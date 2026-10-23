@@ -1,6 +1,6 @@
 from odoo import Command
 from odoo.addons.account.tests.test_taxes_global_discount import TestTaxesGlobalDiscount
-from odoo.addons.point_of_sale.tests.test_frontend import TestTaxCommonPOS
+from odoo.addons.point_of_sale.tests.common import TestTaxCommonPOS
 from odoo.tests import tagged
 
 

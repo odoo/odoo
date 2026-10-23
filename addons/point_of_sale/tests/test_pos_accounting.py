@@ -1,262 +1,101 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from unittest.mock import patch
 
-from odoo import Command, fields
+from odoo import Command
 from odoo.exceptions import UserError
-from odoo.tests import Form, freeze_time
+from odoo.tests import Form, freeze_time, tagged
 from odoo.tools import mute_logger
 
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.point_of_sale.tests.common import CommonPosTest
 
 
-class TestPosAccounting(AccountTestInvoicingCommon):
-
-    @classmethod
-    def _get_main_company(self):
-        return self.company_data['company']
+@tagged('post_install', '-at_install')
+class TestPosAccounting(CommonPosTest):
 
     @classmethod
-    def setUpClass(self):
+    def setUpClass(cls):
         super().setUpClass()
-        self.main_company = self._get_main_company()
-        pos_manager = self.env.ref('point_of_sale.group_pos_manager')
-        self.env.user.group_ids += pos_manager
+        cls.bank_pm.outstanding_account_id = cls.outstanding_bank
+        # These scenarios exercise the configuration's default receivable account.
+        (cls.cash_pm | cls.bank_pm | cls.credit_pm).receivable_account_id = False
 
-        # Create journals
-        self.bank_journal = self.env['account.journal'].create({
-            'name': 'Bank Test',
-            'type': 'bank',
-            'company_id': self.main_company.id,
-            'code': 'BNK',
-            'sequence': 10,
+        # Keep the accounting scenarios' 6%, 12% and 21% rates on existing taxes.
+        for tax, amount in [
+            (cls.taxes['tax7'], 6),
+            (cls.taxes['tax10'], 12),
+            (cls.taxes['tax21_incl'], 21),
+        ]:
+            tax.write({'name': f'Tax {amount}%', 'amount': amount, 'price_include_override': 'tax_excluded'})
+        cls.ten_dollars_no_tax.taxes_id = cls.taxes['tax7']
+        cls.ten_dollars_with_10_incl.taxes_id = cls.taxes['tax10']
+        cls.ten_dollars_with_15_incl.taxes_id = cls.taxes['tax21_incl']
+        cls.ten_dollars_with_5_incl.taxes_id = cls.taxes['tax7'] | cls.taxes['tax10'] | cls.taxes['tax21_incl']
+        cls.cash_rounding_a.write({
+            'profit_account_id': cls.company_data['default_account_revenue'].id,
+            'loss_account_id': cls.company_data['default_account_expense'].id,
         })
-        self.cash_journal = self.env['account.journal'].create({
-            'name': 'Cash Test',
-            'type': 'cash',
-            'company_id': self.main_company.id,
-            'code': 'CSH',
-            'sequence': 10,
-        })
-        self.config_sale_journal = self.env['account.journal'].create({
-            'name': 'PoS Sale',
-            'type': 'sale',
-            'code': 'POSS',
-            'company_id': self.company.id,
-            'sequence': 12,
-        })
+        cls.other_currency.rate_ids.rate = 2
 
-        # Accounts
-        self.bank_outstanding_account = self.copy_account(
-            self.inbound_payment_method_line.payment_account_id,
-            {'name': 'Outstanding Bank'},
-        )
+        # TODO-PARP: Remove compatibility aliases after all modules are migrated.
+        cls.pos_config = cls.pos_config_usd
+        cls.customer_pm = cls.credit_pm
+        cls.product_6 = cls.ten_dollars_no_tax.product_variant_id
+        cls.product_12 = cls.ten_dollars_with_10_incl.product_variant_id
+        cls.product_21 = cls.ten_dollars_with_15_incl.product_variant_id
+        cls.partner_1 = cls.partner_mobt
+        cls.partner_1.property_account_receivable_id = cls.receivable_account
 
-        # Create payment methods
-        self.cash_pm = self.env['pos.payment.method'].create({
-            'name': 'Cash',
-            'type': 'cash',
-            'journal_id': self.cash_journal.id,
-        })
-        self.customer_pm = self.env['pos.payment.method'].create({
-            'name': 'Customer Account',
-            'type': 'pay_later',
-        })
-        self.bank_pm = self.env['pos.payment.method'].create({
-            'name': 'Bank',
-            'type': 'bank',
-            'journal_id': self.bank_journal.id,
-            'outstanding_account_id': self.bank_outstanding_account.id,
-        })
+        cls.env.cr.precommit.run()
 
-        # Create taxes with different rates
-        self.tax_received_account = self.env['account.account'].create({
-            'name': 'TAX_BASE',
-            'code': 'TBASE',
-            'account_type': 'asset_current',
-        })
-        tax_repartition = [
-            (0, 0, {'repartition_type': 'base'}),
-            (0, 0, {
-                'repartition_type': 'tax',
-                'account_id': self.tax_received_account.id,
-            }),
-        ]
-        self.tax_6 = self.env['account.tax'].create({
-            'name': 'Tax 6%',
-            'amount_type': 'percent',
-            'amount': 6,
-            'invoice_repartition_line_ids': tax_repartition,
-            'refund_repartition_line_ids': tax_repartition,
-        })
-        self.tax_12 = self.env['account.tax'].create({
-            'name': 'Tax 12%',
-            'amount_type': 'percent',
-            'amount': 12,
-            'invoice_repartition_line_ids': tax_repartition,
-            'refund_repartition_line_ids': tax_repartition,
-        })
-        self.tax_21 = self.env['account.tax'].create({
-            'name': 'Tax 21%',
-            'amount_type': 'percent',
-            'amount': 21,
-            'invoice_repartition_line_ids': tax_repartition,
-            'refund_repartition_line_ids': tax_repartition,
-        })
-        self.tax_fixed = self.env['account.tax'].create({
-            'name': 'fixed amount tax',
-            'amount_type': 'fixed',
-            'amount': 1,
-            'price_include_override': 'tax_excluded',
-            'invoice_repartition_line_ids': tax_repartition,
-            'refund_repartition_line_ids': tax_repartition,
-        })
-
-        # Create products with different tax configurations
-        self.product_6 = self.env['product.product'].create({
-            'name': 'Product 6%',
-            'type': 'consu',
-            'qty_available': 100,
-            'is_storable': True,
-            'list_price': 10,
-            'taxes_id': [(6, 0, [self.tax_6.id])],
-            'available_in_pos': True,
-        })
-        self.product_12 = self.env['product.product'].create({
-            'name': 'Product 12%',
-            'type': 'consu',
-            'qty_available': 100,
-            'is_storable': True,
-            'list_price': 10,
-            'taxes_id': [(6, 0, [self.tax_12.id])],
-            'available_in_pos': True,
-        })
-        self.product_21 = self.env['product.product'].create({
-            'name': 'Product 21%',
-            'type': 'consu',
-            'is_storable': True,
-            'list_price': 10,
-            'taxes_id': [(6, 0, [self.tax_21.id])],
-            'available_in_pos': True,
-        })
-        self.product_6_12 = self.env['product.product'].create({
-            'name': 'Product 6% + 12%',
-            'type': 'consu',
-            'is_storable': True,
-            'list_price': 10,
-            'taxes_id': [(6, 0, [self.tax_6.id, self.tax_12.id])],
-            'available_in_pos': True,
-        })
-        taxes = [self.tax_6.id, self.tax_12.id, self.tax_21.id]
-        self.product_6_12_21 = self.env['product.product'].create({
-            'name': 'Product 6% + 12% + 21%',
-            'type': 'consu',
-            'is_storable': True,
-            'list_price': 10,
-            'taxes_id': [(6, 0, taxes)],
-            'available_in_pos': True,
-        })
-
-        # Create different partners to use customer account
-        self.partner_1 = self.env['res.partner'].create({
-            'name': 'Partner 1',
-        })
-        self.partner_2 = self.env['res.partner'].create({
-            'name': 'Partner 2',
-        })
-
-        # Create the main PoS configuration used in the tests
-        revenue = self.company_data['default_account_revenue'].id
-        expense = self.company_data['default_account_expense'].id
-        self.rounding_method = self.env['account.cash.rounding'].create({
-            'name': 'Rounding up',
-            'rounding': 0.05,
-            'rounding_method': 'UP',
-            'profit_account_id': revenue,
-            'loss_account_id': expense,
-        })
-        self.pos_config = self.env['pos.config'].create({
-            'name': 'PoS Config',
-            'journal_id': self.config_sale_journal.id,
-            'payment_method_ids': [
-                (4, self.cash_pm.id),
-                (4, self.customer_pm.id),
-                (4, self.bank_pm.id),
-            ],
-        })
-
-    def get_pos_session(self, config=None):
-        config = config or self.pos_config
-        return config.current_session_id
-
+    # TODO-PARP: Remove legacy helper adapters after all modules are migrated.
     def open_pos_session(self, opening=0, note="", config=None):
-        config = config or self.pos_config
-        config.open_ui()
-        session = self.get_pos_session(config)
-        session.set_opening_control(opening, note)
-        self.assertEqual(session.state, 'opened')
+        session = self.open_new_session(opening_cash=opening, config=config or self.pos_config_usd)
+        session.opening_notes = note
         return session
 
-    def simulate_cron_trigger(self):
-        session = self.get_pos_session()
-        session._validate_session_accounting()
-
+    # TODO-PARP: Remove legacy helper adapters after all modules are migrated.
     def close_session(self, amount=0):
-        session = self.get_pos_session()
-        closing_data = session.get_closing_control_data()
-        cash_details = closing_data['default_cash_details']
-        expected_cashbox_amount = amount or cash_details['payment_amount']
-        session.close_session_from_ui({
-            self.cash_pm.id: expected_cashbox_amount,
-        })
-        self.assertEqual(session.state, 'closed')
-        return session
+        return self.close_pos_session(config=self.pos_config, amount=amount or None)
 
-    def create_pos_order(self, payment_method=[], products=[], extra_data={}, session=None):
-        session = session or self.get_pos_session()
-        order = {
-            'amount_total': 0,
-            'amount_paid': 0,
-            'amount_tax': 0,
-            'amount_return': 0,
-            'state': 'draft',
-            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
-            'company_id': self.env.company.id,
-            'session_id': session.id,
-            'lines': [Command.create({
-                'qty': 1,
-                'product_id': product.id,
-                'price_unit': product.lst_price,
-                'price_subtotal': product.lst_price,
-                'tax_ids': [(6, 0, product.taxes_id.ids)],
-                'price_subtotal_incl': 0,
-                **extra_data,
-            }) for [product, extra_data] in products],
-            'payment_ids': [
-                Command.create({
-                    'payment_method_id': pm.id,
-                    **data,
-                }) for [pm, data] in payment_method
-            ],
-            **extra_data,
-        }
-
-        data = self.env['pos.order'].sync_from_ui([order])
-        order = self.env['pos.order'].browse(data['pos.order'][0]['id'])
-        order._compute_prices()
-        if len(payment_method):
-            order_ctx = order.with_context({'generate_pdf': False})
-            order_ctx._process_saved_order(False)
+    # TODO-PARP: Remove legacy helper adapters after all modules are migrated.
+    def create_pos_order(self, lines=None, payments=None, customer=False, **kwargs):
+        legacy = any(key in kwargs for key in ('products', 'payment_method', 'extra_data', 'session'))
+        if legacy:
+            lines = [
+                [product, values.get('qty', 1), values.get('discount', 0), {
+                    'price_unit': product.lst_price,
+                    **values,
+                }]
+                for product, values in kwargs.pop('products', [])
+            ]
+            payments = [
+                [method, values['amount'], {key: value for key, value in values.items() if key != 'amount'}]
+                for method, values in kwargs.pop('payment_method', [])
+            ]
+            kwargs = {**kwargs.pop('extra_data', {}), **kwargs}
+            partner_id = kwargs.pop('partner_id', False)
+            customer = customer or self.env['res.partner'].browse(partner_id)
+            session = kwargs.pop('session', None)
+            kwargs.setdefault('config', session.config_id if session else self.pos_config)
+            kwargs.setdefault('state', 'paid' if payments else 'draft')
+        order = super().create_pos_order(lines, payments, customer, **kwargs)
+        if legacy:
+            order._compute_prices()
         return order
 
+    def _fx_payment(self, pm, amount=10.6):
+        return [[pm, amount, {
+            'foreign_currency_id': self.other_currency.id,
+            'amount_currency': amount * 2,
+        }]]
+
     def test_cash_closing_data_do_not_take_into_account_invoiced_order(self):
-        session = self.open_pos_session()
+        session = self.open_new_session()
         self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 10.6}]],
-            products=[[self.product_6, {}]],
-            extra_data={
-                'partner_id': self.partner_1.id,
-                'to_invoice': True,
-            },
+            payments=[[self.cash_pm, 10.6]],
+            lines=[[self.ten_dollars_no_tax.product_variant_id, 1]],
+            customer=self.partner_mobt,
+            to_invoice=True,
         )
 
         # Payment amount doesn't need to be taken into account for
@@ -278,12 +117,12 @@ class TestPosAccounting(AccountTestInvoicingCommon):
             'taxes_id': False,
             'available_in_pos': True,
         } for price in [12.345, 4.987, 8.474]])
-        session = self.open_pos_session()
+        session = self.open_new_session()
         for pm in [self.bank_pm, self.cash_pm]:
             for product, amount in zip(products, [12.35, 4.99, 8.47]):
                 self.create_pos_order(
-                    payment_method=[[pm, {'amount': amount}]],
-                    products=[[product, {}]],
+                    payments=[[pm, amount]],
+                    lines=[[product]],
                 )
 
         closing_data = session.get_closing_control_data()
@@ -293,26 +132,24 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         self.assertEqual(closing_data['default_cash_details']['payment_amount'], 25.81)
 
     def test_invoiced_order_are_on_partner_receivable_account(self):
-        session = self.open_pos_session()
+        session = self.open_new_session()
         order = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 10.6}]],
-            products=[[self.product_6, {}]],
-            extra_data={
-                'partner_id': self.partner_1.id,
-                'to_invoice': True,
-            },
+            payments=[[self.cash_pm, 10.6]],
+            lines=[[self.ten_dollars_no_tax.product_variant_id, 1]],
+            customer=self.partner_mobt,
+            to_invoice=True,
         )
-        self.close_session()
+        self.close_pos_session()
         move = order.account_move
         self.assertNotIn(move, session.sale_move_ids)
 
     def test_cash_statement_opening_and_closing_consistency(self):
         def open_and_close_session_with_cash_amounts(init, start, end):
-            cash_pm = self.pos_config._get_cash_payment_method()
+            cash_pm = self.pos_config_usd._get_cash_payment_method()
             cash_pm.journal_id._compute_current_statement_balance()     # Force recompute in tests.
-            opening_balance = self.pos_config._get_opening_balance()
+            opening_balance = self.pos_config_usd._get_opening_balance()
             self.assertEqual(opening_balance, init)
-            session = self.open_pos_session(start)
+            session = self.open_new_session(start)
             session.close_session_from_ui({self.cash_pm.id: end})
             self.assertEqual(session.state, 'closed')
             return session.bank_statement_id
@@ -407,42 +244,42 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         is open, this test also check if the tax is correctly marked
         as used when it's part of a PoS order line
         """
-        session = self.open_pos_session()
-        tax_pos = self.product_6.taxes_id
+        session = self.open_new_session()
+        tax_pos = self.ten_dollars_no_tax.product_variant_id.taxes_id
         self.assertFalse(tax_pos.is_used)
 
         order = self.create_pos_order(
-            products=[[self.product_6, {}]],
-            extra_data={'state': 'draft'},
+            lines=[[self.ten_dollars_no_tax.product_variant_id, 1]],
+            state='draft',
         )
-        self.assertEqual(order.lines.tax_ids, self.tax_6)               # sanity check to ensure the order line has the correct tax
+        self.assertEqual(order.lines.tax_ids, self.taxes['tax7'])               # sanity check to ensure the order line has the correct tax
         self.assertEqual(order.session_id, session)                     # sanity check to ensure the order is linked to the current session
         with self.assertRaises(UserError):
-            self.tax_6.write({
+            self.taxes['tax7'].write({
                 'price_include_override': 'tax_included',
             })
 
         self.assertTrue(tax_pos.is_used)
 
     def test_classic_order(self):
-        session = self.open_pos_session()
+        session = self.open_new_session()
         self.create_pos_order(
-            payment_method=[[self.customer_pm, {'amount': 10.6}]],
-            products=[[self.product_6, {}]],
-            extra_data={'partner_id': self.partner_1.id},
+            payments=[[self.credit_pm, 10.6]],
+            lines=[[self.ten_dollars_no_tax.product_variant_id, 1]],
+            customer=self.partner_mobt,
         )
 
         self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 10.6}]],
-            products=[[self.product_6, {}]],
+            payments=[[self.cash_pm, 10.6]],
+            lines=[[self.ten_dollars_no_tax.product_variant_id, 1]],
         )
 
         self.create_pos_order(
-            payment_method=[[self.bank_pm, {'amount': 10.6}]],
-            products=[[self.product_6, {}]],
+            payments=[[self.bank_pm, 10.6]],
+            lines=[[self.ten_dollars_no_tax.product_variant_id, 1]],
         )
 
-        self.close_session()
+        self.close_pos_session()
         sale_move = session.move_ids
         cash_statement = self.cash_pm.journal_id.last_statement_id
         amount_total = session.currency_id.round(
@@ -460,27 +297,27 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         self.assertEqual(cash_statement.is_complete, True)
 
     def test_cash_statement_line(self):
-        session = self.open_pos_session()
+        session = self.open_new_session()
 
         # Cash payment of 10.6 (10 + 6% tax)
         self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 10.6}]],
-            products=[[self.product_6, {}]],
+            payments=[[self.cash_pm, 10.6]],
+            lines=[[self.ten_dollars_no_tax.product_variant_id, 1]],
         )
 
         # Cash payment of 11.2 (10 + 12% tax)
         self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 11.2}]],
-            products=[[self.product_12, {}]],
+            payments=[[self.cash_pm, 11.2]],
+            lines=[[self.ten_dollars_with_10_incl.product_variant_id, 1]],
         )
 
         # Cash payment of 12.0 (10 + 21% tax)
         self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 12.1}]],
-            products=[[self.product_21, {}]],
+            payments=[[self.cash_pm, 12.1]],
+            lines=[[self.ten_dollars_with_15_incl.product_variant_id, 1]],
         )
 
-        self.close_session()
+        self.close_pos_session()
         cash_statement = self.cash_pm.journal_id.last_statement_id
         self.assertEqual(cash_statement, session.bank_statement_id)     # Cash statement should be the one linked to the session
         statement_lines = cash_statement.line_ids
@@ -488,20 +325,17 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         self.assertEqual(statement_lines.amount, 33.9)                  # 10 + 6% tax + 10 + 12% tax + 10 + 21% tax
 
     def test_closing_entry_by_product(self):
-        self.pos_config.use_closing_entry_by_product = True
-        session = self.open_pos_session()
+        self.pos_config_usd.use_closing_entry_by_product = True
+        session = self.open_new_session()
 
         # Create a PoS order with 2 products with different taxes
         self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 21.8}]],          # Total amount of the order is 10 + 6% tax + 10 + 12% tax = 21.8
-            products=[[self.product_6, {}], [self.product_12, {}]],
-            extra_data={'partner_id': self.partner_1.id},
+            payments=[[self.cash_pm, 21.8]],          # Total amount of the order is 10 + 6% tax + 10 + 12% tax = 21.8
+            lines=[[self.ten_dollars_no_tax.product_variant_id, 1], [self.ten_dollars_with_10_incl.product_variant_id, 1]],
+            customer=self.partner_mobt,
         )
 
-        closing_data = session.get_closing_control_data()
-        cash_details = closing_data['default_cash_details']
-        expected_cashbox_amount = cash_details['payment_amount']
-        session.close_session_from_ui({self.cash_pm.id: expected_cashbox_amount})
+        self.close_pos_session()
         self.assertEqual(session.state, 'closed')
 
         sale_move = session.move_ids
@@ -514,29 +348,29 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         )
         product1 = product_lines[0]
         product2 = product_lines[1]
-        self.assertEqual(product1.product_id, self.product_6)           # First product line should be for product with 6% tax
-        self.assertEqual(product2.product_id, self.product_12)          # Second product line should be for product with 12% tax
-        self.assertEqual(product1.tax_ids.ids, [self.tax_6.id])         # First tax line should be for 6% tax
-        self.assertEqual(product2.tax_ids.ids, [self.tax_12.id])        # Second tax line should be for 12% tax
+        self.assertEqual(product1.product_id, self.ten_dollars_no_tax.product_variant_id)           # First product line should be for product with 6% tax
+        self.assertEqual(product2.product_id, self.ten_dollars_with_10_incl.product_variant_id)          # Second product line should be for product with 12% tax
+        self.assertEqual(product1.tax_ids.ids, [self.taxes['tax7'].id])         # First tax line should be for 6% tax
+        self.assertEqual(product2.tax_ids.ids, [self.taxes['tax10'].id])        # Second tax line should be for 12% tax
         self.assertEqual(tax_lines[0].amount_currency, -0.6)            # First tax line should be at 0.6 (6% of 10)
         self.assertEqual(tax_lines[1].amount_currency, -1.2)            # Second tax line should be at 1.2 (12% of 10)
 
     def test_fixed_tax_negative_qty_should_be_negative(self):
-        service = self.env.ref('product.product_category_services').id
-        zero_amount_product = self.env['product.product'].create({
-            'name': 'Zero Amount Product',
-            'available_in_pos': True,
-            'list_price': 0,
-            'taxes_id': [(6, 0, [self.tax_fixed.id])],
-            'categ_id': service,
+        self.taxes['tax5_incl'].write({
+            'name': 'Fixed amount tax',
+            'amount_type': 'fixed',
+            'amount': 1,
+            'price_include_override': 'tax_excluded',
         })
-        self.pos_config.write({'iface_tax_included': 'total'})
+        zero_amount_product = self.twenty_dollars_no_tax.product_variant_id
+        zero_amount_product.write({'list_price': 0, 'taxes_id': [Command.set(self.taxes['tax5_incl'].ids)]})
+        self.pos_config_usd.write({'iface_tax_included': 'total'})
 
         # Test with a positive order first
-        session = self.open_pos_session()
+        session = self.open_new_session()
         order = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 1}]],
-            products=[[zero_amount_product, {'qty': 1}]],
+            payments=[[self.cash_pm, 1]],
+            lines=[[zero_amount_product, 1]],
         )
         session.close_session_from_ui({self.cash_pm.id: 1})
         self.assertEqual(session.state, 'closed')
@@ -559,11 +393,11 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         self.assertEqual(payment_line.debit, 1)                         # Total amount (only taxes) should be debited to the payment line since it's a positive order
 
         # Now test with a negative order
-        session = self.open_pos_session()
+        session = self.open_new_session()
         order = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': -1}]],
-            products=[[zero_amount_product, {'qty': -1}]],
-            extra_data={'is_refund': True},
+            payments=[[self.cash_pm, -1]],
+            lines=[[zero_amount_product, -1]],
+            is_refund=True,
         )
         session.close_session_from_ui({self.cash_pm.id: 0})
         self.assertEqual(session.state, 'closed')
@@ -588,42 +422,36 @@ class TestPosAccounting(AccountTestInvoicingCommon):
     def test_user_right_on_statement_line_for_pos_user(self):
         """Test cash difference *loss* at closing.
         """
-        session = self.open_pos_session()
+        session = self.open_new_session()
         session.close_session_from_ui({self.cash_pm.id: 0})
-        session = self.open_pos_session()
+        session = self.open_new_session()
         self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 10.6}]],
-            products=[[self.product_6, {}]],
+            payments=[[self.cash_pm, 10.6]],
+            lines=[[self.ten_dollars_no_tax.product_variant_id, 1]],
         )
-        closing_data = session.get_closing_control_data()
-        cash_details = closing_data['default_cash_details']
-        expected_cashbox_amount = cash_details['payment_amount']
-        session.close_session_from_ui({self.cash_pm.id: expected_cashbox_amount})
+        self.close_pos_session()
         self.assertEqual(session.state, 'closed')
         bank_statement = session.bank_statement_id
         self.assertEqual(bank_statement.balance_end_real, 10.6)         # The order is 10 + 0.60 taxes
 
     def test_rounding_when_closing_session(self):
-        rounding_method = self.rounding_method
+        rounding_method = self.cash_rounding_a
         rounding_method.rounding_method = 'HALF-UP'
         self.product_a.write({
             'name': 'Product Test',
             'list_price': 0.04,
             'taxes_id': False,
         })
-        self.pos_config.write({
+        self.pos_config_usd.write({
             'rounding_method': rounding_method.id,
             'cash_rounding': True,
             'only_round_cash_method': False,
         })
 
         def check_difference(session, difference):
-            currency = self.pos_config.currency_id
+            currency = self.pos_config_usd.currency_id
             rounded = currency.round(difference)
-            closing_data = session.get_closing_control_data()
-            cash_details = closing_data['default_cash_details']
-            expected_cashbox_amount = cash_details['payment_amount']
-            session.close_session_from_ui({self.cash_pm.id: expected_cashbox_amount})
+            self.close_pos_session()
             self.assertEqual(session.state, 'closed')
             rounding_lines = session.sale_move_ids.line_ids.filtered(
                 lambda line: line.display_type == 'rounding',
@@ -637,8 +465,8 @@ class TestPosAccounting(AccountTestInvoicingCommon):
 
         def create_order_and_check(amount, qty=1, pm=self.cash_pm):
             order = self.create_pos_order(
-                payment_method=[[pm, {'amount': amount}]],
-                products=[[self.product_a, {'qty': qty}]],
+                payments=[[pm, amount]],
+                lines=[[self.product_a, qty]],
             )
             rounded = rounding_method.round(order.amount_total)
             self.assertEqual(order.amount_paid, rounded)
@@ -648,7 +476,7 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         # Only cash check when rounding amount is negative, it should be
         # debited from the move to be credited on the rounding account
         self.product_a.list_price = 0.04
-        session = self.open_pos_session()
+        session = self.open_new_session()
         difference = 0
         difference += create_order_and_check(0.05)                      # Rounding +0.01 (total is 0.04)
         difference += create_order_and_check(0.10, 2)                   # Rounding +0.02 (total is 0.08)
@@ -658,7 +486,7 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         # Only cash check when rounding amount is positive, it should be
         # credited from the move to be debited on the rounding account
         self.product_a.list_price = 0.06
-        session = self.open_pos_session()
+        session = self.open_new_session()
         difference = 0
         difference += create_order_and_check(0.05)                      # Rounding -0.01 (total is 0.04)
         difference += create_order_and_check(0.10, 2)                   # Rounding -0.02 (total is 0.12)
@@ -666,7 +494,7 @@ class TestPosAccounting(AccountTestInvoicingCommon):
 
         # Round bank payment method as well
         self.product_a.list_price = 0.03
-        session = self.open_pos_session()
+        session = self.open_new_session()
         difference = 0
         difference += create_order_and_check(0.05, 2, self.bank_pm)     # Rounding -0.01 (total is 0.06)
         difference += create_order_and_check(0.10, 3, self.bank_pm)     # Rounding +0.01 (total is 0.09)
@@ -675,7 +503,7 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         # Try to round with mixed payment methods, both should be taken
         # into account for the rounding
         self.product_a.list_price = 0.03
-        session = self.open_pos_session()
+        session = self.open_new_session()
         difference = 0
         difference += create_order_and_check(0.05, 2, self.bank_pm)     # Rounding -0.01 (total is 0.06)
         difference += create_order_and_check(0.10, 4)                   # Rounding -0.02 (total is 0.12)
@@ -685,86 +513,69 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         # Set company's default accounts to false
         self.env.company.income_account_id = False
         self.env.company.expense_account_id = False
-        self.product_12.write({
+        self.ten_dollars_with_10_incl.product_variant_id.write({
             'property_account_income_id': False,
             'property_account_expense_id': False,
         })
-        account = self.env['account.account'].create({
-            'name': 'Account for category without account',
-            'code': 'X1111',
-        })
-        self.open_pos_session()
-        self.pos_config.journal_id.default_account_id = account.id
+        account = self.company_data['default_account_revenue']
+        self.open_new_session()
+        self.pos_config_usd.journal_id.default_account_id = account.id
         self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 11.2}]],
-            products=[[self.product_12, {}]],
+            payments=[[self.cash_pm, 11.2]],
+            lines=[[self.ten_dollars_with_10_incl.product_variant_id, 1]],
         )
 
     def test_invoice_a_negative_order_should_create_credit_note(self):
-        self.open_pos_session()
+        self.open_new_session()
         order = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': -10.6}]],
-            products=[[self.product_6, {'qty': -1}]],
-            extra_data={
-                'is_refund': True,
-                'partner_id': self.partner_1.id,
-                'to_invoice': True,
-            },
+            payments=[[self.cash_pm, -10.6]],
+            lines=[[self.ten_dollars_no_tax.product_variant_id, -1]],
+            is_refund=True,
+            customer=self.partner_mobt,
+            to_invoice=True,
         )
         self.assertEqual(order.account_move.move_type, 'out_refund')    # Negative order should be flagged as a refund order
 
     def test_order_with_positive_and_negative_lines(self):
-        self.open_pos_session()
+        self.open_new_session()
         order = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 10.0}]],          # 10.6 * 2 + -11.2 = = 10.0
-            products=[
-                [self.product_6, {'qty': 2}],
-                [self.product_12, {'qty': -1}],
+            payments=[[self.cash_pm, 10.0]],          # 10.6 * 2 + -11.2 = = 10.0
+            lines=[
+                [self.ten_dollars_no_tax.product_variant_id, 2],
+                [self.ten_dollars_with_10_incl.product_variant_id, -1],
             ],
-            extra_data={
-                'partner_id': self.partner_1.id,
-            },
+            customer=self.partner_mobt,
         )
-        self.close_session()
+        self.close_pos_session()
         invoice = order._generate_pos_order_invoice()
         self.assertEqual(order.amount_total, 10.0)
         self.assertEqual(invoice.amount_total, 10.0)                    # Total should be 10 since we have 2 lines at 10.6 and one line at -11.2
         self.assertEqual(invoice.move_type, 'out_invoice')              # Invoice should be flagged as a regular invoice
-        self.open_pos_session()
+        self.open_new_session()
         refund = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': -10.0}]],
-            products=[
-                [self.product_6, {'qty': -2}],
-                [self.product_12, {'qty': 1}],
+            payments=[[self.cash_pm, -10.0]],
+            lines=[
+                [self.ten_dollars_no_tax.product_variant_id, -2],
+                [self.ten_dollars_with_10_incl.product_variant_id, 1],
             ],
-            extra_data={
-                'partner_id': self.partner_1.id,
-                'is_refund': True,
-            },
+            customer=self.partner_mobt,
+            is_refund=True,
         )
-        self.close_session()
+        self.close_pos_session()
         refund_invoice = refund._generate_pos_order_invoice()
         self.assertEqual(refund.amount_total, -10.0)
         self.assertEqual(refund_invoice.amount_total, 10.0)
         self.assertEqual(refund_invoice.move_type, 'out_refund')        # Refund invoice should be flagged as a refund
 
     def test_invoice_an_order_from_closed_session(self):
-        self.open_pos_session()
+        self.open_new_session()
         order = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 10.6}]],
-            products=[[self.product_6, {}]],
-            extra_data={'partner_id': self.partner_1.id},
+            payments=[[self.cash_pm, 10.6]],
+            lines=[[self.ten_dollars_no_tax.product_variant_id, 1]],
+            customer=self.partner_mobt,
         )
-        refund = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': -10.6}]],
-            products=[[self.product_6, {'qty': -1}]],
-            extra_data={
-                'partner_id': self.partner_1.id,
-                'is_refund': True,
-                'refunded_order_id': order.id,
-            },
-        )
-        session = self.close_session()
+        refund = self.refund_pos_order(order, self.cash_pm, -10.6)
+        session = self.close_pos_session()
 
         # Refund the sale order to check if move are correctly created
         order.action_pos_order_invoice()
@@ -794,15 +605,15 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         self.assertEqual(reversal_payment_lines.credit, invoice_payment_lines.debit)
 
     def test_invoice_after_closing_reversal_is_negative(self):
-        self.open_pos_session()
+        self.open_new_session()
         orders = self.env['pos.order']
         for pm in (self.cash_pm, self.bank_pm, self.customer_pm):
             orders |= self.create_pos_order(
-                payment_method=[[pm, {'amount': 10.6}]],
-                products=[[self.product_6, {}]],
-                extra_data={'partner_id': self.partner_1.id},
+                payments=[[pm, 10.6]],
+                lines=[[self.product_6]],
+                customer=self.partner_1,
             )
-        session = self.close_session()
+        session = self.close_pos_session()
 
         # The last invoiced order detaches the closing entry from all its
         # orders, the sign of every reversal must not depend on it.
@@ -824,18 +635,18 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         This test ensures that the refund amount of a partial order
         corresponds to the price of the item, without rounding.
         """
-        self.rounding_method.rounding = 5.0
-        self.rounding_method.rounding_method = 'DOWN'
-        self.pos_config.write({
-            'rounding_method': self.rounding_method.id,
+        self.cash_rounding_a.rounding = 5.0
+        self.cash_rounding_a.rounding_method = 'DOWN'
+        self.pos_config_usd.write({
+            'rounding_method': self.cash_rounding_a.id,
             'cash_rounding': True,
         })
 
-        session = self.open_pos_session()
+        session = self.open_new_session()
         order = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 30}]],
-            products=[[self.product_6, {'qty': 3}]],
-            extra_data={'partner_id': self.partner_1.id},
+            payments=[[self.cash_pm, 30]],
+            lines=[[self.ten_dollars_no_tax.product_variant_id, 3]],
+            customer=self.partner_mobt,
         )
         rounded_amount = order._get_rounded_amount(order.amount_total)
         self.assertEqual(rounded_amount, order.amount_paid)
@@ -848,21 +659,10 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         refund = refund_form.save()
 
         self.assertEqual(refund.amount_total, -10.6)
-        payment_context = self.env['pos.make.payment'].with_context({
-            "active_ids": refund.ids,
-            "active_id": refund.id,
-        })
-        refund_payment = payment_context.create({
-            'amount': refund.amount_total,
-            'payment_method_id': self.cash_pm.id,
-        })
-        refund_payment.check()
+        self.make_payment(refund, self.cash_pm, refund.amount_total)
         self.assertEqual(refund.amount_paid, -10)
 
-        closing_data = session.get_closing_control_data()
-        cash_details = closing_data['default_cash_details']
-        expected_cashbox_amount = cash_details['payment_amount']
-        session.close_session_from_ui({self.cash_pm.id: expected_cashbox_amount})
+        self.close_pos_session()
 
         self.assertEqual(refund.state, 'done')
         self.assertEqual(session.state, 'closed')
@@ -873,33 +673,17 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         updated. Statement line should also be created with the correct
         amount.
         """
-        config_partner = self.pos_config.default_partner_id
+        config_partner = self.pos_config_usd.default_partner_id
         cash_receivable = config_partner.property_account_receivable_id
-        session = self.open_pos_session()
+        session = self.open_new_session()
         order = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 21.8}]],          # Total amount of the order is 10 + 6% tax + 10 + 12% tax = 21.8
-            products=[[self.product_6, {}], [self.product_12, {}]],
-            extra_data={
-                'partner_id': self.partner_1.id,
-            },
+            payments=[[self.cash_pm, 21.8]],          # Total amount of the order is 10 + 6% tax + 10 + 12% tax = 21.8
+            lines=[[self.ten_dollars_no_tax.product_variant_id, 1], [self.ten_dollars_with_10_incl.product_variant_id, 1]],
+            customer=self.partner_mobt,
         )
-        self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': -21.8}]],         # Total amount of the order is 10 + 6% tax + 10 + 12% tax = 21.8
-            products=[
-                [self.product_6, {'qty': -1}],
-                [self.product_12, {'qty': -1}],
-            ],
-            extra_data={
-                'partner_id': self.partner_1.id,
-                'is_refund': True,
-                'refunded_order_id': order.id,
-            },
-        )
+        self.refund_pos_order(order, self.cash_pm, -21.8)
 
-        closing_data = session.get_closing_control_data()
-        cash_details = closing_data['default_cash_details']
-        expected_cashbox_amount = cash_details['payment_amount']
-        session.close_session_from_ui({self.cash_pm.id: expected_cashbox_amount})
+        self.close_pos_session()
         self.assertEqual(session.state, 'closed')
         sale_move = session.sale_move_ids
         refund_move = session.refund_move_ids[0]
@@ -917,7 +701,7 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         )
         self.assertEqual(len(sale_product_lines), 2)
         self.assertEqual(len(refund_product_lines), 2)
-        taxes = [self.tax_6, self.tax_12]
+        taxes = [self.taxes['tax7'], self.taxes['tax10']]
         zippeeeed = zip(sale_product_lines, refund_product_lines, taxes)
         for sale_line, refund_line, tax in zippeeeed:
             self.assertEqual(sale_line.tax_ids, refund_line.tax_ids)
@@ -926,6 +710,7 @@ class TestPosAccounting(AccountTestInvoicingCommon):
 
         cash_move = self.env['account.move.line'].search([
             ('account_id', '=', cash_receivable.id),
+            ('move_id', 'in', order.session_id._get_related_account_moves().ids),
         ]).mapped('amount_currency')
         self.assertEqual([-21.8, 21.8, 21.8, -21.8], cash_move)         # The config default journal is used because cash_pm doesn't have a journal
 
@@ -955,30 +740,16 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         updated. Statement line should also be created with the correct
         amount.
         """
-        cash_receivable = self.partner_1.property_account_receivable_id
-        self.open_pos_session()
+        cash_receivable = self.partner_mobt.property_account_receivable_id
+        self.open_new_session()
 
         order = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 21.8}]],          # Total amount of the order is 10 + 6% tax + 10 + 12% tax = 21.8
-            products=[[self.product_6, {}], [self.product_12, {}]],
-            extra_data={
-                'partner_id': self.partner_1.id,
-                'to_invoice': True,
-            },
+            payments=[[self.cash_pm, 21.8]],          # Total amount of the order is 10 + 6% tax + 10 + 12% tax = 21.8
+            lines=[[self.ten_dollars_no_tax.product_variant_id, 1], [self.ten_dollars_with_10_incl.product_variant_id, 1]],
+            customer=self.partner_mobt,
+            to_invoice=True,
         )
-        refund = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': -21.8}]],         # Total amount of the order is 10 + 6% tax + 10 + 12% tax = 21.8
-            products=[
-                [self.product_6, {'qty': -1}],
-                [self.product_12, {'qty': -1}],
-            ],
-            extra_data={
-                'partner_id': self.partner_1.id,
-                'is_refund': True,
-                'refunded_order_id': order.id,
-                'to_invoice': True,
-            },
-        )
+        refund = self.refund_pos_order(order, self.cash_pm, -21.8)
         sale_move = order.account_move
         refund_move = refund.account_move
 
@@ -995,7 +766,7 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         )
         self.assertEqual(len(sale_product_lines), 2)
         self.assertEqual(len(refund_product_lines), 2)
-        taxes = [self.tax_6, self.tax_12]
+        taxes = [self.taxes['tax7'], self.taxes['tax10']]
         zippeeeed = zip(sale_product_lines, refund_product_lines, taxes)
         for sale_line, refund_line, tax in zippeeeed:
             self.assertEqual(sale_line.tax_ids, refund_line.tax_ids)
@@ -1004,6 +775,7 @@ class TestPosAccounting(AccountTestInvoicingCommon):
 
         cash_move = self.env['account.move.line'].search([
             ('account_id', '=', cash_receivable.id),
+            ('move_id', 'in', order.session_id._get_related_account_moves().ids),
         ]).mapped('amount_currency')
         self.assertEqual([-21.8, 21.8, 21.8, -21.8], cash_move)         # The config default journal is used because cash_pm doesn't have a journal
 
@@ -1031,33 +803,19 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         updated. Statement line should also be created with the correct
         amount.
         """
-        cash_receivable = self.partner_1.property_account_receivable_id
-        self.open_pos_session()
+        cash_receivable = self.partner_mobt.property_account_receivable_id
+        self.open_new_session()
 
         order = self.create_pos_order(
-            products=[
-                [self.product_6, {'discount': 50}],
-                [self.product_12, {'discount': 50}],
+            lines=[
+                [self.ten_dollars_no_tax.product_variant_id, 1, 50],
+                [self.ten_dollars_with_10_incl.product_variant_id, 1, 50],
             ],
-            payment_method=[[self.cash_pm, {'amount': 10.9}]],          # Total amount of the order is 5 + 6% tax + 5 + 12% tax = 10.9
-            extra_data={
-                'partner_id': self.partner_1.id,
-                'to_invoice': True,
-            },
+            payments=[[self.cash_pm, 10.9]],          # Total amount of the order is 5 + 6% tax + 5 + 12% tax = 10.9
+            customer=self.partner_mobt,
+            to_invoice=True,
         )
-        refund = self.create_pos_order(
-            products=[
-                [self.product_6, {'discount': 50, 'qty': -1}],
-                [self.product_12, {'discount': 50, 'qty': -1}],
-            ],
-            payment_method=[[self.cash_pm, {'amount': -10.9}]],         # Total amount of the order is 5 + 6% tax + 5 + 12% tax = 10.9
-            extra_data={
-                'partner_id': self.partner_1.id,
-                'is_refund': True,
-                'refunded_order_id': order.id,
-                'to_invoice': True,
-            },
-        )
+        refund = self.refund_pos_order(order, self.cash_pm, -10.9)
         sale_move = order.account_move
         refund_move = refund.account_move
 
@@ -1079,6 +837,7 @@ class TestPosAccounting(AccountTestInvoicingCommon):
 
         cash_move = self.env['account.move.line'].search([
             ('account_id', '=', cash_receivable.id),
+            ('move_id', 'in', order.session_id._get_related_account_moves().ids),
         ]).mapped('amount_currency')
         self.assertEqual([-10.9, 10.9, 10.9, -10.9], cash_move)
 
@@ -1090,16 +849,14 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         """
         inbound = self.inbound_payment_method_line.payment_account_id
         self.bank_pm.outstanding_account_id = inbound.id
-        config_partner = self.pos_config.default_partner_id
+        config_partner = self.pos_config_usd.default_partner_id
         pos_receivable = config_partner.property_account_receivable_id
         session = self.env['pos.session']
 
         def create_session_with_single_order(**kwargs):
-            config = self.pos_config
-            config.open_ui()
-            session = self.get_pos_session()
+            config = self.pos_config_usd
             cash_acc = config._get_opening_balance()
-            session.set_opening_control(cash_acc, "")
+            session = self.open_new_session(cash_acc, config=config)
             order = self.create_pos_order(**kwargs)
             self.assertEqual(order.state, 'paid')
             closing_data = session.get_closing_control_data()
@@ -1110,22 +867,22 @@ class TestPosAccounting(AccountTestInvoicingCommon):
             return session
 
         session |= create_session_with_single_order(
-            payment_method=[[self.bank_pm, {'amount': 10.6}]],
-            products=[[self.product_6, {}]],
+            payments=[[self.bank_pm, 10.6]],
+            lines=[[self.ten_dollars_no_tax.product_variant_id, 1]],
         )
         session |= create_session_with_single_order(
-            payment_method=[[self.bank_pm, {'amount': -10.6}]],
-            products=[[self.product_6, {'qty': -1}]],
-            extra_data={'is_refund': True},
+            payments=[[self.bank_pm, -10.6]],
+            lines=[[self.ten_dollars_no_tax.product_variant_id, -1]],
+            is_refund=True,
         )
         session |= create_session_with_single_order(
-            payment_method=[[self.cash_pm, {'amount': 11.2}]],
-            products=[[self.product_12, {}]],
+            payments=[[self.cash_pm, 11.2]],
+            lines=[[self.ten_dollars_with_10_incl.product_variant_id, 1]],
         )
         session |= create_session_with_single_order(
-            payment_method=[[self.cash_pm, {'amount': -11.2}]],
-            products=[[self.product_12, {'qty': -1}]],
-            extra_data={'is_refund': True},
+            payments=[[self.cash_pm, -11.2]],
+            lines=[[self.ten_dollars_with_10_incl.product_variant_id, -1]],
+            is_refund=True,
         )
         payments = self.env['account.payment'].search(
             [('pos_session_id', 'in', session.ids)],
@@ -1154,43 +911,33 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         self.assertEqual(accounts, [cash_acc.id, pos_receivable.id])    # Cash payment should be posted on the cash account of the statement
 
         # Open session
-        self.pos_config.open_ui()
-        session = self.get_pos_session()
-        cash_acc = self.pos_config._get_opening_balance()
-        session.set_opening_control(cash_acc, "")
+        cash_acc = self.pos_config_usd._get_opening_balance()
+        session = self.open_new_session(cash_acc)
         order1 = self.create_pos_order(
-            payment_method=[[self.bank_pm, {'amount': 10.6}]],
-            products=[[self.product_6, {}]],
-            extra_data={
-                'partner_id': self.partner_1.id,
-                'to_invoice': True,
-            },
+            payments=[[self.bank_pm, 10.6]],
+            lines=[[self.ten_dollars_no_tax.product_variant_id, 1]],
+            customer=self.partner_mobt,
+            to_invoice=True,
         )
         refund1 = self.create_pos_order(
-            payment_method=[[self.bank_pm, {'amount': -10.6}]],
-            products=[[self.product_6, {'qty': -1}]],
-            extra_data={
-                'is_refund': True,
-                'partner_id': self.partner_1.id,
-                'to_invoice': True,
-            },
+            payments=[[self.bank_pm, -10.6]],
+            lines=[[self.ten_dollars_no_tax.product_variant_id, -1]],
+            is_refund=True,
+            customer=self.partner_mobt,
+            to_invoice=True,
         )
         order2 = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 11.2}]],
-            products=[[self.product_12, {}]],
-            extra_data={
-                'partner_id': self.partner_1.id,
-                'to_invoice': True,
-            },
+            payments=[[self.cash_pm, 11.2]],
+            lines=[[self.ten_dollars_with_10_incl.product_variant_id, 1]],
+            customer=self.partner_mobt,
+            to_invoice=True,
         )
         refund2 = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': -11.2}]],
-            products=[[self.product_12, {'qty': -1}]],
-            extra_data={
-                'is_refund': True,
-                'partner_id': self.partner_1.id,
-                'to_invoice': True,
-            },
+            payments=[[self.cash_pm, -11.2]],
+            lines=[[self.ten_dollars_with_10_incl.product_variant_id, -1]],
+            is_refund=True,
+            customer=self.partner_mobt,
+            to_invoice=True,
         )
 
         # Check bank payments for invoiced orders
@@ -1208,29 +955,27 @@ class TestPosAccounting(AccountTestInvoicingCommon):
 
         sale_invoices = order1.account_move + order2.account_move
         refund_invoices = refund1.account_move + refund2.account_move
-        partner_invoices = self.partner_1.invoice_ids.ids
+        partner_invoices = self.partner_mobt.invoice_ids.ids
         for id in sale_invoices.ids + refund_invoices.ids:
             self.assertIn(id, partner_invoices)
 
     def test_invoicing_zero_amount_pos_order(self):
-        session = self.open_pos_session()
-        self.product_6.lst_price = 0
+        session = self.open_new_session()
+        self.ten_dollars_no_tax.product_variant_id.lst_price = 0
 
         order = self.create_pos_order(
-            payment_method=[
-                [self.cash_pm, {'amount': 0}],
+            payments=[
+                [self.cash_pm, 0],
             ],
-            products=[[self.product_6, {}]],
-            extra_data={
-                'partner_id': self.partner_1.id,
-                'to_invoice': True,
-            },
+            lines=[[self.ten_dollars_no_tax.product_variant_id, 1]],
+            customer=self.partner_mobt,
+            to_invoice=True,
         )
 
         session.close_session_from_ui({self.cash_pm.id: 0})
         self.assertEqual(session.state, 'closed')
 
-        receivable = self.partner_1.property_account_receivable_id
+        receivable = self.partner_mobt.property_account_receivable_id
         line_ids = order.account_move.line_ids
         self.assertEqual(len(line_ids), 2)                              # Only one line for the product
         self.assertEqual(line_ids[0].account_id, receivable)            # Line should be posted on the partner receivable
@@ -1246,7 +991,7 @@ class TestPosAccounting(AccountTestInvoicingCommon):
     def test_various_orders(self):
         StatementLine = self.env['account.bank.statement.line']
         BankPayment = self.env['account.payment']
-        defaut_partner = self.pos_config.default_partner_id
+        defaut_partner = self.pos_config_usd.default_partner_id
 
         def create_order_and_check(order_args, values={
             'amount_total': 0,
@@ -1254,8 +999,8 @@ class TestPosAccounting(AccountTestInvoicingCommon):
             'amount_paid': 0,
         }):
             receivable = defaut_partner.property_account_receivable_id
-            cash_acc = self.pos_config._get_opening_balance()
-            session = self.open_pos_session(cash_acc)
+            cash_acc = self.pos_config_usd._get_opening_balance()
+            session = self.open_new_session(cash_acc)
             order = self.create_pos_order(**order_args)
 
             self.assertEqual(order.state, 'paid')
@@ -1278,9 +1023,9 @@ class TestPosAccounting(AccountTestInvoicingCommon):
             if order.is_singly_invoiced and order.account_move:
                 move = order.account_move
                 partner = order.partner_id
-                nb_product = len(order_args['products'])
-                nb_payment = len(order_args['payment_method'])
-                tax_ids = [p[0].taxes_id.ids for p in order_args['products']]
+                nb_product = len(order_args['lines'])
+                nb_payment = len(order_args['payments'])
+                tax_ids = [p[0].taxes_id.ids for p in order_args['lines']]
                 flat = [x for xs in tax_ids for x in xs]
                 nb_lines = nb_product + nb_payment + len(flat)
                 self.assertEqual(move.state, 'posted')
@@ -1326,56 +1071,56 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         }
         create_order_and_check(
             order_args={
-                'payment_method': [[self.customer_pm, {'amount': 10.6}]],
-                'products': [[self.product_6, {}]],
-                'extra_data': {'partner_id': self.partner_1.id},
+                'payments': [[self.credit_pm, 10.6]],
+                'lines': [[self.ten_dollars_no_tax.product_variant_id, 1]],
+                'customer': self.partner_mobt,
             },
             values=one_product_6_check_values,
         )
         create_order_and_check(
             order_args={
-                'payment_method': [[self.bank_pm, {'amount': 10.6}]],
-                'products': [[self.product_6, {}]],
+                'payments': [[self.bank_pm, 10.6]],
+                'lines': [[self.ten_dollars_no_tax.product_variant_id, 1]],
             },
             values=one_product_6_check_values,
         )
         create_order_and_check(
             order_args={
-                'payment_method': [[self.cash_pm, {'amount': 10.6}]],
-                'products': [[self.product_6, {}]],
+                'payments': [[self.cash_pm, 10.6]],
+                'lines': [[self.ten_dollars_no_tax.product_variant_id, 1]],
             },
             values=one_product_6_check_values,
         )
         create_order_and_check(
             order_args={
-                'payment_method': [
-                    [self.cash_pm, {'amount': 5.3}],
-                    [self.bank_pm, {'amount': 5.3}],
+                'payments': [
+                    [self.cash_pm, 5.3],
+                    [self.bank_pm, 5.3],
                 ],
-                'products': [[self.product_6, {}]],
+                'lines': [[self.ten_dollars_no_tax.product_variant_id, 1]],
             },
             values=one_product_6_check_values,
         )
         create_order_and_check(
             order_args={
-                'payment_method': [
-                    [self.bank_pm, {'amount': 2.3}],
-                    [self.customer_pm, {'amount': 5.3}],
-                    [self.cash_pm, {'amount': 3.0}],
+                'payments': [
+                    [self.bank_pm, 2.3],
+                    [self.credit_pm, 5.3],
+                    [self.cash_pm, 3.0],
                 ],
-                'products': [[self.product_6, {}]],
-                'extra_data': {'partner_id': self.partner_1.id},
+                'lines': [[self.ten_dollars_no_tax.product_variant_id, 1]],
+                'customer': self.partner_mobt,
             },
             values=one_product_6_check_values,
         )
         total = 10.6 + 11.2 + 12.1
         create_order_and_check(
             order_args={
-                'payment_method': [[self.bank_pm, {'amount': total}]],
-                'products': [
-                    [self.product_6, {}],
-                    [self.product_12, {}],
-                    [self.product_21, {}],
+                'payments': [[self.bank_pm, total]],
+                'lines': [
+                    [self.ten_dollars_no_tax.product_variant_id, 1],
+                    [self.ten_dollars_with_10_incl.product_variant_id, 1],
+                    [self.ten_dollars_with_15_incl.product_variant_id, 1],
                 ],
             },
             values={
@@ -1387,9 +1132,9 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         total = 13.9
         create_order_and_check(
             order_args={
-                'payment_method': [[self.bank_pm, {'amount': total}]],
-                'products': [
-                    [self.product_6_12_21, {}],
+                'payments': [[self.bank_pm, total]],
+                'lines': [
+                    [self.ten_dollars_with_5_incl.product_variant_id, 1],
                 ],
             },
             values={
@@ -1398,11 +1143,11 @@ class TestPosAccounting(AccountTestInvoicingCommon):
                 'amount_tax': 0.6 + 1.2 + 2.1,
             },
         )
-        self.tax_6.price_include_override = 'tax_included'
+        self.taxes['tax7'].price_include_override = 'tax_included'
         create_order_and_check(
             order_args={
-                'payment_method': [[self.bank_pm, {'amount': 10}]],
-                'products': [[self.product_6, {}]],
+                'payments': [[self.bank_pm, 10]],
+                'lines': [[self.ten_dollars_no_tax.product_variant_id, 1]],
             },
             values={
                 'amount_total': 10,
@@ -1412,65 +1157,51 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         )
 
     def test_pos_config_with_other_currency_than_company(self):
-        eur = self.env.ref('base.EUR')
-        usd = self.env.ref('base.USD')
-        self.env['res.currency.rate'].search([]).unlink()
-        self.env['res.currency.rate'].create({
-            'name': '2010-01-01',
-            'rate': 2.0,
-            'currency_id': usd.id,
-        })
+        config = self.pos_config_eur
+        config.payment_method_ids |= self.cash_pm2
 
-        self.pos_config.company_id.currency_id = eur
-        self.pos_config.journal_id.currency_id = usd
-        self.pos_config.currency_id = usd
-        self.cash_pm.journal_id.currency_id = usd
+        self.assertEqual(config.company_id.currency_id, self.company_currency)
+        self.assertEqual(config.currency_id, self.other_currency)
+        self.assertEqual(config.journal_id.currency_id, self.other_currency)
+        self.assertEqual(self.cash_pm2.journal_id.currency_id, self.other_currency)
 
-        self.assertEqual(self.pos_config.company_id.currency_id, eur)
-        self.assertEqual(self.pos_config.currency_id, usd)
-        self.assertEqual(self.pos_config.journal_id.currency_id, usd)
-        self.assertEqual(self.cash_pm.journal_id.currency_id, usd)
-
-        session = self.open_pos_session()
+        session = self.open_new_session(config=config)
+        # UI prices are expressed in the configuration currency.
         order = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 21.8}]],          # Total amount of the order is 10 + 6% tax + 10 + 12% tax = 21.8
-            products=[[self.product_6, {}], [self.product_12, {}]],
+            config=config,
+            payments=[[self.cash_pm2, 21.8]],          # Total amount of the order is 10 + 6% tax + 10 + 12% tax = 21.8
+            lines=[[self.ten_dollars_no_tax.product_variant_id, 1, 0, {'price_unit': 10}], [self.ten_dollars_with_10_incl.product_variant_id, 1, 0, {'price_unit': 10}]],
         )
 
         self.assertEqual(order.amount_total, 21.8)
         self.assertEqual(order.amount_paid, 21.8)
         self.assertEqual(order.state, 'paid')
-        self.close_session()
+        self.close_pos_session(config=config)
 
         self.assertTrue(session.move_ids)
-        self.assertEqual(session.move_ids.currency_id, usd)
+        self.assertEqual(session.move_ids.currency_id, self.other_currency)
 
-        total_usd = session.move_ids.amount_total_in_currency_signed
-        total_eur = session.move_ids.amount_total_signed
-        self.assertEqual(total_usd, 21.8)
-        self.assertEqual(total_eur, 10.9)                               # 21.8 / 2 because of the rate we set on USD
+        self.assertEqual(session.move_ids.amount_total_in_currency_signed, 21.8)
+        self.assertEqual(session.move_ids.amount_total_signed, 10.9)    # 21.8 / 2 because of the EUR rate
 
-        session = self.open_pos_session()
+        self.open_new_session(config=config)
         invoiced_order = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 21.8}]],          # Total amount of the order is 10 + 6% tax + 10 + 12% tax = 21.8
-            products=[[self.product_6, {}], [self.product_12, {}]],
-            extra_data={
-                'partner_id': self.partner_1.id,
-                'to_invoice': True,
-            },
+            config=config,
+            payments=[[self.cash_pm2, 21.8]],          # Total amount of the order is 10 + 6% tax + 10 + 12% tax = 21.8
+            lines=[[self.ten_dollars_no_tax.product_variant_id, 1, 0, {'price_unit': 10}], [self.ten_dollars_with_10_incl.product_variant_id, 1, 0, {'price_unit': 10}]],
+            customer=self.partner_mobt,
+            to_invoice=True,
         )
         move = invoiced_order.account_move
-        self.assertEqual(move.currency_id, usd)
-        total_usd = move.amount_total_in_currency_signed
-        total_eur = move.amount_total_signed
-        self.assertEqual(total_usd, 21.8)
-        self.assertEqual(total_eur, 10.9)                               # 21.8 / 2 because of the rate we set on USD
+        self.assertEqual(move.currency_id, self.other_currency)
+        self.assertEqual(move.amount_total_in_currency_signed, 21.8)
+        self.assertEqual(move.amount_total_signed, 10.9)                # 21.8 / 2 because of the EUR rate
 
     def test_accounting_items_when_closing_with_bank_difference(self):
-        session = self.open_pos_session()
+        session = self.open_new_session()
         order = self.create_pos_order(
-            payment_method=[[self.bank_pm, {'amount': 10.6}]],
-            products=[[self.product_6, {}]],
+            payments=[[self.bank_pm, 10.6]],
+            lines=[[self.ten_dollars_no_tax.product_variant_id, 1]],
         )
         self.assertEqual(order.state, 'paid')
         session.close_session_from_ui({self.bank_pm.id: 9.6})           # Simulate a bank difference of -1
@@ -1486,10 +1217,10 @@ class TestPosAccounting(AccountTestInvoicingCommon):
             ['Accounts Receivable (PoS)', 'Cash Difference Loss'],
         )
 
-        session = self.open_pos_session()
+        session = self.open_new_session()
         order = self.create_pos_order(
-            payment_method=[[self.bank_pm, {'amount': 10.6}]],
-            products=[[self.product_6, {}]],
+            payments=[[self.bank_pm, 10.6]],
+            lines=[[self.ten_dollars_no_tax.product_variant_id, 1]],
         )
         self.assertEqual(order.state, 'paid')
         session.close_session_from_ui({self.bank_pm.id: 11.6})          # Simulate a bank difference of +1
@@ -1507,38 +1238,24 @@ class TestPosAccounting(AccountTestInvoicingCommon):
 
     def test_pos_order_with_closing_storno(self):
         with freeze_time('2020-01-01'):
-            session = self.open_pos_session()
+            session = self.open_new_session()
             order = self.create_pos_order(
-                payment_method=[[self.bank_pm, {'amount': 10.6}]],
-                products=[[self.product_6, {}]],
+                payments=[[self.bank_pm, 10.6]],
+                lines=[[self.ten_dollars_no_tax.product_variant_id, 1]],
             )
-            self.create_pos_order(
-                payment_method=[[self.bank_pm, {'amount': -10.6}]],
-                products=[[self.product_6, {'qty': -1}]],
-                extra_data={
-                    'is_refund': True,
-                    'refunded_order_id': order.id,
-                },
-            )
-            self.close_session()
+            self.refund_pos_order(order, self.bank_pm, -10.6)
+            self.close_pos_session()
             classic_refund = session.refund_move_ids[0]
             classic_sale = session.sale_move_ids
 
             self.env.company.account_storno = True
-            session = self.open_pos_session()
+            session = self.open_new_session()
             order = self.create_pos_order(
-                payment_method=[[self.bank_pm, {'amount': 10.6}]],
-                products=[[self.product_6, {}]],
+                payments=[[self.bank_pm, 10.6]],
+                lines=[[self.ten_dollars_no_tax.product_variant_id, 1]],
             )
-            self.create_pos_order(
-                payment_method=[[self.bank_pm, {'amount': -10.6}]],
-                products=[[self.product_6, {'qty': -1}]],
-                extra_data={
-                    'is_refund': True,
-                    'refunded_order_id': order.id,
-                },
-            )
-            self.close_session()
+            self.refund_pos_order(order, self.bank_pm, -10.6)
+            self.close_pos_session()
             storno_refund = session.refund_move_ids[0]
             storno_sale = session.sale_move_ids
 
@@ -1580,37 +1297,30 @@ class TestPosAccounting(AccountTestInvoicingCommon):
             ('id', '!=', src_account.id),
         ], limit=1)
 
-        fp = self.env['account.fiscal.position'].create({
-            'name': 'Test Fiscal Position',
-        })
-        account_fp = self.env['account.fiscal.position.account'].create({
-            'position_id': fp.id,
+        fp = self.fiscal_pos_a
+        fp.account_ids[:1].write({
             'account_src_id': src_account.id,
             'account_dest_id': dest_account.id,
         })
-        fp.write({
-            'account_ids': [(6, 0, account_fp.ids)],
-        })
-        self.tax_6.write({
+        self.taxes['tax7'].write({
             'fiscal_position_ids': [Command.link(fp.id)],
-            'original_tax_ids': [Command.link(self.tax_21.id)],
+            'original_tax_ids': [Command.link(self.taxes['tax21_incl'].id)],
         })
-        self.env['account.tax'].create({
+        self.taxes['tax15_incl'].write({
             'name': 'Tax 0%',
             'amount': 0,
+            'price_include_override': 'tax_excluded',
             'fiscal_position_ids': [Command.link(fp.id)],
-            'original_tax_ids': [Command.link(self.tax_12.id)],
+            'original_tax_ids': [Command.link(self.taxes['tax10'].id)],
         })
 
         # So when selling a product with 21% tax, the fiscal position
         # should replace it with the 6% tax
-        session = self.open_pos_session()
+        session = self.open_new_session()
         order_with_fp = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 10.6}]],          # Fiscal position apply 6% tax instead of 21% tax
-            products=[[self.product_21, {}]],
-            extra_data={
-                'fiscal_position_id': fp.id,
-            },
+            payments=[[self.cash_pm, 10.6]],          # Fiscal position apply 6% tax instead of 21% tax
+            lines=[[self.ten_dollars_with_15_incl.product_variant_id, 1]],
+            fiscal_position_id=fp.id,
         )
         self.assertEqual(order_with_fp.amount_total, 10.6)
         self.assertEqual(order_with_fp.amount_tax, 0.6)
@@ -1618,8 +1328,8 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         self.assertEqual(order_with_fp.state, 'paid')
 
         order_without_fp = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 12.1}]],          # No fiscal position, so 21% tax should be applied
-            products=[[self.product_21, {}]],
+            payments=[[self.cash_pm, 12.1]],          # No fiscal position, so 21% tax should be applied
+            lines=[[self.ten_dollars_with_15_incl.product_variant_id, 1]],
         )
         self.assertEqual(order_without_fp.amount_total, 12.1)
         self.assertEqual(order_without_fp.amount_tax, 2.1)
@@ -1627,17 +1337,15 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         self.assertEqual(order_without_fp.state, 'paid')
 
         order_with_0_tax = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 10}]],            # Fiscal position applies 0% tax instead of 12% tax
-            products=[[self.product_12, {}]],
-            extra_data={
-                'fiscal_position_id': fp.id,
-            },
+            payments=[[self.cash_pm, 10]],            # Fiscal position applies 0% tax instead of 12% tax
+            lines=[[self.ten_dollars_with_10_incl.product_variant_id, 1]],
+            fiscal_position_id=fp.id,
         )
         self.assertEqual(order_with_0_tax.amount_total, 10)
         self.assertEqual(order_with_0_tax.amount_tax, 0)
         self.assertEqual(order_with_0_tax.amount_paid, 10)
         self.assertEqual(order_with_0_tax.state, 'paid')
-        self.close_session()
+        self.close_pos_session()
         move = session.move_ids
         product_line = move.line_ids.filtered(
             lambda line: line.display_type == 'product',
@@ -1651,10 +1359,10 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         self.assertEqual(tax_sorted[1].balance, -0.6)
 
         product_line_6 = product_line.filtered(
-            lambda line: self.tax_6 in line.tax_ids,
+            lambda line: self.taxes['tax7'] in line.tax_ids,
         )
         product_line_21 = product_line.filtered(
-            lambda line: self.tax_21 in line.tax_ids,
+            lambda line: self.taxes['tax21_incl'] in line.tax_ids,
         )
         product_line_0 = product_line - product_line_6 - product_line_21
         self.assertEqual(product_line_6.account_id, dest_account)       # Product line with tax_6 should be posted on the dest account of the fiscal position
@@ -1669,39 +1377,32 @@ class TestPosAccounting(AccountTestInvoicingCommon):
             ('id', '!=', src_account.id),
         ], limit=1)
 
-        fp = self.env['account.fiscal.position'].create({
-            'name': 'Test Fiscal Position',
-        })
-        account_fp = self.env['account.fiscal.position.account'].create({
-            'position_id': fp.id,
+        fp = self.fiscal_pos_a
+        fp.account_ids[:1].write({
             'account_src_id': src_account.id,
             'account_dest_id': dest_account.id,
         })
-        fp.write({
-            'account_ids': [(6, 0, account_fp.ids)],
-        })
-        self.tax_6.write({
+        self.taxes['tax7'].write({
             'fiscal_position_ids': [Command.link(fp.id)],
-            'original_tax_ids': [Command.link(self.tax_21.id)],
+            'original_tax_ids': [Command.link(self.taxes['tax21_incl'].id)],
         })
-        self.env['account.tax'].create({
+        self.taxes['tax15_incl'].write({
             'name': 'Tax 0%',
             'amount': 0,
+            'price_include_override': 'tax_excluded',
             'fiscal_position_ids': [Command.link(fp.id)],
-            'original_tax_ids': [Command.link(self.tax_12.id)],
+            'original_tax_ids': [Command.link(self.taxes['tax10'].id)],
         })
 
         # So when selling a product with 21% tax, the fiscal position
         # should replace it with the 6% tax
-        session = self.open_pos_session()
+        session = self.open_new_session()
         order_with_fp = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 10.6}]],          # Fiscal position apply 6% tax instead of 21% tax
-            products=[[self.product_21, {}]],
-            extra_data={
-                'fiscal_position_id': fp.id,
-                'partner_id': self.partner_1.id,
-                'to_invoice': True,
-            },
+            payments=[[self.cash_pm, 10.6]],          # Fiscal position apply 6% tax instead of 21% tax
+            lines=[[self.ten_dollars_with_15_incl.product_variant_id, 1]],
+            fiscal_position_id=fp.id,
+            customer=self.partner_mobt,
+            to_invoice=True,
         )
         self.assertEqual(order_with_fp.amount_total, 10.6)
         self.assertEqual(order_with_fp.amount_tax, 0.6)
@@ -1712,12 +1413,10 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         self.assertEqual(move.fiscal_position_id, fp)
 
         order_without_fp = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 12.1}]],          # No fiscal position, so 21% tax should be applied
-            products=[[self.product_21, {}]],
-            extra_data={
-                'partner_id': self.partner_1.id,
-                'to_invoice': True,
-            },
+            payments=[[self.cash_pm, 12.1]],          # No fiscal position, so 21% tax should be applied
+            lines=[[self.ten_dollars_with_15_incl.product_variant_id, 1]],
+            customer=self.partner_mobt,
+            to_invoice=True,
         )
         self.assertEqual(order_without_fp.amount_total, 12.1)
         self.assertEqual(order_without_fp.amount_tax, 2.1)
@@ -1728,13 +1427,11 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         self.assertFalse(move.fiscal_position_id)
 
         order_with_0_tax = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 10}]],            # Fiscal position applies 0% tax instead of 12% tax
-            products=[[self.product_12, {}]],
-            extra_data={
-                'fiscal_position_id': fp.id,
-                'partner_id': self.partner_1.id,
-                'to_invoice': True,
-            },
+            payments=[[self.cash_pm, 10]],            # Fiscal position applies 0% tax instead of 12% tax
+            lines=[[self.ten_dollars_with_10_incl.product_variant_id, 1]],
+            fiscal_position_id=fp.id,
+            customer=self.partner_mobt,
+            to_invoice=True,
         )
         self.assertEqual(order_with_0_tax.amount_total, 10)
         self.assertEqual(order_with_0_tax.amount_tax, 0)
@@ -1743,51 +1440,41 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         self.assertEqual(order_with_0_tax.account_move.state, 'posted')
         move = order_with_0_tax.account_move
         self.assertEqual(move.fiscal_position_id, fp)
-        self.close_session()
+        self.close_pos_session()
         self.assertFalse(session.move_ids)
 
     def test_pos_order_with_company_branch(self):
+        # A new branch is required because an existing company's parent cannot change.
         branch = self.env['res.company'].create({
             'name': 'Sub Company',
-            'parent_id': self.env.company.id,
-            'chart_template': self.env.company.chart_template,
-            'country_id': self.env.company.country_id.id,
+            'parent_id': self.company.id,
+            'chart_template': self.company.chart_template,
+            'country_id': self.company.country_id.id,
         })
-        self.env.cr.precommit.run()
-
-        AccJournal = self.env['account.journal'].with_company(branch)
-        PosPm = self.env['pos.payment.method'].with_company(branch)
-        PosConfig = self.env['pos.config'].with_company(branch)
-
-        cash_journal = AccJournal.create({
-            'name': 'Cash Test',
-            'type': 'cash',
+        self.other_cash_journal.write({'company_id': branch.id, 'currency_id': False})
+        self.cash_pm2.company_id = branch
+        config = self.pos_config_eur
+        config.write({
             'company_id': branch.id,
-            'code': 'CSH',
-            'sequence': 10,
-        })
-        cash_pm = PosPm.create({
-            'name': 'Bank',
-            'type': 'cash',
-            'journal_id': cash_journal.id,
-        })
-        self.pos_config = PosConfig.create({
-            'name': 'Main - Sub Company',
             'journal_id': self.company_data['default_journal_sale'].id,
-            'payment_method_ids': [(4, cash_pm.id)],
+            'payment_method_ids': [Command.set(self.cash_pm2.ids)],
+            'use_pricelist': False,
+            'pricelist_id': False,
+            'available_pricelist_ids': [Command.clear()],
         })
 
-        self.open_pos_session()
+        self.open_new_session(config=config)
+        # The branch uses the parent company's sales journal and invoice accounts.
         order = self.create_pos_order(
-            payment_method=[[cash_pm, {'amount': 10.6}]],
-            products=[[self.product_6, {}]],
-            extra_data={
-                'partner_id': self.partner_1.id,
-                'to_invoice': True,
-            },
+            payments=[[self.cash_pm2, 10.6]],
+            lines=[[self.ten_dollars_no_tax.product_variant_id, 1]],
+            customer=self.partner_mobt,
+            to_invoice=True,
+            config=config,
+            company_id=self.company.id,
         )
-        self.close_session()
-        self.assertEqual(order.config_id, self.pos_config)
+        self.close_pos_session(config=config)
+        self.assertEqual(order.config_id, config)
 
     def test_pos_order_rounding_two_payment_methods(self):
         """
@@ -1795,54 +1482,48 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         there is multiple payment methods on the order.
         Invoicing orders shouldn't raise any traceback.
         """
-        self.product_21.lst_price = 6  # Was tested in the UI with this price and it crashes
-        self.rounding_method.rounding_method = 'HALF-UP'
-        self.pos_config.write({
+        self.ten_dollars_with_15_incl.product_variant_id.lst_price = 6  # Was tested in the UI with this price and it crashes
+        self.cash_rounding_a.rounding_method = 'HALF-UP'
+        self.pos_config_usd.write({
             'cash_rounding': True,
-            'rounding_method': self.rounding_method.id,
+            'rounding_method': self.cash_rounding_a.id,
             'only_round_cash_method': True,
         })
-        self.open_pos_session()
+        self.open_new_session()
         self.create_pos_order(
-            payment_method=[
-                [self.cash_pm, {'amount': 5}],
-                [self.bank_pm, {'amount': 2.26}],
+            payments=[
+                [self.cash_pm, 5],
+                [self.bank_pm, 2.26],
             ],
-            products=[[self.product_21, {}]],
-            extra_data={
-                'partner_id': self.partner_1.id,
-                'to_invoice': True,
-            },
+            lines=[[self.ten_dollars_with_15_incl.product_variant_id, 1]],
+            customer=self.partner_mobt,
+            to_invoice=True,
         )
         self.create_pos_order(
-            payment_method=[
-                [self.bank_pm, {'amount': 5}],
-                [self.cash_pm, {'amount': 2.25}],
+            payments=[
+                [self.bank_pm, 5],
+                [self.cash_pm, 2.25],
             ],
-            products=[[self.product_21, {}]],
-            extra_data={
-                'partner_id': self.partner_1.id,
-                'to_invoice': True,
-            },
+            lines=[[self.ten_dollars_with_15_incl.product_variant_id, 1]],
+            customer=self.partner_mobt,
+            to_invoice=True,
         )
-        self.close_session()
+        self.close_pos_session()
 
     def test_cash_destination_account(self):
-        session = self.open_pos_session()
+        session = self.open_new_session()
         session_dest = session._get_receivable_account()
         cash_profit_dest = self.cash_pm.journal_id.profit_account_id
         cash_loss_dest = self.cash_pm.journal_id.loss_account_id
         cash_suspense_dest = self.cash_pm.journal_id.suspense_account_id
         cash_default_dest = self.cash_pm.journal_id.default_account_id
-        partner_dest = self.partner_1.property_account_receivable_id
+        partner_dest = self.partner_mobt.property_account_receivable_id
 
         partner_order = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 11.2}]],
-            products=[[self.product_12, {}]],
-            extra_data={
-                'partner_id': self.partner_1.id,
-                'to_invoice': True,
-            },
+            payments=[[self.cash_pm, 11.2]],
+            lines=[[self.ten_dollars_with_10_incl.product_variant_id, 1]],
+            customer=self.partner_mobt,
+            to_invoice=True,
         )
         account_move_lines = partner_order.account_move.line_ids
         payment_line = account_move_lines.filtered_domain([
@@ -1866,10 +1547,10 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         self.assertEqual(in_accounts[1], cash_suspense_dest)
 
         order = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 11.2}]],
-            products=[[self.product_12, {}]],
+            payments=[[self.cash_pm, 11.2]],
+            lines=[[self.ten_dollars_with_10_incl.product_variant_id, 1]],
         )
-        self.close_session()
+        self.close_pos_session()
         account_move = order.account_move
         payment_line = account_move.line_ids.filtered_domain([
             ('display_type', '=', 'payment_term'),
@@ -1879,17 +1560,17 @@ class TestPosAccounting(AccountTestInvoicingCommon):
             [], limit=1, order="id desc",
         ).closing_balance
 
-        cash_pm = self.pos_config._get_cash_payment_method()
+        cash_pm = self.pos_config_usd._get_cash_payment_method()
         cash_pm.journal_id._compute_current_statement_balance()         # Force recompute in tests.
-        session = self.open_pos_session(last_closing - 10)
+        session = self.open_new_session(last_closing - 10)
         order = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 11.2}]],
-            products=[[self.product_12, {}]],
+            payments=[[self.cash_pm, 11.2]],
+            lines=[[self.ten_dollars_with_10_incl.product_variant_id, 1]],
         )
         closing_data = session.get_closing_control_data()
         cash_details = closing_data['default_cash_details']
         expected_cashbox_amount = cash_details['payment_amount'] + 100
-        self.close_session(expected_cashbox_amount)
+        self.close_pos_session(amount=expected_cashbox_amount)
         statement_lines = session.bank_statement_id.line_ids
         opening_statement = statement_lines[0]
         order_statement = statement_lines[1]
@@ -1920,34 +1601,32 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         )
 
     def test_fake_refund_order_closing(self):
-        session = self.open_pos_session()
+        session = self.open_new_session()
         order = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': -10.6}]],
-            products=[[self.product_6, {'qty': -1}]],
-            extra_data={
-                'partner_id': self.partner_1.id,
-                'to_invoice': True,
-            },
+            payments=[[self.cash_pm, -10.6]],
+            lines=[[self.ten_dollars_no_tax.product_variant_id, -1]],
+            customer=self.partner_mobt,
+            to_invoice=True,
         )
-        self.close_session()
+        self.close_pos_session()
         self.assertFalse(session.refund_move_ids)
         self.assertFalse(session.sale_move_ids)
         self.assertEqual(order.account_move.move_type, 'out_refund')
 
-        session = self.open_pos_session()
+        session = self.open_new_session()
         self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': -10.6}]],
-            products=[[self.product_6, {'qty': -1}]],
+            payments=[[self.cash_pm, -10.6]],
+            lines=[[self.ten_dollars_no_tax.product_variant_id, -1]],
         )
         self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': -10.6}]],
-            products=[[self.product_6, {'qty': -1}]],
+            payments=[[self.cash_pm, -10.6]],
+            lines=[[self.ten_dollars_no_tax.product_variant_id, -1]],
         )
         self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 10.6}]],
-            products=[[self.product_6, {'qty': 1}]],
+            payments=[[self.cash_pm, 10.6]],
+            lines=[[self.ten_dollars_no_tax.product_variant_id, 1]],
         )
-        self.close_session()
+        self.close_pos_session()
         self.assertTrue(session.refund_move_ids[0])
         self.assertTrue(session.sale_move_ids)
         self.assertEqual(session.refund_move_ids[0].move_type, 'out_refund')
@@ -1956,29 +1635,29 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         self.assertEqual(session.sale_move_ids.amount_total, 10.6)
 
     def test_periodic_closing_with_cron(self):
-        session = self.open_pos_session()
+        session = self.open_new_session()
         order = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 11.2}]],
-            products=[[self.product_12, {}]],
+            payments=[[self.cash_pm, 11.2]],
+            lines=[[self.ten_dollars_with_10_incl.product_variant_id, 1]],
         )
         self.assertEqual(order.state, 'paid')
         self.assertEqual(session.state, 'opened')
-        self.simulate_cron_trigger()
+        session._validate_session_accounting()
         self.assertEqual(order.state, 'done')
         self.assertEqual(len(session.sale_move_ids), 1)
-        self.close_session()
+        self.close_pos_session()
         self.assertEqual(len(session.sale_move_ids), 1)                 # Should not create any new move since the order is already posted by the cron
 
     def test_periodic_closing_with_cron_and_post_invoicing(self):
-        session = self.open_pos_session()
+        session = self.open_new_session()
         order = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 11.2}]],
-            products=[[self.product_12, {}]],
-            extra_data={'partner_id': self.partner_1.id},
+            payments=[[self.cash_pm, 11.2]],
+            lines=[[self.ten_dollars_with_10_incl.product_variant_id, 1]],
+            customer=self.partner_mobt,
         )
         self.assertEqual(order.state, 'paid')
         self.assertEqual(session.state, 'opened')
-        self.simulate_cron_trigger()
+        session._validate_session_accounting()
         self.assertEqual(order.state, 'done')
         self.assertEqual(len(session.sale_move_ids), 1)
         order.action_pos_order_invoice()
@@ -1999,31 +1678,31 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         self.assertEqual(reversal_payment_lines.credit, invoice_payment_lines.debit)
 
         self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 11.2}]],
-            products=[[self.product_12, {}]],
+            payments=[[self.cash_pm, 11.2]],
+            lines=[[self.ten_dollars_with_10_incl.product_variant_id, 1]],
         )
-        self.close_session()
+        self.close_pos_session()
         self.assertEqual(len(session.sale_move_ids), 2)                 # Should create a new move since the order is posted after the cron
 
     def test_post_invoicing_take_the_correct_move_after_cron_job(self):
-        session = self.open_pos_session()
+        session = self.open_new_session()
         self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 11.2}]],
-            products=[[self.product_12, {}]],
+            payments=[[self.cash_pm, 11.2]],
+            lines=[[self.ten_dollars_with_10_incl.product_variant_id, 1]],
         )
-        self.simulate_cron_trigger()
+        session._validate_session_accounting()
         self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 11.2}]],
-            products=[[self.product_12, {}]],
+            payments=[[self.cash_pm, 11.2]],
+            lines=[[self.ten_dollars_with_10_incl.product_variant_id, 1]],
         )
-        self.simulate_cron_trigger()
+        session._validate_session_accounting()
         self.assertEqual(len(session.sale_move_ids), 2)
         order = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 11.2}]],
-            products=[[self.product_12, {}]],
-            extra_data={'partner_id': self.partner_1.id},
+            payments=[[self.cash_pm, 11.2]],
+            lines=[[self.ten_dollars_with_10_incl.product_variant_id, 1]],
+            customer=self.partner_mobt,
         )
-        self.simulate_cron_trigger()
+        session._validate_session_accounting()
         order_move = order.account_move
         order.action_pos_order_invoice()
         self.assertTrue(order_move.reversal_move_ids)
@@ -2036,19 +1715,19 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         every order of the customer, each reversal must only take the share
         of its own order.
         """
-        session = self.open_pos_session()
+        session = self.open_new_session()
         orders = self.env['pos.order']
         for _i in range(2):
             orders |= self.create_pos_order(
-                payment_method=[[self.customer_pm, {'amount': 11.2}]],
-                products=[[self.product_12, {}]],
-                extra_data={'partner_id': self.partner_1.id},
+                payments=[[self.customer_pm, 11.2]],
+                lines=[[self.product_12]],
+                customer=self.partner_1,
             )
         self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 11.2}]],
-            products=[[self.product_12, {}]],
+            payments=[[self.cash_pm, 11.2]],
+            lines=[[self.product_12]],
         )
-        self.close_session()
+        self.close_pos_session()
 
         receivable = self.partner_1.property_account_receivable_id
         transfer_line = self.env['account.move.line'].search([
@@ -2079,35 +1758,25 @@ class TestPosAccounting(AccountTestInvoicingCommon):
 
     @mute_logger('odoo.addons.point_of_sale.models.pos_session')
     def test_launch_cron_generate_invoice_period_rollback_on_failure(self):
-        session_ok = self.open_pos_session()
+        session_ok = self.open_new_session()
         order_ok = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 11.2}]],
-            products=[[self.product_12, {}]],
-            session=session_ok,
+            payments=[[self.cash_pm, 11.2]],
+            lines=[[self.ten_dollars_with_10_incl.product_variant_id, 1]],
+            config=session_ok.config_id,
         )
 
-        cash_journal_2 = self.env['account.journal'].create({
-            'name': 'Cash Test 2',
-            'type': 'cash',
-            'company_id': self.main_company.id,
-            'code': 'CSH2',
-            'sequence': 10,
+        self.other_cash_journal.currency_id = False
+        self.other_sales_journal.currency_id = False
+        self.pos_config_eur.write({
+            'payment_method_ids': [Command.set(self.cash_pm2.ids)],
+            'use_pricelist': False,
+            'pricelist_id': False,
         })
-        cash_pm_2 = self.env['pos.payment.method'].create({
-            'name': 'Cash 2',
-            'type': 'cash',
-            'journal_id': cash_journal_2.id,
-        })
-        pos_config_2 = self.env['pos.config'].create({
-            'name': 'PoS Config 2',
-            'journal_id': self.config_sale_journal.id,
-            'payment_method_ids': [(4, cash_pm_2.id)],
-        })
-        session_ko = self.open_pos_session(config=pos_config_2)
+        session_ko = self.open_new_session(config=self.pos_config_eur)
         order_ko = self.create_pos_order(
-            payment_method=[[cash_pm_2, {'amount': 11.2}]],
-            products=[[self.product_12, {}]],
-            session=session_ko,
+            payments=[[self.cash_pm2, 11.2]],
+            lines=[[self.ten_dollars_with_10_incl.product_variant_id, 1]],
+            config=self.pos_config_eur,
         )
 
         # Force an accounting failure for the session_ko
@@ -2152,34 +1821,27 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         """ With a Closing Journal, the closing entries go there while the customer invoices
         stay in the Orders journal.
         """
-        closing_journal = self.env['account.journal'].create({
-            'name': 'PoS Closing',
-            'type': 'sale',
-            'code': 'POSCL',
-            'company_id': self.main_company.id,
-        })
-        self.pos_config.closing_journal_id = closing_journal
+        self.other_sales_journal.currency_id = False
+        self.pos_config_usd.closing_journal_id = self.other_sales_journal
 
-        session = self.open_pos_session()
+        session = self.open_new_session()
         invoiced_order = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 10.6}]],
-            products=[[self.product_6, {}]],
-            extra_data={
-                'partner_id': self.partner_1.id,
-                'to_invoice': True,
-            },
+            payments=[[self.cash_pm, 10.6]],
+            lines=[[self.ten_dollars_no_tax.product_variant_id, 1]],
+            customer=self.partner_mobt,
+            to_invoice=True,
         )
         self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 10.6}]],
-            products=[[self.product_6, {}]],
+            payments=[[self.cash_pm, 10.6]],
+            lines=[[self.ten_dollars_no_tax.product_variant_id, 1]],
         )
-        self.close_session()
+        self.close_pos_session()
 
         self.assertEqual(
-            invoiced_order.account_move.journal_id, self.pos_config.journal_id,
+            invoiced_order.account_move.journal_id, self.pos_config_usd.journal_id,
             "the customer invoices stay in the Orders journal",
         )
-        self.assertEqual(session.sale_move_ids.journal_id, closing_journal)
+        self.assertEqual(session.sale_move_ids.journal_id, self.other_sales_journal)
         self.assertEqual(session.sale_move_ids.move_type, 'out_invoice')
         self.assertEqual(session.sale_move_ids.amount_total, 10.6)
 
@@ -2187,28 +1849,29 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         """ With global rounding, the base delta of an order can be allocated to an
         untaxed line. It must be kept in the closing entry or the move is unbalanced.
         """
-        self.main_company.tax_calculation_rounding_method = 'round_globally'
-        tax_21_incl, tax_12_incl = (self.tax_21 + self.tax_12).copy({'price_include_override': 'tax_included'})
+        self.company.tax_calculation_rounding_method = 'round_globally'
+        tax_21_incl = (self.taxes['tax21_incl']).copy({'price_include_override': 'tax_included'})
+        tax_12_incl = self.taxes['tax21_incl'].copy({'name': 'Tax12 incl', 'amount': 12, 'price_include_override': 'tax_included'})
         product_21 = self.product_21.copy({'taxes_id': [(6, 0, tax_21_incl.ids)]})
         product_12 = self.product_12.copy({'taxes_id': [(6, 0, tax_12_incl.ids)]})
         product_untaxed = self.product_21.copy({'taxes_id': [(5, 0, 0)]})
 
-        session = self.open_pos_session()
+        session = self.open_new_session()
         order = self.create_pos_order(
-            payment_method=[[self.cash_pm, {'amount': 4.5}]],
-            products=[
-                [product_21, {'price_unit': 0.4}],
-                [product_12, {'price_unit': 0.12}],
-                [product_12, {'price_unit': 1.47}],
-                [product_12, {'price_unit': 0.15}],
-                [product_12, {'price_unit': 0.36}],
-                [product_21, {'price_unit': 3.2}],
-                [product_21, {'price_unit': 3.8}],
-                [product_untaxed, {'price_unit': -5.0}],
+            payments=[[self.cash_pm, 4.5]],
+            lines=[
+                [product_21, 1, 0, {'price_unit': 0.4}],
+                [product_12, 1, 0, {'price_unit': 0.12}],
+                [product_12, 1, 0, {'price_unit': 1.47}],
+                [product_12, 1, 0, {'price_unit': 0.15}],
+                [product_12, 1, 0, {'price_unit': 0.36}],
+                [product_21, 1, 0, {'price_unit': 3.2}],
+                [product_21, 1, 0, {'price_unit': 3.8}],
+                [product_untaxed, 1, 0, {'price_unit': -5.0}],
             ],
         )
         self.assertEqual(order.amount_total, 4.5)
-        self.close_session()
+        self.close_pos_session()
 
         move = session.sale_move_ids
         self.assertEqual(move.state, 'posted')
@@ -2217,39 +1880,13 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         untaxed_line = move.line_ids.filtered(lambda line: line.display_type == 'product' and not line.tax_ids)
         self.assertEqual(untaxed_line.balance, 4.99)
 
-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.addons.point_of_sale.tests.test_pos_accounting import TestPosAccounting
-
-
-class TestPosMultiCurrencyPayment(TestPosAccounting):
-    """ Payments made in another currency than the one of the order.
-
-    The amount handed over by the customer is kept on the payment side only
-    (statement line / account.payment): the receivable line of the order stays
-    in the document currency, otherwise amount_residual would compare amounts
-    expressed in two different currencies.
-    """
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        # 1 company currency = 2.0 fx currency (latest rate of setup_other_currency)
-        cls.fx_currency = cls.setup_other_currency('EUR')
-
-    def _fx_payment(self, pm, amount=10.6):
-        return [[pm, {
-            'amount': amount,
-            'foreign_currency_id': self.fx_currency.id,
-            'amount_currency': amount * 2,
-        }]]
-
     def test_invoiced_order_paid_in_foreign_cash(self):
-        session = self.open_pos_session()
+        session = self.open_new_session()
         order = self.create_pos_order(
-            payment_method=self._fx_payment(self.cash_pm),
-            products=[[self.product_6, {}]],
-            extra_data={'partner_id': self.partner_1.id, 'to_invoice': True},
+            payments=self._fx_payment(self.cash_pm),
+            lines=[[self.ten_dollars_no_tax.product_variant_id, 1]],
+            customer=self.partner_mobt,
+            to_invoice=True,
         )
         invoice = order.account_move
         term_lines = invoice.line_ids.filtered(lambda line: line.display_type == 'payment_term')
@@ -2261,15 +1898,16 @@ class TestPosMultiCurrencyPayment(TestPosAccounting):
         st_line = self.env['account.bank.statement.line'].search([('pos_session_id', '=', session.id)])
         self.assertEqual(st_line.amount, 10.6)
         self.assertEqual(st_line.amount_currency, 21.2)
-        self.assertEqual(st_line.foreign_currency_id, self.fx_currency)
-        self.close_session()
+        self.assertEqual(st_line.foreign_currency_id, self.other_currency)
+        self.close_pos_session()
 
     def test_invoiced_order_paid_in_foreign_bank(self):
-        session = self.open_pos_session()
+        session = self.open_new_session()
         order = self.create_pos_order(
-            payment_method=self._fx_payment(self.bank_pm),
-            products=[[self.product_6, {}]],
-            extra_data={'partner_id': self.partner_1.id, 'to_invoice': True},
+            payments=self._fx_payment(self.bank_pm),
+            lines=[[self.ten_dollars_no_tax.product_variant_id, 1]],
+            customer=self.partner_mobt,
+            to_invoice=True,
         )
         invoice = order.account_move
         term_lines = invoice.line_ids.filtered(lambda line: line.display_type == 'payment_term')
@@ -2277,17 +1915,17 @@ class TestPosMultiCurrencyPayment(TestPosAccounting):
         self.assertEqual(invoice.amount_residual, 0.0)
 
         payment = self.env['account.payment'].search([('pos_session_id', '=', session.id)])
-        self.assertEqual(payment.currency_id, self.fx_currency)
+        self.assertEqual(payment.currency_id, self.other_currency)
         self.assertEqual(payment.amount, 21.2)
-        self.close_session()
+        self.close_pos_session()
 
     def test_session_closing_with_foreign_cash_payment(self):
-        session = self.open_pos_session()
+        session = self.open_new_session()
         self.create_pos_order(
-            payment_method=self._fx_payment(self.cash_pm),
-            products=[[self.product_6, {}]],
+            payments=self._fx_payment(self.cash_pm),
+            lines=[[self.ten_dollars_no_tax.product_variant_id, 1]],
         )
-        self.close_session()
+        self.close_pos_session()
         move = session.move_ids
         term_lines = move.line_ids.filtered(lambda line: line.display_type == 'payment_term')
         self.assertEqual(term_lines.currency_id, move.currency_id)
@@ -2295,61 +1933,22 @@ class TestPosMultiCurrencyPayment(TestPosAccounting):
         self.assertTrue(all(line.reconciled for line in term_lines))
 
     def test_cash_out_keeps_its_sign(self):
-        session = self.open_pos_session()
+        session = self.open_new_session()
         session.try_cash_in_out('out', 10, 'test out', False)
         st_line = self.env['account.bank.statement.line'].search([('pos_session_id', '=', session.id)])
         self.assertEqual(st_line.amount, -10)
-        self.close_session(amount=-10)
+        self.close_pos_session(amount=-10)
 
     def test_refund_in_foreign_cash(self):
-        session = self.open_pos_session()
+        session = self.open_new_session()
         order = self.create_pos_order(
-            payment_method=self._fx_payment(self.cash_pm, amount=-10.6),
-            products=[[self.product_6, {'qty': -1, 'price_subtotal': -self.product_6.lst_price}]],
-            extra_data={'partner_id': self.partner_1.id, 'to_invoice': True},
+            payments=self._fx_payment(self.cash_pm, amount=-10.6),
+            lines=[[self.ten_dollars_no_tax.product_variant_id, -1]],
+            customer=self.partner_mobt,
+            to_invoice=True,
         )
         st_line = self.env['account.bank.statement.line'].search([('pos_session_id', '=', session.id)])
         self.assertEqual(st_line.amount, -10.6, "a refund must take cash out of the drawer")
         self.assertEqual(st_line.amount_currency, -21.2)
         self.assertEqual(order.account_move.amount_residual, 0.0)
-        self.close_session(amount=-10.6)
-
-
-from odoo import Command
-from odoo.tests import tagged
-
-from odoo.addons.point_of_sale.tests.common import CommonPosTest
-
-
-@tagged('post_install', '-at_install')
-class TestPosCashDifferenceTax(CommonPosTest):
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.pos_config_usd.cash_control = True
-        cls.pos_config_usd.open_ui()
-        cls.session = cls.pos_config_usd.current_session_id
-        cash_pm = cls.pos_config_usd._get_cash_payment_method()
-        cls.cash_journal = cash_pm.journal_id
-        cls.profit_account = cls.cash_journal.profit_account_id
-        cls.tax_account = cls.env['account.account'].create({
-            'name': 'Sales Tax',
-            'code': 'TTAX',
-            'account_type': 'liability_current',
-        })
-        cls.tax_included = cls._create_tax('tax_included')
-        cls.tax_excluded = cls._create_tax('tax_excluded')
-
-    @classmethod
-    def _create_tax(cls, price_include_override):
-        return cls.env['account.tax'].create({
-            'name': f'Tax 25% {price_include_override}',
-            'amount_type': 'percent',
-            'amount': 25.0,
-            'price_include_override': price_include_override,
-            'invoice_repartition_line_ids': [
-                Command.create({'repartition_type': 'base'}),
-                Command.create({'repartition_type': 'tax', 'account_id': cls.tax_account.id}),
-            ],
-        })
+        self.close_pos_session(amount=-10.6)
