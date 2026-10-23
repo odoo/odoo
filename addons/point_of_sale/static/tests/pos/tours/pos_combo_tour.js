@@ -30,9 +30,9 @@ registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
                 ...Order.doesNotHaveLine(),
             ]),
             scan_barcode("SuperCombo"),
-            combo.select("Combo Product 3"),
+            combo.select("Monitor Stand"),
             combo.isConfirmationButtonDisabled(),
-            combo.select("Combo Product 9"),
+            combo.select("Configurable Chair"),
             // Check Product Configurator is open
             Dialog.is("Attribute selection"),
             {
@@ -40,24 +40,24 @@ registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
                 trigger: ".modal-footer .btn:text(Add) + .btn:text(Discard)",
                 run: "click",
             },
-            combo.select("Combo Product 5"),
-            combo.select("Combo Product 7"),
-            combo.isSelected("Combo Product 7"),
-            combo.select("Combo Product 8"),
-            combo.isSelected("Combo Product 8"),
-            combo.isNotSelected("Combo Product 7"),
+            combo.select("Desk Pad"),
+            combo.select("Magnetic Board"),
+            combo.isSelected("Magnetic Board"),
+            combo.select("Desk Organizer"),
+            combo.isSelected("Desk Organizer"),
+            combo.isNotSelected("Magnetic Board"),
             Dialog.confirm(),
             inLeftSide([
-                ...ProductScreen.selectedOrderlineHasDirect("Office Combo", "1", "62.1"),
-                ...ProductScreen.clickLine("Combo Product 3"),
+                ...ProductScreen.selectedOrderlineHasDirect("Office Combo", "1", "50.87"),
+                ...ProductScreen.clickLine("Monitor Stand"),
                 ...Order.hasLine({ withClass: ":eq(3).selected" }),
-                ...ProductScreen.selectedOrderlineHasDirect("Combo Product 3", "1"),
-                ...ProductScreen.clickLine("Combo Product 5"),
+                ...ProductScreen.selectedOrderlineHasDirect("Monitor Stand", "1"),
+                ...ProductScreen.clickLine("Desk Pad"),
                 ...Order.hasLine({ withClass: ":eq(1).selected" }),
-                ...ProductScreen.selectedOrderlineHasDirect("Combo Product 5", "1"),
-                ...ProductScreen.clickLine("Combo Product 8"),
+                ...ProductScreen.selectedOrderlineHasDirect("Desk Pad", "1"),
+                ...ProductScreen.clickLine("Desk Organizer"),
                 ...Order.hasLine({ withClass: ":eq(2).selected" }),
-                ...ProductScreen.selectedOrderlineHasDirect("Combo Product 8", "1"),
+                ...ProductScreen.selectedOrderlineHasDirect("Desk Organizer", "1"),
             ]),
             // check that you can select a customer which triggers a recomputation of the price
             ...ProductScreen.clickPartnerButton(),
@@ -65,18 +65,18 @@ registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
 
             // check that you can change the quantity of a combo product
             inLeftSide([
-                ...ProductScreen.clickLine("Combo Product 3"),
+                ...ProductScreen.clickLine("Monitor Stand"),
                 Numpad.click("2"),
-                ...ProductScreen.selectedOrderlineHasDirect("Combo Product 3", "2"),
-                ...ProductScreen.orderLineHas("Combo Product 5", "2"),
-                ...ProductScreen.orderLineHas("Combo Product 8", "2"),
-                ...ProductScreen.orderLineHas("Office Combo", "2", "124.2"),
+                ...ProductScreen.selectedOrderlineHasDirect("Monitor Stand", "2"),
+                ...ProductScreen.orderLineHas("Desk Pad", "2"),
+                ...ProductScreen.orderLineHas("Desk Organizer", "2"),
+                ...ProductScreen.orderLineHas("Office Combo", "2", "101.74"),
             ]),
 
             // check that removing a combo product removes all the combo products
             inLeftSide([
                 {
-                    ...ProductScreen.clickLine("Combo Product 3", "2")[0],
+                    ...ProductScreen.clickLine("Monitor Stand", "2")[0],
                     isActive: ["mobile"],
                 },
                 Numpad.click("⌫"),
@@ -85,11 +85,11 @@ registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
             ]),
 
             ...ProductScreen.clickDisplayedProduct("Office Combo"),
-            combo.select("Combo Product 3"),
-            combo.select("Combo Product 5"),
-            combo.select("Combo Product 8"),
+            combo.select("Monitor Stand"),
+            combo.select("Desk Pad"),
+            combo.select("Desk Organizer"),
             Dialog.confirm(),
-            ...ProductScreen.totalAmountIs("62.10"),
+            ...ProductScreen.totalAmountIs("50.87"),
             ...ProductScreen.clickPayButton(),
             ...PaymentScreen.clickPaymentMethod("Bank"),
             ...PaymentScreen.clickValidate(),
@@ -98,17 +98,17 @@ registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
 
             // another order but won't be sent to the backend
             ...ProductScreen.clickDisplayedProduct("Office Combo"),
-            combo.select("Combo Product 2"),
-            combo.select("Combo Product 4"),
-            combo.select("Combo Product 6"),
+            combo.select("Small Shelf"),
+            combo.select("Wall Shelf Unit"),
+            combo.select("Letter Tray"),
             Dialog.confirm(),
             {
-                content: "The 'Combo Product 6' card should not display a quantity.",
+                content: "The 'Letter Tray' card should not display a quantity.",
                 trigger:
-                    "article.product .product-content:has(.product-name:contains('Combo Product 6')):not(:has(.product-cart-qty))",
+                    "article.product .product-content:has(.product-name:contains('Letter Tray')):not(:has(.product-cart-qty))",
             },
-            ...ProductScreen.totalAmountIs("59.17"),
-            ...inLeftSide(Order.hasTax("10.56")),
+            ...ProductScreen.totalAmountIs("41.17"),
+            ...inLeftSide(Order.hasTax("3.34")),
             // the split screen is tested in `pos_restaurant`
         ].flat(),
 });
