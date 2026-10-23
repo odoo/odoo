@@ -42,11 +42,13 @@ class RazorpayController(http.Controller):
                 .sudo()
                 ._search_by_reference("razorpay", {"description": reference})
             )  # Use the same key as for webhook notifications' data.
-            expected_signature = tx_sudo.provider_id._razorpay_calculate_signature(
-                data, is_redirect=True
-            )
-            payment_utils.verify_signature(data.get("razorpay_signature"), expected_signature)
-            tx_sudo._record(data)
+            if tx_sudo:
+                expected_signature = tx_sudo.provider_id._razorpay_calculate_signature(
+                    data, is_redirect=True
+                )
+                payment_utils.verify_signature(data.get("razorpay_signature"), expected_signature)
+                payment_data = {"razorpay_payment_id": data["razorpay_payment_id"]}
+                tx_sudo._record(payment_data)
         else:  # The customer cancelled the payment or the payment failed.
             pass  # Don't try to process this case because the payment id was not provided.
 

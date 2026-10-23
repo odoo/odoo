@@ -33,6 +33,7 @@ class TestPaymentTransaction(RazorpayCommon):
             expected_payload = {
                 "amount": converted_amount,
                 "currency": tx.currency_id.name,
+                "notes": {"reference": tx.reference},
                 "customer_id": self.customer_id,
                 "method": "card",
             }
@@ -86,6 +87,7 @@ class TestPaymentTransaction(RazorpayCommon):
                         "id": "12345",
                         "amount": converted_amount,
                         "currency": other_tx.currency_id.name,
+                        "notes": {"reference": other_tx.reference},
                     },
                 ):
                     self._assert_does_not_raise(UserError, other_tx._send_payment_request)
