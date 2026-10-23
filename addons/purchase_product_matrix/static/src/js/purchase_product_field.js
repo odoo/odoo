@@ -42,7 +42,7 @@ export class PurchaseOrderLineProductField extends ProductLabelSectionAndNoteFie
         if (label.includes(this.productName)) {
             label = label.replace(this.productName, "");
         }
-        return label;
+        return label.trim();
     }
 
     async _onProductTemplateUpdate() {
