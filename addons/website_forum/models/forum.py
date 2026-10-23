@@ -622,7 +622,7 @@ class Post(models.Model):
                 else:
                     body, subtype_xmlid = _('Question Edited'), 'website_forum.mt_question_edit'
                     obj_id = post
-                obj_id.message_post(body=body, subtype_xmlid=subtype_xmlid)
+                obj_id.with_context(forum_auto_notification=True).message_post(body=body, subtype_xmlid=subtype_xmlid)
         if 'active' in vals:
             answers = self.env['forum.post'].with_context(active_test=False).search([('parent_id', 'in', self.ids)])
             if answers:
@@ -633,6 +633,7 @@ class Post(models.Model):
         for post in self:
             tag_partners = post.tag_ids.sudo().mapped('message_partner_ids')
 
+            post = post.with_context(forum_auto_notification=True)
             if post.state == 'active' and post.parent_id:
                 post.parent_id.message_post_with_view(
                     'website_forum.forum_post_template_new_answer',
@@ -945,6 +946,8 @@ class Post(models.Model):
 
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *, message_type='notification', **kwargs):
+        if not self.env.context.get('forum_auto_notification') and not all(self.mapped('can_comment')):
+            raise AccessError(_('%d karma required to comment.', self.karma_comment))
         if self.ids and message_type == 'comment':  # user comments have a restriction on karma
             # add followers of comments on the parent post
             if self.parent_id:
