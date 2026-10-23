@@ -28,9 +28,9 @@ class TestDisableSnippetsAssets(TransactionCase):
     def test_homepage_outdated_and_mega_menu_up_to_date(self):
         self.Website._disable_unused_snippets_assets()
         # Old snippet with scss
-        s_website_form_000_scss = self._get_snippet_asset('s_website_form', '000', 'scss')
+        s_website_form_000_css = self._get_snippet_asset('s_website_form', '000', 'css')
         s_website_form_001_scss = self._get_snippet_asset('s_website_form', '001', 'scss')
-        self.assertEqual(s_website_form_000_scss.active, True)
+        self.assertEqual(s_website_form_000_css.active, True)
         self.assertEqual(s_website_form_001_scss.active, True)
 
         # Old snippet with scss and scss variables
@@ -42,7 +42,7 @@ class TestDisableSnippetsAssets(TransactionCase):
         self.assertEqual(s_masonry_block_001_scss.active, True)
 
         # New snippet
-        s_image_gallery_000 = self._get_snippet_asset('s_image_gallery', '000', 'scss')
+        s_image_gallery_000 = self._get_snippet_asset('s_image_gallery', '000', 'css')
         s_image_gallery_002 = self._get_snippet_asset('s_image_gallery', '002', 'scss')
         self.assertEqual(s_image_gallery_000.active, False)
         self.assertEqual(s_image_gallery_002.active, True)
@@ -77,9 +77,9 @@ class TestDisableSnippetsAssets(TransactionCase):
         self.Website._disable_unused_snippets_assets()
         self.assertIs(transaction.ormcaches__['assets'], cache, 'No update on ir_assets expected, no invalidation should be triggered')
 
-        s_website_form_000_scss = self._get_snippet_asset('s_website_form', '000', 'scss')
+        s_website_form_000_css = self._get_snippet_asset('s_website_form', '000', 'css')
         s_website_form_001_scss = self._get_snippet_asset('s_website_form', '001', 'scss')
-        self.assertEqual(s_website_form_000_scss.active, False)
+        self.assertEqual(s_website_form_000_css.active, False)
         self.assertEqual(s_website_form_001_scss.active, True)
 
         s_masonry_block_000_scss = self._get_snippet_asset('s_masonry_block', '000', 'scss')
@@ -89,7 +89,7 @@ class TestDisableSnippetsAssets(TransactionCase):
         self.assertEqual(s_masonry_block_000_variables_scss.active, False)
         self.assertEqual(s_masonry_block_001_scss.active, True)
 
-        s_image_gallery_000 = self._get_snippet_asset('s_image_gallery', '000', 'scss')
+        s_image_gallery_000 = self._get_snippet_asset('s_image_gallery', '000', 'css')
         s_image_gallery_002 = self._get_snippet_asset('s_image_gallery', '002', 'scss')
         self.assertEqual(s_image_gallery_000.active, True)
         self.assertEqual(s_image_gallery_002.active, True)

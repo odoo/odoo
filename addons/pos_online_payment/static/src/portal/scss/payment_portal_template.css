@@ -1,3 +1,15 @@
+@keyframes skip-visible {
+    to {
+        visibility: visible;
+    }
+}
+
+@keyframes skip-fade-in {
+    to {
+        opacity: 1;
+    }
+}
+
 .pos_payment_status {
     .skip-link {
         visibility: hidden;
@@ -6,18 +18,6 @@
         animation:
             skip-visible 0s linear 10s forwards,
             skip-fade-in 0.5s ease 10s forwards;
-
-        @keyframes skip-visible {
-            to {
-                visibility: visible;
-            }
-        }
-
-        @keyframes skip-fade-in {
-            to {
-                opacity: 1;
-            }
-        }
     }
 
     /* --- Seamless "confirming payment" shell -------------------------------- */
