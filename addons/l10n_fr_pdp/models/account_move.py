@@ -502,7 +502,7 @@ class AccountMove(models.Model):
     )
     def _compute_l10n_fr_pdp_flow_10_report_type(self):
         for move in self:
-            if move.pdp_is_sent:
+            if move.state != 'draft' and move.pdp_is_sent:
                 if move.l10n_fr_pdp_sent_in_flow_ids and move.l10n_fr_pdp_flow_10_report_type:
                     # The previous e-report must be rectified before clearing its scope.
                     self.env['l10n.fr.pdp.reports.flow']._get_open_flow_and_create_if_needed(move)
