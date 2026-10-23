@@ -155,6 +155,18 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 move_form.invoice_date = invoice_date
             self.assertEqual(self.invoice.date, fields.Date.to_date(accounting_date))
 
+    def test_in_invoice_show_journal_single_journal(self):
+        """ With a single purchase journal, the journal is not shown on a new bill. """
+        purchase_journals = self.env['account.journal'].search([
+            *self.env['account.journal']._check_company_domain(self.env.company),
+            ('type', '=', 'purchase'),
+        ])
+        (purchase_journals - self.company_data['default_journal_purchase']).active = False
+        invoice_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        self.assertFalse(invoice_form.show_journal)
+        invoice_form.partner_id = self.partner_a
+        self.assertFalse(invoice_form.show_journal)
+
     @freeze_time('2021-09-16')
     def test_in_invoice_onchange_invoice_date_2(self):
         invoice_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
