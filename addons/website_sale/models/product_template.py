@@ -395,6 +395,7 @@ class ProductTemplate(models.Model):
                     Command.set([
                         copied_ptavs[ptav.product_attribute_value_id.id]
                         for ptav in original_image.attribute_value_ids
+                        if ptav.product_attribute_value_id.id in copied_ptavs
                     ])
                 ]
         return template_copies
