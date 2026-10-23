@@ -866,9 +866,8 @@ class HrEmployee(models.Model):
 
         Needed because the current version depends on today's date: a future
         version only becomes current when this cron runs on or after its
-        ``date_version``. As the compute method is called directly here, the
-        assignment goes through :meth:`write`, which also copies the new
-        version's calendar onto the employee's ``resource_id``.
+        ``date_version``. The calendar and timezone of the employee's
+        ``resource_id`` follow the new current version (computed fields).
         """
         self.search([])._compute_current_version_id()
 

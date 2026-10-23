@@ -24,12 +24,19 @@ class ResourceResource(models.Model):
     work_phone = fields.Char(related='employee_id.work_phone')
     show_hr_icon_display = fields.Boolean(related='employee_id.show_hr_icon_display')
     hr_icon_display = fields.Selection(related='employee_id.hr_icon_display')
-    calendar_id = fields.Many2one(inverse='_inverse_calendar_id')
+    calendar_id = fields.Many2one(compute='_compute_calendar_id', inverse='_inverse_calendar_id', store=True, readonly=False)
 
     @api.depends('employee_id.current_version_id.tz')
     def _compute_tz(self):
         for resource in self.filtered('employee_id.current_version_id'):
             resource.tz = resource.employee_id.current_version_id.tz
+
+    @api.depends('employee_id.current_version_id.resource_calendar_id')
+    def _compute_calendar_id(self):
+        """Follow the calendar of the employee's current version (the resource keeps its
+        calendar when it has no employee)."""
+        for resource in self.filtered('employee_id.current_version_id'):
+            resource.calendar_id = resource.employee_id.current_version_id.resource_calendar_id
 
     def _inverse_tz(self):
         for resource in self.filtered('employee_id'):
