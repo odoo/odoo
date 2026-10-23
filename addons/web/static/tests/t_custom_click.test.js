@@ -1,5 +1,4 @@
-import { expect, test } from "@odoo/hoot";
-import { middleClick, rightClick } from "@odoo/hoot-dom";
+import { after, expect, middleClick, on, rightClick, test } from "@odoo/hoot";
 import { Component, useProps, xml } from "@odoo/owl";
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
@@ -172,4 +171,77 @@ test(`Secondary button clicked`, async () => {
     await rightClick(".clickMe");
 
     expect.verifySteps([]);
+});
+
+test.tags("desktop");
+test(`middle button mousedown is default prevented`, async () => {
+    class MyComponent extends Component {
+        static template = xml`<div t-custom-click="this.plop" class="clickMe"><input class="editMe"/></div>`;
+        plop(ev, isMiddleClick) {
+            expect.step(`isMiddleClick: ${isMiddleClick}`);
+        }
+    }
+
+    await mountWithCleanup(MyComponent);
+    after(
+        on(document, "mousedown", (ev) => {
+            expect.step(`mousedown prevented: ${ev.defaultPrevented}`);
+        })
+    );
+
+    await contains(".clickMe").click();
+    expect.verifySteps(["mousedown prevented: false", "isMiddleClick: false"]);
+
+    await middleClick(".clickMe");
+    expect.verifySteps(["mousedown prevented: true", "isMiddleClick: true"]);
+
+    // the browser default is kept in editable elements
+    await middleClick(".editMe");
+    expect.verifySteps(["mousedown prevented: false", "isMiddleClick: true"]);
+});
+
+test.tags("desktop");
+test(`existing mousedown handler is kept`, async () => {
+    class MyComponent extends Component {
+        static template = xml`<div t-custom-click="this.plop" t-on-mousedown="this.onMouseDown" class="clickMe">text</div>`;
+        plop(ev, isMiddleClick) {
+            expect.step(`isMiddleClick: ${isMiddleClick}`);
+        }
+        onMouseDown() {
+            expect.step("own mousedown");
+        }
+    }
+
+    await mountWithCleanup(MyComponent);
+    after(
+        on(document, "mousedown", (ev) => {
+            expect.step(`mousedown prevented: ${ev.defaultPrevented}`);
+        })
+    );
+
+    await middleClick(".clickMe");
+    expect.verifySteps(["own mousedown", "mousedown prevented: false", "isMiddleClick: true"]);
+});
+
+test.tags("desktop");
+test(`existing mousedown handler with modifiers is kept`, async () => {
+    class MyComponent extends Component {
+        static template = xml`<div t-custom-click="this.plop" t-on-mousedown.capture="this.onMouseDown" class="clickMe">text</div>`;
+        plop(ev, isMiddleClick) {
+            expect.step(`isMiddleClick: ${isMiddleClick}`);
+        }
+        onMouseDown() {
+            expect.step("own mousedown");
+        }
+    }
+
+    await mountWithCleanup(MyComponent);
+    after(
+        on(document, "mousedown", (ev) => {
+            expect.step(`mousedown prevented: ${ev.defaultPrevented}`);
+        })
+    );
+
+    await middleClick(".clickMe");
+    expect.verifySteps(["own mousedown", "mousedown prevented: false", "isMiddleClick: true"]);
 });
