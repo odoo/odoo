@@ -11,6 +11,14 @@ class ResourceCalendarLeaves(models.Model):
 
     @api.depends('date_from')
     def _compute_calendar_id(self):
+        """Set the calendar of resource leaves from the employee's current version.
+
+        A leave of an employee's resource gets the calendar of the employee's
+        ``version_id`` if it starts within that version's ``date_start`` /
+        ``date_end`` (in the version's timezone); leaves starting outside it are
+        left untouched. Leaves of resources without employee version use the
+        ``resource`` behavior (the resource's calendar).
+        """
         def date2datetime(date, tz):
             dt = datetime.fromordinal(date.toordinal())
             return dt.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
