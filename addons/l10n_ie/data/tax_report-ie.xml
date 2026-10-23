@@ -37,6 +37,7 @@
             </record>
             <record id="l10n_ie_tr_T3" model="account.report.line">
                 <field name="name">T3: VAT payable</field>
+                <field name="code">l10n_ie_tr_T3</field>
                 <field name="expression_ids">
                     <record id="l10n_ie_tr_T3_aggregation" model="account.report.expression">
                         <field name="label">balance</field>
@@ -44,15 +45,28 @@
                         <field name="formula">l10n_ie_tr_T1.balance - l10n_ie_tr_T2.balance</field>
                         <field name="subformula">if_above(EUR(0))</field>
                     </record>
+                    <record id="l10n_ie_tr_T3_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_ie_tr_T3.balance</field>
+                        <field name="subformula">if_above(EUR(0))</field>
+                    </record>
                 </field>
             </record>
             <record id="l10n_ie_tr_T4" model="account.report.line">
                 <field name="name">T4: VAT repayable</field>
+                <field name="code">l10n_ie_tr_T4</field>
                 <field name="expression_ids">
                     <record id="l10n_ie_tr_T4_aggregation" model="account.report.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">l10n_ie_tr_T2.balance - l10n_ie_tr_T1.balance</field>
+                        <field name="subformula">if_above(EUR(0))</field>
+                    </record>
+                    <record id="l10n_ie_tr_T4_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_ie_tr_T4.balance</field>
                         <field name="subformula">if_above(EUR(0))</field>
                     </record>
                 </field>

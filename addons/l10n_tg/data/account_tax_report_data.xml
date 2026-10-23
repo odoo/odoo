@@ -294,6 +294,12 @@
                                 <field name="formula">TG_SALES.tax - TG_VAT_DEDUCT.tax</field>
                                 <field name="subformula">if_above(XOF(0))</field>
                             </record>
+                            <record id="account_tax_report_line_tg_to_pay_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TG_TO_PAY.tax</field>
+                                <field name="subformula">if_above(XOF(0))</field>
+                            </record>
                         </field>
                     </record>
                     <record id="account_tax_report_line_tg_to_report" model="account.report.line">
@@ -313,6 +319,12 @@
                                 <field name="engine">aggregation</field>
                                 <field name="formula">TG_REPORT.tax</field>
                                 <field name="carryover_target">TG_VAT_REPORTED._applied_carryover_tax</field>
+                            </record>
+                            <record id="account_tax_report_line_tg_to_report_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TG_REPORT.tax</field>
+                                <field name="subformula">if_above(XOF(0))</field>
                             </record>
                         </field>
                     </record>
