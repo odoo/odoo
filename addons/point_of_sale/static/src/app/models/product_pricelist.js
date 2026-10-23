@@ -20,6 +20,20 @@ export class ProductPricelist extends Base {
         // are loaded by default, if a new pricelist is created
         // after the POS is started, it will be computed during the setup
         this.computeRuleIndexes();
+
+        // Items loaded later (e.g. with new products) come without their pricelist
+        const itemModel = this.models["product.pricelist.item"];
+        if (!itemModel.indexesPricelistRules) {
+            itemModel.indexesPricelistRules = true;
+            itemModel.addEventListener("create", ({ ids }) => {
+                const items = itemModel.readMany(ids);
+                for (const pricelist of new Set(items.map((item) => item.pricelist_id))) {
+                    pricelist?.indexNewRules(
+                        items.filter((item) => item.pricelist_id === pricelist)
+                    );
+                }
+            });
+        }
     }
 
     getCategoryRulesIds(categoryIds) {
@@ -52,8 +66,11 @@ export class ProductPricelist extends Base {
         this.uiState.generalRulesIdsByCateg = {};
         this.uiState.generalRulesIds = {};
 
-        for (let i = 0; i < this.item_ids.length; i++) {
-            const item = this.item_ids[i];
+        // The item_ids getter rebuilds the whole array on each access
+        const items = this.item_ids;
+        this.indexedItemIds = new Set(items.map((item) => item.id));
+        for (let i = 0; i < items.length; i++) {
+            const item = items[i];
             // Read the ids from the raw data: the targeted record may not be loaded in
             // the PoS, and a rule must not be treated as global just because its target
             // is missing.
@@ -87,6 +104,25 @@ export class ProductPricelist extends Base {
             }
 
             this.uiState.generalRulesIds[i] = item.id;
+        }
+    }
+
+    indexNewRules(items) {
+        items = items.filter((item) => !this.indexedItemIds.has(item.id));
+        // Category and global rules are ordered by their position in item_ids
+        if (items.some((item) => !item.raw.product_id && !item.raw.product_tmpl_id)) {
+            this.computeRuleIndexes();
+            return;
+        }
+        for (const item of items) {
+            const { product_id, product_tmpl_id } = item.raw;
+            const index = product_id ? this.rulesByProductId : this.rulesByTmplId;
+            const key = product_id || product_tmpl_id;
+            if (!index[key]) {
+                index[key] = [];
+            }
+            index[key].push(item);
+            this.indexedItemIds.add(item.id);
         }
     }
 
