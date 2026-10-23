@@ -1183,6 +1183,62 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         self.assertEqual(len(replenishments), 1)
         self.assertEqual(replenishments[0]['summary']['name'], purchase.name)
 
+    def test_cancel_mo_keeps_po_link_via_move_orig(self):
+        """Cancel MO must keep non-cancelled receipt origins so PO stays discoverable."""
+        self.env.ref('stock.route_warehouse0_mto').active = True
+        route_buy = self.warehouse.buy_pull_id.route_id.id
+        route_mto = self.warehouse.mto_pull_id.route_id.id
+        self.component_a.write({
+            'seller_ids': [
+                Command.create({'partner_id': self.partner_a.id}),
+            ],
+            'route_ids': [
+                Command.link(route_buy),
+                Command.link(route_mto),
+            ],
+        })
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.component_b.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': self.component_a.id,
+                    'product_qty': 1.0,
+                }),
+            ],
+        })
+        with Form(self.env['mrp.production']) as prod_form:
+            prod_form.product_id = self.component_b
+            prod_form.bom_id = bom
+            prod_form.product_qty = 1
+            production = prod_form.save()
+        production.action_confirm()
+        self.assertEqual(production.purchase_order_count, 1)
+
+        purchase = (
+            production.procurement_group_id.stock_move_ids.created_purchase_line_ids.order_id
+            | production.procurement_group_id.stock_move_ids.move_orig_ids.purchase_line_id.order_id
+        )
+        self.assertEqual(len(purchase), 1)
+        purchase.button_confirm()
+
+        component_move = production.move_raw_ids.filtered(lambda m: m.product_id == self.component_a)
+        self.assertTrue(component_move.move_orig_ids)
+        self.assertTrue(component_move.move_orig_ids.purchase_line_id)
+        self.assertFalse(component_move.move_orig_ids.filtered(lambda m: m.state == 'cancel'))
+
+        production.action_cancel()
+        self.assertEqual(production.state, 'cancel')
+        self.assertEqual(component_move.state, 'cancel')
+        # Receipt origins are still open → keep the chain for PO discovery.
+        self.assertTrue(component_move.move_orig_ids)
+        self.assertFalse(component_move.move_orig_ids.filtered(lambda m: m.state == 'cancel'))
+        self.assertEqual(production.purchase_order_count, 1)
+        self.assertIn(purchase, (
+            production.procurement_group_id.stock_move_ids.created_purchase_line_ids.order_id
+            | production.procurement_group_id.stock_move_ids.move_orig_ids.purchase_line_id.order_id
+        ))
+
     def test_total_cost_share_rounded_to_precision(self):
         kit, compo01, compo02 = self.env['product.product'].create([{
             'name': name,
