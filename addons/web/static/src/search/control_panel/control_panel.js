@@ -22,7 +22,6 @@ import {
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { EmbeddedActionsPanel, useEmbeddedActions } from "./embedded_actions";
 
-const STICKY_CLASS = "o_mobile_sticky";
 const DEFAULT_DISPLAY = {
     actions: true,
     buttons: true,
@@ -52,7 +51,7 @@ export class ControlPanel extends Component {
             ? proxy(this.env.config.pagerProps)
             : undefined;
         this.breadcrumbs = proxy(this.env.config.breadcrumbs);
-
+        this.isSticky = signal(false);
         this.onScrollThrottledBound = this.onScrollThrottled.bind(this);
 
         const { viewSwitcherEntries, viewType } = this.env.config;
@@ -145,7 +144,7 @@ export class ControlPanel extends Component {
         const delta = Math.round(scrollTop - this.oldScrollTop);
 
         if (scrollTop > this.initialScrollTop) {
-            this.root().classList.add(STICKY_CLASS);
+            this.isSticky.set(true);
             if (delta <= 0) {
                 this.lastScrollTop = Math.min(0, this.lastScrollTop - delta);
             } else {
@@ -156,7 +155,7 @@ export class ControlPanel extends Component {
             }
             this.root().style.top = `${this.lastScrollTop}px`;
         } else {
-            this.root().classList.remove(STICKY_CLASS);
+            this.isSticky.set(false);
             this.lastScrollTop = 0;
         }
         this.oldScrollTop = scrollTop;
