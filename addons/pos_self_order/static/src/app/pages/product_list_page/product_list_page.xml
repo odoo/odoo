@@ -7,7 +7,7 @@
             <div class="bg-view border-bottom user-select-none" t-att-class="{'o_self_shadow_top': !has_sub_categories and this.scrollShadow.top }" >
                 <div class="container o_self_container px-kiosk-p-0 ">
                     <div class="category_container d-flex" t-ref="this.categoryContainerRef">
-                        <div class="category_list d-flex mw-100 mx-kiosk-p-auto py-3 px-kiosk-p-4 gap-0 gap-kiosk-p-3 overflow-x-auto overflow-y-hidden position-relative" t-ref="this.categoryListRef">
+                        <div class="category_list d-flex mw-100 mx-kiosk-p-auto py-3 px-kiosk-p-4 gap-0 gap-kiosk-p-3 overflow-x-auto overflow-y-hidden position-relative scrollbar-width-none" t-ref="this.categoryListRef">
                             <t t-foreach="this.state.topCategories" t-as="category" t-key="category.id">
                                 <t t-set="isSelectedCategory" t-value="category === this.topSelectedCategory"/>
                                 <button t-on-click="() => this.selectCategory(category)" role="button" class="category_btn btn d-flex flex-column align-items-center p-0 border-0 "  t-att-data-category-pill="category.id">
@@ -32,7 +32,7 @@
                 <div t-if="has_sub_categories" class="position-relative d-flex flex-nowrap flex-column w-100 text-bg-primary user-select-none">
                    <!-- <div class="d-none d-kiosk-block triangle_pointer position-absolute start-50 translate-middle-x"></div> -->
                     <div class="container o_self_container px-kiosk-p-0 d-flex">
-                        <div class="category_list d-flex mw-100 mx-kiosk-p-auto py-3 px-kiosk-p-4 gap-0 gap-kiosk-p-3 overflow-x-auto overflow-y-hidden"
+                        <div class="category_list d-flex mw-100 mx-kiosk-p-auto py-3 px-kiosk-p-4 gap-0 gap-kiosk-p-3 overflow-x-auto overflow-y-hidden scrollbar-width-none"
                             t-ref="this.subCategoryListRef">
                             <t t-set="isAllSelected" t-value="!this.selectedCategory.parent_id "/>
                             <button t-on-click="() => this.selectCategory(this.topSelectedCategory)" class="child_category_btn child_category_all btn px-3 py-1 rounded-pill border-0" t-att-class="{'btn-light': isAllSelected, 'btn-link text-reset': !isAllSelected}" >
