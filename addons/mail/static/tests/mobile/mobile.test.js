@@ -153,3 +153,39 @@ test("click on an odoo link should fold the chat window (mobile)", async () => {
     await contains(".o-mail-ChatBubble");
     assertChatHub({ folded: [channelId] });
 });
+
+test("click on a record link should fold the chat window (mobile)", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Lead customer" });
+    const channelId = pyEnv["discuss.channel"].create({});
+    pyEnv["mail.message"].create({
+        body: `<a href="#" data-oe-model="res.partner" data-oe-id="${partnerId}">Lead customer</a>`,
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    patchUiSize({ size: SIZES.SM });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-ChatWindow");
+    await click("a[data-oe-model='res.partner']");
+    await contains(".o_form_view");
+    await contains(".o-mail-ChatWindow", { count: 0 });
+});
+
+test("click on a pin notification link highlights the message without folding the chat window (mobile)", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({});
+    const messageId = pyEnv["mail.message"].create({
+        body: "Pin me",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await pyEnv["discuss.channel"].set_message_pin(channelId, messageId, true);
+    patchUiSize({ size: SIZES.SM });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-ChatWindow");
+    await click("a[data-oe-type='highlight']");
+    await contains(".o-mail-Message.o-highlighted .o-mail-Message-content:text(Pin me):count(1)");
+    await contains(".o-mail-ChatWindow");
+});
