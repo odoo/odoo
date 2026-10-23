@@ -517,6 +517,32 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
             'vat': 'FR23334175221',
         }])
 
+    def test_receive_self_billed_keeps_peppol_state_with_tracking(self):
+        """ A received self-billed invoice keeps its `peppol_move_state`.
+        The bug only happens with tracking enabled (it's not by default here in tests), so enable it here
+        """
+        documents = {
+            FAKE_UUID[1]: {
+                'accounting_supplier_party': '0184:16356706', 'filename': 'test_incoming',
+                'enc_key': file_open(f'{FILE_PATH}/enc_key', mode='r').read(),
+                'document': b64encode(file_open(f'{FILE_PATH}/document_factur_x_self_bill', mode='rb').read()).decode(),
+                'state': 'done', 'direction': 'incoming', 'document_type': 'Factur-X', 'origin_message_uuid': FAKE_UUID[1],
+            },
+        }
+        with mock_pdp_documents_retrieval(documents=documents):
+            self.env['account_edi_proxy_client.user'].with_context(
+                tracking_disable=False,
+                mail_notrack=False,
+            )._cron_peppol_get_new_documents()
+
+        move = self.env['account.move'].search([('peppol_message_uuid', '=', FAKE_UUID[1])])
+        self.assertRecordValues(move, [{
+            'move_type': 'out_invoice',
+            'state': 'draft',
+            'peppol_move_state': 'done',
+            'peppol_is_sent': True,
+        }])
+
     def test_silent_error_while_creating_xml(self):
         """When in multi/async mode, the generation of XML can fail silently (without raising).
         This needs to be reflected as an error and put the move in 'error' peppol state.
