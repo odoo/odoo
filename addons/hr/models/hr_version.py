@@ -51,7 +51,8 @@ class HrVersion(models.Model):
         string='Employee',
         tracking=1,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        index=True)
+        index=True,
+        ondelete='cascade')
     name = fields.Char(tracking=1)
     display_name = fields.Char(compute='_compute_display_name')
     active = fields.Boolean(default=True, tracking=1)

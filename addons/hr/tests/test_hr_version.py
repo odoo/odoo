@@ -863,6 +863,24 @@ class TestHrVersion(TestHrCommon):
         version.unlink()
         self.assertEqual(len(employee.version_ids), 1)
 
+    def test_unlink_employee_unlinks_versions(self):
+        """Deleting an employee deletes its versions: no orphan version is left, as it
+        would be taken for a contract template."""
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2020-01-01',
+        })
+        employee.create_version({
+            'date_version': '2021-01-01',
+        })
+        versions = employee.version_ids
+        self.assertEqual(len(versions), 2)
+        employee.unlink()
+        self.env.flush_all()
+        self.assertFalse(versions.exists())
+        templates = self.env['hr.version'].search([('employee_id', '=', False)])
+        self.assertFalse(templates & versions)
+
     def test_first_contract_date_on_create(self):
         employee = self.env['hr.employee'].create({
             'name': 'Youssef Ahmed',
