@@ -741,13 +741,14 @@ class ResourceCalendar(models.Model):
             # If the interval covers only a part of the original attendance, we
             # take durations in days proportionally to what is left of the interval.
             # an interval synthesized for a fully flexible calendar can span several
-            # calendar days at once: split it so
-            # each day gets its own bucket
+            # calendar days at once: split it at midnight so each day gets its own
+            # bucket (no empty bucket for an interval ending at midnight)
             day_start = start
-            while day_start.date() <= stop.date():
-                day_end = min(stop, datetime.combine(day_start.date(), time.max, tzinfo=day_start.tzinfo))
+            while day_start < stop:
+                next_day_start = datetime.combine(day_start.date() + timedelta(days=1), time.min, tzinfo=day_start.tzinfo)
+                day_end = min(stop, next_day_start)
                 day_hours[day_start.date()] += (day_end - day_start).total_seconds() / 3600
-                day_start = datetime.combine(day_start.date() + timedelta(days=1), time.min, tzinfo=day_start.tzinfo)
+                day_start = day_end
 
         duration_based_attendances = self.attendance_ids.filtered('duration_based')
         for day, hours in day_hours.items():
