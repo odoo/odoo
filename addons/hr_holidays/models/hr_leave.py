@@ -1828,7 +1828,7 @@ class HrLeave(models.Model):
         if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
             for hol in self:
                 if hol.state not in ['confirm', 'validate1', 'cancel']:
-                    raise UserError(error_message % {'state': state_description_values.get(self[:1].state)})
+                    raise UserError(error_message % {'state': state_description_values.get(hol.state)})
                 if hol.date_from.date() < now:
                     raise UserError(_("You can't delete a time off request that is in the past."))
         elif not self.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
