@@ -3,6 +3,7 @@
 
 from odoo import exceptions
 from odoo.tests import tagged, users
+from odoo.addons.mail.tests.common import mail_new_test_user
 
 from odoo.addons.sales_team.tests.common import SalesTeamCommon, TestSalesCommon, TestSalesMC
 
@@ -164,7 +165,7 @@ class TestMultiCompany(TestSalesMC):
         team_c2.write({'member_ids': [(4, self.env.user.id)]})
         self.assertEqual(team_c2.member_ids, self.env.user)
 
-        # cannot add someone from another company
+        # cannot add someone from another company (when user allowed only in c1 and team is in c2)
         with self.assertRaises(exceptions.UserError):
             team_c2.write({'member_ids': [(4, self.user_sales_salesman.id)]})
 
@@ -174,9 +175,24 @@ class TestMultiCompany(TestSalesMC):
         team_c2.write({'member_ids': [(4, self.user_sales_salesman.id)]})
         self.assertEqual(team_c2.member_ids, self.user_sales_salesman)
 
-        # cannot change company as it breaks memberships mc check
+        # cannot change team company if its users aren't allowed in the new company
         with self.assertRaises(exceptions.UserError):
             team_c2.write({'company_id': self.company_2.id})
+
+        # a user allowed in multiple companies can be added to a team of any of these companies
+        team_c2.write({'member_ids': [(5, 0)]})
+        team_c2.write({'company_id': self.company_2.id})
+        c1, c2 = self.company_main, self.company_2
+        with self.with_user('admin'):  # user_sales_manager can't create user
+            user_c1_c2 = mail_new_test_user(
+                self.env,
+                login=f"Test_user_default_to_c{c1.id}_allowed_c{'c'.join(map(str, [c1.id, c2.id]))}",
+                company_id=c1.id,
+                company_ids=[(4, company.id) for company in c1 + c2]
+            )
+        user_c1_c2 = user_c1_c2.with_env(self.env)
+        team_c2.write({'member_ids': [(4, user_c1_c2.id)]})
+        self.assertIn(user_c1_c2, team_c2.member_ids)
 
     @users('user_sales_manager')
     def test_team_memberships(self):
@@ -203,6 +219,70 @@ class TestMultiCompany(TestSalesMC):
         # cannot change company as it breaks memberships mc check
         with self.assertRaises(exceptions.UserError):
             team_c2.write({'company_id': self.company_2.id})
+
+
+class TestMembershipCompanyIds(TestSalesMC):
+    """ Membership validity relies on user allowed companies, not default one. """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user_c1_c2 = mail_new_test_user(
+            cls.env,
+            login='member_default_c1_allowed_c1_c2',
+            company_id=cls.company_main.id,
+            company_ids=[(6, 0, (cls.company_main + cls.company_2).ids)],
+        )
+
+    def test_create_member_default_company_differs(self):
+        """ AC-1: allowed in team company but default company is another one """
+        member = self.env['crm.team.member'].create({
+            'crm_team_id': self.team_c2.id,
+            'user_id': self.user_c1_c2.id,
+        })
+        self.assertEqual(member.crm_team_id, self.team_c2)
+        self.assertEqual(member.user_id.company_id, self.company_main)
+        self.assertIn(self.user_c1_c2, self.team_c2.member_ids)
+
+    def test_create_member_not_allowed(self):
+        """ AC-2: no access to team company -> clear error """
+        with self.assertRaises(exceptions.UserError) as cm:
+            self.env['crm.team.member'].create({
+                'crm_team_id': self.team_c2.id,
+                'user_id': self.user_sales_salesman.id,
+            })
+        message = str(cm.exception)
+        self.assertIn(self.user_sales_salesman.name, message)
+        self.assertIn(self.company_2.name, message)
+        self.assertIn(self.team_c2.name, message)
+
+    def test_change_team_company_refused(self):
+        """ AC-2: moving team to company a member cannot access is refused """
+        self.env['crm.team.member'].create({
+            'crm_team_id': self.team_c2.id,
+            'user_id': self.user_c1_c2.id,
+        })
+        team = self.env['crm.team'].create({
+            'name': 'Team Main', 'company_id': self.company_main.id,
+        })
+        self.env['crm.team.member'].create({
+            'crm_team_id': team.id, 'user_id': self.user_sales_salesman.id,
+        })
+        with self.assertRaises(exceptions.UserError):
+            team.write({'company_id': self.company_2.id})
+        # a member allowed in both companies does not block the move
+        self.team_c2.write({'company_id': self.company_main.id})
+        self.assertEqual(self.team_c2.company_id, self.company_main)
+
+    def test_team_without_company(self):
+        """ AC-3: team without company accepts any internal user """
+        team = self.env['crm.team'].create({'name': 'No company', 'company_id': False})
+        for user in (self.user_sales_salesman, self.user_c1_c2):
+            member = self.env['crm.team.member'].create({
+                'crm_team_id': team.id, 'user_id': user.id,
+            })
+            self.assertEqual(member.crm_team_id, team)
+        self.assertEqual(team.member_ids, self.user_sales_salesman | self.user_c1_c2)
 
 
 @tagged('post_install', '-at_install')
