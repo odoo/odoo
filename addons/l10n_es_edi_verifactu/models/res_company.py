@@ -1,5 +1,6 @@
-from odoo import fields, models
+from odoo import _, fields, models
 from odoo.addons.l10n_es_edi_verifactu.const import VERIFACTU_REGIME_CODES_IGIC, VERIFACTU_REGIME_CODES_IVA
+from odoo.exceptions import UserError
 
 
 class ResCompany(models.Model):
@@ -19,6 +20,35 @@ class ResCompany(models.Model):
         default=True,
         copy=False,
     )
+
+    def write(self, vals):
+        if 'l10n_es_edi_verifactu_test_environment' not in vals:
+            return super().write(vals)
+
+        to_test_env = bool(vals['l10n_es_edi_verifactu_test_environment'])
+        changed = self.filtered(lambda c: c.l10n_es_edi_verifactu_test_environment != to_test_env)
+        if to_test_env:
+            blocked = self.env['l10n_es_edi_verifactu.issuer'].sudo().search_count([
+                ('company_id', 'in', changed.ids),
+                ('chain_sequence_id', '!=', False),
+            ], limit=1)
+            message = _("Documents have already been chained in the Veri*Factu production environment; the test environment cannot be enabled again. Use a duplicated database to run tests.")
+        else:
+            blocked = self.env['l10n_es_edi_verifactu.document'].sudo().search_count([
+                ('company_id', 'in', changed.ids),
+                ('json_attachment_id', '!=', False),
+                ('state', '=', False),
+            ], limit=1)
+            message = _("Some Veri*Factu documents generated in the test environment are still waiting to be sent. Send them before switching to production.")
+        if blocked:
+            raise UserError(message)
+        res = super().write(vals)
+        if not to_test_env and changed:
+            # Restart the chain: the next document gets a new sequence and 'PrimerRegistro'
+            self.env['l10n_es_edi_verifactu.issuer'].sudo().search([
+                ('company_id', 'in', changed.ids),
+            ]).chain_sequence_id = False
+        return res
 
     def _l10n_es_edi_verifactu_get_endpoints(self):
         """
