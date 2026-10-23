@@ -41,13 +41,14 @@
 # diego gurwicz <diegog@dnghub.com>, 2026.
 # Yoram Lavi <yoram@digitale.co.il>, 2026.
 # Shanit Kurtser <shanit@laylinetech.com>, 2026.
+# Ifat Vider <ifat@laylinetech.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-09-29 09:33+0000\n"
-"Last-Translator: Shanit Kurtser <shanit@laylinetech.com>\n"
+"PO-Revision-Date: 2026-10-20 13:33+0000\n"
+"Last-Translator: Ifat Vider <ifat@laylinetech.com>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-19/account/"
 "he/>\n"
 "Language: he\n"
@@ -205,13 +206,13 @@ msgstr "%(exception)s ל %(user)s%(end_datetime_string)s%(reason)s."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(label)s at %(currency_amount)s"
-msgstr ""
+msgstr "%(label)s ב %(currency_amount)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(label)s at %(currency_amount)s (Draft)"
-msgstr ""
+msgstr "%(label)s ב%(currency_amount)s (טיוטה)"
 
 #. module: account
 #. odoo-python
@@ -235,7 +236,7 @@ msgstr "%(name)s תשלום #%(number)s"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(name)s%(ref)s at %(currency_amount)s"
-msgstr ""
+msgstr "%(name)s%(ref)s ב%(currency_amount)s"
 
 #. module: account
 #. odoo-python
@@ -271,7 +272,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "%(order)s - %(order_line)s; price difference for %(product)s"
-msgstr ""
+msgstr "%(order)s - %(order_line)s; הפרש מחיר עבור %(product)s"
 
 #. module: account
 #. odoo-python
@@ -5621,6 +5622,8 @@ msgid ""
 "Consider paying the amount with %(btn_start)searly payment discount%"
 "(btn_end)s instead."
 msgstr ""
+"שקול לשלם את הסכום באמצעות %(btn_start)sהנחת תשלום מוקדם%(btn_end)s במקום "
+"זאת."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_buildings
@@ -5702,9 +5705,8 @@ msgstr "עלות ריהוט משרדי, ציוד קבוע וציוד עסקי"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
-#, fuzzy
 msgid "Cost of revenue"
-msgstr "עלות ההכנסות"
+msgstr "עלות המכר"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_postage
@@ -6254,7 +6256,7 @@ msgstr "יתרה מצטברת בהתאם לתחום ולסדר שנבחר בתצ
 #. module: account
 #: model:account.account,description:account.2_account_account_us_retained_earnings
 msgid "Cumulative undistributed profits and losses"
-msgstr ""
+msgstr "רווחים והפסדים צבורים שלא חולקו"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_currency_form
@@ -7878,6 +7880,8 @@ msgid ""
 "Email addresses that will receive copy for sent and received invoices. "
 "Separate entries with ';'."
 msgstr ""
+"כתובות דוא\"ל שיקבלו העתק של חשבוניות שנשלחו והתקבלו. יש להפריד בין ערכים "
+"באמצעות ';'."
 
 #. module: account
 #. odoo-javascript
@@ -13380,7 +13384,7 @@ msgstr "סוג לקוח/ספק"
 #: model:ir.model.fields,field_description:account.field_res_partner__partner_vat_placeholder
 #: model:ir.model.fields,field_description:account.field_res_users__partner_vat_placeholder
 msgid "Partner Vat Placeholder"
-msgstr ""
+msgstr "מזהה עוסק מורשה/ח.פ של השותף"
 
 #. module: account
 #. odoo-python
@@ -14169,22 +14173,22 @@ msgstr "מוצרים לקבלה"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Professional %"
-msgstr ""
+msgstr "אחוז מקצועי %"
 
 #. module: account
 #: model:account.group,name:account.2_us_group_62
 msgid "Professional Fees"
-msgstr ""
+msgstr "שכר טרחה מקצועי"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_professional_insurance
 msgid "Professional Insurance"
-msgstr ""
+msgstr "ביטוח מקצועי"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_professional_liability_insurance
 msgid "Professional Liability Insurance"
-msgstr ""
+msgstr "ביטוח אחריות מקצועית"
 
 #. module: account
 #. odoo-javascript
@@ -14204,32 +14208,32 @@ msgstr "חשבון רווחים"
 #: model:account.account,name:account.1_profit_or_loss
 #: model:account.account,name:account.2_account_account_us_profit_or_loss_appropriation
 msgid "Profit or Loss Appropriation"
-msgstr ""
+msgstr "חלוקת רווחים והפסדים"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__analytic_profitability
 msgid "Profitability"
-msgstr ""
+msgstr "רווחיות"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Proforma Credit Note"
-msgstr ""
+msgstr "הודעת זיכוי פרופורמה"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Proforma Invoice"
-msgstr ""
+msgstr "חשבונית פרופורמה"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Proforma Vendor Bill"
-msgstr ""
+msgstr "חשבונית ספק פרופורמה"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Proforma Vendor Credit Note"
-msgstr ""
+msgstr "הודעת זיכוי ספק פרופורמה"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_inbound_payment_method_line_id
@@ -14241,12 +14245,12 @@ msgstr "שורת אמצעי תשלום נכנס בנכס"
 #: model:ir.model.fields,field_description:account.field_res_partner__property_outbound_payment_method_line_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_outbound_payment_method_line_id
 msgid "Property Outbound Payment Method Line"
-msgstr ""
+msgstr "שורת שיטת תשלום יוצא של הנכס"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_property_tax
 msgid "Property Tax"
-msgstr ""
+msgstr "מס רכוש"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14254,17 +14258,19 @@ msgid ""
 "Propose to validate bills automatically when AI accuracy is right 3 times in "
 "a row for a vendor."
 msgstr ""
+"הצעה לאשר חשבוניות ספק באופן אוטומטי כאשר רמת הדיוק של ה-AI נכונה 3 פעמים "
+"ברציפות עבור ספק."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_mail_mail__account_audit_log_restricted
 #: model:ir.model.fields,field_description:account.field_mail_message__account_audit_log_restricted
 msgid "Protected by restricted Audit Logs"
-msgstr ""
+msgstr "מוגן על ידי יומני ביקורת מוגבלים"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_public_transportation
 msgid "Public Transportation"
-msgstr ""
+msgstr "תחבורה ציבורית"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__purchase
@@ -14319,7 +14325,7 @@ msgstr "רכישת ציוד"
 #: model:account.account,description:account.2_account_account_us_vehicles
 msgid ""
 "Purchase of a car or truck, including second hand or after-lease contract"
-msgstr ""
+msgstr "רכישת רכב פרטי או משאית, כולל יד שנייה או בתום חוזה ליסינג"
 
 #. module: account
 #. odoo-python

@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-24 17:38+0000\n"
-"PO-Revision-Date: 2026-10-15 12:33+0000\n"
+"PO-Revision-Date: 2026-10-19 09:33+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/event/"
 "uk/>\n"
@@ -1525,44 +1525,64 @@ msgstr ""
 "tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"/>\n"
 "<t t-set=\"is_online\" t-value=\"'is_published' in object.event_id and "
 "object.event_id.is_published\"/>\n"
+"<t t-set=\"is_sale\" t-value=\"'sale_order_id' in object and "
+"object.sale_order_id\"/>\n"
 "<t t-set=\"event_organizer\" t-value=\"object.event_id.organizer_id\"/>\n"
 "<t t-set=\"event_address\" t-value=\"object.event_id.address_id\"/>\n"
-"<t t-set=\"event_website_url\" t-value=\"object.event_id.event_share_url\"/>"
-"\n"
+"<t t-set=\"event_website_url\" t-value=\"is_online and "
+"object.event_id.website_url\"/>\n"
 "<t t-set=\"registration_ids\" t-value=\"object.ids if not is_sale else "
 "object._get_event_registration_ids_from_order()\"/>\n"
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
 "style=\"padding: 16px; background-color: white; color: #454748; border-"
 "collapse:separate;\">\n"
 "<tbody>\n"
-"   <!-- HEADER -->\n"
-"    <tr> \n"
-"       <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"    <!-- HEADER -->\n"
+"   <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\"> \n"
+"           <table width=\"590\" border=\"0\" cellpadding=\"0\" "
 "cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
-"padding: 0px 8px 0px 8px; border-collapse:separate;\"> \n"
-"               <tr><td valign=\"middle\"> \n"
-"                   <span style=\"font-size: 10px;\"> Ваша реєстрація</span>"
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr> <td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\"> Ваша реєстрація</span>"
 "<br/>\n"
-"                   <span style=\"font-size: 20px; font-weight: bold;\">\n"
-"                        <t t-set=\"default_name\"> Гость</t>\n"
-"                        <t t-out=\"object.name or default_name\"/>\n"
-"                   </span>\n"
-"                </td> <td valign=\"middle\" align=\"right\">\n"
-"                    <a t-attf-href=\"/event/{{ object.event_id.id }}/"
-"my_tickets?badge_mode=1&amp;registration_ids={{ registration_ids }}"
-"&amp;tickets_hash={{ object.event_id._get_tickets_access_hash"
-"(registration_ids) }}\" target=\"_blank\" t-attf-style=\"padding: 8px 12px; "
-"font-size: 12px; color: {{object.event_id.company_id.email_primary_color or "
-"'#FFFFFF'}}; text-decoration: none !important; font-weight: 400; background-"
-"color: {{object.event_id.company_id.email_secondary_color or '#875A7B'}}; "
-"border-radius:3px\"> \n"
-"                        Завантажити значки\n"
-"                   </a>\n"
+"                   <t t-set=\"default_name\"> Гость</t>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-"
+"out=\"object.name or default_name\"/>\n"
+"                   <div style=\"margin-bottom: 5px;margin-top: 18px;\">\n"
+"                        <a t-if=\"object.event_id.address_id\" t-attf-"
+"href=\"/event/{{ object.event_id.id }}/my_tickets?registration_ids={{ "
+"object.ids }}&amp;tickets_hash={{ object.event_id._get_tickets_access_hash"
+"(object.ids) }}&amp;responsive_html=1\" target=\"_blank\" style=\"padding: "
+"8px 12px; font-size: 12px; color: {"
+"{object.event_id.company_id.email_primary_color or '#FFFFFF'}}; text-"
+"decoration: none !important; font-weight: 400; background-color: {"
+"{object.event_id.company_id.email_secondary_color or '#875A7B'}}; border-"
+"radius:3px\"> \n"
+"                            Переглянути квитки\n"
+"                       </a>\n"
+"                        <a t-else=\"event_website_url\" t-att-"
+"href=\"event_website_url\" target=\"_blank\" style=\"padding: 8px 12px; font-"
+"size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: "
+"400; background-color: #875A7B; border: 0px solid #875A7B; border-"
+"radius:3px\"> \n"
+"                            Переглянути онлайн\n"
+"                       </a>\n"
+"                    </div> \n"
+"               </td><td valign=\"middle\" align=\"right\"> \n"
+"                   <t t-if=\"object.barcode\">\n"
+"                        <div style=\"margin-bottom: 5px;\"> \n"
+"                           <img t-attf-src=\"/report/barcode/QR/{"
+"{object.barcode}}?&amp;width=100&amp;height=100&amp;quiet=0\" width=\"100\" "
+"height=\"100\" alt=\"QR Code\" t-att-style=\"'height: 100px !important;'\"/>"
+"\n"
+"                        </div> \n"
+"                   </t>\n"
 "                    <t t-if=\"not object.company_id.uses_default_logo\"> \n"
 "                       <img t-att-src=\"'/logo.png?company=%s' % "
-"object.company_id.id\" style=\"padding: 0px; margin: 0px; height: auto; "
-"width: 80px;\" t-att-alt=\"'%s' % object.company_id.name\"/>\n"
+"object.company_id.id\" style=\"padding: 0px; margin: 0px; margin-right: "
+"10px; height: auto; width: 80px;\" t-att-alt=\"'%s' % "
+"object.company_id.name\"/>\n"
 "                    </t> \n"
 "               </td></tr> \n"
 "               <tr><td colspan=\"2\" style=\"text-align:center;\"> \n"
@@ -1584,25 +1604,27 @@ msgstr ""
 "                        <t t-set=\"default_name\"> Гость</t>\n"
 "                        Привіт <t t-out=\"object.name or default_name\"/>"
 ",<br/><br/>\n"
-"                        У вкладенні ви знайдете свій бейдж для\n"
+"                        Ми раді нагадати вам, що захід\n"
 "                       <t t-if=\"event_website_url\">\n"
 "                            <a t-att-href=\"event_website_url\" t-attf-"
-"style=\"font-weight:bold;color:{"
+"style=\"font-weight:bold;color: {"
 "{object.event_id.company_id.email_secondary_color or '#875A7B'}}; text-"
-"decoration:none;\" t-out=\"object.event_id.name or ''\"> Презентація "
-"колекції OpenWood онлайн</a>\n"
+"decoration:none;\" t-out=\"object.event_id.name or ''\"> Онлайн-презентація "
+"колекції OpenWood</a>\n"
 "                        </t>\n"
 "                       <t t-else=\"\">\n"
 "                            <strong t-out=\"object.event_id.name or ''\"> "
-"Презентація колекції OpenWood онлайн</strong>.\n"
-"                       </t>\n"
-"                    </div> \n"
-"                   <br/>\n"
-"                    <table style=\"width: auto;\"> \n"
-"                       <tr>\n"
-"                            <td> \n"
-"                               <strong> Додайте цю подію до свого календаря</"
-"strong>\n"
+"Онлайн-презентація колекції OpenWood</strong>\n"
+"                        </t>\n"
+"                        розпочинається <strong t-"
+"out=\"object.event_date_range or ''\">сьогодні</strong>.\n"
+"                   </div>\n"
+"                    <br/> \n"
+"                   <table style=\"width: auto;\">\n"
+"                        <tr> \n"
+"                           <td>\n"
+"                                <strong> Додайте цей захід до свого "
+"календаря</strong>\n"
 "                            </td>\n"
 "                           <td>\n"
 "                                <a t-attf-href=\"/event/{{ slug"
@@ -1643,7 +1665,8 @@ msgstr ""
 "                   </table>\n"
 "                    <br/> <br/>\n"
 "                    <div> \n"
-"                        До зустрічі,<br/>\n"
+"                        Ми підтверджуємо вашу реєстрацію та сподіваємося "
+"зустрітися з вами там,<br/>\n"
 "                        <span style=\"color: #454748;\">\n"
 "                        -- <br/>\n"
 "                        <t t-if=\"event_organizer\">\n"
@@ -1729,51 +1752,52 @@ msgstr ""
 "                                    <t t-"
 "if=\"object.event_id.address_id.name\"> \n"
 "                                       <div t-"
-"out=\"object.event_id.address_id.name\"> Teksa SpA</div>\n"
+"out=\"object.event_id.address_id.name or ''\"> Teksa SpA</div>\n"
 "                                    </t>\n"
 "                                   <t t-"
 "if=\"object.event_id.address_id.street\">\n"
 "                                        <div t-"
-"out=\"object.event_id.address_id.street\"> Пуерто-Мадеро 9710</div>\n"
+"out=\"object.event_id.address_id.street or ''\"> Пуерто-Мадеро 9710</div>\n"
 "                                        <t t-set=\"location\" t-"
 "value=\"object.event_id.address_id.street\"/>\n"
 "                                   </t>\n"
 "                                    <t t-"
 "if=\"object.event_id.address_id.street2\"> \n"
 "                                       <div t-"
-"out=\"object.event_id.address_id.street2\"> Of A15, Сантьяго (RM)</div>\n"
-"                                        <t t-set=\"location\" t-valuef=\"{"
-"{location}}, {{object.event_id.address_id.street2}}\"/>\n"
+"out=\"object.event_id.address_id.street2 or ''\"> Of A15, Сантьяго (RM)</div>"
+"\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, "
+"%s' % (location, object.event_id.address_id.street2)\"/>\n"
 "                                   </t>\n"
 "                                    <div> \n"
 "                                   <t t-"
 "if=\"object.event_id.address_id.city\">\n"
 "                                        <t t-"
-"out=\"object.event_id.address_id.city\"> Пудауель</t>,\n"
-"                                       <t t-set=\"location\" t-valuef=\"{"
-"{location}}, {{object.event_id.address_id.city}}\"/>\n"
+"out=\"object.event_id.address_id.city or ''\"> Пудауель</t>,\n"
+"                                       <t t-set=\"location\" t-value=\"'%s, "
+"%s' % (location, object.event_id.address_id.city)\"/>\n"
 "                                    </t> \n"
 "                                   <t t-"
 "if=\"object.event_id.address_id.state_id.name\">\n"
 "                                        <t t-"
-"out=\"object.event_id.address_id.state_id.name\"> C1</t>,\n"
-"                                       <t t-set=\"location\" t-valuef=\"{"
-"{location}}, {{object.event_id.address_id.state_id.name}}\"/>\n"
+"out=\"object.event_id.address_id.state_id.name or ''\"> C1</t>,\n"
+"                                       <t t-set=\"location\" t-value=\"'%s, "
+"%s' % (location, object.event_id.address_id.state_id.name)\"/>\n"
 "                                    </t> \n"
 "                                   <t t-"
 "if=\"object.event_id.address_id.zip\">\n"
 "                                        <t t-"
-"out=\"object.event_id.address_id.zip\"> 98450</t>\n"
-"                                        <t t-set=\"location\" t-valuef=\"{"
-"{location}}, {{object.event_id.address_id.zip}}\"/>\n"
+"out=\"object.event_id.address_id.zip or ''\"> 98450</t>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, "
+"%s' % (location, object.event_id.address_id.zip)\"/>\n"
 "                                   </t>\n"
 "                                    </div> \n"
 "                                   <t t-"
 "if=\"object.event_id.address_id.country_id.name\">\n"
 "                                        <div t-"
-"out=\"object.event_id.address_id.country_id.name\"> Аргентина</div>\n"
-"                                        <t t-set=\"location\" t-valuef=\"{"
-"{location}}, {{object.event_id.address_id.country_id.name}}\"/>\n"
+"out=\"object.event_id.address_id.country_id.name or ''\"> Аргентина</div>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, "
+"%s' % (location, object.event_id.address_id.country_id.name)\"/>\n"
 "                                   </t>\n"
 "                                </t> \n"
 "                           </td>\n"
@@ -1796,18 +1820,17 @@ msgstr ""
 "Маєте запитання щодо цього заходу?</span>\n"
 "                            <div>Зверніться до організатора:</div>\n"
 "                            <ul>\n"
-"                               <li><t t-out=\"event_organizer.name or ''\"> "
-"YourCompany</t></li>\n"
-"                               <t t-if=\"event_organizer.email\">\n"
-"                                    <li> Електронна пошта: <a t-attf-"
+"                               <li t-out=\"event_organizer.name or ''\"> "
+"YourCompany</li>\n"
+"                                <t t-if=\"event_organizer.email\">\n"
+"                                   <li> Електронна пошта: <a t-attf-"
 "href=\"mailto:{{ event_organizer.email }}\" t-attf-style=\"text-"
-"decoration:none;color: {{object.event_id.company_id.email_secondary_color or "
-"'#875A7B'}};\" t-out=\"event_organizer.email\">info@yourcompany.com</a></li>"
-"\n"
+"decoration:none; color: {{object.event_id.company_id.email_secondary_color "
+"or '#875A7B'}};\" t-out=\"event_organizer.email or ''\"/></li>\n"
 "                               </t>\n"
 "                                <t t-if=\"event_organizer.phone\"> \n"
 "                                   <li> Телефон: <t t-"
-"out=\"event_organizer.phone\">+1 650-123-4567</t></li>\n"
+"out=\"event_organizer.phone or ''\"/></li>\n"
 "                               </t>\n"
 "                            </ul> \n"
 "                       </div>\n"
@@ -1815,81 +1838,75 @@ msgstr ""
 "               </td></tr> \n"
 "               <tr><td style=\"text-align:center;\"> \n"
 "                   <!-- CONTACT ORGANIZER SEPARATION -->\n"
-"                    <t t-if=\"is_online or event_address\"> \n"
-"                       <hr width=\"100%\" style=\"background-color:rgb"
-"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
-"height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
-"                    </t> \n"
+"                    <hr t-if=\"is_online or event_address\" width=\"100%\" "
+"style=\"background-color:rgb(204,204,204);border:medium "
+"none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; "
+"margin: 16px 0px 16px 0px;\"/> \n"
 "               </td></tr> \n"
 "\n"
 "               <tr><td valign=\"top\" style=\"font-size: 14px;\"> \n"
 "                   <!-- PWA MARKGETING -->\n"
-"                    <t t-if=\"is_online\"> \n"
-"                       <div>\n"
-"                            <strong> Отримайте найкращий мобільний досвід.</"
+"                    <div t-if=\"is_online\"> \n"
+"                       <strong> Отримайте найкращий мобільний досвід.</"
 "strong>\n"
-"                            <a href=\"/event\">Встановіть наш мобільний "
-"додаток</a>\n"
-"                        </div>\n"
-"                   </t>\n"
-"                </td> </tr>\n"
-"                <tr> <td style=\"text-align:center;\">\n"
-"                    <!-- PWA MARKGETING SEPARATION--> \n"
-"                   <t t-if=\"is_online and event_address\">\n"
-"                        <hr width=\"100%\" style=\"background-color:rgb"
-"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
-"height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/> \n"
-"                   </t>\n"
-"                </td> </tr>\n"
+"                        <a href=\"/event\">Встановіть наш мобільний додаток</"
+"a>\n"
+"                    </div>\n"
+"               </td></tr> \n"
+"               <tr><td style=\"text-align:center;\"> \n"
+"                   <!-- PWA MARKGETING SEPARATION-->\n"
+"                    <hr t-if=\"is_online and event_address\" width=\"100%\" "
+"style=\"background-color:rgb(204,204,204);border:medium "
+"none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; "
+"margin: 16px 0px 16px 0px;\"/> \n"
+"               </td></tr> \n"
 "\n"
-"                <tr> <td valign=\"top\" style=\"font-size: 14px;\">\n"
-"                    <!-- GOOGLE MAPS LINK --> \n"
-"                   <t t-if=\"event_address and location\">\n"
-"                        <table style=\"width:100%;\"> <tr><td> \n"
-"                           <div>\n"
-"                                <img src=\"/web_editor/font_to_img/61505/rgb"
+"               <tr><td valign=\"top\" style=\"font-size: 14px;\"> \n"
+"                   <!-- GOOGLE MAPS LINK -->\n"
+"                    <table t-if=\"event_address and location\" "
+"style=\"width:100%;\"> <tr><td> \n"
+"                       <div>\n"
+"                            <img src=\"/web_editor/font_to_img/61505/rgb"
 "(81,81,102)/20\" height=\"20\" style=\"vertical-align: bottom;\"/> \n"
-"                               <a t-attf-href=\"https://maps.google.com/"
-"maps?q={{ location }}\" target=\"new\">\n"
-"                                    <img t-if=\"event_address.static_map_url "
-"and event_address.static_map_url_is_valid\" t-att-"
-"src=\"event_address.static_map_url\" style=\"vertical-align:bottom; width: "
+"                           <a t-attf-href=\"https://maps.google.com/maps?q={"
+"{ location }}\" target=\"new\">\n"
+"                                <img t-if=\"event_address.static_map_url and "
+"event_address.static_map_url_is_valid\" t-attf-src=\"{{ "
+"event_address.static_map_url }}\" style=\"vertical-align:bottom; width: "
 "100%;\" alt=\"Google Maps\"/> \n"
-"                                   <t t-else=\"\"> Переглянути "
-"місцезнаходження на Google Maps</t>\n"
-"                                </a>\n"
-"                           </div>\n"
-"                        </td> </tr></table> \n"
-"                   </t>\n"
-"                </td> </tr>\n"
-"            </table> \n"
-"       </td>\n"
-"    </tr> \n"
-"</tbody>\n"
+"                               <span t-else=\"\"> Перегляньте "
+"місцезнаходження на Google Maps</span>\n"
+"                            </a>\n"
+"                       </div>\n"
+"                    </td> </tr></table> \n"
+"               </td></tr> \n"
+"           </table>\n"
+"        </td> \n"
+"   </tr>\n"
+"</tbody> \n"
 "</table>\n"
 "</td></tr>\n"
-"<!-- FOOTER BY -->\n"
+"<!-- FOOTER BY --> \n"
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
-"    <t t-if=\"object.company_id\"> \n"
-"       <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
-"style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; "
-"padding: 8px; border-collapse:separate;\">\n"
-"        <tr> <td style=\"text-align: center; font-size: 14px;\"> \n"
-"            Надіслано <a target=\"_blank\" t-attf-href=\"{{ "
+"   <table t-if=\"object.company_id\" width=\"590\" border=\"0\" "
+"cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-"
+"color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr> <td style=\"text-align: center; font-size: 14px;\"> \n"
+"        Надіслано <a target=\"_blank\" t-attf-href=\"{{ "
 "object.company_id.website }}\" t-attf-style=\"color: {"
 "{object.event_id.company_id.email_secondary_color or '#875A7B'}};\" t-"
 "out=\"object.company_id.name or ''\">YourCompany</a>\n"
-"            <t t-if=\"is_online\">\n"
-"               <br/> \n"
-"                Дізнайтеся <a href=\"/event\" t-attf-style=\"color: {"
+"        <t t-if=\"'website_url' in object.event_id and "
+"object.event_id.website_url\">\n"
+"           <br/> \n"
+"            Дізнайтеся <a href=\"/event\" t-attf-style=\"color: {"
 "{object.event_id.company_id.email_secondary_color or '#875A7B'}};\">про всі "
 "наші події</a>.\n"
-"           </t>\n"
-"        </td> </tr>\n"
-"        </table> \n"
-"   </t>\n"
-"</td> </tr>\n"
-"</table> \n"
+"       </t>\n"
+"      </td> </tr>\n"
+"    </table> \n"
+"</td></tr>\n"
+"</table>\n"
 "            "
 
 #. module: event
@@ -2749,7 +2766,7 @@ msgid ""
 msgstr ""
 "Слот не можна запланувати поза межами часового діапазону події.\n"
 "\n"
-"Подія:        %(event_start)s - %(event_end)s\n"
+"Подія: %(event_start)s - %(event_end)s\n"
 "Слот:\t\t%(slot_name)s"
 
 #. module: event
@@ -4554,12 +4571,12 @@ msgstr "Останні 30 днів"
 #: model:ir.model.fields,field_description:event.field_event_mail__last_registration_id
 #: model:ir.model.fields,field_description:event.field_event_mail_slot__last_registration_id
 msgid "Last Attendee"
-msgstr ""
+msgstr "Останній учасник"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__error_datetime
 msgid "Last Error"
-msgstr ""
+msgstr "Остання помилка"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__write_uid
@@ -4629,7 +4646,7 @@ msgstr "Обмежена реєстрація"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__limit_max_per_order
 msgid "Limit per Order"
-msgstr ""
+msgstr "Обмеження на одне замовлення"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__has_seats_limitation
@@ -4639,7 +4656,7 @@ msgstr "Обмежена кількість місць"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_url
 msgid "Link where the online event will take place."
-msgstr ""
+msgstr "Посилання на місце проведення онлайн-заходу."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4699,7 +4716,7 @@ msgstr "Лист відправлено"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_slot_ids
 msgid "Mail Slot"
-msgstr ""
+msgstr "Поштовий слот"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4762,11 +4779,13 @@ msgid ""
 "Maximum of this product per order.\n"
 "Set to 0 to ignore this rule"
 msgstr ""
+"Максимальна кількість цього товару в одному замовленні.\n"
+"Встановіть значення 0, щоб проігнорувати це правило"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Maximum per slot"
-msgstr ""
+msgstr "Максимум на слот"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_medium_id
@@ -4795,7 +4814,7 @@ msgstr "Місяці"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Multiple Slots"
-msgstr ""
+msgstr "Кілька слотів"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_2_tag_2
@@ -4839,7 +4858,7 @@ msgstr "Новий"
 #. odoo-javascript
 #: code:addons/event/static/src/views/event_slot_calendar/event_slot_calendar_controller.js:0
 msgid "New Slot"
-msgstr ""
+msgstr "Новий слот"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_calendar_event_id
@@ -4886,7 +4905,7 @@ msgstr "Ще немає учасників!"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_question_action
 msgid "No questions yet! Please create one."
-msgstr ""
+msgstr "Поки що немає запитань! Будь ласка, створіть одне."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__barcode_nomenclature_id
@@ -4896,12 +4915,12 @@ msgstr "Номенклатура"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Not Reusable"
-msgstr ""
+msgstr "Не підлягає повторному використанню"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Not mandatory"
-msgstr ""
+msgstr "Не обов’язково"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__note
@@ -4919,7 +4938,7 @@ msgstr "Примітки"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Notes & Documents"
-msgstr ""
+msgstr "Примітки та документи"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
@@ -5001,7 +5020,7 @@ msgstr "Раз на замовлення"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Once per order"
-msgstr ""
+msgstr "Раз на замовлення"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -5017,12 +5036,12 @@ msgstr "Онлайн"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Online Event"
-msgstr ""
+msgstr "Онлайн подія"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_url
 msgid "Online Event URL"
-msgstr ""
+msgstr "URL-адреса онлайн-заходу"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -5037,13 +5056,15 @@ msgstr "Продаж квитків онлайн"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Online if not set"
-msgstr ""
+msgstr "Онлайн, якщо не встановлено"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Open date range picker.<br/>Pick a Start and End date for your event."
 msgstr ""
+"Відкрити вибір діапазону дат.<br/>Виберіть дату початку та дату завершення "
+"вашої події."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -5112,7 +5133,7 @@ msgstr "Введіть дійсний ключ base64"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "Please enter a valid event URL."
-msgstr ""
+msgstr "Введіть дійсну URL-адресу події."
 
 #. module: event
 #. odoo-javascript
@@ -5306,6 +5327,10 @@ msgid ""
 "- there are seats available on event\n"
 "- the tickets are sellable (if ticketing is used)"
 msgstr ""
+"Реєстрація відкрита, якщо:\n"
+"- захід не завершився або не скасовано\n"
+"- на заході є вільні місця\n"
+"- квитки можна продати (якщо використовується система продажу квитків)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_started
@@ -5316,7 +5341,7 @@ msgstr "Реєстрацію розпочато"
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "Rendering of template failed with error: %(error)s."
-msgstr ""
+msgstr "Помилка під час відображення шаблону: %(error)s."
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
@@ -5349,7 +5374,7 @@ msgstr "Адаптивний Html повносторінковий квиток"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Reusable"
-msgstr ""
+msgstr "Можна використовувати повторно"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_formatted_event_address
@@ -5371,7 +5396,7 @@ msgstr "Помилка доставки SMS"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Scan or Tap"
-msgstr ""
+msgstr "Скануйте або торкніться"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -5406,12 +5431,12 @@ msgstr "Запланований час"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__mail_registration_ids
 msgid "Scheduler Emails"
-msgstr ""
+msgstr "Електронні листи планувальника"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Search Event Question"
-msgstr ""
+msgstr "Пошук питання про подію"
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
@@ -5447,7 +5472,7 @@ msgstr "Продавайте квитки на вашому веб-сайті"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets with Point of Sale"
-msgstr ""
+msgstr "Продавайте квитки через Точку продажу"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -5522,7 +5547,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "Показати всі записи, в яких дата наступної дії в минулому"
 
 #. module: event
 #. odoo-javascript
@@ -5536,23 +5561,23 @@ msgstr "Інтервал"
 #. module: event
 #: model:ir.model,name:event.model_event_mail_slot
 msgid "Slot Mail Scheduler"
-msgstr ""
+msgstr "Планувальник поштових повідомлень"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "Slot choice is mandatory on multi-slots events."
-msgstr ""
+msgstr "Вибір слота є обов’язковим у подіях із кількома слотами."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Slot(s)"
-msgstr ""
+msgstr "Слот(и)"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_slot_ids
 msgid "Slot-based communication"
-msgstr ""
+msgstr "Комунікація на основі слотів"
 
 #. module: event
 #. odoo-python
@@ -5562,12 +5587,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_calendar
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_tree
 msgid "Slots"
-msgstr ""
+msgstr "Слоти"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_slot_count
 msgid "Slots Count"
-msgstr ""
+msgstr "Кількість слотів"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_sold_out
@@ -5680,7 +5705,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Successfully registered!"
-msgstr ""
+msgstr "Успішно зареєстровано!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_answer__value_answer_id
@@ -5793,6 +5818,9 @@ msgid ""
 "registrations linked to them:\n"
 "- %s"
 msgstr ""
+"Наведені нижче квитки не можна видалити, якщо до них пов’язано одну або "
+"кілька реєстрацій:\n"
+"- %s"
 
 #. module: event
 #. odoo-python
@@ -5813,6 +5841,8 @@ msgid ""
 "The limit per order cannot be greater than %(limit_orderable)s. Please check "
 "ticket %(ticket_name)s"
 msgstr ""
+"Максимальна сума одного замовлення не може перевищувати %(limit_orderable)s. "
+"Будь ласка, перевірте квиток %(ticket_name)s"
 
 #. module: event
 #. odoo-python
@@ -5821,6 +5851,8 @@ msgid ""
 "The limit per order cannot be greater than the maximum seats number. Please "
 "check ticket %(ticket_name)s"
 msgstr ""
+"Кількість квитків на одне замовлення не може перевищувати максимальну "
+"кількість місць. Будь ласка, перевірте квиток %(ticket_name)s"
 
 #. module: event
 #. odoo-python
@@ -5828,6 +5860,8 @@ msgstr ""
 msgid ""
 "The limit per order must be positive. Please check ticket %(ticket_name)s"
 msgstr ""
+"Граничне значення для кожного замовлення має бути додатним. Будь ласка, "
+"перевірте квиток %(ticket_name)s"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -5850,6 +5884,8 @@ msgid ""
 "There are more registrations than this limit, the event will be sold out and "
 "the extra registrations will remain."
 msgstr ""
+"Якщо кількість реєстрацій перевищить цей ліміт, квитки на захід будуть "
+"розпродані, а зайві реєстрації залишаться."
 
 #. module: event
 #. odoo-python
@@ -5858,6 +5894,8 @@ msgid ""
 "There are not enough seats available for %(event_name)s:\n"
 "%(sold_out_info)s"
 msgstr ""
+"Недостатньо вільних місць для « %(event_name)s »:\n"
+"%(sold_out_info)s"
 
 #. module: event
 #. odoo-python
@@ -5866,6 +5904,8 @@ msgid ""
 "There is an issue with dynamic placeholder. Actual error received is: %"
 "(error)s."
 msgstr ""
+"Виникла проблема з динамічним заповнювачем. Фактична отримана помилка: %"
+"(error)s."
 
 #. module: event
 #: model:ir.model.constraint,message:event.constraint_event_registration_answer_value_check
@@ -5879,6 +5919,9 @@ msgid ""
 "These events cannot have slots scheduled outside of their time range:\n"
 "%(event_names)s"
 msgstr ""
+"Для цих подій не можна призначати слоти поза межами їхнього часового "
+"діапазону:\n"
+"%(event_names)s"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -5914,7 +5957,7 @@ msgstr "Цю інформацію буде роздруковано на ваш�
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "This is due to an error in template %(template_link)s."
-msgstr ""
+msgstr "Це пов’язано з помилкою у шаблоні %(template_link)s."
 
 #. module: event
 #. odoo-javascript
@@ -5944,18 +5987,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "This may be linked to template %(template_link)s."
-msgstr ""
+msgstr "Цю статтю можна пов’язати з шаблоном %(template_link)s."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
 msgid "This question is used by"
-msgstr ""
+msgstr "Це питання використовується"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "This ticket is for another event!"
-msgstr ""
+msgstr "Цей квиток на інший захід!"
 
 #. module: event
 #. odoo-javascript
@@ -5992,7 +6035,7 @@ msgstr "Тип завки"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Ticket already scanned!"
-msgstr ""
+msgstr "Квиток вже відскановано!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
@@ -6013,7 +6056,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Ticket was first scanned on"
-msgstr ""
+msgstr "Квиток було вперше відскановано"
 
 #. module: event
 #. odoo-python
@@ -6033,12 +6076,12 @@ msgstr "Квитки можна роздрукувати або відскану
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_pos_event
 msgid "Tickets with PoS"
-msgstr ""
+msgstr "Квитки через Точку продажу"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_sale
 msgid "Tickets with Sale"
-msgstr ""
+msgstr "Квитки через Продажі"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
@@ -6077,7 +6120,7 @@ msgstr "Всього учасників"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Total Registration"
-msgstr ""
+msgstr "Загальна кількість реєстрацій"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -6193,7 +6236,7 @@ msgstr "Майбутні/Діючі"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "Update the limit of registrations?"
-msgstr ""
+msgstr "Оновити обмеження на кількість реєстрацій?"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__use_barcode
@@ -6311,6 +6354,7 @@ msgid ""
 "When the event is scheduled to take place (expressed in your local timezone "
 "on the form view)."
 msgstr ""
+"Коли запланована подія (вказано у вашому місцевому часовому поясі у формі)."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing
@@ -6330,7 +6374,7 @@ msgstr "Чи немає місць для цього квитка."
 #. module: event
 #: model:ir.model.fields,help:event.field_event_slot__is_sold_out
 msgid "Whether seats are sold out for this slot."
-msgstr ""
+msgstr "Чи розпродані місця на цей слот."
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_2
@@ -6348,7 +6392,7 @@ msgstr "Ви не можете змінити тип запитання, яке 
 #. odoo-python
 #: code:addons/event/models/event_question.py:0
 msgid "You cannot delete a default question."
-msgstr ""
+msgstr "Ви не можете видалити питання за замовчуванням."
 
 #. module: event
 #. odoo-python
@@ -6357,6 +6401,8 @@ msgid ""
 "You cannot delete a question that has already been answered by attendees. "
 "You can archive it instead."
 msgstr ""
+"Ви не можете видалити запитання, на яке вже відповіли учасники. Замість "
+"цього ви можете його архівувати."
 
 #. module: event
 #. odoo-python
@@ -6403,7 +6449,7 @@ msgstr "напр. \"Промоція\""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "e.g. \"https://www.odoo.com\""
-msgstr ""
+msgstr "напр. \"https://www.odoo.com\""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_form_quick_create
@@ -6431,7 +6477,7 @@ msgstr "напр. VIP-квиток"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "event_id"
-msgstr ""
+msgstr "event_id"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
@@ -6507,7 +6553,7 @@ msgstr "завтра"
 #. module: event
 #: model:mail.template,subject:event.event_reminder
 msgid "{{ object.event_id.name }}: {{ object.event_date_range }}"
-msgstr ""
+msgstr "{{ object.event_id.name }}: {{ object.event_date_range }}"
 
 #~ msgid "+123456789"
 #~ msgstr "+123456789"
