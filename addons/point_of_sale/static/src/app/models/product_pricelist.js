@@ -20,6 +20,20 @@ export class ProductPricelist extends Base {
         // are loaded by default, if a new pricelist is created
         // after the POS is started, it will be computed during the setup
         this.computeRuleIndexes();
+
+        // Items loaded later (e.g. with new products) come without their pricelist
+        const itemModel = this.models["product.pricelist.item"];
+        if (!itemModel.indexesPricelistRules) {
+            itemModel.indexesPricelistRules = true;
+            itemModel.addEventListener("create", ({ ids }) => {
+                const items = itemModel.readMany(ids);
+                for (const pricelist of new Set(items.map((item) => item.pricelist_id))) {
+                    pricelist?.computeRuleIndexes(
+                        items.filter((item) => item.pricelist_id === pricelist)
+                    );
+                }
+            });
+        }
     }
 
     getCategoryRulesIds(categoryIds) {
@@ -46,14 +60,30 @@ export class ProductPricelist extends Base {
         return this.rulesByTmplId[tmplId] || [];
     }
 
-    computeRuleIndexes() {
-        this.rulesByProductId = {};
-        this.rulesByTmplId = {};
-        this.uiState.generalRulesIdsByCateg = {};
-        this.uiState.generalRulesIds = {};
+    computeRuleIndexes(newItems) {
+        newItems =
+            this.indexedItemIds && newItems?.filter((item) => !this.indexedItemIds.has(item.id));
+        // Rules follow the item_ids order. The rules of newly loaded products come in that
+        // order, so they can be appended when they start new product or template indexes.
+        const canAppend = newItems?.every(({ raw }) =>
+            raw.product_id
+                ? !this.rulesByProductId[raw.product_id]
+                : raw.product_tmpl_id && !this.rulesByTmplId[raw.product_tmpl_id]
+        );
+        let items = newItems;
+        if (!canAppend) {
+            this.rulesByProductId = {};
+            this.rulesByTmplId = {};
+            this.uiState.generalRulesIdsByCateg = {};
+            this.uiState.generalRulesIds = {};
+            this.indexedItemIds = new Set();
+            // The item_ids getter rebuilds the whole array on each access
+            items = this.item_ids;
+        }
 
-        for (let i = 0; i < this.item_ids.length; i++) {
-            const item = this.item_ids[i];
+        for (let i = 0; i < items.length; i++) {
+            const item = items[i];
+            this.indexedItemIds.add(item.id);
             // Read the ids from the raw data: the targeted record may not be loaded in
             // the PoS, and a rule must not be treated as global just because its target
             // is missing.
