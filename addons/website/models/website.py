@@ -2732,6 +2732,7 @@ class Website(models.CachedModel):
             'logo': f'{base_url}/web/image/website/{self.id}/logo',
         }
 
+    @api.model
     def _get_jsonld_required_props(self, jsonld_type):
         """Return the properties without which an item of ``jsonld_type`` is
         left out. Each type marked in a snippet needs them, checked by a test:
@@ -2743,46 +2744,65 @@ class Website(models.CachedModel):
         :rtype: list | None
         """
         return {
-            # Google has no rich result for a person among others
             'Person': ['name'],
-            # FAQ rich results are gone: questions and answers as Q&A pages require them
             'FAQPage': ['mainEntity'],
             'Question': ['name', 'acceptedAnswer'],
             'Answer': ['text'],
+            # the only property a snippet gives it
+            'Organization': ['contactPoint'],
+            # either a telephone or an email
+            'ContactPoint': [],
+            # all its properties come from _build_jsonld_item_vals
+            'WebSite': [],
         }.get(jsonld_type)
 
+    @api.model
     def _build_jsonld_item_vals(self, item):
         """Build the Schema.org dictionary of an item marked in HTML.
 
         :param item: element marked with ``data-jsonld-type``.
-        :return: Dictionary of Schema.org properties, or None if empty.
+        :return: Dictionary of Schema.org properties, or None if a required one is missing.
+            Plain JSON values (text, numbers, lists, dicts): they're written into the
+            compiled templates.
         :rtype: dict | None
         """
         item_type = item.get('data-jsonld-type')
         props = self._get_jsonld_props(item)
-        if not item_type or not props:
+        if not item_type or props is None:
             return None
-        vals = {'@type': item_type, **props}
-        if vals['@type'] == 'Person':
-            # no host: views keep this in their compiled code, so the current
-            # host is added when rendering (see _render_snippets_jsonld)
-            vals['worksFor'] = {'@id': '/#organization'}
-        return vals
+        # what the snippets can't hold, from the website: no host in the URLs,
+        # views keep them in their compiled code, so the current host is added
+        # when rendering (see _render_snippets_jsonld)
+        website_props = {
+            'Person': {'worksFor': {'@id': '/#organization'}},
+            'Organization': {'@id': '/#organization'},
+            # a search bar: the search page of the website, whatever the bar searches
+            'WebSite': {
+                'url': '/',
+                'potentialAction': {
+                    '@type': 'SearchAction',
+                    'target': '/website/search?search={search_term_string}',
+                    'query-input': 'required name=search_term_string',
+                },
+            },
+        }
+        return {'@type': item_type, **props, **website_props.get(item_type, {})}
 
+    @api.model
     def _get_jsonld_props(self, el):
         """Read the Schema.org properties of an item from its descendants
         marked with ``data-jsonld-prop``.
 
         :param el: element marked with ``data-jsonld-type``.
-        :return: Dictionary of Schema.org properties, empty if a required one is missing.
-        :rtype: dict
+        :return: Dictionary of Schema.org properties, None if a required one is missing.
+        :rtype: dict | None
         """
         props, items = {}, {}
         for prop_el in el.xpath('.//*[@data-jsonld-prop]'):
             if prop_el.xpath('ancestor::*[@data-jsonld-type][1]')[0] is not el:
                 continue  # property of a nested item
             prop = prop_el.get('data-jsonld-prop')
-            if not prop or prop.startswith('@'):
+            if prop.startswith('@'):
                 continue  # not a property, like the @type and @id of JSON-LD
             # a nested item: all of them are kept, a value only once
             if jsonld_type := prop_el.get('data-jsonld-type'):
@@ -2801,7 +2821,7 @@ class Website(models.CachedModel):
             props[prop] = prop_items if len(prop_items) > 1 else prop_items[0]
         required = self._get_jsonld_required_props(el.get('data-jsonld-type')) or []
         if set(required) - props.keys():
-            return {}  # a required property is missing
+            return None  # a required property is missing
         return props
 
     def _render_snippets_jsonld(self, schemas):
@@ -2820,7 +2840,7 @@ class Website(models.CachedModel):
             if isinstance(value, list):
                 return [make_absolute(val, prop) for val in value]
             # only paths of the website get its host: other URLs stay as written
-            if prop in ('@id', 'image') and value.startswith('/') and not value.startswith('//'):
+            if prop in ('@id', 'image', 'url', 'target') and value.startswith('/') and not value.startswith('//'):
                 return base_url + value
             return value
 
