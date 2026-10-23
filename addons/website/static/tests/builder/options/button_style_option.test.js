@@ -122,7 +122,8 @@ test("should have a button linking to theme tab", async () => {
     );
 
     await contains(":iframe p > a.test-target").click();
-    await contains("a.o-hb-button-style-btn-edit").click();
+    await contains("[data-label=Type] .o-hb-select-toggle").click();
+    await contains("a.o-hb-select-item-edit[title='Edit Color Combination']").click();
     await animationFrame();
     expect("button[data-name='theme']").toHaveClass("active");
 });
