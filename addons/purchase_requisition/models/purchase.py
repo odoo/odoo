@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, Command
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, get_lang
 
 
@@ -50,7 +50,7 @@ class PurchaseOrder(models.Model):
         order_lines = []
         for line in requisition.line_ids:
             if line.display_type:
-                order_lines.append((0, 0, line._prepare_purchase_order_line(name=False)))
+                order_lines.append(Command.create(line._prepare_purchase_order_line(name=False)))
                 continue
             # Compute name
             product_lang = line.product_id.with_context(
@@ -69,7 +69,7 @@ class PurchaseOrder(models.Model):
             order_line_values = line._prepare_purchase_order_line(
                 name=name, product_qty=product_qty, price_unit=line.price_unit,
                 taxes_ids=taxes_ids)
-            order_lines.append((0, 0, order_line_values))
+            order_lines.append(Command.create(order_line_values))
         self.order_line = order_lines
 
     @api.model_create_multi
@@ -103,28 +103,29 @@ class PurchaseOrder(models.Model):
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
+    requisition_line_id = fields.Many2one('purchase.requisition.line', string='Blanket Order Line')
+
     def _compute_price_unit_and_date_planned_and_name(self):
         po_lines_without_requisition = self.env['purchase.order.line']
         for pol in self:
-            if pol.display_type or pol.product_id.id not in pol.order_id.requisition_id.line_ids.product_id.ids:
+            if pol.display_type or not pol.requisition_line_id:
                 po_lines_without_requisition |= pol
                 continue
 
-            line = None
-            # Match the requisition line with exact UoM first, then product-only as fallback.
-            for req_line in pol.order_id.requisition_id.line_ids:
-                if req_line.product_id == pol.product_id:
-                    line = req_line
-                    if req_line.uom_id == pol.uom_id:
-                        break
-
+            line = pol.requisition_line_id
             pol.price_unit = line.uom_id._compute_price(line.price_unit, pol.uom_id)
             partner = pol.order_id.partner_id or pol.order_id.requisition_id.vendor_id
             if pol.selected_seller_id or not pol.date_planned:
                 pol.date_planned = pol._get_date_planned(pol.selected_seller_id._get_seller_info())
             product_ctx = {'seller_id': pol.selected_seller_id.id, 'lang': get_lang(pol.env, partner.lang).code}
-            name = pol._get_product_purchase_description(pol.product_id.with_context(product_ctx))
+
+            descriptions = []
+            product_purchase_description = pol._get_product_purchase_description(pol.product_id.with_context(product_ctx))
+            if product_purchase_description:
+                descriptions += product_purchase_description.split('\n')
+            if line.name:
+                descriptions += line.name.split('\n')
             if line.product_description_variants:
-                name += '\n' + line.product_description_variants
-            pol.name = name
+                descriptions.append(line.product_description_variants)
+            pol.name = '\n'.join(descriptions)
         super(PurchaseOrderLine, po_lines_without_requisition)._compute_price_unit_and_date_planned_and_name()
