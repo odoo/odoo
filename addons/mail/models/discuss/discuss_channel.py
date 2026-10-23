@@ -706,6 +706,8 @@ class DiscussChannel(models.Model):
             )
         old_names = {channel: channel.name for channel in self} if "name" in vals else {}
         result = super().write(vals)
+        if "group_public_id" in vals:
+            self.env["bus.bus"]._subscribe_again(self | self.sub_channel_ids)
         if vals.get('group_ids'):
             self._subscribe_users_automatically()
         if old_names:

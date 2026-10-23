@@ -66,21 +66,6 @@ export class DiscussChannel extends Record {
                 }
             }
         );
-        let lastSubscription = "not_member";
-        this.onChange(
-            () => [this.memberBusSubscription],
-            function onChangeMemberBusSubscription(subscription) {
-                const wasMember = lastSubscription !== "not_member";
-                lastSubscription = subscription;
-                if (
-                    subscription === "member_after_start" ||
-                    (wasMember && subscription === "not_member")
-                ) {
-                    this.store.updateBusSubscription();
-                }
-            },
-            { immediate: true }
-        );
         this.onChange(
             () => [this.isDisplayed, this.self_member_id],
             function onChangeIsDisplayed(isDisplayed, selfMember) {
@@ -212,14 +197,6 @@ export class DiscussChannel extends Record {
             (!this.avatar_cache_key || this.avatar_cache_key === "no-avatar") &&
             Boolean(this.correspondent)
         );
-    }
-    get memberBusSubscription() {
-        const member = this.self_member_id;
-        if (!member) {
-            return "not_member";
-        }
-        const { startedAt } = this.store.env.services.bus_service;
-        return member.memberSince >= startedAt ? "member_after_start" : "member_before_start";
     }
     get avatarUrl() {
         if (!this.hasCorrespondentAvatar) {
@@ -582,8 +559,6 @@ export class DiscussChannel extends Record {
         },
         inverse: "channel",
     });
-    // Start with `not_member` not to trigger a subscription if the user is not a member
-    // initially, only when switching from `member_xxx` to `not_member` following a leave.
     typingMembers = fields.Many("discuss.channel.member", { inverse: "channelAsTyping" });
     get unknownMembersCount() {
         return (this.member_count ?? 0) - (this.channel_member_ids.length ?? 0);
