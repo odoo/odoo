@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Support for custom footer (Striped PDF Template) -->
+    <template id="external_layout_striped_inherit_l10n_pk_edi" inherit_id="web.external_layout_striped">
+        <xpath expr="//div[hasclass('o_footer_content')]" position="attributes">
+            <attribute name="t-if">not custom_footer</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_footer_content')]" position="after">
+            <div t-if="custom_footer">
+                <t t-out="custom_footer"/>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Support for custom footer (Boxed PDF Template) -->
+    <template id="external_layout_boxed_inherit_l10n_pk_edi" inherit_id="web.external_layout_boxed">
+        <xpath expr="//div[hasclass('o_footer_content')]" position="attributes">
+            <attribute name="t-if">not custom_footer</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_footer_content')]" position="after">
+            <div t-if="custom_footer">
+                <t t-out="custom_footer"/>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Support for custom footer (Bold PDF Template) -->
+    <template id="external_layout_bold_inherit_l10n_pk_edi" inherit_id="web.external_layout_bold">
+        <xpath expr="//div[hasclass('o_footer_content')]" position="attributes">
+            <attribute name="t-if">not custom_footer</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_footer_content')]" position="after">
+            <div t-if="custom_footer">
+                <t t-out="custom_footer"/>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Support for custom footer (Standard PDF Template) -->
+    <template id="external_layout_standard_inherit_l10n_pk_edi" inherit_id="web.external_layout_standard">
+        <xpath expr="//div[hasclass('o_footer_content')]" position="attributes">
+            <attribute name="t-if">not custom_footer</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_footer_content')]" position="after">
+            <div t-if="custom_footer">
+                <t t-out="custom_footer"/>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Support for custom footer (Folder PDF Template) -->
+    <template id="external_layout_folder_inherit_l10n_pk_edi" inherit_id="web.external_layout_folder">
+        <xpath expr="//div[hasclass('o_footer_content')]" position="attributes">
+            <attribute name="t-if">not custom_footer</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_footer_content')]" position="after">
+            <div t-if="custom_footer">
+                <t t-out="custom_footer"/>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Support for custom footer (Wave PDF Template) -->
+    <template id="external_layout_wave_inherit_l10n_pk_edi" inherit_id="web.external_layout_wave">
+        <xpath expr="//div[contains(@t-attf-class, 'o_footer_content')]" position="attributes">
+            <attribute name="t-if">not custom_footer</attribute>
+        </xpath>
+        <xpath expr="//div[contains(@t-attf-class, 'o_footer_content')]" position="after">
+            <div t-if="custom_footer">
+                <t t-out="custom_footer"/>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Support for custom footer (Bubble PDF Template) -->
+    <template id="external_layout_bubble_inherit_l10n_pk_edi" inherit_id="web.external_layout_bubble">
+        <xpath expr="//div[contains(@t-attf-class, 'o_footer_content')]" position="attributes">
+            <attribute name="t-if">not custom_footer</attribute>
+        </xpath>
+        <xpath expr="//div[contains(@t-attf-class, 'o_footer_content')]" position="after">
+            <div t-if="custom_footer">
+                <t t-out="custom_footer"/>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>
