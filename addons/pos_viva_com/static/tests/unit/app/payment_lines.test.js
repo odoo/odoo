@@ -73,7 +73,6 @@ test("getPaymentActionState", async () => {
                 title: "Send Cancel Request",
                 action: "function",
                 severity: "danger",
-                show: true,
             },
         ],
     });
@@ -103,7 +102,6 @@ test("getPaymentActionState", async () => {
                 title: "Send Cancel Request",
                 action: "function",
                 severity: "danger",
-                show: true,
             },
             {
                 id: "viva_use_app",

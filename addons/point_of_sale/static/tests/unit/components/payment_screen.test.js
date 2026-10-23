@@ -1,7 +1,14 @@
 import { test, expect, animationFrame } from "@odoo/hoot";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
-import { setupPosEnv, getFilledOrder, expectFormattedPrice, addTestTerminals } from "../utils";
+import {
+    setupPosEnv,
+    getFilledOrder,
+    expectFormattedPrice,
+    addTestTerminals,
+    createPaymentLine,
+} from "../utils";
+import { PosPayment } from "@point_of_sale/app/models/pos_payment";
 import { definePosModels } from "../data/generate_model_definitions";
 import { queryOne } from "@odoo/hoot-dom";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
@@ -153,6 +160,114 @@ test("onClickProvider", async () => {
     await comp.onClickProvider("test_terminal");
     expect(order.payment_ids).toHaveLength(1);
     expect(order.payment_ids[0].payment_method_id).toBe(terminal2);
+});
+
+test("deletePaymentLine", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const cash = store.models["pos.payment.method"].get(1);
+    const [terminal] = addTestTerminals(store, 1);
+    const comp = await mountWithCleanup(PaymentScreen, {
+        props: { orderUuid: order.uuid },
+    });
+
+    let cancelSuccess;
+    const cancelledLines = [];
+    patch(PosPayment.prototype, {
+        async cancelPayment() {
+            cancelledLines.push(this.uuid);
+            return cancelSuccess;
+        },
+    });
+    const deleteLine = async (line) => {
+        comp.deletePaymentLine(line.uuid);
+        await animationFrame();
+        return !order.payment_ids.includes(line);
+    };
+
+    // Not cancellable: removed at once
+    const cashLine = createPaymentLine(store, order, cash);
+    expect(cashLine.isCancellable).toBe(false);
+    expect(await deleteLine(cashLine)).toBe(true);
+    expect(cancelledLines).toHaveLength(0);
+
+    // Cancellable: removed only when the cancel succeeds
+    const waitingLine = createPaymentLine(store, order, terminal, {
+        payment_status: "waiting_card",
+    });
+    expect(waitingLine.isCancellable).toBe(true);
+    cancelSuccess = false;
+    expect(await deleteLine(waitingLine)).toBe(false);
+    expect(cancelledLines).toEqual([waitingLine.uuid]);
+
+    cancelSuccess = true;
+    expect(await deleteLine(waitingLine)).toBe(true);
+    expect(cancelledLines).toEqual([waitingLine.uuid, waitingLine.uuid]);
+});
+
+test("onNewTip", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const card = store.models["pos.payment.method"].get(2);
+    const comp = await mountWithCleanup(PaymentScreen, {
+        props: { orderUuid: order.uuid },
+    });
+    const paymentline = createPaymentLine(store, order, card);
+
+    const tips = [];
+    const notifications = [];
+    patch(store, {
+        async setTip(tipAmount) {
+            tips.push(tipAmount);
+        },
+    });
+    patch(comp, {
+        computeNewTip: ({ value }) => value,
+    });
+    patch(comp.notification, {
+        add: (message) => notifications.push(message),
+    });
+
+    // No value: nothing happens
+    await comp.onNewTip({ newValue: undefined, type: "fixed", currentTipAmount: 0, change: 0 });
+    expect(tips).toEqual([]);
+
+    // No selected line: the tip is only set on the order
+    await comp.onNewTip({ newValue: 2, type: "fixed", currentTipAmount: 0, change: 0 });
+    expect(tips).toEqual([2]);
+    expect(paymentline.getAmount()).toBe(10);
+
+    // Same tip as before: the selected line is left alone
+    order.selectPaymentline(paymentline);
+    await comp.onNewTip({ newValue: 2, type: "fixed", currentTipAmount: 2, change: 0 });
+    expect(tips).toEqual([2, 2]);
+    expect(paymentline.getAmount()).toBe(10);
+
+    // Line not editable: the cashier is notified and the line is left alone
+    paymentline.payment_status = "waiting_card";
+    await comp.onNewTip({ newValue: 3, type: "fixed", currentTipAmount: 2, change: 0 });
+    expect(tips).toEqual([2, 2, 3]);
+    expect(notifications).toHaveLength(1);
+    expect(paymentline.getAmount()).toBe(10);
+
+    // No change: the tip difference is added to the line
+    paymentline.payment_status = null;
+    await comp.onNewTip({ newValue: 2, type: "fixed", currentTipAmount: undefined, change: 0 });
+    expect(paymentline.getAmount()).toBe(12);
+
+    // Editable status of a payment interface: the tip difference is added to the line
+    paymentline.payment_status = "retry";
+    await comp.onNewTip({ newValue: 5, type: "fixed", currentTipAmount: 2, change: -1 });
+    expect(paymentline.getAmount()).toBe(15);
+
+    // Change covers part of the tip: only the rest is added to the line
+    await comp.onNewTip({ newValue: 9, type: "fixed", currentTipAmount: 5, change: 1 });
+    expect(paymentline.getAmount()).toBe(18);
+
+    // Change covers the whole tip: the line is left alone
+    await comp.onNewTip({ newValue: 10, type: "fixed", currentTipAmount: 9, change: 3 });
+    expect(paymentline.getAmount()).toBe(18);
+    expect(notifications).toHaveLength(1);
 });
 
 test("Caba pay later always invoice", async () => {

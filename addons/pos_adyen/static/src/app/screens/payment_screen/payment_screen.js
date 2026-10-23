@@ -6,11 +6,9 @@ patch(PaymentScreen.prototype, {
     setup() {
         super.setup(...arguments);
         onMounted(() => {
-            const pendingPaymentLine = this.currentOrder.payment_ids.find(
-                (paymentLine) =>
-                    paymentLine.payment_method_id.payment_provider === "adyen" &&
-                    !paymentLine.isDone() &&
-                    paymentLine.payment_status !== "pending"
+            const pendingPaymentLine = this.pos.getProcessingPaymentLine(
+                "adyen",
+                this.currentOrder
             );
             if (!pendingPaymentLine) {
                 return;

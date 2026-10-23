@@ -39,10 +39,10 @@ export class PaymentPage extends Component {
 
     async back() {
         if (this.state.paymentMethodType === "cash_machine" && !this.selfOrder.paymentError) {
-            const paymentLine = this.selfOrder.getPendingPaymentLine(
+            const paymentLine = this.selfOrder.getProcessingPaymentLine(
                 this.selectedPaymentMethod.payment_provider
             );
-            if (paymentLine) {
+            if (paymentLine?.isCancellable) {
                 const cancelConfirmed = await ask(this.selfOrder.dialog, {
                     title: _t("Confirm cancellation"),
                     body: _t("Are you sure you want to cancel the cash machine payment?"),

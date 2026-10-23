@@ -146,7 +146,7 @@ export class PaymentQFpay extends PaymentInterface {
     }
 
     get pendingQFpayline() {
-        return this.pos.getPendingPaymentLine("qfpay");
+        return this.pos.getProcessingPaymentLine("qfpay");
     }
 
     get _isCreditCardPayment() {

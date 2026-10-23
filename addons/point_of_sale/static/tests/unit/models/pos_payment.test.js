@@ -20,7 +20,7 @@ test("uiState", async () => {
     });
 });
 
-test("isDone", async () => {
+test("isSettled", async () => {
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
     const card = store.models["pos.payment.method"].get(2);
@@ -28,15 +28,15 @@ test("isDone", async () => {
 
     // done
     paymentline.payment_status = "done";
-    expect(paymentline.isDone()).toBe(true);
+    expect(paymentline.isSettled).toBe(true);
 
     // pending
     paymentline.payment_status = "pending";
-    expect(paymentline.isDone()).toBe(false);
+    expect(paymentline.isSettled).toBe(false);
 
     // no status
     paymentline.payment_status = null;
-    expect(paymentline.isDone()).toBe(true);
+    expect(paymentline.isSettled).toBe(true);
 });
 
 test("isProcessing", async () => {
@@ -51,20 +51,109 @@ test("isProcessing", async () => {
         "waiting_card",
         "waiting_scan",
         "waiting_capture",
+        "force_done",
     ];
 
     for (const status of processingStatuses) {
         paymentline.payment_status = status;
-        expect(paymentline.isProcessing()).toBe(true);
+        expect(paymentline.isProcessing).toBe(true);
     }
 
     // non-processing status
     paymentline.payment_status = "done";
-    expect(paymentline.isProcessing()).toBe(false);
+    expect(paymentline.isProcessing).toBe(false);
 
     // no status
     paymentline.payment_status = null;
-    expect(paymentline.isProcessing()).toBe(false);
+    expect(paymentline.isProcessing).toBe(false);
+});
+
+test("isAmountEditable", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const card = store.models["pos.payment.method"].get(2);
+    const paymentline = createPaymentLine(store, order, card);
+
+    const editableStatuses = [null, "pending", "retry"];
+    const lockedStatuses = [
+        "waiting",
+        "waiting_cancel",
+        "waiting_card",
+        "waiting_scan",
+        "waiting_capture",
+        "force_done",
+        "done",
+    ];
+
+    for (const status of editableStatuses) {
+        paymentline.payment_status = status;
+        expect(paymentline.isAmountEditable).toBe(true);
+    }
+    for (const status of lockedStatuses) {
+        paymentline.payment_status = status;
+        expect(paymentline.isAmountEditable).toBe(false);
+    }
+});
+
+test("isDeletable", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const card = store.models["pos.payment.method"].get(2);
+    const paymentline = createPaymentLine(store, order, card);
+
+    const deletableStatuses = [
+        null,
+        "pending",
+        "retry",
+        "waiting",
+        "waiting_card",
+        "waiting_scan",
+        "waiting_capture",
+        "force_done",
+    ];
+    const notDeletableStatuses = ["waiting_cancel", "done"];
+
+    for (const status of deletableStatuses) {
+        paymentline.payment_status = status;
+        expect(paymentline.isDeletable).toBe(true);
+    }
+    for (const status of notDeletableStatuses) {
+        paymentline.payment_status = status;
+        expect(paymentline.isDeletable).toBe(false);
+    }
+});
+
+test("isCancellable", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const card = store.models["pos.payment.method"].get(2);
+    const paymentline = createPaymentLine(store, order, card);
+
+    const cancellableStatuses = [
+        "waiting",
+        "waiting_card",
+        "waiting_scan",
+        "waiting_capture",
+        "force_done",
+    ];
+    const notCancellableStatuses = [null, "pending", "retry", "waiting_cancel", "done"];
+
+    // without payment interface
+    for (const status of cancellableStatuses) {
+        paymentline.payment_status = status;
+        expect(paymentline.isCancellable).toBe(false);
+    }
+
+    // with payment interface
+    card.payment_interface = true;
+    for (const status of cancellableStatuses) {
+        paymentline.payment_status = status;
+        expect(paymentline.isCancellable).toBe(true);
+    }
+    for (const status of notCancellableStatuses) {
+        paymentline.payment_status = status;
+        expect(paymentline.isCancellable).toBe(false);
+    }
 });
 
 test("handlePaymentResponse", async () => {

@@ -683,9 +683,7 @@ export class TicketScreen extends Component {
             (this.ui.isSmall && order != this.getSelectedOrder()) ||
             this.isDefaultOrderEmpty(order) ||
             order.finalized ||
-            order.payment_ids.some(
-                (payment) => payment.isElectronic() && payment.payment_status === "done"
-            )
+            order.payment_ids.some((payment) => payment.payment_status === "done")
         );
     }
     isHighlighted(order) {
