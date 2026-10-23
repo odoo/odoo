@@ -1,5 +1,6 @@
 import { contains, findComponent, onRpc } from "@web/../tests/web_test_helpers";
 import {
+    advanceTime,
     animationFrame,
     beforeEach,
     click,
@@ -12,6 +13,9 @@ import { disableAnimations } from "@odoo/hoot-mock";
 import { editSelectMenu, mountView } from "@web/../tests/_framework/view_test_helpers";
 import {
     clickEvent,
+    findEvent,
+    findTimeGridColumn,
+    findTimeRow,
     moveEventToTime,
     resizeEventToTime,
     selectTimeRange,
@@ -19,7 +23,7 @@ import {
 import { CalendarController } from "@web/views/calendar/calendar_controller";
 import { defineResourceModels } from "../resource_test_helpers";
 import { ResourceCalendarAttendance } from "../mock_server/mock_models/resource_calendar_attendance";
-import { queryRect, waitFor } from "@odoo/hoot-dom";
+import { hover, queryFirst, queryRect, waitFor } from "@odoo/hoot-dom";
 
 defineResourceModels();
 beforeEach(async () => {
@@ -618,4 +622,57 @@ test(`resource calendar week select in timegrid`, async () => {
     expect("div[name=hour_to] input").toHaveValue(12);
     await click(".popover-footer .btn:contains('Discard')");
     await animationFrame();
+});
+
+async function resizeEventStartToTime(eventId, dateTime) {
+    const eventEl = findEvent(eventId);
+    await hover(".o_calendar_event_main:first", { root: eventEl });
+    await animationFrame();
+    const resizer = queryFirst(".o_calendar_resizer_start", { root: eventEl });
+    Object.assign(resizer.style, { display: "block", height: "1px", top: "0" });
+    const [date, time] = dateTime.split(" ");
+    const column = findTimeGridColumn(date);
+    const columnRect = queryRect(column);
+    const rowRect = queryRect(findTimeRow(time));
+    const { drop } = await drag(resizer);
+    await drop(column, {
+        position: { x: columnRect.x + columnRect.width / 2, y: rowRect.y + 1 },
+    });
+    await advanceTime(500);
+}
+
+test.tags("desktop");
+test(`resource calendar resize recurrent event from the start keeps its end`, async () => {
+    ResourceCalendarAttendance._records = [
+        {
+            id: 1,
+            calendar_id: 1,
+            date: "2025-01-01",
+            hour_from: 8,
+            hour_to: 16,
+            duration_hours: 8,
+            duration_based: false,
+            recurrency: true,
+            recurrency_interval: 1,
+            recurrency_type: "weeks",
+            recurrency_end_type: "forever",
+        },
+    ];
+    onRpc("resource.calendar.attendance", "web_save", ({ args }) => {
+        const [, values] = args;
+        expect.step(`web_save ${values.hour_from} ${values.hour_to}`);
+    });
+    await mountView({
+        resModel: "resource.calendar.attendance",
+        type: "calendar",
+    });
+    await animationFrame();
+    await resizeEventStartToTime(1, "2025-01-01 07:00:00");
+    await animationFrame();
+    await waitFor(".o_calendar_popover");
+    await click(".popover-footer .o-dropdown-caret:contains('Save')");
+    await animationFrame();
+    await click(".o-dropdown-item:contains('All events')");
+    await animationFrame();
+    expect.verifySteps(["web_save 7 16"]);
 });
