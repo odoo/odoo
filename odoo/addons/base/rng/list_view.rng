@@ -92,9 +92,9 @@
                         <rng:optional><rng:attribute name="string"/></rng:optional>
                         <rng:optional><rng:attribute name="column_invisible"/></rng:optional>
                         <rng:optional><rng:attribute name="width"/></rng:optional>
-                        <rng:oneOrMore>
+                        <rng:zeroOrMore>
                             <rng:ref name="field"/>
-                        </rng:oneOrMore>
+                        </rng:zeroOrMore>
                     </rng:element>
                     <rng:ref name="separator"/>
                     <rng:ref name="list"/>
