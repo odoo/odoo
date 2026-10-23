@@ -2869,6 +2869,13 @@ class TestTimeRuleCronBehavior(TransactionCase):
         finally:
             rule.write({'active': False})
 
+    def test_week_time_rules_crons_run_daily(self):
+        """The weekly crons only process the rules whose week starts today: they must run
+        every day for the rules of every week start to be processed."""
+        for xmlid in ('hr_attendance.hr_attendance_week_time_rules_cron', 'hr_holidays.hr_leave_week_time_rules_cron'):
+            cron = self.env.ref(xmlid)
+            self.assertEqual((cron.interval_number, cron.interval_type), (1, 'days'), xmlid)
+
 
 @tagged('-at_install', 'post_install', 'work_entry_pipeline')
 class TestTimeRulePipelineLeaves(TransactionCase):
