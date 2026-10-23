@@ -15,7 +15,7 @@ const { DateTime } = luxon;
 // Patch QFPay to validate the request that would be sent to the terminal
 patch(QFPay.prototype, {
     makeQFPayRequest: async function (endpoint, payload) {
-        const paymentLine = posmodel.getPendingPaymentLine("qfpay");
+        const paymentLine = posmodel.getProcessingPaymentLine("qfpay");
         const paymentMethod = paymentLine.payment_method_id;
         let expectedPayload;
         if (endpoint === "trade") {
@@ -66,7 +66,7 @@ registry.category("web_tour.tours").add("qfpay_order_and_refund", {
                 content: "Waiting for Qfpay payment to be processed",
                 trigger: ".paymentline_status_title:contains('Waiting for card')",
                 run: async function () {
-                    const paymentLine = posmodel.getPendingPaymentLine("qfpay");
+                    const paymentLine = posmodel.getProcessingPaymentLine("qfpay");
                     paymentUuid = paymentLine.uuid;
                     const paymentMethodId = paymentLine.payment_method_id.id;
                     mockQFPayWebhook(paymentUuid, paymentMethodId, paymentLine.amount, false);
@@ -87,7 +87,7 @@ registry.category("web_tour.tours").add("qfpay_order_and_refund", {
                 content: "Waiting for Qfpay refund to be processed",
                 trigger: ".paymentline_status_title:contains('Refund in process')",
                 run: async function () {
-                    const paymentLine = posmodel.getPendingPaymentLine("qfpay");
+                    const paymentLine = posmodel.getProcessingPaymentLine("qfpay");
                     const paymentMethodId = paymentLine.payment_method_id.id;
                     mockQFPayWebhook(paymentUuid, paymentMethodId, paymentLine.amount, true);
                 },

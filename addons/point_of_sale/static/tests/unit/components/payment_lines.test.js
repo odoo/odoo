@@ -95,6 +95,8 @@ test("getPaymentActionState", async () => {
     const stateForceDone = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateForceDone)).toEqual({
         id: "force_done",
+        icon: "autorenew",
+        iconClass: "oi-spin",
         title: "Connection error",
         actions: [
             {
@@ -102,6 +104,12 @@ test("getPaymentActionState", async () => {
                 label: "Force done",
                 action: "function",
                 severity: "warning",
+            },
+            {
+                id: "force_cancel",
+                label: "Force Cancel",
+                action: "function",
+                severity: "danger",
             },
         ],
     });
@@ -111,7 +119,7 @@ test("getPaymentActionState", async () => {
     await setIsRefundOrder(true);
     const stateWaitingCardRefund = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateWaitingCardRefund)).toEqual({
-        id: "waiting_refund",
+        id: "waiting_card",
         icon: "autorenew",
         iconClass: "oi-spin",
         title: "Refund in process",
@@ -121,14 +129,6 @@ test("getPaymentActionState", async () => {
                 label: "Force done",
                 action: "function",
                 severity: "warning",
-            },
-            {
-                id: "cancel",
-                label: "Cancel",
-                title: "Send Cancel Request",
-                action: "function",
-                severity: "danger",
-                show: false,
             },
         ],
     });
@@ -154,7 +154,6 @@ test("getPaymentActionState", async () => {
                 title: "Send Cancel Request",
                 action: "function",
                 severity: "danger",
-                show: true,
             },
         ],
     });
@@ -180,7 +179,6 @@ test("getPaymentActionState", async () => {
                 title: "Send Cancel Request",
                 action: "function",
                 severity: "danger",
-                show: true,
             },
         ],
     });
@@ -199,14 +197,6 @@ test("getPaymentActionState", async () => {
                 label: "Force done",
                 action: "function",
                 severity: "warning",
-                show: true,
-            },
-            {
-                id: "force_cancel",
-                label: "Force Cancel",
-                action: "function",
-                severity: "danger",
-                show: false,
             },
         ],
     });
@@ -221,18 +211,10 @@ test("getPaymentActionState", async () => {
         title: "Request sent",
         actions: [
             {
-                id: "force_done",
-                label: "Force done",
-                action: "function",
-                severity: "warning",
-                show: false,
-            },
-            {
                 id: "force_cancel",
                 label: "Force Cancel",
                 action: "function",
                 severity: "danger",
-                show: true,
             },
         ],
     });
@@ -245,22 +227,7 @@ test("getPaymentActionState", async () => {
         icon: "autorenew",
         iconClass: "oi-spin",
         title: "Request sent",
-        actions: [
-            {
-                id: "force_done",
-                label: "Force done",
-                action: "function",
-                severity: "warning",
-                show: false,
-            },
-            {
-                id: "force_cancel",
-                label: "Force Cancel",
-                action: "function",
-                severity: "danger",
-                show: false,
-            },
-        ],
+        actions: [],
     });
 
     // Done - refund
@@ -268,7 +235,7 @@ test("getPaymentActionState", async () => {
     await setIsRefundOrder(true);
     const stateDoneRefund = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateDoneRefund)).toEqual({
-        id: "refunded",
+        id: "done",
         title: "Refund Successful",
         actions: [],
     });
@@ -277,7 +244,7 @@ test("getPaymentActionState", async () => {
     await setIsRefundOrder(false);
     const stateDoneNoRefund = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateDoneNoRefund)).toEqual({
-        id: "paid",
+        id: "done",
         title: "Payment Successful",
         actions: [],
     });

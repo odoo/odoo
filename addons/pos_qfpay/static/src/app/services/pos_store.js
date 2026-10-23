@@ -5,7 +5,7 @@ patch(PosStore.prototype, {
     async setup() {
         await super.setup(...arguments);
         this.data.connectWebSocket("QFPAY_LATEST_RESPONSE", (data) => {
-            const pendingLine = this.getPendingPaymentLine("qfpay");
+            const pendingLine = this.getProcessingPaymentLine("qfpay");
             if (pendingLine) {
                 pendingLine.payment_method_id.payment_interface.handleQFPayStatusResponse(data);
             }

@@ -22,7 +22,7 @@ export class PaymentRazorpay extends PaymentInterface {
     }
 
     pendingRazorpayline() {
-        return this.pos.getPendingPaymentLine("razorpay");
+        return this.pos.getProcessingPaymentLine("razorpay");
     }
 
     async sendPaymentCancel(line) {

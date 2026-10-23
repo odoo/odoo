@@ -1972,13 +1972,16 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
 
-    getPendingPaymentLine(provider) {
-        for (const order of this.models["pos.order"].getAll()) {
+    /**
+     * @param {string} provider
+     * @param {PosOrder|PosOrder[]} [orders] - Orders to search in, all orders when not given.
+     */
+    getProcessingPaymentLine(provider, orders) {
+        orders = [orders ?? this.models["pos.order"].getAll()].flat();
+        for (const order of orders) {
             const paymentLine = order.payment_ids.find(
                 (paymentLine) =>
-                    paymentLine.payment_provider === provider &&
-                    !paymentLine.isDone() &&
-                    paymentLine.payment_status !== "retry"
+                    paymentLine.payment_provider === provider && paymentLine.isProcessing
             );
             if (paymentLine) {
                 return paymentLine;
@@ -3161,7 +3164,7 @@ export class PosStore extends WithLazyGetterTrap {
         // No QR was explicitly pushed: default to the selected payment line's own
         // QR code while it's mid-processing (e.g. a terminal waiting to be scanned).
         const payment = this.getOrder()?.getSelectedPaymentline();
-        return payment?.isProcessing() && payment.qr_code
+        return payment?.isProcessing && payment.qr_code
             ? { title: _t("Scan the QR for payment"), ...payment.getQrPopupProps() }
             : null;
     }
