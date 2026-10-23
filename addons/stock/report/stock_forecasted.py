@@ -129,7 +129,23 @@ class StockForecasted(models.AbstractModel):
         res['user_can_edit_pickings'] = self.env.user.has_group('stock.group_stock_user')
         return res
 
+    def _prepare_forecast_availability_line(self, quantity, move_out, move_in, replenishment_filled, product=False):
+        """Report line holding only the values needed to compute an availability.
+
+        Everything a full line adds for display purposes (source documents, display
+        names, formatted dates, reservation data) is left out.
+        """
+        product = product or move_out.product_id
+        return {
+            'quantity': float_round(quantity, precision_rounding=product.uom_id.rounding),
+            'replenishment_filled': replenishment_filled,
+            'move_out': move_out,
+            'move_in': move_in,
+        }
+
     def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reserved_move=False, in_transit=False, read=True):
+        if move_out and self.env.context.get('forecast_availability_move_ids') is not None:
+            return self._prepare_forecast_availability_line(quantity, move_out, move_in, replenishment_filled, product)
         product = product or (move_out.product_id if move_out else move_in.product_id)
         is_late = move_out.date < move_in.date if (move_out and move_in) else False
 
@@ -248,7 +264,15 @@ class StockForecasted(models.AbstractModel):
                 'taken_from_stock': taken_from_stock_out,
             }
 
-        def _reconcile_out_with_ins(lines, out, ins, demand, product_rounding, in_id_to_in_data, ins_per_product, dest_ids_to_in_ids, read=True):
+        wanted_out_ids = self.env.context.get('forecast_availability_move_ids')
+        lines = []
+
+        def _add_line(quantity, move_out=None, **kwargs):
+            if wanted_out_ids is not None and (not move_out or move_out.id not in wanted_out_ids):
+                return
+            lines.append(self._prepare_report_line(quantity, move_out=move_out, read=read, **kwargs))
+
+        def _reconcile_out_with_ins(out, ins, demand, product_rounding, in_id_to_in_data, ins_per_product, dest_ids_to_in_ids):
             ins_to_remove = []
             for in_id in ins:
                 in_data = in_id_to_in_data[in_id]
@@ -257,7 +281,7 @@ class StockForecasted(models.AbstractModel):
                     continue
                 taken_from_in = min(demand, in_data['qty'])
                 demand -= taken_from_in
-                lines.append(self._prepare_report_line(taken_from_in, move_in=in_data['move'], move_out=out, read=read))
+                _add_line(taken_from_in, out, move_in=in_data['move'])
                 in_data['qty'] -= taken_from_in
                 if in_data['qty'] <= 0:
                     ins_to_remove.append(in_id)
@@ -356,7 +380,6 @@ class StockForecasted(models.AbstractModel):
         product_sum = defaultdict(float)
         for product_loc, quantity in currents.items():
             product_sum[product_loc[0]] += quantity
-        lines = []
         for product in (ins | outs).product_id:
             product_rounding = product.uom_id.rounding
             unreconciled_outs = []
@@ -373,7 +396,7 @@ class StockForecasted(models.AbstractModel):
                 if reserved_out > 0:
                     demand_out = max(demand_out - reserved_out, 0)
                     in_transit = bool(reserved_move.move_orig_ids)
-                    lines.append(self._prepare_report_line(reserved_out, move_out=out, reserved_move=reserved_move, in_transit=in_transit, read=read))
+                    _add_line(reserved_out, out, reserved_move=reserved_move, in_transit=in_transit)
 
                 if float_is_zero(demand_out, precision_rounding=product_rounding):
                     continue
@@ -381,7 +404,7 @@ class StockForecasted(models.AbstractModel):
                 # Reconcile with the current stock.
                 if taken_from_stock_out > 0:
                     demand_out = max(demand_out - taken_from_stock_out, 0)
-                    lines.append(self._prepare_report_line(taken_from_stock_out, move_out=out, read=read))
+                    _add_line(taken_from_stock_out, out)
 
                 if float_is_zero(demand_out, precision_rounding=product_rounding):
                     continue
@@ -391,36 +414,36 @@ class StockForecasted(models.AbstractModel):
                 if unreservable_qty > 0:
                     demand_out -= unreservable_qty
                     transit_stock -= unreservable_qty
-                    lines.append(self._prepare_report_line(unreservable_qty, move_out=out, in_transit=True, read=read))
+                    _add_line(unreservable_qty, out, in_transit=True)
 
                 if float_is_zero(demand_out, precision_rounding=product_rounding):
                     continue
 
                 # Reconcile with the ins.
-                demand_out = _reconcile_out_with_ins(lines, out, dest_ids_to_in_ids[out.id], demand_out, product_rounding, in_id_to_in_data, ins_per_product, dest_ids_to_in_ids, read=read)
+                demand_out = _reconcile_out_with_ins(out, dest_ids_to_in_ids[out.id], demand_out, product_rounding, in_id_to_in_data, ins_per_product, dest_ids_to_in_ids)
 
                 if not float_is_zero(demand_out, precision_rounding=product_rounding):
                     unreconciled_outs.append((demand_out, out))
 
             # Another pass, in case there are some ins linked to a dest move but that still have some quantity available
             for (demand, out) in unreconciled_outs:
-                demand = _reconcile_out_with_ins(lines, out, ins_per_product[product.id], demand, product_rounding, in_id_to_in_data, ins_per_product, dest_ids_to_in_ids, read=read)
+                demand = _reconcile_out_with_ins(out, ins_per_product[product.id], demand, product_rounding, in_id_to_in_data, ins_per_product, dest_ids_to_in_ids)
                 if not float_is_zero(demand, precision_rounding=product_rounding):
                     # Not reconciled
-                    lines.append(self._prepare_report_line(demand, move_out=out, replenishment_filled=False, read=read))
+                    _add_line(demand, out, replenishment_filled=False)
             # Stock in transit
             if not float_is_zero(transit_stock, precision_rounding=product_rounding):
-                lines.append(self._prepare_report_line(transit_stock, product=product, in_transit=True, read=read))
+                _add_line(transit_stock, product=product, in_transit=True)
 
             # Unused remaining stock.
             if not float_is_zero(free_stock, precision_rounding=product_rounding):
-                lines.append(self._prepare_report_line(free_stock, product=product, read=read))
+                _add_line(free_stock, product=product)
             # In moves not used.
             for in_id in ins_per_product[product.id]:
                 in_data = in_id_to_in_data[in_id]
                 if float_is_zero(in_data['qty'], precision_rounding=product_rounding):
                     continue
-                lines.append(self._prepare_report_line(in_data['qty'], move_in=in_data['move'], read=read))
+                _add_line(in_data['qty'], move_in=in_data['move'])
         return lines
 
     @api.model
