@@ -1,7 +1,7 @@
 from unittest import skip
 
 import odoo
-from odoo.addons.point_of_sale.tests.test_pos_margin import TestPosMargin
+from odoo.addons.point_of_sale.tests.test_pos_order import TestPosMargin
 
 
 @odoo.tests.tagged('post_install', '-at_install')
