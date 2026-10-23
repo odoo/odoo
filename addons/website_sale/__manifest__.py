@@ -102,7 +102,7 @@
             "website_sale/static/src/scss/shop_page_empty_screen.scss",
             "website_sale/static/src/scss/website_sale_comparison.scss",
             "website_sale/static/src/scss/website_sale_comparison.options.css",
-            "website_sale/static/src/scss/website_sale_delivery.scss",
+            "website_sale/static/src/scss/website_sale_delivery.css",
             "website_sale/static/src/scss/website_sale_wishlist.scss",
             "website_sale/static/src/scss/website_sale_wishlist.options.css",
             "website_sale/static/src/snippets/s_dynamic_snippet_categories/000.css",

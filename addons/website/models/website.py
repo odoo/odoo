@@ -2169,7 +2169,7 @@ class Website(models.CachedModel):
         snippet_assets = self.env['ir.asset'].with_context(active_test=False).search_fetch(
             [('path', 'like', '/static%/snippets/')],
             ['active', 'path'], order='id')
-        snippet_re = re.compile(r'(\w*)\/.*\/snippets\/(\w*)\/(\d{3})(?:_\w*)?\.(js|scss)')
+        snippet_re = re.compile(r'(\w*)\/.*\/snippets\/(\w*)\/(\d{3})(?:_\w*)?\.(js|scss|css)')
         # regex will match /module/static/[.../]/snippets/snippet_id/XXX[_variable].asset_type
         # _variable is not kept since only module, snippet_id, asset_version (XXX), asset_type are relevant
         html_fields = self._get_html_fields()

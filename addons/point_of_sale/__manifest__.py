@@ -149,7 +149,7 @@
 
             'point_of_sale/static/src/customer_display/**/*',
             ('remove', 'point_of_sale/static/src/customer_display/root.js'),
-            ('remove', 'point_of_sale/static/src/customer_display/styles.scss'),
+            ('remove', 'point_of_sale/static/src/customer_display/styles.css'),
         ],
         'web.assets_unit_tests': [
             'point_of_sale/static/tests/unit/**/*',
@@ -273,7 +273,7 @@
             "point_of_sale/static/src/scss/css_variables.scss",
             "point_of_sale/static/src/customer_display/**/*",
             "point_of_sale/static/src/app/hooks/time_hook.js",
-            "point_of_sale/static/src/app/pos_app.scss",
+            "point_of_sale/static/src/app/pos_app.css",
             "point_of_sale/static/src/app/screens/login_screen/login_screen.scss",
             "point_of_sale/static/src/app/components/price_formatter/**/*",
             "point_of_sale/static/src/app/components/validation_animation/**/*",
