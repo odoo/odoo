@@ -47,12 +47,15 @@ export class GenerateDialog extends Component {
         });
         onMounted(() => {
             if (this.props.mode === "generate") {
-                this.nextSerialCount().value = this.props.move.data.product_uom_qty || 2;
                 if (this.nextCustomSerialNumber) {
                     this.nextSerial().value = this.nextCustomSerialNumber;
                 }
                 if (this.isLotTracking) {
                     this.totalReceived().value = this.props.move.data.quantity;
+                    this.nextSerialCount().value = this.props.move.data.product_uom_qty || 2;
+                }
+                else {
+                    this.nextSerialCount().value = Math.ceil(this.props.move.data.product_qty) || 2;
                 }
             }
         });

@@ -10,7 +10,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
-from odoo.tools import SQL
+from odoo.tools import SQL, float_round
 from odoo.tools.barcode import check_barcode_encoding
 
 PY_OPERATORS = {
@@ -330,6 +330,20 @@ class ProductProduct(models.Model):
         """
         self.ensure_one()
         return []
+
+    def _get_whole_serial_quantity(self, quantity, uom):
+        """Return `quantity` rounded to a whole number expressed in `uom` for reserving quantities
+        of products tracked with serial numbers, so that the product is neither reserved in
+        fractional amounts, nor underreserved, nor overshot to a backorder."""
+        self.ensure_one()
+        product_uom = self.uom_id
+        whole_quantity = float_round(uom._compute_quantity(quantity, product_uom),
+                                     precision_digits=0, rounding_method='UP')
+        rounded_quantity = product_uom._compute_quantity(whole_quantity, uom, rounding_method='DOWN')
+        if product_uom.compare(whole_quantity, float_round(uom._compute_quantity(rounded_quantity, product_uom),
+                                                           precision_digits=0, rounding_method='UP')):
+            return quantity
+        return rounded_quantity
 
     def _get_description(self, picking_type_id):
         """ Hook function meant to be overridden. """
