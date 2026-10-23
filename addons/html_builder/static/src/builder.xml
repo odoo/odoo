@@ -39,7 +39,7 @@
                 </li>
             </ul>
         </div>
-        <div class="o_hb_tab_content overflow-y-auto overflow-x-hidden flex-grow-1" t-att-class="{ 'o_hb_faded_tab_content': !!this.state.pendingTab }" t-on-transitionend="this.onTabTransitionEnd">
+        <div class="o_hb_tab_content overflow-y-auto overflow-x-hidden flex-grow-1 scrollbar-width-thin" t-att-class="{ 'o_hb_faded_tab_content': !!this.state.pendingTab }" t-on-transitionend="this.onTabTransitionEnd">
             <t t-if="this.state.activeTab === 'blocks'">
                 <BlockTab snippetsName="this.props.snippetsName" newInstalledModule="this.props.newInstalledModule"/>
             </t>

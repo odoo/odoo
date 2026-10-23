@@ -4,7 +4,7 @@
         <Dialog size="'xl'" title="this.pos.getOrder().preset_id.name">
             <div>
                 <t t-set="preset" t-value="this.pos.getOrder().preset_id"/>
-                <div class="d-flex w-100 gap-1 mt-2 flex-nowrap overflow-x-auto no-scrollbar pb-2">
+                <div class="d-flex w-100 gap-1 mt-2 flex-nowrap overflow-x-auto pb-2 scrollbar-width-none">
                     <t t-foreach="Object.keys(preset.availabilities)" t-as="sqlDate" t-key="sqlDate">
                         <t t-set="dateInfo" t-value="this.getDateInfo(sqlDate)"/>
                         <button class="preset_date_buttons btn p-2 text-nowrap flex-shrink-0"
