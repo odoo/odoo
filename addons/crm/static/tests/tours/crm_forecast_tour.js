@@ -27,6 +27,9 @@ registry.category("web_tour.tours").add('crm_forecast', {
         content: "click create",
         run: 'click',
     }, {
+        trigger: ".o_kanban_add",
+        content: "Wait after DOM update"
+    }, {
         trigger: ".o_field_widget[name=name] input",
         content: "complete name",
         run: "edit Test Opportunity 1",
