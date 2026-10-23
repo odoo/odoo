@@ -14,9 +14,9 @@ class Digest(models.Model):
     def _compute_kpi_stock_delivery_count_value(self):
         self._raise_if_not_member_of('stock.group_stock_manager')
         self._calculate_kpi(
-            'stock.picking',
+            'stock.move',
             'kpi_stock_delivery_count_value',
-            date_field='date_done',
+            date_field='picking_id.date_done',
             additional_domain=[('state', '=', 'done'),
                                # view_move_search outgoing filter condition
                                ('location_id.usage', 'in', ('internal', 'transit')),
@@ -26,9 +26,9 @@ class Digest(models.Model):
     def _compute_kpi_stock_receipt_count_value(self):
         self._raise_if_not_member_of('stock.group_stock_manager')
         self._calculate_kpi(
-            'stock.picking',
+            'stock.move',
             'kpi_stock_receipt_count_value',
-            date_field='date_done',
+            date_field='picking_id.date_done',
             additional_domain=[('state', '=', 'done'),
                                # view_move_search incoming filter condition
                                ('location_id.usage', 'not in', ('internal', 'transit')),
