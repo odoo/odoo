@@ -81,6 +81,23 @@ const threadPatch = {
         return this.channel?.self_member_id?.message_unread_counter > 0 || super.isUnread;
     },
     /** @override */
+    isLoadedAround(messageId) {
+        if (!this.channel?.self_member_id) {
+            return super.isLoadedAround(...arguments);
+        }
+        if (!this.loadOlder && !this.loadNewer && !this.hasLoadingFailed) {
+            return true;
+        }
+        const oldestId = this.oldestPersistentMessage?.id;
+        const newestId = this.newestPersistentMessage?.id;
+        return (
+            messageId !== undefined &&
+            oldestId !== undefined &&
+            (messageId >= oldestId || !this.loadOlder) &&
+            (messageId <= newestId || !this.loadNewer)
+        );
+    },
+    /** @override */
     async loadAround() {
         // Prefetch isn't done yet. Wait before calling super, this call would be ignored
         // otherwise.

@@ -650,6 +650,11 @@ export class Thread extends Record {
         return "/mail/thread/messages";
     }
 
+    /** @param {number} [messageId] */
+    isLoadedAround(messageId) {
+        return this.messages.some(({ id }) => id === messageId);
+    }
+
     /**
      * Get ready to jump to a message in a thread. This method will fetch the
      * messages around the message to jump to if required, and update the thread
@@ -660,19 +665,7 @@ export class Thread extends Record {
      * @param {MessageRouteParams} [options.routeParams]
      */
     async loadAround({ messageId, routeParams = {} } = {}) {
-        const oldestId = this.oldestPersistentMessage?.id;
-        const newestId = this.newestPersistentMessage?.id;
-        const hasTarget =
-            messageId !== undefined &&
-            oldestId !== undefined &&
-            (messageId >= oldestId || !this.loadOlder) &&
-            (messageId <= newestId || (!this.loadNewer && this.channel?.self_member_id));
-        const isFullyLoaded =
-            this.channel?.self_member_id &&
-            !this.loadOlder &&
-            !this.loadNewer &&
-            !this.hasLoadingFailed;
-        if (this.status === "loading" || (this.isLoaded && (hasTarget || isFullyLoaded))) {
+        if (this.status === "loading" || (this.isLoaded && this.isLoadedAround(messageId))) {
             return;
         }
         this.isLoaded = false;
