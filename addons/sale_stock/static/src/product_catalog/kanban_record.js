@@ -4,7 +4,9 @@ import { patch } from "@web/core/utils/patch";
 
 patch(ProductCatalogKanbanRecord.prototype, {
     updateQuantity(quantity) {
-        if (this.env.orderResModel !== "sale.order" || this.productCatalogData.productType == "service") {
+        if (
+            this.env.orderResModel !== "sale.order" || !this.productCatalogData.deliveredQty
+        ) {
             super.updateQuantity(...arguments);
         } else if (
             this.productCatalogData.quantity === this.productCatalogData.deliveredQty &&

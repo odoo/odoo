@@ -125,7 +125,11 @@ class TestPurchaseProductCatalog(AccountTestInvoicingCommon, HttpCase):
             headers={'Content-Type': 'application/json'},
         )['price']
         self.assertTrue(resp)
-        product_uom_factor = purchase_order.order_line[0]._get_product_catalog_lines_data(purchase_order)['productUomFactor']
+        catalog_data = purchase_order.order_line[0]._get_product_catalog_lines_data(purchase_order)
+        product_uom_factor = (
+            next(filter(lambda uom_data: uom_data['id'] == catalog_data['productUomId'], catalog_data['availableUoms']))['factor']
+            / next(filter(lambda uom_data: uom_data['id'] == catalog_data['uomId'], catalog_data['availableUoms']))['factor']
+        )
         self.assertEqual(resp, other_product_price_converted * 6)
         self.assertEqual(resp * product_uom_factor, other_product_price_converted)  # Price in product unit
 

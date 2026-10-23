@@ -67,8 +67,6 @@ class TestProductCatalog(HttpCase, SaleCommon):
     def _get_default_catalog_data(self, product):
         return {
             "quantity": 0,
-            "readOnly": False,
-            "productType": product.type,
             "price": product.lst_price,
         }
 
