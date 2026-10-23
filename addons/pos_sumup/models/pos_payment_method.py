@@ -3,7 +3,7 @@ import logging
 import requests
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools import hash_sign
 
 _logger = logging.getLogger(__name__)
@@ -134,10 +134,15 @@ class PosPaymentMethod(models.Model):
             super(PosPaymentMethod, payment_method).write(record_vals)
         return True
 
+    def _check_sumup_access(self):
+        if not self.env.su and not self.env.user.has_group("point_of_sale.group_pos_user"):
+            raise AccessError(self.env._("You do not have the necessary permissions to make a SumUp payment."))
+
     def sumup_get_checkout_status(self, checkout_id: str):
         """Ask SumUp directly for the current status of a reader checkout.
         Used as a polling fallback for the initial payment, in case the
         SUMUP_LATEST_RESPONSE bus notification is missed."""
+        self._check_sumup_access()
         self.ensure_one()
         try:
             response = requests.get(
@@ -184,6 +189,7 @@ class PosPaymentMethod(models.Model):
         return f"{self.get_base_url()}/pos_sumup/notification?token={token}"
 
     def sumup_pay(self, amount: float):
+        self._check_sumup_access()
         self.ensure_one()
         currency = self.journal_id.currency_id or self.company_id.currency_id
         minor_unit = currency.decimal_places
@@ -220,6 +226,7 @@ class PosPaymentMethod(models.Model):
         return response.json()
 
     def sumup_refund(self, amount: float, client_transaction_id: str):
+        self._check_sumup_access()
         self.ensure_one()
         original_payment = client_transaction_id and self.env["pos.payment"].search(
             [
@@ -248,6 +255,7 @@ class PosPaymentMethod(models.Model):
         return response.json()
 
     def sumup_cancel(self):
+        self._check_sumup_access()
         try:
             response = requests.post(
                 f"{SUMUP_API_URL}/v0.1/merchants/{self.sumup_merchant_code}/readers/{self.sumup_terminal_id}/terminate",
