@@ -123,7 +123,7 @@ class PurchaseOrder(models.Model):
         'Acknowledged', copy=False, tracking=True,
         help="It indicates that the vendor has acknowledged the receipt of the purchase order.")
     note = fields.Html('Terms and Conditions')
-
+    tag_ids = fields.Many2many('purchase.order.tag', string='Tags')
     partner_bill_count = fields.Integer(related='partner_id.supplier_invoice_count')
     bill_matched_ratio = fields.Float(compute='_compute_bill_matched_ratio', string='Bill Matched Ratio')
     invoice_count = fields.Integer(compute="_compute_invoice", string='Bill Count', copy=False, default=0, store=True)

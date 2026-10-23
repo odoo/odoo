@@ -22,6 +22,14 @@
             <field name="receipt_reminder_email">True</field>
         </record>
 
+        <record id="purchase_tag_1" model="purchase.order.tag">
+            <field name="name">Office Supplies</field>
+        </record>
+
+        <record id="purchase_tag_2" model="purchase.order.tag">
+            <field name="name">IT Equipment</field>
+        </record>
+
         <record id="purchase_order_1" model="purchase.order">
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="user_id" ref="base.user_admin"/>
@@ -66,6 +74,7 @@
                     'uom_id': ref('uom.product_uom_unit'),
                     'date_planned': DateTime.today() + relativedelta(days=1)}),
             ]"/>
+            <field name="tag_ids" eval="[(4, ref('purchase_tag_1'))]"/>
         </record>
 
 
@@ -120,6 +129,7 @@
                     'uom_id': ref('uom.product_uom_unit'),
                     'date_planned': DateTime.today() + relativedelta(days=5)})
             ]"/>
+            <field name="tag_ids" eval="[(4, ref('purchase_tag_1'))]"/>
         </record>
         <function model="purchase.order" name="write">
             <value eval="[ref('purchase_order_4')]"/>
@@ -182,6 +192,7 @@
                     'uom_id': ref('uom.product_uom_unit'),
                     'date_planned': DateTime.today()}),
             ]"/>
+            <field name="tag_ids" eval="[(4, ref('purchase_tag_1'))]"/>
         </record>
 
         <record id="purchase_order_7" model="purchase.order">
@@ -202,6 +213,7 @@
                     'uom_id': ref('uom.product_uom_unit'),
                     'date_planned': DateTime.today()}),
             ]"/>
+            <field name="tag_ids" eval="[(4, ref('purchase_tag_1'))]"/>
         </record>
 
         <record id="purchase_order_8" model="purchase.order">
