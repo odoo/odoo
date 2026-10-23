@@ -277,8 +277,8 @@
                     list-style: none;
 
                     a {
-                        padding: $dropdown-item-padding-y*2 var(--o-bs-dropdown-item-padding-x);
-                        font-family: $font-family-base;
+                        padding: calc(var(--o-bs-dropdown-item-padding-y) * 2) var(--o-bs-dropdown-item-padding-x);
+                        font-family: var(--o-bs-font-family-base);
                         text-decoration: none;
                         line-height: 1.2;
 
@@ -286,7 +286,7 @@
                             background-color: transparent !important;
                             color: var(--gray-600) !important;
                             cursor: default;
-                            padding: $dropdown-item-padding-y*4 var(--o-bs-dropdown-item-padding-x);
+                            padding: calc(var(--o-bs-dropdown-item-padding-y) * 4) var(--o-bs-dropdown-item-padding-x);
                             font-style: italic;
                             font-size: .5em;
                         }

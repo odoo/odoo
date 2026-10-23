@@ -9,7 +9,7 @@
 
     .o_colored_item {
         background-color: var(--countdown-item-bg-color);
-        border: $border-width solid $border-color;
+        border: var(--o-bs-border-width) solid var(--o-border-color);
     }
 
     .o_count_item {
@@ -42,13 +42,13 @@
     &:where(:not(.o_label_compact)) {
         .o_count_inline_text {
             .o_count_item_label {
-                margin-left: map-get($spacers, 1)/2;
+                margin-left: calc(var(--o-bs-spacer-1) / 2);
             }
             /* Split the margin between the number and the label to prevent
             accidentally selecting the label when editing numbers with a
             toolbar. */
             .o_count_item_nbs {
-                margin-right: map-get($spacers, 1)/2;
+                margin-right: calc(var(--o-bs-spacer-1) / 2);
             }
         }
     }
@@ -95,7 +95,7 @@
                 position: absolute;
                 inset: 50% 0 auto;
                 display: block;
-                border-bottom: $border-width solid $border-color;
+                border-bottom: var(--o-bs-border-width) solid var(--o-border-color);
                 content: '';
                 z-index: 1;
             }

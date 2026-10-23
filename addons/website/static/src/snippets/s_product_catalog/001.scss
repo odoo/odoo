@@ -2,11 +2,11 @@
     .s_product_catalog_dish {
         // Title
         .s_product_catalog_dish_title {
-            line-height: $headings-line-height;
+            line-height: var(--o-bs-headings-line-height);
         }
         // Description
         .s_product_catalog_dish_description {
-            margin-bottom: $spacer;
+            margin-bottom: var(--o-bs-spacer);
         }
         &:last-child {
             .s_product_catalog_dish_description {
@@ -20,7 +20,7 @@
             align-items: center;
             &::after {
                 content: '';
-                margin-left: $spacer/2;
+                margin-left: calc(var(--o-bs-spacer) / 2);
                 flex: 1 0 auto;
                 border-bottom: 1px dotted;
             }

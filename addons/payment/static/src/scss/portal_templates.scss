@@ -9,12 +9,12 @@ div[name="o_payment_status_alert"] #o_payment_status_message > p {
 
 .o_payment_summary_separator {
     @media (min-width: 768px) {
-        border-left: var(--o-bs-border-width) solid $border-color;
+        border-left: var(--o-bs-border-width) solid var(--o-border-color, var(--o-bs-border-color));
     }
 }
 
 .o_payment_summary div {
-    border: var(--o-bs-border-width) solid $border-color;
+    border: var(--o-bs-border-width) solid var(--o-border-color, var(--o-bs-border-color));
     padding: var(--o-bs-spacer-3);
     border-radius: var(--o-bs-border-radius);
 }

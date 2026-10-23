@@ -1,6 +1,6 @@
 .s_popup[data-vcss='001']  {
     .modal-content {
-        min-height: $font-size-lg * 2;
+        min-height: calc(var(--o-bs-font-size-lg) * 2);
         border: 0;
         border-radius: 0;
         box-shadow: $modal-content-box-shadow-sm-up;
@@ -8,22 +8,22 @@
         .container, .container-fluid, .o_container_small {
             // Force padding when dropped inside another container (e.g. inside
             // a blog post page)
-            padding-right: $grid-gutter-width * .5;
-            padding-left: $grid-gutter-width * .5;
+            padding-right: calc(var(--o-bs-grid-gutter-width) * .5);
+            padding-left: calc(var(--o-bs-grid-gutter-width) * .5);
         }
     }
 
     // Close icon
     .s_popup_close {
-        z-index: $zindex-modal;
+        z-index: var(--o-bs-zindex-modal);
         position: absolute;
         top: 0;
         inset-inline-end: 0;
-        width: $font-size-lg * 2;
-        height: $font-size-lg * 2;
-        line-height: $font-size-lg * 2;
+        width: calc(var(--o-bs-font-size-lg) * 2);
+        height: calc(var(--o-bs-font-size-lg) * 2);
+        line-height: calc(var(--o-bs-font-size-lg) * 2);
         @include o-bg-color(color-contrast(o-color('primary')), o-color('primary'), $with-extras: false);
-        box-shadow: $box-shadow-sm;
+        box-shadow: var(--box-shadow-sm);
         cursor: pointer;
         @include font-size($font-size-lg);
         text-align: center;
@@ -49,7 +49,7 @@
         margin: 0 0 0 auto;
         min-height: 100%;
         &:not(.s_popup_size_full) {
-            padding: $spacer !important;
+            padding: var(--o-bs-spacer) !important;
         }
     }
     .s_popup_top .modal-dialog {

@@ -1,7 +1,7 @@
 // Tabs
 .s_tabs[data-vcss="002"] {
-    --tabs-bg-color: #{$gray-100};
-    --tabs-link-color: #{$body-color};
+    --tabs-bg-color: var(--gray-100);
+    --tabs-link-color: var(--o-bs-body-color);
 
     .s_tabs_content {
         &.s_tabs_slide_up, &.s_tabs_slide_down, &.s_tabs_slide_left, &.s_tabs_slide_right {
@@ -34,19 +34,19 @@
         }
 
         .s_tabs_nav:has(.nav-tabs), .s_tabs_nav:has(.nav-buttons) {
-            background: var(--tabs-bg-color, $gray-100);
+            background: var(--tabs-bg-color, var(--gray-100));
 
             .nav .nav-item a.nav-link{
-                color: var(--tabs-link-color, $body-color);
+                color: var(--tabs-link-color, var(--o-bs-body-color));
             }
         }
 
         .nav-tabs a.active {
-            color: $body-color;
+            color: var(--o-bs-body-color);
         }
 
         .nav-underline {
-            border-bottom: 1px solid $border-color;
+            border-bottom: 1px solid var(--o-border-color);
 
             .nav-link {
                 margin-bottom: -1px;
@@ -61,14 +61,14 @@
         &.row .nav-underline {
             @include media-breakpoint-up(sm) {
                 border-bottom: 0;
-                border-left: 1px solid $border-color;
+                border-left: 1px solid var(--o-border-color);
 
                 .nav-link {
                     margin-left: -1px;
                     padding: map-get($spacers, 1) map-get($spacers, 3);
 
                     &.active {
-                        border-left: 2px solid $link-color;
+                        border-left: 2px solid var(--link-color);
                         border-bottom: 0;
                     }
                 }
@@ -85,8 +85,8 @@
         .nav-buttons {
             & .active {
                 color: color-contrast($white);
-                background-color: $white;
-                box-shadow: $box-shadow-sm;
+                background-color: var(--white);
+                box-shadow: var(--box-shadow-sm);
             }
         }
     }

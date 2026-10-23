@@ -3,7 +3,7 @@
     --ecomm-categories-showcase-width: 85%;
     --ecomm-categories-showcase-row-height: 100%;
     --ecomm-categories-showcase-flex-base: 1;
-    --ecomm-categories-showcase-edge-spacing: #{$container-padding-x * .5};
+    --ecomm-categories-showcase-edge-spacing: calc(var(--o-bs-container-padding-x) * .5);
 
     .s_ecomm_categories_showcase_wrapper {
         flex-wrap: nowrap;
@@ -57,7 +57,7 @@
             padding: 0 var(--ecomm-categories-showcase-fluid-padding-x, 0);
 
             &:has(.gap-4) {
-                --ecomm-categories-showcase-fluid-padding-x: #{$container-padding-x};
+                --ecomm-categories-showcase-fluid-padding-x: var(--o-bs-container-padding-x);
             }
         }
 

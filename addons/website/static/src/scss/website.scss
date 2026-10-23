@@ -8,6 +8,10 @@
     --o-border-color: #{o-color('300')};
     --o-border-color: #{fade-currentColor()};
 
+    /* Height of the nav of the mobile mega menu, whose dropdown behaves as
+       offcanvas */
+    --o-mega-menu-nav-height: 3rem;
+
     /* The theme customize modal JS will need to know the value of some scss
        variables used to render the user website, and those may have been
        customized by themes, the user or anything else (so there is no file to
@@ -211,7 +215,6 @@
 
 /* Manage custom offcanvas such as the one used for mobile mega menu nav
    where a dropdown behaves as offcanvas. */
-$o-mega-menu-nav-height: 3rem !default;
 $o-mega-menu-zindex: $zindex-offcanvas !default;
 $o-mega-menu-btn-close-zindex: $o-mega-menu-zindex + 1 !default;
 
@@ -1419,7 +1422,7 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
     &.s_carousel_boxed, &.s_carousel_rounded {
         .carousel-control-prev-icon, .carousel-control-next-icon {
             border-radius: var(--o-bs-border-radius);
-            border: var(--o-bs-border-width) solid $border-color;
+            border: var(--o-bs-border-width) solid var(--o-border-color);
             background-color: var(--o-bs-carousel-dark-indicator-active-bg);
             filter: var(--o-bs-carousel-dark-control-icon-filter);
         }
@@ -1857,7 +1860,7 @@ $-transition-duration: 200ms;
 .navbar .o_extra_menu_items > .show {
     > li {
         + li {
-            border-top: var(--o-bs-border-width) solid $border-color;
+            border-top: var(--o-bs-border-width) solid var(--o-border-color);
         }
         > a.dropdown-toggle {
             background-color: var(--tertiary-bg);
@@ -2162,7 +2165,7 @@ header {
     border-radius: 0;
     background-clip: unset; /* Remove the 1px gap introduced by BS4 */
     background-color: transparent; /* In order to allow the mega menu to be transparent */
-    border: var(--o-bs-border-width) solid $border-color; /* Prevent to see the color of the block behind. */
+    border: var(--o-bs-border-width) solid var(--o-border-color); /* Prevent to see the color of the block behind. */
 
     /* Needed to space the megamenu on this specific header */
     @if o-website-value('header-template') == 'boxed' {
@@ -2210,7 +2213,7 @@ header {
 
     .o_mega_nav {
         padding-left: calc(var(--o-bs-grid-gutter-width) * .5);
-        height: $o-mega-menu-nav-height;
+        height: var(--o-mega-menu-nav-height);
         background-color: o-color('menu-custom') or o-color('menu');
     }
 
@@ -2220,9 +2223,9 @@ header {
         inset: 0 0 0 auto !important;
         display: block;
         visibility: hidden;
-        margin-top: $o-mega-menu-nav-height !important;
+        margin-top: var(--o-mega-menu-nav-height) !important;
         border: none;
-        height: calc(100dvh - #{$o-mega-menu-nav-height});
+        height: calc(100dvh - var(--o-mega-menu-nav-height));
         max-height: 100vh;
         background-color: o-color('menu-custom') or o-color('menu');
         overflow-x: hidden;

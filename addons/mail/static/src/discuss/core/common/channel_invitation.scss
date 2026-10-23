@@ -38,7 +38,7 @@
 
 .o-discuss-ChannelInvitation-invitationBox {
     position: sticky;
-    bottom: - map-get($spacers, 2); /* Ignore p-2 class of ActionPanel */
+    bottom: calc(var(--o-bs-spacer-2) * -1); /* Ignore p-2 class of ActionPanel */
 }
 
 .o-discuss-ChannelInvitation-iconPlus {
