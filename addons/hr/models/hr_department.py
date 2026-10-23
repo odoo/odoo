@@ -23,7 +23,7 @@ class Department(models.Model):
     child_ids = fields.One2many('hr.department', 'parent_id', string='Child Departments')
     manager_id = fields.Many2one('hr.employee', string='Manager', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]")
     member_ids = fields.One2many('hr.employee', 'department_id', string='Members', readonly=True)
-    has_read_access = fields.Boolean(search="_search_has_read_access", store=False, export_string_translation=False)
+    has_read_access = fields.Boolean(compute='_compute_has_read_access', search="_search_has_read_access", store=False, export_string_translation=False)
     total_employee = fields.Integer(compute='_compute_total_employee', string='Total Employee',
         export_string_translation=False)
     jobs_ids = fields.One2many('hr.job', 'department_id', string='Jobs')
@@ -47,11 +47,28 @@ class Department(models.Model):
         if operator not in supported_operators or not isinstance(value, bool):
             raise NotImplementedError()
         if not value:
-            return [(1, "=", 0)]
-        if self.env['hr.employee'].has_access('read'):
-            return [(1, "=", 1)]
-        departments_ids = self.env['hr.department'].sudo().search([('manager_id', 'in', self.env.user.employee_ids.ids)]).ids
-        return [('id', 'child_of', departments_ids)]
+            raise ValueError()
+        if self.env.user.has_group('hr.group_hr_user'):
+            return [(1, '=', 1)]
+        departments_ids = self.env['hr.department'].sudo()._search([
+            ('manager_id', 'child_of', self.env.user.employee_ids.ids)]
+        )
+        return [
+            ('id', 'child_of', departments_ids)
+        ]
+
+    @api.depends_context('uid', 'company')
+    @api.depends('manager_id')
+    def _compute_has_read_access(self):
+        if self.env.user.has_group('hr.group_hr_user'):
+            self.has_read_access = True
+        else:
+            departments_ids = self.env['hr.department'].sudo().search([
+                ('manager_id', 'child_of', self.env.user.employee_ids.ids)]
+            ).get_children_department_ids()
+
+            for r in self:
+                r.has_read_access = r.id in departments_ids.ids
 
     @api.model
     def name_create(self, name):
