@@ -360,7 +360,7 @@ export class DomPlugin extends Plugin {
             // Empty blocks would disappear if unwrapped.
             if (isFirstOrLastBlock && !isEmptyBlock(node)) {
                 const isSelectionAtEdge = index === 0 ? isSelectionAtStart : isSelectionAtEnd;
-                shouldUnwrap = this.shouldUnwrapNodeBeforeInsertion(
+                shouldUnwrap = this.shouldUnwrapBlockBeforeInsertion(
                     node,
                     targetBlock,
                     numberOfNodes,
@@ -402,7 +402,7 @@ export class DomPlugin extends Plugin {
      * @param {boolean} isSelectionAtEdge
      * @returns {boolean}
      */
-    shouldUnwrapNodeBeforeInsertion(node, targetBlock, numberOfNodes, isSelectionAtEdge) {
+    shouldUnwrapBlockBeforeInsertion(node, targetBlock, numberOfNodes, isSelectionAtEdge) {
         if (
             numberOfNodes === 1 &&
             this.dependencies.baseContainer.isCandidateForBaseContainer(node)
