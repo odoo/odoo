@@ -1,9 +1,17 @@
 from odoo import http
 from odoo.fields import Domain
 from odoo.http import request
+<<<<<<< 5d18a9e458b9414b32bc9801c6b83bedafc8ad27
 from odoo.service.model import call_kw
 from werkzeug.exceptions import Forbidden, NotFound, BadRequest, Unauthorized
 from odoo.exceptions import MissingError
+||||||| c5907fc52630465fb728b38f274415f2e85cd575
+from werkzeug.exceptions import NotFound, BadRequest, Unauthorized
+from odoo.exceptions import MissingError
+=======
+from werkzeug.exceptions import NotFound, BadRequest, Unauthorized
+from odoo.exceptions import MissingError, UserError
+>>>>>>> 13c03628750a35dc616ac2c242647fbd1b08b461
 from odoo.tools import consteq
 
 
@@ -23,7 +31,31 @@ class PosSelfOrderController(http.Controller):
         # Recompute all prices from newly created lines to ensure price correctness and
         # avoid potential manipulation from the frontend
         order_ids.recompute_prices()
+<<<<<<< 5d18a9e458b9414b32bc9801c6b83bedafc8ad27
         amount_total = order_ids.amount_total
+||||||| c5907fc52630465fb728b38f274415f2e85cd575
+        amount_total, amount_untaxed = self._get_order_prices(order_ids.lines)
+        order_ids.write({
+            'state': 'paid' if amount_total == 0 else 'draft',
+            'amount_tax': amount_total - amount_untaxed,
+            'amount_total': amount_total,
+        })
+=======
+
+        # A negative line (a price_extra configured below the product price) would offset
+        # the other lines of the order. A line priced at exactly 0 is still accepted: it can
+        # only come from the merchant's configuration and is auto-paid like any free order.
+        currency = pos_config.currency_id
+        if any(currency.compare_amounts(line.price_subtotal_incl, 0) < 0 for line in order_ids.lines):
+            raise UserError(self.env._("Invalid product configuration"))
+
+        amount_total, amount_untaxed = self._get_order_prices(order_ids.lines)
+        order_ids.write({
+            'state': 'paid' if amount_total == 0 else 'draft',
+            'amount_tax': amount_total - amount_untaxed,
+            'amount_total': amount_total,
+        })
+>>>>>>> 13c03628750a35dc616ac2c242647fbd1b08b461
 
         if amount_total == 0:
             order_ids.state = 'paid'
