@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fleet_training_vehicle_view_pivot" model="ir.ui.view">
+        <field name="name">fleet_training.vehicle.pivot</field>
+        <field name="model">fleet_training.vehicle</field>
+        <field name="arch" type="xml">
+            <pivot string="Fleet Analysis">
+                <field name="category_id" type="row"/>
+                <field name="state" type="col"/>
+                <field name="seats" type="measure"/>
+                <field name="age_years" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="fleet_training_vehicle_view_graph" model="ir.ui.view">
+        <field name="name">fleet_training.vehicle.graph</field>
+        <field name="model">fleet_training.vehicle</field>
+        <field name="arch" type="xml">
+            <graph string="Fleet Analysis" type="bar">
+                <field name="category_id"/>
+                <field name="state"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_fleet_training_vehicle_analysis" model="ir.actions.act_window">
+        <field name="name">Fleet Analysis</field>
+        <field name="res_model">fleet_training.vehicle</field>
+        <field name="view_mode">pivot,graph</field>
+    </record>
+
+    <menuitem id="menu_fleet_training_reporting" name="Reporting" parent="menu_fleet_training_root" sequence="90"/>
+    <menuitem id="menu_fleet_training_vehicle_analysis" name="Fleet Analysis"
+              parent="menu_fleet_training_reporting"
+              action="action_fleet_training_vehicle_analysis"
+              sequence="10"/>
+</odoo>
