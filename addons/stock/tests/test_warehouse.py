@@ -4,6 +4,7 @@ from odoo import Command
 from odoo.addons.stock.tests.common2 import TestStockCommon
 from odoo.tests import Form
 from odoo.exceptions import UserError
+from odoo.tests.common import new_test_user
 from odoo.tools import mute_logger
 
 
@@ -735,3 +736,52 @@ class TestWarehouse(TestStockCommon):
         sequence.prefix += end_of_prefix
         self.warehouse_1.delivery_steps = 'pick_ship'
         self.assertTrue(sequence.prefix.endswith(end_of_prefix))
+
+    def test_multi_step_routes_multi_company(self):
+        """
+        Confirming a receipt of a two-step reception warehouse creates the
+        input to stock transfer when the warehouse company is allowed but
+        differs from the main active company.
+        """
+        companies = self.env['res.company'].create([
+            {'name': 'COMP1'},
+            {'name': 'COMP2'},
+        ])
+        warehouses = self.env['stock.warehouse'].create([
+            {
+                'name': 'Warehouse 1',
+                'company_id': companies.ids[0],
+                'code': 'WHC1',
+            },
+            {
+                'name': 'Warehouse 2',
+                'company_id': companies.ids[1],
+                'code': 'WHC2',
+            },
+        ])
+        warehouse = warehouses[0]
+        warehouse.reception_steps = 'two_steps'
+        user = new_test_user(self.env, login='bub', groups='stock.group_stock_user', company_id=companies.ids[1], company_ids=[Command.set(companies.ids)])
+        # COMP2 comes first, so the user works with COMP2 as main active company
+        env = self.env(user=user, context=dict(self.env.context, allowed_company_ids=[companies.ids[1], companies.ids[0]]))
+        supplier_location = self.env.ref('stock.stock_location_suppliers')
+        receipt = env['stock.picking'].create({
+            'partner_id': self.partner_1.id,
+            'picking_type_id': warehouse.in_type_id.id,
+            'location_id': supplier_location.id,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+            'company_id': companies.ids[0],
+            'move_ids': [Command.create({
+                'name': self.product_1.name,
+                'product_id': self.product_1.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product_1.uom_id.id,
+                'company_id': companies.ids[0],
+                'location_id': supplier_location.id,
+                'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+            })]
+        })
+        receipt.action_confirm()
+        self.assertRecordValues(receipt.move_ids.move_dest_ids, [{
+            'picking_type_id': warehouse.int_type_id.id, 'company_id': companies.ids[0], 'location_id': warehouse.wh_input_stock_loc_id.id,
+        }])
