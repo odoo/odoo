@@ -45,9 +45,20 @@ def _mock_peppol_register_receiver(func, self):
     self.sudo().company_id.l10n_fr_pdp_annuaire_start_date = fields.Date.to_date(fields.Datetime.now())
 
 
-def _mock_pdp_annuaire_lookup_participant(func, self, edi_identification):
-    peppol_eas = edi_identification.partition(":")[0]
+def _mock_pdp_annuaire_lookup_participant(func, self, edi_identification, **kwargs):
+    if kwargs.get('route') == 'pdp_annuaire_lookup':
+        return {'annuaire_lines': []}
+    peppol_eas = (edi_identification or '').partition(":")[0]
     return {'in_annuaire': peppol_eas == '0225'}
+
+
+def _mock_fetch_active_annuaire_lines(func, self, siren):
+    return {
+        'in_annuaire': False,
+        'identifiers': [],
+        'count': 0,
+        'lines': [],
+    }
 
 
 def _mock_button_trigger_authentication(func, self):
@@ -60,6 +71,7 @@ _demo_behaviour = {
     '_peppol_register_receiver': _mock_peppol_register_receiver,  # account_edi_proxy_client.user
     '_call_peppol_proxy': _mock_call_peppol_proxy,  # account_edi_proxy_client.user
     '_pdp_annuaire_lookup_participant': _mock_pdp_annuaire_lookup_participant,  # res.partner
+    '_fetch_active_annuaire_lines': _mock_fetch_active_annuaire_lines,  # res.partner
     'button_trigger_authentication': _mock_button_trigger_authentication,  # pdp.registration
 }
 
