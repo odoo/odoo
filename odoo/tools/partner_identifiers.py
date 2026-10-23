@@ -96,6 +96,14 @@ TIN_METADATA = {
         'category': 'VAT',
         'countries': ['BA'],
     },
+    'BD_BIN': {
+        'sequence': 10,
+        'label': _lt('BIN'),
+        'help': _lt('Bangladeshi Business Identification Number, 13 digits.'),
+        'placeholder': '123456789-0101',
+        'category': 'VAT',
+        'countries': ['BD'],
+    },
     'BE_VAT': {
         'scheme': '9925',
         'placeholder': 'BE0477472701',
