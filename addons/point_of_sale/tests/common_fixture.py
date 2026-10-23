@@ -209,22 +209,24 @@ class PosTestRecords(AccountTestInvoicingCommon):
             {'name': 'MANV'}, {'name': 'VLST'}, {'name': 'PARP'},
         ])
 
-        # Unlink some data partners that makes the test crash
-        for xmlid in [
-            "l10n_us_hr_payroll.res_partner_taxation_va",
-            "l10n_us_hr_payroll.res_partner_revenue_dc",
-            "l10n_us_hr_payroll.res_partner_pfl_dc",
-            "l10n_us_hr_payroll.res_partner_revenue_or",
-            "l10n_us_hr_payroll.res_partner_dcbs_or",
-            "l10n_us_hr_payroll.res_partner_employment_or",
-            "l10n_us_hr_payroll.res_partner_revenue_nc",
-            "l10n_us_hr_payroll.res_partner_state_tax_commission_id",
-            "l10n_us_hr_payroll.res_partner_department_taxes_vt",
-            "l10n_us_hr_payroll.res_partner_department_revenue_il",
-            "l10n_us_hr_payroll.res_partner_department_revenue_az",
-        ]:
-            if partner := cls.env.ref(xmlid, raise_if_not_found=False):
-                partner.unlink()
+        # Remove payroll data partners that interfere with the customer tours.
+        cls.env['res.partner'].browse(
+            partner.id
+            for xmlid in [
+                "l10n_us_hr_payroll.res_partner_taxation_va",
+                "l10n_us_hr_payroll.res_partner_revenue_dc",
+                "l10n_us_hr_payroll.res_partner_pfl_dc",
+                "l10n_us_hr_payroll.res_partner_revenue_or",
+                "l10n_us_hr_payroll.res_partner_dcbs_or",
+                "l10n_us_hr_payroll.res_partner_employment_or",
+                "l10n_us_hr_payroll.res_partner_revenue_nc",
+                "l10n_us_hr_payroll.res_partner_state_tax_commission_id",
+                "l10n_us_hr_payroll.res_partner_department_taxes_vt",
+                "l10n_us_hr_payroll.res_partner_department_revenue_il",
+                "l10n_us_hr_payroll.res_partner_department_revenue_az",
+            ]
+            if (partner := cls.env.ref(xmlid, raise_if_not_found=False)) is not None
+        ).unlink()
 
     @classmethod
     def _setup_taxes(cls):
