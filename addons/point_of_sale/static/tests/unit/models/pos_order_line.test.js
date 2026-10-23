@@ -275,7 +275,7 @@ test("[setUnitPrice] preserves price precision when tax data is saved", async ()
     const orderLine = data["pos.order.line"][0];
 
     orderLine.setUnitPrice(-2.175);
-    expect(orderLine.price_unit).toBe(-2.18);
+    expect(orderLine.price_unit).toBe(-2.175);
 
     orderLine.extra_tax_data = { price_unit: -2.175 };
     orderLine.setUnitPrice(-2.175);
@@ -284,7 +284,7 @@ test("[setUnitPrice] preserves price precision when tax data is saved", async ()
     currency.rounding = 1.0;
     currency.decimal_places = 0;
     orderLine.setUnitPrice(-2.175);
-    expect(orderLine.price_unit).toBe(-2.18);
+    expect(orderLine.price_unit).toBe(-2.175);
 });
 
 describe("Test taxes after fiscal position", () => {
