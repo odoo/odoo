@@ -87,9 +87,8 @@ export function initMockRpc() {
         delete params.access_token;
         delete params.preset_id;
         const partnerId = MockServer.env["res.partner"].create(params);
-        const partnerFields = MockServer.env["res.partner"]._load_pos_data_fields(odoo.config_id);
         return {
-            "res.partner": MockServer.env["res.partner"].read([partnerId], partnerFields, false),
+            "res.partner": MockServer.env["res.partner"].read([partnerId], ["id"], false),
         };
     };
 
