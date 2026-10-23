@@ -496,11 +496,12 @@ class HrVersion(models.Model):
         """Return the raw work entry values of the versions of ``self`` between two dates.
 
         Thin wrapper on :meth:`_get_version_work_entries_values`. With datetimes, the versions are
-        processed in one batch. The other branch is meant to localize plain dates in each
-        version's timezone; in practice it is only called with datetimes.
+        processed in one batch. With plain dates, the period goes from the start of
+        ``date_start`` to the end of ``date_stop`` in each version's timezone.
 
-        :param datetime date_start: period start (naive is considered UTC)
-        :param datetime date_stop: period end (naive is considered UTC)
+        :param date_start: period start, ``datetime`` (naive is considered UTC) or ``date``
+        :param date_stop: period end, ``datetime`` (naive is considered UTC) or ``date``
+            (included)
         :return: raw values, see :meth:`_get_version_work_entries_values`
         :rtype: list[dict]
         """
@@ -514,8 +515,9 @@ class HrVersion(models.Model):
             for version_tz, versions in versions_by_tz.items():
                 tz = ZoneInfo(version_tz) if version_tz else UTC
                 version_vals += versions._get_version_work_entries_values(
-                    date_start.replace(tzinfo=tz),
-                    date_stop.replace(tzinfo=tz))
+                    datetime.combine(date_start, time.min, tzinfo=tz),
+                    # the end excluded, at the start of the day after date_stop
+                    datetime.combine(date_stop + timedelta(days=1), time.min, tzinfo=tz))
 
         return version_vals
 
