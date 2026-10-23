@@ -31,7 +31,6 @@
  *
  * The end goal is to eliminate all compatibility shims.
  */
-
 // @ts-ignore
 const owl = globalThis.owl;
 
@@ -52,6 +51,18 @@ class Component extends owl.Component {
     }
 }
 owl.Component = Component;
+
+class Plugin extends owl.Plugin {
+    constructor(manager) {
+        super(manager);
+        // Private members can't be accessed through a Proxy: prevent owl from
+        // wrapping this instance when it is reached through a reactive object
+        // (e.g. record.model.x), as `this` would then be the proxy.
+        owl.markRaw(this);
+    }
+}
+
+owl.Plugin = Plugin;
 
 /**
  * @param {() => void} cb

@@ -28,37 +28,32 @@ export class MultiTabFallbackPlugin extends Plugin {
     static HEARTBEAT_KILL_OLD_PERIOD = 15000; // 15 seconds
 
     // PROPERTIES
-    /** @private */
-    _isOnMainTab = signal(false);
-    /** @private */
-    lastHeartbeat = signal(0);
-    /** @private */
-    heartbeatTimeout;
-    /** @private */
-    now = null;
-    /** @private */
-    tabId = null;
+    #isOnMainTab = signal(false);
+    #lastHeartbeat = signal(0);
+    #heartbeatTimeout;
+    #now = null;
+    #tabId = null;
 
     setup() {
-        this.now = new Date().getTime();
-        this.tabId = `multitab${multiTabId++}:${this.now}`;
+        this.#now = new Date().getTime();
+        this.#tabId = `multitab${multiTabId++}:${this.#now}`;
 
         useListener(browser, "pagehide", () => this.unregister());
-        useListener(browser, "storage", (ev) => this.onStorage(ev));
+        useListener(browser, "storage", (ev) => this.#onStorage(ev));
 
         // REGISTER THIS TAB
         const lastPresenceByTab =
             JSON.parse(localStorage.getItem("multi_tab_plugin.lastPresenceByTab")) ?? {};
-        lastPresenceByTab[this.tabId] = this.now;
+        lastPresenceByTab[this.#tabId] = this.#now;
         localStorage.setItem(
             "multi_tab_plugin.lastPresenceByTab",
             JSON.stringify(lastPresenceByTab)
         );
 
         if (!localStorage.getItem("multi_tab_plugin.main")) {
-            this.startElection();
+            this.#startElection();
         }
-        this.heartbeat();
+        this.#heartbeat();
     }
 
     /**
@@ -69,14 +64,11 @@ export class MultiTabFallbackPlugin extends Plugin {
      * @returns {boolean}
      */
     async isOnMainTab() {
-        return this._isOnMainTab();
+        return this.#isOnMainTab();
     }
 
-    /**
-     * @private
-     */
-    startElection() {
-        if (this._isOnMainTab()) {
+    #startElection() {
+        if (this.#isOnMainTab()) {
             return;
         }
         // Check who's next.
@@ -93,12 +85,12 @@ export class MultiTabFallbackPlugin extends Plugin {
             newMain = tab;
             break;
         }
-        if (newMain === this.tabId) {
+        if (newMain === this.#tabId) {
             // We're next in queue. Electing as main.
-            this.lastHeartbeat.set(now);
-            localStorage.setItem("multi_tab_plugin.heartbeat", this.lastHeartbeat());
+            this.#lastHeartbeat.set(now);
+            localStorage.setItem("multi_tab_plugin.heartbeat", this.#lastHeartbeat());
             localStorage.setItem("multi_tab_plugin.main", true);
-            this._isOnMainTab.set(true);
+            this.#isOnMainTab.set(true);
             this.bus.trigger("become_main_tab");
             // Removing main peer from queue.
             delete lastPresenceByTab[newMain];
@@ -109,17 +101,17 @@ export class MultiTabFallbackPlugin extends Plugin {
         }
     }
 
-    heartbeat() {
+    #heartbeat() {
         const now = new Date().getTime();
         let heartbeatValue = parseInt(localStorage.getItem("multi_tab_plugin.heartbeat") ?? 0);
         const lastPresenceByTab =
             JSON.parse(localStorage.getItem("multi_tab_plugin.lastPresenceByTab")) ?? {};
         if (heartbeatValue + MultiTabFallbackPlugin.HEARTBEAT_OUT_OF_DATE_PERIOD < now) {
             // Heartbeat is out of date. Electing new main.
-            this.startElection();
+            this.#startElection();
             heartbeatValue = parseInt(localStorage.getItem("multi_tab_plugin.heartbeat") ?? 0);
         }
-        if (this._isOnMainTab()) {
+        if (this.#isOnMainTab()) {
             // Walk through all tabs and kill old ones.
             const cleanedTabs = {};
             for (const [tabId, lastPresence] of Object.entries(lastPresenceByTab)) {
@@ -127,19 +119,19 @@ export class MultiTabFallbackPlugin extends Plugin {
                     cleanedTabs[tabId] = lastPresence;
                 }
             }
-            if (heartbeatValue !== this.lastHeartbeat()) {
+            if (heartbeatValue !== this.#lastHeartbeat()) {
                 // Someone else is also main...
                 // It should not happen, except in some race condition situation.
-                this._isOnMainTab.set(false);
-                this.lastHeartbeat.set(0);
-                lastPresenceByTab[this.tabId] = now;
+                this.#isOnMainTab.set(false);
+                this.#lastHeartbeat.set(0);
+                lastPresenceByTab[this.#tabId] = now;
                 localStorage.setItem(
                     "multi_tab_plugin.lastPresenceByTab",
                     JSON.stringify(lastPresenceByTab)
                 );
                 this.bus.trigger("no_longer_main_tab");
             } else {
-                this.lastHeartbeat.set(now);
+                this.#lastHeartbeat.set(now);
                 localStorage.setItem("multi_tab_plugin.heartbeat", now);
                 localStorage.setItem(
                     "multi_tab_plugin.lastPresenceByTab",
@@ -148,22 +140,22 @@ export class MultiTabFallbackPlugin extends Plugin {
             }
         } else {
             // Update own heartbeat.
-            lastPresenceByTab[this.tabId] = now;
+            lastPresenceByTab[this.#tabId] = now;
             localStorage.setItem(
                 "multi_tab_plugin.lastPresenceByTab",
                 JSON.stringify(lastPresenceByTab)
             );
         }
-        const hbPeriod = this._isOnMainTab()
+        const hbPeriod = this.#isOnMainTab()
             ? MultiTabFallbackPlugin.MAIN_TAB_HEARTBEAT_PERIOD
             : MultiTabFallbackPlugin.TAB_HEARTBEAT_PERIOD;
-        this.heartbeatTimeout = browser.setTimeout(() => this.heartbeat(), hbPeriod);
+        this.#heartbeatTimeout = browser.setTimeout(() => this.#heartbeat(), hbPeriod);
     }
 
-    onStorage({ key, newValue }) {
+    #onStorage({ key, newValue }) {
         if (key === "multi_tab_plugin.main" && !newValue) {
             // Main was unloaded.
-            this.startElection();
+            this.#startElection();
         }
     }
 
@@ -172,18 +164,18 @@ export class MultiTabFallbackPlugin extends Plugin {
      * be able to become the main tab.
      */
     unregister() {
-        clearTimeout(this.heartbeatTimeout);
+        clearTimeout(this.#heartbeatTimeout);
         const lastPresenceByTab =
             JSON.parse(localStorage.getItem("multi_tab_plugin.lastPresenceByTab")) ?? {};
-        delete lastPresenceByTab[this.tabId];
+        delete lastPresenceByTab[this.#tabId];
         localStorage.setItem(
             "multi_tab_plugin.lastPresenceByTab",
             JSON.stringify(lastPresenceByTab)
         );
 
         // Unload main.
-        if (this._isOnMainTab()) {
-            this._isOnMainTab.set(false);
+        if (this.#isOnMainTab()) {
+            this.#isOnMainTab.set(false);
             this.bus.trigger("no_longer_main_tab");
             browser.localStorage.removeItem("multi_tab_plugin.main");
         }

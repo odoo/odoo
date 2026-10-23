@@ -10,58 +10,50 @@ const STATE = Object.freeze({
 });
 
 export class MultiTabSharedWorkerPlugin extends Plugin {
-    /** @private */
-    workerService = usePlugin(WorkerPlugin);
+    #workerService = usePlugin(WorkerPlugin);
     bus = new EventBus();
-    /**
-     * @type {?PromiseWithResolvers<boolean>}
-     * @private
-     */
-    isMasterTabPromWithResolvers = null;
-    /** @private */
-    state = signal(STATE.INIT);
+    /** @type {?PromiseWithResolvers<boolean>} */
+    #isMasterTabPromWithResolvers = null;
+    #state = signal(STATE.INIT);
 
     setup() {
         useListener(browser, "pagehide", () => this.unregister());
     }
 
     async isOnMainTab() {
-        if (this.state() === STATE.UNREGISTERED) {
+        if (this.#state() === STATE.UNREGISTERED) {
             return false;
         }
-        if (this.state() === STATE.INIT) {
-            await this.startWorker();
+        if (this.#state() === STATE.INIT) {
+            await this.#startWorker();
         }
-        if (!this.isMasterTabPromWithResolvers) {
-            this.isMasterTabPromWithResolvers = Promise.withResolvers();
-            this.workerService.send("ELECTION:IS_MASTER?");
+        if (!this.#isMasterTabPromWithResolvers) {
+            this.#isMasterTabPromWithResolvers = Promise.withResolvers();
+            this.#workerService.send("ELECTION:IS_MASTER?");
         }
-        return this.isMasterTabPromWithResolvers.promise;
+        return this.#isMasterTabPromWithResolvers.promise;
     }
 
-    /**
-     * @private
-     */
-    messageHandler(messageEv) {
+    #messageHandler(messageEv) {
         const { type, data } = messageEv.data;
         if (!type?.startsWith("ELECTION:")) {
             return;
         }
         switch (type) {
             case "ELECTION:IS_MASTER_RESPONSE":
-                this.isMasterTabPromWithResolvers?.resolve(data.answer);
-                this.isMasterTabPromWithResolvers = null;
+                this.#isMasterTabPromWithResolvers?.resolve(data.answer);
+                this.#isMasterTabPromWithResolvers = null;
                 break;
             case "ELECTION:HEARTBEAT_REQUEST":
-                this.workerService.send("ELECTION:HEARTBEAT");
+                this.#workerService.send("ELECTION:HEARTBEAT");
                 break;
             case "ELECTION:ASSIGN_MASTER":
-                this.state.set(STATE.MASTER);
+                this.#state.set(STATE.MASTER);
                 this.bus.trigger("become_main_tab");
                 break;
             case "ELECTION:UNASSIGN_MASTER":
-                if (this.state() !== STATE.UNREGISTERED) {
-                    this.state.set(STATE.REGISTERED);
+                if (this.#state() !== STATE.UNREGISTERED) {
+                    this.#state.set(STATE.REGISTERED);
                 }
                 this.bus.trigger("no_longer_main_tab");
                 break;
@@ -70,18 +62,15 @@ export class MultiTabSharedWorkerPlugin extends Plugin {
         }
     }
 
-    /**
-     * @private
-     */
-    async startWorker() {
-        await this.workerService.ensureWorkerStarted();
-        await this.workerService.registerHandler((ev) => this.messageHandler(ev));
-        this.workerService.send("ELECTION:REGISTER");
-        this.state.set(STATE.REGISTERED);
+    async #startWorker() {
+        await this.#workerService.ensureWorkerStarted();
+        await this.#workerService.registerHandler((ev) => this.#messageHandler(ev));
+        this.#workerService.send("ELECTION:REGISTER");
+        this.#state.set(STATE.REGISTERED);
     }
 
     unregister() {
-        this.workerService.send("ELECTION:UNREGISTER");
-        this.state.set(STATE.UNREGISTERED);
+        this.#workerService.send("ELECTION:UNREGISTER");
+        this.#state.set(STATE.UNREGISTERED);
     }
 }

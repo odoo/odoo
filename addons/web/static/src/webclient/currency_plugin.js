@@ -6,7 +6,7 @@ import { Plugin, useListener, usePlugin } from "@odoo/owl";
 import { services } from "@web/core/services";
 
 export class CurrencyPlugin extends Plugin {
-    orm = usePlugin(ORM);
+    #orm = usePlugin(ORM);
 
     setup() {
         useListener(rpcBus, "RPC:RESPONSE", (ev) => {
@@ -22,7 +22,7 @@ export class CurrencyPlugin extends Plugin {
      * Reload the currencies (initially given in session_info)
      */
     async reloadCurrencies() {
-        const result = await this.orm.call("res.currency", "get_all_currencies");
+        const result = await this.#orm.call("res.currency", "get_all_currencies");
         for (const k in currencies) {
             delete currencies[k];
         }

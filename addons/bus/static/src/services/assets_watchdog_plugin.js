@@ -8,37 +8,32 @@ import { NotificationPlugin } from "@web/core/notifications/notification_plugin"
 import { services } from "@web/core/services";
 
 export class AssetsWatchdogPlugin extends Plugin {
-    /** @private */
-    busService = usePlugin(BusPlugin);
-    /** @private */
-    notification = usePlugin(NotificationPlugin);
+    #busService = usePlugin(BusPlugin);
+    #notification = usePlugin(NotificationPlugin);
 
-    /** @private */
-    isNotificationDisplayed = false;
-    /** @private */
-    bundleNotifTimerID = null;
+    #isNotificationDisplayed = false;
+    #bundleNotifTimerID = null;
 
     setup() {
-        this.busService.subscribe("bundle_changed", ({ server_version }) => {
+        this.#busService.subscribe("bundle_changed", ({ server_version }) => {
             if (server_version !== session.server_version) {
-                this.displayBundleChangedNotification();
+                this.#displayBundleChangedNotification();
             }
         });
-        this.busService.start();
+        this.#busService.start();
     }
 
     /**
-     * @private
      * Displays one notification on user's screen when assets have changed
      */
-    displayBundleChangedNotification() {
-        if (!this.isNotificationDisplayed) {
+    #displayBundleChangedNotification() {
+        if (!this.#isNotificationDisplayed) {
             // Wrap the notification inside a delay.
             // The server may be overwhelmed with recomputing assets
             // We wait until things settle down
-            browser.clearTimeout(this.bundleNotifTimerID);
-            this.bundleNotifTimerID = browser.setTimeout(() => {
-                this.notification.add(_t("The page appears to be out of date."), {
+            browser.clearTimeout(this.#bundleNotifTimerID);
+            this.#bundleNotifTimerID = browser.setTimeout(() => {
+                this.#notification.add(_t("The page appears to be out of date."), {
                     title: _t("Refresh"),
                     type: "warning",
                     sticky: true,
@@ -52,23 +47,22 @@ export class AssetsWatchdogPlugin extends Plugin {
                         },
                     ],
                     onClose: () => {
-                        this.isNotificationDisplayed = false;
+                        this.#isNotificationDisplayed = false;
                     },
                 });
-                this.isNotificationDisplayed = true;
-            }, this.getBundleNotificationDelay());
+                this.#isNotificationDisplayed = true;
+            }, this.#getBundleNotificationDelay());
         }
     }
 
     /**
-     * @private
      * Computes a random delay to avoid hammering the server
      * when bundles change with all the users reloading
      * at the same time
      *
      * @return {number} delay in milliseconds
      */
-    getBundleNotificationDelay() {
+    #getBundleNotificationDelay() {
         return 10000 + Math.floor(Math.random() * 50) * 1000;
     }
 }
