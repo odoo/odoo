@@ -59,7 +59,7 @@
         }
 
         &.row .nav-underline {
-            @include media-breakpoint-up(sm) {
+            @media (min-width: 576px) { /* media-breakpoint-up(sm) */
                 border-bottom: 0;
                 border-left: 1px solid var(--o-border-color);
 

@@ -3,7 +3,7 @@
         @extend %s_carousel_variants;
 
         &.s_carousel_arrows_hidden .carousel-item {
-            @include media-breakpoint-up(md) {
+            @media (min-width: 768px) { /* media-breakpoint-up(md) */
                 // Removing the padding so the container can be full when the
                 // arrows are hidden.
                 padding: 0;

@@ -20,7 +20,7 @@
 
     // Align the arrows vertically with the images for the "Thumbnails" card design
     &:where(.o_wsale_products_opt_design_thumbs:not(.o_arrows_bottom)) {
-        @include media-breakpoint-up(md) {
+        @media (min-width: 768px) { /* media-breakpoint-up(md) */
             .s_dynamic_snippet_arrows {
                 top: var(--o-carousel-item-padding-v);
                 transform: none;
@@ -48,7 +48,7 @@
             minmax(0, 1fr)
         );
 
-        @include media-breakpoint-down(md) {
+        @media (max-width: 767.98px) { /* media-breakpoint-down(md) */
             grid-template-columns: repeat(
                 attr(data-mobile-columns number),
                 minmax(0, 1fr)
@@ -57,7 +57,7 @@
     }
 }
 .s_dynamic_snippet_products:not(.o_arrows_bottom) .container-fluid .s_dynamic_snippet_content {
-    @include media-breakpoint-up(md) {
+    @media (min-width: 768px) { /* media-breakpoint-up(md) */
         // Prevented horizontal overflow of control buttons.
         .carousel-control-prev {
             transform: translateX(50%);

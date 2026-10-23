@@ -5,7 +5,7 @@
 
     .s_blog_posts_post_teaser {
 
-        @include media-breakpoint-up(md) {
+        @media (min-width: 768px) { /* media-breakpoint-up(md) */
             --lines-clamp: 4;
         }
     }
@@ -18,18 +18,18 @@
 
     &.s_blog_post_big_picture {
         .s_blog_posts_post_cover {
-            @include media-breakpoint-up(lg) {
+            @media (min-width: 992px) { /* media-breakpoint-up(lg) */
                 --aspect-ratio: 75%;
             }
         }
 
         &.s_blog_posts_post_picture_size_small {
             .s_blog_posts_post_cover {
-                @include media-breakpoint-up(md) {
+                @media (min-width: 768px) { /* media-breakpoint-up(md) */
                     --aspect-ratio: 66%;
                 }
 
-                @include media-breakpoint-up(xl) {
+                @media (min-width: 1200px) { /* media-breakpoint-up(xl) */
                     --aspect-ratio: 50%;
                 }
             }
@@ -117,7 +117,7 @@
             // "Bind" base animations.
             &.s_blog_posts_post_picture_size_default {
                 @include -big-picture-animate-extended();
-                @include media-breakpoint-only(lg) {
+                @media (min-width: 992px) and (max-width: 1199.98px) { /* media-breakpoint-only(lg) */
                     @include -big-picture-animate-compact();
                 }
             }
@@ -177,23 +177,23 @@
 
     &.s_blog_post_horizontal {
         &.s_blog_posts_post_picture_size_default .s_blog_posts_post_cover_col {
-            @include media-breakpoint-down(md) {
+            @media (max-width: 767.98px) { /* media-breakpoint-down(md) */
                 min-height: 12rem;
             }
 
             // Taking the freedom to use arbitrary values as they are confortable sizes
             // for an image inside a card.
-            @include media-breakpoint-up(md) {
+            @media (min-width: 768px) { /* media-breakpoint-up(md) */
                 flex: 0 0 MIN(26rem, 33%);
             }
         }
 
         &.s_blog_posts_post_picture_size_small .s_blog_posts_post_cover_col {
-            @include media-breakpoint-down(md) {
+            @media (max-width: 767.98px) { /* media-breakpoint-down(md) */
                 min-height: 8rem;
             }
 
-            @include media-breakpoint-up(md) {
+            @media (min-width: 768px) { /* media-breakpoint-up(md) */
                 flex: 0 0 MIN(26rem, 25%);
             }
         }
@@ -210,10 +210,10 @@
     }
 
     &.s_dynamic_snippet_carousel.s_blog_post_big_picture .s_blog_posts_post_cover {
-        @include media-breakpoint-up(sm) {
+        @media (min-width: 576px) { /* media-breakpoint-up(sm) */
             --aspect-ratio: 50%;
         }
-        @include media-breakpoint-up(lg) {
+        @media (min-width: 992px) { /* media-breakpoint-up(lg) */
             --aspect-ratio: 100%;
         }
     }

@@ -5,7 +5,7 @@
 
     .s_tabs_nav_with_descriptions:where(.s_tabs_nav_vertical) :where(.o_nav_tabs_description),
     .s_tabs_nav_with_descriptions_active:where(.s_tabs_nav_vertical) .active > :where(.o_nav_tabs_description) {
-        @include media-breakpoint-up(lg) {
+        @media (min-width: 992px) { /* media-breakpoint-up(lg) */
             display: block;
         }
     }

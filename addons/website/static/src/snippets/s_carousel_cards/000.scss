@@ -6,12 +6,12 @@
         --CarouselControllers-size: 2.5rem;
         --CardBody-padding: #{map-get($spacers, 4)};
 
-        @include media-breakpoint-down(lg) {
+        @media (max-width: 991.98px) { /* media-breakpoint-down(lg) */
             // Remove Extra-height on mobile
             --CardBody-extra-height: 0px !important;
         }
 
-        @include media-breakpoint-down(lg) {
+        @media (max-width: 991.98px) { /* media-breakpoint-down(lg) */
             --CardBody-padding: #{map-get($spacers, 3)};
         }
 
@@ -45,13 +45,13 @@
             padding-inline-start: var(--CardBody-padding);
         }
 
-        @include media-breakpoint-down(md) {
+        @media (max-width: 767.98px) { /* media-breakpoint-down(md) */
             .o_carousel_pause {
                 margin: 0;
             }
         }
 
-        @include media-breakpoint-up(lg) {
+        @media (min-width: 992px) { /* media-breakpoint-up(lg) */
             &.s_carousel_cards_with_img {
 
                 .o_horizontal_controllers_container,

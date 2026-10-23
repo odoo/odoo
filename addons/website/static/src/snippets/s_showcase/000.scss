@@ -1,6 +1,6 @@
 
 #wrapwrap .s_showcase:not([data-vcss]) {
-    @include media-breakpoint-up(lg) {
+    @media (min-width: 992px) { /* media-breakpoint-up(lg) */
         .container, .container-fluid {
             position: relative;
 
@@ -48,7 +48,7 @@
     }
 }
 
-@include media-breakpoint-down(lg) {
+@media (max-width: 991.98px) { /* media-breakpoint-down(lg) */
     #wrapwrap .s_showcase:not([data-vcss]) {
         .text-end, .text-start {
             text-align: center;

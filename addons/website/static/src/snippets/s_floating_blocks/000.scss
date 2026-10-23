@@ -41,7 +41,7 @@
         max-height: calc(100lvh - (var(--o-bs-spacer-5) * 2)) !important;
     }
 
-    @include media-breakpoint-up(lg) {
+    @media (min-width: 992px) { /* media-breakpoint-up(lg) */
         > .container, > .container-fluid {
             --floating-boxes-box-ratio: var(--floating-boxes-box-ratio-lg);
             --floating-boxes-box-padding-x: var(--floating-boxes-box-padding-x-lg);
@@ -68,7 +68,7 @@
         }
     }
 
-    @include media-breakpoint-up(xl) {
+    @media (min-width: 1200px) { /* media-breakpoint-up(xl) */
         > .container, > .container-fluid {
             --floating-boxes-box-ratio: var(--floating-boxes-box-ratio-xl);
         }
@@ -79,7 +79,7 @@
         }
     }
 
-    @include media-breakpoint-up(xxl) {
+    @media (min-width: 1400px) { /* media-breakpoint-up(xxl) */
         > .container-fluid > div {
             padding-left: calc(var(--o-bs-spacer-5) * 3);
             padding-right: calc(var(--o-bs-spacer-5) * 3);
