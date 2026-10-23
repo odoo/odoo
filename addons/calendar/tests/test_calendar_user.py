@@ -21,7 +21,7 @@ class TestCalendarUser(TestCalendarCalendar):
                 self.env["calendar.user"].create({
                     "calendar_id": self.calendar.id,
                     "user_id": self.user.id,
-                    "access_role": "reader",
+                    "access_role": "writer",
                 })
                 self.env.cr.flush()
 
@@ -39,7 +39,7 @@ class TestCalendarUser(TestCalendarCalendar):
     def test_non_superuser_cannot_edit_protected_fields(self):
         membership = self.calendar.calendar_user_ids.filtered(lambda m: m.user_id == self.user)
         with self.assertRaises(AccessError):
-            membership.with_user(self.user).write({"access_role": "reader"})
+            membership.with_user(self.user).write({"access_role": "writer"})
 
     def test_non_superuser_can_edit_filter_fields(self):
         """Filter-only fields (color, active, checked) remain editable by a regular user."""
@@ -57,7 +57,7 @@ class TestCalendarUser(TestCalendarCalendar):
         membership = self.env["calendar.user"].with_user(self.user).create({
             "calendar_id": self.calendar.id,
             "user_id": self.other_user.id,
-            "access_role": "reader",
+            "access_role": "writer",
         })
         self.assertEqual(membership.user_id, self.other_user)
 
@@ -74,7 +74,7 @@ class TestCalendarUser(TestCalendarCalendar):
             self.env["calendar.user"].with_user(self.other_user).create({
                 "calendar_id": self.calendar.id,
                 "user_id": self.user_without_access.id,
-                "access_role": "reader",
+                "access_role": "writer",
             })
 
     def test_writer_cannot_grant_access(self):
@@ -83,16 +83,16 @@ class TestCalendarUser(TestCalendarCalendar):
             self.env["calendar.user"].with_user(self.other_user).create({
                 "calendar_id": self.calendar.id,
                 "user_id": self.user_without_access.id,
-                "access_role": "reader",
+                "access_role": "writer",
             })
 
     def test_non_owner_cannot_write_others_membership(self):
-        self._grant_role(self.calendar, self.other_user, "reader")
+        self._grant_role(self.calendar, self.other_user, "writer")
         with self.assertRaises(AccessError):
             self.user_membership.with_user(self.other_user).write({"filter_color": 9})
 
     def test_member_can_unlink_own_membership(self):
-        self._grant_role(self.calendar, self.other_user, "reader")
+        self._grant_role(self.calendar, self.other_user, "writer")
         membership = self.calendar.calendar_user_ids.filtered(lambda m: m.user_id == self.other_user)
         membership.with_user(self.other_user).unlink()
         self.assertFalse(membership.exists())
@@ -103,7 +103,7 @@ class TestCalendarUser(TestCalendarCalendar):
             self.user_membership.with_user(self.other_user).unlink()
 
     def test_owner_can_unlink_others_membership(self):
-        self._grant_role(self.calendar, self.other_user, "reader")
+        self._grant_role(self.calendar, self.other_user, "writer")
         membership = self.calendar.calendar_user_ids.filtered(lambda m: m.user_id == self.other_user)
         membership.with_user(self.user).unlink()
         self.assertFalse(membership.exists())
