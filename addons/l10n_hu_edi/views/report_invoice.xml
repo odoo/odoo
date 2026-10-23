@@ -44,8 +44,8 @@
             </div>
             </t>
         </xpath>
-        <xpath expr="//div[@name='invoice_date']/t[1]" position="attributes">
-            <attribute name="t-if">o.move_type == 'out_invoice' or (o.move_type == 'out_refund' and not o.reversed_entry_id)</attribute>
+        <xpath expr="//div[@name='invoice_date']/t[@t-elif=&quot;o.move_type == 'out_refund'&quot;]" position="before">
+            <t t-elif="o.move_type == 'out_refund' and not o.reversed_entry_id"><strong>Invoice Date</strong></t>
         </xpath>
         <xpath expr="//t[@name='address_not_same_as_shipping']//address" position="before">
             <strong t-if="is_sale_document">Customer:</strong>
