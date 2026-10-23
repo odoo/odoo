@@ -255,3 +255,46 @@ class L10nHuEdiTestInvoiceXml(L10nHuEdiTestCommon):
             exchange_rate_el = xml_tree.find('.//nav:exchangeRate', nsmap)
 
             self.assertEqual(exchange_rate_el.text, '380.770000')
+
+    def test_invoice_report_vat_huf_non_huf_company(self):
+        """Test that for a Hungarian localization company whose company currency is NOT HUF
+        (e.g. EUR), the invoice report / PDF displays the correct Total VAT amount in HUF.
+        """
+        with freeze_time('2024-02-01'):
+            company = self.company_data['company']
+            currency_eur = self.env.ref('base.EUR')
+            currency_huf = self.env.ref('base.HUF')
+
+            # Change company currency to EUR and clean up rates defined when company was HUF
+            company.currency_id = currency_eur
+            self.env['res.currency.rate'].search([('company_id', '=', company.id)]).unlink()
+
+            # Ensure an active exchange rate exists between EUR and HUF for the test date
+            huf_rate = 380.77
+            self.env['res.currency.rate'].create({
+                'name': '2024-02-01',
+                'currency_id': currency_huf.id,
+                'company_id': company.id,
+                'rate': huf_rate,
+            })
+
+            invoice = self.create_invoice_simple(currency=currency_eur)
+            invoice.action_post()
+
+            # Invoice has 10,000 EUR base with 27% tax -> 2,700 EUR VAT.
+            # In HUF, the VAT amount must be 2,700 * 380.77 = 1,028,079 HUF.
+            expected_vat_huf = currency_huf.round(2700.0 * huf_rate)
+
+            report_totals = invoice._l10n_hu_get_invoice_totals_for_report()
+            self.assertEqual(report_totals['total_vat_amount_in_huf'], expected_vat_huf)
+
+            # Render the invoice report and check that the HUF VAT total appears in the output
+            html = self.env['ir.actions.report']._render_qweb_html('account.report_invoice', invoice.ids)[0].decode('utf-8')
+            self.assertIn("Total VAT amount in HUF", html)
+            self.assertIn(report_totals['formatted_total_vat_amount_in_huf'], html)
+
+            # Also check credit note / refund
+            credit_note = self.create_credit_note_simple(currency=currency_eur)
+            credit_note.action_post()
+            cn_report_totals = credit_note._l10n_hu_get_invoice_totals_for_report()
+            self.assertEqual(cn_report_totals['total_vat_amount_in_huf'], -expected_vat_huf)
