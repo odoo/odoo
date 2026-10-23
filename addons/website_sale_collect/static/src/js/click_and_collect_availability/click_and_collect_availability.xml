@@ -4,6 +4,7 @@
     <t t-name="website_sale_collect.ClickAndCollectAvailability">
         <t t-set="inStoreAvailable" t-value="this.state.inStoreData.stock_data?.in_stock"/>
         <div
+            t-if="this.state.active"
             class="o_wsale_collect_switch d-flex flex-column gap-1 w-100 bg-o-color-3"
             role="radiogroup"
             aria-label="Shipping method"
