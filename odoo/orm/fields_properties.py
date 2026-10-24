@@ -987,6 +987,10 @@ class PropertiesDefinition(Field):
     def convert_to_write(self, value, record):
         return value
 
+    def convert_to_export(self, value, record):
+        # record format -> export format (the JSON the import reads back)
+        return json.dumps(value) if value else ''
+
     def _validate_properties_definition(self, properties_definition, env):
         """Raise an error if the property definition is not valid."""
         allowed_keys = self.ALLOWED_KEYS + env["base"]._additional_allowed_keys_properties_definition()
