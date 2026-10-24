@@ -92,16 +92,16 @@ class AccountMove(models.Model):
 
     def _search_l10n_hr_payment_unreported(self, operator, value):
         # A specific override to enable the "Has unreported payments" filter on the list view
-        if operator == '!=':
-            query = self._search([])
-            query.join('account_move', 'id', 'l10n_hr_edi_addendum', 'move_id', 'addendum')
-            query.add_where(SQL("""ROUND(%(payment_reported_amount)s - %(amount_total)s + %(amount_residual)s, 8) != 0""",
-                payment_reported_amount=self.env['l10n_hr_edi.addendum']._field_to_sql('account_move__addendum', 'payment_reported_amount', query),
-                amount_total=self._field_to_sql('account_move', 'amount_total', query),
-                amount_residual=self._field_to_sql('account_move', 'amount_residual', query),
-            ))
-            return [('id', 'in', query)]
-        return []
+        if operator != 'in':
+            return NotImplemented
+        query = self._search([])
+        query.join('account_move', 'id', 'l10n_hr_edi_addendum', 'move_id', 'addendum')
+        query.add_where(SQL("""ROUND(%(payment_reported_amount)s - %(amount_total)s + %(amount_residual)s, 8) != 0""",
+            payment_reported_amount=self.env['l10n_hr_edi.addendum']._field_to_sql('account_move__addendum', 'payment_reported_amount', query),
+            amount_total=self._field_to_sql('account_move', 'amount_total', query),
+            amount_residual=self._field_to_sql('account_move', 'amount_residual', query),
+        ))
+        return [('id', 'in', query)]
 
     @api.constrains('move_type', 'l10n_hr_process_type')
     def _check_l10n_hr_process_type(self):
