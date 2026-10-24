@@ -505,6 +505,16 @@ been taken for this time off type. Changing it now would affect existing employe
         ]
         return filtered_employee_work_entry_type_infos
 
+    def _get_allocation_info(self, employees, target_date=None):
+        """ :return: ``{employee: info}``, ``info`` being the balance dict of
+                 get_allocation_data() for this single work entry type
+        """
+        self.ensure_one()
+        return {
+            employee: allocations[0][1]
+            for employee, allocations in self.get_allocation_data(employees, target_date).items()
+        }
+
     def get_allocation_data(self, employees, target_date=None, same_year_only=False):
         """Return the balance of the employees for each type of ``self`` on a date.
 
