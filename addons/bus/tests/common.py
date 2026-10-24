@@ -185,6 +185,7 @@ class BusResult:
 class BusCase(BaseCase):
     def _reset_bus(self):
         self.env.cr.precommit.data.get("bus.bus.values", []).clear()
+        self.env.cr.postcommit.data.pop("bus.bus.subscribe_again", None)
         self.env["bus.bus"].sudo().search([]).unlink()
 
     @contextlib.contextmanager
@@ -416,6 +417,29 @@ class WebsocketCase(HttpCase, BusCase):
     def trigger_notification_dispatching(self):
         self.env.cr.precommit.run()  # Trigger the creation of bus.bus records
         self.env.cr.postcommit.run()  # PostgreSQL NOTIFY happens after commit
+
+    @contextlib.contextmanager
+    def _wait_for_subscribe(self):
+        subscribed = Event()
+        original_subscribe = BusDispatcher.subscribe
+
+        def subscribe(dispatcher, *args):
+            original_subscribe(dispatcher, *args)
+            subscribed.set()
+
+        with patch.object(BusDispatcher, "subscribe", subscribe):
+            yield
+            self.assertTrue(self.wait_for_event(subscribed))
+
+    def _commit_and_wait_for_subscribe(self):
+        with self._wait_for_subscribe():
+            self.trigger_notification_dispatching()
+
+    def _recv_types_until(self, websocket, notification_type):
+        types = []
+        while notification_type not in types:
+            types += [notif["message"]["type"] for notif in json.loads(websocket.recv())]
+        return types
 
     def wait_for_event(self, event, timeout=5):
         """Wait for a server thread to set ``event``, giving it the registry lock back."""

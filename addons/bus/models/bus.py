@@ -68,6 +68,14 @@ def get_notify_payloads(channels):
                 get_notify_payloads(channels[pivot:]))
 
 
+def send_notify_payloads(name, payloads):
+    with odoo.sql_db.db_connect(config["db_system"]).cursor() as cr:
+        for payload in payloads:
+            cr.execute(
+                SQL("SELECT %s(%s, %s)", SQL.identifier(ODOO_NOTIFY_FUNCTION), name, payload),
+            )
+
+
 class BusBus(models.Model):
     _name = 'bus.bus'
 
@@ -159,15 +167,33 @@ class BusBus(models.Model):
                         "The imbus notification payload was too large, it's been split into %d payloads.",
                         len(payloads),
                     )
-                with odoo.sql_db.db_connect(config['db_system']).cursor() as cr:
-                    for payload in payloads:
-                        cr.execute(
-                            SQL(
-                                "SELECT %s('imbus', %s)",
-                                SQL.identifier(ODOO_NOTIFY_FUNCTION),
-                                payload,
-                            )
-                        )
+                send_notify_payloads("imbus", payloads)
+
+    @api.model
+    def _subscribe_again(self, targets):
+        """Make the open websockets listening to the bus channel of ``targets`` (users,
+        guests, channels) subscribe again once the transaction is committed, to follow a
+        change of the channels `_build_bus_channel_list` gives them, such as groups."""
+        if not targets:
+            return
+        if "bus.bus.subscribe_again" not in self.env.cr.postcommit.data:
+            self.env.cr.postcommit.data["bus.bus.subscribe_again"] = {
+                # sudo - bus.bus: reading the last bus id isn't sensitive.
+                "last": self.sudo()._bus_last_id(),
+                "channels": OrderedSet(),
+            }
+
+            @self.env.cr.postcommit.add
+            def notify():
+                if not (data := self.env.cr.postcommit.data.pop("bus.bus.subscribe_again", None)):
+                    return
+                payloads = get_notify_payloads(
+                    [(channel, data["last"]) for channel in data["channels"]],
+                )
+                send_notify_payloads("imbus_resubscribe", payloads)
+        self.env.cr.postcommit.data["bus.bus.subscribe_again"]["channels"].update(
+            channel_with_db(self.env.cr.dbname, target) for target in targets
+        )
 
     @api.model
     def _poll(self, channels, last=0, ignore_ids=None):
