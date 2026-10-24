@@ -2,4 +2,11 @@
     .o_card_record:focus-visible {
         outline: none;
     }
+    .o_card_record {
+        @media screen and (min-width: 768px) {
+            --Card-min-width: var(--KanbanRecord-width, #{$o-kanban-default-record-width});
+            --Card-padding-v: 0;
+            --Card-padding-h: 0;
+        }
+    }
 }
