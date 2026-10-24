@@ -215,6 +215,14 @@ export class BusPlugin extends Plugin {
     }
 
     /**
+     * Open a new websocket connection, so that the server reads the cookies again.
+     */
+    restart() {
+        this.workerService.send("BUS:STOP");
+        this.workerService.send("BUS:START");
+    }
+
+    /**
      * Subscribe to a single notification type.
      *
      * @param {string} notificationType
