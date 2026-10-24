@@ -1,14 +1,27 @@
 # -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields, models, api
 
 
 class ProductSupplierinfo(models.Model):
     _inherit = 'product.supplierinfo'
 
-    purchase_requisition_id = fields.Many2one('purchase.requisition', related='purchase_requisition_line_id.requisition_id', string='Agreement')
+    purchase_requisition_id = fields.Many2one('purchase.requisition', related='purchase_requisition_line_id.requisition_id')
     purchase_requisition_line_id = fields.Many2one('purchase.requisition.line', index='btree_not_null')
+    agreement_display_name = fields.Char('Agreement', compute='_compute_agreement_display_name')
+
+    @api.depends('purchase_requisition_id.name', 'purchase_requisition_line_id.remaining_qty', 'purchase_requisition_line_id.uom_id.name')
+    def _compute_agreement_display_name(self):
+        for supplierinfo in self:
+            if supplierinfo.purchase_requisition_id:
+                supplierinfo.agreement_display_name = "%s - %g %s left" % (
+                    supplierinfo.purchase_requisition_id.display_name,
+                    supplierinfo.purchase_requisition_line_id.remaining_qty,
+                    supplierinfo.purchase_requisition_line_id.uom_id.name,
+                )
+            else:
+                supplierinfo.agreement_display_name = False
 
 
 class ProductProduct(models.Model):
