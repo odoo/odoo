@@ -328,6 +328,9 @@ class CustomerPortal(payment_portal.PaymentPortal):
             return {'error': _('The order is not in a state requiring customer signature.')}
         if not signature:
             return {'error': _('Signature is missing.')}
+        # the reason is meant for the salesperson, the customer cannot act on it
+        if order_sudo._get_online_confirmation_error():
+            return {"error": _("This order cannot be confirmed online. Please contact us.")}
 
         try:
             order_sudo.write({
@@ -463,6 +466,9 @@ class PaymentPortal(payment_portal.PaymentPortal):
             raise error
         except AccessError:
             raise ValidationError(_("The access token is invalid."))
+        # refuse before the customer is charged for an order whose confirmation would fail
+        if order_sudo._get_online_confirmation_error():
+            raise ValidationError(_("This order cannot be confirmed online. Please contact us."))
 
         logged_in = not request.env.user._is_public()
         partner_sudo = request.env.user.partner_id if logged_in else order_sudo.partner_invoice_id

@@ -8,6 +8,7 @@ from odoo.http import request
 from odoo.addons.payment.tests.common import PaymentCommon
 from odoo.addons.website_sale.controllers.cart import Cart
 from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale.controllers.payment import PaymentPortal
 from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 from odoo.addons.delivery.tests.common import DeliveryCommon
 
@@ -73,3 +74,30 @@ class TestWebsiteSaleStockDeliveryController(PaymentCommon, WebsiteSaleCommon, D
             request.cart = sale_order
             with self.assertRaises(ValidationError):
                 WebsiteSaleController.shop_payment_validate()
+
+    def test_pay_cart_without_warehouse(self):
+        """Check that paying a cart online is refused before any transaction is created when the company has no warehouse."""
+        self.env["stock.warehouse"].search([
+            ("company_id", "=", self.env.company.id)
+        ]).active = False
+        self.product.is_storable = True
+        cart = self._create_so(carrier_id=self.free_delivery.id)
+
+        website = self.website.with_user(self.public_user)
+        with (
+            MockRequest(website.env, website=website),
+            self.assertRaisesRegex(ValidationError, "This order cannot be confirmed online."),
+        ):
+            PaymentPortal().shop_payment_transaction(
+                cart.id,
+                cart._portal_ensure_token(),
+                provider_id=self.provider.id,
+                payment_method_id=self.payment_method_id,
+                token_id=None,
+                amount=cart.amount_total,
+                flow="direct",
+                tokenization_requested=False,
+                landing_route=cart.get_portal_url(),
+            )
+
+        self.assertFalse(cart.transaction_ids)

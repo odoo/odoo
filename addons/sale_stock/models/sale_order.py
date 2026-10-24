@@ -220,6 +220,23 @@ class SaleOrder(models.Model):
         self.order_line._action_launch_stock_rule()
         return super(SaleOrder, self)._action_confirm()
 
+    def _get_online_confirmation_error(self):
+        """ Refuse the online confirmation of an order whose confirmation would fail due to a missing warehouse. """
+        error_msg = super()._get_online_confirmation_error()
+        if error_msg or self.warehouse_id or self.state not in ('draft', 'sent'):
+            return error_msg
+        other_company_ids = set()
+        for line in self.order_line:
+            if line.product_id.type != 'consu':
+                continue
+            if line.route_ids.company_id and line.route_ids.company_id != line.company_id:
+                other_company_ids.update(line.route_ids.company_id.ids)
+                continue
+            return _("A warehouse is required to confirm this order.")
+        if other_company_ids - set(self.env['stock.warehouse'].search([('company_id', 'in', list(other_company_ids))]).company_id.ids):
+            return _("A warehouse is required to use the routes set on this order.")
+        return False
+
     @api.depends('picking_ids')
     def _compute_picking_ids(self):
         for order in self:
