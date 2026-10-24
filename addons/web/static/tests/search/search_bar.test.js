@@ -496,6 +496,54 @@ test("no search text triggers a reload", async () => {
     expect(updateCount).toBe(1);
 });
 
+test("debounced search", async () => {
+    let updateCount = 0;
+    class TestComponent extends Component {
+        static template = xml`<SearchBar/>`;
+        static components = { SearchBar };
+        props = useProps();
+        setup() {
+            useOnChange(
+                () => [this.props.domain],
+                () => updateCount++,
+                { initialRun: false }
+            );
+        }
+    }
+
+    await mountWithSearch(TestComponent, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+    });
+
+    await keyDown("Enter");
+    await animationFrame();
+    expect(updateCount).toBe(1);
+    await keyDown("Enter");
+    await animationFrame();
+    expect(updateCount).toBe(1);
+    await click(".o_searchview button");
+    await animationFrame();
+    expect(updateCount).toBe(1);
+
+    await advanceTime(500);
+
+    await click(".o_searchview button");
+    await animationFrame();
+    expect(updateCount).toBe(2);
+    await queryFirst(".o_searchview_input").focus();
+    await keyDown("Enter");
+    await animationFrame();
+    expect(updateCount).toBe(2);
+
+    await advanceTime(500);
+
+    await keyDown("Enter");
+    await animationFrame();
+    expect(updateCount).toBe(3);
+});
+
 test("selecting (no result) triggers a search bar rendering", async () => {
     await mountWithSearch(SearchBar, {
         resModel: "partner",
