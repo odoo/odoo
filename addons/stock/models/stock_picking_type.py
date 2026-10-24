@@ -44,6 +44,7 @@ LOT_LABEL_FORMATS = [
 
 class StockPickingType(models.Model):
     _name = 'stock.picking.type'
+    _inherit = ["barcode.uniqueness.mixin"]
     _description = "Picking Type"
     _explanation = "Defines the type of stock operation (e.g., Receipts, Deliveries, Internal Transfers) and contains configuration for how these operations should behave in the warehouse."
     _order = 'is_favorite desc, sequence, id'
@@ -263,6 +264,11 @@ class StockPickingType(models.Model):
              "Leave this value as '0' if no transfer limit.")
     batch_auto_confirm = fields.Boolean("Auto-confirm", default=True)
     batch_properties_definition = fields.PropertiesDefinition('Batch Properties')
+
+    _check_picking_type_barcode_company_unique = models.Constraint(
+        "unique (barcode,company_id)",
+        "The barcode for an operation type must be unique per company!",
+    )
 
     @api.constrains(lambda self: self._get_batch_and_wave_group_by_keys() + ['batch_creation_type'])
     def _check_auto_batch_options(self):
