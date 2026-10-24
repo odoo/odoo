@@ -1,7 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
+import json
 import logging
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import ec, padding, rsa
+from cryptography.hazmat.primitives.asymmetric.utils import encode_dss_signature
 from datetime import datetime, timedelta
+from typing import Self
 
 from odoo import api, fields, models, tools
 from odoo.http import request
@@ -16,6 +22,8 @@ from odoo.http.session import (
 from odoo.modules import module
 from odoo.tools import SQL
 from odoo.tools._vendor.useragents import UserAgent
+from odoo.tools.constants import GC_UNLINK_LIMIT
+from odoo.tools.misc import consteq
 from odoo.tools.translate import _
 
 from .res_users import check_identity
@@ -374,3 +382,142 @@ class ResSession(models.Model):
         must_logout = bool(self.filtered('is_current'))
         if must_logout:
             logout(request.session)
+
+
+class ResDeviceDBSC(models.Model):
+    _name = 'res.device.dbsc'
+    _description = 'Device DBSC'
+
+    session_identifier = fields.Char('Session Identifier', required=True, index='btree')
+    jwk = fields.Json(string='JSON Web Key', required=True)
+    alg = fields.Char(string='Algorithm', required=True)
+
+    _session_identifier_uniq = models.Constraint(
+        'unique (session_identifier)',
+        "A session device can only have one bound public key.",
+    )
+
+    # ============================================
+    # JWS helpers
+    # ============================================
+
+    @classmethod
+    def _verify_jws(
+        cls,
+        jws: str,
+        challenge: str,
+        *,
+        jwk: dict | None = None,
+        alg: str | None = None,
+    ) -> tuple[dict, str]:
+        """ Verify a compact JWS and its bound challenge.
+
+            Used for both DBSC registration and refresh. On registration, the public
+            key and algorithm are taken from the token's own header (``jwk``/``alg``
+            are None). On refresh, the caller pins the previously registered ``jwk``
+            and ``alg`` so the header cannot swap the key that is trusted.
+
+            :param jws: the compact JWS proof (``header.payload.signature``, b64url).
+            :param challenge: the server-issued nonce the token must echo in ``jti``.
+            :param jwk: pinned public key (JWK dict), or None to trust the header's.
+            :param alg: pinned signing algorithm, or None to trust the header's.
+            :return: the ``(jwk, alg)`` actually used to verify the signature.
+            :raise ValueError: if any check below fails (caller treats this as invalid).
+        """
+        def b64url_decode(segment: str) -> bytes:
+            return base64.urlsafe_b64decode(segment + '=' * (-len(segment) % 4))
+
+        try:
+            b64_header, b64_payload, b64_signature = jws.split('.')
+
+            header = json.loads(b64url_decode(b64_header))
+            jwt_claims = json.loads(b64url_decode(b64_payload))
+            b_signature = b64url_decode(b64_signature)
+
+            assert header['typ'] == 'dbsc+jwt'
+
+            jwk = jwk or header['jwk']
+            alg = alg or header['alg']
+            assert (
+                (jwk['kty'] == 'EC' and alg == 'ES256' and jwk['crv'] == 'P-256') or
+                (jwk['kty'] == 'RSA' and alg == 'RS256')
+            )
+
+            signing_input = f'{b64_header}.{b64_payload}'.encode('ascii')
+
+            match jwk['kty']:
+                case 'EC':
+                    x = int.from_bytes(b64url_decode(jwk['x']), 'big')
+                    y = int.from_bytes(b64url_decode(jwk['y']), 'big')
+                    public_key = ec.EllipticCurvePublicNumbers(x, y, ec.SECP256R1()).public_key()
+                    assert len(b_signature) == 64
+                    r = int.from_bytes(b_signature[:32], 'big')
+                    s = int.from_bytes(b_signature[32:], 'big')
+                    signature = encode_dss_signature(r, s)
+                    public_key.verify(signature, signing_input, ec.ECDSA(hashes.SHA256()))
+                case 'RSA':
+                    e = int.from_bytes(b64url_decode(jwk['e']), 'big')
+                    n = int.from_bytes(b64url_decode(jwk['n']), 'big')
+                    public_key = rsa.RSAPublicNumbers(e, n).public_key()
+                    public_key.verify(b_signature, signing_input, padding.PKCS1v15(), hashes.SHA256())
+
+            assert consteq(jwt_claims['jti'], challenge)
+
+        except Exception as e:
+            raise ValueError("Invalid JSON Web Signature") from e
+
+        return jwk, alg
+
+    # ============================================
+    # DBSC API
+    # ============================================
+
+    @api.model
+    def _dbsc_register(self, session_identifier: str, jws: str, challenge: str) -> Self:
+        try:
+            jwk, alg = self._verify_jws(jws, challenge)
+        except ValueError:
+            _logger.warning("DBSC registration rejected", exc_info=True)
+            return self.browse()
+
+        return self.sudo().create({
+            'session_identifier': session_identifier,
+            'jwk': jwk,
+            'alg': alg,
+        })
+
+    def _dbsc_refresh(self, jws: str, challenge: str) -> bool:
+        self.ensure_one()
+        try:
+            self._verify_jws(jws, challenge, jwk=self.jwk, alg=self.alg)
+        except ValueError:
+            _logger.warning("DBSC refresh rejected", exc_info=True)
+            return False
+        return True
+
+    # ============================================
+    # Others
+    # ============================================
+
+    @api.autovacuum
+    def _gc_device_dbsc(self):
+        batch_size = GC_UNLINK_LIMIT
+        offset = 0
+
+        while True:
+            device_dbsc_ids = self.search_fetch([], ['session_identifier'],
+                order='id', limit=batch_size, offset=offset)
+            if not device_dbsc_ids:
+                break
+            offset += batch_size
+            revoked_session_identifiers = session_store().get_missing_session_identifiers(
+                set(device_dbsc_ids.mapped('session_identifier')),
+            )
+            if not revoked_session_identifiers:
+                continue
+            to_unlink = device_dbsc_ids.filtered(
+                lambda candidate: candidate.session_identifier in revoked_session_identifiers
+            )
+            offset -= len(to_unlink)
+            to_unlink.unlink()
+            self.env.cr.commit()
