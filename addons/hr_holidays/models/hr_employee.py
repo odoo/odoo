@@ -541,12 +541,16 @@ class HrEmployee(models.Model):
             return self.browse(ctx.get('default_employee_id'))
         return self.env.user.employee_id
 
-    def _get_consumed_leaves(self, work_entry_types, target_date=False, ignore_future=False, precomputed_allocations={}, same_year_only=False):
+    def _get_consumed_leaves(self, work_entry_types, target_date=False, ignore_future=False, precomputed_allocations={}, same_year_only=False, partial_durations=None):
         """ The unit of the value returned in the dict is defined by the matching allocation.work_entry_type.unit_of_measure
             :param precomputed_allocations: this method won't call `_get_additionnal_future_leaves_on` for
             the allocations contained by this variable (they are considered to be already updated for 'target_date')
             :param same_year_only: only take into account leaves whose `date_from` falls within `target_date`'s year
+            :param partial_durations: durations of the leaves overlapping several allocations, already
+            computed by the caller (the accrual simulation calls this method for each simulated month)
         """
+        if partial_durations is None:
+            partial_durations = {}
         employees = self or self._get_contextual_employee()
         leaves_domain = [
             ('work_entry_type_id', 'in', work_entry_types.ids),
@@ -636,7 +640,7 @@ class HrEmployee(models.Model):
                     precomputed_alloc['allocated_duration'], allocation.work_entry_type_id.unit_of_measure, precomputed_alloc)
             else:
                 if allocation.accrual_plan_id and not ignore_future:
-                    future_leaves = allocation._get_additionnal_future_leaves_on(target_date, precomputed_allocations)
+                    future_leaves = allocation._get_additionnal_future_leaves_on(target_date, precomputed_allocations, partial_durations)
                 max_leaves = (allocation.number_of_hours
                     if allocation.work_entry_type_id.unit_of_measure == 'hour'
                     else allocation.number_of_days) + future_leaves
@@ -763,9 +767,13 @@ class HrEmployee(models.Model):
                                 if allocation.date_to else leave.date_to
                             )
                             partial = leave.date_from != interval_start or leave.date_to != interval_end
-                            duration_info = employee._get_calendar_attendances(
-                                interval_start.replace(tzinfo=UTC), interval_end.replace(tzinfo=UTC)
-                            ) if partial else None
+                            duration_info = None
+                            if partial:
+                                key = (employee.id, interval_start, interval_end)
+                                if key not in partial_durations:
+                                    partial_durations[key] = employee._get_calendar_attendances(
+                                        interval_start.replace(tzinfo=UTC), interval_end.replace(tzinfo=UTC))
+                                duration_info = partial_durations[key]
 
                             remaining_primary = _consume_from_allocation(primary, remaining_primary, allocation, duration_info, partial, leave)
                             remaining_secondary = _consume_from_allocation(secondary, remaining_secondary, allocation, duration_info, partial, leave)
@@ -815,7 +823,7 @@ class HrEmployee(models.Model):
                     virtual_remaining = 0
                     additional_leaves_duration = 0
                     for allocation in consumed_content:
-                        latest_accrual_bonus += allocation and allocation._get_additionnal_future_leaves_on(date_to_simulate, precomputed_allocations)
+                        latest_accrual_bonus += allocation and allocation._get_additionnal_future_leaves_on(date_to_simulate, precomputed_allocations, partial_durations)
                         date_accrual_bonus += consumed_content[allocation][f'{primary_unit}_accrual_bonus']
                         virtual_remaining += consumed_content[allocation][f'{primary_unit}_virtual_remaining_leaves']
                     for leave in content['to_recheck_leaves']:

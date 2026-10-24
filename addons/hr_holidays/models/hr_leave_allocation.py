@@ -672,10 +672,14 @@ class HrLeaveAllocation(models.Model):
             return None
         return lvls_boundaries[level_idx + 1]
 
-    def _process_accrual_plans(self, date_to=None, precomputed_allocations={}):
+    def _process_accrual_plans(self, date_to=None, precomputed_allocations={}, partial_durations=None):
         """ This method is part of the cron's process.
             The goal of this method is to retroactively apply accrual plan levels and progress from nextcall to `date_to` or `today`.
+            :param partial_durations: see `hr.employee._get_consumed_leaves`
         """
+        if partial_durations is None:
+            partial_durations = {}
+
         def _get_leaves_taken(allocation, allocation_data):
             if len(precomputed_allocations):
                 allocations = dict(precomputed_allocations)
@@ -685,7 +689,7 @@ class HrLeaveAllocation(models.Model):
             # By setting `precomputed_allocations`, avoid infinite loop (otherwise _get_consumed_leaves -> _get_additionnal_future_leaves_on -> _process_accrual_plans -> ...)
             employee_days_per_allocation = allocation.employee_id._get_consumed_leaves(
                 allocation.work_entry_type_id, allocation_data['nextcall'], ignore_future=True,
-                precomputed_allocations=allocations)[0]
+                precomputed_allocations=allocations, partial_durations=partial_durations)[0]
             primary_unit = 'hours' if allocation.work_entry_type_id.unit_of_measure == 'hour' else 'days'
             leaves_taken = employee_days_per_allocation[allocation.employee_id][allocation.work_entry_type_id][allocation][f'{primary_unit}_leaves_taken']
             return allocation._convert_to_type_request_unit(
@@ -808,7 +812,7 @@ class HrLeaveAllocation(models.Model):
             '|', ('nextcall', '=', False), ('nextcall', '<=', today),
         ])
 
-    def _get_additionnal_future_leaves_on(self, accrual_date, allocations_data={}):
+    def _get_additionnal_future_leaves_on(self, accrual_date, allocations_data={}, partial_durations=None):
         """ Possibly accrual inconsistent (see the comment under the class declaration)
             :param allocations_data: dict containing the allocation mapped to their data. If `allocations_data` is a dict,
             then this function will return the additionnal leaves compared to the leaves in the `allocations_data` (instead of
@@ -831,7 +835,7 @@ class HrLeaveAllocation(models.Model):
                 and (not nextcall or nextcall <= accrual_date)):
             return 0
 
-        future_alloc_data = self.sudo()._process_accrual_plans(accrual_date, precomputed_allocations=allocations_data)[self]
+        future_alloc_data = self.sudo()._process_accrual_plans(accrual_date, precomputed_allocations=allocations_data, partial_durations=partial_durations)[self]
         if 'allocated_duration' in allocation_data:
             current_allocated_duration = self._convert_from_type_request_unit(
                 allocation_data['allocated_duration'], self.work_entry_type_id.unit_of_measure, allocation_data)
