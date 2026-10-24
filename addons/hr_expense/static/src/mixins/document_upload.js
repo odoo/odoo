@@ -2,6 +2,7 @@ import { proxy, signal, t, useListener, useProps } from "@odoo/owl";
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from '@web/core/utils/hooks';
+import { post } from "@web/core/network/http";
 
 export const ExpenseDocumentDropZone = (T, parentProps) => class ExpenseDocumentDropZone extends T {
     props = useProps({
@@ -57,7 +58,6 @@ export const AbstractExpenseDocumentUpload = (T) => class AbstractExpenseDocumen
         this.actionService = useService('action');
         this.notification = useService('notification');
         this.orm = useService("orm");
-        this.http = useService("http");
         this.uiService = useService("ui");
         this.createdExpenseIds = [];
     }
@@ -99,7 +99,7 @@ export const AbstractExpenseDocumentUpload = (T) => class AbstractExpenseDocumen
             id: 0,
         };
 
-        const attachments = await this.http.post('/web/binary/upload_attachment', params);
+        const attachments = await post('/web/binary/upload_attachment', params);
         if (attachments.error) {
             throw new Error(attachments.error);
         }

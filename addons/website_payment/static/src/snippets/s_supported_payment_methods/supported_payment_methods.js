@@ -1,4 +1,5 @@
 import { registry } from '@web/core/registry';
+import { get } from "@web/core/network/http";
 import { Interaction } from '@web/public/interaction';
 
 
@@ -21,7 +22,7 @@ export class SupportedPaymentMethods extends Interaction {
      * the editor as any edit reloads the interaction.
      */
     async fetchPaymentMethods() {
-        this.payment_methods = await this.waitFor(this.services.http.get(
+        this.payment_methods = await this.waitFor(get(
             `/website_payment/snippet/supported_payment_methods?limit=${this.limit}`
         )).catch(_ => []);
     }

@@ -7,7 +7,6 @@ import {
     defineModels,
     fields,
     MockServer,
-    mockService,
     models,
     mountView,
     onRpc,
@@ -31,19 +30,17 @@ class IrAttachment extends models.Model {
 defineModels([Turtle, IrAttachment]);
 
 test("widget many2many_binary", async () => {
-    expect.assertions(17);
+    expect.assertions(16);
 
-    mockService("http", {
-        post(route, { ufile }) {
-            expect(route).toBe("/web/binary/upload_attachment");
-            expect(ufile[0].name).toBe("fake_file.tiff", {
-                message: "file is correctly uploaded to the server",
-            });
-            const ids = MockServer.env["ir.attachment"].create(
-                ufile.map(({ name }) => ({ name, mimetype: "text/plain" }))
-            );
-            return JSON.stringify(MockServer.env["ir.attachment"].read(ids));
-        },
+    onRpc("/web/binary/upload_attachment", async (request) => {
+        const ufile = (await request.formData()).getAll("ufile");
+        expect(ufile[0].name).toBe("fake_file.tiff", {
+            message: "file is correctly uploaded to the server",
+        });
+        const ids = MockServer.env["ir.attachment"].create(
+            ufile.map(({ name }) => ({ name, mimetype: "text/plain" }))
+        );
+        return JSON.stringify(MockServer.env["ir.attachment"].read(ids));
     });
 
     IrAttachment._views.list = '<list string="Pictures"><field name="name"/></list>';
@@ -131,27 +128,25 @@ test("widget many2many_binary", async () => {
 });
 
 test("widget many2many_binary displays notification on error", async () => {
-    expect.assertions(11);
+    expect.assertions(10);
 
-    mockService("http", {
-        post(route, { ufile }) {
-            expect(route).toBe("/web/binary/upload_attachment");
-            expect([ufile[0].name, ufile[1].name]).toEqual(["good_file.txt", "bad_file.txt"], {
-                message: "files are correctly sent to the server",
-            });
-            const ids = MockServer.env["ir.attachment"].create({
-                name: ufile[0].name,
+    onRpc("/web/binary/upload_attachment", async (request) => {
+        const ufile = (await request.formData()).getAll("ufile");
+        expect([ufile[0].name, ufile[1].name]).toEqual(["good_file.txt", "bad_file.txt"], {
+            message: "files are correctly sent to the server",
+        });
+        const ids = MockServer.env["ir.attachment"].create({
+            name: ufile[0].name,
+            mimetype: "text/plain",
+        });
+        return JSON.stringify([
+            ...MockServer.env["ir.attachment"].read(ids),
+            {
+                name: ufile[1].name,
                 mimetype: "text/plain",
-            });
-            return JSON.stringify([
-                ...MockServer.env["ir.attachment"].read(ids),
-                {
-                    name: ufile[1].name,
-                    mimetype: "text/plain",
-                    error: `Error on file: ${ufile[1].name}`,
-                },
-            ]);
-        },
+                error: `Error on file: ${ufile[1].name}`,
+            },
+        ]);
     });
 
     IrAttachment._views.list = '<list string="Pictures"><field name="name"/></list>';
@@ -191,23 +186,21 @@ test("widget many2many_binary displays notification on error", async () => {
 });
 
 test("widget many2many_binary image MIME type preview", async () => {
-    expect.assertions(9);
+    expect.assertions(8);
 
     const IMAGE_B64 =
         "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z9DwHwAGBQKA3H7sNwAAAABJRU5ErkJggg==";
     const imageData = Uint8Array.from([...atob(IMAGE_B64)].map((c) => c.charCodeAt(0)));
 
-    mockService("http", {
-        post(route, { ufile }) {
-            expect(route).toBe("/web/binary/upload_attachment");
-            expect(ufile[0].name).toBe("fake_image.png", {
-                message: "file is correctly uploaded to the server",
-            });
-            const ids = MockServer.env["ir.attachment"].create(
-                ufile.map(({ name }) => ({ name, mimetype: "image/png" }))
-            );
-            return JSON.stringify(MockServer.env["ir.attachment"].read(ids));
-        },
+    onRpc("/web/binary/upload_attachment", async (request) => {
+        const ufile = (await request.formData()).getAll("ufile");
+        expect(ufile[0].name).toBe("fake_image.png", {
+            message: "file is correctly uploaded to the server",
+        });
+        const ids = MockServer.env["ir.attachment"].create(
+            ufile.map(({ name }) => ({ name, mimetype: "image/png" }))
+        );
+        return JSON.stringify(MockServer.env["ir.attachment"].read(ids));
     });
 
     IrAttachment._views.list = '<list string="Pictures"><field name="name"/></list>';

@@ -4,7 +4,7 @@ import { rpc, RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { redirect } from "@web/core/utils/urls";
-import { post } from "@web/core/network/http_service";
+import { post } from "@web/core/network/http";
 import { session } from "@web/session";
 
 /**

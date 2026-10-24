@@ -1,6 +1,7 @@
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { redirect } from "@web/core/utils/urls";
+import { post } from "@web/core/network/http";
 import { Interaction } from "@web/public/interaction";
 
 export class CustomerAddress extends Interaction {
@@ -15,7 +16,6 @@ export class CustomerAddress extends Interaction {
     };
 
     setup() {
-        this.http = this.services["http"];
         this.addressForm = this.el.querySelector("form.address_autoformat");
         this.errorsDiv = this.el.querySelector("#errors");
         this.addressType = this.addressForm["address_type"].value;
@@ -238,7 +238,7 @@ export class CustomerAddress extends Interaction {
         }
 
         const result = await this.waitFor(
-            this.http.post(this.addressForm.dataset.submitUrl, new FormData(this.addressForm))
+            post(this.addressForm.dataset.submitUrl, new FormData(this.addressForm))
         );
         if (result.redirectUrl) {
             redirect(result.redirectUrl);

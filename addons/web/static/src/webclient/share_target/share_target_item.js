@@ -2,6 +2,7 @@ import { Component, onWillDestroy, proxy, t, useProps } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { checkFileSize } from "@web/core/utils/files";
+import { post } from "@web/core/network/http";
 import { Record } from "@web/model/record";
 import { Field } from "@web/views/fields/field";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
@@ -19,7 +20,6 @@ export class ShareTargetItem extends Component {
         super.setup();
         this.action = useService("action");
         this.dialog = useService("dialog");
-        this.http = useService("http");
         this.notification = useService("notification");
         this.orm = useService("orm");
 
@@ -172,7 +172,7 @@ export class ShareTargetItem extends Component {
             model: this.modelName,
             id: 0,
         };
-        const attachments = await this.http.post("/web/binary/upload_attachment", params);
+        const attachments = await post("/web/binary/upload_attachment", params);
         if (attachments.error) {
             throw new Error(attachments.error);
         }

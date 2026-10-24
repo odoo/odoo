@@ -5,7 +5,6 @@ import {
     contains,
     defineModels,
     fields,
-    mockService,
     models,
     mountView,
     onRpc,
@@ -38,14 +37,12 @@ test("attach document widget calls action with attachment ids", async () => {
         },
     });
 
-    mockService("http", {
-        post(route, params) {
-            expect.step("post");
-            expect(route).toBe("/web/binary/upload_attachment");
-            expect(params.model).toBe("partner");
-            expect(params.id).toBe(1);
-            return '[{ "id": 5 }, { "id": 2 }]';
-        },
+    onRpc("/web/binary/upload_attachment", async (request) => {
+        expect.step("post");
+        const formData = await request.formData();
+        expect(formData.get("model")).toBe("partner");
+        expect(formData.get("id")).toBe("1");
+        return '[{ "id": 5 }, { "id": 2 }]';
     });
 
     onRpc(({ args, kwargs, method, model }) => {
@@ -97,14 +94,12 @@ test("attach document widget calls action with attachment ids on a new record", 
         },
     });
 
-    mockService("http", {
-        post(route, params) {
-            expect.step("post");
-            expect(route).toBe("/web/binary/upload_attachment");
-            expect(params.model).toBe("partner");
-            expect(params.id).toBe(2);
-            return '[{ "id": 5 }, { "id": 2 }]';
-        },
+    onRpc("/web/binary/upload_attachment", async (request) => {
+        expect.step("post");
+        const formData = await request.formData();
+        expect(formData.get("model")).toBe("partner");
+        expect(formData.get("id")).toBe("2");
+        return '[{ "id": 5 }, { "id": 2 }]';
     });
 
     onRpc(({ args, kwargs, method, model }) => {

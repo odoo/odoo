@@ -1,5 +1,4 @@
 import { Component, onWillStart, proxy, t, usePlugin, useProps } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
 
 import { useSpreadsheetNotificationPlugin } from "@spreadsheet/hooks";
 
@@ -7,6 +6,7 @@ import * as spreadsheet from "@odoo/o-spreadsheet";
 import { Spreadsheet, Model } from "@odoo/o-spreadsheet";
 import { registry } from "@web/core/registry";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { get } from "@web/core/network/http";
 
 export class PublicDashboard extends Component {
     static template = "spreadsheet_dashboard.PublicDashboard";
@@ -20,7 +20,6 @@ export class PublicDashboard extends Component {
 
     setup() {
         useSpreadsheetNotificationPlugin();
-        this.http = useService("http");
         this.state = proxy({
             isFilterShown: false,
         });
@@ -41,7 +40,7 @@ export class PublicDashboard extends Component {
     }
 
     async createModel() {
-        this.data = await this.http.get(this.props.dataUrl);
+        this.data = await get(this.props.dataUrl);
         this.model = new Model(
             this.data,
             {

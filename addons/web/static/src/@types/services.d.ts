@@ -9,7 +9,6 @@ declare module "services" {
     import { fileUploadService } from "@web/core/file_upload/file_upload_service";
     import { hotkeyService } from "@web/core/hotkeys/hotkey_plugin";
     import { nameService } from "@web/core/name_plugin";
-    import { httpService } from "@web/core/network/http_service";
     import { notificationService } from "@web/core/notifications/notification_plugin";
     import { offlineService } from "@web/core/offline/offline_plugin";
     import { overlayService } from "@web/core/overlay/overlay_plugin";
@@ -40,7 +39,6 @@ declare module "services" {
         field: typeof fieldService;
         file_upload: typeof fileUploadService;
         hotkey: typeof hotkeyService;
-        http: typeof httpService;
         lazy_session: typeof lazySessionService;
         menu: typeof menuService;
         name: typeof nameService;

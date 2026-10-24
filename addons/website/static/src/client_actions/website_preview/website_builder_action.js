@@ -23,7 +23,7 @@ import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { _t } from "@web/core/l10n/translation";
 import { LazyComponent } from "@web/core/lazy_component";
-import { post } from "@web/core/network/http_service";
+import { post } from "@web/core/network/http";
 import { rpc, RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
