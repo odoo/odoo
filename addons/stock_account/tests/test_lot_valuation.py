@@ -399,6 +399,18 @@ class TestLotValuation(TestStockValuationCommon):
         with self.assertRaises(UserError):
             self.product1.categ_id = new_cat
 
+    def test_write_same_cost_method(self):
+        """ Writing the current cost method and valuation on a category is not a change """
+        self._make_in_move(self.product1, 10, 5, lot_ids=[self.lot1, self.lot2])
+        category = self.product1.categ_id
+        category.write({
+            'property_cost_method': category.property_cost_method,
+            'property_valuation': category.property_valuation,
+        })
+        other_category = self.env['product.category'].create({'name': 'Other Category'})
+        (category | other_category).write({'property_cost_method': 'average'})
+        self.assertEqual(other_category.property_cost_method, 'average')
+
     def test_change_lot_cost(self):
         """ Changing the cost of a lot will reevaluate the lot """
         self._make_in_move(self.product1, 10, 5, lot_ids=[self.lot1, self.lot2])
