@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="ImportErrorResolution">
+        <div t-if="this.canCorrectValue" class="o_import_error_resolution d-flex flex-wrap align-items-center gap-1 mt-2">
+            <button t-if="this.canBeEmpty" class="o_selection_badge btn btn-sm btn-secondary o_import_error_empty"
+                t-att-class="{ active: this.resolution.action === 'empty' }"
+                t-on-click="() => this.toggle('empty')">
+                Leave empty
+            </button>
+            <button class="o_selection_badge btn btn-sm btn-secondary o_import_error_set"
+                t-att-class="{ active: this.isPicking }"
+                t-on-click="() => this.toggle('set')"
+                t-out="this.setValueLabel"/>
+            <div t-if="this.isPicking" class="o_import_error_picker w-100">
+                <ImportMatchAutocomplete t-if="this.isRelational"
+                    resModel="this.comodel"
+                    fieldString="this.props.fieldInfo.label"
+                    activeActions="{ create: this.canCreate, createEdit: this.canCreate }"
+                    quickCreate="this.canCreate ? ((name) => this.quickCreate(name)) : null"
+                    getDomain="() => []"
+                    otherSources="this.matchSources"
+                    value="this.resolution.display_name or ''"
+                    searchThreshold="1"
+                    autofocus="true"
+                    update="(records) => this.onRecordSelected(records)"
+                />
+                <input t-elif="this.isFreeValue" type="text" class="o_input o_import_error_input w-100"
+                    placeholder="Type a value..."
+                    t-att-value="this.resolution.value or ''"
+                    t-on-change="(ev) => this.setValue(ev.target.value)"
+                />
+                <SelectMenu t-else=""
+                    autoSort="false"
+                    choices="this.choices"
+                    value="this.resolution.value"
+                    placeholder.translate="Pick a value..."
+                    onSelect="(value) => this.setValue(value, this.choices.find((choice) => choice.value === value)?.label)"
+                    searchPlaceholder.translate="Search a value..."
+                />
+            </div>
+        </div>
+    </t>
+</templates>
