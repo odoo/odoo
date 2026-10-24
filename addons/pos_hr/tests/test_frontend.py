@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
 from odoo import Command
 from odoo.tests import tagged, new_test_user, users
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
@@ -88,6 +90,35 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
 @tagged("post_install", "-at_install")
 class TestUi(TestPosHrHttpCommon):
     _test_user_groups = None  # FIXME list needed groups
+
+    def test_enable_employee_login_on_new_session(self):
+        self.main_pos_config.write({'module_pos_hr': False})
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        configured_employees = (
+            self.main_pos_config.manager_employee_ids
+            | self.main_pos_config.cashier_employee_ids
+            | self.main_pos_config.restrictive_employee_ids
+            | self.main_pos_config.supervised_employee_ids
+        )
+        employee_data = []
+        PosSession = self.env.registry.models['pos.session']
+        load_data = PosSession.load_data
+
+        def capture_load_data(session, local_data=None):
+            local_data = local_data or {}
+            data = load_data(session, local_data)
+            if session.config_id.module_pos_hr and not local_data.get('only_records'):
+                employee_data.append(data['hr.employee']['records'])
+            return data
+
+        with patch.object(PosSession, 'load_data', capture_load_data):
+            self.start_pos_tour('test_enable_employee_login_on_new_session', login='pos_admin')
+
+        self.assertTrue(employee_data)
+        self.assertCountEqual(
+            [employee['id'] for employee in employee_data[0]],
+            configured_employees.ids,
+        )
 
     def test_01_pos_hr_tour(self):
         self.pos_admin.write({
