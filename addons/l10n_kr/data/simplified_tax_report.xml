@@ -835,6 +835,17 @@
                                 <field name="engine">text</field>
                                 <field name="formula">(29)</field>
                             </record>
+                            <record id="l10n_kr_simplified_tp_vat_stpad_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">KR_STPAD.tax</field>
+                            </record>
+                            <record id="l10n_kr_simplified_tp_vat_stpad_closing_account_balance" model="account.report.expression">
+                                <field name="label">_closing_account_balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula">[('tax_repartition_line_id.use_in_tax_closing', '=', True)]</field>
+                                <field name="subformula">-sum</field>
+                            </record>
                         </field>
                     </record>
                 </field>

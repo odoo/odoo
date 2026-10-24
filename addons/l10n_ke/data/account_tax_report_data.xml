@@ -271,6 +271,7 @@
                         <field name="label">_applied_carryover_tax</field>
                         <field name="engine">external</field>
                         <field name="formula">most_recent</field>
+                        <field name="subformula">closing_account_id=receivable</field>
                         <field name="date_scope">previous_return_period</field>
                     </record>
                     <record id="tax_report_credit_brought_forward_from_previous_month_tax_tag" model="account.report.expression">
@@ -370,6 +371,17 @@
                         <field name="formula">box_26.tax</field>
                         <field name="carryover_target">box_19._applied_carryover_tax</field>
                         <field name="subformula">if_below(RON(0))</field>
+                    </record>
+                    <record id="tax_report_net_vat_payable_or_credit_carried_forward_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">box_26.tax</field>
+                    </record>
+                    <record id="tax_report_net_vat_payable_or_credit_carried_forward_closing_account_balance" model="account.report.expression">
+                        <field name="label">_closing_account_balance</field>
+                        <field name="engine">domain</field>
+                        <field name="formula">[('tax_repartition_line_id.use_in_tax_closing', '=', True)]</field>
+                        <field name="subformula">-sum</field>
                     </record>
                 </field>
             </record>
