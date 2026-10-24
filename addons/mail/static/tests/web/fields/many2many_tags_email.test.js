@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import {
     defineMailModels,
+    hover,
     insertText,
     openFormView,
     start,
@@ -13,6 +14,7 @@ import {
     onRpc,
 } from "@web/../tests/web_test_helpers";
 import { queryAll, waitFor, waitForNone } from "@odoo/hoot-dom";
+import { patch } from "@web/core/utils/patch";
 import { ResPartner } from "../../mock_server/mock_models/res_partner";
 
 defineMailModels();
@@ -69,7 +71,7 @@ test("fieldmany2many tags email (edition)", async () => {
         '.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0:count(2)'
     );
     expect(tags[0].innerText).toBe("gold");
-    expect(tags[0]).toHaveAttribute("data-tooltip", "coucou@petite.perruche");
+    expect(tags[0]).toHaveAttribute("aria-label", "coucou@petite.perruche");
     // should have read Partner_2 2 times: when opening the dropdown and when saving the new email.
     await expect.waitForSteps([`web_read [${partnerId_2}]`, `web_save [${partnerId_2}]`]);
 });
@@ -162,4 +164,36 @@ test("many2many_tags_email widget can load more than 40 records", async () => {
     await clickFieldDropdown("partner_ids");
     await clickFieldDropdownItem("partner_ids", "Public user");
     await waitFor('.o_field_widget[name="partner_ids"] .badge:count(101)');
+});
+
+test("many2many_tags_email avatar card shows the name and normalized email", async () => {
+    // mock: the full composer reads its recipients with the `show_email` context.
+    patch(ResPartner.prototype, {
+        _compute_display_name() {
+            super._compute_display_name();
+            for (const partner of this) {
+                partner.display_name = `${partner.name} <${partner.email}>`;
+            }
+        },
+    });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        name: "Willie Burke",
+        email: '"Willie Burke" <Willie.Burke80@example.com>',
+        email_normalized: "willie.burke80@example.com",
+    });
+    const messageId = pyEnv["mail.message"].create({ partner_ids: [partnerId] });
+    await start();
+    await openFormView("mail.message", messageId, {
+        arch: `
+            <form>
+                <field name="partner_ids" widget="many2many_tags_email"/>
+            </form>
+        `,
+    });
+    await hover(".o_field_widget[name='partner_ids'] .o_tag:text('Willie Burke')");
+    await waitFor(".o-mail-avatar-card-name:text('Willie Burke'):count(1)");
+    await waitFor(
+        ".o_card_user_infos a[href='mailto:willie.burke80@example.com']:text('willie.burke80@example.com'):count(1)"
+    );
 });
