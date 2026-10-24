@@ -15,16 +15,16 @@ from odoo.addons.sale.tests.common import SaleCommon
 @tagged("post_install", "-at_install")
 class TestSalePrices(SaleCommon):
     _test_user_groups = (
-        'product.group_product_manager',
-        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        "product.group_product_manager",
+        "sales_team.group_sale_manager",  # FIXME: use sales_team.group_sale_salesman
         # FIXME: grants write on res.company, needed by sale.order.discount._get_discount_product
         # which lazily auto-creates the company's discount product on first use (business logic,
         # not test setup). Prefer the user-level group 'base.group_user' once that flow no longer
         # requires res.company write access.
-        'base.group_erp_manager',
+        "base.group_erp_manager",
     )
 
-    _test_user_name = 'Test Sales & Product Manager'
+    _test_user_name = "Test Sales & Product Manager"
 
     @classmethod
     def setUpClass(cls):
@@ -411,20 +411,24 @@ class TestSalePrices(SaleCommon):
         current_curr = self.env.company.currency_id  # USD
         other_curr = self._enable_currency("EUR")
         # main_company.currency_id = other_curr # product.currency_id when no company_id set
-        other_company = self.env["res.company"].sudo().create({
-            "name": "Test",
-            "currency_id": other_curr.id,
-        })
-        user_in_other_company = self.env["res.users"].sudo().create({
-            "company_id": other_company.id,
-            "company_ids": [Command.set([other_company.id])],
-            "name": "E.T",
-            "login": "hohoho",
-            "group_ids": (
-                self.env.ref("sales_team.group_sale_salesman")
-                | self.env.ref("product.group_product_manager")
-            ),
-        })
+        other_company = (
+            self.env["res.company"].sudo().create({"name": "Test", "currency_id": other_curr.id})
+        )
+        user_in_other_company = (
+            self
+            .env["res.users"]
+            .sudo()
+            .create({
+                "company_id": other_company.id,
+                "company_ids": [Command.set([other_company.id])],
+                "name": "E.T",
+                "login": "hohoho",
+                "group_ids": (
+                    self.env.ref("sales_team.group_sale_salesman")
+                    | self.env.ref("product.group_product_manager")
+                ),
+            })
+        )
         user_in_other_company.group_ids += self.env.ref("product.group_product_manager")
         with mute_logger("odoo.models.unlink"):
             self.env["res.currency.rate"].sudo().search([]).unlink()
@@ -445,8 +449,8 @@ class TestSalePrices(SaleCommon):
 
         product_1_ctxt = product_1.with_user(user_in_other_company)
         product_2_ctxt = product_2.with_user(user_in_other_company)
-        self.assertEqual(product_1_ctxt.currency_id, main_curr)
-        self.assertEqual(product_2_ctxt.currency_id, main_curr)
+        self.assertEqual(product_1_ctxt.currency_id, other_curr)
+        self.assertEqual(product_2_ctxt.currency_id, other_curr)
         self.assertEqual(product_1_ctxt.cost_currency_id, other_curr)
         self.assertEqual(product_2_ctxt.cost_currency_id, other_curr)
 
@@ -479,7 +483,7 @@ class TestSalePrices(SaleCommon):
 
         # CASE 1:
         # company currency = so currency
-        # product_1.currency != so currency
+        # product_1.currency == so currency (currency_id now follows the active company)
         # product_2.cost_currency_id = so currency
         sales_order = product_1_ctxt.env["sale.order"].create({
             "partner_id": user_in_other_company.partner_id.id,
@@ -493,13 +497,13 @@ class TestSalePrices(SaleCommon):
         so_line_1 = sales_order.order_line[0]
         so_line_2 = sales_order.order_line[1]
         self.assertEqual(so_line_1.discount, 20)
-        self.assertEqual(so_line_1.price_unit, 50.0)
+        self.assertEqual(so_line_1.price_unit, 100.0)
         self.assertEqual(so_line_2.discount, 10)
         self.assertEqual(so_line_2.price_unit, 10)
 
         # CASE 2
         # company currency != so currency
-        # product_1.currency == so currency
+        # product_1.currency != so currency (currency_id now follows the active company)
         # product_2.cost_currency_id != so currency
         pricelist.currency_id = main_curr
         sales_order = product_1_ctxt.env["sale.order"].create({
@@ -515,7 +519,7 @@ class TestSalePrices(SaleCommon):
         so_line_1 = sales_order.order_line[0]
         so_line_2 = sales_order.order_line[1]
         self.assertEqual(so_line_1.discount, 20)
-        self.assertEqual(so_line_1.price_unit, 100.0)
+        self.assertEqual(so_line_1.price_unit, 200.0)
         self.assertEqual(so_line_2.discount, 10)
         self.assertEqual(so_line_2.price_unit, 20)
 
@@ -615,25 +619,35 @@ class TestSalePrices(SaleCommon):
 
     def test_sale_tax_mapping(self):
         country_belgium = self.env["res.country"].search([("name", "=", "Belgium")], limit=1)
-        fiscal_pos = self.env["account.fiscal.position"].sudo().create({
-            "name": "Test Fiscal Position",
-            "auto_apply": True,
-            "country_id": country_belgium.id,
-        })
-        tax_a, tax_b = self.env["account.tax"].sudo().create([
-            {
-                "name": "Test tax A",
-                "type_tax_use": "sale",
-                "price_include_override": "tax_included",
-                "amount": 15.0,
-            },
-            {
-                "name": "Test tax B",
-                "type_tax_use": "sale",
-                "amount": 6.0,
-                "fiscal_position_ids": fiscal_pos,
-            },
-        ])
+        fiscal_pos = (
+            self
+            .env["account.fiscal.position"]
+            .sudo()
+            .create({
+                "name": "Test Fiscal Position",
+                "auto_apply": True,
+                "country_id": country_belgium.id,
+            })
+        )
+        tax_a, tax_b = (
+            self
+            .env["account.tax"]
+            .sudo()
+            .create([
+                {
+                    "name": "Test tax A",
+                    "type_tax_use": "sale",
+                    "price_include_override": "tax_included",
+                    "amount": 15.0,
+                },
+                {
+                    "name": "Test tax B",
+                    "type_tax_use": "sale",
+                    "amount": 6.0,
+                    "fiscal_position_ids": fiscal_pos,
+                },
+            ])
+        )
         tax_b.original_tax_ids = tax_a
 
         # setting up partner:
@@ -687,14 +701,17 @@ class TestSalePrices(SaleCommon):
         pricelist = self.pricelist
         partner = self.partner
 
-        (fpos_incl_incl, fpos_excl_incl, fpos_incl_excl, fpos_excl_excl) = self.env[
-            "account.fiscal.position"
-        ].sudo().create([
-            {"name": "incl -> incl", "sequence": 1},
-            {"name": "excl -> incl", "sequence": 2},
-            {"name": "incl -> excl", "sequence": 3},
-            {"name": "excl -> excl", "sequence": 4},
-        ])
+        (fpos_incl_incl, fpos_excl_incl, fpos_incl_excl, fpos_excl_excl) = (
+            self
+            .env["account.fiscal.position"]
+            .sudo()
+            .create([
+                {"name": "incl -> incl", "sequence": 1},
+                {"name": "excl -> incl", "sequence": 2},
+                {"name": "incl -> excl", "sequence": 3},
+                {"name": "excl -> excl", "sequence": 4},
+            ])
+        )
 
         (
             tax_fixed_incl,
@@ -703,44 +720,49 @@ class TestSalePrices(SaleCommon):
             tax_include_dst,
             tax_exclude_src,
             tax_exclude_dst,
-        ) = self.env["account.tax"].sudo().create([
-            {
-                "name": "fixed include",
-                "amount": 10.00,
-                "amount_type": "fixed",
-                "price_include_override": "tax_included",
-            },
-            {
-                "name": "fixed exclude",
-                "amount": 10.00,
-                "amount_type": "fixed",
-                "price_include_override": "tax_excluded",
-            },
-            {
-                "name": "Include 21%",
-                "amount": 21.00,
-                "amount_type": "percent",
-                "price_include_override": "tax_included",
-            },
-            {
-                "name": "Include 6%",
-                "amount": 6.00,
-                "amount_type": "percent",
-                "price_include_override": "tax_included",
-            },
-            {
-                "name": "Exclude 15%",
-                "amount": 15.00,
-                "amount_type": "percent",
-                "price_include_override": "tax_excluded",
-            },
-            {
-                "name": "Exclude 21%",
-                "amount": 21.00,
-                "amount_type": "percent",
-                "price_include_override": "tax_excluded",
-            },
-        ])
+        ) = (
+            self
+            .env["account.tax"]
+            .sudo()
+            .create([
+                {
+                    "name": "fixed include",
+                    "amount": 10.00,
+                    "amount_type": "fixed",
+                    "price_include_override": "tax_included",
+                },
+                {
+                    "name": "fixed exclude",
+                    "amount": 10.00,
+                    "amount_type": "fixed",
+                    "price_include_override": "tax_excluded",
+                },
+                {
+                    "name": "Include 21%",
+                    "amount": 21.00,
+                    "amount_type": "percent",
+                    "price_include_override": "tax_included",
+                },
+                {
+                    "name": "Include 6%",
+                    "amount": 6.00,
+                    "amount_type": "percent",
+                    "price_include_override": "tax_included",
+                },
+                {
+                    "name": "Exclude 15%",
+                    "amount": 15.00,
+                    "amount_type": "percent",
+                    "price_include_override": "tax_excluded",
+                },
+                {
+                    "name": "Exclude 21%",
+                    "amount": 21.00,
+                    "amount_type": "percent",
+                    "price_include_override": "tax_excluded",
+                },
+            ])
+        )
 
         tax_include_dst.write({
             "fiscal_position_ids": fpos_incl_incl | fpos_excl_incl,
@@ -850,25 +872,32 @@ class TestSalePrices(SaleCommon):
         self.assertRecordValues(sale_order.order_line, [{"price_unit": 100, "price_subtotal": 100}])
 
     def test_so_tax_mapping(self):
-        fpos = self.env["account.fiscal.position"].sudo().create({
-            "name": "Test Fiscal Position",
-            "sequence": 1,
-        })
+        fpos = (
+            self
+            .env["account.fiscal.position"]
+            .sudo()
+            .create({"name": "Test Fiscal Position", "sequence": 1})
+        )
 
-        tax_include, tax_exclude = self.env["account.tax"].sudo().create([
-            {
-                "name": "Include Tax",
-                "amount": "21.00",
-                "price_include_override": "tax_included",
-                "type_tax_use": "sale",
-            },
-            {
-                "name": "Exclude Tax",
-                "amount": "0.00",
-                "type_tax_use": "sale",
-                "fiscal_position_ids": fpos,
-            },
-        ])
+        tax_include, tax_exclude = (
+            self
+            .env["account.tax"]
+            .sudo()
+            .create([
+                {
+                    "name": "Include Tax",
+                    "amount": "21.00",
+                    "price_include_override": "tax_included",
+                    "type_tax_use": "sale",
+                },
+                {
+                    "name": "Exclude Tax",
+                    "amount": "0.00",
+                    "type_tax_use": "sale",
+                    "fiscal_position_ids": fpos,
+                },
+            ])
+        )
         tax_exclude.original_tax_ids = tax_include
 
         self.product.write({"list_price": 121, "taxes_id": [Command.set(tax_include.ids)]})
@@ -883,14 +912,19 @@ class TestSalePrices(SaleCommon):
     def test_so_tax_mapping_multicompany(self):
         fpos = self.env["account.fiscal.position"].sudo().create({"name": "B2B"})
         tax_group = self.env["account.tax.group"].sudo().create({"name": "10%"})
-        tax_include = self.env["account.tax"].sudo().create({
-            "name": "10% Tax Inc.",
-            "type_tax_use": "sale",
-            "amount": 10.0,
-            "price_include_override": "tax_included",
-            "tax_group_id": tax_group.id,
-            "fiscal_position_ids": fpos.ids,
-        })
+        tax_include = (
+            self
+            .env["account.tax"]
+            .sudo()
+            .create({
+                "name": "10% Tax Inc.",
+                "type_tax_use": "sale",
+                "amount": 10.0,
+                "price_include_override": "tax_included",
+                "tax_group_id": tax_group.id,
+                "fiscal_position_ids": fpos.ids,
+            })
+        )
         tax_exclude = tax_include.copy({
             "name": "10% Tax Exc.",
             "amount": 0.0,
@@ -898,11 +932,16 @@ class TestSalePrices(SaleCommon):
             "original_tax_ids": tax_include.ids,
         })
         self.product.write({"list_price": 110.0, "taxes_id": tax_include.ids})
-        branch_company = self.env["res.company"].sudo().create({
-            "name": "Branch Co.",
-            "parent_id": self.env.company.id,
-            "account_fiscal_country_id": self.env.company.account_fiscal_country_id.id,
-        })
+        branch_company = (
+            self
+            .env["res.company"]
+            .sudo()
+            .create({
+                "name": "Branch Co.",
+                "parent_id": self.env.company.id,
+                "account_fiscal_country_id": self.env.company.account_fiscal_country_id.id,
+            })
+        )
         self.env.user.company_ids += branch_company
         order = self._create_so(
             company_id=branch_company.id, fiscal_position_id=fpos.id, user_id=False, team_id=False
@@ -914,24 +953,29 @@ class TestSalePrices(SaleCommon):
 
     def test_free_product_and_price_include_fixed_tax(self):
         """Check that fixed tax include are correctly computed while the price_unit is 0."""
-        taxes = self.env["account.tax"].sudo().create([
-            {
-                "name": "BEBAT 0.05",
-                "type_tax_use": "sale",
-                "amount_type": "fixed",
-                "amount": 0.05,
-                "price_include_override": "tax_included",
-                "include_base_amount": True,
-            },
-            {
-                "name": "Recupel 0.25",
-                "type_tax_use": "sale",
-                "amount_type": "fixed",
-                "amount": 0.25,
-                "price_include_override": "tax_included",
-                "include_base_amount": True,
-            },
-        ])
+        taxes = (
+            self
+            .env["account.tax"]
+            .sudo()
+            .create([
+                {
+                    "name": "BEBAT 0.05",
+                    "type_tax_use": "sale",
+                    "amount_type": "fixed",
+                    "amount": 0.05,
+                    "price_include_override": "tax_included",
+                    "include_base_amount": True,
+                },
+                {
+                    "name": "Recupel 0.25",
+                    "type_tax_use": "sale",
+                    "amount_type": "fixed",
+                    "amount": 0.25,
+                    "price_include_override": "tax_included",
+                    "include_base_amount": True,
+                },
+            ])
+        )
         order = self._create_so(
             order_line=[
                 Command.create({
@@ -953,14 +997,19 @@ class TestSalePrices(SaleCommon):
     def test_sale_with_taxes(self):
         """Test SO with taxes applied on its lines and check subtotal applied on its lines and total
         applied on the SO."""
-        tax_include, tax_exclude = self.env["account.tax"].sudo().create([
-            {
-                "name": "Tax with price include",
-                "amount": 10,
-                "price_include_override": "tax_included",
-            },
-            {"name": "Tax with no price include", "amount": 10},
-        ])
+        tax_include, tax_exclude = (
+            self
+            .env["account.tax"]
+            .sudo()
+            .create([
+                {
+                    "name": "Tax with price include",
+                    "amount": 10,
+                    "price_include_override": "tax_included",
+                },
+                {"name": "Tax with no price include", "amount": 10},
+            ])
+        )
 
         # Apply taxes on the sale order lines
         self.sale_order.order_line[0].write({"tax_ids": [Command.link(tax_include.id)]})
@@ -1297,26 +1346,36 @@ class TestSalePrices(SaleCommon):
     def test_so_included_tax_mapping(self):
         country_belgium = self.env["res.country"].search([("name", "=", "Belgium")], limit=1)
 
-        fiscal_pos = self.env["account.fiscal.position"].sudo().create({
-            "name": "Test tax mapping 21% to 6%",
-            "auto_apply": True,
-            "country_id": country_belgium.id,
-        })
-        tax_a, tax_b = self.env["account.tax"].sudo().create([
-            {
-                "name": "Test tax 21% inc",
-                "type_tax_use": "sale",
-                "price_include_override": "tax_included",
-                "amount": 21.0,
-            },
-            {
-                "name": "Test tax 6% inc",
-                "type_tax_use": "sale",
-                "price_include_override": "tax_included",
-                "amount": 6.0,
-                "fiscal_position_ids": fiscal_pos,
-            },
-        ])
+        fiscal_pos = (
+            self
+            .env["account.fiscal.position"]
+            .sudo()
+            .create({
+                "name": "Test tax mapping 21% to 6%",
+                "auto_apply": True,
+                "country_id": country_belgium.id,
+            })
+        )
+        tax_a, tax_b = (
+            self
+            .env["account.tax"]
+            .sudo()
+            .create([
+                {
+                    "name": "Test tax 21% inc",
+                    "type_tax_use": "sale",
+                    "price_include_override": "tax_included",
+                    "amount": 21.0,
+                },
+                {
+                    "name": "Test tax 6% inc",
+                    "type_tax_use": "sale",
+                    "price_include_override": "tax_included",
+                    "amount": 6.0,
+                    "fiscal_position_ids": fiscal_pos,
+                },
+            ])
+        )
         tax_b.original_tax_ids = tax_a
 
         self.partner.country_id = country_belgium
