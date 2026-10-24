@@ -2,6 +2,7 @@
 
 from datetime import date
 
+from odoo.fields import Domain
 from odoo.tests import tagged
 
 from odoo.addons.hr.tests.common import TestHrCommon
@@ -66,3 +67,26 @@ class TestHrVersionContractOverlap(TestHrCommon):
         self.assert_versions(date(2026, 1, 1), date(2026, 1, 31), v1)
         self.assert_versions(date(2026, 4, 1), date(2026, 4, 30), v2)
         self.assert_versions(date(2026, 1, 1), date(2026, 4, 30), v1 | v2)
+
+    def test_overlapping_period_domain_matches_predicate(self):
+        """ Ensure that the overlapping period domain returns the same versions as the in-memory check. """
+        v1 = self.employee.version_id
+        v1.write({'date_version': date(2026, 1, 1), 'contract_date_start': date(2026, 1, 1)})
+        # The amendment on 03-01 closes v1 on 02-28 and the contract ends on 05-31
+        v2 = self.add_version(date(2026, 3, 1), date(2026, 1, 1), date(2026, 5, 31))
+        versions = v1 | v2
+        # Each period hits v1 only, both versions, v2 only, then nothing after the contract end
+        for date_from, date_to in [
+            (date(2026, 2, 1), date(2026, 2, 28)), (date(2026, 2, 28), date(2026, 3, 1)),
+            (date(2026, 3, 1), date(2026, 3, 31)), (date(2026, 6, 1), date(2026, 6, 30)),
+        ]:
+            domain = self.env['hr.version']._is_overlapping_period_domain(date_from, date_to)
+            expected = versions.filtered(lambda v: v._is_overlapping_period(date_from, date_to))
+            self.assertEqual(
+                versions.search(domain & Domain('id', 'in', versions.ids)), expected,
+                "SQL domain should match the in-memory check for [%s, %s]" % (date_from, date_to)
+            )
+            self.assertEqual(
+                versions.filtered_domain(domain), expected,
+                "filtered_domain should match the in-memory check for [%s, %s]" % (date_from, date_to)
+            )
