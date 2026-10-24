@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="payment_method_mpesa" model="payment.method">
+        <field name="name">M-Pesa</field>
+        <field name="code">mpesa</field>
+        <field name="provider_id" ref="payment.payment_provider_safaricom"/>
+        <field name="image" type="bytes" file="payment/static/img/mpesa.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.ke')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.KES')])]"/>
+    </record>
+</odoo>
