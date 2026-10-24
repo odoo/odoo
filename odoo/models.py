@@ -5832,6 +5832,12 @@ class BaseModel(metaclass=MetaModel):
         self._apply_ir_rules(query, 'read')
 
         if order:
+            # Use id as a tiebreaker order to ensure that the order is
+            # deterministic, even if the user doesn't specify it. This is
+            # important for pagination, as otherwise the same record could
+            # appear on different pages.
+            if not re.search(r'\bid\b', order):
+                order += ', id'
             query.order = self._order_to_sql(order, query)
         query.limit = limit
         query.offset = offset
