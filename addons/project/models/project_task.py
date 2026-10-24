@@ -717,7 +717,7 @@ class Task(models.Model):
 
     def _compute_display_follow_button(self):
         if not self.env.user.share:
-            self.display_follow_button = False
+            self.display_follow_button = True
             return
         project_collaborator_read_group = self.env['project.collaborator']._read_group(
             [('project_id', 'in', self.project_id.ids), ('partner_id', '=', self.env.user.partner_id.id)],
