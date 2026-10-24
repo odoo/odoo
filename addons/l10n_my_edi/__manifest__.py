@@ -30,6 +30,7 @@
 
         'wizard/myinvois_consolidate_invoice_wizard.xml',
         'wizard/myinvois_document_status_update_wizard.xml',
+        'wizard/myinvois_document_sync_wizard.xml',
         'security/ir.access.csv',
     ],
     'author': 'Odoo S.A.',
