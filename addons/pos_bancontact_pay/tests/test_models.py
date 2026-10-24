@@ -3,6 +3,7 @@ import uuid
 from contextlib import contextmanager
 from unittest.mock import patch
 
+from psycopg2 import IntegrityError
 from requests import Response
 
 from odoo import Command
@@ -111,12 +112,11 @@ class TestModels(TestBancontactPay, CommonPosTest):
                 "name": "Bancontact - Sticker 3",
                 "payment_method_type": "external_qr",
                 "payment_provider": "bancontact_pay",
-                "bancontact_usage": "sticker",
                 "type": "bank",
                 "company_id": self.company.id,
                 "journal_id": self.bancontact_journal.id,
-                "bancontact_api_key": "sticker_api_key",
-                "bancontact_ppid": "sticker_profile_id",
+                "bancontact_product_id": self.bancontact_product_sticker.id,
+                "bancontact_sticker_id": self.bancontact_sticker_3.id,
             },
         )
 
@@ -132,12 +132,84 @@ class TestModels(TestBancontactPay, CommonPosTest):
         # Assigning a new sticker to the POS config should work
         test_config.payment_method_ids = [Command.link(payment_method_sticker_3.id)]
 
+    def test_sticker_required_for_sticker_product(self):
+        with self.assertRaises(ValidationError):
+            self.env["pos.payment.method"].create({
+                "name": "Bancontact - No Sticker",
+                "payment_method_type": "external_qr",
+                "payment_provider": "bancontact_pay",
+                "type": "bank",
+                "company_id": self.company.id,
+                "journal_id": self.bancontact_journal.id,
+                "bancontact_product_id": self.bancontact_product_sticker.id,
+            })
+
+    def test_sticker_must_belong_to_product(self):
+        other_product = self.env["pos.bancontact.product"].create({
+            "name": "Other Sticker Product",
+            "company_id": self.company.id,
+            "api_key": "other_api_key",
+            "ppid": "other_profile_id",
+            "usage": "sticker",
+        })
+        other_sticker = self.env["pos.bancontact.sticker"].create({"name": "Other Sticker", "product_id": other_product.id})
+
+        with self.assertRaises(ValidationError):
+            self.payment_method_sticker_1.bancontact_sticker_id = other_sticker
+
+    def test_sticker_unique_per_payment_method(self):
+        with self.assertRaises(IntegrityError), mute_logger("odoo.sql_db"):
+            self.payment_method_sticker_2.bancontact_sticker_id = self.bancontact_sticker_1
+            self.env.flush_all()
+
+    def test_payment_provider_change_releases_sticker(self):
+        self.payment_method_sticker_1.payment_provider = False
+
+        self.assertFalse(self.payment_method_sticker_1.bancontact_product_id)
+        self.assertFalse(self.payment_method_sticker_1.bancontact_sticker_id)
+        self.assertFalse(self.bancontact_sticker_1.payment_method_id)
+
+    # --------------------------
+    # Bancontact Products
+    # --------------------------
+    def test_product_usage_locked_when_used(self):
+        with self.assertRaises(UserError):
+            self.bancontact_product_display.usage = "sticker"
+
+        # Archived payment methods still lock the product
+        self.payment_method_sticker_1.action_archive()
+        self.payment_method_sticker_2.action_archive()
+        with self.assertRaises(UserError):
+            self.bancontact_product_sticker.usage = "display"
+
+        unused_product = self.env["pos.bancontact.product"].create({
+            "name": "Unused Product",
+            "api_key": "unused_api_key",
+            "ppid": "unused_profile_id",
+        })
+        unused_product.usage = "sticker"
+
+    def test_product_company_check(self):
+        with self.assertRaises(UserError):
+            self.payment_method_display_2.bancontact_product_id = self.bancontact_product_display
+
+    def test_product_multi_company_rule(self):
+        self.pos_admin.write({"company_ids": [Command.link(self.company.id)], "company_id": self.company.id})
+        products = self.env["pos.bancontact.product"].with_user(self.pos_admin).with_context(allowed_company_ids=[self.company.id]).search([])
+        self.assertIn(self.bancontact_product_display, products)
+        self.assertNotIn(self.bancontact_product_display_2, products)
+
     # --------------------------------------
     # Create Bancontact Payment
     # --------------------------------------
     def test_create_bancontact_payment_wrong_provider(self):
         with (self.assertRaises(ValidationError)):
             self.bank_payment_method.create_bancontact_payment({})
+
+    def test_create_bancontact_payment_no_product(self):
+        self.payment_method_display.bancontact_product_id = False
+        with self.assertRaises(ValidationError):
+            self.payment_method_display.create_bancontact_payment({})
 
     def test_create_bancontact_payment_success(self):
         generated_bancontact_id = self._generate_bancontact_id()
@@ -163,6 +235,11 @@ class TestModels(TestBancontactPay, CommonPosTest):
     def test_cancel_bancontact_payment_wrong_provider(self):
         with (self.assertRaises(ValidationError)):
             self.bank_payment_method.cancel_bancontact_payment("bancontact_id")
+
+    def test_cancel_bancontact_payment_no_product(self):
+        self.payment_method_display.bancontact_product_id = False
+        with self.assertRaises(ValidationError):
+            self.payment_method_display.cancel_bancontact_payment("bancontact_id")
 
     def test_cancel_bancontact_payment_success(self):
         with self.mock_bancontact_call():
@@ -222,7 +299,7 @@ class TestModels(TestBancontactPay, CommonPosTest):
                 "description": "sample description",
                 "identifyCallbackUrl": f"{self.payment_method_sticker_1.get_base_url()}/bancontact_pay/webhook?config_id=1&payment_method_id={self.payment_method_sticker_1.id}",
                 "callbackUrl": f"{self.payment_method_sticker_1.get_base_url()}/bancontact_pay/webhook?config_id=1&payment_method_id={self.payment_method_sticker_1.id}",
-                "posId": f"pm{self.payment_method_sticker_1.id}",
+                "posId": self.bancontact_sticker_1.identifier,
                 "shopId": "pos1",
                 "shopName": "Shop Name",
             },
