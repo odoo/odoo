@@ -540,10 +540,10 @@ class StockRule(models.Model):
             locations |= locations[-1].location_id
         domain = self._get_rule_domain(locations, values)
         routes_with_no_warehouse = self.env['stock.route']._get_routes_with_no_warehouse()
-        routes = (values.get('route_ids') or self.env['stock.route']) | routes_with_no_warehouse
+        routes = values.get('route_ids') or self.env['stock.route']
         # Get a mapping (location_id, route_id) -> warehouse_id -> rule_id
         rule_dict = self._search_rule_for_warehouses(
-            routes,
+            routes | routes_with_no_warehouse,
             values.get("packaging_uom_id", False),
             product_id,
             values.get("warehouse_id", locations.warehouse_id),
@@ -573,8 +573,11 @@ class StockRule(models.Model):
                 res = extract_rule(rule_dict, packaging_uom_id.package_type_id.route_ids, warehouse_id, location_dest_id)
             if not res:
                 res = extract_rule(rule_dict, product_id.route_ids | product_id.categ_id.total_route_ids, warehouse_id, location_dest_id)
-            if not res and warehouse_id:
-                res = extract_rule(rule_dict, warehouse_id.route_ids, warehouse_id, location_dest_id)
+            if not res:
+                warehouse_routes = routes_with_no_warehouse
+                if warehouse_id:
+                    warehouse_routes |= warehouse_id.route_ids
+                res = extract_rule(rule_dict, warehouse_routes, warehouse_id, location_dest_id)
             return res
 
         location = location_id
