@@ -191,7 +191,10 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             self.env.ref('account_peppol.ir_cron_peppol_get_participant_status')._trigger(at=fields.Datetime.now() + timedelta(hours=1))
 
     def _cron_peppol_webhook_keepalive(self):
-        edi_users = self.search([('company_id.account_peppol_proxy_state', 'in', ['sender', 'receiver'])])
+        edi_users = self.search([
+            ('company_id.account_peppol_proxy_state', 'in', ['sender', 'receiver']),
+            ('proxy_type', 'in', self._get_peppol_proxy_types()),
+        ])
         edi_users._peppol_reset_webhook()
 
     # -------------------------------------------------------------------------
