@@ -1,6 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+<<<<<<< 5d18a9e458b9414b32bc9801c6b83bedafc8ad27
 from odoo import api, fields, models
+||||||| 6d304e3661e320a0a08840c29431604e6a198c87
+from odoo import api, models
+=======
+from odoo import api, models
+from odoo.exceptions import AccessError
+>>>>>>> 1bfbda15d048fafee2c545cb1244f5f2c5594c50
 
 
 class ProductPricelistReport(models.AbstractModel):
@@ -17,6 +24,9 @@ class ProductPricelistReport(models.AbstractModel):
         return self.env['ir.qweb']._render('product.report_pricelist_page', render_values)
 
     def _get_report_data(self, data, report_type='html'):
+        # Prices may be computed from the product cost, which is restricted to internal users
+        if not (self.env.su or self.env.user._is_internal()):
+            raise AccessError(self.env._("Sorry, you are not allowed to access this document."))
         quantities = data.get('quantities', [1])
         data_pricelist_id = data.get('pricelist_id')
         pricelist_id = data_pricelist_id and int(data_pricelist_id)
