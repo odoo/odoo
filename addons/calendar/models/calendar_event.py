@@ -260,6 +260,7 @@ class CalendarEvent(models.Model):
     partner_ids = fields.Many2many(
         'res.partner', 'calendar_event_res_partner_rel',
         string='Attendees', default=_default_partners, falsy_value_label="Unassigned")
+    current_user_handled = fields.Boolean(store=False, copy=False)
     invalid_email_partner_ids = fields.Many2many('res.partner', compute='_compute_invalid_email_partner_ids')
     unavailable_partner_ids = fields.Many2many('res.partner', string="Unavailable Attendees", compute='_compute_unavailable_partner_ids')
     # alarms
@@ -765,6 +766,16 @@ class CalendarEvent(models.Model):
                 'start': parsed_time[0],
                 'stop': parsed_time[1],
             })
+
+    @api.onchange("partner_ids")
+    def _onchange_partner_ids_add_current_user(self):
+        if (
+            self.env.context.get("is_quick_create_form")
+            and self.partner_ids
+            and not self.current_user_handled
+        ):
+            self.current_user_handled = True
+            self.partner_ids |= self.env.user.partner_id
 
     def _parse_time_from_title(self):
         """Extract datetime information from an event title.
