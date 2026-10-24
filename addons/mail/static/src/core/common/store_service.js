@@ -385,7 +385,7 @@ export class Store extends BaseStore {
         navigator.serviceWorker?.addEventListener("message", ({ data = {} }) => {
             const { type, payload } = data;
             if (type === "notification-display-request") {
-                const { correlationId, model, res_id } = payload;
+                const { correlationId, model, res_id, message_id } = payload;
                 const thread = this["mail.thread"].get({ model, id: res_id });
                 let isTabFocused;
                 try {
@@ -393,9 +393,22 @@ export class Store extends BaseStore {
                 } catch {
                     // assumes tab not focused: parent.document from iframe triggers CORS error
                 }
+                const isMessageSeen =
+                    model === "discuss.channel"
+                        ? thread?.channel?.self_member_id?.seen_message_id?.id >= message_id
+                        : thread?.messages.some((m) => m.id === message_id);
                 if (
+<<<<<<< c78fbe0044b2ee26207ab7dfb04fc53ea3cb4379
                     this.self_user?.im_status === "busy" ||
                     (isTabFocused && thread?.channel?.isDisplayed)
+||||||| b75f0e74b6b6d52491404feaf14ca191c04ff041
+                    this.self?.im_status?.includes("busy") ||
+                    (isTabFocused && thread?.channel?.isDisplayed)
+=======
+                    this.self?.im_status?.includes("busy") ||
+                    (isTabFocused && thread?.channel?.isDisplayed) ||
+                    isMessageSeen
+>>>>>>> 23ba744779fe982faba120cd6f7b10f4557d4283
                 ) {
                     navigator.serviceWorker.controller?.postMessage({
                         type: "notification-display-response",
