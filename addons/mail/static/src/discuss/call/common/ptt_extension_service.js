@@ -63,9 +63,11 @@ export const pttExtensionHookService = {
                         self.voiceActivated = false;
                         const isFirstPress = !rtc.selfSession?.isTalking;
                         rtc.onPushToTalk();
+                        // The second key press is slow to come: skip the initial warning and allow more time before inferring release.
+                        if (isFirstPress) {
+                            rtc.cancelPttMutedWarningTimeout();
+                        }
                         if (rtc.selfSession?.isTalking) {
-                            // Second key press is slow to come thus, the first timeout
-                            // must be greater than the following ones.
                             rtc.setPttReleaseTimeout(
                                 isFirstPress ? INITIAL_RELEASE_TIMEOUT : COMMON_RELEASE_TIMEOUT
                             );

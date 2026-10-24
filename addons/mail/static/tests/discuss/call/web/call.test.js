@@ -11,10 +11,13 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { Settings } from "@mail/core/common/settings_model";
 import { pttExtensionServiceInternal } from "@mail/discuss/call/common/ptt_extension_service";
-import { PTT_RELEASE_DURATION } from "@mail/discuss/call/common/rtc_service";
+import {
+    PTT_MUTED_WARNING_DELAY,
+    PTT_RELEASE_DURATION,
+} from "@mail/discuss/call/common/rtc_service";
 import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { toRawValue } from "@mail/utils/common/local_storage";
-import { advanceTime, freezeTime, keyDown, test, waitFor, waitForNone } from "@odoo/hoot";
+import { advanceTime, freezeTime, keyDown, keyUp, test, waitFor, waitForNone } from "@odoo/hoot";
 import { patch } from "@web/core/utils/patch";
 import { contains } from "@web/../tests/web_test_helpers";
 
@@ -63,8 +66,7 @@ test("no auto-call on joining group chat", async () => {
     await waitForNone(".o-discuss-Call");
 });
 
-test.tags("desktop");
-test("Can push-to-talk", async () => {
+async function startPttCall() {
     mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
@@ -99,6 +101,11 @@ test("Can push-to-talk", async () => {
     await waitFor(".o-discuss-Call:count(1)");
     await contains(".o-discuss-Call:count(1)").click();
     await advanceTime(1000);
+}
+
+test.tags("desktop");
+test("Can push-to-talk", async () => {
+    await startPttCall();
     await keyDown("f");
     await advanceTime(PTT_RELEASE_DURATION);
     await waitFor(".o-discuss-CallParticipantCard .o-isTalking:count(1)");
@@ -111,4 +118,50 @@ test("Can push-to-talk", async () => {
     await keyDown("f");
     await advanceTime(PTT_RELEASE_DURATION);
     await waitFor(".o-discuss-CallParticipantCard .o-isTalking:count(1)");
+});
+
+test.tags("desktop");
+test("Muted push-to-talk warns only after the full delay", async () => {
+    await startPttCall();
+    await contains(".o-discuss-CallActionList button[title='Mute']:count(1)").click();
+    // Releasing early cancels the warning.
+    await keyDown("f");
+    await advanceTime(100);
+    await keyUp("f");
+    await advanceTime(PTT_MUTED_WARNING_DELAY);
+    await waitForNone(".o_popover");
+    // Holding the key shows the warning after the delay.
+    await keyDown("f");
+    await advanceTime(PTT_MUTED_WARNING_DELAY - 100);
+    await waitForNone(".o_popover");
+    await advanceTime(100);
+    await waitFor(
+        ".o_popover:text('You are currently muted! Please turn on the microphone to use push-to-talk.'):count(1)"
+    );
+});
+
+test.tags("desktop");
+test("Muted push-to-talk warning dismissal resets after unmuting", async () => {
+    await startPttCall();
+    await contains(".o-discuss-CallActionList button[title='Mute']:count(1)").click();
+    await keyDown("f");
+    await advanceTime(PTT_MUTED_WARNING_DELAY);
+    await keyUp("f");
+    await contains(
+        ".o_popover:text('You are currently muted! Please turn on the microphone to use push-to-talk.') [title='Dismiss warning']:count(1)"
+    ).click();
+    await keyDown("f");
+    await advanceTime(PTT_MUTED_WARNING_DELAY);
+    await waitForNone(".o_popover");
+    await keyUp("f");
+    await contains(".o-discuss-CallActionList button[title='Unmute']:count(1)").click();
+    await contains(".o-discuss-CallActionList button[title='Mute']:count(1)").click();
+    await keyDown("f");
+    await advanceTime(PTT_MUTED_WARNING_DELAY);
+    await waitFor(
+        ".o_popover:text('You are currently muted! Please turn on the microphone to use push-to-talk.'):count(1)"
+    );
+    await keyUp("f");
+    await contains(".o-discuss-CallActionList button[title='Unmute']:count(1)").click();
+    await waitForNone(".o_popover");
 });
