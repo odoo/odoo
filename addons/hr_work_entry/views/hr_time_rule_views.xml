@@ -32,7 +32,8 @@
                             <group string="Conditions" style="grid-template-columns: max-content 1fr; row-gap: 20px;">
 
                                 <label for="employee_domain" string="Employees" help="The rule will automatically apply to all times entries for matching employees."/>
-                                <field name="employee_domain" widget="domain" options="{'model': 'hr.employee'}" nolabel="1"/>
+                                <field name="employee_domain" widget="domain_company" options="{'model': 'hr.employee'}"
+                                    context="{'allowed_company_ids': [company_id] if company_id else allowed_company_ids}" nolabel="1"/>
 
                                 <!-- Time Type (input filter) -->
                                 <label for="condition_work_entry_type_ids" string="Time Type" help="If set, only selected types will be considered by this rule."/>
@@ -143,10 +144,12 @@
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="condition_label" string="Condition"/>
-                <field name="employee_domain" widget="domain_count" options="{'model': 'hr.employee'}" string="Employees"/>
+                <field name="employee_domain" widget="domain_count" options="{'model': 'hr.employee'}"
+                    context="{'allowed_company_ids': [company_id] if company_id else allowed_company_ids}" string="Employees"/>
                 <field name="description" optional="hide"/>
                 <field name="amount_rate" string="Salary Rate (%)" optional="hide"/>
                 <field name="country_id" optional="hide"/>
+                <field name="company_id" column_invisible="True"/>
             </list>
         </field>
     </record>
