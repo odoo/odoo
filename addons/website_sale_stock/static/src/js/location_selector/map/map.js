@@ -2,6 +2,7 @@
 
 import { useLayoutEffect } from "@web/owl2/utils";
 import { Component, onMounted, onWillUnmount, signal, t, useProps } from "@odoo/owl";
+import { useService } from '@web/core/utils/hooks';
 import { renderToString } from '@web/core/utils/render';
 
 export class Map extends Component {
@@ -28,6 +29,7 @@ export class Map extends Component {
     mapRef = signal.ref();
 
     setup() {
+        this.ui = useService('ui');
         this.leafletMap = null;
         this.markers = [];
 
@@ -48,10 +50,16 @@ export class Map extends Component {
             this.leafletMap.remove();
         });
 
-        // Update the size of the map.
+        // Update the size of the map and show all the locations.
         useLayoutEffect(
             (locations) => {
                 this.leafletMap.invalidateSize();
+                if (locations.length) {
+                    this.leafletMap.fitBounds(
+                        locations.map(l => [l.latitude, l.longitude]),
+                        { ...this.viewPadding, maxZoom: 15 },
+                    );
+                }
             },
             () => [this.props.locations]
         );
@@ -119,6 +127,22 @@ export class Map extends Component {
 
             this.markers.push(marker);
         }
+    }
+
+    /**
+     * Return the padding keeping the locations clear of the location details, which are displayed
+     * over the bottom left of the map on larger screens.
+     *
+     * @return {Object} The padding options of the map view.
+     */
+    get viewPadding() {
+        if (this.ui.isSmall) {
+            return { padding: [40, 40] };
+        }
+        return {
+            paddingTopLeft: [Math.min(440, this.leafletMap.getSize().x * 0.45), 80],
+            paddingBottomRight: [70, 60],
+        };
     }
 
     /**

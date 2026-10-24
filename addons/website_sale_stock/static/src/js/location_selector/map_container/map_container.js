@@ -1,5 +1,6 @@
 import {
-    LocationSchedule
+    getTodayStatus,
+    LocationSchedule,
 } from '@website_sale_stock/js/location_selector/location_schedule/location_schedule';
 import { Map } from '@website_sale_stock/js/location_selector/map/map';
 import { Component, onWillStart, proxy, t, useProps } from '@odoo/owl';
@@ -73,6 +74,14 @@ export class MapContainer extends Component {
      */
     get selectedLocation() {
         return this.props.locations.find(l => String(l.id) === this.props.selectedLocationId);
+    }
+
+    get hasOpeningHours() {
+        return Object.keys(this.selectedLocation.opening_hours).length > 0;
+    }
+
+    get todayStatus() {
+        return getTodayStatus(this.selectedLocation.opening_hours);
     }
 
     get errorMessage() {

@@ -3,13 +3,17 @@
     <t t-name="website_sale_stock.locationSelector.dialog">
         <Dialog
             title="this.title"
-            bodyClass="'d-flex flex-column p-0 px-md-3'"
+            size="'xl'"
+            header="this.state.isSmall or this.hideListView"
+            bodyClass="'d-flex flex-column p-0'"
             contentClass="'o_location_selector h-100 overflow-hidden'"
         >
             <!-- Mobile view -->
             <t t-if="this.state.isSmall">
                 <!-- Search bar -->
-                <t t-call="website_sale_stock.locationSelector.searchbar"/>
+                <div class="p-3 border-bottom">
+                    <t t-call="website_sale_stock.locationSelector.searchbar"/>
+                </div>
 
                 <!-- "List view / Map view" navigation -->
                 <div class="nav nav-tabs">
@@ -39,28 +43,24 @@
                         setSelectedLocation.bind="this.setSelectedLocation"
                         validateSelection.bind="this.validateSelection"
                     />
-                    <t t-else="">
-                        <p t-if="this.state.error" class="p-3 fw-bold">No result</p>
-                        <div t-else="" class="position-absolute start-50 top-50 translate-middle">
-                            <div class="spinner-border" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                        </div>
-                    </t>
+                    <t t-else="" t-call="website_sale_stock.locationSelector.placeholder"/>
                 </div>
             </t>
 
             <!-- Desktop view -->
-            <div t-else="" class="d-flex h-100 mx-0 mx-md-n3 overflow-hidden">
+            <div t-else="" class="d-flex h-100 overflow-hidden">
 
                 <!-- List view -->
                 <section
                     id="location_selector_list_view"
-                    class="o_location_selector_view col-md-4 d-flex flex-grow-1 flex-column"
+                    class="o_location_selector_view col-md-5 col-lg-4 position-relative d-flex flex-column border-end"
                 >
+                    <div class="d-flex flex-column gap-3 p-4 pb-3">
+                        <h1 class="modal-title h5 mb-0" t-out="this.title"/>
 
-                    <!-- Search bar -->
-                    <t t-call="website_sale_stock.locationSelector.searchbar" wrapClass="'d-flex'"/>
+                        <!-- Search bar -->
+                        <t t-call="website_sale_stock.locationSelector.searchbar"/>
+                    </div>
 
                     <!-- List group -->
                     <LocationList
@@ -70,24 +70,29 @@
                         setSelectedLocation.bind="this.setSelectedLocation"
                         validateSelection.bind="this.validateSelection"
                     />
-                    <t t-else="">
-                        <p t-if="this.state.error" class="p-3 fw-bold">No result</p>
-                        <div t-else="" class="position-absolute start-50 top-50 translate-middle">
-                            <div class="spinner-border" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                        </div>
-                    </t>
+                    <t t-else="" t-call="website_sale_stock.locationSelector.placeholder"/>
                 </section>
 
                 <!-- Map view -->
-                <section class="o_location_selector_view col-md-8 d-flex flex-grow-1 border-start">
+                <section class="o_location_selector_view position-relative d-flex flex-grow-1">
                     <MapContainer
                         locations="this.locations"
                         selectedLocationId="this.state.selectedLocationId.toString()"
                         setSelectedLocation.bind="this.setSelectedLocation"
                         validateSelection.bind="this.validateSelection"
                     />
+                    <div
+                        t-if="!this.hideListView"
+                        class="position-absolute top-0 end-0 z-1 d-flex m-3 rounded p-2 bg-body shadow-sm"
+                    >
+                        <button
+                            type="button"
+                            class="btn-close"
+                            title="Close"
+                            aria-label="Close"
+                            t-on-click="() => this.props.close()"
+                        />
+                    </div>
                 </section>
             </div>
 
@@ -108,8 +113,17 @@
         </Dialog>
     </t>
 
+    <t t-name="website_sale_stock.locationSelector.placeholder">
+        <p t-if="this.state.error" class="px-4 py-5 text-center text-muted">No result</p>
+        <div t-else="" class="position-absolute top-50 start-50 translate-middle">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </t>
+
     <t t-name="website_sale_stock.locationSelector.searchbar">
-        <div role="search" class="input-group p-3 border-bottom" t-att-class="wrapClass">
+        <div role="search" class="input-group">
             <input
                 id="o_location_selector_search"
                 class="search-query form-control oe_search_box border-0 text-bg-light"
