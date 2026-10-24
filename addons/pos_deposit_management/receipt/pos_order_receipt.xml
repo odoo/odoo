@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="pos_orderline_receipt_inherit" inherit_id="point_of_sale.pos_orderline_receipt">
+            <xpath expr="//tr[@name='standard-line']" position="replace">
+                <tr t-if="not line['combo_parent_id'] and not line.get('is_deposit_for_combo_child')" name="standard-line" class="lines">
+                    <td class="text-start w-10 top">
+                        <span class="qty text-large"><t t-out="line['qty']" /></span>
+                    </td>
+                    <td class="text-start w-60 top">
+                        <t t-call="point_of_sale.pos_orderline_receipt_information" />
+                    </td>
+                    <td t-if="not conditions['basic_receipt']" class="text-end w-30 text-large top price-incl font-monospace" t-out="line['price_subtotal_incl']" />
+                </tr>
+                <tr t-elif="line.get('is_deposit_for_combo_child')" name="deposit-combo-child-line" class="lines">
+                    <td class="text-start w-5 top"/>
+                    <td class="text-start w-10 top">
+                        <span class="combo-child-qty text-large"><t t-out="line['qty']" /></span>
+                    </td>
+                    <td class="text-start w-50 top">
+                        <t t-call="point_of_sale.pos_orderline_receipt_information" />
+                    </td>
+                    <td t-if="not conditions['basic_receipt']" class="text-end w-30 text-large top price-incl font-monospace" t-out="line['price_subtotal_incl']" />
+                </tr>
+            </xpath>
+            <xpath expr="//tr[@name='combo-child-line']" position="replace">
+                <tr t-if="line['combo_parent_id']" name="combo-child-line" class="lines">
+                    <td class="text-start w-5 top"/>
+                    <td class="text-start w-10 top">
+                        <span class="combo-child-qty text-large"><t t-out="line['qty']" /></span>
+                    </td>
+                    <td class="text-start w-80 top">
+                        <t t-call="point_of_sale.pos_orderline_receipt_information" />
+                    </td>
+                </tr>
+            </xpath>
+        </template>
+    </data>
+</odoo>
