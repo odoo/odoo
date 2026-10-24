@@ -2,6 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { registry } from "@web/core/registry";
 import { deepCopy } from "@web/core/utils/objects";
+import { escape } from "@web/core/utils/strings";
 import { parseXML } from "@web/core/utils/xml";
 import { Record } from "@web/model/record";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
@@ -202,7 +203,7 @@ class ResUserGroupIdsField extends Component {
 
     getExtraGroupsArch() {
         return `
-            <group string="${this.extraCategory.name}" class="o_extra_rights_group">
+            <group string="${escape(this.extraCategory.name)}" class="o_extra_rights_group">
                 <group>
                     ${this.extraCategory.privileges
                         .filter((cat, index) => index % 2 === 0)
@@ -229,7 +230,7 @@ class ResUserGroupIdsField extends Component {
 
     getCategoryArch(category) {
         return `
-            <group string="${category.name}">
+            <group string="${escape(category.name)}">
                 ${category.privileges.map((privilege) => this.getPrivilegeArch(privilege)).join("")}
             </group>`;
     }
