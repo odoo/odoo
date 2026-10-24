@@ -1,4 +1,5 @@
 import { test, expect } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-dom";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { ProductListPage } from "@pos_self_order/app/pages/product_list_page/product_list_page";
 import { setupSelfPosEnv, getFilledSelfOrder } from "../utils";
@@ -57,6 +58,23 @@ test("getSubCategories and selectCategory", async () => {
     // for mobile mode
     store.config.self_ordering_mode = "mobile";
     expect(comp.getSubCategories()).toHaveLength(0);
+});
+
+test("category layout", async () => {
+    const store = await setupSelfPosEnv("kiosk", "counter", "each", {}, true);
+    store.config.self_ordering_category_layout = "top";
+    const comp = await mountWithCleanup(ProductListPage, {});
+    expect(comp.isSideCategoryLayout).toBe(false);
+    expect(".category_list.flex-column").toHaveCount(0);
+
+    store.config.self_ordering_category_layout = "side";
+    await animationFrame();
+    expect(comp.isSideCategoryLayout).toBe(true);
+    expect(".category_list.flex-column").toHaveCount(1);
+
+    // Side layout only applies to kiosk
+    store.config.self_ordering_mode = "mobile";
+    expect(comp.isSideCategoryLayout).toBe(false);
 });
 
 test("showBackButton", async () => {
