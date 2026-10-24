@@ -1,6 +1,8 @@
 .o_kanban_view.o_event_kanban_view .o_kanban_renderer {
-    .o_kanban_record > div {
-        min-height: 140px;
+    .o_event_card_calendar {
+        width: var(--EventCardCalendar-width, 80px);
+        aspect-ratio: 1 / 1;
+        background-color: var(--EventCardCalendar-bg-color, #{$white});
     }
 }
 

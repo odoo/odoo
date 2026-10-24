@@ -53,6 +53,7 @@
     'assets': {
         'web.assets_backend': [
             'website_event/static/src/js/tours/**/*',
+            'website_event/static/src/scss/event.scss',
         ],
         'web.assets_tests': [
             'website_event/static/tests/tours/**/*',

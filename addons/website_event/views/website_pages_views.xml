@@ -62,13 +62,13 @@
             <field name="website_url"/>
             <field name="publish_on"/>
         </xpath>
-        <xpath expr="//main" position="inside">
+        <xpath expr="//div[hasclass('o_event_card_main')]" position="inside">
             <div class="text-muted" t-if="record.website_id.value" groups="website.group_multi_website">
                 <i class="oi me-1" data-icon="public"  role="img" aria-label="Website" title="Website"/>
                 <field name="website_id"/>
             </div>
         </xpath>
-        <xpath expr="//main" position="inside">
+        <xpath expr="//div[hasclass('o_event_card_main')]" position="inside">
             <div class="d-flex border-top mt-2 pt-2">
                 <field name="website_published" widget="boolean_toggle"/>
                 <t t-if="record.publish_on.raw_value">Scheduled</t>

@@ -101,6 +101,7 @@ class EventEvent(models.Model):
     start_remaining = fields.Integer(
         'Remaining before start', compute='_compute_time_data',
         help="Remaining time before event starts (minutes)")
+    cover_image_url = fields.Char('Cover Image URL', compute='_compute_cover_image_url')
 
     @api.depends('website_url')
     def _compute_event_share_url(self):
@@ -210,6 +211,11 @@ class EventEvent(models.Model):
         for event in self:
             event.introduction_menu = event.website_menu
             event.register_menu = event.website_menu
+
+    @api.depends('cover_properties')
+    def _compute_cover_image_url(self):
+        for event in self:
+            event.cover_image_url = event._get_image_url()
 
     @api.depends('date_begin', 'date_end')
     def _compute_time_data(self):
