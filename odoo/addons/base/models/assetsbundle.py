@@ -157,6 +157,7 @@ class AssetsBundle(object):
         We compute a SHA512/256 on the rendered bundle + combined linked files last_modified date
         """
         if asset_type not in self._checksum_cache:
+            assets = []
             if asset_type == 'css':
                 assets = self.stylesheets + self.binaries
             elif asset_type == 'js':
