@@ -21,7 +21,7 @@
                 'rounded-0 border-start': !this.ancestors.inDiscussApp and !this.ui.isSmall(),
                 'rounded-3 shadow-lg m-1': this.peek.isOpen(),
             }">
-            <div class="o-mail-MessagingMenu-searchContainer d-flex flex-column gap-2" t-att-class="{ 'px-2 o-py-2_5': !this.peek.isOpen(), 'px-1 pt-2 o-pb-2_5': this.peek.isOpen() }">
+            <div class="o-mail-MessagingMenu-searchContainer d-flex flex-column o-gap-2_5" t-att-class="{ 'o-p-2_5': !this.peek.isOpen(), 'px-2 pt-2 o-pb-2_5': this.peek.isOpen() }">
                 <div class="o-mail-MessagingMenu-searchRow d-flex align-items-stretch gap-1">
                     <t t-foreach="this.activeTab().actions" t-as="action" t-key="action.id">
                         <div t-if="action.subActions?.length" class="d-flex flex-shrink-0">
@@ -58,7 +58,7 @@
                     />
                 </div>
             </div>
-            <div t-ref="this.tabContentRef" class="o-mail-MessagingMenu-tabContent d-flex flex-column overflow-auto o-scrollbar-thin flex-grow-1 o-gap-0_5" t-att-class="{ 'o-px-1_5': !this.peek.isOpen(), 'o-px-0_5': this.peek.isOpen() }">
+            <div t-ref="this.tabContentRef" class="o-mail-MessagingMenu-tabContent d-flex flex-column overflow-auto o-scrollbar-thin flex-grow-1 o-gap-0_5" t-att-class="{ 'px-2': !this.peek.isOpen(), 'px-1': this.peek.isOpen() }">
                 <NotificationItem
                     t-if="this.showPushPermissionRequest"
                     className="'bg-info o-my-0_5'"
