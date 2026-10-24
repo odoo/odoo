@@ -608,3 +608,40 @@ class TestReportSession(TestPoSCommon):
             report['cash_rounding_total'], 10.40 - 10.42, places=2,
             msg="Cash rounding total should equal sum of (amount_paid - amount_total) across orders"
         )
+
+    def test_report_sale_details_with_multiple_correction_moves(self):
+        """Test the sales details report with multiple bank correction moves."""
+        bank_pm_2 = self.bank_pm1.copy({'name': 'Bank 2'})
+        self.config.write({'payment_method_ids': [Command.link(bank_pm_2.id)]})
+
+        self.config.open_ui()
+        session = self.config.current_session_id
+
+        for payment_method in (self.bank_pm1, bank_pm_2):
+            order = self.env['pos.order'].create({
+                'company_id': self.env.company.id,
+                'session_id': session.id,
+                'lines': [Command.create({
+                    'name': 'OL/0001',
+                    'product_id': self.product.id,
+                    'price_unit': 10.6,
+                    'qty': 1,
+                    'price_subtotal': 10.6,
+                    'price_subtotal_incl': 10.6,
+                })],
+                'pricelist_id': self.config.pricelist_id.id,
+                'amount_paid': 10.6,
+                'amount_total': 10.6,
+                'amount_tax': 0.0,
+                'amount_return': 0.0,
+            })
+            self.make_payment(order, payment_method, 10.6)
+
+        session.close_session_from_ui({self.bank_pm1.id: 9.6, bank_pm_2.id: 19.6})
+        self.assertEqual(len(session.correction_move_ids), 2)
+
+        report = self.env['report.point_of_sale.report_saledetails'].get_sale_details(
+            session_ids=[session.id],
+        )
+        self.assertEqual(report['payments'][1]['money_difference'], -1.0)
+        self.assertEqual(report['payments'][2]['money_difference'], 9.0)
