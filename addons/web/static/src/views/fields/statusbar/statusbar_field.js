@@ -376,6 +376,9 @@ export const statusBarField = {
         domain: dynamicInfo.domain,
         context: dynamicInfo.context,
     }),
+    fieldDependencies: [
+        { name: "display_name", type: "char" },
+    ],
 };
 
 registry.category("fields").add("statusbar", statusBarField);
