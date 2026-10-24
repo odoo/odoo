@@ -15,3 +15,4 @@ ContextType = Mapping[str, typing.Any]
 ValuesType = dict[str, typing.Any]
 ModelType = typing.TypeVar("ModelType", bound=BaseModel)
 CommandValue = tuple[Command, int, typing.Literal[0] | ValuesType | Collection[int]]
+JsonType = dict[str, typing.Any] | list[typing.Any] | str | int | float | bool | None

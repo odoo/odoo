@@ -31,7 +31,7 @@ def check_property_field_value_name(property_name):
         raise ValueError(f"Wrong property field value name {property_name!r}.")
 
 
-class Properties(Field):
+class Properties(Field['Property', dict]):
     """ Field that contains a list of properties (aka "sub-field") based on
     a definition defined on a container. Properties are pseudo-fields, acting
     like Odoo fields but without being independently stored in database.
@@ -125,7 +125,7 @@ class Properties(Field):
     #           'aa34746a6851ee4e': 1337,
     #       }
     #
-    def convert_to_column(self, value, record, values=None, validate=True):
+    def convert_to_column(self, value, record, values=None, validate=True) -> str | None:
         if not value:
             return None
 
@@ -198,10 +198,10 @@ class Properties(Field):
     #           'value': [1337, 'Bob'],
     #       }]
     #
-    def convert_to_read(self, value, record, use_display_name=True):
+    def convert_to_read(self, value, record, use_display_name=True) -> list[dict | typing.Literal[False]]:
         return self.convert_to_read_multi([value], record, use_display_name)[0]
 
-    def convert_to_read_multi(self, values, records, use_display_name=True):
+    def convert_to_read_multi(self, values: list[Property], records: BaseModel, use_display_name: bool = True) -> list[dict]:
         if not records:
             return values
         assert len(values) == len(records)
@@ -974,7 +974,7 @@ class Property(abc.Mapping):
         return hash(frozendict(self._values))
 
 
-class PropertiesDefinition(Field):
+class PropertiesDefinition(Field[list[dict], list[dict]]):
     """ Field used to define the properties definition (see :class:`~odoo.fields.Properties`
     field). This field is used on the container record to define the structure
     of expected properties on subrecords. It is used to check the properties
@@ -1048,7 +1048,7 @@ class PropertiesDefinition(Field):
         flush_group()
         return new_def
 
-    def convert_to_column(self, value, record, values=None, validate=True):
+    def convert_to_column(self, value, record, values=None, validate=True) -> str | None:
         """Convert the value before inserting it in database.
 
         This method accepts a list properties definition.

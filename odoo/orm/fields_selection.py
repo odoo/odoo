@@ -16,7 +16,7 @@ if typing.TYPE_CHECKING:
     OnDeletePolicy = str | Callable[[BaseModel], None]
 
 
-class Selection(Field[str | typing.Literal[False]]):
+class Selection(Field[str | typing.Literal[False], str]):
     """ Encapsulates an exclusive choice between different values.
 
     :param selection: specifies the possible values for this field.
@@ -223,7 +223,7 @@ class Selection(Field[str | typing.Literal[False]]):
             selection = determine(selection, env[self.model_name].with_context(lang=None))
         return [str(value) for value, _ in selection]
 
-    def convert_to_column(self, value, record, values=None, validate=True):
+    def convert_to_column(self, value, record, values=None, validate=True) -> str | None:
         return self.convert_to_cache(value, record, validate=validate)
 
     def convert_to_cache(self, value, records, validate=True):
@@ -238,3 +238,6 @@ class Selection(Field[str | typing.Literal[False]]):
             if item[0] == value:
                 return item[1]
         return value or ''
+
+    def convert_to_write(self, value, record) -> str | typing.Literal[False]:
+        return self.convert_to_cache(value, record, validate=False) or False
