@@ -1746,6 +1746,19 @@ class PropertiesCase(TestPropertiesMixin):
                 'Properties > discussion_color_code'
             )
 
+    def test_properties_definition_export_import(self):
+        """ The exported definition is the JSON the import reads back. """
+        definition = self.discussion_1.attributes_definition
+        [[exported]] = self.discussion_1.export_data(['attributes_definition'])['datas']
+        self.assertEqual(json.loads(exported), definition)
+
+        discussion = self.env['test_new_api.discussion'].browse(
+            self.env['test_new_api.discussion'].load(
+                ['name', 'attributes_definition'], [['Imported', exported]],
+            )['ids'],
+        )
+        self.assertEqual(discussion.attributes_definition, definition)
+
 
 class PropertiesSearchCase(TestPropertiesMixin):
     @classmethod
