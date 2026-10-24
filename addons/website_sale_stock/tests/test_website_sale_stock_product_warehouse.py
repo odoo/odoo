@@ -139,3 +139,17 @@ class TestWebsiteSaleStockProductWarehouse(
 
         response = self.url_open('/shop')
         self.assertEqual(response.status_code, 200)
+
+    def test_confirm_keeps_manually_set_warehouse(self):
+        """Confirming a website order keeps the warehouse set on it in the backend."""
+        self.website.warehouse_id = self.warehouse_2
+        self.website.salesperson_id = self.env.user
+        so = self._create_so(order_line=[Command.create({'product_id': self.product_A.id})])
+        self.assertEqual(so.warehouse_id, self.warehouse_2)
+        self.assertFalse(so.user_id)
+
+        so.warehouse_id = self.warehouse_1
+        so.action_confirm()
+        self.assertEqual(so.user_id, self.env.user)
+        self.assertEqual(so.warehouse_id, self.warehouse_1)
+        self.assertEqual(so.picking_ids.picking_type_id.warehouse_id, self.warehouse_1)
