@@ -457,6 +457,8 @@ class HolidaysRequest(models.Model):
                         hours = (leave.date_to - leave.date_from).total_seconds() / 3600
                     if not leave.request_unit_hours and not public_holidays:
                         days = 1 if not leave.request_unit_half else 0.5
+                    elif leave.request_unit_hours and not leave.employee_id.is_fully_flexible and calendar.hours_per_day:
+                        days = hours / calendar.hours_per_day
                     else:
                         days = hours / 24
                 elif leave.leave_type_request_unit == 'day' and check_leave_type:
