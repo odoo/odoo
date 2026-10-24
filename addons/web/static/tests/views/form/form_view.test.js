@@ -7,6 +7,7 @@ import {
     expect,
     hover,
     manuallyDispatchProgrammaticEvent,
+    mockSendBeacon,
     middleClick,
     mockTimeZone,
     mockTouch,
@@ -18,6 +19,7 @@ import {
     setInputFiles,
     test,
     tick,
+    unload,
     waitFor,
 } from "@odoo/hoot";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
@@ -543,6 +545,531 @@ test(`[Offline] save a form view offline (autosave when leaving)`, async () => {
     // TODO: It should be nice to reload the current view after sync ?? For me it should be "new foo"
     expect(".o_data_cell:first").toHaveText("yop");
     await expect.waitForSteps(["web_save"]);
+});
+
+/**
+ * Opens a new partner in a form view and fills a many2many and a one2many
+ * through an onchange, like a mail composer filled by its template. Then the
+ * connection is lost and the record is saved, so that the save is scheduled
+ * offline. Returns a function to toggle the network.
+ */
+async function saveNewRecordWithRelationsOffline({ header = "", inDialog = false } = {}) {
+    let offline = false;
+    onRpc("/*", () => {
+        if (offline) {
+            return new Response("", { status: 502 });
+        }
+    });
+    onRpc("web_save", ({ args, kwargs }) => {
+        // "read": the record saved itself and reads its values back; "no read": the
+        // call scheduled offline is made as is
+        const read = Object.keys(kwargs.specification || {}).length ? "read" : "no read";
+        expect.step(["web_save", args[0], read]);
+    });
+    Partner._onChanges = {
+        foo(record) {
+            if (record.foo === "new foo") {
+                record.type_ids = [[4, 12]];
+                record.child_ids = [[0, 0, { name: "kid" }]];
+            }
+        },
+    };
+    Partner._views = {
+        form: `
+            <form>
+                <header>${header}</header>
+                <field name="foo"/>
+                <field name="int_field"/>
+                <field name="type_ids" widget="many2many_tags"/>
+                <field name="child_ids">
+                    <list editable="bottom"><field name="name"/></list>
+                </field>
+            </form>`,
+        list: `<list><field name="foo"/></list>`,
+        search: `<search/>`,
+    };
+    defineActions([
+        {
+            id: 1,
+            name: "Partner",
+            res_model: "partner",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+        },
+    ]);
+
+    if (inDialog) {
+        await mountViewInDialog({ resModel: "partner", type: "form" });
+    } else {
+        await mountWithCleanup(WebClient);
+        await getService("action").doAction(1);
+        await contains(".o_control_panel .o_list_button_add").click();
+    }
+    await contains(".o_field_widget[name=foo] input").edit("new foo");
+    await runAllTimers(); // execute first _syncORM triggered after a delay in the service startup
+
+    offline = true;
+    return {
+        setOffline: (value) => {
+            offline = value;
+        },
+    };
+}
+
+function getNewPartners() {
+    return MockServer.env["partner"].filter((p) => p.foo?.startsWith("new"));
+}
+
+function getNames(ids) {
+    return MockServer.env["partner"].browse(ids).map((p) => p.name);
+}
+
+test(`[Offline] save a new record again once its offline save has been synced`, async () => {
+    const { setOffline } = await saveNewRecordWithRelationsOffline();
+    await contains(".o_form_button_save").click();
+    expect(getService(OfflinePlugin).isOffline()).toBe(true);
+    expect.verifySteps([]);
+
+    setOffline(false);
+    await runAllTimers(); // execute checkConnection
+    await expect.waitForSteps([["web_save", [], "read"]]); // the record is created when back online
+    const [created] = getNewPartners();
+    expect(created.type_ids).toEqual([12]);
+    expect(getNames(created.child_ids)).toEqual(["kid"]);
+
+    // Saving the record again must write on the created record, not create a
+    // second one with its relational fields left empty.
+    await contains(".o_field_widget[name=foo] input").edit("newer foo");
+    await contains(".o_form_button_save").click();
+    expect.verifySteps([["web_save", [created.id], "read"]]);
+    expect(getNewPartners()).toHaveLength(1);
+    expect(created.foo).toBe("newer foo");
+    expect(created.type_ids).toEqual([12]);
+    expect(getNames(created.child_ids)).toEqual(["kid"]);
+});
+
+test(`[Offline] edit a line of a new record once its offline save has been synced`, async () => {
+    const { setOffline } = await saveNewRecordWithRelationsOffline();
+    await contains(".o_form_button_save").click();
+
+    setOffline(false);
+    await runAllTimers(); // execute checkConnection
+    await expect.waitForSteps([["web_save", [], "read"]]);
+    const [created] = getNewPartners();
+
+    // The line created offline must now be known by its real id, so that it
+    // can be edited like any other line.
+    await contains(".o_field_widget[name=child_ids] .o_data_row .o_data_cell").click();
+    await contains(".o_field_widget[name=child_ids] .o_data_row [name=name] input").edit("kid 2", {
+        confirm: "blur",
+    });
+    await contains(".o_form_button_save").click();
+    expect.verifySteps([["web_save", [created.id], "read"]]);
+    expect(getNewPartners()).toHaveLength(1);
+    expect(getNames(created.child_ids)).toEqual(["kid 2"]);
+});
+
+test(`[Offline] save a new record twice while offline keeps its relational values`, async () => {
+    const { setOffline } = await saveNewRecordWithRelationsOffline();
+    await contains(".o_form_button_save").click();
+    expect(getService(OfflinePlugin).isOffline()).toBe(true);
+
+    await contains(".o_field_widget[name=int_field] input").edit("7");
+    await contains(".o_form_button_save").click();
+    expect.verifySteps([]);
+
+    setOffline(false);
+    await runAllTimers(); // execute checkConnection
+    await expect.waitForSteps([["web_save", [], "read"]]);
+    const created = getNewPartners();
+    expect(created).toHaveLength(1);
+    expect(created[0].int_field).toBe(7);
+    expect(created[0].type_ids).toEqual([12]);
+    expect(getNames(created[0].child_ids)).toEqual(["kid"]);
+});
+
+test(`[Offline] a new record saved offline is created once after its form is closed`, async () => {
+    expect.errors(1); // 1x ConnectionLostError (web_search_read of the list)
+    const { setOffline } = await saveNewRecordWithRelationsOffline();
+    await contains(".o_form_button_save").click();
+    await contains(".o_breadcrumb .o_back_button").click();
+    expect.waitForErrors([
+        `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,
+    ]);
+
+    setOffline(false);
+    await runAllTimers(); // execute checkConnection
+    await expect.waitForSteps([["web_save", [], "no read"]]);
+    const created = getNewPartners();
+    expect(created).toHaveLength(1);
+    expect(created[0].type_ids).toEqual([12]);
+    expect(getNames(created[0].child_ids)).toEqual(["kid"]);
+});
+
+test(`[Offline] save a new record twice offline, then close its form`, async () => {
+    expect.errors(1); // 1x ConnectionLostError (web_search_read of the list)
+    const { setOffline } = await saveNewRecordWithRelationsOffline();
+    await contains(".o_form_button_save").click();
+    await contains(".o_field_widget[name=int_field] input").edit("7");
+    await contains(".o_form_button_save").click();
+    await contains(".o_breadcrumb .o_back_button").click();
+    expect.waitForErrors([
+        `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,
+    ]);
+
+    // the call scheduled offline holds the changes of both saves
+    setOffline(false);
+    await runAllTimers(); // execute checkConnection
+    await expect.waitForSteps([["web_save", [], "no read"]]);
+    const created = getNewPartners();
+    expect(created).toHaveLength(1);
+    expect(created[0].int_field).toBe(7);
+    expect(created[0].type_ids).toEqual([12]);
+    expect(getNames(created[0].child_ids)).toEqual(["kid"]);
+});
+
+test(`[Offline] do not create a new record again if its offline save was synced elsewhere`, async () => {
+    const { setOffline } = await saveNewRecordWithRelationsOffline();
+    await contains(".o_form_button_save").click();
+
+    // another tab syncs the scheduled call (or it is discarded from the systray)
+    const offline = getService(OfflinePlugin);
+    const [key] = Object.keys(offline._ormToSync());
+    await offline._idb.delete(OfflinePlugin.ORM_SYNC_TABLE_NAME, key);
+
+    setOffline(false);
+    await runAllTimers(); // execute checkConnection
+    await contains(".o_field_widget[name=int_field] input").edit("7");
+    await contains(".o_form_button_save").click();
+    expect.verifySteps([]);
+    expect(".o_notification").toHaveText(
+        "The changes saved offline for this record were already synchronized or discarded. Reload the page to continue."
+    );
+    expect(getNewPartners()).toHaveLength(0);
+});
+
+test(`[Offline] changes made after an offline save are kept, not saved, by the sync`, async () => {
+    const { setOffline } = await saveNewRecordWithRelationsOffline();
+    await contains(".o_form_button_save").click();
+    await contains(".o_field_widget[name=int_field] input").edit("7");
+
+    // only what was saved offline is synced: the record isn't saved behind the user's back
+    setOffline(false);
+    await runAllTimers(); // execute checkConnection
+    await expect.waitForSteps([["web_save", [], "read"]]);
+    const [created] = getNewPartners();
+    expect(created.int_field).toBe(0);
+    expect(".o_field_widget[name=int_field] input").toHaveValue("7");
+    expect(".o_form_status_indicator_buttons:not(.invisible)").toHaveCount(1);
+
+    await contains(".o_form_button_save").click();
+    expect.verifySteps([["web_save", [created.id], "read"]]);
+    expect(getNewPartners()).toHaveLength(1);
+    expect(created.int_field).toBe(7);
+});
+
+test(`[Offline] closing the page with unsaved changes after an offline save asks to stay`, async () => {
+    await saveNewRecordWithRelationsOffline();
+    await contains(".o_form_button_save").click();
+    await contains(".o_field_widget[name=int_field] input").edit("7");
+
+    // the urgent save can't be done offline: the page must ask the user to stay
+    const [event] = await unload();
+    expect(event.defaultPrevented).toBe(true);
+    expect.verifySteps([]);
+});
+
+test(`[Offline] closing the page before an offline save is synced asks to stay`, async () => {
+    mockSendBeacon(() => {
+        expect.step("sendBeacon");
+        return true;
+    });
+    const { setOffline } = await saveNewRecordWithRelationsOffline();
+    await contains(".o_form_button_save").click();
+    const plugin = getService(OfflinePlugin);
+    patchWithCleanup(plugin, { async _syncORM() {} }); // the sync starts later
+    setOffline(false);
+    plugin.setOffline(false);
+    await animationFrame();
+    await contains(".o_field_widget[name=int_field] input").edit("7");
+
+    // a beacon would create the record, and the scheduled call a second one
+    const [event] = await unload();
+    expect(event.defaultPrevented).toBe(true);
+    expect.verifySteps([]);
+    expect(Object.keys(plugin._ormToSync())).toHaveLength(1);
+});
+
+test(`[Offline] a save that can't be scheduled offline can be done again`, async () => {
+    expect.errors(1); // 1x NonSecureContextError
+    const { setOffline } = await saveNewRecordWithRelationsOffline();
+    patchWithCleanup(window, { isSecureContext: false });
+    await contains(".o_form_button_save").click();
+    await expect.waitForErrors(["Offline features not available in a non-secure context"]);
+
+    setOffline(false);
+    await contains(".o_form_button_save").click();
+    expect.verifySteps([["web_save", [], "read"]]);
+    const created = getNewPartners();
+    expect(created).toHaveLength(1);
+    expect(created[0].type_ids).toEqual([12]);
+    expect(getNames(created[0].child_ids)).toEqual(["kid"]);
+});
+
+test(`[Offline] a new record reopened from the systray is created once`, async () => {
+    expect.errors(1); // 1x ConnectionLostError (onchange of the reopened new record)
+    const { setOffline } = await saveNewRecordWithRelationsOffline();
+    await contains(".o_form_button_save").click();
+    await contains(`.o_menu_systray .o_nav_entry [data-icon='link_off']`).click();
+    await contains(".o_offline_systray_content .dropdown-item").click();
+    await waitFor(".o_field_widget[name=child_ids] .o_data_row");
+    await expect.waitForErrors([
+        `Connection to "/web/dataset/call_kw/partner/onchange" couldn't be established or was interrupted`,
+    ]);
+
+    // like when it is reopened online, the changes are left to the form
+    setOffline(false);
+    await runAllTimers(); // execute checkConnection
+    expect.verifySteps([]);
+    expect(getService(OfflinePlugin)._ormToSync()).toEqual({});
+
+    await contains(".o_form_button_save").click();
+    expect.verifySteps([["web_save", [], "read"]]);
+    const created = getNewPartners();
+    expect(created).toHaveLength(1);
+    expect(created[0].type_ids).toEqual([12]);
+    expect(getNames(created[0].child_ids)).toEqual(["kid"]);
+});
+
+test(`[Offline] changes discarded from the systray are not saved by the open form`, async () => {
+    let offline = false;
+    onRpc("/*", () => {
+        if (offline) {
+            return new Response("", { status: 502 });
+        }
+    });
+    onRpc("web_save", ({ args }) => {
+        expect.step(["web_save", args[0], Object.keys(args[1])]);
+    });
+    Partner._views = {
+        form: `<form><field name="foo"/><field name="int_field"/></form>`,
+        list: `<list><field name="foo"/></list>`,
+        search: `<search/>`,
+    };
+    defineActions([
+        {
+            id: 1,
+            name: "Partner",
+            res_model: "partner",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+        },
+    ]);
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    await contains(".o_data_row .o_data_cell").click();
+    await runAllTimers(); // execute first _syncORM triggered after a delay in the service startup
+
+    offline = true;
+    await contains(".o_field_widget[name=foo] input").edit("discarded foo");
+    await contains(".o_form_button_save").click();
+    const plugin = getService(OfflinePlugin);
+    plugin.removeScheduledORM(Object.keys(plugin._ormToSync())[0]); // "Discard" in the systray
+
+    offline = false;
+    await runAllTimers(); // execute checkConnection
+    await contains(".o_field_widget[name=int_field] input").edit("9");
+    await contains(".o_form_button_save").click();
+    expect.verifySteps([["web_save", [1], ["int_field"]]]);
+    expect(MockServer.env["partner"].browse(1)[0].foo).toBe("yop");
+});
+
+test(`[Offline] the sync does nothing once the user saved the record`, async () => {
+    const { setOffline } = await saveNewRecordWithRelationsOffline();
+    await contains(".o_form_button_save").click();
+    const plugin = getService(OfflinePlugin);
+    const [key] = Object.keys(plugin._ormToSync());
+    const owner = plugin._ormOwners[key];
+    patchWithCleanup(plugin, { async _syncORM() {} }); // the sync starts later
+
+    // the user saves before the sync calls the owner of the scheduled call
+    setOffline(false);
+    await contains(".o_field_widget[name=int_field] input").edit("7");
+    await contains(".o_form_button_save").click();
+    expect.verifySteps([["web_save", [], "read"]]);
+    expect(await owner()).toBe(true);
+    expect.verifySteps([]);
+    expect(plugin._ormToSync()).toEqual({});
+    const created = getNewPartners();
+    expect(created).toHaveLength(1);
+    expect(created[0].int_field).toBe(7);
+    expect(created[0].type_ids).toEqual([12]);
+});
+
+test(`[Offline] the sync leaves pending line changes to the next save`, async () => {
+    const { setOffline } = await saveNewRecordWithRelationsOffline();
+    await contains(".o_form_button_save").click();
+    const plugin = getService(OfflinePlugin);
+    const [key] = Object.keys(plugin._ormToSync());
+    const owner = plugin._ormOwners[key];
+    patchWithCleanup(plugin, { async _syncORM() {} }); // the sync starts later
+    setOffline(false);
+    plugin.setOffline(false);
+    await animationFrame();
+
+    // a line created before the offline save is edited online before the sync
+    await contains(".o_field_widget[name=child_ids] .o_data_row .o_data_cell").click();
+    await contains(".o_field_widget[name=child_ids] .o_data_row [name=name] input").edit("kid 2", {
+        confirm: "blur",
+    });
+    expect(await owner()).toBe(true);
+    expect.verifySteps([]);
+    expect(Object.keys(plugin._ormToSync())).toEqual([key]);
+
+    // the next save saves both the offline save and the line change
+    await contains(".o_form_button_save").click();
+    expect.verifySteps([["web_save", [], "read"]]);
+    const created = getNewPartners();
+    expect(created).toHaveLength(1);
+    expect(getNames(created[0].child_ids)).toEqual(["kid 2"]);
+    expect(plugin._ormToSync()).toEqual({});
+});
+
+test(`[Offline] closing the dialog while its record syncs still completes the sync`, async () => {
+    const { setOffline } = await saveNewRecordWithRelationsOffline({ inDialog: true });
+    await contains(".o_form_button_save").click();
+    const plugin = getService(OfflinePlugin);
+    const response = Promise.withResolvers();
+    onRpc("partner", "web_save", async () => {
+        expect.step("sync started");
+        await response.promise;
+    });
+
+    setOffline(false);
+    await runAllTimers(); // execute checkConnection
+    await expect.waitForSteps(["sync started"]);
+    await contains(".o_dialog button[aria-label=Close]:first").click();
+    expect(".o_dialog").toHaveCount(0);
+
+    // the server answers once the dialog is closed: the call is done, not scheduled anymore
+    response.resolve();
+    await animationFrame();
+    expect.verifySteps([["web_save", [], "read"]]);
+    expect(getNewPartners()).toHaveLength(1);
+    expect(plugin._ormToSync()).toEqual({});
+    expect(plugin.syncingORM()).toBe(false);
+});
+
+test(`[Offline] closing the dialog while the user saves offline changes cleans the queue`, async () => {
+    const { setOffline } = await saveNewRecordWithRelationsOffline({ inDialog: true });
+    await contains(".o_form_button_save").click();
+    const plugin = getService(OfflinePlugin);
+    patchWithCleanup(plugin, { async _syncORM() {} }); // the sync starts later
+    const response = Promise.withResolvers();
+    onRpc("partner", "web_save", async () => {
+        expect.step("save started");
+        await response.promise;
+    });
+
+    // the user saves the offline changes with a new one, then closes the dialog
+    setOffline(false);
+    plugin.setOffline(false);
+    await animationFrame();
+    await contains(".o_field_widget[name=int_field] input").edit("7");
+    await contains(".o_form_button_save").click();
+    await expect.waitForSteps(["save started"]);
+    await contains(".o_dialog button[aria-label=Close]:first").click();
+    response.resolve();
+    await animationFrame();
+    expect.verifySteps([["web_save", [], "read"]]);
+    const created = getNewPartners();
+    expect(created).toHaveLength(1);
+    expect(created[0].int_field).toBe(7);
+    expect(plugin._ormToSync()).toEqual({});
+});
+
+test(`[Offline] closing the dialog while its record waits to sync makes the scheduled call`, async () => {
+    const { setOffline } = await saveNewRecordWithRelationsOffline({ inDialog: true });
+    await contains(".o_form_button_save").click();
+    const plugin = getService(OfflinePlugin);
+
+    // an onchange that never ends holds the record when the connection is back
+    setOffline(false);
+    onRpc("partner", "onchange", () => new Promise(() => {}));
+    await contains(".o_field_widget[name=foo] input").edit("newer foo");
+    await runAllTimers(); // execute checkConnection: the record waits for the onchange
+    expect.verifySteps([]);
+
+    // closing the dialog doesn't leave the sync waiting for that record forever
+    await contains(".o_dialog button[aria-label=Close]:first").click();
+    await expect.waitForSteps([["web_save", [], "no read"]]);
+    expect(getNewPartners()).toHaveLength(1);
+    expect(plugin._ormToSync()).toEqual({});
+    expect(plugin.syncingORM()).toBe(false);
+});
+
+test(`[Offline] do not execute a button on a new record that is only saved offline`, async () => {
+    mockService("action", {
+        doActionButton(params) {
+            expect.step(["doActionButton", params.name, params.resId]);
+        },
+    });
+    const { setOffline } = await saveNewRecordWithRelationsOffline({
+        header: `<button name="do_it" type="object" string="Do it"/>`,
+    });
+
+    // The connection is lost while the button saves the record: the record is
+    // only scheduled for creation, so there is nothing to call the method on.
+    await contains(".o_form_statusbar button[name=do_it]").click();
+    expect(getService(OfflinePlugin).isOffline()).toBe(true);
+    expect(".o_notification").toHaveText(
+        "Your changes are saved offline. The action will be available once they are synchronized."
+    );
+    expect.verifySteps([]);
+
+    setOffline(false);
+    await runAllTimers(); // execute checkConnection
+    await expect.waitForSteps([["web_save", [], "read"]]);
+    const [created] = getNewPartners();
+
+    await contains(".o_form_statusbar button[name=do_it]").click();
+    expect.verifySteps([["doActionButton", "do_it", created.id]]);
+    expect(getNewPartners()).toHaveLength(1);
+});
+
+test(`[Offline] a save button saves a new record offline like the save icon`, async () => {
+    const { setOffline } = await saveNewRecordWithRelationsOffline({
+        header: `<button special="save" string="Save it" class="o_save_it"/>`,
+    });
+    // there is no action to wait for: the record is just saved offline, and kept in the form
+    await contains(".o_form_statusbar .o_save_it").click();
+    expect(getService(OfflinePlugin).isOffline()).toBe(true);
+    expect(".o_notification").toHaveCount(0);
+    expect(".o_field_widget[name=foo] input").toHaveValue("new foo");
+
+    setOffline(false);
+    await runAllTimers(); // execute checkConnection
+    await expect.waitForSteps([["web_save", [], "read"]]);
+    expect(getNewPartners()).toHaveLength(1);
+});
+
+test(`[Offline] a save button closes the dialog of a new record saved offline`, async () => {
+    const { setOffline } = await saveNewRecordWithRelationsOffline({
+        header: `<button special="save" string="Save it" class="o_save_it"/>`,
+        inDialog: true,
+    });
+    await contains(".o_dialog .o_save_it").click();
+    expect(".o_dialog").toHaveCount(0);
+    expect(".o_notification").toHaveCount(0);
+
+    setOffline(false);
+    await runAllTimers(); // execute checkConnection
+    await expect.waitForSteps([["web_save", [], "no read"]]);
+    expect(getNewPartners()).toHaveLength(1);
 });
 
 test(`form rendering with class and style attributes`, async () => {
