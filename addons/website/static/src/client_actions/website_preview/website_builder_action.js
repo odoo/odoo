@@ -595,13 +595,38 @@ export class WebsiteBuilderClientAction extends Component {
         this.setIframeLoaded();
         this.websiteService.websiteRootInstance = undefined;
         if (url) {
+<<<<<<< 4b274b9486ff84ba9b326fd4413ff597d308e6a2
             const urlObj = new URL(url, this.websiteContent().contentWindow.location);
+||||||| c48c0c835a79169e04f28fd28bf172f296d87334
+            const urlObj = new URL(url, this.websiteContent.el.contentWindow.location);
+=======
+            const baseUrl = new URL(this.websiteContent.el.contentWindow.location);
+            const urlObj = new URL(url, baseUrl);
+>>>>>>> 1a5354240960327e13dcf60c6aaf545feacaa090
             const pathSegments = urlObj.pathname.split("/").map(encodeURIComponent);
             const encodedPath = pathSegments.join("/");
+<<<<<<< 4b274b9486ff84ba9b326fd4413ff597d308e6a2
             this.websiteContent().contentWindow.location.href = new URL(
                 encodedPath,
                 this.websiteContent().contentWindow.location
             );
+||||||| c48c0c835a79169e04f28fd28bf172f296d87334
+            this.websiteContent.el.contentWindow.location.href = new URL(
+                encodedPath,
+                this.websiteContent.el.contentWindow.location
+            );
+=======
+            const newUrl = new URL(encodedPath, baseUrl);
+            if(newUrl.origin !== baseUrl.origin) {
+                console.error("Tried to change the iframe's origin. Reloading instead")
+                this.websiteContent.el.contentWindow.location.reload();
+            } else {
+                if (history.state?.skipRouteChange) {
+                    history.pushState({}, "", newUrl);
+                }
+                this.websiteContent.el.contentWindow.location.href = newUrl;
+            }
+>>>>>>> 1a5354240960327e13dcf60c6aaf545feacaa090
         } else {
             this.websiteContent().contentWindow.location.reload();
         }
