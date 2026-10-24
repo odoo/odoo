@@ -135,6 +135,10 @@ class Web_Unsplash(http.Controller):
     def fetch_unsplash_images(self, **post):
         return self.env['ir.attachment']._fetch_unsplash_images(**post)
 
+    @http.route("/web_unsplash/fetch_photo", type='jsonrpc', auth="user")
+    def fetch_unsplash_photo(self, photo_id):
+        return self.env['ir.attachment']._fetch_unsplash_photo(photo_id)
+
     @http.route("/web_unsplash/get_app_id", type='jsonrpc', auth="public")
     def get_unsplash_app_id(self, **post):
         return unsplash_utils.get_unsplash_app_id(self.env['ir.config_parameter'])
