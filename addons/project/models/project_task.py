@@ -912,7 +912,13 @@ class ProjectTask(models.Model):
                 if copy_from_template:
                     current_task = current_task.with_context(active_test=True)
                 child_ids = current_task.child_ids
-                vals['child_ids'] = [Command.create(child_id.copy_data(default)[0]) for child_id in child_ids.filtered(lambda c: c.active)]
+                child_vals_list = []
+                for child in child_ids.filtered('active'):
+                    child_default = default
+                    if copy_from_template and child.project_id and child.project_id != task.project_id:
+                        child_default = {key: value for key, value in default.items() if key != 'project_id'}
+                    child_vals_list.append(Command.create(child.copy_data(child_default)[0]))
+                vals['child_ids'] = child_vals_list
             if not has_default_users and vals['user_ids']:
                 task_active_users = task.user_ids & active_users
                 vals['user_ids'] = [Command.set(task_active_users.ids)]
