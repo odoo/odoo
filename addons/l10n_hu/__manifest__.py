@@ -14,6 +14,9 @@ Accounting chart and localization for Hungary
     ],
     'auto_install': ['account'],
     'data': [
+        'data/res.city.csv',
+        'views/res_partner_views.xml',
+        'data/res_country_data.xml',
         'data/account_tax_report_data.xml',
     ],
     'demo': [
