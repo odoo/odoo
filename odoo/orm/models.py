@@ -1389,7 +1389,7 @@ class BaseModel(metaclass=MetaModel):
                                 corecord.check_field_access(corecord._fields[fname], 'write')
                         elif command_code == Command.DELETE:
                             self.env[field.comodel_name].browse(cmd[1]).check_access('unlink')
-                value = field.convert_to_cache(value, self)
+                value = field.convert_to_cleaned_cache(value, self)
                 defaults[fname] = field.convert_to_write(value, self)
 
         # add default values for inherited fields
@@ -2899,8 +2899,9 @@ class BaseModel(metaclass=MetaModel):
             translations = {lang: value for lang, value in translations.items() if lang not in drop_langs}
             if drop_langs:
                 stored_translations = self._get_stored_translations(field_name)
-                if field.type == 'html':
-                    translations = {lang: field._validated_cache_value(value, self.env) for lang, value in translations.items()}
+                # StoredTranslations are not cleaned when assigned to the field,
+                # so clean the translations here
+                translations = field.convert_to_cleaned_cache(translations, self)
                 if stored_translations is None:
                     if not translations:
                         return False
@@ -4441,6 +4442,9 @@ class BaseModel(metaclass=MetaModel):
                     columns.append(fname)
                     for stored, row in zip(stored_list, rows):
                         if fname in stored:
+                            if field._must_clean:
+                                # the cleaned value is also put in cache below
+                                stored[fname] = field.convert_to_cleaned_cache(stored[fname], self)
                             row.append(field.convert_to_column_insert(stored[fname], self, stored))
                         else:
                             row.append(SQL_DEFAULT)
@@ -5616,7 +5620,10 @@ class BaseModel(metaclass=MetaModel):
 
         # convert monetary fields after other columns for correct value rounding
         for field, value in sorted(field_values, key=lambda item: self._fields_update_order__[item[0]]):
-            value = field.convert_to_cache(value, self, validate)
+            if validate:
+                value = field.convert_to_cleaned_cache(value, self)
+            else:
+                value = field.convert_to_cache(value, self, validate=False)
             field._update_cache(self, value)
 
             # set inverse fields on new records in the comodel

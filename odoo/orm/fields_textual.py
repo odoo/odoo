@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import collections.abc
+import functools
 import typing
 from difflib import unified_diff
 from hashlib import sha256
@@ -134,16 +135,30 @@ class BaseString(Field[str | typing.Literal[False]]):
                 raise ValidationError(records.env._("Some of the translations are False: %s", value))
             return converted
 
-        value = value.decode() if isinstance(value, bytes) else str(value)
-        if validate:
-            return self._validated_cache_value(value, records.env)
-        return value
+        return value.decode() if isinstance(value, bytes) else str(value)
 
-    def _validated_cache_value(self, value: str, env) -> str:
-        if callable(self.translate):
+    @functools.cached_property
+    def _must_clean(self) -> bool:
+        return self.clean is not None or callable(self.translate)
+
+    def _clean_value(self, value, records):
+        value = super()._clean_value(value, records)
+        if value and callable(self.translate):
             # auto fix broken value
             value = self.translate(lambda t: None, value)  # pylint: disable=not-callable
         return value
+
+    def convert_to_cleaned_cache(self, value, records):
+        if not self._must_clean or isinstance(value, StoredTranslations):
+            return self.convert_to_cache(value, records)
+        if self.translate and isinstance(value, dict):
+            # each translation is cleaned separately
+            value = {lang: self.convert_to_cleaned_cache(lang_value, records) for lang, lang_value in value.items()}
+            return self.convert_to_cache(value, records)
+        if records.env.context.get('edit_translations'):
+            # convert_to_record() decorates translated terms in that context
+            records = records.with_context(edit_translations=None)
+        return super().convert_to_cleaned_cache(value, records)
 
     def convert_to_record(self, value, record):
         if value is None:
@@ -318,25 +333,30 @@ class BaseString(Field[str | typing.Literal[False]]):
                 target[field.name] = record_value[record]
 
     def write(self, records, value):
-        if not self.translate or value is False or value is None:
+        if not self.translate:
             super().write(records, value)
+            return
+
+        # an empty value may be cleaned to a translation, which must be
+        # written below as such
+        cache_value = self.convert_to_cleaned_cache(value, records)
+        if cache_value is None:
+            super().write(records, None)
             return
 
         records.env.remove_to_compute(self, records)
         lang = records.env.lang or 'en_US'
-        if isinstance(value, StoredTranslations):
+        if isinstance(cache_value, StoredTranslations):
             assert any(records._ids)
-            cache_value = self.convert_to_cache(value, records)
             records = self._filter_not_equal(records.with_context(prefetch_langs=True), cache_value)
             self._update_cache(records.with_context(prefetch_langs=True), cache_value, dirty=bool(self.store))
             return
-        elif isinstance(value, dict):
-            cache_value_dict = self.convert_to_cache(value, records)
+        elif isinstance(cache_value, dict):
+            cache_value_dict = cache_value
             if not cache_value_dict:
                 return
             # force update all records
         else:
-            cache_value = self.convert_to_cache(value, records)
             cache_value_dict = {self.translation_lang(records.env): cache_value}
             records = self._filter_not_equal(records, cache_value)
         if not records:
@@ -602,6 +622,13 @@ class Html(BaseString):
     :param bool strip_style: whether to strip style attributes
         (removed and therefore not sanitized, default: ``False``)
     :param bool strip_classes: whether to strip classes attributes (default: ``False``)
+    :param callable clean: see :class:`~odoo.fields.Field`; the function
+        receives a ``Markup`` value, whose string methods escape their
+        arguments. The value is sanitized after the function is applied, and
+        the whole cleaning must be idempotent: the function must return a
+        sanitized value unchanged once it has been cleaned. For instance, a
+        function that reformats the text may undo the markup added by the
+        sanitizer, which then adds it again.
     """
     type = 'html'
     _column_type = ('text', 'text')
@@ -728,8 +755,14 @@ class Html(BaseString):
                         model=record._description, field=self.string, record=record,
                     ))
 
-    def _validated_cache_value(self, value, env):
-        if not self.sanitize or (self.sanitize_overridable and env.user.has_group('base.group_sanitize_override')):
+    @functools.cached_property
+    def _must_clean(self) -> bool:
+        return self.clean is not None or self.sanitize
+
+    def _clean_value(self, value, records):
+        # skip the auto fix of BaseString, as html_sanitize() fixes broken values, too
+        value = Field._clean_value(self, value, records)
+        if not value or not self.sanitize or (self.sanitize_overridable and records.env.user.has_group('base.group_sanitize_override')):
             return value
         return html_sanitize(value, **self.sanitize_vals)
 
