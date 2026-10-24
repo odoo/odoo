@@ -41,7 +41,12 @@ class IrActionsReport(models.Model):
             invoices = self.env[report.model].browse(res_ids)
 
             # Determine which invoices need a QR.
-            qr_inv_ids = invoices.filtered('l10n_ch_is_qr_valid').ids
+            qr_invoices = invoices.filtered('l10n_ch_is_qr_valid')
+            if (data and data.get('proforma')) or self.env.context.get('proforma_invoice'):
+                # A proforma is not the legal document: on the portal, show it without the QR-bill
+                # rather than failing. Sending and printing the invoice still raise the error.
+                qr_invoices = qr_invoices.filtered(lambda invoice: not invoice._l10n_ch_get_qr_bill_errors())
+            qr_inv_ids = qr_invoices.ids
 
             if qr_inv_ids:
                 qr_res = self._render_qweb_pdf_prepare_streams(

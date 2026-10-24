@@ -245,6 +245,8 @@ class ResPartnerBank(models.Model):
             error_messages = [_("The Swiss QR code could not be generated for the following reason(s):")]
             if self.account_type != 'iban':
                 error_messages.append(_("The account type isn't QR-IBAN or IBAN."))
+            elif sanitize_account_number(self.account_number)[:2] not in ('CH', 'LI'):
+                error_messages.append(_("The IBAN isn't a Swiss or Liechtenstein IBAN."))
             debtor_check = self._l10n_ch_qr_debtor_check(debtor_partner)
             if debtor_partner and debtor_check:
                 error_messages.append(debtor_check)
