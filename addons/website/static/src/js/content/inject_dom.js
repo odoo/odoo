@@ -18,6 +18,7 @@ export function unhideConditionalElements() {
     styleEl.id = "conditional_visibility";
     document.head.appendChild(styleEl);
     const conditionalEls = document.querySelectorAll('[data-visibility="conditional"]');
+    const rules = [];
 
     const desktopMegaMenuLiEls = getClosestLiEls(
         "header#top nav:not(.o_header_mobile) .o_mega_menu_toggle"
@@ -37,8 +38,9 @@ export function unhideConditionalElements() {
             mobileMegaMenuLiEl.dataset.visibilityId = visibilityId;
         }
         const selectors = conditionalEl.dataset.visibilitySelectors;
-        styleEl.sheet.insertRule(`${selectors} { display: none !important; }`);
+        rules.push(`${selectors} { display: none !important; }`);
     }
+    styleEl.textContent = rules.join('\n');
 
     // Now remove the classes that makes them always invisible
     for (const conditionalEl of conditionalEls) {
