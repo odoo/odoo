@@ -2,7 +2,7 @@ import { HtmlViewer } from "@html_editor/components/html_viewer/html_viewer";
 import { expect, test } from "@odoo/hoot";
 import { waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { markup } from "@odoo/owl";
+import { Component, markup, proxy, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
 import { WebClient } from "@web/webclient/webclient";
@@ -40,6 +40,27 @@ test(`tables are wrapped in a scroll container in a standalone HtmlViewer`, asyn
     await animationFrame();
     expect(".o_readonly > .o_table_wrapper > table").toHaveCount(1);
     expect("td .o_table_wrapper").toHaveCount(0);
+});
+
+test(`tables are wrapped again when the value of the HtmlViewer changes`, async () => {
+    const state = proxy({
+        value: markup(
+            `<div class="o_table_wrapper"><table class="o_table"><tbody><tr><td>a</td></tr></tbody></table></div><table class="o_table"><tbody><tr><td>b</td></tr></tbody></table>`
+        ),
+    });
+    class Parent extends Component {
+        static template = xml`<HtmlViewer config="{ value: this.state.value }"/>`;
+        static components = { HtmlViewer };
+        setup() {
+            this.state = proxy(state);
+        }
+    }
+    await mountWithCleanup(Parent);
+    expect(".o_readonly > .o_table_wrapper > table").toHaveCount(2);
+
+    state.value = markup(`<table class="o_table"><tbody><tr><td>c</td></tr></tbody></table>`);
+    await animationFrame();
+    expect(".o_readonly > .o_table_wrapper > table").toHaveText("c");
 });
 
 test(`copy from HtmlViewer must support application/vnd.odoo.odoo-editor`, async () => {
