@@ -30,6 +30,7 @@ class L10nInEwaybill(models.Model):
     state = fields.Selection(string='Status', selection=[
         ('pending', 'Pending'),
         ('generated', 'Generated'),
+        ('extended', 'Extended'),
         ('cancel', 'Cancelled'),
     ], required=True, readonly=True, copy=False, tracking=True, default='pending')
 
@@ -296,6 +297,12 @@ class L10nInEwaybill(models.Model):
             default_l10n_in_ewaybill_id=self.id
         )._get_records_action(name=_("Cancel Ewaybill"), target='new')
 
+    def action_extend_ewaybill(self):
+        self.ensure_one()
+        return self.env['l10n.in.ewaybill.extend'].with_context(
+            default_l10n_in_ewaybill_id=self.id,
+        )._get_records_action(name=_("Extend Ewaybill"), target='new')
+
     def action_reset_to_pending(self):
         self.ensure_one()
         if self.state != 'cancel':
@@ -480,7 +487,7 @@ class L10nInEwaybill(models.Model):
             blocking_level = 'warning'
         self._write_error(error_message, blocking_level)
 
-    def _create_and_post_response_attachment(self, ewb_name, response, is_cancel=False):
+    def _create_and_post_response_attachment(self, ewb_name, response, ewb_extend_payload=None, is_cancel=False):
         def _create_attachment_vals(name, raw_data, res_field=False):
             vals = {
                 'name': name,
@@ -494,8 +501,11 @@ class L10nInEwaybill(models.Model):
             return vals
 
         attachment_vals_list = []
-        request_json = self._get_cancellation_request_vals() if is_cancel else self._ewaybill_generate_direct_json()
-        request_type = 'cancel_request' if is_cancel else 'request'
+        request_json, request_type = (
+            (ewb_extend_payload, 'extend_request') if ewb_extend_payload else
+            (self._get_cancellation_request_vals() if is_cancel else
+            self._ewaybill_generate_direct_json(), 'cancel_request' if is_cancel else 'request')
+        )
         request_name = f'ewaybill_{ewb_name}_{request_type}.json'
         attachment_vals_list.append(_create_attachment_vals(request_name, request_json))
         name = f'ewaybill_{ewb_name}_cancel.json' if is_cancel else f'ewaybill_{ewb_name}.json'
@@ -504,7 +514,7 @@ class L10nInEwaybill(models.Model):
         self.message_post(
             author_id=self.env.ref('base.partner_root').id,
             attachment_ids=attachments.ids,
-            body=self.env._("E-waybill has been successfully %s.", 'cancelled' if is_cancel else 'sent')
+            body=self.env._("E-waybill has been successfully %s.", 'extended' if ewb_extend_payload else 'cancelled' if is_cancel else 'sent'),
         )
 
     def _get_cancellation_request_vals(self):
@@ -537,6 +547,28 @@ class L10nInEwaybill(models.Model):
         )
         self._write_successfully_response({'state': 'cancel'})
         self.env.cr.commit()
+
+    def _ewaybill_extend(self, payload):
+        ewb_api = EWayBillApi(self.company_id)
+        self._lock_ewaybill()
+        try:
+            response = ewb_api._ewaybill_extend_validity(payload)
+        except EWayBillError as error:
+            self._handle_error(error)
+            return False
+        self._handle_internal_warning_if_present(response)
+        self._create_and_post_response_attachment(
+            ewb_name=self.name,
+            ewb_extend_payload=payload,
+            response=response,
+        )
+        self._write_successfully_response({
+            'ewaybill_expiry_date': self._convert_str_datetime_to_date(response['data']['validUpto']),
+            'state': 'extended',
+        })
+        self.env.cr.commit()
+        self._generate_and_attach_pdf(_("Extended Ewaybill"))
+        return True
 
     def _log_retry_message_on_generate(self):
         if self.error_message and self.blocking_level == 'error':
