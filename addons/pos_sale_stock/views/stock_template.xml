@@ -8,9 +8,7 @@
                     <li>
                         Delivered from
                         <t t-foreach="pos_orders" t-as="pos_order">
-                            <a href="#" t-att-data-oe-model="pos_order._name" t-att-data-oe-id="pos_order.id">
-                                <t t-out="pos_order.display_name" />
-                            </a><span t-if="pos_orders.ids[-1:] != pos_order.ids">, </span>
+                            <t t-out="pos_order._get_html_link()"/><span t-if="pos_orders.ids[-1:] != pos_order.ids">, </span>
                         </t>
                     </li>
                 </t>

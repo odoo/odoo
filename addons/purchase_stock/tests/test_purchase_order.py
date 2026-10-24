@@ -889,7 +889,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         """
         expected_note = """<div>
             Received quantity is less than the expected quantity for transfer
-            <a href="#" data-oe-model="stock.picking" data-oe-id="{receipt.id}">{receipt.name}</a> and no backorder is planned. Manual action may be needed.
+            <a href="/mail/view?model=stock.picking&amp;res_id={receipt.id}" data-oe-model="stock.picking" data-oe-id="{receipt.id}">{receipt.name}</a> and no backorder is planned. Manual action may be needed.
             <div class="mt16">
                 <ul>
                     <li>
