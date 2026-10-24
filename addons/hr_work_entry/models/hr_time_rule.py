@@ -73,6 +73,46 @@ def _trim_hours_from_start(intervals, hours):
     return result
 
 
+def _trim_hours_from_end(intervals, hours):
+    """Remove `hours` worth of time from the end of an interval list."""
+    remaining = hours
+    result = []
+    for s, e, r in reversed(intervals):
+        if remaining <= 0:
+            result.append((s, e, r))
+            continue
+        slot = (e - s).total_seconds() / 3600
+        if slot <= remaining:
+            remaining -= slot
+        else:
+            result.append((s, e - timedelta(hours=remaining), r))
+            remaining = 0
+    result.reverse()
+    return result
+
+
+def _is_duration_based_schedule(schedule):
+    """True when every attendance line in the schedule is duration-based."""
+    return schedule and all(
+        getattr(att, 'duration_based', False) for _s, _e, att in schedule
+    )
+
+
+def _duration_based_deficit_gap(start, stop, total_worked, deficit_amount, dummy):
+    """Place deficit as one block after checkout, or before checkin if the day is too short."""
+    last_end = max(e for _s, e, _ in total_worked)
+    first_start = min(s for s, _e, _ in total_worked)
+    after_slot = Intervals([(last_end, stop, dummy)]) - total_worked
+    if sum_intervals(after_slot) >= deficit_amount:
+        return _trim_hours_from_end(list(after_slot), sum_intervals(after_slot) - deficit_amount)
+    before_slot = Intervals([(start, first_start, dummy)]) - total_worked
+    before_gap = list(before_slot)
+    trim = sum_intervals(before_slot) - deficit_amount
+    if trim > 0:
+        before_gap = _trim_hours_from_start(before_gap, trim)
+    return before_gap
+
+
 def _to_utc(dt, tz):
     """Convert a naive local datetime to a naive UTC datetime."""
     return dt.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
@@ -601,7 +641,7 @@ class HrTimeRule(models.Model):
                 # group by period, pick the lowest-sequence rule per period
                 by_period = defaultdict(list)
                 for iv_start, iv_end, rule in intervals:
-                    if not rule.work_entry_type_id or iv_end <= iv_start:
+                    if iv_end <= iv_start:
                         continue
                     if rule.quantity_period == 'week':
                         ws = int(rule.week_start or '0')
@@ -617,9 +657,12 @@ class HrTimeRule(models.Model):
                     for iv_start, iv_end, rule in period_ivs:
                         if rule != winning_rule:
                             continue
+                        deficit_hours = (iv_end - iv_start).total_seconds() / 3600
+                        if not rule.work_entry_type_id:
+                            deficit_alloc.append([employee, rule, deficit_hours, source, source])
+                            continue
                         pp = rule._get_pp_frozenset()
                         df = _to_utc(iv_start, tz)
-                        deficit_hours = (iv_end - iv_start).total_seconds() / 3600
                         occupied = source._get_time_rule_deficit_occupied(employee.id, df, period_end)
                         already_covered = source._get_time_rule_deficit_already_covered(rule, df, period_end)
                         remaining = max(0.0, deficit_hours - already_covered)
@@ -801,7 +844,10 @@ class HrTimeRule(models.Model):
                 intervals_by_source.keys(),
                 key=lambda r: max(e for _, e, _ in intervals_by_source[r]),
             )
-            if self.calendar_source:
+            dummy = self.env['resource.calendar']
+            if _is_duration_based_schedule(schedule) and total_worked:
+                gap = _duration_based_deficit_gap(start, stop, total_worked, deficit_amount, dummy)
+            elif self.calendar_source:
                 gap = list((schedule & period_window) - total_worked)
                 extra_outside = sum_intervals(total_worked) - sum_intervals(total_worked & schedule & period_window)
                 if extra_outside > 0:
@@ -811,21 +857,15 @@ class HrTimeRule(models.Model):
                     absence_hours = sum((e - s).total_seconds() / 3600 for s, e, _ in gap)
                     break_deficit = deficit_amount - absence_hours
                     if break_deficit > 1e-6:
-                        dummy = self.env['resource.calendar']
                         gap.append((stop - timedelta(hours=break_deficit), stop, dummy))
-                return {}, {last_source: [(s, e, self) for s, e, _ in gap]}
             else:
-                # when schedule data is available, clip the gap to actual working-time
-                # slots so the deficit output lands within calendar hours, mirroring the
-                # calendar_source branch.  falls back to the full period window for
-                # fully-flexible employees who have no schedule.
                 available = schedule if schedule else period_window
                 gap_iv = available - total_worked
                 gap = list(gap_iv)
                 trim = sum_intervals(gap_iv) - deficit_amount
                 if trim > 0:
                     gap = _trim_hours_from_start(gap, trim)
-                return {}, {last_source: [(s, e, self) for s, e, _ in gap]}
+            return {}, {last_source: [(s, e, self) for s, e, _ in gap]}
 
         tolerance = self.employer_tolerance
         if float_compare(excess_amount, tolerance, 5) != 1:

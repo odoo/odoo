@@ -1784,6 +1784,39 @@ class TestTimeRulePipeline(TransactionCase):
             msg="10 initial - 0.5 deducted (4h * 100% / 8h/day) = 9.5 remaining days",
         )
 
+    def test_deficit_no_wet_still_deducts_allocation(self):
+        """undertime rule without output WET still deducts from an existing allocation."""
+        comp_type = self.env['hr.work.entry.type'].create({
+            'name': 'Flexi No WET', 'code': 'FLEXNOWET',
+            'requires_allocation': True,
+            'time_off_selectable': True,
+            'leave_validation_type': 'no_validation',
+        })
+        allocation = self.env['hr.leave.allocation'].sudo().create({
+            'employee_id': self.cal_emp.id,
+            'work_entry_type_id': comp_type.id,
+            'number_of_days': 10.0,
+            'state': 'confirm',
+        })
+        allocation.action_approve()
+        self.time_rule.write({
+            'threshold_operator': 'less_than',
+            'work_entry_type_id': False,
+            'leave_compensation_rate': 1.0,
+            'allocation_type_id': comp_type.id,
+        })
+        # 4h worked on an 8h day -> 4h deficit -> 4h / 8h_per_day = 0.5 days deducted
+        self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 12, 8),
+            'check_out': datetime(2022, 12, 12, 12),
+        })
+        allocation.invalidate_recordset()
+        self.assertAlmostEqual(
+            allocation.number_of_days, 9.5, places=5,
+            msg="10 - 0.5 (4h deficit / 8h per day) = 9.5 days remaining",
+        )
+
     def test_daily_and_weekly_rules_combined(self):
         """Daily and weekly rules fire independently: 2h daily OT on Mon + 2h weekly OT from the 42h week."""
         weekly_type = self.env['hr.work.entry.type'].create({
