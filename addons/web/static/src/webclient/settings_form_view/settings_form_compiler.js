@@ -1,3 +1,4 @@
+import { generateHTMLId } from "@web/core/utils/strings";
 import { append, createElement } from "@web/core/utils/xml";
 import { FormCompiler } from "@web/views/form/form_compiler";
 import { toStringExpression } from "@web/views/utils";
@@ -60,6 +61,7 @@ export class SettingsFormCompiler extends FormCompiler {
             imgurl:
                 el.getAttribute("logo") ||
                 "/" + el.getAttribute("name") + "/static/description/icon.png",
+            id: generateHTMLId("settings_"),
         };
         params.modules.push(module);
         const settingsApp = createElement("SettingsApp", {
@@ -67,6 +69,7 @@ export class SettingsFormCompiler extends FormCompiler {
             string: toStringExpression(module.string || ""),
             imgurl: toStringExpression(module.imgurl),
             selectedTab: "settings.selectedTab",
+            tabId: toStringExpression(module.id),
         });
 
         for (const child of el.children) {
