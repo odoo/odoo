@@ -297,6 +297,26 @@ test("simple rendering in readonly", async () => {
     ]);
 });
 
+test("category name with XML special characters", async () => {
+    ResUsers._records[0].view_group_hierarchy.categories[1].name =
+        "Project & Helpdesk (category)";
+    await mountView({
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <field name="group_ids" widget="res_user_group_ids"/>
+                </sheet>
+            </form>`,
+        resModel: "res.users",
+        resId: 1,
+    });
+
+    expect(
+        ".o_field_widget[name=group_ids] .o_inner_group:eq(1) .o_horizontal_separator"
+    ).toHaveText("PROJECT & HELPDESK (CATEGORY)");
+});
+
 test("simple rendering (debug)", async () => {
     serverState.debug = "1";
     await mountView({
