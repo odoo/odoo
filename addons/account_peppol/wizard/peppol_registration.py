@@ -1,10 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import contextlib
 import logging
-try:
-    import phonenumbers
-except ImportError:
-    phonenumbers = None
+
+import phonenumbers
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
@@ -141,7 +139,6 @@ class PeppolRegistration(models.TransientModel):
 
     @api.onchange('phone_number')
     def _onchange_phone_number(self):
-        self.env['res.company']._check_phonenumbers_import()
         for wizard in self:
             if wizard.phone_number:
                 # The `phone_number` we set is not necessarily valid (may fail `_sanitize_peppol_phone_number`)

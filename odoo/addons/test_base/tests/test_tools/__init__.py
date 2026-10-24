@@ -15,6 +15,7 @@ from . import (
     test_misc,
     test_pdf,
     test_profiler,
+    test_requirements_generate,
     test_safe_eval,
     test_safe_eval_expr,
     test_set_expression,

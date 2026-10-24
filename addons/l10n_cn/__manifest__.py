@@ -37,6 +37,9 @@ correctly when the cn2an library is installed. (e.g. with pip3 install cn2an)
         'account',
     ],
     'auto_install': ['account'],
+    'external_dependencies': [
+        {'pypi': 'cn2an', 'optional': True},
+    ],
     'data': [
         'data/account_tax_report_data.xml',
         'data/res_city_data.xml',

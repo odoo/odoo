@@ -3,10 +3,12 @@ Faker-based generators for the populate module.
 """
 import functools
 import inspect
-
-from faker import Faker
-
 from .generator import Generator
+try:
+    from faker import Faker
+except ImportError:
+    Faker = None
+
 
 # Stable Policy: Only adding new entries is allowed in 'stable'.
 PROVIDERS_WHITELIST = {

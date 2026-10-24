@@ -17,6 +17,9 @@ can setup API keys to replace their main password.
     'depends': ['web'],
     'category': 'Extra Tools',
     'auto_install': True,
+    'external_dependencies': [
+        {'pypi': 'qrcode', 'apt': 'python3-qrcode'},
+    ],
     'data': [
         'data/ir_action_data.xml',
         'views/res_users_views.xml',

@@ -36,7 +36,6 @@ setup(
         'greenlet',
         'h11',
         'idna',
-        'Jinja2',
         'lxml',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
         'lxml_html_clean',
         'libsass',

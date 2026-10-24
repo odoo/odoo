@@ -20,7 +20,7 @@ from odoo.addons.web.icons import ICONS
 try:
     from werkzeug.utils import send_file
 except ImportError:
-    from .tools._vendor.send_file import send_file
+    from odoo.tools._vendor.send_file import send_file
 
 _logger = logging.getLogger(__name__)
 
