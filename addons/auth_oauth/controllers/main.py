@@ -91,7 +91,7 @@ class OAuthLogin(Home):
 
 class OAuthController(Controller):
 
-    @route('/auth_oauth/signin', type='http', auth='none', readonly=False)
+    @route('/auth_oauth/signin', type='http', auth='none', replica=False)
     @fragment_to_query_string
     def signin(self, **kw):
         state = json.loads(kw['state'])
@@ -148,7 +148,7 @@ class OAuthController(Controller):
         redirect.autocorrect_location_header = False
         return redirect
 
-    @route('/auth_oauth/oea', type='http', auth='none', readonly=False)
+    @route('/auth_oauth/oea', type='http', auth='none', replica=False)
     def oea(self, **kw):
         """login user via Odoo Account provider"""
         dbname = kw.pop('db', None)

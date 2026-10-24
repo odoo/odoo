@@ -60,7 +60,7 @@ class Binary(Controller):
         '/web/content/<int:id>/<string:filename>',
         '/web/content/<string:model>/<int:id>/<string:field>',
         '/web/content/<string:model>/<int:id>/<string:field>/<string:filename>',
-    ], type='http', auth='public', readonly=True)
+    ], type='http', auth='public', replica=True)
     # pylint: disable=redefined-builtin,invalid-name
     def content_common(self, xmlid=None, model='ir.attachment', id=None, field='raw',
                        filename=None, filename_field='name', mimetype=None, unique=False,
@@ -82,7 +82,7 @@ class Binary(Controller):
         return stream.get_response(**send_file_kwargs)
 
     @route([
-        '/web/assets/<string:unique>/<string:filename>'], type='http', auth="public", readonly=True)
+        '/web/assets/<string:unique>/<string:filename>'], type='http', auth="public", replica=True)
     def content_assets(self, filename=None, unique=ANY_UNIQUE, nocache=False, assets_params=None):
         env = request.env  # readonly
         assets_params = assets_params or {}
@@ -181,7 +181,7 @@ class Binary(Controller):
         '/web/image/<int:id>-<string:unique>/<string:filename>',
         '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>',
         '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>/<string:filename>',
-    ], type='http', auth='public', readonly=True, save_session=False)
+    ], type='http', auth='public', replica=True, save_session=False)
     # pylint: disable=redefined-builtin,invalid-name
     def content_image(self, xmlid=None, model='ir.attachment', id=None, field='raw',
                       filename_field='name', filename=None, mimetype=None, unique=False,

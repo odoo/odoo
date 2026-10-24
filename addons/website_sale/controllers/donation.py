@@ -2,7 +2,7 @@ from odoo import http
 
 
 class WebsiteSaleDonation(http.Controller):
-    @http.route("/shop/donation/info", type="jsonrpc", auth="public", website=True, readonly=True)
+    @http.route("/shop/donation/info", type="jsonrpc", auth="public", website=True, replica=True)
     def donation_info(self):
         """Return the donation values needed by the donation snippet.
 
