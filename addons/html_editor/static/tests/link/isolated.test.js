@@ -5,8 +5,15 @@ import { descendants } from "@html_editor/utils/dom_traversal";
 import { tick } from "@odoo/hoot-mock";
 import { getContent, moveSelectionOutsideEditor, setSelection } from "../_helpers/selection";
 import { cleanLinkArtifacts } from "../_helpers/format";
+<<<<<<< df8556d93c722bb28cff09684c2fd97c7df151da
 import { animationFrame } from "@odoo/hoot-dom";
 import { processThroughNormalize } from "../_helpers/dispatch";
+||||||| 1e4c6e9e605cd84f4c39f42f3b9450df6227ff62
+import { dispatchNormalize } from "../_helpers/dispatch";
+=======
+import { animationFrame, press } from "@odoo/hoot-dom";
+import { dispatchNormalize } from "../_helpers/dispatch";
+>>>>>>> a1fd722a29b5de6e56e51653114abee5d5dd04a9
 import { expectElementCount } from "../_helpers/ui_expectations";
 import { isBlock } from "@html_editor/utils/blocks";
 import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
@@ -496,4 +503,40 @@ describe("should position the cursor outside the link", () => {
             '<p>\ufeff<a class="btn btn-primary" href="/test">\ufeff[]test\ufeff</a>\ufeff</p>'
         );
     });
+});
+
+test("Should properly properly delete characters at link edges (1)", async () => {
+    const { el } = await setupEditor('<p>a<a href="http://test.test/">b[]</a>c</p>');
+    await press(["Backspace"]);
+    expect(getContent(el)).toBe(
+        `<p>a\ufeff<a href="http://test.test/" class="o_link_in_selection">\ufeff[]\ufeff</a>\ufeffc</p>`
+    );
+    await press(["Backspace"]);
+    expect(getContent(el)).toBe("<p>[]c</p>");
+});
+
+test("Should properly properly delete characters at link edges (2)", async () => {
+    const { el } = await setupEditor('<p>a<a href="http://test.test/">[]b</a>c</p>');
+    await press(["Delete"]);
+    expect(getContent(el)).toBe(
+        `<p>a\ufeff<a href="http://test.test/" class="o_link_in_selection">\ufeff[]\ufeff</a>\ufeffc</p>`
+    );
+    await press(["Delete"]);
+    expect(getContent(el)).toBe("<p>a[]</p>");
+});
+
+test("Should properly properly delete characters at link edges (3)", async () => {
+    const { el } = await setupEditor('<p>a<a href="http://test.test/">[]b</a>c</p>');
+    await press(["Backspace"]);
+    expect(getContent(el)).toBe(
+        `<p>\ufeff<a href="http://test.test/" class="o_link_in_selection">\ufeff[]b\ufeff</a>\ufeffc</p>`
+    );
+});
+
+test("Should properly properly delete characters at link edges (4)", async () => {
+    const { el } = await setupEditor('<p>a<a href="http://test.test/">b[]</a>c</p>');
+    await press(["Delete"]);
+    expect(getContent(el)).toBe(
+        `<p>a\ufeff<a href="http://test.test/" class="o_link_in_selection">\ufeffb[]\ufeff</a>\ufeff</p>`
+    );
 });
