@@ -33,7 +33,11 @@ const setupMollie = async () => {
             expect(args[1]).toBe(595);
             expect(args[2]).toBe(paymentLine.uuid);
             expect(args[3]).toBe(order.session_id.id);
-            return { id: fakeMollieId, status, _links: {} };
+            return {
+                payment_id: fakeMollieId,
+                status,
+                test_terminal_url: null,
+            };
         });
     };
 
