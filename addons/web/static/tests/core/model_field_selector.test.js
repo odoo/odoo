@@ -1,5 +1,5 @@
 import { render } from "@web/owl2/utils";
-import { expect, test } from "@odoo/hoot";
+import { expect, queryOne, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, proxy, xml } from "@odoo/owl";
@@ -17,6 +17,7 @@ import {
     defineModels,
     fields,
     models,
+    mountView,
     mountWithCleanup,
     onRpc,
 } from "@web/../tests/web_test_helpers";
@@ -1011,4 +1012,37 @@ test("Fields can be selected but not followable", async () => {
     expect(
         ".o_model_field_selector_popover_item:contains(Link):has(.o_model_field_selector_popover_item_relation)"
     ).toHaveCount(1);
+});
+
+test("model field selector supports placeholder", async () => {
+    await mountView({
+        type: "form",
+        resModel: Partner._name,
+        arch: `<form>
+            <field name="foo" placeholder="Char placeholder" />
+            <field name="foo" widget="field_selector" placeholder="Model Field Selector placeholder" options="{ 'model': 'partner' }" />
+        </form>`,
+    });
+    expect("[name='foo'].o_field_widget.o_field_field_selector").toHaveText(
+        "Model Field Selector placeholder"
+    );
+    const charInput = queryOne("[name='foo'].o_field_char input");
+    const colorInputPlaceholder = getComputedStyle(charInput, "::placeholder").getPropertyValue(
+        "color"
+    );
+
+    const modelFieldSelectorPlaceholder = queryOne(
+        "[name='foo'].o_field_widget.o_field_field_selector span"
+    );
+    const colorModelFieldSelectorPlaceholder = getComputedStyle(
+        modelFieldSelectorPlaceholder
+    ).getPropertyValue("color");
+    expect(colorModelFieldSelectorPlaceholder).toBe(colorInputPlaceholder);
+    expect(colorInputPlaceholder).toBe("rgb(190, 197, 204)");
+    // unpractical but the RGB above and the hexa below refer to the same color
+    expect(
+        getComputedStyle(modelFieldSelectorPlaceholder).getPropertyValue(
+            "--o-bs-input-placeholder-color"
+        )
+    ).toBe("#bec5cc");
 });

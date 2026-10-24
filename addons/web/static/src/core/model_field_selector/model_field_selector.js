@@ -23,6 +23,7 @@ export class ModelFieldSelector extends Component {
         sort: t.function().optional(),
         followRelation: t.or([t.boolean(), t.function()]).optional(true),
         showDebugInput: t.boolean().optional(),
+        placeholder: t.string().optional(),
     });
 
     setup() {
