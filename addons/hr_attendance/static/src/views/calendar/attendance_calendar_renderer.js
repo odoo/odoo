@@ -1,16 +1,38 @@
+import { onPatched } from "@odoo/owl";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { CalendarRenderer } from "@web/views/calendar/calendar_renderer";
 import { CalendarCommonRenderer } from "@web/views/calendar/calendar_common/calendar_common_renderer";
 import { AttendanceCalendarOverview } from "../../components/attendance_calendar/attendance_calendar_overview";
+
+export class AttendanceCalendarCommonRenderer extends CalendarCommonRenderer {
+    setup() {
+        super.setup(...arguments);
+        let previous = this.props.model.workingHours;
+        onPatched(() => {
+            const current = this.props.model.workingHours;
+            if (current !== previous) {
+                previous = current;
+                this.fc().setOption("businessHours", current);
+            }
+        });
+    }
+
+    get options() {
+        return {
+            ...super.options,
+            businessHours: this.props.model.workingHours,
+        };
+    }
+}
 
 export class AttendanceCalendarRenderer extends CalendarRenderer {
     static template = "hr_attendance.AttendanceCalendarRenderer";
     static components = {
         ...CalendarRenderer.components,
         AttendanceCalendarOverview,
-        day: CalendarCommonRenderer,
-        week: CalendarCommonRenderer,
-        month: CalendarCommonRenderer,
+        day: AttendanceCalendarCommonRenderer,
+        week: AttendanceCalendarCommonRenderer,
+        month: AttendanceCalendarCommonRenderer,
     };
 
     get dateRange() {
