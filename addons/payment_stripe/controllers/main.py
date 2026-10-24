@@ -10,7 +10,7 @@ from werkzeug.exceptions import Forbidden
 from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
-from odoo.tools import file_open, mute_logger
+from odoo.tools import mute_logger
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
@@ -23,7 +23,6 @@ _logger = get_payment_logger(__name__, const.SENSITIVE_KEYS)
 class StripeController(http.Controller):
     _return_url = "/payment/stripe/return"
     _webhook_url = "/payment/stripe/webhook"
-    _apple_pay_domain_association_url = "/.well-known/apple-developer-merchantid-domain-association"
     WEBHOOK_AGE_TOLERANCE = 10 * 60  # seconds
 
     @http.route(_return_url, type="http", methods=["GET"], auth="public")
@@ -54,7 +53,7 @@ class StripeController(http.Controller):
         else:
             if tx_sudo.reference != response_content["description"]:
                 _logger.warning("Received payment data with incorrect reference")
-                raise Forbidden()
+                raise Forbidden
             if tx_sudo.operation != "validation":
                 self._include_payment_intent_in_payment_data(response_content, data)
             else:
@@ -157,9 +156,11 @@ class StripeController(http.Controller):
                     # Include refunds of capture transactions, as they are grandchildren of the
                     # source transaction found from the charge.
                     child_txs = tx_sudo.child_transaction_ids
-                    processed_refund_ids = (child_txs | child_txs.child_transaction_ids).filtered(
-                        lambda tx: tx.operation == "refund"
-                    ).mapped("provider_reference")
+                    processed_refund_ids = (
+                        (child_txs | child_txs.child_transaction_ids)
+                        .filtered(lambda tx: tx.operation == "refund")
+                        .mapped("provider_reference")
+                    )
                     for refund in filter(lambda r: r["id"] not in processed_refund_ids, refunds):
                         refund_tx_sudo = self._create_refund_tx_from_refund(tx_sudo, refund)
                         self._include_refund_in_payment_data(refund, data)
@@ -258,21 +259,3 @@ class StripeController(http.Controller):
         if not hmac.compare_digest(received_signature, expected_signature):
             _logger.warning("Received payment data with invalid signature")
             raise Forbidden
-
-    @http.route(_apple_pay_domain_association_url, type="http", auth="public", csrf=False)
-    def stripe_apple_pay_get_domain_association_file(self):
-        """Get the domain association file for Stripe's Apple Pay.
-
-        Stripe handles the process of "merchant validation" described in Apple's documentation for
-        Apple Pay on the Web. Stripe and Apple will access this route to check the content of the
-        file and verify that the web domain is registered.
-
-        See https://stripe.com/docs/stripe-js/elements/payment-request-button#verifying-your-domain-with-apple-pay.
-
-        :return: The content of the domain association file.
-        :rtype: str
-        """
-        with file_open(
-            "payment_stripe/static/files/apple-developer-merchantid-domain-association"
-        ) as f:
-            return f.read()

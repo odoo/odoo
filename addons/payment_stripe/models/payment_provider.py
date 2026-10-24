@@ -275,6 +275,12 @@ class PaymentProvider(models.Model):
 
     # === BUSINESS METHODS - PAYMENT FLOW === #
 
+    def _get_apple_pay_domain_association_file_path(self):
+        """Override of `payment` to return Stripe's Apple Pay domain association file path."""
+        if self.code != "stripe":
+            return super()._get_apple_pay_domain_association_file_path()
+        return "payment_stripe/static/files/apple-developer-merchantid-domain-association"
+
     def _stripe_acss_get_client_secret(self, values):
         """Return the `client_secret` of a Intent, created solely to satisfy ACSS's need for
         one upfront.
