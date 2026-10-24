@@ -156,3 +156,71 @@ class TestPortalProject(TestProjectPortalCommon, HttpCase):
         self.assertNotIn(task_template.name, my_tasks_response.text)
         self.assertNotIn(task_template.child_ids[0].name, my_tasks_response.text)
         self.assertNotIn(task_template.child_ids[1].name, my_tasks_response.text)
+
+    def test_portal_task_tracking_message_fetch(self):
+        """Test that ALL tracking messages (both internal and public subtypes)
+        are visible on tasks in the portal, while standard internal notes are excluded."""
+
+        self.project_pigs.write({'privacy_visibility': 'portal'})
+        self.env['project.collaborator'].create({
+            'project_id': self.project_pigs.id,
+            'partner_id': self.user_portal.partner_id.id,
+        })
+
+        task = self.env['project.task'].create({
+            'name': 'Portal Tracking Test Task',
+            'project_id': self.project_pigs.id,
+        })
+
+        msg_tracking_stage, msg_tracking_name, msg_note_internal = self.env["mail.message"].create([
+            {
+                "body": "Stage Changed",
+                "message_type": "tracking",
+                "model": task._name,
+                "res_id": task.id,
+                "subtype_id": self.env.ref("project.mt_task_stage").id,
+            },
+            {
+                "body": "Name Changed",
+                "message_type": "tracking",
+                "model": task._name,
+                "res_id": task.id,
+                "subtype_id": self.env.ref("mail.mt_note").id,
+            },
+            {
+                "body": "Secret Internal Comment",
+                "message_type": "comment",
+                "model": task._name,
+                "res_id": task.id,
+                "subtype_id": self.env.ref("mail.mt_note").id,
+                "is_internal": True,
+            }
+        ])
+
+        self.authenticate(self.user_portal.login, self.user_portal.login)
+
+        chatter_fetch_params = {
+            "thread_id": task.id,
+            "thread_model": task._name,
+        }
+        result = self.make_jsonrpc_request(
+            "/mail/store",
+            {"fetch_params": [["/mail/chatter_fetch", chatter_fetch_params]]},
+        )
+        fetched_ids = [msg["id"] for msg in result.get("mail.message", [])]
+
+        self.assertIn(
+            msg_tracking_stage.id,
+            fetched_ids,
+            "stage tracking messages should be included."
+        )
+        self.assertIn(
+            msg_tracking_name.id,
+            fetched_ids,
+            "name tracking messages should also be included based on the tracking whitelist."
+        )
+        self.assertNotIn(
+            msg_note_internal.id,
+            fetched_ids,
+            "Standard internal notes must still be excluded by the base firewall."
+        )
