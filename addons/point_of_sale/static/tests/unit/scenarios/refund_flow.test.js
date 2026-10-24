@@ -159,6 +159,14 @@ test("test_combo_refund_different_qty: refund combo with different quantities", 
     }
 
     await waitFor(".payment-screen");
+    const refundLine = store
+        .getOrder()
+        .lines.find((line) => line.combo_parent_id && line.product_id.name === "Combo Product 3");
+    const refundedLine = refundLine.refunded_orderline_id;
+    expect(refundedLine.comboExtraDisplayPrice).not.toBe(0);
+    expect(refundLine.comboExtraDisplayPrice / refundLine.displayPrice).toBe(
+        refundedLine.comboExtraDisplayPrice / refundedLine.displayPrice
+    );
 });
 
 test("RefundFewQuantities: refund with quantities less than 0.5", async () => {

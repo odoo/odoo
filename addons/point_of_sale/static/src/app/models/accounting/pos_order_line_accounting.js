@@ -14,6 +14,57 @@ export class PosOrderlineAccounting extends Base {
         "price_extra",
     ]);
 
+    get comboExtraPriceUnitByLine() {
+        const { childLineFree, childLineExtra } = this.order_id.getFreeAndExtraChildLines(this);
+        const extraPriceUnits = {};
+        for (const [childLines, isExtra] of [
+            [childLineFree, false],
+            [childLineExtra, true],
+        ]) {
+            for (const { line } of childLines) {
+                extraPriceUnits[line.uuid] = line.getComboExtraPriceUnit(isExtra);
+            }
+        }
+        return extraPriceUnits;
+    }
+
+    getComboExtraPriceUnit(isExtra) {
+        const comboItem = this.combo_item_id;
+        return (
+            (isExtra ? comboItem.combo_id.base_price : 0) +
+            (comboItem.extra_price || 0) +
+            (this.price_extra || 0)
+        );
+    }
+
+    getDisplayPriceOfPriceUnitPart(priceUnitPart) {
+        if (this.currency.isZero(priceUnitPart)) {
+            return 0;
+        }
+        const [withPart, withoutPart] = [this.price_unit, this.price_unit - priceUnitPart].map(
+            (priceUnit) => {
+                const baseLine = this.getBaseLine({ price_unit: priceUnit });
+                accountTaxHelpers.add_tax_details_in_base_lines([baseLine], this.order_id.company);
+                accountTaxHelpers.round_base_lines_tax_details([baseLine], this.order_id.company);
+                return this.config.iface_tax_included === "total"
+                    ? baseLine.tax_details.total_included
+                    : baseLine.tax_details.total_excluded;
+            }
+        );
+        return this.currency.round((withPart - withoutPart) * this.order_id.orderSign);
+    }
+
+    get comboExtraPriceUnit() {
+        if (this.refunded_orderline_id) {
+            return this.refunded_orderline_id.comboExtraPriceUnit;
+        }
+        return this.combo_parent_id?.comboExtraPriceUnitByLine[this.uuid] || 0;
+    }
+
+    get comboExtraDisplayPrice() {
+        return this.getDisplayPriceOfPriceUnitPart(this.comboExtraPriceUnit);
+    }
+
     /**
      * Display price in the currency format, depending on the tax configuration (included or excluded).
      *
@@ -21,7 +72,10 @@ export class PosOrderlineAccounting extends Base {
      */
     get currencyDisplayPrice() {
         if (this.combo_parent_id) {
-            return "";
+            const extraPrice = this.comboExtraDisplayPrice;
+            return this.currency.isZero(extraPrice)
+                ? ""
+                : formatCurrency(extraPrice, this.currency.id, { trailingZeros: false });
         }
 
         if (this.getDiscount() === 100) {
