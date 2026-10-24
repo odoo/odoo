@@ -528,6 +528,73 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         self.assertTrue(all(e.categ_ids == event_type for e in recurrence.calendar_event_ids))
         self.assertGoogleAPINotCalled()
 
+    def _create_synced_recurrence(self, google_id='test-google-id'):
+        base_event = self.env['calendar.event'].create({
+            'name': "Event with attendees",
+            'start': datetime(2020, 1, 15),
+            'stop': datetime(2020, 1, 15),
+            'allday': True,
+            'need_sync': False,
+            'partner_ids': [(4, self.attendee_user.partner_id.id), (4, self.env.user.partner_id.id)],
+            'recurrency': True,
+            'follow_recurrence': True,
+        })
+        recurrence = self.env['calendar.recurrence'].create({
+            'google_id': google_id,
+            'rrule': 'FREQ=WEEKLY;COUNT=3;BYDAY=WE',
+            'base_event_id': base_event.id,
+            'calendar_event_ids': [(4, base_event.id)],
+            'need_sync': False,
+        })
+        recurrence._apply_recurrence()
+        return recurrence
+
+    @patch_api
+    def test_updating_recurrence_single_patch(self):
+        """ Updating a whole recurrence chain must only patch the master recurrence once.
+        Google then propagates the change to every instance. """
+        recurrence_google_id = 'rrrrrrrrr'
+        recurrence = self._create_synced_recurrence(recurrence_google_id)
+        recurrence.calendar_event_ids.attendee_ids.do_decline()
+
+        # Exactly one patch must have been issued, targeting the master recurrence.
+        self.assertEqual(
+            sum(len(values) for values in self._gsync_patch_values.values()), 1,
+            "Only the master recurrence should be patched when updating all events of a chain"
+        )
+        self.assertIn(recurrence_google_id, self._gsync_patch_values, "The patch must target the master recurrence's google_id")
+
+    @patch_api
+    def test_updating_recurrence_single_instance_patch(self):
+        """ Updating a single instance of a recurrence chain must only patch that instance, not the master recurrence. """
+        recurrence_google_id = 'rrrrrrrrr'
+        recurrence = self._create_synced_recurrence(recurrence_google_id)
+
+        # RSVP on a single instance of the chain (it still follows the recurrence).
+        instance = recurrence.calendar_event_ids.sorted('start')[1]
+        self.assertTrue(instance.follow_recurrence)
+        instance.attendee_ids.do_decline()
+
+        # Exactly one patch must have been issued, targeting the instance, never the master recurrence.
+        self.assertEqual(
+            sum(len(values) for values in self._gsync_patch_values.values()), 1,
+            "Only the updated instance should be patched when updating a single event of a chain"
+        )
+        self.assertIn(instance.google_id, self._gsync_patch_values, "The patch must target the instance's google_id")
+        self.assertNotIn(recurrence_google_id, self._gsync_patch_values, "The master recurrence must not be patched")
+
+    @patch_api
+    def test_updating_future_events_breaks_recurrence(self):
+        """ RSVP on "this and following": instances are patched one by one, only the first one notifies. """
+        recurrence = self._create_synced_recurrence()
+        first, second, third = recurrence.calendar_event_ids.sorted('start')
+
+        second.with_user(self.attendee_user).change_attendee_status('declined', 'future_events')
+
+        self.assertNotIn(recurrence.google_id, self._gsync_patch_values)
+        self.assertEqual(len(self._gsync_patch_values), 2)
+        self.assertEqual(self._gsync_patch_notified, [True, False])
+
     @patch_api
     def test_attendee_state(self):
         """ Sync attendee state immediately """
