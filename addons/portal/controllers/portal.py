@@ -799,8 +799,6 @@ class CustomerPortal(Controller):
                     if partner_sudo_value != value and (bool(partner_sudo_value) or bool(value)):
                         invalid_fields.add(additional_identifier)
                         error_messages.append(get_commercial_field_error_msg(additional_identifier))
-                    else:
-                        address_values["additional_identifiers"].pop(additional_identifier, None)
 
                 # Company name shouldn't be updated anywhere but the main and company address, even
                 # if it's not in the fields returned by _commercial_fields.
