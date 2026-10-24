@@ -5,6 +5,8 @@ from datetime import timedelta
 from operator import itemgetter
 from re import findall as regex_findall
 
+from lxml import etree
+
 from odoo import _, api, Command, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
@@ -204,6 +206,22 @@ class StockMove(models.Model):
     should_replenish_scrapped = fields.Boolean('Should Replenish')
 
     _product_location_index = models.Index("(product_id, location_id, location_dest_id, company_id, state)")
+
+    @api.model
+    def _get_view(self, view_id=None, view_type='form', **options):
+        arch, view = super()._get_view(view_id, view_type, **options)
+        if view_type in ('pivot', 'graph') and view == self.env.ref(
+            f'stock.view_scrap_move_{view_type}', raise_if_not_found=False,
+        ):
+            # Hide measures added by any module, only in the scrap reporting views.
+            for name, field in self._fields.items():
+                if name not in ('id', 'quantity') and field.type in ('integer', 'float', 'monetary') and field.aggregator:
+                    nodes = arch.findall(f"field[@name='{name}']")
+                    if not nodes:
+                        nodes = [etree.SubElement(arch, 'field', name=name)]
+                    for node in nodes:
+                        node.set('invisible', '1')
+        return arch, view
 
     @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids', 'product_id.extra_uom_ids', 'product_id.seller_ids', 'product_id.seller_ids.uom_id')
     def _compute_allowed_uom_ids(self):
