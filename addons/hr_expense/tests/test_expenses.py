@@ -1312,6 +1312,54 @@ class TestExpenses(TestExpenseCommon):
             "The report name should be 'New Expense Report, paid by (employee|company)' as a fallback",
         )
 
+    def test_expense_currency_rate_revert_without_saving(self):
+        """
+        Checks that the currency rate is not computed from an outdated company currency total when the foreign amount
+        or the currency is changed back to its saved value before saving
+        """
+        foreign_currency_1 = self.other_currency  # rate is 1:2
+        foreign_currency_2 = self.setup_other_currency('GBP', rounding=0.01, rates=([('2016-01-01', 1 / 1.52)]))
+        expense, overridden_expense = self.env['hr.expense'].create([{
+            'name': name,
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_c.id,
+            'total_amount_currency': 1000.00,
+            'date': self.frozen_today,
+            'currency_id': foreign_currency_2.id,
+            'tax_ids': [Command.clear()],
+        } for name in ('Default rate', 'Overridden rate')])
+        overridden_expense.total_amount = 3000.00
+        self.assertRecordValues(expense | overridden_expense, [
+            {'currency_rate': 1.52, 'total_amount': 1520.00},
+            {'currency_rate': 3.00, 'total_amount': 3000.00},
+        ])
+
+        with Form(expense) as expense_form:
+            expense_form.total_amount_currency = 900.00
+            self.assertEqual(expense_form.total_amount, 1368.00)
+            expense_form.total_amount_currency = 1000.00
+            self.assertEqual(expense_form.currency_rate, 1.52)
+            self.assertEqual(expense_form.total_amount, 1520.00)
+
+            expense_form.currency_id = foreign_currency_1
+            self.assertEqual(expense_form.total_amount, 500.00)
+            expense_form.currency_id = foreign_currency_2
+            self.assertEqual(expense_form.currency_rate, 1.52)
+            self.assertEqual(expense_form.total_amount, 1520.00)
+
+        # Going back to the saved values keeps the saved overridden rate
+        with Form(overridden_expense) as expense_form:
+            expense_form.total_amount_currency = 900.00
+            self.assertEqual(expense_form.total_amount, 1368.00)
+            expense_form.total_amount_currency = 1000.00
+            self.assertEqual(expense_form.currency_rate, 3.00)
+            self.assertEqual(expense_form.total_amount, 3000.00)
+
+        self.assertRecordValues(expense | overridden_expense, [
+            {'currency_rate': 1.52, 'total_amount_currency': 1000.00, 'total_amount': 1520.00},
+            {'currency_rate': 3.00, 'total_amount_currency': 1000.00, 'total_amount': 3000.00},
+        ])
+
     def test_foreign_currencies_total(self):
         Expense = self.env['hr.expense'].with_user(self.expense_user_employee)
         Expense.create([{
