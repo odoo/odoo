@@ -113,6 +113,9 @@ patch(PosStore.prototype, {
                 }
 
                 if (line.is_downpayment) {
+                    if (!(await this.loadDownPaymentProduct())) {
+                        return;
+                    }
                     line.product_id = this.config.down_payment_product_id;
                 }
 
