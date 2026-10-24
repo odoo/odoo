@@ -79,6 +79,11 @@ class StockMove(models.Model):
                 if move.sale_line_id:
                     move.sale_line_id.name = move.description_picking
 
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        if self.is_scrap and self.repair_id:
+            self.quantity = 1
+
     def copy_data(self, default=None):
         default = dict(default or {})
         vals_list = super().copy_data(default=default)
