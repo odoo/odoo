@@ -110,6 +110,7 @@
                             </tr>
                         </table>
                     </div>
+<<<<<<< d8eda1fc6dbdd075db8c5ecf68c17e42abb597d0
                     <div t-elif="layout_template == 'classic-2'" t-attf-class="d-flex flex-column justify-content-between align-items-center h-100 text-center #{layout_template != 'classic-2' and 'd-none'}">
                         <span class="o_certification_company_logo d-flex justify-content-center align-items-center" t-field="user_input.create_uid.sudo().company_id.logo" t-options="{'widget': 'image'}" role="img"/>
                         <div>
@@ -118,6 +119,21 @@
                             <p class="my-4 text-600">presented to</p>
                             <p class="mb-2 pb-2 border-bottom border-secondary display-4 o_text_cursive" t-out="user_input.partner_id.name or user_input.email or ''">Demo certified name</p>
                             <p class="mb-4 text-600">by <span class="certification-company fw-semibold" t-field="user_input.create_uid.sudo().company_id.display_name">Odoo</span> <br/>for successfully completing this certification.</p>
+||||||| c2fe265e7e53195c68f5e758e26067e3ca055c3c
+
+                    <div class="certification-bottom">
+                        <div class="oe_structure"/>
+                        <div class="certification-date-wrapper">
+                            <span class="certification-date" t-field="user_input.create_date" t-options='{"widget": "date"}'>2023-08-18</span>
+                            <span>Date</span>
+=======
+
+                    <div class="certification-bottom">
+                        <div class="oe_structure"/>
+                        <div class="certification-date-wrapper">
+                            <span>Date</span>
+                            <span class="certification-date" t-field="user_input.create_date" t-options='{"widget": "date"}'>2023-08-18</span>
+>>>>>>> 4ccafebd857476d2d12474f09d79ec6983c9749d
                         </div>
                         <table class="w-100 table table-borderless mb-0 o_fixed_table_layout">
                             <tr>
