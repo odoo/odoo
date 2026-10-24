@@ -109,6 +109,7 @@ class AccountTax(models.Model):
             ('is_domestic', '=', True),
         ]""",
         ondelete='cascade',
+        copy=False,
         help="List of taxes to replace when applying any of the stipulated fiscal positions.",
     )
     replacing_tax_ids = fields.Many2many(
