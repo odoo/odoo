@@ -726,6 +726,31 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
             {'is_valid': True}, {'is_valid': False}, {'is_valid': False},
         ])
 
+    def test_empty_statement_is_complete(self):
+        ''' An empty statement (no lines) with matching balances must be complete. '''
+        statement = self.env['account.bank.statement'].create({
+            'name': 'empty_statement',
+            'journal_id': self.bank_journal_1.id,
+            'balance_start': 100.0,
+        })
+        # no lines: balance_end is computed as balance_start, balance_end_real follows
+        self.assertRecordValues(statement, [{
+            'is_complete': True,
+            'is_valid': True,
+            'balance_end': 100.0,
+            'balance_end_real': 100.0,
+        }])
+
+        # mismatched balances make it incomplete
+        statement.balance_end_real = 150.0
+        statement.flush_recordset(['balance_end_real'])
+        self.assertRecordValues(statement, [{
+            'is_complete': False,
+            'is_valid': True,
+            'balance_end': 100.0,
+            'balance_end_real': 150.0,
+        }])
+
     def test_statement_line_ordering(self):
         self.env.user.company_id = self.company_data_2['company']
 
