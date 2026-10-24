@@ -219,3 +219,36 @@ test(`hover on custom group by item`, async () => {
         message: "only one item should be focused at a time",
     });
 });
+
+test(`should discard selection when clicking outside without confirming it`, async () => {
+    await mountWithSearch(SearchBar, {
+        resModel: "foo",
+        searchMenuTypes: ["groupBy"],
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <filter string="Foo" name="group_by_foo" context="{'group_by': 'foo'}"/>
+            </search>
+        `,
+        searchViewFields: {
+            foo: { string: "Foo", type: "char", store: true, sortable: true, groupable: true },
+            date: { string: "Date", type: "date", store: true, sortable: true, groupable: true },
+        },
+    });
+
+    await toggleSearchBarMenu();
+    const select = document.querySelector(".o_add_custom_group_menu");
+    select.focus();
+    select.value = "date";
+    select.dispatchEvent(new Event("change"));
+    expect(select.value).toEqual("date");
+    expect(select.options[1].selected).toEqual(true);
+    expect(select.options[0].selected).toEqual(false);
+    await contains(".o_cp_searchview").focus();
+    await toggleSearchBarMenu();
+    const reopenedSelect = document.querySelector(".o_add_custom_group_menu");
+    expect(reopenedSelect.value).toEqual("");
+    expect(reopenedSelect.options[1].selected).toEqual(false);
+    expect(reopenedSelect.options[0].selected).toEqual(true);
+    expect(getFacetTexts()).toEqual([]);
+});

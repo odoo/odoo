@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, useExternalListener, useRef } from "@odoo/owl";
 
 export class CustomGroupByItem extends Component {
     static template = "web.CustomGroupByItem";
@@ -6,6 +6,16 @@ export class CustomGroupByItem extends Component {
         fields: Array,
         onAddCustomGroup: Function,
     };
+
+    setup() {
+        this.selectRef = useRef("selectElement");
+        useExternalListener(window, "click", (ev) => {
+            const select = this.selectRef.el;
+            if (select && !select.contains(ev.target)) {
+                select.value = "";
+            }
+        });
+    }
 
     get choices() {
         return this.props.fields.map((f) => ({ label: f.string, value: f.name }));
