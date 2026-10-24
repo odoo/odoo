@@ -37,7 +37,7 @@ registerStoreHandler(
 
 registerStoreHandler(
     "discuss.channel",
-    function store_add_discuss_channel_to_context(store, params) {
+    function store_add_discuss_channel(store, params) {
         /** @type {import("mock_models").DiscussChannel} */
         const DiscussChannel = this.env["discuss.channel"];
         const { ids, with_last_message } = params;
