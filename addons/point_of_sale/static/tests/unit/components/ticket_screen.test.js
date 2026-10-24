@@ -567,3 +567,66 @@ test("searching by customer keeps the orders of a nameless address contact", asy
         { message: "the address contact is searched by its company name" }
     );
 });
+
+test("session default preset persists and is assigned to newly created orders", async () => {
+    const store = await setupPosEnv();
+    const presetOut = store.models["pos.preset"].get(2);
+    store.session.default_preset_id = presetOut;
+
+    const screen = await mountWithCleanup(TicketScreen);
+    expect(store.session.default_preset_id.id).toBe(presetOut.id);
+    screen.onClickNewOrder();
+
+    const createdOrder = store.getOrder();
+    expect(createdOrder.preset_id.id).toBe(presetOut.id);
+});
+
+test("clicking preset filter button activates it and retains it in ticket screen", async () => {
+    const store = await setupPosEnv();
+    const presetIn = store.models["pos.preset"].get(1);
+    const presetOut = store.models["pos.preset"].get(2);
+
+    makeOrder(store, { pos_reference: "O-01", preset_id: presetIn });
+    makeOrder(store, { pos_reference: "O-02", preset_id: presetOut });
+
+    const screen = await mountWithCleanup(TicketScreen);
+
+    await click(`.filter-buttons button:contains("${presetOut.name}")`);
+    expect(screen.state.selectedPreset.id).toBe(presetOut.id);
+
+    const filteredOrders = screen.getFilteredOrderList();
+    expect(filteredOrders.length).toBe(1);
+    expect(filteredOrders[0].pos_reference).toBe("O-02");
+
+    await click(`.filter-buttons button:contains("${presetOut.name}")`);
+    expect(screen.state.selectedPreset).toBe(null);
+    expect(screen.getFilteredOrderList().length).toBe(2);
+});
+
+test("setting default preset via onStarClick updates pos.session and persists across orders", async () => {
+    let rpcWrittenPresetId = null;
+    onRpc("pos.session", "write", ({ args }) => {
+        const [, vals] = args;
+        if (vals.default_preset_id) {
+            rpcWrittenPresetId = vals.default_preset_id;
+        }
+        return true;
+    });
+
+    const store = await setupPosEnv();
+    const presetOut = store.models["pos.preset"].get(2);
+
+    store.session.default_preset_id = presetOut;
+    await store.data.write("pos.session", [store.session.id], {
+        default_preset_id: presetOut.id,
+    });
+
+    expect(rpcWrittenPresetId).toBe(presetOut.id);
+    expect(store.session.default_preset_id.id).toBe(presetOut.id);
+
+    const screen = await mountWithCleanup(TicketScreen);
+
+    screen.onClickNewOrder();
+    expect(store.getOrder().preset_id.id).toBe(presetOut.id);
+    expect(store.session.default_preset_id.id).toBe(presetOut.id);
+});

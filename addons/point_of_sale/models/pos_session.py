@@ -138,6 +138,10 @@ class PosSession(models.Model):
         'Is Using Company Currency',
         compute='_compute_is_in_company_currency',
     )
+    default_preset_id = fields.Many2one(
+        'pos.preset',
+        string='Default Preset',
+    )
 
     @api.depends('closing_balance', 'opening_balance')
     def _compute_closing_difference(self):
@@ -184,7 +188,7 @@ class PosSession(models.Model):
     def _load_pos_data_fields(self, config):
         return [
             'id', 'name', 'user_id', 'config_id', 'start_at', 'stop_at',
-            'payment_method_ids', 'state', 'access_token',
+            'payment_method_ids', 'state', 'access_token', 'default_preset_id',
         ]
 
     def load_data(self, local_data={}):
@@ -413,7 +417,11 @@ class PosSession(models.Model):
 
     @api.model
     def _get_default_session_vals(self, config_id):
-        return {'config_id': config_id}
+        config = self.env['pos.config'].browse(config_id)
+        return {
+            'config_id': config_id,
+            'default_preset_id': config.default_preset_id.id,
+        }
 
     def get_session_orders(self):
         return self.env['pos.order'].search([
