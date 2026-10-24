@@ -79,7 +79,7 @@ class PosVivaComController(http.Controller):
                 dynamicLink = self._create_dynamic_link(f"/pos/ui/{config_id}/resume/{order_uuid}?post_validate=1")
                 return request.redirect(dynamicLink, local=False)
         else:
-            payment_line.write({'payment_status': 'error', 'transaction_id': transaction_id})
+            payment_line.write({'payment_status': 'retry', 'transaction_id': transaction_id})
 
         dynamicLink = self._create_dynamic_link(f"/pos/ui/{config_id}/payment/{order_uuid}")
         return request.redirect(dynamicLink, local=False)

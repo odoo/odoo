@@ -144,7 +144,7 @@ class TestWebhook(TestBancontactPay):
             "payment_method_id": payment_method.id,
             "amount": amount,
             "bancontact_id": bancontact_id,
-            "payment_status": "waitingScan",
+            "payment_status": "waiting_scan",
         })
 
     def _notify_patcher(self):

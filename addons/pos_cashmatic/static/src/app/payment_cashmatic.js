@@ -30,7 +30,7 @@ export class PaymentCashmatic extends PaymentInterface {
         );
 
         return cashmaticPaymentLines.find((line) =>
-            ["waiting", "waitingCancel"].includes(line.payment_status)
+            ["waiting", "waiting_cancel"].includes(line.payment_status)
         );
     }
 

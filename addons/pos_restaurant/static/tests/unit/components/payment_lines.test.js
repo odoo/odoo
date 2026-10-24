@@ -38,7 +38,7 @@ test("getPaymentActionState", async () => {
 
     const expectDoneAdjustAmountAction = (state) => {
         expect(normalizeActionState(state)).toEqual({
-            id: "paid",
+            id: "done",
             title: "Payment Successful",
             actions: [
                 {
@@ -53,7 +53,7 @@ test("getPaymentActionState", async () => {
 
     const expectDoneAction = (state) => {
         expect(normalizeActionState(state)).toEqual({
-            id: "paid",
+            id: "done",
             title: "Payment Successful",
             actions: [],
         });
@@ -67,12 +67,12 @@ test("getPaymentActionState", async () => {
     expectDoneAdjustAmountAction(comp.getPaymentActionState(paymentline));
 
     // Done + cannot be adjusted + amountPaid (10) < priceIncl (15)
-    // --> paid action
+    // --> done action
     paymentline.canBeAdjusted = () => false;
     expectDoneAction(comp.getPaymentActionState(paymentline));
 
     // Done + canBeAdjusted + amountPaid (10) >= priceIncl (5)
-    // --> paid action
+    // --> done action
     paymentline.payment_status = "done";
     order.prices.taxDetails.total_amount_no_rounding = 5;
     expectDoneAction(comp.getPaymentActionState(paymentline));

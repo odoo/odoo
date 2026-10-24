@@ -78,7 +78,7 @@ export class PaymentQFpay extends PaymentInterface {
             });
         }
 
-        line.setPaymentStatus("waitingCard");
+        line.payment_status = "waiting_card";
         return this.waitForPaymentConfirmation(uuid);
     }
 
@@ -146,7 +146,7 @@ export class PaymentQFpay extends PaymentInterface {
     }
 
     get pendingQFpayline() {
-        return this.pos.getPendingPaymentLine("qfpay");
+        return this.pos.getProcessingPaymentLine("qfpay");
     }
 
     get _isCreditCardPayment() {

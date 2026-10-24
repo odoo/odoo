@@ -1,6 +1,6 @@
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { patch } from "@web/core/utils/patch";
-import { onMounted, onWillStart } from "@odoo/owl";
+import { onWillStart } from "@odoo/owl";
 import { useVivaApp } from "../../hooks/use_viva_app";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -8,18 +8,6 @@ import { _t } from "@web/core/l10n/translation";
 patch(PaymentScreen.prototype, {
     setup() {
         super.setup(...arguments);
-        onMounted(() => {
-            const pendingPaymentLine = this.currentOrder.payment_ids.find(
-                (paymentLine) =>
-                    paymentLine.payment_method_id.payment_provider === "viva_com" &&
-                    !paymentLine.isDone() &&
-                    paymentLine.getPaymentStatus() !== "pending"
-            );
-            if (!pendingPaymentLine) {
-                return;
-            }
-        });
-
         this.vivaApp = useVivaApp(this.onClickValidate.bind(this));
         this.integrated = () => window.localStorage.getItem("vivawallet_app_answer") === "true";
         onWillStart(async () => {
@@ -62,7 +50,7 @@ patch(PaymentScreen.prototype, {
             if (previousAnswer === "true") {
                 for (const lineUuid of this.currentOrder.payment_ids.map((line) => line.uuid)) {
                     const paymentLine = this.currentOrder.getPaymentlineByUuid(lineUuid);
-                    if (this.vivaApp.use(paymentLine.payment_method_id) && !paymentLine.isDone()) {
+                    if (this.vivaApp.use(paymentLine.payment_method_id) && !paymentLine.isSettled) {
                         paymentLine.delete();
                     }
                 }
