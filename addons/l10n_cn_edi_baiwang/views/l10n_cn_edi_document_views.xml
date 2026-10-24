@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_l10n_cn_edi_document_tree" model="ir.ui.view">
+        <field name="name">l10n_cn_edi.document.list</field>
+        <field name="model">l10n_cn_edi.document</field>
+        <field name="arch" type="xml">
+            <list string="Baiwang EDI Documents" create="0" edit="0" decoration-danger="state == 'failed'" decoration-success="state == 'red_form_confirmed'" decoration-warning="state == 'red_form_pending'">
+                <field name="create_date" string="Created On"/>
+                <field name="move_id"/>
+                <field name="baiwang_red_form_number"/>
+                <field name="baiwang_uuid"/>
+                <field name="baiwang_red_form_amount_total"/>
+                <field name="baiwang_confirm_state"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_l10n_cn_edi_document_form" model="ir.ui.view">
+        <field name="name">l10n_cn_edi.document.form</field>
+        <field name="model">l10n_cn_edi.document</field>
+        <field name="arch" type="xml">
+            <form string="Baiwang EDI Document" create="0" edit="0">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Related Record">
+                            <field name="move_id"/>
+                        </group>
+                        <group string="Baiwang Data">
+                            <field name="baiwang_uuid"/>
+                            <field name="baiwang_red_form_number"/>
+                            <field name="baiwang_red_invoice_no"/>
+                            <field name="baiwang_confirm_state"/>
+                            <field name="baiwang_red_form_amount_total"/>
+                            <field name="baiwang_red_form_amount_tax"/>
+                        </group>
+                    </group>
+                    <group string="Error Details" invisible="not error_message">
+                        <field name="error_message" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_l10n_cn_edi_document" model="ir.actions.act_window">
+        <field name="name">Baiwang EDI Documents</field>
+        <field name="res_model">l10n_cn_edi.document</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No Baiwang EDI documents found.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_l10n_cn_edi_document"
+              name="Baiwang EDI Documents"
+              action="action_l10n_cn_edi_document"
+              parent="account.menu_finance_configuration"
+              sequence="100"/>
+</odoo>
