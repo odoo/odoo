@@ -315,8 +315,13 @@ export class Action {
             if (closeAll) {
                 this.actions.panelStack = [];
                 this.actions.panelAction = null;
-            } else {
+            } else if (this.actions.panelAction?.id === this.id) {
                 this.actions.panelAction = this.actions.panelStack.pop() ?? null;
+            } else {
+                // panel kept below the shown one, @see openPanel keepPrevious
+                this.actions.panelStack = this.actions.panelStack.filter(
+                    (action) => action.id !== this.id
+                );
             }
         }
         this.definition.panel?.onClose?.call(

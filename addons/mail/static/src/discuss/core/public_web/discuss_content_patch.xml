@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-inherit="mail.DiscussContent" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-mail-DiscussContent')]" position="replace">
+            <div class="d-flex flex-row flex-grow-1 gap-1">
+                <t>$0</t>
+                <t t-if="this.sideChannelPanel()" t-component="this.sideChannelPanel().component" t-key="this.sideChannelPanel().props.channel.localId" t-props="this.sideChannelPanel().props"/>
+            </div>
+        </xpath>
         <xpath expr="//Thread" position="before">
             <PipBanner t-if="this.rtc.isPipMode and this.thread.channel?.eq(this.rtc.channel)"/>
             <Call t-elif="this.thread.channel?.showCallView" channel="this.thread.channel"/>

@@ -167,7 +167,7 @@ const threadPatch = {
     /** @override */
     open(options) {
         if (this.channel) {
-            const res = this.channel.openChannel();
+            const res = this.channel.openChannel(options);
             if (res) {
                 return res;
             }

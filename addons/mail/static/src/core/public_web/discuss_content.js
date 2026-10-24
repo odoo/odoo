@@ -38,9 +38,8 @@ export class DiscussContent extends Component {
         this.rootRef = signal.ref(HTMLDivElement);
         this.threadAvatarRef = signal.ref(HTMLDivElement);
         this.threadActions = useThreadActions({ rootRef: this.rootRef, thread: () => this.thread });
-        this.headerActionsList = computedShallowEqual(() => {
-            const partition = this.threadActions.partition;
-            return [partition.quick, partition.other, ...partition.group.slice().reverse()];
+        this.headerActionsList = computedShallowEqual(() => this.computeHeaderActionsList(), {
+            nested: true,
         });
         this.state = proxy({ jumpThreadPresent: 0 });
         this.isDiscussContent = true;
@@ -64,8 +63,19 @@ export class DiscussContent extends Component {
         }
     }
 
+    /** @returns {Array<import("@mail/core/common/thread_actions").ThreadAction[]>} */
+    computeHeaderActionsList() {
+        const partition = this.threadActions.partition;
+        return [partition.quick, partition.other, ...partition.group.slice().reverse()];
+    }
+
     /** @type {import("@mail/core/common/action_list").GetActionComponent} */
     getActionComponent() {}
+
+    /** Whether the active panel is shown in the panel container, beside the conversation. */
+    get showsPanelContainer() {
+        return Boolean(this.threadActions.activePanel);
+    }
 
     /**
      * The compact panels open in a popover on their button, the others beside the conversation.
