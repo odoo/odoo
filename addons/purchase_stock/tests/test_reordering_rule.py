@@ -1504,3 +1504,17 @@ class TestReorderingRule(TransactionCase):
             'product_qty': 6.0,
             'price_unit': 100.0,
         }])
+
+    def test_multicompany_po_deadline_from_orderpoint(self):
+        """Test that an orderpoint's company determines its PO deadline."""
+        company_2 = self.env['res.company'].create({'name': 'Company 2', 'horizon_days': 30})
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': self.product_01.id,
+            'product_min_qty': 5,
+            'product_max_qty': 10,
+        })
+        for company in (company_2, self.env.company):
+            orderpoint.with_company(company).action_replenish()
+            po = self.env['purchase.order'].search([('origin', '=', orderpoint.name), ('state', '!=', 'cancel')])
+            self.assertEqual(orderpoint.deadline_date, po.date_order.date())
+            po.button_cancel()
