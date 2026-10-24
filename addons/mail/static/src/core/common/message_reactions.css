@@ -2,6 +2,7 @@
     line-height: 1.75;
 
     &:not(.o-selfReacted):hover {
+        /* eslint-disable-next-line css/no-invalid-properties -- false positive: unknown var() mixed with a resolved one */
         border-color: color-mix(in srgb, var(--o-action) calc(var(--mail-MessageReaction-selfReactedBorderOpacity, 1) * 100%), transparent) !important;
     }
 

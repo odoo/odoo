@@ -26,6 +26,7 @@
     height: var(--thumb-size);
     background: black;
     border-radius: 50%;
+    /* eslint-disable-next-line css/no-invalid-properties -- false positive: unknown var() mixed with a resolved one */
     transform: rotate(var(--angle)) translateX(calc(var(--radius) - var(--thumb-size)));
     transform-origin: center center;
     pointer-events: none;
