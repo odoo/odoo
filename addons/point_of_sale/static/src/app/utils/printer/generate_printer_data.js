@@ -105,6 +105,7 @@ export class GeneratePrinterData {
                 cancel: processData(saleDetails.cancelled_products),
                 payments: processedPayments,
                 session_state: saleDetails.session_state,
+                employee_name: saleDetails.employee_name,
                 date: new Date().toLocaleString(),
             },
         };

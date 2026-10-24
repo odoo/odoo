@@ -260,9 +260,9 @@ export class PosTicketPrinterPlugin extends Plugin {
      * fallback to another printer if needed.
      * - this.config.receipt_printer_ids
      */
-    async printSaleDetailsReceipt({ webFallback = true, download = false } = {}) {
+    async printSaleDetailsReceipt({ saleDetails, webFallback = true, download = false } = {}) {
         const generator = this.getGenerator({ models: this.data.models });
-        const saleDetails = await this.data.call(
+        saleDetails ??= await this.data.call(
             "report.point_of_sale.report_saledetails",
             "get_sale_details",
             [false, false, false, [this.session.id]]

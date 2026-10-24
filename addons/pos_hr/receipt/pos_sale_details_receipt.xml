@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="pos_sale_details_receipt" inherit_id="point_of_sale.pos_sale_details_receipt">
+        <xpath expr="//div[@name='logo']" position="after">
+            <div t-if="extra_data.get('employee_name')" class="text-large text-center text-bold">
+                Employee: <t t-out="extra_data['employee_name']"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>
