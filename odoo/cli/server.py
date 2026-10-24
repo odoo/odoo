@@ -98,6 +98,11 @@ def main(args):
     check_postgres_user()
     report_configuration()
 
+    if len(config['db_name']) < 1:
+        _logger.warning("The config value for db_name was empty. "
+                        "Some features like update may do nothing "
+                        "until db_name is set.")
+    
     for db_name in config['db_name']:
         from odoo.service import db  # noqa: PLC0415
         try:
