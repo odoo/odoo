@@ -259,3 +259,43 @@ test("Nested Pricelists with different currencies", async () => {
     // 120 MXN - 25% = 90 MXN
     expect(product.getPrice(posPricelist, 1, 0, false, product)).toBe(90);
 });
+
+test("Pricelist: rules loaded without their pricelist are indexed", async () => {
+    const store = await setupPosEnv();
+    const [pricelist] = store.models.loadConnectedData({
+        "product.pricelist": [
+            {
+                id: 91,
+                name: "Late Rules Pricelist",
+                display_name: "Late Rules Pricelist",
+                currency_id: 1,
+                item_ids: [],
+            },
+        ],
+    })["product.pricelist"];
+    const productTmpl = store.models["product.template"].get(5);
+    const product = productTmpl.product_variant_ids[0];
+    const rule = {
+        pricelist_id: 91,
+        product_tmpl_id: false,
+        product_id: false,
+        categ_id: false,
+        base: "list_price",
+        compute_price: "fixed",
+        min_quantity: 0,
+    };
+
+    // Products loaded later only bring their rules, as load_product_from_pos does
+    store.models.connectNewData({
+        "product.pricelist.item": [
+            { ...rule, id: 910, product_tmpl_id: 5, product_id: product.id, fixed_price: 7 },
+        ],
+    });
+    expect(productTmpl.getPrice(pricelist, 1, 0, false, product)).toBe(7);
+
+    store.models.connectNewData({
+        "product.pricelist.item": [{ ...rule, id: 911, fixed_price: 3 }],
+    });
+    expect(pricelist.getGlobalRulesIds()).toEqual([911]);
+    expect(productTmpl.getPrice(pricelist, 1, 0, false, product)).toBe(7);
+});
