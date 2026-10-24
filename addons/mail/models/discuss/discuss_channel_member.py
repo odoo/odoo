@@ -340,7 +340,8 @@ class DiscussChannelMember(models.Model):
         post_leave_message = self.env.context.get("post_leave_message") is POST_LEAVE_MESSAGE
         for member in self:
             channel = member.channel_id
-            channel.message_unsubscribe(member.partner_id.ids)
+            # sudo: discuss.channel - removing followers of a member that was allowed to be removed
+            channel.sudo().message_unsubscribe(member.partner_id.ids)
             if close_chat_window:
                 for bus_channel in member._bus_channels():
                     custom_store = Store(bus_channel=bus_channel)
