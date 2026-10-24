@@ -480,3 +480,30 @@ class TestAccountTax(AccountTestInvoicingCommon):
         self.assertEqual(tax.type_tax_use, 'purchase')
         self.product.supplier_taxes_id = tax
         self.assertEqual(self.product.supplier_taxes_id, tax)
+
+    def test_cash_basis_transition_account_reconcile(self):
+        """ Test that reconcile is set on the cash basis transition account """
+        tax = self.env['account.tax'].create({
+            'name': 'Cash Basis Tax',
+            'amount': 10.0,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+        reconcile_account = self.env['account.account'].create({
+            'code': '360001',
+            'name': 'Allowed Reconciliation Account',
+            'reconcile': True
+        })
+        no_reconcile_account = self.env['account.account'].create({
+            'code': '360002',
+            'name': 'Not Allowed Reconciliation Account',
+            'reconcile': False
+        })
+        tax.write({
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': reconcile_account
+        })
+        with self.assertRaises(ValidationError):
+            tax.cash_basis_transition_account_id = no_reconcile_account
+        with self.assertRaises(ValidationError):
+            reconcile_account.reconcile = False
