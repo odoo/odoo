@@ -344,6 +344,7 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         );
         editingElement.style.setProperty("position", "relative");
         shapeContainer.className = `o_we_shape o_${shape.replace(/\//g, "_")}`;
+        shapeContainer.setAttribute("aria-hidden", "true");
         return shapeContainer;
     }
     /**
