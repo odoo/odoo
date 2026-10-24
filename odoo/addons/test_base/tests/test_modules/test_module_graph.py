@@ -38,7 +38,6 @@ class TestGraph(BaseCase):
         with (
             patch('odoo.modules.module_graph.ModuleGraph._update_from_database'),
             patch('odoo.modules.module_graph.Manifest.for_addon', make_manifest),
-            patch('odoo.modules.module_graph.ModuleGraph._imported_modules', {'studio_customization'}),
         ):
             dummy_cr = None
             graph = ModuleGraph(dummy_cr)
