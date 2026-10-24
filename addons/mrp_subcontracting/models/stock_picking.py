@@ -100,7 +100,8 @@ class StockPicking(models.Model):
             production_ids_backorder = []
             if not self.env.context.get('cancel_backorder'):
                 production_ids_backorder = productions_to_done.filtered(lambda mo: mo.state == "progress").ids
-            productions_to_done.with_context(mo_ids_to_backorder=production_ids_backorder).button_mark_done()
+            # The subcontractor already consumed the components: no expired lots confirmation to ask for
+            productions_to_done.with_context(mo_ids_to_backorder=production_ids_backorder, skip_expired=True).button_mark_done()
             # For concistency, set the date on production move before the date
             # on picking. (Traceability report + Product Moves menu item)
             minimum_date = min(picking.move_line_ids.mapped('date'))
