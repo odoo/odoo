@@ -10,9 +10,10 @@ registerThreadAction("restart", {
     icon: "refresh",
     name: _t("Restart Conversation"),
     onSelected: ({ channel, owner }) => {
-        owner.props.chatWindow.feedbackDoneResolver?.resolve(false);
+        const chatWindow = owner.props?.chatWindow;
+        chatWindow?.feedbackDoneResolver?.resolve(false);
         channel.chatbot.restart();
-        owner.props.chatWindow.open({ focus: true });
+        chatWindow?.open({ focus: true });
     },
     sequence: 99,
     sequenceQuick: 15,
@@ -21,7 +22,8 @@ registerThreadAction("restart", {
 const callSettingsAction = threadActionsRegistry.get("call-settings");
 patch(callSettingsAction, {
     condition({ channel, store }) {
-        return channel?.channel_type === "livechat"
+        return channel?.channel_type === "livechat" &&
+            channel.self_member_id?.livechat_member_type === "visitor"
             ? store.rtc.localChannel?.eq(channel)
             : super.condition(...arguments);
     },
