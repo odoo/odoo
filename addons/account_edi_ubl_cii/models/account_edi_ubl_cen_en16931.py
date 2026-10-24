@@ -12,17 +12,28 @@ class AccountEdiUBLCenEn16931(models.AbstractModel):
     # EXPORT: NODES
     # -------------------------------------------------------------------------
 
-    def _ubl_add_notes_nodes(self, vals):
-        super()._ubl_add_notes_nodes(vals)
+    def _ubl_add_invoice_type_code_node(self, vals):
+        super()._ubl_add_invoice_type_code_node(vals)
 
-        # [BR-FR-MAP-18] EN16931 caps the Note (BT-22) to 1024 characters.
-        for note in vals['document_node']['cbc:Note']:
-            if isinstance(note['_text'], str):
-                note['_text'] = note['_text'][:1024]
+        if self._is_document(vals, 'invoice'):
+            vals['document_node']['cbc:InvoiceTypeCode']['_text'] = 380
+        elif self._is_document(vals, 'self_invoice'):
+            vals['document_node']['cbc:InvoiceTypeCode']['_text'] = 389
+
+    def _ubl_add_credit_note_type_code_node(self, vals):
+        super()._ubl_add_credit_note_type_code_node(vals)
+
+        if self._is_document(vals, 'credit_note'):
+            vals['document_node']['cbc:CreditNoteTypeCode']['_text'] = 381
+        elif self._is_document(vals, 'self_credit_note'):
+            vals['document_node']['cbc:CreditNoteTypeCode']['_text'] = 261
 
     def _ubl_get_partner_address_node(self, vals, partner):
-        # EXTENDS account.edi.ubl
         node = super()._ubl_get_partner_address_node(vals, partner)
+
+        # [UBL-CR-166] - A UBL invoice should not include the AccountingXXXParty Party PostalAddress Country Name
+        node['cbc:CountrySubentityCode'] = None
+        node['cac:Country']['cbc:Name'] = None
 
         # [BR-FR-MAP-17/BR-FR-MAP-19] EN16931 caps these address lines to 255 characters (postal code: 10).
         for field in ('cbc:StreetName', 'cbc:AdditionalStreetName', 'cbc:CityName', 'cbc:CountrySubentity'):
@@ -36,6 +47,21 @@ class AccountEdiUBLCenEn16931(models.AbstractModel):
             postal_zone_node['_text'] = postal_zone_node['_text'][:10]
 
         return node
+
+    def _ubl_add_document_currency_code_node(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_document_currency_code_node(vals)
+
+        # [BR-05]-An Invoice shall have an Invoice currency code (BT-5).
+        vals['document_node']['cbc:DocumentCurrencyCode']['_text'] = vals['currency'].name
+
+    def _ubl_add_notes_nodes(self, vals):
+        super()._ubl_add_notes_nodes(vals)
+
+        # [BR-FR-MAP-18] EN16931 caps the Note (BT-22) to 1024 characters.
+        for note in vals['document_node']['cbc:Note']:
+            if isinstance(note['_text'], str):
+                note['_text'] = note['_text'][:1024]
 
     def _ubl_add_line_item_name_description_nodes(self, vals):
         # EXTENDS account.edi.ubl
@@ -94,6 +120,18 @@ class AccountEdiUBLCenEn16931(models.AbstractModel):
             return False
         return super()._need_party_tax_scheme_nodes(vals)
 
+    def _ubl_add_party_endpoint_id_node(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_party_endpoint_id_node(vals)
+
+        # [UBL-CR-162][UBL-CR-225][UBL-CR-319] - A UBL invoice should not include the AccountingXXXParty Party PostalAddress CountrySubentityCode
+        # [UBL-CR-166][UBL-CR-229][UBL-CR-323] - A UBL invoice should not include the AccountingXXXParty Party PostalAddress Country Name
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
+        if commercial_partner.peppol_endpoint and commercial_partner.peppol_eas:
+            vals['party_node']['cbc:EndpointID']['_text'] = commercial_partner.peppol_endpoint
+            vals['party_node']['cbc:EndpointID']['schemeID'] = commercial_partner.peppol_eas
+
     def _ubl_add_allowance_charge_nodes(self, vals):
         super()._ubl_add_allowance_charge_nodes(vals)
 
@@ -102,6 +140,15 @@ class AccountEdiUBLCenEn16931(models.AbstractModel):
             self._ubl_add_allowance_charge_nodes_early_payment_discount(vals)
             # Global discount lines are treated as allowances/charges.
             self._ubl_add_allowance_charge_nodes_global_discount(vals)
+
+    def _ubl_add_invoice_delivery_nodes(self, vals):
+        # [UBL-SR-24]-Deliver to information shall occur maximum once
+        super()._ubl_add_invoice_delivery_nodes(vals)
+
+        if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
+            delivery_node = vals['document_node']['cac:Delivery']
+            if isinstance(delivery_node, list):
+                vals['document_node']['cac:Delivery'] = delivery_node[0] if delivery_node else None
 
     def _ubl_default_tax_category_grouping_key(self, base_line, tax_data, vals, currency):
         # Recycling contribution taxes / excises should not appear anywhere as taxes but as allowances/charges.
