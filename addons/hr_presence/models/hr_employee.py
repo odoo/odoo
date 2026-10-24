@@ -32,7 +32,6 @@ class HrEmployee(models.Model):
 
         all_employees = employees
 
-
         # Check on IP
         if company.hr_presence_control_ip:
             ip_list = company.hr_presence_control_ip_list
@@ -67,52 +66,12 @@ class HrEmployee(models.Model):
 
     def get_presence_server_action_data(self):
         server_action_xmlids = [
-            'action_hr_employee_presence_present',
-            'action_hr_employee_presence_absent',
             'action_hr_employee_presence_sms',
-            'action_hr_employee_presence_time_off',
         ]
         actions = self.env['ir.actions.server'].sudo()
         for xmlid in server_action_xmlids:
             actions += actions.env.ref(f"hr_presence.{xmlid}")
         return actions.read(['id', 'name', 'value'])
-
-    def _action_set_manual_presence(self, state):
-        if not self.env.user.has_group('hr.group_hr_manager'):
-            raise UserError(_("You don't have the right to do this. Please contact an Administrator."))
-        self.write({
-            'manually_set_present': state,
-            'manually_set_presence': True,
-        })
-
-    def action_set_present(self):
-        self._action_set_manual_presence(True)
-
-    def action_set_absent(self):
-        self._action_set_manual_presence(False)
-
-    def action_open_leave_request(self):
-        if len(self) == 1:
-            model = 'hr.leave'
-            context = {'default_employee_id': self.id}
-        else:
-            model = 'hr.leave.generate.multi.wizard'
-            today = fields.Date.context_today(self)
-            context = {
-                'default_employee_ids': self.ids,
-                'default_date_from': today,
-                'default_date_to': today,
-                'default_name': _('Unplanned Absence'),
-            }
-
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': model,
-            'views': [[False, 'form']],
-            'view_mode': 'form',
-            'context': context,
-            'target': 'new',
-        }
 
     # --------------------------------------------------
     # Messaging
