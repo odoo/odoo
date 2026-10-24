@@ -1128,13 +1128,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """
         if (
             self.env.website.is_pricelist_available(pricelist_id)
-            and (pricelist := self.env["product.pricelist"].browse(pricelist_id))
+            and (pricelist_sudo := self.env["product.pricelist"].sudo().browse(pricelist_id))
             and (
-                pricelist.selectable
-                or pricelist == self.env.user.partner_id.specific_property_product_pricelist
+                pricelist_sudo.selectable
+                or pricelist_sudo == self.env.user.partner_id.specific_property_product_pricelist
             )
         ):
-            self._apply_pricelist(pricelist=pricelist)
+            self._apply_pricelist(pricelist=pricelist_sudo)
             return True
         return False
 

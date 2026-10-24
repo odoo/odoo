@@ -19,5 +19,5 @@ class EventEventTicket(models.Model):
             product=product_sudo,
             quantity=1.0,
         )
-        pricelist_item = self.env['product.pricelist.item'].browse(rule_id)
-        return pricelist_item._show_discount_on_shop() and (self.total_price - self.total_price_reduce) > 0
+        pricelist_item_sudo = self.env['product.pricelist.item'].sudo().browse(rule_id)
+        return pricelist_item_sudo._show_discount_on_shop() and (self.total_price - self.total_price_reduce) > 0
