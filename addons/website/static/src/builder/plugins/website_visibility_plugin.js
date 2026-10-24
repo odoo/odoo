@@ -10,7 +10,17 @@ export class WebsiteVisibilityPlugin extends Plugin {
         system_classes: ["o_conditional_hidden"],
         on_target_shown_handlers: this.onTargetShow.bind(this),
         on_target_hidden_handlers: this.onTargetHide.bind(this),
+        on_will_save_lcp_handlers: this.onWillSaveLcp.bind(this),
     };
+
+    /**
+     * @param {Document} measureDocument
+     */
+    onWillSaveLcp(measureDocument) {
+        for (const el of measureDocument.querySelectorAll(".o_snippet_override_invisible")) {
+            el.classList.remove("o_snippet_override_invisible");
+        }
+    }
 
     onTargetHide(editingEl) {
         if (

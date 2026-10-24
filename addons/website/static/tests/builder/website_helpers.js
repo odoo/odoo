@@ -27,6 +27,7 @@ import { Registry, registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
 import { WebClient } from "@web/webclient/webclient";
 import { EditInteractionPlugin } from "@website/builder/plugins/edit_interaction_plugin";
+import { LcpMarkingPlugin } from "@website/builder/plugins/lcp_marking_plugin";
 import { WebsiteBridgePlugin } from "@website/builder/plugins/website_bridge_plugin";
 import { WebsiteBuilderClientAction } from "@website/client_actions/website_preview/website_builder_action";
 import { WebsiteSystrayItem } from "@website/client_actions/website_preview/website_systray_item";
@@ -105,6 +106,7 @@ export async function setupWebsiteBuilder(
         withIframeRegistry,
         onIframeLoaded = () => {},
         delayReload = async () => {},
+        measureLcp = false,
     } = {}
 ) {
     loadIframeBuilderTemplates ||= withIframeRegistry;
@@ -274,6 +276,15 @@ export async function setupWebsiteBuilder(
             );
         },
     });
+
+    if (!measureLcp) {
+        // Measuring the LCP renders the page in iframes; only the LCP tests
+        // exercise it.
+        patch(LcpMarkingPlugin.prototype, {
+            async startLcpMeasurement() {},
+            preserveImageFieldSrc() {},
+        });
+    }
 
     patch(WebsiteBridgePlugin.prototype, {
         getSession() {
@@ -534,6 +545,11 @@ export async function insertStructureSnippet(editor, snippetName) {
     const parentEl = editor.editable.querySelector("#wrap") || editor.editable;
     parentEl.append(snippetEl);
     editor.shared.history.commit();
+}
+
+export async function saveWebsiteBuilder() {
+    await contains(".o_hb_snippets_top_actions [data-action='save']").click();
+    await waitFor(".o_website_builder_sidebar:not(.o_builder_sidebar_open)");
 }
 
 export async function toggleMobilePreview() {
