@@ -43,8 +43,15 @@ class MrpBom(models.Model):
         problematic_line_ids = set()
         for sol in related_lines:
             company_ids = product_bom_company[sol.product_id.id]
-            if False in company_ids or sol.company_id.id in company_ids:
-                problematic_line_ids.add(sol.id)
+            if not (False in company_ids or sol.company_id.id in company_ids):
+                continue
+            # the line does not block the kits it was not exploded with
+            line_boms = sol.move_ids.bom_line_id.bom_id.filtered(lambda b: b.type == 'phantom' and (
+                b.product_id == sol.product_id
+                or (b.product_tmpl_id == sol.product_id.product_tmpl_id and not b.product_id)))
+            if line_boms and not line_boms & self:
+                continue
+            problematic_line_ids.add(sol.id)
         lines = self.env['sale.order.line'].browse(problematic_line_ids)
         if lines:
             product_names = ', '.join(lines.product_id.mapped('display_name'))
