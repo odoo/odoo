@@ -90,7 +90,7 @@ export class PaymentGlory extends PaymentInterface {
         );
 
         return gloryPaymentLines.find((line) =>
-            ["waiting", "waitingCancel"].includes(line.payment_status)
+            ["waiting", "waiting_cancel"].includes(line.payment_status)
         );
     }
 

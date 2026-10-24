@@ -93,7 +93,7 @@ patch(PosStore.prototype, {
         const opLinesToUpdate = order.payment_ids.filter(
             (line) =>
                 line.payment_method_id.type === "online" &&
-                ["waiting", "done"].includes(line.getPaymentStatus())
+                ["waiting", "done"].includes(line.payment_status)
         );
         for (const op of opData.online_payments) {
             const matchingLineIndex = opLinesToUpdate.findIndex(
@@ -116,13 +116,13 @@ patch(PosStore.prototype, {
                 opData["modified_payment_lines"] = true;
             }
             opLine.setAmount(op.amount);
-            if (opLine.getPaymentStatus() !== "done") {
+            if (opLine.payment_status !== "done") {
                 newDoneOnlinePayment = true;
             }
-            opLine.setPaymentStatus("done");
+            opLine.payment_status = "done";
         }
         for (const missingInServerLine of opLinesToUpdate) {
-            if (missingInServerLine.getPaymentStatus() === "done") {
+            if (missingInServerLine.payment_status === "done") {
                 this.paymentlines = order.payment_ids.filter(
                     (l) => l.uuid !== missingInServerLine.uuid
                 );

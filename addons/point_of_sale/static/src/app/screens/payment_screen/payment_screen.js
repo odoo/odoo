@@ -247,7 +247,7 @@ export class PaymentScreen extends Component {
         }
         if (
             payment_interface &&
-            !["pending", "retry"].includes(this.selectedPaymentLine.getPaymentStatus())
+            !["pending", "retry"].includes(this.selectedPaymentLine.payment_status)
         ) {
             return;
         }
@@ -300,7 +300,7 @@ export class PaymentScreen extends Component {
         const pLine =
             this.selectedPaymentLine &&
             (!this.selectedPaymentLine.isElectronic() ||
-                this.selectedPaymentLine.getPaymentStatus() === "pending")
+                this.selectedPaymentLine.payment_status === "pending")
                 ? this.selectedPaymentLine
                 : false;
 
@@ -342,11 +342,10 @@ export class PaymentScreen extends Component {
             this.currentOrder.removePaymentline(line);
             this.numberBuffer.reset();
         };
-        const status = line.getPaymentStatus();
-        const cancelableStatuses = ["waiting", "waitingCard", "waitingScan", "timeout"];
-        if (cancelableStatuses.includes(status)) {
+        const cancelableStatuses = ["waiting", "waiting_card", "waiting_scan"];
+        if (cancelableStatuses.includes(line.payment_status)) {
             line.cancelPayment(this.currentOrder).then((success) => success && finalizeDeletion());
-        } else if (status !== "waitingCancel") {
+        } else if (line.payment_status !== "waiting_cancel") {
             finalizeDeletion();
         }
     }

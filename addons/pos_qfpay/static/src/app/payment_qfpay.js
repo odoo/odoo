@@ -78,7 +78,7 @@ export class PaymentQFpay extends PaymentInterface {
             });
         }
 
-        line.setPaymentStatus("waitingCard");
+        line.payment_status = "waiting_card";
         return this.waitForPaymentConfirmation(uuid);
     }
 

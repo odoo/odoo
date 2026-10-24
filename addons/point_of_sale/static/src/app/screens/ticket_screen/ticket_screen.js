@@ -684,7 +684,7 @@ export class TicketScreen extends Component {
             this.isDefaultOrderEmpty(order) ||
             order.finalized ||
             order.payment_ids.some(
-                (payment) => payment.isElectronic() && payment.getPaymentStatus() === "done"
+                (payment) => payment.isElectronic() && payment.payment_status === "done"
             )
         );
     }

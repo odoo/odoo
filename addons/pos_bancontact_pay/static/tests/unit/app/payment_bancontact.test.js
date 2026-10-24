@@ -72,7 +72,7 @@ describe("sendPaymentRequest", () => {
         }
     });
 
-    test("already has bancontact id + waitingScan status", async () => {
+    test("already has bancontact id + waiting_scan status", async () => {
         const store = await setupPosEnv();
         const order = await getFilledOrder(store);
         const display = store.models["pos.payment.method"].get(4);
@@ -81,7 +81,7 @@ describe("sendPaymentRequest", () => {
         const opts = {
             bancontact_id: "origin_bancontact_id",
             qr_code: "origin_bancontact_qr_code",
-            payment_status: "waitingScan",
+            payment_status: "waiting_scan",
         };
         const paymentlineDisplay = createPaymentLine(store, order, display, opts);
         const paymentlineSticker = createPaymentLine(store, order, sticker, opts);
@@ -104,7 +104,7 @@ describe("sendPaymentRequest", () => {
             );
 
             // The payment status will be updated by `handlePaymentResponse`
-            expect(paymentline.payment_status).toBe("waitingScan");
+            expect(paymentline.payment_status).toBe("waiting_scan");
         }
     });
 
@@ -154,7 +154,7 @@ describe("sendPaymentCancel", () => {
 
         const opts = {
             bancontact_id: -400,
-            payment_status: "waitingCancel",
+            payment_status: "waiting_cancel",
             qr_code: "bancontact_qr_code",
         };
         const paymentlineDisplay = createPaymentLine(store, order, display, opts);
@@ -180,7 +180,7 @@ describe("sendPaymentCancel", () => {
 
         const opts = {
             bancontact_id: -422,
-            payment_status: "waitingCancel",
+            payment_status: "waiting_cancel",
             qr_code: "bancontact_qr_code",
         };
         const paymentlineDisplay = createPaymentLine(store, order, display, opts);
@@ -202,7 +202,7 @@ describe("sendPaymentCancel", () => {
             expect(paymentline.qr_code).toBe("bancontact_qr_code");
 
             // The payment status will be updated by `handlePaymentResponse`
-            expect(paymentline.payment_status).toBe("waitingCancel");
+            expect(paymentline.payment_status).toBe("waiting_cancel");
 
             // ---- Force cancel ----
             const promiseResultForce = paymentline.payment_interface.sendPaymentCancel(paymentline);
@@ -228,7 +228,7 @@ describe("sendPaymentCancel", () => {
 
         const opts = {
             bancontact_id: "bancontact_id",
-            payment_status: "waitingCancel",
+            payment_status: "waiting_cancel",
             qr_code: "bancontact_qr_code",
         };
         const paymentlineDisplay = createPaymentLine(store, order, display, opts);
@@ -242,7 +242,7 @@ describe("sendPaymentCancel", () => {
             expect(paymentline.qr_code).toBeEmpty();
 
             // The payment status will be updated by `handlePaymentResponse`
-            expect(paymentline.payment_status).toBe("waitingCancel");
+            expect(paymentline.payment_status).toBe("waiting_cancel");
         }
     });
 });

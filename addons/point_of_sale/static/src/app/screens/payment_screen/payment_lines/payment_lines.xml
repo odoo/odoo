@@ -39,7 +39,7 @@
                 <!-- Payment Status -->
                 <div t-if="line?.isSelected()" class="paymentline_status bg-body-secondary rounded-3">
                     <t t-set="state" t-value="this.getPaymentActionState(line)" />
-                    <t t-if="state.id !== 'unknown'">
+                    <t t-if="state">
                         <div class="paymentline_status_title d-flex justify-content-between align-items-center gap-2 py-3 px-4 fs-4" t-attf-class="paymentline_status_title_{{state.id}}">
                             <span class="text-truncate" t-out="state.title" />
                             <t t-if="state.icon">

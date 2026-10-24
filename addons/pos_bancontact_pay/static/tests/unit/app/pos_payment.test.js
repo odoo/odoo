@@ -27,12 +27,12 @@ test("handlePaymentResponse", async () => {
     // Display successful payment
     const resDisplaySuccess = paymentlineDisplay.handlePaymentResponse(true);
     expect(resDisplaySuccess).toBe(false);
-    expect(paymentlineDisplay.payment_status).toBe("waitingScan");
+    expect(paymentlineDisplay.payment_status).toBe("waiting_scan");
 
     // Sticker successful payment
     const resStickerSuccess = paymentlineSticker.handlePaymentResponse(true);
     expect(resStickerSuccess).toBe(false);
-    expect(paymentlineSticker.payment_status).toBe("waitingScan");
+    expect(paymentlineSticker.payment_status).toBe("waiting_scan");
 });
 
 test("forceDone", async () => {
@@ -40,7 +40,7 @@ test("forceDone", async () => {
     const order = await getFilledOrder(store);
     const display = store.models["pos.payment.method"].get(4);
 
-    const opts = { payment_status: "waitingScan", qr_code: "http://example.com/qr" };
+    const opts = { payment_status: "waiting_scan", qr_code: "http://example.com/qr" };
     const paymentline = createPaymentLine(store, order, display, opts);
 
     paymentline.forceDone();
@@ -54,7 +54,7 @@ test("forceCancel", async () => {
     const display = store.models["pos.payment.method"].get(4);
 
     const opts = {
-        payment_status: "waitingScan",
+        payment_status: "waiting_scan",
         qr_code: "http://example.com/qr",
         bancontact_id: "bancontact_1",
     };

@@ -26,7 +26,7 @@ patch(SelfOrder.prototype, {
         }
 
         if (args.status === "success") {
-            payment.setPaymentStatus("done");
+            payment.payment_status = "done";
             rpc(`/kiosk/payment/${this.config.id}/kiosk`, {
                 order: this.currentOrder.serializeForORM(),
                 access_token: this.access_token,
