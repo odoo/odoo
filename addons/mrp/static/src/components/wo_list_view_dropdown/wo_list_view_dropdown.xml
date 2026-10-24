@@ -5,7 +5,7 @@
         <Dropdown t-if="this.props.record.data.production_state !== 'done'">
             <button t-attf-class="btn btn-link d-flex p-0 {{!this.props.record.resId ? 'invisible': ''}}">
                 <div class="d-flex align-items-center">
-                    <span t-attf-class="o_wo_status o_wo_bubble {{this.statusColor}}" t-if="this.props.display === 'bubble'"/>
+                    <span t-attf-class="o_wo_bubble o_status d-inline-block {{this.bubbleColor}}" t-if="this.props.display === 'bubble'"/>
                     <span t-out="this.formattedValue" class="o_wo_status badge rounded-pill" t-attf-class="{{this.statusColor}}" t-if="this.props.display === 'badge'"/>
                 </div>
             </button>
@@ -19,7 +19,7 @@
                 <DropdownItem
                     class="`d-flex align-items-center`"
                     onSelected="() => this.setState('ready')">
-                        <span t-attf-class="oi oi-lg oi-filled text-muted me-2" data-icon="circle"/>
+                        <span class="o_wo_bubble o_status me-2"/>
                         <span>To Do</span>
                 </DropdownItem>
                 <DropdownItem
@@ -42,7 +42,7 @@
                 </DropdownItem>
             </t>
         </Dropdown>
-        <span t-attf-class="o_wo_status {{this.statusColor}}" t-elif="this.props.display === 'bubble'"/>
+        <span t-attf-class="o_wo_bubble o_status d-inline-block {{this.bubbleColor}}" t-elif="this.props.display === 'bubble'"/>
         <span t-out="this.formattedValue" class="o_wo_status badge rounded-pill" t-attf-class="{{this.statusColor}}" t-elif="this.props.display === 'badge'"/>
     </t>
 

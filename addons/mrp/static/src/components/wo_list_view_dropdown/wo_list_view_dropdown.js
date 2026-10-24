@@ -42,6 +42,10 @@ export class MOListViewDropdown extends BadgeField {
         return this.colorIcons[state] || "";
     }
 
+    get bubbleColor() {
+        return this.props.record.data.state === "ready" ? "" : this.statusColor;
+    }
+
     async setState(state) {
         let selectedWorkorders = this.props.record.model.root.selection;
         if (!selectedWorkorders || selectedWorkorders.length == 0) {
