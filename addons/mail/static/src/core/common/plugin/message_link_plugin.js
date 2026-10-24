@@ -22,13 +22,13 @@ export class MessageLinkPlugin extends Plugin {
     /** @type {import("plugins").EditorResources} */
     resources = {
         // before the basic composer unwraps the links it does not preserve
-        before_insert_processors: withSequence(5, (container) => {
-            for (const linkEl of container.querySelectorAll(MESSAGE_LINK_SELECTOR)) {
+        fragment_to_insert_processors: withSequence(5, (fragment) => {
+            for (const linkEl of fragment.querySelectorAll(MESSAGE_LINK_SELECTOR)) {
                 if (!markMessageLink(linkEl)) {
                     this.unmarkMessageLink(linkEl);
                 }
             }
-            return container;
+            return fragment;
         }),
         clean_for_save_processors: (root) => {
             for (const linkEl of root.querySelectorAll(MESSAGE_LINK_SELECTOR)) {

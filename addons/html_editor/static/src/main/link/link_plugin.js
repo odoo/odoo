@@ -376,7 +376,6 @@ export class LinkPlugin extends Plugin {
         on_will_paste_handlers: this.updateCurrentLinkSyncState.bind(this),
         on_pasted_handlers: this.onPasteNormalizeLink.bind(this),
         on_selectionchange_handlers: this.handleSelectionChange.bind(this),
-        on_inserted_handlers: this.handleAfterInsert.bind(this),
         on_will_remove_handlers: () => this.closeLinkTools(),
 
         /** Overrides */
@@ -390,6 +389,7 @@ export class LinkPlugin extends Plugin {
         /** Processors */
         clean_for_save_processors: (root) => this.removeEmptyLinks(root),
         html_compatibility_processors: this.moveLinkColorToFont.bind(this),
+        on_content_inserted_handlers: this.onContentInserted.bind(this),
         normalize_processors: this.normalizeLink.bind(this),
         to_inline_code_processors: (node) => {
             this.removeEmptyLinks(node);
@@ -1440,8 +1440,7 @@ export class LinkPlugin extends Plugin {
         }
         [targetNode, targetOffset] = edge === "start" ? leftPos(targetNode) : rightPos(targetNode);
         blockToSplit = targetNode;
-        splitOrLineBreakCallback({ ...params, targetNode, targetOffset, blockToSplit });
-        return true;
+        return splitOrLineBreakCallback({ ...params, targetNode, targetOffset, blockToSplit });
     }
 
     handleDeleteBackward({ startContainer, startOffset, endContainer, endOffset }) {
@@ -1466,7 +1465,7 @@ export class LinkPlugin extends Plugin {
         return true;
     }
 
-    handleAfterInsert(insertedNodes) {
+    onContentInserted(insertedNodes) {
         for (const node of insertedNodes) {
             if (node.nodeType === Node.ELEMENT_NODE) {
                 for (const link of selectElements(node, "A")) {

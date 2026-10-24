@@ -623,6 +623,8 @@ export function isListItemElement(node) {
     return [...listItem].includes(node.nodeName);
 }
 
+export const listItemElementSelector = [...listItem].join(",");
+
 export function isListElement(node) {
     return [...listContainers].includes(node.nodeName);
 }
@@ -904,6 +906,13 @@ export function isContentEditableAncestor(node) {
         return false;
     }
     return node.isContentEditable && node.matches("[contenteditable]");
+}
+
+export function isEditionBoundary(node, editable) {
+    if (!node) {
+        return false;
+    }
+    return node === editable || isContentEditableAncestor(node);
 }
 
 export const QWEB_STYLE_ATTRS = ["t-att-class", "t-attf-class", "t-att-style", "t-attf-style"];
