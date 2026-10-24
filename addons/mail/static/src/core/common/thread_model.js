@@ -28,6 +28,7 @@ import { user } from "@web/core/user";
 
 export class Thread extends Record {
     static id = AND("model", "id");
+    /** @type {"mail.thread"} */
     static _name = "mail.thread";
 
     setup() {

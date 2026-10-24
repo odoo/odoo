@@ -5,6 +5,7 @@ import { imageUrl } from "@web/core/utils/urls";
 const { DateTime } = luxon;
 
 export class ResPartner extends Record {
+    /** @type {"res.partner"} */
     static _name = "res.partner";
 
     /** @type {boolean} */

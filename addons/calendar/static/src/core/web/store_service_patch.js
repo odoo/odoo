@@ -1,11 +1,10 @@
 import { Store } from "@mail/core/common/store_plugin";
+import { patchModel } from "@mail/model/export";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { formatDateTime } from "@web/views/fields/formatters";
-import { patch } from "@web/core/utils/patch";
 
-/** @type {import("models").Store} */
-const StorePatch = {
+export const StorePatch = patchModel(Store, {
     onUpdateActivityGroups() {
         super.onUpdateActivityGroups(...arguments);
         for (const group of Object.values(this.activityGroups)) {
@@ -22,5 +21,4 @@ const StorePatch = {
             }
         }
     },
-};
-patch(Store.prototype, StorePatch);
+});

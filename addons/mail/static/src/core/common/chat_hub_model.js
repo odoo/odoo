@@ -14,6 +14,8 @@ export const CHAT_HUB_KEY = "mail.ChatHub";
  */
 
 export class ChatHub extends Record {
+    /** @type {"ChatHub"} */
+    static _name = "ChatHub";
     static singleton = true;
 
     BUBBLE = 56; // same value as $o-mail-ChatHub-bubblesWidth

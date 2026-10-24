@@ -2,6 +2,8 @@ import { fields } from "@mail/model/misc";
 import { Record } from "@mail/model/record";
 
 export class MessagingMenuUIState extends Record {
+    /** @type {"MessagingMenuUIState"} */
+    static _name = "MessagingMenuUIState";
     setup() {
         super.setup(...arguments);
         this.onChange(

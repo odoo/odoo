@@ -1,10 +1,9 @@
 import { Store } from "@mail/core/common/store_plugin";
+import { patchModel } from "@mail/model/export";
 
 import { location } from "@web/core/browser/browser";
-import { patch } from "@web/core/utils/patch";
 
-/** @type {import("models").Store} */
-const StorePatch = {
+export const StorePatch = patchModel(Store, {
     _hasFullscreenUrlOnUpdate() {
         const channel = this.discuss?.thread?.channel;
         let base = location.href;
@@ -19,5 +18,4 @@ const StorePatch = {
         url.searchParams.delete("fullscreen");
         window.history.replaceState(window.history.state, null, url);
     },
-};
-patch(Store.prototype, StorePatch);
+});

@@ -1,8 +1,7 @@
 import { Thread } from "@mail/core/common/thread_model";
+import { patchModel } from "@mail/model/export";
 
-import { patch } from "@web/core/utils/patch";
-
-patch(Thread.prototype, {
+export const threadPatch = patchModel(Thread, {
     setup() {
         super.setup();
         this.hasFetchedLivechatSessionData = false;

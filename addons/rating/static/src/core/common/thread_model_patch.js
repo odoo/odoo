@@ -1,9 +1,7 @@
 import { Thread } from "@mail/core/common/thread_model";
+import { patchModel } from "@mail/model/export";
 
-import { patch } from "@web/core/utils/patch";
-
-/** @type {import("models").Thread} */
-const threadPatch = {
+export const threadPatch = patchModel(Thread, {
     setup() {
         super.setup();
         /** @type {number|undefined} */
@@ -13,5 +11,4 @@ const threadPatch = {
         /** @type {{ avg: number, total: number, percent: Object<number, number>}|undefined}*/
         this.rating_stats = undefined;
     },
-};
-patch(Thread.prototype, threadPatch);
+});

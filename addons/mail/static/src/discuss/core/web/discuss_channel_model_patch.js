@@ -1,9 +1,7 @@
 import { DiscussChannel } from "@mail/discuss/core/common/discuss_channel_model";
+import { patchModel } from "@mail/model/export";
 
-import { patch } from "@web/core/utils/patch";
-
-/** @type {import("models").DiscussChannel} */
-const discussChannelPatch = {
+export const discussChannelPatch = patchModel(DiscussChannel, {
     setup() {
         super.setup(...arguments);
         this.isDisplayedInDiscussAppDesktop = this.computed(() =>
@@ -15,5 +13,4 @@ const discussChannelPatch = {
     computeIsDisplayed() {
         return this.isDisplayedInDiscussAppDesktop || super.computeIsDisplayed();
     },
-};
-patch(DiscussChannel.prototype, discussChannelPatch);
+});

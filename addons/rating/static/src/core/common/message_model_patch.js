@@ -1,9 +1,7 @@
 import { Message } from "@mail/core/common/message_model";
-import { fields } from "@mail/model/export";
+import { fields, patchModel } from "@mail/model/export";
 
-import { patch } from "@web/core/utils/patch";
-
-patch(Message.prototype, {
+export const messagePatch = patchModel(Message, {
     setup() {
         super.setup(...arguments);
         this.rating_id = fields.One("rating.rating");
