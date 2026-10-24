@@ -125,7 +125,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch im_livechat_channel
     #       - fetch country (anonymous_country)
     #   - _get_last_messages
-    #   14: message _to_store:
+    #   15: message _to_store:
     #       - search mail_message_schedule
     #       - fetch mail_message
     #       - search mail_message_reaction
@@ -140,7 +140,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search mail_message_res_partner_starred_rel
     #       - search rating_rating
     #       - _compute_rating_stats
-    _query_count_discuss_channels = 52
+    #       - search discuss_channel (linkedSubChannel)
+    _query_count_discuss_channels = 53
 
     def setUp(self):
         super().setUp()
@@ -1265,6 +1266,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "is_discussion": False,
                 "is_note": True,
                 "linkPreviews": [],
+                "linkedSubChannel": False,
                 "message_type": "comment",
                 "model": "discuss.channel",
                 "needaction": False,
@@ -1301,6 +1303,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "is_discussion": False,
                 "is_note": True,
                 "linkPreviews": [],
+                "linkedSubChannel": False,
                 "message_type": "comment",
                 "model": "discuss.channel",
                 "needaction": True,
@@ -1337,6 +1340,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "is_discussion": True,
                 "is_note": False,
                 "linkPreviews": [],
+                "linkedSubChannel": False,
                 "message_type": "notification",
                 "model": "discuss.channel",
                 "needaction": False,
@@ -1369,6 +1373,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "is_discussion": True,
                 "is_note": False,
                 "linkPreviews": [],
+                "linkedSubChannel": False,
                 "message_type": "notification",
                 "model": "discuss.channel",
                 "needaction": False,
@@ -1401,6 +1406,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "is_discussion": True,
                 "is_note": False,
                 "linkPreviews": [],
+                "linkedSubChannel": False,
                 "message_type": "notification",
                 "model": "discuss.channel",
                 "needaction": False,
