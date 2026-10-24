@@ -85,14 +85,6 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
                 'TransMode': '1',
                 'VehNo': 'GJ11AA1234',
                 'VehType': 'R',
-                'DispDtls': {
-                    'Addr1': 'Khodiyar Chowk',
-                    'Loc': 'Amreli',
-                    'Pin': 365220,
-                    'Stcd': '24',
-                    'Addr2': 'Sala Number 3',
-                    'Nm': 'Default Company'
-                }
             }
         )
         self.assertDictEqual(
@@ -103,19 +95,31 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
                 'TransMode': '1',
                 'VehNo': 'GJ11AA1234',
                 'VehType': 'R',
-                'DispDtls': {
-                    'Addr1': 'Khodiyar Chowk',
-                    'Loc': 'Amreli',
-                    'Pin': 365220,
-                    'Stcd': '24',
-                    'Addr2': 'Sala Number 3',
-                    'Nm': 'Default Company'
-                },
                 'ExpShipDtls': {
                     'Addr1': 'Post Box No. 1 Mundra',
                     'Loc': 'Kutch',
                     'Pin': 370421,
                     'Stcd': '24'
+                }
+            }
+        )
+
+        # Different Bill from and Dsipatch From
+        ewaybill_a.partner_ship_from_id = self.partner_b
+        self.assertDictEqual(
+            ewaybill_a._ewaybill_generate_irn_json(),
+            {
+                'Irn': '1234567890',
+                'Distance': '20',
+                'TransMode': '1',
+                'VehNo': 'GJ11AA1234',
+                'VehType': 'R',
+                'DispDtls': {
+                    'Addr1': 'Sangeet Samrat Naushad Ali Rd',
+                    'Loc': 'Mumbai',
+                    'Pin': 400052,
+                    'Stcd': '27',
+                    'Nm': 'partner_b'
                 }
             }
         )
@@ -126,6 +130,7 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
             'name': 'Atlas'
         })
         ewaybill_a.transporter_id = self.partner_b
+        ewaybill_a.partner_ship_from_id = self.env.company.partner_id
         self.assertDictEqual(
             ewaybill_a._ewaybill_generate_irn_json(),
             {
@@ -135,13 +140,5 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
                 'TransName': 'Atlas',
                 'VehNo': 'GJ11AA1234',
                 'VehType': 'R',
-                'DispDtls': {
-                    'Addr1': 'Khodiyar Chowk',
-                    'Loc': 'Amreli',
-                    'Pin': 365220,
-                    'Stcd': '24',
-                    'Addr2': 'Sala Number 3',
-                    'Nm': 'Default Company'
-                }
             }
         )
