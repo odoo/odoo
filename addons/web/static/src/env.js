@@ -190,10 +190,22 @@ export const customDirectives = {
         )}')`;
         node.setAttribute(`t-on-click${mods}`, handlerFunction);
         node.setAttribute(`t-on-auxclick${mods}`, handlerFunction);
+        // Chromium based browsers start the middle click autoscroll on the
+        // "mousedown" of the middle button and then swallow the "auxclick":
+        // prevent it on elements handling the middle click themselves.
+        if (!node.getAttributeNames().some((a) => a.startsWith("t-on-mousedown"))) {
+            node.setAttribute(`t-on-mousedown${mods}`, "(ev) => __globals__.middleMouseDown(ev)");
+        }
     },
 };
 
 export const globalValues = {
+    middleMouseDown: (ev) => {
+        // keep the browser default (e.g. X11 paste) in editable elements
+        if (ev.button === 1 && !ev.target.isContentEditable && !ev.target.closest("input,textarea")) {
+            ev.preventDefault();
+        }
+    },
     click: (ev, value, modifiers) => {
         if (ev.button === 0 || ev.button === 1) {
             modifiers = JSON.parse(modifiers);
