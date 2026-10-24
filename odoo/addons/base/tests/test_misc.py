@@ -3,6 +3,9 @@
 import base64
 import datetime
 import os.path
+import socket
+from types import SimpleNamespace
+from unittest.mock import patch
 
 import pytz
 
@@ -736,3 +739,57 @@ class TestFormatAmountFunction(TransactionCase):
         # Has no effect on number having same decimal and thousandth seperator - currency position after
         self.currency_object_format_amount.position = "after"
         self.assert_format_amount(10000, "10#000%sfA" % "\N{NO-BREAK SPACE}", False, "GFL")
+
+
+def _resolves_to(*ips):
+    """Fake ``socket.getaddrinfo`` that always answers with ``ips``."""
+    def getaddrinfo(host, port, *args, **kwargs):
+        return [(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', (ip, port or 80)) for ip in ips]
+    return getaddrinfo
+
+
+class _FakeResponse:
+    """Just enough of a requests.Response for ``safe_requests`` to walk redirects."""
+    def __init__(self, status_code, location=None):
+        self.status_code = status_code
+        self.next = SimpleNamespace(url=location) if location else None
+
+
+class TestUrlGuard(BaseCase):
+    # The guard sits in front of the link-preview / attachment / forum fetches
+    # so a user-supplied URL cannot make the server hit its own network.
+
+    def test_scheme_must_be_http(self):
+        for url in (
+            'file:///etc/passwd',
+            'gopher://127.0.0.1:6379/_',
+            'dict://127.0.0.1:11211/',
+            'ftp://example.com/x',
+            'http:///no-host',
+            'http://a.test:99999/',
+        ):
+            with self.subTest(url=url), self.assertRaises(urls.UnsafeUrlError):
+                urls.validate_public_url(url)
+
+    def test_non_public_addresses_are_refused(self):
+        # loopback, the RFC1918 ranges, link-local (incl. the cloud metadata IP),
+        # CGNAT, the unspecified address and their IPv6 counterparts.
+        for ip in (
+            '127.0.0.1', '10.0.0.5', '172.16.0.1', '192.168.1.1',
+            '169.254.169.254', '100.64.0.1', '0.0.0.0',
+            '::1', 'fd00::1', 'fe80::1', '::ffff:127.0.0.1',
+        ):
+            with self.subTest(ip=ip), patch.object(urls.socket, 'getaddrinfo', _resolves_to(ip)):
+                with self.assertRaises(urls.UnsafeUrlError):
+                    urls.validate_public_url('http://somewhere.test/')
+
+    def test_redirect_target_is_checked_too(self):
+        # The classic bypass: a public URL that 302s onto an internal one.
+        def getaddrinfo(host, port, *args, **kwargs):
+            ip = '8.8.8.8' if host == 'public.test' else '127.0.0.1'
+            return [(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', (ip, port or 80))]
+
+        session = SimpleNamespace(get=lambda url, **kw: _FakeResponse(302, 'http://intranet.test/secret'))
+        with patch.object(urls.socket, 'getaddrinfo', getaddrinfo):
+            with self.assertRaises(urls.UnsafeUrlError):
+                urls.safe_requests.get('http://public.test/', session=session)
