@@ -2,6 +2,8 @@ import { patch } from "@web/core/utils/patch";
 import { hootPosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import { models } from "@web/../tests/web_test_helpers";
 
+const { DateTime } = luxon;
+
 export class PosCourse extends models.ServerModel {
     _name = "pos.course";
 
@@ -25,6 +27,12 @@ export class PosCourse extends models.ServerModel {
             write_date: "2025-01-01 10:00:00",
         },
     ];
+}
+
+export function fireCourse(course, { minutesAgo = 0 } = {}) {
+    course.fired = true;
+    course.fired_date = DateTime.now().minus({ minutes: minutesAgo });
+    return course;
 }
 
 patch(hootPosModels, [...hootPosModels, PosCourse]);

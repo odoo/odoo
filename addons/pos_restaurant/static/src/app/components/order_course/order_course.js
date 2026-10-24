@@ -1,4 +1,5 @@
-import { Component, useProps, t } from "@odoo/owl";
+import { Component, proxy, useProps, t } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { RestaurantOrderCourse } from "@pos_restaurant/app/models/restaurant_order_course";
 
 export class OrderCourse extends Component {
@@ -8,6 +9,25 @@ export class OrderCourse extends Component {
         course_index: t.number(),
         slots: t.object().optional(),
     });
+
+    setup() {
+        super.setup();
+
+        this.state = proxy({ duration: this.course.getDuration() });
+        useLayoutEffect(
+            (isLive) => {
+                if (!isLive) {
+                    return;
+                }
+
+                const interval = setInterval(() => {
+                    this.state.duration = this.course.getDuration();
+                }, 60_000);
+                return () => clearInterval(interval);
+            },
+            () => [this.course.isLive]
+        );
+    }
 
     get course() {
         return this.props.course;
