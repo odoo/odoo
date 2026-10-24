@@ -635,6 +635,7 @@ class ResPartner(models.Model):
         for partner in self:
             partner.bank_account_count = mapped_data.get(partner.id, 0)
 
+    @api.depends_context('allowed_company_ids')
     def _compute_supplier_invoice_count(self):
         # retrieve all children partners and prefetch 'parent_id' on them
         all_partners = self.with_context(active_test=False).search_fetch(
@@ -643,7 +644,7 @@ class ResPartner(models.Model):
         )
         supplier_invoice_groups = self.env['account.move']._read_group(
             domain=[('partner_id', 'in', all_partners.ids),
-                    *self.env['account.move']._check_company_domain(self.env.company),
+                    *self.env['account.move']._check_company_domain(self.env.companies),
                     ('move_type', 'in', ('in_invoice', 'in_refund'))],
             groupby=['partner_id'], aggregates=['__count']
         )
