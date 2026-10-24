@@ -220,6 +220,51 @@ class TestIntercoClearingSale(TestIntercoClearing):
 
                 self._verify_asserts(self.sale_order_ke, invoice, self.company_ke.account_interco_receivable_id, 1)
 
+    def test_interco_sale_partial_payment(self):
+        """ A partial online payment settles only the amount that was paid.
+
+        The invoice has to keep a residual instead of being settled in full.
+        """
+        self.ensure_installed('sale')
+
+        self._setup_outstanding_account(active=True, direction='inbound')
+
+        sale_order_ke = self.env['sale.order'].with_company(self.company_ke).sudo().create({
+            'company_id': self.company_ke.id,
+            'partner_id': self.kenyian_partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 2,
+                    'price_unit': 40.0,
+                }),
+            ],
+        })
+        sale_order_ke.action_confirm()
+
+        # The customer only pays a quarter of the order online.
+        self._create_payment_transaction(sale_order_ke, {
+            'sale_order_ids': [Command.set(sale_order_ke.ids)],
+            'amount': sale_order_ke.amount_total / 4,
+            'currency_id': sale_order_ke.currency_id.id,
+        })
+        transaction_sudo = self.payment_transaction_be.sudo().with_context(payment_safe_write=True)
+        transaction_sudo._set_done()
+        transaction_sudo.with_company(self.company_ke)._post_process()
+
+        invoice = sale_order_ke.sudo()._create_invoices()
+        invoice.action_post()
+
+        self.assertEqual(
+            invoice.payment_state,
+            'partial',
+            "A partially paid invoice must not be settled in full.",
+        )
+        self.assertFalse(
+            invoice.company_id.currency_id.is_zero(invoice.amount_residual),
+            "A partially paid invoice must keep a residual.",
+        )
+
 
 @tagged('post_install', '-at_install')
 class TestIntercoClearingPurchase(TestIntercoClearing):
