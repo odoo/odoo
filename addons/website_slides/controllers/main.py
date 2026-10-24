@@ -1446,7 +1446,8 @@ class WebsiteSlides(WebsiteProfile):
         # create slide itself
         try:
             values['user_id'] = request.env.uid
-            slide = request.env['slide.slide'].sudo().create(values)
+            with request.env.cr.savepoint():
+                slide = request.env['slide.slide'].sudo().create(values)
         except UserError as e:
             _logger.error(e)
             return {'error': e.args[0]}
