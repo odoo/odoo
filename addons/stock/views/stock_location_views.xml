@@ -75,8 +75,8 @@
         <field name="name">stock.location.search</field>
         <field name="model">stock.location</field>
         <field name="arch" type="xml">
-            <search string="Stock Locations">
-                <field name="complete_name" string="Stock Locations"/>
+            <search string="Inventory Locations">
+                <field name="complete_name" string="Inventory Locations"/>
                 <filter name="in_location" string="Internal" domain="[('usage', '=', 'internal')]" help="Internal Locations"/>
                 <filter name="customer" string="Customer" domain="[('usage', '=', 'customer')]" help="Customer Locations"/>
                 <filter name="inventory" string="Inventory Loss" domain="[('usage', '=', 'inventory')]" help="Inventory Loss Locations"/>

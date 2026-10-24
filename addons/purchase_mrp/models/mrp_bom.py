@@ -35,7 +35,7 @@ class MrpBomLine(models.Model):
 
     cost_share = fields.Float(
         "Cost Share (%)", digits=0,
-        help="The percentage of the component repartition cost when purchasing a kit."
+        help="The percentage of the component distribution cost when purchasing a kit."
              "The total of all components' cost have to be equal to 100.")
 
     def _get_cost_share(self):
