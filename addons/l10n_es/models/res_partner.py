@@ -149,15 +149,17 @@ class ResPartner(models.Model):
     def _get_all_additional_identifiers_metadata(self):
         return {
             **super()._get_all_additional_identifiers_metadata(),
-            'ES_PASSPORT': {
+            # ES_FOREIGN_ID is listed ahead of ES_PASSPORT (lower sequence): it's the identifier
+            # customers most commonly have on hand at ecommerce checkout.
+            'ES_FOREIGN_ID': {
                 'sequence': 100,
-                'label': 'Passport',
+                'label': 'Country of residence ID document',
                 'category': 'EN',
                 'countries': False,
             },
-            'ES_FOREIGN_ID': {
+            'ES_PASSPORT': {
                 'sequence': 110,
-                'label': 'Country of residence ID document',
+                'label': 'Passport',
                 'category': 'EN',
                 'countries': False,
             },

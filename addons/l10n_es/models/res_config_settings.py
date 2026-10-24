@@ -17,6 +17,7 @@ class ResConfigSettings(models.TransientModel):
     module_l10n_es_edi_verifactu = fields.Boolean('Veri*Factu')
     module_l10n_es_edi_sii = fields.Boolean('SII')
     module_l10n_es_edi_tbai = fields.Boolean('TicketBai')
+    module_l10n_es_website_sale = fields.Boolean('eCommerce')
 
     def set_values(self):
         super().set_values()
