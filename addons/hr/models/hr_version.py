@@ -51,7 +51,8 @@ class HrVersion(models.Model):
         string='Employee',
         tracking=1,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        index=True)
+        index=True,
+        ondelete='cascade')
     name = fields.Char(tracking=1)
     display_name = fields.Char(compute='_compute_display_name')
     active = fields.Boolean(default=True, tracking=1)
@@ -283,11 +284,22 @@ class HrVersion(models.Model):
                 dates_per_employee[version.employee_id].append((version.contract_date_start, version.contract_date_end, version))
 
     def check_contract_finished(self):
+        """Raise if the version has an open-ended contract (start date but no end date).
+
+        :raise ValidationError: if ``contract_date_start`` is set and ``contract_date_end`` is not
+        """
         if self.contract_date_start and not self.contract_date_end:
             raise ValidationError(self.env._("Before creating a new contract, close the current one by setting an end date."))
 
     @api.model_create_multi
     def create(self, vals_list):
+        """Create versions, pre-filling them from ``contract_template_id`` when given.
+
+        Template values (see :meth:`get_values_from_contract_template`) only
+        fill the keys absent from ``vals``. To add a version to an existing
+        employee, prefer ``hr.employee.create_version``, which copies the
+        version in effect and keeps the contract dates consistent.
+        """
         Version = self.env['hr.version']
         for vals in vals_list:
             if 'contract_template_id' in vals:
@@ -305,6 +317,23 @@ class HrVersion(models.Model):
                 )
 
     def write(self, vals):
+        """Write on versions, keeping the contract dates consistent across the versions of a contract.
+
+        All versions of a contract share the same ``contract_date_start`` and
+        ``contract_date_end``: writing one of these fields on a version writes
+        them on every active version of the same contract (writing a start date
+        on the only version of an employee also moves its ``date_version``;
+        on versions not yet in contract, only the written versions are affected).
+        Writing them on versions of different contracts of the same employee at
+        once is refused. Pass ``sync_contract_dates=True`` in the context to
+        bypass the propagation and write the values as is.
+
+        Also notifies the employee when ``hr_responsible_id`` changes.
+
+        :raise ValidationError: when unassigning or archiving all the versions
+            of an employee, or writing contract dates on versions of different
+            contracts at once
+        """
         if 'hr_responsible_id' in vals:
             new_responsible = self.env['res.users'].browse(vals['hr_responsible_id'])
             for version in self:
@@ -382,10 +411,16 @@ class HrVersion(models.Model):
         return super(HrVersion, multiple_versions).write(new_vals)
 
     def get_record_default_action(self, access_uid=None):
-        """
-        Override this method in order to redirect many2one towards the right model
-            - Contract template -> hr.version
-            - Employee record -> hr.employee(.public) with version_id in context
+        """Return the action opening the version: the employee form for employee versions.
+
+        - Version of an employee: opens the employee (``hr.employee``, or
+          ``hr.employee.public`` for non HR officers) with ``version_id`` in the
+          context, so that the form shows this version.
+        - Contract template (no employee): opens the version with the contract
+          template form view.
+
+        :param int access_uid: the user to check instead of the current user
+        :rtype: dict
         """
         res = super().get_record_default_action(access_uid=access_uid)
         context = res.get('context', {})
@@ -427,6 +462,17 @@ class HrVersion(models.Model):
             version.is_in_contract = version._is_in_contract()
 
     def _is_in_contract(self, date=None):
+        """Return whether this version has a contract and is in effect on ``date``.
+
+        Checks ``date_start <= date <= date_end`` of the **version**, not of the
+        whole contract: an older version of a still running contract answers
+        ``False``. Use ``hr.employee._is_in_contract`` to check the contract
+        itself. Single version only.
+
+        :param date: the date to check, today (user's timezone) by default
+        :type date: datetime.date or None
+        :rtype: bool
+        """
         # Return True if the employee is in contract on a given date (today by default)
         if not self.contract_date_start:
             return False
@@ -435,18 +481,31 @@ class HrVersion(models.Model):
         return self.date_start <= date and (not self.date_end or self.date_end >= date)
 
     def _is_flexible(self):
+        """Return whether the version's working schedule is flexible.
+
+        :rtype: bool
+        """
         self.ensure_one()
         return bool(self.resource_calendar_id) and self.resource_calendar_id._is_flexible()
 
     def _is_fully_flexible(self):
+        """Return whether the version's working schedule is fully flexible.
+
+        :rtype: bool
+        """
         self.ensure_one()
         return bool(self.resource_calendar_id) and self.resource_calendar_id._is_fully_flexible()
 
     def _is_overlapping_period(self, date_from, date_to):
-        """
-        Return True if the employee is at least in contract one day during the period given
-        :param date date_from: the start of the period
-        :param date date_to: the stop of the period
+        """Return whether this version is in contract and in effect at least one day of the period.
+
+        Compares the version's ``date_start``/``date_end`` (not the whole
+        contract) with the period. Returns ``False`` if the version has no
+        contract or if a bound is missing.
+
+        :param datetime.date date_from: start of the period (inclusive)
+        :param datetime.date date_to: end of the period (inclusive)
+        :rtype: bool
         """
         if not (self.contract_date_start and date_from and date_to):
             return False
@@ -456,17 +515,46 @@ class HrVersion(models.Model):
         return period_start <= contract_end and self.date_start <= period_end
 
     def _get_reference_calendar(self, date=None):
+        """Return the reference calendar (full-time equivalent) of the version's working schedule.
+
+        That is the calendar's ``reference_calendar_id``, or the company's
+        default calendar. With ``date``, the employee's version in effect on
+        that date is used instead of ``self``.
+
+        :param date: reference date
+        :type date: datetime.date or None
+        :rtype: resource.calendar
+        """
         self.ensure_one()
         version = self.employee_id._get_version(date) if date else self
         return version.resource_calendar_id.reference_calendar_id or version.company_id.resource_calendar_id
 
     @api.model
     def _get_whitelist_fields_from_template(self):
+        """Return the names of the fields copied from a contract template.
+
+        Extend it to have a new ``hr.version`` field filled by contract templates
+        (related fields are never copied). The fields should be tracked so that
+        the change is visible.
+
+        :rtype: list[str]
+        """
         # Add here any field that you want to copy from a contract template
         # Those fields should have tracking=1 in hr.version to see the change
         return ['job_id', 'department_id', 'employee_type_id', 'structure_type_id', 'wage', 'resource_calendar_id', 'reference_calendar_id', 'hr_responsible_id']
 
     def get_values_from_contract_template(self, contract_template_id):
+        """Return the values to copy from a contract template onto a version.
+
+        Contract templates are ``hr.version`` records without employee. Only
+        the whitelisted fields (:meth:`_get_whitelist_fields_from_template`,
+        evaluated in the template's company) are returned.
+
+        :param contract_template_id: the template (may be empty)
+        :type contract_template_id: hr.version
+        :return: values in ``copy_data`` format, ``{}`` without template
+        :rtype: dict
+        """
         if not contract_template_id:
             return {}
         company = contract_template_id.company_id or self.env.company
@@ -479,18 +567,34 @@ class HrVersion(models.Model):
         }
 
     def _get_contract_wage(self):
+        """Return the contractual wage, read from the field given by :meth:`_get_contract_wage_field`.
+
+        :return: the wage, 0 for an empty recordset
+        :rtype: float
+        """
         if not self:
             return 0
         self.ensure_one()
         return self[self._get_contract_wage_field()]
 
     def _get_contract_wage_field(self):
+        """Return the name of the field holding the contractual wage (``'wage'``).
+
+        Overridden e.g. by ``hr_payroll`` (hourly wage) and localizations.
+
+        :rtype: str
+        """
         self.ensure_one()
         return 'wage'
 
     def _get_normalized_wage(self):
-        """ This method is overridden in hr_payroll, as without that module, nothing allows to know
-        there's no way to determine the employee's pay frequency.
+        """Return the hourly wage, assuming a monthly wage (``wage * 12 / 52 / hours_per_week``).
+
+        Without calendar, the wage is returned as is (supposed hourly); with a
+        calendar without hours, 0. Overridden in ``hr_payroll``, which knows
+        the pay frequency.
+
+        :rtype: float
         """
         wage = self._get_contract_wage()
         # without payroll installed, we suppose that the employee with a specific schedule has a monthly salary
@@ -502,6 +606,14 @@ class HrVersion(models.Model):
         return wage
 
     def _get_valid_employee_for_user(self):
+        """Return the employee of the current user, preferably in the current company.
+
+        Falls back on the user's employee in their default company, then on any
+        of their employees (searched in sudo, across companies).
+
+        :return: at most one employee
+        :rtype: hr.employee
+        """
         user = self.env.user
         # retrieve the employee of the current active company for the user
         employee = user.employee_id
@@ -572,6 +684,16 @@ class HrVersion(models.Model):
         'contract_date_start', 'contract_date_end', 'date_version', 'employee_id',
         'employee_id.version_ids.date_version', 'departure_date')
     def _compute_dates(self):
+        """Compute ``date_start`` and ``date_end``, the period during which the version is in effect.
+
+        - ``date_start``: ``max(date_version, contract_date_start)``, or
+          ``date_version`` without contract;
+        - ``date_end``: the day before the next active version of the employee,
+          capped by ``contract_date_end``; ``False`` if it is the last version
+          of an open-ended (or no) contract.
+
+        Both dates are inclusive. These fields are not stored but searchable.
+        """
         for version in self:
             version.date_start = max(version.date_version, version.contract_date_start) \
                 if version.contract_date_start \
@@ -675,8 +797,12 @@ class HrVersion(models.Model):
 
     @api.model
     def _get_current_versions_domain(self):
-        """
-        Returns employee versions that are currently active
+        """Return a domain matching the employee versions whose contract covers today.
+
+        All versions of a running contract match (not only the version in
+        effect today); contract templates (no employee) are excluded.
+
+        :rtype: list
         """
         today = fields.Date.context_today(self)
         return [
@@ -688,6 +814,11 @@ class HrVersion(models.Model):
         ]
 
     def _inverse_resource_calendar_id(self):
+        """Copy the calendar of current versions onto their employee's ``resource.resource``.
+
+        The resource's ``calendar_id`` mirrors the current version's calendar
+        (it is what ``resource`` methods use for employees without contract).
+        """
         for employee, versions in self.grouped('employee_id').items():
             current_version = employee.current_version_id
             for version in versions:
@@ -695,19 +826,43 @@ class HrVersion(models.Model):
                     employee.resource_id.calendar_id = version.resource_calendar_id
 
     def _get_salary_costs_factor(self):
+        """Return the factor turning the wage into a yearly cost (12, i.e. a monthly wage).
+
+        Overridden in ``hr_payroll`` (based on the pay schedule) and by
+        localizations (e.g. 13th month, employer contributions).
+
+        :rtype: float
+        """
         self.ensure_one()
         return 12.0
 
     def _is_struct_from_country(self, country_code):
+        """Return whether the version's salary structure type belongs to the given country.
+
+        :param str country_code: ISO country code, e.g. ``'BE'``
+        :rtype: bool
+        """
         self.ensure_one()
         self_sudo = self.sudo()
         return self_sudo.structure_type_id and self_sudo.structure_type_id.country_id.code == country_code
 
     def _get_tz(self):
+        """Return the timezone name of the version.
+
+        Falls back on the employee's user partner timezone, the employee's
+        company timezone, then ``'UTC'``.
+
+        :rtype: str
+        """
         self.ensure_one()
         return self.tz or self.employee_id.user_partner_id.tz or self.employee_id.company_id.tz or 'UTC'
 
     def _get_resources_per_tz(self):
+        """Group the resources of the versions' employees by the versions' timezone.
+
+        :return: ``{ZoneInfo: resource.resource}``
+        :rtype: dict
+        """
         version_per_tz = self.grouped(lambda e: ZoneInfo(e._get_tz()))
         return {
             tz: versions.employee_id.resource_id
@@ -715,15 +870,16 @@ class HrVersion(models.Model):
         }
 
     def _get_field_block_start_date(self, field_name):
-        """
-        Return the date_start of the earliest contiguous version
-        that shares the same value for `field_name` as the current version.
+        """Return since when ``field_name`` continuously has its current value.
 
-        Useful to determine since when a given field value has been
-        continuously active (e.g. salary scale, job position, wage, ...).
+        Walks back the employee's versions from ``self`` as long as the
+        previous version has the same value and is continuous with the next
+        one (:meth:`_is_continuous_with`), and returns the ``date_start`` of the
+        earliest one. Useful for seniority in a job, salary scale, ...
 
-        :param field_name: str, the field to track (e.g. 'l10n_be_salary_scale_id')
-        :return: date or None
+        :param str field_name: the ``hr.version`` field to track
+        :return: the start date, or ``None`` if the field is empty on ``self``
+        :rtype: datetime.date or None
         """
         self.ensure_one()
         current_value = self[field_name]
@@ -749,6 +905,17 @@ class HrVersion(models.Model):
         return start_version.date_start
 
     def _has_work_hours_between_versions(self, version_to):
+        """Return whether there are working hours between the end of ``self`` and the start of ``version_to``.
+
+        Uses ``self``'s calendar, without leaves. Back-to-back versions never
+        have work hours in between; without calendar, ``False``. Used to decide
+        whether two versions are consecutive (see
+        ``hr.employee._get_last_consecutive_versions``).
+
+        :param version_to: the next version
+        :type version_to: hr.version
+        :rtype: bool
+        """
         # we consider two versions to be consecutive if no work hours are
         # in the period between the two versions
         tz = ZoneInfo(self._get_tz())
@@ -764,10 +931,15 @@ class HrVersion(models.Model):
         return bool(calendar_id.get_work_hours_count(date_from, date_to, compute_leaves=False))
 
     def _is_continuous_with(self, next_version):
-        """
-        return whether `next_version` continues `self` without breaking
-        continuity. By default, any gap between contracts is ignored
-        Localizations can override this to define a tolerated gap.
+        """Return whether ``next_version`` continues ``self`` without breaking continuity.
+
+        Used by :meth:`_get_field_block_start_date`. By default any gap between
+        versions is tolerated (always ``True``); localizations may override it
+        (e.g. ``l10n_be_hr_payroll``).
+
+        :param next_version: the version following ``self``
+        :type next_version: hr.version
+        :rtype: bool
         """
         self.ensure_one()
         return True

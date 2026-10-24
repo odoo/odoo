@@ -2,6 +2,7 @@
 from datetime import datetime, UTC
 from zoneinfo import ZoneInfo
 
+from odoo.exceptions import UserError
 from odoo.tests import Form
 from odoo.tests.common import tagged, TransactionCase
 
@@ -233,3 +234,64 @@ class TestResourceCalendar(TransactionCase):
                 (form.hours_per_week, form.hours_per_day),
                 (12, 4),
             )
+
+    def test_attendance_intervals_without_calendar_nor_resource(self):
+        """Computing attendance intervals without calendar requires resources."""
+        start_dt = datetime(2026, 1, 5, tzinfo=UTC)
+        end_dt = datetime(2026, 1, 10, tzinfo=UTC)
+        with self.assertRaises(UserError):
+            self.env['resource.calendar']._attendance_intervals_batch(start_dt, end_dt)
+
+    def test_unusual_days_working_time_leave(self):
+        """Only leaves counted as absence make a day unusual."""
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Morning Calendar',
+            'attendance_ids': [
+                (0, 0, {'dayofweek': str(day), 'hour_from': 8, 'hour_to': 12})
+                for day in range(5)
+            ],
+        })
+        self.env['resource.calendar.leaves'].create([{
+            'name': 'Training',
+            'calendar_id': calendar.id,
+            'date_from': datetime(2026, 1, 7, 8),
+            'date_to': datetime(2026, 1, 7, 12),
+            'count_as': 'working_time',
+        }, {
+            'name': 'Holiday',
+            'calendar_id': calendar.id,
+            'date_from': datetime(2026, 1, 8, 8),
+            'date_to': datetime(2026, 1, 8, 12),
+        }])
+        unusual_days = calendar._get_unusual_days(datetime(2026, 1, 6), datetime(2026, 1, 8))
+        self.assertEqual(unusual_days, {
+            '2026-01-06': False,
+            '2026-01-07': False,
+            '2026-01-08': True,
+        })
+        unusual_days = calendar._get_unusual_days(datetime(2026, 1, 6), datetime(2026, 1, 8), company_id=self.env.company)
+        self.assertEqual(unusual_days['2026-01-07'], False)
+
+    def test_fully_flexible_work_duration_until_midnight(self):
+        """Intervals are split per day at midnight: an interval ending at midnight does not
+        count the next day, and no time is lost at the day boundaries."""
+        fully_flex_calendar = self.env['resource.calendar'].create({
+            'name': 'Fully Flexible Calendar',
+            'calendar_type': 'undefined',
+            'attendance_ids': [],
+            'hours_per_week': 0,
+            'hours_per_day': 0,
+        })
+        self.assertEqual(
+            fully_flex_calendar.get_work_duration_data(datetime(2026, 1, 5, tzinfo=UTC), datetime(2026, 1, 6, tzinfo=UTC)),
+            {'days': 1.0, 'hours': 24.0},
+        )
+        self.assertEqual(
+            fully_flex_calendar.get_work_duration_data(datetime(2026, 1, 5, tzinfo=UTC), datetime(2026, 1, 8, tzinfo=UTC)),
+            {'days': 3.0, 'hours': 72.0},
+        )
+        empty_interval = [(datetime(2026, 1, 5, tzinfo=UTC), datetime(2026, 1, 5, tzinfo=UTC), self.env['resource.calendar.attendance'])]
+        self.assertEqual(
+            fully_flex_calendar._get_attendance_intervals_days_data(empty_interval),
+            {'days': 0, 'hours': 0},
+        )

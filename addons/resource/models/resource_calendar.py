@@ -19,16 +19,20 @@ from odoo.tools.intervals import Intervals
 
 
 class ResourceCalendar(models.Model):
-    """ Calendar model for a resource. It has
+    """ Working schedule ("Working Time") of resources. It holds:
 
-    - attendance_ids: list of resource.calendar.attendance that are a working
-                    interval in a given weekday.
-    - leave_ids: list of leaves linked to this calendar. A leave can be general
-                or linked to a specific resource, depending on its resource_id.
+    - ``attendance_ids``: the ``resource.calendar.attendance`` lines defining when
+      work is expected (per weekday for ``fixed`` calendars, per date, optionally
+      recurring, for ``variable`` ones, none for ``undefined`` / flexible ones);
+    - ``leave_ids``: the ``resource.calendar.leaves`` linked to this calendar. A leave
+      without ``resource_id`` is global (public holiday for every resource of the
+      calendar), otherwise it only applies to that resource.
 
-    All methods in this class use intervals. An interval is a tuple holding
-    (begin_datetime, end_datetime). A list of intervals is therefore a list of
-    tuples, holding several intervals of work or leaves. """
+    The computation API works on :class:`~odoo.tools.intervals.Intervals` of
+    ``(start, stop, records)`` triples, where ``start``/``stop`` are timezone-aware
+    datetimes and ``records`` is the attendance or leave recordset that produced the
+    interval. Batch methods return a dict ``{resource_id: Intervals}`` in which the
+    key ``False`` holds the calendar-level result (no specific resource). """
     _name = 'resource.calendar'
     _description = "Resource Working Time"
 
@@ -94,19 +98,30 @@ class ResourceCalendar(models.Model):
         help="Reference working hours used to compute the full-time equivalent.")
 
     def _is_flexible(self):
+        """ Return whether this calendar is flexible, i.e. of type ``undefined``: it has no
+        attendance lines and the resource may work whenever it wants, optionally up to the
+        ``hours_per_week`` / ``hours_per_day`` targets (see :meth:`_is_fully_flexible`). """
         self.ensure_one()
         return self.calendar_type == 'undefined'
 
     def _is_fully_flexible(self):
-        """ Return whether this calendar is flexible with no hours target either. """
+        """ Return whether this calendar is flexible (see :meth:`_is_flexible`) and has no
+        hours target either (``hours_per_week`` and ``hours_per_day`` both zero). A fully
+        flexible resource is considered working during the whole requested period. """
         self.ensure_one()
         return self._is_flexible() and not self.hours_per_week and not self.hours_per_day
 
     def _get_attendances_to_unlink(self, next_calendar_type=None):
-        """ Which attendances to drop when the calendar's `calendar_type` is/becomes:
-            - 'fixed': attendances with a date (fixed calendars use plain recurring, undated lines)
-            - 'undefined': every attendance (undefined calendars have no predefined slots at all)
-            - 'variable': attendances without a date (variable calendars use ad-hoc dated lines)
+        """ Return the attendances that do not fit the calendar's ``calendar_type`` (or
+        ``next_calendar_type`` when given), and must be dropped:
+
+        - ``fixed``: attendances with a date (fixed calendars use undated weekly lines);
+        - ``undefined``: every attendance (flexible calendars have no predefined slots);
+        - ``variable``: attendances without a date (variable calendars use dated lines).
+
+        Called after every ``create``/``write`` of calendars.
+
+        :rtype: ``resource.calendar.attendance`` recordset
         """
         def to_unlink(attendance):
             calendar_type = next_calendar_type or attendance.calendar_id.calendar_type
@@ -133,9 +148,9 @@ class ResourceCalendar(models.Model):
         single_occurrence.write({'recurrency': False, 'recurrency_excluded_occurences': False})
 
     def _clean_excluded_occurrences(self):
-        """Remove stale or duplicate entries from recurrency_excluded_occurences.
+        """Remove stale or duplicate entries from ``recurrency_excluded_occurences``.
 
-        Removes dates before the attendance start, dates past recurrency_until,
+        Removes dates before the attendance start, dates past ``recurrency_until``,
         dates that don't fall on a valid recurrency occurrence, and duplicates —
         in a single pass per attendance.
         """
@@ -158,7 +173,10 @@ class ResourceCalendar(models.Model):
                 att.recurrency_excluded_occurences = cleaned
 
     def _calendar_clean_up(self):
-        """Clean up attendance records that should not be kept."""
+        """Clean up the attendances of the calendars in ``self`` (all calendars when
+        ``self`` is empty): drop lines not matching the calendar type, clean excluded
+        occurrences and turn recurrences with a single remaining occurrence into
+        one-off attendances."""
         calendars = self or self.search([])
         calendars._get_attendances_to_unlink().unlink()
         calendars._clean_excluded_occurrences()
@@ -251,6 +269,8 @@ class ResourceCalendar(models.Model):
                 calendar.work_time_rate = 1.0
 
     def is_calendar_referenced(self):
+        """ Return whether any stored many2one field of a non-abstract model (other than
+        the ``resource.calendar*`` models) points to this calendar. Searches as superuser. """
         self.ensure_one()
         relations = self.env['ir.model.fields'].sudo().search([
             ('ttype', '=', 'many2one'),
@@ -285,10 +305,46 @@ class ResourceCalendar(models.Model):
     # --------------------------------------------------
 
     def _attendance_intervals_batch(self, start_dt, end_dt, resources_per_tz=None, domain=None):
+        """ Return the theoretical work intervals generated by the attendance lines of this
+        calendar between ``start_dt`` and ``end_dt``, leaves NOT deducted.
+
+        Each interval is clipped to ``[start_dt, end_dt]``, expressed in the timezone of the
+        resource (attendance hours are local times) and carries its single attendance record
+        as payload (``keep_distinct=True``: two adjacent attendances stay two intervals).
+        Duration-based attendances (no ``hour_from``/``hour_to``) are placed contiguously,
+        centered on 12:00.
+
+        Flexible resources get synthetic intervals instead, based on the calendar returned
+        by ``resource._get_calendar_data_at`` (the resource's own calendar, or the employee's
+        version calendar with ``hr``), not on ``self``:
+
+        - fully flexible: a single interval covering the whole period;
+        - flexible with hours targets: one interval per day of at most ``hours_per_day``,
+          centered on 12:00, until ``hours_per_week`` is reached in each 7-day block counted
+          from ``start_dt`` (not calendar weeks).
+
+        Their payload is a new (unsaved) attendance holding only ``duration_hours``.
+
+        ``self`` holds at most one calendar. It may be empty when ``resources_per_tz`` is
+        given, but then only flexible resources get intervals.
+
+        :param datetime start_dt: timezone-aware start of the period
+        :param datetime end_dt: timezone-aware end of the period
+        :param dict resources_per_tz: ``{ZoneInfo: resource.resource recordset}``, as returned
+            by ``resources._get_resources_per_tz()``. Defaults to no resource, in the timezone
+            of ``start_dt``.
+        :param domain: optional domain on ``resource.calendar.attendance`` restricting the
+            attendances used. When given, the flexible handling above is skipped.
+        :return: ``{resource_id: Intervals}`` for every resource of ``resources_per_tz``, plus
+            the key ``False`` (calendar-level, no resource) when ``self`` is set. With several
+            timezones, the ``False`` entry is expressed in the last timezone of
+            ``resources_per_tz``.
+        :rtype: dict
+        """
         assert start_dt.tzinfo and end_dt.tzinfo
         if self:
             self.ensure_one()
-        elif not resources_per_tz.values():
+        elif not resources_per_tz:
             raise UserError(self.env._("You cannot compute the intervals without a calendar on no resource."))
 
         if not resources_per_tz:
@@ -453,21 +509,55 @@ class ResourceCalendar(models.Model):
         return result_per_resource_id
 
     def _handle_flexible_leave_interval(self, dt0, dt1, leave):
-        """Hook method to handle flexible leave intervals. Can be overridden in other modules."""
+        """ Hook adapting the bounds of a resource-specific leave of a flexible resource.
+        By default, the leave is extended to whole days: from 00:00 on the day of ``dt0`` to
+        23:59:59.999999 on the day of ``dt1``, in their timezone.
+
+        :param datetime dt0: leave start, localized in the resource timezone
+        :param datetime dt1: leave end, localized in the resource timezone
+        :param leave: the ``resource.calendar.leaves`` record
+        :return: the adapted ``(dt0, dt1)``
+        :rtype: tuple
+        """
         tz = dt0.tzinfo  # Get the timezone information from dt0
         dt0 = datetime.combine(dt0.date(), time.min, tzinfo=tz)
         dt1 = datetime.combine(dt1.date(), time.max, tzinfo=tz)
         return dt0, dt1
 
     def _leave_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
+        """ Single-resource shortcut of :meth:`_leave_intervals_batch`.
+
+        :param resource: a ``resource.resource`` record, or ``None`` / empty for the
+            calendar-level leaves (global leaves only, in the timezone of ``start_dt``)
+        :param tz: unused, kept for compatibility; the resource timezone is used
+        :rtype: :class:`~odoo.tools.intervals.Intervals`
+        """
         if resource is None:
             resource = self.env['resource.resource']
         resources_per_tz = resource._get_resources_per_tz()
         return self._leave_intervals_batch(start_dt, end_dt, resources_per_tz=resources_per_tz, domain=domain)[resource.id]
 
     def _leave_intervals_batch(self, start_dt, end_dt, resources_per_tz=None, domain=None):
-        """ Return the leave intervals in the given datetime range.
-            The returned intervals are expressed in specified tz or in the calendar's timezone.
+        """ Return the leave intervals (``resource.calendar.leaves``) overlapping the period,
+        clipped to ``[start_dt, end_dt]`` and expressed in the timezone of each resource.
+
+        A resource gets its own leaves plus the global leaves (no ``resource_id``) of its
+        company; the calendar-level entry (key ``False``) only gets global leaves. When
+        ``self`` is set, only leaves of this calendar or without calendar are considered.
+        Leaves of flexible resources go through :meth:`_handle_flexible_leave_interval`
+        (whole days by default). Overlapping leaves are merged, the payload being the union
+        of the leave records.
+
+        :param datetime start_dt: timezone-aware start of the period
+        :param datetime end_dt: timezone-aware end of the period
+        :param dict resources_per_tz: ``{ZoneInfo: resource.resource recordset}``, see
+            :meth:`_attendance_intervals_batch`
+        :param list domain: domain (as a list) on ``resource.calendar.leaves``. ``None``
+            means ``[('count_as', '=', 'absence')]``; any other value, even ``[]``, replaces
+            that default, so leaves counted as working time are then included.
+        :return: ``{resource_id: Intervals}`` for every resource of ``resources_per_tz``, plus
+            the key ``False`` when ``self`` is set or ``resources_per_tz`` is empty
+        :rtype: dict
         """
         assert start_dt.tzinfo and end_dt.tzinfo
 
@@ -523,7 +613,23 @@ class ResourceCalendar(models.Model):
         return {r.id: Intervals(result[r.id]) for r in all_resources}
 
     def _work_intervals_batch(self, start_dt, end_dt, resources_per_tz=None, domain=None, compute_leaves=True):
-        """ Return the effective work intervals between the given datetimes. """
+        """ Return the effective work intervals: attendance intervals minus leave intervals.
+        This is the method to use (and the one to override, as ``hr_work_entry`` does) to
+        know when resources actually work.
+
+        :param datetime start_dt: timezone-aware start of the period
+        :param datetime end_dt: timezone-aware end of the period
+        :param dict resources_per_tz: ``{ZoneInfo: resource.resource recordset}``, see
+            :meth:`_attendance_intervals_batch`
+        :param list domain: leave domain passed to :meth:`_leave_intervals_batch` (``None``
+            means leaves counted as absence). It does not filter attendances.
+        :param bool compute_leaves: when ``False``, leaves are not deducted and the result
+            equals :meth:`_attendance_intervals_batch`
+        :return: ``{resource_id: Intervals}``, with the key ``False`` for the calendar-level
+            result when ``self`` is set or ``resources_per_tz`` is empty. Intervals are
+            expressed in each resource's timezone and carry attendance records.
+        :rtype: dict
+        """
         all_resources = set()
         if not resources_per_tz or self:
             all_resources.add(self.env['resource.resource'])
@@ -542,15 +648,38 @@ class ResourceCalendar(models.Model):
         }
 
     def _unavailable_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
+        """ Single-resource shortcut of :meth:`_unavailable_intervals_batch`.
+
+        :param resource: a ``resource.resource`` record, or ``None`` / empty for the
+            calendar-level result
+        :param tz: unused, kept for compatibility
+        :return: ``Intervals`` in UTC, empty for a flexible resource without leave
+        """
         if resource is None:
             resource = self.env['resource.resource']
         resources_per_tz = resource._get_resources_per_tz()
         return self._unavailable_intervals_batch(
             start_dt, end_dt, resources_per_tz=resources_per_tz, domain=domain,
-        )[resource.id]
+        ).get(resource.id, Intervals())
 
     def _unavailable_intervals_batch(self, start_dt, end_dt, resources_per_tz=None, domain=None):
-        """ Return the unavailable intervals between the given datetimes. """
+        """ Return the periods during which resources do not work: the complement of
+        :meth:`_work_intervals_batch` within ``[start_dt, end_dt]``, expressed in UTC (used by
+        Gantt views to grey out unavailable time).
+
+        For a flexible resource (according to its own calendar), only its leaves are
+        unavailable, and the resource has no key at all when it has no leave (callers treat
+        that absence as "no unavailability").
+
+        :param datetime start_dt: timezone-aware start of the period
+        :param datetime end_dt: timezone-aware end of the period
+        :param dict resources_per_tz: ``{ZoneInfo: resource.resource recordset}``, see
+            :meth:`_attendance_intervals_batch`
+        :param list domain: leave domain, see :meth:`_leave_intervals_batch`
+        :return: ``{resource_id: Intervals}`` in UTC, with the key ``False`` when ``self`` is
+            set or ``resources_per_tz`` is empty
+        :rtype: dict
+        """
         all_resources = set()
         if not resources_per_tz or self:
             all_resources.add(self.env['resource.resource'])
@@ -558,12 +687,17 @@ class ResourceCalendar(models.Model):
             for _, resources in resources_per_tz.items():
                 all_resources |= set(resources)
         resources_work_intervals = self._work_intervals_batch(start_dt, end_dt, resources_per_tz, domain)
+        leaves = None
         result = {}
         for resource in all_resources:
             if resource and resource._is_flexible():
-                leaves = self._leave_intervals_batch(start_dt, end_dt, resources_per_tz, domain)
-                if res_leaves := leaves.get(resource.id, []):
-                    result[resource.id] = [(i[0].astimezone(UTC), i[1].astimezone(UTC)) for i in res_leaves]
+                if leaves is None:
+                    leaves = self._leave_intervals_batch(start_dt, end_dt, resources_per_tz, domain)
+                if res_leaves := leaves[resource.id]:
+                    result[resource.id] = Intervals([
+                        (start.astimezone(UTC), stop.astimezone(UTC), meta)
+                        for start, stop, meta in res_leaves
+                    ])
                 continue
             work_intervals = resources_work_intervals[resource.id]
             utc_work_intervals = []
@@ -581,14 +715,23 @@ class ResourceCalendar(models.Model):
         return result
 
     def _get_attendance_intervals_days_data(self, attendance_intervals):
-        """
-        helper function to compute duration of `intervals` that have
-        'resource.calendar.attendance' records as payload (3rd element in tuple).
-        expressed in days and hours.
+        """ Convert work intervals (typically the output of :meth:`_work_intervals_batch`
+        for one resource) into a duration in days and hours.
 
-        resource.calendar.attendance records have durations associated
-        with them so this method merely calculates the proportion that is
-        covered by the intervals.
+        Intervals are split per calendar day (in their own timezone). For each day:
+
+        - if this calendar has duration-based attendances on that day, the day counts for
+          ``hours / sum(their duration_hours)`` (proportional);
+        - otherwise it counts for 0.5 day if its hours are at most 3/4 of
+          :meth:`_get_reference_hours_per_day`, else for 1 day.
+
+        The payload of the intervals is ignored. ``self`` may be empty: then any day with
+        hours counts as 1.
+
+        :param attendance_intervals: iterable of ``(start, stop, records)`` with
+            timezone-aware datetimes, e.g. an :class:`~odoo.tools.intervals.Intervals`
+        :return: ``{'days': float, 'hours': float}``, days rounded to 0.001
+        :rtype: dict
         """
         if self:
             self.ensure_one()
@@ -598,13 +741,14 @@ class ResourceCalendar(models.Model):
             # If the interval covers only a part of the original attendance, we
             # take durations in days proportionally to what is left of the interval.
             # an interval synthesized for a fully flexible calendar can span several
-            # calendar days at once: split it so
-            # each day gets its own bucket
+            # calendar days at once: split it at midnight so each day gets its own
+            # bucket (no empty bucket for an interval ending at midnight)
             day_start = start
-            while day_start.date() <= stop.date():
-                day_end = min(stop, datetime.combine(day_start.date(), time.max, tzinfo=day_start.tzinfo))
+            while day_start < stop:
+                next_day_start = datetime.combine(day_start.date() + timedelta(days=1), time.min, tzinfo=day_start.tzinfo)
+                day_end = min(stop, next_day_start)
                 day_hours[day_start.date()] += (day_end - day_start).total_seconds() / 3600
-                day_start = datetime.combine(day_start.date() + timedelta(days=1), time.min, tzinfo=day_start.tzinfo)
+                day_start = day_end
 
         duration_based_attendances = self.attendance_ids.filtered('duration_based')
         for day, hours in day_hours.items():
@@ -617,24 +761,41 @@ class ResourceCalendar(models.Model):
                 day_days[day] = 0.5 if hours <= reference_hours * 3 / 4 else 1
 
         return {
-            # Round the number of days to the closest 16th of a day.
+            # Round the number of days to the closest thousandth of a day.
             'days': float_round(sum(day_days[day] for day in day_days), precision_rounding=0.001),
             'hours': sum(day_hours.values()),
         }
 
     def _get_reference_hours_per_day(self, day):
-        """ Return the number of hours the given day is theoretically made of. """
+        """ Return the number of hours ``day`` is theoretically made of, used as the full-day
+        reference by :meth:`_get_attendance_intervals_days_data`. Defaults to the calendar's
+        average ``hours_per_day``; overridden by ``hr_work_entry`` to include attendances
+        counted as absence.
+
+        :param date day: the day to evaluate
+        :rtype: float
+        """
         self.ensure_one()
         return self.hours_per_day
 
     def _get_closest_work_time(self, dt, match_end=False, resource=None, search_range=None, compute_leaves=True):
-        """Return the closest work interval boundary within the search range.
-        Consider only starts of intervals unless `match_end` is True. It will then only consider
-        ends of intervals.
-        :param dt: reference datetime
-        :param match_end: wether to search for the begining of an interval or the end.
-        :param search_range: time interval considered. Defaults to the entire day of `dt`
+        """ Return the work interval boundary closest to ``dt`` within the search range: the
+        closest interval start, or the closest interval end when ``match_end`` is set.
+
+        Work intervals come from :meth:`_work_intervals_batch` for ``resource``, in the
+        resource timezone. Without resource, the calendar-level intervals are used and the
+        attendance hours are interpreted in UTC.
+
+        :param datetime dt: timezone-aware reference datetime
+        :param bool match_end: look for interval ends instead of interval starts
+        :param resource: ``resource.resource`` record, or ``None``
+        :param search_range: ``(start, end)`` timezone-aware datetimes; defaults to the whole
+            day of ``dt`` in the resource timezone
+        :param bool compute_leaves: deduct leaves from the work intervals
+        :return: the closest boundary (in the resource timezone), or ``None`` if ``dt`` is
+            outside the search range or there is no work interval in it
         :rtype: datetime | None
+        :raises ValueError: if ``dt`` or ``search_range`` are naive
         """
         def interval_dt(interval):
             return interval[1 if match_end else 0]
@@ -664,6 +825,24 @@ class ResourceCalendar(models.Model):
         return interval_dt(work_intervals[0]) if work_intervals else None
 
     def _get_unusual_days(self, start_dt, end_dt, company_id=False, resource=None):
+        """ Tell, for each day between ``start_dt`` and ``end_dt``, whether it is an
+        "unusual" day, i.e. a day without work (weekend, public holiday...). Used by calendar
+        and date picker widgets to grey out days.
+
+        Days are evaluated with the calendar-level work intervals (global leaves deducted),
+        in the timezone of ``start_dt``.
+        For a flexible ``resource``, a day is unusual only if the resource has a leave on it.
+        Only leaves counted as absence are considered: a leave counted as working time
+        (e.g. a training) does not make a day unusual.
+
+        :param datetime start_dt: start of the period; naive means UTC
+        :param datetime end_dt: end of the period (its day included); naive means UTC
+        :param company_id: optional ``res.company`` record restricting the leaves to that
+            company or to no company
+        :param resource: optional ``resource.resource`` record, only used for flexible ones
+        :return: ``{'YYYY-MM-DD': bool}``, ``True`` for unusual days
+        :rtype: dict
+        """
         if self:
             self.ensure_one()
         if not start_dt.tzinfo:
@@ -671,9 +850,9 @@ class ResourceCalendar(models.Model):
         if not end_dt.tzinfo:
             end_dt = end_dt.replace(tzinfo=UTC)
 
-        domain = []
+        domain = [('count_as', '=', 'absence')]
         if company_id:
-            domain = [('company_id', 'in', (company_id.id, False))]
+            domain += [('company_id', 'in', (company_id.id, False))]
         if resource and resource._is_flexible():
             leave_intervals = self._leave_intervals_batch(start_dt, end_dt, domain=domain, resources_per_tz=resource._get_resources_per_tz())[resource.id]
             works = set()
@@ -684,7 +863,12 @@ class ResourceCalendar(models.Model):
         return {fields.Date.to_string(day.date()): (day.date() not in works) for day in rrule(DAILY, start_dt, until=end_dt)}
 
     def _get_default_attendance_ids(self, company_id=None):
-        """ return a copy of the company's calendar attendance or default 40 hours/week """
+        """ Return ``attendance_ids`` commands copying the attendances of the company's fixed
+        calendar, or, by default, 5 duration-based days of 8 hours (Monday to Friday).
+
+        :param company_id: ``res.company`` record, or ``None``
+        :rtype: list
+        """
         if company_id and company_id.resource_calendar_id.calendar_type == "fixed" and (attendances := company_id.resource_calendar_id.attendance_ids):
             return [Command.clear()] + [Command.create(attendance) for attendance in attendances._to_dict()]
         return [Command.clear()] + [
@@ -697,14 +881,21 @@ class ResourceCalendar(models.Model):
     # --------------------------------------------------
 
     def get_work_hours_count(self, start_dt, end_dt, compute_leaves=True, domain=None):
-        """
-            `compute_leaves` controls whether or not this method is taking into
-            account the global leaves.
+        """ Return the number of calendar-level work hours between two dates or datetimes
+        (no resource: only global leaves are deducted).
 
-            `domain` controls the way leaves are recognized.
-            None means default value ('count_as', '=', 'absence')
+        Attendance hours are interpreted in the timezone of ``start_dt`` after conversion:
+        dates and naive datetimes are put in the company timezone, aware datetimes keep
+        their own timezone.
 
-            Counts the number of work hours between two dates/datetimes.
+        :param start_dt: ``date`` (from 00:00 in the company timezone) or ``datetime``
+            (naive means UTC)
+        :param end_dt: ``date`` (until 23:59:59.999999 in the company timezone) or
+            ``datetime`` (naive means UTC)
+        :param bool compute_leaves: deduct global leaves
+        :param list domain: leave domain, ``None`` means ``[('count_as', '=', 'absence')]``,
+            see :meth:`_leave_intervals_batch`
+        :rtype: float
         """
         self.ensure_one()
 
@@ -737,16 +928,20 @@ class ResourceCalendar(models.Model):
         )
 
     def get_work_duration_data(self, from_datetime, to_datetime, compute_leaves=True, domain=None):
-        """
-            Get the working duration (in days and hours) for a given period, only
-            based on the current calendar. This method does not use resource to
-            compute it.
+        """ Return the calendar-level working duration of a period, in days and hours, only
+        based on this calendar (no resource: only global leaves are deducted). Days are
+        computed by :meth:`_get_attendance_intervals_days_data`.
 
-            `domain` is used in order to recognise the leaves to take,
-            None means default value ('count_as', '=', 'absence')
+        Attendance hours are interpreted in the timezone of ``from_datetime`` (UTC if naive).
 
-            Returns a dict {'days': n, 'hours': h} containing the
-            quantity of working time expressed as days and as hours.
+        :param datetime from_datetime: start of the period, naive means UTC
+        :param datetime to_datetime: end of the period, naive means UTC
+        :param bool compute_leaves: deduct global leaves
+        :param list domain: with ``compute_leaves``, the leave domain (``None`` means
+            ``[('count_as', '=', 'absence')]``); without it, a domain on
+            ``resource.calendar.attendance`` filtering the attendances
+        :return: ``{'days': float, 'hours': float}``
+        :rtype: dict
         """
         self.ensure_one()
         # naive datetimes are made explicit in UTC
@@ -762,14 +957,23 @@ class ResourceCalendar(models.Model):
         return self._get_attendance_intervals_days_data(intervals)
 
     def plan_hours(self, hours, day_dt, compute_leaves=False, domain=None, resource=None):
-        """
-        `compute_leaves` controls whether or not this method is taking into
-        account the global leaves.
+        """ Return the datetime reached after working ``hours`` hours from ``day_dt`` according
+        to this calendar (going backwards if ``hours`` is negative). With ``hours=0``, return
+        ``day_dt`` if it is within work time, else the start of the next work interval.
 
-        `domain` controls the way leaves are recognized.
-        None means default value ('count_as', '=', 'absence')
+        Computation happens in the timezone of ``resource`` (company timezone without
+        resource), by windows of 14 days, for at most 100 windows.
 
-        Return datetime after having planned hours
+        :param float hours: number of work hours to plan, negative to plan backwards
+        :param datetime day_dt: starting point; naive means UTC
+        :param bool compute_leaves: deduct leaves (those of ``resource`` and global ones);
+            without it, the calendar-level attendances are used and ``resource`` only gives
+            the timezone
+        :param list domain: leave domain, see :meth:`_leave_intervals_batch`
+        :param resource: optional ``resource.resource`` record
+        :return: the resulting datetime, in the timezone of ``day_dt`` (naive UTC if
+            ``day_dt`` is naive), or ``False`` if not found within the search range
+        :rtype: datetime | bool
         """
         revert = to_timezone(day_dt.tzinfo)
         day_dt = day_dt.astimezone(ZoneInfo(resource.tz if resource else self.env.company.tz))
@@ -808,14 +1012,24 @@ class ResourceCalendar(models.Model):
         return False
 
     def plan_days(self, days, day_dt, compute_leaves=False, domain=None):
-        """
-        `compute_leaves` controls whether or not this method is taking into
-        account the global leaves.
+        """ Return the end of the first work interval of the ``days``-th work day counted
+        from ``day_dt`` (the day of ``day_dt`` included if it has work time after
+        ``day_dt``), or, for a negative ``days``, the start of the last work interval of the
+        ``abs(days)``-th work day counted backwards. ``days=0`` returns ``day_dt``.
 
-        `domain` controls the way leaves are recognized.
-        None means default value ('count_as', '=', 'absence')
+        Beware: with several attendances per day (e.g. a lunch break), the result is the end
+        of the morning attendance of the last day, not the end of that day.
 
-        Returns the datetime of a days scheduling.
+        Calendar-level only (no resource, only global leaves), computed in the company
+        timezone by windows of 14 days, for at most 100 windows.
+
+        :param int days: number of work days to plan, negative to plan backwards
+        :param datetime day_dt: starting point; naive means UTC
+        :param bool compute_leaves: deduct global leaves
+        :param list domain: leave domain, see :meth:`_leave_intervals_batch`
+        :return: the resulting datetime, in the timezone of ``day_dt`` (naive UTC if
+            ``day_dt`` is naive), or ``False`` if not found within the search range
+        :rtype: datetime | bool
         """
         revert = to_timezone(day_dt.tzinfo)
         day_dt = day_dt.astimezone(ZoneInfo(self.env.company.tz))
@@ -852,20 +1066,33 @@ class ResourceCalendar(models.Model):
         return revert(day_dt)
 
     def _works_on_date(self, date):
+        """ Return whether this calendar has a work attendance (see
+        ``resource.calendar.attendance._is_work_period``) on ``date``. Always ``True`` for
+        flexible calendars. Leaves are not considered.
+
+        :param date date: the day to check
+        :rtype: bool
+        """
         # a flexible calendar has no predefined slots to check a specific date against
         if self._is_flexible():
             return True
         return bool(self.attendance_ids._filter_by_date(date, lambda a: a._is_work_period()))
 
     def _get_attendances_by_date(self, date_from, date_to, domain=None):
-        """
-        Get the attendances between date_from and date_to, grouped by day, as a recordset of resource.calendar.attendance.
-            - For variable schedule, only attendances with a date are considered. If an attendance has a recurrency rule, it will be repeated on the corresponding days.
-            - For fixed schedule, only attendances without a date are considered. They will be grouped by their dayofweek and returned on the corresponding days.
+        """ Return the attendances of this calendar applying on each day of the period.
 
-        :param date_from: start date of the period (included)
-        :param date_to: end date of the period (included)
-        :param domain: optional domain to filter attendances
+        - Undated attendances (``fixed`` calendars) apply on every day matching their
+          ``dayofweek``.
+        - Dated attendances (``variable`` calendars) apply on their ``date`` and, when
+          recurring, on every occurrence of their recurrence rule up to
+          ``recurrency_until``, except excluded occurrences.
+
+        :param date date_from: first day of the period (included)
+        :param date date_to: last day of the period (included)
+        :param domain: optional domain on ``resource.calendar.attendance``
+        :return: ``{date: resource.calendar.attendance recordset}`` with one key per day of
+            the period, possibly mapped to an empty recordset (a ``defaultdict``)
+        :rtype: dict
         """
         self.ensure_one()
         result = defaultdict(lambda: self.env['resource.calendar.attendance'])
@@ -900,6 +1127,18 @@ class ResourceCalendar(models.Model):
         return result
 
     def get_attendances(self, date_from, date_to, fields_to_fetch, domain=None):
+        """ Public (RPC) variant of :meth:`_get_attendances_by_date` used by the calendar
+        editor: return each attendance occurring in the period once, read with
+        ``fields_to_fetch``.
+
+        :param date_from: first day, as a ``date`` or a ``'YYYY-MM-DD'`` string
+        :param date_to: last day, as a ``date`` or a ``'YYYY-MM-DD'`` string
+        :param list fields_to_fetch: field names to read
+        :param domain: optional domain on ``resource.calendar.attendance``
+        :return: list of dicts with the read values, plus ``'date'`` (first occurrence in
+            the period) and ``'other_dates'`` (list of the next occurrences)
+        :rtype: list
+        """
         date_from = fields.Date.from_string(date_from)
         date_to = fields.Date.from_string(date_to)
         attendances_per_date = self._get_attendances_by_date(date_from, date_to, domain)

@@ -161,9 +161,10 @@ class HrAttendance(models.Model):
 
     @api.depends('check_in', 'check_out', 'break_duration')
     def _compute_worked_hours(self):
-        """ Computes the worked hours of the attendance record.
-            The worked hours of resource with flexible calendar is computed as the difference
-            between check_in and check_out, without taking into account the lunch_interval"""
+        """Compute ``worked_hours``: ``check_out - check_in`` in hours, minus ``break_duration``.
+
+        The schedule (lunch break included) is not used. Open attendances get ``0``.
+        """
         for attendance in self:
             if attendance.check_out and attendance.check_in and attendance.employee_id:
                 attendance.worked_hours = (
@@ -174,6 +175,11 @@ class HrAttendance(models.Model):
 
     @api.constrains('break_duration', 'check_in', 'check_out')
     def _check_break_duration(self):
+        """Check that ``break_duration`` is positive, only set on closed attendances and not
+        longer than the attendance.
+
+        :raise ValidationError: if one of these conditions is not met
+        """
         for attendance in self:
             if float_compare(attendance.break_duration, 0.0, precision_digits=4) < 0:
                 raise ValidationError(self.env._("Break duration cannot be negative."))
@@ -188,7 +194,10 @@ class HrAttendance(models.Model):
 
     @api.constrains('check_in', 'check_out')
     def _check_validity_check_in_check_out(self):
-        """ verifies if check_in is earlier than check_out. """
+        """Check that ``check_out`` is not earlier than ``check_in``.
+
+        :raise ValidationError: if it is
+        """
         for attendance in self:
             if attendance.check_in and attendance.check_out:
                 if attendance.check_out < attendance.check_in:
@@ -196,10 +205,14 @@ class HrAttendance(models.Model):
 
     @api.constrains('check_in', 'check_out', 'employee_id')
     def _check_validity(self):
-        """ Verifies the validity of the attendance record compared to the others from the same employee.
-            For the same employee we must have :
-                * maximum 1 "open" attendance record (without check_out)
-                * no overlapping time slices with previous employee records
+        """Check the attendance against the other attendances of the employee.
+
+        An employee has at most one open attendance (without ``check_out``) and no overlapping
+        attendances. Skipped when the context has ``skip_time_rules``, i.e. for the writes of
+        the time rule pipeline, the refusal and the automatic check-out.
+
+        :raise ValidationError: if the attendance overlaps another one or if another attendance
+            of the employee is still open
         """
         if self.env.context.get('skip_time_rules'):
             return
@@ -213,7 +226,7 @@ class HrAttendance(models.Model):
             if last_attendance_before_check_in and last_attendance_before_check_in.check_out and last_attendance_before_check_in.check_out > attendance.check_in:
                 raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s",
                                                    empl_name=attendance.employee_id.name,
-                                                   datetime=format_datetime(self.env, attendance.check_in, dt_format=False)))
+                                                   datetime=format_datetime(self.env, last_attendance_before_check_in.check_in, dt_format=False)))
 
             if not attendance.check_out:
                 # if our attendance is "open" (no check_out), we verify there is no other "open" attendance
@@ -243,6 +256,16 @@ class HrAttendance(models.Model):
     _STALE_TRIGGER_FIELDS = frozenset({'check_in', 'check_out', 'break_duration', 'employee_id', 'work_entry_type_id'})
 
     def write(self, vals):
+        """Write ``vals``, then flag the time rule outputs and validate within tolerance.
+
+        Moving an attendance to another employee requires being that employee, an attendance
+        administrator or the employee's attendance approver. When a field of
+        ``_STALE_TRIGGER_FIELDS`` changes, the outputs that existed before the write (and that
+        survive it) get ``source_stale = True``. A new ``check_out`` (without ``state``)
+        re-applies the tolerance policy (:meth:`_update_tolerance_state`).
+
+        :raise AccessError: if the user cannot assign the attendance to ``employee_id``
+        """
         if vals.get('employee_id') and \
             vals['employee_id'] not in self.env.user.employee_ids.ids and \
             not self.env.user.has_group('hr_attendance.group_hr_attendance_manager') and \
@@ -262,11 +285,13 @@ class HrAttendance(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _mark_outputs_stale_on_delete(self):
+        """Flag the time rule outputs of the deleted attendances with ``source_stale``."""
         outputs = self.sudo().mapped('overtime_attendance_ids').filtered('id')
         if outputs:
             outputs.with_context(skip_time_rules=True).write({'source_stale': True})
 
     def action_mark_reviewed(self):
+        """Clear the ``source_stale`` flag, without re-running the time rules."""
         self.with_context(skip_time_rules=True).write({'source_stale': False})
 
     def copy(self, default=None):
@@ -289,6 +314,10 @@ class HrAttendance(models.Model):
         }
 
     def get_kiosk_url(self):
+        """Return the public kiosk URL of the current company (base URL + kiosk key).
+
+        :rtype: str
+        """
         return self.get_base_url() + "/hr_attendance/" + self.env.company.attendance_kiosk_key
 
     @api.model
@@ -449,10 +478,21 @@ class HrAttendance(models.Model):
         }
 
     def _cron_auto_check_out(self):
+        """Cron: check out the forgotten open attendances, for the companies with
+        ``auto_check_out``, in ``tolerance`` and in ``specific_time`` mode."""
         self._cron_auto_check_out_tolerance()
         self._cron_auto_check_out_specific_time()
 
     def _cron_auto_check_out_tolerance(self):
+        """Check out the open attendances exceeding the expected hours of their day plus the
+        company's ``auto_check_out_tolerance``.
+
+        Applies to the companies in ``tolerance`` mode, to employees with a non flexible schedule.
+        The expected hours are those of the schedule on the local day of the check-in
+        (``hr.employee._get_expected_attendances``); the hours already worked that day are
+        deducted. The check-out is set to the moment the limit was reached (at least one second
+        after the check-in), with ``out_mode = 'auto_check_out'``, and a message is posted.
+        """
         def check_in_tz(attendance):
             """Returns check-in time in calendar's timezone."""
             return attendance.check_in.astimezone(ZoneInfo(attendance.employee_id._get_tz(attendance.date)))
@@ -513,12 +553,14 @@ class HrAttendance(models.Model):
                     )
 
     def _cron_absence_detection(self):
-        """Create a 1-second technical attendance for each employee who did not check in yesterday.
+        """Cron: create a validated 1-second technical attendance for each employee without
+        attendance yesterday.
 
-        This triggers the time rule pipeline so that undertime rules can generate
-        output attendances for the missed schedule hours.  The attendance type is set
-        to the company's default so condition filters on undertime rules match it.
-        Technical attendances that produce no time rule output are discarded afterwards.
+        Only for the companies with ``absence_management``, and the employees with a schedule
+        whose current version is in contract yesterday. The attendance starts at local midnight
+        and has the company's attendance type, so that the daily undertime rules see the day and
+        create output attendances for the missed hours. Technical attendances without any output
+        are deleted afterwards.
         """
         yesterday = datetime.today().replace(hour=0, minute=0, second=0) - relativedelta(days=1)
         companies = self.env['res.company'].search([('absence_management', '=', True)])
@@ -560,9 +602,12 @@ class HrAttendance(models.Model):
         to_unlink.unlink()
 
     def _cron_auto_check_out_specific_time(self):
-        """
-        Automatically check-out all employees still checked in
-        when company is in 'specific_time' mode.
+        """Check out the open attendances once the company's ``auto_check_out_specific_time``
+        is reached.
+
+        Applies to the companies in ``specific_time`` mode. The check-out is the first
+        occurrence of that hour (employee's timezone) after the check-in, as soon as it is past,
+        with ``out_mode = 'auto_check_out'``; a message is posted.
         """
         current_utc_dt = fields.Datetime.now()
         utc_tz = ZoneInfo('UTC')
@@ -606,6 +651,13 @@ class HrAttendance(models.Model):
                 ))
 
     def _get_localized_times(self):
+        """Return ``check_in`` and ``check_out`` in the timezone of the employee's version.
+
+        The attendance must be closed.
+
+        :return: ``(check_in, check_out)``, naive local datetimes
+        :rtype: tuple
+        """
         self.ensure_one()
         tz = ZoneInfo(self.employee_id.sudo()._get_version(self.check_in.date()).tz)
         localized_start = self.check_in.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
@@ -613,6 +665,16 @@ class HrAttendance(models.Model):
         return localized_start, localized_end
 
     def _get_break_duration_within_period(self, start, stop):
+        """Return the part of the break durations of ``self`` falling within a period.
+
+        The break of each closed attendance is prorated to the share of the attendance that lies
+        within ``[start, stop]``.
+
+        :param datetime start: naive local datetime (employee's timezone)
+        :param datetime stop: naive local datetime
+        :return: hours
+        :rtype: float
+        """
         attendances = self.filtered(lambda attendance: attendance.check_out and attendance.break_duration)
         if not attendances:
             return 0.0
@@ -638,21 +700,38 @@ class HrAttendance(models.Model):
         """)
 
     def _apply_record_output(self, rules, excess, deficit, active_iv=None):
+        """Apply the time rule results through ``hr.time.rule._apply_attendance_output``."""
         rules._apply_attendance_output(excess, deficit, active_iv=active_iv)
 
     def _get_time_rule_deficit_occupied(self, employee_id, start_utc, period_end_utc):
+        """Return the spans of the attendances of the employee overlapping the period, refused
+        ones excepted, so that undertime outputs are placed outside of them.
+
+        :rtype: Intervals
+        """
         dummy = self.env['resource.calendar']
         existing = self.env['hr.attendance'].sudo().search([
             ('employee_id', '=', employee_id),
             ('check_in', '<', period_end_utc),
             ('check_out', '>', start_utc),
+            ('state', '!=', 'refused'),
         ])
         return Intervals([(a.check_in, a.check_out, dummy) for a in existing], keep_distinct=True)
 
     def _get_time_rule_output_vals(self, rule, df, dt, pp):
+        """Return the values of an output attendance, see
+        ``hr.time.rule._get_output_attendance_vals``.
+
+        :rtype: dict
+        """
         return rule._get_output_attendance_vals(self.employee_id, df, dt, self, accumulated_pp=pp)
 
     def _get_time_rule_remainder_vals(self, df, dt):
+        """Return the values of a remainder attendance: ``employee_id``, ``check_in``,
+        ``check_out`` and ``source_attendance_id``.
+
+        :rtype: dict
+        """
         return {
             'employee_id': self.employee_id.id,
             'check_in': df,
@@ -661,15 +740,35 @@ class HrAttendance(models.Model):
         }
 
     def _get_source_extra_fields_domain(self):
+        """Only validated attendances are time rule sources.
+
+        :rtype: list
+        """
         return [('state', '=', 'validated')]
 
     def _get_time_rule_break_hours(self):
+        """Return ``break_duration``, which the time rules do not count as worked time.
+
+        :rtype: float
+        """
         return self.break_duration or 0.0
 
     def _get_write_source_extra_source_fields(self):
+        """Writing ``work_entry_type_id``, ``state`` or ``break_duration`` also runs the rules.
+
+        :rtype: set[str]
+        """
         return {'work_entry_type_id', 'state', 'break_duration'}
 
     def _update_tolerance_state(self):
+        """Validate the closed draft attendances within the tolerance of their company.
+
+        Only for the companies with ``attendance_validation = 'tolerance_validation'``, on the
+        attendances not produced by a time rule: an attendance is validated when its duration
+        (break included) differs from the expected hours of its local day by at most
+        ``attendance_validation_tolerance``, or when no hours are expected that day. As for
+        :meth:`action_validate`, writing the state runs the time rules on them.
+        """
         to_validate = self.browse()
         candidates = self.filtered(lambda a: a.state == 'draft' and a.check_out and not a.time_rule_id)
         for att in candidates:
@@ -686,10 +785,17 @@ class HrAttendance(models.Model):
             if not expected or abs(worked - expected) <= company.attendance_validation_tolerance:
                 to_validate |= att
         if to_validate:
-            to_validate.with_context(skip_time_rules=True, tracking_disable=True).write({'state': 'validated'})
+            to_validate.with_context(tracking_disable=True).write({'state': 'validated'})
 
     @api.model_create_multi
     def create(self, vals_list):
+        """Create attendances, with an initial ``state`` derived from the validation policy.
+
+        Without ``state`` in the values, time rule outputs (``time_rule_id`` or
+        ``source_attendance_id`` set) are ``validated``; other attendances are ``validated``
+        if the employee's company has ``attendance_validation = 'no_validation'``, else
+        ``draft``. :meth:`_update_tolerance_state` then applies the tolerance policy.
+        """
         for vals in vals_list:
             if 'state' not in vals:
                 if vals.get('time_rule_id') or vals.get('source_attendance_id'):
@@ -705,12 +811,16 @@ class HrAttendance(models.Model):
         return res
 
     def action_validate(self):
+        """Validate the attendances, which runs the time rules on them."""
         self.write({'state': 'validated'})
 
     def action_refuse(self):
-        self.with_context(skip_time_rules=True).write({'state': 'refused'})
+        """Refuse the attendances and the records the time rules created from them
+        (``overtime_attendance_ids``), without running the time rules (``skip_time_rules``)."""
+        (self | self.overtime_attendance_ids).with_context(skip_time_rules=True).write({'state': 'refused'})
 
     def action_reset_to_draft(self):
+        """Set the attendances back to draft."""
         self.write({'state': 'draft'})
 
     def get_record_default_action(self, access_uid=None):
@@ -737,6 +847,12 @@ class HrAttendance(models.Model):
 
     @api.model
     def get_unusual_days(self, date_from, date_to=None):
+        """Return the unusual days of the employee of the context key ``employee_id``, or else
+        of the current user's employee, see ``hr.employee._get_unusual_days``.
+
+        :return: ``{'YYYY-MM-DD': bool}``
+        :rtype: dict
+        """
         employee_id = self.env.context.get('employee_id', False)
         employee = self.env['hr.employee'].browse(employee_id) if employee_id else self.env.user.employee_id
         return employee.sudo(False)._get_unusual_days(date_from, date_to)

@@ -53,9 +53,9 @@ def extract_comodel_domain(
     field_expr: str,
 ):
     """
-    Converts a domain to make it usable on the comodel pointed to by `field_expr`
+    Converts a domain to make it usable on the comodel pointed to by ``field_expr``
 
-    :param model: The model on which the domain was originally meant for. Usually `self`
+    :param model: The model on which the domain was originally meant for. Usually ``self``
     :param domain: The domain we want to convert
     :param field_expr: The field pointing to the comodel we want to translate the domain for.
         e.g.: "employee_id"

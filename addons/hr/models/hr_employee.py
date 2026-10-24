@@ -394,9 +394,21 @@ class HrEmployee(models.Model):
 
     @api.model
     def _get_current_day_location_field(self):
+        """Return the name of today's weekly work location field, e.g. ``'monday_location_id'``.
+
+        "Today" is evaluated in the user's timezone (``fields.Date.context_today``).
+
+        :rtype: str
+        """
         return DAYS[fields.Date.context_today(self).weekday()]
 
     def _prepare_create_values(self, vals_list):
+        """Drop the values of inherited ``hr.version`` fields the current user cannot write.
+
+        Default values of version fields restricted to other groups (e.g. ``wage``
+        for non-managers) would otherwise make the creation of the delegated
+        version raise an ``AccessError``. Values of employee fields are kept as is.
+        """
         result = super()._prepare_create_values(vals_list)
         new_vals_list = []
         Version = self.env['hr.version']
@@ -497,6 +509,12 @@ class HrEmployee(models.Model):
 
     @api.model
     def _create(self, data_list):
+        """Insert the employees, then link the version created by ``_inherits`` back to them.
+
+        The ORM creates the delegated ``hr.version`` before the employee, so its
+        ``employee_id`` can only be set (together with the inherited values) once
+        the employee row exists.
+        """
         versions = [vals['stored'].pop('version_id', None) for vals in data_list]
         result = super()._create(data_list)
         for (employee, version_id, vals) in zip(result, versions, data_list):
@@ -517,6 +535,14 @@ class HrEmployee(models.Model):
         )
 
     def check_no_existing_contract(self, date):
+        """Raise if the employee is already in contract on ``date``.
+
+        Call it before :meth:`create_contract`. Single employee only.
+
+        :param date: the date to check
+        :type date: datetime.date or str
+        :raise ValidationError: if a contract (of any active version) covers ``date``
+        """
         if isinstance(date, str):
             date = fields.Date.from_string(date)
         if self._is_in_contract(date):
@@ -556,6 +582,13 @@ class HrEmployee(models.Model):
 
     @api.model
     def _get_new_hire_field(self):
+        """Return the name of the date(time) field used to compute ``newly_hired``.
+
+        An employee is newly hired when this field is less than 90 days old.
+        Override to use another field (default: ``'create_date'``).
+
+        :rtype: str
+        """
         return 'create_date'
 
     def _compute_newly_hired(self):
@@ -571,9 +604,13 @@ class HrEmployee(models.Model):
 
     @api.depends(*DAYS, 'exceptional_location_id', 'resource_calendar_id', 'hr_presence_state')
     def _compute_presence_icon(self):
-        """
-        This method compute the state defining the display icon in the kanban view.
-        It can be overriden to add other possibilities, like time off or attendances recordings.
+        """Compute ``hr_icon_display`` and ``show_hr_icon_display`` (presence icon of kanban/avatar cards).
+
+        Today's work location (exceptional location, else the weekday location)
+        wins and gives ``presence_home``/``presence_office``/``presence_other``;
+        otherwise the icon is ``'presence_' + hr_presence_state``, shown only for
+        employees linked to a user. Overridden by e.g. ``hr_holidays`` and
+        ``hr_attendance`` to add time off / attendance based icons.
         """
         dayfield = self._get_current_day_location_field()
         for employee in self:
@@ -611,18 +648,34 @@ class HrEmployee(models.Model):
             employee.first_contract_date = employee._get_first_contract_date()
 
     def _get_first_versions(self, date_limit=date.max):
+        """Return the active versions of the employee starting on or before ``date_limit``.
+
+        :param datetime.date date_limit: upper bound on the versions ``date_start``
+        :return: versions ordered by ``date_version``
+        :rtype: hr.version
+        """
         self.ensure_one()
         return self.version_ids.filtered(lambda c: c.date_start <= date_limit)
 
     def _get_last_consecutive_versions(self, date_limit=date.max):
-        """
-        Returns the latest range of consecutive versions of self that is before
-        the passed `date_limit` date.
-        e.g. (with `date_limit` >= 20/11/2025):
-            If self has
-            - 3 consecutive versions from 01/01/2025 to 31/07/2025
-            - 2 consecutive versions from 01/08/2025 to 20/11/2025
-            Then this function returns the two last versions
+        """Return the last uninterrupted block of versions starting on or before ``date_limit``.
+
+        Starting from the latest version, earlier versions are included as long
+        as there are no working hours (according to the earlier version's
+        calendar) between the end of a version and the start of the next one
+        (see :meth:`hr.version._has_work_hours_between_versions`). A gap of
+        non-working days only (e.g. a weekend) does not break the block.
+
+        Example: with versions 01/01-31/07 (3 versions, consecutive), then a
+        working-days gap, then 01/09-20/11 (2 versions), only the last 2 are
+        returned.
+
+        Restricted to HR officers (or superuser). Single employee only.
+
+        :param datetime.date date_limit: upper bound on the versions ``date_start``
+        :return: versions ordered by ``date_start``
+        :rtype: hr.version
+        :raise AccessError: if the user is not an HR officer
         """
         self.ensure_one()
         if not self.env.su and not self.env.user.has_group("hr.group_hr_user"):
@@ -639,10 +692,29 @@ class HrEmployee(models.Model):
         return versions[first_version_index:]
 
     def _get_first_version_date(self, date_limit=date.max):
+        """Return the start date of the last uninterrupted block of versions.
+
+        See :meth:`_get_last_consecutive_versions`.
+
+        :param datetime.date date_limit: only consider versions starting on or before this date
+        :return: the smallest ``date_start`` of the block, or ``False`` if no version
+        :rtype: datetime.date or bool
+        """
         versions = self._get_last_consecutive_versions(date_limit)
         return min(versions.mapped('date_start')) if versions else False
 
     def _get_first_contract_date(self, date_limit=date.max):
+        """Return the first contract start date of the last uninterrupted block of versions.
+
+        This is the value of the stored ``first_contract_date`` field (computed
+        with the default ``date_limit``): the seniority start date, ignoring
+        older contracts separated from the current ones by a gap with working
+        days. See :meth:`_get_last_consecutive_versions`.
+
+        :param datetime.date date_limit: only consider versions starting on or before this date
+        :return: the smallest ``contract_date_start`` of the block, or ``False``
+        :rtype: datetime.date or bool
+        """
         versions = self._get_last_consecutive_versions(date_limit).filtered(lambda x: x.contract_date_start)
         return min(versions.mapped('contract_date_start')) if versions else False
 
@@ -654,6 +726,12 @@ class HrEmployee(models.Model):
 
     @api.model
     def _get_splitting_legal_name_countries(self):
+        """Return the company country codes for which the legal name is split into first/last name.
+
+        Hook for localizations (e.g. ``l10n_be_hr_payroll``); drives ``split_legal_name``.
+
+        :rtype: list[str]
+        """
         return []
 
     def _compute_split_legal_name(self):
@@ -664,11 +742,20 @@ class HrEmployee(models.Model):
     @api.depends('current_version_id')
     @api.depends_context('version_id')
     def _compute_version_id(self):
+        """Compute ``version_id``, the version that the inherited (``_inherits``) fields read and write.
+
+        It is ``current_version_id``, unless the context key ``version_id``
+        holds the id of a version of the employee: the employee then reads and
+        writes that version (this is how the form view displays and edits a
+        past or future version)::
+
+            employee.with_context(version_id=old_version.id).wage
+        """
         context_version_id = self.env.context.get('version_id', False)
         context_version = self.env['hr.version'].browse(context_version_id).exists() if context_version_id else self.env['hr.version']
 
         for employee in self:
-            if context_version.employee_id == self:
+            if context_version.employee_id == employee:
                 version = context_version
             else:
                 version = employee.current_version_id
@@ -701,12 +788,16 @@ class HrEmployee(models.Model):
         return [('id', 'in', subordinates.ids)]
 
     def _get_subordinates(self, parents=None):
-        """
-        Helper function to compute subordinates_ids.
-        Get all subordinates (direct and indirect) of an employee.
-        An employee can be a manager of his own manager (recursive hierarchy; e.g. the CEO is manager of everyone but is also
-        member of the RD department, managed by the CTO itself managed by the CEO).
-        In that case, the manager in not counted as a subordinate if it's in the 'parents' set.
+        """Return all direct and indirect subordinates (via ``child_ids``) of the employees in ``self``.
+
+        Cycles in the hierarchy are supported (e.g. the CEO manages the CTO who
+        manages the R&D department the CEO belongs to): employees already in
+        ``parents`` or ``self`` are never returned. Only active subordinates are
+        followed (``child_ids`` domain).
+
+        :param parents: employees already visited, used by the recursion
+        :type parents: hr.employee or None
+        :rtype: hr.employee
         """
         if not parents:
             parents = self.env[self._name]
@@ -740,6 +831,14 @@ class HrEmployee(models.Model):
 
     @api.depends('version_ids.date_version', 'version_ids.active')
     def _compute_current_version_id(self):
+        """Compute the stored ``current_version_id``.
+
+        The current version is the active version with the latest
+        ``date_version`` on or before today (user's timezone); if all versions
+        are in the future, the first one. Contract dates are not considered:
+        the current version may be out of contract. Since "today" changes, the
+        value is refreshed daily by :meth:`_cron_update_current_version_id`.
+        """
         today = fields.Date.context_today(self)
         current_version_per_employee = {}
         for version in self.env['hr.version'].search_fetch(
@@ -763,6 +862,13 @@ class HrEmployee(models.Model):
                 employee.current_version_id = new_current_version
 
     def _cron_update_current_version_id(self):
+        """Recompute ``current_version_id`` of all active employees (daily cron).
+
+        Needed because the current version depends on today's date: a future
+        version only becomes current when this cron runs on or after its
+        ``date_version``. The calendar and timezone of the employee's
+        ``resource_id`` follow the new current version (computed fields).
+        """
         self.search([])._compute_current_version_id()
 
     def _search_version_id(self, operator, value):
@@ -777,9 +883,19 @@ class HrEmployee(models.Model):
         return table.current_version_id
 
     def _get_version(self, date=None):
-        """
-        Return the version that should be used for the given date (today by default).
-        If no valid version is found, we return the very first version of the employee.
+        """Return the version in effect on ``date``.
+
+        This is the active version with the latest ``date_version`` on or before
+        ``date``. If ``date`` is before all versions, the first version is
+        returned. Archived versions are only used when the employee has no
+        active version. Contract dates are ignored: the result may be out of
+        contract (check ``version._is_in_contract(date)`` if needed).
+        Single employee only.
+
+        :param date: the reference date, today (user's timezone) by default
+        :type date: datetime.date or None
+        :return: a single version, or an empty recordset if the employee has none
+        :rtype: hr.version
         """
         self.ensure_one()
         if date is None:
@@ -791,6 +907,27 @@ class HrEmployee(models.Model):
         return max(filtered_versions, key=lambda v: v.date_version) if filtered_versions else versions[0]
 
     def create_version(self, values):
+        """Create a new version of the employee, effective from ``values['date_version']``.
+
+        The new version is a copy of the version in effect on that date (see
+        :meth:`_get_version`) on which ``values`` are written. If ``values``
+        does not specify them, the contract dates are those of the contract
+        running on that date (``(False, False)`` if none). If a
+        ``contract_date_end`` different from the running contract's end is
+        given (with the same start), the end date is propagated to all versions
+        of that contract. A ``contract_template_id`` in ``values`` is applied
+        on the new version. Single employee only.
+
+        Pitfall: if a version already exists with exactly this ``date_version``,
+        it is returned **unchanged** (``values`` are not written).
+
+        :param dict values: ``hr.version`` values; ``date_version`` (date,
+            datetime or string) is mandatory
+        :return: the new (or already existing) version
+        :rtype: hr.version
+        :raise ValueError: if ``date_version`` is missing
+        :raise AccessError: if the user cannot write on the employee and the copied version
+        """
         self.ensure_one()
 
         date = values.get('date_version', False)
@@ -871,6 +1008,20 @@ class HrEmployee(models.Model):
         return new_version
 
     def create_contract(self, date):
+        """Start a new contract on ``date`` and return the version carrying it.
+
+        The contract starts on ``date`` and ends the day before the next future
+        contract, or is open-ended (``contract_date_end = False``) if there is
+        none. If a version already exists on ``date``, its contract dates are
+        overwritten; otherwise a new version is created with
+        :meth:`create_version` (copying the version in effect on ``date``).
+        The caller must make sure the employee is not already in contract on
+        ``date`` (see :meth:`check_no_existing_contract`). Single employee only.
+
+        :param date: contract start date
+        :type date: datetime.date or str
+        :rtype: hr.version
+        """
         # Here we can assume that there is no existing contract on the date given
         self.ensure_one()
         if date and isinstance(date, str):
@@ -895,45 +1046,58 @@ class HrEmployee(models.Model):
         })
 
     def _is_in_contract(self, date):
+        """Return whether a contract of the employee covers ``date``.
+
+        Based on the contract ranges (:meth:`_get_contract_dates`), not on a
+        single version: unlike :meth:`hr.version._is_in_contract`, it answers
+        ``True`` whatever the version in effect on ``date``. Single employee only.
+
+        :param datetime.date date: the date to check
+        :rtype: bool
+        """
         return self._get_contract_dates(date) != (False, False)
 
     def _is_flexible(self, date=None):
+        """Return whether the working schedule in effect on ``date`` is flexible.
+
+        :param date: reference date (today by default), see :meth:`_get_version`
+        :type date: datetime.date or None
+        :rtype: bool
+        """
         calendar = self._get_version(date).resource_calendar_id
         return bool(calendar) and calendar._is_flexible()
 
     def _is_fully_flexible(self, date=None):
+        """Return whether the working schedule in effect on ``date`` is fully flexible.
+
+        :param date: reference date (today by default), see :meth:`_get_version`
+        :type date: datetime.date or None
+        :rtype: bool
+        """
         calendar = self._get_version(date).resource_calendar_id
         return bool(calendar) and calendar._is_fully_flexible()
 
     def _get_contracts(self, date_start=None, date_end=None, use_latest_version=True, domain=None):
-        """
-        Retrieve the contracts for employees within a specified date range and based
-        on specified criteria, such as domain filtering and version selection.
+        """Return one representative version per contract overlapping the period, per employee.
 
-        This method is used to collect and organize employee contracts based on their
-        versions, date ranges, and other specified options. The resulting contracts are
-        grouped by employee, and their selection logic depends on whether the latest
-        version should be used or not. It supports flexibility in contract retrieval by
-        allowing optional filters for date range and domain.
+        Contracts are found with :meth:`_get_contract_versions`. For each
+        contract, a single version is kept: with ``use_latest_version``, the
+        version in effect on ``date_end`` (the last version of the contract if
+        ``date_end`` is not given); otherwise the version in effect on
+        ``date_start`` (the first version if not given). If no version of the
+        contract has started yet on that date, its first version is used.
 
-        Args:
-            date_start (Optional[datetime.date]): The start date to filter the contracts
-                by. If provided, only contract versions <= this date are considered
-                based on the selection logic.
-            date_end (Optional[datetime.date]): The end date to filter the contracts by.
-                Only contract versions within the range will be retrieved. Defaults to
-                None if not specified.
-            domain (Optional[dict]): A dictionary representing additional filters or
-                constraints to apply to the contract versions retrieved. Defaults to
-                None.
-            use_latest_version (bool): Indicates whether to retrieve the version
-            effective at the end of the contract (or before the date_end) for each employee (True) or
-            at the start of the contract (before the date_start) (False). Defaults to True.
-
-        Returns:
-            collections.defaultdict: A dictionary mapping each employee's identifier
-            (employee.id) to a set of their corresponding contracts. Each set contains
-            version records retrieved and filtered based on the specified criteria.
+        :param date_start: start of the period (inclusive), unbounded if ``None``
+        :type date_start: datetime.date or None
+        :param date_end: end of the period (inclusive), unbounded if ``None``
+        :type date_end: datetime.date or None
+        :param bool use_latest_version: pick the version in effect at the end
+            (``True``) or at the start (``False``) of the period
+        :param domain: extra ``hr.version`` domain
+        :type domain: list or Domain or None
+        :return: ``{employee_id: hr.version}`` (one record per contract),
+            a ``defaultdict`` returning an empty recordset for unknown ids
+        :rtype: dict[int, hr.version]
         """
         contract_versions_by_employee = self._get_contract_versions(date_start, date_end, domain)
         contracts_by_employee = defaultdict(lambda: self.env["hr.version"])
@@ -948,22 +1112,25 @@ class HrEmployee(models.Model):
         return contracts_by_employee
 
     def _get_contract_versions(self, date_start=None, date_end=None, domain=None):
-        """
-        Retrieves contract versions for employees within the specified date range and
-        domain. The function constructs a dynamic domain to filter contracts based on
-        the provided arguments and retrieves grouped results. The grouping ensures
-        organization by employee and date, and the results are stored in a structured
-        format for ease of use.
+        """Return the versions of the contracts overlapping the period, grouped by employee and contract.
 
-        Args:
-            date_start (datetime.date | None): The start date for filtering contracts.
-            date_end (datetime.date | None): The end date for filtering contracts.
-            domain (list | None): Additional domain constraints for filtering.
+        A contract is the set of active versions of an employee sharing the same
+        ``contract_date_start``. A contract overlaps the period if
+        ``contract_date_start <= date_end`` and its ``contract_date_end`` is
+        empty or ``>= date_start``; all its versions are returned, even those
+        whose own ``date_start``/``date_end`` lie outside the period.
 
-        Returns:
-            dict: A dictionary where keys are employee IDs and values are lists of
-                  contract version records organized by contract date start and date
-                  range.
+        Pitfall: on an empty recordset, versions of **all** employees are returned.
+
+        :param date_start: start of the period (inclusive), unbounded if ``None``
+        :type date_start: datetime.date or None
+        :param date_end: end of the period (inclusive), unbounded if ``None``
+        :type date_end: datetime.date or None
+        :param domain: extra ``hr.version`` domain
+        :type domain: list or Domain or None
+        :return: ``{employee_id: {contract_date_start: hr.version}}``, versions
+            ordered by ``date_version`` (nested ``defaultdict``)
+        :rtype: dict[int, dict[datetime.date, hr.version]]
         """
         version_domain = Domain('contract_date_start', '!=', False)
         if self.ids:
@@ -988,9 +1155,14 @@ class HrEmployee(models.Model):
         return contract_versions_by_employee
 
     def _get_all_contract_dates(self):
-        """
-        Return a list of intervals (date_from, date_to) where the employee is in contract.
-        For a permanent contract, the interval is (date_from, False).
+        """Return the contract periods of the employee, ordered by start date.
+
+        One tuple per distinct ``(contract_date_start, contract_date_end)`` among
+        the active versions. Single employee only.
+
+        :return: ``[(date_from, date_to), ...]`` with inclusive dates;
+            ``date_to`` is ``False`` for an open-ended contract
+        :rtype: list[tuple[datetime.date, datetime.date | bool]]
         """
         self.ensure_one()
         return self.env['hr.version']._read_group(
@@ -999,9 +1171,14 @@ class HrEmployee(models.Model):
             order="contract_date_start:day")
 
     def _get_contract_dates(self, date):
-        """
-        Return a tuple (date_from, date_to) of the contract at the date given.
-        (False, False) if the employee is not in contract at that date.
+        """Return the period of the contract covering ``date``.
+
+        Single employee only.
+
+        :param datetime.date date: the date to check
+        :return: ``(date_from, date_to)`` (``date_to`` is ``False`` if open-ended),
+            or ``(False, False)`` if not in contract on ``date``
+        :rtype: tuple
         """
         self.ensure_one()
         for date_from, date_to in self._get_all_contract_dates():
@@ -1035,6 +1212,13 @@ class HrEmployee(models.Model):
         return [('id', operator, new_hires.ids)]
 
     def _create_work_contacts(self):
+        """Create and link a work contact (``res.partner``) for each employee.
+
+        The partner gets the employee's name, work email/phone, image and company.
+        Called on employee creation for employees without ``work_contact_id``.
+
+        :raise UserError: if an employee already has a work contact
+        """
         if any(employee.work_contact_id for employee in self):
             raise UserError(self.env._('Some employee already has a work contact'))
         work_contacts = self.env['res.partner'].create([{
@@ -1066,6 +1250,12 @@ class HrEmployee(models.Model):
                     employee.work_email = employee.work_contact_id.email
 
     def _inverse_work_contact_details(self):
+        """Propagate ``work_email``/``work_phone`` to the work contact, creating it if missing.
+
+        The partner is only updated when it is the work contact of this employee
+        alone (the same partner can be shared by employees of several companies).
+        Conversely, ``_compute_work_contact_details`` reads them from the partner.
+        """
         employees_without_work_contact = self.env['hr.employee']
         for employee in self:
             if not employee.work_contact_id:
@@ -1099,8 +1289,16 @@ class HrEmployee(models.Model):
 
     @api.model
     def _get_employee_working_now(self):
-        """ Sudo needed to get resource_calendar_id as its normally only accessible by hr_users on version model
-        (accessible on employee by inherits)."""
+        """Return the ids of the employees of ``self`` expected to work now.
+
+        An employee is "working now" when their current working schedule has
+        work intervals within the next hour (in the employee's timezone).
+        Intervals are computed per calendar, so only company-wide leaves are
+        considered, not the employee's own time off. Employees without
+        calendar are never returned. Despite ``@api.model``, it works on ``self``.
+
+        :rtype: list[int]
+        """
         working_now = []
         # We loop over all the employee tz and the resource calendar_id to detect working hours in batch.
         for tz_info, employee_ids in self.filtered('resource_calendar_id').grouped('tz').items():
@@ -1120,9 +1318,14 @@ class HrEmployee(models.Model):
 
     @api.depends('user_id.im_status')
     def _compute_presence_state(self):
-        """
-        This method is overritten in several other modules which add additional
-        presence criterions. e.g. hr_attendance, hr_holidays
+        """Compute ``hr_presence_state`` (``present``, ``absent`` or ``out_of_working_hour``).
+
+        In ``hr``, only the login-based presence control is implemented (company
+        setting ``hr_presence_control_login``): out of contract today gives
+        ``out_of_working_hour``; an online user gives ``present``; an offline
+        user expected to work now (:meth:`_get_employee_working_now`) gives
+        ``absent``. Without the setting, the state is always
+        ``out_of_working_hour``. Extended by ``hr_attendance``, ``hr_holidays``, ...
         """
         # sudo: res.users - can access presence of accessible user
         employee_to_check_working = self.filtered(
@@ -1245,6 +1448,13 @@ class HrEmployee(models.Model):
         self.related_partners_count = len(self._get_related_partners())
 
     def _get_related_partners(self):
+        """Return the partners related to the employees (work contacts and users' partners).
+
+        Hook extended by other modules (e.g. ``hr_recruitment`` adds the
+        applicants' partners); used by the "Related Contacts" smart button.
+
+        :rtype: res.partner
+        """
         return self.work_contact_id | self.user_id.partner_id
 
     def action_related_contacts(self):
@@ -1329,6 +1539,17 @@ class HrEmployee(models.Model):
 
     @api.model
     def search_fetch(self, domain, field_names=None, offset=0, limit=None, order=None):
+        """Search and fetch, through ``hr.employee.public`` for users without read access.
+
+        Users without access to ``hr.employee`` (e.g. regular internal users)
+        still get an ``hr.employee`` recordset: the search runs on
+        ``hr.employee.public`` (conditions on ``version_id``/``current_version_id``
+        are mapped or dropped) and the public values are copied into the cache
+        of the ``hr.employee`` records.
+
+        :raise AccessError: if ``field_names`` or ``domain`` contain fields not
+            available on ``hr.employee.public``
+        """
         if self.has_access('read'):
             return super().search_fetch(domain, field_names, offset, limit, order)
 
@@ -1355,12 +1576,25 @@ class HrEmployee(models.Model):
         # employee, we thus need to map it to avoid getting errors
         domain = filter_map_domain(domain, map_condition_to_public_employee)
 
-        public = self.env['hr.employee.public'].search_fetch(domain, field_names, offset, limit, order)
+        try:
+            public = self.env['hr.employee.public'].search_fetch(domain, field_names, offset, limit, order)
+        except (ValueError, KeyError) as e:
+            # the domain uses fields not available on hr.employee.public (as in _search)
+            raise AccessError(self.env._('You do not have access to this document.')) from e
         employees = self.browse(public._ids)
         employees._copy_cache_from(public, field_names)
         return employees
 
     def fetch(self, field_names=None):
+        """Fetch fields, reading them from ``hr.employee.public`` for users without read access.
+
+        This is what makes ``employee.name`` work for a regular internal user:
+        the public values are copied into the ``hr.employee`` cache; reading a
+        non-public field raises an ``AccessError``.
+
+        :raise AccessError: if ``field_names`` contains fields not available on
+            ``hr.employee.public``
+        """
         if self.browse().has_access('read'):
             return super().fetch(field_names)
 
@@ -1383,7 +1617,29 @@ class HrEmployee(models.Model):
                 public.mapped(field_name)
         self._copy_cache_from(public, field_names)
 
+    def _compute_field_value(self, field):
+        """Read the non-stored fields inherited from ``hr.version`` from ``hr.employee.public``
+        for users without read access.
+
+        Those fields (e.g. ``job_title``, ``department_id``) are computed from
+        ``version_id``, that such users cannot read: like in :meth:`fetch`, their
+        public values are copied into the cache (an ``AccessError`` is raised for
+        the fields not available on ``hr.employee.public``).
+        """
+        if field.inherited and all(self._ids) and not self.browse().has_access('read'):
+            # HACK: fill the cache of the employee with the values of hr.employee.public
+            self.fetch([field.name])
+            return
+        super()._compute_field_value(field)
+
     def _access_domain(self, operation):
+        """Grant read access to all employees when the ``hr.mixin`` context marker is set.
+
+        Models inheriting ``hr.mixin`` set the private context key
+        ``_allow_read_hr_employee`` during ``create``/``write`` so that users
+        without access to ``hr.employee`` can still assign many2many fields
+        targeting employees.
+        """
         # This method override provides read access to 'hr.employee' in some
         # situations, like setting a many2many field to comodel 'hr.employee'.
         # Since Odoo 19, one must have read access to the comodel to modify the
@@ -1395,13 +1651,22 @@ class HrEmployee(models.Model):
         return super()._access_domain(operation)
 
     def _check_private_fields(self, field_names):
-        """ Check whether ``field_names`` contain private fields. """
+        """Raise if ``field_names`` contains fields not available on ``hr.employee.public``.
+
+        :param list[str] field_names: field names to check
+        :raise AccessError: if any field is private
+        """
         public_fields = self.env['hr.employee.public']._fields
         private_fields = [fname for fname in field_names if fname not in public_fields]
         if private_fields:
             raise AccessError(self.env._('The fields “%s”, which you are trying to read, are not available for employee public profiles.', ','.join(private_fields)))
 
     def _copy_cache_from(self, public, field_names):
+        """Copy the cached values of ``field_names`` from ``public`` (``hr.employee.public``) to ``self``.
+
+        ``self`` and ``public`` must be aligned (same ids, same order). Values
+        missing from the public cache are left missing.
+        """
         # HACK: retrieve publicly available values from hr.employee.public and
         # copy them to the cache of self; non-public data will be missing from
         # cache, and interpreted as an access error
@@ -1420,6 +1685,18 @@ class HrEmployee(models.Model):
 
     @api.model
     def notify_expiring_contract_work_permit(self):
+        """Schedule "to do" activities for expiring contracts and work permits (daily cron).
+
+        For each company, targets employees whose current ``contract_date_end``
+        (resp. ``work_permit_expiration_date``) falls within the company's
+        ``contract_expiration_notice_period`` (resp.
+        ``work_permit_expiration_notice_period``) days from today. The activity
+        is assigned to the HR responsible (or the current user), with the
+        expiration date as deadline; existing identical activities are not
+        duplicated.
+
+        :return: ``True``
+        """
         companies = self.env['res.company'].search([])
         employees_contract_expiring = self.env['hr.employee']
         employees_work_permit_expiring = self.env['hr.employee']
@@ -1490,12 +1767,22 @@ class HrEmployee(models.Model):
 
     @api.model
     def get_view(self, view_id=None, view_type='form', **options):
+        """Return the ``hr.employee.public`` view for users without read access to ``hr.employee``."""
         if self.browse().has_access('read'):
             return super().get_view(view_id, view_type, **options)
         return self.env['hr.employee.public'].get_view(view_id, view_type, **options)
 
     @api.model
     def get_views(self, views, options=None):
+        """Return the views, replacing the "today's location" placeholders by today's weekday field.
+
+        In the search and list archs, ``today_location_name`` and
+        ``work_location_name`` are replaced by e.g. ``monday_location_id`` (see
+        :meth:`_get_current_day_location_field`).
+
+        :raise RedirectWarning: for users without read access to ``hr.employee``,
+            redirecting them to the public employees action
+        """
         if self.browse().has_access('read'):
             res = super().get_views(views, options)
             # hack to allow groupby on today's location. Since there are 7 different fields, we have to use a placeholder
@@ -1520,13 +1807,17 @@ class HrEmployee(models.Model):
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None, *, bypass_access=False, **kwargs):
-        """
-            We override the _search because it is the method that checks the access rights
-            This is correct to override the _search. That way we enforce the fact that calling
-            search on an hr.employee returns a hr.employee recordset, even if you don't have access
-            to this model, as the result of _search (the ids of the public employees) is to be
-            browsed on the hr.employee model. This can be trusted as the ids of the public
-            employees exactly match the ids of the related hr.employee.
+        """Search employees, through ``hr.employee.public`` for users without read access.
+
+        ``_search`` is where access rights are checked, so overriding it makes
+        ``env['hr.employee'].search(...)`` return an ``hr.employee`` recordset
+        even for users without access to the model: the domain is evaluated on
+        ``hr.employee.public``, whose ids are the employee ids. Conditions on
+        ``current_version_id`` (produced by the optimization of inherited
+        fields) are converted to conditions on ``id``.
+
+        :raise AccessError: if the domain uses fields not available on
+            ``hr.employee.public``
         """
         if self.browse().has_access('read') or bypass_access:
             return super()._search(domain, offset, limit, order, bypass_access=bypass_access, **kwargs)
@@ -1571,7 +1862,13 @@ class HrEmployee(models.Model):
         convert.convert_file(env=self.sudo().env, module='hr', filename='data/scenarios/hr_scenario.xml', idref=None, mode='init')
 
     def get_formview_id(self, access_uid=None):
-        """ Override this method in order to redirect many2one towards the right model depending on access_uid """
+        """Return the public employee form view for users who are not HR officers.
+
+        Used when opening a many2one to ``hr.employee``.
+
+        :param int access_uid: the user to check instead of the current user
+        :rtype: int
+        """
         user = self.env.user
         if access_uid:
             user = self.env['res.users'].browse(access_uid).sudo()
@@ -1582,7 +1879,14 @@ class HrEmployee(models.Model):
         return self.env.ref('hr.hr_employee_public_view_form').id
 
     def get_record_default_action(self, access_uid=None):
-        """ Override this method in order to redirect many2one towards the right model depending on access_uid """
+        """Return the default action of the record, on ``hr.employee.public`` when needed.
+
+        The action targets ``hr.employee.public`` if the user is not an HR
+        officer or cannot read this employee.
+
+        :param int access_uid: the user to check instead of the current user
+        :rtype: dict
+        """
         res = super().get_record_default_action(access_uid=access_uid)
         user = self.env.user
         if access_uid:
@@ -1634,7 +1938,17 @@ class HrEmployee(models.Model):
             self.tz = self.company_id.tz
 
     def _remove_work_contact_id(self, user, employee_company):
-        """ Remove work_contact_id for previous employee if the user is assigned to a new employee """
+        """Unlink ``user``'s partner as work contact of other user-less employees of the company.
+
+        Called when ``user`` gets linked to ``self`` (create/write of
+        ``user_id``), so that the user's partner remains the work contact of a
+        single employee per company.
+
+        :param user: the user being linked
+        :type user: res.users
+        :param employee_company: company id to consider, ``self.company_id`` by default
+        :type employee_company: int or None
+        """
         employee_company = employee_company or self.company_id.id
         # For employees with a user_id, the constraint (user can't be linked to multiple employees) is triggered
         old_partner_employee_ids = user.partner_id.employee_ids.filtered(lambda e:
@@ -1645,6 +1959,20 @@ class HrEmployee(models.Model):
         old_partner_employee_ids.work_contact_id = None
 
     def _sync_user(self, user, employee_has_image=False):
+        """Return the employee values to write when linking ``user`` to the employee.
+
+        The user's partner becomes the work contact, and the user's image
+        (unless the employee has one) and timezone (if set) are copied. Used
+        by :meth:`create`, :meth:`write`, the ``user_id`` onchange and
+        ``res.users.action_create_employee``. Does not write anything itself.
+
+        :param user: the user to link (may be empty)
+        :type user: res.users
+        :param bool employee_has_image: if ``True``, keep the employee's image
+        :return: values for ``hr.employee.write``/``create`` (``work_contact_id``,
+            ``user_id``, optionally ``image_1920`` and ``tz``)
+        :rtype: dict
+        """
         vals = dict(
             work_contact_id=user.partner_id.id if user else self.work_contact_id.id,
             user_id=user.id,
@@ -1656,13 +1984,21 @@ class HrEmployee(models.Model):
         return vals
 
     def _get_or_create_light_user(self, invite=False):
-        """Resolve or create the light user for an employee.
+        """Return a user for the employee, creating a light (less billable) internal user if needed.
 
-        Called while building an employee's create values so the employee is
-        born already linked to its user (keeping the active/user_id constraint
-        satisfied without a mid-create flush). Reuses, in order, the resource's
-        user, the work contact's user, or an existing user matching the work
-        email; otherwise creates a light (less-billable) user.
+        Reuses, in order: the resource's user, the work contact's user, or an
+        existing active internal user whose login/email matches the work email.
+        Otherwise creates a user restricted to the light groups, in the
+        employee's company. Does not link the user: the caller assigns
+        ``user_id`` (see :meth:`action_send_invitation`). Single employee only.
+
+        :param bool invite: send the signup/reset password e-mail to the reused
+            user; refuses to reuse a user only matched by e-mail
+        :rtype: res.users
+        :raise ValidationError: if no e-mail is available to build the login
+        :raise UserError: if the matching user is archived, a portal user,
+            already has an employee in the company, or (with ``invite``) was
+            only matched by e-mail
         """
         self.ensure_one()
         ResUsers = self.env['res.users'].sudo()
@@ -1718,6 +2054,16 @@ class HrEmployee(models.Model):
         })
 
     def _prepare_resource_values(self, vals, tz):
+        """Return the values of the ``resource.resource`` created with the employee.
+
+        Extends ``resource.mixin`` with ``user_id`` and ``active``. Pops
+        ``name`` and ``user_id`` from ``vals`` (they are related to the
+        resource) to avoid a useless write after creation.
+
+        :param dict vals: employee creation values (modified in place)
+        :param str tz: timezone of the resource
+        :rtype: dict
+        """
         resource_vals = super()._prepare_resource_values(vals, tz)
         vals.pop('name', False)  # Already considered by super call but no popped
         # We need to pop it to avoid useless resource update (& write) call
@@ -1732,6 +2078,11 @@ class HrEmployee(models.Model):
 
     @api.model
     def new(self, values=None, origin=None, ref=None):
+        """Create a new (in-memory) employee along with its in-memory version.
+
+        Inherited ``hr.version`` values are put on a new version linked to the
+        new employee, keeping only the fields the user can read.
+        """
         if not values:
             values = {}
         new_vals = values.copy()
@@ -1805,8 +2156,36 @@ class HrEmployee(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        """Create employees, each with its resource, first version and work contact.
+
+        Values of inherited ``hr.version`` fields (``date_version``,
+        ``contract_date_start``, ``wage``, ``job_id``, ``resource_calendar_id``,
+        ...) go to the first version, created through ``_inherits``; creation
+        is done per company so that the version gets the right company. The
+        values of a ``contract_template_id`` are applied to the first version
+        (explicit values have priority). If ``user_id`` is given, the user's partner, image and timezone are used
+        (:meth:`_sync_user`). A work contact is created for employees without
+        one, an avatar is generated if there is no image, department channels
+        are subscribed and an onboarding note is logged.
+
+        Example::
+
+            env['hr.employee'].create({
+                'name': 'John Doe',
+                'job_id': job.id,
+                'date_version': date(2026, 1, 1),
+                'contract_date_start': date(2026, 1, 1),
+                'wage': 3000,
+            })
+        """
         vals_per_company = defaultdict(list)
+        Version = self.env['hr.version']
         for idx, vals in enumerate(vals_list):
+            if vals.get('contract_template_id'):
+                # the template is stored on the employee, not on the version: apply it
+                # here, explicit values having priority (as in hr.version create)
+                template_vals = Version.get_values_from_contract_template(Version.browse(vals['contract_template_id']))
+                vals.update({**template_vals, **vals})
             if vals.get('user_id'):
                 user = self.env['res.users'].browse(vals['user_id'])
                 vals.update(self._sync_user(user, bool(vals.get('image_1920'))))
@@ -1864,6 +2243,24 @@ class HrEmployee(models.Model):
         return employees
 
     def write(self, vals):
+        """Write on employees, sending inherited fields to their ``version_id`` in a single write.
+
+        Values of inherited ``hr.version`` fields are written on ``version_id``,
+        i.e. the current version, or the version given by the ``version_id``
+        context key (see :meth:`_compute_version_id`). To change data from a
+        given date on, create a version instead (:meth:`create_version`).
+        Writing on versions also sets ``last_modified_date/uid`` and logs an
+        "As of <date>" tracking message.
+
+        Side effects: ``user_id`` syncs work contact/image/timezone
+        (:meth:`_sync_user`); ``tz`` is propagated to the linked user (same
+        company); changing ``work_contact_id`` moves the bank accounts to the new
+        partner (and untrusts them); ``resource_calendar_id`` updates the
+        resource's calendar when the written version is the current one;
+        ``current_version_id`` always copies the new version's calendar onto
+        the resource; ``department_id``/``user_id`` subscribe the
+        user to the department's auto-subscription channels.
+        """
         if 'work_contact_id' in vals:
             self.message_unsubscribe(self.work_contact_id.ids)
         if 'user_id' in vals:
@@ -1939,17 +2336,44 @@ class HrEmployee(models.Model):
         return res
 
     def unlink(self):
+        """Delete the employees, their versions and their ``resource.resource``.
+
+        The versions are deleted by the database (``hr.version.employee_id``
+        has ``ondelete='cascade'``), so the ``hr.version`` unlink checks (an
+        employee keeps at least one version) do not apply.
+        """
         resources = self.mapped('resource_id')
         super().unlink()
         return resources.unlink()
 
     def _get_employee_m2o_to_empty_on_archived_employees(self):
+        """Return the ``hr.employee`` many2one fields (to ``hr.employee``) emptied when the target is archived.
+
+        Hook for :meth:`action_archive`, e.g. a manager or coach who is archived
+        is removed from their subordinates.
+
+        :rtype: list[str]
+        """
         return ['parent_id', 'coach_id']
 
     def _get_user_m2o_to_empty_on_archived_employees(self):
+        """Return the ``hr.employee`` many2one fields (to ``res.users``) emptied when the target's employee is archived.
+
+        Hook for :meth:`action_archive` (e.g. ``hr_holidays`` adds the time off
+        approver ``leave_manager_id``).
+
+        :rtype: list[str]
+        """
         return []
 
     def action_archive(self):
+        """Archive the employees and clear the references other employees have to them.
+
+        The fields listed by :meth:`_get_employee_m2o_to_empty_on_archived_employees`
+        and :meth:`_get_user_m2o_to_empty_on_archived_employees` are emptied on
+        the employees pointing to the archived ones (or their users). Archiving
+        an employee also archives its resource (``active`` is related).
+        """
         archived_employees = self.filtered('active')
         res = super().action_archive()
         if archived_employees:
@@ -1992,6 +2416,13 @@ class HrEmployee(models.Model):
             employee.barcode = '041'+"".join(choice(digits) for i in range(9))
 
     def _get_resources_per_tz(self, date=None):
+        """Group the employees' resources by timezone, as expected by ``resource.calendar`` batch methods.
+
+        :param date: reference date for the timezone (see :meth:`_get_tz`)
+        :type date: datetime.date or datetime.datetime or None
+        :return: ``{ZoneInfo: resource.resource}``
+        :rtype: dict
+        """
         employee_per_tz = self.grouped(lambda e: ZoneInfo(e._get_tz(date=date)))
         return {
             tz: employees.resource_id
@@ -1999,6 +2430,17 @@ class HrEmployee(models.Model):
         }
 
     def _get_tz(self, date=None):
+        """Return the timezone name of the employee, on ``date`` if given.
+
+        The timezone is stored on the version: without ``date``, the one of
+        ``version_id`` (current version) is used, otherwise the one of the
+        version in effect on ``date``. Falls back on the user's partner
+        timezone, the company timezone, then ``'UTC'``. Single employee only.
+
+        :param date: reference date
+        :type date: datetime.date or datetime.datetime or str or None
+        :rtype: str
+        """
         self.ensure_one()
         tz = self.tz
         if date:
@@ -2007,15 +2449,26 @@ class HrEmployee(models.Model):
         return tz or self.user_partner_id.tz or self.company_id.tz or 'UTC'
 
     def _get_tz_batch(self, date=None):
+        """Return the timezone name of each employee, see :meth:`_get_tz`.
+
+        :return: ``{employee_id: tz_name}``
+        :rtype: dict[int, str]
+        """
         # Finds the first valid timezone in his tz, his partner tz or UTC
         # Returns a dict {employee_id: tz}
         return {emp.id: emp._get_tz(date=date) for emp in self}
 
     def _get_first_contract_version_at(self, date):
-        """
-        Return {employee_id: version} with the version in effect at ``date`` among the
-        versions in contract at ``date`` (i.e. the latest one with date_version <= date,
-        or the first one of the contract if none started yet).
+        """Return, per employee in contract on ``date``, the version of that contract in effect on ``date``.
+
+        Among the versions whose contract covers ``date``: the latest one with
+        ``date_version <= date``, or the first one of the contract if none has
+        started yet. Employees not in contract on ``date`` are absent from the
+        result.
+
+        :param datetime.date date: the reference date
+        :return: ``{employee_id: hr.version}`` (sudoed versions)
+        :rtype: dict[int, hr.version]
         """
         versions = self.sudo().version_ids.filtered_domain([
             ('contract_date_start', '!=', False),
@@ -2034,6 +2487,18 @@ class HrEmployee(models.Model):
         return res
 
     def _get_calendars(self, date_from=None):
+        """Return the working schedule of each employee, on ``date_from`` if given.
+
+        Without ``date_from``, the calendar of the current version. With
+        ``date_from``, employees in contract on that date get the calendar of
+        the version in effect (:meth:`_get_first_contract_version_at`); the
+        others keep the current version's calendar.
+
+        :param date_from: reference date (a datetime is truncated to its date)
+        :type date_from: datetime.date or datetime.datetime or None
+        :return: ``{employee_id: resource.calendar}``
+        :rtype: dict[int, resource.calendar]
+        """
         res = super()._get_calendars(date_from=date_from)
         if not date_from:
             return res
@@ -2044,6 +2509,11 @@ class HrEmployee(models.Model):
         return res
 
     def _get_hours_per_week_batch(self, date_from=None):
+        """Return the ``hours_per_week`` of each employee's calendar, see :meth:`_get_calendars`.
+
+        :return: ``{employee_id: float}``
+        :rtype: dict[int, float]
+        """
         res = super()._get_hours_per_week_batch(date_from=date_from)
         if not date_from:
             return res
@@ -2054,6 +2524,11 @@ class HrEmployee(models.Model):
         return res
 
     def _get_hours_per_day_batch(self, date_from=None):
+        """Return the ``hours_per_day`` of each employee's calendar, see :meth:`_get_calendars`.
+
+        :return: ``{employee_id: float}``
+        :rtype: dict[int, float]
+        """
         res = super()._get_hours_per_day_batch(date_from=date_from)
         if not date_from:
             return res
@@ -2064,11 +2539,30 @@ class HrEmployee(models.Model):
         return res
 
     def _get_version_periods(self, start, stop, field=None, check_contract=False):
-        """
-        :param date start: the start of the period
-        :param date stop: the stop of the period
-        :param string field: the field mapped over the periods. Returns the versions if left empty
-        :param boolean check_contract: true means that we restrict valid versions only to contract periods
+        """Split ``[start, stop]`` into the periods covered by each version, per employee.
+
+        Each period is the intersection of ``[start, stop]`` with the version's
+        ``[date_start, date_end]`` (an open-ended version is clipped at
+        ``stop``). Days not covered by any version (e.g. before the first
+        version) are simply absent. Works in batch.
+
+        Example::
+
+            employee._get_version_periods(date(2026, 1, 1), date(2026, 12, 31), 'wage')
+            # {hr.employee(23,): [(date(2026, 1, 1), date(2026, 5, 31), 3000.0),
+            #                     (date(2026, 6, 1), date(2026, 12, 31), 3500.0)]}
+
+        :param datetime.date start: start of the period (inclusive)
+        :param datetime.date stop: end of the period (inclusive)
+        :param field: ``hr.version`` field name to map on each period, or a list
+            of field names (values are then tuples); the version itself if empty
+        :type field: str or list[str] or None
+        :param bool check_contract: only consider the versions in contract
+            during the period (:meth:`_get_versions_with_contract_overlap_with_period`)
+        :return: ``{employee record: [(date_from, date_to, value), ...]}`` with
+            inclusive dates, ordered by date (``defaultdict(list)``)
+        :rtype: dict
+        :raise UserError: if a field does not exist
         """
         if isinstance(field, list):
             if any(f not in self for f in field):
@@ -2108,18 +2602,47 @@ class HrEmployee(models.Model):
         return version_periods_by_employee
 
     def _get_calendar_periods(self, start, stop, check_contract=True):
-        """
-        :param date start: the start of the period
-        :param date stop: the stop of the period
-        :param boolean check_contract: true means that we restrict valid versions only to contract periods
+        """Return the working schedule periods of the employees within ``[start, stop]``.
+
+        Shortcut for ``_get_version_periods(start, stop, 'resource_calendar_id',
+        check_contract)`` in sudo; note that ``check_contract`` defaults to
+        ``True`` here, so periods out of contract are excluded.
+
+        :param datetime.date start: start of the period (inclusive)
+        :param datetime.date stop: end of the period (inclusive)
+        :param bool check_contract: only consider the versions in contract
+        :return: ``{employee record: [(date_from, date_to, resource.calendar), ...]}``
+        :rtype: dict
         """
         return self.sudo()._get_version_periods(start, stop, 'resource_calendar_id', check_contract)
 
     def _adjust_leaves(self, leave_intervals):
+        """Hook to alter the leave intervals subtracted from duration-based work intervals.
+
+        Used by :meth:`_get_employee_unavailable_intervals`; overridden in
+        ``hr_holidays``. Returns ``leave_intervals`` unchanged by default.
+
+        :param Intervals leave_intervals: leave intervals of one employee
+        :rtype: Intervals
+        """
         return leave_intervals
 
     def _get_employee_unavailable_intervals(self, start, stop):
-        """ returns a dict {employee_id: [{start, stop}]} for the unavailability intervals of each employee which is used for _gantt_unavailability """
+        """Return the unavailability intervals of each employee within ``[start, stop]`` (Gantt views).
+
+        The available time is computed per version in contract (calendar and
+        timezone of each version): work intervals for regular calendars, whole
+        attendance days for duration-based calendars, everything but leaves for
+        flexible calendars. Unavailability is the complement within
+        ``[start, stop]``; an employee without contract in the period is
+        unavailable the whole period.
+
+        :param datetime.datetime start: timezone-aware start
+        :param datetime.datetime stop: timezone-aware end
+        :return: ``{employee_id: [{'start': datetime, 'stop': datetime}, ...]}``
+            with UTC-aware datetimes
+        :rtype: dict[int, list[dict]]
+        """
 
         unavailability_mapping = defaultdict(list)
         start_dt = start.astimezone(UTC)
@@ -2203,9 +2726,15 @@ class HrEmployee(models.Model):
 
     @api.model
     def _get_all_versions_with_contract_overlap_with_period(self, date_from, date_to):
-        """
-        Returns the versions of all employees between date_from and date_to
-        that have at least 1 day in contract during that period
+        """Return the versions of all employees in contract during ``[date_from, date_to]``.
+
+        Model-level variant of :meth:`_get_versions_with_contract_overlap_with_period`
+        (searches the employees accessible to the user, active ones only).
+
+        :param datetime.date date_from: start of the period (inclusive)
+        :param datetime.date date_to: end of the period (inclusive)
+        :return: versions ordered by ``date_version``
+        :rtype: hr.version
         """
         return self.search([
             ('version_ids', 'any', [
@@ -2218,6 +2747,21 @@ class HrEmployee(models.Model):
         ])._get_versions_with_contract_overlap_with_period(date_from, date_to)
 
     def _get_unusual_days(self, date_from, date_to=None):
+        """Return, for each day of the period, whether it is an "unusual" (non-working) day.
+
+        Used by the calendar widgets to grey out days. Each day covered by a
+        version in contract is evaluated with that version's calendar
+        (``resource.calendar._get_unusual_days``, including public holidays
+        of the company); days between contract periods are unusual. If no
+        version is in contract during the period, all days are returned as
+        **not** unusual. Single employee (or empty recordset).
+
+        :param str date_from: start, formatted ``'%Y-%m-%d %H:%M:%S'``
+        :param str date_to: end, same format; ``None`` means ``date_from``
+            (a single day)
+        :return: ``{'YYYY-MM-DD': bool}``, ``True`` for unusual days, both bounds included
+        :rtype: dict[str, bool]
+        """
         def _generate_unusual_days(date_from, date_to, value=True):
             return {
                 day.strftime('%Y-%m-%d'): value
@@ -2227,7 +2771,7 @@ class HrEmployee(models.Model):
         if self:
             self.ensure_one()
         date_from_date = datetime.strptime(date_from, '%Y-%m-%d %H:%M:%S').date()
-        date_to_date = datetime.strptime(date_to, '%Y-%m-%d %H:%M:%S').date() if date_to else None
+        date_to_date = datetime.strptime(date_to, '%Y-%m-%d %H:%M:%S').date() if date_to else date_from_date
         employee_versions = self.env['hr.version'].sudo().search([
             ('employee_id', '=', self.id),
             ('active', '=', True),
@@ -2255,6 +2799,17 @@ class HrEmployee(models.Model):
         return unusual_days
 
     def formatted_employee_attendance_intervals(self, start, stop):
+        """Return the expected attendances between two days, serialized for the web client.
+
+        Whole days from ``start`` to ``stop`` are considered, in the employee's
+        timezone. See :meth:`_get_expected_attendances`. Single employee only.
+
+        :param start: first day (string or datetime, only the date part is used)
+        :param stop: last day (string or datetime, only the date part is used)
+        :return: ``[{'start': datetime, 'stop': datetime, 'attendance': [dict]}, ...]``
+            where ``attendance`` is the ``read()`` of the ``resource.calendar.attendance``
+        :rtype: list[dict]
+        """
         self.ensure_one()
         employee_tz = ZoneInfo(self.tz) if self.tz else UTC
         date_start = datetime.combine(fields.Datetime.to_datetime(start), time.min, employee_tz)
@@ -2263,6 +2818,19 @@ class HrEmployee(models.Model):
         return [{'start': i[0], 'stop': i[1], 'attendance': i[2].read()} for i in employee_attendance_intervals]
 
     def _get_expected_attendances(self, date_from, date_to):
+        """Return the work intervals the employee is expected to attend between two datetimes.
+
+        Computed per version in contract during the period, each with its own
+        calendar and timezone, minus the leaves counted as absence. Without any
+        version in contract, the current calendar is used for the whole period.
+        Single employee only.
+
+        :param datetime.datetime date_from: timezone-aware start
+        :param datetime.datetime date_to: timezone-aware end
+        :return: intervals of ``(start, stop, resource.calendar.attendance)``
+            with aware datetimes
+        :rtype: Intervals
+        """
         self.ensure_one()
         valid_versions = self.sudo()._get_versions_with_contract_overlap_with_period(date_from.date(), date_to.date())
         employee_tz = ZoneInfo(self.tz) if self.tz else None
@@ -2274,7 +2842,7 @@ class HrEmployee(models.Model):
                 date_to,
                 resources_per_tz=resources_per_tz,
                 compute_leaves=True,
-                domain=[('company_id', 'in', [False, self.company_id.id]), ('count_as', '=', 'leave')])[self.resource_id.id]
+                domain=[('company_id', 'in', [False, self.company_id.id]), ('count_as', '=', 'absence')])[self.resource_id.id]
             return calendar_intervals
         duration_data = Intervals()
         version_prev = datetime.combine(valid_versions[0].date_start, time.min, employee_tz)
@@ -2295,6 +2863,19 @@ class HrEmployee(models.Model):
         return duration_data
 
     def _get_calendar_attendances(self, date_from, date_to):
+        """Return the working time (days and hours) between two datetimes, per the calendars in contract.
+
+        Sums ``resource.calendar.get_work_duration_data`` over the versions in
+        contract during the period (each with its calendar; the leaves counted
+        as absence of the version's company or without company are deduced).
+        Without any version in contract, the current calendar
+        is used for the whole period. Single employee only.
+
+        :param datetime.datetime date_from: start (timezone-aware if the employee has a timezone)
+        :param datetime.datetime date_to: end (same remark)
+        :return: ``{'days': float, 'hours': float}``
+        :rtype: dict
+        """
         self.ensure_one()
         valid_versions = self.sudo()._get_versions_with_contract_overlap_with_period(date_from.date(), date_to.date())
         employee_tz = ZoneInfo(self.tz) if self.tz else None
@@ -2303,7 +2884,7 @@ class HrEmployee(models.Model):
             return calendar.get_work_duration_data(
                 date_from,
                 date_to,
-                domain=[('company_id', 'in', [False, self.company_id.id])])
+                domain=[('company_id', 'in', [False, self.company_id.id]), ('count_as', '=', 'absence')])
         duration_data = {'days': 0, 'hours': 0}
         for version in valid_versions:
             version_start = datetime.combine(version.date_start, time.min, employee_tz)
@@ -2313,7 +2894,7 @@ class HrEmployee(models.Model):
                 .get_work_duration_data(
                     max(date_from, version_start),
                     min(date_to, version_end),
-                    domain=[('company_id', 'in', [False, version.company_id.id])])
+                    domain=[('company_id', 'in', [False, version.company_id.id]), ('count_as', '=', 'absence')])
             duration_data['days'] += version_duration_data['days']
             duration_data['hours'] += version_duration_data['hours']
         return duration_data
@@ -2326,16 +2907,31 @@ class HrEmployee(models.Model):
         }]
 
     def _get_age(self, target_date=None):
+        """Return the age of the employee in full years on ``target_date`` (today by default), 0 without birthday.
+
+        :param target_date: reference date
+        :type target_date: datetime.date or None
+        :rtype: int
+        """
         self.ensure_one()
         if target_date is None:
             target_date = fields.Date.context_today(self.env.user)
         return relativedelta(target_date, self.birthday).years if self.birthday else 0
 
     def _get_versions_with_contract_overlap_with_period(self, date_from, date_to):
-        """
-        Returns the versions of the employee between date_from and date_to
-        that have at least 1 day in contract during that period and were not fully ammended
-        during the period (example : a contract ammended on 1st march and retrieving it in april period.
+        """Return the versions in effect, and in contract, at least one day of ``[date_from, date_to]``.
+
+        Within a contract, a version is effective from its ``date_version``
+        (the first version from the contract start) until the day before the
+        next version of the same contract (the last one until the contract
+        end). Versions of an overlapping contract that were superseded before
+        the period (e.g. replaced on 1 March when asking for April) are
+        excluded. Works in batch.
+
+        :param datetime.date date_from: start of the period (inclusive)
+        :param datetime.date date_to: end of the period (inclusive)
+        :return: versions ordered by ``date_version``
+        :rtype: hr.version
         """
         candidate_versions = self.version_ids.filtered_domain([
             ('contract_date_start', '!=', False), ('contract_date_start', '<=', date_to),
@@ -2420,16 +3016,35 @@ class HrEmployee(models.Model):
                 employee.primary_bank_account_id = False
 
     def get_accounts_with_fixed_allocations(self):
+        """Return the bank accounts receiving a fixed amount (not a percentage) of the salary.
+
+        Based on ``salary_distribution`` (``{str(bank_account_id): {'sequence',
+        'amount', 'amount_is_percentage'}}``); accounts absent from it count as
+        percentage-based. Single employee only.
+
+        :rtype: res.partner.bank
+        """
         self.ensure_one()
         return self.bank_account_ids.filtered(
             lambda a: not self.salary_distribution.get(str(a.id), {}).get('amount_is_percentage', True)
         )
 
     def get_bank_account_salary_allocation(self, account_id):
+        """Return the salary allocation of a bank account from ``salary_distribution``.
+
+        :param int account_id: ``res.partner.bank`` id
+        :return: ``(amount, amount_is_percentage)``; ``(0, None)`` if the account
+            has no allocation
+        :rtype: tuple
+        """
         ba_info = self.salary_distribution.get(str(account_id), {})
         return ba_info.get('amount', 0), ba_info.get('amount_is_percentage')
 
     def get_remaining_percentage(self):
+        """Return the salary percentage not yet allocated to a bank account (never below 0).
+
+        :rtype: float
+        """
         self.ensure_one()
         distribution = self.salary_distribution or {}
         allocated = 0.0
@@ -2461,6 +3076,13 @@ class HrEmployee(models.Model):
         self.primary_bank_account_id.allow_out_payment = not current_val
 
     def action_new_departure(self):
+        """Open the "End of collaboration" wizard (``hr.employee.departure``) for the employee.
+
+        If a departure is already planned (not applied), returns a client action
+        asking to cancel it first.
+
+        :raise UserError: if the employee is not in contract today, or has already departed
+        """
         self.ensure_one()
         if not self.is_in_contract:
             raise UserError(self.env._("You can't end the collaboration of an employee without contract, archive it instead."))
@@ -2492,6 +3114,12 @@ class HrEmployee(models.Model):
         }
 
     def action_cancel_departure(self):
+        """Cancel the employee's departure: unarchive, restore the contract end date and delete the departure.
+
+        The contract end date saved on the departure (``last_contract_date_end``)
+        is restored on the contract that was ended. Versions deleted when the
+        departure was applied are not restored.
+        """
         self.ensure_one()
         self.action_unarchive()
         version = self._get_version(self.departure_id.departure_date)
@@ -2499,24 +3127,25 @@ class HrEmployee(models.Model):
         self.departure_id.unlink()
 
     def _get_working_periods_by_field(self, start, stop, field_key):
-        """
-        Compute working periods for employees grouped by a related field.
+        """Return the contract periods of the employees overlapping ``[start, stop]``, keyed by ``field_key``.
 
-        This method builds a mapping of working periods for each employee,
-        grouped by the provided ``field_key`` (e.g. resource_id, user_id).
-        It considers employee contracts and falls back to the full period
-        if no contract exists.
+        Used by Gantt views of non-employee models (keyed by e.g. resource or
+        user). Each contract overlapping the period gives one entry (not
+        clipped to the period); an employee without any contract gets the
+        whole ``[start, stop]`` period.
 
-        :param start: Start datetime of the period (string or datetime).
-        :param stop: End datetime of the period (string or datetime).
-        :param field_key: Name of the relational field on hr.employee used
-                        to group working periods.
-                          Example values:
-                            - 'resource_id'
-                            - 'user_id'
-                            - any Many2one field usable in views
-                          This allows the result to align with views that
-                          operate on non-employee models.
+        :param start: start of the period (string or naive UTC datetime)
+        :param stop: end of the period (string or naive UTC datetime)
+        :param str field_key: many2one field of ``hr.employee`` used as key,
+            e.g. ``'resource_id'`` or ``'user_id'``
+        :return: ``{field_key id: [{'start': ..., 'end': ...}, ...]}``. For
+            contracts, ``start`` is the contract start date as a datetime string
+            (midnight, not timezone-converted) and ``end`` is the end of the
+            contract's last day in the user's timezone, as a naive UTC datetime
+            string, or ``False`` if open-ended. For employees without contract,
+            a single entry whose ``start``/``end`` are the given bounds as
+            ``datetime`` objects (not strings).
+        :rtype: dict[int, list[dict]]
         """
 
         working_periods = {employee[field_key].id: [] for employee in self}
@@ -2555,6 +3184,14 @@ class HrEmployee(models.Model):
         return working_periods
 
     def get_multi_version_changes(self, version_changes):
+        """Return a human-readable preview of changes to apply on several versions (web client).
+
+        :param dict version_changes: ``{field_name: new_value}`` (ids for
+            relational fields)
+        :return: ``{'(Field label)': (old_value, new_value)}`` with values
+            formatted as in tracking messages, old values read on ``self``
+        :rtype: dict
+        """
         version_changes_to_display = {}
         for field_name in version_changes:
             new_value = version_changes[field_name]

@@ -9,6 +9,7 @@ from odoo.fields import Date
 from odoo.tools.date_utils import sum_intervals
 
 from odoo.tests import tagged
+from odoo.tests.common import freeze_time
 
 from .common import TestHrCommon
 
@@ -204,12 +205,69 @@ class TestResource(TestHrCommon):
         self.assertEqual(21 * 7 + 21 * 8, attendances['hours'],
             "Attendances should add up multiple contracts with varying work weeks.")
 
+    def test_calendar_attendances_working_time_leave(self):
+        """ Only leaves counted as absence are deducted from the calendar attendances. """
+        date_from = datetime(2021, 10, 4, tzinfo=UTC)
+        date_to = datetime(2021, 10, 9, tzinfo=UTC)
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Company training',
+            'calendar_id': self.calendar_35h.id,
+            'date_from': datetime(2021, 10, 6, 6),
+            'date_to': datetime(2021, 10, 6, 18),
+            'count_as': 'working_time',
+        })
+        attendances = self.employee._get_calendar_attendances(date_from, date_to)
+        self.assertEqual(attendances, {'days': 5, 'hours': 35})
+
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Public holiday',
+            'calendar_id': self.calendar_35h.id,
+            'date_from': datetime(2021, 10, 7, 6),
+            'date_to': datetime(2021, 10, 7, 18),
+        })
+        attendances = self.employee._get_calendar_attendances(date_from, date_to)
+        self.assertEqual(attendances, {'days': 4, 'hours': 28})
+
     def test_alter_resource_calendar_of_resouce(self):
         self.assertEqual(self.employee.resource_calendar_id, self.employee.resource_id.calendar_id)
         self.assertEqual(self.employee.version_id.resource_calendar_id, self.employee.resource_id.calendar_id)
         self.employee.resource_id.write({'calendar_id': self.calendar_40h})
         self.assertEqual(self.employee.resource_calendar_id, self.employee.resource_id.calendar_id)
         self.assertEqual(self.employee.version_id.resource_calendar_id, self.employee.resource_id.calendar_id)
+
+    def test_resource_calendar_follows_current_version(self):
+        """ The resource calendar follows the current version, whatever the way it changes. """
+        calendar_a, calendar_b = self.env['resource.calendar'].create([
+            {'name': 'Calendar A'},
+            {'name': 'Calendar B'},
+        ])
+        employee = self.env['hr.employee'].create({
+            'name': 'Versioned Employee',
+            'date_version': date(2020, 1, 1),
+            'resource_calendar_id': calendar_a.id,
+        })
+        future_version = employee.create_version({
+            'date_version': date(2100, 1, 1),
+            'resource_calendar_id': calendar_b.id,
+        })
+        self.assertEqual(employee.resource_id.calendar_id, calendar_a)
+
+        future_version.date_version = date(2021, 1, 1)
+        self.assertEqual(employee.current_version_id, future_version)
+        self.assertEqual(employee.resource_id.calendar_id, calendar_b)
+
+        future_version.action_archive()
+        self.assertEqual(employee.resource_id.calendar_id, calendar_a)
+
+        future_version.action_unarchive()
+        self.assertEqual(employee.resource_id.calendar_id, calendar_b)
+
+        new_version = employee.create_version({
+            'date_version': date(2022, 1, 1),
+            'resource_calendar_id': calendar_a.id,
+        })
+        self.assertEqual(employee.current_version_id, new_version)
+        self.assertEqual(employee.resource_id.calendar_id, calendar_a)
 
     def test_calendar_validity_with_new_version_same_contract(self):
         """ Test that when a new version is created for the same contract with a different
@@ -232,3 +290,53 @@ class TestResource(TestHrCommon):
         work_intervals, _ = self.employee_niv.resource_id._get_valid_work_intervals(start, end)
         total_hours = sum_intervals(work_intervals[self.employee_niv.resource_id.id])
         self.assertEqual(total_hours, 35.0)
+
+    def test_expected_attendances_without_contract_deduct_absences(self):
+        """ Without contract, leaves counted as absence are deducted from the expected attendances. """
+        employee = self.env['hr.employee'].create({
+            'name': 'No Contract',
+            'tz': 'UTC',
+            'resource_calendar_id': self.calendar_35h.id,
+        })
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Day off',
+            'resource_id': employee.resource_id.id,
+            'date_from': datetime(2026, 1, 5, 0, 0),
+            'date_to': datetime(2026, 1, 5, 23, 59, 59),
+            'count_as': 'absence',
+        })
+        intervals = employee._get_expected_attendances(
+            datetime(2026, 1, 5, tzinfo=UTC),
+            datetime(2026, 1, 9, 23, 59, 59, tzinfo=UTC),
+        )
+        self.assertEqual(sum_intervals(intervals), 28.0)
+
+    def test_unusual_days_without_date_to(self):
+        """ Without ``date_to``, the unusual days of the single day ``date_from`` are returned. """
+        self.assertEqual(self.employee_niv._get_unusual_days('2026-01-05 00:00:00'), {'2026-01-05': False})
+        self.employee_niv.version_id.contract_date_start = date(2026, 1, 1)
+        self.assertEqual(self.employee_niv._get_unusual_days('2026-01-10 00:00:00'), {'2026-01-10': True})
+
+    @freeze_time('2026-06-01')
+    def test_resource_leave_calendar_on_last_version_day(self):
+        """ A leave on the last day of the current version gets the calendar of that version. """
+        employee = self.env['hr.employee'].create({
+            'name': 'Versioned',
+            'tz': 'UTC',
+            'date_version': date(2026, 1, 1),
+            'resource_calendar_id': self.calendar_35h.id,
+        })
+        employee.create_version({
+            'date_version': date(2027, 1, 1),
+            'resource_calendar_id': self.calendar_40h.id,
+        })
+        version = employee.version_id
+        self.assertEqual(version.date_end, date(2026, 12, 31))
+        self.assertEqual(version.resource_calendar_id, self.calendar_35h)
+        leave = self.env['resource.calendar.leaves'].create({
+            'name': 'Last day off',
+            'resource_id': employee.resource_id.id,
+            'date_from': datetime(2026, 12, 31, 8, 0),
+            'date_to': datetime(2026, 12, 31, 17, 0),
+        })
+        self.assertEqual(leave.calendar_id, self.calendar_35h)

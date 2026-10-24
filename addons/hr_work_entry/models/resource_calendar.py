@@ -36,6 +36,11 @@ class ResourceCalendar(models.Model):
         return max(hours_per_day, sum(attendances.mapped('duration_hours')))
 
     def _work_intervals_batch(self, start_dt, end_dt, resources_per_tz=None, domain=None, compute_leaves=True):
+        """Remove the attendances whose work entry type counts as absence from the work intervals.
+
+        Only when ``compute_leaves`` is set: such attendances are then treated like leaves.
+        See ``resource.calendar._work_intervals_batch`` for parameters and return value.
+        """
         work_intervals = super()._work_intervals_batch(
             start_dt,
             end_dt,

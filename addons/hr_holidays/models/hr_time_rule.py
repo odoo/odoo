@@ -12,7 +12,10 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
     _inherit = 'hr.time.rule.source.mixin'
 
     def _on_sources_collected(self, sources):
-        """Reverse prior allocation credits before the batch is re-evaluated."""
+        """Reverse the allocation credits of the sources before they are evaluated again.
+
+        :param sources: records of the source model
+        """
         self.env['hr.time.rule']._reverse_allocation_credits(self._name, sources.ids)
 
 
@@ -35,7 +38,12 @@ class HrTimeRule(models.Model):
     )
 
     def _resolve_output_intervals(self, intervals):
-        """Resolve output intervals, then merge consecutive slices sharing a merge key."""
+        """Resolve the output intervals, then merge consecutive slices with the same merge key.
+
+        See :meth:`_get_output_leave_merge_key`.
+
+        :rtype: list
+        """
         resolved = super()._resolve_output_intervals(intervals)
         merged = []
         for iv in resolved:
@@ -48,6 +56,19 @@ class HrTimeRule(models.Model):
         return [iv for iv, _mk in merged]
 
     def _get_output_leave_vals(self, employee, rule, date_from, date_to, source_leave, accumulated_pp=frozenset()):
+        """Return the creation values of a validated time off output by ``rule``.
+
+        The output has the rule's type, ``time_rule_id``, the given span and is linked to
+        ``source_leave``.
+
+        :param employee: ``hr.employee``
+        :param rule: ``hr.time.rule`` producing the output
+        :param datetime date_from: start, naive UTC
+        :param datetime date_to: end, naive UTC
+        :param source_leave: source ``hr.leave``
+        :param frozenset accumulated_pp: premium pay ids
+        :rtype: dict
+        """
         tz = ZoneInfo(employee._get_tz())
         df_local = date_from.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
         dt_local = date_to.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
@@ -67,20 +88,23 @@ class HrTimeRule(models.Model):
         }
 
     def _get_output_leave_merge_key(self, accumulated_pp=frozenset()):
-        """Hashable key controlling when consecutive excess slices are merged into one leave.
+        """Return the hashable key deciding when consecutive excess slices make one time off.
 
-        Override to add extra discriminators (e.g. premium pay rule sets in Belgium).
+        Override to add discriminators (e.g. the premium pays in Belgium). Default: the rule.
         """
         return self
 
     def _apply_allocation_credits(self, excess_alloc, deficit_alloc, *, approve_ctx=None):
-        """Translate excess/deficit hours into allocation credits and write the log.
+        """Credit (or deduct) the excess (or missing) hours of rules to allocations, and log it.
 
-        Time-rule allocations are always open-ended (date_to=False) so they don't
-        collide with accrual or fixed-period allocations.
+        For rules with ``leave_compensation_rate`` and ``allocation_type_id``, the hours times
+        the rate, divided by the employee's hours per day, are added to (or deducted from) the
+        validated allocation without end date of that type, created if needed. Each credit is
+        logged in ``hr.time.rule.allocation.log`` so it can be reversed.
 
-        approve_ctx -- extra context passed to action_approve on new allocations
-                       (e.g. {'leave_skip_state_check': True})
+        :param list excess_alloc: ``[employee, rule, hours, source, log_source]`` rows
+        :param list deficit_alloc: same rows for the deficits
+        :param dict approve_ctx: context to approve the created allocations with
         """
         approve_ctx = approve_ctx or {}
         search_domain = [('state', '=', 'validate'), ('date_to', '=', False)]
@@ -158,11 +182,14 @@ class HrTimeRule(models.Model):
             self.env['hr.time.rule.allocation.log'].sudo().create(log_vals)
 
     def _filter_deficit_exceeding_allocation(self, deficit):
-        """drops deficit intervals whose total deduction would exceed the available allocation
+        """Drop the deficits the allocation of the rule cannot cover.
 
-        When a (employee, alloc_type) pair would be over-drawn, ALL deficit intervals
-        tied to that pair are removed, which also prevents the corresponding output
-        records from being created.
+        When the total deduction of an employee and allocation type exceeds the balance, all
+        the deficit intervals of that pair are dropped, so no output is created for them.
+
+        :param dict deficit: ``{employee: {source: [(start, stop, rule)]}}``
+        :return: the filtered ``deficit``
+        :rtype: dict
         """
         search_domain = [('state', '=', 'validate'), ('date_to', '=', False)]
 
@@ -230,6 +257,16 @@ class HrTimeRule(models.Model):
         return filtered
 
     def _apply_leave_output(self, excess, deficit, active_iv=None):
+        """Apply the time rule result on time off sources.
+
+        Creates the outputs (``_apply_output``, defined by ``hr_work_entry``), credits the
+        allocations (:meth:`_apply_allocation_credits`) and recreates the resource leaves of the
+        sources and outputs.
+
+        :param dict excess: ``{employee: {source: [_Iv]}}``
+        :param dict deficit: ``{employee: {source: [(start, stop, rule)]}}``
+        :param dict active_iv: ``{employee: {source: Intervals}}``
+        """
         deficit = self._filter_deficit_exceeding_allocation(deficit)
         new_records, all_source_ids, excess_alloc, deficit_alloc = self._apply_output(excess, deficit, active_iv=active_iv)
         self._apply_allocation_credits(
@@ -243,7 +280,12 @@ class HrTimeRule(models.Model):
 
     @api.model
     def _reverse_allocation_credits(self, source_model, source_ids):
-        """subtract credits logged for the given source records."""
+        """Reverse the allocation credits logged for the given source records.
+
+        :param str source_model: ``'hr.leave'`` or ``'hr.attendance'``
+        :param source_ids: ids of the sources
+        :raise ValidationError: when the reversal would bring a balance below its minimum
+        """
         if not source_ids:
             return
         Log = self.env['hr.time.rule.allocation.log'].sudo()
@@ -263,7 +305,10 @@ class HrTimeRule(models.Model):
                 continue
             wet = allocation.work_entry_type_id
             allowed_floor = -wet.max_allowed_negative if wet.allows_negative else 0.0
-            remaining_after = allocation.virtual_remaining_leaves - days
+            # the balance is in the unit of the type, the credits in days
+            hours_per_day = (allocation._get_employee_hours_per_day() or 8.0) if wet.unit_of_measure == 'hour' else 1.0
+            remaining_after = allocation.virtual_remaining_leaves / hours_per_day - days
+            allowed_floor /= hours_per_day
             if remaining_after < allowed_floor:
                 employee = allocation.employee_id
                 manager = employee.leave_manager_id or employee.parent_id

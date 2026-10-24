@@ -144,6 +144,32 @@ class TestAccessRightsCreate(TestHrHolidaysAccessRightsCommon):
         }
         self.request_leave(self.user_hruser_id, date.today() + relativedelta(days=5), 1, values)
 
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_create_first_approved_double_validation(self):
+        """ Creating a first approved leave of a double validation type checks the rights """
+        lt_both = self.env['hr.work.entry.type'].create({
+            'name': 'Double Validation',
+            'code': 'Double Validation',
+            'leave_validation_type': 'both',
+            'requires_allocation': False,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
+        })
+        leave_day = date.today() + relativedelta(days=5)
+        values = {
+            'name': 'Hol10',
+            'employee_id': self.employee_emp_id,
+            'work_entry_type_id': lt_both.id,
+            'request_date_from': leave_day,
+            'request_date_to': leave_day,
+            'state': 'validate1',
+        }
+        Leave = self.env['hr.leave'].with_context(leave_skip_state_check=True)
+        with self.assertRaises(AccessError):
+            Leave.with_user(self.user_employee_id).create(values)
+        leave = Leave.with_user(self.user_hruser_id).create(values)
+        self.assertTrue(leave)
+
     # hr_holidays.group_hr_holidays_manager
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
@@ -259,6 +285,24 @@ class TestAccessRightsWrite(TestHrHolidaysAccessRightsCommon):
             subtype_xmlid='mail.mt_comment',
             message_type='comment'
         )
+
+    def test_leave_approval_flags_depend_on_user(self):
+        """ The approval flags of a leave are computed for the current user """
+        def check_flags(leave, field_names):
+            for field_name in field_names:
+                values = []
+                for user_id in (self.user_hrmanager_id, self.user_employee_id):
+                    leave.invalidate_recordset([field_name])
+                    values.append(leave.with_user(user_id)[field_name])
+                self.assertEqual(values, [True, False], field_name)
+                leave.invalidate_recordset([field_name])
+                self.assertEqual(
+                    [leave.with_user(user_id)[field_name] for user_id in (self.user_hrmanager_id, self.user_employee_id)],
+                    values, field_name)
+
+        check_flags(self.employee_leave, ['can_validate', 'can_refuse'])
+        self.employee_leave.with_user(self.user_hrmanager_id).action_approve()
+        check_flags(self.employee_leave, ['can_back_to_approve'])
 
     # ----------------------------------------
     # Validation: one validation, HR
@@ -462,6 +506,24 @@ class TestAccessRightsUnlink(TestHrHolidaysAccessRightsCommon):
         leave = self.request_leave(self.user_employee_id, date.today() + relativedelta(days=-4), 1, values)
         with self.assertRaises(UserError):
             leave.with_user(self.user_employee.id).unlink()
+
+    def test_leave_unlink_error_names_offending_state(self):
+        """ The error raised when a simple user deletes leaves names the state of the faulty one
+
+        The record rules only let simple users delete leaves to approve: the check is reached as
+        superuser, e.g. by a flow deleting leaves on behalf of the user.
+        """
+        values = {
+            'name': 'Random Time Off',
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'state': 'confirm',
+        }
+        confirmed_leave = self.request_leave(self.user_employee_id, date.today() + relativedelta(days=6), 1, values)
+        validated_leave = self.request_leave(self.user_employee_id, date.today() + relativedelta(days=8), 1, values)
+        validated_leave.with_user(self.user_hrmanager_id).write({'state': 'validate'})
+        with self.assertRaisesRegex(UserError, 'Approved'):
+            (confirmed_leave | validated_leave).with_user(self.user_employee.id).sudo().unlink()
 
     def test_leave_unlink_validate_by_user(self):
         """ A simple user cannot delete its leave in validate state"""

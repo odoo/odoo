@@ -11,6 +11,13 @@ class HrLeaveAllocation(models.Model):
     _inherit = 'hr.leave.allocation'
 
     def _get_accrual_plan_level_work_entry_prorata(self, level, start_period, start_date, end_period, end_date):
+        """For ``worked_hours`` levels, return the hours of the validated attendances of the
+        employee between ``start_date`` and ``end_date``.
+
+        The attendance spans are united and clipped to the period; breaks are not deducted.
+
+        :rtype: float
+        """
         self.ensure_one()
         if level.frequency != 'worked_hours':
             return super()._get_accrual_plan_level_work_entry_prorata(level, start_period, start_date, end_period, end_date)

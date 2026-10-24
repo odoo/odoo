@@ -88,6 +88,55 @@ class TestAccessRightsSimpleUser(TestAllocationRights):
         with self.assertRaises(AccessError):
             self.request_allocation(self.user_employee.id, values)
 
+    def test_allocation_approval_flags_depend_on_user(self):
+        """ The approval flags of an allocation are computed for the current user """
+        lt_validation_both = self.env['hr.work.entry.type'].create({
+            'name': 'Validation = both',
+            'code': 'Validation = both',
+            'allocation_validation_type': 'both',
+            'requires_allocation': True,
+            'employee_requests': True,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
+        })
+        allocation = self.request_allocation(self.user_employee.id, {
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': lt_validation_both.id,
+        })
+        users = (self.user_hrmanager, self.user_employee)
+        for field_name in ('can_approve', 'can_validate', 'can_refuse'):
+            values = []
+            for user in users:
+                allocation.invalidate_recordset([field_name])
+                values.append(allocation.with_user(user)[field_name])
+            self.assertEqual(values, [True, False], field_name)
+            allocation.invalidate_recordset([field_name])
+            self.assertEqual([allocation.with_user(user)[field_name] for user in users], values, field_name)
+
+    def test_allocation_request_approval_activity(self):
+        """ The approval activity of an allocation follows the allocation validation type """
+        work_entry_type = self.env['hr.work.entry.type'].create({
+            'name': 'Allocation by HR, time off without validation',
+            'code': 'Allocation by HR',
+            'allocation_validation_type': 'hr',
+            'leave_validation_type': 'no_validation',
+            'requires_allocation': True,
+            'employee_requests': True,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
+        })
+        self.employee_emp.hr_responsible_id = self.user_hrmanager
+        allocation = self.request_allocation(self.user_employee.id, {
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': work_entry_type.id,
+        })
+        self.assertEqual(allocation.state, 'confirm')
+        self.assertEqual(
+            allocation.activity_ids.activity_type_id,
+            self.env.ref('hr_holidays.mail_act_leave_allocation_approval'),
+        )
+        self.assertEqual(allocation.activity_ids.user_id, self.user_hrmanager)
+
     def test_simple_user_reset_to_draft(self):
         """ A simple user can reset to draft only his own allocation """
         values = {

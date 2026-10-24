@@ -16,6 +16,16 @@ class HrVersion(models.Model):
     _inherit = 'hr.version'
 
     def _get_default_work_entry_type_id(self):
+        """Return the id of the work entry type used for worked time without explicit type.
+
+        Used for calendar attendances without ``work_entry_type_id`` and for attendances
+        without type. Default: the ``002.00`` type of the version's country, else the generic
+        ``hr_work_entry.generic_work_entry_type_attendance``. ``hr_payroll`` gives precedence to
+        the structure type's ``default_work_entry_type_id``.
+
+        :return: an ``hr.work.entry.type`` id, or ``False`` if none is found
+        :rtype: int
+        """
         country_code = self.country_code
         country_attendance = self.env['hr.work.entry.type'].search([
             ('code', '=', '002.00'),
@@ -25,27 +35,91 @@ class HrVersion(models.Model):
         return attendance.id if attendance else False
 
     def _get_leave_work_entry_type_dates(self, leave, date_from, date_to, employee):
+        """Return the work entry type of ``leave`` for the slice ``[date_from, date_to]``.
+
+        Override to make the type depend on the period, e.g. ``l10n_be_hr_payroll`` switches
+        a sick leave to another type after 30 days. Default: :meth:`_get_leave_work_entry_type`.
+
+        :param leave: the ``resource.calendar.leaves`` record covering the slice
+        :param datetime date_from: slice start, naive UTC
+        :param datetime date_to: slice end, naive UTC
+        :param employee: the ``hr.employee`` of the version
+        :rtype: hr.work.entry.type
+        """
         return self._get_leave_work_entry_type(leave)
 
     def _get_leave_work_entry_type(self, leave):
+        """Return the work entry type of a ``resource.calendar.leaves`` record.
+
+        ``hr_holidays`` returns the type of the linked time off (``holiday_id``) when there is one.
+
+        :rtype: hr.work.entry.type
+        """
         return leave.work_entry_type_id
 
     # Is used to add more values, for example planning_slot_id
     def _get_more_vals_attendance_interval(self, interval):
+        """Hook to add extra keys to the work entry values generated from an attendance interval.
+
+        The result is concatenated to the base ``(key, value)`` pairs and passed to ``dict()``,
+        so later pairs override earlier ones. Extensions call ``super()`` and append, e.g.
+        ``hr_holidays_attendance`` adds ``('attendance_ids', attendance)`` and ``hr_payroll`` adds
+        ``('category_options_ids', ...)``. A key that holds records to be unioned on merge must
+        also be listed in :meth:`_get_work_entry_source_fields`.
+
+        :param tuple interval: ``(start, stop, payload)``, tz-aware datetimes in the employee
+            timezone; ``payload`` is a ``resource.calendar.attendance`` recordset (calendar
+            based) or an ``hr.attendance`` record (attendance based)
+        :return: list of ``(key, value)`` 2-tuples, not a dict
+        :rtype: list
+        """
         return []
 
     # Is used to add more values, for example leave_id (in hr_holidays)
     def _get_more_vals_leave_interval(self, interval, leaves):
+        """Hook to add extra keys to the work entry values generated from a leave interval.
+
+        Same contract as :meth:`_get_more_vals_attendance_interval`. ``hr_holidays`` appends
+        ``('leave_ids', holiday)`` for each leave of ``leaves`` that contains ``interval`` and is
+        linked to a time off.
+
+        :param tuple interval: ``(start, stop, payload)``, tz-aware in the employee timezone
+        :param list leaves: ``(start, stop, resource.calendar.leaves)`` tuples that may cover
+            ``interval``
+        :return: list of ``(key, value)`` 2-tuples
+        :rtype: list
+        """
         return []
 
     def _get_bypassing_work_entry_type_codes(self):
+        """Return the codes of the leave types that win over public holidays.
+
+        When a time off and a global leave (public holiday) overlap, the global leave normally
+        wins. A time off whose type code is listed here wins instead (e.g. long term sick leave
+        in ``l10n_be_hr_payroll``). Used by :meth:`_get_interval_leave_work_entry_type`.
+
+        :return: list of ``hr.work.entry.type`` codes
+        :rtype: list[str]
+        """
         return []
 
     def _get_interval_leave_work_entry_type(self, interval, leaves, bypassing_codes):
+        """Return the work entry type of a leave interval.
+
+        Base version: the type of the first leave of ``leaves`` that contains the whole
+        ``interval`` (through :meth:`_get_leave_work_entry_type_dates`). ``hr_holidays``
+        overrides it to arbitrate overlapping leaves: bypassing time off, then global leaves
+        (public holidays), then other time off.
+
+        :param tuple interval: ``(start, stop, payload)``, tz-aware in the employee timezone
+        :param list leaves: ``(start, stop, resource.calendar.leaves)`` tuples
+        :param list bypassing_codes: result of :meth:`_get_bypassing_work_entry_type_codes`
+        :return: the leave's type, or ``hr_work_entry.generic_work_entry_type_leave`` if no
+            leave contains the interval
+        :rtype: hr.work.entry.type
+        """
         # returns the work entry time related to the leave that
         # includes the whole interval.
-        # Overriden in hr_work_entry_holiday to select the
-        # global time off first (eg: Public Holiday > Home Working)
         self.ensure_one()
         for leave in leaves:
             if interval[0] >= leave[0] and interval[1] <= leave[1] and leave[2]:
@@ -55,9 +129,25 @@ class HrVersion(models.Model):
         return self.env.ref('hr_work_entry.generic_work_entry_type_leave')
 
     def _get_sub_leave_domain(self):
+        """Return the calendar part of the domain of :meth:`_get_leave_domain`.
+
+        Default: leaves of the versions' calendars or without calendar. ``hr_holidays`` also
+        accepts the leaves linked to time off of the versions' employees, whatever the calendar.
+
+        :rtype: odoo.fields.Domain
+        """
         return Domain('calendar_id', 'in', [False] + self.resource_calendar_id.ids)
 
     def _get_leave_domain(self, start_dt, end_dt):
+        """Return the ``resource.calendar.leaves`` domain used for work entry generation.
+
+        Matches the leaves overlapping ``[start_dt, end_dt]`` that are global (no resource) or
+        belong to the versions' employees, in the versions' companies or without company.
+
+        :param datetime start_dt: period start, UTC (tzinfo is dropped)
+        :param datetime end_dt: period end, UTC (tzinfo is dropped)
+        :rtype: odoo.fields.Domain
+        """
         domain = Domain([
             ('resource_id', 'in', [False] + self.employee_id.resource_id.ids),
             ('date_from', '<=', end_dt.replace(tzinfo=None)),
@@ -67,9 +157,35 @@ class HrVersion(models.Model):
         return domain & self._get_sub_leave_domain()
 
     def _get_resource_calendar_leaves(self, start_dt, end_dt):
+        """Return the ``resource.calendar.leaves`` to consider between ``start_dt`` and ``end_dt``.
+
+        Override to exclude leaves from generation (``hr_payroll`` drops time off whose payslip is
+        blocked/deferred).
+
+        :param datetime start_dt: period start, UTC
+        :param datetime end_dt: period end, UTC
+        :rtype: resource.calendar.leaves
+        """
         return self.env['resource.calendar.leaves'].search(self._get_leave_domain(start_dt, end_dt))
 
     def _get_attendance_intervals(self, start_dt, end_dt):
+        """Return the expected working intervals of the calendar based versions of ``self``.
+
+        Only versions with :meth:`has_static_work_entries` are computed, from their working
+        schedule (``_attendance_intervals_batch``). A fully flexible version gets a single interval
+        covering the whole period with an empty attendance payload (hence 24h per day once
+        split per day).
+
+        A module making versions non-static must override this method to still put an (empty)
+        entry for their resources, as :meth:`_get_version_work_entries_values` indexes the result
+        directly (see ``hr_holidays_attendance``).
+
+        :param datetime start_dt: period start, tz-aware (asserted)
+        :param datetime end_dt: period end, tz-aware (asserted)
+        :return: ``{resource_id: Intervals}``, intervals being ``(start, stop,
+            resource.calendar.attendance)`` in the resource timezone
+        :rtype: dict
+        """
         assert start_dt.tzinfo and end_dt.tzinfo, "function expects localized date"
         # {resource: intervals}
         versions_with_calendar_work_entry_source = self.filtered(lambda version: version.has_static_work_entries())
@@ -89,20 +205,62 @@ class HrVersion(models.Model):
         return result
 
     def _get_interval_work_entry_type(self, interval):
+        """Return the work entry type of an interval from its payload.
+
+        The payload's ``work_entry_type_id`` (first record) if any, else the version's default
+        type (:meth:`_get_default_work_entry_type_id`).
+
+        :param tuple interval: ``(start, stop, payload)``; ``payload`` is usually a
+            ``resource.calendar.attendance`` or ``resource.calendar.leaves`` recordset
+        :rtype: hr.work.entry.type
+        """
         self.ensure_one()
         if 'work_entry_type_id' in interval[2] and interval[2].work_entry_type_id[:1]:
             return interval[2].work_entry_type_id[:1]
         return self.env['hr.work.entry.type'].browse(self._get_default_work_entry_type_id())
 
     def _get_valid_leave_intervals(self, attendances, interval):
+        """Filter or cut a leave interval before it is used for generation.
+
+        Called for each leave clipped to the period. ``hr_holidays_attendance`` removes the
+        parts where the employee actually worked (absence leaves) or where an attendance won
+        (working time leaves).
+
+        :param Intervals attendances: expected attendances of the version's resource
+        :param tuple interval: ``(start, stop, resource.calendar.leaves)``, tz-aware in the
+            employee timezone
+        :return: list of ``(start, stop, payload)`` tuples to keep, possibly empty
+        :rtype: list
+        """
         self.ensure_one()
         return [interval]
 
     def _get_no_wet_or_wet_match(self, leave, leave_entry_type):
+        """Tell whether ``leave`` is a source of a leave work entry of type ``leave_entry_type``.
+
+        True if the calendar leave has no type or the same type. Only the matching leaves are
+        given to :meth:`_get_more_vals_leave_interval`, so a mismatch means no ``leave_ids`` on the
+        generated values.
+
+        :param tuple leave: ``(start, stop, resource.calendar.leaves)``
+        :param leave_entry_type: the ``hr.work.entry.type`` chosen for the interval
+        :rtype: bool
+        """
         return not leave[2].work_entry_type_id or leave[2].work_entry_type_id.id == leave_entry_type.id
 
     # Meant for behavior override
     def _get_real_attendance_work_entry_vals(self, intervals):
+        """Convert attendance intervals into raw work entry values.
+
+        Meant for behavior override.
+
+        :param intervals: iterable of ``(start, stop, payload)``, tz-aware
+        :return: one dict per interval with ``date_start`` and ``date_stop`` (naive UTC),
+            ``work_entry_type_id`` (:meth:`_get_interval_work_entry_type`), ``employee_id``,
+            ``version_id``, ``company_id`` (all recordsets), plus the pairs of
+            :meth:`_get_more_vals_attendance_interval`
+        :rtype: list[dict]
+        """
         self.ensure_one()
         vals = []
         employee = self.employee_id
@@ -120,6 +278,32 @@ class HrVersion(models.Model):
         return vals
 
     def _get_version_work_entries_values(self, date_start, date_stop):
+        """Compute the raw work entry values of the versions of ``self`` over a period.
+
+        Core of the generation, batched over versions. For each version:
+
+        - expected attendances: :meth:`_get_attendance_intervals`;
+        - leaves: :meth:`_get_resource_calendar_leaves`, clipped to the period and filtered by
+          :meth:`_get_valid_leave_intervals`, split on the calendar leave's ``count_as``:
+          ``absence`` leaves replace the expected attendances they overlap, ``working_time``
+          leaves (e.g. home working) produce worked leave entries;
+        - real attendances = attendances minus both kinds of leaves
+          (:meth:`_get_real_attendances`); the leave intervals actually generated depend on the
+          calendar type (fully flexible, flexible, static, or attendance based).
+
+        Override it to add or replace values for a localization (``l10n_fr_hr_holidays``,
+        ``l10n_uz_hr_payroll``) or for a new source of time (``hr_holidays_attendance`` adds the
+        ``hr.attendance`` based values). Values must be completed by
+        :meth:`_generate_work_entries_postprocess` before use.
+
+        :param datetime date_start: period start; naive datetimes are considered UTC
+        :param datetime date_stop: period end; naive datetimes are considered UTC
+        :return: list of dicts with ``date_start`` and ``date_stop`` (naive UTC),
+            ``work_entry_type_id``, ``employee_id``, ``version_id``, ``company_id`` (recordsets)
+            and the extra keys of the ``_get_more_vals_*`` hooks. Alternatively, a value may
+            carry ``date`` and ``duration`` directly.
+        :rtype: list[dict]
+        """
         start_dt = date_start.replace(tzinfo=UTC) if not date_start.tzinfo else date_start
         end_dt = date_stop.replace(tzinfo=UTC) if not date_stop.tzinfo else date_stop
         version_vals = []
@@ -263,21 +447,61 @@ class HrVersion(models.Model):
 
     # will override in attendance bridge to add overtime vals
     def _get_real_attendances(self, attendances, leaves, worked_leaves):
+        """Return the attendance intervals that produce worked time entries.
+
+        Default: expected attendances minus absence and worked leaves.
+        ``hr_holidays_attendance`` also removes the days where the employee has real
+        ``hr.attendance`` records.
+
+        :param Intervals attendances: expected attendances
+        :param Intervals leaves: absence leaves
+        :param Intervals worked_leaves: working time leaves
+        :rtype: Intervals
+        """
         return attendances - leaves - worked_leaves
 
     def _get_real_leaves_static(self, leaves, expected_attendances):
+        """Return the absence intervals to generate for a static (calendar based) version.
+
+        Default: the parts of ``leaves`` that overlap the expected attendances, i.e. a leave
+        only produces entries where the employee was supposed to work.
+
+        :rtype: Intervals
+        """
         return expected_attendances & leaves
 
     def _get_real_leaves_static_attendance(self, leaves, static_attendances):
+        """Return the absence intervals to generate for a non-static (attendance based) version.
+
+        The expected attendances are empty for such a version, so leaves are intersected with the
+        intervals of its working schedule instead.
+
+        :rtype: Intervals
+        """
         return static_attendances & leaves
 
     def _get_real_worked_leaves(self, worked_leaves, real_leaves):
+        """Return the working time leave intervals to generate.
+
+        Default: worked leaves minus the absence intervals (an absence wins over a working time
+        leave).
+
+        :rtype: Intervals
+        """
         return worked_leaves - real_leaves
 
     def _get_work_entries_values(self, date_start, date_stop):
-        """
-        Generate a work_entries list between date_start and date_stop for one version.
-        :return: list of dictionnary.
+        """Return the raw work entry values of the versions of ``self`` between two dates.
+
+        Thin wrapper on :meth:`_get_version_work_entries_values`. With datetimes, the versions are
+        processed in one batch. With plain dates, the period goes from the start of
+        ``date_start`` to the end of ``date_stop`` in each version's timezone.
+
+        :param date_start: period start, ``datetime`` (naive is considered UTC) or ``date``
+        :param date_stop: period end, ``datetime`` (naive is considered UTC) or ``date``
+            (included)
+        :return: raw values, see :meth:`_get_version_work_entries_values`
+        :rtype: list[dict]
         """
         if isinstance(date_start, datetime):
             version_vals = self._get_version_work_entries_values(date_start, date_stop)
@@ -289,18 +513,47 @@ class HrVersion(models.Model):
             for version_tz, versions in versions_by_tz.items():
                 tz = ZoneInfo(version_tz) if version_tz else UTC
                 version_vals += versions._get_version_work_entries_values(
-                    date_start.replace(tzinfo=tz),
-                    date_stop.replace(tzinfo=tz))
+                    datetime.combine(date_start, time.min, tzinfo=tz),
+                    # the end excluded, at the start of the day after date_stop
+                    datetime.combine(date_stop + timedelta(days=1), time.min, tzinfo=tz))
 
         return version_vals
 
     def has_static_work_entries(self):
+        """Tell whether the work entries of this version come from its working schedule.
+
+        ``True`` (default): worked time is generated from the calendar attendances.
+        ``False``: worked time comes from another source; ``hr_holidays_attendance`` returns
+        ``not attendance_based``, worked time then coming from validated ``hr.attendance``
+        records. See :meth:`_get_attendance_intervals` for what an override must also do.
+
+        :rtype: bool
+        """
         # True means this is calendar based, False it is attendance based.
-        # This function gets overridden in hr_work_entry_attendance to correctly check if it's attendance based
         self.ensure_one()
         return True
 
     def generate_work_entries(self, date_start, date_stop):
+        """Return the final work entry values of the versions of ``self`` between two dates.
+
+        Main entry point, used by payroll (``hr.payslip._compute_worked_days_line_ids``). Nothing
+        is stored: the values are computed on the fly. The days are localized in the version's
+        timezone, then the versions are processed per (company, timezone) as superuser with
+        :meth:`_generate_work_entries`, which clips the period to each version's validity.
+
+        :param date date_start: first day, included (``datetime`` is refused)
+        :param date date_stop: last day, included (``datetime`` is refused)
+        :return: list of dicts, at most one per (``date``, type, employee, version, company)
+            and extra merge key parts (see :meth:`_get_work_entry_merge_key`), with keys:
+
+            - ``date``: local day (``datetime.date``) in the version's timezone
+            - ``duration``: hours (float, never zero)
+            - ``work_entry_type_id``, ``employee_id``, ``version_id``, ``company_id``: records
+            - optional keys added by extensions: ``leave_ids`` (``hr.leave``),
+              ``attendance_ids`` (``hr.attendance``), ``category_options_ids``,
+              ``trimmed_duration`` (``hr_payroll``)...
+        :rtype: list[dict]
+        """
         # Generate work entries between 2 dates (datetime.date)
         # To correctly englobe the period, the start and end periods are converted
         # using the calendar timezone.
@@ -326,6 +579,17 @@ class HrVersion(models.Model):
         return new_work_entries
 
     def _generate_work_entries(self, date_start, date_stop):
+        """Compute and post-process the work entry values between two datetimes.
+
+        Clips the period to each version's ``[date_start, date_end]`` (whole local days), groups
+        versions sharing the same clipped period, calls :meth:`_get_work_entries_values` and
+        finally :meth:`_generate_work_entries_postprocess`.
+
+        :param datetime date_start: period start, naive UTC, already localized by the caller
+        :param datetime date_stop: period end, naive UTC
+        :return: final values, see :meth:`generate_work_entries`
+        :rtype: list[dict]
+        """
         # Generate work entries between 2 dates (datetime.datetime)
         # This method considers that the dates are correctly localized
         # based on the target timezone
@@ -362,36 +626,37 @@ class HrVersion(models.Model):
 
     @api.model
     def _get_work_entry_source_fields(self):
-        """
-        Returns the list of work entry fields that should be merged/aggregated
-        when combining multiple work entries of the same type.
+        """Return the keys whose values are unioned when work entry values are merged.
 
-        This is used in _generate_work_entries_postprocess to properly handle
-        source-specific fields (e.g., leave_ids, attendance_ids, planning_slot_ids)
-        when merging work entries.
+        Used by :meth:`_generate_work_entries_postprocess`: when two values share the same merge
+        key, these recordset keys are combined with ``|``. Extensions add their source keys
+        (``leave_ids`` in ``hr_holidays``, ``attendance_ids`` in ``hr_holidays_attendance``).
 
-        :return: list of field names to aggregate
+        :return: list of keys to aggregate
+        :rtype: list[str]
         """
         return []
 
     def _enrich_work_entry_val(self, val):
-        """Hook called per-val after duration/date are set, before the merge step.
+        """Hook called on each value once ``date`` and ``duration`` are set, before merging.
 
-        At this point leave_ids (if present) is still a singleton, so field access is safe.
-        Override to tag extra float sub-totals on the val (e.g. trimmed_duration).
-        Default is a no-op.
+        Modify ``val`` in place. At this point ``leave_ids`` (if any) is still a single record,
+        so field access is safe. ``hr_payroll`` sets ``trimmed_duration``, which is summed when
+        values are merged. Default: no-op.
+
+        :param dict val: one work entry value
         """
 
     @api.model
     def _get_work_entry_merge_key(self, vals):
-        """
-        Returns a tuple key used to identify work entries that should be merged together.
+        """Return the key identifying the work entry values to merge into one.
 
-        By default, this includes the date, work_entry_type_id, employee_id, version_id, and company_id.
-        It can be extended to include other fields if necessary.
+        Values with the same key are merged by summing ``duration``. Default key:
+        ``(date, work_entry_type_id, employee_id, version_id, company_id)``. Extend the tuple
+        to keep values apart (``hr_payroll`` adds ``category_options_ids``).
 
-        :param vals: dictionary of work entry values
-        :return: tuple key for merging
+        :param dict vals: one work entry value, with ``date`` set
+        :rtype: tuple
         """
         return (
             vals['date'],
@@ -403,6 +668,19 @@ class HrVersion(models.Model):
 
     @api.model
     def _generate_work_entries_postprocess_adapt_to_calendar(self, vals):
+        """Tell whether the duration of a value is computed from the working schedule.
+
+        ``True``: ``duration`` is the number of hours the version's calendar plans in the value's
+        span (``_get_work_days_data_batch`` with ``compute_leaves=False``), so a time off counts
+        the planned hours. ``False``: ``duration`` is the real length of the span.
+        Default: ``True`` for absence types. ``hr_holidays`` also returns ``True`` for time off
+        types not requested in hours (but ``False`` for time rule outputs);
+        ``hr_holidays_attendance`` returns ``False`` for attendance values and fully flexible
+        versions. Overrides must not rely on ``vals`` keys other than the raw ones.
+
+        :param dict vals: raw value (``date_start``/``date_stop`` still set)
+        :rtype: bool
+        """
         if 'work_entry_type_id' not in vals:
             return False
         work_entry_type = vals['work_entry_type_id']
@@ -410,6 +688,30 @@ class HrVersion(models.Model):
 
     @api.model
     def _generate_work_entries_postprocess(self, vals_list):
+        """Turn raw work entry values into final ``date``/``duration`` values.
+
+        Steps:
+
+        1. values without ``date_start``/``date_stop`` must already have ``date`` and
+           ``duration`` (``UserError`` otherwise) and are kept as is;
+        2. the others are split at each local midnight (timezone of ``version_id``);
+        3. ``date`` is the local day of the start; ``duration`` is kept if given, otherwise
+           computed from the calendar or from the span, see
+           :meth:`_generate_work_entries_postprocess_adapt_to_calendar`; ``date_start`` and
+           ``date_stop`` are removed, then :meth:`_enrich_work_entry_val` is called;
+        4. values with a zero duration (3 digits) are dropped, the others are merged by
+           :meth:`_get_work_entry_merge_key`, summing ``duration`` and ``trimmed_duration`` and
+           unioning the :meth:`_get_work_entry_source_fields` keys.
+
+        A raw value providing ``duration`` should also provide ``date``, and should not cross
+        local midnight (each split part would keep the full duration).
+
+        :param list vals_list: raw values, see :meth:`_get_version_work_entries_values`
+        :return: final values, see :meth:`generate_work_entries`
+        :rtype: list[dict]
+        :raise UserError: when a version has no timezone or a value has neither dates nor
+            ``date`` and ``duration``
+        """
         # Convert date_start/date_stop to date/duration
         # Split work entries over 2 days due to timezone conversion
         # Regroup work entries of the same type

@@ -373,18 +373,29 @@ class ResourceCalendarAttendance(models.Model):
         ]
 
     def _to_dict(self):
+        """ Read the fields of :meth:`_to_dict_fields`, e.g. to copy attendances to another
+        calendar with ``Command.create``.
+
+        :rtype: list
+        """
         return self.read(self._to_dict_fields(), load=None)
 
     def _is_work_period(self):
+        """ Return whether this attendance counts as work time, e.g. for ``hours_per_week``
+        and ``days_per_week``. Always ``True`` here; ``hr_work_entry`` returns ``False`` for
+        attendances whose work entry type counts as absence. """
         self.ensure_one()
         return True
 
     def _filter_by_date(self, date: date, additional_filter=None):
-        """
-        Get the attendances for a specific date. For variable schedule, it will return the attendances with the same date or with a recurrency rule matching the date. For fixed schedule, it will return the attendances with the same day of week as the date.
+        """ Return the attendances of ``self`` applying on ``date``: undated ones whose
+        ``dayofweek`` matches, dated ones on that date, and recurring ones having a
+        non-excluded occurrence on that date.
 
-        :param date
-        :param additional_filter: optional callable to apply extra filtering in the same loop
+        :param date date: the day to filter on
+        :param additional_filter: optional callable ``attendance -> bool`` applied in the
+            same loop
+        :rtype: ``resource.calendar.attendance`` recordset
         """
         if additional_filter is not None:
             assert callable(additional_filter)
@@ -405,6 +416,12 @@ class ResourceCalendarAttendance(models.Model):
         return self.filtered(date_filter)
 
     def _filter_between_dates(self, date_from, date_to):
+        """ Return the attendances of ``self`` that may occur between ``date_from`` and
+        ``date_to`` (included): undated ones, one-off ones dated in the range and recurring
+        ones whose ``[date, recurrency_until]`` overlaps it (occurrences are not checked).
+
+        :rtype: ``resource.calendar.attendance`` recordset
+        """
         def _is_between_dates(att):
             att.ensure_one()
             if att.date:
@@ -416,6 +433,12 @@ class ResourceCalendarAttendance(models.Model):
         return self.filtered(_is_between_dates)
 
     def exclude_occurence(self, date):
+        """ Remove one occurrence of this recurring attendance (calendar editor action).
+        Excluding the first occurrence moves ``date`` to the next non-excluded occurrence,
+        or deletes the attendance when there is none left.
+
+        :param str date: the occurrence to exclude, as ``'YYYY-MM-DD'``
+        """
         self.ensure_one()
         if (parsed_date := parse_iso_date(date)) == self.date:
             new_date = parsed_date
@@ -435,6 +458,8 @@ class ResourceCalendarAttendance(models.Model):
             self.recurrency_excluded_occurences = excluded_ocurrences
 
     def exclude_multiple_occurences(self, dates):
+        """ Call :meth:`exclude_occurence` for each of ``dates`` (``'YYYY-MM-DD'`` strings)
+        on each attendance of ``self``. """
         for attendance in self:
             for date_to_exclude in dates:
                 attendance.exclude_occurence(date_to_exclude)
@@ -442,6 +467,7 @@ class ResourceCalendarAttendance(models.Model):
                     break
 
     def stop_recurrency(self, date):
+        """ End this recurring attendance the day before ``date`` (``'YYYY-MM-DD'``). """
         self.ensure_one()
         self.update({
             'recurrency_until': parse_iso_date(date) - relativedelta(days=1),
@@ -449,6 +475,14 @@ class ResourceCalendarAttendance(models.Model):
         })
 
     def create_ad_hoc(self, date, changes):
+        """ Modify a single occurrence of this recurring attendance: exclude the occurrence
+        at ``date`` and create a non-recurring copy of the attendance updated with
+        ``changes``.
+
+        :param str date: the occurrence to replace, as ``'YYYY-MM-DD'``
+        :param dict changes: values overriding the copied ones (typically including ``date``)
+        :return: the new attendance
+        """
         self.ensure_one()
         data = self.copy_data()[0]
         self.exclude_occurence(date)
@@ -460,6 +494,14 @@ class ResourceCalendarAttendance(models.Model):
         return self.create(new_data_without_recurrency)
 
     def create_new_recurrency(self, date, changes):
+        """ Modify this recurring attendance from ``date`` onwards: stop the current
+        recurrence the day before ``date`` and create a recurring copy updated with
+        ``changes``.
+
+        :param str date: first occurrence to change, as ``'YYYY-MM-DD'``
+        :param dict changes: values overriding the copied ones (typically including ``date``)
+        :return: the new attendance
+        """
         self.ensure_one()
         data = self.copy_data()[0]
         self.stop_recurrency(date)

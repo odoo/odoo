@@ -2,6 +2,7 @@
 from datetime import datetime, date, UTC
 
 from odoo.tests.common import tagged, TransactionCase
+from odoo.tools.intervals import Intervals
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -169,3 +170,53 @@ class TestFlexibleResourceCalendar(TransactionCase):
             (2025, 52): 40.0,
             (2026, 1): 40.0,
         }, "weeks are well computed when ")
+
+    def test_flexible_resource_unavailable_intervals(self):
+        """Flexible resources are only unavailable during their leaves, returned as Intervals.
+        Without leave, they have no entry in the batch result."""
+        unavailable = self.flex_resource.calendar_id._unavailable_intervals(
+            datetime(2025, 7, 14, tzinfo=UTC), datetime(2025, 7, 19, tzinfo=UTC), resource=self.flex_resource,
+        )
+        self.assertIsInstance(unavailable, Intervals)
+        self.assertFalse(unavailable)
+        unavailable_per_resource = self.resources._get_unavailable_intervals(datetime(2025, 7, 14), datetime(2025, 7, 19))
+        self.assertNotIn(self.flex_resource.id, unavailable_per_resource)
+        self.assertNotIn(self.fully_flex_resource.id, unavailable_per_resource)
+
+        unavailable_per_resource = self.resources._get_unavailable_intervals(datetime(2025, 7, 28), datetime(2025, 8, 2))
+        for resource in self.resources:
+            unavailable = unavailable_per_resource[resource.id]
+            self.assertIsInstance(unavailable, Intervals)
+            self.assertEqual(
+                [(start.date(), stop.date(), start.tzinfo) for start, stop, _leaves in unavailable],
+                [(date(2025, 7, 29), date(2025, 7, 29), UTC), (date(2025, 7, 31), date(2025, 8, 1), UTC)],
+            )
+
+    def test_flexible_resource_working_time_leave(self):
+        """A leave counted as working time does not make the flexible resource unavailable."""
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Training',
+            'resource_id': self.flex_resource.id,
+            'date_from': datetime(2025, 7, 30, 8),
+            'date_to': datetime(2025, 7, 30, 17),
+            'count_as': 'working_time',
+        })
+        start_dt = datetime(2025, 7, 28, tzinfo=UTC)
+        end_dt = datetime(2025, 8, 3, 17, tzinfo=UTC)
+        work_intervals, hours_per_day, hours_per_week = self.flex_resource._get_flexible_resource_valid_work_intervals(start_dt, end_dt)
+        self.assertIn(
+            date(2025, 7, 30),
+            {start.date() for start, _stop, _records in work_intervals[self.flex_resource.id]},
+        )
+        self.assertEqual(hours_per_day[self.flex_resource.id][date(2025, 7, 30)], 8.0)
+        self.assertEqual(hours_per_week[self.flex_resource.id][2025, 31], 16.0)
+
+        unusual_days = self.flex_resource.calendar_id._get_unusual_days(
+            datetime(2025, 7, 28, tzinfo=UTC), datetime(2025, 7, 31, 12, tzinfo=UTC), resource=self.flex_resource,
+        )
+        self.assertEqual(unusual_days, {
+            '2025-07-28': False,
+            '2025-07-29': True,
+            '2025-07-30': False,
+            '2025-07-31': True,
+        })

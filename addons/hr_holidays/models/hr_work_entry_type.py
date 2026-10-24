@@ -32,6 +32,7 @@ class HrWorkEntryType(models.Model):
 
     @api.model
     def _model_sorting_key(self, work_entry_type):
+        """Return the sort key of the types in :meth:`_search` (``sequence``)."""
         return work_entry_type.sequence
 
     create_calendar_meeting = fields.Boolean(
@@ -126,9 +127,11 @@ class HrWorkEntryType(models.Model):
 
     @api.model
     def _search_valid(self, operator, value):
-        """ Returns work_entry_type ids for which a valid allocation exists
-            or that don't need an allocation
-            return [('id', domain_operator, [x['id'] for x in res])]
+        """Search ``has_valid_allocation``: types with a validated allocation for an employee.
+
+        The employee is the context's ``default_employee_id``, ``employee_id`` or the user's
+        employee; the period is ``default_date_from``/``default_date_to`` (with ``tz``) from the
+        context, or the current year.
         """
         if operator not in ('in', 'not in'):
             return NotImplemented
@@ -161,18 +164,21 @@ class HrWorkEntryType(models.Model):
 
     @api.constrains('allow_request_on_top')
     def _check_allow_request_on_top(self):
+        """Forbid requests on top of absences."""
         for leave in self:
             if leave.count_as == "absence" and leave.allow_request_on_top:
                 raise ValidationError(self.env._("You cannot allow requests on top of leaves of type 'Absence'."))
 
     @api.constrains('elligible_for_accrual_rate')
     def _check_elligible_for_accrual_rate(self):
+        """Working time types always count for the accruals."""
         for leave in self:
             if leave.count_as == "working_time" and not leave.elligible_for_accrual_rate:
                 raise ValidationError(self.env._("leaves of type 'Worked Time' should be always eligible for accrual rate."))
 
     @api.constrains('include_public_holidays_in_duration')
     def _check_overlapping_public_holidays(self):
+        """Forbid changing whether public holidays count when this year's requests overlap one."""
         # checking for the current user's company too
         public_holidays = self.env['resource.calendar.leaves'].search([
             ('resource_id', '=', False),
@@ -204,6 +210,7 @@ time type are overlapping with public holidays, meaning that the balance of thos
 
     @api.constrains('count_days_as')
     def _check_leaves_for_count_days_as(self):
+        """Forbid changing ``count_days_as`` once requests of the type exist."""
         leave_count = self.env['hr.leave'].search_count([
             ('work_entry_type_id', 'in', self.ids),
             ('state', 'in', ('validate', 'validate1', 'confirm')),
@@ -213,10 +220,22 @@ time type are overlapping with public holidays, meaning that the balance of thos
 been taken for this time off type. Changing it now would affect existing employee balances."))
 
     def get_work_entry_types_with_valid_allocations(self, date_from, date_to, employee_id):
+        """Return the types of ``self`` the employee can request time off of during a period.
+
+        Types without allocation always; types requiring an allocation when a validated one
+        covers the whole period and is an accrual or has a positive balance (within the negative
+        cap).
+
+        :param date_from: first day
+        :param date_to: last day
+        :param int employee_id: employee id
+        :rtype: hr.work.entry.type
+        """
         allocation_by_work_entry_type = dict(self.env['hr.leave.allocation']._read_group(
             domain=Domain([
                 ('work_entry_type_id', 'in', self.filtered(lambda work_entry_type: work_entry_type.requires_allocation).ids),
                 ('employee_id', '=', employee_id),
+                ('state', '=', 'validate'),
                 ('date_from', '<=', date_from),
                 '|',
                     ('date_to', '>=', date_to),
@@ -256,6 +275,7 @@ been taken for this time off type. Changing it now would affect existing employe
 
     @api.constrains('requires_allocation')
     def check_allocation_requirement_edit_validity(self):
+        """Forbid changing ``requires_allocation`` once requests of the type exist."""
         if not self.env.context.get('install_mode') and self.env['hr.leave'].search_count([('work_entry_type_id', 'in', self.ids)], limit=1):
             raise UserError(_("The allocation requirement of a time type cannot be changed once leaves of that type have been taken. You should create a new time type instead."))
 
@@ -410,16 +430,10 @@ been taken for this time off type. Changing it now would affect existing employe
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None, **kwargs):
-        """ Override _search to order the results, according to some employee.
-        The order is the following
+        """Sort the types with :meth:`_model_sorting_key` when an employee is in the context.
 
-         - allocation fixed first, then allowing allocation, then free allocation
-         - virtual remaining leaves (higher the better, so using reverse on sorted)
-
-        This override is necessary because those fields are not stored and depends
-        on an employee_id given in context. This sort will be done when there
-        is an employee_id in context and that no other order has been given
-        to the method.
+        Only when the default order is requested; the sort is done in Python before offset and
+        limit are applied.
         """
         employee = self.env['hr.employee']._get_contextual_employee()
         if order == self._order and employee:
@@ -461,6 +475,10 @@ been taken for this time off type. Changing it now would affect existing employe
 
     @api.model
     def has_accrual_allocation(self):
+        """Tell whether the contextual employee has a validated accrual allocation still running.
+
+        :rtype: bool
+        """
         employee = self.env['hr.employee']._get_contextual_employee()
         if not employee:
             return False
@@ -475,6 +493,10 @@ been taken for this time off type. Changing it now would affect existing employe
 
     @api.model
     def has_future_allocation(self):
+        """Tell whether the contextual employee has a validated allocation starting in the future.
+
+        :rtype: bool
+        """
         employee = self.env['hr.employee']._get_contextual_employee()
         if not employee:
             return False
@@ -486,6 +508,16 @@ been taken for this time off type. Changing it now would affect existing employe
 
     @api.model
     def get_allocation_data_request(self, target_date=None, hidden_allocations=True, same_year_only=False):
+        """Return the balances of the contextual employee for every type.
+
+        With the context key ``from_dashboard``, types without allocated time are left out.
+
+        :param target_date: date of the balances, today by default
+        :param bool hidden_allocations: include the types hidden on the dashboard
+        :param bool same_year_only: see :meth:`get_allocation_data`
+        :return: list of tuples, see :meth:`get_allocation_data`
+        :rtype: list
+        """
         employee = self.env["hr.employee"]._get_contextual_employee()
         if not employee:
             return defaultdict(list)
@@ -507,6 +539,29 @@ been taken for this time off type. Changing it now would affect existing employe
         return filtered_employee_work_entry_type_infos
 
     def get_allocation_data(self, employees, target_date=None, same_year_only=False):
+        """Return the balance of the employees for each type of ``self`` on a date.
+
+        Sums the data of
+        :meth:`~odoo.addons.hr_holidays.models.hr_employee.HrEmployee._get_consumed_leaves` over
+        the allocations valid on ``target_date``. Amounts are in the ``unit_of_measure`` of
+        the type, rounded to 2 digits. Requests listed in the context key ``ignored_leave_ids``
+        are ignored.
+
+        :param employees: ``hr.employee`` records
+        :param target_date: ``date``, ``datetime`` or ISO string, today by default
+        :param bool same_year_only: only count the allocations starting in the year of
+            ``target_date`` and the requests starting that year
+        :return: ``{employee: [(type name, data, requires_allocation, type id), ...]}``, where
+            ``data`` holds ``max_leaves``, ``leaves_taken`` and ``remaining_leaves`` (approved),
+            ``virtual_leaves_taken`` and ``virtual_remaining_leaves`` (also to approve),
+            ``leaves_requested``, ``leaves_approved``, ``accrual_bonus``,
+            ``closest_allocation_expire`` (formatted date), ``closest_allocation_remaining``,
+            ``closest_allocation_duration``, ``holds_changes``, ``total_virtual_excess``,
+            ``virtual_excess_data``, ``exceeding_duration`` and type information
+            (``request_unit``, ``unit_of_measure``, ``allows_negative``,
+            ``max_allowed_negative``, ``color``, ...)
+        :rtype: dict
+        """
         allocation_data = defaultdict(list)
         if target_date and isinstance(target_date, str):
             target_date = datetime.fromisoformat(target_date).date()
@@ -643,6 +698,19 @@ been taken for this time off type. Changing it now would affect existing employe
         return allocation_data
 
     def _get_closest_expiring_leaves_date_and_count(self, allocations, remaining_leaves, target_date, primary_unit):
+        """Return the next date some remaining time expires, and how much.
+
+        Time expires at the end of an allocation, on a carry-over date when unused time is lost
+        or limited, and at the end of the validity of carried over time.
+
+        :param allocations: ``hr.leave.allocation`` with remaining time
+        :param dict remaining_leaves: ``{allocation: data}`` of
+            :meth:`~odoo.addons.hr_holidays.models.hr_employee.HrEmployee._get_consumed_leaves`
+        :param datetime.date target_date: reference date
+        :param str primary_unit: ``'days'`` or ``'hours'``
+        :return: ``(date, amount)``, ``(None, 0)`` when nothing expires
+        :rtype: tuple
+        """
         # Get the expiration date and carryover date of all allocations and compute the closest expiration date
         expiration_dates_per_allocation = {}
         expiration_dates = list()
@@ -691,6 +759,11 @@ been taken for this time off type. Changing it now would affect existing employe
         return None, 0
 
     def _get_carried_over_days_expiration_data(self, allocations, target_date):
+        """Return when the time carried over by accrual allocations expires, and how much.
+
+        :return: ``{allocation: {'expiration_date': date or None, 'no_expiring_days': float}}``
+        :rtype: dict
+        """
         updated_alloc_data = allocations.sudo()._process_accrual_plans(target_date)
         carried_over_days_expiration_data = {}
         for allocation in allocations:

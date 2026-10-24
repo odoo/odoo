@@ -63,10 +63,27 @@ class HrEmployee(models.Model):
     display_attendances = fields.Boolean(compute="_compute_display_attendances")
 
     def _has_attendance_check_in_ability(self):
+        """Return whether the employee may check in and out from the systray
+        (company's ``attendance_from_systray``).
+
+        :rtype: bool
+        """
         self.ensure_one()
         return self.company_id.attendance_from_systray
 
     def get_attendance_data_by_employee(self, date_start, date_stop):
+        """Return the hours of the attendances overlapping a period, per employee.
+
+        Hours are the full ``worked_hours`` of the overlapping attendances (not clipped to the
+        period); ``overtime_hours`` sums the attendances produced by a time rule.
+
+        :param datetime date_start: naive UTC
+        :param datetime date_stop: naive UTC
+        :return: ``{employee_id: {'worked_hours': float, 'overtime_hours': float,
+            'entries': [{'name': str, 'worked_hours': float, 'color': int}]}}``, one entry per
+            work entry type
+        :rtype: dict
+        """
         attendance_data = {
             employee_id: {
                 'worked_hours': 0,
@@ -111,6 +128,7 @@ class HrEmployee(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        """Create employees and add their ``attendance_manager_id`` to the attendance officers."""
         officer_group = self.env.ref('hr_attendance.group_hr_attendance_officer', raise_if_not_found=False)
         group_updates = []
         for vals in vals_list:
@@ -121,6 +139,8 @@ class HrEmployee(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
+        """Write ``vals``; a new ``attendance_manager_id`` becomes attendance officer, and the
+        previous ones lose that group when they approve no other employee."""
         old_officers = self.env['res.users']
         if 'attendance_manager_id' in vals:
             old_officers = self.attendance_manager_id
@@ -147,6 +167,7 @@ class HrEmployee(models.Model):
                 employee.attendance_manager_id = False
 
     def action_archive(self):
+        """Archive the employees and check out their open attendances (now)."""
         res = super().action_archive()
         open_attendances = self.env['hr.attendance'].sudo().search([
             ('employee_id', 'in', self.ids),
@@ -175,12 +196,13 @@ class HrEmployee(models.Model):
             is_users_employee = has_attendance_own_reader_group and employee in current_user.employee_ids
             employee.display_attendances = has_attendance_user_group or is_approver or is_users_employee
 
-    @api.depends('attendance_ids.worked_hours', 'attendance_ids.time_rule_id')
+    @api.depends('attendance_ids.worked_hours', 'attendance_ids.time_rule_id', 'attendance_ids.state')
     def _compute_total_overtime(self):
         overtime_by_employee = dict(self.env['hr.attendance']._read_group(
             domain=[
                 ('employee_id', 'in', self.ids),
                 ('time_rule_id', '!=', False),
+                ('state', '=', 'validated'),
             ],
             groupby=['employee_id'],
             aggregates=['worked_hours:sum'],
@@ -190,8 +212,11 @@ class HrEmployee(models.Model):
 
     @api.depends('attendance_ids', 'attendance_ids.check_in', 'attendance_ids.check_out', 'attendance_ids.worked_hours', 'attendance_ids.time_rule_id')
     def _compute_hours_last_month(self):
-        """
-        Compute hours and overtime hours in the current month, if we are the 15th of october, will compute from 1 oct to 15 oct
+        """Compute the hours of the **current** month (despite the field names), in the
+        employee's timezone.
+
+        Only the closed attendances within the month count: ``hours_last_month`` sums those not
+        produced by a time rule, ``hours_last_month_overtime`` those produced by one.
         """
         now = fields.Datetime.now()
         now_utc = now.replace(tzinfo=datetime.UTC)
@@ -215,6 +240,12 @@ class HrEmployee(models.Model):
 
     @api.depends('attendance_ids', 'attendance_ids.check_in', 'attendance_ids.check_out', 'attendance_ids.break_duration')
     def _compute_hours_today(self):
+        """Compute the hours worked today (employee's timezone) until now, breaks deducted.
+
+        ``hours_today`` is the total, ``last_attendance_worked_hours`` the part of the last
+        attendance, ``hours_previously_today`` the rest; ``today_attendance_ids`` are the
+        attendances overlapping today.
+        """
         now = fields.Datetime.now()
         now_utc = now.replace(tzinfo=datetime.UTC)
         for timezone, employees in self.grouped('tz').items():
@@ -273,6 +304,7 @@ class HrEmployee(models.Model):
             employee.attendance_state = att and not att.check_out and 'checked_in' or 'checked_out'
 
     def _notify_employee_presence_status(self):
+        """Send the presence state of the employee on the bus (``hr.employee/presence``)."""
         self.ensure_one()
         payload = {
             "hr_presence_state": self.hr_presence_state,
@@ -282,9 +314,21 @@ class HrEmployee(models.Model):
         self._bus_send("hr.employee/presence", payload)
 
     def _attendance_action_change(self, geo_information=None, check_in_image_data=None):
-        """ Check In/Check Out action
-            Check In: create a new attendance record and attach check-in image to it, if available
-            Check Out: modify check_out field of appropriate attendance record
+        """Check the employee in or out, now.
+
+        If the employee is not checked in, create an attendance; otherwise set ``check_out`` on
+        the open attendance, unless the company uses ``single_check_in`` and the employee's
+        schedule is not flexible (then nothing is done). The presence state is sent on the bus.
+
+        :param dict geo_information: values written with an ``in_`` (check-in) or ``out_``
+            (check-out) prefix, e.g. ``{'mode': 'kiosk', 'latitude': ..., 'longitude': ...,
+            'location': ..., 'ip_address': ..., 'browser': ...}``
+        :param dict check_in_image_data: ``{'image': bytes, 'type': str}``, stored in
+            ``in_image`` and posted on the attendance at check-in
+        :return: ``False``, or a notification ``{'type': 'warning', 'message': str}`` when the
+            company requires a check-in picture and none was given
+        :raise UserError: if no open attendance is found to check out, or on a check-out from
+            the systray (context ``is_from_systray_check_in_out``) with ``single_check_in``
         """
         self.ensure_one()
         action_date = fields.Datetime.now()
@@ -364,9 +408,11 @@ class HrEmployee(models.Model):
 
     @api.depends("user_id.im_status", "attendance_state")
     def _compute_presence_state(self):
-        """
-        Override to include checkin/checkout in the presence state
-        Attendance has the second highest priority after login
+        """Use the attendance state in the presence state, after the login.
+
+        A checked in employee (or an employee without user) is ``present``, unless the
+        employee has no user and is out of contract; a checked out employee within working hours
+        and in contract is ``absent``.
         """
         super()._compute_presence_state()
         employees = self.filtered(lambda e: e.hr_presence_state != "present")
@@ -386,6 +432,8 @@ class HrEmployee(models.Model):
                 employee.hr_presence_state = "absent"
 
     def _compute_presence_icon(self):
+        """Show the presence icon of every employee when the company controls presence with
+        attendances (``hr_presence_control_attendance``)."""
         res = super()._compute_presence_icon()
         # All employee must chek in or check out. Everybody must have an icon
         for employee in self:
@@ -400,17 +448,27 @@ class HrEmployee(models.Model):
         }
 
     def _get_calendar_attendance_domain(self):
-        """Return the domain to filter attendances when computing calendar attendance intervals.
+        """Return the domain on ``resource.calendar.attendance`` used by
+        :meth:`_get_work_intervals_by_type` to build the schedule intervals.
 
-        This method can be overridden to customize which attendances are considered
-        for calendar scheduling calculations.
+        ``hr_holidays_attendance`` excludes the schedule attendances whose type is an absence.
 
-        Returns:
-            Domain: The domain expression to filter hr.attendance records.
+        :rtype: Domain
         """
         return Domain.TRUE
 
     def _get_work_intervals_by_type(self, start, stop, version_periods_by_employee):
+        """Split the schedule of the employees in a period by kind of interval.
+
+        :param datetime start: aware datetime
+        :param datetime stop: aware datetime
+        :param dict version_periods_by_employee: ``{employee: [(start, stop, version)]}``
+        :return: ``{'schedule' | 'leave' | 'public_leave' | 'fully_flexible':
+            {employee: Intervals}}``, naive datetimes; fully flexible versions only get a
+            ``fully_flexible`` interval over their period. The timezone of the intervals is
+            dropped, not converted.
+        :rtype: dict
+        """
         employees_by_calendar = defaultdict(lambda: self.env['hr.employee'])
         leave_intervals_by_cal_by_resource = defaultdict(lambda: defaultdict(Intervals))
         public_leave_intervals_by_cal_by_resource = defaultdict(lambda: defaultdict(Intervals))
