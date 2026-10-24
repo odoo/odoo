@@ -158,7 +158,7 @@ export const mergePeersCommits = (peerInfos) => {
             }
             for (const commit of peerInfoB.commits) {
                 peerInfoA.collaborationPlugin.insertRemoteHistoryCommits([
-                    JSON.parse(JSON.stringify(commit)),
+                    new HistoryCommit(JSON.parse(JSON.stringify(commit))),
                 ]);
             }
         }
