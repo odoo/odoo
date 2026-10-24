@@ -402,7 +402,7 @@
                             <button type="object" string="Storage Capacities"
                                 name="action_view_storage_category_capacity"
                                 groups="stock.group_stock_multi_locations"
-                                invisible="type == 'service'"
+                                invisible="type == 'service' or not is_storable"
                                 class="oe_stat_button"
                                 icon="inventory_2"/>
                         </t>
@@ -524,7 +524,7 @@
                              <button type="object"
                                 name="action_view_storage_category_capacity"
                                 groups="stock.group_stock_multi_locations"
-                                invisible="type == 'service'"
+                                invisible="type == 'service' or not is_storable"
                                 class="oe_stat_button"
                                 icon="inventory_2">
                                 <div class="o_stat_info">
