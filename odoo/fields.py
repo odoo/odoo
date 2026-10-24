@@ -4231,6 +4231,10 @@ class PropertiesDefinition(Field):
 
         return value
 
+    def convert_to_export(self, value, record):
+        # record format -> export format (the JSON the import reads back)
+        return json.dumps(value) if value else ''
+
     @classmethod
     def _validate_properties_definition(cls, properties_definition, env):
         """Raise an error if the property definition is not valid."""
