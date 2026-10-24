@@ -5695,11 +5695,10 @@ class AccountMove(models.Model):
                 row['amount'] = row['part_amount']
                 row['currency'] = currency_ids_mapping[row['part_company_currency_id']]
 
-        return [
-            row
-            for row in rows
-            if row['is_exchange'] or not row['is_caba']
-        ]
+        return sorted(
+            (row for row in rows if row['is_exchange'] or not row['is_caba']),
+            key=lambda row: (row['aml'].date, row['aml'].id),
+        )
 
     def _get_reconciled_invoices_partials(self):
         ''' Helper to retrieve the details about reconciled invoices.
