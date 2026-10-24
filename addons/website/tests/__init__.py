@@ -12,6 +12,7 @@ from . import test_crawl
 from . import test_custom_snippets
 from . import test_digest
 from . import test_disable_unused_snippets_assets
+from . import test_fonts
 from . import test_fuzzy
 from . import test_get_current_website
 from . import test_grid_layout
