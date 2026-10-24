@@ -143,3 +143,21 @@ test("side panel with translations", async () => {
 
     expect(".o-translate-side-panel .o-translate-card").toHaveCount(1);
 });
+
+test("side panel links missing translations to the default language", async () => {
+    serverState.lang = "fr_FR";
+    serverState.serverVersion = [3, 0, 0, "final", 0, ""];
+    serverState.debug = "translate";
+
+    await mountWithCleanup(/* xml */ `
+        <div class="sample-element">
+            ${mockEncodedTranslation("Component")}
+        </div>
+    `);
+
+    expect(".sample-element:only").toHaveText("Component");
+    expect(".o-translate-side-panel .o-translate-card:only a[href]").toHaveAttribute(
+        "href",
+        "www.example.com/translate/odoo-3/web/en/?checksum=25c3e74edddbe2ff"
+    );
+});
