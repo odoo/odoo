@@ -44,9 +44,14 @@ class ProductProduct(models.Model):
 
     @api.model
     def _load_pos_self_data_fields(self, config_id):
-        params = super()._load_pos_self_data_fields(config_id)
-        params += ['public_description', 'list_price']
-        return params
+        return [
+            'display_name', 'lst_price', 'pos_categ_ids', 'taxes_id',
+            'name', 'product_tmpl_id', 'type', 'attribute_line_ids', 'active',
+            'image_128', 'combo_ids', 'product_template_variant_value_ids',
+            'self_order_available', 'public_description', 'list_price', 'barcode',
+            'uom_id', 'categ_id', 'tracking', 'default_code', 'write_date',
+            'is_storable', 'to_weight',
+        ]
     
     @api.model
     def _load_pos_self_data_domain(self, data):

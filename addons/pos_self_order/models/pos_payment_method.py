@@ -13,4 +13,4 @@ class PosPaymentMethod(models.Model):
         if data['pos.config']['data'][0]['self_ordering_mode'] == 'kiosk':
             return [('use_payment_terminal', 'in', ['adyen', 'stripe']), ('id', 'in', data['pos.config']['data'][0]['payment_method_ids'])]
         else:
-            [('id', '=', False)]
+            return [('id', '=', False)]
