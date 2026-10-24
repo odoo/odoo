@@ -2605,6 +2605,23 @@ class TestStockValuation(TestStockValuationCommon):
         with freeze_time(Datetime.now() + timedelta(minutes=3)):
             self.assertEqual(product.total_value, 74)  # 49 + (5 * 5) = 74
 
+    def test_average_manual_price_change_product_price_precision(self):
+        """ The manual cost of an AVCO product must keep the 'Product Price' precision,
+        even if it is higher than the currency precision.
+        """
+        self.env['decimal.precision'].search([('name', '=', 'Product Price')]).digits = 5
+        product = self.product_avco
+        self._make_in_move(product, 10, unit_cost=1)
+        with freeze_time(Datetime.now() + timedelta(minutes=1)):
+            product.standard_price = 0.5676
+        # Recompute the average cost from the last manual cost update
+        product._update_standard_price()
+        self.assertEqual(product.standard_price, 0.5676)
+        with freeze_time(Datetime.now() + timedelta(minutes=2)):
+            self._make_in_move(product, 10, unit_cost=1)
+        # (10 * 0.5676 + 10 * 1) / 20
+        self.assertEqual(product.standard_price, 0.7838)
+
     def test_average_manual_revaluation(self):
         product = self.product_avco
 
