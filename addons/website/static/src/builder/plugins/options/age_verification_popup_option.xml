@@ -24,7 +24,7 @@
             <BuilderTextInput attributeAction="'placeholder'" applyTo="'input[name^=&quot;age_verification_birth_&quot;]'"/>
         </BuilderRow>
         <BuilderRow label.translate="Background blur">
-            <BuilderCheckbox dataAttributeAction="'blurBackground'" dataAttributeActionValue="'true'"/>
+            <BuilderRange action="'setAgeVerificationBackgroundBlur'" min="0" max="32" step="1"/>
         </BuilderRow>
     </xpath>
 </t>

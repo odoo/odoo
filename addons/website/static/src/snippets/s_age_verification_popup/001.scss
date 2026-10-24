@@ -10,17 +10,17 @@
     inset: 0;
     z-index: $zindex-modal + 1;
     background: rgba(black, 0.15);
-    backdrop-filter: blur(16px);
+    backdrop-filter: blur(var(--o-age-popup-background-blur, 16px));
 }
 
 body:not(.editor_enable) {
-    #wrapwrap:has([data-age-verification-pending="true"]):has([data-blur-background="true"])::before {
+    #wrapwrap:has([data-age-verification-pending="true"]):has([data-blur-background])::before {
         @include o-apply-age-popup-blur-overlay;
     }
 }
 
 .editor_enable {
-    #wrapwrap:has(.show[data-blur-background="true"])::before {
+    #wrapwrap:has(.show[data-blur-background])::before {
         @include o-apply-age-popup-blur-overlay;
     }
 }
