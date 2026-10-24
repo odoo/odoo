@@ -13,6 +13,7 @@ export class FieldSelectorField extends Component {
         resModel: { type: String, optional: true },
         allowProperties: { type: Boolean, optional: true },
         followRelations: { type: Boolean, optional: true },
+        required: { type: Boolean, optional: true },
     };
 
     filter(fieldDef) {
@@ -74,6 +75,13 @@ export const fieldSelectorField = {
         return {
             allowProperties: options.allow_properties ?? true,
             followRelations: options.follow_relations ?? true,
+<<<<<<< d02db249d8a87b29a910ab5a9c4db1cd5dd8aa31
+||||||| 50fbe09a4f45d9e3b29846ae0cca3b73b068ff18
+            onlySearchable: exprToBoolean(options.only_searchable),
+=======
+            onlySearchable: exprToBoolean(options.only_searchable),
+            required: dynamicInfo.required,
+>>>>>>> 8bb9ad552ffc75388cac5b2d72a3841f1f5df2e2
             resModel: options.model,
         };
     },
