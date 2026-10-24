@@ -31,14 +31,14 @@
                     <field name="allow_billable" invisible="1" />
                     <field name="remaining_hours_available" invisible="1"/>
                     <field name="sale_order_id" invisible="1"/>
-                    <div id="remaining_hours_so_label" class="col-8">
+                    <div id="remaining_hours_so_label" class="col-6 col-md-8">
                         <label class="fw-bold" for="remaining_hours_so"
                             invisible="remaining_hours_so &lt; 0"/>
                         <label class="fw-bold text-danger" for="remaining_hours_so"
                             invisible="remaining_hours_so &gt;= 0"/>
                     </div>
-                    <div class="col-4">
-                        <field name="remaining_hours_so" nolabel="1" widget="timesheet_uom" decoration-danger="remaining_hours_so &lt; 0"/>
+                    <div class="col-6 col-md-4">
+                        <field name="remaining_hours_so" nolabel="1" widget="timesheet_uom" class="text-nowrap" decoration-danger="remaining_hours_so &lt; 0"/>
                     </div>
                 </div>
             </xpath>
