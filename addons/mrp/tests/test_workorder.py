@@ -176,3 +176,27 @@ class TestWorkorder(TestMrpCommon):
 
         mo_copy = mo.copy()
         self.assertEqual(mo_copy.workorder_ids.mapped('name'), original_names)
+
+    def test_update_production_qty_with_workorders(self):
+        """Test that changing the production quantity of a manufacturing order with workorders
+        don't change the producing quantity of the manufacturing order
+        """
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_3
+        mo_form.product_qty = 10
+        mo = mo_form.save()
+        mo.action_confirm()
+        wo = mo.workorder_ids[0]
+        self.assertEqual(wo.qty_production, 10)
+        wo.qty_producing = 3
+        wo.set_qty_producing()
+        self.assertEqual(mo.qty_producing, 3)
+
+        wiz = self.env['change.production.qty'].create({
+            'mo_id': mo.id,
+            'product_qty': 30,
+        })
+        wiz.change_prod_qty()
+        self.assertEqual(mo.qty_producing, 3)
+        self.assertEqual(wo.qty_producing, 3)
+        self.assertEqual(wo.qty_production, 30)
