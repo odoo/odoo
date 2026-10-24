@@ -1327,3 +1327,21 @@ class TestPoSBasicConfig(TestPoSCommon):
         })
 
         self.assertEqual(refund_order.refunded_order_id, orders[0])
+
+    def test_load_pos_data_fields_extended_order(self):
+        """ Extending the fields of pos.order loaded in the PoS must keep the
+        other fields and relations, e.g. the order lines. """
+        session = self.open_new_session()
+        PosOrder = self.registry['pos.order']
+        load_pos_data_fields = PosOrder._load_pos_data_fields
+
+        def extended_load_pos_data_fields(self, config_id):
+            return load_pos_data_fields(self, config_id) + ['floating_order_name']
+
+        with unittest.mock.patch.object(PosOrder, '_load_pos_data_fields', extended_load_pos_data_fields):
+            data = session.load_data(['pos.config', 'pos.order'])
+
+        self.assertIn('floating_order_name', data['pos.order']['fields'])
+        self.assertIn('lines', data['pos.order']['fields'])
+        self.assertIn('lines', data['pos.order']['relations'])
+        self.assertIn('payment_ids', data['pos.order']['relations'])
