@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { parseJSON } from "@website/js/utils";
 import { _t } from "@web/core/l10n/translation";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { ObservingCookieWidgetMixin } from "@website/snippets/observing_cookie_mixin";
@@ -98,8 +99,8 @@ const InstagramPage = publicWidget.Widget.extend(ObservingCookieWidgetMixin, {
             // iOS chrome message)
             return;
         }
-        const evDataJSON = JSON.parse(ev.data);
-        if (evDataJSON.type !== "MEASURE") {
+        const evDataJSON = parseJSON(ev.data);
+        if (evDataJSON?.type !== "MEASURE") {
             // It's not a measure message.
             return;
         }

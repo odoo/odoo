@@ -7,7 +7,7 @@ import { delay } from "@web/core/utils/concurrency";
 import { getDataURLFromFile, redirect } from "@web/core/utils/urls";
 import weUtils from '@web_editor/js/common/utils';
 import { _t } from "@web/core/l10n/translation";
-import { svgToPNG, webpToPNG } from "@website/js/utils";
+import { parseJSON, svgToPNG, webpToPNG } from "@website/js/utils";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
@@ -831,7 +831,7 @@ export class Configurator extends Component {
             palettes[paletteName] = palette;
         });
 
-        const localState = JSON.parse(sessionStorage.getItem(this.storageItemName));
+        const localState = parseJSON(sessionStorage.getItem(this.storageItemName));
         if (localState) {
             let themes = [];
             if (localState.selectedIndustry && localState.selectedPalette) {

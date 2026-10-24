@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { parseJSON } from "@website/js/utils";
 import { cookie } from "@web/core/browser/cookie";
 import { patch } from "@web/core/utils/patch";
 
@@ -10,11 +11,12 @@ patch(cookie, {
                 // Cookies bar is disabled on this website.
                 return true;
             }
-            const consents = JSON.parse(cookie.get("website_cookies_bar") || "{}");
+            const consents = parseJSON(cookie.get("website_cookies_bar") || "{}");
 
             // pre-16.0 compatibility, `website_cookies_bar` was `"true"`.
             // In that case we delete that cookie and let the user choose again.
-            if (typeof consents !== "object") {
+            // A malformed cookie is handled the same way.
+            if (!consents || typeof consents !== "object") {
                 cookie.delete("website_cookies_bar");
                 return false;
             }
