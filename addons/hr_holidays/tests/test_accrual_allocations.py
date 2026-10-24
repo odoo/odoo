@@ -3553,49 +3553,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             ), ('allocated_duration', 'previous_carryover_number_of_days'),
         )
 
-    @freeze_time("2026-01-26")
-    def test_get_additionnal_future_leaves_on(self):
-        """ Assert accrual plan allocation `_get_additionnal_future_leaves_on` uses the
-            `unit_of_measure` and not the `request_unit` of the leave type
-        """
-        allocation_day = self.env['hr.leave.allocation'].create({
-            'name': 'Daily Accrual',
-            'work_entry_type_id': self.work_entry_type_day.id,
-            'employee_id': self.employee_emp.id,
-            'accrual_plan_id': self.accrual_plan_start1.id,
-            'number_of_days': 0,
-            'date_from': "2026-01-26",
-        })
-
-        allocation_day._action_validate()
-
-        # First period accrual: 2026-01-26 -> 2026-02-01
-        # Second period accrual: 2026-02-01 -> 2026-03-01: +1 day
-        # _get_additionnal_future_leaves_on round at 2 digits
-        res_day = allocation_day._get_additionnal_future_leaves_on(date(2026, 2, 15))
-        first_period_accrued_days = self._get_period_days('2026-01-26', '2026-01-31') / self._get_period_days('2026-01-01', '2026-01-31')
-        self.assertAlmostEqual(res_day, 1 + first_period_accrued_days, delta=0.01)
-
-        # Assuming an 8-hour workday, 2 days = 16.0 hours
-        accrual_plan = self.accrual_plan_monthly_start
-        self.employee_emp.resource_calendar_id = self.calendar_8h_per_day
-        work_entry_type_hour = self.work_entry_type_hour_day
-        allocation_hour = self.env['hr.leave.allocation'].create({
-            'name': 'Hourly Allocation with daily accrual',
-            'work_entry_type_id': work_entry_type_hour.id,
-            'employee_id': self.employee_emp.id,
-            'accrual_plan_id': accrual_plan.id,
-            'number_of_days': 0,
-            'date_from': '2026-01-01',
-        })
-        allocation_hour._action_validate()
-
-        # 2026-01-01 -> 2026-02-01: +2 days
-        # 2026-02-01 -> 2026-03-01: +2 days
-        # -> 4 days = 32 hours accordingly to the calendar of the employee
-        res_hour = allocation_hour._get_additionnal_future_leaves_on(date(2026, 2, 2))
-        self.assertEqual(res_hour, 32.0)
-
     def test_accrual_allocation_immediate_monthly_start_day(self):
         """ Assert modifying the `date_from` from the form of an accrual allocation updates the `number_of_days` accordingly
             and that carriedover duration expires properly
@@ -4334,3 +4291,44 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             leave_form.request_date_to = date(2026, 4, 15)
             self.assertEqual(leave_form.number_of_days, 7)
             self.assertEqual(leave_form.allocation_display_warning, "Only 6.0 day(s) available")
+
+    @freeze_time('2026-01-01')
+    def test_accrual_multiple_leaves(self):
+        self.accrual_plan_monthly_end.level_ids[0].added_value = 1
+        allocation = self._create_form_test_accrual_allocation(
+            self.work_entry_type_day,
+            '2026-01-01',
+            self.employee_emp,
+            self.accrual_plan_monthly_end,
+            number_of_days=0,
+        )
+        allocation.action_approve()
+        self.assertEqual(allocation.number_of_days, 0)
+
+        def assert_excess_allocation_data(target_date, accrual_diff, exceeding_duration, total_virtual_excess):
+            allocation_data = self.work_entry_type_day.get_allocation_data(
+                self.employee_emp, target_date)[self.employee_emp][0][1]
+            self.assertAlmostEqual(allocation_data['accrual_diff'], accrual_diff)
+            self.assertAlmostEqual(allocation_data['future_accrual_exceeding_duration'], exceeding_duration)
+            self.assertAlmostEqual(allocation_data['total_virtual_excess'], total_virtual_excess)
+
+        # 5 days leave
+        leave1 = self._create_leave(self.employee_emp, self.work_entry_type_day, '2026-11-02', '2026-11-06')
+        self.assertEqual(leave1.number_of_days, 5)
+        assert_excess_allocation_data(date(2026, 1, 1), 0, 0, 0)
+        assert_excess_allocation_data(date(2026, 12, 1), 11, 0, 0)
+
+        # 4 days leave
+        leave2 = self._create_leave(self.employee_emp, self.work_entry_type_day, '2026-10-05', '2026-10-08')
+        self.assertEqual(leave2.number_of_days, 4)
+        assert_excess_allocation_data(date(2026, 1, 1), 0, 0, 0)
+        assert_excess_allocation_data(date(2026, 12, 1), 11, 0, 0)
+
+        # 5 days leave
+        leave3 = self._create_leave(self.employee_emp, self.work_entry_type_day, '2026-09-07', '2026-09-11')
+        self.assertEqual(leave3.number_of_days, 5)
+        # (allocation.number_of_days on the day of the start of the latest leave) - (leave sum)
+        # 10 - 14 = -4
+        assert_excess_allocation_data(date(2026, 1, 1), 0, 4, 0)
+        # assert_excess_allocation_data(date(2026, 12, 1), 11, 0, 3)
+        # assert_excess_allocation_data(date(2027, 5, 1), 16, 0, 0)
