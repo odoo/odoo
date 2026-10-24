@@ -1816,11 +1816,11 @@ class AccountMove(models.Model):
                         if (iban := payment_info.get('account_number'))
                     }
                     existing_ibans = {
-                        bank['sanitized_account_number']
+                        bank['account_number']
                         for bank in self.env['res.partner.bank'].sudo().with_context(active_test=False).search_read([
-                            ('sanitized_account_number', 'in', list(ibans)),
+                            ('account_number', 'in', list(ibans)),
                             ('partner_id', 'in', self.env['res.company']._cached_data()['partner_id']),
-                        ], ['sanitized_account_number'])
+                        ], ['account_number'])
                     }
                     for sanitized_iban, iban in ibans.items():
                         if sanitized_iban not in existing_ibans:

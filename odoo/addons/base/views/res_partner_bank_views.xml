@@ -11,7 +11,7 @@
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <group>
                             <group>
-                                <field name="account_number"/>
+                                <field name="formatted_account_number" string='Account Number'/>
                                 <div class="d-flex" colspan="1" invisible="not show_clearing_number">
                                     <field name="clearing_label_id" class="p-0" options="{'no_create_edit': True, 'no_open': True}"/>
                                     <label for="clearing_number" string=""/>
@@ -64,7 +64,7 @@
             <field name="arch" type="xml">
                 <list string="Bank Accounts" multi_edit="1" decoration-muted="(not active)">
                     <field name="sequence" widget="handle"/>
-                    <field name="account_number"/>
+                    <field name="formatted_account_number" string="Account Number"/>
                     <field name="partner_id" optional="hide"/>
                     <field name="holder_name" optional="hide"/>
                     <field name="bank_name" string="Bank" optional="hide"/>
