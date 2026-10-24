@@ -191,8 +191,8 @@ class StockMove(models.Model):
         res = super().write(vals)
         if recompute_date:
             impacted_moves._set_value(recompute_date=recompute_date)
-        if vals.get('value'):
-            self.cogs_aml_ids._set_cogs()
+        if 'value' in vals:
+            self._get_cogs_invoice_lines()._set_cogs()
         return res
 
     def _read_group_select(self, table, aggregate_spec):
@@ -252,7 +252,7 @@ class StockMove(models.Model):
         moves_in = moves.filtered(lambda m: m.is_in or m.is_dropship)
         moves_out._set_value()
         moves_in._set_value()
-        moves.cogs_aml_ids._set_cogs()
+        moves._get_cogs_invoice_lines()._set_cogs()
         moves._create_account_move()
         (moves_in | moves_out).sudo()._create_analytic_move()
         return moves
@@ -324,8 +324,36 @@ class StockMove(models.Model):
             'product_id': self.product_id.id,
         }]
 
+    def _update_related_entries(self, old_values):
+        """ Tries to find journal items related to these moves and updates their value if some are found.
+        :param: old_values a dict containing the previous value of each move.
+        """
+        for move in self:
+            old_value = old_values.get(move.id, 0)
+            if old_value == move.value:
+                continue
+
+            amls = move.account_move_id.line_ids.filtered(lambda aml:
+                aml.product_id == aml.product_id
+                and move.reference in aml.name
+                and aml.balance in (old_value, -old_value),
+            )
+            if not amls:
+                continue
+
+            new_value = move.value if move.is_in else -move.value
+            # TODO QUWO: Need to handle lock dates
+            for line in amls:
+                line.with_context(check_move_validity=False).write({
+                    'balance': new_value if line.debit else -new_value,
+                })
+
     def _get_analytic_distribution(self):
         return {}
+
+    def _get_cogs_invoice_lines(self):
+        """Find invoice lines through their existing COGS journal items."""
+        return self.sudo().cogs_aml_ids.cogs_origin_id
 
     def _get_price_unit(self, product=None, include_consigned=False, include_consumable=False):
         """ Returns the unit price to value this stock move.
@@ -379,7 +407,10 @@ class StockMove(models.Model):
             return changed_moves
 
         if recompute_date and any(m.remaining_qty != m._get_valued_qty() or m.is_out for m in self):
-            self.filtered(lambda m: m.is_in)._set_value(skip_check=True)
+            in_moves = self.filtered('is_in')
+            old_in_values = {move.id: move.value for move in in_moves}
+            in_moves._set_value(skip_check=True)
+            in_moves._update_related_entries(old_in_values)
             return self.product_id._correct_inventory_valuation(recompute_date)
 
         self = self.sorted(key=lambda m: (m.date, m.id))  # noqa: PLW0642
