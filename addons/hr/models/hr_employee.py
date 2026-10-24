@@ -2496,7 +2496,16 @@ class HrEmployee(models.Model):
         self.action_unarchive()
         version = self._get_version(self.departure_id.departure_date)
         version.contract_date_end = self.departure_id.last_contract_date_end
+        self._track_departure(self.env._("End of Collaboration cancelled"))
         self.departure_id.unlink()
+
+    def _track_departure(self, message):
+        """ Log the departure changes in the employee chatter, as they are made
+        on the versions (or by deleting the departure) and not on the employee. """
+        if self._track_disabled():
+            return
+        self._track_prepare(['departure_reason_id', 'dismissal_date', 'departure_date'])
+        self._track_set_log_message(Markup("<strong>%s</strong>") % message)
 
     def _get_working_periods_by_field(self, start, stop, field_key):
         """
