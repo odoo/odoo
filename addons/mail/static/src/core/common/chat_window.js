@@ -152,6 +152,11 @@ export class ChatWindow extends Component {
     }
 
     onKeydown(ev) {
+        const hotkey = getActiveHotkey(ev);
+        // allow hotkeys for windows and macOs
+        if (hotkey === "alt" || hotkey === "control") {
+            return;
+        }
         if (ev.key === "Escape" && this.threadActions.panelAction) {
             this.threadActions.panelAction.closePanel();
             ev.stopPropagation();
@@ -161,7 +166,7 @@ export class ChatWindow extends Component {
             return;
         }
         ev.stopPropagation(); // not letting home menu steal my CTRL-C
-        switch (getActiveHotkey(ev)) {
+        switch (hotkey) {
             case "escape":
                 if (
                     isEventHandled(ev, "NavigableList.close") ||

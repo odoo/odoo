@@ -29,6 +29,7 @@ import {
     useScope,
 } from "@odoo/owl";
 
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { _t } from "@web/core/l10n/translation";
 import { Transition } from "@web/core/transition";
 import { UIPlugin } from "@web/core/ui/ui_plugin";
@@ -197,6 +198,7 @@ export class Thread extends Component {
                 }
             }
         );
+        useHotkey(this.jumpPresentHotkey, () => this.jumpToPresent());
         useOnChange(
             () => [this.props.thread.highlightMessage, this.state.mountedAndLoaded],
             (highlightMessage, mountedAndLoaded) => {
@@ -617,6 +619,10 @@ export class Thread extends Component {
     /** @param {import("models").Message} message */
     getMessageClassName(message) {
         return this.isMessageHighlighted(message) ? "o-highlighted" : "";
+    }
+
+    get jumpPresentHotkey() {
+        return this.props.order === "asc" ? "ArrowDown" : "ArrowUp";
     }
 
     async jumpToPresent({ immediate = false } = {}) {
