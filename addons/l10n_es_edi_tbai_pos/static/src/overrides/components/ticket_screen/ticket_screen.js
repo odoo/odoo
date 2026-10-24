@@ -7,12 +7,17 @@ import { qrCodeSrc } from "@point_of_sale/utils";
 patch(TicketScreen.prototype, {
     async addAdditionalRefundInfo(order, destinationOrder) {
         if (this.pos.company.l10n_es_tbai_is_enabled && order.state == "invoiced") {
-            const payload = await makeAwaitable(this.dialog, AddTbaiRefundReasonPopup, {
-                order: destinationOrder,
-            });
-            if (payload) {
-                destinationOrder.l10n_es_tbai_refund_reason = payload.l10n_es_tbai_refund_reason;
-                destinationOrder.to_invoice = true;
+            if (order.is_l10n_es_simplified_invoice) {
+                destinationOrder.l10n_es_tbai_refund_reason = "R5";
+            } else {
+                const payload = await makeAwaitable(this.dialog, AddTbaiRefundReasonPopup, {
+                    order: destinationOrder,
+                });
+                if (payload) {
+                    destinationOrder.l10n_es_tbai_refund_reason =
+                        payload.l10n_es_tbai_refund_reason;
+                    destinationOrder.to_invoice = true;
+                }
             }
         }
         await super.addAdditionalRefundInfo(...arguments);
