@@ -65,9 +65,12 @@ class ResourceCalendar(models.Model):
         compute='_compute_global_leave_ids', store=True, readonly=False,
         domain=[('resource_id', '=', False)],
     )
+    # 0 is uesd as SENTINEL value to represent "Not Limited" days, i.e. any number of days -> See fully flexible
     days_per_week = fields.Float("Days per Week", compute="_compute_days_per_week", store=True, digits=(10, 5), readonly=False)
+    unlimited_days_per_week = fields.Boolean(compute="_compute_unlimited_days_per_week")
     hours_per_day = fields.Float("Average Hour per Day", store=True, compute="_compute_hours_per_day", digits=(10, 5), readonly=False,
         help="Average hours per day a resource is supposed to work with this calendar.")
+    # 0 is used as SENTINEL value to represent "Not Limited" hours, i.e. any number of hours -> See fully flexible
     hours_per_week = fields.Float(
         string="Hours per Week",
         compute="_compute_hours_per_week", store=True, digits=(10, 5), readonly=False, copy=False)
@@ -203,10 +206,19 @@ class ResourceCalendar(models.Model):
             attendances = calendar.attendance_ids.filtered(lambda a: a._is_work_period())
             calendar.days_per_week = len(set(attendances.mapped('dayofweek')))
 
+    @api.depends('days_per_week')
+    def _compute_unlimited_days_per_week(self):
+        for calendar in self:
+            # -1 is the SENTINEL value
+            calendar.unlimited_days_per_week = (calendar.days_per_week == -1)
+
     @api.depends('days_per_week', 'hours_per_week')
     def _compute_hours_per_day(self):
         for calendar in self:
-            calendar.hours_per_day = calendar.hours_per_week / calendar.days_per_week if calendar.days_per_week else 0
+            if not calendar.days_per_week or calendar.unlimited_days_per_week:
+                calendar.hours_per_day = 0.0
+            else:
+                calendar.hours_per_day = calendar.hours_per_week / calendar.days_per_week
 
     @api.depends('attendance_ids.duration_hours', 'calendar_type')
     def _compute_hours_per_week(self):
@@ -226,16 +238,29 @@ class ResourceCalendar(models.Model):
         for calendar in self:
             calendar.work_resources_count = resources_per_calendar.get(calendar, 0)
 
+    @api.constrains('days_per_week')
+    def _verify_days_per_week(self):
+        for calendar in self:
+            if calendar.days_per_week > 7:
+                raise ValidationError(self.env._("Days per week cannot exceed 7."))
+
     @api.constrains('hours_per_week', 'hours_per_day')
     def _verify_hours(self):
         for calendar in self:
             # fixed calendars derive these from their attendance lines, always valid by construction
             if calendar.calendar_type == 'fixed':
                 continue
-            if calendar.hours_per_week < 0 or calendar.hours_per_week > 168:
-                raise ValidationError(self.env._("Hours per week must be between 0 and 168."))
-            if calendar.hours_per_day < 0 or calendar.hours_per_day > 24:
-                raise ValidationError(self.env._("Average hours per day must be between 0 and 24."))
+            if calendar.hours_per_week > 168:
+                raise ValidationError(self.env._("Hours per week cannot exceed 168."))
+            if calendar.hours_per_day > 24:
+                raise ValidationError(self.env._("Average hours cannot exceed 24."))
+
+    @api.constrains('days_per_week', 'hours_per_week')
+    def _valid_fully_flexible(self):
+        for calendar in self:
+            if (calendar.days_per_week == 0 and calendar.hours_per_week != 0) or \
+                (calendar.days_per_week != 0 and calendar.hours_per_week == 0):
+                raise ValidationError(self.env._("Both 'Days per Week' and 'Hours per Week' should be set to 'Not Limited', or None."))
 
     @api.depends('hours_per_week', 'full_time_required_hours')
     def _compute_is_fulltime(self):
