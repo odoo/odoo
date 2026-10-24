@@ -38,7 +38,7 @@ declare module "registries" {
     export interface DebugSectionRegistryItemShape {
         label: TranslatedString;
         sequence: number;
-    };
+    }
 
     interface GlobalRegistryCategories {
         debug: RegistryData<DebugRegistryItemShape, DebugRegistryCategories>;

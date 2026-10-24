@@ -1,5 +1,3 @@
-//@ts-check
-
 import { Domain } from "@web/core/domain";
 import { DynamicList } from "./dynamic_list";
 import { getGroupServerValue } from "./utils";
