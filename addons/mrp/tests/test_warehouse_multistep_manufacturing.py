@@ -121,6 +121,36 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         self.assertEqual(pick.location_id, self.stock_location)
         self.assertEqual(pick.location_dest_id, pre_2)
 
+    def test_scrap_component_unreserves_correct_mo(self):
+        """
+        Ensure scrapping raw material from one MO, prioritise this mo to unreserve.
+
+        Two MOs each reserve 2 units of the same component, with nothing left in
+        stock beyond what both need. Scrapping those 2 units from the first MO
+        should unreserve that first MO, while the second MO's reservation must
+        remain untouched.
+        """
+        self.warehouse_1.manufacture_steps = 'pbm'
+        self.env['stock.quant']._update_available_quantity(self.raw_product, self.warehouse_1.lot_stock_id, 4)
+
+        mos = self.env['mrp.production'].create([{
+            'picking_type_id': self.warehouse_1.manu_type_id.id,
+            'bom_id': self.bom.id,
+            'product_qty': 1,
+        } for __ in range(2)])
+        mos.action_confirm()
+        mos.picking_ids.button_validate()
+        self.assertRecordValues(mos.move_raw_ids, [{'state': 'assigned'}, {'state': 'assigned'}])
+
+        scrap_form = Form.from_action(self.env, mos[0].action_scrap())
+        scrap_form.product_id = self.raw_product
+        scrap_form.quantity = 2.0
+        scrap_form.save().action_scrap()
+
+        self.assertRecordValues(mos.move_raw_ids, [{'state': 'confirmed'}, {'state': 'assigned'}])
+        self.assertFalse(mos[0].move_raw_ids.move_line_ids)
+        self.assertRecordValues(mos[1].move_raw_ids.move_line_ids, [{'quantity': 2.0}])
+
     def test_manufacturing_3_steps(self):
         """ Test MO/picking before manufacturing/picking after manufacturing
         components and move_orig/move_dest. Ensure that everything is created
