@@ -3040,3 +3040,12 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertRecordValues(move1_reversal.message_main_attachment_id, attachment_vals)
         move2_reversal = self._reverse_invoice(move2, is_modify=True)
         self.assertFalse(move2_reversal.message_main_attachment_id)
+
+    def test_in_invoice_show_journal_single_journal(self):
+        self.env['account.journal'].search([
+            ('company_id', '=', self.company_data['company'].id),
+            ('type', '=', 'purchase'),
+            ('id', '!=', self.company_data['default_journal_purchase'].id),
+        ]).action_archive()
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        self.assertFalse(move_form.show_journal)
