@@ -6,6 +6,8 @@ import { localeCompare } from "@web/core/l10n/utils";
 import { patch } from "@web/core/utils/patch";
 import { debounce } from "@web/core/utils/timing";
 
+/** @import { AwaitChatHubInit } from "@mail/core/common/chat_hub_model" */
+
 /** @type {import("models").Store} */
 const storeServicePatch = {
     /** @override */
@@ -34,6 +36,10 @@ const storeServicePatch = {
             () => this.env.services.bus_service.forceUpdateChannels(),
             0
         );
+        /** ⚠️ {@link AwaitChatHubInit} */
+        this.displayedChannels = fields.Many("discuss.channel", {
+            inverse: "storeAsDisplayedChannels",
+        });
         this.favoriteChannels = fields.Many("discuss.channel", {
             inverse: "storeAsFavoriteChannels",
         });
