@@ -142,6 +142,7 @@ class TestConfigManager(TransactionCase):
             'db_template': 'template0',
             'db_replica_host': None,
             'db_replica_port': None,
+            'db_allow_privileged': False,
             'db_app_name': 'odoo-{pid}',
 
             # i18n
@@ -263,6 +264,7 @@ class TestConfigManager(TransactionCase):
             'db_template': 'backup1706',
             'db_replica_host': 'db2.localhost',
             'db_replica_port': 2038,
+            'db_allow_privileged': False,
             'db_app_name': 'odoo-{pid}',
 
             # i18n
@@ -334,6 +336,7 @@ class TestConfigManager(TransactionCase):
             'admin_passwd': 'admin',
             'config': config_path,
             'csv_internal_sep': ',',
+            'db_allow_privileged': False,
             'db_host': '',
             'db_maxconn': 64,
             'db_name': [],
@@ -569,6 +572,7 @@ class TestConfigManager(TransactionCase):
             'db_template': 'backup1706',
             'db_replica_host': 'db2.localhost',
             'db_replica_port': 2038,
+            'db_allow_privileged': False,
             'db_app_name': 'myapp{pid}',
 
             # i18n
@@ -699,6 +703,7 @@ class TestConfigManager(TransactionCase):
             'db_template': 'backup1706',
             'db_replica_host': 'db2.localhost',
             'db_replica_port': 2038,
+            'db_allow_privileged': True,
             'db_app_name': 'envapp',
 
             # i18n (not loaded)
