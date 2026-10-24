@@ -353,13 +353,6 @@ class AccountPayment(models.Model):
         withholding_amount_currency = sum(x['amount_currency'] for x in withholding_lines)
         withholding_balance = sum(x['balance'] for x in withholding_lines)
 
-        # We don't support to combine 'write_off_lines' and 'withholding_lines' together because the withholding lines are already
-        # passed as parameter as write-off lines in '_synchronize_to_moves'.
-        if withholding_lines and write_off_lines:
-            write_off_lines = []
-            write_off_amount_currency = 0.0
-            write_off_balance = 0.0
-
         # Prepare liquidity lines.
         if self.payment_type == 'inbound':
             # Receive money.
@@ -1048,8 +1041,10 @@ class AccountPayment(models.Model):
 
             # Make sure to preserve the write-off amount.
             # This allows to create a new payment with custom 'line_ids'.
+            # We don't support to combine 'write_off_lines' and 'withholding_lines' together because the withholding lines are
+            # part of 'writeoff_lines' and are generated again by '_prepare_move_lines_per_type'.
             write_off_line_vals = []
-            if liquidity_lines and counterpart_lines and writeoff_lines:
+            if liquidity_lines and counterpart_lines and writeoff_lines and not pay._prepare_move_withholding_lines({}):
                 write_off_line_vals.append({
                     'name': writeoff_lines[0].name,
                     'account_id': writeoff_lines[0].account_id.id,

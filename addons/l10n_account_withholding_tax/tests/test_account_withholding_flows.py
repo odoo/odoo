@@ -1177,3 +1177,47 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
         payment_register_form.currency_id = self.env['res.currency']
 
         self.assertEqual(payment_register.withholding_line_ids.original_base_amount, 1000.0)
+
+    def test_withholding_tax_with_payment_difference_write_off(self):
+        """ Ensure the payment difference is written off when withholding taxes are registered on the same payment. """
+        invoice_tax = self.percent_tax(15)
+        withholding_tax = self.percent_tax(-1, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 1000.0,
+                'tax_ids': [Command.set(invoice_tax.ids)],
+            })],
+        })
+        invoice.action_post()
+
+        payment_register = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=invoice.ids)\
+            .create({
+                'amount': 1145.0,
+                'payment_difference_handling': 'reconcile',
+                'writeoff_account_id': self.company_data['default_account_expense'].id,
+                'writeoff_label': 'Bank Fee',
+            })
+        with Form(payment_register) as payment_register_form:
+            payment_register_form.should_withhold_tax = True
+            with payment_register_form.withholding_line_ids.new() as line:
+                line.tax_id = withholding_tax
+                line.base_amount = 1000.0
+
+        payment = payment_register._create_payments()
+        self.assertRecordValues(payment.move_id.line_ids, [
+            {'balance': 1135.0},
+            {'balance': -1150.0},
+            {'balance': 5.0},
+            {'balance': 10.0},
+            {'balance': 1000.0},
+            {'balance': -1000.0},
+        ])
+        self.assertRecordValues(invoice, [{
+            'amount_residual': 0.0,
+            'payment_state': invoice._get_invoice_in_payment_state(),
+        }])
