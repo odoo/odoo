@@ -296,7 +296,7 @@ class TestWebsiteSalePerformanceWithPricelistDepth(TestWebsiteSalePerformanceWit
 
     def _get_shop_page_queries(self):
         res = super()._get_shop_page_queries()
-        res["product_pricelist_item"] += 8
+        res["product_pricelist_item"] += 4
         res["product_pricelist"] += 1
         return res
 
