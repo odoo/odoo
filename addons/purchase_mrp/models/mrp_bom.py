@@ -25,7 +25,7 @@ class MrpBom(models.Model):
     @api.model
     def _round_last_line_done(self, lines_done):
         result = super()._round_last_line_done(lines_done)
-        if result:
+        if result and self.env.context.get('compute_cost_share'):
             result[-1][1]['line_cost_share'] = 100 - sum(vals.get('line_cost_share', 0.0) for _, vals in result[:-1])
         return result
 
@@ -59,11 +59,15 @@ class MrpBomLine(models.Model):
 
     def _prepare_bom_done_values(self, quantity, product, original_quantity, boms_done):
         result = super()._prepare_bom_done_values(quantity, product, original_quantity, boms_done)
+        if not self.env.context.get('compute_cost_share'):
+            return result
         result['bom_cost_share'] = self._get_line_cost_share(product, boms_done)
         return result
 
     def _prepare_line_done_values(self, quantity, product, original_quantity, parent_line, boms_done):
         result = super()._prepare_line_done_values(quantity, product, original_quantity, parent_line, boms_done)
+        if not self.env.context.get('compute_cost_share'):
+            return result
         result['line_cost_share'] = self._get_line_cost_share(product, boms_done)
         return result
 
