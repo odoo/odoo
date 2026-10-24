@@ -3,7 +3,7 @@ import { clickOnSave, registerWebsitePreviewTour } from "@website/js/tours/tour_
 
 import { markup } from "@odoo/owl";
 
-registerWebsitePreviewTour("blog", {}, () => [
+registerWebsitePreviewTour("blog_test", {}, () => [
     {
         trigger: "body:not(:has(.o_new_content_menu_choices)) .o_new_content_container > button",
         content: _t("Click here to add new content to your website."),

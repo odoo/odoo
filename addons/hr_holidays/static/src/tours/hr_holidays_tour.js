@@ -3,7 +3,7 @@ import { markup } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 
-registry.category("web_tour.tours").add("hr_holidays_tour", {
+registry.category("web_tour.tours").add("hr_holidays_tour_test", {
     steps: () => [
         stepUtils.showAppsMenuItem(),
         {

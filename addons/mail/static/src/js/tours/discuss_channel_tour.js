@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 
 import { markup } from "@odoo/owl";
 
-registry.category("web_tour.tours").add("discuss_channel_tour", {
+registry.category("web_tour.tours").add("discuss_channel_tour_test", {
     steps: () => [
         {
             isActive: ["enterprise"],

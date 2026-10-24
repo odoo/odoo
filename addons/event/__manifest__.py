@@ -62,11 +62,7 @@ Key Features
             'event/static/src/icon_selection_field/icon_selection_field.js',
             'event/static/src/icon_selection_field/icon_selection_field.xml',
             'event/static/src/template_reference_field/*',
-            'event/static/src/js/tours/**/*',
             'event/static/src/views/**/*',
-        ],
-        'web.assets_frontend': [
-            'event/static/src/js/tours/**/*',
         ],
         'web.report_assets_common': [
             '/event/static/src/scss/event_badge_report.scss',

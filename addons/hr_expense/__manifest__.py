@@ -62,7 +62,6 @@ This module also uses analytic accounting and is compatible with the invoice on 
             'hr_expense/static/src/views/*.xml',
             'hr_expense/static/src/webclient/**/*',
             'hr_expense/static/src/scss/hr_expense.scss',
-            'hr_expense/static/src/js/tours/*.js',
             'hr_expense/static/src/js/web/*.js',
         ],
         'web.assets_tests': [
