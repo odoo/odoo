@@ -242,6 +242,96 @@
         </field>
     </record>
 
+    <!-- Template for team board -->
+
+    <template id="website.team_board_page_template" name="Ma page Team Board">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty"/>
+            <div class="container">
+                <div id="wrap" class="oe_structure">
+                    <h2>Team Board</h2>
+                    <h5>Meet the people building the next chapter.</h5>
+                    <div class="container">
+                        <section class="s_team_board o_colored_level o_cc o_cc2 pt48 pb48">
+                            <div class="container">
+
+                                <h2>Meet Our Team</h2>
+                                <p>The people building the experience you rely on every day.</p>
+
+                                <div class="row">
+                                    <div class="o_team_board_card col-6 col-lg-3" data-name="Team Member">
+                                        <div class="card border-0 o_cc o_cc1" data-snippet="s_card">
+                                            <figure class="o_card_img_wrapper ratio ratio-1x1 mb-0">
+                                                <img class="card-img-top o_card_img" src="/web/image/website.set_avatars_square_md_1"/>
+                                            </figure>
+                                            <div class="card-body">
+                                                <h3 class="card-title h5-fs">James Mitchell</h3>
+                                                <h6 class="card-subtitle text-secondary mb-2">Chief Technical Officer</h6>
+                                                <p class="card-text">James leads the tech strategy and innovation efforts at the company.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="o_team_board_card col-6 col-lg-3" data-name="Team Member">
+                                        <div class="card border-0 o_cc o_cc1" data-snippet="s_card">
+                                            <figure class="o_card_img_wrapper ratio ratio-1x1 mb-0">
+                                                <img class="card-img-top o_card_img" src="/web/image/website.set_avatars_square_md_4"/>
+                                            </figure>
+                                            <div class="card-body">
+                                                <h3 class="card-title h5-fs">Sophia Benett</h3>
+                                                <h6 class="card-subtitle text-secondary mb-2">Financial Analyst</h6>
+                                                <p class="card-text">Sophia evaluates financial data and provides strategic insights.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="o_team_board_card col-6 col-lg-3" data-name="Team Member">
+                                        <div class="card border-0 o_cc o_cc1" data-snippet="s_card">
+                                            <figure class="o_card_img_wrapper ratio ratio-1x1 mb-0">
+                                                <img class="card-img-top o_card_img" src="/web/image/website.set_avatars_square_md_3"/>
+                                            </figure>
+                                            <div class="card-body">
+                                                <h3 class="card-title h5-fs">Olivia Reed</h3>
+                                                <h6 class="card-subtitle text-secondary mb-2">Product Manager</h6>
+                                                <p class="card-text">Olivia oversees product development from concept to launch.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        
+
+                            <div class="modal o_team_board_modal" tabindex="-1" role="dialog">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header border-0 pb-0">
+                                            <h3 class="h5-fs">Name</h3>
+                                            <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row align-items-start">
+                                                <div class="col-3">
+                                                    <img src="" alt="Avatar" class="img-fluid shadow-sm"/>
+                                                </div>
+                                                <div class="col-9">
+                                                    <div>
+                                                        <h6 class="text-secondary mb-2">Role</h6>
+                                                        <p>Description</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer border-0 pt-0"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </section>
+                    </div>
+                </div>
+            </div> 
+        </t>
+    </template>
     <!-- Template for cookie (optional) -->
     <template id="cookie_policy" name="Cookie Policy">
         <t t-call="website.layout">
@@ -584,6 +674,13 @@
             <field name="track">True</field>
             <field name="website_meta_description">This is the privacy policy page of the website</field>
         </record>
+        <record id="team_board_page" model="website.page">
+            <field name="url">/team-board</field>
+            <field name="view_id" ref="team_board_page_template"/>
+            <field name="is_published">True</field>
+            <field name="track">True</field>
+            <field name="website_meta_description">This is the team board page of the website</field>
+        </record>
 
         <!-- Default Menu to store module menus for new website -->
         <record id="main_menu" model="website.menu">
@@ -594,6 +691,13 @@
             <field name="website_id" eval="False"/>
             <field name="name">Home</field>
             <field name="page_id" ref="website.homepage_page"/>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">10</field>
+        </record>
+        <record id="menu_team_board" model="website.menu">
+            <field name="website_id" eval="False"/>
+            <field name="name">Team Board</field>
+            <field name="page_id" ref="website.team_board_page"/>
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">10</field>
         </record>
