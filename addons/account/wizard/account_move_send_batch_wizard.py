@@ -40,9 +40,24 @@ class AccountMoveSendBatchWizard(models.TransientModel):
             moves = wizard.move_ids._origin
             summary_data = defaultdict(lambda: {'count': 0, 'label': '', 'moves': []})
 
+<<<<<<< 5ce200f24cfaa1573fa53b4c4b3fe5b25fde16a3
             if not moves:
                 wizard.summary_data = summary_data
                 continue
+||||||| 9427e71d7de2dafaecaabe101d86940275cb1311
+            for move in wizard.move_ids._origin:
+                edi_counter += Counter([edi for edi in self._get_default_extra_edis(move)])
+                sending_settings = self._get_default_sending_settings(move)
+                sending_method_counter += Counter([
+                    sending_method
+                    for sending_method in self._get_default_sending_methods(move)
+                    if self._is_applicable_to_move(sending_method, move, **sending_settings)
+                ])
+=======
+            for move in wizard.move_ids._origin:
+                edi_counter += Counter([edi for edi in self._get_default_extra_edis(move)])
+                sending_method_counter += Counter(self._get_applicable_sending_methods(move))
+>>>>>>> c699f0ec3bc5b2de0436f9b0db0c8b154e7a0201
 
             for move in moves:
                 move_info = {
