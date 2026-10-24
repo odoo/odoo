@@ -76,3 +76,34 @@ test("timer field in list view: don't crash when leaving sample mode", async () 
     expect(".o_data_row").toHaveCount(1);
     expect.verifySteps([[1]]);
 });
+
+test("timer field in form view: don't call get_duration on unsaved record", async () => {
+    ResFake._fields.state = fields.Selection({
+        selection: [
+            ["blocked", "Blocked"],
+            ["ready", "To Do"],
+            ["progress", "In Progress"],
+            ["done", "Done"],
+            ["cancel", "Cancelled"],
+        ],
+        default: "progress",
+    });
+    await startServer();
+
+    onRpc("mrp.workorder", "get_duration", ({ args }) => {
+        expect.step(args);
+        return 42;
+    });
+
+    await mountView({
+        resModel: "res.fake",
+        type: "form",
+        arch: `
+            <form>
+                <field name="state"/>
+                <field name="duration" widget="mrp_timer"/>
+            </form>`,
+    });
+
+    expect.verifySteps([]);
+});
