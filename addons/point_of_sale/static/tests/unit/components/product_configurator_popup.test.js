@@ -166,3 +166,78 @@ test("Deleted variant combination cannot be added", async () => {
     expect(alertProps.title).toBe("Variant does not exist");
     expect(order.lines).toHaveLength(0);
 });
+
+const setupArchivedAttributeLine = async () => {
+    const store = await setupPosEnv();
+    // "Leather Belt" with an active "size" line (S/M) and an attribute line archived
+    // because sold variants still use it. Loading those archived variants also loads
+    // the archived line and its values.
+    const productTemplate = store.models["product.template"].get(60);
+    const attribute = store.models["product.attribute"].create({
+        name: "Type",
+        display_type: "pills",
+        create_variant: "always",
+    });
+    const archivedLine = store.models["product.template.attribute.line"].create({
+        attribute_id: attribute,
+        active: false,
+    });
+    const archivedValues = ["Old 1", "Old 2"].map((name) =>
+        store.models["product.template.attribute.value"].create({
+            name,
+            attribute_id: attribute,
+            attribute_line_id: archivedLine,
+        })
+    );
+    archivedLine.update({ product_template_value_ids: archivedValues });
+    const archivedVariant = store.models["product.product"].create({
+        product_tmpl_id: productTemplate,
+        lst_price: 0,
+        product_template_attribute_value_ids: [archivedValues[0]],
+    });
+    productTemplate.update({
+        attribute_line_ids: [store.models["product.template.attribute.line"].get(5), archivedLine],
+        product_variant_ids: [archivedVariant, ...productTemplate.product_variant_ids],
+    });
+    store.addNewOrder();
+    return { store, productTemplate };
+};
+
+test("Archived attribute line is not shown in the configurator", async () => {
+    const { store, productTemplate } = await setupArchivedAttributeLine();
+
+    let payload;
+    const popup = await mountWithCleanup(ProductConfiguratorPopup, {
+        props: {
+            productTemplate: productTemplate,
+            getPayload: (p) => (payload = p),
+            close: () => {},
+        },
+    });
+    expect(".modal .attribute").toHaveCount(1);
+    expect(".modal .alert-warning").toHaveCount(0);
+    expect(".modal-footer .btn-primary").not.toHaveClass("disabled");
+    popup.confirm();
+    expect(payload.attribute_value_ids).toEqual([8]);
+
+    const line = await store.addLineToCurrentOrder({ product_tmpl_id: productTemplate, payload });
+    expect(line.product_id.id).toBe(60);
+});
+
+test("Archived attribute line does not open the configurator", async () => {
+    const { store, productTemplate } = await setupArchivedAttributeLine();
+    // Only the archived line has a choice left.
+    productTemplate.update({
+        attribute_line_ids: [
+            store.models["product.template.attribute.line"].get(6),
+            ...productTemplate.attribute_line_ids.filter((line) => line.active === false),
+        ],
+    });
+    patchWithCleanup(store.dialog, {
+        add: () => {
+            throw new Error("The configurator should not open");
+        },
+    });
+    const payload = await store.openConfigurator(productTemplate);
+    expect(payload.attribute_value_ids).toEqual([10]);
+});
