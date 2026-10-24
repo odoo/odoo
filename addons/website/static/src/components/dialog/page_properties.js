@@ -320,7 +320,9 @@ export class PagePropertiesDialog extends FormViewDialog {
             resIds: pageIds,
             resModel: "website.page",
             onDelete: async () => {
-                await this.orm.unlink("website.page", pageIds);
+                await this.orm.unlink("website.page", pageIds, {
+                    context: { website_url_dependencies_confirmed: true },
+                });
                 this.website.goToWebsite({ path: "/" });
                 this.props.close();
                 this.props.onClose();
