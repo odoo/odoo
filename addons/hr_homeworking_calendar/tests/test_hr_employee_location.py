@@ -1,7 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from freezegun import freeze_time
 
+<<<<<<< 9e38c31ee1ae1a34e0bb009f9e93b980bded8a09:addons/hr_homeworking_calendar/tests/test_hr_employee_location.py
 from odoo.addons.hr_homeworking_calendar.tests.common import TestHrHomeworkingCommon
+||||||| 6415c7008abdf729dcf48346fa389d042f8d05f0:addons/hr_homeworking/tests/test_hr_employee_location.py
+from odoo.addons.hr_homeworking.tests.common import TestHrHomeworkingCommon
+=======
+from odoo.addons.hr_homeworking.tests.common import TestHrHomeworkingCommon
+from odoo.addons.mail.tests.common import mail_new_test_user
+>>>>>>> 5ca7fd396b52a6a65f7ddfbdfe43afa6822126eb:addons/hr_homeworking/tests/test_hr_employee_location.py
 
 from odoo.tests import tagged
 from datetime import datetime
@@ -108,6 +115,7 @@ class TestHrHomeworkingHrEmployeeLocation(TestHrHomeworkingCommon):
         # exception should be deleted
         self.assertEqual(len(created_worklocations), 0, 'should have deleted the worklocation record')
 
+<<<<<<< 9e38c31ee1ae1a34e0bb009f9e93b980bded8a09:addons/hr_homeworking_calendar/tests/test_hr_employee_location.py
     def test_get_work_location_without_hr_rights(self):
         other_employee = self.env['hr.employee'].create({
             'name': 'Other Employee',
@@ -124,6 +132,24 @@ class TestHrHomeworkingHrEmployeeLocation(TestHrHomeworkingCommon):
         )
         self.assertEqual(self.work_home.id, res[other_employee.id]['exceptions']['2026-01-07']['work_location_id'])
 
+||||||| 6415c7008abdf729dcf48346fa389d042f8d05f0:addons/hr_homeworking/tests/test_hr_employee_location.py
+=======
+    @freeze_time("2023-10-04")
+    def test_im_status_takes_exceptional_location_of_today(self):
+        alice_user = mail_new_test_user(self.env, login="alice_user", groups="base.group_user")
+        self.assertFalse(alice_user.has_group("hr.group_hr_user"))
+        partner = self.user_employee.partner_id.with_user(alice_user)
+        self.assertEqual(partner.im_status, "office_offline")
+        self.env["homework.location.wizard"].create({
+            "date": datetime(2023, 10, 4),
+            "employee_id": self.employee_emp.id,
+            "weekly": False,
+            "work_location_id": self.work_home.id,
+        }).set_employee_location()
+        self.env.invalidate_all()
+        self.assertEqual(partner.im_status, "home_offline")
+
+>>>>>>> 5ca7fd396b52a6a65f7ddfbdfe43afa6822126eb:addons/hr_homeworking/tests/test_hr_employee_location.py
     def test_get_views_replace_hw_location_by_date(self):
         view = self.env["ir.ui.view"].create({
             "arch": """<list><field name="work_location_name" /></list>""",
