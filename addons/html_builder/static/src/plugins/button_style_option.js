@@ -5,7 +5,7 @@ import { BuilderSelect } from "@html_builder/core/building_blocks/builder_select
 import { BuilderSelectItem } from "@html_builder/core/building_blocks/builder_select_item";
 import { BuilderNumberInput } from "@html_builder/core/building_blocks/builder_number_input";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { StyleAction, withoutTransition } from "@html_builder/core/core_builder_action_plugin";
+import { ClassAction, StyleAction, withoutTransition } from "@html_builder/core/core_builder_action_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
@@ -22,7 +22,13 @@ import {
 export class ButtonStyleOptionPlugin extends Plugin {
     static id = "buttonStyleOption";
     resources = {
-        builder_actions: { ButtonStyleAction, ButtonFillColorAction },
+        builder_actions: {
+            ButtonStyleAction,
+            ButtonFillColorAction,
+            ButtonColorAction,
+            ButtonBorderAction,
+            CustomButtonHoverAction,
+        },
     };
 }
 
@@ -37,6 +43,13 @@ export class ButtonStyleOption extends BaseOptionComponent {
         BorderConfigurator,
     };
     static dependencies = ["domObserver"];
+    static cleanForSave = (editingEl) => {
+        if (!editingEl.classList.contains("o_btn_custom_hover")) {
+            editingEl.style.removeProperty("--btn-hover-color");
+            editingEl.style.removeProperty("--btn-hover-bg");
+            editingEl.style.removeProperty("--btn-hover-border-color");
+        }
+    };
 
     buttonSizesData = BUTTON_SIZES;
     buttonShapesData = BUTTON_SHAPES;
@@ -172,6 +185,12 @@ export class ButtonStyleAction extends BuilderAction {
         const mode = params.mainParam;
         if (mode === "type") {
             this.applyDefaultInlineStyle(editingElement, value);
+            if (value !== "custom") {
+                editingElement.classList.remove("o_btn_custom_hover");
+                editingElement.style.removeProperty("--btn-hover-color");
+                editingElement.style.removeProperty("--btn-hover-bg");
+                editingElement.style.removeProperty("--btn-hover-border-color");
+            }
         }
 
         editingElement.className = computeButtonClasses(editingElement, {
@@ -183,12 +202,19 @@ export class ButtonStyleAction extends BuilderAction {
 
     applyDefaultInlineStyle(el, currentType) {
         const styleProps = ["color", "backgroundColor", "backgroundImage", "border"];
+        const hoverProps = ["--btn-hover-color", "--btn-hover-bg", "--btn-hover-border-color"]
         if (currentType === "custom") {
             withoutTransition(el, () => {
                 const computedStyle = el.ownerDocument.defaultView.getComputedStyle(el);
                 for (const prop of styleProps) {
                     if (computedStyle[prop] !== "none") {
                         el.style[prop] = computedStyle[prop];
+                    }
+                }
+                for (const prop of hoverProps) {
+                    const value = computedStyle.getPropertyValue(prop);
+                    if (value && !el.style.getPropertyValue(prop)) {
+                        el.style.setProperty(prop, value);
                     }
                 }
                 if (computedStyle.borderStyle === "none") {
@@ -228,6 +254,47 @@ export class ButtonFillColorAction extends StyleAction {
         // the color is not shown unless we hover the button
         const { editingElement: el } = context;
         return el.style.backgroundImage || el.style.backgroundColor || super.getValue(context);
+    }
+}
+
+export class ButtonColorAction extends StyleAction {
+    static id = "buttonColorAction";
+
+    getValue({ editingElement: el }) {
+        // This override is needed because when the button has a custom hover,
+        // the color shown in the color picker is otherwise that of the :hover state
+        return el.style.color;
+    }
+}
+
+export class ButtonBorderAction extends StyleAction {
+    static id = "buttonBorderAction";
+
+    getValue(context) {
+        const { editingElement: el, params: { mainParam: styleName } } = context;
+        if (styleName === "border-color") {
+            return el.style.borderColor || super.getValue(context);
+        }
+        return super.getValue(context);
+    }
+}
+
+export class CustomButtonHoverAction extends ClassAction {
+    static id = "customButtonHoverAction";
+    apply({ editingElement : el }) {
+        super.apply(...arguments);
+        if (el.classList.contains("o_btn_custom_hover")) {
+            const defaultProps = {
+                "--btn-hover-color": el.style.color,
+                "--btn-hover-bg": el.style.backgroundColor,
+                "--btn-hover-border-color": el.style.borderColor,
+            };
+            for (const [prop, value] of Object.entries(defaultProps)) {
+                if (value && !el.style.getPropertyValue(prop)) {
+                    el.style.setProperty(prop, value);
+                }
+            }
+        }
     }
 }
 
