@@ -27,6 +27,7 @@ export class ActivityRenderer extends Component {
         records: { type: Array },
         archInfo: { type: Object },
         groupedActivities: { type: Object },
+        canScheduleActivity: { type: Boolean },
         scheduleActivity: { type: Function },
         onReloadData: { type: Function },
         onEmptyCell: { type: Function },
