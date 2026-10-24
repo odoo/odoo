@@ -39,3 +39,7 @@ class TestUblExportBis3InvoiceBEDownPayment(TestUblExportBis3BE):
         )
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_sale_order_down_payment_first_invoice')
+
+        final_invoice = self._create_final_invoice(sale_order, post=True)
+        self._generate_invoice_ubl_file(final_invoice)
+        self._assert_invoice_ubl_file(final_invoice, 'test_sale_order_down_payment_final_invoice')

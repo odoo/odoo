@@ -16,8 +16,9 @@ class AccountEdiUBLPint(models.AbstractModel):
     def _ubl_add_invoice_type_code_node(self, vals):
         super()._ubl_add_invoice_type_code_node(vals)
 
+        invoice = vals['invoice']
         if self._is_document(vals, 'invoice'):
-            vals['document_node']['cbc:InvoiceTypeCode']['_text'] = 380
+            vals['document_node']['cbc:InvoiceTypeCode']['_text'] = 386 if invoice._is_downpayment() else 380
         elif self._is_document(vals, 'self_invoice'):
             vals['document_node']['cbc:InvoiceTypeCode']['_text'] = 389
 
