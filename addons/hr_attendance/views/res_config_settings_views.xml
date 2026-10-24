@@ -62,6 +62,13 @@
                                  help="Default work entry type assigned to attendance records. Used by the time rule engine.">
                             <field name="attendance_work_entry_type_id" options="{'no_create': True}"/>
                         </setting>
+                        <setting title="Display Overtime" string="Display Extra Hours" company_dependent="1" help="Display extra hours in Kiosk mode and on User profile.">
+                            <field name="hr_attendance_display_overtime"/>
+                            <div invisible="not hr_attendance_display_overtime" class="mt-2">
+                                <label for="hr_attendance_overtime_time_type_ids" string="Extra Hours Time Types" class="fw-bold me-2"/>
+                                <field name="hr_attendance_overtime_time_type_ids" widget="many2many_tags" placeholder="Select Time Types..."/>
+                            </div>
+                        </setting>
                     </block>
                     <block title="Kiosk Settings">
                         <setting string="Kiosk Mode" company_dependent="1" help="Define the way the user will be identified by the application.">
