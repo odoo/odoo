@@ -342,3 +342,39 @@ class StockMoveInvoice(AccountTestInvoicingCommon):
         # Testing a partial quantity
         sale_order.picking_ids.move_ids.quantity = 150
         self.assertEqual(sale_order.picking_ids.move_line_ids.sale_price, 257.03, "Price on delivery slip is not correct")
+
+    def test_package_value_is_the_sale_value(self):
+        """ The value declared to the carrier is the value of the goods, not their cost. """
+        product = self.ProductProduct.create({
+            'name': 'Insured product',
+            'weight': 1.0,
+            'standard_price': 8.0,
+            'list_price': 80.0,
+            'taxes_id': False,
+        })
+        package_type = self.env['stock.package.type'].create({'name': 'Test Package Type'})
+        sale_order = self.SaleOrder.create({
+            'partner_id': self.partner_18.id,
+            'order_line': [Command.create({'product_id': product.id, 'product_uom_qty': 3})],
+        })
+
+        packages = self.normal_delivery._get_packages_from_order(sale_order, package_type)
+        self.assertEqual(sum(package.total_cost for package in packages), 240.0)
+
+        sale_order.action_confirm()
+        picking = sale_order.picking_ids
+        picking.move_ids.quantity = 3
+
+        packages = self.normal_delivery._get_packages_from_picking(picking, package_type)
+        self.assertEqual(sum(package.total_cost for package in packages), 240.0)
+
+        # and the same once the content is put in a package, before and after the transfer
+        picking.move_line_ids.result_package_id = self.env['stock.quant.package'].create({'name': 'Pack'})
+        packages = self.normal_delivery._get_packages_from_picking(picking, package_type)
+        self.assertEqual(sum(package.total_cost for package in packages), 240.0)
+
+        picking.move_ids.picked = True
+        picking.button_validate()
+        self.assertEqual(picking.state, 'done')
+        packages = self.normal_delivery._get_packages_from_picking(picking, package_type)
+        self.assertEqual(sum(package.total_cost for package in packages), 240.0)
