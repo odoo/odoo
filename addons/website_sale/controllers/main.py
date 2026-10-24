@@ -17,6 +17,7 @@ from odoo.tools import SQL, clean_context, float_round, lazy, str2bool
 from odoo.tools.translate import LazyTranslate
 
 from odoo.addons.payment.controllers import portal as payment_portal
+from odoo.addons.portal.controllers.address import Address
 from odoo.addons.sale.controllers import portal as sale_portal
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
@@ -118,7 +119,7 @@ def _get_category_routes(suffix=""):
     ]
 
 
-class WebsiteSale(payment_portal.PaymentPortal):
+class WebsiteSale(Address, payment_portal.PaymentPortal):
     _express_checkout_route = "/shop/express_checkout"
     _express_checkout_delivery_route = "/shop/express/shipping_address_change"
 
