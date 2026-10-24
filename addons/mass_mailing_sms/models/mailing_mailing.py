@@ -4,6 +4,7 @@ import logging
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 from odoo.tools import SQL
 from odoo.tools.urls import urljoin
 
@@ -284,6 +285,11 @@ class MailingMailing(models.Model):
                 'kpi_name': self.mailing_type,
             }
         return values
+
+    def action_view_clicked(self):
+        if self.env.context.get('mailing_sms'):
+            return self.env['link.tracker.click']._action_view_mailing_statistics(Domain('mass_mailing_id', 'in', self.ids), group_by_field='sms_number', graph_mode=True)
+        return super().action_view_clicked()
 
     def _get_pretty_mailing_type(self):
         if self.mailing_type == 'sms':
