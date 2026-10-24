@@ -510,6 +510,27 @@ class WebsiteVisitorTests(WebsiteVisitorTestsCommon):
         self.assertFalse(Visitor.search_count([('partner_id', '=', self.partner_admin_duplicate.id)]),
                          "The admin_duplicate visitor should've been merged (and deleted) with the admin one.")
 
+    def test_merge_partner_with_visitor_hex_access_token(self):
+        """ Visitors coming from older versions can be linked to a partner while
+        keeping a hexadecimal access token, the partner merge must not crash
+        trying to cast it to an integer. """
+        Visitor = self.env['website.visitor']
+        (self.partner_admin_duplicate + self.partner_admin).visitor_ids.unlink()
+        visitor = Visitor.create({'access_token': 'f7b3e2d914a8c05627df49e1b6a83c5d'})
+        self.env.flush_all()
+        self.env.cr.execute(
+            "UPDATE website_visitor SET partner_id = %s WHERE id = %s",
+            (self.partner_admin_duplicate.id, visitor.id),
+        )
+        visitor.invalidate_recordset(['partner_id'])
+
+        self.env['base.partner.merge.automatic.wizard']._merge(
+            (self.partner_admin + self.partner_admin_duplicate).ids,
+            self.partner_admin,
+        )
+        self.assertEqual(visitor.partner_id, self.partner_admin)
+        self.assertEqual(visitor.access_token, 'f7b3e2d914a8c05627df49e1b6a83c5d')
+
 
 @tagged('-at_install', 'post_install')
 class TestPortalWizardMultiWebsites(HttpCase):
