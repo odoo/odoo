@@ -1,4 +1,4 @@
-import { Component, t, usePlugin, useProps } from "@odoo/owl";
+import { Component, proxy, t, usePlugin, useProps } from "@odoo/owl";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { _t } from "@web/core/l10n/translation";
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
@@ -18,6 +18,7 @@ export class FieldSelectorField extends Component {
     });
 
     debugMode = usePlugin(DebugModePlugin);
+    state = proxy({ selectorKey: 0 });
 
     filter(fieldDef) {
         if (fieldDef.type === "separator") {
@@ -30,7 +31,13 @@ export class FieldSelectorField extends Component {
         return true;
     }
 
-    async update(value) {
+    async update(value, fieldInfo) {
+        if (value && !fieldInfo?.fieldDef) {
+            // invalid path (e.g. typed in the debug input): discard it and
+            // remount the selector so that it displays the current value again
+            this.state.selectorKey++;
+            return;
+        }
         await this.props.record.update({ [this.props.name]: value });
     }
 
