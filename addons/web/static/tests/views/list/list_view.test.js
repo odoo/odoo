@@ -18476,10 +18476,6 @@ test(`list view with default_group_by`, async () => {
     });
     expect(`.o_list_renderer table`).toHaveClass("o_list_table_grouped");
     expect(`.o_group_header`).toHaveCount(2);
-    // open search bar in mobile
-    if (isSmall()) {
-        await contains(".o_control_panel_navigation > button").click();
-    }
     expect(`.o_searchview_facet`).toHaveCount(1);
     expect(`.o_searchview_facet`).toHaveText("Bar");
     expect.verifySteps(["web_read_group1"]);
@@ -18530,10 +18526,6 @@ test(`list view with multi-fields default_group_by`, async () => {
     });
     expect(`.o_list_renderer table`).toHaveClass("o_list_table_grouped");
     expect(`.o_group_header`).toHaveCount(3);
-    // open search bar in mobile
-    if (isSmall()) {
-        await contains(".o_control_panel_navigation > button").click();
-    }
     expect(`.o_searchview_facet`).toHaveCount(1);
     expect(`.o_searchview_facet`).toHaveText("Foo\n>\nBar");
     expect.verifySteps(["web_read_group1"]);
@@ -20965,10 +20957,6 @@ test(`cache web_read_group: do not send opening_info if not necessary`, async ()
     expect(`.o_group_header`).toHaveCount(1);
 
     // Do not follow the same steps as earlier, directly remove the filter
-    if (isSmall()) {
-        // Toggle searchbar in mobile
-        await contains(`.o_control_panel_navigation [data-icon='search']`).click();
-    }
     await contains(".o_searchview_facet [data-icon='close']").click();
     expect(`.o_group_header`).toHaveCount(4);
 
