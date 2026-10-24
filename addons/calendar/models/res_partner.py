@@ -31,6 +31,7 @@ class ResPartner(models.Model):
             domain=Domain.AND([
                 self.env['calendar.event']._get_valid_event_domain(),
                 Domain('start', '>=', fields.Datetime.now()),
+                Domain('partner_ids', 'in', self.ids),
             ]),
             groupby=['partner_ids'],
             aggregates=['start:min'],
@@ -87,10 +88,11 @@ class ResPartner(models.Model):
             - calendar_model.js (calendar.CalendarModel)
         """
         attendees_details = []
-        meetings = self.env['calendar.event'].browse(filter(None, meeting_ids))
-        for attendee in meetings.attendee_ids:
-            if attendee.partner_id not in self:
-                continue
+        attendees = self.env['calendar.attendee'].search([
+            ('event_id', 'in', list(filter(None, meeting_ids))),
+            ('partner_id', 'in', self.ids),
+        ])
+        for attendee in attendees:
             attendee_is_organizer = self.env.user == attendee.event_id.user_id and attendee.partner_id == self.env.user.partner_id
             attendees_details.append({
                 'id': attendee.partner_id.id,

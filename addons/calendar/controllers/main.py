@@ -10,49 +10,48 @@ from odoo.tools.misc import get_lang
 
 class CalendarController(http.Controller):
 
+    def _answer_meeting(self, token, state, recurrence=False):
+        """ Accept or decline the meeting invitation.
+
+        :param token: attendee invitation token.
+        :param state: Whether the invitation is 'accepted' or 'declined'.
+        :param recurrence: Whether or not to update the attendee's other events of the recurrence.
+        """
+        assert state in ('accepted', 'declined'), "Invalid attendee state"
+        Attendee = request.env['calendar.attendee'].sudo()
+        attendee = Attendee.search([
+            ('access_token', '=', token),
+            ('state', '!=', state)])
+        if attendee and recurrence:
+            attendee = Attendee.search([
+                ('event_id', 'in', attendee.event_id.recurrence_id.calendar_event_ids.ids),
+                ('partner_id', '=', attendee.partner_id.id),
+                ('state', '!=', state),
+            ])
+        if state == 'accepted':
+            attendee.do_accept()
+        else:
+            attendee.do_decline()
+
     # YTI Note: Keep id and kwargs only for retrocompatibility purpose
     @http.route('/calendar/meeting/accept', type='http', auth="calendar", methods=['POST'])
     def accept_meeting(self, token, id, **kwargs):
-        attendee = request.env['calendar.attendee'].sudo().search([
-            ('access_token', '=', token),
-            ('state', '!=', 'accepted')])
-        attendee.do_accept()
+        self._answer_meeting(token, 'accepted')
         return self.view_meeting(token, id)
 
     @http.route('/calendar/recurrence/accept', type='http', auth="calendar")
     def accept_recurrence(self, token, id, **kwargs):
-        attendee = request.env['calendar.attendee'].sudo().search([
-            ('access_token', '=', token),
-            ('state', '!=', 'accepted')])
-        if attendee:
-            attendees = request.env['calendar.attendee'].sudo().search([
-                ('event_id', 'in', attendee.event_id.recurrence_id.calendar_event_ids.ids),
-                ('partner_id', '=', attendee.partner_id.id),
-                ('state', '!=', 'accepted'),
-            ])
-            attendees.do_accept()
+        self._answer_meeting(token, 'accepted', recurrence=True)
         return self.view_meeting(token, id)
 
     @http.route('/calendar/meeting/decline', type='http', auth="calendar", methods=['POST'])
     def decline_meeting(self, token, id, **kwargs):
-        attendee = request.env['calendar.attendee'].sudo().search([
-            ('access_token', '=', token),
-            ('state', '!=', 'declined')])
-        attendee.do_decline()
+        self._answer_meeting(token, 'declined')
         return self.view_meeting(token, id)
 
     @http.route('/calendar/recurrence/decline', type='http', auth="calendar")
     def decline_recurrence(self, token, id, **kwargs):
-        attendee = request.env['calendar.attendee'].sudo().search([
-            ('access_token', '=', token),
-            ('state', '!=', 'declined')])
-        if attendee:
-            attendees = request.env['calendar.attendee'].sudo().search([
-                ('event_id', 'in', attendee.event_id.recurrence_id.calendar_event_ids.ids),
-                ('partner_id', '=', attendee.partner_id.id),
-                ('state', '!=', 'declined'),
-            ])
-            attendees.do_decline()
+        self._answer_meeting(token, 'declined', recurrence=True)
         return self.view_meeting(token, id)
 
     @http.route('/calendar/meeting/view', type='http', auth="calendar")

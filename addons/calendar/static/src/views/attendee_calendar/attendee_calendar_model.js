@@ -1,6 +1,5 @@
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
@@ -17,7 +16,6 @@ export class AttendeeCalendarModel extends CalendarModel {
         super.setup(...arguments);
         this.action = useService("action");
         this.dialog = services.dialog;
-        this.rpc = rpc;
         this.needsPartnerFiltersInit = true;
     }
 
@@ -44,10 +42,6 @@ export class AttendeeCalendarModel extends CalendarModel {
             this._loaded = true;
         }
         return res;
-    }
-
-    get attendees() {
-        return this.data.attendees;
     }
 
     /**

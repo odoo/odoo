@@ -19,16 +19,19 @@ class CalendarAlarm_Manager(models.AbstractModel):
 
         result = {}
         delta_request = SQL("""
+            WITH upcoming AS MATERIALIZED (
+                SELECT id FROM calendar_event WHERE stop > %s
+            )
             SELECT
                 rel.calendar_event_id,
                 max(alarm.duration_minutes) AS max_delta,
                 min(alarm.duration_minutes) AS min_delta
-            FROM
-                calendar_alarm_calendar_event_rel AS rel
-            LEFT JOIN calendar_alarm AS alarm ON alarm.id = rel.calendar_alarm_id
+            FROM upcoming
+            JOIN calendar_alarm_calendar_event_rel AS rel ON rel.calendar_event_id = upcoming.id
+            JOIN calendar_alarm AS alarm ON alarm.id = rel.calendar_alarm_id
             WHERE alarm.alarm_type = %s
             GROUP BY rel.calendar_event_id
-        """, alarm_type)
+        """, self.env.cr.now(), alarm_type)
         base_request = SQL("""
             SELECT
                 cal.id,

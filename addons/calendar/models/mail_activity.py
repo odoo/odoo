@@ -68,12 +68,6 @@ class MailActivity(models.Model):
                 event.write({'notes': notes})
         return super()._action_done(feedback=feedback, attachment_ids=attachment_ids)
 
-    def unlink_w_meeting(self):
-        events = self.mapped('calendar_event_id')
-        res = self.unlink()
-        events.unlink()
-        return res
-
     def _get_activity_done_message_extra_values(self, activity):
         """Extra values for the chatter template send on activity marked as done."""
         event = activity.calendar_event_id

@@ -5,13 +5,13 @@
             <t t-if="this.displayAttendeeAnswerChoice">
                 <div class="btn-group w-100 w-auto me-auto me-lg-0 ms-lg-auto order-first order-lg-0 px-2 px-lg-0">
                     <button class="btn"
-                            t-attf-class="#{this.selectedStatusInfo.text === 'Yes' ? 'btn-secondary active' : 'btn-outline-secondary'}"
+                            t-attf-class="#{this.props.record.attendeeStatus === 'accepted' ? 'btn-secondary active' : 'btn-outline-secondary'}"
                             t-on-click="() => this.changeAttendeeStatus('accepted')">Yes</button>
                     <button class="btn"
-                            t-attf-class="#{this.selectedStatusInfo.text === 'No' ? 'btn-secondary active' : 'btn-outline-secondary'}"
+                            t-attf-class="#{this.props.record.attendeeStatus === 'declined' ? 'btn-secondary active' : 'btn-outline-secondary'}"
                             t-on-click="() => this.changeAttendeeStatus('declined')">No</button>
                     <button class="btn"
-                            t-attf-class="#{this.selectedStatusInfo.text === 'Maybe' ? 'btn-secondary active' : 'btn-outline-secondary'}"
+                            t-attf-class="#{this.props.record.attendeeStatus === 'tentative' ? 'btn-secondary active' : 'btn-outline-secondary'}"
                             t-on-click="() => this.changeAttendeeStatus('tentative')">Maybe</button>
                 </div>
             </t>
