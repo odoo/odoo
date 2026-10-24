@@ -13,6 +13,7 @@ from . import (
     test_website_sale_stock_product_warehouse,
     test_website_sale_stock_reorder_from_portal,
     test_website_sale_stock_sale_order_line,
+    test_website_sale_stock_shop_filters,
     test_website_sale_stock_stock_message,
     test_website_sale_stock_stock_notification,
 )
