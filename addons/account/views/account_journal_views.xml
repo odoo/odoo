@@ -182,8 +182,6 @@
                                                placeholder="e.g. finance@example.com; accountant@example.com"
                                                class="w-100"/>
                                     </group>
-                                    <!-- edi -->
-                                    <group name="group_edi_config" string="Electronic Data Interchange" invisible="1"/> <!-- placeholder anchor: account_edi's inherit xpaths flip invisible and inject EDI fields here -->
                                     <group string="Payment Communications" invisible="type != 'sale'">
                                         <field name="invoice_reference_type"/>
                                         <field name="invoice_reference_model" invisible="invoice_reference_type == 'none'"/>

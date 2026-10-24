@@ -4968,7 +4968,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'account_consolidation',
             'account_debit_note',
             'account_disallowed_expenses',
-            'account_edi',
             'account_edi_proxy_client',
             'account_external_tax',
             'account_fleet',
