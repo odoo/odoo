@@ -17,7 +17,7 @@ class MySubscription(models.AbstractModel):
         show_database_action = icp_sudo.get_bool('mysubscription.database', default=True)
 
         return {
-            'base_url': icp_sudo.get_str('web.base.url'),
+            'base_url': icp_sudo.get_url('web.base.url'),
             'has_subscription': self._has_subscription(enterprise_code, expiration_date),
             'enterprise_code': enterprise_code if is_system else '',
             'show_database_action': show_database_action,

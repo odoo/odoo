@@ -19,4 +19,4 @@ class WebsiteMassMailingMultiCompanyCommon:
                 'domain': 'http://website-b.test',
             },
         ])
-        cls.env['ir.config_parameter'].sudo().set_str('web.base.url', 'http://website-a.test')
+        cls.env['ir.config_parameter'].sudo().set_url('web.base.url', 'http://website-a.test')

@@ -128,7 +128,7 @@ class IrHttp(models.AbstractModel):
             "partner_write_date": fields.Datetime.to_string(user.partner_id.write_date),
             "partner_display_name": user.partner_id.display_name,
             "partner_id": user.partner_id.id if session_uid and user.partner_id else None,
-            "web.base.url": IrConfigSudo.get_str('web.base.url'),
+            "web.base.url": IrConfigSudo.get_url('web.base.url'),
             "active_ids_limit": IrConfigSudo.get_int('web.active_ids_limit') or 20000,
             'profile_session': request.session.get('profile_session'),
             'profile_collectors': request.session.get('profile_collectors'),

@@ -23,7 +23,7 @@ class TestControllers(tests.HttpCase):
         self.authenticate("admin", "admin")
         Page = self.env['website.page']
         last_5_url_edited = []
-        base_url = self.env['ir.config_parameter'].sudo().get_str('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_url('web.base.url')
         suggested_links_url = base_url + '/website/get_suggested_links'
 
         old_pages = Page
