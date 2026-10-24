@@ -877,6 +877,20 @@ class AccountEdiCommon(models.AbstractModel):
         # Charges are collected (they are used to create new lines), Allowances are transformed into discounts
         discount_amount, charges = self._retrieve_charge_allowance_vals(tree, xpath_dict, quantity)
 
+        # Some files report line-level allowances/charges that are already included in the net price
+        # (net price * quantity == line subtotal): they are only informative and must not be applied again.
+        if (
+            charges
+            and net_price_unit is not None
+            and price_subtotal is not None
+            and float_compare(
+                price_subtotal,
+                net_price_unit * (delivered_qty / basis_qty),
+                precision_digits=self.env.company.currency_id.decimal_places,
+            ) == 0
+        ):
+            charges = []
+
         # price_unit
         charge_amount = sum(d['amount'] for d in charges)
         allow_charge_amount = discount_amount - charge_amount
