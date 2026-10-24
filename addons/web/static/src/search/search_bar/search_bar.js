@@ -1,6 +1,8 @@
 import { Component, proxy, signal, t, usePlugin, useProps } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { Domain } from "@web/core/domain";
+import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
+import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
@@ -48,6 +50,8 @@ export class SearchBar extends Component {
     static components = {
         SearchBarMenu,
         SearchBarDropdown,
+        CheckboxItem,
+        Dropdown,
         DropdownItem,
     };
     props = useProps({
@@ -485,7 +489,14 @@ export class SearchBar extends Component {
             hotkeys: {
                 enter: {
                     isAvailable: () => !this.inputDropdownState.isOpen,
-                    callback: () => this.env.searchModel.search() /** @todo keep this thing ?*/,
+                    callback: (navigator) => {
+                        const el = navigator.activeItem?.el;
+                        if (isFacet(el) && el.ariaHasPopup) {
+                            el.click();
+                        } else {
+                            this.env.searchModel.search(); /** @todo keep this thing ?*/
+                        }
+                    },
                 },
                 arrowdown: {
                     callback: () => this.env.searchModel.trigger("focus-view"),

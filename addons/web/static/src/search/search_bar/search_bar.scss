@@ -21,6 +21,24 @@
         z-index: 0;
     }
 
+    .o_date_nav_btn {
+        --btn-bg: var(--primary-bg-subtle);
+        margin: 1px;
+    }
+
+    /* Keep the hover look while the period dropdown is open */
+    &.show .opacity-100-hover {
+        opacity: 1 !important;
+    }
+
+    /* Touch devices keep :hover on the last tapped element */
+    .o_touch_device & {
+        .o_date_nav_btn {
+            --btn-hover-color: var(--btn-color);
+            --btn-hover-bg: var(--btn-bg);
+        }
+    }
+
     .o_facet_value {
         max-width: var(--o-search-bar-facet-value-width);
 

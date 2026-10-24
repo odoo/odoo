@@ -49,8 +49,41 @@ import {
     validateSearch,
 } from "@web/../tests/web_test_helpers";
 import { cookie } from "@web/core/browser/cookie";
+import { localization } from "@web/core/l10n/localization";
 import { SearchBar, DROPDOWN_CLOSE_DELAY } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
+
+async function mountWithRelativeFilter(string, fieldName, option) {
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchViewId: false,
+        searchMenuTypes: ["filter"],
+        searchViewArch: `
+            <search>
+                <filter string="${string}" name="date_filter" date="${fieldName}"/>
+            </search>
+        `,
+    });
+    await toggleSearchBarMenu();
+    await toggleMenuItem(string);
+    await toggleMenuItemOption(string, option);
+    return searchBar;
+}
+
+async function openDatePeriodMenu() {
+    if (!queryAll(`.o_date_period_menu`).length) {
+        await contains(`.o_searchview_facet .o_facet_values`).click();
+    }
+}
+
+async function editDateRange(start, end) {
+    await openDatePeriodMenu();
+    await contains(`.o_date_period_edit`).click();
+    await contains(`${SELECTORS.valueEditor} .o_datetime_input:first`).edit(start);
+    await contains(`${SELECTORS.valueEditor} .o_datetime_input:last`).edit(end);
+    await contains(`.modal footer button`).click();
+}
+
 class Partner extends models.Model {
     name = fields.Char();
     bar = fields.Many2one({ relation: "partner" });
@@ -1619,6 +1652,434 @@ test("navigation: shifting a relative filter into the future updates the domain 
         ["birthday", "<", "today =1d +3m"],
     ]);
     expect(`.modal`).toHaveCount(0);
+});
+
+test("navigation: select the period of a relative filter in its dropdown", async () => {
+    mockDate("2017-03-22T01:00:00"); // Wednesday
+    const searchBar = await mountWithRelativeFilter("Birthday", "birthday", "This Month");
+    expect(`.o_searchview_facet [data-tooltip="Previous period"]`).toHaveCount(1);
+    expect(`.o_searchview_facet [data-tooltip="Next period"]`).toHaveCount(1);
+    expect(`.o_searchview_facet .o_facet_caret`).toHaveCount(1);
+
+    await contains(`.o_searchview_facet .o_facet_values`).click();
+    expect(queryAllTexts(`.o_date_period_menu .o_item_option`)).toEqual([
+        "Today",
+        "This Week",
+        "This Month",
+        "This Quarter",
+        "This Year",
+    ]);
+    expect(queryAllTexts(`.o_date_period_menu .o_item_option.selected`)).toEqual(["This Month"]);
+
+    await press("Escape");
+    await animationFrame();
+    expect(`.o_date_period_menu`).toHaveCount(0);
+
+    // the period of an option shifted by the arrows is not the current one
+    await contains(`.o_searchview_facet [aria-label="Previous period"]`).click();
+    expect(`.o_date_period_menu`).toHaveCount(0);
+    await contains(`.o_searchview_facet .o_facet_values`).click();
+    expect(`.o_date_period_menu .o_item_option.selected`).toHaveCount(0);
+
+    await contains(`.o_date_period_menu .o_item_option:contains(Today)`).click();
+    expect(getFacetTexts()).toEqual(["Birthday: Mar 22"]);
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["birthday", ">=", "today"],
+        ["birthday", "<", "today +1d"],
+    ]);
+
+    await contains(`.o_searchview_facet [aria-label="Next period"]`).click();
+    expect(getFacetTexts()).toEqual(["Birthday: Mar 23"]);
+});
+
+test("navigation: edit the period of a relative filter as a custom range", async () => {
+    serverState.debug = "1";
+    mockDate("2017-03-22T01:00:00");
+    onRpc("/web/domain/validate", () => true);
+    const searchBar = await mountWithRelativeFilter("Birthday", "birthday", "Today");
+
+    await contains(`.o_searchview_facet .o_facet_values`).click();
+    await contains(`.o_date_period_edit`).click();
+    expect(`.o_domain_selector_debug_container textarea`).toHaveValue(
+        `["&", ("birthday", ">=", "2017-03-22"), ("birthday", "<=", "2017-03-22")]`
+    );
+    await contains(`.o_domain_selector_debug_container textarea`).edit(
+        `[("birthday", ">=", "2017-03-02"), ("birthday", "<=", "2017-03-11")]`
+    );
+    await contains(`.modal footer button`).click();
+    expect(getFacetTexts()).toEqual(["Birthday: Mar 2 to Mar 11"]);
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["birthday", ">=", "2017-03-02"],
+        ["birthday", "<=", "2017-03-11"],
+    ]);
+
+    // the range is shifted by its own number of days
+    await contains(`.o_searchview_facet [aria-label="Next period"]`).click();
+    expect(getFacetTexts()).toEqual(["Birthday: Mar 12 to Mar 21"]);
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["birthday", ">=", "2017-03-12"],
+        ["birthday", "<=", "2017-03-21"],
+    ]);
+    await contains(`.o_searchview_facet [aria-label="Previous period"]`).click();
+    await contains(`.o_searchview_facet [aria-label="Previous period"]`).click();
+    expect(getFacetTexts()).toEqual(["Birthday: Feb 20 to Mar 1"]);
+
+    await contains(`.o_searchview_facet .o_facet_values`).click();
+    expect(`.o_date_period_menu .o_item_option.selected`).toHaveCount(0);
+
+    // a domain which is not a range of days replaces the relative filter
+    await contains(`.o_date_period_edit`).click();
+    await contains(`.o_domain_selector_debug_container textarea`).edit(
+        `[("birthday", ">", "2017-03-02")]`
+    );
+    await contains(`.modal footer button`).click();
+    expect(`.o_date_nav_btn`).toHaveCount(0);
+    expect(searchBar.env.searchModel.domain).toEqual([["birthday", ">", "2017-03-02"]]);
+});
+
+test("navigation: edit the period of a datetime relative filter as a custom range", async () => {
+    serverState.debug = "1";
+    mockTimeZone(2);
+    mockDate("2017-03-22T10:00:00");
+    onRpc("/web/domain/validate", () => true);
+    const searchBar = await mountWithRelativeFilter("Birth DateTime", "birth_datetime", "Today");
+
+    await contains(`.o_searchview_facet .o_facet_values`).click();
+    await contains(`.o_date_period_edit`).click();
+    expect(`.o_domain_selector_debug_container textarea`).toHaveValue(
+        `["&", ("birth_datetime", ">=", "2017-03-21 22:00:00"), ("birth_datetime", "<=", "2017-03-22 21:59:59")]`
+    );
+    await contains(`.o_domain_selector_debug_container textarea`).edit(
+        `["&", ("birth_datetime", ">=", "2017-03-01 22:00:00"), ("birth_datetime", "<=", "2017-03-03 21:59:59")]`
+    );
+    await contains(`.modal footer button`).click();
+    expect(getFacetTexts()).toEqual(["Birth DateTime: Mar 2 to Mar 3"]);
+
+    await contains(`.o_searchview_facet [aria-label="Next period"]`).click();
+    expect(getFacetTexts()).toEqual(["Birth DateTime: Mar 4 to Mar 5"]);
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["birth_datetime", ">=", "2017-03-03 22:00:00"],
+        ["birth_datetime", "<=", "2017-03-05 21:59:59"],
+    ]);
+});
+
+test("navigation: a custom range covering the period of an option steps by that period", async () => {
+    mockDate("2017-03-22T01:00:00");
+    onRpc("/web/domain/validate", () => true);
+    const searchBar = await mountWithRelativeFilter("Birthday", "birthday", "Today");
+
+    await editDateRange("03/01/2017", "03/31/2017");
+    expect(getFacetTexts()).toEqual(["Birthday: March"]);
+    // the range is fixed: it is not the variable period of the option
+    await openDatePeriodMenu();
+    expect(`.o_date_period_menu .o_item_option.selected`).toHaveCount(0);
+
+    // the navigation steps by month, not by 31 days
+    await contains(`.o_searchview_facet [aria-label="Next period"]`).click();
+    expect(getFacetTexts()).toEqual(["Birthday: April"]);
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["birthday", ">=", "2017-04-01"],
+        ["birthday", "<=", "2017-04-30"],
+    ]);
+
+    // a range covering a past period of an option steps by that period too
+    await editDateRange("03/05/2017", "03/11/2017"); // from Sunday to Saturday
+    expect(getFacetTexts()).toEqual(["Birthday: Week 10, Mar 5 - Mar 11"]);
+    await contains(`.o_searchview_facet [aria-label="Next period"]`).click();
+    expect(getFacetTexts()).toEqual(["Birthday: Week 11, Mar 12 - Mar 18"]);
+});
+
+test("navigation: the week of a relative filter follows the week start", async () => {
+    patchWithCleanup(localization, { weekStart: 7 }); // Sunday
+    mockDate("2017-03-22T01:00:00"); // Wednesday
+    onRpc("/web/domain/validate", () => true);
+    const searchBar = await mountWithRelativeFilter("Birthday", "birthday", "This Week");
+
+    await openDatePeriodMenu();
+    await contains(`.o_date_period_edit`).click();
+    expect(queryAll(`${SELECTORS.valueEditor} .o_datetime_input`).map((i) => i.value)).toEqual([
+        "03/19/2017",
+        "03/25/2017",
+    ]);
+    await contains(`.modal-header [aria-label="Close"]`).click();
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["birthday", ">=", "today =week_start"],
+        ["birthday", "<", "today =week_start +1w"],
+    ]);
+    await contains(`.o_searchview_facet [aria-label="Previous period"]`).click();
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["birthday", ">=", "today =week_start -1w"],
+        ["birthday", "<", "today =week_start"],
+    ]);
+
+    // from Monday to Sunday is not a week
+    await editDateRange("03/13/2017", "03/19/2017");
+    expect(getFacetTexts()).toEqual(["Birthday: Mar 13 to Mar 19"]);
+
+    await editDateRange("03/19/2017", "03/25/2017");
+    expect(getFacetTexts()).toEqual(["Birthday: Week 12, Mar 19 - Mar 25"]);
+});
+
+test("navigation: edit the period of a relative filter with the tree editor", async () => {
+    mockDate("2017-03-22T01:00:00");
+    onRpc("/web/domain/validate", () => true);
+    const searchBar = await mountWithRelativeFilter("Birthday", "birthday", "Today");
+
+    await contains(`.o_searchview_facet .o_facet_values`).click();
+    await contains(`.o_date_period_edit`).click();
+    expect(getCurrentOperator()).toBe(label("in range"));
+    expect(queryAll(`${SELECTORS.valueEditor} .o_datetime_input`).map((i) => i.value)).toEqual([
+        "03/22/2017",
+        "03/22/2017",
+    ]);
+    await contains(`${SELECTORS.valueEditor} .o_datetime_input:first`).edit("03/02/2017");
+    await contains(`${SELECTORS.valueEditor} .o_datetime_input:last`).edit("03/11/2017");
+    await contains(`.modal footer button`).click();
+    expect(getFacetTexts()).toEqual(["Birthday: Mar 2 to Mar 11"]);
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["birthday", ">=", "2017-03-02"],
+        ["birthday", "<=", "2017-03-11"],
+    ]);
+});
+
+test("navigation: edit the period of a relative filter with an end date as a custom range", async () => {
+    serverState.debug = "1";
+    mockTimeZone(0);
+    mockDate("2017-03-22T01:00:00");
+    onRpc("/web/domain/validate", () => true);
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchViewId: false,
+        searchMenuTypes: ["filter"],
+        searchViewArch: `
+            <search>
+                <filter string="Birthday" name="date_filter" date="birthday" end_date="birth_datetime"/>
+            </search>
+        `,
+    });
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Birthday");
+    await toggleMenuItemOption("Birthday", "Today");
+
+    await contains(`.o_searchview_facet .o_facet_values`).click();
+    await contains(`.o_date_period_edit`).click();
+    expect(`.o_domain_selector_debug_container textarea`).toHaveValue(
+        `["&", ("birthday", "<=", "2017-03-22"), "|", ("birth_datetime", ">=", "2017-03-22 00:00:00"), "&", ("birth_datetime", "=", False), ("birthday", ">=", "2017-03-22")]`
+    );
+    await contains(`.o_domain_selector_debug_container textarea`).edit(
+        `["&", ("birthday", "<=", "2017-03-11"), "|", ("birth_datetime", ">=", "2017-03-02 00:00:00"), "&", ("birth_datetime", "=", False), ("birthday", ">=", "2017-03-02")]`
+    );
+    await contains(`.modal footer button`).click();
+    expect(getFacetTexts()).toEqual(["Birthday: Mar 2 to Mar 11"]);
+
+    await contains(`.o_searchview_facet [aria-label="Next period"]`).click();
+    expect(getFacetTexts()).toEqual(["Birthday: Mar 12 to Mar 21"]);
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["birthday", "<=", "2017-03-21"],
+        "|",
+        ["birth_datetime", ">=", "2017-03-12 00:00:00"],
+        "&",
+        ["birth_datetime", "=", false],
+        ["birthday", ">=", "2017-03-12"],
+    ]);
+});
+
+test("navigation: select an option of a relative filter in the filter menu over a custom range", async () => {
+    mockDate("2017-03-22T01:00:00");
+    onRpc("/web/domain/validate", () => true);
+    const searchBar = await mountWithRelativeFilter("Birthday", "birthday", "Today");
+    await editDateRange("03/02/2017", "03/11/2017");
+    expect(getFacetTexts()).toEqual(["Birthday: Mar 2 to Mar 11"]);
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Birthday");
+    expect(`.o_filter_menu .o_item_option.selected`).toHaveCount(0);
+    await toggleMenuItemOption("Birthday", "This Year");
+    expect(getFacetTexts()).toEqual(["Birthday: 2017"]);
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["birthday", ">=", "today =1d =1m"],
+        ["birthday", "<", "today =1d =1m +1y"],
+    ]);
+});
+
+test("navigation: an option shifted by the arrows is not selected in the filter menu", async () => {
+    mockDate("2017-03-22T01:00:00");
+    const searchBar = await mountWithRelativeFilter("Birthday", "birthday", "This Month");
+    expect(`.o_filter_menu .o_item_option.selected`).toHaveCount(1);
+
+    await contains(`.o_searchview_facet [aria-label="Previous period"]`).click();
+    expect(getFacetTexts()).toEqual(["Birthday: February"]);
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Birthday");
+    expect(`.o_filter_menu .o_item_option.selected`).toHaveCount(0);
+
+    await toggleMenuItemOption("Birthday", "This Month");
+    expect(getFacetTexts()).toEqual(["Birthday: March"]);
+    expect(`.o_filter_menu .o_item_option.selected`).toHaveCount(1);
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["birthday", ">=", "today =1d"],
+        ["birthday", "<", "today =1d +1m"],
+    ]);
+});
+
+test("navigation: remove a relative filter while its period dropdown is open", async () => {
+    mockDate("2017-03-22T01:00:00");
+    await mountWithRelativeFilter("Birthday", "birthday", "This Month");
+    await toggleSearchBarMenu();
+    await openDatePeriodMenu();
+    await contains(`.o_searchview_facet .o_facet_remove`).click();
+    await animationFrame();
+    expect(`.o_searchview_facet`).toHaveCount(0);
+    expect(`.o_date_period_menu`).toHaveCount(0);
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Birthday");
+    await toggleMenuItemOption("Birthday", "This Month");
+    await toggleSearchBarMenu();
+    queryFirst(`.o_searchview input`).focus();
+    await keyDown("ArrowLeft");
+    await animationFrame();
+    await press("ArrowDown");
+    await animationFrame();
+    expect(`.o_date_period_menu`).toHaveCount(1);
+    await press("Backspace");
+    await animationFrame();
+    await runAllTimers();
+    expect(`.o_searchview_facet`).toHaveCount(0);
+    expect(`.o_date_period_menu`).toHaveCount(0);
+});
+
+test("navigation: keyboard interactions with the period dropdown of a relative filter", async () => {
+    mockDate("2017-03-22T01:00:00");
+    const searchBar = await mountWithRelativeFilter("Birthday", "birthday", "This Month");
+    await toggleSearchBarMenu();
+    expect(`.o_searchview_facet`).toHaveAttribute("aria-haspopup", "menu");
+    expect(`.o_searchview_facet`).toHaveAttribute("aria-expanded", "false");
+
+    queryFirst(`.o_searchview input`).focus();
+    await keyDown("ArrowLeft");
+    await animationFrame();
+    expect(`.o_searchview_facet`).toBeFocused();
+
+    await press("ArrowDown");
+    await animationFrame();
+    expect(`.o_date_period_menu`).toHaveCount(1);
+    expect(`.o_searchview_facet`).toHaveAttribute("aria-expanded", "true");
+
+    await press("Escape");
+    await animationFrame();
+    expect(`.o_date_period_menu`).toHaveCount(0);
+    expect(`.o_searchview_facet`).toHaveAttribute("aria-expanded", "false");
+    expect(`.o_searchview_facet`).toBeFocused();
+
+    // Enter opens the dropdown instead of triggering a search
+    await press("Enter");
+    await animationFrame();
+    expect(`.o_date_period_menu`).toHaveCount(1);
+    expect(`.o_searchview_facet`).toHaveAttribute("aria-expanded", "true");
+
+    await press("ArrowDown");
+    await press("Enter");
+    await animationFrame();
+    expect(`.o_date_period_menu`).toHaveCount(0);
+    expect(getFacetTexts()).toEqual(["Birthday: Mar 22"]);
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["birthday", ">=", "today"],
+        ["birthday", "<", "today +1d"],
+    ]);
+});
+
+test("navigation: the custom range of a relative filter is kept in the exported state and favorites", async () => {
+    mockDate("2017-03-22T01:00:00");
+    onRpc("/web/domain/validate", () => true);
+    const searchBar = await mountWithRelativeFilter("Birthday", "birthday", "Today");
+    await editDateRange("03/02/2017", "03/11/2017");
+    await contains(`.o_searchview_facet [aria-label="Next period"]`).click();
+    expect(getFacetTexts()).toEqual(["Birthday: Mar 12 to Mar 21"]);
+    const irFilter = searchBar.env.searchModel.getIrFilterValues({});
+    expect(irFilter.domain).toBe(
+        `["&", ("birthday", ">=", "2017-03-12"), ("birthday", "<=", "2017-03-21")]`
+    );
+    const searchModel = JSON.stringify(searchBar.env.searchModel.exportState());
+
+    const restoredSearchBar = await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchViewId: false,
+        searchMenuTypes: ["filter"],
+        searchViewArch: `<search/>`,
+        globalState: { searchModel },
+    });
+    expect(restoredSearchBar.env.searchModel.facets.map((f) => f.values)).toEqual([
+        ["Birthday: Mar 12 to Mar 21"],
+    ]);
+    expect(restoredSearchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["birthday", ">=", "2017-03-12"],
+        ["birthday", "<=", "2017-03-21"],
+    ]);
+});
+
+test("navigation: a fixed range stays fixed and a variable period stays variable", async () => {
+    mockDate("2017-03-22T01:00:00");
+    onRpc("/web/domain/validate", () => true);
+    const searchBar = await mountWithRelativeFilter("Birthday", "birthday", "Today");
+    await editDateRange("02/01/2017", "02/28/2017");
+    expect(getFacetTexts()).toEqual(["Birthday: February"]);
+    expect(searchBar.env.searchModel.getIrFilterValues({}).domain).toBe(
+        `["&", ("birthday", ">=", "2017-02-01"), ("birthday", "<=", "2017-02-28")]`
+    );
+    await contains(`.o_searchview_facet [aria-label="Previous period"]`).click();
+    expect(getFacetTexts()).toEqual(["Birthday: January"]);
+    expect(searchBar.env.searchModel.getIrFilterValues({}).domain).toBe(
+        `["&", ("birthday", ">=", "2017-01-01"), ("birthday", "<=", "2017-01-31")]`
+    );
+    const fixedState = JSON.stringify(searchBar.env.searchModel.exportState());
+
+    await openDatePeriodMenu();
+    await contains(`.o_date_period_menu .o_item_option:contains(This Month)`).click();
+    await contains(`.o_searchview_facet [aria-label="Previous period"]`).click();
+    expect(getFacetTexts()).toEqual(["Birthday: February"]);
+    expect(searchBar.env.searchModel.getIrFilterValues({}).domain).toBe(
+        `["&", ("birthday", ">=", "today =1d -1m"), ("birthday", "<", "today =1d")]`
+    );
+    const variableState = JSON.stringify(searchBar.env.searchModel.exportState());
+
+    // restored on a later day, the fixed range keeps its dates while the
+    // variable period follows today
+    mockDate("2017-05-10T01:00:00");
+    const mountRestored = (searchModel) =>
+        mountWithSearch(SearchBar, {
+            resModel: "partner",
+            searchViewId: false,
+            searchMenuTypes: ["filter"],
+            searchViewArch: `<search/>`,
+            globalState: { searchModel },
+        });
+    const fixedSearchBar = await mountRestored(fixedState);
+    expect(fixedSearchBar.env.searchModel.facets.map((f) => f.values)).toEqual([
+        ["Birthday: January"],
+    ]);
+    expect(fixedSearchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["birthday", ">=", "2017-01-01"],
+        ["birthday", "<=", "2017-01-31"],
+    ]);
+    const variableSearchBar = await mountRestored(variableState);
+    expect(variableSearchBar.env.searchModel.facets.map((f) => f.values)).toEqual([
+        ["Birthday: April"],
+    ]);
 });
 
 test("edit a favorite", async () => {
