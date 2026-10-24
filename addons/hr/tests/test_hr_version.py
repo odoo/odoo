@@ -891,3 +891,34 @@ class TestHrVersion(TestHrCommon):
         self.assertEqual(versions, v1)
         versions = self.env['hr.version'].search([('employee_id', '=', employee.id), ('date_end', '>', '2026-06-01')])
         self.assertEqual(versions, v2)
+
+    def test_sex_and_private_address_are_not_versioned(self):
+        """ sex and the private address identify the person, not the employment: they must
+        stay a single value shared by every version of the employee, not one independent
+        copy per version. """
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2026-01-01',
+            'sex': 'male',
+            'private_street': 'Rue de la Loi 16',
+            'private_city': 'Brussels',
+        })
+        v1 = employee.version_id
+        v2 = employee.create_version({
+            'date_version': '2026-06-01',
+        })
+
+        # Editing the field through any version updates the one true value...
+        v1.sex = 'female'
+        v1.private_street = 'Rue Belliard 1'
+        self.assertEqual(employee.sex, 'female')
+        self.assertEqual(employee.private_street, 'Rue Belliard 1')
+
+        # ...so it's never possible for the two versions to disagree.
+        self.assertEqual(v1.sex, v2.sex)
+        self.assertEqual(v1.private_street, v2.private_street)
+        self.assertEqual(v1.private_city, v2.private_city)
+
+        v2.sex = 'male'
+        self.assertEqual(v1.sex, 'male')
+        self.assertEqual(employee.sex, 'male')

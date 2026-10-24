@@ -82,22 +82,21 @@ class HrVersion(models.Model):
         tracking=1)
     passport_id = fields.Char('Passport No', groups="hr.group_hr_user", tracking=1)
     passport_expiration_date = fields.Date('Passport Expiration Date', groups="hr.group_hr_user", tracking=1)
-    sex = fields.Selection([
-        ('male', 'Male'),
-        ('female', 'Female'),
-    ], groups="hr.group_hr_user", tracking=1, help="This is the legal sex as recognized by the state, used for official and statutory purposes.")
-
-    private_street = fields.Char(string="Private Street", groups="hr.group_hr_user", tracking=1)
-    private_street2 = fields.Char(string="Private Street2", groups="hr.group_hr_user", tracking=1)
-    private_city = fields.Char(string="Private City", groups="hr.group_hr_user", tracking=1)
-    allowed_country_state_ids = fields.Many2many("res.country.state", compute='_compute_allowed_country_state_ids', groups="hr.group_hr_user")
+    # sex and the private address identify the person, not the employment: they live on
+    # hr.employee as the single source of truth (see hr_employee.py) and are only mirrored
+    # here as related fields, the same way l10n_be_hr_payroll already mirrors 'niss', so
+    # that version-scoped code can keep reading/writing them without them actually being
+    # able to diverge between versions.
+    sex = fields.Selection(related='employee_id.sex', readonly=False, groups="hr.group_hr_user")
+    private_street = fields.Char(related='employee_id.private_street', readonly=False, groups="hr.group_hr_user")
+    private_street2 = fields.Char(related='employee_id.private_street2', readonly=False, groups="hr.group_hr_user")
+    private_city = fields.Char(related='employee_id.private_city', readonly=False, groups="hr.group_hr_user")
+    allowed_country_state_ids = fields.Many2many(related='employee_id.allowed_country_state_ids', groups="hr.group_hr_user")
     private_state_id = fields.Many2one(
-        "res.country.state", string="Private State",
-        domain="[('id', 'in', allowed_country_state_ids)]",
-        groups="hr.group_hr_user", tracking=1)
-    private_zip = fields.Char(string="Private Zip", groups="hr.group_hr_user", tracking=1)
-    private_country_id = fields.Many2one("res.country", string="Private Country", index='btree_not_null',
-                                         groups="hr.group_hr_user", tracking=1, default=lambda self: self.env.company.country_id)
+        related='employee_id.private_state_id', readonly=False,
+        groups="hr.group_hr_user")
+    private_zip = fields.Char(related='employee_id.private_zip', readonly=False, groups="hr.group_hr_user")
+    private_country_id = fields.Many2one(related='employee_id.private_country_id', readonly=False, groups="hr.group_hr_user")
 
     distance_home_work = fields.Integer(string="Home-Work Distance", groups="hr.group_hr_user", tracking=1)
     km_home_work = fields.Integer(string="Home-Work Distance in Km", groups="hr.group_hr_user",
@@ -240,16 +239,6 @@ class HrVersion(models.Model):
         for version in self.filtered('job_id'):
             if version._origin.job_id != version.job_id:
                 version.is_custom_job_title = False
-
-    @api.depends("private_country_id")
-    def _compute_allowed_country_state_ids(self):
-        versions_with_countries = self.filtered("private_country_id")
-        for version in versions_with_countries:
-            version.allowed_country_state_ids = version.private_country_id.state_ids
-        if versions_without_countries := (self - versions_with_countries):
-            states = self.env["res.country.state"].search([])
-            for version in versions_without_countries:
-                version.allowed_country_state_ids = states
 
     @api.constrains('employee_id', 'contract_date_start', 'contract_date_end')
     def _check_dates(self):
