@@ -55,6 +55,7 @@
         <field name="arch" type="xml">
             <list position="attributes">
                 <attribute name="default_order">website_sequence</attribute>
+                <attribute name="js_class">product_sellable_action_list</attribute>
             </list>
             <field name="is_favorite" position="before">
                 <field name="website_sequence" widget="handle"/>
@@ -75,6 +76,7 @@
         <field name="arch" type="xml">
             <kanban position="attributes">
                 <attribute name="default_order">website_sequence</attribute>
+                <attribute name="js_class">product_sellable_action_kanban</attribute>
             </kanban>
         </field>
     </record>
