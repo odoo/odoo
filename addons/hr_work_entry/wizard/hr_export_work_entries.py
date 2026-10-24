@@ -91,7 +91,7 @@ class HrExportWorkEntries(models.TransientModel):
             (self.env._('External Code'), lambda args: args['we_collection']['work_entries'][0]['work_entry_type_id']['external_code'] or ''),
             (self.env._('Employee Name'), lambda args: args['employee_id'].name),
             (self.env._('Employee Ext. Code'), lambda args: args['employee_id'].external_code or ''),
-            (self.env._('Duration'), lambda args: str(round(int(args['we_collection']['duration'] // 3600), 2))),
+            (self.env._('Duration'), lambda args: str(round(args['we_collection']['duration'] / 3600, 2))),
         ]
         return columns
 
