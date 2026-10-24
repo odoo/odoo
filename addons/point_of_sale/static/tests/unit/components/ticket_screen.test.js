@@ -3,7 +3,7 @@ import { advanceTime } from "@odoo/hoot-mock";
 import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { session } from "@web/session";
 import { barcodeService } from "@barcodes/barcode_service";
-import { setupPosEnv } from "../utils";
+import { getFilledOrder, setupPosEnv } from "../utils";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 import { definePosModels } from "../data/generate_model_definitions";
 
@@ -182,4 +182,32 @@ test("searching by customer keeps the orders of a nameless address contact", asy
         [companyOrder.id, addressOrder.id],
         { message: "the address contact is searched by its company name" }
     );
+});
+
+test("reprint button reprints the last preparation ticket of a sent order", async () => {
+    const store = await setupPosEnv();
+    const printedTickets = [];
+    const [printer] = store.config.preparation_printer_ids;
+    printer._instance = { print: async () => ({ successful: true }) };
+    patchWithCleanup(store.ticketPrinter, {
+        generateIframe: async (_template, ticket) => printedTickets.push(ticket),
+        generateImage: async () => "image",
+    });
+
+    const order = await getFilledOrder(store);
+    await store.sendOrderInPreparation(order);
+    expect(printedTickets).toHaveLength(1);
+    expect(order.lastPrints).toHaveLength(1);
+    expect(order.hasChange).toBe(false);
+
+    const comp = await mountWithCleanup(TicketScreen, { props: {} });
+    await comp.onClickReprintAll(order);
+
+    expect(printedTickets).toHaveLength(2);
+    const reprintedTicket = printedTickets[1];
+    expect(reprintedTicket.extra_data.reprint).toBe(true);
+    expect(reprintedTicket.changes.data.map((line) => line.quantity)).toEqual([3, 2]);
+    expect(order.lastPrints).toHaveLength(1, {
+        message: "a reprint must not be added to the print history",
+    });
 });
