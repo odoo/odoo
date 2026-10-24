@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from datetime import timedelta
 
 from odoo import fields, models, api, _
 from odoo.exceptions import AccessError
@@ -62,9 +63,18 @@ class StockMove(models.Model):
         res = super().write(vals)
         if 'date' in vals:
             for move in self:
-                if move.state in ('done', 'cancel') or not move.is_subcontract:
+                if move.state == 'cancel' or not move.is_subcontract:
                     continue
-                move.move_orig_ids.production_id.with_context(from_subcontract=True).filtered(lambda p: p.state not in ('done', 'cancel')).write({
+                productions = move.move_orig_ids.production_id
+                if move.state == 'done':
+                    # Same dating as at validation: production just before the receipt
+                    production_date = move.date - timedelta(seconds=1)
+                    productions.filtered(lambda p: p.state == 'done').sudo().with_context(force_date=True).write({
+                        'date_start': production_date,
+                        'date_finished': production_date,
+                    })
+                    continue
+                productions.with_context(from_subcontract=True).sudo().filtered(lambda p: p.state not in ('done', 'cancel')).write({
                     'date_start': move.date,
                     'date_finished': move.date,
                 })

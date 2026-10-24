@@ -1176,10 +1176,10 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         po.button_confirm()
         mo = po.picking_ids.move_ids.move_orig_ids.production_id
         original_mo_start_date = mo.date_start
-        with Form(po.picking_ids[0]) as receipt_form:
+        with Form(po.picking_ids[0].with_user(self.inventory_user)) as receipt_form:
             receipt_form.scheduled_date = '2000-06-01'
         self.assertEqual(mo.date_start, datetime(year=2000, month=6, day=1) - timedelta(days=self.bom_finished2.produce_delay))
-        with Form(po.picking_ids[0]) as receipt_form:
+        with Form(po.picking_ids[0].with_user(self.inventory_user)) as receipt_form:
             receipt_form.scheduled_date = '2000-05-01'
         self.assertEqual(mo.date_start, original_mo_start_date)
 
