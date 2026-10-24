@@ -99,7 +99,7 @@ export class FloatTimeField extends Component {
     }
 }
 
-class DurationPopover extends Component {
+export class DurationPopover extends Component {
     static template = "web.DurationPopover";
     static props = {
         state: { type: Object, optional: true },
