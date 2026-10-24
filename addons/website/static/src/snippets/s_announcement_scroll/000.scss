@@ -4,12 +4,26 @@
 
     .s_announcement_scroll_marquee_item {
         white-space: preserve nowrap;
-        caret-color: transparent; // o_not_editable doesn't hide the caret on Firefox
+        margin-bottom: 0;
+
+        &::before {
+            // This ensures a minimum width to the item, in case the user
+            // deletes the content
+            content: "";
+            float: left;
+            min-width: 1.5vw;
+        }
 
         @media (prefers-reduced-motion: reduce) {
             & {
                 animation: none !important;
             }
+        }
+
+        .img-fluid {
+            // Using a width relative to the parent (100%) prevents correct
+            // computation of the size of the item
+            max-width: 100vw;
         }
     }
 
@@ -63,6 +77,10 @@
             &.s_announcement_scroll_parallax .s_announcement_scroll_marquee_item {
                 animation-play-state: paused;
             }
+        }
+
+        .o_marquee_has_selection .s_announcement_scroll_marquee_item {
+            animation-play-state: paused;
         }
     }
 }
