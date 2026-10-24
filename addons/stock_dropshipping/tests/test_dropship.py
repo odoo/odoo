@@ -193,7 +193,7 @@ class TestDropship(common.TransactionCase):
 
         # Check the partner of the related picking and move
         self.assertEqual(sale_order.picking_ids.partner_id, supplier_dropship)
-        self.assertEqual(sale_order.picking_ids.move_ids.partner_id, customer)
+        self.assertEqual(sale_order.picking_ids.move_ids.partner_id, supplier_dropship)
 
     def test_dropshipped_lot_last_delivery(self):
         """ Check if the partner_id of a `stock.lot` is computed correctly
@@ -353,7 +353,7 @@ class TestDropship(common.TransactionCase):
         dropship = po.picking_ids
         self.assertTrue(dropship.is_dropship)
         self.assertRecordValues(dropship.move_ids, [
-            {'product_id': self.dropship_product.id, 'partner_id': delivery_addr.id},
+            {'product_id': self.dropship_product.id, 'partner_id': supplier.id},
         ])
 
         dropship.move_ids.quantity = 1
@@ -500,7 +500,8 @@ class TestDropship(common.TransactionCase):
     def test_modifying_partner_on_dropship_picking(self):
         """
         Test that changing the contact on a dropship picking does not
-        replace the original customer.
+        replace the original customer, which remains available through
+        the picking's sale order regardless of the picking's own partner.
         """
         self.dropship_product.route_ids = [Command.set(self.dropshipping_route.ids)]
         self.supplier.write({'child_ids': [Command.create({'name': 'Supplier employee'})]})
@@ -515,9 +516,9 @@ class TestDropship(common.TransactionCase):
         })
         sale_order.action_confirm()
         sale_order._get_purchase_orders().button_confirm()
-        self.assertEqual(sale_order.picking_ids.move_ids.partner_id.id, self.customer.id)
+        self.assertEqual(sale_order.picking_ids.sale_id.partner_shipping_id.id, self.customer.id)
         sale_order.picking_ids.partner_id = self.supplier.child_ids
-        self.assertEqual(sale_order.picking_ids.move_ids.partner_id.id, self.customer.id)
+        self.assertEqual(sale_order.picking_ids.sale_id.partner_shipping_id.id, self.customer.id)
 
 
 @tagged('post_install', '-at_install')

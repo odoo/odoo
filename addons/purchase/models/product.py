@@ -259,7 +259,9 @@ class ProductProduct(models.Model):
             Overridden when the params restrict the sellers to partners that a
             past purchase does not qualify as, e.g. subcontractors.
         """
-        return True
+        if not params:
+            return True
+        return not params.get('force_supplier_info')
 
     def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, ordered_by='price_discounted', params=False):
         seller_info = super()._select_seller(partner_id=partner_id, quantity=quantity, date=date, uom_id=uom_id, ordered_by=ordered_by, params=params)
