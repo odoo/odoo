@@ -44,7 +44,7 @@ export class RecordList extends Array {
                     record._.uses.add(recordList);
                 });
                 if (inverse) {
-                    store._.updateFields(record, { [inverse]: [["ADD", recordList._.owner]] });
+                    recordList._.echoInverse(inverse, record, "ADD");
                 }
             }
             return recordList._.data().length;
@@ -90,7 +90,7 @@ export class RecordList extends Array {
                     record._.uses.add(recordList);
                 });
                 if (inverse) {
-                    store._.updateFields(record, { [inverse]: [["ADD", recordList._.owner]] });
+                    recordList._.echoInverse(inverse, record, "ADD");
                 }
             }
             return recordList._.data().length;
@@ -124,16 +124,14 @@ export class RecordList extends Array {
             for (const oldRecord of oldRecords) {
                 oldRecord._.uses.delete(recordList);
                 if (inverse) {
-                    store._.updateFields(oldRecord, {
-                        [inverse]: [["DELETE", recordList._.owner]],
-                    });
+                    recordList._.echoInverse(inverse, oldRecord, "DELETE");
                 }
             }
             for (const newRecordProxy of newRecordsProxy) {
                 const newRecord = newRecordProxy._raw;
                 newRecord._.uses.add(recordList);
                 if (inverse) {
-                    store._.updateFields(newRecord, { [inverse]: [["ADD", recordList._.owner]] });
+                    recordList._.echoInverse(inverse, newRecord, "ADD");
                 }
             }
         });
@@ -180,7 +178,12 @@ export class RecordList extends Array {
                 }
                 const rec = recordList._.insert(val, function recordListAddInsertMany(record) {
                     if (recordList._.data().indexOf(record) === -1) {
-                        recordList.push(record);
+                        // Not push(): `record` is already a Record here, so push() would call
+                        // insert() again on it and re-echo onto the inverse, this time with no
+                        // version to read (lives on raw val, not the record).
+                        recordList._.data().push(record);
+                        recordList._.syncLength();
+                        record._.uses.add(recordList);
                     }
                 });
                 res.push(rec);
