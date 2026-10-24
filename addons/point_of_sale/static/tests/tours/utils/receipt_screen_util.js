@@ -88,6 +88,15 @@ export function receiptAmountTotalIs(value) {
         },
     ];
 }
+export function receiptPaymentLineContains(paymentMethodName, amount) {
+    return [
+        {
+            isActive: ["desktop"],
+            content: `receipt payment line contains ${paymentMethodName} and ${amount}`,
+            trigger: `.receipt-screen .pos-receipt .paymentlines:contains("${paymentMethodName}"):contains("${amount}")`,
+        },
+    ];
+}
 export function receiptRoundingAmountIs(value) {
     return [
         {
