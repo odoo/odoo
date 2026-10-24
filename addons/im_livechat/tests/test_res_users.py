@@ -36,6 +36,7 @@ class TestLiveChatResUsersSessionLogin(TestImLivechatCommon):
                     },
                 ),
                 BusResult(channel, "discuss.channel/new_message"),
+                BusResult((channel, "internal_users")),
             ],
         ):
             portal_user.with_context(guest=guest)._join_livechat_sessions_from_guest(guest)
