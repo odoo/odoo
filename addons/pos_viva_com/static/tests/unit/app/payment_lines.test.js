@@ -44,6 +44,12 @@ test("getPaymentActionState", async () => {
         icon: "smartphone",
         actions: [
             {
+                id: "viva_retry",
+                label: "Retry",
+                title: "Retry Payment Request",
+                action: "function",
+            },
+            {
                 id: "viva_reset_integration",
                 label: "Reset Integration",
                 title: "Reset Viva Integration",

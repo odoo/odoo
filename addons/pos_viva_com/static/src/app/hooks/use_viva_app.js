@@ -5,6 +5,20 @@ import { roundPrecision } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { uuidv4 } from "@point_of_sale/utils";
 
+export const vivaAppRequest = {
+    callback(path) {
+        return `${window.location.origin}${path}`;
+    },
+
+    options() {
+        return { show_receipt: true, show_transaction_result: true, show_rating: true };
+    },
+
+    open(url) {
+        window.open(url, "_self");
+    },
+};
+
 /**
  * This hook is used to handle the Viva Wallet app integration in the POS.
  * API documentation: https://developer.viva.com/apis-for-point-of-sale/card-terminal-apps/android-app/sale/
@@ -79,15 +93,15 @@ export const useVivaApp = (validateCallback) => {
      * @param {Object} line
      */
     const abort = async (line) => {
-        const baseUrl = window.location.origin;
-        const callbackPath = `/pos_viva_com/${pos.config.id}/abort/${line.pos_order_id.uuid}`;
-        const callbackLink = `${baseUrl}${callbackPath}`;
+        const callbackLink = vivaAppRequest.callback(
+            `/pos_viva_com/${pos.config.id}/abort/${line.pos_order_id.uuid}`
+        );
         const url =
             "vivapayclient://pay/v1" +
             "?appId=com.odoo.mobile" +
             "&action=abort" +
             `&callback=${callbackLink}`;
-        window.open(url, "_self");
+        vivaAppRequest.open(url);
     };
 
     /**
@@ -104,7 +118,12 @@ export const useVivaApp = (validateCallback) => {
             dialog.add(AlertDialog, { title: _t("Oh snap !"), body: addResult.data });
             return;
         }
-        const line = addResult.data;
+        await launch(addResult.data, isRefund);
+    };
+
+    const retry = (line) => launch(line, line.amount < 0);
+
+    const launch = async (line, isRefund) => {
         try {
             line.viva_com_session_id = `${order.uuid}-${uuidv4()}`;
             const result = await pos.syncAllOrders({ orders: [order] });
@@ -115,17 +134,17 @@ export const useVivaApp = (validateCallback) => {
                 );
             }
 
-            const baseUrl = window.location.origin;
-            const callbackPath = `/pos_viva_com/${pos.config.id}/payment/${order.uuid}`;
-            const callbackLink = `${baseUrl}${callbackPath}`;
+            const callbackLink = vivaAppRequest.callback(
+                `/pos_viva_com/${pos.config.id}/payment/${order.uuid}`
+            );
 
             let url =
                 "vivapayclient://pay/v1" +
                 "?appId=com.odoo.mobile" +
                 `&amount=${roundPrecision(Math.abs(line.amount * 100))}` +
-                "&show_receipt=true" +
-                "&show_transaction_result=true" +
-                "&show_rating=true" +
+                Object.entries(vivaAppRequest.options())
+                    .map(([key, value]) => `&${key}=${value}`)
+                    .join("") +
                 `&callback=${callbackLink}`;
 
             if (isRefund) {
@@ -144,7 +163,7 @@ export const useVivaApp = (validateCallback) => {
             }
 
             line.setPaymentStatus("waitingCard");
-            window.open(url, "_self");
+            vivaAppRequest.open(url);
         } catch {
             line.delete();
             dialog.add(AlertDialog, {
@@ -182,6 +201,7 @@ export const useVivaApp = (validateCallback) => {
         use,
         process,
         start,
+        retry,
         abort,
         isIntegrated,
         resetIntegration,
