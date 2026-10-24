@@ -2,7 +2,7 @@
 
 from urllib.parse import quote as url_quote
 
-from odoo import api, models
+from odoo import _, api, models
 from odoo.exceptions import ValidationError
 from odoo.tools import float_round
 from odoo.tools.urls import urljoin
@@ -31,20 +31,57 @@ class PaymentTransaction(models.Model):
             return super()._get_specific_rendering_values(processing_values)
 
         # Initiate the payment and retrieve the payment link data.
-        payload = self._mercado_pago_prepare_preference_request_payload()
+        idempotency_key = None
+        if self.payment_method_code == "pix":
+            endpoint = "/v1/orders"
+            payload = self._mercado_pago_prepare_pix_payload()
+            idempotency_key = payment_utils.generate_idempotency_key(
+                self, scope="payment_request_order"
+            )
+        else:
+            endpoint = "/checkout/preferences"
+            payload = self._mercado_pago_prepare_preference_request_payload()
         try:
-            response_content = self._send_api_request("POST", "/checkout/preferences", json=payload)
+            response_content = self._send_api_request(
+                "POST", endpoint, json=payload, idempotency_key=idempotency_key
+            )
         except ValidationError as error:
             self._set_error(str(error))
             return {}
 
-        api_url = response_content[
-            "init_point" if self.provider_id.is_live else "sandbox_init_point"
-        ]
+        api_url = self._mercado_pago_get_api_url(response_content)
+
         return {
             "api_url": api_url,
             "http_method": "get",
             "url_params": payment_utils.extract_url_params(api_url),
+        }
+
+    def _mercado_pago_prepare_pix_payload(self):
+        """Create the specific payload for Pix payment requests.
+
+        :return: The Pix specific request payload.
+        :rtype: dict
+        """
+        if not self.partner_email:
+            raise ValidationError(
+                _("An email is required to process PIX payments. Please update your profile.")
+            )
+
+        return {
+            "type": "online",
+            "total_amount": str(self.amount),
+            "external_reference": self.reference,
+            "processing_mode": "automatic",
+            "transactions": {
+                "payments": [
+                    {
+                        "amount": str(self.amount),
+                        "payment_method": {"id": "pix", "type": "bank_transfer"},
+                    }
+                ]
+            },
+            "payer": {"email": self.partner_email},
         }
 
     def _mercado_pago_prepare_preference_request_payload(self):
@@ -118,6 +155,21 @@ class PaymentTransaction(models.Model):
             "notification_url": webhook_url,
             "statement_descriptor": self.company_id.name,
         }
+
+    def _mercado_pago_get_api_url(self, response_content):
+        if self.payment_method_code == "pix":
+            if ticket_url := (
+                response_content
+                .get("transactions", {})
+                .get("payments", [{}])[0]
+                .get("payment_method", {})
+                .get("ticket_url")
+            ):
+                return ticket_url
+            raise ValidationError(
+                self.env._("Connection to the payment provider failed. Please try again.")
+            )
+        return response_content["init_point" if self.provider_id.is_live else "sandbox_init_point"]
 
     def _send_payment_request(self):
         """Override of `payment` to send a payment request to Mercado Pago.
