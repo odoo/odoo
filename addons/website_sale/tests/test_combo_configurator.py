@@ -150,3 +150,14 @@ class TestWebsiteSaleComboConfigurator(HttpCase, WebsiteSaleCommon):
         with self.assertRaises(JsonRpcException):  # Every choice is answered, but one twice.
             add_to_cart(item_a + item_a + item_b)
         self.assertEqual(add_to_cart(item_a + item_b)["quantity"], 1)
+
+    def test_website_sale_combo_max_quantity_empty_combo(self):
+        product = self._create_product()
+        combo = self.env["product.combo"].create({
+            "name": "Empty Combo",
+            "combo_item_ids": [
+                Command.create({"product_id": product.id}),
+            ],
+        })
+        combo.combo_item_ids.unlink()
+        self.assertEqual(combo._get_max_quantity(self.website, self.cart), 0)
