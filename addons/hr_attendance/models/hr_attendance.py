@@ -84,9 +84,12 @@ class HrAttendance(models.Model):
     )
     resource_calendar_id = fields.Many2one(related='employee_id.resource_calendar_id', string="Working Schedule")
     break_duration = fields.Float(string="Break Duration", tracking=True, help="Extra unpaid break duration (hours)")
+    allowed_work_entry_type_ids = fields.Many2many(
+        'hr.work.entry.type', compute='_compute_allowed_work_entry_type_ids')
     work_entry_type_id = fields.Many2one(
         'hr.work.entry.type', string="Time Type", index=True, required=True,
         default=lambda self: self.env.company.sudo().attendance_work_entry_type_id,
+        domain="[('id', 'in', allowed_work_entry_type_ids)]",
     )
     wet_display_code = fields.Char(related='work_entry_type_id.display_code', export_string_translation=False)
     # color index of the linked work entry type, used by calendar/gantt views
@@ -158,6 +161,32 @@ class HrAttendance(models.Model):
     def _compute_can_edit(self):
         for attendance in self:
             attendance.can_edit = attendance.is_manager or attendance.is_own
+
+    @api.depends('employee_id.company_id.country_id')
+    def _compute_allowed_work_entry_type_ids(self):
+        countries = self.employee_id.company_id.country_id
+        country_types = self.env['hr.work.entry.type'].search(
+            self._get_work_entry_type_domain(country_ids=countries.ids))
+        generic_types = self.env['hr.work.entry.type'].search(
+            self._get_work_entry_type_domain(country_ids=[]))
+        countries_with_types = set(country_types.mapped('country_id').ids)
+        for attendance in self:
+            country = attendance.employee_id.company_id.country_id
+            if country.id in countries_with_types:
+                attendance.allowed_work_entry_type_ids = country_types.filtered(
+                    lambda t: t.country_id == country)
+            else:
+                attendance.allowed_work_entry_type_ids = generic_types
+
+    def _get_work_entry_type_domain(self, country_ids=None):
+        if country_ids is None:
+            country_ids = [self.employee_id.company_id.country_id.id]
+        domain = [('count_as', '=', 'working_time')]
+        if country_ids:
+            domain.append(('country_id', 'in', country_ids))
+        else:
+            domain.append(('country_id', '=', False))
+        return domain
 
     @api.depends('check_in', 'check_out', 'break_duration')
     def _compute_worked_hours(self):
