@@ -2065,10 +2065,11 @@ test("mark channel as seen if last message is visible when switching channels wh
 
 test("warning on send with shortcut when attempting to post message with still-uploading attachments", async () => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    const partnerId = pyEnv["res.partner"].create({ name: "test" });
     onRpcBefore("/mail/attachment/upload", () => new Promise(() => {})); // simulates an attachment upload that never completes
     await start();
-    await openDiscuss(channelId);
+    await openFormView("res.partner", partnerId);
+    await click("button:text('Send message')");
     await waitFor(".o-mail-Composer input[type=file]:count(1)");
     const file = new File(["hello, world"], "text.txt", { type: "text/plain" });
     await insertTextInComposer(".o-mail-Composer", "Dummy Message");
@@ -2076,9 +2077,186 @@ test("warning on send with shortcut when attempting to post message with still-u
     await waitFor(
         ".o-mail-AttachmentContainer.o-isUploading:contains(text.txt) [data-icon='autorenew']:count(1)"
     );
-    await waitFor(".o-mail-Composer button[title='Send']:disabled:count(1)");
-    await press("Enter"); // Try to send message
+    await waitFor(".o-mail-Composer-send:disabled:count(1)");
+    triggerHotkey("control+Enter"); // Try to send message
     await waitFor(".o_notification:text('Please wait while the file is uploading.'):count(1)");
+});
+
+test("post message in channel while its attachment is uploading", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    const { promise: uploadPromise, resolve: resolveUpload } = Promise.withResolvers();
+    onRpcBefore("/mail/attachment/upload", () => uploadPromise);
+    onRpcBefore("/mail/message/post", (args) => {
+        const attachment = pyEnv["ir.attachment"].browse(args.post_data.attachment_ids)[0];
+        expect.step(`message_post: ${args.post_data.body} - ${attachment?.name}`);
+    });
+    const isUnloadPrevented = () => {
+        const ev = new Event("beforeunload", { cancelable: true });
+        window.dispatchEvent(ev);
+        return ev.defaultPrevented;
+    };
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(".o-mail-Composer input[type=file]:count(1)");
+    const file = new File(["hello, world"], "text.txt", { type: "text/plain" });
+    await insertTextInComposer(".o-mail-Composer", "Dummy Message");
+    await editInput(document.body, ".o-mail-Composer input[type=file]", [file]);
+    await waitFor(".o-mail-Composer .o-mail-AttachmentContainer.o-isUploading:count(1)");
+    await waitFor(".o-mail-Composer button[title='Send']:enabled:count(1)");
+    expect(isUnloadPrevented()).toBe(false);
+    await press("Enter");
+    // the composer is cleared and the message is pending until the upload is done
+    await containsTextInComposer(".o-mail-Composer", "");
+    await waitForNone(".o-mail-Composer .o-mail-AttachmentContainer");
+    await waitFor(
+        ".o-mail-Message:has(:text('Dummy Message')) .o-mail-AttachmentContainer.o-isUploading:contains(text.txt):count(1)"
+    );
+    await waitFor(".o-mail-Message-uploadProgress[title='Uploading… 0%']:count(1)");
+    expect(".o-mail-Message-actions").toHaveCount(0);
+    expect(isUnloadPrevented()).toBe(true);
+    const [upload] = Object.values(getService("file_upload").uploads);
+    upload.xhr.upload.dispatchEvent(new ProgressEvent("progress", { loaded: 6, total: 12 }));
+    await waitFor(".o-mail-Message-uploadProgress[title='Uploading… 50%']:count(1)");
+    expect.verifySteps([]);
+    resolveUpload();
+    await expect.waitForSteps(["message_post: <div>Dummy Message</div> - text.txt"]);
+    await waitForNone(".o-mail-Message-uploadProgress");
+    await waitFor(
+        ".o-mail-Message:has(:text('Dummy Message')) .o-mail-AttachmentContainer:not(.o-isUploading):contains(text.txt):count(1)"
+    );
+    await waitFor(".o-mail-Message-actions:count(1)");
+    await waitForNone(".o-mail-Composer .o-mail-AttachmentContainer");
+    expect(isUnloadPrevented()).toBe(false);
+});
+
+test("messages posted after a message waiting for its upload keep their order", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    const { promise: uploadPromise, resolve: resolveUpload } = Promise.withResolvers();
+    onRpcBefore("/mail/attachment/upload", () => uploadPromise);
+    onRpcBefore("/mail/message/post", (args) =>
+        expect.step(`message_post: ${args.post_data.body}`)
+    );
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(".o-mail-Composer input[type=file]:count(1)");
+    const file = new File(["hello, world"], "text.txt", { type: "text/plain" });
+    await insertTextInComposer(".o-mail-Composer", "with file");
+    await editInput(document.body, ".o-mail-Composer input[type=file]", [file]);
+    await waitFor(".o-mail-Composer .o-mail-AttachmentContainer.o-isUploading:count(1)");
+    await press("Enter");
+    await containsTextInComposer(".o-mail-Composer", "");
+    await insertTextInComposer(".o-mail-Composer", "after file");
+    await press("Enter");
+    await containsTextInComposer(".o-mail-Composer", "");
+    await waitFor(".o-mail-Message:has(:text('after file')):count(1)");
+    await waitFor(".o-mail-Message-pendingProgress:count(2)");
+    expect.verifySteps([]);
+    resolveUpload();
+    await expect.waitForSteps([
+        "message_post: <div>with file</div>",
+        "message_post: <div>after file</div>",
+    ]);
+    await waitForNone(".o-mail-Message-pendingProgress");
+    await waitFor(".o-mail-Message:eq(0):has(:text('with file'))");
+    await waitFor(".o-mail-Message:eq(1):has(:text('after file'))");
+});
+
+test("messages waiting for an upload are posted after the ones received meanwhile", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
+    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        name: "test",
+    });
+    const { promise: uploadPromise, resolve: resolveUpload } = Promise.withResolvers();
+    onRpcBefore("/mail/attachment/upload", () => uploadPromise);
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(".o-mail-Composer input[type=file]:count(1)");
+    const file = new File(["hello, world"], "text.txt", { type: "text/plain" });
+    await insertTextInComposer(".o-mail-Composer", "with file");
+    await editInput(document.body, ".o-mail-Composer input[type=file]", [file]);
+    await waitFor(".o-mail-Composer .o-mail-AttachmentContainer.o-isUploading:count(1)");
+    await press("Enter");
+    await containsTextInComposer(".o-mail-Composer", "");
+    await insertTextInComposer(".o-mail-Composer", "after file");
+    await press("Enter");
+    await containsTextInComposer(".o-mail-Composer", "");
+    await waitFor(".o-mail-Message:has(:text('after file')):count(1)");
+    await withUser(userId, () =>
+        rpc("/mail/message/post", {
+            post_data: { body: "received meanwhile", message_type: "comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await waitFor(".o-mail-Message:eq(2):has(:text('received meanwhile'))");
+    resolveUpload();
+    await waitForNone(".o-mail-Message-pendingProgress");
+    await waitFor(".o-mail-Message:eq(0):has(:text('received meanwhile'))");
+    await waitFor(".o-mail-Message:eq(1):has(:text('with file'))");
+    await waitFor(".o-mail-Message:eq(2):has(:text('after file'))");
+});
+
+test("message waiting for a previous one keeps its attachment uploaded first", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    const resolveUploads = [];
+    onRpcBefore("/mail/attachment/upload", () => {
+        const { promise, resolve } = Promise.withResolvers();
+        resolveUploads.push(resolve);
+        return promise;
+    });
+    onRpcBefore("/mail/message/post", (args) => {
+        const attachment = pyEnv["ir.attachment"].browse(args.post_data.attachment_ids)[0];
+        expect.step(`message_post: ${args.post_data.body} - ${attachment?.name}`);
+    });
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(".o-mail-Composer input[type=file]:count(1)");
+    for (const name of ["first", "second"]) {
+        const file = new File(["hello, world"], `${name}.txt`, { type: "text/plain" });
+        await insertTextInComposer(".o-mail-Composer", name);
+        await editInput(document.body, ".o-mail-Composer input[type=file]", [file]);
+        await waitFor(".o-mail-Composer .o-mail-AttachmentContainer.o-isUploading:count(1)");
+        await press("Enter");
+        await containsTextInComposer(".o-mail-Composer", "");
+    }
+    await waitFor(".o-mail-Message .o-mail-AttachmentContainer.o-isUploading:count(2)");
+    resolveUploads[1]();
+    await waitFor(
+        ".o-mail-Message:has(:text('second')) .o-mail-AttachmentContainer:not(.o-isUploading):contains(second.txt):count(1)"
+    );
+    expect.verifySteps([]);
+    resolveUploads[0]();
+    await expect.waitForSteps([
+        "message_post: <div>first</div> - first.txt",
+        "message_post: <div>second</div> - second.txt",
+    ]);
+});
+
+test("cancel the only upload of a pending message", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    onRpcBefore("/mail/attachment/upload", () => new Promise(() => {})); // simulates an attachment upload that never completes
+    onRpcBefore("/mail/message/post", () => expect.step("message_post"));
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(".o-mail-Composer input[type=file]:count(1)");
+    const file = new File(["hello, world"], "text.txt", { type: "text/plain" });
+    await editInput(document.body, ".o-mail-Composer input[type=file]", [file]);
+    await waitFor(".o-mail-Composer .o-mail-AttachmentContainer.o-isUploading:count(1)");
+    await press("Enter");
+    await waitFor(".o-mail-Message .o-mail-AttachmentContainer.o-isUploading:count(1)");
+    await click(".o-mail-Message .o-mail-Attachment-unlink");
+    await waitForNone(".o-mail-Message");
+    expect.verifySteps([]);
 });
 
 test("[text composer] Can post message with only attachment", async () => {
