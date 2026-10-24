@@ -1062,7 +1062,89 @@ test("Reaction summary", async () => {
     }
 });
 
+<<<<<<< 62febd5986e065bfa331b4ab653896125daa3d9d
 test("Select already reacted emoji from quick reaction removes the reaction on message", async () => {
+||||||| 4b2ab2440fcf8261c02d9d37d04ea710bb94056f
+test("Select already reacted emoji from the emoji picker keeps the reaction on message", async () => {
+=======
+test("Reaction summary closes when leaving it", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    const messageId = pyEnv["mail.message"].create({
+        body: "Hello world",
+        res_id: channelId,
+        message_type: "comment",
+        model: "discuss.channel",
+    });
+    pyEnv["mail.message.reaction"].create({
+        message_id: messageId,
+        content: "😅",
+        partner_id: serverState.partnerId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await hover(".o-mail-MessageReaction");
+    await contains(".o-mail-MessageReactionList-preview");
+    await hover(".o-mail-MessageReactionList-preview");
+    await hover(".o-mail-Composer-input");
+    await contains(".o-mail-MessageReactionList-preview", { count: 0 });
+});
+
+test("Reaction summary opens again after clicking it", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    const messageId = pyEnv["mail.message"].create({
+        body: "Hello world",
+        res_id: channelId,
+        message_type: "comment",
+        model: "discuss.channel",
+    });
+    pyEnv["mail.message.reaction"].create({
+        message_id: messageId,
+        content: "😅",
+        partner_id: serverState.partnerId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await hover(".o-mail-MessageReaction");
+    await contains(".o-mail-MessageReactionList-preview");
+    await hover(".o-mail-MessageReactionList-preview");
+    await click(".o-mail-MessageReactionList-preview");
+    await contains(".o-mail-MessageReactionMenu");
+    await press("Escape");
+    await contains(".o-mail-MessageReactionMenu", { count: 0 });
+    await contains(".o-mail-MessageReactionList-preview", { count: 0 });
+    await hover(".o-mail-MessageReaction");
+    await contains(".o-mail-MessageReactionList-preview");
+    await hover(".o-mail-Message-body");
+    await hover(".o-mail-MessageReactionList-preview");
+    await click(".o-mail-MessageReactionList-preview");
+    await contains(".o-mail-MessageReactionMenu");
+    await press("Escape");
+    await contains(".o-mail-MessageReactionMenu", { count: 0 });
+    await contains(".o-mail-MessageReactionList-preview", { count: 0 });
+    await hover(".o-mail-MessageReaction");
+    await contains(".o-mail-MessageReactionList-preview");
+    await hover(".o-mail-Message-body");
+    await hover(".o-mail-MessageReaction");
+    await hover(".o-mail-MessageReactionList-preview");
+    await click(".o-mail-MessageReactionList-preview");
+    await contains(".o-mail-MessageReactionMenu");
+    await press("Escape");
+    await contains(".o-mail-MessageReactionMenu", { count: 0 });
+    await contains(".o-mail-MessageReactionList-preview", { count: 0 });
+    await hover(".o-mail-MessageReaction");
+    await contains(".o-mail-MessageReactionList-preview");
+});
+
+test("Select already reacted emoji from the emoji picker keeps the reaction on message", async () => {
+>>>>>>> fd1d626db71e9162d211f368c1f4adc6386123ad
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -2315,15 +2397,42 @@ test("Copy Message Link", async () => {
 
 test("deleted message should not have translate feature", async () => {
     const pyEnv = await startServer();
+<<<<<<< 62febd5986e065bfa331b4ab653896125daa3d9d
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     pyEnv["mail.message"].create({
         author_id: serverState.partnerId,
         body: "not empty",
+||||||| 4b2ab2440fcf8261c02d9d37d04ea710bb94056f
+    const partnerId = pyEnv["res.partner"].create(
+        {
+            type: 'invoice',
+            email: 'invoice@test.example.com',
+            parent_id: serverState.partnerId,
+        }
+    );
+    const messageId = pyEnv["mail.message"].create({
+        body: "Hello",
+        model: "res.partner",
+        partner_ids: [partnerId],
+        res_id: serverState.partnerId,
+=======
+    const partnerId = pyEnv["res.partner"].create({
+        type: "invoice",
+        email: "invoice@test.example.com",
+        parent_id: serverState.partnerId,
+    });
+    const messageId = pyEnv["mail.message"].create({
+        body: "Hello",
+        model: "res.partner",
+        partner_ids: [partnerId],
+        res_id: serverState.partnerId,
+>>>>>>> fd1d626db71e9162d211f368c1f4adc6386123ad
         message_type: "comment",
         model: "res.partner",
         res_id: partnerId,
     });
     await start();
+<<<<<<< 62febd5986e065bfa331b4ab653896125daa3d9d
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Message:contains('not empty')");
     await click(".o-mail-Message [title='Expand']");
@@ -2504,4 +2613,15 @@ test("Prevent adding reactions on messages without a mail thread", async () => {
     await contains("[title='Add a Reaction']");
     await contains(".o-mail-Message:eq(0) [title='Add a Reaction']");
     await contains(".o-mail-Message:eq(1):not(:has([title='Add a Reaction']))");
+||||||| 4b2ab2440fcf8261c02d9d37d04ea710bb94056f
+    await openFormView("res.partner", serverState.partnerId);
+    await click(".o-mail-Message-notification");
+    await contains(".o-mail-MessageNotificationPopover", { text: "Mitchell Admin, Invoice Address" });
+=======
+    await openFormView("res.partner", serverState.partnerId);
+    await click(".o-mail-Message-notification");
+    await contains(".o-mail-MessageNotificationPopover", {
+        text: "Mitchell Admin, Invoice Address",
+    });
+>>>>>>> fd1d626db71e9162d211f368c1f4adc6386123ad
 });
