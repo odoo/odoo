@@ -100,6 +100,9 @@ class TestSuite(BaseTestSuite):
 
         try:
             currentClass.setUpClass()
+            if hasattr(currentClass, 'postSetUpClass'):
+                currentClass.postSetUpClass()
+            currentClass.lock_test_class()
         except Exception as e:
             currentClass._classSetupFailed = True
             className = util.strclass(currentClass)
@@ -138,6 +141,8 @@ class TestSuite(BaseTestSuite):
             return
         if previousClass.__unittest_skip__:
             return
+
+        previousClass.unlock_test_class()
         try:
             previousClass.tearDownClass()
         except Exception as e:
