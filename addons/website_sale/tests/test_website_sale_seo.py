@@ -50,3 +50,21 @@ class WebsiteSaleSEO(HttpCase, WebsiteSaleCommon):
         root = html.fromstring(res.content)
         canonical = root.xpath('//link[@rel="canonical"]')[0].attrib["href"]
         self.assertEqual(canonical, self.base_url() + "/fr" + self.product.website_url)
+
+    def test_website_sale_page_titles_translated(self):
+        website = self.env.ref("website.default_website")
+        lang_fr = self.env["res.lang"]._activate_lang("fr_FR")
+        website.language_ids = self.env.ref("base.lang_en") + lang_fr
+        self.env.ref("website_sale.products").update_field_translations(
+            "arch_db", {"fr_FR": {"Products": "Produits"}},
+        )
+        self.env.ref("website_sale.cart").update_field_translations(
+            "arch_db", {"fr_FR": {"Shopping Cart": "Panier"}},
+        )
+
+        for url, title in (("/fr/shop", "Produits"), ("/fr/shop/cart", "Panier")):
+            res = self.url_open(url)
+            res.raise_for_status()
+            self.assertEqual(
+                html.fromstring(res.content).findtext(".//title"), f"{title} | {website.name}",
+            )
