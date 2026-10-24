@@ -1841,10 +1841,54 @@ $-product-radius-map: (
         font-size: var(--o-bs-font-size-sm);
     }
 
-    .o_wsale_address_fill {
-        .col-form-label:not(.label-optional)::after {
-            content: " *";
-            font-weight: normal;
+    #o_wsale_address_form {
+        &:is(.o_mark_none, .o_mark_optional) .col-form-label:not(.label-optional)::after {
+            content: none;
+        }
+
+        &:not(:is(.o_mark_none, .o_mark_optional)) .col-form-label:not(.label-optional),
+        &.o_mark_optional .col-form-label.label-optional {
+            &::after {
+                content: " " var(--form-mark);
+                color: var(--form-mark-color);
+                font-weight: normal;
+            }
+        }
+
+        // Side label positions
+        //
+        // Each field takes a full row instead of its grid width, so that the
+        // labels line up in one column and the controls stay wide enough.
+        &.o_labels_left > .row > *,
+        &.o_labels_right > .row > * {
+            display: flex;
+            flex: 0 0 100%;
+            flex-wrap: wrap;
+            align-items: center;
+            column-gap: map-get($spacers, 3);
+
+            > label {
+                flex: 0 0 var(--form-label-width);
+                text-align: var(--form-label-align, start);
+            }
+
+            > .form-control,
+            > .form-select,
+            > .input-group {
+                flex: 1;
+                min-width: 0;
+            }
+
+            // Help and validation text belong under the control
+            > .form-text,
+            > .invalid-feedback {
+                flex: 0 0 100%;
+                padding-left: calc(var(--form-label-width) + #{map-get($spacers, 3)});
+            }
+        }
+
+        &.o_labels_right {
+            --form-label-align: end;
         }
     }
 

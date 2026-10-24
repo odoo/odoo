@@ -2,7 +2,7 @@
 <odoo>
 
     <template id="inline_form">
-        <div t-attf-id="demo-container-{{provider_id}}">
+        <div t-attf-id="demo-container-{{provider_id}}" class="o_floating_labels">
             <t t-call="payment_demo.payment_details"/>
         </div>
     </template>
@@ -78,17 +78,15 @@
     </template>
 
     <template id="express_inline_form">
-        <div>
+        <div class="o_floating_labels">
             <t t-call="payment_demo.payment_details"/>
             <div t-if="shipping_info_required"
                  t-attf-id="o_payment_demo_shipping_info_{{provider_id}}"
             >
                 <t t-set="customer" t-value="env.user.partner_id"/>
                 <div class="row mt-0">
-                    <div class="col mb-0">
-                        <label for="o_payment_demo_shipping_name" class=" mt-0">
-                            <small><b>Name</b></small>
-                        </label>
+                    <div class="col mb-2">
+                        <label for="o_payment_demo_shipping_name">Name</label>
                         <input type="text"
                                id="o_payment_demo_shipping_name"
                                class="form-control"
@@ -97,10 +95,8 @@
                                required=""
                         />
                     </div>
-                    <div class="col mb-0">
-                        <label for="o_payment_demo_shipping_email" class=" mt-0">
-                            <small>Email</small>
-                        </label>
+                    <div class="col mb-2">
+                        <label for="o_payment_demo_shipping_email">Email</label>
                         <input type="text"
                                id="o_payment_demo_shipping_email"
                                class="form-control"
@@ -110,10 +106,8 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col mb-0">
-                        <label for="o_payment_demo_shipping_address" class="mt-1">
-                            <small><b>Street and Number</b></small>
-                        </label>
+                    <div class="col mb-2">
+                        <label for="o_payment_demo_shipping_address">Street and Number</label>
                         <input type="text"
                                id="o_payment_demo_shipping_address"
                                class="form-control"
@@ -122,10 +116,8 @@
                                readonly="1"
                         />
                     </div>
-                    <div class="col mb-0">
-                        <label for="o_payment_demo_shipping_address2" class="mt-1">
-                            <small>Street 2</small>
-                        </label>
+                    <div class="col mb-2">
+                        <label for="o_payment_demo_shipping_address2">Street 2</label>
                         <input type="text"
                                id="o_payment_demo_shipping_address2"
                                class="form-control"
@@ -135,10 +127,8 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col mb-0">
-                        <label for="o_payment_demo_shipping_zip" class="mt-1">
-                            <small><b>Zip Code</b></small>
-                        </label>
+                    <div class="col mb-2">
+                        <label for="o_payment_demo_shipping_zip">Zip Code</label>
                         <input type="text"
                                id="o_payment_demo_shipping_zip"
                                class="form-control"
@@ -147,10 +137,8 @@
                                readonly="1"
                         />
                     </div>
-                    <div class="col mb-0">
-                        <label for="o_payment_demo_shipping_city" class="mt-1">
-                            <small><b>City</b></small>
-                        </label>
+                    <div class="col mb-2">
+                        <label for="o_payment_demo_shipping_city">City</label>
                         <input type="text"
                                id="o_payment_demo_shipping_city"
                                class="form-control"
@@ -159,10 +147,8 @@
                                required=""
                         />
                     </div>
-                    <div class="col mb-0">
-                        <label for="o_payment_demo_shipping_country" class="mt-1">
-                            <small><b>Country</b></small>
-                        </label>
+                    <div class="col mb-2">
+                        <label for="o_payment_demo_shipping_country">Country</label>
                         <select id="o_payment_demo_shipping_country"
                                 class="form-select"
                                 disabled="true"
@@ -182,20 +168,16 @@
         <div class="row gap2 gap-md-0">
             <input name="provider_id" type="hidden" id="provider_id" t-att-value="id"/>
             <input name="partner_id" type="hidden" t-att-value="partner_id"/>
-            <div class="col-12 col-md mt-0 mb-0">
-                <label for="customer_input" class="mt-0">
-                    <small>Payment Details (test data)</small>
-                </label>
+            <div class="col-12 col-md mb-2">
+                <label for="customer_input">Payment Details (test data)</label>
                 <input type="text"
                        name="customer_input"
                        id="customer_input"
                        class="form-control"
                        placeholder="XXXX XXXX XXXX XXXX"/>
             </div>
-            <div class="col-12 col-md mb-0">
-                <label for="simulated_payment_state" class="mt-0 text-muted">
-                    <small>Payment Status</small>
-                </label>
+            <div class="col-12 col-md mb-2">
+                <label for="simulated_payment_state">Payment Status</label>
                 <select id="simulated_payment_state" class="form-select">
                     <option value="done" title="Successful payment">
                         Successful

@@ -1,0 +1,73 @@
+// The label rests inside its control and rises onto the control's top border
+// once that control is focused or filled.
+.o_floating_labels {
+    $-label-pad: map-get($spacers, 1);
+
+    label:has(
+        ~ .form-control,
+        ~ .form-select,
+        ~ .input-group .form-control,
+        ~ .input-group .form-select
+    ) {
+        position: relative;
+        // Lines the label up with the control's text
+        top: calc(
+            #{$input-font-size * $input-line-height * .5 + $input-padding-y}
+            + #{$input-border-width}
+        );
+        // Bootstrap raises a focused control inside a group to 5
+        z-index: 6;
+        display: block;
+        width: fit-content;
+        max-width: calc(100% - #{$input-padding-x - $-label-pad});
+        margin-bottom: -$input-font-size * 1.25 * .5;
+        margin-left: $input-padding-x - $-label-pad;
+        padding: 0 $-label-pad;
+        overflow: hidden;
+        color: $input-placeholder-color;
+        font-size: $input-font-size;
+        line-height: 1.25;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        pointer-events: none;
+        transform-origin: left center;
+        @include transition(top .1s ease-in-out, transform .1s ease-in-out);
+
+        .oi {
+            margin-left: $-label-pad;
+            pointer-events: auto;
+        }
+    }
+
+    // The `[value]` branches style server rendered values until the interaction
+    // adds the placeholder the other branches need, then stop matching.
+    label:has(
+        ~ .form-control:focus,
+        ~ .form-control[placeholder]:not(:placeholder-shown),
+        ~ .form-control[value]:not([value=""]):not([placeholder]),
+        ~ .form-select,
+        ~ .input-group .form-control:focus,
+        ~ .input-group .form-control[placeholder]:not(:placeholder-shown),
+        ~ .input-group .form-control[value]:not([value=""]):not([placeholder])
+    ) {
+        top: 0;
+        background: $input-bg;
+        transform: scale(.85);
+    }
+
+    // The placeholder is only there to report emptiness
+    .form-control:not(:focus)::placeholder {
+        color: transparent;
+    }
+
+    // Chrome paints its own autofill background, which an inset shadow hides
+    .form-control:autofill {
+        box-shadow: 0 0 0 100vmax $input-bg inset;
+        -webkit-text-fill-color: $input-color;
+
+        // One property, so the focus ring has to be repeated here
+        &:focus {
+            box-shadow: $input-focus-box-shadow, 0 0 0 100vmax $input-bg inset;
+        }
+    }
+}

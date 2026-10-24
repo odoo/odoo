@@ -217,8 +217,8 @@
         <div id="div_country" class="mb-2 col-lg-6">
             <label class="col-form-label" for="o_country_id">
                 Country
+                <t t-call="portal.address_warning_icon" warning="country_warning"/>
             </label>
-            <t t-call="portal.address_warning_icon" warning="country_warning"/>
             <select
                 id="o_country_id"
                 name="country_id"
@@ -370,12 +370,12 @@
                         for="o_company_name"
                     >
                         Company
+                        <t
+                            t-if="not is_main_address"
+                            t-call="portal.address_warning_icon"
+                            warning="commercial_fields_warning"
+                        />
                     </label>
-                    <t
-                        t-if="not is_main_address"
-                        t-call="portal.address_warning_icon"
-                        warning="commercial_fields_warning"
-                    />
                     <input
                         id="o_company_name"
                         type="text"
@@ -387,14 +387,15 @@
                 </div>
                 <div id="div_vat" class="col-lg-6 mb-2">
                     <label
-                        t-out="vat_label"
                         for="o_vat"
                         class="col-form-label fw-normal label-optional"
-                    />
-                    <t
-                        t-call="portal.address_warning_icon"
-                        warning="commercial_fields_warning or vat_warning"
-                    />
+                    >
+                        <t t-out="vat_label"/>
+                        <t
+                            t-call="portal.address_warning_icon"
+                            warning="commercial_fields_warning or vat_warning"
+                        />
+                    </label>
                     <input
                         type="text"
                         id="o_vat"
@@ -490,7 +491,7 @@
                                 action="/my/address/submit"
                                 method="post"
                                 name="address_form"
-                                class="address_autoformat"
+                                class="address_autoformat o_floating_labels"
                                 t-att-data-company-country-code="res_company.country_id.code"
                                 t-att-data-default-required-fields="','.join(required_fields)"
                                 t-att-data-submit-url="'/my/address/submit'"
@@ -534,7 +535,7 @@
                                 action="/my/address/submit"
                                 method="post"
                                 name="address_form"
-                                class="address_autoformat"
+                                class="address_autoformat o_floating_labels"
                                 t-att-data-company-country-code="res_company.country_id.code"
                                 t-att-data-default-required-fields="','.join(required_fields)"
                                 t-att-data-submit-url="'/my/address/submit'"

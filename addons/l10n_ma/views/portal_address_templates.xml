@@ -8,14 +8,16 @@
                 class="col-lg-6 mb-2"
                 t-att-style="(not country or country.code != 'MA') and 'display:none;'"
             >
-                <label class="col-form-label label-optional" for="MA_ICE">ICE</label>
-                <i
-                    t-if="ice_warning"
-                    class="oi text-warning"
-                    data-icon="info"
-                    data-bs-toggle="tooltip"
-                    t-att-title="ice_warning"
-                />
+                <label class="col-form-label label-optional" for="MA_ICE">
+                    ICE
+                    <i
+                        t-if="ice_warning"
+                        class="oi text-warning"
+                        data-icon="info"
+                        data-bs-toggle="tooltip"
+                        t-att-title="ice_warning"
+                    />
+                </label>
                 <input
                     type="text"
                     name="MA_ICE"
