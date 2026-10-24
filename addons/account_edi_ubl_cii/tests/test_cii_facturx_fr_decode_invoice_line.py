@@ -228,3 +228,25 @@ class TestCiiImportFacturXFRInvoiceLine(CiiImportFacturXFR):
             'price_unit': 2.0,
             'discount': 25.0,
         }])
+
+    def test_partial_import_invoice_line_price_allowance_duplicated_on_line(self):
+        # Some suppliers report the same discount twice: once on the price (AppliedTradeAllowanceCharge, BT-147)
+        # and once at line level (SpecifiedTradeAllowanceCharge, BT-136), while the line total (BT-131) is
+        # simply net_price * qty. The line allowance is then only informative and must not be applied again.
+        # Line 1: gross = 389, rebate = 194.5, net = 194.5, qty = 1, line allowance = 194.5, total = 194.5 --> 50%
+        # Line 2: gross = 724, rebate = 144.8, net = 579.2, qty = 2, line allowance = 289.6, total = 1158.4 --> 20%
+        # Line 3: gross = 299, rebate = 59.8, net = 239.2, qty = 1, line allowance = 59.8, total = 239.2 --> 20%
+        # Line 4: gross = 90, rebate = 9, net = 81, qty = 2, line allowance = 18, charge = 20, total = 182
+        #         --> price_unit = 90 + 20 / 2 = 100, discount = 9 * 2 / (100 * 2) = 9%
+        self.percent_tax(20.0, type_tax_use='purchase')
+        invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_price_allowance_duplicated_on_line')
+        self.assertRecordValues(invoice.invoice_line_ids, [
+            {'price_unit': 389.0, 'quantity': 1.0, 'discount': 50.0, 'price_subtotal': 194.5},
+            {'price_unit': 724.0, 'quantity': 2.0, 'discount': 20.0, 'price_subtotal': 1158.4},
+            {'price_unit': 299.0, 'quantity': 1.0, 'discount': 20.0, 'price_subtotal': 239.2},
+            {'price_unit': 100.0, 'quantity': 2.0, 'discount': 9.0, 'price_subtotal': 182.0},
+        ])
+        self.assertRecordValues(invoice, [{
+            'amount_untaxed': 1774.10,
+            'amount_total': 2128.92,
+        }])
