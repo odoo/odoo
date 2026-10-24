@@ -245,6 +245,10 @@ class StockMove(models.Model):
             if not productions:
                 continue
             if move.has_tracking == 'none':
+                # Historical partial receipts can share completed productions.
+                # Their output must be received without resizing those MOs.
+                if len(productions) > 1 and all(production.state == 'done' for production in productions):
+                    continue
                 if productions.product_uom_id.compare(productions.product_qty, move.quantity) != 0:
                     self.sudo().env['change.production.qty'].with_context(skip_activity=True).create([{
                         'mo_id': productions.id,
