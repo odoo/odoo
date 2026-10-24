@@ -1,4 +1,4 @@
-import { test, expect, mockTouch } from "@odoo/hoot";
+import { describe, test, expect, mockTouch } from "@odoo/hoot";
 import {
     manuallyDispatchProgrammaticEvent,
     pointerDown,
@@ -7,13 +7,10 @@ import {
     queryOne,
 } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame } from "@odoo/hoot-mock";
-import {
-    contains,
-    mountWithCleanup,
-    onRpc,
-    patchWithCleanup,
-} from "@web/../tests/web_test_helpers";
-import { setupPosEnv } from "../utils";
+import { contains, mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
+import { makeOrder, setupPosEnv } from "../utils";
+import { session } from "@web/session";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { definePosModels } from "../data/generate_model_definitions";
 import { LONG_PRESS_DURATION, TOUCH_DELAY } from "@point_of_sale/utils";
@@ -91,7 +88,7 @@ test("full slots remain available in POS", async () => {
 test("long press on a product opens the product info popup", async () => {
     const { store } = await mountProductScreen();
 
-    patchWithCleanup(store, {
+    patch(store, {
         async onProductInfoClick(product) {
             expect.step(`product-info:${product.id}`);
         },
@@ -108,7 +105,7 @@ test("long press on a product opens the product info popup on touch devices", as
     mockTouch(true);
     const { store } = await mountProductScreen();
 
-    patchWithCleanup(store, {
+    patch(store, {
         async onProductInfoClick(product) {
             expect.step(`product-info:${product.id}`);
         },
@@ -124,7 +121,7 @@ test("scrolling the product list on touch devices does not open the product info
     mockTouch(true);
     const { store } = await mountProductScreen();
 
-    patchWithCleanup(store, {
+    patch(store, {
         async onProductInfoClick(product) {
             expect.step(`product-info:${product.id}`);
         },
@@ -147,7 +144,7 @@ test("scrolling the product list on touch devices does not open the product info
 test("simple click on a product adds it to the cart", async () => {
     const { store, order } = await mountProductScreen();
 
-    patchWithCleanup(store, {
+    patch(store, {
         async onProductInfoClick(product) {
             expect.step(`product-info:${product.id}`);
         },
@@ -271,4 +268,55 @@ test("discarding the product configurator does not open the optional products po
 
     expect(order.lines.length).toBe(0);
     expect(document.querySelectorAll(".modal").length).toBe(0);
+});
+
+describe("_barcodeOrderAction", () => {
+    const scanOrder = async (productScreen, order) => {
+        const code = `http://localhost/?order_uuid=${order?.uuid || "unknown"}`;
+        await productScreen._barcodeOrderAction({ type: "order", code });
+        return code;
+    };
+
+    test("opens an unpaid order", async () => {
+        const { store, productScreen } = await mountProductScreen();
+        const savedOrder = makeOrder(store);
+        patch(store.data, { loadServerOrders: async () => [savedOrder] });
+
+        await scanOrder(productScreen, savedOrder);
+
+        expect(store.getOrder()).toBe(savedOrder);
+        expect(store.router.currentScreen()).toBe("ProductScreen");
+    });
+
+    test("shows a paid or cancelled order in the ticket screen", async () => {
+        const { store, order, productScreen } = await mountProductScreen();
+        for (const state of ["paid", "cancel"]) {
+            const scannedOrder = makeOrder(store, { state });
+            patch(store.data, { loadServerOrders: async () => [scannedOrder] });
+
+            await scanOrder(productScreen, scannedOrder);
+
+            expect(store.getOrder()).toBe(order);
+            expect(store.router.currentScreen()).toBe("TicketScreen");
+            expect(store.router.currentScreenParams()).toEqual({
+                scannedOrderUuid: scannedOrder.uuid,
+            });
+        }
+    });
+
+    test("warns when the order is not found", async () => {
+        // The barcode reader only exists with a nomenclature
+        patch(session, { nomenclature_id: 1 });
+        const { store, order, productScreen } = await mountProductScreen();
+        patch(store.data, { loadServerOrders: async () => [] });
+        const notFoundCodes = [];
+        patch(productScreen.barcodeReader, {
+            showNotFoundNotification: (code) => notFoundCodes.push(code.code),
+        });
+
+        const code = await scanOrder(productScreen, null);
+
+        expect(notFoundCodes).toEqual([code]);
+        expect(store.getOrder()).toBe(order);
+    });
 });

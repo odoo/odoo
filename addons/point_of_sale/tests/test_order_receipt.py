@@ -473,6 +473,25 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
         })
         self.assertEqual(order.order_receipt_generate_data()['extra_data']['total_item_count'], 5)
 
+    def test_bill_order_qr_code(self):
+        self.main_pos_config.iface_printbill = False
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        order, _ = self.create_backend_pos_order({
+            'pos_config': self.main_pos_config,
+            'line_data': [
+                {'product_id': self.example_simple_product.product_variant_id.id, 'qty': 1, 'price_subtotal': 0.0, 'price_subtotal_incl': 0.0},
+            ],
+        })
+        self.assertEqual(order.state, 'draft')
+        self.assertFalse(order.order_receipt_generate_data()['image']['order_qr_code'])
+
+        self.main_pos_config.iface_printbill = True
+        self.assertTrue(order.order_receipt_generate_data()['image']['order_qr_code'].startswith('data:image/png;base64,'))
+        self.assertIn('order-qr-code', str(order.order_receipt_generate_html()))
+
+        order.state = 'paid'
+        self.assertFalse(order.order_receipt_generate_data()['image']['order_qr_code'])
+
     def _create_receipt_test_order(self, date_order, preset_time=False):
         preset = self.env['pos.preset'].create({
             'name': 'Online Order',
