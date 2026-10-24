@@ -330,7 +330,12 @@ export class AutoComplete extends Component {
         }
         // If selectOnBlur is true, we select the first element
         // of the autocomplete suggestions list, if this element exists
-        if (this.props.selectOnBlur && !this.isOptionSelected && this.sources[0]) {
+        if (
+            this.inEdition &&
+            this.props.selectOnBlur &&
+            !this.isOptionSelected &&
+            this.sources[0]
+        ) {
             const firstOption = this.sources[0].options[0];
             if (firstOption) {
                 this.state.activeSourceOption = firstOption.unselectable ? null : [0, 0];

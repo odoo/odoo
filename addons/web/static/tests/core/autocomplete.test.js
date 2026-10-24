@@ -778,7 +778,9 @@ test("Clicking away selects the first option when selectOnBlur is true", async (
 
     await mountWithCleanup(Parent);
     const input = ".o-autocomplete input";
-    await contains(input).click();
+    await contains(".o-autocomplete input").edit("W", { confirm: false });
+    await runAllTimers();
+    expect(".o-autocomplete input").toHaveValue("W");
     expect(".o-autocomplete--dropdown-menu").toBeVisible();
     queryFirst(input).blur();
     await animationFrame();
