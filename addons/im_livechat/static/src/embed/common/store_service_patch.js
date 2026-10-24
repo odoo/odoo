@@ -22,8 +22,13 @@ patch(Store.prototype, {
             }
             return;
         }
-        if (livechatService.savedState?.store) {
-            const { Thread = [] } = this.store.insert(livechatService.savedState.store);
+        const savedStore = livechatService.savedState?.store;
+        if (savedStore) {
+            const { chatbot } = savedStore["discuss.channel"][0];
+            if (chatbot && livechatService.rule?.chatbotScript?.id === chatbot.script.id) {
+                chatbot.script = livechatService.rule.chatbotScript;
+            }
+            const { Thread = [] } = this.store.insert(savedStore);
             livechatService.thread = Thread[0];
         }
         this.isReady.resolve();
