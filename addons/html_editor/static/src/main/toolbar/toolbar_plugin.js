@@ -416,10 +416,6 @@ export class ToolbarPlugin extends Plugin {
         }
         // Prevent toolbar to open if the selection is only non-editable nodes.
         const targetedNodes = this.dependencies.selection.getTargetedNodes();
-        if (targetedNodes.every((node) => !this.dependencies.selection.isNodeEditable(node))) {
-            this.closeToolbar();
-            return;
-        }
         // Determine the namespace to use
         let currentNamespace = null;
         let filteredtargetedNodes = [];
@@ -456,8 +452,7 @@ export class ToolbarPlugin extends Plugin {
         return targetedNodes
             .filter(
                 (node) =>
-                    this.dependencies.selection.isNodeEditable(node) &&
-                    (node.nodeType !== Node.TEXT_NODE || (!isEmptyTextNode(node) && !isZWS(node)))
+                    node.nodeType !== Node.TEXT_NODE || (!isEmptyTextNode(node) && !isZWS(node))
             )
             .filter((node) => {
                 const element = closestElement(node);
