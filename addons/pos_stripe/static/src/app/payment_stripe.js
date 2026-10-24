@@ -187,10 +187,10 @@ export class PaymentStripe extends PaymentInterface {
                 line.uiState.stripeCardPresentNetwork =
                     processPayment.paymentIntent.charges?.data[0]?.payment_method_details?.card_present?.network;
 
-                const [captured_card_type, captured_transaction_id] =
+                const [captured_card_brand, captured_transaction_id] =
                     this._getCapturedCardAndTransactionId(processPayment);
-                if (captured_card_type && captured_transaction_id) {
-                    line.card_type = captured_card_type;
+                if (captured_card_brand && captured_transaction_id) {
+                    line.card_brand = captured_card_brand;
                     line.transaction_id = captured_transaction_id;
                 } else {
                     if ((await this.captureAfterPayment(processPayment, line)) === false) {
@@ -261,7 +261,7 @@ export class PaymentStripe extends PaymentInterface {
                 return false;
             }
             if (capturePayment.charges) {
-                line.card_type = this.getCardBrandFromPaymentMethodDetails(
+                line.card_brand = this.getCardBrandFromPaymentMethodDetails(
                     capturePayment.charges.data[0].payment_method_details
                 );
             }
@@ -284,7 +284,7 @@ export class PaymentStripe extends PaymentInterface {
         return (
             this.pos.config.set_tip_after_payment &&
             line.payment_method_id.payment_provider === "stripe" &&
-            line.card_type !== "interac" &&
+            line.card_brand !== "interac" &&
             line.uiState.stripeCardPresentNetwork !== "eftpos_au"
         );
     }
