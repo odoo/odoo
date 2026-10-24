@@ -107,7 +107,7 @@ patch(PosStore.prototype, {
     getSyncAllOrdersContext(orders, options = {}) {
         const context = super.getSyncAllOrdersContext(orders, options);
         const cashier = this.getCashier();
-        if (cashier?.id) {
+        if (this.config.module_pos_hr && cashier?.id) {
             context.current_cashier_id = cashier.id;
         }
         return context;
