@@ -74,6 +74,12 @@ class PosOrder(models.Model):
                 })
         self.env['loyalty.history'].create(history_lines_create_vals)
 
+    def _get_new_coupon_discount_value(self, coupon):
+        rate = coupon.program_id._get_per_point_discount()
+        if rate is None:
+            return False
+        return self.currency_id.format(coupon.points * rate)
+
     def confirm_coupon_programs(self, coupon_data):
         """
         This is called after the order is created.
@@ -177,6 +183,7 @@ class PosOrder(models.Model):
                 'expiration_date': coupon.expiration_date,
                 'code': coupon.code,
                 'barcode_base64': 'data:image/png;base64,' + base64.b64encode(self.env['ir.actions.report'].barcode('Code128', coupon.code, quiet=False)).decode('utf-8'),
+                'discount_value': self._get_new_coupon_discount_value(coupon),
             } for coupon in new_coupons if (
                 coupon.program_id.applies_on == 'future'
                 # Don't send the coupon code for the gift card and ewallet programs.

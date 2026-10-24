@@ -37,9 +37,16 @@ class PosOrderReceipt(models.AbstractModel):
                     'code': history.card_id.code,
                     'expiration_date': history.card_id.expiration_date,
                     'barcode_base64': 'data:image/png;base64,' + base64.b64encode(self.env['ir.actions.report'].barcode('Code128', history.card_id.code, quiet=False)).decode('utf-8'),
+                    'discount_value': self._get_coupon_discount_value(history.card_id),
                 })
 
         data['extra_data']['loyalties'] = loyalties
         data['extra_data']['new_coupons'] = new_coupons
 
         return data
+
+    def _get_coupon_discount_value(self, card):
+        rate = card.program_id._get_per_point_discount()
+        if rate is None:
+            return False
+        return self._order_receipt_format_currency(card.points * rate)
