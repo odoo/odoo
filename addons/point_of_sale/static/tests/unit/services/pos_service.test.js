@@ -10,6 +10,7 @@ import { prepareRoundingVals } from "../accounting/utils";
 import { getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { localization } from "@web/core/l10n/localization";
 import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
+import { patch } from "@web/core/utils/patch";
 
 const { DateTime } = luxon;
 
@@ -1090,5 +1091,42 @@ describe("pos_store.js", () => {
             await expect(store.reloadData()).rejects.toThrow("stop before leaving the page");
             expect.verifySteps(["resetIndexedDB, synced: true"]);
         });
+    });
+
+    test("parseValidFloat", async () => {
+        const store = await setupPosEnv();
+        patch(localization, { decimalPoint: ".", thousandsSep: "," });
+
+        expect(store.parseValidFloat("")).toBe(0);
+        expect(store.parseValidFloat("0")).toBe(0);
+        expect(store.parseValidFloat("100.00")).toBe(100);
+        expect(store.parseValidFloat("-100.00")).toBe(-100);
+        expect(store.parseValidFloat("0.5")).toBe(0.5);
+        expect(store.parseValidFloat(".5")).toBe(0.5);
+        expect(store.parseValidFloat("1,000")).toBe(1000);
+        expect(store.parseValidFloat("50,000")).toBe(50000);
+        expect(store.parseValidFloat("1,000,000")).toBe(1000000);
+        expect(store.parseValidFloat("-1,000")).toBe(-1000);
+        expect(store.parseValidFloat("1,000.50")).toBe(1000.5);
+        // invalid input
+        expect(store.parseValidFloat(".")).toBe(0);
+        expect(store.parseValidFloat("-")).toBe(0);
+        expect(store.parseValidFloat("abc")).toBe(0);
+        expect(store.parseValidFloat("1.000.50")).toBe(0);
+
+        patch(localization, { decimalPoint: ",", thousandsSep: "." });
+
+        expect(store.parseValidFloat("1.000")).toBe(1000);
+        expect(store.parseValidFloat("50.000")).toBe(50000);
+        expect(store.parseValidFloat("1,5")).toBe(1.5);
+        expect(store.parseValidFloat("1.000,50")).toBe(1000.5);
+        expect(store.parseValidFloat("-1.000,5")).toBe(-1000.5);
+        expect(store.parseValidFloat(",")).toBe(0);
+
+        patch(localization, { decimalPoint: ".", thousandsSep: "" });
+
+        expect(store.parseValidFloat("1000")).toBe(1000);
+        expect(store.parseValidFloat("1000.5")).toBe(1000.5);
+        expect(store.parseValidFloat("1,000")).toBe(0);
     });
 });
