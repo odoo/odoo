@@ -127,6 +127,12 @@ class ResCompany(models.Model):
         extra_domain = Domain([
             ('company_id', '=', self.id),
             ('product_id.is_storable', '=', True),
+            # lines with an accrual entry posted as of `date` (and reversal dated after it) already have their accrual accounted for.
+            ('accrual_move_ids', 'not any', [
+                ('state', '=', 'posted'),
+                ('date', '<=', date or 'today'),
+                ('reversal_move_ids', 'not any', [('state', '!=', 'cancel'), ('date', '<=', date or 'today')]),
+            ]),
         ])
         order_lines = self.env['sale.order.line']._get_accrual_line_ids(date=date, extra_domain=extra_domain)
         candidates['invoice_to_be_issued'] = order_lines.filtered(lambda l: l.amount_to_invoice_at_date > 0)
