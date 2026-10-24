@@ -1,6 +1,9 @@
+import io
 import json
 from datetime import date
 from unittest.mock import patch
+
+import openpyxl
 
 from odoo import http
 from odoo.tests import common, tagged
@@ -143,6 +146,35 @@ class TestExport(XlsxCreatorCase):
         expected_fields = set(f.name for f in model_fields.filtered(lambda field: field.readonly == False)) | {'id'}
 
         self.assertEqual(expected_fields, set(field['id'] for field in res))
+
+    def test_export_char_values(self):
+        names = ['Deco Addict', '=Sale= Promo', '{=Office=}', 'https://www.odoo.com', 'mailto:info@odoo.com', '+32 470 12 34 56']
+        self.env['export.aggregator.one2many'].create([{'name': name} for name in names])
+        for groupby, expected in (
+            ([], set(names)),
+            (['name'], set(names) | {f'{name} (1)' for name in names}),
+        ):
+            with self.subTest(groupby=groupby):
+                response = self.url_open(
+                    '/web/export/xlsx',
+                    data={
+                        'data': json.dumps({
+                            'domain': [],
+                            'fields': [{'name': 'name', 'label': 'Name', 'type': 'char'}],
+                            'groupby': groupby,
+                            'ids': False,
+                            'import_compat': False,
+                            'model': 'export.aggregator.one2many',
+                        }),
+                        'csrf_token': http.Request.csrf_token(self),
+                    },
+                )
+                sheet = openpyxl.load_workbook(io.BytesIO(response.content)).active
+                cells = [cell for row in sheet.iter_rows(min_row=2) for cell in row]
+                self.assertEqual({cell.value for cell in cells}, expected)
+                for cell in cells:
+                    self.assertEqual(cell.data_type, 's')
+                    self.assertIsNone(cell.hyperlink)
 
 
 @tagged('-at_install', 'post_install')

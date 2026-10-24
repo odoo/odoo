@@ -215,7 +215,10 @@ class ExportXlsxWriter:
             self.value = self.output.getvalue()
 
     def write(self, row, column, cell_value, style=None):
-        self.worksheet.write(row, column, cell_value, style)
+        if isinstance(cell_value, str) and cell_value:
+            self.worksheet.write_string(row, column, cell_value, style)
+        else:
+            self.worksheet.write(row, column, cell_value, style)
 
     def write_cell(self, row, column, cell_value):
         cell_style = self.base_style

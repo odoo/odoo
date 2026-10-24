@@ -3,9 +3,12 @@
 
 import base64
 import datetime
+import io
 from dateutil.relativedelta import relativedelta
 import os.path
+import openpyxl
 import pytz
+from markupsafe import Markup
 
 from odoo.tools import (
     config,
@@ -650,3 +653,32 @@ class TestMiscToken(TransactionCase):
         self.assertEqual(misc.verify_hash_signed(self.env, 'test', token_default), payload)
         self.assertEqual(misc.verify_hash_signed(self.env, 'test', token_explicit), payload)
         self.assertEqual(misc.verify_hash_signed(self.env, 'test', token_default, secret=db_secret), payload)
+
+
+class TestXlsxWorkbook(BaseCase):
+    def test_write_values(self):
+        names = ['Deco Addict', '=Sale= Promo', '{=Office=}', 'https://www.odoo.com', 'mailto:info@odoo.com']
+        output = io.BytesIO()
+        with misc.xlsxwriter.Workbook(output, {'in_memory': True}) as workbook:
+            worksheet = workbook.add_worksheet()
+            for col, name in enumerate(names):
+                worksheet.write(0, col, name)
+            worksheet.write_row(1, 0, names)
+            worksheet.write_column(2, 0, names)
+            worksheet.merge_range(2, 1, 2, 2, names[1])
+            worksheet.write('B4', names[2])
+            worksheet.write('C4', Markup(names[3]))
+            worksheet.write(4, 1, 42)
+            worksheet.write_formula(5, 1, '=B5*2')
+
+        sheet = openpyxl.load_workbook(output).active
+        text_cells = [*sheet[1], *sheet[2], *sheet['A'][2:], sheet['B3'], sheet['B4'], sheet['C4']]
+        self.assertEqual(
+            [cell.value for cell in text_cells],
+            [*names, *names, *names, names[1], names[2], names[3]],
+        )
+        for cell in text_cells:
+            self.assertEqual(cell.data_type, 's')
+            self.assertIsNone(cell.hyperlink)
+        self.assertEqual(sheet['B5'].value, 42)
+        self.assertEqual(sheet['B6'].data_type, 'f')

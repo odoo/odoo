@@ -438,10 +438,24 @@ except ImportError:
 
 try:
     import xlsxwriter
+    from xlsxwriter.worksheet import Worksheet
+
+    class PatchedXlsxWorksheet(Worksheet):
+
+        def __init__(self):
+            super().__init__()
+            self.add_write_handler(str, PatchedXlsxWorksheet._write_str)
+            self.add_write_handler(markupsafe.Markup, PatchedXlsxWorksheet._write_str)
+
+        def _write_str(self, row, col, *args):
+            if args[0]:
+                return self.write_string(row, col, *args)
+            return None
 
     # add some sanitization to respect the excel sheet name restrictions
     # as the sheet name is often translatable, can not control the input
     class PatchedXlsxWorkbook(xlsxwriter.Workbook):
+        worksheet_class = PatchedXlsxWorksheet
 
         # TODO when xlsxwriter bump to 0.9.8, add worksheet_class=None parameter instead of kw
         def add_worksheet(self, name=None, **kw):
