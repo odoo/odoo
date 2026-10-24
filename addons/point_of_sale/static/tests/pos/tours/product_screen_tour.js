@@ -440,7 +440,13 @@ registry.category("web_tour.tours").add("test_product_create_update_from_fronten
             ),
             Dialog.confirm("Add & New", ".btn-primary"),
             // A fresh "New Product" dialog should reopen for the second product.
+            // The title alone does not tell it apart from the dialog of the first
+            // product, which stays open until its save is loaded back into the POS.
             Dialog.is({ title: "New Product" }),
+            {
+                content: "wait for the form of the second product",
+                trigger: '.modal:not(.o_inactive_modal) div[name="name"] input:value(/^$/)',
+            },
             ProductScreen.createProductFromFrontend(
                 "Test Frontend Product 2",
                 "710535977350",
