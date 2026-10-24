@@ -112,12 +112,9 @@
             'html_editor/static/src/scss/html_editor.frontend.scss',
             'html_editor/static/src/scss/base_style.scss',
 
-            ('after', 'web/static/lib/bootstrap/scss/_maps.scss', 'mass_mailing/static/src/scss/mass_mailing.ui.scss'),
-
             'html_builder/static/src/scss/background.scss',
 
             ('include', 'mass_mailing.assets_mail_themes'),
-            'mass_mailing/static/src/scss/mass_mailing_mail.scss',
             'mass_mailing/static/src/iframe_assets/**/*',
             'mass_mailing/static/src/snippets/**/*.scss',
         ],
@@ -163,6 +160,7 @@
             'mass_mailing/static/src/views/fields/**/*',
             'mass_mailing/static/src/views/mailing_filter*/**/*.js',
             'mass_mailing/static/src/views/mailing_template_kanban_view/**/*',
+            'mass_mailing/static/src/convert_inline/**/*',
             'mass_mailing/static/src/editor/**/*',
             'mass_mailing/static/src/fields/**/*',
             'mass_mailing/static/src/themes/*',
