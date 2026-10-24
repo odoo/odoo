@@ -124,7 +124,10 @@ class DiscussChannelMember(models.Model):
     @api.constrains("channel_role", "channel_id")
     def _check_channel_role_supported(self):
         for member in self:
-            if member.channel_role and member.channel_id.channel_type not in ["group", "channel"]:
+            if (
+                member.channel_role
+                and member.channel_id.channel_type not in member.channel_id._role_allowed_channel_types()
+            ):
                 raise ValidationError(
                     _(
                         "The role '%(role_name)s' is not supported for the channel type '%(channel_type)s'.",
@@ -390,7 +393,10 @@ class DiscussChannelMember(models.Model):
         members_by_channel = {
             channel: self.filtered(lambda m: m.channel_id == channel) for channel in self.channel_id
         }
+        # sudo: discuss.channel.member - reading roles to keep an owner in the channel is allowed
+        channels_losing_owner = self.sudo().filtered(lambda m: m.channel_role == "owner").channel_id
         res = super().unlink()
+        channels_losing_owner._ensure_owner()
         stores = Store.Stores()
         for channel, members in name_members_by_channel.items():
             # sudo - discuss.channel: updating channel names according to members is allowed,
