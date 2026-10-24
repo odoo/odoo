@@ -110,6 +110,21 @@ test("Composer GIF button should open the GIF picker (discuss app)", async () =>
     await waitFor(".o-discuss-GifPicker:count(1)");
 });
 
+test("Composer GIF and emoji pickers open one at a time (discuss app)", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
+    await start();
+    await openDiscuss(channelId);
+    await contains("button[title='Add Emojis']:count(1)").click();
+    await waitFor(".o-EmojiPicker:count(1)");
+    await contains("button[title='Send GIF']:count(1)").click();
+    await waitFor(".o-discuss-GifPicker:count(1)");
+    await waitForNone(".o-EmojiPicker");
+    await contains("button[title='Add Emojis']:count(1)").click();
+    await waitFor(".o-EmojiPicker:count(1)");
+    await waitForNone(".o-discuss-GifPicker");
+});
+
 test("Composer GIF button should open the GIF picker (chat window)", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
