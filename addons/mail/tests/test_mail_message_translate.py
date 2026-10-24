@@ -4,8 +4,15 @@ import json
 from http import HTTPStatus
 from unittest.mock import patch
 
+<<<<<<< 19219429a467d9b1aa619cd11c42c12f21700d19:addons/mail/tests/test_mail_message_translate.py
 import requests
 
+||||||| 4b3c29d30d1d21536697485956b4689f6b3d6c81:addons/mail/tests/test_translation_controller.py
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+=======
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.addons.mail.tests.common import mail_new_test_user
+>>>>>>> 0dfac3ad0769020ca85fe13f7d5ec4a750a58c60:addons/mail/tests/test_translation_controller.py
 from odoo.tests.common import JsonRpcException, new_test_user, tagged
 from odoo.tools import mute_logger
 
@@ -110,6 +117,22 @@ class TestTranslationController(HttpCaseWithUserDemo):
         self.assertEqual(self.env["mail.message.translation"].search_count([]), 2)
         # No API request should be sent if a translation value or source already exists.
         self.assertEqual(self.request_count, 3)
+
+    def test_translation_regional_lang(self):
+        self.env["res.lang"]._activate_lang("zh_CN")
+        self.env["res.lang"]._activate_lang("zh_TW")
+        alice_user = mail_new_test_user(self.env, "alice_user", lang="zh_CN")
+        user_employee = mail_new_test_user(self.env, "user_employee", lang="zh_TW")
+        simplified, traditional = "<p>天气不好，笑脸相迎。</p>", "<p>天氣不好，笑臉相迎。</p>"
+        with patch.dict(SAMPLE, {"zh": simplified, "zh-CN": simplified, "zh-TW": traditional}):
+            for user, body in [(alice_user, simplified), (user_employee, traditional)]:
+                self.authenticate(user.login, user.login)
+                result = self._mock_translation_request({"message_id": self.message.id})
+                self.assertEqual(result["body"], body)
+        self.assertEqual(
+            self.env["mail.message.translation"].search([]).mapped("target_lang"),
+            ["zh-CN", "zh-TW"],
+        )
 
     def test_invalid_api_key(self):
         self.env["ir.config_parameter"].set_str("mail.google_translate_api_key", "INVALIDKEY")
