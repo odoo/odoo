@@ -2,6 +2,7 @@ import { models } from "@web/../tests/web_test_helpers";
 
 export class PosPreset extends models.ServerModel {
     _name = "pos.preset";
+    _order = "sequence, id";
 
     _load_pos_data_fields() {
         return [
@@ -23,6 +24,7 @@ export class PosPreset extends models.ServerModel {
             "service_fee_type",
             "service_fee_amount",
             "service_fee_based_on",
+            "sequence",
         ];
     }
 
@@ -45,6 +47,7 @@ export class PosPreset extends models.ServerModel {
             slots_per_interval: 5,
             interval_time: 20,
             attendance_ids: [],
+            sequence: 30,
         },
         {
             id: 2,
@@ -61,6 +64,7 @@ export class PosPreset extends models.ServerModel {
             interval_time: 20,
             attendance_ids: [],
             resource_calendar_id: 1,
+            sequence: 10,
         },
         {
             id: 3,
@@ -68,6 +72,7 @@ export class PosPreset extends models.ServerModel {
             identification: "name",
             use_timing: false,
             write_date: "2025-07-03 14:34:07",
+            sequence: 40,
         },
         {
             id: 4,
@@ -75,6 +80,7 @@ export class PosPreset extends models.ServerModel {
             identification: "address",
             use_timing: false,
             write_date: "2025-07-03 14:34:07",
+            sequence: 50,
         },
         {
             id: 5,
@@ -91,6 +97,23 @@ export class PosPreset extends models.ServerModel {
             interval_time: 20,
             attendance_ids: [1, 2, 3, 4, 4, 5, 6, 7, 8, 9, 10],
             resource_calendar_id: 1,
+            sequence: 60,
+        },
+        {
+            id: 6,
+            name: "Middle",
+            pricelist_id: false,
+            fiscal_position_id: false,
+            is_return: false,
+            color: 0,
+            has_image: false,
+            write_date: "2025-07-03 14:34:07",
+            identification: "none",
+            use_timing: false,
+            slots_per_interval: 5,
+            interval_time: 20,
+            attendance_ids: [],
+            sequence: 20,
         },
     ];
 

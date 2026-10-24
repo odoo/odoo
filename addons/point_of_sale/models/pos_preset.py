@@ -9,6 +9,10 @@ class PosPreset(models.Model):
     _name = 'pos.preset'
     _inherit = ['pos.load.mixin']
     _description = 'Easily load a set of configuration options'
+    _order = 'sequence, id'
+
+    def _default_sequence(self):
+        return (self.search([], order="sequence desc", limit=1).sequence or 0) + 1
 
     name = fields.Char(string='Label', required=True, translate=True)
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist')
@@ -28,6 +32,7 @@ class PosPreset(models.Model):
     service_fee_type = fields.Selection([('fixed', 'Fixed Price'), ('percent', 'Percent')], string='Type', default='percent')
     service_fee_amount = fields.Float(string='Amount', default=0.0)
     service_fee_based_on = fields.Selection([('pre_discount', 'Order total before discount(s)'), ('post_discount', 'Order total after discount(s)')], string='Based on', default='pre_discount')
+    sequence = fields.Integer(copy=False, default=_default_sequence)
 
     @api.constrains('service_fee', 'service_fee_amount', 'service_fee_type', 'service_fee_product_id')
     def _check_service_fee(self):
@@ -69,7 +74,7 @@ class PosPreset(models.Model):
     def _load_pos_data_fields(self, config):
         return ['id', 'name', 'pricelist_id', 'fiscal_position_id', 'is_return', 'color', 'has_image', 'write_date', 'identification',
             'use_timing', 'slots_per_interval', 'interval_time', 'attendance_ids',
-            'service_fee', 'service_fee_product_id', 'service_fee_type', 'service_fee_amount', 'service_fee_based_on']
+            'service_fee', 'service_fee_product_id', 'service_fee_type', 'service_fee_amount', 'service_fee_based_on', 'sequence']
 
     def _compute_count_linked_orders(self):
         for record in self:

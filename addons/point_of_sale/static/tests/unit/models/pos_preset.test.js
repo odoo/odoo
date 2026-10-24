@@ -1,4 +1,5 @@
 import { test, expect } from "@odoo/hoot";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupPosEnv } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
 
@@ -24,4 +25,23 @@ test("generateSlots", async () => {
     }
     // expect at least 5 days with slots (Monday to Friday)
     expect(daysWithSlot).toBe(5);
+});
+
+test("new floating order preset selection popup is ordered by sequence", async () => {
+    const store = await setupPosEnv();
+    store.config.available_preset_ids = store.models["pos.preset"]
+        .getAll()
+        .filter((preset) => [1, 2, 6].includes(preset.id));
+    patchWithCleanup(store, {
+        shouldSelectPreset: () => true,
+    });
+
+    patchWithCleanup(store.dialog, {
+        add: (_component, props) => {
+            expect(props.list.map((item) => item.label)).toEqual(["Out", "Middle", "In"]);
+            props.getPayload(false);
+        },
+    });
+
+    store.addNewOrder();
 });
