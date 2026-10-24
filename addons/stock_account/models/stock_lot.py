@@ -101,8 +101,6 @@ class StockLot(models.Model):
                 'quantity': quantity,
                 'old_cost': old_value,
                 'new_cost': value,
-                'old_value': old_value * quantity,
-                'new_value': value * quantity,
                 'value': value,
                 'company_id': product.company_id.id or self.env.company.id,
                 'date': now,
