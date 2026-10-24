@@ -259,9 +259,27 @@ class MergePartnerAutomatic(models.TransientModel):
         self.env.flush_all()
 
         # company_dependent fields of merged records
+        changed_fields = []
         with self._cr.savepoint():
             for fname, field in dst_record._fields.items():
                 if field.company_dependent:
+                    # Keep the effective values before SQL fills missing company keys.
+                    # Reading only after the transfer would hide those changes from the ORM.
+                    rows = self.env.execute_query(SQL(
+                        "SELECT id, %(field)s FROM %(table)s WHERE id IN %(ids)s",
+                        field=SQL.identifier(fname),
+                        table=SQL.identifier(dst_record._table),
+                        ids=tuple((src_records + dst_record).ids),
+                    ))
+                    destination_values = next(values or {} for id_, values in rows if id_ == dst_record.id)
+                    company_ids = {
+                        int(key) for id_, values in rows if id_ != dst_record.id
+                        for key in (values or {}) if key not in destination_values
+                    }
+                    before = {
+                        company_id: dst_record.sudo().with_company(company_id)[fname]
+                        for company_id in company_ids
+                    }
                     self.env.execute_query(SQL(
                         # use the specific company dependent value of sources
                         # to fill the non-specific value of destination. Source
@@ -287,6 +305,15 @@ class MergePartnerAutomatic(models.TransientModel):
                         destination_id=dst_record.id,
                         source_ids=tuple(src_records.ids),
                     ))
+                    dst_record.invalidate_recordset([fname])
+                    for company_id, value in before.items():
+                        partner = dst_record.sudo().with_company(company_id)
+                        if partner[fname] != value:
+                            changed_fields.append((partner, fname))
+        # A savepoint flushes using the cursor's default environment. Notify
+        # afterwards so recomputation keeps the merging environment's company.
+        for partner, fname in changed_fields:
+            partner.modified([fname])
 
     @api.model
     def _update_foreign_keys(self, src_partners, dst_partner):
@@ -309,6 +336,34 @@ class MergePartnerAutomatic(models.TransientModel):
         """ Returns the list of fields that should be summed when merging partners
         """
         return []
+
+    def _get_merge_recompute(self, src_partners, dst_partner):
+        """Keep the source's dependents before SQL redirects their relations."""
+        summable_fields = self._get_summable_fields()
+        partners = src_partners + dst_partner
+        partner_fields = [
+            field for name in src_partners.fields_get()
+            if name != 'id'
+            if (field := src_partners._fields[name]).type not in ('many2many', 'one2many')
+            and ((field.compute is None and any(partners.mapped(name)))
+                 or (field.compute is not None and field.company_dependent and name in summable_fields))
+        ]
+        to_compute = defaultdict(set)
+        seen = defaultdict(set)
+        todo = [src_partners._modified(partner_fields, create=False)]
+        for field, records, create in itertools.chain.from_iterable(todo):
+            records -= self.env.protected(field)
+            if field.recursive:
+                if not field.store:
+                    records &= self.env.cache.get_records(records, field, all_contexts=True)
+                records = records.browse(set(records.ids) - seen[field])
+                if not records:
+                    continue
+                seen[field].update(records.ids)
+                todo.append(records._modified([field], create))
+            if field.compute and field.store:
+                to_compute[field].update(records.ids)
+        return to_compute
 
     @api.model
     def _update_values(self, src_partners, dst_partner):
@@ -353,11 +408,32 @@ class MergePartnerAutomatic(models.TransientModel):
         # remove fields that can not be updated (id and parent_id)
         values.pop('id', None)
         parent_id = values.pop('parent_id', None)
-        dst_partner.write(values)
+        unchanged_values = {
+            name: value for name, value in values.items()
+            if value == (dst_partner[name] if dst_partner._fields[name].type == 'reference'
+                         else write_serializer(dst_partner[name]))
+        }
+        if changed_values := {name: value for name, value in values.items() if name not in unchanged_values}:
+            dst_partner.write(changed_values)
+        if unchanged_values:
+            dst_partner.check_access('write')
+            if any(user._is_internal() for user in dst_partner.user_ids if user != self.env.user):
+                self.env['res.users'].check_access('write')
+            # Company propagation belongs to write(), not _fields_sync(). Keep the
+            # children's normal access/user-company checks without rewriting the parent.
+            if 'company_id' in unchanged_values:
+                dst_partner.child_ids.write({'company_id': unchanged_values['company_id']})
+            # Newly reparented contacts still need commercial/address synchronization.
+            dst_partner._fields_sync(unchanged_values)
         for company, vals in values_by_company.items():
-            dst_partner.with_company(company).sudo().write(vals)
+            partner = dst_partner.with_company(company).sudo()
+            changed_values = {name: value for name, value in vals.items() if value != write_serializer(partner[name])}
+            if changed_values:
+                partner.write(changed_values)
+            if unchanged_values := {name: value for name, value in vals.items() if name not in changed_values}:
+                partner._fields_sync(unchanged_values)
         # try to update the parent_id
-        if parent_id and parent_id != dst_partner.id:
+        if parent_id and parent_id not in (dst_partner.id, dst_partner.parent_id.id):
             try:
                 dst_partner.write({'parent_id': parent_id})
             except ValidationError:
@@ -428,6 +504,8 @@ class MergePartnerAutomatic(models.TransientModel):
                 'company_id': dst_partner.company_id.id
             })
 
+        to_compute = self._get_merge_recompute(src_partners, dst_partner)
+
         # Merge bank accounts before merging partners
         self._merge_bank_accounts(src_partners, dst_partner)
 
@@ -435,6 +513,12 @@ class MergePartnerAutomatic(models.TransientModel):
         self._update_foreign_keys(src_partners, dst_partner)
         self._update_reference_fields(src_partners, dst_partner)
         self._update_values(src_partners, dst_partner)
+
+        for field, ids in to_compute.items():
+            records = self.env[field.model_name].browse(ids)
+            if records._name == src_partners._name:
+                records -= src_partners
+            self.env.add_to_compute(field, records)
 
         self.env.add_to_compute(dst_partner._fields['partner_share'], dst_partner)
 
