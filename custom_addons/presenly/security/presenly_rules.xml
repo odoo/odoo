@@ -1,0 +1,198 @@
+<odoo>
+    <record id="rule_hr_work_location_presenly_company" model="ir.rule">
+        <field name="name">Presenly native work locations by allowed company</field>
+        <field name="model_id" ref="hr.model_hr_work_location"/>
+        <field name="groups" eval="[(4, ref('presenly.group_presenly_employee'))]"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_presenly_approval_rule_company" model="ir.rule">
+        <field name="name">Presenly approval rules by company</field>
+        <field name="model_id" ref="model_presenly_approval_rule"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_presenly_schedule_company" model="ir.rule">
+        <field name="name">Work location schedules by allowed company</field>
+        <field name="model_id" ref="model_presenly_work_location_schedule"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_presenly_schedule_employee_own" model="ir.rule">
+        <field name="name">Presenly employee: own work location schedules</field>
+        <field name="model_id" ref="model_presenly_work_location_schedule"/>
+        <field name="groups" eval="[(4, ref('presenly.group_presenly_employee'))]"/>
+        <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+    </record>
+    <record id="rule_presenly_schedule_hr_company" model="ir.rule">
+        <field name="name">Presenly HR: company work location schedules</field>
+        <field name="model_id" ref="model_presenly_work_location_schedule"/>
+        <field name="groups" eval="[(4, ref('presenly.group_presenly_hr'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+    <record id="rule_presenly_schedule_manager_company" model="ir.rule">
+        <field name="name">Presenly manager: company work location schedules</field>
+        <field name="model_id" ref="model_presenly_work_location_schedule"/>
+        <field name="groups" eval="[(4, ref('presenly.group_presenly_manager'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+    <record id="rule_presenly_attendance_event_company" model="ir.rule">
+        <field name="name">Presenly evidence by company</field>
+        <field name="model_id" ref="model_presenly_attendance_event"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_presenly_attendance_event_employee_own" model="ir.rule">
+        <field name="name">Presenly employee: own evidence</field>
+        <field name="model_id" ref="model_presenly_attendance_event"/>
+        <field name="groups" eval="[(4, ref('presenly.group_presenly_employee'))]"/>
+        <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+    </record>
+    <record id="rule_presenly_attendance_event_hr_company" model="ir.rule">
+        <field name="name">Presenly HR: company evidence</field>
+        <field name="model_id" ref="model_presenly_attendance_event"/>
+        <field name="groups" eval="[(4, ref('presenly.group_presenly_hr'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+    <record id="rule_presenly_permission_company" model="ir.rule">
+        <field name="name">Presenly permissions by company</field>
+        <field name="model_id" ref="model_presenly_permission"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_presenly_permission_employee_own" model="ir.rule">
+        <field name="name">Presenly employee: own permissions</field>
+        <field name="model_id" ref="model_presenly_permission"/>
+        <field name="groups" eval="[(4, ref('presenly.group_presenly_employee'))]"/>
+        <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+    </record>
+    <record id="rule_presenly_permission_approver_pending" model="ir.rule">
+        <field name="name">Presenly approver: assigned permissions</field>
+        <field name="model_id" ref="model_presenly_permission"/>
+        <field name="groups" eval="[(4, ref('presenly.group_presenly_approver'))]"/>
+        <field name="domain_force">['|', ('presenly_pending_approver_ids', 'in', [user.id]), ('presenly_approver_history_ids', 'in', [user.id])]</field>
+    </record>
+    <record id="rule_presenly_permission_hr_company" model="ir.rule">
+        <field name="name">Presenly HR: company permissions</field>
+        <field name="model_id" ref="model_presenly_permission"/>
+        <field name="groups" eval="[(4, ref('presenly.group_presenly_hr'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+    <record id="rule_presenly_approval_request_company" model="ir.rule">
+        <field name="name">Approval journeys by allowed company</field>
+        <field name="model_id" ref="model_presenly_approval_request"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_presenly_approval_request_employee_own" model="ir.rule">
+        <field name="name">Presenly employee: own approval journeys</field>
+        <field name="model_id" ref="model_presenly_approval_request"/>
+        <field name="groups" eval="[(4, ref('presenly.group_presenly_employee'))]"/>
+        <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+    </record>
+    <record id="rule_presenly_approval_request_approver" model="ir.rule">
+        <field name="name">Presenly approver: assigned approval journeys</field>
+        <field name="model_id" ref="model_presenly_approval_request"/>
+        <field name="groups" eval="[(4, ref('presenly.group_presenly_approver'))]"/>
+        <field name="domain_force">[('step_ids.assigned_user_ids', 'in', [user.id])]</field>
+    </record>
+    <record id="rule_presenly_approval_request_hr" model="ir.rule">
+        <field name="name">Presenly HR: company approval journeys</field>
+        <field name="model_id" ref="model_presenly_approval_request"/>
+        <field name="groups" eval="[(4, ref('presenly.group_presenly_hr'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+    <record id="rule_presenly_approval_step_company" model="ir.rule">
+        <field name="name">Approval journey steps by allowed company</field>
+        <field name="model_id" ref="model_presenly_approval_step"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_presenly_approval_step_employee_own" model="ir.rule">
+        <field name="name">Presenly employee: own approval steps</field>
+        <field name="model_id" ref="model_presenly_approval_step"/>
+        <field name="groups" eval="[(4, ref('presenly.group_presenly_employee'))]"/>
+        <field name="domain_force">[('approval_request_id.employee_id.user_id', '=', user.id)]</field>
+    </record>
+    <record id="rule_presenly_approval_step_approver" model="ir.rule">
+        <field name="name">Presenly approver: assigned approval steps</field>
+        <field name="model_id" ref="model_presenly_approval_step"/>
+        <field name="groups" eval="[(4, ref('presenly.group_presenly_approver'))]"/>
+        <field name="domain_force">[('approval_request_id.step_ids.assigned_user_ids', 'in', [user.id])]</field>
+    </record>
+    <record id="rule_presenly_approval_step_hr" model="ir.rule">
+        <field name="name">Presenly HR: company approval steps</field>
+        <field name="model_id" ref="model_presenly_approval_step"/>
+        <field name="groups" eval="[(4, ref('presenly.group_presenly_hr'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+    <record id="rule_presenly_approval_log_company" model="ir.rule">
+        <field name="name">Presenly approval logs by company</field>
+        <field name="model_id" ref="model_presenly_approval_log"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_presenly_approval_log_employee_own" model="ir.rule">
+        <field name="name">Presenly employee: own approval logs</field>
+        <field name="model_id" ref="model_presenly_approval_log"/>
+        <field name="groups" eval="[(4, ref('presenly.group_presenly_employee'))]"/>
+        <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+    </record>
+    <record id="rule_presenly_approval_log_approver_own" model="ir.rule">
+        <field name="name">Presenly approver: own decisions</field>
+        <field name="model_id" ref="model_presenly_approval_log"/>
+        <field name="groups" eval="[(4, ref('presenly.group_presenly_approver'))]"/>
+        <field name="domain_force">[('approver_id', '=', user.id)]</field>
+    </record>
+    <record id="rule_presenly_approval_log_hr_company" model="ir.rule">
+        <field name="name">Presenly HR: company approval logs</field>
+        <field name="model_id" ref="model_presenly_approval_log"/>
+        <field name="groups" eval="[(4, ref('presenly.group_presenly_hr'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+    <record id="rule_presenly_leave_approver_pending" model="ir.rule">
+        <field name="name">Presenly approver: assigned Time Off</field>
+        <field name="model_id" ref="hr_holidays.model_hr_leave"/>
+        <field name="groups" eval="[(4, ref('presenly.group_presenly_approver'))]"/>
+        <field name="domain_force">['|', ('presenly_pending_approver_ids', 'in', [user.id]), ('presenly_approver_history_ids', 'in', [user.id])]</field>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="rule_presenly_permission_type_company" model="ir.rule">
+        <field name="name">Presenly permission types by company</field>
+        <field name="model_id" ref="model_presenly_permission_type"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="rule_presenly_overtime_company" model="ir.rule">
+        <field name="name">Presenly overtimerequests by company</field>
+        <field name="model_id" ref="model_presenly_overtime_request"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_presenly_overtime_employee_own" model="ir.rule">
+        <field name="name">Presenly employee: own overtime requests</field>
+        <field name="model_id" ref="model_presenly_overtime_request"/>
+        <field name="groups" eval="[(4, ref('presenly.group_presenly_employee'))]"/>
+        <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+    </record>
+    <record id="rule_presenly_overtime_approver_pending" model="ir.rule">
+        <field name="name">Presenly approver: assigned overtime requests</field>
+        <field name="model_id" ref="model_presenly_overtime_request"/>
+        <field name="groups" eval="[(4, ref('presenly.group_presenly_approver'))]"/>
+        <field name="domain_force">['|', ('presenly_pending_approver_ids', 'in', [user.id]), ('presenly_approver_history_ids', 'in', [user.id])]</field>
+    </record>
+    <record id="rule_presenly_overtime_hr_company" model="ir.rule">
+        <field name="name">Presenly HR: company overtime requests</field>
+        <field name="model_id" ref="model_presenly_overtime_request"/>
+        <field name="groups" eval="[(4, ref('presenly.group_presenly_hr'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+</odoo>

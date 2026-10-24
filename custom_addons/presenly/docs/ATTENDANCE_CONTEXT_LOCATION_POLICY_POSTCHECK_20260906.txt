@@ -1,0 +1,97 @@
+PRESENLY ATTENDANCE CONTEXT ORDER AND WORK LOCATION POLICY — POST-CHECK
+Date: 2026-09-06
+Database: odoo
+Module: presenly 19.0.10.2.0
+
+REQUEST
+- Attendance Context must appear before Check-In Evidence.
+- Clarify the apparently empty Presenly Attendance Policy area in Work Locations.
+- Clarify the purpose of Location Manager and Location Approvers.
+
+ATTENDANCE FORM FIX
+The composed Attendance form now renders sections in this order:
+1. Native Attendance summary
+2. Attendance Context
+3. Attendance metadata (Company, Work Location, Schedule, Source)
+4. Check-In Evidence
+5. Check-Out Evidence
+
+The inherited view uses one atomic separator replacement to prevent a later XPath from renaming the newly inserted Attendance Context separator.
+
+WORK LOCATION UI CLARIFICATION
+- Renamed Presenly Attendance Policy to Presenly Mobile Attendance Policy.
+- Split configuration into clear functional areas:
+  - Geofence Validation
+    - Latitude
+    - Longitude
+    - Geofence Radius
+    - GPS Accuracy Limit
+  - Selfie Evidence
+    - Require Check-In Selfie
+    - Require Check-Out Selfie
+  - Approval Routing
+    - Location Manager
+- Added explanatory text that Location Manager is not automatically an approver.
+- Location Manager is used only when a Permission or Time Off Approval Level has Approver Type = Work Location Manager.
+- The selected user must be active, allowed in the location company, and have the Presenly Approver role when the request is submitted.
+
+LOCATION APPROVERS FINDING
+- presenly_approver_ids existed in the model and view.
+- The current Presenly Approval Journey resolver never reads this field.
+- Therefore it had no operational effect and was misleading.
+- The field was hidden from the Work Location form.
+- The field, database table, and existing relation rows were not deleted.
+- Production retained two existing Location Approver relation rows exactly.
+- If pooled/multiple location approvers are needed later, they should be introduced explicitly as a new Approval Level approver type with snapshot and regression-test behavior.
+
+PRODUCTION CONFIGURATION OBSERVED
+- Work Locations: 4.
+- Location 1 (Home - Feri): Location Manager user ID 6, geofence ready, two preserved Location Approver relations.
+- Location 2 (Office): no Location Manager, not geofence ready.
+- Location 3 (Other): no Location Manager, not geofence ready.
+- Location 4 (Kantor Konsulta Semen Gresik - 1): no Location Manager, geofence ready.
+
+DATA PRESERVATION
+The business fingerprint immediately before and after upgrade was identical:
+- Attendance: 2 records; ID sum 3.
+- Evidence: 7 records; ID sum 28.
+- Referenced selfie attachments: 4; ID sum 670.
+- Existing Attendance timestamps, source, and selfie links unchanged.
+- Native Manage All Attendances user unchanged.
+- Location Manager values unchanged.
+- Location Approver relation rows: 2 before and 2 after; relation sums unchanged.
+- Attendance IDs 1 and 2 remain green (color 10).
+
+TESTING
+- Isolated clone: odoo_presenly_context_location_test_20260906_032100.
+- Final result: 35 test cases / 45 test stats.
+- Failures: 0.
+- Errors: 0.
+- Added coverage verifies:
+  - Attendance Context and metadata precede Check-In Evidence.
+  - Presenly Mobile Attendance Policy section exists once.
+  - Approval Routing section exists once.
+  - Location Manager remains visible and operational.
+  - Unused Location Approvers is absent from the composed form.
+- Validation clone database and filestore were removed.
+
+STATIC VALIDATION
+- Python compilation: passed.
+- XML parsing: 18 files passed.
+- JavaScript syntax: passed.
+- Shell syntax: passed.
+- git diff --check: passed.
+
+BACKUP
+- backups/presenly-migration/odoo-before-context-location-policy-20260906-032100.dump
+- Backup retained after clone cleanup.
+
+ROLLOUT
+- Before: presenly 19.0.10.1.0.
+- After: presenly 19.0.10.2.0.
+- Main server PID: 5708.
+- http://127.0.0.1:8069/web/login returned HTTP 200.
+- Upgrade and active server logs contain no ERROR, CRITICAL, or traceback.
+
+NO COMMIT
+- No Git commit was created.

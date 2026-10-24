@@ -1,0 +1,93 @@
+PRESENLY WORKING HOURS & WORK LOCATION INTEGRATION POST-CHECK
+Date: 2026-09-05
+Database: odoo
+Module: Presenly Attendance Tools 19.0.6.0.0
+
+ARCHITECTURE
+- Native Odoo resource.calendar remains authoritative for when an Employee works.
+- presenly.work.location.schedule assigns where the Employee works inside those periods.
+- No Working Hours data is duplicated into a custom calendar model.
+- Attendance resolution only considers active location slots synchronized with Working Hours.
+- Specific Date location slots use the Employee version/calendar applicable on that date.
+- Native one-location-per-day and primary Work Location remain fallback layers.
+
+VALIDATION RULES
+- Active fixed location slots must fit completely inside one Working Hours period.
+- Employee and Work Location must belong to the same Company.
+- Slots cannot overlap in the same weekly/date scope.
+- Two-week calendars require Week 1 or Week 2 and resolve by native Odoo week parity.
+- Flexible Working Hours permit location slots without fixed-period containment.
+- A calendar change may make an existing slot invalid; it is marked Conflict,
+  ignored by attendance resolution, and remains archivable/fixable.
+
+UI/UX
+- Employee form includes a Working Hours & Locations tab.
+- The tab displays native Working Hours and Primary/Fallback Work Location.
+- Coverage statuses: Fully Assigned, Working Hours Have Gaps, Schedule Conflict,
+  Flexible Working Hours, and No Working Hours.
+- Gap and conflict counters are shown with contextual alerts.
+- Location slots are editable inline with color-coded synchronization status.
+- Open Working Hours opens the native resource.calendar form.
+- Generate from Working Hours opens a preview wizard.
+- Generator modes:
+  1. Fill Unassigned Working Hours (safe/default).
+  2. Replace All Weekly Location Slots (Specific Date exceptions retained).
+- Preview rows can be edited, added, removed, and split among multiple schools.
+- Full schedule list/form also exposes Working Hours status and two-week support.
+
+SECURITY
+- Presenly Administrator now implies native hr.group_hr_user.
+- A temporary non-superuser Presenly Administrator was verified to have:
+  - Employee read access.
+  - Working Hours read/write access.
+  - Work Location Schedule create access.
+  - Generator wizard create access.
+  - Generator action access.
+  - Multi-company isolation.
+- Temporary test user was rolled back; no test user remains.
+
+DATABASE RESULT
+- Module: 19.0.6.0.0, installed.
+- Attendance: 0.
+- Time Off: 0.
+- Time Off Allocation: 0.
+- Permission: 0.
+- Attendance Evidence: 0.
+- Work Location Schedule: 0.
+- Employees retained: Mitchell Admin, Feri, Yusril Falih.
+- Current coverage for each retained Employee is Partial because their native
+  Working Hours contain 10 work periods and no location slots exist yet.
+
+TESTS
+- Isolated clone suite: 21 test cases / 29 test stats.
+- Result: 0 failures, 0 errors.
+- Covered: calendar containment, two schools per day, no fallback between slots,
+  Specific Date replacement, overlaps, company validation, generator gap fill,
+  preview split, calendar-change conflicts, conflict archival, two-week calendars,
+  geofence, API sessions, permissions, Time Off, and approvals.
+- Test clone removed after validation.
+
+HTTP/API
+- Server restarted against database odoo.
+- odoo.conf db_name = odoo.
+- GET /web/login: HTTP 200.
+- Login/session/status/logout/expired-session smoke test: passed.
+
+SOURCE VALIDATION
+- Python compile: passed.
+- XML parse: passed (17 XML files).
+- Shell syntax: passed.
+- git diff --check: passed.
+- No legacy Unit, Additional Work Location Assignment, or custom legacy
+  Work Location model references remain in active Python/XML/CSV source.
+
+BACKUP
+- backups/presenly-migration/odoo-before-working-hours-integration-20260905.dump
+
+ADMIN NEXT STEP
+1. Open Employees > Employee > Working Hours & Locations.
+2. Confirm native Working Hours and Primary/Fallback Work Location.
+3. Click Generate from Working Hours.
+4. Assign Work Location on every preview row; split rows when changing schools.
+5. Generate slots and confirm Location Coverage becomes Fully Assigned.
+6. Configure geofence coordinates/policy on each Work Location before mobile check-in.

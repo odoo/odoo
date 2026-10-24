@@ -1,0 +1,92 @@
+PRESENLY SINGLE-PATH APPROVAL JOURNEY — POST-CHECK
+Date: 2026-09-05
+Database: odoo
+Module: presenly 19.0.7.0.0
+
+ARCHITECTURE
+- Presenly Approval Journey is the only approval path for Permission and Time Off requests.
+- Permission remains presenly.permission.
+- Time Off remains native hr.leave.
+- Native hr_holidays remains the final engine for allocation, calendar leave, duration, and work-entry effects.
+- Native Time Off approve/refuse/validate methods are guarded against bypass until the Presenly journey reaches a valid final state.
+- Extra Hours approval remains native hr_attendance and is outside this journey.
+
+APPROVAL SNAPSHOT
+- presenly.approval.request stores the request-level journey.
+- presenly.approval.step stores immutable level and assigned-approver snapshots.
+- Rule or manager changes after submission do not change an active request.
+- Only the assigned users of the current level may approve or reject.
+- Reject requires a reason and closes all remaining levels.
+- All configured levels are mandatory.
+- A location-specific level overrides a company-wide level with the same sequence.
+- Submission rejects missing, ambiguous, inactive, cross-company, or non-Presenly-Approver assignments.
+
+UI/UX
+- Active queue: Attendances > Approvals > My Approvals.
+- Legacy Permission Approvals and Time Off Approvals menu records remain for XML-ID compatibility but are inactive.
+- Permission and native Time Off forms show current progress, current approvers, and the full Approval Journey.
+- Native Time Off approve/refuse/back-to-approval buttons are hidden.
+- Native Time Off list/kanban approval controls are hidden.
+- Presenly Draft/Pending Approval is shown as the primary Time Off approval status.
+- Transaction fields are locked after submission.
+
+MIGRATION
+- All 75 active/inactive hr.leave.type records use:
+  presenly_approval_engine = presenly
+  leave_validation_type = hr
+- There were no Time Off, Permission, Approval Rule, pending request, or legacy pending journey records to migrate.
+- No transaction data was modified or deleted.
+
+BACKUP
+- backups/presenly-migration/odoo-before-single-path-approval-20260905-215007.dump
+
+ISOLATED VALIDATION
+- Clone databases were used; no tests ran against the main database.
+- Final result: 26 test cases / 34 test stats.
+- Failures: 0.
+- Errors: 0.
+- Coverage includes Permission, Time Off, two-level approval, wrong approver, rejection reason, native bypass guards, journey snapshot, cancellation, Attendance, schedule resolution, geofence, and API session authentication.
+- All validation clone databases were removed.
+
+STATIC VALIDATION
+- Python compile: passed.
+- XML parse: 17 files passed.
+- Shell syntax: passed.
+- git diff --check: passed.
+- Final Presenly upgrade warnings/errors: none.
+
+RUNTIME POST-CHECK
+- Odoo server PID after final rollout: 82414.
+- http://127.0.0.1:8069/web/login: HTTP 200.
+- Anonymous Presenly JSON-RPC request: rejected as expected.
+- Module state: installed.
+- Module version: 19.0.7.0.0.
+- Tables presenly_approval_request and presenly_approval_step: present.
+- My Approvals menu: active.
+- Legacy split approval menus: inactive.
+- Single-path Time Off form/list/kanban views: active.
+- Server log after rollout: no ERROR, CRITICAL, or traceback.
+
+MAIN DATABASE COUNTS AFTER ROLLOUT
+- Attendance: 0
+- Time Off: 0
+- Time Off Allocation: 0
+- Permission: 0
+- Attendance Evidence: 0
+- Work Location Schedule: 0
+- Approval Rule: 0
+- Approval Journey: 0
+- Approval Step: 0
+- Legacy pending Time Off without journey: 0
+- Legacy submitted Permission without journey: 0
+
+OPERATIONAL CONFIGURATION STILL REQUIRED
+1. Create at least one complete Approval Level for every Permission Type and Time Off Type that employees may submit.
+2. Grant every selected approver the Presenly Approver role.
+3. Ensure each approver is active and has the request company in Allowed Companies.
+4. Configure Employee manager and/or Work Location Manager when those approver types are used.
+5. Configure Work Locations, Employee location schedules, Related Users, and Time Off allocations as applicable.
+6. Run business UAT for submit, each approval level, rejection, cancellation, and final native Time Off validation.
+
+IMPORTANT BEHAVIOR
+- With zero Approval Rules in the current database, Permission and Time Off submission is intentionally blocked with a configuration error. This prevents accidental auto-approval or native approval bypass.
