@@ -215,7 +215,11 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             trigger: `${editedMessageSelector}:not(:has(.o-mail-Composer)) .o-mail-AttachmentContainer:contains("text.txt")`,
         },
         {
-            trigger: `${editedMessageSelector}:not(:has(.o-mail-Composer)) .o-mail-AttachmentContainer:contains("extra.txt") .o-mail-Attachment-unlink`,
+            trigger: `${editedMessageSelector}:not(:has(.o-mail-Composer)) .o-mail-AttachmentContainer:contains("extra.txt") [title='Actions']`,
+            run: "click",
+        },
+        {
+            trigger: ".dropdown-item:contains(Remove)",
             run: "click",
         },
         {
