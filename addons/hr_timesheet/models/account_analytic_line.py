@@ -72,7 +72,7 @@ class AccountAnalyticLine(models.Model):
         index=True, help="Define an 'hourly cost' on the employee to track the cost of their time.")
     job_title = fields.Char(related='employee_id.job_title', export_string_translation=False)
     department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True, compute_sudo=True, init_storage=lambda model: None)
-    manager_id = fields.Many2one('hr.employee', "Manager", related='employee_id.parent_id', store=True, init_storage=lambda model: None)
+    manager_id = fields.Many2one('hr.employee', "Manager", compute='_compute_manager_id', store=True, init_storage=lambda model: None)
     encoding_uom_id = fields.Many2one('uom.uom', compute='_compute_encoding_uom_id', export_string_translation=False)
     partner_id = fields.Many2one(compute='_compute_partner_id', store=True, readonly=False)
     readonly_timesheet = fields.Boolean(compute="_compute_readonly_timesheet", compute_sudo=True, export_string_translation=False)
@@ -168,6 +168,11 @@ class AccountAnalyticLine(models.Model):
     def _compute_department_id(self):
         for line in self:
             line.department_id = line.employee_id.department_id
+
+    @api.depends('employee_id')
+    def _compute_manager_id(self):
+        for line in self:
+            line.manager_id = line.employee_id.parent_id
 
     def _compute_calendar_display_name(self):
         companies = self.company_id
