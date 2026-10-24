@@ -71,7 +71,7 @@ class ProductTemplate(models.Model):
         if valid_delivery_methods:
             # Suggest the fastest delivery method.
             estimated_dates_by_dm = {
-                dm.id: dm._get_estimate_delivery_days()[:1] for dm in valid_delivery_methods
+                dm.id: dm._get_delivery_estimate_dates()[:1] for dm in valid_delivery_methods
             }
             fastest_delivery_method = valid_delivery_methods.sorted(
                 key=lambda dm: (not estimated_dates_by_dm[dm.id], estimated_dates_by_dm[dm.id])
@@ -114,7 +114,7 @@ class ProductTemplate(models.Model):
                     cart_qty=cart_qty,
                     **kwargs,
                 )
-            in_store_estimated_dates = in_store_dm._get_estimate_delivery_days()
+            in_store_estimated_dates = in_store_dm._get_delivery_estimate_dates()
             res["in_store_data"] = utils.prepare_cac_widget_data(
                 in_store_dm,
                 in_store_stock_data,

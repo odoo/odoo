@@ -69,6 +69,7 @@ class SaleOrder(models.Model):
             return
 
         fpos_before = self.fiscal_position_id
+        warehouse_before = self.warehouse_id
         if self.partner_shipping_id.pickup_location_data:
             self.warehouse_id = self.partner_shipping_id.pickup_location_data["id"]
             self._compute_fiscal_position_id()
@@ -76,6 +77,8 @@ class SaleOrder(models.Model):
             self._compute_warehouse_id()
         if fpos_before != self.fiscal_position_id:
             self._recompute_taxes()
+        if warehouse_before != self.warehouse_id:
+            self._set_estimated_commitment_date()
 
     def _is_cart_ready_for_delivery(self):
         """Override of `website_sale` to include errors if no pickup location is selected and to
@@ -167,7 +170,7 @@ class SaleOrder(models.Model):
         return insufficient_stock_data
 
     def _apply_pending_cac_selection(self, selection):
-        """Apply the pickup/delivery selection"""
+        """Apply the pickup/delivery selection."""
         self.ensure_one()
         if selection.get("type") == "in_store":
             in_store_dm = self.website_id.sudo().in_store_dm_id
@@ -176,9 +179,9 @@ class SaleOrder(models.Model):
             self.set_delivery_line(in_store_dm, in_store_dm.product_id.list_price)
             self.set_pickup_location(selection["pickup_location_data"])
         elif selection.get("type") == "delivery":
-            delivery_method = self.env["delivery.carrier"].sudo().browse(
-                selection.get("dm_id"),
-            ).exists()
+            delivery_method = (
+                self.env["delivery.carrier"].sudo().browse(selection.get("dm_id")).exists()
+            )
             if delivery_method and delivery_method.id in self._get_delivery_methods().ids:
                 self._set_delivery_method(delivery_method)
 

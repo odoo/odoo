@@ -29,13 +29,15 @@ class WebsiteSaleCollect(WebsiteSale):
             or pending_selection.get("type") == "in_store"
         )
         estimated_dates = [
-            Date.from_string(date) for date in in_store_dm_sudo._get_estimate_delivery_days()
+            Date.from_string(date) for date in in_store_dm_sudo._get_delivery_estimate_dates()
         ]
 
         if is_in_store_selected and order_sudo.partner_shipping_id.pickup_location_data:
             selected_location_data = order_sudo.partner_shipping_id.pickup_location_data
             selected_location_data.update(
-                **order_sudo.warehouse_id._prepare_pickup_availability_data(estimated_dates=estimated_dates)
+                **order_sudo.warehouse_id._prepare_pickup_availability_data(
+                    estimated_dates=estimated_dates
+                )
             )
         elif pending_selection.get("type") == "in_store":
             pickup_location_data = json.loads(pending_selection["pickup_location_data"])
@@ -46,8 +48,8 @@ class WebsiteSaleCollect(WebsiteSale):
                 selected_location_data = pickup_location_data
                 selected_location_data.update(
                     **warehouse_sudo._prepare_pickup_availability_data(
-                        estimated_dates=estimated_dates,
-                    ),
+                        estimated_dates=estimated_dates
+                    )
                 )
         elif single_location:
             warehouse_sudo = in_store_dm_sudo.warehouse_ids[0]
