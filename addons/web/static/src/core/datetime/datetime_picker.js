@@ -275,6 +275,7 @@ const PRECISION_LEVELS = new Map()
 // Other constants
 const GRID_COUNT = 10;
 const GRID_MARGIN = 1;
+const SWIPE_THRESHOLD = 50; // px
 
 const DAYS_PER_WEEK = 7;
 const WEEKS_PER_MONTH = 6;
@@ -540,6 +541,37 @@ export class DateTimePicker extends Component {
         ev.preventDefault();
         const { step } = this.activePrecisionLevel;
         this.state.focusDate = this.clamp(this.state.focusDate.minus(step));
+    }
+
+    /**
+     * @param {TouchEvent} ev
+     */
+    onSwipeStart(ev) {
+        this.swipeStart = ev.touches.length === 1 ? ev.touches[0] : null;
+    }
+
+    /**
+     * Swiping horizontally goes to the next or previous panel, depending on
+     * the swipe direction (reversed in RTL).
+     * @param {TouchEvent} ev
+     */
+    onSwipeEnd(ev) {
+        if (!this.swipeStart) {
+            return;
+        }
+        const { clientX, clientY } = ev.changedTouches[0];
+        const deltaX = clientX - this.swipeStart.clientX;
+        const deltaY = clientY - this.swipeStart.clientY;
+        this.swipeStart = null;
+        if (Math.abs(deltaX) < SWIPE_THRESHOLD || Math.abs(deltaX) < 2 * Math.abs(deltaY)) {
+            return;
+        }
+        const isRTL = localization.direction === "rtl";
+        if (deltaX < 0 !== isRTL) {
+            this.next(ev);
+        } else {
+            this.previous(ev);
+        }
     }
 
     /**
