@@ -474,6 +474,7 @@ class ProductProduct(models.Model):
                 problem_uom=uom.name, uom=product.product_tmpl_id.uom_id.name))
             bom_lines.product_uom_id = to_uom_id
 
+        productions_to_update = self.env['mrp.production']
         for uom, product, productions in self.env['mrp.production']._read_group(
             [('product_id', 'in', self.ids)],
             ['product_uom_id', 'product_id'],
@@ -484,6 +485,10 @@ class ProductProduct(models.Model):
                 'than %(uom)s have already been used for this product, the change of unit of measure can not be done.'
                 'If you want to change it, please archive the product and create a new one.',
                 problem_uom=uom.name, uom=product.product_tmpl_id.uom_id.name))
-            productions.product_uom_id = to_uom_id
+            productions_to_update |= productions
 
-        return super()._update_uom(to_uom_id)
+        res = super()._update_uom(to_uom_id)
+        # after super(): writing it recreates the draft finished moves in the new UoM,
+        # which stock._update_uom rejects as a foreign one
+        productions_to_update.product_uom_id = to_uom_id
+        return res
