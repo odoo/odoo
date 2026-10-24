@@ -9,7 +9,13 @@
                 <div class="o_address_format">
                     <field name="zip" placeholder="Zip" class="o_address_zip"
                            readonly="type == 'contact' and parent_id"/>
+                    <field name="city_id" placeholder="City" class="o_address_city"
+                           domain="[('country_id', '=', country_id)]"
+                           invisible="not country_enforce_cities"
+                           context="{'default_country_id': country_id, 'default_zipcode': zip}"
+                           readonly="type == 'contact' and parent_id"/>
                     <field name="city" placeholder="City" class="o_address_city"
+                           invisible="country_enforce_cities and (city_id or city in ('', False))"
                            readonly="type == 'contact' and parent_id"/>
                     <field name="street" placeholder="Street" class="o_address_street"
                            readonly="type == 'contact' and parent_id"/>
