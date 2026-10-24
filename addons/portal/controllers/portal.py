@@ -424,6 +424,10 @@ class CustomerPortal(Controller):
                 partner_sudo == current_partner and current_partner.can_edit_vat()
             )
         address_fields = (country_sudo and country_sudo.get_address_fields()) or ['city', 'zip']
+        city_field = next(
+            (field for field in ('city', 'city_id') if field in address_fields),
+            None,
+        )
 
         return {
             'partner_sudo': partner_sudo,  # If set, customer is editing an existing address
@@ -448,8 +452,8 @@ class CustomerPortal(Controller):
             'state_id': state_id,
             'country_states': country_sudo.state_ids,
             'zip_before_city': (
-                'zip' in address_fields
-                and address_fields.index('zip') < address_fields.index('city')
+                city_field is not None and 'zip' in address_fields
+                and address_fields.index('zip') < address_fields.index(city_field)
             ),
             'vat_label': request.env._("VAT"),
             'discard_url': callback or '/my/addresses',
@@ -844,11 +848,16 @@ class CustomerPortal(Controller):
             required_fields = self._get_mandatory_billing_address_fields(country)
         else:
             required_fields = self._get_mandatory_delivery_address_fields(country)
+        city_field = next(
+            (field for field in ('city', 'city_id') if field in address_fields),
+            None,
+        )
+
         return {
             'fields': address_fields,
             'zip_before_city': (
-                'zip' in address_fields
-                and address_fields.index('zip') < address_fields.index('city')
+                city_field is not None and 'zip' in address_fields
+                and address_fields.index('zip') < address_fields.index(city_field)
             ),
             'states': [(st.id, st.name, st.code) for st in country.sudo().state_ids],
             'phone_code': country.phone_code,
