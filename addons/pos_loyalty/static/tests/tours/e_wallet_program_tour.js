@@ -142,18 +142,6 @@ registry.category("web_tour.tours").add("EWalletProgramTour2", {
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("ExpiredEWalletProgramTour", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("AAAA"),
-            ProductScreen.addOrderline("Whiteboard Pen", "2", "6", "12.00"),
-            PosLoyalty.eWalletButtonState({ highlighted: false }),
-        ].flat(),
-});
-
 registry.category("web_tour.tours").add("PosLoyaltyPointsEwallet", {
     steps: () =>
         [
