@@ -71,6 +71,8 @@
         <value eval="['email', 'order_reference']"/>
     </function>
 
-    <function model="product.template" name="_create_extra_variant_images" eval="[]"/>
+    <data noupdate="1">
+      <function model="product.template" name="_create_extra_variant_images" eval="[]"/>
+    </data>
 
 </odoo>
