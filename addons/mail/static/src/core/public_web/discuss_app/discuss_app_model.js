@@ -3,6 +3,7 @@ import { fields, Record } from "@mail/model/export";
 
 import { router } from "@web/core/browser/router";
 
+const PANEL_WIDTH = 400;
 const SIDEBAR_WIDTH = 400;
 
 export class DiscussApp extends Record {
@@ -34,10 +35,21 @@ export class DiscussApp extends Record {
     );
     isActive = false;
     isMemberPanelOpenByDefault = this.localStorage(true);
+    isSidebarCollapsed = this.computed(
+        () => this.isSidebarCollapseEnabled && this.canCollapseSidebar()
+    );
+    isSidebarCollapseEnabled = this.localStorage(false);
     lastActiveId = this.localStorage(undefined);
+    /** Width shared by the panels on the side of the conversation. */
+    panelWidth = this.localStorage(PANEL_WIDTH);
     thread = fields.One("mail.thread", { inverse: "discussAppAsThread" });
     hasRestoredThread = false;
     sidebarWidth = this.localStorage(SIDEBAR_WIDTH);
+
+    /** Whether the sidebar offers to collapse: its toggle is in the tabs. */
+    canCollapseSidebar() {
+        return Boolean(this.store.messagingMenu?.sortedVisibleTabs.length);
+    }
 
     /**
      * Write the current discuss selection to the URL and action context so it survives

@@ -22,6 +22,7 @@ import { Wysiwyg } from "@html_editor/wysiwyg";
 import { rpc } from "@web/core/network/rpc";
 import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
+import { getViewportDimensions, useViewportChange } from "@web/core/utils/dvu";
 import { useDebounced } from "@web/core/utils/timing";
 
 import {
@@ -79,6 +80,8 @@ const EDIT_CLICK_TYPE = {
     CANCEL: "cancel",
     SAVE: "save",
 };
+/** Shorter than any soft keyboard, taller than other viewport changes. */
+const SOFT_KEYBOARD_MIN_HEIGHT = 100;
 export const MENTION_AMOUNT_WARNING = 50;
 export const COMPOSER_TYPES = {
     NOTE: "note",
@@ -150,6 +153,27 @@ export class Composer extends Component {
         this.editor = undefined;
         this.isMobileOS = isMobileOS();
         this.isIosPwa = isIOS() && isDisplayStandalone();
+        /**
+         * Whether the soft keyboard covers the bottom of the screen, where the iOS home bar is.
+         * Unlike the focus, it changes only once the keyboard has moved, never under a tap.
+         */
+        this.isSoftKeyboardOpen = signal(false);
+        if (this.isIosPwa) {
+            // The tallest viewport at the current width is the one without the keyboard.
+            let fullWidth = 0;
+            let fullHeight = 0;
+            const updateSoftKeyboardOpen = () => {
+                const { width, height } = getViewportDimensions();
+                if (width !== fullWidth) {
+                    fullWidth = width;
+                    fullHeight = 0;
+                }
+                fullHeight = Math.max(fullHeight, height);
+                this.isSoftKeyboardOpen.set(height < fullHeight - SOFT_KEYBOARD_MIN_HEIGHT);
+            };
+            updateSoftKeyboardOpen();
+            useViewportChange(updateSoftKeyboardOpen);
+        }
         this.store = useService("mail.store");
         this.props = useProps({
             allowUpload: t.boolean().optional(true),

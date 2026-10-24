@@ -12,7 +12,7 @@
                     <i class="oi opacity-75" t-att-class="iconClass" data-icon="keyboard"/>
                     <span class="d-flex flex-column flex-grow-1 min-w-0 o-gap-0_5">
                         <span class="fw-medium">Push-to-Talk</span>
-                        <span t-if="this.store.settings.pushToTalkKey" class="fw-normal opacity-75 text-truncate" t-att-class="this.ancestors.inMeetingView ? 'o-fs-small' : 'smaller'" t-out="this.pttKeyDisplayText"/>
+                        <span t-if="this.store.settings.pushToTalkKey" class="fw-normal opacity-75 text-truncate" t-att-class="this.ancestors.inMeetingView ? 'smaller' : 'o-xsmaller'" t-out="this.pttKeyDisplayText"/>
                     </span>
                     <div class="form-check form-switch d-flex align-items-center mb-0 ps-0">
                         <input class="form-check-input mx-0 mt-0" type="checkbox" role="switch" t-att-checked="this.store.settings.usePushToTalk ? 'checked' : ''"/>

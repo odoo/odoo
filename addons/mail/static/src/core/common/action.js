@@ -19,7 +19,7 @@ export const ACTION_TAGS = Object.freeze({
 });
 
 export const ACTION_GROUP_TAGS = Object.freeze({
-    INLINE_SWITCHER_LOOK: "INLINE_SWITCHER_LOOK",
+    ACTION_PANELS: "ACTION_PANELS",
 });
 
 export const IS_ACTION_DEFINITION_SYM = Symbol("isActionDefinition");
@@ -278,6 +278,8 @@ export class Action {
      */
     openPanel({ container = PANEL, keepPrevious } = {}) {
         if (container.type !== PANEL.type) {
+            // Only one overlay of the owner is open at a time.
+            this.actions?.closeOverlays();
             this.overlayState.open();
             this.overlay.close = this._openOverlay(container);
             return;
@@ -764,12 +766,17 @@ export class UseActions {
 
     /** Closes the panel shown in the panel of the owner, and those open in another container. */
     closePanels() {
+        this.closeOverlays();
+        this.panelAction?.closePanel();
+    }
+
+    /** Closes the panels open in another container than the panel of the owner, @see PANEL */
+    closeOverlays() {
         for (const action of this.actions) {
             if (action.overlayState.isOpen) {
                 action.closePanel();
             }
         }
-        this.panelAction?.closePanel();
     }
 
     _computeActions() {

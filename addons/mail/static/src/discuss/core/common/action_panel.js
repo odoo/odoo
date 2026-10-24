@@ -65,6 +65,11 @@ export class ActionPanel extends Component {
     }
 
     get initialWidth() {
-        return this.props.initialWidth;
+        return this.ancestors.inDiscussContent?.panelWidth() ?? this.props.initialWidth;
+    }
+
+    /** @param {number} width */
+    onResize(width) {
+        this.ancestors.inDiscussContent?.setPanelWidth(width);
     }
 }

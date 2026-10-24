@@ -19,7 +19,9 @@
                     'o-editing': this.props.composer.message,
                     'o-chatWindow mx-2 my-1': this.ancestors.inChatWindow,
                     'mb-2': this.ancestors.inChatWindow and !this.props.composer.message,
-                    'o-discussApp pt-1 ps-2 pe-4': this.ancestors.inDiscussApp,
+                    'o-discussApp': this.ancestors.inDiscussApp,
+                    'pt-1 ps-2 pe-4': this.ancestors.inDiscussApp and this.props.composer.message,
+                    'pt-2 px-4 o-pb-3_5': this.ancestors.inDiscussApp and !this.props.composer.message,
                     'o-disabled': this.props.disabled,
                 }" t-attf-class="{{ this.props.className }}">
             <FileUploader t-if="this.allowUpload" multiUpload="this.isMultiUpload" onUploaded.bind="(data) => { this.attachmentUploader.uploadData(data) }">
@@ -50,9 +52,11 @@
             <div class="o-mail-Composer-coreMain min-w-0 d-flex flex-nowrap align-items-start flex-grow-1" t-att-class="{ 'flex-column' : this.extended or this.props.composer.message }">
                 <div class="o-mail-Composer-inputContainer o-mail-Composer-bg d-flex flex-grow-1 min-w-0 overflow-x-hidden border"
                     t-att-class="{
-                        'o-iosPwa': this.isIosPwa,
+                        'mb-3': this.isIosPwa and !this.isSoftKeyboardOpen(),
                         'align-self-stretch' : this.extended,
                         'w-100': this.props.composer.message,
+                        'px-1': this.compact,
+                        'px-2': this.normal,
                     }"
                     t-ref="this.inputContainerRef"
                 >
