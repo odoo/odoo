@@ -2,77 +2,87 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Activity">
-    <div class="o-mail-Activity d-flex py-1 mb-2" t-on-click="this.onClick">
+    <t t-set="isMainAction" t-value="!!this.activity().user_id and !this.hasMailButton and !this.activity().phone and this.activity().activity_category !== 'upload_file'"/>
+    <div class="o-mail-Activity d-flex align-items-start gap-2 mx-2 opacity-trigger-hover" t-on-click="this.onClick"
+    >
         <div class="o-mail-Activity-sidebar d-flex flex-shrink-0 position-relative align-items-start justify-content-center">
             <div class="o-mail-Activity-avatarContainer position-relative d-flex align-items-center justify-content-center" t-att-role="this.activity().user_id ? 'button' : 'img'" t-on-click="this.onClickAvatar">
                 <img t-if="this.activity().user_id?.partner_id" class="o-mail-Activity-avatar o_avatar rounded" t-att-src="this.activity().user_id.partner_id.avatarUrl" />
                 <div t-elif="this.activity().role_id" class="o-mail-Activity-avatar rounded w-100 h-100 d-flex align-items-center justify-content-center bg-200 text-600">
                     <i class="oi oi-filled fs-4" data-icon="group" role="img" title="Role" aria-label="Role"/>
                 </div>
-                <div
-                    class="o-mail-Activity-iconContainer rounded-circle d-flex align-items-center justify-content-center"
-                    t-att-class="{
-                        'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1 w-50 h-50': this.activity().user_id || this.activity().role_id,
-                        'text-bg-success': this.activity().state === 'planned',
-                        'text-bg-warning': this.activity().state === 'today',
-                        'text-bg-danger': this.activity().state === 'overdue',
-                        }"
-                    t-attf-style="{{(this.activity().user_id || this.activity().role_id) ? '' : 'height:80%; width:80%;'}}"
-                >
-                    <i class="oi oi-sm oi-filled" role="img" t-attf-class="{{this.activity().user_id || this.activity().role_id ? 'oi-sm' : 'fs-2'}}" t-att-data-icon="this.activity().icon"/>
-                </div>
             </div>
         </div>
-        <div class="flex-grow px-1">
-            <div class="o-mail-Activity-info lh-1">
-                <span class="fw-bolder text-success" t-if="this.delay === 1">Tomorrow:</span>
-                <span class="fw-bolder text-success" t-elif="this.delay gt 0">Due in <t t-out="this.delay"/> days:</span>
-                <span class="fw-bolder text-danger" t-elif="this.delay === -1">Yesterday:</span>
-                <span class="fw-bolder text-danger" t-elif="this.delay lt 0"><t t-out="-this.delay"/> days overdue:</span>
-                <span class="fw-bolder text-warning" t-else="">Today:</span>
-                <span class="fw-bolder ps-2 pe-1 text-break"><t t-out="this.displayName"/></span>
-                <span class="o-mail-Activity-user pe-1" t-if="this.activity().user_id?.partner_id" >for <t t-out="this.activity().user_id.partner_id.displayName"/></span>
-                <span class="o-mail-Activity-role pe-1" t-elif="!this.activity().user_id and this.activity().role_id">for @<t t-out="this.activity().role_id.name"/></span>
-                <i class="oi oi-filled p-0 text-muted" data-icon="info" role="img" title="Info" aria-label="Info"
-                    data-tooltip-template="mail.ActivityTooltip" t-att-data-tooltip-info="this.tooltipInfo"/>
+        <div class="o-mail-Activity-info d-flex flex-column w-100">
+            <div class="o-mail-Activity-header d-flex gap-2 justify-content-between align-items-start">
+                <div class="d-flex flex-column">
+                    <small class="text-muted smaller lh-sm">
+                        <span class="o-mail-Activity-date">
+                            <span class="fw-bolder text-success" t-if="this.delay === 1">Tomorrow</span>
+                            <span class="fw-bolder text-success" t-elif="this.delay gt 0">Due in <t t-out="this.delay"/> days</span>
+                            <span class="fw-bolder text-danger" t-elif="this.delay === -1">Yesterday</span>
+                            <span class="fw-bolder text-danger" t-elif="this.delay lt 0"><t t-out="-this.delay"/> days overdue</span>
+                            <span class="fw-bolder text-warning" t-else="">Today</span>
+                        </span>
+                        <span class="o-mail-Activity-user">
+                            for
+                            <t t-if="this.activity().user_id?.partner_id" t-out="this.activity().user_id.partner_id.displayName"/>
+                            <t t-elif="!this.activity().user_id and this.activity().role_id" t-out="this.activity().role_id.name"/>
+                            <i class="o-mail-Activity-info-popover oi ms-1 text-muted opacity-0 opacity-100-hover" data-icon="info" role="img" title="Info" aria-label="Info" data-tooltip-template="mail.ActivityTooltip" t-att-data-tooltip-info="this.tooltipInfo"/>
+                        </span>
+                    </small>
+                    <div class="fw-bold text-break">
+                        <i
+                            class="o-mail-Activity-Container d-inline-block oi me-1"
+                            t-att-class="{
+                                'text-success': this.activity().state === 'planned',
+                                'text-warning': this.activity().state === 'today',
+                                'text-danger': this.activity().state === 'overdue',
+                            }"
+                            role="img"
+                            t-att-data-icon="this.activity().icon"
+                        />
+                        <span class="o-mail-Activity-name" t-out="this.displayName"/>
+                        <div t-if="this.activity().phone" class="o-mail-Activity-phoneNumber btn btn-link position-relative d-inline border-0 p-0 align-baseline">
+                            (<span t-out="this.activity().phone"/>)
+                            <CopyButton
+                                className="'o-mail-Activity-copy btn-link border-0 p-0 opacity-0 opacity-100-hover stretched-link align-baseline ms-n1 lh-1'"
+                                content="this.activity().phone"
+                                icon="'content_copy'"
+                                successText.translate="Copied!"
+                            />
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div t-if="this.activity().phone" class="o-mail-Activity-phoneNumber d-flex align-items-center gap-2">
-                <span t-out="this.activity().phone"/>
-                <CopyButton
-                    className="'o-mail-Activity-copy btn-hover-action p-0'"
-                    content="this.activity().phone"
-                    icon="'content_copy'"
-                    successText.translate="Copied!"
-                />
-            </div>
-            <div t-if="!this.activity().isNoteEmpty" class="o-mail-Activity-note text-break" t-out="this.activity().note"/>
+            <div t-if="!this.activity().isNoteEmpty" class="o-mail-Activity-note d-empty-none mt-1 text-break" t-out="this.activity().note"/>
             <div t-if="this.activity().mail_template_ids?.length > 0" class="o-mail-Activity-mailTemplates">
                 <ActivityMailTemplate activity="this.activity" onActivityChanged="this.onActivityChanged"/>
             </div>
-            <div t-if="this.activity().can_write or this.activity().phone" class="lh-lg">
+            <div t-if="this.activity().can_write or this.activity().phone" class="d-flex gap-1 flex-shrink-0 mt-2">
                 <t name="tools">
                     <t t-if="this.activity().can_write">
-                        <button t-if="!this.activity().user_id" class="o-mail-Activity-assign btn btn-hover-action p-0 me-3" t-on-click="this.onClickAssign">
+                        <button t-if="!this.activity().user_id" class="o-mail-Activity-assign btn btn-secondary btn-sm" t-on-click="this.onClickAssign">
                             <i class="oi oi-filled" data-icon="person" role="img" aria-label="User"/> Assign
                         </button>
-                        <button t-if="this.hasMailButton" class="o-mail-Activity-composeEmail btn btn-hover-action p-0 me-3" t-on-click="this.onClickMail">
-                            <i class="oi oi-filled" data-icon="mail" role="img" aria-label="Compose Mail"/> Send
+                        <button t-if="this.hasMailButton" class="o-mail-Activity-composeEmail btn btn-secondary btn-sm" t-on-click="this.onClickMail">
+                            <i class="oi" data-icon="edit_square" role="img" aria-label="Compose Mail"/> Compose
                         </button>
                     </t>
-                    <a t-if="this.activity().phone" t-att-href="this.phoneHref" class="o-mail-Activity-call btn btn-hover-action btn-sm" t-on-click="this.onClickPhoneNumber">
+                    <a t-if="this.activity().phone" t-att-href="this.phoneHref" class="o-mail-Activity-call btn btn-secondary btn-sm" t-on-click="this.onClickPhoneNumber">
                         <i class="oi oi-filled" data-icon="phone"/> Call
                     </a>
                     <t t-if="this.activity().can_write">
-                        <button class="o-mail-Activity-markDone btn btn-hover-success btn-sm" t-on-click="this.onClickMarkAsDone">
-                            <i class="oi" data-icon="check"/> Done
-                        </button>
                         <FileUploader t-if="this.activity().activity_category === 'upload_file'" onUploaded.bind="this.onFileUploaded">
                             <t t-set-slot="toggler">
-                                <button class="btn btn-hover-action btn-sm text-action p-0">
-                                    <i t-attf-class="oi" t-att-data-icon="this.activity().icon"/> <t t-out="this.activity().display_name"/>
+                                <button class="btn btn-secondary btn-sm">
+                                    <i t-attf-class="oi" t-att-data-icon="this.activity().icon"/> Upload
                                 </button>
                             </t>
                         </FileUploader>
+                        <button class="o-mail-Activity-markDone btn btn-sm" t-att-class="isMainAction ? 'btn-secondary' : 'btn-hover-success'" t-on-click="this.onClickMarkAsDone">
+                            <i class="oi" data-icon="check"/> Done
+                        </button>
                         <button class="o-mail-Activity-edit btn btn-hover-action btn-sm" t-on-click="this.edit">
                             <i class="oi oi-filled" data-icon="edit"/> Edit
                         </button>
