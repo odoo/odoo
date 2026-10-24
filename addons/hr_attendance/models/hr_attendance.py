@@ -86,7 +86,7 @@ class HrAttendance(models.Model):
     break_duration = fields.Float(string="Break Duration", tracking=True, help="Extra unpaid break duration (hours)")
     work_entry_type_id = fields.Many2one(
         'hr.work.entry.type', string="Time Type", index=True, required=True,
-        default=lambda self: self.env.company.sudo().attendance_work_entry_type_id,
+        compute='_compute_work_entry_type_id', store=True, readonly=False, precompute=True,
     )
     wet_display_code = fields.Char(related='work_entry_type_id.display_code', export_string_translation=False)
     # color index of the linked work entry type, used by calendar/gantt views
@@ -171,6 +171,12 @@ class HrAttendance(models.Model):
                 ) - attendance.break_duration
             else:
                 attendance.worked_hours = False
+
+    @api.depends('employee_id', 'check_in')
+    def _compute_work_entry_type_id(self):
+        for attendance in self:
+            if attendance.employee_id:
+                attendance.work_entry_type_id = attendance.employee_id._get_work_entry_type_by_checkin_time(attendance.check_in)
 
     @api.constrains('break_duration', 'check_in', 'check_out')
     def _check_break_duration(self):
