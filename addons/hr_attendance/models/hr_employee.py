@@ -101,6 +101,7 @@ class HrEmployee(models.Model):
             aggregates=['worked_hours:sum'],
         )
         for employee, wet, worked_hours in by_wet:
+            wet = wet.sudo()
             attendance_data[employee.id]['entries'].append({
                 'name': wet.name if wet else self.env._('Attendance'),
                 'worked_hours': worked_hours,

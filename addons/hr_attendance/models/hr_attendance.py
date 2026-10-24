@@ -132,7 +132,7 @@ class HrAttendance(models.Model):
     @api.depends('employee_id', 'check_in', 'check_out', 'work_entry_type_id', 'source_stale')
     def _compute_display_name(self):
         for attendance in self:
-            wet = attendance.work_entry_type_id
+            wet = attendance.work_entry_type_id.sudo()
             wet_name = wet.display_code or wet.name or ''
             if not attendance.check_out:
                 name = wet_name or _("In Progress")
