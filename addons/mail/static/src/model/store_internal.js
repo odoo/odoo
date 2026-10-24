@@ -3,7 +3,13 @@
 /** @typedef {import("./store").Store} Store */
 
 import { ManyFieldVersion, SingleFieldVersion, SKIP_REVISION } from "@mail/model/field_version";
-import { isCommandList, isMany, normalizeManyCommands, untrackFunctions } from "@mail/model/misc";
+import {
+    isCommandList,
+    isMany,
+    normalizeManyCommands,
+    technicalKeysOnRecords,
+    untrackFunctions,
+} from "@mail/model/misc";
 import { RecordInternal } from "@mail/model/record_internal";
 import { incrementFn } from "@mail/utils/common/signal";
 
@@ -13,14 +19,7 @@ import { deserializeDate, deserializeDateTime } from "@web/core/l10n/dates";
 
 const Markup = markup().constructor;
 
-/** @typedef {string} FieldName */
-
 export class StoreInternal extends RecordInternal {
-    /**
-     * See {@link Store#MAKE_UPDATE}.
-     * @type {Map<import("./record").Record, Map<string, true>>}
-     */
-    FC_QUEUE = new Map(); // field-computes
     /**
      * See {@link Store#MAKE_UPDATE}.
      * @type {Map<Record, true>}
@@ -42,10 +41,12 @@ export class StoreInternal extends RecordInternal {
     raiseUpdateDepth = incrementFn(this.updateDepth);
     lowerUpdateDepth = incrementFn(this.updateDepth, -1);
     /**
-     * A computed of the depth, so a held field only recomputes when this
+     * A computed of the depth, so a waiting observer only re-runs when this
      * flips, not on every nested raise. See {@link Store#MAKE_UPDATE}.
      */
     isUpdateInProgress = computed(() => this.updateDepth() > 0);
+    /** See {@link Store#MAKE_UPDATE}. */
+    deletingRecords = signal(false);
     /** See {@link Store#MAKE_UPDATE}. */
     isDrainingQueues = signal(false);
     /**
@@ -66,38 +67,10 @@ export class StoreInternal extends RecordInternal {
         untrackFunctions(this, ["lowerUpdateDepth", "raiseUpdateDepth"]);
     }
 
-    /**
-     * @param {"compute"|"delete"} type
-     * @param {...any} params
-     */
-    ADD_QUEUE(type, ...params) {
-        switch (type) {
-            case "delete": {
-                /** @type {import("./record").Record} */
-                const [record] = params;
-                if (!this.RD_QUEUE.has(record)) {
-                    this.RD_QUEUE.set(record, true);
-                }
-                break;
-            }
-            case "compute": {
-                /** @type {[import("./record").Record, string]} */
-                const [record, fieldName] = params;
-                let recMap = this.FC_QUEUE.get(record);
-                if (!recMap) {
-                    recMap = new Map();
-                    this.FC_QUEUE.set(record, recMap);
-                }
-                recMap.set(fieldName, true);
-                break;
-            }
-        }
-    }
     /** @param {RecordList<Record>} recordList */
     sortRecordList(recordList, func) {
-        const recordProxies = recordList._.data().map((record) => record._proxy);
-        recordProxies.sort(func);
-        const records = recordProxies.map((recordProxy) => recordProxy._raw);
+        const records = recordList._.data().slice();
+        records.sort(func);
         const hasChanged = recordList._.data().some((record, i) => record !== records[i]);
         if (hasChanged) {
             recordList._.data.set(records);
@@ -113,7 +86,7 @@ export class StoreInternal extends RecordInternal {
         const parentFieldName = Model._.parentFields.get(fieldName);
         if (parentFieldName) {
             // Route the write to the parent record, which stores an _inherits field.
-            Reflect.set(record._proxy[parentFieldName], fieldName, value);
+            Reflect.set(record[parentFieldName], fieldName, value);
             return;
         }
         if (Model._.fieldsComputable.has(fieldName)) {
@@ -168,6 +141,22 @@ export class StoreInternal extends RecordInternal {
             Object.getOwnPropertySymbols(vals).map((sym) => [sym, vals[sym]])
         );
         for (const [fieldName, value] of fieldEntries) {
+            const Model = record.Model;
+            if (typeof fieldName === "string" && Model._.parentFields.get(fieldName)) {
+                record[fieldName] = value;
+                continue;
+            }
+            if (
+                typeof fieldName === "string" &&
+                !Model._.fields.get(fieldName) &&
+                !Model._.fieldsComputable.has(fieldName) &&
+                !technicalKeysOnRecords.has(fieldName)
+            ) {
+                console.warn(
+                    `Dropping unknown field "${fieldName}" inserted on "${Model.getName()}": records only hold declared fields.`
+                );
+                continue;
+            }
             let version = record._.fieldsVersion.get(fieldName);
             if (!version) {
                 version = isMany(record.Model, fieldName)
@@ -214,7 +203,7 @@ export class StoreInternal extends RecordInternal {
      */
     updateRelation(record, fieldName, value) {
         /** @type {RecordList<Record>} */
-        const recordList = record[fieldName];
+        const recordList = record._.fieldsList.get(fieldName);
         if (isMany(record.Model, fieldName)) {
             this.updateRelationMany(recordList, value);
         } else {
