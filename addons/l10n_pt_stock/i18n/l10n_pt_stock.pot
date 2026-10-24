@@ -1,0 +1,398 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_pt_stock
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-07-25 12:51+0000\n"
+"PO-Revision-Date: 2025-07-25 12:51+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_pt_stock
+#: model:ir.model.fields,help:l10n_pt_stock.field_l10n_pt_at_series_line__type
+msgid ""
+" * Invoice (FT): Series for Customer Invoices.\n"
+" * Simplified Invoice (FS): Series for Sales Receipts.\n"
+" * Invoice/Receipt (FR): Series for PoS Orders."
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model_terms:ir.ui.view,arch_db:l10n_pt_stock.view_picking_form_inherit_pt
+msgid ""
+")\n"
+"                  does not have an AT Series associated to it. This stock picking will not be hashed."
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model.fields,field_description:l10n_pt_stock.field_stock_picking__l10n_pt_at_series_id
+msgid "AT Series"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model_terms:ir.ui.view,arch_db:l10n_pt_stock.report_delivery_document_inherit_l10n_pt_stock
+msgid "ATCUD:"
+msgstr ""
+
+#. module: l10n_pt_stock
+#. odoo-python
+#: code:addons/l10n_pt_stock/models/stock_picking.py:0
+msgid "Add an AT Series"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model.constraint,message:l10n_pt_stock.constraint_stock_picking_type_at_series_code_unique
+msgid "An AT series cannot be assigned to multiple Operation Types."
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model,name:l10n_pt_stock.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model,name:l10n_pt_stock.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: l10n_pt_stock
+#. odoo-python
+#: code:addons/l10n_pt_stock/models/res_company.py:0
+msgid "Corrupted data on delivery order with id %(id)s (%(name)s)."
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model.fields,field_description:l10n_pt_stock.field_stock_picking_type__country_code
+msgid "Country Code"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model.fields,help:l10n_pt_stock.field_stock_picking__l10n_pt_start_transport_date
+msgid "Date and time of start of transport"
+msgstr ""
+
+#. module: l10n_pt_stock
+#. odoo-python
+#: code:addons/l10n_pt_stock/models/res_company.py:0
+msgid "Delivery orders are correctly hashed"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model.fields,field_description:l10n_pt_stock.field_l10n_pt_at_series_line__type
+msgid "Document Type"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model.fields,field_description:l10n_pt_stock.field_stock_picking_type__l10n_pt_stock_at_series_line_id
+msgid "Document-specific AT Series"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model,name:l10n_pt_stock.model_l10n_pt_at_series_line
+msgid "Document-specific Autoridade Tributária (AT) Series"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model_terms:ir.ui.view,arch_db:l10n_pt_stock.res_config_settings_view_form_inherit_pt
+msgid "Download the Stock Data Inalterability Check Report"
+msgstr ""
+
+#. module: l10n_pt_stock
+#. odoo-python
+#: code:addons/l10n_pt_stock/models/stock_picking.py:0
+msgid "Draft Entries"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model_terms:ir.ui.view,arch_db:l10n_pt_stock.report_delivery_document_inherit_l10n_pt_stock
+msgid "GT 2023/0001"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.actions.server,name:l10n_pt_stock.l10n_pt_stock_cron_missing_hashes_ir_actions_server
+msgid "Generate the missing hashes of stock pickings"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model,name:l10n_pt_stock.model_report_l10n_pt_stock_report_hash_integrity
+msgid "Get hash integrity result as PDF."
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model.fields,field_description:l10n_pt_stock.field_stock_picking__l10n_pt_hashed_on
+msgid "Hashed On"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model.fields,field_description:l10n_pt_stock.field_stock_picking__l10n_pt_stock_inalterable_hash
+msgid "Inalterability Hash"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model.fields.selection,name:l10n_pt_stock.selection__l10n_pt_at_series_line__type__internal
+msgid "Internal Transport Document (GA)"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model.fields,field_description:l10n_pt_stock.field_stock_picking__l10n_pt_show_no_at_series_warning
+msgid "L10N Pt Show No At Series Warning"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model,name:l10n_pt_stock.model_l10n_pt_at_series
+msgid ""
+"Mapping between Odoo Series and the Official Series for the Autoridade "
+"Tributária (AT)"
+msgstr ""
+
+#. module: l10n_pt_stock
+#. odoo-python
+#: code:addons/l10n_pt_stock/models/res_company.py:0
+msgid "No delivery orders found for this configuration."
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model.fields,field_description:l10n_pt_stock.field_stock_picking_type__l10n_pt_stock_at_series_id
+msgid "Official Series of the Tax Authority"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model.fields.selection,name:l10n_pt_stock.selection__stock_picking__l10n_pt_print_version__original
+msgid "Original"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model,name:l10n_pt_stock.model_stock_picking_type
+msgid "Picking Type"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model_terms:ir.ui.view,arch_db:l10n_pt_stock.view_picking_form_inherit_pt
+#: model_terms:ir.ui.view,arch_db:l10n_pt_stock.view_picking_type_form_inherit_pt
+msgid "Portugal"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model.fields,field_description:l10n_pt_stock.field_stock_picking__l10n_pt_stock_atcud
+msgid "Portuguese ATCUD"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model.fields,field_description:l10n_pt_stock.field_stock_picking__l10n_pt_document_type
+msgid "Portuguese Document Type"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model.fields,field_description:l10n_pt_stock.field_stock_picking__l10n_pt_stock_qr_code_str
+msgid "Portuguese QR Code"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.actions.server,name:l10n_pt_stock.action_l10n_pt_stock_check_hash_integrity
+msgid "Portuguese Stock Inalterability Check"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model.fields,field_description:l10n_pt_stock.field_stock_picking__l10n_pt_stock_inalterable_hash_version
+msgid "Portuguese hash version"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.actions.report,name:l10n_pt_stock.action_l10n_pt_stock_report_hash_integrity
+msgid "Portuguese stock hash integrity result PDF"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model_terms:ir.ui.view,arch_db:l10n_pt_stock.view_picking_form_inherit_pt
+msgid "Print"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model,name:l10n_pt_stock.model_product_template
+msgid "Product"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model,name:l10n_pt_stock.model_ir_actions_report
+msgid "Report Action"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model_terms:ir.ui.view,arch_db:l10n_pt_stock.res_config_settings_view_form_inherit_pt
+msgid "Reporting"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model.fields.selection,name:l10n_pt_stock.selection__stock_picking__l10n_pt_print_version__reprint
+msgid "Reprint"
+msgstr ""
+
+#. module: l10n_pt_stock
+#. odoo-python
+#: code:addons/l10n_pt_stock/models/stock_picking.py:0
+msgid "Reprint Reason"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model,name:l10n_pt_stock.model_l10n_pt_reprint_reason
+msgid "Reprint Reason Wizard"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model.fields.selection,name:l10n_pt_stock.selection__l10n_pt_at_series_line__type__incoming
+msgid "Return Note (GD)"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model.fields,field_description:l10n_pt_stock.field_stock_picking__l10n_pt_inalterable_hash_short
+msgid "Short version of the Portuguese hash"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model.fields,field_description:l10n_pt_stock.field_stock_picking__l10n_pt_start_transport_date
+msgid "Start of Transport Date"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model,name:l10n_pt_stock.model_report_stock_report_deliveryslip
+msgid "Stock delivery slip report"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model.fields,help:l10n_pt_stock.field_stock_picking_type__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+
+#. module: l10n_pt_stock
+#. odoo-python
+#: code:addons/l10n_pt_stock/models/stock_picking.py:0
+msgid "The delivery order was successfully signed."
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model_terms:ir.ui.view,arch_db:l10n_pt_stock.view_picking_form_inherit_pt
+msgid "The selected Operation Type ("
+msgstr ""
+
+#. module: l10n_pt_stock
+#. odoo-python
+#: code:addons/l10n_pt_stock/models/stock_picking.py:0
+msgid ""
+"There exists secured stock pickings with a lock date ahead of the present "
+"time."
+msgstr ""
+
+#. module: l10n_pt_stock
+#. odoo-python
+#: code:addons/l10n_pt_stock/models/stock_picking.py:0
+msgid ""
+"There is no AT series for this Operation Type registered under the series "
+"name %(series_name)s.Create a new series or view existing series via the "
+"Accounting Settings."
+msgstr ""
+
+#. module: l10n_pt_stock
+#. odoo-python
+#: code:addons/l10n_pt_stock/models/res_company.py:0
+msgid ""
+"This company has AT Series shared across branches, and other companies also "
+"have hashed documents under this series. To generate the report, please also"
+" select %s in the company selector."
+msgstr ""
+
+#. module: l10n_pt_stock
+#. odoo-python
+#: code:addons/l10n_pt_stock/models/stock_picking.py:0
+msgid ""
+"This document is protected by a hash. Therefore, you cannot edit the "
+"following fields: %s."
+msgstr ""
+
+#. module: l10n_pt_stock
+#. odoo-python
+#: code:addons/l10n_pt_stock/models/res_company.py:0
+msgid "This feature is only available for Portuguese companies."
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model,name:l10n_pt_stock.model_stock_picking
+msgid "Transfer"
+msgstr ""
+
+#. module: l10n_pt_stock
+#. odoo-python
+#: code:addons/l10n_pt_stock/models/stock_picking.py:0
+msgid ""
+"Transfer %s does not have a Unique Document Number. Verify that its "
+"operation type has an AT Series."
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model.fields.selection,name:l10n_pt_stock.selection__l10n_pt_at_series_line__type__outgoing
+msgid "Transport Guide (GT)"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model.fields,field_description:l10n_pt_stock.field_stock_picking__l10n_pt_document_number
+msgid "Unique Document Number"
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model_terms:ir.ui.view,arch_db:l10n_pt_stock.view_picking_form_inherit_pt
+msgid ""
+"Unique document code formed by the AT series validation code and the number "
+"of the                            document in the series. Only assigned once"
+" the document is secured."
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model.fields,help:l10n_pt_stock.field_stock_picking__l10n_pt_document_number
+msgid ""
+"Unique identifier made up of the internal document type code, the series "
+"name, and the number of the document within the series."
+msgstr ""
+
+#. module: l10n_pt_stock
+#: model:ir.model.fields,field_description:l10n_pt_stock.field_stock_picking__l10n_pt_print_version
+msgid "Version of Printed Document"
+msgstr ""
+
+#. module: l10n_pt_stock
+#. odoo-python
+#: code:addons/l10n_pt_stock/models/res_partner.py:0
+msgid ""
+"You cannot change the VAT number of a partner that already has issued "
+"documents"
+msgstr ""
+
+#. module: l10n_pt_stock
+#. odoo-python
+#: code:addons/l10n_pt_stock/models/l10n_pt_at_series.py:0
+msgid ""
+"You cannot change the name or training status of a series that has already "
+"been used."
+msgstr ""
+
+#. module: l10n_pt_stock
+#. odoo-python
+#: code:addons/l10n_pt_stock/models/l10n_pt_at_series.py:0
+msgid ""
+"You cannot change the type, prefix or AT code of a series that has already "
+"been used."
+msgstr ""
+
+#. module: l10n_pt_stock
+#. odoo-python
+#: code:addons/l10n_pt_stock/models/res_product.py:0
+msgid ""
+"You cannot modify the name of a product that has been used in a transfer in "
+"Portugal."
+msgstr ""

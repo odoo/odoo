@@ -1,7 +1,8 @@
 from odoo import Command
+from odoo.tests import tagged
+
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.account.tests.test_taxes_tax_totals_summary import TestTaxesTaxTotalsSummary
-from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install', 'post_install_l10n')
@@ -11,6 +12,51 @@ class TestTaxesTaxTotalsSummaryL10nPt(TestTaxesTaxTotalsSummary):
     @AccountTestInvoicingCommon.setup_country('pt')
     def setUpClass(cls):
         super().setUpClass()
+
+    def _jsonify_document_line(self, document, index, line):
+        # EXTENDS 'account' to include line discounts
+        values = super()._jsonify_document_line(document, index, line)
+        if l10n_pt_line_discount := line.get('l10n_pt_line_discount'):
+            values['l10n_pt_line_discount'] = l10n_pt_line_discount
+        return values
+
+    def convert_base_line_to_invoice_line(self, document, base_line):
+        # EXTENDS 'account' to include line discounts
+        values = super().convert_base_line_to_invoice_line(document, base_line)
+        if l10n_pt_line_discount := base_line.get('l10n_pt_line_discount'):
+            values['l10n_pt_line_discount'] = l10n_pt_line_discount
+        return values
+
+    def convert_document_to_invoice(self, document):
+        # EXTENDS 'account'  to include global discounts
+        invoice = super().convert_document_to_invoice(document)
+        if global_discount := document.get('l10n_pt_global_discount'):
+            invoice.l10n_pt_global_discount = global_discount
+        return invoice
+
+    def populate_document(self, document):
+        if document.get('l10n_pt_line_discount') or document.get('line_discount'):
+            document = self._l10n_pt_add_discount(document)
+        return super().populate_document(document)
+
+    # -------------------------------------------------------------------------
+    # Compute discount
+    # -------------------------------------------------------------------------
+
+    def _l10n_pt_add_discount(self, document):
+        """
+        Simulate behavior of _compute_discount in l10n_pt, which sets the discount amount
+        based on l10n_pt_line_discount and l10n_pt_global_discount.
+        """
+        global_discount = document.get('l10n_pt_global_discount', 0.0) / 100
+        for line in document['lines']:
+            line_discount = line.get('l10n_pt_line_discount', 0.0) / 100
+            line['discount'] = (1 - (1 - global_discount) * (1 - line_discount)) * 100
+        return document
+
+    # -------------------------------------------------------------------------
+    # Tests
+    # -------------------------------------------------------------------------
 
     def _test_taxes_l10n_pt(self):
         """ !!!! THOSE TESTS ARE THERE TO CERTIFY THE USE OF ODOO INVOICING IN PORTUGAL.
@@ -24,8 +70,8 @@ class TestTaxesTaxTotalsSummaryL10nPt(TestTaxesTaxTotalsSummary):
 
         document = self.populate_document(self.init_document(
             lines=[
-                {'quantity': 12.12, 'price_unit': 12.12},
-                {'quantity': 12.12, 'price_unit': 12.12},
+                {'quantity': 12.12, 'price_unit': 12.12, 'tax_ids': tax_0},
+                {'quantity': 12.12, 'price_unit': 12.12, 'tax_ids': tax_0},
             ],
         ))
         expected_values = {
@@ -39,7 +85,14 @@ class TestTaxesTaxTotalsSummaryL10nPt(TestTaxesTaxTotalsSummary):
                     'name': "Untaxed Amount",
                     'base_amount_currency': 293.79,
                     'tax_amount_currency': 0.0,
-                    'tax_groups': [],
+                    'tax_groups': [
+                        {
+                            'id': self.tax_groups[0].id,
+                            'base_amount_currency': 293.79,
+                            'tax_amount_currency': 0.0,
+                            'display_base_amount_currency': 293.79,
+                        },
+                    ],
                 },
             ],
         }
@@ -536,13 +589,15 @@ class TestTaxesTaxTotalsSummaryL10nPt(TestTaxesTaxTotalsSummary):
         }
         yield 14, document, expected_values
 
-        document = self.populate_document(self.init_document(
+        document_vals = self.init_document(
             lines=[
-                {'quantity': 100.0, 'price_unit': 0.55, 'discount': 8.8, 'tax_ids': tax_23},
+                {'quantity': 100.0, 'price_unit': 0.55, 'l10n_pt_line_discount': 8.8, 'tax_ids': tax_23},
                 {'quantity': 10.0, 'price_unit': 2.0, 'tax_ids': tax_23},
-                {'quantity': 1.0, 'price_unit': -7.016, 'tax_ids': tax_23},
             ],
-        ))
+        )
+        document_vals['line_discount'] = True
+        document_vals['l10n_pt_global_discount'] = 10.0
+        document = self.populate_document(document_vals)
         expected_values = {
             'same_tax_base': True,
             'currency_id': self.currency.id,
@@ -567,14 +622,16 @@ class TestTaxesTaxTotalsSummaryL10nPt(TestTaxesTaxTotalsSummary):
         }
         yield 15, document, expected_values
 
-        document = self.populate_document(self.init_document(
+        document_vals = self.init_document(
             lines=[
-                {'quantity': 12.12, 'price_unit': 12.12, 'discount': 6.6, 'tax_ids': tax_13},
-                {'quantity': 12.12, 'price_unit': 12.12, 'discount': 6.6, 'tax_ids': tax_13},
-                {'quantity': 12.12, 'price_unit': 12.12, 'discount': 8.8, 'tax_ids': tax_23},
-                {'quantity': 12.12, 'price_unit': 12.12, 'discount': 8.8, 'tax_ids': tax_23},
+                {'quantity': 12.12, 'price_unit': 12.12, 'l10n_pt_line_discount': 6.6, 'tax_ids': tax_13},
+                {'quantity': 12.12, 'price_unit': 12.12, 'l10n_pt_line_discount': 6.6, 'tax_ids': tax_13},
+                {'quantity': 12.12, 'price_unit': 12.12, 'l10n_pt_line_discount': 8.8, 'tax_ids': tax_23},
+                {'quantity': 12.12, 'price_unit': 12.12, 'l10n_pt_line_discount': 8.8, 'tax_ids': tax_23},
             ],
-        ))
+        )
+        document_vals['line_discount'] = True
+        document = self.populate_document(document_vals)
         expected_values = {
             'same_tax_base': False,
             'currency_id': self.currency.id,
@@ -678,12 +735,14 @@ class TestTaxesTaxTotalsSummaryL10nPt(TestTaxesTaxTotalsSummary):
         }
         yield 18, document, expected_values
 
-        document = self.populate_document(self.init_document(
+        document_vals = self.init_document(
             lines=[
-                {'quantity': 100.0, 'price_unit': 0.55, 'discount': 17.92, 'tax_ids': tax_23},
-                {'quantity': 10.0, 'price_unit': 2.0, 'discount': 10.0, 'tax_ids': tax_23},
+                {'quantity': 100.0, 'price_unit': 0.55, 'l10n_pt_line_discount': 17.92, 'tax_ids': tax_23},
+                {'quantity': 10.0, 'price_unit': 2.0, 'l10n_pt_line_discount': 10.0, 'tax_ids': tax_23},
             ],
-        ))
+        )
+        document_vals['line_discount'] = True
+        document = self.populate_document(document_vals)
         expected_values = {
             'same_tax_base': True,
             'currency_id': self.currency.id,
@@ -711,6 +770,8 @@ class TestTaxesTaxTotalsSummaryL10nPt(TestTaxesTaxTotalsSummary):
     def test_taxes_l10n_pt_generic_helpers(self):
         for test_index, document, expected_values in self._test_taxes_l10n_pt():
             with self.subTest(test_index=test_index):
+                if document.get('l10n_pt_line_discount') or document.get('line_discount'):
+                    document = self._l10n_pt_add_discount(document)
                 self.assert_tax_totals_summary(document, expected_values)
         self._run_js_tests()
 
