@@ -24,6 +24,7 @@ import {
 import { Deferred, animationFrame, mockSendBeacon, tick } from "@odoo/hoot-mock";
 import { onWillDestroy, xml } from "@odoo/owl";
 import {
+    clickModalButton,
     clickSave,
     contains,
     defineModels,
@@ -35,6 +36,8 @@ import {
     onRpc,
     patchWithCleanup,
     serverState,
+    toggleActionMenu,
+    toggleMenuItem,
 } from "@web/../tests/web_test_helpers";
 import { assets } from "@web/core/assets";
 import { browser } from "@web/core/browser/browser";
@@ -1850,6 +1853,27 @@ test("edit and save a html field in collaborative should keep the same wysiwyg",
 
     await clickSave();
     expect.verifySteps(["web_save"]);
+});
+
+test("deleting a record with a collaborative html field should not broadcast without peers", async () => {
+    onRpc("/html_editor/get_ice_servers", () => []);
+    onRpc("/html_editor/bus_broadcast", () => expect.step("bus_broadcast"));
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        actionMenus: {},
+        arch: `
+            <form>
+                <field name="txt" widget="html" options="{'collaborative': true}"/>
+            </form>`,
+    });
+
+    await toggleActionMenu();
+    await toggleMenuItem("Delete");
+    await clickModalButton({ text: "Delete" });
+    expect.verifySteps([]);
 });
 
 test("'checklist' command is not available when 'allowChecklist' = false", async () => {
