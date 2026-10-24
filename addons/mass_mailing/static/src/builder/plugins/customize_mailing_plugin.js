@@ -8,6 +8,8 @@ import {
 } from "@mass_mailing/builder/plugins/customize_mailing_variables";
 import { splitSelectorAroundCommasOutsideParentheses } from "@mail/views/web/fields/html_mail_field/convert_inline";
 import { getCSSVariableValue } from "@html_editor/utils/formatting";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/l10n/translation";
 
 const RE_SELECTOR_ENDS_WITH_GT_STAR = />\s*\*\s*$/;
 export const PRIORITY_STYLES = {
@@ -26,6 +28,7 @@ export class CustomizeMailingPlugin extends Plugin {
     resources = {
         builder_actions: {
             CustomizeMailingVariable,
+            SwitchTemplateAction,
         },
         clean_for_save_processors: (root) => this.cleanForSave(root),
         snippet_preview_dialog_stylesheets_processors: (params) => {
@@ -255,6 +258,33 @@ export class CustomizeMailingVariable extends BuilderAction {
                 );
             },
         });
+    }
+}
+
+export class SwitchTemplateAction extends BuilderAction {
+    static id = "mass_mailing.SwitchTemplateAction";
+    static dependencies = ["builderActions"];
+    setup() {
+        this.preview = false;
+        this.canTimeout = false;
+    }
+    async apply() {
+        const returnToSelectTemplate = await new Promise((resolve) => {
+            this.services.dialog.add(ConfirmationDialog, {
+                title: _t("Switch mailing template?"),
+                body: _t(
+                    "Loading a new template will overwrite your current design. Any text, images and layout changes will be lost. Are you sure?"
+                ),
+                confirmLabel: _t("Switch Template"),
+                cancelLabel: _t("Keep Editing"),
+                confirm: () => resolve(true),
+                cancel: () => resolve(false),
+            });
+        });
+        if (!returnToSelectTemplate) {
+            return;
+        }
+        this.config.onSwitchTemplateTheme();
     }
 }
 

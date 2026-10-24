@@ -3131,7 +3131,7 @@ class TestComposerResultsMass(TestMailComposer):
             self.assertEqual(composer.attachment_ids.name, message.attachment_ids.name)
             self.assertEqual(composer.attachment_ids.raw.content, message.attachment_ids.raw.content)
             # post-related fields are void
-            self.assertFalse(message.subtype_id)
+            self.assertEqual(message.subtype_id, self.env.ref('mail.mt_note'))
             self.assertFalse(message.partner_ids)
 
     @users('employee')
