@@ -90,6 +90,9 @@
                 <SocioUnico t-if="company.l10n_it_eco_index_sole_shareholder != 'NO'" t-out="company.l10n_it_eco_index_sole_shareholder"/>
                 <StatoLiquidazione t-out="company.l10n_it_eco_index_liquidation_state"/>
             </IscrizioneREA>
+            <RiferimentoAmministrazione
+                t-if="partner.l10n_it_administration_reference"
+                t-out="format_alphanumeric(partner.l10n_it_administration_reference, 20)"/>
         </CedentePrestatore>
         <RappresentanteFiscale t-if="not is_self_invoice and representative">
             <DatiAnagrafici>
@@ -160,8 +163,6 @@
                                   t-out="pension_fund['ritenuta']"/>
                         <Natura t-if="pension_fund['natura']"
                                 t-out="format_alphanumeric(pension_fund['natura'])"/>
-                        <RiferimentoAmministrazione t-if="pension_fund['riferimento_amministrazione']"
-                                                    t-out="format_alphanumeric(pension_fund['riferimento_amministrazione'])"/>
                     </DatiCassaPrevidenziale>
                 </t>
                 <ImportoTotaleDocumento t-out="format_monetary(importo_totale_documento, currency)"/>

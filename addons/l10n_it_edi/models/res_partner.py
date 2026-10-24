@@ -21,6 +21,15 @@ class ResPartner(models.Model):
              "associated with the office which, within the addressee administration, deals "
              "with receiving (and processing) the invoice.",
     )
+    # 20 character limit is also enforced in e-invoice ../data/invoice_it_template.xml
+    l10n_it_administration_reference = fields.Char(
+        string="Administration Reference",
+        size=20,
+        help="Administrative reference (Riferimento Amministrazione) code agreed "
+             "with the customer. Fill it in only when the recipient asks for it, "
+             "in order to register the invoice in their system. The allowed value "
+             "is between 1 to 20 characters (inclusive).",
+    )
 
     _l10n_it_codice_fiscale = models.Constraint(
         "CHECK(l10n_it_codice_fiscale IS NULL OR l10n_it_codice_fiscale = '' OR LENGTH(l10n_it_codice_fiscale) >= 11)",
