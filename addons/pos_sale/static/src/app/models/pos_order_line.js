@@ -1,6 +1,7 @@
 import { PosOrderline } from "@point_of_sale/app/models/pos_order_line";
 import { formatCurrency } from "@point_of_sale/app/models/utils/currency";
 import { patch } from "@web/core/utils/patch";
+import { parseFloat } from "@web/views/fields/parsers";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 
 patch(PosOrderline.prototype, {
@@ -18,6 +19,13 @@ patch(PosOrderline.prototype, {
             product_name: detail.product_name,
             total: formatCurrency(detail.total, this.currency),
         }));
+    },
+    setUnitPrice(price) {
+        if (!this.sale_order_line_id) {
+            return super.setUnitPrice(price);
+        }
+        // Keep the full unit price of the sale order line, as the sale order doesn't round it
+        this.price_unit = (isNaN(price) ? parseFloat("" + price) : Number(price)) || 0;
     },
     getBaseLine(opts = {}) {
         const extraTaxData = this.extra_tax_data;
