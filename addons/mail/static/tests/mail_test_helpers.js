@@ -580,7 +580,7 @@ export function mockBrowserFullscreen({ grant = true } = {}) {
             return;
         }
         fullscreenElement = element;
-        window.dispatchEvent(new Event("fullscreenchange"));
+        document.dispatchEvent(new Event("fullscreenchange", { bubbles: true }));
     }
     Object.defineProperty(document, "fullscreenElement", {
         configurable: true,
