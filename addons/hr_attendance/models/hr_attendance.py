@@ -604,9 +604,9 @@ class HrAttendance(models.Model):
 
     def _get_localized_times(self):
         self.ensure_one()
-        tz = ZoneInfo(self.employee_id.sudo()._get_version(self.check_in.date()).tz)
-        localized_start = self.check_in.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
-        localized_end = self.check_out.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
+        tz = ZoneInfo(self.employee_id.sudo()._get_version(self.check_in.date()).tz) if self.employee_id and self.check_in else self.env.tz
+        localized_start = self.check_in.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None) if self.check_in else self.check_in
+        localized_end = self.check_out.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None) if self.check_out else self.check_out
         return localized_start, localized_end
 
     def _get_break_duration_within_period(self, start, stop):
