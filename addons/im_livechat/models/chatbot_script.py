@@ -130,10 +130,14 @@ class ChatbotScript(models.Model):
 
         return res
 
+    def _get_non_welcome_step_types(self):
+        """Return the step types that are excluded from the welcome steps."""
+        return []
+
     def _get_welcome_steps(self):
         """ Returns a sub-set of script_step_ids that only contains the "welcoming steps".
         We consider those as all the steps the bot will say before expecting a first answer from
-        the end user.
+        the end user, excluding any step types returned by `_get_non_welcome_step_types()`.
 
         Example 1:
         - step 1 (question_selection): What do you want to do? - Create a Lead, -Create a Ticket
@@ -155,8 +159,11 @@ class ChatbotScript(models.Model):
         to avoid bloating the channels with bot messages if the end-user never interacts with it. """
         self.ensure_one()
 
+        non_welcome_step_types = self._get_non_welcome_step_types()
         welcome_steps = self.env['chatbot.script.step']
         for step in self.script_step_ids:
+            if step.step_type in non_welcome_step_types:
+                continue
             welcome_steps += step
             if step.step_type != 'text':
                 break

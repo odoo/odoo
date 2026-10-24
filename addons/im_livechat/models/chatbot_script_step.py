@@ -65,19 +65,29 @@ class ChatbotScriptStep(models.Model):
             if update_command:
                 step.triggering_answer_ids = update_command
 
-    @api.depends(
-        "chatbot_script_id.script_step_ids.answer_ids",
-        "chatbot_script_id.script_step_ids.sequence",
-        "chatbot_script_id.script_step_ids.step_type",
-        "chatbot_script_id.script_step_ids.triggering_answer_ids",
-        "sequence",
-        "triggering_answer_ids",
-    )
+    @api.model
+    def _get_step_type_child_depends(self):
+        return (
+            "chatbot_script_id.script_step_ids.answer_ids",
+            "chatbot_script_id.script_step_ids.sequence",
+            "chatbot_script_id.script_step_ids.step_type",
+            "chatbot_script_id.script_step_ids.triggering_answer_ids",
+            "sequence",
+            "triggering_answer_ids",
+        )
+
+    @api.depends(lambda self: self._get_step_type_child_depends())
     def _compute_is_forward_operator_child(self):
+        for step, result in self._get_step_type_child("forward_operator").items():
+            step.is_forward_operator_child = result
+
+    def _get_step_type_child(self, step_type):
+        """Return a dictionary mapping each step to whether it is a child of a step of the given type."""
+        results = {}
         parent_steps_by_chatbot = {}
         for chatbot in self.chatbot_script_id:
             parent_steps_by_chatbot[chatbot.id] = chatbot.script_step_ids.filtered(
-                lambda step: step.step_type in ["forward_operator", "question_selection"]
+                lambda step: step.step_type in (step_type, "question_selection"),
             ).sorted(lambda s: s.sequence, reverse=True)
         for step in self:
             parent_steps = parent_steps_by_chatbot[step.chatbot_script_id.id].filtered(
@@ -86,9 +96,10 @@ class ChatbotScriptStep(models.Model):
             parent = step
             while True:
                 parent = parent._get_parent_step(parent_steps)
-                if not parent or parent.step_type == "forward_operator":
+                if not parent or parent.step_type == step_type:
                     break
-            step.is_forward_operator_child = parent and parent.step_type == "forward_operator"
+            results[step] = bool(parent and parent.step_type == step_type)
+        return results
 
     @api.model_create_multi
     def create(self, vals_list):
