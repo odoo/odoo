@@ -11,6 +11,7 @@ class TestCancelTimeOff(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.company = cls.env.ref('base.test_company')
+        cls.company.country_id = cls.env.ref('base.us')
         cls.global_leave = cls.env['resource.calendar.leaves'].create({
             'name': 'Test Global Leave',
             'date_from': '2020-01-08 00:00:00',
@@ -38,6 +39,7 @@ class TestCancelTimeOff(TransactionCase):
             'leave_validation_type': 'both',
             'request_unit': 'day',
             'unit_of_measure': 'day',
+            'country_id': cls.company.country_id.id,
         })
 
     @freeze_time('2020-01-01')
