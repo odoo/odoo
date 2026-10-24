@@ -90,6 +90,12 @@
             'point_of_sale/static/src/app/models/data_service_options.js',
             'point_of_sale/static/src/utils.js',
             'point_of_sale/static/src/app/models/data_service.js',
+            # for the partner_list.test.js
+            'point_of_sale/static/src/app/store/pos_hook.js',
+            'point_of_sale/static/src/app/generic_components/inputs/t_model_input.js',
+            'point_of_sale/static/src/app/generic_components/inputs/input/input.js',
+            'point_of_sale/static/src/app/screens/partner_list/partner_line/partner_line.js',
+            'point_of_sale/static/src/app/screens/partner_list/partner_list.js',
             'point_of_sale/static/tests/unit/**/*',
             # for the render_service.test.js
             'point_of_sale/static/src/app/utils/html-to-image.js',
