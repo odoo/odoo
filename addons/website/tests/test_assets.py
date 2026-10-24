@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 import re
+from unittest.mock import Mock, patch
 from urllib.parse import urlsplit
 
 import odoo.tests
@@ -99,6 +101,43 @@ class TestWebsiteAssets(odoo.tests.HttpCase):
 
         new_public_assets_links = re.findall(r'(/web/assets/\d+/\w{7}/web.assets_frontend\..+)"/>', page)
         self.assertEqual(new_admin_assets_links, new_public_assets_links, "caches should have been invalidated for public user too")
+
+    def test_03_google_local_font_public_cache(self):
+        font_css = b"""@font-face {
+  font-family: 'Modak';
+  src: url(https://fonts.gstatic.com/s/modak/v18/EJRYQgs1XtIEskMB-hRp7w.woff2) format('woff2');
+}"""
+
+        def fake_get(url, **kwargs):
+            return Mock(content=font_css if 'fonts.googleapis.com' in url else b'wOF2 font data')
+
+        with patch('odoo.addons.website.models.assets.requests.get', side_effect=fake_get):
+            self.env['website.assets'].with_context(website_id=self.ref('base.default_website')).make_scss_customization(
+                '/website/static/src/scss/options/user_values.scss',
+                {'google-local-fonts': "('Modak': '')", 'font': "'Modak'"},
+            )
+
+        def get_public(url):
+            res = self.url_open(url)
+            res.raise_for_status()
+            cache_control = res.headers['Cache-Control'].split(', ')
+            self.assertIn('public', cache_control, url)
+            self.assertIn('immutable', cache_control, url)
+            return res.text
+
+        self.authenticate(None, None)
+        page = self.url_open('/').text
+        font_css_url = re.search(r'href="(/web/content/\d+/google-font-Modak[^"]*)"', page).group(1)
+        font_url = re.search(r'src: url\((/web/content/[^)]+)\)', get_public(font_css_url)).group(1)
+        get_public(font_url)
+
+        self.authenticate('admin', 'admin')
+        [font] = self.make_jsonrpc_request('/website/theme_upload_font', {
+            'name': 'Uploaded.woff2',
+            'data': base64.b64encode(b'wOF2 font data').decode(),
+        })
+        self.authenticate(None, None)
+        get_public(font['url'])
 
     def test_invalid_unlink(self):
         self.env['ir.attachment'].search([('url', '=like', '/web/assets/%')]).unlink()

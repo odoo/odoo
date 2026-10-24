@@ -15,7 +15,7 @@
             $-name: o-get-font-info($alias, 'name');
             $-attachment: o-get-font-info($alias, 'attachment');
             @if $-attachment {
-                --o-font-url-#{$-i}: "/web/content/#{$-attachment}/google-font-#{unquote($-name)}";
+                --o-font-url-#{$-i}: "/web/content/#{$-attachment}/google-font-#{unquote($-name)}?unique=1";
                 $-i: $-i + 1;
             }
         }

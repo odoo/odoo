@@ -95,7 +95,7 @@ class TestWebsiteFontUrls(odoo.tests.HttpCase):
         })
         self.assertEqual(
             self._get_font_urls(),
-            [f'/web/content/{attachment.id}/google-font-Roboto'],
+            [f'/web/content/{attachment.id}/google-font-Roboto?unique=1'],
         )
 
     def test_no_remote_font_returns_no_url(self):

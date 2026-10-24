@@ -257,7 +257,7 @@ class Binary(Controller):
         '/logo',
         '/logo.png',
     ], type='http', auth="none", cors="*")
-    def company_logo(self, dbname=None, **kw):
+    def company_logo(self, dbname=None, unique=False, **kw):
         imgname = 'logo'
         imgext = '.png'
         dbname = request.db
@@ -282,7 +282,8 @@ class Binary(Controller):
                     download_ext = '.svg' if '/svg' in attachment.mimetype else imgext
                     stream.download_name = f'{imgname}{download_ext}'
                     stream.public = True
-                    response = stream.get_response()
+                    # without a company, the logo depends on the user
+                    response = stream.get_response(immutable=bool(unique and company_id))
                 else:
                     response = Stream.from_path('web/static/img/nologo.png').get_response()
             except Exception:  # noqa: BLE001

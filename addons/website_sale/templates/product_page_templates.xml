@@ -340,7 +340,7 @@
                         >
                             <li t-foreach="ptavs" t-as="ptav">
                                 <t t-set="img_style"
-                                   t-value="'background: url(/web/image/product.template.attribute.value/%s/image); background-size: cover; ' % ptav.id if ptav.image else ''"
+                                   t-value="'background: url(%s); background-size: cover; ' % website.image_url(ptav.product_attribute_value_id, 'image') if ptav.image else ''"
                                 />
                                 <t t-set="color_style"
                                    t-value="'background:' + str(ptav.html_color or ptav.name if not ptav.is_custom else '')"
@@ -376,7 +376,7 @@
                             <li t-foreach="ptavs" t-as="ptav" class="list-inline-item me-2 mb-2">
                                 <label
                                     name="o_wsale_attribute_image_selector"
-                                    t-attf-style="#{'background-image: url(/web/image/product.template.attribute.value/%s/image); background-size:cover;' % ptav.id if ptav.image else ''}"
+                                    t-attf-style="#{'background-image: url(%s); background-size:cover;' % website.image_url(ptav.product_attribute_value_id, 'image') if ptav.image else ''}"
                                     t-attf-class="css_attribute_image oe_img_bg o_bg_img_center position-relative d-inline-block rounded-3 bg-body text-center cursor-pointer #{'active' if ptav in combination else ''} #{'custom_value' if ptav.is_custom else ''} #{'transparent' if (not ptav.is_custom and not ptav.html_color) else ''}"
                                 >
                                     <input

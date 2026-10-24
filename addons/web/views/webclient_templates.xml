@@ -258,7 +258,7 @@ For more information, please visit: https://developer.mozilla.org/en-US/docs/Web
         <t t-call="web.login_layout">
             <div class="oe_check_identity_form">
                 <div class="text-center">
-                    <img t-attf-src="/logo.png?company={{ env.company.id }}" style="padding: 0px; margin: 0px; height: auto; height: 48px;" t-att-alt="env.company.name"/>
+                    <img t-att-src="env.company._get_logo_url()" style="padding: 0px; margin: 0px; height: auto; height: 48px;" t-att-alt="env.company.name"/>
                     <h3>Confirm access</h3>
                 </div>
                 <owl-component name="web.check_identity_form" t-att-props="json.dumps({'redirect': redirect})"/>

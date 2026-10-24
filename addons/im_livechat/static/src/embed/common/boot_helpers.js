@@ -1,3 +1,4 @@
+import { session } from "@web/session";
 import { url } from "@web/core/utils/urls";
 
 async function loadFont(name, url, targetDocument) {
@@ -35,7 +36,7 @@ async function loadFont(name, url, targetDocument) {
 function loadStyle(target) {
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = url("/im_livechat/assets_embed.css");
+    link.href = url(session.livechatData?.cssUrl || "/im_livechat/assets_embed.css");
     const stylesLoadedPromise = new Promise((res, rej) => {
         link.addEventListener("load", res);
         link.addEventListener("error", rej);

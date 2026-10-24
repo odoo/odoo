@@ -21,12 +21,12 @@
                             t-if="attachment.mimetype.startsWith('video/')"
                             class="w-100 h-100 object-fit-contain"
                             autoplay="true" muted="true" loop="true" playsinline="true"
-                            t-att-src="'/web/image/ir.attachment/' + attachment.id + '/raw'"
+                            t-att-src="`/web/image/ir.attachment/${attachment.id}/raw?unique=${attachment.checksum}`"
                         />
                         <div
                             t-else=""
                             class="h-100 w-100 img-background"
-                            t-attf-style="background-image: url('/web/image/ir.attachment/{{attachment.id}}/raw');"
+                            t-attf-style="background-image: url('/web/image/ir.attachment/{{attachment.id}}/raw?unique={{attachment.checksum}}');"
                         />
                     </div>
                 </div>

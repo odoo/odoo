@@ -64,6 +64,9 @@ export class Product extends Component {
      * @return {String} This product's image URL.
      */
     get imageUrl() {
+        if (this.props.imageURL) {
+            return this.props.imageURL;
+        }
         const modelPath = this.props.id
             ? `product.product/${ this.props.id }`
             : `product.template/${ this.props.product_tmpl_id }`;

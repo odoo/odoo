@@ -8,10 +8,17 @@ import lxml.html
 from werkzeug import urls
 
 import odoo
+from odoo.tests.common import STATIC_RESOURCE_RE, XMLID_IMAGE_RE, is_cacheable_resource
+from odoo.tools import BinaryBytes
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.addons.base.tests.files import PNG_RAW
 
 _logger = logging.getLogger(__name__)
+
+CSS_URL_RE = re.compile(r'url\((?:&quot;|["\'])?([^)"\']+)')
+# in characters of the data URI
+INLINE_IMAGE_MAX_SIZE = 2048
 
 
 @odoo.tests.common.tagged('post_install', '-at_install', 'crawl')
@@ -63,7 +70,53 @@ class Crawler(HttpCaseWithUserDemo):
 
         return clean_url
 
-    def crawl(self, url, seen=None, msg=''):
+    def _resource_urls(self, doc):
+        yield from doc.xpath('//img/@src')
+        for value in doc.xpath('//img/@srcset | //source/@srcset'):
+            yield from (part.split()[0] for part in value.split(',') if part.strip())
+        for link in doc.xpath('//link[@href]'):
+            if set(link.get('rel', '').split()) & {'stylesheet', 'icon', 'apple-touch-icon', 'preload', 'image_src'}:
+                yield link.get('href')
+        for value in doc.xpath('//*/@style'):
+            yield from CSS_URL_RE.findall(value)
+
+    def check_resources_cacheable(self, doc, page_url, resources):
+        for resource in self._resource_urls(doc):
+            if resource.startswith('data:'):
+                if len(resource) > INLINE_IMAGE_MAX_SIZE:
+                    mimetype = resource[5:].split(';', 1)[0].split(',', 1)[0]
+                    resources.setdefault(f'{resource[:40]}...{resource[-8:]} ({len(resource)} chars)', (page_url, '', 'inline', mimetype, ''))
+                continue
+            parts = urls.url_parse(resource)
+            if parts.netloc or parts.scheme or not parts.path.startswith('/') \
+                    or STATIC_RESOURCE_RE.match(parts.path) or XMLID_IMAGE_RE.fullmatch(parts.path) \
+                    or resource in resources:
+                continue
+            r = self.url_open(resource, allow_redirects=False)
+            target = ''
+            # permanent redirects are cached, other ones are requested on every page view
+            while r.status_code in (301, 308):
+                location = urls.url_parse(r.headers['Location'])
+                if location.netloc and location.netloc != urls.url_parse(self.base_url()).netloc:
+                    break
+                target = location.path
+                r = self.url_open(location.replace(scheme='', netloc='').to_url(), allow_redirects=False)
+            if r.status_code in (301, 308):
+                # permanent redirect to another site, out of scope
+                resources[resource] = None
+                continue
+            resources[resource] = None if is_cacheable_resource(r.headers) else (
+                page_url, target, r.status_code, r.headers.get('Content-Type', ''), r.headers.get('Cache-Control', ''))
+
+    def assert_resources_cacheable(self, resources):
+        uncacheable = {url: info for url, info in resources.items() if info}
+        if uncacheable:
+            self.fail("Resources of public pages must be cacheable by CDNs (not private, with a `unique` URL):\n%s" % '\n'.join(
+                f"{url}{f' -> {target}' if target else ''}  [{status} {content_type} | {cache_control}]  on {page}"
+                for url, (page, target, status, content_type, cache_control) in sorted(uncacheable.items())
+            ))
+
+    def crawl(self, url, seen=None, msg='', resources=None):
         if seen is None:
             seen = set()
 
@@ -88,6 +141,8 @@ class Crawler(HttpCaseWithUserDemo):
 
         if r.headers['Content-Type'].startswith('text/html'):
             doc = lxml.html.fromstring(r.content)
+            if resources is not None:
+                self.check_resources_cacheable(doc, url, resources)
             for link in doc.xpath('//a[@href]'):
                 href = link.get('href')
 
@@ -104,7 +159,7 @@ class Crawler(HttpCaseWithUserDemo):
                    (parts.scheme and parts.scheme not in ('http', 'https')):
                     continue
 
-                self.crawl(href, seen, msg)
+                self.crawl(href, seen, msg, resources)
         return seen
 
     def test_05_test_clean_url(self):
@@ -147,11 +202,26 @@ class Crawler(HttpCaseWithUserDemo):
     def test_10_crawl_public(self):
         t0 = time.time()
         t0_sql = self.cr.sql_log_count
-        seen = self.crawl('/', msg='Anonymous Coward')
+        resources = {}
+        seen = self.crawl('/', msg='Anonymous Coward', resources=resources)
         count = len(seen)
         duration = time.time() - t0
         sql = self.cr.sql_log_count - t0_sql
         _logger.runbot("public crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request, ", count, duration, sql, duration / count, float(sql) / count)
+
+        self.assert_resources_cacheable(resources)
+
+    def test_15_custom_lang_flag_cacheable(self):
+        lang_fr = self.env['res.lang']._activate_lang('fr_FR')
+        lang_fr.flag_image = BinaryBytes(PNG_RAW)
+        self.env.ref('base.default_website').language_ids |= lang_fr
+        self.env.ref('website.footer_language_selector_flag').active = True
+
+        doc = lxml.html.fromstring(self.url_open('/').content)
+        resources = {}
+        self.check_resources_cacheable(doc, '/', resources)
+        self.assertTrue(any(url.startswith(f'/web/image/res.lang/{lang_fr.id}/flag_image') for url in resources))
+        self.assert_resources_cacheable(resources)
 
     def test_20_crawl_demo(self):
         # Demo user without sales/crm/helpdesk/... rights won't be able to access to
