@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import api, fields, models
 from odoo.tools import float_compare
 
 
@@ -65,6 +65,8 @@ class SaleOrderLine(models.Model):
                             order_line.qty_delivered = order_line.product_uom_qty
                         continue
                     moves = order_line.move_ids.filtered(lambda m: m.state == 'done' and not m.scrapped)
+                    if self._context.get('accrual_entry_date'):
+                        moves = moves.filtered(lambda r: fields.Date.context_today(r, r.date) <= self._context['accrual_entry_date'])
                     filters = {
                         # in/out perspective w/ respect to moves is flipped for sale order document
                         'incoming_moves': lambda m:
