@@ -255,21 +255,27 @@ class WebsiteAssets(models.AbstractModel):
                         timeout=5, headers=headers_woff2,
                     ).content.decode()
 
+                    # Variable fonts use the same file for all weights, so store it once to avoid duplicate attachments.
+                    # Without this we would create duplicate attachments and slows website (e.g. Montserrat font create 10 attachemnts not 90).
+                    attachment_by_url = {}
+
                     def fetch_google_font(src):
                         statement = src.group()
                         url, font_format = re.match(r'src: url\(([^\)]+)\) (.+)', statement).groups()
-                        req = requests.get(url, timeout=5, headers=headers_woff2)
                         # https://fonts.gstatic.com/s/modak/v18/EJRYQgs1XtIEskMB-hRp7w.woff2
                         # -> s-modak-v18-EJRYQgs1XtIEskMB-hRp7w.woff2
                         name = url_parse(url).path.lstrip('/').replace('/', '-')
-                        attachment = IrAttachment.create({
-                            'name': f'google-font-{name}',
-                            'type': 'binary',
-                            'raw': BinaryBytes(req.content),
-                            'public': True,
-                        })
-                        nonlocal font_family_attachments
-                        font_family_attachments += attachment
+                        attachment = attachment_by_url.get(url)
+                        if not attachment:
+                            req = requests.get(url, timeout=5, headers=headers_woff2)
+                            attachment = attachment_by_url[url] = IrAttachment.create({
+                                'name': f'google-font-{name}',
+                                'type': 'binary',
+                                'raw': BinaryBytes(req.content),
+                                'public': True,
+                            })
+                            nonlocal font_family_attachments
+                            font_family_attachments += attachment
                         return 'src: url(/web/content/%s/%s) %s' % (
                             attachment.id,
                             name,
