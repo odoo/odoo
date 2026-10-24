@@ -190,9 +190,15 @@ class TestPortalWizard(MailCommon):
             self.assertTrue(portal_user.is_portal)
             self.assertTrue(self.partner.signup_type)
 
+            last_msg = portal_user.user_id.message_ids[0]
+            self.assertIn('Portal Access Granted', last_msg.body)
+
             portal_user.action_revoke_access()
             portal_user.invalidate_recordset()
             self.assertFalse(portal_user.user_id.active)
             self.assertTrue(portal_user.user_id._is_portal())
             self.assertFalse(portal_user.is_portal)
             self.assertFalse(self.partner.signup_type)
+
+            last_msg = portal_user.user_id.message_ids[0]
+            self.assertIn('Portal Access Revoked', last_msg.body)
