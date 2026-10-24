@@ -919,6 +919,14 @@ class ResPartner(models.Model):
             if internal_users := partner.user_ids.filtered(lambda u: u._is_internal() and u != self.env.user):
                 internal_users.check_access('write')
             updated = {fname: fvalue for fname, fvalue in vals.items() if partner[fname] != pre_values.get(fname)}
+            if (
+                'parent_id' in updated and pre_values['parent_id']
+                and partner.commercial_partner_id not in (partner, pre_values['parent_id'].commercial_partner_id)
+            ):
+                # synced values still come from the previous commercial entity
+                commercial = partner.commercial_partner_id
+                if stale := [fname for fname in partner._synced_commercial_fields() if partner[fname] and not commercial[fname]]:
+                    partner.write(dict.fromkeys(stale, False))
             if updated:
                 partner._fields_sync(updated)
         return result
