@@ -10,13 +10,17 @@
                 t-attf-class="py-2 {{ optional_product == this.state.product_lines.at(-1) ? '' : 'border-bottom' }}">
 
                 <!-- Optional Product Line -->
+                <t t-set="isSnoozed" t-value="this.pos.isProductSnoozed(optional_product.product_tmpl_id)"/>
                 <div class="optional-product-line d-flex justify-content-between align-items-center">
                     <!-- Product Details -->
                     <div class="d-flex flex-column align-items-left overflow-hidden">
                         <div class="d-flex align-items-center flex-grow-1">
-                            <img t-if="this.pos.config.show_product_images" t-att-src="optional_product.product_tmpl_id.getImageUrl()" alt="Product Image"
-                                class="product-img rounded me-3" style="width: 60px; height: 60px; object-fit: cover;"/>
-                            <div class="overflow-hidden">
+                            <img t-if="this.pos.config.show_product_images"
+                                t-attf-class="product-img rounded me-3 {{ isSnoozed ? 'opacity-50' : '' }}"
+                                t-att-src="optional_product.product_tmpl_id.getImageUrl()"
+                                alt="Product Image"
+                                style="width: 60px; height: 60px; object-fit: cover;"/>
+                            <div t-attf-class="overflow-hidden {{ isSnoozed ? 'opacity-50' : '' }}">
                                 <h5 class="product-name mb-1 text-truncate">
                                     <t t-out="optional_product.product_tmpl_id.display_name"/>
                                 </h5>
@@ -25,6 +29,14 @@
                                 </p>
                             </div>
                         </div>
+                    </div>
+
+                    <div t-if="isSnoozed" class="d-flex justify-content-end ms-auto ps-2 overflow-hidden flex-shrink-1">
+                        <span class="product-snooze-banner rounded small d-inline-flex align-items-center gap-1 px-2 py-1 text-truncate text-white"
+                            style="background-color: var(--o-gray-700);">
+                            <i class="oi" data-icon="schedule" aria-hidden="true"/>
+                            <span t-out="this.pos.getProductSnoozeLabel(optional_product.product_tmpl_id)"/>
+                        </span>
                     </div>
 
                     <!-- Add to Cart Buttons -->

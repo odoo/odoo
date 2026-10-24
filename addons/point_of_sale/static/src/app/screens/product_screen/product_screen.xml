@@ -35,6 +35,7 @@
                                 class="this.pos.productViewMode"
                                 name="this.getProductName(product)"
                                 available="!this.pos.isProductSnoozed(product)"
+                                snoozeLabel="this.pos.getProductSnoozeLabel(product)"
                                 color="product.color || product.pos_categ_ids?.at(-1)?.color"
                                 imageUrl="this.pos.config.show_product_images and this.getProductImage(product)"
                                 onClick.bind="() => this.addProductToOrder(product)"

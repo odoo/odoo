@@ -18,6 +18,7 @@ export class ProductCard extends Component {
         showWarning: t.boolean().optional(false),
         productCartQty: t.or([t.number(), t.literal(undefined)]).optional(),
         isComboPopup: t.boolean().optional(false),
+        snoozeLabel: t.string().optional(""),
     });
 
     get productQty() {
