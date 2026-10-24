@@ -279,7 +279,7 @@ test("close attachment viewer", async () => {
     await waitFor(".o-mail-AttachmentImage:count(1)");
     await contains(".o-mail-AttachmentImage:count(1)").click();
     await waitFor(".o-FileViewer:count(1)");
-    await contains(".o-FileViewer div[aria-label='Close']:count(1)").click();
+    await contains(".o-FileViewer button[aria-label='Close']:count(1)").click();
     await waitForNone(".o-FileViewer");
 });
 
@@ -313,7 +313,7 @@ test("[technical] does not crash when the viewer is closed before image load", a
     await openDiscuss(channelId);
     await click(".o-mail-AttachmentImage");
     await waitFor(".o-FileViewer-viewImage:count(1)");
-    await click(".o-FileViewer div[aria-label='Close']");
+    await click(".o-FileViewer button[aria-label='Close']");
     // Simulate image becoming loaded.
     expect(() => {
         document

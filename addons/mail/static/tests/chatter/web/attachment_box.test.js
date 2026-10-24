@@ -105,11 +105,11 @@ test("view attachments", async () => {
     await click('.o-mail-AttachmentContainer[aria-label="Blah.txt"] .o-mail-AttachmentCard-image');
     await waitFor(".o-FileViewer:count(1)");
     await waitFor(".o-FileViewer-header:has(:text('Blah.txt')):count(1)");
-    await waitFor(".o-FileViewer div[aria-label='Next']:count(1)");
-    await click(".o-FileViewer div[aria-label='Next']");
+    await waitFor(".o-FileViewer button[aria-label='Next']:count(1)");
+    await click(".o-FileViewer button[aria-label='Next']");
     await waitFor(".o-FileViewer-header:has(:text('Blu.txt')):count(1)");
-    await waitFor(".o-FileViewer div[aria-label='Next']:count(1)");
-    await click(".o-FileViewer div[aria-label='Next']");
+    await waitFor(".o-FileViewer button[aria-label='Next']:count(1)");
+    await click(".o-FileViewer button[aria-label='Next']");
     await waitFor(".o-FileViewer-header:has(:text('Blah.txt')):count(1)");
 });
 
