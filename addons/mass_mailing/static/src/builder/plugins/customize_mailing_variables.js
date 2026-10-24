@@ -78,7 +78,11 @@ const separatorProperties = [
 /* eslint-enable */
 
 export const CUSTOMIZE_MAILING_VARIABLES = Object.assign(
-    generateSimpleMailingVariables("wrapper", ["> [data-snippet]"], wrapperProperties),
+    generateSimpleMailingVariables(
+        "wrapper",
+        [".o_layout .o_mail_wrapper .o_mail_wrapper_td", "> [data-snippet]"],
+        wrapperProperties
+    ),
     (() => {
         const variables = {};
         for (const depth of [1, 2, 3]) {
