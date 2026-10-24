@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        ==========================================================
+        BENCHMARK: Time Off Request
+        ==========================================================
+        Prepares employees with a long time off history and an up-to-date
+        monthly accrual allocation. Employee 00001 is linked to a user, to
+        submit time off as a regular employee.
+
+        This dataset targets the allocation checks done when a time off
+        is submitted (hr.leave._check_validity()).
+    -->
+    <record id="benchmark_time_off_request" model="populate.blueprint">
+        <field name="name">Benchmark: Time Off Request</field>
+        <field name="definition_xml" type="xml">
+            <create model="hr.work.entry.type" count="1" id="bench_time_off_type" scale="False" parallel="False">
+                <field name="name" eval="'Benchmark Paid Time Off'"/>
+                <field name="code" eval="'BENCH_PTO'"/>
+                <field name="unit_of_measure" eval="'day'"/>
+            </create>
+
+            <create model="hr.leave.accrual.plan" count="1" id="bench_time_off_accrual_plan" scale="False" parallel="False">
+                <field name="name" eval="'Benchmark Monthly Accrual'"/>
+                <field name="work_entry_type_id" ref="bench_time_off_type"/>
+                <field name="can_be_carryover" eval="True"/>
+                <field name="level_ids" eval="[Command.create({
+                    'added_value': 1.67,
+                    'frequency': 'monthly',
+                    'action_with_unused_accruals': 'all',
+                })]"/>
+            </create>
+
+            <create model="res.users" count="1" id="bench_time_off_user" scale="False" parallel="False">
+                <field name="name" eval="'Benchmark Time Off Employee'"/>
+                <field name="login" eval="'bench_time_off_employee'"/>
+                <field name="group_ids" eval="[Command.link(env.ref('hr_holidays.group_hr_holidays_employee').id)]"/>
+            </create>
+
+            <create model="hr.employee" count="20" id="bench_time_off_employees">
+                <value name="counter" generator="misc.counter" start="1" unique="True"/>
+                <field name="name" eval="f'Benchmark Time Off Employee {counter:05}'"/>
+                <field name="date_version" eval="'2020-01-01'"/>
+                <field name="contract_date_start" eval="'2020-01-01'"/>
+            </create>
+
+            <write model="hr.employee" ref="bench_time_off_employees" domain="[('name', '=', 'Benchmark Time Off Employee 00001')]" batched="True">
+                <field name="user_id" ref="bench_time_off_user"/>
+            </write>
+
+            <!-- 8 yearly allocations per employee, 2020 to 2027 -->
+            <create model="hr.leave.allocation" count="160" id="bench_time_off_yearly_allocations" parallel="False">
+                <value name="counter" generator="misc.counter" start="0" unique="True"/>
+                <value name="year" eval="2020 + counter % 8"/>
+                <field name="employee_id" ref="bench_time_off_employees"
+                       domain="[('name', '=', 'Benchmark Time Off Employee %05d' % (counter // 8 + 1))]"/>
+                <field name="work_entry_type_id" ref="bench_time_off_type"/>
+                <field name="date_from" eval="f'{year}-01-01'"/>
+                <field name="date_to" eval="f'{year}-12-31'"/>
+                <field name="number_of_days" eval="20"/>
+            </create>
+
+            <create model="hr.leave.allocation" count="20" id="bench_time_off_accrual_allocations" parallel="False">
+                <value name="counter" generator="misc.counter" start="1" unique="True"/>
+                <field name="employee_id" ref="bench_time_off_employees"
+                       domain="[('name', '=', 'Benchmark Time Off Employee %05d' % counter)]"/>
+                <field name="work_entry_type_id" ref="bench_time_off_type"/>
+                <field name="accrual_plan_id" ref="bench_time_off_accrual_plan"/>
+                <field name="date_from" eval="'2020-01-01'"/>
+                <field name="number_of_days" eval="0"/>
+            </create>
+
+            <!-- 6 time off per employee and year, 2020 to 2026, from the 10th to the 12th of February to July -->
+            <create model="hr.leave" count="840" id="bench_time_off_history" parallel="False">
+                <value name="counter" generator="misc.counter" start="0" unique="True"/>
+                <value name="slot" eval="counter % 42"/>
+                <value name="month" eval="'%d-%02d' % (2020 + slot // 6, 2 + slot % 6)"/>
+                <field name="employee_id" ref="bench_time_off_employees"
+                       domain="[('name', '=', 'Benchmark Time Off Employee %05d' % (counter // 42 + 1))]"/>
+                <field name="work_entry_type_id" ref="bench_time_off_type"/>
+                <field name="request_date_from" eval="month + '-10'"/>
+                <field name="request_date_to" eval="month + '-12'"/>
+            </create>
+
+            <!-- 1 time off per employee and year overlapping two yearly allocations, from December 30th to January 2nd -->
+            <create model="hr.leave" count="120" id="bench_time_off_year_boundary" parallel="False">
+                <value name="counter" generator="misc.counter" start="0" unique="True"/>
+                <value name="year" eval="2020 + counter % 6"/>
+                <field name="employee_id" ref="bench_time_off_employees"
+                       domain="[('name', '=', 'Benchmark Time Off Employee %05d' % (counter // 6 + 1))]"/>
+                <field name="work_entry_type_id" ref="bench_time_off_type"/>
+                <field name="request_date_from" eval="f'{year}-12-30'"/>
+                <field name="request_date_to" eval="f'{year + 1}-01-02'"/>
+            </create>
+
+            <!-- 3 time off per employee planned in 2027 -->
+            <create model="hr.leave" count="60" id="bench_time_off_planned" parallel="False">
+                <value name="counter" generator="misc.counter" start="0" unique="True"/>
+                <value name="month" eval="'2027-%02d' % (1 + 3 * (counter % 3))"/>
+                <field name="employee_id" ref="bench_time_off_employees"
+                       domain="[('name', '=', 'Benchmark Time Off Employee %05d' % (counter // 3 + 1))]"/>
+                <field name="work_entry_type_id" ref="bench_time_off_type"/>
+                <field name="request_date_from" eval="month + '-10'"/>
+                <field name="request_date_to" eval="month + '-12'"/>
+            </create>
+
+            <!-- Bring the accruals up to date, as the daily cron would -->
+            <function model="hr.leave.allocation" name="_update_accrual" ref="bench_time_off_accrual_allocations" batched="True"/>
+        </field>
+    </record>
+</odoo>
