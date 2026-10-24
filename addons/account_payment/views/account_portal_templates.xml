@@ -5,8 +5,11 @@
                 <li t-attf-class="breadcrumb-item active">
                     <a t-attf-href="/my/invoices?{{ keep_query() }}">Invoices &amp; Bills</a>
                 </li>
-                <li class="breadcrumb-item active">
+                <li t-if="payment" class="breadcrumb-item active">
                     <t t-out="payment['reference']"/>
+                </li>
+                <li t-else="" class="breadcrumb-item active">
+                    Not Found
                 </li>
             </t>
         </xpath>
@@ -29,6 +32,25 @@
                 Pay Now
             </button>
         </xpath>
+    </template>
+
+    <template id="portal_overdue_invoices_invalid_token" name="Invalid or Expired Token">
+        <t t-call="portal.portal_layout">
+            <div class="row justify-content-center my-5">
+                <div class="col-lg-6 text-center">
+                    <div class="alert alert-warning" role="alert">
+                        <h4 class="alert-heading mb-3">
+                            <i class="fa fa-exclamation-triangle"/> Invalid or Expired Link
+                        </h4>
+                        <p>This overdue invoices payment link is no longer valid.</p>
+                        <hr/>
+                        <p class="mb-0">
+                            Reach out to us for an updated link.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </t>
     </template>
 
     <template id="portal_overdue_invoices_page" name="Overdue payments">
