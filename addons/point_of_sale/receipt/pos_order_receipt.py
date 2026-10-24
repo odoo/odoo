@@ -78,7 +78,8 @@ class PosOrderReceipt(models.AbstractModel):
             display_price_incl = line.order_id.config_id.iface_tax_included == 'total'
 
             data['qty'] = int(line.qty) if float(line.qty).is_integer() else line.qty
-            data['product_data'] = product_by_id[data['product_id']]
+            product_data = product_by_id[data['product_id']]
+            data['product_data'] = {**product_data, 'display_name': line.full_product_name or product_data['display_name']}
 
             data['lot_names'] = False
             if line.pack_lot_ids:
