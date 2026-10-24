@@ -7,6 +7,7 @@ from odoo.tests import HttpCase, new_test_user
 from odoo.tests.common import tagged
 
 from odoo.exceptions import ValidationError
+from odoo.tools.func import reset_cached_properties
 
 from freezegun import freeze_time
 import time
@@ -533,6 +534,7 @@ class TestHolidaysOvertime(HttpCase):
         })
         self.employee.contract_date_start = datetime(2026, 1, 1)
         self.env.user.tz = 'UTC'
+        reset_cached_properties(self.env)
         self.employee.tz = 'UTC'
         self.employee.ruleset_id = self.ref('hr_attendance.hr_attendance_default_ruleset')
 
