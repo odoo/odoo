@@ -87,6 +87,13 @@ BTREE_INDEX_IGNORE_FIELDS = {
     'res.users.company_id': None,  # only linted for auth_totp.wizard, not needed.
 }
 
+# Indexes/constraints that are allowed to have duplicates
+INDEX_DUPLICATES_IGNORE = {
+   'res_users_test_uninstall_res_user_exclude_constraint',
+   'res_users_test_uninstall_res_user_exclude_constraint_l_558b4cf8',  # _test_uninstall_res_user_exclude_constraint_looooooooooooong_name
+   'res_users_test_uninstall_res_user_unique_constraint',
+}
+
 
 @no_retry
 class TestIndexMeta(TransactionCase):
@@ -217,6 +224,33 @@ class TestIndex(TransactionCase):
             # ignore fields from test modules
             or (field._modules and all('test' in module for module in field._modules))
         )
+
+    def test_no_duplicated_index(self):
+        """
+        Ensure no index is duplicated by another index, a unique constraint or unique index.
+        """
+        self.env.cr.execute("""
+            SELECT indrelid::regclass::text,
+                   ARRAY_AGG(indexrelid::regclass::text ORDER BY indexrelid::regclass::text)
+              FROM pg_index
+              JOIN pg_class ON pg_class.oid = indrelid
+             WHERE relnamespace = current_schema::regnamespace
+               AND indexrelid::regclass::text NOT IN %s
+             GROUP BY indrelid, SUBSTRING(pg_get_indexdef(indexrelid) FROM ' USING .*')
+            HAVING COUNT(*) > 1
+             ORDER BY 1
+        """, (tuple(INDEX_DUPLICATES_IGNORE),))
+        duplicates = [
+            f"{table_name}: {', '.join(index_names)}"
+            for table_name, index_names in self.env.cr.fetchall()
+        ]
+        if duplicates:
+            msg = (
+                "These indexes are identical. Note that a UNIQUE constraint already creates an index, "
+                "so a separate `index=True` on the same column(s) is redundant. "
+                "Remove all but one:\n" + "\n".join(f"  - {d}" for d in duplicates)
+            )
+            self.fail(msg)
 
     def test_index_on_one2many_inverse(self):
         """Ensure btree indexes are enforced on the stored inverse fields of One2many relations."""
