@@ -52,6 +52,8 @@ class ResConfigSettings(models.TransientModel):
             self.use_kiosk_mode = True
             self.pos_module_pos_restaurant = False
             self.pos_self_ordering_pay_after = "each"
+            if self.pos_self_ordering_service_mode == 'dynamic_qr':
+                self.pos_self_ordering_service_mode = 'counter'
         else:
             self.use_kiosk_mode = False
 

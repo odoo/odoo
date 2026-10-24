@@ -27,7 +27,9 @@ class PosOrderReceipt(models.AbstractModel):
             if self.table_stand_number:
                 receipt['extra_data']['order_label'] = _("Table Tracker %s", self.table_stand_number)
             elif not self.table_id:
-                receipt['extra_data']['order_label'] = self.floating_order_name
+                # Only show floating_order_name if it holds a real customer name (preset asks for one),
+                # to avoid duplicating the generated tracking/table info printed below.
+                receipt['extra_data']['order_label'] = self.floating_order_name if self.preset_id.identification in ('name', 'address') else False
 
             if not self.table_id and self.self_ordering_table_id:
                 receipt['extra_data']['table_name'] = self.self_ordering_table_id.table_number if self.self_ordering_table_id else False
