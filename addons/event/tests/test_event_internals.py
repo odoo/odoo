@@ -133,6 +133,14 @@ class TestEventData(TestEventInternalsCommon):
             registration.invalidate_recordset(['event_date_range'])
             self.assertEqual(registration.event_date_range, 'on Mar 1, 2020')
 
+            # same month as next month, but one year later
+            event.write({
+                'date_begin': datetime(2021, 2, 20, 17, 0, 0),
+                'date_end': datetime(2021, 2, 20, 20, 0, 0),
+            })
+            registration.invalidate_recordset(['event_date_range'])
+            self.assertEqual(registration.event_date_range, 'on Feb 20, 2021')
+
             # Is actually 8:30 to 20:00 in Mexico
             event.write({
                 'date_begin': datetime(2020, 1, 31, 14, 30, 0),
