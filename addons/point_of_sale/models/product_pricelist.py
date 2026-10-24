@@ -21,7 +21,7 @@ class ProductPricelist(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['id', 'name', 'display_name', 'currency_id', 'item_ids']
+        return ['id', 'name', 'display_name', 'currency_id', 'item_ids', 'write_date']
 
     @api.model
     def _load_pos_data_read(self, records, config):

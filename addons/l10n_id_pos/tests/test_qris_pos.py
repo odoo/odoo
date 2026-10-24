@@ -1,3 +1,4 @@
+from odoo import Command
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
@@ -50,36 +51,22 @@ class TestPosQris(TestPointOfSaleHttpCommon):
         })
 
         cls.company = cls.company_data['company']
-        cls.pos_receivable_bank = cls.copy_account(cls.company.account_default_pos_receivable_account_id, {'name': 'POS Receivable Bank'})
-        cls.outstanding_bank = cls.copy_account(cls.outbound_payment_method_line.payment_account_id, {'name': 'Outstanding Bank'})
-
         cls.company_data['default_journal_bank'].write({'bank_account_id': cls.acc_qris_id.id})
 
-        cls.bank_pm = cls.env['pos.payment.method'].sudo().create({
-            'name': 'Cash',
-            'type': 'cash',
-            'journal_id': cls.company_data['default_journal_cash'].id,
-            'receivable_account_id': cls.pos_receivable_bank.id,
-            'company_id': cls.company.id,
-        })
-        cls.qris_pm = cls.env['pos.payment.method'].sudo().create({
+        cls.qris_pm = cls.bank_pm
+        cls.qris_pm.write({
             'name': 'QRIS',
-            'type': 'bank',
-            'journal_id': cls.company_data['default_journal_bank'].id,
             'receivable_account_id': cls.pos_receivable_bank.id,
             'outstanding_account_id': cls.outstanding_bank.id,
-            'company_id': cls.company.id,
             'payment_method_type': 'bank_qr_code',
             'qr_code_method': 'id_qr'
         })
 
-        cls.main_pos_config = cls.env['pos.config'].sudo().create({
-            'name': 'Shop',
-            'module_pos_restaurant': False,
+        cls.main_pos_config.write({
             # Make sure there is one extra payment method for the tour tests to work.
             # Because if the tour only use the qr payment method, the total amount won't be displayed,
             # causing the tour test to fail.
-            'payment_method_ids': [(4, cls.bank_pm.id), (4, cls.qris_pm.id)],
+            'payment_method_ids': [Command.set((cls.cash_pm | cls.qris_pm).ids)],
         })
 
     def test_qris_transaction_allow_pos_order(self):

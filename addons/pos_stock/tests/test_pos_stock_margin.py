@@ -1,11 +1,11 @@
 from unittest import skip
 
 import odoo
-from odoo.addons.point_of_sale.tests.test_pos_margin import TestPosMargin
+from odoo.addons.point_of_sale.tests.common import CommonPosTest
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestPosStockMargin(TestPosMargin):
+class TestPosStockMargin(CommonPosTest):
     """
     Test the margin computation on orders with basic configuration
     The tests contain the base scenarios.
@@ -31,8 +31,8 @@ class TestPosStockMargin(TestPosMargin):
         Test margin where there is product in FIFO with stock update in real time
         """
 
-        product1 = self.create_product('Product 1', self.categ_anglo, 10, 5)
-        product2 = self.create_product('Product 2', self.categ_basic, 50, 30)
+        product1 = self.create_product('Product 1', 10, standard_price=5, categ_id=self.categ_anglo.id)
+        product2 = self.create_product('Product 2', 50, standard_price=30, categ_id=self.categ_basic.id)
 
         move1 = self.env['stock.move'].create({
             'location_id': self.supplier_location.id,
@@ -90,8 +90,8 @@ class TestPosStockMargin(TestPosMargin):
         """
 
         self.categ_anglo.property_cost_method = 'average'
-        product1 = self.create_product('Product 1', self.categ_anglo, 10, 5)
-        product2 = self.create_product('Product 2', self.categ_basic, 50, 30)
+        product1 = self.create_product('Product 1', 10, standard_price=5, categ_id=self.categ_anglo.id)
+        product2 = self.create_product('Product 2', 50, standard_price=30, categ_id=self.categ_basic.id)
         self.env.company.point_of_sale_update_stock_quantities = 'closing'
 
         move1 = self.env['stock.move'].create({

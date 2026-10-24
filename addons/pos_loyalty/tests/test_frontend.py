@@ -2944,6 +2944,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         """
         if not self.env["ir.module.module"].search([("name", "=", "pos_settle_due"), ("state", "=", "installed")]):
             self.skipTest("pos_settle_due module is required for this test")
+        # The settlement tour identifies the invoice by this journal prefix.
+        self.main_pos_config.journal_id.code = 'TSJ'
         if self.main_pos_config.current_session_id:
             self.main_pos_config.current_session_id.close_session_from_ui()
         LoyaltyProgram = self.env['loyalty.program']

@@ -15,14 +15,13 @@ from odoo.tests.common import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.point_of_sale.tests.common import CommonPosTest
-from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 from odoo.addons.pos_bancontact_pay import const
 from odoo.addons.pos_bancontact_pay.controllers.signature import BancontactSignatureValidation
 from odoo.addons.pos_bancontact_pay.errors.exceptions import BancontactSignatureValidationError
 
 
 @tagged("post_install", "-at_install")
-class TestSignature(CommonPosTest, TestPointOfSaleHttpCommon):
+class TestSignature(CommonPosTest):
 
     _test_user_groups = None  # FIXME list needed groups
 

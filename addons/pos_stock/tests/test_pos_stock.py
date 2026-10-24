@@ -1,11 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import tagged
-from odoo.addons.point_of_sale.tests.test_point_of_sale import TestPointOfSale
+from odoo.addons.point_of_sale.tests.common import CommonPosTest
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
-class TestPosStock(TestPointOfSale):
+class TestPosStock(CommonPosTest):
+
+    @classmethod
+    def _setup_pos_configs(cls):
+        # Existing POS configurations would prevent archiving their warehouse.
+        pass
 
     def test_pos_config_creates_warehouse(self):
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)])
