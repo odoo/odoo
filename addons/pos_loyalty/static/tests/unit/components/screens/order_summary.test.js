@@ -18,7 +18,7 @@ test("_updateGiftCardOrderline", async () => {
     // Card #3 - gift card which program type is gift_card
     const card = models["loyalty.card"].get(3);
 
-    await addProductLineToOrder(store, order);
+    await addProductLineToOrder(store, order, {}, { eWalletGiftCardProgram: program });
 
     const points = product.lst_price;
 
