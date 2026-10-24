@@ -234,21 +234,12 @@ export class ProductPage extends Interaction {
      * Set the selected attribute values based on the URL search params.
      */
     _applySearchParams() {
-        let params = new URLSearchParams(window.location.search);
-        let attributeValueIds = Array.from(params.entries())
+        const params = new URLSearchParams(window.location.search);
+        const attributeValueIds = Array.from(params.entries())
             .filter(([attribute, _]) => !!wSaleUtils.unslug(attribute))
             .flatMap(([_, attributeValues]) => attributeValues.split(","))
-            .map(attributeValue => wSaleUtils.unslug(attributeValue));
-        if (!attributeValueIds) {
-            // TODO: remove support for `attribute_values` query param in version 20 (or later).
-            let attributeValues = params.get('attribute_values');
-            if (!attributeValues) {
-                params = new URLSearchParams(window.location.hash.substring(1));
-                attributeValues = params.get('attribute_values');
-            }
-            attributeValueIds = attributeValues?.split(',')?.map(parseInt) ?? [];
-        }
-        attributeValueIds = attributeValueIds.filter(Boolean);
+            .map(attributeValue => wSaleUtils.unslug(attributeValue))
+            .filter(Boolean);
         if (attributeValueIds.length) {
             const inputs = document.querySelectorAll(
                 'input.js_variant_change, select.js_variant_change option'
