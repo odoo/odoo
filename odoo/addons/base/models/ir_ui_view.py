@@ -473,9 +473,23 @@ actual arch.
 
                     # During an upgrade, we can only use the views that have been
                     # fully upgraded already.
+<<<<<<< 51353aeba3ab80e76eabe1df58ad447e889be7d2
                     if not self.pool.ready and sibling_primary_views and self.pool._init_modules:
                         sql = sibling_primary_views._get_filter_xmlid_query(modules=tuple(self.pool._init_modules))
                         loaded_view_ids = {id_ for id_, in self.env.execute_query(sql)}
+||||||| 830d5acd56d2523c1bf9867a6fa7df877b5bff02
+                    if not self.pool.ready and sibling_primary_views and self.pool._init_modules:
+                        query = sibling_primary_views._get_filter_xmlid_query()
+                        sql = SQL(query, res_ids=tuple(sibling_primary_views.ids), modules=tuple(self.pool._init_modules))
+                        loaded_view_ids = {id_ for id_, in self.env.execute_query(sql)}
+=======
+                    if not self.pool.ready and sibling_primary_views:
+                        loaded_view_ids = set()
+                        if self.pool._init_modules:
+                            query = sibling_primary_views._get_filter_xmlid_query()
+                            sql = SQL(query, res_ids=tuple(sibling_primary_views.ids), modules=tuple(self.pool._init_modules))
+                            loaded_view_ids = {id_ for id_, in self.env.execute_query(sql)}
+>>>>>>> 061cb112b4ae6f34c5db121757822ce54753af18
                         loaded_view_ids.update({
                             id
                             for id, xid in (sibling_primary_views - views.browse(loaded_view_ids)).get_external_id().items()
