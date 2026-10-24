@@ -683,7 +683,12 @@ class SaleOrder(models.Model):
             # Recompute the delivery rate.
             rate = self.carrier_id.rate_shipment(self)
             if rate['success']:
-                self.order_line.filtered('is_delivery').price_unit = rate['price']
+                # The order may have other delivery lines: only update the carrier's one.
+                delivery_lines = self.order_line.filtered('is_delivery')
+                carrier_line = delivery_lines.filtered(
+                    lambda line: line.product_id == self.carrier_id.product_id
+                )[:1] or delivery_lines[:1]
+                carrier_line.price_unit = rate['price']
             else:
                 self._remove_delivery_line()
 
