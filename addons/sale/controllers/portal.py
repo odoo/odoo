@@ -256,7 +256,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
         elif order_sudo.state == 'sale':
             amount = payment_amount or order_sudo.amount_total
         else:
-            amount = order_sudo.amount_total
+            amount = currency.round(order_sudo.amount_total - order_sudo.amount_paid)
 
         availability_report = {}
         # Select all the payment methods and tokens that match the payment context.
