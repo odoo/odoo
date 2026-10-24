@@ -425,6 +425,10 @@
     <xpath expr="//main" position="attributes">
         <attribute name="t-attf-class" add="#{'o_breadcrumb_overlay' if 'breadcrumb_overlay' in main_object and main_object.sudo().breadcrumb_overlay else ''}" />
     </xpath>
+    <xpath expr="//body" position="inside">
+        <!-- JSON-LD structured data of the snippets, collected while rendering the page -->
+        <script t-if="structured_data_snippets" type="application/ld+json" t-out="website._render_snippets_jsonld(structured_data_snippets)"/>
+    </xpath>
 </template>
 
 <template id="font_links" name="Font Links">
