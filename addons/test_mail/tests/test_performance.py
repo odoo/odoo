@@ -1527,18 +1527,15 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                 'model': record._name,
                 'notification_ids': [
                     (0, 0, {
-                        'is_read': False,
                         'notification_type': 'inbox',
                         'res_partner_id': cls.partners[(record_idx * 5) + (msg_idx * 2)].id,
                     }),
                     (0, 0, {
-                        'is_read': True,
                         'notification_type': 'email',
                         'notification_status': 'sent',
                         'res_partner_id': cls.partners[(record_idx * 5) + (msg_idx * 2) + 1].id,
                     }),
                     (0, 0, {
-                        'is_read': True,
                         'notification_type': 'email',
                         'notification_status': 'exception',
                         'res_partner_id': cls.partners[(record_idx * 5) + (msg_idx * 2) + 2].id,

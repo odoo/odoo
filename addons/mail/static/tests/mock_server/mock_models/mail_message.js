@@ -48,7 +48,7 @@ export class MailMessage extends models.ServerModel {
 
         const notifDomain = [
             ["res_partner_id", "=", this.env.user.partner_id],
-            ["is_read", "=", false],
+            ["read_date", "=", false],
         ];
         if (domain) {
             const messages = this._filter(domain);
@@ -59,7 +59,7 @@ export class MailMessage extends models.ServerModel {
         const notifications = MailNotification._filter(notifDomain);
         MailNotification.write(
             notifications.map((notification) => notification.id),
-            { is_read: true }
+            { read_date: serializeDateTime(DateTime.now()) }
         );
         const messageIds = [];
         for (const notification of notifications) {
@@ -230,7 +230,7 @@ export class MailMessage extends models.ServerModel {
                 (message.needaction ||
                     MailNotification.search([
                         ["mail_message_id", "=", message.id],
-                        ["is_read", "=", false],
+                        ["read_date", "=", false],
                         ["res_partner_id", "=", this.env.user.partner_id],
                     ]).length)
         );
@@ -243,7 +243,7 @@ export class MailMessage extends models.ServerModel {
             this.env.user &&
                 MailNotification.search([
                     ["mail_message_id", "=", message.id],
-                    ["is_read", "=", true],
+                    ["read_date", "!=", false],
                     ["res_partner_id", "=", this.env.user.partner_id],
                 ]).length
         );
@@ -308,7 +308,7 @@ export class MailMessage extends models.ServerModel {
         const messages = this.browse(ids);
         const notifications = MailNotification._filter([
             ["res_partner_id", "=", this.env.user.partner_id],
-            ["is_read", "=", false],
+            ["read_date", "=", false],
             ["mail_message_id", "in", messages.map((messages) => messages.id)],
         ]);
         if (notifications.length === 0) {
@@ -316,7 +316,7 @@ export class MailMessage extends models.ServerModel {
         }
         MailNotification.write(
             notifications.map((notification) => notification.id),
-            { is_read: true }
+            { read_date: serializeDateTime(DateTime.now()) }
         );
         // simulate compute that should be done based on notifications
         for (const message of messages) {
@@ -350,7 +350,7 @@ export class MailMessage extends models.ServerModel {
         }
         MailNotification.write(
             notifications.map((e) => e.id),
-            { is_read: false, read_date: false }
+            { read_date: false }
         );
         for (const message of messages) {
             BusBus._sendone(

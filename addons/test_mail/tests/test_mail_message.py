@@ -111,7 +111,7 @@ class TestMessageHelpersRobustness(MailCommon, HttpCase):
     def test_message_fetch(self):
         # set notifications to unread, so that we can simulate inbox usage
         p2_notifications = self.env['mail.notification'].search([('res_partner_id', '=', self.partner_employee_2.id)])
-        p2_notifications.is_read = False
+        p2_notifications.read_date = False
         self.authenticate(self.user_employee_2.login, self.user_employee_2.login)
         data = self.make_jsonrpc_request("/mail/store", {"fetch_params": [["/mail/messaging_menu/mail.message/load_more", {"tab_id": "notification", "filter_ids": ["notification_unread"], "limit": 20}]]})
         self.assertEqual(
