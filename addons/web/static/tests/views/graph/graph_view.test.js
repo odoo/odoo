@@ -235,7 +235,7 @@ test("simple bar chart rendering", async () => {
         stack: "",
     });
     checkLegend(view, []);
-    checkMeasure("Count");
+    checkMeasure(view, "__count");
     checkTooltip(view, { lines: [{ label: "Total", value: "8" }] }, 0);
 });
 
@@ -271,7 +271,7 @@ test("simple bar chart rendering (one groupBy)", async () => {
     });
     // No legend when there's only one groupBy: already shown in the measures button
     checkLegend(view, []);
-    checkMeasure("Count");
+    checkMeasure(view, "__count");
     checkTooltip(view, { lines: [{ label: "false", value: "5" }] }, 0);
     checkTooltip(view, { lines: [{ label: "true", value: "3" }] }, 1);
 });
@@ -342,7 +342,7 @@ test("bar chart many2many groupBy", async () => {
         label: "Revenue",
     });
     checkLegend(view, []);
-    checkMeasure("Revenue");
+    checkMeasure(view, "revenue");
     checkTooltip(view, { lines: [{ label: "black", value: "10" }], title: "Revenue" }, 0);
     checkTooltip(view, { lines: [{ label: "red", value: "13" }], title: "Revenue" }, 1);
     checkTooltip(view, { lines: [{ label: "None", value: "8" }], title: "Revenue" }, 2);
@@ -395,7 +395,7 @@ test("line chart rendering (no groupBy)", async () => {
         stack: undefined,
     });
     checkLegend(view, []);
-    checkMeasure("Count");
+    checkMeasure(view, "__count");
     checkTooltip(view, { lines: [{ label: "Total", value: "8" }] }, 1);
 });
 
@@ -419,7 +419,7 @@ test("line chart rendering (one groupBy)", async () => {
         label: "Count",
     });
     checkLegend(view, []);
-    checkMeasure("Count");
+    checkMeasure(view, "__count");
     checkTooltip(view, { lines: [{ label: "false", value: "5" }] }, 0);
     checkTooltip(view, { lines: [{ label: "true", value: "3" }] }, 1);
 });
@@ -500,7 +500,7 @@ test("line chart many2many groupBy", async () => {
         label: "Revenue",
     });
     checkLegend(view, []);
-    checkMeasure("Revenue");
+    checkMeasure(view, "revenue");
     checkTooltip(view, { lines: [{ label: "black", value: "10" }], title: "Revenue" }, 0);
     checkTooltip(view, { lines: [{ label: "red", value: "13" }], title: "Revenue" }, 1);
 });
@@ -584,7 +584,7 @@ test("format total in hh:mm when measure is unit_amount", async () => {
     expect("div.o_graph_canvas_container canvas").toHaveCount(1);
     expect(measure).toBe("unit_amount", { message: `the measure should be "unit_amount"` });
     checkLegend(view, []);
-    checkMeasure("Unit Amount");
+    checkMeasure(view, "unit_amount");
     checkLabels(view, ["Total"]);
     expect(fieldAttrs[measure].widget).toBe("float_time", {
         message: "should be a float_time widget",
@@ -1175,7 +1175,7 @@ test("field id not in groupBy", async () => {
         stack: "",
     });
     checkLegend(view, []);
-    checkMeasure("Count");
+    checkMeasure(view, "__count");
 });
 
 test("props modifications", async () => {
@@ -1232,15 +1232,210 @@ test("switching mode", async () => {
 });
 
 test("switching measure", async () => {
-    await mountView({ type: "graph", resModel: "foo" });
+    const view = await mountView({ type: "graph", resModel: "foo" });
 
     await contains(`.o_report_measures`).click();
 
-    checkMeasure("Count");
+    checkMeasure(view, "__count");
 
     await toggleMenuItem("Foo");
 
-    checkMeasure("Foo");
+    checkMeasure(view, "foo");
+
+    // in modes other than pie, the menu is closed after each selection
+    await contains(`.o_report_measures`).click();
+    await toggleMenuItem("Revenue");
+
+    checkMeasure(view, "revenue");
+});
+
+test("toggling measures in pie mode", async () => {
+    onRpc("formatted_read_group", ({ kwargs }) => {
+        expect.step(kwargs.aggregates.join(","));
+    });
+
+    const view = await mountView({
+        type: "graph",
+        resModel: "foo",
+        arch: /* xml */ `
+            <graph type="pie" />
+        `,
+    });
+
+    await contains(`.o_report_measures`).click();
+
+    checkMeasure(view, "__count");
+
+    await toggleMenuItem("Foo");
+
+    checkMeasure(view, ["__count", "foo"]);
+
+    await toggleMenuItem("Count");
+
+    checkMeasure(view, "foo");
+
+    // the last active measure cannot be removed
+    await toggleMenuItem("Foo");
+
+    checkMeasure(view, "foo");
+
+    // all active measures are fetched in a single read_group
+    expect.verifySteps(["__count", "__count,foo:sum", "foo:sum"]);
+});
+
+test("several measures in pie mode (no groupBy)", async () => {
+    const view = await mountView({
+        type: "graph",
+        resModel: "foo",
+        arch: /* xml */ `
+            <graph type="pie" />
+        `,
+    });
+
+    await contains(`.o_report_measures`).click();
+    await toggleMenuItem("Foo");
+    await toggleMenuItem("Revenue");
+
+    checkLabels(view, ["Total"]);
+    // each measure is displayed in its own dataset (a ring in the pie)
+    checkDatasets(
+        view,
+        ["data", "label"],
+        [
+            { label: "Count", data: [8] },
+            { label: "Foo", data: [239] },
+            { label: "Revenue", data: [23] },
+        ]
+    );
+    // the legend is based on the labels (shared by all datasets)
+    checkLegend(view, ["Total"]);
+    checkTooltip(
+        view,
+        {
+            title: "Measures",
+            lines: [
+                { label: "Total / Foo", value: "239 (100.00%)" },
+                { label: "Total / Revenue", value: "23 (100.00%)" },
+                { label: "Total / Count", value: "8 (100.00%)" },
+            ],
+        },
+        0
+    );
+    // hovering the segment of a single measure: the tooltip title is the
+    // name of that measure
+    checkTooltip(
+        view,
+        {
+            title: "Foo",
+            lines: [{ label: "Total / Foo", value: "239 (100.00%)" }],
+        },
+        0,
+        1
+    );
+});
+
+test.tags("desktop");
+test("switching from pie to bar mode with several active measures", async () => {
+    const view = await mountView({
+        type: "graph",
+        resModel: "foo",
+        arch: /* xml */ `
+            <graph type="pie">
+                <field name="bar" />
+                <field name="product_id" />
+            </graph>
+        `,
+    });
+
+    await contains(`.o_report_measures`).click();
+    await toggleMenuItem("Foo");
+
+    // in pie mode, several measures can be active at the same time
+    checkMeasure(view, ["__count", "foo"]);
+
+    await selectMode("bar");
+
+    // in the other modes, the measures remain active but only the first one
+    // is displayed
+    checkMeasure(view, ["__count", "foo"]);
+    checkDatasets(
+        view,
+        ["data", "label"],
+        [
+            { label: "xphone", data: [1, 3] },
+            { label: "xpad", data: [4, 0] },
+            { label: "Sum", data: [5, 3] },
+        ]
+    );
+    expect(getYAxisLabel(view)).toBe("Count");
+
+    // the measures dropdown only reflects the displayed measure
+    await contains(`.o_report_measures`).click();
+    expect(queryAllTexts(`.dropdown-menu .o_menu_item.selected`)).toEqual(["Count"]);
+    expect(queryAllTexts(`.o_report_measures`)).toEqual(["Count"]);
+    await contains(`.o_report_measures`).click();
+
+    await selectMode("pie");
+
+    // switching back to pie mode displays all the active measures again
+    checkMeasure(view, ["__count", "foo"]);
+    checkDatasets(view, ["label"], [{ label: "Count" }, { label: "Foo" }]);
+});
+
+test("aggregates of all active measures are fetched in a single read_group", async () => {
+    onRpc("formatted_read_group", ({ kwargs }) => {
+        expect.step(kwargs.aggregates.join(","));
+    });
+
+    await mountView({
+        type: "graph",
+        resModel: "foo",
+        arch: /* xml */ `
+            <graph type="pie">
+                <field name="product_id" />
+            </graph>
+        `,
+    });
+
+    await contains(`.o_report_measures`).click();
+    await toggleMenuItem("Foo");
+    await toggleMenuItem("Revenue");
+
+    expect.verifySteps(["__count", "__count,foo:sum", "__count,foo:sum,revenue:sum"]);
+});
+
+test("graph_measure in context can be a list of measures", async () => {
+    const view = await mountView({
+        type: "graph",
+        resModel: "foo",
+        arch: /* xml */ `
+            <graph type="pie" />
+        `,
+        context: {
+            graph_measure: ["foo", "revenue"],
+        },
+    });
+
+    checkMeasure(view, ["foo", "revenue"]);
+    checkDatasets(
+        view,
+        ["data", "label"],
+        [
+            { label: "Foo", data: [239] },
+            { label: "Revenue", data: [23] },
+        ]
+    );
+
+    // invalid and duplicated measures are dropped
+    const view2 = await mountView({
+        type: "graph",
+        resModel: "foo",
+        context: {
+            graph_measure: ["foo", "gone_with_the_wind", "foo"],
+        },
+    });
+
+    checkMeasure(view2, "foo");
 });
 
 test("process default view description", async () => {
@@ -1492,7 +1687,7 @@ test("save params succeeds", async () => {
     const expectedContexts = [
         {
             graph_mode: "bar",
-            graph_measure: "__count",
+            graph_measure: ["__count"],
             graph_groupbys: ["product_id"],
             graph_order: null,
             graph_stacked: true,
@@ -1501,7 +1696,7 @@ test("save params succeeds", async () => {
         },
         {
             graph_mode: "bar",
-            graph_measure: "foo",
+            graph_measure: ["foo"],
             graph_groupbys: ["product_id"],
             graph_order: null,
             graph_stacked: true,
@@ -1510,7 +1705,7 @@ test("save params succeeds", async () => {
         },
         {
             graph_mode: "line",
-            graph_measure: "foo",
+            graph_measure: ["foo"],
             graph_cumulated: false,
             graph_groupbys: ["product_id"],
             graph_order: null,
@@ -1520,7 +1715,7 @@ test("save params succeeds", async () => {
         },
         {
             graph_mode: "line",
-            graph_measure: "foo",
+            graph_measure: ["foo"],
             graph_cumulated: false,
             graph_groupbys: ["product_id", "color_id"],
             graph_order: null,
@@ -1603,7 +1798,7 @@ test("correctly uses graph_ keys from the context", async () => {
 
     checkLabels(view, ["black", "red"]);
     checkLegend(view, []);
-    checkMeasure("Foo");
+    checkMeasure(view, "foo");
     checkModeIs(view, "line");
     expect(getYAxisLabel(view)).toBe("Foo");
     expect(getGraphModelMetaData(view).mode).toBe("line");
@@ -1626,7 +1821,7 @@ test("correctly uses graph_ keys from the context (at reload)", async () => {
     });
 
     checkLegend(view, []);
-    checkMeasure("Count");
+    checkMeasure(view, "__count");
     expect(getYAxisLabel(view)).toBe("Count");
     checkModeIs(view, "bar");
 
@@ -1634,7 +1829,7 @@ test("correctly uses graph_ keys from the context (at reload)", async () => {
     await toggleMenuItem("Context");
 
     checkLegend(view, []);
-    checkMeasure("Foo");
+    checkMeasure(view, "foo");
     expect(getYAxisLabel(view)).toBe("Foo");
     checkModeIs(view, "line");
 });
@@ -1666,7 +1861,7 @@ test("correctly use group_by key from the context", async () => {
 
     checkLabels(view, ["black", "red"]);
     checkLegend(view, []);
-    checkMeasure("Foo");
+    checkMeasure(view, "foo");
     checkModeIs(view, "line");
     expect(getYAxisLabel(view)).toBe("Foo");
     expect(getGraphModelMetaData(view).mode).toBe("line");
@@ -1779,7 +1974,7 @@ test("initial groupby is kept when reloading", async () => {
 
     checkLabels(view, ["xphone", "xpad"]);
     checkLegend(view, []);
-    checkMeasure("Foo");
+    checkMeasure(view, "foo");
     checkDatasets(view, "data", { data: [82, 157] });
     expect(getYAxisLabel(view)).toBe("Foo");
 
@@ -1801,7 +1996,7 @@ test("use a many2one as a measure should work (without groupBy)", async () => {
 
     checkLabels(view, ["Total"]);
     checkLegend(view, []);
-    checkMeasure("Product");
+    checkMeasure(view, "product_id");
     checkDatasets(view, "data", { data: [2] });
     expect(getYAxisLabel(view)).toBe("Product");
 });
@@ -1820,7 +2015,7 @@ test("use a many2one as a measure should work (with groupBy)", async () => {
 
     checkLabels(view, ["false", "true"]);
     checkLegend(view, []);
-    checkMeasure("Product");
+    checkMeasure(view, "product_id");
     checkDatasets(view, "data", { data: [2, 1] });
 });
 
@@ -1838,7 +2033,7 @@ test("use a many2one as a measure and as a groupby should work", async () => {
 
     checkLabels(view, ["xphone", "xpad"]);
     checkLegend(view, []);
-    checkMeasure("Product");
+    checkMeasure(view, "product_id");
     checkDatasets(view, "data", { data: [1, 1] });
     expect(getYAxisLabel(view)).toBe("Product");
 });
@@ -1917,7 +2112,7 @@ test("a many2one field can be added as measure in arch", async () => {
     });
 
     checkLegend(view, []);
-    checkMeasure("Product");
+    checkMeasure(view, "product_id");
     expect(getYAxisLabel(view)).toBe("Product");
 });
 
@@ -1951,7 +2146,7 @@ test("graph view `graph_measure` field in context", async () => {
 
     expect(getYAxisLabel(view)).toBe("Product");
     checkLegend(view, []);
-    checkMeasure("Product");
+    checkMeasure(view, "product_id");
     checkTooltip(view, { title: "Product", lines: [{ label: "Total", value: "2" }] }, 0);
 });
 
@@ -1971,7 +2166,7 @@ test("`graph_measure` in context is prefered to measure in arch", async () => {
 
     expect(getYAxisLabel(view)).toBe("Product");
     checkLegend(view, []);
-    checkMeasure("Product");
+    checkMeasure(view, "product_id");
     checkTooltip(view, { title: "Product", lines: [{ label: "Total", value: "2" }] }, 0);
 });
 
@@ -2379,7 +2574,7 @@ test("graph view sort by measure", async () => {
     expect("[data-icon='south']").toHaveCount(1);
 
     checkLegend(view, []);
-    checkMeasure("Count");
+    checkMeasure(view, "__count");
     expect("[data-icon='south']").toHaveClass("active");
     checkDatasets(view, "data", { data: [4, 3, 1] });
 
@@ -2405,7 +2600,7 @@ test("graph view sort by measure", async () => {
     expect("[data-icon='south']").toHaveCount(1);
 
     checkLegend(view, []);
-    checkMeasure("Count");
+    checkMeasure(view, "__count");
     expect("[data-icon='south']").not.toHaveClass("active");
     checkDatasets(view, "data", { data: [4, 1, 3] });
 
@@ -2737,6 +2932,7 @@ test("concurrent reloads: add a filter, and directly toggle a measure", async ()
     def.resolve();
     await animationFrame();
 
+    // the Foo measure has replaced the Count measure
     checkDatasets(view, ["data", "label"], {
         data: [82, 4],
         label: "Foo",
@@ -2911,7 +3107,7 @@ test("graph_groupbys should be also used after first load", async () => {
     checkModeIs(view, "bar");
     checkLabels(view, ["Q1 2016", "Q2 2016", "None"]);
     checkLegend(view, []);
-    checkMeasure("Count");
+    checkMeasure(view, "__count");
 
     await toggleSearchBarMenu();
     await toggleMenuItem("Favorite");
@@ -2919,7 +3115,7 @@ test("graph_groupbys should be also used after first load", async () => {
     checkModeIs(view, "bar");
     checkLabels(view, ["red", "None"]);
     checkLegend(view, []);
-    checkMeasure("Revenue");
+    checkMeasure(view, "revenue");
 });
 
 test("order='desc' on arch", async () => {
@@ -3221,7 +3417,7 @@ test("monetary chart rendering with multiple currencies", async () => {
         label: "Amount",
     });
     checkLegend(view, []);
-    checkMeasure("Amount");
+    checkMeasure(view, "amount");
     // should display the sum in the company currency, i.e. EUR
     checkTooltip(view, { title: "Amount", lines: [{ label: "false", value: "1,200.00 €" }] }, 0);
     checkTooltip(view, { title: "Amount", lines: [{ label: "true", value: "1,000.00 €" }] }, 1);
@@ -3299,7 +3495,7 @@ test("graph renders percentage widget measures", async () => {
     });
 
     expect(".o_graph_canvas_container canvas").toHaveCount(1);
-    checkMeasure("Ratio");
+    checkMeasure(view, "ratio");
     checkTooltip(view, { title: "Ratio", lines: [{ label: "Total", value: "33.33%" }] }, 0);
 });
 
