@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_ewaybill_extend_form" model="ir.ui.view">
+            <field name="name">l10n.in.ewaybill.extension.form</field>
+            <field name="model">l10n.in.ewaybill.extend</field>
+            <field name="arch" type="xml">
+                <form string="Extend E-Way Bill Validity">
+                    <group>
+                        <group string="Extension Details">
+                            <field name="extension_reason_code"/>
+                            <field name="extension_remarks"/>
+                        </group>
+                        <group string="Current Location">
+                            <field name="from_pincode"/>
+                            <field name="from_state" options="{'no_create': True}"/>
+                            <field name="from_place"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Transit Info">
+                            <field name="remaining_distance"/>
+                            <field name="consignment_status" widget="radio" options="{'horizontal': true}"/>
+                        </group>
+                        <group string="Transportation Details">
+                            <field name="trans_mode" invisible="consignment_status == 'T'"/>
+                            <field name="transit_type" invisible="consignment_status == 'M'"/>
+                            <field name="vehicle_no" invisible="not ((consignment_status == 'M' and trans_mode == '1') or (consignment_status == 'T' and transit_type == 'R'))"/>
+                            <field name="trans_doc_no" invisible="trans_mode == '1'"/>
+                            <field name="trans_doc_date" invisible="trans_mode == '1'"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Extend E-waybill"
+                                name="extend_ewaybill"
+                                type="object"
+                                class="btn-primary"
+                                data-hotkey="q"/>
+                        <button string="Discard"
+                                class="btn-secondary"
+                                special="cancel"
+                                data-hotkey="x"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+    </data>
+</odoo>
