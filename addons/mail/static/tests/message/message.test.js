@@ -20,6 +20,7 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
+import { Gif } from "@mail/core/common/gif";
 import { LONG_PRESS_DELAY } from "@mail/utils/common/hooks";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, leave, pointerDown, press, queryFirst, waitFor } from "@odoo/hoot-dom";
@@ -29,6 +30,7 @@ import {
     contains as webContains,
     Command,
     mockService,
+    mountWithCleanup,
     onRpc,
     patchWithCleanup,
     serverState,
@@ -2391,6 +2393,29 @@ test("Pause GIF attachment when thread is not focused", async () => {
     await contains(".o-mail-AttachmentImage[data-paused]");
     await focus(".o-mail-Thread");
     await contains(".o-mail-AttachmentImage:not([data-paused])");
+});
+
+test("GIF snapshot should not crash when its same-origin URL redirects cross-origin", async () => {
+    patchWithCleanup(CanvasRenderingContext2D.prototype, {
+        drawImage(image) {
+            if (image.crossOrigin !== "anonymous") {
+                this.canvas.dataset.tainted = "true";
+            }
+            return super.drawImage(...arguments);
+        },
+    });
+    patchWithCleanup(HTMLCanvasElement.prototype, {
+        toDataURL() {
+            if (this.dataset.tainted) {
+                throw new DOMException("Tainted canvases may not be exported.", "SecurityError");
+            }
+            return super.toDataURL(...arguments);
+        },
+    });
+    await mountWithCleanup(Gif, {
+        props: { src: `${window.location.origin}/web/static/img/sep-a.gif`, paused: true },
+    });
+    await contains("img[data-paused][data-src^='data:image/']");
 });
 
 test("Prettify message links", async () => {
