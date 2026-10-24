@@ -429,6 +429,24 @@ class HrEmployee(models.Model):
 
         return all_days
 
+    def get_expected_hours(self, date_from, date_to):
+        employee = self or self._get_contextual_employee()
+        if not employee or employee.resource_id._is_fully_flexible():
+            return {}
+
+        tz = ZoneInfo(employee._get_tz())
+        start_dt = datetime.combine(fields.Date.to_date(date_from), time.min, tzinfo=tz)
+        end_dt = datetime.combine(fields.Date.to_date(date_to), time.max, tzinfo=tz)
+
+        day_hours = defaultdict(float)
+        for start, stop, _meta in employee._get_expected_attendances(start_dt, end_dt):
+            day_start = start
+            while day_start.date() <= stop.date():
+                day_end = min(stop, datetime.combine(day_start.date(), time.max, tzinfo=day_start.tzinfo))
+                day_hours[fields.Date.to_string(day_start.date())] += (day_end - day_start).total_seconds() / 3600
+                day_start = datetime.combine(day_start.date() + timedelta(days=1), time.min, tzinfo=day_start.tzinfo)
+        return dict(day_hours)
+
     @api.model
     def get_special_days_data(self, date_start, date_end):
         return {
