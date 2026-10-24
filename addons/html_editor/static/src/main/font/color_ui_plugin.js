@@ -7,6 +7,7 @@ import { isStylable, isTextNode } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { isCSSColor, normalizeCSSColor, RGBA_REGEX } from "@web/core/utils/colors";
 import { withSequence } from "@html_editor/utils/resource";
+import { backgroundImageCssToParts } from "@html_editor/utils/image";
 
 const RGBA_OPACITY = 0.6;
 const HEX_OPACITY = "99";
@@ -128,6 +129,17 @@ export class ColorUIPlugin extends Plugin {
         for (const font of allFont) {
             if (isCSSColor(font.style[mode])) {
                 usedCustomColors.add(normalizeCSSColor(font.style[mode]));
+            } else {
+                const parts = backgroundImageCssToParts(font.style.backgroundImage);
+                if (!parts.url && parts.gradient) {
+                    const isTextGradient = font.classList.contains("text-gradient");
+                    if (
+                        (isTextGradient && mode === "color") ||
+                        (!isTextGradient && mode === "backgroundColor")
+                    ) {
+                        usedCustomColors.add(parts.gradient);
+                    }
+                }
             }
         }
         return usedCustomColors;

@@ -1,8 +1,10 @@
 import { Component, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { isColorGradient } from "@web/core/utils/colors";
+import { isColorGradient, isCSSColor } from "@web/core/utils/colors";
 import { CustomColorPicker } from "../../custom_color_picker/custom_color_picker";
+
+const MAX_USED_COLORS_TO_SHOW = 16;
 
 export class ColorPickerCustomTab extends Component {
     static template = "html_editor.ColorPickerCustomTab";
@@ -29,7 +31,19 @@ export class ColorPickerCustomTab extends Component {
     });
 
     setup() {
-        this.usedCustomColors = this.props.getUsedCustomColors();
+        this.usedCustomColors = Array.from(this.props.getUsedCustomColors()).filter(isCSSColor);
+    }
+
+    get usedColors() {
+        const colors = this.usedCustomColors.filter(
+            (color) => color.toLowerCase() !== this.props.currentCustomColor?.toLowerCase()
+        );
+        const additionalColors =
+            (!this.props.defaultColorSet && this.isValidCustomColor(this.props.currentCustomColor)
+                ? 1
+                : 0) + (this.props.currentColorPreview ? 1 : 0);
+
+        return colors.slice(0, MAX_USED_COLORS_TO_SHOW - additionalColors);
     }
 
     isValidCustomColor(color) {

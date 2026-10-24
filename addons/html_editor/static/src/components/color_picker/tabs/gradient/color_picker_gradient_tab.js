@@ -1,10 +1,14 @@
 import { Component, onPatched, signal, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { applyOpacityToGradient, isColorGradient } from "@web/core/utils/colors";
+import {
+    applyOpacityToGradient,
+    isColorGradient,
+    standardizeGradient,
+} from "@web/core/utils/colors";
 import { GradientPicker } from "../../gradient_picker/gradient_picker";
 
-const DEFAULT_GRADIENT_COLORS = [
+export const DEFAULT_GRADIENT_COLORS = [
     "linear-gradient(135deg, rgb(255, 204, 51) 0%, rgb(226, 51, 255) 100%)",
     "linear-gradient(135deg, rgb(102, 153, 255) 0%, rgb(255, 51, 102) 100%)",
     "linear-gradient(135deg, rgb(47, 128, 237) 0%, rgb(178, 255, 218) 100%)",
@@ -14,6 +18,8 @@ const DEFAULT_GRADIENT_COLORS = [
     "linear-gradient(135deg, rgb(222, 222, 222) 0%, rgb(69, 69, 69) 100%)",
     "linear-gradient(135deg, rgb(255, 222, 202) 0%, rgb(202, 115, 69) 100%)",
 ];
+
+const MAX_USED_GRADIENTS_TO_SHOW = 4;
 
 export class ColorPickerGradientTab extends Component {
     static template = "html_editor.ColorPickerGradientTab";
@@ -32,14 +38,17 @@ export class ColorPickerGradientTab extends Component {
         noTransparency: t.boolean().optional(),
         selectedColor: t.string().optional(),
         currentColorPreview: t.string().optional(),
+        getUsedCustomColors: t.function().optional(),
     });
 
     customGradientButton = signal.ref();
     showGradientPicker = signal(false);
 
     setup() {
-        this.applyOpacityToGradient = applyOpacityToGradient;
-        this.DEFAULT_GRADIENT_COLORS = DEFAULT_GRADIENT_COLORS;
+        this.standardizeGradient = standardizeGradient;
+        this.DEFAULT_GRADIENTS_WITH_OPACITY = DEFAULT_GRADIENT_COLORS.map((gradient) =>
+            applyOpacityToGradient(gradient, this.props.defaultOpacity)
+        );
         let wasOpen = false;
         onPatched(() => {
             const isOpen = this.showGradientPicker();
@@ -48,6 +57,23 @@ export class ColorPickerGradientTab extends Component {
             }
             wasOpen = isOpen;
         });
+        this.usedCustomGradients = Array.from(this.props.getUsedCustomColors()).filter(
+            (gradient) =>
+                isColorGradient(gradient) && !this.DEFAULT_GRADIENTS_WITH_OPACITY.includes(gradient)
+        );
+    }
+
+    get usedGradients() {
+        const currentGradient = this.getCurrentGradientColor();
+        const gradients = this.usedCustomGradients.filter(
+            (gradient) => gradient !== this.standardizeGradient(currentGradient)
+        );
+        const additionalGradient =
+            currentGradient &&
+            !this.DEFAULT_GRADIENTS_WITH_OPACITY.includes(
+                this.standardizeGradient(currentGradient)
+            );
+        return gradients.slice(0, MAX_USED_GRADIENTS_TO_SHOW - (additionalGradient ? 1 : 0));
     }
 
     getCurrentGradientColor() {
