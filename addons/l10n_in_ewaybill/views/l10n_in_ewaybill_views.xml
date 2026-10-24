@@ -69,6 +69,7 @@
                                    readonly="state != 'pending'"
                                    domain="[('allowed_supply_type', 'in', (supply_type == 'I' and 'in' or 'out', 'both'))]"
                                    required="True"/>
+                            <field name="transaction_type"/>
                         </group>
                         <group>
                             <field name="ewaybill_date" invisible="not ewaybill_date"/>
