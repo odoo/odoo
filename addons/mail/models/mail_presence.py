@@ -55,9 +55,9 @@ class MailPresence(models.Model):
         updated._send_presence()
         return result
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_send_presence(self):
         self._send_presence("offline")
-        return super().unlink()
 
     @api.model
     def _try_update_presence(self, user_or_guest, inactivity_period=0):

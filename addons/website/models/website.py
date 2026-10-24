@@ -517,31 +517,36 @@ class Website(models.CachedModel):
                     default_website_name=first_website.name),
             })
 
+    @api.ondelete(at_uninstall=True)
+    def _unlink_recompute_companies(self):
+        companies = self.company_id
+        if not companies:
+            return None
+
+        def recompute_companies():
+            companies.env.transaction.invalidate_ormcache()
+            companies._compute_website_id()
+        return recompute_companies
+
     @api.ondelete(at_uninstall=False)
     def _unlink_except_default_website(self):
         default_website = self.env.ref('base.default_website', raise_if_not_found=False)
         if default_website and default_website in self:
             raise UserError(_("You cannot delete default website %s. Try to change its settings instead", default_website.name))
 
-    def unlink(self):
-        self._remove_attachments_on_website_unlink()
+    def _delete_extra(self):
+        yield from super()._delete_extra()
+        yield self._attachments_on_website_to_unlink()
 
-        companies = self.company_id
-        res = super().unlink()
-        self.env.transaction.invalidate_ormcache()
-        companies._compute_website_id()
-        return res
-
-    def _remove_attachments_on_website_unlink(self):
+    def _attachments_on_website_to_unlink(self):
         # Do not delete invoices, delete what's strictly necessary
-        attachments_to_unlink = self.env['ir.attachment'].search([
+        return self.env['ir.attachment'].search([
             ('website_id', 'in', self.ids),
             '|', '|',
             ('key', '!=', False),  # theme attachment
             ('url', '=like', '/_custom/%'),  # customized theme attachment
             ('url', 'ilike', '.assets\\_'),
         ])
-        attachments_to_unlink.unlink()
 
     def create_and_redirect_configurator(self):
         self._force()

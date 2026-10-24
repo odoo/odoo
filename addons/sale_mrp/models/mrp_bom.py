@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
 
-from odoo import _, models
+from odoo import _, api, models
 from odoo.exceptions import UserError
 
 
@@ -15,10 +14,7 @@ class MrpBom(models.Model):
             self._ensure_bom_is_free()
         return super().write(vals)
 
-    def unlink(self):
-        self._ensure_bom_is_free()
-        return super().unlink()
-
+    @api.ondelete(at_uninstall=True)
     def _ensure_bom_is_free(self):
         product_ids = []
         product_bom_company = defaultdict(set)

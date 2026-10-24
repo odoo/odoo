@@ -69,10 +69,10 @@ class CalendarCalendar(models.Model):
 
         return result
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_remove_calendar_sync_token(self):
         # Ensure that the calendar syncs back on the next sync so that it can be reimported
         self.env.user.google_calendar_sync_token = False
-        return super().unlink()
 
     @api.model_create_multi
     def create(self, vals_list):

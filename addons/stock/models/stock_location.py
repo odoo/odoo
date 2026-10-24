@@ -267,8 +267,9 @@ class StockLocation(models.Model):
         self.invalidate_model(['warehouse_id'])
         return res
 
-    def unlink(self):
-        return super(StockLocation, self.search([('id', 'child_of', self.ids)])).unlink()
+    def _delete_extra(self):
+        yield from super()._delete_extra()
+        yield self.search([('id', 'child_of', self.ids)])  # kind of ondelete cascade
 
     @api.model
     def name_create(self, name):

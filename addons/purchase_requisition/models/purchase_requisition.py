@@ -110,10 +110,10 @@ class PurchaseRequisition(models.Model):
             requisition.name = self.env['ir.sequence'].with_company(requisition.company_id).next_by_code(code)
         return res
 
-    def unlink(self):
+    def _delete_extra(self):
+        yield from super()._delete_extra()
         # Draft requisitions could have some requisition lines.
-        self.line_ids.unlink()
-        return super().unlink()
+        yield self.line_ids
 
     def action_cancel(self):
         # try to set all associated quotations to cancel state
@@ -309,10 +309,10 @@ class PurchaseRequisitionLine(models.Model):
             'price_unit': 0.0,
         }
 
-    def unlink(self):
+    def _delete_extra(self):
+        yield from super()._delete_extra()
         to_unlink = self.filtered(lambda r: r.requisition_id.state not in ['draft', 'cancel', 'done'])
-        to_unlink.supplier_info_ids.unlink()
-        return super().unlink()
+        yield to_unlink.supplier_info_ids
 
     def _create_supplier_info(self):
         self.ensure_one()

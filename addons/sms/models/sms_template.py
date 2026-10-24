@@ -40,9 +40,9 @@ class SmsTemplate(models.Model):
     # CRUD
     # ------------------------------------------------------------
 
-    def unlink(self):
-        self.sudo().mapped('sidebar_action_id').unlink()
-        return super().unlink()
+    def _delete_extra(self):
+        yield from super()._delete_extra()
+        yield self.sidebar_action_id
 
     def action_create_sidebar_action(self):
         ActWindow = self.env['ir.actions.act_window']

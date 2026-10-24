@@ -178,9 +178,9 @@ class IrSequence(models.Model):
                 _create_sequence(self.env.cr, "ir_sequence_%03d" % seq.id, seq.number_increment or 1, seq.number_next or 1)
         return seqs
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=True)
+    def _unlink_drop_sequences(self):
         _drop_sequences(self.env.cr, ["ir_sequence_%03d" % x.id for x in self])
-        return super().unlink()
 
     def write(self, vals):
         new_implementation = vals.get('implementation')
@@ -373,9 +373,9 @@ class IrSequenceDate_Range(models.Model):
                 _create_sequence(self.env.cr, "ir_sequence_%03d_%03d" % (main_seq.id, seq.id), main_seq.number_increment, seq.number_next_actual or 1)
         return seqs
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=True)
+    def _unlink_drop_sequences(self):
         _drop_sequences(self.env.cr, ["ir_sequence_%03d_%03d" % (x.sequence_id.id, x.id) for x in self])
-        return super().unlink()
 
     def write(self, vals):
         if vals.get('number_next'):
