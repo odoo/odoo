@@ -36,7 +36,7 @@ class IrUiMenu(models.Model):
                     "webIcon": None,
                     "webIconData": None,
                     "webIconDataMimetype": None,
-                    "backgroundImage": menu.get('backgroundImage'),
+                    "homeMenuCustomization": menu.get('homeMenuCustomization'),
                 }
             else:
                 action_id = menu['action_id']
