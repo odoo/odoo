@@ -623,6 +623,21 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
             (self.lead_1 | dup_leads).exists(),
             opp_lost)
 
+    @users('user_sales_manager')
+    def test_probability_100_not_won_conversion_allowed(self):
+        """100% probability alone must not block lead → opportunity conversion."""
+        lead = self.lead_1.with_user(self.env.user)
+        lead.probability = 100
+
+        wizard = self.env['crm.lead2opportunity.partner'].with_context({
+            'active_model': 'crm.lead',
+            'active_id': lead.id,
+            'active_ids': lead.ids,
+        }).create({})
+        wizard.action_apply()
+
+        self.assertEqual(lead.type, 'opportunity')
+
 
 @tagged('lead_manage')
 class TestLeadConvertBatch(crm_common.TestLeadConvertMassCommon):
