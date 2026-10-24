@@ -58,6 +58,22 @@ export class Youtube extends AbstractThirdPartyVideo {
     }
 
     /**
+     * Returns the title of a YouTube video via the oEmbed API.
+     *
+     * @param {string} videoId
+     * @return {Promise<string>} title
+     */
+    static async getTitle(videoId) {
+        const videoUrl = encodeURIComponent(`https://www.youtube.com/watch?v=${videoId}`);
+        const response = await fetch(`https://www.youtube.com/oembed?format=json&url=${videoUrl}`);
+        if (!response.ok) {
+            return "";
+        }
+        const data = await response.json();
+        return data.title || "";
+    }
+
+    /**
      * Example urls are used to test that the urlMatcher regular expression
      * correctly identifies valid video urls and extracts the video ID.
      * Every urls in this object should be parsable by the urlMatcher.

@@ -57,6 +57,23 @@ export class Vimeo extends AbstractThirdPartyVideo {
     }
 
     /**
+     * Returns the title of a vimeo video via the oEmbed API.
+     *
+     * @param {string} videoId
+     * @return {Promise<string>} title
+     */
+    static async getTitle(videoId) {
+        const response = await fetch(
+            `https://vimeo.com/api/oembed.json?url=https://vimeo.com/${encodeURIComponent(videoId)}`
+        );
+        if (!response.ok) {
+            return "";
+        }
+        const data = await response.json();
+        return data.title || "";
+    }
+
+    /**
      * Example urls are used to test that the urlMatcher regular expression
      * correctly identifies valid video urls and extracts the video ID.
      * Every urls in this object should be parsable by the urlMatcher.
