@@ -65,7 +65,11 @@
                   js_class="todo_list">
                 <field name="state" widget="todo_done_checkmark" nolabel="1" width="20px"/>
                 <field name="name"/>
-                <field name="user_ids" optional="hidden" required="1" widget="many2many_avatar_user"/>
+                <field name="user_ids"
+                        optional="hidden"
+                        required="1"
+                        widget="many2many_avatar_user"
+                        domain="[('active', '=', True), ('share', '=', False), ('role', '!=', 'light_user')]"/>
                 <field name="priority" widget="priority" optional="show" width="70px"/>
                 <field name="date_deadline" optional="show" widget="relative_date"/>
                 <field name="activity_ids" optional="hidden" widget="list_activity"/>
@@ -113,7 +117,8 @@
                             <field name="user_ids"
                                 widget="many2many_avatar_user"
                                 required="1"
-                                placeholder="Assignees"/>
+                                placeholder="Assignees"
+                                domain="[('active', '=', True), ('share', '=', False), ('role', '!=', 'light_user')]"/>
                         </group>
                         <group>
                             <field name="tag_ids"
@@ -155,41 +160,6 @@
                             Ensure you follow the correct format and order. For example: "Send invitations #event @Mitchell !"'/>
                     <field name="date_deadline" decoration-danger="date_deadline &lt; current_date"/>
                 </group>
-            </form>
-        </field>
-    </record>
-
-    <!-- Todo conversion form (used by an action added in TodoFormView (contoller) -->
-    <record id="project_task_view_todo_conversion_form" model="ir.ui.view">
-        <field name="model">project.task</field>
-        <field name="name">project.task.view.todo.conversion.form</field>
-        <field name="priority">999</field>
-        <field name="arch" type="xml">
-            <form string="Convert to Task"
-                  js_class="todo_conversion_form">
-                <sheet>
-                    <group>
-                        <!-- company_id field is used in the domain filtering project_id in
-                             hr_timesheet. Creating a bridge module just to add that field is
-                             overkill so it is added here. -->
-                        <field name="company_id" invisible="1"/>
-                        <field name="project_id"
-                               required="1"
-                               default_focus="1"/>
-                        <field name="user_ids"
-                               class="o_task_user_field"
-                               options="{'no_open': True}"
-                               widget="many2many_avatar_user"/>
-                        <field name="tag_ids" widget="many2many_tags"
-                               options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}"
-                               context="{'project_id': project_id}"
-                               placeholder="Choose tags from the selected project"/>
-                    </group>
-                </sheet>
-                <footer>
-                    <button name="action_convert_to_task" string="Convert to Task" type="object" class="btn-primary"/>
-                    <button special="cancel"/>
-                </footer>
             </form>
         </field>
     </record>
@@ -322,21 +292,6 @@
         <field name="view_mode">activity</field>
         <field name="view_id" ref="project_task_view_todo_activity"/>
         <field name="act_window_id" ref="project_task_action_todo"/>
-    </record>
-
-    <!-- Conversion actions-->
-    <record id="project_task_action_convert_todo_to_task" model="ir.actions.act_window">
-        <field name="name">Convert to Task</field>
-        <field name="res_model">project.task</field>
-        <field name="view_mode">form</field>
-        <field name="target">new</field>
-        <field name="context">{'dialog_size': 'medium'}</field>
-    </record>
-
-    <record model="ir.actions.act_window.view" id="project_task_action_convert_todo_to_task_form_view">
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="project_task_view_todo_conversion_form"/>
-        <field name="act_window_id" ref="project_task_action_convert_todo_to_task"/>
     </record>
 
 </odoo>
