@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View -->
+    <record id="view_custom_payroll_slip_form" model="ir.ui.view">
+        <field name="name">custom.payroll.slip.form</field>
+        <field name="model">custom.payroll.slip</field>
+        <field name="arch" type="xml">
+            <form string="Payslip">
+                <header>
+                    <button name="action_confirm" type="object" string="Confirm"
+                            class="btn-primary" invisible="status != 'draft'"/>
+                    <button name="action_recompute_rules" type="object" string="Re-run Salary Rules"
+                            invisible="status not in ('draft', 'confirmed')"
+                            groups="hr_payroll_custom.group_payroll_manager"/>
+                    <button name="action_paid" type="object" string="Mark as Paid"
+                            class="btn-primary" invisible="status != 'confirmed'"/>
+                    <button name="action_send_email" type="object" string="Send by Email"
+                            invisible="status != 'paid'" groups="hr_payroll_custom.group_payroll_user"/>
+                    <button name="action_resend_email" type="object" string="Resend Email"
+                            invisible="status != 'paid' or email_status not in ('sent', 'failed')"
+                            groups="hr_payroll_custom.group_payroll_user"/>
+                    <button name="action_cancel" type="object" string="Cancel"
+                            invisible="status in ('paid', 'cancelled')"/>
+                    <button name="action_draft" type="object" string="Reset to Draft"
+                            invisible="status != 'cancelled'"/>
+                            <field name="status" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Employee">
+                            <field name="employee_id"/>
+                            <field name="employee_name" readonly="1"/>
+                            <field name="department_id" readonly="1"/>
+                            <field name="job_id" readonly="1"/>
+                        </group>
+                        <group string="Payroll">
+                            <field name="payroll_batch_id"/>
+                            <field name="batch_status" readonly="1"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <group string="Batch Approval"
+                           invisible="batch_status not in ('submitted', 'approved', 'done')">
+                        <group>
+                            <field name="batch_submitter_id"/>
+                            <field name="batch_approver_id"/>
+                            <field name="batch_approval_date"/>
+                        </group>
+                        <group>
+                            <field name="batch_rejection_reason" readonly="1"
+                                   placeholder="(none)"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Salary Summary" name="summary">
+                            <group string="Earnings">
+                                <group>
+                                    <field name="total_gaji_pokok" widget="monetary"/>
+                                    <field name="total_tunjangan" widget="monetary"/>
+                                    <field name="total_lembur" widget="monetary"/>
+                                </group>
+                                <group>
+                                    <field name="total_earnings" widget="monetary"/>
+                                </group>
+                            </group>
+                            <group string="Deductions &amp; Net">
+                                <group>
+                                    <field name="total_potongan" widget="monetary"/>
+                                </group>
+                                <group>
+                                    <field name="total_pendapatan" widget="monetary"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Overtime" name="overtime">
+                            <group>
+                                <group string="Settings">
+                                    <field name="overtime_threshold_hours"/>
+                                    <field name="overtime_rate"/>
+                                    <field name="overtime_override"/>
+                                </group>
+                                <group string="Calculation (Auto)">
+                                    <field name="attendance_overtime_hours" readonly="1"/>
+                                    <field name="hourly_rate" readonly="1" widget="monetary"/>
+                                    <field name="overtime_amount" readonly="1" widget="monetary"/>
+                                </group>
+                            </group>
+                            <div class="text-muted mt16">
+                                <p><strong>How overtime is calculated:</strong></p>
+                                <ul>
+                                    <li>Hourly rate = contract wage / 173 (standard monthly hours).</li>
+                                    <li>Overtime hours = sum of (daily worked hours above threshold) from hr.attendance in the batch period.</li>
+                                    <li>Overtime amount = overtime hours x hourly rate x rate multiplier.</li>
+                                    <li>If Manual Override is greater than 0, the attendance calculation is bypassed.</li>
+                                </ul>
+                            </div>
+                        </page>
+                        <page string="Details" name="details">
+                            <field name="detail_ids" readonly="status != 'draft'"/>
+                        </page>
+                        <page string="Email">
+                            <group>
+                                <field name="email_status" readonly="1"/>
+                                <field name="email_delivery_state" readonly="1"/>
+                                <field name="email_mail_id" readonly="1"/>
+                                <field name="email_sent_at" readonly="1"/>
+                                <field name="email_sent_by" readonly="1"/>
+                                <field name="email_error" readonly="1" invisible="not email_error"/>
+                                <field name="email_delivery_error" readonly="1" invisible="not email_delivery_error"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- List View -->
+    <record id="view_custom_payroll_slip_list" model="ir.ui.view">
+        <field name="name">custom.payroll.slip.list</field>
+        <field name="model">custom.payroll.slip</field>
+        <field name="arch" type="xml">
+            <list string="Payslips"
+                  decoration-info="status == 'draft'"
+                  decoration-success="status == 'paid'"
+                  decoration-warning="status == 'confirmed'"
+                  decoration-muted="status == 'cancelled'">
+                <header>
+                    <button name="action_send_email" type="object" string="Send Payslips by Email"
+                            groups="hr_payroll_custom.group_payroll_user"/>
+                </header>
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="department_id" optional="show"/>
+                <field name="payroll_batch_id"/>
+                <field name="total_gaji_pokok" widget="monetary"/>
+                <field name="total_tunjangan" widget="monetary"/>
+                <field name="total_lembur" widget="monetary"/>
+                <field name="total_potongan" widget="monetary"/>
+                <field name="total_pendapatan" widget="monetary"/>
+                <field name="currency_id" column_invisible="1"/>
+                 <field name="status"/>
+                 <field name="email_status" optional="show"/>
+             </list>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_custom_payroll_slip_search" model="ir.ui.view">
+        <field name="name">custom.payroll.slip.search</field>
+        <field name="model">custom.payroll.slip</field>
+        <field name="arch" type="xml">
+            <search string="Payslips">
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="payroll_batch_id"/>
+                <separator/>
+                <filter name="filter_draft" string="Draft" domain="[('status', '=', 'draft')]"/>
+                <filter name="filter_confirmed" string="Confirmed" domain="[('status', '=', 'confirmed')]"/>
+                <filter name="filter_paid" string="Paid" domain="[('status', '=', 'paid')]"/>
+                <filter name="filter_cancelled" string="Cancelled" domain="[('status', '=', 'cancelled')]"/>
+                <filter name="filter_email_sent" string="Email Sent" domain="[('email_status', '=', 'sent')]"/>
+                <filter name="filter_email_failed" string="Email Failed" domain="[('email_status', '=', 'failed')]"/>
+                <separator/>
+                <group>
+                    <filter name="group_employee" string="Employee" context="{'group_by': 'employee_id'}"/>
+                    <filter name="group_batch" string="Payroll Batch" context="{'group_by': 'payroll_batch_id'}"/>
+                    <filter name="group_status" string="Status" context="{'group_by': 'status'}"/>
+                    <filter name="group_department" string="Department" context="{'group_by': 'department_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_custom_payroll_slip" model="ir.actions.act_window">
+        <field name="name">Payslips</field>
+        <field name="res_model">custom.payroll.slip</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_custom_payroll_slip_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first payslip.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_custom_payroll_my_slip" model="ir.actions.act_window">
+        <field name="name">My Payslips</field>
+        <field name="res_model">custom.payroll.slip</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('employee_id.user_id', '=', uid)]</field>
+        <field name="search_view_id" ref="view_custom_payroll_slip_search"/>
+        <field name="context">{'create': False}</field>
+    </record>
+</odoo>

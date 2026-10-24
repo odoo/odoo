@@ -1,0 +1,163 @@
+PRESENLY APPROVAL ROUTES — CONNECTED CONFIGURATION UX POST-CHECK
+Date: 2026-09-06
+Database: odoo
+Module: presenly 19.0.11.0.0
+
+WHY THIS CHANGE
+The previous Approval Levels menu exposed technical rule records without making their relationship to Permission Types, Time Off Types, and Work Locations obvious. Administrators had to understand the model relationships manually, and could not easily see whether a request type was ready for submission.
+
+NEW UX CONCEPT
+- "Approval Levels" is now "Approval Routes".
+- One Approval Route record represents one mandatory Approval Step.
+- Steps execute from the smallest Order to the largest Order.
+- Suggested Orders are 10, 20, 30, leaving room to insert future steps.
+- Submission remains blocked if no complete route applies.
+- Existing submitted requests continue to use immutable snapshot steps.
+
+PRIMARY CONFIGURATION FLOW
+Permission:
+1. Attendances > Configuration > Permission Types.
+2. Open a Permission Type.
+3. Review the Ready Steps indicator.
+4. Click Ready Steps.
+5. Add one row for every mandatory approver.
+
+Time Off:
+1. Open the native Time Off Type configuration.
+2. Review the Ready Steps indicator.
+3. Click Ready Steps.
+4. Add one row for every mandatory request approver.
+5. Native allocation approval remains separate and unchanged.
+
+Global overview:
+- Attendances > Configuration > Approval Routes remains available.
+- This menu is intended for cross-type review and maintenance, not as the recommended starting point.
+
+WORK LOCATION CONNECTION
+- Work Location contains a Ready Overrides smart button.
+- It opens only route steps whose Work Location matches that location.
+- New records automatically default Company and Work Location.
+- Use a location-specific step only when the location needs different routing from the company default.
+- A location-specific step replaces the company-default step with the same Order for that location.
+- Location Manager is resolved only when Approver Source is Work Location Manager.
+
+READY INDICATORS
+- Permission Type Ready Steps counts only active, complete steps for that Permission Type.
+- Time Off Type Ready Steps counts only active, complete steps for that Time Off Type.
+- Work Location Ready Overrides counts only active, complete location-specific steps.
+- A zero Ready Steps value is accompanied by a blocking-readiness warning in the configuration form.
+- Incomplete records remain visible inside Approval Routes so administrators can repair them.
+
+APPROVAL STEP EDITOR
+The editor now follows three explicit decisions:
+
+1. Request Type
+- Company
+- Exactly one Permission Type or Time Off Type
+- Order
+- Computed request summary
+
+2. Work Location Scope
+- Empty Work Location = company-default route for all locations
+- Selected Work Location = location-specific override
+- Computed scope summary
+
+3. Who Approves
+- Employee Manager
+- Work Location Manager
+- HR Officer
+- Specific User
+- Odoo Group
+- Computed approver summary
+
+The form explains how every approver source resolves at submission time. Assigned users are still snapshotted into the immutable Approval Journey.
+
+CONNECTED SMART BUTTONS
+- Permission Type: action_open_approval_routes
+  - filters permission_type_id
+  - defaults Company and Permission Type
+- Time Off Type: action_open_presenly_approval_routes
+  - filters leave_type_id
+  - defaults Company and Time Off Type
+- Work Location: action_open_presenly_approval_overrides
+  - filters work_location_id
+  - defaults Company and Work Location
+
+LIST VIEW
+Approval Routes now shows operational summaries rather than raw foreign keys:
+- Order
+- Step Name
+- Request
+- Applies At
+- Who Approves
+- Configured
+
+PRODUCTION CONFIGURATION PRESERVED
+The existing production route remained unchanged:
+- ID: 1
+- Step Name: Direktur Konsulta
+- Company: 1
+- Work Location: 4 — Kantor Konsulta Semen Gresik - 1
+- Permission Type: 1 — Late Arrival Dispensation
+- Time Off Type: none
+- Order: 10
+- Approver Source: Employee Manager
+- Complete: yes
+- Active: yes
+
+Its new display summaries are:
+- Request: Permission: Late Arrival Dispensation
+- Applies At: Kantor Konsulta Semen Gresik - 1
+- Who Approves: Employee Manager
+
+Current readiness:
+- Permission Type 1 Ready Steps: 1
+- Work Location 4 Ready Overrides: 1
+- No Time Off route currently exists in production; affected Time Off Types remain intentionally blocked until configured.
+
+DATA PRESERVATION
+The business fingerprint immediately before and after upgrade was identical:
+- Attendance: 2 records; ID sum 3.
+- Evidence: 7 records; ID sum 28.
+- Referenced selfie attachments: 4; ID sum 670.
+- Approval route records: 1; ID sum 1; write_date unchanged.
+- Approval journeys: 0.
+- Permission requests: 0.
+- Time Off requests: 0.
+- Existing Location Approver relation rows: 2; unchanged.
+- Native Manage All Attendances assignment unchanged.
+- Existing Attendance IDs 1 and 2 remain green.
+
+TESTING
+- Isolated clone: odoo_presenly_approval_routes_ux_test_20260906_035710.
+- Final result: 37 test cases / 47 test stats.
+- Failures: 0.
+- Errors: 0.
+- Added tests verify:
+  - Permission Type Ready Steps and filtered/defaulted action.
+  - Time Off Type Ready Steps and filtered/defaulted action.
+  - Work Location Ready Overrides and filtered/defaulted action.
+  - Approval Step editor contains Request Type, Work Location Scope, and Who Approves sections.
+  - Permission Type, Time Off Type, and Work Location each expose one connected smart button.
+- Validation clone database and filestore were removed.
+
+STATIC VALIDATION
+- Python compilation: passed.
+- XML parsing: 18 files passed.
+- JavaScript syntax: passed.
+- Shell syntax: passed.
+- git diff --check: passed.
+
+BACKUP
+- backups/presenly-migration/odoo-before-approval-routes-ux-20260906-035710.dump
+- Backup retained after clone cleanup.
+
+ROLLOUT
+- Before: presenly 19.0.10.2.0.
+- After: presenly 19.0.11.0.0.
+- Main server PID: 8803.
+- http://127.0.0.1:8069/web/login returned HTTP 200.
+- Upgrade and active server logs contain no ERROR, CRITICAL, traceback, invalid field, or view parse errors.
+
+NO COMMIT
+- No Git commit was created.

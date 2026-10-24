@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_custom_payroll_reject_wizard_form" model="ir.ui.view">
+        <field name="name">custom.payroll.reject.wizard.form</field>
+        <field name="model">custom.payroll.reject.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Reject Payroll Batch">
+                <group>
+                    <field name="batch_id" readonly="1"/>
+                    <field name="reason" nolabel="1" placeholder="Provide a reason for rejection. The batch will be reset to Draft..."/>
+                </group>
+                <footer>
+                    <button name="action_confirm_reject" type="object" string="Confirm Reject" class="btn-primary"/>
+                    <button special="cancel" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,34 @@
+<odoo noupdate="1">
+    <record id="sequence_presenly_permission" model="ir.sequence">
+        <field name="name">Presenly Permission Request</field>
+        <field name="code">presenly.permission</field>
+        <field name="prefix">DSP/%(year)s/</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+    <record id="sequence_presenly_overtime" model="ir.sequence">
+        <field name="name">Presenly Overtime Request</field>
+        <field name="code">presenly.overtime</field>
+        <field name="prefix">OT/%(year)s/</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+    <record id="permission_type_late_arrival" model="presenly.permission.type">
+        <field name="name">Late Arrival Dispensation</field>
+        <field name="code">LATE_ARRIVAL</field>
+        <field name="affects_attendance">True</field>
+        <field name="paid_status">policy</field>
+    </record>
+    <record id="permission_type_early_departure" model="presenly.permission.type">
+        <field name="name">Early Departure Dispensation</field>
+        <field name="code">EARLY_DEPARTURE</field>
+        <field name="affects_attendance">True</field>
+        <field name="paid_status">policy</field>
+    </record>
+    <record id="permission_type_general" model="presenly.permission.type">
+        <field name="name">General Permission</field>
+        <field name="code">GENERAL</field>
+        <field name="affects_attendance">True</field>
+        <field name="paid_status">policy</field>
+    </record>
+</odoo>
