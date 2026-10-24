@@ -157,6 +157,7 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         generates a KSeF XML with the invoice type <RodzajFaktury>VAT</RodzajFaktury>.
         It simulates a simple sale of a product.
         """
+        self.partner_pl.l10n_pl_links_with_customer = True
         self.standard_invoice.action_post()
         self._assert_export_invoice(self.standard_invoice, "standert_fa3_format.xml")
 
@@ -187,6 +188,7 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         This test verifies that creating a Credit Note (reversal) for a standard invoice
         generates a KSeF XML with invoice type KOR.
         """
+        self.partner_pl.l10n_pl_links_with_customer = True
         # Create Invoice
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',

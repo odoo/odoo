@@ -231,16 +231,6 @@
         <!-- RodzajFaktury: Invoice Type. Can be VAT (standard), KOR (correction), ZAL (advance payment) or ...... -->
         <RodzajFaktury t-out="invoice_type"/>
 
-         <t t-if="invoice_type in ['ROZ', 'ZAL']">
-            <t t-foreach="related_invoices" t-as="related_inv_number">
-                <FakturaZaliczkowa>
-                    <NrKSeFZN t-out="'1'"/>
-                    <NrFaZaliczkowej t-out="related_inv_number"/>
-                </FakturaZaliczkowa>
-            </t>
-        </t>
-
-
         <t t-if="'KOR' in invoice_type">
             <PrzyczynaKorekty t-out="correction_info['PrzyczynaKorekty']"/>
             <TypKorekty t-out="correction_info['TypKorekty']"/>
@@ -255,6 +245,18 @@
                     <NrKSeFN>1</NrKSeFN>
                 </t>
             </DaneFaKorygowanej>
+        </t>
+
+        <!-- TP: Existing relationship between the buyer and the seller. 1=Yes, omitted otherwise. -->
+        <TP t-if="buyer.l10n_pl_links_with_customer" t-out="1"/>
+
+        <t t-if="invoice_type in ['ROZ', 'ZAL']">
+            <t t-foreach="related_invoices" t-as="related_inv_number">
+                <FakturaZaliczkowa>
+                    <NrKSeFZN t-out="'1'"/>
+                    <NrFaZaliczkowej t-out="related_inv_number"/>
+                </FakturaZaliczkowa>
+            </t>
         </t>
 
         <!--
