@@ -270,7 +270,10 @@ class AccountMove(models.Model):
             * tuple of purchase order line ids and their matched 'account.move.line'
         """
         # Sort the invoice lines by unit price and quantity to speed up matching
-        invoice_lines = sorted(inv_lines, key=lambda line: (line.price_unit, line.quantity), reverse=True)
+        invoice_lines = inv_lines.filtered(lambda line: line.name).sorted(
+            key=lambda line: (line.price_unit, line.quantity),
+            reverse=True,
+        )
         # Sort the purchase order lines by unit price and remaining quantity to speed up matching
         purchase_lines = sorted(
             po_lines,
