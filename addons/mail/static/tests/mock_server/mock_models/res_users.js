@@ -184,7 +184,7 @@ export class ResUsers extends webModels.ResUsers {
     }
 
     _store_main_user_fields(res) {
-        res.extend(["active", "partner_id", "share"]);
+        res.extend(["active", "partner_id", "share", "status_message"]);
     }
 
     _store_init_fields(res) {

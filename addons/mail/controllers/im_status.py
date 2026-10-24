@@ -15,3 +15,10 @@ class ImStatusController(http.Controller):
             self.env.user,
             "_store_manual_im_status_fields",
         )
+
+    @mail_route("/mail/set_status_message", methods=["POST"], type="jsonrpc", auth="user")
+    def set_status_message(self, message):
+        self.env.user.status_message = message
+        Store(bus_channel=self.env.user, bus_subchannel="presence").add(
+            self.env.user, ["status_message"]
+        )

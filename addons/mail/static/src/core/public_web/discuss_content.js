@@ -55,6 +55,11 @@ export class DiscussContent extends Component {
         this.correspondentLocalDateTimeFormatted = computed(() =>
             this.store.localTimeIn(this.thread?.channel?.correspondent?.persona?.tz)
         );
+        this.correspondentStatusMessage = computed(() =>
+            this.thread?.channel?.channel_type === "chat"
+                ? this.thread.channel.correspondent?.partner_id?.main_user_id?.status_message
+                : undefined
+        );
     }
 
     autoOpenPanel() {

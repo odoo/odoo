@@ -26,6 +26,7 @@
                     </div>
                 </div>
             </div>
+            <div t-if="this.user?.status_message" class="o-mail-AvatarCard-statusBubble border bg-100 rounded px-3 py-2 mt-3 small" t-out="this.user.status_message"/>
             <t t-set-slot="footer">
                 <div t-if="this.hasDetails" class="o_avatar_card_details d-flex flex-column gap-3"/>
             </t>
