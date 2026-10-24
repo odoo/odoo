@@ -28,9 +28,9 @@
 
                 <t t-else="">
                     <div
-                        class="o_cell o_cell_custom"
+                        class="o_cell"
                         t-attf-style="{{ cell.itemSpan > 1 ? '--o-grid-column-span: ' + cell.itemSpan + ';' : '' }}"
-                        t-attf-class="{{ cell.subType === 'label' ? 'o_wrap_label text-break text-900' : null }} {{ marginOnSmallScreen }}"
+                        t-attf-class="{{ cell.subType === 'label' ? 'o_wrap_label text-break text-900' : '' }} {{ cell.subType === 'cell_custom' ? 'o_cell_custom' : '' }} {{ marginOnSmallScreen }}"
                         t-if="cell.isVisible">
                         <t t-slot="{{ cell.name }}" />
                     </div>
