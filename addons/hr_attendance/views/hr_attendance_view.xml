@@ -14,6 +14,10 @@
                 decoration-danger="color == 1"
                 decoration-it="time_rule_id"
                 duplicate="false">
+                <header>
+                    <button name="action_reprocess_time_rules" type="object"
+                            string="Reprocess Time Rules"/>
+                </header>
                 <field name="employee_id" widget="many2one_avatar_employee"/>
                 <field name="check_in"/>
                 <field name="check_out" options="{}"/>

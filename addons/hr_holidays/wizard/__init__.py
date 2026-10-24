@@ -6,3 +6,4 @@ from . import hr_leave_generate_multi_wizard
 from . import hr_leave_allocation_generate_multi_wizard
 from . import load_public_holiday_wizard
 from . import load_public_holiday_wizard_lines
+from . import hr_time_rule_regenerate_wizard
