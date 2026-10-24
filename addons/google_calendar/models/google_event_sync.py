@@ -65,7 +65,7 @@ class GoogleEventSync(models.AbstractModel):
                         timeout=3
                     )
                 elif vals.get('is_draft') is False:
-                    record.with_user(record._get_event_owner())._google_insert(google_service, record._google_values(), timeout=3)
+                    record.with_user(record._get_event_owner())._google_insert(google_service, record._get_google_calendar_path(), record._google_values(), timeout=3)
 
         return result
 
@@ -180,7 +180,7 @@ class GoogleEventSync(models.AbstractModel):
                     record.last_google_calendar_sync_path,
                     record._get_google_calendar_path()
                 )
-            record.with_user(record._get_event_user())._google_patch(
+            record.with_user(record._get_event_user()).with_context(send_updates=True)._google_patch(
                 google_service,
                 record._get_google_calendar_path(),
                 record.google_id,
@@ -331,7 +331,7 @@ class GoogleEventSync(models.AbstractModel):
         with google_calendar_token(self.env.user.sudo()) as token:
             if token:
                 try:
-                    send_updates = not self._is_event_over()
+                    send_updates = self.env.context.get('send_updates', True) and not self._is_event_over()
                     google_service.google_service = google_service.google_service.with_context(send_updates=send_updates)
                     google_service.patch(google_id, values, calendar, token=token, timeout=timeout)
                 except HTTPError as e:
