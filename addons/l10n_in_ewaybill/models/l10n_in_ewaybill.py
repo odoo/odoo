@@ -34,7 +34,7 @@ class L10nInEwaybill(models.Model):
     ], required=True, readonly=True, copy=False, tracking=True, default='pending')
 
     # Account Move details
-    account_move_id = fields.Many2one('account.move', copy=False, readonly=True)
+    account_move_id = fields.Many2one('account.move', copy=False, readonly=True, ondelete='restrict')
 
     # Document details
     document_date = fields.Datetime("Document Date", compute='_compute_ewaybill_document_details')
