@@ -526,6 +526,16 @@
         <field name="country_id" ref="base.be"/>
     </record>
 
+    <record id="be_work_entry_type_additional_hours_paid_later" model="hr.work.entry.type">
+        <field name="name">Overtime (part-time workers) paid later</field>
+        <field name="color">4</field>
+        <field name="display_code">AHL</field>
+        <field name="code">003.14</field>
+        <field name="amount_rate">0.0</field>
+        <field name="count_as">working_time</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
     <record id="be_work_entry_type_sick_leave" model="hr.work.entry.type">
         <field name="name">Guaranted monthly wage illness</field>
         <field name="display_code">STO</field>
