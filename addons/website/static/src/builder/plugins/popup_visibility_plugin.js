@@ -82,7 +82,15 @@ export class PopupVisibilityPlugin extends Plugin {
         // Do not use Bootstrap to close the popup, as we are cleaning a
         // clone of it. Instead, hide it manually (see `cleanForSave`).
         if (targetEl.matches(".s_popup") && !isCleaning) {
-            this.window.Modal.getOrCreateInstance(targetEl.querySelector(".modal")).hide();
+            const modalEl = targetEl.querySelector(".modal");
+            const modalInstance = this.window.Modal.getOrCreateInstance(modalEl);
+            // A cloned open popup is displayed but has no Bootstrap instance
+            // backing it, and `hide()` does nothing if the instance is not
+            // shown.
+            if (modalEl.classList.contains("show")) {
+                modalInstance._isShown = true;
+            }
+            modalInstance.hide();
         }
     }
 
