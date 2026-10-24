@@ -42,7 +42,7 @@ class IrAttachment(models.Model):
                 continue
 
             if attachment.type == 'url':
-                if attachment.url.startswith('/'):
+                if attachment.url and attachment.url.startswith('/'):
                     # Local URL
                     attachment.image_src = attachment.url
                 else:
