@@ -65,7 +65,7 @@ export class CashierSelector {
 
         let employee = false;
         const allEmployees = this.pos.models["hr.employee"].filter(
-            (employee) => employee.id !== this.pos.getCashier()?.id
+            (employee) => employee._role && employee.id !== this.pos.getCashier()?.id
         );
         const pinMatchEmployees = allEmployees.filter(
             (employee) => !pin || Sha1.hash(pin) === employee._pin
