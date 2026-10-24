@@ -2422,6 +2422,9 @@ export class PosStore extends WithLazyGetterTrap {
                         await this.data.searchRead("product.product", [
                             ["product_tmpl_id", "=", record.evalContext.id],
                         ]);
+                        if (this.selectedCategory?.id && !this.productsToDisplay.length) {
+                            this.setSelectedCategory(0);
+                        }
                         this.action.doAction({
                             type: "ir.actions.act_window_close",
                         });
