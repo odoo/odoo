@@ -503,6 +503,43 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
         self.assertEqual(len(cart.order_line), 2)
         self.assertEqual(cart.order_line.mapped("product_uom_qty"), [4, 1])
 
+    def test_cart_minimum_quantity(self):
+        self.product.minimum_quantity = 5
+        cart = self._create_so(order_line=[])
+
+        cart._cart_add(product_id=self.product.id, quantity=1)
+        self.assertEqual(cart.order_line.product_uom_qty, 5)
+        self.assertEqual(cart.order_line._get_minimum_line_quantity(), 5)
+
+        cart._cart_update_line_quantity(line_id=cart.order_line.id, quantity=3)
+        self.assertEqual(cart.order_line.product_uom_qty, 5)
+
+        cart._cart_update_line_quantity(line_id=cart.order_line.id, quantity=0)
+        self.assertFalse(cart.order_line)
+
+    def test_cart_minimum_quantity_multi_uom(self):
+        """The minimum quantity is computed across all the lines of the product, in its uom."""
+        self._enable_uom()
+        self.product.write({"minimum_quantity": 15, "uom_ids": [Command.link(self.uom_dozen.id)]})
+        cart = self._create_so(order_line=[])
+
+        cart._cart_add(product_id=self.product.id, quantity=1, uom_id=self.uom_dozen.id)
+        self.assertEqual(cart.order_line.product_uom_qty, 2)
+
+        cart._cart_add(product_id=self.product.id, quantity=1, uom_id=self.uom_unit.id)
+        unit_line = cart.order_line.filtered(lambda sol: sol.product_uom_id == self.uom_unit)
+        self.assertEqual(unit_line.product_uom_qty, 1)
+
+    def test_checkout_blocked_below_minimum_quantity(self):
+        self.product.minimum_quantity = 5
+        cart = self._create_so(
+            order_line=[Command.create({"product_id": self.product.id, "product_uom_qty": 3})]
+        )
+        self.assertFalse(cart._is_cart_ready_for_checkout())
+
+        cart.order_line.product_uom_qty = 5
+        self.assertTrue(cart._is_cart_ready_for_checkout())
+
     def test_cart_new_pricelist_from_geoip(self):
         """Check that, when adding a new partner to a website order, the partner's GeoIP
         is factored into the pricelist recomputation.
