@@ -18,7 +18,8 @@ class ProductProduct(models.Model):
         config_self = self.env['pos.config'].sudo().search([('self_ordering_mode', '!=', 'nothing')])
         for config in config_self:
             if config.access_token and config.current_session_id:
-                records = self.env["product.template"].load_product_from_pos(config.id, [('id', '=', self.product_tmpl_id.id)])
+                # The writer may not be logged in the config's company: load as that company
+                records = self.env["product.template"].sudo().with_company(config.company_id).load_product_from_pos(config.id, [('id', '=', self.product_tmpl_id.id)])
                 payload = {}
                 self_models = self.env["pos.config"]._load_self_data_models()
                 for model in records:
