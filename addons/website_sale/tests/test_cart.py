@@ -503,6 +503,43 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
         self.assertEqual(len(cart.order_line), 2)
         self.assertEqual(cart.order_line.mapped("product_uom_qty"), [4, 1])
 
+    def test_add_to_cart_saves_only_filled_custom_values_on_separate_lines(self):
+        """An empty custom value is not saved, and a product with a custom value selected is never
+        merged into an existing cart line."""
+        self.product.product_tmpl_id.attribute_line_ids = [
+            Command.create({
+                "attribute_id": self.custom_attribute.id,
+                "value_ids": [Command.set(self.custom_attribute.value_ids.ids)],
+            })
+        ]
+        custom_ptav = self.product.product_tmpl_id.attribute_line_ids.product_template_value_ids
+
+        with self.mock_request() as request:
+            self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=self.product.product_tmpl_id.id,
+                product_id=self.product.id,
+                quantity=1,
+                product_custom_attribute_values=[{
+                    "custom_product_template_attribute_value_id": custom_ptav.id,
+                    "custom_value": "",
+                }],
+            )
+            self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=self.product.product_tmpl_id.id,
+                product_id=self.product.id,
+                quantity=1,
+                product_custom_attribute_values=[{
+                    "custom_product_template_attribute_value_id": custom_ptav.id,
+                    "custom_value": "Wood",
+                }],
+            )
+            cart = request.cart
+
+        self.assertEqual(
+            [line.product_custom_attribute_value_ids.custom_value for line in cart.order_line],
+            [False, "Wood"],
+        )
+
     def test_cart_new_pricelist_from_geoip(self):
         """Check that, when adding a new partner to a website order, the partner's GeoIP
         is factored into the pricelist recomputation.

@@ -189,15 +189,17 @@ class SaleOrderTemplateLine(models.Model):
 
     def _get_sale_order_line_multiline_description_variants(self):
         no_variant_ptavs = self.product_no_variant_attribute_value_ids._origin.filtered(
-            lambda ptav: ptav.display_type == "multi" or ptav.attribute_line_id.value_count > 1
+            # Only describe the attributes where a choice was made by the customer, skipping custom
+            # values as they are described below with their typed text, if any
+            lambda ptav: (
+                not ptav.is_custom
+                and (ptav.display_type == "multi" or ptav.attribute_line_id.value_count > 1)
+            )
         )
         if not self.product_custom_attribute_value_ids and not no_variant_ptavs:
             return ""
-        custom_ptavs = (
-            self.product_custom_attribute_value_ids.custom_product_template_attribute_value_id
-        )
         multi_ptavs = no_variant_ptavs.filtered(lambda ptav: ptav.display_type == "multi").sorted()
-        lines = (no_variant_ptavs - multi_ptavs - custom_ptavs).mapped("display_name")
+        lines = (no_variant_ptavs - multi_ptavs).mapped("display_name")
         for pta, ptavs in multi_ptavs.grouped("attribute_id").items():
             lines.append(
                 self.env._(
