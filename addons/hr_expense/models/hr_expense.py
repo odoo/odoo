@@ -352,8 +352,9 @@ class HrExpense(models.Model):
 
             employee = expense.employee_id
             is_own_expense = employee.user_id == self.env.user
-            if is_own_expense and expense.state == 'draft':
-                # Anyone can edit their own draft expense
+            if (is_own_expense or not employee) and expense.state == 'draft':
+                # Anyone can edit their own draft expense, or a new one without employee yet
+                # (e.g. the user has no employee in the current company)
                 expense.is_editable = True
                 continue
 
