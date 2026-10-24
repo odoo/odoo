@@ -42,6 +42,12 @@ export class AttributeValueSelector extends Component {
         return this.state.selectedValues.size || _t("All");
     }
 
+    get imageType() {
+        const type = this.props.record.data.type;
+        const options = this.props.record.fields.type.selection;
+        return options.find(option => option[0] == type)?.[1];
+    }
+
     /**
      * Add or remove an attribute value from the current selection.
      *

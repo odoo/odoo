@@ -13,6 +13,8 @@
                         <h2><field name="name" placeholder="Image Name"/></h2>
                         <label for="video_url" string="Video URL"/><br/>
                         <field name="video_url"/><br/>
+                        <label for="type"/><br/>
+                        <field name="type"/><br/>
                     </div>
                     <div class="col-md-6 col-xl-7 text-center o_website_sale_image_modal_container">
                         <div class="row">
@@ -47,6 +49,7 @@
                 <field name="video_url" invisible="1"/>
                 <!-- Needed in attribute_value_selector.js -->
                 <field name="product_tmpl_id"/>
+                <field name="type"/>
                 <templates>
                     <t t-name="card" class="p-0 border-0">
                         <t
