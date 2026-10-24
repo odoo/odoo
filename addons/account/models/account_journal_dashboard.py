@@ -716,10 +716,6 @@ class AccountJournal(models.Model):
             currency_consistent = misc_currencies == currency
             accessible = journal.company_id.id in journal.company_id._accessible_branches().ids
             nb_direct_payments, direct_payments_balance = direct_payment_balances[journal.id]
-            drag_drop_settings = {
-                'image': '/account/static/src/img/bank.svg' if journal.type in ('bank', 'credit') else '/web/static/img/rfq.svg',
-                'text': _('Drop to import transactions'),
-            }
             last_statement_visible = (
                 not journal.company_id.fiscalyear_lock_date
                 or journal.last_statement_id.date
@@ -744,7 +740,6 @@ class AccountJournal(models.Model):
                 'nb_misc_operations': number_misc,
                 'misc_class': 'text-warning' if not currency_consistent else '',
                 'misc_operations_balance': currency.format(misc_balance) if currency_consistent else None,
-                'drag_drop_settings': drag_drop_settings,
             })
 
     def _fill_sale_purchase_dashboard_data(self, dashboard_data):
@@ -808,17 +803,9 @@ class AccountJournal(models.Model):
 
             if journal.type == 'purchase':
                 title_has_sequence_holes = _("Irregularities due to draft, cancelled or deleted bills with a sequence number since last lock date.")
-                drag_drop_settings = {
-                    'image': '/account/static/src/img/bill.svg',
-                    'text': _('Drop and let the AI process your bills automatically.'),
-                }
                 onboarding_action_data = {}
             else:
                 title_has_sequence_holes = _("Irregularities due to draft, cancelled or deleted invoices with a sequence number since last lock date.")
-                drag_drop_settings = {
-                    'image': '/web/static/img/quotation.svg',
-                    'text': _('Drop to import your invoices.'),
-                }
                 onboarding_action_data = journal._get_onboarding_action_data()
 
             dashboard_data[journal.id].update({
@@ -836,7 +823,6 @@ class AccountJournal(models.Model):
                 'has_unhashed_entries': journal.has_unhashed_entries,
                 'is_sample_data': is_sample_data_by_journal_id[journal.id],
                 'has_entries': not is_sample_data_by_journal_id[journal.id],
-                'drag_drop_settings': drag_drop_settings,
                 'onboarding_action_data': onboarding_action_data,
             })
 
@@ -859,15 +845,8 @@ class AccountJournal(models.Model):
             )
         }
         for journal in general_journals:
-            drag_drop_settings = {
-                'image': '/web/static/img/folder.svg',
-                'text': _('Drop to create journal entries with attachments.'),
-                'group': 'account.group_account_user',
-            }
-
             dashboard_data[journal.id].update({
                 'number_draft': draft_vals.get(journal.id, 0),
-                'drag_drop_settings': drag_drop_settings,
             })
 
     def _fill_onboarding_data(self, dashboard_data):

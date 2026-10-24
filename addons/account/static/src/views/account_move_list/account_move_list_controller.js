@@ -1,15 +1,14 @@
 import { _t } from "@web/core/l10n/translation";
-import { AccountUploadListController } from "../account_upload_list/account_upload_list_controller";
+import { ListController } from "@web/views/list/list_controller";
 import { deleteConfirmationMessage } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 import { useService } from "@web/core/utils/hooks";
 
-export class AccountMoveListController extends AccountUploadListController {
+export class AccountMoveListController extends ListController {
     setup() {
         super.setup();
         this.orm = useService("orm");
         this.account_move_service = useService("account_move");
-        this.showUploadButton = this.props.context.default_move_type !== 'entry' || 'active_id' in this.props.context;
     }
 
     get actionMenuProps() {

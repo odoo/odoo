@@ -1,10 +1,9 @@
 import { Component, onWillDestroy, proxy, t, useProps } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
-import { checkFileSize } from "@web/core/utils/files";
 import { Record } from "@web/model/record";
 import { Field } from "@web/views/fields/field";
-import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
+import { uploadFiles } from "@web/views/view_button/upload_button";
 
 export class ShareTargetItem extends Component {
     static template = "web.ShareTargetItem";
@@ -18,9 +17,6 @@ export class ShareTargetItem extends Component {
     setup() {
         super.setup();
         this.action = useService("action");
-        this.dialog = useService("dialog");
-        this.http = useService("http");
-        this.notification = useService("notification");
         this.orm = useService("orm");
 
         const shareTarget = useService("share_target");
@@ -41,20 +37,6 @@ export class ShareTargetItem extends Component {
                 display_name: user.activeCompany.name,
             },
         };
-    }
-
-    /**
-     * @return {File[]}
-     */
-    getFiles() {
-        return this.props.files.filter((file) => this.isAllowedUploadFile(file));
-    }
-
-    /**
-     * @param {File} file
-     */
-    isAllowedUploadFile(file) {
-        return checkFileSize(file.size, this.notification);
     }
 
     async checkAndActiveIfNeededUserCompany() {
@@ -79,9 +61,15 @@ export class ShareTargetItem extends Component {
     }
 
     async process() {
-        const attachments = await this.uploadAttachments();
-        const resId = await this.createRecordWithFile(attachments);
-        await this.openCreatedRecord(resId);
+        const action = await uploadFiles(this.env.services, {
+            clickParams: { name: "action_create_from_uploads" },
+            resModel: this.modelName,
+            context: this.context,
+            files: this.props.files,
+        });
+        if (action) {
+            await this.action.doAction(action, { additionalContext: this.context });
+        }
     }
 
     /**
@@ -123,69 +111,5 @@ export class ShareTargetItem extends Component {
      */
     get modelName() {
         throw new Error("You should implement this !");
-    }
-
-    /**
-     *
-     * @param attachments {{ id: Number, filename: String }[]} the ir_attachment record
-     * @return {Promise<?Number>} the res_id of the created record or null if the record wasn't saved
-     */
-    async createRecordWithFile(attachments) {
-        const { filename } = attachments[0];
-        const resId = await this._createRecord(filename, this.context);
-        const attachmentIds = attachments.map((a) => a.id);
-        await this.orm.write("ir.attachment", attachmentIds, {
-            res_id: resId,
-            res_model: this.modelName,
-        });
-        return resId;
-    }
-
-    async _createRecord(name, context) {
-        try {
-            const [resId] = await this.orm.call(this.modelName, "name_create", [name], {
-                context,
-            });
-            return resId;
-        } catch {
-            // fallback on form view dialog when name_create fails
-            return new Promise((resolve) => {
-                this.dialog.add(FormViewDialog, {
-                    canExpand: false,
-                    close: resolve,
-                    context: {
-                        ...context,
-                        default_name: name,
-                    },
-                    title: name,
-                    resModel: this.modelName,
-                    onRecordSaved: ({ resId }) => resolve(resId),
-                });
-            });
-        }
-    }
-
-    async uploadAttachments() {
-        const params = {
-            csrf_token: odoo.csrf_token,
-            ufile: this.getFiles(),
-            model: this.modelName,
-            id: 0,
-        };
-        const attachments = await this.http.post("/web/binary/upload_attachment", params);
-        if (attachments.error) {
-            throw new Error(attachments.error);
-        }
-        return attachments;
-    }
-
-    async openCreatedRecord(resId) {
-        await this.action.doAction({
-            type: "ir.actions.act_window",
-            res_model: this.modelName,
-            res_id: resId,
-            views: [[false, "form"]],
-            context: this.context,
-        });
     }
 }

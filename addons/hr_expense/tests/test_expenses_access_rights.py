@@ -1,8 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
 from odoo.exceptions import AccessError, UserError
 from odoo.tests import HttpCase, new_test_user, tagged
-from odoo.tools import mute_logger
 
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 
@@ -134,82 +135,53 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
 
         self.assertEqual(len(expense.message_ids), 3)
 
-        # When testing for uploading the attachments, we can't simulate it through a tour as using inputFiles isn't possible
-        # with a AttachDocumentWidget since the input isn't added to the DOM.
+        def upload_receipt(user, name, content):
+            self.authenticate(user.login, user.login)
+            return self.url_open(
+                "/web/dataset/call_upload",
+                {
+                    'csrf_token': self.csrf_token(),
+                    'model': 'hr.expense',
+                    'method': 'attach_document',
+                    'res_ids': json.dumps([expense.id]),
+                },
+                files={'ufile': (name, content, 'text/plain')},
+            )
 
         # User that created the expense should be able to upload an attachment on the expense.
         # But he shouldn't be able to delete it once it's submitted
-        self.authenticate(standard_user.login, standard_user.login)
-        user_response = self.url_open(
-            "/web/binary/upload_attachment",
-            {
-                'csrf_token': self.csrf_token(),
-                'id': expense.id,
-                'model': 'hr.expense',
-            },
-            files={'ufile': ('salut.txt', b"Salut !\n", 'text/plain')},
-        )
-        expense.with_user(standard_user).attach_document(attachment_ids=[attachment['id'] for attachment in user_response.json()])
+        user_response = upload_receipt(standard_user, 'salut.txt', b"Salut !\n")
         self.assertEqual(user_response.status_code, 200)
+        self.assertFalse(user_response.json().get('error'))
         self.assertEqual(len(expense.attachment_ids), 1)
-        self.assertEqual(expense.message_main_attachment_id.id, user_response.json()[0]['id'])
+        self.assertEqual(expense.message_main_attachment_id.name, 'salut.txt')
+        user_attachment = expense.message_main_attachment_id
 
         with self.assertRaises(UserError):
             expense.with_user(standard_user).attachment_ids.unlink()
 
         # User without any access to the expense shouldn't be able to upload an attachment on the expense.
-        self.authenticate(another_standard_user.login, another_standard_user.login)
-        with mute_logger('odoo.addons.web.controllers.binary'):  # To avoid logging the AccessError raised when trying to upload the attachment.
-            response = self.url_open(
-                "/web/binary/upload_attachment",
-                {
-                    'csrf_token': self.csrf_token(),
-                    'id': expense.id,
-                    'model': 'hr.expense',
-                },
-                files={'ufile': ('fail.txt', b"Fail\n", 'text/plain')},
-            )
-
+        response = upload_receipt(another_standard_user, 'fail.txt', b"Fail\n")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()[0]['error'], 'You are not allowed to upload an attachment here.')
+        self.assertTrue(response.json()['error']['message'])
         self.assertEqual(len(expense.attachment_ids), 1)  # No new attachment
-        self.assertEqual(expense.message_main_attachment_id.id, user_response.json()[0]['id'])
+        self.assertEqual(expense.message_main_attachment_id, user_attachment)
 
         # The manager should be able to upload and delete an attachment on the expense.
-        self.authenticate(standard_user_manager.login, standard_user_manager.login)
-        manager_response = self.url_open(
-            "/web/binary/upload_attachment",
-            {
-                'csrf_token': self.csrf_token(),
-                'id': expense.id,
-                'model': 'hr.expense',
-            },
-            files={'ufile': ('manager.txt', b"Manager\n", 'text/plain')},
-        )
-        expense.with_user(standard_user_manager).attach_document(attachment_ids=[attachment['id'] for attachment in manager_response.json()])
+        manager_response = upload_receipt(standard_user_manager, 'manager.txt', b"Manager\n")
         self.assertEqual(manager_response.status_code, 200)
         self.assertEqual(len(expense.attachment_ids), 2)
-        self.assertEqual(expense.message_main_attachment_id.id, manager_response.json()[0]['id'])
+        self.assertEqual(expense.message_main_attachment_id.name, 'manager.txt')
 
         manager_attachment = expense.attachment_ids.filtered(lambda a: a.create_uid == standard_user_manager)
         manager_attachment.with_user(standard_user_manager).unlink()
         self.assertEqual(len(expense.attachment_ids), 1)
 
         # The admin should be able to upload and delete an attachment on the expense.
-        self.authenticate(admin_user.login, admin_user.login)
-        admin_response = self.url_open(
-            "/web/binary/upload_attachment",
-            {
-                'csrf_token': self.csrf_token(),
-                'id': expense.id,
-                'model': 'hr.expense',
-            },
-            files={'ufile': ('admin.txt', b"Admin\n", 'text/plain')},
-        )
-        expense.with_user(admin_user).attach_document(attachment_ids=[attachment['id'] for attachment in admin_response.json()])
+        admin_response = upload_receipt(admin_user, 'admin.txt', b"Admin\n")
         self.assertEqual(admin_response.status_code, 200)
         self.assertEqual(len(expense.attachment_ids), 2)
-        self.assertEqual(expense.message_main_attachment_id.id, admin_response.json()[0]['id'])
+        self.assertEqual(expense.message_main_attachment_id.name, 'admin.txt')
 
         admin_attachment = expense.attachment_ids.filtered(lambda a: a.create_uid == admin_user)
         admin_attachment.with_user(admin_user).unlink()
@@ -218,53 +190,23 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
         expense.with_user(standard_user_manager).action_approve()
 
         # Once the expense is approved, nobody should be able to upload or delete an attachment on the expense except someone with sudo.
-        self.authenticate(standard_user.login, standard_user.login)
         with self.assertRaises(UserError):
             expense.with_user(standard_user).attachment_ids.unlink()
-        with mute_logger('odoo.addons.web.controllers.binary'):  # To avoid logging the AccessError raised when trying to upload the attachment.
-            user_response_after_approval = self.url_open(
-                "/web/binary/upload_attachment",
-                {
-                    'csrf_token': self.csrf_token(),
-                    'id': expense.id,
-                    'model': 'hr.expense',
-                },
-                files={'ufile': ('salut2.txt', b"Salut 2 !\n", 'text/plain')},
-            )
+        user_response_after_approval = upload_receipt(standard_user, 'salut2.txt', b"Salut 2 !\n")
         self.assertEqual(user_response_after_approval.status_code, 200)
-        self.assertEqual(user_response_after_approval.json()[0]['error'], 'You are not allowed to upload an attachment here.')
+        self.assertTrue(user_response_after_approval.json()['error']['message'])
         self.assertEqual(len(expense.attachment_ids), 1)  # No new attachment
 
-        self.authenticate(standard_user_manager.login, standard_user_manager.login)
         with self.assertRaises(UserError):
             expense.with_user(standard_user_manager).attachment_ids.unlink()
-        with mute_logger('odoo.addons.web.controllers.binary'):  # To avoid logging the AccessError raised when trying to upload the attachment.
-            manager_response_after_approval = self.url_open(
-                "/web/binary/upload_attachment",
-                {
-                    'csrf_token': self.csrf_token(),
-                    'id': expense.id,
-                    'model': 'hr.expense',
-                },
-                files={'ufile': ('manager2.txt', b"Manager 2\n", 'text/plain')},
-            )
+        manager_response_after_approval = upload_receipt(standard_user_manager, 'manager2.txt', b"Manager 2\n")
         self.assertEqual(manager_response_after_approval.status_code, 200)
-        self.assertEqual(manager_response_after_approval.json()[0]['error'], 'You are not allowed to upload an attachment here.')
+        self.assertTrue(manager_response_after_approval.json()['error']['message'])
         self.assertEqual(len(expense.attachment_ids), 1)  # No new attachment
 
-        self.authenticate(admin_user.login, admin_user.login)
-        with mute_logger('odoo.addons.web.controllers.binary'):  # To avoid logging the AccessError raised when trying to upload the attachment.
-            admin_response_after_approval = self.url_open(
-                "/web/binary/upload_attachment",
-                {
-                    'csrf_token': self.csrf_token(),
-                    'id': expense.id,
-                    'model': 'hr.expense',
-                },
-                files={'ufile': ('admin2.txt', b"Admin 2\n", 'text/plain')},
-            )
+        admin_response_after_approval = upload_receipt(admin_user, 'admin2.txt', b"Admin 2\n")
         self.assertEqual(admin_response_after_approval.status_code, 200)
-        self.assertEqual(admin_response_after_approval.json()[0]['error'], 'You are not allowed to upload an attachment here.')
+        self.assertTrue(admin_response_after_approval.json()['error']['message'])
         self.assertEqual(len(expense.attachment_ids), 1)  # No new attachment
 
         # If really needed, sudo should always be able to delete the attachments

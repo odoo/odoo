@@ -1,4 +1,5 @@
 from . import test_account_move_reconcile
+from . import test_upload_document
 from . import test_account_move_payments_widget
 from . import test_account_move_out_invoice
 from . import test_account_move_out_refund

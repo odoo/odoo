@@ -4,8 +4,8 @@ import { queryAllTexts } from "@odoo/hoot-dom";
 import {
     contains,
     defineModels,
+    mockUpload,
     mountWithCleanup,
-    onRpc,
     patchWithCleanup,
     serverState,
     webModels,
@@ -304,16 +304,10 @@ test("res.company many2one should update the select value and use it on save", a
         _getShareTargetFiles: async () => [pngFile],
     });
 
-    // mock upload rpc
-    onRpc("/web/binary/upload_attachment", () => {
-        expect.step("upload_attachments_server");
-        return [{ id: 666, filename: pngFile.name }];
-    });
-    onRpc("/web/dataset/call_kw/ir.attachment/write", async (request) => {
-        const { params } = await request.json();
-        expect(params.args[0]).toEqual([666]);
-        expect(params.args[1].res_model).toBe("res.users");
-        return true;
+    mockUpload((route, { model, method, context }) => {
+        expect.step(`${route} ${model} ${method}`);
+        expect(JSON.parse(context).allowed_company_ids).toEqual([changedCompany.id]);
+        return { result: false };
     });
 
     class CustomShareTargetItem extends ShareTargetItem {
@@ -343,17 +337,6 @@ test("res.company many2one should update the select value and use it on save", a
             expect(this.context.allowed_company_ids).toEqual([changedCompany.id]);
             return super.process(...arguments);
         }
-        uploadAttachments() {
-            expect.step(`upload_attachments`);
-            return super.uploadAttachments(...arguments);
-        }
-        async createRecordWithFile(attachments) {
-            expect.step(`create_record_${JSON.stringify(attachments)}`);
-            return super.createRecordWithFile(...arguments);
-        }
-        async openCreatedRecord() {
-            expect.step(`open_record`);
-        }
     }
     shareTargetRegistry.add("fake_share_target", CustomShareTargetItem);
 
@@ -378,10 +361,7 @@ test("res.company many2one should update the select value and use it on save", a
         `onCompanyChange_from_${originalCompany.display_name}_to_${changedCompany.display_name}`,
         "checkAndActiveIfNeededUserCompany",
         "process",
-        "upload_attachments",
-        "upload_attachments_server",
-        'create_record_[{"id":666,"filename":"text.png"}]',
-        "open_record",
+        "/web/dataset/call_upload res.users action_create_from_uploads",
     ]);
 });
 

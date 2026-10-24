@@ -29,6 +29,10 @@
         <field name="model">account.move</field>
         <field name="arch" type="xml">
             <list decoration-info="state == 'draft'" default_order="create_date" string="Invoices and Refunds" decoration-muted="state == 'cancel'" js_class="account_tree">
+                <header>
+                    <button type="upload" name="create_document_from_attachment" string="Upload" data-hotkey="shift+i"
+                            invisible="context.get('default_move_type') == 'entry' and not context.get('active_id')"/>
+                </header>
                 <field name="l10n_latam_document_type_id_code"/>
                 <field name="l10n_latam_document_number" string="Folio" readonly="state != 'draft'"/>
                 <field name="partner_id_vat"/>

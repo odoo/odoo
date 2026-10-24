@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 
 class ProductDocument(models.Model):
@@ -72,3 +72,26 @@ class ProductDocument(models.Model):
     def unlink(self):
         # Delete the attachment instead, and that one will cascade-delete this document.
         return self.ir_attachment_id.unlink()
+
+    # === ACTION METHODS === #
+
+    @api.model
+    def action_create_from_uploads(self, attachment_ids):
+        """ Upload button of the documents: the uploaded files become documents of the record
+        the view is opened for, given by `default_res_model` and `default_res_id` in the context.
+        """
+        context = self.env.context
+        res_model, res_id = context.get('default_res_model'), context.get('default_res_id')
+        if res_model not in self.env or not res_id:
+            raise UserError(_("The documents must be uploaded from a record."))
+        record = self.env[res_model].browse(res_id).exists()
+        if not record:
+            raise UserError(_("The documents must be uploaded from a record."))
+        record.check_access('write')
+        attachments = self.env['ir.attachment'].browse(attachment_ids)
+        attachments.write({
+            'res_model': record._name,
+            'res_id': record.id,
+            'company_id': record.company_id.id,
+        })
+        self.create([{'ir_attachment_id': attachment.id} for attachment in attachments])

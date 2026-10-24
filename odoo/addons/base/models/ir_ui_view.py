@@ -2071,11 +2071,9 @@ actual arch.
             if special not in ('cancel', 'save', 'add'):
                 self._raise_view_error(_("Invalid special '%(value)s' in button", value=special), node)
         elif type_:
-            if type_ != 'action' and type_ != 'object':
+            if type_ not in ('action', 'object', 'upload') or not name:
                 return
-            elif not name:
-                return
-            elif type_ == 'object':
+            if type_ in ('object', 'upload'):
                 func = getattr(name_manager.model, name, None)
                 if not func:
                     msg = _(
@@ -2091,7 +2089,7 @@ actual arch.
                     )
                     self._raise_view_error(msg, node)
                 try:
-                    inspect.signature(func).bind()
+                    inspect.signature(func).bind(**({'attachment_ids': []} if type_ == 'upload' else {}))
                 except TypeError:
                     msg = "%s on %s has parameters and cannot be called from a button"
                     self._log_view_warning(msg % (name, name_manager.model._name), node)
