@@ -42,6 +42,8 @@ class TestHrAttendance(HttpCase, TransactionCase):
         cls.no_contract_employee = cls.env['hr.employee'].create({'name': 'No Contract Employee', 'tz': 'UTC'})
         cls.future_contract_employee = cls.env['hr.employee'].create({'name': 'Future Contract Employee', 'tz': 'UTC'})
         cls.flexible_employee = cls.env['hr.employee'].create({'name': 'Flexible Employee', 'tz': 'UTC'})
+        # disable any time rules to run this test class in isolation
+        cls.env['hr.time.rule'].search([]).write({'active': False})
 
     def setUp(self):
         super().setUp()
