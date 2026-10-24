@@ -133,7 +133,7 @@ class WebsiteCheckoutStep(models.Model):
                     " Please ensure all required fields are correctly filled and try again."
                 )
             )
-            return f"/shop/address?partner_id={delivery_partner_sudo.id}&address_type=delivery"
+            return f"/shop/address?partner_id={delivery_partner_sudo.id}"
 
         # Check that the billing address is complete.
         invoice_partner_sudo = order_sudo.partner_invoice_id
@@ -146,7 +146,7 @@ class WebsiteCheckoutStep(models.Model):
                     " Please ensure all required fields are correctly filled and try again."
                 )
             )
-            return f"/shop/address?partner_id={invoice_partner_sudo.id}&address_type=billing"
+            return f"/shop/address?partner_id={invoice_partner_sudo.id}"
 
     def _check_shop_checkout_completion(self, order_sudo, **_kwargs):
         """Check whether the `/shop/checkout` step is valid and complete, and return the incomplete

@@ -9,12 +9,12 @@ registry.category("web_tour.tours").add("website_sale.update_billing_shipping_ad
         tourUtils.confirmOrder(),
         {
             content: "Edit Address",
-            trigger: '#delivery_and_billing a:contains("Edit")',
+            trigger: '#delivery_address_card a.js_edit_address',
             run: "click",
             expectUnloadPage: true,
         },
         {
-            content: "Edit  billing address which is shipping address too",
+            content: "Edit billing address which is shipping address too",
             trigger: "a.js_edit_address",
             run: "click",
             expectUnloadPage: true,

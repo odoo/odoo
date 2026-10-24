@@ -268,7 +268,7 @@ class CustomerPortal(Controller):
         address_data = self._prepare_address_data(partner_sudo, **query_params)
         has_invoice_type_address = any(
             address.type == 'invoice'
-            for address in address_data['billing_addresses']
+            for address in address_data['addresses']
         )
         values = {
             'partner_sudo': partner_sudo,
@@ -290,7 +290,7 @@ class CustomerPortal(Controller):
 
         :param res.partner partner_sudo: The current user partner.
         :param dict kwargs: Forwarded to underlying methods and available for potential overrides.
-        :return: A dictionary holding the current customer billing and delivery addresses.
+        :return: A dictionary holding the current main address, and all his other addresses.
         :rtype: dict
         """
         partner_sudo = partner_sudo.with_context(show_address=1)
@@ -319,8 +319,8 @@ class CustomerPortal(Controller):
                 )
 
         return {
-            'billing_addresses': billing_partners_sudo,
-            'delivery_addresses': delivery_partners_sudo,
+            'main_address': partner_sudo,
+            'addresses': billing_partners_sudo | delivery_partners_sudo,
         }
 
     @route(
@@ -898,7 +898,7 @@ class CustomerPortal(Controller):
         partner_sudo = request.env['res.partner']._get_current_partner(**kwargs)
         address_values['company_id'] = partner_sudo.company_id.id
         commercial_partner = partner_sudo.commercial_partner_id
-        if use_delivery_as_billing:
+        if use_delivery_as_billing or address_type == 'other':
             address_values['type'] = 'other'
         elif address_type == 'billing':
             address_values['type'] = 'invoice'

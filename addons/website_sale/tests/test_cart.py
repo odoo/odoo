@@ -16,6 +16,7 @@ from odoo.addons.website_sale.controllers.combo_configurator import (
 )
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website_sale.models.product_template import ProductTemplate
+from odoo.addons.website_sale.models.website import CART_SESSION_CACHE_KEY
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
@@ -232,15 +233,15 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
         """A free (0-priced) delivery line must not be treated as a forbidden zero-priced product
         when `prevent_sale` is active."""
         self.website.prevent_sale = True
+        self.partner.write(self.dummy_partner_address_values.copy())
+        self.cart.set_delivery_line(self.free_delivery, 0.0)
+        self.authenticate(None, None)
+        self.update_session(**{CART_SESSION_CACHE_KEY: self.cart.id})
 
-        with self.mock_request(sale_order_id=self.cart.id):
-            self.partner.write(self.dummy_partner_address_values.copy())
-            self.cart.set_delivery_line(self.free_delivery, 0.0)
+        response = self.url_open("/shop/payment", allow_redirects=False)
 
-            response = self.WebsiteSaleController.shop_payment()
-
-            # The free delivery line must not be flagged as a zero-priced product during checkout.
-            self.assertEqual(response.status_code, 200)
+        # The free delivery line must not be flagged as a zero-priced product during checkout.
+        self.assertEqual(response.status_code, 200)
 
     @mute_logger("odoo.http")
     def test_update_cart_before_payment(self):

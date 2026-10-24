@@ -212,6 +212,7 @@ export function fillAddressForm(
         zip: "75000",
     },
     countryName="Belgium",
+    continueCheckout=true,
 ) {
     const steps = [
         {
@@ -226,12 +227,14 @@ export function fillAddressForm(
             run: `edit ${adressParams[arg]}`,
         });
     }
-    steps.push({
-        content: "Continue checkout",
-        trigger: "a[name='website_sale_main_button']",
-        run: "click",
-        expectUnloadPage: true,
-    });
+    if (continueCheckout) {
+        steps.push({
+            content: "Continue checkout",
+            trigger: "a[name='website_sale_main_button']",
+            run: "click",
+            expectUnloadPage: true,
+        });
+    }
     return steps;
 }
 

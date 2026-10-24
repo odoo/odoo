@@ -629,7 +629,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             redirect = self.env["website.checkout.step"]._check_shop_address_completion(so)
             self.assertTrue(redirect is not None)
             self.assertEqual(
-                redirect, f"/shop/address?partner_id={bad_invoicing.id}&address_type=billing"
+                redirect, f"/shop/address?partner_id={bad_invoicing.id}"
             )
 
             # reset to valid one
@@ -644,7 +644,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             redirect = self.env["website.checkout.step"]._check_shop_address_completion(so)
             self.assertTrue(redirect is not None)
             self.assertEqual(
-                redirect, f"/shop/address?partner_id={bad_shipping.id}&address_type=delivery"
+                redirect, f"/shop/address?partner_id={bad_shipping.id}"
             )
 
             # reset to valid one
