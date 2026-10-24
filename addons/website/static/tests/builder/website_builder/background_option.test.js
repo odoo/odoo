@@ -15,6 +15,7 @@ import {
 import { animationFrame, queryOne, scroll, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { PLATFORMS } from "@html_editor/main/media/media_dialog/video_selector";
+import { encodeOptionsToParams } from "@html_editor/main/media/video/utils";
 import {
     addPlugin,
     defineWebsiteModels,
@@ -757,15 +758,10 @@ for (const [platform, platformClass] of Object.entries(PLATFORMS)) {
             await waitForNone(`div.modal`);
 
             const videoSrc = queryAttribute(":iframe .o_background_video", "data-bg-video-src");
-            for (const paramName of platformClass.optionsConfig.hideControls.params) {
-                expect(videoSrc).toMatch(`${paramName}=0`);
-            }
-
-            if (platformClass.optionsConfig.hideControls?.linkedParams?.length) {
-                for (const paramName of platformClass.optionsConfig.hideControls.linkedParams) {
-                    expect(videoSrc).toMatch(`${paramName}=0`);
-                }
-            }
+            // e.g. "controls=0" for YouTube, "hideEmbedTopBar=true&hide_share=true&…" for Loom
+            expect(videoSrc).toInclude(
+                encodeOptionsToParams({ hideControls: true }, platformClass.optionsConfig)
+            );
         });
     }
 }
