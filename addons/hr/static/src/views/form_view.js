@@ -11,24 +11,50 @@ export class EmployeeFormController extends FormController {
     setup() {
         super.setup();
         this.dialogService = useService("dialog");
+        this.actionService = useService("action");
         this.orm = useService('orm');
         this.pendingNewContract = null;
     }
 
-    async onWillSaveRecord(record, changes) {
-        const contractDateStart = record.data.contract_date_start;
+    get modelParams() {
+        const params = super.modelParams;
+        params.hooks.onRecordChanged = this.onRecordChanged.bind(this);
+        return params;
+    }
+
+    async onRecordChanged(record, changes){
+        if (!("contract_date_end" in changes)) {
+            return;
+        }
         const contractDateEnd = record.data.contract_date_end;
-        const previousContractDateStart = record._values?.contract_date_start;
         const previousContractDateEnd = record._values?.contract_date_end;
         const hasDeparture = record.data.departure_id;
 
         const bypassContractEndDialog =
-            previousContractDateStart !== contractDateStart
-            || previousContractDateEnd === contractDateEnd
+            previousContractDateEnd === contractDateEnd
             || !contractDateEnd
             || hasDeparture
             || record._skipContractEndDialog;
 
+        if (!bypassContractEndDialog) {
+            return new Promise((resolve) => {
+                this.dialogService.add(ContractEndDialog, {
+                    record: record,
+                }, {
+                    onClose: (result) => {
+                        resolve();
+                        setTimeout(() => {this._applyContractEndDialogResult(record, result, {
+                                                contractDateEnd,
+                                                previousContractDateEnd,
+                        });
+                        }, 0);  
+                    },
+                });
+            });
+        }
+    }
+
+    async onWillSaveRecord(record, changes) {
         // Only run the logic if it's not an employee creation but an update
         if (Boolean(record._config.resId)) {
             // We extract the versions of the employee so that we can check if we're on the last one chronologically
@@ -74,49 +100,6 @@ export class EmployeeFormController extends FormController {
                 if (!proceed) return false;
             }
         }
-        if (!bypassContractEndDialog) {
-            return new Promise((resolve) => {
-                this.dialogService.add(ContractEndDialog, {
-                    record: record,
-                }, {
-                    onClose: (result) => {
-                        switch (result?.reason) {
-                            case "correction":
-                                changes.fixed_term = true;
-                                break;
-                            case "end_collaboration":
-                                this.actionService.doAction(result.action, {
-                                    onClose: async () => {
-                                        await record.model.load();
-                                    },
-                                });
-                                break;
-                            case "new_contract": {
-                                const newContractDateStart = contractDateEnd.plus({ days: 1 });
-                                let newContractDateEnd = false;
-                                if (previousContractDateEnd && contractDateEnd < previousContractDateEnd) {
-                                    newContractDateEnd = previousContractDateEnd;
-                                }
-                                this.pendingNewContract = {
-                                    date_version: serializeDate(newContractDateStart),
-                                    contract_date_start: serializeDate(newContractDateStart),
-                                    contract_date_end: newContractDateEnd ? serializeDate(newContractDateEnd) : false,
-                                    contract_template_id: result.contractTemplateId,
-                                };
-                                break;
-                            }
-                            case "discard":
-                            default: {
-                                changes.contract_date_end = previousContractDateEnd ? serializeDate(previousContractDateEnd) : false;
-                                break;
-                            }
-                        }
-                        resolve(true);
-                    },
-                });
-            });
-        }
-
         return true;
     }
 
@@ -143,6 +126,48 @@ export class EmployeeFormController extends FormController {
                     version_id,
                 },
             });
+        }
+    }
+
+    async _applyContractEndDialogResult(record, result, { contractDateEnd, previousContractDateEnd }) {
+        record._skipContractEndDialog = true;
+        try {
+            switch (result?.reason) {
+                case "correction":
+                    await record.update({ fixed_term: true });
+                    break;
+                case "end_collaboration":
+                    await record.update({ contract_date_end: contractDateEnd});
+                    await record.save();
+                    this.actionService.doAction(result.action, {
+                        onClose: async () => {
+                            await record.model.load();
+                        },
+                    });
+                    break;
+                case "new_contract": {
+                    const newContractDateStart = contractDateEnd.plus({ days: 1 });
+                    let newContractDateEnd = false;
+                    if (previousContractDateEnd && contractDateEnd < previousContractDateEnd) {
+                        newContractDateEnd = previousContractDateEnd;
+                    }
+                    this.pendingNewContract = {
+                        date_version: serializeDate(newContractDateStart),
+                        contract_date_start: serializeDate(newContractDateStart),
+                        contract_date_end: newContractDateEnd ? serializeDate(newContractDateEnd) : false,
+                        contract_template_id: result.contractTemplateId,
+                    };
+                    break;
+                }
+                case "discard":
+                default:
+                    await record.update({
+                        contract_date_end: previousContractDateEnd || false,
+                    });
+                    break;
+            }
+        } finally {
+            record._skipContractEndDialog = false;
         }
     }
 }
