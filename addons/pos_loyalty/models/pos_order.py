@@ -4,7 +4,7 @@ import base64
 from collections import defaultdict
 from markupsafe import Markup
 
-from odoo import _, models
+from odoo import _, models, api
 from odoo.tools import float_compare
 
 
@@ -253,6 +253,30 @@ class PosOrder(models.Model):
         ).format(message=_('Loyalty coupon sold'), order_name=self._get_html_link())
         for gift_card in gift_cards:
             gift_card.message_post(body=body)
+
+    @api.model
+    def read_pos_orders(self, domain=False):
+        data = super().read_pos_orders(domain)
+
+        histories = self.env['loyalty.history'].search([
+            ('order_model', '=', 'pos.order'),
+            ('card_id.source_pos_order_id', 'in', [order["id"] for order in data["pos.order"]]),
+            ('card_id.program_id.program_type', '=', 'next_order_coupons'),
+        ])
+        if not histories:
+            return data
+
+        coupon_data = defaultdict(list)
+        for history in histories:
+            coupon_data[history.card_id.source_pos_order_id.id].append({
+                'program_name': history.card_id.program_id.name,
+                'expiration_date': history.card_id.expiration_date,
+                'code': history.card_id.code,
+            })
+        for order in data["pos.order"]:
+            order["new_coupon_info"] = coupon_data.get(order["id"], [])
+
+        return data
 
     def _check_existing_loyalty_cards(self, coupon_data):
         coupon_key_to_modify = []
