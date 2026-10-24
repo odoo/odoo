@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.ProductPage">
         <t t-set="product" t-value="this.productTemplate"/>
-        <ProductInterface class="'o_self_product_page'" productTemplate="product" goBack.bind="this.goBack">
+        <ProductInterface class="'o_self_product_page'" productTemplate="product" productVariant="this.getSelectedVariant()" goBack.bind="this.goBack">
             <t t-set-slot="content">
                 <!-- Attributes -->
                 <div class="container o_self_container" t-att-class="{'o_self_product_page_attributes': product.showProductImageInSelf}">

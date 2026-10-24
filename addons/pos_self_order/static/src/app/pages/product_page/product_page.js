@@ -92,14 +92,17 @@ export class ProductPage extends Component {
         return this.props.productTemplate._isArchivedCombination(variantAttributeValueIds);
     }
 
-    getProductPrice() {
-        const attributeIds = this.getSelectedAttributesValues();
-
-        const productVariant = getProductVariantByAttributes(
+    getSelectedVariant() {
+        return getProductVariantByAttributes(
             this.selfOrder.models,
             this.props.productTemplate,
-            attributeIds
+            this.getSelectedAttributesValues()
         );
+    }
+
+    getProductPrice() {
+        const attributeIds = this.getSelectedAttributesValues();
+        const productVariant = this.getSelectedVariant();
 
         const priceExtra = getAttributeValuesExtraPrice(
             getAttributeValues(attributeIds, this.selfOrder.models)
