@@ -242,21 +242,32 @@ export function makeHighlightSvgs(highlightEl, highlightID) {
     const rects = textNodes.map((node) => getTextnodeRects(node, 0, node.length)).flat();
     const finalRects = rectToBatch(rects).map((rects) => getBiggestBoxFromBoxes(rects));
 
+    const containerRect = highlightEl.getBoundingClientRect();
+    const inPreviewIframe =
+        highlightEl.ownerDocument.documentElement.classList.contains("o_add_snippets_preview");
+    let scale = inPreviewIframe && containerRect.width ? highlightEl.offsetWidth / containerRect.width : 1;
+    if (!inPreviewIframe) {
+        // Undo zoom scaling without rounding measurements of unscaled text.
+        const zoomSelector = ".o_anim_zoom_in, .o_anim_zoom_out";
+        for (let el = highlightEl.closest(zoomSelector); el; el = el.parentElement?.closest(zoomSelector)) {
+            const transform = window.getComputedStyle(el).transform;
+            if (transform !== "none") {
+                const zoomScale = new DOMMatrixReadOnly(transform).a;
+                if (zoomScale > 0) {
+                    scale /= zoomScale;
+                }
+            }
+        }
+    }
     const sizePerChar = memoize(() => {
         const numberOfChar = textNodes.reduce(
             (acc, node) => acc + node.textContent.replaceAll(/\s/g, "").length,
             0
         );
-        return finalRects.reduce((acc, rect) => acc + rect.width, 0) / numberOfChar;
+        return finalRects.reduce((acc, rect) => acc + rect.width * scale, 0) / numberOfChar;
     });
     const numberOfCharPerWidth = memoize((width) => Math.round(width / sizePerChar()));
 
-    const containerRect = highlightEl.getBoundingClientRect();
-    // Note: We cannot use `getClientRects()` as we want to be able to draw
-    // text highlights in the snippet/page dialogs where iframe is scaled.
-    const inPreviewIframe =
-        highlightEl.ownerDocument.documentElement.classList.contains("o_add_snippets_preview");
-    const scale = inPreviewIframe ? highlightEl.offsetWidth / containerRect.width : 1;
     const rtl = window.getComputedStyle(highlightEl).direction === "rtl";
     const firstRect = highlightEl.getClientRects()[0];
     const svgs = [];
