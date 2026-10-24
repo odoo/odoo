@@ -284,8 +284,14 @@ class Cart(PaymentPortal):
             notifications.append({"type": "item_added", "data": notification})
 
         if warning:
-            # Store the warning on the order line so the cart page can show its source to the user.
-            (updated_line or order_sudo)._add_warning_alert(warning)
+            if updated_line:
+                # Store the warning on the order line so the cart page can show its source to the
+                # user.
+                updated_line._add_warning_alert(warning)
+            elif not request.env.context.get("website_sale_skip_order_alert"):
+                # No line to attach the warning to: keep it on the order so that it is shown on the
+                # cart page for flows redirecting there.
+                order_sudo._add_warning_alert(warning)
             notifications.append({"type": "warning", "data": {"warning_message": warning}})
 
         return {
@@ -299,6 +305,9 @@ class Cart(PaymentPortal):
         route="/shop/cart/quick_add", type="jsonrpc", auth="user", methods=["POST"], website=True
     )
     def quick_add(self, product_template_id, product_id, quantity=1.0, **kwargs):
+        # The customer is already on the cart page and gets the warning as a notification, don't
+        # keep it on the order to show it again on the next page load.
+        request.update_context(website_sale_skip_order_alert=True)
         values = self.add_to_cart(product_template_id, product_id, quantity=quantity, **kwargs)
 
         order_sudo = request.cart
