@@ -59,9 +59,8 @@ class CalendarEvent(models.Model):
                 'attendee_ids', 'alarm_ids', 'location', 'privacy', 'active', 'show_as', 'videocall_location'}
 
     @api.model
-    def _restart_google_sync(self):
+    def _check_synced_events_alarm_limit(self):
         events = self.env['calendar.event'].search(self._get_sync_domain())
-        events.write({'need_sync': True})
         events._check_alarm_ids_sync_limit()
 
     @api.model_create_multi
@@ -123,7 +122,7 @@ class CalendarEvent(models.Model):
         Log a message on every synced event in self that exceeds this limit.
         """
         synced_events_over_limit = self.filtered(
-            lambda event: len(event.alarm_ids) > 5 and event._get_event_user().is_google_calendar_synced())
+            lambda event: len(event.alarm_ids) > 5 and event._get_event_user().sudo().google_calendar_token)
         if synced_events_over_limit:
             body = _("This event has more than 5 reminders, only the first 5 will be synced to Google Calendar.")
             synced_events_over_limit._message_log_batch(bodies={event.id: body for event in synced_events_over_limit})
@@ -147,9 +146,11 @@ class CalendarEvent(models.Model):
             )
 
     def _skip_send_mail_status_update(self):
-        """If a google calendar is not syncing with the user, don't send a mail."""
-        user_id = self._get_event_user()
-        if user_id.is_google_calendar_synced() and user_id.res_users_settings_id._is_google_calendar_valid():
+        """If the event is synchronized with Google, we let Google handle mail notifications."""
+        user_id = self._get_event_owner() or self.env.user
+        if (user_id._get_google_sync_status() == 'sync_active'
+                and user_id.res_users_settings_id._is_google_calendar_valid()
+                and self._should_be_synced()):
             return True
         return super()._skip_send_mail_status_update()
 
