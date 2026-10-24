@@ -1,4 +1,13 @@
-import { Component, computed, proxy, signal, types, useOnChange, usePlugin } from "@odoo/owl";
+import {
+    Component,
+    computed,
+    proxy,
+    signal,
+    types,
+    useOnChange,
+    usePlugin,
+    useProps,
+} from "@odoo/owl";
 
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { AutoresizeInput } from "@mail/core/common/autoresize_input";
@@ -12,7 +21,6 @@ import { attClassObjectToString } from "@mail/utils/common/format";
 import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { useService } from "@web/core/utils/hooks";
-import { propSignal } from "@mail/utils/common/hooks";
 import { computedShallowEqual } from "@mail/utils/common/signal";
 import { PANEL_CONTAINER_TYPE } from "@mail/core/common/action";
 
@@ -31,8 +39,8 @@ export class DiscussContent extends Component {
         super.setup();
         this.ancestors = useAncestors();
         this.store = useService("mail.store");
-        this.channel = propSignal("channel", types.instanceOf(this.store["discuss.channel"]), {
-            optional: true,
+        this.props = useProps({
+            channel: types.signal(types.instanceOf(this.store["discuss.channel"])).optional(),
         });
         this.ui = usePlugin(UIPlugin);
         this.rootRef = signal.ref(HTMLDivElement);
@@ -95,7 +103,7 @@ export class DiscussContent extends Component {
     }
 
     get thread() {
-        return this.channel?.()?.thread || this.store.discuss.thread;
+        return this.props.channel()?.thread || this.store.discuss.thread;
     }
 
     get isNotificationTabActive() {

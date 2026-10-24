@@ -2259,6 +2259,28 @@ test("composer destroyed before being mounted keeps the saved content", async ()
     expect.verifySteps(["composer setup", "composer mounted"]);
 });
 
+test("composer without dropzone keeps file drops outside of it", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Partner" });
+    await start();
+    const store = getService("mail.store");
+    const thread = await store["mail.thread"].getOrFetch({ model: "res.partner", id: partnerId });
+    class Parent extends Component {
+        static components = { Composer };
+        static template = xml`<Composer composer="this.composer" type="'message'"/>`;
+        setup() {
+            this.composer = thread.composer;
+        }
+    }
+    await mountWithCleanup(Parent);
+    await mailContains(".o-mail-Composer");
+    const dataTransfer = new DataTransfer();
+    dataTransfer.items.add(new File(["hello"], "text.txt", { type: "text/plain" }));
+    const ev = new DragEvent("drop", { bubbles: true, cancelable: true, dataTransfer });
+    document.body.dispatchEvent(ev);
+    expect(ev.defaultPrevented).toBe(false);
+});
+
 test("Post message trims outer whitespaces and newlines", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
