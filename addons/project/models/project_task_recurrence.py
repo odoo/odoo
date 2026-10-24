@@ -108,6 +108,12 @@ class ProjectTaskRecurrence(models.Model):
                 'stage_id': task.sudo().project_id.type_ids[0].id if task.sudo().project_id.type_ids else task.stage_id.id,
                 'child_ids': [Command.create(vals) for vals in self._create_next_occurrences_values({child: recurrence for child in task.child_ids})]
             }
+
+            if fields_to_postpone.get('date_deadline'):
+                start_dt, end_dt, planned_data, fields_to_postpone = self._plan_task(fields_to_postpone, self._get_original_task(recurrence), recurrence)
+                copy_data = self._filter_non_working_employees(copy_data, self._get_original_task(recurrence), task, start_dt, end_dt)
+                create_values.update(planned_data)
+
             create_values.update({
                 field: value[0] if isinstance(value, tuple) else value
                 for field, value in fields_to_copy.items()
@@ -120,3 +126,51 @@ class ProjectTaskRecurrence(models.Model):
             list_create_values.append(copy_data)
 
         return list_create_values
+
+    def _filter_non_working_employees(self, data, original_task, last_task, next_task_date_begin, next_task_date_deadline):
+        '''
+        Filters out all users that should not be assign to this perticular reccurent task
+        and adds back in the user that should be assigned, if they weren't in the previous task.
+        This function is inherited by other modules.
+
+        :param data: the data used to creat this recurent task
+
+        :param original_task: the task that originaly started the recurrence
+
+        :param last_task: the previous task that trigger the creation of this task
+
+        :param next_task_date_begin: the begin datetime for this task
+
+        :param next_task_date_deadline: the end/deadline for this task
+
+        :return: the updated data with the correct users.
+        '''
+        return data
+
+    def _plan_task(self, field_data, original_task, recurrence):
+        '''
+        Plans the recuring task. This function is inherited by other modules.
+
+        :param field_data: the time dependent fields for the new task
+
+        :param original_task: the task that originaly started the recurrence
+
+        :return: returns a turple with the four following values:
+            - The datetime at which the task has been planned to start
+            - The datetime at which the task has been planned to end
+            - A dictionary containg all the planned time dependant fields in 'field_data'
+            - A dictionary containg all the unused time dependent fields in 'field_data'
+        '''
+        new_data = {}
+        has_start = hasattr(self.env['project.task'], 'planned_date_begin') and field_data['planned_date_begin']
+        new_data.update({
+                field: value and value + recurrence._get_recurrence_delta()
+                for field, value in field_data.items()
+            })
+        field_data = {}
+        date_deadline = new_data['date_deadline']
+        date_begin = new_data['planned_date_begin'] if has_start else False
+        return (date_begin, date_deadline, new_data, field_data)
+
+    def _get_original_task(self, recurrence):
+        return recurrence.task_ids[0]
