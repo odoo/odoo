@@ -468,10 +468,22 @@ export class RelationalModel extends Model {
             });
 
             // orderBy
-            config.orderBy = "orderBy" in params ? params.orderBy : config.orderBy;
-            // re-apply previous orderBy if not given (or no order)
-            if (!config.orderBy.length) {
-                config.orderBy = currentConfig.orderBy || [];
+            if ("orderBy" in params) {
+                const searchOrderBy = params.orderBy || [];
+                const previousSearchOrder = orderByToString(currentConfig.searchOrderBy || []);
+
+                const hasNoOrder = !config.orderBy?.length;
+                const searchOrderChanged = orderByToString(searchOrderBy) !== previousSearchOrder;
+                const hasNoLocalOrderOverride =
+                    orderByToString(config.orderBy || []) === previousSearchOrder;
+
+                if (
+                    hasNoOrder ||
+                    (searchOrderChanged && (searchOrderBy.length || hasNoLocalOrderOverride))
+                ) {
+                    config.orderBy = searchOrderBy;
+                }
+                config.searchOrderBy = searchOrderBy;
             }
             // apply default order if no order
             if (this.defaultOrderBy && !config.orderBy.length) {
