@@ -673,3 +673,44 @@ class TestDeliveryCost(DeliveryCommon):
         })
 
         self.assertEqual(delivery._get_price_available(so), 25)
+
+    def test_rate_warns_about_productless_lines(self):
+        """
+        Check that a delivery method whose cost depends on the products warns about the order
+        lines without a product and a fixed delivery method does not create any warning.
+        """
+        rule_delivery = self.env["delivery.carrier"].create({
+            "name": "Delivery based on rule",
+            "delivery_type": "base_on_rule",
+            "product_id": self.product_delivery_normal.id,
+            "price_rule_ids": [
+                Command.create({
+                    "variable": "quantity",
+                    "operator": ">=",
+                    "max_value": 0,
+                    "list_price": 2,
+                    "variable_factor": "quantity",
+                })
+            ],
+        })
+        so = self.env["sale.order"].create({
+            "partner_id": self.partner.id,
+            "order_line": [
+                Command.create({"product_id": self.product.id, "product_uom_qty": 1}),
+                Command.create({"display_type": "line_section", "name": "New section"}),
+                Command.create({
+                    "name": "Product-less order line",
+                    "product_uom_qty": 10,
+                    "price_unit": 100,
+                }),
+            ],
+        })
+
+        rule_rate = rule_delivery.rate_shipment(so)
+        self.assertEqual(rule_rate["price"], 2.0)
+        self.assertEqual(
+            rule_rate["warning_message"],
+            "The shipping cost does not take into account the lines without a product"
+            " (Product-less order line). Select a product on them to consider them properly.",
+        )
+        self.assertFalse(self.normal_delivery.rate_shipment(so)["warning_message"])
