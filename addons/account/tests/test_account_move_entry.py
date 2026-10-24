@@ -938,6 +938,81 @@ class TestAccountMove(AccountTestInvoicingCommon):
             {'name': 'credit', 'debit': 0.0,   'credit': 100.0, 'account_id': income_account.id, 'tax_ids': caba_tax.ids, 'tax_line_id': False},
         ])
 
+    def test_always_exigible_caba_bank_reco_discount(self):
+        """ When doing bank reconciliation, it's possible to apply directly some discount at reconciliation. For example, a 10% discount due to
+        early payment. In such case, the move written in the bank journal will contain a receivable line, as well as a base and tax line in order
+        to reduce the declared tax amounts. This test makes sure this works well with cash basis taxes, checking the computation of
+        always_tax_exigible.
+        """
+        tax_account = self.company_data['default_account_tax_sale']
+        receivable_account = self.company_data['default_account_receivable']
+        income_account = self.company_data['default_account_revenue']
+        bank_account = self.company_data['default_journal_bank'].default_account_id
+
+        tax_account.reconcile = True
+
+        caba_tax = self.env['account.tax'].create({
+            'name': "CABA",
+            'amount_type': 'percent',
+            'amount': 20.0,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': self.safe_copy(tax_account).id,
+            'invoice_repartition_line_ids': [
+                (0, 0, {
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'repartition_type': 'tax',
+                    'account_id': tax_account.id,
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                (0, 0, {
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'repartition_type': 'tax',
+                    'account_id': tax_account.id,
+                }),
+            ],
+        })
+
+        move_form = Form(self.env['account.move'].with_context(default_move_type='entry'))
+
+        move_form.journal_id = self.company_data['default_journal_bank']
+
+        # Receivable line ; will be reconciled with the invoice (assuming the total of the invoice is here 100, tax included)
+        with move_form.line_ids.new() as receivable_line:
+            receivable_line.name = 'receivable'
+            receivable_line.account_id = receivable_account
+            receivable_line.credit = 100
+
+        # Bank line
+        with move_form.line_ids.new() as bank_line:
+            bank_line.name = 'bank'
+            bank_line.account_id = bank_account
+            bank_line.debit = 90
+
+        # 10% discount
+        with move_form.line_ids.new() as discount_line:
+            discount_line.name = 'discount'
+            discount_line.account_id = income_account
+            discount_line.debit = 8.33  # So that base + tax amounts to 10
+            discount_line.tax_ids.clear()
+            discount_line.tax_ids.add(caba_tax)
+
+        move = move_form.save()
+
+        self.assertTrue(move.always_tax_exigible)
+
+        self.assertRecordValues(move.line_ids.sorted(lambda x: x.balance), [
+            # pylint: disable=C0326
+            {'name': 'receivable', 'debit':  0.0,  'credit': 100.0, 'account_id': receivable_account.id, 'tax_ids': [],           'tax_line_id': False},
+            {'name': 'CABA',       'debit':  1.67, 'credit':   0.0, 'account_id': tax_account.id,        'tax_ids': [],           'tax_line_id': caba_tax.id},
+            {'name': 'discount',   'debit':  8.33, 'credit':   0.0, 'account_id': income_account.id,     'tax_ids': caba_tax.ids, 'tax_line_id': False},
+            {'name': 'bank',       'debit': 90.0,  'credit':   0.0, 'account_id': bank_account.id,       'tax_ids': [],           'tax_line_id': False},
+        ])
+
     def test_misc_with_taxes_reverse(self):
         test_account = self.company_data['default_account_revenue']
 
