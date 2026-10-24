@@ -1,5 +1,6 @@
 import { test, expect } from "@odoo/hoot";
-import { advanceTime } from "@odoo/hoot-mock";
+import { advanceTime, animationFrame } from "@odoo/hoot-mock";
+import { click, queryOne, queryRect, resize } from "@odoo/hoot-dom";
 import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { session } from "@web/session";
 import { barcodeService } from "@barcodes/barcode_service";
@@ -132,5 +133,29 @@ test("searching by customer keeps the orders of a nameless address contact", asy
     expect(comp.getFilteredOrderList().map((order) => order.id)).toEqual(
         [companyOrder.id, addressOrder.id],
         { message: "the address contact is searched by its company name" }
+    );
+});
+
+test("many presets keep the search bar and its filter menu usable", async () => {
+    await resize({ width: 1024, height: 768 });
+    const store = await setupPosEnv();
+    for (let i = 1; i <= 8; i++) {
+        store.models["pos.preset"].create({ name: `Delivery ${i}` });
+    }
+    await mountWithCleanup(TicketScreen, { props: {} });
+
+    const input = queryRect(".pos-search-bar input");
+    const filter = queryRect(".pos-search-bar .filter");
+    expect(input.width).toBeGreaterThan(100);
+    expect(filter.top).toBe(input.top, { message: "the filter stays next to the input" });
+    const controls = queryOne(".ticket-screen .controls");
+    expect(controls.scrollWidth).toBe(controls.clientWidth, {
+        message: "the presets scroll inside their own strip",
+    });
+
+    await click(".pos-search-bar .filter");
+    await animationFrame();
+    expect(queryRect(".pos-search-bar .options").left).toBeGreaterThan(
+        queryRect(".ticket-screen").left
     );
 });
