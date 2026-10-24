@@ -302,7 +302,17 @@ class AccountPartialReconcile(models.Model):
                     source_line = partial.credit_move_id
                     counterpart_line = partial.debit_move_id
 
-                payment_date = counterpart_line.date
+                # The reconciled amount is paid on the payment move: its date is the
+                # accounting date of the cash basis entry. The move being processed may be
+                # the payment itself (use its own date) or the invoice it reconciles with
+                # (use the counterpart, which is the payment). Previously `counterpart_line`
+                # was used unconditionally, so when the payment was the move being processed
+                # the invoice date was taken instead and the cash basis entries of this move
+                # were booked in the wrong period.
+                if self.env['account.move.line'].is_payment(move.line_ids):
+                    payment_date = move.date
+                else:
+                    payment_date = counterpart_move.date
 
                 if move_values['currency'] == move.company_id.currency_id:
                     # Ignore the exchange difference.
