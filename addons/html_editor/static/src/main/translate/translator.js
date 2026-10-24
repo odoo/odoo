@@ -1,3 +1,4 @@
+import { htmlToFragment } from "@html_editor/utils/dom";
 import { rpc } from "@web/core/network/rpc";
 
 class Translator {
@@ -10,26 +11,28 @@ class Translator {
      * translate text to a given language, returns the translated text and
      * indicates if there was an error
      *
-     * @param {String} originalText the text needs to be translated
+     * @param {Element} fragment the html fragment that needs to be translated
      * @param {String} targetLang the destination language
      *
-     * @returns {Object} { translatedText: String, isError: Boolean }
+     * @returns {Object} { translatedContent: String, isError: Boolean }
      */
-    async translate(originalText, targetLang) {
-        const translatedText = `Translated content`; // Placeholder for actual translation logic
+    async translate(fragment, targetLang) {
+        const translatedContent = `Translated content`; // Placeholder for actual translation logic
         return {
-            translatedText: translatedText,
+            translatedContent: translatedContent,
             isError: false,
         };
     }
 }
 
 export class GoogleTranslator extends Translator {
-    async translate(originalText, targetLang) {
+    async translate(fragment, targetLang) {
+        const content = document.createElement("div");
+        content.appendChild(fragment.cloneNode(true));
         const protectedCallback = (content) => {
             delete this.pendingRpcPromise;
             return {
-                translatedText: content.translated_text,
+                translatedContent: htmlToFragment(content.translated_html),
                 isError: content.isError || false,
             };
         };
@@ -37,7 +40,7 @@ export class GoogleTranslator extends Translator {
         this.pendingRpcPromise = rpc(
             "/html_editor/google_translate",
             {
-                originalText,
+                originalHtml: content.innerHTML,
                 targetLang: googleLanguageCode,
             },
             { silent: true }
@@ -46,7 +49,7 @@ export class GoogleTranslator extends Translator {
             .then((content) => protectedCallback(content))
             .catch((error) =>
                 protectedCallback({
-                    translated_text: error.data?.message || error.message,
+                    translated_html: error.data?.message || error.message,
                     isError: true,
                 })
             );
@@ -60,11 +63,16 @@ export class ChatGPTTranslator extends Translator {
             {
                 role: "system",
                 content:
-                    "You are a translation assistant. You goal is to translate text while maintaining the original format and" +
-                    "respecting specific instructions. \n" +
-                    "Instructions: \n" +
-                    "- You must respect the format (wrapping the translated text between <generated_text> and </generated_text>)\n" +
-                    "- Do not write HTML.",
+                    "You are an HTML-aware translation assistant. Your goal is to translate the text content of the provided HTML into the target language while preserving the HTML structure exactly.\n" +
+                    "Instructions:\n" +
+                    "- Wrap the entire output between <generated_html> and </generated_html>. Output nothing outside these tags.\n" +
+                    "- The input is an HTML fragment. Translate only the human-readable text nodes (including text inside nested elements).\n" +
+                    "- Preserve every tag, attribute (names and values), attribute order, inline style, class, id, data-* attribute, and nesting exactly as given. Do not add, remove, reorder, or merge elements.\n" +
+                    "- Preserve whitespace, line breaks, and HTML entities (e.g. &nbsp;, &amp;) as in the input.\n" +
+                    "- Do not translate or alter: code/pre content, URLs.\n" +
+                    "- Keep the text flowing naturally in the target language; word order inside a sentence may change as long as the surrounding tags still wrap the equivalent words.\n" +
+                    "- Do not wrap the output in markdown code fences, do not add explanations, comments, or notes.\n" +
+                    "- If the input contains no translatable text, return it unchanged inside the tags.\n",
             },
         ];
     }
@@ -87,12 +95,14 @@ export class ChatGPTTranslator extends Translator {
             .catch((error) => protectedCallback(error.data?.message || error.message, true));
     }
 
-    async translate(originalText, targetLang) {
-        const query = `Translate <generated_text>${originalText}</generated_text> to ${targetLang.languageName}`;
+    async translate(fragment, targetLang) {
+        const content = document.createElement("div");
+        content.appendChild(fragment.cloneNode(true));
+        const query = `Translate <generated_html>${content.innerHTML}</generated_html> to ${targetLang.languageName}`;
         function contentCleaningCallback(content, isError) {
-            const translatedText = content
-                .replace(/^[\s\S]*<generated_text>/, "")
-                .replace(/<\/generated_text>[\s\S]*$/, "");
+            const translatedContent = content
+                .replace(/^[\s\S]*<generated_html>/, "")
+                .replace(/<\/generated_html>[\s\S]*$/, "");
             if (!isError) {
                 // There was no error, add the response to the history.
                 this.conversationHistory.push(
@@ -106,9 +116,8 @@ export class ChatGPTTranslator extends Translator {
                     }
                 );
             }
-
             return {
-                translatedText,
+                translatedContent: htmlToFragment(translatedContent),
                 isError,
             };
         }
