@@ -151,7 +151,6 @@ registry.category("web_tour.tours").add("FeedbackScreenTour", {
                 orderlines: [
                     {
                         name: "Desk Pad",
-                        price_unit: "19", // use baseprice with discount
                         no_discount_price: 20,
                     },
                 ],
