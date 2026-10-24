@@ -139,6 +139,85 @@ class ResPartner(models.Model):
             return '0227', country_code + self.name[:16]
         return False, False
 
+<<<<<<< d006337388ad287a2cbeacaabda95694c4c1ee31
+||||||| 384a95fb2344ead938aaea0284719a352f6b5fbb
+    def _l10n_fr_pdp_get_base_identifier(self):
+        self.ensure_one()
+
+        if not self._peppol_is_french_partner():
+            return None, None
+
+        siret = self.company_registry if self.company_registry and siren_siret_re.match(self.company_registry) else ''
+        siren = siret[:9]
+        if len(siret) == 9:
+            return 'siren', siren
+        elif len(siret) == 14:
+            return 'siret', siret
+        elif siren := self._l10n_fr_get_siren_from_vat():
+            return 'siren', siren
+        return None, None
+
+    def _get_suggested_pdp_identifier(self):
+        self.ensure_one()
+        # We suggest the SIREN (even if the SIRET is filled in).
+        # "Everyone" will probably have registered the SIREN on annuaire. (Even if they have a SIRET.)
+        return self._l10n_fr_pdp_get_siren()
+
+    def _get_peppol_endpoint_value(self, country_code, field, eas):
+        self.ensure_one()
+        if country_code == 'FR' and field == 'peppol_endpoint' and eas == '0225':
+            return self._get_suggested_pdp_identifier()
+        return super()._get_peppol_endpoint_value(country_code, field, eas)
+
+    def _build_error_peppol_endpoint(self, eas, endpoint):
+        # Extend 'account_edi_ubl_cii' for '0225' endpoint
+        if eas != '0225':
+            return super()._build_error_peppol_endpoint(eas, endpoint)
+        if not self.env["res.company"]._check_pdp_identifier(endpoint):
+            return self.env._("The French e-invoicing identifier is not valid. The expected format is: SIREN, SIREN_SIRET, SIREN_SIRET_CodeRoutage or SIREN_SuffixeAdressage")
+
+=======
+    def _l10n_fr_pdp_get_base_identifier(self):
+        self.ensure_one()
+
+        if not self._peppol_is_french_partner():
+            return None, None
+
+        siret = self.company_registry if self.company_registry and siren_siret_re.match(self.company_registry) else ''
+        siren = siret[:9]
+        if len(siret) == 9:
+            return 'siren', siren
+        elif len(siret) == 14:
+            return 'siret', siret
+        elif siren := self._l10n_fr_get_siren_from_vat():
+            return 'siren', siren
+        return None, None
+
+    @api.model
+    def _import_retrieve_customer_from_siret(self, customer_values):
+        if siret := customer_values.get('siret'):
+            return {'criteria': [{'domain': [('company_registry', '=', siret)]}]}
+
+    def _get_suggested_pdp_identifier(self):
+        self.ensure_one()
+        # We suggest the SIREN (even if the SIRET is filled in).
+        # "Everyone" will probably have registered the SIREN on annuaire. (Even if they have a SIRET.)
+        return self._l10n_fr_pdp_get_siren()
+
+    def _get_peppol_endpoint_value(self, country_code, field, eas):
+        self.ensure_one()
+        if country_code == 'FR' and field == 'peppol_endpoint' and eas == '0225':
+            return self._get_suggested_pdp_identifier()
+        return super()._get_peppol_endpoint_value(country_code, field, eas)
+
+    def _build_error_peppol_endpoint(self, eas, endpoint):
+        # Extend 'account_edi_ubl_cii' for '0225' endpoint
+        if eas != '0225':
+            return super()._build_error_peppol_endpoint(eas, endpoint)
+        if not self.env["res.company"]._check_pdp_identifier(endpoint):
+            return self.env._("The French e-invoicing identifier is not valid. The expected format is: SIREN, SIREN_SIRET, SIREN_SIRET_CodeRoutage or SIREN_SuffixeAdressage")
+
+>>>>>>> 9b1011a1c2ba3705e8ddaf9fffebb57f906f10e2
     def _get_edi_builder(self, invoice_edi_format):
         # EXTENDS 'account_edi_ubl_cii'
         if invoice_edi_format == 'ubl_21_fr':
