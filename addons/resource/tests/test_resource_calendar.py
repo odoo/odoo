@@ -126,3 +126,19 @@ class TestResourceCalendar(TransactionCase):
             form.company_id = self.env.company
 
         self.assertEqual(work_schedule.attendance_ids, attendance_1)
+
+    def test_hours_per_day_dated_attendances(self):
+        """ A calendar whose attendances all have a start and an end date
+        still has an average number of hours per day. """
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Dated calendar',
+            'attendance_ids': [(0, 0, {
+                'name': 'Attendance %s' % day,
+                'dayofweek': str(day),
+                'hour_from': 8,
+                'hour_to': 16,
+                'date_from': datetime(2025, 1, 1).date(),
+                'date_to': datetime(2025, 12, 31).date(),
+            }) for day in range(5)],
+        })
+        self.assertEqual(calendar.hours_per_day, 8)
