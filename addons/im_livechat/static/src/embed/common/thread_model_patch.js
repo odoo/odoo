@@ -71,17 +71,41 @@ patch(Thread.prototype, {
     },
 
     get avatarUrl() {
+<<<<<<< 5d18a9e458b9414b32bc9801c6b83bedafc8ad27
         if (this.channel?.channel_type === "livechat") {
             return this.livechat_operator_id.avatarUrl;
+||||||| 807b2abc274e7497ce93747ba2d3759f32e88250
+        if (this.channel_type === "livechat") {
+            return this.livechat_operator_id.avatarUrl;
+=======
+        if (this.channel_type !== "livechat") {
+            return super.avatarUrl;
+>>>>>>> 2b82206f8cfda7d44821bef059ccee716938f269
         }
-        return super.avatarUrl;
+        if (this.livechatVisitorMember && this.self_member_id?.notEq(this.livechatVisitorMember)) {
+            return this.livechatVisitorMember.avatarUrl;
+        }
+        return this.livechat_operator_id.avatarUrl;
     },
     get displayName() {
+<<<<<<< 5d18a9e458b9414b32bc9801c6b83bedafc8ad27
         if (
             this.channel?.channel_type === "livechat" &&
             this.isTransient &&
             this.livechat_operator_id
         ) {
+||||||| 807b2abc274e7497ce93747ba2d3759f32e88250
+        if (this.channel_type === "livechat" && this.livechat_operator_id) {
+=======
+        if (
+            this.channel_type === "livechat" &&
+            this.livechatVisitorMember &&
+            this.self_member_id?.notEq(this.livechatVisitorMember)
+        ) {
+            return this.self_member_id.custom_channel_name || this.livechatVisitorMember.name;
+        }
+        if (this.channel_type === "livechat" && this.livechat_operator_id) {
+>>>>>>> 2b82206f8cfda7d44821bef059ccee716938f269
             return this.getPersonaName(this.livechat_operator_id);
         }
         return super.displayName;
