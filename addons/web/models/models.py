@@ -995,6 +995,12 @@ class Base(models.AbstractModel):
             field = self._fields.get(field_name)
             if field and field.inherited:
                 parent_name, field_name = field.related.split('.', 1)
+                if parent_name in field_names:
+                    # the parent itself is being (re)assigned by this onchange: don't smear
+                    # this field's stale pending value onto the record we're leaving behind,
+                    # or re-selecting that same record later would read back this poisoned
+                    # cache entry instead of its real value.
+                    continue
                 if parent := record[parent_name]:
                     parent._update_cache({field_name: record[field_name]})
 
