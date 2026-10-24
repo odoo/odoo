@@ -79,10 +79,14 @@ export class SignatureForm extends Component {
 
         const name = this.signature.name;
         const signature = this.signature.getSignatureImage().split(",")[1];
-        const data = await rpc(this.props.callUrl, { name, signature });
-        if (data.force_refresh) {
+        let data;
+        try {
+            data = await rpc(this.props.callUrl, { name, signature });
+        } finally {
             restoreBtnLoading();
-            button.prepend(icon)
+            button.prepend(icon);
+        }
+        if (data.force_refresh) {
             if (data.redirect_url) {
                 redirect(data.redirect_url);
             } else {
