@@ -111,6 +111,8 @@ class MailThread(models.AbstractModel):
        record thread. False by default, as creating = following;
      - ``mail_create_nolog``: at create, do not log the automatic '<Document>
        created' message
+     - ``mail_create_log_author_id``: at create, author partner for the automatic
+       '<Document> created' message. Current user's partner by default;
      - ``mail_notrack``: at create and write, do not perform the value tracking
        creating messages;
      - ``tracking_disable``: at create and write, perform no MailThread features
@@ -381,6 +383,11 @@ class MailThread(models.AbstractModel):
 
         # automatic logging unless asked not to (mainly for various testing purpose)
         if not self.env.context.get('mail_create_nolog'):
+            log_author_id = self.env.context.get('mail_create_log_author_id')
+            log_author = (
+                self.env['res.partner'].browse(log_author_id).exists()
+                if log_author_id else self.env['res.partner']
+            ) or self.env.user.partner_id
             threads_no_subtype = self.env[self._name]
             for thread in threads:
                 subtype = thread._creation_subtype()
@@ -389,14 +396,14 @@ class MailThread(models.AbstractModel):
                     continue
                 # if we have a subtype, post message to notify users from _message_auto_subscribe
                 thread.sudo().message_post(
-                    subtype_id=subtype.id, author_id=self.env.user.partner_id.id,
+                    subtype_id=subtype.id, author_id=log_author.id,
                     body=Markup('<div><p>%s</p></div>') % thread._creation_message()
                 )
             if threads_no_subtype:
                 bodies = dict(
                     (thread.id, thread._creation_message())
                     for thread in threads_no_subtype)
-                threads_no_subtype._message_log_batch(bodies=bodies)
+                threads_no_subtype._message_log_batch(bodies=bodies, author_id=log_author.id)
 
         # post track template if a tracked field changed
         threads._track_discard()
