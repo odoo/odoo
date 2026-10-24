@@ -1,4 +1,5 @@
 import { describe, test } from "@odoo/hoot";
+import { mockDate } from "@odoo/hoot-mock";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import {
     actionPanel,
@@ -13,6 +14,7 @@ describe.current.tags("desktop");
 defineHrHolidaysModels();
 
 test("on leave members are categorised correctly in online/offline", async () => {
+    mockDate("2022-12-30 12:00:00");
     const pyEnv = await startServer();
     const [partnerId1, partnerId2, partnerId3, partnerId4] = pyEnv["res.partner"].create([
         { name: "Online Partner" },
@@ -27,9 +29,9 @@ test("on leave members are categorised correctly in online/offline", async () =>
         { partner_id: partnerId4, im_status: "offline" },
     ]);
     pyEnv["hr.employee"].create([
-        { user_id: userId2, leave_date_to: "2023-01-03" },
-        { user_id: userId3, leave_date_to: "2023-01-04" },
-        { user_id: userId4, leave_date_to: "2023-01-05" },
+        { user_id: userId2, leave_datetime_to: "2023-01-03 08:00:00" },
+        { user_id: userId3, leave_datetime_to: "2023-01-04 08:00:00" },
+        { user_id: userId4, leave_datetime_to: "2023-01-05 08:00:00" },
     ]);
     const channelId = pyEnv["discuss.channel"].create({
         name: "TestChanel",
