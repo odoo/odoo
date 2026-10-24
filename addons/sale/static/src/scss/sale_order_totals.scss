@@ -1,0 +1,42 @@
+.o_sale_order_totals [name="tax_totals"] {
+    @include media-breakpoint-up(md) {
+        background-color: var(--gray-100);
+    }
+
+    table {
+        float: none !important;
+        width: 100%;
+    }
+
+    .o_td_label {
+        width: 100%;
+        text-align: start;
+    }
+
+    .o_list_monetary {
+        padding-left: map-get($spacers, 3);
+    }
+
+    tbody > tr:has(span[name]) .o_form_label {
+        font-weight: bold;
+    }
+
+    tbody > tr:nth-last-child(2) > td {
+        padding-bottom: map-get($spacers, 2);
+    }
+
+    tbody > tr:last-child {
+        > td {
+            border-top: 1px solid var(--gray-400);
+            padding-top: map-get($spacers, 2);
+        }
+
+        .oe_subtotal_footer_separator {
+            border-top: 0;
+        }
+
+        .o_form_label {
+            @include font-size($h2-font-size);
+        }
+    }
+}
