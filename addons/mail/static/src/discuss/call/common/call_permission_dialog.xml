@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.CallPermissionDialog">
-        <PermissionPromptDialog title="''" close="this.props.close" illustrationPosition="'right'">
+        <PermissionPromptDialog closeOnClickAway="true" title="''" close="this.props.close" illustrationPosition="'right'">
             <t t-set-slot="illustration">
                 <t t-call="discuss.CallPermissionDialogImg"/>
             </t>

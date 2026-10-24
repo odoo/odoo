@@ -9,6 +9,7 @@ export class PermissionPromptDialog extends Component {
         title: t.any().optional(),
         contentClass: t.any().optional(),
         close: t.any().optional(),
+        closeOnClickAway: t.boolean().optional(),
         slots: t.any().optional(),
         size: t.any().optional(),
         illustrationPosition: t.any().optional(),

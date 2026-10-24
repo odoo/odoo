@@ -38,6 +38,7 @@ const useDialogDraggable = makeDraggableHook({
 });
 
 export const dialogProps = {
+    closeOnClickAway: t.boolean().optional(),
     contentClass: t.string().optional(""),
     bodyClass: t.string().optional(""),
     fullscreen: t.boolean().optional(false),
@@ -154,6 +155,31 @@ export class Dialog extends Component {
 
     onEscape() {
         return this.dismiss();
+    }
+
+    /**
+     * @param {MouseEvent} ev
+     */
+    onMousedownModal(ev) {
+        this.mousedownOnBackdrop = !ev.target.closest(".modal-content");
+    }
+
+    /**
+     * Closes the dialog on click away. Requires the mousedown to also be on the backdrop, so that
+     * e.g. selecting text inside the dialog and releasing on the backdrop does not close it.
+     *
+     * @param {MouseEvent} ev
+     */
+    onClickModal(ev) {
+        const mousedownOnBackdrop = this.mousedownOnBackdrop;
+        this.mousedownOnBackdrop = false;
+        if (
+            this.props.closeOnClickAway &&
+            mousedownOnBackdrop &&
+            !ev.target.closest(".modal-content")
+        ) {
+            this.dismiss();
+        }
     }
 
     async dismiss() {
