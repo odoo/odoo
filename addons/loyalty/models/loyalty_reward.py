@@ -235,13 +235,26 @@ class LoyaltyReward(models.Model):
             elif reward.program_type == 'ewallet':
                 reward_string = _("eWallet")
             elif reward.reward_type == 'product':
+                max_product_in_description = 5
                 products = reward.reward_product_ids
                 if len(products) == 0:
                     reward_string = _("Free Product")
                 elif len(products) == 1:
                     reward_string = _("Free Product - %s", reward.reward_product_id.with_context(display_default_code=False).display_name)
-                else:
+                elif len(products) <= max_product_in_description:
                     reward_string = _("Free Product - [%s]", ', '.join(products.with_context(display_default_code=False).mapped('display_name')))
+                else:
+                    # Avoid huge description: brings no value on SOL and causes
+                    # `psycopg2.errors.ProgramLimitExceeded` error if too long
+                    # as this description will be used for the name of the
+                    # discount product created for this reward, which is indexed
+                    reward_string = _(
+                        "Free Product - [%(products)s, and %(count)s more]",
+                        products=', '.join(
+                            products[:max_product_in_description].with_context(display_default_code=False).mapped('display_name')
+                        ),
+                        count=len(products) - max_product_in_description,
+                    )
             elif reward.reward_type == 'discount':
                 format_string = "%(amount)g %(symbol)s"
                 if reward.currency_id.position == 'before':
