@@ -1,0 +1,2768 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="what_is_my_ip">
+        <s:complexType />
+      </s:element>
+      <s:element name="what_is_my_ipResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="what_is_my_ipResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="create_ser_user">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="user_name" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user_password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ip" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="notes" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="create_ser_userResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="create_ser_userResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="update_ser_user">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="user_name" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user_password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ip" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="notes" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="update_ser_userResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="update_ser_userResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_ser_users">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="user_name" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user_password" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_ser_usersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="get_ser_usersResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_ser_users_notes">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="tin" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_ser_users_notesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="get_ser_users_notesResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="chek">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="chekResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="chekResult" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="sua" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="save_invoice">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="invois_id" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="operation_date" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="seller_un_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="buyer_un_id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="overhead_no" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="overhead_dt" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="b_s_user_id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="save_invoiceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="save_invoiceResult" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="invois_id" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="save_invoice_n">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="invois_id" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="operation_date" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="seller_un_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="buyer_un_id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="overhead_no" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="overhead_dt" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="b_s_user_id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="note" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="save_invoice_nResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="save_invoice_nResult" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="invois_id" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="save_invoice_a">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="invois_id" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="operation_date" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="seller_un_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="buyer_un_id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="overhead_no" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="overhead_dt" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="b_s_user_id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="save_invoice_aResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="save_invoice_aResult" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="invois_id" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_invoice">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="invois_id" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_invoiceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="get_invoiceResult" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="f_series" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="f_number" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="operation_dt" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="reg_dt" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="seller_un_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="buyer_un_id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="overhead_no" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="overhead_dt" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="status" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="seq_num_s" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="seq_num_b" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="k_id" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="r_un_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="k_type" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="b_s_user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="dec_status" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_invoice_desc">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="invois_id" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_invoice_descResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="get_invoice_descResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="save_invoice_desc">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="id" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="invois_id" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="goods" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="g_unit" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="g_number" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="full_amount" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="drg_amount" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="aqcizi_amount" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="akciz_id" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="save_invoice_descResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="save_invoice_descResult" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="id" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="delete_invoice_desc">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="id" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="inv_id" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="delete_invoice_descResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="delete_invoice_descResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_ntos_invoices_inv_nos">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="invois_id" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_ntos_invoices_inv_nosResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="get_ntos_invoices_inv_nosResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="save_ntos_invoices_inv_nos">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="invois_id" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="overhead_no" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="overhead_dt" type="s:dateTime" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="save_ntos_invoices_inv_nosResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="save_ntos_invoices_inv_nosResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="delete_ntos_invoices_inv_nos">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="id" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="inv_id" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="delete_ntos_invoices_inv_nosResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="delete_ntos_invoices_inv_nosResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_un_id_from_tin">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="tin" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_un_id_from_tinResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="get_un_id_from_tinResult" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="name" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_tin_from_un_id">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="un_id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_tin_from_un_idResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="get_tin_from_un_idResult" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="name" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_org_name_from_un_id">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="un_id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_org_name_from_un_idResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="get_org_name_from_un_idResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_un_id_from_user_id">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_un_id_from_user_idResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="get_un_id_from_user_idResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="change_invoice_status">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="inv_id" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="status" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="change_invoice_statusResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="change_invoice_statusResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="acsept_invoice_status">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="inv_id" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="status" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="acsept_invoice_statusResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="acsept_invoice_statusResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ref_invoice_status">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="inv_id" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="ref_text" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ref_invoice_statusResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ref_invoice_statusResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="k_invoice">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="inv_id" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="k_type" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="k_invoiceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="k_invoiceResult" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="k_id" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="g_invoice">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="inv_id" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="g_invoiceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="g_invoiceResult" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="k_id" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_makoreqtirebeli">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="inv_id" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_makoreqtirebeliResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="get_makoreqtirebeliResult" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="k_id" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_seller_invoices">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="un_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="s_dt" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="e_dt" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="op_s_dt" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="op_e_dt" type="s:dateTime" />
+            <s:element minOccurs="0" maxOccurs="1" name="invoice_no" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sa_ident_no" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="desc" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="doc_mos_nom" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_seller_invoicesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="get_seller_invoicesResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_buyer_invoices">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="un_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="s_dt" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="e_dt" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="op_s_dt" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="op_e_dt" type="s:dateTime" />
+            <s:element minOccurs="0" maxOccurs="1" name="invoice_no" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sa_ident_no" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="desc" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="doc_mos_nom" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_buyer_invoicesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="get_buyer_invoicesResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_user_invoices">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="last_update_date_s" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="last_update_date_e" type="s:dateTime" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="un_id" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_user_invoicesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="get_user_invoicesResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_invoice_numbers">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="un_id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="v_invoice_n" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="v_count" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_invoice_numbersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="get_invoice_numbersResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_invoice_tins">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="un_id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="v_invoice_t" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="v_count" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_invoice_tinsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="get_invoice_tinsResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_invoice_d">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="un_id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="v_invoice_d" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="v_count" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_invoice_dResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="get_invoice_dResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_seller_invoices_r">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="un_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="status" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_seller_invoices_rResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="get_seller_invoices_rResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_buyer_invoices_r">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="un_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="status" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_buyer_invoices_rResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="get_buyer_invoices_rResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="print_invoices">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="inv_id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="print_invoicesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="print_invoicesResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_akciz">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="s_text" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_akcizResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="get_akcizResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_seq_nums">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="sag_periodi" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_seq_numsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="get_seq_numsResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="add_inv_to_decl">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="seq_num" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="inv_id" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="add_inv_to_declResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="add_inv_to_declResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="save_invoice_request">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="inv_id" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="bayer_un_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="seller_un_id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="overhead_no" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="dt" type="s:dateTime" />
+            <s:element minOccurs="0" maxOccurs="1" name="notes" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="save_invoice_requestResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="save_invoice_requestResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="del_invoice_request">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="inv_id" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="bayer_un_id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="del_invoice_requestResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="del_invoice_requestResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_invoice_request">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="inv_id" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_invoice_requestResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="get_invoice_requestResult" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="bayer_un_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="seller_un_id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="overhead_no" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="dt" type="s:dateTime" />
+            <s:element minOccurs="0" maxOccurs="1" name="notes" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="acsept_invoice_request_status">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="id" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="seller_un_id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="acsept_invoice_request_statusResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="acsept_invoice_request_statusResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_requested_invoices">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="seller_un_id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_requested_invoicesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="get_requested_invoicesResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_invoice_requests">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="bayer_un_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_invoice_requestsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="get_invoice_requestsResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_seller_filter_count">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="un_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_seller_filter_countResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="get_seller_filter_countResult" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="st_0" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="st_1" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="st_4" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="st_5" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="st_6" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="st_2" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="st_3" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="st_7" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="st_8" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_buyer_filter_count">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="un_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_buyer_filter_countResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="get_buyer_filter_countResult" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="st_1" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="st_5" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="st_6" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="st_2" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="st_3" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="st_7" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="st_8" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_invoice_changes">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="st_date" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="end_date" type="s:dateTime" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_invoice_changesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="get_invoice_changesResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_invoice_id">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="f_series" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="f_number" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_invoice_idResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="get_invoice_idResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_decl_date">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="decl_num" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="un_id" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_decl_dateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="get_decl_dateResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_attachable_advance_invoices">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="seller_un_id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="buyer_tin" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="operation_date" type="s:dateTime" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_attachable_advance_invoicesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="get_attachable_advance_invoicesResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_attached_advance_invoices">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="invoice_id" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_attached_advance_invoicesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="get_attached_advance_invoicesResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="attach_advance_invoice">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="invoice_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="advance_invoice_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="advance_invoice_drg_amount" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="seller_un_id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="buyer_tin" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="Response">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Status" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Message" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="attach_advance_invoiceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="attach_advance_invoiceResult" type="tns:Response" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="detach_advance_invoices">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="invoice_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="advance_invoices" nillable="true" type="tns:AdvanceInvoiceIds" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="AdvanceInvoiceIds">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="id" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="detach_advance_invoicesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="detach_advance_invoicesResult" type="tns:Response" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="update_advance_invoice">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="invoice_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="advance_invoice_id" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="advance_invoice_drg_amount" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="update_advance_invoiceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="update_advance_invoiceResult" type="tns:Response" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="change_barter_status">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="inv_id" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="status" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="user_id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="su" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="change_barter_statusResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="change_barter_statusResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="what_is_my_ipSoapIn">
+    <wsdl:part name="parameters" element="tns:what_is_my_ip" />
+  </wsdl:message>
+  <wsdl:message name="what_is_my_ipSoapOut">
+    <wsdl:part name="parameters" element="tns:what_is_my_ipResponse" />
+  </wsdl:message>
+  <wsdl:message name="create_ser_userSoapIn">
+    <wsdl:part name="parameters" element="tns:create_ser_user" />
+  </wsdl:message>
+  <wsdl:message name="create_ser_userSoapOut">
+    <wsdl:part name="parameters" element="tns:create_ser_userResponse" />
+  </wsdl:message>
+  <wsdl:message name="update_ser_userSoapIn">
+    <wsdl:part name="parameters" element="tns:update_ser_user" />
+  </wsdl:message>
+  <wsdl:message name="update_ser_userSoapOut">
+    <wsdl:part name="parameters" element="tns:update_ser_userResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_ser_usersSoapIn">
+    <wsdl:part name="parameters" element="tns:get_ser_users" />
+  </wsdl:message>
+  <wsdl:message name="get_ser_usersSoapOut">
+    <wsdl:part name="parameters" element="tns:get_ser_usersResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_ser_users_notesSoapIn">
+    <wsdl:part name="parameters" element="tns:get_ser_users_notes" />
+  </wsdl:message>
+  <wsdl:message name="get_ser_users_notesSoapOut">
+    <wsdl:part name="parameters" element="tns:get_ser_users_notesResponse" />
+  </wsdl:message>
+  <wsdl:message name="chekSoapIn">
+    <wsdl:part name="parameters" element="tns:chek" />
+  </wsdl:message>
+  <wsdl:message name="chekSoapOut">
+    <wsdl:part name="parameters" element="tns:chekResponse" />
+  </wsdl:message>
+  <wsdl:message name="save_invoiceSoapIn">
+    <wsdl:part name="parameters" element="tns:save_invoice" />
+  </wsdl:message>
+  <wsdl:message name="save_invoiceSoapOut">
+    <wsdl:part name="parameters" element="tns:save_invoiceResponse" />
+  </wsdl:message>
+  <wsdl:message name="save_invoice_nSoapIn">
+    <wsdl:part name="parameters" element="tns:save_invoice_n" />
+  </wsdl:message>
+  <wsdl:message name="save_invoice_nSoapOut">
+    <wsdl:part name="parameters" element="tns:save_invoice_nResponse" />
+  </wsdl:message>
+  <wsdl:message name="save_invoice_aSoapIn">
+    <wsdl:part name="parameters" element="tns:save_invoice_a" />
+  </wsdl:message>
+  <wsdl:message name="save_invoice_aSoapOut">
+    <wsdl:part name="parameters" element="tns:save_invoice_aResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_invoiceSoapIn">
+    <wsdl:part name="parameters" element="tns:get_invoice" />
+  </wsdl:message>
+  <wsdl:message name="get_invoiceSoapOut">
+    <wsdl:part name="parameters" element="tns:get_invoiceResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_invoice_descSoapIn">
+    <wsdl:part name="parameters" element="tns:get_invoice_desc" />
+  </wsdl:message>
+  <wsdl:message name="get_invoice_descSoapOut">
+    <wsdl:part name="parameters" element="tns:get_invoice_descResponse" />
+  </wsdl:message>
+  <wsdl:message name="save_invoice_descSoapIn">
+    <wsdl:part name="parameters" element="tns:save_invoice_desc" />
+  </wsdl:message>
+  <wsdl:message name="save_invoice_descSoapOut">
+    <wsdl:part name="parameters" element="tns:save_invoice_descResponse" />
+  </wsdl:message>
+  <wsdl:message name="delete_invoice_descSoapIn">
+    <wsdl:part name="parameters" element="tns:delete_invoice_desc" />
+  </wsdl:message>
+  <wsdl:message name="delete_invoice_descSoapOut">
+    <wsdl:part name="parameters" element="tns:delete_invoice_descResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_ntos_invoices_inv_nosSoapIn">
+    <wsdl:part name="parameters" element="tns:get_ntos_invoices_inv_nos" />
+  </wsdl:message>
+  <wsdl:message name="get_ntos_invoices_inv_nosSoapOut">
+    <wsdl:part name="parameters" element="tns:get_ntos_invoices_inv_nosResponse" />
+  </wsdl:message>
+  <wsdl:message name="save_ntos_invoices_inv_nosSoapIn">
+    <wsdl:part name="parameters" element="tns:save_ntos_invoices_inv_nos" />
+  </wsdl:message>
+  <wsdl:message name="save_ntos_invoices_inv_nosSoapOut">
+    <wsdl:part name="parameters" element="tns:save_ntos_invoices_inv_nosResponse" />
+  </wsdl:message>
+  <wsdl:message name="delete_ntos_invoices_inv_nosSoapIn">
+    <wsdl:part name="parameters" element="tns:delete_ntos_invoices_inv_nos" />
+  </wsdl:message>
+  <wsdl:message name="delete_ntos_invoices_inv_nosSoapOut">
+    <wsdl:part name="parameters" element="tns:delete_ntos_invoices_inv_nosResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_un_id_from_tinSoapIn">
+    <wsdl:part name="parameters" element="tns:get_un_id_from_tin" />
+  </wsdl:message>
+  <wsdl:message name="get_un_id_from_tinSoapOut">
+    <wsdl:part name="parameters" element="tns:get_un_id_from_tinResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_tin_from_un_idSoapIn">
+    <wsdl:part name="parameters" element="tns:get_tin_from_un_id" />
+  </wsdl:message>
+  <wsdl:message name="get_tin_from_un_idSoapOut">
+    <wsdl:part name="parameters" element="tns:get_tin_from_un_idResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_org_name_from_un_idSoapIn">
+    <wsdl:part name="parameters" element="tns:get_org_name_from_un_id" />
+  </wsdl:message>
+  <wsdl:message name="get_org_name_from_un_idSoapOut">
+    <wsdl:part name="parameters" element="tns:get_org_name_from_un_idResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_un_id_from_user_idSoapIn">
+    <wsdl:part name="parameters" element="tns:get_un_id_from_user_id" />
+  </wsdl:message>
+  <wsdl:message name="get_un_id_from_user_idSoapOut">
+    <wsdl:part name="parameters" element="tns:get_un_id_from_user_idResponse" />
+  </wsdl:message>
+  <wsdl:message name="change_invoice_statusSoapIn">
+    <wsdl:part name="parameters" element="tns:change_invoice_status" />
+  </wsdl:message>
+  <wsdl:message name="change_invoice_statusSoapOut">
+    <wsdl:part name="parameters" element="tns:change_invoice_statusResponse" />
+  </wsdl:message>
+  <wsdl:message name="acsept_invoice_statusSoapIn">
+    <wsdl:part name="parameters" element="tns:acsept_invoice_status" />
+  </wsdl:message>
+  <wsdl:message name="acsept_invoice_statusSoapOut">
+    <wsdl:part name="parameters" element="tns:acsept_invoice_statusResponse" />
+  </wsdl:message>
+  <wsdl:message name="ref_invoice_statusSoapIn">
+    <wsdl:part name="parameters" element="tns:ref_invoice_status" />
+  </wsdl:message>
+  <wsdl:message name="ref_invoice_statusSoapOut">
+    <wsdl:part name="parameters" element="tns:ref_invoice_statusResponse" />
+  </wsdl:message>
+  <wsdl:message name="k_invoiceSoapIn">
+    <wsdl:part name="parameters" element="tns:k_invoice" />
+  </wsdl:message>
+  <wsdl:message name="k_invoiceSoapOut">
+    <wsdl:part name="parameters" element="tns:k_invoiceResponse" />
+  </wsdl:message>
+  <wsdl:message name="g_invoiceSoapIn">
+    <wsdl:part name="parameters" element="tns:g_invoice" />
+  </wsdl:message>
+  <wsdl:message name="g_invoiceSoapOut">
+    <wsdl:part name="parameters" element="tns:g_invoiceResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_makoreqtirebeliSoapIn">
+    <wsdl:part name="parameters" element="tns:get_makoreqtirebeli" />
+  </wsdl:message>
+  <wsdl:message name="get_makoreqtirebeliSoapOut">
+    <wsdl:part name="parameters" element="tns:get_makoreqtirebeliResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_seller_invoicesSoapIn">
+    <wsdl:part name="parameters" element="tns:get_seller_invoices" />
+  </wsdl:message>
+  <wsdl:message name="get_seller_invoicesSoapOut">
+    <wsdl:part name="parameters" element="tns:get_seller_invoicesResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_buyer_invoicesSoapIn">
+    <wsdl:part name="parameters" element="tns:get_buyer_invoices" />
+  </wsdl:message>
+  <wsdl:message name="get_buyer_invoicesSoapOut">
+    <wsdl:part name="parameters" element="tns:get_buyer_invoicesResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_user_invoicesSoapIn">
+    <wsdl:part name="parameters" element="tns:get_user_invoices" />
+  </wsdl:message>
+  <wsdl:message name="get_user_invoicesSoapOut">
+    <wsdl:part name="parameters" element="tns:get_user_invoicesResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_invoice_numbersSoapIn">
+    <wsdl:part name="parameters" element="tns:get_invoice_numbers" />
+  </wsdl:message>
+  <wsdl:message name="get_invoice_numbersSoapOut">
+    <wsdl:part name="parameters" element="tns:get_invoice_numbersResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_invoice_tinsSoapIn">
+    <wsdl:part name="parameters" element="tns:get_invoice_tins" />
+  </wsdl:message>
+  <wsdl:message name="get_invoice_tinsSoapOut">
+    <wsdl:part name="parameters" element="tns:get_invoice_tinsResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_invoice_dSoapIn">
+    <wsdl:part name="parameters" element="tns:get_invoice_d" />
+  </wsdl:message>
+  <wsdl:message name="get_invoice_dSoapOut">
+    <wsdl:part name="parameters" element="tns:get_invoice_dResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_seller_invoices_rSoapIn">
+    <wsdl:part name="parameters" element="tns:get_seller_invoices_r" />
+  </wsdl:message>
+  <wsdl:message name="get_seller_invoices_rSoapOut">
+    <wsdl:part name="parameters" element="tns:get_seller_invoices_rResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_buyer_invoices_rSoapIn">
+    <wsdl:part name="parameters" element="tns:get_buyer_invoices_r" />
+  </wsdl:message>
+  <wsdl:message name="get_buyer_invoices_rSoapOut">
+    <wsdl:part name="parameters" element="tns:get_buyer_invoices_rResponse" />
+  </wsdl:message>
+  <wsdl:message name="print_invoicesSoapIn">
+    <wsdl:part name="parameters" element="tns:print_invoices" />
+  </wsdl:message>
+  <wsdl:message name="print_invoicesSoapOut">
+    <wsdl:part name="parameters" element="tns:print_invoicesResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_akcizSoapIn">
+    <wsdl:part name="parameters" element="tns:get_akciz" />
+  </wsdl:message>
+  <wsdl:message name="get_akcizSoapOut">
+    <wsdl:part name="parameters" element="tns:get_akcizResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_seq_numsSoapIn">
+    <wsdl:part name="parameters" element="tns:get_seq_nums" />
+  </wsdl:message>
+  <wsdl:message name="get_seq_numsSoapOut">
+    <wsdl:part name="parameters" element="tns:get_seq_numsResponse" />
+  </wsdl:message>
+  <wsdl:message name="add_inv_to_declSoapIn">
+    <wsdl:part name="parameters" element="tns:add_inv_to_decl" />
+  </wsdl:message>
+  <wsdl:message name="add_inv_to_declSoapOut">
+    <wsdl:part name="parameters" element="tns:add_inv_to_declResponse" />
+  </wsdl:message>
+  <wsdl:message name="save_invoice_requestSoapIn">
+    <wsdl:part name="parameters" element="tns:save_invoice_request" />
+  </wsdl:message>
+  <wsdl:message name="save_invoice_requestSoapOut">
+    <wsdl:part name="parameters" element="tns:save_invoice_requestResponse" />
+  </wsdl:message>
+  <wsdl:message name="del_invoice_requestSoapIn">
+    <wsdl:part name="parameters" element="tns:del_invoice_request" />
+  </wsdl:message>
+  <wsdl:message name="del_invoice_requestSoapOut">
+    <wsdl:part name="parameters" element="tns:del_invoice_requestResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_invoice_requestSoapIn">
+    <wsdl:part name="parameters" element="tns:get_invoice_request" />
+  </wsdl:message>
+  <wsdl:message name="get_invoice_requestSoapOut">
+    <wsdl:part name="parameters" element="tns:get_invoice_requestResponse" />
+  </wsdl:message>
+  <wsdl:message name="acsept_invoice_request_statusSoapIn">
+    <wsdl:part name="parameters" element="tns:acsept_invoice_request_status" />
+  </wsdl:message>
+  <wsdl:message name="acsept_invoice_request_statusSoapOut">
+    <wsdl:part name="parameters" element="tns:acsept_invoice_request_statusResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_requested_invoicesSoapIn">
+    <wsdl:part name="parameters" element="tns:get_requested_invoices" />
+  </wsdl:message>
+  <wsdl:message name="get_requested_invoicesSoapOut">
+    <wsdl:part name="parameters" element="tns:get_requested_invoicesResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_invoice_requestsSoapIn">
+    <wsdl:part name="parameters" element="tns:get_invoice_requests" />
+  </wsdl:message>
+  <wsdl:message name="get_invoice_requestsSoapOut">
+    <wsdl:part name="parameters" element="tns:get_invoice_requestsResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_seller_filter_countSoapIn">
+    <wsdl:part name="parameters" element="tns:get_seller_filter_count" />
+  </wsdl:message>
+  <wsdl:message name="get_seller_filter_countSoapOut">
+    <wsdl:part name="parameters" element="tns:get_seller_filter_countResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_buyer_filter_countSoapIn">
+    <wsdl:part name="parameters" element="tns:get_buyer_filter_count" />
+  </wsdl:message>
+  <wsdl:message name="get_buyer_filter_countSoapOut">
+    <wsdl:part name="parameters" element="tns:get_buyer_filter_countResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_invoice_changesSoapIn">
+    <wsdl:part name="parameters" element="tns:get_invoice_changes" />
+  </wsdl:message>
+  <wsdl:message name="get_invoice_changesSoapOut">
+    <wsdl:part name="parameters" element="tns:get_invoice_changesResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_invoice_idSoapIn">
+    <wsdl:part name="parameters" element="tns:get_invoice_id" />
+  </wsdl:message>
+  <wsdl:message name="get_invoice_idSoapOut">
+    <wsdl:part name="parameters" element="tns:get_invoice_idResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_decl_dateSoapIn">
+    <wsdl:part name="parameters" element="tns:get_decl_date" />
+  </wsdl:message>
+  <wsdl:message name="get_decl_dateSoapOut">
+    <wsdl:part name="parameters" element="tns:get_decl_dateResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_attachable_advance_invoicesSoapIn">
+    <wsdl:part name="parameters" element="tns:get_attachable_advance_invoices" />
+  </wsdl:message>
+  <wsdl:message name="get_attachable_advance_invoicesSoapOut">
+    <wsdl:part name="parameters" element="tns:get_attachable_advance_invoicesResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_attached_advance_invoicesSoapIn">
+    <wsdl:part name="parameters" element="tns:get_attached_advance_invoices" />
+  </wsdl:message>
+  <wsdl:message name="get_attached_advance_invoicesSoapOut">
+    <wsdl:part name="parameters" element="tns:get_attached_advance_invoicesResponse" />
+  </wsdl:message>
+  <wsdl:message name="attach_advance_invoiceSoapIn">
+    <wsdl:part name="parameters" element="tns:attach_advance_invoice" />
+  </wsdl:message>
+  <wsdl:message name="attach_advance_invoiceSoapOut">
+    <wsdl:part name="parameters" element="tns:attach_advance_invoiceResponse" />
+  </wsdl:message>
+  <wsdl:message name="detach_advance_invoicesSoapIn">
+    <wsdl:part name="parameters" element="tns:detach_advance_invoices" />
+  </wsdl:message>
+  <wsdl:message name="detach_advance_invoicesSoapOut">
+    <wsdl:part name="parameters" element="tns:detach_advance_invoicesResponse" />
+  </wsdl:message>
+  <wsdl:message name="update_advance_invoiceSoapIn">
+    <wsdl:part name="parameters" element="tns:update_advance_invoice" />
+  </wsdl:message>
+  <wsdl:message name="update_advance_invoiceSoapOut">
+    <wsdl:part name="parameters" element="tns:update_advance_invoiceResponse" />
+  </wsdl:message>
+  <wsdl:message name="change_barter_statusSoapIn">
+    <wsdl:part name="parameters" element="tns:change_barter_status" />
+  </wsdl:message>
+  <wsdl:message name="change_barter_statusSoapOut">
+    <wsdl:part name="parameters" element="tns:change_barter_statusResponse" />
+  </wsdl:message>
+  <wsdl:portType name="NtosServiceSoap">
+    <wsdl:operation name="what_is_my_ip">
+      <wsdl:input message="tns:what_is_my_ipSoapIn" />
+      <wsdl:output message="tns:what_is_my_ipSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="create_ser_user">
+      <wsdl:input message="tns:create_ser_userSoapIn" />
+      <wsdl:output message="tns:create_ser_userSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="update_ser_user">
+      <wsdl:input message="tns:update_ser_userSoapIn" />
+      <wsdl:output message="tns:update_ser_userSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_ser_users">
+      <wsdl:input message="tns:get_ser_usersSoapIn" />
+      <wsdl:output message="tns:get_ser_usersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_ser_users_notes">
+      <wsdl:input message="tns:get_ser_users_notesSoapIn" />
+      <wsdl:output message="tns:get_ser_users_notesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="chek">
+      <wsdl:input message="tns:chekSoapIn" />
+      <wsdl:output message="tns:chekSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="save_invoice">
+      <wsdl:input message="tns:save_invoiceSoapIn" />
+      <wsdl:output message="tns:save_invoiceSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="save_invoice_n">
+      <wsdl:input message="tns:save_invoice_nSoapIn" />
+      <wsdl:output message="tns:save_invoice_nSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="save_invoice_a">
+      <wsdl:input message="tns:save_invoice_aSoapIn" />
+      <wsdl:output message="tns:save_invoice_aSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_invoice">
+      <wsdl:input message="tns:get_invoiceSoapIn" />
+      <wsdl:output message="tns:get_invoiceSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_invoice_desc">
+      <wsdl:input message="tns:get_invoice_descSoapIn" />
+      <wsdl:output message="tns:get_invoice_descSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="save_invoice_desc">
+      <wsdl:input message="tns:save_invoice_descSoapIn" />
+      <wsdl:output message="tns:save_invoice_descSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="delete_invoice_desc">
+      <wsdl:input message="tns:delete_invoice_descSoapIn" />
+      <wsdl:output message="tns:delete_invoice_descSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_ntos_invoices_inv_nos">
+      <wsdl:input message="tns:get_ntos_invoices_inv_nosSoapIn" />
+      <wsdl:output message="tns:get_ntos_invoices_inv_nosSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="save_ntos_invoices_inv_nos">
+      <wsdl:input message="tns:save_ntos_invoices_inv_nosSoapIn" />
+      <wsdl:output message="tns:save_ntos_invoices_inv_nosSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="delete_ntos_invoices_inv_nos">
+      <wsdl:input message="tns:delete_ntos_invoices_inv_nosSoapIn" />
+      <wsdl:output message="tns:delete_ntos_invoices_inv_nosSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_un_id_from_tin">
+      <wsdl:input message="tns:get_un_id_from_tinSoapIn" />
+      <wsdl:output message="tns:get_un_id_from_tinSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_tin_from_un_id">
+      <wsdl:input message="tns:get_tin_from_un_idSoapIn" />
+      <wsdl:output message="tns:get_tin_from_un_idSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_org_name_from_un_id">
+      <wsdl:input message="tns:get_org_name_from_un_idSoapIn" />
+      <wsdl:output message="tns:get_org_name_from_un_idSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_un_id_from_user_id">
+      <wsdl:input message="tns:get_un_id_from_user_idSoapIn" />
+      <wsdl:output message="tns:get_un_id_from_user_idSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="change_invoice_status">
+      <wsdl:input message="tns:change_invoice_statusSoapIn" />
+      <wsdl:output message="tns:change_invoice_statusSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="acsept_invoice_status">
+      <wsdl:input message="tns:acsept_invoice_statusSoapIn" />
+      <wsdl:output message="tns:acsept_invoice_statusSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ref_invoice_status">
+      <wsdl:input message="tns:ref_invoice_statusSoapIn" />
+      <wsdl:output message="tns:ref_invoice_statusSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="k_invoice">
+      <wsdl:input message="tns:k_invoiceSoapIn" />
+      <wsdl:output message="tns:k_invoiceSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="g_invoice">
+      <wsdl:input message="tns:g_invoiceSoapIn" />
+      <wsdl:output message="tns:g_invoiceSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_makoreqtirebeli">
+      <wsdl:input message="tns:get_makoreqtirebeliSoapIn" />
+      <wsdl:output message="tns:get_makoreqtirebeliSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_seller_invoices">
+      <wsdl:input message="tns:get_seller_invoicesSoapIn" />
+      <wsdl:output message="tns:get_seller_invoicesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_buyer_invoices">
+      <wsdl:input message="tns:get_buyer_invoicesSoapIn" />
+      <wsdl:output message="tns:get_buyer_invoicesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_user_invoices">
+      <wsdl:input message="tns:get_user_invoicesSoapIn" />
+      <wsdl:output message="tns:get_user_invoicesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_invoice_numbers">
+      <wsdl:input message="tns:get_invoice_numbersSoapIn" />
+      <wsdl:output message="tns:get_invoice_numbersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_invoice_tins">
+      <wsdl:input message="tns:get_invoice_tinsSoapIn" />
+      <wsdl:output message="tns:get_invoice_tinsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_invoice_d">
+      <wsdl:input message="tns:get_invoice_dSoapIn" />
+      <wsdl:output message="tns:get_invoice_dSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_seller_invoices_r">
+      <wsdl:input message="tns:get_seller_invoices_rSoapIn" />
+      <wsdl:output message="tns:get_seller_invoices_rSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_buyer_invoices_r">
+      <wsdl:input message="tns:get_buyer_invoices_rSoapIn" />
+      <wsdl:output message="tns:get_buyer_invoices_rSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="print_invoices">
+      <wsdl:input message="tns:print_invoicesSoapIn" />
+      <wsdl:output message="tns:print_invoicesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_akciz">
+      <wsdl:input message="tns:get_akcizSoapIn" />
+      <wsdl:output message="tns:get_akcizSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_seq_nums">
+      <wsdl:input message="tns:get_seq_numsSoapIn" />
+      <wsdl:output message="tns:get_seq_numsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="add_inv_to_decl">
+      <wsdl:input message="tns:add_inv_to_declSoapIn" />
+      <wsdl:output message="tns:add_inv_to_declSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="save_invoice_request">
+      <wsdl:input message="tns:save_invoice_requestSoapIn" />
+      <wsdl:output message="tns:save_invoice_requestSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="del_invoice_request">
+      <wsdl:input message="tns:del_invoice_requestSoapIn" />
+      <wsdl:output message="tns:del_invoice_requestSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_invoice_request">
+      <wsdl:input message="tns:get_invoice_requestSoapIn" />
+      <wsdl:output message="tns:get_invoice_requestSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="acsept_invoice_request_status">
+      <wsdl:input message="tns:acsept_invoice_request_statusSoapIn" />
+      <wsdl:output message="tns:acsept_invoice_request_statusSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_requested_invoices">
+      <wsdl:input message="tns:get_requested_invoicesSoapIn" />
+      <wsdl:output message="tns:get_requested_invoicesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_invoice_requests">
+      <wsdl:input message="tns:get_invoice_requestsSoapIn" />
+      <wsdl:output message="tns:get_invoice_requestsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_seller_filter_count">
+      <wsdl:input message="tns:get_seller_filter_countSoapIn" />
+      <wsdl:output message="tns:get_seller_filter_countSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_buyer_filter_count">
+      <wsdl:input message="tns:get_buyer_filter_countSoapIn" />
+      <wsdl:output message="tns:get_buyer_filter_countSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_invoice_changes">
+      <wsdl:input message="tns:get_invoice_changesSoapIn" />
+      <wsdl:output message="tns:get_invoice_changesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_invoice_id">
+      <wsdl:input message="tns:get_invoice_idSoapIn" />
+      <wsdl:output message="tns:get_invoice_idSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_decl_date">
+      <wsdl:input message="tns:get_decl_dateSoapIn" />
+      <wsdl:output message="tns:get_decl_dateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_attachable_advance_invoices">
+      <wsdl:input message="tns:get_attachable_advance_invoicesSoapIn" />
+      <wsdl:output message="tns:get_attachable_advance_invoicesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_attached_advance_invoices">
+      <wsdl:input message="tns:get_attached_advance_invoicesSoapIn" />
+      <wsdl:output message="tns:get_attached_advance_invoicesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="attach_advance_invoice">
+      <wsdl:input message="tns:attach_advance_invoiceSoapIn" />
+      <wsdl:output message="tns:attach_advance_invoiceSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="detach_advance_invoices">
+      <wsdl:input message="tns:detach_advance_invoicesSoapIn" />
+      <wsdl:output message="tns:detach_advance_invoicesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="update_advance_invoice">
+      <wsdl:input message="tns:update_advance_invoiceSoapIn" />
+      <wsdl:output message="tns:update_advance_invoiceSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="change_barter_status">
+      <wsdl:input message="tns:change_barter_statusSoapIn" />
+      <wsdl:output message="tns:change_barter_statusSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="NtosServiceSoap" type="tns:NtosServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="what_is_my_ip">
+      <soap:operation soapAction="http://tempuri.org/what_is_my_ip" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="create_ser_user">
+      <soap:operation soapAction="http://tempuri.org/create_ser_user" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="update_ser_user">
+      <soap:operation soapAction="http://tempuri.org/update_ser_user" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_ser_users">
+      <soap:operation soapAction="http://tempuri.org/get_ser_users" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_ser_users_notes">
+      <soap:operation soapAction="http://tempuri.org/get_ser_users_notes" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="chek">
+      <soap:operation soapAction="http://tempuri.org/chek" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="save_invoice">
+      <soap:operation soapAction="http://tempuri.org/save_invoice" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="save_invoice_n">
+      <soap:operation soapAction="http://tempuri.org/save_invoice_n" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="save_invoice_a">
+      <soap:operation soapAction="http://tempuri.org/save_invoice_a" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_invoice">
+      <soap:operation soapAction="http://tempuri.org/get_invoice" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_invoice_desc">
+      <soap:operation soapAction="http://tempuri.org/get_invoice_desc" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="save_invoice_desc">
+      <soap:operation soapAction="http://tempuri.org/save_invoice_desc" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="delete_invoice_desc">
+      <soap:operation soapAction="http://tempuri.org/delete_invoice_desc" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_ntos_invoices_inv_nos">
+      <soap:operation soapAction="http://tempuri.org/get_ntos_invoices_inv_nos" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="save_ntos_invoices_inv_nos">
+      <soap:operation soapAction="http://tempuri.org/save_ntos_invoices_inv_nos" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="delete_ntos_invoices_inv_nos">
+      <soap:operation soapAction="http://tempuri.org/delete_ntos_invoices_inv_nos" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_un_id_from_tin">
+      <soap:operation soapAction="http://tempuri.org/get_un_id_from_tin" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_tin_from_un_id">
+      <soap:operation soapAction="http://tempuri.org/get_tin_from_un_id" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_org_name_from_un_id">
+      <soap:operation soapAction="http://tempuri.org/get_org_name_from_un_id" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_un_id_from_user_id">
+      <soap:operation soapAction="http://tempuri.org/get_un_id_from_user_id" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="change_invoice_status">
+      <soap:operation soapAction="http://tempuri.org/change_invoice_status" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="acsept_invoice_status">
+      <soap:operation soapAction="http://tempuri.org/acsept_invoice_status" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ref_invoice_status">
+      <soap:operation soapAction="http://tempuri.org/ref_invoice_status" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="k_invoice">
+      <soap:operation soapAction="http://tempuri.org/k_invoice" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="g_invoice">
+      <soap:operation soapAction="http://tempuri.org/g_invoice" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_makoreqtirebeli">
+      <soap:operation soapAction="http://tempuri.org/get_makoreqtirebeli" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_seller_invoices">
+      <soap:operation soapAction="http://tempuri.org/get_seller_invoices" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_buyer_invoices">
+      <soap:operation soapAction="http://tempuri.org/get_buyer_invoices" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_user_invoices">
+      <soap:operation soapAction="http://tempuri.org/get_user_invoices" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_invoice_numbers">
+      <soap:operation soapAction="http://tempuri.org/get_invoice_numbers" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_invoice_tins">
+      <soap:operation soapAction="http://tempuri.org/get_invoice_tins" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_invoice_d">
+      <soap:operation soapAction="http://tempuri.org/get_invoice_d" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_seller_invoices_r">
+      <soap:operation soapAction="http://tempuri.org/get_seller_invoices_r" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_buyer_invoices_r">
+      <soap:operation soapAction="http://tempuri.org/get_buyer_invoices_r" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="print_invoices">
+      <soap:operation soapAction="http://tempuri.org/print_invoices" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_akciz">
+      <soap:operation soapAction="http://tempuri.org/get_akciz" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_seq_nums">
+      <soap:operation soapAction="http://tempuri.org/get_seq_nums" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="add_inv_to_decl">
+      <soap:operation soapAction="http://tempuri.org/add_inv_to_decl" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="save_invoice_request">
+      <soap:operation soapAction="http://tempuri.org/save_invoice_request" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="del_invoice_request">
+      <soap:operation soapAction="http://tempuri.org/del_invoice_request" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_invoice_request">
+      <soap:operation soapAction="http://tempuri.org/get_invoice_request" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="acsept_invoice_request_status">
+      <soap:operation soapAction="http://tempuri.org/acsept_invoice_request_status" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_requested_invoices">
+      <soap:operation soapAction="http://tempuri.org/get_requested_invoices" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_invoice_requests">
+      <soap:operation soapAction="http://tempuri.org/get_invoice_requests" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_seller_filter_count">
+      <soap:operation soapAction="http://tempuri.org/get_seller_filter_count" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_buyer_filter_count">
+      <soap:operation soapAction="http://tempuri.org/get_buyer_filter_count" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_invoice_changes">
+      <soap:operation soapAction="http://tempuri.org/get_invoice_changes" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_invoice_id">
+      <soap:operation soapAction="http://tempuri.org/get_invoice_id" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_decl_date">
+      <soap:operation soapAction="http://tempuri.org/get_decl_date" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_attachable_advance_invoices">
+      <soap:operation soapAction="http://tempuri.org/get_attachable_advance_invoices" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_attached_advance_invoices">
+      <soap:operation soapAction="http://tempuri.org/get_attached_advance_invoices" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="attach_advance_invoice">
+      <soap:operation soapAction="http://tempuri.org/attach_advance_invoice" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="detach_advance_invoices">
+      <soap:operation soapAction="http://tempuri.org/detach_advance_invoices" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="update_advance_invoice">
+      <soap:operation soapAction="http://tempuri.org/update_advance_invoice" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="change_barter_status">
+      <soap:operation soapAction="http://tempuri.org/change_barter_status" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="NtosServiceSoap12" type="tns:NtosServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="what_is_my_ip">
+      <soap12:operation soapAction="http://tempuri.org/what_is_my_ip" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="create_ser_user">
+      <soap12:operation soapAction="http://tempuri.org/create_ser_user" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="update_ser_user">
+      <soap12:operation soapAction="http://tempuri.org/update_ser_user" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_ser_users">
+      <soap12:operation soapAction="http://tempuri.org/get_ser_users" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_ser_users_notes">
+      <soap12:operation soapAction="http://tempuri.org/get_ser_users_notes" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="chek">
+      <soap12:operation soapAction="http://tempuri.org/chek" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="save_invoice">
+      <soap12:operation soapAction="http://tempuri.org/save_invoice" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="save_invoice_n">
+      <soap12:operation soapAction="http://tempuri.org/save_invoice_n" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="save_invoice_a">
+      <soap12:operation soapAction="http://tempuri.org/save_invoice_a" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_invoice">
+      <soap12:operation soapAction="http://tempuri.org/get_invoice" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_invoice_desc">
+      <soap12:operation soapAction="http://tempuri.org/get_invoice_desc" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="save_invoice_desc">
+      <soap12:operation soapAction="http://tempuri.org/save_invoice_desc" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="delete_invoice_desc">
+      <soap12:operation soapAction="http://tempuri.org/delete_invoice_desc" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_ntos_invoices_inv_nos">
+      <soap12:operation soapAction="http://tempuri.org/get_ntos_invoices_inv_nos" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="save_ntos_invoices_inv_nos">
+      <soap12:operation soapAction="http://tempuri.org/save_ntos_invoices_inv_nos" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="delete_ntos_invoices_inv_nos">
+      <soap12:operation soapAction="http://tempuri.org/delete_ntos_invoices_inv_nos" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_un_id_from_tin">
+      <soap12:operation soapAction="http://tempuri.org/get_un_id_from_tin" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_tin_from_un_id">
+      <soap12:operation soapAction="http://tempuri.org/get_tin_from_un_id" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_org_name_from_un_id">
+      <soap12:operation soapAction="http://tempuri.org/get_org_name_from_un_id" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_un_id_from_user_id">
+      <soap12:operation soapAction="http://tempuri.org/get_un_id_from_user_id" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="change_invoice_status">
+      <soap12:operation soapAction="http://tempuri.org/change_invoice_status" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="acsept_invoice_status">
+      <soap12:operation soapAction="http://tempuri.org/acsept_invoice_status" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ref_invoice_status">
+      <soap12:operation soapAction="http://tempuri.org/ref_invoice_status" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="k_invoice">
+      <soap12:operation soapAction="http://tempuri.org/k_invoice" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="g_invoice">
+      <soap12:operation soapAction="http://tempuri.org/g_invoice" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_makoreqtirebeli">
+      <soap12:operation soapAction="http://tempuri.org/get_makoreqtirebeli" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_seller_invoices">
+      <soap12:operation soapAction="http://tempuri.org/get_seller_invoices" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_buyer_invoices">
+      <soap12:operation soapAction="http://tempuri.org/get_buyer_invoices" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_user_invoices">
+      <soap12:operation soapAction="http://tempuri.org/get_user_invoices" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_invoice_numbers">
+      <soap12:operation soapAction="http://tempuri.org/get_invoice_numbers" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_invoice_tins">
+      <soap12:operation soapAction="http://tempuri.org/get_invoice_tins" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_invoice_d">
+      <soap12:operation soapAction="http://tempuri.org/get_invoice_d" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_seller_invoices_r">
+      <soap12:operation soapAction="http://tempuri.org/get_seller_invoices_r" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_buyer_invoices_r">
+      <soap12:operation soapAction="http://tempuri.org/get_buyer_invoices_r" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="print_invoices">
+      <soap12:operation soapAction="http://tempuri.org/print_invoices" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_akciz">
+      <soap12:operation soapAction="http://tempuri.org/get_akciz" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_seq_nums">
+      <soap12:operation soapAction="http://tempuri.org/get_seq_nums" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="add_inv_to_decl">
+      <soap12:operation soapAction="http://tempuri.org/add_inv_to_decl" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="save_invoice_request">
+      <soap12:operation soapAction="http://tempuri.org/save_invoice_request" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="del_invoice_request">
+      <soap12:operation soapAction="http://tempuri.org/del_invoice_request" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_invoice_request">
+      <soap12:operation soapAction="http://tempuri.org/get_invoice_request" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="acsept_invoice_request_status">
+      <soap12:operation soapAction="http://tempuri.org/acsept_invoice_request_status" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_requested_invoices">
+      <soap12:operation soapAction="http://tempuri.org/get_requested_invoices" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_invoice_requests">
+      <soap12:operation soapAction="http://tempuri.org/get_invoice_requests" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_seller_filter_count">
+      <soap12:operation soapAction="http://tempuri.org/get_seller_filter_count" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_buyer_filter_count">
+      <soap12:operation soapAction="http://tempuri.org/get_buyer_filter_count" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_invoice_changes">
+      <soap12:operation soapAction="http://tempuri.org/get_invoice_changes" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_invoice_id">
+      <soap12:operation soapAction="http://tempuri.org/get_invoice_id" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_decl_date">
+      <soap12:operation soapAction="http://tempuri.org/get_decl_date" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_attachable_advance_invoices">
+      <soap12:operation soapAction="http://tempuri.org/get_attachable_advance_invoices" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_attached_advance_invoices">
+      <soap12:operation soapAction="http://tempuri.org/get_attached_advance_invoices" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="attach_advance_invoice">
+      <soap12:operation soapAction="http://tempuri.org/attach_advance_invoice" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="detach_advance_invoices">
+      <soap12:operation soapAction="http://tempuri.org/detach_advance_invoices" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="update_advance_invoice">
+      <soap12:operation soapAction="http://tempuri.org/update_advance_invoice" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="change_barter_status">
+      <soap12:operation soapAction="http://tempuri.org/change_barter_status" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="NtosService">
+    <wsdl:port name="NtosServiceSoap" binding="tns:NtosServiceSoap">
+      <soap:address location="https://www.revenue.mof.ge/ntosservice/ntosservice.asmx" />
+    </wsdl:port>
+    <wsdl:port name="NtosServiceSoap12" binding="tns:NtosServiceSoap12">
+      <soap12:address location="https://www.revenue.mof.ge/ntosservice/ntosservice.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
