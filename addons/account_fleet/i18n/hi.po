@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 17:36+0000\n"
-"PO-Revision-Date: 2026-09-28 13:58+0000\n"
+"PO-Revision-Date: 2026-10-22 10:28+0000\n"
 "Last-Translator: \"Ujjawal Pathak (pauj)\" <pauj@odoo.com>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s19-4/"
 "account_fleet/hi/>\n"
@@ -22,7 +22,6 @@ msgstr ""
 
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.report_invoice_document
-#, fuzzy
 msgid "1-ABC-123"
 msgstr "1-ABC-123"
 
@@ -36,10 +35,9 @@ msgid ""
 "Bill\">Service's Bill</span>"
 msgstr ""
 "<span class=\"o_stat_text text-success\" invisible=\"account_move_state != "
-"'posted'\" title=\"सर्विस बिल\">सर्विस बिल</span>\n"
-"                            <span class=\"o_stat_text text-warning\" "
-"invisible=\"account_move_state == 'posted'\" title=\"सर्विस बिल\">सर्विस बिल</"
-"span>"
+"'posted'\" title=\"Service's Bill\">सर्विस बिल</span>\\n  <span "
+"class=\"o_stat_text text-warning\" invisible=\"account_move_state == "
+"'posted'\" title=\"Service's Bill\">सर्विस बिल</span>"
 
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_log_services_view_form
@@ -48,6 +46,8 @@ msgid ""
 "                                <span class=\"o_stat_text\">Service's Bill</"
 "span>"
 msgstr ""
+"<span class=\"o_stat_value\">नया</span>\n"
+"<span class=\"o_stat_text\">सर्विस का बिल</span>"
 
 #. module: account_fleet
 #: model:ir.model,name:account_fleet.model_account_account
@@ -86,6 +86,8 @@ msgid ""
 "Check this box if a vehicle has to be linked to the account, when creating a "
 "bill for an expense or when creating an asset."
 msgstr ""
+"अगर किसी खर्च के लिए बिल बनाते समय या एसेट बनाते समय किसी व्हीकल को खाते से लिंक करना "
+"हो, तो इस बॉक्स को चेक करें।"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__amount
@@ -100,7 +102,7 @@ msgstr "ऑटोमैटिक एंट्रीज़ बनाएं"
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.account_move_view_tree
 msgid "Creation Date"
-msgstr "निर्माण दिनांक"
+msgstr "बनाने की तारीख"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_account_account__display_name
@@ -142,7 +144,7 @@ msgstr "व्हीकल की ज़रूरत है"
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_account_account__is_vehicle_account
 msgid "Requires vehicle"
-msgstr ""
+msgstr "व्हीकल की आवश्यकता है"
 
 #. module: account_fleet
 #. odoo-python
@@ -202,11 +204,12 @@ msgid ""
 "You cannot modify the amount of services linked to a journal item. Do it on "
 "the related accounting entry instead."
 msgstr ""
+"आप किसी जर्नल आइटम से जुड़ी सर्विस की राशि को बदल नहीं सकते. इसके बजाय संबंधित अकाउंटिंग "
+"एंट्री में बदलाव करें।"
 
 #. module: account_fleet
 #. odoo-python
 #: code:addons/account_fleet/models/account_move.py:0
-#, fuzzy
 msgid "account_move_line_id"
 msgstr "account_move_line_id"
 

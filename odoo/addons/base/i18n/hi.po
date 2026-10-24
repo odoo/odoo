@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 15:03+0000\n"
-"PO-Revision-Date: 2026-09-29 14:30+0000\n"
+"PO-Revision-Date: 2026-10-21 11:30+0000\n"
 "Last-Translator: \"Ujjawal Pathak (pauj)\" <pauj@odoo.com>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s19-4/base/"
 "hi/>\n"
@@ -8897,6 +8897,33 @@ msgid ""
 "Payment' wizard. An error message will appear if no valid mandate is\n"
 "available for generating a payment on the selected invoice.\n"
 msgstr ""
+"\n"
+"यह मॉड्यूल पेमेंट कलेक्ट करने के लिए बैंक को भेजने हेतु SEPA डायरेक्ट डेबिट (SDD) के अनुकूल XML "
+"फ़ाइलें \n"
+"(pain.008.001.02 स्पेसिफ़िकेशन के अनुरूप) जनरेट करने की \n"
+"सुविधा देता है.\n"
+"\n"
+"इस पेमेंट मेथड का इस्तेमाल करने के लिए, ग्राहक को सबसे पहले कंपनी को एक मैंडेट देना होगा, \n"
+"जिसमें डायरेक्ट डेबिट के इस्तेमाल की सहमति हो. इस सहमति को \n"
+"Odoo में 'customer mandate' के रूप में रिकॉर्ड करें.\n"
+"\n"
+"SDD फ़ाइल सही तरीके से जनरेट करने के लिए \n"
+"निम्नलिखित शर्तें पूरी करें:\n"
+"\n"
+"- अपनी कंपनी के अकाउंट में एक मान्य IBAN नंबर सेट करें\n"
+"- अपनी कंपनी के लिए एक क्रेडिटर आइडेंटिफ़ायर जोड़ें (इसे Settings - General Settings - "
+"Accounting सेक्शन में करें)\n"
+"- SDD पेमेंट पाने के लिए अपनी कंपनी में एक जर्नल तय करें (अकाउंटिंग मॉड्यूल की 'settings' में)"
+"\n"
+"- आप जिस भी ग्राहक के लिए पेमेंट जनरेट कर रहे हैं, उसका IBAN अकाउंट नंबर मान्य होना "
+"चाहिए.\n"
+"\n"
+"इनमें से कोई भी शर्त पूरी न होने पर Odoo आपको सूचित करेगा.\n"
+"\n"
+"ओपन इनवॉइस के लिए पेमेंट रजिस्टर करने हेतु, 'पेमेंट रजिस्ट करें' विज़र्ड में बैंक अकाउंट चुनकर \n"
+"'SEPA डायरेक्ट डेबिट' विकल्प का इस्तेमाल करें. अगर चुने गए इनवॉइस पर \n"
+"पेमेंट जनरेट करने के लिए कोई मान्य मैंडेट उपलब्ध नहीं है, \n"
+"तो एक एरर मैसेज दिखाई देगा."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jp_zengin
@@ -44674,12 +44701,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_whatsapp_calendar
 msgid "WhatsApp-Calendar"
-msgstr ""
+msgstr "Whatsapp-कैलेंडर"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_whatsapp_delivery
 msgid "WhatsApp-Delivery"
-msgstr ""
+msgstr "WhatsApp-डिलीवरी"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_whatsapp_pos

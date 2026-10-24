@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 15:03+0000\n"
-"PO-Revision-Date: 2026-10-15 04:19+0000\n"
+"PO-Revision-Date: 2026-10-23 10:25+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-4/base/"
 "ja/>\n"
@@ -12902,8 +12902,9 @@ msgid ""
 "RFQ from an approval purchase request.\n"
 msgstr ""
 "\n"
-"このモジュールは、承認ワークフローで購入承認要求からのRFQを生成出来るようにし"
-"ます\n"
+"本モジュールは、承認購買リクエストから見積依頼書(RFQ)を生成する機能を\n"
+"承認ワークフローに追加します。\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_attendance
@@ -14604,12 +14605,13 @@ msgid ""
 "creates next activities for the related approvers.\n"
 msgstr ""
 "\n"
-"モジュールは承認ワークフローを管理します\n"
+"本モジュールは承認ワークフローを管理します\n"
 "======================================\n"
-"モジュールはビジネスのような承認要求を管理します\n"
-"出張、不在、残業、借入品目、一般承認、調達、契約承認など。\n"
+"出張、休暇・不在、残業、備品貸出、一般的承認、\n"
+"調達、契約承認などの承認リクエストを管理します。\n"
 "\n"
-"承認タイプの設定に従って、要求は関連する承認者の次の活動を作成します。\n"
+"承認タイプリクエストは\n"
+"関連する承認者に対する次の活動を作成します。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_printing
@@ -20516,7 +20518,7 @@ msgstr "アポイントメントMicrosoftカレンダー"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_appointment_sms
 msgid "Appointment SMS"
-msgstr "予約SMS"
+msgstr "アポイントメントSMS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_appointment_full
@@ -20559,12 +20561,12 @@ msgstr "承認"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_approvals_purchase
 msgid "Approvals - Purchase"
-msgstr "承認-購入"
+msgstr "承認 - 購買"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_approvals_purchase_stock
 msgid "Approvals - Purchase - Stock"
-msgstr "承認-購入-在庫"
+msgstr "承認 - 購買 - 在庫"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.open_module_tree
@@ -22794,7 +22796,7 @@ msgstr "支店コード"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Branch Number"
-msgstr "ブランチ番号"
+msgstr "支店番号"
 
 #. module: base
 #. odoo-python
@@ -28029,7 +28031,7 @@ msgstr "モバイルの従業員"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_appointment_hr
 msgid "Employees on Appointments"
-msgstr "予約中の従業員"
+msgstr "予約担当従業員"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_employment_hero
@@ -31063,7 +31065,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__all_group_ids
 msgid "Groups and implied groups"
-msgstr "グループと内包グループ"
+msgstr "グループと包含グループ"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__group_ids
@@ -31737,7 +31739,7 @@ msgstr "ハンガリーの税ID"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Hungarian company ID number."
-msgstr "ハンガリーの企業登録番号。"
+msgstr "ハンガリー会社ID番号。"
 
 #. module: base
 #: model:res.country,name:base.hu
@@ -32330,12 +32332,12 @@ msgstr "内包元数"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__implied_count
 msgid "Implied Count"
-msgstr "内包数"
+msgstr "包含数"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_search
 msgid "Implied Group"
-msgstr "内包グループ"
+msgstr "包含グループ"
 
 #. module: base
 #. odoo-python
@@ -32343,17 +32345,17 @@ msgstr "内包グループ"
 #: model:ir.model.fields,field_description:base.field_res_groups__implied_ids
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
 msgid "Implied Groups"
-msgstr "内包グループ"
+msgstr "包含グループ"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_list
 msgid "Implied groups"
-msgstr "内包グループ"
+msgstr "包含グループ"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_search
 msgid "Implying Group"
-msgstr "内包グループ"
+msgstr "包含元グループ"
 
 #. module: base
 #. odoo-python
@@ -32361,7 +32363,7 @@ msgstr "内包グループ"
 #: model:ir.model.fields,field_description:base.field_res_groups__implied_by_ids
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
 msgid "Implying Groups"
-msgstr "継承グループ"
+msgstr "包含元グループ"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
@@ -33667,7 +33669,7 @@ msgstr "イスラエル- 会計レポート"
 #: code:addons/base/models/res_groups.py:0
 msgid ""
 "It is not possible to remove implied group %(group)s from users %(users)s"
-msgstr "内包グループは%(group)sユーザから%(users)sから削除できません"
+msgstr "包含グループ %(group)s はユーザ %(users)s から削除できません"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_3
@@ -35636,7 +35638,7 @@ msgstr "マルタIntrastat申告書"
 #. module: base
 #: model:ir.module.module,summary:base.module_appointment_hr
 msgid "Manage Appointments with Employees"
-msgstr "従業員との予約を管理"
+msgstr "従業員アプリと連携してアポイントメントを管理"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_recruitment_integration_website
@@ -37208,8 +37210,8 @@ msgstr ""
 "サービスを提供できるよう最善の努力を行うことを約します。ただし、当社のいかな"
 "る義務も、結果の達成を保証する義務（結果債務）とみなされるものではありません"
 "。またMy Company (San Francisco)は、いかなる場合も、最終消費者が顧客に対して"
-"提起した損害賠償請求に関連して、顧客から第三者として当該手続に出廷・関与する"
-"ことを求められるものではありません。"
+"提起した損害賠償請求に関連して、クライアントから第三者として当該手続に出廷・"
+"関与することを求められるものではありません。"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
@@ -41758,7 +41760,7 @@ msgstr "パスワードポリシー"
 #: model:ir.module.module,shortdesc:base.module_auth_password_policy_portal
 #: model:ir.module.module,shortdesc:base.module_auth_password_policy_signup
 msgid "Password Policy support for Signup"
-msgstr "登録為のパスワードサポートポリシー"
+msgstr "新規登録時のパスワードポリシー対応"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.MOP
@@ -48366,7 +48368,7 @@ msgstr "テクニカルガイド"
 #. module: base
 #: model:ir.module.module,description:base.module_approvals_purchase_stock
 msgid "Technical module to link Approvals, Purchase and Inventory together. "
-msgstr "承認、購入、在庫をリンクするための技術モジュール。 "
+msgstr "承認、購買、在庫を連携させるための技術モジュール。 "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_product_matrix
@@ -49101,7 +49103,7 @@ msgstr "以下の変数が使用できます:"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_groups__all_implied_ids
 msgid "The group itself with all its implied groups."
-msgstr "そのグループ自体と、そのグループに内包されるすべてのグループ。"
+msgstr "当該グループおよび、そのグループに包含されるすべてのグループ。"
 
 #. module: base
 #. odoo-python
@@ -50759,12 +50761,12 @@ msgstr "Transifexの連携機能"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__all_implied_ids
 msgid "Transitively Implied Groups"
-msgstr "連鎖的に内包されるグループ"
+msgstr "間接的に包含されるグループ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__all_implied_by_ids
 msgid "Transitively Implying Groups"
-msgstr "間接的に継承するグループ"
+msgstr "間接的に包含するグループ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__translate
@@ -52138,13 +52140,13 @@ msgstr "ユーザログ"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__all_user_ids
 msgid "Users and implied users"
-msgstr "ユーザおよび内包ユーザ"
+msgstr "ユーザおよび包含ユーザ"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_groups.py:0
 msgid "Users and implied users of %(group)s"
-msgstr "%(group)sのユーザおよび内包ユーザ"
+msgstr "%(group)sのユーザおよび包含ユーザ"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_groups__user_ids
@@ -52161,7 +52163,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_res_groups__implied_ids
 msgid "Users in the current group are implicitly part of the implied groups"
-msgstr "現在のグループに属するユーザは、内包されるグループにも暗黙的に含まれます"
+msgstr "現在のグループに属するユーザは、包含グループにも暗黙的に含まれます"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_groups__disjoint_ids
