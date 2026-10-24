@@ -626,6 +626,31 @@ test("chatter 'activity' button open the activity schedule wizard", async () => 
     await expect.waitForSteps(["doAction"]);
 });
 
+test("activity of type email: 'Send' opens the email composer", async () => {
+    const pyEnv = await startServer();
+    const partnerId = serverState.partnerId;
+    const emailTypeId = pyEnv["mail.activity.type"].find((r) => r.name === "Email").id;
+    pyEnv["mail.activity"].create({
+        activity_type_id: emailTypeId,
+        can_write: true,
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+    mockService("action", {
+        async doAction(action) {
+            if (action?.res_model === "mail.compose.message") {
+                expect.step(`doAction ${action.name}`);
+                return;
+            }
+            return super.doAction(...arguments);
+        },
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await click(".o-mail-Activity-composeEmail");
+    await expect.waitForSteps(["doAction Compose Email"]);
+});
+
 test("Activity avatar should have a unique timestamp", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});

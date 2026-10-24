@@ -26,6 +26,8 @@ export class ResUsers extends webModels.ResUsers {
     _init_store_data(store) {
         /** @type {import("mock_models").DiscussChannel} */
         const DiscussChannel = this.env["discuss.channel"];
+        /** @type {import("mock_models").MailActivityType} */
+        const MailActivityType = this.env["mail.activity.type"];
         /** @type {import("mock_models").MailGuest} */
         const MailGuest = this.env["mail.guest"];
         /** @type {import("mock_models").ResPartner} */
@@ -36,6 +38,10 @@ export class ResUsers extends webModels.ResUsers {
         const MailMessageSubtype = this.env["mail.message.subtype"];
         store.add_global_values((res) => {
             res.attr("action_discuss_id", DISCUSS_ACTION_ID);
+            res.attr(
+                "emailActivityTypeId",
+                MailActivityType._filter([["name", "=", "Email"]])[0]?.id ?? false
+            );
             res.attr("channel_types_with_seen_infos", DiscussChannel._types_allowing_seen_infos());
             res.attr("hasGifPickerFeature", true);
             res.attr("hasLinkPreviewFeature", true);
