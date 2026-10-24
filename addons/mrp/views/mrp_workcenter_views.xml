@@ -342,6 +342,17 @@
                                         <div id="costs_hour">
                                             <field name="costs_hour" class="oe_inline" widget="monetary"/>per workcenter
                                         </div>
+                                        <label for="employee_costs_hour" string=""/>
+                                        <div>
+                                            <field name="employee_costs_hour" class="oe_inline"/>per employee
+                                        </div>
+                                    </group>
+                                    <group string="Operations" name="workorder_employee">
+                                        <field name="barcode"/>
+                                        <field name="employee_ids" widget="many2many_tags"
+                                            string="Allowed Employees"
+                                            domain="[('company_id', '=', company_id)]"
+                                            placeholder="Everyone"/>
                                     </group>
                                 </group>
                                 <separator string="Description"/>
@@ -558,6 +569,7 @@
                 <field name="workcenter_id"/>
                 <field name="loss_id"/>
                 <field name="duration" type="measure" string="Duration"/>
+                <field name="employee_cost" invisible="1"/>
             </graph>
         </field>
     </record>
@@ -570,6 +582,7 @@
                 <field name="date_start" type="row" interval="day"/>
                 <field name="loss_type" type="col"/>
                 <field name="duration" type="measure" string="Duration"/>
+                <field name="employee_cost" invisible="1"/>
             </pivot>
         </field>
     </record>
