@@ -49,6 +49,7 @@ export class FieldMany2ManyTagsBanks extends Many2ManyTagsFieldColorEditable {
                 [false, "form"],
             ],
             domain: this.getDomain(),
+            context: this.props.context,
             target: "current",
         });
     }
