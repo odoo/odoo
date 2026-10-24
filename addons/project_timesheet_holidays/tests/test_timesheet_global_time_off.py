@@ -615,3 +615,76 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         })
         timesheet = self.env['account.analytic.line'].search([('employee_id', '=', self.flexible_employee.id)])
         self.assertEqual(timesheet.unit_amount, self.flexible_calendar.hours_per_day)
+
+    def test_global_time_off_in_different_employees_versions(self):
+        attendance_ids_40h = [
+            Command.create({'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+            Command.create({'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+            Command.create({'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+            Command.create({'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+            Command.create({'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+            Command.create({'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+            Command.create({'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+            Command.create({'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+            Command.create({'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+            Command.create({'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
+        ]
+        attendance_ids_20h = [
+            Command.create({'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'full_day'}),
+            Command.create({'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'full_day'}),
+            Command.create({'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'full_day'}),
+            Command.create({'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'full_day'}),
+            Command.create({'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'full_day'}),
+        ]
+
+        calendar_40h, calendar_20h = self.env['resource.calendar'].create([
+            {
+                'name': 'Calendar 40h',
+                'company_id': self.env.company.id,
+                'hours_per_day': 8,
+                'attendance_ids': attendance_ids_40h,
+            },
+            {
+                'name': 'Calendar 20h',
+                'company_id': self.env.company.id,
+                'hours_per_day': 4,
+                'attendance_ids': attendance_ids_20h,
+            }
+        ])
+
+        # This version is using a 40h calendar
+        self.env['hr.version'].create({
+            'company_id': self.env.company.id,
+            'date_version': datetime(2025, 9, 1),
+            'contract_date_start': datetime(2025, 9, 1),
+            'contract_date_end': datetime(2025, 9, 30),
+            'resource_calendar_id': calendar_40h.id,
+            'employee_id': self.full_time_employee.id,
+        })
+        # Another version with half the working schedule 20h
+        self.env['hr.version'].create({
+            'company_id': self.env.company.id,
+            'date_version': datetime(2025, 10, 1),
+            'contract_date_start': datetime(2025, 10, 1),
+            'resource_calendar_id': calendar_20h.id,
+            'employee_id': self.full_time_employee.id,
+        })
+
+        global_time_off, global_time_off_v2 = self.env['resource.calendar.leaves'].create([
+            {
+                'name': 'Test',
+                'date_from': datetime(year=2025, month=9, day=23, hour=0),
+                'date_to': datetime(year=2025, month=9, day=23, hour=23),
+            },
+            {
+                'name': 'Test',
+                'date_from': datetime(year=2025, month=10, day=15, hour=0),
+                'date_to': datetime(year=2025, month=10, day=15, hour=23),
+            }
+        ])
+
+        first_timesheet = self.env['account.analytic.line'].search([('global_leave_id', '=', global_time_off.id), ('employee_id', '=', self.full_time_employee.id)])
+        second_timesheet = self.env['account.analytic.line'].search([('global_leave_id', '=', global_time_off_v2.id), ('employee_id', '=', self.full_time_employee.id)])
+
+        self.assertEqual(first_timesheet.unit_amount, calendar_40h.hours_per_day)
+        self.assertEqual(second_timesheet.unit_amount, calendar_20h.hours_per_day)
