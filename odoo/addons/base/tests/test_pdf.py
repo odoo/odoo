@@ -126,3 +126,26 @@ class TestPdf(TransactionCase):
 
         for i, expected_shape in enumerate(expected_shapes):
             self.assertEqual(processed_text[i], expected_shape)
+
+    def test_reshaping_arabic_text_with_numbers(self):
+        """
+        Test that numbers inside Arabic text keep their left-to-right digit order.
+        """
+        # ASCII numbers
+        processed_text = reshape_text("الأتعاب 1000 درهم و 1,250.50 درهم")
+        self.assertEqual(processed_text, "ﻢﻫﺭﺩ 1,250.50 ﻭ ﻢﻫﺭﺩ 1000 ﺏﺎﻌﺗﻵﺍ")
+
+        # Arabic numbers and separators
+        processed_text = reshape_text("المبلغ ١٬٢٥٠٫٥٠ ريال و ١٢،٥ ريال")
+        self.assertEqual(processed_text, "ﻝﺎﻳﺭ ١٢،٥ ﻭ ﻝﺎﻳﺭ ١٬٢٥٠٫٥٠ ﻎﻠﺒﻤﻟﺍ")
+
+        # No-break space
+        processed_text = reshape_text("المبلغ 1\u00A0000 درهم")
+        self.assertEqual(processed_text, "ﻢﻫﺭﺩ 1\u00A0000 ﻎﻠﺒﻤﻟﺍ")
+
+    def test_reshaping_arabic_text_with_brackets(self):
+        """
+        Test that brackets inside Arabic text are in the right order.
+        """
+        processed_text = reshape_text("الأتعاب (1000) درهم (نقدا)")
+        self.assertEqual(processed_text, "(ﺍﺪﻘﻧ) ﻢﻫﺭﺩ (1000) ﺏﺎﻌﺗﻵﺍ")
