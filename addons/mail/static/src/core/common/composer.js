@@ -562,6 +562,8 @@ export class Composer extends Component {
                 }
             }
         }
+        // the mentions of a restored draft must be known before opening the full composer
+        await this.mentionedPartnersRestored;
         const attachmentIds = this.props.composer.attachments.map((attachment) => attachment.id);
         const body = this.props.composer.text;
         const validMentions = this.store.getMentionsFromText(body, {
@@ -704,6 +706,8 @@ export class Composer extends Component {
             return;
         }
         await this.processMessage(async (value) => {
+            // the mentions of a restored draft must be known before posting
+            await this.mentionedPartnersRestored;
             await this._sendMessage(value, this.postData, this.extraData);
         });
     }
@@ -820,6 +824,7 @@ export class Composer extends Component {
             const config = {
                 emailAddSignature,
                 text,
+                mentionedPartners: this.getMentionedPartnersToSave(),
             };
             browser.localStorage.setItem(composer.localId, JSON.stringify(config));
         };
@@ -839,10 +844,102 @@ export class Composer extends Component {
             if (config.text) {
                 composer.emailAddSignature = config.emailAddSignature;
                 composer.text = config.text;
+                this.restoreMentionedPartners(config.mentionedPartners);
             }
         } catch {
             browser.localStorage.removeItem(composer.localId);
         }
+    }
+
+    /**
+     * Partners mentioned in the composer, saved with the draft so that the mentions can be
+     * found again when the draft is restored. Mentions still being restored are kept, so a
+     * save happening in the meantime does not lose them.
+     *
+     * @returns {Array<{ id: number, name: string }>}
+     */
+    getMentionedPartnersToSave() {
+        const composer = toRaw(this.props.composer);
+        const partners = new Map(
+            (this.mentionedPartnersBeingRestored ?? []).map((partner) => [partner?.id, partner])
+        );
+        for (const partner of composer.mentionedPartners) {
+            partners.set(partner.id, { id: partner.id, name: partner.name });
+        }
+        return [...partners.values()];
+    }
+
+    /**
+     * Restore the partners mentioned in a draft. The saved partners come from the local
+     * storage and cannot be trusted: their ids are validated by the server first (see
+     * getValidMentionedPartnerIds), their saved name is only used when the partner is not
+     * known yet, and the same rules as the mention suggestions are applied (e.g. only members
+     * can be mentioned in private channels).
+     *
+     * @param {Array<{ id: number, name: string }>} [savedPartners]
+     */
+    restoreMentionedPartners(savedPartners) {
+        if (!Array.isArray(savedPartners) || !savedPartners.length) {
+            return;
+        }
+        const composer = toRaw(this.props.composer);
+        const savedNames = new Map();
+        for (const savedPartner of savedPartners) {
+            const { id, name } = savedPartner ?? {};
+            if (
+                Number.isInteger(id) &&
+                typeof name === "string" &&
+                name.trim() &&
+                !composer.mentionedPartners.some((partner) => partner.id === id)
+            ) {
+                savedNames.set(id, name);
+            }
+        }
+        if (!savedNames.size) {
+            return;
+        }
+        const suggestionService = this.env.services["mail.suggestion"];
+        this.mentionedPartnersBeingRestored = savedPartners;
+        this.mentionedPartnersRestored = this.getValidMentionedPartnerIds([...savedNames.keys()])
+            .then((validIds) => {
+                for (const id of validIds) {
+                    const partner = this.store.Persona.insert({ id, type: "partner" });
+                    if (!partner.name) {
+                        partner.name = savedNames.get(id);
+                    }
+                    const { suggestions } = suggestionService.searchSuggestions(
+                        { delimiter: "@", term: partner.name },
+                        { thread: composer.thread }
+                    );
+                    const canBeMentioned = suggestions.some(
+                        (suggestion) => suggestion.type === "partner" && suggestion.id === id
+                    );
+                    if (canBeMentioned) {
+                        composer.mentionedPartners.add(partner);
+                    }
+                }
+            })
+            .catch(() => {
+                // mentions that cannot be validated are not restored, posting stays possible
+            })
+            .finally(() => {
+                this.mentionedPartnersBeingRestored = undefined;
+            });
+    }
+
+    /**
+     * Among the given partner ids, the ones of existing partners that the current user can
+     * read, checked by the server without reading any field. Guests cannot search partners:
+     * only the partners already known are kept for them.
+     *
+     * @param {number[]} ids
+     * @returns {Promise<number[]>}
+     */
+    async getValidMentionedPartnerIds(ids) {
+        if (this.store.self?.type !== "partner") {
+            return ids.filter((id) => this.store.Persona.get({ id, type: "partner" }));
+        }
+        return this.env.services.orm.search("res.partner", [["id", "in", ids]]);
     }
 
     get shouldHideFromMessageListOnDelete() {
