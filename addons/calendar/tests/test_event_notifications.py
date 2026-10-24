@@ -547,12 +547,15 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
             'alarm_ids': [[6, 0, [alarm.id]]],
             'partner_ids': [(4, self.partner.id)],
         }
-        self.event = self.env['calendar.event'].create(event_vals)
-        self.event._apply_recurrence_values({
+        # Not `self.event`: rebinding it would make a retry of this test reuse a rolled back record.
+        daily_event = self.env['calendar.event'].create(event_vals)
+        daily_event._apply_recurrence_values({
             'interval': 1,
             'rrule_type': 'daily',
             'end_type': 'count',
-            'count': recurrence_count
+            'count': recurrence_count,
+            # occurrences are expanded in the event timezone, the expected alarms below are naive UTC
+            'event_tz': 'UTC',
         })
         self.env.flush_all()
         result = self.env['calendar.alarm_manager']._get_next_potential_limit_alarm('notification', partners=partner)
