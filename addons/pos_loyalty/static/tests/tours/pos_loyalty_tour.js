@@ -881,3 +881,38 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountNegativeLine"
             PosLoyalty.finalizeOrder("Cash", "850"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosLoyaltyBuyXGetYOneRewardPerRuleProduct", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Free Product A"),
+            ProductScreen.clickDisplayedProduct("Free Product B"),
+            PosLoyalty.hasRewardLine("Free Product - Free Product B", "-5.00", "1.00"),
+            ProductScreen.clickDisplayedProduct("Free Product B"),
+            ProductScreen.clickDisplayedProduct("Free Product A"),
+            PosLoyalty.hasRewardLine("Free Product - Free Product A", "-1.00", "1.00"),
+            ProductScreen.clickDisplayedProduct("Free Product A"),
+            ProductScreen.clickDisplayedProduct("Free Product B"),
+            PosLoyalty.hasRewardLine("Free Product - Free Product B", "-10.00", "2.00"),
+            ProductScreen.clickDisplayedProduct("Free Product B"),
+            ProductScreen.clickDisplayedProduct("Free Product A"),
+            PosLoyalty.hasRewardLine("Free Product - Free Product A", "-2.00", "2.00"),
+            PosLoyalty.orderTotalIs("12.00"),
+
+            // Same through the reward button
+            Chrome.createFloatingOrder(),
+            ProductScreen.clickDisplayedProduct("Free Product A"),
+            PosLoyalty.claimReward("Free Product - Free Product B"),
+            ProductScreen.clickDisplayedProduct("Free Product B"),
+            PosLoyalty.claimReward("Free Product - Free Product A"),
+            ProductScreen.clickDisplayedProduct("Free Product A"),
+            PosLoyalty.claimReward("Free Product - Free Product B"),
+            ProductScreen.clickDisplayedProduct("Free Product B"),
+            PosLoyalty.claimReward("Free Product - Free Product A"),
+            PosLoyalty.hasRewardLine("Free Product - Free Product B", "-10.00", "2.00"),
+            PosLoyalty.hasRewardLine("Free Product - Free Product A", "-2.00", "2.00"),
+            PosLoyalty.orderTotalIs("12.00"),
+        ].flat(),
+});

@@ -411,7 +411,12 @@ patch(PosOrder.prototype, {
      * @returns {number}
      */
     _getPointsCorrection(program) {
-        const rewardLines = this.lines.filter((line) => line.is_reward_line);
+        return this._getPointsCorrectionForLines(
+            program,
+            this.lines.filter((line) => line.is_reward_line)
+        );
+    },
+    _getPointsCorrectionForLines(program, rewardLines) {
         if (!this._canGenerateRewards(program, this.priceIncl, this.priceExcl)) {
             return 0;
         }
@@ -1335,7 +1340,6 @@ patch(PosOrder.prototype, {
         );
         let claimed = 0;
         let available = 0;
-        let shouldCorrectRemainingPoints = false;
         for (const line of this.getOrderlines()) {
             if (
                 reward.reward_product_ids.map((reward) => reward.id).includes(product.id) &&
@@ -1356,8 +1360,6 @@ patch(PosOrder.prototype, {
                 if (line.reward_id.id == reward.id) {
                     remainingPoints += line.points_cost;
                     claimed += line.getQuantity();
-                } else {
-                    shouldCorrectRemainingPoints = true;
                 }
             }
         }
@@ -1396,9 +1398,10 @@ patch(PosOrder.prototype, {
                         (remainingPoints / reward.required_points) * reward.reward_product_qty
                     );
                 } else {
-                    const correction = shouldCorrectRemainingPoints
-                        ? this._getPointsCorrection(reward.program_id)
-                        : 0;
+                    const correction = this._getPointsCorrectionForLines(
+                        reward.program_id,
+                        this._get_reward_lines().filter((line) => line.reward_id.id !== reward.id)
+                    );
                     freeQty = computeFreeQuantity(
                         (remainingPoints - correction - orderPoints) / factor,
                         reward.required_points / factor,
