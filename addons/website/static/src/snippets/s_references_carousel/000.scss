@@ -1,0 +1,52 @@
+// Fallbacks mirror the values set on the snippet markup, so resetting an
+// option restores the shipped look.
+$-references-carousel-gap: var(--references-carousel-gap, #{$spacer * 2});
+$-references-carousel-logo-height: var(--references-carousel-logo-height, 72px);
+// Scales with the logo, so that small logos do not sit in oversized cells.
+$-references-carousel-cell-padding: calc(#{$-references-carousel-logo-height} / 6);
+
+.s_references_carousel {
+    @include o-marquee-animation('s_references_carousel');
+
+    .s_references_carousel_marquee_item {
+        gap: $-references-carousel-gap;
+        // The gap between a strip and its clone must be part of the strip
+        // width: the animation translates by -100%, which ignores the flex
+        // `gap` of the container (that made the frontend items overlap).
+        padding-inline-end: $-references-carousel-gap;
+    }
+
+    .s_references_carousel_item {
+        display: flex;
+        flex: 0 0 auto;
+        align-items: center;
+        justify-content: center;
+        // Fixed height, but the width follows the logo, so that the space
+        // between two logos stays the same whatever their shape (a narrow
+        // logo in a fixed-width cell left holes once the cell had no
+        // background). The interaction lays the strip out again once the
+        // logos are loaded.
+        // The padding keeps a logo cropped flush to its edges off the cell
+        // border, and adds to the logo size so that the option still sizes the
+        // logo itself.
+        height: calc(#{$-references-carousel-logo-height} + 2 * #{$-references-carousel-cell-padding});
+        padding: $-references-carousel-cell-padding;
+        // Keeps a logo transformed with the image tools (e.g. rotated) inside
+        // its cell instead of painting over the next ones.
+        overflow: hidden;
+
+        img {
+            // Logos must stay whole and keep their ratio: unlike a photo, a
+            // cropped logo is a broken logo. Only caps, no explicit size, so a
+            // logo smaller than its cell is never upscaled into a blurry mess
+            // (same behavior as the other references snippets via `img-fluid`).
+            // Absolute caps: a percentage of a cell sized by its content would
+            // be circular. Wide wordmarks stop at a landscape ratio.
+            max-width: calc(#{$-references-carousel-logo-height} * 2.5);
+            max-height: $-references-carousel-logo-height;
+            // Keeps the ratio when the image options set an explicit width
+            // while the height stays capped by the cell.
+            object-fit: contain;
+        }
+    }
+}

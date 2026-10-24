@@ -9,6 +9,7 @@ import { dynamicSVGSelector } from "../utils";
 import { registry } from "@web/core/registry";
 import { getMimetypeBeforeShape } from "@html_builder/utils/image";
 import { isImageSupportedForProcessing } from "@html_editor/main/media/image_post_process_plugin";
+import { useProps, t } from "@odoo/owl";
 
 export class ImageToolOption extends BaseOptionComponent {
     static id = "image_tool_option";
@@ -20,6 +21,11 @@ export class ImageToolOption extends BaseOptionComponent {
         ImageTransformOption,
         MediaSizeOption,
     };
+    props = useProps({
+        // False for images whose size is set by their container (e.g. a logo
+        // in a fixed-height cell), where a percentage width cannot apply.
+        withSize: t.boolean().optional(true),
+    });
     setup() {
         super.setup();
         this.state = useDomState(async (editingElement) => {

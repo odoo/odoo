@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.ImageToolOption">
-    <t t-if="!this.state.isGridMode and !this.state.isSocialMediaImg and !this.state.isImageBinaryField">
+    <t t-if="this.props.withSize and !this.state.isGridMode and !this.state.isSocialMediaImg and !this.state.isImageBinaryField">
         <MediaSizeOption level="1"/>
     </t>
     <BuilderRow label.translate="Transform" level="1" preview="false">
