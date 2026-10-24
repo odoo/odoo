@@ -21,7 +21,9 @@ class MessagingMenuController(WebclientController):
             case "bookmark":
                 return Domain("bookmarked_partner_ids", "=", partner_id)
             case "notification":
-                return Domain("notification_ids.res_partner_id", "=", partner_id)
+                return Domain(
+                    "notification_ids.res_partner_id", "=", partner_id,
+                ) & self.env["mail.message"]._get_search_domain_share()
             case _:
                 return Domain.FALSE
 
@@ -30,6 +32,13 @@ class MessagingMenuController(WebclientController):
         if tab_id == "notification" and filter_id == "notification_unread":
             return Domain("needaction", "=", True)
         return Domain.FALSE
+
+    def _is_menu_tab_sudo(self, tab_id):
+        """Whether `tab_id`'s messages are searched in sudo, skipping the message access
+        check: its domain alone guarantees the user can read them. Overrides of the tab
+        domain must therefore only narrow it."""
+        # notified messages are readable by their recipient by definition
+        return tab_id == "notification"
 
     def _get_menu_tab_full_domain(self, tab_id, filter_ids=()):
         """`tab_id`'s domain, ANDed with the domain of each id in `filter_ids`.
@@ -62,8 +71,14 @@ class MessagingMenuController(WebclientController):
         if not filter_id_by_tab_id:
             return
         domain_by_tab_id = self.get_menu_counter_domain_by_tab_id(filter_id_by_tab_id)
-        messages = self.env["mail.message"].search_fetch(Domain.OR(domain_by_tab_id.values()))
-        self._add_menu_tab_counters_to_store(store, messages, domain_by_tab_id)
+        for tab_id, domain in domain_by_tab_id.items():
+            # sudo: mail.message: see `_is_menu_tab_sudo`
+            message_ids = self.env["mail.message"].sudo(self._is_menu_tab_sudo(tab_id))._search(domain)
+            store.add_model_values(
+                "MessagingMenuTab",
+                {"init_counter_ids": list(message_ids)},
+                id_data={"id": tab_id},
+            )
 
     def get_menu_counter_domain_by_tab_id(self, filter_id_by_tab_id):
         """Resolve the map of tab id to its full domain (taking `tab_id` and `filter_id`
@@ -99,6 +114,8 @@ class MessagingMenuController(WebclientController):
             store,
             domain=domain,
             fetch_params={"limit": limit, "search_term": search_term},
+            # sudo: mail.message: see `_is_menu_tab_sudo`
+            sudo=self._is_menu_tab_sudo(tab_id),
         )
         if messages:
             request.update_context(add_inbox_fields=True)
