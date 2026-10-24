@@ -84,9 +84,10 @@
                                     <div t-if="event.exhibition_map" class="ms-2 small">
                                         <a class="text-decoration-none text-center" href="#" data-bs-toggle="modal" data-bs-target="#mapModal"><i class="oi me-1" data-icon="map" role="img" aria-hidden="true"/>View Plan</a>
                                         <div role="dialog" id="mapModal" class="modal" tabindex="-1">
-                                            <div class="modal-dialog modal-lg">
-                                                <div class="modal-content">
-                                                    <div class="modal-body">
+                                            <div class="modal-dialog modal-xl">
+                                                <div class="modal-content position-relative">
+                                                    <button type="button" class="btn-close position-absolute top-0 end-0 m-3 z-1" data-bs-dismiss="modal" aria-label="Close"/>
+                                                    <div class="modal-body pt-5 text-center">
                                                         <div t-field="event.exhibition_map" t-options="{'widget': 'image'}" class="img img-responsive"/>
                                                     </div>
                                                 </div>
