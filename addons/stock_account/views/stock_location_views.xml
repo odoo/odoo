@@ -17,5 +17,15 @@
                 </xpath>
             </field>
         </record>
+
+        <record id="action_revalue_moves_through_location" model="ir.actions.server">
+            <field name="name">Recompute Valuation Through This Location</field>
+            <field name="model_id" ref="stock.model_stock_location"/>
+            <field name="binding_model_id" ref="stock.model_stock_location"/>
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">action = records.action_revalue_moves_through_location()</field>
+            <field name="group_ids" eval="[Command.link(ref('base.group_no_one'))]"/>
+        </record>
     </data>
 </odoo>

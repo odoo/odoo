@@ -39,3 +39,58 @@ class StockLocation(models.Model):
         """
         self.ensure_one()
         return bool(self.company_id) and self.usage in ['internal', 'transit']
+
+    def _revalue_moves_through_location(self):
+        """ Recompute `is_in`/`is_out` for every already-`done` move that passed through `self`,
+        and revalue (`_set_value`) whichever ones actually flip. `is_in`/`is_out` are stored,
+        computed fields whose @api.depends only lists ('state', 'move_line_ids') — a location's
+        own `company_id`/`usage` is not tracked as a dependency, so moves already `done` through
+        a location never get their valued-status reassessed if that location's configuration
+        changes afterwards (e.g. a shared transit location's company_id being cleared/set after
+        moves already passed through it). This can silently desynchronize the AVCO/FIFO replay
+        (which trusts the frozen is_in/is_out/value) from the location-based "qty at a past
+        date" reconstruction (which re-evaluates `_should_be_valued()` live on every read).
+        """
+        moves = self.env['stock.move'].search([
+            ('state', '=', 'done'),
+            '|', ('location_id', 'in', self.ids), ('location_dest_id', 'in', self.ids),
+        ])
+        if not moves:
+            return self.env['stock.move']
+        changed_moves = self.env['stock.move']
+        for move in moves:
+            # `_is_in()`/`_is_out()` can return an empty recordset instead of a bare `False`
+            # when falsy (they're `a and not b` expressions) - cast explicitly so comparing
+            # against the already-coerced, stored boolean field doesn't always look "changed".
+            new_is_in, new_is_out = bool(move._is_in()), bool(move._is_out())
+            if new_is_in != move.is_in or new_is_out != move.is_out:
+                move.is_in, move.is_out = new_is_in, new_is_out
+                changed_moves |= move
+        if changed_moves:
+            changed_moves._set_value()
+        return changed_moves
+
+    def action_revalue_moves_through_location(self):
+        """ Manual entry point (e.g. a form button) to recompute valuation for every move
+        through this location, for cases where the location's valued status changed without
+        going through `write()` (e.g. a direct data fix, import, or migration).
+        """
+        self.ensure_one()
+        changed_moves = self._revalue_moves_through_location()
+        if changed_moves:
+            message = self.env._(
+                "Recomputed valuation for %(count)s move(s) through this location.",
+                count=len(changed_moves),
+            )
+        else:
+            message = self.env._("No move through this location needed revaluation.")
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': self.env._("Valuation recomputed"),
+                'message': message,
+                'type': 'success' if changed_moves else 'info',
+                'sticky': False,
+            },
+        }
