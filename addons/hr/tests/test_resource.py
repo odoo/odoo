@@ -232,3 +232,16 @@ class TestResource(TestHrCommon):
         work_intervals, _ = self.employee_niv.resource_id._get_valid_work_intervals(start, end)
         total_hours = sum_intervals(work_intervals[self.employee_niv.resource_id.id])
         self.assertEqual(total_hours, 35.0)
+
+    def test_employees_count_hidden_without_hr_access(self):
+        """ Every internal user can read a working schedule, but the count behind
+            `employees_count` needs the rights on the versions, so the field must
+            not reach a user without them. """
+        user = self.env['res.users'].create({
+            'name': "Plain user",
+            'login': "plain_user",
+            'group_ids': [(6, 0, [self.env.ref('base.group_user').id])],
+        })
+        arch = self.env['resource.calendar'].with_user(user).get_view(
+            self.env.ref('resource.resource_calendar_form').id)['arch']
+        self.assertNotIn('employees_count', arch)
