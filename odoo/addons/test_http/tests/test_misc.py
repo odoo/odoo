@@ -8,6 +8,8 @@ from http import HTTPStatus
 from socket import gethostbyname
 from unittest.mock import patch
 
+import psycopg2
+
 import odoo
 from odoo.http import content_disposition, root
 from odoo.tests import Like, tagged
@@ -169,6 +171,44 @@ class TestHttpMisc(TestHttpBase):
         with mute_logger('werkzeug'):
             response = self.url_open('/' + 'a' * 95536)
         self.assertIn(response.status_code, (HTTPStatus.NOT_FOUND, HTTPStatus.REQUEST_URI_TOO_LONG))
+
+    def test_misc11_primary_database_unreachable(self):
+        cursor = self.registry.cursor
+
+        def primary_down_cursor(readonly=False):
+            if not readonly:
+                # Simulate a primary database that refuses new connections.
+                raise psycopg2.OperationalError("FATAL:  the database system is shutting down\n")
+            return cursor(readonly=readonly)
+
+        self.authenticate("demo", "demo")
+        write_partner = {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "params": {
+                "model": "res.partner",
+                "method": "write",
+                "args": [self.partner_demo.ids, {"name": "Marc Demo"}],
+                "kwargs": {},
+            },
+        }
+        for url, payload in (
+            ("/test_http/greeting-public?readonly=0", None),
+            ("/web/dataset/call_kw/res.partner/write", write_partner),
+        ):
+            with (
+                self.subTest(url=url),
+                patch.object(self.registry, "cursor", primary_down_cursor),
+                self.assertLogs("odoo.http", "WARNING") as capture,
+            ):
+                res = self.url_open(url, json=payload)
+                self.assertEqual(res.status_code, HTTPStatus.SERVICE_UNAVAILABLE)
+                self.assertNotIn("Traceback", res.text)
+                self.assertNotIn("the database system is shutting down", res.text)
+                self.assertEqual(
+                    capture.output,
+                    ["WARNING:odoo.http:Cannot open a read/write cursor: FATAL:  the database system is shutting down"],
+                )
 
 
 @tagged('post_install', '-at_install')
