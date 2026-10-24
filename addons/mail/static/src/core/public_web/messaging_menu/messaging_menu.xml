@@ -22,7 +22,7 @@
                     </t>
                     <DiscussSearch autofocus="this.searchInputAutofocus" class="'flex-grow-1 min-w-0'" messagingMenuUiState="this.state"/>
                 </div>
-                <div t-if="this.activeTab().filters.length" class="o-mail-MessagingMenu-filters d-flex align-items-center flex-nowrap gap-1" role="tablist">
+                <div t-if="this.activeTab().filters.length" class="o-mail-MessagingMenu-filters d-flex align-items-center flex-nowrap gap-1 scrollbar-width-none" role="tablist">
                     <button
                         class="o-mail-MessagingMenu-filter btn btn-sm rounded-pill o-px-2_5 o-py-0_5 flex-shrink-0"
                         t-att-class="{ 'o-active': !this.state().selectedFilter, 'text-muted': this.state().selectedFilter }"
