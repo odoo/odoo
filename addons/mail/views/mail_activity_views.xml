@@ -250,8 +250,8 @@
                 <filter string="This week" name="filter_date_deadline_week"
                         help="Show all records whose next action date is this week"
                         domain="[
-                            ('date_deadline', '&gt;=', '=week_start'),
-                            ('date_deadline', '&lt;', '=week_start +1w')
+                            ('date_deadline', '&gt;=', 'today =week_start'),
+                            ('date_deadline', '&lt;', 'today =week_start +1w')
                         ]"/>
                 <filter string="Future" name="filter_date_deadline_future"
                         domain="[('date_deadline', '&gt;', 'today')
