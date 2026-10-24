@@ -82,6 +82,7 @@ export class TranslationPlugin extends Plugin {
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
+        force_background_translation_state_selectors: ["a[role]", "a.nav-link"],
         clean_for_save_processors: this.cleanForSave.bind(this),
         on_replicated_handlers: ({ sourceEl, targetEl }) => {
             targetEl.classList.toggle("o_dirty", sourceEl.classList.contains("o_dirty"));
@@ -129,7 +130,8 @@ export class TranslationPlugin extends Plugin {
         this.notificationService = this.services.notification;
         this.dialogService = this.services.dialog;
         this.nonTranslatedSelector =
-            `:not(${this.config.translatedElements.join(", ")})` + `:not(.o_translate_inline)`;
+            `:not(${this.config.translatedElements.join(", ")})` +
+            `, .o_not_translate_inline`;
     }
 
     prepareTranslation() {

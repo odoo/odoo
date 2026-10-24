@@ -17,7 +17,7 @@ const formXml = `
                         <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom o_draggable" data-type="datetime">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="onbni9ji3oa">
-                                    <span class="s_website_form_label_content">When ?</span>
+                                    <span class="s_website_form_label_content o_not_translate_inline">When ?</span>
                                 </label>
                                 <div class="col-sm">
                                     <div class="s_website_form_datetime input-group date">
@@ -32,7 +32,7 @@ const formXml = `
                         <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom o_draggable" data-type="char">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="o291di1too2s">
-                                    <span class="s_website_form_label_content">Company</span>
+                                    <span class="s_website_form_label_content o_not_translate_inline">Company</span>
                                 </label>
                                 <div class="col-sm">
                                     <input class="form-control s_website_form_input" type="text" name="company" data-fill-with="parent_name" id="o291di1too2s"/>
