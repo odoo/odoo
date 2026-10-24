@@ -475,40 +475,49 @@ class ResPartner(models.Model):
         """Compute the total amount invoiced to the partner. Multiple currencies may have been linked to the invoices, then it
         is important to define a unique currency to compute the total amount otherwise this one is meaningless. This currency
         is either the one of the partner's company if they have one or the currency of the environment's company."""
-        if self.ids:
-            query_res = self.env.execute_query(SQL(
-                """SELECT move.partner_id, SUM(move.amount_total_signed * COALESCE(currency_rate.rate, 1))
-                     FROM account_move move
-                     LEFT JOIN res_partner partner
-                       ON partner.id = move.partner_id
-                     LEFT JOIN res_company company
-                       ON company.id = COALESCE(partner.company_id, %(default_company_id)s)
-                     /* To use the exchange rate effective at the creation of the invoice. */
-                     LEFT JOIN LATERAL (
-                         SELECT rate
-                           FROM res_currency_rate
-                          WHERE company_id = move.company_id
-                            AND currency_id = company.currency_id
-                            AND name < move.date
-                          ORDER BY name DESC
-                          LIMIT 1
-                     ) currency_rate
-                       ON TRUE
-                    WHERE move.state NOT IN ('draft', 'cancel')
-                      AND move.company_id IN %(company_ids)s
-                      AND move.partner_id IN %(partner_ids)s
-                      AND move.move_type IN ('out_invoice', 'out_refund')
-                    GROUP BY move.partner_id""",
-                partner_ids=tuple(self.ids),
-                company_ids=tuple(self.env.companies.ids),
-                default_company_id=self.env.company.id,
-            ))
-            data_map = dict(query_res)
-        else:
-            data_map = {}
+        self.total_invoiced = 0.0
+        if not self.ids:
+            return
 
-        for partner in self:
-            partner.total_invoiced = data_map.get(partner.id, 0.0)
+        all_partners = self.with_context(active_test=False).search_fetch(
+            [('id', 'child_of', self.ids)],
+            ['parent_id'],
+        )
+        query_res = self.env.execute_query(SQL(
+            """SELECT move.partner_id, SUM(move.amount_total_signed * COALESCE(currency_rate.rate, 1))
+                 FROM account_move move
+                 LEFT JOIN res_partner partner
+                   ON partner.id = move.partner_id
+                 LEFT JOIN res_company company
+                   ON company.id = COALESCE(partner.company_id, %(default_company_id)s)
+                 /* To use the exchange rate effective at the creation of the invoice. */
+                 LEFT JOIN LATERAL (
+                     SELECT rate
+                       FROM res_currency_rate
+                      WHERE company_id = move.company_id
+                        AND currency_id = company.currency_id
+                        AND name < move.date
+                      ORDER BY name DESC
+                      LIMIT 1
+                 ) currency_rate
+                   ON TRUE
+                WHERE move.state NOT IN ('draft', 'cancel')
+                  AND move.company_id IN %(company_ids)s
+                  AND move.partner_id IN %(partner_ids)s
+                  AND move.move_type IN ('out_invoice', 'out_refund')
+                GROUP BY move.partner_id""",
+            partner_ids=tuple(all_partners.ids),
+            company_ids=tuple(self.env.companies.ids),
+            default_company_id=self.env.company.id,
+        ))
+        all_partners_by_id = {partner.id: partner for partner in all_partners}
+        self_ids = set(self._ids)
+        for partner_id, total in query_res:
+            partner = all_partners_by_id.get(partner_id)
+            while partner:
+                if partner.id in self_ids:
+                    partner.total_invoiced += total
+                partner = all_partners_by_id.get(partner.parent_id.id)
 
     @api.depends('credit')
     def _compute_days_sales_outstanding(self):
