@@ -86,7 +86,7 @@ class MrpProductionSerials(models.TransientModel):
     def _parse_serial_numbers(self):
         self.ensure_one()
         if not self.serial_numbers:
-            raise UserError(self.env._("There is no serial numbers to apply."))
+            raise UserError(self.env._("There are no serial numbers to apply."))
         lots = list(filter(lambda serial_number: len(serial_number.strip()) > 0, self.serial_numbers.split('\n'))) if self.serial_numbers else []
         if not lots:
             raise UserError(self.env._("No valid serial numbers provided."))
