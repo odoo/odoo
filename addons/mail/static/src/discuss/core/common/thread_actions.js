@@ -22,7 +22,7 @@ threadActionsRegistry
             const component = useComponent();
             if (!component.props.chatWindow) {
                 action.popover = usePopover(NotificationSettings, {
-                    onClose: () => action.close(),
+                    onClose: () => action.onPopoverClose(),
                     position: "bottom-end",
                     fixedPosition: true,
                     popoverClass: action.panelOuterClass,
@@ -101,7 +101,7 @@ threadActionsRegistry
             const component = useComponent();
             if (!component.props.chatWindow) {
                 action.popover = usePopover(ChannelInvitation, {
-                    onClose: () => action.close(),
+                    onClose: () => action.onPopoverClose(),
                     popoverClass: action.panelOuterClass,
                 });
             }
