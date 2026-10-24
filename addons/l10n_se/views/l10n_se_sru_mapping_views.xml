@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- List view -->
+        <record id="l10n_se_sru_mapping_view_list" model="ir.ui.view">
+            <field name="name">l10n.se.sru.mapping.list</field>
+            <field name="model">l10n_se.sru.mapping</field>
+            <field name="arch" type="xml">
+                <list string="SRU Mappings" editable="bottom">
+                    <field name="sequence" widget="handle"/>
+                    <field name="sru_type"/>
+                    <field name="account_expression"/>
+                    <field name="sru_code"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Form view -->
+        <record id="l10n_se_sru_mapping_view_form" model="ir.ui.view">
+            <field name="name">l10n.se.sru.mapping.form</field>
+            <field name="model">l10n_se.sru.mapping</field>
+            <field name="arch" type="xml">
+                <form string="SRU Mapping">
+                    <sheet>
+                        <group>
+                            <field name="sru_type"/>
+                            <field name="sru_code"/>
+                            <field name="account_expression"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search view -->
+        <record id="l10n_se_sru_mapping_view_search" model="ir.ui.view">
+            <field name="name">l10n.se.sru.mapping.search</field>
+            <field name="model">l10n_se.sru.mapping</field>
+            <field name="arch" type="xml">
+                <search string="SRU Mappings">
+                    <field name="account_expression"/>
+                    <field name="sru_code"/>
+                    <filter name="filter_ink2" string="INK2" domain="[('sru_type', '=', 'ink2')]"/>
+                    <filter name="filter_ink3" string="INK3" domain="[('sru_type', '=', 'ink3')]"/>
+                    <filter name="filter_ink4" string="INK4" domain="[('sru_type', '=', 'ink4')]"/>
+                    <filter name="filter_ne" string="NE" domain="[('sru_type', '=', 'ne')]"/>
+                    <group>
+                        <filter name="group_sru_type" string="SRU Type" context="{'group_by': 'sru_type'}"/>
+                        <filter name="group_sru_code" string="SRU Code" context="{'group_by': 'sru_code'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="l10n_se_sru_mapping_action" model="ir.actions.act_window">
+            <field name="name">SRU Mappings</field>
+            <field name="res_model">l10n_se.sru.mapping</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('company_id', '=', allowed_company_ids[0])]</field>
+            <field name="context">{'default_company_id': allowed_company_ids[0]}</field>
+        </record>
+
+        <!-- Menu under Accounting > Configuration -->
+        <menuitem
+            id="l10n_se_sru_mapping_menu"
+            name="SRU Mappings"
+            parent="account.account_account_menu"
+            action="l10n_se_sru_mapping_action"
+            groups="account.group_account_manager"
+            sequence="100"/>
+    </data>
+</odoo>

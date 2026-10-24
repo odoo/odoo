@@ -11,6 +11,18 @@
                         <field name="l10n_se_check_vendor_ocr"/>
                         <field name="l10n_se_default_vendor_payment_ref"/>
                     </group>
+                    <!-- SNI is an industry classification of Swedish companies: shown on the company, not on its contacts -->
+                    <group string="SNI Codes" name="l10n_se_sni" invisible="country_code != 'SE' or not is_company or parent_id">
+                        <field name="country_code" invisible="1"/>
+                        <field name="l10n_se_primary_sni_id" readonly="1"/>
+                        <field name="l10n_se_sni_ids" nolabel="1" colspan="2">
+                            <list editable="bottom">
+                                <field name="sequence" widget="handle"/>
+                                <field name="sni_id" options="{'no_create': True, 'no_open': True}"/>
+                                <field name="sni_name" readonly="1"/>
+                            </list>
+                        </field>
+                    </group>
                 </group>
             </field>
         </record>
