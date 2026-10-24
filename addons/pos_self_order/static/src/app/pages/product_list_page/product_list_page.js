@@ -174,10 +174,10 @@ export class ProductListPage extends Component {
         if (!currentCategory) {
             return [];
         }
-        if (currentCategory.parent_id) {
-            return currentCategory.parent_id.child_ids;
-        }
-        return currentCategory.child_ids || [];
+        const parentCategory = currentCategory.parent_id || currentCategory;
+        return (parentCategory.child_ids || []).filter((c) =>
+            this.selfOrder.isCategoryAvailable(c.id)
+        );
     }
 
     get productCategories() {

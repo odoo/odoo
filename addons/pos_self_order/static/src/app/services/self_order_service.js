@@ -237,8 +237,10 @@ export class SelfOrder extends Reactive {
         let now = luxon.DateTime.now();
         now = now.hour + now.minute / 60;
         const availableCategories = this.productCategories
-            .filter(
-                (c) => this.productByCategIds[c.id]?.length > 0 || c.associatedProducts?.length > 0
+            .filter((c) =>
+                (c.associatedProducts || this.productByCategIds[c.id] || []).some(
+                    (p) => p.self_order_available
+                )
             )
             .sort((a, b) => a.sequence - b.sequence);
         return availableCategories.filter((c) => {
