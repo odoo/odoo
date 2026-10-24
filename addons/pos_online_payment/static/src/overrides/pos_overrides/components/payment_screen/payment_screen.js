@@ -123,7 +123,7 @@ patch(PaymentScreen.prototype, {
                         qrCode: qrCodeSrc(
                             `${this.pos.session._base_url}/pos/pay/${this.currentOrder.id}?access_token=${this.currentOrder.access_token}`
                         ),
-                        orderName: this.currentOrder.name,
+                        orderName: this.currentOrder.pos_reference,
                     };
                     this.currentOrder.onlinePaymentData = onlinePaymentData;
                     const qrCodePopupCloser = this.dialog.add(
