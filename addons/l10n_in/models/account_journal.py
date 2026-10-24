@@ -1,4 +1,5 @@
-from odoo import fields, models
+from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class AccountJournal(models.Model):
@@ -9,6 +10,15 @@ class AccountJournal(models.Model):
         help="This journal is for self-invoices."
              "Invoices will be created using a different sequence as you configured.",
     )
+
+    @api.constrains('l10n_in_self_invoice', 'type', 'company_id')
+    def _check_l10n_in_self_invoice(self):
+        for journal in self.filtered('l10n_in_self_invoice'):
+            if journal.country_code != 'IN' or journal.type != 'purchase':
+                raise ValidationError(self.env._(
+                    "Self Invoice can only be enabled on purchase journals of Indian companies (journal: %(journal)s).",
+                    journal=journal.display_name,
+                ))
 
     def _compute_inbound_payment_method_line_ids(self):
         super()._compute_inbound_payment_method_line_ids()
