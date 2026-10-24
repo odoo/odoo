@@ -526,6 +526,7 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
             'rrule_type': 'weekly',
             'end_type': 'end_date',
             'until': next_month.date().isoformat(),
+            'event_tz': 'UTC',
             **weekday_dict,
         })
         events = self.env['calendar.event'].search([('name', '=', 'Weekly Sales Meeting')])
@@ -547,12 +548,13 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
             'alarm_ids': [[6, 0, [alarm.id]]],
             'partner_ids': [(4, self.partner.id)],
         }
-        self.event = self.env['calendar.event'].create(event_vals)
-        self.event._apply_recurrence_values({
+        daily_event = self.env['calendar.event'].create(event_vals)
+        daily_event._apply_recurrence_values({
             'interval': 1,
             'rrule_type': 'daily',
             'end_type': 'count',
-            'count': recurrence_count
+            'count': recurrence_count,
+            'event_tz': 'UTC',
         })
         self.env.flush_all()
         result = self.env['calendar.alarm_manager']._get_next_potential_limit_alarm('notification', partners=partner)
