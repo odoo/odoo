@@ -1008,6 +1008,22 @@ class SaleOrderLine(models.Model):
         invoiced_qties = defaultdict(float)
         for line in self:
             invoice_lines = line._get_invoice_lines()
+<<<<<<< ec7eff2c2b9cb6350b6ac290f2d9ee55551d3a20
+||||||| c2fe265e7e53195c68f5e758e26067e3ca055c3c
+            if line.is_downpayment:
+                if not line.currency_id.is_zero(sum(invoice_lines.filtered(lambda l: l.move_id.state != 'cancel').mapped('balance'))):
+                    line.qty_invoiced = 1
+                else:
+                    line.qty_invoiced = 0
+                continue
+=======
+            if line.is_downpayment:
+                if not line.currency_id.is_zero(sum(invoice_lines.filtered(lambda l: l.move_id.state != 'cancel' or l.move_id.payment_state == 'invoicing_legacy').mapped('balance'))):
+                    line.qty_invoiced = 1
+                else:
+                    line.qty_invoiced = 0
+                continue
+>>>>>>> 4f4d4d7b8af526d864a898aa8e3cf94a1673a18b
             for invoice_line in invoice_lines:
                 if line.is_downpayment:
                     if not line.currency_id.is_zero(sum(invoice_lines.filtered(lambda l: l.move_id.state != 'cancel').mapped('balance'))):
