@@ -357,6 +357,54 @@ class TestRobustness(TransactionCase):
         self.env['stock.quant']._clean_reservations()
         self.assertEqual(quant.reserved_quantity, 0)
 
+    def test_clean_quants_synch_serial(self):
+        """ A serial number can only be reserved once: a second move line reserving it
+        must not push the quant above its on hand quantity, and `_clean_reservations`
+        must not restore the over reservation from those move lines either.
+        """
+        product_serial = self.env['product.product'].create({
+            'name': 'Product Serial',
+            'is_storable': True,
+            'tracking': 'serial',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        lot = self.env['stock.lot'].create({
+            'name': 'SN1',
+            'product_id': product_serial.id,
+        })
+        self.env['stock.quant']._update_available_quantity(product_serial, self.stock_location, 1, lot_id=lot)
+        quant = self.env['stock.quant']._gather(product_serial, self.stock_location, lot_id=lot)
+
+        move = self.env['stock.move'].create({
+            'name': 'test_clean_quants_synch_serial',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': product_serial.id,
+            'product_uom_qty': 1,
+        })
+        move._action_confirm()
+        move._action_assign()
+        self.assertEqual(quant.reserved_quantity, 1)
+
+        # a second move line on the same serial, as a concurrent transaction
+        # falling through the `SKIP LOCKED` of `_update_available_quantity` does
+        move2 = move.copy()
+        move2._action_confirm()
+        self.env['stock.move.line'].create({
+            'move_id': move2.id,
+            'product_id': product_serial.id,
+            'lot_id': lot.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'quantity': 1,
+        })
+        self.assertEqual(quant.reserved_quantity, 1)
+        self.assertEqual(quant.available_quantity, 0)
+
+        self.env['stock.quant']._quant_tasks()
+        self.assertEqual(quant.reserved_quantity, 1)
+        self.assertEqual(quant.available_quantity, 0)
+
     def test_clean_quants_synch_with_different_uom(self):
         """ Ensure the _clean_reservaion method align the quants on stock.move.line when using different UoM """
         uom_kg = self.env.ref('uom.product_uom_kgm')
