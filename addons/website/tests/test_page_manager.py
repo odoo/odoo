@@ -23,6 +23,17 @@ class TestWebsitePageManager(odoo.tests.HttpCase):
         website.domain = self.base_url()
         self.start_tour('/odoo/action-website.action_website_pages_list', 'website_page_manager_direct_access', login='admin')
 
+    def test_edit_page_url(self):
+        self.env['website.page'].create({
+            'name': 'Edit URL Page',
+            'type': 'qweb',
+            'arch': '<t t-call="website.layout"/>',
+            'url': '/edit-url-page',
+        })
+        self.start_tour('/odoo/action-website.action_website_pages_list', 'website_page_manager_edit_url', login='admin')
+        self.assertEqual(self.url_open('/edit-url-updated').status_code, 200)
+        self.assertEqual(self.url_open('/edit-url-page').status_code, 404)
+
     def test_generic_page_diverged_not_shown(self):
         Page = self.env['website.page']
         Website = self.env['website']
