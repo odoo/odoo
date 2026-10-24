@@ -149,7 +149,9 @@ class StockLandedCost(models.Model):
             cost.write(cost_vals)
             if cost.account_move_id:
                 move._post()
-            cost.valuation_adjustment_lines.move_id._set_value()
+            # This cost is already done but not yet part of the moves' value.
+            cost.valuation_adjustment_lines.move_id.with_context(
+                landed_cost_in_progress=cost.id)._set_value()
         return True
 
     def get_valuation_lines(self):
