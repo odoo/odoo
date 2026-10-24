@@ -387,6 +387,7 @@ from urllib.parse import unquote_plus
 from odoo import api, models, tools
 from odoo.modules import Manifest
 from odoo.modules.registry import _REGISTRY_CACHES
+from odoo.netsvc import ExecutionInfo
 from odoo.tools import BinaryValue, config, safe_eval, OrderedSet, frozendict, json
 from odoo.tools.constants import SUPPORTED_DEBUGGER, EXTERNAL_ASSET
 from odoo.tools.safe_eval import (
@@ -630,8 +631,8 @@ class QwebContent:
     @property
     def irQweb(self):
         irQweb = self.__irQweb
-        thread_dbname = getattr(threading.current_thread(), 'dbname', None)
-        if thread_dbname and thread_dbname != irQweb.env.cr.dbname:
+        context_dbname = ExecutionInfo.get().dbname
+        if context_dbname and context_dbname != irQweb.env.cr.dbname:
             return None
         return irQweb
 
