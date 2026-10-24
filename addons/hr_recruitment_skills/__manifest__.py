@@ -10,6 +10,7 @@
         'views/hr_applicant_views.xml',
         'views/hr_applicant_skill_views.xml',
         'views/hr_job_views.xml',
+        'wizard/job_add_applicants_views.xml',
         'security/ir.access.csv',
     ],
     'assets': {
