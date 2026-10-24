@@ -3,6 +3,7 @@ import { beforeEach, expect, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
 import {
     contains,
+    defineParams,
     makeMockServer,
     MockServer,
     mountView,
@@ -59,6 +60,12 @@ async function selectTimeStart(startDateTime) {
         },
     });
 }
+
+defineParams({
+    lang_parameters: {
+        time_format: "%I:%M:%S %p",
+    },
+});
 
 beforeEach(async () => {
     mockDate("2016-12-12 08:00:00", 0);

@@ -87,6 +87,12 @@ async function makeDomainSelector(params = {}) {
 
 defineModels([Partner, Product, Country, Stage, Team, Player]);
 
+defineParams({
+    lang_parameters: {
+        time_format: "%I:%M:%S %p",
+    },
+});
+
 test("creating a domain from scratch", async () => {
     await makeDomainSelector({
         isDebugMode: true,
@@ -188,7 +194,7 @@ test("building a domain with a datetime", async () => {
     expect(".o_datetime_input").toHaveCount(1, { message: "there should be a datepicker" });
 
     // The input field should display the date and time in the user's timezone
-    expect(".o_datetime_input").toHaveValue("03/27/2017 16:42:00");
+    expect(".o_datetime_input").toHaveValue("03/27/2017 04:42:00 PM");
 
     // Change the date in the datepicker
     await contains(".o_datetime_input").click();
@@ -197,7 +203,7 @@ test("building a domain with a datetime", async () => {
     await animationFrame();
 
     // The input field should display the date and time in the user's timezone
-    expect(".o_datetime_input").toHaveValue("03/26/2017 16:42:00");
+    expect(".o_datetime_input").toHaveValue("03/26/2017 04:42:00 PM");
 });
 
 test("building a domain with an invalid path", async () => {
@@ -310,7 +316,7 @@ test("building a domain with an expression for value", async () => {
 
     expect(getCurrentValue()).toBe("context_today()");
     await clearNotSupported();
-    expect(getCurrentValue()).toBe("04/20/2023 00:00:00");
+    expect(getCurrentValue()).toBe("04/20/2023 12:00:00 AM");
 });
 
 test("building a domain with an expression in value", async () => {
@@ -2004,7 +2010,7 @@ test("date/datetime edition: switch is_set to other operators", async () => {
 
     await selectOperator(">");
     expect(".o_datetime_input").toHaveCount(1);
-    expect(getCurrentValue()).toBe("04/20/2023 23:59:59");
+    expect(getCurrentValue()).toBe("04/20/2023 11:59:59 PM");
     expect(getCurrentOperator()).toBe(label(">", "datetime"));
     expect.verifySteps(['[("datetime", ">", "2023-04-20 23:59:59")]']);
 });
