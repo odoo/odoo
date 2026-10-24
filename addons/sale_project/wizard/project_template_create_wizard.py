@@ -27,9 +27,6 @@ class ProjectTemplateCreateWizard(models.TransientModel):
 
     @api.depends('partner_id.name', 'partner_id.sale_warn_msg')
     def _compute_sale_warning_text(self):
-        if not self.env.user.has_group("sale.group_warning_sale"):
-            self.sale_warning_text = ""
-            return
         for project in self:
             warnings = OrderedSet()
             if partner_msg := project.partner_id.sale_warn_msg:

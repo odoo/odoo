@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class ResConfigSettings(models.TransientModel):
@@ -17,23 +17,9 @@ class ResConfigSettings(models.TransientModel):
     module_account_3way_match = fields.Boolean("3-way matching: purchases, receptions and bills")
     module_purchase_requisition = fields.Boolean("Purchase Agreements")
     module_purchase_alternative = fields.Boolean("Purchase Alternative")
-    module_purchase_product_matrix = fields.Boolean("Purchase Grid Entry")
 
     group_send_reminder = fields.Boolean("Receipt Reminder", implied_group='purchase.group_send_reminder', default=True,
         help="Allow automatically send email to remind your vendor the receipt date")
-
-    @api.onchange('group_product_variant')
-    def _onchange_group_product_variant_purchase(self):
-        """If the user disables the product variants -> disable the product configurator as well"""
-        if self.module_purchase_product_matrix and not self.group_product_variant:
-            self.module_purchase_product_matrix = False
-
-    @api.onchange('module_purchase_product_matrix')
-    def _onchange_module_purchase_product_matrix(self):
-        """The product variant grid requires the product variants activated
-        If the user enables the product configurator -> enable the product variants as well"""
-        if self.module_purchase_product_matrix and not self.group_product_variant:
-            self.group_product_variant = True
 
     def set_values(self):
         super().set_values()

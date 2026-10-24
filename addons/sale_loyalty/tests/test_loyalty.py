@@ -1401,7 +1401,6 @@ class TestLoyalty(TestSaleCouponCommon):
         self.assertFalse(claimable_rewards.get(loyalty_card))
 
     def test_free_product_sol_is_zero_price(self):
-        self.env["res.config.settings"].create({"group_discount_per_so_line": True}).execute()
         loyalty_program = self.env["loyalty.program"].create({
             "name": "Loyalty Program",
             "program_type": "promotion",

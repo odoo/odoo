@@ -2,20 +2,26 @@
 
 import logging
 
-from odoo.tests import tagged
+from odoo.tests import HttpCase, tagged
 
 from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.addons.product_matrix.tests.common import TestMatrixCommon
+from odoo.addons.product.tests.common import ProductCommon
 
 _logger = logging.getLogger(__name__)
 
 
 @tagged('post_install', '-at_install')
-class TestSaleMatrixUi(TestMatrixCommon):
+class TestSaleMatrixUi(HttpCase, ProductCommon):
+    _test_user_groups = (
+        'product.group_product_manager',
+        'sales_team.group_sale_manager',
+        'account.group_account_manager',
+    )
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.matrix_template = cls._create_matrix_template()
 
         # Adding sale users to test the access rights
         mail_new_test_user(

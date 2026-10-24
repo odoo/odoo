@@ -150,14 +150,6 @@
                     documentation="/applications/websites/ecommerce/managing_products/variants.html"
                 >
                     <field name="group_product_variant"/>
-                    <button
-                        string="Attributes"
-                        type="action"
-                        name="%(product.attribute_action)d"
-                        invisible="not group_product_variant"
-                        class="btn-link"
-                        icon="east"
-                    />
                 </setting>
                 <setting
                     string="Discounts, Loyalty &amp; Gift Card"
@@ -177,15 +169,6 @@
                     documentation="/applications/sales/sales/products_prices/prices/pricing.html"
                 >
                     <field name="group_product_pricelist"/>
-                    <button
-                        string="Pricelists"
-                        type="action"
-                        name="%(product.product_pricelist_action2)d"
-                        groups="product.group_product_pricelist"
-                        invisible="not group_product_pricelist"
-                        class="btn-link"
-                        icon="east"
-                    />
                 </setting>
                 <setting
                     id="hide_add_to_cart_setting"
