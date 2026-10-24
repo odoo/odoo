@@ -125,6 +125,7 @@ test("rounded when using formula in form view", async () => {
         arch: '<form><field name="price"/></form>',
     });
     await fieldInput("price").edit("=100/3");
+    expect(".o_duration_popover").toHaveText("33");
     expect(".o_field_widget input").toHaveValue("33");
 });
 
