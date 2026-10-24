@@ -163,7 +163,10 @@ export class SearchBar extends Component {
         this.state.query = query;
         this.subItems = subItems;
 
-        this.inputRef().value = query;
+        // the input may be gone when the search bar is toggled off on small screens
+        if (this.inputRef()) {
+            this.inputRef().value = query;
+        }
 
         const trimmedQuery = this.state.query.trim();
 
