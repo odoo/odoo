@@ -5,4 +5,5 @@ from . import test_l10n_in_fiscal_position
 from . import test_check_status
 from . import test_gstr_section
 from . import test_invoice_label
+from . import test_report_invoice
 from . import test_l10n_in_company

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="external_layout_legacy">
+        <div t-if="not custom_document_header" t-attf-class="header o_company_#{company.id}_layout"/>
+        <t t-call="web.external_layout_body" hide_recipient_address="True" hide_title="True">
+            <style>
+                .o_legacy_document { color: #111; font-size: 12px; line-height: 1.35; }
+                .o_legacy_document h2 { color: #111 !important; font-size: 18px; text-align: center; margin: 0 0 8px; }
+                .o_legacy_header { width: 100%; table-layout: fixed; border-collapse: collapse; margin-bottom: 12px; }
+                .o_legacy_header > tbody > tr > td { width: 50%; padding: 8px; border: 1px solid #333; vertical-align: top; }
+                .o_legacy_header ul, .o_legacy_header address { margin-bottom: 0; }
+                .o_legacy_logo { max-width: 100px; max-height: 48px; margin-bottom: 6px; }
+                .o_legacy_document .o_legacy_header #informations { display: block; margin: -8px; }
+                .o_legacy_document .o_legacy_header #informations::after { content: ''; display: table; clear: both; }
+                .o_legacy_document .o_legacy_header #informations > div { float: left; width: 50%; padding: 6px 8px; border-bottom: 1px solid #777; min-height: 48px; }
+                .o_legacy_document .o_legacy_header #informations > div:nth-child(odd) { clear: left; border-right: 1px solid #777; }
+                .o_legacy_document .o_legacy_header #informations strong { display: block; font-size: 10px; font-weight: normal; color: #111 !important; }
+                .o_legacy_document .o_main_table { border: 1px solid #333 !important; }
+                .o_legacy_document .o_main_table > :not(caption) > tr > * { border: 1px solid #777 !important; padding: 5px 6px !important; color: #111 !important; background: white !important; }
+                .o_legacy_document .o_main_table thead { display: table-header-group; }
+                .o_legacy_document .o_main_table th { font-weight: bold; }
+            </style>
+            <div class="o_legacy_document">
+                <t t-if="not custom_document_header">
+                    <h2 t-out="layout_document_title"/>
+                    <table class="o_legacy_header" name="legacy_document_header">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <img t-if="company.logo" class="o_legacy_logo" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                                    <strong class="d-block" t-out="company.name"/>
+                                    <t t-call="web.company_address_list"/>
+                                </td>
+                                <td rowspan="2">
+                                    <t t-if="document_information" t-out="document_information"/>
+                                    <t t-else="" t-out="company.report_header"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong class="d-block">Bill To</strong>
+                                    <t t-out="address"/>
+                                    <t t-if="information_block" t-out="information_block"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </t>
+                <t t-out="0"/>
+            </div>
+        </t>
+        <div t-attf-class="footer o_company_#{company.id}_layout">
+            <t t-call="web.external_layout_footer_content" is_centered_footer="True" footer_content_classes="'border-top pt-2 text-center'"/>
+        </div>
+    </template>
+
+    <record id="report_layout_legacy" model="report.layout">
+        <field name="name">Legacy</field>
+        <field name="sequence">13</field>
+        <field name="view_id" ref="account.external_layout_legacy"/>
+    </record>
+</odoo>
