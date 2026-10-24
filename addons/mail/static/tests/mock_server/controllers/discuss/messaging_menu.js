@@ -1,4 +1,8 @@
-import { _resolve_messages } from "@mail/../tests/mock_server/mail_mock_server";
+import {
+    _resolve_messages,
+    parseRequestParams,
+    registerRoute,
+} from "@mail/../tests/mock_server/mail_mock_server";
 import { registerStoreHandler } from "@mail/../tests/mock_server/store_handler";
 
 import { makeKwArgs } from "@web/../tests/web_test_helpers";
@@ -114,6 +118,42 @@ function _get_menu_tab_full_domain(env, tab_id, filter_ids = []) {
     return domain;
 }
 
+function _get_unread_channel_ids(env, { tab_id, filter_ids = [], search_term }) {
+    if (!["chat", "channel", "meeting", "livechat", "whatsapp"].includes(tab_id)) {
+        throw new Error(`unsupported conversation tab "${tab_id}"`);
+    }
+    const domain = _get_menu_tab_full_domain(env, tab_id, filter_ids);
+    domain.push(["self_member_id.is_unread", "=", true]);
+    if (search_term) {
+        domain.push(["name", "ilike", search_term]);
+    }
+    return env["discuss.channel"].search(_resolve_self_member_domain.call({ env }, domain));
+}
+
+registerRoute("/discuss/messaging_menu/unread_count", async function (request) {
+    return _get_unread_channel_ids(this.env, await parseRequestParams(request)).length;
+});
+
+registerRoute("/discuss/messaging_menu/mark_all_as_read", async function (request) {
+    const ids = _get_unread_channel_ids(this.env, await parseRequestParams(request));
+    const members = this.env["discuss.channel.member"];
+    const messages = this.env["mail.message"];
+    for (const channelId of ids) {
+        const [memberId] = members.search([
+            ["channel_id", "=", channelId],
+            ["is_self", "=", true],
+        ]);
+        const lastMessage = messages._filter([
+            ["model", "=", "discuss.channel"],
+            ["res_id", "=", channelId],
+        ]).at(-1);
+        if (memberId && lastMessage) {
+            members._mark_as_read([memberId], lastMessage.id);
+        }
+    }
+    return ids;
+});
+
 /**
  * Resolve `self_member_id.<field>` and `is_member` domain leaves against DiscussChannelMember
  * directly: the mock ORM only resolves dotted domain paths through x2many fields, so these
@@ -134,9 +174,12 @@ function _resolve_self_member_domain(domain) {
         }
         if (condition[0].startsWith("self_member_id.")) {
             const memberField = condition[0].slice("self_member_id.".length);
+            const memberCondition = memberField === "is_unread"
+                ? ["message_unread_counter", condition[2] ? ">" : "=", 0]
+                : [memberField, condition[1], condition[2]];
             const matchingChannelIds = DiscussChannelMember._filter([
                 ["is_self", "=", true],
-                [memberField, condition[1], condition[2]],
+                memberCondition,
             ]).map((m) => m.channel_id);
             return ["id", "in", matchingChannelIds];
         }
