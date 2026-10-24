@@ -15,10 +15,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-09 17:40+0000\n"
-"PO-Revision-Date: 2026-08-31 19:45+0000\n"
+"PO-Revision-Date: 2026-10-20 08:48+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-4/"
-"resource/nl/>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-20/resource/"
+"nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,6 +39,16 @@ msgid ""
 "it wants, optionally up to an hours target.\n"
 "        "
 msgstr ""
+"\n"
+"    - Vast: een wekelijks aanwezigheidspatroon dat zich elke week identiek "
+"herhaalt.\n"
+"    - Variabel: aanwezigheden die op specifieke data zijn vastgelegd in "
+"plaats van een zich herhalend wekelijks patroon, zoals een eenmalig schema "
+"of een rotatie van meerdere weken.\n"
+"    - Ongedefinieerd: helemaal geen vooraf vastgestelde tijdvakken. De "
+"resource kan werken wanneer hij/zij wil, optioneel tot een streefaantal "
+"uren.\n"
+"        "
 
 #. module: resource
 #: model:ir.module.module,description:base.module_resource
@@ -636,12 +646,14 @@ msgstr "Herhalingstype"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__reference_calendar_id
 msgid "Reference Calendar"
-msgstr ""
+msgstr "Referentie-agenda"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__reference_calendar_id
 msgid "Reference working hours used to compute the full-time equivalent."
 msgstr ""
+"Referentie-werktijden die worden gebruikt voor de berekening van het "
+"voltijdsequivalent."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__user_id

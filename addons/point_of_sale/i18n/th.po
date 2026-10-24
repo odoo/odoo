@@ -21,10 +21,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 13:55+0000\n"
+"POT-Creation-Date: 2026-10-23 17:40+0000\n"
+"PO-Revision-Date: 2026-10-21 05:29+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
-"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-4/"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-20/"
 "point_of_sale/th/>\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
@@ -599,6 +599,12 @@ msgstr "? คลิก\"ยืนยัน\"เพื่อตรวจสอบ
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid "A customer is required to use the payment method %s."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment.py:0
+msgid "A customer must be set on the order to pay with a customer account."
 msgstr ""
 
 #. module: point_of_sale
@@ -1811,6 +1817,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/select_default_payment_method_popup/select_default_payment_method_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.js:0
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
@@ -2648,6 +2655,7 @@ msgstr "กำหนดค่าการขายหน้าร้านอย
 #: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/money_details_popup/money_details_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
+#: code:addons/point_of_sale/static/src/app/components/popups/select_default_payment_method_popup/select_default_payment_method_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_confirm_action_wizard
@@ -4695,6 +4703,12 @@ msgid "Invoice Status"
 msgstr "สถานะใบแจ้งหนี้"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
+msgid "Invoice required"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -5040,11 +5054,6 @@ msgid ""
 msgstr ""
 "เว้นว่างไว้เพื่อใช้บัญชีเริ่มต้นจากการตั้งค่าบริษัท\n"
 "แทนที่บัญชีลูกหนี้ของบริษัท (สำหรับระบบขายหน้าร้าน) ที่ใช้ในรายการสมุดรายวัน"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
-msgid "Leave empty to use the receivable account of customer"
-msgstr "เว้นว่างไว้เพื่อใช้บัญชีลูกหนี้ของลูกค้า"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__journal_id
@@ -6096,6 +6105,106 @@ msgid ""
 "interaction history, profiles, and more.\n"
 "\n"
 msgstr ""
+"Odoo การขายหน้าร้าน\n"
+"-----------------------------\n"
+"\n"
+"การขายหน้าร้านของ Odoo\n"
+"มีอินเตอร์เฟซที่สะอาดตาและไม่ต้องติดตั้ง สามารถทำงานออนไลน์และออฟไลน์ได้บนฮาร์ดแวร์ที่ทันสมัย\n"
+"\n"
+"การผสมผสานกับสินค้าคงคลังและบัญชีของบริษัทให้คุณได้สถิติและการรวมกันแบบเรียลไทม์ในร้านค้าทั้งหมดโดยไม่ต้องยุ่งยากในการรวมแอปพลิเคชันหลายๆแอปพลิเคชัน\n"
+"\n"
+"ทำงานกับฮาร์ดแวร์ที่คุณมีอยู่แล้ว\n"
+"---------------------------------------\n"
+"\n"
+"### ในเบราว์เซอร์ของคุณ\n"
+"\n"
+"POS ของ Odoo "
+"เป็นแอปพลิเคชันเว็บที่สามารถทำงานได้บนอุปกรณ์ใดก็ได้ที่สามารถแสดงเว็บไซต์ได้โดยการตั้งค่าง่ายๆ\n"
+"\n"
+"### เป็นจอสัมผัสหรือแป้นพิมพ์?\n"
+"\n"
+"การขายหน้าร้านทำงานได้อย่างสมบูรณ์บนอุปกรณ์ที่สามารถใช้สัมผัสได้ "
+"ไม่ว่าจะเป็นแท็บเล็ตที่รองรับการสัมผัสหลายจุดเช่น iPad หรือเครื่องสัมผัสแบบไม่มีแป้นพิมพ์\n"
+"\n"
+"### เครื่องชั่งและเครื่องพิมพ์\n"
+"\n"
+"สแกนบาร์โค้ดและเครื่องพิมพ์สนับสนุนโดยอัตโนมัติโดยไม่ต้องตั้งค่า สามารถใช้เครื่องชั่ง ลิ้นชักเงินสด "
+"และอุปกรณ์เสริมอื่นๆ กับ API พร็อกซี\n"
+"\n"
+"ออนไลน์และออฟไลน์\n"
+"------------------\n"
+"\n"
+"### POS ของ Odoo ยังคงเป็นที่เชื่อถือได้แม้ว่าการเชื่อมต่อของคุณจะไม่ได้\n"
+"\n"
+"สามารถเปิดร้านค้าใหม่ได้เพียงแค่มีการเชื่อมต่ออินเทอร์เน็ต: **ไม่ต้องติดตั้ง "
+"ไม่ต้องมีฮาร์ดแวร์เฉพาะ** สามารถทำงานได้กับ **iPad, Tablet PC, แล็ปท็อป** หรือเครื่อง "
+"POS อุตสาหกรรม\n"
+"\n"
+"แม้ว่าจะต้องการการเชื่อมต่ออินเทอร์เน็ตเพื่อเริ่มต้นการขายหน้าร้าน "
+"แต่จะยังคงทำงานได้แม้ว่าการตัดสายเชื่อมต่อจะเกิดขึ้น\n"
+"\n"
+"อินเตอร์เฟซผู้ใช้ที่สะอาดตาและง่ายต่อการใช้งาน\n"
+"----------------------------\n"
+"\n"
+"### ง่ายและสวยงาม\n"
+"\n"
+"บอกลาซอฟต์แวร์ POS ที่น่าเบื่อและล้าสมัยได้แล้ว เพลิดเพลินไปกับอินเตอร์เฟซเว็บของ Odoo "
+"ที่ออกแบบมาสำหรับลูกค้ารุ่นใหม่\n"
+"\n"
+"### ออกแบบเพื่อการผลิต\n"
+"\n"
+"ไม่ว่าจะเป็นร้านอาหารหรือร้านค้า คุณสามารถเปิดใช้งานคำสั่งหลายๆ "
+"อันพร้อมกันเพื่อไม่ให้ลูกค้าต้องรอนาน\n"
+"\n"
+"### ค้นหาอย่างรวดเร็ว\n"
+"\n"
+"สแกนสินค้า เรียกดูผ่านหมวดหมู่ชั้นเชิงลึก "
+"หรือรับข้อมูลอย่างรวดเร็วเกี่ยวกับสินค้าด้วยตัวกรองที่เร็วและแรงที่สุดในสินค้าทั้งหมดของคุณ\n"
+"\n"
+"ผสานการจัดการคลังสินค้า\n"
+"-------------------------------\n"
+"\n"
+"รวมทีมขายทั้งหมดของคุณในเวลาจริง: ร้านค้า อีคอมเมิร์ซ ทีมขาย "
+"ได้ควบคุมการจัดการคลังสินค้าและการคาดการณ์ที่แม่นยำในการจัดการการจัดซื้อ\n"
+"\n"
+"ระบบการจัดการคลังสินค้าแบบครบวงจรที่คุณสามารถเข้าถึงได้ง่าย: "
+"รับข้อมูลเกี่ยวกับความพร้อมใช้งานของสินค้า สั่งการจัดซื้อและอื่นๆ\n"
+"\n"
+"ให้บริการลูกค้าในร้านค้า\n"
+"----------------------------------\n"
+"\n"
+"ให้ประสบการณ์ที่ดีกับลูกค้าของคุณโดยการรวมบริการลูกค้าในร้านค้า จัดการการซ่อม "
+"ติดตามการรับประกัน ติดตามการเรียกร้องของลูกค้า วางแผนการส่งสินค้าและอื่นๆ\n"
+"\n"
+"การผสานการใช้งานระหว่างระบบบัญชีและใบแจ้งหนี้\n"
+"----------------------------------\n"
+"\n"
+"สร้างใบแจ้งหนี้ลูกค้าได้โดยคลิกไม่กี่ครั้ง "
+"ควบคุมการขายและเงินสดในเวลาจริงและใช้รายงานที่มีประสิทธิภาพของ Odoo "
+"เพื่อตัดสินใจที่ดีกว่าเพื่อเพิ่มประสิทธิภาพของร้านค้าของคุณ\n"
+"\n"
+"ไม่ต้องยุ่งยากในการรวมซอฟต์แวร์: รับการดำเนินการขายและคลังสินค้าทั้งหมดที่โพสต์โดยอัตโนมัติใน G/"
+"L ของคุณ\n"
+"\n"
+"ข้อมูลที่รวมกันในร้านค้าทั้งหมด\n"
+"------------------------------\n"
+"\n"
+"รับผลิตภัณฑ์ใหม่ กลยุทธ์การกำหนดราคา และโปรโมชั่นที่ใช้งานโดยอัตโนมัติในร้านค้าที่เลือกได้ "
+"ทำงานกับฐานลูกค้าที่รวมกัน "
+"ไม่จำเป็นต้องมีอินเตอร์เฟซที่ซับซ้อนเพื่อควบคุมกลยุทธ์ทั่วโลกในร้านค้าทั้งหมดของคุณ\n"
+"\n"
+"ด้วย Odoo เป็นการทำงานเบื้องหลัง "
+"คุณจะได้ระบบที่เหมาะสมอย่างสมบูรณ์แบบสำหรับร้านค้าขนาดเล็กหรือบริษัทระดับโลก\n"
+"\n"
+"รู้จักลูกค้าของคุณ - ทั้งในร้านค้าและออนไลน์\n"
+"--------------------------------------\n"
+"\n"
+"แบรนด์ที่ประสบความสำเร็จรวมทั้งความสัมพันธ์กับลูกค้าของพวกเขาทั้งหมดในช่องทางการขายทั้งหมดเพื่อพัฒนาโปรไฟล์ลูกค้าที่แม่นยำและสื่อสารกับลูกค้าเมื่อพวกเขาตัดสินใจซื้อสินค้า "
+"ทั้งในร้านค้าหรือออนไลน์\n"
+"\n"
+"ด้วย Odoo คุณจะได้รับมุมมองลูกค้าแบบ 360 องศา รวมถึงการขายทางช่องทางต่างๆ ประวัติการติดต่อ "
+"โปรไฟล์ และอื่นๆ อีกมากมาย\n"
+"\n"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6245,6 +6354,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 msgid "Open Cashbox"
 msgstr ""
@@ -8825,6 +8935,11 @@ msgid "Select a customer with a valid address."
 msgstr ""
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
+msgid "Select a journal"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Select a payment method to validate the order."
@@ -8852,6 +8967,12 @@ msgstr "เลือกรายการราคา"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Select the product(s) to refund and set the quantity"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/select_default_payment_method_popup/select_default_payment_method_popup.xml:0
+msgid "Select your default payment method"
 msgstr ""
 
 #. module: point_of_sale
@@ -10020,6 +10141,14 @@ msgid ""
 msgstr "ไม่อนุญาตให้ใช้วิธีการชำระเงินที่เลือกในการกำหนดค่าของเซสชัน POS"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/select_default_payment_method_popup/select_default_payment_method_popup.xml:0
+msgid ""
+"The payment method you choose will be linked to your device. You can change "
+"it later from the menu on top right."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_available_categ_ids
 msgid ""
 "The point of sale will only display products which are within one of the "
@@ -10469,6 +10598,14 @@ msgid ""
 "This order is not yet synced to server. Make sure it is synced then try "
 "again."
 msgstr "คำสั่งนี้ยังไม่ได้ซิงค์กับเซิร์ฟเวอร์ ตรวจสอบให้แน่ใจว่ามีการซิงค์แล้วลองอีกครั้ง"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
+msgid ""
+"This order must be invoiced before validation because it mixes pay-later "
+"payment and cash-basis taxes."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11996,6 +12133,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr ""
+
+#~ msgid "Leave empty to use the receivable account of customer"
+#~ msgstr "เว้นว่างไว้เพื่อใช้บัญชีลูกหนี้ของลูกค้า"
 
 #~ msgid "Bank Statement Line"
 #~ msgstr "รายการใบแจ้งยอดจากธนาคาร"

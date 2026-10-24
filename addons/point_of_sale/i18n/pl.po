@@ -42,10 +42,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 13:53+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-4/"
+"POT-Creation-Date: 2026-10-23 17:40+0000\n"
+"PO-Revision-Date: 2026-10-19 11:54+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-20/"
 "point_of_sale/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -638,6 +638,12 @@ msgstr "? Kliknięcie \"Potwierdź\" sprawdzi płatność."
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid "A customer is required to use the payment method %s."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment.py:0
+msgid "A customer must be set on the order to pay with a customer account."
 msgstr ""
 
 #. module: point_of_sale
@@ -1883,6 +1889,7 @@ msgstr "Nie można utworzyć kodu QR dla kwoty zerowej."
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/select_default_payment_method_popup/select_default_payment_method_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.js:0
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
@@ -2730,6 +2737,7 @@ msgstr "Skonfiguruj co najmniej jeden punkt sprzedaży."
 #: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/money_details_popup/money_details_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
+#: code:addons/point_of_sale/static/src/app/components/popups/select_default_payment_method_popup/select_default_payment_method_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_confirm_action_wizard
@@ -4825,6 +4833,12 @@ msgid "Invoice Status"
 msgstr "Status faktury"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
+msgid "Invoice required"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -5179,11 +5193,6 @@ msgstr ""
 "Pozostaw puste, aby użyć domyślnego konta z ustawień firmy.\n"
 "Zastępuje konto należności firmy (dla punktu sprzedaży) używane we wpisach "
 "do dziennika."
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
-msgid "Leave empty to use the receivable account of customer"
-msgstr "Pozostaw puste, aby użyć konta należności klienta"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__journal_id
@@ -6263,6 +6272,141 @@ msgid ""
 "interaction history, profiles, and more.\n"
 "\n"
 msgstr ""
+"Odoo Punkt Sprzedaży\n"
+"-----------------------------\n"
+"\n"
+"Punkt sprzedaży Odoo\n"
+"wprowadza super przejrzysty interfejs bez konieczności instalacji, który "
+"działa\n"
+"online i offline na nowoczesnym sprzęcie.\n"
+"\n"
+"Pełna integracja z inwentaryzacją i księgowością firmy zapewnia statystyki w "
+"czasie rzeczywistym i konsolidację\n"
+"statystyki w czasie rzeczywistym i konsolidacje między wszystkimi sklepami "
+"bez konieczności\n"
+"integracji kilku aplikacji.\n"
+"\n"
+"Praca na sprzęcie, który już posiadasz\n"
+"---------------------------------------\n"
+"\n"
+"### W przeglądarce internetowej\n"
+"\n"
+"Odoo POS to aplikacja internetowa, która może działać na dowolnym "
+"urządzeniu, które może wyświetlać\n"
+"strony WWW z niewielką lub żadną konfiguracją.\n"
+"\n"
+"### Ekran dotykowy czy klawiatura?\n"
+"\n"
+"Punkt sprzedaży działa doskonale na każdym urządzeniu obsługującym dotyk, "
+"niezależnie od tego, czy jest to\n"
+"są to wielodotykowe tablety, takie jak iPad, czy bezklawiaturowe terminale z "
+"ekranem dotykowym.\n"
+"terminale.\n"
+"\n"
+"### Wagi i drukarki\n"
+"\n"
+"Skanery kodów kreskowych i drukarki są obsługiwane od razu po wyjęciu z "
+"pudełka, bez\n"
+"konfiguracji. Wagi, kasy i inne urządzenia peryferyjne mogą być używane z "
+"proxy\n"
+"API.\n"
+"\n"
+"Online i Offline\n"
+"------------------\n"
+"\n"
+"### POS Odoo pozostaje niezawodny, nawet jeśli nie masz połączenia z "
+"Internetem\n"
+"\n"
+"Wdrażaj nowe sklepy za pomocą połączenia internetowego: **bez instalacji, "
+"bez\n"
+"nie jest wymagany żaden konkretny sprzęt**. Działa z każdym **iPadem, "
+"tabletem PC, laptopem** lub\n"
+"przemysłowym urządzeniem POS.\n"
+"\n"
+"Podczas gdy połączenie internetowe jest wymagane do uruchomienia punktu "
+"sprzedaży, pozostanie on\n"
+"działać nawet po całkowitym rozłączeniu.\n"
+"\n"
+"\n"
+"Bardzo przejrzysty interfejs użytkownika\n"
+"----------------------------\n"
+"\n"
+"### Prosty i piękny\n"
+"\n"
+"Pożegnaj się z brzydkim, przestarzałym oprogramowaniem POS i ciesz się "
+"interfejsem internetowym Odoo\n"
+"zaprojektowanym dla nowoczesnych sprzedawców detalicznych.\n"
+"\n"
+"### Zaprojektowany dla produktywności\n"
+"\n"
+"Niezależnie od tego, czy jest to restauracja, czy sklep, możesz aktywować "
+"wiele zamówień\n"
+"równolegle, aby klienci nie musieli czekać.\n"
+"\n"
+"### Błyskawiczne wyszukiwanie\n"
+"\n"
+"Skanuj produkty, przeglądaj hierarchiczne kategorie lub uzyskaj szybkie "
+"informacje\n"
+"o produktach dzięki szybkiemu filtrowaniu wszystkich produktów.\n"
+"\n"
+"Zintegrowane zarządzanie zapasami\n"
+"-------------------------------\n"
+"\n"
+"Konsolidacja wszystkich zespołów sprzedaży w czasie rzeczywistym: sklepy, e-"
+"commerce, zespoły sprzedaży.\n"
+"zespoły. Uzyskaj kontrolę nad zapasami w czasie rzeczywistym i dokładne "
+"prognozy, aby zarządzać\n"
+"zamówieniami.\n"
+"\n"
+"Pełny system zarządzania magazynem na wyciągnięcie ręki: uzyskiwanie "
+"informacji o dostępności produktów, wyzwalanie zamówień itp.\n"
+"dostępności produktów, wyzwalaj żądania zamówień itp.\n"
+"\n"
+"Obsługa klienta w sklepie\n"
+"----------------------------------\n"
+"\n"
+"Zapewnij swoim klientom dobre wrażenia z zakupów, integrując usługi\n"
+"usługi. Obsługa reklamacji, wystąpienie gwarancji, śledzenie roszczeń "
+"klientów, planowanie zamówień dostawy itp.\n"
+"zamówienia dostawy itp.\n"
+"\n"
+"Integracja fakturowania i księgowości\n"
+"----------------------------------\n"
+"\n"
+"Wystawianie faktur dla klientów za pomocą kilku kliknięć. Kontroluj sprzedaż "
+"i gotówkę w czasie rzeczywistym\n"
+"w czasie rzeczywistym i korzystaj z zaawansowanego raportowania Odoo, aby "
+"podejmować mądrzejsze decyzje w celu poprawy\n"
+"aby poprawić wydajność sklepu.\n"
+"\n"
+"Koniec z kłopotliwą integracją oprogramowania: wszystkie operacje sprzedaży "
+"i inwentaryzacji\n"
+"operacje magazynowe automatycznie zaksięgowane w G/L.\n"
+"\n"
+"Ujednolicone dane dla wszystkich sklepów\n"
+"------------------------------\n"
+"\n"
+"Otrzymuj nowe produkty, strategie cenowe i promocje stosowane automatycznie "
+"w wybranych sklepach.\n"
+"wybranych sklepach. Pracuj na ujednoliconej bazie klientów. Żaden złożony "
+"interfejs nie jest\n"
+"do pilotowania globalnej strategii we wszystkich sklepach.\n"
+"\n"
+"Z Odoo jako zapleczem, masz system, który doskonale nadaje się dla\n"
+"małych sklepów lub dużych międzynarodowych korporacji.\n"
+"\n"
+"Poznaj swoich klientów - w sklepie i poza nim\n"
+"--------------------------------------\n"
+"\n"
+"Marki odnoszące sukcesy integrują wszystkie swoje relacje z klientami we "
+"wszystkich kanałach\n"
+"kanały, aby opracować dokładny profil klienta i komunikować się z "
+"kupującymi, gdy\n"
+"podejmują decyzje zakupowe, w sklepie lub online.\n"
+"\n"
+"Odoo zapewnia 360-stopniowy widok klienta, w tym sprzedaż wielokanałową,\n"
+"historię interakcji, profile i wiele więcej.\n"
+"\n"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6417,6 +6561,7 @@ msgstr "Otwarte"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 msgid "Open Cashbox"
 msgstr "Otwórz kasę"
@@ -9024,6 +9169,11 @@ msgid "Select a customer with a valid address."
 msgstr "Wybierz klienta z prawidłowym adresem."
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
+msgid "Select a journal"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Select a payment method to validate the order."
@@ -9052,6 +9202,12 @@ msgstr "Wybierz cennik"
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Select the product(s) to refund and set the quantity"
 msgstr "Wybierz produkt(y) do zwrotu i skonfiguruj ilość."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/select_default_payment_method_popup/select_default_payment_method_popup.xml:0
+msgid "Select your default payment method"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__attribute_value_ids
@@ -10260,6 +10416,14 @@ msgid ""
 msgstr "Wybrana metoda płatności nie jest dozwolona w konfiguracji sesji POS."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/select_default_payment_method_popup/select_default_payment_method_popup.xml:0
+msgid ""
+"The payment method you choose will be linked to your device. You can change "
+"it later from the menu on top right."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_available_categ_ids
 msgid ""
 "The point of sale will only display products which are within one of the "
@@ -10763,6 +10927,14 @@ msgid ""
 msgstr ""
 "To zamówienie nie jest jeszcze zsynchronizowane z serwerem. Upewnij się, że "
 "jest zsynchronizowane, a następnie spróbuj ponownie."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
+msgid ""
+"This order must be invoiced before validation because it mixes pay-later "
+"payment and cash-basis taxes."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -12339,6 +12511,9 @@ msgstr "o wartości"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr "x"
+
+#~ msgid "Leave empty to use the receivable account of customer"
+#~ msgstr "Pozostaw puste, aby użyć konta należności klienta"
 
 #~ msgid "Bank Statement Line"
 #~ msgstr "Pozycja wyciągu bankowego"

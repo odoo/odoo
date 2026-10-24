@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 17:39+0000\n"
+"POT-Creation-Date: 2026-10-23 17:40+0000\n"
 "PO-Revision-Date: 2026-10-11 13:33+0000\n"
 "Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -691,8 +691,8 @@ msgid ""
 "Accrual entries generated for this line, so it isn't accrued again while one "
 "is still standing (posted, not yet reversed or cancelled)."
 msgstr ""
-"为此外购订单行生成的应计分录；只要其中一条仍然有效（已过账，尚未冲回或取消）"
-"，此行就不会重复计提。"
+"为此外购订单行生成的应计分录；只要其中一条仍然有效（已过账，尚未冲回或取"
+"消），此行就不会重复计提。"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_accrued_expense_entry_purchase_order_line
@@ -2432,14 +2432,14 @@ msgstr ""
 "--------------------------\n"
 "\n"
 "利用最优价格做出明智的采购决策。轻松导入供应商价格表，根据促销、按数量定价及"
-"特殊合同条件做出更明智的采购决策。您甚至可以根据供应商的价格来制定销售价格"
-"。\n"
+"特殊合同条件做出更明智的采购决策。您甚至可以根据供应商的价格来制定销售价"
+"格。\n"
 "\n"
 "管控产品与发票\n"
 "-----------------------------\n"
 "\n"
-"不遗漏任何产品或订单，库存管控让您能够管理缺货订单、退款、产品收货和质量控制"
-"。根据您的需要选择合适的管控方式。\n"
+"不遗漏任何产品或订单，库存管控让您能够管理缺货订单、退款、产品收货和质量控"
+"制。根据您的需要选择合适的管控方式。\n"
 "\n"
 "轻松管控供应商账单。根据您的需要选择合适的方式：基于采购订单或产品收货预先生"
 "成草稿发票、手动创建发票并从采购订单导入明细行，等等。\n"
@@ -3287,7 +3287,8 @@ msgid ""
 "Reset to today's date to recompute expected arrival based on available lead "
 "time                                     and previous information from the "
 "RFQ."
-msgstr "重置为今天日期，根据可用提前期和询价单中的先前信息重新计算预计到货时间。"
+msgstr ""
+"重置为今天日期，根据可用提前期和询价单中的先前信息重新计算预计到货时间。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_user_id
@@ -3689,6 +3690,12 @@ msgstr "订购数量和单价已更新。"
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "The ordered quantity has been updated."
 msgstr "订购数量已更新。"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/res_partner.py:0
+msgid "The partner cannot be deleted because it is used as a dropship address"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -4308,7 +4315,8 @@ msgstr ""
 msgid ""
 "{{ object.company_id.name }} Request for Quotation (Ref {{ object.name or 'n/"
 "a' }})"
-msgstr "{{ object.company_id.name }} 采购询价（参考 {{ object.name or 'n/a' }}）"
+msgstr ""
+"{{ object.company_id.name }} 采购询价（参考 {{ object.name or 'n/a' }}）"
 
 #~ msgid "Translated Product Name"
 #~ msgstr "已翻译的产品名称"

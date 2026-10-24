@@ -42,8 +42,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 17:41+0000\n"
-"PO-Revision-Date: 2026-10-14 15:33+0000\n"
+"POT-Creation-Date: 2026-10-23 17:40+0000\n"
+"PO-Revision-Date: 2026-10-20 12:34+0000\n"
 "Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/account/"
 "tr/>\n"
@@ -128,7 +128,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
-#, fuzzy
 msgid ""
 "\n"
 "Please contact your administrator."
@@ -151,7 +150,7 @@ msgstr " %skadar geçerli"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
 msgid "# Reconciled Bank Transactions"
-msgstr ""
+msgstr "# Uzlaştırılmış Banka İşlemleri"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -243,6 +242,8 @@ msgstr "%(user)s%(end_datetime_string)s%(reason)s için%(exception)s"
 msgid ""
 "%(failed_count)s out of %(total_count)s entries could not be reset to draft."
 msgstr ""
+"%(failed_count)s %(total_count)s 'daki girişlerden sıfır tanesi taslak "
+"durumuna sıfırlanamadı."
 
 #. module: account
 #. odoo-python
@@ -358,6 +359,9 @@ msgid ""
 "'active' field of account.report shouldn't be directly written to in data "
 "files. Use active_fallback. (Detected while loading %(file_path)s)"
 msgstr ""
+"account.report dosyasının 'active' alanı, veri dosyalarında doğrudan "
+"yazılmamalıdır. active_fallback kullanın. ( %(file_path)s dosyası "
+"yüklenirken tespit edildi)"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_block_payment
@@ -540,11 +544,9 @@ msgstr "90 gün, ayın 10'unda"
 #. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 msgid ""
-"<b>%(count)s#</b> Installment of <b>%(amount)s</b> due on <b style='color: "
+"<b>%(count)s</b> - Installment of <b>%(amount)s</b> due on <b style='color: "
 "#704A66;'>%(date)s</b>"
 msgstr ""
-"<b>%(count)s#</b> taksit tutarı olan <b>%(amount)s</b> ödeme tarihi <b "
-"style='color: #704A66;'>%(date)s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -900,6 +902,11 @@ msgid ""
 "                            <span class=\"text-danger\" "
 "invisible=\"duplicated_ref_ids.length &gt; 1\">Delete duplicate</span>"
 msgstr ""
+"<i class=\"oi oi-filled text-danger\" data-icon=\"delete\"/>\n"
+"                            <span class=\"text-danger\" "
+"invisible=\"duplicated_ref_ids.length == 1\">Tüm yinelenenleri sil</span>\n"
+"                            <span class=\"text-danger\" "
+"invisible=\"duplicated_ref_ids.length &gt; 1\">Yineleneni sil</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -2643,6 +2650,8 @@ msgid ""
 "Account '%s' used for payable line is not of payable type. Check if the "
 "account type is correct."
 msgstr ""
+"Ödeme satırı için kullanılan '%s' hesabı, ödeme türüne uygun değildir. Hesap "
+"türünün doğru olup olmadığını kontrol edin."
 
 #. module: account
 #. odoo-python
@@ -2651,6 +2660,8 @@ msgid ""
 "Account '%s' used for receivable line is not of receivable type. Check if "
 "the account type is correct."
 msgstr ""
+"Alacak satırı için kullanılan '%s' hesabı, alacak türü değildir. Hesap "
+"türünün doğru olup olmadığını kontrol edin."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -2675,7 +2686,6 @@ msgstr "Hesap Planı Şablonu"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_code_mapping.py:0
-#, fuzzy
 msgid ""
 "Account Code Mapping cannot be accessed directly. It is designed to be used "
 "only through the Chart of Accounts."
@@ -3201,43 +3211,50 @@ msgstr "Tahakkuk eden toplam"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_buildings
-msgid "Accumulated Depreciation - Buildings"
-msgstr ""
+#, fuzzy
+msgid "Accumulated Amortization - Buildings"
+msgstr "Birikmiş Amortisman - Binalar"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_furniture
-msgid "Accumulated Depreciation - Furniture & Fixtures"
-msgstr ""
+#, fuzzy
+msgid "Accumulated Amortization - Furniture & Fixtures"
+msgstr "Birikmiş Amortisman - Mobilya ve Demirbaşlar"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_improvements
-msgid "Accumulated Depreciation - Improvements"
-msgstr ""
+#, fuzzy
+msgid "Accumulated Amortization - Improvements"
+msgstr "Birikmiş Amortisman - İyileştirmeler"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_machines
-msgid "Accumulated Depreciation - Machines & Tools"
-msgstr ""
+#, fuzzy
+msgid "Accumulated Amortization - Machines & Tools"
+msgstr "Birikmiş Amortisman - Makine ve Aletler"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_other_property
-msgid "Accumulated Depreciation - Other Property"
-msgstr ""
+#, fuzzy
+msgid "Accumulated Amortization - Other Property"
+msgstr "Birikmiş Amortisman - Diğer Mülkler"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_technology
-msgid "Accumulated Depreciation - Technology"
-msgstr ""
+#, fuzzy
+msgid "Accumulated Amortization - Technology"
+msgstr "Birikmiş Amortisman - Teknoloji"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_vehicles
-msgid "Accumulated Depreciation - Vehicles"
-msgstr ""
+#, fuzzy
+msgid "Accumulated Amortization - Vehicles"
+msgstr "Birikmiş Amortisman - Araçlar"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_acc_depreciation
-msgid "Accumulated Depreciation Misc"
-msgstr ""
+msgid "Accumulated Depreciation"
+msgstr "BİRİKMİŞ AMORTİSMANLAR (-)"
 
 #. module: account
 #: model:account.account,name:account.21_retained_earnings
@@ -3420,6 +3437,8 @@ msgid ""
 "Add a QR-code to your invoices so that your customers can pay instantly with "
 "their banking application."
 msgstr ""
+"Faturalarınıza bir QR kodu ekleyin, böylece müşterileriniz bankacılık "
+"uygulamalarıyla anında ödeme yapabilirler."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3583,6 +3602,46 @@ msgstr ""
 msgid "Adjusting Entry {link} {percent}%% of {amount} recognized on {new_date}"
 msgstr ""
 "Girş Ayarlaması {link} {percent}%% of {amount} şu tarihte tanındı  {new_date}"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_depreciation_and_amortization
+msgid "Adjustment - Depreciation and amortization"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_fin_instr_sale
+msgid "Adjustment - Financial Instruments"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_intangible_asset
+msgid "Adjustment - Intangible Assets"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_net_fin_result
+msgid "Adjustment - Net Financial Result"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_PPE_sale
+msgid "Adjustment - PPE Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_provisions
+msgid "Adjustment - Provisions"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_ROU_sale
+msgid "Adjustment - Right of Use Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_unrealized_forex
+msgid "Adjustment - Unrealized Forex"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_administration_fees
@@ -4344,6 +4403,8 @@ msgid ""
 "At least one transaction in the statement is prior the last posted "
 "transaction (%s)"
 msgstr ""
+"Hesap özetindeki en az bir işlem, en son kaydedilen işlemden önce "
+"gerçekleşmiştir (%s)"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__to_beginning_of_fiscalyear
@@ -5979,12 +6040,12 @@ msgstr ""
 "üretmek"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account_tag__color
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__color
 msgid "Color"
 msgstr "Renk"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_account_tag__color
 #: model:ir.model.fields,field_description:account.field_account_journal__color
 msgid "Color Index"
 msgstr "Renk"
@@ -7028,38 +7089,38 @@ msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_buildings
-msgid "Cumulative depreciation recorded for building assets."
+msgid "Cumulative amortization recorded for building assets."
 msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_technology
-msgid "Cumulative depreciation recorded for capitalized technology assets."
+msgid "Cumulative amortization recorded for capitalized technology assets."
 msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_furniture
-msgid "Cumulative depreciation recorded for furniture and fixture assets."
+msgid "Cumulative amortization recorded for furniture and fixture assets."
 msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_improvements
 msgid ""
-"Cumulative depreciation recorded for leasehold or property improvements."
+"Cumulative amortization recorded for leasehold or property improvements."
 msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_machines
-msgid "Cumulative depreciation recorded for machinery and tool assets."
+msgid "Cumulative amortization recorded for machinery and tool assets."
 msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_other_property
-msgid "Cumulative depreciation recorded for other depreciable property assets."
+msgid "Cumulative amortization recorded for other depreciable property assets."
 msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_vehicles
-msgid "Cumulative depreciation recorded for vehicle assets."
+msgid "Cumulative amortization recorded for vehicle assets."
 msgstr ""
 
 #. module: account
@@ -9288,7 +9349,7 @@ msgstr "Faktör Oranı"
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__factor
 msgid ""
 "Factor to apply on the journal items generated from this distribution line"
-msgstr ""
+msgstr "Bu dağıtım satırından oluşturulan dergi öğelerine uygulanacak faktör"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__factor_percent
@@ -9382,6 +9443,36 @@ msgstr "Finansal Hesaplar Önekleri"
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__journal_id
 msgid "Financial Journal"
 msgstr "Finans Yevmiyesi"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_borrowings_lt
+msgid "Financing - Borrowings Long Term"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_borrowings_st
+msgid "Financing - Borrowings Short Term"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_dividends
+msgid "Financing - Dividends"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_lease
+msgid "Financing - Lease"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_recov_adv
+msgid "Financing - Recoverable Advances"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_share_issuance
+msgid "Financing - Share Issuance"
+msgstr ""
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_financing
@@ -10642,6 +10733,8 @@ msgid ""
 "If you are not subject to VAT, you will have no sale taxes and only non "
 "deductible taxes activated"
 msgstr ""
+"KDV'ye tabi değilseniz, satış vergileriniz olmayacak ve yalnızca "
+"indirilemeyen vergiler etkinleştirilecektir"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11276,6 +11369,51 @@ msgid "Investing & Extraordinary Activities"
 msgstr "Yatırım ve Olağanüstü Faaliyetler"
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_inv_cash_advances
+msgid "Investment - Cash Advances"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_fin_instr_purchase
+msgid "Investment - Financial Instruments Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_fin_instr_sale
+msgid "Investment - Financial Instruments Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_int_ass_purchase
+msgid "Investment - Intangible Assets Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_int_ass_sale
+msgid "Investment - Intangible Assets Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_interest_received
+msgid "Investment - Interest Received"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_ppe_purchase
+msgid "Investment - PPE Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_ppe_sale
+msgid "Investment - PPE Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_rou_sale
+msgid "Investment - Right of Use Sale"
+msgstr ""
+
+#. module: account
 #. odoo-javascript
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
@@ -11878,6 +12016,8 @@ msgid ""
 "It exists closing entries after the selected date. Cancel them before "
 "generate an entry prior to them"
 msgstr ""
+"Seçilen tarihten sonraki girişler mevcut. Bunlardan önceki bir girişi "
+"oluşturmadan önce bunları iptal edin"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__is_move_sent
@@ -13957,6 +14097,9 @@ msgid ""
 "Odoo allows you to reconcile a transaction directly with\n"
 "                the related sale or purchase invoices."
 msgstr ""
+"Odoo, bir işlemi doğrudan\n"
+"                ilgili satış veya satınalma faturalarıyla mutabakatlamanıza "
+"olanak tanır."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_customer
@@ -14251,6 +14394,16 @@ msgstr "Devir Kaydı Onaylandı"
 #: code:addons/account/models/company.py:0
 msgid "Opening balance"
 msgstr "Devir Bakiyesi"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_op_income_tax_paid_received
+msgid "Operating - Income Tax Paid Received"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_op_interest_paid
+msgid "Operating - Interest Paid"
+msgstr ""
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_operating
@@ -16681,6 +16834,8 @@ msgstr "İnceleme Açıklamaları"
 msgid ""
 "Review all the modification done by the user with right under bookkeeper."
 msgstr ""
+"Kullanıcı tarafından yapılan tüm değişiklikleri, \"bookkeeper\"ın hemen "
+"altında inceleyin."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__set_to_review_documents
@@ -17876,6 +18031,8 @@ msgid ""
 "Specify how the rounding difference is applied: add a rounding line or "
 "adjust the highest tax amount."
 msgstr ""
+"Yuvarlama farkının nasıl uygulanacağını belirtin: bir yuvarlama satırı "
+"ekleyin veya en yüksek vergi tutarını ayarlayın."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__auto_post
@@ -18804,6 +18961,8 @@ msgstr "Banka üzerinde alan adını almak için teknik alan"
 msgid ""
 "Technical field used to display warnings if there's a potential phishing risk"
 msgstr ""
+"Olası bir kimlik avı riski varsa uyarıları görüntülemek için kullanılan "
+"teknik alan"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence_override_regex
@@ -19246,6 +19405,8 @@ msgid ""
 "The cash rounding method \"%(name)s\" has no Profit/Loss Accounts set, so no "
 "rounding line can be added."
 msgstr ""
+"\"%(name)s\" adlı nakit yuvarlama yönteminde Kâr/Zarar Hesapları "
+"ayarlanmamıştır, bu nedenle yuvarlama satırı eklenemez."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -19298,6 +19459,8 @@ msgstr "Bu dağıtım satırının ait olduğu şirket."
 #: model:ir.model.fields,help:account.field_account_cash_rounding__rounding_method
 msgid "The computation rule used to round values (e.g., UP, DOWN, or HALF-UP)."
 msgstr ""
+"Değerleri yuvarlamak için kullanılan hesaplama kuralı (örn. UP, DOWN veya "
+"HALF-UP)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
@@ -19316,6 +19479,8 @@ msgid ""
 "The country of the foreign Tax ID could not be detected. Please assign a "
 "country to the fiscal position."
 msgstr ""
+"Yabancı vergi kimlik numarasının ait olduğu ülke tespit edilemedi. Lütfen "
+"mali pozisyona bir ülke atayın."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
@@ -19851,6 +20016,8 @@ msgid ""
 "The scheduled action 'Send Invoices automatically' is archived. You won't be "
 "able to send invoices in batch."
 msgstr ""
+"\"Faturaları otomatik olarak gönder\" adlı zamanlanmış eylem arşivlenmiştir. "
+"Faturaları toplu olarak gönderemezsiniz."
 
 #. module: account
 #. odoo-python
@@ -20110,6 +20277,8 @@ msgid ""
 "There are still unreconciled bank transactions in the period you want to "
 "lock. You should either reconcile or delete them."
 msgstr ""
+"Kilitlemek istediğiniz dönemde henüz mutabakatı yapılmamış banka işlemleri "
+"bulunmaktadır. Bunları ya mutabakatını yapmalı ya da silmelisiniz."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
@@ -20219,6 +20388,8 @@ msgid ""
 "This account is used in bank reconciliation. Currency rate difference "
 "entries will be automatically created if needed."
 msgstr ""
+"Bu hesap, banka mutabakatında kullanılır. Gerekirse döviz kuru farkı "
+"kayıtları otomatik olarak oluşturulur."
 
 #. module: account
 #. odoo-python
@@ -21871,6 +22042,8 @@ msgid ""
 "When automated inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
+"Bir ürün için otomatik stok değerlemesi etkinleştirildiğinde, bu hesap "
+"ürünlerin güncel değerini tutacaktır."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__print_on_new_page
@@ -21925,6 +22098,8 @@ msgid ""
 "With perpetual valuation, this account will hold the price difference "
 "between the standard price and the bill price."
 msgstr ""
+"Sürekli değerleme ile bu hesap, standart fiyat ile fatura fiyatı arasındaki "
+"fiyat farkını tutacaktır."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -21956,6 +22131,36 @@ msgstr "Devam Eden Çalışma"
 #: model:account.account,name:account.22_account_account_us_compensation_insurance
 msgid "Workers Compensation Insurance"
 msgstr "İşçi Tazminat Sigortası"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_deferred_revenue
+msgid "Working Capital - Deferred Revenue"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_inventory
+msgid "Working Capital - Inventory"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_other_payable
+msgid "Working Capital - Other Payable"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_other_receivable
+msgid "Working Capital - Other Receivable"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_trade_payable
+msgid "Working Capital - Trade Payable"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_trade_receivable
+msgid "Working Capital - Trade Receivable"
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -22121,6 +22326,8 @@ msgid ""
 "You can unsubscribe from emails received upon invoice sending and reception "
 "here."
 msgstr ""
+"Faturalama ve alımıyla ilgili e-postaların aboneliğinden buradan "
+"çıkabilirsiniz."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_base_document_layout__vat
@@ -22160,6 +22367,8 @@ msgid ""
 "You can't create a new bank transaction without a suspense account set on "
 "the %s journal."
 msgstr ""
+"%s 'daki yevmiye defterinde bir geçici hesap ayarlanmadan yeni bir banka "
+"işlemi oluşturamazsınız."
 
 #. module: account
 #. odoo-python
@@ -22293,6 +22502,7 @@ msgstr ""
 msgid ""
 "You cannot change the amount of a payment with multiple liquidity lines."
 msgstr ""
+"Birden fazla likidite hattı bulunan bir ödemenin tutarını değiştiremezsiniz."
 
 #. module: account
 #. odoo-python
@@ -22336,6 +22546,8 @@ msgid ""
 "You cannot create a fiscal position with a foreign Tax ID within your fiscal "
 "country without assigning it a state."
 msgstr ""
+"Vergi ülkenizde, bir eyalet atamadan yabancı bir vergi kimlik numarasıyla "
+"mali pozisyon oluşturamazsınız."
 
 #. module: account
 #. odoo-python
@@ -23236,6 +23448,11 @@ msgstr ""
 "herhangi bir talebin bildirilmesi gerekmektedir."
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_non_applicable
+msgid "not applicable"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
 msgid "of tax"
 msgstr "vergisi"
@@ -23483,6 +23700,15 @@ msgid ""
 "{{ object.company_id.name }} {{ object.payment_receipt_title }} (Ref "
 "{{ object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.payment_receipt_title }} (Kaynak "
+"{{ object.name or 'n/a' }})"
+
+#~ msgid ""
+#~ "<b>%(count)s#</b> Installment of <b>%(amount)s</b> due on <b "
+#~ "style='color: #704A66;'>%(date)s</b>"
+#~ msgstr ""
+#~ "<b>%(count)s#</b> taksit tutarı olan <b>%(amount)s</b> ödeme tarihi <b "
+#~ "style='color: #704A66;'>%(date)s</b>"
 
 #~ msgid "# Reconciled Statement Lines"
 #~ msgstr "# Denkleştirilen Hesap Özeti Kalemleri"
@@ -23615,37 +23841,6 @@ msgstr ""
 #~ msgstr ""
 #~ "%s yevmiyesinde bir geçici hesap ayarlanmadan yeni bir ekstre satırı "
 #~ "oluşturamazsınız."
-
-#, fuzzy
-#~ msgid "Accumulated Amortization - Buildings"
-#~ msgstr "Birikmiş Amortisman - Binalar"
-
-#, fuzzy
-#~ msgid "Accumulated Amortization - Furniture & Fixtures"
-#~ msgstr "Birikmiş Amortisman - Mobilya ve Demirbaşlar"
-
-#, fuzzy
-#~ msgid "Accumulated Amortization - Improvements"
-#~ msgstr "Birikmiş Amortisman - İyileştirmeler"
-
-#, fuzzy
-#~ msgid "Accumulated Amortization - Machines & Tools"
-#~ msgstr "Birikmiş Amortisman - Makine ve Aletler"
-
-#, fuzzy
-#~ msgid "Accumulated Amortization - Other Property"
-#~ msgstr "Birikmiş Amortisman - Diğer Mülkler"
-
-#, fuzzy
-#~ msgid "Accumulated Amortization - Technology"
-#~ msgstr "Birikmiş Amortisman - Teknoloji"
-
-#, fuzzy
-#~ msgid "Accumulated Amortization - Vehicles"
-#~ msgstr "Birikmiş Amortisman - Araçlar"
-
-#~ msgid "Accumulated Depreciation"
-#~ msgstr "BİRİKMİŞ AMORTİSMANLAR (-)"
 
 #~ msgid ""
 #~ "<div style=\"margin: 0px; padding: 0px;\">\n"

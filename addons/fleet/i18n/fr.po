@@ -14,10 +14,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-09-09 13:59+0000\n"
+"PO-Revision-Date: 2026-10-24 21:55+0000\n"
 "Last-Translator: \"Cécile Collart (cco)\" <cco@odoo.com>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-master/fleet/"
-"fr/>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-20/fleet/fr/>"
+"\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,6 +46,23 @@ msgid ""
 "* Show all costs associated to a vehicle or to a type of service\n"
 "* Analysis graph for costs\n"
 msgstr ""
+"\n"
+"Véhicules, leasing, assurances, coûts\n"
+"==================================\n"
+"Avec ce module, Odoo vous aide à gérer tous vos véhicules, les\n"
+"contrats associés à ces véhicules ainsi que les services, les coûts\n"
+"et de nombreuses autres fonctionnalités nécessaires à la gestion de votre "
+"parc\n"
+"automobile\n"
+"\n"
+"Fonctionnalités principales\n"
+"-------------\n"
+"* Ajoutez des véhicules à votre parc automobile\n"
+"* Gérez les contrats des véhicules\n"
+"* Recevez un rappel lorsqu'un contrat arrive à expiration\n"
+"* Ajoutez des services et des relevés kilométriques pour tous les véhicules\n"
+"* Consultez tous les coûts associés à un véhicule ou à un type de service\n"
+"* Analyse graphique des coûts\n"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
@@ -317,7 +334,7 @@ msgstr "Disponible"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__next_assignation_date
 msgid "Available From"
-msgstr ""
+msgstr "Disponible à partir du"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__avatar_1920
@@ -558,7 +575,7 @@ msgstr ""
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Close"
-msgstr ""
+msgstr "Fermer"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__contract_state__closed
@@ -1623,7 +1640,7 @@ msgstr ""
 #. module: fleet
 #: model:ir.module.module,summary:base.module_fleet
 msgid "Manage your fleet and track car costs"
-msgstr ""
+msgstr "Gérez votre parc automobile et suivez les coûts des véhicules"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_10
@@ -1654,7 +1671,7 @@ msgstr "Fabricants"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Mark as Done"
-msgstr ""
+msgstr "Marquer comme terminé"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__activity_type_icon
@@ -1662,7 +1679,7 @@ msgstr ""
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__activity_type_icon
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Icône Material Symbols, par ex. checklist"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_has_error
@@ -2523,6 +2540,8 @@ msgid ""
 "The date from which this vehicle becomes available for assignment. Leave "
 "empty if it's available immediately."
 msgstr ""
+"Date à partir de laquelle ce véhicule peut être attribué. Laissez ce champ "
+"vide s'il est disponible immédiatement."
 
 #. module: fleet
 #. odoo-python
@@ -2674,7 +2693,7 @@ msgstr "Unité"
 #. odoo-python
 #: code:addons/fleet/models/fleet_vehicle.py:0
 msgid "Unnamed Vehicle"
-msgstr ""
+msgstr "Véhicule sans nom"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
@@ -2883,6 +2902,8 @@ msgid ""
 "Write here any other information related to this vehicle to show in salary "
 "configurator"
 msgstr ""
+"Saisissez ici toute autre information relative à ce véhicule à afficher dans "
+"le configurateur de salaire"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_send_mail_view_form

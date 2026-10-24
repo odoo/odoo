@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:38+0000\n"
-"PO-Revision-Date: 2026-10-12 10:34+0000\n"
+"PO-Revision-Date: 2026-10-23 11:39+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-20/"
 "stock_account/ar/>\n"
@@ -44,6 +44,20 @@ msgid ""
 "------------------------------------------------------\n"
 "* Stock Inventory Value at given date (support dates in the past)\n"
 msgstr ""
+"\n"
+"تطبيق المحاسبة لنظام إدارة المستودعات\n"
+"======================\n"
+"يضع هذا التطبيق الرابطة بين تطبيقي 'المخزون' و 'الحساب' ويتيح لك إنشاء "
+"القيود المحاسبية لتقييم حركات مخزونك\n"
+"\n"
+"الخصائص الأساسية\n"
+"------------\n"
+"* تقييم المخزون (دورياً أو تلقائياً)\n"
+"* الفوترة من عملية الانتقاء\n"
+"\n"
+"تشمل لوحة البيانات/ تقارير إدارة المستودعات:\n"
+"------------------------------------------------------\n"
+"* قيمة البضاعة الموجودة في المخزون في تاريخ محدد (يدعم التواريخ في الماضي)\n"
 
 #. module: stock_account
 #. odoo-python
@@ -58,6 +72,8 @@ msgid ""
 "%(lot)s cost update from %(old_value)s to %(new_value)s for %(quantity)s by %"
 "(user)s"
 msgstr ""
+"%(lot)s تحديث التكلفة من %(old_value)s إلى %(new_value)s للكمية %(quantity)s "
+"بواسطة %(user)s"
 
 #. module: stock_account
 #. odoo-python
@@ -66,6 +82,8 @@ msgid ""
 "%(move)s cost update from %(old_value)s to %(new_value)s for %(quantity)s by "
 "%(user)s"
 msgstr ""
+"تم تحديث تكلفة%(move)s من %(old_value)s إلى %(new_value)s للكمية %(quantity)"
+"s بواسطة %(user)s"
 
 #. module: stock_account
 #. odoo-python
@@ -76,7 +94,7 @@ msgstr "%(quantity)s %(uom)s بسعر التكلفة"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_move_form
 msgid "<span class=\"o_stat_text\">Product Value</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">قيمة المنتج</span>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -111,17 +129,19 @@ msgstr "قيمة AVCO"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "مجموعات الوصول"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__account_move_id
 msgid "Account Move"
-msgstr ""
+msgstr "حركة الحساب"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__cogs_aml_ids
 msgid "Account move lines using this move in order to compute their COGS"
 msgstr ""
+"بنود القيد المحاسبي التي تستخدم هذا القيد لحساب تكلفة البضاعة المباعة (COGS) "
+"الخاصة بها"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_adjustment_name__accounting_date
@@ -172,12 +192,12 @@ msgstr "تم تعديله بتاريخ %(date)s بواسطة %(user)s"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__adjustment
 msgid "Adjustment"
-msgstr ""
+msgstr "التسوية"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_search_view
 msgid "Adjustments"
-msgstr ""
+msgstr "التعديلات"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -202,7 +222,7 @@ msgstr "بند الحساب التحليلي"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_plan
 msgid "Analytic Plan"
-msgstr ""
+msgstr "الخطة التحليلية"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__avg_cost
@@ -730,12 +750,12 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
 msgid "Quant"
-msgstr ""
+msgstr "الكمية "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__quantity
 msgid "Quantity"
-msgstr ""
+msgstr "الكمية"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__reference
@@ -859,7 +879,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_move_view_list
 msgid "Total"
-msgstr ""
+msgstr "الإجمالي "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__total_quantity

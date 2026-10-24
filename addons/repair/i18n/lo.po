@@ -4,15 +4,15 @@
 #
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2017
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:38+0000\n"
-"PO-Revision-Date: 2026-08-31 15:29+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Lao <https://translate.odoo.com/projects/odoo-s19-4/repair/lo/"
-">\n"
+"PO-Revision-Date: 2026-10-19 11:54+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-20/repair/lo/>\n"
 "Language: lo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,27 +35,38 @@ msgid ""
 "    * Repair quotation report\n"
 "    * Notes for the technician and for the final customer\n"
 msgstr ""
+"\n"
+"ຈຸດປະສົງແມ່ນເພື່ອໃຫ້ມີໂມດູນທີ່ຄົບຖ້ວນໃນການຄຸ້ມຄອງການສ້ອມແປງສິນຄ້າທັງໝົດ.\n"
+"====================================================================\n"
+"\n"
+"ຫົວຂໍ້ຕໍ່ໄປນີ້ແມ່ນກວມເອົາໂດຍໂມດູນນີ້:\n"
+"------------------------------------------------------\n"
+"    * ເພີ່ມ/ເອົາອອກ ສິນຄ້າໃນການສ້ອມແປງ\n"
+"    * ຜົນກະທົບຕໍ່ສາງສິນຄ້າ\n"
+"    * ແນວຄວາມຄິດການຮັບປະກັນ\n"
+"    * ລາຍງານໃບສະເໜີລາຄາການສ້ອມແປງ\n"
+"    * ບັນທຶກສຳລັບຊ່າງເຕັກນິກ ແລະ ສຳລັບລູກຄ້າສຸດທ້າຍ\n"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/stock_warehouse.py:0
 msgid "%(name)s Sequence repair"
-msgstr ""
+msgstr "%(name)s ລຳດັບການສ້ອມແປງ"
 
 #. module: repair
 #: model:ir.actions.report,print_report_name:repair.action_report_repair_order
 msgid "('Repair Order - %s' % (object.name))"
-msgstr ""
+msgstr "('ໃບສັ່ງສ້ອມແປງ - %s' % (object.name))"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "(<i>Recycle</i>)"
-msgstr ""
+msgstr "(<i>ໝູນໃຊ້ຄືນ</i>)"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "(<i>Remove</i>)"
-msgstr ""
+msgstr "(<i>ເອົາອອກ</i>)"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__state
@@ -66,173 +77,177 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* ສະຖານະ 'ໃໝ່' ແມ່ນໃຊ້ເມື່ອຜູ້ໃຊ້ກຳລັງປ້ອນຂໍ້ມູນໃບສັ່ງສ້ອມແປງໃໝ່ທີ່ຍັງບໍ່ທັນຢັ້ງຢືນ.\n"
+"* ສະຖານະ 'ຢັ້ງຢືນແລ້ວ' ແມ່ນໃຊ້ເມື່ອຜູ້ໃຊ້ຢັ້ງຢືນໃບສັ່ງສ້ອມແປງ.\n"
+"* ສະຖານະ 'ສຳເລັດ' ແມ່ນຖືກກຳນົດເມື່ອການສ້ອມແປງສຳເລັດສົມບູນ.\n"
+"* ສະຖານະ 'ຍົກເລີກ' ແມ່ນໃຊ້ເມື່ອຜູ້ໃຊ້ຍົກເລີກໃບສັ່ງສ້ອມແປງ."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<i>(Add)</i>"
-msgstr ""
+msgstr "<i>(ເພີ່ມ)</i>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
 msgid "<span class=\"col-6\">Confirmed</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">ຢັ້ງຢືນແລ້ວ</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
 msgid "<span class=\"col-6\">Late</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">ຊັກຊ້າ</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Done:</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">ສຳເລັດ:</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Repair Parts:</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">ຊິ້ນສ່ວນສ້ອມແປງ:</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "<span class=\"o_stat_text\">Sale Order</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">ໃບສັ່ງຂາຍ</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">To Do:</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">ສິ່ງທີ່ຕ້ອງເຮັດ:</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
 msgid "<span>Orders</span>"
-msgstr ""
+msgstr "<span>ລາຍການສັ່ງ</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<span>Repair Order #</span>"
-msgstr ""
+msgstr "<span>ໃບສັ່ງສ້ອມແປງ #</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Customer:</strong>"
-msgstr ""
+msgstr "<strong>ຄຸ່ຄ້າ:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Lot/Serial:</strong>"
-msgstr ""
+msgstr "<strong>ຊຸດ/ເລກຊີຣຽວ:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Product:</strong>"
-msgstr ""
+msgstr "<strong>ສິນຄ້າ:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Responsible:</strong>"
-msgstr ""
+msgstr "<strong>ຜູ້ຮັບຜິດຊອບ:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Status:</strong>"
-msgstr ""
+msgstr "<strong>ສະພາບ:</strong>"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "ຈຳເປັນຕ້ອງດຳເນີນການ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_ids
 msgid "Activities"
-msgstr ""
+msgstr "ກິດຈະກຳ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "ການຕົກແຕ່ງຂໍ້ຍົກເວັ້ນກິດຈະກຳ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "ແຜນກິດຈະກຳ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "ສະຖານະກິດຈະກຳ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "ໄອຄອນປະເພດກິດຈະກຳ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.repair_order_view_activity
 msgid "Activity view"
-msgstr ""
+msgstr "ມຸມມອງກິດຈະກຳ"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__stock_move__repair_line_type__add
 msgid "Add"
-msgstr ""
+msgstr "ເພີ່ມ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Add a line"
-msgstr ""
+msgstr "ເພີ່ມແຖວ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Add internal notes."
-msgstr ""
+msgstr "ເພີ່ມບັນທຶກພາຍໃນ."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__location_dest_id
 msgid "Added Parts Destination Location"
-msgstr ""
+msgstr "ສະຖານທີ່ປາຍທາງຂອງຊິ້ນສ່ວນທີ່ເພີ່ມ"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__search_date_category__after
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "After"
-msgstr ""
+msgstr "ຫຼັງຈາກ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
 msgid "All"
-msgstr ""
+msgstr "ທັງໝົດ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__is_parts_available
 msgid "All Parts are available"
-msgstr ""
+msgstr "ມີຊິ້ນສ່ວນທັງໝົດພ້ອມໃຊ້ງານ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__allowed_lot_ids
 msgid "Allowed Lot"
-msgstr ""
+msgstr "ຊຸດທີ່ອະນຸຍາດ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__allowed_uom_ids
 #: model:ir.model.fields,field_description:repair.field_repair_service_line__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "ຫົວໜ່ວຍວັດແທກທີ່ອະນຸຍາດ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__reserve_visible
 msgid "Allowed to Reserve Production"
-msgstr ""
+msgstr "ອະນຸຍາດໃຫ້ສຳຮອງການຜະລິດ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__unreserve_visible
 msgid "Allowed to Unreserve Production"
-msgstr ""
+msgstr "ອະນຸຍາດໃຫ້ຍົກເລີກການສຳຮອງການຜະລິດ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__is_parts_late
 msgid "Any Part is late"
-msgstr ""
+msgstr "ມີບາງຊິ້ນສ່ວນຊັກຊ້າ"
 
 #. module: repair
 #. odoo-python
@@ -242,56 +257,59 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
+"ເນື່ອງຈາກຫົວໜ່ວຍວັດແທກອື່ນ (ຕົວຢ່າງ: %(problem_uom)s) ນອກເໜືອຈາກ %(uom)s ໄດ້ຖືກນຳໃຊ້ສຳລັບສິນ"
+"ຄ້ານີ້ແລ້ວ, ຈຶ່ງບໍ່ສາມາດປ່ຽນແປງຫົວໜ່ວຍວັດແທກໄດ້. ຖ້າທ່ານຕ້ອງການປ່ຽນແປງ, ກະລຸນາຈັດເກັບສິນຄ້ານີ້ໄວ້ໃນຄັງເ"
+"ກັບ ແລະ ສ້າງສິນຄ້າໃໝ່."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "ຈຳນວນໄຟລ໌ຄັດຕິດ"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__parts_availability_state__available
 msgid "Available"
-msgstr ""
+msgstr "ພ້ອມໃຊ້ງານ"
 
 #. module: repair
 #. odoo-javascript
 #: code:addons/repair/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Repair"
-msgstr ""
+msgstr "ກັບໄປທີ່ການສ້ອມແປງ"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__search_date_category__before
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Before"
-msgstr ""
+msgstr "ກ່ອນ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.product_view_search_catalog
 msgid "BoM Components"
-msgstr ""
+msgstr "ສ່ວນປະກອບ BoM"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__can_create_extra_invoice
 msgid "Can Create Extra Invoice"
-msgstr ""
+msgstr "ສາມາດສ້າງໃບຮຽກເກັບເງິນເພີ່ມເຕີມໄດ້"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__can_create_sale_or_invoice
 msgid "Can Create Sale Or Invoice"
-msgstr ""
+msgstr "ສາມາດສ້າງການຂາຍ ຫຼື ໃບຮຽກເກັບເງິນໄດ້"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/stock_warehouse.py:0
 msgid "Can't find any production location."
-msgstr ""
+msgstr "ບໍ່ພົບສະຖານທີ່ຜະລິດໃດໆ."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Cancel"
-msgstr ""
+msgstr "ຍົກເລີກ"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__cancel
@@ -302,7 +320,7 @@ msgstr "ຍົກເລີກ"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Catalog"
-msgstr ""
+msgstr "ລາຍການສິນຄ້າ"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__partner_id
@@ -310,11 +328,13 @@ msgid ""
 "Choose partner for whom the order will be invoiced and delivered. You can "
 "find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
+"ເລືອກຄູ່ຄ້າທີ່ຈະອອກໃບຮຽກເກັບເງິນ ແລະ ສົ່ງມອບສິນຄ້າໃຫ້. ທ່ານສາມາດຊອກຫາຄູ່ຄ້າໄດ້ຕາມ ຊື່, ເລກປະຈຳຕົວຜູ້"
+"ເສຍອາກອນ (TIN), ອີເມວ ຫຼື ລະຫັດອ້າງອີງພາຍໃນ."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_tags__color
 msgid "Color Index"
-msgstr ""
+msgstr "ດັດຊະນີສີ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__company_id
@@ -326,34 +346,34 @@ msgstr "ບໍລິສັດ"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.repair_view_picking_type_form
 msgid "Component Destination Location"
-msgstr ""
+msgstr "ສະຖານທີ່ປາຍທາງຂອງສ່ວນປະກອບ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__location_id
 #: model_terms:ir.ui.view,arch_db:repair.repair_view_picking_type_form
 msgid "Component Source Location"
-msgstr ""
+msgstr "ສະຖານທີ່ຕົ້ນທາງຂອງສ່ວນປະກອບ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__parts_availability
 msgid "Component Status"
-msgstr ""
+msgstr "ສະຖານະສ່ວນປະກອບ"
 
 #. module: repair
 #: model:ir.ui.menu,name:repair.repair_menu_config
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
 msgid "Configuration"
-msgstr ""
+msgstr "ການກຳນົດຄ່າ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_consumption_warning_form
 msgid "Confirm"
-msgstr ""
+msgstr "ຢັ້ງຢືນ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Confirm Repair"
-msgstr ""
+msgstr "ຢັ້ງຢືນການສ້ອມແປງ"
 
 #. module: repair
 #. odoo-python
@@ -361,46 +381,46 @@ msgstr ""
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__confirmed
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Confirmed"
-msgstr ""
+msgstr "ຢັ້ງຢືນແລ້ວ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_consumption_warning_line__product_consumed_qty_uom
 msgid "Consumed"
-msgstr ""
+msgstr "ຊົມໃຊ້ແລ້ວ"
 
 #. module: repair
 #: model:ir.actions.act_window,name:repair.action_repair_consumption_warning
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_consumption_warning_form
 msgid "Consumption Warning"
-msgstr ""
+msgstr "ຄຳເຕືອນການຊົມໃຊ້"
 
 #. module: repair
 #: model:ir.model,name:repair.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "ຜູ້ຕິດຕໍ່"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/stock_picking.py:0
 #: model:ir.actions.server,name:repair.action_create_repair_order
 msgid "Create Repair"
-msgstr ""
+msgstr "ສ້າງການສ້ອມແປງ"
 
 #. module: repair
 #: model:ir.model,website_form_label:repair.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "ສ້າງຄຸ່ຄ້າ"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tag
 msgid "Create a new tag"
-msgstr ""
+msgstr "ສ້າງປ້າຍກຳກັບໃໝ່"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:repair.field_product_template__service_tracking
 msgid "Create on Order"
-msgstr ""
+msgstr "ສ້າງຕາມໃບສັ່ງ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_consumption_warning__create_uid
@@ -409,7 +429,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:repair.field_repair_service_line__create_uid
 #: model:ir.model.fields,field_description:repair.field_repair_tags__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "ສ້າງໂດຍ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_consumption_warning__create_date
@@ -418,12 +438,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:repair.field_repair_service_line__create_date
 #: model:ir.model.fields,field_description:repair.field_repair_tags__create_date
 msgid "Created on"
-msgstr ""
+msgstr "ສ້າງເມື່ອ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Creates a new serial/lot number"
-msgstr ""
+msgstr "ສ້າງເລກຊີຣຽວ/ເລກຊຸດໃໝ່"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__partner_id
@@ -434,12 +454,12 @@ msgstr "ຄຸ່ຄ້າ"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__search_date_category
 msgid "Date Category"
-msgstr ""
+msgstr "ໝວດໝູ່ວັນທີ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Demand"
-msgstr ""
+msgstr "ຄວາມຕ້ອງການ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_service_line__description
@@ -451,12 +471,12 @@ msgstr "ຄຳອະທິບາຍ"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Details"
-msgstr ""
+msgstr "ລາຍລະອຽດ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_consumption_warning_form
 msgid "Discard"
-msgstr ""
+msgstr "ຍົກເລີກການປ່ຽນແປງ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_account_move__display_name
@@ -480,54 +500,54 @@ msgstr ""
 #: model:ir.model.fields,field_description:repair.field_stock_traceability_report__display_name
 #: model:ir.model.fields,field_description:repair.field_stock_warehouse__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ຊື່ສະແດງ"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__done
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Done"
-msgstr ""
+msgstr "ສຳເລັດ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "End Repair"
-msgstr ""
+msgstr "ສິ້ນສຸດການສ້ອມແປງ"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid "Exp %s"
-msgstr ""
+msgstr "ໝົດອາຍຸ %s"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__parts_availability_state__expected
 msgid "Expected"
-msgstr ""
+msgstr "ຄາດໄວ້"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "ຜູ້ຕິດຕາມ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "ຜູ້ຕິດຕາມ (ຄູ່ຄ້າ)"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Future Activities"
-msgstr ""
+msgstr "ກິດຈະກຳໃນອະນາຄົດ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "ມີຂໍ້ຄວາມ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__has_uncomplete_moves
 msgid "Has Uncomplete Moves"
-msgstr ""
+msgstr "ມີການເຄື່ອນຍ້າຍທີ່ຍັງບໍ່ສຳເລັດ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_account_move__id
@@ -551,28 +571,28 @@ msgstr ""
 #: model:ir.model.fields,field_description:repair.field_stock_traceability_report__id
 #: model:ir.model.fields,field_description:repair.field_stock_warehouse__id
 msgid "ID"
-msgstr ""
+msgstr "ລະຫັດ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_exception_icon
 msgid "Icon"
-msgstr ""
+msgstr "ໄອຄອນ"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "ໄອຄອນເພື່ອບົ່ງບອກກິດຈະກຳທີ່ເປັນຂໍ້ຍົກເວັ້ນ."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "ຖ້າໝາຍຕິກ, ຂໍ້ຄວາມໃໝ່ຈະຮຽກຮ້ອງຄວາມສົນໃຈຈາກທ່ານ."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_error
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "ຖ້າໝາຍຕິກ, ບາງຂໍ້ຄວາມມີຂໍ້ຜິດພາດໃນການສົ່ງ."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__under_warranty
@@ -580,6 +600,7 @@ msgid ""
 "If ticked, the sales price will be set to 0 for all products transferred "
 "from the repair order."
 msgstr ""
+"ຖ້າໝາຍຕິກ, ລາຄາຂາຍຈະຖືກຕັ້ງເປັນ 0 ສຳລັບສິນຄ້າທັງໝົດທີ່ໂອນມາຈາກໃບສັ່ງສ້ອມແປງ."
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -589,92 +610,95 @@ msgid ""
 "different\n"
 "                operations."
 msgstr ""
+"ໃນໃບສັ່ງສ້ອມແປງ, ທ່ານສາມາດລະບຸລາຍລະອຽດສ່ວນປະກອບທີ່ທ່ານເອົາອອກ,\n"
+"                ເພີ່ມ ຫຼື ປ່ຽນແທນ ແລະ ບັນທຶກເວລາທີ່ທ່ານໃຊ້ໃນການດຳເນີນງານ\n"
+"                ຕ່າງໆ."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_lot__in_repair_count
 msgid "In repair count"
-msgstr ""
+msgstr "ຈຳນວນທີ່ກຳລັງສ້ອມແປງ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.product_view_search_catalog
 msgid "In the Repair Order"
-msgstr ""
+msgstr "ໃນໃບສັ່ງສ້ອມແປງ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__internal_notes
 msgid "Internal Notes"
-msgstr ""
+msgstr "ບັນທຶກພາຍໃນ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__move_id
 msgid "Inventory Move"
-msgstr ""
+msgstr "ການເຄື່ອນຍ້າຍສາງ"
 
 #. module: repair
 #: model:ir.actions.act_window,name:repair.action_repair_move_lines
 msgid "Inventory Moves"
-msgstr ""
+msgstr "ການເຄື່ອນຍ້າຍສາງ"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__validate_button_style__invisible
 msgid "Invisible"
-msgstr ""
+msgstr "ເຊື່ອງໄວ້"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_ids
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Invoice"
-msgstr ""
+msgstr "ໃບຮຽກເກັບເງິນ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_count
 msgid "Invoice Count"
-msgstr ""
+msgstr "ຈຳນວນໃບຮຽກເກັບເງິນ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_service_line__invoice_line_ids
 msgid "Invoice Line"
-msgstr ""
+msgstr "ແຖວໃບຮຽກເກັບເງິນ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Invoices"
-msgstr ""
+msgstr "ໃບຮຽກເກັບເງິນ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "ແມ່ນຜູ້ຕິດຕາມ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Jane Smith"
-msgstr ""
+msgstr "Jane Smith"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "John Doe"
-msgstr ""
+msgstr "John Doe"
 
 #. module: repair
 #: model:ir.model,name:repair.model_account_move
 msgid "Journal Entry"
-msgstr ""
+msgstr "ລາຍການບັນທຶກບັນຊີ"
 
 #. module: repair
 #: model:ir.model,name:repair.model_account_move_line
 msgid "Journal Item"
-msgstr ""
+msgstr "ລາຍການບັນຊີຍ່ອຍ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "L12345"
-msgstr ""
+msgstr "L12345"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Laptop"
-msgstr ""
+msgstr "ຄອມພິວເຕີໂນ້ດບຸກ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_consumption_warning__write_uid
@@ -683,7 +707,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:repair.field_repair_service_line__write_uid
 #: model:ir.model.fields,field_description:repair.field_repair_tags__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "ປັບປຸງລ່າສຸດໂດຍ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_consumption_warning__write_date
@@ -692,18 +716,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:repair.field_repair_service_line__write_date
 #: model:ir.model.fields,field_description:repair.field_repair_tags__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "ປັບປຸງລ່າສຸດເມື່ອ"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__parts_availability_state__late
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Late"
-msgstr ""
+msgstr "ຊັກຊ້າ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Late Activities"
-msgstr ""
+msgstr "ກິດຈະກຳທີ່ຊັກຊ້າ"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__parts_availability
@@ -711,47 +735,48 @@ msgid ""
 "Latest parts availability status for this RO. If green, then the RO's "
 "readiness status is ready."
 msgstr ""
+"ສະຖານະຄວາມພ້ອມຂອງຊິ້ນສ່ວນລ່າສຸດສຳລັບ RO ນີ້. ຖ້າເປັນສີຂຽວ, ສະຖານະຄວາມພ້ອມຂອງ RO ແມ່ນພ້ອມແລ້ວ."
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_consumption_warning_line
 msgid "Line of issue consumption"
-msgstr ""
+msgstr "ແຖວບັນຫາການຊົມໃຊ້"
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_lot
 #: model:ir.model.fields,field_description:repair.field_repair_order__lot_id
 msgid "Lot/Serial"
-msgstr ""
+msgstr "ຊຸດ/ເລກຊີຣຽວ"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "ໄອຄອນ Material Symbols ຕົວຢ່າງ checklist"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "ຂໍ້ຜິດພາດໃນການສົ່ງຂໍ້ຄວາມ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "ຂໍ້ຄວາມ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_consumption_warning_line__move_id
 msgid "Move"
-msgstr ""
+msgstr "ຍ້າຍ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "My Activities"
-msgstr ""
+msgstr "ກິດຈະກຳຂອງຂ້ອຍ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "ກຳນົດເວລາກິດຈະກຳຂອງຂ້ອຍ"
 
 #. module: repair
 #. odoo-python
@@ -760,169 +785,169 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "New"
-msgstr ""
+msgstr "ໃໝ່"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "ເຫດການປະຕິທິນກິດຈະກຳຖັດໄປ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "ກຳນົດເວລາກິດຈະກຳຖັດໄປ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "ສະຫຼຸບກິດຈະກຳຖັດໄປ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "ປະເພດກິດຈະກຳຖັດໄປ"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/stock_warehouse.py:0
 msgid "No location of type Inventory Loss found"
-msgstr ""
+msgstr "ບໍ່ພົບສະຖານທີ່ປະເພດການສູນເສຍສາງ"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid "No repair order found. Let's create one!"
-msgstr ""
+msgstr "ບໍ່ພົບໃບສັ່ງສ້ອມແປງ. ມາສ້າງໃໝ່ກັນເລີຍ!"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__priority__0
 msgid "Normal"
-msgstr ""
+msgstr "ປົກກະຕິ"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid "Not Available"
-msgstr ""
+msgstr "ບໍ່ພ້ອມໃຊ້ງານ"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid ""
 "Note that the warehouses of the return and repair locations don't match!"
-msgstr ""
+msgstr "ກະລຸນາຮັບຊາບວ່າ ສາງຂອງສະຖານທີ່ສົ່ງຄືນ ແລະ ສະຖານທີ່ສ້ອມແປງບໍ່ກົງກັນ!"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "ຈຳນວນການດຳເນີນການ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__count_repair_late
 msgid "Number of Late Repair Orders"
-msgstr ""
+msgstr "ຈຳນວນໃບສັ່ງສ້ອມແປງທີ່ຊັກຊ້າ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__count_repair_confirmed
 msgid "Number of Repair Orders Confirmed"
-msgstr ""
+msgstr "ຈຳນວນໃບສັ່ງສ້ອມແປງທີ່ຢັ້ງຢືນແລ້ວ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__count_repair_ready
 msgid "Number of Repair Orders to Process"
-msgstr ""
+msgstr "ຈຳນວນໃບສັ່ງສ້ອມແປງທີ່ຕ້ອງດຳເນີນການ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "ຈຳນວນຂໍ້ຜິດພາດ"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "ຈຳນວນຂໍ້ຄວາມທີ່ຕ້ອງການດຳເນີນການ"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "ຈຳນວນຂໍ້ຄວາມທີ່ມີຂໍ້ຜິດພາດໃນການສົ່ງ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking__nbr_repairs
 msgid "Number of repairs linked to this picking"
-msgstr ""
+msgstr "ຈຳນວນການສ້ອມແປງທີ່ເຊື່ອມໂຍງກັບການເບີກຈ່າຍນີ້"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
 msgid "Open"
-msgstr ""
+msgstr "ເປີດ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__picking_type_id
 msgid "Operation Type"
-msgstr ""
+msgstr "ປະເພດການດຳເນີນງານ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Operations"
-msgstr ""
+msgstr "ການດຳເນີນງານ"
 
 #. module: repair
 #: model:ir.ui.menu,name:repair.repair_order_menu
 msgid "Orders"
-msgstr ""
+msgstr "ຄຳສັ່ງ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_consumption_warning_line__repair_consumption_warning_id
 msgid "Parent Wizard"
-msgstr ""
+msgstr "ໜ້າຕ່າງຊ່ວຍສ້າງຫຼັກ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__move_ids
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Parts"
-msgstr ""
+msgstr "ຊິ້ນສ່ວນ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__parts_availability_state
 msgid "Parts Availability State"
-msgstr ""
+msgstr "ສະຖານະຄວາມພ້ອມຂອງຊິ້ນສ່ວນ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Pending"
-msgstr ""
+msgstr "ລໍຖ້າດຳເນີນການ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__picking_product_ids
 msgid "Picking Product"
-msgstr ""
+msgstr "ສິນຄ້າທີ່ກຳລັງເບີກຈ່າຍ"
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_picking_type
 msgid "Picking Type"
-msgstr ""
+msgstr "ປະເພດການເບີກຈ່າຍ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__picking_type_visible
 msgid "Picking Type Visible"
-msgstr ""
+msgstr "ສະແດງປະເພດການເບີກຈ່າຍ"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid "Please set the first Serial Number or a default sequence"
-msgstr ""
+msgstr "ກະລຸນາກຳນົດເລກຊີຣຽວທຳອິດ ຫຼື ລຳດັບເລີ່ມຕົ້ນ"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__validate_button_style__primary
 msgid "Primary"
-msgstr ""
+msgstr "ຫຼັກ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__priority
 msgid "Priority"
-msgstr ""
+msgstr "ບູລິມະສິດ"
 
 #. module: repair
 #: model:ir.model,name:repair.model_product_template
@@ -935,70 +960,70 @@ msgstr "ສິນຄ້າ"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Product A"
-msgstr ""
+msgstr "ສິນຄ້າ A"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Product B"
-msgstr ""
+msgstr "ສິນຄ້າ B"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_location_dest_id
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_product_location_dest_id
 msgid "Product Destination Location"
-msgstr ""
+msgstr "ສະຖານທີ່ປາຍທາງຂອງສິນຄ້າ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Product Moves"
-msgstr ""
+msgstr "ການເຄື່ອນຍ້າຍສິນຄ້າ"
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr ""
+msgstr "ການເຄື່ອນຍ້າຍສິນຄ້າ (ແຖວການເຄື່ອນຍ້າຍສາງ)"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_qty
 msgid "Product Quantity"
-msgstr ""
+msgstr "ຈຳນວນສິນຄ້າ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_location_src_id
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_product_location_src_id
 msgid "Product Source Location"
-msgstr ""
+msgstr "ສະຖານທີ່ຕົ້ນທາງຂອງສິນຄ້າ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__tracking
 msgid "Product Tracking"
-msgstr ""
+msgstr "ການຕິດຕາມສິນຄ້າ"
 
 #. module: repair
 #: model:ir.model,name:repair.model_product_product
 msgid "Product Variant"
-msgstr ""
+msgstr "ຮູບແບບສິນຄ້າຍ່ອຍ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_id
 msgid "Product to Repair"
-msgstr ""
+msgstr "ສິນຄ້າທີ່ຈະສ້ອມແປງ"
 
 #. module: repair
 #: model:ir.ui.menu,name:repair.repair_menu_product_template
 msgid "Products"
-msgstr ""
+msgstr "ສິນຄ້າ"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__lot_id
 msgid "Products repaired are all belonging to this lot"
-msgstr ""
+msgstr "ສິນຄ້າທີ່ສ້ອມແປງແລ້ວທັງໝົດແມ່ນຂຶ້ນກັບຊຸດນີ້"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__repair_properties
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Properties"
-msgstr ""
+msgstr "ຄຸນສົມບັດ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_service_line__quantity
@@ -1011,58 +1036,58 @@ msgstr "ຈຳນວນ"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Quote"
-msgstr ""
+msgstr "ໃບສະເໜີລາຄາ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "RO123456"
-msgstr ""
+msgstr "RO123456"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "ການໃຫ້ຄະແນນ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Ready"
-msgstr ""
+msgstr "ພ້ອມແລ້ວ"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__stock_move__repair_line_type__recycle
 msgid "Recycle"
-msgstr ""
+msgstr "ໝູນໃຊ້ຄືນ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_recycle_location_dest_id
 msgid "Recycle Destination Location"
-msgstr ""
+msgstr "ສະຖານທີ່ປາຍທາງໝູນໃຊ້ຄືນ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__recycle_location_id
 msgid "Recycled Parts Destination Location"
-msgstr ""
+msgstr "ສະຖານທີ່ປາຍທາງຂອງຊິ້ນສ່ວນໝູນໃຊ້ຄືນ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__reference_ids
 msgid "References"
-msgstr ""
+msgstr "ເອກະສານອ້າງອີງ"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__stock_move__repair_line_type__remove
 msgid "Remove"
-msgstr ""
+msgstr "ເອົາອອກ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_remove_location_dest_id
 msgid "Remove Destination Location"
-msgstr ""
+msgstr "ສະຖານທີ່ປາຍທາງການເອົາອອກ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__parts_location_id
 msgid "Removed Parts Destination Location"
-msgstr ""
+msgstr "ສະຖານທີ່ປາຍທາງຂອງຊິ້ນສ່ວນທີ່ເອົາອອກ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_consumption_warning__repair_id
@@ -1071,28 +1096,28 @@ msgstr ""
 #: model:ir.model.fields,field_description:repair.field_stock_picking__repair_ids
 #: model:ir.model.fields.selection,name:repair.selection__stock_picking_type__code__repair_operation
 msgid "Repair"
-msgstr ""
+msgstr "ສ້ອມແປງ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_consumption_warning__repair_consumption_warning_line_ids
 msgid "Repair Consumption Warning Line"
-msgstr ""
+msgstr "ແຖວແຈ້ງເຕືອນການຊົມໃຊ້ການສ້ອມແປງ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warehouse__repair_mto_pull_id
 msgid "Repair MTO Rule"
-msgstr ""
+msgstr "ກົດລະບຽບ MTO ການສ້ອມແປງ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Repair Notes"
-msgstr ""
+msgstr "ບັນທຶກການສ້ອມແປງ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warehouse__repair_type_id
 msgid "Repair Operation Type"
-msgstr ""
+msgstr "ປະເພດການດຳເນີນງານສ້ອມແປງ"
 
 #. module: repair
 #: model:ir.actions.report,name:repair.action_report_repair_order
@@ -1106,18 +1131,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Repair Order"
-msgstr ""
+msgstr "ໃບສັ່ງສ້ອມແປງ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_res_partner__repair_order_count
 #: model:ir.model.fields,field_description:repair.field_res_users__repair_order_count
 msgid "Repair Order Count"
-msgstr ""
+msgstr "ຈຳນວນໃບສັ່ງສ້ອມແປງ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_sale_order__repair_count
 msgid "Repair Order(s)"
-msgstr ""
+msgstr "ໃບສັ່ງສ້ອມແປງ"
 
 #. module: repair
 #. odoo-python
@@ -1134,76 +1159,76 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_graph
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_pivot
 msgid "Repair Orders"
-msgstr ""
+msgstr "ໃບສັ່ງສ້ອມແປງ"
 
 #. module: repair
 #: model:ir.actions.act_window,name:repair.action_repair_order_graph
 msgid "Repair Orders Analysis"
-msgstr ""
+msgstr "ການວິເຄາະໃບສັ່ງສ້ອມແປງ"
 
 #. module: repair
 #: model:ir.ui.menu,name:repair.repair_menu_tag
 msgid "Repair Orders Tags"
-msgstr ""
+msgstr "ປ້າຍກຳກັບໃບສັ່ງສ້ອມແປງ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__repair_properties_definition
 msgid "Repair Properties"
-msgstr ""
+msgstr "ຄຸນສົມບັດການສ້ອມແປງ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__name
 msgid "Repair Reference"
-msgstr ""
+msgstr "ລະຫັດອ້າງອີງການສ້ອມແປງ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__repair_request
 msgid "Repair Request"
-msgstr ""
+msgstr "ຄຳຮ້ອງຂໍສ້ອມແປງ"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_service_line
 #: model:ir.model.fields,field_description:repair.field_account_move_line__repair_service_line_id
 #: model:ir.model.fields,field_description:repair.field_sale_order_line__repair_service_line_id
 msgid "Repair Service Line"
-msgstr ""
+msgstr "ແຖວບໍລິການສ້ອມແປງ"
 
 #. module: repair
 #: model:product.template,name:repair.product_service_order_repair_product_template
 msgid "Repair Services"
-msgstr ""
+msgstr "ບໍລິການສ້ອມແປງ"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_tags
 msgid "Repair Tag"
-msgstr ""
+msgstr "ປ້າຍກຳກັບການສ້ອມແປງ"
 
 #. module: repair
 #: model:ir.module.module,summary:base.module_repair
 msgid "Repair damaged products"
-msgstr ""
+msgstr "ສ້ອມແປງສິນຄ້າທີ່ເສຍຫາຍ"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid "Repair must be confirmed in order to end reparation."
-msgstr ""
+msgstr "ຕ້ອງຢັ້ງຢືນການສ້ອມແປງກ່ອນ ຈຶ່ງຈະສາມາດສິ້ນສຸດການສ້ອມແປງໄດ້."
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/stock_lot.py:0
 msgid "Repair orders of %s"
-msgstr ""
+msgstr "ໃບສັ່ງສ້ອມແປງຂອງ %s"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_lot__repair_part_count
 msgid "Repair part count"
-msgstr ""
+msgstr "ຈຳນວນຊິ້ນສ່ວນສ້ອມແປງ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_lot__repaired_count
 msgid "Repaired count"
-msgstr ""
+msgstr "ຈຳນວນທີ່ສ້ອມແປງແລ້ວ"
 
 #. module: repair
 #. odoo-python
@@ -1215,147 +1240,147 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:repair.view_partner_form
 #: model_terms:ir.ui.view,arch_db:repair.view_sale_order_form_inherit_repair
 msgid "Repairs"
-msgstr ""
+msgstr "ການສ້ອມແປງ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_tree
 msgid "Repairs order"
-msgstr ""
+msgstr "ໃບສັ່ງສ້ອມແປງ"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/stock_warehouse.py:0
 msgid "Replenish on Order (MTO)"
-msgstr ""
+msgstr "ເຕີມເຕັມຕາມໃບສັ່ງ (MTO)"
 
 #. module: repair
 #: model:ir.ui.menu,name:repair.repair_menu_reporting
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
 msgid "Reporting"
-msgstr ""
+msgstr "ການລາຍງານ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Reserve"
-msgstr ""
+msgstr "ສຳຮອງ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__user_id
 msgid "Responsible"
-msgstr ""
+msgstr "ຜູ້ຮັບຜິດຊອບ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_user_id
 msgid "Responsible User"
-msgstr ""
+msgstr "ຜູ້ໃຊ້ທີ່ຮັບຜິດຊອບ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Returned"
-msgstr ""
+msgstr "ສົ່ງຄືນແລ້ວ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "ຂໍ້ຜິດພາດໃນການສົ່ງ SMS"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_service_line__sale_line_id
 msgid "Sale Line"
-msgstr ""
+msgstr "ແຖວການຂາຍ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__sale_order_id
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Sale Order"
-msgstr ""
+msgstr "ໃບສັ່ງຂາຍ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__sale_order_line_id
 msgid "Sale Order Line"
-msgstr ""
+msgstr "ແຖວໃບສັ່ງຂາຍ"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__repair_request
 msgid "Sale Order Line Description."
-msgstr ""
+msgstr "ຄຳອະທິບາຍແຖວໃບສັ່ງຂາຍ."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__sale_order_line_id
 msgid "Sale Order Line from which the Repair Order comes from."
-msgstr ""
+msgstr "ແຖວໃບສັ່ງຂາຍທີ່ໃບສັ່ງສ້ອມແປງນີ້ເຊື່ອມໂຍງມາ."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__sale_order_id
 msgid "Sale Order from which the Repair Order comes from."
-msgstr ""
+msgstr "ໃບສັ່ງຂາຍທີ່ໃບສັ່ງສ້ອມແປງນີ້ເຊື່ອມໂຍງມາ."
 
 #. module: repair
 #: model:ir.model,name:repair.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "ໃບສັ່ງຂາຍ"
 
 #. module: repair
 #: model:ir.model,name:repair.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "ແຖວໃບສັ່ງຂາຍ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__schedule_date
 msgid "Scheduled Date"
-msgstr ""
+msgstr "ວັນທີກຳນົດໄວ້"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Search Repair Orders"
-msgstr ""
+msgstr "ຄົ້ນຫາໃບສັ່ງສ້ອມແປງ"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__validate_button_style__secondary
 msgid "Secondary"
-msgstr ""
+msgstr "ສຳຮອງ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_service_line__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "ລຳດັບ"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid "Serial number is required for product to repair : %s"
-msgstr ""
+msgstr "ຕ້ອງມີເລກຊີຣຽວສຳລັບສິນຄ້າທີ່ຈະສ້ອມແປງ: %s"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_service_line__product_id
 msgid "Service"
-msgstr ""
+msgstr "ບໍລິການ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__repair_service_line_ids
 msgid "Service Lines"
-msgstr ""
+msgstr "ແຖວບໍລິການ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Services"
-msgstr ""
+msgstr "ການບໍລິການ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_consumption_warning_form
 msgid "Set Quantities & Validate"
-msgstr ""
+msgstr "ກຳນົດຈຳນວນ & ກວດສອບຄວາມຖືກຕ້ອງ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Set to Draft"
-msgstr ""
+msgstr "ຕັ້ງເປັນສະບັບຮ່າງ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "ສະແດງບັນທຶກທັງໝົດທີ່ວັນທີກິດຈະກຳຖັດໄປກາຍກຳນົດແລ້ວ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__state
@@ -1371,26 +1396,30 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"ສະຖານະຕາມກິດຈະກຳ\n"
+"ກາຍກຳນົດ: ກາຍກຳນົດເວລາແລ້ວ\n"
+"ມື້ນີ້: ວັນທີກິດຈະກຳແມ່ນມື້ນີ້\n"
+"ວາງແຜນໄວ້: ກິດຈະກຳໃນອະນາຄົດ."
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "ການເຄື່ອນຍ້າຍສາງ"
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_forecasted_product_product
 msgid "Stock Replenishment Report"
-msgstr ""
+msgstr "ລາຍງານການເຕີມເຕັມສາງ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_tags__name
 msgid "Tag Name"
-msgstr ""
+msgstr "ຊື່ປ້າຍກຳກັບ"
 
 #. module: repair
 #: model:ir.model.constraint,message:repair.constraint_repair_tags_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "ຊື່ປ້າຍກຳກັບນີ້ມີຢູ່ແລ້ວ!"
 
 #. module: repair
 #: model:ir.actions.act_window,name:repair.action_repair_order_tag
@@ -1398,7 +1427,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_search
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_tree
 msgid "Tags"
-msgstr ""
+msgstr "ປ້າຍກຳກັບ"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__tracking
@@ -1406,27 +1435,29 @@ msgid ""
 "Technical field holding the tracking method. False on a storable product "
 "means it's tracked by quantity only."
 msgstr ""
+"ຊ່ອງຂໍ້ມູນທາງເຕັກນິກທີ່ເກັບວິທີການຕິດຕາມ. ຄ່າ False ສຳລັບສິນຄ້າທີ່ສາມາດເກັບໃນສາງໝາຍເຖິງການຕິດຕາມດ້ວ"
+"ຍຈຳນວນເທົ່ານັ້ນ."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__reserve_visible
 msgid "Technical field to check when we can reserve quantities"
-msgstr ""
+msgstr "ຊ່ອງຂໍ້ມູນທາງເຕັກນິກເພື່ອກວດສອບເວລາທີ່ສາມາດສຳຮອງຈຳນວນໄດ້"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__unreserve_visible
 msgid "Technical field to check when we can unreserve"
-msgstr ""
+msgstr "ຊ່ອງຂໍ້ມູນທາງເຕັກນິກເພື່ອກວດສອບເວລາທີ່ສາມາດຍົກເລີກການສຳຮອງໄດ້"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__search_date_category__day_2
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "The day after tomorrow"
-msgstr ""
+msgstr "ມື້ຮື"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "This is a repair note."
-msgstr ""
+msgstr "ນີ້ແມ່ນບັນທຶກການສ້ອມແປງ."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_product_location_dest_id
@@ -1434,6 +1465,7 @@ msgid ""
 "This is the default destination location for the product to be repaired in "
 "repair orders with this operation type."
 msgstr ""
+"ນີ້ແມ່ນສະຖານທີ່ປາຍທາງເລີ່ມຕົ້ນສຳລັບສິນຄ້າທີ່ຈະສ້ອມແປງໃນໃບສັ່ງສ້ອມແປງທີ່ມີປະເພດການດຳເນີນງານນີ້."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_recycle_location_dest_id
@@ -1441,6 +1473,7 @@ msgid ""
 "This is the default recycle destination location when you create a repair "
 "order with this operation type."
 msgstr ""
+"ນີ້ແມ່ນສະຖານທີ່ປາຍທາງການໝູນໃຊ້ຄືນເລີ່ມຕົ້ນ ເມື່ອທ່ານສ້າງໃບສັ່ງສ້ອມແປງດ້ວຍປະເພດການດຳເນີນງານນີ້."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_remove_location_dest_id
@@ -1448,6 +1481,7 @@ msgid ""
 "This is the default remove destination location when you create a repair "
 "order with this operation type."
 msgstr ""
+"ນີ້ແມ່ນສະຖານທີ່ປາຍທາງການເອົາອອກເລີ່ມຕົ້ນ ເມື່ອທ່ານສ້າງໃບສັ່ງສ້ອມແປງດ້ວຍປະເພດການດຳເນີນງານນີ້."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_product_location_src_id
@@ -1455,29 +1489,30 @@ msgid ""
 "This is the default source location for the product to be repaired in repair "
 "orders with this operation type."
 msgstr ""
+"ນີ້ແມ່ນສະຖານທີ່ຕົ້ນທາງເລີ່ມຕົ້ນສຳລັບສິນຄ້າທີ່ຈະສ້ອມແປງໃນໃບສັ່ງສ້ອມແປງທີ່ມີປະເພດການດຳເນີນງານນີ້."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_id
 msgid ""
 "This is the location where the components of product to repair is located."
-msgstr ""
+msgstr "ນີ້ແມ່ນສະຖານທີ່ບ່ອນທີ່ສ່ວນປະກອບຂອງສິນຄ້າທີ່ຈະສ້ອມແປງຕັ້ງຢູ່."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__product_location_src_id
 msgid "This is the location where the product to repair is located."
-msgstr ""
+msgstr "ນີ້ແມ່ນສະຖານທີ່ບ່ອນທີ່ສິນຄ້າທີ່ຈະສ້ອມແປງຕັ້ງຢູ່."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__parts_location_id
 #: model:ir.model.fields,help:repair.field_repair_order__recycle_location_id
 msgid "This is the location where the repair parts are located."
-msgstr ""
+msgstr "ນີ້ແມ່ນສະຖານທີ່ບ່ອນທີ່ຊິ້ນສ່ວນສ້ອມແປງຕັ້ງຢູ່."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_dest_id
 #: model:ir.model.fields,help:repair.field_repair_order__product_location_dest_id
 msgid "This is the location where the repaired product is located."
-msgstr ""
+msgstr "ນີ້ແມ່ນສະຖານທີ່ບ່ອນທີ່ສິນຄ້າທີ່ສ້ອມແປງແລ້ວຕັ້ງຢູ່."
 
 #. module: repair
 #. odoo-python
@@ -1488,107 +1523,109 @@ msgid ""
 "Please create a new line to link to a new invoice or reset the invoice to "
 "draft."
 msgstr ""
+"ແຖວນີ້ເຊື່ອມໂຍງກັບໃບຮຽກເກັບເງິນທີ່ລົງບັນຊີແລ້ວ ແລະ ບໍ່ສາມາດແກ້ໄຂໄດ້.\n"
+"ກະລຸນາສ້າງແຖວໃໝ່ເພື່ອເຊື່ອມໂຍງກັບໃບຮຽກເກັບເງິນໃໝ່ ຫຼື ຕັ້ງຄ່າໃບຮຽກເກັບເງິນກັບໄປເປັນສະບັບຮ່າງ."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_consumption_warning_line__product_expected_qty_uom
 msgid "To Consume"
-msgstr ""
+msgstr "ຕ້ອງຊົມໃຊ້"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
 msgid "To Repair"
-msgstr ""
+msgstr "ຕ້ອງສ້ອມແປງ"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__search_date_category__today
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Today"
-msgstr ""
+msgstr "ມື້ນີ້"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Today Activities"
-msgstr ""
+msgstr "ກິດຈະກຳມື້ນີ້"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__search_date_category__day_1
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Tomorrow"
-msgstr ""
+msgstr "ມື້ອື່ນ"
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_traceability_report
 msgid "Traceability Report"
-msgstr ""
+msgstr "ລາຍງານການຕິດຕາມຍ້ອນຮອຍ"
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_picking
 #: model:ir.model.fields,field_description:repair.field_repair_order__picking_id
 msgid "Transfer"
-msgstr ""
+msgstr "ການໂອນຍ້າຍ"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__picking_id
 msgid "Transfer from which the product to be repaired is picked"
-msgstr ""
+msgstr "ການໂອນຍ້າຍທີ່ເບີກສິນຄ້າທີ່ຈະສ້ອມແປງອອກມາ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_move__repair_line_type
 msgid "Type"
-msgstr ""
+msgstr "ປະເພດ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__code
 msgid "Type of Operation"
-msgstr ""
+msgstr "ປະເພດຂອງການດຳເນີນງານ"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "ປະເພດຂອງກິດຈະກຳຂໍ້ຍົກເວັ້ນໃນບັນທຶກ."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__under_warranty
 msgid "Under Warranty"
-msgstr ""
+msgstr "ຢູ່ໃນການຮັບປະກັນ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_consumption_warning_line__uom_id
 #: model:ir.model.fields,field_description:repair.field_repair_order__uom_id
 #: model:ir.model.fields,field_description:repair.field_repair_service_line__uom_id
 msgid "Unit"
-msgstr ""
+msgstr "ຫົວໜ່ວຍ"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Units"
-msgstr ""
+msgstr "ຫົວໜ່ວຍ"
 
 #. module: repair
 #: model:ir.actions.server,name:repair.action_unreserve
 msgid "Unreserve"
-msgstr ""
+msgstr "ຍົກເລີກການສຳຮອງ"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__priority__1
 msgid "Urgent"
-msgstr ""
+msgstr "ດ່ວນ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__validate_button_style
 msgid "Validate Button Style"
-msgstr ""
+msgstr "ຮູບແບບປຸ່ມກວດສອບຄວາມຖືກຕ້ອງ"
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_warehouse
 msgid "Warehouse"
-msgstr ""
+msgstr "ສາງ"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid "Warning"
-msgstr ""
+msgstr "ຄຳເຕືອນ"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_consumption_warning
@@ -1596,12 +1633,13 @@ msgid ""
 "Wizard for warning about mismatching expected vs actual component "
 "consumption quantities for ROs"
 msgstr ""
+"ໜ້າຕ່າງຊ່ວຍສ້າງສຳລັບເຕືອນກ່ຽວກັບຈຳນວນການຊົມໃຊ້ສ່ວນປະກອບຕົວຈິງທີ່ບໍ່ກົງກັບທີ່ຄາດໄວ້ສຳລັບ RO"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__search_date_category__yesterday
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Yesterday"
-msgstr ""
+msgstr "ມື້ວານນີ້"
 
 #. module: repair
 #. odoo-python
@@ -1611,18 +1649,20 @@ msgid ""
 "type. To change this, go on the operation type and tick the box \"Create New "
 "Lots/Serial Numbers\"."
 msgstr ""
+"ທ່ານບໍ່ໄດ້ຮັບອະນຸຍາດໃຫ້ສ້າງເລກຊຸດ ຫຼື ເລກຊີຣຽວດ້ວຍປະເພດການດຳເນີນງານນີ້. ເພື່ອປ່ຽນແປງສິ່ງນີ້, ໃຫ້ໄປທີ່ປະ"
+"ເພດການດຳເນີນງານແລ້ວໝາຍຕິກໃສ່ຫ້ອງ \"ສ້າງເລກຊຸດ/ເລກຊີຣຽວໃໝ່\"."
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid "You can not enter negative quantities."
-msgstr ""
+msgstr "ທ່ານບໍ່ສາມາດປ້ອນຈຳນວນຕິດລົບໄດ້."
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid "You cannot cancel a Repair Order that's already been completed"
-msgstr ""
+msgstr "ທ່ານບໍ່ສາມາດຍົກເລີກໃບສັ່ງສ້ອມແປງທີ່ສຳເລັດສົມບູນແລ້ວໄດ້"
 
 #. module: repair
 #. odoo-python
@@ -1633,12 +1673,15 @@ msgid ""
 "Concerned repair order(s):\n"
 "%(ref_str)s"
 msgstr ""
+"ທ່ານບໍ່ສາມາດສ້າງໃບສະເໜີລາຄາສຳລັບໃບສັ່ງສ້ອມແປງທີ່ເຊື່ອມໂຍງກັບໃບສັ່ງຂາຍທີ່ມີຢູ່ແລ້ວໄດ້.\n"
+"ໃບສັ່ງສ້ອມແປງທີ່ກ່ຽວຂ້ອງ:\n"
+"%(ref_str)s"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_consumption_warning_form
 msgid ""
 "You consumed a different quantity than expected for the following products."
-msgstr ""
+msgstr "ທ່ານໄດ້ຊົມໃຊ້ຈຳນວນທີ່ແຕກຕ່າງຈາກທີ່ຄາດໄວ້ສຳລັບສິນຄ້າຕໍ່ໄປນີ້."
 
 #. module: repair
 #. odoo-python
@@ -1649,20 +1692,23 @@ msgid ""
 "Concerned repair order(s):\n"
 "%(ref_str)s"
 msgstr ""
+"ທ່ານຈຳເປັນຕ້ອງກຳນົດຄູ່ຄ້າສຳລັບໃບສັ່ງສ້ອມແປງ ເພື່ອທີ່ຈະສ້າງໃບສະເໜີລາຄາທີ່ກ່ຽວຂ້ອງ.\n"
+"ໃບສັ່ງສ້ອມແປງທີ່ກ່ຽວຂ້ອງ:\n"
+"%(ref_str)s"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/stock_picking.py:0
 msgid "id"
-msgstr ""
+msgstr "id"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/sale_order.py:0
 msgid "sale_order_id"
-msgstr ""
+msgstr "sale_order_id"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "text"
-msgstr ""
+msgstr "ຂໍ້ຄວາມ"

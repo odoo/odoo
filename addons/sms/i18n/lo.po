@@ -1,15 +1,16 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sms
+# * sms
 #
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-11 17:43+0000\n"
-"PO-Revision-Date: 2026-08-31 17:06+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Lao <https://translate.odoo.com/projects/odoo-s19-4/sms/lo/>\n"
+"PO-Revision-Date: 2026-10-19 13:37+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-20/sms/lo/>\n"
 "Language: lo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,16 +27,21 @@ msgid ""
 "\n"
 "The service is provided by the In App Purchase Odoo platform.\n"
 msgstr ""
+"\n"
+"ໂມດູນນີ້ສະໜອງໂຄງຮ່າງສຳລັບການສົ່ງຂໍ້ຄວາມ SMS\n"
+"----------------------------------------------------\n"
+"\n"
+"ການບໍລິການແມ່ນສະໜອງໃຫ້ໂດຍລະບົບ In App Purchase Odoo.\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
 msgid "# Invalid recipients"
-msgstr ""
+msgstr "# ຜູ້ຮັບທີ່ບໍ່ຖືກຕ້ອງ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_valid_count
 msgid "# Valid recipients"
-msgstr ""
+msgstr "# ຜູ້ຮັບທີ່ຖືກຕ້ອງ"
 
 #. module: sms
 #. odoo-python
@@ -44,12 +50,13 @@ msgid ""
 "%(count)s out of the %(total)s selected SMS Text Messages have successfully "
 "been resent."
 msgstr ""
+"ຂໍ້ຄວາມ SMS ທີ່ເລືອກ %(count)s ຈາກ %(total)s ຂໍ້ຄວາມ ໄດ້ຖືກສົ່ງຄືນໃໝ່ສຳເລັດແລ້ວ."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "%s invalid recipients"
-msgstr ""
+msgstr "%s ຜູ້ຮັບທີ່ບໍ່ຖືກຕ້ອງ"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -57,6 +64,8 @@ msgid ""
 "<i class=\"oi\" data-icon=\"east\"/>\n"
 "                            Register"
 msgstr ""
+"<i class=\"oi\" data-icon=\"east\"/>\n"
+"                            ລົງທະບຽນ"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -64,6 +73,8 @@ msgid ""
 "<i class=\"oi\" data-icon=\"east\"/>\n"
 "                            Set Sender Name"
 msgstr ""
+"<i class=\"oi\" data-icon=\"east\"/>\n"
+"                            ກຳນົດຊື່ຜູ້ສົ່ງ"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -71,6 +82,8 @@ msgid ""
 "<i class=\"oi\" data-icon=\"warning\"/> An error occurred with your account. "
 "Please contact the support for more information..."
 msgstr ""
+"<i class=\"oi\" data-icon=\"warning\"/> ເກີດຂໍ້ຜິດພາດກັບບັນຊີຂອງທ່ານ. ກະລຸນາຕິດຕໍ່ຝ່າຍຊ່ວຍເ"
+"ຫຼືອສຳລັບຂໍ້ມູນເພີ່ມເຕີມ..."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -78,6 +91,8 @@ msgid ""
 "<i class=\"oi\" data-icon=\"warning\"/> You cannot send SMS while your "
 "account is not registered."
 msgstr ""
+"<i class=\"oi\" data-icon=\"warning\"/> ທ່ານບໍ່ສາມາດສົ່ງ SMS ໄດ້ໃນຂະນະທີ່ບັນຊີຂອງທ່ານຍັງບໍ່"
+"ໄດ້ລົງທະບຽນ."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -86,11 +101,14 @@ msgid ""
 "                                <span class=\"o_stat_text\">Context Action</"
 "span>"
 msgstr ""
+"<span class=\"o_stat_text\">ເພີ່ມ</span>\n"
+"                                <span class=\"o_stat_text\">ການກະທຳຕາມບໍລິບົດ</"
+"span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "<span class=\"o_stat_text\">Preview</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">ເບິ່ງຕົວຢ່າງ</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -99,22 +117,26 @@ msgid ""
 "                                <span class=\"o_stat_text\">Context Action</"
 "span>"
 msgstr ""
+"<span class=\"o_stat_text\">ລຶບອອກ</span>\n"
+"                                <span class=\"o_stat_text\">ການກະທຳຕາມບໍລິບົດ</"
+"span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "<span class=\"text-muted\">To</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">ເຖິງ</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid ""
 "<span class=\"text-warning\" invisible=\"not no_record\">No records</span>"
 msgstr ""
+"<span class=\"text-warning\" invisible=\"not no_record\">ບໍ່ມີຂໍ້ມູນ</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "<span> or to specify the country code.</span>"
-msgstr ""
+msgstr "<span> ຫຼື ເພື່ອກຳນົດລະຫັດປະເທດ.</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -122,30 +144,32 @@ msgid ""
 "<strong>Invalid number:</strong>\n"
 "                        <span> make sure to set a country on the </span>"
 msgstr ""
+"<strong>ເບີໂທບໍ່ຖືກຕ້ອງ:</strong>\n"
+"                        <span> ກະລຸນາກວດສອບໃຫ້ແນ່ໃຈວ່າໄດ້ກຳນົດປະເທດໃນ </span>"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "A message can only be scheduled in comment mode"
-msgstr ""
+msgstr "ຂໍ້ຄວາມສາມາດກຳນົດເວລາສົ່ງໄດ້ສະເພາະໃນໂໝດຄຳເຫັນເທົ່ານັ້ນ"
 
 #. module: sms
 #: model:ir.model.constraint,message:sms.constraint_sms_tracker_sms_uuid_unique
 msgid "A record for this UUID already exists"
-msgstr ""
+msgstr "ມີຂໍ້ມູນສຳລັບ UUID ນີ້ຢູ່ແລ້ວ"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "A scheduled date is needed to schedule a message"
-msgstr ""
+msgstr "ຈຳເປັນຕ້ອງມີວັນທີທີ່ກຳນົດໄວ້ ເພື່ອກຳນົດເວລາສົ່ງຂໍ້ຄວາມ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__account_id
 #: model:ir.model.fields,field_description:sms.field_sms_account_phone__account_id
 #: model:ir.model.fields,field_description:sms.field_sms_account_sender__account_id
 msgid "Account"
-msgstr ""
+msgstr "ບັນຊີ"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -153,29 +177,30 @@ msgid ""
 "Add a contextual action on the related model to open a sms composer with "
 "this template"
 msgstr ""
+"ເພີ່ມການກະທຳຕາມບໍລິບົດໃນໂມເດວທີ່ກ່ຽວຂ້ອງ ເພື່ອເປີດໜ້າຂຽນ SMS ດ້ວຍແມ່ແບບນີ້"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__sms_type__alert
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__sms_type__alert
 msgid "Alert"
-msgstr ""
+msgstr "ແຈ້ງເຕືອນ"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_sms__uuid
 msgid "Alternate way to identify a SMS record, used for delivery reports"
-msgstr ""
+msgstr "ວິທີອື່ນໃນການລະບຸຂໍ້ມູນ SMS, ໃຊ້ສຳລັບລາຍງານການສົ່ງ"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/core/failure_model_patch.js:0
 msgid "An error occurred when sending an SMS"
-msgstr ""
+msgstr "ເກີດຂໍ້ຜິດພາດຂຶ້ນໃນຂະນະທີ່ສົ່ງ SMS"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/core/failure_model_patch.js:0
 msgid "An error occurred when sending an SMS on “%(record_name)s”"
-msgstr ""
+msgstr "ເກີດຂໍ້ຜິດພາດຂຶ້ນໃນຂະນະທີ່ສົ່ງ SMS ໃນ “%(record_name)s”"
 
 #. module: sms
 #. odoo-python
@@ -184,12 +209,13 @@ msgid ""
 "An unknown error occurred. Please contact Odoo support if this error "
 "persists."
 msgstr ""
+"ເກີດຂໍ້ຜິດພາດທີ່ບໍ່ຮູ້ສາເຫດ. ກະລຸນາຕິດຕໍ່ຝ່າຍຊ່ວຍເຫຼືອ Odoo ຖ້າຂໍ້ຜິດພາດນີ້ຍັງຄົງເກີດຂຶ້ນ."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_id
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__model_id
 msgid "Applies to"
-msgstr ""
+msgstr "ນຳໃຊ້ກັບ"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_reset_view_form
@@ -197,56 +223,58 @@ msgid ""
 "Are you sure you want to reset these sms templates to their original "
 "configuration? Changes and translations will be lost."
 msgstr ""
+"ທ່ານແນ່ໃຈບໍ່ວ່າຕ້ອງການຣີເຊັດແມ່ແບບ SMS ເຫຼົ່ານີ້ກັບໄປເປັນຄ່າເລີ່ມຕົ້ນດັ້ງເດີມ? ການປ່ຽນແປງ ແລະ ການແປຈະສູ"
+"ນຫາຍ."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/controllers/main.py:0
 msgid "Bad parameters"
-msgstr ""
+msgstr "ພາລາມິເຕີບໍ່ຖືກຕ້ອງ"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_blacklist
 msgid "Blacklisted"
-msgstr ""
+msgstr "ຕິດບັນຊີດຳ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__body
 #: model:ir.model.fields,field_description:sms.field_sms_template__body
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__body
 msgid "Body"
-msgstr ""
+msgstr "ເນື້ອໃນ"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "Buy credits."
-msgstr ""
+msgstr "ຊື້ເຄຣດິດ."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "Cancel"
-msgstr ""
+msgstr "ຍົກເລີກ"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__canceled
 msgid "Cancelled"
-msgstr ""
+msgstr "ຖືກຍົກເລີກແລ້ວ"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "Choose a language:"
-msgstr ""
+msgstr "ເລືອກພາສາ:"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
 msgid "Choose a template..."
-msgstr ""
+msgstr "ເລືອກແມ່ແບບ..."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "Choose an example"
-msgstr ""
+msgstr "ເລືອກຕົວຢ່າງ"
 
 #. module: sms
 #. odoo-python
@@ -254,27 +282,27 @@ msgstr ""
 #: code:addons/sms/wizard/sms_account_code.py:0
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 msgid "Choose your sender name"
-msgstr ""
+msgstr "ເລືອກຊື່ຜູ້ສົ່ງຂອງທ່ານ"
 
 #. module: sms
 #: model:ir.model,name:sms.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "ບໍລິສັດ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__composition_mode
 msgid "Composition Mode"
-msgstr ""
+msgstr "ໂໝດການຂຽນ"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "Contact"
-msgstr ""
+msgstr "ຜູ້ຕິດຕໍ່"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "Content"
-msgstr ""
+msgstr "ເນື້ອຫາ"
 
 #. module: sms
 #. odoo-javascript
@@ -282,7 +310,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_country_not_supported
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_country_not_supported
 msgid "Country Not Supported"
-msgstr ""
+msgstr "ບໍ່ຮອງຮັບປະເທດນີ້"
 
 #. module: sms
 #. odoo-javascript
@@ -290,13 +318,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_registration_needed
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_registration_needed
 msgid "Country-specific Registration Required"
-msgstr ""
+msgstr "ຕ້ອງມີການລົງທະບຽນສະເພາະປະເທດ"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "Create an SMS Template"
-msgstr ""
+msgstr "ສ້າງແມ່ແບບ SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__create_uid
@@ -309,7 +337,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template_reset__create_uid
 #: model:ir.model.fields,field_description:sms.field_sms_tracker__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "ສ້າງໂດຍ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__create_date
@@ -322,22 +350,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template_reset__create_date
 #: model:ir.model.fields,field_description:sms.field_sms_tracker__create_date
 msgid "Created on"
-msgstr ""
+msgstr "ສ້າງເມື່ອ"
 
 #. module: sms
 #: model:iap.service,unit_name:sms.iap_service_sms
 msgid "Credits"
-msgstr ""
+msgstr "ເຄຣດິດ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__partner_id
 msgid "Customer"
-msgstr ""
+msgstr "ລູກຄ້າ"
 
 #. module: sms
 #: model:sms.template,name:sms.sms_template_demo_0
 msgid "Customer: automated SMS"
-msgstr ""
+msgstr "ລູກຄ້າ: SMS ອັດຕະໂນມັດ"
 
 #. module: sms
 #. odoo-javascript
@@ -345,17 +373,17 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_database_non_active
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_database_non_active
 msgid "Database non active"
-msgstr ""
+msgstr "ຖານຂໍ້ມູນບໍ່ໄດ້ເປີດໃຊ້ງານ"
 
 #. module: sms
 #: model:sms.template,body:sms.sms_template_demo_0
 msgid "Dear {{ object.display_name }} this is an automated SMS."
-msgstr ""
+msgstr "ຮຽນ {{ object.display_name }} ນີ້ແມ່ນຂໍ້ຄວາມ SMS ອັດຕະໂນມັດ."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__sent
 msgid "Delivered"
-msgstr ""
+msgstr "ສົ່ງຮອດແລ້ວ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_iap_account__display_name
@@ -377,108 +405,108 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template_reset__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_tracker__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ຊື່ທີ່ສະແດງ"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_followers
 msgid "Document Follower"
-msgstr ""
+msgstr "ຜູ້ຕິດຕາມເອກະສານ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_id
 msgid "Document ID"
-msgstr ""
+msgstr "ລະຫັດເອກະສານ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_ids
 msgid "Document IDs"
-msgstr ""
+msgstr "ລະຫັດເອກະສານຕ່າງໆ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_model_description
 msgid "Document Model Description"
-msgstr ""
+msgstr "ລາຍລະອຽດໂມເດວເອກະສານ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_model
 msgid "Document Model Name"
-msgstr ""
+msgstr "ຊື່ໂມເດວເອກະສານ"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_duplicate
 msgid "Duplicate"
-msgstr ""
+msgstr "ຊ້ຳຊ້ອນ"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/models/mail_scheduled_message.py:0
 msgid "Edit Scheduled SMS"
-msgstr ""
+msgstr "ແກ້ໄຂ SMS ທີ່ກຳນົດເວລາໄວ້"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_scheduled_message__send_method__email
 msgid "Email"
-msgstr ""
+msgstr "ອີເມວ"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_thread
 msgid "Email Thread"
-msgstr ""
+msgstr "ສາຍການສົນທະນາອີເມວ"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/components/phone_field/phone_field.js:0
 msgid "Enable SMS"
-msgstr ""
+msgstr "ເປີດໃຊ້ງານ SMS"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "Enter a phone number to get an SMS with a verification code."
-msgstr ""
+msgstr "ປ້ອນເບີໂທລະສັບເພື່ອຮັບ SMS ພ້ອມລະຫັດຢືນຢັນ."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__error
 msgid "Error"
-msgstr ""
+msgstr "ຂໍ້ຜິດພາດ"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_expired
 msgid "Expired"
-msgstr ""
+msgstr "ໝົດອາຍຸແລ້ວ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__failure_type
 msgid "Failure Type"
-msgstr ""
+msgstr "ປະເພດຂໍ້ຜິດພາດ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__failure_type
 msgid "Failure type"
-msgstr ""
+msgstr "ປະເພດຂໍ້ຜິດພາດ"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__template_fs
 msgid "File from where the template originates. Used to reset broken template."
-msgstr ""
+msgstr "ໄຟລ໌ຕົ້ນກຳເນີດຂອງແມ່ແບບ. ໃຊ້ເພື່ອຣີເຊັດແມ່ແບບທີ່ເສຍຫາຍ."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "Following numbers are not correctly encoded: %s"
-msgstr ""
+msgstr "ເບີໂທຕໍ່ໄປນີ້ບໍ່ໄດ້ເຂົ້າລະຫັດຢ່າງຖືກຕ້ອງ: %s"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_mail__has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mail_message__has_sms_error
 msgid "Has SMS error"
-msgstr ""
+msgstr "ມີຂໍ້ຜິດພາດ SMS"
 
 #. module: sms
 #: model:ir.model,name:sms.model_iap_account
 msgid "IAP Account"
-msgstr ""
+msgstr "ບັນຊີ IAP"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_iap_account__id
@@ -500,7 +528,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template_reset__id
 #: model:ir.model.fields,field_description:sms.field_sms_tracker__id
 msgid "ID"
-msgstr ""
+msgstr "ລະຫັດ"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_account_analytic_account__message_has_sms_error
@@ -539,29 +567,29 @@ msgstr ""
 #: model:ir.model.fields,help:sms.field_res_partner__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_res_users__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "ຖ້າໝາຍຕິກ, ສະແດງວ່າມີບາງຂໍ້ຄວາມເກີດຂໍ້ຜິດພາດໃນການສົ່ງ."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "Impossible to determine the model for the template."
-msgstr ""
+msgstr "ບໍ່ສາມາດລະບຸໂມເດວສຳລັບແມ່ແບບໄດ້."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__outgoing
 msgid "In Queue"
-msgstr ""
+msgstr "ຢູ່ໃນຄິວ"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__comment_single_recipient
 msgid "Indicates if the SMS composer targets a single specific recipient"
-msgstr ""
+msgstr "ລະບຸວ່າໜ້າຂຽນ SMS ເປົ້າໝາຍໃສ່ຜູ້ຮັບສະເພາະຄົນດຽວຫຼືບໍ່"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 msgid "Insert Field"
-msgstr ""
+msgstr "ແຊກຊ່ອງຂໍ້ມູນ"
 
 #. module: sms
 #. odoo-javascript
@@ -569,14 +597,14 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_credit
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_credit
 msgid "Insufficient Credit"
-msgstr ""
+msgstr "ເຄຣດິດບໍ່ພຽງພໍ"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_invalid_destination
 msgid "Invalid Destination"
-msgstr ""
+msgstr "ປາຍທາງບໍ່ຖືກຕ້ອງ"
 
 #. module: sms
 #. odoo-python
@@ -586,27 +614,29 @@ msgid ""
 "i.e. a plus sign (+), then country code, city code, and local phone number. "
 "For example: +1 555-555-555"
 msgstr ""
+"ເບີໂທລະສັບບໍ່ຖືກຕ້ອງ. ກະລຸນາກວດສອບໃຫ້ແນ່ໃຈວ່າໄດ້ນຳໃຊ້ຕາມຮູບແບບສາກົນ, ເຊັ່ນ: ເຄື່ອງໝາຍບວກ (+), ຕ"
+"າມດ້ວຍລະຫັດປະເທດ, ລະຫັດເມືອງ, ແລະ ເບີໂທລະສັບທ້ອງຖິ່ນ. ຕົວຢ່າງ: +1 555-555-555"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "Invalid recipient number. Please update it."
-msgstr ""
+msgstr "ເບີໂທຜູ້ຮັບບໍ່ຖືກຕ້ອງ. ກະລຸນາອັບເດດໃໝ່."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_valid
 msgid "Is valid"
-msgstr ""
+msgstr "ຖືກຕ້ອງ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_keep_log
 msgid "Keep a note on document"
-msgstr ""
+msgstr "ບັນທຶກໂນ້ດໄວ້ໃນເອກະສານ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__lang
 msgid "Language"
-msgstr ""
+msgstr "ພາສາ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__write_uid
@@ -619,7 +649,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template_reset__write_uid
 #: model:ir.model.fields,field_description:sms.field_sms_tracker__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "ອັບເດດຫຼ້າສຸດໂດຍ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__write_date
@@ -632,50 +662,50 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template_reset__write_date
 #: model:ir.model.fields,field_description:sms.field_sms_tracker__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "ອັບເດດຫຼ້າສຸດເມື່ອ"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_tracker
 msgid "Link SMS to mailing/sms tracking models"
-msgstr ""
+msgstr "ເຊື່ອມຕໍ່ SMS ໃສ່ໂມເດວການຕິດຕາມ mailing/sms"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__mail_message_id
 msgid "Mail Message"
-msgstr ""
+msgstr "ຂໍ້ຄວາມຈົດໝາຍ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_tracker__mail_notification_id
 msgid "Mail Notification"
-msgstr ""
+msgstr "ການແຈ້ງເຕືອນຈົດໝາຍ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_model__is_mail_thread_sms
 msgid "Mail Thread SMS"
-msgstr ""
+msgstr "ສາຍການສົນທະນາ SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__to_delete
 msgid "Marked for deletion"
-msgstr ""
+msgstr "ໝາຍໄວ້ເພື່ອລຶບ"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__sms_type__marketing
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__sms_type__marketing
 msgid "Marketing"
-msgstr ""
+msgstr "ການຕະຫຼາດ"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_message
 #: model:ir.model.fields,field_description:sms.field_sms_composer__body
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "Message"
-msgstr ""
+msgstr "ຂໍ້ຄວາມ"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_notification
 msgid "Message Notification"
-msgstr ""
+msgstr "ການແຈ້ງເຕືອນຂໍ້ຄວາມ"
 
 #. module: sms
 #. odoo-javascript
@@ -683,42 +713,42 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_number_missing
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_number_missing
 msgid "Missing Number"
-msgstr ""
+msgstr "ຂາດເບີໂທລະສັບ"
 
 #. module: sms
 #: model:ir.model,name:sms.model_ir_model
 msgid "Model"
-msgstr ""
+msgstr "ໂມເດວ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__name
 msgid "Name"
-msgstr ""
+msgstr "ຊື່"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__no_record
 msgid "No Record"
-msgstr ""
+msgstr "ບໍ່ມີຂໍ້ມູນ"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_not_allowed
 msgid "Not Allowed"
-msgstr ""
+msgstr "ບໍ່ໄດ້ຮັບອະນຸຍາດ"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_not_delivered
 msgid "Not Delivered"
-msgstr ""
+msgstr "ບໍ່ໄດ້ຖືກສົ່ງຮອດ"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/models/sms_sms.py:0
 msgid "Not enough credits to send SMS"
-msgstr ""
+msgstr "ເຄຣດິດບໍ່ພຽງພໍທີ່ຈະສົ່ງ SMS"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
@@ -726,21 +756,23 @@ msgid ""
 "Note that this is not required, if you don't set a sender name, your SMS "
 "will be sent from a short code."
 msgstr ""
+"ກະລຸນາຮັບຊາບວ່າອັນນີ້ບໍ່ໄດ້ບັງຄັບ, ຖ້າທ່ານບໍ່ໄດ້ກຳນົດຊື່ຜູ້ສົ່ງ, SMS ຂອງທ່ານຈະຖືກສົ່ງອອກຈາກລະຫັດສັ້ນ "
+"(short code)."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__notification_type
 msgid "Notification Type"
-msgstr ""
+msgstr "ປະເພດການແຈ້ງເຕືອນ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__number
 msgid "Number"
-msgstr ""
+msgstr "ເບີໂທ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__number_field_name
 msgid "Number Field"
-msgstr ""
+msgstr "ຊ່ອງເບີໂທ"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__res_ids_count
@@ -748,11 +780,12 @@ msgid ""
 "Number of recipients that will receive the SMS if sent in mass mode, without "
 "applying the Active Domain value"
 msgstr ""
+"ຈຳນວນຜູ້ຮັບທີ່ຈະໄດ້ຮັບ SMS ຖ້າສົ່ງໃນໂໝດກຸ່ມໃຫຍ່, ໂດຍບໍ່ນຳໃຊ້ຄ່າ Active Domain"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_optout
 msgid "Opted Out"
-msgstr ""
+msgstr "ຍົກເລີກການຮັບຂໍ້ມູນແລ້ວ"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__lang
@@ -762,16 +795,19 @@ msgid ""
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
+"ພາສາແປທາງເລືອກ (ລະຫັດ ISO) ທີ່ຈະເລືອກເມື່ອສົ່ງອີເມວອອກ. ຖ້າບໍ່ໄດ້ກຳນົດ, ພາສາຂອງຄູ່ຮ່ວມຫຼັກຈະຖືກນຳໃ"
+"ຊ້. ສ່ວນຫຼາຍຄວນເປັນ placeholder expression ທີ່ກຳນົດພາສາທີ່ເໝາະສົມ, ເຊັ່ນ: {{ "
+"object.partner_id.lang }}."
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
 msgid "Outgoing SMS"
-msgstr ""
+msgstr "SMS ຂາອອກ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_phone__phone_number
 msgid "Phone Number"
-msgstr ""
+msgstr "ເບີໂທລະສັບ"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__recipient_single_number_itf
@@ -779,17 +815,18 @@ msgid ""
 "Phone number of the recipient. If changed, it will be recorded on "
 "recipient's profile."
 msgstr ""
+"ເບີໂທລະສັບຂອງຜູ້ຮັບ. ຖ້າມີການປ່ຽນແປງ, ມັນຈະຖືກບັນທຶກໄວ້ໃນໂປຣໄຟລ໌ຂອງຜູ້ຮັບ."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "Please provide a name for the template."
-msgstr ""
+msgstr "ກະລຸນາກຳນົດຊື່ສຳລັບແມ່ແບບ."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__comment
 msgid "Post on a document"
-msgstr ""
+msgstr "ໂພສລົງໃນເອກະສານ"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__use_exclusion_list
@@ -797,107 +834,108 @@ msgid ""
 "Prevent sending messages to blacklisted contacts. Disable only when "
 "absolutely necessary."
 msgstr ""
+"ປ້ອງກັນການສົ່ງຂໍ້ຄວາມໄປຫາຜູ້ຕິດຕໍ່ທີ່ຕິດບັນຊີດຳ. ປິດການໃຊ້ງານສະເພາະກໍລະນີທີ່ຈຳເປັນແທ້ໆເທົ່ານັ້ນ."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "Preview of"
-msgstr ""
+msgstr "ເບິ່ງຕົວຢ່າງຂອງ"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_reset_view_form
 msgid "Proceed"
-msgstr ""
+msgstr "ດຳເນີນການຕໍ່"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__process
 msgid "Processing"
-msgstr ""
+msgstr "ກຳລັງປະມວນຜົນ"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Put in queue"
-msgstr ""
+msgstr "ເອົາເຂົ້າຄິວ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_number_itf
 msgid "Recipient Number"
-msgstr ""
+msgstr "ເບີໂທຜູ້ຮັບ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__numbers
 msgid "Recipients (Numbers)"
-msgstr ""
+msgstr "ຜູ້ຮັບ (ເບີໂທ)"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_description
 msgid "Recipients (Partners)"
-msgstr ""
+msgstr "ຜູ້ຮັບ (ຄູ່ຮ່ວມ)"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__resource_ref
 msgid "Record reference"
-msgstr ""
+msgstr "ການອ້າງອີງຂໍ້ມູນ"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_code_view_form
 msgid "Register"
-msgstr ""
+msgstr "ລົງທະບຽນ"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/models/iap_account.py:0
 #: code:addons/sms/wizard/sms_account_phone.py:0
 msgid "Register Account"
-msgstr ""
+msgstr "ລົງທະບຽນບັນຊີ"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_code_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "Register your SMS account"
-msgstr ""
+msgstr "ລົງທະບຽນບັນຊີ SMS ຂອງທ່ານ"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_rejected
 msgid "Rejected"
-msgstr ""
+msgstr "ຖືກປະຕິເສດແລ້ວ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model
 msgid "Related Document Model"
-msgstr ""
+msgstr "ໂມເດວເອກະສານທີ່ກ່ຽວຂ້ອງ"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "Remove the contextual action of the related model"
-msgstr ""
+msgstr "ລຶບການກະທຳຕາມບໍລິບົດຂອງໂມເດວທີ່ກ່ຽວຂ້ອງອອກ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "ໂມເດວການປະມວນຜົນສະແດງຜົນ"
 
 #. module: sms
 #: model:ir.actions.server,name:sms.ir_actions_server_sms_sms_resend
 msgid "Resend"
-msgstr ""
+msgstr "ສົ່ງຄືນໃໝ່"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_reset_action
 msgid "Reset SMS Template"
-msgstr ""
+msgstr "ຣີເຊັດແມ່ແບບ SMS"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "Reset Template"
-msgstr ""
+msgstr "ຣີເຊັດແມ່ແບບ"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "Retry"
-msgstr ""
+msgstr "ລອງໃໝ່ອີກຄັ້ງ"
 
 #. module: sms
 #. odoo-javascript
@@ -912,34 +950,34 @@ msgstr ""
 #: model:ir.ui.menu,name:sms.sms_sms_menu
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "SMS"
-msgstr ""
+msgstr "SMS"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 msgid "SMS ("
-msgstr ""
+msgstr "SMS ("
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/thread/message_patch.js:0
 msgid "SMS Account"
-msgstr ""
+msgstr "ບັນຊີ SMS"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_account_phone
 msgid "SMS Account Registration Phone Number Wizard"
-msgstr ""
+msgstr "ຕົວຊ່ວຍສ້າງການລົງທະບຽນເບີໂທລະສັບບັນຊີ SMS"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_account_sender
 msgid "SMS Account Sender Name Wizard"
-msgstr ""
+msgstr "ຕົວຊ່ວຍສ້າງຊື່ຜູ້ສົ່ງບັນຊີ SMS"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_account_code
 msgid "SMS Account Verification Code Wizard"
-msgstr ""
+msgstr "ຕົວຊ່ວຍສ້າງລະຫັດຢືນຢັນບັນຊີ SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_account_analytic_account__message_has_sms_error
@@ -978,62 +1016,62 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_res_users__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "ເກີດຂໍ້ຜິດພາດໃນການສົ່ງ SMS"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/messaging_menu/messaging_menu_patch.js:0
 msgid "SMS Failure: %(modelName)s"
-msgstr ""
+msgstr "SMS ລົ້ມເຫຼວ: %(modelName)s"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/messaging_menu/messaging_menu_patch.js:0
 msgid "SMS Failures"
-msgstr ""
+msgstr "SMS ທີ່ລົ້ມເຫຼວ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_id_int
 msgid "SMS ID"
-msgstr ""
+msgstr "ລະຫັດ SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_number
 msgid "SMS Number"
-msgstr ""
+msgstr "ເບີໂທ SMS"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "SMS Preview"
-msgstr ""
+msgstr "ເບິ່ງຕົວຢ່າງ SMS"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 msgid "SMS Pricing"
-msgstr ""
+msgstr "ລາຄາ SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__state
 msgid "SMS Status"
-msgstr ""
+msgstr "ສະຖານະ SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_template_id
 #: model:ir.model.fields,field_description:sms.field_ir_cron__sms_template_id
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "SMS Template"
-msgstr ""
+msgstr "ແມ່ແບບ SMS"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_template_preview
 msgid "SMS Template Preview"
-msgstr ""
+msgstr "ເບິ່ງຕົວຢ່າງແມ່ແບບ SMS"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_template_reset
 msgid "SMS Template Reset"
-msgstr ""
+msgstr "ຣີເຊັດແມ່ແບບ SMS"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_template
@@ -1042,125 +1080,125 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_tree
 msgid "SMS Templates"
-msgstr ""
+msgstr "ແມ່ແບບ SMS"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/wizard/sms_template_reset.py:0
 msgid "SMS Templates have been reset"
-msgstr ""
+msgstr "ແມ່ແບບ SMS ໄດ້ຖືກຣີເຊັດແລ້ວ"
 
 #. module: sms
 #: model:ir.module.module,summary:base.module_sms
 msgid "SMS Text Messaging"
-msgstr ""
+msgstr "ການສົ່ງຂໍ້ຄວາມ SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_tracker_ids
 msgid "SMS Trackers"
-msgstr ""
+msgstr "ຕົວຕິດຕາມ SMS"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "SMS content"
-msgstr ""
+msgstr "ເນື້ອໃນ SMS"
 
 #. module: sms
 #: model:ir.module.module,shortdesc:base.module_sms
 msgid "SMS gateway"
-msgstr ""
+msgstr "ປະຕູເຊື່ອມຕໍ່ SMS"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/models/ir_actions_server.py:0
 msgid "SMS template model of %(action_name)s does not match action model."
-msgstr ""
+msgstr "ໂມເດວແມ່ແບບ SMS ຂອງ %(action_name)s ບໍ່ກົງກັບໂມເດວການກະທຳ."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__sms_tracker_id
 msgid "SMS trackers"
-msgstr ""
+msgstr "ຕົວຕິດຕາມ SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_tracker__sms_uuid
 msgid "SMS uuid"
-msgstr ""
+msgstr "uuid ຂອງ SMS"
 
 #. module: sms
 #: model:ir.actions.server,name:sms.ir_cron_sms_scheduler_action_ir_actions_server
 msgid "SMS: SMS Queue Manager"
-msgstr ""
+msgstr "SMS: ຕົວຈັດການຄິວ SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__sanitized_numbers
 msgid "Sanitized Number"
-msgstr ""
+msgstr "ເບີໂທທີ່ຖືກປັບແຕ່ງຮູບແບບແລ້ວ"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form_template_save
 msgid "Save Template"
-msgstr ""
+msgstr "ບັນທຶກແມ່ແບບ"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form_template_save
 msgid "Save as SMS Template"
-msgstr ""
+msgstr "ບັນທຶກເປັນແມ່ແບບ SMS"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Schedule"
-msgstr ""
+msgstr "ກຳນົດເວລາ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__scheduled_date
 msgid "Scheduled Date"
-msgstr ""
+msgstr "ວັນທີທີ່ກຳນົດໄວ້"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_scheduled_message
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mail_scheduled_message_id
 msgid "Scheduled Message"
-msgstr ""
+msgstr "ຂໍ້ຄວາມທີ່ກຳນົດເວລາໄວ້"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "Scheduling messages is only supported on mail.thread models."
-msgstr ""
+msgstr "ການກຳນົດເວລາສົ່ງຂໍ້ຄວາມແມ່ນຮອງຮັບສະເພາະໃນໂມເດວ mail.thread ເທົ່ານັ້ນ."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_search
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_search
 msgid "Search SMS Templates"
-msgstr ""
+msgstr "ຄົ້ນຫາແມ່ແບບ SMS"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/sms_composer_template_selector.js:0
 msgid "Select a Template"
-msgstr ""
+msgstr "ເລືອກແມ່ແບບ"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Send"
-msgstr ""
+msgstr "ສົ່ງ"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/models/ir_actions_server.py:0
 msgid "Send %(template_name)s"
-msgstr ""
+msgstr "ສົ່ງ %(template_name)s"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_scheduled_message__send_method
 msgid "Send Method"
-msgstr ""
+msgstr "ວິທີການສົ່ງ"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "Send Now"
-msgstr ""
+msgstr "ສົ່ງຕອນນີ້"
 
 #. module: sms
 #. odoo-javascript
@@ -1170,75 +1208,76 @@ msgstr ""
 #: model:ir.actions.act_window,name:sms.sms_composer_action_form
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__state__sms
 msgid "Send SMS"
-msgstr ""
+msgstr "ສົ່ງ SMS"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/models/sms_template.py:0
 msgid "Send SMS (%s)"
-msgstr ""
+msgstr "ສົ່ງ SMS (%s)"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_composer
 msgid "Send SMS Wizard"
-msgstr ""
+msgstr "ຕົວຊ່ວຍສ້າງການສົ່ງ SMS"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__mass
 msgid "Send SMS in batch"
-msgstr ""
+msgstr "ສົ່ງ SMS ເປັນຊຸດ"
 
 #. module: sms
 #: model:iap.service,description:sms.iap_service_sms
 msgid "Send SMS to your contacts directly from your database."
-msgstr ""
+msgstr "ສົ່ງ SMS ຫາຜູ້ຕິດຕໍ່ຂອງທ່ານໂດຍກົງຈາກຖານຂໍ້ມູນຂອງທ່ານ."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Send an SMS"
-msgstr ""
+msgstr "ສົ່ງຂໍ້ຄວາມ SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_force_send
 msgid "Send directly"
-msgstr ""
+msgstr "ສົ່ງໂດຍກົງ"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Send now"
-msgstr ""
+msgstr "ສົ່ງຕອນນີ້"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__numbers
 msgid "Send to numbers"
-msgstr ""
+msgstr "ສົ່ງຫາເບີໂທລະສັບ"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "Send verification code"
-msgstr ""
+msgstr "ສົ່ງລະຫັດຢືນຢັນ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_iap_account__sender_name
 #: model:ir.model.fields,field_description:sms.field_sms_account_sender__sender_name
 msgid "Sender Name"
-msgstr ""
+msgstr "ຊື່ຜູ້ສົ່ງ"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/models/ir_actions_server.py:0
 msgid "Sending SMS can only be done on a not transient mail.thread model"
 msgstr ""
+"ການສົ່ງ SMS ສາມາດເຮັດໄດ້ສະເພາະໃນໂມເດວ mail.thread ທີ່ບໍ່ແມ່ນ transient ເທົ່ານັ້ນ"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__pending
 msgid "Sent"
-msgstr ""
+msgstr "ສົ່ງແລ້ວ"
 
 #. module: sms
 #: model:ir.model,name:sms.model_ir_actions_server
 msgid "Server Action"
-msgstr ""
+msgstr "ການກະທຳຂອງເຊີບເວີ"
 
 #. module: sms
 #. odoo-javascript
@@ -1246,17 +1285,17 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_server
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_server
 msgid "Server Error"
-msgstr ""
+msgstr "ຂໍ້ຜິດພາດຂອງເຊີບເວີ"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 msgid "Set sender name"
-msgstr ""
+msgstr "ຕັ້ງຊື່ຜູ້ສົ່ງ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__sidebar_action_id
 msgid "Sidebar action"
-msgstr ""
+msgstr "ການກະທຳໃນແຖບດ້ານຂ້າງ"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__sidebar_action_id
@@ -1264,69 +1303,70 @@ msgid ""
 "Sidebar action to make this template available on records of the related "
 "document model"
 msgstr ""
+"ການກະທຳໃນແຖບດ້ານຂ້າງເພື່ອໃຫ້ແມ່ແບບນີ້ສາມາດໃຊ້ງານໄດ້ກັບຂໍ້ມູນຂອງໂມເດວເອກະສານທີ່ກ່ຽວຂ້ອງ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__comment_single_recipient
 msgid "Single Mode"
-msgstr ""
+msgstr "ໂໝດດ່ຽວ"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 msgid "Skip for now"
-msgstr ""
+msgstr "ຂ້າມໄປກ່ອນ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__sms_template_id
 msgid "Sms Template"
-msgstr ""
+msgstr "ແມ່ແບບ SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__sms_type
 #: model:ir.model.fields,field_description:sms.field_sms_sms__sms_type
 msgid "Sms Type"
-msgstr ""
+msgstr "ປະເພດ SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_number
 msgid "Stored Recipient Number"
-msgstr ""
+msgstr "ເບີໂທຜູ້ຮັບທີ່ຖືກບັນທຶກໄວ້"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/models/sms_sms.py:0
 msgid "Success"
-msgstr ""
+msgstr "ສຳເລັດ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_reset__template_ids
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
 msgid "Template"
-msgstr ""
+msgstr "ແມ່ແບບ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__template_fs
 msgid "Template Filename"
-msgstr ""
+msgstr "ຊື່ໄຟລ໌ແມ່ແບບ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__template_name
 msgid "Template Name"
-msgstr ""
+msgstr "ຊື່ແມ່ແບບ"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_preview_action
 msgid "Template Preview"
-msgstr ""
+msgstr "ເບິ່ງຕົວຢ່າງແມ່ແບບ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__lang
 msgid "Template Preview Language"
-msgstr ""
+msgstr "ພາສາເບິ່ງຕົວຢ່າງແມ່ແບບ"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_action
 msgid "Templates"
-msgstr ""
+msgstr "ແມ່ແບບຕ່າງໆ"
 
 #. module: sms
 #. odoo-python
@@ -1335,78 +1375,79 @@ msgid ""
 "The SMS Service is currently unavailable for new users and new accounts "
 "registrations are suspended."
 msgstr ""
+"ການບໍລິການ SMS ໃນຕອນນີ້ຍັງບໍ່ພ້ອມໃຫ້ບໍລິການສຳລັບຜູ້ໃຊ້ໃໝ່ ແລະ ການລົງທະບຽນບັນຊີໃໝ່ຖືກໂຈະຊົ່ວຄາວ."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/models/sms_sms.py:0
 msgid "The SMS Text Messages could not be resent."
-msgstr ""
+msgstr "ບໍ່ສາມາດສົ່ງຂໍ້ຄວາມ SMS ຄືນໃໝ່ໄດ້."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "The content of the message violates rules applied by our providers."
-msgstr ""
+msgstr "ເນື້ອໃນຂອງຂໍ້ຄວາມລະເມີດກົດລະບຽບທີ່ກຳນົດໂດຍຜູ້ໃຫ້ບໍລິການຂອງພວກເຮົາ."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "The destination country is not supported."
-msgstr ""
+msgstr "ປະເທດປາຍທາງບໍ່ໄດ້ຮັບການຮອງຮັບ."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "The number you're trying to reach is not correctly formatted."
-msgstr ""
+msgstr "ເບີໂທທີ່ທ່ານພະຍາຍາມຕິດຕໍ່ບໍ່ໄດ້ຢູ່ໃນຮູບແບບທີ່ຖືກຕ້ອງ."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__model_id
 #: model:ir.model.fields,help:sms.field_sms_template_preview__model_id
 msgid "The type of document this template can be used with"
-msgstr ""
+msgstr "ປະເພດເອກະສານທີ່ແມ່ແບບນີ້ສາມາດນຳໃຊ້ຮ່ວມໄດ້"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "The verification code is incorrect."
-msgstr ""
+msgstr "ລະຫັດຢືນຢັນບໍ່ຖືກຕ້ອງ."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/models/sms_sms.py:0
 msgid "There are no SMS Text Messages to resend."
-msgstr ""
+msgstr "ບໍ່ມີຂໍ້ຄວາມ SMS ທີ່ຈະສົ່ງຄືນໃໝ່."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "This SMS has been removed as the number was already used."
-msgstr ""
+msgstr "SMS ນີ້ຖືກລຶບອອກແລ້ວ ເນື່ອງຈາກເບີໂທນີ້ຖືກນຳໃຊ້ໄປແລ້ວ."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid ""
 "This account already has an existing sender name and it cannot be changed."
-msgstr ""
+msgstr "ບັນຊີນີ້ມີຊື່ຜູ້ສົ່ງຢູ່ແລ້ວ ແລະ ບໍ່ສາມາດປ່ຽນແປງໄດ້."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_iap_account__sender_name
 msgid "This is the name that will be displayed as the sender of the SMS."
-msgstr ""
+msgstr "ນີ້ແມ່ນຊື່ທີ່ຈະສະແດງເປັນຊື່ຜູ້ສົ່ງຂອງ SMS."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.res_partner_view_form
 msgid ""
 "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
-msgstr ""
+msgstr "ເບີໂທລະສັບນີ້ຕິດບັນຊີດຳສຳລັບການຕະຫຼາດ SMS. ກົດເພື່ອປົດອອກຈາກບັນຊີດຳ."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "This phone number/account has been banned from our service."
-msgstr ""
+msgstr "ເບີໂທລະສັບ/ບັນຊີ ນີ້ຖືກຫ້າມບໍ່ໃຫ້ໃຊ້ບໍລິການຂອງພວກເຮົາ."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__state
@@ -1414,7 +1455,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_mail_mail__message_type
 #: model:ir.model.fields,field_description:sms.field_mail_message__message_type
 msgid "Type"
-msgstr ""
+msgstr "ປະເພດ"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_ir_actions_server__state
@@ -1433,21 +1474,31 @@ msgid ""
 "- 'Multi Actions': define an action that triggers several other server "
 "actions\n"
 msgstr ""
+"ປະເພດການກະທຳຂອງເຊີບເວີ. ສາມາດເລືອກຄ່າຕໍ່ໄປນີ້ໄດ້:\n"
+"- 'Update a Record': ອັບເດດຄ່າຕ່າງໆຂອງຂໍ້ມູນ\n"
+"- 'Create Activity': ສ້າງກິດຈະກຳ (Discuss)\n"
+"- 'Send Email': ໂພສຂໍ້ຄວາມ, ໂນ້ດ ຫຼື ສົ່ງອີເມວ (Discuss)\n"
+"- 'Send SMS': ສົ່ງ SMS, ບັນທຶກລົງໃນເອກະສານ (SMS)- 'Add/Remove Followers': ເພີ່ມ ຫຼື ລຶບ"
+"ຜູ້ຕິດຕາມອອກຈາກຂໍ້ມູນ (Discuss)\n"
+"- 'Create Record': ສ້າງຂໍ້ມູນໃໝ່ພ້ອມຄ່າໃໝ່\n"
+"- 'Execute Code': ຊຸດໂຄດ Python ທີ່ຈະຖືກປະຕິບັດການ\n"
+"- 'Send Webhook Notification': ສົ່ງຄຳຂໍ POST ໄປຫາລະບົບພາຍນອກ, ຫຼື ທີ່ເອີ້ນວ່າ Webhook\n"
+"- 'Multi Actions': ກຳນົດການກະທຳທີ່ຈະກະຕຸ້ນໃຫ້ເກີດຫຼາຍໆການກະທຳອື່ນໆຂອງເຊີບເວີ\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__uuid
 msgid "UUID"
-msgstr ""
+msgstr "UUID"
 
 #. module: sms
 #: model:ir.model.constraint,message:sms.constraint_sms_sms_uuid_unique
 msgid "UUID must be unique"
-msgstr ""
+msgstr "UUID ຕ້ອງບໍ່ຊ້ຳກັນ"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__unknown
 msgid "Unknown error"
-msgstr ""
+msgstr "ຂໍ້ຜິດພາດທີ່ບໍ່ຮູ້ສາເຫດ"
 
 #. module: sms
 #. odoo-javascript
@@ -1455,17 +1506,17 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_acc
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_acc
 msgid "Unregistered Account"
-msgstr ""
+msgstr "ບັນຊີທີ່ຍັງບໍ່ໄດ້ລົງທະບຽນ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__use_exclusion_list
 msgid "Use Exclusion List"
-msgstr ""
+msgstr "ນຳໃຊ້ລາຍການຍົກເວັ້ນ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__template_id
 msgid "Use Template"
-msgstr ""
+msgstr "ນຳໃຊ້ແມ່ແບບ"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_mail_mail__message_type
@@ -1480,28 +1531,35 @@ msgid ""
 "acknowledgment\n"
 "'user_notification': generated for a specific recipient"
 msgstr ""
+"ໃຊ້ສຳລັບຈັດປະເພດຕົວສ້າງຂໍ້ຄວາມ\n"
+"'email': ສ້າງຂຶ້ນຈາກອີເມວຂາເຂົ້າ ເຊັ່ນ: mailgateway\n"
+"'comment': ສ້າງຂຶ້ນຈາກການປ້ອນຂໍ້ມູນຂອງຜູ້ໃຊ້ ເຊັ່ນ: ຜ່ານ discuss ຫຼື composer\n"
+"'email_outgoing': ສ້າງຂຶ້ນຈາກການສົ່ງຈົດໝາຍ\n"
+"'notification': ສ້າງຂຶ້ນຈາກລະບົບ ເຊັ່ນ: ຂໍ້ຄວາມຕິດຕາມ\n"
+"'auto_comment': ສ້າງຂຶ້ນຈາກກົນໄກການແຈ້ງເຕືອນອັດຕະໂນມັດ ເຊັ່ນ: ການຮັບຊາບ\n"
+"'user_notification': ສ້າງຂຶ້ນສຳລັບຜູ້ຮັບສະເພາະເຈາະຈົງ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__verification_code
 msgid "Verification Code"
-msgstr ""
+msgstr "ລະຫັດຢືນຢັນ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_ids_count
 msgid "Visible records count"
-msgstr ""
+msgstr "ຈຳນວນຂໍ້ມູນທີ່ສະແດງ"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/models/sms_sms.py:0
 msgid "Warning"
-msgstr ""
+msgstr "ຄຳເຕືອນ"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "We were not able to find your account in our database."
-msgstr ""
+msgstr "ພວກເຮົາບໍ່ພົບບັນຊີຂອງທ່ານໃນຖານຂໍ້ມູນຂອງພວກເຮົາ."
 
 #. module: sms
 #. odoo-python
@@ -1510,23 +1568,25 @@ msgid ""
 "We were not able to reach you via your phone number. If you have requested "
 "multiple codes recently, please retry later."
 msgstr ""
+"ພວກເຮົາບໍ່ສາມາດຕິດຕໍ່ທ່ານຜ່ານເບີໂທລະສັບຂອງທ່ານໄດ້. ຖ້າທ່ານໄດ້ຮ້ອງຂໍລະຫັດຫຼາຍຄັ້ງເມື່ອໄວໆມານີ້, ກະລຸນາລອ"
+"ງໃໝ່ພາຍຫຼັງ."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_ir_model__is_mail_thread_sms
 msgid "Whether this model supports messages and notifications through SMS"
-msgstr ""
+msgstr "ໂມເດວນີ້ຮອງຮັບຂໍ້ຄວາມ ແລະ ການແຈ້ງເຕືອນຜ່ານ SMS ຫຼື ບໍ່"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_sms__to_delete
 msgid ""
 "Will automatically be deleted, while notifications will not be deleted in "
 "any case."
-msgstr ""
+msgstr "ຈະຖືກລຶບອອກໂດຍອັດຕະໂນມັດ, ໃນຂະນະທີ່ການແຈ້ງເຕືອນຈະບໍ່ຖືກລຶບໃນທຸກໆກໍລະນີ."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Write a message..."
-msgstr ""
+msgstr "ຂຽນຂໍ້ຄວາມ..."
 
 #. module: sms
 #. odoo-javascript
@@ -1534,50 +1594,50 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_number_format
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_number_format
 msgid "Wrong Number Format"
-msgstr ""
+msgstr "ຮູບແບບເບີໂທບໍ່ຖືກຕ້ອງ"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "You don't have an eligible IAP account."
-msgstr ""
+msgstr "ທ່ານບໍ່ມີບັນຊີ IAP ທີ່ມີສິດນຳໃຊ້."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "You don't have enough credits on your IAP account."
-msgstr ""
+msgstr "ທ່ານມີເຄຣດິດບໍ່ພຽງພໍໃນບັນຊີ IAP ຂອງທ່ານ."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "You tried too many times. Please retry later."
-msgstr ""
+msgstr "ທ່ານໄດ້ພະຍາຍາມຫຼາຍຄັ້ງເກີນໄປ. ກະລຸນາລອງໃໝ່ພາຍຫຼັງ."
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.js:0
 msgid ""
 "Your SMS Text Message must include at least one non-whitespace character"
-msgstr ""
+msgstr "ຂໍ້ຄວາມ SMS ຂອງທ່ານຕ້ອງມີຕົວອັກສອນທີ່ບໍ່ແມ່ນຍະຫວ່າງຢ່າງໜ້ອຍໜຶ່ງຕົວ"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/wizard/sms_account_code.py:0
 msgid "Your SMS account has been successfully registered."
-msgstr ""
+msgstr "ບັນຊີ SMS ຂອງທ່ານໄດ້ຮັບການລົງທະບຽນສຳເລັດແລ້ວ."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "Your country is not supported due to sender registration legislation"
-msgstr ""
+msgstr "ປະເທດຂອງທ່ານບໍ່ໄດ້ຮັບການຮອງຮັບ ເນື່ອງຈາກກົດໝາຍວ່າດ້ວຍການລົງທະບຽນຜູ້ສົ່ງ"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "Your database is not activated"
-msgstr ""
+msgstr "ຖານຂໍ້ມູນຂອງທ່ານຍັງບໍ່ໄດ້ເປີດໃຊ້ງານ"
 
 #. module: sms
 #. odoo-python
@@ -1587,6 +1647,7 @@ msgid ""
 "Your sender name must be between 3 and 11 characters long and only contain "
 "alphanumeric characters."
 msgstr ""
+"ຊື່ຜູ້ສົ່ງຂອງທ່ານຕ້ອງມີຄວາມຍາວລະຫວ່າງ 3 ຫາ 11 ຕົວອັກສອນ ແລະ ປະກອບດ້ວຍຕົວອັກສອນ ຫຼື ຕົວເລກເທົ່ານັ້ນ."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
@@ -1596,51 +1657,55 @@ msgid ""
 "                        It must fit your company name, and you aren't "
 "allowed to modify it once you registered one, choose it carefully."
 msgstr ""
+"ຊື່ຜູ້ສົ່ງຂອງທ່ານຕ້ອງມີຄວາມຍາວລະຫວ່າງ 3 ຫາ 11 ຕົວອັກສອນ ແລະ ປະກອບດ້ວຍຕົວອັກສອນ ຫຼື ຕົວເລກເທົ່ານັ້"
+"ນ.\n"
+"                        ມັນຕ້ອງກົງກັບຊື່ບໍລິສັດຂອງທ່ານ, ແລະ ທ່ານຈະບໍ່ໄດ້ຮັບອະນຸຍາດໃຫ້ແກ້ໄຂເມື່ອໄດ້"
+"ລົງທະບຽນແລ້ວ, ກະລຸນາເລືອກຢ່າງລະມັດລະວັງ."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "Your sms account has not been activated yet."
-msgstr ""
+msgstr "ບັນຊີ sms ຂອງທ່ານຍັງບໍ່ໄດ້ຮັບການເປີດໃຊ້ງານເທື່ອ."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "e.g. +1 415 555 0100"
-msgstr ""
+msgstr "ຕົວຢ່າງ: +1 415 555 0100"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "e.g. Calendar Reminder"
-msgstr ""
+msgstr "ຕົວຢ່າງ: ແຈ້ງເຕືອນປະຕິທິນ"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "e.g. Contact"
-msgstr ""
+msgstr "ຕົວຢ່າງ: ຜູ້ຕິດຕໍ່"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "e.g. en_US or {{ object.partner_id.lang }}"
-msgstr ""
+msgstr "ຕົວຢ່າງ: en_US ຫຼື {{ object.partner_id.lang }}"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form_template_save
 msgid "e.g: Send order confirmation"
-msgstr ""
+msgstr "ຕົວຢ່າງ: ສົ່ງການຢືນຢັນຄຳສັ່ງຊື້"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "out of"
-msgstr ""
+msgstr "ຈາກທັງໝົດ"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid ""
 "recipients have an invalid phone number and will not receive this text "
 "message."
-msgstr ""
+msgstr "ຜູ້ຮັບມີເບີໂທລະສັບບໍ່ຖືກຕ້ອງ ແລະ ຈະບໍ່ໄດ້ຮັບຂໍ້ຄວາມນີ້."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "record:"
-msgstr ""
+msgstr "ຂໍ້ມູນ:"

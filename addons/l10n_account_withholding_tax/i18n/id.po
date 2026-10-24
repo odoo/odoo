@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-11 18:10+0000\n"
-"PO-Revision-Date: 2026-08-31 16:49+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-10-22 10:32+0000\n"
+"Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
+"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-20/"
 "l10n_account_withholding_tax/id/>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
@@ -86,11 +86,13 @@ msgstr "Semua baris pemotongan harus memiliki pembayaran yang sama."
 msgid ""
 "Allows users to manage withholding taxes on invoices, bills, and payments."
 msgstr ""
+"Memungkinkan user mengelola pemotongan pajak pada faktur, tagihan, dan "
+"pembayaran."
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_move__amount_residual
 msgid "Amount Due"
-msgstr ""
+msgstr "Belum Dibayar"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__analytic_distribution
@@ -152,7 +154,7 @@ msgstr "Pengaturan Konfigurasi"
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_withholding_line__country_code
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_withholding_line__country_code
 msgid "Country Code"
-msgstr ""
+msgstr "Kode Negara"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__create_uid
@@ -178,7 +180,7 @@ msgstr "Mata Uang"
 #: code:addons/l10n_account_withholding_tax/static/src/components/account_payment.xml:0
 #: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.report_invoice_document
 msgid "Deducted on"
-msgstr ""
+msgstr "Dipotong pada"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register__withholding_default_account_id
@@ -259,11 +261,13 @@ msgid ""
 "If enabled, this tax will not affect the amount due until applied via the "
 "Pay button."
 msgstr ""
+"Jika diaktifkan, pajak ini tidak akan memengaruhi jumlah yang harus dibayar "
+"hingga diterapkan melalui tombol Bayar."
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model,name:l10n_account_withholding_tax.model_account_move
 msgid "Journal Entry"
-msgstr ""
+msgstr "Entri Jurnal"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__write_uid
@@ -286,13 +290,13 @@ msgstr "Jumlah Bersih"
 #. module: l10n_account_withholding_tax
 #: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.account_move_view_form_inherit_l10n_account_withholding_tax
 msgid "Net Due"
-msgstr ""
+msgstr "Jatuh Tempo"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_bank_statement_line__withholding_net_residual_amount_currency
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_move__withholding_net_residual_amount_currency
 msgid "Net Due Amount"
-msgstr ""
+msgstr "Jumlah Terutang Bersih"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_payment_register__withholding_net_amount
@@ -350,7 +354,7 @@ msgstr "Akun Pembayaran"
 #: model:ir.model.fields.selection,name:l10n_account_withholding_tax.selection__account_payment__withhold__payment
 #: model:ir.model.fields.selection,name:l10n_account_withholding_tax.selection__account_payment_register__withhold__payment
 msgid "Payment Only"
-msgstr ""
+msgstr "Hanya Pembayaran"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__payment_register_id
@@ -480,6 +484,8 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
+"Kode ISO negara dalam dua karakter.\n"
+"Anda dapat menggunakan kolom ini untuk pencarian cepat."
 
 #. module: l10n_account_withholding_tax
 #. odoo-python
@@ -494,6 +500,7 @@ msgstr ""
 msgid ""
 "The amount that will actually be paid after deducting withholding taxes."
 msgstr ""
+"Jumlah yang sebenarnya akan dibayarkan setelah dikurangi pemotongan pajak."
 
 #. module: l10n_account_withholding_tax
 #. odoo-python
@@ -506,12 +513,13 @@ msgstr "Jumlah pokok baris pemotongan pajak harus di atas 0."
 #: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_move__withholding_net_residual_amount_currency
 msgid "The net amount due after deducting the remaining withholding amount."
 msgstr ""
+"Jumlah bersih yang harus dibayarkan setelah dikurangi sisa jumlah pemotongan."
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_bank_statement_line__withholding_residual_amount_currency
 #: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_move__withholding_residual_amount_currency
 msgid "The remaining withholding amount to be deducted."
-msgstr ""
+msgstr "Sisa jumlah pemotongan yang harus dipotong."
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_move__amount_residual
@@ -519,18 +527,20 @@ msgid ""
 "The total amount due, including the amount to be paid and the withholding "
 "due."
 msgstr ""
+"Jumlah total yang harus dibayar, termasuk jumlah yang harus dibayarkan dan "
+"pemotongan yang harus dibayarkan."
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_bank_statement_line__withholding_deducted_amount_currency
 #: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_move__withholding_deducted_amount_currency
 msgid "The total withholding amount already deducted."
-msgstr ""
+msgstr "Jumlah pemotongan total yang telah dipotong."
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_bank_statement_line__withholding_total_amount_currency
 #: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_move__withholding_total_amount_currency
 msgid "The total withholding amount to be deducted."
-msgstr ""
+msgstr "Jumlah pemotongan total yang harus dipotong."
 
 #. module: l10n_account_withholding_tax
 #. odoo-python
@@ -564,7 +574,7 @@ msgstr "Jumlah Total Pemotongan"
 #. module: l10n_account_withholding_tax
 #: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.view_account_payment_register_form
 msgid "Total withheld:"
-msgstr ""
+msgstr "Total pemotongan:"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__type_tax_use
@@ -577,13 +587,13 @@ msgstr "Tipe Pajak yang Digunakan"
 #. odoo-python
 #: code:addons/l10n_account_withholding_tax/models/account_withholding_line.py:0
 msgid "WH Base"
-msgstr ""
+msgstr "DPP PPh"
 
 #. module: l10n_account_withholding_tax
 #. odoo-python
 #: code:addons/l10n_account_withholding_tax/models/account_withholding_line.py:0
 msgid "WH Base Counterpart"
-msgstr ""
+msgstr "Tandingan DPP PPh"
 
 #. module: l10n_account_withholding_tax
 #. odoo-python
@@ -601,7 +611,7 @@ msgstr "Pokok Pemotongan: %(names)s"
 #. odoo-python
 #: code:addons/l10n_account_withholding_tax/models/account_withholding_line.py:0
 msgid "WH Tax"
-msgstr ""
+msgstr "Pajak Potongan"
 
 #. module: l10n_account_withholding_tax
 #. odoo-python
@@ -619,24 +629,24 @@ msgstr "Jumlah yang Dipotong"
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register__withhold
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_tax__is_withholding_tax
 msgid "Withhold"
-msgstr ""
+msgstr "Pemotongan"
 
 #. module: l10n_account_withholding_tax
 #: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.account_move_view_form_inherit_l10n_account_withholding_tax
 msgid "Withhold Due"
-msgstr ""
+msgstr "Potongan Jatuh Tempo"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields.selection,name:l10n_account_withholding_tax.selection__account_payment__withhold__withhold
 #: model:ir.model.fields.selection,name:l10n_account_withholding_tax.selection__account_payment_register__withhold__withhold
 msgid "Withhold Only"
-msgstr ""
+msgstr "Hanya Pemotongan"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields.selection,name:l10n_account_withholding_tax.selection__account_payment__withhold__withhold_pay
 #: model:ir.model.fields.selection,name:l10n_account_withholding_tax.selection__account_payment_register__withhold__withhold_pay
 msgid "Withhold and Pay"
-msgstr ""
+msgstr "Potong dan Bayar"
 
 #. module: l10n_account_withholding_tax
 #: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.view_account_payment_form
@@ -648,19 +658,19 @@ msgstr "Pemotongan"
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment__withholding_amount
 #: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.view_account_payment_tree
 msgid "Withholding Amount"
-msgstr ""
+msgstr "Jumlah Pemotongan"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_bank_statement_line__withholding_deducted_amount_currency
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_move__withholding_deducted_amount_currency
 msgid "Withholding Deducted Amount Currency"
-msgstr ""
+msgstr "Mata Uang Potongan Pajak"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment__withholding_hide_name
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register__withholding_hide_name
 msgid "Withholding Hide Name"
-msgstr ""
+msgstr "Sembunyikan Nama Potongan"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment__withholding_hide_tax_base_account
@@ -688,7 +698,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_bank_statement_line__withholding_residual_amount_currency
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_move__withholding_residual_amount_currency
 msgid "Withholding Residual Amount Currency"
-msgstr ""
+msgstr "Mata Uang Sisa Pemotongan"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__withholding_sequence_id
@@ -701,7 +711,7 @@ msgstr "Urutan Pemotongan"
 #. module: l10n_account_withholding_tax
 #: model:ir.module.module,shortdesc:base.module_l10n_account_withholding_tax
 msgid "Withholding Tax"
-msgstr ""
+msgstr "Pemotongan Pajak"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_res_company__withholding_tax_base_account_id
@@ -713,7 +723,7 @@ msgstr "Pokok Pemotongan Pajak"
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_bank_statement_line__withholding_total_amount_currency
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_move__withholding_total_amount_currency
 msgid "Withholding Total Amount Currency"
-msgstr ""
+msgstr "Mata Uang Jumlah Pemotongan"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__amount
@@ -737,7 +747,7 @@ msgstr "Pemotongan:"
 #. module: l10n_account_withholding_tax
 #: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.view_account_payment_register_form
 msgid "Withholdings"
-msgstr ""
+msgstr "Pemotongan pajak"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model,name:l10n_account_withholding_tax.model_account_withholding_line

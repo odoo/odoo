@@ -1,19 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* l10n_eu_account_vies
+# * l10n_eu_account_vies
 #
+# "Marianna Ciofani (cima)" <cima@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 18:19+0000\n"
-"PO-Revision-Date: 2026-08-28 18:19+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2026-10-23 16:22+0000\n"
+"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-20/"
+"l10n_eu_account_vies/it/>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: it\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: l10n_eu_account_vies
 #: model:ir.module.module,description:base.module_l10n_eu_account_vies
@@ -40,6 +44,36 @@ msgid ""
 "such as Chile, Colombia, Mexico, Norway or Russia. For unsupported countries,\n"
 "only the country code will be validated.\n"
 msgstr ""
+"\n"
+"Convalida dell’IVA per i numeri di partita IVA dei partner.\n"
+"=========================================\n"
+"\n"
+"Dopo l’installazione di questo modulo, i valori inseriti nel campo IVA dei "
+"partner\n"
+"saranno convalidati tramite VIES per tutti i Paesi supportati. Il Paese "
+"viene dedotto dal\n"
+"codice Paese a 2 lettere che precede il numero di partita IVA. Ad esempio, "
+"``BE0477472701``\n"
+"sarà convalidato secondo le norme belghe.\n"
+"\n"
+"    * Quando l’opzione “Controllo IVA VIES” è abilitata (nella "
+"configurazione dell’\n"
+"      azienda dell’utente), i numeri di partita IVA saranno inviati al "
+"database VIES dell’UE online,\n"
+"      che verificherà effettivamente che il numero sia valido e attualmente\n"
+"      assegnato a un’azienda dell’UE. Questa operazione è leggermente più "
+"lenta rispetto al semplice\n"
+"      controllo offline, richiede una connessione a Internet e potrebbe non "
+"essere disponibile\n"
+"      in ogni momento. Se il servizio non è disponibile o non supporta il\n"
+"      Paese richiesto (ad es. per i paesi extra-UE), verrà eseguito\n"
+"      invece un semplice controllo.\n"
+"\n"
+"I Paesi attualmente supportati includono i Paesi dell’UE e alcuni Paesi "
+"extra-UE\n"
+"come Cile, Colombia, Messico, Norvegia o Russia. Per i Paesi non "
+"supportati,\n"
+"verrà convalidato solo il codice Paese.\n"
 
 #. module: l10n_eu_account_vies
 #: model:ir.model,name:l10n_eu_account_vies.model_res_partner
@@ -60,7 +94,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_eu_account_vies.field_res_country__display_name
 #: model:ir.model.fields,field_description:l10n_eu_account_vies.field_res_partner__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nome visualizzato"
 
 #. module: l10n_eu_account_vies
 #: model:ir.model.fields,help:l10n_eu_account_vies.field_res_partner__vies_valid
@@ -118,7 +152,7 @@ msgstr ""
 #. module: l10n_eu_account_vies
 #: model:ir.module.module,shortdesc:base.module_l10n_eu_account_vies
 msgid "VAT VIES Validation"
-msgstr ""
+msgstr "Convalida IVA VIES"
 
 #. module: l10n_eu_account_vies
 #: model:ir.actions.server,name:l10n_eu_account_vies.vies_iap_check_update_ir_actions_server

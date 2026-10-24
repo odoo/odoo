@@ -21,8 +21,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 17:41+0000\n"
-"PO-Revision-Date: 2026-10-16 03:33+0000\n"
+"POT-Creation-Date: 2026-10-23 17:40+0000\n"
+"PO-Revision-Date: 2026-10-23 11:39+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-20/account/"
 "ja/>\n"
@@ -128,7 +128,7 @@ msgstr " 有効期限 %s"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
 msgid "# Reconciled Bank Transactions"
-msgstr ""
+msgstr "# 消込済の銀行取引"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -242,6 +242,8 @@ msgid ""
 "To be consistent, the journal entry must always have exactly one suspense "
 "line."
 msgstr ""
+"%(move)sは、関連する銀行取引に関して無効な状態に達しました。\n"
+"整合性を保つため、仕訳には常に1つの仮勘定明細行が存在する必要があります。   "
 
 #. module: account
 #. odoo-python
@@ -513,11 +515,9 @@ msgstr "90日後の10日払い"
 #. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 msgid ""
-"<b>%(count)s#</b> Installment of <b>%(amount)s</b> due on <b style='color: "
+"<b>%(count)s</b> - Installment of <b>%(amount)s</b> due on <b style='color: "
 "#704A66;'>%(date)s</b>"
 msgstr ""
-"<b>%(count)s#</b>分割払<b>%(amount)s</b> 期日 <b style='color: #704A66;'>%"
-"(date)s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1450,7 +1450,7 @@ msgstr "<span> 期限: </span>"
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
 msgid "<span> on </span>"
-msgstr "<span>　</span>"
+msgstr "<span>対象額</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -3301,43 +3301,43 @@ msgstr "未払金合計"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_buildings
-msgid "Accumulated Depreciation - Buildings"
-msgstr "減価償却累計額 - 建物"
+msgid "Accumulated Amortization - Buildings"
+msgstr "減価償却累計 - 建物"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_furniture
-msgid "Accumulated Depreciation - Furniture & Fixtures"
-msgstr "減価償却累計額 - 家具・備品"
+msgid "Accumulated Amortization - Furniture & Fixtures"
+msgstr "減価償却累計 - 家具・備品"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_improvements
-msgid "Accumulated Depreciation - Improvements"
-msgstr "累積減価償却額 - 改良"
+msgid "Accumulated Amortization - Improvements"
+msgstr "減価償却累計 - 改良費"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_machines
-msgid "Accumulated Depreciation - Machines & Tools"
-msgstr "減価償却累計額 - 機械・工具"
+msgid "Accumulated Amortization - Machines & Tools"
+msgstr "減価償却累計 - 機械・工具"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_other_property
-msgid "Accumulated Depreciation - Other Property"
-msgstr "減価償却累計額 - その他の物件"
+msgid "Accumulated Amortization - Other Property"
+msgstr "減価償却累計 - その他の不動産"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_technology
-msgid "Accumulated Depreciation - Technology"
-msgstr "減価償却累計額 - 技術"
+msgid "Accumulated Amortization - Technology"
+msgstr "減価償却累計 - テクノロジー"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_vehicles
-msgid "Accumulated Depreciation - Vehicles"
-msgstr "減価償却累計額 - 車両"
+msgid "Accumulated Amortization - Vehicles"
+msgstr "減価償却累計 - 車両"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_acc_depreciation
-msgid "Accumulated Depreciation Misc"
-msgstr "減価償却累計額 その他"
+msgid "Accumulated Depreciation"
+msgstr "減価償却累計額"
 
 #. module: account
 #: model:account.account,name:account.21_retained_earnings
@@ -3681,6 +3681,46 @@ msgstr ""
 "した"
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_adj_depreciation_and_amortization
+msgid "Adjustment - Depreciation and amortization"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_fin_instr_sale
+msgid "Adjustment - Financial Instruments"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_intangible_asset
+msgid "Adjustment - Intangible Assets"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_net_fin_result
+msgid "Adjustment - Net Financial Result"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_PPE_sale
+msgid "Adjustment - PPE Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_provisions
+msgid "Adjustment - Provisions"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_ROU_sale
+msgid "Adjustment - Right of Use Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_unrealized_forex
+msgid "Adjustment - Unrealized Forex"
+msgstr ""
+
+#. module: account
 #: model:account.account,name:account.22_account_account_us_administration_fees
 msgid "Administration Fees"
 msgstr "事務手数料"
@@ -3843,7 +3883,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__unreconciled_bank_statement_line_ids
 msgid "All unreconciled bank transactions before the selected date."
-msgstr ""
+msgstr "選択した日付より前の、未消込の銀行取引すべて。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
@@ -4423,6 +4463,8 @@ msgid ""
 "At least one transaction in the statement is prior the last posted "
 "transaction (%s)"
 msgstr ""
+"明細内に、前回の最終記帳取引(%s)より前の日付の取引が少なくとも1件含まれていま"
+"す"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__to_beginning_of_fiscalyear
@@ -4726,7 +4768,7 @@ msgstr "仕入先請求書に戻る"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Credit Note"
-msgstr ""
+msgstr "クレジットノートに戻る"
 
 #. module: account
 #. odoo-javascript
@@ -4738,7 +4780,7 @@ msgstr "顧客請求書に戻る"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Refund"
-msgstr ""
+msgstr "返金に戻る"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -5048,7 +5090,7 @@ msgstr "銀行取引と支払:"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_statement_line_ids
 msgid "Bank transactions matched to this payment"
-msgstr ""
+msgstr "この支払いに一致した銀行取引"
 
 #. module: account
 #. odoo-python
@@ -6045,12 +6087,12 @@ msgid ""
 msgstr "Intrastatで、EU域内の貿易に関して、情報を集めて統計を出します。"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account_tag__color
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__color
 msgid "Color"
 msgstr "色"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_account_tag__color
 #: model:ir.model.fields,field_description:account.field_account_journal__color
 msgid "Color Index"
 msgstr "カラーインデクス"
@@ -7089,39 +7131,39 @@ msgstr "口座の累積残高。"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_buildings
-msgid "Cumulative depreciation recorded for building assets."
-msgstr "建物資産について計上された累積減価償却額。"
+msgid "Cumulative amortization recorded for building assets."
+msgstr "建物資産に計上された減価償却累計額。"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_technology
-msgid "Cumulative depreciation recorded for capitalized technology assets."
-msgstr "資産計上された技術資産について、累積減価償却費が計上された。"
+msgid "Cumulative amortization recorded for capitalized technology assets."
+msgstr "資産計上されたテクノロジー資産に計上された減価償却累計額。"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_furniture
-msgid "Cumulative depreciation recorded for furniture and fixture assets."
-msgstr "家具および備品資産について計上された累積減価償却額。"
+msgid "Cumulative amortization recorded for furniture and fixture assets."
+msgstr "家具・什器資産に計上された減価償却累計額。"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_improvements
 msgid ""
-"Cumulative depreciation recorded for leasehold or property improvements."
-msgstr "リース権または不動産改良費について計上された累積減価償却額。"
+"Cumulative amortization recorded for leasehold or property improvements."
+msgstr "賃借物件の改良費（資産）に計上された減価償却累計額。"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_machines
-msgid "Cumulative depreciation recorded for machinery and tool assets."
-msgstr "機械および工具資産について計上された累積減価償却額。"
+msgid "Cumulative amortization recorded for machinery and tool assets."
+msgstr "機械・工具資産に計上された減価償却累計額。"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_other_property
-msgid "Cumulative depreciation recorded for other depreciable property assets."
-msgstr "その他の減価償却対象物件について計上された累積減価償却額。"
+msgid "Cumulative amortization recorded for other depreciable property assets."
+msgstr "その他の減価償却資産(不動産)に計上された減価償却累計額。"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_vehicles
-msgid "Cumulative depreciation recorded for vehicle assets."
-msgstr "車両資産について計上された累積減価償却額。"
+msgid "Cumulative amortization recorded for vehicle assets."
+msgstr "車両資産に計上された減価償却累計額。"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_retained_earnings
@@ -9428,6 +9470,36 @@ msgid "Financial Journal"
 msgstr "仕訳帳"
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_fin_borrowings_lt
+msgid "Financing - Borrowings Long Term"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_borrowings_st
+msgid "Financing - Borrowings Short Term"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_dividends
+msgid "Financing - Dividends"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_lease
+msgid "Financing - Lease"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_recov_adv
+msgid "Financing - Recoverable Advances"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_share_issuance
+msgid "Financing - Share Issuance"
+msgstr ""
+
+#. module: account
 #: model:account.account.tag,name:account.account_tag_financing
 msgid "Financing Activities"
 msgstr "会計業務"
@@ -11286,6 +11358,51 @@ msgstr "在庫変動"
 #: model:account.account.tag,name:account.account_tag_investing
 msgid "Investing & Extraordinary Activities"
 msgstr "投資・その他の活動"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_cash_advances
+msgid "Investment - Cash Advances"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_fin_instr_purchase
+msgid "Investment - Financial Instruments Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_fin_instr_sale
+msgid "Investment - Financial Instruments Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_int_ass_purchase
+msgid "Investment - Intangible Assets Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_int_ass_sale
+msgid "Investment - Intangible Assets Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_interest_received
+msgid "Investment - Interest Received"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_ppe_purchase
+msgid "Investment - PPE Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_ppe_sale
+msgid "Investment - PPE Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_rou_sale
+msgid "Investment - Right of Use Sale"
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -13955,6 +14072,8 @@ msgid ""
 "Odoo allows you to reconcile a transaction directly with\n"
 "                the related sale or purchase invoices."
 msgstr ""
+"Odooでは、取引を関連する販売請求書\n"
+"                仕入請求書と直接消込できます。"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_customer
@@ -14241,6 +14360,16 @@ msgid "Opening balance"
 msgstr "期首残高"
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_op_income_tax_paid_received
+msgid "Operating - Income Tax Paid Received"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_op_interest_paid
+msgid "Operating - Interest Paid"
+msgstr ""
+
+#. module: account
 #: model:account.account.tag,name:account.account_tag_operating
 msgid "Operating Activities"
 msgstr "オペレーティング活動"
@@ -14308,7 +14437,7 @@ msgstr "元のロック日"
 #: model:ir.model.fields,field_description:account.field_account_move_line__statement_line_id
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Originator Bank Transaction"
-msgstr ""
+msgstr "起点となる銀行取引"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__group_tax_id
@@ -15163,7 +15292,7 @@ msgstr "アクションを実行する各行のパーセンテージ。"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__percentage_st_line
 msgid "Percentage of transaction"
-msgstr ""
+msgstr "取引の割合"
 
 #. module: account
 #. odoo-python
@@ -16053,7 +16182,7 @@ msgstr "消込済"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
 msgid "Reconciled Bank Transactions"
-msgstr ""
+msgstr "消込済の銀行取引"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bill_ids
@@ -17692,7 +17821,7 @@ msgstr "課税対象供給日を表示"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Show Unreconciled Bank Transactions"
-msgstr ""
+msgstr "未消込の銀行取引を表示"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -19156,7 +19285,7 @@ msgstr "銀行消込で使用する銀行取引明細書"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
 msgid "The bank transaction that created this entry"
-msgstr ""
+msgstr "この仕訳を生成した銀行取引"
 
 #. module: account
 #. odoo-python
@@ -19548,6 +19677,9 @@ msgid ""
 "To be consistent, the journal entry must always have exactly one journal "
 "item involving the bank/cash account."
 msgstr ""
+"仕訳 %s は、関連する銀行取引に関して不正な状態になりました。\n"
+"整合性を保つため、仕訳には銀行/現金勘定が関与する仕訳明細が常に厳密に1行含ま"
+"れている必要があります。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -19708,6 +19840,12 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
+"消込モデルは、取引ラベル、取引詳細、または注記のいずれかが次の条件に一致した"
+"場合にのみ適用されます。:\n"
+"        * 含む: 取引にこの文字列が含まれている必要があります(大文字・小文字を"
+"区別しません)。\n"
+"        * 含まない: 「含む」の否定です。\n"
+"        * 正規表現に一致: 独自の正規表現を定義します。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_amount
@@ -20045,6 +20183,8 @@ msgid ""
 "entries from journal prefixes containing them will not be secured: %"
 "(prefix_info)s"
 msgstr ""
+"選択した日付より前に、未消込の銀行取引がまだ残っています。これらを含む仕訳帳"
+"プレフィックスの仕訳は保護されません：%(prefix_info)s"
 
 #. module: account
 #. odoo-python
@@ -20053,6 +20193,8 @@ msgid ""
 "There are still unreconciled bank transactions in the period you want to "
 "lock. You should either reconcile or delete them."
 msgstr ""
+"ロックしようとしている期間内に、未消込の銀行取引がまだ残っています。消込する"
+"か、削除してください。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
@@ -20495,7 +20637,7 @@ msgstr ""
 msgid ""
 "Those can be used to automatically match journal items with your "
 "transactions."
-msgstr ""
+msgstr "これらを使うと、取引と仕訳明細を自動的に照合できます。"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
@@ -20844,7 +20986,7 @@ msgstr "取引タイプ"
 #. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 msgid "Transaction percentage can't be 0"
-msgstr ""
+msgstr "取引の割合は0にはできません"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__line_ids
@@ -21460,7 +21602,7 @@ msgstr "銀行口座を承認"
 #: model:ir.model.fields,help:account.field_account_reconcile_model__trigger
 msgid ""
 "Validate the transaction automatically (reconciliation based on your rule)."
-msgstr ""
+msgstr "取引を自動的に検証します(ルールに基づいて消込します)。"
 
 #. module: account
 #. odoo-javascript
@@ -21877,6 +22019,36 @@ msgid "Workers Compensation Insurance"
 msgstr "労災補償保険"
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_deferred_revenue
+msgid "Working Capital - Deferred Revenue"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_inventory
+msgid "Working Capital - Inventory"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_other_payable
+msgid "Working Capital - Other Payable"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_other_receivable
+msgid "Working Capital - Other Receivable"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_trade_payable
+msgid "Working Capital - Trade Payable"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_trade_receivable
+msgid "Working Capital - Trade Receivable"
+msgstr ""
+
+#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Write a customer name to <b>create one</b> or <b>see suggestions</b>."
@@ -22081,6 +22253,7 @@ msgid ""
 "You can't create a new bank transaction without a suspense account set on "
 "the %s journal."
 msgstr ""
+"%s 仕訳帳に仮勘定が設定されていないため、新しい銀行取引を作成できません。"
 
 #. module: account
 #. odoo-python
@@ -23072,7 +23245,7 @@ msgstr "ID"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "in"
-msgstr "に"
+msgstr ": "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -23135,6 +23308,11 @@ msgid ""
 msgstr ""
 "クレームが発生した場合は、商品の引渡しまたはサービスの提供から8日以内に、書留"
 "郵便で登録事務所に送付された書簡により通知されなければならない。"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_non_applicable
+msgid "not applicable"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
@@ -23384,6 +23562,60 @@ msgstr ""
 "{{ object.company_id.name }} {{ object.payment_receipt_title }} (参照"
 "{{ object.name or 'n/a' }})"
 
+#~ msgid ""
+#~ "<b>%(count)s#</b> Installment of <b>%(amount)s</b> due on <b "
+#~ "style='color: #704A66;'>%(date)s</b>"
+#~ msgstr ""
+#~ "<b>%(count)s#</b>分割払<b>%(amount)s</b> 期日 <b style='color: #704A66;'>%"
+#~ "(date)s</b>"
+
+#~ msgid "Accumulated Depreciation - Buildings"
+#~ msgstr "減価償却累計額 - 建物"
+
+#~ msgid "Accumulated Depreciation - Furniture & Fixtures"
+#~ msgstr "減価償却累計額 - 家具・備品"
+
+#~ msgid "Accumulated Depreciation - Improvements"
+#~ msgstr "累積減価償却額 - 改良"
+
+#~ msgid "Accumulated Depreciation - Machines & Tools"
+#~ msgstr "減価償却累計額 - 機械・工具"
+
+#~ msgid "Accumulated Depreciation - Other Property"
+#~ msgstr "減価償却累計額 - その他の物件"
+
+#~ msgid "Accumulated Depreciation - Technology"
+#~ msgstr "減価償却累計額 - 技術"
+
+#~ msgid "Accumulated Depreciation - Vehicles"
+#~ msgstr "減価償却累計額 - 車両"
+
+#~ msgid "Accumulated Depreciation Misc"
+#~ msgstr "減価償却累計額 その他"
+
+#~ msgid "Cumulative depreciation recorded for building assets."
+#~ msgstr "建物資産について計上された累積減価償却額。"
+
+#~ msgid "Cumulative depreciation recorded for capitalized technology assets."
+#~ msgstr "資産計上された技術資産について、累積減価償却費が計上された。"
+
+#~ msgid "Cumulative depreciation recorded for furniture and fixture assets."
+#~ msgstr "家具および備品資産について計上された累積減価償却額。"
+
+#~ msgid ""
+#~ "Cumulative depreciation recorded for leasehold or property improvements."
+#~ msgstr "リース権または不動産改良費について計上された累積減価償却額。"
+
+#~ msgid "Cumulative depreciation recorded for machinery and tool assets."
+#~ msgstr "機械および工具資産について計上された累積減価償却額。"
+
+#~ msgid ""
+#~ "Cumulative depreciation recorded for other depreciable property assets."
+#~ msgstr "その他の減価償却対象物件について計上された累積減価償却額。"
+
+#~ msgid "Cumulative depreciation recorded for vehicle assets."
+#~ msgstr "車両資産について計上された累積減価償却額。"
+
 #~ msgid "# Reconciled Statement Lines"
 #~ msgstr "消込済明細書明細数"
 
@@ -23506,53 +23738,6 @@ msgstr ""
 #~ msgstr ""
 #~ "%sの仕訳帳に設定された仮勘定をせずに新しい文の行を作成することはできませ"
 #~ "ん。"
-
-#~ msgid "Accumulated Amortization - Buildings"
-#~ msgstr "減価償却累計 - 建物"
-
-#~ msgid "Accumulated Amortization - Furniture & Fixtures"
-#~ msgstr "減価償却累計 - 家具・備品"
-
-#~ msgid "Accumulated Amortization - Improvements"
-#~ msgstr "減価償却累計 - 改良費"
-
-#~ msgid "Accumulated Amortization - Machines & Tools"
-#~ msgstr "減価償却累計 - 機械・工具"
-
-#~ msgid "Accumulated Amortization - Other Property"
-#~ msgstr "減価償却累計 - その他の不動産"
-
-#~ msgid "Accumulated Amortization - Technology"
-#~ msgstr "減価償却累計 - テクノロジー"
-
-#~ msgid "Accumulated Amortization - Vehicles"
-#~ msgstr "減価償却累計 - 車両"
-
-#~ msgid "Accumulated Depreciation"
-#~ msgstr "減価償却累計額"
-
-#~ msgid "Cumulative amortization recorded for building assets."
-#~ msgstr "建物資産に計上された減価償却累計額。"
-
-#~ msgid "Cumulative amortization recorded for capitalized technology assets."
-#~ msgstr "資産計上されたテクノロジー資産に計上された減価償却累計額。"
-
-#~ msgid "Cumulative amortization recorded for furniture and fixture assets."
-#~ msgstr "家具・什器資産に計上された減価償却累計額。"
-
-#~ msgid ""
-#~ "Cumulative amortization recorded for leasehold or property improvements."
-#~ msgstr "賃借物件の改良費（資産）に計上された減価償却累計額。"
-
-#~ msgid "Cumulative amortization recorded for machinery and tool assets."
-#~ msgstr "機械・工具資産に計上された減価償却累計額。"
-
-#~ msgid ""
-#~ "Cumulative amortization recorded for other depreciable property assets."
-#~ msgstr "その他の減価償却資産(不動産)に計上された減価償却累計額。"
-
-#~ msgid "Cumulative amortization recorded for vehicle assets."
-#~ msgstr "車両資産に計上された減価償却累計額。"
 
 #~ msgid "Stock Closing"
 #~ msgstr "在庫期末処理"

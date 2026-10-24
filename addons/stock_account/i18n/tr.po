@@ -27,7 +27,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:38+0000\n"
-"PO-Revision-Date: 2026-10-14 15:33+0000\n"
+"PO-Revision-Date: 2026-10-20 12:34+0000\n"
 "Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/"
 "stock_account/tr/>\n"
@@ -85,6 +85,8 @@ msgid ""
 "%(lot)s cost update from %(old_value)s to %(new_value)s for %(quantity)s by %"
 "(user)s"
 msgstr ""
+"%(lot)s %(quantity)s için adresinden adresine maliyet güncellemesi, "
+"tarafından %(old_value)s %(new_value)s %(user)s"
 
 #. module: stock_account
 #. odoo-python
@@ -93,6 +95,8 @@ msgid ""
 "%(move)s cost update from %(old_value)s to %(new_value)s for %(quantity)s by "
 "%(user)s"
 msgstr ""
+"%(move)s %(quantity)s için adresinden adresine maliyet güncellemesi, "
+"tarafından %(old_value)s %(new_value)s %(user)s"
 
 #. module: stock_account
 #. odoo-python
@@ -127,6 +131,8 @@ msgid ""
 "A lot/serial number is required for product '%s' as it has lot valuation "
 "enabled."
 msgstr ""
+"\"%s\" ürünü için parti değerlemesi etkin olduğundan, parti numarası/seri "
+"numarası gereklidir."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__avco_value
@@ -147,6 +153,8 @@ msgstr ""
 #: model:ir.model.fields,help:stock_account.field_stock_move__cogs_aml_ids
 msgid "Account move lines using this move in order to compute their COGS"
 msgstr ""
+"Muhasebe işlemlerinde Hesapların COGS'sini hesaplamak için bu hareketi "
+"kullanarak satırları taşıyın"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_adjustment_name__accounting_date
@@ -507,6 +515,8 @@ msgid ""
 "If the move originates from a document from another company, contains that "
 "company's partner, otherwise the move's partner."
 msgstr ""
+"Taşıma işlemi başka bir şirkete ait bir belgeden kaynaklanıyorsa, o şirketin "
+"ortağını; aksi takdirde taşıma işleminin ortağını belirtin."
 
 #. module: stock_account
 #. odoo-python
@@ -667,6 +677,8 @@ msgid ""
 "Only set if the move is generated from a document belonging to another "
 "company"
 msgstr ""
+"Yalnızca taşıma işlemi başka bir şirkete ait bir belgeden oluşturulmuşsa "
+"ayarlayın"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__order_partner_id
@@ -741,6 +753,8 @@ msgid ""
 "Product should be passed as an argument in order to get the unit price for "
 "moves in a kit."
 msgstr ""
+"Bir kitteki hareketlerin birim fiyatını almak için ürün, bir argüman olarak "
+"geçirilmelidir."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_account_id
@@ -850,6 +864,8 @@ msgid ""
 "Technical field holding the tracking method. False on a storable product "
 "means it's tracked by quantity only."
 msgstr ""
+"Takip yöntemini içeren teknik alan. Depolanabilir bir üründe \"false\" "
+"değeri, ürünün yalnızca miktar bazında takip edildiği anlamına gelir."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__company_currency_id
@@ -1056,6 +1072,9 @@ msgid ""
 "quantities without a lot/serial number:\n"
 "%s"
 msgstr ""
+"Aşağıdaki ürünlerin lot/seri numarası olmayan stok miktarları olduğundan lot "
+"değerlemesini etkinleştiremezsiniz:\n"
+"%s"
 
 #. module: stock_account
 #. odoo-python
@@ -1064,6 +1083,8 @@ msgid ""
 "You cannot modify the scheduled date of operation %s because it falls within "
 "a locked fiscal period."
 msgstr ""
+"%s 'deki planlanan işlem tarihini, kilitli bir mali döneme denk geldiği için "
+"değiştiremezsiniz."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_id

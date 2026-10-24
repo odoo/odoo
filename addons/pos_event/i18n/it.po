@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:42+0000\n"
+"POT-Creation-Date: 2026-10-23 17:41+0000\n"
 "PO-Revision-Date: 2026-08-31 17:38+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -25,6 +25,12 @@ msgstr ""
 #: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
 msgid " for this slot"
 msgstr " per questo slot"
+
+#. module: pos_event
+#. odoo-javascript
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
+msgid "%s limit exceeded"
+msgstr ""
 
 #. module: pos_event
 #. odoo-javascript
@@ -59,12 +65,6 @@ msgstr "<span class=\"o_stat_text\">Ordine POS</span>"
 #: model_terms:ir.ui.view,arch_db:pos_event.event_event_view_form_inherit_pos_event
 msgid "<span class=\"o_stat_text\">PoS Sales</span>"
 msgstr "<span class=\"o_stat_text\">Vendite POS</span>"
-
-#. module: pos_event
-#. odoo-javascript
-#: code:addons/pos_event/static/src/app/screens/product_screen/product_screen.js:0
-msgid "All slots are booked out for this event."
-msgstr "Tutti i posti disponibili per questo evento sono esauriti."
 
 #. module: pos_event
 #: model:ir.model.fields,field_description:pos_event.field_pos_order__attendee_count
@@ -120,6 +120,8 @@ msgid "Error"
 msgstr "Errore"
 
 #. module: pos_event
+#. odoo-javascript
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
 #: model:ir.model,name:pos_event.model_event_event
 msgid "Event"
 msgstr "Evento"
@@ -223,7 +225,6 @@ msgstr "Nessuno slot"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
 #: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.js:0
 msgid "Oh snap !"
 msgstr "Oh, no!"
@@ -306,6 +307,12 @@ msgstr ""
 
 #. module: pos_event
 #. odoo-javascript
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
+msgid "Slot"
+msgstr ""
+
+#. module: pos_event
+#. odoo-javascript
 #: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.xml:0
 #: code:addons/pos_event/static/src/app/components/product_card/product_card.xml:0
 msgid "Sold out"
@@ -331,6 +338,12 @@ msgstr "Biglietto n°"
 #: code:addons/pos_event/static/src/app/models/pos_order_line.js:0
 msgid "Ticket error"
 msgstr "Errore biglietto"
+
+#. module: pos_event
+#. odoo-javascript
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
+msgid "Ticket limit exceeded"
+msgstr ""
 
 #. module: pos_event
 #. odoo-javascript
@@ -365,6 +378,14 @@ msgstr ""
 
 #. module: pos_event
 #. odoo-javascript
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
+msgid ""
+"You selected more tickets than available seats (max %s). Please select a "
+"smaller amount."
+msgstr ""
+
+#. module: pos_event
+#. odoo-javascript
 #: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
 msgid "for"
 msgstr "per"
@@ -392,3 +413,6 @@ msgstr "slot"
 #: code:addons/pos_event/static/src/app/components/product_card/product_card.xml:0
 msgid "slots"
 msgstr "slot"
+
+#~ msgid "All slots are booked out for this event."
+#~ msgstr "Tutti i posti disponibili per questo evento sono esauriti."

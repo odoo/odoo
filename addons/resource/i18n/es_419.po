@@ -10,10 +10,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-09 17:40+0000\n"
-"PO-Revision-Date: 2026-08-31 19:44+0000\n"
+"PO-Revision-Date: 2026-10-23 00:33+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
-"odoo-s19-4/resource/es_419/>\n"
+"odoo-20/resource/es_419/>\n"
 "Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,6 +34,15 @@ msgid ""
 "it wants, optionally up to an hours target.\n"
 "        "
 msgstr ""
+"\n"
+"    - Fijo: Un patrón de asistencia semanal que se repite de la misma forma "
+"cada semana.\n"
+"    - Variable: Asistencias programadas para fechas específicas, en lugar de "
+"seguir un patrón semanal recurrente, como un horario puntual o una rotación "
+"de varias semanas.\n"
+"    - Sin definir: No hay horarios predefinidos. El recurso puede trabajar "
+"cuando quiera, con la opción de definir un objetivo de horas.\n"
+"       "
 
 #. module: resource
 #: model:ir.module.module,description:base.module_resource
@@ -48,6 +57,15 @@ msgid ""
 "calendar\n"
 "associated to every resource. It also manages the leaves of every resource.\n"
 msgstr ""
+"\n"
+"Módulo de gestión de recursos.\n"
+"===============================\n"
+"\n"
+"Un recurso representa algo que se puede planificar (un desarrollador "
+"asignado a una tarea o \n"
+"un centro de trabajo en una orden de fabricación). Este módulo gestiona un "
+"calendario \n"
+"asociado a cada recurso. También gestiona los permisos de cada recurso.\n"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
@@ -191,7 +209,7 @@ msgstr "Días de cierre"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__color
 msgid "Color"
-msgstr ""
+msgstr "Color"
 
 #. module: resource
 #: model:ir.model,name:resource.model_res_company
@@ -518,7 +536,7 @@ msgstr "Material"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_material_from_calendar
 msgid "Material Resources"
-msgstr ""
+msgstr "Recursos materiales"
 
 #. module: resource
 #. odoo-javascript
@@ -585,7 +603,7 @@ msgstr "Teléfono"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
 msgid "Preview"
-msgstr ""
+msgstr "Previsualizar"
 
 #. module: resource
 #. odoo-python
@@ -628,7 +646,7 @@ msgstr "Tipo de recurrencia"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__reference_calendar_id
 msgid "Reference Calendar"
-msgstr ""
+msgstr "Calendario de referencia"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__reference_calendar_id
@@ -923,7 +941,7 @@ msgstr "Tipo"
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar__calendar_type__undefined
 msgid "Undefined"
-msgstr ""
+msgstr "Sin definir"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__recurrency_end_type__date
@@ -1072,7 +1090,7 @@ msgstr "No puedes calcular los intervalos sin un calendario en un recurso."
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "from company"
-msgstr ""
+msgstr "de la empresa"
 
 #~ msgid ""
 #~ "Define the working schedule of the resource. If not set, the resource "

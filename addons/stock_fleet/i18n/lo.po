@@ -3,15 +3,16 @@
 # * stock_fleet
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-11 17:43+0000\n"
-"PO-Revision-Date: 2026-08-31 16:57+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Lao <https://translate.odoo.com/projects/odoo-s19-4/"
-"stock_fleet/lo/>\n"
+"PO-Revision-Date: 2026-10-24 11:33+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-20/stock_fleet/"
+"lo/>\n"
 "Language: lo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,21 +23,18 @@ msgstr ""
 #. module: stock_fleet
 #. odoo-python
 #: code:addons/stock_fleet/models/fleet_vehicle_model.py:0
-#, fuzzy
 msgid "%(display_name)s (%(load_capacity)s)"
 msgstr "%(display_name)s (%(load_capacity)s)"
 
 #. module: stock_fleet
 #. odoo-python
 #: code:addons/stock_fleet/models/fleet_vehicle_model.py:0
-#, fuzzy
 msgid "%(volume_capacity)s %(volume_uom)s"
 msgstr "%(volume_capacity)s %(volume_uom)s"
 
 #. module: stock_fleet
 #. odoo-python
 #: code:addons/stock_fleet/models/fleet_vehicle_model.py:0
-#, fuzzy
 msgid "%(weight_capacity)s %(weight_uom)s"
 msgstr "%(weight_capacity)s %(weight_uom)s"
 
@@ -44,12 +42,12 @@ msgstr "%(weight_capacity)s %(weight_uom)s"
 #: model:ir.actions.report,print_report_name:stock_fleet.action_report_cmr
 #: model:ir.actions.report,print_report_name:stock_fleet.action_report_cmr_batch
 msgid "'CMR - %s' % (object.name)"
-msgstr ""
+msgstr "'CMR - %s' % (object.name)"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_card
 msgid "<i class=\"oi mx-2\" data-icon=\"east\" title=\"Arrow\"/>"
-msgstr ""
+msgstr "<i class=\"oi mx-2\" data-icon=\"east\" title=\"ລູກສອນ\"/>"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_card
@@ -57,6 +55,8 @@ msgid ""
 "<i class=\"oi text-primary me-2\" data-icon=\"inventory_2\" "
 "title=\"Location\"/>"
 msgstr ""
+"<i class=\"oi text-primary me-2\" data-icon=\"inventory_2\" title=\"ສະຖານ"
+"ທີ່\"/>"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_card
@@ -64,10 +64,11 @@ msgid ""
 "<i class=\"oi text-primary me-2\" data-icon=\"local_shipping\" "
 "title=\"Vehicle\"/>"
 msgstr ""
+"<i class=\"oi text-primary me-2\" data-icon=\"local_shipping\" title=\"ພາຫະນ"
+"ະ\"/>"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.view_picking_type_form
-#, fuzzy
 msgid ""
 "<span class=\"fw-bold\" invisible=\"code !='outgoing'\">From</span>\n"
 "                        <span class=\"fw-bold\" invisible=\"code "
@@ -79,30 +80,26 @@ msgstr ""
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_picking_batch_inherit
-#, fuzzy
 msgid "<strong>Dock:</strong>"
 msgstr "<strong>ຊ່ອງໂຫຼດສິນຄ້າ:</strong>"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_picking_batch_inherit
-#, fuzzy
 msgid "<strong>Vehicle Category:</strong>"
 msgstr "<strong>ໝວດໝູ່ພາຫະນະ:</strong>"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_picking_batch_inherit
-#, fuzzy
 msgid "<strong>Vehicle:</strong>"
 msgstr "<strong>ພາຫະນະ:</strong>"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Address"
-msgstr ""
+msgstr "ທີ່ຢູ່"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__allowed_dock_ids
-#, fuzzy
 msgid "Allowed Docks"
 msgstr "ຊ່ອງໂຫຼດສິນຄ້າທີ່ອະນຸຍາດ"
 
@@ -112,133 +109,130 @@ msgid ""
 "Allows organizing deliveries by dock, assigning drivers and vehicles, and "
 "printing the associated consignment notes."
 msgstr ""
+"ຊ່ວຍໃນການຈັດການຈັດສົ່ງຕາມຊ່ອງໂຫຼດສິນຄ້າ, ກຳນົດຄົນຂັບ ແລະ ພາຫະນະ, ລວມທັງພິມໃບກຳກັບການຂົນສົ່ງທີ່ກ່ຽວ"
+"ຂ້ອງ."
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Annexed documents"
-msgstr ""
+msgstr "ເອກະສານຕິດຄັດ"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__auto_print_cmr_report
 msgid "Auto Print Consignment Note (CMR)"
-msgstr ""
+msgstr "ພິມໃບກຳກັບການຂົນສົ່ງ (CMR) ອັດຕະໂນມັດ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Balance"
-msgstr ""
+msgstr "ຍອດເຫຼືອ"
 
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_pivot
-#, fuzzy
 msgid "Batch Transfer"
 msgstr "ການໂອນຍ້າຍເປັນຊຸດ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
-#, fuzzy
 msgid "Batches by Route"
 msgstr "ຊຸດຕາມເສັ້ນທາງ"
 
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_report_stock_fleet_report_cmr_batch
 msgid "CMR Batch Report"
-msgstr ""
+msgstr "ລາຍງານຊຸດ CMR"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "CMR INTERNATIONAL CONSIGNMENT NOTE"
-msgstr ""
+msgstr "ໃບກຳກັບການຂົນສົ່ງສິນຄ້າລະຫວ່າງປະເທດ CMR"
 
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_report_stock_fleet_report_cmr
 msgid "CMR Report"
-msgstr ""
+msgstr "ລາຍງານ CMR"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
-#, fuzzy
 msgid "Calendar"
 msgstr "ປະຕິທິນ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Carriage charges"
-msgstr ""
+msgstr "ຄ່າຂົນສົ່ງ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Carrier (name, address, country)"
-msgstr ""
+msgstr "ຜູ້ຂົນສົ່ງ (ຊື່, ທີ່ຢູ່, ປະເທດ)"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Carrier's reservations and observations"
-msgstr ""
+msgstr "ຂໍ້ສະຫງວນ ແລະ ຂໍ້ສັງເກດຂອງຜູ້ຂົນສົ່ງ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Cash on delivery"
-msgstr ""
+msgstr "ເກັບເງິນປາຍທາງ"
 
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_fleet_vehicle_model_category
-#, fuzzy
 msgid "Category of the model"
 msgstr "ໝວດໝູ່ຂອງລຸ້ນ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Class"
-msgstr ""
+msgstr "ປະເພດ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Consignee"
-msgstr ""
+msgstr "ຜູ້ຮັບສິນຄ້າ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Consignee (name, address, country)"
-msgstr ""
+msgstr "ຜູ້ຮັບສິນຄ້າ (ຊື່, ທີ່ຢູ່, ປະເທດ)"
 
 #. module: stock_fleet
 #: model:ir.actions.report,name:stock_fleet.action_report_cmr
 #: model:ir.actions.report,name:stock_fleet.action_report_cmr_batch
 #: model_terms:ir.ui.view,arch_db:stock_fleet.view_picking_type_form
 msgid "Consignment Note (CMR)"
-msgstr ""
+msgstr "ໃບກຳກັບການຂົນສົ່ງ (CMR)"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Copy for the carrier"
-msgstr ""
+msgstr "ສະບັບສຳລັບຜູ້ຂົນສົ່ງ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Copy for the consignee"
-msgstr ""
+msgstr "ສະບັບສຳລັບຜູ້ຮັບສິນຄ້າ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Copy for the sender"
-msgstr ""
+msgstr "ສະບັບສຳລັບຜູ້ສົ່ງ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Date"
-msgstr ""
+msgstr "ວັນທີ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Directions as to freight payment"
-msgstr ""
+msgstr "ຄຳແນະນຳກ່ຽວກັບການຊຳລະຄ່າຂົນສົ່ງ"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__has_dispatch_management
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__dispatch_management
-#, fuzzy
 msgid "Dispatch Management"
 msgstr "ການຈັດການການສົ່ງເຄື່ອງ"
 
@@ -250,45 +244,38 @@ msgstr "ການຈັດການການສົ່ງເຄື່ອງ"
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__display_name
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__display_name
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_warehouse__display_name
-#, fuzzy
 msgid "Display Name"
 msgstr "ຊື່ທີ່ສະແດງ"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__dock_id
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__dock_ids
-#, fuzzy
 msgid "Dock"
 msgstr "ຊ່ອງໂຫຼດສິນຄ້າ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
-#, fuzzy
 msgid "Dock Dispatching"
 msgstr "ການຈັດສົ່ງທີ່ຊ່ອງໂຫຼດ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
-#, fuzzy
 msgid "Dock Location"
 msgstr "ສະຖານທີ່ຊ່ອງໂຫຼດ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.view_picking_type_form
-#, fuzzy
 msgid "Dock Locations"
 msgstr "ສະຖານທີ່ຊ່ອງໂຫຼດສິນຄ້າ"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__driver_id
-#, fuzzy
 msgid "Driver"
 msgstr "ຄົນຂັບ"
 
 #. module: stock_fleet
 #: model:ir.model.fields,help:stock_fleet.field_stock_picking_batch__has_dispatch_management
 #: model:ir.model.fields,help:stock_fleet.field_stock_picking_type__dispatch_management
-#, fuzzy
 msgid ""
 "Enable this option to display dispatch management related details in the "
 "batch/wave form view and operations kanban overview."
@@ -298,35 +285,33 @@ msgstr ""
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__end_date
-#, fuzzy
 msgid "End Date"
 msgstr "ວັນທີສິ້ນສຸດ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Established in / on"
-msgstr ""
+msgstr "ເຮັດຂຶ້ນທີ່ / ວັນທີ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Freight paid"
-msgstr ""
+msgstr "ຈ່າຍຄ່າຂົນສົ່ງແລ້ວ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Freight to be paid"
-msgstr ""
+msgstr "ຄ່າຂົນສົ່ງທີ່ຕ້ອງຈ່າຍ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_graph
-#, fuzzy
 msgid "Graph View"
 msgstr "ມຸມມອງກຣາບ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Gross weight kg"
-msgstr ""
+msgstr "ນ້ຳໜັກລວມ ກິໂລກຣາມ"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__id
@@ -336,7 +321,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__id
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__id
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_warehouse__id
-#, fuzzy
 msgid "ID"
 msgstr "ລະຫັດ"
 
@@ -346,213 +330,201 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the Consignment "
 "Note (CMR) of a delivery when it is validated."
 msgstr ""
+"ຖ້າໝາຍຕິກໃສ່ຊ່ອງນີ້, Odoo ຈະພິມໃບກຳກັບການຂົນສົ່ງ (CMR) ຂອງການຈັດສົ່ງໂດຍອັດຕະໂນມັດເມື່ອກວດສອບຢືນຢັ"
+"ນແລ້ວ."
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Letter"
-msgstr ""
+msgstr "ຕົວອັກສອນ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Loading list of products"
-msgstr ""
+msgstr "ລາຍການສິນຄ້າທີ່ໂຫຼດຂຶ້ນ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
-#, fuzzy
 msgid "Manage Batches"
 msgstr "ຈັດການຊຸດ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Marks and Nos."
-msgstr ""
+msgstr "ເຄື່ອງໝາຍ ແລະ ເລກລຳດັບ."
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__volume_capacity
-#, fuzzy
 msgid "Max Volume"
 msgstr "ບໍລິມາດສູງສຸດ"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__vehicle_volume_capacity
-#, fuzzy
 msgid "Max Volume (m³)"
 msgstr "ບໍລິມາດສູງສຸດ (ມ³)"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__weight_capacity
-#, fuzzy
 msgid "Max Weight"
 msgstr "ນ້ຳໜັກສູງສຸດ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Method of packing"
-msgstr ""
+msgstr "ວິທີການຫຸ້ມຫໍ່"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Miscellaneous"
-msgstr ""
+msgstr "ເບັດຕະເລັດ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Name"
-msgstr ""
+msgstr "ຊື່"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Nature of the goods"
-msgstr ""
+msgstr "ລັກສະນະຂອງສິນຄ້າ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
-#, fuzzy
 msgid "Next 7 Days"
 msgstr "7 ວັນຂ້າງໜ້າ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Number"
-msgstr ""
+msgstr "ໝາຍເລກ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Number of packages"
-msgstr ""
+msgstr "ຈຳນວນຫີບຫໍ່"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
-#, fuzzy
 msgid "Own Fleet"
 msgstr "ກອງລົດຂອງຕົນເອງ"
 
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_stock_picking_type
-#, fuzzy
 msgid "Picking Type"
 msgstr "ປະເພດການເກັບເຄື່ອງ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Place and date of taking over the goods (place, country, date)"
-msgstr ""
+msgstr "ສະຖານທີ່ ແລະ ວັນທີຮັບສິນຄ້າ (ສະຖານທີ່, ປະເທດ, ວັນທີ)"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Place of delivery of the goods (place, country)"
-msgstr ""
+msgstr "ສະຖານທີ່ສົ່ງມອບສິນຄ້າ (ສະຖານທີ່, ປະເທດ)"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Reductions"
-msgstr ""
+msgstr "ສ່ວນຫຼຸດ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
-#, fuzzy
 msgid "Scheduled Date"
 msgstr "ວັນທີກຳນົດໄວ້"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "See the attached loading list of products"
-msgstr ""
+msgstr "ເບິ່ງລາຍການສິນຄ້າທີ່ໂຫຼດຂຶ້ນຕິດຄັດ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Sender"
-msgstr ""
+msgstr "ຜູ້ສົ່ງ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Sender (name, address, country)"
-msgstr ""
+msgstr "ຜູ້ສົ່ງ (ຊື່, ທີ່ຢູ່, ປະເທດ)"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Sender's instructions (customs and other formalities)"
-msgstr ""
+msgstr "ຄຳແນະນຳຂອງຜູ້ສົ່ງ (ລະບຽບການພາສີ ແລະ ອື່ນໆ)"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_picking_batch_inherit
-#, fuzzy
 msgid "Sequence"
 msgstr "ລຳດັບ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.vpicktree
-#, fuzzy
 msgid "Shipping Volume"
 msgstr "ບໍລິມາດການຂົນສົ່ງ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.vpicktree
-#, fuzzy
 msgid "Shipping Weight"
 msgstr "ນ້ຳໜັກໃນການຈັດສົ່ງ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Signature and stamp of the carrier"
-msgstr ""
+msgstr "ລາຍເຊັນ ແລະ ກາຈ້ຳຂອງຜູ້ຂົນສົ່ງ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Signature and stamp of the consignee"
-msgstr ""
+msgstr "ລາຍເຊັນ ແລະ ກາຈ້ຳຂອງຜູ້ຮັບສິນຄ້າ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Signature and stamp of the sender"
-msgstr ""
+msgstr "ລາຍເຊັນ ແລະ ກາຈ້ຳຂອງຜູ້ສົ່ງ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Special agreements"
-msgstr ""
+msgstr "ຂໍ້ຕົກລົງພິເສດ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Statistical No."
-msgstr ""
+msgstr "ເລກສະຖິຕິ."
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
-#, fuzzy
 msgid "Statistics"
 msgstr "ສະຖິຕິ"
 
 #. module: stock_fleet
 #: model:ir.module.module,shortdesc:base.module_stock_fleet
 msgid "Stock Transport"
-msgstr ""
+msgstr "ການຂົນສົ່ງສາງ"
 
 #. module: stock_fleet
 #: model:ir.module.module,summary:base.module_stock_fleet
 msgid "Stock Transport Management"
-msgstr ""
+msgstr "ການຈັດການການຂົນສົ່ງສາງ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Successive carriers (name, address, country)"
-msgstr ""
+msgstr "ຜູ້ຂົນສົ່ງຕໍ່ເນື່ອງ (ຊື່, ທີ່ຢູ່, ປະເທດ)"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Supplement charges"
-msgstr ""
+msgstr "ຄ່າທຳນຽມເພີ່ມເຕີມ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
-#, fuzzy
 msgid "Third Party Carrier"
 msgstr "ຜູ້ຂົນສົ່ງພາຍນອກ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_form
-#, fuzzy
 msgid "Third Party Provider"
 msgstr "ຜູ້ໃຫ້ບໍລິການພາຍນອກ"
 
@@ -563,151 +535,135 @@ msgid ""
 "convention on the contact for the international carriage of goods by road "
 "(CMR)"
 msgstr ""
+"ການຂົນສົ່ງນີ້ແມ່ນຂຶ້ນກັບສົນທິສັນຍາວ່າດ້ວຍສັນຍາການຂົນສົ່ງສິນຄ້າທາງຖະໜົນລະຫວ່າງປະເທດ (CMR) ເຖິງວ່າຈະມີຂໍ້ກ"
+"ຳນົດອື່ນທີ່ຂັດແຍ່ງກັນກໍຕາມ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Time of arrival"
-msgstr ""
+msgstr "ເວລາເຖິງ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Time of departure"
-msgstr ""
+msgstr "ເວລາອອກເດີນທາງ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "To be paid by"
-msgstr ""
+msgstr "ຈ່າຍໂດຍ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
-#, fuzzy
 msgid "Tomorrow"
 msgstr "ມື້ອື່ນ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.vpicktree
-#, fuzzy
 msgid "Total Shipping Volume"
 msgstr "ບໍລິມາດການຂົນສົ່ງທັງໝົດ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.vpicktree
-#, fuzzy
 msgid "Total Shipping Weight"
 msgstr "ນ້ຳໜັກການຂົນສົ່ງທັງໝົດ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Total to be paid"
-msgstr ""
+msgstr "ຍອດລວມທີ່ຕ້ອງຈ່າຍ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Tractor licence plate"
-msgstr ""
+msgstr "ປ້າຍທະບຽນລົດຫົວລາກ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Trailer licence plate"
-msgstr ""
+msgstr "ປ້າຍທະບຽນຫາງລາກ"
 
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_stock_picking
-#, fuzzy
 msgid "Transfer"
 msgstr "ໂອນ"
 
 #. module: stock_fleet
 #: model:fleet.vehicle.tag,name:stock_fleet.vehicle_tag_transport
-#, fuzzy
 msgid "Transport"
 msgstr "ການຂົນສົ່ງ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
-#, fuzzy
 msgid "Transport Management"
 msgstr "ການຈັດການການຂົນສົ່ງ"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__vehicle_weight_capacity
-#, fuzzy
 msgid "Vehcilce Payload Capacity"
 msgstr "ຄວາມສາມາດໃນການບັນທຸກຂອງພາຫະນະ"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__vehicle_id
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
-#, fuzzy
 msgid "Vehicle"
 msgstr "ພາຫະນະ"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__vehicle_category_id
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
-#, fuzzy
 msgid "Vehicle Category"
 msgstr "ໝວດໝູ່ພາຫະນະ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_form
-#, fuzzy
 msgid "Volume"
 msgstr "ບໍລິມາດ"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__used_volume_percentage
-#, fuzzy
 msgid "Volume %"
 msgstr "ບໍລິມາດ %"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Volume m³"
-msgstr ""
+msgstr "ບໍລິມາດ ມ³"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__volume_capacity_uom_name
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__volume_uom_name
-#, fuzzy
 msgid "Volume unit of measure label"
 msgstr "ປ້າຍຫົວໜ່ວຍວັດແທກບໍລິມາດ"
 
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_stock_warehouse
-#, fuzzy
 msgid "Warehouse"
 msgstr "ສາງສິນຄ້າ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_form
-#, fuzzy
 msgid "Weight"
 msgstr "ນໍ້າໜັກ"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__used_weight_percentage
-#, fuzzy
 msgid "Weight %"
 msgstr "ນ້ຳໜັກ %"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__weight_capacity_uom_name
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__weight_uom_name
-#, fuzzy
 msgid "Weight unit of measure label"
 msgstr "ສະຫຼາກຫົວໜ່ວຍວັດແທກນ້ຳໜັກ"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking__zip
-#, fuzzy
 msgid "Zip"
 msgstr "ລະຫັດໄປສະນີ"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_form
-#, fuzzy
 msgid "semi-truck"
 msgstr "ລົດຫົວລາກ"
 

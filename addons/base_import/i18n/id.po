@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-10-08 08:41+0000\n"
+"PO-Revision-Date: 2026-10-21 10:33+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-20/"
 "base_import/id/>\n"
@@ -50,6 +50,27 @@ msgid ""
 "* In a module, so that administrators and users of Odoo who do not\n"
 "  need or want an online import can avoid it being available to users.\n"
 msgstr ""
+"\n"
+"Sistem impor file baru yang dapat diperpanjang untuk Odoo\n"
+"======================================\n"
+"\n"
+"Implementasi ulang sistem impor file Odoo:\n"
+"\n"
+"* Sisi server, sistem sebelumnya memaksa sebagian besar logic ke\n"
+"  klien yang menduplikasi effort (di antara klien), sehingga\n"
+"  sistem impor sangat susah digunakan tanpa klien (RPC langsung atau\n"
+"  tipe otomatisasi lainnya) dan membuat pengetahuan mengenai\n"
+"  sistem impor/ekspor lebih susah untuk dikumpulkan karena tersebar\n"
+"  di 3+ project yang berbeda-beda.\n"
+"\n"
+"* Dalam cara yang lebih mudah diperpanjang, supaya user dan mitra dapat\n"
+"  membuat front-end mereka sendiri untuk mengimpor format file lainnya\n"
+"  (misallnya file OpenDocument) yang mungkin lebih mudah untuk dikelola\n"
+"   dalam work flow mereka atau dari sumber data produksi mereka.\n"
+"\n"
+"* Dalam modul, agar administrator dan user Odoo yang tidak membutuhkan\n"
+"  atau menginginkan impor online dapat menghindari ketersediaan fitur "
+"tersebut untuk user.\n"
 
 #. module: base_import
 #. odoo-javascript
@@ -107,7 +128,6 @@ msgstr ""
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-#, fuzzy
 msgid "Attachments"
 msgstr "Lampiran"
 
@@ -129,12 +149,11 @@ msgstr "Base Import Mapping"
 #. module: base_import
 #: model:ir.module.module,shortdesc:base.module_base_import
 msgid "Base import"
-msgstr ""
+msgstr "Base import"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
-#, fuzzy
 msgid "Batch"
 msgstr "Batch"
 
@@ -142,19 +161,19 @@ msgstr "Batch"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Batch interval"
-msgstr ""
+msgstr "Interval batch"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Batch max size"
-msgstr ""
+msgstr "Ukuran maks. batch"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Batch size"
-msgstr ""
+msgstr "Ukuran batch"
 
 #. module: base_import
 #. odoo-javascript
@@ -226,7 +245,6 @@ msgstr "ID Database"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-#, fuzzy
 msgid "Date Format"
 msgstr "Format Tanggal"
 
@@ -234,19 +252,20 @@ msgstr "Format Tanggal"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Datetime Format"
-msgstr ""
+msgstr "Format Tanggal Waktu"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Decimals Separator"
-msgstr ""
+msgstr "Pemisah Desimal"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Defines how many megabytes can be imported in each batch"
 msgstr ""
+"Mendefinisikan berapa banyak megabyte yang dapat diimpor di setiap batch"
 
 #. module: base_import
 #. odoo-javascript
@@ -255,6 +274,8 @@ msgid ""
 "Defines the number of records that will be imported in one transaction. "
 "Reduce the batch size in case of heavy imports"
 msgstr ""
+"Menentukan jumlah record yang akan diimpor dalam satu transaksi. Kurangi "
+"ukuran batch jika impor dalam jumlah besar"
 
 #. module: base_import
 #. odoo-javascript

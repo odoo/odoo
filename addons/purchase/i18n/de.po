@@ -16,9 +16,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 17:39+0000\n"
-"PO-Revision-Date: 2026-10-08 08:41+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"POT-Creation-Date: 2026-10-23 17:40+0000\n"
+"PO-Revision-Date: 2026-10-22 10:31+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-20/purchase/"
 "de/>\n"
 "Language: de\n"
@@ -679,6 +679,9 @@ msgid ""
 "With perpetual valuation, it counterbalances the stock valuation account at "
 "closing."
 msgstr ""
+"Konto, auf dem der abgegrenzte Wert der in Rechnung gestellten, aber noch "
+"nicht erhaltenen Waren verbucht wird. Bei fortlaufender Bewertung dient es "
+"am Bilanzstichtag als Gegenposten zum Bestandsbewertungskonto."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_category__property_account_bills_to_receive_id
@@ -687,11 +690,14 @@ msgid ""
 "With perpetual valuation, it counterbalances the stock valuation account at "
 "closing."
 msgstr ""
+"Konto, auf dem der abgegrenzte Wert der erhaltenen, aber noch nicht in "
+"Rechnung gestellten Waren verbucht wird. Bei fortlaufender Bewertung dient "
+"es am Bilanzstichtag als Gegenposten zum Bestandsbewertungskonto."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__accrual_move_ids
 msgid "Accrual Entries"
-msgstr ""
+msgstr "Abgrenzungsbuchungen"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__accrual_move_ids
@@ -699,6 +705,9 @@ msgid ""
 "Accrual entries generated for this line, so it isn't accrued again while one "
 "is still standing (posted, not yet reversed or cancelled)."
 msgstr ""
+"Für diese Zeile wurden Abgrenzungsbuchungen generiert, sodass sie nicht "
+"erneut abgegrenzt wird, solange eine davon noch besteht (gebucht, noch nicht "
+"storniert oder rückgebucht)."
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_accrued_expense_entry_purchase_order_line
@@ -708,13 +717,13 @@ msgstr "Abgegrenzte Kostenbuchung"
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_accrued_orders_wizard
 msgid "Accrued Orders Wizard"
-msgstr ""
+msgstr "Assistent für abgegrenzte Aufträge"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/wizard/accrued_orders.py:0
 msgid "Accrued total"
-msgstr ""
+msgstr "Insgesamt abgegrenzt"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1084,7 +1093,7 @@ msgstr "Rechnung zur Bestellung"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__bill_to_receive
 msgid "Bill to Receive"
-msgstr ""
+msgstr "Zu erhaltene Rechnung"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced_at_date
@@ -1102,12 +1111,12 @@ msgstr "Abgerechneter Nettobetrag"
 #: model:ir.model.fields,field_description:purchase.field_product_category__property_account_billed_not_received_id
 #: model:ir.model.fields,field_description:purchase.field_res_company__account_billed_not_received_id
 msgid "Billed Not Received Account"
-msgstr ""
+msgstr "Konto für abgerechnete, aber nicht erhaltene Waren"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_category__property_account_billed_not_received_active
 msgid "Billed Not Received Account Active"
-msgstr ""
+msgstr "Konto für abgerechnete, aber nicht erhaltene Waren (aktiv)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced
@@ -1144,12 +1153,12 @@ msgstr "Erhaltene Rechnungen"
 #: model:ir.model.fields,field_description:purchase.field_product_category__property_account_bills_to_receive_id
 #: model:ir.model.fields,field_description:purchase.field_res_company__account_bills_to_receive_id
 msgid "Bills to Receive Account"
-msgstr ""
+msgstr "Konto für zu erhaltene Rechnungen"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_category__property_account_bills_to_receive_active
 msgid "Bills to Receive Account Active"
-msgstr ""
+msgstr "Konto für zu erhaltene Rechnungen (aktiv)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__user_id
@@ -1266,7 +1275,7 @@ msgstr "Bestellung in einem Schritt bestätigen"
 #. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 msgid "Confirm the price."
-msgstr ""
+msgstr "Bestätigen Sie den Preis."
 
 #. module: purchase
 #. odoo-javascript
@@ -1603,7 +1612,7 @@ msgstr "Duplizierter Auftrag"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Enter a Description..."
-msgstr ""
+msgstr "Beschreibung eingeben …"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_planned
@@ -1660,7 +1669,7 @@ msgstr "Verbotene Werte in nicht buchungspflichtigen Bestellzeilen"
 #: model_terms:ir.ui.view,arch_db:purchase.product_product_purchase_tree_view
 #: model_terms:ir.ui.view,arch_db:purchase.product_template_purchase_tree_view
 msgid "Forecasted"
-msgstr ""
+msgstr "Prognostiziert"
 
 #. module: purchase
 #. odoo-python
@@ -1908,7 +1917,7 @@ msgstr "Buchungszeile"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__label
 msgid "Label"
-msgstr ""
+msgstr "Bezeichnung"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__write_uid
@@ -2077,7 +2086,7 @@ msgstr "Passende Rechnungen"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Material-Symbols-Icon, z. B. Checkliste"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_merger
@@ -2245,7 +2254,7 @@ msgstr "Nächster Aktivitätstyp"
 #. module: purchase
 #: model:res.groups.privilege,placeholder:purchase.res_groups_privilege_purchase
 msgid "No"
-msgstr ""
+msgstr "Nein"
 
 #. module: purchase
 #. odoo-javascript
@@ -2443,6 +2452,90 @@ msgid ""
 "etc.\n"
 "\n"
 msgstr ""
+"Odoo Lieferkette\n"
+"-----------------\n"
+"\n"
+"Automatisieren Sie die Zahlungsanforderung und kontrollieren Sie die "
+"Rechnungsstellung mit der\n"
+"<a href=\"https://www.odoo.com/app/purchase\">Open-Source-Lieferkette</a> "
+"von Odoo.\n"
+"\n"
+"Automatisieren Sie Beschaffungsvorschläge, starten Sie Angebotsanfragen, "
+"verfolgen\n"
+"Sie Bestellungen, verwalten Sie Lieferantenangaben, kontrollieren Sie den "
+"Wareneingang und\n"
+"prüfen Sie Lieferantenrechnungen.\n"
+"\n"
+"Automatisierte Beschaffungsangebote\n"
+"----------------------------------\n"
+"\n"
+"Reduzieren Sie den Lagerbestand mit Beschaffungsregeln. Holen Sie sich den "
+"richtigen Kaufvorschlag\n"
+"zur richtigen Zeit, um Ihren Lagerbestand zu reduzieren. Verbessern Sie "
+"Ihre\n"
+"Einkaufs- und Bestandsleistung mit Beschaffungsregeln in Abhängigkeit von "
+"Lagerbeständen, Logistikregeln, Verkaufsaufträgen, prognostizierten "
+"Fertigungsaufträgen usw.\n"
+"\n"
+"Senden Sie Angebotsanfragen oder Bestellungen mit einem Klick an Ihren "
+"Lieferanten.\n"
+"Greifen Sie über Ihre Bestellung auf Wareneingänge und Rechnungen zu.\n"
+"\n"
+"Ausschreibungen\n"
+"----------------\n"
+"\n"
+"Ausschreibungen starten, Antworten der Anbieter in den Prozess integrieren "
+"und\n"
+"Angebote vergleichen. Wählen Sie das beste Angebot aus und versenden Sie "
+"problemlos Bestellungen.\n"
+"Nutzen Sie das Berichterstattungssystem, um die Qualität von Dienstleistern "
+"im Nachhinein zu analysieren.\n"
+"\n"
+"\n"
+"E-Mail-Integration\n"
+"------------------\n"
+"\n"
+"Integrieren Sie alle Mitteilungen der Lieferanten zu den Bestellungen (oder "
+"Ausschreibungen), um\n"
+"die Rückverfolgbarkeit der Verhandlungen oder des Kundendienstes zu "
+"gewährleisten. Verwenden Sie das\n"
+"Forderungsmanagementmodul, um Probleme im Zusammenhang mit Lieferanten zu "
+"verfolgen.\n"
+"\n"
+"Standardpreis, Durchschnittspreis, FIFO\n"
+"-----------------------------------\n"
+"\n"
+"Verwenden Sie die Kalkulationsmethode, die Ihrem Geschäft entspricht: "
+"Standardpreis, Durchschnittspreis, FIFO oder LIFO. Sie erhalten Ihre "
+"Buchhaltungseinträge und die korrekte Bestandsbewertung in Echtzeit; Odoo "
+"verwaltet alles für Sie, auf transparente Weise.\n"
+"\n"
+"Lieferantenpreislisten importieren\n"
+"--------------------------\n"
+"\n"
+"Treffen Sie intelligente Kaufentscheidungen anhand der besten Preise. "
+"Importieren Sie mühelos die Preislisten\n"
+"Ihrer Lieferanten, um intelligentere Kaufentscheidungen auf der Grundlage "
+"von Sonderangeboten, Mengenrabatten und speziellen Vertragsbedingungen "
+"fällen zu können. Sie können sogar Ihren\n"
+"Verkaufspreis von den Preisen Ihres Lieferanten abhängig machen.\n"
+"\n"
+"Produkt- und Rechnungskontrolle\n"
+"-----------------------------\n"
+"\n"
+"Kein Produkt und keine Bestellung wird vergessen, die Bestandskontrolle "
+"ermöglicht Ihnen die Verwaltung von\n"
+"Lieferrückständen, Rückerstattungen, Produktannahmen und Qualitätskontrolle. "
+"Wählen Sie die richtige\n"
+"Kontrollmethode nach Ihrem Bedarf.\n"
+"\n"
+"Kontrollieren Sie ganz leicht Lieferantenrechnungen. Wählen Sie die richtige "
+"Methode je nach\n"
+"Bedarf: Generieren Sie Rechnungsentwürfe auf Basis von Bestellungen oder "
+"gelieferten Produkten, erstellen Sie Rechnungen manuell und importieren Sie "
+"Zeilen aus Bestellungen\n"
+"usw.\n"
+"\n"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_method__purchase
@@ -2638,7 +2731,7 @@ msgstr "Portalzugriffs-URL"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__prepaid_expense
 msgid "Prepaid Expense"
-msgstr ""
+msgstr "Vorausbezahlte Ausgabe"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2968,7 +3061,7 @@ msgstr "Bestellungen mit nicht abgerechneten Positionen."
 #. module: purchase
 #: model:ir.module.module,summary:base.module_purchase
 msgid "Purchase orders, tenders and agreements"
-msgstr ""
+msgstr "Bestellungen, Ausschreibungen und Verträge"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.purchase_send_reminder_mail_ir_actions_server
@@ -3095,6 +3188,8 @@ msgid ""
 "Quantity on hand minus outgoing quantity from Sales Orders plus incoming "
 "quantity from Purchase Orders"
 msgstr ""
+"Vorrätige Menge abzüglich der ausgehenden Menge aus Verkaufsaufträgen "
+"zuzüglich der eingehenden Menge aus Bestellungen"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3331,7 +3426,7 @@ msgstr "SMS-Zustellungsfehler"
 #. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 msgid "Save the line."
-msgstr ""
+msgstr "Speichern Sie die Zeile."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -3376,7 +3471,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Select a Product"
-msgstr ""
+msgstr "Produkt auswählen"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
@@ -3387,7 +3482,7 @@ msgstr "Ein Einkaufsbeleg auswählen"
 #. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 msgid "Select price"
-msgstr ""
+msgstr "Preis auswählen"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__selected_seller_id
@@ -3737,6 +3832,12 @@ msgid "The ordered quantity has been updated."
 msgstr "Die bestellte Menge wurde aktualisiert."
 
 #. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/res_partner.py:0
+msgid "The partner cannot be deleted because it is used as a dropship address"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid ""
 "The request for quotation is the first step of the purchases flow. Once\n"
@@ -3870,7 +3971,7 @@ msgstr "Insgesamt berechnet"
 #: model_terms:ir.ui.view,arch_db:purchase.product_product_purchase_tree_view
 #: model_terms:ir.ui.view,arch_db:purchase.product_template_purchase_tree_view
 msgid "Total Forecasted"
-msgstr ""
+msgstr "Insgesamt prognostiziert"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree

@@ -27,8 +27,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 17:41+0000\n"
-"PO-Revision-Date: 2026-10-11 23:36+0000\n"
+"POT-Creation-Date: 2026-10-23 17:40+0000\n"
+"PO-Revision-Date: 2026-10-22 15:33+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-20/account/pt_BR/>\n"
@@ -522,11 +522,9 @@ msgstr "90 dias, no dia 10"
 #. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 msgid ""
-"<b>%(count)s#</b> Installment of <b>%(amount)s</b> due on <b style='color: "
+"<b>%(count)s</b> - Installment of <b>%(amount)s</b> due on <b style='color: "
 "#704A66;'>%(date)s</b>"
 msgstr ""
-"<b>%(count)sª</b> parcela de <b>%(amount)s</b> que vence em <b style='color: "
-"#704A66;'>%(date)s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -3264,43 +3262,43 @@ msgstr "Total provisionado"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_buildings
-msgid "Accumulated Depreciation - Buildings"
-msgstr "Depreciação acumulada - Edifícios"
+msgid "Accumulated Amortization - Buildings"
+msgstr "Amortização acumulada - Edifícios"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_furniture
-msgid "Accumulated Depreciation - Furniture & Fixtures"
-msgstr "Depreciação acumulada – Móveis e utensílios"
+msgid "Accumulated Amortization - Furniture & Fixtures"
+msgstr "Amortização acumulada - Móveis e utensílios"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_improvements
-msgid "Accumulated Depreciation - Improvements"
-msgstr "Depreciação acumulada - Melhorias"
+msgid "Accumulated Amortization - Improvements"
+msgstr "Amortização acumulada - Melhorias"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_machines
-msgid "Accumulated Depreciation - Machines & Tools"
-msgstr "Depreciação acumulada - Máquinas e ferramentas"
+msgid "Accumulated Amortization - Machines & Tools"
+msgstr "Amortização acumulada - Máquinas e ferramentas"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_other_property
-msgid "Accumulated Depreciation - Other Property"
-msgstr "Depreciação acumulada – Outros bens"
+msgid "Accumulated Amortization - Other Property"
+msgstr "Amortização acumulada - Outros imóveis"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_technology
-msgid "Accumulated Depreciation - Technology"
-msgstr "Depreciação acumulada - Tecnologia"
+msgid "Accumulated Amortization - Technology"
+msgstr "Amortização acumulada - Tecnologia"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_vehicles
-msgid "Accumulated Depreciation - Vehicles"
-msgstr "Depreciação acumulada - Veículos"
+msgid "Accumulated Amortization - Vehicles"
+msgstr "Amortização acumulada - Veículos"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_acc_depreciation
-msgid "Accumulated Depreciation Misc"
-msgstr ""
+msgid "Accumulated Depreciation"
+msgstr "Depreciação acumulada"
 
 #. module: account
 #: model:account.account,name:account.21_retained_earnings
@@ -3467,7 +3465,7 @@ msgstr "Adicionar link de código QR no PDF"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/search/search_panel/search_panel.xml:0
 msgid "Add Section"
-msgstr "+ Adicionar seção"
+msgstr "Adicionar seção"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__terms_type__plain
@@ -3646,6 +3644,46 @@ msgstr ""
 msgid "Adjusting Entry {link} {percent}%% of {amount} recognized on {new_date}"
 msgstr ""
 "Lançamento de ajuste {link} {percent}%% de {amount} reconhecido em {new_date}"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_depreciation_and_amortization
+msgid "Adjustment - Depreciation and amortization"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_fin_instr_sale
+msgid "Adjustment - Financial Instruments"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_intangible_asset
+msgid "Adjustment - Intangible Assets"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_net_fin_result
+msgid "Adjustment - Net Financial Result"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_PPE_sale
+msgid "Adjustment - PPE Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_provisions
+msgid "Adjustment - Provisions"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_ROU_sale
+msgid "Adjustment - Right of Use Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_unrealized_forex
+msgid "Adjustment - Unrealized Forex"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_administration_fees
@@ -6051,12 +6089,12 @@ msgstr ""
 "Europa com o Intrastat"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account_tag__color
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__color
 msgid "Color"
 msgstr "Cor"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_account_tag__color
 #: model:ir.model.fields,field_description:account.field_account_journal__color
 msgid "Color Index"
 msgstr "Índice de cores"
@@ -7113,39 +7151,45 @@ msgstr "Saldo acumulado da conta."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_buildings
-msgid "Cumulative depreciation recorded for building assets."
-msgstr ""
+msgid "Cumulative amortization recorded for building assets."
+msgstr "Amortização acumulada registrada para ativos imobiliários."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_technology
-msgid "Cumulative depreciation recorded for capitalized technology assets."
+msgid "Cumulative amortization recorded for capitalized technology assets."
 msgstr ""
+"Amortização acumulada registrada para ativos de tecnologia capitalizados."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_furniture
-msgid "Cumulative depreciation recorded for furniture and fixture assets."
-msgstr ""
+msgid "Cumulative amortization recorded for furniture and fixture assets."
+msgstr "Amortização acumulada registrada para ativos de móveis e utensílios."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_improvements
 msgid ""
-"Cumulative depreciation recorded for leasehold or property improvements."
+"Cumulative amortization recorded for leasehold or property improvements."
 msgstr ""
+"Amortização acumulada registrada para melhorias em bens arrendados ou "
+"imóveis."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_machines
-msgid "Cumulative depreciation recorded for machinery and tool assets."
+msgid "Cumulative amortization recorded for machinery and tool assets."
 msgstr ""
+"Amortização acumulada registrada para ativos de máquinas e ferramentas."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_other_property
-msgid "Cumulative depreciation recorded for other depreciable property assets."
+msgid "Cumulative amortization recorded for other depreciable property assets."
 msgstr ""
+"Amortização acumulada registrada para outros ativos imobilizados "
+"depreciáveis."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_vehicles
-msgid "Cumulative depreciation recorded for vehicle assets."
-msgstr ""
+msgid "Cumulative amortization recorded for vehicle assets."
+msgstr "Amortização acumulada registrada para ativos de veículos."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_retained_earnings
@@ -9479,6 +9523,36 @@ msgid "Financial Journal"
 msgstr "Diário financeiro"
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_fin_borrowings_lt
+msgid "Financing - Borrowings Long Term"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_borrowings_st
+msgid "Financing - Borrowings Short Term"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_dividends
+msgid "Financing - Dividends"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_lease
+msgid "Financing - Lease"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_recov_adv
+msgid "Financing - Recoverable Advances"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_share_issuance
+msgid "Financing - Share Issuance"
+msgstr ""
+
+#. module: account
 #: model:account.account.tag,name:account.account_tag_financing
 msgid "Financing Activities"
 msgstr "Atividades financeiras"
@@ -11377,6 +11451,51 @@ msgstr "Variação de inventário"
 #: model:account.account.tag,name:account.account_tag_investing
 msgid "Investing & Extraordinary Activities"
 msgstr "Atividades extraordinárias e de investimento"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_cash_advances
+msgid "Investment - Cash Advances"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_fin_instr_purchase
+msgid "Investment - Financial Instruments Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_fin_instr_sale
+msgid "Investment - Financial Instruments Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_int_ass_purchase
+msgid "Investment - Intangible Assets Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_int_ass_sale
+msgid "Investment - Intangible Assets Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_interest_received
+msgid "Investment - Interest Received"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_ppe_purchase
+msgid "Investment - PPE Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_ppe_sale
+msgid "Investment - PPE Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_rou_sale
+msgid "Investment - Right of Use Sale"
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -14365,6 +14484,16 @@ msgstr "Movimentação de abertura lançada"
 #: code:addons/account/models/company.py:0
 msgid "Opening balance"
 msgstr "Saldo inicial"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_op_income_tax_paid_received
+msgid "Operating - Income Tax Paid Received"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_op_interest_paid
+msgid "Operating - Interest Paid"
+msgstr ""
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_operating
@@ -22172,6 +22301,36 @@ msgid "Workers Compensation Insurance"
 msgstr "Seguro de acidentes de trabalho"
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_deferred_revenue
+msgid "Working Capital - Deferred Revenue"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_inventory
+msgid "Working Capital - Inventory"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_other_payable
+msgid "Working Capital - Other Payable"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_other_receivable
+msgid "Working Capital - Other Receivable"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_trade_payable
+msgid "Working Capital - Trade Payable"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_trade_receivable
+msgid "Working Capital - Trade Receivable"
+msgstr ""
+
+#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Write a customer name to <b>create one</b> or <b>see suggestions</b>."
@@ -23488,6 +23647,11 @@ msgstr ""
 "entrega das mercadorias ou a prestação dos serviços."
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_non_applicable
+msgid "not applicable"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
 msgid "of tax"
 msgstr "de imposto"
@@ -23737,6 +23901,34 @@ msgstr ""
 "{{ object.company_id.name }} {{ object.payment_receipt_title }} (Ref. "
 "{{ object.name or 'n/a' }})"
 
+#~ msgid ""
+#~ "<b>%(count)s#</b> Installment of <b>%(amount)s</b> due on <b "
+#~ "style='color: #704A66;'>%(date)s</b>"
+#~ msgstr ""
+#~ "<b>%(count)sª</b> parcela de <b>%(amount)s</b> que vence em <b "
+#~ "style='color: #704A66;'>%(date)s</b>"
+
+#~ msgid "Accumulated Depreciation - Buildings"
+#~ msgstr "Depreciação acumulada - Edifícios"
+
+#~ msgid "Accumulated Depreciation - Furniture & Fixtures"
+#~ msgstr "Depreciação acumulada – Móveis e utensílios"
+
+#~ msgid "Accumulated Depreciation - Improvements"
+#~ msgstr "Depreciação acumulada - Melhorias"
+
+#~ msgid "Accumulated Depreciation - Machines & Tools"
+#~ msgstr "Depreciação acumulada - Máquinas e ferramentas"
+
+#~ msgid "Accumulated Depreciation - Other Property"
+#~ msgstr "Depreciação acumulada – Outros bens"
+
+#~ msgid "Accumulated Depreciation - Technology"
+#~ msgstr "Depreciação acumulada - Tecnologia"
+
+#~ msgid "Accumulated Depreciation - Vehicles"
+#~ msgstr "Depreciação acumulada - Veículos"
+
 #~ msgid "# Reconciled Statement Lines"
 #~ msgstr "Nº de linhas de extrato reconciliadas"
 
@@ -23871,60 +24063,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Não é possível criar uma nova linha de demonstrativo sem uma conta "
 #~ "transitória definida no diário %s."
-
-#~ msgid "Accumulated Amortization - Buildings"
-#~ msgstr "Amortização acumulada - Edifícios"
-
-#~ msgid "Accumulated Amortization - Furniture & Fixtures"
-#~ msgstr "Amortização acumulada - Móveis e utensílios"
-
-#~ msgid "Accumulated Amortization - Improvements"
-#~ msgstr "Amortização acumulada - Melhorias"
-
-#~ msgid "Accumulated Amortization - Machines & Tools"
-#~ msgstr "Amortização acumulada - Máquinas e ferramentas"
-
-#~ msgid "Accumulated Amortization - Other Property"
-#~ msgstr "Amortização acumulada - Outros imóveis"
-
-#~ msgid "Accumulated Amortization - Technology"
-#~ msgstr "Amortização acumulada - Tecnologia"
-
-#~ msgid "Accumulated Amortization - Vehicles"
-#~ msgstr "Amortização acumulada - Veículos"
-
-#~ msgid "Accumulated Depreciation"
-#~ msgstr "Depreciação acumulada"
-
-#~ msgid "Cumulative amortization recorded for building assets."
-#~ msgstr "Amortização acumulada registrada para ativos imobiliários."
-
-#~ msgid "Cumulative amortization recorded for capitalized technology assets."
-#~ msgstr ""
-#~ "Amortização acumulada registrada para ativos de tecnologia capitalizados."
-
-#~ msgid "Cumulative amortization recorded for furniture and fixture assets."
-#~ msgstr ""
-#~ "Amortização acumulada registrada para ativos de móveis e utensílios."
-
-#~ msgid ""
-#~ "Cumulative amortization recorded for leasehold or property improvements."
-#~ msgstr ""
-#~ "Amortização acumulada registrada para melhorias em bens arrendados ou "
-#~ "imóveis."
-
-#~ msgid "Cumulative amortization recorded for machinery and tool assets."
-#~ msgstr ""
-#~ "Amortização acumulada registrada para ativos de máquinas e ferramentas."
-
-#~ msgid ""
-#~ "Cumulative amortization recorded for other depreciable property assets."
-#~ msgstr ""
-#~ "Amortização acumulada registrada para outros ativos imobilizados "
-#~ "depreciáveis."
-
-#~ msgid "Cumulative amortization recorded for vehicle assets."
-#~ msgstr "Amortização acumulada registrada para ativos de veículos."
 
 #~ msgid "Stock Closing"
 #~ msgstr "Fechamento do estoque"

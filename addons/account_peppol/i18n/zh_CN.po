@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
+"POT-Creation-Date: 2026-10-23 17:40+0000\n"
 "PO-Revision-Date: 2026-10-11 11:46+0000\n"
 "Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -1124,7 +1124,8 @@ msgstr "应收账款会计分录"
 msgid ""
 "Invoice %(invoice_name)s exceeds the size limit of 64 MB to be sent via %"
 "(network_name)s."
-msgstr "发票 %(invoice_name)s 超过通过 %(network_name)s 发送的 64 MB 大小限制。"
+msgstr ""
+"发票 %(invoice_name)s 超过通过 %(network_name)s 发送的 64 MB 大小限制。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1133,8 +1134,8 @@ msgid ""
 "Invoice lines using Tax Category 'O' cannot use a percentage-based tax. "
 "Please update the tax type in Advanced Options."
 msgstr ""
-"使用税项类别“O”的发票明细行不能使用按百分比的税项。请在高级选项中更新税项类型"
-"。"
+"使用税项类别“O”的发票明细行不能使用按百分比的税项。请在高级选项中更新税项类"
+"型。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1242,7 +1243,8 @@ msgstr ""
 msgid ""
 "Missing Reverse Charge details. Please set the Exemption Reason to 'Reverse "
 "charge' in the Advanced Options of the tax configuration."
-msgstr "缺少反向征收详情。请在税项配置的高级选项中将免税原因设置为“Reverse charge”。"
+msgstr ""
+"缺少反向征收详情。请在税项配置的高级选项中将免税原因设置为“Reverse charge”。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1250,7 +1252,8 @@ msgstr "缺少反向征收详情。请在税项配置的高级选项中将免税
 msgid ""
 "Missing VAT category code. Action Required: Install the module "
 "account_edi_ubl_cii_tax_extension."
-msgstr "缺少增值税类别代码。需要操作：请安装模块 account_edi_ubl_cii_tax_extension。"
+msgstr ""
+"缺少增值税类别代码。需要操作：请安装模块 account_edi_ubl_cii_tax_extension。"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__phone_number
@@ -2217,7 +2220,8 @@ msgstr "终端点号码可能不正确。 请检查你输入的身份证号码�
 msgid ""
 "The exemption reason code is invalid. Action Required: Install the module "
 "account_edi_ubl_cii_tax_extension."
-msgstr "免税原因代码无效。需要操作：请安装模块 account_edi_ubl_cii_tax_extension。"
+msgstr ""
+"免税原因代码无效。需要操作：请安装模块 account_edi_ubl_cii_tax_extension。"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -2230,6 +2234,17 @@ msgstr ""
 "以下%s Peppol 文档将重置为草稿状态：\n"
 "\n"
 "• %s"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+msgid ""
+"The following %s document(s) were sent via Peppol / PDP and will be left "
+"untouched. If you need to modify them, you must issue a credit or debit "
+"note:\n"
+"\n"
+"• %s"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-javascript
@@ -2625,6 +2640,22 @@ msgid ""
 msgstr ""
 "用于接收 Peppol 发票的日记账，类型不能修改为非 “采购” 类型。\n"
 "请先更换 Peppol 接收所使用的日记账，再修改该日记账的类型。"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move.py:0
+msgid ""
+"You cannot delete invoices that were sent via Peppol / PDP. If you need to "
+"modify them, you must issue a credit or debit note."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move.py:0
+msgid ""
+"You cannot reset to draft invoices that were sent via Peppol / PDP. If you "
+"need to modify them, you must issue a credit or debit note."
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
