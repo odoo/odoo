@@ -2,7 +2,9 @@
 <templates xml:space="preserve">
     <!-- Attributes line template -->
     <t t-name="sale.ProductTemplateAttributeLine">
-        <div name="ptal" t-attf-class="#{this.props.attribute_values.length === 1 &amp;&amp; hasPTAVCustom() ? 'd-lg-flex' : ''}">
+        <div name="ptal"
+            t-attf-class="#{this.props.attribute_values.length === 1 &amp;&amp; hasPTAVCustom() ? 'd-lg-flex' : ''}"
+            t-att-class="{ 'o_ptal_loading': this.props.isLoading }">
         <!-- If the attribute line contains only one attribute value, we don't show the attribute
              value template or the attribute line title unless the single attribute value is custom,
              whereas in this case, only the title of the attribute line and the custom value
@@ -21,6 +23,7 @@
                 t-att-placeholder="customValuePlaceholder"
                 t-if="hasPTAVCustom &amp;&amp; isSelectedPTAVCustom()"
                 t-att-value="this.props.customValue"
+                t-att-disabled="this.props.isLoading"
                 t-on-change="updateCustomValue"
             />
         </div>
