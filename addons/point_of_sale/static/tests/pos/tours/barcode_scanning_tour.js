@@ -46,7 +46,7 @@ registry.category("web_tour.tours").add("test_variants_merge_line_barcode", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("A variant product"),
-            ProductConfiguratorPopup.pickRadio("S"),
+            ProductConfiguratorPopup.pickPills("S"),
             Dialog.confirm(),
             Order.hasLine({
                 productName: "A variant product",

@@ -20,7 +20,7 @@ registry.category('web_tour.tours').add('website_sale.contact_us_button', {
         },
         {
             content: "Select attribute with price zero value",
-            trigger: '.js_attribute_value:contains(blue) input',
+            trigger: '.js_attribute_value:contains(blue) label',
             run: 'click',
         },
         {
