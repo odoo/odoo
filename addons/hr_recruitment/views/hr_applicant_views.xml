@@ -481,6 +481,17 @@
         </field>
     </record>
 
+    <record id="hr_list_view_applicant_talent_pool" model="ir.ui.view">
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.crm_case_tree_view_job"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="default_group_by"></attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="action_hr_talent_pool_applications" model="ir.actions.act_window">
         <field name="name">Talents</field>
         <field name="res_model">hr.applicant</field>
@@ -490,7 +501,7 @@
         <field name="view_mode">list,kanban,form,graph,calendar,pivot,activity</field>
         <field name="view_ids" eval="[
             (5, 0, 0),
-            (0, 0, {'view_mode': 'list'}),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('hr_list_view_applicant_talent_pool')}),
             (0, 0, {'view_mode': 'kanban', 'view_id': ref('hr_kanban_view_applicant_talent_pool')})]"/>
         <field name="context">{
             'default_talent_pool_ids': active_ids,
