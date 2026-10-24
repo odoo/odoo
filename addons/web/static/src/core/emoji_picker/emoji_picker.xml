@@ -13,7 +13,7 @@
             <span>Failed to load emojis...</span>
         </t>
         <t t-else="">
-            <div class="o-EmojiPicker-search d-flex align-items-center mx-2 mt-2 rounded">
+            <div class="o-EmojiPicker-search d-flex align-items-center mx-2 mt-2 rounded" t-att-class="{ 'o-focused': this.isSearchFocused() }">
                 <span class="o-EmojiPicker-searchContour d-flex mx-1 w-100 rounded-pill o-active align-items-center justify-content-center border bg-view">
                     <i class="oi ps-2 py-1 fs-7 rounded-start-0 rounded-3 o-active opacity-50" data-icon="search" title="Search..." role="img" aria-label="Search..."/>
                     <t t-call="web.EmojiPicker.searchInput"/>
@@ -158,6 +158,8 @@
         t-ref="this.autofocusRef"
         t-att-tabindex="this.isMobileOS ? -1 : 0"
         t-on-input="() => this.activeEmojiIndex.set(0)"
+        t-on-focus="() => this.isSearchFocused.set(true)"
+        t-on-blur="() => this.isSearchFocused.set(false)"
     />
 </t>
 
