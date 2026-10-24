@@ -32,7 +32,8 @@ patch(DiscussClientAction.prototype, {
         await super.restoreDiscussThread(...arguments);
         this.publicState.welcome ||=
             this.store.shouldDisplayWelcomeView ??
-            this.store.discuss.thread?.defaultDisplayMode === "video_full_screen";
+            (!this.store.isAnonymous &&
+                this.store.discuss.thread?.defaultDisplayMode === "video_full_screen");
         this.store.shouldDisplayWelcomeView = this.publicState.welcome;
     },
     closeWelcomePage() {

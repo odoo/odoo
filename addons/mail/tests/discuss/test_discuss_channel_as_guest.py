@@ -71,6 +71,29 @@ class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         self.assertTrue(self.channel.message_ids[0].author_guest_id)
         self.start_tour(self.channel.invitation_url, self.tour, cookies={guest._cookie_name: guest._format_auth_cookie()})
 
+    def test_discuss_channel_public_page_as_anonymous(self):
+        self.channel.message_post(
+            body="Hello",
+            message_type="comment",
+            subtype_xmlid="mail.mt_comment",
+        )
+        self.start_tour(
+            f"/discuss/channel/{self.channel.id}",
+            "discuss_channel_public_page_as_anonymous_tour.js",
+        )
+
+    def test_discuss_channel_public_page_as_anonymous_video_full_screen(self):
+        self.channel.default_display_mode = "video_full_screen"
+        self.channel.message_post(
+            body="Hello",
+            message_type="comment",
+            subtype_xmlid="mail.mt_comment",
+        )
+        self.start_tour(
+            f"/discuss/channel/{self.channel.id}",
+            "discuss_channel_public_page_as_anonymous_tour.js",
+        )
+
     def test_discuss_channel_public_page_call_public(self):
         self.channel.default_display_mode = 'video_full_screen'
         self.start_tour(self.channel.invitation_url, "discuss_channel_call_public_tour.js")

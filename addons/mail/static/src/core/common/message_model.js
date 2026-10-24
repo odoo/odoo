@@ -448,14 +448,15 @@ export class Message extends Record {
 
     /** @param {import("models").Thread} thread the thread where the message is shown */
     canAddReaction(thread) {
-        return Boolean(!this.is_transient && this.thread?.can_react);
+        return Boolean(!this.is_transient && this.thread?.can_react && !this.store.isAnonymous);
     }
 
     /** @param {import("models").Thread} thread the thread where the message is shown */
     canReplyTo(thread) {
         return (
             ["discuss.channel", "mail.box"].includes(thread.model) &&
-            this.message_type !== "user_notification"
+            this.message_type !== "user_notification" &&
+            !this.store.isAnonymous
         );
     }
 
