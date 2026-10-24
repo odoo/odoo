@@ -3389,6 +3389,8 @@ class TestMrpOrder(TestMrpCommon):
         to each WO after the creation of the MO. A warning will be displayed.
         -> The user replans one of the WO: the warnings should disappear and the
         WO should be postponed.
+        -> The user moves the start of the postponed WO into the slot of the
+        other one: its expected duration is kept and its end skips that slot.
         """
         # Required for `workorder_ids` to be visible in the view
         self.env.user.groups_id += self.env.ref('mrp.group_mrp_routings')
@@ -3415,6 +3417,11 @@ class TestMrpOrder(TestMrpCommon):
         self.assertFalse(wo_01.show_json_popover)
         self.assertFalse(wo_02.show_json_popover)
         self.assertEqual(wo_01.date_finished, wo_02.date_start)
+
+        with Form(mo_02) as mo_form:
+            with mo_form.workorder_ids.edit(0) as wo_line:
+                wo_line.date_start = datetime(2022, 6, 28, 8, 30)
+        self.assertRecordValues(wo_02, [{'duration_expected': 60, 'date_finished': datetime(2022, 6, 28, 10)}])
 
     @freeze_time('2022-10-05 12:00')
     def test_replan_mo_without_bom(self):
