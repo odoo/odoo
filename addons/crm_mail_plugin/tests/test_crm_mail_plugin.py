@@ -2,10 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-
+import base64
+from odoo.tests import tagged
 from odoo.addons.mail_plugin.tests.common import TestMailPluginControllerCommon, mock_auth_method_outlook
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCrmMailPlugin(TestMailPluginControllerCommon):
     @mock_auth_method_outlook('employee')
     def test_get_contact_data(self):
@@ -87,3 +89,87 @@ class TestCrmMailPlugin(TestMailPluginControllerCommon):
             company_b,
             msg='The created record should belong to company_B',
         )
+
+    @mock_auth_method_outlook('employee')
+    def test_crm_lead_create_nameless_attachment(self):
+        """
+        Test that creating a lead with an email with a nameless attachment does not cause errors
+        """
+        self.user_test.groups_id |= self.env.ref(
+            'sales_team.group_sale_salesman_all_leads'
+        )
+
+        image_data = base64.b64decode(
+            'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJ'
+            'AAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
+        )
+
+        image_name = 'image.png'
+
+        # create contacts
+        partner1 = self.env['res.partner'].create({
+            'name': 'Named Image',
+            'email': 'named.image@example.com'
+        })
+
+        partner2 = self.env['res.partner'].create({
+            'name': 'Nameless Image',
+            'email': 'nameless.image@example.com'
+        })
+
+        # Control
+        named_params = {
+            'email_subject': 'Named Attachment Test',
+            'email_body': '<p>Body with inline image</p>',
+            'partner_id': partner1.id,
+            'attachments': [[
+                image_name,
+                base64.b64encode(image_data).decode()
+            ]],
+        }
+
+        named_result = self.make_jsonrpc_request(
+            route='/mail_plugin/lead/create',
+            params=named_params,
+        )
+
+        self.assertIn('lead_id', named_result)
+        named_lead = self.env['crm.lead'].browse(named_result['lead_id'])
+
+        named_attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', 'crm.lead'),
+            ('res_id', '=', named_lead.id),
+        ], limit=1)
+
+        self.assertTrue(named_attachment.exists())
+        self.assertTrue(named_attachment.name, image_name)
+
+        # Regression case
+        nameless_params = {
+            'email_subject': 'Nameless Attachment Test',
+            'email_body': '<p>Body with inline image</p>',
+            'partner_id': partner2.id,
+            'attachments': [  # two attachments to check if they conflict with each other
+                [False,
+                base64.b64encode(image_data).decode()],
+                [False,
+                base64.b64encode(image_data).decode()],
+            ],
+        }
+
+        nameless_result = self.make_jsonrpc_request(  # should give ValidationError if no fix
+            route='/mail_plugin/lead/create',
+            params=nameless_params,
+        )
+
+        self.assertIn('lead_id', nameless_result)
+        nameless_lead = self.env['crm.lead'].browse(nameless_result['lead_id'])
+
+        nameless_attachments = self.env['ir.attachment'].search([
+            ('res_model', '=', 'crm.lead'),
+            ('res_id', '=', nameless_lead.id),
+        ])
+
+        for nameless_attachment in nameless_attachments:
+            self.assertTrue(nameless_attachment.exists())
+            self.assertTrue(nameless_attachment.name)
