@@ -2294,6 +2294,22 @@ header {
         top: 0;
         inset-inline: 0;
         z-index: 1000;
+        background-color: var(--header-background-color);
+
+        // For rounded-box menu over the content: apply the background
+        // to the navbar and neutralize theme color like other menu
+        &:has(> .container > .navbar) {
+            background-color: transparent !important;
+
+            > .container > .navbar {
+                background-color: var(--header-background-color);
+                color: inherit;
+
+                .nav-item > .nav-link {
+                    color: inherit;
+                }
+            }
+        }
 
         > .navbar {
             /* Prevent the nav color/gradient to impact the header color. */
