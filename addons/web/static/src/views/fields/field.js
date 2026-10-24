@@ -416,7 +416,7 @@ export class Field extends Component {
             this.props.readonly ||
             (this.offlinePlugin.isOffline() &&
                 !validFieldTypes[this.props.record.fields[this.props.name].type]
-                    .availableOffline) ||
+                    ?.availableOffline) ||
             false;
 
         let propsFromNode = {};
