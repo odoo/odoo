@@ -362,10 +362,11 @@ class MailMessage(models.Model):
     @api.depends_context("uid")
     def _compute_is_bookmarked(self):
         """ Compute if the message is bookmarked by the current user. """
-        # TDE FIXME: use SQL
+        partner = self.env.user.partner_id
         bookmarked = (
             self.sudo()
-            .filtered(lambda msg: self.env.user.partner_id in msg.bookmarked_partner_ids)
+            .with_context(active_test=False)
+            .filtered(lambda msg: partner.id in msg.bookmarked_partner_ids.ids and partner.active)
             .sudo(False)
         )
         for message in self:
