@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_partner_form_pos_ui_inherit_l10n_fr_pdp_pos" model="ir.ui.view">
+        <field name="name">res.partner.form.pos.ui.inherit.l10n_fr_pdp_pos</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="pos_account_peppol.view_partner_form_pos_ui_inherit_pos_account_peppol"/>
+        <field name="arch" type="xml">
+            <label for="peppol_verification_state" position="attributes">
+                <attribute name="for">pdp_verification_display_state</attribute>
+            </label>
+            <field name="peppol_verification_state" position="attributes">
+                <attribute name="name">pdp_verification_display_state</attribute>
+            </field>
+            <field name="routing_endpoint" position="replace">
+                <div class="d-flex justify-content-between">
+                    <field name="routing_endpoint" class="w-100" nolabel="1"/>
+                    <button class="btn border-0 p-0 oi" data-icon="search" title="Search endpoint"
+                        name="action_pdp_annuaire_lookup" type="object"/>
+                </div>
+            </field>
+        </field>
+    </record>
+</odoo>
