@@ -25,6 +25,19 @@ class AccountEdiCommon(models.AbstractModel):
                 ("No discount for early payment."),
         }
 
+    def _import_retrieve_customer(self, collected_values):
+        # EXTENDS account_edi_ubl_cii
+        # The sender identifier of the envelope is the one to use to send responses back,
+        # it takes precedence over the endpoint in the document (which may be a SIREN/SIRET).
+        if sender_identifier := self.env.context.get('l10n_fr_pdp_sender_identifier'):
+            peppol_eas, _sep, peppol_endpoint = sender_identifier.partition(':')
+            if peppol_endpoint:
+                collected_values['customer_values'].update({
+                    'peppol_eas': peppol_eas,
+                    'peppol_endpoint': peppol_endpoint,
+                })
+        return super()._import_retrieve_customer(collected_values)
+
     def _l10n_fr_pdp_get_profile_id(self, vals):
         invoice = vals['invoice']
         # Les valeurs autorisées pour le Cadre (Mode de Facturation) sont:
