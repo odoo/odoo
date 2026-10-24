@@ -132,3 +132,16 @@ class TestIrConfigParameter(TransactionCase):
         with self.assertNoLogs('odoo.addons.base.models.ir_config_parameter', 'WARNING'):
             self.env.transaction.invalidate_ormcache('stable')
             self.assertEqual(ICP.get_int('config_key', 100), 100)
+
+    def test_unset(self):
+        ICP = self.env['ir.config_parameter'].sudo()
+
+        ICP.set_str('config_key', 'value')
+        self.assertEqual(ICP.get_str('config_key'), 'value')
+
+        old = ICP.unset('config_key')
+        self.assertEqual(old, 'value')
+        self.assertEqual(ICP.get_str('config_key'), '')
+
+        config_record = ICP.search([('key', '=', 'config_key')], limit=1)
+        self.assertFalse(config_record)
