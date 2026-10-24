@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+from collections import Counter
 
 from psycopg2.extras import Json
 from zeep.cache import Base as ZeepCache
@@ -143,11 +144,6 @@ class ResCompany(models.CachedModel):
     secondary_color = fields.Char()
     color = fields.Integer(compute='_compute_color', inverse='_inverse_color')
     uninstalled_l10n_module_ids = fields.Many2many('ir.module.module', compute='_compute_uninstalled_l10n_module_ids')
-
-    _name_uniq = models.Constraint(
-        'unique (name)',
-        "The company name must be unique!",
-    )
 
     def init(self):
         for company in self.search([('paperformat_id', '=', False)]):
@@ -320,6 +316,18 @@ class ResCompany(models.CachedModel):
                 f.set('readonly', "parent_id != False")
         return arch, view
 
+    @api.depends('name', 'country_id')
+    def _compute_display_name(self):
+        # Companies of different countries may share a name: the country then tells them apart.
+        # The names of all companies are already cached, archived ones included.
+        name_counts = Counter(self._cached_data()['name'])
+        duplicated_names = {name for name, count in name_counts.items() if count > 1}
+        for company in self:
+            if company.name in duplicated_names and company.country_id:
+                company.display_name = f"{company.name} ({company.country_id.name})"
+            else:
+                company.display_name = company.name
+
     @api.model
     def _search_display_name(self, operator, value):
         context = dict(self.env.context)
@@ -335,6 +343,13 @@ class ResCompany(models.CachedModel):
             newself = newself.sudo()
         newself = newself.with_context(context)
         domain = super(ResCompany, newself)._search_display_name(operator, value)
+        if operator in ('=', 'in'):
+            # Companies sharing a name are displayed with their country, e.g. "Lush GmbH (Germany)":
+            # that display name is matched back, e.g. when it comes from an export
+            for display_name in ([value] if operator == '=' else value):
+                name, sep, country_name = str(display_name).rpartition(' (')
+                if sep and country_name.endswith(')'):
+                    domain |= Domain('name', '=', name) & Domain('partner_id.country_id.name', '=', country_name[:-1])
         return domain & constraint
 
     @api.depends('company_details')
@@ -444,6 +459,16 @@ class ResCompany(models.CachedModel):
         if company_address_fields_upd:
             self.invalidate_model(company_address_fields)
         return res
+
+    @api.constrains('name', 'country_id')
+    def _check_name_unique_per_country(self):
+        duplicates = self.with_context(active_test=False).sudo()._read_group(
+            domain=[('name', 'in', self.mapped('name'))],
+            groupby=['name', 'partner_id.country_id'],
+            having=[('__count', '>', 1)],
+        )
+        if duplicates:
+            raise ValidationError(self.env._("The company name must be unique per country!"))
 
     @api.constrains('active')
     def _check_active(self):

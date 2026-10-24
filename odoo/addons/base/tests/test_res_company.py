@@ -88,6 +88,50 @@ class TestCompany(TransactionCase):
         with patch('odoo.addons.base.models.res_company.ResCompany._get_company_root_delegated_field_names', return_value=["currency_id", "zip"]):
             self.env.company.write({'currency_id': new_currency.id, 'zip': '12345'})
 
+    def test_name_unique_per_country(self):
+        """ Companies of different countries may share a legal name; the country then tells them apart. """
+        Company = self.env['res.company']
+        lush_de = Company.create({'name': 'Lush GmbH', 'country_id': self.env.ref('base.de').id})
+        lush_at = Company.create({'name': 'Lush GmbH', 'country_id': self.env.ref('base.at').id})
+        lush_be = Company.create({'name': 'Lush NV', 'country_id': self.env.ref('base.be').id})
+        self.assertEqual(lush_de.display_name, 'Lush GmbH (Germany)')
+        self.assertEqual(lush_at.display_name, 'Lush GmbH (Austria)')
+        self.assertEqual(lush_be.display_name, 'Lush NV')
+
+        with self.assertRaisesRegex(ValidationError, 'unique per country'):
+            Company.create({'name': 'Lush GmbH', 'country_id': self.env.ref('base.de').id})
+        with self.assertRaisesRegex(ValidationError, 'unique per country'):
+            lush_be.write({'name': 'Lush GmbH', 'country_id': self.env.ref('base.at').id})
+
+        no_country = Company.create({'name': 'Lush'})
+        self.assertEqual(no_country.display_name, 'Lush')
+        with self.assertRaisesRegex(ValidationError, 'unique per country'):
+            Company.create({'name': 'Lush'})
+
+        # An archived company still takes its name in its country
+        lush_at.active = False
+        with self.assertRaisesRegex(ValidationError, 'unique per country'):
+            Company.create({'name': 'Lush GmbH', 'country_id': self.env.ref('base.at').id})
+        lush_de.invalidate_recordset(['display_name'])
+        self.assertEqual(lush_de.display_name, 'Lush GmbH (Germany)')
+
+    def test_search_display_name_with_country(self):
+        """ The display name of companies sharing a name can be searched back, e.g. when it is imported. """
+        Company = self.env['res.company']
+        lush_de = Company.create({'name': 'Lush GmbH', 'country_id': self.env.ref('base.de').id})
+        lush_at = Company.create({'name': 'Lush GmbH', 'country_id': self.env.ref('base.at').id})
+        lush_retail = Company.create({'name': 'Lush (Retail)'})
+
+        self.assertEqual(Company.search([('display_name', '=', 'Lush GmbH (Germany)')]), lush_de)
+        self.assertEqual(Company.search([('display_name', 'in', ['Lush GmbH (Austria)'])]), lush_at)
+        self.assertEqual(Company.search([('display_name', '=', 'Lush GmbH')]), lush_de + lush_at)
+        self.assertEqual(Company.search([('display_name', '=', 'Lush (Retail)')]), lush_retail)
+        self.assertFalse(Company.search([('display_name', '=', 'Lush GmbH (Belgium)')]))
+
+        result = self.env['res.partner'].load(['name', 'company_id'], [['Lush employee', 'Lush GmbH (Austria)']])
+        self.assertFalse(result['messages'])
+        self.assertEqual(self.env['res.partner'].browse(result['ids']).company_id, lush_at)
+
     def test_write_country_installs_l10n_modules(self):
         company = self.env['res.company'].create({'name': 'foo'})
         with patch('odoo.addons.base.models.res_company.ResCompany.install_l10n_modules', autospec=True) as install:
