@@ -2,6 +2,7 @@ import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { Domain } from "@web/core/domain";
+import { evaluateExpr } from "@web/core/py_js/py";
 
 /**
  * This ORM service is the standard way to interact with the ORM in python from
@@ -63,6 +64,69 @@ export const x2ManyCommands = {
         return [x2ManyCommands.SET, false, ids];
     },
 };
+
+/**
+ * Onchanges sometimes return update commands for records we don't know (e.g. if
+ * they are on a page we haven't loaded yet). We may actually never load them.
+ * When this happens, we must still be able to send back those commands to the
+ * server when saving. However, we can't send the commands exactly as we received
+ * them, since the values they contain have been "unity read". The purpose of this
+ * function is to transform field values from the unity format to the format
+ * expected by the server for a write.
+ * For instance, for a many2one: { id: 3, display_name: "Marc" } => 3.
+ */
+export function fromUnityToServerValues(
+    values,
+    fields,
+    activeFields,
+    { withReadonly, context } = {}
+) {
+    const { CREATE, UPDATE } = x2ManyCommands;
+    const serverValues = {};
+    for (const fieldName in values) {
+        let value = values[fieldName];
+        const field = fields[fieldName];
+        const activeField = activeFields[fieldName];
+        if (!withReadonly) {
+            if (field.readonly) {
+                continue;
+            }
+            try {
+                if (evaluateExpr(activeField.readonly, context)) {
+                    continue;
+                }
+            } catch {
+                // if the readonly expression depends on other fields, we can't evaluate it as we
+                // didn't read the record, so we simply ignore it
+            }
+        }
+        switch (fields[fieldName].type) {
+            case "one2many":
+            case "many2many":
+                value = value.map((c) => {
+                    if (c[0] === CREATE || c[0] === UPDATE) {
+                        const _fields = activeField.related.fields;
+                        const _activeFields = activeField.related.activeFields;
+                        return [
+                            c[0],
+                            c[1],
+                            fromUnityToServerValues(c[2], _fields, _activeFields, { withReadonly }),
+                        ];
+                    }
+                    return [c[0], c[1]];
+                });
+                break;
+            case "many2one":
+                value = value ? value.id : false;
+                break;
+            case "reference":
+                value = value ? `${value.id.model},${value.id.id}` : false;
+                break;
+        }
+        serverValues[fieldName] = value;
+    }
+    return serverValues;
+}
 
 function validateModel(value) {
     if (typeof value !== "string" || value.length === 0) {

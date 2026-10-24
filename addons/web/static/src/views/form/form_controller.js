@@ -213,6 +213,15 @@ export class FormController extends Component {
         };
         this.model = useState(useModel(this.props.Model, this.modelParams, { beforeFirstLoad }));
         useSubEnv({ model: this.model });
+        const offlineState = useState(this.offlineService);
+        useLayoutEffect(
+            () => {
+                if (!offlineState.offline) {
+                    this.model.root.runPendingOnchanges();
+                }
+            },
+            () => [offlineState.offline]
+        );
         onMounted(() => {
             effect(
                 (model) => {
