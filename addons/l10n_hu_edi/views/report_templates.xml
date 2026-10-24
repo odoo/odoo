@@ -14,105 +14,59 @@
         </xpath>
     </template>
 
-    <template id="external_layout_standard" inherit_id="web.external_layout_standard" >
-        <xpath expr="//img/../.." position="attributes">
-            <attribute name="t-if">not custom_header</attribute>
-        </xpath>
-
-        <xpath expr="//table" position="after">
-            <div t-if="custom_header and company.account_fiscal_country_id.code == 'HU'">
-                <t t-call="#{custom_header}"/>
-            </div>
+    <template id="external_layout_standard" inherit_id="web.external_layout_standard">
+        <xpath expr="//t[@t-call='web.company_address_list']" position="replace">
+            <t t-if="l10n_hu_company_details" t-out="l10n_hu_company_details"/>
+            <t t-else="" t-call="web.company_address_list"/>
         </xpath>
     </template>
 
     <template id="external_layout_bubble" inherit_id="web.external_layout_bubble">
-        <xpath expr="//img/../.." position="attributes">
-            <attribute name="t-if">not custom_header</attribute>
-        </xpath>
-
-        <xpath expr="//img/../.." position="after">
-            <div t-if="custom_header and company.account_fiscal_country_id.code == 'HU'">
-                <t t-call="#{custom_header}"/>
-            </div>
+        <xpath expr="//t[@t-call='web.company_address_list']" position="replace">
+            <t t-if="l10n_hu_company_details" t-out="l10n_hu_company_details"/>
+            <t t-else="" t-call="web.company_address_list"/>
         </xpath>
     </template>
 
     <template id="external_layout_wave" inherit_id="web.external_layout_wave">
-        <!-- support for custom header -->
-        <xpath expr="//img/../.." position="attributes">
-            <attribute name="t-if">not custom_header</attribute>
-        </xpath>
-
-        <xpath expr="//img/../.." position="after">
-            <div t-if="custom_header and company.account_fiscal_country_id.code == 'HU'">
-                <t t-call="#{custom_header}"/>
-            </div>
+        <xpath expr="//t[@t-call='web.company_address_list']" position="replace">
+            <t t-if="l10n_hu_company_details" t-out="l10n_hu_company_details"/>
+            <t t-else="" t-call="web.company_address_list"/>
         </xpath>
     </template>
 
     <template id="external_layout_folder" inherit_id="web.external_layout_folder">
-        <!-- support for custom header -->
-        <xpath expr="//img/../.." position="attributes">
-            <attribute name="t-if">not custom_header</attribute>
-        </xpath>
-
-        <xpath expr="//img/../.." position="after">
-            <div t-if="custom_header and company.account_fiscal_country_id.code == 'HU'">
-                <t t-call="#{custom_header}"/>
-            </div>
+        <xpath expr="//t[@t-call='web.company_address_list']" position="replace">
+            <t t-if="l10n_hu_company_details" t-out="l10n_hu_company_details"/>
+            <t t-else="" t-call="web.company_address_list"/>
         </xpath>
     </template>
 
     <template id="external_layout_center" inherit_id="web.external_layout_center">
-        <!-- support for custom header -->
-        <xpath expr="//table" position="attributes">
-            <attribute name="t-if">not custom_header</attribute>
-        </xpath>
-
-        <xpath expr="//table" position="after">
-            <div t-if="custom_header and company.account_fiscal_country_id.code == 'HU'">
-                <t t-call="#{custom_header}"/>
-            </div>
+        <xpath expr="//t[@t-call='web.company_address_list']" position="replace">
+            <t t-if="l10n_hu_company_details" t-out="l10n_hu_company_details"/>
+            <t t-else="" t-call="web.company_address_list"/>
         </xpath>
     </template>
 
     <template id="external_layout_dual" inherit_id="web.external_layout_dual">
-        <!-- support for custom header -->
-        <xpath expr="//table" position="attributes">
-            <attribute name="t-if">not custom_header</attribute>
-        </xpath>
-
-        <xpath expr="//table" position="after">
-            <div t-if="custom_header and company.account_fiscal_country_id.code == 'HU'">
-                <t t-call="#{custom_header}"/>
-            </div>
+        <xpath expr="//t[@t-call='web.company_address_list']" position="replace">
+            <t t-if="l10n_hu_company_details" t-out="l10n_hu_company_details"/>
+            <t t-else="" t-call="web.company_address_list"/>
         </xpath>
     </template>
 
     <template id="external_layout_lines" inherit_id="web.external_layout_lines">
-        <!-- support for custom header -->
-        <xpath expr="//table" position="attributes">
-            <attribute name="t-if">not custom_header</attribute>
-        </xpath>
-
-        <xpath expr="//table" position="after">
-            <div t-if="custom_header and company.account_fiscal_country_id.code == 'HU'">
-                <t t-call="#{custom_header}"/>
-            </div>
+        <xpath expr="//t[@t-call='web.company_address_list']" position="replace">
+            <t t-if="l10n_hu_company_details" t-out="l10n_hu_company_details"/>
+            <t t-else="" t-call="web.company_address_list"/>
         </xpath>
     </template>
 
     <template id="external_layout_compact" inherit_id="web.external_layout_compact">
-        <!-- support for custom header -->
-        <xpath expr="//table" position="attributes">
-            <attribute name="t-if">not custom_header</attribute>
-        </xpath>
-
-        <xpath expr="//table" position="after">
-            <div t-if="custom_header and company.account_fiscal_country_id.code == 'HU'">
-                <t t-call="#{custom_header}"/>
-            </div>
+        <xpath expr="//t[@t-call='web.company_address_list']" position="replace">
+            <t t-if="l10n_hu_company_details" t-out="l10n_hu_company_details"/>
+            <t t-else="" t-call="web.company_address_list"/>
         </xpath>
     </template>
 </odoo>
