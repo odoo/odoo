@@ -442,6 +442,49 @@ test("showInvoiceButton", async () => {
     expect(ticketScreen.showInvoiceButton).toBe(true);
 });
 
+test("a pending refund locks its line until it is paid", async () => {
+    const store = await setupPosEnv();
+    const order = store.addNewOrder();
+    await store.addLineToOrder(
+        { product_tmpl_id: store.models["product.template"].get(5), qty: 3 },
+        order
+    );
+    order.state = "paid";
+
+    const screen = await mountWithCleanup(TicketScreen);
+    screen.onClickOrder(order);
+    const line = order.lines[0];
+    const refundDetail = screen.getToRefundDetail(line);
+    refundDetail.qty = 2;
+    await screen.onDoRefund();
+
+    const pendingRefund = store.getOrder();
+    const orderCount = store.models["pos.order"].getAll().length;
+    expect(pendingRefund.lines.length).toBe(1);
+    expect(line.refundedQty).toBe(2);
+
+    screen.onClickOrder(order);
+    expect(screen.getHasItemsToRefund()).toBe(false);
+    screen.numberBuffer.sendKey("1");
+    screen.numberBuffer.sendKey("2");
+    expect(screen.getHasItemsToRefund()).toBe(false);
+    await screen.onClickRefund();
+    screen.onClickOrderline(line);
+    await waitFor(".o_dialog:contains('A refund is already in progress for this order')");
+    expect(".o_dialog").toHaveCount(1);
+    expect(refundDetail.qty).toBe(2);
+    expect(store.models["pos.order"].getAll().length).toBe(orderCount);
+    expect(store.getOrder()).toBe(pendingRefund);
+
+    // Paid but not synced yet: the remaining unit can be refunded.
+    pendingRefund.state = "paid";
+    screen.onClickOrder(order);
+    expect(screen.getHasItemsToRefund()).toBe(true);
+    await screen.onClickRefund();
+    expect(store.getOrder()).not.toBe(pendingRefund);
+    expect(store.getOrder().lines.map((l) => l.qty)).toEqual([-1]);
+});
+
 // Preset 1 ("In") is the config default and carries fiscal position 1, mapped here to
 // turn the 15% tax into the 25% one. Preset 2 ("Out") has no fiscal position.
 const setupPresetFiscalPositions = (store) => {
