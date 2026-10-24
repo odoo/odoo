@@ -397,9 +397,18 @@ class WebsitePage(models.Model):
         parameters like user language or currency.
         """
         return (
+<<<<<<< c218a9c9af9e7e659d18f8d607eed729371de0e0
             self.env.context.get('website_id'),
             self.env.context.get('lang'),
             self.env.context.get('cookies_allowed'),
+||||||| ac0a51a481fe809bfebf3b78584956c46dd12312
+            request.website.id,
+            request.lang.code,
+=======
+            request.website.id,
+            request.lang.code,
+            request.httprequest.host,
+>>>>>>> 9e84fcfdb6240a7d0292081122974a4edeb470ef
             request.httprequest.path,
             request.session.debug,
         )
