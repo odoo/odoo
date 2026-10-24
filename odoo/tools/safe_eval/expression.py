@@ -6,6 +6,7 @@ access are needed.
 """
 import ast
 import operator
+from collections.abc import Mapping
 from types import NoneType
 from typing import Any
 
@@ -81,7 +82,7 @@ class _ExprEval(ast.NodeVisitor):
     """Evaluate supported expressions for `expr_eval`."""
     __slots__ = ("context",)
 
-    def __init__(self, context: dict[str, Any]):
+    def __init__(self, context: Mapping[str, Any]):
         self.context = context
 
     def visit_Expression(self, node):
@@ -190,7 +191,7 @@ class _ExprEval(ast.NodeVisitor):
         raise SyntaxError(f"Unsupported syntax: {type(node).__name__}")
 
 
-def expr_eval(expr: str, context: dict[str, Any] | None = None) -> Any:
+def expr_eval(expr: str, context: Mapping[str, Any] | None = None) -> Any:
     """Evaluate a restricted Python-like expression.
 
     Supported syntax includes literals, variables from ``context``,
