@@ -60,3 +60,9 @@ class AccountEdiXmlUBL21RS(models.AbstractModel):
         party_node['cac:PartyLegalEntity']['cbc:CompanyID'] = {'_text': partner.l10n_rs_edi_registration_number}
 
         return party_node
+
+    def _get_uom_unece_code(self, uom):
+        # EXTENDS 'account_edi_ubl_cii'
+        # SEF uses H87 as unit code instead of C62
+        unece_code = super()._get_uom_unece_code(uom)
+        return 'H87' if unece_code == 'C62' else unece_code
