@@ -7,34 +7,6 @@ import { CalendarArchParser } from "@web/views/calendar/calendar_arch_parser";
 describe.current.tags("headless");
 
 const parser = new CalendarArchParser();
-const DEFAULT_ARCH_RESULTS = {
-    aggregate: null,
-    canCreate: true,
-    canDelete: true,
-    canEdit: true,
-    canSchedule: false,
-    eventLimit: 5,
-    fieldMapping: {
-        date_start: "start_date",
-        date_stop: "start_date",
-    },
-    fieldNames: ["display_name", "start_date"],
-    filtersInfo: {},
-    formViewId: false,
-    hasEditDialog: false,
-    quickCreate: true,
-    quickCreateViewId: null,
-    isDateHidden: false,
-    isTimeHidden: false,
-    monthOverflow: true,
-    multiCreateView: null,
-    popoverFieldNodes: {},
-    popoverNode: undefined,
-    scale: "week",
-    scales: ["day", "week", "month", "year"],
-    showUnusualDays: false,
-    showDatePicker: true,
-};
 
 function parseArch(arch) {
     return parser.parse(parseXML(arch), { fake: { fields: FAKE_FIELDS } }, "fake");
@@ -54,7 +26,34 @@ test(`throw if date_start is not set`, () => {
 });
 
 test(`defaults`, () => {
-    expect(parseArch(`<calendar date_start="start_date"/>`)).toEqual(DEFAULT_ARCH_RESULTS);
+    const archInfo = parseArch(`<calendar date_start="start_date"/>`);
+    expect(archInfo.aggregate).toBe(null);
+    expect(archInfo.canCreate).toBe(true);
+    expect(archInfo.canDelete).toBe(true);
+    expect(archInfo.canEdit).toBe(true);
+    expect(archInfo.canSchedule).toBe(false);
+    expect(archInfo.eventLimit).toBe(5);
+    expect(archInfo.fieldMapping).toEqual({
+        date_start: "start_date",
+        date_stop: "start_date",
+    });
+    expect(archInfo.fieldNames).toEqual(["display_name", "start_date"]);
+    expect(archInfo.filtersInfo).toEqual({});
+    expect(archInfo.formViewId).toBe(false);
+    expect(archInfo.hasEditDialog).toBe(false);
+    expect(archInfo.quickCreate).toBe(true);
+    expect(archInfo.quickCreateViewId).toBe(null);
+    expect(archInfo.isDateHidden).toBe(false);
+    expect(archInfo.isTimeHidden).toBe(false);
+    expect(archInfo.monthOverflow).toBe(true);
+    expect(archInfo.multiCreateView).toBe(null);
+    expect(archInfo.popoverFieldNodes).toEqual({});
+    expect(archInfo.popoverNode).toBe(undefined);
+    expect(archInfo.scale).toBe("week");
+    expect(archInfo.scales).toEqual(["day", "week", "month", "year"]);
+    expect(archInfo.showUnusualDays).toBe(false);
+    expect(archInfo.showDatePicker).toBe(true);
+    expect(archInfo.schedulecard.archInfo.templateDocs).toInclude("card");
 });
 
 test("canCreate", () => {
@@ -128,21 +127,17 @@ test("quickCreate", () => {
 });
 
 test("quickCreateViewId", () => {
-    expect(parseWith({ quick_create: "0", quick_create_view_id: "12" })).toEqual({
-        ...DEFAULT_ARCH_RESULTS,
-        quickCreate: false,
-        quickCreateViewId: null,
-    });
-    expect(parseWith({ quick_create: "1", quick_create_view_id: "12" })).toEqual({
-        ...DEFAULT_ARCH_RESULTS,
-        quickCreate: true,
-        quickCreateViewId: 12,
-    });
-    expect(parseWith({ quick_create: "1" })).toEqual({
-        ...DEFAULT_ARCH_RESULTS,
-        quickCreate: true,
-        quickCreateViewId: null,
-    });
+    let archInfo = parseWith({ quick_create: "0", quick_create_view_id: "12" });
+    expect(archInfo.quickCreate).toBe(false);
+    expect(archInfo.quickCreateViewId).toBe(null);
+
+    archInfo = parseWith({ quick_create: "1", quick_create_view_id: "12" });
+    expect(archInfo.quickCreate).toBe(true);
+    expect(archInfo.quickCreateViewId).toBe(12);
+
+    archInfo = parseWith({ quick_create: "1" });
+    expect(archInfo.quickCreate).toBe(true);
+    expect(archInfo.quickCreateViewId).toBe(null);
 });
 
 test("isDateHidden", () => {
@@ -218,4 +213,27 @@ test("showUnusualDays", () => {
     expect(parseWith({ show_unusual_days: "false" }).showUnusualDays).toBe(false);
     expect(parseWith({ show_unusual_days: "False" }).showUnusualDays).toBe(false);
     expect(parseWith({ show_unusual_days: "0" }).showUnusualDays).toBe(false);
+});
+
+test("schedulecard defaults", () => {
+    const { schedulecard } = parseArch(`<calendar date_start="start_date"/>`);
+    expect(schedulecard.activeFields).toInclude("display_name");
+    expect(schedulecard.archInfo.cardClassName).toBe("cursor-pointer");
+});
+
+test("schedulecard", () => {
+    const { schedulecard } = parseArch(`
+        <calendar date_start="start_date">
+            <schedulecard>
+                <templates>
+                    <t t-name="card">
+                        <field name="name"/>
+                    </t>
+                </templates>
+            </schedulecard>
+        </calendar>
+    `);
+    expect(schedulecard.activeFields).toInclude("name");
+    expect(schedulecard.activeFields).toInclude("display_name");
+    expect(schedulecard.archInfo.cardClassName).toBe("cursor-pointer");
 });
