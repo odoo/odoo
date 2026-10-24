@@ -30,6 +30,9 @@ class WebsitePagePropertiesBase(models.TransientModel):
             domain += ['|', ('page_id', '=', target.id), ('url', '=', url_to_check)]
         else:
             domain += [('url', '=', url_to_check)]
+        # "In Menu" is about the main menu of the website: menus of other menu
+        # trees (a footer menu, for example) may link the page too.
+        domain += [('id', 'child_of', self.website_id.menu_id.id)]
         return domain
 
     @api.depends('url', 'website_id')

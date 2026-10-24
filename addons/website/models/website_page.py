@@ -68,8 +68,11 @@ class WebsitePage(models.Model):
 
     @api.depends('menu_ids')
     def _compute_website_menu(self):
+        # Only the main menu of a website counts: menus of other menu trees
+        # (a footer menu, for example) may link the page too.
+        main_menus = self.env['website'].search([]).menu_id
         for page in self:
-            page.is_in_menu = bool(page.menu_ids)
+            page.is_in_menu = bool(page.menu_ids.filtered_domain([('id', 'child_of', main_menus.ids)]))
 
     # This update was added to make sure the mixin calculations are correct
     # (page.website_url > page.url).
