@@ -103,12 +103,12 @@ const setupPaymentPage = async () => {
 };
 
 const clickPaymentMethod = async (paymentMethod) => {
-    const paymentMethodButton = queryOne(`button:text(${paymentMethod.name})`);
+    const paymentMethodButton = queryOne(`button span:text(${paymentMethod.name})`);
     await click(paymentMethodButton);
 };
 
 const clickBackButton = async () => {
-    const backButton = queryOne(`button:text(Back)`);
+    const backButton = queryOne(`button:text(Back to cart)`);
     await click(backButton);
 };
 
