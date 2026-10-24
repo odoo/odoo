@@ -411,6 +411,10 @@ class DeliveryCarrier(models.Model):
     # API for external providers #
     # -------------------------- #
 
+    def _rate_shipment_get_handler(self):
+        """Return the name of the method computing the shipment rate."""
+        return "%s_rate_shipment" % self.delivery_type
+
     def rate_shipment(self, order):
         """Compute the price of the order shipment.
 
@@ -426,8 +430,9 @@ class DeliveryCarrier(models.Model):
         """
         # TODO maybe the currency code?
         self.ensure_one()
-        if hasattr(self, "%s_rate_shipment" % self.delivery_type):
-            res = getattr(self, "%s_rate_shipment" % self.delivery_type)(order)
+        handler = self._rate_shipment_get_handler()
+        if hasattr(self, handler):
+            res = getattr(self, handler)(order)
             # apply fiscal position
             company = self.company_id or order.company_id or self.env.company
             res["price"] = self.product_id._get_tax_included_unit_price(
