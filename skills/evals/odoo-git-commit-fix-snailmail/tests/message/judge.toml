@@ -1,0 +1,86 @@
+# LLM judge on the commit message itself. The reference is the message of the
+# merged fix (odoo/odoo 2a4f2233211d), which the agent never saw.
+[judge]
+judge = "anthropic/claude-sonnet-5"
+files = ["/logs/verifier/commit_message.txt", "/logs/verifier/commit.diff"]
+reference = "/tests/reference_message.txt"
+reasoning_effort = "medium"
+guard = "flag"
+
+[[criterion]]
+name = "why_first"
+type = "binary"
+description = """
+The body explains what was wrong and for whom before it describes the change.
+A body that only narrates the diff (which lines were replaced by which) does
+not pass. The commit message is in /logs/verifier/commit_message.txt; the diff
+it describes is /logs/verifier/commit.diff.
+"""
+
+[[criterion]]
+name = "reproduction_steps"
+type = "rubric"
+description = """
+A bug fix message gives the steps that reproduce the bug: what to do, what
+happens, what should happen instead. Grade the message in
+/logs/verifier/commit_message.txt.
+"""
+levels = [
+  "No reproduction steps; the symptom is at most implied.",
+  "Steps or a scenario are present but one of what-to-do, what-happens, what-should-happen is missing.",
+  "What to do, what happens, and what should happen are all stated.",
+]
+
+[[criterion]]
+name = "reported_case_first"
+type = "binary"
+description = """
+The ticket reported this scenario: the snailmail cover page is enabled on the
+company, a letter is sent by post to a German partner that has a Street 2, and
+the cover page prints the zip/city line twice, so Pingen rejects the letter.
+The message must lead with that reported scenario. Other cases the author
+found in the code (for example a partner without a street) may be mentioned
+afterwards but must not replace the reported one.
+"""
+
+[[criterion]]
+name = "cause_explained"
+type = "binary"
+description = """
+The message states the cause: the German cover layout was produced by
+overwriting fixed line positions of the partner's address, so when a Street 2
+is set the zip/city line was written over the Street 2 line while the original
+zip/city line stayed, duplicating it. Any accurate wording of that mechanism
+passes; a message that names no cause, or a wrong one, fails.
+"""
+
+[[criterion]]
+name = "summary_states_the_outcome"
+type = "binary"
+description = """
+The header summary (after '[FIX] snailmail: ') is an imperative sentence that
+completes 'if applied, this commit will ...' and tells a reader of the log
+what the fix achieves for the user or which symptom it removes. Vague
+summaries ('fix bug', 'improvements', 'update cover address') fail.
+"""
+
+[[criterion]]
+name = "no_unsupported_claims"
+type = "binary"
+description = """
+Every factual statement in the message is supported by the diff in
+/logs/verifier/commit.diff or by the ticket scenario above. Invented details
+(measurements, affected versions, other modules, customers, dates, a different
+ticket) fail. Describing the new behaviour the diff implements is fine.
+"""
+
+[[criterion]]
+name = "reviewer_acceptance"
+type = "likert"
+points = 5
+description = """
+Compare the message with the reference message of the merged fix. Would an
+Odoo reviewer merge the agent's message as it is? 1 = would send it back for
+a rewrite, 3 = would ask for a change or two, 5 = as good as or better than
+the reference.
+"""

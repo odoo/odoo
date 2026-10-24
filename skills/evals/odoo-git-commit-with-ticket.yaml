@@ -1,0 +1,44 @@
+# Commit a pending fix with the support ticket given in the prompt.
+#   cd skills/evals && harbor run -c odoo-git-commit-with-ticket.yaml
+# Skill paths are relative to the directory harbor runs from. The skills reference
+# each other, so odoo-guidelines rides along with odoo-git. Three Claude tiers on
+# claude-code, three GPT-6 tiers on codex, three attempts each.
+job_name: odoo-git-commit-with-ticket
+jobs_dir: jobs
+n_attempts: 3
+n_concurrent_trials: 3
+
+agents:
+  - name: claude-code
+    model_name: anthropic/claude-haiku-4-5-20251001
+    skills:
+      - ../odoo-git
+      - ../odoo-guidelines
+  - name: claude-code
+    model_name: anthropic/claude-sonnet-5
+    skills:
+      - ../odoo-git
+      - ../odoo-guidelines
+  - name: claude-code
+    model_name: anthropic/claude-opus-5
+    skills:
+      - ../odoo-git
+      - ../odoo-guidelines
+  - name: codex
+    model_name: openai/gpt-6-luna
+    skills:
+      - ../odoo-git
+      - ../odoo-guidelines
+  - name: codex
+    model_name: openai/gpt-6-sol
+    skills:
+      - ../odoo-git
+      - ../odoo-guidelines
+  - name: codex
+    model_name: openai/gpt-6-astra
+    skills:
+      - ../odoo-git
+      - ../odoo-guidelines
+
+tasks:
+  - path: ./odoo-git-commit-fix-snailmail
