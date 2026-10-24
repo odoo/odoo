@@ -229,7 +229,7 @@ export class PosAccessRightPlugin extends Plugin {
     }
 
     get showEditPlanButton() {
-        return true;
+        return this.loggedCashier?._role === "manager";
     }
 
     get canAccessTotalDue() {

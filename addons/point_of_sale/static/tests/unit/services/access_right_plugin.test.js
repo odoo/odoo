@@ -1,25 +1,30 @@
 import { test, expect } from "@odoo/hoot";
 import { setupPosEnv } from "@point_of_sale/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 definePosModels();
 
 test("disablePriceButton", async () => {
     const store = await setupPosEnv();
-    const cashier = store.accessRight.loggedCashier;
+    let loggedCashierId = 3; // User1
+    patchWithCleanup(store.accessRight, {
+        get loggedCashier() {
+            return this.data.models["res.users"].get(loggedCashierId);
+        },
+    });
 
     // Without price restriction, everyone can modify prices
     store.config.restrict_price_control = false;
-    cashier._role = "cashier";
     expect(store.accessRight.disablePriceButton).toBe(false);
-    cashier._role = "manager";
+    loggedCashierId = 2; // Administrator
     expect(store.accessRight.disablePriceButton).toBe(false);
 
     // With price restriction, only managers can modify prices
     store.config.restrict_price_control = true;
-    cashier._role = "cashier";
+    loggedCashierId = 3;
     expect(store.accessRight.disablePriceButton).toBe(true);
-    cashier._role = "manager";
+    loggedCashierId = 2;
     expect(store.accessRight.disablePriceButton).toBe(false);
 });
 
