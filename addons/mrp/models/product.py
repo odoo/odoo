@@ -175,6 +175,11 @@ class ProductProduct(models.Model):
         return [op, ('product_tmpl_id', neg + 'in', bom_tmpl_query.subselect('product_tmpl_id')),
                 ('id', neg + 'in', bom_product_query.subselect('product_id'))]
 
+    def _get_product_ids_with_quantities(self):
+        # The quantities of the kits come from their components.
+        kit_boms = self.env['mrp.bom'].sudo().search_fetch([('type', '=', 'phantom')], ['product_tmpl_id'])
+        return super()._get_product_ids_with_quantities() | set(kit_boms.product_tmpl_id.product_variant_ids.ids)
+
     def _compute_show_qty_status_button(self):
         super()._compute_show_qty_status_button()
         for product in self:
