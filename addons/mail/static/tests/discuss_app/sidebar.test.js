@@ -85,7 +85,7 @@ test("sidebar: can open chat actions", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId, channel_role: "owner" }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
@@ -96,7 +96,7 @@ test("sidebar: can open chat actions", async () => {
     await waitFor(".o-mail-MessagingMenuItem:has(:text('Demo')):count(1)");
     await waitFor(".o-mail-MessagingMenuItem img[alt='Thread Image']:count(1)");
     await click("[title='Chat Actions']");
-    await waitFor(".o-dropdown-item:count(8)", { timeout: 3000 });
+    await waitFor(".o-dropdown-item:count(7)", { timeout: 3000 });
     await waitFor(".o-mail-ActionList-group:count(4)");
     const group = range(0, 4).map((i) => `.o-mail-ActionList-group:eq(${i})`);
     await waitFor(`${group[0]} .o-dropdown-item:count(2)`);
@@ -105,10 +105,9 @@ test("sidebar: can open chat actions", async () => {
     await waitFor(`${group[1]} .o-dropdown-item:count(2)`);
     await waitFor(`${group[1]} .o-dropdown-item:eq(0):text('Invite People')`);
     await waitFor(`${group[1]} .o-dropdown-item:eq(1):text('Add to Favorites')`);
-    await waitFor(`${group[2]} .o-dropdown-item:count(3)`);
+    await waitFor(`${group[2]} .o-dropdown-item:count(2)`);
     await waitFor(`${group[2]} .o-dropdown-item:eq(0):text('Mute Conversation')`);
     await waitFor(`${group[2]} .o-dropdown-item:eq(1):text('View Recordings')`);
-    await waitFor(`${group[2]} .o-dropdown-item:eq(2):text('Advanced Settings')`);
     await waitFor(`${group[3]} .o-dropdown-item:count(1)`);
     await waitFor(`${group[3]} .o-dropdown-item:text('Hide Until New Message')`);
     await waitForNone(".o-mail-MessagingMenuItem .badge");
@@ -117,7 +116,7 @@ test("sidebar: can open chat actions", async () => {
     // Can also right-click to see messaging menu item actions
     await rightClick(".o-mail-MessagingMenuItem");
     await waitFor(".o-mail-MessagingMenuItem[data-right-clicking]:count(1)");
-    await waitFor(".o-dropdown-item:count(8)");
+    await waitFor(".o-dropdown-item:count(7)");
 });
 
 test("sidebar: dispatch recording action", async () => {
@@ -125,7 +124,7 @@ test("sidebar: dispatch recording action", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId, channel_role: "owner" }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
@@ -156,7 +155,6 @@ test("sidebar: dispatch recording action", async () => {
     const recordingGroup = ".o-mail-ActionList-group:eq(2)";
     await waitFor(`${recordingGroup} .o-dropdown-item:eq(0):text('Mute Conversation')`);
     await waitFor(`${recordingGroup} .o-dropdown-item:eq(1):text('View Recordings')`);
-    await waitFor(`${recordingGroup} .o-dropdown-item:eq(2):text('Advanced Settings')`);
     await click(`${recordingGroup} .o-dropdown-item:eq(1)`);
     await expect.waitForSteps(["action_view_recordings", "doAction"]);
 });
