@@ -114,9 +114,14 @@ class SaleOrderLine(models.Model):
         super()._compute_qty_invoiced()
         for sale_line in self:
             pos_lines = sale_line.pos_order_line_ids.filtered(lambda order_line: order_line.order_id.state not in ['cancel', 'draft'])
-            sale_line.qty_invoiced += sum(self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in pos_lines)
             refund_lines = sale_line.pos_order_line_ids.refund_orderline_ids.filtered(lambda order_line: order_line.order_id.state not in ['cancel', 'draft'])
-            sale_line.qty_invoiced += sum(self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in refund_lines)
+            if sale_line.is_downpayment:
+                invoice_balance = -sum(sale_line._get_invoice_lines().filtered(lambda l: l.move_id.state != 'cancel').mapped('balance'))
+                pos_balance = sum((pos_lines | refund_lines).mapped('price_subtotal'))
+                sale_line.qty_invoiced = 0 if sale_line.currency_id.is_zero(pos_balance + invoice_balance) else 1
+            else:
+                sale_line.qty_invoiced += sum(self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in pos_lines)
+                sale_line.qty_invoiced += sum(self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in refund_lines)
 
     def _get_sale_order_fields(self):
         return ["product_id", "display_name", "price_unit", "product_uom_qty", "tax_id", "qty_delivered", "qty_invoiced", "discount", "qty_to_invoice", "price_total", "is_downpayment"]

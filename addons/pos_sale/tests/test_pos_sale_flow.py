@@ -213,6 +213,34 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         payment.create_invoices()
         self.assertEqual(sale_order.invoice_ids.amount_untaxed, 100)
 
+    def test_pos_downpayment_with_full_invoice(self):
+        """
+        This addresses an edge case where a user may do a downpayment for a quote via POS then create a full invoice.
+        When an invoice is created with the downpayment included, the qty invoiced field of its sale order line is set to 2 instead of 0
+        """
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [(0, 0, {
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1,
+                'price_unit': 100,
+                'tax_id': False,
+            })],
+        })
+        sale_order.action_confirm()
+        self.main_pos_config.down_payment_product_id = self.env.ref("pos_sale.default_downpayment_product")
+        self.main_pos_config.open_ui()
+
+        # reuse tour that applies a 20 dollar downpayment
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PoSDownPaymentAmount', login="accountman")
+        self.assertEqual(sale_order.amount_to_invoice, 80.0, "Downpayment amount not considered!")
+        downpayment_line = sale_order.order_line[-1]
+        self.assertTrue(downpayment_line.is_downpayment)
+        self.assertEqual(downpayment_line.qty_invoiced, 1)
+
+        sale_order._create_invoices(final=True)
+        self.assertEqual(downpayment_line.qty_invoiced, 0)
+
     def test_settle_order_unreserve_order_lines(self):
         #create a product category that use the closest location for the removal strategy
         self.removal_strategy = self.env['product.removal'].search([('method', '=', 'closest')], limit=1)
