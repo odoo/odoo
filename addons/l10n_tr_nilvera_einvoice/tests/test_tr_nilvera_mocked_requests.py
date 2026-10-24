@@ -268,7 +268,26 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
             "The invoice status couldn't be retrieved from Nilvera.",
         )
 
+<<<<<<< 4fd1a2ea4f90da0a641ce64e12e077cab6c3d851
     @freeze_time('2026-02-02T12:00:00')
+||||||| a39adb5345262e447c5c7458c4f7b355a2d513c2
+=======
+    def test_cancel_succeeded_invoice(self):
+        _, invoice = self._generate_invoice_xml(self.einvoice_partner, include_invoice=True)
+        invoice.l10n_tr_nilvera_send_status = "succeed"
+
+        self.assertFalse(invoice.show_reset_to_draft_button)
+        invoice.with_context(l10n_tr_nilvera_force_cancel=True).button_cancel()
+        self.assertEqual(invoice.state, "cancel")
+        self.assertFalse(invoice.show_reset_to_draft_button)
+
+    def test_sent_invoice_cannot_be_reset_to_draft(self):
+        _, invoice = self._generate_invoice_xml(self.einvoice_partner, include_invoice=True)
+        invoice.l10n_tr_nilvera_send_status = "succeed"
+        with self.assertRaisesRegex(UserError, "reset to draft an entry that has been sent to Nilvera"):
+            invoice.button_draft()
+
+>>>>>>> b3323ce1106d41d30d4a5ce2efc427788d94f475
     @patch_nilvera_request
     def test_fetching_einvoices(self, mocked_request):
         # EndDate is adjusted to match Europe/Istanbul timezone(UTC+3)
