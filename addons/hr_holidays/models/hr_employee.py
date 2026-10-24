@@ -547,6 +547,18 @@ class HrEmployee(models.Model):
             the allocations contained by this variable (they are considered to be already updated for 'target_date')
             :param same_year_only: only take into account leaves whose `date_from` falls within `target_date`'s year
         """
+        # The accrual simulation re-enters this method for each simulated month: share the
+        # partial leave/allocation durations for the duration of the outermost call.
+        cache = self.env.cr.cache
+        if 'hr_holidays_partial_attendances' in cache:
+            return self._get_consumed_leaves_data(work_entry_types, target_date, ignore_future, precomputed_allocations, same_year_only)
+        cache['hr_holidays_partial_attendances'] = {}
+        try:
+            return self._get_consumed_leaves_data(work_entry_types, target_date, ignore_future, precomputed_allocations, same_year_only)
+        finally:
+            del cache['hr_holidays_partial_attendances']
+
+    def _get_consumed_leaves_data(self, work_entry_types, target_date, ignore_future, precomputed_allocations, same_year_only):
         employees = self or self._get_contextual_employee()
         leaves_domain = [
             ('work_entry_type_id', 'in', work_entry_types.ids),
@@ -763,9 +775,14 @@ class HrEmployee(models.Model):
                                 if allocation.date_to else leave.date_to
                             )
                             partial = leave.date_from != interval_start or leave.date_to != interval_end
-                            duration_info = employee._get_calendar_attendances(
-                                interval_start.replace(tzinfo=UTC), interval_end.replace(tzinfo=UTC)
-                            ) if partial else None
+                            duration_info = None
+                            if partial:
+                                attendances_cache = self.env.cr.cache['hr_holidays_partial_attendances']
+                                cache_key = (employee.id, interval_start, interval_end)
+                                if cache_key not in attendances_cache:
+                                    attendances_cache[cache_key] = employee._get_calendar_attendances(
+                                        interval_start.replace(tzinfo=UTC), interval_end.replace(tzinfo=UTC))
+                                duration_info = attendances_cache[cache_key]
 
                             remaining_primary = _consume_from_allocation(primary, remaining_primary, allocation, duration_info, partial, leave)
                             remaining_secondary = _consume_from_allocation(secondary, remaining_secondary, allocation, duration_info, partial, leave)
