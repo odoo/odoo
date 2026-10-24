@@ -140,10 +140,12 @@ class OdooTestResult(object):
     def stopTest(self, test):
         """Called when the given test has been run"""
         if stats_logger.isEnabledFor(logging.INFO):
-            self.stats[test.id()] = Stat(
+            stat = Stat(
                 time=real_time() - self.time_start,
                 queries=sql_db.sql_counter - self.queries_start,
             )
+            for key, value in test.get_stats_entries(stat).items():
+                self.stats[key] += value
 
     def addError(self, test, err):
         """Called when an error has occurred. 'err' is a tuple of values as

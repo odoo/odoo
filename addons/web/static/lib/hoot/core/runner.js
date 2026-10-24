@@ -1278,12 +1278,19 @@ export class Runner {
         if (this.headless) {
             // Log root suite results in headless
             const restoreLogLevel = logger.setLogLevel("suites");
+            const moduleDurations = {};
             for (const suite of this.suites.values()) {
                 if (!suite.parent) {
                     logger.logSuite(suite);
+                    const [firstSegment] = suite.fullName.split("/");
+                    if (firstSegment.startsWith("@")) {
+                        const module = firstSegment.slice(1);
+                        moduleDurations[module] = (moduleDurations[module] || 0) + suite.reporting.duration;
+                    }
                 }
             }
             restoreLogLevel();
+            logger.logModuleStats(moduleDurations);
         }
 
         const { passed, failed, assertions } = this.reporting;
