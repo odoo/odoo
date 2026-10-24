@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- The button of the warning raised when the system clock is behind the last issued document. -->
+    <record id="action_l10n_pt_confirm_system_clock" model="ir.actions.server">
+        <field name="name">Confirm the system date and time</field>
+        <field name="model_id" ref="base.model_res_company"/>
+        <field name="group_ids" eval="[Command.link(ref('base.group_user'))]"/>
+        <field name="state">code</field>
+        <field name="code">action = model._l10n_pt_confirm_system_clock()</field>
+    </record>
+</odoo>

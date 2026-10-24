@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_delivery_document_inherit_l10n_pt_stock" inherit_id="stock.report_delivery_document">
+<!--    Add the document designation and Unique Document Identifier-->
+        <xpath expr="//span[@t-field='o.name']" position="after">
+            <t t-if="o.company_id.account_fiscal_country_id.code == 'PT'">
+                <span t-if="o.l10n_pt_document_number">
+                    - <t t-out="o._l10n_pt_get_document_type_designation()"/>
+                    <span t-field="o.l10n_pt_document_number">GT 2023/0001</span>
+                </span>
+            </t>
+        </xpath>
+
+<!--    Dates are printed as DD-MM-AAAA (Despacho 8632/2014 2.2.4)-->
+        <xpath expr="//div[@t-field='o.date_done']" position="attributes">
+            <attribute name="t-options">{'widget': 'datetime', 'format': 'dd-MM-yyyy HH:mm', 'tz_name': o._l10n_pt_get_legal_tz()} if o.company_id.account_fiscal_country_id.code == 'PT' else {}</attribute>
+        </xpath>
+        <xpath expr="//div[@t-field='o.scheduled_date']" position="attributes">
+            <attribute name="t-options">{'widget': 'datetime', 'format': 'dd-MM-yyyy HH:mm', 'tz_name': o._l10n_pt_get_legal_tz()} if o.company_id.account_fiscal_country_id.code == 'PT' else {}</attribute>
+        </xpath>
+
+<!--    What a transport document states (RBC art. 4(2), 4(4), 4(9)): the places of loading and unloading,
+        referred to as such, the start of transport, and the recipient with its NIF, or the mention that it
+        is not a taxable person-->
+        <xpath expr="//div[@id='informations']" position="after">
+            <t t-if="o.company_id.account_fiscal_country_id.code == 'PT' and o.l10n_pt_document_number">
+                <t t-set="l10n_pt_places" t-value="o._l10n_pt_get_loading_and_unloading_places()"/>
+                <t t-set="l10n_pt_recipient" t-value="o._l10n_pt_get_recipient()"/>
+                <div name="l10n_pt_transport" class="row mb-4">
+                    <div class="col-4" name="l10n_pt_loading_place">
+                        <strong>Local de carga</strong>
+                        <div t-out="l10n_pt_places[0]"
+                             t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                    </div>
+                    <div class="col-4" name="l10n_pt_unloading_place">
+                        <strong>Local de descarga</strong>
+                        <div t-out="l10n_pt_places[1]"
+                             t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                    </div>
+                    <div class="col-4" name="l10n_pt_transport_start">
+                        <strong>Início do transporte</strong>
+                        <div t-field="o.l10n_pt_start_transport_date"
+                             t-options="{'widget': 'datetime', 'format': 'dd-MM-yyyy HH:mm', 'tz_name': o._l10n_pt_get_legal_tz()}"/>
+                    </div>
+                </div>
+                <div name="l10n_pt_recipient" class="mb-4">
+                    <strong>Destinatário:</strong>
+                    <t t-out="l10n_pt_recipient.name"/>
+                    <t t-if="l10n_pt_recipient._l10n_pt_has_nif()">- NIF: <t t-out="l10n_pt_recipient.vat"/></t>
+                    <t t-else="">- destinatário não sujeito passivo</t>
+                </div>
+            </t>
+        </xpath>
+
+<!--    QR Code-->
+        <xpath expr='//table[@name="stock_move_line_table"]' position="after">
+            <div t-if="o.company_id.account_fiscal_country_id.code == 'PT' and o.l10n_pt_qr_code_str" class="text-center" >
+                <div>
+                    ATCUD:<t t-out="o.l10n_pt_atcud"/>
+                </div>
+                <img style="margin: 0.25cm;"
+                     t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;barLevel=%s'%('QR', quote_plus(o.l10n_pt_qr_code_str), 125, 125, 'M')"
+                />
+            </div>
+        </xpath>
+    </template>
+</odoo>

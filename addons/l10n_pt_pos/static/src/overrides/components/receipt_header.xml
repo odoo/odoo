@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+        <!-- Add the Portuguese document type and number next to the order date -->
+        <xpath expr="//div[@id='order-date']" position="before">
+            <t t-if="order.isPortugueseCompany() and order.l10nPtPosIdentifier">
+                <div t-if="order.l10nPtDocumentType" class="fw-bold" t-out="order.l10nPtDocumentType"/>
+                <div>
+                    Document Number: <t t-out="order.l10nPtPosIdentifier"/>
+                </div>
+            </t>
+        </xpath>
+        <!-- A training receipt shows the software house, not the client company (Despacho 8632/2014 1.5) -->
+        <xpath expr="//img[hasclass('pos-receipt-logo')]" position="attributes">
+            <attribute name="t-if">!(order.isPortugueseCompany() and order.l10nPtTrainingMode)</attribute>
+        </xpath>
+        <xpath expr="//div[@t-if='order.config.receipt_header']" position="attributes">
+            <attribute name="t-if">order.config.receipt_header and !(order.isPortugueseCompany() and order.l10nPtTrainingMode)</attribute>
+        </xpath>
+        <!-- A final consumer is printed as such, never with the generic NIF -->
+        <xpath expr="//div[@t-if='order.partner_id.vat']" position="attributes">
+            <attribute name="t-if">order.partner_id.vat and !(order.isPortugueseCompany() and order.l10nPtIsFinalConsumer())</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('pos-receipt-contact')]" position="after">
+            <div t-if="order.isPortugueseCompany() and order.l10nPtIsFinalConsumer()" class="mt-2">Consumidor final</div>
+        </xpath>
+    </t>
+</templates>
