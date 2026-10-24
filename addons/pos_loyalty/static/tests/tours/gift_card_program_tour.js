@@ -274,6 +274,7 @@ registry.category("web_tour.tours").add("test_physical_gift_card", {
             // Use gift_card_generated_but_not_sold - Warning is triggered
             PosLoyalty.enterCode("gift_card_generated_but_not_sold"),
             Dialog.cancel({ title: "unpaid gift card" }),
+            Dialog.cancel({ title: "Enter Code" }),
 
             // Sell the unsold gift card
             PosLoyalty.useExistingLoyaltyCard("gift_card_generated_but_not_sold", true),
@@ -328,6 +329,7 @@ registry.category("web_tour.tours").add("test_physical_gift_card", {
             ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
             ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
             PosLoyalty.enterCode("gift_card_expired"),
+            Dialog.cancel({ title: "Enter Code" }),
             PosLoyalty.orderTotalIs("9.60"),
             PosLoyalty.finalizeOrder("Cash", "9.60"),
 

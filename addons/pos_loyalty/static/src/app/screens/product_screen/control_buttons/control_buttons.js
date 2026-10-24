@@ -135,14 +135,10 @@ patch(ControlButtons.prototype, {
             placeholder: _t("Gift card or Discount code"),
             size: "md",
             removeNewLines: true,
+            inputValidationFunc: this.pos.loadCode.bind(this.pos),
             getPayload: async (code) => {
                 code = code.trim();
                 if (code === "") {
-                    return;
-                }
-                const loadError = await this.pos.loadCode(code);
-                if (loadError) {
-                    this.notification.add(loadError, { type: "danger" });
                     return;
                 }
                 await this.pos.applyCode(code);

@@ -15,4 +15,17 @@ ProductTemplate._records = [
         taxes_id: [],
         product_variant_ids: [200],
     },
+    {
+        id: 201,
+        name: "Gift Card",
+        display_name: "Gift Card",
+        type: "service",
+        list_price: 50,
+        standard_price: 0,
+        uom_id: 1,
+        available_in_pos: true,
+        active: true,
+        taxes_id: [],
+        product_variant_ids: [201],
+    },
 ];

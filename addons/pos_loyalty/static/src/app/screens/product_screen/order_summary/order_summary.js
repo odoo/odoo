@@ -57,16 +57,6 @@ patch(OrderSummary.prototype, {
                 }
                 // A card code is unique: reject it when another line on this order already
                 // claims it, otherwise both lines would try to create the same card.
-                const duplicate = this.currentOrder
-                    .getOrderlines()
-                    .some((other) => other !== line && other.gift_card_vals?.code === code);
-                if (duplicate) {
-                    this.dialog.add(AlertDialog, {
-                        title: _t("Validation Error"),
-                        body: _t("A coupon/loyalty card must have a unique code."),
-                    });
-                    return;
-                }
                 line.setUnitPrice(amount);
                 line.gift_card_vals = {
                     ...line.gift_card_vals,
