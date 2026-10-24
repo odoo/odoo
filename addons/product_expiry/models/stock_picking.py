@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import datetime
 
-from odoo import models, _
+from odoo import Command, _, models
 
 
 class StockPicking(models.Model):
@@ -13,24 +13,19 @@ class StockPicking(models.Model):
         # We use the 'skip_expired' context key to avoid to make the check when
         # user did already confirmed the wizard about expired lots.
         if res is True and not self.env.context.get('skip_expired'):
-            pickings_to_warn_expired = self._get_move_lines_with_removal_warning().picking_id
-            if pickings_to_warn_expired:
-                return pickings_to_warn_expired._action_generate_expired_wizard()
+            if action := self._action_generate_expired_wizard():
+                return action
         return res
 
     def _action_generate_expired_wizard(self):
-        expired_move_lines = self._get_move_lines_with_removal_warning()
+        move_lines_with_removal_warning = self._get_move_lines_with_removal_warning()
+        if not (move_lines_with_removal_warning):
+            return None
         view_id = self.env.ref('product_expiry.confirm_expiry_view').id
         context = dict(self.env.context)
 
-        expired_lot_ids = expired_move_lines.lot_id.ids
-        expired_move_line = expired_move_lines[:1]
-
         context.update({
-            'default_picking_ids': [(6, 0, self.ids)],
-            'default_lot_ids': [(6, 0, expired_lot_ids)],
-            'expired_product_name': expired_move_line.product_id.display_name,
-            'expired_lot_name': expired_move_line.lot_name,
+            'default_move_line_ids': [Command.set(move_lines_with_removal_warning.ids)],
         })
         return {
             'name': _('Confirmation'),
