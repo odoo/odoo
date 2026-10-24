@@ -1554,54 +1554,73 @@ class HrLeave(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        # Override to avoid automatic logging of creation
-        if not self.env.context.get('leave_fast_create'):
-            work_entry_types = self.env['hr.work.entry.type'].browse([values.get('work_entry_type_id') for values in vals_list if values.get('work_entry_type_id')])
-            mapped_validation_type = {work_entry_type.id: work_entry_type.leave_validation_type for work_entry_type in work_entry_types}
-
-            for values in vals_list:
-                employee_id = values.get('employee_id', False)
-                work_entry_type_id = values.get('work_entry_type_id')
-
-                # Handle double validation
-                if work_entry_type_id and mapped_validation_type.get(work_entry_type_id) == 'both':
-                    self._check_double_validation_rules(employee_id, values.get('state', False))
-
+        fast_create = self.env.context.get('leave_fast_create')
+        skip_time_rules = self.env.context.get('skip_time_rules', False)
+        if not fast_create:
+            self._check_create_double_validation(vals_list)
         if any(not vals.get('employee_id', self.env.context.get('default_employee_id')) for vals in vals_list):
-            raise UserError(_("There is no employee set on the time off. Please make sure you're logged in the correct company."))
-        holidays = super(HrLeave, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
-        employees_without_allocation = self.env['hr.employee']
-        zero_duration_employees = self.env['hr.employee']
-        if not self.env.context.get('skip_check_validity'):
-            real_holidays = holidays.filtered(lambda leave: leave.work_entry_type_id.time_off_selectable)
-            employees_without_allocation, zero_duration_employees = real_holidays.with_context(multi_leave_request=self.env.context.get('multi_leave_request'))._check_validity()
-            invalid_holidays = real_holidays.filtered(lambda l: l.employee_id in (employees_without_allocation | zero_duration_employees))
-            holidays -= invalid_holidays
-            invalid_holidays.unlink()
-        self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
+            raise UserError(self.env._("There is no employee set on the time off. Please make sure you're logged in the correct company."))
 
-        for holiday in holidays:
-            if not self.env.context.get('leave_fast_create'):
-                holiday._process_auto_approve_activities()
-        if not self.env.context.get('leave_fast_create') and not self.env.context.get('skip_time_rules'):
-            # mixin create() fired _trigger_time_rules() before action_approve() (no-op: state != validate).
-            # now that auto-approved leaves are validated and resource.calendar.leaves exist, trigger properly.
-            # leave_fast_create leaves are created with state=validate, so mixin handles them correctly already.
-            holidays._trigger_time_rules()
+        # Don't subscribe the creator: followers are added by _process_auto_approve_activities().
+        # Outside fast create, the time rules are only triggered below, once the auto-approved leaves are validated.
+        create_self = self.with_context(mail_create_nosubscribe=True, skip_time_rules=skip_time_rules or not fast_create)
+        leaves = super(HrLeave, create_self).create(vals_list).with_context(skip_time_rules=skip_time_rules)
+        leaves, employees_without_allocation, zero_duration_employees = leaves._remove_invalid_leaves()
+        # computed from hr.leave records, without any relational field to depend on
+        self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])
+
+        if fast_create:
+            if not self.env.context.get('skip_create_resource_leave'):
+                leaves.filtered(lambda leave: leave.state == 'validate')._create_resource_leave()
+        else:
+            for leave in leaves:
+                leave._process_auto_approve_activities()
+            if not skip_time_rules:
+                leaves._trigger_time_rules()
+
+        self._notify_invalid_leaves(employees_without_allocation, zero_duration_employees)
+        return leaves
+
+    @api.model
+    def _check_create_double_validation(self, vals_list):
+        work_entry_types = self.env['hr.work.entry.type'].browse([vals['work_entry_type_id'] for vals in vals_list if vals.get('work_entry_type_id')])
+        validation_type_by_work_entry_type = {work_entry_type.id: work_entry_type.leave_validation_type for work_entry_type in work_entry_types}
+        for vals in vals_list:
+            work_entry_type_id = vals.get('work_entry_type_id')
+            if work_entry_type_id and validation_type_by_work_entry_type.get(work_entry_type_id) == 'both':
+                employees = self.env['hr.employee'].browse(vals.get('employee_id'))
+                self._check_double_validation_rules(employees, vals.get('state', False))
+
+    def _remove_invalid_leaves(self):
+        """ Check the allocations of the new leaves and unlink the ones that cannot be taken
+        (only possible with ``multi_leave_request``, otherwise ``_check_validity`` raises).
+
+        :return: the remaining leaves, the employees without allocation and the employees
+                 whose leave is outside their working schedule
+        """
+        no_employees = self.env['hr.employee']
+        if self.env.context.get('skip_check_validity'):
+            return self, no_employees, no_employees
+        time_off_leaves = self.filtered(lambda leave: leave.work_entry_type_id.time_off_selectable)
+        employees_without_allocation, zero_duration_employees = time_off_leaves._check_validity()
+        invalid_employees = employees_without_allocation | zero_duration_employees
+        invalid_leaves = time_off_leaves.filtered(lambda leave: leave.employee_id in invalid_employees)
+        invalid_leaves.unlink()
+        return self - invalid_leaves, employees_without_allocation, zero_duration_employees
+
+    @api.model
+    def _notify_invalid_leaves(self, employees_without_allocation, zero_duration_employees):
         if employees_without_allocation:
-            invalid_employee_names = ', '.join(self.env._('%s', employee.name) for employee in employees_without_allocation)
+            employee_names = ', '.join(employees_without_allocation.mapped('name'))
             self.env.user._bus_send('simple_notification', {
                 'type': 'danger',
-                'message': self.env._('There is no valid allocation to cover this request for the following employees: %s', invalid_employee_names),
+                'message': self.env._('There is no valid allocation to cover this request for the following employees: %s', employee_names),
             })
-        if self.env.context.get('leave_fast_create') and not self.env.context.get('skip_create_resource_leave'):
-            holidays.filtered(lambda l: l.state == 'validate')._create_resource_leave()
         if zero_duration_employees:
             self.env.user._bus_send('simple_notification', {
                 'type': 'danger',
                 'message': self.env._('The time off is outside the working schedule of the employee'),
             })
-        return holidays
 
     def _process_auto_approve_activities(self):
 
