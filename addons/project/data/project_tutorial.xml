@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="project_tutorial" model="web_tuto.tutorial">
+        <field name="name">project_tutorial</field>
+        <field name="sequence">110</field>
+        <field name="rainbow_man_message">Congratulations, you are now a master of project management.</field>
+    </record>
+
+    <record id="project_tutorial_view_project_kanban" model="web_tuto.step">
+        <field name="tutorial_id" ref="project_tutorial"/>
+        <field name="view_id" ref="view_project_kanban"/>
+    </record>
+    <record id="project_tutorial_view_project_kanban_new" model="web_tuto.step">
+        <field name="parent_id" ref="project_tutorial_view_project_kanban"/>
+        <field name="action">new</field>
+    </record>
+
+    <record id="project_tutorial_project_project_view_form_simplified" model="web_tuto.step">
+        <field name="tutorial_id" ref="project_tutorial"/>
+        <field name="view_id" ref="project_project_view_form_simplified"/>
+    </record>
+    <record id="project_tutorial_project_project_view_form_simplified_name" model="web_tuto.step">
+        <field name="parent_id" ref="project_tutorial_project_project_view_form_simplified"/>
+        <field name="action">name</field>
+    </record>
+    <record id="project_tutorial_project_project_view_form_simplified_action_view_tasks" model="web_tuto.step">
+        <field name="parent_id" ref="project_tutorial_project_project_view_form_simplified"/>
+        <field name="action">action_view_tasks</field>
+    </record>
+
+    <record id="project_tutorial_view_task_kanban" model="web_tuto.step">
+        <field name="tutorial_id" ref="project_tutorial"/>
+        <field name="view_id" ref="view_task_kanban"/>
+    </record>
+    <record id="project_tutorial_view_task_kanban_add_stage" model="web_tuto.step">
+        <field name="parent_id" ref="project_tutorial_view_task_kanban"/>
+        <field name="action">add_stage</field>
+        <field name="content">Add a stage</field>
+    </record>
+    <record id="project_tutorial_view_task_kanban_add_stage_2" model="web_tuto.step">
+        <field name="parent_id" ref="project_tutorial_view_task_kanban"/>
+        <field name="action">add_stage</field>
+    </record>
+    <record id="project_tutorial_view_task_kanban_new" model="web_tuto.step">
+        <field name="parent_id" ref="project_tutorial_view_task_kanban"/>
+        <field name="action">new</field>
+    </record>
+    <record id="project_tutorial_view_task_kanban_name" model="web_tuto.step">
+        <field name="parent_id" ref="project_tutorial_view_task_kanban"/>
+        <field name="action">name</field>
+    </record>
+    <record id="project_tutorial_view_task_kanban_user_ids" model="web_tuto.step">
+        <field name="parent_id" ref="project_tutorial_view_task_kanban"/>
+        <field name="action">user_ids</field>
+    </record>
+    <record id="project_tutorial_view_task_kanban_edit" model="web_tuto.step">
+        <field name="parent_id" ref="project_tutorial_view_task_kanban"/>
+        <field name="action">edit</field>
+    </record>
+
+    <record id="project_tutorial_view_task_form2" model="web_tuto.step">
+        <field name="tutorial_id" ref="project_tutorial"/>
+        <field name="view_id" ref="view_task_form2"/>
+    </record>
+    <record id="project_tutorial_view_task_form2_priority" model="web_tuto.step">
+        <field name="parent_id" ref="project_tutorial_view_task_form2"/>
+        <field name="action">priority</field>
+    </record>
+    <record id="project_tutorial_view_task_form2_tag_ids" model="web_tuto.step">
+        <field name="parent_id" ref="project_tutorial_view_task_form2"/>
+        <field name="action">tag_ids</field>
+    </record>
+    <record id="project_tutorial_view_task_form2_date_deadline" model="web_tuto.step">
+        <field name="parent_id" ref="project_tutorial_view_task_form2"/>
+        <field name="action">date_deadline</field>
+    </record>
+    <record id="project_tutorial_view_task_form2_description" model="web_tuto.step">
+        <field name="parent_id" ref="project_tutorial_view_task_form2"/>
+        <field name="action">description</field>
+    </record>
+    <record id="project_tutorial_view_task_form2_send" model="web_tuto.step">
+        <field name="parent_id" ref="project_tutorial_view_task_form2"/>
+        <field name="action">send</field>
+    </record>
+    <record id="project_tutorial_view_task_form2_log" model="web_tuto.step">
+        <field name="parent_id" ref="project_tutorial_view_task_form2"/>
+        <field name="action">log</field>
+    </record>
+    <record id="project_tutorial_view_task_form2_stage_id" model="web_tuto.step">
+        <field name="parent_id" ref="project_tutorial_view_task_form2"/>
+        <field name="action">stage_id</field>
+    </record>
+</odoo>

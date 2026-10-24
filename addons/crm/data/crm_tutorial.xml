@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="crm_tutorial" model="web_tuto.tutorial">
+        <field name="name">crm_tutorial</field>
+        <field name="sequence">10</field>
+        <field name="rainbow_man_message">Congrats, best of luck catching such big fish! :&#41;</field>
+    </record>
+
+    <record id="crm_tutorial_crm_case_kanban_view_leads" model="web_tuto.step">
+        <field name="tutorial_id" ref="crm_tutorial"/>
+        <field name="view_id" ref="crm_case_kanban_view_leads"/>
+    </record>
+    <record id="crm_tutorial_crm_case_kanban_view_leads_new" model="web_tuto.step">
+        <field name="parent_id" ref="crm_tutorial_crm_case_kanban_view_leads"/>
+        <field name="action">new</field>
+        <field name="content">Create your first opportunity right here</field>
+    </record>
+    <record id="crm_tutorial_crm_case_kanban_view_leads_partner_id" model="web_tuto.step">
+        <field name="parent_id" ref="crm_tutorial_crm_case_kanban_view_leads"/>
+        <field name="action">partner_id</field>
+        <field name="content">Write a few letters to look for an existing contact or create a new one</field>
+    </record>
+    <record id="crm_tutorial_crm_case_kanban_view_leads_expected_revenue" model="web_tuto.step">
+        <field name="parent_id" ref="crm_tutorial_crm_case_kanban_view_leads"/>
+        <field name="action">expected_revenue</field>
+    </record>
+    <record id="crm_tutorial_crm_case_kanban_view_leads_priority" model="web_tuto.step">
+        <field name="parent_id" ref="crm_tutorial_crm_case_kanban_view_leads"/>
+        <field name="action">priority</field>
+    </record>
+    <record id="crm_tutorial_crm_case_kanban_view_leads_edit" model="web_tuto.step">
+        <field name="parent_id" ref="crm_tutorial_crm_case_kanban_view_leads"/>
+        <field name="action">edit</field>
+        <field name="content">Now, add your opportunity to your pipeline and check further details</field>
+    </record>
+
+    <record id="crm_tutorial_crm_lead_view_form" model="web_tuto.step">
+        <field name="tutorial_id" ref="crm_tutorial"/>
+        <field name="view_id" ref="crm_lead_view_form"/>
+    </record>
+    <record id="crm_tutorial_crm_lead_view_form_tag_ids" model="web_tuto.step">
+        <field name="parent_id" ref="crm_tutorial_crm_lead_view_form"/>
+        <field name="action">tag_ids</field>
+    </record>
+    <record id="crm_tutorial_crm_lead_view_form_description" model="web_tuto.step">
+        <field name="parent_id" ref="crm_tutorial_crm_lead_view_form"/>
+        <field name="action">description</field>
+    </record>
+    <record id="crm_tutorial_crm_lead_view_form_send" model="web_tuto.step">
+        <field name="parent_id" ref="crm_tutorial_crm_lead_view_form"/>
+        <field name="action">send</field>
+    </record>
+    <record id="crm_tutorial_crm_lead_view_form_stage_id" model="web_tuto.step">
+        <field name="parent_id" ref="crm_tutorial_crm_lead_view_form"/>
+        <field name="action">stage_id</field>
+    </record>
+    <record id="crm_tutorial_crm_lead_view_form_delete" model="web_tuto.step">
+        <field name="parent_id" ref="crm_tutorial_crm_lead_view_form"/>
+        <field name="action">delete</field>
+        <field name="content">Here you can delete</field>
+        <field name="hint" eval="True"/>
+    </record>
+</odoo>

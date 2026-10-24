@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="web_tuto.TutorialPointer">
+        <div t-ref="this.anchorRef" class="o_tutorial_anchor"/>
+        <div
+            t-ref="this.pointerRef"
+            t-if="this.isVisible"
+            class="o_tutorial_pointer"
+            t-attf-style="
+                --TutorialPointer__width: {{ this.constructor.width }}px;
+                --TutorialPointer__height: {{ this.constructor.height }}px;
+            "
+        >
+            <div t-attf-class="o_tutorial_pointer_tip o_{{ this.state.direction }}"/>
+        </div>
+    </t>
+    <t t-name="web_tuto.TutorialPointer.Content">
+        <div class="o_tutorial_pointer o_tutorial_pointer_content px-3 py-2" t-on-click="this.props.onClick">
+            <span>
+                <t t-out="this.props.content"/>
+            </span>
+            <div class="d-flex justify-content-between align-items-center gap-3 mt-2">
+                <button t-if="this.props.onSkip" class="btn btn-link btn-sm shadow-none fw-normal px-0 o_tutorial_skip" t-on-click.stop="this.props.onSkip">Skip Tutorial</button>
+                <button t-if="this.props.onNext" class="btn btn-primary btn-sm o_tutorial_next" t-on-click.stop="this.props.onNext">Next</button>
+            </div>
+        </div>
+    </t>
+</templates>

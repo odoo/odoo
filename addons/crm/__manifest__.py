@@ -17,6 +17,7 @@
         'resource',
         'utm',
         'web_tour',
+        'web_tuto',
         'contacts',
         'digest',
         'phone_validation',
@@ -34,7 +35,6 @@
         'data/mail_message_subtype_data.xml',
         'data/crm_recurring_plan_data.xml',
         'data/mail_templates.xml',
-        'data/crm_tour.xml',
 
         'wizard/crm_lead_lost_views.xml',
         'wizard/crm_lead_to_opportunity_mass_views.xml',
@@ -60,6 +60,7 @@
         'views/crm_helper_templates.xml',
         'views/crm_lead_templates.xml',
         'security/ir.access.csv',
+        'data/crm_tutorial.xml',
     ],
     'demo': [
         'data/crm_team_demo.xml',

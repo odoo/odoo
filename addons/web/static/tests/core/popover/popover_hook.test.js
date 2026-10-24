@@ -1,4 +1,4 @@
-import { animationFrame, expect, getFixture, test } from "@odoo/hoot";
+import { animationFrame, expect, getFixture, queryOne, test } from "@odoo/hoot";
 import {
     Component,
     onMounted,
@@ -145,4 +145,35 @@ test("propagate scope to popover", async () => {
     await mountWithCleanup(Parent);
     await animationFrame();
     expect(".o_popover").toHaveText("abc");
+});
+
+test("popover reopened while the previous one closes itself", async () => {
+    class Comp extends Component {
+        static template = xml`<div t-out="this.text"/>`;
+        text = useProps.static("text", t.string());
+    }
+
+    class Parent extends Component {
+        static template = xml`<div><span class="first"/><span class="second"/></div>`;
+
+        setup() {
+            this.popover = usePopover(Comp);
+        }
+    }
+
+    const parent = await mountWithCleanup(Parent);
+    parent.popover.open(queryOne(".first"), { text: "first" });
+    await animationFrame();
+    expect(".o_popover").toHaveText("first");
+
+    // the first popover also closes itself, as its target is removed
+    queryOne(".first").remove();
+    parent.popover.open(queryOne(".second"), { text: "second" });
+    await animationFrame();
+    expect(".o_popover").toHaveText("second");
+    expect(parent.popover.isOpen).toBe(true);
+
+    parent.popover.close();
+    await animationFrame();
+    expect(".o_popover").toHaveCount(0);
 });
