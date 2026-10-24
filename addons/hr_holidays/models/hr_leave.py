@@ -32,6 +32,9 @@ def get_employee_from_context(values, context, user_employee_id):
 POSITION_DEPENDS = ('date_from', 'date_to', 'tz', 'request_date_from', 'request_date_to',
                     'request_date_from_period', 'request_date_to_period', 'work_entry_type_request_unit')
 
+NO_ALLOCATION_ERROR = 'no_allocation'
+NOT_ENOUGH_ALLOCATION_ERROR = 'not_enough_allocation'
+
 
 class HrLeave(models.Model):
     """ Time Off Requests Access specifications
@@ -1440,67 +1443,93 @@ class HrLeave(models.Model):
                 raise ValidationError(_("You cannot create a time off request for an employee of type company executive."))
 
     def _check_validity(self):
-        sorted_leaves = defaultdict(lambda: self.env['hr.leave'])
-        employees_without_allocation = self.env['hr.employee']
-        zero_duration_employees = self.env['hr.employee']
+        """ Raise if the leaves are not covered by the allocations of their employees or
+        fall on a mandatory day. """
+        allocation_errors = self._get_allocation_errors()
+        if allocation_errors:
+            employee, work_entry_type, error = allocation_errors[0]
+            raise ValidationError(self._get_allocation_error_message(error, employee, work_entry_type))
+        self._check_mandatory_days()
+
+    def _get_allocation_errors(self):
+        """ :return: list of ``(employee, work_entry_type, error)`` for the leaves not covered
+                 by the allocations of their employees, ``error`` being
+                 ``NO_ALLOCATION_ERROR`` or ``NOT_ENOUGH_ALLOCATION_ERROR``
+        """
+        leaves_by_type_and_date = defaultdict(lambda: self.env['hr.leave'])
         for leave in self:
-            if float_is_zero(leave.number_of_hours, precision_digits=3) and self.env.context.get('multi_leave_request', False) \
-                    and leave.work_entry_type_id.count_as == 'absence':
-                zero_duration_employees |= leave.employee_id
-            sorted_leaves[leave.work_entry_type_id, leave.date_from.date()] |= leave
-        for (work_entry_type, date_from), leaves in sorted_leaves.items():
+            leaves_by_type_and_date[leave.work_entry_type_id, leave.date_from.date()] |= leave
+        allocation_errors = []
+        for (work_entry_type, date_from), leaves in leaves_by_type_and_date.items():
             if not work_entry_type.requires_allocation or self.env.context.get('skip_allocation_check'):
                 continue
-            employees = leaves.employee_id
-            leave_data = work_entry_type.get_allocation_data(employees, date_from)
             if work_entry_type.allows_negative:
-                max_excess = work_entry_type.max_allowed_negative
-                is_cancellation = all(leave.state in ('cancel', 'refuse') for leave in leaves)
-                for employee in employees:
-                    if is_cancellation:
-                        continue
-                    if not leave_data[employee][0][1]['max_leaves']:
-                        if self.env.context.get('multi_leave_request', False):
-                            employees_without_allocation |= employee
-                        else:
-                            raise ValidationError(self.env._("You do not have any allocation for this time type.\n"
-                                                             "Please request an allocation before submitting your time off request."))
-                    if leave_data[employee] and leave_data[employee][0][1]['virtual_remaining_leaves'] < -max_excess:
-                        if self.env.context.get('multi_leave_request', False):
-                            employees_without_allocation |= employee
-                        else:
-                            raise ValidationError(_(
-                                "%(name)s does not have a valid allocation for the leave type %(leave_type)s to cover that request.",
-                                name=employee.name, leave_type=work_entry_type.name))
-                continue
+                type_errors = leaves._get_negative_allocation_errors(work_entry_type, date_from)
+            else:
+                type_errors = leaves._get_excess_allocation_errors(work_entry_type, date_from)
+            allocation_errors += [(employee, work_entry_type, error) for employee, error in type_errors]
+        return allocation_errors
 
-            previous_leave_data = work_entry_type.with_context(
-                ignored_leave_ids=leaves.ids
-            ).get_allocation_data(employees, date_from)
-            for employee in employees:
-                previous_emp_data = previous_leave_data[employee] and previous_leave_data[employee][0][1]['virtual_excess_data']
-                emp_data = leave_data[employee] and leave_data[employee][0][1]['virtual_excess_data']
-                if not leave_data[employee][0][1]['max_leaves']:
-                    if self.env.context.get('multi_leave_request', False):
-                        employees_without_allocation |= employee
-                    else:
-                        raise ValidationError(self.env._("You do not have any allocation for this time type.\n"
-                                                         "Please request an allocation before submitting your time off request."))
-                if not previous_emp_data and not emp_data:
-                    continue
-                if previous_emp_data != emp_data and len(emp_data) >= len(previous_emp_data):
-                    if self.env.context.get('multi_leave_request', False):
-                        employees_without_allocation |= employee
-                    else:
-                        raise ValidationError(_(
-                            "%(name)s does not have a valid allocation for the leave type %(leave_type)s to cover that request.",
-                            name=employee.name, leave_type=work_entry_type.name))
+    def _get_negative_allocation_errors(self, work_entry_type, date_from):
+        """ Allocation errors of leaves of the same type and start date, for a type whose
+        balance may go negative down to ``max_allowed_negative``.
 
-        is_leave_user = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
-        if not is_leave_user and any(leave.has_mandatory_day for leave in self if leave.state not in ('cancel', 'refuse')):
+        :return: list of ``(employee, error)``
+        """
+        if all(leave.state in ('cancel', 'refuse') for leave in self):
+            return []
+        allocation_info_by_employee = work_entry_type._get_allocation_info(self.employee_id, date_from)
+        allocation_errors = []
+        for employee in self.employee_id:
+            allocation_info = allocation_info_by_employee[employee]
+            if not allocation_info['max_leaves']:
+                allocation_errors.append((employee, NO_ALLOCATION_ERROR))
+            if allocation_info['virtual_remaining_leaves'] < -work_entry_type.max_allowed_negative:
+                allocation_errors.append((employee, NOT_ENOUGH_ALLOCATION_ERROR))
+        return allocation_errors
+
+    def _get_excess_allocation_errors(self, work_entry_type, date_from):
+        """ Allocation errors of leaves of the same type and start date: a leave is not
+        covered when it creates or extends an excess compared to the balance without it.
+
+        :return: list of ``(employee, error)``
+        """
+        allocation_info_by_employee = work_entry_type._get_allocation_info(self.employee_id, date_from)
+        previous_allocation_info_by_employee = work_entry_type.with_context(
+            ignored_leave_ids=self.ids,
+        )._get_allocation_info(self.employee_id, date_from)
+        allocation_errors = []
+        for employee in self.employee_id:
+            allocation_info = allocation_info_by_employee[employee]
+            excess = allocation_info['virtual_excess_data']
+            previous_excess = previous_allocation_info_by_employee[employee]['virtual_excess_data']
+            if not allocation_info['max_leaves']:
+                allocation_errors.append((employee, NO_ALLOCATION_ERROR))
+            if excess != previous_excess and len(excess) >= len(previous_excess):
+                allocation_errors.append((employee, NOT_ENOUGH_ALLOCATION_ERROR))
+        return allocation_errors
+
+    @api.model
+    def _get_allocation_error_message(self, error, employee, work_entry_type):
+        if error == NO_ALLOCATION_ERROR:
+            return self.env._(
+                "You do not have any allocation for this time type.\n"
+                "Please request an allocation before submitting your time off request.")
+        return self.env._(
+            "%(name)s does not have a valid allocation for the leave type %(leave_type)s to cover that request.",
+            name=employee.name, leave_type=work_entry_type.name)
+
+    def _check_mandatory_days(self):
+        if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+            return
+        if any(leave.has_mandatory_day for leave in self if leave.state not in ('cancel', 'refuse')):
             raise ValidationError(self.env._('You are not allowed to request time off on a Mandatory Day.'))
 
-        return employees_without_allocation, zero_duration_employees
+    def _get_zero_duration_employees(self):
+        return self.filtered(
+            lambda leave: leave.work_entry_type_id.count_as == 'absence'
+            and float_is_zero(leave.number_of_hours, precision_digits=3),
+        ).employee_id
 
     ####################################################
     # ORM Overrides methods
@@ -1602,7 +1631,14 @@ class HrLeave(models.Model):
         if self.env.context.get('skip_check_validity'):
             return self, no_employees, no_employees
         time_off_leaves = self.filtered(lambda leave: leave.work_entry_type_id.time_off_selectable)
-        employees_without_allocation, zero_duration_employees = time_off_leaves._check_validity()
+        if not self.env.context.get('multi_leave_request'):
+            time_off_leaves._check_validity()
+            return self, no_employees, no_employees
+
+        allocation_errors = time_off_leaves._get_allocation_errors()
+        time_off_leaves._check_mandatory_days()
+        employees_without_allocation = no_employees.union(*(employee for employee, _work_entry_type, _error in allocation_errors))
+        zero_duration_employees = time_off_leaves._get_zero_duration_employees()
         invalid_employees = employees_without_allocation | zero_duration_employees
         invalid_leaves = time_off_leaves.filtered(lambda leave: leave.employee_id in invalid_employees)
         invalid_leaves.unlink()
@@ -1696,7 +1732,12 @@ class HrLeave(models.Model):
             if not values.get('state') or values.get('state') not in ('refuse', 'cancel'):
                 # Preserve context check for date validation skip
                 if not self.env.context.get('leave_skip_date_check'):
-                    self.filtered(lambda leave: leave.work_entry_type_id.time_off_selectable)._check_validity()
+                    time_off_leaves = self.filtered(lambda leave: leave.work_entry_type_id.time_off_selectable)
+                    if self.env.context.get('multi_leave_request'):
+                        # allocation errors of multi leave requests don't raise, see _remove_invalid_leaves()
+                        time_off_leaves._check_mandatory_days()
+                    else:
+                        time_off_leaves._check_validity()
             self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])
 
         if not self.env.context.get('leave_fast_create'):
@@ -2593,11 +2634,11 @@ class HrLeave(models.Model):
         for leave in concerned_leaves:
             work_entry_type = leave.work_entry_type_id
             date = leave.date_from.date()
-            work_entry_type_data = work_entry_type.get_allocation_data(leave.employee_id, date)
-            if not work_entry_type_data[leave.employee_id][0][1]['max_leaves']:
+            allocation_info = work_entry_type._get_allocation_info(leave.employee_id, date)[leave.employee_id]
+            if not allocation_info['max_leaves']:
                 leave._force_cancel(reason, 'mail.mt_note')
                 continue
-            exceeding_duration = work_entry_type_data[leave.employee_id][0][1]['total_virtual_excess']
+            exceeding_duration = allocation_info['total_virtual_excess']
             excess_limit = work_entry_type.max_allowed_negative if work_entry_type.allows_negative else 0
             if exceeding_duration <= excess_limit:
                 continue
