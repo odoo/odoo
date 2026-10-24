@@ -737,6 +737,40 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
             )
         self.assertEqual(partner_user.company_name, 'My company')
 
+    def test_15_shop_address_submit_company_registry(self):
+        """The company registry is saved from the address form, and like the VAT,
+        can't be changed once invoices have been issued."""
+        partner = self.user_portal.partner_id
+        so = self._create_so(partner_id=partner.id)
+        env = api.Environment(self.env.cr, self.user_portal.id, {})
+        address_values = {
+            **self.default_billing_address_values,
+            'name': partner.name,
+            'email': partner.email,
+            'country_id': self.env.ref('base.fr').id,
+            'company_registry': '732829320',
+        }
+        with MockRequest(env, website=self.website.with_env(env), sale_order_id=so.id) as req:
+            req.httprequest.method = "POST"
+            self.WebsiteSaleController.shop_address_submit(partner_id=partner.id, **address_values)
+        self.assertEqual(partner.company_registry, '732829320')
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': partner.id,
+            'invoice_line_ids': [Command.create({'product_id': self.product.id})],
+        })
+        invoice.action_post()
+
+        with MockRequest(env, website=self.website.with_env(env), sale_order_id=so.id) as req:
+            req.httprequest.method = "POST"
+            res = self.WebsiteSaleController.shop_address_submit(
+                partner_id=partner.id, **dict(address_values, company_registry='123456789'),
+            ).data
+        self.assertIn('company_registry', json.loads(res)['invalid_fields'])
+
+        self.assertEqual(partner.company_registry, '732829320')
+
     def test_imported_user_with_trailing_name_can_checkout(self):
         """Ensure that an imported user with trailing spaces in their name can complete checkout without error."""
 
