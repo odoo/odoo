@@ -1,5 +1,6 @@
 import { fields } from "@mail/model/misc";
 import { Record } from "@mail/model/record";
+import { LIST_LOADER_STATUS } from "@mail/utils/common/list_loader";
 
 export class MessagingMenuUIState extends Record {
     setup() {
@@ -105,7 +106,10 @@ export class MessagingMenuUIState extends Record {
     }
 
     _ensureTabOrFilterInitialLoad() {
-        if (this.activeTab.getLoadStatus(this.selectedFilter, this.activePluginFilters) === "new") {
+        if (
+            this.activeTab.getLoadStatus(this.selectedFilter, this.activePluginFilters) ===
+            LIST_LOADER_STATUS.NEW
+        ) {
             this.activeTab.loadMore({
                 filter: this.selectedFilter,
                 pluginFilters: this.activePluginFilters,
