@@ -8,10 +8,17 @@ class AccountMoveSendBatchWizard(models.TransientModel):
 
     def _compute_send_by_post_stamps(self):
         for wizard in self:
-            partner_with_valid_address = wizard.move_ids.partner_id.filtered(
-                self.env['snailmail.letter']._is_valid_address
-            )
-            wizard.send_by_post_stamps = len(partner_with_valid_address)
+            stamps = 0
+            # One letter is created per move (see _hook_if_success), and the IAP service
+            # charges one stamp per document, whatever its number of physical pages.
+            for move in wizard.move_ids:
+                sending_settings = self._get_default_sending_settings(move)
+                if (
+                    'snailmail' in sending_settings['sending_methods']
+                    and self._is_applicable_to_move('snailmail', move, **sending_settings)
+                ):
+                    stamps += 1
+            wizard.send_by_post_stamps = stamps
 
     def _compute_summary_data(self):
         # EXTENDS 'account'
