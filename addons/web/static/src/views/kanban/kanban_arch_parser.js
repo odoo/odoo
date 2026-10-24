@@ -102,6 +102,7 @@ export class KanbanArchParser {
             cardArchInfo,
             cardColorField: xmlDoc.getAttribute("highlight_color"),
             className: xmlDoc.getAttribute("class"),
+            editable: xmlDoc.getAttribute("editable"),
             controls,
             defaultGroupBy,
             handleField,

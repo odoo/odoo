@@ -2422,6 +2422,47 @@ test("one2many kanban order with handle widget", async () => {
     expect.verifySteps(["web_read"]);
 });
 
+test("one2many kanban editable top adds a record at the top", async () => {
+    Partner._records[0].p = [2, 4];
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="p" add-label="Add a line">
+                    <kanban editable="top">
+                        <templates>
+                            <t t-name="card">
+                                <field name="name"/>
+                            </t>
+                        </templates>
+                    </kanban>
+                    <form>
+                        <field name="name"/>
+                    </form>
+                </field>
+            </form>`,
+        resId: 1,
+    });
+
+    expect(".o_kanban_renderer > .o-kanban-button-new:first-child").toHaveCount(1);
+    expect(
+        queryAllTexts(".o_kanban_record:visible:not(.o-kanban-button-new):not(.o_kanban_ghost)")
+    ).toEqual(["second record", "aaa"]);
+
+    await contains(".o-kanban-button-new").click();
+    await contains(".modal .o_field_widget[name=name] input").edit("new record", {
+        confirm: false,
+    });
+    await contains(".modal .o_form_button_save").click();
+
+    // A record created from the top button must become the first kanban card.
+    expect(
+        queryAllTexts(".o_kanban_record:visible:not(.o-kanban-button-new):not(.o-kanban_ghost)")
+    ).toEqual(["new record", "second record", "aaa"]);
+});
+
 test("press Enter in a form with a one2many kanban", async () => {
     Partner._records[0].p = [2, 4];
 

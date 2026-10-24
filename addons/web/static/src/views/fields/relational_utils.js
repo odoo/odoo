@@ -1027,7 +1027,7 @@ export function useOpenX2ManyRecord({
     };
 }
 
-export function useX2ManyCrud(getList, isMany2Many) {
+export function useX2ManyCrud(getList, isMany2Many, position) {
     let saveRecord; // FIXME: isn't this "createRecord" instead?
     if (isMany2Many) {
         saveRecord = async (object) => {
@@ -1041,7 +1041,7 @@ export function useX2ManyCrud(getList, isMany2Many) {
             }
         };
     } else {
-        saveRecord = async (record) => getList().validateExtendedRecord(record);
+        saveRecord = async (record) => getList().validateExtendedRecord(record, position);
     }
 
     const updateRecord = async (record) => {
