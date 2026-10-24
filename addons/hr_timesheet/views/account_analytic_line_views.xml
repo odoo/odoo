@@ -5,7 +5,7 @@
             <field name="name">account.analytic.line.list.hr_timesheet</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
-                <list editable="top" string="Timesheet Activities" sample="1" decoration-muted="readonly_timesheet == True">
+                <list editable="top" string="Timesheet Activities" sample="1" decoration-muted="readonly_timesheet == True" multi_edit="1" js_class="timesheet_list_view">
                     <field name="readonly_timesheet" column_invisible="True"/>
                     <field name="date" readonly="readonly_timesheet"/>
                     <field name="employee_id" column_invisible="True" readonly="readonly_timesheet"/>
@@ -49,6 +49,9 @@
             <field name="mode">primary</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
+                <xpath expr="//list" position="attributes">
+                    <attribute name="js_class">timesheet_list_view</attribute>
+                </xpath>
                 <xpath expr="//field[@name='employee_id']" position="attributes">
                     <attribute name="column_invisible">0</attribute>
                     <attribute name="required">1</attribute>
