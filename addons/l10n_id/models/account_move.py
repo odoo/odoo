@@ -5,13 +5,16 @@ from odoo import fields, models, _
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    l10n_id_qris_transaction_ids = fields.Many2many('l10n_id.qris.transaction', groups='account.group_account_invoice')
+    l10n_id_qris_transaction_ids = fields.Many2many('l10n_id.qris.transaction', groups='account.group_account_invoice', copy=False)
 
     def _generate_qr_code(self, silent_errors=False):
         """
         Adds information about which invoice is triggering the creation of the QR-Code, so that we can link both together.
         """
         # EXTENDS account
+        # Once the invoice has been paid, no QR-Code is generated to avoid a second payment.
+        if self.country_code == 'ID' and self.payment_state not in ('not_paid', 'partial'):
+            return None
         return super(
             AccountMove,
             self.with_context(qris_model="account.move", qris_model_id=str(self.id)),
@@ -26,7 +29,7 @@ class AccountMove(models.Model):
             - If it is paid, we will register the payment on the invoices.
         """
         invoices = self.search([
-            ('payment_state', '=', 'not_paid'),
+            ('payment_state', 'in', ('not_paid', 'partial')),
             ('l10n_id_qris_transaction_ids', '!=', False)
         ])
         return invoices._l10n_id_update_payment_status()
@@ -40,7 +43,7 @@ class AccountMove(models.Model):
             - If it is paid, we will register the payment on the invoices.
         """
         invoices = self.filtered_domain([
-            ('payment_state', '=', 'not_paid'),
+            ('payment_state', 'in', ('not_paid', 'partial')),
             ('l10n_id_qris_transaction_ids', '!=', False)
         ])
         return invoices._l10n_id_update_payment_status()
@@ -96,13 +99,19 @@ class AccountMove(models.Model):
                 paid_invoices |= invoice
                 paid_messages[invoice.id] = message
 
+        # The payment could be registered concurrently (webhook, cron or manual action), avoid registering it twice.
+        paid_invoices = paid_invoices.try_lock_for_update().filtered(lambda inv: inv.payment_state in ('not_paid', 'partial'))
+
         # Update paid invoices
         if paid_invoices:
             paid_invoices._message_log_batch(bodies=paid_messages)
-            # Finally, register the payment:
-            return self.env['account.payment.register'].with_context(
-                active_model='account.move', active_ids=paid_invoices.ids
-            ).create({'group_payment': False}).action_create_payments()
+            # Register the amount actually paid with the QR code
+            payments = self.env['account.payment']
+            for invoice in paid_invoices:
+                payments |= self.env['account.payment.register'].with_context(
+                    active_model='account.move', active_ids=invoice.ids,
+                ).create({'amount': invoices_statuses[invoice.id]['transaction'].qris_amount})._create_payments()
+            return payments._get_records_action(name=self.env._("Payments"), context={'create': False})
 
     def _compute_tax_totals(self):
         """ OVERRIDE

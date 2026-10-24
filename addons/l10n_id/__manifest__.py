@@ -19,10 +19,16 @@ This is the latest Indonesian Odoo localisation necessary to run Odoo accounting
     'data': [
         'data/ir_cron.xml',
         'views/account_move_views.xml',
+        'views/account_portal_templates.xml',
         'views/res_bank.xml',
         'views/res_config_settings_views.xml',
         'security/ir.access.csv',
     ],
+    'assets': {
+        'web.assets_frontend': [
+            'l10n_id/static/src/interactions/**/*',
+        ],
+    },
     'demo': [
         'demo/demo_company.xml',
     ],
