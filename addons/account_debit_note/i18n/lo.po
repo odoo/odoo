@@ -1,15 +1,16 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account_debit_note
+# * account_debit_note
 #
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.2a1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-25 17:37+0000\n"
-"PO-Revision-Date: 2026-08-31 19:18+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Lao <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-10-24 11:33+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-20/"
 "account_debit_note/lo/>\n"
 "Language: lo\n"
 "MIME-Version: 1.0\n"
@@ -29,6 +30,11 @@ msgid ""
 "original invoice.\n"
 "The wizard used is similar as the one for the credit note.\n"
 msgstr ""
+"\n"
+"ໃນຫຼາຍປະເທດ, ໃບເພີ່ມໜີ້ແມ່ນຖືກນຳໃຊ້ເພື່ອເພີ່ມມູນຄ່າຂອງໃບແຈ້ງໜີ້ທີ່ມີຢູ່ແລ້ວ\n"
+"ຫຼື ໃນບາງກໍລະນີສະເພາະ ແມ່ນໃຊ້ເພື່ອຍົກເລີກໃບຫຼຸດໜີ້.\n"
+"ມັນຄ້າຍຄືກັບໃບແຈ້ງໜີ້ທົ່ວໄປ, ແຕ່ພວກເຮົາຕ້ອງຕິດຕາມການເຊື່ອມໂຍງກັບໃບແຈ້ງໜີ້ຕົ້ນສະບັບ.\n"
+"ຕົວຊ່ວຍສ້າງທີ່ນຳໃຊ້ແມ່ນຄ້າຍຄືກັນກັບຕົວຊ່ວຍສ້າງຂອງໃບຫຼຸດໜີ້.\n"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
@@ -42,46 +48,55 @@ msgid ""
 "                        <span class=\"o_stat_text\" "
 "invisible=\"debit_origin_move_type != 'in_refund'\">Refund</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"debit_origin_move_type != "
+"'out_invoice'\">ໃບແຈ້ງໜີ້</span>\n"
+"                        <span class=\"o_stat_text\" "
+"invisible=\"debit_origin_move_type != 'in_invoice'\">ໃບຮຽກເກັບເງິນຜູ້ສະໜອງ</span>"
+"\n"
+"                        <span class=\"o_stat_text\" "
+"invisible=\"debit_origin_move_type != 'out_refund'\">ໃບຫຼຸດໜີ້</span>\n"
+"                        <span class=\"o_stat_text\" "
+"invisible=\"debit_origin_move_type != 'in_refund'\">ການຄືນເງິນ</span>"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
 msgid "<span class=\"o_stat_text\">Debit Notes</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">ໃບເພີ່ມໜີ້</span>"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "<strong>Debit Note Date</strong>"
-msgstr ""
+msgstr "<strong>ວັນທີໃບເພີ່ມໜີ້</strong>"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "<strong>Invoice Date</strong>"
-msgstr ""
+msgstr "<strong>ວັນທີໃບແຈ້ງໜີ້</strong>"
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_debit_note
 msgid "Add Debit Note wizard"
-msgstr ""
+msgstr "ຕົວຊ່ວຍສ້າງເພີ່ມໃບເພີ່ມໜີ້"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Cancelled Debit Note"
-msgstr ""
+msgstr "ໃບເພີ່ມໜີ້ທີ່ຖືກຍົກເລີກ"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Cancelled Invoice"
-msgstr ""
+msgstr "ໃບແຈ້ງໜີ້ທີ່ຖືກຍົກເລີກ"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Cancelled Proforma Debit Note"
-msgstr ""
+msgstr "ໃບເພີ່ມໜີ້ຊົ່ວຄາວທີ່ຖືກຍົກເລີກ"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Cancelled Proforma Invoice"
-msgstr ""
+msgstr "ໃບແຈ້ງໜີ້ຊົ່ວຄາວທີ່ຖືກຍົກເລີກ"
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_journal__debit_sequence
@@ -89,32 +104,34 @@ msgid ""
 "Check this box if you don't want to share the same sequence for invoices and "
 "debit notes made from this journal"
 msgstr ""
+"ໝາຍໃສ່ຫ້ອງນີ້ ຖ້າທ່ານບໍ່ຕ້ອງການໃຊ້ເລກລຳດັບຮ່ວມກັນ ສຳລັບໃບແຈ້ງໜີ້ ແລະ ໃບເພີ່ມໜີ້ ທີ່ສ້າງຂຶ້ນຈາກປຶ້ມບັນຊີລາຍວັ"
+"ນນີ້"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__copy_lines
 msgid "Copy Lines"
-msgstr ""
+msgstr "ສຳເນົາລາຍການ"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__country_code
 msgid "Country Code"
-msgstr ""
+msgstr "ລະຫັດປະເທດ"
 
 #. module: account_debit_note
 #: model:ir.actions.act_window,name:account_debit_note.action_view_account_move_debit
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
 msgid "Create Debit Note"
-msgstr ""
+msgstr "ສ້າງໃບເພີ່ມໜີ້"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "ສ້າງໂດຍ"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__create_date
 msgid "Created on"
-msgstr ""
+msgstr "ສ້າງເມື່ອ"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
@@ -122,13 +139,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_move_line_filter_debit
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
 msgid "Debit Note"
-msgstr ""
+msgstr "ໃບເພີ່ມໜີ້"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__date
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
 msgid "Debit Note Date"
-msgstr ""
+msgstr "ວັນທີໃບເພີ່ມໜີ້"
 
 #. module: account_debit_note
 #. odoo-python
@@ -140,57 +157,58 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_invoice_filter_debit
 msgid "Debit Notes"
-msgstr ""
+msgstr "ໃບເພີ່ມໜີ້"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_origin_move_type
 #: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_origin_move_type
 msgid "Debit Origin Move Type"
-msgstr ""
+msgstr "ປະເພດການເຄື່ອນໄຫວຕົ້ນທາງຂອງໃບເພີ່ມໜີ້"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_journal__debit_sequence
 msgid "Dedicated Debit Note Sequence"
-msgstr ""
+msgstr "ເລກລຳດັບສະເພາະຂອງໃບເພີ່ມໜີ້"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__display_name
 #: model:ir.model.fields,field_description:account_debit_note.field_account_journal__display_name
 #: model:ir.model.fields,field_description:account_debit_note.field_account_move__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ຊື່ສະແດງ"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Draft Debit Note"
-msgstr ""
+msgstr "ຮ່າງໃບເພີ່ມໜີ້"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Draft Invoice"
-msgstr ""
+msgstr "ຮ່າງໃບແຈ້ງໜີ້"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Draft Proforma Debit Note"
-msgstr ""
+msgstr "ຮ່າງໃບເພີ່ມໜີ້ຊົ່ວຄາວ"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Draft Proforma Invoice"
-msgstr ""
+msgstr "ຮ່າງໃບແຈ້ງໜີ້ຊົ່ວຄາວ"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__id
 #: model:ir.model.fields,field_description:account_debit_note.field_account_journal__id
 #: model:ir.model.fields,field_description:account_debit_note.field_account_move__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__journal_id
 msgid "If empty, uses the journal of the journal entry to be debited."
 msgstr ""
+"ຖ້າປະຫວ່າງໄວ້, ຈະນຳໃຊ້ປຶ້ມບັນຊີລາຍວັນ ຂອງລາຍການບັນທຶກບັນຊີທີ່ຈະເພີ່ມໜີ້."
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__copy_lines
@@ -198,79 +216,81 @@ msgid ""
 "In case you need to do corrections for every line, it can be in handy to "
 "copy them.  We won't copy them for debit notes from credit notes. "
 msgstr ""
+"ໃນກໍລະນີທີ່ທ່ານຕ້ອງການແກ້ໄຂທຸກໆລາຍການ, ມັນຈະສະດວກຫຼາຍຖ້າສຳເນົາພວກມັນໄວ້. ພວກເຮົາຈະບໍ່ສຳເນົາພວກມັ"
+"ນ ສຳລັບໃບເພີ່ມໜີ້ທີ່ມາຈາກໃບຫຼຸດໜີ້. "
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Invoice"
-msgstr ""
+msgstr "ໃບແຈ້ງໜີ້"
 
 #. module: account_debit_note
 #. odoo-python
 #: code:addons/account_debit_note/models/account_move.py:0
 msgid "Invoices"
-msgstr ""
+msgstr "ໃບແຈ້ງໜີ້"
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_journal
 msgid "Journal"
-msgstr ""
+msgstr "ປຶ້ມບັນຊີລາຍວັນ"
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_move
 msgid "Journal Entry"
-msgstr ""
+msgstr "ລາຍການບັນທຶກບັນຊີ"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__journal_type
 msgid "Journal Type"
-msgstr ""
+msgstr "ປະເພດປຶ້ມບັນຊີລາຍວັນ"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "ອັບເດດຫຼ້າສຸດໂດຍ"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "ອັບເດດຫຼ້າສຸດເມື່ອ"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__move_ids
 msgid "Move"
-msgstr ""
+msgstr "ການເຄື່ອນໄຫວບັນຊີ"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__move_type
 msgid "Move Type"
-msgstr ""
+msgstr "ປະເພດການເຄື່ອນໄຫວບັນຊີ"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_note_count
 #: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_note_count
 msgid "Number of Debit Notes"
-msgstr ""
+msgstr "ຈຳນວນໃບເພີ່ມໜີ້"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_origin_id
 #: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_origin_id
 msgid "Original Invoice Debited"
-msgstr ""
+msgstr "ໃບແຈ້ງໜີ້ຕົ້ນສະບັບທີ່ຖືກເພີ່ມໜີ້"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Proforma Debit Note"
-msgstr ""
+msgstr "ໃບເພີ່ມໜີ້ຊົ່ວຄາວ"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Proforma Invoice"
-msgstr ""
+msgstr "ໃບແຈ້ງໜີ້ຊົ່ວຄາວ"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__reason
 msgid "Reason"
-msgstr ""
+msgstr "ເຫດຜົນ"
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__country_code
@@ -278,23 +298,25 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
+"ລະຫັດປະເທດຕາມມາດຕະຖານ ISO ແບບ 2 ຕົວອັກສອນ. \n"
+"ທ່ານສາມາດໃຊ້ຫ້ອງນີ້ເພື່ອຄົ້ນຫາແບບວ່ອງໄວ."
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_bank_statement_line__debit_note_ids
 #: model:ir.model.fields,help:account_debit_note.field_account_move__debit_note_ids
 msgid "The debit notes created for this invoice"
-msgstr ""
+msgstr "ໃບເພີ່ມໜີ້ທີ່ສ້າງຂຶ້ນສຳລັບໃບແຈ້ງໜີ້ນີ້"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__journal_id
 msgid "Use Specific Journal"
-msgstr ""
+msgstr "ໃຊ້ປຶ້ມບັນຊີລາຍວັນສະເພາະ"
 
 #. module: account_debit_note
 #. odoo-python
 #: code:addons/account_debit_note/models/account_move.py:0
 msgid "Vendor Bills"
-msgstr ""
+msgstr "ໃບຮຽກເກັບເງິນຜູ້ສະໜອງ"
 
 #. module: account_debit_note
 #. odoo-python
@@ -303,12 +325,14 @@ msgid ""
 "You can make a debit note only for a Customer Invoice, a Customer Credit "
 "Note, a Vendor Bill or a Vendor Credit Note."
 msgstr ""
+"ທ່ານສາມາດສ້າງໃບເພີ່ມໜີ້ໄດ້ສະເພາະສຳລັບ ໃບແຈ້ງໜີ້ລູກຄ້າ, ໃບຫຼຸດໜີ້ລູກຄ້າ, ໃບຮຽກເກັບເງິນຜູ້ສະໜອງ ຫຼື ໃບຫຼຸດ"
+"ໜີ້ຜູ້ສະໜອງ ເທົ່ານັ້ນ."
 
 #. module: account_debit_note
 #. odoo-python
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 msgid "You can only debit posted moves."
-msgstr ""
+msgstr "ທ່ານສາມາດເພີ່ມໜີ້ໄດ້ສະເພາະລາຍການເຄື່ອນໄຫວທີ່ລົງບັນຊີແລ້ວເທົ່ານັ້ນ."
 
 #. module: account_debit_note
 #. odoo-python
@@ -317,3 +341,4 @@ msgid ""
 "You can't make a debit note for an invoice that is already linked to a debit "
 "note."
 msgstr ""
+"ທ່ານບໍ່ສາມາດສ້າງໃບເພີ່ມໜີ້ ສຳລັບໃບແຈ້ງໜີ້ທີ່ໄດ້ເຊື່ອມໂຍງກັບໃບເພີ່ມໜີ້ອື່ນຢູ່ແລ້ວ."

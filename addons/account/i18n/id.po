@@ -21,8 +21,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 17:41+0000\n"
-"PO-Revision-Date: 2026-10-15 11:55+0000\n"
+"POT-Creation-Date: 2026-10-23 17:40+0000\n"
+"PO-Revision-Date: 2026-10-21 08:33+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-20/"
 "account/id/>\n"
@@ -130,7 +130,7 @@ msgstr " valid sampai %s"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
 msgid "# Reconciled Bank Transactions"
-msgstr ""
+msgstr "# Transaksi Bank Sudah Rekonsiliasi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -244,6 +244,10 @@ msgid ""
 "To be consistent, the journal entry must always have exactly one suspense "
 "line."
 msgstr ""
+"%(move)s telah mencapai status tidak valid terkait transaksi bank yang "
+"bersangkutan.\n"
+"Agar konsisten, entri jurnal harus selalu memiliki satu baris penangguhan "
+"saja."
 
 #. module: account
 #. odoo-python
@@ -515,11 +519,9 @@ msgstr "90 hari, pada tanggal 10"
 #. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 msgid ""
-"<b>%(count)s#</b> Installment of <b>%(amount)s</b> due on <b style='color: "
+"<b>%(count)s</b> - Installment of <b>%(amount)s</b> due on <b style='color: "
 "#704A66;'>%(date)s</b>"
 msgstr ""
-"<b>%(count)s#</b> Cicilan sebesar <b>%(amount)s</b> jatuh tempo pada <b "
-"style='color: #704A66;'>%(date)s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -3325,43 +3327,43 @@ msgstr "Accrued total"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_buildings
-msgid "Accumulated Depreciation - Buildings"
-msgstr "Akumulasi Penyusutan - Bangunan"
+msgid "Accumulated Amortization - Buildings"
+msgstr "Akumulasi Amortisasi - Bangunan"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_furniture
-msgid "Accumulated Depreciation - Furniture & Fixtures"
-msgstr "Akumulasi Penyusutan - Furnitur & Perlengkapan"
+msgid "Accumulated Amortization - Furniture & Fixtures"
+msgstr "Akumulasi Amortisasi - Perabotan & Perlengkapan"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_improvements
-msgid "Accumulated Depreciation - Improvements"
-msgstr "Akumulasi Penyusutan - Perbaikan"
+msgid "Accumulated Amortization - Improvements"
+msgstr "Akumulasi Amortisasi - Perbaikan"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_machines
-msgid "Accumulated Depreciation - Machines & Tools"
-msgstr "Akumulasi Penyusutan - Mesin & Perkakas"
+msgid "Accumulated Amortization - Machines & Tools"
+msgstr "Akumulasi Amortisasi - Mesin & Alat"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_other_property
-msgid "Accumulated Depreciation - Other Property"
-msgstr "Akumulasi Penyusutan - Properti Lainnya"
+msgid "Accumulated Amortization - Other Property"
+msgstr "Akumulasi Amortisasi - Properti Lainnya"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_technology
-msgid "Accumulated Depreciation - Technology"
-msgstr "Akumulasi Penyusutan - Teknologi"
+msgid "Accumulated Amortization - Technology"
+msgstr "Akumulasi Amortisasi - Teknologi"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_vehicles
-msgid "Accumulated Depreciation - Vehicles"
-msgstr "Akumulasi Penyusutan - Kendaraan"
+msgid "Accumulated Amortization - Vehicles"
+msgstr "Akumulasi Amortisasi - Kendaraan"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_acc_depreciation
-msgid "Accumulated Depreciation Misc"
-msgstr "Akumulasi Penyusutan Lain-lain"
+msgid "Accumulated Depreciation"
+msgstr "Penyusutan Terakumulasi"
 
 #. module: account
 #: model:account.account,name:account.21_retained_earnings
@@ -3604,7 +3606,7 @@ msgstr "Tambahkan baris pembulatan"
 #: code:addons/account/static/src/components/product_catalog/search/search_panel/search_panel.xml:0
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Add a section"
-msgstr "Add a section"
+msgstr "Tambahkan bagian"
 
 #. module: account
 #. odoo-javascript
@@ -3705,6 +3707,46 @@ msgid "Adjusting Entry {link} {percent}%% of {amount} recognized on {new_date}"
 msgstr ""
 "Menyesuaikan Entri {link} {percent}%% dari {amount} yang diakui pada "
 "{new_date}"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_depreciation_and_amortization
+msgid "Adjustment - Depreciation and amortization"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_fin_instr_sale
+msgid "Adjustment - Financial Instruments"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_intangible_asset
+msgid "Adjustment - Intangible Assets"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_net_fin_result
+msgid "Adjustment - Net Financial Result"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_PPE_sale
+msgid "Adjustment - PPE Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_provisions
+msgid "Adjustment - Provisions"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_ROU_sale
+msgid "Adjustment - Right of Use Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_unrealized_forex
+msgid "Adjustment - Unrealized Forex"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_administration_fees
@@ -3875,6 +3917,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__unreconciled_bank_statement_line_ids
 msgid "All unreconciled bank transactions before the selected date."
 msgstr ""
+"Semua transaksi bank yang belum direkonsiliasi sebelum tanggal yang dipilih."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
@@ -4463,6 +4506,8 @@ msgid ""
 "At least one transaction in the statement is prior the last posted "
 "transaction (%s)"
 msgstr ""
+"Minimal ada satu transaksi dalam laporan yang terjadi sebelum transaksi "
+"terakhir yang direkam (%s)"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__to_beginning_of_fiscalyear
@@ -4767,7 +4812,7 @@ msgstr "Kembali ke Tagiha"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Credit Note"
-msgstr ""
+msgstr "Kembali ke Nota Kredit"
 
 #. module: account
 #. odoo-javascript
@@ -4779,7 +4824,7 @@ msgstr "Kembali ke Faktur"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Refund"
-msgstr ""
+msgstr "Kembali ke Pengembalian Dana"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -5090,7 +5135,7 @@ msgstr "Transaksi dan pembayaran bank:"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_statement_line_ids
 msgid "Bank transactions matched to this payment"
-msgstr ""
+msgstr "Transaksi bank yang terkait dengan pembayaran ini"
 
 #. module: account
 #. odoo-python
@@ -6103,12 +6148,12 @@ msgstr ""
 "intrastat"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account_tag__color
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__color
 msgid "Color"
 msgstr "Warna"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_account_tag__color
 #: model:ir.model.fields,field_description:account.field_account_journal__color
 msgid "Color Index"
 msgstr "Indeks Warna"
@@ -7159,44 +7204,44 @@ msgstr "Saldo kumulatif untuk akun."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_buildings
-msgid "Cumulative depreciation recorded for building assets."
-msgstr "Penyusutan kumulatif yang tercatat untuk aset bangunan."
+msgid "Cumulative amortization recorded for building assets."
+msgstr "Amortisasi kumulatif yang dicatat untuk aset bangunan."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_technology
-msgid "Cumulative depreciation recorded for capitalized technology assets."
+msgid "Cumulative amortization recorded for capitalized technology assets."
 msgstr ""
-"Penyusutan kumulatif yang tercatat untuk aset teknologi yang dikapitalisasi."
+"Amortisasi kumulatif yang dicatat untuk aset teknologi yang dikapitalisasi."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_furniture
-msgid "Cumulative depreciation recorded for furniture and fixture assets."
+msgid "Cumulative amortization recorded for furniture and fixture assets."
 msgstr ""
-"Penyusutan kumulatif yang tercatat untuk aset furnitur dan perlengkapan."
+"Amortisasi kumulatif yang dicatat untuk aset perabotan dan perlengkapan."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_improvements
 msgid ""
-"Cumulative depreciation recorded for leasehold or property improvements."
+"Cumulative amortization recorded for leasehold or property improvements."
 msgstr ""
-"Penyusutan kumulatif yang tercatat untuk hak sewa atau perbaikan properti."
+"Amortisasi kumulatif yang dicatat untuk perbaikan aset sewa atau properti."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_machines
-msgid "Cumulative depreciation recorded for machinery and tool assets."
-msgstr "Penyusutan kumulatif yang terekam untuk aset mesin dan perkakas."
+msgid "Cumulative amortization recorded for machinery and tool assets."
+msgstr "Amortisasi kumulatif yang dicatat untuk aset mesin dan peralatan."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_other_property
-msgid "Cumulative depreciation recorded for other depreciable property assets."
+msgid "Cumulative amortization recorded for other depreciable property assets."
 msgstr ""
-"Penyusutan kumulatif yang terekam untuk aset properti lain yang dapat "
+"Amortisasi kumulatif yang dicatat untuk aset properti lain yang dapat "
 "disusutkan."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_vehicles
-msgid "Cumulative depreciation recorded for vehicle assets."
-msgstr "Penyusutan kumulatif yang tercatat untuk aset kendaraan."
+msgid "Cumulative amortization recorded for vehicle assets."
+msgstr "Amortisasi kumulatif yang dicatat untuk aset kendaraan."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_retained_earnings
@@ -9523,6 +9568,36 @@ msgid "Financial Journal"
 msgstr "Jurnal Keuangan"
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_fin_borrowings_lt
+msgid "Financing - Borrowings Long Term"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_borrowings_st
+msgid "Financing - Borrowings Short Term"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_dividends
+msgid "Financing - Dividends"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_lease
+msgid "Financing - Lease"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_recov_adv
+msgid "Financing - Recoverable Advances"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_share_issuance
+msgid "Financing - Share Issuance"
+msgstr ""
+
+#. module: account
 #: model:account.account.tag,name:account.account_tag_financing
 msgid "Financing Activities"
 msgstr "Aktivitas Keuangan"
@@ -10377,7 +10452,7 @@ msgstr "Sembunyikan Tombol Post"
 #: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 #: model:ir.model.fields,field_description:account.field_account_move_line__collapse_prices
 msgid "Hide Prices"
-msgstr "Sembunyikkan Harga"
+msgstr "Sembunyikan Harga"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__hide_tax_exigibility
@@ -11420,6 +11495,51 @@ msgstr "Variasi Inventaris"
 #: model:account.account.tag,name:account.account_tag_investing
 msgid "Investing & Extraordinary Activities"
 msgstr "Investasi & Kegiatan Luar Biasa"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_cash_advances
+msgid "Investment - Cash Advances"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_fin_instr_purchase
+msgid "Investment - Financial Instruments Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_fin_instr_sale
+msgid "Investment - Financial Instruments Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_int_ass_purchase
+msgid "Investment - Intangible Assets Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_int_ass_sale
+msgid "Investment - Intangible Assets Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_interest_received
+msgid "Investment - Interest Received"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_ppe_purchase
+msgid "Investment - PPE Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_ppe_sale
+msgid "Investment - PPE Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_rou_sale
+msgid "Investment - Right of Use Sale"
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -12566,7 +12686,7 @@ msgstr "Aktivitas Terlambat"
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "Learn more"
-msgstr "Pelajari lebih lanjut"
+msgstr "Selengkapnya"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
@@ -13133,13 +13253,13 @@ msgstr "Matching #"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__matching_order
 msgid "Matching Order"
-msgstr ""
+msgstr "Order yang Cocok"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_matching_rules
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Matching Rules"
-msgstr ""
+msgstr "Aturan Pencocokan"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matching_number
@@ -13153,7 +13273,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__matching_rule
 msgid "Matching rule"
-msgstr ""
+msgstr "Aturan pencocokan"
 
 #. module: account
 #. odoo-python
@@ -13639,7 +13759,7 @@ msgstr "Notifikasi eFaktur Baru"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__new_first
 msgid "Newest first"
-msgstr ""
+msgstr "Paling baru terlebih dahulu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__next_activity_type_id
@@ -14110,6 +14230,9 @@ msgid ""
 "Odoo allows you to reconcile a transaction directly with\n"
 "                the related sale or purchase invoices."
 msgstr ""
+"Odoo memungkinkan Anda untuk merekonsiliasi transaksi secara langsung "
+"dengan\n"
+"                faktur penjualan atau pembelian terkait."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_customer
@@ -14169,7 +14292,7 @@ msgstr "Meja, kursi, rak kantor, dsb"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__old_first
 msgid "Oldest first"
-msgstr ""
+msgstr "Paling lama terlebih dahulu"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term__early_pay_discount_computation__included
@@ -14399,6 +14522,16 @@ msgid "Opening balance"
 msgstr "Saldo pembukaan"
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_op_income_tax_paid_received
+msgid "Operating - Income Tax Paid Received"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_op_interest_paid
+msgid "Operating - Interest Paid"
+msgstr ""
+
+#. module: account
 #: model:account.account.tag,name:account.account_tag_operating
 msgid "Operating Activities"
 msgstr "Kegiatan Operasi"
@@ -14467,7 +14600,7 @@ msgstr "Original Lock Date"
 #: model:ir.model.fields,field_description:account.field_account_move_line__statement_line_id
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Originator Bank Transaction"
-msgstr ""
+msgstr "Transaksi Bank Pengirim"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__group_tax_id
@@ -14527,7 +14660,7 @@ msgstr "Info Lainnya"
 #. odoo-javascript
 #: code:addons/account/static/src/components/stock_valuation/stock_valuation_report.js:0
 msgid "Other Stock Variation"
-msgstr ""
+msgstr "Variasi Stok Lainnya"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_other_property
@@ -14573,7 +14706,7 @@ msgstr "Pembayaran Keluar"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Outstanding"
-msgstr ""
+msgstr "Belum Lunas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__outstanding_account_id
@@ -15137,12 +15270,12 @@ msgstr "Baris Termin Pembayaran"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__payment_tolerance
 msgid "Payment Tolerance"
-msgstr ""
+msgstr "Toleransi Pembayaran"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__payment_tolerance_type
 msgid "Payment Tolerance Type"
-msgstr ""
+msgstr "Tipe Toleransi Pembayaran"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_type
@@ -15325,7 +15458,7 @@ msgstr "Persentase dari setiap baris dalam menjalankan action."
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__percentage_st_line
 msgid "Percentage of transaction"
-msgstr ""
+msgstr "Persentase transaksi"
 
 #. module: account
 #. odoo-python
@@ -16188,7 +16321,7 @@ msgstr "Terima faktur"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__partner_bank_id
 msgid "Recipient Account"
-msgstr ""
+msgstr "Akun Penerima"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_bank_id
@@ -16226,7 +16359,7 @@ msgstr "Direkonsiliasi"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
 msgid "Reconciled Bank Transactions"
-msgstr ""
+msgstr "Transaksi Bank Sudah Rekonsiliasi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bill_ids
@@ -16277,7 +16410,7 @@ msgstr "Bagian Rekonsiliasi"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__reco_model
 msgid "Reconciliation model"
-msgstr ""
+msgstr "Model rekonsiliasi"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__reference
@@ -16454,7 +16587,7 @@ msgstr "Buat kembali nomor urut dari Entri Jurnal"
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid "Remittance Advice"
-msgstr ""
+msgstr "Pemberitahuan Pembayaran"
 
 #. module: account
 #. odoo-javascript
@@ -16678,7 +16811,7 @@ msgstr "Biaya rencana pensiun (setara dengan 401K di Amerika)"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__return_partner_bank_id
 msgid "Returns Bank Account"
-msgstr ""
+msgstr "Rekening Bank Retur"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
@@ -16922,7 +17055,7 @@ msgstr "Metode Pembulatan"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__rule_type
 msgid "Rule Type"
-msgstr ""
+msgstr "Tipe Aturan"
 
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_line
@@ -17190,7 +17323,7 @@ msgstr "Cari nama atau ID Pajak..."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Search a product"
-msgstr ""
+msgstr "Cari produk"
 
 #. module: account
 #. odoo-javascript
@@ -17892,7 +18025,7 @@ msgstr "Tunjukkan Tanggal Suplai yang Dikenakan Pajak"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Show Unreconciled Bank Transactions"
-msgstr ""
+msgstr "Tampilkan Transaksi Bank Belum Rekonsiliasi"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -19373,7 +19506,7 @@ msgstr "Rekening koran yang digunakan untuk rekonsiliasi bank"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
 msgid "The bank transaction that created this entry"
-msgstr ""
+msgstr "Transaksi bank yang menghasilkan entri ini"
 
 #. module: account
 #. odoo-python
@@ -19776,6 +19909,9 @@ msgid ""
 "To be consistent, the journal entry must always have exactly one journal "
 "item involving the bank/cash account."
 msgstr ""
+"Entri jurnal %s mencapai status tidak valid terkait transaksi bank terkait.\n"
+"Agar konsisten, entri jurnal harus selalu memiliki tepat satu item jurnal "
+"yang melibatkan rekening bank/kas."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -19945,6 +20081,12 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
+"Model rekonsiliasi hanya akan diterapkan jika label transaksi, detail "
+"transaksi, atau catatan sesuai dengan salah satu data berikut ini:\n"
+"        * Mengandung: Transaksi harus mengandung string ini (tidak peka "
+"huruf besar/kecil).\n"
+"        * Tidak Mengandung: Kebalikan dari \"Mengandung\".\n"
+"        * Cocok dengan Regex: Tentukan ekspresi reguler Anda sendiri."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_amount
@@ -20295,6 +20437,9 @@ msgid ""
 "entries from journal prefixes containing them will not be secured: %"
 "(prefix_info)s"
 msgstr ""
+"Masih ada transaksi bank yang belum direkonsiliasi sebelum tanggal yang "
+"dipilih. Entri dari awalan jurnal yang memuat transaksi tersebut tidak akan "
+"diamankan: %(prefix_info)s"
 
 #. module: account
 #. odoo-python
@@ -20303,6 +20448,8 @@ msgid ""
 "There are still unreconciled bank transactions in the period you want to "
 "lock. You should either reconcile or delete them."
 msgstr ""
+"Masih ada transaksi bank yang belum direkonsiliasi pada periode yang ingin "
+"Anda kunci. Anda harus merekonsiliasi atau menghapusnya."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
@@ -20762,6 +20909,8 @@ msgid ""
 "Those can be used to automatically match journal items with your "
 "transactions."
 msgstr ""
+"Fitur-fitur tersebut dapat digunakan untuk mencocokkan entri jurnal dengan "
+"transaksi Anda secara otomatis."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
@@ -21116,7 +21265,7 @@ msgstr "Transaction Type"
 #. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 msgid "Transaction percentage can't be 0"
-msgstr ""
+msgstr "Persentase transaksi tidak boleh 0"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__line_ids
@@ -21739,6 +21888,7 @@ msgstr "Validasi akun bank"
 msgid ""
 "Validate the transaction automatically (reconciliation based on your rule)."
 msgstr ""
+"Validasi transaksi secara otomatis (rekonsiliasi berdasarkan aturan Anda)."
 
 #. module: account
 #. odoo-javascript
@@ -22000,7 +22150,7 @@ msgstr "Lihat Partner"
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "View payments"
-msgstr ""
+msgstr "Lihat pembayaran"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.rounding_form_view
@@ -22164,6 +22314,36 @@ msgstr "Work in Progress"
 #: model:account.account,name:account.22_account_account_us_compensation_insurance
 msgid "Workers Compensation Insurance"
 msgstr "Asuransi Kompensasi Pekerja"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_deferred_revenue
+msgid "Working Capital - Deferred Revenue"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_inventory
+msgid "Working Capital - Inventory"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_other_payable
+msgid "Working Capital - Other Payable"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_other_receivable
+msgid "Working Capital - Other Receivable"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_trade_payable
+msgid "Working Capital - Trade Payable"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_trade_receivable
+msgid "Working Capital - Trade Receivable"
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -22380,6 +22560,8 @@ msgid ""
 "You can't create a new bank transaction without a suspense account set on "
 "the %s journal."
 msgstr ""
+"Anda tidak dapat membuat transaksi bank baru tanpa akun suspense yang "
+"ditetapkan pada jurnal %s."
 
 #. module: account
 #. odoo-python
@@ -22491,6 +22673,8 @@ msgid ""
 "You can't reset to draft those journal entries. You need to request a "
 "cancellation instead."
 msgstr ""
+"Anda tidak dapat mereset entri jurnal tersebut menjadi draft. Anda harus "
+"meminta pembatalan."
 
 #. module: account
 #. odoo-python
@@ -23193,7 +23377,7 @@ msgstr "jumlah untuk"
 #. odoo-javascript
 #: code:addons/account/static/src/components/invoice_guide/invoice_guide.xml:0
 msgid "and"
-msgstr ""
+msgstr "dan"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
@@ -23281,7 +23465,7 @@ msgstr "e-Faktur & Email"
 #. odoo-javascript
 #: code:addons/account/static/src/components/invoice_guide/invoice_guide.xml:0
 msgid "e-invoicing"
-msgstr ""
+msgstr "faktur elektronik"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
@@ -23478,6 +23662,11 @@ msgstr ""
 "harus diberitahukan mengenai klaim apapun melalui surat dengan pengiriman "
 "yang tercatat ke kantor yang terdaftar dalam waktu 8 hari dari pengiriman "
 "barang atau pelaksanaan layanan."
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_non_applicable
+msgid "not applicable"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
@@ -23730,6 +23919,66 @@ msgstr ""
 "{{ object.company_id.name }} {{ object.payment_receipt_title }} (Ref "
 "{{ object.name or 'n/a' }})"
 
+#~ msgid ""
+#~ "<b>%(count)s#</b> Installment of <b>%(amount)s</b> due on <b "
+#~ "style='color: #704A66;'>%(date)s</b>"
+#~ msgstr ""
+#~ "<b>%(count)s#</b> Cicilan sebesar <b>%(amount)s</b> jatuh tempo pada <b "
+#~ "style='color: #704A66;'>%(date)s</b>"
+
+#~ msgid "Accumulated Depreciation - Buildings"
+#~ msgstr "Akumulasi Penyusutan - Bangunan"
+
+#~ msgid "Accumulated Depreciation - Furniture & Fixtures"
+#~ msgstr "Akumulasi Penyusutan - Furnitur & Perlengkapan"
+
+#~ msgid "Accumulated Depreciation - Improvements"
+#~ msgstr "Akumulasi Penyusutan - Perbaikan"
+
+#~ msgid "Accumulated Depreciation - Machines & Tools"
+#~ msgstr "Akumulasi Penyusutan - Mesin & Perkakas"
+
+#~ msgid "Accumulated Depreciation - Other Property"
+#~ msgstr "Akumulasi Penyusutan - Properti Lainnya"
+
+#~ msgid "Accumulated Depreciation - Technology"
+#~ msgstr "Akumulasi Penyusutan - Teknologi"
+
+#~ msgid "Accumulated Depreciation - Vehicles"
+#~ msgstr "Akumulasi Penyusutan - Kendaraan"
+
+#~ msgid "Accumulated Depreciation Misc"
+#~ msgstr "Akumulasi Penyusutan Lain-lain"
+
+#~ msgid "Cumulative depreciation recorded for building assets."
+#~ msgstr "Penyusutan kumulatif yang tercatat untuk aset bangunan."
+
+#~ msgid "Cumulative depreciation recorded for capitalized technology assets."
+#~ msgstr ""
+#~ "Penyusutan kumulatif yang tercatat untuk aset teknologi yang "
+#~ "dikapitalisasi."
+
+#~ msgid "Cumulative depreciation recorded for furniture and fixture assets."
+#~ msgstr ""
+#~ "Penyusutan kumulatif yang tercatat untuk aset furnitur dan perlengkapan."
+
+#~ msgid ""
+#~ "Cumulative depreciation recorded for leasehold or property improvements."
+#~ msgstr ""
+#~ "Penyusutan kumulatif yang tercatat untuk hak sewa atau perbaikan properti."
+
+#~ msgid "Cumulative depreciation recorded for machinery and tool assets."
+#~ msgstr "Penyusutan kumulatif yang terekam untuk aset mesin dan perkakas."
+
+#~ msgid ""
+#~ "Cumulative depreciation recorded for other depreciable property assets."
+#~ msgstr ""
+#~ "Penyusutan kumulatif yang terekam untuk aset properti lain yang dapat "
+#~ "disusutkan."
+
+#~ msgid "Cumulative depreciation recorded for vehicle assets."
+#~ msgstr "Penyusutan kumulatif yang tercatat untuk aset kendaraan."
+
 #~ msgid "# Reconciled Statement Lines"
 #~ msgstr "# Barisan Laporan Rekonsiliasi"
 
@@ -23861,59 +24110,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Anda tidak dapat membuat statement lien baru tanpa suspense account yang "
 #~ "ditetapkan pada jurnal %s."
-
-#~ msgid "Accumulated Amortization - Buildings"
-#~ msgstr "Akumulasi Amortisasi - Bangunan"
-
-#~ msgid "Accumulated Amortization - Furniture & Fixtures"
-#~ msgstr "Akumulasi Amortisasi - Perabotan & Perlengkapan"
-
-#~ msgid "Accumulated Amortization - Improvements"
-#~ msgstr "Akumulasi Amortisasi - Perbaikan"
-
-#~ msgid "Accumulated Amortization - Machines & Tools"
-#~ msgstr "Akumulasi Amortisasi - Mesin & Alat"
-
-#~ msgid "Accumulated Amortization - Other Property"
-#~ msgstr "Akumulasi Amortisasi - Properti Lainnya"
-
-#~ msgid "Accumulated Amortization - Technology"
-#~ msgstr "Akumulasi Amortisasi - Teknologi"
-
-#~ msgid "Accumulated Amortization - Vehicles"
-#~ msgstr "Akumulasi Amortisasi - Kendaraan"
-
-#~ msgid "Accumulated Depreciation"
-#~ msgstr "Penyusutan Terakumulasi"
-
-#~ msgid "Cumulative amortization recorded for building assets."
-#~ msgstr "Amortisasi kumulatif yang dicatat untuk aset bangunan."
-
-#~ msgid "Cumulative amortization recorded for capitalized technology assets."
-#~ msgstr ""
-#~ "Amortisasi kumulatif yang dicatat untuk aset teknologi yang "
-#~ "dikapitalisasi."
-
-#~ msgid "Cumulative amortization recorded for furniture and fixture assets."
-#~ msgstr ""
-#~ "Amortisasi kumulatif yang dicatat untuk aset perabotan dan perlengkapan."
-
-#~ msgid ""
-#~ "Cumulative amortization recorded for leasehold or property improvements."
-#~ msgstr ""
-#~ "Amortisasi kumulatif yang dicatat untuk perbaikan aset sewa atau properti."
-
-#~ msgid "Cumulative amortization recorded for machinery and tool assets."
-#~ msgstr "Amortisasi kumulatif yang dicatat untuk aset mesin dan peralatan."
-
-#~ msgid ""
-#~ "Cumulative amortization recorded for other depreciable property assets."
-#~ msgstr ""
-#~ "Amortisasi kumulatif yang dicatat untuk aset properti lain yang dapat "
-#~ "disusutkan."
-
-#~ msgid "Cumulative amortization recorded for vehicle assets."
-#~ msgstr "Amortisasi kumulatif yang dicatat untuk aset kendaraan."
 
 #~ msgid ""
 #~ "<div style=\"margin: 0px; padding: 0px;\">\n"

@@ -48,7 +48,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-06 17:49+0000\n"
-"PO-Revision-Date: 2026-10-16 10:03+0000\n"
+"PO-Revision-Date: 2026-10-20 12:33+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-20/base/fi/>"
 "\n"
@@ -68,6 +68,12 @@ msgid ""
 "        can't be used for endpoints requiring any other scope than 'A'.\n"
 "        "
 msgstr ""
+"\n"
+"        Tunnistetta, jonka laajuus on 'A', voi käyttää vain laajuuden 'A' "
+"kantajatunnusta vaativissa päätepisteissä.\n"
+"        Sitä ei voi käyttää päätepisteissä, jotka vaativat muuta laajuutta "
+"kuin 'A'.\n"
+"        "
 
 #. module: base
 #. odoo-python
@@ -76,6 +82,8 @@ msgid ""
 "\n"
 "Example: %(example)s"
 msgstr ""
+"\n"
+"Esimerkki: %(example)s"
 
 #. module: base
 #. odoo-python
@@ -439,7 +447,7 @@ msgstr ""
 #. module: base
 #: model:website,contact_us_link_url:base.default_website
 msgid "/contactus"
-msgstr ""
+msgstr "/contactus"
 
 #. module: base
 #. odoo-python
@@ -467,7 +475,7 @@ msgstr "1 Kuukausi"
 #: code:addons/base/models/res_partner.py:0
 #: code:addons/partner_identifiers.py:0
 msgid "1-01-85004-3 or 101850043"
-msgstr ""
+msgstr "1-01-85004-3 tai 101850043"
 
 #. module: base
 #. odoo-python
@@ -475,19 +483,20 @@ msgstr ""
 #: code:addons/partner_identifiers.py:0
 msgid "10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
 msgstr ""
+"10XXXXXXXXY tai 20XXXXXXXXY tai 15XXXXXXXXY tai 16XXXXXXXXY tai 17XXXXXXXXY"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 #: code:addons/partner_identifiers.py:0
 msgid "11111111111 (NIN) or 2222222222 (VKN)"
-msgstr ""
+msgstr "11111111111 (NIN) tai 2222222222 (VKN)"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "123-45-67890 or 1234567890"
-msgstr ""
+msgstr "123-45-67890 tai 1234567890"
 
 #. module: base
 #. odoo-python
@@ -502,6 +511,7 @@ msgstr ""
 msgid ""
 "12345678 or UA12345678 (EDRPOU), 1234567890 (RNOPP) or 123456789012 (IPN)"
 msgstr ""
+"12345678 tai UA12345678 (EDRPOU), 1234567890 (RNOPP) tai 123456789012 (IPN)"
 
 #. module: base
 #. odoo-python
@@ -520,13 +530,13 @@ msgstr ""
 #: code:addons/base/models/res_partner.py:0
 #: code:addons/partner_identifiers.py:0
 msgid "1792060346001 or 1792060346"
-msgstr ""
+msgstr "1792060346001 tai 1792060346"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "3002707692 [Tax identification number]"
-msgstr ""
+msgstr "3002707692 [Verotunnus]"
 
 #. module: base
 #. odoo-python
@@ -534,13 +544,15 @@ msgstr ""
 #: code:addons/partner_identifiers.py:0
 msgid "310175397400003 [Fifteen digits, first and last digits should be \"3\"]"
 msgstr ""
+"310175397400003 [Viisitoista numeroa, ensimmäisen ja viimeisen numeron "
+"pitäisi olla \"3\"]"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 #: code:addons/partner_identifiers.py:0
 msgid "49-098-576 or 49098576"
-msgstr ""
+msgstr "49-098-576 tai 49098576"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_enable_profiling_wizard__duration__minutes_5
@@ -551,7 +563,7 @@ msgstr "5 minuuttia"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "700 Number"
-msgstr ""
+msgstr "700-numero"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_1
@@ -842,12 +854,12 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_kanban_view
 msgid "<span class=\"me-1\">For</span>"
-msgstr ""
+msgstr "<span class=\"me-1\">:</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_kanban_view
 msgid "<span class=\"me-1\">On</span>"
-msgstr ""
+msgstr "<span class=\"me-1\"> </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
@@ -1092,7 +1104,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
 msgid "<span> days</span>"
-msgstr ""
+msgstr "<span> päivää</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -1351,6 +1363,10 @@ msgid ""
 "group                                             that is constrained by "
 "their domain and the restrictions"
 msgstr ""
+"Rajoitus on ryhmätön käyttöoikeus, jota sovelletaan globaalisti"
+"                                             ja jota ei voi ohittaa. Lupa on "
+"ryhmään liitetty käyttöoikeus,                                             "
+"jota rajoittavat sen toimialue ja rajoitukset"
 
 #. module: base
 #. odoo-python
@@ -1390,7 +1406,7 @@ msgstr "A0 5 841 x 1189 mm"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "A00012345"
-msgstr ""
+msgstr "A00012345"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__a1
@@ -1446,7 +1462,7 @@ msgstr "ABN"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "ACN"
-msgstr ""
+msgstr "ACN"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_ai
@@ -1525,7 +1541,7 @@ msgstr "Käyttöoikeudet"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__access_count
 msgid "Access Count"
-msgstr ""
+msgstr "Käyttöoikeuksien määrä"
 
 #. module: base
 #: model:ir.model,name:base.model_res_groups
@@ -1540,7 +1556,7 @@ msgstr "Käyttöoikeuksien valikko"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_search_view
 msgid "Access Right"
-msgstr ""
+msgstr "Käyttöoikeus"
 
 #. module: base
 #. odoo-python
@@ -1571,7 +1587,7 @@ msgstr "Käyttöoikeuksien epäjohdonmukaisuus"
 #: code:addons/base/models/res_groups.py:0
 #: model:ir.model.fields,field_description:base.field_res_groups__access_ids
 msgid "Access Rules"
-msgstr ""
+msgstr "Käyttöoikeussäännöt"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__access_token
@@ -1581,7 +1597,7 @@ msgstr "Pääsytunniste"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
 msgid "Access name..."
-msgstr ""
+msgstr "Käyttöoikeuden nimi..."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
@@ -1925,7 +1941,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__additional_identifiers
 #: model:ir.model.fields,field_description:base.field_res_users__additional_identifiers
 msgid "Additional Identifiers"
-msgstr ""
+msgstr "Lisätunnisteet"
 
 #. module: base
 #. odoo-python
@@ -4218,7 +4234,7 @@ msgstr "Australia/Yancowinna"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Australian Company Number."
-msgstr ""
+msgstr "Australian yritystunnus."
 
 #. module: base
 #: model:res.country,name:base.at
@@ -4316,7 +4332,7 @@ msgstr "Saatavilla olevat mallit"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys_description__available_scopes_count
 msgid "Available Scopes Count"
-msgstr ""
+msgstr "Saatavilla olevien laajuuksien lukumäärä"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_avatar_mixin__avatar_1920
@@ -4447,7 +4463,7 @@ msgstr "B9 23 33 x 62 mm"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "BCE/KBO"
-msgstr ""
+msgstr "BCE/KBO"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__bank_bic
@@ -4864,13 +4880,13 @@ msgstr "Laatikoitu"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Branch Code"
-msgstr ""
+msgstr "Toimipaikan koodi"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Branch Number"
-msgstr ""
+msgstr "Toimipaikan numero"
 
 #. module: base
 #. odoo-python
@@ -4941,7 +4957,7 @@ msgstr "Brunei"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Brønnøysund nr"
-msgstr ""
+msgstr "Brønnøysund nr"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__report_tables_id__bubble
@@ -4972,19 +4988,19 @@ msgstr "Burundi"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Business ID"
-msgstr ""
+msgstr "Yritystunnus"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Business ID (Y-tunnus)."
-msgstr ""
+msgstr "Yritystunnus (Y-tunnus)."
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Business Registration Number."
-msgstr ""
+msgstr "Yrityksen rekisteröintinumero."
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.GMD
@@ -5088,7 +5104,7 @@ msgstr "CUIT"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "CVR"
-msgstr ""
+msgstr "CVR"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__calendar
@@ -5216,7 +5232,7 @@ msgstr "Kap Verde"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__card
 msgid "Card"
-msgstr ""
+msgstr "Kortti"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__on_delete__cascade
@@ -5585,7 +5601,7 @@ msgstr "Joulusaari"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Citizen Identification"
-msgstr ""
+msgstr "Henkilöllisyyden tunnistaminen"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__city
@@ -5814,7 +5830,7 @@ msgstr "Kaupallinen yksikkö"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Commercial Registration Number"
-msgstr ""
+msgstr "Kaupallinen rekisteröitymisnumero"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_commission
@@ -6544,22 +6560,22 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_access__operation__cd
 msgid "Create, Delete"
-msgstr ""
+msgstr "Luo, Poista"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_access__operation__cr
 msgid "Create, Read"
-msgstr ""
+msgstr "Luo, Lue"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_access__operation__crd
 msgid "Create, Read, Delete"
-msgstr ""
+msgstr "Luo, Lue, Poista"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_access__operation__cru
 msgid "Create, Read, Update"
-msgstr ""
+msgstr "Luo, Lue, Päivitä"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_access__operation__crud
@@ -6569,12 +6585,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_access__operation__cu
 msgid "Create, Update"
-msgstr ""
+msgstr "Luo, Päivitä"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_access__operation__cud
 msgid "Create, Update, Delete"
-msgstr ""
+msgstr "Luo, Päivitä, Poista"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -7021,7 +7037,7 @@ msgstr "Räätälöinnit"
 #: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid "Customize"
-msgstr ""
+msgstr "Räätälöi"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_ui_view_custom
@@ -7072,7 +7088,7 @@ msgstr "D - SÄHKÖN, KAASUN, HÖYRYN JA ILMASTOINNIN TOIMITTAMINEN"
 #: code:addons/base/models/res_partner.py:0
 #: code:addons/partner_identifiers.py:0
 msgid "DE123456788 or 12/345/67890"
-msgstr ""
+msgstr "DE123456788 tai 12/345/67890"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__dle
@@ -7088,7 +7104,7 @@ msgstr "DOM-TOM"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "DUNS"
-msgstr ""
+msgstr "DUNS"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.GMD
@@ -8043,13 +8059,13 @@ msgstr "E - VESIHUOLTO, VIEMÄRÖINTI, JÄTEHUOLTO JA MUU YMPÄRISTÖN PUHTAANAP
 #. module: base
 #: model:ir.model.fields,help:base.field_website__domain
 msgid "E.g. https://www.mydomain.com"
-msgstr ""
+msgstr "Esim. https://www.minunverkkosivuni.fi"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "EAN/GLN"
-msgstr ""
+msgstr "EAN/GLN"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_edi
@@ -9862,7 +9878,7 @@ msgstr "Vastaanotto"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_search_view
 msgid "Full"
-msgstr ""
+msgstr "Täysi"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__full_name
@@ -9898,25 +9914,25 @@ msgstr ""
 #: code:addons/base/models/res_partner.py:0
 #: code:addons/partner_identifiers.py:0
 msgid "GB123456782 or XI123456782"
-msgstr ""
+msgstr "GB123456782 tai XI123456782"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "GCC ID"
-msgstr ""
+msgstr "GCC-tunnus"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "GCC ID Number"
-msgstr ""
+msgstr "GCC-tunnusnumero"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "GEBA"
-msgstr ""
+msgstr "GEBA"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__gmt
@@ -10263,7 +10279,7 @@ msgstr "HMRC"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "HRB Nr"
-msgstr ""
+msgstr "HRB-numero"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_report__report_type__qweb-html
@@ -10491,7 +10507,7 @@ msgstr "Henkilöstöhallinto"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Hungarian Tax ID"
-msgstr ""
+msgstr "Unkarin verotunnus"
 
 #. module: base
 #. odoo-python
@@ -10528,7 +10544,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "ICE"
-msgstr ""
+msgstr "ICE"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field__unknown__id
@@ -10695,7 +10711,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "IIN"
-msgstr ""
+msgstr "IIN"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_device__ip_address
@@ -10733,7 +10749,7 @@ msgstr "IT/Viestintä"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "IVA"
-msgstr ""
+msgstr "IVA"
 
 #. module: base
 #: model:res.country,name:base.is
@@ -11023,17 +11039,17 @@ msgstr "Toteutus"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__implied_by_count
 msgid "Implied By Count"
-msgstr ""
+msgstr "Ilmaistaan lukumäärällä"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__implied_count
 msgid "Implied Count"
-msgstr ""
+msgstr "Oletettu lukumäärä"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_search
 msgid "Implied Group"
-msgstr ""
+msgstr "Oletettu ryhmä"
 
 #. module: base
 #. odoo-python
@@ -11051,7 +11067,7 @@ msgstr "Oletetut ryhmät"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_search
 msgid "Implying Group"
-msgstr ""
+msgstr "Viittaava ryhmä"
 
 #. module: base
 #. odoo-python
@@ -11672,13 +11688,13 @@ msgstr "Esineiden internet (IoT)"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Iqama ID Number"
-msgstr ""
+msgstr "Iqama-tunnusnumero"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Iqama Number"
-msgstr ""
+msgstr "Iqama-numero"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_menu_ir_profile
@@ -11740,7 +11756,7 @@ msgstr "On julkinen"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_access__is_standard
 msgid "Is Standard"
-msgstr ""
+msgstr "On standardi"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__is_company
@@ -11824,7 +11840,7 @@ msgstr "Italia"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "IČO"
-msgstr ""
+msgstr "IČO"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_J
@@ -11894,7 +11910,7 @@ msgstr "K - RAHOITUS- JA VAKUUTUSTOIMINTA"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "KVK"
-msgstr ""
+msgstr "KVK"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__kanban
@@ -11973,7 +11989,7 @@ msgstr "Kina"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_access__kind
 msgid "Kind"
-msgstr ""
+msgstr "Tyyppi"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.LAK
@@ -12077,7 +12093,7 @@ msgstr "L - KIINTEISTÖALAN TOIMINTA"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "LEI"
-msgstr ""
+msgstr "LEI"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__lgpl-3
@@ -12445,7 +12461,7 @@ msgstr "Legal    3   8,5 x 14 tuumaa, 215,9 x 355,6 mm"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Legal Entity Identifier"
-msgstr ""
+msgstr "Oikeushenkilötunnus"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
@@ -12456,7 +12472,7 @@ msgstr "Selite (etuliite, pääte)"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Leitweg-ID"
-msgstr ""
+msgstr "Leitweg-ID"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.ALL
@@ -12760,37 +12776,37 @@ msgstr "M - AMMATILLINEN, TIETEELLINEN JA TEKNINEN TOIMINTA"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "MHRSD License"
-msgstr ""
+msgstr "MHRSD-lisenssi"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "MHRSD License Number"
-msgstr ""
+msgstr "MHRSD-lisenssinumero"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "MISA License"
-msgstr ""
+msgstr "MISA-lisenssi"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "MISA License Number"
-msgstr ""
+msgstr "MISA-lisenssinumero"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "MOMRAH License"
-msgstr ""
+msgstr "MOMRAH-lisenssi"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "MOMRAH License Number"
-msgstr ""
+msgstr "MOMRAH-lisenssinumero"
 
 #. module: base
 #: model:res.country,name:base.mo
@@ -12889,7 +12905,7 @@ msgstr "Malta"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
 msgid "Manage Scopes"
-msgstr ""
+msgstr "Hallitse laajuuksia"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.grant_menu_access
@@ -13086,7 +13102,7 @@ msgstr "Yhdistä tarkistamalla manuaalisesti"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Mersis Number"
-msgstr ""
+msgstr "Mersis-numero"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging__message
@@ -13556,7 +13572,7 @@ msgstr "NIT"
 #. module: base
 #: model:res.country,vat_label:base.id
 msgid "NPWP/NIK"
-msgstr ""
+msgstr "NPWP/NIK"
 
 #. module: base
 #: model:res.country,vat_label:base.pk
@@ -13572,7 +13588,7 @@ msgstr "NUIT"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "NZBN"
-msgstr ""
+msgstr "NZBN"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.NGN
@@ -13682,7 +13698,7 @@ msgstr "Kapea"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "National ID"
-msgstr ""
+msgstr "Kansallinen tunnus"
 
 #. module: base
 #: model:res.country,name:base.nr
@@ -13878,7 +13894,7 @@ msgstr "Mikään ryhmä ei tällä hetkellä salli tätä toimintoa."
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__placeholder
 msgid "No group label"
-msgstr ""
+msgstr "Ei ryhmänimikettä"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_res_groups
@@ -13941,7 +13957,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
 msgid "No scope"
-msgstr ""
+msgstr "Ei laajuutta"
 
 #. module: base
 #. odoo-python
@@ -14141,7 +14157,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "OIN"
-msgstr ""
+msgstr "OIN"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -14161,7 +14177,7 @@ msgstr "Objekti:"
 #. module: base
 #: model:ir.module.category,name:base.module_category_supply_chain_obox
 msgid "Obox"
-msgstr ""
+msgstr "Obox"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__oeel-1
@@ -14454,13 +14470,13 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_access__operation
 msgid "Operation"
-msgstr ""
+msgstr "Toiminto"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
 #: model_terms:ir.ui.view,arch_db:base.ir_access_search_view
 msgid "Operations"
-msgstr ""
+msgstr "Toiminnot"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_partner_merge_automatic_wizard__state__option
@@ -14563,13 +14579,13 @@ msgstr "Muut erityisoikeudet"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Other ID"
-msgstr ""
+msgstr "Muu tunnus"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Other ID Number"
-msgstr ""
+msgstr "Muu tunnusnumero"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__other_osi_approved_licence
@@ -14717,7 +14733,7 @@ msgstr "POEdit"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "PPSN"
-msgstr ""
+msgstr "PPSN"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.TOP
@@ -15145,7 +15161,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Passport ID"
-msgstr ""
+msgstr "Passin numero"
 
 #. module: base
 #. odoo-python
@@ -15268,7 +15284,7 @@ msgstr "Penny"
 #: model:ir.model.fields.selection,name:base.selection__ir_access__kind__permission
 #: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
 msgid "Permission"
-msgstr ""
+msgstr "Lupa"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_2
@@ -15414,7 +15430,7 @@ msgstr "Kassajärjestelmä"
 #. module: base
 #: model:ir.module.category,name:base.module_category_point_of_sale
 msgid "Point of sale"
-msgstr ""
+msgstr "Kassajärjestelmä"
 
 #. module: base
 #: model:res.country,name:base.pl
@@ -15720,7 +15736,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__update_property
 #: model:ir.model.fields,field_description:base.field_ir_cron__update_property
 msgid "Property to Update"
-msgstr ""
+msgstr "Päivitettävä ominaisuus"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_2
@@ -15740,7 +15756,7 @@ msgstr "Julkishallinto"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_website__user_id
 msgid "Public User"
-msgstr ""
+msgstr "Julkinen käyttäjä"
 
 #. module: base
 #: model:res.groups,comment:base.group_public
@@ -15774,7 +15790,7 @@ msgstr "Pulssi"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_website__domain_punycode
 msgid "Punycode Domain"
-msgstr ""
+msgstr "Punycode-domain"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_purchase
@@ -15962,7 +15978,7 @@ msgstr "R - TAIDE, VIIHDE JA VIRKISTYS"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "RC123456"
-msgstr ""
+msgstr "RC123456"
 
 #. module: base
 #: model:res.country,vat_label:base.mx
@@ -15983,7 +15999,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_users_apikeys_description__scope__rpc
 msgid "RPC"
-msgstr ""
+msgstr "RPC"
 
 #. module: base
 #: model:res.country,vat_label:base.hn
@@ -16034,17 +16050,17 @@ msgstr "Lue"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_access__operation__rd
 msgid "Read, Delete"
-msgstr ""
+msgstr "Lue, Poista"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_access__operation__ru
 msgid "Read, Update"
-msgstr ""
+msgstr "Lue, Päivitä"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_access__operation__rud
 msgid "Read, Update, Delete"
-msgstr ""
+msgstr "Lue, Päivitä, Poista"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__readonly
@@ -16148,7 +16164,7 @@ msgstr "Viittaukset"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Registrikood"
-msgstr ""
+msgstr "Registrikood"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__parent_id
@@ -16467,12 +16483,12 @@ msgstr "Estä"
 #: model:ir.model.fields.selection,name:base.selection__ir_access__kind__restriction
 #: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
 msgid "Restriction"
-msgstr ""
+msgstr "Rajoitus"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
 msgid "Restriction globally applied"
-msgstr ""
+msgstr "Rajoituksen maailmanlaajuinen soveltaminen"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
@@ -16711,7 +16727,7 @@ msgstr "S - MUU PALVELUTOIMINTA"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "SE"
-msgstr ""
+msgstr "SE"
 
 #. module: base
 #: model:res.country.group,name:base.sepa_zone
@@ -16722,13 +16738,13 @@ msgstr "SEPA-maat"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "SIREN"
-msgstr ""
+msgstr "SIREN"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "SIRET"
-msgstr ""
+msgstr "SIRET"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_port
@@ -16801,7 +16817,7 @@ msgstr "SSL/TLS, vain salaus"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "SST"
-msgstr ""
+msgstr "SST"
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.demo_company_id
@@ -17079,7 +17095,7 @@ msgstr "Laajuus:"
 #: model:ir.actions.act_window,name:base.action_res_groups_privilege
 #: model:ir.ui.menu,name:base.menu_action_res_groups_privilege
 msgid "Scopes"
-msgstr ""
+msgstr "Laajuudet"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__search
@@ -17171,7 +17187,7 @@ msgstr "Valitse kenttä, johon tietue linkitetään"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
 msgid "Select a scope"
-msgstr ""
+msgstr "Valitse laajuus"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -18227,7 +18243,7 @@ msgstr "TIN"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "TKU"
-msgstr ""
+msgstr "TKU"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_mail_server__smtp_encryption__starttls_strict
@@ -20065,13 +20081,13 @@ msgstr "U - EKSTRATERRITORIAALISTEN JÄRJESTÖJEN JA ELINTEN TOIMINTA"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "UEN"
-msgstr ""
+msgstr "UEN"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "UIDB"
-msgstr ""
+msgstr "UIDB"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_uk
@@ -20461,7 +20477,7 @@ msgstr "Päivitä liittyvä malli"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_access__operation__ud
 msgid "Update, Delete"
-msgstr ""
+msgstr "Päivitä, Poista"
 
 #. module: base
 #. odoo-python
@@ -21202,7 +21218,7 @@ msgstr "Verkkosivu"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_website__domain
 msgid "Website Domain"
-msgstr ""
+msgstr "Verkkosivun domain"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_website_domain_unique
@@ -21219,7 +21235,7 @@ msgstr "Verkkosivusto"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_website__name
 msgid "Website Name"
-msgstr ""
+msgstr "Verkkosivun nimi"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_website_sale
@@ -22109,7 +22125,7 @@ msgstr "päivä"
 #. odoo-python
 #: code:addons/base/models/ir_access.py:0
 msgid "delete"
-msgstr ""
+msgstr "poista"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export

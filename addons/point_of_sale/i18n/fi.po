@@ -43,7 +43,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 17:41+0000\n"
+"POT-Creation-Date: 2026-10-23 17:40+0000\n"
 "PO-Revision-Date: 2026-10-15 06:59+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-20/"
@@ -632,6 +632,12 @@ msgstr "? Klikkaamalla \"Vahvista\" hyväksyt maksun."
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid "A customer is required to use the payment method %s."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment.py:0
+msgid "A customer must be set on the order to pay with a customer account."
 msgstr ""
 
 #. module: point_of_sale
@@ -1871,6 +1877,7 @@ msgstr "Nollasummalle ei voi luoda QR-koodia"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/select_default_payment_method_popup/select_default_payment_method_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.js:0
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
@@ -2718,6 +2725,7 @@ msgstr "Määritä vähintään yksi Kassajärjestelmä."
 #: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/money_details_popup/money_details_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
+#: code:addons/point_of_sale/static/src/app/components/popups/select_default_payment_method_popup/select_default_payment_method_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_confirm_action_wizard
@@ -4801,6 +4809,12 @@ msgid "Invoice Status"
 msgstr "Laskutuksen tila"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
+msgid "Invoice required"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -5157,11 +5171,6 @@ msgstr ""
 "Jätä tyhjäksi, jos haluat käyttää oletustiliä yrityksen asetuksista.\n"
 "Ohittaa yrityksen saamistilin (kassan osalta), jota käytetään "
 "päiväkirjamerkinnöissä."
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
-msgid "Leave empty to use the receivable account of customer"
-msgstr "Jätä tyhjäksi, jos haluat käyttää asiakkaan saamistiliä"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__journal_id
@@ -6518,6 +6527,7 @@ msgstr "Avaa"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 msgid "Open Cashbox"
 msgstr "Avaa kassalipas"
@@ -9118,6 +9128,11 @@ msgid "Select a customer with a valid address."
 msgstr "Valitse asiakas kelvollisella osoitteella."
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
+msgid "Select a journal"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Select a payment method to validate the order."
@@ -9146,6 +9161,12 @@ msgstr "Valitse hinnasto"
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Select the product(s) to refund and set the quantity"
 msgstr "Valitse palautettava tuote tai tuotteet ja aseta määrä"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/select_default_payment_method_popup/select_default_payment_method_popup.xml:0
+msgid "Select your default payment method"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__attribute_value_ids
@@ -10344,6 +10365,14 @@ msgid ""
 msgstr "Valittu maksutapa ei ole sallittu kassaistunnon asetuksissa."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/select_default_payment_method_popup/select_default_payment_method_popup.xml:0
+msgid ""
+"The payment method you choose will be linked to your device. You can change "
+"it later from the menu on top right."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_available_categ_ids
 msgid ""
 "The point of sale will only display products which are within one of the "
@@ -10831,6 +10860,14 @@ msgid ""
 msgstr ""
 "Tätä tilausta ei ole vielä synkronoitu palvelimelle. Varmista, että se on "
 "synkronoitu ja yritä sitten uudelleen."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
+msgid ""
+"This order must be invoiced before validation because it mixes pay-later "
+"payment and cash-basis taxes."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -12398,6 +12435,9 @@ msgstr "arvolla"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr "x"
+
+#~ msgid "Leave empty to use the receivable account of customer"
+#~ msgstr "Jätä tyhjäksi, jos haluat käyttää asiakkaan saamistiliä"
 
 #~ msgid "Bank Statement Line"
 #~ msgstr "Pankkitiliotteen rivi"

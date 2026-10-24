@@ -1,15 +1,16 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* stock_account
+# * stock_account
 #
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:38+0000\n"
-"PO-Revision-Date: 2026-08-31 20:29+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Lao <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-10-24 12:03+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-20/"
 "stock_account/lo/>\n"
 "Language: lo\n"
 "MIME-Version: 1.0\n"
@@ -36,12 +37,26 @@ msgid ""
 "------------------------------------------------------\n"
 "* Stock Inventory Value at given date (support dates in the past)\n"
 msgstr ""
+"\n"
+"ໂມດູນບັນຊີສາງສິນຄ້າ (WMS)\n"
+"======================\n"
+"ໂມດູນນີ້ເຮັດໜ້າທີ່ເຊື່ອມຕໍ່ລະຫວ່າງໂມດູນ 'ສາງ' ແລະ 'ບັນຊີ' ເຂົ້າກັນ ພ້ອມທັງຊ່ວຍໃຫ້ທ່ານສາມາດສ້າງລາຍການບັ"
+"ນຊີເພື່ອຕີມູນຄ່າການເຄື່ອນໄຫວສິນຄ້າໃນສາງໄດ້\n"
+"\n"
+"ຄຸນສົມບັດຫຼັກ\n"
+"------------\n"
+"* ການຕີມູນຄ່າສິນຄ້າໃນສາງ (ຕາມກຳນົດເວລາ ຫຼື ແບບອັດຕະໂນມັດ)\n"
+"* ອອກໃບເກັບເງິນຈາກການເບີກຈ່າຍສິນຄ້າ\n"
+"\n"
+"ກະດານສະຫຼຸບຜົນ / ບົດລາຍງານ ສຳລັບການຄຸ້ມຄອງສາງສິນຄ້າ ປະກອບມີ:\n"
+"------------------------------------------------------\n"
+"* ມູນຄ່າສິນຄ້າໃນສາງຕາມວັນທີທີ່ກຳນົດ (ຮອງຮັບວັນທີໃນອະດີດ)\n"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_quant.py:0
 msgid " [Accounted on %s]"
-msgstr ""
+msgstr " [ລົງບັນຊີເມື່ອ %s]"
 
 #. module: stock_account
 #. odoo-python
@@ -50,6 +65,8 @@ msgid ""
 "%(lot)s cost update from %(old_value)s to %(new_value)s for %(quantity)s by %"
 "(user)s"
 msgstr ""
+"ອັບເດດຕົ້ນທຶນ %(lot)s ຈາກ %(old_value)s ເປັນ %(new_value)s ສຳລັບ %(quantity)s ໂດຍ %"
+"(user)s"
 
 #. module: stock_account
 #. odoo-python
@@ -58,32 +75,34 @@ msgid ""
 "%(move)s cost update from %(old_value)s to %(new_value)s for %(quantity)s by "
 "%(user)s"
 msgstr ""
+"ອັບເດດຕົ້ນທຶນ %(move)s ຈາກ %(old_value)s ເປັນ %(new_value)s ສຳລັບ %(quantity)s ໂດຍ "
+"%(user)s"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "%(quantity)s %(uom)s at product's cost"
-msgstr ""
+msgstr "%(quantity)s %(uom)s ຕາມຕົ້ນທຶນສິນຄ້າ"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_move_form
 msgid "<span class=\"o_stat_text\">Product Value</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">ມູນຄ່າສິນຄ້າ</span>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "<span>Product</span>"
-msgstr ""
+msgstr "<span>ສິນຄ້າ</span>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "<span>Quantity</span>"
-msgstr ""
+msgstr "<span>ຈຳນວນ</span>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "<span>SN/LN</span>"
-msgstr ""
+msgstr "<span>SN/LN</span>"
 
 #. module: stock_account
 #. odoo-python
@@ -92,82 +111,85 @@ msgid ""
 "A lot/serial number is required for product '%s' as it has lot valuation "
 "enabled."
 msgstr ""
+"ຈຳເປັນຕ້ອງມີເລກຊຸດ/ເລກລຳດັບສິນຄ້າ ສຳລັບສິນຄ້າ '%s' ເນື່ອງຈາກໄດ້ເປີດໃຊ້ງານການຕີມູນຄ່າຕາມເລກຊຸດ."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__avco_value
 msgid "AVCO Value"
-msgstr ""
+msgstr "ມູນຄ່າ AVCO"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "ກຸ່ມສິດການນຳໃຊ້"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__account_move_id
 msgid "Account Move"
-msgstr ""
+msgstr "ການເຄື່ອນໄຫວບັນຊີ"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__cogs_aml_ids
 msgid "Account move lines using this move in order to compute their COGS"
 msgstr ""
+"ແຖວລາຍການເຄື່ອນໄຫວບັນຊີທີ່ໃຊ້ການເຄື່ອນໄຫວນີ້ເພື່ອຄິດໄລ່ຕົ້ນທຶນຂາຍ (COGS)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_adjustment_name__accounting_date
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__accounting_date
 msgid "Accounting Date"
-msgstr ""
+msgstr "ວັນທີລົງບັນຊີ"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
 msgid "Accounting Information"
-msgstr ""
+msgstr "ຂໍ້ມູນທາງບັນຊີ"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid ""
 "Add additional cost (transport, customs, ...) in the value of the product."
 msgstr ""
+"ເພີ່ມຕົ້ນທຶນເພີ່ມເຕີມ (ຄ່າຂົນສົ່ງ, ຄ່າພາສີ, ...) ເຂົ້າໃນມູນຄ່າຂອງສິນຄ້າ."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__quantity
 msgid "Added Quantity"
-msgstr ""
+msgstr "ຈຳນວນທີ່ເພີ່ມເຂົ້າ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__added_value
 msgid "Added Value"
-msgstr ""
+msgstr "ມູນຄ່າທີ່ເພີ່ມເຂົ້າ"
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.product_value_action
 #: model:ir.actions.server,name:stock_account.stock_move_action_adjust_valuation
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_form_view
 msgid "Adjust Valuation"
-msgstr ""
+msgstr "ປັບປຸງການຕີມູນຄ່າ"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Adjust Valuation: %(product)s"
-msgstr ""
+msgstr "ປັບປຸງການຕີມູນຄ່າ: %(product)s"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Adjusted on %(date)s by %(user)s"
-msgstr ""
+msgstr "ປັບປຸງເມື່ອ %(date)s ໂດຍ %(user)s"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__adjustment
 msgid "Adjustment"
-msgstr ""
+msgstr "ການປັບປຸງ"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_search_view
 msgid "Adjustments"
-msgstr ""
+msgstr "ການປັບປຸງ"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -176,82 +198,83 @@ msgid ""
 "Affect landed costs on reception operations and split them among products to "
 "update their cost price."
 msgstr ""
+"ນຳໃຊ້ຕົ້ນທຶນເພີ່ມເຕີມໃນການດຳເນີນງານຮັບສິນຄ້າ ແລະ ແບ່ງສັນໃຫ້ແກ່ສິນຄ້າຕ່າງໆເພື່ອອັບເດດລາຄາຕົ້ນທຶນ."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_account
 msgid "Analytic Account"
-msgstr ""
+msgstr "ບັນຊີວິເຄາະ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__analytic_account_line_ids
 msgid "Analytic Account Line"
-msgstr ""
+msgstr "ແຖວບັນຊີວິເຄາະ"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_plan
 msgid "Analytic Plan"
-msgstr ""
+msgstr "ແຜນການວິເຄາະ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__avg_cost
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__avg_cost
 msgid "Average Cost"
-msgstr ""
+msgstr "ຕົ້ນທຶນສະເລ່ຍ"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__stock_quant__cost_method__average
 msgid "Average Cost (AVCO)"
-msgstr ""
+msgstr "ຕົ້ນທຶນສະເລ່ຍ (AVCO)"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "BC46282798"
-msgstr ""
+msgstr "BC46282798"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "Bacon"
-msgstr ""
+msgstr "ເບຄອນ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__cogs_aml_ids
 msgid "COGS lines"
-msgstr ""
+msgstr "ແຖວ COGS"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__cogs_move_ids
 msgid "COGS stock moves"
-msgstr ""
+msgstr "ການເຄື່ອນໄຫວສິນຄ້າ COGS"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_bank_statement_line__closing_datetime
 #: model:ir.model.fields,field_description:stock_account.field_account_move__closing_datetime
 msgid "Closing Date"
-msgstr ""
+msgstr "ວັນທີປິດບັນຊີ"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/res_company.py:0
 msgid "Closing: Location Reclassification - [%(account)s]"
-msgstr ""
+msgstr "ການປິດ: ຈັດປະເພດສະຖານທີ່ໃໝ່ - [%(account)s]"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_company
 #: model:ir.model.fields,field_description:stock_account.field_product_value__company_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__company_id
 msgid "Company"
-msgstr ""
+msgstr "ບໍລິສັດ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__company_currency_id
 msgid "Company Currency"
-msgstr ""
+msgstr "ສະກຸນເງິນຂອງບໍລິສັດ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__computed_value_description
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__value_computed_justification
 msgid "Computed Value Description"
-msgstr ""
+msgstr "ຄຳອະທິບາຍມູນຄ່າທີ່ຄິດໄລ່ໄດ້"
 
 #. module: stock_account
 #. odoo-python
@@ -260,16 +283,18 @@ msgid ""
 "Computed value: %(value)s\n"
 "%(description)s"
 msgstr ""
+"ມູນຄ່າທີ່ຄິດໄລ່ໄດ້: %(value)s\n"
+"%(description)s"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "ການຕັ້ງຄ່າລະບົບ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__standard_price
 msgid "Cost"
-msgstr ""
+msgstr "ຕົ້ນທຶນ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__cost_method
@@ -277,12 +302,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_res_company__cost_method
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__cost_method
 msgid "Cost Method"
-msgstr ""
+msgstr "ວິທີຄິດໄລ່ຕົ້ນທຶນ"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
 msgid "Cost of Production"
-msgstr ""
+msgstr "ຕົ້ນທຶນການຜະລິດ"
 
 #. module: stock_account
 #. odoo-python
@@ -290,55 +315,56 @@ msgstr ""
 msgid ""
 "Cost update from %(old_value)s to %(new_value)s for %(quantity)s by %(user)s"
 msgstr ""
+"ອັບເດດຕົ້ນທຶນຈາກ %(old_value)s ເປັນ %(new_value)s ສຳລັບ %(quantity)s ໂດຍ %(user)s"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_cost_method
 msgid "Costing Method"
-msgstr ""
+msgstr "ວິທີການຄິດໄລ່ຕົ້ນທຶນ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking_type__country_code
 msgid "Country Code"
-msgstr ""
+msgstr "ລະຫັດປະເທດ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "ສ້າງໂດຍ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__create_date
 msgid "Created on"
-msgstr ""
+msgstr "ສ້າງເມື່ອ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__currency_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__currency_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "ສະກຸນເງິນ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__current_value
 msgid "Current Value"
-msgstr ""
+msgstr "ມູນຄ່າປະຈຸບັນ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__current_value_description
 msgid "Current Value Description"
-msgstr ""
+msgstr "ຄຳອະທິບາຍມູນຄ່າປະຈຸບັນ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__current_value_details
 msgid "Current Value Details"
-msgstr ""
+msgstr "ລາຍລະອຽດມູນຄ່າປະຈຸບັນ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__date
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__date
 msgid "Date"
-msgstr ""
+msgstr "ວັນທີ"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_inventory_adjustment_name__accounting_date
@@ -347,17 +373,19 @@ msgid ""
 "Date at which the accounting entries will be created in case of automated "
 "inventory valuation. If empty, the inventory date will be used."
 msgstr ""
+"ວັນທີທີ່ຈະສ້າງລາຍການບັນຊີໃນກໍລະນີທີ່ມີການຕີມູນຄ່າສິນຄ້າແບບອັດຕະໂນມັດ. ຖ້າຫວ່າງເປົ່າ, ຈະໃຊ້ມື້ກວດນັບສິນຄ້າແ"
+"ທນ."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__description
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__description
 msgid "Description"
-msgstr ""
+msgstr "ຄຳອະທິບາຍ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__group_lot_on_invoice
 msgid "Display Lots & Serial Numbers on Invoices"
-msgstr ""
+msgstr "ສະແດງເລກຊຸດ ແລະ ເລກລຳດັບໃນໃບເກັບເງິນ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_analytic_account__display_name
@@ -383,17 +411,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking_type__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ຊື່ສະແດງ"
 
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_lot_on_invoice
 msgid "Display Serial & Lot Number on Invoices"
-msgstr ""
+msgstr "ສະແດງເລກລຳດັບ ແລະ ເລກຊຸດໃນໃບເກັບເງິນ"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_list_view
 msgid "Done By"
-msgstr ""
+msgstr "ດຳເນີນການໂດຍ"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_account_id
@@ -401,6 +429,7 @@ msgid ""
 "Expense account used to re-qualify products removed from stock and sent to "
 "this location"
 msgstr ""
+"ບັນຊີລາຍຈ່າຍທີ່ໃຊ້ສຳລັບການປັບສະຖານະສິນຄ້າທີ່ຖືກຕັດອອກຈາກສາງ ແລະ ສົ່ງມາຍັງສະຖານທີ່ນີ້"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -408,13 +437,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:stock_account.selection__res_company__cost_method__fifo
 #: model:ir.model.fields.selection,name:stock_account.selection__stock_quant__cost_method__fifo
 msgid "First In First Out (FIFO)"
-msgstr ""
+msgstr "ເຂົ້າກ່ອນ ອອກກ່ອນ (FIFO)"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product_value.py:0
 msgid "For %(quantity)s %(uom)s (%(price_unit)s per %(uom)s)"
-msgstr ""
+msgstr "ສຳລັບ %(quantity)s %(uom)s (%(price_unit)s ຕໍ່ %(uom)s)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_analytic_account__id
@@ -440,21 +469,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking_type__id
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__id
 msgid "ID"
-msgstr ""
+msgstr "ລະຫັດ ID"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__anglo_saxon_accounting
 msgid ""
 "If checked, the product will be valued using the Anglo-Saxon accounting "
 "method."
-msgstr ""
+msgstr "ຖ້າໝາຍຕິກ, ສິນຄ້າຈະຖືກຕີມູນຄ່າໂດຍໃຊ້ວິທີການບັນຊີແບບ Anglo-Saxon."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__lot_valuated
 #: model:ir.model.fields,help:stock_account.field_product_template__lot_valuated
 #: model:ir.model.fields,help:stock_account.field_stock_lot__lot_valuated
 msgid "If checked, the valuation will be specific by Lot/Serial number."
-msgstr ""
+msgstr "ຖ້າໝາຍຕິກ, ການຕີມູນຄ່າຈະສະເພາະເຈາະຈົງຕາມເລກຊຸດ/ເລກລຳດັບ."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__order_partner_id
@@ -462,22 +491,24 @@ msgid ""
 "If the move originates from a document from another company, contains that "
 "company's partner, otherwise the move's partner."
 msgstr ""
+"ຖ້າການເຄື່ອນໄຫວມາຈາກເອກະສານຂອງບໍລິສັດອື່ນ ຈະສະແດງຄູ່ຮ່ວມຄ້າຂອງບໍລິສັດນັ້ນ, ຖ້າບໍ່ດັ່ງນັ້ນຈະສະແດງຄູ່ຮ່ວມຄ້"
+"າຂອງການເຄື່ອນໄຫວນີ້."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_location.py:0
 msgid "Invalid search operator or value"
-msgstr ""
+msgstr "ຕົວດຳເນີນການຄົ້ນຫາ ຫຼື ຄ່າທີ່ລະບຸບໍ່ຖືກຕ້ອງ"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory_adjustment_name
 msgid "Inventory Adjustment Reference / Reason"
-msgstr ""
+msgstr "ເອກະສານອ້າງອີງ / ເຫດຜົນໃນການປັບປຸງຍອດສິນຄ້າໃນສາງ"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
 msgid "Inventory Location"
-msgstr ""
+msgstr "ສະຖານທີ່ສາງ"
 
 #. module: stock_account
 #. odoo-javascript
@@ -485,136 +516,137 @@ msgstr ""
 #: code:addons/stock_account/report/account_stock_valuation_report.py:0
 #: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.js:0
 msgid "Inventory Loss"
-msgstr ""
+msgstr "ສິນຄ້າສູນເສຍໃນສາງ"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_account_move_line__cogs_move_ids
 msgid "Inventory moves used to compute COGS values."
-msgstr ""
+msgstr "ການເຄື່ອນໄຫວສິນຄ້າໃນສາງທີ່ໃຊ້ເພື່ອຄິດໄລ່ມູນຄ່າຕົ້ນທຶນຂາຍ (COGS)."
 
 #. module: stock_account
 #: model:ir.module.module,summary:base.module_stock_account
 msgid "Inventory, Logistic, Valuation, Accounting"
-msgstr ""
+msgstr "ສິນຄ້າໃນສາງ, ໂລຈິສຕິກ, ການຕີມູນຄ່າ, ການບັນຊີ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__invoice_line_ids
 msgid "Invoice Line"
-msgstr ""
+msgstr "ແຖວລາຍການໃບເກັບເງິນ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__is_dropship
 msgid "Is Dropship"
-msgstr ""
+msgstr "ແມ່ນການສົ່ງກົງ (Dropship)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__is_in
 msgid "Is Incoming (valued)"
-msgstr ""
+msgstr "ແມ່ນສິນຄ້າຂາເຂົ້າ (ມີການຕີມູນຄ່າ)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__is_out
 msgid "Is Outgoing (valued)"
-msgstr ""
+msgstr "ແມ່ນສິນຄ້າຂາອອກ (ມີການຕີມູນຄ່າ)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__is_valued
 msgid "Is Valued"
-msgstr ""
+msgstr "ມີການຕີມູນຄ່າ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__is_valued
 msgid "Is valued inside the company"
-msgstr ""
+msgstr "ມີການຕີມູນຄ່າພາຍໃນບໍລິສັດ"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product_value.py:0
 #: model:ir.model,name:stock_account.model_account_move
 msgid "Journal Entry"
-msgstr ""
+msgstr "ລາຍການບັນຊີປະຈຳວັນ"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move_line
 msgid "Journal Item"
-msgstr ""
+msgstr "ລາຍການຍ່ອຍບັນຊີປະຈຳວັນ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__justification
 msgid "Justification"
-msgstr ""
+msgstr "ເຫດຜົນປະກອບ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__module_stock_landed_costs
 msgid "Landed Costs"
-msgstr ""
+msgstr "ຕົ້ນທຶນເພີ່ມເຕີມສິນຄ້າ (Landed Costs)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "ປັບປຸງຫຼ້າສຸດໂດຍ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "ປັບປຸງຫຼ້າສຸດເມື່ອ"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
 msgid "Loss Account"
-msgstr ""
+msgstr "ບັນຊີຜົນຂາດທຶນ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__lot_id
 msgid "Lot"
-msgstr ""
+msgstr "ຊຸດສິນຄ້າ"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_lot
 msgid "Lot/Serial"
-msgstr ""
+msgstr "ຊຸດ/ເລກລຳດັບ"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid "Lots & Serial numbers will appear on the invoice"
-msgstr ""
+msgstr "ເລກຊຸດ ແລະ ເລກລຳດັບຈະສະແດງໃນໃບເກັບເງິນ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__value_manual
 msgid "Manual Value"
-msgstr ""
+msgstr "ມູນຄ່າທີ່ກຳນົດເອງ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__move_id
 msgid "Move"
-msgstr ""
+msgstr "ການເຄື່ອນໄຫວ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__new_cost
 msgid "New Unit Cost"
-msgstr ""
+msgstr "ຕົ້ນທຶນຕໍ່ໜ່ວຍໃໝ່"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__new_value
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_form_view
 msgid "New Value"
-msgstr ""
+msgstr "ມູນຄ່າໃໝ່"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__old_cost
 msgid "Old Unit Cost"
-msgstr ""
+msgstr "ຕົ້ນທຶນຕໍ່ໜ່ວຍເກົ່າ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__old_value
 msgid "Old Value"
-msgstr ""
+msgstr "ມູນຄ່າເກົ່າ"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Only is set (= True) is supported in search for remaining_qty."
 msgstr ""
+"ຮອງຮັບສະເພາະຄ່າທີ່ຖືກຕັ້ງໄວ້ (= True) ເທົ່ານັ້ນໃນການຄົ້ນຫາ remaining_qty."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__origin_company_id
@@ -622,26 +654,27 @@ msgid ""
 "Only set if the move is generated from a document belonging to another "
 "company"
 msgstr ""
+"ຖືກກຳນົດສະເພາະເມື່ອການເຄື່ອນໄຫວຖືກສ້າງຂຶ້ນຈາກເອກະສານຂອງບໍລິສັດອື່ນເທົ່ານັ້ນ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__order_partner_id
 msgid "Order Partner"
-msgstr ""
+msgstr "ຄູ່ຮ່ວມຄ້າໃນໃບສັ່ງ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__origin_company_id
 msgid "Origin Company"
-msgstr ""
+msgstr "ບໍລິສັດຕົ້ນທາງ"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking_type
 msgid "Picking Type"
-msgstr ""
+msgstr "ປະເພດການເບີກຈ່າຍ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__price_unit
 msgid "Price Unit"
-msgstr ""
+msgstr "ລາຄາຕໍ່ໜ່ວຍ"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -649,29 +682,29 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__product_id
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_search_view
 msgid "Product"
-msgstr ""
+msgstr "ສິນຄ້າ"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
 msgid "Product Category"
-msgstr ""
+msgstr "ໝວດໝູ່ສິນຄ້າ"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr ""
+msgstr "ການເຄື່ອນໄຫວສິນຄ້າ (ລາຍການເຄື່ອນໄຫວສາງ)"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_quant.py:0
 msgid "Product Quantity Confirmed"
-msgstr ""
+msgstr "ຢືນຢັນຈຳນວນສິນຄ້າແລ້ວ"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_quant.py:0
 msgid "Product Quantity Updated"
-msgstr ""
+msgstr "ອັບເດດຈຳນວນສິນຄ້າແລ້ວ"
 
 #. module: stock_account
 #. odoo-python
@@ -682,12 +715,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__product_value_ids
 #: model:ir.model.fields.selection,name:stock_account.selection__stock_avco_report__res_model_name__product_value
 msgid "Product Value"
-msgstr ""
+msgstr "ມູນຄ່າສິນຄ້າ"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_product
 msgid "Product Variant"
-msgstr ""
+msgstr "ຮູບແບບຍ່ອຍຂອງສິນຄ້າ"
 
 #. module: stock_account
 #. odoo-python
@@ -696,62 +729,63 @@ msgid ""
 "Product should be passed as an argument in order to get the unit price for "
 "moves in a kit."
 msgstr ""
+"ຄວນສົ່ງສິນຄ້າເປັນອາກິວເມັນເພື່ອດຶງລາຄາຕໍ່ໜ່ວຍສຳລັບການເຄື່ອນໄຫວໃນຊຸດສິນຄ້າ (kit)."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_account_id
 msgid "Production WIP Account"
-msgstr ""
+msgstr "ບັນຊີສິນຄ້າລະຫວ່າງຜະລິດ (WIP)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_overhead_account_id
 msgid "Production WIP Overhead Account"
-msgstr ""
+msgstr "ບັນຊີຄ່າໃຊ້ຈ່າຍທາງອ້ອມລະຫວ່າງຜະລິດ (WIP Overhead)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
 msgid "Quant"
-msgstr ""
+msgstr "ຈຳນວນສິນຄ້າໃນສາງ (Quant)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__quantity
 msgid "Quantity"
-msgstr ""
+msgstr "ຈຳນວນ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__reference
 msgid "Reference"
-msgstr ""
+msgstr "ເອກະສານອ້າງອີງ"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_move_search
 msgid "Remaining"
-msgstr ""
+msgstr "ຄົງເຫຼືອ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__remaining_qty
 msgid "Remaining Quantity"
-msgstr ""
+msgstr "ຈຳນວນຄົງເຫຼືອ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__remaining_value
 msgid "Remaining Value"
-msgstr ""
+msgstr "ມູນຄ່າຄົງເຫຼືອ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__res_model_name
 msgid "Resource Model Name"
-msgstr ""
+msgstr "ຊື່ໂມເດວຊັບພະຍາກອນ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_adjustment_name__should_show_accounting_date
 msgid "Should Show Accounting Date"
-msgstr ""
+msgstr "ຄວນສະແດງວັນທີລົງບັນຊີ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__standard_price
 #: model:ir.model.fields.selection,name:stock_account.selection__stock_quant__cost_method__standard
 msgid "Standard Price"
-msgstr ""
+msgstr "ລາຄາມາດຕະຖານ"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_cost_method
@@ -762,11 +796,14 @@ msgid ""
 "cost.\n"
 "        "
 msgstr ""
+"ລາຄາມາດຕະຖານ: ສິນຄ້າຈະຖືກຕີມູນຄ່າຕາມຕົ້ນທຶນມາດຕະຖານທີ່ກຳນົດໄວ້ໃນສິນຄ້າ.\n"
+"        ຕົ້ນທຶນສະເລ່ຍ (AVCO): ສິນຄ້າຈະຖືກຕີມູນຄ່າຕາມຕົ້ນທຶນສະເລ່ຍຖ່ວງນ້ຳໜັກ.\n"
+"        "
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_avco_report
 msgid "Stock AVCO Justifier"
-msgstr ""
+msgstr "ຕົວແຈ້ງເຫດຜົນ AVCO ຂອງສິນຄ້າ"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
@@ -775,24 +812,24 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__stock_move_id
 #: model:ir.model.fields.selection,name:stock_account.selection__stock_avco_report__res_model_name__stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "ການເຄື່ອນໄຫວສິນຄ້າ"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_forecasted_product_product
 msgid "Stock Replenishment Report"
-msgstr ""
+msgstr "ບົດລາຍງານການເຕີມເຕັມສິນຄ້າ"
 
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.js:0
 #: model:ir.model,name:stock_account.model_account_stock_valuation_report
 msgid "Stock Valuation"
-msgstr ""
+msgstr "ການຕີມູນຄ່າສິນຄ້າໃນສາງ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__valuation_account_id
 msgid "Stock Valuation Account"
-msgstr ""
+msgstr "ບັນຊີການຕີມູນຄ່າສິນຄ້າໃນສາງ"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_value__product_tracking
@@ -800,6 +837,8 @@ msgid ""
 "Technical field holding the tracking method. False on a storable product "
 "means it's tracked by quantity only."
 msgstr ""
+"ຟິວທາງເຕັກນິກທີ່ເກັບວິທີການຕິດຕາມ. ຄ່າ False ສຳລັບສິນຄ້າທີ່ເກັບໃນສາງໝາຍເຖິງຖືກຕິດຕາມຕາມຈຳນວນເທົ່ານັ້"
+"ນ."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__company_currency_id
@@ -807,6 +846,8 @@ msgid ""
 "Technical field to correctly show the currently selected company's currency "
 "that corresponds to the totaled value of the product's valuation layers"
 msgstr ""
+"ຟິວທາງເຕັກນິກເພື່ອສະແດງສະກຸນເງິນຂອງບໍລິສັດທີ່ເລືອກໃນປະຈຸບັນຢ່າງຖືກຕ້ອງ ເຊິ່ງກົງກັບມູນຄ່າລວມຂອງຊັ້ນການຕີມູ"
+"ນຄ່າສິນຄ້າ"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_picking__country_code
@@ -815,12 +856,15 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
+"ລະຫັດປະເທດຕາມມາດຕະຖານ ISO ຈຳນວນ 2 ຕົວອັກສອນ.\n"
+"ທ່ານສາມາດໃຊ້ຟິວນີ້ເພື່ອການຄົ້ນຫາແບບວ່ອງໄວ."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_value__current_value
 #: model:ir.model.fields,help:stock_account.field_stock_move__value
 msgid "The current value of the move. It's zero if the move is not valued."
 msgstr ""
+"ມູນຄ່າປະຈຸບັນຂອງການເຄື່ອນໄຫວ. ຈະມີຄ່າເປັນສູນຖ້າການເຄື່ອນໄຫວບໍ່ມີການຕີມູນຄ່າ."
 
 #. module: stock_account
 #. odoo-javascript
@@ -829,26 +873,28 @@ msgid ""
 "This operation might lead in a loss of data. Valuation will be identical for "
 "all lots/SN. Do you want to proceed ? "
 msgstr ""
+"ການດຳເນີນງານນີ້ອາດເຮັດໃຫ້ຂໍ້ມູນສູນຫາຍ. ການຕີມູນຄ່າຈະຄືກັນສຳລັບທຸກໆ ເລກຊຸດ/ເລກລຳດັບ. ທ່ານຕ້ອງການດຳ"
+"ເນີນການຕໍ່ບໍ່? "
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_move_view_list
 msgid "Total"
-msgstr ""
+msgstr "ລວມ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__total_quantity
 msgid "Total Quantity"
-msgstr ""
+msgstr "ຈຳນວນລວມ"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_move_view_list_valuation
 msgid "Total Remaining Qty"
-msgstr ""
+msgstr "ຈຳນວນຄົງເຫຼືອລວມ"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_move_view_list_valuation
 msgid "Total Remaining Value"
-msgstr ""
+msgstr "ມູນຄ່າຄົງເຫຼືອລວມ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__total_value
@@ -857,77 +903,77 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quant_tree_editable_inherit
 msgid "Total Value"
-msgstr ""
+msgstr "ມູນຄ່າລວມ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__product_tracking
 msgid "Tracking Method"
-msgstr ""
+msgstr "ວິທີການຕິດຕາມ"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking
 msgid "Transfer"
-msgstr ""
+msgstr "ການໂອນຍ້າຍ"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__to_refund
 msgid ""
 "Trigger a decrease of the delivered/received quantity in the associated Sale "
 "Order/Purchase Order"
-msgstr ""
+msgstr "ກະຕຸ້ນໃຫ້ຫຼຸດຈຳນວນທີ່ຈັດສົ່ງ/ໄດ້ຮັບ ໃນໃບສັ່ງຂາຍ/ໃບສັ່ງຊື້ ທີ່ກ່ຽວຂ້ອງ"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_avco_report_view_list
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_move_view_list_valuation
 msgid "Unit Cost"
-msgstr ""
+msgstr "ຕົ້ນທຶນຕໍ່ໜ່ວຍ"
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.stock_avco_report_action
 msgid "Unit Cost History"
-msgstr ""
+msgstr "ປະຫວັດຕົ້ນທຶນຕໍ່ໜ່ວຍ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
 msgid "Update quantities on SO/PO"
-msgstr ""
+msgstr "ອັບເດດຈຳນວນໃນ SO/PO"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__anglo_saxon_accounting
 msgid "Use Anglo-Saxon Accounting"
-msgstr ""
+msgstr "ໃຊ້ການບັນຊີແບບ Anglo-Saxon"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__user_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__user_id
 msgid "User"
-msgstr ""
+msgstr "ຜູ້ໃຊ້ງານ"
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.stock_move_valuation_action
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid "Valuation"
-msgstr ""
+msgstr "ການຕີມູນຄ່າ"
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.product_value_list_action
 #: model:ir.ui.menu,name:stock_account.valuation_adjustments_menu
 msgid "Valuation Adjustments"
-msgstr ""
+msgstr "ການປັບປຸງການຕີມູນຄ່າ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__company_currency_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__company_currency_id
 msgid "Valuation Currency"
-msgstr ""
+msgstr "ສະກຸນເງິນການຕີມູນຄ່າ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__lot_valuated
 #: model:ir.model.fields,field_description:stock_account.field_product_template__lot_valuated
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__lot_valuated
 msgid "Valuation by Lot/Serial"
-msgstr ""
+msgstr "ການຕີມູນຄ່າຕາມຊຸດ/ເລກລຳດັບ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__value
@@ -936,30 +982,30 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__value
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_move_view_list
 msgid "Value"
-msgstr ""
+msgstr "ມູນຄ່າ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__value_justification
 msgid "Value Description"
-msgstr ""
+msgstr "ຄຳອະທິບາຍມູນຄ່າ"
 
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
 msgid "Value On Hand:"
-msgstr ""
+msgstr "ມູນຄ່າທີ່ມີໃນສາງ:"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Value based on original move %(reference)s"
-msgstr ""
+msgstr "ມູນຄ່າອີງຕາມການເຄື່ອນໄຫວຕົ້ນສະບັບ %(reference)s"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Value from previous move %(references)s"
-msgstr ""
+msgstr "ມູນຄ່າຈາກການເຄື່ອນໄຫວຜ່ານມາ %(references)s"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_lot__standard_price
@@ -969,22 +1015,25 @@ msgid ""
 "inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"ມູນຄ່າຂອງຊຸດສິນຄ້າ (ຄິດໄລ່ແບບອັດຕະໂນມັດໃນ AVCO).\n"
+"        ໃຊ້ເພື່ອຕີມູນຄ່າສິນຄ້າເມື່ອບໍ່ຮູ້ຕົ້ນທຶນການຊື້ (ຕົວຢ່າງ: ການປັບປຸງຍອດສິນຄ້າໃນສາງ).\n"
+"        ໃຊ້ເພື່ອຄິດໄລ່ກຳໄລສ່ວນຕ່າງໃນໃບສັ່ງຂາຍ."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_list_view
 msgid "View Account Move"
-msgstr ""
+msgstr "ເບິ່ງການເຄື່ອນໄຫວບັນຊີ"
 
 #. module: stock_account
 #: model:ir.module.module,shortdesc:base.module_stock_account
 msgid "WMS Accounting"
-msgstr ""
+msgstr "ບັນຊີສາງສິນຄ້າ (WMS)"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "You can only adjust valuation for one move at a time."
-msgstr ""
+msgstr "ທ່ານສາມາດປັບປຸງການຕີມູນຄ່າໄດ້ເທື່ອລະ 1 ການເຄື່ອນໄຫວເທົ່ານັ້ນ."
 
 #. module: stock_account
 #. odoo-python
@@ -994,6 +1043,9 @@ msgid ""
 "quantities without a lot/serial number:\n"
 "%s"
 msgstr ""
+"ທ່ານບໍ່ສາມາດເປີດໃຊ້ງານການຕີມູນຄ່າຕາມຊຸດສິນຄ້າໄດ້ ເນື່ອງຈາກສິນຄ້າຕໍ່ໄປນີ້ມີຈຳນວນຄົງເຫຼືອໃນສາງໂດຍບໍ່ມີເລກຊຸ"
+"ດ/ເລກລຳດັບ:\n"
+"%s"
 
 #. module: stock_account
 #. odoo-python
@@ -1002,13 +1054,15 @@ msgid ""
 "You cannot modify the scheduled date of operation %s because it falls within "
 "a locked fiscal period."
 msgstr ""
+"ທ່ານບໍ່ສາມາດແກ້ໄຂວັນທີທີ່ກຳນົດໄວ້ຂອງການດຳເນີນງານ %s ໄດ້ ເນື່ອງຈາກຕົກຢູ່ໃນໄລຍະຮອບວຽນບັນຊີທີ່ຖືກລັອກໄ"
+"ວ້."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_id
 msgid "stock_move_id"
-msgstr ""
+msgstr "stock_move_id"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "units"
-msgstr ""
+msgstr "ໜ່ວຍ"

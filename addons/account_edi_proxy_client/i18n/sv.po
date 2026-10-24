@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-11 17:42+0000\n"
-"PO-Revision-Date: 2026-09-29 14:33+0000\n"
+"PO-Revision-Date: 2026-10-20 12:34+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-20/"
 "account_edi_proxy_client/sv/>\n"
@@ -38,6 +38,20 @@ msgid ""
 "- Authentication offers an additionnal level of security to avoid "
 "impersonification, in case someone gains to the user's database.\n"
 msgstr ""
+"\n"
+"Den här modulen lägger till allmänna funktioner för att registrera en Odoo-"
+"databas på den ansvariga proxyn för att ta emot data (via förfrågningar från "
+"webbtjänster).\n"
+"- En edi_proxy_user har ett unikt ID-nummer för en specifik proxy-typ (t.ex. "
+"l10n_it_edi, peppol) vilket\n"
+"gör det möjligt att identifiera användaren när ett dokument är adresserat "
+"till denne. Det är kopplat till ett specifikt företag på en specifik\n"
+"databas i Odoo.\n"
+"- Krypteringsfunktioner gör det möjligt att läsa av användarens information "
+"när man tar emot den från en proxy.\n"
+"- Autentisering erbjuder en ytterligare säkerhetsnivå för att undvika "
+"bedrägerier, i det fall att utomstående får åtkomst till användarens "
+"databas.\n"
 
 #. module: account_edi_proxy_client
 #. odoo-python
@@ -53,7 +67,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
 msgid "A user already exists with this identification."
-msgstr ""
+msgstr "Det finns redan en befintlig användare med den här identifieringen."
 
 #. module: account_edi_proxy_client
 #: model:ir.model,name:account_edi_proxy_client.model_account_edi_proxy_client_user
@@ -178,7 +192,7 @@ msgstr "Typ av proxy"
 #. module: account_edi_proxy_client
 #: model:ir.module.module,shortdesc:base.module_account_edi_proxy_client
 msgid "Proxy features for account_edi"
-msgstr ""
+msgstr "Proxyfunktioner för account_edi"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__refresh_token

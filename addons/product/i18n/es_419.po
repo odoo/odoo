@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-25 17:38+0000\n"
-"PO-Revision-Date: 2026-10-07 16:33+0000\n"
+"PO-Revision-Date: 2026-10-23 00:33+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-20/product/es_419/>\n"
@@ -136,6 +136,7 @@ msgstr "- %(amount)s de reembolso"
 #: code:addons/product/models/product_product.py:0
 msgid "- Barcode \"%(barcode)s\" already assigned to %(product_list)s"
 msgstr ""
+"- El código de barras \"%(barcode)s\" ya está asignado a %(product_list)s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -401,7 +402,7 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Grupos de acceso"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__access_token
@@ -646,7 +647,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Apply"
-msgstr ""
+msgstr "Aplicar"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__applied_on
@@ -833,7 +834,7 @@ msgstr "Base de datos de código de barras"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Barcode Lookup"
-msgstr ""
+msgstr "Barcode Lookup"
 
 #. module: product
 #. odoo-python
@@ -975,7 +976,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_catalog_mixin.py:0
 msgid "Catalog missing the child field to update."
-msgstr ""
+msgstr "Falta el campo secundario en el catálogo para actualizarlo."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_category_action_form
@@ -1743,7 +1744,7 @@ msgstr "Ocurrió un error al exportar el archivo, vuelva a intentarlo."
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Example:"
-msgstr ""
+msgstr "Ejemplo:"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__excluded_value_ids
@@ -1811,7 +1812,7 @@ msgstr "Favoritos"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
 msgid "File"
-msgstr ""
+msgstr "Archivo"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__raw
@@ -2046,7 +2047,7 @@ msgstr "Altura"
 #. module: product
 #: model:res.groups.privilege,description:product.res_groups_privilege_product
 msgid "Helps you manage your product catalog."
-msgstr ""
+msgstr "Te ayuda a gestionar tu catálogo de productos."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__html_color
@@ -2082,6 +2083,11 @@ msgid ""
 "Fixed Price: a set amount, ignoring the base price entirely.\n"
 "Activate the discount settings to show the discount to the customer."
 msgstr ""
+"Cómo se calcula el precio a partir del precio base.\n"
+"Descuento: Un porcentaje que se resta al precio base.\n"
+"Recargo: Un porcentaje que se suma al precio base.\n"
+"Precio fijo: Un importe establecido que no depende del precio base.\n"
+"Activa los ajustes de descuento para mostrar el descuento al cliente."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_ir_attachment__id
@@ -2519,7 +2525,7 @@ msgstr "Líneas"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 msgid "Link"
-msgstr ""
+msgstr "Enlace"
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom
@@ -3531,7 +3537,7 @@ msgstr "Productos"
 #. module: product
 #: model:ir.module.module,shortdesc:base.module_product
 msgid "Products & Pricelists"
-msgstr ""
+msgstr "Productos y listas de precios"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
@@ -3692,7 +3698,7 @@ msgstr "Opción"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__range
 msgid "Range"
-msgstr ""
+msgstr "Rango"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_rayban
@@ -4714,7 +4720,7 @@ msgstr "Variante"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__variant_attribute_value_ids
 msgid "Variant Attribute Value"
-msgstr ""
+msgstr "Valor del atributo de la variante"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_variant_count
@@ -4836,7 +4842,7 @@ msgstr "Proveedores"
 #. module: product
 #: model:res.groups.privilege,placeholder:product.res_groups_privilege_product
 msgid "View"
-msgstr ""
+msgstr "Ver"
 
 #. module: product
 #: model:product.template,name:product.product_product_2_product_template
@@ -5027,6 +5033,8 @@ msgstr ""
 msgid ""
 "You can only print labels for packaging barcodes using the same packaging."
 msgstr ""
+"Solo puedes imprimir etiquetas para códigos de barras de embalaje que usan "
+"el mismo embalaje."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__image
@@ -5046,7 +5054,7 @@ msgstr "No puede editar este producto en el catálogo."
 #. odoo-python
 #: code:addons/product/models/product_catalog_mixin.py:0
 msgid "You cannot add or remove products from this record."
-msgstr ""
+msgstr "No puedes agregar ni eliminar productos de este registro."
 
 #. module: product
 #. odoo-python
@@ -5318,182 +5326,182 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_normal_label
 msgid "^FO174,91,0^A0N,18,15^TBN,277,19^FH^FD"
-msgstr ""
+msgstr "^FO174,91,0^A0N,18,15^TBN,277,19^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_jewelry_label
 msgid "^FO18,4^BXN,4,200,20,20^FH^FD"
-msgstr ""
+msgstr "^FO18,4^BXN,4,200,20,20^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_jewelry_label
 msgid "^FO18,8^BY1^BCN,76,Y,N,N^FH^FD"
-msgstr ""
+msgstr "^FO18,8^BY1^BCN,76,Y,N,N^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_jewelry_label
 msgid "^FO210,29,0^A0N,15,13^TBN,232,16^FH^FD"
-msgstr ""
+msgstr "^FO210,29,0^A0N,15,13^TBN,232,16^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_jewelry_label
 msgid "^FO210,44,0^A0N,15,13^TBN,232,16^FH^FD"
-msgstr ""
+msgstr "^FO210,44,0^A0N,15,13^TBN,232,16^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_jewelry_label
 msgid "^FO210,8,0^A0N,20^TBN,232,21^FH^FD"
-msgstr ""
+msgstr "^FO210,8,0^A0N,20^TBN,232,21^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_small_label
 msgid "^FO248,145,1^A0N,25^TBN,108,26^FH^FD"
-msgstr ""
+msgstr "^FO248,145,1^A0N,25^TBN,108,26^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_small_label
 msgid "^FO248,170,1^A0N,14^TBN,108,15^FH^FD"
-msgstr ""
+msgstr "^FO248,170,1^A0N,14^TBN,108,15^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_small_label
 msgid "^FO249,151,1^A0N,14^TBN,108,15^FH^FD"
-msgstr ""
+msgstr "^FO249,151,1^A0N,14^TBN,108,15^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_small_label
 msgid "^FO249,151,1^A0N,25^TBN,108,26^FH^FD"
-msgstr ""
+msgstr "^FO249,151,1^A0N,25^TBN,108,26^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_small_label
 msgid "^FO249,176,1^A0N,14^TBN,108,15^FH^FD"
-msgstr ""
+msgstr "^FO249,176,1^A0N,14^TBN,108,15^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_small_label
 msgid "^FO30,46^BY1^BCN,70,Y,N,N^FH^FD"
-msgstr ""
+msgstr "^FO30,46^BY1^BCN,70,Y,N,N^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_normal_label
 msgid "^FO30,54^BY2^BCN,80,Y,N,N^FH^FD"
-msgstr ""
+msgstr "^FO30,54^BY2^BCN,80,Y,N,N^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_alternative_label
 msgid "^FO401,135,1^A0N,30^TBN,187,31^FH^FD"
-msgstr ""
+msgstr "^FO401,135,1^A0N,30^TBN,187,31^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_alternative_label
 msgid "^FO401,153,1^A0N,30^TBN,187,31^FH^FD"
-msgstr ""
+msgstr "^FO401,153,1^A0N,30^TBN,187,31^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_alternative_label
 msgid "^FO401,156,1^A0N,16^TBN,187,17^FH^FD"
-msgstr ""
+msgstr "^FO401,156,1^A0N,16^TBN,187,17^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_alternative_label
 msgid "^FO401,160,1^A0N,16^TBN,187,17^FH^FD"
-msgstr ""
+msgstr "^FO401,160,1^A0N,16^TBN,187,17^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_alternative_label
 msgid "^FO401,178,1^A0N,16^TBN,187,17^FH^FD"
-msgstr ""
+msgstr "^FO401,178,1^A0N,16^TBN,187,17^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_jewelry_label
 msgid "^FO435,64,1^A0N,24^TBN,201,25^FH^FD"
-msgstr ""
+msgstr "^FO435,64,1^A0N,24^TBN,201,25^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_jewelry_label
 msgid "^FO435,86,1^A0N,12^TBN,201,13^FH^FD"
-msgstr ""
+msgstr "^FO435,86,1^A0N,12^TBN,201,13^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_jewelry_label
 msgid "^FO442,60,1^A0N,24^TBN,201,25^FH^FD"
-msgstr ""
+msgstr "^FO442,60,1^A0N,24^TBN,201,25^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_jewelry_label
 msgid "^FO442,84,1^A0N,12^TBN,201,13^FH^FD"
-msgstr ""
+msgstr "^FO442,84,1^A0N,12^TBN,201,13^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_normal_label
 msgid "^FO451,160,1^A0N,38^TBN,165,40^FH^FD"
-msgstr ""
+msgstr "^FO451,160,1^A0N,38^TBN,165,40^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_normal_label
 msgid "^FO451,195,1^A0N,18^TBN,165,19^FH^FD"
-msgstr ""
+msgstr "^FO451,195,1^A0N,18^TBN,165,19^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_normal_label
 msgid "^FO452,188,1^A0N,18^TBN,165,19^FH^FD"
-msgstr ""
+msgstr "^FO452,188,1^A0N,18^TBN,165,19^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_normal_label
 msgid "^FO452,188,1^A0N,38^TBN,165,40^FH^FD"
-msgstr ""
+msgstr "^FO452,188,1^A0N,38^TBN,165,40^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_normal_label
 msgid "^FO452,223,1^A0N,18^TBN,165,19^FH^FD"
-msgstr ""
+msgstr "^FO452,223,1^A0N,18^TBN,165,19^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_small_label
 msgid "^FO5,151^A0N,14,12^TBN,102,15^FH^FD"
-msgstr ""
+msgstr "^FO5,151^A0N,14,12^TBN,102,15^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_alternative_label
 msgid "^FO5,156^A0N,16,13^TBN,172,17^FH^FD"
-msgstr ""
+msgstr "^FO5,156^A0N,16,13^TBN,172,17^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_small_label
 msgid "^FO5,166^A0N,14,12^TBN,102,15^FH^FD"
-msgstr ""
+msgstr "^FO5,166^A0N,14,12^TBN,102,15^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_alternative_label
 msgid "^FO5,173^A0N,16,13^TBN,172,17^FH^FD"
-msgstr ""
+msgstr "^FO5,173^A0N,16,13^TBN,172,17^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_normal_label
 msgid "^FO5,188^A0N,18,15^TBN,195,19^FH^FD"
-msgstr ""
+msgstr "^FO5,188^A0N,18,15^TBN,195,19^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_normal_label
 msgid "^FO5,208^A0N,18,15^TBN,195,19^FH^FD"
-msgstr ""
+msgstr "^FO5,208^A0N,18,15^TBN,195,19^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_alternative_label
 msgid "^FO5,21^BXN,7,200,20,20^FH^FD"
-msgstr ""
+msgstr "^FO5,21^BXN,7,200,20,20^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_normal_label
 msgid "^FO6,35^BXN,8,200,20,20^FH^FD"
-msgstr ""
+msgstr "^FO6,35^BXN,8,200,20,20^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_small_label
 msgid "^FO6,46^BXN,6,200,20,20^FH^FD"
-msgstr ""
+msgstr "^FO6,46^BXN,6,200,20,20^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_alternative_label
@@ -5557,6 +5565,8 @@ msgid ""
 "^PW406\n"
 "^LL203"
 msgstr ""
+"^PW406\n"
+"^LL203"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_alternative_label
@@ -5573,6 +5583,8 @@ msgid ""
 "^PW447\n"
 "^LL102"
 msgstr ""
+"^PW447\n"
+"^LL102"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_normal_label
@@ -5580,6 +5592,8 @@ msgid ""
 "^PW457\n"
 "^LL254"
 msgstr ""
+"^PW457\n"
+"^LL254"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_normal_label

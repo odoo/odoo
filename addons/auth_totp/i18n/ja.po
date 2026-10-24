@@ -9,9 +9,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 13:59+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-10-23 02:33+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-20/"
 "auth_totp/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -37,6 +37,21 @@ msgid ""
 "where it is enabled. In order to be able to execute RPC scripts, the user\n"
 "can setup API keys to replace their main password.\n"
 msgstr ""
+"\n"
+"二要素認証 (TOTP)\n"
+"================================\n"
+"時間ベースのワンタイムパスワード (TOTP) を使用して、ユーザがユーザアカウント"
+"で\n"
+"二要素認証を設定することができます。\n"
+"\n"
+"有効にすると、ユーザは、認証アプリによって提供される 6 桁のコードを入力する必"
+"要があります。\n"
+"すべての一般的な認証アプリがサポートされています。\n"
+"\n"
+"注意: 論理的には、2ファクタが有効になっているユーザは、パスワードベースのRPC"
+"アクセスができません。\n"
+"RPCスクリプトを実行できるようにするには、ユーザは\n"
+"メインパスワードの代わりにAPIキーを設定することができます。\n"
 
 #. module: auth_totp
 #. odoo-python
@@ -127,6 +142,8 @@ msgid ""
 "Check your Authenticator app for your code.\n"
 "                        <br/>"
 msgstr ""
+"認証アプリでコードを確認してください。\n"
+"                       <br/>"
 
 #. module: auth_totp
 #: model:ir.model.fields.selection,name:auth_totp.selection__auth_totp_rate_limit_log__limit_type__code_check
@@ -194,12 +211,12 @@ msgstr "2要素認証を有効化する"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid "Enter code"
-msgstr ""
+msgstr "コードを入力してください"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid "Enter verification code"
-msgstr ""
+msgstr "認証コードを入力してください"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__expiration_date
@@ -307,7 +324,7 @@ msgstr "TOTP 最終カウンタ"
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_secret
 msgid "Totp Secret"
-msgstr "Totpシークレット"
+msgstr "TOTP シークレット"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_trusted_device_ids
@@ -317,7 +334,7 @@ msgstr "信頼されたデバイス"
 #. module: auth_totp
 #: model:ir.module.module,shortdesc:base.module_auth_totp
 msgid "Two-Factor Authentication (TOTP)"
-msgstr ""
+msgstr "二段階認証(TOTP)"
 
 #. module: auth_totp
 #. odoo-python
@@ -398,7 +415,7 @@ msgstr "認証コード"
 #: code:addons/auth_totp/models/res_users.py:0
 #: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
 msgid "Verification failed, please double-check the 6-digit code"
-msgstr "認証が失敗しました。６桁のコードを再度確認してください。"
+msgstr "認証に失敗しました。6桁のコードを再度ご確認ください。"
 
 #. module: auth_totp
 #. odoo-python

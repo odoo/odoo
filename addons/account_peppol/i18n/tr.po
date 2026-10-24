@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
-"PO-Revision-Date: 2026-10-15 06:59+0000\n"
+"POT-Creation-Date: 2026-10-23 17:40+0000\n"
+"PO-Revision-Date: 2026-10-20 12:34+0000\n"
 "Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/"
 "account_peppol/tr/>\n"
@@ -31,6 +31,10 @@ msgid ""
 "- Send and receive documents via Peppol network in Peppol BIS Billing 3.0 "
 "format\n"
 msgstr ""
+"\n"
+"- Peppol katılımcısı olarak kaydolun\n"
+"- Peppol BIS Billing 3.0 formatında Peppol ağı üzerinden belgeler gönderin "
+"ve alın\n"
 
 #. module: account_peppol
 #. odoo-python
@@ -325,6 +329,8 @@ msgid ""
 "A Peppol response declaring you %(status)s this document could not be sent "
 "to the Peppol Access Point."
 msgstr ""
+"%(status)s 'i bildiren bir Peppol yanıtı, bu belgenin Peppol Erişim "
+"Noktasına gönderilemediğini belirtir."
 
 #. module: account_peppol
 #. odoo-python
@@ -333,6 +339,8 @@ msgid ""
 "A Peppol response was sent to the Peppol Access Point declaring you %"
 "(status)s this document."
 msgstr ""
+"%(status)s 'da bu belgeye ilişkin bir Peppol yanıtı Peppol Erişim Noktasına "
+"gönderilmiştir."
 
 #. module: account_peppol
 #. odoo-python
@@ -625,6 +633,8 @@ msgid ""
 "An error occurred while responding to this invoice's expeditor.%(br)sStatus: "
 "%(status)s - %(error)s"
 msgstr ""
+"Bu faturanın gönderenine yanıt verilirken bir hata oluştu.%(br)sDurum: %"
+"(status)s - %(error)s"
 
 #. module: account_peppol
 #. odoo-python
@@ -670,7 +680,7 @@ msgstr ""
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #: code:addons/account_peppol/wizard/peppol_rejection_wizard.py:0
 msgid "At least one reason must be given when rejecting a Peppol invoice."
-msgstr ""
+msgstr "Bir Peppol faturasını reddederken en az bir neden belirtilmelidir."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -747,7 +757,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/models/account_move.py:0
 msgid "Cannot cancel an entry that has already been sent via %(network_name)s"
-msgstr ""
+msgstr "Zaten gönderilmiş bir girişi iptal edemezsiniz %(network_name)s"
 
 #. module: account_peppol
 #. odoo-python
@@ -945,6 +955,9 @@ msgid ""
 "\n"
 "Would you like to cancel this document instead?"
 msgstr ""
+"Peppol aracılığıyla gönderilen/alınan belgeler silinemez.\n"
+"\n"
+"Bunun yerine bu belgeyi iptal etmek ister misiniz?"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -954,6 +967,9 @@ msgid ""
 "\n"
 "Would you like to reset this document to draft instead?"
 msgstr ""
+"Peppol aracılığıyla gönderilen/alınan belgeler silinemez.\n"
+"\n"
+"Bunun yerine bu belgeyi taslak olarak sıfırlamak ister misiniz?"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -1143,6 +1159,8 @@ msgid ""
 "Invoice %(invoice_name)s exceeds the size limit of 64 MB to be sent via %"
 "(network_name)s."
 msgstr ""
+"%(invoice_name)s 'daki fatura, %(network_name)s üzerinden gönderilebilmesi "
+"için gerekli olan 64 MB boyut sınırını aşıyor."
 
 #. module: account_peppol
 #. odoo-python
@@ -1151,6 +1169,8 @@ msgid ""
 "Invoice lines using Tax Category 'O' cannot use a percentage-based tax. "
 "Please update the tax type in Advanced Options."
 msgstr ""
+"\"O\" Vergi Kategorisi kullanılan fatura satırlarında yüzdeye dayalı vergi "
+"kullanılamaz. Lütfen Gelişmiş Seçenekler'den vergi türünü güncelleyin."
 
 #. module: account_peppol
 #. odoo-python
@@ -1731,6 +1751,8 @@ msgid ""
 "Please enter the mobile number in the correct international format.\n"
 "For example: +32123456789, where +32 is the country code."
 msgstr ""
+"Lütfen cep telefonu numarasını doğru uluslararası formatta girin.\n"
+"Örneğin: +32123456789; burada +32 ülke kodudur."
 
 #. module: account_peppol
 #. odoo-python
@@ -1749,6 +1771,8 @@ msgstr "Lütfen phonenumbers kütüphanesini yükleyin."
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Please make sure the Contact email is a valid email address."
 msgstr ""
+"Lütfen Kontaklar e-postasının geçerli bir e-posta adresi olduğundan emin "
+"olun."
 
 #. module: account_peppol
 #. odoo-python
@@ -2014,8 +2038,8 @@ msgid ""
 "                            By clicking the button below I accept that Odoo "
 "may process my e-invoices."
 msgstr ""
-"Test modu, test Peppol ağı üzerinden e-fatura gönderilmesine olanak "
-"tanır.<br/>\n"
+"Test modu, test Peppol ağı üzerinden e-fatura gönderilmesine olanak tanır."
+"<br/>\n"
 "                            Aşağıdaki düğmeye tıklayarak, Odoo'nun e-"
 "faturalarımı işleyebileceğini kabul ediyorum."
 
@@ -2100,13 +2124,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "The Peppol receiver of this document replied that he has accepted it."
-msgstr ""
+msgstr "Bu belgenin Peppol alıcısı, belgeyi kabul ettiğini bildirdi."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "The Peppol receiver of this document replied that he has received it."
-msgstr ""
+msgstr "Bu belgenin Peppol alıcısı, belgeyi aldığını bildirdi."
 
 #. module: account_peppol
 #. odoo-python
@@ -2267,6 +2291,17 @@ msgid ""
 "The following %s Peppol document(s) will be reset to draft:\n"
 "\n"
 "• %s"
+msgstr "Aşağıdaki %s Peppol belgeleri taslak durumuna sıfırlanacaktır: %s"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+msgid ""
+"The following %s document(s) were sent via Peppol / PDP and will be left "
+"untouched. If you need to modify them, you must issue a credit or debit "
+"note:\n"
+"\n"
+"• %s"
 msgstr ""
 
 #. module: account_peppol
@@ -2303,6 +2338,8 @@ msgid ""
 "The invoice has been sent to the Peppol Access Point. The following "
 "attachments were sent with the XML:"
 msgstr ""
+"Fatura, Peppol Erişim Noktasına gönderilmiştir. XML dosyasıyla birlikte "
+"aşağıdaki ekler gönderilmiştir:"
 
 #. module: account_peppol
 #. odoo-python
@@ -2328,6 +2365,8 @@ msgid ""
 "The reasons to reject the received PEPPOL document. These will be sent to "
 "the document's sender."
 msgstr ""
+"Alınan PEPPOL belgesinin reddedilme nedenleri. Bunlar, belgenin gönderenine "
+"iletilecektir."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -2484,6 +2523,8 @@ msgstr ""
 msgid ""
 "To use the Approved Platform for French E-Invoicing install the module '%s'."
 msgstr ""
+"Fransızca E-Faturalama için Onaylı Platformu kullanmak üzere '%s' modülünü "
+"yükleyin."
 
 #. module: account_peppol
 #. odoo-python
@@ -2671,6 +2712,22 @@ msgid ""
 "type different than 'Purchase'.\n"
 "Please change the journal used for Peppol reception before changing the type "
 "of this journal."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move.py:0
+msgid ""
+"You cannot delete invoices that were sent via Peppol / PDP. If you need to "
+"modify them, you must issue a credit or debit note."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move.py:0
+msgid ""
+"You cannot reset to draft invoices that were sent via Peppol / PDP. If you "
+"need to modify them, you must issue a credit or debit note."
 msgstr ""
 
 #. module: account_peppol

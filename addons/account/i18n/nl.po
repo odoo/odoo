@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 17:41+0000\n"
-"PO-Revision-Date: 2026-09-29 12:11+0000\n"
+"POT-Creation-Date: 2026-10-23 17:40+0000\n"
+"PO-Revision-Date: 2026-10-21 16:08+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-20/account/nl/"
 ">\n"
@@ -512,11 +512,9 @@ msgstr "90 dagen, op de 10de"
 #. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 msgid ""
-"<b>%(count)s#</b> Installment of <b>%(amount)s</b> due on <b style='color: "
+"<b>%(count)s</b> - Installment of <b>%(amount)s</b> due on <b style='color: "
 "#704A66;'>%(date)s</b>"
 msgstr ""
-"<b>%(count)s#</b> termijnen van <b>%(amount)s</b> verschuldigd op <b "
-"style='color: #704A66;'>%(date)s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -3328,43 +3326,43 @@ msgstr "Totaal overlopende boekingen"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_buildings
-msgid "Accumulated Depreciation - Buildings"
-msgstr ""
+msgid "Accumulated Amortization - Buildings"
+msgstr "Gecumuleerde afschrijving - Gebouwen"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_furniture
-msgid "Accumulated Depreciation - Furniture & Fixtures"
-msgstr ""
+msgid "Accumulated Amortization - Furniture & Fixtures"
+msgstr "Gecumuleerde afschrijvingen - Meubilair & inrichting"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_improvements
-msgid "Accumulated Depreciation - Improvements"
-msgstr ""
+msgid "Accumulated Amortization - Improvements"
+msgstr "Gecumuleerde afschrijvingen - Verbeteringen"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_machines
-msgid "Accumulated Depreciation - Machines & Tools"
-msgstr ""
+msgid "Accumulated Amortization - Machines & Tools"
+msgstr "Gecumuleerde afschrijvingen - Machines & gereedschappen"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_other_property
-msgid "Accumulated Depreciation - Other Property"
-msgstr ""
+msgid "Accumulated Amortization - Other Property"
+msgstr "Gecumuleerde afschrijvingen - Overige eigendommen"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_technology
-msgid "Accumulated Depreciation - Technology"
-msgstr ""
+msgid "Accumulated Amortization - Technology"
+msgstr "Gecumuleerde afschrijvingen - Technologie"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_vehicles
-msgid "Accumulated Depreciation - Vehicles"
-msgstr ""
+msgid "Accumulated Amortization - Vehicles"
+msgstr "Geaccumuleerde afschrijvingen - Voertuigen"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_acc_depreciation
-msgid "Accumulated Depreciation Misc"
-msgstr ""
+msgid "Accumulated Depreciation"
+msgstr "Gecumuleerde afschrijving"
 
 #. module: account
 #: model:account.account,name:account.21_retained_earnings
@@ -3705,6 +3703,46 @@ msgstr "Correctiepost {link} {percent}%% van {amount} herkend van {date}"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Adjusting Entry {link} {percent}%% of {amount} recognized on {new_date}"
 msgstr "Correctiepost {link} {percent}%% van {amount} herkend op {new_date}"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_depreciation_and_amortization
+msgid "Adjustment - Depreciation and amortization"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_fin_instr_sale
+msgid "Adjustment - Financial Instruments"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_intangible_asset
+msgid "Adjustment - Intangible Assets"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_net_fin_result
+msgid "Adjustment - Net Financial Result"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_PPE_sale
+msgid "Adjustment - PPE Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_provisions
+msgid "Adjustment - Provisions"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_ROU_sale
+msgid "Adjustment - Right of Use Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_unrealized_forex
+msgid "Adjustment - Unrealized Forex"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_administration_fees
@@ -6117,12 +6155,12 @@ msgstr ""
 "goederen in Europa met Intrastat"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account_tag__color
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__color
 msgid "Color"
 msgstr "Kleur"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_account_tag__color
 #: model:ir.model.fields,field_description:account.field_account_journal__color
 msgid "Color Index"
 msgstr "Kleurindex"
@@ -7173,39 +7211,41 @@ msgstr "Gecumuleerd saldo voor de rekening."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_buildings
-msgid "Cumulative depreciation recorded for building assets."
-msgstr ""
+msgid "Cumulative amortization recorded for building assets."
+msgstr "Gecumuleerde afschrijvingen geboekt voor gebouwen."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_technology
-msgid "Cumulative depreciation recorded for capitalized technology assets."
+msgid "Cumulative amortization recorded for capitalized technology assets."
 msgstr ""
+"Gecumuleerde afschrijvingen geboekt op geactiveerde technologische activa."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_furniture
-msgid "Cumulative depreciation recorded for furniture and fixture assets."
-msgstr ""
+msgid "Cumulative amortization recorded for furniture and fixture assets."
+msgstr "Gecumuleerde afschrijvingen op meubilair en inrichting."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_improvements
 msgid ""
-"Cumulative depreciation recorded for leasehold or property improvements."
-msgstr ""
+"Cumulative amortization recorded for leasehold or property improvements."
+msgstr "Gecumuleerde afschrijvingen op gehuurde gebouwen en verbouwingswerken."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_machines
-msgid "Cumulative depreciation recorded for machinery and tool assets."
-msgstr ""
+msgid "Cumulative amortization recorded for machinery and tool assets."
+msgstr "Gecumuleerde afschrijvingen op machines en gereedschap."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_other_property
-msgid "Cumulative depreciation recorded for other depreciable property assets."
+msgid "Cumulative amortization recorded for other depreciable property assets."
 msgstr ""
+"Gecumuleerde afschrijvingen op overige afschrijfbare materiële vaste activa."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_vehicles
-msgid "Cumulative depreciation recorded for vehicle assets."
-msgstr ""
+msgid "Cumulative amortization recorded for vehicle assets."
+msgstr "Gecumuleerde afschrijvingen op voertuigen."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_retained_earnings
@@ -9535,6 +9575,36 @@ msgid "Financial Journal"
 msgstr "Financieel dagboek"
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_fin_borrowings_lt
+msgid "Financing - Borrowings Long Term"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_borrowings_st
+msgid "Financing - Borrowings Short Term"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_dividends
+msgid "Financing - Dividends"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_lease
+msgid "Financing - Lease"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_recov_adv
+msgid "Financing - Recoverable Advances"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_share_issuance
+msgid "Financing - Share Issuance"
+msgstr ""
+
+#. module: account
 #: model:account.account.tag,name:account.account_tag_financing
 msgid "Financing Activities"
 msgstr "Financiële activiteiten"
@@ -11438,6 +11508,51 @@ msgstr "Voorraadvariatie"
 #: model:account.account.tag,name:account.account_tag_investing
 msgid "Investing & Extraordinary Activities"
 msgstr "Investeren en buitengewone activiteiten"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_cash_advances
+msgid "Investment - Cash Advances"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_fin_instr_purchase
+msgid "Investment - Financial Instruments Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_fin_instr_sale
+msgid "Investment - Financial Instruments Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_int_ass_purchase
+msgid "Investment - Intangible Assets Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_int_ass_sale
+msgid "Investment - Intangible Assets Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_interest_received
+msgid "Investment - Interest Received"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_ppe_purchase
+msgid "Investment - PPE Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_ppe_sale
+msgid "Investment - PPE Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_rou_sale
+msgid "Investment - Right of Use Sale"
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -13444,7 +13559,7 @@ msgstr "Naar omlaag verplaatsen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__move_line_ids
 msgid "Move Line"
-msgstr "Boekingsregel"
+msgstr "Verplaatsingsregel"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__move_to_hash_ids
@@ -14430,6 +14545,16 @@ msgstr "Openingsbalans geboekt"
 #: code:addons/account/models/company.py:0
 msgid "Opening balance"
 msgstr "Openingssaldo"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_op_income_tax_paid_received
+msgid "Operating - Income Tax Paid Received"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_op_interest_paid
+msgid "Operating - Interest Paid"
+msgstr ""
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_operating
@@ -22250,6 +22375,36 @@ msgid "Workers Compensation Insurance"
 msgstr "Arbeidsongevallenverzekering"
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_deferred_revenue
+msgid "Working Capital - Deferred Revenue"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_inventory
+msgid "Working Capital - Inventory"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_other_payable
+msgid "Working Capital - Other Payable"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_other_receivable
+msgid "Working Capital - Other Receivable"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_trade_payable
+msgid "Working Capital - Trade Payable"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_trade_receivable
+msgid "Working Capital - Trade Receivable"
+msgstr ""
+
+#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Write a customer name to <b>create one</b> or <b>see suggestions</b>."
@@ -23565,6 +23720,11 @@ msgstr ""
 "aangetekend schrijven op haar maatschappelijke zetel."
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_non_applicable
+msgid "not applicable"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
 msgid "of tax"
 msgstr "van btw"
@@ -23815,6 +23975,13 @@ msgstr ""
 "{{ object.company_id.name }} {{ object.payment_receipt_title }} (Ref "
 "{{ object.name or 'n.v.t.' }})"
 
+#~ msgid ""
+#~ "<b>%(count)s#</b> Installment of <b>%(amount)s</b> due on <b "
+#~ "style='color: #704A66;'>%(date)s</b>"
+#~ msgstr ""
+#~ "<b>%(count)s#</b> termijnen van <b>%(amount)s</b> verschuldigd op <b "
+#~ "style='color: #704A66;'>%(date)s</b>"
+
 #~ msgid "# Reconciled Statement Lines"
 #~ msgstr "# Afgeletterde afschriftregels"
 
@@ -23938,57 +24105,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Je kunt geen nieuwe bankafschriftregel maken zonder een tussenrekening in "
 #~ "te stellen in het %s dagboek."
-
-#~ msgid "Accumulated Amortization - Buildings"
-#~ msgstr "Gecumuleerde afschrijving - Gebouwen"
-
-#~ msgid "Accumulated Amortization - Furniture & Fixtures"
-#~ msgstr "Gecumuleerde afschrijvingen - Meubilair & inrichting"
-
-#~ msgid "Accumulated Amortization - Improvements"
-#~ msgstr "Gecumuleerde afschrijvingen - Verbeteringen"
-
-#~ msgid "Accumulated Amortization - Machines & Tools"
-#~ msgstr "Gecumuleerde afschrijvingen - Machines & gereedschappen"
-
-#~ msgid "Accumulated Amortization - Other Property"
-#~ msgstr "Gecumuleerde afschrijvingen - Overige eigendommen"
-
-#~ msgid "Accumulated Amortization - Technology"
-#~ msgstr "Gecumuleerde afschrijvingen - Technologie"
-
-#~ msgid "Accumulated Amortization - Vehicles"
-#~ msgstr "Geaccumuleerde afschrijvingen - Voertuigen"
-
-#~ msgid "Accumulated Depreciation"
-#~ msgstr "Gecumuleerde afschrijving"
-
-#~ msgid "Cumulative amortization recorded for building assets."
-#~ msgstr "Gecumuleerde afschrijvingen geboekt voor gebouwen."
-
-#~ msgid "Cumulative amortization recorded for capitalized technology assets."
-#~ msgstr ""
-#~ "Gecumuleerde afschrijvingen geboekt op geactiveerde technologische activa."
-
-#~ msgid "Cumulative amortization recorded for furniture and fixture assets."
-#~ msgstr "Gecumuleerde afschrijvingen op meubilair en inrichting."
-
-#~ msgid ""
-#~ "Cumulative amortization recorded for leasehold or property improvements."
-#~ msgstr ""
-#~ "Gecumuleerde afschrijvingen op gehuurde gebouwen en verbouwingswerken."
-
-#~ msgid "Cumulative amortization recorded for machinery and tool assets."
-#~ msgstr "Gecumuleerde afschrijvingen op machines en gereedschap."
-
-#~ msgid ""
-#~ "Cumulative amortization recorded for other depreciable property assets."
-#~ msgstr ""
-#~ "Gecumuleerde afschrijvingen op overige afschrijfbare materiële vaste "
-#~ "activa."
-
-#~ msgid "Cumulative amortization recorded for vehicle assets."
-#~ msgstr "Gecumuleerde afschrijvingen op voertuigen."
 
 #~ msgid "Stock Closing"
 #~ msgstr "Voorraadsluiting"

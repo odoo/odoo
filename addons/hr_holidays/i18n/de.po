@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-16 17:41+0000\n"
-"PO-Revision-Date: 2026-10-12 08:33+0000\n"
+"PO-Revision-Date: 2026-10-20 10:33+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-20/"
 "hr_holidays/de/>\n"
@@ -81,6 +81,34 @@ msgid ""
 "also possible in order to automatically create a meeting when a time off "
 "request is accepted by setting up a type of meeting in time off Type.\n"
 msgstr ""
+"\n"
+"Verwaltung von Urlaubsanträgen und -ansprüchen\n"
+"=====================================\n"
+"\n"
+"Diese App steuert den Abwesenheitsplan Ihres Unternehmens. Es ermöglicht den "
+"Mitarbeitern, Abwesenheiten zu beantragen. Anschließend können Manager "
+"Abwesenheitsanträge prüfen und genehmigen oder ablehnen. Auf diese Weise "
+"können Sie die Gesamtzeitplanung für das Unternehmen oder die Abteilung "
+"steuern.\n"
+"\n"
+"Sie können mehrere Arten von Abwesenheiten (Krankheit, bezahlte Tage …) "
+"einstellen und Abwesenheiten einem Mitarbeiter oder einer Abteilung über die "
+"Urlaubsansprüche schnell zuordnen. Ein Mitarbeiter kann auch durch einen "
+"neuen Antrag auf Urlaubsanspruch weitere freie Tage beantragen. Es erhöht "
+"die Gesamtzahl der verfügbaren Tage für diese Abwesenheitsart, sofern der "
+"Antrag angenommen wird.\n"
+"\n"
+"Sie können die Abwesenheit auf verschiedene Weise verfolgen, indem Sie die "
+"Berichte verfolgen:\n"
+"\n"
+"* Zusammenfassung der Abwesenheiten\n"
+"* Abwesenheit nach Abteilungen\n"
+"* Abwesenheitsanalyse\n"
+"\n"
+"Eine Synchronisation mit einer internen Agenda (Meetings des CRM-Moduls) ist "
+"ebenfalls möglich, um automatisch eine Besprechung zu erstellen, wenn ein "
+"Abwesenheitsantrag akzeptiert wird, indem eine Art von Besprechung in der "
+"Abwesenheitsart eingerichtet wird.\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -134,7 +162,7 @@ msgstr "%(allocation_name)s (von %(date_from)s bis Kein Limit)"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_display_name_mixin.py:0
 msgid "%(days)g days"
-msgstr ""
+msgstr "%(days)g Tage"
 
 #. module: hr_holidays
 #. odoo-python
@@ -146,7 +174,7 @@ msgstr "%(days)g T."
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_display_name_mixin.py:0
 msgid "%(duration)s"
-msgstr ""
+msgstr "%(duration)s"
 
 #. module: hr_holidays
 #. odoo-python
@@ -188,7 +216,7 @@ msgstr "%(leave_name)s wurde aus folgendem Grund storniert: %(reason)s."
 #. odoo-python
 #: code:addons/hr_holidays/models/res_users.py:0
 msgid "%(name)s !!✈ Back on %(date)s!!"
-msgstr ""
+msgstr "%(name)s!!✈ Zurück am %(date)s!!"
 
 #. module: hr_holidays
 #. odoo-python
@@ -212,13 +240,13 @@ msgstr "%(name)s (%(duration)s Stunde(n)"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_work_entry_type.py:0
 msgid "%(name)s (%(time)g days left)"
-msgstr ""
+msgstr "%(name)s (%(time)g Tage übrig)"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_work_entry_type.py:0
 msgid "%(name)s (%(time)g hours left)"
-msgstr ""
+msgstr "%(name)s (%(time)g Stunden übrig)"
 
 #. module: hr_holidays
 #. odoo-python
@@ -326,7 +354,7 @@ msgstr ", zurück am "
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "- %(code)s - %(name)s: %(nbr_days)s days"
-msgstr ""
+msgstr "- %(code)s - %(name)s: %(nbr_days)s Tage"
 
 #. module: hr_holidays
 #. odoo-python
@@ -434,6 +462,8 @@ msgid ""
 "<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\" invisible=\"accrual_plan_id or state != 'confirm'\"/>"
 msgstr ""
+"<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
+"title=\"Pfeil\" invisible=\"accrual_plan_id or state != 'confirm'\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
@@ -441,6 +471,8 @@ msgid ""
 "<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\" invisible=\"accrual_plan_id\"/>"
 msgstr ""
+"<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
+"title=\"Pfeil\" invisible=\"accrual_plan_id\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
@@ -448,6 +480,8 @@ msgid ""
 "<i class=\"oi oi-fw mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\" invisible=\"accrual_plan_id\"/>"
 msgstr ""
+"<i class=\"oi oi-fw mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
+"title=\"Pfeil\" invisible=\"accrual_plan_id\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -455,6 +489,8 @@ msgid ""
 "<i class=\"oi oi-lg align-self-center\" data-icon=\"label\" title=\"Time Off "
 "Type\" name=\"work_entry_type_id\"/>"
 msgstr ""
+"<i class=\"oi oi-lg align-self-center\" data-icon=\"label\" "
+"title=\"Abwesenheitsart\" name=\"work_entry_type_id\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -462,6 +498,8 @@ msgid ""
 "<i class=\"oi oi-lg align-self-center\" data-icon=\"schedule\" "
 "title=\"Dates\" name=\"date\"/>"
 msgstr ""
+"<i class=\"oi oi-lg align-self-center\" data-icon=\"schedule\" "
+"title=\"Daten\" name=\"date\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -469,6 +507,8 @@ msgid ""
 "<i class=\"oi oi-lg oi-filled align-self-center\" data-icon=\"edit\" "
 "title=\"Description\" name=\"name\"/>"
 msgstr ""
+"<i class=\"oi oi-lg oi-filled align-self-center\" data-icon=\"edit\" "
+"title=\"Beschreibung\" name=\"name\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_dashboard_manager_new_time_off
@@ -477,6 +517,8 @@ msgid ""
 "<i class=\"oi oi-lg oi-filled align-self-center\" data-icon=\"person\" "
 "title=\"Employee\" name=\"employee_id\"/>"
 msgstr ""
+"<i class=\"oi oi-lg oi-filled align-self-center\" data-icon=\"person\" "
+"title=\"Mitarbeiter\" name=\"employee_id\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_form
@@ -484,6 +526,8 @@ msgid ""
 "<i class=\"oi oi-lg oi-fw flex-shrink-0\" data-icon=\"label\" title=\"Work "
 "Entry Types\" name=\"work_entry_type_id\"/>"
 msgstr ""
+"<i class=\"oi oi-lg oi-fw flex-shrink-0\" data-icon=\"label\" "
+"title=\"Arbeitseintragsarten\" name=\"work_entry_type_id\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_form
@@ -491,6 +535,8 @@ msgid ""
 "<i class=\"oi oi-lg oi-fw flex-shrink-0\" data-icon=\"schedule\" "
 "title=\"Dates\" name=\"date\"/>"
 msgstr ""
+"<i class=\"oi oi-lg oi-fw flex-shrink-0\" data-icon=\"schedule\" "
+"title=\"Daten\" name=\"date\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_form
@@ -498,6 +544,8 @@ msgid ""
 "<i class=\"oi oi-lg oi-fw oi-filled flex-shrink-0\" data-icon=\"edit\" "
 "title=\"Description\" name=\"description\"/>"
 msgstr ""
+"<i class=\"oi oi-lg oi-fw oi-filled flex-shrink-0\" data-icon=\"edit\" "
+"title=\"Beschreibung\" name=\"description\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_form
@@ -505,6 +553,8 @@ msgid ""
 "<i class=\"oi oi-lg oi-fw oi-filled flex-shrink-0\" data-icon=\"person\" "
 "title=\"Employees\" name=\"employee_id\"/>"
 msgstr ""
+"<i class=\"oi oi-lg oi-fw oi-filled flex-shrink-0\" data-icon=\"person\" "
+"title=\"Mitarbeiter\" name=\"employee_id\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -514,7 +564,7 @@ msgstr "<i class=\"oi\" data-icon=\"attach_file\" title=\"Dateianhänge\"/>"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "<i class=\"oi\" data-icon=\"east\" aria-label=\"to\" title=\"To\"/>"
-msgstr ""
+msgstr "<i class=\"oi\" data-icon=\"east\" aria-label=\"to\" title=\"Bis\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
@@ -587,7 +637,7 @@ msgstr "<span class=\"o_stat_text\">Urlaubsansprüche</span>"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "<span class=\"o_stat_text\">Calendar</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Kalender</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
@@ -600,6 +650,8 @@ msgid ""
 "<span class=\"text-danger\" invisible=\"not work_entry_type_support_document "
 "or supported_attachment_ids\">Required</span>"
 msgstr ""
+"<span class=\"text-danger\" invisible=\"not work_entry_type_support_document "
+"or supported_attachment_ids\">Erforderlich</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
@@ -617,6 +669,8 @@ msgid ""
 "<span class=\"text-muted text-nowrap\" "
 "invisible=\"work_entry_type_request_unit == 'hour'\">day(s)</span>"
 msgstr ""
+"<span class=\"text-muted text-nowrap\" "
+"invisible=\"work_entry_type_request_unit == 'hour'\">Tag(e)</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_time_rule_view_form_inherit_hr_holidays
@@ -676,11 +730,15 @@ msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
+#, fuzzy
 msgid ""
 "<span invisible=\"unit_of_measure == 'hour'\">days</span>\n"
 "                                    <span invisible=\"unit_of_measure != "
 "'hour'\">hours</span>"
 msgstr ""
+"<span invisible=\"unit_of_measure == 'hour'\">Tage</span>\n"
+"                                            <span "
+"invisible=\"unit_of_measure != 'hour'\">Stunden</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_mandatory_day_action
@@ -739,6 +797,8 @@ msgid ""
 "A duration of %s per day does not fit in the working time of the selected "
 "dates."
 msgstr ""
+"Eine Dauer von %s pro Tag passt nicht in die Arbeitszeit der ausgewählten "
+"Daten."
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_holiday_allocation_id
@@ -797,7 +857,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "A supporting document is required for this type of time type."
-msgstr ""
+msgstr "Für diese Zeitart ist ein Nachweis erforderlich."
 
 #. module: hr_holidays
 #. odoo-python
@@ -851,7 +911,7 @@ msgstr "Heute abwesend"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Zugriffsgruppen"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1115,7 +1175,7 @@ msgstr "Urlaub zuweisen"
 #. module: hr_holidays
 #: model:ir.module.module,summary:base.module_hr_holidays
 msgid "Allocate time off and follow leave requests"
-msgstr ""
+msgstr "Abwesenheiten zuweisen und Urlaubsanträge verfolgen"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_time_rule__allocation_type_id
@@ -1158,7 +1218,7 @@ msgstr "Urlaubsanspruchsanzeige"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__allocation_display_warning
 msgid "Allocation Display Warning"
-msgstr ""
+msgstr "Warnung zur Zuweisungsanzeige"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_work_entry_type__allocation_notif_subtype_id
@@ -1499,13 +1559,13 @@ msgstr "Genehmigt und bestätigt"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__allocation_validation_type__hr
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__leave_validation_type__hr
 msgid "By HR Responsible"
-msgstr ""
+msgstr "Von Personalverantwortlichen"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__allocation_validation_type__both
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__leave_validation_type__both
 msgid "By HR Responsible and Time Off Approver"
-msgstr ""
+msgstr "Vom Personalverantwortlichen und Abwesenheitsgenehmiger"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__allocation_validation_type__manager
@@ -3012,7 +3072,7 @@ msgstr "März"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_type_icon
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Material-Symbols-Icon, z. B. Checkliste"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__max_leaves

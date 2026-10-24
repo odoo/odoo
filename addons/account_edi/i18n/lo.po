@@ -1,16 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account_edi
+# * account_edi
 #
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.3a1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 16:05+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Lao <https://translate.odoo.com/projects/odoo-s19-4/"
-"account_edi/lo/>\n"
+"PO-Revision-Date: 2026-10-24 11:33+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-20/account_edi/"
+"lo/>\n"
 "Language: lo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,36 +34,44 @@ msgid ""
 "exchange (other company,\n"
 "governements, etc.)\n"
 msgstr ""
+"\n"
+"ການແລກປ່ຽນຂໍ້ມູນແບບເອເລັກໂຕຣນິກ (Electronic Data Interchange)\n"
+"=======================================\n"
+"EDI ແມ່ນການແລກປ່ຽນຂໍ້ມູນທາງທຸລະກິດແບບເອເລັກໂຕຣນິກ ໂດຍນຳໃຊ້ຮູບແບບມາດຕະຖານ.\n"
+"\n"
+"ນີ້ແມ່ນໂມດູນພື້ນຖານສຳລັບການນຳເຂົ້າ ແລະ ສົ່ງອອກໃບຮຽກເກັບເງິນໃນຮູບແບບ EDI ຕ່າງໆ, ແລະ\n"
+"ການສົ່ງເອກະສານດັ່ງກ່າວໄປຍັງພາກສ່ວນຕ່າງໆ ທີ່ກ່ຽວຂ້ອງກັບການແລກປ່ຽນ (ບໍລິສັດອື່ນ,\n"
+"ລັດຖະບານ, ແລະ ອື່ນໆ)\n"
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid "%(count)s Electronic invoicing error(s)"
-msgstr ""
+msgstr "ຂໍ້ຜິດພາດຂອງໃບຮຽກເກັບເງິນເອເລັກໂຕຣນິກ %(count)s ລາຍການ"
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid "%(count)s Electronic invoicing info(s)"
-msgstr ""
+msgstr "ຂໍ້ມູນຂອງໃບຮຽກເກັບເງິນເອເລັກໂຕຣນິກ %(count)s ລາຍການ"
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid "%(count)s Electronic invoicing warning(s)"
-msgstr ""
+msgstr "ຄຳເຕືອນຂອງໃບຮຽກເກັບເງິນເອເລັກໂຕຣນິກ %(count)s ລາຍການ"
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid "A cancellation of the EDI has been requested."
-msgstr ""
+msgstr "ໄດ້ມີການຮ້ອງຂໍຍົກເລີກ EDI ແລ້ວ."
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid "A request for cancellation of the EDI has been called off."
-msgstr ""
+msgstr "ຄຳຮ້ອງຂໍຍົກເລີກ EDI ໄດ້ຖືກຖອນຄືນແລ້ວ."
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
@@ -70,17 +79,18 @@ msgid ""
 "Are you sure you want to cancel this invoice without waiting for the EDI "
 "document to be canceled?"
 msgstr ""
+"ທ່ານແນ່ໃຈບໍ່ວ່າຕ້ອງການຍົກເລີກໃບຮຽກເກັບເງິນນີ້ ໂດຍບໍ່ລໍຖ້າໃຫ້ເອກະສານ EDI ຖືກຍົກເລີກກ່ອນ?"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_attachment
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__attachment_id
 msgid "Attachment"
-msgstr ""
+msgstr "ໄຟລ໌ຄັດຕິດ"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__blocking_level
 msgid "Blocking Level"
-msgstr ""
+msgstr "ລະດັບການລະງັບ"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__blocking_level
@@ -94,17 +104,22 @@ msgid ""
 "  * Error: there is an error that blocks the current Electronic Invoicing "
 "operation."
 msgstr ""
+"ລະງັບການດຳເນີນງານປັດຈຸບັນຂອງເອກະສານ ໂດຍອີງຕາມລະດັບຄວາມຮຸນແຮງຂອງຂໍ້ຜິດພາດ:\n"
+"  * ຂໍ້ມູນ (Info): ເອກະສານບໍ່ໄດ້ຖືກລະງັບ ແລະ ທຸກຢ່າງເຮັດວຽກຕາມປົກກະຕິ.\n"
+"  * ຄຳເຕືອນ (Warning): ມີຂໍ້ຜິດພາດເກີດຂຶ້ນ ແຕ່ບໍ່ໄດ້ຂັດຂວາງການດຳເນີນງານໃບຮຽກເກັບເງິນເອເລັກໂຕຣນິ"
+"ກໃນປະຈຸບັນ.\n"
+"  * ຂໍ້ຜິດພາດ (Error): ມີຂໍ້ຜິດພາດທີ່ລະງັບການດຳເນີນງານໃບຮຽກເກັບເງິນເອເລັກໂຕຣນິກໃນປະຈຸບັນ."
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Call off EDI Cancellation"
-msgstr ""
+msgstr "ຖອນຄືນການຍົກເລີກ EDI"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__cancelled
 #: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_state__cancelled
 msgid "Cancelled"
-msgstr ""
+msgstr "ຍົກເລີກແລ້ວ"
 
 #. module: account_edi
 #. odoo-python
@@ -113,28 +128,29 @@ msgid ""
 "Cannot deactivate (%s) on this journal because not all documents are "
 "synchronized"
 msgstr ""
+"ບໍ່ສາມາດປິດການນຳໃຊ້ (%s) ໃນປຶ້ມບັນຊີລາຍວັນນີ້ໄດ້ ເນື່ອງຈາກເອກະສານທັງໝົດຍັງບໍ່ທັນໄດ້ເຊື່ອມໂຍງຂໍ້ມູນສຳເລັດ"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_format__code
 msgid "Code"
-msgstr ""
+msgstr "ລະຫັດ"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_journal__compatible_edi_ids
 msgid "Compatible Edi"
-msgstr ""
+msgstr "EDI ທີ່ເຂົ້າກັນໄດ້"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__create_uid
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_format__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "ສ້າງໂດຍ"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__create_date
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_format__create_date
 msgid "Created on"
-msgstr ""
+msgstr "ສ້າງເມື່ອ"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__display_name
@@ -146,95 +162,95 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_edi.field_ir_actions_report__display_name
 #: model:ir.model.fields,field_description:account_edi.field_ir_attachment__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ຊື່ທີ່ສະແດງ"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Download"
-msgstr ""
+msgstr "ດາວໂຫຼດ"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "EDI Documents"
-msgstr ""
+msgstr "ເອກະສານ EDI"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_edi_format
 msgid "EDI format"
-msgstr ""
+msgstr "ຮູບແບບ EDI"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_journal__compatible_edi_ids
 msgid "EDI format that support moves in this journal"
-msgstr ""
+msgstr "ຮູບແບບ EDI ທີ່ຮອງຮັບການລົງບັນຊີໃນປຶ້ມບັນຊີລາຍວັນນີ້"
 
 #. module: account_edi
 #: model:ir.actions.server,name:account_edi.ir_cron_edi_network_ir_actions_server
 msgid "EDI: Perform web services operations"
-msgstr ""
+msgstr "EDI: ດຳເນີນການບໍລິການເວັບ (Web Services)"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_blocking_level
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_blocking_level
 msgid "Edi Blocking Level"
-msgstr ""
+msgstr "ລະດັບການລະງັບຂອງ EDI"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_content
 msgid "Edi Content"
-msgstr ""
+msgstr "ເນື້ອຫາ EDI"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_document_ids
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_document_ids
 msgid "Edi Document"
-msgstr ""
+msgstr "ເອກະສານ EDI"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_error_count
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_error_count
 msgid "Edi Error Count"
-msgstr ""
+msgstr "ຈຳນວນຂໍ້ຜິດພາດຂອງ EDI"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_error_message
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_error_message
 msgid "Edi Error Message"
-msgstr ""
+msgstr "ຂໍ້ຄວາມຜິດພາດຂອງ EDI"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_id
 msgid "Edi Format"
-msgstr ""
+msgstr "ຮູບແບບ EDI"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_abandon_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_abandon_cancel_button
 msgid "Edi Show Abandon Cancel Button"
-msgstr ""
+msgstr "EDI ສະແດງປຸ່ມຖອນຄືນການຍົກເລີກ"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_cancel_button
 msgid "Edi Show Cancel Button"
-msgstr ""
+msgstr "EDI ສະແດງປຸ່ມຍົກເລີກ"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_force_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_force_cancel_button
 msgid "Edi Show Force Cancel Button"
-msgstr ""
+msgstr "EDI ສະແດງປຸ່ມບັງຄັບຍົກເລີກ"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_web_services_to_process
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_web_services_to_process
 msgid "Edi Web Services To Process"
-msgstr ""
+msgstr "ບໍລິການເວັບ EDI ທີ່ຕ້ອງປະມວນຜົນ"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_edi_document
 msgid "Electronic Document for an account.move"
-msgstr ""
+msgstr "ເອກະສານເອເລັກໂຕຣນິກສຳລັບ account.move"
 
 #. module: account_edi
 #: model:ir.actions.act_window,name:account_edi.action_open_edi_documents
@@ -242,40 +258,40 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_edi.field_account_journal__edi_format_ids
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_state
 msgid "Electronic invoicing"
-msgstr ""
+msgstr "ໃບຮຽກເກັບເງິນເອເລັກໂຕຣນິກ"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
 msgid "Electronic invoicing processing needed"
-msgstr ""
+msgstr "ຈຳເປັນຕ້ອງມີການປະມວນຜົນໃບຮຽກເກັບເງິນເອເລັກໂຕຣນິກ"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
 msgid "Electronic invoicing state"
-msgstr ""
+msgstr "ສະຖານະໃບຮຽກເກັບເງິນເອເລັກໂຕຣນິກ"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__error
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__blocking_level__error
 #: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_blocking_level__error
 msgid "Error"
-msgstr ""
+msgstr "ຂໍ້ຜິດພາດ"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Force Cancel"
-msgstr ""
+msgstr "ບັງຄັບຍົກເລີກ"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_name
 msgid "Format Name"
-msgstr ""
+msgstr "ຊື່ຮູບແບບ"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_bank_statement_line__edi_error_count
 #: model:ir.model.fields,help:account_edi.field_account_move__edi_error_count
 msgid "How many EDIs are in error for this move?"
-msgstr ""
+msgstr "ມີ EDI ຈັກລາຍການທີ່ເກີດຂໍ້ຜິດພາດສຳລັບການລົງບັນຊີນີ້?"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__id
@@ -287,18 +303,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_edi.field_ir_actions_report__id
 #: model:ir.model.fields,field_description:account_edi.field_ir_attachment__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: account_edi
 #: model:ir.module.module,shortdesc:base.module_account_edi
 msgid "Import/Export Invoices From XML/PDF"
-msgstr ""
+msgstr "ນຳເຂົ້າ/ສົ່ງອອກ ໃບຮຽກເກັບເງິນຈາກ XML/PDF"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__blocking_level__info
 #: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_blocking_level__info
 msgid "Info"
-msgstr ""
+msgstr "ຂໍ້ມູນ"
 
 #. module: account_edi
 #. odoo-python
@@ -308,96 +324,99 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"ການກຳນົດຄ່າໃບຮຽກເກັບເງິນບໍ່ຖືກຕ້ອງ:\n"
+"\n"
+"%s"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_journal
 msgid "Journal"
-msgstr ""
+msgstr "ປຶ້ມບັນຊີລາຍວັນ"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_move
 msgid "Journal Entry"
-msgstr ""
+msgstr "ການລົງບັນຊີລາຍວັນ"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__write_uid
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_format__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "ອັບເດດຫຼ້າສຸດໂດຍ"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__write_date
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_format__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "ອັບເດດຫຼ້າສຸດເມື່ອ"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__move_id
 msgid "Move"
-msgstr ""
+msgstr "ການເຄື່ອນໄຫວບັນຊີ"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__name
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_format__name
 msgid "Name"
-msgstr ""
+msgstr "ຊື່"
 
 #. module: account_edi
 #: model:ir.model.constraint,message:account_edi.constraint_account_edi_document_unique_edi_document_by_move_by_format
 msgid "Only one edi document by move by format"
-msgstr ""
+msgstr "ສາມາດມີເອກະສານ EDI ໄດ້ພຽງອັນດຽວຕໍ່ໜຶ່ງການເຄື່ອນໄຫວ ແລະ ຕໍ່ໜຶ່ງຮູບແບບ"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Process now"
-msgstr ""
+msgstr "ປະມວນຜົນຕອນນີ້"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_resequence_wizard
 msgid "Remake the sequence of Journal Entries."
-msgstr ""
+msgstr "ຈັດລຽງລຳດັບເລກທີຂອງການລົງບັນຊີລາຍວັນຄືນໃໝ່."
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_actions_report
 msgid "Report Action"
-msgstr ""
+msgstr "ການດຳເນີນງານລາຍງານ"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Request EDI Cancellation"
-msgstr ""
+msgstr "ຮ້ອງຂໍຍົກເລີກ EDI"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Retry"
-msgstr ""
+msgstr "ລອງໃໝ່ອີກຄັ້ງ"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_journal__edi_format_ids
 msgid "Send XML/EDI invoices"
-msgstr ""
+msgstr "ສົ່ງໃບຮຽກເກັບເງິນແບບ XML/EDI"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__sent
 #: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_state__sent
 msgid "Sent"
-msgstr ""
+msgstr "ສົ່ງແລ້ວ"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_move_send
 msgid "Shared Send Invoice Wizard Functions"
-msgstr ""
+msgstr "ຟັງຊັນຕົວຊ່ວຍສ້າງການສົ່ງໃບຮຽກເກັບເງິນທີ່ໃຊ້ຮ່ວມກັນ"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__state
 msgid "State"
-msgstr ""
+msgstr "ສະຖານະ"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_bank_statement_line__edi_state
 #: model:ir.model.fields,help:account_edi.field_account_move__edi_state
 msgid "The aggregated state of all the EDIs with web-service of this move"
-msgstr ""
+msgstr "ສະຖານະລວມຂອງ EDI ທັງໝົດທີ່ມີບໍລິການເວັບສຳລັບການລົງບັນຊີນີ້"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__attachment_id
@@ -405,35 +424,38 @@ msgid ""
 "The file generated by edi_format_id when the invoice is posted (and this "
 "document is processed)."
 msgstr ""
+"ໄຟລ໌ທີ່ສ້າງຂຶ້ນໂດຍ edi_format_id ເມື່ອໃບຮຽກເກັບເງິນຖືກລົງບັນຊີແລ້ວ (ແລະ ເອກະສານນີ້ໄດ້ຮັບການປະມວນ"
+"ຜົນ)."
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/wizard/account_resequence.py:0
 msgid ""
 "The following documents have already been sent and cannot be resequenced: %s"
-msgstr ""
+msgstr "ເອກະສານຕໍ່ໄປນີ້ໄດ້ຖືກສົ່ງໄປແລ້ວ ແລະ ບໍ່ສາມາດຈັດລຽງລຳດັບໃໝ່ໄດ້: %s"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "The invoice will soon be sent to"
-msgstr ""
+msgstr "ໃບຮຽກເກັບເງິນຈະຖືກສົ່ງໄປຍັງ"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__error
 msgid ""
 "The text of the last error that happened during Electronic Invoice operation."
 msgstr ""
+"ຂໍ້ຄວາມຂອງຂໍ້ຜິດພາດຫຼ້າສຸດທີ່ເກີດຂຶ້ນໃນລະຫວ່າງການດຳເນີນງານໃບຮຽກເກັບເງິນເອເລັກໂຕຣນິກ."
 
 #. module: account_edi
 #: model:ir.model.constraint,message:account_edi.constraint_account_edi_format_unique_code
 msgid "This code already exists"
-msgstr ""
+msgstr "ລະຫັດນີ້ມີຢູ່ແລ້ວ"
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_edi_document.py:0
 msgid "This document is being sent by another process already. "
-msgstr ""
+msgstr "ເອກະສານນີ້ກຳລັງຖືກສົ່ງໂດຍຂະບວນການອື່ນຢູ່ແລ້ວ. "
 
 #. module: account_edi
 #. odoo-python
@@ -442,24 +464,25 @@ msgid ""
 "This invoice was canceled while the EDIs %s still had a pending cancellation "
 "request."
 msgstr ""
+"ໃບຮຽກເກັບເງິນນີ້ຖືກຍົກເລີກ ໃນຂະນະທີ່ EDI %s ຍັງມີຄຳຮ້ອງຂໍຍົກເລີກທີ່ຄ້າງຢູ່."
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_cancel
 #: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_state__to_cancel
 msgid "To Cancel"
-msgstr ""
+msgstr "ລໍຖ້າຍົກເລີກ"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_send
 #: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_state__to_send
 msgid "To Send"
-msgstr ""
+msgstr "ລໍຖ້າສົ່ງ"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__blocking_level__warning
 #: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_blocking_level__warning
 msgid "Warning"
-msgstr ""
+msgstr "ຄຳເຕືອນ"
 
 #. module: account_edi
 #. odoo-python
@@ -469,6 +492,8 @@ msgid ""
 "has already been sent. Please use the 'Request EDI Cancellation' button "
 "instead."
 msgstr ""
+"ທ່ານບໍ່ສາມາດແກ້ໄຂການລົງບັນຊີລາຍວັນຕໍ່ໄປນີ້ %s ໄດ້ ເນື່ອງຈາກເອກະສານເອເລັກໂຕຣນິກໄດ້ຖືກສົ່ງໄປແລ້ວ. ກະລຸ"
+"ນາໃຊ້ປຸ່ມ 'ຮ້ອງຂໍຍົກເລີກ EDI' ແທນ."
 
 #. module: account_edi
 #. odoo-python
@@ -476,8 +501,9 @@ msgstr ""
 msgid ""
 "You can't unlink an attachment being an EDI document sent to the government."
 msgstr ""
+"ທ່ານບໍ່ສາມາດລຶບໄຟລ໌ຄັດຕິດທີ່ເປັນເອກະສານ EDI ທີ່ຖືກສົ່ງໄປໃຫ້ລັດຖະບານແລ້ວໄດ້."
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "⇒ See errors"
-msgstr ""
+msgstr "⇒ ເບິ່ງຂໍ້ຜິດພາດ"

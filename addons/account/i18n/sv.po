@@ -41,8 +41,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 17:41+0000\n"
-"PO-Revision-Date: 2026-10-14 13:35+0000\n"
+"POT-Creation-Date: 2026-10-23 17:40+0000\n"
+"PO-Revision-Date: 2026-10-23 14:33+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-20/account/"
 "sv/>\n"
@@ -113,6 +113,18 @@ msgid ""
 "This module also offers you an easy method of registering payments, without "
 "having to encode complete abstracts of account.\n"
 msgstr ""
+"\n"
+"Fakturering och betalningar\n"
+"====================\n"
+"Ett specifikt och lättanvänt faktureringssystem i Odoo som gör det möjligt "
+"för dig att hålla koll på din bokföring, även för icke-revisorer. Det enkla "
+"tillvägagångssätt gör det möjligt att följa upp med leverantörer och "
+"kunder.\n"
+"\n"
+"Använd den här förenklade bokföringen om du har en extern bokföring men ändå "
+"vill hålla koll på dina transaktioner och betalningar. Modulen ger också ett "
+"enkelt sätt för att registrera betalningar, utan att behöva skapa "
+"fullständiga kontosammanfattningar.\n"
 
 #. module: account
 #. odoo-python
@@ -139,7 +151,7 @@ msgstr " giltig till %s"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
 msgid "# Reconciled Bank Transactions"
-msgstr ""
+msgstr "# Avstämda banktransaktioner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -179,7 +191,7 @@ msgstr "%(action)s för journalen %(journal)s"
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "%(amount).2f %(currency)s already paid."
-msgstr ""
+msgstr "%(amount).2f %(currency)s är redan betalt."
 
 #. module: account
 #. odoo-python
@@ -523,11 +535,9 @@ msgstr "Om 90 dagar, på den 10:e"
 #. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 msgid ""
-"<b>%(count)s#</b> Installment of <b>%(amount)s</b> due on <b style='color: "
+"<b>%(count)s</b> - Installment of <b>%(amount)s</b> due on <b style='color: "
 "#704A66;'>%(date)s</b>"
 msgstr ""
-"Delbetalning #<b>%(count)s</b> med beloppet <b>%(amount)s</b> förfaller den "
-"<b style='color: #704A66;'>%(date)s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -3178,43 +3188,43 @@ msgstr "Totalt periodiseringsbelopp"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_buildings
-msgid "Accumulated Depreciation - Buildings"
-msgstr ""
+msgid "Accumulated Amortization - Buildings"
+msgstr "Ackumulerade amorteringar - Byggnader"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_furniture
-msgid "Accumulated Depreciation - Furniture & Fixtures"
-msgstr ""
+msgid "Accumulated Amortization - Furniture & Fixtures"
+msgstr "Ackumulerade amorteringar - Möbler och inventarier"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_improvements
-msgid "Accumulated Depreciation - Improvements"
-msgstr ""
+msgid "Accumulated Amortization - Improvements"
+msgstr "Ackumulerade amorteringar - Förbättringar"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_machines
-msgid "Accumulated Depreciation - Machines & Tools"
-msgstr ""
+msgid "Accumulated Amortization - Machines & Tools"
+msgstr "Ackumulerade amorteringar - Maskiner och verktyg"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_other_property
-msgid "Accumulated Depreciation - Other Property"
-msgstr ""
+msgid "Accumulated Amortization - Other Property"
+msgstr "Ackumulerade amorteringar - Övrigt ägande"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_technology
-msgid "Accumulated Depreciation - Technology"
-msgstr ""
+msgid "Accumulated Amortization - Technology"
+msgstr "Ackumulerade amorteringar - Teknologi"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_vehicles
-msgid "Accumulated Depreciation - Vehicles"
-msgstr ""
+msgid "Accumulated Amortization - Vehicles"
+msgstr "Ackumulerade amorteringar - Fordon"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_acc_depreciation
-msgid "Accumulated Depreciation Misc"
-msgstr ""
+msgid "Accumulated Depreciation"
+msgstr "Ackumulerade avskrivningar"
 
 #. module: account
 #: model:account.account,name:account.21_retained_earnings
@@ -3553,6 +3563,46 @@ msgstr "Bokföringsorder {link} {percent}%% för {amount} från {date}"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Adjusting Entry {link} {percent}%% of {amount} recognized on {new_date}"
 msgstr "Bokföringsorder {link} {percent}%% för {amount} från den {new_date}"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_depreciation_and_amortization
+msgid "Adjustment - Depreciation and amortization"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_fin_instr_sale
+msgid "Adjustment - Financial Instruments"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_intangible_asset
+msgid "Adjustment - Intangible Assets"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_net_fin_result
+msgid "Adjustment - Net Financial Result"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_PPE_sale
+msgid "Adjustment - PPE Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_provisions
+msgid "Adjustment - Provisions"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_ROU_sale
+msgid "Adjustment - Right of Use Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_unrealized_forex
+msgid "Adjustment - Unrealized Forex"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_administration_fees
@@ -4305,7 +4355,7 @@ msgstr "På bokföringsdatum"
 msgid ""
 "At closing, register the inventory variation of the period into a specific "
 "account"
-msgstr ""
+msgstr "Vid bokslut, bokförs periodens lagerdifferens på ett specifikt konto"
 
 #. module: account
 #. odoo-python
@@ -4578,7 +4628,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__product_template__cost_method__average
 #: model:ir.model.fields.selection,name:account.selection__res_company__cost_method__average
 msgid "Average Cost (AVCO)"
-msgstr ""
+msgstr "Genomsnittlig kostnad (AVCO)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_average
@@ -5961,12 +6011,12 @@ msgstr ""
 "med intrastat"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account_tag__color
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__color
 msgid "Color"
 msgstr "Färg"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_account_tag__color
 #: model:ir.model.fields,field_description:account.field_account_journal__color
 msgid "Color Index"
 msgstr "Färgindex"
@@ -6426,7 +6476,7 @@ msgstr "Kostnader för intäkter"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category__property_cost_method
 msgid "Costing Method"
-msgstr ""
+msgstr "Kalkyleringsmetod"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_postage
@@ -6712,8 +6762,8 @@ msgid ""
 "                    adjustments, ensuring compliance with diverse "
 "regulations."
 msgstr ""
-"Skapa så många reskontragrupper som behövs för att upprätthålla separata "
-"reskontran för lokala GAAP-, IFRS-\n"
+"Skapa så många journalgrupper som behövs för upprätthålla separat bokföring "
+"vid lokala GAAP-, IFRS-\n"
 "                    eller skattejusteringar, vilket säkerställer att man "
 "klarar av att följa olika regelverk."
 
@@ -7015,39 +7065,39 @@ msgstr "Kontots ackumulerade saldo."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_buildings
-msgid "Cumulative depreciation recorded for building assets."
-msgstr ""
+msgid "Cumulative amortization recorded for building assets."
+msgstr "Ackumulerade amorteringar som registrerats för byggnadstillgångar."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_technology
-msgid "Cumulative depreciation recorded for capitalized technology assets."
+msgid "Cumulative amortization recorded for capitalized technology assets."
 msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_furniture
-msgid "Cumulative depreciation recorded for furniture and fixture assets."
+msgid "Cumulative amortization recorded for furniture and fixture assets."
 msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_improvements
 msgid ""
-"Cumulative depreciation recorded for leasehold or property improvements."
+"Cumulative amortization recorded for leasehold or property improvements."
 msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_machines
-msgid "Cumulative depreciation recorded for machinery and tool assets."
+msgid "Cumulative amortization recorded for machinery and tool assets."
 msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_other_property
-msgid "Cumulative depreciation recorded for other depreciable property assets."
+msgid "Cumulative amortization recorded for other depreciable property assets."
 msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_vehicles
-msgid "Cumulative depreciation recorded for vehicle assets."
-msgstr ""
+msgid "Cumulative amortization recorded for vehicle assets."
+msgstr "Ackumulerade amorteringar som registrerats för fordonstillgångar."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_retained_earnings
@@ -7332,7 +7382,7 @@ msgstr "Tullavgifter som uppkommer vid import av varor från länder utanför US
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Cut-off {label}"
-msgstr "Avgränsning {etikett}"
+msgstr "Avgränsning {label}"
 
 #. module: account
 #. odoo-python
@@ -8366,7 +8416,7 @@ msgstr "Genväg för domänformel"
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Domestic"
-msgstr "Inrikes"
+msgstr "Inhemska"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__domestic_fiscal_position_id
@@ -8632,7 +8682,7 @@ msgstr "Växel"
 #: model:ir.model.fields,field_description:account.field_account_payment_term__early_discount
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
 msgid "Early Discount"
-msgstr "Rabatt vid tidig betalning"
+msgstr "Rabatt vid förskottsbetalning"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
@@ -9374,6 +9424,36 @@ msgid "Financial Journal"
 msgstr "Finansiell bokföringsjournal"
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_fin_borrowings_lt
+msgid "Financing - Borrowings Long Term"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_borrowings_st
+msgid "Financing - Borrowings Short Term"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_dividends
+msgid "Financing - Dividends"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_lease
+msgid "Financing - Lease"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_recov_adv
+msgid "Financing - Recoverable Advances"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_share_issuance
+msgid "Financing - Share Issuance"
+msgstr ""
+
+#. module: account
 #: model:account.account.tag,name:account.account_tag_financing
 msgid "Financing Activities"
 msgstr "Finansiella aktiviteter"
@@ -9532,7 +9612,7 @@ msgstr "Räkenskapsårets sista månad"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__fixed
 #: model:ir.model.fields.selection,name:account.selection__account_tax__amount_type__fixed
 msgid "Fixed"
-msgstr "Fast"
+msgstr "Belopp"
 
 #. module: account
 #: model:account.account,name:account.21_fixed_assets
@@ -11268,6 +11348,51 @@ msgid "Investing & Extraordinary Activities"
 msgstr "Investeringar och utomstående aktiviteter"
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_inv_cash_advances
+msgid "Investment - Cash Advances"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_fin_instr_purchase
+msgid "Investment - Financial Instruments Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_fin_instr_sale
+msgid "Investment - Financial Instruments Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_int_ass_purchase
+msgid "Investment - Intangible Assets Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_int_ass_sale
+msgid "Investment - Intangible Assets Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_interest_received
+msgid "Investment - Interest Received"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_ppe_purchase
+msgid "Investment - PPE Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_ppe_sale
+msgid "Investment - PPE Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_rou_sale
+msgid "Investment - Right of Use Sale"
+msgstr ""
+
+#. module: account
 #. odoo-javascript
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
@@ -12439,8 +12564,7 @@ msgstr "Gruppnamn"
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_group_list
 msgid "Ledger group allows managing multiple accounting standards."
 msgstr ""
-"Reskontragrupper gör det möjligt att hantera flera olika "
-"bokföringsstandarder."
+"Journalgrupper gör det möjligt att hantera flera olika bokföringsstandarder."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_line__horizontal_split_side__left
@@ -13030,7 +13154,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__activity_type_icon
 #: model:ir.model.fields,help:account.field_res_partner_bank__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Material Symbols-ikon, t.ex. checklista"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__max_date
@@ -13316,7 +13440,7 @@ msgstr "Reskontragrupper"
 #: model:ir.actions.act_window,name:account.action_account_journal_group_list
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_form
 msgid "Multi-ledger"
-msgstr "Reskontragrupper"
+msgstr "Journalgrupper"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__direction_sign
@@ -14258,6 +14382,16 @@ msgstr "Ingående balans bokförd"
 #: code:addons/account/models/company.py:0
 msgid "Opening balance"
 msgstr "Ingående balans"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_op_income_tax_paid_received
+msgid "Operating - Income Tax Paid Received"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_op_interest_paid
+msgid "Operating - Interest Paid"
+msgstr ""
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_operating
@@ -15215,7 +15349,7 @@ msgstr "Jämförelse mellan perioder"
 #: model:ir.model.fields.selection,name:account.selection__product_template__valuation__periodic
 #: model:ir.model.fields.selection,name:account.selection__res_company__inventory_valuation__periodic
 msgid "Periodic (at closing)"
-msgstr ""
+msgstr "Periodisk (vid bokslut)"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_expense_buildings
@@ -15264,13 +15398,17 @@ msgid ""
 "inventory when a product is billed or invoiced.\n"
 "        "
 msgstr ""
+"Periodisk: Verifikationer skapas manuellt i lagervärderingsrapporten.\n"
+"        Löpande: Verifikationer skapas automatiskt för att bidra till "
+"lagervärderingen när en produkt faktureras in eller ut.\n"
+"        "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__product_category__property_valuation__real_time
 #: model:ir.model.fields.selection,name:account.selection__product_template__valuation__real_time
 #: model:ir.model.fields.selection,name:account.selection__res_company__inventory_valuation__real_time
 msgid "Perpetual (at invoicing)"
-msgstr ""
+msgstr "Löpande (vid fakturering)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__phishing_warnings
@@ -17914,7 +18052,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__product_template__cost_method__standard
 #: model:ir.model.fields.selection,name:account.selection__res_company__cost_method__standard
 msgid "Standard Price"
-msgstr ""
+msgstr "Standardpris"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_cost_method
@@ -17925,6 +18063,11 @@ msgid ""
 "cost.\n"
 "        "
 msgstr ""
+"Standardpris: Produkter värderas till ett standardpris som definieras för "
+"varje produkt.\n"
+"        Genomsnittlig kostnad (AVCO): Produkter värderas till en viktad "
+"genomsnittlig kostnad.\n"
+"        "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -18052,7 +18195,7 @@ msgstr "Steget är slutfört!"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
 msgid "Stock Account"
-msgstr ""
+msgstr "Lagerkonto"
 
 #. module: account
 #. odoo-python
@@ -18089,7 +18232,7 @@ msgstr ""
 #: code:addons/account/static/src/components/stock_valuation/stock_valuation_report.js:0
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
 msgid "Stock Variation"
-msgstr ""
+msgstr "Lagerdifferens"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category__account_stock_variation_id
@@ -21925,6 +22068,8 @@ msgid ""
 "When automated inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
+"När automatisk lagervärdering aktiveras för en produkt kommer detta konto "
+"att innehålla produktens aktuella värde."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__print_on_new_page
@@ -22011,6 +22156,36 @@ msgstr "Pågående arbete"
 #: model:account.account,name:account.22_account_account_us_compensation_insurance
 msgid "Workers Compensation Insurance"
 msgstr "Arbetsskadeförsäkring"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_deferred_revenue
+msgid "Working Capital - Deferred Revenue"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_inventory
+msgid "Working Capital - Inventory"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_other_payable
+msgid "Working Capital - Other Payable"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_other_receivable
+msgid "Working Capital - Other Receivable"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_trade_payable
+msgid "Working Capital - Trade Payable"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_trade_receivable
+msgid "Working Capital - Trade Receivable"
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -23331,6 +23506,11 @@ msgstr ""
 "eller tillhandahållandet av tjänsterna."
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_non_applicable
+msgid "not applicable"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
 msgid "of tax"
 msgstr "av skatt"
@@ -23578,6 +23758,13 @@ msgid ""
 "{{ object.name or 'n/a' }})"
 msgstr ""
 
+#~ msgid ""
+#~ "<b>%(count)s#</b> Installment of <b>%(amount)s</b> due on <b "
+#~ "style='color: #704A66;'>%(date)s</b>"
+#~ msgstr ""
+#~ "Delbetalning #<b>%(count)s</b> med beloppet <b>%(amount)s</b> förfaller "
+#~ "den <b style='color: #704A66;'>%(date)s</b>"
+
 #~ msgid "# Reconciled Statement Lines"
 #~ msgstr "# Avstämda rader på kontoutdrag"
 
@@ -23692,36 +23879,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Det är inte möjligt att skapa en ny rad i ett kontoutdrag utan ett "
 #~ "interimskonto angett för journalen %s."
-
-#~ msgid "Accumulated Amortization - Buildings"
-#~ msgstr "Ackumulerade amorteringar - Byggnader"
-
-#~ msgid "Accumulated Amortization - Furniture & Fixtures"
-#~ msgstr "Ackumulerade amorteringar - Möbler och inventarier"
-
-#~ msgid "Accumulated Amortization - Improvements"
-#~ msgstr "Ackumulerade amorteringar - Förbättringar"
-
-#~ msgid "Accumulated Amortization - Machines & Tools"
-#~ msgstr "Ackumulerade amorteringar - Maskiner och verktyg"
-
-#~ msgid "Accumulated Amortization - Other Property"
-#~ msgstr "Ackumulerade amorteringar - Övrigt ägande"
-
-#~ msgid "Accumulated Amortization - Technology"
-#~ msgstr "Ackumulerade amorteringar - Teknologi"
-
-#~ msgid "Accumulated Amortization - Vehicles"
-#~ msgstr "Ackumulerade amorteringar - Fordon"
-
-#~ msgid "Accumulated Depreciation"
-#~ msgstr "Ackumulerade avskrivningar"
-
-#~ msgid "Cumulative amortization recorded for building assets."
-#~ msgstr "Ackumulerade amorteringar som registrerats för byggnadstillgångar."
-
-#~ msgid "Cumulative amortization recorded for vehicle assets."
-#~ msgstr "Ackumulerade amorteringar som registrerats för fordonstillgångar."
 
 #~ msgid ""
 #~ "<div style=\"margin: 0px; padding: 0px;\">\n"

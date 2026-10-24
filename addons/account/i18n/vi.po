@@ -12,14 +12,15 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# daniel nguyen <dangu@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 16:00+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-4/"
+"POT-Creation-Date: 2026-10-23 17:40+0000\n"
+"PO-Revision-Date: 2026-10-21 09:15+0000\n"
+"Last-Translator: daniel nguyen <dangu@odoo.com>\n"
+"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-20/"
 "account/vi/>\n"
 "Language: vi\n"
 "MIME-Version: 1.0\n"
@@ -496,11 +497,9 @@ msgstr "90 ngày, vào ngày 10"
 #. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 msgid ""
-"<b>%(count)s#</b> Installment of <b>%(amount)s</b> due on <b style='color: "
+"<b>%(count)s</b> - Installment of <b>%(amount)s</b> due on <b style='color: "
 "#704A66;'>%(date)s</b>"
 msgstr ""
-"<b>%(count)s#</b> Khoản trả trước <b>%(amount)s</b> đến hạn thanh toán vào "
-"<b style='color: #704A66;'>%(date)s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -2413,6 +2412,9 @@ msgid ""
 "A new field 'Total (tax inc.)' to speed up and control the encoding by "
 "automating line creation with the right account and tax."
 msgstr ""
+"Một trường mới có tên 'Tổng cộng (đã bao gồm thuế)' giúp đẩy nhanh và kiểm "
+"soát quy trình hạch toán bằng cách tự động tạo dòng dữ liệu với tài khoản và "
+"mức thuế phù hợp."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -3143,43 +3145,43 @@ msgstr "Tổng dồn tích"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_buildings
-msgid "Accumulated Depreciation - Buildings"
-msgstr ""
+msgid "Accumulated Amortization - Buildings"
+msgstr "Khấu hao lũy kế - Nhà cửa, công trình"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_furniture
-msgid "Accumulated Depreciation - Furniture & Fixtures"
-msgstr ""
+msgid "Accumulated Amortization - Furniture & Fixtures"
+msgstr "Khấu hao lũy kế - Nội thất và thiết bị"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_improvements
-msgid "Accumulated Depreciation - Improvements"
-msgstr ""
+msgid "Accumulated Amortization - Improvements"
+msgstr "Khấu hao lũy kế - Cải tạo"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_machines
-msgid "Accumulated Depreciation - Machines & Tools"
-msgstr ""
+msgid "Accumulated Amortization - Machines & Tools"
+msgstr "Khấu hao lũy kế - Máy móc và dụng cụ"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_other_property
-msgid "Accumulated Depreciation - Other Property"
-msgstr ""
+msgid "Accumulated Amortization - Other Property"
+msgstr "Khấu hao lũy kế - Tài sản khác"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_technology
-msgid "Accumulated Depreciation - Technology"
-msgstr ""
+msgid "Accumulated Amortization - Technology"
+msgstr "Khấu hao lũy kế - Công nghệ"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_vehicles
-msgid "Accumulated Depreciation - Vehicles"
-msgstr ""
+msgid "Accumulated Amortization - Vehicles"
+msgstr "Khấu hao lũy kế - Phương tiện vận tải"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_acc_depreciation
-msgid "Accumulated Depreciation Misc"
-msgstr ""
+msgid "Accumulated Depreciation"
+msgstr "Giá trị hao mòn luỹ kế"
 
 #. module: account
 #: model:account.account,name:account.21_retained_earnings
@@ -3523,6 +3525,46 @@ msgid "Adjusting Entry {link} {percent}%% of {amount} recognized on {new_date}"
 msgstr ""
 "Bút toán điều chỉnh {link} {percent}%% số tiền {amount} được ghi nhận vào "
 "{new_date}"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_depreciation_and_amortization
+msgid "Adjustment - Depreciation and amortization"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_fin_instr_sale
+msgid "Adjustment - Financial Instruments"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_intangible_asset
+msgid "Adjustment - Intangible Assets"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_net_fin_result
+msgid "Adjustment - Net Financial Result"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_PPE_sale
+msgid "Adjustment - PPE Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_provisions
+msgid "Adjustment - Provisions"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_ROU_sale
+msgid "Adjustment - Right of Use Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_unrealized_forex
+msgid "Adjustment - Unrealized Forex"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_administration_fees
@@ -4178,7 +4220,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Apply rounding to the total amount of a sales invoice."
-msgstr ""
+msgstr "Áp dụng quy tắc làm tròn cho tổng số tiền của hóa đơn bán hàng."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__auto_apply
@@ -4235,7 +4277,7 @@ msgstr "Bạn có chắc không? Thao tác này sẽ thực hiện các hoạt �
 #. odoo-javascript
 #: code:addons/account/static/src/components/stock_valuation/filters/filter_date.xml:0
 msgid "As of"
-msgstr ""
+msgstr "Tại"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__autopost_bills__ask
@@ -5129,7 +5171,7 @@ msgstr "Hóa đơn cần Thanh toán"
 #. odoo-python
 #: code:addons/account/report/account_stock_valuation_report.py:0
 msgid "Bills to Receive"
-msgstr ""
+msgstr "Hóa đơn cần nhận"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5675,7 +5717,7 @@ msgstr "Tiền mặt: Số dư"
 #: model_terms:ir.ui.view,arch_db:account.account_bank_statement_line_view_pivot_cashflow
 #: model_terms:ir.ui.view,arch_db:account.account_bank_statement_line_view_search_cashflow
 msgid "Cashflow Analysis"
-msgstr ""
+msgstr "Phân tích dòng tiền"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -5923,12 +5965,12 @@ msgstr ""
 "với intastat"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account_tag__color
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__color
 msgid "Color"
 msgstr "Màu sắc"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_account_tag__color
 #: model:ir.model.fields,field_description:account.field_account_journal__color
 msgid "Color Index"
 msgstr "Mã màu"
@@ -6974,39 +7016,42 @@ msgstr "Số dư lũy kế của tài khoản."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_buildings
-msgid "Cumulative depreciation recorded for building assets."
-msgstr ""
+msgid "Cumulative amortization recorded for building assets."
+msgstr "Khấu hao lũy kế đã ghi nhận cho tài sản là nhà cửa, công trình."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_technology
-msgid "Cumulative depreciation recorded for capitalized technology assets."
+msgid "Cumulative amortization recorded for capitalized technology assets."
 msgstr ""
+"Số dư khấu hao lũy kế được ghi nhận cho các tài sản công nghệ được vốn hóa."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_furniture
-msgid "Cumulative depreciation recorded for furniture and fixture assets."
-msgstr ""
+msgid "Cumulative amortization recorded for furniture and fixture assets."
+msgstr "Khấu hao lũy kế đã ghi nhận cho tài sản là nội thất và trang thiết bị."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_improvements
 msgid ""
-"Cumulative depreciation recorded for leasehold or property improvements."
+"Cumulative amortization recorded for leasehold or property improvements."
 msgstr ""
+"Khấu hao lũy kế đã ghi nhận cho tài sản là cải tạo tài sản thuê hoặc cải tạo "
+"bất động sản."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_machines
-msgid "Cumulative depreciation recorded for machinery and tool assets."
-msgstr ""
+msgid "Cumulative amortization recorded for machinery and tool assets."
+msgstr "Khấu hao lũy kế đã ghi nhận cho tài sản là máy móc và công cụ."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_other_property
-msgid "Cumulative depreciation recorded for other depreciable property assets."
-msgstr ""
+msgid "Cumulative amortization recorded for other depreciable property assets."
+msgstr "Khấu hao lũy kế đã ghi nhận cho các tài sản khấu hao khác."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_vehicles
-msgid "Cumulative depreciation recorded for vehicle assets."
-msgstr ""
+msgid "Cumulative amortization recorded for vehicle assets."
+msgstr "Khấu hao lũy kế đã ghi nhận cho tài sản là phương tiện vận tải."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_retained_earnings
@@ -8222,7 +8267,7 @@ msgstr "Hiển thị nút xem trước"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Display the total amount of an invoice in words"
-msgstr ""
+msgstr "Hiển thị tổng số tiền của hóa đơn bằng chữ"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_disposal_fees
@@ -8295,7 +8340,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_company__document_sequence_editable
 #: model:ir.model.fields,field_description:account.field_res_config_settings__document_sequence_editable
 msgid "Document's sequence editable"
-msgstr ""
+msgstr "Có thể chỉnh sửa thứ tự tài liệu"
 
 #. module: account
 #. odoo-python
@@ -9329,6 +9374,36 @@ msgstr "Tiền tố tài khoản tài chính"
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__journal_id
 msgid "Financial Journal"
 msgstr "Sổ nhật ký tài chính"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_borrowings_lt
+msgid "Financing - Borrowings Long Term"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_borrowings_st
+msgid "Financing - Borrowings Short Term"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_dividends
+msgid "Financing - Dividends"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_lease
+msgid "Financing - Lease"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_recov_adv
+msgid "Financing - Recoverable Advances"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_share_issuance
+msgid "Financing - Share Issuance"
+msgstr ""
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_financing
@@ -11211,6 +11286,51 @@ msgstr ""
 #: model:account.account.tag,name:account.account_tag_investing
 msgid "Investing & Extraordinary Activities"
 msgstr "Đầu tư & hoạt động khác"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_cash_advances
+msgid "Investment - Cash Advances"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_fin_instr_purchase
+msgid "Investment - Financial Instruments Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_fin_instr_sale
+msgid "Investment - Financial Instruments Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_int_ass_purchase
+msgid "Investment - Intangible Assets Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_int_ass_sale
+msgid "Investment - Intangible Assets Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_interest_received
+msgid "Investment - Interest Received"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_ppe_purchase
+msgid "Investment - PPE Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_ppe_sale
+msgid "Investment - PPE Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_rou_sale
+msgid "Investment - Right of Use Sale"
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -14177,6 +14297,16 @@ msgid "Opening balance"
 msgstr "Số dư đầu kỳ"
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_op_income_tax_paid_received
+msgid "Operating - Income Tax Paid Received"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_op_interest_paid
+msgid "Operating - Interest Paid"
+msgstr ""
+
+#. module: account
 #: model:account.account.tag,name:account.account_tag_operating
 msgid "Operating Activities"
 msgstr "Hoạt động nghiệp vụ"
@@ -15137,7 +15267,7 @@ msgstr "So sánh kỳ"
 #: model:ir.model.fields.selection,name:account.selection__product_template__valuation__periodic
 #: model:ir.model.fields.selection,name:account.selection__res_company__inventory_valuation__periodic
 msgid "Periodic (at closing)"
-msgstr ""
+msgstr "Định kỳ (tại thời điểm khóa sổ)"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_expense_buildings
@@ -15189,7 +15319,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__product_template__valuation__real_time
 #: model:ir.model.fields.selection,name:account.selection__res_company__inventory_valuation__real_time
 msgid "Perpetual (at invoicing)"
-msgstr ""
+msgstr "Tự động (tại thời điểm xuất hóa đơn)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__phishing_warnings
@@ -16622,6 +16752,7 @@ msgstr "Rà soát báo cáo"
 msgid ""
 "Review all the modification done by the user with right under bookkeeper."
 msgstr ""
+"Xem lại tất cả các thay đổi do người dùng thực hiện với quyền của bookkeeper."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__set_to_review_documents
@@ -16629,7 +16760,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_company__set_to_review_documents
 #: model:ir.model.fields,field_description:account.field_res_config_settings__set_to_review_documents
 msgid "Review data"
-msgstr ""
+msgstr "Rà soát dữ liệu"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__review_state__reviewed
@@ -17895,7 +18026,7 @@ msgstr "Tên sao kê"
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_legal_statements_menu
 msgid "Statement Reports"
-msgstr "Báo cáo sao kê"
+msgstr "Báo cáo tài chính"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
@@ -17993,7 +18124,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_product_category__property_stock_valuation_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_stock_valuation_id
 msgid "Stock Valuation Account"
-msgstr ""
+msgstr "TK định giá tồn kho"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category__property_stock_valuation_account_active
@@ -19377,7 +19508,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "The document's sequence becomes editable on all documents."
-msgstr ""
+msgstr "Thứ tự của tài liệu có thể được chỉnh sửa trên tất cả các tài liệu."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_origin
@@ -20727,7 +20858,7 @@ msgstr "Tổng còn lại theo loại tiền tệ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
 msgid "Total Rounding"
-msgstr ""
+msgstr "Làm tròn toàn bộ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -20781,7 +20912,7 @@ msgstr "Tổng tiền bằng chữ: <br/>"
 #: model:ir.model.fields,field_description:account.field_res_company__display_invoice_amount_total_words
 #: model:ir.model.fields,field_description:account.field_res_config_settings__display_invoice_amount_total_words
 msgid "Total amount of invoice in words"
-msgstr ""
+msgstr "Tổng số tiền trên hóa đơn (ghi bằng chữ)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__credit
@@ -21893,6 +22024,36 @@ msgstr "Đang tiến hành"
 #: model:account.account,name:account.22_account_account_us_compensation_insurance
 msgid "Workers Compensation Insurance"
 msgstr "Bảo hiểm bồi thường cho người lao động"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_deferred_revenue
+msgid "Working Capital - Deferred Revenue"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_inventory
+msgid "Working Capital - Inventory"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_other_payable
+msgid "Working Capital - Other Payable"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_other_receivable
+msgid "Working Capital - Other Receivable"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_trade_payable
+msgid "Working Capital - Trade Payable"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_trade_receivable
+msgid "Working Capital - Trade Receivable"
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -23179,6 +23340,11 @@ msgstr ""
 "hàng hoặc cung cấp dịch vụ."
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_non_applicable
+msgid "not applicable"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
 msgid "of tax"
 msgstr "thuế"
@@ -23423,6 +23589,13 @@ msgid ""
 "{{ object.name or 'n/a' }})"
 msgstr ""
 
+#~ msgid ""
+#~ "<b>%(count)s#</b> Installment of <b>%(amount)s</b> due on <b "
+#~ "style='color: #704A66;'>%(date)s</b>"
+#~ msgstr ""
+#~ "<b>%(count)s#</b> Khoản trả trước <b>%(amount)s</b> đến hạn thanh toán "
+#~ "vào <b style='color: #704A66;'>%(date)s</b>"
+
 #~ msgid "# Reconciled Statement Lines"
 #~ msgstr "# Dòng sao kê đã đối chiếu"
 
@@ -23535,58 +23708,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Bạn không thể tạo một dòng sao kê mới mà không thiết lập tài khoản tạm "
 #~ "thời cho sổ nhật ký %s."
-
-#~ msgid "Accumulated Amortization - Buildings"
-#~ msgstr "Khấu hao lũy kế - Nhà cửa, công trình"
-
-#~ msgid "Accumulated Amortization - Furniture & Fixtures"
-#~ msgstr "Khấu hao lũy kế - Nội thất và thiết bị"
-
-#~ msgid "Accumulated Amortization - Improvements"
-#~ msgstr "Khấu hao lũy kế - Cải tạo"
-
-#~ msgid "Accumulated Amortization - Machines & Tools"
-#~ msgstr "Khấu hao lũy kế - Máy móc và dụng cụ"
-
-#~ msgid "Accumulated Amortization - Other Property"
-#~ msgstr "Khấu hao lũy kế - Tài sản khác"
-
-#~ msgid "Accumulated Amortization - Technology"
-#~ msgstr "Khấu hao lũy kế - Công nghệ"
-
-#~ msgid "Accumulated Amortization - Vehicles"
-#~ msgstr "Khấu hao lũy kế - Phương tiện vận tải"
-
-#~ msgid "Accumulated Depreciation"
-#~ msgstr "Giá trị hao mòn luỹ kế"
-
-#~ msgid "Cumulative amortization recorded for building assets."
-#~ msgstr "Khấu hao lũy kế đã ghi nhận cho tài sản là nhà cửa, công trình."
-
-#~ msgid "Cumulative amortization recorded for capitalized technology assets."
-#~ msgstr ""
-#~ "Số dư khấu hao lũy kế được ghi nhận cho các tài sản công nghệ được vốn "
-#~ "hóa."
-
-#~ msgid "Cumulative amortization recorded for furniture and fixture assets."
-#~ msgstr ""
-#~ "Khấu hao lũy kế đã ghi nhận cho tài sản là nội thất và trang thiết bị."
-
-#~ msgid ""
-#~ "Cumulative amortization recorded for leasehold or property improvements."
-#~ msgstr ""
-#~ "Khấu hao lũy kế đã ghi nhận cho tài sản là cải tạo tài sản thuê hoặc cải "
-#~ "tạo bất động sản."
-
-#~ msgid "Cumulative amortization recorded for machinery and tool assets."
-#~ msgstr "Khấu hao lũy kế đã ghi nhận cho tài sản là máy móc và công cụ."
-
-#~ msgid ""
-#~ "Cumulative amortization recorded for other depreciable property assets."
-#~ msgstr "Khấu hao lũy kế đã ghi nhận cho các tài sản khấu hao khác."
-
-#~ msgid "Cumulative amortization recorded for vehicle assets."
-#~ msgstr "Khấu hao lũy kế đã ghi nhận cho tài sản là phương tiện vận tải."
 
 #~ msgid ""
 #~ "Amount of %(amount).2f %(currency)s is already paid. Make sure you don't "

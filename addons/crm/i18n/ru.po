@@ -10,10 +10,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:38+0000\n"
-"PO-Revision-Date: 2026-08-31 12:55+0000\n"
+"PO-Revision-Date: 2026-10-20 12:34+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
-"Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-4/crm/"
-"ru/>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-20/crm/ru/>"
+"\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,7 +60,7 @@ msgstr "%(attach_name)s (из %(lead_name)s)"
 #. odoo-python
 #: code:addons/crm/wizard/crm_lead_to_opportunity_mass.py:0
 msgid "%(converted_count)s leads have been converted"
-msgstr ""
+msgstr "Преобразовано лидов: %(converted_count)s"
 
 #. module: crm
 #. odoo-python
@@ -98,7 +98,7 @@ msgstr "(пример данных)"
 #. odoo-python
 #: code:addons/crm/wizard/crm_lead_to_opportunity_mass.py:0
 msgid "1 lead has been converted"
-msgstr ""
+msgstr "Преобразован 1 лид"
 
 #. module: crm
 #. odoo-javascript
@@ -157,6 +157,8 @@ msgid ""
 "<i class=\"oi\" data-icon=\"warning\" title=\"Exceeded\" invisible=\"not "
 "lead_all_assigned_month_exceeded\"/>"
 msgstr ""
+"<i class=\"oi\" data-icon=\"warning\" title=\"Превышено\" invisible=\"not "
+"lead_all_assigned_month_exceeded\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
@@ -175,12 +177,12 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "<span class=\"me-1\"> of </span>"
-msgstr ""
+msgstr "<span class=\"me-1\"> из </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "<span class=\"mx-3 mb-1\" invisible=\"type == 'lead'\"> at</span>"
-msgstr ""
+msgstr "<span class=\"mx-3 mb-1\" invisible=\"type == 'lead'\"> в</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -214,7 +216,7 @@ msgstr "<span class=\"o_stat_text\"> Лиды</span>"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "<span class=\"o_stat_text\">Opportunities</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Возможности</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -250,26 +252,35 @@ msgid ""
 "merge all duplicates listed below.\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"name != 'convert'\">\n"
+"                        Найдены возможные дубликаты. Используйте «"
+"Преобразовать и объединить с дубликатами», чтобы очистить данные перед "
+"преобразованием.\n"
+"                    </span>\n"
+"                    <span invisible=\"name != 'convert_and_merge'\">\n"
+"                        Преобразуйте выбранные лиды в возможности и "
+"объедините все дубликаты из списка ниже.\n"
+"                    </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "<span> %</span>"
-msgstr ""
+msgstr "<span> %</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "<span> leads per 30 days </span>"
-msgstr ""
+msgstr "<span> лидов за 30 дней </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "<span>%</span>"
-msgstr ""
+msgstr "<span>%</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "<span>@</span>"
-msgstr ""
+msgstr "<span>@</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -292,11 +303,18 @@ msgid ""
 "default.\n"
 "                                </span>"
 msgstr ""
+"<span>Периодически распределять лиды на основе приоритетов и фильтров.</span>"
+"<br/>\n"
+"                                <span invisible=\"not "
+"crm_use_auto_assignment\">\n"
+"                                    Все отделы продаж будут использовать эти "
+"настройки по умолчанию.\n"
+"                                </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "<span>days</span>"
-msgstr ""
+msgstr "<span>дн.</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -306,7 +324,7 @@ msgstr "<span>в этот.</span>"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "<span>~ </span>"
-msgstr ""
+msgstr "<span>~ </span>"
 
 #. module: crm
 #: model:mail.template,body_html:crm.mail_template_demo_crm_lead
@@ -419,13 +437,13 @@ msgstr "Принимать письма от"
 #. module: crm
 #: model:ir.model,name:crm.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Группы доступа"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Access request for \"%s\""
-msgstr ""
+msgstr "Запрос доступа для «%s»"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_needaction
@@ -616,7 +634,7 @@ msgstr "Модель с псевдонимом"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/team_switcher/team_switcher.js:0
 msgid "All Teams"
-msgstr ""
+msgstr "Все команды"
 
 #. module: crm
 #. odoo-javascript
@@ -647,12 +665,14 @@ msgid ""
 "As you are a member of no Sales Team, you are showed the entire Pipeline.<br/"
 ">"
 msgstr ""
+"Поскольку вы не входите в состав ни одной команды по продажам, вам "
+"отображается вся воронка.<br/>"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.xml:0
 msgid "Ask your Team Leader to get access"
-msgstr ""
+msgstr "Запросите доступ у руководителя отдела"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -725,7 +745,7 @@ msgstr "Дата следующего выполнения автоматиче�
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__assignment_rules
 msgid "Auto-Assignment Rules"
-msgstr ""
+msgstr "Правила автораспределения"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__automated_probability
@@ -768,7 +788,7 @@ msgstr "Отказ"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/promote_mail_plugins_dialog/promote_mail_plugins_dialog.xml:0
 msgid "Bring Odoo into your inbox:"
-msgstr ""
+msgstr "Подключите Odoo к вашей почте:"
 
 #. module: crm
 #: model:ir.module.module,shortdesc:base.module_crm
@@ -882,6 +902,8 @@ msgid ""
 "Click on the breadcrumbs to go back to your Pipeline. Odoo will save all "
 "your changes as you navigate."
 msgstr ""
+"Нажмите на навигационную цепочку, чтобы вернуться в воронку. Odoo сохранит "
+"все изменения автоматически."
 
 #. module: crm
 #. odoo-javascript
@@ -976,7 +998,7 @@ msgstr "Поздравляем, удачи в поимке такой больш
 #. odoo-javascript
 #: code:addons/crm/static/src/components/promote_mail_plugins_dialog/promote_mail_plugins_dialog.xml:0
 msgid "Connect to Gmail or Outlook accounts."
-msgstr ""
+msgstr "Подключить аккаунты Gmail или Outlook."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
@@ -1047,12 +1069,12 @@ msgstr "Дата конверсии лида в сделку"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Convert"
-msgstr ""
+msgstr "Преобразовать"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner_mass__name__convert_and_merge
 msgid "Convert & Merge with Opportunities"
-msgstr ""
+msgstr "Преобразовать и объединить с возможностями"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner_mass
@@ -1062,7 +1084,7 @@ msgstr "Конвертировать лиды в сделки (массово)"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Convert into an Opportunity to see it in your Pipeline"
-msgstr ""
+msgstr "Преобразуйте в возможность, чтобы увидеть ее в вашей воронке"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_crm_send_mass_convert
@@ -1111,7 +1133,7 @@ msgstr "Страна"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/promote_mail_plugins_dialog/promote_mail_plugins_dialog.xml:0
 msgid "Create Contacts, Leads, Tickets, Projects and Tasks."
-msgstr ""
+msgstr "Создавайте контакты, лиды, обращения, проекты и задачи."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_website_crm_iap_reveal
@@ -1172,7 +1194,7 @@ msgstr "Создайте возможность, чтобы начать раб�
 #. odoo-javascript
 #: code:addons/crm/static/src/js/tours/crm.js:0
 msgid "Create your new contact."
-msgstr ""
+msgstr "Создайте новый контакт."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__create_uid

@@ -1,16 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* mail_group
+# * mail_group
 #
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-04 17:45+0000\n"
-"PO-Revision-Date: 2026-08-31 17:09+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Lao <https://translate.odoo.com/projects/odoo-s19-4/"
-"mail_group/lo/>\n"
+"PO-Revision-Date: 2026-10-19 01:36+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-20/mail_group/"
+"lo/>\n"
 "Language: lo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,26 +25,28 @@ msgid ""
 "\n"
 "Manage your mailing lists from Odoo.\n"
 msgstr ""
+"\n"
+"ຈັດການລາຍຊື່ອີເມວຂອງທ່ານຈາກ Odoo.\n"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
 msgid "#Members"
-msgstr ""
+msgstr "#ສະມາຊິກ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
 msgid "#Messages"
-msgstr ""
+msgstr "#ຂໍ້ຄວາມ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
 msgid "#To Review"
-msgstr ""
+msgstr "#ລໍຖ້າກວດກາ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid ") <span invisible=\"not send_email\">and send them an email</span>."
-msgstr ""
+msgstr ") <span invisible=\"not send_email\">ແລະ ສົ່ງອີເມວຫາພວກເຂົາ</span>."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
@@ -51,11 +54,13 @@ msgid ""
 "<br/>\n"
 "                    Get the conversation started by sending an email to"
 msgstr ""
+"<br/>\n"
+"                    ເລີ່ມຕົ້ນການສົນທະນາໂດຍການສົ່ງອີເມວຫາ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "<br/> You'll be notified as soon as some new content is posted."
-msgstr ""
+msgstr "<br/> ທ່ານຈະໄດ້ຮັບການແຈ້ງເຕືອນທັນທີເມື່ອມີເນື້ອຫາໃໝ່ຖືກໂພສ."
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_subscribe
@@ -74,6 +79,18 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                ສະບາຍດີ,<br/><br/>\n"
+"                ທ່ານໄດ້ຮ້ອງຂໍສະໝັກເປັນສະມາຊິກລາຍຊື່ອີເມວ <strong t-out=\"object.name "
+"or ''\"/>.\n"
+"                <br/><br/>\n"
+"                ເພື່ອຢືນຢັນ, ກະລຸນາເຂົ້າໄປທີ່ລິ້ງດັ່ງຕໍ່ໄປນີ້: <strong t-if=\"ctx.get"
+"('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"out=\"ctx['token_url'] or ''\"/></a></strong>\n"
+"                <br/><br/>\n"
+"                ຫາກນີ້ແມ່ນຂໍ້ຜິດພາດ ຫຼື ທ່ານບໍ່ໄດ້ຮ້ອງຂໍການດຳເນີນການນີ້, ກະລຸນາລະເລີຍຂໍ້ຄວາມນີ້.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
@@ -92,6 +109,18 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                ສະບາຍດີ,<br/><br/>\n"
+"                ທ່ານໄດ້ຮ້ອງຂໍຍົກເລີກການເປັນສະມາຊິກລາຍຊື່ອີເມວ <strong t-"
+"out=\"object.name or ''\"/>.\n"
+"                <br/><br/>\n"
+"                ເພື່ອຢືນຢັນ, ກະລຸນາເຂົ້າໄປທີ່ລິ້ງດັ່ງຕໍ່ໄປນີ້: <strong t-if=\"ctx.get"
+"('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"out=\"ctx['token_url'] or ''\"/></a></strong>.\n"
+"                <br/><br/>\n"
+"                ຫາກນີ້ແມ່ນຂໍ້ຜິດພາດ ຫຼື ທ່ານບໍ່ໄດ້ຮ້ອງຂໍການດຳເນີນການນີ້, ກະລຸນາລະເລີຍຂໍ້ຄວາມນີ້.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_guidelines
@@ -105,6 +134,14 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"                <p>ສະບາຍດີ <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
+"                <p>ກະລຸນາເບິ່ງຂໍ້ແນະນຳຂອງລາຍຊື່ອີເມວ <t t-"
+"out=\"object.mail_group_id.name\"/> ຢູ່ດ້ານລຸ່ມນີ້.</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg "
+"or ''\"/></p>\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -112,6 +149,8 @@ msgid ""
 "<i class=\"oi me-1\" data-icon=\"mail\" role=\"img\" aria-label=\"Alias\" "
 "title=\"Alias\"/>"
 msgstr ""
+"<i class=\"oi me-1\" data-icon=\"mail\" role=\"img\" aria-label=\"ຊື່ແທນ\" "
+"title=\"ຊື່ແທນ\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
@@ -119,6 +158,8 @@ msgid ""
 "<i class=\"oi oi-filled\" data-icon=\"calendar_today\" role=\"img\" aria-"
 "label=\"Date\" title=\"Date\"/>"
 msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"calendar_today\" role=\"img\" aria-"
+"label=\"ວັນທີ\" title=\"ວັນທີ\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -126,6 +167,8 @@ msgid ""
 "<i class=\"oi oi-fw oi-filled\" data-icon=\"person\" role=\"img\" aria-"
 "label=\"Recipients\" title=\"Recipients\"/>"
 msgstr ""
+"<i class=\"oi oi-fw oi-filled\" data-icon=\"person\" role=\"img\" aria-"
+"label=\"ຜູ້ຮັບ\" title=\"ຜູ້ຮັບ\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -133,6 +176,8 @@ msgid ""
 "<i class=\"oi oi-fw\" data-icon=\"mail\" role=\"img\" aria-label=\"Traffic\" "
 "title=\"Traffic\"/>"
 msgstr ""
+"<i class=\"oi oi-fw\" data-icon=\"mail\" role=\"img\" aria-label=\"ປະລິມານການຮັ"
+"ບສົ່ງ\" title=\"ປະລິມານການຮັບສົ່ງ\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
@@ -140,6 +185,8 @@ msgid ""
 "<i class=\"oi\" data-icon=\"chevron_forward\" role=\"img\" aria-label=\"Hide "
 "attachments\" title=\"Hide attachments\"/>"
 msgstr ""
+"<i class=\"oi\" data-icon=\"chevron_forward\" role=\"img\" aria-label=\"ເຊື່ອງໄ"
+"ຟລ໌ຄັດຕິດ\" title=\"ເຊື່ອງໄຟລ໌ຄັດຕິດ\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
@@ -147,6 +194,8 @@ msgid ""
 "<i class=\"oi\" data-icon=\"chevron_forward\" role=\"img\" aria-label=\"Hide "
 "replies\" title=\"Hide replies\"/>"
 msgstr ""
+"<i class=\"oi\" data-icon=\"chevron_forward\" role=\"img\" aria-label=\"ເຊື່ອງກ"
+"ານຕອບກັບ\" title=\"ເຊື່ອງການຕອບກັບ\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
@@ -154,6 +203,8 @@ msgid ""
 "<i class=\"oi\" data-icon=\"east\" role=\"img\" aria-label=\"Next message\" "
 "title=\"Next message\"/>"
 msgstr ""
+"<i class=\"oi\" data-icon=\"east\" role=\"img\" aria-label=\"ຂໍ້ຄວາມຕໍ່ໄປ\" "
+"title=\"ຂໍ້ຄວາມຕໍ່ໄປ\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
@@ -161,6 +212,8 @@ msgid ""
 "<i class=\"oi\" data-icon=\"keyboard_arrow_down\" role=\"img\" aria-"
 "label=\"Show attachments\" title=\"Show attachments\"/>"
 msgstr ""
+"<i class=\"oi\" data-icon=\"keyboard_arrow_down\" role=\"img\" aria-label=\"ສ"
+"ະແດງໄຟລ໌ຄັດຕິດ\" title=\"ສະແດງໄຟລ໌ຄັດຕິດ\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
@@ -168,6 +221,8 @@ msgid ""
 "<i class=\"oi\" data-icon=\"keyboard_arrow_down\" role=\"img\" aria-"
 "label=\"Show replies\" title=\"Show replies\"/>"
 msgstr ""
+"<i class=\"oi\" data-icon=\"keyboard_arrow_down\" role=\"img\" aria-label=\"ສ"
+"ະແດງການຕອບກັບ\" title=\"ສະແດງການຕອບກັບ\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_name
@@ -175,6 +230,8 @@ msgid ""
 "<i class=\"oi\" data-icon=\"mail\" role=\"img\" aria-label=\"Alias\" "
 "title=\"Alias\"/>"
 msgstr ""
+"<i class=\"oi\" data-icon=\"mail\" role=\"img\" aria-label=\"ຊື່ແທນ\" title=\"ຊື່"
+"ແທນ\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
@@ -182,11 +239,13 @@ msgid ""
 "<i class=\"oi\" data-icon=\"west\" role=\"img\" aria-label=\"Previous "
 "message\" title=\"Previous message\"/>"
 msgstr ""
+"<i class=\"oi\" data-icon=\"west\" role=\"img\" aria-label=\"ຂໍ້ຄວາມກ່ອນໜ້າ\" "
+"title=\"ຂໍ້ຄວາມກ່ອນໜ້າ\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
 msgid "<span class=\"bg-warning\">Pending</span>"
-msgstr ""
+msgstr "<span class=\"bg-warning\">ລໍຖ້າກວດກາ</span>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
@@ -196,16 +255,20 @@ msgid ""
 "                            <span class=\"ms-2 badge text-bg-danger\" "
 "invisible=\"author_moderation != 'ban'\">Banned</span>"
 msgstr ""
+"<span class=\"ms-2 badge text-bg-success\" invisible=\"author_moderation != "
+"'allow'\">ອະນຸຍາດແລ້ວ</span>\n"
+"                            <span class=\"ms-2 badge text-bg-danger\" "
+"invisible=\"author_moderation != 'ban'\">ຖືກລະງັບ</span>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
 msgid "<span class=\"mx-2\">-</span>"
-msgstr ""
+msgstr "<span class=\"mx-2\">-</span>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
 msgid "<span>By thread</span>"
-msgstr ""
+msgstr "<span>ຕາມສາຍການສົນທະນາ</span>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -213,6 +276,8 @@ msgid ""
 "<span>No Mail Group yet.</span>\n"
 "                    <br/>"
 msgstr ""
+"<span>ຍັງບໍ່ມີກຸ່ມອີເມວເທື່ອ.</span>\n"
+"                    <br/>"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_defaults
@@ -220,28 +285,29 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
+"ວັດຈະນານຸກົມ Python ທີ່ຈະຖືກປະເມີນເພື່ອສະໜອງຄ່າເລີ່ມຕົ້ນ ເມື່ອສ້າງບັນທຶກໃໝ່ສຳລັບຊື່ແທນນີ້."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
 msgid "Accept"
-msgstr ""
+msgstr "ຍອມຮັບ"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__accepted
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 msgid "Accepted"
-msgstr ""
+msgstr "ຍອມຮັບແລ້ວ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__action
 msgid "Action"
-msgstr ""
+msgstr "ການດຳເນີນການ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__active
 msgid "Active"
-msgstr ""
+msgstr "ເປີດໃຊ້ງານ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
@@ -250,102 +316,103 @@ msgid ""
 "Add this email address to white list of people and accept all pending "
 "messages from the same author."
 msgstr ""
+"ເພີ່ມທີ່ຢູ່ອີເມວນີ້ໃສ່ລາຍຊື່ອະນຸຍາດ ແລະ ຍອມຮັບທຸກຂໍ້ຄວາມທີ່ລໍຖ້າກວດກາຈາກຜູ້ຂຽນຄົນດຽວກັນ."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_id
 msgid "Alias"
-msgstr ""
+msgstr "ຊື່ແທນ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_contact
 msgid "Alias Contact Security"
-msgstr ""
+msgstr "ຄວາມປອດໄພຂອງການຕິດຕໍ່ຜ່ານຊື່ແທນ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_domain_id
 msgid "Alias Domain"
-msgstr ""
+msgstr "ໂດເມນຊື່ແທນ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_domain
 msgid "Alias Domain Name"
-msgstr ""
+msgstr "ຊື່ໂດເມນຊື່ແທນ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_full_name
 msgid "Alias Email"
-msgstr ""
+msgstr "ອີເມວຊື່ແທນ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_name
 msgid "Alias Name"
-msgstr ""
+msgstr "ຊື່ຂອງຊື່ແທນ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_status
 msgid "Alias Status"
-msgstr ""
+msgstr "ສະຖານະຊື່ແທນ"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr ""
+msgstr "ສະຖານະຊື່ແທນທີ່ໄດ້ຮັບການປະເມີນຈາກຂໍ້ຄວາມສຸດທ້າຍທີ່ໄດ້ຮັບ."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_model_id
 msgid "Aliased Model"
-msgstr ""
+msgstr "ໂມເດວຊື່ແທນ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "All messages of this group"
-msgstr ""
+msgstr "ທຸກຂໍ້ຄວາມຂອງກຸ່ມນີ້"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
 msgid "Allowed Emails"
-msgstr ""
+msgstr "ອີເມວທີ່ໄດ້ຮັບອະນຸຍາດ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "Alone we can do so little, together we can do so much"
-msgstr ""
+msgstr "ຢູ່ຄົນດຽວເຮົາເຮັດໄດ້ໜ້ອຍ, ຢູ່ຮ່ວມກັນເຮົາເຮັດໄດ້ຫຼາຍ"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_moderation__status__allow
 msgid "Always Allow"
-msgstr ""
+msgstr "ອະນຸຍາດສະເໝີ"
 
 #. module: mail_group
 #. odoo-javascript
 #: code:addons/mail_group/static/src/interactions/mail_group.js:0
 msgid "An email with instructions has been sent."
-msgstr ""
+msgstr "ອີເມວພ້ອມຄຳແນະນຳໄດ້ຖືກສົ່ງອອກໄປແລ້ວ."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
 msgid "Archived"
-msgstr ""
+msgstr "ຈັດເກັບແລ້ວ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
 msgid "Archives"
-msgstr ""
+msgstr "ຄັງຈັດເກັບ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__attachment_ids
 msgid "Attachments"
-msgstr ""
+msgstr "ໄຟລ໌ຄັດຕິດ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__author_id
 msgid "Author"
-msgstr ""
+msgstr "ຜູ້ຂຽນ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__author_moderation
 msgid "Author Moderation Status"
-msgstr ""
+msgstr "ສະຖານະການກວດສອບຜູ້ຂຽນ"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group_message__author_id
@@ -353,16 +420,17 @@ msgid ""
 "Author of the message. If not set, email_from may hold an email address that "
 "did not match any partner."
 msgstr ""
+"ຜູ້ຂຽນຂໍ້ຄວາມ. ຖ້າບໍ່ໄດ້ກຳນົດ, email_from ອາດຈະມີທີ່ຢູ່ອີເມວທີ່ບໍ່ກົງກັບຄູ່ຮ່ວມໃດໆ."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__access_group_id
 msgid "Authorized Group"
-msgstr ""
+msgstr "ກຸ່ມທີ່ໄດ້ຮັບອະນຸຍາດ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_notify
 msgid "Automatic notification"
-msgstr ""
+msgstr "ການແຈ້ງເຕືອນອັດຕະໂນມັດ"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message_reject__action__ban
@@ -370,12 +438,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
 msgid "Ban"
-msgstr ""
+msgstr "ລະງັບ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "Ban the author of the message ("
-msgstr ""
+msgstr "ລະງັບຜູ້ຂຽນຂໍ້ຄວາມ ("
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
@@ -384,41 +452,42 @@ msgid ""
 "Ban this email address and reject all pending messages from the same author "
 "and send an email to the author"
 msgstr ""
+"ລະງັບທີ່ຢູ່ອີເມວນີ້ ແລະ ປະຕິເສດທຸກຂໍ້ຄວາມທີ່ລໍຖ້າກວດກາຈາກຜູ້ຂຽນຄົນດຽວກັນ ພ້ອມທັງສົ່ງອີເມວຫາຜູ້ຂຽນ"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__author_moderation__ban
 msgid "Banned"
-msgstr ""
+msgstr "ຖືກລະງັບ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
 msgid "Banned Emails"
-msgstr ""
+msgstr "ອີເມວທີ່ຖືກລະງັບ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
 msgid "By date"
-msgstr ""
+msgstr "ຕາມວັນທີ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__can_manage_group
 msgid "Can Manage"
-msgstr ""
+msgstr "ສາມາດຈັດການໄດ້"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__can_manage_group
 msgid "Can manage the members"
-msgstr ""
+msgstr "ສາມາດຈັດການສະມາຊິກໄດ້"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__group_message_child_ids
 msgid "Children"
-msgstr ""
+msgstr "ລາຍການຍ່ອຍ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Choose or configure a custom domain"
-msgstr ""
+msgstr "ເລືອກ ຫຼື ກຳນົດຄ່າໂດເມນກຳນົດເອງ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_name
@@ -426,39 +495,39 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "Closed"
-msgstr ""
+msgstr "ປິດແລ້ວ"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__is_closed
 msgid ""
 "Closed groups might still be accessed, but emails sent to it will bounce"
-msgstr ""
+msgstr "ກຸ່ມທີ່ປິດແລ້ວຍັງອາດຈະເຂົ້າເບິ່ງໄດ້, ແຕ່ອີເມວທີ່ສົ່ງຫາມັນຈະຖືກຕີກັບ"
 
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_list_subscribe
 msgid "Confirm subscription to {{ object.name }}"
-msgstr ""
+msgstr "ຢືນຢັນການສະໝັກສະມາຊິກ {{ object.name }}"
 
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_list_unsubscribe
 msgid "Confirm unsubscription to {{ object.name }}"
-msgstr ""
+msgstr "ຢືນຢັນການຍົກເລີກສະມາຊິກ {{ object.name }}"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__body
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__body
 msgid "Contents"
-msgstr ""
+msgstr "ເນື້ອຫາ"
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_action
 msgid "Create a Mail Group"
-msgstr ""
+msgstr "ສ້າງກຸ່ມອີເມວ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "Create a new group"
-msgstr ""
+msgstr "ສ້າງກຸ່ມໃໝ່"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__create_uid
@@ -467,7 +536,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__create_uid
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "ສ້າງໂດຍ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__create_date
@@ -475,27 +544,27 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__create_date
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__create_date
 msgid "Created on"
-msgstr ""
+msgstr "ສ້າງເມື່ອ"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__is_moderator
 msgid "Current user is a moderator of the group"
-msgstr ""
+msgstr "ຜູ້ໃຊ້ປະຈຸບັນແມ່ນຜູ້ກວດສອບຂອງກຸ່ມ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr ""
+msgstr "ຂໍ້ຄວາມຕີກັບກຳນົດເອງ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_defaults
 msgid "Default Values"
-msgstr ""
+msgstr "ຄ່າເລີ່ມຕົ້ນ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__description
 msgid "Description"
-msgstr ""
+msgstr "ຄຳອະທິບາຍ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__display_name
@@ -504,31 +573,31 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__display_name
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ຊື່ສະແດງ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__email
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__email
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_member_view_tree
 msgid "Email"
-msgstr ""
+msgstr "ອີເມວ"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "Email %s is invalid"
-msgstr ""
+msgstr "ອີເມວ %s ບໍ່ຖືກຕ້ອງ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_email
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Email Alias"
-msgstr ""
+msgstr "ຊື່ແທນອີເມວ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__email_from_normalized
 msgid "Email From"
-msgstr ""
+msgstr "ອີເມວຈາກ"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group_message__email_from
@@ -536,37 +605,38 @@ msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found and replaces the author_id field in the chatter."
 msgstr ""
+"ທີ່ຢູ່ອີເມວຂອງຜູ້ສົ່ງ. ຊ່ອງຂໍ້ມູນນີ້ຖືກກຳນົດເມື່ອບໍ່ພົບຄູ່ຮ່ວມທີ່ກົງກັນ ແລະ ໃຊ້ແທນຊ່ອງ author_id ໃນ chatter."
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
+msgstr "ໂດເມນອີເມວ ເຊັ່ນ 'example.com' ໃນ 'odoo@example.com'"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Emails"
-msgstr ""
+msgstr "ອີເມວ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Emails waiting an action for this group"
-msgstr ""
+msgstr "ອີເມວທີ່ກຳລັງລໍຖ້າການດຳເນີນການສຳລັບກຸ່ມນີ້"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__public
 msgid "Everyone"
-msgstr ""
+msgstr "ທຸກຄົນ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
 msgid "Follow-Ups"
-msgstr ""
+msgstr "ການຕິດຕາມຜົນ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__email_from
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 msgid "From"
-msgstr ""
+msgstr "ຈາກ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__mail_group_id
@@ -575,45 +645,45 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "Group"
-msgstr ""
+msgstr "ກຸ່ມ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 msgid "Group Message"
-msgstr ""
+msgstr "ຂໍ້ຄວາມກຸ່ມ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Group Name"
-msgstr ""
+msgstr "ຊື່ກຸ່ມ"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
 msgid "Group message can only be linked to mail group. Current model is %s."
-msgstr ""
+msgstr "ຂໍ້ຄວາມກຸ່ມສາມາດເຊື່ອມໂຍງກັບກຸ່ມອີເມວເທົ່ານັ້ນ. ໂມເດວປະຈຸບັນແມ່ນ %s."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/controllers/portal.py:0
 msgid "Groups"
-msgstr ""
+msgstr "ກຸ່ມ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines_msg
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Guidelines"
-msgstr ""
+msgstr "ຂໍ້ແນະນຳ"
 
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_guidelines
 msgid "Guidelines of group {{ object.mail_group_id.name }}"
-msgstr ""
+msgstr "ຂໍ້ແນະນຳຂອງກຸ່ມ {{ object.mail_group_id.name }}"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
 msgid "Hello"
-msgstr ""
+msgstr "ສະບາຍດີ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.email_template_mail_group_closed
@@ -625,6 +695,11 @@ msgid ""
 "    <br/><br/>\n"
 "    Kind Regards,"
 msgstr ""
+"ສະບາຍດີ,\n"
+"    <br/><br/>\n"
+"    ລາຍຊື່ອີເມວທີ່ທ່ານພະຍາຍາມຕິດຕໍ່ໄດ້ຖືກປິດແລ້ວ, ແລະ ຈະບໍ່ຮັບຂໍ້ຄວາມໃໝ່ອີກ.\n"
+"    <br/><br/>\n"
+"    ດ້ວຍຄວາມນັບຖື,"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__id
@@ -633,14 +708,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__id
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__id
 msgid "ID"
-msgstr ""
+msgstr "ລະຫັດ"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_parent_thread_id
 msgid ""
 "ID of the parent record holding the alias (example: project holding the task "
 "creation alias)"
-msgstr ""
+msgstr "ລະຫັດຂອງບັນທຶກຫຼັກທີ່ຖືຊື່ແທນ (ຕົວຢ່າງ: ໂຄງການທີ່ຖືຊື່ແທນການສ້າງໜ້າວຽກ)"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_bounced_content
@@ -648,59 +723,60 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
+"ຖ້າກຳນົດ, ເນື້ອຫານີ້ຈະຖືກສົ່ງອອກໄປຫາຜູ້ໃຊ້ທີ່ບໍ່ໄດ້ຮັບອະນຸຍາດໂດຍອັດຕະໂນມັດແທນຂໍ້ຄວາມເລີ່ມຕົ້ນ."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__image_128
 msgid "Image"
-msgstr ""
+msgstr "ຮູບພາບ"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "Invalid action for URL generation (%s)"
-msgstr ""
+msgstr "ການດຳເນີນການບໍ່ຖືກຕ້ອງສຳລັບການສ້າງ URL (%s)"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_moderation.py:0
 msgid "Invalid email address “%s”"
-msgstr ""
+msgstr "ທີ່ຢູ່ອີເມວບໍ່ຖືກຕ້ອງ “%s”"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.invalid_token_subscription
 msgid "Invalid or expired confirmation link."
-msgstr ""
+msgstr "ລິ້ງຢືນຢັນບໍ່ຖືກຕ້ອງ ຫຼື ໝົດອາຍຸແລ້ວ."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
 msgid "Is Allowed"
-msgstr ""
+msgstr "ໄດ້ຮັບອະນຸຍາດ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
 msgid "Is Banned"
-msgstr ""
+msgstr "ຖືກລະງັບ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__is_closed
 msgid "Is Closed"
-msgstr ""
+msgstr "ຖືກປິດແລ້ວ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__is_group_moderated
 msgid "Is Group Moderated"
-msgstr ""
+msgstr "ກຸ່ມມີການກວດສອບ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__is_member
 msgid "Is Member"
-msgstr ""
+msgstr "ເປັນສະມາຊິກ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 msgid "Join"
-msgstr ""
+msgstr "ເຂົ້າຮ່ວມ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__write_uid
@@ -709,7 +785,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__write_uid
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "ອັບເດດລ່າສຸດໂດຍ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__write_date
@@ -718,251 +794,252 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__write_date
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "ອັບເດດລ່າສຸດເມື່ອ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 msgid "Leave"
-msgstr ""
+msgstr "ອອກຈາກກຸ່ມ"
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_member_action
 msgid "Let people subscribe to your list online or manually add them here."
 msgstr ""
+"ໃຫ້ຄົນອື່ນສະໝັກເປັນສະມາຊິກລາຍຊື່ຂອງທ່ານທາງອອນລາຍ ຫຼື ເພີ່ມພວກເຂົາດ້ວຍຕົນເອງຢູ່ນີ້."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_incoming_local
 msgid "Local-part based incoming detection"
-msgstr ""
+msgstr "ການກວດຈັບອີເມວຂາເຂົ້າໂດຍອີງໃສ່ Local-part"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group
 #: model:ir.module.module,shortdesc:base.module_mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Mail Group"
-msgstr ""
+msgstr "ກຸ່ມອີເມວ"
 
 #. module: mail_group
 #: model:res.groups,name:mail_group.group_mail_group_manager
 msgid "Mail Group Administrator"
-msgstr ""
+msgstr "ຜູ້ເບິ່ງແຍງລະບົບກຸ່ມອີເມວ"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_subscribe
 msgid "Mail Group: Mailing List Subscription"
-msgstr ""
+msgstr "ກຸ່ມອີເມວ: ການສະໝັກສະມາຊິກລາຍຊື່ອີເມວ"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_unsubscribe
 msgid "Mail Group: Mailing List Unsubscription"
-msgstr ""
+msgstr "ກຸ່ມອີເມວ: ການຍົກເລີກສະມາຊິກລາຍຊື່ອີເມວ"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_guidelines
 msgid "Mail Group: Send Guidelines"
-msgstr ""
+msgstr "ກຸ່ມອີເມວ: ສົ່ງຂໍ້ແນະນຳ"
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_action
 #: model:ir.ui.menu,name:mail_group.mail_group_menu
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 msgid "Mail Groups"
-msgstr ""
+msgstr "ກຸ່ມອີເມວ"
 
 #. module: mail_group
 #: model:ir.actions.server,name:mail_group.ir_cron_mail_notify_group_moderators_ir_actions_server
 msgid "Mail List: Notify group moderators"
-msgstr ""
+msgstr "ລາຍຊື່ອີເມວ: ແຈ້ງເຕືອນຜູ້ກວດສອບກຸ່ມ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__mail_message_id
 msgid "Mail Message"
-msgstr ""
+msgstr "ຂໍ້ຄວາມອີເມວ"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_member
 msgid "Mailing List Member"
-msgstr ""
+msgstr "ສະມາຊິກລາຍຊື່ອີເມວ"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_message
 msgid "Mailing List Message"
-msgstr ""
+msgstr "ຂໍ້ຄວາມລາຍຊື່ອີເມວ"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_moderation
 msgid "Mailing List black/white list"
-msgstr ""
+msgstr "ລາຍຊື່ດຳ/ລາຍຊື່ອະນຸຍາດ ຂອງລາຍຊື່ອີເມວ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.portal_breadcrumbs_group
 msgid "Mailing Lists"
-msgstr ""
+msgstr "ລາຍຊື່ອີເມວ"
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_action
 msgid ""
 "Mailing groups are communities that like to discuss a specific topic "
 "together."
-msgstr ""
+msgstr "ກຸ່ມອີເມວແມ່ນຊຸມຊົນທີ່ມັກສົນທະນາກ່ຽວກັບຫົວຂໍ້ສະເພາະຮ່ວມກັນ."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
 msgid "Mailing-List:"
-msgstr ""
+msgstr "ລາຍຊື່ອີເມວ:"
 
 #. module: mail_group
 #: model:ir.module.module,summary:base.module_mail_group
 msgid "Manage your mailing lists"
-msgstr ""
+msgstr "ຈັດການລາຍຊື່ອີເມວຂອງທ່ານ"
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_member_action
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__member_ids
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Members"
-msgstr ""
+msgstr "ສະມາຊິກ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__member_count
 msgid "Members Count"
-msgstr ""
+msgstr "ຈຳນວນສະມາຊິກ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Members of this group"
-msgstr ""
+msgstr "ສະມາຊິກຂອງກຸ່ມນີ້"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__members
 msgid "Members only"
-msgstr ""
+msgstr "ສະເພາະສະມາຊິກ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__mail_group_message_id
 msgid "Message"
-msgstr ""
+msgstr "ຂໍ້ຄວາມ"
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_message_reject_action
 msgid "Message Rejection Explanation"
-msgstr ""
+msgstr "ຄຳອະທິບາຍການປະຕິເສດຂໍ້ຄວາມ"
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_message_action
 msgid "Messages"
-msgstr ""
+msgstr "ຂໍ້ຄວາມ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_count
 msgid "Messages Count"
-msgstr ""
+msgstr "ຈຳນວນຂໍ້ຄວາມ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_last_month_count
 msgid "Messages Per Month"
-msgstr ""
+msgstr "ຂໍ້ຄວາມຕໍ່ເດືອນ"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "Messages are pending moderation"
-msgstr ""
+msgstr "ຂໍ້ຄວາມກຳລັງລໍຖ້າການກວດສອບ"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__mail_group_message_moderation_count
 msgid "Messages that need an action"
-msgstr ""
+msgstr "ຂໍ້ຄວາມທີ່ຕ້ອງການການດຳເນີນການ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation
 msgid "Moderate"
-msgstr ""
+msgstr "ກວດສອບ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
 msgid "Moderate Messages"
-msgstr ""
+msgstr "ກວດສອບຂໍ້ຄວາມ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
 msgid "Moderated"
-msgstr ""
+msgstr "ກວດສອບແລ້ວ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderator_id
 msgid "Moderated By"
-msgstr ""
+msgstr "ກວດສອບໂດຍ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_rule_ids
 msgid "Moderated Emails"
-msgstr ""
+msgstr "ອີເມວທີ່ຖືກກວດສອບ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_rule_count
 msgid "Moderated emails count"
-msgstr ""
+msgstr "ຈຳນວນອີເມວທີ່ຖືກກວດສອບ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Moderated emails in this group"
-msgstr ""
+msgstr "ອີເມວທີ່ຖືກກວດສອບໃນກຸ່ມນີ້"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "Moderated group must have moderators."
-msgstr ""
+msgstr "ກຸ່ມທີ່ມີການກວດສອບຕ້ອງມີຜູ້ກວດສອບ."
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_moderation_action
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
 msgid "Moderation"
-msgstr ""
+msgstr "ການກວດສອບ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_tree
 msgid "Moderation Lists"
-msgstr ""
+msgstr "ລາຍຊື່ການກວດສອບ"
 
 #. module: mail_group
 #: model:ir.ui.menu,name:mail_group.mail_group_moderation_menu
 msgid "Moderation Rules"
-msgstr ""
+msgstr "ກົດລະບຽບການກວດສອບ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Moderations"
-msgstr ""
+msgstr "ການກວດສອບ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__is_moderator
 msgid "Moderator"
-msgstr ""
+msgstr "ຜູ້ກວດສອບ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderator_ids
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Moderators"
-msgstr ""
+msgstr "ຜູ້ກວດສອບ"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "Moderators must have an email address."
-msgstr ""
+msgstr "ຜູ້ກວດສອບຕ້ອງມີທີ່ຢູ່ອີເມວ."
 
 #. module: mail_group
 #: model:mail.group,name:mail_group.mail_group_1
 msgid "My Company News"
-msgstr ""
+msgstr "ຂ່າວສານບໍລິສັດຂອງຂ້ອຍ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__name
 msgid "Name"
-msgstr ""
+msgstr "ຊື່"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -971,47 +1048,49 @@ msgid ""
 "end\" data-icon=\"south\" role=\"img\" aria-label=\"\" title=\"Read this !\"/"
 ">"
 msgstr ""
+"ຕ້ອງການຍົກເລີກສະມາຊິກບໍ່? <br/>ຢູ່ບ່ອນນີ້ເລີຍ! <span class=\"oi oi-2x float-end\" data-"
+"icon=\"south\" role=\"img\" aria-label=\"\" title=\"ອ່ານບ່ອນນີ້ !\"/>"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__moderation_guidelines
 msgid ""
 "Newcomers on this moderated group will automatically receive the guidelines."
-msgstr ""
+msgstr "ຜູ້ເຂົ້າຮ່ວມໃໝ່ໃນກຸ່ມທີ່ມີການກວດສອບນີ້ ຈະໄດ້ຮັບຂໍ້ແນະນຳໂດຍອັດຕະໂນມັດ."
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_member_action
 msgid "No Members in this list yet!"
-msgstr ""
+msgstr "ຍັງບໍ່ມີສະມາຊິກໃນລາຍຊື່ນີ້ເທື່ອ!"
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_message_action
 msgid "No Messages in this list yet!"
-msgstr ""
+msgstr "ຍັງບໍ່ມີຂໍ້ຄວາມໃນລາຍຊື່ນີ້ເທື່ອ!"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__email_normalized
 msgid "Normalized Email"
-msgstr ""
+msgstr "ອີເມວຮູບແບບມາດຕະຖານ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__email_from_normalized
 msgid "Normalized From"
-msgstr ""
+msgstr "ຜູ້ສົ່ງຮູບແບບມາດຕະຖານ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_notify_msg
 msgid "Notification message"
-msgstr ""
+msgstr "ຂໍ້ຄວາມແຈ້ງເຕືອນ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Notify Members"
-msgstr ""
+msgstr "ແຈ້ງເຕືອນສະມາຊິກ"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__mail_group_message_count
 msgid "Number of message in this group"
-msgstr ""
+msgstr "ຈຳນວນຂໍ້ຄວາມໃນກຸ່ມນີ້"
 
 #. module: mail_group
 #. odoo-python
@@ -1019,23 +1098,24 @@ msgstr ""
 msgid ""
 "Only an administrator or a moderator can send guidelines to group members."
 msgstr ""
+"ສະເພາະຜູ້ເບິ່ງແຍງລະບົບ ຫຼື ຜູ້ກວດສອບເທົ່ານັ້ນ ທີ່ສາມາດສົ່ງຂໍ້ແນະນຳຫາສະມາຊິກກຸ່ມ."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "Only members can send email to the mailing list."
-msgstr ""
+msgstr "ສະເພາະສະມາຊິກເທົ່ານັ້ນທີ່ສາມາດສົ່ງອີເມວຫາລາຍຊື່ອີເມວໄດ້."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "Only selected groups of users can send email to the mailing list."
-msgstr ""
+msgstr "ສະເພາະກຸ່ມຜູ້ໃຊ້ທີ່ເລືອກໄວ້ເທົ່ານັ້ນທີ່ສາມາດສົ່ງອີເມວຫາລາຍຊື່ອີເມວໄດ້."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
 msgid "Oops, there are no messages here."
-msgstr ""
+msgstr "ໂອ້, ບໍ່ມີຂໍ້ຄວາມຢູ່ນີ້ເລີຍ."
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_force_thread_id
@@ -1044,21 +1124,23 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
+"ລະຫັດທາງເລືອກຂອງສາຍການສົນທະນາ (ບັນທຶກ) ທີ່ທຸກຂໍ້ຄວາມຂາເຂົ້າຈະຖືກແນບໃສ່, ເຖິງແມ່ນວ່າພວກເຂົາຈະບໍ່ໄດ້"
+"ຕອບກັບມັນກໍຕາມ. ຖ້າກຳນົດ, ສິ່ງນີ້ຈະປິດການສ້າງບັນທຶກໃໝ່ໂດຍສິ້ນເຊີງ."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__group_message_parent_id
 msgid "Parent"
-msgstr ""
+msgstr "ຫຼັກ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_parent_model_id
 msgid "Parent Model"
-msgstr ""
+msgstr "ໂມເດວຫຼັກ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "ລະຫັດສາຍການສົນທະນາຂອງບັນທຶກຫຼັກ"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_parent_model_id
@@ -1067,31 +1149,33 @@ msgid ""
 "necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"ໂມເດວຫຼັກທີ່ຖືຊື່ແທນ. ໂມເດວທີ່ຖືການອ້າງອີງຊື່ແທນ ບໍ່ຈຳເປັນຕ້ອງແມ່ນໂມເດວທີ່ກຳນົດໂດຍ alias_model_id "
+"(ຕົວຢ່າງ: ໂຄງການ (parent_model) ແລະ ໜ້າວຽກ (model))"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__partner_id
 msgid "Partner"
-msgstr ""
+msgstr "ຄູ່ຮ່ວມ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__member_partner_ids
 msgid "Partners Member"
-msgstr ""
+msgstr "ສະມາຊິກຄູ່ຮ່ວມ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_ids
 msgid "Pending Messages"
-msgstr ""
+msgstr "ຂໍ້ຄວາມທີ່ລໍຖ້າກວດກາ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_moderation_count
 msgid "Pending Messages Count"
-msgstr ""
+msgstr "ຈຳນວນຂໍ້ຄວາມທີ່ລໍຖ້າກວດກາ"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__pending_moderation
 msgid "Pending Moderation"
-msgstr ""
+msgstr "ລໍຖ້າການກວດສອບ"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__moderation_notify
@@ -1099,11 +1183,12 @@ msgid ""
 "People receive an automatic notification about their message being waiting "
 "for moderation."
 msgstr ""
+"ຜູ້ຄົນຈະໄດ້ຮັບການແຈ້ງເຕືອນອັດຕະໂນມັດ ວ່າຂໍ້ຄວາມຂອງພວກເຂົາກຳລັງລໍຖ້າການກວດສອບ."
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_moderation__status__ban
 msgid "Permanent Ban"
-msgstr ""
+msgstr "ລະງັບຖາວອນ"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_contact
@@ -1114,43 +1199,47 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
+"ນະໂຍບາຍໃນການໂພສຂໍ້ຄວາມລົງໃນເອກະສານໂດຍໃຊ້ mailgateway.\n"
+"- everyone: ທຸກຄົນສາມາດໂພສໄດ້\n"
+"- partners: ສະເພາະຄູ່ຮ່ວມທີ່ຜ່ານການຢືນຢັນຕົວຕົນເທົ່ານັ້ນ\n"
+"- followers: ສະເພາະຜູ້ຕິດຕາມເອກະສານທີ່ກ່ຽວຂ້ອງ ຫຼື ສະມາຊິກຂອງຊ່ອງທີ່ຕິດຕາມເທົ່ານັ້ນ\n"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
 msgid "Post to:"
-msgstr ""
+msgstr "ໂພສຫາ:"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__create_date
 msgid "Posted"
-msgstr ""
+msgstr "ໂພສແລ້ວ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__access_mode
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Privacy"
-msgstr ""
+msgstr "ຄວາມເປັນສ່ວນຕົວ"
 
 #. module: mail_group
 #: model:mail.group,name:mail_group.mail_group_2
 msgid "Public Mailing List"
-msgstr ""
+msgstr "ລາຍຊື່ອີເມວສາທາລະນະ"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/wizard/mail_group_message_reject.py:0
 msgid "Re: %s"
-msgstr ""
+msgstr "ຕອບກັບ: %s"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_force_thread_id
 msgid "Record Thread ID"
-msgstr ""
+msgstr "ລະຫັດສາຍການສົນທະນາຂອງບັນທຶກ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
 msgid "Reference"
-msgstr ""
+msgstr "ອ້າງອີງ"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message_reject__action__reject
@@ -1158,137 +1247,137 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
 msgid "Reject"
-msgstr ""
+msgstr "ປະຕິເສດ"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_message_reject
 msgid "Reject Group Message"
-msgstr ""
+msgstr "ປະຕິເສດຂໍ້ຄວາມກຸ່ມ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "Reject Silently"
-msgstr ""
+msgstr "ປະຕິເສດແບບງຽບໆ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "Reject the message"
-msgstr ""
+msgstr "ປະຕິເສດຂໍ້ຄວາມ"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__rejected
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 msgid "Rejected"
-msgstr ""
+msgstr "ປະຕິເສດແລ້ວ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Responsibles"
-msgstr ""
+msgstr "ຜູ້ຮັບຜິດຊອບ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
 msgid "Search Group Message"
-msgstr ""
+msgstr "ຄົ້ນຫາຂໍ້ຄວາມກຸ່ມ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_member_view_search
 msgid "Search Mail Group Member"
-msgstr ""
+msgstr "ຄົ້ນຫາສະມາຊິກກຸ່ມອີເມວ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
 msgid "Search Mail group"
-msgstr ""
+msgstr "ຄົ້ນຫາກຸ່ມອີເມວ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
 msgid "Search Moderation List"
-msgstr ""
+msgstr "ຄົ້ນຫາລາຍຊື່ການກວດສອບ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Select users"
-msgstr ""
+msgstr "ເລືອກຜູ້ໃຊ້"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__groups
 msgid "Selected group of users"
-msgstr ""
+msgstr "ກຸ່ມຜູ້ໃຊ້ທີ່ເລືອກ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
 msgid "Send"
-msgstr ""
+msgstr "ສົ່ງ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "Send & Ban"
-msgstr ""
+msgstr "ສົ່ງ ແລະ ລະງັບ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "Send & Reject"
-msgstr ""
+msgstr "ສົ່ງ ແລະ ປະຕິເສດ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__send_email
 msgid "Send Email"
-msgstr ""
+msgstr "ສົ່ງອີເມວ"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group_message_reject__send_email
 msgid "Send an email to the author of the message"
-msgstr ""
+msgstr "ສົ່ງອີເມວຫາຜູ້ຂຽນຂໍ້ຄວາມ"
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_compose_message_action_mail_group
 msgid "Send email"
-msgstr ""
+msgstr "ສົ່ງອີເມວ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines
 msgid "Send guidelines to new members"
-msgstr ""
+msgstr "ສົ່ງຂໍ້ແນະນຳຫາສະມາຊິກໃໝ່"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_guidelines
 msgid "Sent to people who subscribed to a mailing group with group guidelines"
-msgstr ""
+msgstr "ສົ່ງຫາຜູ້ທີ່ສະໝັກເຂົ້າຮ່ວມກຸ່ມອີເມວ ພ້ອມດ້ວຍຂໍ້ແນະນຳຂອງກຸ່ມ"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_unsubscribe
 msgid "Sent to people who unsubscribed from a mailing group"
-msgstr ""
+msgstr "ສົ່ງຫາຜູ້ທີ່ຍົກເລີກສະມາຊິກຈາກກຸ່ມອີເມວ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderation_status
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__status
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
 msgid "Status"
-msgstr ""
+msgstr "ສະຖານະ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "Stay in touch with our Community"
-msgstr ""
+msgstr "ຕິດຕໍ່ພົວພັນກັບຊຸມຊົນຂອງພວກເຮົາສະເໝີ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__subject
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__subject
 msgid "Subject"
-msgstr ""
+msgstr "ຫົວຂໍ້"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "Subscribe"
-msgstr ""
+msgstr "ສະໝັກສະມາຊິກ"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_subscribe
 msgid "Subscription confirmation to a mailing group"
-msgstr ""
+msgstr "ການຢືນຢັນການສະໝັກສະມາຊິກກຸ່ມອີເມວ"
 
 #. module: mail_group
 #. odoo-python
@@ -1297,46 +1386,48 @@ msgid ""
 "Template \"mail_group.mail_template_guidelines\" was not found. No email has "
 "been sent. Please contact an administrator to fix this issue."
 msgstr ""
+"ບໍ່ພົບແມ່ແບບ \"mail_group.mail_template_guidelines\". ບໍ່ມີອີເມວຖືກສົ່ງອອກ. ກະລຸນາຕິດຕໍ່ຜູ້ເບິ່ງ"
+"ແຍງລະບົບເພື່ອແກ້ໄຂບັນຫານີ້."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
 msgid "Thank you!"
-msgstr ""
+msgstr "ຂອບໃຈ!"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "The \"Authorized Group\" is missing."
-msgstr ""
+msgstr "ຂາດ \"ກຸ່ມທີ່ໄດ້ຮັບອະນຸຍາດ\"."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "The email"
-msgstr ""
+msgstr "ອີເມວ"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
 msgid "The email \"%s\" is not valid."
-msgstr ""
+msgstr "ອີເມວ \"%s\" ບໍ່ຖືກຕ້ອງ."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "The group of the message do not match."
-msgstr ""
+msgstr "ກຸ່ມຂອງຂໍ້ຄວາມບໍ່ກົງກັນ."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "The guidelines description is empty."
-msgstr ""
+msgstr "ຄຳອະທິບາຍຂໍ້ແນະນຳແມ່ນວ່າງເປົ່າ."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "The guidelines description is missing."
-msgstr ""
+msgstr "ຂາດຄຳອະທິບາຍຂໍ້ແນະນຳ."
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_model_id
@@ -1345,6 +1436,8 @@ msgid ""
 "email that does not reply to an existing record will cause the creation of a "
 "new record of this model (e.g. a Project Task)"
 msgstr ""
+"ໂມເດວ (ປະເພດເອກະສານ Odoo) ທີ່ຊື່ແທນນີ້ກົງກັນ. ອີເມວຂາເຂົ້າໃດໆ ທີ່ບໍ່ໄດ້ຕອບກັບບັນທຶກທີ່ມີຢູ່ ຈະເຮັດໃຫ້ເກີ"
+"ດການສ້າງບັນທຶກໃໝ່ຂອງໂມເດວນີ້ (ຕົວຢ່າງ: ໜ້າວຽກໂຄງການ)"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_name
@@ -1352,205 +1445,206 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"ຊື່ຂອງຊື່ແທນອີເມວ, ເຊັ່ນ 'jobs' ຖ້າທ່ານຕ້ອງການດັກຈັບອີເມວສຳລັບ <jobs@example.odoo.com>"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "The notification message is missing."
-msgstr ""
+msgstr "ຂາດຂໍ້ຄວາມແຈ້ງເຕືອນ."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "The partner can not be found."
-msgstr ""
+msgstr "ບໍ່ພົບຄູ່ຮ່ວມ."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
 msgid "The record of the message should be the group."
-msgstr ""
+msgstr "ບັນທຶກຂອງຂໍ້ຄວາມຄວນຈະແມ່ນກຸ່ມ."
 
 #. module: mail_group
 #. odoo-javascript
 #: code:addons/mail_group/static/src/interactions/mail_group.js:0
 msgid "This email is already subscribed."
-msgstr ""
+msgstr "ອີເມວນີ້ໄດ້ສະໝັກສະມາຊິກແລ້ວ."
 
 #. module: mail_group
 #. odoo-javascript
 #: code:addons/mail_group/static/src/interactions/mail_group.js:0
 msgid "This email is not subscribed."
-msgstr ""
+msgstr "ອີເມວນີ້ຍັງບໍ່ໄດ້ສະໝັກສະມາຊິກ."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
 msgid "This message can not be moderated"
-msgstr ""
+msgstr "ຂໍ້ຄວາມນີ້ບໍ່ສາມາດກວດສອບໄດ້"
 
 #. module: mail_group
 #: model:ir.model.constraint,message:mail_group.constraint_mail_group_member_unique_partner
 msgid "This partner is already subscribed to the group"
-msgstr ""
+msgstr "ຄູ່ຮ່ວມນີ້ໄດ້ສະໝັກເປັນສະມາຊິກກຸ່ມແລ້ວ"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
 msgid "Those messages can not be moderated: %s."
-msgstr ""
+msgstr "ຂໍ້ຄວາມເຫຼົ່ານີ້ບໍ່ສາມາດກວດສອບໄດ້: %s."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "To Review"
-msgstr ""
+msgstr "ລໍຖ້າກວດກາ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "Unsubscribe"
-msgstr ""
+msgstr "ຍົກເລີກສະມາຊິກ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
 msgid "Unsubscribe:"
-msgstr ""
+msgstr "ຍົກເລີກສະມາຊິກ:"
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_message_action
 msgid ""
 "When people send an email to the alias of the list, they will appear here."
-msgstr ""
+msgstr "ເມື່ອມີຄົນສົ່ງອີເມວຫາຊື່ແທນຂອງລາຍຊື່, ພວກມັນຈະປາກົດຢູ່ນີ້."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
 msgid "Whitelist"
-msgstr ""
+msgstr "ລາຍຊື່ອະນຸຍາດ"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__author_moderation__allow
 msgid "Whitelisted"
-msgstr ""
+msgstr "ຢູ່ໃນລາຍຊື່ອະນຸຍາດແລ້ວ"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
 msgid "Wrong status (%s)"
-msgstr ""
+msgstr "ສະຖານະບໍ່ຖືກຕ້ອງ (%s)"
 
 #. module: mail_group
 #: model:ir.model.constraint,message:mail_group.constraint_mail_group_moderation_mail_group_email_uniq
 msgid "You can create only one rule for a given email address in a group."
-msgstr ""
+msgstr "ທ່ານສາມາດສ້າງໄດ້ພຽງກົດລະບຽບດຽວສຳລັບທີ່ຢູ່ອີເມວທີ່ກຳນົດໃນກຸ່ມ."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "You can not join a closed group."
-msgstr ""
+msgstr "ທ່ານບໍ່ສາມາດເຂົ້າຮ່ວມກຸ່ມທີ່ປິດແລ້ວໄດ້."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "You can not send guidelines for a closed group."
-msgstr ""
+msgstr "ທ່ານບໍ່ສາມາດສົ່ງຂໍ້ແນະນຳສຳລັບກຸ່ມທີ່ປິດແລ້ວໄດ້."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
 msgid "You have messages to moderate, please go for the proceedings."
-msgstr ""
+msgstr "ທ່ານມີຂໍ້ຄວາມທີ່ຕ້ອງກວດສອບ, ກະລຸນາດຳເນີນການ."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "alias"
-msgstr ""
+msgstr "ຊື່ແທນ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "and send an email to the author ("
-msgstr ""
+msgstr "ແລະ ສົ່ງອີເມວຫາຜູ້ຂຽນ ("
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
 msgid "attachments"
-msgstr ""
+msgstr "ໄຟລ໌ຄັດຕິດ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
 msgid "by"
-msgstr ""
+msgstr "ໂດຍ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "e.g. \"Newsletter\""
-msgstr ""
+msgstr "ຕົວຢ່າງ: \"ຈົດໝາຍຂ່າວ\""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "e.g. \"This group is about ...\""
-msgstr ""
+msgstr "ຕົວຢ່າງ: \"ກຸ່ມນີ້ກ່ຽວກັບ...\"`"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "e.g. mycompany.com"
-msgstr ""
+msgstr "ຕົວຢ່າງ: mycompany.com"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "e.g.\"Please be polite and ...\""
-msgstr ""
+msgstr "ຕົວຢ່າງ: \"ກະລຸນາສຸພາບ ແລະ...\""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
 msgid "group"
-msgstr ""
+msgstr "ກຸ່ມ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "has been"
-msgstr ""
+msgstr "ໄດ້ຮັບການ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "members<br/>"
-msgstr ""
+msgstr "ສະມາຊິກ<br/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "messages / month"
-msgstr ""
+msgstr "ຂໍ້ຄວາມ / ເດືອນ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 msgid "messages to review"
-msgstr ""
+msgstr "ຂໍ້ຄວາມທີ່ຕ້ອງກວດກາ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
 msgid "more replies"
-msgstr ""
+msgstr "ການຕອບກັບເພີ່ມເຕີມ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
 msgid "replies"
-msgstr ""
+msgstr "ການຕອບກັບ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "subscribed to"
-msgstr ""
+msgstr "ສະໝັກສະມາຊິກ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "the list"
-msgstr ""
+msgstr "ລາຍຊື່"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "unsubscribed from"
-msgstr ""
+msgstr "ຍົກເລີກສະມາຊິກຈາກ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "your email..."
-msgstr ""
+msgstr "ອີເມວຂອງທ່ານ..."

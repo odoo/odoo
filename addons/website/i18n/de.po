@@ -20,8 +20,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 17:41+0000\n"
-"PO-Revision-Date: 2026-09-21 06:49+0000\n"
+"POT-Creation-Date: 2026-10-23 17:40+0000\n"
+"PO-Revision-Date: 2026-10-23 06:33+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-20/website/"
 "de/>\n"
@@ -7559,8 +7559,8 @@ msgstr "Standardwechsel der Kontrollkästcheneingabe"
 #. module: website
 #. odoo-python
 #: code:addons/website/models/website.py:0
-msgid "Default website changed"
-msgstr "Standardwebsite geändert"
+msgid "Default website changed to %(default_website_name)s."
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -8353,6 +8353,12 @@ msgstr "Doppelklick auf ein Symbol, um es durch eines Ihrer Wahl zu ersetzen."
 #: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
 msgid "Doughnut"
 msgstr "Ringdiagramm"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/popup_option_plugin.js:0
+msgid "Drag blocks here"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_dropzone
@@ -14480,6 +14486,8 @@ msgid ""
 "Note: To view the website information, enable it from the Style tab in edit "
 "mode."
 msgstr ""
+"Hinweis: Um die Website-Informationen anzuzeigen, aktivieren Sie diese im "
+"Bearbeitungsmodus im Reiter „Stil“."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_controller_page__notes
@@ -19810,26 +19818,6 @@ msgstr "Der Name der Seite, der in einer URL verwendet werden kann"
 #. module: website
 #. odoo-python
 #: code:addons/website/models/website.py:0
-msgid "The new default website is %(default_website_name)s."
-msgstr "Die neue Standardwebsite lautet %(default_website_name)s."
-
-#. module: website
-#. odoo-python
-#: code:addons/website/models/website.py:0
-msgid ""
-"The new default website is %(default_website_name)s. The following default "
-"settings were copied from the old default website to the new one: %"
-"(transferred_settings)s. Note that these settings are still present on the "
-"old default website."
-msgstr ""
-"Die neue Standardwebsite lautet %(default_website_name)s. Die folgenden "
-"Standardeinstellungen wurden von der alten Standardwebsite auf die neue "
-"Standardwebsite übertragen: %(transferred_settings)s. Beachten Sie, dass "
-"diese Einstellungen weiterhin auf der alten Standardwebsite vorhanden sind."
-
-#. module: website
-#. odoo-python
-#: code:addons/website/models/website.py:0
 msgid "The provided website domain is not a valid URL."
 msgstr "Die angegebene Website-Domain ist keine gültige URL."
 
@@ -22946,6 +22934,8 @@ msgstr ""
 msgid ""
 "You don't have the necessary access rights to use the website configurator."
 msgstr ""
+"Sie verfügen nicht über die erforderlichen Zugriffsrechte, um den Website-"
+"Konfigurator zu nutzen."
 
 #. module: website
 #. odoo-javascript
@@ -23504,6 +23494,8 @@ msgid ""
 "contacts, collect, submission, input, fields, questionnaire, survey, "
 "registration, request, images, pictures, photos, illustration, media, visual"
 msgstr ""
+"Kontakte, Erfassung, Einreichung, Eingabe, Felder, Fragebogen, Umfragen, "
+"Registrierung, Anfragen, Bilder, Fotos, Illustrationen, Medien, visuell"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23513,6 +23505,10 @@ msgid ""
 "visual, company, companies, organization, address, phone, email, location, "
 "get-in-touch"
 msgstr ""
+"Kontakte, Erfassung, Einreichung, Eingabe, Felder, Fragebogen, Umfrage, "
+"Registrierung, Anfrage, Bilder, Fotos, Illustrationen, Medien, visuell, "
+"Unternehmen, Firmen, Organisation, Adresse, Telefon, E-Mail, Standort, "
+"Kontakt aufnehmen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23521,6 +23517,9 @@ msgid ""
 "registration, request, images, pictures, photos, illustration, media, "
 "visual, get-in-touch"
 msgstr ""
+"Kontakte, Erfassung, Einreichung, Eingabe, Felder, Fragebogen, Umfragen, "
+"Registrierung, Anfrage, Bilder, Fotos, Illustrationen, Medien, visuell, "
+"Kontakt aufnehmen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23529,6 +23528,9 @@ msgid ""
 "line, plot, bars, metrics, figures, data-visualization, statistics, stats, "
 "analytics, infographic, report"
 msgstr ""
+"Inhalt, Artikel, Geschichte, Geschichten, Kombination, Grafiken, Tabellen, "
+"Diagramme, Linien, Kurven, Balken, Kennzahlen, Abbildungen, "
+"Datenvisualisierung, Statistik, Statistiken, Analysen, Infografik, Bericht"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23537,11 +23539,15 @@ msgid ""
 "pie, doughnut, plot, bars, metrics, figures, data-visualization, statistics, "
 "stats, analytics, infographic, report"
 msgstr ""
+"Inhalt, Artikel, Geschichte, Geschichten, Kombination, Grafiken, Tabellen, "
+"Diagramme, Kreisdiagramme, Ringdiagramme, Balkendiagramme, Kennzahlen, "
+"Zahlen, Datenvisualisierung, Statistik, Statistiken, Analytik, Infografik, "
+"Bericht"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "content, paragraph, articles, body, descriptions, information"
-msgstr ""
+msgstr "Inhalt, Absatz, Artikel, Textkörper, Beschreibungen, Informationen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23549,6 +23555,8 @@ msgid ""
 "content, pictures, photos, connections, covers, shape, backgrounds, images, "
 "headings, heroes, light, experience, parallax"
 msgstr ""
+"Inhalt, Bilder, Fotos, Verknüpfungen, Titelbilder, Form, Hintergründe, "
+"Grafiken, Überschriften, Hero-Bereiche, hell, Erlebnis, Parallax"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23556,6 +23564,8 @@ msgid ""
 "content, pictures, photos, illustration, media, visual, articles, story, "
 "stories, combination"
 msgstr ""
+"Inhalt, Bilder, Fotos, Illustrationen, Medien, Bildmaterial, Artikel, "
+"Geschichte, Geschichten, Kombination"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23563,6 +23573,9 @@ msgid ""
 "content, pictures, photos, illustration, media, visual, articles, story, "
 "stories, combination, engage, call to action, cta, boxes, showcase"
 msgstr ""
+"Inhalt, Bilder, Fotos, Illustrationen, Medien, Visuelles, Artikel, "
+"Geschichte, Geschichten, Kombination, ansprechen, Handlungsaufforderung, "
+"CTA, Boxen, Präsentation"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23570,6 +23583,9 @@ msgid ""
 "content, pictures, photos, illustration, media, visual, articles, story, "
 "stories, combination, full width, fullwidth, bleed, grids"
 msgstr ""
+"Inhalt, Bilder, Fotos, Illustrationen, Medien, Bildmaterial, Artikel, "
+"Geschichte, Geschichten, Kombination, volle Breite, Vollbreite, Beschnitt, "
+"Raster"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23577,6 +23593,8 @@ msgid ""
 "content, pictures, photos, illustration, media, visual, articles, story, "
 "stories, combination, heading, headline"
 msgstr ""
+"Inhalt, Bilder, Fotos, Illustrationen, Medien, Bildmaterial, Artikel, "
+"Geschichte, Geschichten, Kombination, Überschrift, Schlagzeile"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23584,6 +23602,8 @@ msgid ""
 "content, pictures, photos, illustration, media, visual, articles, story, "
 "stories, combination, more, hexagon, geometric"
 msgstr ""
+"Inhalt, Bilder, Fotos, Illustrationen, Medien, Bildmaterial, Artikel, "
+"Geschichte, Geschichten, Kombination, mehr, Sechseck, geometrisch"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23592,6 +23612,9 @@ msgid ""
 "stories, combination, network, relationships, interactions, connectivity, "
 "collaborations"
 msgstr ""
+"Inhalt, Bilder, Fotos, Illustrationen, Medien, Bildmaterial, Artikel, "
+"Geschichte, Geschichten, Kombination, Netzwerk, Beziehungen, Interaktionen, "
+"Vernetzung, Kooperationen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -24374,7 +24397,7 @@ msgstr "Pointer, um die Funktionen zu entdecken."
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "positioning"
-msgstr "Stil"
+msgstr "Positionierung"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -24719,7 +24742,7 @@ msgstr "mit dieser Farbvoreinstellung aussehen."
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "with a"
-msgstr "in einem"
+msgstr "in einer"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_achievements_list
@@ -24797,6 +24820,24 @@ msgstr "✽  Pizza"
 #: model_terms:ir.ui.view,arch_db:website.s_key_benefits
 msgid "✽  What We Offer"
 msgstr "✽  Was wir bieten"
+
+#~ msgid "Default website changed"
+#~ msgstr "Standardwebsite geändert"
+
+#~ msgid "The new default website is %(default_website_name)s."
+#~ msgstr "Die neue Standardwebsite lautet %(default_website_name)s."
+
+#~ msgid ""
+#~ "The new default website is %(default_website_name)s. The following "
+#~ "default settings were copied from the old default website to the new one: "
+#~ "%(transferred_settings)s. Note that these settings are still present on "
+#~ "the old default website."
+#~ msgstr ""
+#~ "Die neue Standardwebsite lautet %(default_website_name)s. Die folgenden "
+#~ "Standardeinstellungen wurden von der alten Standardwebsite auf die neue "
+#~ "Standardwebsite übertragen: %(transferred_settings)s. Beachten Sie, dass "
+#~ "diese Einstellungen weiterhin auf der alten Standardwebsite vorhanden "
+#~ "sind."
 
 #~ msgid "Arrow Position"
 #~ msgstr "Pfeilposition"

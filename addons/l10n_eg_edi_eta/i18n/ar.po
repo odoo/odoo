@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 15.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 18:19+0000\n"
-"PO-Revision-Date: 2026-10-13 06:33+0000\n"
+"PO-Revision-Date: 2026-10-21 12:34+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-20/"
 "l10n_eg_edi_eta/ar/>\n"
@@ -125,39 +125,43 @@ msgid ""
 "<span class=\"o_form_label\">Production (Live)</span> - Production "
 "credentials needed to connect to the live ETA environment"
 msgstr ""
+"<span class=\"o_form_label\">بيئة التشغيل الفعلي (الإنتاج المباشر)</span> - "
+"يلزم توفير بيانات الاعتماد الخاصة ببيئة التشغيل المباشر لإتمام الربط والتكامل "
+"مع بيئة منظومة الفاتورة الإلكترونية لمصلحة الضرائب المصرية (ETA)"
 
 #. module: l10n_eg_edi_eta
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.egyptian_invoice
 msgid "<strong class=\"text-center\">ETA QR Code</strong>"
 msgstr ""
+"<strong class=\"text-center\">رمز الاستجابة السريعة (QR) لـ ETA</strong>"
 
 #. module: l10n_eg_edi_eta
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.product_normal_form_view_inherit_l10n_eg_eta_edi
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.product_template_only_form_view_inherit_l10n_eg_eta_edi
 msgid "<strong>WARNING - This code must match the ETA portal</strong>"
-msgstr ""
+msgstr "<strong>تحذير - يجب أن يتطابق هذا الرمز مع بوابة ETA</strong>"
 
 #. module: l10n_eg_edi_eta
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.res_config_settings_view_form
 msgid "API Mode"
-msgstr ""
+msgstr "وضع الواجهة البرمجية للتطلبيق"
 
 #. module: l10n_eg_edi_eta
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.res_config_settings_view_form
 msgid "API Modes"
-msgstr ""
+msgstr "أوضاع الواجهة البرمجية للتطلبيق"
 
 #. module: l10n_eg_edi_eta
 #: model:ir.model.fields.selection,name:l10n_eg_edi_eta.selection__account_move__l10n_eg_edi_submission_state__accepted
 #: model:ir.model.fields.selection,name:l10n_eg_edi_eta.selection__l10n_eg_edi_eta_submission__state__accepted
 msgid "Accepted"
-msgstr ""
+msgstr "تم القبول"
 
 #. module: l10n_eg_edi_eta
 #: model:ir.model.fields.selection,name:l10n_eg_edi_eta.selection__account_move__l10n_eg_edi_submission_state__test
 #: model:ir.model.fields.selection,name:l10n_eg_edi_eta.selection__l10n_eg_edi_eta_submission__state__test
 msgid "Accepted (Test)"
-msgstr ""
+msgstr "تم القبول (البيئة التجريبية)"
 
 #. module: l10n_eg_edi_eta
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_thumb_drive__access_token
@@ -167,12 +171,12 @@ msgstr "رمز الوصول "
 #. module: l10n_eg_edi_eta
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_journal__l10n_eg_activity_type_id
 msgid "Activity Code"
-msgstr ""
+msgstr "رمز النشاط"
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_C62
 msgid "Activity unit ( AU )"
-msgstr ""
+msgstr "وحدة النشاط (AU)"
 
 #. module: l10n_eg_edi_eta
 #: model:ir.model.fields,help:l10n_eg_edi_eta.field_account_journal__l10n_eg_branch_id
@@ -180,67 +184,69 @@ msgid ""
 "Address of the subdivision of the company.  You can just put the company "
 "partner if this is used for the main branch."
 msgstr ""
+"عنوان الفرع التابع للشركة.  يمكنك الاكتفاء بذكر الشريك في الشركة إذا كان هذا "
+"العنوان مخصصًا للفرع الرئيسي."
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_AMP
 msgid "Ampere ( A )"
-msgstr ""
+msgstr "أمبير ( A )"
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_AE
 msgid "Ampere per metre"
-msgstr ""
+msgstr "أمبير لكل متر"
 
 #. module: l10n_eg_edi_eta
 #. odoo-javascript
 #: code:addons/l10n_eg_edi_eta/static/src/client_action/sign_invoice.js:0
 msgid "An unexpected error has occurred"
-msgstr ""
+msgstr "حدث خطأ غير متوقع"
 
 #. module: l10n_eg_edi_eta
 #: model:ir.model,name:l10n_eg_edi_eta.model_ir_attachment
 msgid "Attachment"
-msgstr ""
+msgstr "المرفق"
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_BG
 msgid "Bag ( Bag )"
-msgstr ""
+msgstr "حقيبة (حقيبة)"
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_BL
 msgid "Bale"
-msgstr ""
+msgstr "بيل"
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_BBL
 msgid "Barrel (oil 42 gal.)"
-msgstr ""
+msgstr "برميل (نفط 42 غالونًا)"
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_B4
 msgid "Barrel, Imperial"
-msgstr ""
+msgstr "برميل، إمبراطوري"
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_BB
 msgid "Base box"
-msgstr ""
+msgstr "المربع الأساسي"
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_BK
 msgid "Basket"
-msgstr ""
+msgstr "سلة"
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_BD
 msgid "Board"
-msgstr ""
+msgstr "لوح"
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_BO
 msgid "Bottle ( Bt. )"
-msgstr ""
+msgstr "زجاجة ( Bt. )"
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_BOX
@@ -262,107 +268,110 @@ msgstr "معرف الفرع"
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_res_partner__l10n_eg_building_no
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_res_users__l10n_eg_building_no
 msgid "Building No."
-msgstr ""
+msgstr "رقم المبنى"
 
 #. module: l10n_eg_edi_eta
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.view_company_form_inherit_l10n_eg_edi
 msgid "Building No..."
-msgstr ""
+msgstr "رقم المبنى..."
 
 #. module: l10n_eg_edi_eta
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.eg_partner_address_form
 msgid "Building Number..."
-msgstr ""
+msgstr "رقم المبنى..."
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_VQ
 msgid "Bulk"
-msgstr ""
+msgstr "بالجملة"
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_BE
 msgid "Bundle"
-msgstr ""
+msgstr "حزمة"
 
 #. module: l10n_eg_edi_eta
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.l10n_eg_edi_view_out_credit_note_tree_inherit
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.l10n_eg_edi_view_out_invoice_tree_inherit
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.view_move_form_inherit
 msgid "Cancel (ETA)"
-msgstr ""
+msgstr "إلغاء (ETA)"
 
 #. module: l10n_eg_edi_eta
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.l10n_eg_edi_cancel_wizard_form
 msgid "Cancel Invoice"
-msgstr ""
+msgstr "إلغاء الفاتورة"
 
 #. module: l10n_eg_edi_eta
 #: model:ir.model.fields.selection,name:l10n_eg_edi_eta.selection__account_move__l10n_eg_edi_submission_state__cancel
 #: model:ir.model.fields.selection,name:l10n_eg_edi_eta.selection__l10n_eg_edi_eta_submission__state__cancel
 msgid "Cancelled"
-msgstr ""
+msgstr "ملغى"
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_CA
 msgid "Canister ( Can )"
-msgstr ""
+msgstr "علبة معدنية ( Can )"
 
 #. module: l10n_eg_edi_eta
 #. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
 msgid "Cannot cancel an invoice which is already cancelled !"
-msgstr ""
+msgstr "لا يمكن إلغاء فاتورة تم إلغاؤها بالفعل!"
 
 #. module: l10n_eg_edi_eta
 #. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
 msgid "Cannot fetch PDF if the invoice company's ETA API mode is in Demo."
 msgstr ""
+"تعذر استرداد أو تنزيل ملف PDF الخاص بالفاتورة عندما يكون وضع الاتصال بالواجهة "
+"البرمجية لمصلحة الضرائب المصرية (ETA) المسجل لشركة الفاتورة محدداً على البيئة "
+"التجريبية (Demo)."
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_NC
 msgid "Car"
-msgstr ""
+msgstr "كارتون"
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_CT
 msgid "Carton ( Car )"
-msgstr ""
+msgstr "كارتون ( Car )"
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_CS
 msgid "Case ( Case )"
-msgstr ""
+msgstr "صندوق ( Case )"
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_Z3
 msgid "Cask"
-msgstr ""
+msgstr "برميل خشب"
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_CTL
 msgid "Centiliter ( Cl )"
-msgstr ""
+msgstr "سنتيلتر (Cl)"
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_CMT
 msgid "Centimeter ( cm )"
-msgstr ""
+msgstr "سنتيمتر ( cm )"
 
 #. module: l10n_eg_edi_eta
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.eg_partner_address_form
 msgid "City"
-msgstr ""
+msgstr "المدينة"
 
 #. module: l10n_eg_edi_eta
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.res_config_settings_view_form
 msgid "Client ID"
-msgstr ""
+msgstr "معرف العميل"
 
 #. module: l10n_eg_edi_eta
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.l10n_eg_edi_cancel_wizard_form
 msgid "Close"
-msgstr ""
+msgstr "إغلاق"
 
 #. module: l10n_eg_edi_eta
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_activity_type__code
@@ -389,7 +398,7 @@ msgstr "جهة اتصال "
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_CH
 msgid "Container"
-msgstr ""
+msgstr "حاوية"
 
 #. module: l10n_eg_edi_eta
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.eg_partner_address_form
@@ -399,7 +408,7 @@ msgstr "الدولة"
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_CR
 msgid "Crate"
-msgstr ""
+msgstr "صندوق خشبي"
 
 #. module: l10n_eg_edi_eta
 #: model:ir.model,website_form_label:l10n_eg_edi_eta.model_res_partner
@@ -427,22 +436,22 @@ msgstr "أنشئ في"
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_CMQ
 msgid "Cubic centimeter ( cm3 )"
-msgstr ""
+msgstr "سنتيمتر مكعب ( cm³ )"
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_FTQ
 msgid "Cubic foot ( ft3 )"
-msgstr ""
+msgstr "قدم مكعب (ft³)"
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_INQ
 msgid "Cubic inch"
-msgstr ""
+msgstr "إنش مكعب"
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_MTQ
 msgid "Cubic meter ( m3 )"
-msgstr ""
+msgstr "متر مكعب ( m3 )"
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_MMQ
@@ -549,7 +558,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.view_account_journal_form_inherit_l10n_eg_edi
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.view_move_form_inherit
 msgid "ETA"
-msgstr ""
+msgstr "مصلحة الضرائب المصرية (ETA)"
 
 #. module: l10n_eg_edi_eta
 #. odoo-python
@@ -676,7 +685,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
 msgid "ETA_INVOICE_PDF_%s"
-msgstr ""
+msgstr "ETA_INVOICE_PDF_%s"
 
 #. module: l10n_eg_edi_eta
 #: model:ir.module.module,shortdesc:base.module_l10n_eg_edi_eta

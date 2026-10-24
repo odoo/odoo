@@ -3,14 +3,15 @@
 # * stock_landed_costs
 #
 # Translators:
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-04 17:44+0000\n"
-"PO-Revision-Date: 2026-08-31 18:32+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Lao <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-10-24 11:33+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-20/"
 "stock_landed_costs/lo/>\n"
 "Language: lo\n"
 "MIME-Version: 1.0\n"
@@ -29,18 +30,23 @@ msgid ""
 "split of these costs among their stock moves in order to take them into "
 "account in your stock valuation.\n"
 msgstr ""
+"\n"
+"ການຄຸ້ມຄອງຕົ້ນທຶນສິນຄ້າຮອດສາງ\n"
+"=======================\n"
+"ໂມດູນນີ້ຊ່ວຍໃຫ້ທ່ານສາມາດເພີ່ມຕົ້ນທຶນເພີ່ມເຕີມໃສ່ການເບີກຮັບສິນຄ້າ ແລະ ກຳນົດການແບ່ງປັນຕົ້ນທຶນເຫຼົ່ານີ້ໃຫ້ກັບແຕ່ລ"
+"ະການເຄື່ອນໄຫວສາງໄດ້ຢ່າງງ່າຍດາຍ ເພື່ອຄິດໄລ່ເຂົ້າໃນການຕີມູນຄ່າສາງຂອງທ່ານ.\n"
 
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_move.py:0
 msgid "+ %(value)s (Landed Cost: %(landed_cost)s)"
-msgstr ""
+msgstr "+ %(value)s (ຕົ້ນທຶນຮອດສາງ: %(landed_cost)s)"
 
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_move.py:0
 msgid "+ %(value)s from %(vendor_bill)s (Landed Cost: %(landed_cost)s)"
-msgstr ""
+msgstr "+ %(value)s ຈາກ %(vendor_bill)s (ຕົ້ນທຶນຮອດສາງ: %(landed_cost)s)"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_view_kanban
@@ -48,56 +54,58 @@ msgid ""
 "<i class=\"oi\" data-icon=\"schedule\" title=\"Date\" role=\"img\" aria-"
 "label=\"Date\"/>"
 msgstr ""
+"<i class=\"oi\" data-icon=\"schedule\" title=\"Date\" role=\"img\" aria-"
+"label=\"Date\"/>"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__account_id
 msgid "Account"
-msgstr ""
+msgstr "ບັນຊີ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__account_journal_id
 msgid "Account Journal"
-msgstr ""
+msgstr "ປຶ້ມບັນຊີປະຈຳວັນ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "ຕ້ອງການການດຳເນີນການ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_ids
 msgid "Activities"
-msgstr ""
+msgstr "ກິດຈະກຳ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "ການຕົກແຕ່ງຂໍ້ຍົກເວັ້ນກິດຈະກຳ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "ແຜນກິດຈະກຳ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "ສະຖານະກິດຈະກຳ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "ໄອຄອນປະເພດກິດຈະກຳ"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Additional Costs"
-msgstr ""
+msgstr "ຕົ້ນທຶນເພີ່ມເຕີມ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__additional_landed_cost
 msgid "Additional Landed Cost"
-msgstr ""
+msgstr "ຕົ້ນທຶນຮອດສາງເພີ່ມເຕີມ"
 
 #. module: stock_landed_costs
 #. odoo-python
@@ -106,101 +114,103 @@ msgid ""
 "Additional landed costs:\n"
 "%(landed_cost)s"
 msgstr ""
+"ຕົ້ນທຶນຮອດສາງເພີ່ມເຕີມ:\n"
+"%(landed_cost)s"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_product_landed_cost_form
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "All Products"
-msgstr ""
+msgstr "ສິນຄ້າທັງໝົດ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__allowed_product_ids
 msgid "Allowed Product"
-msgstr ""
+msgstr "ສິນຄ້າທີ່ອະນຸຍາດ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__landed_cost_on_product_ids
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__landed_cost_on_product_ids
 msgid "Apply Landed Cost On"
-msgstr ""
+msgstr "ນຳໃຊ້ຕົ້ນທຶນຮອດສາງໃສ່"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__target_model
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__apply_on_product_ids
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_product_landed_cost_form
 msgid "Apply On"
-msgstr ""
+msgstr "ນຳໃຊ້ໃສ່"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "ຈຳນວນເອກະສານຕິດຄັດ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__product_template__split_method_landed_cost__by_current_cost_price
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost_lines__split_method__by_current_cost_price
 msgid "By Current Cost"
-msgstr ""
+msgstr "ຕາມຕົ້ນທຶນປະຈຸບັນ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__product_template__split_method_landed_cost__by_quantity
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost_lines__split_method__by_quantity
 msgid "By Quantity"
-msgstr ""
+msgstr "ຕາມຈຳນວນ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__product_template__split_method_landed_cost__by_volume
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost_lines__split_method__by_volume
 msgid "By Volume"
-msgstr ""
+msgstr "ຕາມບໍລິມາດ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__product_template__split_method_landed_cost__by_weight
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost_lines__split_method__by_weight
 msgid "By Weight"
-msgstr ""
+msgstr "ຕາມນ້ຳໜັກ"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Cancel"
-msgstr "ຍົກເລີອກ"
+msgstr "ຍົກເລີກ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__cancel
 msgid "Cancelled"
-msgstr "ຍົກເລີກ"
+msgstr "ຍົກເລີກແລ້ວ"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_res_company
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__company_id
 msgid "Company"
-msgstr ""
+msgstr "ບໍລິສັດ"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Compute"
-msgstr ""
+msgstr "ຄິດໄລ່"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "ການຕັ້ງຄ່າ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__price_unit
 msgid "Cost"
-msgstr ""
+msgstr "ຕົ້ນທຶນ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__cost_line_id
 msgid "Cost Line"
-msgstr ""
+msgstr "ລາຍການຕົ້ນທຶນ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__cost_lines
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Cost Lines"
-msgstr ""
+msgstr "ລາຍການຕົ້ນທຶນ"
 
 #. module: stock_landed_costs
 #. odoo-python
@@ -209,61 +219,62 @@ msgid ""
 "Cost and adjustments lines do not match. You should maybe recompute the "
 "landed costs."
 msgstr ""
+"ລາຍການຕົ້ນທຶນ ແລະ ລາຍການປັບປຸງບໍ່ກົງກັນ. ທ່ານອາດຈະຕ້ອງຄິດໄລ່ຕົ້ນທຶນຮອດສາງໃໝ່."
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.account_view_move_form_inherited
 msgid "Create Landed Costs"
-msgstr ""
+msgstr "ສ້າງຕົ້ນທຶນຮອດສາງ"
 
 #. module: stock_landed_costs
 #: model_terms:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
 msgid "Create a new landed cost"
-msgstr ""
+msgstr "ສ້າງຕົ້ນທຶນຮອດສາງໃໝ່"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__create_uid
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__create_uid
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "ສ້າງໂດຍ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__create_date
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__create_date
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__create_date
 msgid "Created on"
-msgstr ""
+msgstr "ສ້າງເມື່ອ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__currency_id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__currency_id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "ສະກຸນເງິນ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__date
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Date"
-msgstr ""
+msgstr "ວັນທີ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings__lc_journal_id
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.res_config_settings_view_form
 msgid "Default Journal"
-msgstr ""
+msgstr "ປຶ້ມບັນຊີປະຈຳວັນເລີ່ມຕົ້ນ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__split_method_landed_cost
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__split_method_landed_cost
 msgid "Default Split Method"
-msgstr ""
+msgstr "ວິທີການແບ່ງປັນເລີ່ມຕົ້ນ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__split_method_landed_cost
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__split_method_landed_cost
 msgid "Default Split Method when used for Landed Cost"
-msgstr ""
+msgstr "ວິທີການແບ່ງປັນເລີ່ມຕົ້ນເມື່ອນຳໃຊ້ສຳລັບຕົ້ນທຶນຮອດສາງ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__name
@@ -283,25 +294,25 @@ msgstr "ຄຳອະທິບາຍ"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_move__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ຊື່ທີ່ສະແດງ"
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,name:stock_landed_costs.mt_stock_landed_cost_open
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Done"
-msgstr "ຈົບເເລັວ"
+msgstr "ສຳເລັດແລ້ວ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__draft
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Draft"
-msgstr "ຕົວທົດລອງ"
+msgstr "ຮ່າງ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__product_template__split_method_landed_cost__equal
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost_lines__split_method__equal
 msgid "Equal"
-msgstr ""
+msgstr "ເທົ່າກັນ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_lines__split_method
@@ -312,21 +323,26 @@ msgid ""
 "By Weight: Cost will be divided depending on its weight.\n"
 "By Volume: Cost will be divided depending on its volume."
 msgstr ""
+"ເທົ່າກັນ: ຕົ້ນທຶນຈະຖືກແບ່ງອອກຢ່າງເທົ່າທຽມກັນ.\n"
+"ຕາມຈຳນວນ: ຕົ້ນທຶນຈະຖືກແບ່ງປັນຕາມຈຳນວນສິນຄ້າ.\n"
+"ຕາມຕົ້ນທຶນປະຈຸບັນ: ຕົ້ນທຶນຈະຖືກແບ່ງປັນຕາມຕົ້ນທຶນປະຈຸບັນຂອງສິນຄ້າ.\n"
+"ຕາມນ້ຳໜັກ: ຕົ້ນທຶນຈະຖືກແບ່ງປັນຕາມນ້ຳໜັກຂອງສິນຄ້າ.\n"
+"ຕາມບໍລິມາດ: ຕົ້ນທຶນຈະຖືກແບ່ງປັນຕາມບໍລິມາດຂອງສິນຄ້າ."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "ຜູ້ຕິດຕາມ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "ຜູ້ຕິດຕາມ (ຄູ່ຄ້າ)"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Future Activities"
-msgstr ""
+msgstr "ກິດຈະກຳໃນອະນາຄົດ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_account_move_line__product_type
@@ -334,11 +350,13 @@ msgid ""
 "Goods are tangible materials and merchandise you provide.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"ສິນຄ້າ ແມ່ນວັດຖຸສິ່ງຂອງ ແລະ ສິນຄ້າທີ່ຈັບບາຍໄດ້ ທີ່ທ່ານສະໜອງໃຫ້.\n"
+"ການບໍລິການ ແມ່ນຜະລິດຕະພັນທີ່ບໍ່ມີຕົວຕົນ ທີ່ທ່ານສະໜອງໃຫ້."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "ມີຂໍ້ຄວາມ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__id
@@ -352,28 +370,28 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_move__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__id
 msgid "ID"
-msgstr ""
+msgstr "ລະຫັດ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_exception_icon
 msgid "Icon"
-msgstr ""
+msgstr "ໄອຄອນ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "ໄອຄອນເພື່ອບົ່ງບອກກິດຈະກຳທີ່ມີຂໍ້ຍົກເວັ້ນ."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "ຖ້າໝາຍຕິກ, ຂໍ້ຄວາມໃໝ່ຕ້ອງການຄວາມສົນໃຈຈາກທ່ານ."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_error
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "ຖ້າໝາຍຕິກ, ມີບາງຂໍ້ຄວາມເກີດຂໍ້ຜິດພາດໃນການສົ່ງ."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__landed_cost_ok
@@ -382,50 +400,52 @@ msgid ""
 "Indicates whether the product is a landed cost: when receiving a vendor "
 "bill, you can allocate this cost on preceding receipts."
 msgstr ""
+"ບົ່ງບອກວ່າສິນຄ້ານີ້ແມ່ນຕົ້ນທຶນຮອດສາງຫຼືບໍ່: ເມື່ອໄດ້ຮັບໃບບິນຜູ້ສະໜອງ, ທ່ານສາມາດຈັດສັນຕົ້ນທຶນນີ້ໃສ່ໃບຮັບສິນຄ້າກ່ອ"
+"ນໜ້າໄດ້."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "ແມ່ນຜູ້ຕິດຕາມ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__is_landed_costs_line
 msgid "Is Landed Costs Line"
-msgstr ""
+msgstr "ແມ່ນລາຍການຕົ້ນທຶນຮອດສາງ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__landed_cost_ok
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__landed_cost_ok
 msgid "Is a Landed Cost"
-msgstr ""
+msgstr "ແມ່ນຕົ້ນທຶນຮອດສາງ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__description
 msgid "Item Description"
-msgstr ""
+msgstr "ຄຳອະທິບາຍລາຍການ"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Journal"
-msgstr ""
+msgstr "ປຶ້ມບັນຊີປະຈຳວັນ"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_account_move
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__account_move_id
 msgid "Journal Entry"
-msgstr ""
+msgstr "ລາຍການບັນທຶກບັນຊີປະຈຳວັນ"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_account_move_line
 msgid "Journal Item"
-msgstr ""
+msgstr "ລາຍການບັນຊີ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__cost_id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__cost_id
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed Cost"
-msgstr ""
+msgstr "ຕົ້ນທຶນຮອດສາງ"
 
 #. module: stock_landed_costs
 #. odoo-python
@@ -441,18 +461,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_tree
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_tree2
 msgid "Landed Costs"
-msgstr ""
+msgstr "ຕົ້ນທຶນຮອດສາງ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_bank_statement_line__landed_costs_visible
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__landed_costs_visible
 msgid "Landed Costs Visible"
-msgstr ""
+msgstr "ສະແດງຕົ້ນທຶນຮອດສາງ"
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
 msgid "Landed cost validated"
-msgstr ""
+msgstr "ຢັ້ງຢືນຕົ້ນທຶນຮອດສາງແລ້ວ"
 
 #. module: stock_landed_costs
 #: model_terms:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
@@ -460,55 +480,57 @@ msgid ""
 "Landed costs allow you to include additional costs (shipment, insurance, "
 "customs duties, etc) into the cost of the product."
 msgstr ""
+"ຕົ້ນທຶນຮອດສາງຊ່ວຍໃຫ້ທ່ານສາມາດຮວມຕົ້ນທຶນເພີ່ມເຕີມ (ຄ່າຂົນສົ່ງ, ຄ່າປະກັນໄພ, ພາສີ, ແລະ ອື່ນໆ) ເຂົ້າໃນຕົ້ນ"
+"ທຶນຂອງສິນຄ້າ."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__write_uid
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__write_uid
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "ປັບປຸງຫຼ້າສຸດໂດຍ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__write_date
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__write_date
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "ປັບປຸງຫຼ້າສຸດເມື່ອ"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Late Activities"
-msgstr ""
+msgstr "ກິດຈະກຳກາຍກຳນົດ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__lc_journal_id
 msgid "Lc Journal"
-msgstr ""
+msgstr "ປຶ້ມບັນຊີປະຈຳວັນ LC"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "ໄອຄອນ Material Symbols ເຊັ່ນ: checklist"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "ຂໍ້ຜິດພາດໃນການສົ່ງຂໍ້ຄວາມ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "ຂໍ້ຄວາມ"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "My Activities"
-msgstr ""
+msgstr "ກິດຈະກຳຂອງຂ້ອຍ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "ກຳນົດເວລາກິດຈະກຳຂອງຂ້ອຍ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__name
@@ -520,90 +542,90 @@ msgstr "ຊື່"
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 msgid "New"
-msgstr ""
+msgstr "ໃໝ່"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__final_cost
 msgid "New Value"
-msgstr ""
+msgstr "ມູນຄ່າໃໝ່"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "ເຫດການປະຕິທິນກິດຈະກຳຕໍ່ໄປ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "ກຳນົດເວລາກິດຈະກຳຕໍ່ໄປ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "ສະຫຼຸບກິດຈະກຳຕໍ່ໄປ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "ປະເພດກິດຈະກຳຕໍ່ໄປ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "ຈຳນວນການດຳເນີນການ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "ຈຳນວນຂໍ້ຜິດພາດ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "ຈຳນວນຂໍ້ຄວາມທີ່ຕ້ອງການການດຳເນີນການ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "ຈຳນວນຂໍ້ຄວາມທີ່ມີຂໍ້ຜິດພາດໃນການສົ່ງ"
 
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 msgid "Only draft landed costs can be validated"
-msgstr ""
+msgstr "ສາມາດຢັ້ງຢືນໄດ້ສະເພາະຕົ້ນທຶນຮອດສາງທີ່ຢູ່ໃນສະຖານະຮ່າງເທົ່ານັ້ນ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__former_cost
 msgid "Original Value"
-msgstr ""
+msgstr "ມູນຄ່າເດີມ"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Picking"
-msgstr ""
+msgstr "ການເບີກຮັບສິນຄ້າ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__pickings_count
 msgid "Pickings Count"
-msgstr ""
+msgstr "ຈຳນວນການເບີກຮັບສິນຄ້າ"
 
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 msgid "Please configure Stock Expense Account for product: %s."
-msgstr ""
+msgstr "ກະລຸນາກຳນົດບັນຊີລາຍຈ່າຍສາງສຳລັບສິນຄ້າ: %s."
 
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 msgid "Please define %s on which those additional costs should apply."
-msgstr ""
+msgstr "ກະລຸນາກຳນົດ %s ທີ່ຕົ້ນທຶນເພີ່ມເຕີມເຫຼົ່ານີ້ຄວນນຳໃຊ້ໃສ່."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__done
 msgid "Posted"
-msgstr ""
+msgstr "ລົງບັນຊີແລ້ວ"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_product_template
@@ -615,12 +637,12 @@ msgstr "ສິນຄ້າ"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__product_type
 msgid "Product Type"
-msgstr ""
+msgstr "ປະເພດສິນຄ້າ"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_purchase_order_line
 msgid "Purchase Order Line"
-msgstr ""
+msgstr "ລາຍການໃບສັ່ງຊື້"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__quantity
@@ -630,37 +652,37 @@ msgstr "ຈຳນວນ"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "ການໃຫ້ຄະແນນ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_user_id
 msgid "Responsible User"
-msgstr ""
+msgstr "ຜູ້ໃຊ້ທີ່ຮັບຜິດຊອບ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "ຂໍ້ຜິດພາດໃນການສົ່ງ SMS"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "ສະແດງບັນທຶກທັງໝົດທີ່ວັນທີກິດຈະກຳຕໍ່ໄປກາຍກຳນົດແລ້ວ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__split_method
 msgid "Split Method"
-msgstr ""
+msgstr "ວິທີການແບ່ງປັນ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__state
 msgid "State"
-msgstr "ສະພາບ"
+msgstr "ສະຖານະ"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Status"
-msgstr "ສະພາບ"
+msgstr "ສະຖານະ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_state
@@ -670,22 +692,26 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"ສະຖານະອີງຕາມກິດຈະກຳ\n"
+"ກາຍກຳນົດ: ກາຍກຳນົດເວລາແລ້ວ\n"
+"ມື້ນີ້: ວັນທີກິດຈະກຳແມ່ນມື້ນີ້\n"
+"ວາງແຜນແລ້ວ: ກິດຈະກຳໃນອະນາຄົດ."
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost
 msgid "Stock Landed Cost"
-msgstr ""
+msgstr "ຕົ້ນທຶນສິນຄ້າຮອດສາງ"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost_lines
 msgid "Stock Landed Cost Line"
-msgstr ""
+msgstr "ລາຍການຕົ້ນທຶນສິນຄ້າຮອດສາງ"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_move
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__move_id
 msgid "Stock Move"
-msgstr ""
+msgstr "ການເຄື່ອນໄຫວສາງ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__landed_cost_on_product_ids
@@ -698,11 +724,14 @@ msgid ""
 "the AVCO or FIFO methods will have their calculated value affected by landed "
 "costs."
 msgstr ""
+"ໂດຍຄ່າເລີ່ມຕົ້ນແລ້ວ ຕົ້ນທຶນຮອດສາງຈະນຳໃຊ້ສະເພາະກັບສິນຄ້າເຫຼົ່ານີ້ເທົ່ານັ້ນ, ຖ້າມີຢູ່ໃນການໂອນຍ້າຍ.\n"
+"ເຖິງແມ່ນວ່າຕົ້ນທຶນຮອດສາງຈະສາມາດນຳໃຊ້ໄດ້ກັບສິນຄ້າທັງໝົດ, ແຕ່ສະເພາະສິນຄ້າທີ່ຕີມູນຄ່າໂດຍໃຊ້ວິທີ AVCO ຫຼື "
+"FIFO ເທົ່ານັ້ນ ທີ່ຈະໄດ້ຮັບຜົນກະທົບຕໍ່ມູນຄ່າທີ່ຄິດໄລ່ຈາກຕົ້ນທຶນຮອດສາງ."
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Today Activities"
-msgstr ""
+msgstr "ກິດຈະກຳມື້ນີ້"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__amount_total
@@ -716,17 +745,17 @@ msgstr "ລວມທັງໝົດ"
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__target_model__picking
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Transfers"
-msgstr ""
+msgstr "ການໂອນຍ້າຍ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "ປະເພດຂອງກິດຈະກຳຂໍ້ຍົກເວັ້ນໃນບັນທຶກ."
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Validate"
-msgstr ""
+msgstr "ຢັ້ງຢືນ"
 
 #. module: stock_landed_costs
 #. odoo-python
@@ -735,37 +764,38 @@ msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
 "landed costs to reverse them"
 msgstr ""
+"ຕົ້ນທຶນຮອດສາງທີ່ຢັ້ງຢືນແລ້ວບໍ່ສາມາດຍົກເລີກໄດ້, ແຕ່ທ່ານສາມາດສ້າງຕົ້ນທຶນຮອດສາງຄ່າລົບເພື່ອລົບລ້າງໄດ້"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
 msgid "Valuation Adjustment Line"
-msgstr ""
+msgstr "ລາຍການປັບປຸງການຕີມູນຄ່າ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__valuation_adjustment_lines
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Valuation Adjustments"
-msgstr ""
+msgstr "ການປັບປຸງການຕີມູນຄ່າ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__vendor_bill_id
 msgid "Vendor Bill"
-msgstr ""
+msgstr "ໃບບິນຜູ້ສະໜອງ"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__volume
 msgid "Volume"
-msgstr ""
+msgstr "ບໍລິມາດ"
 
 #. module: stock_landed_costs
 #: model:ir.module.module,shortdesc:base.module_stock_landed_costs
 msgid "WMS Landed Costs"
-msgstr ""
+msgstr "ຕົ້ນທຶນຮອດສາງ WMS"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__weight
 msgid "Weight"
-msgstr "ນໍ້າໜັກ"
+msgstr "ນ້ຳໜັກ"
 
 #. module: stock_landed_costs
 #. odoo-python
@@ -774,3 +804,5 @@ msgid ""
 "You cannot change the product type or disable landed cost option because the "
 "product is used in a journal item."
 msgstr ""
+"ທ່ານບໍ່ສາມາດປ່ຽນປະເພດສິນຄ້າ ຫຼື ປິດການໃຊ້ງານຕົວເລືອກຕົ້ນທຶນຮອດສາງໄດ້ ເນື່ອງຈາກສິນຄ້ານີ້ຖືກນຳໃຊ້ໃນລາຍກ"
+"ານບັນຊີແລ້ວ."

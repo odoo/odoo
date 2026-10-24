@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 17:39+0000\n"
+"POT-Creation-Date: 2026-10-23 17:40+0000\n"
 "PO-Revision-Date: 2026-10-16 21:33+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -190,8 +190,8 @@ msgstr ""
 "        </t>\n"
 "        que está programada para el \n"
 "        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-out=\"format_date"
-"(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            <span style=\"font-weight:bold;\" t-"
+"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
 "        </t>\n"
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">sin definir</span>.\n"
@@ -3817,6 +3817,12 @@ msgstr "Se actualizaron la cantidad y el precio unitario."
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "The ordered quantity has been updated."
 msgstr "Se actualizó la cantidad ordenada."
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/res_partner.py:0
+msgid "The partner cannot be deleted because it is used as a dropship address"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order

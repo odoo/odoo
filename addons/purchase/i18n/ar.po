@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 17:39+0000\n"
-"PO-Revision-Date: 2026-10-12 10:35+0000\n"
+"POT-Creation-Date: 2026-10-23 17:40+0000\n"
+"PO-Revision-Date: 2026-10-22 12:00+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-20/purchase/"
 "ar/>\n"
@@ -54,7 +54,7 @@ msgstr "عدد البنود"
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "%(added_lines_count)s PO lines added to the bill."
-msgstr ""
+msgstr "%(added_lines_count)s تمت إضافة بنود أمر الشراء إلى الفاتورة."
 
 #. module: purchase
 #. odoo-python
@@ -63,6 +63,8 @@ msgid ""
 "%(matched_lines_count)s bill lines matched, %(unmatched_lines_count)s "
 "unmatched remaining."
 msgstr ""
+"تم مطابقة %(matched_lines_count)s بند/بنود من الفاتورة، ولا يزال هناك %"
+"(unmatched_lines_count)s بند/بنود لم تتم مطابقتها بعد."
 
 #. module: purchase
 #. odoo-python
@@ -121,6 +123,7 @@ msgstr "-&gt;"
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "0 bill lines matched with this PO."
 msgstr ""
+"تعذّر العثور على أي تطابق بين بنود الفاتورة الحالية وأمر الشراء المُنصّ عليه."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -3651,6 +3654,12 @@ msgid "The ordered quantity has been updated."
 msgstr ""
 
 #. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/res_partner.py:0
+msgid "The partner cannot be deleted because it is used as a dropship address"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid ""
 "The request for quotation is the first step of the purchases flow. Once\n"
@@ -3933,7 +3942,7 @@ msgstr "الإجمالي دون الضريبة"
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "Update"
-msgstr ""
+msgstr "تحديث"
 
 #. module: purchase
 #. odoo-javascript

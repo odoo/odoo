@@ -14,9 +14,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:40+0000\n"
-"PO-Revision-Date: 2026-08-31 14:44+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-10-23 08:20+0000\n"
+"Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
+"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-20/"
 "portal/id/>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
@@ -38,6 +38,17 @@ msgid ""
 "of this module is to allow the display of a customer portal without having\n"
 "a dependency towards website editing and customization capabilities."
 msgstr ""
+"\n"
+"Modul ini menambahkan kode dasar yang diperlukan untuk portal pelanggan yang "
+"sepenuhnya terintegrasi.\n"
+"Modul ini berisi kelas pengendali dasar dan template dasar. Add-on bisnis\n"
+"akan menambahkan template dan pengendali khusus mereka untuk memperluas\n"
+"portal pelanggan.\n"
+"\n"
+"Modul ini berisi sebagian besar kode yang berasal dari website_portal odoo "
+"v10. Tujuan\n"
+"modul ini adalah untuk memungkinkan tampilan portal pelanggan tanpa\n"
+"bergantung pada kemampuan pengeditan dan penyesuaian situs web."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -48,25 +59,25 @@ msgstr "\" untuk memvalidasi action Anda."
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "\"Authorization\": f\"bearer {mcp_key}\","
-msgstr ""
+msgstr "\"Authorization\": f\"bearer {mcp_key}\","
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "\"Content-Type\": \"application/json\","
-msgstr ""
+msgstr "\"Content-Type\": \"application/json\","
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "# Store the API key securely, not in the code."
-msgstr ""
+msgstr "# Simpan API Key dengan aman, jangan di dalam kode."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/wizard/portal_share.py:0
 msgid "%(model_name)s shared with %(partner_names)s"
-msgstr ""
+msgstr "%(model_name)s dibagikan kepada %(partner_names)s"
 
 #. module: portal
 #. odoo-javascript
@@ -105,11 +116,13 @@ msgid ""
 "<i class=\"oi m-auto ms-auto me-3\" data-icon=\"mail\" role=\"img\" aria-"
 "label=\"Send Message\"/>"
 msgstr ""
+"<i class=\"oi m-auto ms-auto me-3\" data-icon=\"mail\" role=\"img\" aria-"
+"label=\"Kirim Pesan\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "<i class=\"oi me-1\" data-icon=\"add\"/>Add"
-msgstr ""
+msgstr "<i class=\"oi me-1\" data-icon=\"add\"/>Tambahkan"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
@@ -145,6 +158,8 @@ msgid ""
 "<i class=\"oi oi-fw small text-primary-emphasis\" data-icon=\"logout\"/> "
 "Logout"
 msgstr ""
+"<i class=\"oi oi-fw small text-primary-emphasis\" data-icon=\"logout\"/> "
+"Logout"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
@@ -214,7 +229,7 @@ msgstr "<span class=\"small me-1 navbar-text\">Sortir Berdasarkan:</span>"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_contact
 msgid "<span class=\"small text-muted\">Your Contact</span>"
-msgstr ""
+msgstr "<span class=\"small text-muted\">Kontak Anda</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -248,7 +263,7 @@ msgstr "Peringatan akses"
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Account Details"
-msgstr ""
+msgstr "Detail Akun"
 
 #. module: portal
 #. odoo-python
@@ -264,7 +279,7 @@ msgstr "Tambahkan catatan"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "Add an address"
-msgstr ""
+msgstr "Tambahkan alamat"
 
 #. module: portal
 #. odoo-javascript
@@ -312,13 +327,13 @@ msgstr "Sudah Terdaftar"
 #. odoo-python
 #: code:addons/portal/wizard/portal_share.py:0
 msgid "An email invitation has been sent to the selected users."
-msgstr ""
+msgstr "Undangan email telah dikirim ke user yang dipilih."
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/interactions/portal_profile_editor.js:0
 msgid "An error occurred while saving your profile."
-msgstr ""
+msgstr "Terjadi kesalahan saat menyimpan profil Anda."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -349,7 +364,7 @@ msgstr "Alamat tagihan"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "Billing addresses"
-msgstr ""
+msgstr "Alamat penagihan"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__category
@@ -368,6 +383,8 @@ msgid ""
 "Changing %(field_description)s is not allowed once document(s) have been "
 "issued for your account. Please contact us directly for this operation."
 msgstr ""
+"Mengubah %(field_description)s tidak diperbolehkan setelah dokumen "
+"diterbitkan untuk akun Anda. Silakan hubungi kami langsung untuk operasi ini."
 
 #. module: portal
 #. odoo-python
@@ -376,6 +393,8 @@ msgid ""
 "Changing country is not allowed once document(s) have been issued for your "
 "account. Please contact us directly for this operation."
 msgstr ""
+"Mengubah negara tidak diizinkan setelah dokumen telah diterbitkan untuk akun "
+"Anda. Silakan hubungi kami langsung untuk operasi ini."
 
 #. module: portal
 #. odoo-python
@@ -401,7 +420,7 @@ msgstr "Kota"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "City..."
-msgstr ""
+msgstr "Kota..."
 
 #. module: portal
 #. odoo-javascript
@@ -421,12 +440,12 @@ msgstr "Tutup"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.message_thread
 msgid "Communication History"
-msgstr ""
+msgstr "Riwayat Komunikasi"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Company"
-msgstr ""
+msgstr "Perusahaan"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__is_config_card
@@ -452,7 +471,7 @@ msgstr "Konfirmasi Password"
 #. module: portal
 #: model:portal.entry,name:portal.portal_entry_base
 msgid "Connection & Security"
-msgstr ""
+msgstr "Koneksi & Keamanan"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -477,7 +496,7 @@ msgstr "Kontak"
 #. odoo-javascript
 #: code:addons/portal/static/src/interactions/portal_security.js:0
 msgid "Copied to clipboard"
-msgstr ""
+msgstr "Disalin ke clipboard"
 
 #. module: portal
 #. odoo-javascript
@@ -494,13 +513,13 @@ msgstr "Negara"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Country..."
-msgstr ""
+msgstr "Negara..."
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/interactions/portal_security.js:0
 msgid "Create Key"
-msgstr ""
+msgstr "Buat Key"
 
 #. module: portal
 #: model:ir.model,website_form_label:portal.model_res_partner
@@ -532,7 +551,7 @@ msgstr "API Key Pelanggan"
 #: model:ir.module.module,shortdesc:base.module_portal
 #: model:ir.module.module,summary:base.module_portal
 msgid "Customer Portal"
-msgstr ""
+msgstr "Portal Pelanggan"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
@@ -573,7 +592,7 @@ msgstr "Alamat pengiriman"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "Delivery addresses"
-msgstr ""
+msgstr "Alamat pengiriman"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -616,7 +635,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Discard"
-msgstr ""
+msgstr "Buang"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_ir_http__display_name
@@ -678,7 +697,7 @@ msgstr "Tanggal Kedaluwarsa"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Expires"
-msgstr ""
+msgstr "Kedaluwarsa"
 
 #. module: portal
 #. odoo-javascript
@@ -750,7 +769,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "If you want to modify it, update"
-msgstr ""
+msgstr "Jika Anda ingin mengubahnya, perbarui"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__image
@@ -809,7 +828,7 @@ msgstr "Apakah Portal"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Key Name — your only way to identify that key"
-msgstr ""
+msgstr "Nama Key — satu-satunya cara untuk mengidentifikasi key tersebut"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__write_uid
@@ -851,7 +870,7 @@ msgstr "Log out dari semua perangkat"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_card
 msgid "Main Address"
-msgstr ""
+msgstr "Alamat Utama"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_message
@@ -887,7 +906,7 @@ msgstr "Alamat-alamat saya"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Name"
-msgstr ""
+msgstr "Nama"
 
 #. module: portal
 #. odoo-javascript
@@ -927,7 +946,7 @@ msgstr "Hanya user internal dan portal dapat membuat API key"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 msgid "Oops! Something went wrong. Try to reload the page and log in."
-msgstr ""
+msgstr "Terjadi kesalahan. Coba muat ulang halaman dan log in."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__partner_ids
@@ -1049,7 +1068,7 @@ msgstr "Model Dokumen Terkait"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_card
 msgid "Remove this address"
-msgstr ""
+msgstr "Hapus alamat ini"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -1131,7 +1150,7 @@ msgstr "Share Dokumen"
 #. odoo-python
 #: code:addons/portal/wizard/portal_share.py:0
 msgid "Shared successfully"
-msgstr ""
+msgstr "Berhasil dibagikan"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_ir_ui_view__customize_show
@@ -1177,7 +1196,7 @@ msgstr "Provinsi"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "State / Province..."
-msgstr ""
+msgstr "Negara Bagian / Provinsi ..."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email_state
@@ -1204,13 +1223,13 @@ msgstr "Terima Kasih!"
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "The %(field_description)s is managed on your company account."
-msgstr ""
+msgstr "%(field_description)s dikelola di akun perusahaan Anda."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "The %(field_description)s is managed on your main account address."
-msgstr ""
+msgstr "%(field_description)s dikelola di alamat akun utama Anda."
 
 #. module: portal
 #. odoo-python
@@ -1237,7 +1256,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "The company billing details can only be updated on the company account."
-msgstr ""
+msgstr "Detail penagihan perusahaan hanya dapat diperbarui di akun perusahaan."
 
 #. module: portal
 #. odoo-python
@@ -1313,6 +1332,9 @@ msgid ""
 "This key won't be shown again. Please copy it and store it securely. Treat "
 "it like a password, it grants full access to your account."
 msgstr ""
+"Key ini tidak akan ditampilkan lagi. Silakan salin dan simpan dengan aman. "
+"Perlakukan seperti password karena key ini memberikan akses penuh ke akun "
+"Anda."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -1341,7 +1363,7 @@ msgstr "Judul Kartu"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "To login, use the following parameters (Python):"
-msgstr ""
+msgstr "Untuk login, gunakan parameter berikut (Python):"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -1355,6 +1377,8 @@ msgid ""
 "Updating VAT number is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"Pembaruan nomor PPN tidak diperbolehkan setelah dokumen telah diterbitkan "
+"untuk akun Anda. Silakan hubungi kami secara langsung untuk proses ini."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__user_id
@@ -1436,7 +1460,7 @@ msgstr "Anda tidak dapat mengarsip alamat utama Anda"
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "You cannot edit another user's profile."
-msgstr ""
+msgstr "Anda tidak dapat mengedit profil user lain."
 
 #. module: portal
 #. odoo-python
@@ -1448,7 +1472,7 @@ msgstr "Anda tidak dapat mengosongkan kata sandi"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 msgid "You must be"
-msgstr ""
+msgstr "Anda harus"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1481,7 +1505,7 @@ msgstr "Kode Pos"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "e.g. \"Odoo MCP\""
-msgstr ""
+msgstr "cth: \"Odoo MCP\""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -1492,13 +1516,13 @@ msgstr "telah mengundang Anda untuk mengakses yang berikut"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "headers = {"
-msgstr ""
+msgstr "headers = {"
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "import requests"
-msgstr ""
+msgstr "impor permintaan"
 
 #. module: portal
 #. odoo-javascript
@@ -1510,7 +1534,7 @@ msgstr "logged in"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "mcp_key = os.environ[\"ODOO_MCP_KEY\"]"
-msgstr ""
+msgstr "mcp_key = os.environ[\"ODOO_MCP_KEY\"]"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
@@ -1526,7 +1550,7 @@ msgstr "urutan"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 msgid "to post a comment."
-msgstr ""
+msgstr "untuk posting komentar."
 
 #. module: portal
 #. odoo-javascript

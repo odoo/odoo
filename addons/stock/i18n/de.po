@@ -17,10 +17,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-16 17:41+0000\n"
-"PO-Revision-Date: 2026-09-23 07:33+0000\n"
+"PO-Revision-Date: 2026-10-19 08:28+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-20/stock/de/"
-">\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-20/stock/de/>"
+"\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -547,6 +547,28 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                    Guten Tag <t t-out=\"object.partner_id.display_name or "
+"''\">Marc Demo</t><br/><br/> \n"
+"                    wir möchten einen Produktrückruf bezüglich der folgenden "
+"Artikel aus Ihrer Lieferung\n"
+"                   <strong><t t-out=\"object.name\"> WH/OUT/EXAMPLE</t></"
+"strong> veranlassen:<br/><br/>\n"
+"\n"
+"                   <strong> Produkt(e):</strong><br/>\n"
+"                   <t t-out=\"ctx.get('recalled_products_dict', {}).get(str"
+"(object.id))\"> [BEISPIEL] Schublade</t><br/><br/>\n"
+"                    <strong> Los-/Seriennummer(n):</strong><br/>\n"
+"                   <t t-out=\"ctx.get('recalled_lots_dict', {}).get(str"
+"(object.id))\"> 0000000000029</t><br/><br/> \n"
+"\n"
+"                    Wir entschuldigen uns für die entstandenen "
+"Unannehmlichkeiten.<br/><br/>\n"
+"                    Mit freundlichen Grüßen\n"
+"               </p>\n"
+"            </div> \n"
+"        "
 
 #. module: stock
 #: model:mail.template,body_html:stock.mail_template_data_delivery_confirmation
@@ -6150,7 +6172,7 @@ msgstr "Als To-do markieren"
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_type_icon
 #: model:ir.model.fields,help:stock.field_stock_picking_batch__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Material-Symbols-Icon, z. B. Checkliste"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__product_max_qty
@@ -8045,12 +8067,12 @@ msgstr "Produktbarcode"
 #. module: stock
 #: model:mail.template,subject:stock.mail_template_data_stock_picking_recall
 msgid "Product recall for Delivery {{ object.name }}"
-msgstr ""
+msgstr "Produktrückruf für Lieferung {{ object.name }}"
 
 #. module: stock
 #: model:mail.template,description:stock.mail_template_data_stock_picking_recall
 msgid "Product recall from lot/serial number"
-msgstr ""
+msgstr "Produktrückruf anhand von Los-/Seriennummer"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
@@ -11541,7 +11563,7 @@ msgstr "Transfer:"
 #. module: stock
 #: model:mail.template,name:stock.mail_template_data_stock_picking_recall
 msgid "Transfer: Product Recall"
-msgstr ""
+msgstr "Transfer: Produktrückruf"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__package_history_ids

@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-16 17:41+0000\n"
-"PO-Revision-Date: 2026-10-09 09:29+0000\n"
+"PO-Revision-Date: 2026-10-20 08:48+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-20/"
 "hr_holidays/nl/>\n"
@@ -426,6 +426,29 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"                    Beste <t t-out=\"object.employee_id.name or "
+"'Employee'\"/>,<br/><br/>\n"
+"                    Je verloftoewijzing is bevestigd.<br/><br/>\n"
+"                    Details:<br/>\n"
+"                    <ul>\n"
+"                        <li>Tijdtype: <t t-"
+"out=\"object.work_entry_type_id.name or ''\"/></li>\n"
+"                        <li>Toewijzing: <t t-out=\"object.duration_display "
+"or ''\"/></li>\n"
+"                        <li>Geldig vanaf: <t t-out=\"object.date_from or "
+"''\"/> <t t-if=\"not object.date_to\">(Geen vervaldatum)</t><t t-else=\"\"> "
+"tot <t t-out=\"object.date_to or ''\"/></t></li>\n"
+"                        <li t-if=\"object.accrual_plan_id\">Opbouwplan: <t t-"
+"out=\"object.accrual_plan_id.name or ''\"/></li>\n"
+"                    </ul>\n"
+"                    <br/>\n"
+"                    Neem bij vragen contact op met de HR-"
+"verantwoordelijke.<br/><br/>\n"
+"                    Met vriendelijke groet,<br/>\n"
+"                    <t t-out=\"object.env.user.name or ''\"/>\n"
+"                </div>\n"
+"            "
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -1492,19 +1515,19 @@ msgstr "Beide bevestigd en goedgekeurd"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__allocation_validation_type__hr
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__leave_validation_type__hr
 msgid "By HR Responsible"
-msgstr ""
+msgstr "Door HR-verantwoordelijke"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__allocation_validation_type__both
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__leave_validation_type__both
 msgid "By HR Responsible and Time Off Approver"
-msgstr ""
+msgstr "Door HR-verantwoordelijke en verlofgoedkeurder"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__allocation_validation_type__manager
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__leave_validation_type__manager
 msgid "By Time Off Approver"
-msgstr ""
+msgstr "Door Verlofgoedkeurder"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__count_days_as__calendar
@@ -4043,6 +4066,7 @@ msgstr ""
 #: model:mail.template,description:hr_holidays.mail_template_allocation_confirmed
 msgid "Sent to employee when their time off allocation is confirmed"
 msgstr ""
+"Wordt naar de werknemer gestuurd wanneer zijn verloftoewijzing is bevestigd"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__second_month__9
@@ -4624,7 +4648,7 @@ msgstr "Verloftoewijzing"
 #. module: hr_holidays
 #: model:mail.template,name:hr_holidays.mail_template_allocation_confirmed
 msgid "Time Off Allocation Confirmed"
-msgstr ""
+msgstr "Verloftoewijzing bevestigd"
 
 #. module: hr_holidays
 #: model:mail.template,subject:hr_holidays.mail_template_allocation_confirmed
@@ -4632,6 +4656,8 @@ msgid ""
 "Time Off Allocation Confirmed: {{ object.work_entry_type_id.name }} "
 "({{ object.duration_display }})"
 msgstr ""
+"Verloftoewijzing bevestigd: {{ object.work_entry_type_id.name }} ({{ "
+"object.duration_display }})"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_report_action
@@ -5054,7 +5080,7 @@ msgstr "Tz mismatch"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation_generate_multi_wizard__unit_of_measure
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_work_entry_type__unit_of_measure
 msgid "Unit"
-msgstr ""
+msgstr "Eenheid"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__carryover_options__unlimited

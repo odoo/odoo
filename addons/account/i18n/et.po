@@ -28,7 +28,7 @@
 # Leaanika Randmets, 2023
 # Martin Trigaux, 2023
 # Tairi Tiimann <tairi@avalah.ee>, 2025.
-# Kristina Pešehodko <kristina@avalah.ee>, 2025.
+# Kristina Pešehodko <kristina@avalah.ee>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
 # Erik Köster <erik@officeplus.ee>, 2026.
@@ -36,11 +36,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 15:48+0000\n"
-"Last-Translator: Erik Köster <erik@officeplus.ee>\n"
-"Language-Team: Estonian <https://translate.odoo.com/projects/odoo-s19-4/"
-"account/et/>\n"
+"POT-Creation-Date: 2026-10-23 17:40+0000\n"
+"PO-Revision-Date: 2026-10-21 16:08+0000\n"
+"Last-Translator: Kristina Pešehodko <kristina@avalah.ee>\n"
+"Language-Team: Estonian <https://translate.odoo.com/projects/odoo-20/account/"
+"et/>\n"
 "Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -502,11 +502,9 @@ msgstr "90 päeva, 10. kuupäeval"
 #. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 msgid ""
-"<b>%(count)s#</b> Installment of <b>%(amount)s</b> due on <b style='color: "
+"<b>%(count)s</b> - Installment of <b>%(amount)s</b> due on <b style='color: "
 "#704A66;'>%(date)s</b>"
 msgstr ""
-"<b>%(count)s#</b> Osamakse summas <b>%(amount)s</b> tähtajaga <b "
-"style='color: #704A66;'>%(date)s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -2657,42 +2655,42 @@ msgstr "Tekkepõhine kokku"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_buildings
-msgid "Accumulated Depreciation - Buildings"
+msgid "Accumulated Amortization - Buildings"
 msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_furniture
-msgid "Accumulated Depreciation - Furniture & Fixtures"
+msgid "Accumulated Amortization - Furniture & Fixtures"
 msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_improvements
-msgid "Accumulated Depreciation - Improvements"
+msgid "Accumulated Amortization - Improvements"
 msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_machines
-msgid "Accumulated Depreciation - Machines & Tools"
+msgid "Accumulated Amortization - Machines & Tools"
 msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_other_property
-msgid "Accumulated Depreciation - Other Property"
+msgid "Accumulated Amortization - Other Property"
 msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_technology
-msgid "Accumulated Depreciation - Technology"
+msgid "Accumulated Amortization - Technology"
 msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_vehicles
-msgid "Accumulated Depreciation - Vehicles"
+msgid "Accumulated Amortization - Vehicles"
 msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_acc_depreciation
-msgid "Accumulated Depreciation Misc"
+msgid "Accumulated Depreciation"
 msgstr ""
 
 #. module: account
@@ -3033,6 +3031,46 @@ msgstr "Täiendav kanne {link} {percent}%%  {amount} leitud {date}"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Adjusting Entry {link} {percent}%% of {amount} recognized on {new_date}"
 msgstr "Täiendav kanne {link} {percent}%% {amount} leitud {new_date}"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_depreciation_and_amortization
+msgid "Adjustment - Depreciation and amortization"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_fin_instr_sale
+msgid "Adjustment - Financial Instruments"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_intangible_asset
+msgid "Adjustment - Intangible Assets"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_net_fin_result
+msgid "Adjustment - Net Financial Result"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_PPE_sale
+msgid "Adjustment - PPE Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_provisions
+msgid "Adjustment - Provisions"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_ROU_sale
+msgid "Adjustment - Right of Use Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_unrealized_forex
+msgid "Adjustment - Unrealized Forex"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_administration_fees
@@ -4544,12 +4582,12 @@ msgstr "Ostuarve number"
 #. odoo-python
 #: code:addons/account/report/account_stock_valuation_report.py:0
 msgid "Billed Not Received"
-msgstr ""
+msgstr "Arveldatud, kuid kättesaamata"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_accrued_orders_wizard__accrual_type__billed_not_received
 msgid "Billed not received"
-msgstr ""
+msgstr "Arveldatud, kuid kättesaamata"
 
 #. module: account
 #. odoo-python
@@ -4594,7 +4632,7 @@ msgstr "Arved maksta"
 #. odoo-python
 #: code:addons/account/report/account_stock_valuation_report.py:0
 msgid "Bills to Receive"
-msgstr ""
+msgstr "Laekumata ostuarved"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5371,12 +5409,12 @@ msgstr ""
 "intrastati abil"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account_tag__color
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__color
 msgid "Color"
 msgstr "Värv"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_account_tag__color
 #: model:ir.model.fields,field_description:account.field_account_journal__color
 msgid "Color Index"
 msgstr "Värvikood"
@@ -6405,38 +6443,38 @@ msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_buildings
-msgid "Cumulative depreciation recorded for building assets."
+msgid "Cumulative amortization recorded for building assets."
 msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_technology
-msgid "Cumulative depreciation recorded for capitalized technology assets."
+msgid "Cumulative amortization recorded for capitalized technology assets."
 msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_furniture
-msgid "Cumulative depreciation recorded for furniture and fixture assets."
+msgid "Cumulative amortization recorded for furniture and fixture assets."
 msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_improvements
 msgid ""
-"Cumulative depreciation recorded for leasehold or property improvements."
+"Cumulative amortization recorded for leasehold or property improvements."
 msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_machines
-msgid "Cumulative depreciation recorded for machinery and tool assets."
+msgid "Cumulative amortization recorded for machinery and tool assets."
 msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_other_property
-msgid "Cumulative depreciation recorded for other depreciable property assets."
+msgid "Cumulative amortization recorded for other depreciable property assets."
 msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_vehicles
-msgid "Cumulative depreciation recorded for vehicle assets."
+msgid "Cumulative amortization recorded for vehicle assets."
 msgstr ""
 
 #. module: account
@@ -8738,6 +8776,36 @@ msgid "Financial Journal"
 msgstr "Finantskonto"
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_fin_borrowings_lt
+msgid "Financing - Borrowings Long Term"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_borrowings_st
+msgid "Financing - Borrowings Short Term"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_dividends
+msgid "Financing - Dividends"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_lease
+msgid "Financing - Lease"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_recov_adv
+msgid "Financing - Recoverable Advances"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_share_issuance
+msgid "Financing - Share Issuance"
+msgstr ""
+
+#. module: account
 #: model:account.account.tag,name:account.account_tag_financing
 msgid "Financing Activities"
 msgstr "Finantseerimistegevused"
@@ -10580,6 +10648,51 @@ msgid "Investing & Extraordinary Activities"
 msgstr "Investeerimine ja plaanivälised tegevused"
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_inv_cash_advances
+msgid "Investment - Cash Advances"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_fin_instr_purchase
+msgid "Investment - Financial Instruments Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_fin_instr_sale
+msgid "Investment - Financial Instruments Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_int_ass_purchase
+msgid "Investment - Intangible Assets Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_int_ass_sale
+msgid "Investment - Intangible Assets Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_interest_received
+msgid "Investment - Interest Received"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_ppe_purchase
+msgid "Investment - PPE Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_ppe_sale
+msgid "Investment - PPE Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_rou_sale
+msgid "Investment - Right of Use Sale"
+msgstr ""
+
+#. module: account
 #. odoo-javascript
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
@@ -10858,12 +10971,12 @@ msgstr "Arveldatud"
 #. odoo-python
 #: code:addons/account/report/account_stock_valuation_report.py:0
 msgid "Invoiced Not Delivered"
-msgstr ""
+msgstr "Arveldatud, kuid tarnimata"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_accrued_orders_wizard__accrual_type__invoiced_not_delivered
 msgid "Invoiced not delivered"
-msgstr ""
+msgstr "Arveldatud, kuid tarnimata"
 
 #. module: account
 #. odoo-python
@@ -10959,12 +11072,12 @@ msgstr "Arved kinnitamiseks"
 #. odoo-python
 #: code:addons/account/report/account_stock_valuation_report.py:0
 msgid "Invoices to be Issued"
-msgstr ""
+msgstr "Väljastamata arved"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_accrued_orders_wizard__accrual_type__invoice_to_be_issued
 msgid "Invoices to be issued"
-msgstr ""
+msgstr "Väljastamata arved"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_bill_ids
@@ -13506,6 +13619,16 @@ msgid "Opening balance"
 msgstr "Algsaldo"
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_op_income_tax_paid_received
+msgid "Operating - Income Tax Paid Received"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_op_interest_paid
+msgid "Operating - Interest Paid"
+msgstr ""
+
+#. module: account
 #: model:account.account.tag,name:account.account_tag_operating
 msgid "Operating Activities"
 msgstr "Põhitegevused"
@@ -14450,7 +14573,7 @@ msgstr "Perioodi võrdlus"
 #: model:ir.model.fields.selection,name:account.selection__product_template__valuation__periodic
 #: model:ir.model.fields.selection,name:account.selection__res_company__inventory_valuation__periodic
 msgid "Periodic (at closing)"
-msgstr ""
+msgstr "Perioodiline (sulgemisel)"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_expense_buildings
@@ -14496,13 +14619,18 @@ msgid ""
 "inventory when a product is billed or invoiced.\n"
 "        "
 msgstr ""
+"Perioodiline: raamatupidamiskanded pakutakse välja käsitsi laoseisu väärtuse "
+"aruandes.\n"
+"                  Püsiv: raamatupidamiskanne luuakse automaatselt laovaru "
+"väärtustamiseks, kui toode arveldatakse või arve väljastatakse.\n"
+"                  "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__product_category__property_valuation__real_time
 #: model:ir.model.fields.selection,name:account.selection__product_template__valuation__real_time
 #: model:ir.model.fields.selection,name:account.selection__res_company__inventory_valuation__real_time
 msgid "Perpetual (at invoicing)"
-msgstr ""
+msgstr "Püsiv (arveldamisel)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__phishing_warnings
@@ -17229,7 +17357,7 @@ msgstr "Tehtud!"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
 msgid "Stock Account"
-msgstr ""
+msgstr "Laokonto"
 
 #. module: account
 #. odoo-python
@@ -17252,7 +17380,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_product_category__property_stock_valuation_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_stock_valuation_id
 msgid "Stock Valuation Account"
-msgstr ""
+msgstr "Laovarude hindamise konto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category__property_stock_valuation_account_active
@@ -17266,12 +17394,12 @@ msgstr ""
 #: code:addons/account/static/src/components/stock_valuation/stock_valuation_report.js:0
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
 msgid "Stock Variation"
-msgstr ""
+msgstr "Laovarude muutmise konto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category__account_stock_variation_id
 msgid "Stock Variation Account"
-msgstr ""
+msgstr "Laovarude muutuse konto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category__account_stock_variation_active
@@ -20997,6 +21125,36 @@ msgid "Workers Compensation Insurance"
 msgstr ""
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_deferred_revenue
+msgid "Working Capital - Deferred Revenue"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_inventory
+msgid "Working Capital - Inventory"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_other_payable
+msgid "Working Capital - Other Payable"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_other_receivable
+msgid "Working Capital - Other Receivable"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_trade_payable
+msgid "Working Capital - Trade Payable"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_trade_receivable
+msgid "Working Capital - Trade Receivable"
+msgstr ""
+
+#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Write a customer name to <b>create one</b> or <b>see suggestions</b>."
@@ -22227,6 +22385,11 @@ msgstr ""
 "või teenuste osutamist."
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_non_applicable
+msgid "not applicable"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
 msgid "of tax"
 msgstr "maksust"
@@ -22462,6 +22625,13 @@ msgid ""
 "{{ object.company_id.name }} {{ object.payment_receipt_title }} (Ref "
 "{{ object.name or 'n/a' }})"
 msgstr ""
+
+#~ msgid ""
+#~ "<b>%(count)s#</b> Installment of <b>%(amount)s</b> due on <b "
+#~ "style='color: #704A66;'>%(date)s</b>"
+#~ msgstr ""
+#~ "<b>%(count)s#</b> Osamakse summas <b>%(amount)s</b> tähtajaga <b "
+#~ "style='color: #704A66;'>%(date)s</b>"
 
 #~ msgid "# Reconciled Statement Lines"
 #~ msgstr "# Kinnitatud väljavõte read"

@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-06 17:49+0000\n"
-"PO-Revision-Date: 2026-10-06 10:33+0000\n"
+"PO-Revision-Date: 2026-10-22 07:33+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-20/base/th/>\n"
 "Language: th\n"
@@ -544,6 +544,9 @@ msgid ""
 "                        No Outgoing Servers yet\n"
 "                    </b>"
 msgstr ""
+"<b class=\"o_view_nocontent_smiling_face\">\n"
+"                        ยังไม่มีเซิร์ฟเวอร์ขาออก\n"
+"                    </b>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -897,12 +900,12 @@ msgstr "<span class=\"o_stat_text\">เปิดใช้งานและแ�
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<span class=\"o_stat_text\">Parent Action</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">การดำเนินการหลัก</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<span class=\"o_stat_text\">Scheduled Action</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">การดำเนินการที่กำหนดไว้</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_form
@@ -1113,7 +1116,7 @@ msgstr "เร็ก จำนวนเจ้าของล่าสุด     
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.server_action_history_wizard_view
 msgid "<span>No diff available</span>"
-msgstr ""
+msgstr "<span>ไม่มีเวอร์ชันที่แตกต่างกัน</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -1340,12 +1343,16 @@ msgid ""
 "group                                             that is constrained by "
 "their domain and the restrictions"
 msgstr ""
+"ข้อจำกัดสิทธิ์ คือสิทธิ์การเข้าถึงที่ไม่ได้ผูกกับกลุ่มผู้ใช้ ซึ่งมีผลบังคับใช้ครอบคลุมทั่วทั้งระบบ"
+"                                             และไม่สามารถข้ามได้ ส่วนการอนุญาตสิทธิ์ "
+"คือสิทธิ์การเข้าถึงที่ผูกไว้กับกลุ่มผู้ใช้                                             ซึ่งถูกจำ"
+"กัดขอบเขตตามเงื่อนไขโดเมนของกลุ่มนั้นและข้อจำกัดสิทธิ์ที่มีอยู่"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "A sequence must only be used with character fields."
-msgstr ""
+msgstr "ลำดับนี้ต้องใช้กับฟิลด์ตัวอักษรเท่านั้น"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_contact
@@ -1480,17 +1487,17 @@ msgstr "บทคัดย่อ"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__abstract
 msgid "Abstract Model"
-msgstr ""
+msgstr "โมเดลนามธรรม"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Abstract: False"
-msgstr ""
+msgstr "โมเดลนามธรรม: False"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Abstract: True"
-msgstr ""
+msgstr "โมเดลนามธรรม: True"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__user_ids
@@ -1577,6 +1584,10 @@ msgid ""
 "                            Access rights associated with a group grant "
 "permissions. These are constrained by their domain and the restrictions."
 msgstr ""
+"ข้อจำกัดสิทธิ์สิทธิ์การเข้าถึงที่ไม่ได้ผูกกับกลุ่มผู้ใช้ ซึ่งมีผลบังคับใช้ครอบคลุมทั่วทั้งระบบและไม่สามารถข้ามไ"
+"ด้<br/>\n"
+"                            ส่วนการอนุญาตสิทธิ์สิทธิ์การเข้าถึงที่ผูกไว้กับกลุ่มผู้ใช้ ซึ่งถูกจำกัดขอ"
+"บเขตตามเงื่อนไขโดเมนของกลุ่มนั้นและข้อจำกัดสิทธิ์ที่มีอยู่"
 
 #. module: base
 #: model:res.groups,comment:base.group_user
@@ -1591,25 +1602,25 @@ msgstr "เข้าถึงเมนูหลักด้วยการเข
 #. module: base
 #: model:res.groups,comment:base.group_system
 msgid "Access to the settings to configure the apps"
-msgstr ""
+msgstr "การเข้าถึงการตั้งค่าเพื่อปรับแต่งแอป"
 
 #. module: base
 #. odoo-python
 #: code:addons/environments.py:0
 msgid "Access to unauthorized or invalid companies."
-msgstr ""
+msgstr "การเข้าถึงบริษัทที่ไม่ได้รับอนุญาตหรือไม่ถูกต้อง"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_access.py:0
 msgid "Accesses with domain can not be applied on model Access itself."
-msgstr ""
+msgstr "การเข้าถึงด้วยโดเมนไม่สามารถนำไปใช้กับโมเดล \"เข้าถึง\" เองได้"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "Accessible only for the super user"
-msgstr ""
+msgstr "สามารถเข้าถึงได้เฉพาะผู้ใช้ระดับซุปเปอร์ยูสเซอร์เท่านั้น"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_account_charts
@@ -1625,7 +1636,7 @@ msgstr "หมายเลขบัญชี"
 #: model:ir.model.fields,help:base.field_res_partner_bank__holder_name
 msgid ""
 "Account holder name in case it is different than the name of the partner."
-msgstr ""
+msgstr "ชื่อผู้ถือบัญชี ในกรณีที่ชื่อดังกล่าวแตกต่างจากชื่อของพาร์ทเนอร์"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting
@@ -1641,6 +1652,9 @@ msgid ""
 "productive,\n"
 "                responsive and profitable."
 msgstr ""
+"Acme Corporation ออกแบบ พัฒนา ผสาน และสนับสนุนกระบวนการ HR และ\n"
+"                ซัพพลายเชนเพื่อช่วยให้ลูกค้าของเราเพิ่มประสิทธิภาพ\n"
+"                ตอบสนองได้รวดเร็วขึ้น และสร้างผลกำไรได้มากขึ้น"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_2
@@ -1650,6 +1664,8 @@ msgid ""
 "Chain processes in order to make our customers more productive, responsive "
 "and profitable."
 msgstr ""
+"Acme Corporation ออกแบบ พัฒนา ผสาน และสนับสนุนกระบวนการ HR และซัพพลายเชนเพื่อช่วยให้ลู"
+"กค้าของเราเพิ่มประสิทธิภาพ ตอบสนองได้รวดเร็วขึ้น และสร้างผลกำไรได้มากขึ้น"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_2
@@ -1659,6 +1675,9 @@ msgid ""
 "                with Open Sources software to manage their businesses. Our\n"
 "                consultants are experts in the following areas:"
 msgstr ""
+"Acme Corporation ติดตั้งระบบ ERP สำหรับบริษัทระดับโลก และสนับสนุน PME\n"
+"                ด้วยซอฟต์แวร์โอเพนซอร์สเพื่อจัดการธุรกิจของพวกเขา ผู้\n"
+"                ปรึกษาของเราเป็นผู้เชี่ยวชาญในด้านต่อไปนี้:"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_actions
@@ -1820,7 +1839,7 @@ msgstr "โมเดลหลักที่ใช้งานอยู่"
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "Actual Code"
-msgstr ""
+msgstr "รหัสจริง"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__number_next_actual
@@ -1837,7 +1856,7 @@ msgstr "เพิ่ม"
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Add API Key"
-msgstr ""
+msgstr "เพิ่ม API Key"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_language_install
@@ -1870,7 +1889,7 @@ msgstr "เพิ่มข้อมูลทิศทาง (ไม่ใช่�
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Add to the 'Print' menu"
-msgstr ""
+msgstr "เพิ่มลงในเมนู 'พิมพ์'"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__update_m2m_operation__add
@@ -1880,7 +1899,7 @@ msgstr "การเพิ่ม"
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_31
 msgid "Addison Olson is a mighty sales representative at Acme Corporation."
-msgstr ""
+msgstr "แอดดิสัน โอลสัน เป็นตัวแทนขายที่เก่งกาจของ Acme Corporation"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_31
@@ -1889,13 +1908,16 @@ msgid ""
 "    notably for selling mouse traps. With that trick he cut\n"
 "    IT budget by almost half within the last 2 years."
 msgstr ""
+"แอดดิสัน โอลสัน ทำงานในภาคเทคโนโลยีสารสนเทศ <b>ตั้งแต่ 10 ปีที่ผ่านมา</b> เขาเป็นที่รู้จัก\n"
+"     โดยเฉพาะในการคิดค้นวิธีดักทางแก้ปัญหาจุกจิก ด้วยเคล็ดลับนั้นเขาลดงบการเงิน\n"
+"     ด้าน IT ลงไปถึงครึ่งหนึ่งในช่วง 2 ปีที่ผ่านมา"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__additional_identifiers
 #: model:ir.model.fields,field_description:base.field_res_partner__additional_identifiers
 #: model:ir.model.fields,field_description:base.field_res_users__additional_identifiers
 msgid "Additional Identifiers"
-msgstr ""
+msgstr "ตัวระบุเพิ่มเติม"
 
 #. module: base
 #. odoo-python
@@ -1912,7 +1934,7 @@ msgstr "ที่อยู่"
 #: model:ir.model.fields,field_description:base.field_res_partner__address
 #: model:ir.model.fields,field_description:base.field_res_users__address
 msgid "Address (without name)"
-msgstr ""
+msgstr "ที่อยู่ (ไม่มีชื่อ)"
 
 #. module: base
 #: model:ir.model,name:base.model_format_address_mixin
@@ -1929,7 +1951,7 @@ msgstr "ชนิดที่อยู่"
 #: model:ir.model.fields,field_description:base.field_res_partner__type_address_label
 #: model:ir.model.fields,field_description:base.field_res_users__type_address_label
 msgid "Address Type Description"
-msgstr ""
+msgstr "คำอธิบายประเภทที่อยู่"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_country_form
@@ -1940,7 +1962,7 @@ msgstr "รูปแบบที่อยู่"
 #: model:ir.model.fields,field_description:base.field_res_partner__address_inline
 #: model:ir.model.fields,field_description:base.field_res_users__address_inline
 msgid "Address inline (without name)"
-msgstr ""
+msgstr "ที่อยู่แบบแทรกในข้อความ (ไม่มีชื่อ)"
 
 #. module: base
 #. odoo-python
@@ -2368,7 +2390,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__allowed_states
 #: model:ir.model.fields,field_description:base.field_ir_cron__allowed_states
 msgid "Allowed states"
-msgstr ""
+msgstr "สถานะที่อนุญาต"
 
 #. module: base
 #. odoo-python
@@ -2586,7 +2608,7 @@ msgstr "America/Costa_Rica"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/coyhaique
 msgid "America/Coyhaique"
-msgstr ""
+msgstr "อเมริกา/คอยไฮค์"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/creston
@@ -3235,6 +3257,8 @@ msgid ""
 "An error occurred while evaluating the domain:\n"
 "%(error)s"
 msgstr ""
+"เกิดข้อผิดพลาดขณะตรวจสอบโดเมน:\n"
+"%(error)s"
 
 #. module: base
 #. odoo-python

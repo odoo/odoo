@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
-"PO-Revision-Date: 2026-10-12 10:33+0000\n"
+"POT-Creation-Date: 2026-10-23 17:40+0000\n"
+"PO-Revision-Date: 2026-10-20 10:33+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-20/"
 "calendar/id/>\n"
@@ -57,7 +57,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_count
 #: model:ir.model.fields,field_description:calendar.field_res_users__meeting_count
 msgid "# Meetings"
-msgstr "# Pertemuan"
+msgstr "# Meeting"
 
 #. module: calendar
 #. odoo-python
@@ -97,7 +97,7 @@ msgstr "%(time_start)s - %(date_stop)s, %(time_stop)s"
 #. odoo-python
 #: code:addons/calendar/models/calendar_alarm_manager.py:0
 msgid "%(time_start)s - %(time_stop)s"
-msgstr ""
+msgstr "%(time_start)s - %(time_stop)s"
 
 #. module: calendar
 #. odoo-python
@@ -135,7 +135,7 @@ msgstr "(Tidak ada Judul)"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_filter_section.js:0
 msgid "+ Add guests"
-msgstr ""
+msgstr "+ Tambahkan tamu"
 
 #. module: calendar
 #. odoo-javascript
@@ -1803,17 +1803,94 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"font-size: 13px; color: #374151; background-color: white;\">\n"
+"    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or "
+"ctx.get('mail_tz')\"/>\n"
+"    <t t-set=\"event_name\" t-value=\"object.name or ''\"/>\n"
+"    <t t-set=\"event_organizer\" t-value=\"object.user_id.name or ''\"/>\n"
+"    <h1 style=\"font-size: 18px; font-weight: bold; color: #374151; margin-"
+"bottom: 28px;\">\n"
+"        Acara dibatalkan\n"
+"        <img src=\"/calendar/static/src/img/times-circle.png\" "
+"style=\"border:0; width: 20px; height: 20px; margin-left: 10px; text-"
+"decoration:none; vertical-align: middle; padding-bottom: 2px;\"/>\n"
+"    </h1>\n"
+"    <p style=\"margin: 0;\">\n"
+"        Halo,<br/>\n"
+"        <span style=\"display: block; margin-top: 8px;\">\n"
+"            Pesan ini merupakan pemberitahuan bahwa acara <strong t-"
+"out=\"event_name or ''\">Follow-up for Project proposal</strong> <t t-"
+"if=\"event_organizer\">yang diselenggarakan oleh </t><t t-"
+"out=\"event_organizer or ''\">Colleen Diaz</t> telah dibatalkan dan dihapus "
+"dari kalender Anda.\n"
+"        </span>\n"
+"    </p>\n"
+"    <div style=\"margin: 32px 0 0;\">\n"
+"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};"
+"\">Detail</h2>\n"
+"        <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-"
+"size: 13px; color: #374151;\">\n"
+"            <tr>\n"
+"                <td style=\"width: 100px; color: #676F7B;\">Tanggal &amp; "
+"Waktu</td>\n"
+"                <td style=\"font-weight: bold;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
+"if not object.allday else None, dt_format='EEEE', lang_code=object.env.lang)"
+"\">Selasa</t>\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
+"if not object.allday else None, dt_format='d', lang_code=object.env.lang)"
+"\">4</t>\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
+"if not object.allday else None, dt_format='MMMM y', "
+"lang_code=object.env.lang)\">Mei 2021</t>\n"
+"                    <t t-if=\"not object.allday\">\n"
+"                        <t t-out=\"format_time(time=object.start, "
+"tz=mail_tz, time_format='short', lang_code=object.env.lang)\">11:00 AM</t>\n"
+"                        <t t-if=\"mail_tz\">\n"
+"                            <span style=\"font-size: 11px; font-weight: "
+"normal;\">\n"
+"                                (<t t-out=\"mail_tz or ''\">Eropa/Brussels</"
+"t>)\n"
+"                            </span>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr t-if=\"not object.allday and object.duration\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;"
+"\">Durasi</td>\n"
+"                <td style=\"padding-top: 6px;\"><t t-out=\"('%dH%02d' % "
+"(object.duration,round(object.duration*60)%60))\">0J30</t></td>\n"
+"            </tr>\n"
+"            <tr t-if=\"object.location\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;"
+"\">Lokasi</td>\n"
+"                <td style=\"padding-top: 6px;\"><t t-out=\"object.location "
+"or ''\">Bruxelles</t></td>\n"
+"            </tr>\n"
+"        </table>\n"
+"    </div>\n"
+"    <p style=\"margin: 32px 0 0;\">\n"
+"        Jika ada pertanyaan atau kekhawatiran, silakan hubungi kami. <br/>\n"
+"        Salam hormat,\n"
+"        <span style=\"display: block; margin-top: 8px;\">Tim Kalender</"
+"span>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view
 #: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view_calendars
 msgid "<i class=\"me-2 oi\" data-icon=\"arrow_forward\"/>Manage my calendars"
-msgstr ""
+msgstr "<i class=\"me-2 oi\" data-icon=\"arrow_forward\"/>Kelola kalender saya"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi oi-filled mt-1\" data-icon=\"schedule\" title=\"Dates\"/>"
 msgstr ""
+"<i class=\"oi oi-filled mt-1\" data-icon=\"schedule\" title=\"Tanggal\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_schedule_view_form
@@ -1822,52 +1899,57 @@ msgid ""
 "<i class=\"oi oi-filled\" data-icon=\"calendar_today\" title=\"Calendar\"/>\n"
 "                    <span class=\"text-muted\">Pick a date and time</span>"
 msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"calendar_today\" title=\"Calendar\"/>\n"
+"                    <span class=\"text-muted\">Pilih tanggal dan waktu</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi oi-filled\" data-icon=\"circle\" title=\"Show as\"/>"
 msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"circle\" title=\"Tampilkan sebagai\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi oi-filled\" data-icon=\"label\" title=\"Booking Name\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-filled\" data-icon=\"label\" title=\"Nama Booking\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi oi-filled\" data-icon=\"lock\" title=\"Visibility\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-filled\" data-icon=\"lock\" title=\"Visibilitas\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi oi-filled\" data-icon=\"map\" title=\"Location\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-filled\" data-icon=\"map\" title=\"Lokasi\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi oi-filled\" data-icon=\"person\" title=\"Participants\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-filled\" data-icon=\"person\" title=\"Peserta\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi oi-filled\" data-icon=\"sticky_note_2\" title=\"Notes\"/>"
 msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"sticky_note_2\" title=\"Catatan\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid ""
 "<i class=\"oi oi-filled\" data-icon=\"videocam\" title=\"Videocall URL\"/>"
 msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"videocam\" title=\"URL Videocall\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi\" data-icon=\"calendar_today\" title=\"Calendar\"/>"
-msgstr ""
+msgstr "<i class=\"oi\" data-icon=\"calendar_today\" title=\"Kalender\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi\" data-icon=\"close\" title=\"Remove\"/>"
-msgstr ""
+msgstr "<i class=\"oi\" data-icon=\"close\" title=\"Hapus\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1875,6 +1957,8 @@ msgid ""
 "<i title=\"Clear meeting\" data-tooltip=\"Clear meeting\" class=\"oi\" data-"
 "icon=\"close\"/>"
 msgstr ""
+"<i title=\"Hapus meeting\" data-tooltip=\"Hapus meeting\" class=\"oi\" data-"
+"icon=\"close\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1882,6 +1966,8 @@ msgid ""
 "<i title=\"Join Video Call\" data-tooltip=\"Join video call\" class=\"oi\" "
 "data-icon=\"login\"/>"
 msgstr ""
+"<i title=\"Masuk ke Video Call\" data-tooltip=\"Masuk ke video call\" "
+"class=\"oi\" data-icon=\"login\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1905,6 +1991,8 @@ msgid ""
 "<span class=\"mx-1\"><i class=\"oi me-1\" data-icon=\"add\"/>Video "
 "conference</span>"
 msgstr ""
+"<span class=\"mx-1\"><i class=\"oi me-1\" data-icon=\"add\"/>Konferensi "
+"video</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view
@@ -1912,6 +2000,8 @@ msgid ""
 "<span class=\"o_form_label fw-bold text-900\" invisible=\"share or id != "
 "uid\">Calendar</span>"
 msgstr ""
+"<span class=\"o_form_label fw-bold text-900\" invisible=\"share or id != "
+"uid\">Kalender</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view_calendars
@@ -1919,11 +2009,13 @@ msgid ""
 "<span class=\"o_form_label fw-bold text-900\" invisible=\"share\">Calendar</"
 "span>"
 msgstr ""
+"<span class=\"o_form_label fw-bold text-900\" invisible=\"share\">Kalender</"
+"span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<span class=\"oi me-1\" data-icon=\"add\"/>Video conference"
-msgstr ""
+msgstr "<span class=\"oi me-1\" data-icon=\"add\"/>Konferensi video"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
@@ -1945,6 +2037,8 @@ msgid ""
 "<span invisible=\"block_mail\">Notify attendees of confirmed events that the "
 "event was canceled?</span>"
 msgstr ""
+"<span invisible=\"block_mail\">Beri tahu peserta acara yang telah "
+"dikonfirmasi bahwa acara dibatalkan?</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
@@ -1964,6 +2058,20 @@ msgid ""
 "this occurrence will be archived.\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"requested_action != 'unlink'\">Yakin ingin menghapus acara "
+"ini?</span>\n"
+"                    <span invisible=\"requested_action != 'archive'\">Yakin "
+"ingin mengarsipkan acara ini?</span>\n"
+"                    <span invisible=\"not has_recurrent_events or "
+"requested_action != 'unlink'\">\n"
+"                        Beberapa acara yang mengandung pengulangan dipilih; "
+"hanya acara ini yang akan dilepaskan.\n"
+"                   </span>\n"
+"                    <span invisible=\"not has_recurrent_events or "
+"requested_action != 'archive'\"> \n"
+"                        Beberapa acara yang mengandung pengulangan dipilih; "
+"hanya acara ini yang akan diarsipkan.\n"
+"                   </span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
@@ -1973,6 +2081,10 @@ msgid ""
 "                    <span invisible=\"requested_action != 'archive'\">Are "
 "you sure you want to archive this event ?</span>"
 msgstr ""
+"<span invisible=\"requested_action != 'unlink'\">Yakin ingin menghapus acara "
+"ini?</span>\n"
+"                    <span invisible=\"requested_action != 'archive'\">Yakin "
+"ingin mengarsipkan acara ini?</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1994,12 +2106,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/calendar/models/calendar_calendar.py:0
 msgid "A primary calendar cannot be deleted."
-msgstr ""
+msgstr "Kalender utama tidak dapat dihapus."
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_event_check_no_recurrent_draft
 msgid "A recurring event cannot be a draft."
-msgstr ""
+msgstr "Acara berulang tidak boleh berupa draft."
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_filters_user_id_partner_id_unique
@@ -2021,12 +2133,12 @@ msgstr "Jumlah yang Diterima"
 #: model:ir.model.fields,field_description:calendar.field_calendar_calendar__user_access_role
 #: model:ir.model.fields,field_description:calendar.field_calendar_user__access_role
 msgid "Access Role"
-msgstr ""
+msgstr "Peran Akses"
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_event_access_token_unique
 msgid "Access token should be unique"
-msgstr ""
+msgstr "Token akses harus unik"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
@@ -2108,7 +2220,7 @@ msgstr "Tambahkan Judul"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Add attendees..."
-msgstr ""
+msgstr "Tambahkan peserta..."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2153,7 +2265,7 @@ msgstr "Semua Hari, %(day)s"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 msgid "All calendars"
-msgstr ""
+msgstr "Semua kalender"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
@@ -2170,35 +2282,35 @@ msgstr "Semua acara"
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event_archive_or_unlink_wizard__recurrence_choice__all_events
 msgid "All the events"
-msgstr ""
+msgstr "Semua acara"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
 msgid "Archive"
-msgstr ""
+msgstr "Arsip"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "Archive event"
-msgstr ""
+msgstr "Arsipkan acara"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "Archive events"
-msgstr ""
+msgstr "Arsipkan acara"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
 msgid "Archive or Delete Event"
-msgstr ""
+msgstr "Arsipkan atau Hapus Acara"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
 msgid "Archive or Delete Events"
-msgstr ""
+msgstr "Arsipkan atau Hapus Acara"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2210,7 +2322,7 @@ msgstr "Diarsipkan"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 msgid "Are you sure you want to unsubscribe from this calendar?"
-msgstr ""
+msgstr "Yakin ingin berhenti berlangganan kalender ini?"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_attachment_count
@@ -2236,7 +2348,7 @@ msgstr "Jumlah Peserta"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Attendees will be notified upon confirmation."
-msgstr ""
+msgstr "Peserta akan diberi tahu setelah konfirmasi."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__current_status
@@ -2273,7 +2385,7 @@ msgstr "Acara Dasar"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__block_mail
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__block_mail
 msgid "Block Mail"
-msgstr ""
+msgstr "Blokir Email"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__body_has_template_value
@@ -2308,6 +2420,7 @@ msgstr "Menurut Hari"
 #: model:ir.ui.menu,name:calendar.menu_calendar_configuration
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "Calendar"
 msgstr "Kalender"
 
@@ -2340,12 +2453,12 @@ msgstr "Acara Kalender"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_archive_or_unlink_wizard
 msgid "Calendar Event Archive Or Unlink Wizard"
-msgstr ""
+msgstr "Wizard Pengarsipan atau Pemutusan Acara"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_multi_archive_or_unlink_wizard
 msgid "Calendar Event Multi Archive Or Unlink Wizard"
-msgstr ""
+msgstr "Wizard Pengarsipan Ganda atau Pemutus Tautan Acara Kalender"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_filters
@@ -2360,12 +2473,12 @@ msgstr "Kalender Undangan"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_mail_activity__calendar_event_id
 msgid "Calendar Meeting"
-msgstr "Kalender Rapat"
+msgstr "Kalender Meeting"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__members_only
 msgid "Calendar Members Only"
-msgstr ""
+msgstr "Khusus Anggota Kalender"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
@@ -2375,12 +2488,12 @@ msgstr "Pengaturan Kalender"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_users__calendar_user_ids
 msgid "Calendar User"
-msgstr ""
+msgstr "User Kalender"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_user
 msgid "Calendar User Manager"
-msgstr ""
+msgstr "Manajer User Kalender"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2390,7 +2503,7 @@ msgstr "Deskripsi kalender"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_calendar_view_form
 msgid "Calendar name"
-msgstr ""
+msgstr "Nama kalender"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_changedate
@@ -2400,7 +2513,7 @@ msgstr "Kalender: Tanggal Diupdate"
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_delete_event
 msgid "Calendar: Event Canceled"
-msgstr ""
+msgstr "Kalender: Acara DIbatalkan"
 
 #. module: calendar
 #: model:ir.actions.server,name:calendar.ir_cron_scheduler_alarm_ir_actions_server
@@ -2437,7 +2550,7 @@ msgstr "Dapat Mengedit Body"
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_delete_event
 msgid "Canceled event: {{ object.name }}"
-msgstr ""
+msgstr "Acara dibatalkan: {{ object.name }}"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__is_organizer_alone
@@ -2475,7 +2588,7 @@ msgstr "Nama umum"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_partner_view_form_simplified
 msgid "Company"
-msgstr ""
+msgstr "Perusahaan"
 
 #. module: calendar
 #: model:ir.ui.menu,name:calendar.calendar_menu_config
@@ -2527,7 +2640,7 @@ msgstr "Hitung"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 msgid "Create Calendar"
-msgstr ""
+msgstr "Buat Kalender"
 
 #. module: calendar
 #: model:ir.model,website_form_label:calendar.model_res_partner
@@ -2570,7 +2683,7 @@ msgstr "Peserta Saat Ini"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_calendar__calendar_user_id
 msgid "Current Membership Record"
-msgstr ""
+msgstr "Record Keanggotaan Saat Ini"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__custom
@@ -2643,7 +2756,7 @@ msgstr "Privasi Default"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_calendar_view_form
 msgid "Default visibility"
-msgstr ""
+msgstr "Visibilitas default"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
@@ -2655,13 +2768,13 @@ msgstr "Hapus"
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "Delete event"
-msgstr ""
+msgstr "Hapus acara"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "Delete events"
-msgstr ""
+msgstr "Hapus acara"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__description
@@ -2689,6 +2802,11 @@ msgstr "Channel Diskusi"
 #: model:ir.model,name:calendar.model_discuss_channel
 msgid "Discussion Channel"
 msgstr "Saluran Diskusi"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__calendar_is_displayed
+msgid "Display Calendar"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_description
@@ -2738,7 +2856,7 @@ msgstr "Nama Model Dokumen"
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Draft"
-msgstr ""
+msgstr "Draft"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__dtstart
@@ -2766,7 +2884,7 @@ msgstr "EMAIL"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 msgid "Edit Calendar"
-msgstr ""
+msgstr "Edit Kalender"
 
 #. module: calendar
 #. odoo-javascript
@@ -2778,7 +2896,7 @@ msgstr "Edit acara Rutin"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.xml:0
 msgid "Edit filter"
-msgstr ""
+msgstr "Edit filter"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2799,7 +2917,7 @@ msgstr "Email"
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_1_day
 msgid "Email - 1 day"
-msgstr ""
+msgstr "Email - 1 hari"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_1
@@ -2861,7 +2979,7 @@ msgstr "Peraturan Acara Rutin"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_type_tree
 msgid "Event Tag"
-msgstr ""
+msgstr "Tag Acara"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_time
@@ -2871,17 +2989,17 @@ msgstr "Waktu Acara"
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.mt_calendar_event_updated
 msgid "Event Updates"
-msgstr ""
+msgstr "Pembaruan Acara"
 
 #. module: calendar
 #: model:mail.message.subtype,description:calendar.mt_calendar_event_updated
 msgid "Event updated"
-msgstr ""
+msgstr "Acara diperbarui"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_calendar__event_ids
 msgid "Events"
-msgstr ""
+msgstr "Acara"
 
 #. module: calendar
 #. odoo-python
@@ -2987,7 +3105,7 @@ msgstr "Masukan: %s"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_user__is_filter_checked
 msgid "Filter Enabled"
-msgstr ""
+msgstr "Filter Diaktifkan"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__1
@@ -3069,7 +3187,7 @@ msgstr "Google Calendar"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__google_calendar_url
 msgid "Google Calendar URL"
-msgstr ""
+msgstr "URL Google Calendar"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
@@ -3084,7 +3202,7 @@ msgstr "Memiliki Pesan"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__has_recurrent_events
 msgid "Has Recurrent Events"
-msgstr ""
+msgstr "Memiliki Acara Berulang"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__hours
@@ -3170,6 +3288,10 @@ msgid ""
 "\n"
 "This action cannot be reversed."
 msgstr ""
+"Jika Anda adalah satu-satunya orang yang menggunakan kalender ini, semua "
+"acara di dalamnya akan dihapus. Yakin ingin melanjutkan?\n"
+"\n"
+"Tindakan ini tidak dapat dibatalkan."
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_calendar__calendar_default_privacy__confidential
@@ -3189,7 +3311,7 @@ msgstr "Email Partner Tidak Valid"
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
 msgid "Invitation Status"
-msgstr ""
+msgstr "Status Undangan"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__access_token
@@ -3235,7 +3357,7 @@ msgstr "Adalah Follower"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_draft
 msgid "Is draft"
-msgstr ""
+msgstr "Adalah draft"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_highlighted
@@ -3251,18 +3373,18 @@ msgstr "Apakah Organizer Sendiri"
 #. odoo-javascript
 #: code:addons/calendar/static/src/core/web/activity_patch.xml:0
 msgid "Join Meeting"
-msgstr ""
+msgstr "Masuk ke Meeting"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 msgid "Keep this calendar"
-msgstr ""
+msgstr "Simpan kalender ini"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_user__name
 msgid "Label"
-msgstr ""
+msgstr "Label"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__lang
@@ -3323,7 +3445,7 @@ msgstr "Biarkan acara mengulang otomatis pada interval tersebut"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__google_calendar_url
 msgid "Link to manually add the meeting to Google Calendar"
-msgstr ""
+msgstr "Link untuk menambahkan meeting secara manual ke Google Calendar"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_record
@@ -3354,7 +3476,7 @@ msgstr "Mail Tz"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Ikon Material Symbols, misalnya checklist"
 
 #. module: calendar
 #. odoo-javascript
@@ -3378,7 +3500,7 @@ msgstr "Meeting dengan"
 #: model:ir.model.fields.selection,name:calendar.selection__mail_activity_type__category__meeting
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Meeting"
-msgstr "Rapat"
+msgstr "Meeting"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__meeting_activity_ids
@@ -3389,12 +3511,12 @@ msgstr "Aktivitas Meeting"
 #: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_display_label
 #: model:ir.model.fields,field_description:calendar.field_res_users__meeting_display_label
 msgid "Meeting Display Label"
-msgstr ""
+msgstr "Label Tampilan Meeting"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__name
 msgid "Meeting Subject"
-msgstr "Pokok Pertemuan"
+msgstr "Subjek Meeting"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_location
@@ -3404,7 +3526,7 @@ msgstr "URL Meeting"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__event_id
 msgid "Meeting linked"
-msgstr "Pertemuan terkait"
+msgstr "Meeting terkait"
 
 #. module: calendar
 #. odoo-python
@@ -3417,12 +3539,12 @@ msgstr "Pertemuan terkait"
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "Meetings"
-msgstr "Pertemuan"
+msgstr "Meeting"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
 msgid "Message"
-msgstr ""
+msgstr "Pesan"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error
@@ -3491,9 +3613,15 @@ msgid "My Activity Deadline"
 msgstr "Deadline Kegiatan Saya"
 
 #. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
+msgid "My Calendars"
+msgstr ""
+
+#. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "My Meetings"
-msgstr "Pertemuan Saya"
+msgstr "Meeting Saya"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__name
@@ -3519,7 +3647,7 @@ msgstr "Baru"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 msgid "New Calendar"
-msgstr ""
+msgstr "Kalender Baru"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_calendar_event_id
@@ -3552,7 +3680,7 @@ msgstr "Tipe Aktivitas Berikutnya"
 #: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_next_date
 #: model:ir.model.fields,field_description:calendar.field_res_users__meeting_next_date
 msgid "Next Meeting"
-msgstr ""
+msgstr "Meeting Berikutnya"
 
 #. module: calendar
 #. odoo-javascript
@@ -3582,7 +3710,7 @@ msgstr "Tidak Ada Meeting"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "No calendar"
-msgstr ""
+msgstr "Tidak ada kalender"
 
 #. module: calendar
 #. odoo-javascript
@@ -3716,7 +3844,7 @@ msgstr "Hanya pengguna internal"
 #. odoo-python
 #: code:addons/calendar/models/calendar_calendar.py:0
 msgid "Only the calendar owner can modify these fields: %(fields)s"
-msgstr ""
+msgstr "Hanya pemilik kalender yang dapat mengubah field ini: %(fields)s"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__month_by
@@ -3726,7 +3854,7 @@ msgstr "Opsi"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
 msgid "Optional message"
-msgstr ""
+msgstr "Pesan opsional"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_archive_or_unlink_wizard__lang
@@ -3772,14 +3900,14 @@ msgstr "Kalender Outlook"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_users__owned_calendar_ids
 msgid "Owned Calendar"
-msgstr ""
+msgstr "Kalender yang Dimiliki"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_calendar__owner_id
 #: model:ir.model.fields,field_description:calendar.field_calendar_user__calendar_owner_id
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_user__access_role__owner
 msgid "Owner"
-msgstr ""
+msgstr "Pemilik"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_ids
@@ -3810,12 +3938,12 @@ msgstr "Telepon"
 #: model:ir.model.fields,field_description:calendar.field_calendar_calendar__is_primary
 #: model:ir.model.fields,field_description:calendar.field_calendar_user__is_primary
 msgid "Primary"
-msgstr ""
+msgstr "Utama"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_users__primary_calendar_id
 msgid "Primary Calendar"
-msgstr ""
+msgstr "Kalender Utama"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__privacy
@@ -3864,7 +3992,7 @@ msgstr "Pengulangan"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__recurrence_choice
 msgid "Recurrence Choice"
-msgstr ""
+msgstr "Pilihan Pengulangan"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__recurrence_id
@@ -3885,7 +4013,7 @@ msgstr "Update Pengulangan"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_calendar__recurrence_ids
 msgid "Recurrences"
-msgstr ""
+msgstr "Pengulangan"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrency
@@ -3907,7 +4035,7 @@ msgstr "Ingatkan Sebelum"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
 msgid "Reminder"
-msgstr ""
+msgstr "Pengingat"
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_calendar_alarm
@@ -3956,7 +4084,7 @@ msgstr "Ulang x kali"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__requested_action
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__requested_action
 msgid "Requested Action"
-msgstr ""
+msgstr "Tindakan Diminta"
 
 #. module: calendar
 #. odoo-javascript
@@ -4005,18 +4133,18 @@ msgstr "Sabtu"
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
 msgid "Schedule Meeting"
-msgstr ""
+msgstr "Jadwalkan Meeting"
 
 #. module: calendar
 #: model:ir.module.module,summary:base.module_calendar
 msgid "Schedule employees' meetings"
-msgstr ""
+msgstr "Jadwalkan meeting karyawan"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/core/web/messaging_menu_model_patch.js:0
 msgid "Schedule for later"
-msgstr ""
+msgstr "Jadwalkan untuk nanti"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_id
@@ -4036,7 +4164,7 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Search Meetings"
-msgstr "Cari Pertemuan"
+msgstr "Cari Meeting"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__2
@@ -4063,7 +4191,7 @@ msgstr "Kirim email"
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
 msgid "Send and archive"
-msgstr ""
+msgstr "Kirim dan arsipkan"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
@@ -4107,13 +4235,13 @@ msgstr "Pengaturan"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_calendar__calendar_default_privacy__members_only
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__effective_privacy__members_only
 msgid "Shared Calendar Members Only"
-msgstr ""
+msgstr "Hanya untuk Anggota Kalender Bersama"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_calendar__share_user_ids
 #: model:ir.model.fields,field_description:calendar.field_calendar_user__calendar_share_user_ids
 msgid "Shared with"
-msgstr ""
+msgstr "Dibagikan dengan"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__should_show_status
@@ -4140,7 +4268,7 @@ msgstr "Tunjukkan sebagai"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_user__is_filter_active
 msgid "Shown in Filters List"
-msgstr ""
+msgstr "Ditampilkan di Daftar Filter"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__start
@@ -4233,7 +4361,7 @@ msgstr "Sinkronisasi gagal"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Sync with"
-msgstr ""
+msgstr "Sinkronkan dengan"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
@@ -4350,7 +4478,7 @@ msgstr "Tidak ada peserta pada acara-acara tersebut"
 #. odoo-python
 #: code:addons/calendar/models/calendar_user.py:0
 msgid "These fields cannot be modified: %(fields)s"
-msgstr ""
+msgstr "Field ini tidak dapat dimodifikasi: %(fields)s"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__3
@@ -4380,6 +4508,9 @@ msgid ""
 "This field allows to perform the archiving or deletion on several events "
 "belonging to the         selected event's recurrence."
 msgstr ""
+"Field ini memungkinkan Anda untuk melakukan pengarsipan atau penghapusan "
+"beberapa acara yang termasuk dalam           pola pengulangan acara yang "
+"dipilih."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__thu
@@ -4487,7 +4618,7 @@ msgstr "Unit"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 msgid "Unsubscribe from calendar"
-msgstr ""
+msgstr "Berhenti langganan kalender"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__until
@@ -4516,7 +4647,7 @@ msgstr "Pengguna"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_calendar
 msgid "User Calendar"
-msgstr ""
+msgstr "Kalender User"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__user_can_edit
@@ -4537,7 +4668,7 @@ msgstr "User default"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_calendar__calendar_user_ids
 msgid "Users"
-msgstr ""
+msgstr "User"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -4565,13 +4696,13 @@ msgstr "Lihat Meeting"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_calendar_view_list
 msgid "Visibility"
-msgstr ""
+msgstr "Visibiltas"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 msgid "Warning"
-msgstr ""
+msgstr "Peringatan"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__wed
@@ -4612,11 +4743,17 @@ msgid ""
 "should be set at the creation         of the event and never reset once it "
 "is removed."
 msgstr ""
+"Jika bernilai True, field ini menonaktifkan notifikasi acara. Hal ini "
+"memungkinkan penyimpanan acara           tanpa konfirmasi dan mencegah "
+"pengiriman pesan pembaruan kepada peserta karena beberapa informasi belum "
+"diketahui saat           pembuatan acara. Untuk mencegah masalah alur acara, "
+"status draft harus ditetapkan saat pembuatan           acara dan tidak boleh "
+"diubah setelah dihapus."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__notify_responsible
 msgid "When activated, the event organizer will also receive this reminder."
-msgstr ""
+msgstr "Jika diaktifkan, penyelenggara acara juga akan menerima pengingat ini."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__description
@@ -4639,12 +4776,12 @@ msgstr "Apakah acara pribadi, mempertimbangkan privasi user"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_users__writable_calendar_ids
 msgid "Writable Calendar"
-msgstr ""
+msgstr "Kalender Siap Modifikasi"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_user__access_role__writer
 msgid "Writer"
-msgstr ""
+msgstr "Penulis"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__yearly
@@ -4674,13 +4811,13 @@ msgstr "Ya, saya akan datang."
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 msgid "Yes, delete this calendar"
-msgstr ""
+msgstr "Ya, hapus kalender ini"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 msgid "Yes, unsubscribe"
-msgstr ""
+msgstr "Ya, hentikan langganan"
 
 #. module: calendar
 #. odoo-python
@@ -4689,6 +4826,8 @@ msgid ""
 "You are not allowed to change the default privacy of a calendar you do not "
 "own."
 msgstr ""
+"Anda tidak boleh mengubah pengaturan privasi default dari kalender yang "
+"bukan milik Anda."
 
 #. module: calendar
 #. odoo-python
@@ -4718,7 +4857,7 @@ msgstr "Anda sendirian di meeting ini"
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "[Draft]"
-msgstr ""
+msgstr "[Draft]"
 
 #. module: calendar
 #. odoo-javascript
@@ -4726,7 +4865,7 @@ msgstr ""
 #: code:addons/calendar/models/calendar_event.py:0
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
 msgid "[Draft] %s"
-msgstr ""
+msgstr "[Draft] %s"
 
 #. module: calendar
 #. odoo-javascript
@@ -4738,7 +4877,7 @@ msgstr "diterima"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event_archive_or_unlink_wizard__requested_action__archive
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event_multi_archive_or_unlink_wizard__requested_action__archive
 msgid "archive"
-msgstr ""
+msgstr "arsipkan"
 
 #. module: calendar
 #. odoo-javascript
@@ -4756,17 +4895,17 @@ msgstr "ditolak"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event_archive_or_unlink_wizard__requested_action__unlink
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event_multi_archive_or_unlink_wizard__requested_action__unlink
 msgid "delete"
-msgstr ""
+msgstr "hapus"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_partner_view_form_simplified
 msgid "e.g. (555) 555-0199"
-msgstr ""
+msgstr "Cth: (555) 555-0199"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_partner_view_form_simplified
 msgid "e.g. Acme Corporation"
-msgstr ""
+msgstr "cth: Acme Corporation"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -4776,17 +4915,17 @@ msgstr "mis: Makan Siang Bisnis"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_partner_view_form_simplified
 msgid "e.g. Lumber Inc or Brandon Freeman"
-msgstr ""
+msgstr "cth: Lumber Inc atau Brandon Freeman"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_partner_view_form_simplified
 msgid "e.g. Sales Director"
-msgstr ""
+msgstr "cth: Sales Director"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_partner_view_form_simplified
 msgid "e.g. john.doe@email.com"
-msgstr ""
+msgstr "cth: john.doe@email.com"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form

@@ -17,9 +17,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 17:41+0000\n"
-"PO-Revision-Date: 2026-10-08 09:46+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"POT-Creation-Date: 2026-10-23 17:40+0000\n"
+"PO-Revision-Date: 2026-10-22 02:33+0000\n"
+"Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-20/"
 "point_of_sale/id/>\n"
 "Language: id\n"
@@ -60,7 +60,7 @@ msgstr "% Diskon"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_orderline_receipt_information
 msgid "% discount off on"
-msgstr ""
+msgstr "diskon % pada"
 
 #. module: point_of_sale
 #. odoo-python
@@ -620,6 +620,12 @@ msgstr "? Mengeklik \"Konfirmasi\" akan memvalidasi pembayaran."
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid "A customer is required to use the payment method %s."
+msgstr "Pelanggan diwajibkan menggunakan metode pembayaran %s."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment.py:0
+msgid "A customer must be set on the order to pay with a customer account."
 msgstr ""
 
 #. module: point_of_sale
@@ -1669,12 +1675,12 @@ msgstr "Rekening Koran"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
 msgid "Bank Transaction"
-msgstr ""
+msgstr "Transaksi Bank"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__bank_statement_line_ids
 msgid "Bank Transactions"
-msgstr ""
+msgstr "Transaksi Bank"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1869,6 +1875,7 @@ msgstr "Tidak dapat membuat QR untuk jumlah nol"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/select_default_payment_method_popup/select_default_payment_method_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.js:0
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
@@ -2713,6 +2720,7 @@ msgstr "Konfigurasi setidaknya satu POS."
 #: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/money_details_popup/money_details_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
+#: code:addons/point_of_sale/static/src/app/components/popups/select_default_payment_method_popup/select_default_payment_method_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_confirm_action_wizard
@@ -4805,6 +4813,12 @@ msgid "Invoice Status"
 msgstr "Status Faktur"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
+msgid "Invoice required"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -5165,11 +5179,6 @@ msgstr ""
 "jurnal."
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
-msgid "Leave empty to use the receivable account of customer"
-msgstr "Biarkan kosong untuk menggunakan akun piutang pelanggan"
-
-#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__journal_id
 msgid ""
 "Leave empty to use the receivable account of customer.\n"
@@ -5181,6 +5190,15 @@ msgid ""
 "payment method.\n"
 "Only cash and bank journals are allowed."
 msgstr ""
+"Kosongkan untuk menggunakan akun piutang pelanggan.\n"
+"Menentukan jurnal tempat mencatat pembayaran yang terakumulasi (atau "
+"pembayaran individual jika \"Identifikasi Pelanggan\" bernilai true) setelah "
+"sesi ditutup.\n"
+"Untuk jurnal kas, kami langsung mencatat ke akun default di jurnal melalui "
+"transaksi bank.\n"
+"Untuk jurnal bank, kami mencatat ke Akun Belum Lunas yang ditentukan dalam "
+"metode pembayaran ini.\n"
+"Hanya jurnal kas dan jurnal bank yang diperbolehkan."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.letter_tray_product_template
@@ -6548,6 +6566,7 @@ msgstr "Buka"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 msgid "Open Cashbox"
 msgstr "Buka Cashbox"
@@ -7126,7 +7145,7 @@ msgstr "Kategori Induk"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Partial reversal of %s for PoS Order invoicing"
-msgstr ""
+msgstr "Pembalikan sebagian dari %s untuk Faktur Pesanan POS"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
@@ -9158,6 +9177,11 @@ msgid "Select a customer with a valid address."
 msgstr "Pilih pelanggan dengan alamat valid."
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
+msgid "Select a journal"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Select a payment method to validate the order."
@@ -9186,6 +9210,12 @@ msgstr "Pilih daftar harga"
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Select the product(s) to refund and set the quantity"
 msgstr "Pilih produk untuk merefund dan menetapkan kuantitas"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/select_default_payment_method_popup/select_default_payment_method_popup.xml:0
+msgid "Select your default payment method"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__attribute_value_ids
@@ -9625,7 +9655,7 @@ msgstr "Beberapa pesanan sudah sedang difaktur. Silakan coba lagi nanti."
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Some orders are not globally invoiced."
-msgstr ""
+msgstr "Beberapa order tidak ditagihkan secara global."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10396,6 +10426,14 @@ msgid ""
 msgstr "Metode pembayaran yang dipilih tidak diizinkan di konfig sesi POS."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/select_default_payment_method_popup/select_default_payment_method_popup.xml:0
+msgid ""
+"The payment method you choose will be linked to your device. You can change "
+"it later from the menu on top right."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_available_categ_ids
 msgid ""
 "The point of sale will only display products which are within one of the "
@@ -10483,7 +10521,7 @@ msgstr "Resi akan secara otomatis dicetak di akhir masing-masing order."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.js:0
 msgid "The register cannot be opened while offline. Please try again."
-msgstr ""
+msgstr "Kasir tidak dapat dibuka saat offline. Silakan coba lagi."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10889,6 +10927,14 @@ msgid ""
 "again."
 msgstr ""
 "Order ini belum di-sync ke server. Pastikan sudah di-sync lalu coba lagi."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
+msgid ""
+"This order must be invoiced before validation because it mixes pay-later "
+"payment and cash-basis taxes."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11483,7 +11529,7 @@ msgstr "PPN"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "VAT:"
-msgstr ""
+msgstr "PPN:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -12413,7 +12459,7 @@ msgstr "order aktif yang direncanakan untuk nanti."
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "order"
-msgstr ""
+msgstr "order"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -12425,7 +12471,7 @@ msgstr "pesanan untuk beberapa hari ke depan:"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "orders"
-msgstr ""
+msgstr "order"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
@@ -12502,6 +12548,9 @@ msgstr "dengan nilai"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr "x"
+
+#~ msgid "Leave empty to use the receivable account of customer"
+#~ msgstr "Biarkan kosong untuk menggunakan akun piutang pelanggan"
 
 #~ msgid "Bank Statement Line"
 #~ msgstr "Baris Rekening Koran"

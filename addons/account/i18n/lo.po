@@ -10,11 +10,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 15:53+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Lao <https://translate.odoo.com/projects/odoo-s19-4/account/"
-"lo/>\n"
+"POT-Creation-Date: 2026-10-23 17:40+0000\n"
+"PO-Revision-Date: 2026-10-18 16:33+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-20/account/lo/"
+">\n"
 "Language: lo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,6 +81,16 @@ msgid ""
 "This module also offers you an easy method of registering payments, without "
 "having to encode complete abstracts of account.\n"
 msgstr ""
+"\n"
+"ການອອກໃບແຈ້ງໜີ້ ແລະ ການຊຳລະເງິນ\n"
+"====================\n"
+"ລະບົບການອອກໃບແຈ້ງໜີ້ທີ່ສະເພາະເຈາະຈົງ ແລະ ໃຊ້ງານງ່າຍໃນ Odoo "
+"ຊ່ວຍໃຫ້ທ່ານສາມາດຕິດຕາມບັນຊີຂອງທ່ານໄດ້ ເຖິງແມ່ນວ່າທ່ານຈະບໍ່ແມ່ນນັກບັນຊີກໍຕາມ. ມັນຊ່ວຍໃຫ້ຕິດຕາມຜູ້ສະໜອງ "
+"ແລະ ລູກຄ້າຂອງທ່ານໄດ້ຢ່າງງ່າຍດາຍ.\n"
+"\n"
+"ທ່ານສາມາດໃຊ້ການບັນຊີແບບຮຽບງ່າຍນີ້ ໃນກໍລະນີທີ່ທ່ານເຮັດວຽກກັບບັນຊີ (ພາຍນອກ) ເພື່ອລົງບັນຊີຂອງທ່ານ, "
+"ແລະ ທ່ານຍັງຕ້ອງການຕິດຕາມການຊຳລະເງິນຢູ່. ໂມດູນນີ້ຍັງມີວິທີການງ່າຍໆໃນການລົງທະບຽນການຊຳລະເງິນ, "
+"ໂດຍບໍ່ຈຳເປັນຕ້ອງປ້ອນຂໍ້ມູນສະຫຼຸບບັນຊີທັງໝົດ.\n"
 
 #. module: account
 #. odoo-python
@@ -107,7 +117,7 @@ msgstr " ໃຊ້ໄດ້ຈົນເຖິງ %s"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
 msgid "# Reconciled Bank Transactions"
-msgstr ""
+msgstr "# ທຸລະກຳທະນາຄານທີ່ກວດສອບຍອດແລ້ວ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -135,7 +145,7 @@ msgstr "#ສ້າງໂດຍ: %s"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "%(accrual_type)s entry as of %(date)s"
-msgstr ""
+msgstr "ລາຍການ %(accrual_type)s ນະ ວັນທີ %(date)s"
 
 #. module: account
 #. odoo-python
@@ -147,7 +157,7 @@ msgstr "%(action)s ສໍາລັບບັນຊີປະຈໍາວັນ %(j
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "%(amount).2f %(currency)s already paid."
-msgstr ""
+msgstr "ຊຳລະແລ້ວ %(amount).2f %(currency)s."
 
 #. module: account
 #. odoo-python
@@ -196,7 +206,7 @@ msgstr "%(exception)s ສຳລັບ %(user)s%(end_datetime_string)s%(reason)s.
 #: code:addons/account/models/account_move.py:0
 msgid ""
 "%(failed_count)s out of %(total_count)s entries could not be reset to draft."
-msgstr ""
+msgstr "ລາຍການ %(failed_count)s ຈາກທັງໝົດ %(total_count)s ບໍ່ສາມາດຕັ້ງຄ່າໃໝ່ເປັນຮ່າງໄດ້."
 
 #. module: account
 #. odoo-python
@@ -218,6 +228,8 @@ msgid ""
 "To be consistent, the journal entry must always have exactly one suspense "
 "line."
 msgstr ""
+"%(move)s ຢູ່ໃນສະຖານະທີ່ບໍ່ຖືກຕ້ອງກ່ຽວກັບທຸລະກຳທະນາຄານທີ່ກ່ຽວຂ້ອງ.\n"
+"ເພື່ອຄວາມສອດຄ່ອງ, ລາຍການບັນຊີປະຈຳວັນຕ້ອງມີແຖວພັກ (suspense line) ພຽງແຖວດຽວສະເໝີ."
 
 #. module: account
 #. odoo-python
@@ -299,7 +311,7 @@ msgstr "'%(filename)s' (ປະເພດ=%(type)s)"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__vat_disabled_available
 msgid "'Not Subject to VAT' Available"
-msgstr ""
+msgstr "'ບໍ່ຢູ່ໃນເກນເສຍອາກອນມູນຄ່າເພີ່ມ' ພ້ອມໃຊ້ງານ"
 
 #. module: account
 #. odoo-python
@@ -308,6 +320,8 @@ msgid ""
 "'active' field of account.report shouldn't be directly written to in data "
 "files. Use active_fallback. (Detected while loading %(file_path)s)"
 msgstr ""
+"ຟິວ 'active' ຂອງ account.report ບໍ່ຄວນຂຽນທັບໂດຍກົງໃນໄຟລ໌ຂໍ້ມູນ. ໃຫ້ໃຊ້ active_fallback "
+"ແທນ. (ກວດພົບຂະນະກຳລັງໂຫຼດ %(file_path)s)"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_block_payment
@@ -341,11 +355,16 @@ msgid ""
 "- A rounding per line is advised if your prices are tax-included. That way, "
 "the sum of line subtotal equals the total with taxes."
 msgstr ""
+"- ແນະນຳໃຫ້ປັດເສດຕໍ່ພາສີ ຖ້າລາຄາຂອງທ່ານບໍ່ລວມພາສີ. ວິທີນີ້ຈະຊ່ວຍຫຼຸດຜ່ອນຂໍ້ຜິດພາດສະສົມຈາກການປັດເສດ "
+"ຍ້ອນວ່າມັນຈະລວມຈຳນວນພາສີທີ່ຍັງບໍ່ທັນປັດເສດທັງໝົດກ່ອນ ແລ້ວຈຶ່ງປັດເສດຍອດລວມພາສີຂັ້ນສຸດທ້າຍພຽງຄັ້ງດຽວ."
+"\\n                                                                                                                                                                                "
+"- ແນະນຳໃຫ້ປັດເສດຕໍ່ແຖວ ຖ້າລາຄາຂອງທ່ານລວມພາສີແລ້ວ. ດ້ວຍວິທີນັ້ນ, "
+"ຜົນລວມຍ່ອຍຂອງແຕ່ລະແຖວຈະເທົ່າກັບຍອດລວມທີ່ລວມພາສີ."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_kanban
 msgid "- Ending"
-msgstr ""
+msgstr "- ສິ້ນສຸດ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -479,11 +498,9 @@ msgstr "90 ວັນ, ໃນວັນທີ 10"
 #. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 msgid ""
-"<b>%(count)s#</b> Installment of <b>%(amount)s</b> due on <b style='color: "
+"<b>%(count)s</b> - Installment of <b>%(amount)s</b> due on <b style='color: "
 "#704A66;'>%(date)s</b>"
 msgstr ""
-"<b>%(count)s#</b> ງວດຂອງ <b>%(amount)s</b> ຄົບກໍານົດໃນ <b style='color: "
-"#704A66;'>%(date)s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -538,6 +555,48 @@ msgid ""
 "        </div>\n"
 "                    "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"            <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                ຮຽນ\n"
+"                <t t-if=\"object.partner_id.parent_id\">\n"
+"                    <t t-out=\"object.partner_id.name or ''\">Brandon "
+"Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>),\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    <t t-out=\"object.partner_id.name or ''\">Brandon "
+"Freeman</t>,\n"
+"                </t>\n"
+"                <br/><br/>\n"
+"                ນີ້ແມ່ນ\n"
+"                <t t-if=\"object.name\">\n"
+"                    ໃບຫຼຸດໜີ້ອອກເອງ <span style=\"font-weight:bold;\" t-"
+"out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    ໃບຫຼຸດໜີ້ອອກເອງ\n"
+"                </t>\n"
+"                <t t-if=\"object.invoice_origin\">\n"
+"                    (ຕາມເອກະສານອ້າງອີງ: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
+"                </t>\n"
+"                ເປັນຈຳນວນເງິນ <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143,750.00</span>\n"
+"                ຈາກ <t t-out=\"object.company_id.name or ''\">YourCompany</"
+"t>.\n"
+"                <br/><br/>\n"
+"                ຫາກທ່ານມີຂໍ້ສົງໄສໃດໆ, ກະລຸນາຕິດຕໍ່ພວກເຮົາໄດ້ທຸກເມື່ອ.\n"
+"                <t t-if=\"not is_html_empty(object.invoice_user_id.signature)"
+"\">\n"
+"                    <br/><br/>\n"
+"                    <div data-o-mail-quote=\"1\">--<br data-o-mail-"
+"quote=\"1\"/><t t-out=\"object.invoice_user_id.signature or ''\">Mitchell "
+"Admin</t></div>\n"
+"                </t>\n"
+"            </p>\n"
+"        </div>\n"
+"                    "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -602,6 +661,65 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        ຮຽນ\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-if=\"object.partner_id.name\">\n"
+"                <t t-out=\"object.partner_id.name\">Brandon Freeman</t> (<t "
+"t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>,\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        ນີ້ແມ່ນ\n"
+"        <t t-if=\"object.name\">\n"
+"            ໃບແຈ້ງໜີ້ <span style=\"font-weight:bold;\" t-out=\"object.name or "
+"''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            ໃບແຈ້ງໜີ້\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (ຕາມເອກະສານອ້າງອີງ: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
+"        </t>\n"
+"        ເປັນຈຳນວນເງິນ <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143,750.00</span>\n"
+"        ຈາກ <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            ໃບແຈ້ງໜີ້ນີ້ໄດ້ຮັບການຊຳລະແລ້ວ.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            ກະລຸນາຊຳລະເງິນຕາມຄວາມສະດວກຂອງທ່ານໃຫ້ໄວເທົ່າທີ່ຈະໄວໄດ້.\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br/><br/>\n"
+"                ກະລຸນາລະບຸຂໍ້ຄວາມອ້າງອີງຕໍ່ໄປນີ້ໃນການຊຳລະເງິນຂອງທ່ານ: <strong t-"
+"out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                <t t-if=\"object.partner_bank_id\">\n"
+"                    ເຂົ້າບັນຊີ <strong t-"
+"out=\"object.partner_bank_id.account_number\"/>\n"
+"                </t>\n"
+"                .\n"
+"            </t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        ຫາກທ່ານມີຂໍ້ສົງໄສໃດໆ, ກະລຸນາຕິດຕໍ່ພວກເຮົາໄດ້ທຸກເມື່ອ.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.invoice_user_id.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_self_billing_invoice
@@ -653,6 +771,52 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        ຮຽນ\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-if=\"object.partner_id.name\">\n"
+"                <t t-out=\"object.partner_id.name\">Brandon Freeman</t> (<t "
+"t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>,\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        ນີ້ແມ່ນ\n"
+"        <t t-if=\"object.name\">\n"
+"            ໃບແຈ້ງໜີ້ອອກເອງ <span style=\"font-weight:bold;\" t-"
+"out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            ໃບແຈ້ງໜີ້ອອກເອງ\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (ຕາມເອກະສານອ້າງອີງ: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
+"        </t>\n"
+"        ເປັນຈຳນວນເງິນ <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143,750.00</span>\n"
+"        ຈາກ <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            ໃບແຈ້ງໜີ້ອອກເອງນີ້ໄດ້ຮັບການຊຳລະແລ້ວ.\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        ຫາກທ່ານມີຂໍ້ສົງໄສໃດໆ, ກະລຸນາຕິດຕໍ່ພວກເຮົາໄດ້ທຸກເມື່ອ.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.invoice_user_id.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -695,6 +859,43 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        ຮຽນ\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> "
+"(<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        ນີ້ແມ່ນ\n"
+"        <t t-if=\"object.name\">\n"
+"            ໃບຫຼຸດໜີ້ <span style=\"font-weight:bold;\" t-out=\"object.name or "
+"''\">RINV/2021/05/0001</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            ໃບຫຼຸດໜີ້\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (ຕາມເອກະສານອ້າງອີງ: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
+"        </t>\n"
+"        ເປັນຈຳນວນເງິນ <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143,750.00</span>\n"
+"        ຈາກ <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        ຫາກທ່ານມີຂໍ້ສົງໄສໃດໆ, ກະລຸນາຕິດຕໍ່ພວກເຮົາໄດ້ທຸກເມື່ອ.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.invoice_user_id.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -728,6 +929,34 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        ຮຽນ <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/"
+"><br/>\n"
+"        <t t-if=\"object.partner_type == 'customer' and object.payment_type "
+"== 'outbound'\">ພວກເຮົາໄດ້ດຳເນີນການສົ່ງເງິນຄືນຂອງທ່ານຈຳນວນ</t>\n"
+"        <t t-elif=\"object.partner_type == 'supplier' and "
+"object.payment_type == 'outbound'\">ພວກເຮົາໄດ້ດຳເນີນການຊຳລະເງິນຂອງທ່ານຈຳນວນ</t>\n"
+"        <t t-elif=\"object.partner_type == 'supplier' and "
+"object.payment_type == 'inbound'\">ຂອບໃຈສຳລັບການສົ່ງເງິນຄືນຂອງທ່ານຈຳນວນ</t>\n"
+"        <t t-else=\"\">ຂອບໃຈສຳລັບການຊຳລະເງິນຂອງທ່ານຈຳນວນ</t> <span style=\"font-"
+"weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or "
+"''\">$ 10.00</span>.\n"
+"        ກະລຸນາກວດເບິ່ງ <t t-out=\"object.payment_receipt_title.lower()"
+"\">ໃບຮັບເງິນ</t> <span t-if=\"object.name\" style=\"font-weight:bold;\" t-"
+"out=\"object.name.replace('/','-')\">BNK1-2021-05-0002</span> ຈາກ <t t-"
+"out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        ຫາກທ່ານມີຂໍ້ສົງໄສໃດໆ, ກະລຸນາຕິດຕໍ່ພວກເຮົາໄດ້ທຸກເມື່ອ.\n"
+"        <br/><br/>\n"
+"        ດ້ວຍຄວາມນັບຖືຢ່າງສູງ,\n"
+"        <t t-if=\"not is_html_empty(user.signature)\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -740,16 +969,17 @@ msgid ""
 "<i class=\"o_button_icon oi me-2\" data-icon=\"east\"/> Configure Alias "
 "Domain"
 msgstr ""
+"<i class=\"o_button_icon oi me-2\" data-icon=\"east\"/> ກຳນົດຄ່າໂດເມນຊື່ແຝງ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.address_form_additional_identifiers
 msgid "<i class=\"oi me-1\" data-icon=\"add\"/>Add identifier"
-msgstr ""
+msgstr "<i class=\"oi me-1\" data-icon=\"add\"/>ເພີ່ມຕົວລະບຸ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
 msgid "<i class=\"oi me-1\" data-icon=\"east\"/>Back to settings"
-msgstr ""
+msgstr "<i class=\"oi me-1\" data-icon=\"east\"/>ກັບໄປຫາການຕັ້ງຄ່າ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -760,6 +990,11 @@ msgid ""
 "                            <span class=\"text-danger\" "
 "invisible=\"duplicated_ref_ids.length &gt; 1\">Delete duplicate</span>"
 msgstr ""
+"<i class=\"oi oi-filled text-danger\" data-icon=\"delete\"/>\n"
+"                            <span class=\"text-danger\" "
+"invisible=\"duplicated_ref_ids.length == 1\">ລຶບລາຍການທີ່ຊ້ຳກັນທັງໝົດ</span>\n"
+"                            <span class=\"text-danger\" "
+"invisible=\"duplicated_ref_ids.length &gt; 1\">ລຶບລາຍການທີ່ຊ້ຳກັນ</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -769,6 +1004,10 @@ msgid ""
 "                                    <span class=\"d-none d-md-inline\"> "
 "Paid</span>"
 msgstr ""
+"<i class=\"oi oi-fw\" data-icon=\"check\" aria-label=\"Paid\" title=\"Paid\" "
+"role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> "
+"ຊຳລະແລ້ວ</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -778,6 +1017,10 @@ msgid ""
 "                                    <span class=\"d-none d-md-inline\"> "
 "Reversed</span>"
 msgstr ""
+"<i class=\"oi oi-fw\" data-icon=\"check\" aria-label=\"Reversed\" "
+"title=\"Reversed\" role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> "
+"ປີ້ນກັບແລ້ວ</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -787,11 +1030,15 @@ msgid ""
 "                                    <span class=\"d-none d-md-inline\"> "
 "Processing Payment</span>"
 msgstr ""
+"<i class=\"oi oi-fw\" data-icon=\"check\" aria-label=\"processing_payment\" "
+"title=\"Processing Payment\" role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> "
+"ກຳລັງດຳເນີນການຊຳລະ</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<i class=\"oi oi-fw\" data-icon=\"download\"/> Download"
-msgstr ""
+msgstr "<i class=\"oi oi-fw\" data-icon=\"download\"/> ດາວໂຫຼດ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -801,6 +1048,10 @@ msgid ""
 "                                    <span class=\"d-none d-md-inline\"> "
 "Waiting for Payment</span>"
 msgstr ""
+"<i class=\"oi oi-fw\" data-icon=\"schedule\" aria-label=\"Opened\" "
+"title=\"Opened\" role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> "
+"ລໍຖ້າການຊຳລະ</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -808,6 +1059,8 @@ msgid ""
 "<i class=\"oi\" data-icon=\"east\"/>\n"
 "                                                Preview"
 msgstr ""
+"<i class=\"oi\" data-icon=\"east\"/>\n"
+"                                                ສະແດງຕົວຢ່າງ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -818,6 +1071,10 @@ msgid ""
 "                        You also have the option to disable the feature for "
 "all vendors in the accounting settings."
 msgstr ""
+"<i class=\"oi\" data-icon=\"lightbulb\" role=\"img\"/>\n"
+"                        ບໍ່ຕ້ອງກັງວົນ, "
+"ທ່ານສາມາດປ່ຽນການຕັ້ງຄ່ານີ້ໃນພາຍຫຼັງໄດ້ສະເໝີໃນຟອມຂອງຜູ້ສະໜອງ.\n"
+"                        ທ່ານຍັງມີຕົວເລືອກທີ່ຈະປິດການໃຊ້ງານຄຸນສົມບັດນີ້ສຳລັບຜູ້ສະໜອງທັງໝົດໃນການຕັ້ງຄ່າບັນຊີ."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
@@ -825,6 +1082,8 @@ msgid ""
 "<i class=\"oi\" data-icon=\"schedule\" aria-label=\"Date\" role=\"img\" "
 "title=\"Date\"/>"
 msgstr ""
+"<i class=\"oi\" data-icon=\"schedule\" aria-label=\"Date\" role=\"img\" "
+"title=\"Date\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details
@@ -846,6 +1105,9 @@ msgid ""
 "                                        To Review\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-info\">\n"
+"                                        ລໍຖ້າກວດກາ\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -857,6 +1119,12 @@ msgid ""
 "Cancelled</span>\n"
 "                                </span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-warning\">\n"
+"                                    <i class=\"oi oi-fw\" data-"
+"icon=\"close\" aria-label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> "
+"ຍົກເລີກແລ້ວ</span>\n"
+"                                </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_financial_year_opening_form
@@ -870,7 +1138,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 msgid "<span class=\"me-1\">The Bank Account could be a duplicate of</span>"
-msgstr ""
+msgstr "<span class=\"me-1\">ບັນຊີທະນາຄານອາດຈະຊ້ຳກັນກັບ</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -914,6 +1182,12 @@ msgid ""
 "                                <span class=\"o_stat_text\" "
 "invisible=\"move_type != 'entry'\">Journal Entry</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"move_type != 'out_refund'\">ໃບແຈ້ງໜີ້</"
+"span>\n"
+"                                <span class=\"o_stat_text\" "
+"invisible=\"move_type != 'in_refund'\">ບິນຜູ້ສະໜອງ</span>\n"
+"                                <span class=\"o_stat_text\" "
+"invisible=\"move_type != 'entry'\">ລາຍການບັນຊີປະຈຳວັນ</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -983,7 +1257,7 @@ msgstr "<span class=\"o_stat_text\">ລາຍການບັນຊີປະຈ�
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span class=\"o_stat_text\">Journal Items</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">ລາຍການບັນຊີຍ່ອຍ</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1060,6 +1334,8 @@ msgid ""
 "<span invisible=\"name or name_placeholder or "
 "document_sequence_editable\">Draft</span>"
 msgstr ""
+"<span invisible=\"name or name_placeholder or "
+"document_sequence_editable\">ຮ່າງ</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -1069,7 +1345,7 @@ msgstr "<span invisible=\"nb_unmodified_bills &lt; 10\">10+</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_kanban
 msgid "<span invisible=\"not account_id\">on</span>"
-msgstr ""
+msgstr "<span invisible=\"not account_id\">ໃນ</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -1095,7 +1371,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_kanban
 msgid "<span invisible=\"repartition_type == 'base'\">%</span>"
-msgstr ""
+msgstr "<span invisible=\"repartition_type == 'base'\">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -1137,7 +1413,7 @@ msgstr "<span> ໃບບິນ</span>"
 msgid ""
 "<span> already exists for this period. Posting this entry will replace it.</"
 "span>"
-msgstr ""
+msgstr "<span> ມີຢູ່ແລ້ວສຳລັບງວດນີ້. ການລົງບັນຊີລາຍການນີ້ຈະປ່ຽນແທນລາຍການເດີມ.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1180,7 +1456,7 @@ msgstr "<span>ຈຳນວນເງິນ</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
 msgid "<span>An accrual entry of </span>"
-msgstr ""
+msgstr "<span>ລາຍການຄ້າງຮັບ/ຄ້າງຈ່າຍ ຈຳນວນ </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1221,7 +1497,7 @@ msgstr "<span>ໃໝ່</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_financial_year_opening_form
 msgid "<span>Not Subject to VAT</span>"
-msgstr ""
+msgstr "<span>ບໍ່ຢູ່ໃນເກນເສຍອາກອນມູນຄ່າເພີ່ມ</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2147,7 +2423,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_group_uniq_name
 msgid "A Ledger group name must be unique."
-msgstr ""
+msgstr "ຊື່ກຸ່ມບັນຊີໃຫຍ່ (Ledger) ຕ້ອງບໍ່ຊ້ຳກັນ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_defaults
@@ -2192,6 +2468,8 @@ msgid ""
 "and is used by domestic money transfer protocols (from/to bank accounts in "
 "the same country)."
 msgstr ""
+"ໝາຍເລກເຄຼຍຣິງ (ຫຼື routing number) ໝາຍເຖິງທະນາຄານ, ສາຂາ, ຫຼື ສະຖານທີ່ ແລະ "
+"ຖືກນຳໃຊ້ໂດຍໂປຣໂຕຄອນການໂອນເງິນພາຍໃນປະເທດ (ຈາກ/ໄປຫາ ບັນຊີທະນາຄານໃນປະເທດດຽວກັນ)."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_credit_statement_tree
@@ -2209,7 +2487,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "A fiscal position with a foreign Tax ID already exists in this country."
-msgstr ""
+msgstr "ສະຖານະທາງການເງິນທີ່ມີເລກປະຈຳຕົວຜູ້ເສຍພາສີຕ່າງປະເທດ ມີຢູ່ແລ້ວໃນປະເທດນີ້."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -2254,6 +2532,8 @@ msgid ""
 "A new field 'Total (tax inc.)' to speed up and control the encoding by "
 "automating line creation with the right account and tax."
 msgstr ""
+"ຟິວໃໝ່ 'ລວມ (ລວມພາສີ)' ເພື່ອເລັ່ງຄວາມໄວ ແລະ ຄວບຄຸມການປ້ອນຂໍ້ມູນ "
+"ໂດຍການສ້າງລາຍການອັດຕະໂນມັດພ້ອມບັນຊີ ແລະ ພາສີທີ່ຖືກຕ້ອງ."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -2267,6 +2547,8 @@ msgid ""
 "A partner cannot have both an individual identifier (%(individual)s) and a "
 "company identifier (%(company)s)."
 msgstr ""
+"ຄູ່ຮ່ວມຄ້າບໍ່ສາມາດມີທັງຕົວລະບຸບຸກຄົນ (%(individual)s) ແລະ ຕົວລະບຸບໍລິສັດ (%(company)s) "
+"ພ້ອມກັນໄດ້."
 
 #. module: account
 #. odoo-python
@@ -2299,6 +2581,8 @@ msgid ""
 "A statement (%(statement_name)s) belonging to a hashed journal (%"
 "(journal_code)s) cannot be draft."
 msgstr ""
+"ສະເຕດເມັ້ນ (%(statement_name)s) ທີ່ຂຶ້ນກັບບັນຊີລາຍວັນທີ່ເຂົ້າລະຫັດແລ້ວ (%(journal_code)s) "
+"ບໍ່ສາມາດເປັນຮ່າງໄດ້."
 
 #. module: account
 #. odoo-python
@@ -2307,6 +2591,8 @@ msgid ""
 "A statement (%(statement_name)s) belonging to a hashed journal (%"
 "(journal_code)s) cannot having an ending balance that is negative."
 msgstr ""
+"ສະເຕດເມັ້ນ (%(statement_name)s) ທີ່ຂຶ້ນກັບບັນຊີລາຍວັນທີ່ເຂົ້າລະຫັດແລ້ວ (%(journal_code)s) "
+"ບໍ່ສາມາດມະຍອດເຫຼືອທ້າຍຕິດລົບໄດ້."
 
 #. module: account
 #. odoo-python
@@ -2404,14 +2690,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Account '%s' is of payable type, but is used in a sale operation."
-msgstr ""
+msgstr "ບັນຊີ '%s' ແມ່ນປະເພດເຈົ້າໜີ້, ແຕ່ຖືກນຳໃຊ້ໃນການດຳເນີນງານຂາຍ."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid ""
 "Account '%s' is of receivable type, but is used in a purchase operation."
-msgstr ""
+msgstr "ບັນຊີ '%s' ແມ່ນປະເພດລູກໜີ້, ແຕ່ຖືກນຳໃຊ້ໃນການດຳເນີນງານຊື້."
 
 #. module: account
 #. odoo-python
@@ -2419,7 +2705,7 @@ msgstr ""
 msgid ""
 "Account '%s' used for payable line is not of payable type. Check if the "
 "account type is correct."
-msgstr ""
+msgstr "ບັນຊີ '%s' ທີ່ໃຊ້ສຳລັບແຖວເຈົ້າໜີ້ ບໍ່ແມ່ນປະເພດເຈົ້າໜີ້. ກະລຸນາກວດສອບວ່າປະເພດບັນຊີຖືກຕ້ອງຫຼືບໍ່."
 
 #. module: account
 #. odoo-python
@@ -2427,17 +2713,17 @@ msgstr ""
 msgid ""
 "Account '%s' used for receivable line is not of receivable type. Check if "
 "the account type is correct."
-msgstr ""
+msgstr "ບັນຊີ '%s' ທີ່ໃຊ້ສຳລັບແຖວລູກໜີ້ ບໍ່ແມ່ນປະເພດລູກໜີ້. ກະລຸນາກວດສອບວ່າປະເພດບັນຊີຖືກຕ້ອງຫຼືບໍ່."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Account (with children)"
-msgstr ""
+msgstr "ບັນຊີ (ພ້ອມບັນຊີຍ່ອຍ)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__account_active
 msgid "Account Active"
-msgstr ""
+msgstr "ເປີດໃຊ້ງານບັນຊີ"
 
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
@@ -2538,7 +2824,7 @@ msgstr "ຈຳນວນການເຄື່ອນໄຫວບັນຊີ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__account_move_line_ids
 msgid "Account Move Line"
-msgstr ""
+msgstr "ແຖວການເຄື່ອນໄຫວບັນຊີ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__name
@@ -2558,7 +2844,7 @@ msgstr "ເລກບັນຊີ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_hierarchy
 msgid "Account Parents"
-msgstr ""
+msgstr "ບັນຊີຫຼັກ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_payable_id
@@ -2570,7 +2856,7 @@ msgstr "ບັນຊີເຈົ້າໜີ້"
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_payable_active
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_payable_active
 msgid "Account Payable Active"
-msgstr ""
+msgstr "ເປີດໃຊ້ງານບັນຊີເຈົ້າໜີ້"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix_placeholder
@@ -2587,17 +2873,17 @@ msgstr "ບັນຊີລູກໜີ້"
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_receivable_active
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_receivable_active
 msgid "Account Receivable Active"
-msgstr ""
+msgstr "ເປີດໃຊ້ງານບັນຊີລູກໜີ້"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__account_reconcile_model_line_ids
 msgid "Account Reconcile Model Line"
-msgstr ""
+msgstr "ແຖວຮູບແບບການສົມທຽບບັນຊີ"
 
 #. module: account
 #: model:onboarding.onboarding,name:account.onboarding_onboarding_account_return_dashboard
 msgid "Account Return Dashboard Onboarding"
-msgstr ""
+msgstr "ການເລີ່ມຕົ້ນໃຊ້ງານແຜງຄວບຄຸມການສົ່ງຄືນບັນຊີ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -2638,7 +2924,7 @@ msgstr "ກຸ່ມພາສີບັນຊີ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_form
 msgid "Account Tax Repartition Line"
-msgstr ""
+msgstr "ແຖວການຈັດສັນພາສີບັນຊີ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_ir_module_module__account_templates
@@ -2698,7 +2984,7 @@ msgstr "ບັນຊີສໍາລັບຈໍານວນຜິດດ່ຽງ
 #: model:ir.model.fields,help:account.field_res_partner_bank__holder_name
 msgid ""
 "Account holder name in case it is different than the name of the partner."
-msgstr ""
+msgstr "ຊື່ເຈົ້າຂອງບັນຊີ ໃນກໍລະນີທີ່ແຕກຕ່າງຈາກຊື່ຄູ່ຮ່ວມຄ້າ."
 
 #. module: account
 #: model:ir.model,name:account.model_account_merge_wizard
@@ -2783,7 +3069,7 @@ msgstr "ບັນຊີທີ່ມີລາຍການ"
 #. module: account
 #: model:ir.actions.server,name:account.ir_cron_post_stock_valuation_ir_actions_server
 msgid "Account: Inventory Valuation Closing"
-msgstr ""
+msgstr "ບັນຊີ: ການປິດການຕີມູນຄ່າສາງ"
 
 #. module: account
 #: model:ir.actions.server,name:account.ir_cron_auto_post_draft_entry_ir_actions_server
@@ -2920,7 +3206,7 @@ msgstr "ລາຍການບັນຊີຄ້າງຮັບ/ຄ້າງຈ�
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__accrual_type
 msgid "Accrual Type"
-msgstr ""
+msgstr "ປະເພດຄ້າງຮັບ/ຄ້າງຈ່າຍ"
 
 #. module: account
 #. odoo-python
@@ -2938,7 +3224,7 @@ msgstr ""
 #: code:addons/account/report/account_stock_valuation_report.py:0
 #: code:addons/account/static/src/components/stock_valuation/stock_valuation_report.xml:0
 msgid "Accruals"
-msgstr ""
+msgstr "ລາຍການຄ້າງຮັບ/ຄ້າງຈ່າຍ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -2948,12 +3234,12 @@ msgstr "ບັນຊີຄ້າງຮັບ/ຄ້າງຈ່າຍ"
 #. module: account
 #: model:account.account,name:account.21_accrued_expenses
 msgid "Accrued Expenses"
-msgstr ""
+msgstr "ລາຍຈ່າຍຄ້າງຈ່າຍ"
 
 #. module: account
 #: model:account.account,name:account.21_accrued_income
 msgid "Accrued Income"
-msgstr ""
+msgstr "ລາຍຮັບຄ້າງຮັບ"
 
 #. module: account
 #: model:ir.model,name:account.model_account_accrued_orders_wizard
@@ -2968,43 +3254,43 @@ msgstr "ຍອດລວມຄ້າງຮັບ/ຄ້າງຈ່າຍ"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_buildings
-msgid "Accumulated Depreciation - Buildings"
+msgid "Accumulated Amortization - Buildings"
 msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_furniture
-msgid "Accumulated Depreciation - Furniture & Fixtures"
+msgid "Accumulated Amortization - Furniture & Fixtures"
 msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_improvements
-msgid "Accumulated Depreciation - Improvements"
+msgid "Accumulated Amortization - Improvements"
 msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_machines
-msgid "Accumulated Depreciation - Machines & Tools"
+msgid "Accumulated Amortization - Machines & Tools"
 msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_other_property
-msgid "Accumulated Depreciation - Other Property"
+msgid "Accumulated Amortization - Other Property"
 msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_technology
-msgid "Accumulated Depreciation - Technology"
+msgid "Accumulated Amortization - Technology"
 msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_vehicles
-msgid "Accumulated Depreciation - Vehicles"
+msgid "Accumulated Amortization - Vehicles"
 msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_acc_depreciation
-msgid "Accumulated Depreciation Misc"
-msgstr ""
+msgid "Accumulated Depreciation"
+msgstr "ຄ່າເສື່ອມລາຄາສະສົມ"
 
 #. module: account
 #: model:account.account,name:account.21_retained_earnings
@@ -3041,7 +3327,7 @@ msgstr "ຂໍ້ຜິດພາດທີ່ສາມາດແກ້ໄຂໄດ
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Activate E-Invoicing"
-msgstr ""
+msgstr "ເປີດໃຊ້ງານໃບແຈ້ງໜີ້ເອເລັກໂຕຣນິກ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -3076,12 +3362,12 @@ msgstr "ເປີດໃຊ້ງານ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__active_fallback
 msgid "Active Fallback"
-msgstr ""
+msgstr "ຄ່າສຳຮອງການເປີດໃຊ້ງານ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__active_selection
 msgid "Active Selection"
-msgstr ""
+msgstr "ການເລືອກທີ່ເປີດໃຊ້ງານ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__activity_ids
@@ -3160,7 +3446,7 @@ msgstr "ເພີ່ມ"
 #. odoo-javascript
 #: code:addons/account/static/src/components/mail_attachments/account_move_send_attachments_selector.xml:0
 msgid "Add Attachment"
-msgstr ""
+msgstr "ເພີ່ມໄຟລ໌ຄັດຕິດ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3171,7 +3457,7 @@ msgstr "ເພີ່ມລິ້ງລະຫັດ QR ໃນ PDF"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/search/search_panel/search_panel.xml:0
 msgid "Add Section"
-msgstr ""
+msgstr "ເພີ່ມພາກສ່ວນ"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__terms_type__plain
@@ -3184,6 +3470,7 @@ msgid ""
 "Add a QR-code to your invoices so that your customers can pay instantly with "
 "their banking application."
 msgstr ""
+"ເພີ່ມລະຫັດ QR ໃສ່ໃບແຈ້ງໜີ້ ເພື່ອໃຫ້ລູກຄ້າຂອງທ່ານສາມາດຊຳລະເງິນໄດ້ທັນທີ ຜ່ານແອັບທະນາຄານຂອງພວກເຂົາ."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3266,7 +3553,7 @@ msgstr "ເພີ່ມຜູ້ຕິດຕໍ່ເພື່ອແຈ້ງເ
 #. odoo-javascript
 #: code:addons/account/static/src/interactions/portal_additional_identifiers.js:0
 msgid "Add identifier"
-msgstr ""
+msgstr "ເພີ່ມຕົວລະບຸ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3277,7 +3564,7 @@ msgstr "ເພີ່ມເງື່ອນໄຂ ແລະ ຂໍ້ກຳນົ�
 #. odoo-javascript
 #: code:addons/account/static/src/components/mail_attachments/account_move_send_attachments_selector.xml:0
 msgid "Add..."
-msgstr ""
+msgstr "ເພີ່ມ..."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
@@ -3341,6 +3628,46 @@ msgstr "ລາຍການປັບປຸງ {link} {percent}%% ຂອງ {amoun
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Adjusting Entry {link} {percent}%% of {amount} recognized on {new_date}"
 msgstr "ລາຍການປັບປຸງ {link} {percent}%% ຂອງ {amount} ຮັບຮູ້ໃນ {new_date}"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_depreciation_and_amortization
+msgid "Adjustment - Depreciation and amortization"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_fin_instr_sale
+msgid "Adjustment - Financial Instruments"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_intangible_asset
+msgid "Adjustment - Intangible Assets"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_net_fin_result
+msgid "Adjustment - Net Financial Result"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_PPE_sale
+msgid "Adjustment - PPE Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_provisions
+msgid "Adjustment - Provisions"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_ROU_sale
+msgid "Adjustment - Right of Use Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_unrealized_forex
+msgid "Adjustment - Unrealized Forex"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_administration_fees
@@ -3503,12 +3830,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__unreconciled_bank_statement_line_ids
 msgid "All unreconciled bank transactions before the selected date."
-msgstr ""
+msgstr "ທຸລະກຳທະນາຄານທັງໝົດທີ່ຍັງບໍ່ທັນໄດ້ກວດສອບຍອດ ກ່ອນວັນທີທີ່ເລືອກ."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
 msgid "Allow Foreign Tax ID"
-msgstr ""
+msgstr "ອະນຸຍາດເລກປະຈຳຕົວຜູ້ເສຍພາສີຕ່າງປະເທດ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -3583,7 +3910,7 @@ msgstr "ພາສີມີຜົນບັງຄັບໃຊ້ສະເໝີ"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_line__foldability__always_unfolded
 msgid "Always Unfolded"
-msgstr ""
+msgstr "ຂະຫຍາຍອອກສະເໝີ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_partial_reconcile__amount
@@ -3758,12 +4085,12 @@ msgstr "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ຄິ
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 msgid "An individual identifier cannot be combined with a VAT number."
-msgstr ""
+msgstr "ເລກລະບຸຕົວຕົນບຸກຄົນ ບໍ່ສາມາດໃຊ້ຮ່ວມກັບເລກປະຈຳຕົວຜູ້ເສຍພາສີມູນຄ່າເພີ່ມໄດ້."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Analysis"
-msgstr ""
+msgstr "ການວິເຄາະ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -3907,13 +4234,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Any journal item on '%s' (Payable) must have a due date."
-msgstr ""
+msgstr "ລາຍການປຶ້ມບັນຊີໃດໆໃນ '%s' (ເຈົ້າໜີ້) ຕ້ອງມີກຳນົດວັນທີຊຳລະ."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Any journal item on '%s' (Receivable) must have a due date."
-msgstr ""
+msgstr "ລາຍການປຶ້ມບັນຊີໃດໆໃນ '%s' (ລູກໜີ້) ຕ້ອງມີກຳນົດວັນທີຊຳລະ."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -3963,12 +4290,12 @@ msgstr "ນຳໃຊ້ສະເພາະຖ້າປະເທດຈັດສົ
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__vat_required
 msgid "Apply only if partner has a Tax ID."
-msgstr ""
+msgstr "ນຳໃຊ້ສະເພາະຖ້າຄູ່ຄ້າມີເລກປະຈຳຕົວຜູ້ເສຍພາສີ."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Apply rounding to the total amount of a sales invoice."
-msgstr ""
+msgstr "ນຳໃຊ້ການປັດເສດກັບຍອດລວມຂອງໃບແຈ້ງໜີ້ຂາຍ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__auto_apply
@@ -3976,6 +4303,8 @@ msgid ""
 "Apply tax & account mappings on invoices automatically if the matching "
 "criterias (Tax ID/Country) are met."
 msgstr ""
+"ນຳໃຊ້ການຈັບຄູ່ພາສີ ແລະ ບັນຊີໃນໃບແຈ້ງໜີ້ໂດຍອັດຕະໂນມັດ ຖ້າກົງກັບເງື່ອນໄຂ (ເລກປະຈຳຕົວຜູ້ເສຍພາສີ/"
+"ປະເທດ)."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_profit_or_loss_appropriation
@@ -4025,7 +4354,7 @@ msgstr "ທ່ານແນ່ໃຈບໍ່? ການດໍາເນີນກ�
 #. odoo-javascript
 #: code:addons/account/static/src/components/stock_valuation/filters/filter_date.xml:0
 msgid "As of"
-msgstr ""
+msgstr "ນັບແຕ່ວັນທີ"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__autopost_bills__ask
@@ -4062,7 +4391,7 @@ msgstr "ໃນວັນທີ"
 msgid ""
 "At closing, register the inventory variation of the period into a specific "
 "account"
-msgstr ""
+msgstr "ເມື່ອປິດບັນຊີ, ໃຫ້ບັນທຶກສ່ວນປ່ຽນແປງຂອງສາງສິນຄ້າໃນງວດເຂົ້າໃນບັນຊີສະເພາະ"
 
 #. module: account
 #. odoo-python
@@ -4070,7 +4399,7 @@ msgstr ""
 msgid ""
 "At least one transaction in the statement is prior the last posted "
 "transaction (%s)"
-msgstr ""
+msgstr "ມີຢ່າງໜ້ອຍໜຶ່ງທຸລະກຳໃນໃບແຈ້ງຍອດທີ່ມາກ່ອນທຸລະກຳທີ່ລົງບັນຊີຫຼ້າສຸດ (%s)"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__to_beginning_of_fiscalyear
@@ -4086,7 +4415,7 @@ msgstr "ໃນຕອນເລີ່ມຕົ້ນຂອງງວດ"
 #. odoo-javascript
 #: code:addons/account/static/src/components/stock_valuation/filters/filter_date.xml:0
 msgid "At the date of"
-msgstr ""
+msgstr "ໃນວັນທີຂອງ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_wizard_form
@@ -4244,7 +4573,7 @@ msgstr "ລຳດັບອັດຕະໂນມັດ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Automatically compute US and Canadian tax rates."
-msgstr ""
+msgstr "ຄິດໄລ່ອັດຕາພາສີຂອງສະຫະລັດ ແລະ ການາດາ ໂດຍອັດຕະໂນມັດ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__autopost_bills
@@ -4279,7 +4608,7 @@ msgstr "ຕົວຊ່ວຍສ້າງການລົງບັນຊີໃບ
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_avatax
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "AvaTax"
-msgstr ""
+msgstr "AvaTax"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__availability_condition
@@ -4326,14 +4655,14 @@ msgstr "ລາຍງານ PDF ທີ່ມີໃຫ້"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__available_return_partner_bank_ids
 msgid "Available Return Partner Bank"
-msgstr ""
+msgstr "ທະນາຄານຂອງຄູ່ຄ້າສຳລັບການສົ່ງຄືນເງິນທີ່ມີໃຫ້ໃຊ້"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__product_category__property_cost_method__average
 #: model:ir.model.fields.selection,name:account.selection__product_template__cost_method__average
 #: model:ir.model.fields.selection,name:account.selection__res_company__cost_method__average
 msgid "Average Cost (AVCO)"
-msgstr ""
+msgstr "ຕົ້ນທຶນສະເລ່ຍ (AVCO)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_average
@@ -4350,7 +4679,7 @@ msgstr "BE71096123456769"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_bic
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__bank_bic
 msgid "BIC/SWIFT"
-msgstr ""
+msgstr "BIC/SWIFT"
 
 #. module: account
 #. odoo-python
@@ -4373,7 +4702,7 @@ msgstr "ກັບຄືນໄປຫາໃບເກັບເງິນ"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Credit Note"
-msgstr ""
+msgstr "ກັບຄືນໄປຫາໃບຫຼຸດໜີ້"
 
 #. module: account
 #. odoo-javascript
@@ -4385,7 +4714,7 @@ msgstr "ກັບຄືນໄປຫາໃບແຈ້ງໜີ້"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Refund"
-msgstr ""
+msgstr "ກັບຄືນໄປຫາໃບຄືນເງິນ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -4400,7 +4729,7 @@ msgstr "ລູກໜີ້ທີ່ບໍ່ດີ"
 #. module: account
 #: model:account.account,name:account.22_account_account_us_bad_debts
 msgid "Bad Debts"
-msgstr ""
+msgstr "ໜີ້ເສຍ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__balance
@@ -4537,6 +4866,9 @@ msgid ""
 "letters) + Country Code (2 letters) + Location Code (2 letters/numbers) + "
 "Optional Branch Code (3 letters/numbers)."
 msgstr ""
+"ລະຫັດລະບຸທະນາຄານສຳລັບການໂອນເງິນລະຫວ່າງປະເທດ ໃນຮູບແບບ ລະຫັດທະນາຄານ (4 ຕົວອັກສອນ) + "
+"ລະຫັດປະເທດ (2 ຕົວອັກສອນ) + ລະຫັດສະຖານທີ່ (2 ຕົວອັກສອນ/ຕົວເລກ) + ລະຫັດສາຂາເລືອກໄດ້ (3 "
+"ຕົວອັກສອນ/ຕົວເລກ)."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__bank_journal_ids
@@ -4607,7 +4939,7 @@ msgstr "ບັນຊີພັກທະນາຄານ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_suspense_account_active
 msgid "Bank Suspense Account Active"
-msgstr ""
+msgstr "ບັນຊີພັກທະນາຄານກຳລັງໃຊ້ງານ"
 
 #. module: account
 #. odoo-python
@@ -4635,6 +4967,8 @@ msgid ""
 "Bank account type: Normal, IBAN, CLABE, or other from localization. Inferred "
 "from the bank account number."
 msgstr ""
+"ປະເພດບັນຊີທະນາຄານ: ທຳມະດາ, IBAN, CLABE, ຫຼື ອື່ນໆຕາມການຕັ້ງຄ່າທ້ອງຖິ່ນ. "
+"ຖືກກຳນົດຈາກເລກບັນຊີທະນາຄານ."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -4668,7 +5002,7 @@ msgstr "ການຕັ້ງຄ່າທະນາຄານແບບປ້ອນ
 #: code:addons/account/models/account_move.py:0
 msgid ""
 "Bank statements must be linked to a journal of type Bank, Cash or Credit."
-msgstr ""
+msgstr "ໃບແຈ້ງຍອດທະນາຄານຕ້ອງເຊື່ອມໂຍງກັບປຶ້ມບັນຊີປະເພດ ທະນາຄານ, ເງິນສົດ ຫຼື ສິນເຊື່ອ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__suspense_account_id
@@ -4687,7 +5021,7 @@ msgstr "ລາຍການເຄື່ອນໄຫວທະນາຄານ ແ�
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_statement_line_ids
 msgid "Bank transactions matched to this payment"
-msgstr ""
+msgstr "ທຸລະກຳທະນາຄານທີ່ກົງກັບການຊຳລະນີ້"
 
 #. module: account
 #. odoo-python
@@ -4725,7 +5059,7 @@ msgstr "ບັນຊີພາສີພື້ນຖານທີ່ໄດ້ຮັ
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_cash_basis_base_account_active
 msgid "Base Tax Received Account Active"
-msgstr ""
+msgstr "ບັນຊີພາສີພື້ນຖານທີ່ໄດ້ຮັບກຳລັງໃຊ້ງານ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__repartition_type
@@ -4853,12 +5187,12 @@ msgstr "ການອ້າງອີງໃບບິນ"
 #. odoo-python
 #: code:addons/account/report/account_stock_valuation_report.py:0
 msgid "Billed Not Received"
-msgstr ""
+msgstr "ອອກໃບບິນແລ້ວຍັງບໍ່ໄດ້ຮັບສິນຄ້າ"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_accrued_orders_wizard__accrual_type__billed_not_received
 msgid "Billed not received"
-msgstr ""
+msgstr "ອອກໃບບິນແລ້ວຍັງບໍ່ໄດ້ຮັບສິນຄ້າ"
 
 #. module: account
 #. odoo-python
@@ -4903,7 +5237,7 @@ msgstr "ໃບບິນທີ່ຕ້ອງຊຳລະ"
 #. odoo-python
 #: code:addons/account/report/account_stock_valuation_report.py:0
 msgid "Bills to Receive"
-msgstr ""
+msgstr "ໃບບິນທີ່ຕ້ອງໄດ້ຮັບ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5003,6 +5337,9 @@ msgid ""
 "Specifying a ledger allows you to isolate IFRS, Tax, or Intercompany "
 "adjustments without affecting local statutory accounts."
 msgstr ""
+"ໂດຍຄ່າເລີ່ມຕົ້ນ, ທຸກປຶ້ມບັນຊີຈະລົງບັນຊີໃນບັນຊີໃຫຍ່ຕາມກົດໝາຍ (Local GAAP).\n"
+"ການກຳນົດບັນຊີໃຫຍ່ຈະຊ່ວຍໃຫ້ທ່ານສາມາດແຍກການປັບປຸງ IFRS, ພາສີ, ຫຼື ທຸລະກຳລະຫວ່າງບໍລິສັດ "
+"ໂດຍບໍ່ກະທົບຕໍ່ບັນຊີຕາມກົດໝາຍທ້ອງຖິ່ນ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__active
@@ -5030,27 +5367,27 @@ msgstr "C"
 #. module: account
 #: model:account.tax,name:account.22_account_tax_us_demo_ca_alameda
 msgid "CA Alameda County 4.25%"
-msgstr ""
+msgstr "CA ເຂດ Alameda 4.25%"
 
 #. module: account
 #: model:account.tax,name:account.22_account_tax_us_demo_ca_state
 msgid "CA State 6%"
-msgstr ""
+msgstr "CA ລັດ 6%"
 
 #. module: account
 #: model:account.tax,name:account.22_account_tax_us_demo_ca_exempt
 msgid "CA State 6% Exempt"
-msgstr ""
+msgstr "CA ລັດ 6% ຍົກເວັ້ນພາສີ"
 
 #. module: account
 #: model:account.tax,name:account.22_account_tax_us_demo_ca_nontaxable
 msgid "CA State 6% Non-Taxable"
-msgstr ""
+msgstr "CA ລັດ 6% ບໍ່ມີພາສີ"
 
 #. module: account
 #: model:account.tax,name:account.22_account_tax_us_demo_ca_reduced
 msgid "CA State 6% reduced to 4%"
-msgstr ""
+msgstr "CA ລັດ 6% ຫຼຸດເຫຼືອ 4%"
 
 #. module: account
 #. odoo-python
@@ -5073,7 +5410,7 @@ msgstr "ຄ່າຂົນສົ່ງທີ່ຊຳລະໃຫ້ແກ່ (C
 #: code:addons/account/models/res_partner_bank.py:0
 #: model:ir.model.fields.selection,name:account.selection__res_partner_bank__account_type__clabe
 msgid "CLABE"
-msgstr ""
+msgstr "CLABE"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CFR
@@ -5088,7 +5425,7 @@ msgstr "ຕົ້ນທຶນ, ປະກັນໄພ ແລະ ຄ່າຂົ�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "CSV, XLS and XLSX files cannot be imported automatically."
-msgstr ""
+msgstr "ໄຟລ໌ CSV, XLS ແລະ XLSX ບໍ່ສາມາດນຳເຂົ້າແບບອັດຕະໂນມັດໄດ້."
 
 #. module: account
 #. odoo-python
@@ -5104,7 +5441,7 @@ msgstr "ສາມາດຖືກສະເໜີໄດ້"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_base_document_layout__can_configure_later
 msgid "Can Configure Later"
-msgstr ""
+msgstr "ສາມາດກຳນົດຄ່າພາຍຫຼັງໄດ້"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__can_edit_body
@@ -5131,7 +5468,7 @@ msgstr "ບໍ່ສາມາດປິດການໃຊ້ງານຮ່ອງ
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Cancel"
-msgstr "ຍົກເລີອກ"
+msgstr "ຍົກເລີກ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -5377,12 +5714,12 @@ msgstr "ເງິນສົດຮ້ານເຟີນີເຈີ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_bank_statement_line_view_search_cashflow
 msgid "Cash In"
-msgstr ""
+msgstr "ເງິນສົດເຂົ້າ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_bank_statement_line_view_search_cashflow
 msgid "Cash Out"
-msgstr ""
+msgstr "ເງິນສົດອອກ"
 
 #. module: account
 #: model:account.account,name:account.21_cash_journal_default_account_305
@@ -5393,7 +5730,7 @@ msgstr "ເງິນສົດຮ້ານອາຫານ"
 #: model:ir.model.fields,field_description:account.field_res_company__cash_rounding_loss_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__cash_rounding_loss_account_id
 msgid "Cash Rounding Loss Account"
-msgstr ""
+msgstr "ບັນຊີຂາດທຶນຈາກການປັດເສດເງິນສົດ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_cash_rounding_id
@@ -5405,7 +5742,7 @@ msgstr "ວິທີການປັດເສດເງິນສົດ"
 #: model:ir.model.fields,field_description:account.field_res_company__cash_rounding_profit_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__cash_rounding_profit_account_id
 msgid "Cash Rounding Profit Account"
-msgstr ""
+msgstr "ບັນຊີກຳໄລຈາກການປັດເສດເງິນສົດ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -5431,7 +5768,7 @@ msgstr "ເງິນສົດ: ຍອດເຫຼືອ"
 #: model_terms:ir.ui.view,arch_db:account.account_bank_statement_line_view_pivot_cashflow
 #: model_terms:ir.ui.view,arch_db:account.account_bank_statement_line_view_search_cashflow
 msgid "Cashflow Analysis"
-msgstr ""
+msgstr "ການວິເຄາະກະແສເງິນສົດ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -5441,7 +5778,7 @@ msgstr "ລາຍການສິນຄ້າ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__catalog_is_in_selected_section
 msgid "Catalog Is In Selected Section"
-msgstr ""
+msgstr "ລາຍການສິນຄ້າຢູ່ໃນພາກສ່ວນທີ່ເລືອກ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__category
@@ -5583,7 +5920,7 @@ msgstr "ເມືອງ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__clearing_label_id
 msgid "Clearing Label"
-msgstr ""
+msgstr "ຊື່ລາຍການຊຳລະສະສາງ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__clearing_number
@@ -5600,7 +5937,7 @@ msgstr "ຄລິກ"
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_pick_currency_rate/account_pick_currency_rate.xml:0
 msgid "Click to swap currencies"
-msgstr ""
+msgstr "ຄລິກເພື່ອສະຫຼັບສະກຸນເງິນ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -5616,13 +5953,13 @@ msgstr "ການປິດບັນຊີ"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Closing: Stock Variation Global for company [%(company)s]"
-msgstr ""
+msgstr "ການປິດບັນຊີ: ສ່ວນປ່ຽນແປງສາງສິນຄ້າລວມສຳລັບບໍລິສັດ [%(company)s]"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Closing: Stock Variation Over Period"
-msgstr ""
+msgstr "ການປິດບັນຊີ: ສ່ວນປ່ຽນແປງສາງສິນຄ້າຕະຫຼອດງວດ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__code
@@ -5649,7 +5986,7 @@ msgstr "ການຈັບຄູ່ລະຫັດ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__code_path
 msgid "Code Path"
-msgstr ""
+msgstr "ເສັ້ນທາງລະຫັດ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__code_store
@@ -5659,7 +5996,7 @@ msgstr "ຄັງເກັບລະຫັດ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__cogs_origin_id
 msgid "Cogs Origin"
-msgstr ""
+msgstr "ຕົ້ນກຳເນີດຕົ້ນທຶນຂາຍ (COGS)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5674,12 +6011,12 @@ msgid ""
 msgstr "ເກັບກຳຂໍ້ມູນ ແລະ ສ້າງສະຖິຕິການຄ້າສິນຄ້າໃນຢູໂຣບດ້ວຍ intrastat"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account_tag__color
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__color
 msgid "Color"
 msgstr "ສີ"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_account_tag__color
 #: model:ir.model.fields,field_description:account.field_account_journal__color
 msgid "Color Index"
 msgstr "ດັດຊະນີສີ"
@@ -5696,6 +6033,8 @@ msgid ""
 "Item).             When set, the report lines will generate sublines grouped "
 "by those keys except when specified on the report line."
 msgstr ""
+"ລາຍຊື່ຟິວຈາກ account.move.line (ລາຍການປຶ້ມບັນຊີ) ທີ່ແຍກດ້ວຍຈຸດ. ເມື່ອຕັ້ງຄ່າແລ້ວ, "
+"ແຖວລາຍງານຈະສ້າງແຖວຍ່ອຍທີ່ຈັດກຸ່ມຕາມຄີເຫຼົ່ານັ້ນ ຍົກເວັ້ນເມື່ອມີການກຳນົດໄວ້ໃນແຖວລາຍງານ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report__groupby
@@ -5704,6 +6043,8 @@ msgid ""
 "Item).             When set, this report will have report lines generating "
 "sublines grouped by those keys except when specified on the report line."
 msgstr ""
+"ລາຍຊື່ຟິວຈາກ account.move.line (ລາຍການປຶ້ມບັນຊີ) ທີ່ແຍກດ້ວຍຈຸດ. ເມື່ອຕັ້ງຄ່າແລ້ວ, "
+"ລາຍງານນີ້ຈະມີແຖວລາຍງານທີ່ສ້າງແຖວຍ່ອຍຈັດກຸ່ມຕາມຄີເຫຼົ່ານັ້ນ ຍົກເວັ້ນເມື່ອມີການກຳນົດໄວ້ໃນແຖວລາຍງານ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__groupby
@@ -5858,7 +6199,7 @@ msgstr "ບໍລິສັດມີຜັງບັນຊີແລ້ວ"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_company_id
 #: model:ir.model.fields,field_description:account.field_account_move__journal_company_id
 msgid "Company of the Journal"
-msgstr ""
+msgstr "ບໍລິສັດຂອງປຶ້ມບັນຊີ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__company_id
@@ -5908,7 +6249,7 @@ msgstr "ຄອມພິວເຕີ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.rounding_form_view
 msgid "Conditions"
-msgstr ""
+msgstr "ເງື່ອນໄຂ"
 
 #. module: account
 #: model:ir.model,name:account.model_res_config_settings
@@ -5936,7 +6277,7 @@ msgstr "ຕັ້ງຄ່າ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_base_document_layout
 msgid "Configure Later"
-msgstr ""
+msgstr "ກຳນົດຄ່າພາຍຫຼັງ"
 
 #. module: account
 #. odoo-python
@@ -6011,7 +6352,7 @@ msgstr "ການລວມບັນຊີ"
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__consolidation_currency_id
 #: model:ir.model.fields,field_description:account.field_res_currency_rate_consolidation_mixin__consolidation_currency_id
 msgid "Consolidation Currency"
-msgstr ""
+msgstr "ສະກຸນເງິນການລວມບັນຊີ"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_buildings
@@ -6050,7 +6391,7 @@ msgstr "ເນື້ອຫາ"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Continue with the default document layout."
-msgstr ""
+msgstr "ສືບຕໍ່ດ້ວຍຮູບແບບເອກະສານເລີ່ມຕົ້ນ."
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_audit_control_menu
@@ -6060,17 +6401,17 @@ msgstr "ການຄວບຄຸມ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__consolidation_balance
 msgid "Converted balance"
-msgstr ""
+msgstr "ຍອດເຫຼືອທີ່ແປງແລ້ວ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__consolidation_credit
 msgid "Converted credit"
-msgstr ""
+msgstr "ຈຳນວນເບື້ອງມີ (Credit) ທີ່ແປງແລ້ວ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__consolidation_debit
 msgid "Converted debit"
-msgstr ""
+msgstr "ຈຳນວນເບື້ອງຄ້າງ (Debit) ທີ່ແປງແລ້ວ"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_amounts_to_settle
@@ -6088,7 +6429,7 @@ msgstr "ຂໍ້ມູນເສຍຫາຍໃນລາຍການປຶ້ມ
 #: model:ir.model.fields,field_description:account.field_product_template__cost_method
 #: model:ir.model.fields,field_description:account.field_res_company__cost_method
 msgid "Cost Method"
-msgstr ""
+msgstr "ວິທີການຕົ້ນທຶນ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
@@ -6126,7 +6467,7 @@ msgstr "ຕົ້ນທຶນຂອງລາຍຮັບ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category__property_cost_method
 msgid "Costing Method"
-msgstr ""
+msgstr "ວິທີຄິດໄລ່ຕົ້ນທຶນ"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_postage
@@ -6172,7 +6513,7 @@ msgstr "ບໍ່ສາມາດອັບໂຫຼດໄຟລ໌ໄດ້"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Couldn't reload data."
-msgstr ""
+msgstr "ບໍ່ສາມາດໂຫລດຂໍ້ມູນຄືນໃໝ່ໄດ້."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines
@@ -6194,12 +6535,12 @@ msgstr "ລາຍການຄູ່ຊຳລະ"
 msgid ""
 "Counterpart used at closing for accounting adjustments to inventory "
 "valuation."
-msgstr ""
+msgstr "ບັນຊີຄູ່ສັນຍາທີ່ໃຊ້ໃນຕອນປິດບັນຊີ ສຳລັບການປັບປຸງມູນຄ່າສາງສິນຄ້າ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
 msgid "Countries for which the company has a Tax ID"
-msgstr ""
+msgstr "ປະເທດທີ່ບໍລິສັດມີເລກປະຈຳຕົວຜູ້ເສຍພາສີ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
@@ -6251,7 +6592,7 @@ msgstr "ປະເທດທີ່ແທັກນີ້ສາມາດໃຊ້ໄ
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 #: model_terms:ir.ui.view,arch_db:account.setup_credit_card_account_wizard
 msgid "Create"
-msgstr "ເເກ້ນ"
+msgstr "ສ້າງ"
 
 #. module: account
 #: model:ir.model,name:account.model_account_automatic_entry_wizard
@@ -6340,7 +6681,7 @@ msgstr "ສ້າງເງື່ອນໄຂການຄ້າໃໝ່"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_matching_rules
 msgid "Create a new matching rule"
-msgstr ""
+msgstr "ສ້າງກົດເກນການຈັບຄູ່ໃໝ່"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.product_product_action_purchasable
@@ -6395,7 +6736,7 @@ msgstr "ສ້າງໃບຫຼຸດໜີ້ຜູ້ສະໜອງ"
 #. odoo-javascript
 #: code:addons/account/static/src/components/tax_totals/tax_totals.js:0
 msgid "Create and edit"
-msgstr ""
+msgstr "ສ້າງ ແລະ ແກ້ໄຂ"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_group_list
@@ -6448,7 +6789,7 @@ msgstr "ສ້າງບັນຊີໃໝ່"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.rounding_list_action
 msgid "Create the first rounding method"
-msgstr ""
+msgstr "ສ້າງວິທີການປັດເສດທຳອິດ"
 
 #. module: account
 #. odoo-javascript
@@ -6632,7 +6973,7 @@ msgstr "ໃບຫຼຸດໜີ້"
 #. odoo-javascript
 #: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
 msgid "Credit Note :"
-msgstr ""
+msgstr "ໃບຫຼຸດໜີ້:"
 
 #. module: account
 #. odoo-python
@@ -6699,42 +7040,42 @@ msgstr "ຍອດເຫຼືອສະສົມ"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__cumulated_balance
 msgid "Cumulated balance for the account."
-msgstr ""
+msgstr "ຍອດເຫຼືອສະສົມສຳລັບບັນຊີ."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_buildings
-msgid "Cumulative depreciation recorded for building assets."
+msgid "Cumulative amortization recorded for building assets."
 msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_technology
-msgid "Cumulative depreciation recorded for capitalized technology assets."
+msgid "Cumulative amortization recorded for capitalized technology assets."
 msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_furniture
-msgid "Cumulative depreciation recorded for furniture and fixture assets."
+msgid "Cumulative amortization recorded for furniture and fixture assets."
 msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_improvements
 msgid ""
-"Cumulative depreciation recorded for leasehold or property improvements."
+"Cumulative amortization recorded for leasehold or property improvements."
 msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_machines
-msgid "Cumulative depreciation recorded for machinery and tool assets."
+msgid "Cumulative amortization recorded for machinery and tool assets."
 msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_other_property
-msgid "Cumulative depreciation recorded for other depreciable property assets."
+msgid "Cumulative amortization recorded for other depreciable property assets."
 msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_vehicles
-msgid "Cumulative depreciation recorded for vehicle assets."
+msgid "Cumulative amortization recorded for vehicle assets."
 msgstr ""
 
 #. module: account
@@ -6928,7 +7269,7 @@ msgstr "ບັນຊີສ່ວນຫຼຸດໃບແຈ້ງໜີ້ລູ
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_discount_expense_allocation_active
 msgid "Customer Invoices Discounts Account Active"
-msgstr ""
+msgstr "ບັນຊີສ່ວນຫຼຸດໃບແຈ້ງໜີ້ລູກຄ້າກຳລັງໃຊ້ງານ"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__out_and_in_invoices
@@ -6989,7 +7330,7 @@ msgstr "ລູກຄ້າ:"
 #. odoo-python
 #: code:addons/account/controllers/download_docs.py:0
 msgid "CustomerInvoices"
-msgstr ""
+msgstr "ໃບແຈ້ງໜີ້ລູກຄ້າ"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.res_partner_action_customer
@@ -7051,7 +7392,7 @@ msgstr "ສົ່ງເຖິງສະຖານທີ່ໂດຍລວມພາ
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__inventory_period__daily
 msgid "Daily"
-msgstr ""
+msgstr "ປະຈຳວັນ"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
@@ -7249,7 +7590,7 @@ msgstr "ບັນຊີເລີ່ມຕົ້ນ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_active
 msgid "Default Account Active"
-msgstr ""
+msgstr "ບັນຊີເລີ່ມຕົ້ນກຳລັງໃຊ້ງານ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_type
@@ -7419,7 +7760,7 @@ msgstr "ກຳນົດວ່າຄວນສະແດງຄຳນຳໜ້າເ
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.ir_actions_report_form_inherit_account
 msgid "Defines if the report is used in the invoice wizard"
-msgstr ""
+msgstr "ກຳນົດວ່າບົດລາຍງານນີ້ຖືກນຳໃຊ້ໃນຕົວຊ່ວຍສ້າງໃບແຈ້ງໜີ້ຫຼືບໍ່"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_cash_rounding_id
@@ -7504,42 +7845,42 @@ msgstr "ຄ່າເສື່ອມລາຄາ"
 #. module: account
 #: model:account.account,name:account.22_account_account_us_deprec_amort_expense
 msgid "Depreciation & Amortization Expense"
-msgstr ""
+msgstr "ຄ່າໃຊ້ຈ່າຍຄ່າເສື່ອມລາຄາ ແລະ ຄ່າຕັດຈຳໜ່າຍ"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_expense_buildings
 msgid "Depreciation Expense - Buildings"
-msgstr ""
+msgstr "ຄ່າໃຊ້ຈ່າຍຄ່າເສື່ອມລາຄາ - ອາຄານ"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_expense_furniture
 msgid "Depreciation Expense - Furniture & Fixtures"
-msgstr ""
+msgstr "ຄ່າໃຊ້ຈ່າຍຄ່າເສື່ອມລາຄາ - ເຟີນີເຈີ ແລະ ເຄື່ອງຕິດຕັ້ງ"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_expense_improvements
 msgid "Depreciation Expense - Improvements"
-msgstr ""
+msgstr "ຄ່າໃຊ້ຈ່າຍຄ່າເສື່ອມລາຄາ - ການປັບປຸງ"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_expense_machines
 msgid "Depreciation Expense - Machines & Tools"
-msgstr ""
+msgstr "ຄ່າໃຊ້ຈ່າຍຄ່າເສື່ອມລາຄາ - ເຄື່ອງຈັກ ແລະ ເຄື່ອງມື"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_expense_other_property
 msgid "Depreciation Expense - Other Property"
-msgstr ""
+msgstr "ຄ່າໃຊ້ຈ່າຍຄ່າເສື່ອມລາຄາ - ຊັບສິນອື່ນໆ"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_expense_technology
 msgid "Depreciation Expense - Technology"
-msgstr ""
+msgstr "ຄ່າໃຊ້ຈ່າຍຄ່າເສື່ອມລາຄາ - ເຕັກໂນໂລຊີ"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_expense_vehicles
 msgid "Depreciation Expense - Vehicles"
-msgstr ""
+msgstr "ຄ່າໃຊ້ຈ່າຍຄ່າເສື່ອມລາຄາ - ຍານພາຫະນະ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__description
@@ -7632,7 +7973,7 @@ msgstr "ປິດການໃຊ້ງານປຸ່ມຮວມ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__disable_dashboard_graph
 msgid "Disable chart to speed up dashboard"
-msgstr ""
+msgstr "ປິດແຜນຜັງເພື່ອເລັ່ງຄວາມໄວໜ້າແຜງຄວບຄຸມ"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_account_type__disabled
@@ -7939,7 +8280,7 @@ msgstr "ສະແດງປຸ່ມເບິ່ງຕົວຢ່າງ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Display the total amount of an invoice in words"
-msgstr ""
+msgstr "ສະແດງຈຳນວນເງິນລວມຂອງໃບແຈ້ງໜີ້ເປັນຕົວໜັງສື"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_disposal_fees
@@ -8004,7 +8345,7 @@ msgstr "ການຫັນເອກະສານເປັນດີຈີຕອນ
 #: model:ir.model.fields,field_description:account.field_account_move__document_tax_mode
 #: model:ir.model.fields,field_description:account.field_account_move_line__document_tax_mode
 msgid "Document Tax Mode"
-msgstr ""
+msgstr "ຮູບແບບພາສີເອກະສານ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__document_sequence_editable
@@ -8012,13 +8353,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_company__document_sequence_editable
 #: model:ir.model.fields,field_description:account.field_res_config_settings__document_sequence_editable
 msgid "Document's sequence editable"
-msgstr ""
+msgstr "ສາມາດແກ້ໄຂເລກລຳດັບເອກະສານໄດ້"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/controllers/download_docs.py:0
 msgid "Documents"
-msgstr ""
+msgstr "ເອກະສານ"
 
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_base_document_layout
@@ -8243,7 +8584,7 @@ msgstr "ຄູ່ຄ້າທະນາຄານຊໍ້າຊ້ອນ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__duplicate_entry_id
 msgid "Duplicate Entry"
-msgstr ""
+msgstr "ລາຍການຊໍ້າຊ້ອນ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__duplicate_payment_ids
@@ -8317,7 +8658,7 @@ msgstr "ກໍາໄລຈາກສ່ວນຫຼຸດການຊຳລະກ
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_active
 msgid "Early Discount Gain Account Active"
-msgstr ""
+msgstr "ບັນຊີກຳໄລສ່ວນຫຼຸດກ່ອນກຳນົດເປີດໃຊ້ງານ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
@@ -8327,7 +8668,7 @@ msgstr "ຂາດທຶນຈາກສ່ວນຫຼຸດການຊຳລະ
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_active
 msgid "Early Discount Loss Account Active"
-msgstr ""
+msgstr "ບັນຊີຂາດທຶນສ່ວນຫຼຸດກ່ອນກຳນົດເປີດໃຊ້ງານ"
 
 #. module: account
 #. odoo-python
@@ -8434,7 +8775,7 @@ msgstr "ສົ່ງໃບບິນຜ່ານອີເມລ"
 #. module: account
 #: model:ir.model,name:account.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr ""
+msgstr "ຕົວຊ່ວຍສ້າງອີເມລ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_domain
@@ -8500,12 +8841,12 @@ msgstr "ເປີດໃຊ້ງານ PEPPOL"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__enable_snapshots
 msgid "Enable Snapshots"
-msgstr ""
+msgstr "ເປີດໃຊ້ງານ Snapshots"
 
 #. module: account
 #: model:ir.model,name:account.model_res_currency_rate_consolidation_mixin
 msgid "Enable multi company consolidation"
-msgstr ""
+msgstr "ເປີດໃຊ້ການຮວບຮວມຂໍ້ມູນຫຼາຍບໍລິສັດ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_use_credit_limit
@@ -8548,7 +8889,7 @@ msgstr "ຍອດເຫຼືອປິດທ້າຍ"
 #: code:addons/account/report/account_stock_valuation_report.py:0
 #: code:addons/account/static/src/components/stock_valuation/stock_valuation_report.xml:0
 msgid "Ending Stock"
-msgstr ""
+msgstr "ສິນຄ້າຄົງເຫຼືອທ້າຍງວດ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -8558,7 +8899,7 @@ msgstr "ປ້ອນຄຳອະທິບາຍ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Enter description here..."
-msgstr ""
+msgstr "ປ້ອນຄຳອະທິບາຍຢູ່ບ່ອນນີ້..."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_line_form
@@ -8599,7 +8940,7 @@ msgstr "ລາຍການບັນຊີບໍ່ໄດ້ຢູ່ໃນບໍ
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Entries in error"
-msgstr ""
+msgstr "ລາຍການບັນຊີທີ່ມີຂໍ້ຜິດພາດ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_validate_account_move__force_post
@@ -8703,7 +9044,7 @@ msgstr "ແມ່ນແຕ່ຜູ້ມີເວດມົນກໍບໍ່ສ
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Everything is correctly closed"
-msgstr ""
+msgstr "ທຸກຢ່າງຖືກປິດຢ່າງຖືກຕ້ອງແລ້ວ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__example_amount
@@ -8753,7 +9094,7 @@ msgstr "ປື້ມບັນຊີລາຍວັນກຳໄລ ຫຼື ຂ�
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Exchange Loss"
-msgstr ""
+msgstr "ຂາດທຶນຈາກອັດຕາແລກປ່ຽນ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__exchange_move_ids
@@ -8765,12 +9106,12 @@ msgstr "ການເຄື່ອນໄຫວແລກປ່ຽນ"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Exchange Profit"
-msgstr ""
+msgstr "ກຳໄລຈາກອັດຕາແລກປ່ຽນ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__exchange_rate
 msgid "Exchange Rate"
-msgstr ""
+msgstr "ອັດຕາແລກປ່ຽນ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8781,12 +9122,12 @@ msgstr "ລາຍການສ່ວນຕ່າງອັດຕາແລກປ່
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__no_followup
 #: model:ir.model.fields,help:account.field_account_move__no_followup
 msgid "Exclude this journal entry from Reminder reports."
-msgstr ""
+msgstr "ຍົກເວັ້ນລາຍການບັນຊີນີ້ອອກຈາກບົດລາຍງານການເຕືອນ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__no_followup
 msgid "Exclude this journal item from Reminder reports."
-msgstr ""
+msgstr "ຍົກເວັ້ນລາຍການບັນຊີຍ່ອຍນີ້ອອກຈາກບົດລາຍງານການເຕືອນ."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__expected_currency_rate
@@ -8823,7 +9164,7 @@ msgstr "ບັນຊີລາຍຈ່າຍ"
 #: model:ir.model.fields,field_description:account.field_product_template__property_account_expense_active
 #: model:ir.model.fields,field_description:account.field_res_config_settings__expense_account_active
 msgid "Expense Account Active"
-msgstr ""
+msgstr "ບັນຊີລາຍຈ່າຍເປີດໃຊ້ງານ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__expense_accrual_account
@@ -8938,14 +9279,14 @@ msgstr "ອັດຕາສ່ວນປັດໄຈ"
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__factor
 msgid ""
 "Factor to apply on the journal items generated from this distribution line"
-msgstr ""
+msgstr "ປັດໄຈທີ່ຈະນຳໃຊ້ກັບລາຍການບັນຊີທີ່ສ້າງຂຶ້ນຈາກແຖວການແຈກຢາຍນີ້"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__factor_percent
 msgid ""
 "Factor to apply on the journal items generated from this distribution line, "
 "in percents"
-msgstr ""
+msgstr "ປັດໄຈທີ່ຈະນຳໃຊ້ກັບລາຍການບັນຊີທີ່ສ້າງຂຶ້ນຈາກແຖວການແຈກຢາຍນີ້ ເປັນເປີເຊັນ"
 
 #. module: account
 #. odoo-python
@@ -9031,6 +9372,36 @@ msgid "Financial Journal"
 msgstr "ປຶ້ມບັນຊີການເງິນ"
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_fin_borrowings_lt
+msgid "Financing - Borrowings Long Term"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_borrowings_st
+msgid "Financing - Borrowings Short Term"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_dividends
+msgid "Financing - Dividends"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_lease
+msgid "Financing - Lease"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_recov_adv
+msgid "Financing - Recoverable Advances"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_share_issuance
+msgid "Financing - Share Issuance"
+msgstr ""
+
+#. module: account
 #: model:account.account.tag,name:account.account_tag_financing
 msgid "Financing Activities"
 msgstr "ກິດຈະກຳການຈັດຫາທຶນ"
@@ -9090,7 +9461,7 @@ msgstr "ລະຫັດປະເທດທາງພາສີ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__company_country_code
 msgid "Fiscal Country Code of the Company"
-msgstr ""
+msgstr "ລະຫັດປະເທດທາງພາສີຂອງບໍລິສັດ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__fiscal_country_codes
@@ -9215,7 +9586,7 @@ msgstr "ຈຳນວນທົດສະນິຍົມ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__foldability
 msgid "Foldability"
-msgstr ""
+msgstr "ຄວາມສາມາດໃນການພັບ"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_line__foldability__foldable
@@ -9277,7 +9648,7 @@ msgstr "ອາຫານ: ການບໍລິການຈັດລ້ຽງ ແ
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "For Perpetual Continental Only"
-msgstr ""
+msgstr "ສຳລັບລະບົບບັນຊີແບບຕໍ່ເນື່ອງພາກພື້ນທະວີບ (Continental) ເທົ່ານັ້ນ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.email_template_mail_gateway_failed
@@ -9298,7 +9669,7 @@ msgstr "ສຳລັບເປີເຊັນ ໃຫ້ປ້ອນອັດຕ�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 msgid "For the Last 365 Days"
-msgstr ""
+msgstr "ສຳລັບ 365 ວັນຜ່ານມາ"
 
 #. module: account
 #. odoo-python
@@ -9365,7 +9736,7 @@ msgstr "ເລກປະຈຳຕົວຜູ້ເສຍພາສີຕ່າງ
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
 msgid "Foreign Tax ID countries"
-msgstr ""
+msgstr "ປະເທດຂອງເລກປະຈຳຕົວຜູ້ເສຍພາສີຕ່າງປະເທດ"
 
 #. module: account
 #: model:account.fiscal.position,name:account.21_template_generic_export_fiscal_position
@@ -9558,7 +9929,7 @@ msgstr "ບັນຊີກຳໄລຈາກອັດຕາແລກປ່ຽນ
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__income_currency_exchange_account_active
 msgid "Gain Exchange Rate Account Active"
-msgstr ""
+msgstr "ບັນຊີກຳໄລຈາກອັດຕາແລກປ່ຽນເປີດໃຊ້ງານ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -9579,7 +9950,7 @@ msgstr "ສ້າງ"
 #. odoo-javascript
 #: code:addons/account/static/src/components/stock_valuation/buttons_bar/buttons_bar.xml:0
 msgid "Generate Entries"
-msgstr ""
+msgstr "ສ້າງລາຍການບັນຊີ"
 
 #. module: account
 #. odoo-python
@@ -9597,7 +9968,7 @@ msgstr "ລາຍການລົງບັນຊີທີ່ຖືກສ້າງ
 #. odoo-python
 #: code:addons/account/models/template_generic_coa.py:0
 msgid "Generic (Minimal) Chart of Accounts"
-msgstr ""
+msgstr "ຜັງບັນຊີທົ່ວໄປ (ແບບຫຍໍ້)"
 
 #. module: account
 #: model:account.report,name:account.generic_tax_report
@@ -9742,7 +10113,7 @@ msgstr "ມີລາຍການບັນຊີ"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__has_draft_move_duplicate
 #: model:ir.model.fields,field_description:account.field_account_move__has_draft_move_duplicate
 msgid "Has Draft Move Duplicate"
-msgstr ""
+msgstr "ມີຮ່າງລາຍການເຄື່ອນໄຫວທີ່ຊ້ຳກັນ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_entries
@@ -9770,7 +10141,7 @@ msgstr "ມີໃບແຈ້ງຍອດທີ່ບໍ່ຖືກຕ້ອງ
 #: model:ir.model.fields,field_description:account.field_account_journal__has_ledger
 #: model:ir.model.fields,field_description:account.field_res_company__has_ledger
 msgid "Has Ledger"
-msgstr ""
+msgstr "ມີບັນຊີແຍກປະເພດ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__has_message
@@ -9795,7 +10166,7 @@ msgstr "ມີຕົວຄູນຄ່າລົບ"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__has_phishing_warnings
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__has_phishing_warnings
 msgid "Has Phishing Warnings"
-msgstr ""
+msgstr "ມີຄຳເຕືອນການຫຼອກລວງ (Phishing)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_posted_entries
@@ -9860,7 +10231,7 @@ msgstr "ເຊື່ອງອົງປະກອບ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__hide_payment_method
 msgid "Hide Payment Method"
-msgstr ""
+msgstr "ເຊື່ອງວິທີການຊຳລະເງິນ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__hide_post_button
@@ -9921,7 +10292,7 @@ msgstr "ເນັ້ນປຸ່ມສົ່ງ"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__holder_name
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__holder_name
 msgid "Holder Name"
-msgstr ""
+msgstr "ຊື່ຜູ້ຖືຄອງ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__horizontal_split_side
@@ -10234,6 +10605,8 @@ msgid ""
 "will                                            depend upon the output of "
 "the verification by the European VIES Service."
 msgstr ""
+"ຖ້າໝາຍຕິກຊ່ອງນີ້, ສະຖານະທາງພາສີເລີ່ມຕົ້ນທີ່ຈະນຳໃຊ້ຈະຂຶ້ນກັບຜົນຂອງການກວດສອບໂດຍບໍລິການ European "
+"VIES."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__is_journal_hash
@@ -10255,6 +10628,8 @@ msgid ""
 "If you are not subject to VAT, you will have no sale taxes and only non "
 "deductible taxes activated"
 msgstr ""
+"ຖ້າທ່ານບໍ່ໄດ້ຢູ່ໃນຂ່າຍເສຍພາສີມູນຄ່າເພີ່ມ, ທ່ານຈະບໍ່ມີພາສີຂາຍ ແລະ "
+"ຈະເປີດໃຊ້ສະເພາະພາສີທີ່ບໍ່ສາມາດຫັກໄດ້ເທົ່ານັ້ນ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10342,7 +10717,7 @@ msgstr "ຄ່າທຳນຽມການນຳເຂົ້າ"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__import_source_attachment_id
 #: model:ir.model.fields,field_description:account.field_account_move__import_source_attachment_id
 msgid "Import Source Attachment"
-msgstr ""
+msgstr "ນຳເຂົ້າໄຟລ໌ຄັດຕິດແຫຼ່ງຂໍ້ມູນ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10363,7 +10738,7 @@ msgstr "ໃນສະກຸນເງິນ"
 #. odoo-javascript
 #: code:addons/account/static/src/webclient/share_target/account_share_target_item.xml:0
 msgid "In Journal"
-msgstr ""
+msgstr "ໃນປຶ້ມບັນຊີ"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__in_payment
@@ -10376,7 +10751,7 @@ msgstr "ຢູ່ໃນຂັ້ນຕອນການຊຳລະ"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__amount
 msgid "In amount"
-msgstr ""
+msgstr "ຕາມຈຳນວນເງິນ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -10401,7 +10776,7 @@ msgstr "ຢູ່ໃນລະຫວ່າງການຊຳລະ"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__percentage
 msgid "In percentage"
-msgstr ""
+msgstr "ຕາມເປີເຊັນ"
 
 #. module: account
 #. odoo-python
@@ -10424,6 +10799,10 @@ msgid ""
 "Expected: cross_report(<report_id>|<xml_id>[,force_date_sope])Example:  "
 "cross_report(my_module.my_report) or cross_report(123)"
 msgstr ""
+"ໃນລາຍງານ '%(report_name)s', ຢູ່ແຖວ '%(line_name)s', ທີ່ມີປ້າຍກຳກັບ '%(label)s',\n"
+"ຮູບແບບສຳນວນ cross report ບໍ່ຖືກຕ້ອງ.\n"
+"ຮູບແບບທີ່ຖືກຕ້ອງ: cross_report(<report_id>|<xml_id>[,force_date_sope]) ຕົວຢ່າງ:  "
+"cross_report(my_module.my_report) ຫຼື cross_report(123)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.rounding_search_view
@@ -10466,7 +10845,7 @@ msgstr "ລວມເຂົ້າໃນຕົ້ນທຶນວິເຄາະ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__included_journal_ids
 msgid "Included Journals"
-msgstr ""
+msgstr "ປຶ້ມບັນຊີທີ່ລວມຢູ່ນຳ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__price_include_override
@@ -10496,7 +10875,7 @@ msgstr "ບັນຊີລາຍຮັບ"
 #: model:ir.model.fields,field_description:account.field_product_template__property_account_income_active
 #: model:ir.model.fields,field_description:account.field_res_config_settings__income_account_active
 msgid "Income Account Active"
-msgstr ""
+msgstr "ບັນຊີລາຍຮັບເປີດໃຊ້ງານ"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_state_income_tax
@@ -10517,7 +10896,7 @@ msgstr "ການຊຳລະເງິນຂາເຂົ້າ"
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "Incorrect ending balance, expected %s"
-msgstr ""
+msgstr "ຍອດເຫຼືອປິດທ້າຍບໍ່ຖືກຕ້ອງ, ຄາດວ່າແມ່ນ %s"
 
 #. module: account
 #. odoo-python
@@ -10596,18 +10975,18 @@ msgstr "ຂໍ້ມູນ"
 #: code:addons/account/report/account_stock_valuation_report.py:0
 #: code:addons/account/static/src/components/stock_valuation/stock_valuation_report.xml:0
 msgid "Initial Balance"
-msgstr ""
+msgstr "ຍອດຍົກມາຕົ້ນງວດ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Initial Setup"
-msgstr ""
+msgstr "ການຕັ້ງຄ່າເລີ່ມຕົ້ນ"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "Initial balance (%s) does not match previous statement"
-msgstr ""
+msgstr "ຍອດຍົກມາຕົ້ນງວດ (%s) ບໍ່ກົງກັບໃບແຈ້ງຍອດກ່ອນໜ້າ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10701,7 +11080,7 @@ msgstr "ການໂອນຍ້າຍພາຍໃນ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__transfer_account_active
 msgid "Internal Transfer Account Active"
-msgstr ""
+msgstr "ບັນຊີໂອນຍ້າຍພາຍໃນເປີດໃຊ້ງານ"
 
 #. module: account
 #. odoo-python
@@ -10790,7 +11169,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Invalid Statement"
-msgstr ""
+msgstr "ໃບແຈ້ງຍອດບໍ່ຖືກຕ້ອງ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -10820,18 +11199,18 @@ msgstr "ໂທເຄັນບໍ່ຖືກຕ້ອງ"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__inventory_closing
 #: model:ir.model.fields,field_description:account.field_account_move__inventory_closing
 msgid "Inventory Closing"
-msgstr ""
+msgstr "ການປິດບັນຊີສາງເຄື່ອງ"
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/stock_valuation/stock_valuation_report.xml:0
 msgid "Inventory Loss"
-msgstr ""
+msgstr "ການສູນເສຍສິນຄ້າໃນສາງ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__inventory_period
 msgid "Inventory Period"
-msgstr ""
+msgstr "ງວດບັນຊີສາງເຄື່ອງ"
 
 #. module: account
 #. odoo-python
@@ -10855,12 +11234,57 @@ msgstr "ມູນຄ່າສາງເຄື່ອງ"
 #: model:account.account,name:account.21_stock_variation
 #: model:account.account,name:account.22_account_account_us_inventory_variation
 msgid "Inventory Variation"
-msgstr ""
+msgstr "ການປ່ຽນແປງມູນຄ່າສາງເຄື່ອງ"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_investing
 msgid "Investing & Extraordinary Activities"
 msgstr "ກິດຈະກຳການລົງທຶນ ແລະ ກິດຈະກຳພິເສດ"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_cash_advances
+msgid "Investment - Cash Advances"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_fin_instr_purchase
+msgid "Investment - Financial Instruments Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_fin_instr_sale
+msgid "Investment - Financial Instruments Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_int_ass_purchase
+msgid "Investment - Intangible Assets Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_int_ass_sale
+msgid "Investment - Intangible Assets Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_interest_received
+msgid "Investment - Interest Received"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_ppe_purchase
+msgid "Investment - PPE Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_ppe_sale
+msgid "Investment - PPE Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_rou_sale
+msgid "Investment - Right of Use Sale"
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -10887,7 +11311,7 @@ msgstr "ເລກທີໃບເກັບເງິນ #"
 #. odoo-javascript
 #: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
 msgid "Invoice :"
-msgstr ""
+msgstr "ໃບແຈ້ງໜີ້ :"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_account_invoice_report_all
@@ -11014,7 +11438,7 @@ msgstr "ວິດເຈັດການຊຳລະເງິນໃບແຈ້ງ
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.ir_actions_report_form_inherit_account
 msgid "Invoice Report"
-msgstr ""
+msgstr "ລາຍງານໃບແຈ້ງໜີ້"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__state
@@ -11031,7 +11455,7 @@ msgstr "ຍອດລວມໃບແຈ້ງໜີ້"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_vendor_bill_id
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_vendor_bill_id
 msgid "Invoice Vendor Bill"
-msgstr ""
+msgstr "ໃບແຈ້ງໜີ້/ໃບບິນຜູ້ສະໜອງ"
 
 #. module: account
 #. odoo-python
@@ -11137,12 +11561,12 @@ msgstr "ອອກໃບແຈ້ງໜີ້ແລ້ວ"
 #. odoo-python
 #: code:addons/account/report/account_stock_valuation_report.py:0
 msgid "Invoiced Not Delivered"
-msgstr ""
+msgstr "ອອກໃບແຈ້ງໜີ້ແລ້ວແຕ່ຍັງບໍ່ທັນຈັດສົ່ງ"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_accrued_orders_wizard__accrual_type__invoiced_not_delivered
 msgid "Invoiced not delivered"
-msgstr ""
+msgstr "ອອກໃບແຈ້ງໜີ້ແລ້ວແຕ່ຍັງບໍ່ທັນຈັດສົ່ງ"
 
 #. module: account
 #. odoo-python
@@ -11170,7 +11594,7 @@ msgstr "ໃບແຈ້ງໜີ້"
 #. module: account
 #: model:ir.module.module,summary:base.module_account
 msgid "Invoices & Payments"
-msgstr ""
+msgstr "ໃບແຈ້ງໜີ້ ແລະ ການຊຳລະເງິນ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -11238,12 +11662,12 @@ msgstr "ໃບແຈ້ງໜີ້ທີ່ລໍຖ້າການກວດສ
 #. odoo-python
 #: code:addons/account/report/account_stock_valuation_report.py:0
 msgid "Invoices to be Issued"
-msgstr ""
+msgstr "ໃບແຈ້ງໜີ້ທີ່ຕ້ອງອອກ"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_accrued_orders_wizard__accrual_type__invoice_to_be_issued
 msgid "Invoices to be issued"
-msgstr ""
+msgstr "ໃບແຈ້ງໜີ້ທີ່ຕ້ອງອອກ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_bill_ids
@@ -11414,7 +11838,7 @@ msgstr "ຖືກສົ່ງແລ້ວ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_statement_posted
 msgid "Is Statement Posted"
-msgstr ""
+msgstr "ໃບແຈ້ງຍອດລົງບັນຊີແລ້ວຫຼືບໍ່"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_storno
@@ -11455,7 +11879,7 @@ msgstr "ລາຍການເຄື່ອນໄຫວກຳລັງຖືກສ
 msgid ""
 "It exists closing entries after the selected date. Cancel them before "
 "generate an entry prior to them"
-msgstr ""
+msgstr "ມີລາຍການປິດບັນຊີຫຼັງຈາກວັນທີທີ່ເລືອກ. ກະລຸນາຍົກເລີກລາຍການເຫຼົ່ານັ້ນກ່ອນທີ່ຈະສ້າງລາຍການກ່ອນໜ້າມັນ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__is_move_sent
@@ -11586,7 +12010,7 @@ msgstr "ຂໍ້ມູນລາຍການບັນຊີ"
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
 msgid "Journal Entry Reversal"
-msgstr ""
+msgstr "ການກັບລາຍການບັນຊີ"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line
@@ -11814,7 +12238,7 @@ msgstr "ປ້າຍຊື່ໃນໃບຮັບເງິນ PoS"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sanitize_payment_reference
 #: model:ir.model.fields,field_description:account.field_account_move__sanitize_payment_reference
 msgid "Label sanitize"
-msgstr ""
+msgstr "ການກັ່ນຕອງປ້າຍຊື່"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_land
@@ -11829,7 +12253,7 @@ msgstr "ພາສາ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_bank_statement_line_view_search_cashflow
 msgid "Last 12 Months"
-msgstr ""
+msgstr "12 ເດືອນຜ່ານມາ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -12055,7 +12479,7 @@ msgstr "ໃຫ້ປັນຍາປະດິດສະແກນໃບຮຽກເ
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Let your customers pay their invoices on your portal"
-msgstr ""
+msgstr "ອະນຸຍາດໃຫ້ລູກຄ້າຂອງທ່ານຊຳລະໃບແຈ້ງໜີ້ຢູ່ໃນພໍທັລ (portal) ຂອງທ່ານ"
 
 #. module: account
 #. odoo-javascript
@@ -12098,7 +12522,7 @@ msgstr "ໃບອະນຸຍາດ ຫຼື ບໍລິການຄອມພ�
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__open_on
 msgid "Limit the date for the Residual (at date) fields."
-msgstr ""
+msgstr "ຈຳກັດວັນທີສຳລັບຊ່ອງຂໍ້ມູນຍອດຄົງເຫຼືອ (ຕາມວັນທີ)."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__line_ids
@@ -12163,14 +12587,14 @@ msgstr "ຄ່າໃຊ້ຈ່າຍດອກເບ້ຍເງິນກູ້
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_loan_extract
 msgid "Loans Digitization"
-msgstr ""
+msgstr "ການຫັນເງິນກູ້ເປັນດິຈິຕອນ"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Local Gaap"
-msgstr ""
+msgstr "ມາດຕະຖານການບັນຊີທ້ອງຖິ່ນ (Local GAAP)"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_property_tax
@@ -12241,7 +12665,7 @@ msgstr "ບັນຊີຂາດທຶນ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__loss_account_active
 msgid "Loss Account Active"
-msgstr ""
+msgstr "ບັນຊີຂາດທຶນເປີດໃຊ້ງານ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__expense_currency_exchange_account_id
@@ -12252,7 +12676,7 @@ msgstr "ບັນຊີຂາດທຶນຈາກອັດຕາແລກປ່
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__expense_currency_exchange_account_active
 msgid "Loss Exchange Rate Account Active"
-msgstr ""
+msgstr "ບັນຊີຂາດທຶນຈາກອັດຕາແລກປ່ຽນເປີດໃຊ້ງານ"
 
 #. module: account
 #. odoo-python
@@ -12475,7 +12899,7 @@ msgstr "ການວິເຄາະກຳໄລສ່ວນຕ່າງ"
 #. module: account
 #: model:ir.actions.server,name:account.action_mark_payment_as_reconciled
 msgid "Mark as Reconciled"
-msgstr ""
+msgstr "ໝາຍວ່າກວດສອບກະທົບຍອດແລ້ວ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -12542,13 +12966,13 @@ msgstr "ເລກທີການຈັບຄູ່"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__matching_order
 msgid "Matching Order"
-msgstr ""
+msgstr "ລຳດັບການຈັບຄູ່"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_matching_rules
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Matching Rules"
-msgstr ""
+msgstr "ກົດລະບຽບການຈັບຄູ່"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matching_number
@@ -12562,13 +12986,13 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__matching_rule
 msgid "Matching rule"
-msgstr ""
+msgstr "ກົດລະບຽບການຈັບຄູ່"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 msgid "Matching rules must be automatic."
-msgstr ""
+msgstr "ກົດລະບຽບການຈັບຄູ່ຕ້ອງເປັນແບບອັດຕະໂນມັດ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__activity_type_icon
@@ -12579,7 +13003,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__activity_type_icon
 #: model:ir.model.fields,help:account.field_res_partner_bank__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "ໄອຄອນ Material Symbols ເຊັ່ນ: checklist"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__max_date
@@ -12923,7 +13347,7 @@ msgstr "ຊື່"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__name_path
 msgid "Name Path"
-msgstr ""
+msgstr "ເສັ້ນທາງຊື່"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__name_placeholder
@@ -12998,7 +13422,7 @@ msgstr "ບໍ່ເຄີຍ"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_line__foldability__never_unfolded
 msgid "Never Unfolded"
-msgstr ""
+msgstr "ບໍ່ເຄີຍຂະຫຍາຍອອກ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -13031,7 +13455,7 @@ msgstr "ລາຍການເຄື່ອນໄຫວໃໝ່"
 #. odoo-javascript
 #: code:addons/account/static/src/components/tax_totals/tax_totals.js:0
 msgid "New Rounding Method"
-msgstr ""
+msgstr "ວິທີການປັດເສດໃໝ່"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__new_values
@@ -13046,7 +13470,7 @@ msgstr "ການແຈ້ງເຕືອນໃບເກັບເງິນເອ
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__new_first
 msgid "Newest first"
-msgstr ""
+msgstr "ໃໝ່ສຸດກ່ອນ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__next_activity_type_id
@@ -13127,7 +13551,7 @@ msgstr "ບໍ່ມີທຸລະກຳທະນາຄານ"
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
 msgid "No Partner"
-msgstr ""
+msgstr "ບໍ່ມີຄູ່ຄ້າ"
 
 #. module: account
 #. odoo-python
@@ -13140,12 +13564,12 @@ msgstr "ບໍ່ມີວິທີການຊຳລະເງິນ"
 #: model:ir.model.fields,field_description:account.field_account_move__no_followup
 #: model:ir.model.fields,field_description:account.field_account_move_line__no_followup
 msgid "No Reminder"
-msgstr ""
+msgstr "ບໍ່ມີການແຈ້ງເຕືອນ"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__review_state__no_review
 msgid "No Review"
-msgstr ""
+msgstr "ບໍ່ມີການກວດກາ"
 
 #. module: account
 #. odoo-python
@@ -13168,7 +13592,7 @@ msgstr "ບໍ່ມີເອກະສານຄັດຕິດ"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "No files found to download"
-msgstr ""
+msgstr "ບໍ່ພົບໄຟລ໌ສຳລັບດາວໂຫຼດ"
 
 #. module: account
 #. odoo-python
@@ -13212,12 +13636,12 @@ msgstr "ບໍ່ພົບການດຳເນີນການທີ່ເປັ
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "No rounding applied"
-msgstr ""
+msgstr "ບໍ່ມີການນຳໃຊ້ການປັດເສດ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__non_deductible_amount
 msgid "Non Deductible Amount"
-msgstr ""
+msgstr "ຈຳນວນເງິນທີ່ບໍ່ສາມາດຫັກລົບໄດ້"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__non_deductible_product
@@ -13323,12 +13747,12 @@ msgstr "ຍັງບໍ່ໄດ້ສົ່ງ"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__vat_disabled
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Not Subject to VAT"
-msgstr ""
+msgstr "ບໍ່ຢູ່ໃນຂ່າຍເສຍອາກອນມູນຄ່າເພີ່ມ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__vat_disabled_available
 msgid "Not Subject to VAT Available"
-msgstr ""
+msgstr "ມີລາຍການບໍ່ຢູ່ໃນຂ່າຍເສຍ VAT"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_secure_entries_wizard
@@ -13360,7 +13784,7 @@ msgstr "ໝາຍເຫດ: ວິທີທີ່ງ່າຍທີ່ສຸດ�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Note to add on invoices using this Fiscal Position."
-msgstr ""
+msgstr "ໝາຍເຫດທີ່ຈະເພີ່ມໃສ່ໃບແຈ້ງໜີ້ໂດຍໃຊ້ສະຖານະພາສີນີ້."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__note
@@ -13506,6 +13930,8 @@ msgid ""
 "Odoo allows you to reconcile a transaction directly with\n"
 "                the related sale or purchase invoices."
 msgstr ""
+"Odoo ອະນຸຍາດໃຫ້ທ່ານກວດສອບຍອດທຸລະກຳໂດຍກົງກັບ\n"
+"                ໃບແຈ້ງໜີ້ການຂາຍ ຫຼື ການຊື້ທີ່ກ່ຽວຂ້ອງ."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_customer
@@ -13565,7 +13991,7 @@ msgstr "ໂຕະຫ້ອງການ, ຕັ່ງ, ຊັ້ນວາງ, ແ
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__old_first
 msgid "Oldest first"
-msgstr ""
+msgstr "ເກົ່າສຸດກ່ອນ"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term__early_pay_discount_computation__included
@@ -13638,7 +14064,7 @@ msgstr "ແຖວໜຶ່ງ ຫຼື ຫຼາຍກວ່ານັ້ນຕ�
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "Only Accounting managers can create foreign taxes."
-msgstr ""
+msgstr "ສະເພາະຜູ້ຈັດການບັນຊີເທົ່ານັ້ນທີ່ສາມາດສ້າງພາສີຕ່າງປະເທດໄດ້."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__only_tax_exigible
@@ -13690,6 +14116,7 @@ msgid ""
 "Only the value 'periodic' and 'real_time' are accepted to search on "
 "valuation field."
 msgstr ""
+"ຍອມຮັບສະເພາະຄ່າ 'periodic' ແລະ 'real_time' ເທົ່ານັ້ນເພື່ອຄົ້ນຫາໃນຊ່ອງການປະເມີນມູນຄ່າ."
 
 #. module: account
 #. odoo-python
@@ -13788,6 +14215,16 @@ msgid "Opening balance"
 msgstr "ຍອດເປີດບັນຊີ"
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_op_income_tax_paid_received
+msgid "Operating - Income Tax Paid Received"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_op_interest_paid
+msgid "Operating - Interest Paid"
+msgstr ""
+
+#. module: account
 #: model:account.account.tag,name:account.account_tag_operating
 msgid "Operating Activities"
 msgstr "ກິດຈະກຳການດຳເນີນງານ"
@@ -13855,7 +14292,7 @@ msgstr "ວັນທີປິດບັນຊີເດີມ"
 #: model:ir.model.fields,field_description:account.field_account_move_line__statement_line_id
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Originator Bank Transaction"
-msgstr ""
+msgstr "ທຸລະກຳທະນາຄານຕົ້ນທາງ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__group_tax_id
@@ -13915,7 +14352,7 @@ msgstr "ຂໍ້ມູນອື່ນໆ"
 #. odoo-javascript
 #: code:addons/account/static/src/components/stock_valuation/stock_valuation_report.js:0
 msgid "Other Stock Variation"
-msgstr ""
+msgstr "ການປ່ຽນແປງສະຕັອກອື່ນໆ"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_other_property
@@ -13961,7 +14398,7 @@ msgstr "ການຊຳລະເງິນອອກ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Outstanding"
-msgstr ""
+msgstr "ຍັງຄ້າງ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__outstanding_account_id
@@ -14009,7 +14446,7 @@ msgstr "ເງິນເກີນຄ້າງຈ່າຍ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Outstanding payments"
-msgstr ""
+msgstr "ການຊຳລະເງິນທີ່ຍັງຄ້າງ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -14026,7 +14463,7 @@ msgstr "ຈຳນວນເງິນເກີນກຳນົດຊຳລະ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_search
 msgid "Overdue Invoices"
-msgstr ""
+msgstr "ໃບແຈ້ງໜີ້ເກີນກຳນົດ"
 
 #. module: account
 #. odoo-python
@@ -14151,7 +14588,7 @@ msgstr "ຂໍ້ຄວາມຫຼັກ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__parent_id
 msgid "Parent Account"
-msgstr ""
+msgstr "ບັນຊີຫຼັກ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__parent_id
@@ -14223,7 +14660,7 @@ msgstr "ຄຸ່ຄ້າ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cash_rounding__partner_category_ids
 msgid "Partner Category"
-msgstr ""
+msgstr "ໝວດໝູ່ຄູ່ຄ້າ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__contract_ids
@@ -14274,7 +14711,7 @@ msgstr "ບ່ອນໃສ່ເລກປະຈຳຕົວຜູ້ເສຍພ
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "Partner set to %s"
-msgstr ""
+msgstr "ຕັ້ງຄູ່ຄ້າເປັນ %s"
 
 #. module: account
 #. odoo-python
@@ -14330,7 +14767,7 @@ msgstr "ບັນຊີເຈົ້າໜີ້"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__payable_account_id
 msgid "Payable Account"
-msgstr ""
+msgstr "ບັນຊີເຈົ້າໜີ້"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_account_type__both
@@ -14442,7 +14879,7 @@ msgstr "ວິທີການຊຳລະເງິນ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Payment QR Codes"
-msgstr ""
+msgstr "ລະຫັດ QR ສຳລັບການຊຳລະເງິນ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__qr_code_method
@@ -14469,7 +14906,7 @@ msgstr "ຫົວຂໍ້ໃບຮັບເງິນ"
 #: model:ir.model.fields,field_description:account.field_account_account__reconcile
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_account_reconcile
 msgid "Payment Reconciliation"
-msgstr ""
+msgstr "ການກວດສອບຍອດການຊຳລະເງິນ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_reference
@@ -14521,12 +14958,12 @@ msgstr "ແຖວເງື່ອນໄຂການຊຳລະ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__payment_tolerance
 msgid "Payment Tolerance"
-msgstr ""
+msgstr "ຄ່າຜິດດ່ຽງການຊຳລະທີ່ຍອມຮັບໄດ້"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__payment_tolerance_type
 msgid "Payment Tolerance Type"
-msgstr ""
+msgstr "ປະເພດຄ່າຜິດດ່ຽງການຊຳລະທີ່ຍອມຮັບໄດ້"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_type
@@ -14540,7 +14977,7 @@ msgstr "ປະເພດການຊຳລະ"
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid "Payment must be in paid state to be reconciled."
-msgstr ""
+msgstr "ການຊຳລະເງິນຕ້ອງຢູ່ໃນສະຖານະຈ່າຍແລ້ວຈຶ່ງຈະສາມາດກວດສອບຍອດໄດ້."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -14642,7 +15079,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid "Payments linked to an Asset Cash account cannot be reconciled."
-msgstr ""
+msgstr "ການຊຳລະເງິນທີ່ເຊື່ອມໂຍງກັບບັນຊີເງິນສົດຊັບສິນບໍ່ສາມາດກວດສອບຍອດໄດ້."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -14708,7 +15145,7 @@ msgstr "ເປີເຊັນຂອງແຕ່ລະລາຍການທີ່
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__percentage_st_line
 msgid "Percentage of transaction"
-msgstr ""
+msgstr "ເປີເຊັນຂອງທຸລະກຳ"
 
 #. module: account
 #. odoo-python
@@ -14731,42 +15168,42 @@ msgstr "ການປຽບທຽບໄລຍະເວລາ"
 #: model:ir.model.fields.selection,name:account.selection__product_template__valuation__periodic
 #: model:ir.model.fields.selection,name:account.selection__res_company__inventory_valuation__periodic
 msgid "Periodic (at closing)"
-msgstr ""
+msgstr "ຕາມງວດ (ເມື່ອປິດບັນຊີ)"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_expense_buildings
 msgid "Periodic depreciation expense for building assets."
-msgstr ""
+msgstr "ຄ່າຫຼຸ້ຍຫ້ຽນຕາມງວດສຳລັບຊັບສິນປະເພດອາຄານ."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_expense_technology
 msgid "Periodic depreciation expense for capitalized technology assets."
-msgstr ""
+msgstr "ຄ່າຫຼຸ້ຍຫ້ຽນຕາມງວດສຳລັບຊັບສິນເຕັກໂນໂລຊີທີ່ຖືເປັນທຶນ."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_expense_furniture
 msgid "Periodic depreciation expense for furniture and fixture assets."
-msgstr ""
+msgstr "ຄ່າຫຼຸ້ຍຫ້ຽນຕາມງວດສຳລັບຊັບສິນເຄື່ອງເຟີນີເຈີ ແລະ ເຄື່ອງຕິດຕັ້ງ."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_expense_improvements
 msgid "Periodic depreciation expense for leasehold or property improvements."
-msgstr ""
+msgstr "ຄ່າຫຼຸ້ຍຫ້ຽນຕາມງວດສຳລັບການປັບປຸງສິດການເຊົ່າ ຫຼື ອະສັງຫາລິມະຊັບ."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_expense_machines
 msgid "Periodic depreciation expense for machinery and tool assets."
-msgstr ""
+msgstr "ຄ່າຫຼຸ້ຍຫ້ຽນຕາມງວດສຳລັບຊັບສິນປະເພດເຄື່ອງຈັກ ແລະ ເຄື່ອງມື."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_expense_other_property
 msgid "Periodic depreciation expense for other depreciable property assets."
-msgstr ""
+msgstr "ຄ່າຫຼຸ້ຍຫ້ຽນຕາມງວດສຳລັບຊັບສິນອື່ນໆທີ່ສາມາດຄິດໄລ່ຄ່າຫຼຸ້ຍຫ້ຽນໄດ້."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_expense_vehicles
 msgid "Periodic depreciation expense for vehicle assets."
-msgstr ""
+msgstr "ຄ່າຫຼຸ້ຍຫ້ຽນຕາມງວດສຳລັບຊັບສິນປະເພດຍານພາຫະນະ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_valuation
@@ -14777,24 +15214,28 @@ msgid ""
 "inventory when a product is billed or invoiced.\n"
 "        "
 msgstr ""
+"Periodic: ລາຍການບັນຊີຈະຖືກແນະນຳດ້ວຍຕົນເອງໃນລາຍງານການປະເມີນມູນຄ່າສາງ.\n"
+"        Perpetual: ລາຍການບັນຊີຈະຖືກສ້າງຂຶ້ນໂດຍອັດຕະໂນມັດເພື່ອຕີມູນຄ່າສາງ "
+"ເມື່ອສິນຄ້າຖືກຮຽກເກັບເງິນ ຫຼື ອອກໃບແຈ້ງໜີ້.\n"
+"        "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__product_category__property_valuation__real_time
 #: model:ir.model.fields.selection,name:account.selection__product_template__valuation__real_time
 #: model:ir.model.fields.selection,name:account.selection__res_company__inventory_valuation__real_time
 msgid "Perpetual (at invoicing)"
-msgstr ""
+msgstr "ແບບຕໍ່ເນື່ອງ (ເມື່ອອອກໃບແຈ້ງໜີ້)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__phishing_warnings
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__phishing_warnings
 msgid "Phishing Warnings"
-msgstr ""
+msgstr "ຄຳເຕືອນການຫຼອກລວງ (Phishing)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Phishing risk"
-msgstr ""
+msgstr "ຄວາມສ່ຽງຕໍ່ການຫຼອກລວງ (Phishing)"
 
 #. module: account
 #. odoo-python
@@ -14803,6 +15244,8 @@ msgid ""
 "Phishing risk: %(label1)s is in %(country1)s but %(label2)s is in %"
 "(country2)s"
 msgstr ""
+"ຄວາມສ່ຽງຕໍ່ການຫຼອກລວງ (Phishing): %(label1)s ຢູ່ໃນ %(country1)s ແຕ່ %(label2)s ຢູ່ໃນ %"
+"(country2)s"
 
 #. module: account
 #. odoo-python
@@ -14811,6 +15254,8 @@ msgid ""
 "Phishing risk: %(money_transfer_service)s is a money transfer service and "
 "not a bank. Double check if the account can be trusted by calling the vendor."
 msgstr ""
+"ຄວາມສ່ຽງຕໍ່ການຫຼອກລວງ (Phishing): %(money_transfer_service)s ແມ່ນບໍລິການໂອນເງິນ ແລະ "
+"ບໍ່ແມ່ນທະນາຄານ. ກະລຸນາກວດສອບຄືນວ່າບັນຊີນັ້ນເຊື່ອຖືໄດ້ຫຼືບໍ່ ໂດຍການໂທຫາຜູ້ຈຳໜ່າຍ."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_internet
@@ -14866,14 +15311,14 @@ msgstr "ກະລຸນາກຳນົດຄ່າການປັດເສດເ
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Please set the Journal for Inventory Valuation in the settings."
-msgstr ""
+msgstr "ກະລຸນາກຳນົດປື້ມບັນຊີສຳລັບການປະເມີນມູນຄ່າສາງໃນການຕັ້ງຄ່າ."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "Please set the Valuation Account for Inventory Valuation in the settings."
-msgstr ""
+msgstr "ກະລຸນາກຳນົດບັນຊີການປະເມີນມູນຄ່າສຳລັບການປະເມີນມູນຄ່າສາງໃນການຕັ້ງຄ່າ."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -14912,7 +15357,7 @@ msgstr "ລົງບັນຊີສ່ວນຕ່າງໃນ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
 msgid "Post Entry?"
-msgstr ""
+msgstr "ລົງບັນຊີລາຍການນີ້ບໍ?"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_account_confirm_payments
@@ -14959,7 +15404,7 @@ msgstr "ຍອດລວມຍ່ອຍກ່ອນໜ້າ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cash_rounding__rounding
 msgid "Precision"
-msgstr ""
+msgstr "ຄວາມລະອຽດ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__preferred_payment_method_line_id
@@ -15070,7 +15515,7 @@ msgstr "ບັນຊີສ່ວນຕ່າງລາຄາ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category__property_price_difference_account_active
 msgid "Price Difference Account Active"
-msgstr ""
+msgstr "ບັນຊີສ່ວນຕ່າງລາຄາເປີດໃຊ້ງານ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__price_include
@@ -15098,7 +15543,7 @@ msgstr "ພິມໃນໜ້າໃໝ່"
 #. module: account
 #: model:ir.actions.server,name:account.action_server_payment_receipt
 msgid "Print Payment Receipt"
-msgstr ""
+msgstr "ພິມໃບຮັບເງິນ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15118,7 +15563,7 @@ msgstr "ບັນຊີຫຸ້ນສ່ວນຕົວ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__non_deductible_account_active
 msgid "Private Share Account Active"
-msgstr ""
+msgstr "ບັນຊີຫຸ້ນສ່ວນຕົວເປີດໃຊ້ງານ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__problem_description
@@ -15146,7 +15591,7 @@ msgstr "ບັນຊີສິນຄ້າ:"
 #. module: account
 #: model:ir.model,name:account.model_product_catalog_line_mixin
 msgid "Product Catalog Line Mixin"
-msgstr ""
+msgstr "Product Catalog Line Mixin"
 
 #. module: account
 #: model:ir.model,name:account.model_product_catalog_mixin
@@ -15221,7 +15666,7 @@ msgstr "ມືອາຊີບ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__deductible_percentage
 msgid "Professional Expense Deductibility Percentage"
-msgstr ""
+msgstr "ເປີເຊັນການຫັກລົບຄ່າໃຊ້ຈ່າຍວິຊາຊີບ"
 
 #. module: account
 #: model:account.account,name:account.22_us_group_62
@@ -15254,7 +15699,7 @@ msgstr "ບັນຊີກຳໄລ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__profit_account_active
 msgid "Profit Account Active"
-msgstr ""
+msgstr "ບັນຊີກຳໄລເປີດໃຊ້ງານ"
 
 #. module: account
 #. odoo-python
@@ -15467,7 +15912,7 @@ msgstr "ຄ່າໃຊ້ຈ່າຍ RD"
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__consolidation_rate
 #: model:ir.model.fields,field_description:account.field_res_currency_rate_consolidation_mixin__consolidation_rate
 msgid "Rate"
-msgstr ""
+msgstr "ອັດຕາ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__rating_ids
@@ -15528,7 +15973,7 @@ msgstr "ບັນຊີລູກໜີ້"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__receivable_account_id
 msgid "Receivable Account"
-msgstr ""
+msgstr "ບັນຊີລູກໜີ້"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__payment_type__inbound
@@ -15548,7 +15993,7 @@ msgstr "ຮັບໃບແຈ້ງໜີ້"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__partner_bank_id
 msgid "Recipient Account"
-msgstr ""
+msgstr "ບັນຊີຜູ້ຮັບ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_bank_id
@@ -15586,7 +16031,7 @@ msgstr "ກວດສອບຍອດແລ້ວ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
 msgid "Reconciled Bank Transactions"
-msgstr ""
+msgstr "ທຸລະກຳທະນາຄານທີ່ກວດສອບຍອດແລ້ວ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bill_ids
@@ -15637,12 +16082,12 @@ msgstr "ສ່ວນການກວດສອບຍອດ"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__reco_model
 msgid "Reconciliation model"
-msgstr ""
+msgstr "ຮູບແບບການກວດສອບຍອດ"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__reference
 msgid "Record Reference"
-msgstr ""
+msgstr "ເອກະສານອ້າງອີງຂອງບັນທຶກ"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
@@ -15704,7 +16149,7 @@ msgstr "ຄືນເງິນ"
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid "Refund Confirmation"
-msgstr ""
+msgstr "ການຢືນຢັນການຄືນເງິນ"
 
 #. module: account
 #. odoo-python
@@ -15792,7 +16237,7 @@ msgstr "ໂຫຼດໃໝ່"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reload Data"
-msgstr ""
+msgstr "ໂຫຼດຂໍ້ມູນຄືນໃໝ່"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15811,20 +16256,20 @@ msgstr "ສ້າງລຳດັບຂອງລາຍການບັນຊີຄ
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid "Remittance Advice"
-msgstr ""
+msgstr "ໃບແຈ້ງການຊຳລະເງິນ"
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/interactions/portal_additional_identifiers.js:0
 #: model_terms:ir.ui.view,arch_db:account.address_form_additional_identifiers
 msgid "Remove"
-msgstr ""
+msgstr "ລຶບອອກ"
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/tax_totals/tax_totals.xml:0
 msgid "Remove Rounding Method"
-msgstr ""
+msgstr "ລຶບວິທີການປັດເສດອອກ"
 
 #. module: account
 #. odoo-python
@@ -15842,7 +16287,7 @@ msgstr "ຖືກລົບອອກ"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/search/section_row/section_row.xml:0
 msgid "Rename"
-msgstr ""
+msgstr "ປ່ຽນຊື່"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__render_model
@@ -15915,7 +16360,7 @@ msgstr "ແຖວບົດລາຍງານ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_line_comparison
 msgid "Report Line Comparison"
-msgstr ""
+msgstr "ການປຽບທຽບແຖວລາຍງານ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__report_line_name
@@ -15974,7 +16419,7 @@ msgstr "ມູນຄ່າທີ່ເຫຼືອ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__residual_at_date
 msgid "Residual (at date)"
-msgstr ""
+msgstr "ມູນຄ່າທີ່ເຫຼືອ (ຕາມວັນທີ)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_residual
@@ -15996,7 +16441,7 @@ msgstr "ມູນຄ່າທີ່ເຫຼືອຕາມສະກຸນເງ
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__residual_currency_at_date
 msgid "Residual in currency (at date)"
-msgstr ""
+msgstr "ມູນຄ່າທີ່ເຫຼືອຕາມສະກຸນເງິນ (ຕາມວັນທີ)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__activity_user_id
@@ -16034,7 +16479,7 @@ msgstr "ຄ່າໃຊ້ຈ່າຍແຜນການລ້ຽງຊີບຍ
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__return_partner_bank_id
 msgid "Returns Bank Account"
-msgstr ""
+msgstr "ບັນຊີທະນາຄານສຳລັບການສົ່ງຄືນ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
@@ -16062,7 +16507,7 @@ msgstr "ວັນທີກັບລາຍການ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reversal Entries"
-msgstr ""
+msgstr "ລາຍການກັບບັນຊີ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reversal_move_ids
@@ -16074,7 +16519,7 @@ msgstr "ການເຄື່ອນໄຫວກັບລາຍການ"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reversal_move_count
 #: model:ir.model.fields,field_description:account.field_account_move__reversal_move_count
 msgid "Reversal Move Count"
-msgstr ""
+msgstr "ຈຳນວນລາຍການກັບບັນຊີ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date
@@ -16185,7 +16630,7 @@ msgstr "ກວດສອບໃບລາຍງານບັນຊີ"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Review all the modification done by the user with right under bookkeeper."
-msgstr ""
+msgstr "ກວດກາຄືນທຸກການແກ້ໄຂທີ່ດຳເນີນການໂດຍຜູ້ໃຊ້ທີ່ມີສິດຕ່ຳກວ່າພະນັກງານບັນຊີ."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__set_to_review_documents
@@ -16193,7 +16638,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_company__set_to_review_documents
 #: model:ir.model.fields,field_description:account.field_res_config_settings__set_to_review_documents
 msgid "Review data"
-msgstr ""
+msgstr "ກວດກາຂໍ້ມູນຄືນ"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__review_state__reviewed
@@ -16229,7 +16674,7 @@ msgstr "ບົດລາຍງານຫຼັກ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Root account"
-msgstr ""
+msgstr "ບັນຊີຕົ້ນເຄົ້າ"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__tax_calculation_rounding_method__round_per_line
@@ -16272,12 +16717,12 @@ msgstr "ວິທີການປັດເສດ"
 #: model:ir.ui.menu,name:account.menu_action_rounding_form_view
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Rounding Methods"
-msgstr ""
+msgstr "ວິທີການປັດເສດ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__rule_type
 msgid "Rule Type"
-msgstr ""
+msgstr "ປະເພດກົດລະບຽບ"
 
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_line
@@ -16302,7 +16747,7 @@ msgstr "ການຕັດບັນຊີອັດຕະໂນມັດ SEPA (SD
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "SEPA QR Codes"
-msgstr ""
+msgstr "ລະຫັດ SEPA QR"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_has_sms_error
@@ -16543,13 +16988,13 @@ msgstr "ຄົ້ນຫາຊື່ ຫຼື ເລກປະຈຳຕົວຜ�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Search a product"
-msgstr ""
+msgstr "ຄົ້ນຫາສິນຄ້າ"
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/tax_totals/tax_totals.js:0
 msgid "Search more..."
-msgstr ""
+msgstr "ຄົ້ນຫາເພີ່ມເຕີມ..."
 
 #. module: account
 #. odoo-javascript
@@ -16626,7 +17071,7 @@ msgstr "ໂທເຄັນຄວາມປອດໄພ"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "See exchange information"
-msgstr ""
+msgstr "ເບິ່ງຂໍ້ມູນອັດຕາແລກປ່ຽນ"
 
 #. module: account
 #. odoo-python
@@ -16639,7 +17084,7 @@ msgstr "ເບິ່ງລາຍການ"
 #: code:addons/account/static/src/components/tax_totals/tax_totals.js:0
 #: code:addons/account/static/src/components/tax_totals/tax_totals.xml:0
 msgid "Select Rounding Method"
-msgstr ""
+msgstr "ເລືອກວິທີການປັດເສດ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_distribution_model__product_categ_id
@@ -16751,12 +17196,12 @@ msgstr "ສົ່ງສຳເນົາໄປທີ່"
 #. module: account
 #: model:ir.model,name:account.model_account_move_send_batch_wizard
 msgid "Send Invoice Batch Wizard"
-msgstr ""
+msgstr "ຕົວຊ່ວຍສ້າງການສົ່ງໃບແຈ້ງໜີ້ເປັນຊຸດ"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_send_wizard
 msgid "Send Invoice Wizard"
-msgstr ""
+msgstr "ຕົວຊ່ວຍສ້າງການສົ່ງໃບແຈ້ງໜີ້"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__allow_out_payment
@@ -16775,7 +17220,7 @@ msgstr "ສົ່ງໃບແຈ້ງໜີ້ໄປທີ່"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Send invoices and payment reminders by post"
-msgstr ""
+msgstr "ສົ່ງໃບແຈ້ງໜີ້ ແລະ ໃບເຕືອນການຊຳລະເງິນທາງໄປສະນີ"
 
 #. module: account
 #: model:ir.actions.server,name:account.ir_cron_account_move_send_ir_actions_server
@@ -17045,7 +17490,7 @@ msgstr "ຕັ້ງຄ່າຜັງບັນຊີຂອງທ່ານ ແ�
 #. odoo-javascript
 #: code:addons/account/static/src/components/invoice_guide/invoice_guide.js:0
 msgid "Set your Company Data"
-msgstr ""
+msgstr "ຕັ້ງຄ່າຂໍ້ມູນບໍລິສັດຂອງທ່ານ"
 
 #. module: account
 #. odoo-python
@@ -17088,7 +17533,7 @@ msgstr "ຕັ້ງຄ່າບັນຊີບັດເຄຣດິດ"
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Setup Your Invoice Layout"
-msgstr ""
+msgstr "ຕັ້ງຄ່າຮູບແບບໃບແຈ້ງໜີ້ຂອງທ່ານ"
 
 #. module: account
 #: model:ir.actions.server,name:account.model_account_move_action_share
@@ -17098,7 +17543,7 @@ msgstr "ແບ່ງປັນ"
 #. module: account
 #: model:ir.model,name:account.model_account_move_send
 msgid "Shared Send Invoice Wizard Functions"
-msgstr ""
+msgstr "ຟັງຊັນຕົວຊ່ວຍສ້າງການສົ່ງໃບແຈ້ງໜີ້ທີ່ໃຊ້ຮ່ວມກັນ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__code
@@ -17116,7 +17561,7 @@ msgstr "ສະແດງຄຸນສົມບັດການບັນຊີ - ອ
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__show_clearing_number
 msgid "Show Clearing Number"
-msgstr ""
+msgstr "ສະແດງເລກຫັກບັນຊີ"
 
 #. module: account
 #. odoo-javascript
@@ -17166,7 +17611,7 @@ msgstr "ສະແດງຄຸນສົມບັດການປ້ອງກັນ
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_invoice_vendor_bill
 #: model:ir.model.fields,field_description:account.field_account_move__show_invoice_vendor_bill
 msgid "Show Invoice Vendor Bill"
-msgstr ""
+msgstr "ສະແດງໃບແຈ້ງໜີ້/ໃບຮຽກເກັບເງິນຈາກຜູ້ຈຳໜ່າຍ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_journal
@@ -17219,7 +17664,7 @@ msgstr "ສະແດງວັນທີສະໜອງສິນຄ້າທີ່
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Show Unreconciled Bank Transactions"
-msgstr ""
+msgstr "ສະແດງທຸລະກຳທະນາຄານທີ່ຍັງບໍ່ທັນກວດສອບຍອດ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -17289,7 +17734,7 @@ msgstr "ບາງເອກະສານກຳລັງຖືກສົ່ງໂດ
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Some entries could not be reset to draft"
-msgstr ""
+msgstr "ບາງລາຍການບໍ່ສາມາດຕັ້ງຄ່າກັບເປັນສະບັບຮ່າງໄດ້"
 
 #. module: account
 #. odoo-javascript
@@ -17353,7 +17798,7 @@ msgstr ""
 msgid ""
 "Specify how the rounding difference is applied: add a rounding line or "
 "adjust the highest tax amount."
-msgstr ""
+msgstr "ລະບຸວິທີການນຳໃຊ້ສ່ວນຕ່າງການປັດເສດ: ເພີ່ມແຖວການປັດເສດ ຫຼື ປັບປ່ຽນຈຳນວນພາສີທີ່ສູງທີ່ສຸດ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__auto_post
@@ -17370,7 +17815,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__product_template__cost_method__standard
 #: model:ir.model.fields.selection,name:account.selection__res_company__cost_method__standard
 msgid "Standard Price"
-msgstr ""
+msgstr "ລາຄາມາດຕະຖານ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_cost_method
@@ -17381,6 +17826,9 @@ msgid ""
 "cost.\n"
 "        "
 msgstr ""
+"ລາຄາມາດຕະຖານ: ສິນຄ້າຖືກຕີມູນຄ່າຕາມຕົ້ນທຶນມາດຕະຖານທີ່ກຳນົດໄວ້ໃນສິນຄ້າ.\n"
+"        ຕົ້ນທຶນສະເລ່ຍ (AVCO): ສິນຄ້າຖືກຕີມູນຄ່າຕາມຕົ້ນທຶນສະເລ່ຍຖ່ວງນ້ຳໜັກ.\n"
+"        "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -17390,7 +17838,7 @@ msgstr "ການສື່ສານມາດຕະຖານ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_kanban
 msgid "Starting"
-msgstr ""
+msgstr "ເລີ່ມຕົ້ນ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_start
@@ -17508,35 +17956,35 @@ msgstr "ຂັ້ນຕອນສຳເລັດແລ້ວ!"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
 msgid "Stock Account"
-msgstr ""
+msgstr "ບັນຊີສິນຄ້າໃນສາງ"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Stock Closing as of %(date)s"
-msgstr ""
+msgstr "ຍອດປິດສິນຄ້າໃນສາງ ນະ ວັນທີ %(date)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category__property_stock_journal
 #: model:ir.model.fields,field_description:account.field_res_company__account_stock_journal_id
 msgid "Stock Journal"
-msgstr ""
+msgstr "ປຶ້ມບັນຊີສິນຄ້າໃນສາງ"
 
 #. module: account
 #: model:ir.model,name:account.model_account_stock_valuation_report
 msgid "Stock Valuation"
-msgstr ""
+msgstr "ການຕີມູນຄ່າສິນຄ້າໃນສາງ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category__property_stock_valuation_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_stock_valuation_id
 msgid "Stock Valuation Account"
-msgstr ""
+msgstr "ບັນຊີການຕີມູນຄ່າສິນຄ້າໃນສາງ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category__property_stock_valuation_account_active
 msgid "Stock Valuation Account Active"
-msgstr ""
+msgstr "ບັນຊີການຕີມູນຄ່າສິນຄ້າໃນສາງເປີດໃຊ້ງານ"
 
 #. module: account
 #. odoo-javascript
@@ -17544,19 +17992,18 @@ msgstr ""
 #: code:addons/account/report/account_stock_valuation_report.py:0
 #: code:addons/account/static/src/components/stock_valuation/stock_valuation_report.js:0
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
-#, fuzzy
 msgid "Stock Variation"
 msgstr "ສ່ວນຕ່າງສິນຄ້າໃນສາງ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category__account_stock_variation_id
 msgid "Stock Variation Account"
-msgstr ""
+msgstr "ບັນຊີສ່ວນຕ່າງສິນຄ້າໃນສາງ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category__account_stock_variation_active
 msgid "Stock Variation Account Active"
-msgstr ""
+msgstr "ບັນຊີສ່ວນຕ່າງສິນຄ້າໃນສາງເປີດໃຊ້ງານ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -17572,7 +18019,7 @@ msgstr "ການບັນຊີແບບ Storno"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cash_rounding__strategy
 msgid "Strategy"
-msgstr ""
+msgstr "ຍຸດທະສາດ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__street
@@ -17675,7 +18122,7 @@ msgstr "ບັນຊີພັກ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__suspense_account_active
 msgid "Suspense Account Active"
-msgstr ""
+msgstr "ບັນຊີພັກເປີດໃຊ້ງານ"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_move_type
@@ -17685,12 +18132,12 @@ msgstr "ປ່ຽນເປັນໃບແຈ້ງໜີ້/ໃບຫຼຸດ�
 #. module: account
 #: model:account.tax,name:account.22_account_tax_us_demo_tx_state
 msgid "TX State 6.25%"
-msgstr ""
+msgstr "ລັດ TX 6.25%"
 
 #. module: account
 #: model:account.tax,name:account.22_account_tax_us_demo_tx_exempt
 msgid "TX State 6.25% Exempt"
-msgstr ""
+msgstr "ຍົກເວັ້ນພາສີລັດ TX 6.25%"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__name
@@ -17798,7 +18245,7 @@ msgstr "ພາສີ 4.225%"
 #. module: account
 #: model:account.tax.group,name:account.22_account_tax_group_us_demo_4_25
 msgid "Tax 4.25%"
-msgstr ""
+msgstr "ພາສີ 4.25%"
 
 #. module: account
 #: model:account.tax.group,name:account.22_account_tax_group_us_4_5
@@ -17968,12 +18415,12 @@ msgstr "ລະຫັດປະເທດຂອງພາສີ"
 #. odoo-javascript
 #: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
 msgid "Tax Distribution"
-msgstr ""
+msgstr "ການແຈກຢາຍພາສີ"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__document_tax_mode__tax_excluded
 msgid "Tax Excl."
-msgstr ""
+msgstr "ບໍ່ລວມພາສີ."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__price_include_override__tax_excluded
@@ -18021,12 +18468,12 @@ msgstr "ເລກປະຈຳຕົວຜູ້ເສຍພາສີ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
 msgid "Tax ID required"
-msgstr ""
+msgstr "ຕ້ອງການເລກປະຈຳຕົວຜູ້ເສຍພາສີ"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__document_tax_mode__tax_included
 msgid "Tax Incl."
-msgstr ""
+msgstr "ລວມພາສີ."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__price_include_override__tax_included
@@ -18267,7 +18714,7 @@ msgstr "ຫ້ອງຂໍ້ມູນທາງເຕັກນິກເພື່
 #: model:ir.model.fields,help:account.field_res_partner_bank__phishing_warnings
 msgid ""
 "Technical field used to display warnings if there's a potential phishing risk"
-msgstr ""
+msgstr "ຫ້ອງຂໍ້ມູນເຕັກນິກທີ່ໃຊ້ເພື່ອສະແດງການແຈ້ງເຕືອນ ຖ້າມີຄວາມສ່ຽງຕໍ່ການຫຼອກລວງ (Phishing)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence_override_regex
@@ -18318,43 +18765,43 @@ msgstr "ການສ້າງແມ່ແບບຈາກຜູ້ຂຽນຕ້
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Template for Bills"
-msgstr ""
+msgstr "ແມ່ແບບສຳລັບໃບຮຽກເກັບເງິນ"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "Template for Chart of Accounts"
-msgstr ""
+msgstr "ແມ່ແບບສຳລັບຜັງບັນຊີ"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Template for Credit Notes"
-msgstr ""
+msgstr "ແມ່ແບບສຳລັບໃບຫຼຸດໜີ້"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Template for Invoices"
-msgstr ""
+msgstr "ແມ່ແບບສຳລັບໃບແຈ້ງໜີ້"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Template for Journal Items"
-msgstr ""
+msgstr "ແມ່ແບບສຳລັບລາຍການບັນຊີຍ່ອຍ"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Template for Misc. Operations"
-msgstr ""
+msgstr "ແມ່ແບບສຳລັບການດຳເນີນງານອື່ນໆ"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Template for Refunds"
-msgstr ""
+msgstr "ແມ່ແບບສຳລັບການຄືນເງິນ"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__templates_found
@@ -18484,7 +18931,7 @@ msgid ""
 "using a single 100% line. "
 msgstr ""
 "ຄຸນສົມບັດສ່ວນຫຼຸດສຳລັບການຊຳລະກ່ອນກຳນົດ ສາມາດໃຊ້ໄດ້ກັບເງື່ອນໄຂການຊຳລະເງິນທີ່ໃຊ້ແຖວ 100% "
-"ພຽງແຖວດຽວເທົ່ານັ້ນ."
+"ພຽງແຖວດຽວເທົ່ານັ້ນ. "
 
 #. module: account
 #. odoo-python
@@ -18495,7 +18942,7 @@ msgstr "ສ່ວນຫຼຸດສຳລັບການຊຳລະກ່ອນ
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_report_column_expression_label_uniq
 msgid "The Expression label must be unique per account report."
-msgstr ""
+msgstr "ປ້າຍຊື່ສຳນວນຕ້ອງບໍ່ຊ້ຳກັນໃນແຕ່ລະບົດລາຍງານບັນຊີ."
 
 #. module: account
 #. odoo-python
@@ -18555,7 +19002,7 @@ msgstr "ບັນຊີ %(name)s (%(code)s) ຖືກຈັດເກັບແລ
 msgid ""
 "The account code can only contain alphanumeric characters, dots, and dashes. "
 "(account code: %s)"
-msgstr ""
+msgstr "ລະຫັດບັນຊີສາມາດມີໄດ້ພຽງແຕ່ຕົວອັກສອນ, ຕົວເລກ, ຈ້ຳເມັດ ແລະ ຂີດຕໍ່ເທົ່ານັ້ນ. (ລະຫັດບັນຊີ: %s)"
 
 #. module: account
 #. odoo-python
@@ -18661,7 +19108,7 @@ msgstr "ໃບແຈ້ງຍອດທະນາຄານທີ່ໃຊ້ສຳ
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
 msgid "The bank transaction that created this entry"
-msgstr ""
+msgstr "ທຸລະກຳທະນາຄານທີ່ສ້າງລາຍການນີ້"
 
 #. module: account
 #. odoo-python
@@ -18692,6 +19139,8 @@ msgid ""
 "The cash rounding method \"%(name)s\" has no Profit/Loss Accounts set, so no "
 "rounding line can be added."
 msgstr ""
+"ວິທີການປັດເສດເງິນສົດ \"%(name)s\" ບໍ່ມີການຕັ້ງຄ່າບັນຊີກຳໄລ/ຂາດທຶນ, "
+"ດັ່ງນັ້ນຈຶ່ງບໍ່ສາມາດເພີ່ມແຖວການປັດເສດໄດ້."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -18745,7 +19194,7 @@ msgstr "ບໍລິສັດທີ່ແຖວການແຈກຢາຍນີ
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__rounding_method
 msgid "The computation rule used to round values (e.g., UP, DOWN, or HALF-UP)."
-msgstr ""
+msgstr "ກົດເກນການຄິດໄລ່ທີ່ໃຊ້ເພື່ອປັດເສດຄ່າ (ຕົວຢ່າງ: UP, DOWN, ຫຼື HALF-UP)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
@@ -18764,6 +19213,8 @@ msgid ""
 "The country of the foreign Tax ID could not be detected. Please assign a "
 "country to the fiscal position."
 msgstr ""
+"ບໍ່ສາມາດກວດຫາປະເທດຂອງເລກປະຈຳຕົວຜູ້ເສຍພາສີຕ່າງປະເທດໄດ້. "
+"ກະລຸນາກຳນົດປະເທດໃຫ້ກັບສະຖານະທາງພາສີ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
@@ -18867,7 +19318,7 @@ msgstr "ຈຳນວນມື້ທີ່ເພີ່ມເຂົ້າຕ້ອ
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "The deductibility percentage must be between 0% and 100%"
-msgstr ""
+msgstr "ເປີເຊັນທີ່ສາມາດຫັກລົບໄດ້ຕ້ອງຢູ່ລະຫວ່າງ 0% ຫາ 100%"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__partner_shipping_id
@@ -18879,12 +19330,12 @@ msgstr "ທີ່ຢູ່ນຳສົ່ງຈະຖືກນຳໃຊ້ໃນ
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_check_document_tax_mode_set
 msgid "The document tax mode must be set."
-msgstr ""
+msgstr "ຕ້ອງກຳນົດໂໝດພາສີຂອງເອກະສານ."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "The document's sequence becomes editable on all documents."
-msgstr ""
+msgstr "ລຳດັບຂອງເອກະສານສາມາດແກ້ໄຂໄດ້ໃນທຸກເອກະສານ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_origin
@@ -19031,6 +19482,7 @@ msgid ""
 "The journal (%(journal_code)s) has some hashed statements so the type cannot "
 "be changed"
 msgstr ""
+"ປຶ້ມບັນຊີ (%(journal_code)s) ມີບາງໃບແຈ້ງຍອດທີ່ຖືກ Hash ແລ້ວ ດັ່ງນັ້ນຈຶ່ງບໍ່ສາມາດປ່ຽນປະເພດໄດ້"
 
 #. module: account
 #. odoo-python
@@ -19041,6 +19493,9 @@ msgid ""
 "To be consistent, the journal entry must always have exactly one journal "
 "item involving the bank/cash account."
 msgstr ""
+"ລາຍການບັນຊີ %s ຢູ່ໃນສະຖານະທີ່ບໍ່ຖືກຕ້ອງກ່ຽວກັບທຸລະກຳທະນາຄານທີ່ກ່ຽວຂ້ອງ.\n"
+"ເພື່ອໃຫ້ສອດຄ່ອງກັນ, ລາຍການບັນຊີຕ້ອງມີລາຍການບັນຊີຍ່ອຍພຽງລາຍການດຽວສະເໝີທີ່ກ່ຽວຂ້ອງກັບບັນຊີທະນາຄານ/"
+"ເງິນສົດ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -19076,6 +19531,8 @@ msgid ""
 "The journal of this statement (%(statement_name)) is hashed, the statement "
 "cannot be reset to draft"
 msgstr ""
+"ປຶ້ມບັນຊີຂອງໃບແຈ້ງຍອດນີ້ (%(statement_name)) ຖືກ Hash ແລ້ວ, "
+"ໃບແຈ້ງຍອດບໍ່ສາມາດຕັ້ງຄືນເປັນສະບັບຮ່າງໄດ້"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
@@ -19158,7 +19615,7 @@ msgstr "ການຊຳລະເງິນທີ່ສ້າງລາຍການ
 #. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 msgid "The payment tolerance must be positive."
-msgstr ""
+msgstr "ຄ່າຜິດດ່ຽງການຊຳລະທີ່ຍອມຮັບໄດ້ຕ້ອງເປັນຕົວເລກບວກ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__currency_id
@@ -19170,7 +19627,7 @@ msgstr "ສະກຸນເງິນຂອງການຊຳລະເງິນ."
 #. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 msgid "The percentage tolerance must be between 0 and 100."
-msgstr ""
+msgstr "ເປີເຊັນຄ່າຜິດດ່ຽງທີ່ຍອມຮັບໄດ້ຕ້ອງຢູ່ລະຫວ່າງ 0 ຫາ 100."
 
 #. module: account
 #. odoo-python
@@ -19199,6 +19656,11 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
+"ຮູບແບບການກວດສອບຍອດຈະຖືກນຳໃຊ້ກໍຕໍ່ເມື່ອປ້າຍຊື່ທຸລະກຳ, ລາຍລະອຽດທຸລະກຳ ຫຼື ໝາຍເຫດ "
+"ກົງກັບເງື່ອນໄຂດັ່ງຕໍ່ໄປນີ້:\n"
+"        * ປະກອບມີ: ທຸລະກຳຕ້ອງມີຂໍ້ຄວາມນີ້ (ບໍ່ຈຳແນກຕົວອັກສອນນ້ອຍໃຫຍ່).\n"
+"        * ບໍ່ປະກອບມີ: ກົງກັນຂ້າມກັບ \"ປະກອບມີ\".\n"
+"        * ກົງກັບ Regex: ກຳນົດ Regular Expression ຂອງທ່ານເອງ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_amount
@@ -19251,14 +19713,14 @@ msgstr "ໜ້າທີ່ຮ້ອງຂໍບໍ່ຖືກຕ້ອງ ຫ�
 #: model:ir.model.fields,help:account.field_account_move_line__residual_currency_at_date
 msgid ""
 "The residual amount (at date) on a journal item expressed in its currency."
-msgstr ""
+msgstr "ຈຳນວນເງິນຄົງເຫຼືອ (ນະ ວັນທີ) ໃນລາຍການບັນຊີຍ່ອຍ ທີ່ສະແດງເປັນສະກຸນເງິນຂອງມັນເອງ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__residual_at_date
 msgid ""
 "The residual amount (at date) on a journal item expressed in the company "
 "currency."
-msgstr ""
+msgstr "ຈຳນວນເງິນຄົງເຫຼືອ (ນະ ວັນທີ) ໃນລາຍການບັນຊີຍ່ອຍ ທີ່ສະແດງເປັນສະກຸນເງິນຂອງບໍລິສັດ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__amount_residual_currency
@@ -19442,11 +19904,14 @@ msgid ""
 "on this portion; the rest is treated as a private expense. Use this for "
 "mixed-use costs (e.g. a home office, a car used partly for personal trips)."
 msgstr ""
+"ອັດຕາສ່ວນຂອງຄ່າໃຊ້ຈ່າຍນີ້ທີ່ໃຊ້ສຳລັບຈຸດປະສົງທາງທຸລະກິດ. ອາກອນມູນຄ່າເພີ່ມ (VAT) "
+"ສາມາດຫັກອອກໄດ້ສະເພາະສ່ວນນີ້ເທົ່ານັ້ນ; ສ່ວນທີ່ເຫຼືອຈະຖືວ່າເປັນລາຍຈ່າຍສ່ວນຕົວ. "
+"ໃຫ້ໃຊ້ອັນນີ້ສຳລັບຕົ້ນທຶນທີ່ໃຊ້ປົນກັນ (ເຊັ່ນ: ຫ້ອງການຢູ່ເຮືອນ, ລົດທີ່ໃຊ້ສ່ວນຕົວບາງຄັ້ງຄາວ)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__rounding
 msgid "The smallest value used to round the total amount (e.g., 0.05 or 100)."
-msgstr ""
+msgstr "ຄ່ານ້ອຍທີ່ສຸດທີ່ໃຊ້ເພື່ອປັດເສດຍອດລວມທັງໝົດ (ຕົວຢ່າງ: 0.05 ຫຼື 100)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__foreign_vat
@@ -19520,6 +19985,8 @@ msgid ""
 "entries from journal prefixes containing them will not be secured: %"
 "(prefix_info)s"
 msgstr ""
+"ຍັງມີທຸລະກຳທະນາຄານທີ່ຍັງບໍ່ໄດ້ສົມທຽບກ່ອນວັນທີທີ່ເລືອກ. ລາຍການຈາກຄຳນຳໜ້າປຶ້ມບັນຊີທີ່ມີພວກມັນຢູ່ "
+"ຈະບໍ່ໄດ້ຮັບການຮັກສາຄວາມປອດໄພ: %(prefix_info)s"
 
 #. module: account
 #. odoo-python
@@ -19528,6 +19995,8 @@ msgid ""
 "There are still unreconciled bank transactions in the period you want to "
 "lock. You should either reconcile or delete them."
 msgstr ""
+"ຍັງມີທຸລະກຳທະນາຄານທີ່ຍັງບໍ່ໄດ້ສົມທຽບໃນໄລຍະເວລາທີ່ທ່ານຕ້ອງການລັອກ. ທ່ານຄວນສົມທຽບຍອດ ຫຼື "
+"ລຶບພວກມັນອອກ."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
@@ -19633,6 +20102,8 @@ msgid ""
 "This account is used in bank reconciliation. Currency rate difference "
 "entries will be automatically created if needed."
 msgstr ""
+"ບັນຊີນີ້ໃຊ້ໃນການສົມທຽບຍອດທະນາຄານ. "
+"ລາຍການສ່ວນຕ່າງອັດຕາແລກປ່ຽນເງິນຕາຈະຖືກສ້າງຂຶ້ນໂດຍອັດຕະໂນມັດຖ້າຈຳເປັນ."
 
 #. module: account
 #. odoo-python
@@ -19653,6 +20124,8 @@ msgid ""
 "This action is irreversible: the credit/debit cannot be modified again from "
 "this screen.  -  This action will affect your current company only."
 msgstr ""
+"ການດຳເນີນການນີ້ບໍ່ສາມາດກັບຄືນໄດ້: ເບື້ອງມີ/ເບື້ອງໜີ້ ບໍ່ສາມາດແກ້ໄຂໄດ້ອີກຈາກໜ້າຈໍນີ້. - "
+"ການດຳເນີນການນີ້ຈະມີຜົນຕໍ່ບໍລິສັດປັດຈຸບັນຂອງທ່ານເທົ່ານັ້ນ."
 
 #. module: account
 #. odoo-python
@@ -19705,7 +20178,7 @@ msgstr "ສິ່ງນີ້ສາມາດໃຊ້ໄດ້ກັບລາຍ
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This document has no tax amount to adjust."
-msgstr ""
+msgstr "ເອກະສານນີ້ບໍ່ມີຈຳນວນພາສີທີ່ຈະປັບປຸງ."
 
 #. module: account
 #. odoo-python
@@ -19748,7 +20221,7 @@ msgstr ""
 msgid ""
 "This entry has already been supervised. You need the accounting manager role "
 "to change it."
-msgstr ""
+msgstr "ລາຍການນີ້ໄດ້ຮັບການກວດກາແລ້ວ. ທ່ານຕ້ອງມີບົດບາດຜູ້ຈັດການບັນຊີເພື່ອປ່ຽນແປງມັນ."
 
 #. module: account
 #. odoo-python
@@ -19766,7 +20239,7 @@ msgstr "ລາຍການນີ້ຖືກສຳເນົາມາຈາກ %s
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "This entry has been reversed by %s"
-msgstr ""
+msgstr "ລາຍການນີ້ໄດ້ຖືກກັບຄືນລາຍການໂດຍ %s"
 
 #. module: account
 #. odoo-python
@@ -19779,6 +20252,7 @@ msgstr "ລາຍການນີ້ໄດ້ຖືກກັບຄືນລາຍ
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reviewed by accountants, only them can edit it now."
 msgstr ""
+"ລາຍການນີ້ໄດ້ຮັບການກວດສອບໂດຍພະນັກງານບັນຊີແລ້ວ, ມີພຽງແຕ່ພວກເຂົາເທົ່ານັ້ນທີ່ສາມາດແກ້ໄຂໄດ້ໃນຕອນນີ້."
 
 #. module: account
 #. odoo-python
@@ -19861,7 +20335,7 @@ msgstr "ແຖວນີ້ ແລະ ແຖວຍ່ອຍຂອງມັນຈ�
 #. odoo-python
 #: code:addons/account/models/product_catalog_mixin.py:0
 msgid "This model does not support (sub)sections"
-msgstr ""
+msgstr "ໂມເດວນີ້ບໍ່ຮອງຮັບໝວດ(ຍ່ອຍ)"
 
 #. module: account
 #. odoo-python
@@ -19896,7 +20370,7 @@ msgstr "ລາຍການເຄື່ອນໄຫວນີ້ຈະຖືກລ
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "This note will be mentioned on invoices using this tax."
-msgstr ""
+msgstr "ໝາຍເຫດນີ້ຈະຖືກລະບຸໄວ້ໃນໃບແຈ້ງໜີ້ທີ່ນຳໃຊ້ພາສີນີ້."
 
 #. module: account
 #. odoo-javascript
@@ -19953,7 +20427,7 @@ msgstr ""
 msgid ""
 "Those can be used to automatically match journal items with your "
 "transactions."
-msgstr ""
+msgstr "ສິ່ງເຫຼົ່ານີ້ສາມາດນຳໃຊ້ເພື່ອຈັບຄູ່ລາຍການບັນຊີຍ່ອຍກັບທຸລະກຳຂອງທ່ານໂດຍອັດຕະໂນມັດ."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
@@ -20167,7 +20641,7 @@ msgstr "ມູນຄ່າທີ່ເຫຼືອທັງໝົດ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
 msgid "Total Residual at date"
-msgstr ""
+msgstr "ມູນຄ່າທີ່ເຫຼືອທັງໝົດຕາມວັນທີ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
@@ -20177,12 +20651,12 @@ msgstr "ມູນຄ່າທີ່ເຫຼືອທັງໝົດຕາມສ
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
 msgid "Total Rounding"
-msgstr ""
+msgstr "ຍອດລວມການປັດເສດ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Total Rounding Accounts:"
-msgstr ""
+msgstr "ບັນຊີປັດເສດລວມ:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_total_signed
@@ -20229,7 +20703,7 @@ msgstr "ຈຳນວນເງິນລວມເປັນຕົວໜັງສື
 #: model:ir.model.fields,field_description:account.field_res_company__display_invoice_amount_total_words
 #: model:ir.model.fields,field_description:account.field_res_config_settings__display_invoice_amount_total_words
 msgid "Total amount of invoice in words"
-msgstr ""
+msgstr "ຈຳນວນເງິນລວມຂອງໃບແຈ້ງໜີ້ເປັນຕົວໜັງສື"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__credit
@@ -20300,7 +20774,7 @@ msgstr "ປະເພດທຸລະກຳ"
 #. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 msgid "Transaction percentage can't be 0"
-msgstr ""
+msgstr "ເປີເຊັນຂອງທຸລະກຳບໍ່ສາມາດເປັນ 0 ໄດ້"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__line_ids
@@ -20496,7 +20970,7 @@ msgstr "ລະຫັດກຳນົດສະເພາະສຳລັບແຖວ
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__transaction_uuid
 msgid "Unique transaction identifier assigned by the initiating party"
-msgstr ""
+msgstr "ລະຫັດກຳນົດທຸລະກຳສະເພາະທີ່ລະບຸໂດຍຝ່າຍເລີ່ມຕົ້ນ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_uom_id
@@ -20582,12 +21056,12 @@ msgstr "ລາຍການທີ່ຍັງບໍ່ທັນໄດ້ກວດ
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__open_on
 msgid "Unreconciled On"
-msgstr ""
+msgstr "ຍັງບໍ່ທັນກະທົບຍອດເມື່ອ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__unreconciled_paid_amount
 msgid "Unreconciled Paid Amount"
-msgstr ""
+msgstr "ຈຳນວນເງິນທີ່ຊຳລະແລ້ວຍັງບໍ່ທັນກະທົບຍອດ"
 
 #. module: account
 #. odoo-python
@@ -20885,7 +21359,7 @@ msgstr "ຟິວຊ່ວຍເພື່ອສະແດງວ່າລາຍກ
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_l10n_eu_account_vies
 msgid "VAT number validation with VIES"
-msgstr ""
+msgstr "ການກວດສອບເລກອາກອນມູນຄ່າເພີ່ມດ້ວຍ VIES"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -20895,12 +21369,12 @@ msgstr "ໃຊ້ໄດ້ສຳລັບ"
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move
 msgid "Validate Journal Entry"
-msgstr ""
+msgstr "ຢືນຢັນລາຍການບັນທຶກບັນຊີ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
 msgid "Validate and Post"
-msgstr ""
+msgstr "ຢືນຢັນ ແລະ ລົງບັນຊີ"
 
 #. module: account
 #: model:res.groups,name:account.group_validate_bank_account
@@ -20911,7 +21385,7 @@ msgstr "ຢືນຢັນບັນຊີທະນາຄານ"
 #: model:ir.model.fields,help:account.field_account_reconcile_model__trigger
 msgid ""
 "Validate the transaction automatically (reconciliation based on your rule)."
-msgstr ""
+msgstr "ຢືນຢັນທຸລະກຳໂດຍອັດຕະໂນມັດ (ການກະທົບຍອດໂດຍອີງຕາມກົດເກນຂອງທ່ານ)."
 
 #. module: account
 #. odoo-javascript
@@ -20929,7 +21403,7 @@ msgstr "ກວດສອບແລ້ວ"
 #: model:ir.model.fields,field_description:account.field_product_template__valuation
 #: model:ir.model.fields,field_description:account.field_res_company__inventory_valuation
 msgid "Valuation"
-msgstr ""
+msgstr "ການປະເມີນມູນຄ່າ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__value
@@ -20993,12 +21467,12 @@ msgstr "ຕົວປ່ຽນ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__account_stock_variation_id
 msgid "Variation Account"
-msgstr ""
+msgstr "ບັນຊີຜົນຕ່າງ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__account_stock_variation_active
 msgid "Variation Account Active"
-msgstr ""
+msgstr "ບັນຊີຜົນຕ່າງເປີດໃຊ້ງານຢູ່"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_office_supplies
@@ -21076,7 +21550,7 @@ msgstr "ບັນຊີສ່ວນຫຼຸດໃບບິນຜູ້ຈຳໜ
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_discount_income_allocation_active
 msgid "Vendor Bills Discounts Account Active"
-msgstr ""
+msgstr "ບັນຊີສ່ວນຫຼຸດໃບບິນຜູ້ສະໜອງເປີດໃຊ້ງານຢູ່"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__in_refund
@@ -21112,7 +21586,7 @@ msgstr "ຜູ້ສະໜອງ:"
 #. odoo-python
 #: code:addons/account/controllers/download_docs.py:0
 msgid "VendorBills"
-msgstr ""
+msgstr "ໃບບິນຜູ້ສະໜອງ"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.res_partner_action_supplier
@@ -21137,17 +21611,17 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__vat_check_vies
 msgid "Verify VAT Numbers"
-msgstr ""
+msgstr "ກວດສອບເລກອາກອນມູນຄ່າເພີ່ມ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__vat_check_vies
 msgid "Verify VAT Numbers with VIES"
-msgstr ""
+msgstr "ກວດສອບເລກອາກອນມູນຄ່າເພີ່ມດ້ວຍ VIES"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
-msgstr ""
+msgstr "ກວດສອບເລກອາກອນມູນຄ່າເພີ່ມໂດຍໃຊ້ບໍລິການ European VIES"
 
 #. module: account
 #. odoo-javascript
@@ -21172,7 +21646,7 @@ msgstr "ເບິ່ງຄູ່ຄ້າ"
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "View payments"
-msgstr ""
+msgstr "ເບິ່ງການຊຳລະເງິນ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.rounding_form_view
@@ -21237,6 +21711,7 @@ msgid ""
 "When automated inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
+"ເມື່ອເປີດໃຊ້ງານການປະເມີນມູນຄ່າສາງອັດຕະໂນມັດສຳລັບສິນຄ້າ, ບັນຊີນີ້ຈະເກັບຮັກສາມູນຄ່າປັດຈຸບັນຂອງສິນຄ້າ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__print_on_new_page
@@ -21261,6 +21736,8 @@ msgid ""
 "When doing automated inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
+"ເມື່ອເຮັດການປະເມີນມູນຄ່າສາງແບບອັດຕະໂນມັດ, "
+"ນີ້ແມ່ນປຶ້ມບັນຊີທີ່ຈະລົງບັນຊີລາຍການໂດຍອັດຕະໂນມັດເມື່ອມີການເຄື່ອນຍ້າຍສາງເກີດຂຶ້ນ."
 
 #. module: account
 #. odoo-python
@@ -21286,6 +21763,7 @@ msgid ""
 "With perpetual valuation, this account will hold the price difference "
 "between the standard price and the bill price."
 msgstr ""
+"ດ້ວຍການປະເມີນມູນຄ່າແບບຕໍ່ເນື່ອງ, ບັນຊີນີ້ຈະເກັບຜົນຕ່າງລາຄາລະຫວ່າງລາຄາມາດຕະຖານ ແລະ ລາຄາໃນໃບບິນ."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -21317,6 +21795,36 @@ msgstr "ວຽກທີ່ພວມດຳເນີນການ"
 #: model:account.account,name:account.22_account_account_us_compensation_insurance
 msgid "Workers Compensation Insurance"
 msgstr "ປະກັນໄພຄ່າທົດແທນແຮງງານ"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_deferred_revenue
+msgid "Working Capital - Deferred Revenue"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_inventory
+msgid "Working Capital - Inventory"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_other_payable
+msgid "Working Capital - Other Payable"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_other_receivable
+msgid "Working Capital - Other Receivable"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_trade_payable
+msgid "Working Capital - Trade Payable"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_trade_receivable
+msgid "Working Capital - Trade Receivable"
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -21395,6 +21903,12 @@ msgid ""
 "2/ filter on this journal and on 'Unposted' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
+"ທ່ານບໍ່ສາມາດຈັດເກັບປຶ້ມບັນຊີທີ່ມີລາຍການບັນຊີສະບັບຮ່າງໄດ້.\n"
+"\n"
+"ເພື່ອດຳເນີນການ:\n"
+"1/ ໄປທີ່ ການບັນຊີ > ການບັນຊີ > ລາຍການບັນທຶກບັນຊີ\n"
+"2/ ກັ່ນຕອງປຶ້ມບັນຊີນີ້ ແລະ ລາຍການ 'ຍັງບໍ່ທັນລົງບັນຊີ'\n"
+"3/ ເລືອກທັງໝົດແລ້ວລົງບັນຊີ ຫຼື ລຶບພວກມັນອອກຜ່ານເມນູການດຳເນີນການ"
 
 #. module: account
 #. odoo-python
@@ -21425,6 +21939,8 @@ msgstr "ທ່ານບໍ່ສາມາດຈັດລຽງລຳດັບຄ
 msgid ""
 "You can only generate sales documents or purchase documents for self-billing."
 msgstr ""
+"ທ່ານສາມາດສ້າງໄດ້ສະເພາະເອກະສານການຂາຍ ຫຼື ເອກະສານການຊື້ສຳລັບການອອກໃບແຈ້ງໜີ້ດ້ວຍຕົນເອງ (self-"
+"billing) ເທົ່ານັ້ນ."
 
 #. module: account
 #. odoo-python
@@ -21448,13 +21964,13 @@ msgstr "ທ່ານສາມາດຈັດລຳດັບຄືນໃໝ່ໄ
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You can only switch the type of a draft document."
-msgstr ""
+msgstr "ທ່ານສາມາດປ່ຽນປະເພດໄດ້ສະເພາະເອກະສານສະບັບຮ່າງເທົ່ານັ້ນ."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/product.py:0
 msgid "You can only use the '=' operator to search on valuation field."
-msgstr ""
+msgstr "ທ່ານສາມາດໃຊ້ເຄື່ອງໝາຍ '=' ເທົ່ານັ້ນເພື່ອຄົ້ນຫາໃນຫ້ອງຂໍ້ມູນການປະເມີນມູນຄ່າ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_type
@@ -21508,6 +22024,7 @@ msgid ""
 "You can't create a new bank transaction without a suspense account set on "
 "the %s journal."
 msgstr ""
+"ທ່ານບໍ່ສາມາດສ້າງທຸລະກຳທະນາຄານໃໝ່ໄດ້ ໂດຍບໍ່ມີການຕັ້ງຄ່າບັນຊີພັກ (suspense account) ໃນປຶ້ມບັນຊີ %s."
 
 #. module: account
 #. odoo-python
@@ -21605,7 +22122,7 @@ msgstr "ເຈົ້າບໍ່ສາມາດລົງທະບຽນການ
 msgid ""
 "You can't reset to draft those journal entries. You need to request a "
 "cancellation instead."
-msgstr ""
+msgstr "ທ່ານບໍ່ສາມາດປ່ຽນລາຍການບັນທຶກບັນຊີເຫຼົ່ານີ້ກັບຄືນເປັນຮ່າງໄດ້. ທ່ານຕ້ອງຮ້ອງຂໍການຍົກເລີກແທນ."
 
 #. module: account
 #. odoo-python
@@ -21651,7 +22168,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/base_document_layout.py:0
 msgid "You cannot configure the document layout for this company."
-msgstr ""
+msgstr "ທ່ານບໍ່ສາມາດກຳນົດຮູບແບບເອກະສານສຳລັບບໍລິສັດນີ້ໄດ້."
 
 #. module: account
 #. odoo-python
@@ -21668,6 +22185,8 @@ msgid ""
 "You cannot create a fiscal position with a foreign Tax ID within your fiscal "
 "country without assigning it a state."
 msgstr ""
+"ທ່ານບໍ່ສາມາດສ້າງສະຖານະທາງພາສີທີ່ມີເລກປະຈຳຕົວຜູ້ເສຍພາສີຕ່າງປະເທດພາຍໃນປະເທດທາງພາສີຂອງທ່ານໄດ້ "
+"ໂດຍບໍ່ກຳນົດລັດ/ແຂວງໃຫ້ມັນ."
 
 #. module: account
 #. odoo-python
@@ -21792,6 +22311,8 @@ msgid ""
 "unless the name is removed or set to \"/\". This might create a gap in the "
 "sequence."
 msgstr ""
+"ທ່ານບໍ່ສາມາດແກ້ໄຂປຶ້ມບັນຊີຂອງລາຍການບັນທຶກບັນຊີໄດ້ຖ້າມັນເຄີຍຖືກລົງບັນຊີແລ້ວ, ເວັ້ນເສຍແຕ່ຊື່ຈະຖືກລຶບອອກ ຫຼື "
+"ຕັ້ງເປັນ \"/\". ສິ່ງນີ້ອາດຈະເຮັດໃຫ້ເລກລຳດັບຂາດຕອນ."
 
 #. module: account
 #. odoo-python
@@ -21801,6 +22322,8 @@ msgid ""
 "assigned, unless the name is removed or set to \"/\". This might create a "
 "gap in the sequence."
 msgstr ""
+"ທ່ານບໍ່ສາມາດແກ້ໄຂປຶ້ມບັນຊີຂອງລາຍການບັນທຶກບັນຊີທີ່ມີການກຳນົດເລກລຳດັບແລ້ວໄດ້, ເວັ້ນເສຍແຕ່ຊື່ຈະຖືກລຶບອອກ "
+"ຫຼື ຕັ້ງເປັນ \"/\". ສິ່ງນີ້ອາດຈະເຮັດໃຫ້ເລກລຳດັບຂາດຕອນ."
 
 #. module: account
 #. odoo-python
@@ -21850,6 +22373,8 @@ msgid ""
 "You cannot modify the following readonly fields on the posted move %(move)s: "
 "%(fields)s"
 msgstr ""
+"ທ່ານບໍ່ສາມາດແກ້ໄຂຫ້ອງຂໍ້ມູນແບບອ່ານຢ່າງດຽວຕໍ່ໄປນີ້ໃນລາຍການເຄື່ອນໄຫວທີ່ລົງບັນຊີແລ້ວ %(move)s: %"
+"(fields)s"
 
 #. module: account
 #. odoo-python
@@ -21884,7 +22409,7 @@ msgstr "ເຈົ້າບໍ່ສາມາດລົງບັນຊີລາຍ
 #. odoo-python
 #: code:addons/account/wizard/base_document_layout.py:0
 msgid "You cannot preview this invoice."
-msgstr ""
+msgstr "ທ່ານບໍ່ສາມາດເບິ່ງຕົວຢ່າງໃບແຈ້ງໜີ້ນີ້ໄດ້."
 
 #. module: account
 #. odoo-python
@@ -22033,7 +22558,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "You do not have access to the Accounting Dashboard."
-msgstr ""
+msgstr "ທ່ານບໍ່ມີສິດເຂົ້າເຖິງໜ້າຕ່າງສະຫຼຸບການບັນຊີ (Accounting Dashboard)."
 
 #. module: account
 #. odoo-python
@@ -22233,7 +22758,7 @@ msgstr "ຈຳນວນເງິນສຳລັບ"
 #. odoo-javascript
 #: code:addons/account/static/src/components/invoice_guide/invoice_guide.xml:0
 msgid "and"
-msgstr ""
+msgstr "ແລະ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
@@ -22320,7 +22845,7 @@ msgstr "ການອອກໃບແແຈ້ງໜີ້ເອເລັກໂຕ
 #. odoo-javascript
 #: code:addons/account/static/src/components/invoice_guide/invoice_guide.xml:0
 msgid "e-invoicing"
-msgstr ""
+msgstr "ໃບແຈ້ງໜີ້ເອເລັກໂຕຣນິກ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
@@ -22360,7 +22885,7 @@ msgstr "ຕົວຢ່າງ ຄ່າທຳນຽມທະນາຄານ"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_tree
 msgid "e.g. CONSO, IFRS, ..."
-msgstr ""
+msgstr "ຕົວຢ່າງ: CONSO, IFRS, ..."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -22412,7 +22937,7 @@ msgstr "ທຸກຄົນ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "fall outside the typical range.<br/>"
-msgstr ""
+msgstr "ຢູ່ນອກຊ່ວງປົກກະຕິ.<br/>"
 
 #. module: account
 #. odoo-python
@@ -22517,6 +23042,11 @@ msgstr ""
 "ນັບຈາກມື້ສົ່ງມອບສິນຄ້າ ຫຼື ການສະໜອງບໍລິການ."
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_non_applicable
+msgid "not applicable"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
 msgid "of tax"
 msgstr "ຂອງພາສີ"
@@ -22607,7 +23137,7 @@ msgstr "ປີ້ນລາຍການແລ້ວ"
 #: model:ir.model.fields,help:account.field_account_account__code_path
 msgid ""
 "similar to parent path but with codes instead of ids, used to order accounts"
-msgstr ""
+msgstr "ຄ້າຍຄືກັບເສັ້ນທາງແມ່ (parent path) ແຕ່ໃຊ້ລະຫັດແທນໄອດີ (ID), ໃຊ້ສຳລັບຈັດລຳດັບບັນຊີ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__name_path
@@ -22615,6 +23145,7 @@ msgid ""
 "similar to parent path but with names instead of ids, used to order and "
 "search accounts"
 msgstr ""
+"ຄ້າຍຄືກັບເສັ້ນທາງແມ່ (parent path) ແຕ່ໃຊ້ຊື່ແທນໄອດີ (ID), ໃຊ້ສຳລັບຈັດລຳດັບ ແລະ ຄົ້ນຫາບັນຊີ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids_domain
@@ -22753,6 +23284,62 @@ msgid ""
 "{{ object.company_id.name }} {{ object.payment_receipt_title }} (Ref "
 "{{ object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.payment_receipt_title }} (ອ້າງອີງ "
+"{{ object.name or 'n/a' }})"
+
+#~ msgid ""
+#~ "<b>%(count)s#</b> Installment of <b>%(amount)s</b> due on <b "
+#~ "style='color: #704A66;'>%(date)s</b>"
+#~ msgstr ""
+#~ "<b>%(count)s#</b> ງວດຂອງ <b>%(amount)s</b> ຄົບກໍານົດໃນ <b style='color: "
+#~ "#704A66;'>%(date)s</b>"
+
+#~ msgid "Accumulated Depreciation - Buildings"
+#~ msgstr "ຄ່າຫຼຸ້ຍຫ້ຽນສະສົມ - ອາຄານ"
+
+#~ msgid "Accumulated Depreciation - Furniture & Fixtures"
+#~ msgstr "ຄ່າຫຼຸ້ຍຫ້ຽນສະສົມ - ເຟີນີເຈີ ແລະ ເຄື່ອງຕິດຕັ້ງ"
+
+#~ msgid "Accumulated Depreciation - Improvements"
+#~ msgstr "ຄ່າຫຼຸ້ຍຫ້ຽນສະສົມ - ສ່ວນປັບປຸງ"
+
+#~ msgid "Accumulated Depreciation - Machines & Tools"
+#~ msgstr "ຄ່າຫຼຸ້ຍຫ້ຽນສະສົມ - ເຄື່ອງຈັກ ແລະ ເຄື່ອງມື"
+
+#~ msgid "Accumulated Depreciation - Other Property"
+#~ msgstr "ຄ່າຫຼຸ້ຍຫ້ຽນສະສົມ - ຊັບສິນອື່ນໆ"
+
+#~ msgid "Accumulated Depreciation - Technology"
+#~ msgstr "ຄ່າຫຼຸ້ຍຫ້ຽນສະສົມ - ເຕັກໂນໂລຊີ"
+
+#~ msgid "Accumulated Depreciation - Vehicles"
+#~ msgstr "ຄ່າຫຼຸ້ຍຫ້ຽນສະສົມ - ພາຫະນະ"
+
+#~ msgid "Accumulated Depreciation Misc"
+#~ msgstr "ຄ່າຫຼຸ້ຍຫ້ຽນສະສົມເບັດເຕັດ"
+
+#~ msgid "Cumulative depreciation recorded for building assets."
+#~ msgstr "ຄ່າເສື່ອມລາຄາສະສົມທີ່ບັນທຶກສຳລັບຊັບສິນປະເພດອາຄານ."
+
+#~ msgid "Cumulative depreciation recorded for capitalized technology assets."
+#~ msgstr "ຄ່າເສື່ອມລາຄາສະສົມທີ່ບັນທຶກສຳລັບຊັບສິນເຕັກໂນໂລຊີທີ່ຖືເປັນທຶນ."
+
+#~ msgid "Cumulative depreciation recorded for furniture and fixture assets."
+#~ msgstr "ຄ່າເສື່ອມລາຄາສະສົມທີ່ບັນທຶກສຳລັບຊັບສິນເຟີນີເຈີ ແລະ ເຄື່ອງຕິດຕັ້ງ."
+
+#~ msgid ""
+#~ "Cumulative depreciation recorded for leasehold or property improvements."
+#~ msgstr "ຄ່າເສື່ອມລາຄາສະສົມທີ່ບັນທຶກສຳລັບສິດເຊົ່າ ຫຼື ການປັບປຸງຊັບສິນ."
+
+#~ msgid "Cumulative depreciation recorded for machinery and tool assets."
+#~ msgstr "ຄ່າເສື່ອມລາຄາສະສົມທີ່ບັນທຶກສຳລັບຊັບສິນເຄື່ອງຈັກ ແລະ ເຄື່ອງມື."
+
+#~ msgid ""
+#~ "Cumulative depreciation recorded for other depreciable property assets."
+#~ msgstr "ຄ່າເສື່ອມລາຄາສະສົມທີ່ບັນທຶກສຳລັບຊັບສິນອື່ນໆທີ່ສາມາດຄິດໄລ່ຄ່າເສື່ອມລາຄາໄດ້."
+
+#~ msgid "Cumulative depreciation recorded for vehicle assets."
+#~ msgstr "ຄ່າເສື່ອມລາຄາສະສົມທີ່ບັນທຶກສຳລັບຊັບສິນປະເພດຍານພາຫະນະ."
 
 #~ msgid "# Reconciled Statement Lines"
 #~ msgstr "# ລາຍການສະເຕດເມັ້ນທີ່ກວດສອບຍອດແລ້ວ"
@@ -22861,9 +23448,6 @@ msgstr ""
 #~ msgstr ""
 #~ "ທ່ານບໍ່ສາມາດສ້າງແຖວໃບແຈ້ງຍອດທະນາຄານໃໝ່ໄດ້ ໂດຍທີ່ບໍ່ມີການກຳນົດບັນຊີພັກ (Suspense account) "
 #~ "ໄວ້ໃນບັນຊີປະຈຳວັນ %s."
-
-#~ msgid "Accumulated Depreciation"
-#~ msgstr "ຄ່າເສື່ອມລາຄາສະສົມ"
 
 #~ msgid ""
 #~ "Downpayments posted on this account will be considered by the Tax Closing "

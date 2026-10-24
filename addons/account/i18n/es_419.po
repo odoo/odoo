@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 17:41+0000\n"
-"PO-Revision-Date: 2026-10-16 21:33+0000\n"
+"POT-Creation-Date: 2026-10-23 17:40+0000\n"
+"PO-Revision-Date: 2026-10-20 22:33+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-20/account/es_419/>\n"
@@ -123,7 +123,7 @@ msgstr " válido hasta %s"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
 msgid "# Reconciled Bank Transactions"
-msgstr ""
+msgstr "Núm. de transacciones bancarias conciliadas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -238,6 +238,10 @@ msgid ""
 "To be consistent, the journal entry must always have exactly one suspense "
 "line."
 msgstr ""
+"%(move)s alcanzó un estado no válido en relación con su transacción bancaria "
+"asociada.\n"
+"Para mantener las operaciones uniformes, el asiento contable debe tener "
+"siempre exactamente una línea transitoria."
 
 #. module: account
 #. odoo-python
@@ -511,11 +515,9 @@ msgstr "90 días, en el día 10"
 #. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 msgid ""
-"<b>%(count)s#</b> Installment of <b>%(amount)s</b> due on <b style='color: "
+"<b>%(count)s</b> - Installment of <b>%(amount)s</b> due on <b style='color: "
 "#704A66;'>%(date)s</b>"
 msgstr ""
-"Plazo <b>#%(count)s</b> de <b>%(amount)s</b> a pagar antes del <b "
-"style='color: #704A66;'>%(date)s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -3152,8 +3154,8 @@ msgid ""
 "Account: Post draft entries with auto_post enabled and accounting date up to "
 "today"
 msgstr ""
-"Cuenta: Publica asientos en estado de borrador con auto_post habilitado y la "
-"fecha contable hasta hoy"
+"Cuenta: Registra los asientos en borrador con la opción auto_post habilitada "
+"y una fecha contable hasta hoy"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_accounting
@@ -3331,43 +3333,43 @@ msgstr "Total devengado"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_buildings
-msgid "Accumulated Depreciation - Buildings"
-msgstr "Depreciación acumulada - Edificios"
+msgid "Accumulated Amortization - Buildings"
+msgstr "Amortización acumulada - Edificios"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_furniture
-msgid "Accumulated Depreciation - Furniture & Fixtures"
-msgstr "Depreciación acumulada - Muebles y accesorios"
+msgid "Accumulated Amortization - Furniture & Fixtures"
+msgstr "Amortización acumulada - Mobiliario y accesorios"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_improvements
-msgid "Accumulated Depreciation - Improvements"
-msgstr "Depreciación acumulada - Mejoras"
+msgid "Accumulated Amortization - Improvements"
+msgstr "Amortización acumulada - Mejoras"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_machines
-msgid "Accumulated Depreciation - Machines & Tools"
-msgstr "Depreciación acumulada - Máquinas y herramientas"
+msgid "Accumulated Amortization - Machines & Tools"
+msgstr "Amortización acumulada - Máquinas y herramientas"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_other_property
-msgid "Accumulated Depreciation - Other Property"
-msgstr "Depreciación acumulada - Otros bienes"
+msgid "Accumulated Amortization - Other Property"
+msgstr "Amortización acumulada - Otros bienes inmuebles"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_technology
-msgid "Accumulated Depreciation - Technology"
-msgstr "Depreciación acumulada - Tecnología"
+msgid "Accumulated Amortization - Technology"
+msgstr "Amortización acumulada - Tecnología"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_vehicles
-msgid "Accumulated Depreciation - Vehicles"
-msgstr "Depreciación acumulada - Vehículos"
+msgid "Accumulated Amortization - Vehicles"
+msgstr "Amortización acumulada - Vehículos"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_acc_depreciation
-msgid "Accumulated Depreciation Misc"
-msgstr "Depreciación acumulada - Varios"
+msgid "Accumulated Depreciation"
+msgstr "Depreciación acumulada"
 
 #. module: account
 #: model:account.account,name:account.21_retained_earnings
@@ -3714,6 +3716,46 @@ msgstr ""
 "Asiento de ajuste {link} {percent}%% de {amount} reconocido el {new_date}"
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_adj_depreciation_and_amortization
+msgid "Adjustment - Depreciation and amortization"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_fin_instr_sale
+msgid "Adjustment - Financial Instruments"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_intangible_asset
+msgid "Adjustment - Intangible Assets"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_net_fin_result
+msgid "Adjustment - Net Financial Result"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_PPE_sale
+msgid "Adjustment - PPE Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_provisions
+msgid "Adjustment - Provisions"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_ROU_sale
+msgid "Adjustment - Right of Use Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_adj_unrealized_forex
+msgid "Adjustment - Unrealized Forex"
+msgstr ""
+
+#. module: account
 #: model:account.account,name:account.22_account_account_us_administration_fees
 msgid "Administration Fees"
 msgstr "Gastos administrativos"
@@ -3884,6 +3926,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__unreconciled_bank_statement_line_ids
 msgid "All unreconciled bank transactions before the selected date."
 msgstr ""
+"Todas las transacciones bancarias sin conciliar anteriores a la fecha "
+"seleccionada."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
@@ -4487,6 +4531,8 @@ msgid ""
 "At least one transaction in the statement is prior the last posted "
 "transaction (%s)"
 msgstr ""
+"Al menos una transacción del estado de cuenta es anterior a la última "
+"transacción registrada (%s)"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__to_beginning_of_fiscalyear
@@ -4794,7 +4840,7 @@ msgstr "Regresar a la factura"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Credit Note"
-msgstr ""
+msgstr "Volver a la nota de crédito"
 
 #. module: account
 #. odoo-javascript
@@ -4806,7 +4852,7 @@ msgstr "Regresar a la factura"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Refund"
-msgstr ""
+msgstr "Volver al reembolso"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -5122,7 +5168,7 @@ msgstr "Transacciones bancarias y pagos:"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_statement_line_ids
 msgid "Bank transactions matched to this payment"
-msgstr ""
+msgstr "Transacciones bancarias conciliadas con este pago"
 
 #. module: account
 #. odoo-python
@@ -6141,12 +6187,12 @@ msgstr ""
 "Europa con Intrastat."
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account_tag__color
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__color
 msgid "Color"
 msgstr "Color"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_account_tag__color
 #: model:ir.model.fields,field_description:account.field_account_journal__color
 msgid "Color Index"
 msgstr "Índice de color"
@@ -7204,47 +7250,44 @@ msgstr "Saldo acumulado de la cuenta."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_buildings
-msgid "Cumulative depreciation recorded for building assets."
-msgstr "Depreciación acumulada registrada para los activos inmobiliarios."
+msgid "Cumulative amortization recorded for building assets."
+msgstr "Amortización acumulada registrada para activos inmobiliarios."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_technology
-msgid "Cumulative depreciation recorded for capitalized technology assets."
+msgid "Cumulative amortization recorded for capitalized technology assets."
 msgstr ""
-"Depreciación acumulada registrada para los activos tecnológicos "
-"capitalizados."
+"Amortización acumulada registrada para activos de tecnología capitalizada."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_furniture
-msgid "Cumulative depreciation recorded for furniture and fixture assets."
+msgid "Cumulative amortization recorded for furniture and fixture assets."
 msgstr ""
-"Depreciación acumulada registrada para los activos de muebles y accesorios."
+"Amortización acumulada registrada para activos de mobiliario y accesorios."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_improvements
 msgid ""
-"Cumulative depreciation recorded for leasehold or property improvements."
+"Cumulative amortization recorded for leasehold or property improvements."
 msgstr ""
-"Depreciación acumulada registrada para mejoras en propiedades alquiladas o "
+"Amortización acumulada registrada para mejoras en arrendamientos o "
 "propiedades."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_machines
-msgid "Cumulative depreciation recorded for machinery and tool assets."
+msgid "Cumulative amortization recorded for machinery and tool assets."
 msgstr ""
-"Depreciación acumulada registrada para activos de máquinas y herramientas."
+"Amortización acumulada registrada para activos de máquinas y herramientas."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_other_property
-msgid "Cumulative depreciation recorded for other depreciable property assets."
-msgstr ""
-"Depreciación acumulada registrada para otros activos depreciables de "
-"propiedad."
+msgid "Cumulative amortization recorded for other depreciable property assets."
+msgstr "Amortización acumulada registrada para otros activos depreciables."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_vehicles
-msgid "Cumulative depreciation recorded for vehicle assets."
-msgstr "Depreciación acumulada registrada para activos de vehículos."
+msgid "Cumulative amortization recorded for vehicle assets."
+msgstr "Amortización acumulada registrada para activos de vehículos."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_retained_earnings
@@ -9586,6 +9629,36 @@ msgid "Financial Journal"
 msgstr "Diario financiero"
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_fin_borrowings_lt
+msgid "Financing - Borrowings Long Term"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_borrowings_st
+msgid "Financing - Borrowings Short Term"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_dividends
+msgid "Financing - Dividends"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_lease
+msgid "Financing - Lease"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_recov_adv
+msgid "Financing - Recoverable Advances"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_fin_share_issuance
+msgid "Financing - Share Issuance"
+msgstr ""
+
+#. module: account
 #: model:account.account.tag,name:account.account_tag_financing
 msgid "Financing Activities"
 msgstr "Actividades financieras"
@@ -11484,6 +11557,51 @@ msgstr "Variación de inventario"
 #: model:account.account.tag,name:account.account_tag_investing
 msgid "Investing & Extraordinary Activities"
 msgstr "Actividades de inversión y extraordinarias"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_cash_advances
+msgid "Investment - Cash Advances"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_fin_instr_purchase
+msgid "Investment - Financial Instruments Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_fin_instr_sale
+msgid "Investment - Financial Instruments Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_int_ass_purchase
+msgid "Investment - Intangible Assets Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_int_ass_sale
+msgid "Investment - Intangible Assets Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_interest_received
+msgid "Investment - Interest Received"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_ppe_purchase
+msgid "Investment - PPE Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_ppe_sale
+msgid "Investment - PPE Sale"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_inv_rou_sale
+msgid "Investment - Right of Use Sale"
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -14188,6 +14306,8 @@ msgid ""
 "Odoo allows you to reconcile a transaction directly with\n"
 "                the related sale or purchase invoices."
 msgstr ""
+"Odoo te permite conciliar una transacción directamente con\n"
+"                las facturas de venta o compra relacionadas."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_customer
@@ -14483,6 +14603,16 @@ msgid "Opening balance"
 msgstr "Balance de apertura"
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_op_income_tax_paid_received
+msgid "Operating - Income Tax Paid Received"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_op_interest_paid
+msgid "Operating - Interest Paid"
+msgstr ""
+
+#. module: account
 #: model:account.account.tag,name:account.account_tag_operating
 msgid "Operating Activities"
 msgstr "Actividades operativas"
@@ -14551,7 +14681,7 @@ msgstr "Fecha de bloqueo original"
 #: model:ir.model.fields,field_description:account.field_account_move_line__statement_line_id
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Originator Bank Transaction"
-msgstr ""
+msgstr "Transacción bancaria de origen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__group_tax_id
@@ -15413,7 +15543,7 @@ msgstr "Porcentaje de cada línea sobre la que ejecutar la acción."
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__percentage_st_line
 msgid "Percentage of transaction"
-msgstr ""
+msgstr "Porcentaje de la transacción"
 
 #. module: account
 #. odoo-python
@@ -16325,7 +16455,7 @@ msgstr "Conciliado"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
 msgid "Reconciled Bank Transactions"
-msgstr ""
+msgstr "Transacciones bancarias conciliadas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bill_ids
@@ -17998,7 +18128,7 @@ msgstr "Mostrar la fecha del suministro gravable"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Show Unreconciled Bank Transactions"
-msgstr ""
+msgstr "Mostrar transacciones bancarias sin conciliar"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -19488,7 +19618,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
 msgid "The bank transaction that created this entry"
-msgstr ""
+msgstr "La transacción bancaria que creó este asiento"
 
 #. module: account
 #. odoo-python
@@ -19893,6 +20023,11 @@ msgid ""
 "To be consistent, the journal entry must always have exactly one journal "
 "item involving the bank/cash account."
 msgstr ""
+"El asiento contable %s alcanzó un estado no válido en relación con su "
+"transacción bancaria asociada.\n"
+"Para que haya uniformidad, el asiento contable debe tener siempre "
+"exactamente un apunte contable que involucre la cuenta bancaria o de "
+"efectivo."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -20065,6 +20200,13 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
+"El modelo de conciliación solo se aplicará cuando la etiqueta, los detalles "
+"o la nota de la transacción coincidan con lo siguiente:\n"
+"        * Contiene: La transacción debe contener esta cadena, no distingue "
+"entre mayúsculas y minúsculas.\n"
+"        * No contiene: Lo contrario de Contiene.\n"
+"        * Coincide con la expresión regular: Define tu propia expresión "
+"regular."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_amount
@@ -20421,6 +20563,9 @@ msgid ""
 "entries from journal prefixes containing them will not be secured: %"
 "(prefix_info)s"
 msgstr ""
+"Aún hay transacciones bancarias sin conciliar anteriores a la fecha "
+"seleccionada. Los asientos con prefijos de diario que las contengan no se "
+"guardarán: %(prefix_info)s"
 
 #. module: account
 #. odoo-python
@@ -20429,6 +20574,8 @@ msgid ""
 "There are still unreconciled bank transactions in the period you want to "
 "lock. You should either reconcile or delete them."
 msgstr ""
+"Aún hay transacciones bancarias sin conciliar en el periodo que quieres "
+"bloquear. Debes conciliarlas o eliminarlas."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
@@ -20887,6 +21034,8 @@ msgid ""
 "Those can be used to automatically match journal items with your "
 "transactions."
 msgstr ""
+"Puedes usarlas para conciliar de forma automática los apuntes contables con "
+"tus transacciones."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
@@ -21240,7 +21389,7 @@ msgstr "Tipo de transacción"
 #. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 msgid "Transaction percentage can't be 0"
-msgstr ""
+msgstr "El porcentaje de la transacción no puede ser 0"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__line_ids
@@ -21869,6 +22018,7 @@ msgstr "Validar cuenta bancaria"
 msgid ""
 "Validate the transaction automatically (reconciliation based on your rule)."
 msgstr ""
+"Validar la transacción de forma automática (conciliación basada en tu regla)."
 
 #. module: account
 #. odoo-javascript
@@ -22294,6 +22444,36 @@ msgid "Workers Compensation Insurance"
 msgstr "Seguro de compensación de trabajadores"
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_deferred_revenue
+msgid "Working Capital - Deferred Revenue"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_inventory
+msgid "Working Capital - Inventory"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_other_payable
+msgid "Working Capital - Other Payable"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_other_receivable
+msgid "Working Capital - Other Receivable"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_trade_payable
+msgid "Working Capital - Trade Payable"
+msgstr ""
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_wcap_trade_receivable
+msgid "Working Capital - Trade Receivable"
+msgstr ""
+
+#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Write a customer name to <b>create one</b> or <b>see suggestions</b>."
@@ -22511,6 +22691,8 @@ msgid ""
 "You can't create a new bank transaction without a suspense account set on "
 "the %s journal."
 msgstr ""
+"No puedes crear una nueva transacción bancaria si el diario %s no tiene una "
+"cuenta transitoria configurada."
 
 #. module: account
 #. odoo-python
@@ -23600,6 +23782,11 @@ msgstr ""
 "desde la entrega de los bienes o la prestación de los servicios."
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_non_applicable
+msgid "not applicable"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
 msgid "of tax"
 msgstr "de impuesto"
@@ -23850,6 +24037,69 @@ msgstr ""
 "{{ object.company_id.name }} {{ object.payment_receipt_title }} (Ref. "
 "{{ object.name or 'n/a' }})"
 
+#~ msgid ""
+#~ "<b>%(count)s#</b> Installment of <b>%(amount)s</b> due on <b "
+#~ "style='color: #704A66;'>%(date)s</b>"
+#~ msgstr ""
+#~ "Plazo <b>#%(count)s</b> de <b>%(amount)s</b> a pagar antes del <b "
+#~ "style='color: #704A66;'>%(date)s</b>"
+
+#~ msgid "Accumulated Depreciation - Buildings"
+#~ msgstr "Depreciación acumulada - Edificios"
+
+#~ msgid "Accumulated Depreciation - Furniture & Fixtures"
+#~ msgstr "Depreciación acumulada - Muebles y accesorios"
+
+#~ msgid "Accumulated Depreciation - Improvements"
+#~ msgstr "Depreciación acumulada - Mejoras"
+
+#~ msgid "Accumulated Depreciation - Machines & Tools"
+#~ msgstr "Depreciación acumulada - Máquinas y herramientas"
+
+#~ msgid "Accumulated Depreciation - Other Property"
+#~ msgstr "Depreciación acumulada - Otros bienes"
+
+#~ msgid "Accumulated Depreciation - Technology"
+#~ msgstr "Depreciación acumulada - Tecnología"
+
+#~ msgid "Accumulated Depreciation - Vehicles"
+#~ msgstr "Depreciación acumulada - Vehículos"
+
+#~ msgid "Accumulated Depreciation Misc"
+#~ msgstr "Depreciación acumulada - Varios"
+
+#~ msgid "Cumulative depreciation recorded for building assets."
+#~ msgstr "Depreciación acumulada registrada para los activos inmobiliarios."
+
+#~ msgid "Cumulative depreciation recorded for capitalized technology assets."
+#~ msgstr ""
+#~ "Depreciación acumulada registrada para los activos tecnológicos "
+#~ "capitalizados."
+
+#~ msgid "Cumulative depreciation recorded for furniture and fixture assets."
+#~ msgstr ""
+#~ "Depreciación acumulada registrada para los activos de muebles y "
+#~ "accesorios."
+
+#~ msgid ""
+#~ "Cumulative depreciation recorded for leasehold or property improvements."
+#~ msgstr ""
+#~ "Depreciación acumulada registrada para mejoras en propiedades alquiladas "
+#~ "o propiedades."
+
+#~ msgid "Cumulative depreciation recorded for machinery and tool assets."
+#~ msgstr ""
+#~ "Depreciación acumulada registrada para activos de máquinas y herramientas."
+
+#~ msgid ""
+#~ "Cumulative depreciation recorded for other depreciable property assets."
+#~ msgstr ""
+#~ "Depreciación acumulada registrada para otros activos depreciables de "
+#~ "propiedad."
+
+#~ msgid "Cumulative depreciation recorded for vehicle assets."
+#~ msgstr "Depreciación acumulada registrada para activos de vehículos."
+
 #~ msgid "# Reconciled Statement Lines"
 #~ msgstr "N° de líneas de estado de cuenta conciliadas"
 
@@ -23984,58 +24234,6 @@ msgstr ""
 #~ msgstr ""
 #~ "No puede crear una nueva línea de estado de cuenta sin una cuenta "
 #~ "transitoria establecida en el diario %s."
-
-#~ msgid "Accumulated Amortization - Buildings"
-#~ msgstr "Amortización acumulada - Edificios"
-
-#~ msgid "Accumulated Amortization - Furniture & Fixtures"
-#~ msgstr "Amortización acumulada - Mobiliario y accesorios"
-
-#~ msgid "Accumulated Amortization - Improvements"
-#~ msgstr "Amortización acumulada - Mejoras"
-
-#~ msgid "Accumulated Amortization - Machines & Tools"
-#~ msgstr "Amortización acumulada - Máquinas y herramientas"
-
-#~ msgid "Accumulated Amortization - Other Property"
-#~ msgstr "Amortización acumulada - Otros bienes inmuebles"
-
-#~ msgid "Accumulated Amortization - Technology"
-#~ msgstr "Amortización acumulada - Tecnología"
-
-#~ msgid "Accumulated Amortization - Vehicles"
-#~ msgstr "Amortización acumulada - Vehículos"
-
-#~ msgid "Accumulated Depreciation"
-#~ msgstr "Depreciación acumulada"
-
-#~ msgid "Cumulative amortization recorded for building assets."
-#~ msgstr "Amortización acumulada registrada para activos inmobiliarios."
-
-#~ msgid "Cumulative amortization recorded for capitalized technology assets."
-#~ msgstr ""
-#~ "Amortización acumulada registrada para activos de tecnología capitalizada."
-
-#~ msgid "Cumulative amortization recorded for furniture and fixture assets."
-#~ msgstr ""
-#~ "Amortización acumulada registrada para activos de mobiliario y accesorios."
-
-#~ msgid ""
-#~ "Cumulative amortization recorded for leasehold or property improvements."
-#~ msgstr ""
-#~ "Amortización acumulada registrada para mejoras en arrendamientos o "
-#~ "propiedades."
-
-#~ msgid "Cumulative amortization recorded for machinery and tool assets."
-#~ msgstr ""
-#~ "Amortización acumulada registrada para activos de máquinas y herramientas."
-
-#~ msgid ""
-#~ "Cumulative amortization recorded for other depreciable property assets."
-#~ msgstr "Amortización acumulada registrada para otros activos depreciables."
-
-#~ msgid "Cumulative amortization recorded for vehicle assets."
-#~ msgstr "Amortización acumulada registrada para activos de vehículos."
 
 #~ msgid "Stock Closing"
 #~ msgstr "Cierre de inventario"

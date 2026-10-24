@@ -20,9 +20,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-25 17:37+0000\n"
-"PO-Revision-Date: 2026-10-11 06:34+0000\n"
-"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
+"POT-Creation-Date: 2026-10-23 17:40+0000\n"
+"PO-Revision-Date: 2026-10-20 07:25+0000\n"
+"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-20/project/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -606,8 +606,8 @@ msgid ""
 "<i class=\"oi oi-filled me-2\" data-icon=\"person\" aria-label=\"Project "
 "Manager\" title=\"Project Manager\" data-tooltip=\"Project Manager\"/>"
 msgstr ""
-"<i class=\"oi oi-filled me-2\" data-icon=\"person\" aria-label=\"项目管理"
-"员\" title=\"项目管理员\" data-tooltip=\"项目管理员\"/>"
+"<i class=\"oi oi-filled me-2\" data-icon=\"person\" aria-label=\"项目管理员"
+"\" title=\"项目管理员\" data-tooltip=\"项目管理员\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_kanban
@@ -746,11 +746,13 @@ msgid ""
 "<span class=\"o_field_widget ps-1\" invisible=\"closed_task_count == 0\">(</"
 "span>"
 msgstr ""
+"<span class=\"o_field_widget ps-1\" invisible=\"closed_task_count == 0\">(</"
+"span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<span class=\"o_field_widget ps-1\">(</span>"
-msgstr ""
+msgstr "<span class=\"o_field_widget ps-1\">(</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1092,8 +1094,8 @@ msgid ""
 "Add internal users as team members to give them access to the project. They "
 "can also access tasks they follow."
 msgstr ""
-"将内部用户添加为团队成员，让他们可以访问该项目。他们也可以访问自己关注的任务"
-"。"
+"将内部用户添加为团队成员，让他们可以访问该项目。他们也可以访问自己关注的任"
+"务。"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_3
@@ -2033,7 +2035,8 @@ msgid ""
 "Customers propose feedbacks by email; Odoo creates tasks automatically, and "
 "you can\n"
 "      communicate on the task directly."
-msgstr "客户通过电子邮件提出反馈；Odoo 会自动创建任务，您可以直接在任务上进行沟通。"
+msgstr ""
+"客户通过电子邮件提出反馈；Odoo 会自动创建任务，您可以直接在任务上进行沟通。"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status_period__daily
@@ -3135,7 +3138,8 @@ msgid ""
 "Manage the lifecycle of your project using the kanban view. Add newly "
 "acquired projects,\n"
 "      assign them and use the"
-msgstr "使用看板视图管理项目的整个生命周期。添加新获取的项目，为其指派人员，并使用"
+msgstr ""
+"使用看板视图管理项目的整个生命周期。添加新获取的项目，为其指派人员，并使用"
 
 #. module: project
 #. odoo-javascript
@@ -4395,7 +4399,8 @@ msgstr "每季度"
 msgid ""
 "Quickly identify tasks awaiting approval or change requests, and spot those "
 "on hold due to unresolved dependencies."
-msgstr "快速识别等待审批或变更请求的任务，并发现因未解决的依赖关系而搁置的任务。"
+msgstr ""
+"快速识别等待审批或变更请求的任务，并发现因未解决的依赖关系而搁置的任务。"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_7
@@ -5700,7 +5705,6 @@ msgstr "此项新任务并未属于任何项目。"
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
-#: code:addons/project/models/project_task.py:0
 msgid "This project can’t be shared with external people."
 msgstr "此项目无法与外部人员分享。"
 
@@ -5737,6 +5741,12 @@ msgid ""
 msgstr ""
 "该项目与任何公司都没有关联，而该阶段与%s关联。有几个方案可以考虑：要么更改项"
 "目的公司，使其与阶段的公司一致，要么删除阶段的公司名称"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project_task.py:0
+msgid "This task can’t be shared with external people."
+msgstr ""
 
 #. module: project
 #. odoo-python
