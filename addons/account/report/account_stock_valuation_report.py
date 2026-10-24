@@ -82,6 +82,7 @@ class StockValuationReport(models.AbstractModel):
             if vals["account_id"] in valuation_account_ids
         )
         stock_variation["lines"] = self._get_balance_lines_by_account(stock_valuation_account_vals)
+        account_ids.update([line['account_id'] for line in stock_variation['lines']])
 
         accounts_read_data = self.env['account.account'].search_read(
             [('id', 'in', account_ids)],
