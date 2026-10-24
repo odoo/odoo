@@ -55,3 +55,35 @@ class TestCloudStorageAttachmentController(HttpCaseWithUserDemo):
             self.assertCountEqual(archive.namelist(), contents)
             for name, content in contents.items():
                 self.assertEqual(archive.read(name), content)
+
+    def test_cloud_storage_attachment_render_text(self):
+        """Text previews and thumbnails show the content of a cloud attachment."""
+        self.env['ir.config_parameter'].sudo().set_str('cloud_storage_provider', 'dummy')
+        self.patch(self.env.registry['res.config.settings'], '_get_cloud_storage_configuration',
+                   lambda self: {'provider': 'dummy'})
+        self.patch(self.env.registry['ir.attachment'], '_generate_cloud_storage_url',
+                   lambda self: f'https://cloud.storage/{self.name}')
+        self.patch(self.env.registry['ir.attachment'], '_generate_cloud_storage_download_info',
+                   lambda self: {'url': self.url})
+
+        self.authenticate(self.user_demo.login, self.user_demo.login)
+
+        content = b'a' * 4096 + b'end of file'
+        attachment = self.env['ir.attachment'].with_user(self.user_demo).create({
+            'name': 'cloud.txt', 'raw': content, 'mimetype': 'text/plain',
+        })
+        attachment.sudo()._post_add_create(cloud_storage=True)
+
+        def download_cloud_file(url, **kwargs):
+            response = requests.Response()
+            response.status_code = 200
+            response._content = content
+            return response
+
+        with patch('requests.get', side_effect=download_cloud_file):
+            preview = self.url_open(f'/mail/attachment/render_text/{attachment.id}')
+            thumbnail = self.url_open(f'/mail/attachment/render_text/{attachment.id}?head=1')
+
+        self.assertIn('a' * 4096 + 'end of file', preview.text)
+        self.assertIn('a' * 4096, thumbnail.text)
+        self.assertNotIn('end of file', thumbnail.text)

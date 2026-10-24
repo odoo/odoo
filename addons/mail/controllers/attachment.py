@@ -270,6 +270,11 @@ class AttachmentController(ThreadController):
             response.cache_control.max_age = STATIC_CACHE_LONG
         return response
 
+    def _get_text_attachment_content(self, attachment, head=False):
+        """Return the bytes to render, only the first 4kiB when ``head`` is set."""
+        with attachment.raw.open() as f:
+            return f.read(self.TEXTUAL_THUMBNAIL_SIZE) if head else f.read()
+
     def _render_text_attachment(self, attachment, head=False, unique=False):
         """Shared rendering engine for text attachments."""
         mimetype = attachment.mimetype
@@ -283,8 +288,7 @@ class AttachmentController(ThreadController):
             return stream.get_response(
                 as_attachment=False, immutable=immutable, content_security_policy="default-src 'none'; sandbox;"
             )
-        with attachment.raw.open() as f:
-            content = f.read(self.TEXTUAL_THUMBNAIL_SIZE) if head else f.read()
+        content = self._get_text_attachment_content(attachment, head)
         text_content = content.decode(errors='replace')
         if mimetype == 'text/markdown' and markdown:
             rendered = markdown(

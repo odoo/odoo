@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import requests
+
 from odoo import _
 from odoo.http import request
 from odoo.addons.mail.controllers.attachment import AttachmentController
@@ -10,6 +12,15 @@ class CloudAttachmentController(AttachmentController):
     def _make_zip(self, name, attachments):
         # ZIP files need the attachment bytes rather than a cloud redirect.
         return super()._make_zip(name, attachments.with_context(cloud_storage_force_download=True))
+
+    def _get_text_attachment_content(self, attachment, head=False):
+        if not (info := attachment._get_download_info()):
+            return super()._get_text_attachment_content(attachment, head)
+        # Thumbnails only need the first bytes of the file.
+        headers = {'Range': f'bytes=0-{self.TEXTUAL_THUMBNAIL_SIZE - 1}'} if head else None
+        response = requests.get(info['url'], headers=headers, timeout=10)
+        response.raise_for_status()
+        return response.content[:self.TEXTUAL_THUMBNAIL_SIZE] if head else response.content
 
     @mail_route()
     def mail_attachment_upload(self, ufile, thread_id, thread_model, is_pending=False, **kwargs):
