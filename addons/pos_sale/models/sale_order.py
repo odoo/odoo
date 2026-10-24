@@ -181,6 +181,13 @@ class SaleOrderLine(models.Model):
         invoiced_qties = super()._prepare_qty_invoiced()
         for sale_line in self:
             pos_lines = sale_line.sudo().pos_order_line_ids.filtered(lambda order_line: order_line.order_id.state not in ['cancel', 'draft'])
+            if sale_line.is_downpayment and pos_lines:
+                # 'sale' would flag the deduction alone as invoiced, the PoS line is the +1
+                invoiced_qties[sale_line] = sum((
+                    (1 if invoice_line.move_id.move_type == 'out_invoice' else -1) * invoice_line.quantity
+                    for invoice_line in sale_line._get_invoice_lines()
+                    if invoice_line.move_id.state != 'cancel'
+                ), 0)
             invoiced_qties[sale_line] += sum((
                 self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in pos_lines
             ), 0)
