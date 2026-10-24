@@ -28,7 +28,7 @@ export class AttachmentUploader {
      * @param {boolean} [options.voice]
      */
     async uploadFile(file, options) {
-        const thread = options?.thread || this.thread;
+        const thread = options?.thread || this.composer?.targetThread || this.thread;
         return this.attachmentUploadService.upload(thread, this.composer, file, options);
     }
 

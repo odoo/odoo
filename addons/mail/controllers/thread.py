@@ -55,6 +55,23 @@ class ThreadController(http.Controller):
             },
         )
 
+    @classmethod
+    def _get_notified_message(cls, thread_model, thread_id, message_id):
+        """Return the message `message_id` of the given record when the current user was notified
+        of it, so that they can reply to it without the right to post on the record, as they can
+        by email. Channels keep their membership check: a mention also notifies, so a member who
+        left a group could otherwise post in it again by replying to an old mention."""
+        if thread_model == "discuss.channel" or not message_id:
+            return request.env["mail.message"]
+        domain = [
+            ("id", "=", int(message_id)),
+            ("model", "=", thread_model),
+            ("res_id", "=", int(thread_id)),
+            ("notification_ids.res_partner_id", "=", request.env.user.partner_id.id),
+        ]
+        # sudo: mail.message - can read the notifications of the parent message to reply to it
+        return request.env["mail.message"].sudo().search(domain, limit=1)
+
     # main routes
     # ------------------------------------------------------------
 
@@ -147,7 +164,15 @@ class ThreadController(http.Controller):
             ).ids,
         }
 
-    def _prepare_message_data(self, post_data, *, thread, from_create=True, **kwargs):
+    def _prepare_message_data(
+        self,
+        post_data,
+        *,
+        thread,
+        from_create=True,
+        notified_parent=False,
+        **kwargs,
+    ):
         res = {
             key: value
             for key, value in post_data.items()
@@ -161,6 +186,8 @@ class ThreadController(http.Controller):
             ):
                 res["message_type"] = "comment"
                 res["subtype_xmlid"] = "mail.mt_comment"
+                if notified_parent and notified_parent.subtype_id.internal:
+                    res["subtype_xmlid"] = "mail.mt_note"
             else:
                 res.setdefault("message_type", "comment")
         if (attachment_ids := post_data.get("attachment_ids")) is not None:
@@ -228,13 +255,25 @@ class ThreadController(http.Controller):
                 'ids': canned_response_ids,
             })
         thread = self._get_thread_with_access_for_post(thread_model, thread_id, **kwargs)
+        notified_parent = request.env["mail.message"]
         if not thread:
-            raise NotFound()
+            thread = request.env[thread_model].browse(int(thread_id))
+            notified_parent = self._get_notified_message(
+                thread_model, thread_id, post_data.get("parent_id"),
+            )
+            if not notified_parent:
+                raise NotFound()
         if not self._get_thread_with_access(thread_model, thread_id, mode="write"):
             thread = thread.with_context(mail_post_autofollow_author_skip=True, mail_post_autofollow=False)
         # sudo: mail.thread - users can post on accessible threads
         message = thread.sudo().message_post(
-            **self._prepare_message_data(post_data, thread=thread, from_create=True, **kwargs),
+            **self._prepare_message_data(
+                post_data,
+                thread=thread,
+                from_create=True,
+                notified_parent=notified_parent,
+                **kwargs,
+            ),
         )
         return {
             "store_data": store.add(message).get_result(),

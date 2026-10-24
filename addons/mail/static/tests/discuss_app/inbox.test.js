@@ -2,6 +2,7 @@ import {
     click,
     contains,
     defineMailModels,
+    inputFiles,
     insertText,
     onRpcBefore,
     openDiscuss,
@@ -171,6 +172,40 @@ test('"reply to" composer should send message if message replied to is not a not
     await click(".o-mail-Composer button[title='Send']:enabled");
     await contains(".o-mail-Composer button[title='Send']", { count: 0 });
     await waitForSteps(["/mail/message/post"]);
+});
+
+test('"reply to" composer uploads attachments with the message replied to', async () => {
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([{}, {}]);
+    const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
+        { body: "First", model: "res.partner", needaction: true, res_id: partnerId_1 },
+        { body: "Second", model: "res.partner", needaction: true, res_id: partnerId_2 },
+    ]);
+    pyEnv["mail.notification"].create(
+        [messageId_1, messageId_2].map((messageId) => ({
+            mail_message_id: messageId,
+            notification_status: "sent",
+            notification_type: "inbox",
+            res_partner_id: serverState.partnerId,
+        }))
+    );
+    onRpc("/mail/attachment/upload", async (request) => {
+        const body = await request.formData();
+        asyncStep(`upload on ${body.get("thread_id")} with parent_id ${body.get("parent_id")}`);
+    });
+    await start();
+    await openDiscuss("mail.box_inbox");
+    await click(".o-mail-Message:has(:text('First')) [title='Expand']");
+    await click(".o-dropdown-item:text('Reply')");
+    await contains(".o-mail-Message.o-selected:has(:text('First'))");
+    await click(".o-mail-Message:has(:text('Second')) [title='Expand']");
+    await click(".o-dropdown-item:text('Reply')");
+    await contains(".o-mail-Message.o-selected:has(:text('Second'))");
+    await inputFiles(".o-mail-Composer .o_input_file", [
+        new File(["hello, world"], "text.txt", { type: "text/plain" }),
+    ]);
+    await contains(".o-mail-AttachmentContainer:not(.o-isUploading)[title='text.txt']");
+    await waitForSteps([`upload on ${partnerId_2} with parent_id ${messageId_2}`]);
 });
 
 test("show subject of message in Inbox", async () => {
