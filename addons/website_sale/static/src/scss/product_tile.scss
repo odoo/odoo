@@ -217,7 +217,7 @@
 
         /* Only visible in /shop page */
         .css_attribute_preview_thumbnail {
-            border: var(--o-bs-border-width) solid $border-color;
+            border: var(--o-bs-border-width) solid var(--o-border-color);
             border-radius: var(--o-wsale-card-attribute-previewer-thumbnail-border-radius, var(--border-radius-sm));
             aspect-ratio: var(--o-wsale-card-thumb-aspect-ratio, 1/1);
             transition: border-color 0.05s ease-in-out;
@@ -227,7 +227,7 @@
             }
         }
         .btn {
-            border: var(--o-bs-border-width) solid $border-color;
+            border: var(--o-bs-border-width) solid var(--o-border-color);
 
             &:hover {
                 border-color: var(--primary);
@@ -1780,12 +1780,12 @@ $_wsale_products_roundness_map: (
     $-bg-color: o-color($-bg) or $body-bg;
     $-text: o-color($-text) or color-contrast($-bg-color);
     $-headings: o-color($-headings) or $headings-color;
-    $-link-color: if($-link, o-color($-link), map-get($theme-colors, 'primary'));
+    $-link-color: if($-link, o-color($-link), $primary);
     $-muted: opaque($-bg-color, rgba($-text, 0.7));
 
-    $-btn-primary-color: if($-btn-primary, o-color($-btn-primary), map-get($theme-colors, 'primary'));
+    $-btn-primary-color: if($-btn-primary, o-color($-btn-primary), $primary);
     $-btn-primary-border-color: if($-btn-primary-border, o-color($-btn-primary-border), $-btn-primary-color);
-    $-btn-secondary-color: if($-btn-secondary, o-color($-btn-secondary), map-get($theme-colors, 'secondary'));
+    $-btn-secondary-color: if($-btn-secondary, o-color($-btn-secondary), $secondary);
     $-btn-secondary-border-color: if($-btn-secondary-border, o-color($-btn-secondary-border), $-btn-secondary-color);
 
     .o_wsale_products_opt_cc#{$index} {

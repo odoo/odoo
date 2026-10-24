@@ -9,7 +9,7 @@
     display: inline-block;
     height: var(--o-wsale-css-attribute-color__size);
     width: var(--o-wsale-css-attribute-color__size);
-    border: var(--o-bs-border-width) solid var(--o-wsale-attribute-color-border-color, #{$border-color});
+    border: var(--o-bs-border-width) solid var(--o-wsale-attribute-color-border-color, var(--o-border-color));
     border-radius: 50%;
     transition: var(--o-bs-transition-base);
 
@@ -63,7 +63,7 @@
     height: calc(var(--o-wsale-css-attribute-image__height) - var(--o-wsale-css-attribute-image__outline-width));
     aspect-ratio: 1;
     border: calc(var(--o-bs-border-width) * 5) solid var(--body-bg);
-    outline: var(--o-wsale-css-attribute-image__outline-width) solid $border-color;
+    outline: var(--o-wsale-css-attribute-image__outline-width) solid var(--o-border-color);
     transition: var(--o-bs-input-transition);
 
     &:hover, &.active {
@@ -92,7 +92,7 @@
     box-sizing: content-box;
     border: 1px solid var(--body-bg);
     border-radius: MIN(var(--o-wsale-product-image-radius), var(--border-radius));
-    outline: var(--o-bs-border-width) solid $border-color;
+    outline: var(--o-bs-border-width) solid var(--o-border-color);
     aspect-ratio: var(--o-wsale-product-image-ratio);
     width: 64px;
 
@@ -201,7 +201,7 @@ select.form-select.css_attribute_select {
 
 .variant_attribute {
     .o_variant_pills {
-        border: var(--o-bs-border-width) solid $border-color;
+        border: var(--o-bs-border-width) solid var(--o-border-color);
 
         &:has(input:focus-visible) {
             box-shadow: $btn-focus-box-shadow;

@@ -26,13 +26,13 @@
                 height: 180px;
 
                 .s_events_event_date {
-                    top: $card-spacer-x;
-                    right: $card-spacer-x;
+                    top: var(--o-bs-card-spacer-x);
+                    right: var(--o-bs-card-spacer-x);
                     display: flex;
                     flex-direction: column;
                     justify-content: center;
-                    width: $font-size-base * 4;
-                    height: $font-size-base * 4;
+                    width: calc(var(--o-bs-font-size-base) * 4);
+                    height: calc(var(--o-bs-font-size-base) * 4);
                     border-radius: 50%;
                     text-align: center;
 
@@ -49,7 +49,7 @@
     }
 
     // Solo templates
-    @include media-breakpoint-up(lg) {
+    @media (min-width: 992px) {
         &.s_event_event_single_offset .position-lg-absolute {
             transform: translate(-50%, -50%);
         }
@@ -61,7 +61,7 @@
         }
 
         &:hover {
-            box-shadow: $box-shadow-sm;
+            box-shadow: var(--box-shadow-sm);
         }
     }
 }

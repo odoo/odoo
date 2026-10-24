@@ -3,7 +3,7 @@
     --ecomm-categories-showcase-width: 85%;
     --ecomm-categories-showcase-row-height: 100%;
     --ecomm-categories-showcase-flex-base: 1;
-    --ecomm-categories-showcase-edge-spacing: #{$container-padding-x * .5};
+    --ecomm-categories-showcase-edge-spacing: calc(var(--o-bs-container-padding-x) * .5);
 
     .s_ecomm_categories_showcase_wrapper {
         flex-wrap: nowrap;
@@ -38,7 +38,7 @@
         padding: 0;
     }
 
-    @include media-breakpoint-down(lg) {
+    @media (max-width: 991.98px) {
         .s_ecomm_categories_showcase_wrapper {
             margin-left: calc(var(--ecomm-categories-showcase-edge-spacing) * -1);
             margin-right: calc(var(--ecomm-categories-showcase-edge-spacing) * -1);
@@ -48,16 +48,16 @@
         }
     }
 
-    @include media-breakpoint-between(md, lg) {
+    @media (min-width: 768px) and (max-width: 991.98px) {
         --ecomm-categories-showcase-width: 55%;
     }
 
-    @include media-breakpoint-up(lg) {
+    @media (min-width: 992px) {
         .container-fluid {
             padding: 0 var(--ecomm-categories-showcase-fluid-padding-x, 0);
 
             &:has(.gap-4) {
-                --ecomm-categories-showcase-fluid-padding-x: #{$container-padding-x};
+                --ecomm-categories-showcase-fluid-padding-x: var(--o-bs-container-padding-x);
             }
         }
 
@@ -91,7 +91,7 @@
     &.o_min_height_short {
         --ecomm-categories-showcase-min-height: 25vh;
 
-        @include media-breakpoint-down(md) {
+        @media (max-width: 767.98px) {
             .s_ecomm_categories_showcase_block {
                 min-height: 30vh;
             }
@@ -101,7 +101,7 @@
     &.o_min_height_tall {
         --ecomm-categories-showcase-min-height: 75vh;
 
-        @include media-breakpoint-down(md) {
+        @media (max-width: 767.98px) {
             .s_ecomm_categories_showcase_block {
                 min-height: 60vh;
             }

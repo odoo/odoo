@@ -8,7 +8,7 @@
         position: relative;
         justify-content: center;
 
-        @include media-breakpoint-up(md) {
+        @media (min-width: 768px) {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
@@ -21,7 +21,7 @@
         // "s_dynamic_snippet" for dynamic carousel snippets.
         > .container {
             .s_dynamic_snippet_title.s_dynamic_snippet_title_aside + .s_dynamic_snippet_content .s_dynamic_snippet_row > * {
-                @include media-breakpoint-up(lg) {
+                @media (min-width: 992px) {
                     flex: initial;
                 }
             }
@@ -29,7 +29,7 @@
 
         > .o_container_small {
             .s_dynamic_snippet_row > * {
-                @include media-breakpoint-up(lg) {
+                @media (min-width: 992px) {
                     flex: initial;
                 }
             }
@@ -38,7 +38,7 @@
                 min-width: auto;
 
                 + .s_dynamic_snippet_content .s_dynamic_snippet_row > * {
-                    @include media-breakpoint-up(lg) {
+                    @media (min-width: 992px) {
                         flex: initial;
                     }
                 }
@@ -56,14 +56,14 @@
 
     // Rounded arrows (default selected)
     .o_carousel_arrow {
-        border-radius: $border-radius-pill;
-        background-color: $carousel-dark-indicator-active-bg;
-        color: $carousel-control-color;
+        border-radius: var(--border-radius-pill);
+        background-color: var(--o-bs-carousel-dark-indicator-active-bg);
+        color: var(--o-bs-carousel-control-color);
     }
 
     &.o_light_arrows, &.o_default_arrows {
         .o_carousel_arrow {
-            filter: $carousel-dark-control-icon-filter;
+            filter: var(--o-bs-carousel-dark-control-icon-filter);
         }
     }
 
@@ -78,14 +78,14 @@
     }
 
     &.o_boxed_arrows .o_carousel_arrow {
-        border-radius: $border-radius;
+        border-radius: var(--o-bs-border-radius);
     }
 
     &.o_hidden_arrows .o_carousel_arrow {
         display: none;
     }
 
-    @include media-breakpoint-up(md) {
+    @media (min-width: 768px) {
         --o-DynamicCarousel__arrowPrev-offset: -50% /* rtl: 50% */;
         --o-DynamicCarousel__arrowNext-offset: 50% /* rtl: -50% */;
 

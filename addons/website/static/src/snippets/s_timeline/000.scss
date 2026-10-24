@@ -1,9 +1,9 @@
 .s_timeline:not([data-vcss]) {
-    --spacing: #{$grid-gutter-width * .5};
+    --spacing: calc(var(--o-bs-grid-gutter-width) * .5);
 
     .s_timeline_line {
         position: relative;
-        border-color: map-get($grays, '800'); // For inheritance, not actual border
+        border-color: var(--gray-800); // For inheritance, not actual border
 
         &:before {
             content: '';
@@ -32,7 +32,7 @@
         &.flex-row-reverse .s_timeline_content {
             flex-direction: row-reverse;
         }
-        @include media-breakpoint-up(md) {
+        @media (min-width: 768px) {
             &.flex-row-reverse .s_timeline_content {
                 flex-direction: row-reverse;
 
@@ -49,10 +49,10 @@
         position: relative;
         margin: var(--spacing) 0;
         padding: map-get($spacers, 1);
-        background-color: var(--o-cc-bg, #{$body-bg});
+        background-color: var(--o-cc-bg, var(--body-bg));
         text-align: center;
 
-        @include media-breakpoint-up(md) {
+        @media (min-width: 768px) {
             position: absolute;
             left: 50%;
             transform: translateX(-50%);

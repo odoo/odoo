@@ -2,7 +2,7 @@
 .s_popup_main:not([data-vcss]) {
     .s_popup_content {
         // keep lower than <p> height (cookies bar)
-        min-height: $o-font-size-base * $o-line-height-base;
+        min-height: calc(var(--o-font-size-base) * var(--o-line-height-base));
         box-shadow: $modal-content-box-shadow-sm-up;
         .container {
             // keep margin when fixed bottom
@@ -60,7 +60,7 @@
     &.s_popup_fixed {
         &.s_popup_fixed_top {
             .s_popup_content {
-                top: $o-navbar-height;
+                top: var(--o-navbar-height);
             }
         }
         &:not(.s_popup_fixed_top) {
@@ -69,7 +69,7 @@
             }
         }
         .s_popup_content {
-            z-index: $zindex-modal;
+            z-index: var(--o-bs-zindex-modal);
             position: fixed;
             right: 20px;
         }

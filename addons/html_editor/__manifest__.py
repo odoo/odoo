@@ -45,7 +45,7 @@ This addon provides an extensible, maintainable editor.
             'html_editor/static/lib/vkbeautify/**/*',
             'html_editor/static/src/scss/base_style.scss',
             'html_editor/static/src/scss/html_editor.common.scss',
-            'html_editor/static/src/scss/html_editor.backend.scss',
+            'html_editor/static/src/scss/html_editor.backend.css',
         ],
         'html_editor.assets_editor': [
             'web/static/lib/dompurify/DOMpurify.js',
