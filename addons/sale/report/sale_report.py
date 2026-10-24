@@ -245,6 +245,13 @@ class SaleReport(models.Model):
     def _table_query(self):
         return self._query()
 
+    def _fetch_query(self, query, fields):
+        # Cache the fields used by record rules to avoid reading the whole
+        # report again by aggregate ids during access checks.
+        if not self.env.su:
+            fields = list(fields) + [self._fields[name] for name in ('company_id', 'user_id')]
+        return super()._fetch_query(query, fields)
+
     def _get_order_reference(self):
         """Resolve the order from the line id, without reading the view."""
         self.ensure_one()
