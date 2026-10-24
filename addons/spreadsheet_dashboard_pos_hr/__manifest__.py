@@ -2,9 +2,8 @@
 {
     'name': "Spreadsheet dashboard for point of sale",
     'category': 'Productivity/Dashboard',
-    'summary': 'Spreadsheet',
-    'description': 'Spreadsheet',
-    'depends': ['spreadsheet_dashboard', 'pos_hr'],
+    'summary': 'point of Sale with HR Spreadsheet Dashboard',
+    'depends': ['spreadsheet_dashboard_pos', 'pos_hr'],
     'data': [
         "data/dashboards.xml",
     ],
