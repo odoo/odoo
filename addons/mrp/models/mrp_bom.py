@@ -90,6 +90,10 @@ class MrpBom(models.Model):
     continuous = fields.Boolean('Continuous Production', default=False,
         help="If active, registering production on a work order will automatically unblock the next work order if it is blocked."
     )
+    outdated_production_count = fields.Integer(
+        string="Outdated MO Count",
+        compute='_compute_outdated_production_count',
+    )
 
     _qty_positive = models.Constraint(
         'check (product_qty > 0)',
@@ -337,6 +341,29 @@ class MrpBom(models.Model):
         action['domain'] = [('id', 'in', exploded_bom_line_ids)]
         action['context'] = {'forced_order_ids': exploded_bom_line_ids}
         return action
+
+    def _compute_outdated_production_count(self):
+        for bom in self:
+            count = self.env['mrp.production'].search_count([
+                ('product_id', 'in', bom.product_tmpl_id.product_variant_ids.ids),
+                ('state', 'in', ['draft', 'confirmed', 'progress']),
+                ('is_outdated_bom', '=', True),
+            ])
+            bom.outdated_production_count = count
+
+    def action_open_outdated_MOs(self):
+        self.ensure_one()
+        return {
+            'name': _("Outdated Manufacturing Orders"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'mrp.production',
+            'view_mode': 'list,form',
+            'views': [(False, 'list'), (False, 'form')],
+            'context': {
+                'search_default_filter_outdated_bom': True,
+                'search_default_bom_id': self.id,
+            },
+        }
 
     @api.depends('code')
     def _compute_display_name(self):
