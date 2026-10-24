@@ -76,7 +76,9 @@ class HrLeaveAllocation(models.Model):
         domain = [('company_id', 'in', self.env.companies.ids)]
         if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
             domain += [
-                ('leave_manager_id', '=', self.env.user.id)
+                '|',
+                    ('leave_manager_id', '=', self.env.user.id),
+                    ('user_id', '=', self.env.user.id),
             ]
         return domain
 
