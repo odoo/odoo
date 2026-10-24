@@ -2,7 +2,7 @@
 
 from werkzeug.urls import url_encode, url_join
 
-from odoo import fields, models, _
+from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
 
@@ -49,7 +49,11 @@ class SaleOrder(models.Model):
         action['domain'] = [('sale_order_id', 'in', self.ids)]
         return action
 
+    @api.depends_context('uid')
     def _compute_attendee_count(self):
+        if not self.env['event.registration'].has_access('read'):
+            self.attendee_count = 0
+            return
         sale_orders_data = self.env['event.registration']._read_group(
             [('sale_order_id', 'in', self.ids),
              ('state', '!=', 'cancel')],
