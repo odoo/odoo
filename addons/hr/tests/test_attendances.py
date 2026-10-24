@@ -18,8 +18,8 @@ class TestAttendances(TestHrCommon):
 
         contract_now = cls.employee.create_version({
             'wage': 1,
-            'contract_date_start': date(2024, 6, 1),
             'date_version': date(2024, 6, 1),
+            'contract_date_start': date(2024, 6, 1),
         })
 
         resource_calendar_half_time = cls.env['resource.calendar'].create([{
@@ -40,16 +40,16 @@ class TestAttendances(TestHrCommon):
 
         cls.employee.create_version({
             'resource_calendar_id': resource_calendar_half_time.id,
+            'date_version': date(2024, 6, 1),
             'contract_date_start': date(2024, 6, 1),
             'contract_date_end': date(2024, 7, 31),
             'wage': 1,
-            'date_version': date(2024, 7, 1),
         })
 
         cls.employee.create_version({
+            'date_version': date(2024, 8, 1),
             'contract_date_start': date(2024, 8, 1),
             'wage': 1,
-            'date_version': date(2024, 9, 1),
         })
 
         cls.employee.resource_calendar_id = contract_now.resource_calendar_id
