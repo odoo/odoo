@@ -81,26 +81,24 @@ export class FeedbackScreen extends Component {
     }
 
     onClick(buttonClicked = false) {
-        if (!this.isAutoSkip || buttonClicked) {
-            if (this.loading()) {
-                return;
-            }
-            this.goNext();
-        } else {
+        if (!buttonClicked && this.isAutoSkip && !this.ignoreTimeout) {
+            // First click on the screen only stops the automatic skip
             this.stopAutomaticSkip();
+            return;
         }
+        if (this.loading()) {
+            return;
+        }
+        this.goNext();
     }
 
     stopAutomaticSkip() {
         if (!this.isAutoSkip) {
             return;
         }
-        if (this.timeout()) {
-            clearTimeout(this.timeout());
-            this.timeout.set(null);
-        } else {
-            this.ignoreTimeout = true;
-        }
+        clearTimeout(this.timeout());
+        this.timeout.set(null);
+        this.ignoreTimeout = true;
     }
 
     goNext() {
