@@ -2,7 +2,7 @@ import { Component, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { Thread } from "@mail/core/common/thread_model";
 import { callActionsRegistry } from "../common/call_actions";
-import { useHover } from "@mail/utils/common/hooks";
+import { useHover, UseHoverOverlay } from "@mail/utils/common/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 /**
@@ -13,13 +13,13 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 export class DiscussSidebarCallParticipants extends Component {
     static template = "mail.DiscussSidebarCallParticipants";
     static props = { thread: { type: Thread }, compact: { type: Boolean, optional: true } };
-    static components = { DiscussSidebarCallParticipants, Dropdown };
+    static components = { DiscussSidebarCallParticipants, Dropdown, UseHoverOverlay };
 
     setup() {
         super.setup();
         this.store = useState(useService("mail.store"));
         this.rtc = useState(useService("discuss.rtc"));
-        this.hover = useHover(["root", "floating*"], {
+        this.hover = useHover(["root"], {
             onHover: () => (this.floating.isOpen = true),
             onAway: () => (this.floating.isOpen = false),
         });
