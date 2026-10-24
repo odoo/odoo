@@ -1495,16 +1495,23 @@ class HrLeave(models.Model):
         :return: list of ``(employee, error)``
         """
         allocation_info_by_employee = work_entry_type._get_allocation_info(self.employee_id, date_from)
+        # Without excess, the request cannot create one: only compute the balance without it
+        # for the employees that have some (an empty recordset would fall back on the
+        # contextual employee).
+        employees_with_excess = self.employee_id.filtered(
+            lambda employee: allocation_info_by_employee[employee]['virtual_excess_data'])
         previous_allocation_info_by_employee = work_entry_type.with_context(
             ignored_leave_ids=self.ids,
-        )._get_allocation_info(self.employee_id, date_from)
+        )._get_allocation_info(employees_with_excess, date_from) if employees_with_excess else {}
         allocation_errors = []
         for employee in self.employee_id:
             allocation_info = allocation_info_by_employee[employee]
-            excess = allocation_info['virtual_excess_data']
-            previous_excess = previous_allocation_info_by_employee[employee]['virtual_excess_data']
             if not allocation_info['max_leaves']:
                 allocation_errors.append((employee, NO_ALLOCATION_ERROR))
+            excess = allocation_info['virtual_excess_data']
+            if not excess:
+                continue
+            previous_excess = previous_allocation_info_by_employee[employee]['virtual_excess_data']
             if excess != previous_excess and len(excess) >= len(previous_excess):
                 allocation_errors.append((employee, NOT_ENOUGH_ALLOCATION_ERROR))
         return allocation_errors
