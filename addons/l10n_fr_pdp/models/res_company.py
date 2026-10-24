@@ -136,6 +136,14 @@ class ResCompany(models.Model):
                 and company.l10n_fr_pdp_annuaire_start_date <= fields.Date.context_today(self)
             )
 
+    def _l10n_fr_pdp_sends_unregulated(self):
+        """ Whether the invoices of this company go through the Approved Platform as non regulated
+        messages: until the company is registered on the annuaire, or when it chose not to send to
+        the PPF, they are exchanged on Peppol only.
+        """
+        self.ensure_one()
+        return not self.l10n_fr_pdp_registered or not self.l10n_fr_pdp_send_to_ppf
+
     def _force_update_l10n_fr_f10_moves(self):
         companies = self.filtered(
             lambda company: company.l10n_fr_f10_enable_reporting
