@@ -72,10 +72,22 @@ class MrpProduction(models.Model):
         res['extra_cost'] = self.extra_cost
         return res
 
+    def _get_valuation_account_id(self, mo):
+        production_location = mo.product_id.with_company(self.company_id).property_stock_production
+
+        if production_location.valuation_account_id:
+            return production_location.valuation_account_id
+
+        categ = self.product_id.categ_id
+        if hasattr(categ, 'valuation_account_id') and categ.valuation_account_id:
+            return categ.valuation_account_id
+
+        return self.company_id.valuation_account_id or self.env['account.account']
+
     def _post_labour(self):
         for mo in self:
-            production_location = mo.product_id.with_company(mo.company_id).property_stock_production
-            if mo.with_company(mo.company_id).product_id.valuation != 'real_time' or not production_location.valuation_account_id:
+            valuation_account = self._get_valuation_account_id(mo)
+            if mo.with_company(mo.company_id).product_id.valuation != 'real_time' or not valuation_account:
                 continue
 
             if mo.workorder_ids.time_ids.account_move_line_id:
@@ -94,8 +106,7 @@ class MrpProduction(models.Model):
                 continue
 
             desc = _('%s - Labour', mo.name)
-            account = production_location.valuation_account_id
-            labour_amounts[account] -= workcenter_cost
+            labour_amounts[valuation_account] -= workcenter_cost
             account_move = self.env['account.move'].sudo().create({
                 'journal_id': product_accounts['stock_journal'].id,
                 'date': fields.Date.context_today(self),

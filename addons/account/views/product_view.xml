@@ -121,11 +121,11 @@
                 <notebook position="inside">
                     <page name="accounting" string="Accounting" groups="account.group_account_readonly">
                         <group>
-                            <group name="properties">
+                            <group name="properties" string="Product accounts">
                                 <field name="property_account_income_categ_id"/>
                                 <field name="property_account_expense_categ_id"/>
                             </group>
-                            <group name="stock_properties">
+                            <group name="stock_properties" string="Inventory valuation">
                                 <field name="property_valuation"/>
                                 <field name="property_cost_method" required="True"/>
                                 <field name="property_stock_valuation_account_id" string="Stock Account" options="{'no_create': True}" decoration-muted="not property_stock_valuation_account_active"/>

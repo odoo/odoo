@@ -66,6 +66,9 @@ class MrpAccountWipAccounting(models.TransientModel):
         compute="_compute_line_ids", store=True, readonly=False)
     mo_ids = fields.Many2many('mrp.production')
 
+    def _get_production_account(self):
+        return self.env.company.account_production_wip_account_id.id
+
     def _get_overhead_account(self):
         overhead_account = self.env.company.account_production_wip_overhead_account_id
         if overhead_account:
@@ -78,29 +81,60 @@ class MrpAccountWipAccounting(models.TransientModel):
             productions = self.env['mrp.production']
         if not date:
             date = datetime.now().replace(hour=23, minute=59, second=59)
-        compo_value = sum(
-            ml.quantity_product_uom * (ml.product_id.lot_valuated and ml.lot_id and ml.lot_id.standard_price or ml.product_id.standard_price)
-            for ml in productions.move_raw_ids.move_line_ids.filtered(lambda ml: ml.picked and ml.quantity and ml.date <= date)
-        )
-        overhead_value = productions.workorder_ids._cal_cost(date)
-        sval_acc = self.env['product.category']._fields['property_stock_valuation_account_id'].get_company_dependent_fallback(self.env['product.category']).id
-        return [
-            Command.create({
-                'label': _("WIP - Component Value"),
-                'credit': compo_value,
-                'account_id': sval_acc,
-            }),
-            Command.create({
-                'label': _("WIP - Overhead"),
-                'credit': overhead_value,
-                'account_id': self._get_overhead_account(),
-            }),
-            Command.create({
-                'label': _("Manufacturing WIP - %(orders_list)s", orders_list=productions.mapped('name') or _("Manual Entry")),
-                'debit': compo_value + overhead_value,
-                'account_id': self.env.company.account_production_wip_account_id.id,
+
+        # use (account, label) as a key to uniquely identify a line, use (debit, credit, extra_labels -> set()) to allow for metadata from where the data came
+        accounting_lines = {}
+        for production in productions:
+            mo_debit = 0
+            # components can belong to different categories which can each have their own account, otherwise use the companies' account
+            for ml in production.move_raw_ids.move_line_ids.filtered(lambda ml: ml.picked and ml.quantity and ml.date <= date):
+                value = ml.quantity_product_uom * (ml.product_id.lot_valuated and ml.lot_id and ml.lot_id.standard_price or ml.product_id.standard_price)
+                overhead_account = ml.product_id.categ_id.property_stock_valuation_account_id or self.env.company.account_stock_valuation_id
+
+                key = (overhead_account, _("WIP - Component Value"))
+                vals = accounting_lines.setdefault(key, {
+                    "debit": 0.0,
+                    "credit": 0.0,
+                    "extra_labels": set(),
+                })
+                vals['credit'] += value
+                mo_debit += value
+            # cost of production is logged on the stock valuation account of the product category, if not present fall back to the company stock valuation account
+            overhead_value = production.workorder_ids._cal_cost(date)
+            overhead_account = production.product_id.categ_id.account_production_wip_overhead_account_id or self.env.company.account_production_wip_overhead_account_id
+
+            key = (overhead_account, _("WIP - Overhead"))
+            vals = accounting_lines.setdefault(key, {
+                "debit": 0.0,
+                "credit": 0.0,
+                "extra_labels": set(),
             })
-        ]
+            vals['credit'] += overhead_value
+            mo_debit += overhead_value
+
+            # now we have to debit the wip account which is also done first by the setting on product category, afterwards on the company
+            production_account = production.product_id.categ_id.account_production_wip_account_id or self.env.company.account_production_wip_account_id
+            key = (production_account, _("Manufacturing WIP"))
+            vals = accounting_lines.setdefault(key, {
+                "debit": 0.0,
+                "credit": 0.0,
+                "extra_labels": set(),
+            })
+            vals['debit'] += mo_debit
+            vals['extra_labels'].add(production.name or _("Manual Entry"))
+
+        return_commands = []
+        for (account, label), vals in accounting_lines.items():
+            debit, credit, extra_labels = vals["debit"], vals["credit"], vals["extra_labels"]
+            return_commands.append(
+                Command.create({
+                    'label': f"{label}{": " + ", ".join(list(extra_labels)) if extra_labels else ""}",
+                    'debit': debit,
+                    'credit': credit,
+                    'account_id': account,
+                }),
+            )
+        return return_commands
 
     @api.depends('date')
     def _compute_reversal_date(self):

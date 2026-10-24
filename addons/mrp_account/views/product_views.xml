@@ -66,4 +66,16 @@
                 records.action_bom_cost()
             </field>
         </record>
+
+        <record id="view_category_account_production_form" model="ir.ui.view">
+        <field name="name">mrp.product.form.inherit</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="account.view_category_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='stock_properties']" position="inside">
+                <field name="account_production_wip_account_id" options="{'no_create': True}" readonly="0"/>
+                <field name="account_production_wip_overhead_account_id" options="{'no_create': True}" readonly="0"/>
+            </xpath>
+        </field>
+        </record>
 </odoo>
