@@ -2,7 +2,15 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.ChatHub">
+<<<<<<< 6cd956b8101c4018ebb89266989a01cd4931ea16
     <div class="o-mail-ChatHub d-print-none" t-ref="root">
+||||||| 5ce600033cdb46b278122b1a519bc1e356c2ebe2
+    <div class="o-mail-ChatHub d-print-none">
+
+=======
+    <div class="o-mail-ChatHub d-print-none" t-att-class="{'o-dragged': position.dragged}">
+
+>>>>>>> cec79181a582a002e1813bda83e8ea4ff6dfcced
         <t t-set="visibleChatWindows" t-value="chatHub.compact ? chatHub.opened.filter(({ bypassCompact }) => bypassCompact) : chatHub.opened "/>
         <t t-foreach="visibleChatWindows" t-as="cw" t-key="cw.localId">
             <ChatWindow chatWindow="cw" t-if="cw.canShow" right="chatHub.BUBBLE_START + chatHub.BUBBLE + (chatHub.BUBBLE_OUTER*2) + (visibleChatWindows.length - cw_index - 1) * (chatHub.WINDOW + chatHub.WINDOW_INBETWEEN * 2)"/>
