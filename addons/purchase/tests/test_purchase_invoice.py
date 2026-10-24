@@ -1040,6 +1040,24 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
             else:
                 self.assertFalse(line.purchase_line_id in po.order_line)
 
+    def test_subset_match_from_edi_diff_discount(self):
+        """When an EDI vendor bill line has the same unit price as a purchase order line
+        but a different discount, it should not be matched or overwritten.
+        """
+        po = self.init_purchase(confirm=True, products=[self.product_order])
+        po.order_line.discount = 10.0
+
+        invoice = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order])
+        self.assertEqual(invoice.invoice_line_ids.discount, 0.0)
+        self.assertEqual(invoice.invoice_line_ids.price_unit, po.order_line.price_unit)
+
+        invoice._find_and_set_purchase_orders(
+            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False)
+
+        # Since discounts differ (10% on PO vs 0% on bill), the line must not match or be overwritten
+        self.assertFalse(invoice.invoice_line_ids.purchase_line_id)
+        self.assertEqual(invoice.invoice_line_ids.discount, 0.0)
+
     def test_subset_not_match_non_invoice_lines(self):
         """Test that a purchase line with a line of 0 as unit price won't match
         with a non-invoice-lines (not an invoice_line_ids)
