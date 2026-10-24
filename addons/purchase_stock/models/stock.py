@@ -331,7 +331,7 @@ class StockWarehouseOrderpoint(models.Model):
             quantity=qty_to_order,
             date=max(dates_info['date_order'].date(), fields.Date.today()),
             uom_id=self.uom_id
-        )
+        ) or self._get_default_supplier()
         return supplier.uom_id
 
     def _quantity_in_progress(self):
