@@ -18,6 +18,8 @@ PK_CN_RE = re.compile(r'\d{13}')
 # universal identifier (where 'XX' is an ISO 3166-1 alpha-2 country code, e.g. 'FRUID' for
 # France) whose remainder is not a UEN and is taken as-is.
 SG_PEPPOL_PREFIX_RE = re.compile(r'(?P<uen_prefix>SGUEN|SGUXN)|(?P<other_prefix>SGTST|SGGST|[A-Z]{2}UID)')
+# IT CUC: 8 alphanumeric characters
+IT_CUC_RE = re.compile(r'^[A-Z0-9]{8}$')
 
 
 # ===========================================================
@@ -75,5 +77,13 @@ def pk_cn_validate(value):
 
 def validate_email(value):
     if not single_email_re.match(value):
+        raise InvalidFormat()
+    return value
+
+
+def it_cuc_validate(value):
+    """Normalize and validate an Italian CUC code."""
+    value = value.strip().upper()
+    if not IT_CUC_RE.fullmatch(value):
         raise InvalidFormat()
     return value
