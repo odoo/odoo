@@ -615,27 +615,40 @@ class SurveyUserInput(models.Model):
         It loops to the first skipped question or page if 'last_displayed_page_id' is the last
         skipped question or page."""
         self.ensure_one()
-        skipped_mandatory_answer_ids = self.user_input_line_ids.filtered(
-            lambda answer: answer.skipped and answer.question_id.constr_mandatory)
 
-        if not skipped_mandatory_answer_ids:
+        skipped = self._get_skipped_questions()
+        if not skipped:
             return self.env['survey.question']
 
-        page_or_question_key = 'page_id' if self.survey_id.questions_layout == 'page_per_section' else 'question_id'
-        page_or_question_ids = skipped_mandatory_answer_ids.mapped(page_or_question_key).sorted()
+        if self.survey_id.questions_layout == 'page_per_section':
+            skipped = skipped.mapped('page_id')
 
-        if self.last_displayed_page_id not in page_or_question_ids\
-            or self.last_displayed_page_id == page_or_question_ids[-1]:
-            return page_or_question_ids[0]
+        skipped = skipped.sorted()
+        if self.last_displayed_page_id not in skipped\
+            or self.last_displayed_page_id == skipped[-1]:
+            return skipped[0]
 
-        current_page_index = page_or_question_ids.ids.index(self.last_displayed_page_id.id)
-        return page_or_question_ids[current_page_index + 1]
+        current_page_index = skipped.ids.index(self.last_displayed_page_id.id)
+        return skipped[current_page_index + 1]
 
     def _get_skipped_questions(self):
         self.ensure_one()
 
-        return self.user_input_line_ids.filtered(
-            lambda answer: answer.skipped and answer.question_id.constr_mandatory).question_id
+        skipped_questions = self.env['survey.question']
+
+        _, triggered_questions_by_answers, _ = self._get_conditional_values()
+
+        for input_line in self.user_input_line_ids:
+            if input_line.skipped and input_line.question_id.constr_mandatory:
+                skipped_questions |= input_line.question_id
+            else:
+                answer = input_line.suggested_answer_id
+                if answer in triggered_questions_by_answers:
+                    for question in triggered_questions_by_answers[answer]:
+                        if question not in self.user_input_line_ids.question_id:
+                            skipped_questions |= question
+
+        return skipped_questions
 
     def _is_last_skipped_page_or_question(self, page_or_question):
         """In case of a submitted survey tells if the question or page is the last
@@ -652,6 +665,12 @@ class SurveyUserInput(models.Model):
         """
         if self.survey_id.questions_layout == 'one_page':
             return True
+
+        _, triggered_questions_by_answers, _ = self._get_conditional_values()
+        if any(answer in triggered_questions_by_answers for answer in page_or_question.suggested_answer_ids):
+            # return false since it can trigger the display of another question
+            return False
+
         skipped = self._get_skipped_questions()
         if not skipped:
             return True
