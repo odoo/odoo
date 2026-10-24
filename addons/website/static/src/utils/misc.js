@@ -73,7 +73,13 @@ export function setUtmsHtmlDataset() {
  * @returns {URL|""} URL if the protocol is http(s), empty string otherwise
  */
 export function verifyHttpsUrl(link) {
-    const url = new URL(link, window.location.href);
+    let url;
+    try {
+        url = new URL(link, window.location.href);
+    } catch {
+        // The link is not a valid URL.
+        return "";
+    }
     if (!/https?:/.test(url.protocol)) {
         return "";
     }
