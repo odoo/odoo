@@ -750,6 +750,8 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(len(mo.production_group_id.production_ids), 10)
         last_move = mo.production_group_id.production_ids[-1].move_raw_ids.filtered(lambda m: m.product_id == product_to_use_2)
         self.assertFalse(last_move.quantity)
+        for production in mo.production_group_id.production_ids:
+            self.assertEqual(production.move_raw_ids.move_line_ids.production_id, production)
 
     def test_auto_generate_backorder(self):
         """
