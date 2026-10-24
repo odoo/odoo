@@ -16,7 +16,7 @@ import {
     serverState,
 } from "@web/../tests/web_test_helpers";
 import { encodeTranslation } from "../src/translation.patch";
-import { urlParams } from "../src/translation_mode_service";
+import { urlParams } from "../src/translation_mode_plugin";
 
 class IrConfigParameter extends models.ServerModel {
     _name = "ir.config_parameter";
