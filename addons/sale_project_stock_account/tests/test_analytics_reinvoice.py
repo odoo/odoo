@@ -35,7 +35,8 @@ class TestAnalyticsReinvoice(TestAnalytics):
             'product_id': reinvoicable_product.id,
             'product_uom_qty': 3,
         })
-        self.company.anglo_saxon_accounting = True
+        # the accounting method is a company setting: administrator data
+        self.company.sudo().anglo_saxon_accounting = True
         picking_out.action_confirm()
         picking_out.with_user(self.user_stock_user).button_validate()
 
@@ -52,10 +53,12 @@ class TestAnalyticsReinvoice(TestAnalytics):
         delivery still charges the project.
         """
         other_company = self.env.ref('base.main_company')
-        other_company.anglo_saxon_accounting = False
-        self.company.anglo_saxon_accounting = True
-        self.user_stock_user.company_ids |= other_company
-        self.user_stock_user.company_id = other_company
+        # the accounting method of each company and the companies allowed to a
+        # user are administrator data
+        other_company.sudo().anglo_saxon_accounting = False
+        self.company.sudo().anglo_saxon_accounting = True
+        self.user_stock_user.sudo().company_ids |= other_company
+        self.user_stock_user.sudo().company_id = other_company
         self.product1.reinvoice_policy = 'cost'
         self.picking_type_out.analytic_costs = True
         picking_out = self.PickingObj.create({

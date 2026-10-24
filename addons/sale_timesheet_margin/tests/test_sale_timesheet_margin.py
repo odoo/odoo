@@ -9,8 +9,6 @@ from odoo.tests import tagged
 @tagged('-at_install', 'post_install')
 class TestSaleTimesheetMargin(TestCommonSaleTimesheet):
 
-    _test_user_groups = None  # FIXME list needed groups
-
     def setUp(self):
         super().setUp()
         uom_day_id = self.ref('uom.product_uom_day')

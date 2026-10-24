@@ -8,7 +8,20 @@ from odoo.tests import Form, tagged
 @tagged('post_install', '-at_install')
 class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    # An expense booked on a project is re-invoiced through the sales order of
+    # that project.
+    _test_user_groups = (
+        'hr_expense.group_hr_expense_manager',  # FIXME: use hr_expense.group_hr_expense_user
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        'account.group_account_manager',  # FIXME: use account.group_account_invoice
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'uom.group_uom',  # view visibility (uom_id)
+        'project.group_project_manager',  # FIXME: use project.group_project_user
+        'analytic.group_analytic_accounting',  # view visibility (analytic_distribution)
+        'mrp.group_mrp_user',  # FIXME: copying an analytic account copies its workcenter_ids
+    )
+
+    _test_user_name = 'Test Project Sale Expense Manager'
 
     def test_company_paid_expense_from_project_no_phantom_revenue(self):
         """ The liquidity line of a company-paid expense created from a project must not get
@@ -94,9 +107,6 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
     def test_compute_analytic_distribution_expense(self):
         """ Test that the analytic distibution is well computed when we link a sale order to an expense """
 
-        # Make sure the user has access to analytic accounting, otherwise the 'analytic_distribution' field will not appear
-        # in the view and will not be computed
-        self.env.user.write({'group_ids': [Command.link(self.env.ref('analytic.group_analytic_accounting').id)]})
         # Set the expense policy to 'sales_price' to make the 'sale_order_id' field visible on the form view
         self.product_c.reinvoice_policy = 'sales_price'
 
@@ -127,11 +137,14 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
             'project_id': project.id,
         }
         so1 = self.env['sale.order'].create(so_values)
+        # `create_expenses` is a class method: it creates the expense in the
+        # environment of the setup user, while a form is read with the rights of
+        # the environment of its record. Bring it back to the test user.
         expense = self.create_expenses({
             'name': 'Expense Test',
             'sale_order_id': so1.id,
             'product_id': self.product_c.id,
-        })
+        }).with_env(self.env)
 
         self.assertEqual(
             expense.analytic_distribution,

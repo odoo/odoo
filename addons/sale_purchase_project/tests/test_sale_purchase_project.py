@@ -8,11 +8,22 @@ from odoo.addons.sale_purchase.tests.test_sale_purchase import TestSalePurchase
 @tagged('-at_install', 'post_install')
 class TestSalePurchaseProject(TestSalePurchase):
 
-    _test_user_groups = None  # FIXME list needed groups
+    # A service sold then subcontracted: the purchase order line inherits the
+    # analytic distribution of the project of the sales order.
+    _test_user_groups = (
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        'purchase.group_purchase_manager',  # FIXME: use purchase.group_purchase_user
+        'account.group_account_manager',  # FIXME: use account.group_account_invoice
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'uom.group_uom',  # view visibility (uom_id)
+        'project.group_project_manager',  # FIXME: use project.group_project_user
+        'analytic.group_analytic_accounting',  # view visibility (analytic_distribution)
+    )
+
+    _test_user_name = 'Test Sale Purchase Project Manager'
 
     def test_pol_analytic_distribution(self):
         """Confirming SO, analytic accounts from the project's SO should be set as Analytic Distribution in POL."""
-        self.env.user.group_ids += self.quick_ref('project.group_project_manager')
         project = self.env['project.project'].create({
             'name': 'SO Project',
             self.analytic_plan._column_name(): self.test_analytic_account_1.id,

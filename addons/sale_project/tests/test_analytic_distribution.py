@@ -9,8 +9,6 @@ from odoo.tests.common import tagged
 @tagged('post_install', '-at_install')
 class TestAnalyticDistribution(HttpCase, TestSaleProjectCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -91,7 +89,10 @@ class TestAnalyticDistribution(HttpCase, TestSaleProjectCommon):
         - The SOL's analytic distribution should come from project_b, not project_a
         """
         company_a = self.env.company
-        company_b = self.env['res.company'].create({'name': 'Company B'})
+        # A company is administrator master-data: create it as sudo, then let
+        # the test user work in it.
+        company_b = self.env['res.company'].sudo().create({'name': 'Company B'})
+        self.env.user.sudo().company_ids = [Command.link(company_b.id)]
         analytic_account_a, analytic_account_b = self.env['account.analytic.account'].create([
             {
                 'name': 'Analytic Account Company A',

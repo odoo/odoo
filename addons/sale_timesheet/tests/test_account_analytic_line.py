@@ -6,8 +6,6 @@ from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
 @tagged('-at_install', 'post_install')
 class TestAccountAnalyticLine(TestCommonSaleTimesheet):
 
-    _test_user_groups = None  # FIXME list needed groups
-
     def test_timesheet_product_from_sale_line(self):
         sale_line = self.so.order_line.filtered(lambda sol: sol.product_id == self.product_delivery_timesheet2)
         task = self.env['project.task'].search([('sale_line_id', '=', sale_line.id)])

@@ -12,14 +12,27 @@ from psycopg2.errors import NotNullViolation
 @tagged('post_install', '-at_install')
 class TestSoLineMilestones(TestSaleCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    # Milestone services are sold, then delivered and invoiced milestone by
+    # milestone from the project.
+    _test_user_groups = (
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        'account.group_account_manager',  # FIXME: use account.group_account_invoice
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'uom.group_uom',  # view visibility (uom_id)
+        'project.group_project_manager',  # FIXME: use project.group_project_user
+        'project.group_project_milestone',  # feature: milestone-based services
+    )
+
+    _test_user_name = 'Test Sale Milestone Manager'
+
+    @classmethod
+    def get_default_groups(cls):
+        groups = super().get_default_groups()
+        return groups | cls.quick_ref('project.group_project_manager') | cls.quick_ref('project.group_project_milestone')
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env.user.group_ids += cls.quick_ref('project.group_project_manager')
-
-        cls.env.user.group_ids += cls.env.ref('project.group_project_milestone')
         uom_hour = cls.env.ref('uom.product_uom_hour')
 
         cls.product_delivery_milestones1 = cls.env['product.product'].create({

@@ -1,19 +1,43 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.fields import Command
+
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.sale_project.tests.common import TestSaleProjectCommon
 
 
 class TestCommonSaleTimesheet(TestSaleProjectCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    # Timesheets are logged on the tasks delivering a sold service, then
+    # invoiced: on top of the sale/project flows, the test user reads the
+    # timesheets of the other employees of the project.
+    _test_user_groups = (
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        'account.group_account_manager',  # FIXME: use account.group_account_invoice
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'uom.group_uom',  # view visibility (uom_id)
+        'project.group_project_manager',  # FIXME: use project.group_project_user
+        'project.group_project_milestone',  # feature: milestone-based services
+        'analytic.group_analytic_accounting',  # view visibility (account_id on projects)
+        'hr_timesheet.group_hr_timesheet_approver',  # FIXME: use hr_timesheet.group_hr_timesheet_user
+        'hr.group_hr_user',  # FIXME: used by self.env['hr.employee'].create(
+    )
+
+    _test_user_name = 'Test Sale Timesheet Manager'
+
+    @classmethod
+    def get_default_groups(cls):
+        groups = super().get_default_groups()
+        return groups | cls.quick_ref('hr.group_hr_user')
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env.user.group_ids |= cls.env.ref('hr.group_hr_user')
         cls.company_data_2 = cls.setup_other_company()
+        # The common sets up a second company to test the multi-company flows:
+        # the test user has to be allowed in it as well.
+        cls._test_user.company_ids = [Command.link(cls.company_data_2['company'].id)]
 
         cls.user_employee_company_B = mail_new_test_user(
             cls.env,

@@ -8,7 +8,22 @@ from odoo.exceptions import UserError
 @tagged('post_install', '-at_install')
 class TestAccruedTimeSheetSaleOrders(TestCommonSaleTimesheet):
 
-    _test_user_groups = None  # FIXME list needed groups
+    # Same as the common, plus the accrued revenue entries, which are reserved
+    # to the full accounting features.
+    _test_user_groups = (
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        'account.group_account_manager',  # FIXME: use account.group_account_invoice
+        'account.group_account_user',  # feature: accrued revenue entries wizard
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'uom.group_uom',  # view visibility (uom_id)
+        'project.group_project_manager',  # FIXME: use project.group_project_user
+        'project.group_project_milestone',  # feature: milestone-based services
+        'analytic.group_analytic_accounting',  # view visibility (account_id on projects)
+        'hr_timesheet.group_hr_timesheet_approver',  # FIXME: use hr_timesheet.group_hr_timesheet_user
+        'hr.group_hr_user',  # FIXME: used by self.env['hr.employee'].create(
+    )
+
+    _test_user_name = 'Test Accrued Timesheet Accountant'
 
     @classmethod
     def setUpClass(cls):
