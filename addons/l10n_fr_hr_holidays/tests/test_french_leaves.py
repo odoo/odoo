@@ -578,3 +578,139 @@ class TestFrenchLeaves(TransactionCase):
         self.assertEqual(leave.date_from.date(), date(2026, 1, 12))
         self.assertEqual(leave.date_to.date(), date(2026, 1, 12))
         self.assertEqual(leave.number_of_hours, 8.0, 'Duration should be 8 hours (one working day)')
+
+    def test_far_timezone_single_day(self):
+        # A single full day off must count as 1 day, even when the employee's
+        # timezone is far enough from UTC (UTC-10) that converting the local
+        # end-of-day hour to UTC crosses the day boundary.
+        employee_calendar = self.env['resource.calendar'].create({
+            'name': 'Employee Calendar (UTC-10)',
+            'tz': 'Pacific/Tahiti',
+        })
+        self.company.resource_calendar_id = self.base_calendar
+        self.employee.resource_calendar_id = employee_calendar
+        self.employee.tz = 'Pacific/Tahiti'
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Test',
+            'holiday_status_id': self.time_off_type.id,
+            'employee_id': self.employee.id,
+            'request_date_from': '2026-07-07',  # Tuesday
+            'request_date_to': '2026-07-07',
+        })
+        self.assertEqual(leave.number_of_days, 1, 'A single day off must count as 1 day regardless of the employee timezone.')
+
+    def test_far_timezone_thursday(self):
+        # Same bug as test_far_timezone_single_day, but exposed through
+        # _get_fr_date_from_to (date extension) rather than _get_durations:
+        # ending on Thursday used to push the extended end date all the way
+        # to Sunday because of the same UTC day-rollover issue.
+        employee_calendar = self.env['resource.calendar'].create({
+            'name': 'Employee Calendar (UTC-10)',
+            'tz': 'Pacific/Tahiti',
+        })
+        self.company.resource_calendar_id = self.base_calendar
+        self.employee.resource_calendar_id = employee_calendar
+        self.employee.tz = 'Pacific/Tahiti'
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Test',
+            'holiday_status_id': self.time_off_type.id,
+            'employee_id': self.employee.id,
+            'request_date_from': '2026-07-09',  # Thursday
+            'request_date_to': '2026-07-09',
+        })
+        self.assertEqual(leave.number_of_days, 1, 'A single day off must count as 1 day regardless of the employee timezone.')
+
+    def test_far_timezone_part_time_extension_preserved(self):
+        # Same setup as test_end_of_week (part time employee, extension to
+        # the next company work day), but with the employee in a timezone
+        # far from UTC: the legitimate extension must still be computed
+        # correctly, not just suppressed by the timezone fix.
+        employee_calendar = self.env['resource.calendar'].create({
+            'name': 'Employee Calendar (UTC-10)',
+            'tz': 'Pacific/Tahiti',
+            'attendance_ids': [
+                (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Monday Lunch', 'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Tuesday Lunch', 'dayofweek': '1', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Wednesday Lunch', 'dayofweek': '2', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+            ],
+        })
+        self.company.resource_calendar_id = self.base_calendar
+        self.employee.resource_calendar_id = employee_calendar
+        self.employee.tz = 'Pacific/Tahiti'
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Test',
+            'holiday_status_id': self.time_off_type.id,
+            'employee_id': self.employee.id,
+            'request_date_from': '2026-07-06',  # Monday
+            'request_date_to': '2026-07-08',    # Wednesday
+        })
+        self.assertEqual(leave.number_of_days, 5, 'The number of days should be equal to 5.')
+
+    def test_far_timezone_short_friday_thursday_leave(self):
+        # Reproduces the schedule that exposed the bug in adjust_date_range
+        # (nested in _get_fr_date_from_to): with an asymmetric week (short
+        # Friday), misreading date_to's weekday as Friday instead of
+        # Thursday silently rebuilds date_to using Friday's hours, adding a
+        # full spurious day. A symmetric Mon-Fri calendar does not expose
+        # this, since the wrong day's hours happen to match the right ones.
+        employee_calendar = self.env['resource.calendar'].create({
+            'name': 'Employee Calendar (UTC-10, short Friday)',
+            'tz': 'Pacific/Tahiti',
+            'attendance_ids': [
+                (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Monday Lunch', 'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Tuesday Lunch', 'dayofweek': '1', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Wednesday Lunch', 'dayofweek': '2', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Thursday Lunch', 'dayofweek': '3', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Friday Lunch', 'dayofweek': '4', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
+            ],
+        })
+        self.company.resource_calendar_id = self.env['resource.calendar'].create({
+            'name': 'Company Calendar (same hours, distinct record)',
+            'attendance_ids': [
+                (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Monday Lunch', 'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Tuesday Lunch', 'dayofweek': '1', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Wednesday Lunch', 'dayofweek': '2', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Thursday Lunch', 'dayofweek': '3', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Friday Lunch', 'dayofweek': '4', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
+            ],
+        })
+        self.employee.resource_calendar_id = employee_calendar
+        self.employee.tz = 'Pacific/Tahiti'
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Test',
+            'holiday_status_id': self.time_off_type.id,
+            'employee_id': self.employee.id,
+            'request_date_from': '2026-06-11',  # Thursday
+            'request_date_to': '2026-06-11',
+        })
+        self.assertEqual(leave.number_of_days, 1, 'A single Thursday off must count as 1 day, not be pushed to Friday hours by adjust_date_range.')
