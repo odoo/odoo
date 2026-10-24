@@ -18,14 +18,16 @@ patch(OrderPaymentValidation.prototype, {
 
         if (this.order.amount_total >= (this.pos.config._l10n_eg_edi_invoicing_threshold || 0)) {
             const partner = this.order.partner_id;
-            if (!partner || !partner.name || !partner.vat) {
+            const countryCode = partner?.country_id?.code;
+            const identifierKey = !countryCode || countryCode === "EG" ? "EG_NIN" : "EG_FID";
+            if (!partner?.additional_identifiers?.[identifierKey]) {
                 this.pos.dialog.add(AlertDialog, {
                     title: _t("ETA Validation Error"),
                     body: _t(
                         "As the Order Value is equal to or above %s EGP, " +
                             "depending on the nature of the buyer, please either select " +
                             'an Individual Egypt Customer and fill in the "Tax ID" with ' +
-                            "their National ID, or an Individual non-Egypt Customer.",
+                            "their National ID, or Foreign ID for an Individual non-Egypt Customer.",
                         (this.pos.config._l10n_eg_edi_invoicing_threshold || 0).toLocaleString()
                     ),
                 });
