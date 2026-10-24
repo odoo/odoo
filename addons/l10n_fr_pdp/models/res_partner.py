@@ -59,6 +59,8 @@ class ResPartner(models.Model):
 
     @api.constrains('invoice_edi_format', 'invoice_sending_method')
     def _check_pdp_send_ubl_21_fr(self):
+        if self.env.context.get('l10n_fr_pdp_skip_ubl_21_fr_check'):
+            return
         if self.filtered(
             lambda partner: (
                 partner.invoice_sending_method == "peppol"
@@ -69,6 +71,18 @@ class ResPartner(models.Model):
         ):
             ubl_21_fr_string = self.env._("France E-Invoicing (UBL 2.1)")
             raise ValidationError(self.env._("For French regulated invoices, only %(format_name)s is supported.", format_name=ubl_21_fr_string))
+
+    # -------------------------------------------------------------------------
+    # LOW-LEVEL METHODS
+    # -------------------------------------------------------------------------
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        # The format is only stored by its inverse, which runs after the constraints on stored fields
+        partners = super(ResPartner, self.with_context(l10n_fr_pdp_skip_ubl_21_fr_check=True)).create(vals_list)
+        partners = partners.with_env(self.env)
+        partners._check_pdp_send_ubl_21_fr()
+        return partners
 
     # -------------------------------------------------------------------------
     # OVERRIDE AND HELPERS

@@ -20,8 +20,22 @@ class ResPartner(models.Model):
 
     @api.constrains('invoice_edi_format', 'invoice_sending_method')
     def _check_mojeracun_send_ubl_hr(self):
+        if self.env.context.get('l10n_hr_edi_skip_ubl_hr_check'):
+            return
         if self.filtered(lambda partner: partner.invoice_edi_format != 'ubl_hr' and partner.invoice_sending_method == 'mojeracun'):
             raise ValidationError(self.env._('On MojEracun, only the Croatian UBL format is supported.'))
+
+    # -------------------------------------------------------------------------
+    # LOW-LEVEL METHODS
+    # -------------------------------------------------------------------------
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        # The format is only stored by its inverse, which runs after the constraints on stored fields
+        partners = super(ResPartner, self.with_context(l10n_hr_edi_skip_ubl_hr_check=True)).create(vals_list)
+        partners = partners.with_env(self.env)
+        partners._check_mojeracun_send_ubl_hr()
+        return partners
 
     # -------------------------------------------------------------------------
     # OVERRIDE AND HELPERS
