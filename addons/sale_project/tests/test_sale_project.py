@@ -2160,3 +2160,31 @@ class TestSaleProject(TestSaleProjectCommon):
         line_vendor_bill = self.env['account.analytic.line'].search([('account_id', '=', self.project_global.account_id.id), ('category', '=', 'vendor_bill')])
         self.assertEqual(line_vendor_bill.category_report, 'costs')
         self.assertEqual(line_vendor_bill.billable_type, '12_vendor_bill')
+
+    def test_sale_order_amount_total_linked_so_batch(self):
+        """ Test that sale_order_amount_total is computed correctly in batch
+            for projects with linked SOs whose lines have no project_id.
+        """
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'project_id': self.project_global.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_order_service1.id,
+                    'product_uom_qty': 2,
+                    'price_unit': 50.0,
+                }),
+            ],
+        })
+        sale_order.action_confirm()
+        self.assertFalse(sale_order.order_line.project_id, "The SOL itself should not have a project_id.")
+
+        # Batch compute (len > 1)
+        projects = self.project_global | self.project_template
+        projects._compute_sale_order_count()
+
+        self.assertEqual(
+            self.project_global.sale_order_amount_total,
+            115.0,
+            "Sale Order Amount Total must include lines from orders linked via SO header.",
+        )
