@@ -17,7 +17,5 @@ class CalendarEvent(models.Model):
         return super()._need_video_call()
 
     def _compute_user_can_edit(self):
-        for event in self:
-            super()._compute_user_can_edit()
-            if event.res_model == 'hr.leave':
-                event.user_can_edit = False
+        super()._compute_user_can_edit()
+        self.filtered(lambda e: e.res_model == 'hr.leave').user_can_edit = False
