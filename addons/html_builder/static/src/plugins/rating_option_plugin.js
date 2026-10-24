@@ -6,7 +6,7 @@ import { clamp } from "@web/core/utils/numbers";
 
 export class RatingOptionPlugin extends Plugin {
     static id = "ratingOption";
-    static dependencies = ["history", "media"];
+    static dependencies = ["history", "media", "operation"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
         so_content_addition_selectors: [".s_rating"],
@@ -17,15 +17,50 @@ export class RatingOptionPlugin extends Plugin {
             TotalIconsNumberAction,
         },
     };
+
+    setup() {
+        this.addDomListener(this.editable, "click", (ev) => {
+            if (ev.target.closest(".s_rating_icons i")) {
+                this.dependencies.operation.next(() => this.onRatingClick(ev));
+            }
+        });
+    }
+
+    onRatingClick(ev) {
+        const clickedIcon = ev.target.closest(".s_rating_icons i");
+        const ratingElement = clickedIcon?.closest(".s_rating");
+
+        if (!ratingElement) {
+            return;
+        }
+
+        const allIcons = Array.from(getAllIcons(ratingElement));
+        const clickedIndex = allIcons.indexOf(clickedIcon);
+
+        const newActiveCount = clickedIndex + 1;
+        const nbTotalIcons = allIcons.length;
+
+        createIcons({
+            editingElement: ratingElement,
+            nbActiveIcons: newActiveCount,
+            nbTotalIcons: nbTotalIcons,
+        });
+        updateAriaLabel({
+            editingElement: ratingElement,
+            nbActiveIcons: newActiveCount,
+            nbTotalIcons: nbTotalIcons,
+        });
+        this.dependencies.history.commit();
+    }
 }
 
 export class SetIconsAction extends BuilderAction {
     static id = "setIcons";
     apply({ editingElement, params: { mainParam: iconParam } }) {
         editingElement.dataset.ratingIcon = iconParam;
-        renderIcons(editingElement);
         delete editingElement.dataset.activeCustomIcon;
         delete editingElement.dataset.inactiveCustomIcon;
+        renderIcons(editingElement);
     }
     isApplied({ editingElement, params: { mainParam: iconParam } }) {
         return getIconType(editingElement) === iconParam;
@@ -153,14 +188,17 @@ function getInactiveIcons(editingElement) {
 }
 function renderIcons(editingElement) {
     const iconType = getIconType(editingElement);
+    const activeIcon = getActiveCustomIcons(editingElement) || iconType;
+    const inactiveIcon = getInactiveCustomIcons(editingElement) || iconType;
+
     const activeIconEls = getActiveIcons(editingElement);
     const inactiveIconEls = getInactiveIcons(editingElement);
     activeIconEls.forEach((activeIconEl) => {
         activeIconEl.className = "oi oi-filled";
-        activeIconEl.dataset.icon = iconType;
+        activeIconEl.dataset.icon = activeIcon;
     });
     inactiveIconEls.forEach((inactiveIconEl) => {
         inactiveIconEl.className = "oi";
-        inactiveIconEl.dataset.icon = iconType;
+        inactiveIconEl.dataset.icon = inactiveIcon;
     });
 }
