@@ -125,8 +125,11 @@
             </t>
         </xpath>
         <!--adding currency to unit price-->
-        <xpath expr="//td[@name='td_product_priceunit']/span" position="attributes">
-            <attribute name="t-options"  >{"widget": "monetary", "display_currency": line.currency_id}</attribute>
+        <xpath expr="//td[@name='td_product_priceunit']/span[@t-field='line.price_unit']" position="attributes">
+            <attribute name="t-options">{"widget": "monetary", "display_currency": line.currency_id}</attribute>
+        </xpath>
+        <xpath expr="//td[@name='td_product_priceunit']/span[@t-out]" position="attributes">
+            <attribute name="t-options">{"widget": "monetary", "display_currency": line.currency_id}</attribute>
         </xpath>
     </template>
 </odoo>
