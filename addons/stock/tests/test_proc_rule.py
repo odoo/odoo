@@ -381,6 +381,44 @@ class TestProcRule(TransactionCase):
         })
         self.assertEqual(orderpoint.qty_to_order, 15.5)  # 15.0 < 14.5 + 15.5 <= 30.0
 
+    def test_reordering_rule_round_down_to_max(self):
+        """Opt-in 18.0-style rounding: do not exceed Max when a smaller multiple still reaches Min."""
+        self.env['ir.config_parameter'].sudo().set_param('stock.orderpoint_round_down_to_max', True)
+        stock_location = self.env.ref('stock.stock_location_stock')
+        product = self.env['product.product'].create({
+            'name': 'Desk Combination',
+            'is_storable': True,
+        })
+        pack_of_100 = self.env['uom.uom'].create({
+            'name': 'pack of 100',
+            'relative_factor': 100.0,
+            'relative_uom_id': self.uom_unit.id,
+        })
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': product.id,
+            'location_id': stock_location.id,
+            'inventory_quantity': 194.0,
+        }).action_apply_inventory()
+
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'ProductA RR',
+            'product_id': product.id,
+            'product_min_qty': 200.0,
+            'product_max_qty': 300.0,
+            'replenishment_uom_id': pack_of_100.id,
+        })
+        self.assertEqual(orderpoint.qty_to_order, 100.0)  # 194 + 100 = 294, between 200 and 300
+
+        # Rounding down would miss Min: keep rounding up.
+        orderpoint.product_max_qty = 250.0
+        self.assertEqual(orderpoint.qty_to_order, 100.0)  # 194 + 0 would stay below 200
+
+        # Default (no opt-in) still rounds up past Max.
+        self.env['ir.config_parameter'].sudo().set_param('stock.orderpoint_round_down_to_max', False)
+        orderpoint.invalidate_recordset(['qty_to_order_computed', 'qty_to_order'])
+        orderpoint.product_max_qty = 300.0
+        self.assertEqual(orderpoint.qty_to_order, 200.0)  # 194 + 200 = 394
+
     def test_orderpoint_replenishment_view_1(self):
         """ Create two warehouses + two moves
         verify that the replenishment view is consistent"""
