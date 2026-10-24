@@ -9,7 +9,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
 import { FormRenderer } from "@web/views/form/form_renderer";
 
-import { Component, toRaw } from "@odoo/owl";
+import { Component, htmlEscape, toRaw } from "@odoo/owl";
 import { localeCompare } from "@web/core/l10n/utils";
 
 /**
@@ -204,7 +204,7 @@ class ResUserGroupIdsField extends Component {
 
     getExtraGroupsArch() {
         return `
-            <group string="${this.extraCategory.name}" class="o_extra_rights_group">
+            <group string="${htmlEscape(this.extraCategory.name)}" class="o_extra_rights_group">
                 <group>
                     ${this.extraCategory.privileges
                         .filter((cat, index) => index % 2 === 0)
@@ -231,7 +231,7 @@ class ResUserGroupIdsField extends Component {
 
     getCategoryArch(category) {
         return `
-            <group string="${category.name}">
+            <group string="${htmlEscape(category.name)}">
                 ${category.privileges.map((privilege) => this.getPrivilegeArch(privilege)).join("")}
             </group>`;
     }
