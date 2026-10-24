@@ -36,6 +36,20 @@ class TestUblImportBis3InvoiceBERetrievePartner(TestUblImportBis3InvoiceBE):
         )
         self.assertRecordValues(invoice.partner_id, [{'id': partner.id}])
 
+    def test_import_partner_vat_in_other_country(self):
+        """ Test that the country is taken into account when matching partners by VAT. """
+        bill = self._import_invoice_as_attachment_on(test_name='test_import_partner_vat_in_other_country')
+        branch = bill.partner_id
+
+        self.assertNotEqual(branch, self.partner_be)
+        self.assertRecordValues(branch, [{
+            'name': "partner_be, Dutch branch",
+            'vat': 'BE0477472701',
+            'country_id': self.env.ref('base.nl').id,
+            'city': "Amsterdam",
+            'is_company': True,
+        }])
+
     @freeze_time('2020-01-01')
     def test_import_partner_creation_ch(self):
         """
