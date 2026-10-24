@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Standalone copy of stock_fleet/report/report_picking_cmr.xml (saas 19.4) adapted and defined in spanish since it is required by law. -->
+        <record id="paperformat_deca" model="report.paperformat">
+            <field name="name">DeCA</field>
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">10</field>
+            <field name="margin_bottom">10</field>
+            <field name="margin_left">8</field>
+            <field name="margin_right">8</field>
+            <field name="dpi">90</field>
+        </record>
+   
+    <template id="report_deca_goods_table">
+        <!-- t-translation="off" to keep the labels in spanish -->
+        <table t-translation="off">
+            <thead class="text-center fw-bold py-3">
+                <tr>
+                    <th><div class="deca-label">6. Marcas y números</div></th>
+                    <th><div class="deca-label">7. Número de bultos</div></th>
+                    <th><div class="deca-label">8. Forma de embalaje</div></th>
+                    <th><div class="deca-label">9. Naturaleza de la mercancía</div></th>
+                    <th><div class="deca-label">10. N.º estadístico</div></th>
+                    <th><div class="deca-label">11. Peso bruto kg</div></th>
+                    <th><div class="deca-label">12. Volumen m³</div></th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                <t t-if="should_compress_goods_rows">
+                    <tr>
+                        <td /><td /><td />
+                        <td><div>Véase la lista de carga de productos adjunta</div></td>
+                        <td /><td /><td />
+                    </tr>
+                </t>
+                <t t-else="">
+                    <t t-foreach="data['goods_rows']" t-as="row">
+                        <tr>
+                            <td class="align-middle"><div t-out="row['package_name']" /></td>
+                            <t t-if="row_first">
+                                <td t-att-rowspan="len(data['goods_rows'])" class="align-middle">
+                                    <t t-out="data['outermost_packages_count'] or False" />
+                                </td>
+                            </t>
+                            <td class="align-middle"><t t-out="row['packing_method']" /></td>
+                            <td class="align-middle">
+                                <t t-foreach="row['products']" t-as="prod_qty">
+                                    <div><t t-out="'%g' % prod_qty[0]" /><t t-if="prod_qty[1]"> <t t-out="prod_qty[1]" /> de</t> <t t-out="prod_qty[2]" /></div><div><t t-out="prod_qty[3]" /></div>
+                                    <t t-if="not prod_qty_last"><br /></t>
+                                </t>
+                            </td>
+                            <td class="align-middle">
+                                <t t-foreach="row['hs_codes']" t-as="hs">
+                                    <t t-out="hs" /><br />
+                                </t>
+                            </td>
+                            <td class="align-middle"><t t-out="'%g' % row['weight'] if row['weight'] else False" /></td>
+                            <td class="align-middle"><t t-out="'%g' % row['volume'] if row['volume'] else False" /></td>
+                        </tr>
+                    </t>
+                </t>
+            </tbody>
+            <tbody class="fw-bold">
+                <tr>
+                    <td>Clase</td>
+                    <td>Número</td>
+                    <td>Letra</td>
+                    <td>ADR</td>
+                    <td>&#8721;</td>
+                    <td class="text-center"><t t-out="'%g' % kg_uom_id.round(sum(row['weight'] for row in data['goods_rows']))" /></td>
+                    <td class="text-center"><t t-out="'%g' % m3_uom_id.round(sum(row['volume'] for row in data['goods_rows']))" /></td>
+                </tr>
+            </tbody>
+        </table>
+    </template>
+
+    <template id="report_deca">
+        <t t-call="web.html_container" t-translation="off">
+            <!-- docs, pickings_data, kg_uom_id and m3_uom_id come from report.l10n_es_sale_stock.report_deca -->
+            <t t-foreach="docs" t-as="picking">
+                <t t-set="data" t-value="pickings_data[picking_index]" />
+                <t t-set="should_compress_goods_rows" t-value="data['should_compress_goods_rows']" />
+                <t t-set="consignee_id" t-value="data['consignee_id']" />
+                <t t-set="delivery_address" t-value="data['delivery_address']" />
+                <!-- If any of sender/carrier is blank, defaults to current company -->
+                <t t-set="sender_id" t-value="picking.l10n_es_sender_contact_id or data['sender_id']" />
+                <t t-set="carrier_contact" t-value="picking.l10n_es_carrier_contact_id or picking.company_id.partner_id" />
+
+                <div class="article">
+                    <div class="o_report_deca page">
+                        <table>
+                            <colgroup>
+                                <col class="w-50" />
+                                <col class="w-50" />
+                            </colgroup>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="deca-label">1. Remitente (nombre, domicilio, país)</div>
+                                        <div class="mt-2">
+                                            <span class="deca-field-label">Nombre: </span>
+                                            <span t-field="sender_id.name" />
+                                        </div>
+                                        <div class="mt-2">
+                                            <span class="deca-field-label">NIF: </span>
+                                            <span t-field="sender_id.vat" />
+                                        </div>
+                                        <div class="mt-2">
+                                            <span class="deca-field-label">Domicilio: </span>
+                                            <t t-if="sender_id">
+                                                <span t-field="sender_id.street" /><br />
+                                                <span class="fw-bold invisible">Domicilio: </span>
+                                                <span t-field="sender_id.zip" /> <span t-field="sender_id.city" />, <span t-field="sender_id.state_id.name" />, <span t-field="sender_id.country_id.name" />
+                                            </t>
+                                        </div>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        <span class="d-block fw-bold">Documento de Control Administrativo (DeCA)</span>
+                                        <span class="d-block mt-1">Este transporte se rige por la Ley 15/2009, de 11 de noviembre, del contrato de transporte terrestre de mercancías, y por cualquier otra legislación española aplicable.</span>
+                                        <span class="d-block mt-2 fw-bold">N.º de referencia <t t-out="data['reference']" /></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="deca-label">2. Destinatario (nombre, domicilio, país)</div>
+                                        <div class="mt-2">
+                                            <span class="deca-field-label">Nombre: </span>
+                                            <span t-out="consignee_id.name" />
+                                        </div>
+                                        <div class="mt-2">
+                                            <span class="deca-field-label">Domicilio: </span>
+                                            <t t-if="consignee_id">
+                                                <span t-out="consignee_id.street" /><br />
+                                                <span class="fw-bold invisible">Domicilio: </span>
+                                                <span t-out="consignee_id.zip" /> <span t-out="consignee_id.city" />, <span t-field="consignee_id.state_id.name" />, <span t-out="consignee_id.country_id.name" />
+                                            </t>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="deca-label">3. Transportista (nombre, domicilio, país)</div>
+                                        <div class="mt-2">
+                                            <span class="deca-field-label">Nombre: </span>
+                                            <span t-out="carrier_contact.name" />
+                                        </div>
+                                        <div class="mt-2">
+                                            <span class="deca-field-label">NIF: </span>
+                                            <span t-out="carrier_contact.vat" />
+                                        </div>
+                                        <div class="mt-2">
+                                            <span class="deca-field-label">Domicilio: </span>
+                                            <span t-out="carrier_contact.street" /><br />
+                                            <span class="fw-bold invisible">Domicilio: </span>
+                                            <span t-out="carrier_contact.zip" /> <span t-out="carrier_contact.city" />, <span t-out="carrier_contact.state_id.name" />, <span t-out="carrier_contact.country_id.name" />
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="deca-label">4. Lugar de entrega de la mercancía (lugar, país)</div>
+                                        <div class="mt-2">
+                                            <span class="deca-field-label">Domicilio: </span>
+                                            <t t-if="delivery_address">
+                                                <span t-field="delivery_address.street" /><br />
+                                                <span class="fw-bold invisible">Domicilio: </span>
+                                                <span t-field="delivery_address.zip" /> <span t-field="delivery_address.city" />, <span t-field="delivery_address.state_id.name" />, <span t-field="delivery_address.country_id.name" />
+                                            </t>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="deca-label">5. Observaciones y autorizaciones</div>
+                                        <div class="mt-2" style="white-space: pre-line;" t-out="picking.l10n_es_authorization_observation" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <t t-call="l10n_es_sale_stock.report_deca_goods_table" />
+
+                        <table>
+                            <colgroup>
+                                <col class="w-50" />
+                                <col class="w-50" />
+                            </colgroup>
+                            <tbody>
+                                <tr>
+                                    <td class="pb-4">
+                                        <div class="deca-label">Matrícula de la cabeza tractora</div>
+                                        <div class="mt-2 text-center fw-bold" t-out="picking.l10n_es_tractor_license_plate" />
+                                    </td>
+                                    <td class="pb-4">
+                                        <div class="deca-label">Matrícula del remolque</div>
+                                        <div class="mt-2 text-center fw-bold" t-out="picking.l10n_es_trailer_license_plate" />
+                                    </td>
+                                </tr>                  
+                            </tbody>
+                        </table>
+                        <table>
+                            <tr>
+                                <td class="pb-4">
+                                    <!-- deca_url comes from action_l10n_es_print_deca -->
+                                    <div t-if="deca_url" class="text-center mt-3">
+                                        <img t-att-src="'/report/barcode/?barcode_type=QR&amp;value=%s&amp;width=180&amp;height=180' % quote_plus(deca_url)"
+                                            style="width: 180px; height: 180px;" />
+                                    </div>    
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <!-- Loading list page, appended when the goods rows exceed the limit set in report_picking_deca.py -->
+                    <t t-if="should_compress_goods_rows">
+                        <div class="o_report_deca page">
+                            <div class="fw-bold p-1">Lista de carga de productos</div>
+                            <t t-set="should_compress_goods_rows" t-value="False" />
+                            <t t-call="l10n_es_sale_stock.report_deca_goods_table" />
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_deca" model="ir.actions.report">
+        <field name="name">DeCA</field>
+        <field name="model">stock.picking</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_es_sale_stock.report_deca</field>
+        <field name="paperformat_id" ref="l10n_es_sale_stock.paperformat_deca"/>
+        <field name="attachment" eval="False" />
+        <field name="binding_model_id" eval="False" />
+    </record>
+</odoo>

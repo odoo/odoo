@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="view_picking_form_inherit_deca_report" model="ir.ui.view">
+        <field name="name">view.picking.view.form.inherit.deca.report</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_l10n_es_print_deca" type="object" string="Print DeCA"
+                    invisible="picking_type_code != 'outgoing' or state == 'cancel'" />
+            </xpath>
+            <field name="picking_properties" position="before">
+                <group string="DeCA" name="deca_info" invisible="picking_type_code != 'outgoing'">
+                    <group>
+                        <field name="l10n_es_tractor_license_plate"/>
+                        <field name="l10n_es_trailer_license_plate"/>
+                        <field name="l10n_es_authorization_observation"/>
+                    </group>
+                    <group>
+                        <field name="l10n_es_sender_contact_id"/>
+                        <field name="l10n_es_carrier_contact_id"/>
+                    </group>
+                </group>
+            </field>
+            <xpath expr="//notebook" position="inside">
+                <page string="DeCA versions" name="deca_versions" invisible="picking_type_code != 'outgoing' or not l10n_es_deca_attachment_ids">
+                    <field name="l10n_es_deca_attachment_ids" readonly="1"
+                        context="{'list_view_ref': 'l10n_es_sale_stock.view_ir_attachment_deca_list'}" />
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_l10n_es_print_deca" model="ir.actions.server">
+        <field name="name">Print DeCA</field>
+        <field name="model_id" ref="stock.model_stock_picking" />
+        <field name="binding_model_id" ref="stock.model_stock_picking" />
+        <field name="state">code</field>
+        <field name="code">action = records.action_l10n_es_print_deca()</field>
+    </record>
+
+</odoo>
