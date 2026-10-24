@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command, api, fields, models
+from odoo import Command, _, api, fields, models
+from odoo.exceptions import UserError
 
 
 class HrExpense(models.Model):
@@ -76,7 +77,53 @@ class HrExpense(models.Model):
             if expense.sale_order_id and not expense.analytic_distribution:
                 analytic_account = self.env['account.analytic.account'].create(expense.sale_order_id._prepare_analytic_account_data())
                 expense.analytic_distribution = {analytic_account.id: 100}
-        return super().action_post()
+        res = super().action_post()
+        self.filtered(lambda e: e.has_existing_bill and e.sale_order_id and not e.sale_order_line_id)._create_reinvoice_sale_order_line()
+        return res
+
+    def _get_reinvoice_price(self, order):
+        self.ensure_one()
+        if self.product_id.reinvoice_policy == 'sales_price':
+            return order.pricelist_id._get_product_price(self.product_id, 1.0, uom=self.product_uom_id, date=order.date_order)
+        price_unit = self.untaxed_amount
+        if self.company_currency_id and self.company_currency_id != order.currency_id:
+            price_unit = self.company_currency_id._convert(
+                price_unit, order.currency_id, order.company_id, order.date_order or fields.Date.context_today(self)
+            )
+        return price_unit
+
+    def _get_reinvoice_quantity(self):
+        if self.product_id.reinvoice_policy == 'sales_price' and self.product_id.standard_price:
+            return self.quantity
+        return 1.0
+
+    def _create_reinvoice_sale_order_line(self):
+        sale_line_vals_list = []
+        for order, expenses in self.grouped('sale_order_id').items():
+            if order.state != 'sale' or order.locked:
+                raise UserError(_("The Sales Order must be a validated and unlocked order.",))
+            last_so_line = self.env['sale.order.line'].search([('order_id', '=', order.id)], order='sequence desc', limit=1)
+            sequence = last_so_line.sequence + 1 if last_so_line else 100
+            fiscal_position = order.fiscal_position_id or order.fiscal_position_id._get_fiscal_position(order.partner_id)
+            for expense in expenses:
+                product_taxes = expense.product_id.taxes_id._filter_taxes_by_company(order.company_id)
+                sale_line_vals_list.append({
+                    'order_id': order.id,
+                    'name': expense.name,
+                    'sequence': sequence,
+                    'price_unit': expense._get_reinvoice_price(order),
+                    'tax_ids': [Command.set(fiscal_position.map_tax(product_taxes).ids)],
+                    'discount': 0.0,
+                    'product_id': expense.product_id.id,
+                    'product_uom_id': expense.product_uom_id.id,
+                    'product_uom_qty': expense._get_reinvoice_quantity(),
+                    'is_expense': True,
+                    'expense_ids': [Command.set(expense.ids)],
+                    'analytic_distribution': expense.analytic_distribution,
+                })
+                sequence += 1
+        self.env['sale.order.line'].create(sale_line_vals_list)
+        return True
 
     def action_open_sale_order(self):
         self.ensure_one()
