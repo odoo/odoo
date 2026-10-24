@@ -232,12 +232,14 @@ export class KanbanRenderer extends Component {
 
         useHotkey("space", ({ target }) => this.onSpaceKeyPress(target), {
             area: () => this.rootRef(),
-            isAvailable: () => !this.props.quickCreateState?.groupId,
+            isAvailable: (target) =>
+                !this.props.quickCreateState?.groupId && target.classList.contains("o_kanban_record"),
         });
 
         useHotkey("shift+space", ({ target }) => this.onSpaceKeyPress(target, true), {
             area: () => this.rootRef(),
-            isAvailable: () => !this.props.quickCreateState?.groupId,
+            isAvailable: (target) =>
+                !this.props.quickCreateState?.groupId && target.classList.contains("o_kanban_record"),
         });
 
         const arrowsOptions = { area: () => this.rootRef(), allowRepeat: true };
@@ -386,6 +388,14 @@ export class KanbanRenderer extends Component {
 
     getSelection() {
         return this.props.list.selection || [];
+    }
+
+    get hasSelectedRecords() {
+        return this.props.list.selection?.length || this.isDomainSelected;
+    }
+
+    get isDomainSelected() {
+        return this.props.list.isDomainSelected;
     }
 
     /**
