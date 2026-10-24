@@ -87,13 +87,13 @@ class HrExpenseSplit(models.TransientModel):
     @api.onchange('product_id')
     def _onchange_product_id(self):
         """
-        In case we switch to the product without taxes defined on it, taxes should be removed.
-        Computed method won't be good for this purpose, as we don't want to recompute and reset taxes in case they are removed on purpose during splitting.
+        Set the taxes of the selected product. The onchange is also triggered when loading the
+        default values of a new line (product and taxes of the original expense): keep those taxes.
         """
-        if self.product_has_tax and self.tax_ids:
-            self.tax_ids = self.tax_ids
-        else:
-            self.tax_ids = self.product_id.supplier_taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(self.company_id))
+        if self.product_id == self.expense_id.product_id and self.tax_ids == self.expense_id.tax_ids:
+            # Default values of the split line: keep the taxes of the original expense
+            return
+        self.tax_ids = self.product_id.supplier_taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(self.company_id))
 
     @api.depends('product_id')
     def _compute_product_has_tax(self):

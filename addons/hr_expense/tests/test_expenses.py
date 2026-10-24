@@ -319,6 +319,23 @@ class TestExpenses(TestExpenseCommon):
             }
         ])
 
+    def test_expense_split_product_change_updates_taxes(self):
+        """ Check that choosing another product on a split line sets the taxes of that product. """
+        expense = self.create_expenses({'tax_ids': [Command.set(self.tax_purchase_a.ids)]})
+        product_with_tax, product_without_tax = self.env['product.product'].create([
+            {'name': 'product with tax', 'can_be_expensed': True, 'supplier_taxes_id': [Command.set(self.tax_purchase_b.ids)]},
+            {'name': 'product without tax', 'can_be_expensed': True, 'supplier_taxes_id': [Command.clear()]},
+        ])
+
+        wizard = self.env['hr.expense.split.wizard'].browse(expense.action_split_wizard()['res_id'])
+        with Form(wizard) as form:
+            with form.expense_split_line_ids.new() as line:
+                self.assertEqual(line.tax_ids.ids, self.tax_purchase_a.ids)
+                line.product_id = product_with_tax
+                self.assertEqual(line.tax_ids.ids, self.tax_purchase_b.ids)
+                line.product_id = product_without_tax
+                self.assertEqual(line.tax_ids.ids, [])
+
     def test_expense_split_approved_with_attachment(self):
         """ Check splitting an approved expense with attachments does not raise an Access Error. """
         expense = self.create_expenses({
