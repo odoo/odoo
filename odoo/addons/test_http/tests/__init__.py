@@ -1,5 +1,6 @@
 from . import test_auth_custom
 from . import test_bearer_scope
+from . import test_bigint
 from . import test_captcha
 from . import test_common
 from . import test_device

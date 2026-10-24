@@ -22,6 +22,14 @@ class Test_RpcModel_A(models.Model):
     def not_depending_on_id(self, vals=None):
         return f"got {vals}"
 
+    @api.model
+    def int8(self):
+        return 1 << 32
+
+    @api.model
+    def bigint(self):
+        return 1 << 64
+
 
 class Test_RpcModel_B(models.Model):
     _name = 'test_rpc.model_b'
