@@ -1341,8 +1341,8 @@
                 </t>
             </div>
             <div id="o_wsale_offcanvas_content" class="accordion accordion-flush flex-grow-1 overflow-auto">
-                <!-- Show sorting only if it's not avavailbe in the topbar already -->
-                <div t-if="not is_view_active('website_sale.sort')" class="accordion-item">
+                <!-- TODO: Remove me in master -->
+                <div t-if="not is_view_active('website_sale.sort')" class="accordion-item" hidden="True">
                     <t t-if="isSortingBy" t-set="isSortingBy" t-value="isSortingBy[0][1]"/>
                     <t t-else="" t-set="isSortingBy" t-value="website.shop_default_sort"/>
                     <h2 id="o_wsale_offcanvas_orderby_header" class="accordion-header mb-0">
