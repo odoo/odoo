@@ -23,6 +23,12 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
         }).with_context(mail_notrack=True)
         cls.user = new_test_user(cls.env, 'xav', email='em@il.com', notification_type='inbox')
         cls.partner = cls.user.partner_id
+        cls.notification_alarm = cls.env['calendar.alarm'].create({
+            'name': 'Notification - 15 Minutes',
+            'alarm_type': 'notification',
+            'interval': 'minutes',
+            'duration': 15,
+        })
 
     @freeze_time('2018')  # class event has hardcoded dates
     def test_message_invite(self):
@@ -561,3 +567,36 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
 
         for expected, actual in zip(expected_alarms, actual_alarms):
             self.assertEqual(actual, expected)
+
+    def _create_notification_event(self, name, partner, hours_from_now, **values):
+        now = fields.Datetime.now()
+        return self.env['calendar.event'].create({
+            'name': name,
+            'start': now + relativedelta(hours=hours_from_now),
+            'stop': now + relativedelta(hours=hours_from_now + 1),
+            'partner_ids': [(4, partner.id)],
+            'alarm_ids': [(4, self.notification_alarm.id)],
+            **values,
+        })
+
+    def test_get_next_notif_not_shadowed_by_another_attendee(self):
+        """ An alarm due earlier but belonging to somebody else must not hide
+        our own alarms: returning nothing is final, as the web client only
+        schedules its next poll once it has an alarm to wait for. """
+        other_user = new_test_user(self.env, 'notified_other', email='other@il.com')
+        self._create_notification_event("Their meeting", other_user.partner_id, 1)
+        self._create_notification_event("Our meeting", self.partner, 6)
+
+        notifications = self.env['calendar.alarm_manager'].with_user(self.user).get_next_notif()
+
+        self.assertEqual([notif['title'] for notif in notifications], ["Our meeting"])
+
+    def test_get_next_notif_not_shadowed_by_archived_event(self):
+        """ Same, with an alarm of an archived event: the outer query discards
+        such events, so they may not narrow the window either. """
+        self._create_notification_event("Cancelled meeting", self.partner, 1, active=False)
+        self._create_notification_event("Our meeting", self.partner, 6)
+
+        notifications = self.env['calendar.alarm_manager'].with_user(self.user).get_next_notif()
+
+        self.assertEqual([notif['title'] for notif in notifications], ["Our meeting"])

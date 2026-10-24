@@ -2,6 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
+import { deserializeDateTime } from "@web/core/l10n/dates";
 import { ConnectionLostError, rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 
@@ -17,6 +18,22 @@ export const calendarNotificationService = {
             displayCalendarNotification(payload);
         });
         bus_service.start();
+        getNextCalendarNotif();
+
+        /**
+         * Returns the delay, in seconds, before the given notification has to be
+         * displayed. 'timer' is computed when the notification is pushed, hence
+         * stale as soon as the payload is replayed from the bus after a reload:
+         * rely on the absolute 'notify_at' instead.
+         *
+         * @returns {number} negative when the alarm is already due
+         */
+        function getNotificationDelay(notif) {
+            if (!notif.notify_at) {
+                return notif.timer;
+            }
+            return deserializeDateTime(notif.notify_at).diffNow().as("seconds");
+        }
 
         /**
          * Displays the Calendar notification on user's screen
@@ -35,6 +52,7 @@ export const calendarNotificationService = {
                 if (displayedNotifications.has(key)) {
                     return;
                 }
+                const delay = getNotificationDelay(notif);
                 calendarNotifTimeouts[key] = browser.setTimeout(function () {
                     const notificationRemove = notification.add(notif.message, {
                         title: notif.title,
@@ -73,8 +91,8 @@ export const calendarNotificationService = {
                         ],
                     });
                     displayedNotifications.add(key);
-                }, notif.timer * 1000);
-                lastNotifTimer = Math.max(lastNotifTimer, notif.timer);
+                }, delay * 1000);
+                lastNotifTimer = Math.max(lastNotifTimer, delay);
             });
 
             // Set a timeout to get the next notifications when the last one has been displayed
