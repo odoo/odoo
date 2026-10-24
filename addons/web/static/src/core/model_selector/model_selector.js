@@ -22,7 +22,6 @@ export class ModelSelector extends Component {
 
     setup() {
         this.orm = useService("orm");
-        this.uiService = useService("ui");
 
         onWillStart(async () => {
             if (!this.props.models) {
