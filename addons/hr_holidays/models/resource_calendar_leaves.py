@@ -231,13 +231,20 @@ class ResourceCalendarLeaves(models.Model):
     def _cron_generate_public_holidays(self):
         if config['test_enable'] or modules.module.current_test:
             return
+        companies = self.env.companies
         start_date = fields.Date.today()
         end_date = fields.Date.add(fields.Date.today(), years=1)
-        prepared_public_holidays = self._prepare_public_holidays_data(start_date, end_date)['prepared_public_holidays']
-        if prepared_public_holidays:
-            create_values = [
-                public_holiday_value
-                for company_data in prepared_public_holidays.values()
-                for public_holiday_value in company_data
-            ]
+        prepared_public_holidays_data = self._prepare_public_holidays_data(start_date, end_date)
+        create_values = []
+        for company in companies - prepared_public_holidays_data['companies_with_all_existing_holidays']:
+            company_tz = ZoneInfo(company.tz or 'UTC')
+
+            if public_holidays_data := prepared_public_holidays_data['prepared_public_holidays'].get(company.id):
+                create_values.extend([{
+                    'name': public_holiday_value['name'],
+                    'date_from': convert_timezone(datetime.combine(public_holiday_value['date_from'], time.min), UTC, company_tz),
+                    'date_to': convert_timezone(datetime.combine(public_holiday_value['date_from'], time.max), UTC, company_tz),
+                    'company_id': public_holiday_value['company_id'],
+                } for public_holiday_value in public_holidays_data])
+        if create_values:
             self.env['resource.calendar.leaves'].sudo().create(create_values)
