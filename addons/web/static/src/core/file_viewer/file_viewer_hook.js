@@ -6,11 +6,14 @@ let id = 1;
 
 export function createFileViewer() {
     const fileViewerId = `web.file_viewer${id++}`;
+    let onClose = null;
+
     /**
      * @param {import("@web/core/file_viewer/file_viewer").FileViewer.props.files[]} file
      * @param {import("@web/core/file_viewer/file_viewer").FileViewer.props.files} files
+     * @param {Function} [onCloseCallback]
      */
-    function open(file, files = [file]) {
+    function open(file, files = [file], onCloseCallback) {
         close();
         if (!file.isViewable) {
             return;
@@ -22,11 +25,14 @@ export function createFileViewer() {
                 Component: FileViewer,
                 props: { files: viewableFiles, startIndex: index, close },
             });
+            onClose = onCloseCallback;
         }
     }
 
     function close() {
         registry.category("main_components").remove(fileViewerId);
+        onClose?.();
+        onClose = null;
     }
     return { open, close };
 }
