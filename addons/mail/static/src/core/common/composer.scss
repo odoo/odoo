@@ -51,7 +51,7 @@
     }
 
     &.o-isUiSmall:not(.o-editing) .o-mail-Composer-mainActions {
-        margin-top: calc(var(--o-bs-spacer-1) * 6 / 4);
+        margin-top: var(--o-bs-spacer-1);
     }
 
     &.o-focused {
@@ -140,6 +140,11 @@
     .o-mail-Composer.o-editing & {
         padding-left: var(--o-bs-spacer-2);
         padding-right: var(--o-bs-spacer-2);
+    }
+
+    /* Right after the "+", spaced enough from the text. */
+    .o-mail-Composer.o-editing .o-mail-Composer-inputContainer:has(.o-mail-Composer-moreActions) & {
+        padding-left: calc(var(--o-bs-spacer-1) / 2);
     }
 
     .o-mail-Composer.o-extended & {
