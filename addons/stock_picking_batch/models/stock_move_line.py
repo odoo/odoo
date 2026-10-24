@@ -16,7 +16,7 @@ class StockMoveLine(models.Model):
 
     def action_open_add_to_wave(self):
         # This action can be called from the move line list view or from the 'Add to wave' wizard
-        if self.env.context.get('active_wave_id'):
+        if self.env.context.get('active_wave_id') or self.env.context.get('picking_to_wave'):
             wave = self.env['stock.picking.batch'].browse(self.env.context.get('active_wave_id'))
             return self._add_to_wave(wave)
         view = self.env.ref('stock_picking_batch.stock_add_to_wave_form')
