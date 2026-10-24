@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="purchase_order_tag_form_view" model="ir.ui.view">
+        <field name="name">purchase.order.tag.form</field>
+        <field name="model">purchase.order.tag</field>
+        <field name="arch" type="xml">
+            <form string="Purchase Order Tag">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="color" widget='color'/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="purchase_order_tag_tree_view" model="ir.ui.view">
+        <field name="name">purchase.order.tag.list</field>
+        <field name="model">purchase.order.tag</field>
+        <field name="arch" type="xml">
+            <list string="Purchase Order Tags" multi_edit="1">
+                <field name="name" string="Tag Name" />
+                <field name="color" widget='color'/>
+            </list>
+        </field>
+    </record>
+</odoo>
