@@ -504,6 +504,7 @@ export class Store extends BaseStore {
                 }
                 const isMessageSeen =
                     model === "discuss.channel"
+<<<<<<< 62febd5986e065bfa331b4ab653896125daa3d9d
                         ? thread?.self_member_id?.seen_message_id?.id >= message_id
                         : thread?.messages.some((m) => m.id === message_id);
                 if (
@@ -511,6 +512,16 @@ export class Store extends BaseStore {
                     (isTabFocused && thread?.isDisplayed) ||
                     isMessageSeen
                 ) {
+||||||| 7d1a9e2235f1b37ca9728bf3fbc635ce8aa02318
+                        ? thread?.selfMember?.seen_message_id?.id >= message_id
+                        : thread?.messages.some((m) => m.id === message_id);
+                if ((isTabFocused && thread?.isDisplayed) || isInbox || isMessageSeen) {
+=======
+                        ? thread?.selfMember?.seen_message_id?.id >= message_id
+                        : thread?.messages.some((m) => m.id === message_id) ||
+                          this.Message.get(message_id)?.needaction === false;
+                if ((isTabFocused && thread?.isDisplayed) || isMessageSeen) {
+>>>>>>> 23dd2a1ec767778bc4314e476267695ca4758cdd
                     navigator.serviceWorker.controller?.postMessage({
                         type: "notification-display-response",
                         payload: { correlationId },
