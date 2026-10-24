@@ -183,11 +183,26 @@ class AccountFiscalPosition(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        """
+        - Format zip codes if provided.
+        - Ensure new fiscal positions are added at the top of the list
+        """
+
+        first_record = self.env['account.fiscal.position'].search([], order='sequence asc', limit=1)
+        current_min_sequence = first_record.sequence if first_record else 0
+
         for vals in vals_list:
+            # Zip codes formatting
             zip_from = vals.get('zip_from')
             zip_to = vals.get('zip_to')
             if zip_from and zip_to:
                 vals['zip_from'], vals['zip_to'] = self._convert_zip_values(zip_from, zip_to)
+
+            # Sequence management
+            if not vals.get('sequence'):
+                current_min_sequence -= 1
+                vals['sequence'] = current_min_sequence
+
         return super().create(vals_list)
 
     def write(self, vals):
