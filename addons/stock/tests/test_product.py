@@ -217,6 +217,88 @@ class TestVirtualAvailable(TestStockCommon):
         ])
         self.assertEqual(product, result)
 
+    def test_search_product_quantity_fields(self):
+        """Test domain search on non-stored quantity fields via _search_product_quantity."""
+        self.picking_out.action_confirm()
+        self.picking_out.action_assign()
+        self.picking_out_2.action_confirm()
+        self.picking_out_2.action_assign()
+
+        pid = self.product_3.ids
+
+        result = self.env['product.product'].with_context(to_date='2099-01-01').search([
+            ('virtual_available', '<', 40), ('id', 'in', pid),
+        ])
+        self.assertEqual(result, self.product_3)
+
+        result = self.env['product.product'].with_context(to_date='2099-01-01').search([
+            ('outgoing_qty', '>', 0), ('id', 'in', pid),
+        ])
+        self.assertEqual(result, self.product_3)
+
+        result = self.env['product.product'].with_context(to_date='2099-01-01').search([
+            ('free_qty', '<', 40), ('id', 'in', pid),
+        ])
+        self.assertEqual(result, self.product_3)
+
+        result = self.env['product.product'].with_context(to_date='2099-01-01').search([
+            ('incoming_qty', '=', 0), ('id', 'in', pid),
+        ])
+        self.assertIn(self.product_3, result)
+
+        result = self.env['product.product'].with_context(
+            to_date='2099-01-01', owner_id=self.user_stock_user.partner_id.id,
+        ).search([('virtual_available', '<', 10), ('id', 'in', pid)])
+        self.assertEqual(result, self.product_3)
+
+        result = self.env['product.product'].with_context(to_date='2099-01-01').search([
+            ('virtual_available', '<', 10), ('id', 'in', pid),
+        ])
+        self.assertNotIn(self.product_3, result)
+
+        lot_product = self.env['product.product'].create({
+            'name': 'Lot Product', 'is_storable': True, 'tracking': 'lot',
+        })
+        stock_loc = self.env.ref('stock.stock_location_stock')
+        lot_a = self.env['stock.lot'].create({'name': 'LOT-A', 'product_id': lot_product.id})
+        lot_b = self.env['stock.lot'].create({'name': 'LOT-B', 'product_id': lot_product.id})
+        self.env['stock.quant'].create([
+            {'product_id': lot_product.id, 'location_id': stock_loc.id,
+             'lot_id': lot_a.id, 'quantity': 7.0},
+            {'product_id': lot_product.id, 'location_id': stock_loc.id,
+             'lot_id': lot_b.id, 'quantity': 20.0},
+        ])
+        lot_pid = lot_product.ids
+
+        result = self.env['product.product'].with_context(
+            to_date='2099-01-01', lot_id=lot_a.id,
+        ).search([('qty_available', '<', 10), ('id', 'in', lot_pid)])
+        self.assertEqual(result, lot_product)
+        result = self.env['product.product'].with_context(to_date='2099-01-01').search([
+            ('qty_available', '<', 10), ('id', 'in', lot_pid),
+        ])
+        self.assertNotIn(lot_product, result)
+
+        pkg_product = self.env['product.product'].create({
+            'name': 'Package Product', 'is_storable': True,
+        })
+        package = self.env['stock.quant.package'].create({'name': 'PKG-001'})
+        self.env['stock.quant'].create([
+            {'product_id': pkg_product.id, 'location_id': stock_loc.id,
+             'package_id': package.id, 'quantity': 5.0},
+            {'product_id': pkg_product.id, 'location_id': stock_loc.id,
+             'quantity': 50.0},
+        ])
+        pkg_pid = pkg_product.ids
+        result = self.env['product.product'].with_context(
+            to_date='2099-01-01', package_id=package.id,
+        ).search([('qty_available', '<', 10), ('id', 'in', pkg_pid)])
+        self.assertEqual(result, pkg_product)
+        result = self.env['product.product'].with_context(to_date='2099-01-01').search([
+            ('qty_available', '<', 10), ('id', 'in', pkg_pid),
+        ])
+        self.assertNotIn(pkg_product, result)
+
     def test_search_product_template(self):
         """
         Suppose a variant V01 that can not be deleted because it is used by a

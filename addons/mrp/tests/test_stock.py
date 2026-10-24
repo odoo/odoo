@@ -474,6 +474,13 @@ class TestKitPicking(common.TestMrpCommon):
             component_g: 6
         }
 
+    def _apply_component_quants(self, location_id):
+        self.env['stock.quant'].create([{
+            'product_id': product.id,
+            'inventory_quantity': qty,
+            'location_id': location_id,
+        } for product, qty in self.expected_quantities.items()]).action_apply_inventory()
+
     def test_kit_immediate_transfer(self):
         """ Make sure a kit is split in the corrects quantity by components in case of an
         immediate transfer.
@@ -729,11 +736,7 @@ class TestKitPicking(common.TestMrpCommon):
         self.assertEqual(delivery.move_ids.move_line_ids.product_packaging_qty, 12)
 
     def test_search_kit_on_quantity(self):
-        self.env['stock.quant'].create([{
-            'product_id': product.id,
-            'inventory_quantity': qty,
-            'location_id': self.test_supplier.id,
-        } for product, qty in self.expected_quantities.items()]).action_apply_inventory()
+        self._apply_component_quants(self.stock_location)
 
         products = self.env['product.product'].search([
             '&', ('qty_available', '>', 3), ('qty_available', '<', 9),
@@ -741,6 +744,53 @@ class TestKitPicking(common.TestMrpCommon):
         self.assertNotIn(self.kit_1, products)  # 12
         self.assertIn(self.kit_2, products)     # 6
         self.assertNotIn(self.kit_3, products)  # 3
+
+    def test_search_kit_on_quantity_operators(self):
+        """Search on qty_available for kit BoMs with no nested kit components
+        and no variant-specific lines."""
+        self._apply_component_quants(self.stock_location)
+
+        # kit_1.id=12, kit_2.id=6, kit_3.id=3
+        def search(domain):
+            return self.env['product.product'].search(
+                domain + [('id', 'in', (self.kit_1 | self.kit_2 | self.kit_3).ids)]
+            )
+        self.assertEqual(search([('qty_available', '<=', 6)]), self.kit_2 | self.kit_3)
+        self.assertEqual(search([('qty_available', '>=', 6)]), self.kit_1 | self.kit_2)
+        self.assertEqual(search([('qty_available', '=', 6)]), self.kit_2)
+        self.assertEqual(search([('qty_available', '!=', 6)]), self.kit_1 | self.kit_3)
+
+    def test_search_kit_on_quantity_multi_uom(self):
+        """Search on qty_available for a kit BoM with no nested kit components,
+        where the BOM line is in dozens and the component quant is in units."""
+        uom_dozen = self.env.ref('uom.product_uom_dozen')
+
+        comp = self.env['product.product'].create({'name': 'Comp UoM', 'is_storable': True})
+        kit = self.env['product.product'].create({'name': 'Kit UoM', 'is_storable': True})
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+        })
+        self.env['mrp.bom.line'].create({
+            'bom_id': bom.id,
+            'product_id': comp.id,
+            'product_qty': 1.0,
+            'product_uom_id': uom_dozen.id,
+        })
+        self.env['stock.quant'].create({
+            'product_id': comp.id,
+            'location_id': self.stock_location,
+            'quantity': 24.0,
+        })
+        result = self.env['product.product'].search([
+            ('qty_available', '>=', 2), ('id', '=', kit.id),
+        ])
+        self.assertEqual(result, kit)
+        result = self.env['product.product'].search([
+            ('qty_available', '>=', 3), ('id', '=', kit.id),
+        ])
+        self.assertNotIn(kit, result)
 
     def test_scrap_change_product(self):
         """ Ensure a scrap order automatically updates the BoM when its product is changed,
