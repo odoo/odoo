@@ -6,8 +6,6 @@ APIs:
 - [Payment Sessions API](https://docs.xendit.co/apidocs/create-session) (`/sessions`)
 - [Payment Requests API](https://docs.xendit.co/apidocs/create-payment-request) version `3`
 - [Payment Tokens API](https://docs.xendit.co/apidocs/create-payment-token) version `3`
-- Credit Charge API version `1` (`/credit_card_charges`, legacy: only used to charge tokens saved
-  before the migration to the Payment Tokens API, as Xendit provides no migration path for them)
 
 This module uses the generic payment with redirection flow based on form submission provided by the
 `payment` module for every payment method, including `Card`: the customer is redirected to a
@@ -19,19 +17,21 @@ Xendit returns on a successful payment is saved in Odoo. Charging a saved token 
 server-to-server through the Payment Requests API; if that requires 3-D Secure authentication, the
 customer is redirected to the authentication URL Xendit returns.
 
-A customer returning from checkout, or from a 3-D Secure challenge, is checked directly against
-Xendit before falling back to the default pending state, in case the webhook notification is delayed
-or dropped.
+The transaction status is only updated from webhook notifications: a customer returning from
+checkout merely sets the transaction to pending until the notification is received.
 
 ## Supported features
 
 - Payment with redirection flow for all payment methods, including `Card`
 - Webhook notifications
 - Tokenization with or without payment
-- Status sync when the customer returns from checkout
 
 ## Module history
 
+- `20.1`
+  - The support for charging tokens saved through the legacy Credit Charge API (which Xendit
+    support can migrate to Payment Tokens API tokens), the status sync when the customer returns
+    from checkout, and the `xendit_public_key` field are removed. odoo/odoo#293440
 - `18.0`
   - The redirect flow is migrated to Xendit's Payment Sessions and Payment Requests/Tokens v3 APIs;
     the inline `Card` form, the Xendit.js SDK, and the `xendit_public_key` credential (kept on

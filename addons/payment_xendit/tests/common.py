@@ -75,16 +75,6 @@ class XenditCommon(PaymentCommon):
                 "transaction_sequence": "INITIAL",
             },
         }
-        cls.legacy_charge_notification_data = {
-            "id": "5f1d3d1e9a1b2c0011f3a1a2",
-            "external_id": cls.reference,
-            "status": "CAPTURED",
-            "currency": cls.currency.name,
-            "amount": cls.amount,
-            "payment_method": "CREDIT_CARD",
-            "credit_card_token_id": "legacy-token-123",
-            "masked_card_number": "400000XXXXXX1000",
-        }
         cls.payment_request_requires_action_data = {
             "payment_request_id": "pr-64a8d9c614802d6c402cd82d",
             "reference_id": cls.reference,
