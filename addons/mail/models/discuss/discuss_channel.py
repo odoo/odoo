@@ -1575,7 +1575,7 @@ class DiscussChannel(models.Model):
             }
         return {
             "type": "ir.actions.act_url",
-            "url": f"/odoo/action-mail.action_discuss?active_id={self.id}",
+            "url": f"/odoo/discuss?active_id={self.id}",
             "target": "self",
         }
 

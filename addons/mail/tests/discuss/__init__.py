@@ -12,6 +12,7 @@ from . import test_discuss_channel_as_guest
 from . import test_discuss_channel_last_interest
 from . import test_discuss_channel_member
 from . import test_discuss_channel_readonly
+from . import test_discuss_default_channels
 from . import test_discuss_mail_presence
 from . import test_discuss_meetings
 from . import test_discuss_mention_suggestions
