@@ -2,6 +2,7 @@
 from datetime import datetime
 from psycopg2.errors import UniqueViolation
 
+from odoo import http
 from odoo.tests import Form, users, HttpCase, tagged, new_test_user
 from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.tools import mute_logger, split_every
@@ -537,6 +538,37 @@ class TestHrEmployeeLinks(HttpCase):
                 "check_public_employee_link_redirect",
                 login=user_amy.login,
             )
+
+
+class TestHrEmployeeFirstLogin(HttpCase):
+    def test_employee_time_zone_not_changed_first_login(self):
+        # check that user logging in for first time doesn't change time zone of employee
+        employee = self.env['hr.employee'].create({
+            'name': 'Test User - employee'
+        })
+        user = self.env['res.users'].create({
+            'name': 'Test User',
+            'login': 'test_user',
+            'password': 'test_user',
+            'email': 'test_user@odoo.com',
+            'tz': "Japan",
+            'create_employee_id': employee.id,
+        })
+
+        self.assertEqual(user.tz, "Japan")
+        self.assertEqual(employee.tz, "Japan")
+
+        self.authenticate(None, None)
+        self.opener.cookies.set('tz', 'Europe/Brussels')
+        self.url_open('/web/login', data={
+            'login': user.login,
+            'password': 'test_user',
+            'csrf_token': http.Request.csrf_token(self),
+        })
+
+        self.assertTrue(user.login_date)
+        self.assertEqual(user.tz, "Europe/Brussels")
+        self.assertEqual(employee.tz, "Japan")
 
 
 @tagged('-at_install', 'post_install')

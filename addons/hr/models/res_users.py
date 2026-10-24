@@ -229,7 +229,8 @@ class User(models.Model):
     def _get_employee_fields_to_sync(self):
         """Get values to sync to the related employee when the User is changed.
         """
-        return ['name', 'email', 'image_1920', 'tz']
+        # we don't want the first login to overwrite timezone of created employee
+        return ['name', 'email', 'image_1920'] + (['tz'] if not self.env.context.get("first_login") else [])
 
     def _get_personal_info_partner_ids_to_notify(self, employee):
         # To override in appropriate module

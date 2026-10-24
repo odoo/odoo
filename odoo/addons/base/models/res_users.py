@@ -937,7 +937,7 @@ class Users(models.Model):
                     tz = request.cookies.get('tz') if request else None
                     if tz in pytz.all_timezones and (not user.tz or not user.login_date):
                         # first login or missing tz -> set tz to browser tz
-                        user.tz = tz
+                        user.with_context(first_login=True).tz = tz
                     user._update_last_login()
         except AccessDenied:
             _logger.info("Login failed for db:%s login:%s from %s", db, login, ip)
