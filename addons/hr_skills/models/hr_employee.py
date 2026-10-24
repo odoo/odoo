@@ -56,6 +56,9 @@ class HrEmployee(models.Model):
             vals_emp_skill = vals.pop('current_employee_skill_ids', []) + vals.pop('certification_ids', [])\
                 + vals.get('employee_skill_ids', [])
             vals['employee_skill_ids'] = self.env['hr.employee.skill']._get_transformed_commands(vals_emp_skill, self)
+        if company_id := vals.get('company_id'):
+            for employee in self:
+                employee.employee_skill_ids._validation_company_id_change(company_id)
         return super().write(vals)
 
     @api.model

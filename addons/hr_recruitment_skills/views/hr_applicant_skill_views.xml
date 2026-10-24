@@ -11,7 +11,6 @@
                         <field name="skill_type_id" widget="badges_many2one" string="Category"/>
                         <field name="skill_id" widget="badges_many2one"
                             context="{'default_skill_type_id': skill_type_id}"
-                            domain="[('skill_type_id', '=', skill_type_id)]"
                             invisible="not skill_type_id"
                         />
                         <field name="skill_level_id"

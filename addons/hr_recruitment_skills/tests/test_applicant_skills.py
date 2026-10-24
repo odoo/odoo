@@ -3,6 +3,7 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 
 from odoo.tests import Form, TransactionCase, tagged
+from odoo.exceptions import ValidationError
 
 
 @tagged("recruitment")
@@ -13,7 +14,14 @@ class TestApplicantSkills(TransactionCase):
         super().setUpClass()
         cls.today = date.today()
 
-        cls.t_job = cls.env["hr.job"].create({"name": "Test Job"})
+        cls.company_a, cls.company_b = cls.env['res.company'].create([
+            {'name': 'Company A'},
+            {'name': 'Company B'},
+        ])
+        cls.t_job = cls.env["hr.job"].create({
+            "name": "Test Job",
+            "company_id": cls.company_a.id,
+        })
         cls.t_skill_type, cls.t_cert_type = cls.env["hr.skill.type"].create(
             [{"name": "Skills for tests"}, {"name": "Certification for tests", "is_certification": True}],
         )
@@ -601,3 +609,21 @@ class TestApplicantSkills(TransactionCase):
         self.assertEqual(applicant.degree_score, 0)
         self.assertEqual(applicant.skills_score, 0)
         self.assertFalse(applicant.is_degree_score_matching)
+
+    def test_change_applicant_company_id_with_company_specific_skill(self):
+        self.t_skill_type.write({
+            'company_id': self.company_a.id,
+        })
+        with self.assertRaises(ValidationError):
+            self.t_job.write({
+                'company_id': self.company_b.id,
+            })
+
+    def test_change_skill_type_company_id_with_company_specific_skill(self):
+        self.t_skill_type.write({
+            'company_id': self.company_a.id,
+        })
+        with self.assertRaises(ValidationError):
+            self.t_skill_type.write({
+                'company_id': self.company_b.id,
+            })

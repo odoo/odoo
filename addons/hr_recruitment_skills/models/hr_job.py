@@ -101,3 +101,9 @@ class HrJob(models.Model):
             res["context"]["active_job_id"] = self.id
             res["context"]["active_job_applicant_ids"] = self.application_ids.ids
         return res
+
+    def write(self, vals):
+        if company_id := vals.get('company_id'):
+            for job in self:
+                job.application_ids.applicant_skill_ids._validation_company_id_change(company_id)
+        return super().write(vals)
