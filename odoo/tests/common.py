@@ -1302,6 +1302,20 @@ class Approx:  # noqa: PLW1641
         return self.cmp(self.value, other) == 0
 
 
+@contextmanager
+def _preserve_cursor_callbacks(cr):
+    snapshots = [
+        (callback, deque(callback._funcs), deepcopy(callback.data))
+        for callback in (cr.precommit, cr.postcommit, cr.prerollback, cr.postrollback)
+    ]
+    try:
+        yield
+    finally:
+        for callback, funcs, data in reversed(snapshots):
+            callback._funcs = funcs
+            callback.data = data
+
+
 class TransactionCase(BaseCase):
     """ Test class in which all test methods are run in a single transaction,
     but each test method is run in a sub-transaction managed by a savepoint.
@@ -1455,11 +1469,7 @@ class TransactionCase(BaseCase):
 
         # This prevents precommit functions and data from piling up
         # until cr.flush is called in 'assertRaises' clauses
-        def _reset(cb, funcs, data):
-            cb._funcs = funcs
-            cb.data = data
-        for callback in [cr.precommit, cr.postcommit, cr.prerollback, cr.postrollback]:
-            self.addCleanup(_reset, callback, deque(callback._funcs), deepcopy(callback.data))
+        self.enterContext(_preserve_cursor_callbacks(cr))
 
         self.addCleanup(self.savepoint.rollback)
 
@@ -3086,6 +3096,7 @@ def users(*logins):
             finally:
                 self.uid = old_uid
 
+        with_users._users = logins
         return with_users
     return users_decorator
 
@@ -3102,6 +3113,10 @@ def warmup(func, /):
     assertQueries and assertQueryCount assertions, it also discardes all
     changes but the ormcaches ones.
     """
+    if hasattr(func, '_benchmark'):
+        msg = '@warmup cannot be combined with @benchmark'
+        raise ValueError(msg)
+
     @wraps(func)
     def warmup(self, *args, **kwargs):
         self.env.flush_all()
@@ -3115,6 +3130,7 @@ def warmup(func, /):
         self.env.invalidate_all()
         self.warm = True
         func(self, *args, **kwargs)
+    warmup._warmup = True
     return warmup
 
 

@@ -19,8 +19,11 @@ class TagsSelector(object):
                                 (?:\[(.*)\])?               # parameters
                                 $''', re.VERBOSE)  # [-][tag][/module][:class][.method][[params]]
 
-    def __init__(self, spec, available_modules=None):
-        """ Parse the spec to determine tags to include and exclude. """
+    def __init__(self, spec, available_modules=None, *, default_tag='standard', strict=False):
+        """Parse included/excluded tags, using default_tag for implicit selections.
+
+        strict raises ValueError for malformed filters or unavailable modules.
+        """
         parts = ['']
         bracket_level = 0
         escape_next = False
@@ -39,11 +42,18 @@ class TagsSelector(object):
             elif char == ']':
                 if not escape_next:
                     bracket_level -= 1
+                    if strict and bracket_level < 0:
+                        msg = 'Unbalanced selector parameters'
+                        raise ValueError(msg)
             elif escape_next:  # the previous \ was not escaping anything, put it back
                 parts[-1] += '\\'
 
             escape_next = False
             parts[-1] += char
+
+        if strict and bracket_level:
+            msg = 'Unbalanced selector parameters'
+            raise ValueError(msg)
 
         filter_specs = [t.strip() for t in parts if t.strip()]
         self.exclude = set()
@@ -54,16 +64,20 @@ class TagsSelector(object):
         for filter_spec in filter_specs:
             match = self.filter_spec_re.match(filter_spec)
             if not match:
+                if strict:
+                    raise ValueError(f'Invalid tag {filter_spec!r}')
                 _logger.error('Invalid tag %s', filter_spec)
                 continue
 
             sign, tag, file_path, module, klass, method, parameters = match.groups()
+            if strict and module and available_modules is not None and module not in available_modules:
+                raise ValueError(f'Selector addon {module!r} is unknown or not installed')
             is_include = sign != '-'
             is_exclude = not is_include
 
             if not tag and is_include:
-                # including /module:class.method implicitly requires 'standard'
-                tag = 'standard'
+                # A tagless positive filter uses the caller's default tag.
+                tag = default_tag
             elif not tag or tag == '*':
                 # '*' indicates all tests (instead of 'standard' tests only)
                 tag = None
@@ -87,7 +101,7 @@ class TagsSelector(object):
                 self.exclude.add(test_filter)
 
         if (self.exclude or self.parameters) and not self.has_include:
-            self.include.add(('standard', None, None, None, None))
+            self.include.add((default_tag, None, None, None, None))
 
     def check(self, test):
         """ Return whether ``arg`` matches the specification: it must have at
