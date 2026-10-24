@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <record id="resource_calendar_leave_form_inherit_in" model="ir.ui.view">
+        <field name="name">resource.calendar.leaves.form.inherit</field>
+        <field name="model">resource.calendar.leaves</field>
+        <field name="inherit_id" ref="resource.resource_calendar_leave_form"/>
+        <field name="arch" type="xml">
+            <field name="date_to" position="after">
+                <field name="is_exceptional_days"/>
+                <field name="working_start_date" invisible="not is_exceptional_days" required="is_exceptional_days"/>
+                <field name="working_end_date" invisible="not is_exceptional_days" readonly="1"/>
+            </field>
+        </field>
+    </record>
+</odoo>
