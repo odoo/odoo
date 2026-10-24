@@ -6,9 +6,14 @@
                 <t t-if="this.rtc.microphonePermission !== 'granted'">
                     <i class="oi text-warning me-1" data-icon="warning"/> No microphone permissions
                 </t>
-                <t t-else="">
+                <t t-if="this.rtc.showMicrophoneSilentWarning">
                     <div class="fs-5 mb-1"><i class="oi text-warning me-1" data-icon="warning"/> Microphone muted by system</div>
                     <div>Go to your computer's settings to unmute your mic and increase its level</div>
+                </t>
+                <t t-if="this.rtc.showTalkWhileMutedSuggestion">
+                    <div class="fs-5 mb-1"><i class="oi text-info me-1" data-icon="info"/>You are muted!</div>
+                    <div>You seem to be speaking, but your microphone is muted. Unmute to speak.</div>
+                    <button type="button" class="btn btn-link p-0 mt-2" t-on-click="this.onClickDisableTalkWhileMutedSuggestion">Don't show this again</button>
                 </t>
             </div>
             <div class="align-self-start cursor-pointer" t-on-click="this.onClickClose" title="Dismiss warning">
