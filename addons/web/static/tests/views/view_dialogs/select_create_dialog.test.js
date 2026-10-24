@@ -25,7 +25,7 @@ import {
     removeFacet,
     saveFavorite,
     toggleMenuItem,
-    toggleSaveFavorite,
+    waitForSaveFavorite,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
 
@@ -533,7 +533,7 @@ test("SelectCreateDialog: save current search on desktop", async () => {
     expect(".o_data_row").toHaveCount(2, { message: "should contain 2 records" });
 
     // save filter
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
     await editFavoriteName("some name");
     await saveFavorite();
 });
@@ -594,7 +594,7 @@ test("SelectCreateDialog: save current search on mobile", async () => {
     expect(".o_kanban_record[data-id]").toHaveCount(2, { message: "should contain 2 records" });
 
     // save filter
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
     await editFavoriteName("some name");
     await saveFavorite();
 });
