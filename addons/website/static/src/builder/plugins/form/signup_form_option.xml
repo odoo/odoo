@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<!-- The options of the signup form have no setting: fields are added from the
+    header of their container kept similar to form generalization. An option
+    still needs a template, and a container without any content is hidden along
+    with its header. The empty element keeps the container, and so the
+    "+ Field" button, displayed. -->
+<t t-name="website.s_website_form_signup_fields_option">
+    <div/>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <!-- The area of the signup fields uses the form snippet styles but holds no
+            form: the form options do not apply to it. -->
+    <xpath expr="//form_option" position="attributes">
+        <attribute name="exclude">#oe_structure_signup_fields</attribute>
+    </xpath>
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <website_signup_fields_option
+            template="website.s_website_form_signup_fields_option"
+            selector="form.oe_signup_form:has(#oe_structure_signup_fields)"
+            title="Sign Up Fields"
+            editableOnly="false"/>
+    </xpath>
+</t>
+
+</templates>
