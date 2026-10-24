@@ -11,6 +11,7 @@ take them into account in your stock valuation.
     'depends': ['stock_landed_costs', 'mrp'],
     'category': 'Supply Chain/Manufacturing',
     'data': [
+        'security/ir.access.csv',
         'views/stock_landed_cost_views.xml',
     ],
     'auto_install': True,
