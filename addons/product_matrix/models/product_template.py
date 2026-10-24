@@ -1,12 +1,41 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import itertools
+import math
 
-from odoo import models, fields
+from odoo import _, models, fields
+
+MATRIX_COMBINATION_LIMIT = 5000
 
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
+
+    def _create_variant_ids(self):
+        res = super()._create_variant_ids()
+        if not self.env.context.get('with_warning_too_many_combination'):
+            return res
+        templates_too_big = self.filtered(lambda t: t.purchase_ok and t._get_matrix_combination_count() > MATRIX_COMBINATION_LIMIT)
+        if templates_too_big:
+            self.env.user._bus_send("simple_notification", {
+                'type': 'warning',
+                'title': _("Too many combinations"),
+                'message': _(
+                    "%(products)s have more than %(limit)s attribute combinations and cannot be selected through the grid entry. "
+                    "Consider splitting them into several products.",
+                    products=", ".join(templates_too_big.mapped('display_name')),
+                    limit=MATRIX_COMBINATION_LIMIT,
+                ),
+                'sticky': True,
+            })
+        return res
+
+    def _get_matrix_combination_count(self):
+        self.ensure_one()
+        return math.prod(
+            len(line.product_template_value_ids._only_active())
+            for line in self.valid_product_template_attribute_line_ids
+        )
 
     def _get_template_matrix(self, **kwargs):
         self.ensure_one()
