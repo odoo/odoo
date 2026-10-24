@@ -1292,7 +1292,7 @@ class Picking(models.Model):
 
     def _send_confirmation_email(self):
         subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
-        for stock_pick in self.filtered(lambda p: p.company_id.stock_move_email_validation and p.picking_type_id.code == 'outgoing'):
+        for stock_pick in self.filtered(lambda p: p.company_id.stock_move_email_validation and p.picking_type_id.code == 'outgoing' and p.location_dest_id.usage == 'customer'):
             delivery_template = stock_pick.company_id.stock_mail_confirmation_template_id
             stock_pick.with_context(force_send=True).message_post_with_source(
                 delivery_template,
