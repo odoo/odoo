@@ -384,3 +384,13 @@ class PosOrder(models.Model):
             'expiration_date': program.date_to or False,
             'source_pos_order_id': self.id,
         })
+
+    def _is_program_pricelist_valid(self, program):
+        """
+        Whether `program` is available for this order's pricelist.
+        mirror of *static/src/app/models/pos_order.js* PosOrder.isProgramPricelistValid
+        """
+        return (
+            not program.pricelist_ids or
+            self.pricelist_id in program.pricelist_ids
+        )

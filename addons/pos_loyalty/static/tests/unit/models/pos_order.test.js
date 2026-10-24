@@ -306,6 +306,7 @@ describe("pos.order - loyalty", () => {
         const code_reward = models["loyalty.reward"].get(1);
 
         // Program 1: a specific discount on product 8, capped at 100.
+        loyalty_program.rule_ids = [1];
         loyalty_program.reward_ids = [4];
         loyalty_reward.discount_applicability = "specific";
         loyalty_reward.all_discount_product_ids = [8];
@@ -343,5 +344,56 @@ describe("pos.order - loyalty", () => {
         // program 1's specific reward is capped at its discount_max_amount of 100.
         expect(order.lines[1].prices.total_included).toBe(-37.5);
         expect(order.lines[2].prices.total_included).toBe(-100);
+    });
+
+    test("a loyalty program doesn't give points if the pricelist is not valid", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+
+        // Program 7 is a loyalty program, restricted to pricelist 1.
+        deactivateAllProgramsExcept(store, [7]);
+        const program = models["loyalty.program"].get(7);
+        const validPriceList = models["product.pricelist"].get(1);
+        const invalidPriceList = models["product.pricelist"].get(2);
+
+        store.setPartnerToCurrentOrder(models["res.partner"].get(1));
+        await addProductLineToOrder(store, order, {
+            productId: 24,
+            templateId: 24,
+            qty: 1,
+        });
+
+        order.setPricelist(invalidPriceList);
+        await store.updateRewards();
+        await tick();
+
+        expect(program.getEarnedPoints(order)).toBe(0);
+
+        order.setPricelist(validPriceList);
+        await store.updateRewards();
+        await tick();
+
+        expect(program.getEarnedPoints(order)).toBe(1);
+    });
+
+    test("a claimed reward is dropped when switching to a pricelist its program doesn't allow", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+        const hasRewardLine = () =>
+            order.getOrderlines().some((line) => line.is_reward_line && line.reward_id?.id === 3);
+
+        order.setPricelist(models["product.pricelist"].get(1));
+        store.setPartnerToCurrentOrder(models["res.partner"].get(1));
+        order.active_rewards = [{ reward_id: 3 }];
+        order.recomputeRewards();
+        expect(hasRewardLine()).toBe(true);
+
+        order.setPricelist(models["product.pricelist"].get(2));
+        expect(hasRewardLine()).toBe(false);
+
+        order.setPricelist(models["product.pricelist"].get(1));
+        expect(hasRewardLine()).toBe(true);
     });
 });

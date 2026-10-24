@@ -101,6 +101,27 @@ class TestPOSLoyaltyPoints(TestPointOfSaleHttpCommon):
         self.assertEqual(sum(history.mapped('issued')), 10.0, "The with_code rule should earn its points once the code is applied")
         self.assertEqual(card.points, 10.0)
 
+    def test_pricelist_restricted_program_earns_only_with_its_pricelist(self):
+        """
+        A program restricted to some pricelists generates points only for the orders
+        using one of them.
+        """
+        program_pricelist = self.main_pos_config.pricelist_id
+        other_pricelist = self.env['product.pricelist'].create({'name': 'Other Pricelist'})
+        program = self._create_loyalty_program(pricelist_ids=[Command.set(program_pricelist.ids)])
+        card = self.env['loyalty.card'].create({
+            'program_id': program.id,
+            'partner_id': self.partner.id,
+        })
+
+        self._create_order([self._line(self.whiteboard_pen_product, 1, 100)], pricelist_id=other_pricelist.id)
+        card.invalidate_recordset()
+        self.assertEqual(card.points, 0.0, "No points should be issued with a pricelist the program doesn't allow")
+
+        self._create_order([self._line(self.whiteboard_pen_product, 1, 100)], pricelist_id=program_pricelist.id)
+        card.invalidate_recordset()
+        self.assertEqual(card.points, 100.0)
+
     def test_points_cost_recomputed_not_trusted(self):
         """
         The client-sent points_cost is only a hint: the backend recomputes the cost
