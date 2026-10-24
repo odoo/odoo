@@ -42,7 +42,7 @@
         <function model="account.chart.template" name="try_loading">
             <value eval="[]"/>
             <value>generic_coa</value>
-            <value model="res.company" eval="obj().env.ref('base.main_company')"/>
+            <value model="res.company" search="[('id', '=', ref('base.main_company')), ('chart_template', '=', False)]"/>
             <value name="install_demo" eval="True"/>
         </function>
 
