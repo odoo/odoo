@@ -4,6 +4,7 @@ from unittest.mock import patch
 
 from werkzeug.urls import url_encode
 
+from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 from odoo.tools.urls import urljoin as url_join
@@ -118,7 +119,7 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
     def test_extract_token_values_maps_fields_correctly(self):
         tx = self._create_transaction("direct")
         payment_data = {
-            "payment_intent": {"charges": {"data": [{}]}, "customer": "test_customer"},
+            "payment_intent": {"latest_charge": "ch_test", "customer": "test_customer"},
             "payment_method": {
                 "card": {"brand": "visa", "last4": "1111"},
                 "id": "pm_test",
@@ -126,7 +127,11 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
                 "type": "card",
             },
         }
-        token_values = tx._extract_token_values(payment_data)
+        with patch(
+            "odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request",
+            return_value={"id": "ch_test"},
+        ):
+            token_values = tx._extract_token_values(payment_data)
         self.assertDictEqual(
             token_values,
             {
@@ -136,6 +141,36 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
                 "stripe_payment_method": "pm_test",
             },
         )
+
+    def test_extract_token_values_ignores_inactive_mandate(self):
+        tx = self._create_transaction("direct")
+        for mandate_status, expected_mandate in (("active", "mandate_test"), ("inactive", None)):
+            charge = {
+                "id": "ch_test",
+                "payment_method_details": {
+                    "type": "card",
+                    "card": {"mandate": {"id": "mandate_test", "status": mandate_status}},
+                },
+            }
+            with (
+                self.subTest(mandate_status=mandate_status),
+                patch(
+                    "odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request",
+                    return_value=charge,
+                ),
+            ):
+                token_values = tx._extract_token_values(self.tokenization_payment_data)
+                self.assertEqual(token_values["stripe_mandate"], expected_mandate)
+
+    @mute_logger("odoo.addons.payment_stripe.models.payment_transaction")
+    def test_charge_fetch_failure_during_tokenization_keeps_transaction_authorized(self):
+        tx = self._create_transaction("direct", state="authorized")
+        with patch(
+            "odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request",
+            side_effect=ValidationError("Stripe is unavailable"),
+        ):
+            tx._extract_token_values(self.tokenization_payment_data)
+        self.assertEqual(tx.state, "authorized")
 
     @mute_logger("odoo.addons.payment_stripe.controllers.main")
     def test_webhook_notification_tokenizes_payment_method(self):
