@@ -109,3 +109,12 @@ class TestHttpGreeting(TestHttpBase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.headers.get('Content-Type'), 'text/html; charset=utf-8')
         self.assertEqual(res.text, "Tek'ma'te")
+
+    def test_greeting3_self_param(self):
+        for path, text in (('/test_http/greeting?self=1', "Tek'ma'te"), ('/test_http/echo-http-get?self=1', '{}')):
+            with self.subTest(path=path), self.assertLogs('odoo.http', 'WARNING') as capture:
+                res = self.nodb_url_open(path)
+                res.raise_for_status()
+                self.assertEqual(res.status_code, 200)
+                self.assertEqual(res.text, text)
+            self.assertTrue(any("called ignoring args {'self'}" in line for line in capture.output))
