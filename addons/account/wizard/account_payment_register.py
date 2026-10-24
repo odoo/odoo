@@ -89,6 +89,11 @@ class AccountPaymentRegister(models.TransientModel):
         readonly=True,
         store=False
     )
+    exchange_rate_currency_id = fields.Many2one(
+        comodel_name='res.currency',
+        compute="_compute_exchange_rate",
+        store=False,
+    )
 
     # == Fields given through the context ==
     line_ids = fields.Many2many('account.move.line', 'account_payment_register_move_line_rel', 'wizard_id', 'line_id',
@@ -968,6 +973,7 @@ class AccountPaymentRegister(models.TransientModel):
     def _compute_exchange_rate(self):
         for wizard in self:
             target_currency = wizard.currency_id if wizard.currency_id != wizard.company_currency_id else wizard.source_currency_id
+            wizard.exchange_rate_currency_id = target_currency
             if target_currency != wizard.company_currency_id:
                 wizard.exchange_rate = self.env['res.currency']._get_conversion_rate(
                     from_currency=wizard.company_currency_id,

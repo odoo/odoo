@@ -44,12 +44,13 @@ export class AccountCurrencyExchangeRate extends Component {
         readonly: t.boolean(),
         record: t.object(),
         rateField: t.string(),
+        currencyField: t.string().optional(),
     });
 
     setup() {
         this._swapKey = "account.currency_exchange_rate.swapped";
         this.state = proxy({
-            swapped: localStorage.getItem(this._swapKey) === "true" 
+            swapped: localStorage.getItem(this._swapKey) === "true"
         });
     }
 
@@ -57,16 +58,20 @@ export class AccountCurrencyExchangeRate extends Component {
         return this.props.record.data[this.props.rateField];
     }
 
+    get rateCurrency() {
+        return this.props.record.data[this.props.currencyField || "currency_id"];
+    }
+
     get fromCurrency() {
         return this.state.swapped
-            ? this.props.record.data.currency_id
+            ? this.rateCurrency
             : this.props.record.data.company_currency_id;
     }
 
     get toCurrency() {
         return this.state.swapped
             ? this.props.record.data.company_currency_id
-            : this.props.record.data.currency_id;
+            : this.rateCurrency;
     }
 
     get displayRate() {
@@ -104,7 +109,13 @@ export const accountCurrencyExchangeRate = {
     component: AccountCurrencyExchangeRate,
     extractProps: ({ options }) => ({
         rateField: options.rate_field,
+        currencyField: options.currency_field,
     }),
+    fieldDependencies: ({ options }) => [
+        { name: "currency_id", type: "many2one" },
+        { name: "company_currency_id", type: "many2one" },
+        ...(options.currency_field ? [{ name: options.currency_field, type: "many2one" }] : []),
+    ],
 };
 
 registry.category("view_widgets").add("account_pick_currency_date",  accountPickCurrencyDate);
