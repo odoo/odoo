@@ -1968,14 +1968,66 @@ class HrEmployee(models.Model):
                         employee[field] = False
         return res
 
-    @api.onchange('company_id')
-    def _onchange_company_id(self):
-        if self._origin:
-            return {'warning': {
-                'title': self.env._("Warning"),
-                'message': self.env._("To avoid multi company issues (losing the access to your previous contracts, leaves, ...), you should create another employee in the new company instead.")
-            }}
-        return None
+    def action_duplicate_employee(self, new_company_id):
+        self.ensure_one()
+        vals = self.copy_data()[0]
+
+        keys_to_remove = [
+            'version_id', 'version_ids', 'current_version_id',
+            'departure_id', 'employee_id', 'resource_id', 'resource_calendar_id',
+            'department_id', 'job_id', 'job_title', 'is_custom_job_title',
+            'parent_id', 'coach_id', 'address_id', 'work_location_id',
+            'contract_date_start', 'contract_date_end',
+        ]
+        for key in keys_to_remove:
+            vals.pop(key, None)
+
+        today = fields.Date.today()
+        vals.update(
+            name=self.name,
+            company_id=new_company_id,
+            date_version=today,
+            tz=self.env['res.company'].browse(new_company_id).tz or self.tz,
+        )
+        if self.is_in_contract:
+            vals['contract_date_start'] = today
+
+        new_employee = self.env['hr.employee'].with_company(new_company_id).with_context(mail_create_nolog=True).create(vals)
+
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'hr.employee',
+            'res_id': new_employee.id,
+            'views': [[False, 'form']],
+            'target': 'current',
+        }
+
+    def action_duplicate_and_archive_employee(self, new_company_id):
+        self.ensure_one()
+        action = self.action_duplicate_employee(new_company_id)
+        new_employee = self.env['hr.employee'].browse(action['res_id'])
+
+        user = self.user_id
+        if user:
+            if new_company_id not in user.company_ids.ids:
+                user.sudo().company_ids = [Command.link(new_company_id)]
+            self.user_id = False
+            new_employee.user_id = user
+
+        if self.is_in_contract:
+            today = fields.Date.today()
+            departure = self.env['hr.employee.departure'].create({
+                'employee_id': self.id,
+                'dismissal_date': today,
+                'departure_date': today,
+                'action_date': today,
+                'departure_description': self.env._("Automatically archived due to company transfer."),
+            })
+            departure.action_register()
+        else:
+            self.action_archive()
+
+        return action
 
     def _load_scenario(self):
         demo_tag = self.env.ref('hr.employee_category_demo', raise_if_not_found=False)
