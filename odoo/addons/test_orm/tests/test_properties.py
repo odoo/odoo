@@ -1763,6 +1763,19 @@ class PropertiesCase(TestPropertiesMixin):
             messages[0]['attributes']['many2many']
             messages[1]['attributes']['many2many']
 
+    def test_properties_definition_export_import(self):
+        """ The exported definition is the JSON the import reads back. """
+        definition = self.discussion_1.attributes_definition
+        [[exported]] = self.discussion_1.export_data(['attributes_definition'])['datas']
+        self.assertEqual(json.loads(exported), definition)
+
+        discussion = self.env['test_orm.discussion'].browse(
+            self.env['test_orm.discussion'].load(
+                ['name', 'attributes_definition'], [['Imported', exported]],
+            )['ids'],
+        )
+        self.assertEqual(discussion.attributes_definition, definition)
+
 
 class PropertiesSearchCase(TransactionExpressionCase, TestPropertiesMixin):
     @classmethod
