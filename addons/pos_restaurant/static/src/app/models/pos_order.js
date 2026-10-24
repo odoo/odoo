@@ -43,7 +43,10 @@ patch(PosOrder.prototype, {
         if (numCustomers === 0) {
             return 0;
         }
-        return this.totalDue / numCustomers;
+        return (
+            (this.priceIncl - this.splitPaymentLines.reduce((acc, l) => acc + l["priceIncl"], 0)) /
+            numCustomers
+        );
     },
     setBooked(booked) {
         this.uiState.booked = booked;
@@ -209,5 +212,9 @@ patch(PosOrder.prototype, {
                 0
             ) + 1
         );
+    },
+
+    get splitPaymentLines() {
+        return this.lines.filter((line) => line.isSplitPaymentLine);
     },
 });
