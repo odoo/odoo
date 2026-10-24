@@ -302,7 +302,7 @@ class AccountEdiCii(models.AbstractModel):
 
     def _cii_get_gross_price_product_trade_price_node(self, vals, base_line):
         return {
-            'ram:ChargeAmount': {'_text': FloatFmt(base_line['tax_details']['raw_gross_price_unit_currency'], max_dp=2)},
+            'ram:ChargeAmount': {'_text': FloatFmt(base_line['tax_details']['raw_gross_price_unit_currency'], min_dp=2, max_dp=6)},
             'ram:AppliedTradeAllowanceCharge': self._cii_get_applied_trade_allowance_charge_node(vals, base_line) if base_line.get('discount') else None,
         }
 
@@ -313,14 +313,14 @@ class AccountEdiCii(models.AbstractModel):
                 'udt:Indicator': {'_text': 'false' if base_line['discount'] > 0 else 'true'},
             },
             'ram:ActualAmount': {
-                '_text': FloatFmt(vals['currency_id'].round(base_line['tax_details']['raw_gross_price_unit_currency'] * discount_percentage), max_dp=2),
+                '_text': FloatFmt(base_line['tax_details']['raw_gross_price_unit_currency'] * discount_percentage, min_dp=2, max_dp=6),
             }
         }
 
     def _cii_get_net_price_product_trade_price_node(self, vals, base_line):
         return {
             'ram:ChargeAmount': {
-                '_text': FloatFmt(base_line['tax_details']['raw_total_excluded_currency'] / (base_line['quantity'] or 1.0), max_dp=2),
+                '_text': FloatFmt(base_line['tax_details']['raw_total_excluded_currency'] / (base_line['quantity'] or 1.0), min_dp=2, max_dp=6),
             }
         }
 
