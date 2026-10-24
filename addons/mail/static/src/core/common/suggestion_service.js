@@ -17,21 +17,19 @@ export class SuggestionService {
      * @param {import("services").ServiceFactories} services
      */
     constructor(env, services) {
-        this.env = env;
         this.orm = usePlugin(ORM);
         this.store = services["mail.store"];
     }
 
     /**
      * Returns list of supported delimiters, each supported
-     * delimiter is in an array [a, b, c] where:
+     * delimiter is in an array [a, b] where:
      * - a: chars to trigger
      * - b: (optional) if set, the exact position in the composer text node to allow using this delimiter
-     * - c: (optional) if set, this is the minimum amount of extra char after delimiter to allow using this delimiter
      *
      * @param {import('models').Thread} thread
      * @param {Readonly<Record<string, any>>} [ancestors] named ancestors of the composer, @see useAncestors
-     * @returns {Array<[SuggestionDelimiter, number, number]>}
+     * @returns {Array<[SuggestionDelimiter, number?]>}
      */
     getSupportedDelimiters(thread, ancestors) {
         return [[SUGGESTION_DELIMITERS.PARTNER], [SUGGESTION_DELIMITERS.CANNED_RESPONSE]];
