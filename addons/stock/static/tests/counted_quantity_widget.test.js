@@ -38,7 +38,7 @@ test("Test changing the inventory quantity with the widget", async function () {
     await contains("td[name=inventory_diff_quantity]").click();
 
     expect("td[name=inventory_diff_quantity] div input").toHaveValue(-27);
-    expect("td[name=inventory_quantity_set] div input").toBeChecked();
+    expect("td[name=inventory_quantity_set] div input:eq(0)").toBeChecked();
 
     await contains("td.o_counted_quantity_widget_cell").click();
     await contains("td.o_counted_quantity_widget_cell input").edit("40.5");

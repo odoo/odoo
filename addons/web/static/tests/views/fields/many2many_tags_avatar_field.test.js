@@ -159,7 +159,7 @@ test("widget many2many_tags_avatar in list view", async () => {
         ".o_data_row .o_many2many_tags_avatar_cell:eq(0) .o-autocomplete--input"
     ).click();
     await contains(".o-autocomplete--dropdown-item:eq(1)").click();
-    await contains(".o_control_panel_main_buttons .o_list_button_save").click();
+    await contains(".o_control_panel_main .o_list_button_save").click();
     expect(".o_data_row:eq(0) .o_field_many2many_tags_avatar .o_avatar img").toHaveCount(2);
 
     // Edit first row
