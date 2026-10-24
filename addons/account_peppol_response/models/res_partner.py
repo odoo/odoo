@@ -25,7 +25,7 @@ class ResPartner(models.Model):
             participant_info = partner._peppol_lookup_participant(edi_identification)
             if not participant_info:
                 continue
-            partner.peppol_supported_documents = [service['document_id'] for service in participant_info.get('services', []) if service.get('document_id')]
+            partner.sudo().peppol_supported_documents = [service['document_id'] for service in participant_info.get('services', []) if service.get('document_id')]
 
     @handle_demo
     def button_account_peppol_check_partner_endpoint(self, company=None):
