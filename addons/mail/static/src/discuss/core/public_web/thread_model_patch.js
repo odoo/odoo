@@ -9,6 +9,75 @@ import { patch } from "@web/core/utils/patch";
 const threadPatch = {
     setup() {
         super.setup(...arguments);
+<<<<<<< 5d18a9e458b9414b32bc9801c6b83bedafc8ad27
+||||||| 2504d010c2fdb107961a0d57d564d021b36a08c1
+        this.appAsUnreadChannels = fields.One("DiscussApp", {
+            compute() {
+                return this.channel_type === "channel" && this.isUnread ? this.store.discuss : null;
+            },
+        });
+        this.categoryAsThreadWithCounter = fields.One("DiscussAppCategory", {
+            compute() {
+                return this.displayInSidebar && this.importantCounter > 0
+                    ? this.discussAppCategory
+                    : null;
+            },
+        });
+        this.discussAppCategory = fields.One("DiscussAppCategory", {
+            compute() {
+                return this._computeDiscussAppCategory();
+            },
+        });
+        this.from_message_id = fields.One("mail.message");
+        this.parent_channel_id = fields.One("Thread", {
+            onDelete() {
+                this.delete();
+            },
+        });
+        this.sub_channel_ids = fields.Many("Thread", {
+            inverse: "parent_channel_id",
+            sort: (a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id,
+        });
+        this.displayInSidebar = fields.Attr(false, {
+            compute() {
+                return this._computeDisplayInSidebar();
+            },
+        });
+=======
+        this.appAsUnreadChannels = fields.One("DiscussApp", {
+            compute() {
+                return this.channel_type === "channel" && this.isUnread ? this.store.discuss : null;
+            },
+        });
+        this.categoryAsThreadWithCounter = fields.One("DiscussAppCategory", {
+            compute() {
+                // Sub channels have no category, they are displayed in the one of their parent.
+                return this.displayInSidebar && this.importantCounter > 0
+                    ? this.discussAppCategory ?? this.parent_channel_id?.discussAppCategory
+                    : null;
+            },
+        });
+        this.discussAppCategory = fields.One("DiscussAppCategory", {
+            compute() {
+                return this._computeDiscussAppCategory();
+            },
+        });
+        this.from_message_id = fields.One("mail.message");
+        this.parent_channel_id = fields.One("Thread", {
+            onDelete() {
+                this.delete();
+            },
+        });
+        this.sub_channel_ids = fields.Many("Thread", {
+            inverse: "parent_channel_id",
+            sort: (a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id,
+        });
+        this.displayInSidebar = fields.Attr(false, {
+            compute() {
+                return this._computeDisplayInSidebar();
+            },
+        });
+>>>>>>> 52fd39ff365c8c53c5795ac3b9e3b59b4b9ecefe
         this.loadSubChannelsDone = false;
         this.lastSubChannelLoaded = fields.One("discuss.channel");
     },

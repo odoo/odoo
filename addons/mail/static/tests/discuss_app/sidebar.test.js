@@ -14,11 +14,21 @@ import {
     triggerHotkey,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
+<<<<<<< 5d18a9e458b9414b32bc9801c6b83bedafc8ad27
 import { toRawValue } from "@mail/utils/common/local_storage";
 import { DiscussApp } from "@mail/core/public_web/discuss_app/discuss_app_model";
 import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { describe, expect, test, waitFor } from "@odoo/hoot";
 import { animationFrame, drag, press, queryFirst } from "@odoo/hoot-dom";
+||||||| 2504d010c2fdb107961a0d57d564d021b36a08c1
+import { DISCUSS_SIDEBAR_COMPACT_LS } from "@mail/core/public_web/discuss_app_model";
+import { describe, expect, test } from "@odoo/hoot";
+import { animationFrame, drag, press, queryFirst } from "@odoo/hoot-dom";
+=======
+import { DISCUSS_SIDEBAR_COMPACT_LS } from "@mail/core/public_web/discuss_app_model";
+import { describe, expect, test } from "@odoo/hoot";
+import { animationFrame, drag, press, queryFirst, waitFor } from "@odoo/hoot-dom";
+>>>>>>> 52fd39ff365c8c53c5795ac3b9e3b59b4b9ecefe
 import { Deferred, mockDate } from "@odoo/hoot-mock";
 import { Command, getService, onRpc, serverState } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
@@ -484,6 +494,39 @@ test("channel - counter: should have correct value of needaction threads if cate
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory", {
         contains: [["i.oi.oi-chevron-right"], ["span:text('Channels')"], [".badge:text('2')"]],
+    });
+});
+
+test("channel - counter: should count needaction sub threads if category is folded", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "Main Channel" });
+    const subChannelId = pyEnv["discuss.channel"].create({
+        name: "Sub Channel",
+        parent_channel_id: channelId,
+    });
+    const messageId = pyEnv["mail.message"].create({
+        body: "Hello @Mitchell Admin",
+        model: "discuss.channel",
+        partner_ids: [serverState.partnerId],
+        res_id: subChannelId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+    pyEnv["res.users.settings"].create({
+        user_id: serverState.userId,
+        is_discuss_sidebar_category_channel_open: false,
+    });
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebarCategory", {
+        contains: [
+            ["i.oi.oi-chevron-right"],
+            ["span", { text: "Channels" }],
+            [".badge", { text: "1" }],
+        ],
     });
 });
 
@@ -1223,6 +1266,7 @@ test("Sidebar channels show correct notification counter based on settings", asy
     await contains(".o-mail-DiscussSidebarChannel:contains(Mentions) .badge", { count: 0 });
     await contains(".o-mail-DiscussSidebarChannel:contains(Regular) .badge", { count: 0 });
 });
+<<<<<<< 5d18a9e458b9414b32bc9801c6b83bedafc8ad27
 
 test("add and remove channel from favorites updates sidebar", async () => {
     const pyEnv = await startServer();
@@ -1243,3 +1287,49 @@ test("add and remove channel from favorites updates sidebar", async () => {
     await click(".o-dropdown-item:contains('Remove from Favorites')");
     await contains(`${channelContainerSelector} ${generalChannelSelector}`);
 });
+||||||| 2504d010c2fdb107961a0d57d564d021b36a08c1
+=======
+
+test("Sidebar sub channels show correct notification counter based on settings", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users.settings"].create({
+        user_id: serverState.userId,
+        channel_notifications: "all",
+    });
+    const partnerId = pyEnv["res.partner"].create({ name: "Chuck" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const subChannelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        name: "Thread",
+        parent_channel_id: channelId,
+    });
+    const mentionMessageId = pyEnv["mail.message"].create({
+        author_id: partnerId,
+        model: "discuss.channel",
+        res_id: subChannelId,
+        body: "@Mitchell Admin",
+        needaction: true,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: mentionMessageId,
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+    pyEnv["mail.message"].create({
+        author_id: partnerId,
+        model: "discuss.channel",
+        res_id: subChannelId,
+        body: "test",
+    });
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebarSubchannel:contains(Thread) .badge", { text: "2" });
+    rpc("/discuss/settings/custom_notifications", { custom_notifications: false }); // default: @mention only
+    await contains(".o-mail-DiscussSidebarSubchannel:contains(Thread) .badge", { text: "1" });
+    rpc("/discuss/settings/custom_notifications", { custom_notifications: "no_notif" });
+    await waitFor(".o-mail-DiscussSidebarSubchannel:contains(Thread):not(:has(.badge))");
+});
+>>>>>>> 52fd39ff365c8c53c5795ac3b9e3b59b4b9ecefe

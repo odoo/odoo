@@ -152,7 +152,15 @@ const threadPatch = {
         if (this.channel?.isChatChannel && this.self_member_id?.message_unread_counter_ui) {
             return this.self_member_id.message_unread_counter_ui;
         }
+<<<<<<< 5d18a9e458b9414b32bc9801c6b83bedafc8ad27
         if (this.channel.discussAppCategory?.id === "channels") {
+||||||| 2504d010c2fdb107961a0d57d564d021b36a08c1
+        if (this.discussAppCategory?.id === "channels") {
+=======
+        // Sub channels have no category of their own: they follow the one of their parent.
+        const category = this.discussAppCategory ?? this.parent_channel_id?.discussAppCategory;
+        if (category?.id === "channels") {
+>>>>>>> 52fd39ff365c8c53c5795ac3b9e3b59b4b9ecefe
             if (this.store.settings.channel_notifications === "no_notif") {
                 return 0;
             }
