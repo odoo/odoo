@@ -242,34 +242,39 @@ class WebsiteAssets(models.AbstractModel):
             # Google is serving different font format (woff, woff2, ttf, eot..)
             # based on the user agent. We need to get the woff2 as this is
             # supported by all the browers we support.
-            headers_woff2 = {
-                'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.41 Safari/537.36',
-            }
+            session = requests.Session()
+            session.headers['user-agent'] = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.41 Safari/537.36'
             for font_name in google_local_fonts:
                 if google_local_fonts[font_name]:
                     google_local_fonts[font_name] = int(google_local_fonts[font_name])
                 else:
                     font_family_attachments = IrAttachment
-                    font_content = requests.get(
+                    font_content = session.get(
                         f'https://fonts.googleapis.com/css?family={font_name}:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap',
-                        timeout=5, headers=headers_woff2,
+                        timeout=5,
                     ).content.decode()
+
+                    # Variable fonts use the same file for all weights, so store it once to avoid duplicate attachments.
+                    # Without this we would create duplicate attachments and slows website (e.g. Montserrat font create 10 attachemnts not 90).
+                    attachment_by_url = {}
 
                     def fetch_google_font(src):
                         statement = src.group()
                         url, font_format = re.match(r'src: url\(([^\)]+)\) (.+)', statement).groups()
-                        req = requests.get(url, timeout=5, headers=headers_woff2)
                         # https://fonts.gstatic.com/s/modak/v18/EJRYQgs1XtIEskMB-hRp7w.woff2
                         # -> s-modak-v18-EJRYQgs1XtIEskMB-hRp7w.woff2
                         name = url_parse(url).path.lstrip('/').replace('/', '-')
-                        attachment = IrAttachment.create({
-                            'name': f'google-font-{name}',
-                            'type': 'binary',
-                            'raw': BinaryBytes(req.content),
-                            'public': True,
-                        })
-                        nonlocal font_family_attachments
-                        font_family_attachments += attachment
+                        attachment = attachment_by_url.get(url)
+                        if not attachment:
+                            req = session.get(url, timeout=5)
+                            attachment = attachment_by_url[url] = IrAttachment.create({
+                                'name': f'google-font-{name}',
+                                'type': 'binary',
+                                'raw': BinaryBytes(req.content),
+                                'public': True,
+                            })
+                            nonlocal font_family_attachments
+                            font_family_attachments += attachment
                         return 'src: url(/web/content/%s/%s) %s' % (
                             attachment.id,
                             name,
