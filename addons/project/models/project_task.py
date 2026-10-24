@@ -1682,6 +1682,15 @@ class Task(models.Model):
         return [x for x in email_list if x.split('@')[0] not in aliases]
 
     @api.model
+    def _mail_find_partner_from_emails(self, emails, records=None, force_create=False, extra_domain=False):
+        extra_domain = extra_domain or []
+        if records and records[0]._name == "project.project":
+            project_companies = records.mapped("company_id")
+            if project_companies:
+                extra_domain += ["|", ("company_id", "in", project_companies.ids), ("company_id", "=", False)]
+        return super()._mail_find_partner_from_emails(emails=emails, records=records, force_create=force_create, extra_domain=extra_domain)
+
+    @api.model
     def message_new(self, msg, custom_values=None):
         """ Overrides mail_thread message_new that is called by the mailgateway
             through message_process.
@@ -1698,7 +1707,12 @@ class Task(models.Model):
             custom_values = {}
         # Auto create partner if not existant when the task is created from email
         if not msg.get('author_id') and msg.get('email_from'):
-            msg['author_id'] = self.env['res.partner'].create({
+            partner_model = self.env['res.partner']
+            if custom_values.get("project_id"):
+                project = self.env["project.project"].browse(custom_values["project_id"])
+                if project.company_id:
+                    partner_model = partner_model.with_company(project.company_id)
+            msg['author_id'] = partner_model.create({
                 'email': msg['email_from'],
                 'name': msg['email_from'],
             }).id

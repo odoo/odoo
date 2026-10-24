@@ -195,6 +195,37 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
         self.assertEqual(task.name, "In a cage")
         self.assertEqual(task.project_id, self.project_pigs)
 
+    def test_task_creation_from_mail_multi_company(self):
+        company_a = self.env["res.company"].create({"name": "Test company A"})
+        self.partner_1.company_id = company_a
+        company_b = self.env["res.company"].create({"name": "Test company B"})
+        self.env["ir.default"].create({
+            "field_id": self.env.ref("base.field_res_partner__ref").id,
+            "json_value": '"default-ref"',
+            "company_id": company_b.id,
+        })
+        self.project_pigs.write({
+            "company_id": company_b.id,
+            "partner_id": False
+        })
+        task_id = self.env["mail.thread"].message_process(
+            "project.task",
+            EMAIL_TPL.format(
+                cc="",
+                email_from="valid.lelitre@agrolait.com",
+                to=f"project+pigs@{self.alias_domain}",
+                subject="In a cage",
+                msg_id="<on.antibiotics@example.com>",
+            ),
+        )
+        task = self.env['project.task'].browse(task_id)
+        self.assertEqual(task.name, "In a cage")
+        self.assertEqual(task.project_id, self.project_pigs)
+        self.assertEqual(task.company_id, company_b)
+        self.assertNotEqual(task.partner_id, self.partner_1)
+        self.assertEqual(task.partner_id.email, "valid.lelitre@agrolait.com")
+        self.assertEqual(task.partner_id.ref, "default-ref")
+
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_auto_create_partner(self):
         email = 'unknown@test.com'
