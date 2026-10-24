@@ -12,6 +12,7 @@ export class BuilderNumberInputBase extends BuilderInputBase {
         min: t.number().optional(),
         onKeydownArrow: t.function().optional(),
         step: t.number().optional(),
+        increment: t.boolean().optional(true),
     });
 
     onKeydown(e) {
@@ -19,6 +20,9 @@ export class BuilderNumberInputBase extends BuilderInputBase {
             // Prevent default behavior of input number since we want to
             // debounce commit for the history
             e.preventDefault();
+            if (!this.props.increment) {
+                return;
+            }
             const step = this.props.step || 1;
             const values = e.target.value.split(" ").map((number) => parseFloat(number) || 0);
             values.forEach((value, i) => {
