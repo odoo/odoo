@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mail.tests.common import mail_new_test_user
@@ -12,7 +11,7 @@ class TestMassMailPerformanceBase(BaseMailPerformance):
 
     @classmethod
     def setUpClass(cls):
-        super(TestMassMailPerformanceBase, cls).setUpClass()
+        super().setUpClass()
 
         cls.user_marketing = mail_new_test_user(
             cls.env,
@@ -22,11 +21,12 @@ class TestMassMailPerformanceBase(BaseMailPerformance):
             signature='--\nMartial'
         )
 
+
 @tagged('mail_performance', 'post_install', '-at_install')
 class TestMassMailPerformance(TestMassMailPerformanceBase):
 
     def setUp(self):
-        super(TestMassMailPerformance, self).setUp()
+        super().setUp()
         values = [{
             'name': 'Recipient %s' % x,
             'email_from': 'Recipient <rec.%s@example.com>' % x,
@@ -48,8 +48,8 @@ class TestMassMailPerformance(TestMassMailPerformanceBase):
         # runbot needs +101 compared to local
         with (
             self.mock_mail_gateway(mail_unlink_sent=True),
-            # contains notably 1 query / record for unlink in mail
-            self.assertQueryCount(__system__=1481, marketing=1482),  # 1332, 1333
+            # contains notably a few query / record for unlink in mail
+            self.assertQueryCount(__system__=1629, marketing=1630),  # tmm: 1129, 1130
         ):
             mailing.action_send_mail()
 
@@ -66,7 +66,7 @@ class TestMassMailBlPerformance(TestMassMailPerformanceBase):
     def setUp(self):
         """ In this setup we prepare 20 blacklist entries. We therefore add
         20 recipients compared to first test in order to have comparable results. """
-        super(TestMassMailBlPerformance, self).setUp()
+        super().setUp()
         values = [{
             'name': 'Recipient %s' % x,
             'email_from': 'Recipient <rec.%s@example.com>' % x,
@@ -92,8 +92,8 @@ class TestMassMailBlPerformance(TestMassMailPerformanceBase):
         })
 
         # runbot needs +153 compared to local
-        # contains notably 1 query / record for unlink in mail
-        with self.assertQueryCount(__system__=1513, marketing=1514):  # 1364, 1365
+        # contains notably a few query / record for unlink in mail
+        with self.assertQueryCount(__system__=1650, marketing=1651):  # tmm: 1150, 1151
             mailing.action_send_mail()
 
         self.assertEqual(mailing.sent, 50)

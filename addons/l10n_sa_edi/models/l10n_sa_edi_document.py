@@ -31,7 +31,9 @@ class L10nSaEdiDocument(models.Model):
         ('account.move', "Journal Entry"),
         ('pos.order', "POS Order"),
     ], string="Invoice Type", readonly=True, required=True)
-    res_id = fields.Many2oneReference(model_field="res_model", readonly=True, required=True)
+    res_id = fields.Many2oneReference(model_field="res_model", readonly=True, required=True,
+        ondelete=lambda s, ref: 'restrict' if ref._name in s._fields['res_model'].get_values(s.env) else 'ignore',
+    )
     attachment_id = fields.Many2one(comodel_name='ir.attachment', readonly=True)
     state = fields.Selection(string="ZATCA State", readonly=True, selection=L10N_SA_DOCUMENT_STATES)
     message = fields.Html("ZATCA Errors/Warnings", translate=True, help="Detailed Errors/Warnings")
