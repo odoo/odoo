@@ -67,12 +67,15 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         with MockRequest(self.env, website=self.env.ref('base.default_website'), url_root='http://example.com'):
             meta = self.blog_post.get_website_meta()
             self.assertEqual(meta['opengraph_meta']['og:image'], 'http://example.com/website_blog/static/src/img/cover_1.jpg')
+            self.assertEqual(meta['twitter_meta']['twitter:image'], 'http://example.com/website_blog/static/src/img/cover_1.jpg')
             self.blog_post.cover_properties = """{"background-image": "url(\\"/2.jpg\\")"}"""
             meta = self.blog_post.get_website_meta()
             self.assertEqual(meta['opengraph_meta']['og:image'], 'http://example.com/2.jpg')
+            self.assertEqual(meta['twitter_meta']['twitter:image'], 'http://example.com/2.jpg')
             self.blog_post.cover_properties = """{"background-image": "url(/3.jpg)"}"""
             meta = self.blog_post.get_website_meta()
             self.assertEqual(meta['opengraph_meta']['og:image'], 'http://example.com/3.jpg')
+            self.assertEqual(meta['twitter_meta']['twitter:image'], 'http://example.com/3.jpg')
 
     def test_avatar_comment(self):
         mail_message = self.env['mail.message'].create({
