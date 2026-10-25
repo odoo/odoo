@@ -54,7 +54,7 @@ class AccountMoveSend(models.AbstractModel):
         results = super()._get_placeholder_mail_attachments_data(move, invoice_edi_format=invoice_edi_format, extra_edis=extra_edis, pdf_report=pdf_report)
 
         if (
-            ('es_facturae' in extra_edis or invoice_edi_format == 'es_facturae')
+            ((extra_edis and 'es_facturae' in extra_edis) or invoice_edi_format == 'es_facturae')
             and move._l10n_es_edi_facturae_get_default_enable()
         ):
             filename = f'{move.name.replace("/", "_")}_facturae_signed.xml'
