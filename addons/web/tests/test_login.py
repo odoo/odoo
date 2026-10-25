@@ -60,6 +60,27 @@ class TestWebLogin(TestWebLoginCommon):
         # log in using the above form, it should still be valid
         self.login('internal_user', 'internal_user', csrf_token)
 
+    def assert_first_login_tz(self, user_tz, browser_tz, expected_tz):
+        user = new_test_user(self.env, 'tz_test_user', tz=user_tz)
+        self.assertFalse(user.login_date)
+        self.opener.cookies.set('tz', browser_tz, domain=HOST, path='/')
+        self.login('tz_test_user', 'tz_test_user')
+        user.invalidate_recordset(['tz'])
+        self.assertEqual(user.tz, expected_tz)
+
+    def test_web_login_browser_tz(self):
+        self.assert_first_login_tz(False, 'Europe/Brussels', 'Europe/Brussels')
+
+    def test_web_login_browser_tz_first_login(self):
+        self.assert_first_login_tz('Europe/Brussels', 'Europe/Paris', 'Europe/Paris')
+
+    # a fixed offset only means the OS has DST disabled, it is not a location
+    def test_web_login_browser_tz_fixed_offset(self):
+        self.assert_first_login_tz(False, 'Etc/GMT-1', False)
+
+    def test_web_login_browser_tz_fixed_offset_keeps_tz(self):
+        self.assert_first_login_tz('Europe/Brussels', 'Etc/GMT-1', 'Europe/Brussels')
+
 
 @tagged('post_install', '-at_install')
 class TestUserSwitch(HttpCaseWithUserDemo):
