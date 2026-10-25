@@ -10,6 +10,13 @@ def _contains_dot_segments(path: str) -> str:
     return any(seg in ('.', '..') for seg in decoded_path.split('/'))
 
 
+def _is_within_path(path: str, base_path: str) -> bool:
+    if not path.startswith(base_path):
+        return False
+    remainder = path[len(base_path):]
+    return not remainder or remainder.startswith('/') or base_path.endswith('/')
+
+
 def urljoin(base: str, extra: str) -> str:
     """Join a trusted base URL with a relative URL safely.
 
@@ -54,7 +61,7 @@ def urljoin(base: str, extra: str) -> str:
 
     if e_scheme or e_netloc:
         # allow absolute extra URL if it matches base
-        if (e_scheme != b_scheme) or (e_netloc != b_netloc) or not e_path.startswith(path):
+        if (e_scheme != b_scheme) or (e_netloc != b_netloc) or not _is_within_path(e_path, path):
             raise ValueError("Extra URL must use same scheme and host as base, and begin with base path")
 
         e_path = e_path[len(path):]
