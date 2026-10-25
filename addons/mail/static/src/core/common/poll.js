@@ -1,8 +1,15 @@
 import { PollVotesPanel } from "@mail/core/common/poll_votes_panel";
 import { useDynamicInterval } from "@mail/utils/common/misc";
+<<<<<<< b75f0e74b6b6d52491404feaf14ca191c04ff041
 
 import { Component, useState } from "@odoo/owl";
+||||||| 7182e53fbbcff6eb5fbfa7383323c1c62d6aa5f9
+import { Component, useState } from "@odoo/owl";
+=======
+import { Component, useEffect, useRef, useState } from "@odoo/owl";
+>>>>>>> bea3cffd4578ffadfbcb152eb73648b6dea3dbea
 
+import { hasTouch } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 
 const { DateTime } = luxon;
@@ -20,8 +27,21 @@ export class Poll extends Component {
         this.state = useState({
             isShowingResults: false,
             selectedOptionIds: new Set(),
+            truncatedOptionIds: new Set(),
             voting: false,
         });
+        this.root = useRef("root");
+        if (hasTouch()) {
+            useEffect(() => this.updateTruncatedOptionIds());
+            useEffect(
+                (el) => {
+                    const observer = new ResizeObserver(() => this.updateTruncatedOptionIds());
+                    observer.observe(el);
+                    return () => observer.disconnect();
+                },
+                () => [this.root.el]
+            );
+        }
         useDynamicInterval(
             (endDt) => {
                 if (!endDt) {
@@ -111,4 +131,49 @@ export class Poll extends Component {
     percentageAttStyle(option) {
         return this.isShowingResults ? `background-size: ${option.vote_percentage}%;` : "";
     }
+<<<<<<< b75f0e74b6b6d52491404feaf14ca191c04ff041
+||||||| 7182e53fbbcff6eb5fbfa7383323c1c62d6aa5f9
+
+    voteCountText(numberOfVotes) {
+        switch (numberOfVotes) {
+            case 0:
+                return _t("0 votes");
+            case 1:
+                return _t("1 vote");
+            default:
+                return _t("%(count)s votes", { count: numberOfVotes });
+        }
+    }
+=======
+
+    /** @param {PointerEvent} ev */
+    onPointerenterOptionLabel(ev) {
+        const el = ev.currentTarget;
+        el.dataset.tooltip = el.scrollWidth > el.clientWidth ? el.textContent : "";
+    }
+
+    updateTruncatedOptionIds() {
+        const ids = new Set();
+        for (const el of this.root.el.querySelectorAll("[data-option-id]")) {
+            if (el.scrollWidth > el.clientWidth) {
+                ids.add(Number(el.dataset.optionId));
+            }
+        }
+        const current = this.state.truncatedOptionIds;
+        if (ids.size !== current.size || [...ids].some((id) => !current.has(id))) {
+            this.state.truncatedOptionIds = ids;
+        }
+    }
+
+    voteCountText(numberOfVotes) {
+        switch (numberOfVotes) {
+            case 0:
+                return _t("0 votes");
+            case 1:
+                return _t("1 vote");
+            default:
+                return _t("%(count)s votes", { count: numberOfVotes });
+        }
+    }
+>>>>>>> bea3cffd4578ffadfbcb152eb73648b6dea3dbea
 }
