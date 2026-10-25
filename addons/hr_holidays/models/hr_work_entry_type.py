@@ -500,9 +500,11 @@ been taken for this time off type. Changing it now would affect existing employe
         elif not target_date:
             target_date = fields.Date.context_today(self)
 
+        # shared by all the accrual simulations below
+        partial_durations = {}
         allocations_leaves_consumed, extra_data = employees.with_context(
             ignored_leave_ids=self.env.context.get('ignored_leave_ids')
-        )._get_consumed_leaves(self, target_date, same_year_only=same_year_only)
+        )._get_consumed_leaves(self, target_date, same_year_only=same_year_only, partial_durations=partial_durations)
 
         today = fields.Date.context_today(self)
         for employee in employees:
@@ -586,6 +588,7 @@ been taken for this time off type. Changing it now would affect existing employe
                                                                             allocations_leaves_consumed[employee][work_entry_type],
                                                                             target_date,
                                                                             primary_unit,
+                                                                            partial_durations,
                                                                         )
                 if closest_expiration_date:
                     closest_allocation_expire = format_date(self.env, closest_expiration_date)
@@ -627,11 +630,11 @@ been taken for this time off type. Changing it now would affect existing employe
                 allocation_data[employee].append(lt_info)
         return allocation_data
 
-    def _get_closest_expiring_leaves_date_and_count(self, allocations, remaining_leaves, target_date, primary_unit):
+    def _get_closest_expiring_leaves_date_and_count(self, allocations, remaining_leaves, target_date, primary_unit, partial_durations=None):
         # Get the expiration date and carryover date of all allocations and compute the closest expiration date
         expiration_dates_per_allocation = {}
         expiration_dates = list()
-        carried_over_days_expiration_data = self._get_carried_over_days_expiration_data(allocations, target_date)
+        carried_over_days_expiration_data = self._get_carried_over_days_expiration_data(allocations, target_date, partial_durations)
         for allocation in allocations:
             expiration_date = allocation.date_to
 
@@ -675,8 +678,8 @@ been taken for this time off type. Changing it now would affect existing employe
         # No leaves will expire
         return None, 0
 
-    def _get_carried_over_days_expiration_data(self, allocations, target_date):
-        updated_alloc_data = allocations.sudo()._process_accrual_plans(target_date)
+    def _get_carried_over_days_expiration_data(self, allocations, target_date, partial_durations=None):
+        updated_alloc_data = allocations.sudo()._process_accrual_plans(target_date, partial_durations=partial_durations)
         carried_over_days_expiration_data = {}
         for allocation in allocations:
             if not allocation.accrual_plan_id:
