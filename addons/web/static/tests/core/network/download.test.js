@@ -81,7 +81,7 @@ test("handles success download", async () => {
     mockFetch((_, { body }) => {
         expect(body).toBeInstanceOf(FormData);
         expect(body.get("someKey")).toBe("someValue");
-        expect(body.has("token")).toBe(true);
+        expect(body.has("token")).toBe(false);
         expect(body.has("csrf_token")).toBe(true);
         expect.step("fetching file");
 
