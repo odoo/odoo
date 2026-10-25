@@ -211,6 +211,11 @@ class ResCountryState(models.Model):
         "The code of the state must be unique by country!",
     )
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_default(self):
+        if any(self.get_external_id().values()):
+            raise UserError(_('You cannot delete a default state.'))
+
     @api.model
     def name_search(self, name='', domain=None, operator='ilike', limit=100):
         result = []
