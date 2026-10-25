@@ -43,6 +43,15 @@ class BadgeUser(models.Model):
 
         return True
 
+    def action_open_badge(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'gamification.badge',
+            'view_mode': 'form',
+            'res_id': self.badge_id.id,
+        }
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
