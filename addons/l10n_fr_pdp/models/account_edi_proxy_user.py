@@ -121,7 +121,7 @@ class AccountEdiProxyClientUser(models.Model):
         urls = super()._get_proxy_urls()
         urls['pdp'] = {
             'prod': 'https://pdp.api.odoo.com',
-            'test': 'https://pdp.test.odoo.com',
+            'test': 'http://localhost:8081',
             'demo': 'demo',
         }
         return urls
