@@ -69,7 +69,7 @@ class HrOrgChartController(http.Controller):
                 for idx, ancestor in enumerate(ancestors)
                 if idx < max_level - 1
             ],
-            managers_more=len(ancestors) > self._managers_level,
+            managers_more=len(ancestors) >= max_level,
             children=[self._prepare_employee_data(child) for child in employee.child_ids if child != employee],
         )
         values['managers'].reverse()
