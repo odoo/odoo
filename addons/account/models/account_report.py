@@ -599,8 +599,10 @@ class AccountReportExpression(models.Model):
         for expression in self:
             if expression.carryover_target and not expression.label.startswith('_carryover_'):
                 raise UserError(_("You cannot use the field carryover_target in an expression that does not have the label starting with _carryover_"))
-            elif expression.carryover_target and not expression.carryover_target.split('.')[1].startswith('_applied_carryover_'):
-                raise UserError(_("When targeting an expression for carryover, the label of that expression must start with _applied_carryover_"))
+            elif expression.carryover_target:
+                target_parts = expression.carryover_target.split('.', 1)
+                if len(target_parts) != 2 or not all(target_parts) or not target_parts[1].startswith('_applied_carryover_'):
+                    raise UserError(_("When targeting an expression for carryover, use this format: line_code._applied_carryover_*"))
 
     @api.constrains('formula')
     def _check_domain_formula(self):
