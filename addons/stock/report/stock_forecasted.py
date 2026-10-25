@@ -173,9 +173,21 @@ class StockForecasted_Product_Product(models.AbstractModel):
 
     def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reserved_move=False, in_transit=False, read=True):
         product = product or (move_out.product_id if move_out else move_in.product_id)
+        if self.env.context.get('forecast_availability_only'):
+            # stock.move._get_forecast_availability_outgoing reads these four
+            # keys and nothing else. The source documents, display names and
+            # formatted dates of the full line cost several reads per move.
+            return {
+                'quantity': product.uom_id.round(quantity),
+                'move_out': move_out,
+                'move_in': move_in,
+                'replenishment_filled': replenishment_filled,
+            }
+        cache = self.env.context.get('forecast_report_cache') or {}
+        now = cache.get('now') or datetime.now()
         is_late = move_out.date < move_in.date if (move_out and move_in) else False
-        delivery_late = move_out.state != 'done' and move_out.date < datetime.now() if move_out else False
-        receipt_late = move_in.state != 'done' and move_in.date < datetime.now() if move_in else False
+        delivery_late = move_out.state != 'done' and move_out.date < now if move_out else False
+        receipt_late = move_in.state != 'done' and move_in.date < now if move_in else False
 
         move_to_match_ids = self.env.context.get('move_to_match_ids') or []
         move_in_id = move_in.id if move_in else None
@@ -199,36 +211,56 @@ class StockForecasted_Product_Product(models.AbstractModel):
             'reservation': self._get_reservation_data(reserved_move) if reserved_move else False,
             'in_transit': in_transit,
             'is_matched': any(move_id in [move_in_id, move_out_id] for move_id in move_to_match_ids),
-            'uom_id' : product.uom_id.read()[0] if read else product.uom_id,
+            'uom_id': self._read_report_record(product.uom_id, None, cache) if read else product.uom_id,
         }
         if move_in:
             document_in = move_in.sudo()._get_source_document()
             line.update({
-                'move_in': move_in.read(fields=self._get_report_moves_fields())[0] if read else move_in,
+                'move_in': self._read_report_record(move_in, self._get_report_moves_fields(), cache) if read else move_in,
                 'document_in' : {
                     '_name' : document_in._name,
                     'id' : document_in.id,
                     'name' : document_in.display_name,
                 } if document_in else False,
-                'receipt_date': format_date(self.env, move_in.date),
+                'receipt_date': self._format_report_date(move_in.date, cache),
             })
 
         if move_out:
             document_out = move_out.sudo()._get_source_document()
             line.update({
-                'move_out': move_out.read(fields=self._get_report_moves_fields())[0] if read else move_out,
+                'move_out': self._read_report_record(move_out, self._get_report_moves_fields(), cache) if read else move_out,
                 'document_out' : {
                     '_name' : document_out._name,
                     'id' : document_out.id,
                     'name' : document_out.display_name,
                 } if document_out else False,
-                'delivery_date': format_date(self.env, move_out.date),
+                'delivery_date': self._format_report_date(move_out.date, cache),
             })
             if move_out.picking_id and read:
                 line['move_out'].update({
-                    'picking_id': move_out.picking_id.read(fields=['id', 'priority'])[0],
+                    'picking_id': self._read_report_record(move_out.picking_id, ['id', 'priority'], cache),
                 })
         return line
+
+    def _read_report_record(self, record, fields, cache):
+        """ Return the values of ``record`` as ``read`` gives them, through the
+        cache of the report being built when there is one. A move shows up on
+        several lines, and ``read`` costs the same per call whether the record
+        is in the ORM cache or not. The cache hands out a copy, since the
+        extensions of ``_prepare_report_line`` update the dict of the line.
+        """
+        values_by_id = cache.setdefault(record._name, {})
+        values = values_by_id.get(record.id)
+        if values is None:
+            values = record.read(fields=fields)[0]
+            values_by_id[record.id] = values
+        return dict(values)
+
+    def _format_report_date(self, value, cache):
+        dates = cache.setdefault('dates', {})
+        if value not in dates:
+            dates[value] = format_date(self.env, value)
+        return dates[value]
 
     def _get_report_moves_fields(self):
         return ['id', 'date']
@@ -237,6 +269,12 @@ class StockForecasted_Product_Product(models.AbstractModel):
         return [('location_id', 'in', location_ids), ('quantity', '>', 0), ('product_id', 'in', products.ids)]
 
     def _get_report_lines(self, product_template_ids, product_ids, wh_location_ids, wh_stock_location, read=True):
+        # One cache for the lines of this call: the values of the moves and
+        # pickings they show, the unit of measure of their products, the
+        # formatted dates and the time the report considers as now. The lines
+        # are built through 'report' so that '_prepare_report_line' finds it.
+        cache = {'now': datetime.now()}
+        report = self.with_context(forecast_report_cache=cache)
 
         def _get_out_move_reserved_data(out, linked_moves, used_reserved_moves, currents, wh_stock_location, wh_stock_sub_location_ids):
             reserved_out = 0
@@ -312,7 +350,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
                     continue
                 taken_from_in = min(demand, in_data['qty'])
                 demand -= taken_from_in
-                lines.append(self._prepare_report_line(taken_from_in, move_in=in_data['move'], move_out=out, read=read))
+                lines.append(report._prepare_report_line(taken_from_in, move_in=in_data['move'], move_out=out, read=read))
                 in_data['qty'] -= taken_from_in
                 if in_data['qty'] <= 0:
                     ins_to_remove.append(in_id)
@@ -339,6 +377,12 @@ class StockForecasted_Product_Product(models.AbstractModel):
         outs = past_outs | future_outs
 
         ins = self.env['stock.move'].search(in_domain, order='priority desc, date, id')
+        if read:
+            # Read the moves and pickings of the lines in two calls instead of
+            # one per line: on a product with tens of thousands of open moves
+            # the per-line reads took 94% of the report.
+            cache['stock.move'] = {vals['id']: vals for vals in (outs | ins).read(fields=self._get_report_moves_fields())}
+            cache['stock.picking'] = {vals['id']: vals for vals in outs.picking_id.read(fields=['id', 'priority'])}
         # Prewarm cache with rollups
         outs._rollup_move_origs_fetch()
         ins._rollup_move_dests_fetch()
@@ -433,7 +477,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
                 if reserved_out > 0:
                     demand_out = max(demand_out - reserved_out, 0)
                     in_transit = bool(reserved_move.move_orig_ids)
-                    lines.append(self._prepare_report_line(reserved_out, move_out=out, reserved_move=reserved_move, in_transit=in_transit, read=read))
+                    lines.append(report._prepare_report_line(reserved_out, move_out=out, reserved_move=reserved_move, in_transit=in_transit, read=read))
 
                 if float_is_zero(demand_out, precision_rounding=product_rounding):
                     continue
@@ -441,7 +485,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
                 # Reconcile with the current stock.
                 if taken_from_stock_out > 0:
                     demand_out = max(demand_out - taken_from_stock_out, 0)
-                    lines.append(self._prepare_report_line(taken_from_stock_out, move_out=out, read=read))
+                    lines.append(report._prepare_report_line(taken_from_stock_out, move_out=out, read=read))
 
                 if float_is_zero(demand_out, precision_rounding=product_rounding):
                     continue
@@ -451,7 +495,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
                 if unreservable_qty > 0:
                     demand_out -= unreservable_qty
                     transit_stock -= unreservable_qty
-                    lines.append(self._prepare_report_line(unreservable_qty, move_out=out, in_transit=True, read=read))
+                    lines.append(report._prepare_report_line(unreservable_qty, move_out=out, in_transit=True, read=read))
 
                 if float_is_zero(demand_out, precision_rounding=product_rounding):
                     continue
@@ -467,21 +511,21 @@ class StockForecasted_Product_Product(models.AbstractModel):
                 demand = _reconcile_out_with_ins(lines, out, ins_per_product[product.id], demand, product_rounding, in_id_to_in_data, ins_per_product, dest_ids_to_in_ids, read=read)
                 if not float_is_zero(demand, precision_rounding=product_rounding):
                     # Not reconciled
-                    lines.append(self._prepare_report_line(demand, move_out=out, replenishment_filled=False, read=read))
+                    lines.append(report._prepare_report_line(demand, move_out=out, replenishment_filled=False, read=read))
             # Stock in transit
             if not float_is_zero(transit_stock, precision_rounding=product_rounding):
-                lines.append(self._prepare_report_line(transit_stock, product=product, in_transit=True, read=read))
+                lines.append(report._prepare_report_line(transit_stock, product=product, in_transit=True, read=read))
 
             # Unused remaining stock.
             if not float_is_zero(free_stock, precision_rounding=product.uom_id.rounding) or lines_init_count == len(lines):
-                lines += self._free_stock_lines(product, free_stock, moves_data, wh_location_ids, read)
+                lines += report._free_stock_lines(product, free_stock, moves_data, wh_location_ids, read)
 
             # In moves not used.
             for in_id in ins_per_product[product.id]:
                 in_data = in_id_to_in_data[in_id]
                 if float_is_zero(in_data['qty'], precision_rounding=product_rounding):
                     continue
-                lines.append(self._prepare_report_line(in_data['qty'], move_in=in_data['move'], read=read))
+                lines.append(report._prepare_report_line(in_data['qty'], move_in=in_data['move'], read=read))
         return lines
 
     def _free_stock_lines(self, product, free_stock, moves_data, wh_location_ids, read):
