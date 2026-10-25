@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- BTAE-02 https://docs.peppol.eu/poac/ae/pint-ae/bis/#_invoice_transaction_type_code -->
+    <record id="transaction_type_free_trade_zone" model="l10n_ae.transaction.type">
+        <field name="name">Free Trade Zone</field>
+        <field name="code">10000000</field>
+    </record>
+    <record id="transaction_type_deemed_supply" model="l10n_ae.transaction.type">
+        <field name="name">Deemed Supply</field>
+        <field name="code">01000000</field>
+    </record>
+    <record id="transaction_type_profit_margin_scheme" model="l10n_ae.transaction.type">
+        <field name="name">Profit Margin Scheme</field>
+        <field name="code">00100000</field>
+    </record>
+    <record id="transaction_type_summary" model="l10n_ae.transaction.type">
+        <field name="name">Summary</field>
+        <field name="code">00010000</field>
+    </record>
+    <record id="transaction_type_continuous_supply" model="l10n_ae.transaction.type">
+        <field name="name">Continuous Supply</field>
+        <field name="code">00001000</field>
+    </record>
+    <record id="transaction_type_disclosed_agent_billing" model="l10n_ae.transaction.type">
+        <field name="name">Disclosed Agent Billing</field>
+        <field name="code">00000100</field>
+    </record>
+    <record id="transaction_type_e_commerce" model="l10n_ae.transaction.type">
+        <field name="name">Supply through e-commerce</field>
+        <field name="code">00000010</field>
+    </record>
+    <record id="transaction_type_exports" model="l10n_ae.transaction.type">
+        <field name="name">Exports</field>
+        <field name="code">00000001</field>
+    </record>
+</odoo>
