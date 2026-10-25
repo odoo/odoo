@@ -91,3 +91,22 @@ class TestResCompany(common.TransactionCase, MockIAPPartnerAutocomplete):
         with patch.object(self.env.registry['iap.autocomplete.api'], '_request_partner_autocomplete', patched_request):
             result = self.env['res.partner'].with_context(enriched_company_data=be_company_data).enrich_by_duns('BE1234567')
             self.assertEqual(result.get('vat'), '')
+
+    def test_enrich_with_industry_id(self):
+        """Test that the industry ID is extracted from the enrichment data."""
+        company = self.env['res.company'].create({
+            'name': "Test Company 1",
+            'email': 'demo@testmail.com',
+        })
+        contact = self.env['res.partner'].create({
+            'name': "Test Contact",
+            'parent_id': company.partner_id.id,
+        })
+
+        industry = self.env.ref('base.res_partner_industry_Q')
+        company_data = {'industry_id': {'display_name': industry.display_name, 'id': industry.id}}
+
+        with patch.object(self.env.registry['res.partner'], 'enrich_by_domain', return_value=company_data):
+            self.assertTrue(company._enrich())
+
+        self.assertRecordValues(company.partner_id | contact, [{'industry_id': industry.id}] * 2)
