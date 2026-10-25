@@ -1403,6 +1403,61 @@ class TestAccountMove(AccountTestInvoicingCommon):
         move.line_ids.account_id = shared_account
         move.action_post()
 
+    def test_post_invoice_fails_with_tax_and_journal_company_inconsistency(self):
+        """
+        Ensure that an invoice cannot be posted when at least one line tax
+        belongs to a different company than the journal.
+
+        The company check of the ORM only runs on the written fields, so moving
+        a draft invoice to another company keeps the taxes of the former company.
+        The inconsistency would then only be detected when resetting to draft.
+        """
+        tax = self.company_data['default_tax_purchase']
+        company_branch, company_b = self.env['res.company'].create([
+            {
+                'name': 'Company Branch',
+                'parent_id': self.env.company.id,
+                'country_id': self.env.company.country_id.id,
+            },
+            {
+                'name': 'Company B',
+                'country_id': self.env.company.country_id.id,
+            },
+        ])
+        self.env.user.company_ids |= company_branch | company_b
+        journal_branch, journal_b = self.env['account.journal'].create([
+            {
+                'name': 'Company Branch Purchase Journal',
+                'type': 'purchase',
+                'code': 'CBrP',
+                'company_id': company_branch.id,
+            },
+            {
+                'name': 'Company B Purchase Journal',
+                'type': 'purchase',
+                'code': 'CBP',
+                'company_id': company_b.id,
+            },
+        ])
+        invoice = self.init_invoice('in_invoice', products=self.product_a, taxes=tax)
+        invoice = invoice.with_context(allowed_company_ids=(self.env.company | company_branch | company_b).ids)
+
+        # Ensure branch company aren't considered as inconsistency
+        invoice.write({'company_id': company_branch.id, 'journal_id': journal_branch.id})
+        invoice.action_post()
+        invoice.button_draft()
+
+        # Ensure posting fails when the tax's company is different than the journal's company,
+        # even if the accounts are shared between the two companies
+        for account in invoice.line_ids.account_id:
+            account.write({
+                'company_ids': [Command.link(company_b.id)],
+                'code_mapping_ids': [Command.create({'company_id': company_b.id, 'code': account.code})],
+            })
+        invoice.write({'name': '/', 'company_id': company_b.id, 'journal_id': journal_b.id})
+        with self.assertRaisesRegex(UserError, rf"The entry is using taxes \({tax.display_name}\) from a different company\."):
+            invoice.action_post()
+
     def test_journal_entry_analytic_distribution_search_is_set(self):
         """ Verify searching on analytic_distribution with 'is set', 'is not set'."""
         analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan'})
