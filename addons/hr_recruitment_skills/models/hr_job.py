@@ -27,6 +27,9 @@ class HrJob(models.Model):
             job_skills = job.job_skill_ids
             job_degree = job.expected_degree.score * 100
             job_total = sum(job.job_skill_ids.mapped("level_progress")) + job_degree
+            if not job_total:
+                job.applicant_matching_score = False
+                continue
             job_skill_map = {js.skill_id.id: js.level_progress for js in job_skills}
 
             matching_applicant_skills = applicant.current_applicant_skill_ids.filtered(
