@@ -1,4 +1,5 @@
-import { useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
+import { exportTimeOffRecords } from "@hr_holidays/views/hr_leave_export";
 import { registry } from '@web/core/registry';
 import { listView } from '@web/views/list/list_view';
 import { ListController } from "@web/views/list/list_controller";
@@ -10,6 +11,14 @@ export class HolidaysListController extends ListController {
     setup() {
         super.setup();
         this.orm = useService("orm");
+        useBus(this.env.searchModel, "direct-export-data", (ev) => {
+            ev.stopImmediatePropagation();
+            exportTimeOffRecords({
+                resModel: this.model.root.resModel,
+                domain: this.model.root.domain,
+                context: this.model.root.context,
+            });
+        });
 
         // Store reference to original button click handler for fallback
         this.onClickViewButton = this.env.onClickViewButton;
