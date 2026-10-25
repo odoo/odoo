@@ -161,7 +161,7 @@
                         </span>
                         <div class="ms-1 w-100">
                             <div class="d-flex">
-                                <a href="#" target="_blank" t-attf-href="{{state.url}}" class="o_we_url_link fw-bold flex-grow-1 text-truncate" style="max-width: 160px;" t-attf-title="{{state.urlTitle}}">
+                                <a href="#" target="_blank" t-attf-href="{{state.url}}" class="o_we_url_link fw-bold flex-grow-1 text-truncate" t-att-class="{'text-decoration-line-through': state.isMissingAttachment}" style="max-width: 160px;" t-attf-title="{{state.urlTitle}}">
                                     <t t-esc="state.urlTitle"/>
                                 </a>
                                 <div class="flex-grow-1 d-flex justify-content-end align-items-center gap-1">
@@ -182,6 +182,10 @@
                                     <t t-if="state.url" t-esc="state.url"/>
                                     <t t-else="">No URL specified</t>
                                 </span>
+                            </div>
+                            <div t-if="state.isMissingAttachment" class="o_we_missing_attachment d-flex align-items-center gap-2 text-danger" style="font-size: 12px;">
+                                <span>This file no longer exists.</span>
+                                <a t-if="props.canRemove" href="#" class="o_we_remove_missing_link btn-link" t-on-click.prevent="onClickRemove">Remove link</a>
                             </div>
                         </div>
                     </div>

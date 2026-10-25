@@ -1748,6 +1748,28 @@ describe("upload file via link popover", () => {
         expect(".direct-download-option").toHaveCount(0);
     });
 
+    test("popover in preview mode should flag a link to a deleted attachment", async () => {
+        onRpc("ir.attachment", "read", () => []);
+        await setupEditor(
+            '<p><a href="/web/content/1?download=true&unique=123">file.txt[]</a></p>'
+        );
+        await waitFor(".o_we_missing_attachment");
+        expect(".o_we_missing_attachment span").toHaveText("This file no longer exists.");
+        expect(".o_we_url_link").toHaveClass("text-decoration-line-through");
+        expect(".o_we_preview_favicon .fa-chain-broken").toHaveCount(1);
+    });
+
+    test("remove link from the deleted attachment notice keeps the label", async () => {
+        onRpc("ir.attachment", "read", () => []);
+        const { el } = await setupEditor(
+            '<p><a href="/web/content/1?download=true&unique=123">file.txt[]</a></p>'
+        );
+        await waitFor(".o_we_remove_missing_link");
+        await click(".o_we_remove_missing_link");
+        await waitForNone(".o-we-linkpopover", { timeout: 1500 });
+        expect(getContent(el)).toBe("<p>file.txt[]</p>");
+    });
+
     test("should not insert attachment as link if popover is discarded during file upload", async () => {
         const patchUpload = (editor) => {
             const mockedUploadPromise = new Promise((resolve) => {
