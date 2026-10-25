@@ -281,6 +281,34 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(po.order_line[0].price_unit, 200)
         self.assertEqual(po.order_line[1].price_unit, 0, "No vendor with matching UoM is found, so price should be 0")
 
+    def test_amount_to_invoice_at_date_with_uom(self):
+        self.env.user.group_ids += self.env.ref('uom.group_uom')
+        uom_dozens = self.env.ref('uom.product_uom_dozen')
+
+        product_data = {
+            'name': 'SuperProduct',
+            'type': 'consu',
+            'seller_ids': [Command.create({
+                'partner_id': self.partner_a.id,
+                'product_uom_id': uom_dozens.id,
+                'price': 1200,
+            })]
+        }
+        product = self.env['product.product'].create(product_data)
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product
+            po_line.product_uom_id = uom_dozens
+            po_line.product_qty = 2
+        po = po_form.save()
+
+        po.order_line[0].qty_received = 2
+
+        self.assertEqual(po.order_line[0].price_unit, 1200)
+        self.assertEqual(po.order_line[0].amount_to_invoice_at_date, 2400)
+
     def test_on_change_quantity_description(self):
         """
         When a user changes the quantity of a product in a purchase order it
@@ -306,9 +334,6 @@ class TestPurchase(AccountTestInvoicingCommon):
         correctly handled when creating a purchase order i-e product having a price of 100 usd
         and when purchasing in EUR company the correct conversion should be applied
         """
-        self.env['decimal.precision'].search([
-            ('name', '=', 'Product Price'),
-        ]).digits = 5
         product = self.env['product.product'].create({
             'name': 'product_test',
             'uom_id': self.env.ref('uom.product_uom_unit').id,
@@ -522,6 +547,71 @@ class TestPurchase(AccountTestInvoicingCommon):
         product._invalidate_cache()
         self.assertEqual(product.seller_ids[0].partner_id, self.partner_a)
         self.assertEqual(product.seller_ids[0].company_id, company_a)
+
+    def test_price_include_price_exclude_with_multicompany(self):
+        """
+        Check that price tax included and price tax excluded are computed correctly in a multicompany context.
+        """
+        company_tax_excluded = self.company_data['company']
+        company_tax_included = self.company_data_2['company']
+        company_tax_included.account_price_include = 'tax_included'
+        product = self.env['product.product'].create({
+            'name': 'product_test',
+            'standard_price': 100.0,
+        })
+        product.with_company(company_tax_included).standard_price = 100.0
+
+        po_form = Form(self.env['purchase.order'].with_company(company_tax_included))
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product
+            po_line.product_qty = 1
+        po_tax_included = po_form.save()
+        po_tax_included.button_confirm()
+
+        self.assertRecordValues(po_tax_included, [{
+            'amount_tax': 13.04,
+            'amount_untaxed': 86.96,
+            'amount_total': 100.00,
+        }])
+
+        po_form = Form(self.env['purchase.order'].with_company(company_tax_excluded))
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product
+            po_line.product_qty = 1
+        po_tax_excluded = po_form.save()
+        po_tax_excluded.button_confirm()
+
+        self.assertRecordValues(po_tax_excluded, [{
+            'amount_tax': 15.00,
+            'amount_untaxed': 100.00,
+            'amount_total': 115.00,
+        }])
+
+    def test_price_include_tax_mapped_by_fiscal_position_on_branch(self):
+        """Check that a branch using its parent company's taxes removes a price-included tax replaced by
+        the fiscal position from the product cost, like its parent company does."""
+        company = self.env.company
+        branch = self.env['res.company'].create({
+            'name': 'Branch',
+            'country_id': company.country_id.id,
+            'parent_id': company.id,
+        })
+        self.tax_purchase_a.price_include_override = 'tax_included'
+        self.product_a.with_company(branch).standard_price = 800.0
+
+        po_parent, po_branch = self.env['purchase.order'].create([{
+            'partner_id': self.partner_a.id,
+            'company_id': po_company.id,
+            'fiscal_position_id': self.fiscal_pos_a.id,
+            'order_line': [Command.create({'product_id': self.product_a.id})],
+        } for po_company in (company, branch)])
+
+        self.assertRecordValues((po_parent + po_branch).order_line, [
+            {'price_unit': 695.65, 'tax_ids': self.tax_purchase_b.ids, 'price_total': 800.0},
+            {'price_unit': 695.65, 'tax_ids': self.tax_purchase_b.ids, 'price_total': 800.0},
+        ])
 
     def test_discount_po_line_vendorpricelist(self):
         """ Set a discount in VendorPriceList and check if that discount comes in po line and if vendor select
@@ -1359,3 +1449,75 @@ class TestPurchase(AccountTestInvoicingCommon):
             "The UoM of the PO line for the Blue variant should not be the supplier info UoM (dozens) tied to Red.")
         self.assertNotIn(self.uom_dozen, po_line_blue.allowed_uom_ids,
             "The dozens UoM should not be allowed for the Blue variant since the supplier info is specific to Red.")
+
+    @freeze_time('2026-05-12 20:00:00')
+    def test_supplierinfo_date_timezone_aware(self):
+        """Supplierinfo lookup should use the user's local date, not UTC.
+
+        When a user in Pacific/Auckland (UTC+12) creates a PO at
+        2026-05-12 20:00 UTC (= 2026-05-13 08:00 NZST), a supplierinfo
+        with date_start=2026-05-13 must match — the user's local date is
+        May 13, even though the UTC date is still May 12.
+
+        An older entry covering up to May 12 at a different price ensures
+        the test fails if the code uses the UTC date instead of the
+        user's local date.
+        """
+        self.env.user.tz = 'Pacific/Auckland'
+        self.env['product.supplierinfo'].create({
+            'partner_id': self.partner_a.id,
+            'product_tmpl_id': self.product_a.product_tmpl_id.id,
+            'min_qty': 1,
+            'price': 30.0,
+            'date_start': fields.Date.from_string('2026-05-01'),
+            'date_end': fields.Date.from_string('2026-05-12'),
+        })
+        self.env['product.supplierinfo'].create({
+            'partner_id': self.partner_a.id,
+            'product_tmpl_id': self.product_a.product_tmpl_id.id,
+            'min_qty': 1,
+            'price': 50.0,
+            'date_start': fields.Date.from_string('2026-05-13'),
+            'date_end': fields.Date.from_string('2026-05-31'),
+        })
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'product_qty': 1,
+            })],
+        })
+
+        self.assertEqual(
+            po.order_line.price_unit, 50.0,
+            "The price should come from the May 13–31 entry, not the "
+            "May 1–12 entry that matches the wrong UTC date.",
+        )
+
+    def test_import_keeps_imported_price_unit(self):
+        self.product_a.seller_ids = [Command.create({'partner_id': self.partner_a.id, 'price': 50.0})]
+        order = self.env['purchase.order'].create({'partner_id': self.partner_a.id})
+
+        self.env['purchase.order'].with_context(import_file=True).load(
+            ['.id', 'partner_id/.id', 'order_line/product_id/.id',
+             'order_line/product_qty', 'order_line/price_unit'],
+            [[str(order.id), str(self.partner_a.id), str(self.product_a.id), '1', '10.0']],
+        )
+
+        self.assertEqual(order.order_line.price_unit, 10.0)
+
+    def test_prevent_partner_deletion(self):
+        """Check that alt PO correctly copies the original PO values"""
+        subcontractor, client = self.env["res.partner"].create([
+            {"name": "subcontractor"},
+            {"name": "client"},
+        ])
+
+        po = self.env["purchase.order"].create([{
+            "partner_id": subcontractor.id,
+            "dest_address_id": client.id,
+        }])
+        po.button_confirm()
+        with self.assertRaises(UserError):
+            client.unlink()

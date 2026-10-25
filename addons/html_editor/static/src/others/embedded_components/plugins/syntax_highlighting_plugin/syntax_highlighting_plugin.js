@@ -9,6 +9,8 @@ import {
 import { removeInvisibleWhitespace } from "@html_editor/utils/dom";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { closestBlock } from "@html_editor/utils/blocks";
+import { DISABLED_NAMESPACE } from "@html_editor/main/toolbar/toolbar_plugin";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 
 const CODE_BLOCK_CLASS = "o_syntax_highlighting";
 const CODE_BLOCK_SELECTOR = `div.${CODE_BLOCK_CLASS}`;
@@ -45,6 +47,14 @@ export class SyntaxHighlightingPlugin extends Plugin {
                 removeInvisibleWhitespace(el, cursors);
             }
         },
+        toolbar_namespace_providers: withSequence(70, (targetedNodes) => {
+            if (
+                targetedNodes.length &&
+                targetedNodes.every((node) => closestElement(node, ".o_syntax_highlighting"))
+            ) {
+                return DISABLED_NAMESPACE;
+            }
+        }),
 
         /** Processors */
         clipboard_content_processors: (clonedContent) => this.cleanForSave(clonedContent),

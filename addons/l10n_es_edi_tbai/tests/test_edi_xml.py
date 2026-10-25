@@ -6,6 +6,7 @@ from datetime import datetime, date
 from freezegun import freeze_time
 from lxml import etree
 
+from odoo import Command
 from odoo.addons.l10n_es_edi_tbai.models.xml_utils import NS_MAP
 from odoo.tests import tagged
 
@@ -305,6 +306,59 @@ class TestEdiTbaiXmls(TestEsEdiTbaiCommon):
             xml_expected = etree.fromstring(super()._get_sample_xml('xml_post_in_ic.xml'))
             self.assertXmlTreeEqual(xml_doc, xml_expected)
 
+    def test_xml_tree_post_isp(self):
+        """
+        Test Customer Invoice XML with Sujeto ISP (reverse charge).
+        TipoImpositivo and CuotaImpuesto must appear in the S2 DetalleIVA block.
+        """
+        self.out_invoice.invoice_line_ids.tax_ids = self._get_tax_by_xml_id('s_iva0_isp')
+        self.out_invoice.partner_id = self.partner_b
+        with freeze_time(self.frozen_today):
+            edi_document = self.out_invoice._l10n_es_tbai_create_edi_document(cancel=False)
+            edi_document._generate_xml(self.out_invoice._l10n_es_tbai_get_values(cancel=False))
+            xml_doc = edi_document._get_xml()
+            xml_doc.remove(xml_doc.find("Signature", namespaces=NS_MAP))
+            xml_expected_base = etree.fromstring(super()._get_sample_xml('xml_post.xml'))
+            xpath = """
+                <xpath expr="//Destinatarios" position="replace">
+                    <Destinatarios>
+                        <IDDestinatario>
+                            <NIF>F35999705</NIF>
+                            <ApellidosNombreRazonSocial>partner_b</ApellidosNombreRazonSocial>
+                            <Direccion/>
+                        </IDDestinatario>
+                    </Destinatarios>
+                </xpath>
+                <xpath expr="//ImporteTotal" position="replace">
+                    <ImporteTotal>4000.00000000</ImporteTotal>
+                </xpath>
+                <xpath expr="//ImporteTotalFactura" position="replace">
+                    <ImporteTotalFactura>4000.00</ImporteTotalFactura>
+                </xpath>
+                <xpath expr="//TipoDesglose" position="replace">
+                    <TipoDesglose>
+                        <DesgloseFactura>
+                            <Sujeta>
+                                <NoExenta>
+                                    <DetalleNoExenta>
+                                        <TipoNoExenta>S2</TipoNoExenta>
+                                        <DesgloseIVA>
+                                            <DetalleIVA>
+                                                <BaseImponible>4000.00</BaseImponible>
+                                                <TipoImpositivo>0.00</TipoImpositivo>
+                                                <CuotaImpuesto>0.00</CuotaImpuesto>
+                                            </DetalleIVA>
+                                        </DesgloseIVA>
+                                    </DetalleNoExenta>
+                                </NoExenta>
+                            </Sujeta>
+                        </DesgloseFactura>
+                    </TipoDesglose>
+                </xpath>
+            """
+            xml_expected = self.with_applied_xpath(xml_expected_base, xpath)
+            self.assertXmlTreeEqual(xml_doc, xml_expected)
+
     def test_xml_tree_cancel(self):
         post_xml = b"""<TicketBAI>
 <CabeceraFactura><FechaExpedicionFactura>01-01-2025</FechaExpedicionFactura></CabeceraFactura>
@@ -343,3 +397,25 @@ class TestEdiTbaiXmls(TestEsEdiTbaiCommon):
             xml_doc.remove(xml_doc.find("Signature", namespaces=NS_MAP))
             xml_expected = etree.fromstring(super()._get_sample_xml('xml_fecha_operacion.xml'))
             self.assertXmlTreeEqual(xml_doc, xml_expected)
+
+    def test_xml_tree_no_sujeto_loc_multiple_taxes(self):
+        """
+        Test that the NoSujeta amount summing several no_sujeto_loc taxes is rounded to 2 decimals
+        """
+        tax_6, tax_23 = self.env['account.tax'].create([{
+            'name': f'{amount}% PT VAT',
+            'amount': amount,
+            'price_include_override': 'tax_included',
+            'tax_scope': 'consu',
+            'l10n_es_type': 'no_sujeto_loc',
+        } for amount in (6.0, 23.0)])
+        self.out_invoice.invoice_line_ids = [
+            Command.clear(),
+            Command.create({'product_id': self.product_a.id, 'price_unit': 4380.0, 'tax_ids': tax_6.ids}),
+            Command.create({'product_id': self.product_a.id, 'price_unit': 39.90, 'tax_ids': tax_23.ids}),
+        ]
+        with freeze_time(self.frozen_today):
+            edi_document = self.out_invoice._l10n_es_tbai_create_edi_document(cancel=False)
+            edi_document._generate_xml(self.out_invoice._l10n_es_tbai_get_values(cancel=False))
+            xml_doc = edi_document._get_xml()
+        self.assertEqual(xml_doc.findtext('.//DetalleNoSujeta/Importe'), '4164.52')

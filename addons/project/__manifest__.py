@@ -3,7 +3,7 @@
 
 {
     'name': 'Project',
-    'version': '1.3',
+    'version': '1.4',
     'website': 'https://www.odoo.com/app/project',
     'category': 'Services/Project',
     'sequence': 45,
@@ -218,8 +218,12 @@
 
             ('include', 'html_editor.assets_editor'),
             'html_editor/static/src/others/dynamic_placeholder_plugin.js',
+            'html_editor/static/src/others/editor_dynamic_placeholder_popover.js',
+            'html_editor/static/src/others/editor_dynamic_placeholder_popover.xml',
             'html_editor/static/src/backend/**/*',
             'html_editor/static/src/fields/**/*',
+            'html_editor/static/src/scss/html_editor.common.scss',
+            'html_editor/static/src/scss/base_style.scss',
 
             'mail/static/src/scss/variables/*.scss',
             'mail/static/src/chatter/web/form_renderer.scss',

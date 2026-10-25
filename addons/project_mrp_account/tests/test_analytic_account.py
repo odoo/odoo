@@ -428,9 +428,9 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
 
     def test_mandatory_analytic_plan_production(self):
         """
-        Tests that the MO can only generate AALs if it is supposed to.
-        ie. The MO is producing the product and there is a project linked to the MO that has at least one analytic plan set,
-        and all its mandatory plans set (the ones that are constrained by the 'Manufacturing Order' domain).
+        Tests that the MO cannot be confirmed if the linked project does not
+        have an analytic account set on all plans mandatory for the
+        'Manufacturing Order' business domain.
         """
         self.env.user.group_ids += self.env.ref('mrp.group_mrp_routings')
         self.applicability.business_domain = 'manufacturing_order'
@@ -450,11 +450,9 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         mo_form.product_qty = 1
         mo_form.project_id = self.project
         mo = mo_form.save()
-        mo.action_confirm()
-        self.assertTrue(mo)
 
-        with self.assertRaises(ValidationError):
-            mo.button_mark_done()
+        with self.assertRaisesRegex(ValidationError, "The Project linked to the Manufacturing Order is missing a mandatory distribution"):
+            mo.action_confirm()
 
     def test_bom_aal_generation(self):
         """ This test ensure that when a project is set on a BOM, the aal are correctly generated when the workorder of

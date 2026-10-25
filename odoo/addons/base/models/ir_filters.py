@@ -2,6 +2,7 @@
 import ast
 
 from odoo import api, fields, models
+from odoo.tools.misc import clean_context
 
 
 class IrFilters(models.Model):
@@ -10,7 +11,7 @@ class IrFilters(models.Model):
     _order = 'model_id, name, id desc'
 
     name = fields.Char(string='Filter Name', required=True)
-    user_ids = fields.Many2many('res.users', string='Users', ondelete='cascade', help="The users the filter is shared with. If empty, the filter is shared with all users.")
+    user_ids = fields.Many2many('res.users', string='Users', ondelete='cascade', help="The users the filter is shared with. If empty, the filter is shared with all users.", context={'active_test': False})
     domain = fields.Text(default='[]', required=True)
     context = fields.Text(default='{}', required=True)
     sort = fields.Char(default='[]', required=True)
@@ -39,6 +40,14 @@ class IrFilters(models.Model):
         "Invalid sort definition",
     )
 
+    def _sanitize_shared_context(self):
+        for shared_filter in self.filtered(lambda f: f.user_ids != self.env.user and f.context.strip()):
+            context = ast.literal_eval(shared_filter.context.strip())
+            cleaned = clean_context(context)
+            defaults = context.keys() - cleaned.keys()
+            if defaults:
+                shared_filter.context = repr(cleaned)
+
     @api.model
     def _list_all_models(self):
         lang = self.env.lang or 'en_US'
@@ -57,9 +66,17 @@ class IrFilters(models.Model):
                 del vals['embedded_parent_res_id']
         return [dict(vals, name=self.env._("%s (copy)", ir_filter.name)) for ir_filter, vals in zip(self, vals_list)]
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        filters = super().create(vals_list)
+        filters._sanitize_shared_context()
+        return filters
+
     def write(self, vals):
         new_filter = super().write(vals)
         self.check_access('write')
+        if 'context' in vals or 'user_ids' in vals:
+            self._sanitize_shared_context()
         return new_filter
 
     def _get_eval_domain(self):

@@ -8,18 +8,18 @@
 # Luca Carlo, 2023
 # Martin Trigaux, 2023
 # Marianna Ciofani, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Marianna Ciofani (cima)" <cima@odoo.com>, 2025, 2026.
-# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# Andrea Zucca <a.zucca@gruppohermes.com>, 2025.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Andrea Zucca <a.zucca@gruppohermes.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-24 17:37+0000\n"
-"PO-Revision-Date: 2026-05-02 09:50+0000\n"
+"POT-Creation-Date: 2026-07-10 17:38+0000\n"
+"PO-Revision-Date: 2026-09-10 13:45+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/web/it/>"
 "\n"
@@ -29,7 +29,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: web
 #. odoo-javascript
@@ -187,8 +187,7 @@ msgstr ": no"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login_oauth
 msgid "<em class=\"d-block my-3 small text-center text-muted\">- or -</em>"
-msgstr ""
-"<em class=\"d-block my-3 small text-center text-muted\">- oppure -</em>"
+msgstr "<em class=\"d-block my-3 small text-center text-muted\">- oppure -</em>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
@@ -281,8 +280,8 @@ msgid ""
 msgstr ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa "
 "Barbara\n"
-"                                       Rd<br/>Pleasant Hill CA 94523<br/"
-">Stati Uniti</span>"
+"                                       Rd<br/>Pleasant Hill CA 94523<br/>"
+"Stati Uniti</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -2352,7 +2351,7 @@ msgstr "Visualizza in orizzontale"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 msgid "Display in Cards"
-msgstr "Visualizza in carte"
+msgstr "Mostra in schede"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
@@ -2869,8 +2868,8 @@ msgid ""
 "displayed next to the progress bar (e.g. 10 / 200)."
 msgstr ""
 "Il campo che contiene il valore massimo della barra di avanzamento. Se "
-"selezionato, verrà visualizzato accanto alla barra di avanzamento ad es "
-"10/200)."
+"selezionato, verrà visualizzato accanto alla barra di avanzamento ad es 10/"
+"200)."
 
 #. module: web
 #. odoo-javascript
@@ -4275,13 +4274,8 @@ msgstr "Oggetto appuntamento"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
-msgid "Memory limit (in bytes)"
-msgstr "Limite memoria (in byte)"
-
-#. module: web
-#: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
-msgid "Memory profile"
-msgstr "Profilo memoria"
+msgid "Memory (heuristic)"
+msgstr "Memoria (euristica)"
 
 #. module: web
 #. odoo-javascript
@@ -6072,6 +6066,12 @@ msgstr "Salva manualmente"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/translation_button.js:0
+msgid "Save this record and its parent to translate"
+msgstr "Salva questo record e il suo record padre per la traduzione"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2one/many2one.xml:0
 msgid "Scan barcode"
 msgstr "Scansione codici a barre"
@@ -6783,17 +6783,6 @@ msgid "Text file"
 msgstr "File di testo"
 
 #. module: web
-#: model:ir.model.fields,help:web.field_base_document_layout__vat
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
-msgstr ""
-"Il numero di partita IVA. I valori saranno convalidati in base al formato "
-"del Paese. Puoi usare '/' per indicare che il partner non è soggetto a "
-"tassazione."
-
-#. module: web
 #. odoo-python
 #: code:addons/web/controllers/action.py:0
 msgid "The action “%s” does not exist"
@@ -7047,6 +7036,12 @@ msgstr "Gio"
 #: code:addons/web/static/src/views/fields/float_time/float_time_field.js:0
 msgid "Time"
 msgstr "Tempo"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/webclient/debug/profiling/profiling_item.xml:0
+msgid "Time Limit (seconds)"
+msgstr "Tempo massimo (secondi)"
 
 #. module: web
 #. odoo-javascript
@@ -7468,8 +7463,7 @@ msgstr "Usa per il kanban"
 #: code:addons/web/static/src/views/fields/float/float_field.js:0
 #: code:addons/web/static/src/views/fields/integer/integer_field.js:0
 msgid "Use a human readable format (e.g.: 500G instead of 500,000,000,000)."
-msgstr ""
-"Utilizza un formato leggibile (ad es.: 500G invece di 500.000.000.000)."
+msgstr "Utilizza un formato leggibile (ad es.: 500G invece di 500.000.000.000)."
 
 #. module: web
 #. odoo-javascript
@@ -7899,6 +7893,13 @@ msgstr "Puoi installare l'app dal menu del browser"
 #: code:addons/web/models/properties_base_definition.py:0
 msgid "You can not read that field definition."
 msgstr "Non puoi leggere la definizione di questo campo."
+
+#. module: web
+#: model:ir.model.fields,help:web.field_base_document_layout__vat
+msgid "You can use '/' to indicate that the customer has no Tax ID."
+msgstr ""
+"È possibile utilizzare '/' per indicare che il cliente non possiede un "
+"codice fiscale."
 
 #. module: web
 #. odoo-javascript
@@ -19066,8 +19067,7 @@ msgstr "om"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 msgid "on any screen to show shortcut overlays and"
-msgstr ""
-"su qualsiasi schermo per mostrare la sovrapposizione dei collegamenti e"
+msgstr "su qualsiasi schermo per mostrare la sovrapposizione dei collegamenti e"
 
 #. module: web
 #. odoo-javascript
@@ -19162,7 +19162,6 @@ msgstr "faccina con mano sulla bocca"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
-#: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "open"
 msgstr "apri"
 
@@ -26989,6 +26988,21 @@ msgstr "秘"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "空"
 msgstr "空"
+
+#~ msgid ""
+#~ "The Tax Identification Number. Values here will be validated based on the "
+#~ "country format. You can use '/' to indicate that the partner is not "
+#~ "subject to tax."
+#~ msgstr ""
+#~ "Il numero di partita IVA. I valori saranno convalidati in base al formato "
+#~ "del Paese. Puoi usare '/' per indicare che il partner non è soggetto a "
+#~ "tassazione."
+
+#~ msgid "Memory limit (in bytes)"
+#~ msgstr "Limite memoria (in byte)"
+
+#~ msgid "Memory profile"
+#~ msgstr "Profilo memoria"
 
 #~ msgid "00"
 #~ msgstr "00"

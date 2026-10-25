@@ -23,8 +23,10 @@ from odoo.http import request, Response
 _logger = logging.getLogger(__name__)
 
 # NOTE: the second pattern is used for the ModelConverter, do not use nor flags nor groups
-_UNSLUG_RE = re.compile(r'(?:(\w{1,2}|\w[\w-]+?\w)-)?(-?\d+)(?=$|\/|#|\?)')
-_UNSLUG_ROUTE_PATTERN = r'(?:(?:\w{1,2}|\w[\w-]+?\w)-)?(?:-?\d+)(?=$|\/|#|\?)'
+# A slug starts at the beginning of the string or of a path component,
+# otherwise searching a long component is quadratic.
+_UNSLUG_RE = re.compile(r'(?:^|(?<=\/))(?:(\w{1,2}|\w[\w-]+?\w)-)?(-?\d+)(?=$|\/|#|\?)')
+_UNSLUG_ROUTE_PATTERN = r'(?:^|(?<=\/))(?:(?:\w{1,2}|\w[\w-]+?\w)-)?(?:-?\d+)(?=$|\/|#|\?)'
 
 
 class ModelConverter(ir_http.ModelConverter):
@@ -271,8 +273,18 @@ class IrHttp(models.AbstractModel):
             session_info['bundle_params']['lang'] = lang
         session_info.update({
             'translationURL': '/website/translations',
+            'translation_hash': self._get_cached_frontend_translations_hash(session_info['bundle_params']['lang']),
         })
         return session_info
+
+    @api.model
+    def _get_cached_frontend_translations_hash(self, lang: str) -> str:
+        """ Return the hash of the translations served by /website/translations
+        for ``lang`` if it is cached, an empty string otherwise. """
+        return self._get_cached_web_translations_hash(
+            self.get_translation_frontend_modules(),
+            self._get_web_translations_lang(lang),
+        )
 
     @api.model
     def get_translation_frontend_modules(self) -> list[str]:

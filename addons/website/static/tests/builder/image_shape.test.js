@@ -2,7 +2,12 @@ import { describe, expect, test } from "@odoo/hoot";
 import { queryFirst, setInputRange } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { Plugin } from "@html_editor/plugin";
-import { addPlugin, defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
+import {
+    addPlugin,
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+    setupWebsiteBuilderWithSnippet,
+} from "./website_helpers";
 import { onRpcImg, testImg, testSvgImg, testSvgImgSrc } from "./image_test_helpers";
 import { dummyCORSSrc, setupCORSProtectedImg } from "@html_builder/../tests/helpers";
 
@@ -274,7 +279,7 @@ test("Should change the shape color of an image", async () => {
     );
     expect(`:iframe .test-options-target img`).toHaveAttribute(
         "data-shape-colors",
-        "#714B67;#F0CDA8;#F6F5F4;;#1B1319"
+        "o-color-1;o-color-2;o-color-3;;o-color-5"
     );
 
     await contains(`[data-label="Colors"] .o_we_color_preview:nth-child(1)`).click();
@@ -288,7 +293,7 @@ test("Should change the shape color of an image", async () => {
     );
     expect(`:iframe .test-options-target img`).toHaveAttribute(
         "data-shape-colors",
-        "#FF0000;#F0CDA8;#F6F5F4;;#1B1319"
+        "#FF0000;o-color-2;o-color-3;;o-color-5"
     );
 });
 test("Should change the shape color of an image with a class color", async () => {
@@ -332,7 +337,7 @@ test("Should change the shape color of an image with a class color", async () =>
     );
     expect(`:iframe .test-options-target img`).toHaveAttribute(
         "data-shape-colors",
-        "#714B67;#F0CDA8;#F6F5F4;;#1B1319"
+        "o-color-1;o-color-2;o-color-3;;o-color-5"
     );
 
     await contains(`[data-label="Colors"] .o_we_color_preview:nth-child(1)`).click();
@@ -346,7 +351,7 @@ test("Should change the shape color of an image with a class color", async () =>
     );
     expect(`:iframe .test-options-target img`).toHaveAttribute(
         "data-shape-colors",
-        "#F0CDA8;#F0CDA8;#F6F5F4;;#1B1319"
+        "o-color-2;o-color-2;o-color-3;;o-color-5"
     );
 });
 test("Should not show transform action on shape that cannot bet transformed", async () => {
@@ -934,4 +939,12 @@ test("Shape should not be applied on replaced CORS-protected image", async () =>
     expect(imgEl).toHaveAttribute("src", dummyCORSSrc);
     expect(imgEl).not.toHaveAttribute("data-shape");
     expect(imgEl).not.toHaveAttribute("data-shape-colors");
+});
+
+test("Verify that the image shape color option appears in the sidebar for s_cta_mockups", async () => {
+    await setupWebsiteBuilderWithSnippet("s_cta_mockups", {
+        loadIframeBundles: true,
+    });
+    await contains(":iframe .s_cta_mockups .o_grid_item_image img").click();
+    expect(`[data-label="Colors"] .o_we_color_preview`).toHaveCount(1);
 });

@@ -14,14 +14,16 @@
 # Hanna Kheradroosta, 2023
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
 # Martin Trigaux, 2023
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Aliraza Habibitanha <alireza.habibitanha@gmail.com>, 2026.
+# Heshmatkhah <maheshmatkhah.soft@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2025-11-08 19:13+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-07-03 17:35+0000\n"
+"PO-Revision-Date: 2026-08-23 06:12+0000\n"
+"Last-Translator: Heshmatkhah <maheshmatkhah.soft@gmail.com>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-19/"
 "hr_expense/fa/>\n"
 "Language: fa\n"
@@ -29,7 +31,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_expense
 #. odoo-python
@@ -41,19 +43,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "%(expense_name)s: It is not from your department"
-msgstr ""
+msgstr "%(expense_name)s: این هزینه مربوط به دپارتمان شما نیست"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "%(expense_name)s: It is your own expense"
-msgstr ""
+msgstr "%(expense_name)s: این هزینه شخصی شماست"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "%(expense_name)s: You are neither a Manager nor a HR Officer"
-msgstr ""
+msgstr "%(expense_name)s: شما نه مدیر و نه مسئول منابع انسانی هستید"
 
 #. module: hr_expense
 #. odoo-python
@@ -62,6 +64,7 @@ msgid ""
 "%(expense_name)s: Your are neither a Manager nor a HR Officer of this "
 "expense's company"
 msgstr ""
+"%(expense_name)s: شما نه مدیر و نه مسئول منابع انسانی شرکت این هزینه هستید"
 
 #. module: hr_expense
 #. odoo-python
@@ -75,11 +78,12 @@ msgid ""
 "'Expense - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
 "''))"
 msgstr ""
+"'هزینه - %s - %s' % (object.employee_id.name, (object.name).replace('/', ''))"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "(incl"
-msgstr ""
+msgstr "(شامل"
 
 #. module: hr_expense
 #. odoo-python
@@ -91,17 +95,17 @@ msgstr "١ %(exp_cur)s = %(rate)s %(comp_cur)s"
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "<b>Wasting time recording your receipts?</b> Let’s try a better way."
-msgstr ""
+msgstr "<b>با ثبت رسید زمان‌تان هدر می‌رود؟</b> راه بهتری را امتحات کنید."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "<i class=\"oi oi-arrow-right\"/> Setup your alias domain"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right\"/> تنظیم دامنه مستعار"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_payment_form_inherit_expense
 msgid "<span class=\"o_stat_text\">Expense</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">هزینه</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -136,7 +140,7 @@ msgstr "<span>پرداخت شده توسط:</span>"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
 msgid "<span>The total amount doesn't match the original amount.</span>"
-msgstr ""
+msgstr "<span>مبلغ کل با مبلغ اصلی مطابقت ندارد</span>"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__account_id
@@ -157,7 +161,7 @@ msgstr "تاریخ حسابداری"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_post_wizard_view
 msgid "Accounting date"
-msgstr ""
+msgstr "تاریخ حسابداری"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_needaction
@@ -208,7 +212,7 @@ msgstr "تایید کننده همه"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "All Paid"
-msgstr ""
+msgstr "همه پرداخت شده‌ها"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -218,12 +222,12 @@ msgstr "تمام روش‌های پرداخت مجاز هستند"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "All to Pay"
-msgstr ""
+msgstr "همه موارد نیازمند پرداخت"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "All to Post"
-msgstr ""
+msgstr "همه موارد برای ارسال"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__amount_residual
@@ -234,7 +238,7 @@ msgstr "مقدار سررسید"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "An"
-msgstr ""
+msgstr "یک"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -323,6 +327,11 @@ msgid "Attach a receipt - usually an image or a PDF file."
 msgstr "رسید را پیوست کنید - معمولاً یک تصویر یا فایل PDF است."
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_ir_attachment
+msgid "Attachment"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_attachment_count
 msgid "Attachment Count"
 msgstr "تعداد پیوست ها"
@@ -342,7 +351,7 @@ msgstr "پیوست ها"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_employee_tree_inherit_expense
 msgid "Auto-validation"
-msgstr ""
+msgstr "تأیید خودکار"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__tax_ids
@@ -435,7 +444,7 @@ msgstr "هزینه:"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_account
 msgid "Create a new expense"
-msgstr ""
+msgstr "هزینه جدیدی ایجاد کنید"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -453,6 +462,8 @@ msgid ""
 "Create prepaid virtual and physical cards for both one-time and recurring "
 "expenses, integrated into Odoo through Stripe Issuing."
 msgstr ""
+"کارت‌های مجازی و فیزیکی پیش‌پرداخت را برای هزینه‌های یک‌باره و تکراری ایجاد کنید "
+"که از طریق Stripe Issuing با اودو یکپارچه شده‌اند."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__create_uid
@@ -550,6 +561,7 @@ msgstr "دیجیتالی کردن رسیدهای خود با OCR و هوش مص�
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_ir_actions_report__display_name
+#: model:ir.model.fields,field_description:hr_expense.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_product_product__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_product_template__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__display_name
@@ -605,6 +617,8 @@ msgid ""
 "Each expense paid by the company must have a distinct and dedicated journal "
 "entry."
 msgstr ""
+"هر هزینه‌ای که توسط شرکت پرداخت می‌شود باید یک ثبت روزنامه مجزا و اختصاصی "
+"داشته باشد."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_employee
@@ -657,7 +671,7 @@ msgstr "هزینه"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_department_filtered
 msgid "Expense Analysis"
-msgstr ""
+msgstr "تحلیل هزینه"
 
 #. module: hr_expense
 #: model:mail.activity.type,name:hr_expense.mail_act_expense_approval
@@ -679,7 +693,7 @@ msgstr "تایید کننده هزینه"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Expense Card"
-msgstr ""
+msgstr "کارت هزینه"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_product
@@ -707,7 +721,7 @@ msgstr "مدیریت دخل و خرج"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_post_wizard
 msgid "Expense Posting Wizard"
-msgstr ""
+msgstr "ویزارد ثبت هزینه"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
@@ -742,7 +756,7 @@ msgstr "تایید هزینه تکراری"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_approved
 msgid "Expense approved"
-msgstr ""
+msgstr "هزینه تأیید شد"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
@@ -753,12 +767,12 @@ msgstr "دسته‌بندی‌های هزینه می‌توانند به مشت�
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Expense created from a split."
-msgstr ""
+msgstr "هزینه از یک تقسیم ایجاد شده است."
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_paid
 msgid "Expense paid"
-msgstr ""
+msgstr "هزینه پرداخت شده است"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -768,12 +782,12 @@ msgstr "دلیل رد هزینه"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
 msgid "Expense refused"
-msgstr ""
+msgstr "هزینه رد شد"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_reset
 msgid "Expense reset to Draft"
-msgstr ""
+msgstr "هزینه به پیش‌نویس بازنشانی شد"
 
 #. module: hr_expense
 #. odoo-python
@@ -784,7 +798,7 @@ msgstr "تقسیم هزینه"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_department_to_approve
 msgid "Expense to Approve"
-msgstr ""
+msgstr "هزینه نیازمند تأیید"
 
 #. module: hr_expense
 #. odoo-python
@@ -828,7 +842,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Expenses of %(employee)s"
-msgstr ""
+msgstr "هزینه‌های %(employee)s"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
@@ -838,7 +852,7 @@ msgstr "هزینه‌های عضو تیم شما"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department__expenses_to_approve_count
 msgid "Expenses to Approve"
-msgstr ""
+msgstr "هزینه‌ها نیازمند تأیید"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_to_process
@@ -850,7 +864,7 @@ msgstr "هزینه‌ها برای پردازش"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Expenses with a similar receipt to %(other_expense_name)s"
-msgstr ""
+msgstr "هزینه‌های دارای رسید مشابه با %(other_expense_name)s"
 
 #. module: hr_expense
 #. odoo-python
@@ -859,6 +873,8 @@ msgid ""
 "Failed to send mails for submitted expenses. No valid email was found for "
 "the company"
 msgstr ""
+"ارسال ایمیل برای هزینه‌های ارسال شده ناموفق بود. ایمیل معتبری برای شرکت یافت "
+"نشد"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__filter_for_expense
@@ -889,7 +905,7 @@ msgstr "آیکون فونت عالی به عبارتی fa-tasks"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__former_sheet_id
 msgid "Former Report"
-msgstr ""
+msgstr "گزارش قبلی"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
@@ -916,17 +932,17 @@ msgstr "هدایا به مشتریان یا فروشندگان"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Go to Account"
-msgstr ""
+msgstr "ورود به حساب"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Guideline"
-msgstr ""
+msgstr "راهنما"
 
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.ir_cron_send_submitted_expenses_mail_ir_actions_server
 msgid "HR Expense: Send Submitted Expenses Mail"
-msgstr ""
+msgstr "هزینه منابع انسانی: ارسال ایمیل هزینه‎های ثبت شده"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__has_message
@@ -941,7 +957,7 @@ msgstr "هتل، بلیط هواپیما، تاکسی، و غیره."
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_domain_id
 msgid "Hr Expense Alias Domain"
-msgstr ""
+msgstr "دامنه مستعار هزینه منابع انسانی"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_account__id
@@ -961,6 +977,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__id
 #: model:ir.model.fields,field_description:hr_expense.field_ir_actions_report__id
+#: model:ir.model.fields,field_description:hr_expense.field_ir_attachment__id
 #: model:ir.model.fields,field_description:hr_expense.field_product_product__id
 #: model:ir.model.fields,field_description:hr_expense.field_product_template__id
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__id
@@ -1064,7 +1081,7 @@ msgstr "ورود\\-به\\-دفتر پاک‌شده"
 #. module: hr_expense
 #: model:mail.message.subtype,name:hr_expense.mt_expense_entry_draft
 msgid "Journal Entry Reset to Draft"
-msgstr ""
+msgstr "بازنشانی ثبت دفتر روزنامه به پیش‌نویس"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_move_line
@@ -1075,13 +1092,13 @@ msgstr "آیتم روزنامه"
 #. odoo-python
 #: code:addons/hr_expense/models/account_move.py:0
 msgid "Journal entry created from these expenses: %(links)s"
-msgstr ""
+msgstr "سند حسابداری از این هزینه‌ها ایجاد شده است: %(links)s"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/account_move.py:0
 msgid "Journal entry created from this expense: %(link)s"
-msgstr ""
+msgstr "سند حسابداری از این هزینه ایجاد شده است: %(link)s"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_entry_delete
@@ -1091,7 +1108,7 @@ msgstr "ورود به ژورنال حذف شد"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_entry_draft
 msgid "Journal entry reset to draft"
-msgstr ""
+msgstr "بازنشانی ثبت دفتر روزنامه به پیش‌نویس"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__label_currency_rate
@@ -1147,6 +1164,8 @@ msgid ""
 "Link your stripe issuing account to manage company credit cards for your "
 "employees through Odoo"
 msgstr ""
+"حساب صادرکننده stripe خود را برای مدیریت کارت‌های اعتباری شرکت برای کارکنان "
+"خود از طریق اودو پیوند دهید"
 
 #. module: hr_expense
 #. odoo-python
@@ -1172,6 +1191,8 @@ msgid ""
 "Managers can approve the expense here, then an accountant can post the "
 "accounting entries."
 msgstr ""
+"مدیران می‌توانند هزینه را در اینجا تأیید کنند، سپس یک حسابدار می‌تواند ثبت‌های "
+"حسابداری را ارسال کند."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1182,7 +1203,7 @@ msgstr "مدیران می‌توانند تمام هزینه‌ها را از ا
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Marc Demo"
-msgstr "دموی مارچ"
+msgstr "ماهان دمو‌پور"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.expense_product_meal_product_template
@@ -1207,7 +1228,7 @@ msgstr "کبفیت مصرف سوخت"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Mitchell Admin"
-msgstr "میچل ادمین"
+msgstr "میکائیل ادمین‌زاده"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
@@ -1241,7 +1262,7 @@ msgstr "نام"
 #. odoo-python
 #: code:addons/hr_expense/wizard/hr_expense_post_wizard.py:0
 msgid "New expense entries"
-msgstr ""
+msgstr "ثبت‌های هزینه جدید"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
@@ -1254,7 +1275,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "New expenses waiting for your approval"
-msgstr ""
+msgstr "هزینه‌های جدید در انتظار تأیید شما"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_calendar_event_id
@@ -1298,6 +1319,8 @@ msgstr "دسته‌بندی هزینه‌ای یافت نشد. بیایید یک
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "No work contact found for the employee %(name)s, please configure one."
 msgstr ""
+"اطلاعات تماس کاری برای کارمند %(name)s یافت نشد، لطفاً اطلاعات کاری را پیکربندی "
+"کنید."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_categories_tree_view
@@ -1344,7 +1367,7 @@ msgstr "تعداد پیامهای با خطای تحویل"
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/components/expense_dashboard.xml:0
 msgid "Numbers computed from your personal expenses."
-msgstr ""
+msgstr "اعداد بر اساس هزینه‌های شخصی شما محاسبه شده‌اند."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
@@ -1361,6 +1384,9 @@ msgid ""
 "Give Odoo a hand to find an account by setting up an expense account.\n"
 "%(expense)s %(expense_name)s.\n"
 msgstr ""
+"اودو هزینه، محصول، شرکت و دفتر روزنامه شما را بررسی کرد اما نتیجه‌ای نیافت.\n"
+"با تنظیم حساب هزینه به اودو کمک کنید تا یک حساب پیدا کند.\n"
+"%(expense)s %(expense_name)s.\n"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_account
@@ -1378,6 +1404,8 @@ msgid ""
 "Once your <b>Expense</b> is ready, you can submit it to your manager and "
 "wait for approval."
 msgstr ""
+"وقتی <b>هزینه</b> آماده شد، می‌توانید آن را برای مدیر خود ارسال کرده و منتظر "
+"تأیید بمانید."
 
 #. module: hr_expense
 #. odoo-python
@@ -1385,24 +1413,26 @@ msgstr ""
 msgid ""
 "Only HR Officers, accountants, or the concerned employee can reset to draft."
 msgstr ""
+"فقط کارشناسان منابع انسانی، حسابداران یا کارمند مربوطه می‌توانند به حالت "
+"پیش‌نویس بازنشانی کنند."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Only draft expenses can have a total of 0."
-msgstr ""
+msgstr "فقط هزینه‌های پیش‌نویس می‌توانند مجموع 0 داشته باشند."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Only expense paid by the employee can be posted with the wizard"
-msgstr ""
+msgstr "فقط هزینه‌های پرداخت شده توسط کارمند می‌توانند با ویزارد ثبت شوند"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Only one expense can be linked to a particular payment"
-msgstr ""
+msgstr "فقط یک هزینه می‌تواند به یک پرداخت مشخص مرتبط شود"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1413,7 +1443,7 @@ msgstr "منوی اشکال‌زدایی را باز کنید."
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__split_expense_origin_id
 msgid "Origin Split Expense"
-msgstr ""
+msgstr "هزینه تقسیم شده مبدأ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
@@ -1423,7 +1453,7 @@ msgstr "مبلغ اصلی"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__split_expense_origin_id
 msgid "Original expense from a split."
-msgstr ""
+msgstr "هزینه اصلی از یک تقسیم."
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__paid
@@ -1439,12 +1469,12 @@ msgstr "پرداخت شده توسط"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Paid by Company"
-msgstr ""
+msgstr "پرداخت شده توسط شرکت"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Paid by Employee"
-msgstr ""
+msgstr "پرداخت شده توسط کارمند"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_move_list_expense
@@ -1498,7 +1528,7 @@ msgstr "صورتحساب‌های تلفن، هزینه‌های پستی، و �
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid ""
 "Please specify if the expenses were paid by the company, or the employee."
-msgstr ""
+msgstr "مشخص کنید که آیا هزینه‌ها توسط شرکت پرداخت شده‌اند یا کارمند."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1509,7 +1539,7 @@ msgstr "ثبت اسناد"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_post_wizard_view
 msgid "Post Expenses"
-msgstr ""
+msgstr "ثبت هزینه‌ها"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -1520,13 +1550,13 @@ msgstr "ارسال داده های روزنامه"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Post expenses"
-msgstr ""
+msgstr "ثبت هزینه‌ها"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Post expenses paid by the employee"
-msgstr ""
+msgstr "ثبت هزینه‌های پرداخت شده توسط کارمند"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__posted
@@ -1623,7 +1653,7 @@ msgstr "مرجع‌"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Refund employees via their payslips."
-msgstr ""
+msgstr "بازپرداخت به کارمندان از طریق فیش حقوقی انجام می‌شود."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
@@ -1698,7 +1728,7 @@ msgstr "قیمت فروش"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__same_receipt_expense_ids
 msgid "Same Receipt Expense"
-msgstr ""
+msgstr "هزینه با همان رسید"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1763,7 +1793,7 @@ msgstr "تنظیمات"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "نمایش تمام رکوردهایی که تاریخ فعالیت بعدی آنها سپری شده است"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_move_list_expense
@@ -1773,7 +1803,7 @@ msgstr "مدرک مبدا"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_post_wizard__accounting_date
 msgid "Specify the bill date of the related vendor bill."
-msgstr ""
+msgstr "تاریخ صورت‌حساب تأمین‌کننده مرتبط را مشخص کنید."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_product_product__can_be_expensed
@@ -1913,7 +1943,7 @@ msgstr "تایید ‌کننده تیم"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "The account %(name)s (%(code)s) is archived. Activate it to continue"
-msgstr ""
+msgstr "حساب %(name)s (%(code)s) بایگانی شده است. برای ادامه آن را فعال کنید"
 
 #. module: hr_expense
 #. odoo-python
@@ -1922,6 +1952,8 @@ msgid ""
 "The attachment (%(attachment_name)s) has not been added to the report due to "
 "the following error: '%(error)s'"
 msgstr ""
+"پیوست (%(attachment_name)s) به دلیل خطای ذکر شده به گزارش اضافه نشد: '%"
+"(error)s'"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
@@ -1964,6 +1996,9 @@ msgid ""
 "this isn't supported:\n"
 "%(expenses)s"
 msgstr ""
+"روش پرداخت هزینه‌های زیر به حساب‌های پرداختنی متعددی منجر می‌شوند که پشتیبانی "
+"نمی‌شوند:\n"
+"%(expenses)s"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_post_wizard__employee_journal_id
@@ -1994,6 +2029,8 @@ msgid ""
 "payment method.\n"
 "Please set a vendor on the following expenses: %s"
 msgstr ""
+"برای هزینه‌ای که روش پرداخت آن انتقال اعتباری SEPA باشد، تأمین‌کننده الزامی "
+"است. برای این هزینه‌ها تأمین‌کننده مشخص کنید: %s"
 
 #. module: hr_expense
 #. odoo-python
@@ -2022,12 +2059,12 @@ msgstr "نکته: با برنامه کنترل از راه دور، از رسی�
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Tip: try sending receipts by email"
-msgstr ""
+msgstr "نکته: ارسال رسید از طریق ایمیل را امتحان کنید"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "To Post"
-msgstr ""
+msgstr "آماده ارسال"
 
 #. module: hr_expense
 #. odoo-python
@@ -2069,7 +2106,7 @@ msgstr "کل مالیات"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__untaxed_amount
 msgid "Total Untaxed Amount"
-msgstr ""
+msgstr "مبلغ کل بدون مالیات"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__untaxed_amount_currency
@@ -2105,6 +2142,10 @@ msgid ""
 "Reach out to the administrators, flash your best smile, and see if they'll "
 "grant you the magical access you seek."
 msgstr ""
+"خطا! شما نمی‌توانید این هزینه را ویرایش کنید.\n"
+"\n"
+"با مدیران تماس بگیرید، بهترین لبخند خود را بزنید و ببینید آیا دسترسی جادویی "
+"مورد نظر شما را اعطا می‌کنند یا خیر."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_uom_id
@@ -2127,7 +2168,7 @@ msgstr "مبلغ بدون مالیات"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Untitled Expense %s"
-msgstr ""
+msgstr "هزینه بدون عنوان %s"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2140,7 +2181,7 @@ msgstr "آپلود"
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_to_process
 msgid "Upload or drop an expense receipt"
-msgstr ""
+msgstr "رسید هزینه را آپلود کنید یا به اینجا بکشید و رها کنید"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2166,7 +2207,7 @@ msgstr "مشاهده هزینه"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "View expenses"
-msgstr ""
+msgstr "مشاهده هزینه‌ها"
 
 #. module: hr_expense
 #. odoo-python
@@ -2180,7 +2221,7 @@ msgstr "منتظر موافقت"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Waiting Reimbursement"
-msgstr ""
+msgstr "در انتظار بازپرداخت"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__website_message_ids
@@ -2204,6 +2245,11 @@ msgid ""
 "like allowances for mileage, per diem, "
 "accommodation                                             or meal."
 msgstr ""
+"زمانی که هزینه محصول هزینه متفاوت از ۰ باشد، کاربر استفاده‌کننده از محصول "
+"نمی‌تواند مقدار هزینه را تغییر دهد. کاربر تنها می‌تواند تعداد آن را تغییر دهد. "
+"از هزینه‌ای متفاوت از ۰ برای دسته‌بندی‌های هزینه‌ای استفاده کنید که توسط شرکت با "
+"هزینه ثابت مانند کمک هزینه‌های کیلومتری، روزانه، اقامت یا وعده غذایی تأمین "
+"می‌شود."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
@@ -2220,7 +2266,7 @@ msgstr "تَردست"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You can not submit an expense without a category."
-msgstr ""
+msgstr "نمی‌توانید هزینه را بدون دسته‌بندی ثبت کنید."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2231,6 +2277,25 @@ msgstr "هم اکنون می توانید آن را از لینک زیر به م
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You can only generate an accounting entry for approved expense(s)."
+msgstr "فقط برای هزینه(های) تأیید شده می‌توانید ثبت حسابداری ایجاد کنید."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+msgid "You can't add an attachment to an expense once it has been approved."
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/ir_attachment.py:0
+msgid "You can't add attachments to an expense once it has been approved."
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/ir_attachment.py:0
+msgid ""
+"You can't delete attachments from an expense once it has been submitted."
 msgstr ""
 
 #. module: hr_expense
@@ -2240,6 +2305,8 @@ msgid ""
 "You can't post simultaneously employee-paid expenses belonging to different "
 "companies"
 msgstr ""
+"نمی‌توانید به طور همزمان هزینه‌های پرداخت شده توسط کارمند را که به شرکت‌های "
+"مختلف تعلق دارند، ثبت کنید"
 
 #. module: hr_expense
 #. odoo-python
@@ -2248,12 +2315,15 @@ msgid ""
 "You cannot approve:\n"
 " %(reasons)s"
 msgstr ""
+"شما امکان تأیید ندارید:\n"
+" %(reasons)s"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot cancel an expense linked to a posted journal entry"
 msgstr ""
+"نمی‌توانید هزینه‌ای را که به یک سند حسابداری ارسال شده لینک شده است، لغو کنید"
 
 #. module: hr_expense
 #. odoo-python
@@ -2274,12 +2344,13 @@ msgstr ""
 msgid ""
 "You cannot do this modification since the payment is linked to an expense."
 msgstr ""
+"از آنجا که پرداخت به یک هزینه مرتبط است، نمی‌توانید این تغییر را انجام دهید."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot edit the security fields of an expense manually"
-msgstr ""
+msgstr "نمی‌توانید فیلدهای امنیتی یک هزینه را به صورت دستی ویرایش کنید"
 
 #. module: hr_expense
 #. odoo-python
@@ -2288,36 +2359,46 @@ msgid ""
 "You cannot refuse:\n"
 " %(reasons)s"
 msgstr ""
+"شما نمی‌توانید رد کنید:\n"
+" %(reasons)s"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot reset to draft an expense linked to a posted journal entry."
 msgstr ""
+"نمی‌توانید هزینه‌ای را که به یک سند حسابداری ارسال شده لینک شده است، به حالت "
+"پیش‌نویس بازنشانی کنید."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot split an expense that is already posted."
-msgstr ""
+msgstr "نمی‌توانید هزینه‌ای را که قبلاً ارسال شده است، تقسیم کنید."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You do not have the required permission to submit this expense."
-msgstr ""
+msgstr "شما مجوز لازم برای ارسال این هزینه را ندارید."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You do not have the rights to edit this expense."
+msgstr "شما حق ویرایش این هزینه را ندارید."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+msgid "You don't have the access rights to modify this expense."
 msgstr ""
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/wizard/hr_expense_post_wizard.py:0
 msgid "You don't have the rights to create accounting entries."
-msgstr ""
+msgstr "شما حق ایجاد ثبت‌های حسابداری را ندارید."
 
 #. module: hr_expense
 #. odoo-python
@@ -2338,7 +2419,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Your Expense"
-msgstr ""
+msgstr "هزینه شما"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2363,7 +2444,7 @@ msgstr "برای مثال، ناهار با مشتری"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "e.g. Restaurants: only week days, for lunch"
-msgstr ""
+msgstr "مثال: رستوران: فقط روزهای کاری هفته، برای ناهار"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -2373,7 +2454,7 @@ msgstr "برای مثال mycompany.com"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "expense"
-msgstr ""
+msgstr "هزینه"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
@@ -2383,7 +2464,7 @@ msgstr "رد شده است"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "no taxes"
-msgstr ""
+msgstr "بدون مالیات"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -2393,7 +2474,7 @@ msgstr "در"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "tax)"
-msgstr ""
+msgstr "مالیات)"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -2403,7 +2484,7 @@ msgstr "استفاده از OCR برای پرکردن داده‌ها از یک 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "with the same receipt already exists."
-msgstr ""
+msgstr "با رسید یکسان قبلاً وجود دارد."
 
 #~ msgid "$100.00"
 #~ msgstr "۱۰۰.۰۰ دلار"

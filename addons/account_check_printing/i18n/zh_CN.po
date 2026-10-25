@@ -6,14 +6,15 @@
 # Martin Trigaux, 2022
 # Emily Jia <eji@odoo.com>, 2023
 # Jeffery CHEN <jeffery9@gmail.com>, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-09-16 15:19+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2026-08-02 19:17+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-19/account_check_printing/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -21,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account_check_printing
 #. odoo-python
@@ -235,6 +236,7 @@ msgstr "手动编号"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_line_id
+#, fuzzy
 msgid ""
 "Manual: Pay or Get paid by any method outside of Odoo.\n"
 "Payment Providers: Each payment provider has its own Payment Method. Request "
@@ -251,6 +253,13 @@ msgid ""
 "U.S. ISO20022: Pay in the US by submitting an ISO20022 file to your bank. "
 "Module account_iso20022 is necessary.\n"
 msgstr ""
+"线下支付：在Odoo系统外完成收付款操作。\n"
+"支付网关：各服务商提供专属支付渠道，通过客户预留的支付令牌发起卡交易。\n"
+"支票付款：使用支票支付并直接打印。\n"
+"批量存支票：一次性处理多张支票生成存款单。需安装account_batch_payment模块。\n"
+"SEPA转账：通过标准文件实现欧洲区付款。需安装account_iso20022模块。\n"
+"SEPA扣款：凭客户授权在欧洲区自动收款。需安装account_iso20022模块。\n"
+"美国ISO20022：通过ISO20022文件实现美国付款。需安装account_iso20022模块。\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -383,10 +392,11 @@ msgstr "检查布局出现问题，请在开票/记账设置中选择其他布�
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
+#, fuzzy
 msgid ""
 "The check number you entered (%(num)s) exceeds the maximum allowed value of %"
 "(max)d. Please enter a smaller number."
-msgstr ""
+msgstr "您输入的支票号码（%(num)s ）超过了%(max)d 的允许最大值。请输入较小的数字。"
 
 #. module: account_check_printing
 #. odoo-python
@@ -456,8 +466,7 @@ msgstr "作废支票"
 msgid ""
 "You have to choose a check layout. For this, go in Invoicing/Accounting "
 "Settings, search for 'Checks layout' and set one."
-msgstr ""
-"您必须选择检查布局。为此，请进入开票/记账设置，搜索\"检查布局\"并设置一个。"
+msgstr "您必须选择检查布局。为此，请进入开票/记账设置，搜索\"检查布局\"并设置一个。"
 
 #. module: account_check_printing
 #. odoo-python

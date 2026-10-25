@@ -11,9 +11,8 @@ class TransientModel(Model):
     """ Model super-class for transient records, meant to be temporarily
     persistent, and regularly vacuum-cleaned.
 
-    A TransientModel has a simplified access rights management, all users can
-    create new records, and may only access the records they created. The
-    superuser has unrestricted access to all TransientModel records.
+    A TransientModel uses the same access rights mechanisms as a regular
+    :class:`Model`, through access control lists and record rules.
     """
     _auto: bool = True          # automatically create database backend
     _register: bool = False     # not visible in ORM registry, meant to be python-inherited only
@@ -66,8 +65,8 @@ class TransientModel(Model):
 
     def _transient_clean_old_rows(self, max_count: int) -> bool:
         # Check how many rows we have in the table
-        self._cr.execute(SQL("SELECT count(*) FROM %s", SQL.identifier(self._table)))
-        [count] = self._cr.fetchone()
+        self.env.cr.execute(SQL("SELECT count(*) FROM %s", SQL.identifier(self._table)))
+        [count] = self.env.cr.fetchone()
         if count > max_count:
             return self._transient_clean_rows_older_than(300)
         return False

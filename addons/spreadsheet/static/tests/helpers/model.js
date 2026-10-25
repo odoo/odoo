@@ -1,5 +1,5 @@
 import { animationFrame } from "@odoo/hoot-mock";
-import { Model } from "@odoo/o-spreadsheet";
+import { Model, stores } from "@odoo/o-spreadsheet";
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 import {
     defineActions,
@@ -7,6 +7,7 @@ import {
     getMockEnv,
     makeMockEnv,
     onRpc,
+    patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { setCellContent } from "./commands";
 import { addRecordsFromServerData, addViewsFromServerData } from "./data";
@@ -81,6 +82,12 @@ export async function makeSpreadsheetMockEnv(params = {}) {
     if (params.serverData?.views) {
         addViewsFromServerData(params.serverData);
     }
+    patchWithCleanup(stores.GridRenderer.prototype, {
+        getBoxesWithAnimations(boxes) {
+            // disable animations for tests, as they won't work with hoot patched `requestAnimationFrame`
+            return boxes;
+        },
+    });
     const env = getMockEnv() || (await makeMockEnv());
     return env;
 }

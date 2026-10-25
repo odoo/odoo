@@ -56,7 +56,7 @@ class Action(Controller):
             request.update_context(**context)
         action = request.env['ir.actions.server'].browse([action_id])
         result = action.run()
-        return clean_action(result, env=action.env) if result else False
+        return clean_action(result, env=action.env) if isinstance(result, dict) and result else False
 
     @route('/web/action/load_breadcrumbs', type='jsonrpc', auth='user', readonly=True)
     def load_breadcrumbs(self, actions):
@@ -83,7 +83,9 @@ class Action(Controller):
                         if record_id == 'new':
                             results.append({'display_name': _("New")})
                         elif act['res_model']:
-                            results.append({'display_name': request.env[act['res_model']].browse(record_id).display_name})
+                            record = request.env[act['res_model']].browse(record_id)
+                            record.read(['display_name'])
+                            results.append({'display_name': record.display_name})
                         else:
                             results.append({'display_name': act['display_name']})
                     else:
@@ -100,7 +102,9 @@ class Action(Controller):
                         if record_id == 'new':
                             results.append({'display_name': _("New")})
                         else:
-                            results.append({'display_name': Model.browse(record_id).display_name})
+                            record = Model.browse(record_id)
+                            record.read(['display_name'])
+                            results.append({'display_name': record.display_name})
                     else:
                         # This case cannot be produced by the web client
                         raise BadRequest('Actions with a model should also have a resId')

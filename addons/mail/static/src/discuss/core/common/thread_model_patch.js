@@ -228,17 +228,23 @@ const threadPatch = {
         });
         this.scrollUnread = true;
         // memberBusSubscription
-        this.toggleBusSubscription = fields.Attr(false, {
+        // Start with `not_member` not to trigger a subscription if the user is not a member
+        // initially, only when switching from `member_xxx` to `not_member` following a leave.
+        this.toggleBusSubscription = fields.Attr("not_member", {
             /** @this {import("models").Thread} */
             compute() {
-                return (
-                    this.model === "discuss.channel" &&
-                    this.self_member_id?.memberSince >=
-                        this.store.env.services.bus_service.startedAt
-                );
+                if (!this.self_member_id) {
+                    return "not_member";
+                }
+                return this.self_member_id.memberSince >=
+                    this.store.env.services.bus_service.startedAt
+                    ? "member_after_start"
+                    : "member_before_start";
             },
             onUpdate() {
-                this.store.updateBusSubscription();
+                if (this.toggleBusSubscription !== "member_before_start") {
+                    this.store.updateBusSubscription();
+                }
             },
         });
         this.typingMembers = fields.Many("discuss.channel.member", { inverse: "threadAsTyping" });
@@ -375,7 +381,9 @@ const threadPatch = {
         if (this.isChatChannel && this.self_member_id?.message_unread_counter_ui) {
             return this.self_member_id.message_unread_counter_ui;
         }
-        if (this.discussAppCategory?.id === "channels") {
+        // Sub channels have no category of their own: they follow the one of their parent.
+        const category = this.discussAppCategory ?? this.parent_channel_id?.discussAppCategory;
+        if (category?.id === "channels") {
             if (this.store.settings.channel_notifications === "no_notif") {
                 return 0;
             }

@@ -302,6 +302,93 @@ describe("Selection collapsed", () => {
                     contentAfter: "<ul><li>abc</li><li>[]<br></li></ul>",
                 });
             });
+
+            test("should split a list item when the cursor is before a table", async () => {
+                await testEditor({
+                    contentBefore: unformat(`
+                        <ul>
+                            <li>
+                                <p>ab[]</p>
+                                <table><tbody><tr><td><p>x</p></td></tr></tbody></table>
+                                <p>def</p>
+                            </li>
+                        </ul>`),
+                    stepFunction: splitBlock,
+                    contentAfter: unformat(`
+                        <ul>
+                            <li><p>ab</p></li>
+                            <li>
+                                <p>[]<br></p>
+                                <table><tbody><tr><td><p>x</p></td></tr></tbody></table>
+                                <p>def</p>
+                            </li>
+                        </ul>`),
+                });
+            });
+
+            test("should split a list item when the cursor is after a table", async () => {
+                await testEditor({
+                    contentBefore: unformat(`
+                        <ul>
+                            <li>
+                                <p>ab</p>
+                                <table><tbody><tr><td><p>x</p></td></tr></tbody></table>
+                                <p>de[]f</p>
+                            </li>
+                        </ul>`),
+                    stepFunction: splitBlock,
+                    contentAfter: unformat(`
+                        <ul>
+                            <li>
+                                <p>ab</p>
+                                <table><tbody><tr><td><p>x</p></td></tr></tbody></table>
+                                <p>de</p>
+                            </li>
+                            <li><p>[]f</p></li>
+                        </ul>`),
+                });
+            });
+
+            test("should split a list item from the placeholder after a table", async () => {
+                await testEditor({
+                    contentBefore: unformat(`
+                        <ul>
+                            <li>
+                                <p>ab</p>
+                                <table><tbody><tr><td><p>x</p></td></tr></tbody></table>
+                                <p data-selection-placeholder="">[]<br></p>
+                            </li>
+                        </ul>`),
+                    stepFunction: splitBlock,
+                    contentAfter: unformat(`
+                        <ul>
+                            <li>
+                                <p>ab</p>
+                                <table><tbody><tr><td><p>x</p></td></tr></tbody></table>
+                            </li>
+                            <li><p>[]<br></p></li>
+                        </ul>`),
+                });
+            });
+
+            test("should split a list item from the placeholder before a table", async () => {
+                await testEditor({
+                    contentBefore: unformat(`
+                        <ul>
+                            <li>
+                                <p data-selection-placeholder="">[]<br></p>
+                                <table><tbody><tr><td><p>x</p></td></tr></tbody></table>
+                                <p data-selection-placeholder=""><br></p>
+                            </li>
+                        </ul>`),
+                    stepFunction: splitBlock,
+                    contentAfter: unformat(`
+                        <ul>
+                            <li><p><br></p></li>
+                            <li>[]<table><tbody><tr><td><p>x</p></td></tr></tbody></table></li>
+                        </ul>`),
+                });
+            });
         });
         describe("Removing items", () => {
             test("should add an empty list item at the end of a list, then remove it", async () => {

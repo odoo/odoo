@@ -6,16 +6,16 @@
 # Tony Ng, 2025
 # Wil Odoo, 2025
 #
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # Ho Pak Wai <wai@users.noreply.translate.odoo.com>, 2026.
 # "Tony Ng (ngto)" <ngto@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2026-01-23 07:37+0000\n"
-"Last-Translator: Ho Pak Wai <wai@users.noreply.translate.odoo.com>\n"
+"POT-Creation-Date: 2026-07-10 17:38+0000\n"
+"PO-Revision-Date: 2026-08-02 11:21+0000\n"
+"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
 "projects/odoo-19/website_sale_stock/zh_Hant/>\n"
 "Language: zh_TW\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_sale_stock
 #. odoo-python
@@ -76,7 +76,7 @@ msgstr "繼續銷售"
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__default_allow_out_of_stock_order
 msgid "Continue selling when out-of-stock"
-msgstr "當缺貨時繼續銷售"
+msgstr "缺貨時繼續銷售"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
@@ -147,7 +147,7 @@ msgstr "電郵地址無效"
 
 #. module: website_sale_stock
 #. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#: code:addons/website_sale_stock/static/src/interactions/website_sale.js:0
 msgid "Invalid email"
 msgstr "電郵地址無效"
 
@@ -177,13 +177,19 @@ msgstr "缺貨"
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Out-of-Stock"
-msgstr "暫時缺貨"
+msgstr "缺貨"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__out_of_stock_message
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__out_of_stock_message
 msgid "Out-of-Stock Message"
 msgstr "暫時缺貨訊息"
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/controllers/main.py:0
+msgid "Please sign in to proceed."
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-python
@@ -246,7 +252,7 @@ msgstr "顯示可銷售數量"
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Show Available Quantity"
-msgstr ""
+msgstr "顯示可用數量"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__available_threshold
@@ -280,6 +286,12 @@ msgstr "以下產品目前已到貨"
 #: code:addons/website_sale_stock/models/product_product.py:0
 msgid "The product '%(product_name)s' is now available"
 msgstr "您願望清單內的 '%(product_name)s' 產品已經到貨"
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/controllers/main.py:0
+msgid "This product is not eligible for stock notifications."
+msgstr ""
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
@@ -322,8 +334,7 @@ msgstr ""
 msgid ""
 "You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
 "available"
-msgstr ""
-"你要求 %(desired_qty)s 件 %(product_name)s，但只有 %(new_qty)s 件可供出售。"
+msgstr "你要求 %(desired_qty)s 件 %(product_name)s，但只有 %(new_qty)s 件可供出售。"
 
 #. module: website_sale_stock
 #. odoo-python
@@ -352,7 +363,7 @@ msgstr ""
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "only if below"
-msgstr "只有當少於"
+msgstr "只在當少於"
 
 #. module: website_sale_stock
 #: model:ir.model.fields.selection,name:website_sale_stock.selection__product_ribbon__assign__out_of_stock

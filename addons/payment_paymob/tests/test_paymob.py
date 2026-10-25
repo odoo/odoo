@@ -19,7 +19,7 @@ class PaymobTest(PaymobCommon, PaymentHttpCommon):
         tx = self._create_transaction('redirect')
         with patch(
             'odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request',
-            return_value={'client_secret': 'dummy_secret'},
+            return_value={'intention_order_id': self.order_id, 'client_secret': 'dummy_secret'},
         ):
             rendering_values = tx._get_specific_rendering_values(None)
         paymob_url = self.paymob._paymob_get_api_url()
@@ -33,10 +33,10 @@ class PaymobTest(PaymobCommon, PaymentHttpCommon):
         tx = self._create_transaction('redirect')
         with patch(
             'odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request',
-            return_value={'id': 'dummy_id'}
+            return_value={'intention_order_id': self.order_id}
         ):
             tx._get_specific_rendering_values(None)  # Set provider reference here
-            self.assertEqual(tx.provider_reference, self.redirection_data['id'])
+            self.assertEqual(tx.provider_reference, self.order_id)
             self.assertEqual(tx.state, 'draft')
             tx._process('paymob', self.redirection_data)
             self.assertEqual(tx.state, 'done')
@@ -49,15 +49,31 @@ class PaymobTest(PaymobCommon, PaymentHttpCommon):
         )
         self.assertEqual(computed_hmac, self.hmac_signature)
 
-    @mute_logger('odoo.addons.payment_paymob.controllers.main')
-    def test_normalize_webhook_data(self):
-        """ Test the normalization of the paymob webhook data """
-        normalized_data = PaymobController._normalize_response(
-            self.webhook_data, self.hmac_signature
-        )
-        self.assertDictEqual(normalized_data, self.redirection_data)
-
     def test_change_paymob_account_country(self):
         """ Test that changing the Paymob account country will change the currency accordingly. """
         self.provider.paymob_account_country_id = self.quick_ref('base.sa')
         self.assertEqual(self.provider.available_currency_ids.name, 'SAR')
+
+    def test_visa_payment_rounded_to_supported_decimals_is_accepted(self):
+        """Test that a Visa payment rounded down by Paymob to the decimals supported by Visa for the
+        currency (e.g., 4.725 OMR charged as 4.720 OMR) doesn't fail the amount validation."""
+        omr = self._enable_currency("OMR")
+        tx = self._create_transaction("redirect", amount=4.725, currency_id=omr.id)
+        payment_data = dict(self.redirection_data, amount_cents="4720", currency="OMR")
+        tx._process("paymob", payment_data)
+        self.assertEqual(tx.state, "done")
+
+    @mute_logger("odoo.addons.payment.models.payment_transaction")
+    def test_non_visa_payment_is_validated_with_currency_decimals(self):
+        """Test that the amount of a non-Visa payment is still validated with the decimals of the
+        currency as per the ISO 4217 norm."""
+        omr = self._enable_currency("OMR")
+        tx = self._create_transaction("redirect", amount=4.725, currency_id=omr.id)
+        payment_data = dict(
+            self.redirection_data,
+            amount_cents="4720",
+            currency="OMR",
+            **{"source_data.sub_type": "MasterCard"},
+        )
+        tx._process("paymob", payment_data)
+        self.assertEqual(tx.state, "error")

@@ -468,3 +468,16 @@ describe("bottom", () => {
         });
     });
 });
+
+describe("override !important class", () => {
+    test("should align left even if a class sets text-align with !important", async () => {
+        await testEditor({
+            contentBefore: '<p class="text-center">a[]b</p>',
+            styleContent: ".text-center { text-align: center !important; }",
+            stepFunction: alignLeft,
+            contentAfterEdit:
+                '<p class="text-center" style="text-align: left !important;">a[]b</p>',
+            contentAfter: '<p class="text-center" style="text-align: left !important;">a[]b</p>',
+        });
+    });
+});

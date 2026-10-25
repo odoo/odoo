@@ -40,31 +40,45 @@ class TestLinkTracker(TransactionCase):
 
     @users('test_user')
     def test_compute_short_url_host(self):
-        """Test _compute_short_url_host with multiple companies/websites
-            The short URL base should match the website domain of the company
-        """
-        link_1 = self.env['link.tracker'].create({
+        """The short URL host depends on the current website and company."""
+        base_url = self.env['link.tracker'].get_base_url()
+
+        # Current website matches the company's website.
+        link_1 = self.env['link.tracker'].with_context(website_id=self.website_1.id).create({
             'url': 'https://www.1odoo.com',
         })
         self.assertTrue(link_1.short_url.startswith(self.website_1.domain),
-            "Short URL should use company 1 website domain")
+            "Short URL uses the current website's domain")
 
-        # Switch to Company 2
+        # Current website differs from the company's website.
         self.env.user.company_id = self.company_2
-        link_2 = self.env['link.tracker'].create({
+        link_2 = self.env['link.tracker'].with_context(website_id=self.website_1.id).create({
             'url': 'https://www.2odoooo.com',
         })
         self.assertTrue(link_2.short_url.startswith(self.website_2.domain),
-            "Short URL should use company 2 website domain"
-        )
+            "Short URL uses the company's website domain when it differs from the current website")
 
-        # Remove website from Company 2
-        # The short URL host should fallback to a default value
-        self.company_2.write({'website_id': False})
+        # No website resolvable from context.
         link_3 = self.env['link.tracker'].create({
-            'url': 'https://www.3ooddoooo.com'
+            'url': 'https://www.3ooddoooo.com',
         })
-        self.assertTrue(
-            link_3.short_url_host,
-            "Short URL host should have a fallback value when no website is configured"
-        )
+        self.assertTrue(link_3.short_url.startswith(base_url),
+            "Short URL uses web.base.url when no website is resolvable from context")
+
+    @users('test_user')
+    def test_compute_short_url_host_second_website_of_company(self):
+        """Each website of a company gets its own domain, not the company's first one."""
+        website_3 = self.env['website'].sudo().create({
+            'name': 'website 3',
+            'domain': 'https://maincompany-second-site.odoo.com',
+            'company_id': self.company_1.id,
+        })
+        self.company_1.sudo().website_id = self.website_1
+        self.assertNotEqual(self.company_1.website_id, website_3,
+            "The company points at another of its websites")
+
+        link = self.env['link.tracker'].with_context(website_id=website_3.id).create({
+            'url': 'https://www.4odoo.com',
+        })
+        self.assertTrue(link.short_url.startswith(website_3.domain),
+            "Short URL uses the current website's domain, not another website of the same company")

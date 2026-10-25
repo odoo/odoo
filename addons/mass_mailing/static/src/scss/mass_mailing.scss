@@ -184,3 +184,8 @@ body.editor_has_snippets .o_field_mass_mailing_html div.d-flex:has(iframe) {
         position: static !important;
     }
 }
+
+.o-overlay-container:has(~ .o-mail-ChatHub > .o-mail-ChatWindow.o-isAiComposer)
+    > .o-overlay-item:has(.o_dialog .o_add_snippet_dialog):not(:has(.o_error_dialog)) {
+    z-index: $zindex-modal;
+}

@@ -133,6 +133,7 @@ class AccountPayment(models.Model):
         store=True, readonly=False,
         compute='_compute_destination_account_id',
         domain="[('account_type', 'in', ('asset_receivable', 'liability_payable'))]",
+        index='btree_not_null',
         check_company=True)
 
     # == Stat buttons ==
@@ -220,26 +221,26 @@ class AccountPayment(models.Model):
         '''
         self.ensure_one()
 
-        # liquidity_lines, counterpart_lines, writeoff_lines
-        lines = [self.env['account.move.line'] for _dummy in range(3)]
-        valid_account_types = self._get_valid_payment_account_types()
-        for line in self.move_id.line_ids:
-            if line.account_id in self._get_valid_liquidity_accounts():
-                lines[0] += line  # liquidity_lines
-            elif line.account_id.account_type in valid_account_types or line.account_id == line.company_id.transfer_account_id:
-                lines[1] += line  # counterpart_lines
-            else:
-                lines[2] += line  # writeoff_lines
+        valid_account_types = set(self._get_valid_payment_account_types())
+        valid_liquidity_accounts = set(self._get_valid_liquidity_accounts())
+
+        def categorize(line):
+            if line.account_id in valid_liquidity_accounts:
+                return 'liquidity'
+            if line.account_id.account_type in valid_account_types or line.account_id == line.company_id.transfer_account_id:
+                return 'counterpart'
+            return 'writeoff'
+        groups = self.move_id.line_ids.grouped(categorize)
+        liquidity, counterpart, writeoff = (groups.get(key, self.env['account.move.line']) for key in ('liquidity', 'counterpart', 'writeoff'))
 
         # In some case, there is no liquidity or counterpart line (after changing an outstanding account on the journal for example)
         # In that case, and if there is one writeoff line, we take this line and set it as liquidity/counterpart line
-        if len(lines[2]) == 1:
-            for i in (0, 1):
-                if not lines[i]:
-                    lines[i] = lines[2]
-                    lines[2] -= lines[2]
-
-        return lines
+        if len(writeoff) == 1:
+            if not liquidity:
+                liquidity, writeoff = writeoff, liquidity
+            elif not counterpart:
+                counterpart, writeoff = writeoff, counterpart
+        return liquidity, counterpart, writeoff
 
     def _get_valid_liquidity_accounts(self):
         self.ensure_one()
@@ -452,6 +453,7 @@ class AccountPayment(models.Model):
 
     @api.depends('reconciled_invoice_ids.payment_state', 'reconciled_bill_ids.payment_state', 'move_id.line_ids.amount_residual')
     def _compute_state(self):
+        paid_payments_to_recompute = self.env['account.payment']
         for payment in self:
             if not payment.state:
                 payment.state = 'draft'
@@ -465,6 +467,8 @@ class AccountPayment(models.Model):
                 )
             if payment.state == 'in_process' and (moves := (payment.reconciled_invoice_ids | payment.reconciled_bill_ids)) and all(invoice.payment_state == 'paid' for invoice in moves):
                 payment.state = 'paid'
+                paid_payments_to_recompute |= payment
+        self.env.add_to_compute(self._fields['is_matched'], paid_payments_to_recompute)
 
     @api.depends('move_id.line_ids.amount_residual', 'move_id.line_ids.amount_residual_currency', 'move_id.line_ids.account_id', 'state')
     def _compute_reconciliation_status(self):

@@ -56,8 +56,8 @@
                     <a
                         t-if="row.relation"
                         class="cursor-pointer text-muted ms-1"
-                        href="#"
-                        t-on-click="() => this.goToModel(row.relation)"
+                        t-attf-href="/doc/{{row.relation}}"
+                        t-on-click.prevent="() => this.goToModel(row.relation)"
                     >
                         <t t-out="row.relation"/>
                         <i

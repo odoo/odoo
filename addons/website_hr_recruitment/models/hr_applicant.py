@@ -9,6 +9,9 @@ class HrApplicant(models.Model):
     _inherit = 'hr.applicant'
 
     def website_form_input_filter(self, request, values):
+        if 'partner_id' in values:
+            values.pop('email_from', None)
+            values.pop('partner_phone', None)
         if values.get('job_id'):
             job = self.env['hr.job'].browse(values.get('job_id'))
             if not job.sudo().active:

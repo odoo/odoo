@@ -6,15 +6,16 @@
 # Cécile Collart <cco@odoo.com>, 2022
 # Martin Trigaux, 2022
 # Jolien De Paepe, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
+# Bren Driesen <brdri@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:37+0000\n"
-"PO-Revision-Date: 2026-04-07 15:52+0000\n"
-"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
+"POT-Creation-Date: 2026-07-10 17:37+0000\n"
+"PO-Revision-Date: 2026-08-04 22:28+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/payment/"
 "fr/>\n"
 "Language: fr\n"
@@ -23,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report_records
@@ -70,11 +71,10 @@ msgid ""
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" "
-"invisible=\"support_partial_capture != 'full_only'\" title=\"Certaines des "
-"transactions que vous voulez capturer ne peuvent être capturées que dans "
-"leur intégralité. Traitez les transactions individuellement pour capturer un "
-"montant partiel.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture "
+"!= 'full_only'\" title=\"Certaines des transactions que vous voulez capturer "
+"ne peuvent être capturées que dans leur intégralité. Traitez les "
+"transactions individuellement pour capturer un montant partiel.\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
@@ -572,7 +572,7 @@ msgstr "Belfius"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_benefit
 msgid "Benefit"
-msgstr "Avantage"
+msgstr "Benefit"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bharatqr
@@ -830,6 +830,11 @@ msgid "Contact"
 msgstr "Contact"
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_cvs
+msgid "Convenience Stores"
+msgstr "Supérettes"
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_cordial
 msgid "Cordial"
 msgstr "Cordial"
@@ -973,7 +978,7 @@ msgstr "Désactivé"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_discover
 msgid "Discover"
-msgstr "Découvrir"
+msgstr "Discover"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_ir_http__display_name
@@ -1011,6 +1016,11 @@ msgid "DuitNow"
 msgstr "DuitNow"
 
 #. module: payment
+#: model:payment.provider,name:payment.payment_provider_ecpay
+msgid "ECPay"
+msgstr "ECPay"
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_emi_india
 msgid "EMI"
 msgstr "EMI"
@@ -1019,11 +1029,6 @@ msgstr "EMI"
 #: model:payment.method,name:payment.payment_method_eps
 msgid "EPS"
 msgstr "EPS"
-
-#. module: payment
-#: model:payment.method,name:payment.payment_method_easypaisa
-msgid "EasyPaisa"
-msgstr "EasyPaisa"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_elo
@@ -1088,6 +1093,11 @@ msgstr "FPX"
 #: model:payment.method,name:payment.payment_method_facilito
 msgid "Facilito"
 msgstr "Facilito"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_family_mart
+msgid "Family Mart"
+msgstr "Family Mart"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_floa_bank
@@ -1193,6 +1203,11 @@ msgstr "Le paiement a été post-traité"
 #: model:ir.model.fields,field_description:payment.field_payment_provider__pre_msg
 msgid "Help Message"
 msgstr "Message d'aide"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_hi_life
+msgid "Hi-Life"
+msgstr "Hi-Life"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_hipercard
@@ -1314,11 +1329,6 @@ msgstr "Iyzico"
 #: model:payment.method,name:payment.payment_method_jcb
 msgid "JCB"
 msgstr "JCB"
-
-#. module: payment
-#: model:payment.method,name:payment.payment_method_jazzcash
-msgid "JazzCash"
-msgstr "JazzCash"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_jeniuspay
@@ -1563,6 +1573,11 @@ msgid "Mobile"
 msgstr "Mobile"
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_mobile_wallet
+msgid "Mobile Wallet"
+msgstr "Portefeuille mobile"
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_mobile_wallet_eg
 msgid "Mobile Wallets Egypt"
 msgstr "Portefeuilles mobiles Égypte"
@@ -1661,6 +1676,11 @@ msgstr "Aucun n'est configuré pour :"
 #: model:payment.provider,name:payment.payment_provider_nuvei
 msgid "Nuvei"
 msgstr "Nuvei"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_ok_mart
+msgid "OK Mart"
+msgstr "OK Mart"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ovo
@@ -1846,6 +1866,11 @@ msgstr "PayPal"
 #: model:payment.method,name:payment.payment_method_paysafecard
 msgid "PaySafeCard"
 msgstr "PaySafeCard"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_payu
+msgid "PayU"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -2445,6 +2470,11 @@ msgid "TTB"
 msgstr "TTB"
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_twqr
+msgid "TWQR"
+msgstr "TWQR"
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_tabby
 msgid "Tabby"
 msgstr "Tabby"
@@ -2495,8 +2525,7 @@ msgstr "Merci !"
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s encountered an error."
-msgstr ""
-"Le %(tx_label)s %(ref)s de %(formatted_amount)s a rencontré une erreur."
+msgstr "Le %(tx_label)s %(ref)s de %(formatted_amount)s a rencontré une erreur."
 
 #. module: payment
 #. odoo-python
@@ -2541,15 +2570,13 @@ msgstr "Le montant ou la devise est manquant dans les données de paiement."
 #. odoo-python
 #: code:addons/payment/wizards/payment_capture_wizard.py:0
 msgid "The amount to capture must be positive and cannot be superior to %s."
-msgstr ""
-"Le montant à capturer doit être positif et ne peut être supérieur à %s."
+msgstr "Le montant à capturer doit être positif et ne peut être supérieur à %s."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__image
 #: model:ir.model.fields,help:payment.field_payment_method__image_payment_form
 msgid "The base image used for this payment method; in a 64x64 px format."
-msgstr ""
-"L'image de base utilisée pour ce mode de paiement ; au format 64x64 px."
+msgstr "L'image de base utilisée pour ce mode de paiement ; au format 64x64 px."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__brand_ids
@@ -3287,6 +3314,7 @@ msgstr ""
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_buckaroo
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_demo
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_dpo
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_ecpay
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_flutterwave
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_iyzico
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_mercado_pago
@@ -3294,6 +3322,7 @@ msgstr ""
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_nuvei
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_paypal
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_payu
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_sepa_direct_debit
@@ -3315,6 +3344,7 @@ msgstr "Votre paiement a été autorisé."
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_buckaroo
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_demo
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_dpo
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_ecpay
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_flutterwave
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_iyzico
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_mercado_pago
@@ -3322,6 +3352,7 @@ msgstr "Votre paiement a été autorisé."
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_nuvei
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_paypal
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_payu
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_sepa_direct_debit
@@ -3343,6 +3374,7 @@ msgstr "Votre paiement a été annulé."
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_buckaroo
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_demo
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_dpo
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_ecpay
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_flutterwave
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_iyzico
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_mercado_pago
@@ -3350,6 +3382,7 @@ msgstr "Votre paiement a été annulé."
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_nuvei
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_paypal
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_payu
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sepa_direct_debit
@@ -3370,6 +3403,7 @@ msgstr "Votre paiement a été traité mais est en attente d’approbation."
 #: model_terms:payment.provider,done_msg:payment.payment_provider_buckaroo
 #: model_terms:payment.provider,done_msg:payment.payment_provider_demo
 #: model_terms:payment.provider,done_msg:payment.payment_provider_dpo
+#: model_terms:payment.provider,done_msg:payment.payment_provider_ecpay
 #: model_terms:payment.provider,done_msg:payment.payment_provider_flutterwave
 #: model_terms:payment.provider,done_msg:payment.payment_provider_iyzico
 #: model_terms:payment.provider,done_msg:payment.payment_provider_mercado_pago
@@ -3377,6 +3411,7 @@ msgstr "Votre paiement a été traité mais est en attente d’approbation."
 #: model_terms:payment.provider,done_msg:payment.payment_provider_nuvei
 #: model_terms:payment.provider,done_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,done_msg:payment.payment_provider_paypal
+#: model_terms:payment.provider,done_msg:payment.payment_provider_payu
 #: model_terms:payment.provider,done_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,done_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,done_msg:payment.payment_provider_sepa_direct_debit
@@ -3438,7 +3473,7 @@ msgstr "Zalopay"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
 #: model:payment.method,name:payment.payment_method_zip
 msgid "Zip"
-msgstr "Code postal"
+msgstr "Zip"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cofidis
@@ -3461,6 +3496,11 @@ msgstr "Paiement rapide non pris en charge"
 #: model:payment.method,name:payment.payment_method_ideal_brand
 msgid "iDEAL"
 msgstr "iDEAL"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_ipass_money
+msgid "iPASS Money"
+msgstr "iPASS Money"
 
 #. module: payment
 #. odoo-python
@@ -3540,6 +3580,12 @@ msgstr "Tokenisation non prise en charge"
 #: code:addons/payment/const.py:0
 msgid "tokenization without payment no supported"
 msgstr "Tokenisation sans paiement non prise en charge"
+
+#~ msgid "EasyPaisa"
+#~ msgstr "EasyPaisa"
+
+#~ msgid "JazzCash"
+#~ msgstr "JazzCash"
 
 #~ msgid "ACTIVATE STRIPE"
 #~ msgstr "ACTIVER STRIPE"

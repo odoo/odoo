@@ -88,3 +88,69 @@ test("isNextEnabled", async () => {
     comp.next();
     expect(comp.isNextEnabled()).toBe(false);
 });
+
+test("attribute other than 'no_variant' and 'is_custom' in combo 'kiosk' mode is not allowed", async () => {
+    const store = await setupSelfPosEnv();
+    const models = store.models;
+    const comboProduct = models["product.template"].get(7);
+    const item1 = models["product.combo.item"].get(2);
+    const productWithCustomAttrvariant = models["product.product"].get(51);
+    const item2 = models["product.combo.item"].create({
+        combo_id: 2,
+        product_id: productWithCustomAttrvariant.id,
+    });
+    const comp = await mountWithCleanup(ComboPage, {
+        props: { productTemplate: comboProduct },
+    });
+    comp.selectItem(item1);
+    expect(comp.isNextEnabled()).toBe(true);
+    comp.next();
+    comp.selectItem(item2);
+    expect(comp.isNextEnabled()).toBe(true);
+    expect(!!comp.hasAttribute(productWithCustomAttrvariant)).toBe(false);
+});
+
+test("'is_custom' is not configurable in combo 'kiosk' mode", async () => {
+    const store = await setupSelfPosEnv();
+    const models = store.models;
+    const comboProduct = models["product.template"].get(7);
+    const item1 = models["product.combo.item"].get(2);
+    const productWithCustomAttr = models["product.template"].get(51);
+    productWithCustomAttr.attribute_line_ids = [productWithCustomAttr.attribute_line_ids[1]];
+    const item2 = models["product.combo.item"].create({
+        combo_id: 2,
+        product_id: productWithCustomAttr.id,
+    });
+    const comp = await mountWithCleanup(ComboPage, {
+        props: { productTemplate: comboProduct },
+    });
+    comp.selectItem(item1);
+    expect(comp.isNextEnabled()).toBe(true);
+    comp.next();
+    comp.selectItem(item2);
+    expect(comp.isNextEnabled()).toBe(true);
+    expect(!!comp.hasAttribute(productWithCustomAttr)).toBe(false);
+});
+
+test("'is_custom' is configurable in combo 'mobile' mode", async () => {
+    const store = await setupSelfPosEnv("mobile");
+    const models = store.models;
+    const comboProduct = models["product.template"].get(7);
+    const item1 = models["product.combo.item"].get(2);
+    const productWithCustomAttr = models["product.template"].get(51);
+    productWithCustomAttr.attribute_line_ids = [productWithCustomAttr.attribute_line_ids[1]];
+    const item2 = models["product.combo.item"].create({
+        combo_id: 2,
+        product_id: productWithCustomAttr.id,
+    });
+
+    const comp = await mountWithCleanup(ComboPage, {
+        props: { productTemplate: comboProduct },
+    });
+    comp.selectItem(item1);
+    expect(comp.isNextEnabled()).toBe(true);
+    comp.next();
+    comp.selectItem(item2);
+    expect(comp.isNextEnabled()).toBe(false);
+    expect(!!comp.hasAttribute(productWithCustomAttr)).toBe(true);
+});

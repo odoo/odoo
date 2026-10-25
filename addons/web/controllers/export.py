@@ -15,6 +15,8 @@ from odoo import http
 from odoo.exceptions import UserError
 from odoo.http import content_disposition, request
 from odoo.tools import osutil
+from odoo.tools.misc import split_every
+from odoo.tools.constants import PREFETCH_MAX
 
 
 _logger = logging.getLogger(__name__)
@@ -578,12 +580,16 @@ class ExportFormat(object):
                 SearchModel = Model
             groups_data = SearchModel.formatted_read_group(domain, groupby, ['__count', 'id:array_agg'])
 
+            # export_data has IDs as strings, but groups_data is in its native type (int or string)
+            # We can't blindly cast the ID to an int, as some models have string IDs
+            native_ids = {str(id): id for id in records.ids}
+
             # Build a map from record ID to its export rows
             record_rows = {}
             current_id = None
             for row in export_data:
                 if row[0]:  # First column is the record ID
-                    current_id = int(row[0])
+                    current_id = native_ids[row[0]]
                     record_rows[current_id] = []
                 record_rows[current_id].append(row[1:])
 
@@ -609,8 +615,13 @@ class ExportFormat(object):
 
             response_data = self.from_group_data(fields, columns_headers, tree)
         else:
-            export_data = records.export_data(field_names).get('datas', [])
-            response_data = self.from_data(fields, columns_headers, export_data)
+            all_rows = []
+            for batch in split_every(PREFETCH_MAX, records.ids, Model.browse):
+                export_data = batch.export_data(field_names).get('datas', [])
+                all_rows.extend(export_data)
+                batch.invalidate_recordset()
+
+            response_data = self.from_data(fields, columns_headers, all_rows)
 
         _logger.info(
             "User %d exported %d %r records from %s. Fields: %s. %s: %s",

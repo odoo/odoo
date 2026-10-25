@@ -1,6 +1,7 @@
-from odoo.addons.base.tests.test_expression import TransactionExpressionCase
 from odoo.fields import Command, Domain
 from odoo.tests import TransactionCase
+
+from odoo.addons.base.tests.test_expression import TransactionExpressionCase
 
 
 class TestSubqueries(TransactionCase):
@@ -13,9 +14,11 @@ class TestSubqueries(TransactionCase):
             FROM "test_orm_multi"
             LEFT JOIN "res_partner" AS "test_orm_multi__partner"
             ON ("test_orm_multi"."partner" = "test_orm_multi__partner"."id")
-            WHERE ("test_orm_multi"."partner" IS NOT NULL AND (
-                "test_orm_multi__partner"."name" LIKE %s
-                AND "test_orm_multi__partner"."phone" LIKE %s
+            WHERE (
+                "test_orm_multi"."partner" IS NOT NULL AND
+                "test_orm_multi__partner"."id" IS NOT NULL AND (
+                    "test_orm_multi__partner"."name" LIKE %s
+                    AND "test_orm_multi__partner"."phone" LIKE %s
             ))
             ORDER BY "test_orm_multi"."id"
         """]):
@@ -30,9 +33,11 @@ class TestSubqueries(TransactionCase):
             FROM "test_orm_multi"
             LEFT JOIN "res_partner" AS "test_orm_multi__partner"
             ON ("test_orm_multi"."partner" = "test_orm_multi__partner"."id")
-            WHERE ("test_orm_multi"."partner" IS NOT NULL AND (
-                "test_orm_multi__partner"."name" LIKE %s
-                OR "test_orm_multi__partner"."phone" LIKE %s
+            WHERE (
+                "test_orm_multi"."partner" IS NOT NULL AND
+                "test_orm_multi__partner"."id" IS NOT NULL AND (
+                    "test_orm_multi__partner"."name" LIKE %s
+                    OR "test_orm_multi__partner"."phone" LIKE %s
             ))
             ORDER BY "test_orm_multi"."id"
         """]):
@@ -87,9 +92,11 @@ class TestSubqueries(TransactionCase):
             FROM "test_orm_multi"
             LEFT JOIN "res_partner" AS "test_orm_multi__partner"
                 ON ("test_orm_multi"."partner" = "test_orm_multi__partner"."id")
-            WHERE ("test_orm_multi"."partner" IS NOT NULL AND (
-                "test_orm_multi__partner"."name" LIKE %s
-                OR "test_orm_multi__partner"."phone" LIKE %s
+            WHERE (
+                "test_orm_multi"."partner" IS NOT NULL AND
+                "test_orm_multi__partner"."id" IS NOT NULL AND (
+                    "test_orm_multi__partner"."name" LIKE %s
+                    OR "test_orm_multi__partner"."phone" LIKE %s
             ))
             ORDER BY "test_orm_multi"."id"
         """]):
@@ -123,12 +130,14 @@ class TestSubqueries(TransactionCase):
             FROM "test_orm_multi"
             LEFT JOIN "res_partner" AS "test_orm_multi__partner"
             ON ("test_orm_multi"."partner" = "test_orm_multi__partner"."id")
-            WHERE ("test_orm_multi"."partner" IS NOT NULL AND (
-                "test_orm_multi__partner"."email" LIKE %s
-                AND (
-                    "test_orm_multi__partner"."name" LIKE %s
-                    OR "test_orm_multi__partner"."phone" LIKE %s
-                )
+            WHERE (
+                "test_orm_multi"."partner" IS NOT NULL AND
+                "test_orm_multi__partner"."id" IS NOT NULL AND (
+                    "test_orm_multi__partner"."email" LIKE %s
+                    AND (
+                        "test_orm_multi__partner"."name" LIKE %s
+                        OR "test_orm_multi__partner"."phone" LIKE %s
+                    )
             ))
             ORDER BY "test_orm_multi"."id"
         """]):
@@ -146,7 +155,7 @@ class TestSubqueries(TransactionCase):
             LEFT JOIN "res_partner" AS "test_orm_multi__partner"
             ON ("test_orm_multi"."partner" = "test_orm_multi__partner"."id")
             WHERE (
-                ({many2one} IS NOT NULL AND (
+                ({many2one} IS NOT NULL AND "test_orm_multi__partner"."id" IS NOT NULL AND (
                     "test_orm_multi__partner"."email" LIKE %s
                     OR "test_orm_multi__partner"."name" LIKE %s
                 ))
@@ -155,7 +164,11 @@ class TestSubqueries(TransactionCase):
                     WHERE "res_partner"."website" LIKE %s
                 ))
                 AND (
-                    ({many2one} IS NOT NULL AND "test_orm_multi__partner"."function" LIKE %s)
+                    (
+                        {many2one} IS NOT NULL AND
+                        "test_orm_multi__partner"."id" IS NOT NULL AND
+                        "test_orm_multi__partner"."function" LIKE %s
+                    )
                     OR ({many2one} IS NULL OR {many2one} NOT IN (
                         {subselect}
                         WHERE "res_partner"."phone" LIKE %s
@@ -451,8 +464,11 @@ class TestSearchRelated(TransactionCase):
             FROM "test_orm_related"
             LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
                 ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
-            WHERE ("test_orm_related"."foo_id" IS NOT NULL AND "test_orm_related__foo_id"."name" IN %s)
-            AND "test_orm_related"."id" < %s
+            WHERE (
+                "test_orm_related"."foo_id" IS NOT NULL
+                AND "test_orm_related__foo_id"."id" IS NOT NULL
+                AND "test_orm_related__foo_id"."name" IN %s
+            ) AND "test_orm_related"."id" < %s
             ORDER BY "test_orm_related"."id"
         """]):
             model.search([('foo_name_sudo', '=', 'a')])
@@ -520,6 +536,7 @@ class TestSearchRelated(TransactionCase):
                 ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
             WHERE (
                 "test_orm_related"."foo_id" IS NOT NULL
+                AND "test_orm_related__foo_id"."id" IS NOT NULL
                 AND "test_orm_related__foo_id"."bar_id" IN %s
             )
             AND "test_orm_related"."id" < %s
@@ -533,6 +550,7 @@ class TestSearchRelated(TransactionCase):
             LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
                 ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
             WHERE ("test_orm_related"."foo_id" IS NOT NULL
+                AND "test_orm_related__foo_id"."id" IS NOT NULL
                 AND "test_orm_related__foo_id"."bar_id" IN (
                     SELECT "test_orm_related_bar"."id"
                     FROM "test_orm_related_bar"
@@ -602,7 +620,7 @@ class TestSearchRelated(TransactionCase):
             FROM "test_orm_related"
             LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
                 ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
-            WHERE ("test_orm_related"."foo_id" IS NOT NULL AND EXISTS (
+            WHERE ("test_orm_related"."foo_id" IS NOT NULL AND "test_orm_related__foo_id"."id" IS NOT NULL AND EXISTS (
                 SELECT 1
                 FROM "test_orm_related_bar_test_orm_related_foo_rel" AS "test_orm_related__foo_id__bar_ids"
                 WHERE "test_orm_related__foo_id__bar_ids"."test_orm_related_foo_id" = "test_orm_related__foo_id"."id"
@@ -618,7 +636,7 @@ class TestSearchRelated(TransactionCase):
             FROM "test_orm_related"
             LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
                 ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
-            WHERE ("test_orm_related"."foo_id" IS NOT NULL AND EXISTS (
+            WHERE ("test_orm_related"."foo_id" IS NOT NULL AND "test_orm_related__foo_id"."id" IS NOT NULL AND EXISTS (
                 SELECT 1
                 FROM "test_orm_related_bar_test_orm_related_foo_rel" AS "test_orm_related__foo_id__bar_ids"
                 WHERE "test_orm_related__foo_id__bar_ids"."test_orm_related_foo_id" = "test_orm_related__foo_id"."id"
@@ -686,13 +704,15 @@ class TestSearchRelated(TransactionCase):
             FROM "test_orm_related"
             LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
                 ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
-            WHERE ("test_orm_related"."foo_id" IS NOT NULL
-                AND EXISTS(SELECT FROM (
-                    SELECT "test_orm_related"."foo_id" AS __inverse
-                    FROM "test_orm_related"
-                    WHERE "test_orm_related"."id" IN %s
-                    AND "test_orm_related"."foo_id" IS NOT NULL
-                ) AS __sub WHERE __inverse = "test_orm_related__foo_id"."id")
+            WHERE (
+                "test_orm_related"."foo_id" IS NOT NULL
+                AND "test_orm_related__foo_id"."id" IS NOT NULL
+                    AND EXISTS(SELECT FROM (
+                        SELECT "test_orm_related"."foo_id" AS __inverse
+                        FROM "test_orm_related"
+                        WHERE "test_orm_related"."id" IN %s
+                        AND "test_orm_related"."foo_id" IS NOT NULL
+                    ) AS __sub WHERE __inverse = "test_orm_related__foo_id"."id")
             )
             AND "test_orm_related"."id" < %s
             ORDER BY "test_orm_related"."id"
@@ -705,6 +725,7 @@ class TestSearchRelated(TransactionCase):
             LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
                 ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
             WHERE ("test_orm_related"."foo_id" IS NOT NULL
+                AND "test_orm_related__foo_id"."id" IS NOT NULL
                 AND EXISTS(SELECT FROM (
                     SELECT "test_orm_related"."foo_id" AS __inverse
                     FROM "test_orm_related"
@@ -720,23 +741,54 @@ class TestSearchRelated(TransactionCase):
         """]):
             model.search([('foo_foo_sudo_ids.name', '=', 'a')])
 
+    def test_binary_attachment(self):
+        model = self.env['test_orm.attachment.host'].with_user(self.env.ref('base.user_admin'))
+
+        # warmup
+        model.search([('real_binary', '=', False)])
+        model.search([('real_binary', '!=', False)])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_attachment_host"."id"
+            FROM "test_orm_attachment_host"
+            WHERE NOT EXISTS (
+                SELECT 1 FROM ir_attachment WHERE res_model = %s AND res_field = %s
+                AND res_id = "test_orm_attachment_host"."id"
+            )
+            ORDER BY "test_orm_attachment_host"."id"
+        """]):
+            model.search([('real_binary', '=', False)])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_attachment_host"."id"
+            FROM "test_orm_attachment_host"
+            WHERE EXISTS (
+                SELECT 1 FROM ir_attachment WHERE res_model = %s AND res_field = %s
+                AND res_id = "test_orm_attachment_host"."id"
+            )
+            ORDER BY "test_orm_attachment_host"."id"
+        """]):
+            model.search([('real_binary', '!=', False)])
+
     def test_related_binary(self):
         model = self.env['test_orm.related'].with_user(self.env.ref('base.user_admin'))
 
         # warmup
         model.search([('foo_binary_att', '!=', False)])
+        model.search([('foo_binary_att', '=', False)])
         model.search([('foo_binary_bin', '!=', False)])
         model.search([('foo_binary_att_sudo', '!=', False)])
+        model.search([('foo_binary_att_sudo', '=', False)])
         model.search([('foo_binary_bin_sudo', '!=', False)])
-
         with self.assertQueries(["""
             SELECT "test_orm_related"."id"
             FROM "test_orm_related"
             WHERE "test_orm_related"."foo_id" IN (
                 SELECT "test_orm_related_foo"."id"
                 FROM "test_orm_related_foo"
-                WHERE "test_orm_related_foo"."id" IN (
-                    SELECT res_id FROM ir_attachment WHERE res_model = %s AND res_field = %s
+                WHERE EXISTS (
+                    SELECT 1 FROM ir_attachment WHERE res_model = %s AND res_field = %s
+                    AND res_id = "test_orm_related_foo"."id"
                 )
                 AND "test_orm_related_foo"."id" < %s
             )
@@ -744,6 +796,24 @@ class TestSearchRelated(TransactionCase):
             ORDER BY "test_orm_related"."id"
         """]):
             model.search([('foo_binary_att', '!=', False)])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            WHERE ("test_orm_related"."foo_id" IS NULL OR
+                  "test_orm_related"."foo_id" IN (
+                SELECT "test_orm_related_foo"."id"
+                FROM "test_orm_related_foo"
+                WHERE NOT EXISTS (
+                    SELECT 1 FROM ir_attachment WHERE res_model = %s AND res_field = %s
+                    AND res_id = "test_orm_related_foo"."id"
+                )
+                AND "test_orm_related_foo"."id" < %s
+            ))
+            AND "test_orm_related"."id" < %s
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search([('foo_binary_att', '=', False)])
 
         with self.assertQueries(["""
             SELECT "test_orm_related"."id"
@@ -766,8 +836,10 @@ class TestSearchRelated(TransactionCase):
                 ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
             WHERE (
                 "test_orm_related"."foo_id" IS NOT NULL
-                AND "test_orm_related__foo_id"."id" IN (
-                    SELECT res_id FROM ir_attachment WHERE res_model = %s AND res_field = %s
+                AND "test_orm_related__foo_id"."id" IS NOT NULL
+                AND EXISTS (
+                    SELECT 1 FROM ir_attachment WHERE res_model = %s AND res_field = %s
+                    AND res_id = "test_orm_related__foo_id"."id"
                 )
             )
             AND "test_orm_related"."id" < %s
@@ -781,7 +853,29 @@ class TestSearchRelated(TransactionCase):
             LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
                 ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
             WHERE (
+                "test_orm_related"."foo_id" IS NULL
+                OR (
+                    "test_orm_related"."foo_id" IS NOT NULL
+                    AND "test_orm_related__foo_id"."id" IS NOT NULL
+                    AND NOT EXISTS (
+                        SELECT 1 FROM ir_attachment WHERE res_model = %s AND res_field = %s
+                        AND res_id = "test_orm_related__foo_id"."id"
+                    )
+                )
+            )
+            AND "test_orm_related"."id" < %s
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search([('foo_binary_att_sudo', '=', False)])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
+                ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
+            WHERE (
                 "test_orm_related"."foo_id" IS NOT NULL
+                AND "test_orm_related__foo_id"."id" IS NOT NULL
                 AND "test_orm_related__foo_id"."binary_bin" IS NOT NULL
             )
             AND "test_orm_related"."id" < %s
@@ -806,10 +900,15 @@ class TestSearchRelated(TransactionCase):
                 ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
             LEFT JOIN "test_orm_related_bar" AS "test_orm_related__foo_id__bar_id"
                 ON ("test_orm_related__foo_id"."bar_id" = "test_orm_related__foo_id__bar_id"."id")
-            WHERE ("test_orm_related"."foo_id" IS NOT NULL AND (
-                "test_orm_related__foo_id"."bar_id" IS NOT NULL
-                AND "test_orm_related__foo_id__bar_id"."name" IN %s
-            ))
+            WHERE (
+                "test_orm_related"."foo_id" IS NOT NULL
+                AND "test_orm_related__foo_id"."id" IS NOT NULL
+                AND (
+                    "test_orm_related__foo_id"."bar_id" IS NOT NULL
+                    AND "test_orm_related__foo_id__bar_id"."id" IS NOT NULL
+                    AND "test_orm_related__foo_id__bar_id"."name" IN %s
+                )
+            )
             AND "test_orm_related"."id" < %s
             ORDER BY "test_orm_related"."id"
         """]):
@@ -879,6 +978,7 @@ class TestSearchRelated(TransactionCase):
                 ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
             WHERE (
                 "test_orm_related"."foo_id" IS NOT NULL
+                AND "test_orm_related__foo_id"."id" IS NOT NULL
                 AND "test_orm_related__foo_id"."bar_id" IN (
                     SELECT "test_orm_related_bar"."id"
                     FROM "test_orm_related_bar"
@@ -996,7 +1096,11 @@ class TestSearchRelated(TransactionCase):
             FROM "test_orm_related"
             LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
             ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
-            WHERE ("test_orm_related"."foo_id" IS NOT NULL AND "test_orm_related__foo_id"."name" IN %s)
+            WHERE (
+                "test_orm_related"."foo_id" IS NOT NULL
+                AND "test_orm_related__foo_id"."id" IS NOT NULL
+                AND "test_orm_related__foo_id"."name" IN %s
+            )
             ORDER BY "test_orm_related"."id"
         """]):
             model.search([('foo_name', '=', 'a')])
@@ -1022,6 +1126,7 @@ class TestSearchRelated(TransactionCase):
             ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
             WHERE ("test_orm_related"."foo_id" IS NULL OR (
                 "test_orm_related"."foo_id" IS NOT NULL
+                AND "test_orm_related__foo_id"."id" IS NOT NULL
                 AND ("test_orm_related__foo_id"."name" IN %s OR "test_orm_related__foo_id"."name" IS NULL)
             ))
             ORDER BY "test_orm_related"."id"
@@ -1033,7 +1138,11 @@ class TestSearchRelated(TransactionCase):
             FROM "test_orm_related"
             LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
             ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
-            WHERE ("test_orm_related"."foo_id" IS NOT NULL AND "test_orm_related__foo_id"."name" NOT IN %s)
+            WHERE (
+                "test_orm_related"."foo_id" IS NOT NULL
+                AND "test_orm_related__foo_id"."id" IS NOT NULL
+                AND "test_orm_related__foo_id"."name" NOT IN %s
+            )
             ORDER BY "test_orm_related"."id"
         """]):
             model.search([('foo_name', '!=', False)])
@@ -1043,7 +1152,10 @@ class TestSearchRelated(TransactionCase):
             FROM "test_orm_related"
             LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
             ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
-            WHERE ("test_orm_related"."foo_id" IS NOT NULL AND "test_orm_related__foo_id"."name" IN %s)
+            WHERE (
+                "test_orm_related"."foo_id" IS NOT NULL
+                AND "test_orm_related__foo_id"."id" IS NOT NULL
+                AND "test_orm_related__foo_id"."name" IN %s)
             ORDER BY "test_orm_related"."id"
         """]):
             model.search([('foo_name', 'in', ['a', 'b'])])
@@ -1069,7 +1181,8 @@ class TestSearchRelated(TransactionCase):
             LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
             ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
             WHERE ("test_orm_related"."foo_id" IS NULL OR (
-                "test_orm_related"."foo_id" IS NOT NULL AND (
+                "test_orm_related"."foo_id" IS NOT NULL AND
+                "test_orm_related__foo_id"."id" IS NOT NULL AND (
                     "test_orm_related__foo_id"."name" IN %s
                     OR "test_orm_related__foo_id"."name" IS NULL
                 )
@@ -1085,6 +1198,7 @@ class TestSearchRelated(TransactionCase):
             ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
             WHERE (
                 "test_orm_related"."foo_id" IS NOT NULL
+                AND "test_orm_related__foo_id"."id" IS NOT NULL
                 AND "test_orm_related__foo_id"."name" NOT IN %s
             )
             ORDER BY "test_orm_related"."id"
@@ -1109,7 +1223,8 @@ class TestSearchRelated(TransactionCase):
             LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
                 ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
             WHERE ("test_orm_related"."foo_id" IS NULL OR (
-                "test_orm_related"."foo_id" IS NOT NULL AND (
+                "test_orm_related"."foo_id" IS NOT NULL AND
+                "test_orm_related__foo_id"."id" IS NOT NULL AND (
                     "test_orm_related__foo_id"."name" IN %s
                     OR "test_orm_related__foo_id"."name" IS NULL
                 )
@@ -1127,11 +1242,15 @@ class TestSearchRelated(TransactionCase):
             ON ("test_orm_related__foo_id"."bar_id" = "test_orm_related__foo_id__bar_id"."id")
             WHERE (
                 "test_orm_related"."foo_id" IS NULL
-                OR ("test_orm_related"."foo_id" IS NOT NULL AND (
-                    "test_orm_related__foo_id"."bar_id" IS NULL
-                    OR ("test_orm_related__foo_id"."bar_id" IS NOT NULL AND (
-                        "test_orm_related__foo_id__bar_id"."name" IN %s
-                        OR "test_orm_related__foo_id__bar_id"."name" IS NULL
+                OR (
+                    "test_orm_related"."foo_id" IS NOT NULL AND
+                    "test_orm_related__foo_id"."id" IS NOT NULL AND (
+                        "test_orm_related__foo_id"."bar_id" IS NULL
+                        OR (
+                            "test_orm_related__foo_id"."bar_id" IS NOT NULL AND
+                            "test_orm_related__foo_id__bar_id"."id" IS NOT NULL AND (
+                                "test_orm_related__foo_id__bar_id"."name" IN %s
+                                OR "test_orm_related__foo_id__bar_id"."name" IS NULL
                     ))
                 ))
             )
@@ -1146,9 +1265,12 @@ class TestSearchRelated(TransactionCase):
             ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
             LEFT JOIN "test_orm_related_bar" AS "test_orm_related__foo_id__bar_id"
             ON ("test_orm_related__foo_id"."bar_id" = "test_orm_related__foo_id__bar_id"."id")
-            WHERE ("test_orm_related"."foo_id" IS NOT NULL AND (
-                "test_orm_related__foo_id"."bar_id" IS NOT NULL
-                AND "test_orm_related__foo_id__bar_id"."name" NOT IN %s
+            WHERE (
+                "test_orm_related"."foo_id" IS NOT NULL AND
+                "test_orm_related__foo_id"."id" IS NOT NULL AND (
+                    "test_orm_related__foo_id"."bar_id" IS NOT NULL
+                    AND "test_orm_related__foo_id__bar_id"."id" IS NOT NULL
+                    AND "test_orm_related__foo_id__bar_id"."name" NOT IN %s
             ))
             ORDER BY "test_orm_related"."id"
         """]):
@@ -1162,9 +1284,10 @@ class TestSearchRelated(TransactionCase):
             LEFT JOIN "test_orm_related_bar" AS "test_orm_related__foo_id__bar_id"
                 ON ("test_orm_related__foo_id"."bar_id" = "test_orm_related__foo_id__bar_id"."id")
             WHERE ("test_orm_related"."foo_id" IS NULL OR (
-                "test_orm_related"."foo_id" IS NOT NULL AND (
+                "test_orm_related"."foo_id" IS NOT NULL AND
+                "test_orm_related__foo_id"."id" IS NOT NULL AND (
                     "test_orm_related__foo_id"."bar_id" IS NULL
-                    OR ("test_orm_related__foo_id"."bar_id" IS NOT NULL AND (
+                    OR ("test_orm_related__foo_id"."bar_id" IS NOT NULL AND "test_orm_related__foo_id__bar_id"."id" IS NOT NULL AND (
                         "test_orm_related__foo_id__bar_id"."name" IN %s
                         OR "test_orm_related__foo_id__bar_id"."name" IS NULL
                     ))
@@ -1181,8 +1304,9 @@ class TestSearchRelated(TransactionCase):
                 ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
             LEFT JOIN "test_orm_related_bar" AS "test_orm_related__foo_id__bar_id"
                 ON ("test_orm_related__foo_id"."bar_id" = "test_orm_related__foo_id__bar_id"."id")
-            WHERE ("test_orm_related"."foo_id" IS NOT NULL AND (
+            WHERE ("test_orm_related"."foo_id" IS NOT NULL AND "test_orm_related__foo_id"."id" IS NOT NULL AND (
                 "test_orm_related__foo_id"."bar_id" IS NOT NULL
+                AND "test_orm_related__foo_id__bar_id"."id" IS NOT NULL
                 AND "test_orm_related__foo_id__bar_id"."name" NOT IN %s
             ))
             ORDER BY "test_orm_related"."id"
@@ -1221,6 +1345,7 @@ class TestSearchRelated(TransactionCase):
                 ON ("test_orm_related_inherits__base_id"."foo_id" = "test_orm_related_inherits__base_id__foo_id"."id")
             WHERE (
                 "test_orm_related_inherits__base_id"."foo_id" IS NOT NULL
+                AND "test_orm_related_inherits__base_id__foo_id"."id" IS NOT NULL
                 AND "test_orm_related_inherits__base_id__foo_id"."name" IN %s
             )
             AND "test_orm_related_inherits__base_id"."id" < %s
@@ -1254,8 +1379,10 @@ class TestSearchRelated(TransactionCase):
             LEFT JOIN "test_orm_related_bar" AS "test_orm_related_inherits__base_id__foo_id__bar_id"
                 ON ("test_orm_related_inherits__base_id__foo_id"."bar_id" = "test_orm_related_inherits__base_id__foo_id__bar_id"."id")
             WHERE (
-                "test_orm_related_inherits__base_id"."foo_id" IS NOT NULL AND (
+                "test_orm_related_inherits__base_id"."foo_id" IS NOT NULL AND
+                "test_orm_related_inherits__base_id__foo_id"."id" IS NOT NULL AND (
                     "test_orm_related_inherits__base_id__foo_id"."bar_id" IS NOT NULL
+                    AND "test_orm_related_inherits__base_id__foo_id__bar_id"."id" IS NOT NULL
                     AND "test_orm_related_inherits__base_id__foo_id__bar_id"."name" IN %s
                 )
             )
@@ -1348,6 +1475,7 @@ class TestSearchAny(TransactionCase):
                 ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
             WHERE (
                 "test_orm_related"."foo_id" IS NOT NULL
+                AND "test_orm_related__foo_id"."id" IS NOT NULL
                 AND "test_orm_related__foo_id"."name" IN %s
             ) AND "test_orm_related"."id" < %s
             ORDER BY "test_orm_related"."id"
@@ -1361,6 +1489,7 @@ class TestSearchAny(TransactionCase):
                 ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
             WHERE (
                 "test_orm_related"."foo_id" IS NOT NULL
+                AND "test_orm_related__foo_id"."id" IS NOT NULL
                 AND "test_orm_related__foo_id"."bar_id" IN (
                     SELECT "test_orm_related_bar"."id"
                     FROM "test_orm_related_bar"
@@ -1543,7 +1672,11 @@ class TestFlushSearch(TransactionCase):
             FROM "test_orm_city"
             LEFT JOIN "test_orm_country" AS "test_orm_city__country_id"
             ON ("test_orm_city"."country_id" = "test_orm_city__country_id"."id")
-            WHERE ("test_orm_city"."country_id" IS NOT NULL AND "test_orm_city__country_id"."name" LIKE %s)
+            WHERE (
+                "test_orm_city"."country_id" IS NOT NULL
+                AND "test_orm_city__country_id"."id" IS NOT NULL
+                AND "test_orm_city__country_id"."name" LIKE %s
+            )
             ORDER BY "test_orm_city"."id"
         ''']):
             self.brussels.country_id = self.france
@@ -1561,7 +1694,11 @@ class TestFlushSearch(TransactionCase):
             FROM "test_orm_city"
             LEFT JOIN "test_orm_country" AS "test_orm_city__country_id"
             ON ("test_orm_city"."country_id" = "test_orm_city__country_id"."id")
-            WHERE ("test_orm_city"."country_id" IS NOT NULL AND "test_orm_city__country_id"."name" LIKE %s)
+            WHERE (
+                "test_orm_city"."country_id" IS NOT NULL
+                AND "test_orm_city__country_id"."id" IS NOT NULL
+                AND "test_orm_city__country_id"."name" LIKE %s
+            )
             ORDER BY "test_orm_city"."id"
         ''']):
             self.belgium.name = "Belgique"
@@ -1582,7 +1719,11 @@ class TestFlushSearch(TransactionCase):
             FROM "test_orm_city"
             LEFT JOIN "test_orm_country" AS "test_orm_city__country_id"
                 ON ("test_orm_city"."country_id" = "test_orm_city__country_id"."id")
-            WHERE ("test_orm_city"."country_id" IS NOT NULL AND "test_orm_city__country_id"."name" LIKE %s)
+            WHERE (
+                "test_orm_city"."country_id" IS NOT NULL
+                AND "test_orm_city__country_id"."id" IS NOT NULL
+                AND "test_orm_city__country_id"."name" LIKE %s
+            )
             ORDER BY "test_orm_city"."id"
         ''']):
             self.brussels.country_id = self.france
@@ -1852,6 +1993,39 @@ class TestDatePartNumber(TransactionExpressionCase):
     def test_datetime_filtered(self):
         Person = self.env["test_orm.person"].with_context(active_test=False)
         self.assertEqual(self._search(Person, [('birthday.month_number', '=', 2)]), self.person)
+
+    def test_quarter_number_filtered(self):
+        Model = self.env['test_orm.mixed'].with_context(tz='UTC')
+        records = Model.create([
+            {'date': f'2026-{month:02d}-15', 'moment': f'2026-{month:02d}-15 12:00:00'}
+            for month in range(1, 13)
+        ])
+        empty = Model.create({})
+        for field_name in ('date', 'moment'):
+            for quarter in range(1, 5):
+                with self.subTest(field=field_name, quarter=quarter):
+                    domain = [
+                        ('id', 'in', (records + empty).ids),
+                        (f'{field_name}.quarter_number', '=', quarter),
+                    ]
+                    self.assertEqual(self._search(Model, domain), records[(quarter - 1) * 3:quarter * 3])
+
+    def test_day_of_week_filtered(self):
+        Model = self.env['test_orm.mixed'].with_context(tz='UTC')
+        records = Model.create([
+            {'date': f'2026-07-{day}', 'moment': f'2026-07-{day} 12:00:00'}
+            for day in range(12, 19)
+        ])
+        empty = Model.create({})
+        for field_name in ('date', 'moment'):
+            for weekday in range(7):
+                with self.subTest(field=field_name, weekday=weekday):
+                    domain = [
+                        ('id', 'in', (records + empty).ids),
+                        (field_name, '!=', False),
+                        (f'{field_name}.day_of_week', '=', weekday),
+                    ]
+                    self.assertEqual(self._search(Model, domain), records[weekday])
 
     def test_many2one(self):
         result = self._search(self.env["test_orm.lesson"], [('teacher_id.birthday.month_number', '=', 2)])

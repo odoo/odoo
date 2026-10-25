@@ -14,8 +14,9 @@ import {
     getSnippetStructure,
     getSnippetView,
 } from "@html_builder/../tests/helpers";
-import { contains, onRpc } from "@web/../tests/web_test_helpers";
-import { animationFrame, Deferred, queryText, tick, click } from "@odoo/hoot-dom";
+import { browser } from "@web/core/browser/browser";
+import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { animationFrame, Deferred, tick, click } from "@odoo/hoot-dom";
 import { undo } from "@html_editor/../tests/_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
@@ -111,8 +112,8 @@ test("Use the sidebar 'save snippet' buttons", async () => {
     };
     const snippets = {
         snippet_groups: [
-            '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
-            '<div name="Custom" data-oe-thumbnail="custom.svg" data-oe-snippet-id="123" data-o-snippet-group="custom"><section data-snippet="s_snippet_group"></section></div>',
+            '<div name="A" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
+            '<div name="Custom" data-oe-snippet-id="123" data-o-snippet-group="custom"><section data-snippet="s_snippet_group"></section></div>',
         ],
         snippet_structure: [getSnippetStructure(structureSnippetDesc)],
         snippet_content: [getInnerContent(innerContentDesc)],
@@ -178,6 +179,57 @@ test("Use the sidebar 'save snippet' buttons", async () => {
     ).toHaveCount(1);
 });
 
+test("Saved custom snippets drop root unremovable and unmovable classes", async () => {
+    const snippets = {
+        snippet_groups: [
+            '<div name="Custom" data-o-snippet-group="custom"><section data-snippet="s_snippet_group"></section></div>',
+        ],
+        snippet_structure: [
+            getSnippetStructure({
+                name: "Dummy Section",
+                groupName: "custom",
+                content: `
+                    <section data-snippet="s_dummy">
+                        <div class="container">
+                            <div>Content</div>
+                        </div>
+                    </section>
+                `,
+            }),
+        ],
+        snippet_custom: [],
+    };
+    await setupWebsiteBuilder(
+        `
+        <section
+            class="oe_unremovable oe_unmovable"
+            data-name="Dummy Section"
+            data-snippet="s_dummy"
+        >
+            <div class="container">
+                <div>Content</div>
+            </div>
+        </section>
+    `,
+        { snippets }
+    );
+
+    onRpc("ir.ui.view", "save_snippet", ({ kwargs }) => {
+        expect.step("save snippet");
+        const snippetEl = new DOMParser().parseFromString(kwargs.arch, "text/html").body
+            .firstElementChild;
+        expect(snippetEl).not.toHaveClass("oe_unremovable");
+        expect(snippetEl).not.toHaveClass("oe_unmovable");
+        return kwargs.name;
+    });
+
+    await contains(":iframe section[data-snippet='s_dummy']").click();
+    await animationFrame();
+    await contains(".oe_snippet_save").click();
+    await contains(".o_dialog .btn:contains('Save')").click();
+    expect.verifySteps(["save snippet"]);
+});
+
 test("Use the sidebar 'create anchor' buttons", async () => {
     const websiteContent = `
         <section class="first" data-name="Dummy Section" data-snippet="s_dummy">
@@ -191,6 +243,14 @@ test("Use the sidebar 'create anchor' buttons", async () => {
         </section>
     `;
     await setupWebsiteBuilder(websiteContent);
+    // The toast only confirms the copy, so the created link is checked on the
+    // clipboard itself.
+    let copiedLinks;
+    patchWithCleanup(browser.navigator.clipboard, {
+        async writeText(text) {
+            copiedLinks = text;
+        },
+    });
     const anchorSelector =
         ".o_customize_tab .options-container > div:contains('Dummy Section') button.oe_snippet_anchor";
     const notificationContentSelector = ".o_notification_manager .o_notification_content";
@@ -203,7 +263,7 @@ test("Use the sidebar 'create anchor' buttons", async () => {
     expect(anchorSelector).toHaveCount(1);
     await contains(anchorSelector).click();
     expect(notificationContentSelector).toHaveCount(1);
-    expect(queryText(notificationContentSelector)).toInclude("#Anchor-test");
+    expect(copiedLinks).toInclude("#Anchor-test");
     await contains(notificationCloseSelector).click();
     expect(":iframe section.first").toHaveAttribute("id", "Anchor-test");
     expect(":iframe section.first").toHaveAttribute("data-anchor", "true");
@@ -213,7 +273,7 @@ test("Use the sidebar 'create anchor' buttons", async () => {
     await animationFrame();
     await contains(anchorSelector).click();
     await animationFrame();
-    expect(queryText(notificationContentSelector)).toInclude("#Dummy-Section");
+    expect(copiedLinks).toInclude("#Dummy-Section");
     await contains(notificationCloseSelector).click();
     expect(":iframe section.second").toHaveAttribute("id", "Dummy-Section");
 
@@ -221,7 +281,7 @@ test("Use the sidebar 'create anchor' buttons", async () => {
     await contains(":iframe section.third").click();
     await animationFrame();
     await contains(anchorSelector).click();
-    expect(queryText(notificationContentSelector)).toInclude("#Dummy-Section2");
+    expect(copiedLinks).toInclude("#Dummy-Section2");
     expect(":iframe section.third").toHaveAttribute("id", "Dummy-Section2");
 
     // Edit anchor.

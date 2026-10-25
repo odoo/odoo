@@ -46,6 +46,25 @@ def _replace_tags_sql(cr, tax_ids, old_tag, new_tag, is_base=False):
         'tax_ids': tax_ids_tuple
     })
 
+    # update grid in repartition line of taxes as well
+    cr.execute(
+        """
+        UPDATE account_account_tag_account_tax_repartition_line_rel rel
+           SET account_account_tag_id = %s
+          FROM account_tax_repartition_line repartition
+         WHERE repartition.id = rel.account_tax_repartition_line_id
+           AND repartition.tax_id IN %s
+           AND rel.account_account_tag_id = %s
+           AND NOT EXISTS (
+                SELECT 1
+                  FROM account_account_tag_account_tax_repartition_line_rel tag_rel2
+                 WHERE tag_rel2.account_tax_repartition_line_id = rel.account_tax_repartition_line_id
+                   AND tag_rel2.account_account_tag_id = %s
+                )
+        """,
+        [new_tag.id, tax_ids_tuple, old_tag.id, new_tag.id]
+    )
+
     return updated_count
 
 
@@ -59,10 +78,14 @@ def migrate(cr, version):
     companies = env['res.company'].search([('account_fiscal_country_id.code', '=', 'MT')])
 
     for company in companies:
-        tax_7 |= env.ref(f'account.{company.id}_VAT_S_IN_MT_7_G', raise_if_not_found=False)
-        tax_7 |= env.ref(f'account.{company.id}_VAT_S_IN_MT_7_S', raise_if_not_found=False)
-        tax_5 |= env.ref(f'account.{company.id}_VAT_S_IN_MT_5_G', raise_if_not_found=False)
-        tax_5 |= env.ref(f'account.{company.id}_VAT_S_IN_MT_5_S', raise_if_not_found=False)
+        if tax := env.ref(f'account.{company.id}_VAT_S_IN_MT_7_G', raise_if_not_found=False):
+            tax_7 |= tax
+        if tax := env.ref(f'account.{company.id}_VAT_S_IN_MT_7_S', raise_if_not_found=False):
+            tax_7 |= tax
+        if tax := env.ref(f'account.{company.id}_VAT_S_IN_MT_5_G', raise_if_not_found=False):
+            tax_5 |= tax
+        if tax := env.ref(f'account.{company.id}_VAT_S_IN_MT_5_S', raise_if_not_found=False):
+            tax_5 |= tax
 
     tag_iii_1_base = env['account.account.tag'].search([('name', '=', 'III.1_base'), ('country_id.code', '=', 'MT')], limit=1)
     tag_iii_1_tax = env['account.account.tag'].search([('name', '=', 'III.1_tax'), ('country_id.code', '=', 'MT')], limit=1)

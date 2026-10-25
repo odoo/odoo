@@ -26,7 +26,7 @@ registry.category("web_tour.tours").add('order_lunch_tour', {
     trigger: '.lunch_location input:value("Farm 1")',
 },
 {
-    trigger: ".o_kanban_record",
+    trigger: `.o_kanban_record:contains("Aaron's Pizza")`,
     content: _t("Click on a product you want to order and is available."),
     run: 'click'
 },

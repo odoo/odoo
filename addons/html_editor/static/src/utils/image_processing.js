@@ -52,6 +52,10 @@ function _getValidSrc(src) {
         return cache[src];
     }
     const prom = new Promise((resolve) => {
+        if (!src) {
+            resolve(placeholderHref);
+            return;
+        }
         fetch(src)
             .then((response) => {
                 resolve(response.ok ? src : placeholderHref);
@@ -252,6 +256,8 @@ export async function loadImageInfo(el, attachmentSrc = "") {
         newDataset.originalId = original.id;
         newDataset.originalSrc = original.image_src;
         newDataset.mimetypeBeforeConversion = original.mimetype;
+    } else if (/^\/web\/image\/[\w.]+\/\d+\/[\w-]+(\/|\?|$)/.test(src)) {
+        newDataset.originalSrc = src;
     }
     return newDataset;
 }

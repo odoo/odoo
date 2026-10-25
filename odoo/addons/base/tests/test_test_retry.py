@@ -104,6 +104,17 @@ class TestRetryCommitedCursorError(TestRetryCommon, TransactionCase):
 
 
 @tagged('test_retry', 'test_retry_success')
+class TestRetryTracebackExcInfo(TestRetryCommon):
+
+    def test_retry_traceback_exc_info_success(self):
+        if self.is_soft_fail():
+            try:
+                raise Exception("Some exception")  # ruff: ignore[raise-vanilla-class, raise-within-try, raw-string-in-exception]
+            except Exception:
+                _logger.warning("Error during browser shutdown", exc_info=True)
+
+
+@tagged('-standard', 'test_retry', 'test_retry_success')
 class TestRetrySubtest(TestRetryCommon):
 
     def test_retry_subtest_success_one(self):

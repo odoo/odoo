@@ -125,7 +125,7 @@ test("should not format non-editable text (setFontSize)", async () => {
 test("should add font size in selected table cells", async () => {
     await testEditor({
         contentBefore:
-            '<table><tbody><tr><td class="o_selected_td"><p>[<br></p></td><td class="o_selected_td"><p><br></p>]</td></tr><tr><td><p><br></p></td><td><p><br></p></td></tr></tbody></table>',
+            '<table><tbody><tr><td class="o_selected_td"><p>[<br></p></td><td class="o_selected_td"><p>]<br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td></tr></tbody></table>',
         stepFunction: setFontSize("48px"),
         contentAfter:
             '<table><tbody><tr><td><p><span style="font-size: 48px;">[<br></span></p></td><td><p><span style="font-size: 48px;">]<br></span></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td></tr></tbody></table>',
@@ -203,7 +203,7 @@ test("should add style to br except line-break br", async () => {
     const { editor, el } = await setupEditor("<p>[]abc<br><br></p>");
     await press(["ctrl", "a"]);
     execCommand(editor, "formatFontSize", { size: "36px" });
-    expect(getContent(el)).toBe(`<p><span style="font-size: 36px;">[abc]</span><br><br></p>`);
+    expect(getContent(el)).toBe(`<p><span style="font-size: 36px;">[abc</span><br>]<br></p>`);
 });
 
 test("should update the font size currectly if already has one", async () => {
@@ -220,7 +220,7 @@ test("should add style to br except line-break br (2)", async () => {
     await press(["ctrl", "a"]);
     execCommand(editor, "formatFontSize", { size: "36px" });
     expect(getContent(el)).toBe(
-        `<p><span style="font-size: 36px;">[abc</span><br><span style="font-size: 36px;"><br>]</span><br></p>`
+        `<p><span style="font-size: 36px;">[abc</span><br><span style="font-size: 36px;"><br></span>]<br></p>`
     );
 });
 
@@ -229,6 +229,32 @@ test("should update the font class if the parent already has one", async () => {
         contentBefore: '<h2 class="h4-fs">[abcdefg]</h2>',
         stepFunction: setFontSizeClassName("h3-fs"),
         contentAfter: '<h2 class="h4-fs"><span class="h3-fs">[abcdefg]</span></h2>',
+    });
+});
+
+test("should preserve a heading typography span in its matching heading", async () => {
+    await testEditor({
+        contentBefore: '<h4><span class="h4">a[b]c</span></h4>',
+        stepFunction: setFontSizeClassName("display-1-fs"),
+        contentAfter: '<h4><span class="h4">a<span class="display-1-fs">[b]</span>c</span></h4>',
+    });
+});
+
+test("should replace a default heading typography class with another default class", async () => {
+    await testEditor({
+        contentBefore: '<p><span class="h4">a[b]c</span></p>',
+        stepFunction: setFontSizeClassName("h1"),
+        contentAfter:
+            '<p><span class="h4">a</span><span class="h1">[b]</span><span class="h4">c</span></p>',
+    });
+});
+
+test("should split an inline default font size class", async () => {
+    await testEditor({
+        contentBefore: '<p><span class="o_default_font_size">a[b]c</span></p>',
+        stepFunction: setFontSizeClassName("display-1-fs"),
+        contentAfter:
+            '<p><span class="o_default_font_size">a</span><span class="display-1-fs">[b]</span><span class="o_default_font_size">c</span></p>',
     });
 });
 
@@ -245,5 +271,15 @@ test("should apply font size on non breaking space", async () => {
         contentBefore: `<div><p>a[&nbsp;]b</p></div>`,
         stepFunction: setFontSize("36px"),
         contentAfter: `<div><p>a<span style="font-size: 36px;">[&nbsp;]</span>b</p></div>`,
+    });
+});
+
+test("should format inside of content editable boundary (setFontSize)", async () => {
+    await testEditor({
+        contentBefore:
+            '<div contenteditable="false"><p>a<span contenteditable="true">[b]</span>c</p></div>',
+        stepFunction: setFontSize("36px"),
+        contentAfter:
+            '<div contenteditable="false"><p>a<span contenteditable="true"><span style="font-size: 36px;">[b]</span></span>c</p></div>',
     });
 });

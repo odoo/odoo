@@ -15,9 +15,10 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         if self._is_customer_behind_chorus_pro(customer):
             if not customer.company_registry:
                 constraints['chorus_customer'] = _("The Company Registry (Siret) of the final recipient is mandatory for the customer when invoicing through Chorus Pro.")
-            if supplier.country_code == 'FR' and not supplier.company_registry:
+            france_country_codes = self.env['res.company']._get_france_country_codes()
+            if supplier.country_code in france_country_codes and not supplier.company_registry:
                 constraints['chorus_supplier_fr'] = _("The Company Registry (Siret) is mandatory for french suppliers when invoicing through Chorus Pro.")
-            if supplier.country_code != 'FR' and not supplier.vat:
+            if supplier.country_code not in france_country_codes and not supplier.vat:
                 constraints['chorus_supplier_not_fr'] = _("The VAT is mandatory for non-french suppliers when invoicing through Chorus Pro.")
         return constraints
 
@@ -55,7 +56,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         nodes = vals['party_node']['cac:PartyIdentification'] = []
         partner = vals['party_vals']['partner']
         commercial_partner = partner.commercial_partner_id
-        if commercial_partner.country_code == 'FR' and commercial_partner.company_registry:
+        if commercial_partner.country_code in self.env['res.company']._get_france_country_codes() and commercial_partner.company_registry:
             nodes.append({
                 'cbc:ID': {
                     '_text': commercial_partner.company_registry.replace(" ", ""),
@@ -83,7 +84,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
 
         partner = vals['party_vals']['partner']
         commercial_partner = partner.commercial_partner_id
-        if commercial_partner.country_code == 'FR' and commercial_partner.company_registry:
+        if commercial_partner.country_code in self.env['res.company']._get_france_country_codes() and commercial_partner.company_registry:
             vals['party_node']['cac:PartyLegalEntity'] = [{
                 'cbc:RegistrationName': {'_text': commercial_partner.name},
                 'cbc:CompanyID': {

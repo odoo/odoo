@@ -50,7 +50,7 @@
             <field name="model">discuss.channel</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
-                <form string="Mail Channel Form">
+                <form string="Mail Channel Form" duplicate="0">
                     <sheet>
                         <div class="oe_button_box" name="button_box"/>
                         <field name="avatar_128" invisible="1"/>
@@ -60,7 +60,7 @@
                         <div class="oe_title">
                             <label for="name" string="Group Name"/>
                             <h1>
-                                #<field name="name" class="oe_inline" default_focus="1" placeholder="e.g. support" readonly="not is_editable"/>
+                                #<field name="name" class="oe_inline" default_focus="1" placeholder="e.g. support" readonly="not is_editable" required="channel_type != 'group'"/>
                             </h1>
                         </div>
                         <group class="o_label_nowrap">

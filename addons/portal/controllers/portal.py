@@ -206,7 +206,6 @@ class CustomerPortal(Controller):
         :rtype: dict
         """
         return {
-            'page_name': 'my_details',
             **self._prepare_portal_layout_values(),
             **self._prepare_address_form_values(
                 partner_sudo=request.env.user.partner_id,
@@ -214,6 +213,7 @@ class CustomerPortal(Controller):
                 use_delivery_as_billing=True,
                 callback=redirect,
             ),
+            'page_name': 'my_details',
         }
 
     @route('/my/addresses', type='http', auth='user', readonly=True, website=True)

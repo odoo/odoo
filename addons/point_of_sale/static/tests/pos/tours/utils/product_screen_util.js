@@ -205,16 +205,12 @@ export function clickPartnerButton() {
         },
         {
             content: "partner screen is shown",
-            trigger: `${PartnerList.clickPartner().trigger}`,
+            trigger: PartnerList.partnerListTrigger(),
         },
     ];
 }
-export function clickCustomer(name, pressEnter = false) {
-    return [
-        ...PartnerList.searchCustomerValue(name, pressEnter),
-        PartnerList.clickPartner(name),
-        { ...back(), isActive: ["mobile"] },
-    ];
+export function clickCustomer(name) {
+    return [...PartnerList.clickPartner(name), { ...back(), isActive: ["mobile"] }];
 }
 export function selectPreset(selectedPreset, presetToSelect) {
     return [
@@ -520,24 +516,17 @@ export function serialCheckStep(number) {
     ];
 }
 
-export function enterExistingLotNumber(number, tracking = "serial") {
-    const steps = [];
-    steps.push(
+export function enterExistingLotNumber(number) {
+    return [
         {
             content: "enter lot number",
             trigger: ".o-autocomplete input",
             run: "edit " + number,
         },
-        {
-            trigger: ".o-autocomplete input",
-            run: "press Enter",
-        }
-    );
-    if (tracking === "serial") {
-        steps.push(...serialCheckStep(number));
-    }
-    steps.push(Dialog.confirm());
-    return steps;
+        // Apply the typed lot directly: pressing Enter only selects it while the
+        // autocomplete dropdown is open, and any page scroll closes it.
+        Dialog.confirm(),
+    ];
 }
 
 export function enterLotNumbers(numbers) {

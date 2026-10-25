@@ -129,6 +129,10 @@ class SnailmailLetter(models.Model):
             self.attachment_id.check_access('read')
         return res
 
+    @api.onchange("attachment_id")
+    def _onchange_attachment_id(self):
+        self.attachment_id.check_access('read')
+
     def _generate_report_pdf(self, report):
         obj = self.env[self.model].browse(self.res_id)
         if report.print_report_name:
@@ -470,13 +474,19 @@ class SnailmailLetter(models.Model):
         return all(record[key] for key in required_keys)
 
     def _get_cover_address_split(self):
-        address_split = self.partner_id.with_context(show_address=True, lang='en_US').display_name.split('\n')
         if self.country_id.code == 'DE':
-            # Germany requires specific address formatting for Pingen
-            if self.street2:
-                address_split[1] = f'{self.street} // {self.street2}'
-            address_split[2] = f'{self.zip} {self.city}'
-        return address_split
+            return self._snailmail_cover_address_split_de()
+        return self.partner_id.with_context(show_address=True, lang='en_US').display_name.split('\n')
+
+    def _snailmail_cover_address_split_de(self):
+        """ Germany requires specific address formatting for Pingen: both street
+        lines on a single line, followed by zip/city. Empty parts are skipped. """
+        address_lines = [
+            ' // '.join(filter(None, [self.street, self.street2])),
+            ' '.join(filter(None, [self.zip, self.city])),
+            self.country_id.with_context(lang='en_US').name,
+        ]
+        return [self.partner_id.with_context(lang='en_US').display_name] + [line for line in address_lines if line]
 
     def _append_cover_page(self, invoice_bin: bytes):
         out_writer = PdfFileWriter()
@@ -552,8 +562,10 @@ class SnailmailLetter(models.Model):
         curr_pdf = PdfFileReader(io.BytesIO(invoice_bin))
         out = PdfFileWriter()
         for page in curr_pdf.pages:
-            page.mergePage(new_pdf.getPage(0))
             out.addPage(page)
+            added_page = out.getPage(-1)
+            added_page.mergePage(new_pdf.getPage(0))
+            added_page.compressContentStreams()
         out_stream = io.BytesIO()
         out.write(out_stream)
         out_bin = out_stream.getvalue()

@@ -1,4 +1,5 @@
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
+import { useService } from "@web/core/utils/hooks";
 import { CalendarCommonRenderer } from "./calendar_common/calendar_common_renderer";
 import { CalendarYearRenderer } from "./calendar_year/calendar_year_renderer";
 
@@ -24,6 +25,9 @@ export class CalendarRenderer extends Component {
         onSquareSelection: Function,
         cleanSquareSelection: Function,
     };
+    setup() {
+        this.ui = useService("ui");
+    }
     get concreteRenderer() {
         return this.constructor.components[this.props.model.scale];
     }
@@ -44,10 +48,8 @@ export class CalendarRenderer extends Component {
     }
     get actionSwiperProps() {
         return {
-            onLeftSwipe: this.env.isSmall
-                ? { action: () => this.props.setDate("next") }
-                : undefined,
-            onRightSwipe: this.env.isSmall
+            onLeftSwipe: this.ui.isSmall ? { action: () => this.props.setDate("next") } : undefined,
+            onRightSwipe: this.ui.isSmall
                 ? { action: () => this.props.setDate("previous") }
                 : undefined,
             animationOnMove: false,

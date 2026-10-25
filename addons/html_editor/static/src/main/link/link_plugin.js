@@ -1,16 +1,18 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
-import { mergeAdjacentTextNodes, unwrapContents } from "@html_editor/utils/dom";
+import { mergeAdjacentTextNodes, removeClass, unwrapContents } from "@html_editor/utils/dom";
 import { findInSelection, callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
 import { LinkPopover } from "./link_popover";
 import { DIRECTIONS, leftPos, nodeSize, rightPos } from "@html_editor/utils/position";
 import { EMAIL_REGEX, URL_REGEX, cleanZWChars, deduceURLfromText } from "./utils";
 import {
+    isContentEditable,
     isElement,
     isPhrasingContent,
     isProtected,
     isProtecting,
+    isTextNode,
     isVisible,
     isZwnbsp,
 } from "@html_editor/utils/dom_info";
@@ -20,7 +22,15 @@ import { memoize } from "@web/core/utils/functions";
 import { withSequence } from "@html_editor/utils/resource";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-import { isBrowserFirefox } from "@web/core/browser/feature_detection";
+import { removeFormat } from "@html_editor/core/format_plugin";
+import { isBrowserFirefox, isBrowserSafari } from "@web/core/browser/feature_detection";
+import { FONT_SIZE_CLASSES, formatsSpecs } from "@html_editor/utils/formatting";
+
+const FONT_SIZED_SPAN_SELECTOR = [
+    ...FONT_SIZE_CLASSES.map((className) => `span.${className}`),
+    'span[style*="font-size"]',
+].join(", ");
+const FONT_SIZED_BUTTON_CLASS = "o_btn_with_font_size";
 
 /** @typedef {import("@odoo/owl").Component} Component */
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
@@ -89,7 +99,7 @@ async function fetchInternalMetaData(url) {
     }
 
     const result = await keepLastPromise
-        .add(fetch(urlParsed))
+        .add(fetch(urlParsed, { headers: { "Odoo-Link-Preview": "True" } }))
         .then((response) => response.text())
         .then(async (content) => {
             const html_parser = new window.DOMParser();
@@ -118,11 +128,12 @@ async function fetchAttachmentMetaData(url, ormService) {
     try {
         const urlParsed = new URL(url, window.location.origin);
         const attachementId = parseInt(urlParsed.pathname.split("/").pop());
-        return (
+        const result = (
             await ormService.read("ir.attachment", [attachementId], ["name", "mimetype", "type"])
         )[0];
+        return result || { name: url, type: "url" };
     } catch {
-        return { name: url };
+        return { name: url, type: "url" };
     }
 }
 
@@ -301,9 +312,17 @@ export class LinkPlugin extends Plugin {
         before_paste_handlers: this.updateCurrentLinkSyncState.bind(this),
         after_paste_handlers: this.onPasteNormalizeLink.bind(this),
         selectionchange_handlers: this.handleSelectionChange.bind(this),
-        clean_for_save_handlers: ({ root }) => this.removeEmptyLinks(root),
-        normalize_handlers: this.normalizeLink.bind(this),
+        clean_for_save_handlers: ({ root }) => {
+            this.removeEmptyLinks(root);
+            this.clearFontSizedButtonClass(root);
+        },
+        normalize_handlers: [
+            this.normalizeLink.bind(this),
+            this.updateFontSizedButtonClass.bind(this),
+        ],
+        system_classes: [FONT_SIZED_BUTTON_CLASS],
         after_insert_handlers: this.handleAfterInsert.bind(this),
+        format_selection_handlers: this.applyFormatToLinks.bind(this),
         on_will_remove_handlers: () => this.closeLinkTools(),
 
         /** Overrides */
@@ -311,6 +330,7 @@ export class LinkPlugin extends Plugin {
         insert_line_break_element_overrides: this.handleInsertLineBreak.bind(this),
         delete_image_overrides: this.deleteImageLink.bind(this),
         delete_backward_overrides: withSequence(15, this.handleDeleteBackward.bind(this)),
+        delete_forward_overrides: withSequence(15, this.handleDeleteForward.bind(this)),
         double_click_overrides: this.doubleClickLinkOverrides.bind(this),
         triple_click_overrides: this.tripleClickButtonOverrides.bind(this),
 
@@ -332,17 +352,65 @@ export class LinkPlugin extends Plugin {
         this.addDomListener(this.editable, "click", (ev) => {
             const linkEl = ev.target.closest("a");
             if (linkEl) {
+                const selection = this.dependencies.selection.getEditableSelection();
+                const clickedInsideNonEditableLink =
+                    !linkEl.isContentEditable &&
+                    !isContentEditable(closestElement(selection.anchorNode));
                 if (ev.ctrlKey || ev.metaKey) {
                     window.open(linkEl.href, "_blank");
+                } else if (clickedInsideNonEditableLink) {
+                    this.dependencies.selection.setSelection({
+                        anchorNode: linkEl,
+                        anchorOffset: 0,
+                    });
                 }
                 ev.preventDefault();
             }
         });
-        this.addDomListener(this.editable, "mousedown", () => {
-            this._isNavigatingByMouse = true;
-        });
-        this.addDomListener(this.editable, "keydown", () => {
-            delete this._isNavigatingByMouse;
+        this.addDomListener(this.editable, "pointerdown", (ev) => {
+            const clickedEl = this.document.elementFromPoint(ev.clientX, ev.clientY);
+            if (!clickedEl || !isContentEditable(clickedEl)) {
+                return;
+            }
+            let caretPosition = {};
+            if (this.document.caretPositionFromPoint) {
+                // Firefox API
+                const pos = this.document.caretPositionFromPoint(ev.clientX, ev.clientY);
+                caretPosition = pos;
+            } else if (this.document.caretRangeFromPoint) {
+                // Chrome / Safari API
+                const range = document.caretRangeFromPoint(ev.clientX, ev.clientY);
+                caretPosition.offsetNode = range?.startContainer;
+                caretPosition.offset = range?.startOffset;
+            }
+            const link = caretPosition?.offsetNode && closestElement(caretPosition.offsetNode, "A");
+            if (clickedEl.closest("a") && isZwnbsp(caretPosition.offsetNode)) {
+                // This handles the case of clicking at the start of the button
+                const isFirstFeff = !caretPosition.offsetNode.previousSibling;
+                if (isFirstFeff && caretPosition.offset === 0) {
+                    ev.preventDefault();
+                    this.dependencies.selection.setSelection({
+                        anchorNode: clickedEl,
+                        anchorOffset: 1,
+                    });
+                    this.dependencies.selection.focusEditable();
+                }
+            } else if (!clickedEl.closest("a") && link) {
+                // This handles the case of clicking outside the link that is
+                // at the start/end of paragraph
+                const anchorFeff =
+                    nodeSize(caretPosition.offsetNode) === caretPosition.offset
+                        ? link.nextSibling
+                        : link.previousSibling;
+                if (anchorFeff && isZwnbsp(anchorFeff)) {
+                    ev.preventDefault();
+                    this.dependencies.selection.setSelection({
+                        anchorNode: anchorFeff,
+                        anchorOffset: 1,
+                    });
+                    this.dependencies.selection.focusEditable();
+                }
+            }
         });
         this.addDomListener(this.editable, "auxclick", (ev) => {
             if (ev.button === 1) {
@@ -460,6 +528,54 @@ export class LinkPlugin extends Plugin {
         return pasteAsURLCommand;
     }
 
+    /**
+     * Apply the format on the fully selected links.
+     *
+     * @param {string} formatName
+     * @param {Object} options
+     */
+    applyFormatToLinks(formatName, { applyStyle, formatProps } = {}) {
+        const formatSpec = formatsSpecs[formatName];
+        if (!formatSpec.addNeutralStyle) {
+            return;
+        }
+        // Links often have styles applied to them by css which can only be
+        // overriden by applying the style to the link itself. Buttons are
+        // excluded as their font size only applies from inside them.
+        const links = new Set();
+        for (const node of this.dependencies.selection.getTargetedNodes()) {
+            if (!isTextNode(node)) {
+                continue;
+            }
+            const link = closestElement(node, "a:not(.btn)");
+            // Keep only the selected text that can be edited and formatted.
+            if (
+                link &&
+                isContentEditable(node) &&
+                (this.checkPredicates("is_formattable_node_predicates", node) ?? true) &&
+                !formatSpec.isFormatted(link.parentElement, formatProps) &&
+                this.dependencies.selection.areNodeContentsFullySelected(link)
+            ) {
+                links.add(link);
+            }
+        }
+        if (!links.size) {
+            return;
+        }
+        const cursors = this.dependencies.selection.preserveSelection();
+        for (const link of links) {
+            for (const node of [link, ...descendants(link).filter(isElement)]) {
+                removeFormat(node, formatSpec, cursors);
+            }
+            if (applyStyle && !formatSpec.isFormatted(link, formatProps)) {
+                formatSpec.addStyle(link, formatProps);
+            } else if (!applyStyle && formatSpec.isFormatted(link, formatProps)) {
+                formatSpec.addNeutralStyle(link);
+            }
+        }
+        cursors.restore();
+    }
+
     isLinkAllowedOnSelection() {
         const isLinkCompatible = this.checkPredicates("link_compatible_selection_predicates");
         if (isLinkCompatible !== undefined) {
@@ -486,15 +602,17 @@ export class LinkPlugin extends Plugin {
     openLinkTools(linkElement, type) {
         this.currentOverlay.close();
         this.LinkPopoverState.editing = false;
-        if (!this.isLinkAllowedOnSelection()) {
+        let selection = this.dependencies.selection.getEditableSelection();
+        const commonAncestor = closestElement(selection.commonAncestorContainer);
+        const closestLink = closestElement(commonAncestor, "A");
+        const isNonEditableLink = closestLink && !closestLink.isContentEditable;
+        if (!this.isLinkAllowedOnSelection() && !isNonEditableLink) {
             return this.services.notification.add(
                 _t("Unable to create a link on the current selection."),
                 { type: "danger" }
             );
         }
-        let selection = this.dependencies.selection.getEditableSelection();
         let cursorsToRestore = this.dependencies.selection.preserveSelection();
-        const commonAncestor = closestElement(selection.commonAncestorContainer);
         linkElement = linkElement || findInSelection(selection, "a");
         this.type = type;
         if (
@@ -662,7 +780,9 @@ export class LinkPlugin extends Plugin {
             getAttachmentMetadata: this.getAttachmentMetadata,
             recordInfo: this.config.getRecordInfo?.() || {},
             canEdit:
-                !this.linkInDocument || !this.linkInDocument.classList.contains("o_link_readonly"),
+                (!this.linkInDocument ||
+                    !this.linkInDocument.classList.contains("o_link_readonly")) &&
+                this.linkInDocument?.isContentEditable,
             canRemove:
                 this.linkInDocument &&
                 this.linkInDocument.parentElement.isContentEditable &&
@@ -680,7 +800,10 @@ export class LinkPlugin extends Plugin {
         const popover = this.getActivePopover(linkElement);
         if (popover) {
             this.currentOverlay = popover.overlay;
-            if (!linkElement.href) {
+            if (
+                !linkElement.href &&
+                (!this.linkInDocument || this.linkInDocument?.isContentEditable)
+            ) {
                 this.LinkPopoverState.editing = true;
             }
             this.currentOverlay.open({ props: popover.getProps(props) });
@@ -777,48 +900,6 @@ export class LinkPlugin extends Plugin {
 
     handleSelectionChange(selectionData) {
         const selection = selectionData.editableSelection;
-        if (
-            this._isNavigatingByMouse &&
-            selection.isCollapsed &&
-            selectionData.documentSelectionIsInEditable
-        ) {
-            delete this._isNavigatingByMouse;
-            const { startContainer, startOffset, endContainer, endOffset } = selection;
-            const linkElement = closestElement(startContainer, "a");
-            if (
-                linkElement &&
-                linkElement.textContent.startsWith("\uFEFF") &&
-                linkElement.textContent.endsWith("\uFEFF")
-            ) {
-                const linkDescendants = descendants(linkElement);
-
-                // Check if the cursor is positioned at the begining of link.
-                const isCursorAtStartOfLink = isZwnbsp(startContainer)
-                    ? linkDescendants.indexOf(startContainer) === 0
-                    : startContainer.nodeType === Node.TEXT_NODE &&
-                      linkDescendants.indexOf(startContainer) === 1 &&
-                      startOffset === 0;
-
-                // Check if the cursor is positioned at the end of link.
-                const isCursorAtEndOfLink = isZwnbsp(endContainer)
-                    ? linkDescendants.indexOf(endContainer) === linkDescendants.length - 1
-                    : endContainer.nodeType === Node.TEXT_NODE &&
-                      linkDescendants.indexOf(endContainer) === linkDescendants.length - 2 &&
-                      endOffset === nodeSize(endContainer);
-
-                // Handle selection movement.
-                if (isCursorAtStartOfLink || isCursorAtEndOfLink) {
-                    const [targetNode, targetOffset] = isCursorAtStartOfLink
-                        ? leftPos(linkElement)
-                        : rightPos(linkElement);
-                    this.dependencies.selection.setSelection({
-                        anchorNode: targetNode,
-                        anchorOffset: isCursorAtStartOfLink ? targetOffset - 1 : targetOffset + 1,
-                    });
-                    return;
-                }
-            }
-        }
         const anchorNode = this.document.getSelection()?.anchorNode;
         const isSelectionInProtected =
             this.document.getSelection()?.isCollapsed &&
@@ -856,7 +937,7 @@ export class LinkPlugin extends Plugin {
             const isLinkEditable = this.getResource("is_link_editable_predicates").some((p) =>
                 p(closestLinkElement)
             );
-            if (closestLinkElement && closestLinkElement.isContentEditable) {
+            if (closestLinkElement) {
                 if (closestLinkElement !== this.linkInDocument || !this.currentOverlay.isOpen) {
                     this.openLinkTools(closestLinkElement);
                 }
@@ -1054,6 +1135,27 @@ export class LinkPlugin extends Plugin {
         this.dependencies.history.addStep();
     }
 
+    updateFontSizedButtonClass(root) {
+        const buttons = selectElements(root, ".btn");
+        const parentButton = closestElement(root, ".btn");
+        if (parentButton && parentButton !== root) {
+            buttons.push(parentButton);
+        }
+        for (const button of buttons) {
+            if (button.querySelector(FONT_SIZED_SPAN_SELECTOR)) {
+                button.classList.add(FONT_SIZED_BUTTON_CLASS);
+            } else if (button.classList.contains(FONT_SIZED_BUTTON_CLASS)) {
+                removeClass(button, FONT_SIZED_BUTTON_CLASS);
+            }
+        }
+    }
+
+    clearFontSizedButtonClass(root) {
+        for (const button of selectElements(root, `.${FONT_SIZED_BUTTON_CLASS}`)) {
+            removeClass(button, FONT_SIZED_BUTTON_CLASS);
+        }
+    }
+
     removeEmptyLinks(root) {
         const remove = (node) => {
             for (const child of node.childNodes) {
@@ -1101,6 +1203,32 @@ export class LinkPlugin extends Plugin {
             (ev.inputType === "insertText" && ev.data === " ")
         ) {
             this.convertToLink = this.prepareConvertToLink();
+            if (this.convertToLink && ev.inputType === "insertText" && isBrowserSafari()) {
+                // The splitText calls in prepareConvertToLink leave Safari's
+                // native selection anchored on an empty text node, so letting
+                // the browser insert the space would put it in the wrong node
+                // and leave the selection with an out-of-range offset
+                // (IndexSizeError). Instead, take over: cancel the native
+                // insertion and perform the conversion, the space insertion
+                // and the selection placement ourselves.
+                ev.preventDefault();
+                // prepareConvertToLink left the selection collapsed on the
+                // text node following the future link.
+                const { anchorNode } = this.dependencies.selection.getEditableSelection();
+                // Use a non-breaking space: a regular space at the end of a
+                // block would be collapsed by the HTML whitespace rules.
+                anchorNode.textContent = "\u00a0" + anchorNode.textContent;
+                this.dependencies.selection.setSelection({
+                    anchorNode,
+                    anchorOffset: 1,
+                });
+                // Two steps, so that undo reverts the link conversion but
+                // keeps the typed space, as with the native insertion.
+                this.dependencies.history.addStep();
+                this.convertToLink();
+                this.dependencies.history.addStep();
+                delete this.convertToLink;
+            }
         }
     }
 
@@ -1213,7 +1341,9 @@ export class LinkPlugin extends Plugin {
             const textNodeSplitted = textSliced.split(/\s/);
             const potentialUrl = textNodeSplitted.pop();
             // In case of multiple matches, only the last one will be converted.
-            const match = [...potentialUrl.matchAll(new RegExp(URL_REGEX, "g"))].pop();
+            const match = [
+                ...potentialUrl.matchAll(new RegExp(URL_REGEX.source, URL_REGEX.flags + "g")),
+            ].pop();
 
             if (match) {
                 const nodeForSelectionRestore = selection.anchorNode.splitText(
@@ -1234,6 +1364,16 @@ export class LinkPlugin extends Plugin {
                 // split the text node and replace the url text with the link
                 const textNodeToReplace = selection.anchorNode.splitText(startOffset);
                 textNodeToReplace.splitText(match[0].length);
+                // The splitText calls above leave Safari's native selection
+                // anchored on an empty text node with stale offsets. Anything
+                // reading the selection afterwards (e.g. splitBlock when
+                // converting through Enter) would then throw an
+                // IndexSizeError. Re-anchor the selection at the caret
+                // position, right after the future link.
+                this.dependencies.selection.setSelection(
+                    { anchorNode: nodeForSelectionRestore, anchorOffset: 0 },
+                    { normalize: false }
+                );
                 const link = this.createLink(url, text);
                 return () => {
                     textNodeToReplace.splitText(match[0].length); // this will keep the space (that will have been added in the meantime)
@@ -1318,6 +1458,28 @@ export class LinkPlugin extends Plugin {
         this.dependencies.selection.setSelection({
             anchorNode: startContainer.previousSibling,
             anchorOffset: startContainer.previousSibling.childNodes.length - 1,
+        });
+        return true;
+    }
+
+    handleDeleteForward({ startContainer, startOffset }) {
+        if (
+            startContainer?.nextSibling?.textContent !== "\uFEFF" ||
+            nodeSize(startContainer) !== startOffset
+        ) {
+            return;
+        }
+        const feff = startContainer.nextSibling;
+        if (!feff.nextSibling || feff.nextSibling.nodeName !== "A") {
+            return;
+        }
+        const link = feff.nextSibling;
+        if (!link?.matches(".btn")) {
+            return;
+        }
+        this.dependencies.selection.setSelection({
+            anchorNode: link.firstChild,
+            anchorOffset: 1,
         });
         return true;
     }

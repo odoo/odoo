@@ -2,7 +2,7 @@ import { test, expect, describe } from "@odoo/hoot";
 import { getFilledOrder, setupPosEnv } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
 import { ConnectionLostError } from "@web/core/network/rpc";
-import { onRpc } from "@web/../tests/web_test_helpers";
+import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { imageUrl } from "@web/core/utils/urls";
 import { prepareRoundingVals } from "../accounting/utils";
 const { DateTime } = luxon;
@@ -19,6 +19,20 @@ describe("pos_store.js", () => {
         expect(order.is_tipped).toBe(true);
         expect(order.tip_amount).toBe(50);
         expect(order.lines.length).toBe(3); // 2 original lines + 1 tip line
+    });
+
+    test("a popstate after clickSaveOrder does not reopen the saved order", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        store.navigate("ProductScreen", { orderUuid: order.uuid });
+
+        store.clickSaveOrder();
+        const newOrder = store.getOrder();
+        expect(newOrder.uuid).not.toBe(order.uuid);
+        expect(store.router.state.params.orderUuid).toBe(newOrder.uuid);
+        await store.router.popStateCallback();
+
+        expect(store.getOrder().uuid).toBe(newOrder.uuid);
     });
 
     test("orderNoteFormat", async () => {
@@ -84,6 +98,54 @@ describe("pos_store.js", () => {
 
         expect(printCalled).toBe(false);
         expect(order.hasChange).toBe(false);
+    });
+
+    test("computeProductAttributesExclusion ignores exclusion of an unloaded value", async () => {
+        const store = await setupPosEnv();
+        // Exclusion 99 points to a value the POS never loaded, e.g. read back from IndexedDB
+        store.models.loadConnectedData({
+            "product.template.attribute.exclusion": [
+                { id: 98, product_template_attribute_value_id: 5, value_ids: [6, 9998] },
+                { id: 99, product_template_attribute_value_id: 9999, value_ids: [5] },
+            ],
+        });
+
+        const exclusions = store.computeProductAttributesExclusion();
+        expect([...exclusions.get(5)]).toEqual([6]);
+        expect([...exclusions.get(6)]).toEqual([5]);
+        expect(exclusions.has(9999)).toBe(false);
+    });
+
+    test("sendOrderInPreparation marks changes as sent when printed on retry", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        const printer = store.unwatched.printers[0];
+        let printedCount = 0;
+        printer.printReceipt = async () => {
+            printedCount++;
+            if (printedCount === 1) {
+                return { successful: false, message: { body: "The printer is not reachable." } };
+            }
+            return { successful: true };
+        };
+        let retryPopupProps;
+        patchWithCleanup(store.dialog, {
+            add: (component, props) => {
+                retryPopupProps = props;
+            },
+        });
+
+        await store.sendOrderInPreparation(order);
+        expect(retryPopupProps.message).toInclude("The printer is not reachable.");
+        expect(store.getOrderChanges(order).nbrOfChanges).toBe(5);
+
+        await retryPopupProps.retry();
+        expect(printedCount).toBe(2);
+
+        // The changes printed on retry must not be printed again with the next ones
+        expect(store.getOrderChanges(order).nbrOfChanges).toBe(0);
+        await store.sendOrderInPreparation(order);
+        expect(printedCount).toBe(2);
     });
 
     describe("syncAllOrders", () => {
@@ -158,6 +220,39 @@ describe("pos_store.js", () => {
             expect(order.lines[1].id).toBeOfType("string");
         });
 
+        test("retry sync reserializes updated order lines", async () => {
+            const store = await setupPosEnv();
+            const order = await getFilledOrder(store);
+
+            await store.syncAllOrders();
+
+            order.lines[0].qty += 1;
+
+            let syncCallCount = 0;
+            let secondPayload;
+            const originalCall = store.data.call.bind(store.data);
+            store.data.call = async (model, method, args, kwargs) => {
+                if (model === "pos.order" && method === "sync_from_ui") {
+                    syncCallCount += 1;
+                    if (syncCallCount === 1) {
+                        const firstPayload = args[0][0];
+                        expect(firstPayload.lines.length).toBeGreaterThan(0);
+                        expect(firstPayload.lines[0][0]).toBe(1);
+                        throw new Error("sync failure");
+                    }
+                    secondPayload = args[0][0];
+                }
+                return originalCall(model, method, args, kwargs);
+            };
+
+            await store.syncAllOrders({ orders: [order] });
+            await store.syncAllOrders({ orders: [order] });
+
+            expect(syncCallCount).toBe(2);
+            expect(secondPayload.lines.length).toBeGreaterThan(0);
+            expect(secondPayload.lines[0][0]).toBe(1);
+        });
+
         test("insync order should not be re-synced", async () => {
             const store = await setupPosEnv();
             const order = await getFilledOrder(store);
@@ -190,6 +285,36 @@ describe("pos_store.js", () => {
         expect(store.getOrder().lines[0].qty).toBe(1);
         await store.addLineToCurrentOrder({ product_tmpl_id: product.product_tmpl_id, qty: 3 }, {});
         expect(store.getOrder().lines[0].qty).toBe(4);
+    });
+
+    test("addLineToCurrentOrder keeps the given variant with a single-value dynamic attribute", async () => {
+        const store = await setupPosEnv();
+        store.setOrder(null);
+        const variantM = store.models["product.product"].get(61);
+
+        await store.addLineToCurrentOrder(
+            { product_id: variantM, product_tmpl_id: variantM.product_tmpl_id },
+            {},
+            variantM.needToConfigure()
+        );
+
+        const orderLines = store.getOrder().lines;
+        const addedProduct = orderLines.at(-1).product_id;
+        expect(orderLines.length).toBe(1);
+        expect(addedProduct.id).toBe(61);
+        const iceCream = store.models["product.product"].get(153);
+
+        await store.addLineToCurrentOrder(
+            { product_id: iceCream, product_tmpl_id: iceCream.product_tmpl_id },
+            {}
+        );
+        const lastOrderLine = store.getOrder().lines[1];
+        const addedProduct1 = lastOrderLine.product_id;
+        expect(store.getOrder().lines.length).toBe(2);
+        expect(addedProduct1.id).toBe(153);
+        expect(lastOrderLine.attribute_value_ids).toHaveLength(1);
+        expect(lastOrderLine.attribute_value_ids[0].id).toBe(12);
+        expect(lastOrderLine.attribute_value_ids[0].name).toBe("Male");
     });
 
     test("changesToOrderNoPrepCateg", async () => {
@@ -366,9 +491,9 @@ describe("pos_store.js", () => {
         const store = await setupPosEnv();
         store.selectedCategory = store.models["pos.category"].get(1);
         let products = store.productsToDisplay;
-        expect(products.length).toBe(2);
-        expect(products[0].id).toBe(17);
-        expect(products[1].id).toBe(5);
+        expect(products.length).toBe(3);
+        expect(products[1].id).toBe(17);
+        expect(products[products.length - 1].id).toBe(5);
         expect(store.selectedCategory.id).toBe(1);
         store.selectedCategory = store.models["pos.category"].get(1);
         store.searchProductWord = "TEST";
@@ -391,7 +516,7 @@ describe("pos_store.js", () => {
         let grouped = store.productToDisplayByCateg;
         expect(grouped.length).toBe(1); //Only one group
         expect(grouped[0][0]).toBe("0");
-        expect(grouped[0][1].length).toBe(15);
+        expect(grouped[0][1].length).toBe(16);
 
         // Case 2: Grouping enabled
         store.config.iface_group_by_categ = true;
@@ -426,8 +551,8 @@ describe("pos_store.js", () => {
         grouped = store.productToDisplayByCateg;
         expect(grouped.length).toBe(1);
         expect(grouped[0][0]).toBe(1);
-        expect(grouped[0][1][0].name).toBe("Multi Category Product");
-        expect(grouped[0][1][1].name).toBe("TEST");
+        expect(grouped[0][1][1].name).toBe("Multi Category Product");
+        expect(grouped[0][1][2].name).toBe("TEST");
 
         // Case 5: Grouping with category 'Food' selected (parent of 'Burger' & 'Pizza')
         store.selectedCategory = store.models["pos.category"].get(3);
@@ -521,6 +646,18 @@ describe("pos_store.js", () => {
         const deletedOrder = await store.onDeleteOrder(order);
         expect(order.uiState.displayed).toBe(false);
         expect(deletedOrder).toBe(true);
+    });
+
+    test("onDeleteOrder keeps the router state in sync with the order it switches to", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        store.navigate("ProductScreen", { orderUuid: order.uuid });
+
+        await store.onDeleteOrder(order);
+
+        const newOrder = store.getOrder();
+        expect(newOrder.uuid).not.toBe(order.uuid);
+        expect(store.router.state.params.orderUuid).toBe(newOrder.uuid);
     });
 
     test("setNextOrderRefs", async () => {
@@ -652,6 +789,84 @@ describe("pos_store.js", () => {
             expect(order.lines[1].price_unit).toEqual(3);
             expect(order.lines[1].price_subtotal).toEqual(6);
             expect(order.lines[1].price_subtotal_incl).toEqual(7.5);
+        });
+    });
+
+    const setupScale = (store) => {
+        store.config.iface_electronic_scale = true;
+        const product = store.models["product.product"].get(5);
+        product.product_tmpl_id.to_weight = true;
+        const weighed = [];
+        store.weighProduct = async () => {
+            weighed.push(true);
+            return 2.5;
+        };
+        return { product, weighed };
+    };
+
+    test("scanned weighed product opens the scale", async () => {
+        const store = await setupPosEnv();
+        const { product, weighed } = setupScale(store);
+        const code = { type: "product", base_code: "0100100", code: "0100100" };
+        const line = await store.addLineToCurrentOrder(
+            { product_id: product, product_tmpl_id: product.product_tmpl_id },
+            { code },
+            product.product_tmpl_id.needToConfigure()
+        );
+        expect(weighed).toHaveLength(1);
+        expect(line.qty).toBe(2.5);
+    });
+
+    test("scanned weight barcode skips the scale", async () => {
+        const store = await setupPosEnv();
+        const { product, weighed } = setupScale(store);
+        const code = { type: "weight", base_code: "0100100", code: "0100100", value: 1.25 };
+        const line = await store.addLineToCurrentOrder(
+            { product_id: product, product_tmpl_id: product.product_tmpl_id },
+            { code },
+            product.product_tmpl_id.needToConfigure()
+        );
+        expect(weighed).toHaveLength(0);
+        expect(line.qty).toBe(1.25);
+    });
+
+    describe("reloadData", () => {
+        test("keeps a paid order that could not be synced", async () => {
+            const store = await setupPosEnv();
+            const order = await getFilledOrder(store);
+            order.state = "paid";
+            store.data.network.offline = true;
+            patchWithCleanup(store.data, {
+                async resetIndexedDB() {
+                    expect.step("resetIndexedDB");
+                    throw new Error("stop before leaving the page");
+                },
+            });
+            patchWithCleanup(store.dialog, {
+                add(component, props) {
+                    expect.step(props.title);
+                },
+            });
+
+            await store.reloadData().catch(() => {});
+            expect.verifySteps(["Reload Data"]);
+            expect(store.models["pos.order"].get(order.id)).toBe(order);
+            expect(order.isSynced).toBe(false);
+        });
+
+        test("syncs a paid order before wiping local data", async () => {
+            const store = await setupPosEnv();
+            const order = await getFilledOrder(store);
+            order.state = "paid";
+            patchWithCleanup(store.data, {
+                async resetIndexedDB() {
+                    expect.step(`resetIndexedDB, synced: ${order.isSynced}`);
+                    throw new Error("stop before leaving the page");
+                },
+            });
+
+            await expect(store.reloadData()).rejects.toThrow("stop before leaving the page");
+            expect.verifySteps(["resetIndexedDB, synced: true"]);
         });
     });
 });

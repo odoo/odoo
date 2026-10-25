@@ -162,7 +162,7 @@ export class ToolbarPlugin extends Plugin {
     /** @type {import("plugins").EditorResources} */
     resources = {
         selectionchange_handlers: this.handleSelectionChange.bind(this),
-        selection_leave_handlers: () => this.closeToolbar(),
+        selection_leave_handlers: () => this.closeToolbar(null, { force: true }),
         selection_enter_handlers: () => this.updateToolbar(),
         step_added_handlers: () => this.updateToolbar(),
         user_commands: {
@@ -218,7 +218,12 @@ export class ToolbarPlugin extends Plugin {
         this.state = reactive({ buttonGroups: [], namespace: undefined });
 
         this.onSelectionChangeActive = true;
-        this.debouncedUpdateToolbar = debounce(this._updateToolbar, DELAY_TOOLBAR_OPEN);
+        // Re-enable selection tracking only after the debounced update finishes,
+        // so async selectionchange events don't open the toolbar early.
+        this.debouncedUpdateToolbar = debounce(() => {
+            this._updateToolbar();
+            this.onSelectionChangeActive = true;
+        }, DELAY_TOOLBAR_OPEN);
 
         if (this.isMobileToolbar) {
             this.addDomListener(this.editable, "pointerup", () => {
@@ -236,8 +241,7 @@ export class ToolbarPlugin extends Plugin {
             this.addGlobalDomListener("mouseup", (ev) => {
                 if (ev.detail >= 2) {
                     // Delayed open, waiting for a possible triple click.
-                    this.onSelectionChangeActive = true;
-                    this.debouncedUpdateToolbar();
+                    this.triggerDebouncedUpdateToolbar();
                 } else {
                     // Fast open, just wait for a possible selection change due
                     // to mouseup.
@@ -269,16 +273,14 @@ export class ToolbarPlugin extends Plugin {
             this.addDomListener(this.editable, "keyup", (ev) => {
                 if (ev.key?.startsWith("Arrow")) {
                     this.pendingArrowKey = false;
-                    this.onSelectionChangeActive = true;
-                    this.debouncedUpdateToolbar();
+                    this.triggerDebouncedUpdateToolbar();
                 }
             });
             if (isMacOS()) {
                 this.addDomListener(this.document, "selectionchange", () => {
                     if (this.pendingArrowKey && !this.isMouseDown) {
                         this.pendingArrowKey = false;
-                        this.onSelectionChangeActive = true;
-                        this.debouncedUpdateToolbar();
+                        this.triggerDebouncedUpdateToolbar();
                     }
                 });
                 this.addDomListener(this.editable, "mousedown", () => (this.isMouseDown = true));
@@ -299,6 +301,13 @@ export class ToolbarPlugin extends Plugin {
         this.updateToolbar.cancel();
         this.overlay.close();
         super.destroy();
+    }
+
+    /**
+     * Schedules a debounced toolbar update.
+     */
+    triggerDebouncedUpdateToolbar() {
+        this.debouncedUpdateToolbar();
     }
 
     /**
@@ -362,6 +371,10 @@ export class ToolbarPlugin extends Plugin {
         };
     }
 
+    getIsToolbarOpen() {
+        return this.overlay.isOpen;
+    }
+
     handleSelectionChange(selectionData) {
         if (this.onSelectionChangeActive) {
             this.updateToolbar(selectionData);
@@ -375,6 +388,14 @@ export class ToolbarPlugin extends Plugin {
      */
     updateToolbar = debounce(this._updateToolbar, 0, { trailing: true });
     _updateToolbar(selectionData = this.dependencies.selection.getSelectionData()) {
+        // A debounced/deferred update can still fire after the plugin has been
+        // destroyed (e.g. the "mouseup" handler re-arms `updateToolbar` through a
+        // raw setTimeout that isn't cancelled by `destroy`). At that point the
+        // editable's document is detached and `defaultView` is null, which would
+        // crash in `getFilteredTargetedNodes`. Bail out early in that case.
+        if (this.isDestroyed) {
+            return;
+        }
         // Prevent toolbar to open if the selection is not in the editable area,
         // or if the selection is protected or protecting.
         if (
@@ -461,7 +482,7 @@ export class ToolbarPlugin extends Plugin {
     /**
      * @param {SelectionData} selectionData
      */
-    closeToolbar(selectionData = null) {
+    closeToolbar(selectionData = null, { force = false } = {}) {
         if (!this.overlay.isOpen) {
             return;
         }
@@ -470,8 +491,9 @@ export class ToolbarPlugin extends Plugin {
             ? selectionData.editableSelection?.anchorNode
             : document.getSelection()?.anchorNode;
         const shouldPreventClosing =
+            !force &&
             anchor?.closest?.("[data-prevent-closing-overlay]")?.dataset?.preventClosingOverlay ===
-            "true";
+                "true";
         if (!shouldPreventClosing) {
             this.overlay.close();
             this.isToolbarExpanded = false;
@@ -554,6 +576,7 @@ class MobileToolbarOverlay {
 
     open({ props }) {
         props.class = "shadow";
+        props.editable = this.editable;
         if (!this.isOpen) {
             const modal = this.editable.closest(".o_modal_full");
             if (modal) {

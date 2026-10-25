@@ -56,7 +56,7 @@
                         t-attf-for="ptav-{{ptav.id}}-input">
                         <span class="me-1" t-out="ptav.name"/>
                         <BadgeExtraPrice
-                            t-if="ptav.price_extra"
+                            t-if="ptav.price_extra &amp;&amp; this.props.show_extra_price"
                             price="ptav.price_extra"
                             currencyId="this.env.currency.id"
                         />
@@ -75,10 +75,10 @@
         </ul>
     </t>
     <t t-name="sale.ptav_pills">
-         <ul class="list-inline list-unstyled flex-grow-1 mb-0">
+         <ul class="d-flex flex-wrap gap-2 list-unstyled flex-grow-1 mb-0">
             <li t-foreach="this.props.attribute_values" t-as="ptav" t-key="ptav.id"
                 t-att-class="{'active': this.props.selected_attribute_value_ids.includes(ptav.id)}"
-                class="o_sale_product_configurator_ptav_pills list-inline-item">
+                class="o_sale_product_configurator_ptav_pills">
                 <label
                     class="btn btn-outline-secondary"
                     t-att-class="{ 'css_not_available': ptav.excluded }"
@@ -108,7 +108,7 @@
             <li t-foreach="this.props.attribute_values" t-as="ptav" t-key="ptav.id"
                 class="list-inline-item me-2">
                 <t t-set="img_style" t-value="ptav.image ? 'background:url(/web/image/product.template.attribute.value/'+ptav.id+'/image); background-size:cover;' : ''"/>
-                <t t-set="color_style" t-value="ptav.is_custom ? '' : 'background-color:' + ptav.html_color"/>
+                <t t-set="color_style" t-value="ptav.is_custom ? '' : 'background-color:' + (ptav.html_color || ptav.name)"/>
                 <label
                     class="position-relative d-inline-block rounded-pill text-center"
                     t-att-title="ptav.name"
@@ -116,7 +116,7 @@
                     t-att-class="{'o_sale_product_configurator_ptav_color': true,
                                   'active': this.props.selected_attribute_value_ids.includes(ptav.id),
                                   'custom_value': ptav.is_custom,
-                                  'transparent': !ptav.is_custom and !ptav.html_color,
+                                  'transparent': !ptav.is_custom and !ptav.html_color and !ptav.name,
                                   'css_not_available': ptav.excluded }">
                     <input
                         type="radio"

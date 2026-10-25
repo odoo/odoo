@@ -72,11 +72,10 @@ export class ChatWindow extends Component {
     }
 
     get autofocusThread() {
-        const autofocus = this.props.chatWindow.autofocus;
-        if (this.isMobileOS) {
-            return autofocus + (this.thread.composerDisabled ? 1 : 0);
+        if (this.isMobileOS || this.thread.composerDisabled) {
+            return this.props.chatWindow.autofocus;
         }
-        return this.thread.composerDisabled ? autofocus + 1 : undefined;
+        return undefined;
     }
 
     get composerType() {

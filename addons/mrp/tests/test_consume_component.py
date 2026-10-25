@@ -24,6 +24,8 @@ class TestConsumeComponentCommon(common.TransactionCase):
         cls.SERIAL_TRIGGERS_COUNT = 2
         cls.DEFAULT_TRIGGERS_COUNT = 1
 
+        cls.env.user.group_ids |= cls.env.ref('stock.group_production_lot')
+
         cls.manufacture_route = cls.env.ref('mrp.route_warehouse0_manufacture')
         cls.stock_id = cls.env.ref('stock.stock_location_stock').id
 
@@ -384,7 +386,6 @@ class TestConsumeComponent(TestConsumeComponentCommon):
             {'quantity': 2.0, 'picked': False, 'lot_ids': lot_1.ids},
             {'quantity': 1.0, 'picked': False, 'lot_ids': lot_2.ids},
         ])
-        mo.move_raw_ids.picked = True
         mo.button_mark_done()
 
     def test_automatic_consume_new_added_component(self):
@@ -453,8 +454,6 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         Check that indicated lot on raw move lines are conserved even if the first
         lot has enough quantity on hand
         """
-        grp_lot = self.env.ref('stock.group_production_lot')
-        self.env.user.group_ids |= grp_lot
         self.bom_serial_lines[0].unlink()
         self.bom_serial_lines[2].unlink()
 
@@ -506,7 +505,6 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         Check that moves created after setting the qty producing are
         also taken into considaration once the MO is marked as done
         """
-        self.env.user.group_ids += self.env.ref('stock.group_production_lot')
         mo = self.env['mrp.production'].create({
             'product_id': self.produced_serial.id,
             'product_qty': 1,
@@ -585,3 +583,150 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         # Check quantity available in stock for each product
         self.assertEqual(self.raw_none.qty_available, 0)
         self.assertEqual(self.raw_lot.qty_available, 0)
+
+    def test_scrapped_component_is_not_reused_on_mo(self):
+        """Ensure scrapped lots/serials are not reused on the MO.
+
+        When a component tracked by lot/serial number is scrapped during
+        a work order, the same lot/serial should no longer be used if it is no
+        longer available in inventory.
+        """
+        self.create_quant(self.raw_serial, 2).action_apply_inventory()
+        self.env['mrp.routing.workcenter'].create({
+            'name': 'operation',
+            'workcenter_id': self.workcenter.id,
+            'bom_id': self.bom_none.id,
+        })
+        mo = self.create_mo(self.mo_none_tmpl, 1)
+        mo.action_confirm()
+        mo.workorder_ids.button_start()
+        sn = mo.move_raw_ids[2].lot_ids
+        move_line = mo.move_raw_ids[2].move_line_ids
+        self.env['stock.scrap'].create({
+            'product_id': self.raw_serial.id,
+            'lot_id': sn.id,
+            'production_id': mo.id,
+        }).do_scrap()
+        self.assertTrue(mo.move_raw_ids[2].lot_ids)
+        self.assertFalse(sn in mo.move_raw_ids[2].lot_ids)
+        self.assertFalse(move_line.exists())
+
+    def test_2_steps_manufacturing_reservation_with_tracked_components(self):
+        """Ensure lot-tracked componnent is correctly picked in production
+        even if production quantity is manually set before validating
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.manufacture_steps = 'pbm'
+        self.bom_none.write({
+            'consumption': 'warning',
+            'product_id': self.produced_none,
+        })
+        components = self.bom_none.bom_line_ids.mapped('product_id')
+        lot, serial = self.env['stock.lot'].create([
+            {
+                'name': 'LOT01',
+                'product_id': components[1].id,
+                'company_id': self.env.company.id,
+            },
+            {
+                'name': 'SN01',
+                'product_id': components[2].id,
+                'company_id': self.env.company.id,
+            },
+        ])
+        self.env['stock.quant']._update_available_quantity(components[0], warehouse.lot_stock_id, 3)
+        self.env['stock.quant']._update_available_quantity(components[1], warehouse.lot_stock_id, 2, lot_id=lot)
+        self.env['stock.quant']._update_available_quantity(components[2], warehouse.lot_stock_id, 1, lot_id=serial)
+        mo = self.env['mrp.production'].create({
+            'product_id': self.bom_none.product_id.id,
+            'product_qty': 1,
+            'bom_id': self.bom_none.id,
+        })
+        mo.action_confirm()
+        self.assertRecordValues(mo.picking_ids.move_ids, [
+            {'quantity': 3.0, 'product_qty': 3.0, 'picked': False, 'lot_ids': []},
+            {'quantity': 2.0, 'product_qty': 2.0, 'picked': False, 'lot_ids': [lot.id]},
+            {'quantity': 1.0, 'product_qty': 1.0, 'picked': False, 'lot_ids': [serial.id]},
+        ])
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'forecast_availability': 3.0, 'quantity': 0.0, 'picked': False, 'lot_ids': []},
+            {'forecast_availability': 2.0, 'quantity': 0.0, 'picked': False, 'lot_ids': []},
+            {'forecast_availability': 1.0, 'quantity': 0.0, 'picked': False, 'lot_ids': []},
+        ])
+        with Form(mo) as mo_form:
+            mo_form.qty_producing = 1.0
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'forecast_availability': 3.0, 'quantity': 3.0, 'picked': True, 'lot_ids': []},
+            {'forecast_availability': 2.0, 'quantity': 0.0, 'picked': False, 'lot_ids': []},
+            {'forecast_availability': 1.0, 'quantity': 0.0, 'picked': False, 'lot_ids': []},
+        ])
+        mo.picking_ids.button_validate()
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'quantity': 3.0, 'picked': True, 'lot_ids': []},
+            {'quantity': 2.0, 'picked': False, 'lot_ids': lot.ids},
+            {'quantity': 1.0, 'picked': False, 'lot_ids': serial.ids},
+        ])
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'quantity': 3.0, 'picked': True, 'lot_ids': []},
+            {'quantity': 2.0, 'picked': True, 'lot_ids': lot.ids},
+            {'quantity': 1.0, 'picked': True, 'lot_ids': serial.ids},
+        ])
+
+    def test_2_steps_manufacturing_partial_production_with_tracked_components(self):
+        """Ensure lots/serials tracked components are correctly consumed on MOs
+        when the order is only partially produced
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.manufacture_steps = 'pbm_sam'
+        self.bom_none.write({
+            'consumption': 'warning',
+            'product_id': self.produced_none,
+        })
+        components = self.bom_none.bom_line_ids.mapped('product_id')
+        lot, sn1, sn2 = self.env['stock.lot'].create([
+            {
+                'name': 'LOT01',
+                'product_id': components[1].id,
+                'company_id': self.env.company.id,
+            },
+            {
+                'name': 'SN01',
+                'product_id': components[2].id,
+                'company_id': self.env.company.id,
+            },
+            {
+                'name': 'SN02',
+                'product_id': components[2].id,
+                'company_id': self.env.company.id,
+            },
+        ])
+        self.env['stock.quant']._update_available_quantity(components[0], warehouse.lot_stock_id, 6)
+        self.env['stock.quant']._update_available_quantity(components[1], warehouse.lot_stock_id, 4, lot_id=lot)
+        self.env['stock.quant']._update_available_quantity(components[2], warehouse.lot_stock_id, 1, lot_id=sn1)
+        self.env['stock.quant']._update_available_quantity(components[2], warehouse.lot_stock_id, 1, lot_id=sn2)
+        mo = self.env['mrp.production'].create({
+            'product_id': self.bom_none.product_id.id,
+            'product_qty': 2.0,
+            'bom_id': self.bom_none.id,
+        })
+        mo.action_confirm()
+        with Form(mo) as mo_form:
+            mo_form.qty_producing = 1.0
+        mo.picking_ids.button_validate()
+        action = mo.button_mark_done()
+        self.assertEqual(action.get('res_model'), 'mrp.production.backorder')
+        Form(self.env['mrp.production.backorder'].with_context(**action['context'])).save().action_backorder()
+        self.assertEqual(mo.state, 'done')
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'quantity': 3.0, 'picked': True},
+            {'quantity': 2.0, 'picked': True},
+            {'quantity': 1.0, 'picked': True},
+        ])
+        mo_backorder = mo.production_group_id.production_ids[-1]
+        self.assertRecordValues(mo_backorder.move_raw_ids, [
+            {'quantity': 3.0, 'picked': False},
+            {'quantity': 2.0, 'picked': False},
+            {'quantity': 1.0, 'picked': False},
+        ])

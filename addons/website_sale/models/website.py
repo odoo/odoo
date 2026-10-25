@@ -438,7 +438,7 @@ class Website(models.Model):
                                 'id': cat.id,
                             }
                             for cat in ecommerce_categories
-                        ])
+                        ], ensure_ascii=False)
 
                 if footer_updated:
                     footer_view.write({'arch': etree.tostring(arch_tree)})
@@ -575,13 +575,13 @@ class Website(models.Model):
         if country_code:
             pricelists |= self.env['res.country.group'].search(
                 [('country_ids.code', '=', country_code)]
-            ).pricelist_ids.filtered(
+            ).sudo().pricelist_ids.filtered(
                 lambda pl: pl._is_available_on_website(self) and check_pricelist(pl)
             )
 
         # no GeoIP or no pricelist for this country
         if not pricelists:
-            pricelists = pricelists.browse(website_pricelist_ids).filtered(
+            pricelists = pricelists.browse(website_pricelist_ids).sudo().filtered(
                 lambda pl: check_pricelist(pl) and not (country_code and pl.country_group_ids))
 
         # if logged in, add partner pl (which is `property_product_pricelist`, might not be website compliant)
@@ -691,7 +691,7 @@ class Website(models.Model):
             'company_id': self.company_id.id,
             'partner_id': partner_sudo.id,
 
-            'fiscal_position_id': request.fiscal_position.id,
+            **(self.is_public_user() and {'fiscal_position_id': request.fiscal_position.id} or {}),
             'pricelist_id': request.pricelist.id,
 
             'team_id': self.salesteam_id.id,
@@ -755,7 +755,7 @@ class Website(models.Model):
             fpos_sudo = AccountFiscalPositionSudo.browse(
                 request.session[FISCAL_POSITION_SESSION_CACHE_KEY]
             )
-            if fpos_sudo and fpos_sudo.exists():
+            if not fpos_sudo or fpos_sudo.exists():
                 return fpos_sudo
 
         partner_sudo = self.env.user.partner_id
@@ -1080,11 +1080,10 @@ class Website(models.Model):
         return '64px'
 
     def _get_basic_feed_product_domain(self):
-        return Domain.AND([
-            Domain('is_published', '=', True),
-            Domain('type', 'in', ('consu', 'combo')),
-            self.website_domain(),
-        ])
+        return (
+            Domain("type", "in", {"consu", "combo"})
+            & self.with_user(self.user_id).sale_product_domain()
+        )
 
     def _default_feed_is_valid(self):
         self.ensure_one()

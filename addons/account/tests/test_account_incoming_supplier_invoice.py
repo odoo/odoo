@@ -13,6 +13,7 @@ from odoo.tools.misc import mute_logger
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE, MAIL_PDF_MIME_TEMPLATE
 from odoo.addons.test_mimetypes.tests.test_guess_mimetypes import contents
 
 
@@ -366,6 +367,41 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
         self.assertEqual(message_ids.body, '<p>Vendor Bill Created</p>', 'Only the invoice creation should be posted')
 
         self.assertRegex(invoice.name_placeholder, r'BILL/\d{4}/\d{2}/0001')
+
+    def test_supplier_invoice_mailed_shared_email_in_other_company(self):
+        """ The sender address exists on external partners in several
+        companies. It must resolve to the partner in the journal's company,
+        otherwise account.move.partner_id's check_company bounces the mail. """
+        company = self.company_data['company']
+        other_company = self.env['res.company'].create({'name': 'Other Company'})
+        shared_email = 'shared@supplier.example.com'
+        # Created in the other company first so it has the lower id: that is
+        # the partner the matcher returns when nothing disambiguates by company.
+        self.env['res.partner'].create({
+            'name': 'Shared Supplier (other company)',
+            'email': shared_email,
+            'company_id': other_company.id,
+        })
+        supplier = self.env['res.partner'].create({
+            'name': 'Shared Supplier',
+            'email': shared_email,
+            'company_id': company.id,
+        })
+        message_parsed = {
+            'message_id': 'message-id-dead-beef',
+            'message_type': 'email',
+            'subject': 'Incoming bill',
+            'from': '%s <%s>' % (supplier.name, shared_email),
+            'to': '%s@%s' % (self.journal.alias_id.alias_name, self.journal.alias_id.alias_domain),
+            'body': "You know, that thing that you bought.",
+            'attachments': [b'Hello, invoice'],
+        }
+
+        # sudo() mirrors the mail gateway (ModelCtx.sudo()), so the other
+        # company's partner is a candidate regardless of allowed companies.
+        invoice = self.env['account.move'].sudo().message_new(
+            message_parsed, {'move_type': 'in_invoice', 'journal_id': self.journal.id})
+        self.assertEqual(invoice.partner_id, supplier)
 
     def test_supplier_invoice_forwarded_by_internal_user_without_supplier(self):
         """ In this test, the bill was forwarded by an employee,
@@ -1009,6 +1045,38 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                 }
             },
         )
+
+    def test_original_email_not_set_as_main_attachment(self):
+        """ Testt that with "Keep Original" enabled on the incoming mail server,
+            a copy of the email is stored but not kept as a main attachment of the
+            invoice.
+        """
+        # Empty email, the invoice should have no main attachment
+        with RecordCapturer(self.env['account.move']) as move_capturer:
+            self.format_and_process(
+                MAIL_TEMPLATE,
+                'supplier@example.com',
+                self.journal.alias_id.display_name,
+                target_model='account.move',
+                save_original=True,
+            )
+        invoice = move_capturer.records
+        self.assertFalse(invoice.message_main_attachment_id)
+
+        # Email with a PDF, the invoice should have the pdf as main attachment
+        with RecordCapturer(self.env['account.move']) as move_capturer:
+            self.format_and_process(
+                MAIL_PDF_MIME_TEMPLATE,
+                'supplier@example.com',
+                self.journal.alias_id.display_name,
+                target_model='account.move',
+                pdf_mime='application/pdf',
+                save_original=True,
+            )
+        invoice = move_capturer.records
+        main = invoice.message_main_attachment_id
+        self.assertEqual(main.mimetype, 'application/pdf')
+        self.assertEqual(main.res_id, invoice.id)
 
     def test_import_with_traceback(self):
         # Verify that even an Exception does not cause the import to fail, and that we log the attachment in the chatter

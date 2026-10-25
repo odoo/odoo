@@ -204,3 +204,79 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
                 expected_amounts[ln.matched_credit_ids.exchange_move_id.id] = 50.0
 
         self.assert_invoice_outstanding_reconciled_widget(out_invoice, expected_amounts)
+
+    def test_outstanding_payments_branch_and_companies(self):
+        """ Test the outstanding payments widget on invoices of a branch
+        of the company having oustanding payments.
+        """
+
+        branch_a, branch_b = self.env['res.company'].create([{
+            'name': name,
+            'parent_id': self.env.company.id,
+        } for name in ['Branch A', 'Branch B']])
+        self.cr.precommit.run()  # load the CoA
+
+        other_company_data = self.setup_other_company()
+        other_company = other_company_data['company']
+
+        self.env['account.journal'].with_company(company=other_company).create([
+            {'name': 'sale', 'type': 'sale', 'code': 'SALE'},
+            {'name': 'purchase', 'type': 'purchase', 'code': 'BUY'},
+        ])
+
+        # Customer invoice of 2500.0 in curr_1.
+        out_invoices = self.env['account.move'].create([{
+            'move_type': 'out_invoice',
+            'date': '2017-01-01',
+            'invoice_date': '2017-01-01',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.curr_1.id,
+            'company_id': company.id,
+            'invoice_line_ids': [(0, 0, {'name': '/', 'price_unit': 2500.0})],
+        } for company in [branch_a, branch_b, other_company, self.company]])
+        out_invoices.action_post()
+
+        # Vendor bill of 2500.0 in curr_1.
+        in_invoices = self.env['account.move'].create([{
+            'move_type': 'in_invoice',
+            'date': '2017-01-01',
+            'invoice_date': '2017-01-01',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.curr_1.id,
+            'company_id': company.id,
+            'invoice_line_ids': [(0, 0, {'name': '/', 'price_unit': 2500.0})],
+        } for company in [branch_a, branch_b, other_company, self.company]])
+        in_invoices.action_post()
+
+        out_refund = self.env['account.move'].create([{
+            'move_type': 'out_refund',
+            'partner_id': self.partner_a.id,
+            'company_id': branch.id,
+            'invoice_line_ids': [(0, 0, {'name': '/', 'price_unit': price})],
+        } for branch, price in zip((branch_a, branch_b), (2500.0, 1000.0))])
+        out_refund.action_post()
+        in_refund = self.env['account.move'].create([{
+            'move_type': 'in_refund',
+            'invoice_date': '2017-01-01',
+            'partner_id': self.partner_a.id,
+            'company_id': branch.id,
+            'invoice_line_ids': [(0, 0, {'name': '/', 'price_unit': price})],
+        } for branch, price in zip((branch_a, branch_b), (2500.0, 1000.0))])
+        in_refund.action_post()
+
+        expected_amounts = {
+            self.payment_2016_curr_1.id: 500.0,
+            self.payment_2016_curr_2.id: 500.0,
+            self.payment_2017_curr_2.id: 500.0,
+            self.payment_2016_curr_3.id: 500.0,
+            self.payment_2017_curr_3.id: 500.0,
+        }
+
+        self.assert_invoice_outstanding_to_reconcile_widget(out_invoices[0], {out_refund[0].id: 2500.0})
+        self.assert_invoice_outstanding_to_reconcile_widget(in_invoices[0], {in_refund[0].id: 2500.0})
+        self.assert_invoice_outstanding_to_reconcile_widget(out_invoices[1], {out_refund[1].id: 1000.0})
+        self.assert_invoice_outstanding_to_reconcile_widget(in_invoices[1], {in_refund[1].id: 1000.0})
+        self.assert_invoice_outstanding_to_reconcile_widget(out_invoices[2], {})
+        self.assert_invoice_outstanding_to_reconcile_widget(in_invoices[2], {})
+        self.assert_invoice_outstanding_to_reconcile_widget(out_invoices[3], {**expected_amounts, out_refund[0].id: 2500.0, out_refund[1].id: 1000.0})
+        self.assert_invoice_outstanding_to_reconcile_widget(in_invoices[3], {**expected_amounts, in_refund[0].id: 2500.0, in_refund[1].id: 1000.0})

@@ -45,15 +45,24 @@ class StockMove(models.Model):
     def _compute_description_picking(self):
         super()._compute_description_picking()
         for move in self:
-            if move.purchase_line_id:
+            if move.purchase_line_id and not move.description_picking_manual:
                 current_description = move.description_picking
+                product = move.product_id.with_context(lang=move._get_lang())
+                has_receipt_description = bool(product._get_picking_description(move.picking_type_id))
+                if not has_receipt_description:
+                    current_description = '\n'.join(
+                        line for line in current_description.split('\n')
+                        if line not in {product.display_name, product.name}
+                    )
                 seller = move.purchase_line_id.sudo().selected_seller_id
                 vendor_reference = f'[{seller.product_code}]' if seller.product_code else ''
                 vendor_reference += f' {seller.product_name}' if seller.product_name else ''
                 if vendor_reference.strip() in current_description:
                     vendor_reference = ''
                 no_variant_attributes = '\n'.join(f'{attribute.attribute_id.name}: {attribute.name}' for attribute in move.purchase_line_id.sudo().product_no_variant_attribute_value_ids)
-                move.description_picking = (no_variant_attributes + '\n' + vendor_reference + '\n' + current_description).strip()
+                if no_variant_attributes and no_variant_attributes.strip() in current_description:
+                    no_variant_attributes = ''
+                move.description_picking = '\n'.join(part for part in (no_variant_attributes, vendor_reference, current_description) if part).strip()
 
     def _get_description(self):
         return self.purchase_line_id.name if self.purchase_line_id else super()._get_description()
@@ -128,7 +137,11 @@ class StockMove(models.Model):
 
     def _is_purchase_return(self):
         self.ensure_one()
-        return self.location_dest_id.usage == "supplier" or (self.origin_returned_move_id and self.location_dest_id == self.env.ref('stock.stock_location_inter_company', raise_if_not_found=False))
+        return self.location_dest_id.usage == "supplier"\
+            or self.origin_returned_move_id and (
+                self.location_dest_id == self.env.ref('stock.stock_location_inter_company', raise_if_not_found=False) or
+                self.origin_returned_move_id.location_usage == "supplier"
+            )
 
     def _get_all_related_sm(self, product):
         return super()._get_all_related_sm(product) | self.filtered(lambda m: m.purchase_line_id.product_id == product)
@@ -227,8 +240,7 @@ class StockMove(models.Model):
         if not self.purchase_line_id:
             return super()._get_value_from_quotation(quantity, at_date)
         price_unit = self.purchase_line_id.with_context(conversion_date=self.date)._get_stock_move_price_unit()
-        uom_quantity = self.product_uom._compute_quantity(quantity, self.product_id.uom_id)
-        quantity = min(quantity, uom_quantity)
+        quantity = min(quantity, self.product_uom._compute_quantity(self.quantity, self.product_id.uom_id))
         cost_ratio = self._get_cost_ratio(quantity)
         value = price_unit * cost_ratio
         return {

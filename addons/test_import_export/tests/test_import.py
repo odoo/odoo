@@ -1277,6 +1277,44 @@ g,g@example.com
         self.assertEqual(partners_3.mapped('name'), ['d', 'e', 'f', 'g'])
 
 
+class TestImageImport(TransactionCase):
+    webp = base64.b64decode(
+        b'UklGRjoAAABXRUJQVlA4IC4AAAAwAQCdASoBAAEAAUAmJaAAA3AA/u/uY//8s//2W/7LeM///5Bj'
+    )
+
+    def _import_image(self, content):
+        response = unittest.mock.Mock(
+            headers={},
+            iter_content=unittest.mock.Mock(return_value=[content]),
+        )
+        session = unittest.mock.Mock()
+        session.get.return_value = response
+        return self.env['base_import.import']._import_file_by_url(
+            'https://example.com/image.webp', session, 'image', 0,
+        )
+
+    def test_import_webp_by_url(self):
+        self.assertEqual(self._import_image(self.webp), base64.b64encode(self.webp))
+
+    def test_import_unsupported_webp_by_url(self):
+        # ImageProcess accepts unknown WebP codecs and returns the source bytes.
+        content = b'RIFF\x08\x00\x00\x00WEBPVP8?'
+        self.assertEqual(self._import_image(content), base64.b64encode(content))
+
+    def test_import_oversized_webp_by_url(self):
+        # Above IMAGE_MAX_RESOLUTION (50e6); 8000x8000 = 64e6
+        width = height = 8000
+        dimensions = b''.join(
+            (size - 1).to_bytes(3, 'little') for size in (width, height)
+        )
+        chunk = b'VP8X' + (10).to_bytes(4, 'little') + b'\x00\x00\x00\x00' + dimensions
+        content = b'RIFF' + (len(chunk) + 4).to_bytes(4, 'little') + b'WEBP' + chunk
+
+        with mute_logger('odoo.addons.base_import.models.base_import'), \
+             self.assertRaisesRegex(ImportValidationError, r'Too large image \(above 50\.0Mpx\)'):
+            self._import_image(content)
+
+
 class test_failures(TransactionCase):
     def test_big_attachments(self):
         """

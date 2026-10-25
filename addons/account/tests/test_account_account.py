@@ -391,6 +391,19 @@ class TestAccountAccount(TestAccountMergeCommon):
         new_account.code = alternate_code
         self.assertEqual(new_account.account_type, existing_account.account_type)
 
+    def test_compute_account_type_on_code_change(self):
+        """ Changing the code should recompute account_type and reconcile too, since reconcile depends on it. """
+        receivable_account = self.company_data['default_account_receivable']
+
+        new_code = self.env['account.account']._search_new_account_code(receivable_account.code)
+        with Form(self.env['account.account']) as account_form:
+            account_form.name = "A new account"
+            account_form.code = new_code
+
+        account = account_form.record
+        self.assertEqual(account.account_type, 'asset_receivable')
+        self.assertTrue(account.reconcile)
+
     def test_get_closest_parent_account(self):
         self.env['account.account'].create({
             'code': 99998,
@@ -1103,3 +1116,54 @@ class TestAccountAccount(TestAccountMergeCommon):
         })
         with self.assertRaisesRegex(ValidationError, "Bank & Cash accounts cannot be shared between companies."):
             account.write({'company_ids': [Command.link(branch.id)]})
+
+    def test_duplicate_entry_update_amount_recomputes_totals(self):
+        """Ensure totals are recomputed after updating a duplicated journal entry."""
+        move = self.env['account.move'].create({
+            'move_type': 'entry',
+            'journal_id': self.company_data['default_journal_misc'].id,
+            'line_ids': [
+                Command.create({
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'balance': -1000.0,
+                }),
+                Command.create({
+                    'account_id': self.company_data['default_account_expense'].id,
+                    'balance': 1000.0,
+                }),
+            ],
+        })
+        move_copy = move.copy()
+        debit_line = move_copy.line_ids.filtered(lambda line: line.debit)
+        credit_line = move_copy.line_ids.filtered(lambda line: line.credit)
+        self.assertRecordValues(debit_line, [{
+            'debit': 1000.0,
+            'balance': 1000.0,
+            'amount_currency': 1000.0,
+            'price_subtotal': 1000.0,
+            'price_total': 1000.0,
+        }])
+        move_copy.write({
+            'line_ids': [
+                Command.update(debit_line.id, {
+                    'debit': 1500.0,
+                }),
+                Command.update(credit_line.id, {
+                    'credit': 1500.0,
+                }),
+            ],
+        })
+        self.assertRecordValues(debit_line, [{
+            'debit': 1500.0,
+            'balance': 1500.0,
+            'amount_currency': 1500.0,
+            'price_subtotal': 1500.0,
+            'price_total': 1500.0,
+        }])
+        self.assertRecordValues(credit_line, [{
+            'credit': 1500.0,
+            'balance': -1500.0,
+            'amount_currency': -1500.0,
+            'price_subtotal': -1500.0,
+            'price_total': -1500.0,
+        }])

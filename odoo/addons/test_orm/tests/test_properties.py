@@ -1162,6 +1162,28 @@ class PropertiesCase(TestPropertiesMixin):
         self.assertTrue(isinstance(data['boolean_value'], bool))
         self.assertEqual(self._get_sql_properties(self.message_1), {'int_value': 0, 'float_value': 0, 'boolean_value': False})
 
+    def test_properties_field_search_domain_with_number_edge_case(self):
+        """Tests that a condition where we compare a number to 1 or 0 is not wrongly altered"""
+        for ftype in ['integer', 'float']:
+            def_name = ftype + '_value'
+            self.discussion_1.attributes_definition = [
+            {
+                'name': def_name,
+                'string': 'Number value',
+                'type': ftype,
+            }]
+            self.message_1.attributes = [{
+                'name': def_name,
+                'type': ftype,
+                'value': 1,
+            }]
+            self.message_2.attributes = [{
+                'name': def_name,
+                'type': ftype,
+                'value': 2,
+            }]
+            self.assertEqual(self.env['test_orm.message'].search_count([('attributes.' + def_name, '=', 1)]), 1)
+
     def test_properties_field_integer_float_falsy_value_edge_cases(self):
         self.discussion_1.attributes_definition = [
             {

@@ -27,10 +27,10 @@ class IrActionsReport(models.Model):
 
         collected_streams = OrderedDict()
         for invoice in invoices:
-            attachment = self._prepare_local_attachments(invoice.message_main_attachment_id)
+            attachment = self._prepare_local_attachments(invoice.message_main_attachment_id.sudo())
             if attachment:
                 stream = pdf.to_pdf_stream(attachment)
-                if stream:
+                if stream and attachment.res_model:
                     record = self.env[attachment.res_model].browse(attachment.res_id)
                     try:
                         stream = pdf.add_banner(stream, record.name or '', logo=True)
@@ -77,7 +77,7 @@ class IrActionsReport(models.Model):
     def _unlink_except_master_tags(self):
         master_xmlids = [
             "account_invoices",
-            "action_account_original_vendor_bill"
+            "action_account_original_vendor_bill",
             "account_invoices_without_payment",
             "action_report_journal",
             "action_report_payment_receipt",

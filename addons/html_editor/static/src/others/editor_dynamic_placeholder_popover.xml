@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="html_editor.EditorDynamicPlaceholderPopover" t-inherit="web.DynamicPlaceholderPopover" t-inherit-mode="primary">
+        <xpath expr="//ModelFieldSelectorPopover" position="replace">
+            <EditorModelFieldSelectorPopover
+                close.bind="closeFieldSelector"
+                filter.bind="filter"
+                followRelations="true"
+                isDebugMode="!!env.debug"
+                path="state.path"
+                resModel="props.resModel"
+                readProperty="true"
+                showSearchInput="true"
+                update.bind="setPath"
+            />
+        </xpath>
+    </t>
+
+</templates>

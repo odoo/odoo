@@ -55,8 +55,7 @@ class ResPartner(models.Model):
             signup_type = self.env.context.get('signup_force_type_in_url', partner.sudo().signup_type or '')
             if signup_type:
                 route = 'reset_password' if signup_type == 'reset' else signup_type
-
-            query['token'] = partner.sudo()._generate_signup_token()
+                query['token'] = partner.sudo()._generate_signup_token()
 
             if url:
                 query['redirect'] = url
@@ -88,6 +87,7 @@ class ResPartner(models.Model):
     def action_signup_prepare(self):
         return self.signup_prepare()
 
+    @api.private
     def signup_get_auth_param(self):
         """ Get a signup token related to the partner if signup is enabled.
             If the partner already has a user, get the login parameter.

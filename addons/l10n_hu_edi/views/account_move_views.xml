@@ -44,7 +44,7 @@
             <xpath expr="//page[@id='other_tab_entry']" position="after">
                 <page id="l10n_hu_edi"
                       string="NAV 3.0"
-                      invisible="not l10n_hu_edi_state">
+                      invisible="not (l10n_hu_edi_state or l10n_hu_edi_attachment)">
                     <group>
                         <group>
                             <field name="l10n_hu_edi_state" readonly="1"/>

@@ -75,8 +75,8 @@ class AccountMove(models.Model):
             country_id = rec.partner_id.country_id
             latam_document_type_code = rec.l10n_latam_document_type_id.code
             if (rec.journal_id.type == 'purchase' and tax_payer_type == '4' and country_id.code != 'CL' and
-                latam_document_type_code == '61' and
-               '46' in rec.l10n_cl_reference_ids.mapped('l10n_cl_reference_doc_type_selection')):
+                latam_document_type_code == '61' and 'l10n_cl_reference_ids' in rec._fields and
+               '46' in rec.l10n_cl_reference_ids.mapped('l10n_cl_reference_doc_type_id.code')):
                 continue
             if (not tax_payer_type or not vat) and (country_id.code == "CL" and latam_document_type_code
                                                   and latam_document_type_code not in ['35', '38', '39', '41']):
@@ -181,7 +181,7 @@ class AccountMove(models.Model):
         return self.l10n_latam_document_type_id.code in ['39', '41', '110', '111', '112', '34']
 
     def _is_manual_document_number(self):
-        if self.journal_id.company_id.country_id.code == 'CL':
+        if self.journal_id.country_code == 'CL':
             return self.journal_id.type == 'purchase' and not self.l10n_latam_document_type_id._is_doc_type_vendor()
         return super()._is_manual_document_number()
 

@@ -98,10 +98,12 @@ def initialize(cr: Cursor) -> None:
         AND state not in ('to install', 'uninstallable')
         AND NOT EXISTS (
             SELECT 1 FROM ir_module_module_dependency d
-            JOIN ir_module_module mdep ON (d.name = mdep.name)
+            LEFT JOIN ir_module_module mdep ON (d.name = mdep.name)
             WHERE d.module_id = m.id
-              AND d.auto_install_required
-              AND mdep.state != 'to install'
+              AND (
+                  mdep.id IS NULL
+                  OR (d.auto_install_required AND mdep.state != 'to install')
+              )
         )""")
         to_auto_install = [x[0] for x in cr.fetchall()]
         # however if the module has non-required deps we need to install
@@ -185,6 +187,17 @@ def has_unaccent(cr: BaseCursor) -> FunctionStatus:
     # can be used to create index (it should be 'i' - means immutable), see
     # https://www.postgresql.org/docs/current/catalog-pg-proc.html.
     return FunctionStatus.INDEXABLE if result[0] == 'i' else FunctionStatus.PRESENT
+
+
+def has_bytewise_collation(cr: BaseCursor) -> bool:
+    """ Test if the default collation of the database compares strings
+    character by character, like the "C" collation does.
+
+    Collations like glibc's en_US.UTF-8 ignore punctuation at first and sort
+    '12/14/' after '120', so a range on ``parent_path`` misses descendants.
+    """
+    cr.execute("SELECT '12/14/'::varchar < '120'::varchar")
+    return cr.fetchone()[0]
 
 
 def has_trigram(cr: BaseCursor) -> bool:

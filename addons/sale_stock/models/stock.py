@@ -29,9 +29,10 @@ class StockMove(models.Model):
         for move in self:
             if move.sale_line_id and not move.description_picking_manual:
                 sale_line_id = move.sale_line_id.with_context(lang=move.sale_line_id.order_id.partner_id.lang)
-                if move.description_picking == move.product_id.display_name:
+                multiline_description = sale_line_id._get_sale_order_line_multiline_description_variants()
+                if move.description_picking == move.product_id.display_name and multiline_description:
                     move.description_picking = ''
-                move.description_picking = (sale_line_id._get_sale_order_line_multiline_description_variants() + '\n' + move.description_picking).strip()
+                move.description_picking = (multiline_description + '\n' + move.description_picking).strip()
 
     def _action_synch_order(self):
         sale_order_lines_vals = []
@@ -57,7 +58,7 @@ class StockMove(models.Model):
 
             so_line_vals = {
                 'move_ids': [(4, move.id, 0)],
-                'name': product.display_name,
+                'name': product.with_context(lang=sale_order.partner_id.lang).get_product_multiline_description_sale(),
                 'order_id': sale_order.id,
                 'product_id': product.id,
                 'product_uom_qty': 0,
@@ -205,21 +206,20 @@ class StockPicking(models.Model):
                     picking.move_type = "one"
 
     def _set_sale_id(self):
-        if self.reference_ids:
-            if self.sale_id:
-                self.reference_ids.sale_ids = [Command.link(self.sale_id.id)]
-            else:
-                sale_order = self.move_ids.sale_line_id.order_id
-                if len(sale_order) == 1:
-                    self.reference_ids.sale_ids = [Command.unlink(sale_order.id)]
-        else:
-            if self.sale_id:
-                reference = self.env['stock.reference'].create({
-                    'sale_ids': [Command.link(self.sale_id.id)],
-                    'name': self.sale_id.name,
-                })
-                self._add_reference(reference)
-        self.move_ids._reassign_sale_lines(self.sale_id)
+        for picking in self:
+            sale_order = picking.sale_id
+            references = sale_order.stock_reference_ids
+            # Destination moves still link this picking to its original supply chain.
+            chain_references = picking.move_ids.move_dest_ids.reference_ids
+            picking._remove_reference(picking.reference_ids.filtered('sale_ids') - references - chain_references)
+            if sale_order:
+                if not references:
+                    references = self.env['stock.reference'].create({
+                        'sale_ids': [Command.link(sale_order.id)],
+                        'name': sale_order.name,
+                    })
+                picking._add_reference(references)
+            picking.move_ids._reassign_sale_lines(sale_order)
 
     def _auto_init(self):
         """

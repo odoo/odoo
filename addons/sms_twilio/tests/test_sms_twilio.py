@@ -188,3 +188,26 @@ class TestSmsTwilio(MockSmsTwilio):
                         "record_company_id": company_iap_2,
                     },
                 )
+            # Ensure SMS Queue Manager _process_queue cron runs in multi company
+            self.env['sms.sms'].sudo().create({
+                "body": "Test Cron SMS Twilio",
+                "partner_id": partners_twilio[0].id,
+                "number": "+12202154110",
+                "record_company_id": company_twilio.id,
+                "state": "outgoing"
+            })
+            self.env['sms.sms'].sudo().create({
+                "body": "Test Cron SMS IAP",
+                "partner_id": partners_iap[0].id,
+                "number": "+12202154330",
+                "record_company_id": company_iap.id,
+                "state": "outgoing"
+            })
+            # patch to prevent self.env['ir.cron']._commit_progress
+            # in _process_queue from breaking test environment
+            self.patch(
+                self.registry['ir.cron'],
+                '_commit_progress',
+                lambda cron_model, processed=0, remaining=None, **kwargs: 1,
+            )
+            self.env['sms.sms'].sudo()._process_queue()

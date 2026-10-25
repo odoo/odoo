@@ -6,7 +6,7 @@
 # Nikola Iliev, 2023
 # Ивайло Малинов <iv.malinov@gmail.com>, 2023
 # Ivo Matev <ivo.matev@lensin.eu>, 2023
-# Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2023
+# Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2023, 2026.
 # aleksandar ivanov, 2023
 # Boris Stefanov <borkata@gmail.com>, 2023
 # Igor Sheludko <igor.sheludko@gmail.com>, 2023
@@ -14,14 +14,14 @@
 # kalatchev, 2023
 # Maria Boyadjieva <marabo2000@gmail.com>, 2023
 # Albena Mincheva <albena_vicheva@abv.bg>, 2023
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-11-14 15:21+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-08-03 19:22+0000\n"
+"Last-Translator: Rosen Vladimirov <vladimirov.rosen@gmail.com>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-19/"
 "event_sale/bg/>\n"
 "Language: bg\n"
@@ -29,7 +29,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_change_exception
@@ -43,7 +43,7 @@ msgstr ""
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
 msgid "<i class=\"fa fa-arrow-right\"/> Configure Events &amp; Tickets"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> Конфигуриране на събития и билети"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
@@ -70,7 +70,7 @@ msgstr "Добави"
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
 #: model_terms:ir.ui.view,arch_db:event_sale.sale_order_view_form
 msgid "All Events"
-msgstr ""
+msgstr "Всички събития"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event__sale_order_lines_ids
@@ -85,6 +85,9 @@ msgid ""
 "attendees and the maximum number of tickets registrations are defined for "
 "each time slot instead of the whole event."
 msgstr ""
+"Разрешава няколко времеви слота. Комуникациите, максималният брой "
+"присъстващи и максималният брой регистрации с билети се определят за всеки "
+"времеви слот поотделно, а не за цялото събитие."
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__done
@@ -141,6 +144,8 @@ msgid ""
 "Choose an event slot and it will automatically create a registration for "
 "this event slot."
 msgstr ""
+"Изберете слот на събитието и той автоматично ще създаде регистрация за този "
+"слот."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ticket_id
@@ -292,7 +297,7 @@ msgstr "Отчет за продажби на събития"
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_slot_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_slot_id
 msgid "Event Slot"
-msgstr ""
+msgstr "Слот на събитие"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_date_begin
@@ -352,7 +357,7 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/event_sale/wizard/event_configurator.py:0
 msgid "Invalid slot choice \"%(slot_name)s\" for event \"%(event_name)s\"."
-msgstr ""
+msgstr "Невалиден избор на слот „%(slot_name)s“ за събитие „%(event_name)s“."
 
 #. module: event_sale
 #. odoo-python
@@ -370,7 +375,7 @@ msgstr "Адрес на фактура"
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__is_multi_slots
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__is_multi_slots
 msgid "Is Multi Slots"
-msgstr ""
+msgstr "С няколко слота"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__active
@@ -548,7 +553,7 @@ msgstr "Продажби"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event__sale_price_total
 msgid "Sales (Tax Included)"
-msgstr ""
+msgstr "Продажби (с включен данък)"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order
@@ -582,7 +587,7 @@ msgstr "Избор на събитие"
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_slot_id
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Slot"
-msgstr ""
+msgstr "Слот"
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__sold
@@ -607,6 +612,8 @@ msgid ""
 "The sale order line with the product %(product_name)s needs an event, a "
 "ticket and a slot in case the event has multiple time slots."
 msgstr ""
+"Редът от поръчката за продажба с продукта %(product_name)s се нуждае от "
+"събитие, билет и слот, в случай че събитието има няколко времеви слота."
 
 #. module: event_sale
 #. odoo-python
@@ -674,7 +681,7 @@ msgstr "Не е открит съответстващ билет за събит
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_change_exception
 msgid "changed from"
-msgstr ""
+msgstr "променено от"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form

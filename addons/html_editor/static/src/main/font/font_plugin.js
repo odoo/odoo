@@ -23,6 +23,7 @@ import {
     getHtmlStyle,
     getFontSizeDisplayValue,
     FONT_SIZE_CLASSES,
+    DEFAULT_FONT_SIZE_CLASSES,
 } from "@html_editor/utils/formatting";
 import { DIRECTIONS } from "@html_editor/utils/position";
 import { _t } from "@web/core/l10n/translation";
@@ -65,7 +66,7 @@ const rightLeafOnlyNotBlockPath = createDOMPathGenerator(DIRECTIONS.RIGHT, {
     stopFunction: isBlock,
 });
 
-const headingTags = ["H1", "H2", "H3", "H4", "H5", "H6"];
+export const headingTags = ["H1", "H2", "H3", "H4", "H5", "H6"];
 const handledElemSelector = [...headingTags, "PRE", "BLOCKQUOTE"].join(", ");
 
 export class FontPlugin extends Plugin {
@@ -215,6 +216,11 @@ export class FontPlugin extends Plugin {
                     },
                     onBlur: () => this.dependencies.selection.focusEditable(),
                     document: this.document,
+                    isSelectionInEditable: () =>
+                        this.dependencies.selection.isSelectionInEditable(
+                            this.document.getSelection()
+                        ),
+                    focusEditable: () => this.dependencies.selection.focusEditable(),
                 },
                 isAvailable: isHtmlContentSupported,
             }),
@@ -309,6 +315,10 @@ export class FontPlugin extends Plugin {
             this.updateFontSelectorParams.bind(this),
             this.updateFontSizeSelectorParams.bind(this),
         ],
+        remove_all_formats_handlers: [
+            this.updateFontSelectorParams.bind(this),
+            this.updateFontSizeSelectorParams.bind(this),
+        ],
         normalize_handlers: this.normalize.bind(this),
 
         /** Overrides */
@@ -320,12 +330,27 @@ export class FontPlugin extends Plugin {
         delete_backward_overrides: withSequence(20, this.handleDeleteBackward.bind(this)),
         delete_backward_word_overrides: this.handleDeleteBackward.bind(this),
 
+        /** Predicates */
+        are_shorthands_available_predicates: (node) => {
+            if (closestElement(node, "pre")) {
+                return false;
+            }
+        },
+        is_powerbox_available_predicates: (node) => {
+            if (closestElement(node, "pre")) {
+                return false;
+            }
+        },
+
         /** Processors */
         clipboard_content_processors: this.processContentForClipboard.bind(this),
         before_insert_processors: this.handleInsertWithinPre.bind(this),
 
-        format_class_predicates: (className) =>
-            [...FONT_SIZE_CLASSES, "o_default_font_size"].includes(className),
+        format_class_predicates: (className, targetClassName) =>
+            FONT_SIZE_CLASSES.includes(className) ||
+            className === "o_default_font_size" ||
+            (DEFAULT_FONT_SIZE_CLASSES.includes(className) &&
+                DEFAULT_FONT_SIZE_CLASSES.includes(targetClassName)),
     };
 
     setup() {
@@ -544,8 +569,8 @@ export class FontPlugin extends Plugin {
                 if (dir) {
                     baseContainer.setAttribute("dir", dir);
                 }
-                baseContainer.replaceChildren(...newElement.childNodes);
                 newElement.replaceWith(baseContainer);
+                baseContainer.replaceChildren(this.document.createElement("br"));
                 this.dependencies.selection.setCursorStart(baseContainer);
             }
             return true;

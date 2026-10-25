@@ -106,7 +106,8 @@ export class ProductPage extends Component {
         return (
             this.isProductAvailable() &&
             !this.hasMissingAttributeValues() &&
-            !this.isArchivedCombination()
+            !this.isArchivedCombination() &&
+            !this.isDeletedCombination()
         );
     }
 
@@ -124,6 +125,15 @@ export class ProductPage extends Component {
         return this.props.productTemplate._isArchivedCombination(variantAttributeValueIds);
     }
 
+    isDeletedCombination() {
+        return (
+            !this.hasMissingAttributeValues() &&
+            this.productTemplate.isDeletedCombination(
+                getAttributeValues(this.getSelectedAttributesValues(), this.selfOrder.models)
+            )
+        );
+    }
+
     getProductPrice() {
         const attributeIds = this.getSelectedAttributesValues();
 
@@ -137,15 +147,23 @@ export class ProductPage extends Component {
             getAttributeValues(attributeIds, this.selfOrder.models)
         );
 
+        const order = this.selfOrder.currentOrder;
+        const pricelist = order.pricelist_id;
         const price = this.props.productTemplate.getPrice(
-            this.selfOrder.currentOrder.pricelist_id,
+            pricelist,
             1,
             priceExtra,
             false,
             productVariant
         );
-        const taxDetails = this.props.productTemplate.getTaxDetails({
-            overridedValues: { price_unit: price, quantity: this.state.qty },
+        const product = productVariant || this.props.productTemplate;
+        const fiscalPosition = order.fiscal_position_id;
+        const taxDetails = product.getTaxDetails({
+            overridedValues: {
+                price,
+                fiscalPosition,
+                quantity: this.state.qty,
+            },
         });
         return this.selfOrder.isTaxesIncludedInPrice()
             ? taxDetails.total_included

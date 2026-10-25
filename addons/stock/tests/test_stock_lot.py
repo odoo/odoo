@@ -91,6 +91,27 @@ class TestLotSerial(TestStockCommon):
         self.assertEqual(vals[2]['lot_name'], 'wxc')
         self.assertEqual(vals[2]['quantity'], 1, "default lot qty")
 
+    def test_generate_lots_quantity_split(self):
+        """ The quantity should be split into full lots, plus one lot for the remainder
+        if there is one, without float errors adding an empty lot. """
+        context = {
+            'default_tracking': 'lot',
+            'default_product_id': self.productA.id,
+            'default_location_dest_id': self.locationC.id,
+        }
+        for quantity, qty_per_lot, expected in [
+            (3.0, 0.3, [0.3] * 10),
+            (5.4, 1.8, [1.8] * 3),
+            (7.0, 2.0, [2.0, 2.0, 2.0, 1.0]),
+        ]:
+            with self.subTest(quantity=quantity, qty_per_lot=qty_per_lot):
+                vals = self.MoveObj.action_generate_lot_line_vals(
+                    {**context, 'default_quantity': quantity}, "generate", "LOT001", qty_per_lot, False,
+                )
+                self.assertEqual(len(vals), len(expected))
+                for val, qty in zip(vals, expected):
+                    self.assertAlmostEqual(val['quantity'], qty)
+
     def test_lot_no_company(self):
         """ check the lot created in a receipt should not have a company if the product is not
         linked to a company"""

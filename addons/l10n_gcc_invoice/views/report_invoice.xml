@@ -95,27 +95,27 @@
                     <br/>
                 </t>
             </xpath>
-            <xpath expr="//div[@name='due_date']/strong" position="before">
+            <xpath expr="//div[@name='due_date']/*[1]" position="before">
                 <strong name="due_date_ar" t-if="display_in_ar" t-translation="off">تاريخ الاستحقاق<br/></strong>
                 <strong name="due_date_en" t-if="display_in_en" t-translation="off">Due Date<br/></strong>
             </xpath>
-            <xpath expr="//div[@name='delivery_date']/strong" position="before">
+            <xpath expr="//div[@name='delivery_date']/*[1]" position="before">
                 <strong name="delivery_date_ar" t-if="display_in_ar" t-translation="off">تاريخ التوصيل<br/></strong>
                 <strong name="delivery_date_en" t-if="display_in_en" t-translation="off">Delivery Date<br/></strong>
             </xpath>
-            <xpath expr="//div[@name='origin']/strong" position="before">
+            <xpath expr="//div[@name='origin']/*[1]" position="before">
                 <strong name="origin_ar" t-if="display_in_ar" t-translation="off">المصدر<br/></strong>
                 <strong name="origin_en" t-if="display_in_en" t-translation="off">Source<br/></strong>
             </xpath>
-            <xpath expr="//div[@name='customer_code']/strong" position="before">
+            <xpath expr="//div[@name='customer_code']/*[1]" position="before">
                 <strong name="customer_code_ar" t-if="display_in_ar" t-translation="off">كود العميل<br/></strong>
                 <strong name="customer_code_en" t-if="display_in_en" t-translation="off">Customer Code<br/></strong>
             </xpath>
-            <xpath expr="//div[@name='reference']/strong" position="before">
+            <xpath expr="//div[@name='reference']/*[1]" position="before">
                 <strong name="reference_ar" t-if="display_in_ar" t-translation="off">رقم الإشارة<br/></strong>
                 <strong name="reference_en" t-if="display_in_en" t-translation="off">Reference<br/></strong>
             </xpath>
-            <xpath expr="//div[@name='incoterm_id']/strong" position="before">
+            <xpath expr="//div[@name='incoterm_id']/*[1]" position="before">
                 <strong name="incoterm_id_ar" t-if="display_in_ar" t-translation="off">شرط التجارة الدولي<br/></strong>
                 <strong name="incoterm_id_en" t-if="display_in_en" t-translation="off">Incoterm<br/></strong>
             </xpath>

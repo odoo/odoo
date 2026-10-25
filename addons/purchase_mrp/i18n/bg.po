@@ -1,66 +1,71 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* purchase_mrp
+# * purchase_mrp
 #
+# Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2024-09-26 08:56+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: \n"
+"PO-Revision-Date: 2026-08-06 22:07+0000\n"
+"Last-Translator: Rosen Vladimirov <vladimirov.rosen@gmail.com>\n"
+"Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-19/"
+"purchase_mrp/bg/>\n"
+"Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: purchase_mrp
 #: model_terms:ir.ui.view,arch_db:purchase_mrp.purchase_order_form_mrp
 msgid "<span class=\"o_stat_text\">Manufacturing</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Производство</span>"
 
 #. module: purchase_mrp
 #: model_terms:ir.ui.view,arch_db:purchase_mrp.mrp_production_form_view_purchase
 msgid "<span class=\"o_stat_text\">Purchases</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Доставки</span>"
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_report_mrp_report_bom_structure
 msgid "BOM Overview Report"
-msgstr ""
+msgstr "Справка за преглед на спецификацията (BOM)"
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_mrp_bom
 msgid "Bill of Material"
-msgstr ""
+msgstr "Списък на материалите"
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_mrp_bom_line
 msgid "Bill of Material Line"
-msgstr ""
+msgstr "Ред на спецификацията"
 
 #. module: purchase_mrp
 #. odoo-python
 #: code:addons/purchase_mrp/models/mrp_bom.py:0
 msgid "Components cost share have to be positive or equals to zero."
 msgstr ""
+"Делът на себестойността на компонентите трябва да е положителен или равен на "
+"нула."
 
 #. module: purchase_mrp
 #: model:ir.model.fields,field_description:purchase_mrp.field_mrp_bom_line__cost_share
 msgid "Cost Share (%)"
-msgstr ""
+msgstr "Дял от себестойността (%)"
 
 #. module: purchase_mrp
 #: model:ir.model.fields,field_description:purchase_mrp.field_purchase_order__mrp_production_count
 msgid "Count of MO Source"
-msgstr ""
+msgstr "Брой производствени поръчки източник"
 
 #. module: purchase_mrp
 #: model:ir.model.fields,field_description:purchase_mrp.field_mrp_production__purchase_order_count
 msgid "Count of generated PO"
-msgstr ""
+msgstr "Брой генерирани поръчки за покупка"
 
 #. module: purchase_mrp
 #: model:ir.model.fields,field_description:purchase_mrp.field_mrp_bom__display_name
@@ -73,7 +78,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_mrp.field_stock_move__display_name
 #: model:ir.model.fields,field_description:purchase_mrp.field_stock_rule__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Име за показване"
 
 #. module: purchase_mrp
 #: model:ir.model.fields,field_description:purchase_mrp.field_mrp_bom__id
@@ -86,23 +91,23 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_mrp.field_stock_move__id
 #: model:ir.model.fields,field_description:purchase_mrp.field_stock_rule__id
 msgid "ID"
-msgstr ""
+msgstr "Номер (ID)"
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_report_mrp_report_mo_overview
 msgid "MO Overview Report"
-msgstr ""
+msgstr "Отчет за преглед на ПН"
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_mrp_production
 msgid "Manufacturing Order"
-msgstr ""
+msgstr "Производствена поръчка"
 
 #. module: purchase_mrp
 #. odoo-python
 #: code:addons/purchase_mrp/models/purchase.py:0
 msgid "Manufacturing Source of %s"
-msgstr ""
+msgstr "Производствен източник на %s"
 
 #. module: purchase_mrp
 #. odoo-python
@@ -111,32 +116,33 @@ msgid ""
 "Odoo is not able to generate the anglo saxon entries. The total valuation of "
 "%s is zero."
 msgstr ""
+"Odoo не може да генерира англосаксонските записи. Общата оценка на %s е нула."
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_purchase_order
 msgid "Purchase Order"
-msgstr ""
+msgstr "Поръчка"
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_purchase_order_line
 msgid "Purchase Order Line"
-msgstr ""
+msgstr "Ред на поръчка за покупка"
 
 #. module: purchase_mrp
 #. odoo-python
 #: code:addons/purchase_mrp/models/mrp_production.py:0
 msgid "Purchase Order generated from %s"
-msgstr ""
+msgstr "Поръчка за покупка, генерирана от %s"
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Движение в склада"
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_stock_rule
 msgid "Stock Rule"
-msgstr ""
+msgstr "Правило за наличност"
 
 #. module: purchase_mrp
 #: model:ir.model.fields,help:purchase_mrp.field_mrp_bom_line__cost_share
@@ -144,9 +150,11 @@ msgid ""
 "The percentage of the component repartition cost when purchasing a kit.The "
 "total of all components' cost have to be equal to 100."
 msgstr ""
+"Процентът на разпределяне на разходите за компонента при закупуване на "
+"комплект. Сборът на разходите на всички компоненти трябва да е равен на 100."
 
 #. module: purchase_mrp
 #. odoo-python
 #: code:addons/purchase_mrp/models/mrp_bom.py:0
 msgid "The total cost share for a BoM's component have to be 100"
-msgstr ""
+msgstr "Общият дял на разходите за компонентите на спецификация трябва да е 100"

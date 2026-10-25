@@ -10,7 +10,7 @@ import {
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
 
-import { onWillDestroy, onWillStart, reactive, useState } from "@odoo/owl";
+import { onWillDestroy, onWillStart, reactive, useState, xml } from "@odoo/owl";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
     clickFieldDropdown,
@@ -33,6 +33,7 @@ import {
     serverState,
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
+import { x2ManyCommands } from "@web/core/orm_service";
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
 import { Record } from "@web/model/relational_model/record";
@@ -391,7 +392,7 @@ test("one2many in a list x2many non-editable use the right context", async () =>
     });
 
     await contains(".o_field_x2many_list .o_field_x2many_list_row_add a").click();
-    await contains("[name='trululu'] input").edit("new partner");
+    await contains("[name='trululu'] input").edit("new partner", { confirm: false });
     await selectFieldDropdownItem("trululu", 'Create "new partner"');
 
     expect.verifySteps(["name_create form"]);
@@ -4584,8 +4585,9 @@ test("editable o2m with onchange and required field: delete an invalid line", as
     expect.verifySteps(["get_views", "web_read"]);
     await contains(".o_data_cell").click();
     await contains(".o_field_widget[name=product_id] input").clear();
+    await runAllTimers();
     // no onchange should be done as line is invalid
-    expect.verifySteps([]);
+    expect.verifySteps(["web_name_search"]);
     await contains(".o_list_record_remove").click();
     // onchange should have been done
     expect.verifySteps(["onchange"]);
@@ -6381,6 +6383,62 @@ test("one2many with x2many in form view (but not in list view)", async () => {
     await contains(".modal .modal-footer .btn-primary").click(); // save
 
     await clickSave();
+});
+
+test.tags("desktop");
+test("one2many with properties in form view but not in list view", async () => {
+    Partner._fields.definitions = fields.PropertiesDefinition();
+    Partner._records[0].definitions = [
+        {
+            name: "property_3",
+            string: "My Char 3",
+            type: "char",
+        },
+    ];
+    Turtle._fields.properties = fields.Properties({
+        string: "Properties",
+        searchable: false,
+        definition_record: "turtle_trululu",
+        definition_record_field: "definitions",
+    });
+    Turtle._records[1].turtle_trululu = 1;
+    Turtle._records[1].properties = {
+        property_3: "some property value",
+    };
+    Turtle._views.form = `
+        <form>
+            <field name="turtle_foo"/>
+            <field name="properties"/>
+            <field name="turtle_trululu"/>
+        </form>`;
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <group>
+                    <field name="turtles">
+                        <list>
+                            <field name="turtle_foo"/>
+                        </list>
+                    </field>
+                </group>
+            </form>`,
+        resId: 1,
+    });
+
+    // Open a record and close once.
+    await contains(".o_data_row td").click();
+    expect(".modal .o_field_widget[name=properties] input").toHaveValue("some property value");
+    await contains(".modal .modal-header .btn-close").click();
+    expect(".modal").toHaveCount(0);
+
+    // Open the same record and close again. This differs from the first time because the record has
+    // already been extended (extendRecord), and fake property fields have already been created.
+    await contains(".o_data_row td").click();
+    expect(".modal .o_field_widget[name=properties] input").toHaveValue("some property value");
+    await contains(".modal .modal-header .btn-close").click();
+    expect(".modal").toHaveCount(0);
 });
 
 test.tags("desktop");
@@ -13719,4 +13777,107 @@ test("one2many list with monetary aggregates and different currencies", async ()
     await contains("tfoot span sup").hover();
     expect(".o_multi_currency_popover").toHaveCount(1);
     expect(".o_multi_currency_popover").toHaveText("500.00 € at $ 0.50");
+});
+
+test.tags("desktop");
+test("duplicate records of a one2many (serializes date and datetime values)", async () => {
+    // No standard field widget of web uses StaticList.duplicateRecords, so we define one here, in
+    // the spirit of the section and note widget of account (which allows to duplicate a section).
+    class DuplicateX2ManyField extends X2ManyField {
+        static template = xml`
+            <div>
+                <button class="o_duplicate_all" t-on-click="() => this.list.duplicateRecords(this.list.records)">
+                    Duplicate all
+                </button>
+                <t t-call="web.X2ManyField"/>
+            </div>`;
+    }
+    registry.category("fields").add("duplicate_all", {
+        ...x2ManyField,
+        component: DuplicateX2ManyField,
+    });
+
+    mockTimeZone(+2);
+    Turtle._fields.turtle_date = fields.Date();
+    Turtle._fields.turtle_datetime = fields.Datetime();
+    Turtle._records = [
+        { id: 1, name: "leonardo" },
+        {
+            id: 2,
+            name: "donatello",
+            turtle_date: "2017-01-25",
+            turtle_datetime: "2016-12-12 10:55:05",
+        },
+    ];
+    Partner._records[0].turtles = [1, 2];
+
+    onRpc("onchange_batch", ({ args }) => {
+        const [valuesList] = args;
+        // date and datetime values must have been serialized by copyRecordData, otherwise the
+        // server can't read them (they are Luxon objects client side)
+        expect(valuesList.map((values) => values.turtle_date)).toEqual([false, "2017-01-25"]);
+        expect(valuesList.map((values) => values.turtle_datetime)).toEqual([
+            false,
+            "2016-12-12 10:55:05",
+        ]);
+        expect.step("onchange_batch");
+    });
+    onRpc("web_save", ({ args }) => {
+        const createCommands = args[1].turtles.filter((c) => c[0] === x2ManyCommands.CREATE);
+        expect(createCommands.map((c) => c[2].name)).toEqual(["leonardo", "donatello"]);
+        expect(createCommands.map((c) => c[2].turtle_date)).toEqual([false, "2017-01-25"]);
+        expect(createCommands.map((c) => c[2].turtle_datetime)).toEqual([
+            false,
+            "2016-12-12 10:55:05",
+        ]);
+        expect.step("web_save");
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="turtles" widget="duplicate_all">
+                    <list editable="bottom">
+                        <field name="name"/>
+                        <field name="turtle_date"/>
+                        <field name="turtle_datetime"/>
+                    </list>
+                </field>
+            </form>`,
+    });
+
+    expect(queryAllTexts(".o_data_row [name=name]")).toEqual(["leonardo", "donatello"]);
+    expect(queryAllTexts(".o_data_row [name=turtle_date]")).toEqual(["", "Jan 25, 2017"]);
+    expect(queryAllTexts(".o_data_row [name=turtle_datetime]")).toEqual([
+        "",
+        "Dec 12, 2016, 12:55 PM",
+    ]);
+
+    await contains(".o_duplicate_all").click();
+    expect.verifySteps(["onchange_batch"]);
+
+    expect(queryAllTexts(".o_data_row [name=name]")).toEqual([
+        "leonardo",
+        "donatello",
+        "leonardo",
+        "donatello",
+    ]);
+    expect(queryAllTexts(".o_data_row [name=turtle_date]")).toEqual([
+        "",
+        "Jan 25, 2017",
+        "",
+        "Jan 25, 2017",
+    ]);
+    expect(queryAllTexts(".o_data_row [name=turtle_datetime]")).toEqual([
+        "",
+        "Dec 12, 2016, 12:55 PM",
+        "",
+        "Dec 12, 2016, 12:55 PM",
+    ]);
+
+    await clickSave();
+    expect.verifySteps(["web_save"]);
 });

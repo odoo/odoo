@@ -296,6 +296,9 @@ export class TableResizePlugin extends Plugin {
     }
 
     onMousedown(ev) {
+        if (ev.button !== 0) {
+            return;
+        }
         const isHoveringTdBorder = this.isHoveringTdBorder(ev);
         const isRTL = this.config.direction === "rtl";
         if (isHoveringTdBorder) {
@@ -332,7 +335,12 @@ export class TableResizePlugin extends Plugin {
             }
             this.isResizingTable = true;
             this.setTableResizeCursor(direction);
-            const resizeTable = (ev) => this.resizeTable(ev, direction, target1, target2);
+            const resizeTable = (ev) => {
+                if ((target1 && !target1.isConnected) || (target2 && !target2.isConnected)) {
+                    return stopResizing(ev);
+                }
+                this.resizeTable(ev, direction, target1, target2);
+            };
             const stopResizing = (ev) => {
                 ev.preventDefault();
                 this.isResizingTable = false;

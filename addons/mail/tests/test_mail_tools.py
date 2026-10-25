@@ -148,16 +148,18 @@ class TestMailTools(MailCommon):
         # formatted email
         encapsulated_test_email = f'"Robert Astaire" <{self._test_email}>'
         (follower_partner + test_partner).sudo().write({'email': encapsulated_test_email})
+        other_test_partner = follower_partner.copy({'name': 'Other Test Partner'})
         cases = [
-            (self._test_email, True),  # normalized
-            (self._test_email, False),  # normalized
-            (encapsulated_test_email, True),  # encapsulated, same
-            (encapsulated_test_email, False),  # encapsulated, same
-            (f'"AnotherName" <{self._test_email}', True),  # same normalized, other name
-            (f'"AnotherName" <{self._test_email}', False),  # same normalized, other name
+            (self._test_email, True, follower_partner),  # normalized
+            (self._test_email, False, test_partner),  # normalized
+            (encapsulated_test_email, True, follower_partner),  # encapsulated, same
+            (encapsulated_test_email, False, test_partner),  # encapsulated, same
+            (f'"AnotherName" <{self._test_email}', True, follower_partner),  # same normalized, other name
+            (f'"AnotherName" <{self._test_email}', False, test_partner),  # same normalized, other name
+            (f'"{other_test_partner.name}" <{self._test_email}>', True, follower_partner),  # same normalized, existing name
+            (f'"{other_test_partner.name}" <{self._test_email}>', False, other_test_partner),  # same normalized, existing name
         ]
-        for source, follower_check in cases:
-            expected_partner = follower_partner if follower_check else test_partner
+        for source, follower_check, expected_partner in cases:
             with self.subTest(source=source, follower_check=follower_check):
                 partner = self.env['res.partner']._mail_find_partner_from_emails(
                     [source], records=linked_record if follower_check else None

@@ -5,7 +5,7 @@
     'description': """
 Base module containing core functionalities required by other Nilvera modules.
     """,
-    'depends': ['l10n_tr'],
+    'depends': ['l10n_tr', 'account_edi_ubl_cii'],
     'data': [
         'security/ir.model.access.csv',
         'views/res_config_settings_views.xml',

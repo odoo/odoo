@@ -44,5 +44,8 @@ export function useCalendarPopover(component) {
                 popover.open(target, props);
             }
         },
+        get isOpen() {
+            return owner.env.isSmall ? Boolean(removeDialog) : popover.isOpen;
+        },
     };
 }

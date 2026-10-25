@@ -29,26 +29,26 @@
 # Ediz Duman <neps1192@gmail.com>, 2023
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
 # Murat Kaplan <muratk@projetgrup.com>, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
-# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025, 2026.
 # "Deniz Guvener Unal (degu)" <degu@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-24 17:37+0000\n"
-"PO-Revision-Date: 2026-04-13 20:49+0000\n"
+"POT-Creation-Date: 2026-07-10 17:38+0000\n"
+"PO-Revision-Date: 2026-08-07 04:34+0000\n"
 "Last-Translator: \"Deniz Guvener Unal (degu)\" <degu@odoo.com>\n"
-"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/web/tr/"
-">\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/web/tr/>"
+"\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: web
 #. odoo-javascript
@@ -4276,13 +4276,8 @@ msgstr "Toplantı Konusu"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
-msgid "Memory limit (in bytes)"
-msgstr "Bellek sınırı (bayt cinsinden)"
-
-#. module: web
-#: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
-msgid "Memory profile"
-msgstr "Bellek profili"
+msgid "Memory (heuristic)"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6071,6 +6066,12 @@ msgstr "Manuel olarak kaydetme"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/translation_button.js:0
+msgid "Save this record and its parent to translate"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2one/many2one.xml:0
 msgid "Scan barcode"
 msgstr "Barkodu tara"
@@ -6782,16 +6783,6 @@ msgid "Text file"
 msgstr "Metin dosyası"
 
 #. module: web
-#: model:ir.model.fields,help:web.field_base_document_layout__vat
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
-msgstr ""
-"Vergi Kimlik Numarası. Buradaki değerler ülke biçimine göre doğrulanır. "
-"Ortağın vergiye tabi olmadığını belirtmek için '/' kullanabilirsiniz."
-
-#. module: web
 #. odoo-python
 #: code:addons/web/controllers/action.py:0
 msgid "The action “%s” does not exist"
@@ -6898,8 +6889,8 @@ msgid ""
 "The selected file (%(size)sB) is larger than the maximum allowed file size (%"
 "(maxSize)sB)."
 msgstr ""
-"Seçilen dosya (%(size)sB), izin verilen en büyük dosya boyutunu (%"
-"(maxSize)sB) aşıyor."
+"Seçilen dosya (%(size)sB), izin verilen en büyük dosya boyutunu (%(maxSize)"
+"sB) aşıyor."
 
 #. module: web
 #. odoo-javascript
@@ -7043,6 +7034,12 @@ msgstr "Per"
 #: code:addons/web/static/src/views/fields/float_time/float_time_field.js:0
 msgid "Time"
 msgstr "Zaman"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/webclient/debug/profiling/profiling_item.xml:0
+msgid "Time Limit (seconds)"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -7898,6 +7895,11 @@ msgstr "Uygulamayı tarayıcı menüsünden yükleyebilirsiniz"
 #: code:addons/web/models/properties_base_definition.py:0
 msgid "You can not read that field definition."
 msgstr "Bu alan tanımını okuyamazsınız."
+
+#. module: web
+#: model:ir.model.fields,help:web.field_base_document_layout__vat
+msgid "You can use '/' to indicate that the customer has no Tax ID."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -19156,7 +19158,6 @@ msgstr "hata"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
-#: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "open"
 msgstr "aç"
 
@@ -26983,6 +26984,20 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "空"
 msgstr ""
+
+#~ msgid ""
+#~ "The Tax Identification Number. Values here will be validated based on the "
+#~ "country format. You can use '/' to indicate that the partner is not "
+#~ "subject to tax."
+#~ msgstr ""
+#~ "Vergi Kimlik Numarası. Buradaki değerler ülke biçimine göre doğrulanır. "
+#~ "Ortağın vergiye tabi olmadığını belirtmek için '/' kullanabilirsiniz."
+
+#~ msgid "Memory limit (in bytes)"
+#~ msgstr "Bellek sınırı (bayt cinsinden)"
+
+#~ msgid "Memory profile"
+#~ msgstr "Bellek profili"
 
 #~ msgid "00"
 #~ msgstr "00"

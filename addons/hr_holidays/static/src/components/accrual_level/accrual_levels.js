@@ -43,9 +43,17 @@ export class AccrualLevels extends Component {
         }));
     }
 
+    get durationTypes() {
+        return {
+            'day': _t('day(s)'),
+            'month': _t('month(s)'),
+            'year': _t('year(s)'),
+            'hour': _t('hour(s)')
+        };
+    }
+
     getFullDay(day) {
-        return luxon.DateTime.fromFormat(day, "c", {
-            locale: this.env.model.config.context.lang.replace("_","-")}).toLocaleString({ weekday: "long" });
+        return luxon.Info.weekdays()[day];
     }
 
     getFullMonth(month) {

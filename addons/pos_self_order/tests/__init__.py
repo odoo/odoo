@@ -14,3 +14,5 @@ from . import test_self_order_preset
 from . import test_self_order_controller
 from . import test_takeaway_preset_mail
 from . import test_self_order_prices
+from . import test_self_partner_validation
+from . import test_self_order_sibling_ptav

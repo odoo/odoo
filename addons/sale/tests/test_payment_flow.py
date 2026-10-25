@@ -258,6 +258,45 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         self.assertEqual(len(self._new_mails), 2)
         self.assertTrue(self._new_mails.filtered(lambda x: 'Invoice' in x.subject))
 
+    def test_partial_payments_generate_invoices_for_the_payment_amount(self):
+        self.env["ir.config_parameter"].sudo().set_param("sale.automatic_invoice", "True")
+        self.sale_order.action_confirm()
+
+        first_tx = self._create_transaction(
+            flow="direct",
+            amount=200.0,
+            sale_order_ids=self.sale_order.ids,
+            state="done",
+            reference="First partial payment",
+        )
+        with mute_logger("odoo.addons.sale.models.payment_transaction"):
+            first_tx._post_process()
+        self.assertEqual(first_tx.invoice_ids.amount_total, 200.0)
+
+        second_tx = self._create_transaction(
+            flow="direct",
+            amount=300.0,
+            sale_order_ids=self.sale_order.ids,
+            state="done",
+            reference="Second partial payment",
+        )
+        with mute_logger("odoo.addons.sale.models.payment_transaction"):
+            second_tx._post_process()
+        self.assertEqual(second_tx.invoice_ids.amount_total, 300.0)
+
+        third_tx = self._create_transaction(
+            flow="direct",
+            amount=225.0,
+            sale_order_ids=self.sale_order.ids,
+            state="done",
+            reference="Third partial payment",
+        )
+        with mute_logger("odoo.addons.sale.models.payment_transaction"):
+            third_tx._post_process()
+        self.assertEqual(third_tx.invoice_ids.amount_total, 225.0)
+
+        self.assertEqual(sum(self.sale_order.invoice_ids.mapped("amount_total")), 725.0)
+
     def test_auto_done_and_auto_invoice(self):
         # Set automatic invoice
         self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', 'True')
@@ -389,6 +428,42 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         msg = "The newly created invoice should only be linked to the pending transaction."
         self.assertEqual(len(second_invoice.transaction_ids), 1, msg=msg)
         self.assertEqual(second_invoice.transaction_ids.state, 'pending', msg=msg)
+
+    def test_invoice_reconciled_when_payment_matched_before_invoicing(self):
+        """Test that a payment matched with the bank before the invoice exists is still reconciled
+        with the invoice at posting (the matched payment is 'paid', not 'in_process').
+        """
+        self.amount = self.sale_order.amount_total
+        tx = self._create_transaction(
+            flow="redirect", sale_order_ids=[self.sale_order.id], state="done",
+        )
+        with mute_logger("odoo.addons.sale.models.payment_transaction"):
+            tx._post_process()
+        payment = tx.payment_id
+
+        bank_journal = self.company_data["default_journal_bank"]
+        liquidity_line = payment.move_id.line_ids.filtered(
+            lambda line: line.account_id == payment.outstanding_account_id
+        )
+        statement_line = self.env["account.bank.statement.line"].create({
+            "payment_ref": payment.memo,
+            "journal_id": bank_journal.id,
+            "amount": payment.amount,
+            "date": payment.date,
+        })
+        suspense_line = statement_line.move_id.line_ids.filtered(
+            lambda line: line.account_id != bank_journal.default_account_id
+        )
+        suspense_line.account_id = liquidity_line.account_id
+        (suspense_line + liquidity_line).reconcile()
+
+        self.assertRecordValues(payment, [{"state": "paid", "is_reconciled": False}])
+
+        invoice = self.sale_order._create_invoices()
+        invoice.action_post()
+
+        self.assertEqual(invoice.payment_state, "paid")
+        self.assertTrue(payment.is_reconciled)
 
     def test_downpayment_confirm_sale_order_sufficient_amount(self):
         """Paying down payments can confirm an order if amount is enough."""
@@ -538,3 +613,36 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
             author_id = message_post_mock.call_args[1].get("author_id")
 
         self.assertEqual(author_id, self.user.partner_id.id)
+
+    def test_payment_linking_when_invoice_already_created(self):
+        """
+        Example of when this will occur: ACH Direct Debit has a delay, user creates invoice, _invoice_sale_orders eventually hits and
+        removes connection between invoice and transaction
+        """
+        transaction = self._create_transaction("redirect", sale_order_ids=self.sale_order, state="pending")
+        self.sale_order.action_confirm()
+        invoice = self.sale_order._create_invoices()
+
+        transaction._set_done()
+        transaction._invoice_sale_orders()
+
+        self.assertEqual(transaction.invoice_ids, invoice, "Invoice id was incorrectly removed from payment.transaction")
+
+    def test_payment_confirms_and_invoices_order_pending_signature(self):
+        """Test that paying a quotation waiting for a signature confirms and invoices it."""
+        self.env["ir.config_parameter"].sudo().set_param("sale.automatic_invoice", "True")
+        self.sale_order.require_signature = True
+        self.amount = self.sale_order.amount_total
+        tx = self._create_transaction(
+            flow="redirect", sale_order_ids=[self.sale_order.id], state="done"
+        )
+        with mute_logger("odoo.addons.sale.models.payment_transaction"):
+            tx._post_process()
+
+        self.assertEqual(self.sale_order.state, "sale")
+        self.assertTrue(tx.invoice_ids)
+        self.assertEqual(tx.invoice_ids, self.sale_order.invoice_ids)
+        self.assertEqual(tx.invoice_ids.state, "posted")
+        self.assertEqual(
+            tx.invoice_ids.payment_state, tx.invoice_ids._get_invoice_in_payment_state()
+        )

@@ -14,6 +14,7 @@ declare module "plugins" {
     import { get_overlay_buttons, OverlayButtonsShared } from "@html_builder/core/overlay_buttons/overlay_buttons_plugin";
     import { empty_node_predicates, is_unremovable_selector, on_removed_handlers, on_will_remove_handlers, RemoveShared } from "@html_builder/core/remove_plugin";
     import { after_save_handlers, before_save_handlers, get_dirty_els, pre_save_handlers, savable_selectors, save_element_handlers, save_elements_overrides, save_handlers, SaveShared } from "@html_builder/core/save_plugin";
+    import { submit_button_selectors } from "@html_builder/core/save_snippet_plugin";
     import { after_setup_editor_handlers, before_setup_editor_handlers, o_editable_selectors, SetupEditorShared } from "@html_builder/core/setup_editor_plugin";
     import { target_hide, target_show, VisibilityShared } from "@html_builder/core/visibility_plugin";
     import { default_shape_handlers, image_shape_groups_providers, post_compute_shape_listeners } from "@html_builder/plugins/image/image_shape_option_plugin";
@@ -21,7 +22,7 @@ declare module "plugins" {
     import { is_draggable_handlers, on_element_dragged_handlers, on_element_dropped_handlers, on_element_dropped_near_handlers, on_element_dropped_over_handlers, on_element_move_handlers, on_element_out_dropzone_handlers, on_element_over_dropzone_handlers, on_prepare_drag_handlers } from "@html_builder/core/drag_and_drop_plugin";
     import { lower_panel_entries, on_mobile_preview_clicked, trigger_dom_updated } from "@html_builder/builder";
     import { on_reveal_target_handlers } from "@html_builder/sidebar/invisible_elements_panel";
-    import { on_snippet_dragged_handlers, on_snippet_dropped_handlers, on_snippet_dropped_near_handlers, on_snippet_dropped_over_handlers, on_snippet_move_handlers, on_snippet_out_dropzone_handlers, on_snippet_over_dropzone_handlers } from "@html_builder/sidebar/block_tab";
+    import { on_snippet_dragged_handlers, on_snippet_dropped_handlers, on_snippet_dropped_near_handlers, on_snippet_dropped_over_handlers, on_snippet_inserted_handlers, on_snippet_move_handlers, on_snippet_out_dropzone_handlers, on_snippet_over_dropzone_handlers } from "@html_builder/sidebar/block_tab";
     import { snippet_preview_dialog_bundles, snippet_preview_dialog_stylesheets_handlers } from "@html_builder/snippets/add_snippet_dialog";
     import { background_shape_groups_providers, background_shape_target_providers } from "@html_builder/plugins/background_option/background_shape_option_plugin";
     import { mark_color_level_selector_params } from "@html_builder/plugins/background_option/background_option_plugin";
@@ -89,6 +90,7 @@ declare module "plugins" {
         on_snippet_dropped_handlers: on_snippet_dropped_handlers;
         on_snippet_dropped_near_handlers: on_snippet_dropped_near_handlers;
         on_snippet_dropped_over_handlers: on_snippet_dropped_over_handlers;
+        on_snippet_inserted_handlers: on_snippet_inserted_handlers;
         on_snippet_move_handlers: on_snippet_move_handlers;
         on_snippet_out_dropzone_handlers: on_snippet_out_dropzone_handlers;
         on_snippet_over_dropzone_handlers: on_snippet_over_dropzone_handlers;
@@ -154,5 +156,6 @@ declare module "plugins" {
         so_content_addition_selector: so_content_addition_selector;
         so_snippet_addition_selector: so_snippet_addition_selector;
         snippet_preview_dialog_bundles: snippet_preview_dialog_bundles;
+        submit_button_selectors: submit_button_selectors;
     }
 }

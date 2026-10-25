@@ -409,3 +409,76 @@ class TestReInvoice(TestSaleCommon):
 
         aml = self.env['account.move.line'].search([('move_id', 'in', so.invoice_ids.ids)])[0]
         self.assertRecordValues(aml, [{'analytic_distribution': {str(analytic_account_default.id): 100}}])
+
+    def test_reinvoice_multiple_projects_same_analytic_account(self):
+        """ Test that when multiple projects share the same analytic account,
+            reinvoicing matches the correct sale order linked to one of the projects.
+        """
+        # Create Project Z sharing the same analytic account as self.project.
+        project_z = self.env['project.project'].create({
+            'name': 'Z Project',
+            f'{self.analytic_plan._column_name()}': self.analytic_account.id,
+        })
+        project_z.account_id = False
+
+        self.assertTrue(self.analytic_account == project_z[self.analytic_plan._column_name()] == self.project[self.analytic_plan._column_name()], "Analytic Account On project_z/self.project is not set to 'test AA'")
+
+        self.sale_order.action_confirm()
+        self.assertEqual(self.sale_order.project_id, self.project, "Self.project is not set as self.sale_order.project_id")
+
+        # Create vendor bill using the shared analytic account
+        product = self.company_data['product_order_cost']
+        inv = self.env['account.move'].with_context(default_move_type='in_invoice').create({
+            'partner_id': self.partner_a.id,
+            'invoice_date': self.sale_order.date_order,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': product.name,
+                    'product_id': product.id,
+                    'quantity': 1,
+                    'price_unit': product.standard_price,
+                    'analytic_distribution': {self.analytic_account.id: 100},
+                }),
+            ],
+        })
+        inv.action_post()
+
+        sol = self.sale_order.order_line.filtered(lambda l: l.product_id == product)
+        self.assertTrue(sol, "Move line should be mapped to SO reinvoicing line even when multiple projects share an analytic account.")
+
+    def test_reinvoice_multiple_analytic_accounts_on_move_line(self):
+        """ Test that when a move line has multiple analytic accounts,
+            valid project matches are not overwritten by subsequent accounts in the loop.
+        """
+        analytic_account_2 = self.env['account.analytic.account'].create({
+            'name': 'Test AA 2',
+            'company_id': self.partner_a.company_id.id,
+            'plan_id': self.analytic_plan.id,
+        })
+        self.assertEqual(self.analytic_account, self.project[self.analytic_plan._column_name()], "Analytic Account on self.project is not set correctly")
+
+        self.sale_order.action_confirm()
+        self.assertEqual(self.sale_order.project_id, self.project, "Self.project is not set as self.sale_order.project_id")
+
+        # Vendor bill line distributed between self.analytic_account and analytic_account_2
+        product = self.company_data['product_order_cost']
+        inv = self.env['account.move'].with_context(default_move_type='in_invoice').create({
+            'partner_id': self.partner_a.id,
+            'invoice_date': self.sale_order.date_order,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': product.name,
+                    'product_id': product.id,
+                    'quantity': 1,
+                    'price_unit': product.standard_price,
+                    'analytic_distribution': {
+                        self.analytic_account.id: 50,
+                        analytic_account_2.id: 50,
+                    },
+                }),
+            ],
+        })
+        inv.action_post()
+
+        sol = self.sale_order.order_line.filtered(lambda l: l.product_id == product)
+        self.assertTrue(sol, "Move line distributed across multiple analytic accounts should be mapped to the matching SO.")

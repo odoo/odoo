@@ -26,6 +26,10 @@ patch(Checkout.prototype, {
     async selectDeliveryMethod(ev) {
         this._adaptDeliveryTitles();
         await super.selectDeliveryMethod(...arguments);
+        const checkedRadio = this.el.querySelector('input[name="o_delivery_radio"]:checked');
+        if (checkedRadio?.dataset.deliveryType === 'in_store') {
+            window.location.reload();
+        }
     },
 
     /**
@@ -117,12 +121,25 @@ patch(Checkout.prototype, {
     // #=== DELIVERY FLOW ===#
 
     /**
+     * Reload the page after confirming an in-store pickup location from the selector.
+     *
+     * @override method from `@website_sale/interactions/checkout`
+     */
+    async _onPickupLocationConfirmed() {
+        await super._onPickupLocationConfirmed(...arguments);
+        const checkedRadio = this.el.querySelector('input[name="o_delivery_radio"]:checked');
+        if (checkedRadio?.dataset.deliveryType === 'in_store') {
+            window.location.reload();
+        }
+    },
+
+    /**
      * Display a warning if any when selecting an in_store delivery method.
      *
      * @override method from `@website_sale/interactions/checkout`
      */
     async _showPickupLocation(radio) {
-        super._showPickupLocation(...arguments);
+        await super._showPickupLocation(...arguments);
         if (radio.dataset.deliveryType === 'in_store') {
             const dmContainer = this._getDeliveryMethodContainer(radio);
             const warning = dmContainer.querySelector('[name="unavailable_products_warning"]');

@@ -61,11 +61,7 @@ export class PaymentMollie extends PaymentInterface {
 
             paymentLine.transaction_id = data.id;
             await this.pos.data.synchronizeLocalDataInIndexedDB();
-
-            const { promise, resolve } = Promise.withResolvers();
-            this.paymentLineResolvers[paymentLine.uuid] = resolve;
-
-            return promise;
+            return this._waitForPaymentConfirmation(paymentLine);
         } catch (error) {
             this._showMollieError(error);
             return false;
@@ -109,6 +105,48 @@ export class PaymentMollie extends PaymentInterface {
         );
 
         return matchedPaymentLine?.transaction_id ?? null;
+    }
+
+    _waitForPaymentConfirmation(paymentLine) {
+        const { promise, resolve } = Promise.withResolvers();
+        const transactionId = paymentLine.transaction_id;
+        this.paymentLineResolvers[paymentLine.uuid] = resolve;
+        let connectionLost = false;
+
+        const intervalId = setInterval(async () => {
+            const isPaymentStillValid = () =>
+                this.paymentLineResolvers[paymentLine.uuid] &&
+                transactionId === paymentLine.transaction_id;
+            if (!isPaymentStillValid()) {
+                clearInterval(intervalId);
+                return;
+            }
+
+            try {
+                const result = await this.env.services.orm.silent.call(
+                    "pos.payment.method",
+                    "mollie_get_payment",
+                    [this.payment_method_id.id, transactionId]
+                );
+                connectionLost = false;
+                if (!["open", "pending"].includes(result.status) && isPaymentStillValid()) {
+                    clearInterval(intervalId);
+                    this.handleMollieStatusResponse(paymentLine, result);
+                }
+            } catch {
+                if (!connectionLost) {
+                    connectionLost = true;
+                    this.env.services.notification.add(
+                        _t(
+                            "No internet connection. Waiting for recovery to confirm the payment..."
+                        ),
+                        { type: "warning" }
+                    );
+                }
+            }
+        }, 5000);
+
+        return promise;
     }
 
     handleMollieStatusResponse(paymentLine, notification) {

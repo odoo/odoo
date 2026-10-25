@@ -59,25 +59,6 @@ export function selectRandomValueInInput(inputSelector) {
     };
 }
 
-export function selectSpecificValueInInput(inputSelector, value) {
-    return {
-        content: `Select Specific Value in Input`,
-        trigger: inputSelector,
-        run: (helpers) => {
-            const options = document.querySelectorAll(`${inputSelector} option`);
-            const targetOption = Array.from(options).find((option) =>
-                option.textContent.includes(value)
-            );
-            if (targetOption) {
-                helpers.anchor.value = targetOption.value;
-                helpers.anchor.dispatchEvent(new Event("change"));
-            } else {
-                throw new Error(`Slot "${value}" was not found`);
-            }
-        },
-    };
-}
-
 export function fillInput(inputPlaceholder, value) {
     return {
         content: `Fill input with ${value}`,
@@ -91,6 +72,21 @@ export function checkProduct(name, price, quantity = "1") {
         content: `Check product card with ${name} and ${price}`,
         trigger: `.product-cart-item:has(div:contains("${name}")):has(div:contains("${quantity}")):has(div .o-so-tabular-nums:contains("${price}"))`,
         run: "click",
+    };
+}
+
+export function removeProduct(name) {
+    return {
+        content: `Remove product ${name} from the cart`,
+        trigger: `.product-cart-item:has(div:contains("${name}")) button:has(.fa-trash-o)`,
+        run: "click",
+    };
+}
+
+export function checkNoProduct(name) {
+    return {
+        content: `Check that product ${name} is no longer in the cart`,
+        trigger: `.order_box:not(:has(.product-cart-item div:contains("${name}")))`,
     };
 }
 

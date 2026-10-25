@@ -195,6 +195,8 @@ try:
         elif not isinstance(bin_data, bytes):
             raise TypeError('`bin_data` must be bytes or bytearray')
         mimetype = magic.from_buffer(bin_data[:MIMETYPE_HEAD_SIZE], mime=True)
+        if mimetype == 'application/octet-stream':
+            mimetype = _odoo_guess_mimetype(bin_data)
         if mimetype in ('application/CDFV2', 'application/x-ole-storage'):
             # Those are the generic file format that Microsoft Office
             # was using before 2006, use our own check to further

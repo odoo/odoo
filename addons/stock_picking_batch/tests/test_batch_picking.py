@@ -1247,6 +1247,25 @@ class TestBatchPicking02(TransactionCase):
         self.assertEqual(batch.state, 'done')
         self.assertFalse(pickings[1].batch_id)
 
+    def test_batch_name_with_wrong_separator_prefix(self):
+        """Check that no error is raised if a wrong separator is used in the prefix."""
+        # Fetch an existing sequence and update its prefix
+        sequence = self.env['ir.sequence'].search([('code', '=', 'picking.batch')], limit=1)
+        self.assertTrue(sequence, "Sequence with code 'picking.batch' should exist.")
+        sequence.prefix = 'BATCH-'
+        batch = self.env['stock.picking.batch'].create({
+            'company_id': self.env.company.id,
+        })
+        batch.write({
+            'picking_type_id': self.picking_type_internal.id,
+        })
+
+        self.assertTrue(batch.name.startswith('INT/BATCH-'))
+        self.assertIn(
+            "The sequence 'picking.batch' is misconfigured. Its prefix should end with a '/' separator.",
+            batch.message_ids[0].body,
+        )
+
     def test_batch_name_with_complex_prefix(self):
         """Check that batch name is correctly generated with a complex prefix."""
         # Fetch an existing sequence and update its prefix

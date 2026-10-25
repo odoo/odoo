@@ -2,8 +2,8 @@
 
 import { delay, tick } from "@odoo/hoot-dom";
 import {
-    mockedCancelAnimationFrame,
-    mockedRequestAnimationFrame,
+    _mockedCancelAnimationFrame,
+    _mockedRequestAnimationFrame,
 } from "@web/../lib/hoot-dom/helpers/time";
 import { isInstanceOf } from "../../hoot-dom/hoot_dom_utils";
 import { makeNetworkLogger } from "../core/logger";
@@ -380,7 +380,8 @@ export async function mockedFetch(input, init) {
     }
 
     // Result can be a request or the final request value
-    const responseHeaders = getHeaders(result, result);
+    // Guess the content type of a raw value only: a response already carries its headers.
+    const responseHeaders = getHeaders(result, isInstanceOf(result, Response) ? null : result);
 
     if (result instanceof MockResponse) {
         // Mocked response
@@ -576,9 +577,9 @@ export class MockDedicatedWorkerGlobalScope {
         $assign(
             this,
             {
-                cancelanimationframe: mockedCancelAnimationFrame,
+                cancelAnimationFrame: _mockedCancelAnimationFrame,
                 onconnect: null,
-                requestanimationframe: mockedRequestAnimationFrame,
+                requestAnimationFrame: _mockedRequestAnimationFrame,
                 self: this,
             },
             worker

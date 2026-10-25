@@ -1,14 +1,15 @@
 import { Plugin } from "@html_editor/plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { PowerButtonsPlugin } from "@html_editor/main/power_buttons_plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { describe, expect, queryAllTexts, test } from "@odoo/hoot";
 import { click, pointerDown, press, tick, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, advanceTime } from "@odoo/hoot-mock";
-import { onRpc } from "@web/../tests/web_test_helpers";
+import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { PowerboxPlugin } from "../src/main/powerbox/powerbox_plugin";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
-import { insertText, redo, simulateArrowKeyPress, splitBlock, undo } from "./_helpers/user_actions";
+import { insertText, redo, splitBlock, undo } from "./_helpers/user_actions";
 import { expectElementCount } from "./_helpers/ui_expectations";
 
 describe.tags("desktop");
@@ -117,31 +118,45 @@ describe("visibility", () => {
         );
     });
     test("should debounce powerButtons on selection change", async () => {
-        const { el, editor } = await setupEditor(
-            "<p>[]<br></p><p><br></p><p><br></p><p><br></p><p><br></p>",
-            {
-                config: { debouncePowerbuttons: true },
-            }
-        );
+        patchWithCleanup(PowerButtonsPlugin.prototype, {
+            triggerDebouncedUpdatePowerButtons(...args) {
+                expect.step("triggerDebouncedUpdatePowerButtons");
+                return super.triggerDebouncedUpdatePowerButtons(...args);
+            },
+            updatePowerButtons(...args) {
+                expect.step("updatePowerButtons");
+                return super.updatePowerButtons(...args);
+            },
+        });
+        const { el, editor } = await setupEditor("<p>[]<br></p>", {
+            config: { debouncePowerbuttons: true },
+        });
         expect(getContent(el)).toBe(
-            `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p><p><br></p><p><br></p><p><br></p><p><br></p>`
+            `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
         );
         await expectElementCount(".o_we_power_buttons:not(.invisible)", 1);
-        expect(".o_we_power_buttons").toBeVisible();
-        await simulateArrowKeyPress(editor, "ArrowDown");
-        await animationFrame();
-        expect(".o_we_power_buttons").not.toBeVisible();
-        await simulateArrowKeyPress(editor, "ArrowDown");
-        await advanceTime(20);
-        expect(".o_we_power_buttons").not.toBeVisible();
-        await simulateArrowKeyPress(editor, "ArrowDown");
-        await advanceTime(20);
-        expect(".o_we_power_buttons").not.toBeVisible();
-        await simulateArrowKeyPress(editor, "ArrowDown");
-        await advanceTime(20);
-        await new Promise((resolve) => setTimeout(resolve, 30));
-        await animationFrame();
-        expect(".o_we_power_buttons").toBeVisible();
+
+        // setupEditor triggers updatePowerButtons via
+        // layout_geometry_change_handlers, followed by a debounced update via
+        // selectionchange_handlers.
+        expect.verifySteps([
+            "updatePowerButtons",
+            "triggerDebouncedUpdatePowerButtons",
+            "updatePowerButtons",
+        ]);
+
+        // Dispatch selectionchange synchronously so the debounce timer starts
+        // at a deterministic time.
+        editor.document.dispatchEvent(new Event("selectionchange"));
+
+        // Verify that selectionchange synchronously triggers the debounced
+        // wrapper, but not updatePowerButtons yet.
+        expect.verifySteps(["triggerDebouncedUpdatePowerButtons"]);
+
+        // Advance past the 30ms debounce threshold so the debounced
+        // updatePowerButtons callback executes.
+        await advanceTime(31);
+        expect.verifySteps(["updatePowerButtons"]);
     });
 });
 

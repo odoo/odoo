@@ -1,8 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 """ Implementation of "INVENTORY VALUATION TESTS (With valuation layers)" spreadsheet. """
 
+from datetime import datetime
+
+from odoo import fields
+from odoo.fields import Command
 from odoo.addons.mrp_account.tests.common import TestBomPriceCommon
 from odoo.tests import Form
+from odoo.tests.common import new_test_user
 
 PRICE = 718.75 - 100  # total price minus glass
 
@@ -338,12 +343,248 @@ class TestMrpValuationStandard(TestBomPriceCommon):
 
     def test_kit_product_valuation(self):
         """
-        Verify that kit products are excluded from inventory valuation
-        and have no effect on valuation upon price change.
+        Verify that kit products are excluded from inventory valuation,
+        do not affect valuation when their price changes, and still appear
+        in the quantity history report with total value of zero.
         """
-        self.assertRecordValues(self.table_head, [{'standard_price': 300, 'total_value': 300}])
-        self.assertTrue(self.table_head not in self.env.company._get_accounts_by_product())
+        self.assertRecordValues(self.table_head, [{'standard_price': 300, 'total_value': 0}])
         old_stock_value = sum(self.env.company.stock_value().values())
         self.table_head.action_bom_cost()
-        self.assertRecordValues(self.table_head, [{'standard_price': 468.75, 'total_value': 468.75}])
+        self.assertRecordValues(self.table_head, [{'standard_price': 468.75, 'total_value': 0}])
         self.assertEqual(old_stock_value, sum(self.env.company.stock_value().values()))
+        action = self.env['stock.quantity.history'].create({}).open_at_date()
+        products = self.env[action['res_model']].with_context(action['context']).search(action['domain'])
+        self.assertRecordValues(
+            products & self.table_head,
+            [{
+                'standard_price': 468.75,
+                'qty_available': 1,
+                'total_value': 0,
+                'avg_cost': 0,
+            }],
+        )
+
+    def test_mo_valuation_uses_production_company(self):
+        """
+        Verify that when validating an MO while env.company differs from mo.company_id, we read company-dependent
+        fields (product.cost_method / standard_price) in the MO's company, not the caller's env.company
+        """
+        self._make_in_move(self.glass, 1, 10)
+        mo = self._create_mo(self.bom_1, 1)
+        self._produce(mo)
+        mo.with_company(self.other_company).button_mark_done()
+        self.assertEqual(self.dining_table.total_value, PRICE + 10)
+
+    def test_kit_in_other_company_does_not_zero_valuation(self):
+        """
+        Check that a product's stock value and on-hand quantity in one company are
+        unaffected by a kit defined for the same product in another company.
+        """
+        company_1 = self.company
+        company_2 = self.other_company
+
+        super_product, component = self.env['product.product'].create([
+            {'name': 'Super product', 'is_storable': True, 'categ_id': self.category_standard.id},
+            {'name': 'Component', 'is_storable': True, 'categ_id': self.category_standard.id},
+        ])
+
+        super_product.with_company(company_1).standard_price = 50
+        self.env['stock.quant']._update_available_quantity(super_product, self.stock_location, 10)
+
+        self.env['mrp.bom'].with_company(company_2).create({
+            'product_id': super_product.id,
+            'product_tmpl_id': super_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'company_id': company_2.id,
+            'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 1})],
+        })
+        super_product.invalidate_recordset()
+
+        super_product = super_product.with_context(allowed_company_ids=(company_1 + company_2).ids)
+        self.assertEqual(super_product.total_value, 500)
+        self.assertEqual(super_product.qty_available, 10)
+
+    def test_validate_branch_mo_with_main_company_component(self):
+        """
+        Check that an MRP user of a branch company can process an MO in a multi-company
+        setup where the component belongs to the main company.
+        """
+        sub_company = self.branch
+        self.category_avco.with_company(self.branch).write({'property_valuation': 'real_time', 'property_cost_method': 'average'})
+        final_product, component = self.env['product.product'].create([
+            {
+                'name': 'Finished Product',
+                'is_storable': True,
+                'company_id': self.company.id,
+                'categ_id': self.category_avco.id,
+            },
+            {
+                'name': 'Component',
+                'is_storable': True,
+                'company_id': self.company.id,
+                'categ_id': self.category_avco.id,
+            },
+        ])
+        bom = self.env['mrp.bom'].create({
+            'product_id': final_product.id,
+            'product_tmpl_id': final_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'company_id': sub_company.id,
+            'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 2})],
+        })
+        self._make_in_move(component, 1, 10, company=self.branch)
+        self.assertEqual(component.with_company(self.branch).standard_price, 10.0)
+        mrp_user = new_test_user(
+            self.env,
+            login='test_mrp_sub_user',
+            groups='mrp.group_mrp_user,stock.group_stock_user',
+            company_id=sub_company.id,
+        )
+        mo = self.env['mrp.production'].with_context(allowed_company_ids=sub_company.ids).with_user(mrp_user).create({
+            'product_id': final_product.id,
+            'bom_id': bom.id,
+            'product_qty': 1.0,
+        })
+        mo.action_confirm()
+        with Form(mo) as mo_form:
+            mo_form.qty_producing = 1.0
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(final_product.with_company(self.branch).standard_price, 20.0)
+
+    def test_kit_variation_lines_specific_valuation(self):
+        """ Check that when
+        - the kit is the only product linked to a valuation account
+        - its components are linked to another valuation account,
+        - we buy the comp, receive and bill
+        - we sell the kit, deliver and invoice
+        -> the variation lines are correct and the entry generated balances everything out
+        """
+        variation_account = self.category_avco_auto.account_stock_variation_id
+        account_kit = self.env['account.account'].create({
+            'name': 'Stock Valuation kit',
+            'code': 'VAL.Kit',
+            'account_type': 'asset_current',
+            'account_stock_variation_id': variation_account.id,
+        })
+        self.category_avco_auto_kit = self.category_avco.copy({
+            'name': 'Avco Auto Kit',
+            'property_valuation': 'real_time',
+            'property_stock_valuation_account_id': account_kit.id
+        })
+        final_product, component = self.env['product.product'].create([
+            {'name': 'Final product', 'is_storable': True, 'categ_id': self.category_avco_auto_kit.id},
+            {'name': 'Component', 'is_storable': True, 'categ_id': self.category_avco_auto.id},
+        ])
+        self.env['mrp.bom'].create({
+            'product_id': final_product.id,
+            'product_tmpl_id': final_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 1})],
+        })
+        closing_move = self.env['account.move'].browse(self.env.company.action_close_stock_valuation()['res_id'])
+        closing_move._post()
+        self.assertEqual(self.env['stock_account.stock.valuation.report'].get_report_values()['data']['stock_variation']['value'], 0)
+
+        # Receive 1 component at 10 and bill: this debits 10 to stock valuation and adds 10 to inventory value
+        self._make_in_move(component, 1, 10)
+        final_product.action_bom_cost()
+        bill_comp = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner.id,
+            'invoice_date': fields.Date.today(),
+            'invoice_line_ids': [Command.create({
+                'product_id': component.id,
+                'quantity': 1,
+                'price_unit': 10,
+            })],
+        })
+        bill_comp.action_post()
+
+        # Deliver one kit (move will be for the component) and invoice 1 kit: this credits 10 from 'stock valuation kit' and removes 10 from inventory value
+        type_out = self.env['stock.picking.type'].search([
+            ('company_id', '=', self.env.company.id),
+            ('name', '=', 'Delivery Orders')])
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': type_out.id,
+            'move_ids': [Command.create({
+                'product_id': final_product.id,
+                'product_uom_qty': 1.0,
+            })],
+        })
+        delivery.action_confirm()
+        delivery.move_ids.move_line_ids.quantity = 1
+        delivery.button_validate()
+        invoice_kit = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner.id,
+            'invoice_date': fields.Date.today(),
+            'invoice_line_ids': [Command.create({
+                'product_id': final_product.id,
+                'quantity': 1,
+                'price_unit': 10,
+            })],
+        })
+        invoice_kit.action_post()
+
+        # No quantities are left in stock and everything is billed/invoiced so initial balance and ending stock should be the same.
+        # Particularity here is that bill debited 'stock valuation' whereas invoice credited 'stock valuation kit'.
+        # So, variation lines should just be there to compensate this difference.
+        val_data = self.env['stock_account.stock.valuation.report'].get_report_values()['data']
+        self.assertEqual((val_data['initial_balance']['value']), val_data['ending_stock']['value'])
+        variation_lines = sorted(val_data['stock_variation']['lines'], key=lambda l: (l['credit'], l['debit']))
+        self.assertListEqual(variation_lines, [
+            {'account_id': account_kit.id,                                                    'debit': 10.0, 'credit': 0.0},
+            {'account_id': self.category_avco_auto.property_stock_valuation_account_id.id,    'debit': 0.0, 'credit': 10.0},
+            {'account_id': variation_account.id,                                              'debit': 10.0, 'credit': 10.0},
+        ])
+        # We also check that closing lines generated are correct
+        closing_move_2 = self.env['account.move'].browse(self.env.company.action_close_stock_valuation()['res_id'])
+        closing_lines = closing_move_2.line_ids.sorted(lambda l: (l.credit, l.account_id.id == variation_account.id))
+        self.assertRecordValues(closing_lines, [
+            {'account_id': account_kit.id,                                                    'debit': 10.0, 'credit': 0.0},
+            {'account_id': variation_account.id,                                              'debit': 10.0, 'credit': 0.0},
+            {'account_id': self.category_avco_auto.property_stock_valuation_account_id.id,    'debit': 0.0, 'credit': 10.0},
+            {'account_id': variation_account.id,                                              'debit': 0.0, 'credit': 10.0},
+        ])
+
+    def test_operation_cost_matches_labour_je_overlapping_loss_types(self):
+        """Test that the MO Overview operation cost equals the posted labour
+        journal entry when time logs with different loss types overlap on the
+        same work order.
+        """
+        workcenter = self.env['mrp.workcenter'].create({'name': 'Assembly', 'costs_hour': 60})
+        self.bom_1.operation_ids = [Command.create({
+            'name': 'Assemble',
+            'workcenter_id': workcenter.id,
+            'time_mode': 'manual',
+            'time_cycle_manual': 60,
+        })]
+        mo = self._create_mo(self.bom_1, 1)
+        self._produce(mo)
+        workorder = mo.workorder_ids
+        # overlapping time, productive 10:00 -> 11:00 and reduced speed 10:30 -> 11:30
+        self.env['mrp.workcenter.productivity'].create([{
+            'workorder_id': workorder.id,
+            'workcenter_id': workcenter.id,
+            'loss_id': self.env.ref('mrp.block_reason7').id,
+            'date_start': datetime(2020, 1, 1, 10, 0),
+            'date_end': datetime(2020, 1, 1, 11, 0),
+        }, {
+            'workorder_id': workorder.id,
+            'workcenter_id': workcenter.id,
+            'loss_id': self.env.ref('mrp.block_reason4').id,
+            'date_start': datetime(2020, 1, 1, 10, 30),
+            'date_end': datetime(2020, 1, 1, 11, 30),
+        }])
+        workorder.button_finish()
+        mo.button_mark_done()
+
+        # workcenter occupied 10:00 -> 11:30 = 1.5h * 60 = 90 (not 2 * 1h * 60 = 120)
+        report = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
+        self.assertEqual(report['data']['operations']['summary']['real_cost'], 90)
+        labour_je = self.env['account.move'].search([('ref', '=', '%s - Labour' % mo.name)])
+        self.assertEqual(sum(labour_je.line_ids.filtered('debit').mapped('debit')), 90)

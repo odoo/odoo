@@ -50,18 +50,21 @@ class CalendarEvent(models.Model):
 
     @api.model
     def _restart_google_sync(self):
-        self.env['calendar.event'].search(self._get_sync_domain()).write({
-            'need_sync': True,
-        })
+        events = self.env['calendar.event'].search(self._get_sync_domain())
+        events.write({'need_sync': True})
+        events._check_alarm_ids_sync_limit()
 
     @api.model_create_multi
     def create(self, vals_list):
         description_context = self.env.context.get('skip_contact_description', False)
         notify_context = self.env.context.get('dont_notify', False)
-        return super(CalendarEvent, self.with_context(dont_notify=notify_context, skip_contact_description=description_context)).create([
+        events = super(CalendarEvent, self.with_context(dont_notify=notify_context, skip_contact_description=description_context)).create([
             dict(vals, need_sync=False) if vals.get('recurrence_id') or vals.get('recurrency') else vals
             for vals in vals_list
         ])
+        if any('alarm_ids' in vals for vals in vals_list):
+            events._check_alarm_ids_sync_limit()
+        return events
 
     @api.model
     def _check_values_to_sync(self, values):
@@ -95,10 +98,25 @@ class CalendarEvent(models.Model):
         notify_context = self.env.context.get('dont_notify', False)
         if not notify_context and ([self.env.user.id != record.user_id.id for record in self]):
             self._check_modify_event_permission(vals)
+        previous_alarms_per_event = {event.id: event.alarm_ids for event in self} if 'alarm_ids' in vals else {}
         res = super(CalendarEvent, self.with_context(dont_notify=notify_context)).write(vals)
+        if previous_alarms_per_event:
+            # Only check events whose alarms actually changed (Google -> Odoo sync only logs on Google alarms update).
+            events_to_check = self.filtered(lambda event: event.alarm_ids != previous_alarms_per_event[event.id])
+            events_to_check._check_alarm_ids_sync_limit()
         if recurrence_update_setting == 'all_events' and len(self) == 1 and vals.keys() & self._get_google_synced_fields():
             self.recurrence_id.need_sync = True
         return res
+
+    def _check_alarm_ids_sync_limit(self):
+        """ Google Calendar only accepts up to 5 reminders per event.
+        Log a message on every synced event in self that exceeds this limit.
+        """
+        synced_events_over_limit = self.filtered(
+            lambda event: len(event.alarm_ids) > 5 and event._get_event_user().is_google_calendar_synced())
+        if synced_events_over_limit:
+            body = _("This event has more than 5 reminders, only the first 5 will be synced to Google Calendar.")
+            synced_events_over_limit._message_log_batch(bodies={event.id: body for event in synced_events_over_limit})
 
     def _check_modify_event_permission(self, values):
         """ Check if event modification attempt by attendee is valid to avoid duplicate events creation. """
@@ -183,12 +201,14 @@ class CalendarEvent(models.Model):
             stop = parse(google_event.end.get('dateTime')).astimezone(pytz.utc).replace(tzinfo=None)
             values['allday'] = False
         else:
-            start = parse(google_event.start.get('date'))
-            stop = parse(google_event.end.get('date')) - relativedelta(days=1)
+            # Set the inverse of start_date manually to avoid going through the inverse and setting need_sync.
+            # Regular day hours prevent weird results when the start datetime is shown in list views and the likes.
+            start = parse(google_event.start.get('date')).replace(hour=8)
+            stop = (parse(google_event.end.get('date')) - relativedelta(days=1)).replace(hour=18)
             # Stop date should be exclusive as defined here https://developers.google.com/calendar/v3/reference/events#resource
             # but it seems that's not always the case for old event
             if stop < start:
-                stop = parse(google_event.end.get('date'))
+                stop = parse(google_event.end.get('date')).replace(hour=18)
             values['allday'] = True
         if related_event['start'] != start:
             values['start'] = start
@@ -214,23 +234,27 @@ class CalendarEvent(models.Model):
             existing_attendees = event.attendee_ids
         attendees_by_emails = {tools.email_normalize(a.email): a for a in existing_attendees}
         partners = self._get_sync_partner(emails)
-        for attendee in zip(emails, partners, google_attendees):
-            email = attendee[0]
-            if email in attendees_by_emails:
+        partners_by_email = {(p.email_normalized or p.email): p for p in partners}
+        for google_attendee in google_attendees:
+            attendee_email = google_attendee.get('email')
+            attendee_email_normalized = tools.email_normalize(attendee_email)
+            if attendee_email in attendees_by_emails:
                 # Update existing attendees
-                attendee_commands += [(1, attendees_by_emails[email].id, {'state': attendee[2].get('responseStatus')})]
+                attendee_commands += [(1, attendees_by_emails[attendee_email].id, {'state': google_attendee.get('responseStatus')})]
             else:
                 # Create new attendees
-                if attendee[2].get('self'):
+                if google_attendee.get('self'):
                     partner = self.env.user.partner_id
-                elif attendee[1]:
-                    partner = attendee[1]
+                elif partners_by_email.get(attendee_email_normalized):
+                    partner = partners_by_email[attendee_email_normalized]
+                elif partners_by_email.get(attendee_email):
+                    partner = partners_by_email[attendee_email]
                 else:
                     continue
-                attendee_commands += [(0, 0, {'state': attendee[2].get('responseStatus'), 'partner_id': partner.id})]
+                attendee_commands += [(0, 0, {'state': google_attendee.get('responseStatus'), 'partner_id': partner.id})]
                 partner_commands += [(4, partner.id)]
-                if attendee[2].get('displayName') and not partner.name:
-                    partner.name = attendee[2].get('displayName')
+                if google_attendee.get('displayName') and not partner.name:
+                    partner.name = google_attendee.get('displayName')
         for odoo_attendee in attendees_by_emails.values():
             # Remove old attendees but only if it does not correspond to the current user.
             email = tools.email_normalize(odoo_attendee.email)
@@ -309,10 +333,11 @@ class CalendarEvent(models.Model):
             # Otherwise, if both 'date' and 'dateTime' are set, Google may not recognize it as a timed event
             start['dateTime'] = pytz.utc.localize(self.start).isoformat()
             end['dateTime'] = pytz.utc.localize(self.stop).isoformat()
+        # The Google Calendar API only accepts up to 5 reminders per event.
         reminders = [{
             'method': "email" if alarm.alarm_type == "email" else "popup",
             'minutes': alarm.duration_minutes
-        } for alarm in self.alarm_ids]
+        } for alarm in self.alarm_ids.sorted('id')[:5]]
 
         attendees = self.attendee_ids
         attendee_values = [{

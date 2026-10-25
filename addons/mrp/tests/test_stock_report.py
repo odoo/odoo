@@ -739,3 +739,145 @@ class TestMrpStockReports(TestReportsCommon):
         overview_values_no_bom = self.env['report.mrp.report_mo_overview'].get_report_values(mo_no_bom.id)
         self.assertEqual(overview_values_no_bom['data']['components'][0]['summary']['bom_cost'], 120)
         self.assertEqual(overview_values_no_bom['data']['components'][0]['summary']['mo_cost'], 120)
+
+    def test_forecast_report_cross_warehouse_mo(self):
+        """
+        Test that when an MO is planned between two warehouses,
+        the forecast header report correctly computes the incoming
+        quantity for correct warehouse.
+        """
+        wh1 = self.env.ref('stock.warehouse0')
+        wh2 = self.wh_2
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product.id,
+            'product_qty': 10,
+            'location_src_id': wh1.lot_stock_id.id,
+            'location_dest_id': wh2.lot_stock_id.id,
+        })
+        mo.action_confirm()
+        self.assertEqual(self.product.with_context(warehouse_id=wh1.id).incoming_qty, 0)
+        self.assertEqual(self.product.with_context(warehouse_id=wh2.id).incoming_qty, 10)
+
+    def test_stock_reception_action_assign_sets_group_ids(self):
+        """In this test we check if action_assign correctly links the MO's using the production groups.
+        We expect action_assign to correctly set parent_ids and child_ids in the group. Analog we expect
+        action_unassign to remove them.
+        """
+        warehouse = self.wh_2
+        route_mto = warehouse.mto_pull_id.route_id
+        route_mto.active = True
+        route_manufacture = warehouse.manufacture_pull_id.route_id
+
+        component, sub_component, part1, part2 = self.env['product.product'].create([
+            {'name': 'Component'},
+            {'name': 'Sub Component', 'route_ids': [
+                Command.set([route_manufacture.id, route_mto.id]),
+            ]},
+            {'name': 'Part 1'},
+            {'name': 'Part 2'}
+        ])
+
+        component_bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': component.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [
+                Command.create({'product_id': sub_component.id, 'product_qty': 1.0}),
+            ],
+        })
+        sub_component_bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': sub_component.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [
+                Command.create({'product_id': part1.id, 'product_qty': 1.0}),
+                Command.create({'product_id': part2.id, 'product_qty': 1.0})
+            ],
+        })
+        component_mo = self.env['mrp.production'].create({
+            'bom_id': component_bom.id,
+            'product_qty': 1,
+        })
+        component_mo.action_confirm()
+        self.assertEqual(len(component_mo.production_group_id.child_ids), 1)
+        component_mo.production_group_id.child_ids.production_ids.action_cancel()
+        sub_component_mo = self.env['mrp.production'].create({
+            'product_id': sub_component.id,
+            'bom_id': sub_component_bom.id,
+            'product_qty': 1,
+        })
+
+        sub_component_mo.action_confirm()
+        in_move = component_mo.move_raw_ids
+        out_move = sub_component_mo.move_finished_ids
+        self.assertEqual(len(in_move), 1)
+        self.assertEqual(len(out_move), 1)
+        self.env['report.stock.report_reception'].action_assign(in_move.ids, [1], out_move.ids)
+
+        component_mo_group = component_mo.production_group_id
+        sub_component_mo_group = sub_component_mo.production_group_id
+        self.assertIn(sub_component_mo_group.id, component_mo_group.child_ids.ids)
+        self.assertIn(component_mo_group.id, sub_component_mo_group.parent_ids.ids)
+
+        self.env['report.stock.report_reception'].action_unassign(in_move.ids, 1, out_move.ids)
+        self.assertNotIn(sub_component_mo_group.id, component_mo_group.child_ids.ids)
+        self.assertNotIn(component_mo_group.id, sub_component_mo_group.parent_ids.ids)
+
+    def test_a_mrp_report_overview_bom_cost(self):
+        """
+        Test that the BoM cost in the MO overview is correctly calculated when the BoM's base
+        quantity is greater than 1.
+        """
+        manufactured, component = self.env['product.product'].create([
+            {
+                'name': 'Manufactured',
+                'is_storable': True,
+            },
+            {
+                'name': 'Component',
+                'is_storable': True,
+                'standard_price': 10,
+            },
+        ])
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': manufactured.product_tmpl_id.id,
+            'product_qty': 10,
+            'type': 'normal',
+            'bom_line_ids': [
+                Command.create({'product_id': component.id, 'product_qty': 1}),
+            ],
+        })
+        self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'move_ids': [Command.create({
+                'product_id': component.id,
+                'product_uom_qty': 1,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+            })],
+        }).action_confirm()
+        mo = self.env['mrp.production'].create({
+            'bom_id': bom.id,
+            'product_qty': 20,
+        })
+        mo.action_confirm()
+        report_data = self.env['report.mrp.report_mo_overview']._get_report_data(mo.id)
+        self.assertEqual(report_data['components'][0]['replenishments'][0]['summary']['bom_cost'], 10.0)
+        self.assertEqual(report_data['components'][0]['replenishments'][1]['summary']['bom_cost'], 10.0)
+
+        # Make sure it also works when the MO has no bom.
+        mo.action_cancel()
+        mo_2 = self.env['mrp.production'].create({
+            'product_id': self.product.id,
+            'product_qty': 20,
+            'move_raw_ids': [
+                Command.create({
+                    'product_id': component.id,
+                    'product_uom_qty': 2,
+                }),
+            ],
+        })
+        mo_2.action_confirm()
+        report_data = self.env['report.mrp.report_mo_overview']._get_report_data(mo_2.id)
+        self.assertEqual(report_data['components'][0]['replenishments'][0]['summary']['bom_cost'], 0.0)
+        self.assertEqual(report_data['components'][0]['replenishments'][1]['summary']['bom_cost'], 0.0)

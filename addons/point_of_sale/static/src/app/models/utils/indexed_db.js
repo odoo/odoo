@@ -96,7 +96,7 @@ export default class IndexedDB {
             logPosMessage(
                 "IndexedDB",
                 "databaseEventListener",
-                `IndexedDB ${this.dbVersion} Ready`,
+                `IndexedDB ${this.dbName} Ready`,
                 CONSOLE_COLOR
             );
             whenReady?.();

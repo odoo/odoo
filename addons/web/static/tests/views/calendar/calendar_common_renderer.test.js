@@ -1,6 +1,6 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { queryAllTexts, queryFirst, queryRect } from "@odoo/hoot-dom";
-import { runAllTimers } from "@odoo/hoot-mock";
+import { runAllTimers, mockTimeZone } from "@odoo/hoot-mock";
 import { mockService, mountWithCleanup, preloadBundle } from "@web/../tests/web_test_helpers";
 import {
     DEFAULT_DATE,
@@ -143,6 +143,35 @@ test(`Week: check dates`, async () => {
         "15",
         "16",
         "17",
+    ]);
+});
+
+test("Week: check dates across a DST transition happening at local midnight (Africa/Cairo)", async () => {
+    // Egypt springs its clock forward from 00:00 to 01:00 on the last Friday of
+    // April, so "midnight" doesn't exist as a local time that day. This used to
+    // make FullCalendar's Luxon timezone plugin resolve that day's header to the
+    // previous day (duplicating its weekday name).
+    mockTimeZone("Africa/Cairo");
+    await start({ model: { ...FAKE_MODEL, scale: "week", date: luxon.DateTime.local(2027, 4, 25) } });
+
+    expect(`.fc-col-header-cell.fc-day`).toHaveCount(7);
+    expect(queryAllTexts(`.fc-col-header-cell .o_cw_day_name`)).toEqual([
+        "Sun",
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+    ]);
+    expect(queryAllTexts`.fc-col-header-cell .o_cw_day_number`).toEqual([
+        "25",
+        "26",
+        "27",
+        "28",
+        "29",
+        "30",
+        "1",
     ]);
 });
 

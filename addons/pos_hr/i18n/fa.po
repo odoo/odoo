@@ -2,14 +2,16 @@
 # This file contains the translation of the following modules:
 # * pos_hr
 #
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Aliraza Habibitanha <alireza.habibitanha@gmail.com>, 2026.
+# Heshmatkhah <maheshmatkhah.soft@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-11-08 22:00+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-07-31 17:37+0000\n"
+"PO-Revision-Date: 2026-08-23 06:11+0000\n"
+"Last-Translator: Heshmatkhah <maheshmatkhah.soft@gmail.com>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-19/pos_hr/"
 "fa/>\n"
 "Language: fa\n"
@@ -17,12 +19,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
 msgid "Abigal Peterson"
-msgstr ""
+msgstr "آسنا دانایی"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -33,19 +35,19 @@ msgstr "امکان دسترسی وجود ندارد"
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_daily_sales_reports_wizard__add_report_per_employee
 msgid "Add a report per each employee"
-msgstr ""
+msgstr "درج گزارش به ازای هر کارمند"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
 msgid "Advanced rights"
-msgstr ""
+msgstr "دسترسی‌های پیشرفته"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
 msgid "All Employees"
-msgstr ""
+msgstr "همه کارمندان"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_account_bank_statement_line
@@ -56,7 +58,7 @@ msgstr "سطر صورتحساب بانک"
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
 msgid "Basic rights"
-msgstr ""
+msgstr "دسترسی‌های پایه"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.view_pos_daily_sales_reports_wizard
@@ -64,12 +66,14 @@ msgid ""
 "Cannot generate report per employee: only one employee logged in during this "
 "session."
 msgstr ""
+"امکان تولید گزارش به ازای هر کارمند وجود ندارد: فقط یک کارمند در این نشست "
+"وارد شده است."
 
 #. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Cash in/out"
-msgstr ""
+msgstr "ورود/خروج نقد"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__employee_id
@@ -83,18 +87,18 @@ msgstr "صندوقدار"
 #. odoo-python
 #: code:addons/pos_hr/models/pos_order.py:0
 msgid "Cashier %s"
-msgstr ""
+msgstr "صندوق‌دار %s"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__cashier
 msgid "Cashier name"
-msgstr ""
+msgstr "نام صندوق‌دار"
 
 #. module: pos_hr
 #. odoo-python
 #: code:addons/pos_hr/models/pos_session.py:0
 msgid "Closed Register"
-msgstr ""
+msgstr "رجیستر بسته شده"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_res_config_settings
@@ -102,10 +106,20 @@ msgid "Config Settings"
 msgstr "تنظیمات پیکربندی"
 
 #. module: pos_hr
+#: model:ir.model,name:pos_hr.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Counted"
 msgstr "شمارش شده"
+
+#. module: pos_hr
+#: model:ir.model,website_form_label:pos_hr.model_res_partner
+msgid "Create a Customer"
+msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
@@ -131,6 +145,7 @@ msgstr "رها کردن"
 #: model:ir.model.fields,field_description:pos_hr.field_report_pos_hr_single_employee_sales_report__display_name
 #: model:ir.model.fields,field_description:pos_hr.field_report_pos_order__display_name
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:pos_hr.field_res_partner__display_name
 msgid "Display Name"
 msgstr "نام نمایشی"
 
@@ -146,12 +161,12 @@ msgstr "کارمند"
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
 msgid "Employee Sales Report"
-msgstr ""
+msgstr "گزارش فروش کارمند"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
 msgid "Employee:"
-msgstr ""
+msgstr "کارمند:"
 
 #. module: pos_hr
 #. odoo-python
@@ -166,30 +181,32 @@ msgid ""
 "Employees linked to users with the PoS Manager role are automatically added "
 "to this list"
 msgstr ""
+"در صورت خالی بودن، فقط کاربران اودو دارای دسترسی‌های گسترده‌تر در پایانه فروش "
+"هستند"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__basic_employee_ids
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_basic_employee_ids
 msgid "Employees with basic access"
-msgstr ""
+msgstr "کارمندان دارای دسترسی پایه"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__advanced_employee_ids
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_advanced_employee_ids
 msgid "Employees with manager access"
-msgstr ""
+msgstr "کارمندان دارای دسترسی مدیریتی"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__minimal_employee_ids
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_minimal_employee_ids
 msgid "Employees with minimal access"
-msgstr ""
+msgstr "کارمندان با دسترسی حداقلی"
 
 #. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/screens/login_screen/login_screen.xml:0
 msgid "Enter your PIN"
-msgstr ""
+msgstr "PIN خود را وارد کنید"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_account_bank_statement_line__id
@@ -203,6 +220,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_hr.field_report_pos_hr_single_employee_sales_report__id
 #: model:ir.model.fields,field_description:pos_hr.field_report_pos_order__id
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__id
+#: model:ir.model.fields,field_description:pos_hr.field_res_partner__id
 msgid "ID"
 msgstr "شناسه"
 
@@ -212,7 +230,7 @@ msgstr "شناسه"
 #: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_basic_employee_ids
 #: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_minimal_employee_ids
 msgid "If left empty, all employees can log in to PoS"
-msgstr ""
+msgstr "در صورت خالی بودن، همه کارمندان می‌توانند وارد پایانه فروش شوند"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -225,13 +243,13 @@ msgstr "قفل"
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
 msgid "Minimal rights"
-msgstr ""
+msgstr "حداقل دسترسی‌ها"
 
 #. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
 msgid "No Cashiers"
-msgstr ""
+msgstr "بدون صندوق‌دار"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -240,18 +258,20 @@ msgid ""
 "Only the cashier linked to the logged-in user (%s) can proceed to the "
 "Backend."
 msgstr ""
+"فقط صندوق‌دار مرتبط با کاربر وارد شده (%s) می‌تواند وارد بک‌اند (بخش مدیریت) "
+"شود."
 
 #. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/screens/login_screen/login_screen.xml:0
 msgid "Open Register"
-msgstr ""
+msgstr "ورود به صندوق"
 
 #. module: pos_hr
 #. odoo-python
 #: code:addons/pos_hr/models/pos_session.py:0
 msgid "Opened register"
-msgstr ""
+msgstr "رجیستر باز شده"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -269,13 +289,13 @@ msgstr "دیگران"
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
 msgid "PIN not found"
-msgstr ""
+msgstr "PIN یافت نشد"
 
 #. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
 msgid "Password?"
-msgstr ""
+msgstr "رمز عبور؟"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -328,40 +348,40 @@ msgstr "انتخاب صندوق‌دار"
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
 msgid "Select Employee(s)"
-msgstr ""
+msgstr "انتخاب کارمند(ها)"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_report_pos_hr_single_employee_sales_report
 msgid "Session sales details for a single employee"
-msgstr ""
+msgstr "جزئیات فروش نشست برای یک کارمند"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_session__employee_id
 msgid "The employee who currently uses the cash register"
-msgstr ""
+msgstr "کارمندی که در حال حاضر از صندوق استفاده می‌کند"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_account_bank_statement_line__employee_id
 msgid "The employee who made the cash move."
-msgstr ""
+msgstr "کارمندی که انتقال وجه را انجام داده است."
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_order__employee_id
 #: model:ir.model.fields,help:pos_hr.field_pos_payment__employee_id
 msgid "The employee who uses the cash register."
-msgstr ""
+msgstr "کارمندی که از صندوق استفاده می‌کند."
 
 #. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
 msgid "There is no cashier available."
-msgstr ""
+msgstr "صندوق‌داری در دسترس نیست."
 
 #. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/screens/login_screen/login_screen.xml:0
 msgid "Unlock Register"
-msgstr ""
+msgstr "قفل‌گشایی صندوق"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -373,7 +393,7 @@ msgstr "پین‌کد اشتباه"
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "You are not allowed to change the price of a product."
-msgstr ""
+msgstr "شما مجاز به تغییر قیمت یک محصول نیستید."
 
 #. module: pos_hr
 #. odoo-python

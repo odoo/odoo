@@ -1109,7 +1109,7 @@ describe("waitFor...", () => {
             class Test extends Interaction {
                 static selector = ".test";
                 async willStart() {
-                    await this.waitForTimeout(() => expect.step("waitfortimeout"), 50);
+                    this.waitForTimeout(() => expect.step("waitfortimeout"), 50);
                     expect.step("willstart");
                     return new Promise((resolve) => {
                         setTimeout(() => {
@@ -1124,9 +1124,9 @@ describe("waitFor...", () => {
             }
             await startInteraction(Test, TemplateTest, { waitForStart: false });
             expect.verifySteps(["willstart"]);
-            await advanceTime(75);
+            await advanceTime(50, { animationFrame: false });
             expect.verifySteps(["waitfortimeout"]);
-            await advanceTime(75);
+            await advanceTime(50, { animationFrame: false });
             expect.verifySteps(["timeout", "start"]);
         });
 
@@ -1176,13 +1176,13 @@ describe("waitFor...", () => {
                 static selector = ".test";
 
                 async willStart() {
-                    await this.waitForAnimationFrame(() => expect.step("waitForAnimationFrame"));
+                    this.waitForAnimationFrame(() => expect.step("waitForAnimationFrame"));
                     expect.step("willstart");
                     return new Promise((resolve) => {
                         setTimeout(() => {
                             expect.step("timeout");
                             resolve();
-                        }, 100);
+                        }, 1000);
                     });
                 }
                 start() {
@@ -1193,7 +1193,7 @@ describe("waitFor...", () => {
             expect.verifySteps(["willstart"]);
             await animationFrame();
             expect.verifySteps(["waitForAnimationFrame"]);
-            await advanceTime(100);
+            await advanceTime(1000);
             expect.verifySteps(["timeout", "start"]);
         });
 

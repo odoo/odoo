@@ -148,12 +148,17 @@ export function removeClass(element, ...classNames) {
     }
 }
 
+/**
+ * Removes the specified CSS properties from an element's inline styles.
+ * If no inline styles remain afterward, the `style` attribute is removed.
+ *
+ * @param {Element} element
+ * @param {...string} styleProperties
+ */
 export function removeStyle(element, ...styleProperties) {
-    const propsToRemoveSet = new Set(styleProperties);
-    if ([...element.style].every((prop) => propsToRemoveSet.has(prop))) {
+    styleProperties.forEach((prop) => element.style.removeProperty(prop));
+    if (element.getAttribute("style") === "") {
         element.removeAttribute("style");
-    } else {
-        styleProperties.forEach((prop) => element.style.removeProperty(prop));
     }
 }
 
@@ -283,6 +288,23 @@ export function cleanTextNode(node, char, cursors) {
 }
 
 /**
+ * Remove all empty text nodes within the given root element
+ * and update cursors for later selection restore.
+ *
+ * This prevents the editor from keeping unnecessary empty text
+ * nodes that may create extra nodes during split operations.
+ *
+ * @param {HTMLElement} root
+ * @param {Cursors} [cursors]
+ */
+export function removeEmptyTextNodes(root, cursors) {
+    for (const node of childNodes(root).filter((n) => isEmptyTextNode(n))) {
+        cursors?.update(callbacksForCursorUpdate.remove(node));
+        node.remove();
+    }
+}
+
+/**
  * Splits a text node in two parts.
  * If the split occurs at the beginning or the end, the text node stays
  * untouched and unsplit. If a split actually occurs, the original text node
@@ -335,9 +357,11 @@ export function splitTextNode(textNode, offset, originalNodeSide = DIRECTIONS.RI
  * @param {import("@html_editor/core/selection_plugin").Cursors} [cursors]
  */
 export function removeInvisibleWhitespace(el, cursors) {
-    const [countLeadingWhitespace, countTrailingWhitespace] = [/^\s+/, /\s+$/].map(
-        (regex) => (node) => node?.textContent.match(regex)?.[0]?.length || 0
-    );
+    const whitespaceRegex = /[^\S\u00A0\uFEFF]/;
+    const [countLeadingWhitespace, countTrailingWhitespace] = [
+        new RegExp(`^${whitespaceRegex.source}+`),
+        new RegExp(`${whitespaceRegex.source}+$`),
+    ].map((regex) => (node) => node?.textContent.match(regex)?.[0]?.length || 0);
     const isInlineElement = (node) => node?.nodeType === Node.ELEMENT_NODE && !isBlock(node);
     const textChildren = descendants(el).filter((child) => child.nodeType === Node.TEXT_NODE);
     let removedTrailingSpaceBefore = false;
@@ -369,8 +393,8 @@ export function removeInvisibleWhitespace(el, cursors) {
                 leadingWhitespace,
                 child.textContent.length - trailingWhitespace || leadingWhitespace
             )
-            .replace(/^\s+/, " ")
-            .replace(/\s+$/, " ");
+            .replace(new RegExp(`^${whitespaceRegex.source}+`), " ")
+            .replace(new RegExp(`${whitespaceRegex.source}+$`), " ");
         if (!child.textContent) {
             child.remove();
         }

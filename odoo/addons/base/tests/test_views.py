@@ -7,12 +7,14 @@ from contextlib import contextmanager
 
 from functools import partial
 from collections import defaultdict
+from unittest.mock import patch
 
 from lxml import etree
 from lxml.builder import E
 from psycopg2 import IntegrityError
 from psycopg2.extras import Json
 
+from odoo import fields
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import common, tagged
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
@@ -3806,6 +3808,114 @@ Forbidden use of `__comp__` in arch."""
             })
         self.assertIn("Element '<e4>' cannot be located in parent view", str(catcher.exception.args[0]))
 
+    def test_check_primary_skip_unloaded_siblings_during_base_update(self):
+        """ During `-u base`, a sibling primary view of a module that is not
+        loaded yet must not be checked when a base view of its tree is updated.
+        """
+        # P: primary, E: extension
+        #
+        #       P1
+        #      /  \
+        #    E1    E2
+        #            \
+        #             P2
+        #
+        # P1 belongs to base, E1, E2 and P2 to a module that is not loaded yet.
+        # P2 targets <e1/>, added by E1, which is left out while base loads.
+        p1 = self.View.create({
+            'name': 'test_view_p1',
+            'type': 'qweb',
+            'arch_db': '<div><p1/></div>',
+        })
+        e1 = self.View.create({
+            'name': 'test_view_e1',
+            'mode': 'extension',
+            'inherit_id': p1.id,
+            'arch_db': '<div position="inside"><e1/></div>',
+        })
+        e2 = self.View.create({
+            'name': 'test_view_e2',
+            'mode': 'extension',
+            'inherit_id': p1.id,
+            'arch_db': '<div position="inside"><e2/></div>',
+        })
+        p2 = self.View.create({
+            'name': 'test_view_p2',
+            'mode': 'primary',
+            'inherit_id': e2.id,
+            'arch_db': '<e1 position="replace"><p2/></e1>',
+        })
+        self.env['ir.model.data'].create([{
+            'module': module,
+            'name': view.name,
+            'model': 'ir.ui.view',
+            'res_id': view.id,
+        } for module, view in [
+            ('base', p1),
+            ('test_not_loaded_yet', e1),
+            ('test_not_loaded_yet', e2),
+            ('test_not_loaded_yet', p2),
+        ]])
+
+        # simulate the registry state while base is being updated: no module is fully loaded yet
+        with (
+            patch.object(self.registry, '_init', True),
+            patch.object(self.registry, '_init_modules', set()),
+            patch.object(self.registry, 'loaded_xmlids', set()),
+        ):
+            # base rewrites its own view from the XML file, which triggers the check of P2
+            p1.with_context(install_module='base').arch_db = '<div><p1/></div>'
+
+        # once all modules are loaded, P2 is valid
+        self.assertEqual(p2.get_combined_arch(), '<div><p1/><p2/><e2/></div>')
+
+    def test_check_primary_skip_not_yet_updated_siblings_of_installing_module(self):
+        """ During the update of a module, a sibling primary view of that same
+        module which has not been reloaded yet must not be checked when a view
+        of its tree is updated: its arch is still the old one.
+        """
+        # P: primary
+        #
+        #       P1
+        #        \
+        #         P2
+        #
+        # P1 and P2 belong to the module being updated. The new version of P1
+        # removes <old/>, the new version of P2 (loaded after P1) targets <new/>.
+        p1 = self.View.create({
+            'name': 'test_view_p1',
+            'type': 'qweb',
+            'arch_db': '<div><old/></div>',
+        })
+        p2 = self.View.create({
+            'name': 'test_view_p2',
+            'mode': 'primary',
+            'inherit_id': p1.id,
+            'arch_db': '<old position="replace"><p2/></old>',
+        })
+        self.env['ir.model.data'].create([{
+            'module': 'test_being_updated',
+            'name': view.name,
+            'model': 'ir.ui.view',
+            'res_id': view.id,
+        } for view in (p1, p2)])
+
+        # simulate the registry state while test_being_updated is being updated
+        with (
+            patch.object(self.registry, '_init', True),
+            patch.object(self.registry, '_init_modules', {'base'}),
+            patch.object(self.registry, 'loaded_xmlids', set()),
+        ):
+            # P1 is reloaded first, P2 still has its old arch and must be skipped
+            p1.with_context(install_module='test_being_updated').arch_db = '<div><new/></div>'
+            self.registry.loaded_xmlids.add('test_being_updated.test_view_p1')
+
+            # P2 is reloaded afterwards with an arch matching the new P1
+            p2.with_context(install_module='test_being_updated').arch_db = '<new position="replace"><p2/></new>'
+            self.registry.loaded_xmlids.add('test_being_updated.test_view_p2')
+
+        self.assertEqual(p2.get_combined_arch(), '<div><p2/></div>')
+
 
 @tagged('post_install', '-at_install')
 class TestDebugger(common.TransactionCase):
@@ -6124,3 +6234,23 @@ class ViewModifiers(ViewCase):
                 'inherit_id': parent_view.id,
                 'arch': inherit_arch,
             })
+
+
+class TestPropertiesFieldViewValidation(ViewCase):
+
+    def test_properties_field_without_definition_record(self):
+        """A ``properties`` field whose ``definition_record`` is not set
+        (e.g. the module declaring ``definition=`` is absent, as happens
+        during upgrade with custom module fields) must not crash view validation."""
+
+        model_name = 'ir.ui.view.custom'
+        model_class = self.env.registry[model_name]
+        dummy_field = fields.Properties(string="Dummy Properties", name='x_dummy_properties')
+        dummy_field.model_name = model_name
+
+        self.patch(model_class, '_fields', dict(model_class._fields, x_dummy_properties=dummy_field))
+
+        self.assertValid(
+            '<form><field name="x_dummy_properties"/></form>',
+            model=model_name,
+        )

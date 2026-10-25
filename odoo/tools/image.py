@@ -78,9 +78,17 @@ class ImageProcess:
         self.source = source or False
         self.operationsCount = 0
 
-        if not source or source[:1] == b'<' or (source[0:4] == b'RIFF' and source[8:15] == b'WEBPVP8'):
-            # don't process empty source or SVG or WEBP
+        if not source or source[:1] == b'<':
+            # don't process empty source or SVG
             self.image = False
+        elif source[0:4] == b'RIFF' and source[8:15] == b'WEBPVP8':
+            # don't process WEBP, but still verify its resolution like the
+            # other formats.
+            self.image = False
+            if verify_resolution:
+                size = get_webp_size(source)
+                if size and size[0] * size[1] > IMAGE_MAX_RESOLUTION:
+                    raise UserError(_lt("Too large image (above %sMpx), reduce the image size.", str(IMAGE_MAX_RESOLUTION / 1e6)))
         else:
             try:
                 self.image = Image.open(io.BytesIO(source))
@@ -148,7 +156,6 @@ class ImageProcess:
         if output_format == 'GIF':
             opt['optimize'] = True
             opt['save_all'] = True
-
         if output_image.mode not in ["1", "L", "P", "RGB", "RGBA"] or (output_format == 'JPEG' and output_image.mode == 'RGBA'):
             output_image = output_image.convert("RGB")
 

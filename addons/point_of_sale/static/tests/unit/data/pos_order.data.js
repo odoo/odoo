@@ -41,6 +41,12 @@ export class PosOrder extends models.ServerModel {
     }
 
     sync_from_ui(data) {
+        for (const order of data) {
+            if (order.to_invoice) {
+                order.invoice_status = "invoiced";
+            }
+        }
+
         const orderIds = [];
         for (const record of data) {
             const record_uuid_mapping = record.relations_uuid_mapping || {};
@@ -140,5 +146,17 @@ export class PosOrder extends models.ServerModel {
             "pos.pack.operation.lot": posPackOperationLot,
             "product.attribute.custom.value": posCustomAttributeValue,
         };
+    }
+
+    get_stock_reports_to_print() {
+        return [
+            {
+                type: "ir.actions.report",
+                report_name: "stock.report_return_document",
+                report_type: "qweb-pdf",
+                report_file: "return_slip",
+                name: "Return slip",
+            },
+        ];
     }
 }

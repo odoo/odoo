@@ -10,7 +10,8 @@ from odoo import http, _
 from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.tools import groupby as groupbyelem
+from odoo.tools import groupby as groupbyelem, consteq
+from odoo.tools.misc import hmac
 
 from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
 
@@ -168,10 +169,16 @@ class ProjectCustomerPortal(CustomerPortal):
             and project.with_user(request.env.user)._check_project_sharing_access()
         ):
             return request.not_found()
-        return request.render(
+        session_info = self._prepare_project_sharing_session_info(project)
+        hmac_payload = request.env.user._session_token_get_values()
+        session_info['browser_cache_secret'] = hmac(request.env(su=True), 'browser_cache_key', hmac_payload)
+
+        response = request.render(
             'project.project_sharing_portal',
-            {'session_info': self._prepare_project_sharing_session_info(project)},
+            {'session_info': session_info},
         )
+        response.headers['Cache-Control'] = 'no-store'
+        return response
 
     @http.route('/my/projects/<int:project_id>/task/<int:task_id>', type='http', auth='public', website=True)
     def portal_my_project_task(self, project_id=None, task_id=None, access_token=None, **kw):
@@ -180,9 +187,11 @@ class ProjectCustomerPortal(CustomerPortal):
         except (AccessError, MissingError):
             return request.redirect('/my')
         Task = request.env['project.task']
-        if access_token:
+        if access_token and project_sudo.access_token and consteq(project_sudo.access_token, access_token):
             Task = Task.sudo()
         task_sudo = Task.search([('project_id', '=', project_id), ('id', '=', task_id)], limit=1).sudo()
+        if not task_sudo:
+            return request.not_found()
         task_sudo.attachment_ids.generate_access_token()
         values = self._task_get_page_view_values(task_sudo, access_token, project=project_sudo, **kw)
         values['project'] = project_sudo

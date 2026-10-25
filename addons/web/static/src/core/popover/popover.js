@@ -24,9 +24,10 @@ function useEarlyExternalListener(target, eventName, handler, eventParams) {
  *
  * This also handles the case where an iframe is clicked.
  *
+ * @param {Popover} popover
  * @param {(node?: Node) => any} callback
  */
-function useClickAway(callback) {
+function useClickAway(popover, callback) {
     function blurHandler(ev) {
         const target = ev.relatedTarget || document.activeElement;
         if (target?.tagName === "IFRAME") {
@@ -38,13 +39,41 @@ function useClickAway(callback) {
         callback(document.documentElement);
     }
 
-    function pointerDownHandler(ev) {
-        callback(ev.composedPath()[0]);
+    function clickAwayHandler(ev) {
+        if (ev.detail === 0) {
+            callback(ev.composedPath()[0]);
+        }
     }
 
-    useEarlyExternalListener(window, "pointerdown", pointerDownHandler, { capture: true });
+    useEarlyExternalListener(window, "pointerdown", clickAwayHandler, { capture: true });
     useEarlyExternalListener(window, "blur", blurHandler, { capture: true });
     useEarlyExternalListener(window, "popstate", navigationHandler, { capture: true });
+    useEarlyExternalListener(window, "click", clickAwayHandler, { capture: true });
+    for (const iframeEl of document.querySelectorAll("iframe")) {
+        try {
+            useEarlyExternalListener(
+                iframeEl.contentWindow,
+                "pointerdown",
+                () => {
+                    const popupEl = popover.popoverRef.el;
+                    let checkEl = iframeEl.parentElement;
+                    while (checkEl) {
+                        if (checkEl === popupEl) {
+                            // Ignore iframes within popup
+                            return;
+                        }
+                        checkEl = checkEl.parentElement;
+                    }
+                    callback(iframeEl);
+                },
+                { capture: true, once: true }
+            );
+        } catch (e) {
+            // In some browsers, if an iframe is loaded from a different
+            // domain accessing it results in a SecurityError.
+            if (e.name !== "SecurityError") throw e;
+        }
+    }
 }
 
 const POPOVERS = new WeakMap();
@@ -148,7 +177,7 @@ export class Popover extends Component {
         onWillDestroy(() => POPOVERS.delete(this.props.target));
 
         if (this.props.target.isConnected) {
-            useClickAway(this.onClickAway.bind(this));
+            useClickAway(this, this.onClickAway.bind(this));
 
             if (this.props.closeOnEscape) {
                 useHotkey("escape", () => this.props.close());

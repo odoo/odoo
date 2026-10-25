@@ -353,7 +353,7 @@ class AccountEdiFormat(models.Model):
 
         # Set 'l10n_sa_edi_is_production' to True upon the first invoice submission in Production mode
         if not invoice.company_id.l10n_sa_edi_is_production:
-            invoice.company_id.l10n_sa_edi_is_production = invoice.company_id.l10n_sa_api_mode == 'prod'
+            invoice.company_id.sudo().l10n_sa_edi_is_production = invoice.company_id.l10n_sa_api_mode == 'prod'
 
         # Save the submitted/returned invoice XML content once the submission has been completed successfully
         invoice._l10n_sa_log_results(cleared_xml.encode(), response_data)

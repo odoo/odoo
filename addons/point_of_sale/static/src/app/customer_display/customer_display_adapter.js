@@ -21,12 +21,15 @@ export class CustomerDisplayPosAdapter {
 
     dispatch(pos) {
         this.channel.postMessage(JSON.parse(JSON.stringify(this.data)));
+        const deviceUuid = localStorage.getItem("device_uuid");
+        if (!deviceUuid) {
+            // The uuid is only created when the customer display is opened, so
+            // there is nothing to notify yet. A display running in this browser
+            // is served by the BroadcastChannel anyway.
+            return;
+        }
         pos.data
-            .call("pos.config", "update_customer_display", [
-                [pos.config.id],
-                this.data,
-                localStorage.getItem("device_uuid"),
-            ])
+            .call("pos.config", "update_customer_display", [[pos.config.id], this.data, deviceUuid])
             .catch((error) => {
                 logPosMessage(
                     "CustomerDisplay",

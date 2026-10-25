@@ -211,6 +211,39 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
 
         self.assertEqual(10, len(self.blue_sofa_item['additional_image_link']))
 
+    def test_gmc_items_additional_images_exclude_videos(self):
+        image = self._create_image("blue")
+        self.blue_sofa.product_variant_image_ids = [
+            Command.create({"name": "image 0", "image_1920": image}),
+            Command.create({"name": "image 1", "image_1920": image}),
+            Command.create({
+                "name": "video",
+                "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                "image_1920": image,  # Thumbnail
+            }),
+        ]
+
+        self.update_items()
+
+        self.assertEqual(2, len(self.blue_sofa_item["additional_image_link"]))
+
+    def test_gmc_items_additional_images_does_not_load_images_bytes(self):
+        self.blue_sofa.product_variant_image_ids = [
+            Command.create({"name": "image", "image_1920": self._create_image("blue")})
+        ]
+        self.blue_sofa.product_variant_image_ids.invalidate_model()
+
+        self.update_items()
+
+        self.assertListEqual(
+            [
+                self.env.cache.contains_field(self.env["product.image"]._fields[field])
+                for field in ("image_1920", "image_1024", "image_512", "image_256", "image_128")
+            ],
+            [False] * 5,
+            msg="Should't load any image in memory",
+        )
+
     def test_gmc_items_identifier_exists_iff_barcode_exists(self):
         self.red_sofa.barcode = '0232344532564'
 
@@ -277,6 +310,19 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
         self.assertEqual(self.red_sofa_item['item_group_id'], self.blue_sofa_item['item_group_id'])
         # no other variant
         self.assertNotIn('item_group_id', self.items[product_one_variant])
+
+    def test_gmc_feed_excludes_products_from_other_companies(self):
+        """The feed should only contain products available on the website's company, even though
+        the controller serves it in sudo, bypassing the multi-company record rules."""
+        other_company = self.env["res.company"].create({"name": "Other Company"})
+        other_company_product = self._create_product(
+            name="Other Company Product", company_id=other_company.id
+        )
+
+        feed_products = self.gmc_feed.sudo()._get_feed_products()
+
+        self.assertIn(self.blanket, feed_products)
+        self.assertNotIn(other_company_product, feed_products)
 
     def test_gmc_items_bundle_if_is_combo_product(self):
         self.update_items()

@@ -2,8 +2,9 @@
 from datetime import date, datetime, time, timedelta, timezone
 from functools import partial
 
+import babel
 import pytz
-from dateutil.relativedelta import relativedelta
+from dateutil.relativedelta import relativedelta, weekdays
 from freezegun import freeze_time
 
 from odoo.tests import BaseCase, TransactionCase
@@ -11,6 +12,7 @@ from odoo.tools.date_utils import (
     add,
     date_range,
     end_of,
+    float_to_time,
     get_fiscal_year,
     localized,
     parse_date,
@@ -18,6 +20,7 @@ from odoo.tools.date_utils import (
     start_of,
     subtract,
     to_timezone,
+    weeknumber,
 )
 
 
@@ -238,6 +241,24 @@ class TestDateUtils(TransactionCase):
         with freeze_time('2024-01-04 23:05:00'):
             self.assertEqual(parse('today'), date(2024, 1, 5))
 
+    def test_monday_override_on_sunday_locale(self):
+        locale = babel.Locale.parse('en_US')
+        self.assertEqual(locale.first_week_day, 6)
+        self.assertEqual(weeknumber(locale, date(2026, 8, 30)), (2026, 36))
+        self.assertEqual(weeknumber(locale, date(2026, 8, 30), 0), (2026, 35))
+
+    def test_override_keeps_week_together(self):
+        for code in ('en_US', 'en_GB', 'ar_SA', 'ja_JP'):
+            locale = babel.Locale.parse(code)
+            for first_week_day in range(7):
+                start = date(2026, 1, 1) + relativedelta(weekday=weekdays[first_week_day](-1))
+                with self.subTest(locale=code, first_week_day=first_week_day):
+                    weeknumbers = [
+                        weeknumber(locale, start + timedelta(days=day), first_week_day)
+                        for day in range(7)
+                    ]
+                    self.assertEqual(len(set(weeknumbers)), 1, weeknumbers)
+
 
 class TestDateRangeFunction(BaseCase):
     """ Test on date_range generator. """
@@ -288,6 +309,47 @@ class TestDateRangeFunction(BaseCase):
         ]
 
         self.assertEqual(list(date_range(start, end)), expected)
+
+    def test_date_range_with_mixed_date_and_datetime(self):
+        for tz in (None, pytz.utc):
+            for start, end in (
+                (date(2018, 3, 25), datetime(2018, 3, 26, tzinfo=tz)),
+                (datetime(2018, 3, 25, tzinfo=tz), date(2018, 3, 26)),
+            ):
+                with self.subTest(start=start, end=end):
+                    with self.assertRaisesRegex(ValueError, 'start/end should be both date or both datetime type'):
+                        list(date_range(start, end))
+
+    def test_date_range_with_date_and_time_step(self):
+        start = date(2018, 3, 25)
+        end = date(2018, 3, 26)
+        for step in (
+            relativedelta(hours=1),
+            relativedelta(minutes=1),
+            relativedelta(seconds=1),
+            relativedelta(microseconds=1),
+            relativedelta(days=1, hours=1),
+            relativedelta(days=1, hour=0),
+        ):
+            with self.subTest(step=step):
+                with self.assertRaisesRegex(ValueError, 'the step interval must add only entire days'):
+                    list(date_range(start, end, step))
+
+    def test_date_range_with_date_and_day_step(self):
+        start = date(2018, 3, 25)
+        end = date(2018, 3, 27)
+        expected = [start, date(2018, 3, 26), end]
+        for step in (relativedelta(days=1), relativedelta(hours=24)):
+            with self.subTest(step=step):
+                self.assertEqual(list(date_range(start, end, step)), expected)
+
+    def test_date_range_with_utc_datetimes(self):
+        start = datetime(2018, 3, 25, tzinfo=pytz.utc)
+        end = datetime(2018, 3, 25, 2, tzinfo=pytz.utc)
+        self.assertEqual(
+            list(date_range(start, end, relativedelta(hours=1))),
+            [start, datetime(2018, 3, 25, 1, tzinfo=pytz.utc), end],
+        )
 
     def test_date_range_with_timezone_aware_datetimes_other_than_utc(self):
         """ Check date_range with timezone-aware datetimes other than UTC."""
@@ -385,3 +447,25 @@ class TestDateRangeFunction(BaseCase):
             list(date_range(start, end, relativedelta()))
         with self.assertRaises(ValueError):
             list(date_range(start, end, relativedelta(hours=-1)))
+
+
+class TestFloatToTime(BaseCase):
+    def test_minutes_carry_over_when_rounding_up(self):
+        # 16.9959 h -> 59.754 min -> rounds to 60. This must carry into the hour
+        # rather than raising "ValueError: minute must be in 0..59, not 60".
+        self.assertEqual(float_to_time(16.9959), time(17, 0))
+        self.assertEqual(float_to_time(8.999), time(9, 0))
+
+    def test_carry_at_end_of_day_returns_time_max(self):
+        self.assertEqual(float_to_time(23.9959), time.max)
+
+    def test_regular_values(self):
+        self.assertEqual(float_to_time(0.0), time(0, 0))
+        self.assertEqual(float_to_time(10.5), time(10, 30))
+        self.assertEqual(float_to_time(24.0), time.max)
+
+    def test_hours_beyond_24_raise(self):
+        # Only an exact 24:00 maps to time.max; anything larger is out of range.
+        for invalid in (24.5, 25.0):
+            with self.assertRaises(ValueError):
+                float_to_time(invalid)

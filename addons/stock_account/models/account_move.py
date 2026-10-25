@@ -136,6 +136,7 @@ class AccountMove(models.Model):
                     'price_unit': price_unit,
                     'amount_currency': -amount_currency,
                     'account_id': stock_account.id,
+                    'analytic_distribution': line.analytic_distribution,
                     'display_type': 'cogs',
                     'tax_ids': [],
                     'cogs_origin_id': line.id,

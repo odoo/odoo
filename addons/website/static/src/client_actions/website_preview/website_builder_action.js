@@ -203,6 +203,12 @@ export class WebsiteBuilderClientAction extends Component {
             },
             () => [this.state.isEditing]
         );
+        onMounted(() => {
+            document.body.classList.add("o_website_o_website_preview");
+        });
+        onWillUnmount(() => {
+            document.body.classList.remove("o_website_o_website_preview");
+        });
     }
 
     get testMode() {
@@ -377,7 +383,6 @@ export class WebsiteBuilderClientAction extends Component {
         // If we detect that behavior, we reload the iframe with a new query
         // parameter, so that it's not cached for Chrome.
         const iframe = this.websiteContent.el;
-        iframe.contentDocument.body.setAttribute("is-ready", "false");
         if (isBrowserChrome() && !iframe.src.includes("iframe_reload")) {
             try {
                 /* eslint-disable no-unused-expressions */
@@ -400,6 +405,7 @@ export class WebsiteBuilderClientAction extends Component {
                 }
             }
         }
+        iframe.contentDocument.body.setAttribute("is-ready", "false");
         if (this.lastPageURL !== iframe.contentWindow.location.href) {
             // Hide Ace Editor when moving to another page.
             this.websiteService.context.showResourceEditor = false;
@@ -515,7 +521,7 @@ export class WebsiteBuilderClientAction extends Component {
     waitForIframeReady() {
         return new Promise((resolve) => {
             const doc = this.websiteContent.el.contentDocument;
-            if (doc.body.hasAttribute("is-ready")) {
+            if (doc.body.getAttribute("is-ready") === "true") {
                 resolve();
             } else {
                 const observer = new MutationObserver(() => {
@@ -554,13 +560,20 @@ export class WebsiteBuilderClientAction extends Component {
         this.setIframeLoaded();
         this.websiteService.websiteRootInstance = undefined;
         if (url) {
-            const urlObj = new URL(url, this.websiteContent.el.contentWindow.location);
+            const baseUrl = new URL(this.websiteContent.el.contentWindow.location);
+            const urlObj = new URL(url, baseUrl);
             const pathSegments = urlObj.pathname.split("/").map(encodeURIComponent);
             const encodedPath = pathSegments.join("/");
-            this.websiteContent.el.contentWindow.location.href = new URL(
-                encodedPath,
-                this.websiteContent.el.contentWindow.location
-            );
+            const newUrl = new URL(encodedPath, baseUrl);
+            if(newUrl.origin !== baseUrl.origin) {
+                console.error("Tried to change the iframe's origin. Reloading instead")
+                this.websiteContent.el.contentWindow.location.reload();
+            } else {
+                if (history.state?.skipRouteChange) {
+                    history.pushState({}, "", newUrl);
+                }
+                this.websiteContent.el.contentWindow.location.href = newUrl;
+            }
         } else {
             this.websiteContent.el.contentWindow.location.reload();
         }

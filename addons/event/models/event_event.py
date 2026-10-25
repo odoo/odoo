@@ -14,7 +14,7 @@ from odoo import _, api, Command, fields, models, tools
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import ValidationError
 from odoo.fields import Datetime, Domain
-from odoo.tools import format_date, format_datetime, format_time, frozendict
+from odoo.tools import Query, format_date, frozendict
 from odoo.tools.mail import is_html_empty, html_to_inner_content
 from odoo.tools.misc import formatLang
 from odoo.tools.translate import html_translate
@@ -171,6 +171,7 @@ class EventEvent(models.Model):
         check_company=True,
         tracking=True
     )
+    # TODO remove address_search in master
     address_search = fields.Many2one(
         'res.partner', string='Address', compute='_compute_address_search', search='_search_address_search')
     address_inline = fields.Char(
@@ -436,6 +437,8 @@ class EventEvent(models.Model):
         if isinstance(value, Domain):
             domain = value.map_conditions(lambda cond: cond if cond.field_expr != 'display_name' else make_codomain(cond.value))
             return Domain('address_id', operator, domain)
+        if isinstance(value, Query):
+            return Domain('address_id', 'in', value)
         if operator == 'ilike' and isinstance(value, str):
             return Domain('address_id', 'any', make_codomain(value))
         # for the trivial "empty" case, there is no empty address
@@ -637,6 +640,44 @@ class EventEvent(models.Model):
                                     "the event will be sold out and the extra registrations will remain."),
                     }
                 }
+
+    def _search(self, domain, *a, **kw):
+        domain = Domain(domain).optimize(self).map_conditions(
+            lambda c: self._search_address_search(c.operator, c.value) if c.field_expr == 'address_search' else c)
+        return super()._search(domain, *a, **kw)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        events = super().create(vals_list)
+        events.filtered('event_type_id')._sync_event_ticket_translations_from_type()
+        return events
+
+    def write(self, vals):
+        events_to_sync = self.env['event.event']
+        if vals.get('event_type_id'):
+            events_to_sync = self.filtered(
+                lambda event: event.event_type_id.id != vals['event_type_id']
+            )
+        res = super().write(vals)
+        if events_to_sync:
+            events_to_sync._sync_event_ticket_translations_from_type()
+        return res
+
+    def _sync_event_ticket_translations_from_type(self):
+        """ Copy ticket translations from the event template after tickets are stored.
+
+        Translatable fields copied via Command.create only get the active language;
+        restore the other languages from the template.
+        """
+        for event in self.filtered('event_type_id'):
+            event_tickets = event.event_ticket_ids.filtered(lambda ticket: not ticket.registration_ids)
+            for template_ticket in event.event_type_id.event_type_ticket_ids:
+                event_ticket = next(
+                    (ticket for ticket in event_tickets if ticket.name == template_ticket.name), None
+                )
+                if event_ticket:
+                    template_ticket.copy_translations(event_ticket)
+                    event_tickets -= event_ticket
 
     @api.depends('event_registrations_sold_out', 'seats_limited', 'seats_max', 'seats_available')
     @api.depends_context('name_with_seats_availability')

@@ -126,7 +126,7 @@ class PaymentTransaction(models.Model):
     partner_lang = fields.Selection(string="Language", selection=_lang_get)
     partner_email = fields.Char(string="Email")
     partner_address = fields.Char(string="Address")
-    partner_zip = fields.Char(string="Zip")
+    partner_zip = fields.Char(string="Zip Code")
     partner_city = fields.Char(string="City")
     partner_state_id = fields.Many2one(string="State", comodel_name='res.country.state')
     partner_country_id = fields.Many2one(string="Country", comodel_name='res.country')
@@ -1095,9 +1095,11 @@ class PaymentTransaction(models.Model):
                 [('is_post_processed', '=', False), ('last_state_change', '>=', retry_limit_date)]
             )
         for tx in txs_to_post_process:
+            tx = tx.with_prefetch()  # Restrict pre-fetching before cache invalidation
             try:
-                tx._post_process()
-                self.env.cr.commit()
+                if not tx.is_post_processed:  # No other flow post-processed the tx since the search
+                    tx._post_process()
+                    self.env.cr.commit()
             except psycopg2.OperationalError:
                 self.env.cr.rollback()  # Rollback and try later.
             except Exception as e:

@@ -134,12 +134,13 @@ export class ComboPage extends Component {
     }
 
     hasAttribute(product) {
-        return (
-            product.attribute_line_ids.length > 0 &&
-            product.attribute_line_ids.some(
-                (line) => line.attribute_id?.create_variant === "no_variant"
-            )
-        );
+        const isKiosk = this.selfOrder.kioskMode;
+        return product.attribute_line_ids.some((line) => {
+            if (line.attribute_id?.create_variant !== "no_variant") {
+                return false;
+            }
+            return line.product_template_value_ids.some((a) => !(isKiosk && a.is_custom));
+        });
     }
 
     getSelectedItems(choiceState = undefined) {
@@ -509,15 +510,32 @@ export class ComboPage extends Component {
         );
     }
 
+    getFixedComboSelection() {
+        // Fixed choices (a single item without attributes) are not shown as a
+        // selection step, so they have to be added to the selection explicitly.
+        return this.props.productTemplate.combo_ids
+            .filter(
+                (c) =>
+                    c.qty_max <= 1 &&
+                    c.combo_item_ids.length === 1 &&
+                    c.combo_item_ids[0].product_id.attribute_line_ids.length === 0
+            )
+            .map((c) => ({
+                combo_item_id: c.combo_item_ids[0],
+                qty: 1,
+                configuration: {
+                    attribute_custom_values: [],
+                    attribute_value_ids: [],
+                    price_extra: 0,
+                },
+            }));
+    }
+
     addToCart() {
-        this.selfOrder.addToCart(
-            this.props.productTemplate,
-            this.state.qty,
-            "",
-            {},
-            {},
-            this.getComboSelection()
-        );
+        this.selfOrder.addToCart(this.props.productTemplate, this.state.qty, "", {}, {}, [
+            ...this.getComboSelection(),
+            ...this.getFixedComboSelection(),
+        ]);
 
         this.goBack();
     }
@@ -526,7 +544,7 @@ export class ComboPage extends Component {
         return computeTotalComboPrice(
             this.selfOrder,
             this.props.productTemplate,
-            this.getComboSelection(),
+            [...this.getComboSelection(), ...this.getFixedComboSelection()],
             this.state.qty
         );
     }

@@ -6,15 +6,15 @@
 # Jolien De Paepe, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023, 2026.
 # Martin Trigaux, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # Bren Driesen <brdri@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-04-24 08:00+0000\n"
+"PO-Revision-Date: 2026-09-02 12:29+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/purchase/"
 "nl/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.action_report_purchase_order
@@ -155,8 +155,8 @@ msgstr ""
 "        </t>\n"
 "        wordt verwacht op \n"
 "        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-"
-"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            <span style=\"font-weight:bold;\" t-out=\"format_date"
+"(object.date_planned) or ''\">05/05/2021</span>.\n"
 "        </t>\n"
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">ongedefinieerd</span>.\n"
@@ -235,8 +235,8 @@ msgstr ""
 "        In de bijlage vind je inkooporder <span style=\"font-weight:bold;\" "
 "t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            met referentie: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
-"t>\n"
+"            met referentie: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>"
+"\n"
 "        </t>\n"
 "        voor een bedrag van <span style=\"font-weight:bold;\" t-"
 "out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
@@ -305,11 +305,11 @@ msgstr ""
 "Interior</t>)\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        In de bijlage vind je offerteaanvraag <span style=\"font-weight:bold;"
-"\" t-out=\"object.name or ''\">P00015</span>\n"
+"        In de bijlage vind je offerteaanvraag <span style=\"font-"
+"weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            met referentie: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
-"t>\n"
+"            met referentie: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>"
+"\n"
 "        </t>\n"
 "        van <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br/><br/>\n"
@@ -412,8 +412,8 @@ msgid ""
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Purchase Order </span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')"
-"\">Inkoopofferte </span><span class=\"o_form_label\" invisible=\"state in "
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">"
+"Inkoopofferte </span><span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Inkooporder</span>"
 
 #. module: purchase
@@ -1372,7 +1372,7 @@ msgstr "Korting:"
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:purchase.field_res_partner__display_name
 msgid "Display Name"
-msgstr "Weergavenaam"
+msgstr "Schermnaam"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__display_type
@@ -1645,7 +1645,7 @@ msgstr "In de order"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__incoterm_id
 msgid "Incoterm"
-msgstr "Leveringscondities"
+msgstr "Incoterm"
 
 #. module: purchase
 #. odoo-javascript
@@ -1668,9 +1668,9 @@ msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
-"International Commercial Terms (INCOTERMS) zijn een set van "
-"voorgedefinieerde commerciële voorwaarden, welke worden gebruikt bij "
-"internationaal transport."
+"International Commercial Terms (Incoterms) zijn een groep van "
+"voorgedefinieerde handelsvoorwaarden die worden gebruikt bij internationaal "
+"transport."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2258,12 +2258,12 @@ msgstr "Land partner"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__payment_term_id
 msgid "Payment Terms"
-msgstr "Betaalvoorwaarden"
+msgstr "Betalingsvoorwaarden"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "Payment terms"
-msgstr "Betaalvoorwaarden"
+msgstr "Betalingsvoorwaarden"
 
 #. module: purchase
 #. odoo-python
@@ -2462,7 +2462,7 @@ msgstr "Regels van inkooporders en leveranciersfacturen linken"
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "Purchase Matching"
-msgstr "Inkopen linken"
+msgstr "Inkoopmatching"
 
 #. module: purchase
 #. odoo-python
@@ -2725,8 +2725,7 @@ msgstr "Inkoopofferte verzonden"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "RFQ merged with %(oldest_rfq_name)s and %(cancelled_rfq)s"
-msgstr ""
-"Inkoopofferte samengevoegd met %(oldest_rfq_name)s en %(cancelled_rfq)s"
+msgstr "Inkoopofferte samengevoegd met %(oldest_rfq_name)s en %(cancelled_rfq)s"
 
 #. module: purchase
 #. odoo-python

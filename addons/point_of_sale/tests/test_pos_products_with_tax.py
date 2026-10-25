@@ -171,7 +171,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
             for t1, t2 in zip(sorted(manually_calculated_taxes), sorted(tax_lines.mapped('balance'))):
                 self.assertAlmostEqual(t1, t2, msg='Taxes should be correctly combined.')
 
-            base_amounts = (97.27, 445.46)  # computation does not include invoiced order.
+            base_amounts = (-97.27, -445.46)  # computation does not include invoiced order.
             self.assertAlmostEqual(sum(base_amounts), sum(tax_lines.mapped('tax_base_amount')))
 
         self._run_test({
@@ -551,7 +551,6 @@ class TestPoSProductsWithTax(TestPoSCommon):
         tax_pos = self.product1.taxes_id
         self.assertFalse(tax_pos.is_used)
         self.test_orders_no_invoiced()
-        tax_pos.invalidate_model(fnames=['is_used'])
         self.assertTrue(tax_pos.is_used)
 
     def test_pos_loaded_product_taxes_on_branch(self):
@@ -717,6 +716,34 @@ class TestPoSProductsWithTax(TestPoSCommon):
         self.assertEqual(get_taxes_name_popup(product_no_xx_tax), ["Tax X"])
         self.assertEqual(get_taxes_name_popup(product_no_branch_tax), ["Tax A", "Tax B"])
         self.assertEqual(get_taxes_name_popup(product_no_tax), [])
+
+    def test_get_product_info_pos_with_fiscal_position(self):
+        tax_15 = self.env['account.tax'].create({
+            'name': 'tax_15',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 15.0,
+        })
+        tax_30 = self.env['account.tax'].create({
+            'name': 'tax_30',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 30.0,
+            'original_tax_ids': [Command.set(tax_15.ids)],
+        })
+        fp = self.env['account.fiscal.position'].create({
+            'name': 'Maps 15 to 30',
+            'tax_ids': [Command.set(tax_30.ids)],
+        })
+        product = self.create_product('Product FP', self.categ_basic, 100.0, tax_ids=tax_15.ids)
+        template = product.product_tmpl_id
+
+        def get_display_info(fp_id=False):
+            info = template.with_context(fiscal_position_id=fp_id).get_product_info_pos(100.0, 1, self.config.id)['all_prices']
+            return (info['price_with_tax'], [t['name'] for t in info['tax_details']])
+
+        self.assertEqual(get_display_info(), (115.0, ['tax_15']))
+        self.assertEqual(get_display_info(fp.id), (130.0, ['tax_30']))
 
     def test_combo_product_variant_error(self):
         """This tests make sure that product containing variants cannot change type to combo"""

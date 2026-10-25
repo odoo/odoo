@@ -57,7 +57,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         # randomness: at least 1 query, +3 for demo -> 957 + 5
         with self.with_user('user_sales_manager'):
             self.env.user._is_internal()  # warmup the cache to avoid inconsistency between community an enterprise
-            with self.assertQueryCount(user_sales_manager=962):
+            with self.assertQueryCount(user_sales_manager=968):
                 self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads()
 
         # teams assign
@@ -185,7 +185,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
 
         # randomness: add 2 queries
         with self.with_user('user_sales_manager'):
-            with self.assertQueryCount(user_sales_manager=5173):
+            with self.assertQueryCount(user_sales_manager=5188):
                 self.env['crm.team'].browse(sales_teams.ids)._action_assign_leads()
 
         # teams assign

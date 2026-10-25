@@ -191,3 +191,68 @@ class L10nHuEdiTestInvoiceXml(L10nHuEdiTestCommon):
                     self.get_xml_tree_from_string(invoice_xml),
                     self.get_xml_tree_from_string(expected_xml_file.read()),
                 )
+
+    def test_invoice_xml_uses_invoice_currency_rate(self):
+        """Test that the generated XML uses the invoice's own invoice_currency_rate,
+        not a fresh date-based currency lookup.
+
+        This matters when the rate on the invoice differs from the date-based rate,
+        e.g. because the user manually edited it, or a currency rate sync updated
+        the rate for the date after the invoice was created.
+        """
+        with freeze_time('2024-02-01'):
+            currency_eur = self.env.ref('base.EUR')
+            invoice = self.create_invoice_simple(currency=currency_eur)
+
+            # The date-based rate for today (2024-02-01) is 380.77 HUF/EUR (set up in setUpClass).
+            # Manually set a different invoice_currency_rate to simulate a scenario where
+            # the rate on the invoice doesn't match the date-based rate.
+            custom_huf_per_eur = 390.0
+            invoice.invoice_currency_rate = 1 / custom_huf_per_eur
+
+            invoice.action_post()
+            invoice_xml = invoice._l10n_hu_edi_generate_xml()
+
+            xml_tree = self.get_xml_tree_from_string(invoice_xml)
+            nsmap = {'nav': 'http://schemas.nav.gov.hu/OSA/3.0/data'}
+            exchange_rate_el = xml_tree.find('.//nav:exchangeRate', nsmap)
+
+            self.assertEqual(
+                exchange_rate_el.text,
+                '390.000000',
+                "The XML exchangeRate should reflect the invoice's invoice_currency_rate, "
+                "not a freshly-looked-up date-based rate.",
+            )
+
+    def test_invoice_xml_rate_non_huf_company(self):
+        """Test that for a Hungarian localization company whose company currency is NOT HUF
+        (e.g. EUR), an invoice in that currency outputs the correct EUR/HUF exchange rate
+        """
+        with freeze_time('2024-02-01'):
+            company = self.company_data['company']
+            currency_eur = self.env.ref('base.EUR')
+            currency_huf = self.env.ref('base.HUF')
+
+            # Change company currency to EUR and clean up rates defined when company was HUF
+            company.currency_id = currency_eur
+            self.env['res.currency.rate'].search([('company_id', '=', company.id)]).unlink()
+
+            # Ensure an active exchange rate exists between EUR and HUF for the test date
+            self.env['res.currency.rate'].create({
+                'name': '2024-02-01',
+                'currency_id': currency_huf.id,
+                'company_id': company.id,
+                'rate': 380.77,
+            })
+
+            invoice = self.create_invoice_simple(currency=currency_eur)
+            invoice.action_post()
+
+            self.assertAlmostEqual(invoice._l10n_hu_get_currency_rate(), 380.77, places=2)
+
+            invoice_xml = invoice._l10n_hu_edi_generate_xml()
+            xml_tree = self.get_xml_tree_from_string(invoice_xml)
+            nsmap = {'nav': 'http://schemas.nav.gov.hu/OSA/3.0/data'}
+            exchange_rate_el = xml_tree.find('.//nav:exchangeRate', nsmap)
+
+            self.assertEqual(exchange_rate_el.text, '380.770000')

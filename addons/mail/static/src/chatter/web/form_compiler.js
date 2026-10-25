@@ -101,7 +101,7 @@ patch(FormCompiler.prototype, {
         // after sheet bg (standard position, either aside or below)
         setAttributes(chatterContainerXml, {
             isInFormSheetBg: `["COMBO", "BOTTOM_CHATTER"].includes(__comp__.mailLayout(${hasPreview}))`,
-            isChatterAside: `["SIDE_CHATTER", "EXTERNAL_COMBO_XXL", "EXTERNAL_COMBO"].includes(__comp__.mailLayout(${hasPreview}))`,
+            isChatterAside: `["SIDE_CHATTER", "EXTERNAL_COMBO_XXL"].includes(__comp__.mailLayout(${hasPreview}))`,
         });
         const { ["t-if"]: tIf } = extractAttributes(chatterContainerHookXml, ["t-if"]);
         setAttributes(chatterContainerHookXml, {

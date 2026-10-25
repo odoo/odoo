@@ -3,7 +3,7 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import SUPERUSER_ID, api, Command, fields, models, _
-from odoo.tools.float_utils import float_compare, float_is_zero, float_round
+from odoo.tools.float_utils import float_compare
 from odoo.exceptions import UserError
 
 
@@ -71,7 +71,7 @@ class PurchaseOrderLine(models.Model):
                             # receive the product physically in our stock. To avoid counting the
                             # quantity twice, we do nothing.
                             pass
-                        elif move.origin_returned_move_id and move.origin_returned_move_id._is_purchase_return() and not move.to_refund:
+                        elif move.origin_returned_move_id and move.origin_returned_move_id._is_purchase_return() and not move.to_refund or not move._should_count_for_quantity_received():
                             pass
                         else:
                             total += move.product_uom._compute_quantity(move.quantity, line.product_uom_id, rounding_method='HALF-UP')
@@ -218,15 +218,15 @@ class PurchaseOrderLine(models.Model):
         move_dests = self.move_dest_ids or self.move_ids.move_dest_ids
         move_dests = move_dests.filtered(lambda m: m.state != 'cancel' and not m._is_purchase_return())
 
+        qty_to_push = self.product_qty - qty
+        move_dests_initial_demand = self._get_move_dests_initial_demand(move_dests)
         if not move_dests:
             qty_to_attach = 0
-            qty_to_push = self.product_qty - qty
         else:
-            move_dests_initial_demand = self._get_move_dests_initial_demand(move_dests)
             qty_to_attach = move_dests_initial_demand - qty
-            qty_to_push = self.product_qty - move_dests_initial_demand
 
         if self.product_uom_id.compare(qty_to_attach, 0.0) > 0:
+            qty_to_push = self.product_qty - move_dests_initial_demand
             product_uom_qty, product_uom = self.product_uom_id._adjust_uom_quantities(qty_to_attach, self.product_id.uom_id)
             res.append(self._prepare_stock_move_vals(picking, price_unit, product_uom_qty, product_uom))
         if not self.product_uom_id.is_zero(qty_to_push):
@@ -240,7 +240,6 @@ class PurchaseOrderLine(models.Model):
         self.ensure_one()
         order = self.order_id
         price_unit = self.price_unit_discounted
-        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         if self.tax_ids:
             qty = self.product_qty or 1
             price_unit = self.tax_ids.compute_all(
@@ -259,7 +258,7 @@ class PurchaseOrderLine(models.Model):
             conversion_date = self.env.context.get('conversion_date', self.date_order) or fields.Date.today()
             price_unit = order.currency_id._convert(
                 price_unit, order.company_id.currency_id, self.company_id, conversion_date, round=False)
-        return float_round(price_unit, precision_digits=price_unit_prec)
+        return price_unit
 
     def _get_qty_procurement(self):
         self.ensure_one()
@@ -310,6 +309,7 @@ class PurchaseOrderLine(models.Model):
             'warehouse_id': self.order_id.picking_type_id.warehouse_id.id,
             'product_uom_qty': product_uom_qty,
             'product_uom': product_uom.id,
+            'never_product_template_attribute_value_ids': self.product_no_variant_attribute_value_ids,
             'sequence': self.sequence,
         }
 
@@ -377,9 +377,15 @@ class PurchaseOrderLine(models.Model):
         description_picking = ''
         if values.get('product_description_variants'):
             description_picking = values['product_description_variants']
+        has_temp_manual_orderpoint = (
+            values.get('orderpoint_id')
+            and values['orderpoint_id'].create_uid.id == SUPERUSER_ID
+            and values['orderpoint_id'].trigger == 'manual'
+        )
         lines = self.filtered(
             lambda l: l.propagate_cancel == values['propagate_cancel']
-            and (l.orderpoint_id in [values['orderpoint_id'], False] if values['orderpoint_id'] and not values['move_dest_ids'] else True)
+            and (l.orderpoint_id in [values['orderpoint_id'], False] if values['orderpoint_id']
+            and not values['move_dest_ids'] and not has_temp_manual_orderpoint else True)
             and (l.product_uom_id == product_uom if values.get('force_uom') else True)
         )
 

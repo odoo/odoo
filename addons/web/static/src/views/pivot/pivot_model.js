@@ -278,6 +278,7 @@ import { computeReportMeasures, processMeasure } from "@web/views/utils";
  * @property {boolean} useSampleModel
  * @property {Object} widgets
  * @property {Map} customGroupBys
+ * @property {string[]} archMeasures
  * @property {string[]} expandedRowGroupBys
  * @property {string[]} expandedColGroupBys
  * @property {Object} sortedColumn
@@ -318,6 +319,7 @@ export class PivotModel extends Model {
      * @param {string|null} params.metaData.defaultOrder
      * @param {boolean} params.metaData.disableLinking
      * @param {boolean} params.metaData.useSampleModel
+     * @param {string[]} [params.metaData.archMeasures=[]]
      * @param {Map} [params.metaData.customGroupBys={}]
      * @param {string[]} [params.metaData.expandedColGroupBys=[]]
      * @param {string[]} [params.metaData.expandedRowGroupBys=[]]
@@ -356,6 +358,7 @@ export class PivotModel extends Model {
             numbering: {},
         };
         const metaData = Object.assign({}, params.metaData, {
+            archMeasures: params.metaData.archMeasures || params.metaData.activeMeasures,
             customGroupBys: params.metaData.customGroupBys || new Map(),
             expandedRowGroupBys: params.metaData.expandedRowGroupBys || [],
             expandedColGroupBys: params.metaData.expandedColGroupBys || [],
@@ -672,7 +675,9 @@ export class PivotModel extends Model {
             metaData.expandedColGroupBys = [];
         }
 
-        const allActivesMeasures = new Set(this.metaData.activeMeasures);
+        const allActivesMeasures = new Set(
+            this.metaData.activeMeasures.concat(this.metaData.archMeasures)
+        );
         if (processedMeasures) {
             processedMeasures.forEach((e) => allActivesMeasures.add(e));
         }
@@ -783,6 +788,7 @@ export class PivotModel extends Model {
         metaData.activeMeasures = [...metaData.activeMeasures];
         metaData.colGroupBys = [...metaData.colGroupBys];
         metaData.rowGroupBys = [...metaData.rowGroupBys];
+        metaData.archMeasures = [...metaData.archMeasures];
         metaData.expandedColGroupBys = [...metaData.expandedColGroupBys];
         metaData.expandedRowGroupBys = [...metaData.expandedRowGroupBys];
         metaData.customGroupBys = new Map([...metaData.customGroupBys]);

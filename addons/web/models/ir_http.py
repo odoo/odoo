@@ -27,7 +27,12 @@ ALLOWED_DEBUG_MODES = ['', '1', 'assets', 'tests']
 class IrHttp(models.AbstractModel):
     _inherit = 'ir.http'
 
-    bots = ["bot", "crawl", "slurp", "spider", "curl", "wget", "facebookexternalhit", "whatsapp", "trendsmapresolver", "pinterest", "instagram", "google-pagerenderer", "preview"]
+    bots = [
+        "bot", "crawl", "slurp", "spider", "curl", "wget", "facebookexternalhit",
+        "whatsapp", "trendsmapresolver", "pinterest", "instagram",
+        "google-pagerenderer", "preview", "google-inspectiontool", "googleother",
+        "meta-external", "meta-webindexer", "chatgpt-user", "claude-user", "perplexity-user",
+    ]
 
     @classmethod
     def is_a_bot(cls):
@@ -124,6 +129,10 @@ class IrHttp(models.AbstractModel):
             'bundle_params': {
                 'lang': request.session.context['lang'],
             },
+            'translation_hash': self._get_cached_web_translations_hash(
+                self._get_web_translations_modules(),
+                self._get_web_translations_lang(user_context.get('lang')),
+            ),
             'test_mode': config['test_enable'],
             'view_info': self.env['ir.ui.view'].get_view_info(),
             'groups': {

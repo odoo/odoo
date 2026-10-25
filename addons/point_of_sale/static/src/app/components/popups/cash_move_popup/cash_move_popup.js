@@ -11,6 +11,7 @@ import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
+import { formatDateTime } from "@web/core/l10n/dates";
 
 const { DateTime } = luxon;
 
@@ -38,7 +39,9 @@ export class CashMovePopup extends Component {
     get partnerId() {
         return this.pos.user.partner_id.id;
     }
-
+    getMessage(formattedAmount) {
+        return `${_t("Cash")} ${_t(this.state.type)} - ${_t("Amount")}: ${formattedAmount}`;
+    }
     async confirm() {
         const amount = parseFloat(this.state.amount);
         const formattedAmount = this.env.utils.formatCurrency(amount);
@@ -59,10 +62,7 @@ export class CashMovePopup extends Component {
             {},
             true
         );
-        await this.pos.logEmployeeMessage(
-            `${_t("Cash")} ${translatedType} - ${_t("Amount")}: ${formattedAmount}`,
-            "CASH_DRAWER_ACTION"
-        );
+        await this.pos.logEmployeeMessage(this.getMessage(formattedAmount), "CASH_DRAWER_ACTION");
         const order = this.pos.models["pos.order"].create({
             session_id: this.pos.session,
             company_id: this.pos.company,
@@ -72,21 +72,26 @@ export class CashMovePopup extends Component {
             tracking_number: "",
             sequence_number: 0,
             pos_reference: "",
+            state: "cancel", // transient receipt-only order, must never reach IndexedDB
         });
         await this.printer.print(CashMoveReceipt, {
-            reason,
-            translatedType,
-            order: order,
-            formattedAmount,
-            date: new Date().toLocaleString(),
+            ...this.getMoveReceiptProps(formattedAmount),
+            order,
         });
         this.pos.models["pos.order"].delete(order);
-
         this.props.close();
         this.notification.add(
             _t("Successfully made a cash %s of %s.", type, formattedAmount),
             3000
         );
+    }
+    getMoveReceiptProps(formattedAmount) {
+        return {
+            reason: this.state.reason.trim(),
+            translatedType: _t(this.state.type),
+            formattedAmount,
+            date: formatDateTime(DateTime.now()),
+        };
     }
     onClickButton(type) {
         this.state.type = type;
@@ -128,5 +133,8 @@ export class CashMovePopup extends Component {
         if (result) {
             this.state.amount = result;
         }
+    }
+    async cancel() {
+        this.props.close();
     }
 }

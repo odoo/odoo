@@ -49,8 +49,8 @@ def mtr(host):
         return None, None
 
     output = p.stdout.strip()
-    last_line = output.splitlines()[-1].split(",")
     try:
+        last_line = output.splitlines()[-1].split(",")
         return float(last_line[6]), float(last_line[10])
     except (IndexError, ValueError):
         return None, None

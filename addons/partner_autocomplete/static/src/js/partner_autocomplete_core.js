@@ -6,6 +6,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
 import { renderToMarkup } from "@web/core/utils/render";
 import { onWillStart } from "@odoo/owl";
+import { ConnectionLostError } from "@web/core/network/rpc";
 
 /**
  * Get list of companies via Autocomplete API
@@ -73,7 +74,7 @@ export function usePartnerAutocomplete() {
      * @private
      */
     function enrichCompany(company) {
-        const context = { 
+        const context = {
             'enriched_company_data': company,
         };
 
@@ -153,7 +154,14 @@ export function usePartnerAutocomplete() {
             [value, queryCountryId],
         );
 
-        const suggestions = await keepLastOdoo.add(prom);
+        let suggestions = [];
+        try {
+          suggestions = await keepLastOdoo.add(prom);
+        } catch (e) {
+          if (!(e instanceof ConnectionLostError)) {
+            throw e;
+          }
+        }
 
         if (!isVAT && suggestions.length === 0) {
             lastNoResultsQuery = value;
@@ -162,8 +170,8 @@ export function usePartnerAutocomplete() {
         await Promise.all(suggestions.map(async (suggestion) => {
             suggestion.query = value;  // Save queried value (name, VAT) for later
             suggestion.description = '';
-            if (suggestion.city){
-                suggestion.description += suggestion.city;
+            if (suggestion.city || suggestion.city_id){
+                suggestion.description += suggestion.city || suggestion.city_id.display_name;
             }
             // Show country name only if searching worldwide
             if (queryCountryId === 0 && suggestion.country_id && suggestion.country_id.display_name) {

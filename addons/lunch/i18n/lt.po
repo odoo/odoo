@@ -17,14 +17,16 @@
 # Martin Trigaux, 2022
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2022
 # Arunas V. <arunas@devoro.com>, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# Ulevičienė <vilma.uleviciene@mededu.lt>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2025-09-16 18:37+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2026-10-13 12:33+0000\n"
+"Last-Translator: Ulevičienė <vilma.uleviciene@mededu.lt>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/lunch/"
 "lt/>\n"
 "Language: lt\n"
@@ -32,9 +34,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
-"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
-"1 : n % 1 != 0 ? 2: 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 "
+": n % 1 != 0 ? 2: 3);\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_temaki
@@ -93,8 +95,8 @@ msgid ""
 "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Amount\" title=\"Amount\"/"
 ">"
 msgstr ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Amount\" title=\"Amount\"/"
-">"
+"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Amount\" "
+"title=\"Amount\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
@@ -319,6 +321,9 @@ msgid ""
 "            An expense is automatically created at the order receipt.<br>\n"
 "            A payment represents the employee reimbursement to the company."
 msgstr ""
+"Grynųjų pinigų judėjimas gali būti išlaidos arba mokėjimas.<BR>\n"
+"            Išlaidos automatiškai sukuriama gavus užsakymą.<BR>\n"
+"            Mokėjimas reiškia darbuotojo kompensaciją įmonei."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action
@@ -406,8 +411,9 @@ msgstr "Įspėjimai"
 #. module: lunch
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
+#, fuzzy
 msgid "Already Paid"
-msgstr ""
+msgstr "Jau sumokėta"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__amount
@@ -627,8 +633,9 @@ msgstr ""
 #. module: lunch
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
+#, fuzzy
 msgid "Close"
-msgstr ""
+msgstr "Uždaryti"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_club
@@ -703,7 +710,7 @@ msgstr "Valstybė"
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_report_action_control_accounts
 msgid "Create a new payment"
-msgstr "Sukurkite naują mokėjimą"
+msgstr "Sukurti naują mokėjimą"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_category_action
@@ -898,8 +905,9 @@ msgstr ""
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__display_toppings
+#, fuzzy
 msgid "Extras"
-msgstr ""
+msgstr "Papildomų"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_ids_1
@@ -1001,6 +1009,10 @@ msgid ""
 "            An expense is automatically created when an order is received "
 "while a payment is a reimbursement to the company encoded by the manager."
 msgstr ""
+"Čia galite peržiūrėti savo pinigų judėjimus.<br>Pinigų judėjimas gali būti "
+"išlaida arba mokėjimas.\n"
+"            Išlaida sukuria automatiškai, kai gaunamas užsakymas, o "
+"mokėjimas – tai vadovo užkoduotas kompensavimas įmonei."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__id
@@ -1371,12 +1383,12 @@ msgstr ""
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_report_action_account
 msgid "My Account"
-msgstr "Mano paskyra"
+msgstr "Paskyra"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_cashmove_report_menu_form
 msgid "My Account History"
-msgstr ""
+msgstr "Mano paskyros istorija"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search
@@ -1994,8 +2006,9 @@ msgstr "Sekmadienis"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__supplier_id
+#, fuzzy
 msgid "Supplier"
-msgstr ""
+msgstr "Tiekėjas"
 
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_sushi
@@ -2063,7 +2076,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/lunch/models/lunch_order.py:0
 msgid "The vendor related to this order is not available at the selected date."
-msgstr ""
+msgstr "Su šiuo užsakymu susijęs tiekėjas pasirinktą datą nėra pasiekiamas."
 
 #. module: lunch
 #. odoo-python
@@ -2311,13 +2324,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/lunch/models/lunch_order.py:0
 msgid "You have to order one and only one %s"
-msgstr ""
+msgstr "Turite užsisakyti vieną ir tik vieną %s"
 
 #. module: lunch
 #. odoo-python
 #: code:addons/lunch/models/lunch_order.py:0
 msgid "You should order at least one %s"
-msgstr ""
+msgstr "Turėtumėte užsisakyti bent vieną %s"
 
 #. module: lunch
 #. odoo-javascript

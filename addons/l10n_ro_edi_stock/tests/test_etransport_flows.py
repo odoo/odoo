@@ -1,8 +1,5 @@
-import base64
-
 from odoo.exceptions import UserError
 from odoo.tests import tagged
-from odoo.tools import misc
 
 from odoo.addons.l10n_ro_edi_stock.tests.common import TestL10nRoEdiStockCommon
 
@@ -86,36 +83,6 @@ class TestETransportFlows(TestL10nRoEdiStockCommon):
                 "atentie": "Verificati starea XML-ului transmis. Codul UIT este valabil din momentul in care apare ca valid dupa apelul de stare",
             }
         }
-
-    def _assert_picking_state(self, picking, state=False, amt_documents=0, enabled_fields=('enable', 'fields_readonly')):
-        self.assertEqual(picking.l10n_ro_edi_stock_state, state)
-        if amt_documents > 0:
-            self.assertTrue(picking.l10n_ro_edi_stock_document_ids)
-            self.assertEqual(len(picking.l10n_ro_edi_stock_document_ids), amt_documents)
-        else:
-            self.assertFalse(picking.l10n_ro_edi_stock_document_ids)
-
-        for suffix in ('enable', 'enable_send', 'enable_fetch', 'enable_amend', 'fields_readonly'):
-            field_value = getattr(picking, f'l10n_ro_edi_stock_{suffix}')
-            self.assertEqual(field_value, suffix in enabled_fields)
-
-    def _assert_etransport_document(self, document, filename):
-        with misc.file_open(f'{self.test_module}/tests/test_files/{filename}.xml', 'rb') as file:
-            expected_document = file.read()
-
-        expected_tree = self.get_xml_tree_from_string(expected_document)
-
-        if 'intrastat_code_id' in self.env['product.product']._fields:
-            nsmap = expected_tree.nsmap
-            nsmap['etr'] = nsmap[None]
-            nsmap.pop(None)
-            for tag in expected_tree.xpath('//*/etr:bunuriTransportate', namespaces=nsmap):
-                tag.attrib['codTarifar'] = self.default_intrastat_code.code
-
-        self.assertXmlTreeEqual(
-            self.get_xml_tree_from_string(base64.b64decode(document.attachment)),
-            expected_tree,
-        )
 
     def test_send_and_amend_etransport(self, make_request):
         self._assert_picking_state(self.delivery_picking, enabled_fields=['enable'])

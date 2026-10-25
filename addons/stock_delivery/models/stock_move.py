@@ -42,7 +42,7 @@ class StockMove(models.Model):
         vals = super(StockMove, self)._get_new_picking_values()
         if not any(rule.propagate_carrier for rule in self.rule_id):
             return vals
-        carrier_id = self.reference_ids.sale_ids.carrier_id.id
+        carrier_id = len(self.reference_ids.sale_ids.carrier_id) == 1 and self.reference_ids.sale_ids.carrier_id.id
         carrier_tracking_ref = self.move_orig_ids.picking_id.filtered('carrier_tracking_ref')[:1].carrier_tracking_ref
         # check if the previous picking have a carrier_id, then take carrier from that
         # earlier we were taking carrier from sale but since carrier can be changed or updated in next steps so now we take carrier from prev picking
@@ -110,6 +110,8 @@ class StockMoveLine(models.Model):
 
     def _post_put_in_pack_hook(self, package):
         weight = self.env.context.get('weight')
+        if not weight and self.carrier_id:
+            weight = package._get_weight(self.picking_id[:1].id).get(package, 0.0)
         if weight:
             package.shipping_weight = weight
         return super()._post_put_in_pack_hook(package)

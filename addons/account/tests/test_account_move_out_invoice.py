@@ -150,6 +150,17 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         with self.assertRaisesRegex(UserError, 'lock date'):
             inv.line_ids.tax_tag_ids = tax_tag.ids
 
+    def test_invoice_default_sale_person(self):
+        """ Test public user won't be assigned as invoice salesman
+        """
+        public_user = self.env.ref('base.public_user')
+        invoice = self.env['account.move'].create({'move_type': 'out_invoice'})
+        public_invoice = invoice.with_user(public_user).sudo()
+        public_invoice.partner_id = self.partner_a
+
+        self.assertNotEqual(public_invoice.invoice_user_id, public_user, "Public user shall not be set as salesperson")
+        self.assertEqual(public_invoice.invoice_user_id, public_invoice.create_uid, "the salesperson should fall back to the document creator")
+
     @freeze_time('2020-01-15')
     def test_out_invoice_onchange_invoice_date(self):
         for tax_date, invoice_date, accounting_date in [
@@ -1360,6 +1371,38 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             {'analytic_distribution': False},
         ])
 
+    def test_out_invoice_cash_rounding_multi_company(self):
+        # profit_account_id / loss_account_id are company-dependent: when the
+        # invoice belongs to another company than the active one, the rounding
+        # line must use the accounts of the invoice's company.
+        company_data_2 = self.company_data_2
+        self.cash_rounding_a.with_company(company_data_2['company']).write({
+            'profit_account_id': company_data_2['default_account_revenue'].id,
+            'loss_account_id': company_data_2['default_account_expense'].id,
+        })
+
+        self.assertEqual(self.env.company, self.company_data['company'])
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'company_id': company_data_2['company'].id,
+            'partner_id': self.partner_a.id,
+            'invoice_cash_rounding_id': self.cash_rounding_a.id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'quantity': 1,
+                'price_unit': 100.42,
+                'tax_ids': [],
+            })],
+        })
+
+        rounding_line = move.line_ids.filtered(lambda line: line.display_type == 'rounding')
+        self.assertTrue(rounding_line, "A cash rounding line should have been added.")
+        self.assertEqual(
+            rounding_line.account_id,
+            company_data_2['default_account_revenue'],
+            "The rounding line must use the profit / loss account depending on the move's company.",
+        )
+
     def test_out_invoice_line_onchange_cash_rounding_1(self):
         # Required for `invoice_cash_rounding_id` to be visible in the view
         self.env.user.group_ids += self.env.ref('account.group_cash_rounding')
@@ -1927,28 +1970,28 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 **self.product_line_vals_1,
                 'amount_currency': 1000.0,
                 'currency_id': self.other_currency.id,
-                'debit': 500.0,
+                'debit': 333.33,
                 'credit': 0.0,
             },
             {
                 **self.product_line_vals_2,
                 'amount_currency': 200.0,
                 'currency_id': self.other_currency.id,
-                'debit': 100.0,
+                'debit': 66.67,
                 'credit': 0.0,
             },
             {
                 **self.tax_line_vals_1,
                 'amount_currency': 180.0,
                 'currency_id': self.other_currency.id,
-                'debit': 90.0,
+                'debit': 60.0,
                 'credit': 0.0,
             },
             {
                 **self.tax_line_vals_2,
                 'amount_currency': 30.0,
                 'currency_id': self.other_currency.id,
-                'debit': 15.0,
+                'debit': 10.0,
                 'credit': 0.0,
             },
             {
@@ -1957,7 +2000,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'amount_currency': -1410.0,
                 'currency_id': self.other_currency.id,
                 'debit': 0.0,
-                'credit': 705.0,
+                'credit': 470.0,
                 'date_maturity': move_reversal.date,
             },
         ], {
@@ -2956,7 +2999,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'debit': 0.0,
                 'credit': 300.0,
                 'account_id': wizard.revenue_accrual_account.id,
-                'reconciled': False
+                'reconciled': True
             },
             {
                 'amount_currency': 120.0,
@@ -2970,7 +3013,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'debit': 0.0,
                 'credit': 60.0,
                 'account_id': wizard.revenue_accrual_account.id,
-                'reconciled': False
+                'reconciled': True
             },
             {
                 'amount_currency': -600.0,
@@ -2984,7 +3027,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'debit': 300.0,
                 'credit': 0.0,
                 'account_id': wizard.revenue_accrual_account.id,
-                'reconciled': False
+                'reconciled': True
             },
             {
                 'amount_currency': -120.0,
@@ -2998,7 +3041,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'debit': 60.0,
                 'credit': 0.0,
                 'account_id': wizard.revenue_accrual_account.id,
-                'reconciled': False
+                'reconciled': True
             },
         ])
 
@@ -4114,10 +4157,18 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
         (valid_invoice + invalid_invoice_1 + invalid_invoice_2).auto_post = 'at_date'
 
-        with self.enter_registry_test_mode():
+        with (
+            self.enter_registry_test_mode(),
+            patch('odoo.addons.base.models.ir_cron.IrCron._reschedule_asap') as reschedule_asap,
+        ):
             self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()
+            # No retries for batches with failed moves
+            reschedule_asap.assert_not_called()
+
         self.assertEqual(valid_invoice.state, 'posted')
         self.assertEqual(invalid_invoice_1.state, 'draft')
+        self.assertEqual(invalid_invoice_1.auto_post, 'no')
+        self.assertEqual(invalid_invoice_2.auto_post, 'no')
 
         self.assertTrue(any(
             message.body == (
@@ -4565,10 +4616,39 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             },
         ])
 
+    def test_discount_allocation_account_with_price_included_tax(self):
+        """ Test that the discount allocation is computed on the untaxed amount, rounded per account rather than per line """
+        discount_account = self.company_data['default_account_expense'].copy()
+        self.company_data['company'].account_discount_expense_allocation_id = discount_account
+        tax_included = self.env['account.tax'].create({
+            'name': '15% incl',
+            'amount': 15,
+            'price_include_override': 'tax_included',
+        })
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 1.0,
+                    'discount': 20,
+                    'tax_ids': [Command.set(tax_included.ids)],
+                })
+                for _i in range(3)
+            ],
+        })
+        product_line_account = invoice.invoice_line_ids.account_id
+        self.assertRecordValues(invoice.line_ids.filtered(lambda l: l.display_type == 'discount'), [
+            {'account_id': product_line_account.id, 'balance': -0.52},
+            {'account_id': discount_account.id, 'balance': 0.52},
+        ])
+
     def test_invoice_with_empty_currency(self):
         move = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
+            'invoice_payment_term_id': self.env.ref('account.account_payment_term_advance_60days').id,
             'invoice_line_ids': [
                 Command.create({
                     'name': 'invoice_line',
@@ -4967,6 +5047,46 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             {'balance': 851053.94},
         ])
 
+    def test_posted_invoice_amount_residual_from_payment_term_lines(self):
+        """ The amount due of a posted invoice must be the open balance of its payment term lines, even when
+        the totals recomputed from the invoice lines no longer match the journal items (here, because the tax
+        rounding method changed after posting). Otherwise a fully paid invoice ends up partially paid. """
+        self.env.company.tax_calculation_rounding_method = 'round_per_line'
+        invoice = self._create_invoice(
+            invoice_line_ids=[
+                self._prepare_invoice_line(price_unit=10.0, discount=0.04, tax_ids=self.tax_sale_a)
+                for _i in range(3)
+            ],
+            post=True,
+        )
+        # Rounded per line: 3 * 10.00 + 3 * 1.50 = 34.50
+        self.assertEqual(invoice.amount_total, 34.5)
+
+        # Rounded globally, the same lines only amount to 29.99 + 4.50 = 34.49
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
+        self.env.invalidate_all()
+        self.assertEqual(invoice.tax_totals['total_amount_currency'], 34.49)
+
+        self._register_payment(invoice)
+        self.assertRecordValues(invoice, [{
+            'amount_total': 34.5,
+            'amount_residual': 0.0,
+            'amount_residual_signed': 0.0,
+            'payment_state': invoice._get_invoice_in_payment_state(),
+        }])
+
+    def test_draft_invoice_amount_residual_follows_unsaved_lines(self):
+        """ The amount due of a draft invoice follows its lines before the record is saved. """
+        with Form(self.env['account.move'].with_context(default_move_type='out_invoice')) as move_form:
+            move_form.partner_id = self.partner_a
+            with move_form.invoice_line_ids.new() as line_form:
+                line_form.name = 'test line'
+                line_form.price_unit = 100.0
+                line_form.tax_ids.clear()
+                line_form.tax_ids.add(self.tax_sale_a)
+            self.assertEqual(move_form.tax_totals['total_amount_currency'], 115.0)
+            self.assertEqual(move_form.amount_residual, 115.0)
+
     def test_tax_recomputed_when_changing_base_lines(self):
         percent_tax = self.company_data['default_tax_sale']
 
@@ -5175,3 +5295,111 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             1000.00,
             msg="Price should be tax included"
         )
+
+    @freeze_time('2026-04-01')
+    def test_auto_post_and_reset_to_draft(self):
+        inv1 = self.invoice
+        inv1.date = '2026-01-01'
+        inv1.auto_post = 'quarterly'
+
+        def recurrence():
+            return self.env['account.move'].search(
+                [('auto_post_origin_id', '=', inv1.id)],
+                order='date',
+            )
+
+        def post_next_entry():
+            with self.enter_registry_test_mode():
+                self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()
+
+        jan, feb, mar, apr, may = (fields.Date.to_date(f'2026-0{month}-01') for month in range(1, 6))
+
+        # 1) Posting inv1 generates the draft of the next period.
+        inv1.action_post()
+        self.assertRecordValues(recurrence(), [
+            {'date': jan, 'state': 'posted'},
+            {'date': apr, 'state': 'draft'},
+        ])
+
+        # 2) Resetting inv1 to draft deletes the draft it generated.
+        inv1.button_draft()
+        self.assertRecordValues(recurrence(), [
+            {'date': jan, 'state': 'draft'},
+        ])
+
+        # 3) inv1 -> inv2 -> draft
+        inv1.auto_post = 'monthly'
+        post_next_entry()  # inv1
+        post_next_entry()  # inv2
+        self.assertRecordValues(recurrence(), [
+            {'date': jan, 'state': 'posted'},
+            {'date': feb, 'state': 'posted'},
+            {'date': mar, 'state': 'draft'},
+        ])
+
+        # 4) Resetting inv2 to draft deletes the draft it generated.
+        inv2 = recurrence()[1]
+        inv2.button_draft()
+        self.assertRecordValues(recurrence(), [
+            {'date': jan, 'state': 'posted'},
+            {'date': feb, 'state': 'draft'},
+        ])
+
+        # 5) inv1 -> inv2 -> inv3 -> draft
+        post_next_entry()  # inv2
+        post_next_entry()  # inv3
+        self.assertRecordValues(recurrence(), [
+            {'date': jan, 'state': 'posted'},
+            {'date': feb, 'state': 'posted'},
+            {'date': mar, 'state': 'posted'},
+            {'date': apr, 'state': 'draft'},
+        ])
+
+        # 6) Resetting inv3 to draft deletes the draft it generated.
+        inv3 = recurrence()[2]
+        inv3.button_draft()
+        self.assertRecordValues(recurrence(), [
+            {'date': jan, 'state': 'posted'},
+            {'date': feb, 'state': 'posted'},
+            {'date': mar, 'state': 'draft'},
+        ])
+
+        # 7) inv1 -> inv2 -> inv3 -> draft
+        post_next_entry()  # inv3
+        self.assertRecordValues(recurrence(), [
+            {'date': jan, 'state': 'posted'},
+            {'date': feb, 'state': 'posted'},
+            {'date': mar, 'state': 'posted'},
+            {'date': apr, 'state': 'draft'},
+        ])
+
+        # 8) Resetting inv1 to draft changes nothing: the pending draft was generated by inv3, not by inv1.
+        inv1.button_draft()
+        self.assertRecordValues(recurrence(), [
+            {'date': jan, 'state': 'draft'},
+            {'date': feb, 'state': 'posted'},
+            {'date': mar, 'state': 'posted'},
+            {'date': apr, 'state': 'draft'},
+        ])
+
+        # 9) The cron shouldn't recreate already existing recurring moves
+        inv2.button_draft()
+        post_next_entry()
+        self.assertRecordValues(recurrence(), [
+            {'date': jan, 'state': 'posted'},
+            {'date': feb, 'state': 'posted'},
+            {'date': mar, 'state': 'posted'},
+            {'date': apr, 'state': 'posted'},
+            {'date': may, 'state': 'draft'},
+        ])
+
+    def test_invoice_partner_display_name_ignores_partner_form_context(self):
+        """ Test that granting portal access to a contact does not add context
+            info to the invoice partner display name."""
+        self.partner_a.write({'email': 'partner_a@example.com', 'street': 'Rue du Test 1', 'vat': 'BE0477472701'})
+        invoice = self.init_invoice('out_invoice', partner=self.partner_a, amounts=[100])
+        action = self.partner_a.with_context(show_address=1, show_vat=True).get_formview_action()
+        wizard = self.env['portal.wizard'].with_context(action['context'], active_ids=self.partner_a.ids).create({})
+        wizard.user_ids.action_grant_access()
+        self.env.flush_all()
+        self.assertEqual(invoice.invoice_partner_display_name, 'partner_a')

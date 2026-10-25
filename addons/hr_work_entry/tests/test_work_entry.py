@@ -1,9 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
+from lxml import etree
 import pytz
 
+from odoo import Command
+from odoo.fields import Date
 from odoo.tests.common import tagged
 from odoo.addons.hr_work_entry.tests.common import TestWorkEntryBase
 
@@ -27,6 +32,25 @@ class TestWorkEntry(TestWorkEntryBase):
             'wage': 1000,
             'date_generated_from': cls.end.date() + relativedelta(days=5),
         })
+
+    @freeze_time('2026-04-15')
+    def test_current_month_filter_tz_boundary(self):
+        """Test that the "Current Month" filter keeps the month boundaries in a
+        positive-offset timezone (Europe/Brussels, set by the base fixture),
+        instead of shifting the window one day earlier."""
+        node = etree.fromstring(self.env.ref('hr_work_entry.hr_work_entry_view_search').arch)
+        domain = ast.literal_eval(node.xpath("//filter[@name='current_month']")[0].get('domain'))
+        entries = self.env['hr.work.entry'].create([
+            {
+                'name': name,
+                'employee_id': self.richard_emp.id,
+                'version_id': self.richard_emp.version_ids[0].id,
+                'work_entry_type_id': self.work_entry_type.id,
+                'date': Date.to_date(day),
+            }
+            for name, day in [('prev month', '2026-03-31'), ('current month', '2026-04-30')]
+        ])
+        self.assertEqual(entries.filtered_domain(domain), entries[1])
 
     def test_no_duplicate(self):
         self.richard_emp.generate_work_entries(self.start, self.end)
@@ -187,6 +211,19 @@ class TestWorkEntry(TestWorkEntryBase):
         vals_list = self.env['hr.version']._generate_work_entries_postprocess(vals_list)
         work_entry = self.env['hr.work.entry'].create(vals_list)
         self.assertEqual(work_entry.duration, 1, "The duration should be 1 hour")
+
+    def test_working_schedule_leave_is_not_counted_as_work(self):
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Calendar',
+            'tz': 'UTC',
+            'attendance_ids': [
+                Command.create({'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                Command.create({'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon', 'work_entry_type_id': self.work_entry_type_leave.id}),
+            ],
+        })
+        start = datetime(2024, 9, 2, 0, 0, 0)
+        end = datetime(2024, 9, 2, 23, 59, 59)
+        self.assertEqual(calendar.get_work_hours_count(start, end), 4.0)
 
     def test_work_entry_different_calendars(self):
         """ Test work entries are correctly created for employees with versions that have different calendar types. """
@@ -505,3 +542,37 @@ class TestWorkEntry(TestWorkEntryBase):
         work_entries = self.env['hr.work.entry'].search([('employee_id', '=', employee.id)])
         self.assertEqual(len(work_entries), 23, "23 attendance")
         self.assertEqual(sum(work_entries.mapped("duration")), 178, "7 * 8h + 6 * 7h + 10 * 8h")
+
+    @freeze_time('2025-09-15')
+    def test_flexible_calendar_public_holiday_duration(self):
+        """ A full day public holiday on a flexible calendar should last the average hours per day,
+            not the whole 24 hours of the day, whatever its work entry type. """
+        tz = pytz.timezone('America/Costa_Rica')
+        self.env.user.tz = 'America/Costa_Rica'
+        flexible_calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible 48h',
+            'flexible_hours': True,
+            'hours_per_week': 48,
+            'full_time_required_hours': 48,
+            'hours_per_day': 8,
+            'tz': 'America/Costa_Rica',
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Flexible Employee',
+            'tz': 'America/Costa_Rica',
+            'resource_calendar_id': flexible_calendar.id,
+            'date_version': date(2025, 1, 1),
+            'contract_date_start': date(2025, 1, 1),
+        })
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Public Holiday',
+            'calendar_id': flexible_calendar.id,
+            'date_from': tz.localize(datetime(2025, 9, 1, 0, 0, 0)).astimezone(pytz.utc).replace(tzinfo=None),
+            'date_to': tz.localize(datetime(2025, 9, 1, 23, 59, 59)).astimezone(pytz.utc).replace(tzinfo=None),
+            'work_entry_type_id': self.env.ref('hr_work_entry.work_entry_type_attendance').id,
+        })
+
+        work_entries = employee.generate_work_entries(date(2025, 9, 1), date(2025, 9, 2)).sorted('date')
+        self.assertEqual(len(work_entries), 2)
+        self.assertEqual(work_entries.mapped('date'), [date(2025, 9, 1), date(2025, 9, 2)])
+        self.assertEqual(work_entries.mapped('duration'), [8.0, 8.0])

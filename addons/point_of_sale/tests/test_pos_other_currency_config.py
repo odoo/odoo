@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest import skip
-
 import odoo
 
-from odoo import tools
+from odoo import fields, tools
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -36,6 +34,7 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
         self.config.pricelist_id.write({'item_ids': [(6, 0, (self.config.pricelist_id.item_ids | pricelist_item).ids)]})
 
         self.expense_account = self.categ_anglo.property_account_expense_categ_id
+        self.valuation_account = self.categ_anglo.property_stock_valuation_account_id
 
     def test_01_check_product_cost(self):
         # Product price should be half of the original price because currency rate is 0.5.
@@ -223,7 +222,6 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
             },
         })
 
-    @skip('Temporary to fast merge new valuation')
     def test_04_anglo_saxon_products(self):
         """
         ======
@@ -276,7 +274,7 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
                         {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 7153.90, 'reconciled': False, 'amount_currency': -3576.95},
                         {'account_id': self.expense_account.id, 'partner_id': False, 'debit': 2375.99, 'credit': 0, 'reconciled': False, 'amount_currency': 2375.99},
                         {'account_id': self.cash_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 7153.90, 'credit': 0, 'reconciled': True, 'amount_currency': 3576.95},
-                        {'account_id': self.output_account.id, 'partner_id': False, 'debit': 0, 'credit': 2375.99, 'reconciled': True, 'amount_currency': -2375.99},
+                        {'account_id': self.valuation_account.id, 'partner_id': False, 'debit': 0, 'credit': 2375.99, 'reconciled': False, 'amount_currency': -2375.99},
                     ],
                 },
                 'cash_statement': [
@@ -301,7 +299,7 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
             'journal_entries_after_closing': {
                 'session_journal_entry': {
                     'line_ids': [
-                        {'account_id': self.tax_received_account.id, 'partner_id': False, 'debit': 0, 'credit': 3.43, 'reconciled': False, 'amount_currency': -1.715, 'tax_base_amount': 49},
+                        {'account_id': self.tax_received_account.id, 'partner_id': False, 'debit': 0, 'credit': 3.43, 'reconciled': False, 'amount_currency': -1.715, 'tax_base_amount': -49},
                         {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 49, 'reconciled': False, 'amount_currency': -24.5, 'tax_base_amount': 0},
                         {'account_id': self.cash_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 52.43, 'credit': 0, 'reconciled': True, 'amount_currency': 26.215, 'tax_base_amount': 0},
                     ],
@@ -385,3 +383,71 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
         res = self.other_currency_config.current_session_id.load_data({})
         product1_data = next(filter(lambda product: product['display_name'] == "Product 1", res['product.product']))
         self.assertEqual(product1_data['standard_price'], 2.5)  # standard price should be converted
+
+    def test_pos_data_shared_product_cost_currency(self):
+        """ A product shared across companies (company_id = False) takes its sale-price
+        currency from the main company but its cost currency from the active company.
+        When the POS runs in a company whose currency differs from the main company, the
+        cost (standard_price) must be converted from cost_currency_id, not currency_id,
+        otherwise it gets wrongly multiplied by the exchange rate even though it is
+        already expressed in the POS currency.
+        """
+        main_company = self.env['res.company']._get_main_company()
+        self.assertNotEqual(main_company.currency_id, self.other_currency)
+
+        other_company = self.env['res.company'].create({
+            'name': 'Other Currency Company',
+            'currency_id': self.other_currency.id,
+        })
+        self.env.user.company_ids |= other_company
+
+        self.env['res.currency.rate'].create({
+            'name': fields.Date.today(),
+            'currency_id': main_company.currency_id.id,
+            'rate': 2.0,
+            'company_id': other_company.id,
+        })
+
+        shared_product = self.env['product.product'].create({
+            'name': 'Shared Product',
+            'available_in_pos': True,
+            'is_storable': True,
+            'taxes_id': [(5, 0, 0)],
+            'lst_price': 100.0,
+            'company_id': False,
+        }).with_company(other_company)
+        # standard_price is company-dependent: set it for the active company, where it
+        # is therefore expressed in that company's currency (the "other" currency).
+        shared_product.standard_price = 100.0
+
+        self.assertEqual(shared_product.currency_id, main_company.currency_id)
+        self.assertEqual(shared_product.cost_currency_id, self.other_currency)
+
+        self.assertEqual(self.other_currency_config.currency_id, self.other_currency)
+        [data] = shared_product._load_pos_data_read(shared_product, self.other_currency_config)
+
+        self.assertAlmostEqual(data['standard_price'], 100.0)
+        self.assertAlmostEqual(data['lst_price'], 50.0)
+
+    def test_combo_prices_converted_to_pos_currency(self):
+        # A combo's `base_price` and its items' `extra_price` are stored in the
+        # company currency. When loaded in a PoS running another currency they
+        # must be converted, just like standalone product prices (rate 0.5).
+        combo = self.env['product.combo'].create({
+            'name': 'Combo choice',
+            'company_id': self.company.id,
+            'combo_item_ids': [
+                (0, 0, {'product_id': self.product1.product_variant_id.id, 'extra_price': 20.0}),
+                (0, 0, {'product_id': self.product3.product_variant_id.id, 'extra_price': 0.0}),
+            ],
+        })
+        # base_price is the min lst_price among the items, in company currency (product1 = 10.0).
+        self.assertAlmostEqual(combo.base_price, 10.0)
+
+        combo_read = self.env['product.combo']._load_pos_data_read(combo, self.config)[0]
+        self.assertAlmostEqual(combo_read['base_price'], 5.0)
+
+        combo_item_read = self.env['product.combo.item']._load_pos_data_read(combo.combo_item_ids, self.config)
+        extra_prices = {rec['product_id']: rec['extra_price'] for rec in combo_item_read}
+        self.assertAlmostEqual(extra_prices[self.product1.product_variant_id.id], 10.0)
+        self.assertAlmostEqual(extra_prices[self.product3.product_variant_id.id], 0.0)

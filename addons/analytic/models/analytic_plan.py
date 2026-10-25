@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
-
 from random import randint
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import ormcache, make_index_name, create_index
+from odoo.tools import create_index, frozendict, make_index_name, ormcache
 
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 
@@ -215,6 +214,10 @@ class AccountAnalyticPlan(models.Model):
     def get_relevant_plans(self, **kwargs):
         """ Returns the list of plans that should be available.
             This list is computed based on the applicabilities of root plans. """
+        cache = self.env.cr.cache.setdefault('get_relevant_plans', {})
+        key = frozendict(kwargs)
+        if key in cache:
+            return cache[key]
         record_account_ids = kwargs.get('existing_account_ids', [])
         project_plan, other_plans = self.env['account.analytic.plan']._get_all_plans()
         root_plans = (project_plan + other_plans).filtered(lambda p: (
@@ -227,7 +230,7 @@ class AccountAnalyticPlan(models.Model):
         # percentage could be different from 0)
         forced_plans = self.env['account.analytic.account'].browse(record_account_ids).exists().mapped(
             'root_plan_id') - root_plans
-        return [
+        cache[key] = [
             {
                 "id": plan.id,
                 "name": plan.name,
@@ -238,6 +241,7 @@ class AccountAnalyticPlan(models.Model):
             }
             for plan in (root_plans + forced_plans).sorted('sequence')
         ]
+        return cache[key]
 
     def _get_applicability(self, **kwargs):
         """ Returns the applicability of the best applicability line or the default applicability """
@@ -246,7 +250,10 @@ class AccountAnalyticPlan(models.Model):
             # For models for example, we want all plans to be visible, so we force the applicability
             return kwargs['applicability']
         else:
-            score = 0
+            # Baseline: the sum of all low-priority criteria (e.g. company) must not exceed this alone,
+            # and must stay below 1 (a single high-priority criterion's weight) or it would effectively
+            # become a high-priority match. Adapt each criterion's weight if new ones are added.
+            score = 0.5
             applicability = self.default_applicability
             for applicability_rule in self.applicability_ids.filtered(
                     lambda rule:
@@ -267,6 +274,7 @@ class AccountAnalyticPlan(models.Model):
         res = super().unlink()
         related_fields.filtered(lambda f: not self._is_subplan_field_used(f)).unlink()
         self.env.registry.clear_cache('stable')
+        self.env.cr.cache.pop('get_relevant_plans', None)
         return res
 
     def _hierarchy_name(self):
@@ -309,63 +317,100 @@ class AccountAnalyticPlan(models.Model):
             self._sync_plan_column(model)
 
     def _sync_plan_column(self, model):
-        # Create/delete a new field/column on related models for this plan, and keep the name in sync.
-        # Sort by parent_path to ensure parents are processed before children
-        for plan in self.sorted('parent_path'):
-            prev_stored = plan._find_plan_column(model)
-            depth, name_related = plan._hierarchy_name()
-            prev_related = plan._find_related_field(model)
-            if plan.parent_id:
-                # If there is a parent, we just need to make sure there is a field to group by the hierarchy level
-                # of this plan, allowing to group by sub plan
-                if prev_stored:
-                    prev_stored.with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
-                description = f"{plan.root_id.name} ({depth})"
-                if not prev_related:
-                    self.env['ir.model.fields'].with_context(update_custom_fields=True).sudo().create({
-                        'name': name_related,
-                        'field_description': description,
-                        'state': 'manual',
-                        'model': model,
-                        'model_id': self.env['ir.model']._get_id(model),
-                        'ttype': 'many2one',
-                        'relation': 'account.analytic.plan',
-                        'related': plan._column_name() + '.plan_id' + '.parent_id' * (depth - 1),
-                        'store': False,
-                        'readonly': True,
-                    })
-                else:
-                    prev_related.field_description = description
+        # Create/delete a new field/column on related models for this plan (and its sub plans), and keep the name
+        # in sync.
+        # Every write/create/unlink on ir.model.fields reloads the registry, so everything is done in batch: the
+        # fields only depend on the root plans (one stored field each) and on the (root plan, depth) pairs (one
+        # related field each), no matter how many plans share them.
+        if not self:
+            return
+        plans = self.browse()
+        todo = self
+        while todo:
+            plans |= todo
+            todo = todo.children_ids - plans
+        roots = plans.filtered(lambda p: not p.parent_id)
+        subplans = plans - roots
+        stored_vals = {}  # {column: description}
+        related_vals = {}  # {fname: (root plan, depth)}
+        to_remove = set()
+        for plan in roots:
+            stored_vals[plan._strict_column_name()] = plan.name
+        for plan in subplans:
+            to_remove.add(plan._strict_column_name())
+            depth, fname = plan._hierarchy_name()
+            related_vals[fname] = (plan.root_id, depth)
+
+        IrModelFields = self.env['ir.model.fields'].sudo()
+        existing = IrModelFields.search([
+            ('model', '=', model),
+            ('name', 'in', list(stored_vals.keys() | related_vals.keys() | to_remove)),
+        ]).grouped('name')
+
+        # Remove the stored fields of the plans that got a parent and the related fields of the plans that lost it
+        to_unlink = IrModelFields.browse(existing[fname].id for fname in to_remove if fname in existing)
+        to_unlink.with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
+
+        to_create = []
+        to_write = {}  # {description: fields}
+        model_id = self.env['ir.model']._get_id(model)
+
+        def field_vals(fname, description):
+            return {
+                'name': fname,
+                'field_description': description,
+                'state': 'manual',
+                'model': model,
+                'model_id': model_id,
+                'ttype': 'many2one',
+            }
+
+        for column, description in stored_vals.items():
+            if column in existing:
+                to_write.setdefault(description, []).append(existing[column])
             else:
-                # If there is no parent, then we need to create a new stored field as this is the root plan
-                if prev_related:
-                    prev_related.with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
-                description = plan.name
-                if not prev_stored:
-                    column = plan._strict_column_name()
-                    field = self.env['ir.model.fields'].with_context(update_custom_fields=True).sudo().create({
-                        'name': column,
-                        'field_description': description,
-                        'state': 'manual',
-                        'model': model,
-                        'model_id': self.env['ir.model']._get_id(model),
-                        'ttype': 'many2one',
-                        'relation': 'account.analytic.account',
-                        'copied': True,
-                        'on_delete': 'restrict',
-                    })
-                    Model = self.env[model]
-                    if Model._auto:
-                        tablename = Model._table
-                        indexname = make_index_name(tablename, column)
-                        create_index(self.env.cr, indexname, tablename, [column], 'btree', f'{column} IS NOT NULL')
-                        field['index'] = True
-                else:
-                    prev_stored.field_description = description
-        if self.children_ids:
-            self.children_ids._sync_plan_column(model)
+                to_create.append({
+                    **field_vals(column, description),
+                    'relation': 'account.analytic.account',
+                    'copied': True,
+                    'on_delete': 'restrict',
+                })
+        for fname, (root, depth) in related_vals.items():
+            description = f"{root.name} ({depth})"
+            if fname in existing:
+                to_write.setdefault(description, []).append(existing[fname])
+            else:
+                to_create.append({
+                    **field_vals(fname, description),
+                    'relation': 'account.analytic.plan',
+                    'related': root._strict_column_name() + '.plan_id' + '.parent_id' * (depth - 1),
+                    'store': False,
+                    'readonly': True,
+                })
+
+        if to_create:
+            created = IrModelFields.with_context(update_custom_fields=True).create(to_create)
+            Model = self.env[model]
+            if Model._auto:
+                tablename = Model._table
+                stored = created.filtered('store')
+                for column in stored.mapped('name'):
+                    indexname = make_index_name(tablename, column)
+                    create_index(self.env.cr, indexname, tablename, [column], 'btree', f'{column} IS NOT NULL')
+                stored.index = True
+        for description, fields_list in to_write.items():
+            IrModelFields.browse(
+                f.id for f in fields_list if f.field_description != description
+            ).field_description = description
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        self.env.cr.cache.pop('get_relevant_plans', None)
+        return super().create(vals_list)
 
     def write(self, vals):
+        if 'default_applicability' in vals:
+            self.env.cr.cache.pop('get_relevant_plans', None)
         new_parent = self.env['account.analytic.plan'].browse(vals.get('parent_id'))
         plan2previous_parent = {plan: plan.parent_id for plan in self if plan.parent_id}
         if 'parent_id' in vals and new_parent:
@@ -377,7 +422,16 @@ class AccountAnalyticPlan(models.Model):
                     accounts=self.env['account.analytic.account'].search([('plan_id', 'child_of', plan.id)]),
                 )
 
+        prev_related = self.env['ir.model.fields']
+        if 'parent_id' in vals:
+            # Related fields of the hierarchy levels the moved plans (and their sub plans) were on
+            prev_related = self.search([('id', 'child_of', self.ids)])._find_related_field()
+
         res = super().write(vals)
+
+        # Remove the related fields of the hierarchy levels left empty by the move (see `unlink`). The ones of a
+        # demoted root plan are already gone with its column.
+        prev_related.exists().filtered(lambda f: not self._is_subplan_field_used(f)).unlink()
 
         if 'parent_id' in vals and not new_parent:
             # Update accounts in analytic lines after _sync_plan_column() creates the new column
@@ -417,6 +471,19 @@ class AccountAnalyticApplicability(models.Model):
         string='Company',
         default=lambda self: self.env.company,
     )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        self.env.cr.cache.pop('get_relevant_plans', None)
+        return super().create(vals_list)
+
+    def write(self, vals):
+        self.env.cr.cache.pop('get_relevant_plans', None)
+        return super().write(vals)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_clear_cache(self):
+        self.env.cr.cache.pop('get_relevant_plans', None)
 
     def _get_score(self, **kwargs):
         """ Gives the score of an applicability with the parameters of kwargs """

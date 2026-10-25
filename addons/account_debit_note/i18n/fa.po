@@ -2,14 +2,15 @@
 # This file contains the translation of the following modules:
 # * account_debit_note
 #
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Heshmatkhah <maheshmatkhah.soft@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-11-12 13:06+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-06-19 17:35+0000\n"
+"PO-Revision-Date: 2026-08-08 01:16+0000\n"
+"Last-Translator: Heshmatkhah <maheshmatkhah.soft@gmail.com>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-19/"
 "account_debit_note/fa/>\n"
 "Language: fa\n"
@@ -17,12 +18,22 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
 msgid "<span class=\"o_stat_text\">Debit Notes</span>"
 msgstr "<span class=\"o_stat_text\">اسناد بدهکاری</span>"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "<strong>Debit Note Date</strong>"
+msgstr ""
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "<strong>Invoice Date</strong>"
+msgstr ""
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_debit_note
@@ -33,6 +44,26 @@ msgstr "ویزارد افزودن سند بدهکاری"
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
 msgid "Cancel"
 msgstr "لغو"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Cancelled Debit Note"
+msgstr ""
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Cancelled Invoice"
+msgstr ""
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Cancelled Proforma Debit Note"
+msgstr ""
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Cancelled Proforma Invoice"
+msgstr "صورتحساب لغو شده"
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_journal__debit_sequence
@@ -68,6 +99,7 @@ msgid "Created on"
 msgstr "ایجادشده در"
 
 #. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_move_filter_debit
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_move_line_filter_debit
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
@@ -103,6 +135,26 @@ msgid "Display Name"
 msgstr "نام نمایشی"
 
 #. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Draft Debit Note"
+msgstr ""
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Draft Invoice"
+msgstr ""
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Draft Proforma Debit Note"
+msgstr ""
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Draft Proforma Invoice"
+msgstr "پیشنویس صورتحساب"
+
+#. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__id
 #: model:ir.model.fields,field_description:account_debit_note.field_account_journal__id
 #: model:ir.model.fields,field_description:account_debit_note.field_account_move__id
@@ -124,6 +176,11 @@ msgid ""
 msgstr ""
 "در صورت نیاز به انجام اصلاحات برای هر سطر ، کپی کردن آنها مفید خواهد بود. ما "
 "آنها را برای یادداشت های بدهکار از یادداشت های اعتباری کپی نمی کنیم. "
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Invoice"
+msgstr ""
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_journal
@@ -173,6 +230,16 @@ msgid "Original Invoice Debited"
 msgstr "فاکتور اصلی بدهکار"
 
 #. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Proforma Debit Note"
+msgstr ""
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Proforma Invoice"
+msgstr "صورتحساب"
+
+#. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__reason
 msgid "Reason"
 msgstr "علت"
@@ -210,8 +277,8 @@ msgid ""
 "You can make a debit note only for a Customer Invoice, a Customer Credit "
 "Note, a Vendor Bill or a Vendor Credit Note."
 msgstr ""
-"می‌توانید یک سند بستانکار را تنها برای یک فاکتور مشتری، یک سند بستانکار "
-"مشتری، صورت‌حساب یک فروشنده یا سند بستانکار یک فروشنده ایجاد کنید."
+"می‌توانید یک سند بستانکار را تنها برای یک فاکتور مشتری، یک سند بستانکار مشتری"
+"، صورت‌حساب یک فروشنده یا سند بستانکار یک فروشنده ایجاد کنید."
 
 #. module: account_debit_note
 #. odoo-python

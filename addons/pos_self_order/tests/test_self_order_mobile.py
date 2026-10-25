@@ -261,7 +261,9 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         self.assertEqual(len(order.lines), 2)
 
         # Check self-order in pos-terminal are not prompted for Send-for-Preparation
+        expected_table = order.self_ordering_table_id
         self.start_tour('/pos/ui?config_id=%d' % self.pos_config.id, 'test_pos_self_order_preparation_changes', login='pos_user')
+        self.assertEqual(order.self_ordering_table_id, expected_table, "self_ordering_table_id should be equal to the original table")
 
     def test_self_order_table_sharing(self):
         """

@@ -22,8 +22,8 @@
 # Christelle Wehbe <libanon_cristelle@hotmail.com>, 2022
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # Martin Trigaux, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Jacob Ljungström <jacob.ljungstrom03@gmail.com>, 2025.
 # Hanna Kharraziha <hakha@odoo.com>, 2025, 2026.
 # symbiotech <symbiotech3@gmail.com>, 2026.
@@ -31,8 +31,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-05-06 15:36+0000\n"
+"POT-Creation-Date: 2026-07-24 17:38+0000\n"
+"PO-Revision-Date: 2026-10-22 09:54+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/project/"
 "sv/>\n"
@@ -41,12 +41,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
-msgid " All internal users and invited portal users"
-msgstr " Alla interna användare och inbjudna portalanvändare"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -299,6 +294,115 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>"
+"\n"
+"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"width:100%; margin:0px auto;\">\n"
+"    <tbody>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            <t t-if=\"partner.name\">\n"
+"                Hej <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br/>"
+"<br/>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                Hej,<br/><br/>\n"
+"            </t>\n"
+"            Vi skulle uppskatta om du tog dig tiden att ge ett omdöme "
+"angående våra tjänster relaterade till uppgiften <strong t-out=\"object.name "
+"or ''\">Planering och budget</strong>\n"
+"            <t t-if=\"object._rating_get_operator().name\">\n"
+"                som tilldelades till <strong t-"
+"out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>"
+".<br/>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                .<br/>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"        <tr><td style=\"text-align: center;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"width:100%; margin: 32px 0px 32px 0px; display: inline-"
+"table;\">\n"
+"                <tr><td style=\"font-size: 13px;text-align:center;\">\n"
+"                    <strong>Berätta gärna för oss hur du upplevde våra "
+"tjänster</strong><br/>\n"
+"                    <span style=\"font-size: 12px; opacity: 0.5; color: "
+"#454748;\">(klicka på en av följande smileys)</span>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <table style=\"width:100%;text-align:center;margin-"
+"top:2rem;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"5\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Happy\" src=\"/rating/static/"
+"src/img/rating_5.png\" title=\"Bra\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"3\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Neutral\" src=\"/rating/"
+"static/src/img/rating_3.png\" title=\"Neutralt\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"1\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Unhappy\" src=\"/rating/"
+"static/src/img/rating_1.png\" title=\"Dåligt\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td></tr>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            Vi uppskattar din feedback. Den hjälper oss att ständigt "
+"förbättras.\n"
+"            <t t-if=\"object.stage_id.rating_status == 'stage'\">\n"
+"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
+"color: #454748;\">Den här enkäten har skickats ut eftersom att uppgiften har "
+"förflyttats till etappen <b t-out=\"object.stage_id.name or ''\">Pågående</b>"
+"</span>\n"
+"            </t>\n"
+"            <t t-if=\"object.stage_id.rating_status == 'periodic'\">\n"
+"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
+"color: #454748;\">Den här enkäten skickas ut varje <b t-"
+"out=\"object.stage_id.rating_status_period or ''\">vecka</b> så länge som "
+"uppgiften stannar i etappen <b t-out=\"object.stage_id.name or ''\">"
+"Pågående</b>.</span>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"        <tr><td><br/>Med vänliga hälsningar,</td></tr>\n"
+"        <tr><td>\n"
+"           <t t-out=\"object.project_id.company_id.name or ''\">YourCompany</"
+"t>\n"
+"        </td></tr>\n"
+"        <tr><td style=\"opacity: 0.5;\">\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\">1 650-123-"
+"4567</t>\n"
+"            <t t-if=\"object.project_id.company_id.email\">\n"
+"                | <a t-attf-href=\"mailto:{{ "
+"object.project_id.company_id.email }}\" style=\"text-decoration:none; color: "
+"#454748;\" t-out=\"object.project_id.company_id.email or ''\">"
+"info@yourcompany.com</a>\n"
+"            </t>\n"
+"            <t t-if=\"object.project_id.company_id.website\">\n"
+"                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
+"\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"object.project_id.company_id.website or ''\">http://www.example.com</a>"
+"\n"
+"            </t>\n"
+"        </td></tr>\n"
+"    </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.project_done_email_template
@@ -476,7 +580,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span>Reporting</span>"
-msgstr "<span>Rapportering</span>"
+msgstr "<span>Rapporter</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
@@ -628,13 +732,13 @@ msgstr "Aktiviteter för"
 #: model:ir.model.fields,field_description:project.field_project_task__activity_exception_decoration
 #: model:ir.model.fields,field_description:project.field_project_update__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Undantagsaktiviteter dekoration"
+msgstr "Stilmarkeringar för undantagsaktiviteter"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_plan_action_config_project_task_plan
 #: model:ir.ui.menu,name:project.mail_activity_plan_menu_config_project
 msgid "Activity Plans"
-msgstr "Verksamhetsplaner"
+msgstr "Aktivitetsplaner"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_state
@@ -739,7 +843,9 @@ msgstr "Administratör"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_manager
-msgid "Administrator can manage the employees' schedule"
+msgid ""
+"Administrator: Can manage projects and stages, with access to reporting and "
+"configuration."
 msgstr ""
 
 #. module: project
@@ -811,6 +917,11 @@ msgstr "Alla uppgifter"
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
 msgid "All internal users"
 msgstr "Alla interna användare"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
+msgid "All internal users and invited portal users"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__allocated_hours
@@ -893,7 +1004,7 @@ msgstr "Arkivera Lägen"
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Archived"
-msgstr "Arkiverad"
+msgstr "Arkiverade"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -1035,8 +1146,8 @@ msgid ""
 "(orange bullet).\n"
 msgstr ""
 "Ändra automatiskt status när kunden svarar på feedbacken för detta steg.\n"
-" * Bra feedback från kunden uppdaterar statusen till \"Godkänd\" (grön "
-"punkt).\n"
+" * Bra feedback från kunden uppdaterar statusen till \"Godkänd\" (grön punkt)"
+".\n"
 " * Neutral eller dålig feedback gör att kanbanstatus ändras till \"Changes "
 "Requested\" (orange punkt).\n"
 
@@ -1299,7 +1410,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "Communication history"
-msgstr "Kommuniktationshistorik"
+msgstr "Kommunikationshistorik"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
@@ -1326,7 +1437,7 @@ msgstr "Inställningar"
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_config
 msgid "Configuration"
-msgstr "Konfiguration"
+msgstr "Inställningar"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -1606,7 +1717,7 @@ msgstr "Kundomdöme"
 #: model:ir.actions.act_window,name:project.rating_rating_action_project_report
 #: model:ir.ui.menu,name:project.rating_rating_menu_project
 msgid "Customer Ratings"
-msgstr "Kundbetyg"
+msgstr "Kundomdömen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_status
@@ -1643,7 +1754,7 @@ msgstr "Dagligen"
 #: model:ir.embedded.actions,name:project.project_embedded_action_project_updates
 #: model_terms:ir.ui.view,arch_db:project.project_view_kanban_inherit_project
 msgid "Dashboard"
-msgstr "Anslagstavla"
+msgstr "Dashboard"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__date
@@ -2113,7 +2224,7 @@ msgstr "Extern"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Extra Info"
-msgstr "Tilläggsinformation"
+msgstr "Mer information"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project
@@ -2408,7 +2519,8 @@ msgstr "Idéer"
 #: model:ir.model.fields,help:project.field_project_update__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr ""
-"Om ikryssad, så finns det nya meddelanden som kräver din uppmärksamhet."
+"Om rutan är markerad, så finns det nya meddelanden som kräver din "
+"uppmärksamhet."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_milestone__message_has_error
@@ -2420,7 +2532,7 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_update__message_has_error
 #: model:ir.model.fields,help:project.field_project_update__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Om ikryssad, så finns det meddelanden med leveransfel."
+msgstr "Om rutan är markerad, så har vissa meddelanden leveransfel."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__fold
@@ -2587,8 +2699,8 @@ msgid ""
 "                    Collaborate efficiently by chatting in real-time or via "
 "email."
 msgstr ""
-"Håll koll på hur dina uppgifter fortskrider från skapande till slutförande."
-"<br>\n"
+"Håll koll på hur dina uppgifter fortskrider från skapande till "
+"slutförande.<br>\n"
 "                    Samarbeta effektivt genom att chatta i realtid eller via "
 "e-post."
 
@@ -2600,8 +2712,8 @@ msgid ""
 "                Collaborate efficiently by chatting in real-time or via "
 "email."
 msgstr ""
-"Håll koll på hur dina uppgifter fortskrider från skapande till slutförande."
-"<br>\n"
+"Håll koll på hur dina uppgifter fortskrider från skapande till "
+"slutförande.<br>\n"
 "                Samarbeta effektivt genom att chatta i realtid eller via e-"
 "post."
 
@@ -2815,7 +2927,7 @@ msgstr "Tillverkning"
 #: code:addons/project/static/src/components/done_checkmark/task_done_checkmark.xml:0
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.xml:0
 msgid "Mark as done"
-msgstr "Markera som färdig"
+msgstr "Markera som klar"
 
 #. module: project
 #. odoo-javascript
@@ -2877,7 +2989,7 @@ msgstr "Meddelande"
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_error
 #: model:ir.model.fields,field_description:project.field_project_update__message_has_error
 msgid "Message Delivery error"
-msgstr "Leveransfel för meddelanden"
+msgstr "Leveransfel för meddelande"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_ids
@@ -3074,14 +3186,14 @@ msgstr "Nästa aktivitetshändelse i kalendern"
 #: model:ir.model.fields,field_description:project.field_project_task__activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_update__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Nästa tidsgräns för en aktivitet"
+msgstr "Tidsgräns för nästa aktivitet"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_summary
 #: model:ir.model.fields,field_description:project.field_project_task__activity_summary
 #: model:ir.model.fields,field_description:project.field_project_update__activity_summary
 msgid "Next Activity Summary"
-msgstr "Nästa aktivitetssammanfattning"
+msgstr "Sammanfattning av nästa aktivitet"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_type_id
@@ -3485,7 +3597,7 @@ msgstr ""
 #: model:project.tags,name:project.project_tags_16
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Priority"
-msgstr "Prioritet"
+msgstr "Prioritetsnivå"
 
 #. module: project
 #. odoo-javascript
@@ -4065,7 +4177,7 @@ msgstr "Upprepa enhet"
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_report
 msgid "Reporting"
-msgstr "Rapportering"
+msgstr "Rapporter"
 
 #. module: project
 #. odoo-javascript
@@ -4149,7 +4261,7 @@ msgstr "Rotting"
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_create/subtask_kanban_create.xml:0
 msgid "SAVE"
-msgstr "SÄKERHET"
+msgstr "SPARA"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_has_sms_error
@@ -4157,7 +4269,7 @@ msgstr "SÄKERHET"
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_sms_error
 #: model:ir.model.fields,field_description:project.field_project_update__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "Leveransfel för SMS"
+msgstr "Leveransfel för sms"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -4336,7 +4448,7 @@ msgstr "Inställningar"
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Share Project"
-msgstr "Dela Projekt"
+msgstr "Dela projekt"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.portal_share_action
@@ -4414,8 +4526,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Sorry. You can't set a task as its parent task."
-msgstr ""
-"Jag beklagar. Du kan inte ange en uppgift som dess överordnade uppgift."
+msgstr "Jag beklagar. Du kan inte ange en uppgift som dess överordnade uppgift."
 
 #. module: project
 #. odoo-javascript
@@ -4546,10 +4657,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"Status baserad på aktiviteter\n"
-"Försenade: Leveranstidpunkten har passerat\n"
-"Idag: Aktivitetsdatum är idag\n"
-"Kommande: Framtida aktiviteter."
+"Status baserat på aktivitetsdatum:\n"
+"Försenade: Aktivitetsdatum har redan passerat.\n"
+"Idag: Aktivitetsdatum är dagens datum.\n"
+"Planerade: Kommande aktiviteter."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__duration_tracking
@@ -4564,7 +4675,7 @@ msgstr "Status tid"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Sub-tasks"
-msgstr "Underaktivitet"
+msgstr "Deluppgifter"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__subtask_allocated_hours
@@ -4614,7 +4725,7 @@ msgstr "Etiketter"
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_tree_project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Task"
-msgstr "Aktivitet"
+msgstr "Uppgift"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__tasks
@@ -4741,8 +4852,8 @@ msgstr "Aktivitetstitel..."
 msgid ""
 "Task Transferred from Project %(source_project)s to %(destination_project)s"
 msgstr ""
-"Uppgift överförd från projekt  %(source_project)s till %"
-"(destination_project)s"
+"Uppgift överförd från projekt  %(source_project)s till %(destination_project)"
+"s"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_waiting
@@ -4812,7 +4923,7 @@ msgstr "Uppgift: Begäran om betyg"
 #: model_terms:ir.ui.view,arch_db:project.view_task_partner_info_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Tasks"
-msgstr "Aktiviteter"
+msgstr "Uppgifter"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree
@@ -4823,7 +4934,7 @@ msgstr "Aktiviteter"
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_pivot
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Tasks Analysis"
-msgstr "Aktivietetsanalys"
+msgstr "Uppgiftsanalyser"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5552,7 +5663,7 @@ msgstr "Användarinställningar"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_user
-msgid "User can user the your employees' schedule"
+msgid "User: Can manage tasks in projects shared with them."
 msgstr ""
 
 #. module: project
@@ -5601,8 +5712,8 @@ msgstr "Väntar"
 msgid ""
 "Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
 msgstr ""
-"Vill du ha ett bättre verktyg för <b>administration av dina projekt</b>? "
-"<i>det börjar här.</i>"
+"Vill du ha ett bättre verktyg för <b>administration av dina projekt</b>? <i>"
+"det börjar här.</i>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__website_message_ids
@@ -6096,6 +6207,9 @@ msgstr "👤 Ej tilldelad"
 #: code:addons/project/models/project_task.py:0
 msgid "🔒 Private"
 msgstr "🔒 Privat"
+
+#~ msgid " All internal users and invited portal users"
+#~ msgstr " Alla interna användare och inbjudna portalanvändare"
 
 #~ msgid "Invalid fields: "
 #~ msgstr "Ogiltiga fält: "

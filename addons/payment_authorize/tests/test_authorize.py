@@ -2,10 +2,14 @@
 
 from unittest.mock import patch
 
+import requests
+
+from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment_authorize.models.authorize_request import AuthorizeAPI
 from odoo.addons.payment_authorize.tests.common import AuthorizeCommon
 
 
@@ -62,6 +66,33 @@ class AuthorizeTest(AuthorizeCommon):
             })
         self.assertEqual(amount_data, None)  # Amount validation is skipped.
 
+    @mute_logger('odoo.addons.payment_authorize.models.authorize_request')
+    def test_get_transaction_details_raises_on_timeout(self):
+        """Transport failures fetching details should raise ValidationError."""
+        authorize_api = AuthorizeAPI(self.authorize)
+        with patch(
+            'odoo.addons.payment_authorize.models.authorize_request.requests.post',
+            side_effect=requests.exceptions.Timeout(),
+        ):
+            with self.assertRaises(ValidationError):
+                authorize_api.get_transaction_details('60012345678')
+
+    def test_amount_validation_is_skipped_when_transaction_details_request_fails(self):
+        """Test that a ValidationError fetching details skips amount validation."""
+        tx = self._create_transaction('direct')
+        with patch(
+            'odoo.addons.payment_authorize.models.authorize_request.AuthorizeAPI'
+            '.get_transaction_details',
+            side_effect=ValidationError(''),
+        ):
+            amount_data = tx._extract_amount_data({
+                'response': {
+                    'x_response_code': '1',
+                    'x_trans_id': '60012345678',
+                },
+            })
+        self.assertEqual(amount_data, None)  # Amount validation is skipped.
+
     def test_voiding_confirmed_tx_cancels_it(self):
         """ Test that voiding a transaction cancels it even if it's already confirmed. """
         source_tx = self._create_transaction('direct', state='done')
@@ -95,3 +126,41 @@ class AuthorizeTest(AuthorizeCommon):
             'provider_ref': '123456789',
             'authorize_profile': '987654321',
         })
+
+    def test_validation_tx_is_tokenized_before_being_voided(self):
+        """Test that the tokenization request is sent before the void request.
+        The customer profile can only be created from a transaction that has not been voided yet,
+        so the tokenization must happen before the validation transaction is voided.
+        """
+        tx = self._create_transaction("direct", operation="validation", tokenize=True)
+        call_order = []
+
+        def tokenize(*args, **kwargs):
+            call_order.append("tokenize")
+            tx.tokenize = False
+
+        def void(*args, **kwargs):
+            call_order.append("void")
+
+        with (
+            patch(
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._tokenize",
+                side_effect=tokenize,
+            ),
+            patch(
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._void",
+                side_effect=void,
+            ),
+        ):
+            tx._process(
+                "authorize",
+                {
+                    "response": {
+                        "x_response_code": "1",
+                        "x_type": "auth_only",
+                        "x_trans_id": "test_trans_id",
+                    }
+                },
+            )
+
+        self.assertEqual(call_order, ["tokenize", "void"])

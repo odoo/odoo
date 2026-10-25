@@ -97,6 +97,29 @@ test("Functions with a wrong company id is correctly in error", async () => {
     expect(getEvaluatedCell(model, "A1").message).toBe("Currency not available for this company.");
 });
 
+test("string company_id is converted to integer before server request", async () => {
+    const { model } = await createModelWithDataSource({
+        mockRPC: async function (_route, args) {
+            if (args.method === "spreadsheet_fetch_debit_credit") {
+                for (const blob of args.args[0]) {
+                    expect(blob.company_id).toBe(1);
+                }
+                expect.step("spreadsheet_fetch_debit_credit");
+                return [{ debit: 10, credit: 5 }];
+            }
+        },
+    });
+    // passing company_id as the string "1" -> server must receive integer 1, not the string
+    setCellContent(model, "A1", `=ODOO.CREDIT("100", "2022", 0, "1")`);
+    setCellContent(model, "A2", `=ODOO.DEBIT("100", "2022", 0, "1")`);
+    setCellContent(model, "A3", `=ODOO.BALANCE("100", "2022", 0, "1")`);
+    await waitForDataLoaded(model);
+    expect(getCellValue(model, "A1")).toBe(5);
+    expect(getCellValue(model, "A2")).toBe(10);
+    expect(getCellValue(model, "A3")).toBe(5);
+    expect.verifySteps(["spreadsheet_fetch_debit_credit"]);
+});
+
 test("formula with invalid date", async () => {
     const { model } = await createModelWithDataSource();
     setCellContent(model, "A1", `=ODOO.CREDIT("100",)`);

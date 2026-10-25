@@ -58,7 +58,7 @@ describe("Checklist", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                     <ul class="o_checklist">
-                        <li class="o_checked">
+                        <li class="o_checked o_checked_has_nested_list">
                             <p>abc</p>
                             <ul class="o_checklist">
                                 <li class="o_checked">d[e]f</li>
@@ -78,7 +78,7 @@ describe("Checklist", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                     <ul class="o_checklist">
-                        <li class="o_checked">
+                        <li class="o_checked o_checked_has_nested_list">
                             <p>abc</p>
                             <ul class="o_checklist">
                                 <li>d[e]f</li>
@@ -205,7 +205,7 @@ describe("Checklist", () => {
             contentBefore: unformat(`
                     <ul class="o_checklist">
                         <li class="o_checked">abc</li>
-                        <li class="o_checked">d[e]f
+                        <li class="o_checked o_checked_has_nested_list">d[e]f
                             <ul class="o_checklist">
                                 <li class="o_checked">ghi</li>
                             </ul>
@@ -214,7 +214,7 @@ describe("Checklist", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                     <ul class="o_checklist">
-                        <li class="o_checked"><p>abc</p>
+                        <li class="o_checked o_checked_has_nested_list"><p>abc</p>
                             <ul class="o_checklist">
                                 <li class="o_checked"><p>d[e]f</p></li>
                                 <li class="o_checked">ghi</li>
@@ -262,7 +262,7 @@ describe("Checklist", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                     <ul class="o_checklist">
-                        <li class="o_checked"><p>abc</p>
+                        <li class="o_checked o_checked_has_nested_list"><p>abc</p>
                             <ul class="o_checklist">
                                 <li><p>d[e]f</p></li>
                                 <li>ghi</li>

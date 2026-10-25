@@ -101,3 +101,31 @@ registry.category("web_tour.tours").add("invoicePoSOrderWithSelfInvocing", {
         },
     ],
 });
+registry.category("web_tour.tours").add("invoicePoSOrderWithPartner", {
+    steps: () => [
+        {
+            trigger: "input[name='pos_reference']",
+            run: "edit 2500-002-00003",
+        },
+        {
+            trigger: ".o_portal_wrap input[name='date_order']",
+            run: function () {
+                const date_order = luxon.DateTime.now();
+                document.querySelector(".o_portal_wrap input[name='date_order']").value =
+                    date_order.toFormat("yyyy-MM-dd");
+            },
+        },
+        {
+            trigger: ".o_portal_wrap input[name='ticket_code']",
+            run: "edit inPoS",
+        },
+        {
+            trigger: ".o_portal_wrap button:contains('Request Invoice')",
+            run: "click",
+            expectUnloadPage: true,
+        },
+        {
+            trigger: ".rounded.text-bg-success.fw-normal.badge",
+        },
+    ],
+});

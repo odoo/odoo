@@ -1,11 +1,14 @@
 import uuid
+from base64 import b64decode
+from urllib.parse import quote, urlencode, urlparse
+
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
-from urllib.parse import quote, urlencode, urlparse
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import SQL
+
 from odoo.addons.l10n_tr_nilvera.const import NILVERA_ERROR_CODE_MESSAGES
 from odoo.addons.l10n_tr_nilvera.lib.nilvera_client import _get_nilvera_client
 
@@ -80,14 +83,16 @@ class AccountMove(models.Model):
             return self.env['account.edi.xml.ubl.tr']
         return super()._get_ubl_cii_builder_from_xml_tree(tree)
 
-    def button_draft(self):
-        # EXTENDS account
+    def _l10n_tr_nilvera_check_reset_to_draft(self):
         for move in self.filtered(lambda move: move.l10n_tr_nilvera_uuid and move.move_type == 'out_invoice'):
             if move.l10n_tr_nilvera_send_status == 'error':
                 move.message_post(body=_("To preserve accounting integrity and comply with legal requirements, invoices cannot be reused once an error occurs. Please create a new invoice to continue."))
             elif move.l10n_tr_nilvera_send_status != 'not_sent':
                 raise UserError(_("You cannot reset to draft an entry that has been sent to Nilvera."))
-        super().button_draft()
+
+    def button_draft(self):
+        self._l10n_tr_nilvera_check_reset_to_draft()
+        return super().button_draft()
 
     def _post(self, soft=True):
         for move in self:
@@ -363,7 +368,7 @@ class AccountMove(models.Model):
             'name': filename,
             'res_id': invoice.id,
             'res_model': 'account.move',
-            'datas': response,
+            'raw': b64decode(response),
             'type': 'binary',
             'mimetype': 'application/pdf',
         })
@@ -372,6 +377,10 @@ class AccountMove(models.Model):
         invoice.with_context(no_new_invoice=True).message_post(attachment_ids=attachment.ids)
 
     def l10n_tr_nilvera_get_pdf(self):
+        invoices_to_refresh = self.filtered(lambda inv: inv.l10n_tr_nilvera_send_status in {'waiting', 'sent', 'unknown'})
+        if invoices_to_refresh:
+            invoices_to_refresh._l10n_tr_nilvera_get_submitted_document_status()
+
         with _get_nilvera_client(self.env.company) as client:
             for invoice in self:
                 if (
@@ -384,7 +393,7 @@ class AccountMove(models.Model):
                     client,
                     invoice,
                     invoice.l10n_tr_nilvera_uuid,
-                    document_category="Sale",
+                    document_category=invoice._l10n_tr_get_document_category(invoice.l10n_tr_nilvera_customer_status),
                     invoice_channel=invoice.l10n_tr_nilvera_customer_status,
                 )
 
@@ -424,6 +433,12 @@ class AccountMove(models.Model):
             for line in self.invoice_line_ids
         )
 
+    def _l10n_tr_nilvera_einvoice_check_lines_missing_taxes(self):
+        return any(
+            line.display_type == 'product' and not line.tax_ids
+            for line in self.invoice_line_ids
+        )
+
     def _get_partner_l10n_tr_nilvera_customer_alias_name(self):
         # Allows overriding the default customer alias with a custom one.
         self.ensure_one()
@@ -440,7 +455,7 @@ class AccountMove(models.Model):
 
     def _l10n_tr_nilvera_company_get_documents(self, invoice_channel, category, journal_type):
         for company in self.env.companies:
-            if company.country_code != "TR" or not company.l10n_tr_nilvera_api_key:
+            if company.country_code != "TR" or not company.sudo().l10n_tr_nilvera_api_key:
                 continue
             self.with_company(company)._l10n_tr_nilvera_get_documents(invoice_channel, category, journal_type)
 
@@ -455,7 +470,7 @@ class AccountMove(models.Model):
 
     def _cron_nilvera_get_invoice_status(self):
         invoices_to_update = self.env['account.move'].search([
-            ('l10n_tr_nilvera_send_status', 'in', ['waiting', 'sent']),
+            ('l10n_tr_nilvera_send_status', 'in', ['waiting', 'sent', 'unknown']),
             ('move_type', 'in', self._l10n_tr_types_to_update_status()),
         ])
         invoices_to_update._l10n_tr_nilvera_get_submitted_document_status()
@@ -490,6 +505,6 @@ class AccountMove(models.Model):
                         client,
                         invoice,
                         invoice.l10n_tr_nilvera_uuid,
-                        document_category="Sale",
+                        document_category=invoice._l10n_tr_get_document_category(invoice.l10n_tr_nilvera_customer_status),
                         invoice_channel=invoice.l10n_tr_nilvera_customer_status,
                     )

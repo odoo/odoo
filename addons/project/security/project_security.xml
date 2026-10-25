@@ -9,7 +9,7 @@
 
     <record id="group_project_user" model="res.groups">
         <field name="name">User</field>
-        <field name="comment">User can user the your employees' schedule</field>
+        <field name="comment">User: Can manage tasks in projects shared with them.</field>
         <field name="sequence">10</field>
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         <field name="privilege_id" ref="res_groups_privilege_project"/>
@@ -17,7 +17,7 @@
 
     <record id="group_project_manager" model="res.groups">
         <field name="name">Administrator</field>
-        <field name="comment">Administrator can manage the employees' schedule</field>
+        <field name="comment">Administrator: Can manage projects and stages, with access to reporting and configuration.</field>
         <field name="sequence">20</field>
         <field name="privilege_id" ref="res_groups_privilege_project"/>
         <field name="implied_ids" eval="[(4, ref('project.group_project_user')), (4, ref('mail.group_mail_canned_response_admin'))]"/>
@@ -236,6 +236,23 @@
         <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
         <field name="perm_read" eval="False"/>
         <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="project_task_rule_portal_project_sharing_create_access" model="ir.rule">
+        <field name="name">Project/Task: portal users: portal user can create with project sharing feature</field>
+        <field name="model_id" ref="project.model_project_task"/>
+        <field name="active" model="ir.rule"
+            eval="obj().env.ref('project.project_task_rule_portal_project_sharing').active"/>
+        <field name="domain_force">[
+            ('project_id.privacy_visibility', 'in', ['invited_users', 'portal']),
+            ('active', '=', True),
+            ('project_id.collaborator_ids.partner_id', '=', user.partner_id.id),
+        ]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="False"/>
         <field name="perm_create" eval="True"/>
         <field name="perm_unlink" eval="False"/>
     </record>

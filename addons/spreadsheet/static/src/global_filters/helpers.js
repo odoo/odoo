@@ -115,7 +115,7 @@ export function dateFilterValueToString(value) {
                     DateTime.fromISO(value.from).startOf("day"),
                     DateTime.fromISO(value.to).endOf("day")
                 );
-                return interval.toLocaleString(DateTime.DATE_FULL);
+                return interval.toLocaleString(DateTime.DATE_FULL).replace(/\s+–\s+/, " – ");
             } else if (value.from) {
                 return _t("Since %(from)s", {
                     from: DateTime.fromISO(value.from).toLocaleString(DateTime.DATE_FULL),

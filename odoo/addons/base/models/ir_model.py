@@ -171,9 +171,17 @@ def upsert_en(model, fnames, rows, conflict):
         excluded=comma(
             (
                 SQL(
-                    "COALESCE(%s, '{}'::jsonb) || EXCLUDED.%s",
-                    SQL.identifier(model._table, fname),
-                    SQL.identifier(fname),
+                    """CASE
+                        WHEN %(old)s ->> 'en_US' IS DISTINCT FROM %(new)s ->> 'en_US'
+                            -- the source text changed: existing translations were
+                            -- made for a source that no longer exists, drop them so
+                            -- they get reloaded fresh instead of being kept as if
+                            -- they still applied to the current source
+                            THEN %(new)s
+                        ELSE COALESCE(%(old)s, '{}'::jsonb) || %(new)s
+                       END""",
+                    old=SQL.identifier(model._table, fname),
+                    new=SQL("EXCLUDED.%s", SQL.identifier(fname)),
                 )
                 if model._fields[fname].translate is True
                 else SQL("EXCLUDED.%s", SQL.identifier(fname))
@@ -484,7 +492,7 @@ class IrModel(models.Model):
             '_description': model_data['name'],
             '_module': False,
             '_custom': True,
-            '_abstract': bool(model_data['abstract']),
+            '_abstract': bool(model_data.get('abstract', False)),
             '_transient': bool(model_data['transient']),
             '_order': model_data['order'],
             '_fold_name': model_data['fold_name'],
@@ -770,6 +778,21 @@ class IrModelFields(models.Model):
         for rec in self:
             if rec.relation_table:
                 models.check_pg_name(rec.relation_table)
+
+    @api.constrains('relation', 'relation_field')
+    def _check_relation_field(self):
+        if any(
+            (rec := record).state == 'manual'
+            and rec.ttype == 'one2many'
+            and rec.relation_field
+            and not self._get(rec.relation, rec.relation_field)
+            for record in self
+        ):
+            raise ValidationError(_(
+                "Unknown field “%(field)s” on model “%(model)s” in Relation Field",
+                field=rec.relation_field,
+                model=rec.relation,
+            ))
 
     @api.constrains('currency_field')
     def _check_currency_field(self):
@@ -2351,6 +2374,7 @@ class IrModelData(models.Model):
 
         # query xml_ids by prefix
         result = []
+        self.flush_model()
         cr = self.env.cr
         for prefix, suffixes in bymodule.items():
             query = """

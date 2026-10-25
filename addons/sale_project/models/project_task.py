@@ -101,10 +101,11 @@ class ProjectTask(models.Model):
     def _inverse_partner_id(self):
         for task in self:
             # check that sale_line_id/sale_order_id and customer are consistent
+            task_sale_order_sudo = task.sale_order_id.sudo()
             consistent_partners = (
-                task.sale_order_id.partner_id
-                | task.sale_order_id.partner_invoice_id
-                | task.sale_order_id.partner_shipping_id
+                task_sale_order_sudo.partner_id
+                | task_sale_order_sudo.partner_invoice_id
+                | task_sale_order_sudo.partner_shipping_id
             ).commercial_partner_id
             if task.sale_order_id and task.partner_id.commercial_partner_id not in consistent_partners:
                 task.sale_order_id = task.sale_line_id = False

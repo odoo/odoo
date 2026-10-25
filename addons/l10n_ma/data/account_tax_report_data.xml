@@ -1226,6 +1226,11 @@
                         <field name="name@fr">Pourcentage de déductions proratisées (ADC110)</field>
                         <field name="code">l10n_ma_vat_d_prorata</field>
                         <field name="expression_ids">
+                            <record id="l10n_ma_vat_d_prorata_pro_default" model="account.report.expression">
+                                <field name="label">_default_pro</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">100</field>
+                            </record>
                             <record id="l10n_ma_vat_d_prorata_pro" model="account.report.expression">
                                 <field name="label">pro</field>
                                 <field name="engine">external</field>

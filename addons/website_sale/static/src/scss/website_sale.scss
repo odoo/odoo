@@ -55,7 +55,7 @@
     // === Content (Right) =====================================================
     // == Main content wrapper
     #products_grid {
-        overflow: auto;
+        overflow: visible;
         container-type: inline-size;
         container-name: o-wsale-grid;
         grid-template-rows: minmax(auto, auto);
@@ -1019,6 +1019,7 @@ $-product-ratios-map: (
     .o_wsale_image_viewer_ratio_#{$-ratio-name},
     .o_wsale_product_page_opt_image_ratio_#{$-ratio-name} {
         --o-wsale-product-image-ratio: #{$-ratio-value};
+        --o-wsale-product-thumbnail-ratio: #{if($-ratio-name == 'auto', 1, $-ratio-value)};
         @if($-ratio-name == 'auto') {
             & img {
                 object-fit: contain !important; 
@@ -1068,7 +1069,6 @@ $-product-radius-map: (
     padding-top: map-get($spacers, 3);
     padding-left: var(--o-wsale-product-col-details-padding-left, calc(var(--gutter-x) * .5));
     padding-right: var(--o-wsale-product-col-details-padding-right, calc(var(--gutter-x) * .5));
-    background-color: $body-bg;
     container: product-details / inline-size;
     z-index: 0;
 
@@ -1330,6 +1330,16 @@ $-product-radius-map: (
 #o_wsale_cta_wrapper {
     &.o_wsale_cta_wrapper_boxed {
         max-width: 26rem;
+
+        .product_price {
+            label {
+                overflow-wrap: anywhere;
+            }
+
+            td > .d-flex {
+                flex-wrap: wrap;
+            }
+        }
     }
 
     &.o_wsale_cta_wrapper_large .css_quantity {
@@ -1538,6 +1548,10 @@ $-product-radius-map: (
         aspect-ratio: var(--o-wsale-product-image-ratio);
     }
 
+    .carousel-item > .o_product_detail_img_wrapper {
+        min-height: inherit;
+    }
+
     // Hide controls when not hovering on desktop
     @include media-breakpoint-up(xl) {
         &:not(:hover) {
@@ -1577,7 +1591,7 @@ $-product-radius-map: (
                     & > div,
                     & > div > img {
                         border-radius: MIN(var(--o-wsale-product-image-radius), var(--border-radius));
-                        aspect-ratio: var(--o-wsale-product-image-ratio);
+                        aspect-ratio: var(--o-wsale-product-thumbnail-ratio);
                     }
 
                     .o_product_video_thumb {
@@ -1928,7 +1942,7 @@ $-product-radius-map: (
 
 .oe_website_sale {
     // Changes the chevron color to contrast with user's theme background color
-    .accordion-button:not(.collapsed)::after {
+    .accordion-button::after {
         background-image: escape-svg($accordion-button-icon);
     }
 

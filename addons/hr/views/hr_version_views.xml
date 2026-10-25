@@ -23,6 +23,7 @@
                 <field name="create_date" optional="hide"/>
                 <field name="last_modified_uid" optional="hide" readonly="1"/>
                 <field name="last_modified_date" optional="hide" readonly="1"/>
+                <button name="action_open_version_form_view" type="object" string="View" class="btn-link" groups="base.group_no_one"/>
             </list>
         </field>
     </record>
@@ -85,12 +86,12 @@
                 <separator />
                 <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
-                    domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    domain="[('my_activity_date_deadline', '&lt;', 'today')]"
                     help="Show all records whose next activity date is past"/>
                 <filter invisible="1" string="Today Activities" name="activities_today"
-                    domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    domain="[('my_activity_date_deadline', '=', 'today')]"/>
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                    domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    domain="[('my_activity_date_deadline', '&gt;', 'today')]"/>
 
                 <filter string="Employee" name="group_by_employee" domain="[]" context="{'group_by': 'employee_id'}"/>
                 <separator />
@@ -110,7 +111,6 @@
         <field name="view_mode">list,graph,pivot</field>
         <field name="view_ids" eval="[(5, 0, 0),
             (0, 0, {'view_mode': 'list', 'view_id': ref('hr.hr_version_list_view')}),
-            (0, 0, {'view_mode': 'kanban'}),
             (0, 0, {'view_mode': 'pivot'})
         ]"/>
         <field name="domain">[('employee_id', '!=', False)]</field>

@@ -25,14 +25,9 @@ export class CategorySelector extends Component {
     }
 
     getCategoriesAndSub() {
-        const { limit_categories, iface_available_categ_ids } = this.pos.config;
-        let rootCategories = this.pos.models["pos.category"].getAll();
-        if (limit_categories && iface_available_categ_ids.length > 0) {
-            rootCategories = iface_available_categ_ids;
-        }
-        rootCategories = rootCategories
-            .filter((category) => !category.parent_id)
-            .sort((a, b) => a.sequence - b.sequence);
+        const rootCategories = [...this.pos.rootCategories].sort(
+            (a, b) => a.sequence - b.sequence || a.name.localeCompare(b.name)
+        );
         const selected = this.pos.selectedCategory ? [this.pos.selectedCategory] : [];
         const allParents = selected.concat(this.pos.selectedCategory?.allParents || []).reverse();
         return this.getCategoriesList(rootCategories, allParents, 0)
@@ -61,9 +56,7 @@ export class CategorySelector extends Component {
     }
 
     getChildCategories(selectedCategory) {
-        return selectedCategory
-            ? [...selectedCategory.child_ids]
-            : this.pos.models["pos.category"].filter((category) => !category.parent_id);
+        return selectedCategory ? [...selectedCategory.child_ids] : this.pos.rootCategories;
     }
 
     getAllSelected() {

@@ -50,7 +50,7 @@ class IrAttachment(models.Model):
                     attachment.image_src = '/web/image/%s-redirect/%s' % (attachment.id, name)
             else:
                 # Adding unique in URLs for cache-control
-                unique = attachment.checksum[:8]
+                unique = attachment.checksum[:8] if attachment.checksum else '0'
                 if attachment.url:
                     # For attachments-by-url, unique is used as a cachebuster. They
                     # currently do not leverage max-age headers.
@@ -84,3 +84,6 @@ class IrAttachment(models.Model):
         - Non admin user uploading an unsplash image (bypass binary/url check)
         """
         return False
+
+    def _get_mimetype_exempt_groups(self):
+        return []

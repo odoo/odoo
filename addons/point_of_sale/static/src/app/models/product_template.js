@@ -37,18 +37,19 @@ export class ProductTemplate extends ProductTemplateAccounting {
     async _onScaleNotAvailable() {}
 
     isConfigurable() {
-        return this.attribute_line_ids.find(
-            (l) =>
-                l.product_template_value_ids.length > 1 ||
-                l.product_template_value_ids.some((v) => v.is_custom)
+        return (
+            this.attribute_line_ids.map((a) => a.active !== false && a.product_template_value_ids)
+                .length >= 1
         );
     }
 
     needToConfigure() {
+        const activeLines = this.attribute_line_ids.filter((l) => l.active !== false);
         return (
-            this.isConfigurable() &&
-            this.attribute_line_ids.length > 0 &&
-            this.attribute_line_ids.some((l) => l.attribute_id.create_variant === "no_variant")
+            this.isCombo() ||
+            (this.isConfigurable() &&
+                activeLines.length > 0 &&
+                activeLines.some((l) => l.attribute_id.create_variant === "no_variant"))
         );
     }
 
@@ -98,6 +99,40 @@ export class ProductTemplate extends ProductTemplateAccounting {
 
     getImageUrl() {
         return `/web/image?model=product.template&field=image_128&id=${this.id}&unique=${this.write_date}`;
+    }
+
+    hasDynamicAttributes() {
+        return this.attribute_line_ids.some(
+            (line) => line.attribute_id.create_variant === "dynamic"
+        );
+    }
+
+    getVariantForCombination(attributeValues) {
+        const valueIds = attributeValues
+            .filter((value) => value.attribute_id.create_variant !== "no_variant")
+            .map(({ id }) => id);
+        if (!valueIds.length) {
+            return false;
+        }
+
+        return (
+            this.product_variant_ids.find((variant) => {
+                // Not product_template_variant_value_ids: its domain drops values from
+                // single-value attribute lines, which are part of the combination.
+                const variantValueIds = variant.product_template_attribute_value_ids.map(
+                    ({ id }) => id
+                );
+                return valueIds.every((id) => variantValueIds.includes(id));
+            }) || false
+        );
+    }
+
+    isDeletedCombination(attributeValues) {
+        return (
+            !this.hasDynamicAttributes() &&
+            attributeValues.some((value) => value.attribute_id.create_variant !== "no_variant") &&
+            !this.getVariantForCombination(attributeValues)
+        );
     }
 
     _isArchivedCombination(attributeValueIds) {

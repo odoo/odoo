@@ -1,14 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest import skip
-
-from odoo import fields, tools
+from odoo import fields
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.tests import tagged, common, Form
 
 
 @tagged('-at_install', 'post_install')
-@skip('Temporary to fast merge new valuation')
 class TestLifoPrice(ValuationReconciliationTestCommon):
 
     def test_lifoprice(self):
@@ -106,4 +103,4 @@ class TestLifoPrice(ValuationReconciliationTestCommon):
         outgoing_lifo_shipment.button_validate()
 
         # Check if the move value correctly reflects the fifo costing method
-        self.assertEqual(outgoing_lifo_shipment.move_ids.mapped('value'), 1400.0, 'Stock move value should have been 1400 euro')
+        self.assertEqual(outgoing_lifo_shipment.move_ids.value, 1400.0, 'Stock move value should have been 1400 euro')

@@ -276,7 +276,13 @@ class StockMove(models.Model):
                 if not values.get('location_dest_id'):
                     values['location_dest_id'] = mo.location_dest_id.id
                 if not values.get('location_final_id'):
-                    values['location_final_id'] = mo.warehouse_id.lot_stock_id.id
+                    warehouse = mo.location_dest_id.warehouse_id
+                    if warehouse.sam_loc_id and mo.location_dest_id._child_of(warehouse.sam_loc_id):
+                        # in 3 steps, the finished product is pushed afterwards
+                        sam_rule = warehouse.pbm_route_id.rule_ids.filtered(lambda r: r.picking_type_id == warehouse.sam_type_id)[:1]
+                        values['location_final_id'] = sam_rule.location_dest_id.id or mo.location_dest_id.id
+                    else:
+                        values['location_final_id'] = mo.location_dest_id.id
         return super().create(vals_list)
 
     def write(self, vals):
@@ -349,14 +355,6 @@ class StockMove(models.Model):
         if procurements:
             self.env['stock.rule'].run(procurements)
 
-    def _action_assign(self, force_qty=False):
-        res = super(StockMove, self)._action_assign(force_qty=force_qty)
-        for move in self.filtered(lambda x: x.production_id or x.raw_material_production_id):
-            if move.move_line_ids:
-                move.move_line_ids.write({'production_id': move.raw_material_production_id.id,
-                                               'workorder_id': move.workorder_id.id,})
-        return res
-
     def _action_confirm(self, merge=True, merge_into=False, create_proc=True):
         moves = self.action_explode()
         merge_into = merge_into and merge_into.action_explode()
@@ -372,6 +370,10 @@ class StockMove(models.Model):
 
     def _should_bypass_reservation(self, forced_location=False):
         return super()._should_bypass_reservation(forced_location) or self.product_id.with_company(self.company_id).is_kits
+
+    def _should_be_auto_picked(self):
+        self.ensure_one()
+        return (self.manual_consumption or (self.has_tracking != 'none' and self.move_orig_ids and self.lot_ids)) and not self.picked
 
     def action_explode(self):
         """ Explodes pickings """
@@ -514,6 +516,12 @@ class StockMove(models.Model):
     def _is_consuming(self):
         return super()._is_consuming() or self.picking_type_id.code == 'mrp_operation'
 
+    def _get_quantity_to_assign(self):
+        res = super()._get_quantity_to_assign()
+        if self.raw_material_production_id and self.raw_material_production_id.qty_producing:
+            return self.product_uom._compute_quantity(self.should_consume_qty, self.product_id.uom_id)
+        return res
+
     def _get_backorder_move_vals(self):
         self.ensure_one()
         return {
@@ -561,7 +569,16 @@ class StockMove(models.Model):
 
     def _key_assign_picking(self):
         keys = super(StockMove, self)._key_assign_picking()
-        return keys + (self.created_production_id,)
+        keys += (self.created_production_id,)
+        if self._feeds_raw_material_production():
+            keys += (self.production_group_id,)
+        return keys
+
+    def _feeds_raw_material_production(self):
+        """Whether this move directly or indirectly supplies components for a production
+        (i.e. ends up in a `raw_material_production_id`).
+        """
+        return bool(self.browse(self._rollup_move_dests()).raw_material_production_id)
 
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
@@ -654,6 +671,8 @@ class StockMove(models.Model):
         return domain
 
     def _get_production_assignation_domain(self):
+        if not self._feeds_raw_material_production():
+            return []
         return [('production_group_id', '=', self.production_group_id.id)]
 
     def action_open_reference(self):

@@ -33,8 +33,11 @@ class StockPicking(models.Model):
 
     @api.depends('partner_id', 'carrier_id.max_weight', 'carrier_id.max_volume', 'carrier_id.must_have_tag_ids', 'carrier_id.excluded_tag_ids', 'move_ids.product_id.product_tag_ids', 'move_ids.product_id.weight', 'move_ids.product_id.volume')
     def _compute_allowed_carrier_ids(self):
+        all_carriers = self.env['delivery.carrier'].search(
+            self.env['delivery.carrier']._check_company_domain(self.company_id)
+        )
         for picking in self:
-            carriers = self.env['delivery.carrier'].search(self.env['delivery.carrier']._check_company_domain(picking.company_id))
+            carriers = all_carriers.filtered(lambda c: not c.company_id or c.company_id == picking.company_id)
             picking.allowed_carrier_ids = carriers.available_carriers(picking.partner_id, picking) if picking.partner_id else carriers
 
     @api.depends('carrier_id', 'carrier_tracking_ref')
@@ -188,7 +191,7 @@ class StockPicking(models.Model):
             if not delivery_lines:
                 delivery_lines = sale_order._create_delivery_line(self.carrier_id, self.carrier_price)
             vals = self._prepare_sale_delivery_line_vals()
-            delivery_lines[0].write(vals)
+            delivery_lines[0].with_context(allow_delivery_cost_update=True).write(vals)
 
     def open_website_url(self):
         self.ensure_one()
@@ -217,7 +220,7 @@ class StockPicking(models.Model):
 
     def cancel_shipment(self):
         for picking in self:
-            picking.carrier_id.cancel_shipment(self)
+            picking.carrier_id.cancel_shipment(picking)
             msg = "Shipment %s cancelled" % picking.carrier_tracking_ref
             picking.message_post(body=msg)
             picking.carrier_tracking_ref = False

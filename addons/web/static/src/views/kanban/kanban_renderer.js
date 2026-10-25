@@ -261,6 +261,7 @@ export class KanbanRenderer extends Component {
                 );
                 let groupIdToFocus = this.lastOpenedGroupId;
                 if (
+                    lastOpenedGroupIndex >= 0 &&
                     lastOpenedGroupIndex < groups.length - 1 &&
                     groups[lastOpenedGroupIndex + 1].group.isFolded
                 ) {
@@ -269,10 +270,12 @@ export class KanbanRenderer extends Component {
                 const groupEl = this.rootRef.el.querySelector(
                     `.o_kanban_group[data-id="${groupIdToFocus}"]`
                 );
-                const rect = groupEl.getBoundingClientRect();
-                // Don't scroll if the group to focus is completely inside of the viewport
-                if (rect.x + rect.width > window.innerWidth) {
-                    groupEl.scrollIntoView({ behavior: "smooth", inline: "end" });
+                if (groupEl) {
+                    const rect = groupEl.getBoundingClientRect();
+                    // Don't scroll if the group to focus is completely inside of the viewport
+                    if (rect.x + rect.width > window.innerWidth) {
+                        groupEl.scrollIntoView({ behavior: "smooth", inline: "end" });
+                    }
                 }
                 delete this.lastOpenedGroupId;
             }

@@ -104,3 +104,9 @@ class StockScrap(models.Model):
                 'production_group_id': self.production_id.production_group_id.id,
             })
         super().do_replenish(values)
+
+    def do_scrap(self):
+        for scrap in self:
+            if scrap.production_id and scrap.lot_id:
+                scrap.production_id.move_raw_ids.move_line_ids.filtered(lambda ml: ml.lot_id == scrap.lot_id).picked = False
+        return super().do_scrap()

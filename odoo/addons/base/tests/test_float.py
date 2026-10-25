@@ -3,7 +3,7 @@
 from math import log10
 
 from odoo.tests.common import TransactionCase
-from odoo.tools import float_compare, float_is_zero, float_repr, float_round, float_split, float_split_str
+from odoo.tools import float_compare, float_div, float_is_zero, float_repr, float_round, float_split, float_split_str
 
 
 class TestFloatPrecision(TransactionCase):
@@ -242,6 +242,40 @@ class TestFloatPrecision(TransactionCase):
         try_split(0.1, (0, 10), float_split)
         try_split(13.0, (13, 0), float_split, rounding=0)
 
+    def test_float_div_06(self):
+        """ Test euclidean division at a given precision. """
+        def try_div(value1, value2, expected, digits=2, rounding=None):
+            kwargs = {'precision_rounding': rounding} if rounding else {'precision_digits': digits}
+            result = float_div(value1, value2, **kwargs)
+            self.assertEqual(result, expected, 'Div error: got %s, expected %s' % (result, expected))
+
+        # exact multiples where the naive operators give a wrong result:
+        # ``value1 % value2`` leaves a spurious remainder while
+        # ``int(value1 / value2)`` truncates the quotient too low
+        try_div(50.4, 16.8, (3, 0.0))  # 50.4 % 16.8 == 16.799999999999997
+        try_div(0.3, 0.1, (3, 0.0))  # int(0.3 / 0.1) == 2
+        try_div(7.35, 1.05, (7, 0.0))  # int(7.35 / 1.05) == 6
+        try_div(0.1 + 0.2, 0.1, (3, 0.0))  # 0.1 + 0.2 == 0.30000000000000004
+
+        # genuine, non-zero remainders are reported at the given precision
+        try_div(50.5, 16.8, (3, 0.1))
+        try_div(0.25, 0.1, (2, 0.05))
+        try_div(0.07, 0.1, (0, 0.07))  # divisor greater than the dividend
+
+        # negative dividends floor towards minus infinity
+        try_div(-0.3, 0.1, (-3, 0.0))
+        try_div(-50.5, 16.8, (-4, 16.7))
+
+        # precision given as a rounding step instead of a number of digits
+        try_div(1.0, 0.05, (20, 0.0), rounding=0.05)
+        try_div(4.35, 0.05, (87, 0.0), rounding=0.05)
+
+        # operands are snapped onto the precision grid before dividing: at a 0.1
+        # step 0.95 and 2.55 round up to 1.0 and 2.6, holding 10 and 26 tenths.
+        # int(0.95 / 0.1) == 9 and int(2.55 / 0.1) == 25, and rounding the native
+        # remainder (0.95 % 0.1 == 0.0499...) would also wrongly report 9 and 25
+        try_div(0.95, 0.1, (10, 0.0), rounding=0.1)
+        try_div(2.55, 0.1, (26, 0.0), rounding=0.1)
 
     def test_rounding_invalid(self):
         """ verify that invalid parameters are forbidden """

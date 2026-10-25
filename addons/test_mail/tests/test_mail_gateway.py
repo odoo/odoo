@@ -275,6 +275,28 @@ class TestMailgateway(MailGatewayCommon):
         self.assertEqual(msg.subtype_id, self.env.ref('mail.mt_comment'))
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_message_process_attachment_charset(self):
+        """Attachment bytes must be stored unchanged, whatever charset the part declares."""
+        test_cases = [
+            ('Período', 'utf-8', 'us-ascii'),
+            ('Período', 'utf-8', 'iso-8859-1'),
+            ('Período', 'utf-8', 'utf-8'),
+            ('請求書', 'shift_jis', 'utf-8'),
+        ]
+        for content_string, content_charset, charset in test_cases:
+            with self.subTest(content_charset=content_charset, charset=charset):
+                content = f'<?xml version="1.0" encoding="{content_charset}"?><r>{content_string}</r>'.encode(content_charset)
+                record = self.format_and_process(
+                    test_mail_data.MAIL_ATTACHMENT_CHARSET_TEMPLATE, self.email_from,
+                    f'groups@{self.alias_domain}', subject=f'Charset {content_charset} as {charset}', charset=charset,
+                    content=base64.b64encode(content).decode('ascii'),
+                )
+                self.assertEqual(
+                    record.message_ids.attachment_ids.raw, content,
+                    'The attachment must keep the bytes that were sent',
+                )
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_process_cid(self):
         origin_message_parse_extract_payload = MailThread._message_parse_extract_payload
 
@@ -1072,6 +1094,22 @@ class TestMailgateway(MailGatewayCommon):
             )
         self.assertFalse(new_recs)
         self.assertNotSentEmail()
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
+    def test_message_route_bounce_multi_company_alias_domain(self):
+        """Incoming emails: company-specific bounce alias from catchall"""
+        with self.mock_mail_gateway():
+            record = self.format_and_process(
+                MAIL_TEMPLATE, self.partner_1.email_formatted,
+                f'{self.alias_catchall_c2}@{self.alias_domain_c2_name}',
+                subject='Test multi-company routing alias',
+            )
+        self.assertFalse(record)
+        self.assertSentEmail(
+            f'"MAILER-DAEMON" <{self.alias_bounce_c2}@{self.alias_domain_c2_name}>',
+            ['whatever-2a840@postmaster.twitter.com'],
+            subject='Re: Test multi-company routing alias'
+        )
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_route_bounce_other_recipients(self):
@@ -1943,15 +1981,9 @@ class TestMailgateway(MailGatewayCommon):
         record = self.format_and_process(test_mail_data.MAIL_MULTIPART_INVALID_ENCODING, self.email_from, f'groups@{self.alias_domain}')
 
         self.assertEqual(record.message_ids.attachment_ids.name, 'bis3_with_error_encoding_address.xml')
-        # NB: the xml received by email contains b"Chauss\xef\xbf\xbd\xef\xbf\xbde" with "\xef\xbf\xbd" being the
-        # replacement character � in UTF-8.
-        # When calling `_message_parse_extract_payload`, `part.get_content()` will be called on the attachment part of
-        # the email, triggering the decoding of the base64 attachment, so b"Chauss\xef\xbf\xbd\xef\xbf\xbde" is
-        # first retrieved. Then, `get_text_content` in `email` tries to decode this using the charset of the email
-        # part, i.e: `content.decode('us-ascii', errors='replace')`. So the errors are replaced using the Unicode
-        # replacement marker and the string "Chauss������e" is used to create the attachment.
-        # This explains the multiple "�" in the attachment.
-        self.assertIn("Chauss������e de Bruxelles", record.message_ids.attachment_ids.raw.decode())
+        # The sender already built a broken file, its xml holds b"Chauss\xef\xbf\xbd\xef\xbf\xbde" where
+        # "\xef\xbf\xbd" is the replacement character � in UTF-8, and the attachment keeps those bytes.
+        self.assertIn("Chauss��e de Bruxelles", record.message_ids.attachment_ids.raw.decode())
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_process_file_omitted_charset_xml(self):
@@ -2732,6 +2764,43 @@ class TestMailGatewayReplies(MailGatewayCommon):
                 },
                 'notif': [
                     {'email_to': [email_normalize(self.email_from)], 'type': 'email'},
+                ],
+                'subtype': 'mail.mt_comment',
+            }],
+        )
+        # second internal user reply (verifies that earlier OOO record with outgoing_email_to=False
+        # does not falsely suppress OOO notification for another internal partner)
+        self.user_employee_c2.notification_type = 'email'
+        with self.mock_datetime_and_now(datetime(2025, 6, 17, 14, 17, 00)):
+            with self.mock_mail_gateway(), self.mock_mail_app():
+                self.format_and_process(
+                    MAIL_TEMPLATE_EXTRA_HTML, self.user_employee_c2.email_formatted,
+                    self.alias.alias_full_name,
+                    extra=f'In-Reply-To:{initial_msg.message_id}\nReferences:{initial_msg.message_id}\n',
+                    extra_html='Employee C2  user reply',
+                    subject='Employee C2 user reply',
+                )
+        self.assertEqual(len(self._new_msgs), 2, 'Employee C2 reply + OOO message sent to employee C2 user')
+        ooo_message_2 = self._new_msgs[1]
+        self.assertMailNotifications(
+            ooo_message_2,
+            [{
+                'content': "<p>Le numéro que vous avez composé n'est plus attribué.</p>",
+                'email_values': {
+                    'subject': 'Auto: Employee C2 user reply',
+                },
+                'message_type': 'out_of_office',
+                'message_values': {
+                    'author_id': self.partner_employee,
+                    'email_from': self.partner_employee.email_formatted,
+                    'model': record._name,
+                    'partner_ids': self.partner_employee_c2,
+                    'notified_partner_ids': self.partner_employee_c2,
+                    'res_id': record.id,
+                    'subject': 'Auto: Employee C2 user reply',
+                },
+                'notif': [
+                    {'partner': self.partner_employee_c2, 'type': 'email'},
                 ],
                 'subtype': 'mail.mt_comment',
             }],

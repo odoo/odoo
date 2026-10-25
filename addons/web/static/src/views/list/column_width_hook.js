@@ -449,7 +449,7 @@ export function useMagicColumnWidths(tableRef, getState) {
         const initialX = ev.clientX;
         const initialWidth = th.getBoundingClientRect().width;
         const initialTableWidth = table.getBoundingClientRect().width;
-        const resizeStoppingEvents = ["keydown", "pointerdown", "pointerup"];
+        const resizeStoppingEvents = ["keydown", "pointerdown", "pointerup", "pointercancel"];
 
         // Fix the width so that if the resize overflows, it doesn't affect the layout of the parent
         if (!table.parentElement.style.width) {
@@ -511,6 +511,7 @@ export function useMagicColumnWidths(tableRef, getState) {
         // - pointerdown (e.g. pressing right click)
         // - pointerup : logical flow of the resizing feature (drag & drop)
         // - keydown : (e.g. pressing 'Alt' + 'Tab' or 'Windows' key)
+        // - pointercancel : the browser takes over the gesture (e.g. touch scroll on tablets)
         for (const eventType of resizeStoppingEvents) {
             window.addEventListener(eventType, stopResize);
         }

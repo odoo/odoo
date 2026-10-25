@@ -273,7 +273,8 @@ class ResUsers(models.Model):
 
         mail_create_values = []
         for user in self:
-            body_html = self.env['mail.render.mixin']._render_template(
+            user_lang = user.lang or self.env.lang or 'en_US'
+            body_html = self.env['mail.render.mixin'].with_context(lang=user_lang)._render_template(
                 'mail.account_security_alert',
                 model='res.users',
                 res_ids=user.ids,
@@ -515,7 +516,7 @@ class ResUsers(models.Model):
         for model_name, activities in activities_model_groups.items():
             Model = self.env[model_name]
             module = Model._original_module
-            icon = module and modules.module.get_module_icon(module)
+            icon = (module and modules.module.get_module_icon(module)) or "/base/static/description/icon.png"
             model = self.env["ir.model"]._get(model_name).with_prefetch(model_ids)
             user_activities[model_name] = {
                 "id": model.id,

@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="pos_self_order.OrderChangeReceipt">
-        <div class="pos-receipt m-0 p-0 pt-5">
+        <div class="pos-receipt m-0 p-0 pt-5 mt-5">
             <div class="receipt-header text-center">
                 <div class="pos-receipt-title" t-if="changes.preset_name">
                     <t t-esc="changes.preset_name"/> <t t-if="changes.preset_time">(<t t-esc="changes.preset_time"/>)</t>
@@ -47,7 +47,6 @@
                     <br/>
                 </t>
             </t>
-            <br />
             <br />
         </div>
     </t>

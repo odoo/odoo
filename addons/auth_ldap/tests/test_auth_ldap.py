@@ -9,6 +9,11 @@ from odoo.tests.common import HttpCase, tagged
 class TestAuthLDAP(HttpCase):
 
     def test_auth_ldap(self):
+        template_user = self.env["res.users"].create({
+            "name": "User Template",
+            "login": "user_template",
+        })
+
         def _get_ldap_dicts(*args, **kwargs):
             return [
                 {
@@ -20,7 +25,7 @@ class TestAuthLDAP(HttpCase):
                     "ldap_password": "admin",
                     "ldap_filter": "cn=%s",
                     "ldap_base": "dc=odoo,dc=com",
-                    "user": (6, "Marc Demo"),
+                    "user": (template_user.id, template_user.name),
                     "create_user": True,
                     "ldap_tls": False,
                 }

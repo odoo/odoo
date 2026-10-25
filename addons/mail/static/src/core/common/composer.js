@@ -37,7 +37,12 @@ import { useService } from "@web/core/utils/hooks";
 import { htmlJoin, isHtmlEmpty, isMarkup, setElementContent } from "@web/core/utils/html";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { isEmail } from "@web/core/utils/strings";
-import { isDisplayStandalone, isIOS, isMobileOS } from "@web/core/browser/feature_detection";
+import {
+    isDisplayStandalone,
+    isIOS,
+    isMacOS,
+    isMobileOS,
+} from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useComposerActions } from "@mail/core/common/composer_actions";
@@ -149,7 +154,7 @@ export class Composer extends Component {
             closeOnClickAway: false,
             closeOnEscape: false,
             position: "top-end",
-            popoverClass: "dropdown-menu bg-view overflow-visible o-rounded-bubble mx-1",
+            popoverClass: "dropdown-menu o-dropdown--menu bg-view overflow-visible o-rounded-bubble mx-1",
         });
         this.fullComposerBus = new EventBus();
         this.selection = useSelection({
@@ -181,12 +186,13 @@ export class Composer extends Component {
             window,
             "click",
             (ev) => {
+                const target = ev.composedPath()[0];
                 if (
                     this.ui.isSmall &&
                     this.composerActions.activePicker &&
                     this.pickerContainerRef.el &&
-                    ev.target !== this.pickerContainerRef.el &&
-                    !this.pickerContainerRef.el.contains(ev.target)
+                    target !== this.pickerContainerRef.el &&
+                    !this.pickerContainerRef.el.contains(target)
                 ) {
                     this.composerActions.activePicker.close?.();
                 }
@@ -203,7 +209,8 @@ export class Composer extends Component {
                 },
                 () =>
                     this.props.allowUpload &&
-                    (!this.store.rtc.state.isFullscreen || this.env.inMeetingView)
+                    (!this.store.rtc.state.isFullscreen || this.env.inMeetingView) &&
+                    (this.props.composer.message || !this.thread?.messageInEdition)
             );
         }
         useChildSubEnv({ inComposer: true });
@@ -411,7 +418,8 @@ export class Composer extends Component {
     }
 
     get sendKeybinds() {
-        return this.env.inChatter ? [_t("CTRL"), _t("Enter")] : [_t("Enter")];
+        const modifierKey = isMacOS() ? _t("CMD") : _t("CTRL");
+        return this.env.inChatter ? [modifierKey, _t("Enter")] : [_t("Enter")];
     }
 
     get showComposerAvatar() {
@@ -451,6 +459,7 @@ export class Composer extends Component {
         const props = {
             anchorRef: this.inputContainerRef.el,
             position: this.env.inChatter ? "bottom-fit" : "top-fit",
+            onClose: () => this.suggestion.dismiss(),
             onSelect: (ev, option) => {
                 this.suggestion.insert(option);
                 markEventHandled(ev, "composer.selectSuggestion");
@@ -531,7 +540,9 @@ export class Composer extends Component {
                 if (this.isMobileOS || ev.isComposing) {
                     return;
                 }
-                const shouldPost = this.env.inChatter ? ev.ctrlKey : !ev.shiftKey;
+                // CMD is the usual modifier on macOS, CTRL is kept for existing habits
+                const modKey = ev.ctrlKey || (isMacOS() && ev.metaKey);
+                const shouldPost = this.env.inChatter ? modKey : !ev.shiftKey;
                 if (!shouldPost) {
                     return;
                 }
@@ -606,12 +617,17 @@ export class Composer extends Component {
             default_partner_ids:
                 this.props.type === "note"
                     ? []
-                    : allRecipients.map((recipient) => recipient.partner_id),
+                    : allRecipients
+                          .filter((recipient) => recipient.partner_id)
+                          .map((recipient) => recipient.partner_id),
             default_res_ids: [this.thread.id],
             default_subtype_xmlid: this.props.type === "note" ? "mail.mt_note" : "mail.mt_comment",
             clicked_on_full_composer: true,
-            body_contains_signature_only: !this.props.composer.composerText || this.props.composer.composerText.trim().length === 0,
+            body_contains_signature_only:
+                !this.props.composer.composerText ||
+                this.props.composer.composerText.trim().length === 0,
             // Changed in 18.2+: finally get rid of autofollow, following should be done manually
+            is_thread_composer: true,
             ...this.fullComposerAdditionalContext,
         };
         const action = {

@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 from io import BytesIO
 from zipfile import ZipFile
 
 from lxml import etree
 from odoo import fields, Command
 from odoo.tests import HttpCase, tagged
+from odoo.tools.pdf import OdooPdfFileWriter
 from odoo.tools.safe_eval import datetime
 
 from odoo.addons.account_edi_ubl_cii.tests.common import TestUblCiiCommon
@@ -72,6 +74,10 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         super().setUp()
 
     def test_export_import_product(self):
+        companies = self.company_data['company'] + self.company_data_2['company']
+        if 'predict_bill_product' in companies._fields:
+            companies.predict_bill_product = True
+
         products = self.env['product.product'].create([{
             'name': 'XYZ',
             'default_code': '1234',
@@ -96,7 +102,7 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
             }, {
                 'product_id': self.displace_prdct.id,
                 'name': 'Displacement',
-                'product_uom_id': self.uom_units.id,
+                'product_uom_id': False,
                 'tax_ids': [self.company_data_2['default_tax_sale'].id]
             }, {
                 'product_id': self.displace_prdct.id,
@@ -144,6 +150,8 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         })]
 
         company.partner_id.with_company(company).invoice_edi_format = 'facturx'
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
 
         invoice = self.env['account.move'].create({
             'company_id': company.id,
@@ -176,6 +184,125 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         new_invoice = invoice.journal_id._create_document_from_attachment(attachment.ids)
         self.assertRecordValues(new_invoice.invoice_line_ids, line_vals)
 
+    def _get_pdf_bytes(self, xml_content=None, filename='factur-x.xml'):
+        """ Small A4 PDF, with `xml_content` embedded as `filename` if given. """
+        a4_width_pt, a4_height_pt = 595, 842
+        writer = OdooPdfFileWriter()
+        writer.addBlankPage(a4_width_pt, a4_height_pt)
+        if xml_content:
+            writer.addAttachment(filename, xml_content, subtype='text/xml', afrelationship='/Alternative')
+        buffer = BytesIO()
+        writer.write(buffer)
+        return buffer.getvalue()
+
+    def _configure_seller_for_cii_export(self):
+        """ Factur-X/ZUGFeRD/CII exports require a fully configured seller (VAT, phone, email,
+        bank account with a sanitized account number) or the export raises validation errors. """
+        company = self.env.company
+        company.write({
+            'country_id': self.env.ref('base.fr').id,
+            'vat': 'FR23334175221',
+            'phone': '+33499999999',
+            'email': 'company@test.example',
+        })
+        company.partner_id.bank_ids = [Command.create({
+            'acc_number': '999999',
+            'partner_id': company.partner_id.id,
+            'allow_out_payment': True,
+        })]
+        return company
+
+    def test_facturx_zugferd_no_duplicate_xml_attachment(self):
+        """ Factur-X/ZUGFeRD embed the XML inside the PDF (hybrid invoice). The XML must not
+        also be attached as a separate file, or some recipient systems detect two invoices. """
+        company = self._configure_seller_for_cii_export()
+        for edi_format in ('facturx', 'zugferd'):
+            with self.subTest(edi_format=edi_format):
+                self.partner_be.invoice_edi_format = edi_format
+                invoice = self._create_invoice_one_line(
+                    partner_id=self.partner_be,
+                    price_unit=100.0,
+                    tax_ids=self.company_data['default_tax_sale'],
+                    partner_bank_id=company.partner_id.bank_ids[:1].id,
+                    post=True,
+                )
+
+                wizard = self._create_account_move_send_wizard_single(invoice, sending_methods=['manual'])
+                self.assertEqual(wizard.invoice_edi_format, edi_format)
+                wizard.action_send_and_print()
+
+                # no wkhtmltopdf in tests: the hook doesn't embed the XML, so put it in the PDF here
+                xml_content = base64.b64decode(invoice.ubl_cii_xml_file)
+                pdf_bytes = self._get_pdf_bytes(xml_content, filename='factur-x.xml')
+                invoice.invoice_pdf_report_file = base64.b64encode(pdf_bytes)
+
+                # the XML was generated and embedded in the PDF...
+                self.assertTrue(invoice.ubl_cii_xml_id)
+                # ...but must not be listed as an extra attachment (it would duplicate the email attachment)
+                extra_attachments = self.env['account.move.send']._get_invoice_extra_attachments(invoice)
+                self.assertEqual(extra_attachments, invoice.invoice_pdf_report_id)
+                self.assertNotIn(invoice.ubl_cii_xml_id, extra_attachments)
+
+    def test_facturx_zugferd_keeps_xml_attachment_if_pdf_not_hybrid(self):
+        """ The PDF is not regenerated when it already exists, so it can be a plain PDF without the
+        XML inside. In that case the XML must still be sent as a separate attachment. """
+        company = self._configure_seller_for_cii_export()
+        self.partner_be.invoice_edi_format = 'zugferd'
+        invoice = self._create_invoice_one_line(
+            partner_id=self.partner_be,
+            price_unit=100.0,
+            tax_ids=self.company_data['default_tax_sale'],
+            partner_bank_id=company.partner_id.bank_ids[:1].id,
+            post=True,
+        )
+        # plain PDF generated before, without any XML embedded
+        invoice.invoice_pdf_report_file = base64.b64encode(self._get_pdf_bytes())
+
+        wizard = self._create_account_move_send_wizard_single(invoice, sending_methods=['manual'])
+        wizard.action_send_and_print()
+
+        self.assertTrue(invoice.ubl_cii_xml_id)
+        extra_attachments = self.env['account.move.send']._get_invoice_extra_attachments(invoice)
+        self.assertIn(invoice.ubl_cii_xml_id, extra_attachments)
+
+    def test_ubl_bis3_keeps_xml_attachment(self):
+        """ Unlike Factur-X/ZUGFeRD, Peppol UBL formats don't embed an identical XML in the PDF,
+        so the standalone XML attachment must still be sent alongside the PDF. """
+        company = self._configure_seller_for_cii_export()
+        self.partner_be.invoice_edi_format = 'ubl_bis3'
+        invoice = self._create_invoice_one_line(
+            partner_id=self.partner_be,
+            price_unit=100.0,
+            name='test line',
+            tax_ids=self.company_data['default_tax_sale'],
+            partner_bank_id=company.partner_id.bank_ids[:1].id,
+            post=True,
+        )
+
+        wizard = self._create_account_move_send_wizard_single(invoice, sending_methods=['manual'])
+        wizard.action_send_and_print()
+
+        extra_attachments = self.env['account.move.send']._get_invoice_extra_attachments(invoice)
+        self.assertIn(invoice.ubl_cii_xml_id, extra_attachments)
+        self.assertIn(invoice.invoice_pdf_report_id, extra_attachments)
+
+    def test_get_invoice_extra_attachments_no_partner(self):
+        """ `_get_invoice_extra_attachments` is called for any account.move opened in the chatter
+        (see `_get_mail_thread_data_attachments`), not just from the Send & Print wizard, so it
+        must not crash on a move without a `partner_id` (lik a plain journal entry). """
+        move = self.env['account.move'].create({
+            'move_type': 'entry',
+            'journal_id': self.company_data['default_journal_misc'].id,
+        })
+        self.assertFalse(move.partner_id)
+        extra_attachments = self.env['account.move.send']._get_invoice_extra_attachments(move)
+        self.assertFalse(extra_attachments)
+
+        # even if a ubl_cii_xml_file ends up set on a partner-less move, it must not crash either
+        move.ubl_cii_xml_file = base64.b64encode(b"<test/>")
+        extra_attachments = self.env['account.move.send']._get_invoice_extra_attachments(move)
+        self.assertIn(move.ubl_cii_xml_id, extra_attachments)
+
     def test_peppol_eas_endpoint_compute(self):
         partner = self.partner_a
         partner.vat = 'DE123456788'
@@ -198,7 +325,7 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
 
         self.assertRecordValues(partner, [{
             'peppol_eas': '9957',
-            'peppol_endpoint': '23334175221',
+            'peppol_endpoint': 'FR23334175221',
         }])
 
         partner.write({
@@ -274,6 +401,63 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         imported_invoice = self._import_invoice_as_attachment_on(attachment=xml_attachment, journal=self.company_data["default_journal_sale"])
         self.assertEqual(imported_invoice.partner_id, partner)
 
+    def test_import_partner_retrieval_bank_account_number(self):
+        """Check that the bank account number is used to retieve the partner when importing a non-BIS3 UBL XML."""
+        partner_bank = self.env['res.partner.bank'].create({
+            'acc_number': 'BE43200112345678',
+            'partner_id': self.partner_a.id,
+            'allow_out_payment': True,
+        })
+        # Update partner_a and link it with the bank account we created
+        self.partner_a.update({
+            'name': "Test Partner Bank Retrieval",
+            'street': "42 Maze street",
+            'city': "Berlin",
+            'zip': "6534",
+            'vat': 'BE0727720427',
+            'country_id': self.env.ref('base.be').id,
+            'bank_ids': partner_bank.ids,
+        })
+
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+            'partner_bank_id': partner_bank.id,
+        })
+        invoice.action_post()
+
+        xml_attachment = self.env['ir.attachment'].create({
+            'raw': self.env['account.edi.xml.ubl_21']._export_invoice(invoice)[0],
+            'name': 'test_invoice.xml',
+        })
+
+        # Change the partner details so it can only be retrieved through the bank account
+        self.partner_a.update({
+            'name': "Different Partner",
+            'vat': False,
+            'email': False,
+            'phone': False,
+        })
+        # partner_a should be matched through the bank account number and its VAT should be filled in from the XML
+        imported_invoice = self._import_invoice_as_attachment_on(attachment=xml_attachment, journal=self.company_data['default_journal_sale'])
+        self.assertEqual(imported_invoice.partner_id, self.partner_a)
+        self.assertEqual(imported_invoice.partner_id.vat, 'BE0727720427')
+
+        # Change the VAT to trigger the VAT mismatch logic
+        self.partner_a.vat = 'BE0403170701'
+        # A new partner should be created
+        imported_invoice = self._import_invoice_as_attachment_on(attachment=xml_attachment, journal=self.company_data["default_journal_sale"])
+        self.assertNotEqual(imported_invoice.partner_id, self.partner_a)
+        self.assertRecordValues(imported_invoice.partner_id, [{
+            'name': "Test Partner Bank Retrieval",
+            'street': "42 Maze street",
+            'city': "Berlin",
+            'zip': "6534",
+            'vat': 'BE0727720427',
+            'country_id': self.env.ref('base.be').id,
+        }])
+
     def test_actual_delivery_date_in_cii_xml(self):
 
         invoice = self.env['account.move'].create({
@@ -336,14 +520,18 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
             'name': 'test_invoice.xml',
         })
         xml_tree = etree.fromstring(xml_attachment.raw)
-        start_date = xml_tree.find('.//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:StartDateTime/udt:DateTimeString', self.namespaces)
-        end_date = xml_tree.find('.//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:EndDateTime/udt:DateTimeString', self.namespaces)
-        self.assertEqual(start_date.text, '20241201')
-        self.assertEqual(end_date.text, '20241231')
+        # The line has no dates: no invoicing period, the invoice date is exported as delivery date instead.
+        self.assertIsNone(xml_tree.find('.//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod', self.namespaces))
+        actual_delivery_date = xml_tree.find('.//ram:ActualDeliverySupplyChainEvent/ram:OccurrenceDateTime/udt:DateTimeString', self.namespaces)
+        self.assertEqual(actual_delivery_date.text, '20241201')
 
     def test_export_import_billing_dates(self):
         if self.env.ref('base.module_accountant').state != 'installed':
             self.skipTest("payment_custom module is not installed")
+
+        company = self.company_data['company']
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
 
         invoice = self.env['account.move'].create({
             'partner_id': self.partner_a.id,
@@ -384,12 +572,8 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         line_end_dates = xml_tree.findall('.//ram:SpecifiedLineTradeSettlement/ram:BillingSpecifiedPeriod/ram:EndDateTime/udt:DateTimeString', self.namespaces)
         self.assertEqual([value.text for value in line_end_dates], ['20241211', '20241226', '20241215'])
 
-        global_start_date = xml_tree.find('.//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:StartDateTime/udt:DateTimeString', self.namespaces)
-        self.assertEqual(global_start_date.text, '20241119')
-
-        global_end_date = xml_tree.find('.//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:EndDateTime/udt:DateTimeString', self.namespaces)
-        self.assertEqual(global_end_date.text, '20241226')
-
+        # One line has no dates: no invoicing period in the header.
+        self.assertIsNone(xml_tree.find('.//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod', self.namespaces))
         line_vals = [
             {
                 'product_id': self.product_a.id,
@@ -718,6 +902,72 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         })
         self.assertEqual(node[0].text, self.company.vat, "Company VAT fallback")
 
+    def test_facturx_omits_schemeid_va_when_vat_is_slash(self):
+        """Test that Factur-X never outputs '/' as a VAT id.
+
+        '/' is the conventional value Odoo uses to mark a partner as not subject to VAT (as
+        opposed to one who simply hasn't had a VAT number entered yet): it must never be emitted
+        as a real VAT id, be it the seller's (the company's own VAT) or the buyer's. A VAT id
+        without its ISO country-code prefix (e.g. 'DE', 'FR') would otherwise violate EN16931
+        rule BR-CO-09.
+
+        (The fiscal position's foreign VAT isn't tested here: base_vat's format validation
+        already rejects '/' at creation, so that branch can never actually see it.)
+        """
+        namespaces = {
+            "ram": "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100",
+            "rsm": "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100",
+        }
+
+        # Company VAT and buyer VAT are both '/' at once: 2 independent t-if conditions evaluated
+        # on the same invoice, so one export already exercises both; a bug in either would
+        # surface a VA tag on its side.
+        self.company.vat = '/'
+        self.partner_a.write({'invoice_edi_format': 'facturx', 'vat': '/'})
+        invoice = self._create_invoice_one_line(price_unit=1)
+        invoice.action_post()
+
+        # The fix was applied to both the legacy QWeb template and the new dict-based builder:
+        # exercise both so neither regresses on its own. set_param(key, False) would unlink the
+        # parameter instead of storing it (see ir.config_parameter.set_param), silently falling
+        # back to its own True default, hence the str() conversion.
+        for use_new_dict_to_xml_helpers in (False, True):
+            self.env['ir.config_parameter'].sudo().set_param(
+                'account_edi_ubl_cii.use_new_dict_to_xml_helpers', str(use_new_dict_to_xml_helpers))
+            with self.subTest(use_new_dict_to_xml_helpers=use_new_dict_to_xml_helpers):
+                xml_bytes = self.env["account.edi.xml.cii"]._export_invoice(invoice)[0]
+
+                self.assertFalse(
+                    etree.fromstring(xml_bytes).xpath("//ram:SellerTradeParty//ram:ID[@schemeID='VA']", namespaces=namespaces),
+                    "'/' company / seller VAT must not be output as a VA tag",
+                )
+                self.assertFalse(
+                    etree.fromstring(xml_bytes).xpath("//ram:BuyerTradeParty//ram:ID[@schemeID='VA']", namespaces=namespaces),
+                    "'/' buyer VAT must not be output as a VA tag",
+                )
+
+    def test_facturx_line_without_product_has_name(self):
+        """A line with no product_id (e.g. a sale order down payment invoice line) must still
+        expose a ram:Name in the Factur-X/CII export, falling back to the line's free-text name,
+        without also emitting a redundant ram:Description."""
+        invoice = self.env["account.move"].create({
+            "partner_id": self.partner_a.id,
+            "move_type": "out_invoice",
+            "invoice_line_ids": [Command.create({
+                "name": "Down payment of 40.00%",
+                "price_unit": 100.0,
+            })],
+        })
+        invoice.action_post()
+
+        xml_bytes = self.env["account.edi.xml.cii"]._export_invoice(invoice)[0]
+        xml_tree = etree.fromstring(xml_bytes)
+        name_node = xml_tree.find(".//ram:SpecifiedTradeProduct/ram:Name", self.namespaces)
+        description_node = xml_tree.find(".//ram:SpecifiedTradeProduct/ram:Description", self.namespaces)
+        self.assertIsNotNone(name_node, "ram:Name must be present even when the line has no product")
+        self.assertEqual(name_node.text, "Down payment of 40.00%")
+        self.assertIsNone(description_node)
+
     def test_bank_details_import(self):
         acc_number = '1234567890'
         partner_bank = self.env['res.partner.bank'].create({
@@ -974,3 +1224,86 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         self.assertEqual(due_date.text, '20251231')
         self.assertEqual(days.text, '15')
         self.assertEqual(percent.text, '3.0')
+
+    def test_facturx_export_non_eu_supplier_to_eu_customer(self):
+        """Test that a non-EU/EEA supplier (e.g. Switzerland) exporting goods to an EU customer
+        is classified as 'G' / VATEX-EU-G (export outside the EU).
+        """
+        switzerland = self.env.ref("base.ch")
+        germany = self.env.ref("base.de")
+
+        company = self.env.company
+        company.country_id = switzerland.id
+        company.vat = 'CHE-123.456.788 MWST'
+
+        self.partner_a.country_id = germany.id
+        self.partner_a.invoice_edi_format = 'facturx'
+
+        tax_0_export = self.env['account.tax'].create({
+            'name': 'CH Export 0%',
+            'amount': 0.0,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_date': fields.Date.from_string('2025-12-22'),
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'tax_ids': [Command.set(tax_0_export.ids)],
+            })],
+        })
+        invoice.action_post()
+
+        xml_bytes = self.env["account.edi.xml.cii"]._export_invoice(invoice)[0]
+        xml_tree = etree.fromstring(xml_bytes)
+
+        category_code = xml_tree.find('.//ram:ApplicableTradeTax/ram:CategoryCode', self.namespaces)
+        exemption_reason_code = xml_tree.find('.//ram:ApplicableTradeTax/ram:ExemptionReasonCode', self.namespaces)
+        self.assertEqual(category_code.text, 'G')
+        self.assertEqual(exemption_reason_code.text, 'VATEX-EU-G')
+
+    def test_facturx_export_import_discount_rounding(self):
+        """ An invoice generated by Odoo and imported back as a vendor bill must keep the same line amounts. """
+        tax_sale = self.company_data['default_tax_sale']
+        tax_sale_included = tax_sale.copy({'name': 'Tax included', 'price_include_override': 'tax_included'})
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [
+                # 103.00 * 9.75% = 10.0425 of discount per unit: the net price unit (92.9575) is exported rounded to 2 decimals.
+                # The line total is 31 * 92.9575 = 2881.68, not 31 * 92.96 = 2881.76.
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 31,
+                    'price_unit': 103.0,
+                    'discount': 9.75,
+                    'tax_ids': [Command.set(tax_sale.ids)],
+                }),
+                # No discount: the net price unit (86.956522) is exported rounded to 2 decimals.
+                # The line total is 3 * 86.956522 = 260.87, not 3 * 86.96 = 260.88. As there is no discount on the line,
+                # the difference is managed by a rounding line.
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 3,
+                    'price_unit': 100.0,
+                    'tax_ids': [Command.set(tax_sale_included.ids)],
+                }),
+            ],
+        })
+        invoice.action_post()
+        self.assertRecordValues(invoice.invoice_line_ids, [{'price_subtotal': 2881.68}, {'price_subtotal': 260.87}])
+
+        xml_attachment = self.env['ir.attachment'].create({
+            'raw': self.env['account.edi.xml.cii']._export_invoice(invoice)[0],
+            'name': 'test_invoice.xml',
+        })
+        bill = self._import_invoice_as_attachment_on(attachment=xml_attachment, journal=self.company_data['default_journal_purchase'])
+        self.assertRecordValues(bill.invoice_line_ids, [
+            {'quantity': 31.0, 'price_unit': 103.0, 'discount': 9.75, 'price_subtotal': 2881.68},
+            {'quantity': 3.0, 'price_unit': 86.96, 'discount': 0.0, 'price_subtotal': 260.88},
+            {'quantity': 1.0, 'price_unit': -0.01, 'discount': 0.0, 'price_subtotal': -0.01},
+        ])
+        self.assertRecordValues(bill, [{'amount_untaxed': invoice.amount_untaxed, 'amount_total': invoice.amount_total}])

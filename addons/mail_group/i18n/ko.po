@@ -2,15 +2,16 @@
 # This file contains the translation of the following modules:
 # * mail_group
 #
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2026-01-23 07:37+0000\n"
-"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
+"PO-Revision-Date: 2026-08-02 19:29+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
 "mail_group/ko/>\n"
 "Language: ko\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
@@ -38,8 +39,7 @@ msgstr "검토 대기 수"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid ") <span invisible=\"not send_email\">and send them an email</span>."
-msgstr ""
-") <span invisible=\"not send_email\">을 클릭하고 이메일을 전송합니다</span>."
+msgstr ") <span invisible=\"not send_email\">을 클릭하고 이메일을 전송합니다</span>."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
@@ -77,12 +77,12 @@ msgstr ""
 "                메일링 리스트 구독을 신청하셨습니다<strong t-"
 "out=\"object.name or ''\"/>.\n"
 "                <br/><br/>\n"
-"                확인하려면 다음 링크를 눌러주세요: <strong t-"
-"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"                확인하려면 다음 링크를 눌러주세요: <strong t-if=\"ctx.get"
+"('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
 "out=\"ctx['token_url'] or ''\"/></a></strong>\n"
 "                <br/><br/>\n"
-"                구독을 요청하지 않으셨거나 실수로 누르신 경우 이 메시지는 무"
-"시하셔도 됩니다.\n"
+"                구독을 요청하지 않으셨거나 실수로 누르신 경우 이 메시지는 "
+"무시하셔도 됩니다.\n"
 "            </div>\n"
 "        "
 
@@ -108,17 +108,18 @@ msgstr ""
 "                메일링 리스트 구독 해지를 신청하셨습니다<strong t-"
 "out=\"object.name or ''\"/>.\n"
 "                <br/><br/>\n"
-"                확인하려면 다음 링크를 눌러주세요: <strong t-"
-"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"                확인하려면 다음 링크를 눌러주세요: <strong t-if=\"ctx.get"
+"('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
 "out=\"ctx['token_url'] or ''\"/></a></strong>.\n"
 "                <br/><br/>\n"
-"                구독 취소를 요청하지 않으셨거나 실수로 누르신 경우 이 메시지"
-"는 무시하셔도 됩니다.\n"
+"                구독 취소를 요청하지 않으셨거나 실수로 누르신 경우 이 "
+"메시지는 무시하셔도 됩니다.\n"
 "            </div>\n"
 "        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_guidelines
+#, fuzzy
 msgid ""
 "<div>\n"
 "                <p>Hello <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
@@ -129,6 +130,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"                <p>안녕하세요, <t t-out=\"object.partner_id.name or ''\"/>"
+"님.</p>\n"
+"                <p>하기 <t t-out=\"object.mail_group_id.name\"/>메일링 "
+"리스트</p>의 가이드라인을 참조해 주시기 바랍니다.\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg "
+"or ''\"/></p>\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
@@ -157,10 +167,13 @@ msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, fuzzy
 msgid ""
 "<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" "
 "title=\"Traffic\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"트래픽\" "
+"title=\"트래픽\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -213,8 +226,8 @@ msgid ""
 "<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide "
 "attachments\" title=\"Hide attachments\"/>"
 msgstr ""
-"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"첨부 파일 숨기기"
-"\" title=\"첨부 파일 숨기기\"/>"
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"첨부 파일 "
+"숨기기\" title=\"첨부 파일 숨기기\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
@@ -268,8 +281,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"이 별칭에 대한 새 레코드를 만들 때 기본값을 제공하도록 평가되는 Python 사전입"
-"니다."
+"이 별칭에 대한 새 레코드를 만들 때 기본값을 제공하도록 평가되는 Python "
+"사전입니다."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
@@ -300,8 +313,8 @@ msgid ""
 "Add this email address to white list of people and accept all pending "
 "messages from the same author."
 msgstr ""
-"이 이메일 주소를 화이트리스트에 추가하고 동일한 작성자가 보낸 모든 대기 중 메"
-"시지를 수락하세요."
+"이 이메일 주소를 화이트리스트에 추가하고 동일한 작성자가 보낸 모든 대기 중 "
+"메시지를 수락하세요."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_id
@@ -486,9 +499,10 @@ msgstr "종료"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__is_closed
+#, fuzzy
 msgid ""
 "Closed groups might still be accessed, but emails sent to it will bounce"
-msgstr ""
+msgstr "닫힌 그룹에도 계속 액세스할 수 있지만, 그룹으로 전송된 이메일은 반송됩니다. "
 
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_list_subscribe
@@ -597,8 +611,8 @@ msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found and replaces the author_id field in the chatter."
 msgstr ""
-"보낸 사람의 이메일 주소입니다. 이 필드는 일치하는 협력사가 없는 경우에 설정되"
-"어 메시지 창에서 작성자 필드를 대체합니다."
+"보낸 사람의 이메일 주소입니다. 이 필드는 일치하는 협력사가 없는 경우에 "
+"설정되어 메시지 창에서 작성자 필드를 대체합니다."
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_domain
@@ -680,6 +694,7 @@ msgstr "안녕하세요"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.email_template_mail_group_closed
+#, fuzzy
 msgid ""
 "Hello there,\n"
 "    <br/><br/>\n"
@@ -688,6 +703,12 @@ msgid ""
 "    <br/><br/>\n"
 "    Kind Regards,"
 msgstr ""
+"안녕하세요,\n"
+"    <br/><br/>\n"
+"    귀하가 접속하려는 메일링 리스트는 사용이 종료되었으며, 더 이상 새로운 "
+"메시지를 받지 않을 수 없습니다.\n"
+"    <br/><br/>\n"
+"    감사합니다."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__id
@@ -704,16 +725,15 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task "
 "creation alias)"
 msgstr ""
-"별칭을 담고 있는 상위 레코드의 ID (예: 별칭을 생성한 작업을 담고 있는 프로젝"
-"트)"
+"별칭을 담고 있는 상위 레코드의 ID (예: 별칭을 생성한 작업을 담고 있는 "
+"프로젝트)"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_bounced_content
 msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
-msgstr ""
-"설정할 경우, 권한이 없는 사용자에게 기본 메시지 대신 이 내용을 전송합니다."
+msgstr "설정할 경우, 권한이 없는 사용자에게 기본 메시지 대신 이 내용을 전송합니다."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__image_128
@@ -870,8 +890,7 @@ msgstr "메일보내기 목록"
 msgid ""
 "Mailing groups are communities that like to discuss a specific topic "
 "together."
-msgstr ""
-"메일 그룹은 특정 주제에 대해 함께 토론하는 것을 좋아하는 커뮤니티입니다."
+msgstr "메일 그룹은 특정 주제에 대해 함께 토론하는 것을 좋아하는 커뮤니티입니다."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
@@ -1096,8 +1115,9 @@ msgstr "선택한 사용자 그룹만 메일링 리스트에 이메일을 보낼
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+#, fuzzy
 msgid "Oops, there are no messages here."
-msgstr ""
+msgstr "죄송합니다. 메시지가 없습니다."
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_force_thread_id
@@ -1132,8 +1152,8 @@ msgid ""
 "(parent_model) and task (model))"
 msgstr ""
 "별칭이 있는 상위 모델입니다. 별칭 참조를 포함하는 모델은 반드시 "
-"alias_model_id(예: 프로젝트(parent_model) 및 태스크(model)에서 제공하는 모델"
-"일 필요는 없습니다.)"
+"alias_model_id(예: 프로젝트(parent_model) 및 태스크(model)에서 제공하는 "
+"모델일 필요는 없습니다.)"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__partner_id
@@ -1184,8 +1204,8 @@ msgstr ""
 "Mailgateway를 사용하여 문서에 메시지를 게시하는 정책.\n"
 "- 모든 사용자: 모든 사용자가 게시할 수 있습니다\n"
 "- 협력사: 인증된 협력사만 게시할 수 있습니다\n"
-"- 팔로워: 관련 문서의 팔로워 또는 팔로잉 중인 채널의 사용자만 게시할 수 있습"
-"니다\n"
+"- 팔로워: 관련 문서의 팔로워 또는 팔로잉 중인 채널의 사용자만 게시할 수 "
+"있습니다\n"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
@@ -1327,8 +1347,9 @@ msgstr "이메일 전송"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines
+#, fuzzy
 msgid "Send guidelines to new members"
-msgstr ""
+msgstr "신규 회원에게 가이드라인 보내기"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_guidelines
@@ -1375,8 +1396,8 @@ msgid ""
 "Template \"mail_group.mail_template_guidelines\" was not found. No email has "
 "been sent. Please contact an administrator to fix this issue."
 msgstr ""
-"\"mail_group.mail_template_guidelines\" 서식을 찾을 수 없습니다. 이메일이 전"
-"송되지 않았습니다. 이 문제를 해결하려면 관리자에게 문의하십시오."
+"\"mail_group.mail_template_guidelines\" 서식을 찾을 수 없습니다. 이메일이 "
+"전송되지 않았습니다. 이 문제를 해결하려면 관리자에게 문의하십시오."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
@@ -1425,8 +1446,8 @@ msgid ""
 "email that does not reply to an existing record will cause the creation of a "
 "new record of this model (e.g. a Project Task)"
 msgstr ""
-"이 별칭에 해당하는 모델(Odoo 문서 종류)입니다. 모든 받는 메일은 기존 레코드"
-"로 기록되지 않고 이 모델의 새 레코드로 작성됩니다. (예. 프로젝트 작업)"
+"이 별칭에 해당하는 모델(Odoo 문서 종류)입니다. 모든 받는 메일은 기존 "
+"레코드로 기록되지 않고 이 모델의 새 레코드로 작성됩니다. (예. 프로젝트 작업)"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_name
@@ -1434,8 +1455,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"<jobs@example.odoo.com>에 대한 이메일을 수신하도록 하려면 이메일의 별칭 이름"
-"을 적어주세요. 예: 'jobs'"
+"<jobs@example.odoo.com>에 대한 이메일을 수신하도록 하려면 이메일의 별칭 "
+"이름을 적어주세요. 예: 'jobs'"
 
 #. module: mail_group
 #. odoo-python
@@ -1530,14 +1551,16 @@ msgstr "그룹 내 지정된 이메일 주소에 대해 하나의 규칙만 생�
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
+#, fuzzy
 msgid "You can not join a closed group."
-msgstr ""
+msgstr "비공개 그룹에 가입할 수 없습니다."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
+#, fuzzy
 msgid "You can not send guidelines for a closed group."
-msgstr ""
+msgstr "비공개 그룹에 대한 가이드라인을 전송할 수 없습니다."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
@@ -1571,8 +1594,9 @@ msgstr "예. \"뉴스레터\""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
 msgid "e.g. \"This group is about ...\""
-msgstr ""
+msgstr "예: \"이 그룹은 ...\""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
@@ -1581,8 +1605,9 @@ msgstr "예: mycompany.com"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
 msgid "e.g.\"Please be polite and ...\""
-msgstr ""
+msgstr "예: “예의를 지켜 주세요...”"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search

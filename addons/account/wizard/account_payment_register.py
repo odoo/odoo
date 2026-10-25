@@ -487,10 +487,12 @@ class AccountPaymentRegister(models.TransientModel):
             else:
                 wizard.group_payment = False
 
-    @api.depends('journal_id')
+    @api.depends('journal_id', 'line_ids.move_id.currency_id')
     def _compute_currency_id(self):
         for wizard in self:
-            wizard.currency_id = wizard.journal_id.currency_id or wizard.source_currency_id or wizard.company_id.currency_id
+            move_currencies = wizard.line_ids.move_id.currency_id
+            shared_currency = move_currencies if len(move_currencies) == 1 else wizard.company_id.currency_id
+            wizard.currency_id = wizard.journal_id.currency_id or wizard.source_currency_id or shared_currency
 
     @api.depends('payment_type', 'company_id', 'can_edit_wizard')
     def _compute_available_journal_ids(self):
@@ -979,6 +981,8 @@ class AccountPaymentRegister(models.TransientModel):
                 raise UserError(_("You can't create payments for entries belonging to different branches without access to parent company."))
             if len(set(available_lines.mapped('account_type'))) > 1:
                 raise UserError(_("You can't register payments for both inbound and outbound moves at the same time."))
+            if any(move.payment_state == 'blocked' for move in available_lines.move_id):
+                raise UserError(self.env._("You cannot register payments for blocked invoices."))
 
             res['line_ids'] = [(6, 0, available_lines.ids)]
 
@@ -1211,7 +1215,7 @@ class AccountPaymentRegister(models.TransientModel):
                         ('reconciled', '=', False),
                     ])\
                     .reconcile()
-            lines.move_id.matched_payment_ids += payment
+            lines.move_id.matched_payment_ids = [Command.link(payment.id)]
 
     def _create_payments(self):
         self.ensure_one()

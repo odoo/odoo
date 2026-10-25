@@ -842,11 +842,21 @@ export class Rtc extends Record {
         this.notification.add(errorMessage, { type: "warning" });
     }
 
-    async askForBrowserPermission({ audio, video }) {
+    /**
+     * @param {Object} param0
+     * @param {boolean} [param0.audio]
+     * @param {boolean} [param0.video]
+     * @param {string} [param0.deviceId]
+     */
+    async askForBrowserPermission({ audio, video, deviceId }) {
         try {
             const stream = await browser.navigator.mediaDevices.getUserMedia({
-                audio: audio ? this.store.settings.audioConstraints : false,
-                video: video ? this.store.settings.cameraConstraints : false,
+                audio: audio
+                    ? { ...this.store.settings.audioConstraints, ...(deviceId && { deviceId }) }
+                    : false,
+                video: video
+                    ? { ...this.store.settings.cameraConstraints, ...(deviceId && { deviceId }) }
+                    : false,
             });
             if (isBrowserSafari() || isMobileOS()) {
                 if (audio) {
@@ -859,6 +869,7 @@ export class Rtc extends Record {
             closeStream(stream);
         } catch {
             this.showMediaUnavailableWarning({ microphone: audio, camera: video });
+            return false;
         }
         if (audio && video) {
             return this.microphonePermission === "granted" && this.cameraPermission === "granted";
@@ -1842,50 +1853,43 @@ export class Rtc extends Record {
                 break;
             }
         }
-        if (this.localSession) {
-            switch (type) {
-                case "camera": {
-                    this.removeVideoFromSession(this.localSession, {
-                        type: "camera",
-                        cleanup: false,
-                    });
-                    if (this.state.cameraTrack) {
-                        this.updateStream(this.localSession, this.state.cameraTrack);
-                    }
-                    break;
-                }
-                case "screen": {
-                    if (!this.state.screenTrack) {
-                        this.removeVideoFromSession(this.localSession, {
-                            type: "screen",
-                            cleanup: false,
-                        });
-                    } else {
-                        this.updateStream(this.localSession, this.state.screenTrack);
-                    }
-                    break;
-                }
-            }
-        }
-        const updatedTrack = type === "camera" ? this.state.cameraTrack : this.state.screenTrack;
-        await this.network?.updateUpload(type, updatedTrack);
         if (!this.localSession) {
             return;
         }
         switch (type) {
             case "camera": {
+                this.removeVideoFromSession(this.localSession, {
+                    type: "camera",
+                    cleanup: false,
+                });
+                if (this.state.cameraTrack) {
+                    this.updateStream(this.localSession, this.state.cameraTrack);
+                }
+                // broadcast the new state right away: updating the upload waits
+                // on the peer connections, and a peer that never completes its
+                // handshake must not block the flag for everyone else
                 this.updateAndBroadcast({
                     is_camera_on: !!this.state.sendCamera,
                 });
                 break;
             }
             case "screen": {
+                if (!this.state.screenTrack) {
+                    this.removeVideoFromSession(this.localSession, {
+                        type: "screen",
+                        cleanup: false,
+                    });
+                } else {
+                    this.updateStream(this.localSession, this.state.screenTrack);
+                }
                 this.updateAndBroadcast({
                     is_screen_sharing_on: !!this.state.sendScreen,
                 });
                 break;
             }
         }
+        const updatedTrack = type === "camera" ? this.state.cameraTrack : this.state.screenTrack;
+        await this.network?.updateUpload(type, updatedTrack);
     }
 
     updateAndBroadcast(data) {

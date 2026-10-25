@@ -46,3 +46,16 @@ class TestProcessingFlows(IyzicoCommon, PaymentHttpCommon):
         ) as process_mock:
             self._make_json_request(url, data=self.webhook_data)
         self.assertEqual(process_mock.call_count, 1)
+
+    @mute_logger('odoo.addons.payment_iyzico.controllers.main')
+    def test_reject_notification_with_mismatching_reference(self):
+        tx = self._create_transaction('redirect', reference='other_reference')
+        url = self._build_url(
+            f"{const.PAYMENT_RETURN_ROUTE}?{url_encode({'tx_ref': tx.reference})}"
+        )
+        with patch(
+            'odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request',
+            return_value=self.payment_data,
+        ), patch('odoo.addons.payment.models.payment_transaction.PaymentTransaction._process'):
+            response = self._make_http_post_request(url, data=self.return_data)
+        self.assertEqual(response.status_code, 403)

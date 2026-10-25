@@ -2,6 +2,7 @@ import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
 } from "@im_livechat/../tests/livechat_test_helpers";
+import { expirableStorage } from "@im_livechat/core/common/expirable_storage";
 import {
     assertChatBubbleAndWindowImStatus,
     click,
@@ -10,16 +11,28 @@ import {
     insertText,
     mockGetMedia,
     onRpcBefore,
+    setupChatHub,
     start,
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
-import { asyncStep, serverState, waitForSteps, withUser } from "@web/../tests/web_test_helpers";
+import { Attachment } from "@mail/core/common/attachment_model";
+import { describe, expect, test } from "@odoo/hoot";
+import { mockFetch } from "@odoo/hoot-mock";
+import {
+    asyncStep,
+    Command,
+    patchWithCleanup,
+    serverState,
+    waitForSteps,
+    withUser,
+} from "@web/../tests/web_test_helpers";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
 import { getOrigin } from "@web/core/utils/urls";
+import { browser } from "@web/core/browser/browser";
+import { session } from "@web/session";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -125,6 +138,13 @@ test("avatar url contains access token for non-internal users", async () => {
             guest.id
         }/avatar_128?access_token=${guest.id}&unique=${deserializeDateTime(guest.write_date).ts}"]`
     );
+    await contains(
+        `.o-mail-ChatWindow-threadAvatar img[data-src="${getOrigin()}/web/image/res.partner/${
+            partner.id
+        }/avatar_128?access_token=${partner.id}&unique=${
+            deserializeDateTime(partner.write_date).ts
+        }"]`
+    );
 });
 
 test("can close confirm livechat with keyboard", async () => {
@@ -180,4 +200,148 @@ test("Should not show IM status of agents", async () => {
     await click(".o-mail-ChatWindow-header");
     await contains(".o-mail-ChatBubble");
     await assertChatBubbleAndWindowImStatus("MitchellOp", 0);
+});
+
+test("should not make XMLHttpRequest to server file content when embedded externally", async () => {
+    patchWithCleanup(browser.location, {
+        origin: "https://www.hoot.test",
+    });
+    patchWithCleanup(session, {
+        origin: window.location.origin,
+    });
+    mockFetch(() => {
+        throw new Error("Should not fetch from external to odoo");
+    });
+    patchWithCleanup(HTMLAnchorElement.prototype, {
+        click() {
+            const url = new URL(this.href);
+            expect.step(`${url.origin} ${url.searchParams.get("filename")}`);
+        },
+    });
+
+    const pyEnv = await startServer();
+    await loadDefaultEmbedConfig();
+
+    const [partnerUser] = pyEnv["res.users"].search_read([["id", "=", serverState.partnerId]]);
+    await start({ authenticateAs: partnerUser });
+    await click(".o-livechat-LivechatButton");
+    const textFile = new File(["hello, world"], "test.txt", { type: "text/plain" });
+    await contains(".o-mail-Composer");
+
+    await click(".o-mail-Composer button[title='More Actions']");
+    await contains(".dropdown-item:contains('Attach files')");
+    await inputFiles(".o-mail-Composer .o_input_file", [textFile]);
+    await contains(".o-mail-AttachmentContainer:not(.o-isUploading):contains(test.txt) .fa-check");
+    await click(".o-mail-Composer button[title='Send']:enabled");
+    await contains(".o-mail-Message .o-mail-AttachmentContainer:contains(test.txt)");
+    await click(
+        ".o-mail-Message .o-mail-AttachmentContainer:contains(test.txt) [title='Download']"
+    );
+
+    expect.verifySteps([`${session.origin} test.txt`]);
+});
+
+/** @see {@link import("@mail/core/attachment_list_patch").ExternalLivechatDisabledPdfReason} */
+test("should not allow preview of PDF attachments when embedded externally", async () => {
+    patchWithCleanup(browser.location, {
+        origin: "https://www.hoot.test",
+    });
+    patchWithCleanup(session, {
+        origin: window.location.origin,
+    });
+    patchWithCleanup(Attachment.prototype, {
+        get isViewable() {
+            const res = super.isViewable;
+            if (res) {
+                expect.step("fileViewer.isViewable");
+            }
+            return res;
+        },
+    });
+
+    const pyEnv = await startServer();
+    await loadDefaultEmbedConfig();
+
+    const [partnerUser] = pyEnv["res.users"].search_read([["id", "=", serverState.partnerId]]);
+    await start({ authenticateAs: partnerUser });
+    await click(".o-livechat-LivechatButton");
+    const pdfFile = new File(["hello, world"], "test.pdf", { type: "application/pdf" });
+    await contains(".o-mail-Composer");
+
+    await click(".o-mail-Composer button[title='More Actions']");
+    await contains(".dropdown-item:contains('Attach files')");
+    await inputFiles(".o-mail-Composer .o_input_file", [pdfFile]);
+    await contains(".o-mail-AttachmentContainer:not(.o-isUploading):contains(test.pdf) .fa-check");
+    await click(".o-mail-Composer button[title='Send']:enabled");
+    await click(".o-mail-Message .o-mail-AttachmentContainer:contains(test.pdf)");
+});
+
+test("Agent sees the visitor avatar on the chat bubble of a live chat", async () => {
+    const pyEnv = await startServer();
+    const livechatChannelId = await loadDefaultEmbedConfig();
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob Operator" });
+    const ownSessionId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: bobPartnerId }),
+        ],
+        channel_type: "livechat",
+        livechat_channel_id: livechatChannelId,
+        livechat_operator_id: bobPartnerId,
+    });
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
+    const visitorSessionId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ guest_id: guestId }),
+        ],
+        channel_type: "livechat",
+        livechat_channel_id: livechatChannelId,
+        livechat_operator_id: serverState.partnerId,
+    });
+    expirableStorage.setItem(
+        "im_livechat.saved_state",
+        JSON.stringify({
+            store: { "discuss.channel": [{ id: ownSessionId }] },
+            persisted: true,
+            livechatUserId: serverState.userId,
+        })
+    );
+    setupChatHub({ folded: [visitorSessionId] });
+    await start();
+    const [guest] = pyEnv["mail.guest"].read(guestId);
+    await contains(
+        `.o-mail-ChatBubble img[data-src='${getOrigin()}/web/image/mail.guest/${guestId}/avatar_128?unique=${
+            deserializeDateTime(guest.write_date).ts
+        }']`
+    );
+    await contains(".o-mail-ChatBubble[name='Visitor 11']");
+});
+
+test("Agent sees their own avatar on the chat bubble of their own live chat", async () => {
+    const pyEnv = await startServer();
+    const livechatChannelId = await loadDefaultEmbedConfig();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        channel_type: "livechat",
+        livechat_channel_id: livechatChannelId,
+        livechat_operator_id: serverState.partnerId,
+    });
+    expirableStorage.setItem(
+        "im_livechat.saved_state",
+        JSON.stringify({
+            store: { "discuss.channel": [{ id: channelId }] },
+            persisted: true,
+            livechatUserId: serverState.userId,
+        })
+    );
+    setupChatHub({ folded: [channelId] });
+    await start();
+    const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
+    await contains(
+        `.o-mail-ChatBubble img[data-src='${getOrigin()}/web/image/res.partner/${
+            serverState.partnerId
+        }/avatar_128?unique=${deserializeDateTime(partner.write_date).ts}']`
+    );
+    await contains(".o-mail-ChatBubble[name='Mitchell Admin']");
 });

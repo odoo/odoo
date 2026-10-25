@@ -754,7 +754,7 @@ test("onchanges on many2ones trigger when editing record in form view", async ()
 test("edit many2one before onchange is finished should not reset the value", async () => {
     Partner._onChanges = {
         name: function (obj) {
-            obj.user_id = 19;
+            obj.user_id = 2;
         },
     };
     onRpc("onchange", () => {
@@ -775,8 +775,9 @@ test("edit many2one before onchange is finished should not reset the value", asy
     });
 
     await contains("[name='name'] input").edit("new name");
-    await contains("[name='user_id'] input").edit("Plop");
-    expect("[name='user_id'] input").toHaveValue("Plop");
+    await contains("[name='user_id'] input").edit("Plop", { confirm: false });
+    await runAllTimers();
+    await clickFieldDropdownItem("user_id", 'Create "Plop"');
 
     def.resolve();
     await animationFrame();
@@ -851,7 +852,7 @@ test("empty a many2one field in list view", async () => {
     });
 
     await contains(".o_data_row .o_data_cell").click();
-    await contains(".o_field_widget[name=trululu] input").edit("");
+    await contains(".o_field_widget[name=trululu] input").clear({ confirm: false });
     expect(".o_data_row .o_field_widget[name=trululu] input").toHaveText("");
 
     await contains(".o_list_view").click();
@@ -3352,7 +3353,7 @@ test("search more in many2one: no text in input", async () => {
     // when the user clicks on 'Search more...' in a many2one dropdown, and there is no text
     // in the input (i.e. no value to search on), we bypass the web_name_search that is meant to
     // return a list of preselected ids to filter on in the list view (opened in a dialog)
-    expect.assertions(2);
+    expect.assertions(4);
 
     for (let i = 0; i < 8; i++) {
         Partner._records.push({ id: 100 + i, name: `test_${i}` });
@@ -3377,14 +3378,19 @@ test("search more in many2one: no text in input", async () => {
         arch: '<form><field name="trululu" /></form>',
     });
 
+    expect.verifySteps([
+        "get_views", // main form view
+        "onchange",
+    ]);
+
     await contains(`.o_field_widget[name="trululu"] input`).clear();
+    await runAllTimers();
+    expect.verifySteps(["web_name_search"]);
 
     await contains(`.o_field_widget[name="trululu"] input`).click();
     await contains(`.o_field_widget[name="trululu"] .o_m2o_dropdown_option_search_more`).click();
 
     expect.verifySteps([
-        "get_views", // main form view
-        "onchange",
         "web_name_search", // to display results in the dropdown
         "get_views", // list view in dialog
         "has_group",

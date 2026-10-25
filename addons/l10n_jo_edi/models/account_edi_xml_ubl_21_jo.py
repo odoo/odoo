@@ -176,35 +176,12 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
 
     def _add_invoice_accounting_customer_party_nodes(self, document_node, vals):
         super()._add_invoice_accounting_customer_party_nodes(document_node, vals)
-        # Override AccountingCustomerParty for refunds
         invoice = vals['invoice']
-        if invoice.move_type == 'out_refund':
-            document_node['cac:AccountingCustomerParty'] = {
-                'cac:Party': {
-                    'cac:PostalAddress': {
-                        'cac:Country': {
-                            'cbc:IdentificationCode': {'_text': 'JO'}
-                        }
-                    },
-                    'cac:PartyTaxScheme': {
-                        'cac:TaxScheme': {
-                            'cbc:ID': {'_text': 'VAT'}
-                        }
-                    }
-                },
-                'cac:AccountingContact': {
-                    'cbc:Telephone': {
-                        '_text': ''
-                    }
-                }
+        document_node['cac:AccountingCustomerParty']['cac:AccountingContact'] = {
+            'cbc:Telephone': {
+                '_text': self._sanitize_phone(invoice.partner_id.phone)
             }
-        else:
-            # For non-refund invoices, use the standard party node
-            document_node['cac:AccountingCustomerParty']['cac:AccountingContact'] = {
-                'cbc:Telephone': {
-                    '_text': self._sanitize_phone(invoice.partner_id.phone)
-                }
-            }
+        }
 
     def _add_invoice_seller_supplier_party_nodes(self, document_node, vals):
         # Add SellerSupplierParty

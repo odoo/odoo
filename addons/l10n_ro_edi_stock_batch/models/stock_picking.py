@@ -6,19 +6,14 @@ class Picking(models.Model):
 
     @api.depends('batch_id', 'company_id', 'picking_type_code')
     def _compute_l10n_ro_edi_stock_enable(self):
-        # OVERRIDES 'l10n_ro_edi_stock'
+        super()._compute_l10n_ro_edi_stock_enable()
         for picking in self:
-            picking.l10n_ro_edi_stock_enable = (
-                (not picking.batch_id or picking.batch_id.state != 'done')
-                and picking.picking_type_code != 'internal'
-                and picking.company_id.country_id.code == 'RO'
-            )
+            picking.l10n_ro_edi_stock_enable &= not picking.batch_id
 
     @api.model
     def _l10n_ro_edi_stock_validate_carrier_filter(self, picking):
-        # OVERRIDE l10n_ro_edi_stock
-
-        # Override for when the batch picking calls this function to validate the carriers
         validate_carrier = self.env.context.get('l10n_ro_edi_stock_validate_carrier', False)
-
-        return picking.company_id.account_fiscal_country_id.code == 'RO' and (picking.l10n_ro_edi_stock_enable or validate_carrier)
+        return (
+            super()._l10n_ro_edi_stock_validate_carrier_filter(picking)
+            or (picking.company_id.account_fiscal_country_id.code == 'RO' and validate_carrier)
+        )

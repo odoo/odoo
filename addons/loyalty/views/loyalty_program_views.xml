@@ -103,7 +103,7 @@
                                 />
                             </div>
                             <field name="payment_program_discount_product_id" groups="base.group_no_one" invisible="program_type not in ('gift_card', 'ewallet')"/>
-                            <field name="mail_template_id" invisible="program_type not in ('gift_card', 'ewallet')"/>
+                            <field name="mail_template_id" invisible="program_type not in ('gift_card', 'ewallet')" context="{'default_model': 'loyalty.card'}"/>
                             <field name="currency_id"/>
                             <field name="currency_symbol" invisible="1"/>
                             <field name="pricelist_ids"

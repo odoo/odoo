@@ -2,7 +2,7 @@
 
 from odoo import Command
 from odoo.exceptions import AccessError, UserError
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.mail.tests.common import MailCommon
@@ -155,3 +155,95 @@ class TestAccessRights(SaleCommon, MailCommon):
         # Employee can't delete the SO
         with self.assertRaises(AccessError):
             so_as_internal_user.unlink()
+
+    def test_access_invoice_from_sale_order(self):
+        """ Test access rights on invoices created from sale orders when the current user has no
+        accounting access rights but is the default salesperson related to the created invoice.
+
+        Cash rounding can trigger access checks on accounting records; this test ensures
+        the salesperson retains read/write access via the default user_id relation.
+        """
+        # Enable cash rounding in the settings, create one and set it as default for invoices
+        self.env.user.group_ids += self.env.ref('account.group_cash_rounding')
+        rounding = self.env['account.cash.rounding'].create({
+            'name': 'rounding',
+        })
+        self.env['ir.default'].set('account.move', 'invoice_cash_rounding_id', rounding.id)
+        # Create a sale order as a salesperson that has no accounting access rights
+        sale_order = self.env['sale.order'].with_user(self.sale_user).create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product.id,
+                }),
+            ],
+        })
+        # Salesperson confirms the SO and creates the related invoice
+        sale_order.action_confirm()
+        invoice = sale_order._create_invoices().with_user(self.sale_user)
+        # Ensure cache is clear so that the user needs to access fields
+        rounding.invalidate_recordset(["strategy"])
+        # Ensure the salesperson can access the invoice even when a cash rounding is set
+        with Form(invoice) as form:
+            self.assertEqual(form.user_id, self.sale_user)
+
+    def test_invoice_payment_on_read_only_sale_order(self):
+        """ Payment registration must not require write access on the sale order. """
+        self.sale_user2.group_ids |= self.env.ref('account.group_account_invoice')
+        self.sale_order.user_id = self.sale_user2.id
+        self.sale_order.action_confirm()
+        invoice = self.sale_order._create_invoices()
+        invoice.action_post()
+
+        # Block write access on sale orders while keeping read access.
+        self.env['ir.rule'].sudo().create({
+            'name': 'Test: block write access on sale orders',
+            'model_id': self.env.ref('sale.model_sale_order').id,
+            'domain_force': [(0, '=', 1)],
+            'perm_read': False,
+            'perm_write': True,
+            'perm_create': False,
+            'perm_unlink': False,
+        })
+
+        sale_order = self.sale_order.with_user(self.sale_user2)
+        self.assertTrue(sale_order.has_access('read'))
+        self.assertFalse(sale_order.has_access('write'))
+
+        previous_message_ids = self.sale_order.sudo().message_ids.ids
+        bank_journal = self.env['account.journal'].search([
+            ('type', '=', 'bank'),
+            ('company_id', '=', self.env.company.id),
+        ], limit=1)
+        payment_wizard = (
+            self.env['account.payment.register']
+            .with_user(self.sale_user2)
+            .with_context(active_model='account.move', active_ids=invoice.ids)
+            .create({
+                'journal_id': bank_journal.id,
+            })
+        )
+        payment_wizard.action_create_payments()
+        if invoice.payment_state == 'in_payment':
+            statement_line = self.env['account.bank.statement.line'].create({
+                'payment_ref': invoice.name,
+                'journal_id': bank_journal.id,
+                'partner_id': invoice.partner_id.id,
+                'amount': invoice.amount_residual,
+            })
+            _, suspense_lines, _ = statement_line._seek_for_lines()
+            receivable_lines = invoice.line_ids.filtered(
+                lambda line: line.account_type == 'asset_receivable' and not line.reconciled,
+            )
+            suspense_lines.account_id = receivable_lines.account_id
+            (suspense_lines | receivable_lines).reconcile()
+        self.assertTrue(
+            invoice.currency_id.is_zero(invoice.amount_residual),
+            "The invoice must be fully paid, otherwise the paid log cannot be created.",
+        )
+        self.assertTrue(
+            self.sale_order.sudo().message_ids.filtered(
+                lambda msg: msg.id not in previous_message_ids and invoice.name in (msg.body or ''),
+            ),
+            "The invoice must have been logged as paid on the sale order.",
+        )

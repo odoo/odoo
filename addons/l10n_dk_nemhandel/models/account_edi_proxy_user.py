@@ -173,7 +173,8 @@ class AccountEdiProxyClientUser(models.Model):
             'domain': {
                 'direction': 'incoming',
                 'errors': False,
-            }
+            },
+            'limit': job_count,
         }
         for edi_user in self:
             edi_user = edi_user.with_company(edi_user.company_id)
@@ -205,8 +206,8 @@ class AccountEdiProxyClientUser(models.Model):
             if not message_uuids:
                 continue
 
-            need_retrigger = need_retrigger or len(message_uuids) > job_count
-            message_uuids = message_uuids[:job_count]
+            has_more = messages.get('has_more', False)
+            need_retrigger = need_retrigger or has_more
 
             # retrieve attachments for filtered messages
             all_messages = edi_user._call_nemhandel_proxy(
@@ -361,7 +362,7 @@ class AccountEdiProxyClientUser(models.Model):
 
         if company.l10n_dk_nemhandel_proxy_state != 'in_verification':
             # a participant can only try registering as a receiver if they are not registered
-            nemhandel_state_translated = dict(company._fields['l10n_dk_nemhandel_proxy_state'].selection)[company.l10n_dk_nemhandel_proxy_state]
+            nemhandel_state_translated = dict(company._fields['l10n_dk_nemhandel_proxy_state']._description_selection(self.env))[company.l10n_dk_nemhandel_proxy_state]
             raise UserError(_('Cannot register a user with a %s application', nemhandel_state_translated))
 
         company_vat = company.vat[2:] if company.vat and company.vat[:2].isalpha() else company.vat

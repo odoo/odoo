@@ -128,12 +128,10 @@ export class SelectMenu extends Component {
         this.inputRef = useRef("inputRef");
         this.menuRef = useChildRef();
         this.props.menuRef?.(this.menuRef);
-        this.debouncedOnInput = useDebounced((ev) => {
+        this.debouncedOnInput = useDebounced((searchString) => {
             if (!this.dropdownState.isOpen) {
                 this.dropdownState.open();
             }
-            const searchString = ev.target.value;
-            this.state.searchValue = searchString;
             this.onInput(searchString);
         }, DEBOUNCED_DELAY);
         this.dropdownState = useDropdownState();
@@ -253,8 +251,12 @@ export class SelectMenu extends Component {
 
     onInputBlur(ev) {
         this.state.isFocused = false;
-        if (ev.target.value === "" && this.canDeselect && !this.props.multiSelect) {
-            this.onInputClear();
+        if (ev.target.value === "" && !this.props.multiSelect) {
+            if (this.canDeselect) {
+                this.onInputClear();
+            } else {
+                this.state.searchValue = null;
+            }
         }
     }
 
@@ -262,6 +264,11 @@ export class SelectMenu extends Component {
         if (!ev.target.classList.contains("o_select_menu_toggler")) {
             ev.stopPropagation();
         }
+    }
+
+    onSearchInput(ev) {
+        this.state.searchValue = ev.target.value;
+        this.debouncedOnInput(this.state.searchValue);
     }
 
     onInputClear() {

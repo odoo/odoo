@@ -312,3 +312,61 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
            to negative value."""
         with self.assertRaises(ValidationError):
             self.root_company.fiscalyear_last_day = -1
+
+    def test_chart_template_ref_branch_user_without_parent_access(self):
+        """Branch users must resolve parent-company chart xmlids without parent company access."""
+        branch_user = self.env['res.users'].create({
+            'name': 'Branch Chart Ref User',
+            'login': 'branch_chart_ref_test',
+            'email': 'branch_chart_ref_test@example.com',
+            'company_id': self.branch_a.id,
+            'company_ids': [Command.set([self.branch_a.id])],
+            'group_ids': [Command.set([
+                self.env.ref('account.group_account_invoice').id,
+            ])],
+        })
+        # The outstanding accounts only exist on the root company
+        ChartTemplate = self.env['account.chart.template']
+        xmlid = 'account_journal_payment_debit_account_id'
+        root_account = ChartTemplate.with_company(self.root_company).ref(xmlid)
+
+        # The root company is in cache at this point, which would hide the access error
+        self.env.invalidate_all()
+        branch_account = ChartTemplate.with_user(branch_user).with_company(self.branch_a).ref(xmlid)
+        self.assertEqual(branch_account, root_account)
+
+    def test_branch_user_bank_statement_foreign_currency(self):
+        # Create a user that only belongs to branch a
+        user = self.env['res.users'].create({
+            'name': "User A",
+            'login': "user_a@example.com",
+            'email': "user_a@example.com",
+            'company_id': self.branch_a.id,
+            'company_ids': [Command.set([self.branch_a.id])],
+            'group_ids': [Command.set([
+                self.env.ref('account.group_account_user').id,
+            ])],
+        })
+
+        journal = self.env['account.journal'].create({
+            'name': "Bank (EUR)",
+            'code': "EBNK",
+            'type': "bank",
+            'company_id': self.root_company.id,
+            'currency_id': self.other_currency.id,
+        })
+
+        statement_line = self.env['account.bank.statement.line'].with_user(user.id).create({
+            'date': '2019-01-01',
+            'journal_id': journal.id,
+            'payment_ref': 'line_1',
+            'partner_id': False,
+            'foreign_currency_id': False,
+            'amount': 25,
+            'company_id': self.branch_a.id
+        })
+
+        self.assertRecordValues(statement_line, [{
+            'amount_total_in_currency_signed': 25,
+            'amount_total_signed': 12.5,
+        }])

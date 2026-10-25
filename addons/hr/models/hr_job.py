@@ -36,7 +36,7 @@ class HrJob(models.Model):
     # TODO (master): remove the field `allowed_user_ids`.
     allowed_user_ids = fields.Many2many('res.users', compute='_compute_allowed_user_ids', readonly=True)
     department_id = fields.Many2one('hr.department', string='Department', check_company=True, tracking=True, index='btree_not_null')
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, tracking=True)
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, tracking=True, domain=lambda self: [('id', 'in', self.env.companies.ids)])
     contract_type_id = fields.Many2one('hr.contract.type', string='Employment Type', tracking=True)
 
     _name_company_uniq = models.Constraint(

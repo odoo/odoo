@@ -21,7 +21,7 @@
                             <td style="max-width: 9rem;">
                                 <a t-att-title="(line.bank_label ? line.bank_label + ' - ' : '') + (line.move_ref ? line.move_ref : '')"
                                    role="button"
-                                   class="open_account_move oe_form_field btn btn-link w-100 text-start"
+                                   class="open_account_move oe_form_field btn btn-link text-truncate w-100 text-start"
                                    t-on-click="() => this.openMove(line.move_id)"
                                    data-bs-toggle="tooltip"
                                    t-att-payment-id="account_payment_id"
@@ -50,7 +50,7 @@
                             </td>
                             <td t-if="line.is_exchange" colspan="2">
                                 <i class="o_field_widget text-start text-muted text-start">
-                                    <span class="oe_form_field oe_form_field_float oe_form_field_monetary fw-bold">
+                                    <span class="oe_form_field oe_form_field_float oe_form_field_monetary fw-bold" dir="ltr">
                                         <t t-out="line.amount_formatted"/>
                                     </span>
                                     <span> Exchange Difference</span>
@@ -58,7 +58,7 @@
                             </td>
                         </t>
                         <td t-if="!line.is_exchange" class="text-end ps-2 text-nowrap">
-                            <span class="oe_form_field oe_form_field_float oe_form_field_monetary">
+                            <span class="oe_form_field oe_form_field_float oe_form_field_monetary" dir="ltr">
                                 <t t-out="line.amount_formatted"/>
                             </span>
                         </td>

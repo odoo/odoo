@@ -11,10 +11,8 @@ patch(ResUsers.prototype, {
         });
         this.employee_id = fields.One("hr.employee", {
             compute() {
-                return (
-                    this.employee_ids.find(
-                        (employee) => employee.company_id?.id === user.activeCompany.id
-                    ) || this.employee_ids[0]
+                return this.employee_ids.find(
+                    (employee) => employee.company_id?.id === user.activeCompany.id
                 );
             },
         });

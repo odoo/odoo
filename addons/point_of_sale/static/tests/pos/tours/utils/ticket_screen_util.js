@@ -96,11 +96,34 @@ export function search(field, searchWord) {
                     : "TSJ/" + new Date().getFullYear() + "/" + searchWord
             }`,
         },
+        suggestionIsOnTop(field),
         {
             trigger: `.pos-search-bar .search ul li:contains("${field}")`,
             run: "click",
         },
     ];
+}
+/**
+ * A tour clicks the element directly, so it would not notice a suggestion that is
+ * painted behind the order list. Assert it is the topmost element at its own center.
+ */
+export function suggestionIsOnTop(field) {
+    return {
+        content: `the "${field}" search suggestion must not be covered by another element`,
+        trigger: `.pos-search-bar .search ul li:contains("${field}")`,
+        run: function () {
+            const rect = this.anchor.getBoundingClientRect();
+            const topMost = document.elementFromPoint(
+                rect.left + rect.width / 2,
+                rect.top + rect.height / 2
+            );
+            if (topMost !== this.anchor && !this.anchor.contains(topMost)) {
+                throw new Error(
+                    `The "${field}" search suggestion is hidden behind <${topMost?.tagName} class="${topMost?.className}">`
+                );
+            }
+        },
+    };
 }
 export function settleTips() {
     return [

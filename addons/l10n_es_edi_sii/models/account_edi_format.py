@@ -213,7 +213,7 @@ class AccountEdiFormat(models.Model):
             info = {
                 'PeriodoLiquidacion': {
                     'Ejercicio': str(invoice.date.year),
-                    'Periodo': str(invoice.date.month).zfill(2),
+                    'Periodo': invoice._l10n_es_edi_get_period(),
                 },
                 'IDFactura': {
                     'FechaExpedicionFacturaEmisor': invoice.invoice_date.strftime('%d-%m-%Y'),
@@ -244,7 +244,11 @@ class AccountEdiFormat(models.Model):
                         **partner_info,
                         'NombreRazon': com_partner.name[:120],
                     }
-                invoice_node['ClaveRegimenEspecialOTrascendencia'] = invoice.invoice_line_ids.tax_ids._l10n_es_get_regime_code()
+
+                regime_code = invoice.invoice_line_ids.tax_ids._l10n_es_get_regime_code()
+                if regime_code != '02' and com_partner.country_id.code == 'ES' and com_partner.state_id.code in ('TF', 'GC', 'CE', 'ME') and invoice.invoice_line_ids.tax_ids.filtered(lambda t: t.l10n_es_type == 'no_sujeto_loc'):
+                    regime_code = '08'
+                invoice_node['ClaveRegimenEspecialOTrascendencia'] = regime_code
             else:
                 if invoice._l10n_es_is_dua():
                     partner_info = self._l10n_es_edi_get_partner_info(invoice.company_id.partner_id)
@@ -409,6 +413,15 @@ class AccountEdiFormat(models.Model):
                 'test_url': 'https://sii-prep.egoitza.gipuzkoa.eus/JBS/HACI/SSII-FACT/ws/fr/SiiFactFRV1SOAP',
             }
 
+    def _l10n_es_edi_web_service_navarra_vals(self, invoices):
+        wsdl = 'SuministroFactEmitidas' if invoices[0].is_sale_document() else 'SuministroFactRecibidas'
+        return {
+            'url': f'https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/ssii_1_1/fact/ws/{wsdl}.wsdl',
+            'address': 'https://siihacienda.navarra.es/SII_PRODUCCION.proxy/SiiMensajesXsdHandlet.ashx',
+            'test_url': 'https://siihacienda.navarra.es/SII_PRUEBAS.proxy/SiiMensajesXsdHandlet.ashx',
+            'custom_navarra': True,
+        }
+
     def _l10n_es_edi_call_web_service_sign(self, invoices, info_list):
         return self._l10n_es_edi_call_web_service_sign_common(invoices, info_list)
 
@@ -442,7 +455,15 @@ class AccountEdiFormat(models.Model):
         session.cert = company.l10n_es_sii_certificate_id
         session.mount('https://', CertificateAdapter(ciphers=EUSKADI_CIPHERS))
 
-        client = zeep.Client(connection_vals['url'], operation_timeout=60, timeout=60, session=session)
+        client = company._get_zeep_client__(connection_vals['url'], session=session)
+
+        if connection_vals.get('custom_navarra'):
+            # We Inject the namespaces directly in the header dictionary
+            # This makes Odoo serializer to include them in the Envelope
+            header['_attributes'] = {
+                'xmlns:sum': 'https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/ssii/fact/ws/SuministroLR.xsd',
+                'xmlns:sum1': 'https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/ssii/fact/ws/SuministroInformacion.xsd',
+            }
 
         if invoices[0].is_sale_document():
             service_name = 'SuministroFactEmitidas'
@@ -457,6 +478,7 @@ class AccountEdiFormat(models.Model):
             serv._binding_options['address'] = connection_vals['test_url']
 
         error_msg = None
+        blocking_lvl = None
         try:
             if cancel:
                 if invoices[0].is_sale_document():
@@ -470,6 +492,10 @@ class AccountEdiFormat(models.Model):
                     res = serv.SuministroLRFacturasRecibidas(header, info_list)
         except requests.exceptions.SSLError as error:
             error_msg = _("The SSL certificate could not be validated.")
+        # If the receiver intentionally rejects the message, he migth return a Fault
+        except zeep.exceptions.Fault as soapfault:
+            blocking_lvl = 'error'
+            error_msg = self.env._("Fault error:\n[%(code)s] %(message)s", code=soapfault.code, message=soapfault.message)
         except (zeep.exceptions.Error, requests.exceptions.ConnectionError) as error:
             error_msg = _("Networking error:\n%s", error)
         except Exception as error:
@@ -478,7 +504,7 @@ class AccountEdiFormat(models.Model):
         if error_msg:
             return {inv: {
                 'error': error_msg,
-                'blocking_level': 'warning',
+                'blocking_level': blocking_lvl or 'warning',
             } for inv in invoices}
 
         # Process response.

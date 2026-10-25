@@ -189,14 +189,13 @@ class TestPartnerLeadPortal(TestCrmCommon, HttpCase):
         })
         opportunity = self.env['crm.lead'].browse(data['id'])
 
-        email_1 = 'test_partner@test.com'
+        origin_email = 'test_partner@test.com'
         test_user = self.env['res.users'].create({
             'name': 'test user',
             'login': 'user',
-            'email': email_1,
+            'email': origin_email,
         })
         test_partner = test_user.partner_id
-        test_partner.user_id = test_user
 
         with self.assertRaises(AccessError):
             opportunity.with_user(self.user_portal).write({
@@ -218,18 +217,24 @@ class TestPartnerLeadPortal(TestCrmCommon, HttpCase):
         opportunity.with_user(self.user_portal).update_lead_portal(update_values)
         self.assertEqual(opportunity.expected_revenue, 9999.0, "Portal user should be able to update revenue or other details via portal method")
 
-        email_2 = 'test_partner_updated@test.com'
-        opportunity.with_user(self.user_portal).update_contact_details_from_portal({
-            'email_from': email_2,
-        })
-        self.assertEqual(opportunity.email_from, email_2, 'Address email on the opportunity must be updated')
-        self.assertEqual(test_partner.email, email_1, 'Adress email on the partner should not be updated')
+        # `update_contact_details_from_portal` should not update partner's email address
 
+        # Lead linked to a user via a partner
+        new_email = 'test_partner_update1@test.com'
+        opportunity.with_user(self.user_portal).update_contact_details_from_portal({
+            'email_from': new_email,
+        })
+        self.assertEqual(opportunity.email_from, new_email, 'Address email on the opportunity must be updated')
+        self.assertEqual(test_partner.email, origin_email, 'Adress email on the partner should not be updated')
+
+        # Lead not linked to a user via a parter
+        new_email = 'test_partner_update2@test.com'
         test_user.unlink()
         opportunity.with_user(self.user_portal).update_contact_details_from_portal({
-            'email_from': email_2,
+            'email_from': new_email,
         })
-        self.assertEqual(test_partner.email, email_2, 'Adress email on the partner must be updated')
+        self.assertEqual(opportunity.email_from, new_email, 'Address email on the opportunity must be updated')
+        self.assertEqual(test_partner.email, origin_email, 'Adress email on the partner should not be updated')
 
         # Portal user must be able to write to the thread
         old_message_ids = opportunity.message_ids

@@ -1,4 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 
@@ -95,6 +96,14 @@ export class PopupVisibilityPlugin extends Plugin {
             modalEl.classList.remove("show");
             this.window.Modal.getOrCreateInstance(modalEl)._hideModal();
             this.window.Modal.getInstance(modalEl).dispose();
+        }
+
+        // Delete all empty popups upon save
+        for (const popupEl of selectElements(rootEl, ".s_popup")) {
+            const isPopupEmpty = !popupEl.querySelector(".oe_structure > *:not(.s_popup_close)");
+            if (isPopupEmpty) {
+                popupEl.remove();
+            }
         }
     }
 

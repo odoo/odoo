@@ -3,4 +3,5 @@
 
 from . import loyalty_program
 from . import loyalty_reward
+from . import payment_provider
 from . import sale_order

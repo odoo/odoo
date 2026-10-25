@@ -283,9 +283,9 @@ class StockForecasted_Product_Product(models.AbstractModel):
                     continue
                 # check available qty for move if chained, move available is what was move by orig moves
                 if move.move_orig_ids:
-                    move_in_qty = sum(move.move_orig_ids.filtered(lambda m: m.state == 'done').mapped('quantity'))
+                    move_in_qty = sum(move.move_orig_ids.filtered(lambda m: m.state == 'done').move_line_ids.mapped('quantity_product_uom'))
                     sibling_moves = (move.move_orig_ids.move_dest_ids - move)
-                    move_out_qty = sum(sibling_moves.filtered(lambda m: m.state == 'done').mapped('quantity'))
+                    move_out_qty = sum(sibling_moves.filtered(lambda m: m.state == 'done').move_line_ids.mapped('quantity_product_uom'))
                     move_available_qty = move_in_qty - move_out_qty - reserved
                 else:
                     move_available_qty = currents[(out.product_id.id, move.location_id.id)]
@@ -346,7 +346,8 @@ class StockForecasted_Product_Product(models.AbstractModel):
         linked_moves_per_out = {}
         ins_ids = set(ins._ids)
         for out in outs:
-            linked_move_ids = out._rollup_move_origs() - ins_ids
+            # stop the rollup at the in moves: what feeds them is still outside the warehouse
+            linked_move_ids = out._rollup_move_origs(seen=OrderedSet(ins._ids)) - ins_ids
             linked_moves_per_out[out] = self.env['stock.move'].browse(linked_move_ids)
 
         # Gather all linked moves

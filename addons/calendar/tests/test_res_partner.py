@@ -2,6 +2,7 @@
 
 from odoo.tests.common import TransactionCase
 from odoo.tests.common import new_test_user
+from odoo.addons.mail.tests.common import mail_new_test_user
 
 
 class TestResPartner(TransactionCase):
@@ -75,3 +76,43 @@ class TestResPartner(TransactionCase):
         self.assertEqual(test_partner_5.meeting_count, 2)
         self.assertEqual(test_partner_6.meeting_count, 1)
         self.assertEqual(test_partner_7.meeting_count, 1)
+
+    def test_view_multicompany_contact_with_inaccessible_meeting_parent(self):
+        """Check the partner's meeting accesses in a multi-company environment."""
+
+        company1 = self.env.ref('base.main_company')
+        company2 = self.env['res.company'].create({'name': 'OtherCompany'})
+
+        company1.partner_id.company_id = company1
+
+        # create two users
+        allcompany_user = mail_new_test_user(
+            self.env,
+            name='All company User',
+            login='allcompany_user',
+            company_id=company1.id,
+            company_ids=[company1.id, company2.id],
+            groups='base.group_user',
+        )
+        company1_user = mail_new_test_user(
+            self.env,
+            name='Restricted Kanban User',
+            login='restricted_kanban_user',
+            company_id=company1.id,
+            company_ids=[company1.id, company2.id],
+            groups='base.group_user',
+        )
+        company1_user.partner_id.write({'company_id': company1.id, 'parent_id': company1.partner_id.id})
+
+        # create an event that includes both users' partners (imitates the provided payload)
+        self.env['calendar.event'].create({
+            'name': 'test',
+            'start': '2026-02-16 17:00:00',
+            'stop': '2026-02-16 18:00:00',
+            'partner_ids': [allcompany_user.partner_id.id, company1_user.partner_id.id],
+        })
+
+        # compute the meeting_count as seen from another company
+        self.env.invalidate_all()
+        c1_partner_seen_from_c2 = company1_user.partner_id.with_user(allcompany_user).with_company(company2)
+        self.assertEqual(c1_partner_seen_from_c2.meeting_count, 1, "Should compute meeting count without access error as partner is accessible in all companies")

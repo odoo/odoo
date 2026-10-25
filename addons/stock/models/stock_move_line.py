@@ -10,6 +10,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import OrderedSet, groupby
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
+from odoo.tools.misc import clean_context
 
 
 class StockMoveLine(models.Model):
@@ -189,6 +190,11 @@ class StockMoveLine(models.Model):
         if self.product_id:
             self.lots_visible = self.product_id.tracking != 'none'
 
+    @api.onchange('quant_id')
+    def _onchange_quant_id(self):
+        if self.quant_id:
+            self.update(self._copy_quant_info({'quant_id': self.quant_id.id}))
+
     @api.onchange('lot_name', 'lot_id')
     def _onchange_serial_number(self):
         """ When the user is encoding a move line for a tracked product, we apply some logic to
@@ -350,6 +356,9 @@ class StockMoveLine(models.Model):
                 vals.update(self._copy_quant_info(vals))
 
         mls = super().create(vals_list)
+        # A new line can break the entirety of a package it shares with lines already in the transfer.
+        if mls_not_entire_pack := (mls | mls.picking_id.move_line_ids)._get_lines_not_entire_pack():
+            mls_not_entire_pack.is_entire_pack = False
 
         created_moves = set()
 
@@ -571,8 +580,12 @@ class StockMoveLine(models.Model):
             if not float_is_zero(ml.quantity_product_uom, precision_digits=precision) and ml.move_id and not ml.move_id._should_bypass_reservation(ml.location_id):
                 self.env['stock.quant']._update_reserved_quantity(ml.product_id, ml.location_id, -ml.quantity_product_uom, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
         moves = self.mapped('move_id')
+        pickings = self.picking_id
         packages = self.env['stock.package'].browse(self.result_package_id._get_all_package_dest_ids())
         res = super().unlink()
+        # Removing a line can break the entirety of a package it shares with the remaining lines.
+        if mls_not_entire_pack := pickings.move_line_ids._get_lines_not_entire_pack():
+            mls_not_entire_pack.is_entire_pack = False
         if moves:
             # Add with_prefetch() to set the _prefecht_ids = _ids
             # because _prefecht_ids generator look lazily on the cache of move_id
@@ -641,10 +654,10 @@ class StockMoveLine(models.Model):
             elif not ml.is_inventory:
                 ml_ids_to_delete.add(ml.id)
 
-        for (product, _company), mls in ml_ids_to_check.items():
+        for (product, company), mls in ml_ids_to_check.items():
             mls = self.env['stock.move.line'].browse(mls)
             lots = self.env['stock.lot'].search([
-                '|', ('company_id', '=', False), ('company_id', '=', ml.company_id.id),
+                '|', ('company_id', '=', False), ('company_id', '=', company.id),
                 ('product_id', '=', product.id),
                 ('name', 'in', mls.mapped('lot_name')),
             ])
@@ -678,9 +691,18 @@ class StockMoveLine(models.Model):
 
         # Now, we can actually move the quant.
         ml_ids_to_ignore = OrderedSet()
+
+        # The loop below gathers in strict mode, matching the lot, package and
+        # owner of each move line exactly: only those quants can ever be read
+        # from the cache, so restrict it to them.
+        packages = mls_todo.package_id | mls_todo.result_package_id
         quants_cache = self.env['stock.quant']._get_quants_by_products_locations(
             mls_todo.product_id, mls_todo.location_id | mls_todo.location_dest_id,
-            extra_domain=['|', ('lot_id', 'in', mls_todo.lot_id.ids), ('lot_id', '=', False)])
+            extra_domain=[
+                '|', ('lot_id', 'in', mls_todo.lot_id.ids), ('lot_id', '=', False),
+                '|', ('package_id', 'in', packages.ids), ('package_id', '=', False),
+                '|', ('owner_id', 'in', mls_todo.owner_id.ids), ('owner_id', '=', False),
+            ])
 
         # Prepare package history records before any actual move
         if not self.env.context.get('ignore_dest_packages'):
@@ -787,6 +809,14 @@ class StockMoveLine(models.Model):
             subtype_xmlid='mail.mt_note',
         )
 
+    def _get_outdated_candidate_sort_key(self, candidate):
+        """ Prioritise the current picking first, followed by pickings with the latest scheduled date"""
+        return (
+            candidate.picking_id != self.move_id.picking_id,
+            -(candidate.picking_id.scheduled_date or candidate.move_id.date).timestamp()
+            if candidate.picking_id or candidate.move_id else 0,
+            -candidate.id)
+
     def _free_reservation(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, ml_ids_to_ignore=None):
         """ When editing a done move line or validating one with some forced quantities, it is
         possible to impact quants that were not reserved. It is therefore necessary to edit or
@@ -816,15 +846,7 @@ class StockMoveLine(models.Model):
             ('id', 'not in', tuple(ml_ids_to_ignore)),
         ]
 
-        # We take the current picking first, then the pickings with the latest scheduled date
-        def current_picking_first(cand):
-            return (
-                cand.picking_id != self.move_id.picking_id,
-                -(cand.picking_id.scheduled_date or cand.move_id.date).timestamp()
-                if cand.picking_id or cand.move_id else 0,
-                -cand.id)
-
-        outdated_candidates = self.env['stock.move.line'].search(outdated_move_lines_domain).sorted(current_picking_first)
+        outdated_candidates = self.env['stock.move.line'].search(outdated_move_lines_domain).sorted(self._get_outdated_candidate_sort_key)
 
         # As the move's state is not computed over the move lines, we'll have to manually
         # recompute the moves which we adapted their lines.
@@ -849,7 +871,7 @@ class StockMoveLine(models.Model):
                 'move_orig_ids': [Command.clear()]
             })
         move_line_to_unlink.unlink()
-        move_to_reassign._action_assign()
+        move_to_reassign[::-1]._action_assign()
 
     def _get_aggregated_properties(self, move_line=False, move=False):
         move = move or move_line.move_id
@@ -919,7 +941,7 @@ class StockMoveLine(models.Model):
                     previous_move_lines = move_line.move_id.move_line_ids.filtered(
                         lambda ml: line_key.startswith(self._get_aggregated_properties(move=ml.move_id)['line_key']) and ml.id != move_line.id
                     )
-                    qty_ordered -= sum([m.product_uom_id._compute_quantity(m.quantity, uom) for m in previous_move_lines])
+                    qty_ordered = uom.round(qty_ordered - sum(m.product_uom_id._compute_quantity(m.quantity, uom) for m in previous_move_lines))
                     packaging_qty_ordered = uom._compute_quantity(qty_ordered, move_line.move_id.packaging_uom_id)
                 aggregated_move_lines[line_key] = {
                     **aggregated_properties,
@@ -930,10 +952,10 @@ class StockMoveLine(models.Model):
                     'product': move_line.product_id,
                 }
             else:
-                aggregated_move_lines[line_key]['qty_ordered'] += quantity
-                aggregated_move_lines[line_key]['packaging_qty_ordered'] += packaging_quantity
-                aggregated_move_lines[line_key]['quantity'] += quantity
-                aggregated_move_lines[line_key]['packaging_quantity'] += packaging_quantity
+                aggregated_move_lines[line_key]['qty_ordered'] = uom.round(aggregated_move_lines[line_key]['qty_ordered'] + quantity)
+                aggregated_move_lines[line_key]['packaging_qty_ordered'] = move_line.move_id.packaging_uom_id.round(aggregated_move_lines[line_key]['packaging_qty_ordered'] + packaging_quantity)
+                aggregated_move_lines[line_key]['quantity'] = uom.round(aggregated_move_lines[line_key]['quantity'] + quantity)
+                aggregated_move_lines[line_key]['packaging_quantity'] = move_line.move_id.packaging_uom_id.round(aggregated_move_lines[line_key]['packaging_quantity'] + packaging_quantity)
 
         # Does the same for empty move line to retrieve the ordered qty. for partially done moves
         # (as they are splitted when the transfer is done and empty moves don't have move lines).
@@ -950,7 +972,7 @@ class StockMoveLine(models.Model):
                 else:
                     to_bypass = True
             aggregated_properties = self._get_aggregated_properties(move=empty_move)
-            line_key = aggregated_properties['line_key']
+            line_key, uom = aggregated_properties['line_key'], aggregated_properties['product_uom']
 
             if not any(aggregated_key.startswith(line_key) for aggregated_key in aggregated_move_lines) and not to_bypass:
                 qty_ordered = empty_move.product_uom_qty
@@ -963,11 +985,11 @@ class StockMoveLine(models.Model):
                     'product': empty_move.product_id,
                 }
             elif line_key in aggregated_move_lines:
-                aggregated_move_lines[line_key]['qty_ordered'] += empty_move.product_uom_qty
+                aggregated_move_lines[line_key]['qty_ordered'] = uom.round(aggregated_move_lines[line_key]['qty_ordered'] + empty_move.product_uom_qty)
             else:
                 keys = list(filter(lambda key: key.startswith(line_key), aggregated_move_lines))
                 if keys:
-                    aggregated_move_lines[keys[0]]['qty_ordered'] += empty_move.product_uom_qty
+                    aggregated_move_lines[keys[0]]['qty_ordered'] = uom.round(aggregated_move_lines[keys[0]]['qty_ordered'] + empty_move.product_uom_qty)
 
         return aggregated_move_lines
 
@@ -1124,6 +1146,8 @@ class StockMoveLine(models.Model):
         return package
 
     def action_put_in_pack(self, *, package_id=False, package_type_id=False, package_name=False):
+        if self.env.context.get('sml_specific_default'):
+            self = self.with_context(clean_context(self.env.context))  # noqa: PLW0642
         move_lines = self
         if self.env.context.get('all_move_line_ids'):
             move_lines = self.env['stock.move.line'].browse(self.env.context['all_move_line_ids'])
@@ -1191,7 +1215,7 @@ class StockMoveLine(models.Model):
                 'location_dest_id': self.location_id.id,
                 'company_id': self.company_id.id or self.env.company.id,
                 'lot_id': self.lot_id.id,
-                'package_id': self.package_id.id,
+                'package_id': self.result_package_id.id,
                 'result_package_id': self.package_id.id,
                 'owner_id': self.owner_id.id,
             })]

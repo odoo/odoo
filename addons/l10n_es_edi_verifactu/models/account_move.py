@@ -1,4 +1,5 @@
 from odoo import _, api, fields, models
+from odoo.tools.sql import column_exists, create_column
 
 
 class AccountMove(models.Model):
@@ -78,6 +79,18 @@ class AccountMove(models.Model):
         copy=False,
     )
 
+    def _auto_init(self):
+        """Create columns `l10n_es_edi_verifactu_state` and `l10n_es_edi_verifactu_clave_regimen`
+        to avoid computing them during the installation of the module.
+        """
+        if not column_exists(self.env.cr, 'account_move', 'l10n_es_edi_verifactu_state'):
+            create_column(self.env.cr, 'account_move', 'l10n_es_edi_verifactu_state', 'varchar')
+
+        if not column_exists(self.env.cr, 'account_move', 'l10n_es_edi_verifactu_clave_regimen'):
+            create_column(self.env.cr, 'account_move', 'l10n_es_edi_verifactu_clave_regimen', 'varchar')
+
+        return super()._auto_init()
+
     @api.model
     def _l10n_es_edi_verifactu_clave_regimen_selection(self):
         return [
@@ -89,6 +102,7 @@ class AccountMove(models.Model):
             # VAT & IGIC
             ('01', _("General regime operation")),
             ('02', _("Export")),
+            ('08', _("IPSI/IGIC")),
             ('11', _("Leasing of business premises")),
             # VAT only
             ('17_iva', _("Operation under one of the regimes provided for in Chapter XI of Title IX (OSS and IOSS).")),

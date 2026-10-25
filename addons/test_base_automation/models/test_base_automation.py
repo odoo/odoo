@@ -49,6 +49,13 @@ class BaseAutomationLeadTest(models.Model):
             else:
                 record.deadline = record.create_date + relativedelta.relativedelta(days=3)
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        leads = super().create(vals_list)
+        if self.env.context.get('test_base_automation_read_stage_on_create'):
+            leads.mapped('stage_id')
+        return leads
+
     def write(self, vals):
         result = super().write(vals)
         # force recomputation of field 'deadline' via 'employee': the action
@@ -122,10 +129,11 @@ class Test_Base_AutomationTask(models.Model):
             if not task.project_id:
                 task.project_id = task.parent_id.project_id
 
-    @api.depends('trigger_hours')
+    @api.depends('trigger_hours', 'project_id')
     def _compute_effective_hours(self):
         for task in self:
-            task.effective_hours = task.trigger_hours
+            # reading 'project_id' nests its computation inside this one
+            task.effective_hours = task.trigger_hours if task.project_id else 0.0
 
     @api.depends('effective_hours')
     def _compute_remaining_hours(self):
@@ -153,6 +161,21 @@ class BaseAutomationLeadThreadTest(models.Model):  # noqa: F811
     _name = 'base.automation.lead.thread.test'
     _inherit = ["base.automation.lead.test", "mail.thread"]
     _description = "Threaded Lead Test"
+
+
+class ReadOnlyTest(models.Model):
+    _name = "base.automation.readonly.test"
+    _description = "Automated Rule Read-Only Test"
+
+    name = fields.Char()
+    tag_id = fields.Many2one('test_base_automation.tag')
+    tag_name = fields.Char(compute='_compute_tag_name', store=True, compute_sudo=False)
+    date_automation_last = fields.Datetime(readonly=True)
+
+    @api.depends('tag_id.name')
+    def _compute_tag_name(self):
+        for record in self:
+            record.tag_name = record.tag_id.name
 
 
 class BaseAutomationModelWithRecnameChar(models.Model):

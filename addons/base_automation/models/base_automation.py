@@ -5,6 +5,7 @@ import logging
 import re
 import traceback
 from collections import defaultdict
+from contextlib import contextmanager
 from uuid import uuid4
 
 from dateutil.relativedelta import relativedelta
@@ -51,6 +52,22 @@ def _domain_fields_differences(automation, domain1, domain2):
     in_d1_only_fields = d1_fields - d2_fields
     in_d2_only_fields = d2_fields - d1_fields
     return in_d1_only_fields, in_d2_only_fields
+
+
+@contextmanager
+def _keep_to_compute(env, changed_fields):
+    """ Keep the computed fields depending on ``changed_fields`` as-is, so that
+    they are recomputed once the values of ``changed_fields`` are set.
+    """
+    to_compute = {
+        dep: comp
+        for f in changed_fields
+        for dep in env.registry.get_dependent_fields(f)
+        if (comp := env.records_to_compute(dep))
+    }
+    yield
+    for dep, comp in to_compute.items():
+        env.add_to_compute(dep, comp)
 
 
 DATE_RANGE = {
@@ -637,8 +654,8 @@ class BaseAutomation(models.Model):
         try:
             return self._process(record)
         except Exception as e: # noqa: BLE001
-            msg = "Webhook #%s failed with error:\n%s"
-            msg_args = (self.id, traceback.format_exc())
+            msg = "Webhook #%s failed on record %s with error:\n%s"
+            msg_args = (self.id, record, traceback.format_exc())
             _logger.warning(msg, *msg_args)
             if self.log_webhook_calls:
                 ir_logging_sudo.create(self._prepare_loggin_values(message=msg % msg_args, level="ERROR"))
@@ -734,19 +751,7 @@ class BaseAutomation(models.Model):
                 # automations while evaluating their precondition
                 records = records.with_context(__action_feedback=True)
             domain = safe_eval.safe_eval(self_sudo.filter_pre_domain, self._get_eval_context())
-            # keep computed fields depending on the currently changed field
-            # as-is so they are recomputed after the value is set
-            # see `test_computation_sequence`
-            changed_fields = self.env.context.get('changed_fields', ())
-            to_compute = {
-                dep: comp
-                for f in changed_fields
-                for dep in self.env.registry.get_dependent_fields(f)
-                if (comp := self.env.records_to_compute(dep))
-            }
-            records = records.with_context(changed_fields=()).sudo().filtered_domain(domain).sudo(records.env.su)
-            for dep, comp in to_compute.items():
-                self.env.add_to_compute(dep, comp)
+            records = records.sudo().filtered_domain(domain).sudo(records.env.su)
         return records
 
     def _filter_post(self, records, feedback=False):
@@ -785,7 +790,7 @@ class BaseAutomation(models.Model):
             return
 
         # mark the remaining records as done (to avoid recursive processing)
-        if self.env.context.get('__action_feedback'):
+        if records.env.context.get('__action_feedback'):
             # modify the context dict in place: this is useful when fields are
             # computed during the pre/post filtering, in order to know which
             # automations have already been run by the computation itself
@@ -802,7 +807,7 @@ class BaseAutomation(models.Model):
         automation_done[self] = records_done + records
 
         if records and 'date_automation_last' in records._fields:
-            records.date_automation_last = self.env.cr.now()
+            records.sudo().date_automation_last = self.env.cr.now()
 
         # prepare the contexts for server actions
         contexts = [
@@ -872,7 +877,8 @@ class BaseAutomation(models.Model):
                         "Processing automation rule %s (#%s) on %s records (create)",
                         automation.sudo().name, automation.sudo().id, len(records),
                     )
-                    automation._process(automation._filter_post(records, feedback=True))
+                    with _keep_to_compute(self.env, self.env._protected):
+                        automation._process(automation._filter_post(records, feedback=True))
                 return records.with_env(self.env)
 
             return create
@@ -885,8 +891,10 @@ class BaseAutomation(models.Model):
                 if not (automations and self):
                     return write.origin(self, vals, **kw)
                 records = self.with_env(automations.env).filtered('id')
+                written_fields = [records._fields[n] for n in vals if n in records._fields]
                 # check preconditions on records
-                pre = {a: a._filter_pre(records) for a in automations}
+                with _keep_to_compute(self.env, written_fields):
+                    pre = {a: a._filter_pre(records) for a in automations}
                 # read old values before the update
                 old_values = {
                     record.id: {field_name: record[field_name] for field_name in vals if field_name in record._fields and record._fields[field_name].store}
@@ -896,12 +904,13 @@ class BaseAutomation(models.Model):
                 write.origin(self.with_env(automations.env), vals, **kw)
                 # check postconditions, and execute actions on the records that satisfy them
                 for automation in automations.with_context(old_values=old_values):
-                    _logger.debug(
-                        "Processing automation rule %s (#%s) on %s records (write)",
-                        automation.sudo().name, automation.sudo().id, len(records),
-                    )
-                    records, domain_post = automation._filter_post_export_domain(pre[automation], feedback=True)
-                    automation._process(records, domain_post=domain_post)
+                    with _keep_to_compute(self.env, written_fields):
+                        _logger.debug(
+                            "Processing automation rule %s (#%s) on %s records (write)",
+                            automation.sudo().name, automation.sudo().id, len(records),
+                        )
+                        records, domain_post = automation._filter_post_export_domain(pre[automation], feedback=True)
+                        automation._process(records, domain_post=domain_post)
                 return True
 
             return write
@@ -925,22 +934,24 @@ class BaseAutomation(models.Model):
                 # check preconditions on records
                 # changed fields are all fields computed by the function
                 changed_fields = [f for f in records._fields.values() if f.compute == field.compute]
-                pre = {a: a.with_context(changed_fields=changed_fields)._filter_pre(records) for a in automations}
-                # read old values before the update
-                old_values = {
-                    record.id: {fname: record[fname] for fname in stored_fnames}
-                    for record in records
-                }
+                with _keep_to_compute(self.env, changed_fields):
+                    pre = {a: a._filter_pre(records) for a in automations}
+                    # read old values before the update
+                    old_values = {
+                        record.id: {fname: record[fname] for fname in stored_fnames}
+                        for record in records
+                    }
                 # call original method
                 _compute_field_value.origin(self, field)
                 # check postconditions, and execute automations on the records that satisfy them
                 for automation in automations.with_context(old_values=old_values):
-                    _logger.debug(
-                        "Processing automation rule %s (#%s) on %s records (_compute_field_value)",
-                        automation.sudo().name, automation.sudo().id, len(records),
-                    )
-                    records, domain_post = automation._filter_post_export_domain(pre[automation], feedback=True)
-                    automation._process(records, domain_post=domain_post)
+                    with _keep_to_compute(self.env, changed_fields):
+                        _logger.debug(
+                            "Processing automation rule %s (#%s) on %s records (_compute_field_value)",
+                            automation.sudo().name, automation.sudo().id, len(records),
+                        )
+                        records, domain_post = automation._filter_post_export_domain(pre[automation], feedback=True)
+                        automation._process(records, domain_post=domain_post)
                 return True
 
             return _compute_field_value
@@ -957,7 +968,8 @@ class BaseAutomation(models.Model):
                         "Processing automation rule %s (#%s) on %s records (unlink)",
                         automation.sudo().name, automation.sudo().id, len(records),
                     )
-                    automation._process(automation._filter_post(records, feedback=True))
+                    with _keep_to_compute(self.env, self.env._protected):
+                        automation._process(automation._filter_post(records, feedback=True))
                 # call original method
                 return unlink.origin(self, **kwargs)
 
@@ -1015,12 +1027,13 @@ class BaseAutomation(models.Model):
                 mail_trigger = "on_message_received" if not message_sudo.author_id or message_sudo.author_id.partner_share else "on_message_sent"
                 automations = self.env['base.automation']._get_actions(self, [mail_trigger])
                 for automation in automations.with_context(old_values=None):
-                    records = automation._filter_pre(self, feedback=True)
-                    _logger.debug(
-                        "Processing automation rule %s (#%s) on %s records (_message_post)",
-                        automation.sudo().name, automation.sudo().id, len(records),
-                    )
-                    automation._process(records)
+                    with _keep_to_compute(self.env, self.env._protected):
+                        records = automation._filter_pre(self, feedback=True)
+                        _logger.debug(
+                            "Processing automation rule %s (#%s) on %s records (_message_post)",
+                            automation.sudo().name, automation.sudo().id, len(records),
+                        )
+                        automation._process(records)
 
                 return message
             return _message_post
@@ -1082,7 +1095,7 @@ class BaseAutomation(models.Model):
     def _get_calendar(self, automation, record):
         return automation.trg_date_calendar_id
 
-    @api.deprecated("Since 19.0, use _cron_process_time_based_automations")
+    @api.deprecated("Since 19.0, use _cron_process_time_based_actions")
     def _check(self, automatic=False, use_new_cursor=False):
         if not automatic:
             raise RuntimeError("can run time-based automations only in automatic mode")
@@ -1143,7 +1156,11 @@ class BaseAutomation(models.Model):
                         last_run,
                         compute_leaves=True,
                     )
-                return past_last_run[calendar.id] <= record_dt < past_until[calendar.id]
+                return (
+                    past_last_run[calendar.id]
+                    and past_until[calendar.id]
+                    and past_last_run[calendar.id] <= record_dt < past_until[calendar.id]
+                )
 
             return records.filtered(calendar_filter)
 
@@ -1176,9 +1193,9 @@ class BaseAutomation(models.Model):
         # retrieve all the automation rules to run based on a timed condition
         final_exception = None
         automations = self.with_context(active_test=True).search([('trigger', 'in', TIME_TRIGGERS)])
-        self.env['ir.cron']._commit_progress(remaining=len(automations))
 
         for automation in automations:
+            automation = automation.with_prefetch()
             # is automation deactivated or disappeared between commits?
             try:
                 if not automation.active:
@@ -1189,20 +1206,24 @@ class BaseAutomation(models.Model):
             now = self.env.cr.now()
             records = automation._search_time_based_automation_records(until=now)
             # run the automation on the records
+            record = None
             try:
                 for record in records:
                     automation._process(record)
+                record = None  # a flush error can't be attributed to a record
                 self.env.flush_all()
             except Exception as e:
                 self.env.cr.rollback()
-                _logger.exception("Error in time-based automation rule `%s`.", automation.name)
+                if record:
+                    _logger.exception("Error in time-based automation rule `%s` on record %s.", automation.name, record)
+                else:
+                    _logger.exception("Error in time-based automation rule `%s`.", automation.name)
                 final_exception = e
                 continue
 
             automation.write({'last_run': now})
             _logger.info("Time-based automation rule `%s` done.", automation.name)
-            if not self.env['ir.cron']._commit_progress(1):
-                break
+            self.env['ir.cron']._commit_progress()
         if final_exception is not None:
             # raise the last found exception to mark the cron job as failing
             raise final_exception

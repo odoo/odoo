@@ -15,6 +15,7 @@ import { mockDate } from "@odoo/hoot-mock";
 import { inputFiles } from "@web/../tests/utils";
 import {
     asyncStep,
+    Command,
     getService,
     mockService,
     serverState,
@@ -194,4 +195,32 @@ test("Message (hard) delete notification", async () => {
     await contains(".o-mail-Message", { count: 0 });
     await contains("button", { text: "Inbox", contains: [".badge", { count: 0 }] });
     await contains("button", { text: "Starred messages", contains: [".badge", { count: 0 }] });
+});
+
+test("Mark conversation as read when sole unread message has been deleted", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_member_ids: [
+            Command.create({
+                message_unread_counter: 1,
+                new_message_separator: 0,
+                partner_id: serverState.partnerId,
+                seen_message_id: false,
+            }),
+        ],
+    });
+    const messageId = pyEnv["mail.message"].create({
+        body: "Unread message",
+        message_type: "comment",
+        model: "discuss.channel",
+        partner_ids: [serverState.partnerId],
+        res_id: channelId,
+    });
+    await start();
+    // Do not open the conversation so that seen_message_id stays unset.
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebar-unreadIndicator");
+    pyEnv["mail.message"].unlink(messageId);
+    await contains(".o-mail-DiscussSidebar-unreadIndicator", { count: 0 });
 });

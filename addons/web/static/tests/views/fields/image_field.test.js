@@ -9,7 +9,7 @@ import {
     setInputFiles,
     waitFor,
 } from "@odoo/hoot-dom";
-import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { animationFrame, mockUserAgent, runAllTimers } from "@odoo/hoot-mock";
 import {
     clickSave,
     defineModels,
@@ -18,11 +18,13 @@ import {
     mountView,
     onRpc,
     pagerNext,
+    patchWithCleanup,
     contains,
     webModels,
 } from "@web/../tests/web_test_helpers";
 
 import { getOrigin } from "@web/core/utils/urls";
+import { ImageField } from "@web/views/fields/image/image_field";
 
 const MY_IMAGE =
     "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
@@ -348,7 +350,9 @@ test("ImageField preview is updated when an image is uploaded", async () => {
     await click(".o_select_file_button");
     await setInputFiles(imageFile);
     // It can take some time to encode the data as a base64 url
-    await waitFor(`div[name=document] img[data-src="data:image/png;base64,${MY_IMAGE}"]`);
+    await waitFor(`div[name=document] img[data-src="data:image/png;base64,${MY_IMAGE}"]`, {
+        timeout: 1000,
+    });
 });
 
 test("clicking save manually after uploading new image should change the unique of the image src", async () => {
@@ -477,6 +481,42 @@ test("ImageField: option accepted_file_extensions", async () => {
     // The view must be in edit mode
     expect("input.o_input_file").toHaveAttribute("accept", ".png,.jpeg", {
         message: "the input should have the correct ``accept`` attribute",
+    });
+});
+
+test("ImageField: no camera hint mimetype in the mobile app", async () => {
+    // the app builds its own file chooser out of the accept attribute
+    mockUserAgent("OdooMobile (Linux; Android 1000)");
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <field name="document" widget="image" options="{'accepted_file_extensions': '.png'}" />
+            </form>
+        `,
+    });
+    expect("input.o_input_file").toHaveAttribute("accept", ".png", {
+        message: "the input should only have the accepted file extensions of the field",
+    });
+});
+
+test("ImageField: camera hint mimetype on Chromium for Android", async () => {
+    // a mimetype which is not an image is needed to get the camera back, see the ImageField
+    mockUserAgent("android");
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <field name="document" widget="image" />
+            </form>
+        `,
+    });
+    expect("input.o_input_file").toHaveAttribute("accept", "image/*,dummy/allowAndroidCamera", {
+        message: "the input should have the camera hint mimetype on top of the accepted extensions",
     });
 });
 
@@ -835,23 +875,40 @@ test("unique in url does not change on record change if reload option is set to 
 });
 
 test("convert image to webp", async () => {
+    const webpData = "UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAUAmJaQAA3AA/vz0AAA=";
+    patchWithCleanup(HTMLCanvasElement.prototype, {
+        toDataURL(type, ...args) {
+            if (type === "image/webp") {
+                expect.step("convert to webp");
+                return `data:image/webp;base64,${webpData}`;
+            }
+            return super.toDataURL(type, ...args);
+        },
+    });
+    let uploadedInfo;
+    let record;
+    patchWithCleanup(ImageField.prototype, {
+        onFileUploaded(info) {
+            uploadedInfo = info;
+            record = this.props.record;
+            return super.onFileUploaded(info);
+        },
+    });
     onRpc("ir.attachment", "create_unique", ({ args }) => {
-        // This RPC call is done two times - once for storing webp and once for storing jpeg
-        // This handles first RPC call to store webp
-        if (!args[0][0].res_id) {
-            // Here we check the image data we pass and generated data.
-            // Also we check the file type
-            expect(args[0][0].datas).not.toBe(imageData);
-            expect(args[0][0].mimetype).toBe("image/webp");
+        const attachment = args[0][0];
+        expect.step(attachment.mimetype);
+        if (!attachment.res_id) {
+            expect(attachment.datas).toBe(webpData);
+            expect(attachment.name).toBe("fake_file.webp");
+            expect(attachment.mimetype).toBe("image/webp");
             return [1];
         }
-        // This handles second RPC call to store jpeg
-        expect(args[0][0].datas).not.toBe(imageData);
-        expect(args[0][0].mimetype).toBe("image/jpeg");
-        return true;
+        expect(attachment.name).toBe("fake_file.jpg");
+        expect(attachment.mimetype).toBe("image/jpeg");
+        return [2];
     });
 
-    const imageData = Uint8Array.from([...atob(MY_IMAGE)].map((c) => c.charCodeAt(0)));
+    const imageData = Uint8Array.from(atob(MY_IMAGE), (c) => c.charCodeAt(0));
     await mountView({
         type: "form",
         resModel: "partner",
@@ -862,14 +919,68 @@ test("convert image to webp", async () => {
         `,
     });
 
-    const imageFile = new File([imageData], "fake_file.jpeg", { type: "image/jpeg" });
+    const imageFile = new File([imageData], "fake_file.png", { type: "image/png" });
     expect("img[alt='Binary file']").toHaveAttribute(
         "data-src",
         "/web/static/img/placeholder.png",
         { message: "image field should not be set" }
     );
     await setFiles(imageFile);
+
+    expect(uploadedInfo.data).toBe(webpData);
+    expect(uploadedInfo.name).toBe("fake_file.webp");
+    expect(uploadedInfo.type).toBe("image/webp");
+    expect(record.data.document).toBe(webpData);
+    expect.verifySteps(["convert to webp", "image/webp", "image/jpeg"]);
 });
+
+for (const type of ["image/png", "image/jpeg"]) {
+    test(`keep original ${type} upload when WebP encoding falls back to PNG`, async () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = canvas.height = 1;
+        const originalData = canvas.toDataURL(type).split(",")[1];
+        const name = type === "image/png" ? "image.png" : "image.jpg";
+        patchWithCleanup(HTMLCanvasElement.prototype, {
+            toDataURL(type, ...args) {
+                if (type === "image/webp") {
+                    expect.step("convert to webp");
+                    return `data:image/png;base64,${MY_IMAGE}`;
+                }
+                return super.toDataURL(type, ...args);
+            },
+        });
+        onRpc("ir.attachment", "create_unique", () => {
+            expect.step("unexpected attachment");
+            return [1];
+        });
+        let uploadedInfo;
+        let record;
+        patchWithCleanup(ImageField.prototype, {
+            onFileUploaded(info) {
+                uploadedInfo = info;
+                record = this.props.record;
+                return super.onFileUploaded(info);
+            },
+        });
+        await mountView({
+            type: "form",
+            resModel: "partner",
+            arch: /* xml */ `
+                <form>
+                    <field name="document" widget="image" options="{'convert_to_webp': True}"/>
+                </form>
+            `,
+        });
+        const imageData = Uint8Array.from(atob(originalData), (c) => c.charCodeAt(0));
+        await setFiles(new File([imageData], name, { type }));
+
+        expect(uploadedInfo.data).toBe(originalData);
+        expect(uploadedInfo.name).toBe(name);
+        expect(uploadedInfo.type).toBe(type);
+        expect(record.data.document).toBe(originalData);
+        expect.verifySteps(["convert to webp"]);
+    });
+}
 
 test.tags("desktop");
 test("ImageField with width attribute in list", async () => {

@@ -33,9 +33,9 @@ class MercadoPagoOnboardingController(Controller):
         provider_id = int(data['provider_id'])
         authorization_code = data.get('authorization_code')
         csrf_token = data.get('csrf_token')  # Could be missing if authorization was cancelled.
-        provider_sudo = request.env['payment.provider'].sudo().browse(provider_id).exists()
-        if not provider_sudo or provider_sudo.code != 'mercado_pago':
-            raise ValidationError(_("Could not find Mercado Pago provider %s", provider_sudo))
+        provider = request.env['payment.provider'].browse(provider_id).exists()
+        if not provider or provider.code != 'mercado_pago':
+            raise ValidationError(_("Could not find Mercado Pago provider %s", provider))
 
         # Verify the CSRF token.
         if not request.validate_csrf(csrf_token):
@@ -44,7 +44,7 @@ class MercadoPagoOnboardingController(Controller):
 
         # Request and set the OAuth tokens on the provider.
         action = request.env.ref('payment.action_payment_provider')
-        redirect_url = f'/odoo/action-{action.id}/{int(provider_sudo.id)}'
+        redirect_url = f'/odoo/action-{action.id}/{int(provider.id)}'
         if not authorization_code:  # The user cancelled the authorization.
             return request.redirect(redirect_url)
 
@@ -52,11 +52,11 @@ class MercadoPagoOnboardingController(Controller):
         proxy_payload = self.env['payment.provider']._prepare_json_rpc_payload(
             {
                 'authorization_code': authorization_code,
-                'account_country_code': provider_sudo.mercado_pago_account_country_id.code.lower(),
+                'account_country_code': provider.mercado_pago_account_country_id.code.lower(),
             }
         )
         try:
-            response_content = provider_sudo._send_api_request(
+            response_content = provider._send_api_request(
                 'POST', '/get_access_token', json=proxy_payload, is_proxy_request=True,
             )
         except ValidationError as e:
@@ -71,7 +71,7 @@ class MercadoPagoOnboardingController(Controller):
             + timedelta(seconds=int(response_content['expires_in']))
             - timedelta(days=31)
         )
-        provider_sudo.write({
+        provider.write({
             # Save the OAuth credentials.
             'mercado_pago_access_token': response_content['access_token'],
             'mercado_pago_refresh_token': response_content['refresh_token'],
@@ -83,6 +83,6 @@ class MercadoPagoOnboardingController(Controller):
             'allow_tokenization': True,
         })
         # Set the currency to the one compatible with the seller account.
-        provider_sudo._inverse_mercado_pago_account_country_id()
+        provider._inverse_mercado_pago_account_country_id()
 
         return request.redirect(redirect_url)

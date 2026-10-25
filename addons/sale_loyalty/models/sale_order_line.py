@@ -102,6 +102,14 @@ class SaleOrderLine(models.Model):
                 if line.points_cost != previous_cost or line.coupon_id != previous_coupon:
                     previous_coupon.points += previous_cost
                     line.coupon_id.points -= line.points_cost
+                    # Same coupon: apply the delta in a single call to avoid a redundant search.
+                    if line.coupon_id == previous_coupon:
+                        line.order_id._update_loyalty_history(line.coupon_id, line.points_cost - previous_cost)
+                    else:
+                        if previous_coupon:
+                            line.order_id._update_loyalty_history(previous_coupon, -previous_cost)
+                        if line.coupon_id:
+                            line.order_id._update_loyalty_history(line.coupon_id, line.points_cost)
         return res
 
     def unlink(self):

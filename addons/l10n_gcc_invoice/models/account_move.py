@@ -13,6 +13,8 @@ except ImportError:
     _logger.warning("The num2words python library is not installed, amount-to-text features won't be fully available.")
     num2words = None
 
+EXCLUDE_IF_NOT_REGISTERED = {'AE', 'SA'}
+
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
@@ -21,7 +23,11 @@ class AccountMove(models.Model):
 
     def _get_name_invoice_report(self):
         self.ensure_one()
-        if self.company_id.country_id and 'GCC' in self.company_id.country_id.country_group_codes:
+        if (
+            (self.company_id.vat or self.company_id.country_id.code not in EXCLUDE_IF_NOT_REGISTERED)
+            and self.company_id.country_id
+            and "GCC" in self.company_id.country_id.country_group_codes
+        ):
             return 'l10n_gcc_invoice.l10n_gcc_report_invoice_document'
         return super()._get_name_invoice_report()
 
@@ -37,6 +43,7 @@ class AccountMove(models.Model):
 
         return num2words(number, lang=lang).title()
 
+    # TODO: Remove in master
     def _load_narration_translation(self):
         # Workaround to have the english/arabic version of the payment terms
         # in the report
@@ -59,16 +66,15 @@ class AccountMove(models.Model):
         ], dirty=True)
         moves_to_fix.modified(['narration'])
 
+    # TODO: Remove in master
     @api.model_create_multi
     def create(self, vals_list):
         moves = super().create(vals_list)
-        moves._load_narration_translation()
         return moves
 
+    # TODO: Remove in master
     def _compute_narration(self):
         super()._compute_narration()
-        # Only update translations of real records
-        self.filtered('id')._load_narration_translation()
 
 
 class AccountMoveLine(models.Model):

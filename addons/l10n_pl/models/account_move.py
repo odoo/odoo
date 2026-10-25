@@ -30,13 +30,10 @@ class AccountMove(models.Model):
             move.taxable_supply_date_placeholder = self.env._("Invoice Date")
 
     def _get_accounting_date_source(self):
-        self.ensure_one()
-        if self.country_code == 'PL' and self.taxable_supply_date:
-            return self.taxable_supply_date
-        return super()._get_accounting_date_source()
+        return (self.country_code == 'PL' and self.taxable_supply_date) or super()._get_accounting_date_source()
 
     def _get_invoice_currency_rate_date(self):
-        self.ensure_one()
-        if self.country_code == 'PL' and self.taxable_supply_date:
-            return self.taxable_supply_date
-        return super()._get_invoice_currency_rate_date()
+        return (self.country_code == 'PL' and self.taxable_supply_date) or super()._get_invoice_currency_rate_date()
+
+    def _get_default_currency_rate_date(self):
+        return (self.country_code == 'PL' and self.taxable_supply_date) or super()._get_default_currency_rate_date()

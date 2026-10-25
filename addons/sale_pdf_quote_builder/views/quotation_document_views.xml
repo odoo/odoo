@@ -20,6 +20,7 @@
                                     filename="name"
                                     options="{'accepted_file_extensions': '.pdf', 'allowed_mime_type' : 'application/pdf'}"
                                     class="oe_inline"
+                                    required="1"
                                 />
                                 <button
                                     name="action_open_pdf_form_fields"
@@ -118,7 +119,7 @@
         <field name="name">quotation.document.list</field>
         <field name="model">quotation.document</field>
         <field name="arch" type="xml">
-            <list editable="top" multi_edit="true">
+            <list multi_edit="true">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="document_type"/>

@@ -1,6 +1,6 @@
 import { useService } from '@web/core/utils/hooks';
 import { formatMonetary } from "@web/views/fields/formatters";
-import { Component, onWillStart, useState } from "@odoo/owl";
+import { Component, onWillStart, useState, onWillUpdateProps } from "@odoo/owl";
 
 export class ExpenseDashboard extends Component {
     static template = "hr_expense.ExpenseDashboard";
@@ -16,8 +16,11 @@ export class ExpenseDashboard extends Component {
         });
 
         onWillStart(async () => {
-            const expense_states = await this.orm.call("hr.expense", 'get_expense_dashboard', []);
-            this.state.expenses = expense_states;
+            await this.fetchExpenseDashboardData();
+        });
+
+        onWillUpdateProps(async () => {
+            await this.fetchExpenseDashboardData();
         });
     }
 
@@ -25,11 +28,15 @@ export class ExpenseDashboard extends Component {
         return formatMonetary(value, { currencyId: currency_id});;
     }
 
-    async applyFilter(filterName) {
-        const { actionId } = this.env.config;
-        const action = actionId ? await this.actionService.loadAction(actionId) : {};
+    async fetchExpenseDashboardData() {
+        const domain = this.env.searchModel?.domain ?? [];
+        const expense_states = await this.orm.call(
+            "hr.expense",
+            'get_expense_dashboard',
+            [],
+            { context: { domain: domain }}
+        );
 
-        action['context'] = { [`search_default_${filterName}`]: 1, [`search_default_my_open_expenses`]: 1 };
-        return this.actionService.doAction(action, {clearBreadcrumbs: true});
+        this.state.expenses = expense_states;
     }
 }

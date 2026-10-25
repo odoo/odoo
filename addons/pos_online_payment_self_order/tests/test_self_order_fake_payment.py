@@ -1,3 +1,4 @@
+import json
 import odoo.tests
 from odoo import Command
 from odoo.addons.mail.tests.common import MailCase
@@ -87,6 +88,15 @@ class TestSelfOrderFakePayment(TestSelfOrderMobile):
 
 @odoo.tests.tagged("post_install", "-at_install")
 class TestSelfOrderFakePaymentMail(MailCase, TestSelfOrderMobile):
+    def make_request_to_controller(self, url, params):
+        response = self.url_open(url, json.dumps({'jsonrpc': '2.0', 'params': params}),
+            method='POST',
+            headers={
+                'Content-Type': 'application/json',
+            }
+        )
+        return response.json().get('result')
+
     def test_online_payment_mobile_sends_mail_after_payment(self):
         self.pos_config.write({
             'self_ordering_mode': 'mobile',
@@ -124,6 +134,17 @@ class TestSelfOrderFakePaymentMail(MailCase, TestSelfOrderMobile):
             order = self.env['pos.order'].browse(order.id)
 
         self.assertEqual(order.state, 'paid')
+
+        # Call the controller to send receipt email
+        with self.mock_mail_gateway():
+            self.make_request_to_controller('/pos-self-order/send_self_order_receipt', {
+                'access_token': self.pos_config.access_token,
+                'order_id': order.id,
+                'order_access_token': order.access_token,
+                'fullTicketImage': False,
+                'basicTicketImage': False,
+            })
+
         self.assertEqual(len(self._new_mails), 1)
         self.assertEqual(self._new_mails.email_to, order.email)
         self.assertIn('receipt', (self._new_mails.subject or '').lower())

@@ -20,20 +20,27 @@ const formatDate = (d) => {
     return `${year}-${month}-${day}`;
 };
 
+const formatUTCDate = (d) => {
+    const year = d.getUTCFullYear();
+    const month = format(d.getUTCMonth() + 1);
+    const day = format(d.getUTCDate());
+    return `${year}-${month}-${day}`;
+};
+
 const formatDateTime = (d) => {
-    const h = format(d.getHours());
-    const m = format(d.getMinutes());
-    const s = format(d.getSeconds());
-    return `${formatDate(d)} ${h}:${m}:${s}`;
+    const h = format(d.getUTCHours());
+    const m = format(d.getUTCMinutes());
+    const s = format(d.getUTCSeconds());
+    return `${formatUTCDate(d)} ${h}:${m}:${s}`;
 };
 
 describe.current.tags("headless");
 
 describe("time", () => {
     test("strftime", () => {
-        expect(check("time.strftime('%Y')", (d) => String(d.getFullYear()))).toBe(true);
+        expect(check("time.strftime('%Y')", (d) => String(d.getUTCFullYear()))).toBe(true);
         expect(
-            check("time.strftime('%Y') + '-01-30'", (d) => String(d.getFullYear()) + "-01-30")
+            check("time.strftime('%Y') + '-01-30'", (d) => String(d.getUTCFullYear()) + "-01-30")
         ).toBe(true);
         expect(check("time.strftime('%Y-%m-%d %H:%M:%S')", formatDateTime)).toBe(true);
     });
@@ -41,12 +48,12 @@ describe("time", () => {
 
 describe("datetime.datetime", () => {
     test("datetime.datetime.now", () => {
-        expect(check("datetime.datetime.now().year", (d) => d.getFullYear())).toBe(true);
-        expect(check("datetime.datetime.now().month", (d) => d.getMonth() + 1)).toBe(true);
-        expect(check("datetime.datetime.now().day", (d) => d.getDate())).toBe(true);
-        expect(check("datetime.datetime.now().hour", (d) => d.getHours())).toBe(true);
-        expect(check("datetime.datetime.now().minute", (d) => d.getMinutes())).toBe(true);
-        expect(check("datetime.datetime.now().second", (d) => d.getSeconds())).toBe(true);
+        expect(check("datetime.datetime.now().year", (d) => d.getUTCFullYear())).toBe(true);
+        expect(check("datetime.datetime.now().month", (d) => d.getUTCMonth() + 1)).toBe(true);
+        expect(check("datetime.datetime.now().day", (d) => d.getUTCDate())).toBe(true);
+        expect(check("datetime.datetime.now().hour", (d) => d.getUTCHours())).toBe(true);
+        expect(check("datetime.datetime.now().minute", (d) => d.getUTCMinutes())).toBe(true);
+        expect(check("datetime.datetime.now().second", (d) => d.getUTCSeconds())).toBe(true);
     });
 
     test("various operations", () => {

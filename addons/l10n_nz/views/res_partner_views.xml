@@ -6,11 +6,15 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='company_registry']" position="attributes">
-                <attribute name="nolabel">1</attribute>
+                <attribute name="invisible" add="country_code == 'NZ'" separator=" or "/>
             </xpath>
+            <xpath expr="//field[@name='company_registry']" position="after">
+                <field name="company_registry" string="NZBN" options="{'placeholder_field': 'company_registry_placeholder'}" invisible="country_code != 'NZ'"/>
+            </xpath>
+            <!-- Kept for stable compatibility, remove in master -->
             <field name="company_registry" position="before">
-                <label for="company_registry" invisible="country_code == 'NZ'" />
-                <label for="company_registry" string="NZBN" invisible="country_code != 'NZ'" />
+                <label for="company_registry" invisible="1"/>
+                <label for="company_registry" string="NZBN" invisible="1"/>
             </field>
         </field>
     </record>

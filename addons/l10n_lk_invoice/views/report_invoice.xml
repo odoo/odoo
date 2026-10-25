@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
+        <xpath expr="//t[@name='invoice_title']" position="replace">
+            <t t-if="o._l10n_lk_is_tax_invoice_company()" name="invoice_title">Tax Invoice</t>
+            <t t-else="">$0</t>
+        </xpath>
+
+        <xpath expr="//div[@name='delivery_date']/strong" position="replace">
+            <strong t-if="o._l10n_lk_is_tax_invoice_company()">Supply Date</strong>
+            <t t-else="">$0</t>
+        </xpath>
+
+        <xpath expr="//div[@name='delivery_date']" position="after">
+            <div class="col" name="l10n_lk_mode_of_payment"
+                 t-if="o._l10n_lk_is_tax_invoice_company() and o.preferred_payment_method_line_id">
+                <strong>Mode of Payment</strong>
+                <div t-field="o.preferred_payment_method_line_id"/>
+            </div>
+        </xpath>
+
+        <xpath expr="//div[hasclass('row')]" position="replace">
+            <t t-set="invoice_address_body">
+                <address class="mb-0" t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                <div t-if="o.partner_id.vat" id="partner_vat">
+                    <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                    <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
+                </div>
+            </t>
+            <t t-set="shipping_body">
+                <div groups="account.group_delivery_invoice_address" name="shipping_address_block">
+                    <strong class="d-block mt-3">Shipping Address</strong>
+                    <div t-field="o.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                </div>
+            </t>
+            <t t-set="has_shipping" t-value="o.partner_shipping_id and o.partner_shipping_id != o.partner_id"/>
+            <t t-set="tax_company" t-value="o._l10n_lk_is_tax_invoice_company()"/>
+            <t t-set="information_block" t-value="has_shipping and (tax_company and invoice_address_body or shipping_body)"/>
+            <t t-set="address" t-value="has_shipping and (tax_company and shipping_body or invoice_address_body) or invoice_address_body"/>
+            <t t-set="custom_layout_address" t-value="tax_company and not has_shipping"/>
+        </xpath>
+    </template>
+
+    <template id="report_commercial_invoice">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="lang" t-value="o.partner_id.lang"/>
+                <t t-call="account.report_invoice_document" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_commercial_invoice" model="ir.actions.report">
+        <field name="name">Commercial Invoice</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_lk_invoice.report_commercial_invoice</field>
+        <field name="report_file">l10n_lk_invoice.report_commercial_invoice</field>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+        <field name="domain">[('country_code', '=', 'LK'), ('journal_id.type', '=', 'sale')]</field>
+    </record>
+
+    <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-elif="o._get_name_invoice_report() == 'l10n_lk_invoice.report_invoice_document'"
+               t-call="l10n_lk_invoice.report_invoice_document"
+               t-lang="lang"/>
+        </xpath>
+    </template>
+</odoo>

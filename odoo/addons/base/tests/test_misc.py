@@ -619,6 +619,26 @@ class TestMiscToken(TransactionCase):
         token = base64.urlsafe_b64encode(token[:1] + new_timestamp + token[9:]).decode()
         self.assertIsNone(misc.verify_hash_signed(self.env, 'test', token))
 
+    def test_custom_secret(self):
+        payload = {'value': 123456, 'name': 'bob'}
+        token = misc.hash_sign(self.env, 'test', payload, expiration_hours=24, secret='very_secret')
+
+        self.assertEqual(misc.verify_hash_signed(self.env, 'test', token, secret='very_secret'), payload)
+        self.assertEqual(misc.verify_hash_signed(self.env, 'test', token, secret=b'very_secret'), payload)
+        self.assertIsNone(misc.verify_hash_signed(self.env, 'test', token, secret='other'))
+        self.assertIsNone(misc.verify_hash_signed(self.env, 'test', token))
+
+    def test_default_secret(self):
+        payload = ["str1", "str2", "str3", 4, 5]
+        db_secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
+
+        token_default = misc.hash_sign(self.env, 'test', payload, expiration_hours=24)
+        token_explicit = misc.hash_sign(self.env, 'test', payload, expiration_hours=24, secret=db_secret)
+
+        self.assertEqual(misc.verify_hash_signed(self.env, 'test', token_default), payload)
+        self.assertEqual(misc.verify_hash_signed(self.env, 'test', token_explicit), payload)
+        self.assertEqual(misc.verify_hash_signed(self.env, 'test', token_default, secret=db_secret), payload)
+
 
 class TestFormatAmountFunction(TransactionCase):
     @classmethod
@@ -684,6 +704,28 @@ class TestFormatAmountFunction(TransactionCase):
         # Has effect on number having trailing zeroes - currency position after
         self.currency_object_format_amount.position = "after"
         self.assert_format_amount(1.0000, "1%sfA" % "\N{NO-BREAK SPACE}", False)
+
+    def test_trailing_false_on_currency_without_decimal_places(self):
+        self.currency_object_format_amount.rounding = 1
+        self.assertEqual(self.currency_object_format_amount.decimal_places, 0)
+        for lang_code, separator in [('en_US', ','), ('GFL', '#')]:
+            for position in ['before', 'after']:
+                self.currency_object_format_amount.position = position
+                for amount, formatted_amount in [
+                    (0, '0'),
+                    (10, '10'),
+                    (100, '100'),
+                    (123, '123'),
+                    (-100, '-\N{ZERO WIDTH NO-BREAK SPACE}100'),
+                    (10000, f'10{separator}000'),
+                ]:
+                    with self.subTest(lang_code=lang_code, position=position, amount=amount):
+                        expected = (
+                            f'fA\N{NO-BREAK SPACE}{formatted_amount}'
+                            if position == 'before'
+                            else f'{formatted_amount}\N{NO-BREAK SPACE}fA'
+                        )
+                        self.assert_format_amount(amount, expected, False, lang_code)
 
     def test_trailing_false_on_number_having_trailing_zeroes_with_kilikili_language(self):
         # Here the amount is first will be given decimal separator and thousandth separator as

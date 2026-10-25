@@ -42,7 +42,12 @@ import {
 import { CTYPES } from "../utils/content_types";
 import { withSequence } from "@html_editor/utils/resource";
 import { compareListTypes } from "@html_editor/main/list/utils";
-import { hasTouch, isBrowserChrome, isMacOS } from "@web/core/browser/feature_detection";
+import {
+    isBrowserChrome,
+    isBrowserSafari,
+    isMacOS,
+    isMobileOS,
+} from "@web/core/browser/feature_detection";
 import { normalizeDeepCursorPosition, normalizeFakeBR } from "@html_editor/utils/selection";
 
 /**
@@ -1327,7 +1332,7 @@ export class DeletePlugin extends Plugin {
         if (argsForDelete) {
             this.delete(...argsForDelete);
             ev.preventDefault();
-            if (isBrowserChrome() && hasTouch()) {
+            if (isBrowserChrome() && isMobileOS()) {
                 this.preventDefaultDeleteAndroidChrome(ev);
             }
         }
@@ -1340,6 +1345,11 @@ export class DeletePlugin extends Plugin {
                 this.dispatchTo("before_delete_handlers");
                 this.deleteSelection(selection);
                 this.dispatchTo("delete_handlers");
+                if (isBrowserSafari()) {
+                    // Safari requires the initial anchor node to remain inside the DOM.
+                    ev.preventDefault();
+                    this.document.execCommand(ev.inputType, false, ev.data);
+                }
             }
             // Default behavior: insert text and trigger input event
         }
@@ -1391,7 +1401,7 @@ export class DeletePlugin extends Plugin {
         return this.deleteCharUnmergeable(startContainer, startOffset, endContainer, endOffset);
     }
 
-    // Trap cursor inside unmergeable element. Remove it if empty.
+    // Trap cursor inside unmergeable block element. Remove it if empty.
     deleteCharUnmergeable(sourceContainer, sourceOffset, destContainer, destOffset) {
         if (!destContainer) {
             return;
@@ -1400,7 +1410,8 @@ export class DeletePlugin extends Plugin {
         const closestUnmergeable = findUpTo(sourceContainer, commonAncestor, (node) =>
             this.isUnmergeable(node)
         );
-        if (!closestUnmergeable) {
+
+        if (!isBlock(closestUnmergeable)) {
             return;
         }
 

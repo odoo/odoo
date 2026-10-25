@@ -10,8 +10,10 @@ import {
     models,
     mountView,
     onRpc,
+    patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
+import { browser } from "@web/core/browser/browser";
 
 class Board extends models.Model {}
 
@@ -283,6 +285,44 @@ describe("board_desktop", () => {
         });
 
         await contains("tr.o_data_row td:contains(yop)").click();
+    });
+
+    test("can open a record in a new tab", async () => {
+        Partner._views.kanban = `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`;
+
+        patchWithCleanup(browser, {
+            open: (url) => {
+                expect.step(`opened in new window: ${url}`);
+            },
+        });
+
+        onRpc("/web/action/load", () => ({
+            res_model: "partner",
+            view_mode: "kanban",
+            views: [[false, "kanban"]],
+        }));
+        await mountView({
+            type: "form",
+            resModel: "board",
+            arch: `
+                <form string="My Dashboard" js_class="board">
+                    <board style="2-1">
+                        <column>
+                            <action name="149" string="Partner" view_mode="kanban" id="action_0_1"></action>
+                        </column>
+                    </board>
+                </form>`,
+        });
+
+        await contains(".o_kanban_record").click({ ctrlKey: true });
+        expect.verifySteps(["opened in new window: /odoo/m-partner/1"]);
     });
 
     test("can open record using action form view", async () => {

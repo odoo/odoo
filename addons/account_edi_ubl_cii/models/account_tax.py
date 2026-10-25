@@ -112,6 +112,9 @@ class AccountTax(models.Model):
             ('VATEX-FR-298SEXDECIESA', 'VATEX-FR-298SEXDECIESA - Exempt based on article 298 sexdecies A of the Code Général des Impôts (CGI ; General tax code)'),
             ('VATEX-FR-CGI295', 'VATEX-FR-CGI295 - Exempt based on article 295 of the Code Général des Impôts (CGI ; General tax code)'),
             ('VATEX-FR-AE', 'VATEX-FR-AE - Exempt based on 2 of article 283 of the Code Général des Impôts (CGI ; General tax code)'),
+            ('VATEX-FR-F', 'VATEX-FR-F - Second-hand sales'),
+            ('VATEX-FR-I', 'VATEX-FR-I - Sales of works of art'),
+            ('VATEX-FR-J', 'VATEX-FR-J - Sales of antiques'),
         ]
     )
     ubl_cii_requires_exemption_reason = fields.Boolean(compute='_compute_ubl_cii_requires_exemption_reason')

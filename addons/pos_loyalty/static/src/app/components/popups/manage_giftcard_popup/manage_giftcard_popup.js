@@ -103,9 +103,8 @@ export class ManageGiftCardPopup extends Component {
                 false,
                 [error]
             );
-            this.pos.notification.add({
+            this.pos.notification.add(_t("An error occurred while checking the gift card."), {
                 type: "danger",
-                body: _t("An error occurred while checking the gift card."),
             });
         } finally {
             this.state.error = false;

@@ -109,6 +109,11 @@ test("Search highlight", async () => {
             output: `<p>&lt;strong&gt;<span class="${HIGHLIGHT_CLASS}">test</span>&lt;/strong&gt; <span class="${HIGHLIGHT_CLASS}">hello</span></p>`,
             searchTerm: "test hello",
         },
+        {
+            input: markup`test odoo`,
+            output: `t<span class="${HIGHLIGHT_CLASS}">e</span>st o<span class="${HIGHLIGHT_CLASS}">d</span>oo`,
+            searchTerm: "e               d",
+        },
     ];
     for (const { input, output, searchTerm } of testCases) {
         expect(searchHighlight(searchTerm, input).toString()).toBe(output);

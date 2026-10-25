@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
 from odoo.addons.event_sale.tests.common import TestEventSaleCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.exceptions import ValidationError
@@ -428,9 +427,6 @@ class TestEventSale(TestEventSaleCommon):
 
         currency_USD = _prepare_currency(self, 'USD')
         currency_VEF = _prepare_currency(self, 'VEF')
-        currency_VEF.rate_ids = [Command.create({
-            'rate': 5.0,
-        })]
 
         company_test = self.env['res.company'].create({
             'name': 'TestCompany',
@@ -439,7 +435,12 @@ class TestEventSale(TestEventSaleCommon):
         })
         self.env.user.company_ids += company_test
         self.env.user.company_id = company_test
-        currency_VEF.rate_ids.company_id = company_test
+
+        currency_VEF.rate_ids = self.env['res.currency.rate'].create({
+            'company_id': company_test.id,
+            'currency_id': currency_VEF.id,
+            'rate': 5.0,
+        })
 
         pricelist_USD = self.env['product.pricelist'].create({
             'name': 'pricelist_USD',
@@ -576,15 +577,20 @@ class TestEventSale(TestEventSaleCommon):
         self.assertEqual(len(event.registration_ids), 0)
 
     @users('user_salesman')
-    def test_cancel_so(self):
+    def test_cancel_and_draft_so(self):
         """ This test ensures that when canceling a sale order, if the latter is linked to an event registration,
-        it is also cancelled """
+        it is also cancelled and that after the sale order is set back to draft, new registrations are created on confirmation. """
         event = self.env['event.event'].browse(self.event_0.ids)
         self.register_person.action_make_registration()
         self.assertEqual(len(event.registration_ids), 1)
         self.sale_order._action_cancel()
         self.assertEqual(len(event.registration_ids), 1)
         self.assertEqual(event.registration_ids.state, 'cancel')
+        # After canceling the sale order, we set it back to draft and confirm it again. This should create new registrations.
+        self.sale_order.action_draft()
+        self.sale_order.action_confirm()
+        self.assertEqual(len(event.registration_ids), 2)
+        self.assertEqual(event.registration_ids.mapped('state'), ['cancel', 'draft'])
 
     @users('user_salesman')
     def test_compute_sale_status(self):

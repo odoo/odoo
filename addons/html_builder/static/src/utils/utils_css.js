@@ -1,7 +1,7 @@
 import { EDITOR_COLOR_CSS_VARIABLES, isColorCombinationName } from "@html_editor/utils/color";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { backgroundImageCssToParts, getBgImageURLFromURL } from "@html_editor/utils/image";
-import { normalizeCSSColor, isCSSColor, isColorGradient, rgbaToHex } from "@web/core/utils/colors";
+import { normalizeCSSColor, isCSSColor, isColorGradient } from "@web/core/utils/colors";
 import { convertNumericToUnit, getCSSVariableValue } from "@html_editor/utils/formatting";
 
 /**
@@ -463,11 +463,11 @@ export function parseBoxShadow(value) {
     return value.match(regex)?.groups ?? {};
 }
 
-export function getAllUsedColors(el) {
+export function getAllUsedColors(el, noTransparency = false) {
     const usedCustomColors = new Set();
     const collectColor = (colorValue) => {
         if (isCSSColor(colorValue)) {
-            usedCustomColors.add(rgbaToHex(colorValue));
+            usedCustomColors.add(normalizeCSSColor(colorValue));
         }
     };
     for (const coloredEl of selectElements(el, '[style*="color"]')) {
@@ -508,5 +508,14 @@ export function getAllUsedColors(el) {
     )) {
         collectUrlColors(getBgImageURLFromEl(bgEl));
     }
+
+    if (noTransparency) {
+        for (const color of usedCustomColors) {
+            if (color.length > 7) {
+                usedCustomColors.delete(color);
+            }
+        }
+    }
+
     return usedCustomColors;
 }

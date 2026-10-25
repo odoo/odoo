@@ -12,22 +12,23 @@
 # Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2022
 # Wichanon Jamwutthipreecha, 2022
 # Martin Trigaux, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Nusara Boonma <nuboo@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2025-11-08 21:55+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-07-10 17:37+0000\n"
+"PO-Revision-Date: 2026-08-05 01:43+0000\n"
+"Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/sale/th/>\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale
 #. odoo-javascript
@@ -42,6 +43,11 @@ msgid ""
 "            UBL-RequestForQuotation file will work as well.\n"
 "        "
 msgstr ""
+"\n"
+"            หากลูกค้าของคุณใช้ Odoo 18 หรือสูงกว่า ข้อมูลลูกค้าและรายการใบสั่งขาย\n"
+"            จะถูกสร้างขึ้นโดยอัตโนมัติ เอกสาร pdf อื่นๆ ที่มีไฟล์แนบ\n"
+"            UBL-RequestForQuotation จะใช้งานได้เช่นกัน\n"
+"        "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sale_order_count
@@ -174,14 +180,13 @@ msgstr ""
 "        <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference "
 "or ''\">SOOO49</span>\n"
 "        เป็นจำนวน\n"
-"        <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(transaction_sudo.amount, object.currency_id) or ''\">$ "
-"10.00</span>\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
 "        สำหรับการสั่งซื้อของคุณ\n"
-"        <span style=\"font-weight:bold;\" t-out=\"object.name or "
-"''\">S00049</span>\n"
-"        <t t-if=\"transaction_sudo and transaction_sudo.state == "
-"'pending'\">\n"
+"        <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">"
+"S00049</span>\n"
+"        <t t-if=\"transaction_sudo and transaction_sudo.state == 'pending'\">"
+"\n"
 "            กำลังดำเนินการ\n"
 "            <br/>\n"
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid "
@@ -191,9 +196,9 @@ msgstr ""
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                เมื่อยืนยันแล้ว\n"
-"                <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total - object.amount_paid - "
-"transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
+"                <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total - object.amount_paid - transaction_sudo.amount, "
+"object.currency_id) or ''\">$ 10.00</span>\n"
 "                ยังคงต้องชำระ\n"
 "            </t>\n"
 "        </t>\n"
@@ -202,9 +207,9 @@ msgstr ""
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid, "
 "object.amount_total) &lt; 0\">\n"
 "                <br/>\n"
-"                <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total - object.amount_paid, "
-"object.currency_id) or ''\">$ 10.00</span>\n"
+"                <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total - object.amount_paid, object.currency_id) or ''\">$ "
+"10.00</span>\n"
 "                ยังคงต้องชำระ\n"
 "            </t>\n"
 "        </t>\n"
@@ -641,9 +646,9 @@ msgstr ""
 "        <t t-if=\"object.origin\">\n"
 "            (เลขที่อ้างอิง: <t t-out=\"object.origin or ''\"/> )\n"
 "        </t>\n"
-"        เป็นเงินจำนวน <span style=\"font-weight: bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"10.00</span> อยู่ในบัญชีของคุณ\n"
+"        เป็นเงินจำนวน <span style=\"font-weight: bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 10.00</span> อยู่ในบัญชีของคุ"
+"ณ\n"
 "        <br/><br/>\n"
 "        โปรดติดต่อเราหากคุณมีคำถาม\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
@@ -696,8 +701,8 @@ msgstr "<i class=\"fa fa-fw fa-clock-o\"/> รอชำระเงิน"
 msgid ""
 "<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Quotations\" role=\"img\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-money me-1\" aria-label=\"ใบเสนอราคา\" role=\"รูปภาพ\"/"
-">"
+"<i class=\"fa fa-fw fa-money me-1\" aria-label=\"ใบเสนอราคา\" role=\"รูปภา"
+"พ\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -749,9 +754,9 @@ msgid ""
 "product is archived\" invisible=\"state not in ['draft', 'sent'] or not "
 "is_product_archived\"/>"
 msgstr ""
-"<span class=\"fa fa-exclamation-triangle text-warning me-1\" "
-"title=\"สินค้าชิ้นนี้ถูกเก็บถาวรแล้ว\" invisible=\"state not in ['draft', 'sent'] or "
-"not is_product_archived\"/>"
+"<span class=\"fa fa-exclamation-triangle text-warning me-1\" title=\"สินค้าชิ้นนี้ถู"
+"กเก็บถาวรแล้ว\" invisible=\"state not in ['draft', 'sent'] or not "
+"is_product_archived\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
@@ -794,8 +799,8 @@ msgid ""
 "email to validate the quote.\n"
 "        </span>"
 msgstr ""
-"<span><b>ขอแสดงความยินดี</b> ใบเสนอราคาแรกของคุณถูกส่งไปแล้ว!"
-"<br>ตรวจสอบอีเมลของคุณเพื่อยืนยันใบเสนอราคา\n"
+"<span><b>ขอแสดงความยินดี</b> ใบเสนอราคาแรกของคุณถูกส่งไปแล้ว!<br>ตรวจสอบอีเมลของคุณเพื่"
+"อยืนยันใบเสนอราคา\n"
 "        </span>"
 
 #. module: sale
@@ -849,7 +854,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Fiscal Position Remark:</strong>"
-msgstr "<strong>หมายเหตุฐานะทางการเงิน:</strong>"
+msgstr "<strong>หมายเหตุเงื่อนไขภาษี:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -897,7 +902,8 @@ msgstr "หมายเหตุ เนื้อหาที่มักจะ�
 msgid ""
 "A sale order line's combo item must be among its linked line's available "
 "combo items."
-msgstr "รายการคอมโบของบรรทัดคำสั่งขายจะต้องอยู่ในรายการคอมโบที่พร้อมใช้งานของบรรทัดที่เชื่อมโยงอยู่"
+msgstr ""
+"รายการคอมโบของบรรทัดคำสั่งขายจะต้องอยู่ในรายการคอมโบที่พร้อมใช้งานของบรรทัดที่เชื่อมโยงอยู่"
 
 #. module: sale
 #. odoo-python
@@ -917,8 +923,8 @@ msgid ""
 "invoicing,according to their invoicing policy (based on ordered or delivered "
 "quantity)."
 msgstr ""
-"ใบแจ้งหนี้มาตรฐานจะออกพร้อมกับรายการใบสั่งซื้อทั้งหมดที่พร้อมสำหรับการออกใบแจ้งหนี้ "
-"ตามนโยบายการออกใบแจ้งหนี้ (ตามปริมาณที่สั่งหรือจัดส่ง)"
+"ใบแจ้งหนี้มาตรฐานจะออกพร้อมกับรายการใบสั่งซื้อทั้งหมดที่พร้อมสำหรับการออกใบแจ้งหนี้ ตามนโยบายกา"
+"รออกใบแจ้งหนี้ (ตามปริมาณที่สั่งหรือจัดส่ง)"
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
@@ -1149,8 +1155,8 @@ msgstr ""
 "เช่น ตัวเลือกนี้อาจมีประโยชน์ในการแชร์ไฟล์คำอธิบายผลิตภัณฑ์\n"
 "ในการยืนยันคำสั่งซื้อ: เอกสารจะถูกส่งถึงและลูกค้าสามารถเข้าถึงได้\n"
 "เช่น ตัวเลือกนี้อาจมีประโยชน์ในการแชร์คู่มือผู้ใช้หรือเนื้อหาดิจิทัลที่ซื้อจากอีคอมเมิร์ซ\n"
-"ในใบเสนอราคา: เอกสารจะรวมอยู่ใน pdf "
-"ของใบเสนอราคาและใบสั่งขายระหว่างหน้าส่วนหัวและตารางใบเสนอราคา "
+"ในใบเสนอราคา: เอกสารจะรวมอยู่ใน pdf ของใบเสนอราคาและใบสั่งขายระหว่างหน้าส่วนหัวและตาร"
+"างใบเสนอราคา "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -1242,8 +1248,8 @@ msgid ""
 "Apply manual discounts on sales order lines or display discounts computed "
 "from pricelists (option to activate in the pricelist configuration)."
 msgstr ""
-"ใช้ส่วนลดด้วยตนเองในไลน์คำสั่งขายหรือแสดงส่วนลดที่คำนวณจากรายการราคา "
-"(ตัวเลือกเพื่อเปิดใช้งานในการกำหนดค่ารายการราคา)"
+"ใช้ส่วนลดด้วยตนเองในไลน์คำสั่งขายหรือแสดงส่วนลดที่คำนวณจากรายการราคา (ตัวเลือกเพื่อเปิดใช้งาน"
+"ในการกำหนดค่ารายการราคา)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
@@ -1262,7 +1268,8 @@ msgstr ""
 msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
-msgstr "คุณแน่ใจหรือไม่ว่าต้องการยกเลิกธุรกรรมที่ได้รับอนุญาต? การดำเนินการนี้ไม่สามารถยกเลิกได้"
+msgstr ""
+"คุณแน่ใจหรือไม่ว่าต้องการยกเลิกธุรกรรมที่ได้รับอนุญาต? การดำเนินการนี้ไม่สามารถยกเลิกได้"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -1281,9 +1288,9 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
-"เนื่องจากมีการใช้งานหน่วยวัดอื่น (เช่น: %(problem_uom)s) นอกเหนือจาก %(uom)s "
-"กับสินค้านี้แล้ว จึงไม่สามารถเปลี่ยนหน่วยวัดได้ หากต้องการเปลี่ยนหน่วยวัด กรุณาเก็บถาวร "
-"(archive) สินค้านี้ไว้ และสร้างรายการสินค้าใหม่"
+"เนื่องจากมีการใช้งานหน่วยวัดอื่น (เช่น: %(problem_uom)s) นอกเหนือจาก %(uom)s กับสินค้านี้แล้"
+"ว จึงไม่สามารถเปลี่ยนหน่วยวัดได้ หากต้องการเปลี่ยนหน่วยวัด กรุณาเก็บถาวร (archive) สินค้านี้ไว้ "
+"และสร้างรายการสินค้าใหม่"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -1348,7 +1355,8 @@ msgstr "เอาชนะคู่แข่งด้วยการเสนอ
 msgid ""
 "Boost sales with online payments or signatures, upsells, and a great "
 "customer portal."
-msgstr "เพิ่มยอดขายด้วยการชำระเงินหรือลายเซ็นออนไลน์ การขายต่อยอด และพอร์ทัลลูกค้าที่ยอดเยี่ยม"
+msgstr ""
+"เพิ่มยอดขายด้วยการชำระเงินหรือลายเซ็นออนไลน์ การขายต่อยอด และพอร์ทัลลูกค้าที่ยอดเยี่ยม"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1358,9 +1366,9 @@ msgid ""
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
-"เพิ่มยอดขายของคุณด้วยโปรแกรมหลายประเภท: คูปอง โปรโมชั่น บัตรของขวัญ บัตรสมาชิก "
-"สามารถกำหนดเงื่อนไขเฉพาะได้ (สินค้า, ลูกค้า, จำนวนซื้อขั้นต่ำ, ระยะเวลา) "
-"รางวัลอาจเป็นส่วนลด (% หรือจำนวน) หรือแถมสินค้าฟรี"
+"เพิ่มยอดขายของคุณด้วยโปรแกรมหลายประเภท: คูปอง โปรโมชั่น บัตรของขวัญ บัตรสมาชิก สามารถกำห"
+"นดเงื่อนไขเฉพาะได้ (สินค้า, ลูกค้า, จำนวนซื้อขั้นต่ำ, ระยะเวลา) รางวัลอาจเป็นส่วนลด (% หรือจำ"
+"นวน) หรือแถมสินค้าฟรี"
 
 #. module: sale
 #. odoo-javascript
@@ -1448,10 +1456,10 @@ msgstr ""
 "• นโยบายการออกใบแจ้งหนี้ของผลิตภัณฑ์ได้รับการกำหนดค่าอย่างถูกต้อง\n"
 "\n"
 "หากคุณต้องการออกใบแจ้งหนี้ตามปริมาณที่สั่งซื้อแทน ให้ทำดังนี้\n"
-"• สำหรับผลิตภัณฑ์ที่บริโภคได้หรือจัดเก็บได้ ให้เปิดผลิตภัณฑ์ ไปที่แท็บ 'ข้อมูลทั่วไป' และเปลี่ยน "
-"'นโยบายการออกใบแจ้งหนี้' จาก 'ปริมาณที่จัดส่ง' เป็น 'ปริมาณที่สั่งซื้อ'\n"
-"• สำหรับบริการ (และผลิตภัณฑ์อื่นๆ) ให้เปลี่ยน 'นโยบายการออกใบแจ้งหนี้' เป็น 'ชำระล่วงหน้า/"
-"ราคาคงที่'\n"
+"• สำหรับผลิตภัณฑ์ที่บริโภคได้หรือจัดเก็บได้ ให้เปิดผลิตภัณฑ์ ไปที่แท็บ 'ข้อมูลทั่วไป' และเปลี่ยน 'นโยบา"
+"ยการออกใบแจ้งหนี้' จาก 'ปริมาณที่จัดส่ง' เป็น 'ปริมาณที่สั่งซื้อ'\n"
+"• สำหรับบริการ (และผลิตภัณฑ์อื่นๆ) ให้เปลี่ยน 'นโยบายการออกใบแจ้งหนี้' เป็น 'ชำระล่วงหน้า/ราค"
+"าคงที่'\n"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1481,8 +1489,8 @@ msgid ""
 "adjustments in the details of the lines. You might consider updating the "
 "prices."
 msgstr ""
-"การเปลี่ยนบริษัทของใบเสนอราคาที่มีอยู่อาจต้องมีการปรับปรุงรายละเอียดของรายการด้วยตนเอง "
-"คุณอาจพิจารณาอัปเดตราคา"
+"การเปลี่ยนบริษัทของใบเสนอราคาที่มีอยู่อาจต้องมีการปรับปรุงรายละเอียดของรายการด้วยตนเอง คุณอาจ"
+"พิจารณาอัปเดตราคา"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
@@ -1683,11 +1691,6 @@ msgid "Connect with your software!"
 msgstr "เชื่อมต่อกับซอฟต์แวร์ของคุณ!"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Connect your software"
-msgstr "เชื่อมต่อซอฟต์แวร์ของคุณ"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Connectors"
 msgstr "ตัวเชื่อมต่อ"
@@ -1781,7 +1784,7 @@ msgstr "สร้างใบแจ้งหนี้ ลงทะเบีย�
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__service_tracking
 msgid "Create on Order"
-msgstr "สร้างคำสั่ง"
+msgstr "สร้างตามสั่ง"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__consolidated_billing
@@ -1927,8 +1930,8 @@ msgid ""
 "Days between quotation proposal and expiration. 0 days means automatic "
 "expiration is disabled"
 msgstr ""
-"จำนวนวันระหว่างข้อเสนอใบเสนอราคาและการหมดอายุ การที่มี 0 วัน "
-"หมายความว่าการหมดอายุอัตโนมัติถูกปิดใช้งาน"
+"จำนวนวันระหว่างข้อเสนอใบเสนอราคาและการหมดอายุ การที่มี 0 วัน หมายความว่าการหมดอายุอัตโนมั"
+"ติถูกปิดใช้งาน"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deduct_down_payments
@@ -1953,7 +1956,8 @@ msgstr "ราคาขายเริ่มต้นรวม"
 msgid ""
 "Default on whether the sales price used on the product and invoices with "
 "this Company includes its taxes."
-msgstr "เป็นค่าเริ่มต้นไม่ว่าราคาขายที่ใช้กับผลิตภัณฑ์และใบแจ้งหนี้กับบริษัทนี้รวมภาษีแล้วหรือไม่"
+msgstr ""
+"เป็นค่าเริ่มต้นไม่ว่าราคาขายที่ใช้กับผลิตภัณฑ์และใบแจ้งหนี้กับบริษัทนี้รวมภาษีแล้วหรือไม่"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1961,8 +1965,8 @@ msgid ""
 "Default period during which the quote is valid and can still be accepted by "
 "the customer. The default can be changed per order or template."
 msgstr ""
-"ระยะเวลาเริ่มต้นในระหว่างที่ใบเสนอราคาถูกต้องและลูกค้ายังสามารถยอมรับได้ "
-"ค่าเริ่มต้นสามารถเปลี่ยนแปลงได้ต่อคำสั่งซื้อหรือเทมเพลต"
+"ระยะเวลาเริ่มต้นในระหว่างที่ใบเสนอราคาถูกต้องและลูกค้ายังสามารถยอมรับได้ ค่าเริ่มต้นสามารถเปลี่ย"
+"นแปลงได้ต่อคำสั่งซื้อหรือเทมเพลต"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__sale_discount_product_id
@@ -2031,9 +2035,9 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
-"วันที่จัดส่งที่คุณสามารถสัญญากับลูกค้าได้ "
-"โดยคำนวณจากระยะเวลานำสินค้าขั้นต่ำของรายการคำสั่งในกรณีของสินค้าบริการ ในกรณีของการจัดส่ง "
-"นโยบายการจัดส่งของคำสั่งจะถูกนำมาพิจารณาโดยใช้ระยะเวลานำสินค้าขั้นต่ำหรือสูงสุดของรายการคำสั่ง"
+"วันที่จัดส่งที่คุณสามารถสัญญากับลูกค้าได้ โดยคำนวณจากระยะเวลานำสินค้าขั้นต่ำของรายการคำสั่งในกรณีข"
+"องสินค้าบริการ ในกรณีของการจัดส่ง นโยบายการจัดส่งของคำสั่งจะถูกนำมาพิจารณาโดยใช้ระยะเวลานำ"
+"สินค้าขั้นต่ำหรือสูงสุดของรายการคำสั่ง"
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -2050,7 +2054,7 @@ msgstr "คำอธิบาย"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Disc.%"
-msgstr "ลด%"
+msgstr "ส่วนลด%"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
@@ -2290,8 +2294,8 @@ msgid ""
 "Drag and drop the request for quotation PDF file into your list of "
 "quotations in Odoo. Enjoy the automation!"
 msgstr ""
-"ลากและวางไฟล์ PDF คำขอใบเสนอราคาลงในรายการใบเสนอราคาของคุณใน Odoo "
-"สนุกไปกับการทำงานแบบอัตโนมัติ!"
+"ลากและวางไฟล์ PDF คำขอใบเสนอราคาลงในรายการใบเสนอราคาของคุณใน Odoo สนุกไปกับการทำง"
+"านแบบอัตโนมัติ!"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2385,7 +2389,7 @@ msgstr "ตัวเชื่อมต่อ FedEx"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__fiscal_position_id
 msgid "Fiscal Position"
-msgstr "ฐานะทางการเงิน"
+msgstr "เงื่อนไขภาษี"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__fiscal_position_id
@@ -2393,8 +2397,8 @@ msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
 "customers or sales orders/invoices.The default value comes from the customer."
 msgstr ""
-"สถานะทางการเงินใช้เพื่อปรับภาษีและบัญชีสำหรับลูกค้าเฉพาะหรือคำสั่งขาย/ใบแจ้งหนี้ "
-"ค่าเริ่มต้นมาจากลูกค้า"
+"สถานะทางการเงินใช้เพื่อปรับภาษีและบัญชีสำหรับลูกค้าเฉพาะหรือคำสั่งขาย/ใบแจ้งหนี้ ค่าเริ่มต้นมาจากลู"
+"กค้า"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__amount
@@ -2440,9 +2444,8 @@ msgid ""
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
-"จากรายงานนี้ คุณจะมีภาพรวมของจำนวนเงินที่ออกใบแจ้งหนี้ให้กับลูกค้าของคุณได้ "
-"เครื่องมือค้นหายังสามารถใช้เพื่อปรับรายงานใบแจ้งหนี้ในแบบของคุณ "
-"และเพื่อให้ตรงกับการวิเคราะห์ที่ตรงความต้องการของคุณ"
+"จากรายงานนี้ คุณจะมีภาพรวมของจำนวนเงินที่ออกใบแจ้งหนี้ให้กับลูกค้าของคุณได้ เครื่องมือค้นหายังสามา"
+"รถใช้เพื่อปรับรายงานใบแจ้งหนี้ในแบบของคุณ และเพื่อให้ตรงกับการวิเคราะห์ที่ตรงความต้องการของคุณ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal_amount_selector
@@ -2636,13 +2639,14 @@ msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
 msgstr ""
-"หากการขายถูกล็อก คุณจะไม่สามารถแก้ไขได้อีกต่อไป อย่างไรก็ตาม "
-"คุณจะยังสามารถออกใบแจ้งหนี้หรือจัดส่งได้"
+"หากการขายถูกล็อก คุณจะไม่สามารถแก้ไขได้อีกต่อไป อย่างไรก็ตาม คุณจะยังสามารถออกใบแจ้งหนี้หรือจั"
+"ดส่งได้"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
 msgid "If you change the pricelist, only newly added lines will be affected."
-msgstr "หากคุณเปลี่ยนรายการราคา เฉพาะบรรทัดที่เพิ่มใหม่เท่านั้นที่จะได้รับผลกระทบ"
+msgstr ""
+"หากคุณเปลี่ยนรายการราคา เฉพาะบรรทัดที่เพิ่มใหม่เท่านั้นที่จะได้รับผลกระทบ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2788,8 +2792,8 @@ msgid ""
 "has invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
-"รายได้ใบแจ้งหนี้สำหรับเดือนปัจจุบัน นี่คือจำนวนเงินที่ช่องทางการขายได้ออกใบแจ้งหนี้ในเดือนนี้ "
-"ใช้เพื่อคำนวณสัดส่วนความคืบหน้าของรายได้และเป้าหมายปัจจุบันในมุมมองคัมบัง"
+"รายได้ใบแจ้งหนี้สำหรับเดือนปัจจุบัน นี่คือจำนวนเงินที่ช่องทางการขายได้ออกใบแจ้งหนี้ในเดือนนี้ ใช้เพื่อค"
+"ำนวณสัดส่วนความคืบหน้าของรายได้และเป้าหมายปัจจุบันในมุมมองคัมบัง"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__delivery
@@ -3037,8 +3041,8 @@ msgid ""
 "Make your quote attractive by adding header pages, product descriptions and "
 "footer pages to your quote."
 msgstr ""
-"ทำให้ใบเสนอราคาของคุณน่าสนใจโดยการเพิ่มส่วนหัวของหน้า คำอธิบายสินค้า "
-"และส่วนท้ายของหน้าให้กับใบเสนอราคาของคุณ"
+"ทำให้ใบเสนอราคาของคุณน่าสนใจโดยการเพิ่มส่วนหัวของหน้า คำอธิบายสินค้า และส่วนท้ายของหน้าให้กับ"
+"ใบเสนอราคาของคุณ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3076,8 +3080,8 @@ msgid ""
 "Create a task and track hours: Create a task on the sales order validation "
 "and track the work hours."
 msgstr ""
-"กำหนดปริมาณตามคำสั่งซื้อด้วยตนเอง: ใบแจ้งหนี้ตามปริมาณที่ป้อนด้วยตนเอง "
-"โดยไม่ต้องสร้างบัญชีวิเคราะห์\n"
+"กำหนดปริมาณตามคำสั่งซื้อด้วยตนเอง: ใบแจ้งหนี้ตามปริมาณที่ป้อนด้วยตนเอง โดยไม่ต้องสร้างบัญชีวิเครา"
+"ะห์\n"
 "ใบบันทึกเวลาในสัญญา: ใบแจ้งหนี้ตามชั่วโมงที่ติดตามบนใบบันทึกเวลาที่เกี่ยวข้อง\n"
 "สร้างงานและติดตามชั่วโมง: สร้างงานในการตรวจสอบคำสั่งขายและติดตามชั่วโมงทำงาน"
 
@@ -3323,8 +3327,8 @@ msgid ""
 "to track if something gets invoiced or delivered).\n"
 "                Set the quantity to 0 instead."
 msgstr ""
-"เมื่อยืนยันใบสั่งขายแล้ว คุณจะไม่สามารถลบรายการใดรายการหนึ่งได้ "
-"(เราจำเป็นต้องติดตามว่ามีบางอย่างได้รับใบแจ้งหนี้หรือจัดส่งหรือไม่)\n"
+"เมื่อยืนยันใบสั่งขายแล้ว คุณจะไม่สามารถลบรายการใดรายการหนึ่งได้ (เราจำเป็นต้องติดตามว่ามีบางอย่"
+"างได้รับใบแจ้งหนี้หรือจัดส่งหรือไม่)\n"
 "               ตั้งค่าปริมาณเป็น 0 แทน"
 
 #. module: sale
@@ -3335,8 +3339,8 @@ msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales order."
 "<br> You will be able to create an invoice and collect the payment."
 msgstr ""
-"เมื่อลูกค้ายืนยันใบเสนอราคาแล้ว จะกลายเป็นคำสั่งขาย<br> "
-"คุณจะสามารถสร้างใบแจ้งหนี้และรับการชำระเงินได้"
+"เมื่อลูกค้ายืนยันใบเสนอราคาแล้ว จะกลายเป็นคำสั่งขาย<br> คุณจะสามารถสร้างใบแจ้งหนี้และรับการชำ"
+"ระเงินได้"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders
@@ -3344,8 +3348,8 @@ msgid ""
 "Once the quotation is confirmed, it becomes a sales order.<br> You will be "
 "able to create an invoice and collect the payment."
 msgstr ""
-"เมื่อยืนยันใบเสนอราคาแล้ว จะกลายเป็นคำสั่งขาย<br> "
-"คุณจะสามารถสร้างใบแจ้งหนี้และรับการชำระเงินได้"
+"เมื่อยืนยันใบเสนอราคาแล้ว จะกลายเป็นคำสั่งขาย<br> คุณจะสามารถสร้างใบแจ้งหนี้และรับการชำระเงิ"
+"นได้"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
@@ -3389,7 +3393,8 @@ msgstr "เฉพาะคำสั่งร่างเท่านั้นท
 #: model:ir.model.constraint,message:sale.constraint_product_attribute_custom_value_sol_custom_value_unique
 msgid ""
 "Only one Custom Value is allowed per Attribute Value per Sales Order Line."
-msgstr "อนุญาตให้ใช้ค่าที่กำหนดเองได้เพียงค่าเดียวต่อค่าคุณลักษณะและต่อไลน์คำสั่งขาย"
+msgstr ""
+"อนุญาตให้ใช้ค่าที่กำหนดเองได้เพียงค่าเดียวต่อค่าคุณลักษณะและต่อไลน์คำสั่งขาย"
 
 #. module: sale
 #. odoo-python
@@ -3410,8 +3415,8 @@ msgid ""
 "Optional Products are suggested whenever the customer hits *Add to Cart* "
 "(cross-sell strategy, e.g. for computers: warranty, software, etc.)."
 msgstr ""
-"มีการแนะนำผลิตภัณฑ์เสริมทุกครั้งที่ลูกค้ากด *หยิบลงตะกร้า* (กลยุทธ์การขายต่อเนื่อง เช่น "
-"สำหรับคอมพิวเตอร์: การรับประกัน ซอฟต์แวร์ ฯลฯ)"
+"มีการแนะนำผลิตภัณฑ์เสริมทุกครั้งที่ลูกค้ากด *หยิบลงตะกร้า* (กลยุทธ์การขายต่อเนื่อง เช่น สำหรับคอมพิ"
+"วเตอร์: การรับประกัน ซอฟต์แวร์ ฯลฯ)"
 
 #. module: sale
 #. odoo-python
@@ -4104,8 +4109,8 @@ msgid ""
 "Request a payment to confirm orders, in full (100%) or partial. The default "
 "can be changed per order or template."
 msgstr ""
-"ขอการชำระเงินเพื่อยืนยันคำสั่งซื้อทั้งหมด (100%) หรือบางส่วน "
-"ค่าเริ่มต้นสามารถเปลี่ยนแปลงได้ต่อคำสั่งซื้อหรือเทมเพลต"
+"ขอการชำระเงินเพื่อยืนยันคำสั่งซื้อทั้งหมด (100%) หรือบางส่วน ค่าเริ่มต้นสามารถเปลี่ยนแปลงได้ต่อคำสั่"
+"งซื้อหรือเทมเพลต"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4113,8 +4118,8 @@ msgid ""
 "Request customers to sign quotations to validate orders. The default can be "
 "changed per order or template."
 msgstr ""
-"ขอให้ลูกค้าเซ็นใบเสนอราคาเพื่อตรวจสอบคำสั่งซื้อ "
-"ค่าเริ่มต้นสามารถเปลี่ยนแปลงได้ต่อคำสั่งซื้อหรือเทมเพลต"
+"ขอให้ลูกค้าเซ็นใบเสนอราคาเพื่อตรวจสอบคำสั่งซื้อ ค่าเริ่มต้นสามารถเปลี่ยนแปลงได้ต่อคำสั่งซื้อหรือเทมเ"
+"พลต"
 
 #. module: sale
 #. odoo-python
@@ -4130,7 +4135,8 @@ msgstr "ผู้ใช้ที่รับผิดชอบ"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced_target
 msgid "Revenue Target for the current month (untaxed total of paid invoices)."
-msgstr "เป้าหมายรายได้สำหรับเดือนปัจจุบัน (ยอดใบแจ้งหนี้ที่ชำระแล้วที่ไม่ต้องเสียภาษี)"
+msgstr ""
+"เป้าหมายรายได้สำหรับเดือนปัจจุบัน (ยอดใบแจ้งหนี้ที่ชำระแล้วที่ไม่ต้องเสียภาษี)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
@@ -4397,8 +4403,8 @@ msgid ""
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
 msgstr ""
-"รายการในใบสั่งขายที่จะใช้เวลาเพิ่มเพื่อออกใบแจ้งหนี้ให้กับลูกค้าของคุณ "
-"ลบรายการใบสั่งขายสำหรับรายการใบบันทึกเวลาที่ไม่สามารถเรียกเก็บเงินได้"
+"รายการในใบสั่งขายที่จะใช้เวลาเพิ่มเพื่อออกใบแจ้งหนี้ให้กับลูกค้าของคุณ ลบรายการใบสั่งขายสำหรับราย"
+"การใบบันทึกเวลาที่ไม่สามารถเรียกเก็บเงินได้"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
@@ -4533,8 +4539,8 @@ msgid ""
 "content about a product (instructions, rules, links, media, etc.). Create "
 "and set the email template from the product detail form (in Accounting tab)."
 msgstr ""
-"การส่งอีเมลมีประโยชน์หากคุณต้องการแชร์ข้อมูลหรือเนื้อหาเฉพาะเกี่ยวกับสินค้า (คำแนะนำ กฎ ลิงก์ "
-"สื่อ และอื่นๆ) สร้างและตั้งค่าเทมเพลตอีเมลจากแบบฟอร์มรายละเอียดของสินค้า (ในแท็บระบบบัญชี)"
+"การส่งอีเมลมีประโยชน์หากคุณต้องการแชร์ข้อมูลหรือเนื้อหาเฉพาะเกี่ยวกับสินค้า (คำแนะนำ กฎ ลิงก์ สื่"
+"อ และอื่นๆ) สร้างและตั้งค่าเทมเพลตอีเมลจากแบบฟอร์มรายละเอียดของสินค้า (ในแท็บระบบบัญชี)"
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_confirmation
@@ -4675,7 +4681,8 @@ msgstr ""
 msgid ""
 "Some order lines are missing a product, you need to correct them before "
 "going further."
-msgstr "มีรายการสั่งซื้อบางรายการที่ยังไม่ได้ระบุสินค้า กรุณาแก้ไขให้เรียบร้อยก่อนดำเนินการต่อ"
+msgstr ""
+"มีรายการสั่งซื้อบางรายการที่ยังไม่ได้ระบุสินค้า กรุณาแก้ไขให้เรียบร้อยก่อนดำเนินการต่อ"
 
 #. module: sale
 #. odoo-python
@@ -4741,7 +4748,8 @@ msgstr "Stripe"
 msgid ""
 "Stripe Connect is not available in your country, please use another payment "
 "provider."
-msgstr "Stripe Connect ไม่สามารถใช้งานได้ในประเทศของคุณ โปรดใช้ผู้ให้บริการชำระเงินรายอื่น"
+msgstr ""
+"Stripe Connect ไม่สามารถใช้งานได้ในประเทศของคุณ โปรดใช้ผู้ให้บริการชำระเงินรายอื่น"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_subsection
@@ -4779,8 +4787,8 @@ msgid ""
 "Sum of transactions made in through the online payment form that are in the "
 "state 'done' or 'authorized' and linked to this order."
 msgstr ""
-"ยอดรวมธุรกรรมที่ทำผ่านแบบฟอร์มการชำระเงินออนไลน์ที่มีสถานะ 'เสร็จสิ้น' หรือ 'ได้รับอนุมัติ' "
-"และเชื่อมโยงกับคำสั่งนี้"
+"ยอดรวมธุรกรรมที่ทำผ่านแบบฟอร์มการชำระเงินออนไลน์ที่มีสถานะ 'เสร็จสิ้น' หรือ 'ได้รับอนุมัติ' และเ"
+"ชื่อมโยงกับคำสั่งนี้"
 
 #. module: sale
 #: model:ir.model,name:sale.model_ir_config_parameter
@@ -4853,8 +4861,8 @@ msgid ""
 "Team %(team_name)s has %(sale_order_count)s active sale orders. Consider "
 "cancelling them or archiving the team instead."
 msgstr ""
-"ทีม %(team_name)s มี %(sale_order_count)s คำสั่งซื้อขายที่ใช้งานอยู่ "
-"พิจารณายกเลิกหรือเก็บทีมแทน"
+"ทีม %(team_name)s มี %(sale_order_count)s คำสั่งซื้อขายที่ใช้งานอยู่ พิจารณายกเลิกหรือเก็บทีม"
+"แทน"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__technical_price_unit
@@ -4866,7 +4874,8 @@ msgstr ""
 msgid ""
 "Tell us why you are refusing this quotation, this will help us improve our "
 "services."
-msgstr "บอกเราว่าเหตุใดคุณจึงปฏิเสธใบเสนอราคานี้ ซึ่งจะช่วยปรับปรุงบริการของเราได้"
+msgstr ""
+"บอกเราว่าเหตุใดคุณจึงปฏิเสธใบเสนอราคานี้ ซึ่งจะช่วยปรับปรุงบริการของเราได้"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__terms_type
@@ -4910,8 +4919,8 @@ msgid ""
 "The Sales Order %(order)s to be reinvoiced is cancelled. You cannot register "
 "an expense on a cancelled Sales Order."
 msgstr ""
-"ใบสั่งขาย %(order)s ที่จะออกใบแจ้งหนี้ใหม่ถูกยกเลิก "
-"คุณไม่สามารถลงทะเบียนค่าใช้จ่ายในใบสั่งขายที่ถูกยกเลิกได้"
+"ใบสั่งขาย %(order)s ที่จะออกใบแจ้งหนี้ใหม่ถูกยกเลิก คุณไม่สามารถลงทะเบียนค่าใช้จ่ายในใบสั่งขายที่"
+"ถูกยกเลิกได้"
 
 #. module: sale
 #. odoo-python
@@ -4920,8 +4929,8 @@ msgid ""
 "The Sales Order %(order)s to be reinvoiced is currently locked. You cannot "
 "register an expense on a locked Sales Order."
 msgstr ""
-"ขณะนี้ใบสั่งขาย %(order)s ที่จะออกใบแจ้งหนี้ใหม่ถูกล็อคอยู่ "
-"คุณไม่สามารถลงทะเบียนค่าใช้จ่ายในใบสั่งขายที่ถูกล็อคได้"
+"ขณะนี้ใบสั่งขาย %(order)s ที่จะออกใบแจ้งหนี้ใหม่ถูกล็อคอยู่ คุณไม่สามารถลงทะเบียนค่าใช้จ่ายในใบสั่ง"
+"ขายที่ถูกล็อคได้"
 
 #. module: sale
 #. odoo-python
@@ -4956,7 +4965,8 @@ msgstr ""
 msgid ""
 "The company is required, please select one before making any other changes "
 "to the sale order."
-msgstr "บริษัทจำเป็นต้องระบุ โปรดเลือกหนึ่งรายการก่อนที่จะทำการเปลี่ยนแปลงใดๆ กับใบสั่งขาย"
+msgstr ""
+"บริษัทจำเป็นต้องระบุ โปรดเลือกหนึ่งรายการก่อนที่จะทำการเปลี่ยนแปลงใดๆ กับใบสั่งขาย"
 
 #. module: sale
 #. odoo-python
@@ -4964,7 +4974,8 @@ msgstr "บริษัทจำเป็นต้องระบุ โปร�
 msgid ""
 "The delivery date is sooner than the expected date. You may be unable to "
 "honor the delivery date."
-msgstr "วันที่จัดส่งเร็วกว่าวันที่คาดไว้ คุณอาจไม่สามารถปฏิบัติตามวันที่จัดส่งได้"
+msgstr ""
+"วันที่จัดส่งเร็วกว่าวันที่คาดไว้ คุณอาจไม่สามารถปฏิบัติตามวันที่จัดส่งได้"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
@@ -4982,11 +4993,11 @@ msgid ""
 "You can archive these products and recreate them with your company "
 "restriction instead, or leave them as shared product."
 msgstr ""
-"ผลิตภัณฑ์ต่อไปนี้ไม่สามารถจำกัดเฉพาะบริษัท %(company)s ได้ "
-"เนื่องจากมีการใช้ผลิตภัณฑ์เหล่านี้ในใบเสนอราคาหรือใบสั่งขายในบริษัทอื่นแล้ว:\n"
+"ผลิตภัณฑ์ต่อไปนี้ไม่สามารถจำกัดเฉพาะบริษัท %(company)s ได้ เนื่องจากมีการใช้ผลิตภัณฑ์เหล่านี้ในใบเ"
+"สนอราคาหรือใบสั่งขายในบริษัทอื่นแล้ว:\n"
 "%(used_products)s\n"
-"คุณสามารถเก็บถาวรผลิตภัณฑ์เหล่านี้และสร้างใหม่โดยมีข้อจำกัดของบริษัทคุณแทน "
-"หรือปล่อยให้เป็นผลิตภัณฑ์ที่ใช้ร่วมกัน"
+"คุณสามารถเก็บถาวรผลิตภัณฑ์เหล่านี้และสร้างใหม่โดยมีข้อจำกัดของบริษัทคุณแทน หรือปล่อยให้เป็นผลิตภัณฑ์"
+"ที่ใช้ร่วมกัน"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -4998,10 +5009,10 @@ msgid ""
 "This mode is advised if you issue the final invoice at the order and not "
 "after the delivery."
 msgstr ""
-"ใบแจ้งหนี้จะถูกสร้างขึ้นโดยอัตโนมัติและพร้อมใช้งานในพอร์ทัลลูกค้า "
-"เมื่อธุรกรรมได้รับการยืนยันโดยผู้รับการชำระเงิน\n"
-"ใบแจ้งหนี้ถูกทำเครื่องหมายว่าชำระเงินแล้ว "
-"และการชำระเงินจะถูกลงทะเบียนในสมุดรายวันการชำระเงินที่กำหนดไว้ในการกำหนดค่าของผู้ให้บริการการชำระเงิน\n"
+"ใบแจ้งหนี้จะถูกสร้างขึ้นโดยอัตโนมัติและพร้อมใช้งานในพอร์ทัลลูกค้า เมื่อธุรกรรมได้รับการยืนยันโดยผู้รับก"
+"ารชำระเงิน\n"
+"ใบแจ้งหนี้ถูกทำเครื่องหมายว่าชำระเงินแล้ว และการชำระเงินจะถูกลงทะเบียนในสมุดรายวันการชำระเงิ"
+"นที่กำหนดไว้ในการกำหนดค่าของผู้ให้บริการการชำระเงิน\n"
 "แนะนำให้ใช้โหมดนี้หากคุณออกใบแจ้งหนี้ครั้งสุดท้ายตามคำสั่งซื้อ ไม่ใช่หลังการจัดส่ง"
 
 #. module: sale
@@ -5009,7 +5020,8 @@ msgstr ""
 msgid ""
 "The margin is computed as the sum of product sales prices minus the cost set "
 "in their detail form."
-msgstr "กำไรจะคำนวณเป็นผลรวมของราคาขายของผลิตภัณฑ์ลบด้วยต้นทุนที่กำหนดไว้ในแบบฟอร์มรายละเอียด"
+msgstr ""
+"กำไรจะคำนวณเป็นผลรวมของราคาขายของผลิตภัณฑ์ลบด้วยต้นทุนที่กำหนดไว้ในแบบฟอร์มรายละเอียด"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -5110,8 +5122,8 @@ msgid ""
 "yet. You can either use a per-line discount, or ask an administrator to "
 "grant the discount the first time."
 msgstr ""
-"ดูเหมือนว่าจะยังไม่มีผลิตภัณฑ์ส่วนลดใดที่กำหนดค่าไว้สำหรับบริษัทนี้ "
-"คุณสามารถใช้ส่วนลดแบบต่อบรรทัดหรือขอให้ผู้ดูแลระบบให้ส่วนลดในครั้งแรกก็ได้"
+"ดูเหมือนว่าจะยังไม่มีผลิตภัณฑ์ส่วนลดใดที่กำหนดค่าไว้สำหรับบริษัทนี้ คุณสามารถใช้ส่วนลดแบบต่อบรรทัดหรือ"
+"ขอให้ผู้ดูแลระบบให้ส่วนลดในครั้งแรกก็ได้"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__downpayment_account_id
@@ -5124,7 +5136,8 @@ msgstr "บัญชีนี้จะใช้ในใบแจ้งหนี
 msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
-msgstr "ค่าเริ่มต้นนี้ใช้กับสินค้าใหม่ที่สร้างขึ้น ซึ่งสามารถเปลี่ยนแปลงได้ในแบบฟอร์มรายละเอียดสินค้า"
+msgstr ""
+"ค่าเริ่มต้นนี้ใช้กับสินค้าใหม่ที่สร้างขึ้น ซึ่งสามารถเปลี่ยนแปลงได้ในแบบฟอร์มรายละเอียดสินค้า"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__campaign_id
@@ -5142,8 +5155,8 @@ msgid ""
 "This is the delivery date promised to the customer. If set, the delivery "
 "order will be scheduled based on this date rather than product lead times."
 msgstr ""
-"นี้คือวันที่จัดส่งตามที่สัญญาไว้กับลูกค้า หากตั้งค่าไว้ "
-"คำสั่งจัดส่งจะถูกกำหนดเวลาตามวันที่นี้แทนที่จะเป็นเวลานำการผลิต"
+"นี้คือวันที่จัดส่งตามที่สัญญาไว้กับลูกค้า หากตั้งค่าไว้ คำสั่งจัดส่งจะถูกกำหนดเวลาตามวันที่นี้แทนที่จะเป็นเวล"
+"านำการผลิต"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__medium_id
@@ -5159,7 +5172,8 @@ msgstr "นี้เป็นวิธีการจัดส่งเช่น
 msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
-msgstr "นี่เป็นที่มาของลิงก์ เช่น เครื่องมือค้นหา โดเมนอื่นๆ หรือชื่อรายการอีเมล"
+msgstr ""
+"นี่เป็นที่มาของลิงก์ เช่น เครื่องมือค้นหา โดเมนอื่นๆ หรือชื่อรายการอีเมล"
 
 #. module: sale
 #. odoo-javascript
@@ -5185,11 +5199,10 @@ msgid ""
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
-"รายงานนี้ทำการวิเคราะห์ใบเสนอราคาและใบสั่งขายของคุณ "
-"การวิเคราะห์ตรวจสอบรายได้จากการขายของคุณและจัดเรียงตามเกณฑ์กลุ่มต่างๆ (พนักงานขาย คู่ค้า "
-"ผลิตภัณฑ์ ฯลฯ) ใช้รายงานนี้เพื่อวิเคราะห์ยอดขายที่ยังไม่ได้ออกใบแจ้งหนี้ "
-"หากคุณต้องการวิเคราะห์การหมุนเวียนของคุณ "
-"คุณควรใช้รายงานการวิเคราะห์ใบแจ้งหนี้ในแอปพลิเคชันการบัญชี"
+"รายงานนี้ทำการวิเคราะห์ใบเสนอราคาและใบสั่งขายของคุณ การวิเคราะห์ตรวจสอบรายได้จากการขายข"
+"องคุณและจัดเรียงตามเกณฑ์กลุ่มต่างๆ (พนักงานขาย คู่ค้า ผลิตภัณฑ์ ฯลฯ) ใช้รายงานนี้เพื่อวิเคราะห์ยอด"
+"ขายที่ยังไม่ได้ออกใบแจ้งหนี้ หากคุณต้องการวิเคราะห์การหมุนเวียนของคุณ คุณควรใช้รายงานการวิเคราะ"
+"ห์ใบแจ้งหนี้ในแอปพลิเคชันการบัญชี"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -5200,11 +5213,10 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
-"รายงานนี้ทำการวิเคราะห์ใบเสนอราคาของคุณ "
-"การวิเคราะห์ตรวจสอบรายได้จากการขายของคุณและจัดเรียงตามเกณฑ์กลุ่มต่างๆ (พนักงานขาย คู่ค้า "
-"ผลิตภัณฑ์ ฯลฯ) ใช้รายงานนี้เพื่อวิเคราะห์ยอดขายที่ยังไม่ได้ออกใบแจ้งหนี้ "
-"หากคุณต้องการวิเคราะห์การหมุนเวียนของคุณ "
-"คุณควรใช้รายงานการวิเคราะห์ใบแจ้งหนี้ในแอปพลิเคชันการบัญชี"
+"รายงานนี้ทำการวิเคราะห์ใบเสนอราคาของคุณ การวิเคราะห์ตรวจสอบรายได้จากการขายของคุณและจัดเ"
+"รียงตามเกณฑ์กลุ่มต่างๆ (พนักงานขาย คู่ค้า ผลิตภัณฑ์ ฯลฯ) ใช้รายงานนี้เพื่อวิเคราะห์ยอดขายที่ยังไม่ได้"
+"ออกใบแจ้งหนี้ หากคุณต้องการวิเคราะห์การหมุนเวียนของคุณ คุณควรใช้รายงานการวิเคราะห์ใบแจ้งหนี้ใน"
+"แอปพลิเคชันการบัญชี"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -5215,11 +5227,10 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
-"รายงานนี้ทำการวิเคราะห์คำสั่งขายของคุณ "
-"การวิเคราะห์และตรวจสอบรายได้จากการขายของคุณและจัดเรียงตามเกณฑ์กลุ่มต่าง ๆ (พนักงานขาย "
-"พาร์ทเนอร์ สินค้า และ อื่น ๆ ) ใช้รายงานนี้เพื่อวิเคราะห์ยอดขายที่ยังไม่ได้ออกใบแจ้งหนี้ "
-"หากคุณต้องการวิเคราะห์การหมุนเวียนของคุณ "
-"คุณควรใช้รายงานการวิเคราะห์ใบแจ้งหนี้ในแอปพลิเคชันบัญชี"
+"รายงานนี้ทำการวิเคราะห์คำสั่งขายของคุณ การวิเคราะห์และตรวจสอบรายได้จากการขายของคุณและจัดเ"
+"รียงตามเกณฑ์กลุ่มต่าง ๆ (พนักงานขาย พาร์ทเนอร์ สินค้า และ อื่น ๆ ) ใช้รายงานนี้เพื่อวิเคราะห์ยอด"
+"ขายที่ยังไม่ได้ออกใบแจ้งหนี้ หากคุณต้องการวิเคราะห์การหมุนเวียนของคุณ คุณควรใช้รายงานการวิเคราะ"
+"ห์ใบแจ้งหนี้ในแอปพลิเคชันบัญชี"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5257,9 +5268,8 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
-"หากต้องการส่งคำเชิญในโหมด B2B "
-"ให้เปิดรายชื่อผู้ติดต่อหรือเลือกหลายรายการในมุมมองรายการแล้วคลิกตัวเลือก "
-"'จัดการการเข้าถึงพอร์ทัล' ในเมนูดรอปดาวน์ *การดำเนินการ*"
+"หากต้องการส่งคำเชิญในโหมด B2B ให้เปิดรายชื่อผู้ติดต่อหรือเลือกหลายรายการในมุมมองรายการแล้วคลิ"
+"กตัวเลือก 'จัดการการเข้าถึงพอร์ทัล' ในเมนูดรอปดาวน์ *การดำเนินการ*"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -5463,7 +5473,8 @@ msgstr ""
 #. module: sale
 #: model:mail.template,description:sale.email_template_edi_sale
 msgid "Used by salespeople when they send quotations or proforma to prospects"
-msgstr "ใช้โดยพนักงานขาย เมื่อส่งใบเสนอราคาหรือตัวอย่างไปยังผู้มีโอกาสเป็นลูกค้า"
+msgstr ""
+"ใช้โดยพนักงานขาย เมื่อส่งใบเสนอราคาหรือตัวอย่างไปยังผู้มีโอกาสเป็นลูกค้า"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -5482,8 +5493,8 @@ msgid ""
 "Validated expenses, vendor bills, or stock pickings (set up to track costs) "
 "can be invoiced to the customer at either cost or sales price."
 msgstr ""
-"สามารถเรียกเก็บเงินค่าใช้จ่ายที่ผ่านการตรวจสอบ ใบแจ้งหนี้จากผู้ขาย หรือรายการเลือกสินค้า "
-"(ตั้งค่าเพื่อติดตามต้นทุน) ไปยังลูกค้าได้ในราคาต้นทุนหรือราคาขาย"
+"สามารถเรียกเก็บเงินค่าใช้จ่ายที่ผ่านการตรวจสอบ ใบแจ้งหนี้จากผู้ขาย หรือรายการเลือกสินค้า (ตั้งค่าเ"
+"พื่อติดตามต้นทุน) ไปยังลูกค้าได้ในราคาต้นทุนหรือราคาขาย"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
@@ -5495,7 +5506,8 @@ msgstr "ช่วงเวลาการตรวจสอบ"
 msgid ""
 "Validity of the order, after that you will not able to sign & pay the "
 "quotation."
-msgstr "ความถูกต้องของคำสั่งซื้อ หลังจากนั้นคุณจะไม่สามารถลงนามและชำระเงินในใบเสนอราคาได้"
+msgstr ""
+"ความถูกต้องของคำสั่งซื้อ หลังจากนั้นคุณจะไม่สามารถลงนามและชำระเงินในใบเสนอราคาได้"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5588,7 +5600,8 @@ msgstr "ประวัติการสื่อสารของเว็บ
 msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
 "first cancel it."
-msgstr "คุณไม่สามารถลบใบเสนอราคาที่ถูกส่งแล้วหรือใบสั่งขายที่ยืนยันแล้ว คุณต้องทำการยกเลิกก่อน"
+msgstr ""
+"คุณไม่สามารถลบใบเสนอราคาที่ถูกส่งแล้วหรือใบสั่งขายที่ยืนยันแล้ว คุณต้องทำการยกเลิกก่อน"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
@@ -5606,8 +5619,8 @@ msgid ""
 "communication will be given to the customer when they choose the payment "
 "method."
 msgstr ""
-"คุณสามารถตั้งค่าประเภทการสื่อสารที่จะปรากฏในใบสั่งขายได้ที่นี่ "
-"ลูกค้าจะได้รับประเภทการสื่อสารเมื่อพวกเขาเลือกวิธีการชำระเงิน"
+"คุณสามารถตั้งค่าประเภทการสื่อสารที่จะปรากฏในใบสั่งขายได้ที่นี่ ลูกค้าจะได้รับประเภทการสื่อสารเมื่อพว"
+"กเขาเลือกวิธีการชำระเงิน"
 
 #. module: sale
 #. odoo-python
@@ -5637,8 +5650,8 @@ msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
-"คุณไม่สามารถเปลี่ยนชนิดของไลน์ใบสั่งขาย "
-"คุณควรลบไลน์ปัจจุบันและสร้างไลน์ใหม่ในประเภทที่เหมาะสมแทน"
+"คุณไม่สามารถเปลี่ยนชนิดของไลน์ใบสั่งขาย คุณควรลบไลน์ปัจจุบันและสร้างไลน์ใหม่ในประเภทที่เหมาะสมแ"
+"ทน"
 
 #. module: sale
 #. odoo-python
@@ -5720,8 +5733,8 @@ msgid ""
 " Please change the company of your quotation or remove the products from "
 "other companies (%(bad_products)s)."
 msgstr ""
-"ใบเสนอราคาของคุณมีสินค้าจากบริษัท %(product_company)s "
-"ในขณะที่ใบเสนอราคาของคุณเป็นของบริษัท %(quote_company)s \n"
+"ใบเสนอราคาของคุณมีสินค้าจากบริษัท %(product_company)s ในขณะที่ใบเสนอราคาของคุณเป็นของบริ"
+"ษัท %(quote_company)s \n"
 "กรุณาเปลี่ยนบริษัทที่เสนอราคาหรือนำสินค้าออกจากบริษัทอื่น(%(bad_products)s)"
 
 #. module: sale
@@ -5796,11 +5809,6 @@ msgid "sale order"
 msgstr "ใบสั่งขาย"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "to create quotes automatically."
-msgstr "เพื่อสร้างคำพูดโดยอัตโนมัติ"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "to learn all the ways to connect your software with"
 msgstr "เพื่อเรียนรู้วิธีต่างๆ ในการเชื่อมต่อซอฟต์แวร์ของคุณด้วย"
@@ -5809,11 +5817,6 @@ msgstr "เพื่อเรียนรู้วิธีต่างๆ ใ�
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "units"
 msgstr "หน่วย"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "with"
-msgstr "กับ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -5850,6 +5853,15 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+
+#~ msgid "Connect your software"
+#~ msgstr "เชื่อมต่อซอฟต์แวร์ของคุณ"
+
+#~ msgid "to create quotes automatically."
+#~ msgstr "เพื่อสร้างคำพูดโดยอัตโนมัติ"
+
+#~ msgid "with"
+#~ msgstr "กับ"
 
 #~ msgid "2023-12-31"
 #~ msgstr "2023-12-31"

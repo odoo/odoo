@@ -13,3 +13,14 @@ class ResPartner(models.Model):
                 partner.company_registry_placeholder = _('SIRET Number')
             elif country.code == 'PF':
                 partner.company_registry_placeholder = _('No. Tahiti') # PF adheres to French regulations
+
+    def _get_peppol_endpoint_value(self, country_code, field, eas):
+        endpoint = super()._get_peppol_endpoint_value(country_code, field, eas)
+        if (
+            not endpoint
+            and country_code == 'FR'
+            and field == 'peppol_endpoint'
+            and not self.company_registry
+        ):
+            return self._l10n_fr_get_siren_from_vat()
+        return endpoint

@@ -39,7 +39,7 @@ test("selectProduct", async () => {
 test("getSubCategories and selectCategory", async () => {
     const store = await setupSelfPosEnv();
     const models = store.models;
-    expect(store.currentCategory).toBeEmpty();
+    expect(store.currentCategory.id).toBe(1);
     const comp = await mountWithCleanup(ProductListPage, {});
 
     expect(store.currentCategory.id).toBe(1);
@@ -63,4 +63,16 @@ test("getSubCategories and selectCategory", async () => {
     // for mobile mode
     store.config.self_ordering_mode = "mobile";
     expect(comp.getSubCategories()).toHaveLength(0);
+});
+
+test("getProducts follows pos_sequence then name", async () => {
+    const store = await setupSelfPosEnv();
+    const models = store.models;
+    const comp = await mountWithCleanup(ProductListPage, {});
+    models["product.template"].get(13).pos_sequence = 1;
+    models["product.template"].get(12).pos_sequence = 2;
+    models["product.template"].get(14).pos_sequence = 2;
+
+    const foodCatg = models["pos.category"].get(3);
+    expect(comp.getProducts(foodCatg).map((p) => p.id)).toEqual([13, 12, 14]);
 });

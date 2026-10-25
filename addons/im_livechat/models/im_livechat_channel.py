@@ -610,7 +610,7 @@ class Im_LivechatChannelRule(models.Model):
         ('hide_button', 'Hide')], string='Live Chat Button', required=True, default='display_button',
         help="* 'Show' displays the chat button on the pages.\n"\
              "* 'Show with notification' is 'Show' in addition to a floating text just next to the button.\n"\
-             "* 'Open automatically' displays the button and automatically opens the conversation pane.\n"\
+             "* 'Open automatically' displays the button and automatically opens the conversation pane on larger screens. On small screens, this behaves like 'Show'.\n"
              "* 'Hide' hides the chat button on the pages.\n")
     auto_popup_timer = fields.Integer('Time to Open', default=0,
         help="Delay (in seconds) to automatically open the conversation window. Note: the selected action must be 'Open automatically' otherwise this parameter will not be taken into account.")
@@ -631,6 +631,15 @@ class Im_LivechatChannelRule(models.Model):
         help="The rule will only be applied for these countries. Example: if you select 'Belgium' and 'United States' and that you set the action to 'Hide', the chat button will be hidden on the specified URL from the visitors located in these 2 countries. This feature requires GeoIP installed on your server.")
     sequence = fields.Integer('Matching order', default=10,
         help="Given the order to find a matching rule. If 2 rules are matching for the given url/country, the one with the lowest sequence will be chosen.")
+
+    @api.constrains("regex_url")
+    def _check_regex_url(self):
+        for rule in self:
+            if rule.regex_url:
+                try:
+                    re.compile(rule.regex_url)
+                except re.error:
+                    raise ValidationError(_("The URL Regex '%(regex)s' is not valid.", regex=rule.regex_url))
 
     def match_rule(self, channel_id, url, country_id=False):
         """ determine if a rule of the given channel matches with the given url

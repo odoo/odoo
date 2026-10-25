@@ -136,7 +136,7 @@
                         <div class="d-flex justify-content-between align-items-center mt-1">
                             <div>
                                 <button class="o_we_apply_link btn btn-sm btn-primary" t-att-disabled="!state.url" t-on-click="onClickApply">Apply</button>
-                                <button class="o_we_discard_link btn btn-sm btn-secondary ms-1" t-on-click="props.onDiscard">Discard</button>
+                                <button class="o_we_discard_link btn btn-sm btn-secondary ms-1" t-on-click="this.discard">Discard</button>
                             </div>
                             <div class="d-flex align-items-center gap-1">
                                 <a t-if="props.canRemove and state.url" href="#" class="o_we_remove_link text-dark d-flex me-1" t-on-click.prevent="onClickRemove" title="Remove Link">
@@ -154,7 +154,7 @@
             <div t-else="" style="width: 274px;" data-prevent-closing-overlay="true">
                 <div class="d-flex flex-column p-2">
                     <div class="d-flex">
-                        <span class="o_we_preview_favicon" style="width: 16px; height: 32px">
+                        <span class="o_we_preview_favicon" style="width: 16px; height: 18px">
                             <img t-if="state.previewIcon.type === 'imgSrc'" t-att-src="state.previewIcon.value" class="align-content-center"/>
                             <span t-elif="state.previewIcon.type === 'mimetype'" class="o_image" t-att-data-mimetype="state.previewIcon.value"/>
                             <i t-else="" t-attf-class="fa fa-fw {{state.previewIcon.value}}"></i>
@@ -165,8 +165,8 @@
                                     <t t-esc="state.urlTitle"/>
                                 </a>
                                 <div class="flex-grow-1 d-flex justify-content-end align-items-center gap-1">
-                                    <a href="#" class="mx-1 o_we_replace_title_btn text-dark"
-                                        t-if="!state.isImage and state.urlTitle and state.label === '' and !state.showReplaceTitleBanner"
+                                    <a href="#" class="justify-content-center btn-link o_we_replace_title_btn text-dark"
+                                        t-if="this.state.canReplaceTitle and state.urlTitle and state.label === '' and !state.showReplaceTitleBanner"
                                         t-on-click="onClickReplaceTitle"
                                         title="Replace URL with its title"
                                     >
@@ -197,7 +197,7 @@
                         </span>
                     </div>
                 </div>
-                <div t-if="!state.isImage and state.urlTitle and state.label === '' and state.showReplaceTitleBanner" class="d-flex align-items-baseline" style="background-color: var(--primary);">
+                <div t-if="this.state.canReplaceTitle and state.urlTitle and state.label === '' and state.showReplaceTitleBanner" class="d-flex align-items-baseline" style="background-color: var(--primary);">
                     <i class="fa fa-magic fa-fw m-1" style="color: var(--o-cc1-btn-primary-text);"></i>
                     <span class="me-2 flex-grow-1" style="color: var(--o-cc1-btn-primary-text);font-size: smaller;">Replace URL with its title?</span>
                     <button class=" btn btn-sm btn-primary o_we_replace_title_btn" style="margin: 1px;font-size: smaller;" t-on-click="onClickReplaceTitle">Yes</button>

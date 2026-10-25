@@ -13,7 +13,7 @@ import subprocess
 
 from odoo import tools
 from odoo.modules import Manifest
-from odoo.tests import TransactionCase
+from odoo.tests import TransactionCase, no_retry
 from odoo.tools.which import which
 
 HERE = os.path.dirname(os.path.realpath(__file__))
@@ -21,6 +21,7 @@ HERE = os.path.dirname(os.path.realpath(__file__))
 _logger = logging.getLogger(__name__)
 
 
+@no_retry
 class TestPyLint(TransactionCase):
     def _skip_test(self, reason):
         _logger.warning(reason)

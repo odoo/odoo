@@ -9,7 +9,7 @@ import {
     test,
 } from "@odoo/hoot";
 import { hover as hootHover, queryFirst, resize } from "@odoo/hoot-dom";
-import { Deferred, microTick } from "@odoo/hoot-mock";
+import { Deferred } from "@odoo/hoot-mock";
 import {
     MockServer,
     asyncStep,
@@ -31,7 +31,8 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { CHAT_HUB_KEY } from "@mail/core/common/chat_hub_model";
-import { click, contains } from "./mail_test_helpers_contains";
+import { Store } from "@mail/core/common/store_service";
+import { click, contains, TIMEOUT } from "./mail_test_helpers_contains";
 
 import { closeStream, mailGlobal } from "@mail/utils/common/misc";
 import { Component, onMounted, onPatched, onWillDestroy, status } from "@odoo/owl";
@@ -88,6 +89,17 @@ import { Network, Rtc } from "@mail/discuss/call/common/rtc_service";
 import { UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
 
 export * from "./mail_test_helpers_contains";
+
+const { AudioContext } = window;
+
+/**
+ * Audio context that processes audio without rendering it to any output device.
+ */
+class SilentAudioContext extends AudioContext {
+    constructor(options) {
+        super({ ...options, sinkId: { type: "none" } });
+    }
+}
 
 before(prepareRegistriesWithCleanup);
 export const registryNamesToCloneWithCleanup = [];
@@ -343,6 +355,7 @@ export async function start(options) {
             after(() => this.clear());
         },
     });
+    preventActualMediaUsage();
     if (!MockServer.current) {
         await startServer();
     }
@@ -467,7 +480,7 @@ export async function patchUiSize({ height, size, width }) {
 }
 
 function createAudioStream() {
-    const ctx = new window.AudioContext();
+    const ctx = new SilentAudioContext();
     const dest = ctx.createMediaStreamDestination();
     after(() => {
         closeStream(dest.stream);
@@ -521,6 +534,32 @@ export function mockGetMedia() {
         },
     });
     return streams;
+}
+
+/**
+ * Prevents tests from using the actual microphone, camera, screen and speakers:
+ * media requests that are not mocked by the test get synthetic streams, and
+ * audio is processed without being rendered to an output device.
+ *
+ * The prototype is patched so that the test's own mocks on `navigator.mediaDevices`
+ * (e.g. `mockGetMedia`, denied permissions) take precedence regardless of order.
+ */
+function preventActualMediaUsage() {
+    patchWithCleanup(MediaDevices.prototype, {
+        async getUserMedia(constraints) {
+            return constraints?.audio ? createAudioStream() : createVideoStream();
+        },
+        async getDisplayMedia() {
+            return createVideoStream();
+        },
+    });
+    if (window.AudioContext === AudioContext) {
+        patchWithCleanup(window, { AudioContext: SilentAudioContext });
+    }
+    if (browser.AudioContext === AudioContext) {
+        // not already mocked by the test, e.g. with `patchVoiceMessageAudio`
+        patchWithCleanup(browser, { AudioContext: SilentAudioContext });
+    }
 }
 
 /**
@@ -722,7 +761,7 @@ export async function isInViewportOf(childSelector, parentSelector) {
     await contains(parentSelector);
     await contains(childSelector);
     const inViewportDeferred = new Deferred();
-    const failTimeout = setTimeout(() => check({ crashOnFail: true }), 3000);
+    const failTimeout = setTimeout(() => check({ crashOnFail: true }), TIMEOUT);
     const check = ({ crashOnFail = false } = {}) => {
         const parent = queryFirst(parentSelector);
         const child = queryFirst(childSelector);
@@ -792,27 +831,32 @@ export const STORE_FETCH_ROUTES = ["/mail/action", "/mail/data"];
  *  and the specific params should be logged in asyncStep. By default only the name is logged.
  */
 export function listenStoreFetch(nameOrNames = [], { logParams = [], onRpc: onRpcOverride } = {}) {
-    async function registerStep(request, name, params) {
-        const res = await onRpcOverride?.(request);
-        if (logParams.includes(name)) {
-            asyncStep(`store fetch: ${name} - ${JSON.stringify(params)}`);
-        } else {
-            asyncStep(`store fetch: ${name}`);
-        }
-        return res;
+    const namesToRegister = typeof nameOrNames === "string" ? [nameOrNames] : nameOrNames;
+    function isRegistered(name) {
+        return namesToRegister.length === 0 || namesToRegister.includes(name);
     }
-    async function registerSteps(request, fetchParams) {
-        const namesToRegister = typeof nameOrNames === "string" ? [nameOrNames] : nameOrNames;
+    patchWithCleanup(Store.prototype, {
+        async fetchStoreData(name, params) {
+            const res = await super.fetchStoreData(...arguments);
+            if (isRegistered(name)) {
+                if (logParams.includes(name)) {
+                    asyncStep(`store fetch: ${name} - ${JSON.stringify(params)}`);
+                } else {
+                    asyncStep(`store fetch: ${name}`);
+                }
+            }
+            return res;
+        },
+    });
+    if (!onRpcOverride) {
+        return;
+    }
+    async function callOverride(request, fetchParams) {
         let res;
         for (const fetchParam of fetchParams) {
             const name = typeof fetchParam === "string" ? fetchParam : fetchParam[0];
-            const params = typeof fetchParam === "string" ? undefined : fetchParam[1];
-            if (namesToRegister.length > 0) {
-                if (namesToRegister.some((namesToRegister) => namesToRegister === name)) {
-                    res = await registerStep(request, name, params);
-                }
-            } else {
-                res = await registerStep(request, name, params);
+            if (isRegistered(name)) {
+                res = await onRpcOverride(request);
             }
         }
         return res;
@@ -821,19 +865,18 @@ export function listenStoreFetch(nameOrNames = [], { logParams = [], onRpc: onRp
      * The fetch could happen through any of those routes depending on various conditions.
      * Most tests don't care about which route is used, so we just listen to all of them.
      */
-    onRpc("/mail/action", async (request) => {
-        const { params } = await request.json();
-        return registerSteps(request, params.fetch_params);
-    });
-    onRpc("/mail/data", async (request) => {
-        const { params } = await request.json();
-        return registerSteps(request, params.fetch_params);
-    });
+    for (const route of STORE_FETCH_ROUTES) {
+        onRpc(route, async (request) => {
+            const { params } = await request.json();
+            return callOverride(request, params.fetch_params);
+        });
+    }
 }
 
 /**
- * Waits for the given name or names of store fetch parameters to have been fetched from the server,
- * in the given order. Expected names have to be registered with listenStoreFetch beforehand.
+ * Waits for the given name(s) of store fetch parameters to have been fetched
+ * and applied to the store, in the given order. Expected names have to be registered with
+ * listenStoreFetch beforehand.
  * If other asyncStep are resolving in the same flow, they must be provided to stepsAfter (if they
  * are resolved after the fetch) or stepsBefore (if they are resolved before the fetch). The order
  * can be ignored with ignoreOrder option.
@@ -865,13 +908,6 @@ export async function waitStoreFetch(
         ],
         { ignoreOrder }
     );
-    /**
-     * Extra tick necessary to ensure the RPC is fully processed before resolving.
-     * This is necessary because the asyncStep in onRpc is not synchronous with the moment
-     * the RPC result is resolved and processed in the business code. Removing this tick
-     * won't make everything fail, but it might create subtle race conditions.
-     */
-    await microTick();
 }
 
 export function userContext() {
@@ -937,7 +973,7 @@ export function patchVoiceMessageAudio() {
             }
             /** @returns {AudioBuffer} */
             decodeAudioData(...args) {
-                return new AudioContext().decodeAudioData(...args);
+                return new SilentAudioContext().decodeAudioData(...args);
             }
         },
         AudioWorkletNode: class {

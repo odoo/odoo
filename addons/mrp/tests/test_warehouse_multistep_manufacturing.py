@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import Form, tagged
+from odoo.tests import Form, tagged, Command
 from odoo.addons.mrp.tests.common import TestMrpCommon
 
 
@@ -135,6 +135,38 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         pick = production.picking_ids
         self.assertEqual(pick.location_id, self.warehouse.lot_stock_id)
         self.assertEqual(pick.location_dest_id, pre_2)
+
+    def test_scrap_component_unreserves_correct_mo(self):
+        """
+        Ensure scrapping raw material from one MO, prioritise this mo to unreserve.
+
+        Two MOs each reserve 2 units of the same component, with nothing left in
+        stock beyond what both need. Scrapping those 2 units from the first MO
+        should unreserve that first MO, while the second MO's reservation must
+        remain untouched.
+        """
+        self.warehouse.manufacture_steps = 'pbm'
+        self.env['stock.quant']._update_available_quantity(self.raw_product, self.warehouse.lot_stock_id, 4)
+
+        mos = self.env['mrp.production'].create([{
+            'picking_type_id': self.warehouse.manu_type_id.id,
+            'bom_id': self.bom.id,
+            'product_qty': 1,
+        } for __ in range(2)])
+        mos.action_confirm()
+        mos.picking_ids.button_validate()
+        self.assertRecordValues(mos.move_raw_ids, [{'state': 'assigned'}, {'state': 'assigned'}])
+
+        scrap = self.env['stock.scrap'].create({
+            'product_id': self.raw_product.id,
+            'production_id': mos[0].id,
+            'scrap_qty': 2.0,
+        })
+        scrap.action_validate()
+
+        self.assertRecordValues(mos.move_raw_ids, [{'state': 'confirmed'}, {'state': 'assigned'}])
+        self.assertFalse(mos[0].move_raw_ids.move_line_ids)
+        self.assertRecordValues(mos[1].move_raw_ids.move_line_ids, [{'quantity': 2.0}])
 
     def test_manufacturing_3_steps(self):
         """ Test MO/picking before manufacturing/picking after manufacturing
@@ -617,6 +649,72 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         self.assertEqual(mo.product_qty, 1.0)
         self.assertEqual(mo.bom_id, bom_2)
 
+    def test_mto_3steps_lot_reservation_after_sam_sublocation(self):
+        """In a MTO + 3-step manufacturing flow, when the 'Store Finished
+        Products' (SAM) transfer is validated to a sublocation of WH/Stock
+        (e.g. WH/Stock/Shelf 1) instead of WH/Stock directly, the downstream
+        delivery order must reserve the lot that was just produced (Lot 002)
+        and not fall back to pre-existing stock (Lot 001).
+        """
+        # Configure warehouse for 3-step manufacturing and MTO
+        self.warehouse_1.manufacture_steps = 'pbm_sam'
+        self.warehouse_1.mto_pull_id.route_id.active = True
+        # change the tracking to 'lot' and update available qty for the finished product with Lot1
+        self.finished_product.write({
+            'tracking': 'lot',
+            'route_ids': self.warehouse_1.mto_pull_id.route_id,
+        })
+
+        lot_1 = self.env['stock.lot'].create({'name': 'Lot 001', 'product_id': self.finished_product.id})
+        self.env['stock.quant']._update_available_quantity(
+            self.finished_product, self.stock_location, 1.0, lot_id=lot_1
+        )
+        self.env['stock.quant']._update_available_quantity(self.raw_product, self.stock_location, 2.0)
+        # Create a MTO picking that will trigger the manufacturing order
+        picking_customer = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.warehouse_1.out_type_id.id,
+            'move_ids': [Command.create({
+                'product_id': self.finished_product.id,
+                'product_uom_qty': 1,
+                'product_uom': self.uom_unit.id,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+                'procure_method': 'make_to_order',
+            })],
+        })
+        picking_customer.action_confirm()
+
+        production = self.env['mrp.production'].search([('product_id', '=', self.finished_product.id)])
+        self.assertEqual(len(production), 1)
+
+        pbm_picking = production.picking_ids
+        pbm_picking.action_assign()
+        pbm_picking._action_done()
+
+        production.action_assign()
+        production.action_generate_serial()
+        production.button_mark_done()
+
+        sam_picking = self.env['stock.picking'].search([
+            ('picking_type_id', '=', self.warehouse_1.sam_type_id.id),
+            ('state', 'not in', ['done', 'cancel']),
+        ])
+        self.assertEqual(len(sam_picking), 1)
+
+        # Simulate user changing the destination to a sublocation of WH/Stock
+        sam_picking.location_dest_id = self.shelf_1
+        sam_picking.move_ids.picked = True
+        self.assertEqual(picking_customer.state, 'waiting')
+        sam_picking._action_done()
+        self.assertEqual(sam_picking.state, 'done')
+        picking_customer.action_assign()
+        self.assertEqual(picking_customer.state, 'assigned')
+        reserved_lots = picking_customer.move_line_ids.lot_id
+        self.assertIn(production.lot_producing_ids, reserved_lots, "Delivery should reserve Lot 003 (manufactured for this MTO order)")
+        self.assertNotIn(lot_1, reserved_lots, "Delivery should not reserve Lot 001 (pre-existing stock)")
+
     # def test_manufacturing_bom_with_repetitions(self):
     #     """
     #         Checks that manufacturing orders created to manufacture the components of a BOM
@@ -874,11 +972,11 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         ])
 
     def test_3_steps_manufacturing_forecast(self):
-        """Check that a confirmed MO influence the forecast of the warehouse stock"""
+        """Check that a confirmed MO influences the forecast of the warehouse stock"""
         self.warehouse_1.manufacture_steps = 'pbm_sam'
         lovely_product = self.bom_1.product_id.copy({'uom_id': self.uom_unit.id})
         self.bom_1.product_id = lovely_product
-        self.assertEqual(lovely_product.with_context(location_id=self.warehouse_1.lot_stock_id.id).virtual_available, 0.0)
+        self.assertEqual(lovely_product.with_context(location=self.warehouse_1.lot_stock_id.id).virtual_available, 0.0)
         mo = self.env['mrp.production'].create({
             'bom_id': self.bom_1.id,
             'picking_type_id': self.warehouse_1.manu_type_id.id,
@@ -886,7 +984,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         })
         mo.action_confirm()
         self.assertEqual(mo.state, 'confirmed')
-        self.assertEqual(lovely_product.with_context(location_id=self.warehouse_1.lot_stock_id.id).virtual_available, 3.0)
+        self.assertEqual(lovely_product.with_context(location=self.warehouse_1.lot_stock_id.id).virtual_available, 3.0)
 
     def test_manufacture_to_resupply_unchecks_and_unlinks_warehouse(self):
         """Unchecking Manufacture to Resupply should keep manufacture_to_resupply disabled."""

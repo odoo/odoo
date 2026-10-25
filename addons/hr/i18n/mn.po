@@ -22,23 +22,23 @@
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022
 # Bayarkhuu Bataa, 2023
 # Martin Trigaux, 2023
-# Bayarkhuu Bataa <bbayarkhuu@gmail.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Bayarkhuu Bataa <bbayarkhuu@gmail.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-20 18:35+0000\n"
-"PO-Revision-Date: 2025-11-17 10:55+0000\n"
+"POT-Creation-Date: 2026-06-19 17:35+0000\n"
+"PO-Revision-Date: 2026-08-14 03:09+0000\n"
 "Last-Translator: Bayarkhuu Bataa <bbayarkhuu@gmail.com>\n"
-"Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-19/hr/mn/"
-">\n"
+"Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-19/hr/mn/>"
+"\n"
 "Language: mn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr
 #. odoo-python
@@ -1062,7 +1062,6 @@ msgid "Attachment Count"
 msgstr "Хавсралтын тоо"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 msgid "Attendance PIN"
 msgstr ""
@@ -1530,7 +1529,7 @@ msgstr "Гэрээний загвар"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_version_wizard_action
 msgid "Contract Template Load"
-msgstr ""
+msgstr "Гэрээний үлгэр ачааллах"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_version_wizard
@@ -2815,7 +2814,7 @@ msgstr "Ажилбар дээр сануулга гарсныг илэрхийл
 #: model:ir.model.fields,field_description:hr.field_hr_employee__identification_id
 #: model:ir.model.fields,field_description:hr.field_hr_version__identification_id
 msgid "Identification No"
-msgstr "Хувийн дугаар"
+msgstr "Регистрийн дугаар"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_needaction
@@ -3198,7 +3197,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Load a Template"
-msgstr ""
+msgstr "Үлгэр ачааллах"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
@@ -3634,6 +3633,18 @@ msgid ""
 "structure.                        We found a circular reporting loop and no "
 "one in that loop is linked to a user.                        Please double-"
 "check that everyone reports to the correct manager."
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
+msgid "Open Contact Profile"
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
+msgid "Open Employee Profile (activates company)"
 msgstr ""
 
 #. module: hr
@@ -4275,7 +4286,7 @@ msgstr "SMS илгээлтийн алдаа"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__ssnid
 #: model:ir.model.fields,field_description:hr.field_hr_version__ssnid
 msgid "SSN No"
-msgstr "Регистрын дугаар"
+msgstr "Татвар төлөгчийн дугаар"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__employee_salary_amount
@@ -4735,8 +4746,7 @@ msgstr "%s ажилтны менежер нь хэрэглэгчтэй холб�
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_job_name_company_uniq
 msgid "The name of the job position must be unique per department in company!"
-msgstr ""
-"Ажлын байрны нэр нь компаны алба нэгж тус бүрт үл давтагдах байх ёстой!"
+msgstr "Ажлын байрны нэр нь компаны алба нэгж тус бүрт үл давтагдах байх ёстой!"
 
 #. module: hr
 #. odoo-python
@@ -4804,8 +4814,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 msgid "Those responsible types are limited to Employee plans."
-msgstr ""
-"Хариуцсан төрлүүд нь зөвхөн Ажилтны үйл явцын төлөвлөгөөнд ашиглагдана."
+msgstr "Хариуцсан төрлүүд нь зөвхөн Ажилтны үйл явцын төлөвлөгөөнд ашиглагдана."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__tz
@@ -5024,8 +5033,24 @@ msgid "Version"
 msgstr "Хувилбар"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__version_revision
+msgid "Version Revision"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__versions_count
 msgid "Versions Count"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
+msgid "View"
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
+msgid "View Profile"
 msgstr ""
 
 #. module: hr
@@ -5269,7 +5294,7 @@ msgstr "Ажлын утас"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__employee_type__worker
 msgid "Worker"
-msgstr "Ажилтан"
+msgstr "Ажилчин"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__resource_calendar_id

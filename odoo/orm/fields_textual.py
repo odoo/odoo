@@ -45,6 +45,11 @@ class BaseString(Field[str | typing.Literal[False]]):
 
     _related_translate = property(attrgetter('translate'))
 
+    def _compute_related(self, records):
+        if records.env.context.get('edit_translations'):
+            records = records.with_context(edit_translations=None, check_translations=True)
+        super()._compute_related(records)
+
     def _description_translate(self, env):
         return bool(self.translate)
 
@@ -127,6 +132,14 @@ class BaseString(Field[str | typing.Literal[False]]):
             and record.env.context.get('edit_translations')
             and self.get_trans_terms(value)
         ):
+            field_ = self
+            record_ = record
+            while not field_.store and field_.related:
+                record_ = record_.mapped(field_.related.rsplit('.', 1)[0])[:1]
+                field_ = field_.related_field
+            if field_ is not self:
+                return field_.convert_to_record(value, record_)
+
             base_lang = record._get_base_lang()
             lang = record.env.lang or 'en_US'
             delay_translation = value != record.with_context(edit_translations=None, check_translations=None, lang=lang)[self.name]

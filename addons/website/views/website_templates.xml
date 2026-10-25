@@ -173,6 +173,7 @@
         google font is actually used. Note that if no font is used, the
         preconnect is actually not connecting to the google servers. -->
         <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin=""/>
+        <link rel="apple-touch-icon" t-att-href="x_icon"/>
     </xpath>
 
     <xpath expr="//head/script" position="before">
@@ -2504,9 +2505,9 @@
                                     </div>
                                     <div class="col-lg-4 text-end pt16 pb16">
                                         <a href="#" id="cookies-consent-essential" role="button"
-                                           class="js_close_popup btn btn-outline-primary rounded-circle btn-sm px-2">Only essentials</a>
+                                           class="js_close_popup btn btn-outline-primary rounded-circle btn-sm px-2 mb-2">Only essentials</a>
                                         <a href="#" id="cookies-consent-all" role="button"
-                                           class="js_close_popup btn btn-outline-primary rounded-circle btn-sm">I agree</a>
+                                           class="js_close_popup btn btn-outline-primary rounded-circle btn-sm mb-2">I agree</a>
                                     </div>
                                 </div>
                             </div>
@@ -2542,6 +2543,7 @@
     </xpath>
     <xpath expr="//*[contains(@t-attf-class, 'js_change_lang')]/span" position="before">
         <t t-if="flags">
+            <t t-if="no_text and not codes" t-set="flag_lang_alt" t-value="lg.name.split('/').pop()"/>
             <t t-call="website.lang_flag"
                 flag_image_url="lg.flag_image_url"/>
         </t>
@@ -3096,7 +3098,7 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
                     </div>
                 </t>
                 <div t-if="results" class="table-responsive">
-                    <t t-call="website.one_hybrid" t-foreach="results" t-as="result" t-key="result_index"/>
+                    <t t-call="website.one_hybrid" t-foreach="results" t-as="result" />
                 </div>
                 <div t-if="pager" class="o_portal_pager d-flex justify-content-center">
                     <t t-call="website.pager"/>

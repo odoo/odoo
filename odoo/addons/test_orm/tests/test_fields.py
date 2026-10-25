@@ -12,7 +12,7 @@ from odoo import Command, fields, models
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tests import Form, TransactionCase, tagged, users
-from odoo.tools import float_repr, mute_logger
+from odoo.tools import SQL, float_repr, mute_logger
 from odoo.tools.image import image_data_uri
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
@@ -4156,6 +4156,38 @@ class TestParentStore(TransactionCaseWithUserDemo):
         self.assertParentOf(self.cats(5), self.cats(0, 5))
         self.assertParentOf(self.cats(9), self.cats(0, 6, 9))
 
+    def test_move_collation(self):
+        """ Move a subtree when parent_path does not sort in the "C" collation. """
+        # find a collation sorting '12/14/' after '120', like glibc's en_US.UTF-8
+        self.env.cr.execute(SQL("""
+            SELECT collname FROM pg_collation
+            WHERE collprovider = 'c' AND collname NOT IN ('C', 'POSIX', 'ucs_basic')
+            AND collencoding IN (-1, pg_char_to_encoding(getdatabaseencoding()))
+            ORDER BY collname ILIKE %s DESC, collname
+        """, 'en_US%'))
+        for [collation] in self.env.cr.fetchall():
+            self.env.cr.execute(SQL(
+                "SELECT %s::varchar > %s::varchar COLLATE %s", '12/14/', '120',
+                SQL.identifier(collation),
+            ))
+            if self.env.cr.fetchone()[0]:
+                break
+        else:
+            self.skipTest("no collation sorting '12/14/' after '120'")
+        # make parent_path sort like a database whose default is that collation
+        self.env.flush_all()
+        self.env.cr.execute(SQL(
+            "ALTER TABLE test_orm_category ALTER COLUMN parent_path TYPE varchar COLLATE %s",
+            SQL.identifier(collation),
+        ))
+        self.patch(self.registry, 'has_bytewise_collation', False)
+
+        self.cats(6).write({'parent': self.cats(1).id})
+        self.assertChildOf(self.cats(1), self.cats(1, 6, 7, 8, 9))
+        self.assertChildOf(self.cats(3), self.cats(3, 4, 5))
+        self.assertChildOf(self.cats(6), self.cats(6, 7, 8, 9))
+        self.assertParentOf(self.cats(9), self.cats(0, 1, 6, 9))
+
     def test_move_1_cycle(self):
         """ Move a node to create a cycle. """
         with self.assertRaises(UserError):
@@ -4269,6 +4301,43 @@ class TestRequiredMany2oneTransient(TransactionCase):
             field.setup_nonrelated(Model)
 
 
+@tagged('post_install', '-at_install')
+class TestOne2manyInvalidInverse(TransactionCase):
+
+    @mute_logger("odoo.fields")
+    def test_field_inverses_invalid_inverse_name(self):
+        """Building field_inverses must not crash on a wrong custom One2many inverse."""
+        self.addCleanup(self.registry.reset_changes)
+        self.addCleanup(self.registry.clear_all_caches)
+        # post_install: before the registry is loaded, custom one2many fields
+        # with a missing inverse are simply not added to the model
+        field = self.env['ir.model.fields'].create({
+            'name': 'x_messages',
+            'model_id': self.env.ref('test_orm.model_test_orm_message').id,
+            'field_description': 'Messages',
+            'ttype': 'one2many',
+            'relation': 'test_orm.message',
+            'relation_field': 'discussion',
+            'related': 'discussion.messages',
+            'store': False,
+        })
+        with self.assertRaises(ValidationError):
+            field.relation_field = 'invalid key example'
+
+        # invalid inverse already stored in database
+        self.env.cr.execute(
+            "UPDATE ir_model_fields SET relation_field = 'invalid key example' WHERE id = %s",
+            [field.id],
+        )
+        self.registry.clear_cache('stable')
+        self.registry._setup_models__(self.env.cr, ['test_orm.message'])
+        o2m = self.env['test_orm.message']._fields['x_messages']
+        self.assertEqual(o2m.inverse_name, 'invalid key example')
+
+        self.registry.__dict__.pop('field_inverses', None)
+        self.assertFalse(self.registry.field_inverses[o2m])
+
+
 @tagged('m2oref')
 class TestMany2oneReference(TransactionExpressionCase):
 
@@ -4357,6 +4426,69 @@ class TestSelectionUpdates(TransactionCase):
             record = self.env[self.MODEL_RELATED_UPDATE].create({'selection_id': related_record.id})
         with self.assertQueryCount(2):
             record.related_selection = 'bar'
+
+
+@tagged('selection_manual_related_update')
+class TestSelectionManualRelatedUpdate(TransactionCase):
+    """
+    Regression test: adding a value to a manual selection field must update
+    the registry for models that have a manual related field pointing to it.
+    """
+
+    MODEL_BASE = 'test_orm.model_selection_base'
+    MODEL_RELATED = 'test_orm.model_selection_related'
+
+    def test_manual_related_selection_reflects_new_value(self):
+        self.env.flush_all()
+        base_model_id = self.env['ir.model']._get_id(self.MODEL_BASE)
+        related_model_id = self.env['ir.model']._get_id(self.MODEL_RELATED)
+
+        # Create a manual selection field with two initial options
+        x_sel = self.env['ir.model.fields'].create({
+            'name': 'x_sel',
+            'field_description': 'Manual Selection',
+            'model_id': base_model_id,
+            'ttype': 'selection',
+            'selection_ids': [
+                Command.create({'value': 'a', 'name': 'A', 'sequence': 0}),
+                Command.create({'value': 'b', 'name': 'B', 'sequence': 1}),
+            ],
+        })
+
+        # Create a manual related field on MODEL_RELATED pointing to the new field
+        self.env['ir.model.fields'].create({
+            'name': 'x_related_sel',
+            'field_description': 'Related Manual Selection',
+            'model_id': related_model_id,
+            'ttype': 'selection',
+            'related': 'selection_id.x_sel',
+        })
+
+        # Sanity check: the related field initially knows only 'a' and 'b'
+        related_field = self.env[self.MODEL_RELATED]._fields['x_related_sel']
+        initial_values = [v for v, _ in related_field._description_selection(self.env)]
+        self.assertIn('a', initial_values)
+        self.assertIn('b', initial_values)
+        self.assertNotIn('c', initial_values)
+
+        # Add a third option to the manual selection field
+        self.env['ir.model.fields.selection'].create({
+            'field_id': x_sel.id,
+            'value': 'c',
+            'name': 'C',
+            'sequence': 2,
+        })
+
+        # The manual related field must reflect the new option
+        related_field = self.env[self.MODEL_RELATED]._fields['x_related_sel']
+        updated_values = [v for v, _ in related_field._description_selection(self.env)]
+        self.assertIn('c', updated_values,
+            "Manual related selection field must reflect new values added to its target field")
+
+        # Also verify that reading a record with the new value via the related field works
+        base_record = self.env[self.MODEL_BASE].create({'x_sel': 'c'})
+        related_record = self.env[self.MODEL_RELATED].create({'selection_id': base_record.id})
+        self.assertEqual(related_record.x_related_sel, 'c')
 
 
 @tagged('selection_ondelete_base')

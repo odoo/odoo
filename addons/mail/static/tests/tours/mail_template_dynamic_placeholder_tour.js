@@ -1,6 +1,5 @@
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
-import { delay } from "@web/core/utils/concurrency";
 
 registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour", {
     url: "/odoo",
@@ -32,33 +31,17 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
             run: "edit Contact",
         },
         {
-            content: "Wait for the autocomplete RPC",
-            trigger: 'div[name="model_id"] .ui-autocomplete:contains("Contact")',
-            run: async () => {
-                await delay(300);
-            },
-        },
-        {
             content: "Click on contact",
-            trigger: 'div[name="model_id"] .ui-autocomplete',
-            run: async function () {
-                const contact = Array.from(
-                    document.querySelectorAll(
-                        'div[name="model_id"] .ui-autocomplete .dropdown-item'
-                    )
-                ).find((el) => el.textContent === "Contact");
-                await contact.click();
-            },
+            trigger: 'div[name="model_id"] .ui-autocomplete .dropdown-item:text(Contact)',
+            run: "click",
         },
         {
             content: "Wait for the drop down to disappear",
             trigger: 'div[name="model_id"] .o-autocomplete:not(:has(.ui-autocomplete))',
-            run: async () => {
-                // Ensure the system has registered a correct model value before
-                // we try to open the DPH.
-                // It seems that the autocomplete validation can be very slow.
-                await delay(200);
-            },
+        },
+        {
+            content: "Wait for the onchange of the model",
+            trigger: 'div[name="model_id"] .o_external_button',
         },
         {
             content: 'Retry insert # inside "Subject" input',

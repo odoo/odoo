@@ -213,7 +213,13 @@ class MailMail(models.Model):
         if 'filters' in self.env.context:
             domain.extend(self.env.context['filters'])
         batch_size = int(self.env['ir.config_parameter'].sudo().get_param('mail.mail.queue.batch.size', batch_size)) or batch_size
-        send_ids = self.search(domain, limit=batch_size if not email_ids else batch_size * 10).ids
+        send_limit = batch_size if not email_ids else batch_size * 10
+        send_ids = self.search(domain, limit=send_limit).ids
+        _logger.info(
+            "Processing email queue with send limit of '%s'%s",
+            send_limit,
+            " (with forced 'email_ids')" if email_ids else "",
+        )
         if not email_ids:
             ids_done = set()
             total = len(send_ids) if len(send_ids) < batch_size else self.search_count(domain)
@@ -222,7 +228,7 @@ class MailMail(models.Model):
                 """ Track mail ids that have been sent, and notify cron progress accordingly. """
                 processed = set(ids) - ids_done
                 ids_done.update(processed)
-                if self.env.get('ir_cron'):
+                if self.env.context.get('cron_id'):
                     # commit progress only when running from a cron job
                     self.env['ir.cron']._commit_progress(len(processed), remaining=total - len(ids_done))
         else:
@@ -779,12 +785,15 @@ class MailMail(models.Model):
             failure_reason = None
             failure_type = None
             mail = None
+            # separate variable for logging in case of postgres failure
+            message_id = None
             try:
                 mail = self.browse(mail_id)
                 if mail.state != 'outgoing':
                     continue
                 no_recipients = (not (mail.email_to or '').strip() and not mail.recipient_ids and not (mail.email_cc or '').strip())
 
+                message_id = mail.message_id
                 # Writing on the mail object may fail (e.g. lock on user) which
                 # would trigger a rollback *after* actually sending the email.
                 # To avoid sending twice the same email, provoke the failure earlier
@@ -882,6 +891,7 @@ class MailMail(models.Model):
                         else:
                             raise
                 if res:  # mail has been sent at least once, no major exception occurred
+                    message_id = res
                     mail.write({'state': 'sent', 'message_id': res, 'failure_type': False, 'failure_reason': False})
                     if not modules.module.current_test:
                         _logger.info(
@@ -912,7 +922,7 @@ class MailMail(models.Model):
                 # instead of marking the mail as failed
                 _logger.exception(
                     'MemoryError while processing mail with ID %r and Msg-Id %r. Consider raising the --limit-memory-hard startup option',
-                    mail.id, mail.message_id)
+                    mail.id, message_id)
                 # mail status will stay on ongoing since transaction will be rollback
                 raise
             except (psycopg2.Error, smtplib.SMTPServerDisconnected):
@@ -920,7 +930,7 @@ class MailMail(models.Model):
                 # or SMTP session are unusable, causing further errors when trying to save the state.
                 _logger.exception(
                     'Exception while processing mail with ID %r and Msg-Id %r.',
-                    mail.id, mail.message_id)
+                    mail.id, message_id)
                 raise
             except Exception as e:
                 if isinstance(e, AssertionError):

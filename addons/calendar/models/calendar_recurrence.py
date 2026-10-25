@@ -119,6 +119,7 @@ class CalendarRecurrence(models.Model):
     weekday = fields.Selection(WEEKDAY_SELECTION, string='Weekday')
     byday = fields.Selection(BYDAY_SELECTION, string='By day')
     until = fields.Date('Repeat Until')
+    # TODO master: remove, it is not set anymore (see _setup_alarms)
     trigger_id = fields.Many2one('ir.cron.trigger')
 
     _month_day = models.Constraint("""CHECK (
@@ -217,6 +218,11 @@ class CalendarRecurrence(models.Model):
         for recurrence in self:
             if recurrence.rrule:
                 values = self._rrule_parse(recurrence.rrule, recurrence.dtstart)
+                until = values.get('until')
+                if until and until.tzinfo:
+                    # UNTIL=...Z is parsed as an aware UTC datetime; convert it to the
+                    # recurrence timezone so the stored date is the right local boundary day.
+                    values['until'] = until.astimezone(recurrence._get_timezone())
                 recurrence.with_context(dont_notify=True).write(values)
 
     def _reconcile_events(self, ranges):
@@ -304,13 +310,10 @@ class CalendarRecurrence(models.Model):
         if not result:
             return
         events = self.env['calendar.event'].browse(value['event_id'] for value in result)
-        triggers_by_events = events._setup_alarms()
-        for vals in result:
-            trigger_id = triggers_by_events.get(vals['event_id'])
-            if not trigger_id:
-                continue
-            recurrence = self.env['calendar.recurrence'].browse(vals['recurrence_id'])
-            recurrence.trigger_id = trigger_id
+        # Do not link the trigger to the recurrence: when run by the reminder cron, writing
+        # trigger_id waits on the lock taken by the cron runner when it deletes the fired
+        # trigger, and the job deadlocks.
+        events._setup_alarms()
 
     def _split_from(self, event, recurrence_values=None):
         """Stops the current recurrence at the given event and creates a new one starting
@@ -603,8 +606,18 @@ class CalendarRecurrence(models.Model):
                 rrule_params['count'] = min(limit_years, MAX_RECURRENT_EVENT)
             elif freq == 'monthly':
                 rrule_params['count'] = min(limit_years * 12, MAX_RECURRENT_EVENT)
-            else:
-                rrule_params['count'] = MAX_RECURRENT_EVENT
+            elif freq == 'weekly':
+                # A weekly recurrence yields one occurrence per selected weekday,
+                # every `interval` weeks. Keep the horizon bounded by `limit_years`
+                # (like yearly/monthly) instead of always generating the hard cap.
+                # ~52 weeks per standard year (365 // 7).
+                weekdays = len(self._get_week_days())  # always >= 1 for weekly (validated above)
+                weeks = limit_years * 365 // 7
+                rrule_params['count'] = min(weeks * weekdays // max(self.interval, 1),
+                                            MAX_RECURRENT_EVENT)
+            else:  # daily
+                rrule_params['count'] = min(limit_years * 365 // max(self.interval, 1),
+                                            MAX_RECURRENT_EVENT)
         elif self.end_type == 'end_date':  # e.g. stop after 12/10/2020
             rrule_params['until'] = datetime.combine(self.until, time.max)
         return rrule.rrule(

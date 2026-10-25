@@ -13,7 +13,6 @@ import {
 } from "@website/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add("parent_child_menu", {
-    url: "/odoo/action-website.action_website_menu",
     steps: () => [
         {
             content: "Open Menu Form View",
@@ -34,6 +33,10 @@ registry.category("web_tour.tours").add("parent_child_menu", {
             content: "Click on Save Button",
             trigger: ".o_form_button_save",
             run: "click",
+        },
+        {
+            content: "Wait for the record to be saved",
+            trigger: ".o_form_button_save:not(:visible)",
         },
         {
             content: "Click on Add a line button",
@@ -224,22 +227,6 @@ registerWebsitePreviewTour(
         },
         // Edit the menu item from the "edit menu" popover button
         ...clickOnEditAndWaitEditMode(),
-        {
-            content: "Wait for the builder sidebar to fully open",
-            trigger: ":iframe .editor_enable",
-            run: async function () {
-                // Entering the edit mode opens the builder sidebar, which triggers
-                // multiple iframe resize events, which in turn rebuilds the extra
-                // menu items dropdown (see `auto_hide_menu.js` resize handler).
-                //
-                // We wait briefly to ensure all recalculations complete,
-                // avoiding race conditions when opening the link popover.
-                //
-                // NOTE: the delay below (200ms) matches the CSS `transition-delay`
-                // defined for `o-website-builder_sidebar`.
-                await delay(200);
-            },
-        },
         clickOnExtraMenuItem({}, true),
         ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Modnar')", "Modnar", 1),
         {
@@ -284,6 +271,28 @@ registerWebsitePreviewTour(
         {
             content: "Label should have changed",
             trigger: ':iframe .top_menu .nav-item a:contains("Modnar !!")',
+        },
+        {
+            content: "Click on the extra menu dropdown toggle if it is there to close it",
+            trigger: ":iframe .top_menu",
+            async run(actions) {
+                // Note: the button might not exist (it only appear if there is
+                // many menu items).
+                const extraMenuButtonEl = this.anchor.querySelector(
+                    ".o_extra_menu_items a.nav-link"
+                );
+                // Don't click on the extra menu button if it's already hidden
+                if (extraMenuButtonEl && extraMenuButtonEl.classList.contains("show")) {
+                    const dropdownFullyClosed = Promise.withResolvers();
+                    extraMenuButtonEl.addEventListener(
+                        "hidden.bs.dropdown",
+                        dropdownFullyClosed.resolve,
+                        { once: true }
+                    );
+                    await actions.click(extraMenuButtonEl);
+                    await dropdownFullyClosed.promise;
+                }
+            },
         },
         // Nest menu item from the menu.
         {

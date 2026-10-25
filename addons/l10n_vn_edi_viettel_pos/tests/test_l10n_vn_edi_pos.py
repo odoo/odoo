@@ -78,6 +78,22 @@ class TestVNEDIPOS(TestVNEDI, TestPointOfSaleHttpCommon):
             "The invoice symbol on the invoice values should be the symbol set in the POS configuration.",
         )
 
+    def test_prepare_order_vals_rights(self):
+        """ Test that a pos users is able to register an invoice from the PoS without being blocked. """
+        self.pos_user = self.env['res.users'].create({
+            'name': 'A simple PoS man!',
+            'login': 'test_pos_user',
+            'password': 'pos_user',
+            'group_ids': [
+                (4, self.env.ref('base.group_user').id),
+                (4, self.env.ref('point_of_sale.group_pos_user').id),
+                (4, self.env.ref('stock.group_stock_user').id),
+            ],
+        })
+        pos_order = self._create_simple_order()
+        pos_order.config_id.invalidate_recordset()
+        pos_order.with_user(self.pos_user)._prepare_invoice_vals()
+
     @freeze_time('2024-01-01')
     def test_invoice_send_and_print(self):
         """ Test the invoice creation, sending and printing from a POS order."""

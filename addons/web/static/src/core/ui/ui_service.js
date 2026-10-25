@@ -1,8 +1,6 @@
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
-import { throttleForAnimation } from "@web/core/utils/timing";
 import { BlockUI } from "./block_ui";
-import { browser } from "@web/core/browser/browser";
 import { getTabableElements, isFocusable } from "@web/core/utils/ui";
 import { getActiveHotkey } from "../hotkeys/hotkey_service";
 
@@ -84,13 +82,16 @@ export function useActiveElement(refName) {
                     el.focus();
                 }
                 return async () => {
+                    // Deactivate right away: the element is being removed, so it mustn't be seen
+                    // as active anymore (e.g. by hotkeys registered by components mounted in the
+                    // same render).
+                    uiService.deactivateElement(el);
                     // Components are destroyed from top to bottom, meaning that this cleanup is
                     // called before the ones of children. As a consequence, event handlers added on
                     // the current active element in children aren't removed yet, and can thus be
-                    // executed if we deactivate that active element right away (e.g. the blur and
-                    // change events could be triggered). For that reason, we wait for a micro-tick.
+                    // executed if we move the focus right away (e.g. the blur and change events
+                    // could be triggered). For that reason, we wait for a micro-tick.
                     await Promise.resolve();
-                    uiService.deactivateElement(el);
                     el.removeEventListener("keydown", trapFocus);
 
                     /**
@@ -143,7 +144,8 @@ export function getMediaQueryLists() {
 }
 
 // window size handling.
-const MEDIAS = getMediaQueryLists();
+let MEDIAS = getMediaQueryLists();
+let updateSizeHandler = null;
 
 export const utils = {
     getSize() {
@@ -210,6 +212,11 @@ export const uiService = {
             }
         }
 
+        if (updateSizeHandler) {
+            MEDIAS.forEach((m) => m.removeEventListener?.("change", updateSizeHandler));
+            MEDIAS = getMediaQueryLists();
+        }
+
         const ui = reactive({
             bus,
             size: utils.getSize(),
@@ -228,15 +235,14 @@ export const uiService = {
         });
 
         // listen to media query status changes
-        const updateSize = () => {
-            const prevSize = ui.size;
-            ui.size = utils.getSize();
-            if (ui.size !== prevSize) {
+        updateSizeHandler = (ev) => {
+            if (ev.matches) {
+                ui.size = MEDIAS.indexOf(ev.target);
                 ui.isSmall = utils.isSmall(ui);
                 bus.trigger("resize");
             }
         };
-        browser.addEventListener("resize", throttleForAnimation(updateSize));
+        MEDIAS.forEach((m) => m.addEventListener?.("change", updateSizeHandler));
 
         Object.defineProperty(env, "isSmall", {
             get() {

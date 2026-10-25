@@ -5,8 +5,11 @@ from datetime import date, timedelta
 from odoo.addons.base.tests.common import HttpCase
 from odoo.tests.common import tagged
 from odoo.tests.common import users
+from odoo.exceptions import ValidationError
+
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
+
 
 @tagged('post_install', '-at_install', 'holiday_calendar')
 class TestHolidaysCalendar(HttpCase, TestHrHolidaysCommon):
@@ -101,3 +104,59 @@ class TestHolidaysCalendar(HttpCase, TestHrHolidaysCommon):
         self.assertEqual(leave_half.meeting_id.allday, False)
         self.assertEqual(leave_half.meeting_id.start, leave_half.date_from)
         self.assertEqual(leave_half.meeting_id.stop, leave_half.date_to)
+
+    def test_overlapping_refused_time_off_approval(self):
+        """
+        Test that a refused time off request shows a warning message
+        when another approved request exists for the same period.
+        """
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test Leave Type',
+            'requires_allocation': False,
+            'request_unit': 'day',
+            'leave_validation_type': 'no_validation',
+            'allow_request_on_top': False,
+        })
+        test_date = date(2025, 4, 22)
+
+        # Now create leave requests
+        leave_request_a = self.env['hr.leave'].create({
+            'name': 'First Time Off Request',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': test_date,
+            'request_date_to': test_date,
+        })
+        leave_request_a.action_approve()
+        leave_request_a.action_refuse()
+        leave_request_b = self.env['hr.leave'].create({
+            'name': 'Second Time Off Request',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': test_date,
+            'request_date_to': test_date,
+        })
+        leave_request_b.action_approve()
+        with self.assertRaises(ValidationError):
+            leave_request_a.action_approve()
+
+    def test_duration_calendar_event_all_day(self):
+        """
+        Ensure that calendar events created from multi-day leave requests
+        have their duration computed correctly
+        """
+
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test',
+            'requires_allocation': False,
+            'leave_validation_type': 'hr',
+            'create_calendar_meeting': True,
+        })
+
+        leave = self._take_leave(self.employee_emp, leave_type, date(2026, 8, 24), date(2026, 8, 28))
+        leave._action_validate()
+        event = leave.meeting_id
+
+        # Ensure that the length of the duration matches the start and stop times
+        self.assertTrue(event.allday)
+        self.assertEqual(event.duration, 105)

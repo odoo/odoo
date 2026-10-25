@@ -12,14 +12,22 @@
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
-        <t t-set="doc_name" t-value="'quotation' if object.state in ('draft', 'sent') else 'order'"/>
         Hello,
         <br/><br/>
-        Your <t t-out="doc_name or ''">quotation</t> <span style="font-weight: bold;" t-out="object.name or ''"></span>
-        <t t-if="object.origin">
-            (with reference: <t t-out="object.origin or ''">S00052</t> )
+        <t t-if="object.state in ('draft', 'sent')">
+            Your quotation <span style="font-weight: bold;" t-out="object.name or ''"></span>
+            <t t-if="object.origin">
+                (with reference: <t t-out="object.origin or ''">S00052</t> )
+            </t>
+            amounting in <span style="font-weight: bold;" t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</span> is ready for review.
         </t>
-        amounting in <span style="font-weight: bold;" t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</span> is ready for review.
+        <t t-else="">
+            Your order <span style="font-weight: bold;" t-out="object.name or ''"></span>
+            <t t-if="object.origin">
+                (with reference: <t t-out="object.origin or ''">S00052</t> )
+            </t>
+            amounting in <span style="font-weight: bold;" t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</span> is ready for review.
+        </t>
         <br/>
         <t t-set="documents" t-value="object._get_product_documents()"/>
         <t t-if="documents">
@@ -63,10 +71,14 @@
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
-        <t t-set="doc_name" t-value="'quotation' if object.state in ('draft', 'sent') else 'order'"/>
         Hello,
         <br/><br/>
-        Your Pro forma invoice for <t t-out="doc_name or ''">quotation</t> <span style="font-weight: bold;"  t-out="object.name or ''">S00052</span>
+        <t t-if="object.state in ('draft', 'sent')">
+            Your Pro forma invoice for quotation <span style="font-weight: bold;"  t-out="object.name or ''">S00052</span>
+        </t>
+        <t t-else="">
+            Your Pro forma invoice for order <span style="font-weight: bold;"  t-out="object.name or ''">S00052</span>
+        </t>
         <t t-if="object.origin">
             (with reference: <t t-out="object.origin or ''"></t> )
         </t>

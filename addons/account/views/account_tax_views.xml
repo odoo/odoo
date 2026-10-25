@@ -43,7 +43,7 @@
                            invisible="repartition_type == 'base'"
                            widget="account_tax_repartition_line_factor_percent"/>
                     <field name="repartition_type"/>
-                    <field name="account_id" invisible="repartition_type == 'base'" options="{'no_create': True}"/>
+                    <field name="account_id" invisible="repartition_type == 'base'" options="{'no_create': True}" context="{'active_test': True}"/>
                     <field name="tag_ids"
                            widget="many2many_tags"
                            options="{'no_create': True}"
@@ -222,7 +222,7 @@
                                            groups="base.group_no_one"/>
                                     <field name="hide_tax_exigibility" invisible="1"/>
                                     <field name="tax_exigibility" widget="radio" invisible="amount_type == 'group' or not hide_tax_exigibility"/>
-                                    <field name="cash_basis_transition_account_id" options="{'no_create': True}" invisible="tax_exigibility == 'on_invoice'" required="tax_exigibility == 'on_payment'" groups="account.group_account_readonly"/>
+                                    <field name="cash_basis_transition_account_id" options="{'no_create': True}" invisible="tax_exigibility == 'on_invoice'" required="tax_exigibility == 'on_payment'"/>
                                 </group>
                             </group>
                         </page>

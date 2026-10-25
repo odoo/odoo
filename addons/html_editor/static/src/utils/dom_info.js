@@ -251,7 +251,7 @@ export function isVisibleTextNode(testedNode) {
         return false;
     }
     // Preceding is whitespace or following is whitespace: invisible
-    return visibleCharRegex.test(preceding.textContent);
+    return !isWhitespace(preceding);
 }
 
 /**
@@ -261,7 +261,7 @@ export function isVisibleTextNode(testedNode) {
  * @param {Node} node
  * @returns {boolean}
  */
-const selfClosingElementTags = ["BR", "IMG", "INPUT", "T", "HR"];
+const selfClosingElementTags = ["BR", "IMG", "INPUT", "HR"];
 export function isSelfClosingElement(node) {
     return node && selfClosingElementTags.includes(node.nodeName);
 }
@@ -286,7 +286,10 @@ export function isVisible(node) {
             isMediaElement(node) ||
             hasVisibleContent(node) ||
             isProtecting(node) ||
-            isEmbeddedComponent(node))
+            isEmbeddedComponent(node) ||
+            // Keep editor tables visible even when cells only contain
+            // placeholder ZWS content, as `.o_table` tables are always visible.
+            (node.nodeName === "TD" && !!closestElement(node, "table.o_table")))
     );
 }
 export function hasVisibleContent(node) {

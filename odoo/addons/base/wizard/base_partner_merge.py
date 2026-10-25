@@ -359,6 +359,8 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         values_by_company = defaultdict(dict)   # {company: vals}
         for column in model_fields:
             field = dst_partner._fields[column]
+            if not field.copy:
+                continue
             if field.type not in ('many2many', 'one2many') and field.compute is None:
                 for item in itertools.chain(src_partners, [dst_partner]):
                     if item[column]:
@@ -433,7 +435,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
             raise UserError(self.env._("You cannot merge a contact with one of his parent."))
 
         # check if the list of partners to merge are linked to more than one user
-        if len(partner_ids.with_context(active_test=False).user_ids) > 1:
+        if len(partner_ids.sudo().with_context(active_test=False).user_ids) > 1:
             raise UserError(self.env._("You cannot merge contacts linked to more than one user even if only one is active."))
 
         if extra_checks and len(set(partner.email for partner in partner_ids)) > 1:

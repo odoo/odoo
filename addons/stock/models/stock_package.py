@@ -172,7 +172,7 @@ class StockPackage(models.Model):
     def _compute_picking_ids(self):
         children_by_dest_pack, all_pack_ids = self._get_all_children_package_dest_ids()
         groups = self.env['stock.move.line']._read_group(
-            domain=[('state', 'not in', ['done', 'cancel']), ('result_package_id', 'in', all_pack_ids)],
+            domain=[('state', 'not in', ['done', 'cancel']), ('result_package_id', 'in', all_pack_ids), ('picking_id', '!=', False)],
             groupby=['result_package_id'], aggregates=['picking_id:array_agg'])
         pickings_by_package = {package.id: picking_ids for package, picking_ids in groups}
 
@@ -413,7 +413,7 @@ class StockPackage(models.Model):
 
     def _check_move_lines_map_quant(self, move_lines):
         """ This method checks that all product (quants) of self (package) are well present in the `move_line_ids`. """
-        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit')
 
         def _keys_groupby(record):
             return record.product_id, record.lot_id

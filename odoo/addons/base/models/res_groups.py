@@ -111,6 +111,11 @@ class ResGroups(models.Model):
         if user:
             user._check_disjoint_groups()  # raises a ValidationError
 
+    @api.constrains('user_ids')
+    def _check_at_least_one_administrator(self):
+        # same check as on res.users, when users are removed from the group side
+        self.env['res.users']._check_at_least_one_administrator()
+
     @api.ondelete(at_uninstall=False)
     def _unlink_except_settings_group(self):
         classified = self.env['res.config.settings']._get_classified_fields()
@@ -364,10 +369,10 @@ class ResGroups(models.Model):
     def _get_group_definitions(self):
         """ Return the definition of all the groups as a :class:`~odoo.tools.SetDefinitions`. """
         groups = self.sudo().search([], order='id')
-        id_to_ref = groups.get_external_id()
+        id_to_refs = groups._get_external_ids()
         data = {
             group.id: {
-                'ref': id_to_ref[group.id] or str(group.id),
+                'refs': id_to_refs[group.id] or [str(group.id)],
                 'supersets': group.implied_ids.ids,
                 'disjoints': group.disjoint_ids.ids,
             }

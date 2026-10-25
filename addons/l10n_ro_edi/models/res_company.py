@@ -7,8 +7,6 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.http import request
-from odoo.tools.urls import urljoin as url_join
 from odoo.tools.safe_eval import json
 
 
@@ -16,9 +14,9 @@ class ResCompany(models.Model):
     _inherit = 'res.company'
 
     l10n_ro_edi_client_id = fields.Char(string='eFactura Client ID')
-    l10n_ro_edi_client_secret = fields.Char(string='Client Secret')
-    l10n_ro_edi_access_token = fields.Char(string='Access Token')
-    l10n_ro_edi_refresh_token = fields.Char(string='Refresh Token')
+    l10n_ro_edi_client_secret = fields.Char(string='Client Secret', groups='base.group_user')
+    l10n_ro_edi_access_token = fields.Char(string='Access Token', groups='base.group_user')
+    l10n_ro_edi_refresh_token = fields.Char(string='Refresh Token', groups='base.group_user')
     l10n_ro_edi_access_expiry_date = fields.Date(string='Access Token Expiry Date')
     l10n_ro_edi_refresh_expiry_date = fields.Date(string='Refresh Token Expiry Date')
     l10n_ro_edi_callback_url = fields.Char(compute='_compute_l10n_ro_edi_callback_url')
@@ -37,7 +35,7 @@ class ResCompany(models.Model):
         """ Callback URLs are used for generating client_id and client_secret from l10n_ro_edi's setting. """
         for company in self:
             if company.country_code == 'RO':
-                company.l10n_ro_edi_callback_url = url_join(request.httprequest.url_root, 'l10n_ro_edi/callback/%s' % company.id)
+                company.l10n_ro_edi_callback_url = company.get_base_url() + ('/l10n_ro_edi/callback/%s' % company.id)
             else:
                 company.l10n_ro_edi_callback_url = False
 

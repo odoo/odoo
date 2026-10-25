@@ -299,8 +299,9 @@
                     <tbody class="purchase_tbody">
 
                           <t t-set="current_subtotal" t-value="0"/>
+                          <t t-set="filtered_lines" t-value="order.order_line.filtered(lambda l: l.display_type or l.product_qty != 0)"/>
 
-                          <t t-foreach="order.order_line.filtered(lambda l: l.display_type or l.product_qty != 0)" t-as="line">
+                          <t t-foreach="filtered_lines" t-as="line">
 
                               <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
 
@@ -361,7 +362,7 @@
                                     </td>
                                 </t>
                             </tr>
-                            <t t-if="current_section and (line_last or order.order_line[line_index+1].display_type in ('line_section', 'line_subsection')) and order.state == 'purchase'">
+                            <t t-if="current_section and (line_last or filtered_lines[line_index+1].display_type in ('line_section', 'line_subsection')) and order.state == 'purchase'">
                                 <tr class="is-subtotal text-end">
                                     <td colspan="99">
                                         <strong class="mr16">Subtotal</strong>

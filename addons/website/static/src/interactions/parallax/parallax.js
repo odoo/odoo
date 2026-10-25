@@ -36,8 +36,24 @@ export class Parallax extends Interaction {
     }
 
     start() {
-        this.updateBackgroundHeight();
-        this.updateContent();
+        if (this.el.classList.contains("carousel-item")) {
+            // CarouselSlider.computeMaxHeight() sets a stable min-height on all
+            // carousel items in its own start(), which may run after this one.
+            // Wait one frame so that min-height is in place before we take our
+            // initial measurement. This ensures the height used here equals the
+            // height used after any animation completes, preventing a snap on
+            // the very first animation.
+            this.waitForAnimationFrame(() => {
+                this.updateBackgroundHeight();
+            });
+        } else {
+            this.updateBackgroundHeight();
+            this.updateContent();
+        }
+    }
+
+    get targetEl() {
+        return this.el.classList.contains("carousel-item") ? this.el.parentElement : this.el;
     }
 
     updateBackgroundHeight() {
@@ -46,7 +62,7 @@ export class Parallax extends Interaction {
             return;
         }
         this.viewportHeight = document.body.clientHeight;
-        this.parallaxHeight = this.el.getBoundingClientRect().height;
+        this.parallaxHeight = this.targetEl.getBoundingClientRect().height;
 
         // The parallax is in the viewport if it is between these two values
         // min : bottom of the parallax in at the top of the page
@@ -70,7 +86,7 @@ export class Parallax extends Interaction {
     }
 
     onScroll() {
-        const currentPosition = this.el.getBoundingClientRect().top;
+        const currentPosition = this.targetEl.getBoundingClientRect().top;
         if (
             this.speed === 0 ||
             this.speed === 1 ||

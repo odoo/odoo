@@ -22,10 +22,13 @@ import { session } from "@web/session";
     const env = makeEnv();
     await startServices(env);
     odoo.isReady = true;
-    const target = await makeShadow(makeRoot(document.body));
+    const root = makeRoot(document.body);
+    const target = await makeShadow(root);
     env.services["discuss.rtc"].rootEl = target;
     await mount(MainComponentsContainer, target, {
-        env,
+        env: Object.assign(Object.create(env), {
+            rootId: root.getAttribute("id"),
+        }),
         getTemplate,
         translatableAttributes: ["data-tooltip"],
         translateFn: appTranslateFn,

@@ -190,7 +190,7 @@ class BlogPost(models.Model):
     teaser = fields.Text('Teaser', compute='_compute_teaser', inverse='_set_teaser', translate=True)
     teaser_manual = fields.Text(string='Teaser Content', translate=True)
 
-    website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', '=', 'comment')])
+    website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', '=', 'comment'), '&', ('is_internal', '=', False), ('subtype_id.internal', '=', False)])
 
     # creation / update stuff
     create_date = fields.Datetime('Created on', readonly=True)
@@ -326,6 +326,15 @@ class BlogPost(models.Model):
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
         res['default_meta_description'] = self.subtitle
         return res
+
+    def _mail_get_operation_for_mail_message_operation(self, message_operation):
+        if (
+            message_operation == 'create'
+            and not self.env.user._is_internal()
+            and not self.env['website'].is_view_active('website_blog.opt_blog_post_comment')
+        ):
+            return dict.fromkeys(self, 'write')
+        return super()._mail_get_operation_for_mail_message_operation(message_operation)
 
     @api.model
     def _search_get_detail(self, website, order, options):

@@ -116,6 +116,19 @@ class TestProjectBase(TestProjectCommon):
         project_unlink.unlink()
         self.assertNotEqual(task_count, 0, "The all tasks linked to project should be deleted when user delete the project")
 
+    def test_delete_project_analytic_account(self):
+        """ The analytic account is kept when deleting a project if another project uses it. """
+        project_plan, _other_plans = self.env['account.analytic.plan']._get_all_plans()
+        account = self.env['account.analytic.account'].create({'name': 'Shared', 'plan_id': project_plan.id})
+        project_1, project_2 = self.env['project.project'].create([
+            {'name': 'Project 1', 'account_id': account.id},
+            {'name': 'Project 2', 'account_id': account.id},
+        ])
+
+        project_1.unlink()
+        self.assertTrue(account.exists(), "The analytic account shouldn't be deleted if another project uses it.")
+        self.assertEqual(project_2.account_id, account)
+
     def test_auto_assign_stages_when_importing_tasks(self):
         self.assertFalse(self.project_pigs.type_ids)
         self.assertEqual(len(self.project_goats.type_ids), 2)
@@ -541,3 +554,9 @@ class TestProjectBase(TestProjectCommon):
         })
         parent_task.child_ids.active = False
         self.assertFalse(parent_task.copy().child_ids, "Archived subtask should not be copied")
+
+    def test_rename_multiple_projects_updates_analytic_account_names(self):
+        projects = self.project_pigs + self.project_goats
+        projects._create_analytic_account()
+        projects.write({'name': 'sheeps'})
+        self.assertEqual(projects.account_id.mapped('name'), ['sheeps', 'sheeps'])

@@ -23,5 +23,12 @@ class TestHrEmployee(TestHrCommon):
         self.env['hr.employee.public'].with_user(self.res_users_without_hr_right).search([("email", "!=", False)])
 
     def test_access_search_on_users_department(self):
+        dep = self.env['hr.department'].create({'name': 'test'})
+        emp = self.env['hr.employee'].create({'department_id': dep.id, 'name': 'Joe'})
+        # the search can be performed on the user (without access error)
         User = self.env['res.users'].with_user(self.res_users_without_hr_right)
-        User.search([('employee_id.department_id', '=', 1)])
+        User.search([('employee_id.department_id', '=', dep.id)])
+        # the search on the resource should find the user
+        res = self.env['resource.resource'].with_user(self.res_users_without_hr_right)
+        res = res.search([('employee_id.department_id', '=', dep.id)])
+        self.assertIn(emp.resource_id, res, "Resource should be found")

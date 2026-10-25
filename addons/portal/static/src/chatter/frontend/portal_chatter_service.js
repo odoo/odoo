@@ -42,7 +42,9 @@ export class PortalChatterService {
         chatterEl.appendChild(root);
         this.createShadow(root).then((shadow) => {
             new App(PortalChatter, {
-                env,
+                env: Object.assign(Object.create(env), {
+                    rootId: root.getAttribute("id"),
+                }),
                 getTemplate,
                 props,
                 translatableAttributes: ["data-tooltip"],

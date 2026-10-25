@@ -3,7 +3,11 @@ import re
 import time
 
 from odoo import api, models
+from odoo.exceptions import AccessDenied
 from odoo.http import request, root, SessionExpiredException
+
+
+_logger = logging.getLogger(__name__)
 
 
 class CheckIdentityException(SessionExpiredException):
@@ -68,6 +72,12 @@ class IrHttp(models.AbstractModel):
                             timestamp_1fa, auth_method_1fa = first_fa
                             if timestamp_1fa > threshold:
                                 res["1fa"] = auth_method_1fa
+                    res["log_reason"] = (
+                        f"Logged out after {timeout} seconds of inactivity."
+                        if reauth_type == 'logout' else
+                        f"Locked after {timeout} seconds of inactivity "
+                        f"({'2FA' if mfa and session.get('identity-check-1fa') else '1FA'})."
+                    )
                     return res
 
     @classmethod
@@ -88,6 +98,9 @@ class IrHttp(models.AbstractModel):
             - {"mfa": True, "auth_methods": [...]} if a second factor is required,
             - None if re-authentication is complete.
 
+        :raises AccessDenied: if the credential type is not one of the user's enabled
+            authentication methods, or if the credential itself is invalid.
+
         :rtype: dict or None
         """
         check_identity = cls._must_check_identity() or {}
@@ -98,6 +111,9 @@ class IrHttp(models.AbstractModel):
             if first_fa and first_fa in auth_methods:
                 auth_methods.remove(first_fa)
             return {"user_id": user.id, "login": user.login, "auth_methods": auth_methods}
+
+        if credential.get("type") not in auth_methods:
+            raise AccessDenied()
 
         if credential.get("type") in ("totp", "totp_mail"):
             credential["token"] = int(re.sub(r"\s", "", credential["token"]))
@@ -173,9 +189,14 @@ class IrHttp(models.AbstractModel):
         super()._authenticate(endpoint)
         if endpoint.routing["auth"] == "user" and request.session.uid is not None:
             if must_check_identity := cls._must_check_identity():
+                log_reason = must_check_identity.get("log_reason")
                 if must_check_identity.get("logout"):
+                    if log_reason:
+                        _logger.info("User %r (uid: %s): %s", request.session.login, request.session.uid, log_reason)
                     raise SessionExpiredException(f"User {request.session.uid} needs to login again")
                 elif endpoint.routing.get("check_identity", True) and must_check_identity.get("check_identity"):
+                    if log_reason:
+                        _logger.info("User %r (uid: %s): %s", request.session.login, request.session.uid, log_reason)
                     raise CheckIdentityException(f"User {request.session.uid} needs to confirm his identity")
 
     @classmethod

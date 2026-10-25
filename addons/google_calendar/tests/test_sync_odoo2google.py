@@ -161,7 +161,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'start': {'dateTime': '2020-01-15T08:00:00+00:00', 'date': None},
             'end': {'dateTime': '2020-01-15T18:00:00+00:00', 'date': None},
             'summary': 'Event',
-            'description': event.description,
+            'description': '',
             'location': '',
             'visibility': 'private',
             'guestsCanModify': True,

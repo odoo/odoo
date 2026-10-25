@@ -6,14 +6,15 @@
 # Tony Ng, 2025
 # Wil Odoo, 2025
 #
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
+# "Tony Ng (ngto)" <ngto@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-09-16 08:11+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-06-05 19:29+0000\n"
+"PO-Revision-Date: 2026-10-01 14:33+0000\n"
+"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
 "projects/odoo-19/project_timesheet_holidays/zh_Hant/>\n"
 "Language: zh_TW\n"
@@ -21,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_account_analytic_line
@@ -150,6 +151,12 @@ msgid "Time Off Types Count"
 msgstr "休假類型數目"
 
 #. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+msgid "Timesheets linked to public holidays cannot be modified."
+msgstr ""
+
+#. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_project_task__display_name
 msgid ""
 "Use these keywords in the title to set new tasks:\n"
@@ -164,6 +171,16 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"在新任務標題中，使用這些關鍵字進行設定：\n"
+"\n"
+"        30h：向任務分配 30 小時\n"
+"        #標籤名稱：為任務設定標籤\n"
+"        @用戶名稱：將任務指派給用戶\n"
+"        !：將任務設為中等優先級別\n"
+"        !!：將任務設為高優先級別\n"
+"        !!!：將任務設為緊急\n"
+"\n"
+"        記得使用正確格式及順序，例如：改進配置畫面 5h #特色功能 #v16 @志明 !"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -177,8 +194,7 @@ msgstr "查看休假"
 msgid ""
 "You cannot create timesheets for a task that is linked to a time off type. "
 "Please use the Time Off application to request new time off instead."
-msgstr ""
-"不可為連結至休假類型的任務建立工時表。請使用「休假」應用程式，申請新的休假。"
+msgstr "不可為連結至休假類型的任務建立工時表。請使用「休假」應用程式，申請新的休假。"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -192,8 +208,7 @@ msgstr "你不可刪除已連結至全域休假的工時表。"
 msgid ""
 "You cannot delete timesheets that are linked to time off requests. Please "
 "cancel your time off request from the Time Off application instead."
-msgstr ""
-"不可刪除連結至休假請求的工時表。請改為在「休假」應用程式取消你的休假請求。"
+msgstr "不可刪除連結至休假請求的工時表。請改為在「休假」應用程式取消你的休假請求。"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -202,8 +217,8 @@ msgid ""
 "You cannot modify timesheets that are linked to time off requests. Please "
 "use the Time Off application to modify your time off requests instead."
 msgstr ""
-"不可修改連結至休假請求的工時表。請改為使用「休假」應用程式，修改你的休假請"
-"求。"
+"不可修改連結至休假請求的工時表。請改為使用「休假」應用程式，修改你的休假請求"
+"。"
 
 #. module: project_timesheet_holidays
 #. odoo-python

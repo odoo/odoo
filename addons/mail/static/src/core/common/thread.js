@@ -83,6 +83,12 @@ export class Thread extends Component {
         this.state = useState({
             isReplyingTo: false,
             mountedAndLoaded: false,
+            /**
+             * Bumped by `reset()`. Used as a dependency of the effect mirroring
+             * `isLoaded` into `mountedAndLoaded` so the mirror is re-synced after
+             * a reset without making `mountedAndLoaded` depend on itself.
+             */
+            resetCount: 0,
             showJumpPresent: false,
             scrollTop: null,
         });
@@ -215,11 +221,15 @@ export class Thread extends Component {
                 this.state.mountedAndLoaded = isLoaded;
             },
             /**
-             * Observe `mountedAndLoaded` as well because it might change from
-             * other parts of the code without `useEffect` detecting any change
-             * for `isLoaded`, and it should still be reset when patching.
+             * `reset()` forces `mountedAndLoaded` false and this effect writes
+             * it too, so it can't be its own dependency: `useEffect` records
+             * dependencies before running the body, hence a `reset()` landing
+             * while this effect is being applied would leave the recorded value
+             * matching the current one and strand `mountedAndLoaded` at false.
+             * Depend on `resetCount`, bumped by `reset()`, so every reset
+             * re-syncs `mountedAndLoaded` with `isLoaded`.
              */
-            () => [this.props.thread.isLoaded, this.state.mountedAndLoaded]
+            () => [this.props.thread.isLoaded, this.state.resetCount]
         );
         useEffect(
             () => {
@@ -494,6 +504,14 @@ export class Thread extends Component {
         this.props.thread.fetchMoreMessages();
     }
 
+    onClickRetry() {
+        if (!this.props.thread.oldestPersistentMessage) {
+            this.fetchMessages();
+            return;
+        }
+        this.onClickLoadOlder();
+    }
+
     async onClickPreferences() {
         const actionDescription = await this.orm.call("res.users", "action_get");
         actionDescription.res_id = this.store.self.main_user_id?.id;
@@ -557,6 +575,15 @@ export class Thread extends Component {
 
     reset() {
         this.state.mountedAndLoaded = false;
+        // Bump `resetCount` (a mirror-effect dependency) so the effect re-runs
+        // and re-syncs `mountedAndLoaded`. Only when loaded: while `!isLoaded`,
+        // `applyScroll` resets on every patch, so an unconditional bump would
+        // spin the render loop until the fetch resolves. When loaded the bump
+        // re-renders once, the mirror sets `mountedAndLoaded` true and
+        // `applyScroll` stops resetting, so it converges.
+        if (this.props.thread.isLoaded) {
+            this.state.resetCount++;
+        }
         this.loadOlderState.ready = false;
         this.loadNewerState.ready = false;
         this.lastSetValue = undefined;
@@ -613,6 +640,9 @@ export class Thread extends Component {
     }
 
     saveScroll() {
+        if (this.isSmoothScrolling) {
+            return;
+        }
         const thread = toRaw(this.props.thread);
         const isBottom = this.isAtBottom;
         if (isBottom) {
@@ -665,10 +695,21 @@ export class Thread extends Component {
             clearTimeout(this.smoothScrollingTimeout);
             this.isSmoothScrolling = true;
             this.smoothScrollingDeferred = new Deferred();
+            const thread = toRaw(this.props.thread);
             const onSmoothScrollingEnd = () => {
                 this.smoothScrollingDeferred.resolve();
                 this.smoothScrollingDeferred = undefined;
                 this.isSmoothScrolling = false;
+                const el = this.scrollableRef.el;
+                if (!el || thread.notEq(this.props.thread)) {
+                    return;
+                }
+                if (Math.abs(el.scrollTop - value) <= 1) {
+                    thread.scrollTop = "bottom";
+                    this.applyScroll();
+                } else {
+                    this.saveScroll();
+                }
             };
             if ("onscrollend" in window) {
                 document.addEventListener("scrollend", onSmoothScrollingEnd, {
@@ -677,7 +718,17 @@ export class Thread extends Component {
                 });
             } else {
                 // To remove when safari will support the "scrollend" event.
-                this.smoothScrollingTimeout = setTimeout(onSmoothScrollingEnd, 250);
+                let lastScrollTop = this.scrollableRef.el.scrollTop;
+                const checkSmoothScrollingEnd = () => {
+                    const el = this.scrollableRef.el;
+                    if (!el || el.scrollTop === lastScrollTop) {
+                        onSmoothScrollingEnd();
+                        return;
+                    }
+                    lastScrollTop = el.scrollTop;
+                    this.smoothScrollingTimeout = setTimeout(checkSmoothScrollingEnd, 250);
+                };
+                this.smoothScrollingTimeout = setTimeout(checkSmoothScrollingEnd, 250);
             }
         }
         this.scrollableRef.el.scrollTo({ behavior: smooth ? "smooth" : undefined, top: value });

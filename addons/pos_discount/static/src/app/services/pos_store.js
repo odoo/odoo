@@ -25,9 +25,9 @@ patch(PosStore.prototype, {
 
         this.models["pos.order.line"].addEventListener("update", (data) => {
             const line = this.models["pos.order.line"].get(data.id);
-            const order = line.order_id;
 
-            if (!line.isDiscountLine) {
+            if (line && !line.isDiscountLine) {
+                const order = line.order_id;
                 updateOrderDiscount(order);
             }
         });
@@ -42,12 +42,12 @@ patch(PosStore.prototype, {
             }
         });
     },
-    selectOrderLine(order, line) {
-        super.selectOrderLine(order, line);
-        // Ensure the numpadMode should be `price` when the discount line is selected
-        if (line?.isDiscountLine) {
-            this.numpadMode = "price";
+    getLinesToMerge(sourceOrder, destinationOrder) {
+        const res = super.getLinesToMerge(...arguments);
+        if (destinationOrder.globalDiscountPc) {
+            return res.filter((line) => !line.isDiscountLine);
         }
+        return res;
     },
     async applyDiscount(percent, order = this.getOrder()) {
         const taxKey = (taxIds) =>
@@ -137,5 +137,11 @@ patch(PosStore.prototype, {
             order.selectOrderline(lastDiscountLine);
             this.numpadMode = "price";
         }
+    },
+    showDiscountLineEditError() {
+        return this.dialog.add(AlertDialog, {
+            title: _t("Error"),
+            body: _t("You cannot edit a discount line."),
+        });
     },
 });

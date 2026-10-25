@@ -344,6 +344,12 @@
             <sheet>
                 <field name="dashboard_warning_message" class="alert alert-danger d-flex mt-2" role="alert" style="white-space: pre-wrap;" invisible="not dashboard_warning_message"/>
                 <field name="leave_type_increases_duration" class="alert alert-info d-flex mt-2" role="alert" style="white-space: pre-wrap;" invisible="not leave_type_increases_duration"/>
+                <div class="alert alert-info d-flex mt-2" 
+                     role="alert" 
+                     invisible="state in ['validate', 'refuse', 'cancel'] or not leave_type_support_document">
+                    A supporting document is required for this type of time off.
+                </div>
+
                 <div class="o_hr_leave_content row">
                     <div class="o_hr_leave_column col_left col-md-6 col-12">
                         <widget name="web_ribbon" title="Cancelled" bg_color="text-bg-danger" invisible="state != 'cancel'"/>
@@ -363,7 +369,7 @@
                                                     ('virtual_remaining_leaves', '&gt;', 0),
                                                     ('allows_negative', '=', False),
                                 ]"
-                                context="{'employee_id': employee_id, 'default_date_from': date_from, 'default_date_to': date_to}"
+                                context="{'employee_id': employee_id, 'default_date_from': date_from, 'default_date_to': date_to, 'leave_date_from': date_from}"
                                 options="{'no_create': True, 'request_type': 'leave'}"
                                 readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
                             <label for="request_date_from" invisible="not request_unit_half and not request_unit_hours" string="Date" />

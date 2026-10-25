@@ -29,6 +29,7 @@ patch(ProductConfiguratorDialog.prototype, {
             this.createProductUrl = '/website_sale/product_configurator/create_product';
             this.updateCombinationUrl = '/website_sale/product_configurator/update_combination';
             this.getOptionalProductsUrl = '/website_sale/product_configurator/get_optional_products';
+            this.getComboDataUrl = '/website_sale/combo_configurator/get_data';
             this.title = _t("Configure");
         }
 
@@ -56,6 +57,13 @@ patch(ProductConfiguratorDialog.prototype, {
         return this.props.isFrontend && !this.props.edit;
     },
 
+    _handleUnitOfMeasureUpdate(product, combination, uomId) {
+        super._handleUnitOfMeasureUpdate(...arguments);
+        if (this.props.isFrontend && combination.strikethrough_price) {
+            product.strikethrough_price = parseFloat(combination.strikethrough_price);
+        }
+    },
+
     get totalMessage() {
         if (this.env.isFrontend) {
             // To be translated, the title must be repeated here. Indeed, only
@@ -65,6 +73,14 @@ patch(ProductConfiguratorDialog.prototype, {
             return _t("Total: %s", this.getFormattedTotal());
         }
         return super.totalMessage(...arguments);
+    },
+
+    _getAdditionalDialogProps() {
+        const props = super._getAdditionalDialogProps();
+        if (this.props.isFrontend) {
+            props.isFrontend = this.props.isFrontend;
+        }
+        return props;
     },
 
 });

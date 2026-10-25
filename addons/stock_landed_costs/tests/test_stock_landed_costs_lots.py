@@ -1,180 +1,154 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest import skip
-
 from odoo.addons.stock_account.tests.test_lot_valuation import TestLotValuation
 from odoo.tests import tagged, Form
-from odoo import Command
+from odoo.fields import Command
 
 
 @tagged('post_install', '-at_install')
-@skip('Temporary to fast merge new valuation')
 class TestStockLandedCostsLots(TestLotValuation):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.productlc1 = cls.env['product.product'].create({
-            'name': 'product1',
+            'name': 'landed cost',
             'type': 'service',
             'landed_cost_ok': True,
             'categ_id': cls.env.ref('product.product_category_goods').id,
         })
 
-    def test_stock_landed_costs_lots(self):
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
-        picking_1 = self.env['stock.picking'].create({
-            'picking_type_id': self.env.ref('stock.picking_type_in').id,
-            'move_ids': [Command.create({
-                'product_id': self.product1.id,
-                'product_uom_qty': 15,
-                'product_uom': self.ref('uom.product_uom_unit'),
-                'location_id': self.supplier_location.id,
-                'location_dest_id': self.env.ref('stock.stock_location_stock').id,
-                'price_unit': 10,
+    def _receive_in_lots(self, product, unit_cost, lot_qtys):
+        """
+        Receive product at a given unit cost through a purchase order.
+
+        :param lot_qtys: list of (lot_name, quantity) tuples
+        """
+        po = self.env['purchase.order'].create({
+            'partner_id': self.vendor.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_qty': sum(qty for _name, qty in lot_qtys),
+                'price_unit': unit_cost,
+                'tax_ids': [Command.clear()],
             })],
         })
-        product2 = self.env['product.product'].create({
-            'name': 'product2',
-            'is_storable': True,
-            'tracking': 'lot',
-            'lot_valuated': True,
-            'categ_id': self.env.ref('product.product_category_goods').id,
-        })
-        picking_2 = self.env['stock.picking'].create({
-            'picking_type_id': self.env.ref('stock.picking_type_in').id,
-            'move_ids': [Command.create({
-                'product_id': product2.id,
-                'product_uom_qty': 10,
-                'product_uom': self.ref('uom.product_uom_unit'),
-                'location_id': self.supplier_location.id,
-                'location_dest_id': self.env.ref('stock.stock_location_stock').id,
-                'price_unit': 11,
-            })],
-        })
-
-        # Confirm and assign picking
-        (picking_1 | picking_2).action_confirm()
-        picking_1.move_ids.move_line_ids = [Command.clear()] + [Command.create({
-            'product_id': self.product1.id,
+        po.button_confirm()
+        receipt = po.picking_ids
+        receipt.move_ids.move_line_ids = [Command.clear()] + [Command.create({
+            'product_id': product.id,
             'lot_name': lot_name,
-            'quantity': 5,
-            'location_id': self.supplier_location.id,
-            'location_dest_id': self.env.ref('stock.stock_location_stock').id,
-        }) for lot_name in ['LClotA1', 'LClotA2', 'LClotA3']]
-        picking_2.move_ids.move_line_ids = [Command.clear()] + [Command.create({
-            'product_id': product2.id,
-            'lot_name': lot_name,
-            'quantity': 5,
-            'location_id': self.supplier_location.id,
-            'location_dest_id': self.env.ref('stock.stock_location_stock').id,
-        }) for lot_name in ['LClotB1', 'LClotB2']]
-        (picking_1 | picking_2).move_ids.picked = True
-        (picking_1 | picking_2).button_validate()
+            'quantity': qty,
+            'location_id': receipt.location_id.id,
+            'location_dest_id': receipt.location_dest_id.id,
+        }) for lot_name, qty in lot_qtys]
+        receipt.button_validate()
+        return receipt
 
-        og_p1_layers = picking_1.move_ids.stock_valuation_layer_ids
-        og_p2_layers = picking_2.move_ids.stock_valuation_layer_ids
+    def _apply_landed_cost(self, picking_ids, amount, product):
         lc_form = Form(self.env['stock.landed.cost'])
-        lc_form.picking_ids = (picking_1 | picking_2)
+        for picking in picking_ids:
+            lc_form.picking_ids.add(picking)
         with lc_form.cost_lines.new() as cost_line:
-            cost_line.product_id = self.productlc1
-            cost_line.price_unit = 6
+            cost_line.product_id = product
+            cost_line.price_unit = amount
         lc = lc_form.save()
         lc.compute_landed_cost()
         lc.button_validate()
-        for valuation in lc.valuation_adjustment_lines:
-            if valuation.cost_line_id.name == 'equal split':
-                self.assertEqual(valuation.additional_landed_cost, 5)
+        return lc
 
-        # I check that the landed cost is now "Closed" and that it has an accounting entry
+    def test_stock_landed_costs_lots(self):
+        """
+        Check that a landed cost applied on receipts of lot-valuated products is spread
+        equally across the receipts and, within a receipt, spread over its lots.
+        """
+        product_a, product_b = self.env['product.product'].create([{
+            'name': 'product_a',
+            'is_storable': True,
+            'tracking': 'lot',
+            'lot_valuated': True,
+            'categ_id': self.category_avco_auto.id,
+        }, {
+            'name': 'product_b',
+            'is_storable': True,
+            'tracking': 'lot',
+            'lot_valuated': True,
+            'categ_id': self.category_avco_auto.id,
+        }])
+        receipt_a = self._receive_in_lots(product_a, 10, [('LClotA1', 5), ('LClotA2', 5), ('LClotA3', 5)])
+        receipt_b = self._receive_in_lots(product_b, 11, [('LClotB1', 5), ('LClotB2', 5)])
+
+        lc = self._apply_landed_cost(receipt_a | receipt_b, 6, self.productlc1)
+
+        # Equal split across the two receipt moves: 6 / 2 = 3 per move
+        self.assertRecordValues(lc.valuation_adjustment_lines, [
+            {'additional_landed_cost': 3},
+            {'additional_landed_cost': 3},
+        ])
+
         self.assertEqual(lc.state, "done")
-        self.assertTrue(lc.account_move_id)
-        self.assertEqual(len(lc.account_move_id.line_ids), 4)
-
-        lc_value = sum(lc.account_move_id.line_ids.filtered(lambda aml: aml.account_id.name.startswith('Expenses')).mapped('debit'))
-        product_value = abs(self.productlc1.value_svl)
-        self.assertEqual(lc_value, product_value)
-        lot = self.env['stock.lot'].search([('name', 'ilike', 'LClot')])
-        lot_product_a = lot.filtered(lambda l: l.product_id == self.product1)
-        lot_product_b = lot - lot_product_a
-        self.assertRecordValues(lc.stock_valuation_layer_ids.sorted(lambda svl: svl.product_id.id), [
-            {'lot_id': lot_product_a[0].id, 'product_id': self.product1.id, 'stock_valuation_layer_id': og_p1_layers[0].id, 'quantity': 0, 'value': 1},
-            {'lot_id': lot_product_a[1].id, 'product_id': self.product1.id, 'stock_valuation_layer_id': og_p1_layers[1].id, 'quantity': 0, 'value': 1},
-            {'lot_id': lot_product_a[2].id, 'product_id': self.product1.id, 'stock_valuation_layer_id': og_p1_layers[2].id, 'quantity': 0, 'value': 1},
-            {'lot_id': lot_product_b[0].id, 'product_id': product2.id, 'stock_valuation_layer_id': og_p2_layers[0].id, 'quantity': 0, 'value': 1.5},
-            {'lot_id': lot_product_b[1].id, 'product_id': product2.id, 'stock_valuation_layer_id': og_p2_layers[1].id, 'quantity': 0, 'value': 1.5},
+        self.assertRecordValues(lc.account_move_id.line_ids, [
+            {'account_id': self.account_stock_valuation.id, 'debit': 3, 'credit': 0},
+            {'account_id': self.account_expense.id, 'debit': 0, 'credit': 3},
+            {'account_id': self.account_stock_valuation.id, 'debit': 3, 'credit': 0},
+            {'account_id': self.account_expense.id, 'debit': 0, 'credit': 3},
         ])
 
-        for l, price in zip(lot_product_a, [10.2, 10.2, 10.2]):
-            self.assertEqual(l.standard_price, price)
-        for l, price in zip(lot_product_b, [11.3, 11.3]):
-            self.assertEqual(l.standard_price, price)
-        outs = self._make_out_move(self.product1, 9, lot_ids=[lot_product_a[0], lot_product_a[1], lot_product_a[2]])
-        self.assertRecordValues(outs.stock_valuation_layer_ids.sorted('id'), [
-            {'lot_id': lot_product_a[0].id, 'product_id': self.product1.id, 'quantity': -3, 'value': -30.6},
-            {'lot_id': lot_product_a[1].id, 'product_id': self.product1.id, 'quantity': -3, 'value': -30.6},
-            {'lot_id': lot_product_a[2].id, 'product_id': self.product1.id, 'quantity': -3, 'value': -30.6},
+        lots = self.env['stock.lot'].search([('name', 'ilike', 'LClot')])
+        lot_a = lots.filtered(lambda l: l.product_id == product_a)
+        lot_b = lots - lot_a
+        # product_a: (15 * 10 + 3) / 15 = 10.2 ; product_b: (10 * 11 + 3) / 10 = 11.3
+        self.assertRecordValues(lot_a, [
+            {'standard_price': 10.2, 'total_value': 51},
+            {'standard_price': 10.2, 'total_value': 51},
+            {'standard_price': 10.2, 'total_value': 51},
         ])
-        # out move with 2 units of product 2 in each lot, so 11.3 * 2 = 22.6
-        outs = self._make_out_move(product2, 4, lot_ids=[lot_product_b[0], lot_product_b[1]])
-        self.assertRecordValues(outs.stock_valuation_layer_ids.sorted('id'), [
-            {'lot_id': lot_product_b[0].id, 'product_id': product2.id, 'quantity': -2, 'value': -22.6},
-            {'lot_id': lot_product_b[1].id, 'product_id': product2.id, 'quantity': -2, 'value': -22.6},
+        self.assertRecordValues(lot_b, [
+            {'standard_price': 11.3, 'total_value': 56.5},
+            {'standard_price': 11.3, 'total_value': 56.5},
+        ])
+
+        out_a = self._make_out_move(product_a, 9, lot_ids=[lot_a[0], lot_a[1], lot_a[2]])
+        self.assertEqual(out_a.value, 91.8)  # 9 * 10.2
+        self.assertRecordValues(lot_a, [
+            {'product_qty': 2, 'total_value': 20.4},
+            {'product_qty': 2, 'total_value': 20.4},
+            {'product_qty': 2, 'total_value': 20.4},
+        ])
+
+        out_b = self._make_out_move(product_b, 4, lot_ids=[lot_b[0], lot_b[1]])
+        self.assertEqual(out_b.value, 45.2)  # 4 * 11.3
+        self.assertRecordValues(lot_b, [
+            {'product_qty': 3, 'total_value': 33.9},
+            {'product_qty': 3, 'total_value': 33.9},
         ])
 
     def test_landed_cost_when_partially_sold(self):
         """
-        check that the landed costs split correctly between lot/ serial numbers
+        Check that the landed costs split correctly between lot/ serial numbers
         when some lot/serial number are empty (no share of the landed cost for those)
         or when some have a portion of their quantity already sold (check that it uses the
         remaining quantity)
         """
-        product1 = self.env['product.product'].create({
-            'name': 'product2',
+        product = self.env['product.product'].create({
+            'name': 'product',
             'is_storable': True,
             'tracking': 'lot',
             'lot_valuated': True,
-            'categ_id': self.env.ref('product.product_category_goods').id,
+            'categ_id': self.category_fifo_auto.id,
         })
-        product1.categ_id.property_cost_method = 'fifo'
-        # acquire 5 products
-        picking_1 = self.env['stock.picking'].create({
-            'picking_type_id': self.env.ref('stock.picking_type_in').id,
-            'move_ids': [Command.create({
-                'product_id': product1.id,
-                'product_uom_qty': 5,
-                'product_uom': self.ref('uom.product_uom_unit'),
-                'location_id': self.supplier_location.id,
-                'location_dest_id': self.env.ref('stock.stock_location_stock').id,
-                'price_unit': 10000,
-            })],
-        })
-        picking_1.action_confirm()
-        # split in lots
-        picking_1.move_ids.move_line_ids = [Command.clear()] + [Command.create({
-            'product_id': product1.id,
-            'lot_name': lot_name,
-            'quantity': lot_quantity,
-            'location_id': self.supplier_location.id,
-            'location_dest_id': self.env.ref('stock.stock_location_stock').id,
-        }) for (lot_name, lot_quantity) in [('L1', 1), ('L2', 2), ('L3', 1), ('L4', 1)]]
-        picking_1.move_ids.picked = True
-        picking_1.button_validate()
-        # deliver 2 products
-        (lot1, lot2, lot3, lot4) = picking_1.move_ids.move_line_ids.mapped('lot_id').sorted('id')
-        self._make_out_move(product1, quantity=2, lot_ids=[lot1, lot2])
+        # Receive 5 units split in 4 lots
+        receipt = self._receive_in_lots(product, 10000, [('L1', 1), ('L2', 2), ('L3', 1), ('L4', 1)])
+        lots = receipt.move_ids.move_line_ids.lot_id.sorted('id')
+        # Deliver 2 Units, 1 from L1 and 1 form L2
+        self._make_out_move(product, 2, lot_ids=[lots[0], lots[1]])
 
-        # add the landed cost
-        lc_form = Form(self.env['stock.landed.cost'])
-        lc_form.picking_ids = picking_1
-        with lc_form.cost_lines.new() as cost_line:
-            cost_line.product_id = self.productlc1
-            cost_line.price_unit = 5000
-        lc = lc_form.save()
-        lc.compute_landed_cost()
-        lc.button_validate()
-        # check it was correctly split
-        self.assertRecordValues(lc.stock_valuation_layer_ids.sorted('id'), [
-            {'lot_id': lot2.id, 'value': 1000},
-            {'lot_id': lot3.id, 'value': 1000},
-            {'lot_id': lot4.id, 'value': 1000},
+        # Add the landed cost after the delivery
+        self._apply_landed_cost(receipt, 5000, self.productlc1)
+
+        # The landed cost should add 5000 / 5 = 1000 per unit
+        self.assertRecordValues(lots, [
+            {'product_qty': 0, 'standard_price': 0, 'total_value': 0},
+            {'product_qty': 1, 'standard_price': 11000, 'total_value': 11000},
+            {'product_qty': 1, 'standard_price': 11000, 'total_value': 11000},
+            {'product_qty': 1, 'standard_price': 11000, 'total_value': 11000},
         ])

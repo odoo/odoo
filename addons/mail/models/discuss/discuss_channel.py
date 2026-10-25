@@ -435,6 +435,8 @@ class DiscussChannel(models.Model):
             channel._bus_send("discuss.channel/delete", {"id": channel.id})
 
     def write(self, vals):
+        if "name" in vals and not vals["name"] and set(self.mapped("channel_type")) == {"group"}:
+            vals = {**vals, "name": ""}
         if 'channel_type' in vals:
             failing_channels = self.filtered(lambda channel: channel.channel_type != vals.get('channel_type'))
             if failing_channels:
@@ -540,11 +542,7 @@ class DiscussChannel(models.Model):
             members = members.with_prefetch(new_members.ids)
             Store(bus_channel=bus_channel).add(members.channel_id).add(
                 members,
-                [
-                    Store.One("channel_id", [], as_thread=True),
-                    *self.env["discuss.channel.member"]._to_store_persona(),
-                    "unpin_dt",
-                ],
+                extra_fields=["unpin_dt"],
             ).bus_send()
 
     def _subscribe_users_automatically_get_members(self):
@@ -832,19 +830,27 @@ class DiscussChannel(models.Model):
         if pids:
             email_from = tools.email_normalize(msg_vals.get('email_from') or message.email_from)
             self.env['res.partner'].flush_model(['active', 'email', 'partner_share'])
-            self.env['res.users'].flush_model(['notification_type', 'partner_id'])
+            self.env['res.users'].flush_model(['active', 'notification_type', 'partner_id', 'share'])
             sql_query = SQL(
                 """
-                SELECT DISTINCT ON (partner.id) partner.id,
+                SELECT partner.id,
                        partner.email_normalized,
                        partner.lang,
                        partner.name,
                        partner.partner_share,
-                       users.id as uid,
-                       COALESCE(users.notification_type, 'email') as notif,
-                       COALESCE(users.share, FALSE) as ushare
+                       sub_user.uid as uid,
+                       COALESCE(sub_user.notification_type, 'email') as notif,
+                       COALESCE(sub_user.share, FALSE) as ushare
                   FROM res_partner partner
-             LEFT JOIN res_users users on partner.id = users.partner_id
+     LEFT JOIN LATERAL (
+                        SELECT users.id AS uid,
+                               users.notification_type AS notification_type,
+                               users.share AS share
+                          FROM res_users users
+                         WHERE users.partner_id = partner.id AND users.active
+                      ORDER BY users.share ASC NULLS FIRST, users.id ASC
+                         FETCH FIRST ROW ONLY
+                       ) sub_user ON TRUE
                  WHERE partner.active IS TRUE
                        AND partner.email != %(email)s
                        AND partner.id IN %(partner_ids)s AND partner.id != %(author_id)s
@@ -942,7 +948,18 @@ class DiscussChannel(models.Model):
         if kwargs.get("silent"):
             payload["silent"] = True
         self._bus_send("discuss.channel/new_message", payload)
+        self._bus_send_attachment_ownership(message)
         return rdata
+
+    def _bus_send_attachment_ownership(self, message):
+        if not message.attachment_ids:
+            return
+        users = message.author_id.user_ids
+        if message.author_guest_id or any(not user._is_public() for user in users):
+            Store(bus_channel=message.author_guest_id or message.author_id).add(
+                message.attachment_ids,
+                self.env["ir.attachment"]._get_store_ownership_fields(),
+            ).bus_send()
 
     def _notify_by_web_push_prepare_payload(self, message, msg_vals=False, force_record_name=False):
         payload = super()._notify_by_web_push_prepare_payload(
@@ -1034,13 +1051,20 @@ class DiscussChannel(models.Model):
                 ("channel_id", "=", self.parent_channel_id.id),
                 ("partner_id", "in", message.partner_ids.ids),
             ])
+
+            def wants_channel_notifications(partner):
+                return not partner.user_ids or any(
+                    user.res_users_settings_id.channel_notifications != "no_notif"
+                    for user in partner.user_ids
+                )
+
             to_invite = members.filtered(lambda m:
                 m.custom_notifications != "no_notif" if m.custom_notifications
-                else m.partner_id.user_ids.res_users_settings_id.channel_notifications != "no_notif"
+                else wants_channel_notifications(m.partner_id)
             ).partner_id
             if self.parent_channel_id.channel_type == "channel":
-                to_invite |= (message.partner_ids - members.partner_id).filtered(lambda p:
-                    p.user_ids.res_users_settings_id.channel_notifications != "no_notif"
+                to_invite |= (message.partner_ids - members.partner_id).filtered(
+                    wants_channel_notifications
                 )
             self._add_members(partners=to_invite)
         return super()._message_post_after_hook(message, msg_vals)
@@ -1049,6 +1073,7 @@ class DiscussChannel(models.Model):
         if partner_ids:
             kwargs["partner_ids"] = self._get_allowed_message_partner_ids(partner_ids)
         super()._message_update_content(message, **kwargs)
+        self._bus_send_attachment_ownership(message)
 
     def _check_can_update_message_content(self, message):
         # Don't call super in this override as we want to ignore the mail.thread behavior completely

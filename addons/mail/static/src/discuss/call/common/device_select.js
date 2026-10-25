@@ -95,10 +95,26 @@ export class DeviceSelect extends Component {
     onChangeSelectAudioInput(ev) {
         switch (this.props.kind) {
             case "audioinput":
-                this.store.settings.setAudioInputDevice(ev.target.value);
+                this.store.rtc
+                    .askForBrowserPermission({ audio: true, deviceId: ev.target.value })
+                    .then((granted) => {
+                        if (granted) {
+                            this.store.settings.setAudioInputDevice(ev.target.value);
+                        } else {
+                            ev.target.value = this.store.settings.audioInputDeviceId;
+                        }
+                    });
                 return;
             case "videoinput":
-                this.store.settings.setCameraInputDevice(ev.target.value);
+                this.store.rtc
+                    .askForBrowserPermission({ video: true, deviceId: ev.target.value })
+                    .then((granted) => {
+                        if (granted) {
+                            this.store.settings.setCameraInputDevice(ev.target.value);
+                        } else {
+                            ev.target.value = this.store.settings.cameraInputDeviceId;
+                        }
+                    });
                 return;
             case "audiooutput":
                 this.store.settings.setAudioOutputDevice(ev.target.value);
@@ -111,5 +127,15 @@ export class DeviceSelect extends Component {
             return this.store.rtc.cameraPermission === "granted";
         }
         return this.store.rtc.microphonePermission === "granted";
+    }
+
+    /**
+     * @param {KeyboardEvent} ev
+     */
+    handlePermissionKeydown(ev) {
+        if (ev.key === "Enter" || ev.key === " ") {
+            ev.preventDefault();
+            this.showPermissionDialog(this.props.kind);
+        }
     }
 }

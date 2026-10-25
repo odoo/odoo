@@ -2,6 +2,8 @@
 
 import pprint
 
+from werkzeug.exceptions import ServiceUnavailable
+
 from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
@@ -35,7 +37,10 @@ class MollieController(http.Controller):
                           embedded in the return URL.
         """
         _logger.info("handling redirection from Mollie with data:\n%s", pprint.pformat(data))
-        self._verify_and_process(data)
+        try:
+            self._verify_and_process(data)
+        except ValidationError:
+            _logger.error("Unable to process the payment data")
         return request.redirect('/payment/status')
 
     @http.route(_webhook_url, type='http', auth='public', methods=['POST'], csrf=False)
@@ -46,9 +51,14 @@ class MollieController(http.Controller):
                           embedded in the return URL
         :return: An empty string to acknowledge the notification
         :rtype: str
+        :raise ServiceUnavailable: If the payment data could not be fetched from Mollie
         """
         _logger.info("notification received from Mollie with data:\n%s", pprint.pformat(data))
-        self._verify_and_process(data)
+        try:
+            self._verify_and_process(data)
+        except ValidationError as error:
+            _logger.error("Unable to process the payment data")
+            raise ServiceUnavailable from error
         return ''  # Acknowledge the notification
 
     @staticmethod
@@ -57,16 +67,11 @@ class MollieController(http.Controller):
 
         :param dict data: The payment data.
         :return: None
+        :raise ValidationError: If the payment data could not be fetched from Mollie
         """
         tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference('mollie', data)
         if not tx_sudo:
             return
 
-        try:
-            verified_data = tx_sudo._send_api_request(
-                'GET', f'/payments/{tx_sudo.provider_reference}'
-            )
-        except ValidationError:
-            _logger.error("Unable to process the payment data")
-        else:
-            tx_sudo._process('mollie', verified_data)
+        verified_data = tx_sudo._send_api_request("GET", f"/payments/{tx_sudo.provider_reference}")
+        tx_sudo._process("mollie", verified_data)

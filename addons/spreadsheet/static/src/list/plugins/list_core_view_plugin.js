@@ -4,8 +4,8 @@ import { Domain } from "@web/core/domain";
 import { ListDataSource } from "../list_data_source";
 import { OdooCoreViewPlugin } from "@spreadsheet/plugins";
 
-const { astToFormula } = spreadsheet;
-const { isEvaluationError } = spreadsheet.helpers;
+const { astToFormula, invalidateEvaluationCommands } = spreadsheet;
+const { isEvaluationError, PositionMap } = spreadsheet.helpers;
 
 /**
  * @typedef {import("./list_core_plugin").SpreadsheetList} SpreadsheetList
@@ -33,6 +33,9 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
         this.lists = {};
 
         this.custom = config.custom;
+        this._pendingAddDomains = false;
+        this.listPositionCache = new PositionMap();
+        this.shouldInvalidateCache = false;
     }
 
     beforeHandle(cmd) {
@@ -41,10 +44,6 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
                 for (const listId of this.getters.getListIds()) {
                     this._setupListDataSource(listId, 0);
                 }
-
-                // make sure the domains are correctly set before
-                // any evaluation
-                this._addDomains();
                 break;
         }
     }
@@ -54,6 +53,12 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
      * @param {Object} cmd Command
      */
     handle(cmd) {
+        if (invalidateEvaluationCommands.has(cmd.type)) {
+            this.shouldInvalidateCache = true;
+        }
+        if (cmd.type === "UPDATE_CELL" && !this.shouldInvalidateCache) {
+            this.shouldInvalidateCache = true;
+        }
         switch (cmd.type) {
             case "INSERT_ODOO_LIST": {
                 const { id, linesNumber } = cmd;
@@ -71,7 +76,7 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
             case "EDIT_GLOBAL_FILTER":
             case "REMOVE_GLOBAL_FILTER":
             case "SET_GLOBAL_FILTER_VALUE":
-                this._addDomains();
+                this._pendingAddDomains = true;
                 break;
             case "UPDATE_ODOO_LIST":
             case "UPDATE_ODOO_LIST_DOMAIN": {
@@ -123,6 +128,17 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
         }
     }
 
+    finalize() {
+        if (this.shouldInvalidateCache) {
+            this.listPositionCache = new PositionMap();
+            this.shouldInvalidateCache = false;
+        }
+        if (this._pendingAddDomains) {
+            this._addDomains();
+            this._pendingAddDomains = false;
+        }
+    }
+
     // -------------------------------------------------------------------------
     // Handlers
     // -------------------------------------------------------------------------
@@ -133,6 +149,7 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
         if (!(dataSourceId in this.lists)) {
             this.lists[dataSourceId] = new ListDataSource(this.custom, { ...definition, limit });
         }
+        this._addDomain(listId);
     }
 
     /**
@@ -258,16 +275,19 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
      * @returns {string|undefined}
      */
     getListIdFromPosition(position) {
-        const cell = this.getters.getCorrespondingFormulaCell(position);
-        const sheetId = position.sheetId;
-        if (cell && cell.isFormula) {
-            const listFunction = getFirstListFunction(cell.compiledFormula.tokens);
-            if (listFunction) {
-                const content = astToFormula(listFunction.args[0]);
-                return this.getters.evaluateFormula(sheetId, content)?.toString();
+        if (!this.listPositionCache.has(position)) {
+            const cell = this.getters.getCorrespondingFormulaCell(position);
+            const sheetId = position.sheetId;
+            if (cell && cell.isFormula) {
+                const listFunction = getFirstListFunction(cell.compiledFormula.tokens);
+                if (listFunction) {
+                    const content = astToFormula(listFunction.args[0]);
+                    const listId = this.getters.evaluateFormula(sheetId, content)?.toString() || false;
+                    this.listPositionCache.set(position, listId);
+                }
             }
         }
-        return undefined;
+        return this.listPositionCache.get(position) || undefined;
     }
 
     getListFieldFromPosition(position) {
@@ -342,7 +362,6 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
      */
     getListCellValueAndFormat(listId, position, path) {
         const dataSource = this.getters.getListDataSource(listId);
-        dataSource.addFieldPathToFetch(path);
         const value = dataSource.getListCellValue(position, path);
         if (typeof value === "object" && isEvaluationError(value.value)) {
             return value;

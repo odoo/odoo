@@ -8,8 +8,12 @@ from uuid import uuid4
 
 import requests
 
+from odoo.exceptions import ValidationError
+from odoo.tools import LazyTranslate
+
 from odoo.addons.payment import utils as payment_utils
 
+_lt = LazyTranslate(__name__)
 _logger = logging.getLogger(__name__)
 
 
@@ -174,11 +178,11 @@ class AuthorizeAPI:
                     'firstName': split_name[0][:50],
                     'lastName': split_name[1][:50],  # lastName is always required
                     'company': tx.partner_name[:50] if tx.partner_id.is_company else '',
-                    'address': tx.partner_address,
-                    'city': tx.partner_city,
-                    'state': tx.partner_state_id.name or '',
-                    'zip': tx.partner_zip,
-                    'country': tx.partner_country_id.name or '',
+                    'address': tx.partner_address[:60],
+                    'city': (tx.partner_city or '')[:40],
+                    'state': (tx.partner_state_id.name or '')[:40],
+                    'zip': (tx.partner_zip or '')[:20],
+                    'country': (tx.partner_country_id.name or '')[:60],
                 }
             }
 
@@ -272,8 +276,13 @@ class AuthorizeAPI:
         :param str transaction_id: transaction id
         :return: a dict containing the transaction details
         :rtype: dict
+        :raise ValidationError: If the request fails due to a network error.
         """
-        return self._make_request('getTransactionDetailsRequest', {'transId': transaction_id})
+        try:
+            return self._make_request('getTransactionDetailsRequest', {'transId': transaction_id})
+        except requests.exceptions.RequestException as error:
+            _logger.warning("Could not retrieve the transaction details: %s", error)
+            raise ValidationError(_lt("Could not retrieve the transaction details.")) from error
 
     def capture(self, transaction_id, amount):
         """Capture a previously authorized payment for the given amount.
@@ -324,21 +333,34 @@ class AuthorizeAPI:
         :return: a dict containing the response code, transaction id and transaction type
         :rtype: dict
         """
-        card = tx_details.get('transaction', {}).get('payment', {}).get('creditCard', {}).get('cardNumber')
-        response = self._make_request('createTransactionRequest', {
-            'transactionRequest': {
-                'transactionType': 'refundTransaction',
-                'amount': str(amount),
-                'payment': {
-                    'creditCard': {
-                        'cardNumber': card,
-                        'expirationDate': 'XXXX',
-                    }
-                },
-                'refTransId': transaction_id,
+        tx_payment = tx_details.get("transaction", {}).get("payment", {})
+        if "bankAccount" in tx_payment:
+            payment_data = {
+                "bankAccount": {
+                    "routingNumber": tx_payment["bankAccount"].get("routingNumber"),
+                    "accountNumber": tx_payment["bankAccount"].get("accountNumber"),
+                    "nameOnAccount": tx_payment["bankAccount"].get("nameOnAccount"),
+                }
             }
-        })
-        return self._format_response(response, 'refund')
+        else:
+            payment_data = {
+                "creditCard": {
+                    "cardNumber": tx_payment.get("creditCard", {}).get("cardNumber"),
+                    "expirationDate": "XXXX",
+                }
+            }
+        response = self._make_request(
+            "createTransactionRequest",
+            {
+                "transactionRequest": {
+                    "transactionType": "refundTransaction",
+                    "amount": str(amount),
+                    "payment": payment_data,
+                    "refTransId": transaction_id,
+                }
+            },
+        )
+        return self._format_response(response, "refund")
 
     # Provider configuration: fetch authorize_client_key & currencies
     def merchant_details(self):

@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
 from odoo.api import Environment
 import odoo.tests
 from odoo.tools import html2plaintext
 import unittest
+from odoo.tests.common import new_test_user
 
 from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.website_hr_recruitment.controllers.main import WebsiteHrRecruitment
@@ -118,3 +121,82 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
             ),
             "One message in the chatter should contain the extra information filled in by the applicant"
         )
+
+    def test_apply_job_does_not_update_existing_user(self):
+        internal_user = new_test_user(
+            self.env,
+            login='internal.user@example.com',
+            name='Internal User',
+        )
+        job = self.env['hr.job'].create({
+            'name': 'Developer',
+            'is_published': True,
+        })
+
+        self.authenticate(None, None)
+        response = self.url_open('/website/form/hr.applicant', data={
+            'partner_name': 'Impersonated User',
+            'email_from': internal_user.email,
+            'partner_phone': '12345678',
+            'job_id': job.id,
+        })
+
+        applicant = self.env['hr.applicant'].browse(response.json().get('id'))
+        self.assertEqual(applicant.partner_id, internal_user.partner_id)
+        self.assertEqual(applicant.partner_name, 'Impersonated User')
+        self.assertEqual(internal_user.name, 'Internal User')
+
+    @odoo.tests.users('admin')
+    def test_interview_invite_url_with_multi_website(self):
+        if self.env['ir.module.module']._get('appointment_hr_recruitment').state != 'installed':
+            self.skipTest('`appointment_hr_recruitment` module not installed')
+
+        company_1 = self.env.company
+        company_2 = self.env['res.company'].create({
+            'email': 'company_2@test.example.com',
+            'name': 'Company 2',
+        })
+        base_url = 'http://127.0.0.1:8069'
+        self.env['ir.config_parameter'].sudo().set_param('web.base.url', base_url)
+        website_1 = company_1.website_id
+        website_1.domain = 'http://127.0.0.1:8069'
+        website_2 = self.env['website'].create({
+            'name': 'Website Company 2',
+            'company_id': company_2.id,
+            'domain': 'http://localhost:8069',
+        })
+
+        self.authenticate(self.env.user.login, self.env.user.login)
+        test_cases = [
+            (website_2, 'localhost:8069'),
+            (website_1, '127.0.0.1:8069'),
+            (None, base_url),
+        ]
+        for website, expected_host in test_cases:
+            company_id = website.company_id.id if website else False
+            job = self.env['hr.job'].create({
+                'name': f'Test Job {expected_host}',
+                'company_id': company_id,
+                'website_id': website.id if website else False,
+            })
+            applicant = self.env['hr.applicant'].create({
+                'job_id': job.id,
+                'partner_name': f'Test Applicant {expected_host}',
+                'email_from': 'test@example.com',
+                'company_id': company_id,
+            })
+
+            res = self.url_open(
+                '/appointment/appointment_type/search_create_anytime',
+                data=json.dumps({
+                    'params': {
+                        'context': {
+                            'applicant_code': applicant.interview_invite_code,
+                        },
+                    },
+                }),
+                headers={'Content-Type': 'application/json'},
+            )
+            self.assertEqual(res.status_code, 200, 'Response should be OK')
+            res_data = res.json()
+            self.assertIn(expected_host, res_data['result']['invite_url'])

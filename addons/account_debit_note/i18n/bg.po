@@ -2,14 +2,15 @@
 # This file contains the translation of the following modules:
 # * account_debit_note
 #
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# Toma Tomov <toma.tomov@gmail.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Toma Tomov <toma.tomov@gmail.com>, 2025, 2026.
+# Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-12-21 12:47+0000\n"
+"POT-Creation-Date: 2026-06-19 17:35+0000\n"
+"PO-Revision-Date: 2026-08-02 14:26+0000\n"
 "Last-Translator: Toma Tomov <toma.tomov@gmail.com>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-19/"
 "account_debit_note/bg/>\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
@@ -26,9 +27,19 @@ msgid "<span class=\"o_stat_text\">Debit Notes</span>"
 msgstr "<span class=\"o_stat_text\">Дебитни известия</span>"
 
 #. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "<strong>Debit Note Date</strong>"
+msgstr "<strong>Дата на дебитно известие</strong>"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "<strong>Invoice Date</strong>"
+msgstr "<strong>Дата на фактура</strong>"
+
+#. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_debit_note
 msgid "Add Debit Note wizard"
-msgstr ""
+msgstr "Помощник за добавяне на дебитно известие"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
@@ -36,16 +47,38 @@ msgid "Cancel"
 msgstr "Отказ"
 
 #. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Cancelled Debit Note"
+msgstr "Отменено дебитно известие"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Cancelled Invoice"
+msgstr "Отменена фактура"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Cancelled Proforma Debit Note"
+msgstr "Отменено проформа дебитно известие"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Cancelled Proforma Invoice"
+msgstr "Отменена проформа фактура"
+
+#. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_journal__debit_sequence
 msgid ""
 "Check this box if you don't want to share the same sequence for invoices and "
 "debit notes made from this journal"
 msgstr ""
+"Отметнете това поле, ако не желаете да споделяте една и съща номерация за "
+"фактурите и дебитните известия, създадени от този дневник"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__copy_lines
 msgid "Copy Lines"
-msgstr ""
+msgstr "Копиране на редовете"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__country_code
@@ -69,6 +102,7 @@ msgid "Created on"
 msgstr "Създадено на"
 
 #. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_move_filter_debit
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_move_line_filter_debit
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
@@ -94,7 +128,7 @@ msgstr "Дебитни известия"
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_journal__debit_sequence
 msgid "Dedicated Debit Note Sequence"
-msgstr ""
+msgstr "Отделна номерация за дебитни известия"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__display_name
@@ -102,6 +136,26 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_debit_note.field_account_move__display_name
 msgid "Display Name"
 msgstr "Име за показване"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Draft Debit Note"
+msgstr "Чернова на дебитно известие"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Draft Invoice"
+msgstr "Чернова фактура"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Draft Proforma Debit Note"
+msgstr "Чернова на проформа дебитно известие"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Draft Proforma Invoice"
+msgstr "Чернова на проформа фактура"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__id
@@ -114,6 +168,8 @@ msgstr "ID"
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__journal_id
 msgid "If empty, uses the journal of the journal entry to be debited."
 msgstr ""
+"Ако е празно, използва дневника на счетоводния запис, който ще бъде "
+"дебитиран."
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__copy_lines
@@ -121,6 +177,13 @@ msgid ""
 "In case you need to do corrections for every line, it can be in handy to "
 "copy them.  We won't copy them for debit notes from credit notes. "
 msgstr ""
+"В случай че трябва да правите корекции за всеки ред, може да е удобно да ги "
+"копирате. Няма да ги копираме за дебитни известия от кредитни известия. "
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Invoice"
+msgstr "Фактура"
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_journal
@@ -135,7 +198,7 @@ msgstr "Записи в Дневника"
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__journal_type
 msgid "Journal Type"
-msgstr ""
+msgstr "Тип на дневника"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__write_uid
@@ -155,7 +218,7 @@ msgstr "Движение"
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__move_type
 msgid "Move Type"
-msgstr ""
+msgstr "Тип движение"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_note_count
@@ -167,7 +230,17 @@ msgstr "Номера на Дебитни известия"
 #: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_origin_id
 #: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_origin_id
 msgid "Original Invoice Debited"
-msgstr ""
+msgstr "Дебитирана оригинална фактура"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Proforma Debit Note"
+msgstr "Проформа дебитно известие"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Proforma Invoice"
+msgstr "Проформа фактура"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__reason
@@ -193,7 +266,7 @@ msgstr "Дебитни известия за тази фактура"
 #. odoo-python
 #: code:addons/account_debit_note/models/account_move.py:0
 msgid "This debit note was created from: %s"
-msgstr ""
+msgstr "Това дебитно известие е създадено от: %s"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__journal_id
@@ -214,7 +287,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 msgid "You can only debit posted moves."
-msgstr ""
+msgstr "Можете да дебитирате само осчетоводени документи."
 
 #. module: account_debit_note
 #. odoo-python
@@ -223,9 +296,11 @@ msgid ""
 "You can't make a debit note for an invoice that is already linked to a debit "
 "note."
 msgstr ""
+"Не можете да създадете дебитно известие за фактура, която вече е свързана с "
+"дебитно известие."
 
 #. module: account_debit_note
 #. odoo-python
 #: code:addons/account_debit_note/models/account_move.py:0
 msgid "debit_origin_id"
-msgstr ""
+msgstr "debit_origin_id"

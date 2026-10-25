@@ -5,6 +5,7 @@ import time
 from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
+from werkzeug.exceptions import Forbidden
 from werkzeug.urls import url_encode
 
 from odoo import _, api, fields, models
@@ -216,6 +217,8 @@ class PaymentTransaction(models.Model):
 
         try:
             order_data = self._razorpay_create_order()
+            if not order_data:  # The order creation failed and the transaction was set in error.
+                return
             phone = self._validate_phone_number(self.partner_phone)
             customer_id, token_id = self.token_id.provider_ref.split(',')
             payload = {
@@ -253,7 +256,7 @@ class PaymentTransaction(models.Model):
             },
         }
         response_content = self._send_api_request(
-            'POST', f'payments/{self.provider_reference}/refund', json=payload
+            'POST', f'payments/{self.source_transaction_id.provider_reference}/refund', json=payload
         )
         response_content.update(entity_type='refund')
         self._process('razorpay', response_content)
@@ -266,7 +269,7 @@ class PaymentTransaction(models.Model):
         converted_amount = payment_utils.to_minor_currency_units(self.amount, self.currency_id)
         payload = {'amount': converted_amount, 'currency': self.currency_id.name}
         response_content = self._send_api_request(
-            'POST', f'payments/{self.provider_reference}/capture', json=payload
+            'POST', f'payments/{self.source_transaction_id.provider_reference}/capture', json=payload
         )
 
         # Process the capture request response.
@@ -375,6 +378,11 @@ class PaymentTransaction(models.Model):
             except ValidationError as e:
                 self._set_error(str(e))
                 return
+
+        reference = entity_data.get("description") or entity_data["notes"]["reference"]
+        if self.reference != reference:
+            _logger.warning("Received payment data with incorrect reference")
+            raise Forbidden()
 
         # Update the provider reference.
         entity_id = entity_data.get('id')

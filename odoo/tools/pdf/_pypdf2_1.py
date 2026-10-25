@@ -1,8 +1,10 @@
 from PyPDF2 import filters, generic, utils as errors, PdfFileReader, PdfFileWriter
 from PyPDF2.generic import createStringObject as create_string_object
+from PyPDF2.pdf import PageObject
 from PyPDF2 import __version__  # noqa: F401
 
 __all__ = [
+    "PageObject",
     "PdfReader",
     "PdfWriter",
     "create_string_object",
@@ -10,6 +12,12 @@ __all__ = [
     "filters",
     "generic",
 ]
+
+
+PageObject.add_transformation = lambda self, ctm: self.addTransformation(ctm)
+generic.PdfObject.get_object = lambda self: self.getObject()
+generic.RectangleObject.lower_left = property(lambda self: self.lowerLeft)
+
 
 # by default PdfFileReader will overwrite warnings.showwarning which is what
 # logging.captureWarnings does, meaning it essentially reverts captureWarnings

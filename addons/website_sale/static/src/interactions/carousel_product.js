@@ -31,6 +31,10 @@ export class CarouselProduct extends Interaction {
     }
 
     start() {
+        for (const iframeEl of this.el.querySelectorAll(".carousel-item:not(.active) iframe")) {
+            iframeEl.dataset.src = iframeEl.getAttribute("src");
+            iframeEl.removeAttribute("src");
+        }
         this.updateCarouselPosition();
         this.registerCleanup(this.services.website_menus.registerCallback(this.updateCarouselPosition.bind(this)));
         if (this.el.querySelector(".carousel-indicators")) {
@@ -54,6 +58,11 @@ export class CarouselProduct extends Interaction {
      * @param {Event} ev
      */
     onSlideCarouselProduct(ev) {
+        const iframeEl = ev?.relatedTarget?.querySelector("iframe[data-src]");
+        if (iframeEl) {
+            iframeEl.setAttribute("src", iframeEl.dataset.src);
+            delete iframeEl.dataset.src;
+        }
         const isReversed = this.el.style["flex-direction"] === "column-reverse";
         const isLeftIndicators = this.el.classList.contains("o_carousel_product_left_indicators");
         const indicatorsDivEl = this.el.querySelector(isLeftIndicators ? ".o_carousel_product_indicators" : ".carousel-indicators");

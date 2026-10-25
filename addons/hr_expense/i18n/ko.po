@@ -7,16 +7,16 @@
 # Linkup <link-up@naver.com>, 2022
 # Martin Trigaux, 2023
 # Sarah Park, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-01-27 06:39+0000\n"
-"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
+"POT-Creation-Date: 2026-07-03 17:35+0000\n"
+"PO-Revision-Date: 2026-08-05 22:21+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
 "hr_expense/ko/>\n"
 "Language: ko\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_expense
 #. odoo-python
@@ -57,8 +57,8 @@ msgid ""
 "%(expense_name)s: Your are neither a Manager nor a HR Officer of this "
 "expense's company"
 msgstr ""
-"%(expense_name)s: 이 경비에 해당하는 회사의 관리자 또는 인사 담당자가 아닙니"
-"다"
+"%(expense_name)s: 이 경비에 해당하는 회사의 관리자 또는 인사 담당자가 "
+"아닙니다"
 
 #. module: hr_expense
 #. odoo-python
@@ -90,8 +90,8 @@ msgstr "1 %(exp_cur)s = %(rate)s %(comp_cur)s"
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "<b>Wasting time recording your receipts?</b> Let’s try a better way."
 msgstr ""
-"<b>영수증 내역을 기록하는데 시간을 낭비하고 있으신가요? </b>더 나은 방법을 찾"
-"아보세요."
+"<b>영수증 내역을 기록하는데 시간을 낭비하고 있으신가요? </b>더 나은 방법을 "
+"찾아보세요."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -323,6 +323,11 @@ msgid "Attach a receipt - usually an image or a PDF file."
 msgstr "영수증을 첨부하세요 - 이미지 또는 PDF 파일."
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_ir_attachment
+msgid "Attachment"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_attachment_count
 msgid "Attachment Count"
 msgstr "첨부 파일 수"
@@ -350,8 +355,8 @@ msgid ""
 "Both price-included and price-excluded taxes will behave as price-included "
 "taxes for expenses."
 msgstr ""
-"가격에 포함된 세금과 가격에서 제외된 세금은 비용 청구 시 가격에 포함된 세금으"
-"로 처리됩니다."
+"가격에 포함된 세금과 가격에서 제외된 세금은 비용 청구 시 가격에 포함된 "
+"세금으로 처리됩니다."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
@@ -549,6 +554,7 @@ msgstr "OCR 및 인공 지능을 활용하여 영수증을 디지털로 변환�
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_ir_actions_report__display_name
+#: model:ir.model.fields,field_description:hr_expense.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_product_product__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_product_template__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__display_name
@@ -569,9 +575,9 @@ msgid ""
 "picture of your receipt and let Odoo digitalizes it for you. The OCR and "
 "Artificial Intelligence will fill the data automatically."
 msgstr ""
-"더 이상 경비 지출 관련 영수증을 아무 곳에나 보관하지 마세요. 영수증을 사진으"
-"로 찍기만 하면 Odoo가 간편하게 디지털로 저장합니다. OCR과 인공 지능을 활용한 "
-"시스템이 자동으로 내용을 채워줍니다."
+"더 이상 경비 지출 관련 영수증을 아무 곳에나 보관하지 마세요. 영수증을 "
+"사진으로 찍기만 하면 Odoo가 간편하게 디지털로 저장합니다. OCR과 인공 지능을 "
+"활용한 시스템이 자동으로 내용을 채워줍니다."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_applicability__business_domain
@@ -858,8 +864,8 @@ msgid ""
 "Failed to send mails for submitted expenses. No valid email was found for "
 "the company"
 msgstr ""
-"제출 경비에 대한 메일을 전송하지 못했습니다. 유효한 회사 이메일을 찾을 수 없"
-"습니다."
+"제출 경비에 대한 메일을 전송하지 못했습니다. 유효한 회사 이메일을 찾을 수 "
+"없습니다."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__filter_for_expense
@@ -962,6 +968,7 @@ msgstr "HR 비용 별칭 도메인"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__id
 #: model:ir.model.fields,field_description:hr_expense.field_ir_actions_report__id
+#: model:ir.model.fields,field_description:hr_expense.field_ir_attachment__id
 #: model:ir.model.fields,field_description:hr_expense.field_product_product__id
 #: model:ir.model.fields,field_description:hr_expense.field_product_template__id
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__id
@@ -1145,8 +1152,8 @@ msgid ""
 "Link your stripe issuing account to manage company credit cards for your "
 "employees through Odoo"
 msgstr ""
-"Stripe 발급 계정을 연결해두면 Odoo에서 직원용 회사 법인 카드를 관리할 수 있습"
-"니다."
+"Stripe 발급 계정을 연결해두면 Odoo에서 직원용 회사 법인 카드를 관리할 수 "
+"있습니다."
 
 #. module: hr_expense
 #. odoo-python
@@ -1172,8 +1179,8 @@ msgid ""
 "Managers can approve the expense here, then an accountant can post the "
 "accounting entries."
 msgstr ""
-"여기에서 관리자가 경비를 승인하면 회계 담당자가 회계 항목을 발행할 수 있습니"
-"다."
+"여기에서 관리자가 경비를 승인하면 회계 담당자가 회계 항목을 발행할 수 "
+"있습니다."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1299,8 +1306,7 @@ msgstr "비용 카테고리를 찾을 수 없습니다. 새로 작성해주세�
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "No work contact found for the employee %(name)s, please configure one."
-msgstr ""
-"직원 %(name)s에 대한 회사 연락처를 찾을 수 없습니다. 새로 설정해 주세요."
+msgstr "직원 %(name)s에 대한 회사 연락처를 찾을 수 없습니다. 새로 설정해 주세요."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_categories_tree_view
@@ -1364,8 +1370,8 @@ msgid ""
 "Give Odoo a hand to find an account by setting up an expense account.\n"
 "%(expense)s %(expense_name)s.\n"
 msgstr ""
-"Odoo에서 경비, 품목, 회사 및 전표를 살펴보았으나 확인된 내용이 없습니다.Odoo"
-"에서 계정을 확인할 수 있도록 경비 계정을 설정해 주세요:.\n"
+"Odoo에서 경비, 품목, 회사 및 전표를 살펴보았으나 확인된 내용이 "
+"없습니다.Odoo에서 계정을 확인할 수 있도록 경비 계정을 설정해 주세요:.\n"
 "%(expense)s %(expense_name)s.\n"
 
 #. module: hr_expense
@@ -1381,16 +1387,14 @@ msgstr "지출결의서를 생성하고 난 후 관리자에게 승인을 요청
 msgid ""
 "Once your <b>Expense</b> is ready, you can submit it to your manager and "
 "wait for approval."
-msgstr ""
-"<b>경비</b> 입력을 완료하면, 관리자에게 제출하고 결재를 기다려야 합니다."
+msgstr "<b>경비</b> 입력을 완료하면, 관리자에게 제출하고 결재를 기다려야 합니다."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid ""
 "Only HR Officers, accountants, or the concerned employee can reset to draft."
-msgstr ""
-"인사 담당자, 회계 담당자 또는 관련 직원이 초안으로 재설정할 수 있습니다."
+msgstr "인사 담당자, 회계 담당자 또는 관련 직원이 초안으로 재설정할 수 있습니다."
 
 #. module: hr_expense
 #. odoo-python
@@ -1605,9 +1609,9 @@ msgid ""
 "don't <em>need to save</em> - Odoo will save eveyrthing for you when you "
 "navigate."
 msgstr ""
-"준비되셨나요? 수정 내용을 여기에서 수기로 직접 저장하거나 취소할 수 있습니"
-"다. 고객님이 별도 <em>저장할 필요가 없습니다</em> - 확인만 하면 Odoo에서 모"
-"든 것을 자동 저장합니다."
+"준비되셨나요? 수정 내용을 여기에서 수기로 직접 저장하거나 취소할 수 "
+"있습니다. 고객님이 별도 <em>저장할 필요가 없습니다</em> - 확인만 하면 "
+"Odoo에서 모든 것을 자동 저장합니다."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__reason
@@ -1749,10 +1753,11 @@ msgid ""
 "category will automatically be set. Type the expense amount in the mail "
 "subject to set it on the expense too."
 msgstr ""
-"이 이메일 별칭으로 영수증을 첨부하여 이메일을 전송하면 클릭 한 번만으로 경비"
-"를 생성할 수 있습니다. 메일 제목에 있는 첫 번째 단어가 카테고리의 내부 참조 "
-"번호 혹은 카테고리 이름에 해당할 경우 관련된 카테고리가 자동으로 설정됩니다. "
-"또한 메일 제목에 경비 금액을 입력하면 경비에도 자동으로 설정됩니다."
+"이 이메일 별칭으로 영수증을 첨부하여 이메일을 전송하면 클릭 한 번만으로 "
+"경비를 생성할 수 있습니다. 메일 제목에 있는 첫 번째 단어가 카테고리의 내부 "
+"참조 번호 혹은 카테고리 이름에 해당할 경우 관련된 카테고리가 자동으로 "
+"설정됩니다. 또한 메일 제목에 경비 금액을 입력하면 경비에도 자동으로 "
+"설정됩니다."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
@@ -1956,8 +1961,8 @@ msgid ""
 "than some expenses of this report. Please verify this report does not "
 "contain duplicates."
 msgstr ""
-"승인 처리 된 다음 비용은 이 보고서의 일부 비용과 직원, 금액 및 카테고리가 유"
-"사합니다. 해당 지출결의서에 중복되는 항목이 없는지 다시 한번 확인해주세요."
+"승인 처리 된 다음 비용은 이 보고서의 일부 비용과 직원, 금액 및 카테고리가 "
+"유사합니다. 해당 지출결의서에 중복되는 항목이 없는지 다시 한번 확인해주세요."
 
 #. module: hr_expense
 #. odoo-python
@@ -2006,8 +2011,9 @@ msgid ""
 "category cost will change expense amounts. Make sure it is what you want to "
 "do."
 msgstr ""
-"이 카테고리와 관련된 게시되지 않은 비용이 있습니다. 카테고리 비용을 업데이트"
-"하면 이러한 비용의 금액이 변경됩니다. 이 작업을 수행하려는 것인지 확인하세요."
+"이 카테고리와 관련된 게시되지 않은 비용이 있습니다. 카테고리 비용을 "
+"업데이트하면 이러한 비용의 금액이 변경됩니다. 이 작업을 수행하려는 것인지 "
+"확인하세요."
 
 #. module: hr_expense
 #: model_terms:web_tour.tour,rainbow_man_message:hr_expense.hr_expense_tour
@@ -2209,12 +2215,12 @@ msgid ""
 "like allowances for mileage, per diem, "
 "accommodation                                             or meal."
 msgstr ""
-"경비 품목의 비용이 0이 아닌 경우, 이 품목을 사용하는 사용자"
-"는                                             금액은 수정할 수 없으며 수량"
-"만 변경할 수 있습니다.                                            마일리지, "
-"일당, 숙박비, 식대 등 회사에서 고정으로 지원하는 비용 카테고리의 경"
-"우                                             비용은 0이 아닌 숫자를 사용해"
-"야                                             합니다."
+"경비 품목의 비용이 0이 아닌 경우, 이 품목을 사용하는 사용자는"
+"                                             금액은 수정할 수 없으며 수량만 "
+"변경할 수 있습니다.                                            마일리지, "
+"일당, 숙박비, 식대 등 회사에서 고정으로 지원하는 비용 카테고리의 경우"
+"                                             비용은 0이 아닌 숫자를 사용해야"
+"                                             합니다."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
@@ -2243,6 +2249,25 @@ msgstr "이제 다음 링크에서 관리자에게 제출할 수 있습니다."
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You can only generate an accounting entry for approved expense(s)."
 msgstr "승인된 비용에 대한 회계 항목만 생성할 수 있습니다."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+msgid "You can't add an attachment to an expense once it has been approved."
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/ir_attachment.py:0
+msgid "You can't add attachments to an expense once it has been approved."
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/ir_attachment.py:0
+msgid ""
+"You can't delete attachments from an expense once it has been submitted."
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python
@@ -2329,6 +2354,12 @@ msgstr "이 경비를 편집할 권한이 없습니다."
 
 #. module: hr_expense
 #. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+msgid "You don't have the access rights to modify this expense."
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
 #: code:addons/hr_expense/wizard/hr_expense_post_wizard.py:0
 msgid "You don't have the rights to create accounting entries."
 msgstr "계정을 만들 수 있는 권한이 없습니다."
@@ -2346,8 +2377,8 @@ msgid ""
 "You need to have at least one category that can be expensed in your database "
 "to proceed!"
 msgstr ""
-"계속 진행하려면 데이터베이스에 비용 지출용 카테고리가 하나 이상 있어야 합니"
-"다!"
+"계속 진행하려면 데이터베이스에 비용 지출용 카테고리가 하나 이상 있어야 "
+"합니다!"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason

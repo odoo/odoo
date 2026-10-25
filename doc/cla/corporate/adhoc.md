@@ -55,3 +55,4 @@ Manuela Cepeda cem@adhoc.inc https://github.com/cem-adhoc
 Lara Valeri lav@adhoc.inc https://github.com/lav-adhoc
 Joaquin Arroyo joa@adhoc.inc https://github.com/joa-adhoc
 Juan Ignacio Rivero jr@adhoc.inc https://github.com/Jradhoc
+Luciano Esperlazza les@adhoc.inc https://github.com/les-adhoc

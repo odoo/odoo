@@ -54,7 +54,10 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
                 additionalContext: {
                     dont_redirect_to_payments: 1,
                 },
-                onClose: async () => {
+                onClose: async (closeParams) => {
+                    if (closeParams?.noReload) {
+                        return;
+                    }
                     await this.model.root.load();
                     this.render(true);
                 }

@@ -15,8 +15,8 @@ import { Domain } from "@web/core/domain";
 export class MailMessage extends models.ServerModel {
     _name = "mail.message";
 
-    author_id = fields.Generic({ default: () => serverState.partnerId });
-    pinned_at = fields.Generic({ default: false });
+    author_id = fields.Many2one({ default: () => serverState.partnerId });
+    pinned_at = fields.Datetime({ default: false });
 
     /** @param {DomainListRepr} [domain] */
     mark_all_as_read(domain) {
@@ -525,6 +525,8 @@ export class MailMessage extends models.ServerModel {
                 ]);
             }
             domain = Domain.and([domain, message_domain]).toList();
+        }
+        if (search_term || is_notification !== undefined) {
             res.count = this.search_count(domain);
         }
         if (around !== undefined) {

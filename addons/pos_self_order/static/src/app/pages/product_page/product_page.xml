@@ -23,8 +23,8 @@
                              <!-- Name & Image -->
                             <div class="d-flex flex-column align-items-center">
                                 <h1 class="mt-kiosk-p-3 mb-3 " t-esc="product.name" t-ref="productName"/>
-                                <div class="o_self_product_image ratio ratio-1x1 rounded-4 w-70 w-m-50 ">
-                                    <img class="rounded-4" t-attf-src="/web/image/product.template/{{ product.id }}/image_512?unique=#{product.write_date}" loading="lazy"/>
+                                <div class="o_self_product_image ratio ratio-1x1">
+                                    <img class="object-fit-scale rounded-4" t-attf-src="/web/image/product.template/{{ product.id }}/image_512?unique=#{product.write_date}" loading="lazy"/>
                                 </div>
                             </div>
                         </div>
@@ -47,7 +47,7 @@
             <!-- Footer -->
             <div class="o_self_footer bg-white border-top py-3"  t-att-class="{'o_self_shadow_bottom': scrollShadow.bottom}">
                 <div class="container o_self_container ">
-                    <div  t-if="isArchivedCombination()" class="alert alert-warning text-center mb-3">
+                    <div  t-if="isArchivedCombination() or isDeletedCombination()" class="alert alert-warning text-center mb-3">
                         This combination does not exist.
                     </div>
                    <div class="d-flex justify-content-between align-items-center  gap-2 gap-md-5">

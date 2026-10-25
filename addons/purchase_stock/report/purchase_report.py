@@ -19,11 +19,11 @@ class PurchaseReport(models.Model):
                 spt.warehouse_id as picking_type_id, po.effective_date as effective_date,
                 extract(
                     epoch from age(
-                        l.date_planned,
                         COALESCE(
                             order_effective_date.date_done,
-                            po.date_order
-                        )
+                            l.date_planned
+                        ),
+                        po.date_order
                     )
                 )/(24*60*60)::decimal(16,2) as days_to_arrival
             """, super()._select()

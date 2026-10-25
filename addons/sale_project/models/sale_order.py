@@ -69,10 +69,13 @@ class SaleOrder(models.Model):
     def _search_tasks_ids(self, operator, value):
         if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
-        task_domain = [
-            ('display_name' if isinstance(value, str) else 'id', operator, value),
-            ('sale_order_id', '!=', False),
-        ]
+        if operator in ('any', 'any!'):
+            task_domain = value
+        else:
+            task_domain = [
+                ('display_name' if isinstance(value, str) else 'id', operator, value),
+                ('sale_order_id', '!=', False),
+            ]
         query = self.env['project.task']._search(task_domain)
         return [('id', 'in', query.subselect('sale_order_id'))]
 
@@ -199,9 +202,6 @@ class SaleOrder(models.Model):
 
     def action_view_project_ids(self):
         self.ensure_one()
-        if not self.order_line:
-            return {'type': 'ir.actions.act_window_close'}
-
         sorted_line = self.order_line.sorted('sequence')
         default_sale_line = next((
             sol for sol in sorted_line if sol.product_id.type == 'service'

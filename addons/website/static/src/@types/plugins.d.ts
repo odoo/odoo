@@ -1,6 +1,6 @@
 declare module "plugins" {
     import { CarouselOptionShared } from "@website/builder/plugins/carousel_option_plugin";
-    import { CustomizeWebsiteShared } from "@website/builder/plugins/customize_website_plugin";
+    import { CustomizeWebsiteShared, on_website_color_updated_handlers } from "@website/builder/plugins/customize_website_plugin";
     import { content_manually_updated_handlers, EditInteractionShared } from "@website/builder/plugins/edit_interaction_plugin";
     import { WebsiteFontShared } from "@website/builder/plugins/font/font_plugin";
     import { FormOptionShared } from "@website/builder/plugins/form/form_option_plugin";
@@ -33,6 +33,7 @@ declare module "plugins" {
     import { mark_translatable_nodes } from "@website/builder/plugins/translation_plugin";
     import { force_background_translation_state_selectors } from "@website/builder/plugins/translation/repeat_translation_state_plugin";
     import { translate_options } from "@html_builder/core/builder_options_plugin_translate";
+    import { ValueHistoryShared } from "@website/builder/plugins/value_history_plugin";
     import { WebsiteSessionShared } from "@website/builder/plugins/website_session_plugin";
 
     interface SharedMethods {
@@ -59,6 +60,7 @@ declare module "plugins" {
         socialMediaOptionPlugin: SocialMediaOptionShared;
         switchableViews: SwitchableViewsShared;
         themeTab: ThemeTabShared;
+        valueHistory: ValueHistoryShared;
         websiteBackgroundVideoPlugin: WebsiteBackgroundVideoShared;
         websiteFont: WebsiteFontShared;
         websiteFormOption: FormOptionShared;
@@ -79,6 +81,7 @@ declare module "plugins" {
         remove_hover_effect_handlers: remove_hover_effect_handlers;
         reorder_items_handlers: reorder_items_handlers;
         set_hover_effect_handlers: set_hover_effect_handlers;
+        on_website_color_updated_handlers: on_website_color_updated_handlers;
 
         // Overrides
 

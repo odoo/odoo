@@ -59,7 +59,7 @@ export class CompositeAction extends BuilderAction {
         const actionDef = actions.find((actionDef) => {
             const action = this.dependencies.builderActions.getAction(actionDef.action);
             if (action.has("getValue")) {
-                actionGetValue = action.getValue;
+                actionGetValue = action.getValue.bind(action);
             }
             return !!action.getValue;
         });

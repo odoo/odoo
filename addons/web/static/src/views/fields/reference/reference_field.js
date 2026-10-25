@@ -79,6 +79,7 @@ export class ReferenceField extends Component {
             relation: this.getRelation(),
             value: value && { id: value.resId, display_name: value.displayName },
             update: this.updateM2O.bind(this),
+            placeholder: this.props.placeholder || _t("Search a record..."),
         };
     }
     get selection() {

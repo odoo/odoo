@@ -9,6 +9,7 @@ import {
     listGroupToTable,
     normalizeColors,
     normalizeRem,
+    toInline,
 } from "@mail/views/web/fields/html_mail_field/convert_inline";
 import { beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
 import { enableTransitions } from "@odoo/hoot-mock";
@@ -22,6 +23,9 @@ import {
 
 const TEST_WIDTH = 800;
 const TEST_HEIGHT = 600;
+
+const base64Img =
+    "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
 
 let editable;
 function testConvertGrid({ before, after, title, stepFunction }) {
@@ -888,6 +892,23 @@ describe("Convert classes to inline styles", () => {
         styleSheet.deleteRule(0);
     });
 
+    test("strip theme color classes after inlining their styles", async () => {
+        const bgColor = "rgb(17, 24, 39)";
+        const style = document.createElement("style");
+        style.textContent = `.bg-o-color-5 { background-color: ${bgColor} !important; }`;
+        const fixture = getFixture();
+        fixture.append(style);
+
+        editable.innerHTML = `<div class="bg-o-color-5 keep-me">Hello</div>`;
+        fixture.append(editable);
+
+        classToStyle(editable, getCSSRules(editable.ownerDocument));
+
+        const block = editable.querySelector(".keep-me");
+        expect(block).toHaveStyle({ backgroundColor: bgColor });
+        expect(block).not.toHaveClass("bg-o-color-5");
+    });
+
     test("simplify border/margin/padding styles", async () => {
         // border-radius
         styleSheet.insertRule(
@@ -1325,6 +1346,21 @@ describe("Convert classes to inline styles", () => {
             { message: "should have removed all specific flex styles" }
         );
         styleSheet.deleteRule(0);
+        styleSheet.insertRule(
+            `
+            .test-inline-flex {
+                display: inline-flex;
+            }
+        `,
+            0
+        );
+        editable.innerHTML = `<div class="test-inline-flex"></div>`;
+        classToStyle(editable, getCSSRules(editable.ownerDocument));
+        expect(editable).toHaveInnerHTML(
+            `<div class="test-inline-flex" style="box-sizing:border-box;display:inline-block;"></div>`,
+            { message: "should have replaced the inline-flex display with inline-block" }
+        );
+        styleSheet.deleteRule(0);
 
         // @todo to adapt when hoot has a better way to remove it
     });
@@ -1515,7 +1551,7 @@ describe("Should not convert blacklisted class to inline styles", () => {
         classToStyle(editable, getCSSRules(editable.ownerDocument));
 
         expect(editable).toHaveInnerHTML(
-            `<a contenteditable="false" href="#" class="o_mail_redirect" style="text-decoration: none; padding: 0rem 0.15rem; margin: 0rem 0.025rem; box-sizing: border-box; overflow-wrap: unset;">@Marc Demo</a> Testing!`,
+            `<a contenteditable="false" href="#" class="o_mail_redirect" style="text-decoration:none;box-sizing:border-box;overflow-wrap:unset;">@Marc Demo</a> Testing!`,
             {
                 message: "blacklisted class styles should remain unconverted",
             }
@@ -1531,8 +1567,61 @@ describe("Should not convert blacklisted class to inline styles", () => {
         editable.innerHTML = `<a contenteditable="false" href="#" class="o_mail_redirect test-style">@Marc Demo</a> Testing!`;
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
-            `<a contenteditable="false" href="#" class="o_mail_redirect test-style" style="text-decoration: none; padding: 0rem 0.15rem; margin: 0rem 0.025rem; box-sizing: border-box; background-color: yellow; overflow-wrap: unset;"> @Marc Demo </a> Testing!`,
+            `<a contenteditable="false" href="#" class="o_mail_redirect test-style" style="text-decoration:none;box-sizing:border-box;background-color:yellow;overflow-wrap:unset;"> @Marc Demo </a> Testing!`,
             { message: "styles marked !important should override blacklisted class restrictions" }
+        );
+    });
+
+    test("should not convert blacklisted class of an element in the document", async () => {
+        getFixture().append(editable);
+        editable.innerHTML = `<a contenteditable="false" href="#" class="o_mail_redirect">@Marc Demo</a> Testing!`;
+
+        classToStyle(editable, getCSSRules(editable.ownerDocument));
+
+        const style = editable.querySelector("a").style;
+        const properties = [
+            "border-radius",
+            "display",
+            "font-weight",
+            "margin",
+            "outline-style",
+            "padding",
+            "text-decoration",
+        ];
+        expect(
+            Object.fromEntries(properties.map((name) => [name, style.getPropertyValue(name)]))
+        ).toEqual(
+            {
+                "border-radius": "",
+                display: "",
+                "font-weight": "",
+                margin: "",
+                "outline-style": "",
+                padding: "",
+                "text-decoration": "none",
+            },
+            { message: "only the styles of the blacklisted class should remain unconverted" }
+        );
+    });
+
+    test("should not convert grouped style of a blacklisted class over a class having less specificity", async () => {
+        styleSheet.insertRule(`
+            .test-radius {
+                border-radius: 2px;
+            }
+        `);
+        getFixture().append(editable);
+        editable.innerHTML = `<a contenteditable="false" href="#" class="o_mail_redirect test-radius">@Marc Demo</a> Testing!`;
+
+        classToStyle(editable, getCSSRules(editable.ownerDocument));
+
+        const style = editable.querySelector("a").style;
+        expect({
+            "border-radius": style.getPropertyValue("border-radius"),
+            "text-decoration": style.getPropertyValue("text-decoration"),
+        }).toEqual(
+            { "border-radius": "", "text-decoration": "none" },
+            { message: "a less specific class should not bring back the blacklisted radius" }
         );
     });
 
@@ -1545,11 +1634,18 @@ describe("Should not convert blacklisted class to inline styles", () => {
         editable.innerHTML = `<a contenteditable="false" href="#" class="o_mail_redirect test-color">@Marc Demo</a> Testing!`;
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
-            `<a contenteditable="false" href="#" class="o_mail_redirect test-color" style="text-decoration: none; padding: 0rem 0.15rem; margin: 0rem 0.025rem; box-sizing: border-box; overflow-wrap: unset;"> @Marc Demo </a> Testing!`,
+            `<a contenteditable="false" href="#" class="o_mail_redirect test-color" style="text-decoration:none;box-sizing:border-box;overflow-wrap:unset;"> @Marc Demo </a> Testing!`,
             {
                 message:
                     "should ignore styles from lower specificity class in favor of blacklisted class",
             }
         );
+    });
+
+    test("should set display block on mx-auto and ms-auto images", async () => {
+        editable.innerHTML = `<img class="mx-auto" src="${base64Img}"/><img class="ms-auto" src="${base64Img}"/>`;
+        await toInline(editable, []);
+        expect(editable.querySelector("img.mx-auto").style.display).toBe("block");
+        expect(editable.querySelector("img.ms-auto").style.display).toBe("block");
     });
 });

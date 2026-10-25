@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
 import logging
+import json
 from ast import literal_eval
 
 import requests
@@ -66,7 +67,7 @@ class Publisher_WarrantyContract(AbstractModel):
         Utility method to send a publisher warranty get logs messages.
         """
         msg = self._get_message()
-        arguments = {'arg0': str(msg), "action": "update"}
+        arguments = {'arg0': json.dumps(msg), "action": "update"}
 
         url = config.get("publisher_warranty_url")
 

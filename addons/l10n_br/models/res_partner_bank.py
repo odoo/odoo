@@ -40,7 +40,7 @@ class ResPartnerBank(models.Model):
                 raise ValidationError(_("%s is not a valid email.", value))
 
             if bank.proxy_type == "br_cpf_cnpj" and (
-                not self.partner_id.check_vat_br(value) or any(not char.isdecimal() for char in value)
+                not value or not self.partner_id.check_vat_br(value) or any(not char.isdecimal() for char in value)
             ):
                 raise ValidationError(_("%s is not a valid CPF or CNPJ (don't include periods or dashes).", value))
 
@@ -53,7 +53,7 @@ class ResPartnerBank(models.Model):
                 )
 
             regex = r"%(char)s{8}-%(char)s{4}-%(char)s{4}-%(char)s{4}-%(char)s{12}" % {"char": "[a-fA-F0-9]"}
-            if bank.proxy_type == "br_random" and not re.fullmatch(regex, bank.proxy_value):
+            if bank.proxy_type == "br_random" and (not value or not re.fullmatch(regex, value)):
                 raise ValidationError(
                     _(
                         "The random key %s is invalid, the format looks like this: 71d6c6e1-64ea-4a11-9560-a10870c40ca2",

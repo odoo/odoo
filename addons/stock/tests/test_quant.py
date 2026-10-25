@@ -321,6 +321,61 @@ class TestStockQuant(TestStockCommon):
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, -1.0)
         self.assertEqual(len(self.gather_relevant(self.productA, self.stock_location)), 0)
 
+    def test_to_date_consignment(self):
+        """ Check that computing past quantities with 'to_date' correctly ignores
+        consigned stock moves when checking company-owned stock.
+        """
+        self.env.user.group_ids += self.env.ref('stock.group_tracking_owner')
+
+        today = fields.Datetime.now()
+        yesterday = today - timedelta(days=1)
+
+        # Create Incoming Consignment Move (10 units)
+        picking_in = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'owner_id': self.partner_1.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': self.productA.id,
+                    'product_uom_qty': 10,
+                    'location_id': self.supplier_location.id,
+                    'location_dest_id': self.stock_location.id,
+                }),
+            ],
+        })
+        picking_in.action_confirm()
+        picking_in.button_validate()
+
+        # Create Outgoing Move (4 Units)
+        picking_out = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': self.productA.id,
+                    'product_uom_qty': 4.0,
+                    'location_id': self.stock_location.id,
+                    'location_dest_id': self.customer_location.id,
+                }),
+            ],
+        })
+
+        picking_out.action_confirm()
+
+        picking_out.button_validate()
+
+        # Mimic _with_valuation_context()
+        product_past = self.productA.with_context(to_date=yesterday, owners=[False, self.env.company.partner_id.id])
+
+        self.assertEqual(
+            product_past.qty_available,
+            0.0,
+            "Company-owned past quantity should be 0.0, it must ignore consigned stock moves."
+        )
+
     def test_increase_reserved_quantity_1(self):
         """ Increase the reserved quantity of quantity x when there's a single quant in a given
         location which has an available quantity of x.
@@ -1052,6 +1107,38 @@ class TestStockQuant(TestStockCommon):
         with self.assertRaises(UserError):
             _get_relocate_wizard(quants_bab_AB)
 
+    def test_relocate_reserved_entire_package(self):
+        """Ensure that a package reserved for a move can still be relocated.
+            - The package is used by a confirmed delivery.
+            - The package is relocated to 'WH/stock/shelf 1'.
+        """
+        package = self.env['stock.package'].create({'name': 'PACKX'})
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 10, package_id=package)
+        quant = self.env['stock.quant'].search([('product_id', '=', self.productA.id)])
+
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.ref('stock.picking_type_out'),
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'move_ids': [Command.create({
+                'product_id': self.productA.id,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.ref('stock.stock_location_customers'),
+                'product_uom_qty': 10,
+            })],
+        })
+        delivery.action_confirm()
+        self.assertEqual(delivery.move_ids.state, 'assigned')
+        self.assertEqual(delivery.move_line_ids.result_package_id, package)
+
+        relocate_wizard = Form.from_action(self.env, quant.action_stock_quant_relocate())
+        relocate_wizard.dest_location_id = self.shelf_1
+        relocate_wizard.save().with_user(self.user_stock_manager).action_relocate_quants()
+
+        relocated_quant = self.env['stock.quant'].search([('product_id', '=', self.productA.id)])
+        self.assertEqual(relocated_quant.location_id, self.shelf_1)
+        self.assertEqual(package.picking_ids, delivery)
+
     def test_inventory_adjustment_package(self):
         """ With the changes implemented in _get_inventory_move_values(), we want to make sure that it correctly
         writes the package and destination package for inventory adjustments in _apply_inventory(). """
@@ -1456,6 +1543,54 @@ class TestStockQuant(TestStockCommon):
         delivery.action_assign()
         self.assertEqual(delivery.move_ids.quantity, 24)
 
+    def test_reservation_preserved_after_relocation(self):
+        """Test stock relocation preserves the original reservation order
+        between deliveries."""
+        customer_location = self.env.ref('stock.stock_location_customers')
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 8.0)
+        first_delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.ref('stock.picking_type_out'),
+            'location_id': self.stock_location.id,
+            'location_dest_id': customer_location.id,
+            'move_ids': [Command.create({
+                'product_id': self.productA.id,
+                'product_uom_qty': 5.0,
+                'location_id': self.stock_location.id,
+                'location_dest_id': customer_location.id,
+            })],
+        })
+        second_delivery = first_delivery.copy()
+        (first_delivery | second_delivery).action_confirm()
+
+        self.assertRecordValues(first_delivery.move_line_ids, [{
+            'quantity': 5.0,
+            'location_id': self.stock_location.id,
+            'product_id': self.productA.id,
+        }])
+        self.assertRecordValues(second_delivery.move_line_ids, [{
+            'quantity': 3.0,
+            'location_id': self.stock_location.id,
+            'product_id': self.productA.id,
+        }])
+        quant = self.env['stock.quant'].search([
+            ('product_id', '=', self.productA.id),
+            ('location_id', '=', self.stock_location.id),
+        ])
+        relocate_wizard = Form.from_action(self.env, quant.action_stock_quant_relocate())
+        relocate_wizard.dest_location_id = self.shelf_1
+        relocate_wizard.save().action_relocate_quants()
+
+        self.assertRecordValues(first_delivery.move_line_ids, [{
+            'quantity': 5.0,
+            'location_id': self.shelf_1.id,
+            'product_id': self.productA.id,
+        }])
+        self.assertRecordValues(second_delivery.move_line_ids, [{
+            'quantity': 3.0,
+            'location_id': self.shelf_1.id,
+            'product_id': self.productA.id,
+        }])
+
 
 class TestStockQuantRemovalStrategy(TestStockCommon):
 
@@ -1661,6 +1796,62 @@ class TestStockQuantRemovalStrategy(TestStockCommon):
             ('package_id', '=', package.id),
             ('location_id', '=', self.stock_location.id),
         ]))
+
+    def test_action_done_quants_cache_scope(self):
+        """ The quants cache built by '_action_done' holds the lots, packages
+        and owners of the validated move lines and nothing else. The strict
+        gathers of the loop match those exactly, so the other quants of the
+        product at the same locations are never read from the cache.
+        """
+        customer_location = self.env.ref('stock.stock_location_customers')
+        owner = self.env['res.partner'].create({'name': 'Owner'})
+        packages = self.env['stock.package'].create([{'name': 'PACK-%s' % i} for i in range(3)])
+        for package in packages:
+            self.env['stock.quant']._update_available_quantity(self.product, customer_location, 1.0, package_id=package)
+        self.env['stock.quant']._update_available_quantity(self.product, customer_location, 1.0, owner_id=owner)
+        self.env['stock.quant']._update_available_quantity(self.product, customer_location, 1.0)
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 3.0)
+
+        move = self.env['stock.move'].create({
+            'product_id': self.product.id,
+            'product_uom_qty': 1,
+            'product_uom': self.product.uom_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': customer_location.id,
+        })
+        move._action_confirm()
+        move._action_assign()
+        move.move_line_ids.write({'result_package_id': packages[0].id, 'quantity': 1})
+        move.picked = True
+
+        Quant = self.env.registry['stock.quant']
+        original = Quant._get_quants_by_products_locations
+        caches = []
+
+        def spy(quants, *args, **kwargs):
+            cache = original(quants, *args, **kwargs)
+            # '_action_assign' builds an empty cache for moves without origin
+            if cache:
+                caches.append(cache)
+            return cache
+
+        self.patch(Quant, '_get_quants_by_products_locations', spy)
+        move._action_done()
+
+        self.assertEqual(len(caches), 1)
+        self.assertEqual({key[3] for key in caches[0]}, {False, packages[0].id})
+        self.assertEqual({key[4] for key in caches[0]}, {False})
+        customer_quants = self.env['stock.quant'].search([
+            ('product_id', '=', self.product.id),
+            ('location_id', '=', customer_location.id),
+        ]).sorted('id')
+        self.assertRecordValues(customer_quants, [
+            {'package_id': packages[0].id, 'owner_id': False, 'quantity': 2.0},
+            {'package_id': packages[1].id, 'owner_id': False, 'quantity': 1.0},
+            {'package_id': packages[2].id, 'owner_id': False, 'quantity': 1.0},
+            {'package_id': False, 'owner_id': owner.id, 'quantity': 1.0},
+            {'package_id': False, 'owner_id': False, 'quantity': 1.0},
+        ])
 
     def test_quant_cache_for_packages(self):
         """

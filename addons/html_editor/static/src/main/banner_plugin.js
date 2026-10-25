@@ -161,7 +161,7 @@ export class BannerPlugin extends Plugin {
             this.document,
             `<div class="${containerClass}o_editor_banner user-select-none o-contenteditable-false ${
                 emoji ? "lh-1 " : ""
-            }d-flex align-items-center alert alert-${alertClass} pb-0 pt-3" data-oe-role="status">
+            }d-flex align-items-center alert alert-${alertClass} pb-0 pt-3 ps-3 pe-3" data-oe-role="status">
                 ${emojiHtml}
                 <div class="${contentClass}o_editor_banner_content o-contenteditable-true w-100 px-3">
                     ${baseContainerHtml}

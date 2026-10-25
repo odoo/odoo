@@ -26,6 +26,7 @@ export class PosData {
         this.custom = {};
         this.syncInProgress = false;
         this.mutex = markRaw(new Mutex());
+        this.indexedDBMutex = markRaw(new Mutex());
         this.records = {};
         this.opts = new DataServiceOptions();
         this.channels = [];
@@ -40,6 +41,10 @@ export class PosData {
             loading: true,
             unsyncData: [],
         });
+
+        // UUIDs of paid orders written to IndexedDB but not yet confirmed synced to the server.
+        // Used by the beforeunload guard to prevent data loss on accidental page close/reload.
+        this.localUnsyncedPaidOrderUuids = new Set();
 
         await this.checkConnectivity();
 
@@ -95,19 +100,6 @@ export class PosData {
 
     reconnectWebSocket() {
         this.initializeWebsocket();
-        const channels = [...this.channels];
-        this.channels = [];
-        while (channels.length) {
-            const channel = channels.pop();
-            this.connectWebSocket(channel.channel, channel.method);
-
-            logPosMessage(
-                "DataService",
-                "reconnectWebSocket",
-                `Reconnecting to channe ${channel.channel}`,
-                CONSOLE_COLOR
-            );
-        }
     }
 
     connectWebSocket(channel, method) {
@@ -132,7 +124,25 @@ export class PosData {
         return await this.indexedDB.delete(model, ids);
     }
 
+    requestPersistentStorage() {
+        // Ask the browser to exempt this origin's storage (incl. indexedDB) from
+        // automatic eviction under disk pressure. Best-effort: the browser may
+        // deny (or prompt, on Firefox), so don't await it in the startup path.
+        if (navigator.storage?.persist) {
+            navigator.storage.persisted().then(async (persisted) => {
+                const granted = persisted || (await navigator.storage.persist());
+                logPosMessage(
+                    "DataService",
+                    "requestPersistentStorage",
+                    `Persistent storage ${granted ? "granted" : "denied by the browser"}`,
+                    CONSOLE_COLOR
+                );
+            });
+        }
+    }
+
     async initIndexedDB(relations) {
+        this.requestPersistentStorage();
         // This method initializes indexedDB with all models loaded into the PoS. The default key is ID.
         // But some models have another key configured in data_service_options.js. These models are
         // generally those that can be created in the frontend.
@@ -150,6 +160,14 @@ export class PosData {
     }
 
     async synchronizeLocalDataInIndexedDB() {
+        return this.indexedDBMutex.exec(async () => await this._synchronizeLocalDataInIndexedDB());
+    }
+
+    /**
+     * Private method that synchronizes local data and state in indexedDB.
+     * DO NOT CALL THIS METHOD DIRECTLY, use synchronizeLocalDataInIndexedDB instead.
+     */
+    async _synchronizeLocalDataInIndexedDB() {
         // This methods will synchronize local data and state in indexedDB. This methods is mostly
         // used with models like pos.order, pos.order.line, pos.payment etc. These models are created
         // in the frontend and are not loaded from the backend.
@@ -216,6 +234,40 @@ export class PosData {
                     }
                     if (!dataToKeep[model] || !dataToKeep[model].includes(record[key])) {
                         keysToDelete.push(record[key]);
+                    }
+                }
+
+                if (model === "pos.order") {
+                    const idbOrdersByUuid = new Map(records.map((r) => [r[key], r]));
+                    for (const trackedUuid of [...this.localUnsyncedPaidOrderUuids]) {
+                        const idbRecord = idbOrdersByUuid.get(trackedUuid);
+                        if (!idbRecord) {
+                            logPosMessage(
+                                "IndexedDB",
+                                "localUnsyncedPaidOrderUuids",
+                                `Paid order ${trackedUuid} is flagged but not found in IndexedDB — potential data loss`,
+                                CONSOLE_COLOR,
+                                [],
+                                true
+                            );
+                            continue;
+                        }
+                        const localRecord = this.models[model].get(idbRecord.id);
+                        if (idbRecord.state === "paid" || !localRecord?.isUnsyncedPaid) {
+                            // Remove guard when either:
+                            // - the order is confirmed in IndexedDB in paid state (safe on reload), or
+                            // - the order is no longer unsynced in memory (synced to server).
+                            this.localUnsyncedPaidOrderUuids.delete(trackedUuid);
+                        } else {
+                            logPosMessage(
+                                "IndexedDB",
+                                "localUnsyncedPaidOrderUuids",
+                                `Paid order ${trackedUuid} is in IndexedDB but has state "${idbRecord.state}" instead of "paid"`,
+                                CONSOLE_COLOR,
+                                [],
+                                true
+                            );
+                        }
                     }
                 }
 
@@ -379,18 +431,6 @@ export class PosData {
 
         this.models.loadConnectedData(data, this.modelToLoad);
         this.models.loadConnectedData({ "pos.order": order, "pos.order.line": orderlines }, []);
-        this.sanitizeData();
-    }
-
-    async sanitizeData() {
-        const order_to_delete = this.models["pos.order"].filter((order) =>
-            order.lines.some((line) => line.is_reward_line && !line.coupon_id && !line.reward_id)
-        );
-        for (const order of order_to_delete) {
-            for (let i = order.lines.length - 1; i >= 0; i--) {
-                order.lines[i].delete();
-            }
-        }
     }
 
     async loadFieldsAndRelations() {
@@ -806,6 +846,9 @@ export class PosData {
     }
 
     async loadServerOrders(domain) {
+        const finalizedStates = new Map(
+            this.models["pos.order"].filter((o) => o.finalized).map((o) => [o.uuid, o.state])
+        );
         const result = await this.callRelated(
             "pos.order",
             "read_pos_orders",
@@ -818,6 +861,10 @@ export class PosData {
         const session = this.models["pos.session"].get(odoo.pos_session_id);
         const orders = result["pos.order"] || [];
         for (const order of orders) {
+            // A read started before the payment was committed must not reopen the order
+            if (finalizedStates.has(order.uuid) && !order.finalized) {
+                order.state = finalizedStates.get(order.uuid);
+            }
             // Clear commands
             order.serializeForORM();
             order.config_id = config;

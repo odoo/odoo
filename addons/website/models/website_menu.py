@@ -87,7 +87,7 @@ class WebsiteMenu(models.Model):
         - Menus with children cannot be added as a submenu under another menu.
         """
         for record in self:
-            parent_menu = record.parent_id.sudo() if record.parent_id else None
+            parent_menu = record.parent_id.sudo() if record.parent_id else self.env[self._name]
 
             # Check hierarchy level
             level = 0
@@ -98,14 +98,13 @@ class WebsiteMenu(models.Model):
                 if level > 2:
                     raise UserError(_("Menus cannot have more than two levels of hierarchy."))
 
-            if parent_menu:
-                # Mega menu constraint
-                if parent_menu.is_mega_menu or (record.is_mega_menu and (parent_menu.parent_id or record.child_id)):
-                    raise UserError(_("A mega menu cannot have a parent or child menu."))
+            # Mega menu constraint
+            if parent_menu.is_mega_menu or (record.is_mega_menu and (parent_menu.parent_id or record.child_id)):
+                raise UserError(_("A mega menu cannot have a parent or child menu."))
 
-                # Submenu structure constraint
-                if record.child_id and (parent_menu.parent_id or record.child_id.child_id):
-                    raise UserError(_("Menus with child menus cannot be added as a submenu."))
+            # Submenu structure constraint
+            if record.child_id and (parent_menu.parent_id or record.child_id.child_id):
+                raise UserError(_("Menus with child menus cannot be added as a submenu."))
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -182,15 +181,15 @@ class WebsiteMenu(models.Model):
             if menu.page_id and not menu.env.user._is_internal():
                 page_sudo = menu.page_id.sudo()
                 if (not page_sudo.is_visible
-                    or (not page_sudo.view_id._handle_visibility(do_raise=False)
-                        and page_sudo.view_id._get_cached_visibility() != "password")):
+                    or (page_sudo.view_id._get_cached_visibility() != "password"
+                        and not page_sudo.view_id._handle_visibility(do_raise=False))):
                     visible = False
 
             if menu.controller_page_id and not menu.env.user._is_internal():
                 controller_page_sudo = menu.controller_page_id.sudo()
                 if (not controller_page_sudo.is_published
-                    or (not controller_page_sudo.view_id._handle_visibility(do_raise=False)
-                        and controller_page_sudo.view_id._get_cached_visibility() != "password")):
+                    or (controller_page_sudo.view_id._get_cached_visibility() != "password"
+                        and not controller_page_sudo.view_id._handle_visibility(do_raise=False))):
                     visible = False
 
             menu.is_visible = visible

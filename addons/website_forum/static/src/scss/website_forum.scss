@@ -333,3 +333,12 @@ $-forum-sidebar-width: map-get($container-max-widths, sm) / 2;
 .o_wforum_background_gradient {
     background-image: linear-gradient(0deg, rgba($body-bg, .75) 30%, rgba($body-bg, 0) 100%);
 }
+
+.forum_intro.o_wforum_intro_closing {
+    height: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    opacity: 0;
+    overflow: hidden;
+    transition: height .4s ease-in-out, padding .4s ease-in-out, opacity .4s ease-in-out;
+}

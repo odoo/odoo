@@ -87,12 +87,16 @@ class SQL:
 
     # pylint: disable=keyword-arg-before-vararg
     def __init__(self, code: (str | SQL) = "", /, *args, to_flush: (Field | Iterable[Field] | None) = None, **kwargs):
-        if isinstance(code, SQL):
-            if args or kwargs or to_flush:
+        if isinstance(code, SQL) or (code == "%s" and len(args) == 1 and isinstance(args[0], SQL)):
+            if code == "%s":
+                code, args = args[0], ()
+            if args or kwargs:
                 raise TypeError("SQL() unexpected arguments when code has type SQL")
             self.__code = code.__code
             self.__params = code.__params
-            self.__to_flush = code.__to_flush
+            self.__to_flush = (code.__to_flush if to_flush is None
+                        else tuple(to_flush) if getattr(to_flush.__class__, '__iter__', None) is not None
+                        else (to_flush,))
             return
 
         # validate the format of code and parameters
@@ -107,7 +111,7 @@ class SQL:
             self.__params = ()
             if to_flush is None:
                 self.__to_flush = ()
-            elif hasattr(to_flush, '__iter__'):
+            elif getattr(to_flush.__class__, '__iter__', None) is not None:
                 self.__to_flush = tuple(to_flush)
             else:
                 self.__to_flush = (to_flush,)
@@ -125,7 +129,7 @@ class SQL:
                 code_list.append("%s")
                 params_list.append(arg)
         if to_flush is not None:
-            if hasattr(to_flush, '__iter__'):
+            if getattr(to_flush.__class__, '__iter__', None) is not None:
                 to_flush_list.extend(to_flush)
             else:
                 to_flush_list.append(to_flush)
@@ -303,23 +307,52 @@ def table_columns(cr, tablename):
     # Do not select the field `character_octet_length` from `information_schema.columns`
     # because specific access right restriction in the context of shared hosting (Heroku, OVH, ...)
     # might prevent a postgres user to read this field.
-    cr.execute(SQL(
-        ''' SELECT column_name, udt_name, character_maximum_length, is_nullable
-            FROM information_schema.columns WHERE table_name=%s
-            AND table_schema = current_schema ''',
-        tablename,
-    ))
+    query = """
+        SELECT a.attname AS column_name,
+               coalesce(bt.typname, t.typname) AS udt_name,
+               information_schema._pg_char_max_length(information_schema._pg_truetypid(a.*, t.*), information_schema._pg_truetypmod(a.*, t.*)) AS character_maximum_length,
+               CASE WHEN a.attnotnull OR t.typtype = 'd' AND t.typnotnull THEN 'NO'
+                    ELSE 'YES'
+               END AS is_nullable
+          FROM pg_attribute a
+          JOIN pg_class c
+            ON a.attrelid = c.oid
+          JOIN pg_namespace nc
+            ON c.relnamespace = nc.oid
+          JOIN pg_type t
+            ON a.atttypid = t.oid
+     LEFT JOIN (pg_type bt JOIN pg_namespace nbt ON bt.typnamespace = nbt.oid)
+            ON t.typtype = 'd'::"char"
+           AND t.typbasetype = bt.oid
+         WHERE nc.nspname = current_schema
+           AND a.attnum > 0
+           AND NOT a.attisdropped
+           AND c.relkind IN ('r', 'v', 'f', 'p')
+           AND (pg_has_role(c.relowner, 'USAGE'::text) OR has_column_privilege(c.oid, a.attnum, 'SELECT, INSERT, UPDATE, REFERENCES'))
+           AND c.relname=%s
+    """
+    cr.execute(SQL(query, tablename))
     return {row['column_name']: row for row in cr.dictfetchall()}
 
 
 def column_exists(cr, tablename, columnname):
     """ Return whether the given column exists. """
-    cr.execute(SQL(
-        """ SELECT 1 FROM information_schema.columns
-            WHERE table_name=%s AND column_name=%s
-            AND table_schema = current_schema """,
-        tablename, columnname,
-    ))
+    query = """
+        SELECT 1
+          FROM pg_attribute a
+          JOIN pg_class c
+            ON a.attrelid = c.oid
+          JOIN pg_namespace nc
+            ON c.relnamespace = nc.oid
+         WHERE nc.nspname = current_schema
+           AND a.attnum > 0
+           AND NOT a.attisdropped
+           AND c.relkind IN ('r', 'v', 'f', 'p')
+           AND (pg_has_role(c.relowner, 'USAGE'::text) OR has_column_privilege(c.oid, a.attnum, 'SELECT, INSERT, UPDATE, REFERENCES'))
+           AND c.relname=%s
+           AND a.attname=%s
+    """
+    cr.execute(SQL(query, tablename, columnname))
     return cr.rowcount
 
 

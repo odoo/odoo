@@ -1,7 +1,9 @@
+from odoo import fields
 from odoo.addons.account_edi_ubl_cii.tests.common import TestUblBis3Common, TestUblCiiBECommon
 from odoo.tests import tagged
 
 from freezegun import freeze_time
+from lxml import etree
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -131,3 +133,80 @@ class TestUblImportBis3InvoiceBE(TestUblBis3Common, TestUblCiiBECommon):
                 },
             ],
         )
+
+    def test_import_embedded_pdf(self):
+        """
+        Importing an xml with embedded pdf should correctly import the
+        pdf in the newly created bill
+        """
+        journal = self.company_data['default_journal_purchase']
+        xml_attachment = self._import_invoice_as_attachment(test_name='test_import_embedded_pdf')
+
+        # Import the document manually
+        created_moves = []
+        move_create = self.env.registry['account.move'].create
+
+        # patch used to retrieve all created documents
+        def patched_create(self, vals_list):
+            records = move_create(self, vals_list)
+            created_moves.extend(records.ids)
+            return records
+        self.patch(self.env.registry['account.move'], 'create', patched_create)
+
+        # Import the document manually
+        journal.create_document_from_attachment(xml_attachment.id)
+
+        self.assertEqual(len(created_moves), 1, "A single bill should be created")
+        bill = self.env['account.move'].browse(created_moves)
+        self.assertTrue(bill.message_main_attachment_id, "The Bill should have a main attachment")
+        self.assertEqual(bill.message_main_attachment_id.mimetype, "application/pdf", "The main attachment should be a pdf")
+        self.assertEqual(bill.message_main_attachment_id.res_id, bill.id, "The main attachment res_id should be the invoice id")
+        self.assertEqual(len(bill.message_ids.mapped('attachment_ids')), 4, "All nested attachments should be attached to a chatter message")
+
+        # Import the document via mail alias
+        init_vals = {'move_type': 'in_invoice', 'journal_id': journal.id}
+        email_raw = self._get_raw_mail_message_str(attachments=xml_attachment, email_to=journal.alias_id.display_name)
+        created_moves = []
+        move_id = self.env['mail.thread'].message_process('account.move', email_raw, custom_values=init_vals)
+        bill = self.env['account.move'].browse(move_id)
+
+        self.assertEqual(len(created_moves), 1, "A single bill should be created")
+        self.assertTrue(bill.message_main_attachment_id, "The Bill should have a main attachment")
+        self.assertEqual(bill.message_main_attachment_id.mimetype, "application/pdf", "The main attachment should be a pdf")
+        self.assertEqual(bill.message_main_attachment_id.res_id, bill.id, "The main attachment res_id should be the invoice id")
+        self.assertEqual(len(bill.message_ids.mapped('attachment_ids')), 4, "All nested attachments should be attached to a chatter message")
+
+    def test_import_empty_embedded_document(self):
+        """
+        Importing an xml with an empty embedded document (self-closing EmbeddedDocumentBinaryObject) should skip it instead of failing the import
+        """
+        _filename, file_content = self._import_file_content('test_import_embedded_pdf', 'xml')
+        xml_tree = etree.fromstring(file_content)
+
+        # Keep a single additional document, without any content
+        additional_doc, *other_docs = xml_tree.findall('./{*}AdditionalDocumentReference')
+        for doc in other_docs:
+            xml_tree.remove(doc)
+        additional_doc.find('./{*}Attachment/{*}EmbeddedDocumentBinaryObject').text = None
+        xml_attachment = self.env['ir.attachment'].create({
+            'mimetype': 'application/xml',
+            'name': 'test_invoice.xml',
+            'raw': etree.tostring(xml_tree),
+        })
+
+        bill = self._import_invoice_as_attachment_on(attachment=xml_attachment)
+        self.assertRecordValues(bill.invoice_line_ids, [{'quantity': 1.0, 'price_unit': 657.0}])
+        self.assertFalse(bill.attachment_ids.filtered(lambda att: att.mimetype == 'application/pdf'))
+
+    def test_import_credit_note_payment_due_date(self):
+        """ Test that the due date are imported correctly from the credit note """
+        credit_note = self._import_invoice_as_attachment_on(
+            test_name='test_partial_import_credit_note_payment_due_date',
+            journal=self.company_data['default_journal_purchase'],
+        )
+        self.assertRecordValues(credit_note, [{
+            'move_type': 'in_refund',
+            'partner_id': self.partner_be.id,
+            'invoice_date': fields.Date.from_string('2027-01-01'),
+            'invoice_date_due': fields.Date.from_string('2027-01-31'),
+        }])

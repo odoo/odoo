@@ -160,6 +160,7 @@ test("load dashboard that doesn't exist", async () => {
     await createSpreadsheetDashboard({
         spreadsheetId: 999,
     });
+    await animationFrame();
     expect(".o_spreadsheet_dashboard_action .dashboard-loading-status.error").toHaveCount(1, {
         message: "It should display an error",
     });

@@ -1019,9 +1019,10 @@ class WebsocketConnectionHandler:
                 httprequest,
                 version
             ))
-            # Force save the session. Session must be persisted to handle
-            # WebSocket authentication.
-            request.session.is_dirty = True
+            # Save the session, as the WebSocket authentication reads it back
+            # from disk. Marking it dirty would resend the session_id cookie.
+            if request.session.can_save:
+                root.session_store.save(request.session)
             return response
         except KeyError as exc:
             raise RuntimeError(
@@ -1140,7 +1141,9 @@ class WebsocketConnectionHandler:
                     websocket.close(CloseCode.TRY_LATER)
                 except Exception:
                     _logger.exception("Exception occurred during websocket request handling")
-
+                # Free the request object to avoid keeping a reference to the env / registry
+                # while waiting for the next message. Useful for registry GC.
+                del req
 
 def _kick_all(code=CloseCode.GOING_AWAY):
     """ Disconnect all the websocket instances. """

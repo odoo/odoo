@@ -618,6 +618,41 @@ export const accountTaxHelpers = {
      * [!] Mirror of the same method in account_tax.py.
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
+    reverse_quantity_base_line_extra_tax_data(extra_tax_data) {
+        if (!extra_tax_data || !Object.keys(extra_tax_data).length) {
+            return null;
+        }
+        const new_extra_tax_data = { ...extra_tax_data };
+        for (const field of [
+            "quantity",
+            "manual_total_excluded_currency",
+            "manual_total_excluded",
+        ]) {
+            if (new_extra_tax_data[field]) {
+                new_extra_tax_data[field] *= -1;
+            }
+        }
+        if (new_extra_tax_data.manual_tax_amounts) {
+            new_extra_tax_data.manual_tax_amounts = {};
+            for (const [tax_id_str, amounts] of Object.entries(extra_tax_data.manual_tax_amounts)) {
+                new_extra_tax_data.manual_tax_amounts[tax_id_str] = { ...amounts };
+                for (const suffix of ["_currency", ""]) {
+                    for (const prefix of ["base", "tax"]) {
+                        const field = `${prefix}_amount${suffix}`;
+                        if (amounts[field]) {
+                            new_extra_tax_data.manual_tax_amounts[tax_id_str][field] *= -1;
+                        }
+                    }
+                }
+            }
+        }
+        return new_extra_tax_data;
+    },
+
+    /**
+     * [!] Mirror of the same method in account_tax.py.
+     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+     */
     get_base_line_field_value_from_record(record, field, extra_values, fallback) {
         if (field in extra_values) {
             return extra_values[field] || fallback;
@@ -778,6 +813,10 @@ export const accountTaxHelpers = {
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
     distribute_delta_amount_smoothly(precision_digits, delta_amount, target_factors) {
+        if (!target_factors.length) {
+            return [];
+        }
+
         const precision_rounding = Number(`1e-${precision_digits}`);
         const amounts_to_distribute = target_factors.map((x) => 0.0);
         if (floatIsZero(delta_amount, precision_digits)) {
@@ -1341,9 +1380,15 @@ export const accountTaxHelpers = {
             const strategy = cash_rounding.strategy;
             const cash_rounding_pd = cash_rounding.rounding;
             const cash_rounding_method = cash_rounding.rounding_method;
-            const total_amount_currency =
-                tax_totals_summary.base_amount_currency + tax_totals_summary.tax_amount_currency;
-            const total_amount = tax_totals_summary.base_amount + tax_totals_summary.tax_amount;
+            // Round first so cash rounding doesn't inflate a sub-unit float residue.
+            const total_amount_currency = roundPrecision(
+                tax_totals_summary.base_amount_currency + tax_totals_summary.tax_amount_currency,
+                currency.rounding
+            );
+            const total_amount = roundPrecision(
+                tax_totals_summary.base_amount + tax_totals_summary.tax_amount,
+                company_pd
+            );
             const expected_total_amount_currency = roundPrecision(
                 total_amount_currency,
                 cash_rounding_pd,
@@ -1433,6 +1478,7 @@ export const accountTaxHelpers = {
         const tax_details = base_line.tax_details;
         const taxes_data = tax_details.taxes_data;
         const manual_tax_amounts = base_line.manual_tax_amounts;
+        const tax_amount_to_propagate = {}
 
         // If there are no taxes, we pass an empty object to the grouping function.
         for (const tax_data of taxes_data.length !== 0 ? taxes_data : [null]) {
@@ -1478,9 +1524,13 @@ export const accountTaxHelpers = {
                     const excluded_target_field = `target_${excluded_rounded_field}`;
                     const excluded_manual_field = `manual_${excluded_rounded_field}`;
 
-                    const excluded_rounded_amount =
+                    let excluded_rounded_amount =
                         tax_details[excluded_rounded_field] + tax_details[excluded_delta_field];
-                    const excluded_raw_amount = tax_details[excluded_raw_field];
+                    let excluded_raw_amount = tax_details[excluded_raw_field];
+                    if (tax_data && tax_data.tax.id in tax_amount_to_propagate) {
+                        excluded_rounded_amount += tax_amount_to_propagate[tax_data.tax.id][excluded_rounded_field]
+                        excluded_raw_amount += tax_amount_to_propagate[tax_data.tax.id][excluded_raw_field]
+                    }
 
                     values[excluded_rounded_field] = excluded_rounded_amount;
                     values[excluded_raw_field] = excluded_raw_amount;
@@ -1532,6 +1582,22 @@ export const accountTaxHelpers = {
 
             // Tax amount.
             if (tax_data) {
+                // Compute the amount that should be propagated by tax
+                for (const tax of tax_data['taxes']) {
+                    const tax_id = tax.id
+                    if (tax_id in tax_amount_to_propagate) {
+                        tax_amount_to_propagate[tax_id]['raw_total_excluded'] += tax_data['raw_tax_amount']
+                        tax_amount_to_propagate[tax_id]['raw_total_excluded_currency'] += tax_data['raw_tax_amount_currency']
+                        tax_amount_to_propagate[tax_id]['total_excluded'] += tax_data['tax_amount']
+                        tax_amount_to_propagate[tax_id]['total_excluded_currency'] += tax_data['tax_amount_currency']
+                    } else {
+                        tax_amount_to_propagate[tax_id] = {}
+                        tax_amount_to_propagate[tax_id]['raw_total_excluded'] = tax_data['raw_tax_amount']
+                        tax_amount_to_propagate[tax_id]['raw_total_excluded_currency'] = tax_data['raw_tax_amount_currency']
+                        tax_amount_to_propagate[tax_id]['total_excluded'] = tax_data['tax_amount']
+                        tax_amount_to_propagate[tax_id]['total_excluded_currency'] = tax_data['tax_amount_currency']
+                    }
+                }
                 const reverse_charge_sign = tax_data.is_reverse_charge ? -1 : 1;
                 const values = values_per_grouping_key[grouping_key];
                 for (const suffix of ["_currency", ""]) {

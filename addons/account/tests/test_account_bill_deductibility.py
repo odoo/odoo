@@ -89,6 +89,22 @@ class TestAccountBillPartialDeductibility(AccountTestInvoicingCommon):
             {}
         )
 
+        bill.button_draft()
+        bill.invoice_line_ids[0].deductible_amount = 99.0
+        bill.action_post()
+        self.assertInvoiceValues(
+            bill,
+            [
+                {'display_type': 'product',                      'name': 'Partial item',                        'balance': 100.0,  'tax_ids': [self.tax_purchase_a.id]},  # noqa: E241
+                {'display_type': 'non_deductible_product',       'name': 'Partial item',                        'balance': -1.0,   'tax_ids': [self.tax_purchase_a.id]},  # noqa: E241
+                {'display_type': 'tax',                          'name': '15%',                                 'balance': 14.85,  'tax_ids': []},  # noqa: E241
+                {'display_type': 'payment_term',                 'name': False,                                 'balance': -115.0, 'tax_ids': []},  # noqa: E241
+                {'display_type': 'non_deductible_tax',           'name': bill.name + ' - private part (taxes)', 'balance': 0.15,   'tax_ids': []},  # noqa: E241
+                {'display_type': 'non_deductible_product_total', 'name': bill.name + ' - private part',         'balance': 1.0,    'tax_ids': []},  # noqa: E241
+            ],
+            {}
+        )
+
     def test_bill_partial_deductibility_with_identical_lines(self):
         bill = self.env['account.move'].create({
             'move_type': 'in_invoice',
@@ -473,6 +489,89 @@ class TestAccountBillPartialDeductibility(AccountTestInvoicingCommon):
                 {'display_type': 'tax',                          'name': 'Reverse Charge 20%',    'balance': -20.0,   'tax_ids': []},
                 {'display_type': 'tax',                          'name': 'Reverse Charge 20%',    'balance': 12.0,    'tax_ids': []},
                 {'display_type': 'payment_term',                 'name': False,                   'balance': -100.0,  'tax_ids': []},
+            ],
+            {}
+        )
+
+    def test_simple_receipt_partial_deductibility(self):
+        bill = self.env['account.move'].create({
+            'move_type': 'in_receipt',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.today(),
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'Partial item',
+                    'price_unit': 100,
+                    'quantity': 1,
+                    'deductible_amount': 75.00,
+                    'tax_ids': [Command.set(self.tax_purchase_a.ids)],
+                })
+            ]
+        })
+
+        self.assertInvoiceValues(
+            bill,
+            [
+                {'display_type': 'product',                      'name': 'Partial item',         'balance': 100.0,  'tax_ids': [self.tax_purchase_a.id]},  # noqa: E241
+                {'display_type': 'non_deductible_product',       'name': 'Partial item',         'balance': -25.0,  'tax_ids': [self.tax_purchase_a.id]},  # noqa: E241
+                {'display_type': 'non_deductible_product_total', 'name': 'private part',         'balance': 25.0,   'tax_ids': []},  # noqa: E241
+                {'display_type': 'non_deductible_tax',           'name': 'private part (taxes)', 'balance': 3.75,   'tax_ids': []},  # noqa: E241
+                {'display_type': 'tax',                          'name': '15%',                  'balance': 11.25,  'tax_ids': []},  # noqa: E241
+                {'display_type': 'payment_term',                 'name': False,                  'balance': -115.0, 'tax_ids': []},  # noqa: E241
+            ],
+            {}
+        )
+
+        bill.invoice_line_ids[0].quantity = 2
+        self.assertInvoiceValues(
+            bill,
+            [
+                {'display_type': 'product',                      'name': 'Partial item',         'balance': 200.0,  'tax_ids': [self.tax_purchase_a.id]},  # noqa: E241
+                {'display_type': 'non_deductible_product',       'name': 'Partial item',         'balance': -50.0,  'tax_ids': [self.tax_purchase_a.id]},  # noqa: E241
+                {'display_type': 'non_deductible_tax',           'name': 'private part (taxes)', 'balance': 7.5,    'tax_ids': []},  # noqa: E241
+                {'display_type': 'tax',                          'name': '15%',                  'balance': 22.5,   'tax_ids': []},  # noqa: E241
+                {'display_type': 'payment_term',                 'name': False,                  'balance': -230.0, 'tax_ids': []},  # noqa: E241
+                {'display_type': 'non_deductible_product_total', 'name': 'private part',         'balance': 50.0,   'tax_ids': []},  # noqa: E241
+            ],
+            {}
+        )
+
+        bill.invoice_line_ids[0].price_unit = 50.0
+        self.assertInvoiceValues(
+            bill,
+            [
+                {'display_type': 'product',                      'name': 'Partial item',         'balance': 100.0,  'tax_ids': [self.tax_purchase_a.id]},  # noqa: E241
+                {'display_type': 'non_deductible_product',       'name': 'Partial item',         'balance': -25.0,  'tax_ids': [self.tax_purchase_a.id]},  # noqa: E241
+                {'display_type': 'non_deductible_tax',           'name': 'private part (taxes)', 'balance': 3.75,   'tax_ids': []},  # noqa: E241
+                {'display_type': 'tax',                          'name': '15%',                  'balance': 11.25,  'tax_ids': []},  # noqa: E241
+                {'display_type': 'payment_term',                 'name': False,                  'balance': -115.0, 'tax_ids': []},  # noqa: E241
+                {'display_type': 'non_deductible_product_total', 'name': 'private part',         'balance': 25.0,   'tax_ids': []},  # noqa: E241
+            ],
+            {}
+        )
+
+        bill.invoice_line_ids[0].deductible_amount = 100.0
+        self.assertInvoiceValues(
+            bill,
+            [
+                {'display_type': 'product',      'name': 'Partial item', 'balance': 100.0,  'tax_ids': [self.tax_purchase_a.id]},  # noqa: E241
+                {'display_type': 'tax',          'name': '15%',          'balance': 15.0,   'tax_ids': []},  # noqa: E241
+                {'display_type': 'payment_term', 'name': False,          'balance': -115.0, 'tax_ids': []},  # noqa: E241
+            ],
+            {}
+        )
+
+        bill.invoice_line_ids[0].deductible_amount = 75.0
+        bill.action_post()
+        self.assertInvoiceValues(
+            bill,
+            [
+                {'display_type': 'product',                      'name': 'Partial item',                        'balance': 100.0,  'tax_ids': [self.tax_purchase_a.id]},  # noqa: E241
+                {'display_type': 'non_deductible_product',       'name': 'Partial item',                        'balance': -25.0,  'tax_ids': [self.tax_purchase_a.id]},  # noqa: E241
+                {'display_type': 'tax',                          'name': '15%',                                 'balance': 11.25,  'tax_ids': []},  # noqa: E241
+                {'display_type': 'payment_term',                 'name': False,                                 'balance': -115.0, 'tax_ids': []},  # noqa: E241
+                {'display_type': 'non_deductible_product_total', 'name': bill.name + ' - private part',         'balance': 25.0,   'tax_ids': []},  # noqa: E241
+                {'display_type': 'non_deductible_tax',           'name': bill.name + ' - private part (taxes)', 'balance': 3.75,   'tax_ids': []},  # noqa: E241
             ],
             {}
         )

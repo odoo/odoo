@@ -157,8 +157,8 @@ class AccountMove(models.Model):
 
     @api.depends('l10n_in_state_id', 'l10n_in_gst_treatment')
     def _compute_fiscal_position_id(self):
-
-        foreign_state = self.env['res.country.state'].search([('code', '!=', 'IN')], limit=1)
+        foreign_country = self.env['res.country'].new({'name': 'Not India', 'code': '!!'})
+        foreign_state = self.env['res.country.state'].new({'country_id': foreign_country})
 
         def _get_fiscal_state(move):
             """
@@ -251,7 +251,7 @@ class AccountMove(models.Model):
                 if company.l10n_in_tcs_feature and invalid_tax_lines:
                     warnings['lower_tcs_tax'] = {
                         'message': _("As the Partner's PAN missing/invalid apply TCS at the higher rate."),
-                        'actions': invalid_tax_lines.with_context(tax_validation=True)._get_records_action(
+                        'action': invalid_tax_lines.with_context(tax_validation=True)._get_records_action(
                             name=action_name,
                             views=[(_xmlid_to_res_id("l10n_in.view_move_line_tree_hsn_l10n_in"), "list")],
                             domain=[('id', 'in', invalid_tax_lines.ids)],

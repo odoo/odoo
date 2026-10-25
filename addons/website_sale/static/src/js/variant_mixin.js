@@ -236,7 +236,8 @@ const VariantMixin = {
      */
     _disableInput(parent, attributeValueId, excludedBy, attributeNames, productName) {
         const input = parent.querySelector(
-            `option[value="${attributeValueId}"], input[value="${attributeValueId}"]`
+            `select.js_variant_change option[value="${attributeValueId}"],
+            input.js_variant_change[value="${attributeValueId}"]`
         );
         input.classList.add('css_not_available')
         input.closest('label')?.classList?.add('css_not_available');
@@ -277,7 +278,7 @@ const VariantMixin = {
         const pricePerUom = parent.querySelector('.o_base_unit_price')
             ?.querySelector('.oe_currency_value');
         if (pricePerUom) {
-            const hasPrice = isCombinationPossible && combination.base_unit_price !== 0;
+            const hasPrice = this._hasUomPrice(combination);
             pricePerUom.closest('.o_base_unit_price_wrapper').classList.toggle('d-none', !hasPrice);
             if (hasPrice) {
                 pricePerUom.textContent = this._priceToStr(combination.base_unit_price, precision);
@@ -381,6 +382,10 @@ const VariantMixin = {
         productIdInput.dispatchEvent(new Event('change', { bubbles: true }));
 
         this.handleCustomValues(ev.target);
+    },
+
+    _hasUomPrice(combination) {
+        return !!combination.is_combination_possible && combination.base_unit_price !== 0;
     },
 
     /**

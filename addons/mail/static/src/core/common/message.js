@@ -41,6 +41,12 @@ import { useLongPress } from "@mail/utils/common/hooks";
 import { ActionList } from "@mail/core/common/action_list";
 import { loadCssFromBundle } from "@mail/utils/common/misc";
 
+class MessageDropdown extends Dropdown {
+    get isBottomSheet() {
+        return hasTouch() && this.props.bottomSheet;
+    }
+}
+
 /**
  * @typedef {Object} Props
  * @property {boolean} [hasActions=true]
@@ -63,7 +69,7 @@ export class Message extends Component {
         ActionSwiper,
         AttachmentList,
         Composer,
-        Dropdown,
+        Dropdown: MessageDropdown,
         ImStatus,
         MessageInReply,
         MessageLinkPreviewList,
@@ -144,8 +150,10 @@ export class Message extends Component {
                 const shadowStyle = document.createElement("style");
                 shadowStyle.textContent = `
                     * {
-                        background-color: transparent !important;
                         color: ${color} !important;
+                    }
+                    *:not(.o-mail-ellipsis) {
+                        background-color: transparent !important;
                     }
                     a, a * {
                         color: ${this.constructor.SHADOW_LINK_COLOR} !important;
