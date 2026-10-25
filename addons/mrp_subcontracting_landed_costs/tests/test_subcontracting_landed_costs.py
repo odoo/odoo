@@ -1,12 +1,12 @@
 from odoo.exceptions import ValidationError
 from odoo.tests import Form, tagged
-from odoo import Command
 
 from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon
+from odoo.addons.purchase_stock.tests.common import PurchaseTestCommon
 
 
 @tagged('post_install', '-at_install')
-class TestSubcontractingLandedCosts(TestMrpSubcontractingCommon):
+class TestSubcontractingLandedCosts(TestMrpSubcontractingCommon, PurchaseTestCommon):
 
     def test_subcontracting_landed_cost_receipts_flow(self):
         """
@@ -15,26 +15,18 @@ class TestSubcontractingLandedCosts(TestMrpSubcontractingCommon):
         """
         self.product_category.property_cost_method = 'fifo'
         self.product_category.property_valuation = 'real_time'
-        po = self.env['purchase.order'].create({
-            'partner_id': self.subcontractor_partner1.id,
-            'order_line': [(0, 0, {
-                'name': self.finished.name,
-                'product_id': self.finished.id,
-                'product_uom_qty': 10,
-                'product_uom_id': self.finished.uom_id.id,
-                'price_unit': 10,
-            })],
-        })
-        po.button_confirm()
+        po = self._create_purchase(
+            product=self.finished,
+            quantity=10,
+            price_unit=10,
+            partner_id=self.subcontractor_partner1.id,
+        )
 
         mo = self.env['mrp.production'].search([('bom_id', '=', self.bom.id)])
         self.assertTrue(mo)
 
-        action = po.action_view_picking()
-        in_picking = self.env[action['res_model']].browse(action['res_id'])
-        in_picking.move_ids.quantity = 10
-        in_picking.move_ids.picked = True
-        in_picking.button_validate()
+        in_picking = po.picking_ids
+        self._receive(po)
 
         # create a landed cost for the incoming picking
         default_vals = self.env['stock.landed.cost'].default_get(list(self.env['stock.landed.cost'].fields_get()))
@@ -77,23 +69,19 @@ class TestSubcontractingLandedCosts(TestMrpSubcontractingCommon):
         self.assertEqual(in_picking.move_ids.value, 0)
         self.assertEqual(in_picking.move_ids.move_orig_ids.value, 199)
 
-        new_po = self.env['purchase.order'].create({
-            'partner_id': self.subcontractor_partner1.id,
-            'order_line': [(0, 0, {
-                'name': self.finished.name,
-                'product_id': self.finished.id,
-                'product_uom_qty': 10,
-                'product_uom_id': self.finished.uom_id.id,
-                'price_unit': 10,
-            })],
-        })
-
         # The following checks ensure that the landed cost is distributed uniformly between standard product and subcontracting product
         product = self.env['product.product'].create({
             'name': 'Product',
             'is_storable': True,
             'categ_id': self.product_category.id,
         })
+        new_po = self._create_purchase(
+            product=self.finished,
+            quantity=10,
+            price_unit=10,
+            partner_id=self.subcontractor_partner1.id,
+            confirm=False,
+        )
         with Form(new_po) as po_form:
             with po_form.order_line.new() as new_line:
                 new_line.product_id = product
@@ -144,44 +132,22 @@ class TestSubcontractingLandedCosts(TestMrpSubcontractingCommon):
             of a landed cost applied to the receipt of  subcontracted product take into
             account the pro rata of the products still in stock.
         """
-        warehouse = self.env['stock.warehouse'].search([
-            ('company_id', '=', self.env.company.id),
-        ], limit=1)
-        product_category_all = self.env.ref('product.product_category_goods')
+        product_category_all = self.category_avco_auto
         self._setup_category_stock_journals()
-        product_category_all.property_cost_method = 'average'
-        product_category_all.property_valuation = 'real_time'
         self.finished.categ_id = product_category_all
 
         # create and confirm PO
-        po = self.env['purchase.order'].create({
-            'partner_id': self.subcontractor_partner1.id,
-            'order_line': [(0, 0, {
-                'name': self.finished.name,
-                'product_id': self.finished.id,
-                'product_qty': 10,
-                'product_uom_id': self.finished.uom_id.id,
-                'price_unit': 10,
-            })],
-        })
-        po.button_confirm()
+        po = self._create_purchase(
+            product=self.finished,
+            quantity=10,
+            price_unit=10,
+            partner_id=self.subcontractor_partner1.id,
+        )
 
         # validate outgoing move to have only partial quantity remaining
         receipt = po.picking_ids[0]
-        receipt.button_validate()
-        move = self.env['stock.move'].create({
-            'product_id': self.finished.id,
-            'location_id': warehouse.lot_stock_id.id,
-            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
-            'product_uom_qty': 3,
-            'picking_type_id': warehouse.out_type_id.id,
-            'move_line_ids': [Command.create({
-                'quantity': 3,
-                'product_id': self.finished.id,
-            })]
-        })
-        move.picked = True
-        move._action_done()
+        self._receive(po)
+        self._make_out_move(self.finished, 3)
         self.assertEqual(self.finished.standard_price, 10)
 
         # create a landed cost for the incoming picking and validate it
