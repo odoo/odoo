@@ -2124,6 +2124,63 @@ test("discard with nested o2m form view dialog", async () => {
     expect(".modal .o_data_row [name='name']").toHaveText("aaa");
 });
 
+test("discard new o2m record opened in dialog with extra x2many, then discard main form", async () => {
+    Partner._records[0].turtles = [];
+    Partner._onChanges = {
+        foo: (obj) => {
+            obj.turtles = [[0, 0, { name: "new turtle" }]];
+        },
+    };
+    Turtle._views = {
+        form: `
+            <form>
+                <field name="name"/>
+                <field name="partner_ids" widget="many2many_tags"/>
+            </form>`,
+    };
+    let turtle;
+    patchWithCleanup(Record.prototype, {
+        _discard() {
+            super._discard(...arguments);
+            if (this.resModel === "turtle") {
+                turtle = this;
+            }
+        },
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="foo"/>
+                <field name="turtles" mode="kanban">
+                    <kanban>
+                        <templates>
+                            <t t-name="card">
+                                <field name="name"/>
+                            </t>
+                        </templates>
+                    </kanban>
+                </field>
+            </form>`,
+    });
+
+    await contains("[name=foo] input").edit("trigger onchange");
+    expect("article.o_kanban_record").toHaveText("new turtle");
+
+    await contains("article.o_kanban_record").click();
+    await contains(".modal .o_form_button_cancel").click();
+    expect(".modal").toHaveCount(0);
+
+    await contains(".o_form_button_cancel").click();
+    // partner_ids was added to the active fields by the dialog: it must still hold a list
+    expect(turtle.isNew).toBe(true);
+    expect("partner_ids" in turtle.activeFields).toBe(true);
+    expect(turtle.data.partner_ids.currentIds).toEqual([]);
+});
+
 test("discard a form dialog view and then reopen it with a domain based on a text field", async () => {
     Turtle._records[1].turtle_foo = "yop";
     Turtle._views = {
