@@ -535,7 +535,11 @@ class Cursor(_CursorProtocol):
         self.postrollback.clear()
         if self._closing:
             self._close()
+        if not self.postcommit:
+            return
         self.postcommit.run()
+        if not self.closed:
+            self.rollback()
 
     def rollback(self) -> None:
         """ Rollback the current transaction. """
@@ -552,6 +556,8 @@ class Cursor(_CursorProtocol):
             self._now = None
         if self._closing:
             self._close()
+        if not self.postrollback:
+            return
         try:
             self.postrollback.run()
         except Exception:
@@ -560,6 +566,9 @@ class Cursor(_CursorProtocol):
             self.prerollback.clear()
             self.postrollback.clear()
             self.rollback()
+        else:
+            if not self.closed:
+                self.rollback()
 
     def __getattr__(self, name):
         if self._closed and name == '_obj':
