@@ -285,7 +285,6 @@ commandProviderRegistry.add("find_or_start_conversation", {
         const palette = new DiscussCommandPalette(env, options);
         await palette.fetch();
         palette.buildResults();
-        palette.commands.slice(0, 8);
         if (!palette.store.inPublicPage) {
             if (palette.cleanedTerm) {
                 palette.commands.push(palette.makeDiscussCommand(NEW_CHANNEL));
