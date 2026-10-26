@@ -192,11 +192,6 @@ class Environment(Mapping[str, "BaseModel"]):
         """Return the protected map of the transaction."""
         return self.transaction.protected
 
-    @functools.cached_property
-    def cache(self):
-        """Return the cache object of the transaction."""
-        return self.transaction.cache
-
     @property
     def _access_context(self) -> tuple:
         """Return the context values used by the access caches."""
