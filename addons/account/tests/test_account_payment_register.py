@@ -2327,3 +2327,38 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
         ).create({})
 
         self.assertEqual(register_wizard.currency_id, self.company_data['currency'])
+
+    def test_unreconcile_payment(self):
+        invoice_a = self._create_invoice_one_line(price_unit=1000.0, post=True)
+        invoice_b = self._create_invoice_one_line(price_unit=1000.0, post=True)
+        payment_b = self._register_payment(invoice_b, amount=100.0)
+        payment_ab = self._register_payment(invoice_a + invoice_b)
+        self.assertEqual(payment_ab.invoice_ids, invoice_a + invoice_b)
+        self.assertEqual(payment_b.invoice_ids, invoice_b)
+
+        # Removes payment_ab-invoice_a and payment_b-invoice_b, payment_ab-invoice_b should stays reconciled.
+        (
+            (invoice_a.line_ids + payment_b.move_id.line_ids)
+            .filtered(lambda l: l.account_type == 'asset_receivable')
+            .remove_move_reconcile()
+        )
+
+        self.assertEqual(payment_ab.invoice_ids, invoice_b)
+        self.assertFalse(payment_b.invoice_ids)
+
+        invoice_c = self._create_invoice_one_line(price_unit=1000.0, post=True, move_type='in_invoice')
+        invoice_d = self._create_invoice_one_line(price_unit=1000.0, post=True, move_type='in_invoice')
+        payment_d = self._register_payment(invoice_d, amount=100.0)
+        payment_cd = self._register_payment(invoice_c + invoice_d)
+        self.assertEqual(payment_cd.invoice_ids, invoice_c + invoice_d)
+        self.assertEqual(payment_d.invoice_ids, invoice_d)
+
+        # Removes payment_ab-invoice_a and payment_b-invoice_b, payment_ab-invoice_b should stays reconciled.
+        (
+            (invoice_c.line_ids + payment_d.move_id.line_ids)
+            .filtered(lambda l: l.account_type == 'liability_payable')
+            .remove_move_reconcile()
+        )
+
+        self.assertEqual(payment_cd.invoice_ids, invoice_d)
+        self.assertFalse(payment_d.invoice_ids)
