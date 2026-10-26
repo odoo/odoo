@@ -101,10 +101,7 @@ export function isNotAllowedContent(node) {
 
 export const isHtmlContentSupported = weakMemoize(
     (/** @type {EditorSelection} */ selection) =>
-        !closestElement(
-            selection.focusNode,
-            '[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-source-sha])'
-        )
+        !closestElement(selection.focusNode, ".o_plaintext")
 );
 
 /**
