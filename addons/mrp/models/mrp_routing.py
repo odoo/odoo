@@ -62,6 +62,7 @@ class MrpRoutingWorkcenter(models.Model):
                                  "- Based on Actual time: the cost will be calculated based on tracked time and real employee costs.\n"
                                  "- Based on Theoretical time: the cost will be calculated based on estimated time and costs.")
     cost = fields.Float('Cost', compute="_compute_cost")
+    employee_ratio = fields.Float("Employee Capacity", default=1, help="Number of employees needed to complete operation.")
 
     @api.depends('time_mode', 'time_mode_batch')
     def _compute_time_computed_on(self):
@@ -128,11 +129,13 @@ class MrpRoutingWorkcenter(models.Model):
         for operation in self:
             operation.workorder_count = count_data.get(operation.id, 0)
 
-    @api.depends('time_total', 'workcenter_id')
+    @api.depends('time_total', 'workcenter_id', 'employee_ratio')
     @api.depends_context('product', 'quantity', 'unit', 'workcenter')
     def _compute_cost(self):
         for operation in self:
-            operation.cost = (operation.time_total / 60.0) * operation.workcenter_id.costs_hour
+            operation_time = (operation.time_total / 60.0)
+            operation.cost = operation_time * operation.workcenter_id.costs_hour + \
+                operation_time * operation.workcenter_id.employee_costs_hour * (operation.employee_ratio or 1)
 
     @api.constrains('blocked_by_operation_ids')
     def _check_no_cyclic_dependencies(self):
