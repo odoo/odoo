@@ -137,11 +137,10 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
             tx_values = CustomerPortal()._get_payment_values(
                 self.sale_order,
                 is_down_payment=False,
-                payment_amount=self.sale_order._get_prepayment_required_amount(),
             )
         self.assertEqual(tx_values["amount"], self.sale_order.amount_total)
 
-    def test_confirmed_transactions_comfirms_so_with_multiple_transaction(self):
+    def test_confirmed_transactions_confirms_so_with_multiple_transaction(self):
         """Test that a confirmed transaction confirms a SO even if one or more non-confirmed
         transactions are linked."""
         # Create the payment
