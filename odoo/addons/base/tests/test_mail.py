@@ -376,6 +376,25 @@ class TestSanitizer(BaseCase):
         self.assertNotIn('<title>404 - Not Found</title>', html)
         self.assertIn('<h1>404 - Not Found</h1>', html)
 
+    def test_meta_charset_mismatch(self):
+        """ An in-document charset declaration must not change how an already
+        decoded string is interpreted: Outlook/Exchange emails may declare
+        'charset=unicode' (UTF-16) while the MIME part is UTF-8. """
+        metas = (
+            '<meta content="text/html; charset=%s" http-equiv="Content-Type">',
+            '<meta charset="%s">',
+        )
+        for meta in metas:
+            for charset in ('unicode', 'utf-16'):
+                with self.subTest(meta=meta, charset=charset):
+                    src = (
+                        '<html><head>%s</head>'
+                        '<body><p>Please find attached your invoice <b>INV/2024/0001</b>.</p></body></html>'
+                    ) % (meta % charset)
+                    html = html_sanitize(src)
+                    self.assertIn('Please find attached your invoice', html)
+                    self.assertIn('<b>INV/2024/0001</b>', html)
+
     def test_cid_with_at(self):
         img_tag = '<img src="@">'
         sanitized = html_sanitize(img_tag, sanitize_tags=False, strip_classes=True)
