@@ -5,9 +5,9 @@
             <field name="model">product.margin</field>
             <field name="arch" type="xml">
                 <form string="Properties categories">
-                    <group col="4" string="General Information">
-                        <field name="from_date" />
-                        <field name="to_date" />
+                    <group col="2" string="General Information">
+                        <field name="from_date" options="{'end_date_field': 'to_date', 'always_range': True}"/>
+                        <field name="to_date" invisible="1"/>
                         <field name="invoice_state" />
                     </group>
                     <footer>
