@@ -28,6 +28,7 @@ import { TextTruncateTooltipPlugin } from "@web/core/tooltip/text_truncate_toolt
 import { withSequence } from "@html_editor/utils/resource";
 import { getHtmlStyle } from "@html_editor/utils/formatting";
 import { isVisible } from "@html_builder/utils/utils";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 
 const TAB_TRANSITION_FALLBACK_DELAY = 400;
 
@@ -187,6 +188,13 @@ export class Builder extends Component {
                     Component: InvisibleElementsPanel,
                     props: this.invisibleElementsPanelState,
                 }),
+                properties: {
+                    predicate: (/** @type {Node} */ node) => {
+                        const typedEl = closestElement(node, "[data-oe-type]");
+                        return typedEl && typedEl.dataset.oeType != "html";
+                    },
+                    plaintext: true,
+                },
             },
             localOverlayContainers: {
                 key: this.props.localOverlayContainerKey,

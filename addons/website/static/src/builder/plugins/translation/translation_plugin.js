@@ -4,7 +4,6 @@ import { registry } from "@web/core/registry";
 import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 import { withSequence } from "@html_editor/utils/resource";
 import { makeContentsInline, unwrapContents } from "@html_editor/utils/dom";
-import { DISABLED_NAMESPACE } from "@html_editor/main/toolbar/toolbar_plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 
 /**
@@ -119,7 +118,7 @@ export class TranslationPlugin extends Plugin {
         }),
         properties: {
             predicate: (node) => closestElement(node, ".o_translation_select"),
-            toolbar: DISABLED_NAMESPACE,
+            plaintext: true,
         },
     };
 

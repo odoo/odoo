@@ -23,6 +23,7 @@ import { expectElementCount } from "./_helpers/ui_expectations";
 import { nodeSize } from "@html_editor/utils/position";
 import { iconClasses } from "@html_editor/utils/dom_info";
 import { Plugin } from "@html_editor/plugin";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 
 function isInline(node) {
     return ["I", "B", "U", "S", "EM", "STRONG", "IMG", "BR", "A", "FONT"].includes(node);
@@ -4638,8 +4639,19 @@ describe("onDrop", () => {
 
         expect(getContent(el)).toBe("<p>b[]acd</p>");
     });
-    test("should not be able to paste inside some branded node", async () => {
-        const { el } = await setupEditor(`<p data-oe-model="foo" data-oe-type="text">a[b]cd</p>`);
+    test("should not be able to paste html inside plaintext node", async () => {
+        class TestPlaintextPlugin extends Plugin {
+            static id = "testPlaintextPlugin";
+            resources = {
+                properties: {
+                    predicate: (node) => closestElement(node, ".test_plaintext"),
+                    plaintext: true,
+                },
+            };
+        }
+        const { el } = await setupEditor(`<p class="test_plaintext">a[b]cd</p>`, {
+            config: { includePlugins: [TestPlaintextPlugin] },
+        });
         const pElement = el.firstChild;
         const textNode = pElement.firstChild;
 
@@ -4653,7 +4665,7 @@ describe("onDrop", () => {
         await dispatch(pElement, "drop", { dataTransfer: dropData });
         await tick();
 
-        expect(getContent(el)).toBe(`<p data-oe-model="foo" data-oe-type="text">a[b]cd</p>`);
+        expect(getContent(el)).toBe(`<p class="test_plaintext">a[b]cd</p>`);
     });
     test("should add new images form fileTransferItems", async () => {
         const { el } = await setupEditor(`<p>ab[]cd</p>`);

@@ -203,11 +203,7 @@ export class DomPlugin extends Plugin {
         const systemNodeSelector = this.getResource("system_node_selectors").join(",");
         this.isSystemNode = (node) => systemNodeSelector && node.matches?.(systemNodeSelector);
         this.supportsHtmlContentMemoized = weakMemoize(
-            (selection) =>
-                !closestElement(
-                    selection.focusNode,
-                    '[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-source-sha])'
-                )
+            (selection) => !this.dependencies.properties.get(selection.startContainer, "plaintext")
         );
     }
 
