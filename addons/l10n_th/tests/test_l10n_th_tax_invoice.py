@@ -561,3 +561,35 @@ class TestL10nTHTaxInvoice(AccountTestInvoicingCommon):
                 },
             ],
         )
+
+    def test_tax_invoice_for_payment_registered_on_draft_invoice(self):
+        """Ensure a tax invoice is posted, not cancelled, when a paid draft invoice is posted."""
+
+        self.invoice.invoice_line_ids = [
+            self._prepare_invoice_line(
+                price_unit=1000,
+                tax_ids=self.tax_on_payment,
+            ),
+        ]
+
+        self._register_payment(
+            self.invoice,
+            amount=1070.0,
+        )
+
+        caba_entry = self.invoice.tax_cash_basis_created_move_ids
+        tax_invoice = self.invoice.l10n_th_tax_invoice_ids
+
+        self.assertRecordValues(tax_invoice, [{
+            'invoice_move_id': self.invoice.id,
+            'payment_move_id': caba_entry.id,
+            'state': 'draft',
+            'reference': False,
+        }])
+
+        self.invoice.action_post()
+
+        self.assertRecordValues(tax_invoice, [{
+            'state': 'posted',
+            'reference': caba_entry.name,
+        }])
