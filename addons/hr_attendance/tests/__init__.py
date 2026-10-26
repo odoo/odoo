@@ -9,3 +9,4 @@ from . import test_hr_attendance_self_edit_role
 from . import test_hr_attendance_manager
 from . import test_oman_overtime
 from . import test_hr_attendance_work_entry_type_domain
+from . import test_hr_time_rule_pipeline
