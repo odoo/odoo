@@ -1,6 +1,7 @@
 from datetime import date, timedelta
 
 from freezegun import freeze_time
+from lxml import etree
 
 from odoo.exceptions import ValidationError
 from odoo.fields import Date, Datetime
@@ -852,3 +853,34 @@ class TestAllocations(TestHrHolidaysCommon):
             self.assertEqual(pending_leave.state, 'confirm')
             with self.assertRaises(ValidationError):
                 allocation.write({'date_to': date(2024, 1, 11)})
+
+    @freeze_time('2024-01-05')
+    def test_employee_form_time_off_not_defined(self):
+        """ The employee form shows a red "Not defined" Time Off button when the employee has no
+            currently valid allocation; an accrual allocation that has not accrued anything yet
+            is an allocation (no red button). """
+        arch = etree.fromstring(self.env['hr.employee'].get_views([(False, 'form')])['views']['form']['arch'])
+        not_defined_button = arch.xpath("//button[@name='action_time_off_dashboard'][.//span[text()='Not defined']]")
+        self.assertEqual(len(not_defined_button), 1)
+        # based on the number of valid allocations, not on the number of allocated days
+        self.assertIn('allocations_count', not_defined_button[0].get('invisible'))
+
+        self.assertEqual(self.employee.allocations_count, 0)
+        self.assertEqual(self.employee.allocation_display, '0')
+
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Monthly Accrual Plan',
+            'work_entry_type_id': self.work_entry_type_paid.id,
+            'accrued_gain_time': 'end',
+            'level_ids': [(0, 0, {
+                'added_value': 1,
+                'added_value_type': 'day',
+                'frequency': 'monthly',
+            })],
+        })
+        self._create_validated_allocation(
+            self.work_entry_type_paid, self.employee, date(2024, 1, 1), accrual_plan=accrual_plan, days=0,
+        )
+        self.employee.invalidate_recordset(['allocations_count', 'allocation_display'])
+        self.assertEqual(self.employee.allocation_display, '0', "nothing accrued yet")
+        self.assertEqual(self.employee.allocations_count, 1, "but the employee has an allocation")
