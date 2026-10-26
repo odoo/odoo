@@ -1980,6 +1980,7 @@ class MailCommon(MailCase):
             signature='--\nErnest'
         )
         cls.partner_employee = cls.user_employee.partner_id
+        cls.role_employee = cls.env['res.role'].create({'name': 'Employee Role', 'user_ids': [(4, cls.user_employee.id)]})
         cls.guest = cls.env['mail.guest'].create({'name': 'Guest Mario'})
         cls.subtitles = []
         cls.default_arch_db_layout = """
