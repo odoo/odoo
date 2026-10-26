@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_payment_method_view_form_inherit_pos_worldline" model="ir.ui.view">
+        <field name="name">pos.payment.method.form.inherit.worldline</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <notebook invisible="payment_provider != 'worldline_api'">
+                    <page name="settings" string="Worldline">
+                        <group>
+                            <field name="worldline_merchant_id" invisible="payment_provider != 'worldline_api'" required="payment_provider == 'worldline_api'"/>
+                            <field name="worldline_terminal_id" invisible="payment_provider != 'worldline_api'" required="payment_provider == 'worldline_api'"/>
+                            <field name="worldline_api_key" password="True" invisible="payment_provider != 'worldline_api'" required="payment_provider == 'worldline_api'"/>
+                            <field name="worldline_test_mode" invisible="payment_provider != 'worldline_api'"/>
+                            <div colspan="2" invisible="payment_provider != 'worldline_api'">
+                                <button name="action_worldline_test" type="object" string="Test" class="btn-primary text-nowrap"/>
+                            </div>
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+</odoo>
