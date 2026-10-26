@@ -84,3 +84,45 @@ test("show correspondent local time in DM header when timezones differ", async (
     await openDiscuss(channelId);
     await contains(".o-mail-DiscussContent-header:has(:text('17:30 local time'))");
 });
+
+test("discard push notification of already seen channel message", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const [seenMessageId, unseenMessageId] = pyEnv["mail.message"].create([
+        { body: "Seen", model: "discuss.channel", res_id: channelId },
+        { body: "Unseen", model: "discuss.channel", res_id: channelId },
+    ]);
+    const [memberId] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", serverState.partnerId],
+    ]);
+    pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: seenMessageId });
+    patchWithCleanup(navigator.serviceWorker, {
+        controller: {
+            postMessage: ({ type, payload }) => expect.step(`${type} ${payload.correlationId}`),
+        },
+    });
+    await start();
+    await openDiscuss("mail.box_inbox");
+    await contains(".o-mail-DiscussContent-threadName[title='Inbox']");
+    await contains(".o-mail-DiscussSidebarChannel:has(:text('General'))");
+    for (const [correlationId, messageId] of [
+        ["unseen", unseenMessageId],
+        ["seen", seenMessageId],
+    ]) {
+        navigator.serviceWorker.dispatchEvent(
+            new MessageEvent("message", {
+                data: {
+                    type: "notification-display-request",
+                    payload: {
+                        correlationId,
+                        model: "discuss.channel",
+                        res_id: channelId,
+                        message_id: messageId,
+                    },
+                },
+            })
+        );
+    }
+    await expect.waitForSteps(["notification-display-response seen"]);
+});
