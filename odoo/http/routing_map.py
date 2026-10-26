@@ -201,10 +201,10 @@ def route(
             f"@route(type={routing['type']!r}) is not one of {_dispatchers.keys()}"
         if route:
             routing['routes'] = [route] if isinstance(route, str) else route
-        if (wrong := routing.pop('method', sentinel) is not sentinel):
+        if (wrong := routing.pop('method', sentinel)) is not sentinel:
             _logger.warning("%s defined with invalid routing parameter 'method', assuming 'methods'", fname)
             routing['methods'] = wrong
-        if (wrong := routing.pop('readonly', sentinel) is not sentinel):
+        if (wrong := routing.pop('readonly', sentinel)) is not sentinel:
             _logger.warning("%s defined with invalid routing parameter 'readonly', assuming 'replica'", fname)
             routing['replica'] = wrong
         if routing.get('auth') == 'bearer':
