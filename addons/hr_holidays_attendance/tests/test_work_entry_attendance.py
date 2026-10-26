@@ -238,3 +238,30 @@ class TestWorkentryAttendance(HrWorkEntryAttendanceCommon):
             datetime(2025, 6, 25).date(),
             datetime(2025, 6, 29).date()
         )
+
+    def test_allowed_work_entry_types_exclude_allocation_types(self):
+        """ Time types that require an allocation are time off types: they cannot be chosen
+            as the time type of an attendance. """
+        country = self.env['res.country'].create({'name': 'Allocland', 'code': 'Q3'})
+        self.employee.company_id.country_id = country
+        free_type, allocation_type = self.env['hr.work.entry.type'].create([{
+            'name': 'Free working time',
+            'code': 'TDOM_FREE',
+            'count_as': 'working_time',
+            'country_id': country.id,
+            'requires_allocation': False,
+        }, {
+            'name': 'Allocated working time',
+            'code': 'TDOM_ALLOC',
+            'count_as': 'working_time',
+            'country_id': country.id,
+            'requires_allocation': True,
+        }])
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 9, 13, 8, 0, 0),
+            'check_out': datetime(2021, 9, 13, 12, 0, 0),
+            'work_entry_type_id': free_type.id,
+        })
+        self.assertEqual(attendance.allowed_work_entry_type_ids, free_type)
+        self.assertNotIn(allocation_type, attendance.allowed_work_entry_type_ids)
