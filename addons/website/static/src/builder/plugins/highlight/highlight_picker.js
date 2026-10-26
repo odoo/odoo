@@ -11,6 +11,7 @@ export class HighlightPicker extends Component {
         selectHighlight: t.function(),
         previewHighlight: t.function(),
         revertHighlight: t.function(),
+        selectedHighlight: t.string().optional(),
         style: t.string().optional(),
     });
 
