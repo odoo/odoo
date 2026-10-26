@@ -7,9 +7,10 @@
         z-index: var(--mail-ChatWindow-mobileZindex, $zindex-sticky - 2) !important;
     }
     &:not(.o-mobile) {
-        --border-opacity: var(--mail-ChatWindow-desktopBorderOpacity, .15);
         height: Min(95vh, calc(var(--o-mail-ChatWindow-width) * 15 / 9));
         border-radius: calc(var(--o-mail-Composer-chatWindowVPadding) + var(--o-mail-Composer-pillRadiusBase));
+        /* Translucent ring, visible on any host background. */
+        box-shadow: 0 0 0 1px rgba(136, 136, 136, .35), var(--box-shadow-sm);
     }
     outline: none;
 
@@ -51,7 +52,6 @@
 
 .o-mail-ChatWindow-header {
     --o-btn-circle-height: 0;
-    --border-opacity: var(--mail-ChatWindow-headerBorderOpacity, .15);
 
     .o-mail-ActionList-group {
         gap: var(--o-bs-spacer-3);
