@@ -209,3 +209,31 @@ test("searching by customer keeps the orders of a nameless address contact", asy
         { message: "the address contact is searched by its company name" }
     );
 });
+
+test("reprint all prints the last preparation ticket again", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const printed = [];
+    patchWithCleanup(store.ticketPrinter, {
+        async generateIframe(template, data) {
+            printed.push(data);
+            return document.createElement("iframe");
+        },
+        setIframeSizeFromPrinter() {},
+        async generateImage() {
+            return "fake_image_data";
+        },
+        print() {
+            return { successful: true };
+        },
+    });
+    await store.sendOrderInPreparation(order);
+    expect(printed).toHaveLength(1);
+    expect(order.lastPrints).toHaveLength(1);
+
+    const ticketScreen = await mountWithCleanup(TicketScreen);
+    await ticketScreen.onClickReprintAll(order);
+    expect(printed).toHaveLength(2);
+    expect(printed[1].extra_data.reprint).toBe(true);
+    expect(order.lastPrints).toHaveLength(1);
+});

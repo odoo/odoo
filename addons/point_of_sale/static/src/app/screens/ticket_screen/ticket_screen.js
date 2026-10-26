@@ -261,10 +261,7 @@ export class TicketScreen extends Component {
         });
     }
     async onClickReprintAll(order) {
-        const printingChanges = order.lastPrints;
-        if (printingChanges.length) {
-            await this.pos.ticketPrinter.printOrderChanges({ order, opts: printingChanges });
-        }
+        await this.pos.ticketPrinter.printOrderChanges({ order, opts: { explicitReprint: true } });
     }
     async onNextPage() {
         if (this.state.page < this.getNbrPages()) {
