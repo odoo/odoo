@@ -502,8 +502,9 @@ class StockLocation(models.Model):
         return self._child_of(inter_comp_location)
 
     def _get_weight(self, excluded_sml_ids=False):
-        """Returns a dictionary with the net and forecasted weight of the location.
-        param excluded_sml_ids: set of stock.move.line ids to exclude from the computation
+        """Returns a dictionary with the net weight, forecasted weight and forecasted product
+        quantities of the location.
+        :param excluded_sml_ids: set of stock.move.line ids to exclude from the computation
         """
         if not excluded_sml_ids:
             excluded_sml_ids = set()
@@ -532,12 +533,15 @@ class StockLocation(models.Model):
             weight = quantity_sum * product.weight
             result[loc]['net_weight'] += weight
             result[loc]['forecast_weight'] += weight
+            result[loc][product] += quantity_sum
 
         for loc, product, quantity_product_uom_sum in outgoing_move_lines:
             result[loc]['forecast_weight'] -= quantity_product_uom_sum * product.weight
+            result[loc][product] -= quantity_product_uom_sum
 
         for dest_loc, product, quantity_product_uom_sum in incoming_move_lines:
             result[dest_loc]['forecast_weight'] += quantity_product_uom_sum * product.weight
+            result[dest_loc][product] += quantity_product_uom_sum
 
         return result
 
