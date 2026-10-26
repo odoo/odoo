@@ -65,6 +65,7 @@ export class CallParticipantCard extends Component {
         this.isMobileOS = isMobileOS();
         this.dragPos = undefined;
         this.isDrag = false;
+        this.stopDrag = undefined;
         onMounted(async () => {
             const avatarUrl = this.channelMember?.avatarUrl;
             if (avatarUrl) {
@@ -79,6 +80,7 @@ export class CallParticipantCard extends Component {
             });
         });
         onWillUnmount(() => {
+            this.stopDrag?.();
             if (!this.rtcSession) {
                 return;
             }
@@ -266,9 +268,23 @@ export class CallParticipantCard extends Component {
         if (!this.props.inset) {
             return;
         }
-        const onMousemove = (ev) => this.drag(ev);
+        this.stopDrag?.();
+        const onMousemove = (ev) => {
+            if (!this.props.inset) {
+                this.stopDrag();
+                return;
+            }
+            this.drag(ev);
+        };
         const onMouseup = () => {
-            this.drop();
+            if (this.props.inset) {
+                this.drop();
+            }
+            this.stopDrag();
+        };
+        this.stopDrag = () => {
+            this.dragPos = undefined;
+            this.stopDrag = undefined;
             document.removeEventListener("mouseup", onMouseup);
             document.removeEventListener("mousemove", onMousemove);
         };
