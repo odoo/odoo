@@ -4,12 +4,10 @@ import { patch } from "@web/core/utils/patch";
 patch(Thread.prototype, {
     /**
      * @param {string[]} requestList
-     * @param {Object} [options]
-     * @param {MessageRouteParams} [options.messageFetchRouteParams]
      */
-    async fetchThreadData(requestList, { messageFetchRouteParams = {} } = {}) {
+    async fetchThreadData(requestList) {
         if (requestList.includes("messages")) {
-            this.fetchNewMessages({ routeParams: messageFetchRouteParams });
+            this.fetchNewMessages();
         }
         await this.store.fetchStoreData("mail.thread", {
             access_params: this.rpcParams,

@@ -21,10 +21,6 @@ patch(Chatter.prototype, {
         this.projectSharingPlugin.projectSharingId.set(this.projectSharingProps.projectSharingId);
     },
 
-    get extraMessageFetchRouteParams() {
-        return super.extraMessageFetchRouteParams;
-    },
-
     async toggleIsFollower() {
         this.state.isFollower = await this.orm.call(
             this.thread().model,
