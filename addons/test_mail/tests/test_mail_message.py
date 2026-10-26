@@ -500,3 +500,21 @@ class TestMessageValues(MailCommon):
         """ Test various values on mail.message, notably default values """
         msg = self.env['mail.message'].create({'model': self.alias_record._name, 'res_id': self.alias_record.id})
         self.assertEqual(msg.message_type, 'comment', 'Message should be comments by default')
+
+    def test_mail_message_write_invalidate_documents(self):
+        """ Writing on messages of several documents invalidates the messages
+        cache of all those documents, not only the first one. """
+        records = self.env['mail.test.simple'].with_context(self._test_context).create([
+            {'name': f'Test {idx}'} for idx in range(3)
+        ])
+        messages = self.env['mail.message'].create([
+            {'body': f'Message {idx}', 'message_type': 'comment', 'model': record._name, 'res_id': record.id}
+            for idx, record in enumerate(records[:2])
+        ])
+        for record, message in zip(records[:2], messages):
+            self.assertEqual(record.message_ids, message)
+
+        messages.write({'res_id': records[2].id})
+        for record in records[:2]:
+            self.assertFalse(record.message_ids)
+        self.assertEqual(records[2].message_ids, messages)
