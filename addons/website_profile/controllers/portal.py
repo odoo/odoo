@@ -2,10 +2,10 @@
 
 from odoo.http import request
 
-from odoo.addons.portal.controllers.portal import CustomerPortal
+from odoo.addons.portal.controllers.address import Address
 
 
-class CustomerPortalProfile(CustomerPortal):
+class CustomerPortalProfile(Address):
 
     def _validate_address_values(self, address_values, partner_sudo, *args, **kwargs):
         """Overide to hide email validated button if changed on current partner."""
