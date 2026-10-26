@@ -96,6 +96,7 @@ class AccountReconcileModel(models.Model):
     _inherit = ['mail.thread']
     _order = 'sequence, id'
     _check_company_auto = True
+    _check_company_domain = models.check_company_domain_parent_of
 
     # Base fields.
     active = fields.Boolean(default=True)
