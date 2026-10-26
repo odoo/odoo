@@ -102,6 +102,16 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
                 ".mail-composer-template-dropdown.popover:not(:has(.o-dropdown-item:contains(Test template for admin)))",
         },
         {
+            content: "Check template of my role is listed",
+            trigger:
+                '.mail-composer-template-dropdown.popover .o-dropdown-item:contains("Test template for my role")',
+        },
+        {
+            content: "Verify template of other role is NOT listed",
+            trigger:
+                ".mail-composer-template-dropdown.popover:not(:has(.o-dropdown-item:contains(Test template for other role)))",
+        },
+        {
             content: "Send message from full composer",
             trigger: ".o_mail_send",
             run: "click",
