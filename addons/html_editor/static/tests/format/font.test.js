@@ -18,6 +18,21 @@ test("should change the containing block with the font", async () => {
     expect(getContent(el)).toBe("<blockquote>ab[cde]fg</blockquote>");
 });
 
+test("should show the current font type as active when opening the dropdown", async () => {
+    await setupEditor("<p>ab[cde]fg</p>");
+    await contains(".btn[name='font_type']").click();
+    await waitFor(".o_font_type_selector_menu");
+    expect(".o_font_type_selector_menu .o-dropdown-item.active").toHaveAttribute("name", "p");
+    await contains(".o_font_type_selector_menu .o-dropdown-item[name=blockquote]").click();
+
+    await contains(".btn[name='font_type']").click();
+    await waitFor(".o_font_type_selector_menu");
+    expect(".o_font_type_selector_menu .o-dropdown-item.active").toHaveAttribute(
+        "name",
+        "blockquote"
+    );
+});
+
 test("should have font tool only if the block is content editable", async () => {
     for (const [contenteditable, count] of [
         [false, 0],

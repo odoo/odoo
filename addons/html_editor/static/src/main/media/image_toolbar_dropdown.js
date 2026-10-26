@@ -17,7 +17,7 @@ export class ImageToolbarDropdown extends Component {
         focusEditable: t.function(),
         onSelected: t.function(),
         items: t.array(),
-        getDisplay: t.function().optional(),
+        getDisplay: t.function(),
     });
     static template = "html_editor.ImageToolbarDropdown";
 
@@ -25,9 +25,7 @@ export class ImageToolbarDropdown extends Component {
 
     setup() {
         this.items = this.props.items;
-        if (this.props.getDisplay) {
-            this.state = proxy(this.props.getDisplay());
-        }
+        this.state = proxy(this.props.getDisplay());
         this.menuRef = signal.ref();
         this.dropdown = useDropdownState();
         useToolbarDropdownFocus(this.dropdown, this.imageToolbarBtn);

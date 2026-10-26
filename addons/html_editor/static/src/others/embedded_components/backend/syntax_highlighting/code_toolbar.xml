@@ -12,6 +12,7 @@
                         <t t-foreach="Object.entries(this.languages)" t-as="language" t-key="language[0]">
                             <DropdownItem
                                 attrs="{ name: language[1] }"
+                                class="{ active: language[0] === this.props.currentLanguage }"
                                 onSelected="() => this.props.onLanguageChange(language[0])" t-on-pointerdown.prevent="() => {}">
                                 <t t-out="language[1]"/>
                             </DropdownItem>

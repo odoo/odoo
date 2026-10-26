@@ -72,6 +72,32 @@ test("image should show actual width if set to default size", async () => {
     );
 });
 
+test("should show the current image size as active when opening the dropdown", async () => {
+    await setupEditor(`
+        <img class="img-fluid test-image" src="${base64Img}" style="width: 37%;">
+    `);
+    await click("img.test-image");
+    await waitFor(".o-we-toolbar");
+    const sizeToggle = ".o-we-toolbar .dropdown-toggle[title='Resize image']";
+
+    await click(sizeToggle);
+    await animationFrame();
+    // A custom width matches none of the preset sizes.
+    expect(".image_size_selector .dropdown-item.active").toHaveCount(0);
+    await click(".image_size_selector .dropdown-item:contains('50%')");
+    await animationFrame();
+
+    await click(sizeToggle);
+    await animationFrame();
+    expect(".image_size_selector .dropdown-item.active").toHaveText("50%");
+    await click(".image_size_selector .dropdown-item:contains('Default')");
+    await animationFrame();
+
+    await click(sizeToggle);
+    await animationFrame();
+    expect(".image_size_selector .dropdown-item.active").toHaveText("Default");
+});
+
 test("Can undo the image sizing", async () => {
     const { editor } = await setupEditor(`
         <img class="img-fluid test-image" src="${base64Img}">
@@ -152,6 +178,25 @@ test("Can change the padding of an image", async () => {
     await click(".o-dropdown--menu span:contains('None')");
     await animationFrame();
     expect("img").not.toHaveClass("p-5");
+});
+
+test("should show the current image padding as active when opening the dropdown", async () => {
+    await setupEditor(`
+        <img class="img-fluid test-image" src="${base64Img}">
+    `);
+    await click("img.test-image");
+    await waitFor(".o-we-toolbar");
+
+    await click(".o-we-toolbar .dropdown-toggle[title='Set image padding']");
+    await animationFrame();
+    expect(".o-dropdown--menu .dropdown-item.active").toHaveText("None");
+    await click(".o-dropdown--menu span:contains('Medium')");
+    await animationFrame();
+
+    await click(".o-we-toolbar .dropdown-toggle[title='Set image padding']");
+    await animationFrame();
+    expect("img").toHaveClass("p-2");
+    expect(".o-dropdown--menu .dropdown-item.active").toHaveText("Medium");
 });
 
 test("Can undo the image padding", async () => {
