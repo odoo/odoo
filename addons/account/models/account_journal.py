@@ -4,7 +4,7 @@ from urllib.parse import urlencode
 from odoo import api, Command, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.base.models.res_partner_bank import sanitize_account_number
-from odoo.tools import email_normalize, email_normalize_all, groupby, urls, clean_context
+from odoo.tools import email_normalize, email_normalize_all, formatLang, groupby, urls, clean_context
 from odoo.tools.misc import hash_sign
 from odoo.fields import Domain
 from collections import defaultdict
@@ -12,6 +12,12 @@ import logging
 import re
 
 _logger = logging.getLogger(__name__)
+
+# Smallest coin of the currencies whose cash payments must be rounded, e.g. the 1 and 2 forint coins
+# were withdrawn in 2008, so cash payments in HUF are rounded to 5 forints.
+CASH_ROUNDINGS = {
+    'HUF': 5.0,
+}
 
 
 class AccountJournalGroup(models.Model):
@@ -823,6 +829,9 @@ class AccountJournal(models.Model):
             for journal in self.filtered(lambda journal: journal.type in ('bank', 'cash', 'credit')):
                 journal.default_account_id.currency_id = journal.currency_id
 
+        if 'currency_id' in vals or 'type' in vals:
+            self._setup_cash_rounding()
+
         # Create the bank_account_id if necessary
         if 'bank_account_number' in vals:
             for journal in self.filtered(lambda r: r.type == 'bank' and not r.bank_account_id):
@@ -1071,7 +1080,36 @@ class AccountJournal(models.Model):
                 if journal.bank_account_id and journal.bank_account_id._user_can_trust():
                     journal.bank_account_id.allow_out_payment = True
 
+        journals._setup_cash_rounding()
         return journals
+
+    def _setup_cash_rounding(self):
+        """ Cash journals in a currency whose small coins were withdrawn get the cash rounding of that currency,
+        applied to the invoices to be paid in cash through the inbound payment methods of the journal.
+        """
+        CashRounding = self.env['account.cash.rounding']
+        for journal in self.filtered(lambda journal: journal.type == 'cash'):
+            currency = journal.currency_id or journal.company_id.currency_id
+            rounding = CASH_ROUNDINGS.get(currency.name)
+            if not rounding:
+                continue
+            cash_rounding = CashRounding.search([
+                *CashRounding._check_company_domain(journal.company_id),
+                ('currency_ids', 'in', currency.ids),
+                ('rounding', '=', rounding),
+            ], limit=1)
+            if not cash_rounding:
+                cash_rounding = CashRounding.with_company(journal.company_id).create({
+                    'name': _("Cash rounding to %(rounding)s %(currency)s", rounding=formatLang(self.env, rounding, digits=0), currency=currency.name),
+                    'rounding': rounding,
+                    'rounding_method': 'HALF-UP',
+                    'strategy': 'add_invoice_line',
+                    'profit_account_id': journal.profit_account_id.id,
+                    'loss_account_id': journal.loss_account_id.id,
+                    'currency_ids': [Command.link(currency.id)],
+                    'company_id': journal.company_id.id,
+                })
+            cash_rounding.payment_method_line_ids |= journal.inbound_payment_method_line_ids
 
     def set_bank_account(self, account_number, bank_bic=None, bank_name=None):
         """ Create a res.partner.bank (if not exists) and set it as value of the field bank_account_id """
