@@ -35,9 +35,9 @@
                 New Request
             </a>
             <div t-if="this.hasAccrualAllocation or this.hasFutureAllocation"
-                 class="o_timeoff_card d-flex justify-content-center"
+                 class="o_timeoff_card d-flex align-items-center justify-content-center gap-2"
             >
-                <span class="text-danger o_timeoff_name">Balance at the</span>
+                <span class="text-danger o_timeoff_name m-0">Balance on the</span>
                 <div class="d-flex flex-column align-items-start justify-content-center o_timeoff_validity">
                     <DateTimeInput
                             type="'date'"
