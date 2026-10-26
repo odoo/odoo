@@ -8,6 +8,7 @@
     'data': [
         'views/website_livechat.xml',
         'views/res_config_settings_views.xml',
+        'views/im_livechat_channel_views.xml',
         'views/im_livechat_chatbot_script_view.xml',
         'views/website_visitor_views.xml',
         'views/im_livechat_channel_add.xml',
