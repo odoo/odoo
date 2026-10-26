@@ -161,7 +161,7 @@ export class TranslationPlugin extends Plugin {
         /** @type {ElToTranslationInfoMap} */
         this.elToTranslationInfoMap = new Map();
         const translationRegex =
-            /<span [^>]*data-oe-translation-source-sha="([^"]+)"[^>]*>([\s\S]*?)<\/span>/;
+            /^<span [^>]*data-oe-translation-source-sha="([^"]+)"[^>]*>([\s\S]*?)<\/span>$/;
         const isEmpty = (el) => !el.hasChildNodes() || el.innerHTML.trim() === "";
         const matchTag = (el) => el.matches("input, select, textarea, img");
 
