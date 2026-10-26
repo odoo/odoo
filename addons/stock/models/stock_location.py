@@ -512,12 +512,15 @@ class StockLocation(models.Model):
             weight = quantity_sum * product.weight
             result[loc]['net_weight'] += weight
             result[loc]['forecast_weight'] += weight
+            result[loc][product] += quantity_sum
 
         for loc, product, quantity_product_uom_sum in outgoing_move_lines:
             result[loc]['forecast_weight'] -= quantity_product_uom_sum * product.weight
+            result[loc][product] -= quantity_product_uom_sum
 
         for dest_loc, product, quantity_product_uom_sum in incoming_move_lines:
             result[dest_loc]['forecast_weight'] += quantity_product_uom_sum * product.weight
+            result[dest_loc][product] += quantity_product_uom_sum
 
         return result
 
