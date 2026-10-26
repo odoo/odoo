@@ -181,9 +181,15 @@ class AccountEdiCii(models.AbstractModel):
 
     def _cii_add_exchanged_document_node(self, vals):
         invoice = vals['invoice']
+        type_code = '380' if invoice.move_type == 'out_invoice' else '381'
+        if invoice.partner_bank_id and invoice.partner_bank_id._edi_is_factoring_bank():
+            if invoice.move_type == 'out_invoice':
+                type_code = '393'
+            elif invoice.move_type == 'out_refund':
+                type_code = '396'
         vals['document_node']['rsm:ExchangedDocument'] = {
             'ram:ID': {'_text': invoice.name},
-            'ram:TypeCode': {'_text': '380' if invoice.move_type == 'out_invoice' else '381'},
+            'ram:TypeCode': {'_text': type_code},
             'ram:IssueDateTime': self._cii_get_date_time_string_node(vals, invoice.invoice_date),
             'ram:IncludedNote': self._cii_get_included_note_node(vals)
         }
@@ -644,9 +650,13 @@ class AccountEdiCii(models.AbstractModel):
 
     def _cii_get_applicable_header_trade_settlement_node(self, vals):
         invoice = vals['invoice']
-        return {
+        node = {
             'ram:PaymentReference': {'_text': invoice.payment_reference},
             'ram:InvoiceCurrencyCode': {'_text': vals['currency_id'].name},
+        }
+        if payee_node := self._cii_get_payee_trade_party_node(vals):
+            node['ram:PayeeTradeParty'] = payee_node
+        node.update({
             'ram:SpecifiedTradeSettlementPaymentMeans': {
                 'ram:TypeCode': {'_text': PAYMENT_MEAN_CODES['SEPA direct debit']
                     if self.env['account.payment']._fields.get('sdd_mandate_id') and invoice.reconciled_payment_ids.sdd_mandate_id
@@ -658,18 +668,58 @@ class AccountEdiCii(models.AbstractModel):
             'ram:BillingSpecifiedPeriod': self._cii_get_billing_specified_period_node(vals),
             'ram:SpecifiedTradePaymentTerms': self._cii_get_specified_trade_payment_terms_node(vals),
             'ram:SpecifiedTradeSettlementHeaderMonetarySummation': self._cii_get_specified_trade_settlement_header_monetary_summary_node(vals),
+        })
+        return node
+
+    def _cii_get_payee_trade_party_node(self, vals):
+        """BG-10. Empty unless the invoice bank account is a factoring IBAN."""
+        invoice = vals['invoice']
+        partner_bank = invoice.partner_bank_id
+        if not partner_bank:
+            return None
+        payee = partner_bank._get_edi_payee_partner()
+        if not payee:
+            return None
+        commercial_partner = payee.commercial_partner_id
+        siret = self._edi_get_partner_siret(payee)
+        siren = self._edi_get_partner_siren(payee)
+        vat = commercial_partner.vat if commercial_partner.vat and commercial_partner.vat != '/' else False
+        role_code = partner_bank._get_edi_payee_role_code()
+        holder_name = partner_bank._get_edi_payee_account_holder_name() or commercial_partner.name
+        node = {
+            'ram:RoleCode': {'_text': role_code} if role_code else None,
+            'ram:Name': {'_text': holder_name},
         }
+        if siret:
+            node['ram:RegisteredID'] = {
+                '_text': siret,
+                'schemeID': '0009',
+            }
+        if siren:
+            node['ram:SpecifiedLegalOrganization'] = {
+                'ram:ID': {'_text': siren},
+            }
+        if vat:
+            node['ram:SpecifiedTaxRegistration'] = {
+                'ram:ID': {
+                    '_text': vat,
+                    'schemeID': 'VA',
+                },
+            }
+        return node
 
     def _cii_get_payee_party_creditor_financial_account_node(self, vals):
         invoice = vals['invoice']
-        if invoice.partner_bank_id.acc_type == 'iban':
-            return {
-                'ram:IBANID': {'_text': invoice.partner_bank_id.sanitized_acc_number}
-            }
+        partner_bank = invoice.partner_bank_id
+        payee = partner_bank._get_edi_payee_partner() if partner_bank else self.env['res.partner']
+        node = {}
+        if partner_bank and (holder_name := partner_bank._get_edi_payee_account_holder_name()):
+            node['ram:AccountName'] = {'_text': holder_name}
+        if partner_bank.acc_type == 'iban' and not payee:
+            node['ram:IBANID'] = {'_text': partner_bank.sanitized_acc_number}
         else:
-            return {
-                'ram:ProprietaryID': {'_text': invoice.partner_bank_id.sanitized_acc_number}
-            }
+            node['ram:ProprietaryID'] = {'_text': partner_bank.sanitized_acc_number}
+        return node
 
     def _cii_get_applicable_trade_tax_nodes(self, vals):
         tax_nodes = []
