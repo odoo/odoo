@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-24 17:37+0000\n"
-"PO-Revision-Date: 2026-04-24 17:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:36+0000\n"
+"PO-Revision-Date: 2026-10-24 17:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -54,6 +54,14 @@ msgstr ""
 msgid ""
 "Could not connect to the Odoo server, please check your internet connection "
 "and try again."
+msgstr ""
+
+#. module: pos_viva_com
+#. odoo-javascript
+#: code:addons/pos_viva_com/static/src/app/payment_viva_com.js:0
+msgid ""
+"Could not sync the order before starting the Viva.com payment. Please try "
+"again."
 msgstr ""
 
 #. module: pos_viva_com
@@ -195,6 +203,12 @@ msgstr ""
 #. module: pos_viva_com
 #. odoo-python
 #: code:addons/pos_viva_com/models/pos_payment_method.py:0
+msgid "There are some issues between us and Viva.com, try again later."
+msgstr ""
+
+#. module: pos_viva_com
+#. odoo-python
+#: code:addons/pos_viva_com/models/pos_payment_method.py:0
 msgid "There are some issues between us and Viva.com, try again later. %s"
 msgstr ""
 
@@ -248,6 +262,39 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_viva_com/static/src/app/payment_viva_com.js:0
 msgid "Viva.com Error"
+msgstr ""
+
+#. module: pos_viva_com
+#. odoo-javascript
+#: code:addons/pos_viva_com/static/src/app/hooks/use_viva_app.js:0
+#: code:addons/pos_viva_com/static/src/app/payment_viva_com.js:0
+msgid "Viva.com Payment Error"
+msgstr ""
+
+#. module: pos_viva_com
+#. odoo-javascript
+#: code:addons/pos_viva_com/static/src/app/utils/error_messages.js:0
+msgid ""
+"Viva.com charged %s, which does not match the total for this order (%s). The"
+" customer may have been charged; refund the transaction on the Viva terminal"
+" before retrying."
+msgstr ""
+
+#. module: pos_viva_com
+#. odoo-javascript
+#: code:addons/pos_viva_com/static/src/app/utils/error_messages.js:0
+msgid ""
+"Viva.com charged in %s, which does not match the currency set for this order"
+" (%s). The customer may have been charged; refund the transaction on the "
+"Viva terminal before retrying."
+msgstr ""
+
+#. module: pos_viva_com
+#. odoo-javascript
+#: code:addons/pos_viva_com/static/src/app/utils/error_messages.js:0
+msgid ""
+"Viva.com payment could not be validated. The customer may have been charged;"
+" refund the transaction on the Viva terminal before retrying."
 msgstr ""
 
 #. module: pos_viva_com
