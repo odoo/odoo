@@ -95,6 +95,9 @@ describe("button style", () => {
                 </p>
             `)
         );
+        const innerSpan = el.querySelector("span.h6-fs")
+        innerSpan.textContent += "d";
+        editor.shared.history.addStep();
         const [inlineButton, classButton] = el.querySelectorAll("a.btn");
         const outerSpan = el.querySelector("span.display-1-fs");
         for (const button of [inlineButton, classButton]) {
