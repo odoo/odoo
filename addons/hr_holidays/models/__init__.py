@@ -24,3 +24,4 @@ from . import res_groups
 from . import res_partner
 from . import res_users
 from . import calendar_event
+from . import update
