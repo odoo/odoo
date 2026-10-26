@@ -287,7 +287,10 @@ class Company(models.Model):
             if vals.get('name') and not vals.get('partner_id')
         ]
         if no_partner_vals_list:
-            partners = self.env['res.partner'].with_context(default_parent_id=False).create([
+            partners = self.env['res.partner'].with_context(
+                default_parent_id=False,
+                default_company_id=False,
+            ).create([
                 {
                     'name': vals['name'],
                     'is_company': True,
