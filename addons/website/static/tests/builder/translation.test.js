@@ -269,6 +269,25 @@ test("translate attribute", async () => {
     expect(resultSave[0]).toBe("titre");
 });
 
+test("translate attribute translate the complete term (and allows surrounding spaces)", async () => {
+    await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            <img
+                src="/web/image/website.landscape_md_9"
+                class="img img-fluid mx-auto rounded"
+                data-oe-translate-src="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>/web/image/website.landscape_md_9</span>"
+                title=" &lt;span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;&gt;&lt;span&gt;title&lt;/span&gt;end&lt;/span&gt; "
+                loading="lazy"
+                style="">
+        `,
+    });
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    await contains(":iframe img").click();
+    expect(
+        ".o_hb_options_container [data-action-id='translateAttribute'][data-action-param='title'] input"
+    ).toHaveValue("<span>title</span>end");
+});
+
 test("translate attribute history", async () => {
     const { getEditor } = await setupSidebarBuilderForTranslation({
         websiteContent: `
