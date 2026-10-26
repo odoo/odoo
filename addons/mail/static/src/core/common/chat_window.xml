@@ -3,7 +3,7 @@
 
 <t t-name="mail.ChatWindow">
     <t t-if="this.props.chatWindow.exists() and this.channel.exists()">
-    <div class="o-mail-ChatWindow fixed-bottom overflow-hidden d-flex flex-column shadow-sm"
+    <div class="o-mail-ChatWindow fixed-bottom overflow-hidden d-flex flex-column"
         t-att-style="this.style"
         t-att-class="this.attClass"
         t-on-keydown="this.onKeydown"
