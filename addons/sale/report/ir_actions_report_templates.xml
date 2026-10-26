@@ -396,7 +396,7 @@
                                     <span
                                         t-if="show_section_total"
                                         name="price_subtotal_section_grouped"
-                                        t-out="section_line['price_subtotal']/line.section_qty"
+                                        t-out="section_line['price_subtotal']/(line.section_qty or 1.0)"
                                         t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"
                                     >
                                         25.00
