@@ -530,6 +530,10 @@ class ProductTemplate(models.Model):
             self._create_variant_ids()
         if 'active' in vals and not vals.get('active'):
             self.with_context(active_test=False).mapped('product_variant_ids').write({'active': vals.get('active')})
+        if 'active' in vals and vals.get('active'):
+            # Make sure the attribute lines are still valid when unarchiving a template, calling the
+            # constraint directly since api.constrains doesn't support fields paths.
+            self.attribute_line_ids._check_valid_values()
         if 'image_1920' in vals:
             self.env['product.product'].invalidate_model([
                 'image_1920',
