@@ -40,6 +40,11 @@ class TestGroupsObject(common.BaseCase):
         self.assertEqual(str(B), "'B'")
         self.assertEqual(str(B1), "'B1'")
 
+    def test_groups_1_base_whitespaces(self):
+        parse = self.definitions.parse
+        self.assertEqual(parse('A, B'), parse('A,B'))
+        self.assertEqual(parse('A, !B1'), parse('A,!B1'))
+
     def test_groups_2_and(self):
         A = self.definitions.parse('A')
         A1 = self.definitions.parse('A1')
