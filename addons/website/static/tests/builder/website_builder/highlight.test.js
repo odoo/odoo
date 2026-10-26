@@ -103,6 +103,22 @@ test("Changing highlight keep the color and the width", async () => {
     });
 });
 
+test("should show the current highlight as active when opening the picker", async () => {
+    await setupEditor(
+        `<p>
+            <span class="o_text_highlight o_text_highlight_freehand_2" style="--text-highlight-color: #E79C9C; --text-highlight-width: 2px;">[highlight 3]</span>
+        </p>`,
+        { config: { includePlugins: [HighlightPlugin, FakeEditInteractionPlugin] } }
+    );
+    await expandToolbar();
+    await contains(".o-we-toolbar .o_hb_select_highlight").click();
+    await contains("#highlightPicker").click();
+    expect(".o_popover .border-primary .o_text_highlight").toHaveCount(1);
+    expect(".o_popover .border-primary .o_text_highlight").toHaveClass(
+        "o_text_highlight_freehand_2"
+    );
+});
+
 test("Selecting partially a highlight select all the highlight", async () => {
     const { editor } = await setupEditor(
         ` 
