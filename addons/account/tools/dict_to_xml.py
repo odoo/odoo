@@ -2,7 +2,7 @@ from lxml import etree
 from odoo.tools.xml_utils import remove_control_characters
 
 
-def dict_to_xml(node, *, nsmap={}, template=None, render_empty_nodes=False, tag=None, path=None):
+def dict_to_xml(node, *, nsmap: dict = {}, template=None, render_empty_nodes=False, tag=None, path=None):
     """ Helper to render a Python dict as an XML node.
 
     The dict is expected to be of the form:
@@ -10,6 +10,7 @@ def dict_to_xml(node, *, nsmap={}, template=None, render_empty_nodes=False, tag=
         # Special keys:
         '_tag': 'tag_name',  # '_tag' is rendered as the node's tag
         '_text': 'content',  # '_text' is rendered as the node's text content
+        '_nsmap': {'ns': 'namespace'},  # '_nsmap' is rendered as the node's namespace map
         '_dummy': 'dummy_value',  # Keys starting with '_' are not rendered
 
         # Simple values are rendered as attributes
@@ -38,11 +39,20 @@ def dict_to_xml(node, *, nsmap={}, template=None, render_empty_nodes=False, tag=
     :param path: (optional) The path of the currently rendered node in the XML tree (needed only for recursive calls).
     :return: The rendered XML node as an lxml.Element.
     """
-    def convert_tag_to_lxml_convention(tag):
+    nsmap = {
+        **nsmap,
+        **((node.get('_nsmap') and isinstance(node.get('_nsmap'), dict) and node['_nsmap']) or {}),
+    }
+
+    def convert_tag_to_lxml_convention(tag, is_attribute=False):
         if ':' in tag:
             namespace, local_name = tag.split(':')
             if namespace in nsmap:
                 return etree.QName(nsmap[namespace], local_name).text
+        elif not is_attribute and None in nsmap:
+            # Use the default namespace for non-attribute tags if it is defined in nsmap,
+            # e.g. {None: 'urn:oasis:names:specification:ubl:schema:xsd:Invoice-2'}
+            return etree.QName(nsmap[None], tag).text
         return tag
 
     if template is not None:
@@ -62,7 +72,7 @@ def dict_to_xml(node, *, nsmap={}, template=None, render_empty_nodes=False, tag=
     # Add attributes
     for attr_name, attr_value in node.items():
         if not attr_name.startswith('_') and not isinstance(attr_value, (dict, list)) and attr_value is not None and attr_value is not False:
-            element.set(convert_tag_to_lxml_convention(attr_name), str(attr_value))
+            element.set(convert_tag_to_lxml_convention(attr_name, is_attribute=True), str(attr_value))
 
     # Add text content if present
     text = node.get('_text')
