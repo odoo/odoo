@@ -80,7 +80,6 @@ export class TranslationPlugin extends Plugin {
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        clean_for_save_processors: this.cleanForSave.bind(this),
         on_replicated_handlers: ({ sourceEl, targetEl }) => {
             targetEl.classList.toggle("o_dirty", sourceEl.classList.contains("o_dirty"));
         },
@@ -327,13 +326,6 @@ export class TranslationPlugin extends Plugin {
             }
         }
         return dirtyInfo;
-    }
-
-    cleanForSave(root) {
-        root.querySelectorAll(".o_savable_attribute").forEach((el) => {
-            el.classList.remove("o_savable_attribute");
-        });
-        return root;
     }
 }
 
