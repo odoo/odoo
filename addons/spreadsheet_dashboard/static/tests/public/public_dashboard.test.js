@@ -34,7 +34,6 @@ function cleanupEnv(env) {
 async function mountPublicDashboard(dataUrl) {
     const env = getMockEnv();
     cleanupEnv(env);
-    env.isFrozenSpreadsheet = () => true;
     const component = await mountWithCleanup(PublicDashboard, {
         props: {
             dataUrl,
