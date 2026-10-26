@@ -29,6 +29,7 @@ import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer"
 import { Store } from "@mail/../tests/mock_server/store";
 import { SoundEffectsPlugin } from "@mail/core/common/sound_effects_plugin";
 import { CALL_GRID_LAYOUT } from "@mail/discuss/call/common/call_layout";
+import { CallParticipantCard } from "@mail/discuss/call/common/call_participant_card";
 import {
     CROSS_TAB_CLIENT_MESSAGE,
     CROSS_TAB_HOST_MESSAGE,
@@ -867,6 +868,37 @@ test("Inset card is hidden when sidebar is open", async () => {
     await click(".o-discuss-ChangeLayoutDialog-option:contains('Spotlight')");
     expect(store.settings.callLayout).toBe(CALL_GRID_LAYOUT.SPOTLIGHT);
     await waitFor(".o-discuss-CallParticipantCard.o-inset:count(1)");
+});
+
+test("Inset card removed while being dragged", async () => {
+    mockGetMedia();
+    patch(CallParticipantCard.prototype, {
+        drag(ev) {
+            expect.step(`drag ${ev.clientX},${ev.clientY}`);
+            return super.drag(ev);
+        },
+    });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const env = await start();
+    const rtc = env.services["discuss.rtc"];
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await click("[title='Share Screen']");
+    await click("[title='Turn camera on']");
+    await waitFor("video[type='camera'].o-inset:count(1)");
+    await manuallyDispatchProgrammaticEvent(
+        queryFirst(".o-discuss-CallParticipantCard.o-inset"),
+        "mousedown"
+    );
+    await manuallyDispatchProgrammaticEvent(document, "mousemove", { clientX: 10, clientY: 10 });
+    expect.verifySteps(["drag 10,10"]);
+    await rtc.toggleVideo("screen", false);
+    await waitFor("video[type='camera']:not(.o-inset):count(1)");
+    await waitForNone(".o-discuss-CallParticipantCard.o-inset");
+    await manuallyDispatchProgrammaticEvent(document, "mousemove", { clientX: 200, clientY: 150 });
+    expect.verifySteps([]);
+    await manuallyDispatchProgrammaticEvent(document, "mouseup");
 });
 
 test("join/leave sounds are only played on main tab", async () => {
