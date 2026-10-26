@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="im_livechat_channel_view_form_website_theme_sync" model="ir.ui.view">
+        <field name="name">im_livechat.channel.form.website.theme.sync</field>
+        <field name="model">im_livechat.channel</field>
+        <field name="inherit_id" ref="im_livechat.im_livechat_channel_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='design_theme_sync']" position="before">
+                <!-- Whether a website is followed, used in the invisible conditions below. -->
+                <field name="website_theme_sync_url" invisible="1"/>
+                <!-- Whether the colors match the website, used in the invisible conditions below. -->
+                <field name="theme_colors_synced" invisible="1"/>
+            </xpath>
+            <xpath expr="//widget[@name='colors_reset_button']" position="attributes">
+                <attribute name="invisible">website_theme_sync_url and theme_colors_synced</attribute>
+            </xpath>
+            <xpath expr="//widget[@name='colors_reset_button']" position="after">
+                <span class="text-muted" invisible="not website_theme_sync_url or not theme_colors_synced">
+                    Following the website theme colors.
+                </span>
+            </xpath>
+            <xpath expr="//group[@name='colors']" position="after">
+                <widget name="theme_colors_live_sync" class="d-none"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
