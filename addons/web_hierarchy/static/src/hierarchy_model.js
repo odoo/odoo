@@ -46,30 +46,12 @@ export class HierarchyNode {
     }
 
     /**
-     * Get ancestor node
-     *
-     * @returns {HierarchyNode} ancestor node
-     */
-    get ancestorNode() {
-        return this.parentNode ? this.ancestorNode : this;
-    }
-
-    /**
      * Is leaf?
      *
      * @returns {Boolean} False if the current node has node as child nodes, otherwise True.
      */
     get isLeaf() {
         return !this.nodes.length;
-    }
-
-    /**
-     * Get forest of the current node
-     *
-     * @returns {HierarchyForest}
-     */
-    get forest() {
-        return this.tree.forest;
     }
 
     /**
@@ -126,23 +108,6 @@ export class HierarchyNode {
      */
     get hasChildren() {
         return this._nodes.length > 0 || this.data[this.childFieldName]?.length > 0;
-    }
-
-    /**
-     * Can show parent node
-     *
-     * Knows if the parent node can be fetched and displayed inside the view
-     *
-     * @returns {Boolean} True if the current node has a parent node but it is not yet displayed and the data of the
-     *                    current node is not already displayed in another node.
-     */
-    get canShowParentNode() {
-        return (
-            Boolean(this.parentResId) &&
-            this.parentResId !== this.resId &&
-            !this.parentNode &&
-            this.tree.forest.resIds.filter((resId) => resId === this.resId).length === 1
-        );
     }
 
     /**

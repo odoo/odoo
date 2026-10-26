@@ -8,10 +8,8 @@ import { HierarchyCard } from "./hierarchy_card";
 import { useHierarchyNodeDraggable } from "./hierarchy_node_draggable";
 
 export class HierarchyRenderer extends Component {
-    static components = {
-        HierarchyCard,
-    };
     static template = "web_hierarchy.HierarchyRenderer";
+    static components = { HierarchyCard };
 
     props = useProps({
         model: t.object(),
@@ -27,23 +25,14 @@ export class HierarchyRenderer extends Component {
         if (this.canDragAndDropRecord) {
             useHierarchyNodeDraggable({
                 ref: this.rendererRef,
-                enable: this.draggable,
-                elements: ".o_hierarchy_node_container",
-                handle: ".o_hierarchy_node",
-                rows: ".o_hierarchy_row",
-                ignore: "button",
+                enable: this.props.archInfo.draggable,
+                elements: '.o_hierarchy_node_container',
+                handle: '.o_hierarchy_node',
+                rows: '.o_hierarchy_row',
+                ignore: 'button',
                 onDragStart: ({ addClass, element }) => {
-                    addClass(element, "o_hierarchy_dragged");
-                    addClass(element.querySelector(".o_hierarchy_node"), "shadow");
-                },
-                onDragEnd: ({ removeClass, element, row, hierarchyRow }) => {
-                    removeClass(element, "o_hierarchy_dragged");
-                    if (row) {
-                        removeClass(row, "o_hierarchy_hover");
-                    }
-                    if (hierarchyRow) {
-                        removeClass(hierarchyRow, "o_hierarchy_hover");
-                    }
+                    addClass(element, 'o_hierarchy_dragged');
+                    addClass(element.querySelector('.o_hierarchy_node'), 'shadow');
                 },
                 onDrop: (params) => {
                     this.nodeDrop(params);
@@ -101,56 +90,19 @@ export class HierarchyRenderer extends Component {
         return this.props.archInfo.draggable;
     }
 
-    get rows() {
-        const rootNodes = this.props.model.root.rootNodes;
-        const rows = [{ nodes: rootNodes }];
-        const processNode = (node, rootNode) => {
-            const subNodes = node.nodes;
-            if (subNodes.length && !subNodes.includes(rootNode)) {
-                rows.push({ parentNode: node, nodes: subNodes });
-                for (const subNode of subNodes) {
-                    processNode(subNode, rootNode);
-                }
-            }
-        };
-
-        for (const node of rootNodes) {
-            processNode(node, node);
-        }
-
-        return rows;
-    }
-
     async nodeDrop({ element, row, nextRow, newParentNode }) {
-        let parentNodeId, parentResId;
+        const elementId = element.querySelector('article').dataset.id;
+        const record = this.props.model.root.records.find((r) => r.id === elementId);
+        
+        let parentResId;
         if (newParentNode) {
-            parentNodeId = newParentNode.dataset.nodeId;
+            const parentId = newParentNode.querySelector('article').dataset.id;
+            parentResId = this.props.model.root.records.find((r) => r.id === parentId).resId;
         } else if (nextRow?.dataset.rowId !== row.dataset.rowId) {
-            parentNodeId = nextRow.dataset.parentNodeId;
-            if (!parentNodeId) {
-                const nodes = this.rows[nextRow.dataset.rowId].nodes || [];
-                if (nodes) {
-                    parentNodeId = nodes[0].parentNode?.id;
-                    if (!parentNodeId) {
-                        parentResId = nodes[0].parentResId;
-                        if (!nodes.every((node) => node.parentResId === parentResId)) {
-                            this.notification.add(
-                                _t(
-                                    "Impossible to update the parent node of the dragged node because no parent has been found."
-                                ),
-                                {
-                                    type: "danger",
-                                }
-                            );
-                            return;
-                        }
-                    }
-                }
-            }
+            parentResId = this.props.model.root.groups.find((g) => g.id === nextRow.dataset.rowId).value;
         }
-        await this.props.model.updateParentNode(element.dataset.nodeId, {
-            parentResId,
-            parentNodeId,
-        });
+
+        await this.props.model.updateParent(record, parentResId);
+        //await this.props.model.load();
     }
 }

@@ -1776,6 +1776,12 @@ actual arch.
             card_arch, _card_view = self._get_view(view_id=int(card_id), view_type='card')
             node.append(card_arch)
 
+    def _postprocess_tag_hierarchy(self, node, name_manager, node_info):
+        # Inline the card view if the hierarchy node references one via the 'card_id' attribute.
+        if card_id := node.get('card_id'):
+            card_arch, _card_view = self._get_view(view_id=int(card_id), view_type='card')
+            node.append(card_arch)
+
     def _postprocess_tag_list(self, node, name_manager, node_info):
         # reuse form view post-processing
         self._postprocess_tag_form(node, name_manager, node_info)

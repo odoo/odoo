@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
 import { HierarchyArchParser } from "./hierarchy_arch_parser";
 import { HierarchyController } from "./hierarchy_controller";
-import { HierarchyModel } from "./hierarchy_model";
+import { HierarchyModel } from "./hierarchy_model_manual";
 import { HierarchyRenderer } from "./hierarchy_renderer";
 
 export const hierarchyView = {
