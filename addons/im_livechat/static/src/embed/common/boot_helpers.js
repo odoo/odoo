@@ -1,4 +1,40 @@
 import { url } from "@web/core/utils/urls";
+import { session } from "@web/session";
+
+import {
+    capBrightness,
+    getBubbleColors,
+    getContrastColor,
+    MAX_BRIGHTNESS_FOR_WHITE_CONTRAST,
+} from "@im_livechat/embed/common/color_utils";
+
+// OKLCH lightness and maximum chroma of the bubbles of each role. The visitor's bubbles
+// are darker than the operator's, so the two stay apart even with close colors.
+const BUBBLE_STYLES = {
+    primary: { lightness: 0.87, maxChroma: 0.06 },
+    secondary: { lightness: 0.95, maxChroma: 0.04 },
+};
+
+/**
+ * CSS vars derived from a single configured color (primary or secondary).
+ *
+ * @param {string} color
+ * @param {"primary"|"secondary"} role
+ */
+function getColorCssVariables(color, role) {
+    const { lightness, maxChroma } = BUBBLE_STYLES[role];
+    const bubble = getBubbleColors(color, lightness, maxChroma);
+    return {
+        [`--o-mail-livechat-${role}`]: color,
+        [`--o-mail-livechat-${role}-text`]: getContrastColor(color),
+        [`--o-mail-livechat-${role}-outline`]: capBrightness(
+            color,
+            MAX_BRIGHTNESS_FOR_WHITE_CONTRAST
+        ),
+        [`--o-mail-livechat-${role}-bubble-bg`]: bubble.background,
+        [`--o-mail-livechat-${role}-bubble-border`]: bubble.border,
+    };
+}
 
 async function loadFont(name, url, targetDocument) {
     await targetDocument.fonts.ready;
@@ -55,6 +91,14 @@ export function makeRoot(target) {
     root.style.zIndex = "calc(9e999)";
     root.style.position = "relative";
     root.style.display = "block";
+    const options = session.livechatData?.options ?? {};
+    const cssVariables = {
+        ...getColorCssVariables(options.primary_color, "primary"),
+        ...getColorCssVariables(options.secondary_color, "secondary"),
+    };
+    for (const [name, value] of Object.entries(cssVariables)) {
+        root.style.setProperty(name, value);
+    }
     target.appendChild(root);
     return root;
 }

@@ -33,15 +33,24 @@ class Im_LivechatChannel(models.Model):
     def _default_default_message(self):
         return _('How may I help you?')
 
+    def _get_default_colors(self):
+        return {
+            "primary_color": "#71639E",
+            "secondary_color": "#4EA7F2",
+        }
+
     # attribute fields
     name = fields.Char('Channel Name', required=True)
     button_text = fields.Char('Text of the Button', default=_default_button_text, translate=True)
     default_message = fields.Char('Welcome Message', default=_default_default_message,
         help="This is an automated 'welcome' message that your visitor will see when they initiate a new conversation.", translate=True)
-    header_background_color = fields.Char(default="#875A7B", help="Default background color of the channel header once open")
-    title_color = fields.Char(default="#FFFFFF", help="Default title color of the channel once open")
-    button_background_color = fields.Char(default="#875A7B", help="Default background color of the Livechat button")
-    button_text_color = fields.Char(default="#FFFFFF", help="Default text color of the Livechat button")
+    primary_color = fields.Char(default=lambda self: self._get_default_colors()['primary_color'], required=True,
+        help="Main brand color: window header, visitor message bubbles, and the Livechat button.")
+    secondary_color = fields.Char(default=lambda self: self._get_default_colors()['secondary_color'], required=True,
+        help="Color of the operator's message bubbles.")
+    # Sent to the client as part of the record so "reset to default" can
+    # apply it without a round-trip - see colors_reset_button.js.
+    default_colors = fields.Json(compute="_compute_default_colors")
     max_sessions_mode = fields.Selection(
         [("unlimited", "Unlimited"), ("limited", "Limited")],
         default="unlimited",
@@ -96,6 +105,11 @@ class Im_LivechatChannel(models.Model):
     def _are_you_inside(self):
         for channel in self:
             channel.are_you_inside = self.env.user in channel.user_ids
+
+    @api.depends()
+    def _compute_default_colors(self):
+        for channel in self:
+            channel.default_colors = self._get_default_colors()
 
     @api.depends("channel_ids.livechat_end_dt")
     def _compute_ongoing_sessions_count(self):
@@ -608,16 +622,19 @@ class Im_LivechatChannel(models.Model):
         self.ensure_one()
 
         return {
-            'header_background_color': self.header_background_color,
-            'button_background_color': self.button_background_color,
-            'title_color': self.title_color,
-            'button_text_color': self.button_text_color,
+            **self._get_livechat_colors(),
             'button_text': self.button_text,
             'default_message': self.default_message,
             "channel_name": self.name,
             "channel_id": self.id,
             "review_link": self.review_link,
         }
+
+    def _get_livechat_colors(self):
+        """Colors the visitors see, extended by website_livechat to follow the
+        website theme."""
+        self.ensure_one()
+        return {field: self[field] for field in self._get_default_colors()}
 
     def get_livechat_info(self, username=None):
         self.ensure_one()
