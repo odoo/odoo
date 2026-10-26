@@ -35,6 +35,9 @@ export function setupAutoplay(src, needCookiesApproval = false) {
  * @param {HTMLIframeElement} iframeEl - the iframe containing the video player
  */
 export function triggerAutoplay(iframeEl) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        return;
+    }
     const isYoutubeVideo = iframeEl.src.indexOf("youtube") >= 0;
     const isMobileEnv = uiUtils.getSize() <= SIZES.LG && hasTouch();
 
