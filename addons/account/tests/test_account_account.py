@@ -338,6 +338,19 @@ class TestAccountAccount(TestAccountMergeCommon):
         with self.assertRaises(UserError):
             account.reconcile = False
 
+    def test_toggle_reconcile_cash_basis_transition_account(self):
+        account = self.company_data['default_account_assets']
+        account.reconcile = True
+        self.env['account.tax'].create({
+            'name': 'cash basis tax',
+            'amount': 10.0,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': account.id,
+        })
+
+        with self.assertRaises(ValidationError):
+            account.reconcile = False
+
     def test_remove_account_from_account_group(self):
         """Test if an account is well removed from account group"""
         group = self.env['account.group'].create({
