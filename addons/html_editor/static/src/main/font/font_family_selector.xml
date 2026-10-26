@@ -9,6 +9,7 @@
                     <t t-foreach="this.props.fontFamilyItems" t-as="item" t-key="item_index">
                         <DropdownItem
                             attrs="{ name: item.nameShort, style: item.fontFamily ? 'font-family: ' + item.fontFamily : '' }"
+                            class="{ active: item.nameShort === this.props.currentFontFamily.displayName }"
                             onSelected="() => this.onSelected(item)" t-on-pointerdown.prevent="() => {}">
                             <t t-out="item.name"/>
                         </DropdownItem>
