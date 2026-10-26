@@ -125,8 +125,9 @@ class CalendarController(http.Controller):
         if not event:
             return request.not_found()
 
-        # if channel doesn't exist
+        # if channel doesn't exist, create it as the organizer, who is shown as the inviter
         if not event.videocall_channel_id:
-            event._create_videocall_channel()
+            # sudo: calendar.event - holders of the access token can create the event's channel
+            event.with_user(event.user_id or event.env.user).sudo()._create_videocall_channel()
 
         return request.redirect(event.videocall_channel_id.invitation_url)

@@ -41,3 +41,15 @@ class TestCalendarController(HttpCase):
         self.assertEqual(res.status_code, 200, "Response should = OK")
         self.env.invalidate_all()
         self.assertEqual(attendee.state, "accepted", "Attendee should have accepted")
+
+    def test_join_videocall_unauthenticated(self):
+        self.event.user_id = self.other_user
+        self.event._set_discuss_videocall_location()
+        self.authenticate(None, None)
+        res = self.url_open(f"/calendar/join_videocall/{self.event.access_token}")
+        self.assertEqual(res.status_code, 200, "Response should = OK")
+        self.assertEqual(
+            self.event.videocall_channel_id.create_uid,
+            self.other_user,
+            "The organizer should create the channel, as they are shown as the inviter",
+        )
