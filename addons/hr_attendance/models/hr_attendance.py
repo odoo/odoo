@@ -420,8 +420,13 @@ class HrAttendance(models.Model):
 
             weekly_expected_hours = defaultdict(float)
 
+            handled_dates = set()
             for day_data in sorted(attendance_dates, key=lambda x: x[1]):
                 attendance_date = day_data[1]
+                # a day can have two starts in UTC, e.g. when the daylight saving time changes
+                if attendance_date in handled_dates:
+                    continue
+                handled_dates.add(attendance_date)
                 attendances = attendances_per_day.get(attendance_date, self.browse())
                 unfinished_shifts = attendances.filtered(lambda a: not a.check_out)
                 overtime_duration = 0
