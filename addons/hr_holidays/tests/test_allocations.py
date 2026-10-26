@@ -387,17 +387,19 @@ class TestAllocations(TestHrHolidaysCommon):
 
         # _compute_leaves depends on the context that is getting cleared
         self.env['hr.work.entry.type'].invalidate_model(['max_leaves', 'leaves_taken', 'virtual_remaining_leaves'])
-        result = self.env['hr.work.entry.type'].with_company(self.employee.company_id).with_context(
+        work_entry_type = work_entry_type.with_company(self.employee.company_id).with_context(
             employee_id=self.employee.id,
             leave_date_from='2024-08-18 06:00:00',  # for _compute_leaves
             default_date_from='2024-08-18 06:00:00',
             default_date_to='2024-08-18 15:00:00'
-        ).name_search(domain=[['id', '=', work_entry_type.id]])
+        )
+        result = work_entry_type.name_search(domain=[['id', '=', work_entry_type.id]])
         display_country_name = not bool(self.env.companies and len(self.env.companies.mapped('country_id')) == 1)
         if display_country_name:
-            self.assertEqual(result[0][1], 'Compensatory Time Off (9 remaining out of 9 days) (Generic)')
+            self.assertEqual(result[0][1], 'Compensatory Time Off (Generic)')
         else:
-            self.assertEqual(result[0][1], 'Compensatory Time Off (9 remaining out of 9 days)')
+            self.assertEqual(result[0][1], 'Compensatory Time Off')
+        self.assertEqual(work_entry_type.remaining_leaves_label, '9 days left')
 
     def test_allocation_hourly_work_entry_type(self):
         """

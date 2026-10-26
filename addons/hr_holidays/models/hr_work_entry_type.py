@@ -52,6 +52,7 @@ class HrWorkEntryType(models.Model):
     virtual_remaining_leaves = fields.Float(
         compute='_compute_leaves', search='_search_virtual_remaining_leaves', string='Virtual Remaining Time Off',
         help='Maximum Time Off Allowed - Time Off Already Taken - Time Off Waiting Approval')
+    remaining_leaves_label = fields.Char(compute='_compute_remaining_leaves_label')
 
     allocation_count = fields.Integer(
         compute='_compute_allocation_count', string='Allocations')
@@ -370,7 +371,20 @@ been taken for this time off type. Changing it now would affect existing employe
     def requested_display_name(self):
         return self.env.context.get('work_entry_type_display_name', True) and self.env.context.get('employee_id')
 
-    @api.depends('requires_allocation', 'virtual_remaining_leaves', 'max_leaves', 'unit_of_measure', 'country_id')
+    @api.depends('time_off_selectable', 'requires_allocation', 'virtual_remaining_leaves', 'unit_of_measure')
+    @api.depends_context('work_entry_type_display_name', 'employee_id')
+    def _compute_remaining_leaves_label(self):
+        for record in self:
+            record.remaining_leaves_label = False
+            if not record.requested_display_name() or not (record.time_off_selectable and record.requires_allocation):
+                continue
+            remaining_time = float_round(record.virtual_remaining_leaves, precision_digits=2) or 0.0
+            if record.unit_of_measure == "hour":
+                record.remaining_leaves_label = self.env._("%(time)g hours left", time=remaining_time)
+            else:
+                record.remaining_leaves_label = self.env._("%(time)g days left", time=remaining_time)
+
+    @api.depends('country_id')
     @api.depends_context('work_entry_type_display_name', 'employee_id', 'company')
     def _compute_display_name(self):
         display_country_name = not bool(self.env.companies and len(self.env.companies.mapped('country_id')) == 1)
@@ -383,20 +397,6 @@ been taken for this time off type. Changing it now would affect existing employe
                     record.display_name = record.name
                 continue
             name = record.name
-            if record.time_off_selectable and record.requires_allocation:
-                remaining_time = float_round(record.virtual_remaining_leaves, precision_digits=2) or 0.0
-                maximum = float_round(record.max_leaves, precision_digits=2) or 0.0
-
-                is_popover = self.env.context.get("is_popover", False)
-                is_hour = record.unit_of_measure == "hour"
-                if is_popover and is_hour:
-                    name = self.env._("%(name)s (%(time)g hours left)", name=record.name, time=remaining_time)
-                elif is_popover:
-                    name = self.env._("%(name)s (%(time)g days left)", name=record.name, time=remaining_time)
-                elif is_hour:
-                    name = self.env._("%(name)s (%(time)g remaining out of %(maximum)g hours)", name=record.name, time=remaining_time, maximum=maximum)
-                else:
-                    name = self.env._("%(name)s (%(time)g remaining out of %(maximum)g days)", name=record.name, time=remaining_time, maximum=maximum)
             if display_country_name:
                 record.display_name = f"{name} ({record.country_id.name or self.env._("Generic")})"
             else:
