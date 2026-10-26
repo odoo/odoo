@@ -91,9 +91,7 @@ export class TranslateToAction extends BuilderAction {
         const elements = Array.from(
             containerEl.querySelectorAll("[data-oe-translation-state='to_translate']:not(.o_dirty)")
         ).filter((el) => {
-            // TODO: fix `o_frontend_to_backend_buttons` to have no
-            // attribute `data-oe-translation-state`
-            if (el.closest(".o_not_editable, .o_frontend_to_backend_buttons, .o_brand_promotion")) {
+            if (el.closest(".o_not_editable")) {
                 return false;
             }
             const sha = el.dataset.oeTranslationSourceSha;
