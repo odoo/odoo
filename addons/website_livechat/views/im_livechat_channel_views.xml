@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="im_livechat_channel_view_form" model="ir.ui.view">
+        <field name="name">im_livechat.channel.form.inherit.website.theme</field>
+        <field name="model">im_livechat.channel</field>
+        <field name="inherit_id" ref="im_livechat.im_livechat_channel_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='design_theme_sync']" position="before">
+                <field name="has_website" invisible="1"/>
+                <field name="follow_website_theme" string="Use website colors" invisible="not has_website"/>
+            </xpath>
+            <xpath expr="//div[@name='design_theme_sync']" position="attributes">
+                <attribute name="invisible">has_website and follow_website_theme</attribute>
+            </xpath>
+            <field name="primary_color" position="attributes">
+                <attribute name="invisible">has_website and follow_website_theme</attribute>
+            </field>
+            <field name="secondary_color" position="attributes">
+                <attribute name="invisible">has_website and follow_website_theme</attribute>
+            </field>
+            <field name="secondary_color" position="after">
+                <field name="website_primary_color" string="Primary Color" widget="color" readonly="1"
+                    invisible="not has_website or not follow_website_theme"/>
+                <field name="website_secondary_color" string="Secondary Color" widget="color" readonly="1"
+                    invisible="not has_website or not follow_website_theme"/>
+            </field>
+        </field>
+    </record>
+</odoo>
