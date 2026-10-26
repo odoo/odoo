@@ -11,7 +11,7 @@ import { Model } from "@odoo/o-spreadsheet";
 /**
  * Share button to share a spreadsheet
  */
-export class SpreadsheetShareButton extends Component {
+export class DashboardShareButton extends Component {
     static template = "spreadsheet.ShareButton";
     static components = { Dropdown, DropdownItem, CopyButton };
     props = useProps({

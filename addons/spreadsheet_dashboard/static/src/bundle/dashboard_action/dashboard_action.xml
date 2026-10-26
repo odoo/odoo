@@ -21,7 +21,7 @@
                         activeDashboard="dashboard"
                         groups="this.getDashboardGroups()"/>
                 </t>
-                <SpreadsheetShareButton t-key="this.activeDashboardId()" model="this.loader.getActiveDashboard()?.model" onSpreadsheetShared.bind="this.shareSpreadsheet" togglerClass="'btn-light'"/>
+                <DashboardShareButton t-key="this.activeDashboardId()" model="this.loader.getActiveDashboard()?.model" onSpreadsheetShared.bind="this.shareSpreadsheet" togglerClass="'btn-light'"/>
                 <a
                     t-if="this.loader.getActiveDashboard()"
                     title="Toggle favorite"
