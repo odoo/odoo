@@ -184,9 +184,10 @@ class AccountPayment(models.Model):
             line_vals = []
             for check in check_ids:
                 if check == self.l10n_latam_new_check_ids[-1]:
-                    # last check absorbs rounding: close each column against its own total
-                    liquidity_amount_currency = self.currency_id.round(abs(default_values['amount_currency']) - amount_currency_total)
-                    liquidity_balance = company_currency.round(abs(default_values['balance']) - balance_total)
+                    # last check absorbs rounding: close each column against its own total.
+                    # Keep the sign: the liquidity is positive when withholdings exceed the checks.
+                    liquidity_amount_currency = self.currency_id.round(-default_values['amount_currency'] - amount_currency_total)
+                    liquidity_balance = company_currency.round(-default_values['balance'] - balance_total)
                 else:
                     # check.amount is expressed in the payment currency (check.currency_id)
                     liquidity_amount_currency = self.currency_id.round(check.amount)
