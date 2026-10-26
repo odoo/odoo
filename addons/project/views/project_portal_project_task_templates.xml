@@ -10,7 +10,7 @@
     </template>
 
     <template id="portal_my_tasks_priority_widget_template" name="Priority Widget Template">
-        <t t-set="priority_label" t-value="priority_labels[task.priority]"/>
+        <t t-set="priority_label" t-value="priority_labels.get(task.priority, priority_labels['0'])"/>
         <span t-attf-class="o_priority_star d-inline-block oi #{'oi-filled text-warning' if task.priority != '0' else 'opacity-75'} #{classes if classes else ''}" data-icon="star" t-att-title="priority_label"/>
         <span t-attf-class="o_priority_star d-inline-block oi #{'oi-filled text-warning' if task.priority in ['2', '3'] else 'opacity-75'} #{classes if classes else ''}" data-icon="star" t-att-title="priority_label"/>
         <span t-attf-class="o_priority_star d-inline-block oi #{'oi-filled text-warning' if task.priority == '3' else 'opacity-75'} #{classes if classes else ''}" data-icon="star" t-att-title="priority_label"/>
