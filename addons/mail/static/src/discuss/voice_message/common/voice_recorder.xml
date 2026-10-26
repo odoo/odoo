@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.VoiceRecorder">
-        <div class="o-mail-VoiceRecorder d-flex align-items-stretch gap-2 flex-shrink-0 pe-2">
-            <button class="btn btn-secondary o_btn_circle d-flex align-items-center border-0 rounded-circle o-hasBtnBg" t-on-click="this.props.state.cancelRecording" t-att-title="this.cancelTitle">
-                <i class="oi oi-fw" data-icon="close"/>
+        <div class="o-mail-VoiceRecorder d-flex align-items-center gap-2 flex-shrink-0 p-1 bg-200 rounded-pill">
+            <button class="btn btn-secondary o_btn_circle d-flex align-items-center border-0 rounded-circle o-hasBtnBg" t-att-disabled="this.props.state.isActionPending" t-on-click="this.props.state.cancelRecording" t-att-title="this.cancelTitle">
+                <i class="oi oi-fw" data-icon="delete" role="img" aria-hidden="true"/>
             </button>
-            <small class="o-mail-VoiceRecorder-elapsed flex-shrink-0 align-self-center" t-att-class="{ 'text-danger': this.props.state.limitWarning }" t-out="this.props.state.elapsed"/>
-            <div class="o-mail-VoiceRecorder-visualizer d-flex align-items-center justify-content-center gap-1 flex-shrink-0">
-                <t t-foreach="this.props.state.volumes" t-as="vol" t-key="vol_index">
-                    <!-- monitorAudio returns volume ~0.0 to ~1.0, so we boost it for visual impact -->
-                    <div class="o-mail-VoiceRecorder-bar h-50" t-attf-class="{{ this.props.state.limitWarning ? 'bg-danger' : 'bg-900' }}" t-attf-style="transform: scaleY(#{Math.max(0.2, Math.sqrt(vol) * 2)});"/>
-                </t>
+            <i class="o-mail-VoiceRecorder-dot oi oi-filled text-danger" data-icon="circle" role="img" aria-label="Recording in progress" title="Recording in progress"/>
+            <small class="o-mail-VoiceRecorder-elapsed flex-shrink-0" t-att-class="{ 'text-danger': this.props.state.limitWarning }">
+                <t t-out="this.props.state.elapsed"/>
+                <t t-if="this.props.state.limitWarning"> / <t t-out="this.props.state.limit"/></t>
+            </small>
+            <div class="o-mail-VoiceRecorder-visualizer d-flex align-items-center align-self-stretch overflow-hidden flex-shrink-0">
+                <div class="o-mail-VoiceRecorder-bars d-flex align-items-center" t-key="this.props.state.volumeLevelsOffset">
+                    <span t-foreach="this.props.state.volumeLevels" t-as="volumeLevel" t-key="volumeLevel_index" class="o-mail-VoiceRecorder-bar rounded-pill" t-att-class="this.props.state.limitWarning ? 'bg-danger' : 'bg-900'" t-attf-style="--VoiceRecorder__bar-level: {{ volumeLevel }};"/>
+                </div>
             </div>
-            <button class="btn btn-primary o_btn_circle d-flex align-items-center border-0 rounded-circle text-bg-primary opacity-100 o-hasBtnBg" t-on-click="this.props.state.onClick" t-att-title="this.title">
-                <i class="oi oi-fw" data-icon="check"/>
+            <button class="btn btn-primary o_btn_circle d-flex align-items-center border-0 rounded-circle text-bg-primary opacity-100 o-hasBtnBg" t-att-disabled="this.props.state.isActionPending" t-on-click="this.props.state.onClick" t-att-title="this.title">
+                <i class="oi oi-fw oi-filled" data-icon="stop" role="img" aria-hidden="true"/>
             </button>
         </div>
     </t>

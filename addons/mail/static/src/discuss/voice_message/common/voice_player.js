@@ -1,4 +1,10 @@
 import {
+    formatVoiceTime,
+    getVolumeLevel,
+    getVolumePeak,
+} from "@mail/discuss/voice_message/common/voice_message_service";
+
+import {
     Component,
     computed,
     onMounted,
@@ -160,7 +166,7 @@ export class VoicePlayer extends Component {
                 return;
             }
             this.duration = buffer.duration;
-            this.state.totalTime = this.generateTime(buffer.duration);
+            this.state.totalTime = formatVoiceTime(buffer.duration);
             this.setVisualTime(0);
             this.drawWave(this.getPeaks(buffer));
             this.applyPlaybackRate();
@@ -188,23 +194,14 @@ export class VoicePlayer extends Component {
      * @returns {number[]} the loudest sample of each bar
      */
     getPeaks(buffer) {
-        const peaks = [];
         // Number of audio samples represented by each bar.
         const sampleSize = buffer.length / this.barCount;
-        // Sample roughly 10 points per bar instead of every sample.
-        // This significantly reduces processing while preserving the visual shape.
-        const sampleStep = Math.max(1, Math.floor(sampleSize / 10));
         const channel = buffer.getChannelData(0);
-        for (let i = 0; i < this.barCount; i++) {
-            const start = Math.floor(i * sampleSize);
-            const end = Math.floor(start + sampleSize);
-            let max = 0;
-            for (let j = start; j < end; j += sampleStep) {
-                max = Math.max(max, Math.abs(channel[j]));
-            }
-            peaks[i] = max;
-        }
-        return peaks;
+        return Array.from({ length: this.barCount }, (_, i) =>
+            getVolumePeak(
+                channel.subarray(Math.floor(i * sampleSize), Math.floor((i + 1) * sampleSize))
+            )
+        );
     }
 
     /** @param {number[]} peaks */
@@ -223,7 +220,6 @@ export class VoicePlayer extends Component {
     getWavePath(peaks) {
         const { width, height } = this.waveCtx.canvas;
         const ratio = width / this.width;
-        const maxPeak = Math.max(...peaks) || 1;
         const barWidth = Math.round(BAR_WIDTH * ratio);
         // Half the bar width makes both bar ends fully round.
         const radius = (BAR_WIDTH * ratio) / 2;
@@ -231,10 +227,10 @@ export class VoicePlayer extends Component {
         const pitch = (width + BAR_GAP * ratio) / peaks.length;
         const path = new Path2D();
         for (let i = 0; i < peaks.length; i++) {
-            // Scale each bar relative to the loudest peak, cap it to a fraction of the canvas height,
+            // Scale each bar by its loudness, cap it to a fraction of the canvas height,
             // and keep it at least as tall as the bar width, so sections with silence remain visible as dots.
             const barHeight = Math.round(
-                Math.max(BAR_WIDTH * ratio, (peaks[i] / maxPeak) * height * WAVE_AMPLITUDE)
+                Math.max(BAR_WIDTH * ratio, getVolumeLevel(peaks[i]) * height * WAVE_AMPLITUDE)
             );
             const x = Math.round(i * pitch);
             const y = Math.round((height - barHeight) / 2);
@@ -300,17 +296,7 @@ export class VoicePlayer extends Component {
 
     /** @param {number} timeInSecond */
     setVisualTime(timeInSecond) {
-        this.state.currentTime = this.generateTime(timeInSecond);
-    }
-
-    /**
-     * @param {number} timeInSecond
-     * @returns {string} formatted as "mm : ss"
-     */
-    generateTime(timeInSecond) {
-        const second = Math.floor(timeInSecond % 60);
-        const minute = Math.floor(timeInSecond / 60);
-        return `${String(minute).padStart(2, "0")} : ${String(second).padStart(2, "0")}`;
+        this.state.currentTime = formatVoiceTime(timeInSecond);
     }
 
     destroyAudio() {

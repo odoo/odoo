@@ -14,6 +14,8 @@ registerComposerAction("voice-start", {
 });
 registerComposerAction("voice-recording", {
     condition: ({ composer, owner }) =>
-        composer.targetThread?.channel && owner.voiceRecorder?.recording,
+        composer.targetThread?.channel &&
+        owner.voiceRecorder?.recording &&
+        !owner.showVoiceRecorderAbove(),
     sequenceQuick: 10,
 });
