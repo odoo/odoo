@@ -27,7 +27,9 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'VAT_P_IN_MT_18_G',
                 'expense_account_id': 'mt_5550',
                 'income_account_id': 'mt_5000',
-                'receivable_account_id': 'mt_2050',
-                'payable_account_id': 'mt_3100',
+                'receivable_account_id': 'mt_2052',
+                'payable_account_id': 'mt_3101',
+                'deferred_expense_account_id': 'mt_2205',
+                'deferred_revenue_account_id': 'mt_3080',
             },
         }
