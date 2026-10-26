@@ -15,11 +15,12 @@ class L10nThTaxInvoice(models.Model):
         comodel_name='account.move',
         ondelete='set null',
         check_company=True,
+        index='btree_not_null',
     )
 
     date = fields.Date(string="Date")
     tax_invoice_number = fields.Char(string="Tax Invoice Number")
-    reference = fields.Char(string="Reference")
+    reference = fields.Char(string="Reference", compute='_compute_reference', store=True)
     total_amount = fields.Monetary(string='Total Amount')
     vat_amount = fields.Monetary(string='VAT Amount')
     amount_residual = fields.Monetary(string='Amount Due')
@@ -54,20 +55,26 @@ class L10nThTaxInvoice(models.Model):
         index=True,
     )
 
+    @api.depends('payment_move_id.name')
+    def _compute_reference(self):
+        for record in self:
+            record.reference = record.payment_move_id.name
+
     def _get_tax_invoice_document_title(self):
         self.ensure_one()
 
         doc_name = self.tax_invoice_number
 
-        if self.reference:
+        if self.state == 'cancel':
+            return self.env._("Cancelled %(doc_name)s", doc_name=doc_name)
+
+        if self.payment_move_id:
             doc_name = self.env._("Receipt / Tax Invoice %(doc_name)s", doc_name=doc_name)
         else:
             doc_name = self.env._("Tax Invoice %(doc_name)s", doc_name=doc_name)
 
         if self.state == 'draft':
             doc_name = self.env._("Draft %(doc_name)s", doc_name=doc_name)
-        if self.state == 'cancel':
-            doc_name = self.env._("Cancelled %(doc_name)s", doc_name=doc_name)
 
         return doc_name
 
