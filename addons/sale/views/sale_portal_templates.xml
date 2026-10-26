@@ -156,7 +156,7 @@
                 <t t-set="subtitle">Tax Included</t>
                 <t t-set="entries">
                     <div
-                        t-if="sale_order.state in ('draft', 'sent') and sale_order.prepayment_percent != 1.0"
+                        t-if="sale_order.state in ('draft', 'sent') and sale_order.prepayment_percent != 1.0 and not payment_amount"
                         class="alert alert-warning mt-3"
                         role="alert"
                     >
@@ -532,6 +532,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
             </header>
             <main class="modal-body" id="sign-dialog">
+                <!-- TODO: remove prepayment_amount var in master and use the portal route variable in the rendering values -->
                 <t
                     t-set="prepayment_amount"
                     t-value="sale_order._get_prepayment_required_amount()"
@@ -541,7 +542,7 @@
                     t-if="sale_order._has_to_be_paid() and prepayment_available"
                     t-call="sale.sale_order_portal_pay_modal_amount_selector"
                 />
-                <div t-if="sale_order._has_to_be_paid() and full_prepayment" class="mb-3">
+                <div t-if="sale_order._has_to_be_paid() and (full_prepayment or from_payment_link)" class="mb-3">
                     <!-- The widget associated with this modal will hide and show spans depending of the selected option. -->
                     <span t-if="prepayment_available">
                         <span id="o_sale_portal_use_amount_prepayment">
