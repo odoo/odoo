@@ -1,4 +1,3 @@
-import { useEnv } from "@web/owl2/utils";
 import { ActivityListPopover } from "@mail/core/web/activity_list_popover";
 
 import { Component, signal, types, useProps } from "@odoo/owl";
@@ -16,14 +15,14 @@ export class ActivityButton extends Component {
         super.setup();
         this.props = useProps({ record: types.instanceOf(Record) });
         this.popover = usePopover(ActivityListPopover, { position: "bottom-start" });
-        this.env = useEnv();
         this.defaultActivityStateClass = "text-muted";
         this.defaultActivityDecorationClass = "btn-link text-dark";
     }
 
     get buttonClass() {
         const classes = [];
-        const { activity_ids, activity_state, activity_exception_decoration } = this.props.record.data;
+        const { activity_ids, activity_state, activity_exception_decoration } =
+            this.props.record.data;
         if (activity_ids.records.length) {
             classes.push("oi-filled");
         }
@@ -87,7 +86,7 @@ export class ActivityButton extends Component {
             this.popover.close();
         } else {
             const resId = this.props.record.resId;
-            const selectedRecords = this.env?.model?.root?.selection ?? [];
+            const selectedRecords = this.props.record.model.root?.selection ?? [];
             const selectedIds = selectedRecords.map((r) => r.resId);
             // If the current record is not selected, ignore the selection
             const resIds =
