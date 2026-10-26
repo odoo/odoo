@@ -4205,6 +4205,7 @@ class MailThread(models.AbstractModel):
                 'body': html2plaintext(body, include_references=False),
                 'icon': icon,
                 'data': {
+                    "message_id": message.id,
                     'model': message.model or '',
                     'res_id': message.res_id or '',
                 }
