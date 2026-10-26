@@ -1,4 +1,13 @@
-import { asyncComputed, computed, Plugin, signal, t, useEffect, usePlugin } from "@odoo/owl";
+import {
+    asyncComputed,
+    computed,
+    onWillStart,
+    Plugin,
+    signal,
+    t,
+    useEffect,
+    usePlugin,
+} from "@odoo/owl";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { GlobalBusPlugin } from "@web/core/global_bus_plugin";
 import { registry } from "@web/core/registry";
@@ -39,10 +48,10 @@ export class MenuPlugin extends Plugin {
     });
     /** @private */
     fetchedMenus = asyncComputed(
-        async () => {
+        async ({ abortSignal }) => {
             const forceReload = this.forceReload;
             this.forceReload = false;
-            return await this.fetchMenus(forceReload);
+            return await this.fetchMenus(forceReload, abortSignal);
         },
         { initial: null }
     );
@@ -50,6 +59,18 @@ export class MenuPlugin extends Plugin {
     menusData = computed(() => this.fetchedMenus() || JSON.parse(this.storedMenus() || "{}"));
 
     setup() {
+        onWillStart(async () => {
+            await this.storedMenus.currentPromise();
+            if (!this.storedMenus()) {
+                await this.fetchedMenus.currentPromise();
+            }
+        });
+        useEffect(() => {
+            const error = this.fetchedMenus.error();
+            if (error) {
+                Promise.reject(error);
+            }
+        });
         useEffect(() => {
             const storedMenus = this.storedMenus();
             const fetchedMenus = this.fetchedMenus();
@@ -67,12 +88,13 @@ export class MenuPlugin extends Plugin {
     /**
      * @private
      * @param {boolean} [reload=false]
+     * @param {AbortSignal} abortSignal
      */
-    async fetchMenus(reload) {
+    async fetchMenus(reload, abortSignal) {
         if (!reload && odoo.loadMenusPromise) {
             return odoo.loadMenusPromise;
         }
-        const res = await fetch(LOAD_MENUS_URL, { cache: "no-store" });
+        const res = await fetch(LOAD_MENUS_URL, { cache: "no-store", signal: abortSignal });
         if (!res.ok) {
             throw new Error("Error while fetching menus");
         }
@@ -96,9 +118,7 @@ export class MenuPlugin extends Plugin {
 
     async reload() {
         this.forceReload = true;
-        this.fetchedMenus.refresh();
-        // the refresh only starts the fetch in Owl's batched effects (next microtask)
-        await Promise.resolve();
+        await this.fetchedMenus.refresh();
         await this.fetchedMenus.currentPromise();
     }
 
