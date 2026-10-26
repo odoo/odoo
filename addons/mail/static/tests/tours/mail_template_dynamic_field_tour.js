@@ -31,12 +31,12 @@ registry.category("web_tour.tours").add("mail_template_dynamic_field_tour", {
         },
         {
             content: "Click on contact",
-            trigger: 'div[name="model_id"] .ui-autocomplete .dropdown-item:text(Contact)',
+            trigger: ".o-autocomplete--dropdown-menu .dropdown-item:text(Contact)",
             run: "click",
         },
         {
             content: "Wait for the drop down to disappear",
-            trigger: 'div[name="model_id"] .o-autocomplete:not(:has(.ui-autocomplete))',
+            trigger: "body:not(:has(.o-autocomplete--dropdown-menu))",
         },
         {
             content: "Wait for the onchange of the model",

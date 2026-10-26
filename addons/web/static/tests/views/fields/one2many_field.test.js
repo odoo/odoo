@@ -5131,7 +5131,7 @@ test("one2many list with a many2one", async () => {
 
     checkOnchange = true;
     await clickFieldDropdown("product_id");
-    await contains('div[name="product_id"] .o_input_dropdown li:eq(1)').click();
+    await contains(".o-autocomplete--dropdown-menu li:eq(1)").click();
 
     await contains(".modal .modal-footer button").click();
     expect(".o_data_cell:text('xphone')").toHaveCount(1);
@@ -5213,7 +5213,7 @@ test("one2many list with inline form view", async () => {
 
     // write in the many2one field, value = 41 (xpad)
     await clickFieldDropdown("product_id");
-    await contains('div[name="product_id"] .o_input_dropdown li:eq(1)').click();
+    await contains(".o-autocomplete--dropdown-menu li:eq(1)").click();
 
     // save and close
     await contains(".modal .o_form_button_save").click();
@@ -6110,7 +6110,7 @@ test("many2one and many2many in one2many", async () => {
     ]);
     // add a tag
     await contains('div[name="partner_ids"] input').click();
-    await contains('div[name="partner_ids"] .o_input_dropdown li').click(); // xpad
+    await contains(".o-autocomplete--dropdown-menu li").click(); // xpad
 
     expect(queryAllTexts(".o_selected_row .o_field_many2many_tags .badge")).toEqual([
         "second record",
@@ -6119,7 +6119,7 @@ test("many2one and many2many in one2many", async () => {
 
     // edit the m2o of first row
     await clickFieldDropdown("product_id");
-    await contains('div[name="product_id"] .o_input_dropdown li:eq(1)').click(); // xpad
+    await contains(".o-autocomplete--dropdown-menu li:eq(1)").click(); // xpad
 
     expect(".o_selected_row .o_field_many2one input").toHaveValue("xpad");
 
@@ -6238,7 +6238,7 @@ test("onchange many2many in one2many list editable", async () => {
     await contains(".o_field_x2many_list_row_add button").click();
     await contains('div[name="name"] input').edit("first", { confirm: false });
     await clickFieldDropdown("product_id");
-    await contains('div[name="product_id"] .o_input_dropdown li:eq(1)').click(); // xpad
+    await contains(".o-autocomplete--dropdown-menu li:eq(1)").click(); // xpad
 
     expect(".o_field_many2many_tags .o_tags_input").toHaveCount(1, {
         message: "should display the line in editable mode",
@@ -6278,7 +6278,7 @@ test("onchange many2many in one2many list editable", async () => {
     await contains(".o_field_x2many_list_row_add button").click();
     await contains('div[name="name"] input').edit("first", { confirm: false });
     await clickFieldDropdown("product_id");
-    await contains('div[name="product_id"] .o_input_dropdown li:eq(2)').click(); // xenomorphe
+    await contains(".o-autocomplete--dropdown-menu li:eq(2)").click(); // xenomorphe
 
     expect(".o_field_many2many_tags .o_tags_input").toHaveCount(1, {
         message: "should display the line in editable mode",
@@ -6433,7 +6433,7 @@ test("one2many with x2many in form view (but not in list view)", async () => {
     await contains(".o_data_row td").click(); // edit first record
 
     await contains('div[name="partner_ids"] input').click();
-    await contains('div[name="partner_ids"] .o_input_dropdown li').click();
+    await contains(".o-autocomplete--dropdown-menu li").click();
 
     // add a many2many tag and save
     await contains(".modal .o_field_many2many_tags input").edit("test", { confirm: false });

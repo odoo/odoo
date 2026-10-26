@@ -123,7 +123,7 @@ test("Analytic dynamic multi-edit", async () => {
     await contains(".analytic_distribution_popup tbody tr:first .o_field_many2one").click();
     await contains(".analytic_distribution_popup tbody tr:first .o_field_many2one input").edit("Brussels", {confirm: false});
     await runAllTimers();
-    await contains(".analytic_distribution_popup tbody tr:first .o_field_many2one .o_input_dropdown a").click();
+    await contains(".o-autocomplete--dropdown-menu a").click();
     await contains(".o_list_renderer").click();  // close the widget
     await contains(".modal-footer .btn-primary").click();  // validate confirmation
     await runAllTimers();
@@ -144,7 +144,7 @@ test("Analytic dynamic multi-edit", async () => {
     await contains(".analytic_distribution_popup tbody tr:first .o_field_many2one").click();
     await contains(".analytic_distribution_popup tbody tr:first .o_field_many2one input").edit("Belgium", { confirm: false });
     await runAllTimers();
-    await contains(".analytic_distribution_popup tbody tr:first .o_field_many2one .o_input_dropdown a").click();
+    await contains(".o-autocomplete--dropdown-menu a").click();
     await contains(".o_list_renderer").click();  // close the widget
     await contains(".modal-footer .btn-primary").click();  // validate confirmation
     await runAllTimers();
@@ -198,7 +198,7 @@ test("Analytic multi-edit: New Model dialog stays open", async () => {
     await contains(".analytic_distribution_popup tbody tr:first .o_field_many2one").click();
     await contains(".analytic_distribution_popup tbody tr:first .o_field_many2one input").edit("Brussels", { confirm: false });
     await runAllTimers();
-    await contains(".analytic_distribution_popup tbody tr:first .o_field_many2one .o_input_dropdown a").click();
+    await contains(".o-autocomplete--dropdown-menu a").click();
 
     // click "New Model": opens the "Create Analytic Distribution Model" dialog
     await contains(".analytic_distribution_popup .popover-header .btn-link").click();

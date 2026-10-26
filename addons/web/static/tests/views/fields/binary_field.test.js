@@ -348,7 +348,7 @@ test("readonly in create mode does not download", async () => {
 
     await click(`.o_field_many2one[name='product_id'] input`);
     await animationFrame();
-    await click(`.o_field_many2one[name='product_id'] .dropdown-item`);
+    await click(`.o-autocomplete--dropdown-menu .dropdown-item`);
     await animationFrame();
     expect(`.o_field_widget[name="document"] a`).toHaveCount(0, {
         message: "The link to download the binary should not be present",
@@ -396,7 +396,7 @@ test("new record has no download button", async () => {
 
 test("filename doesn't exceed 255 bytes", async () => {
     const data = "A".repeat(MAX_FILENAME_SIZE_BYTES + 1);
-    const LARGE_BINARY_FILE = {filename: data, content: data, size: data.length};
+    const LARGE_BINARY_FILE = { filename: data, content: data, size: data.length };
 
     Partner._fields.document.default = LARGE_BINARY_FILE;
     await mountView({
@@ -404,12 +404,9 @@ test("filename doesn't exceed 255 bytes", async () => {
         type: "form",
         arch: `<form><field name="document"/></form>`,
     });
-    expect(queryValue(`.o_field_binary input[type=text]`)).toHaveLength(
-        MAX_FILENAME_SIZE_BYTES,
-        {
-            message: "The filename shouldn't exceed the maximum size in bytes",
-        }
-    );
+    expect(queryValue(`.o_field_binary input[type=text]`)).toHaveLength(MAX_FILENAME_SIZE_BYTES, {
+        message: "The filename shouldn't exceed the maximum size in bytes",
+    });
 });
 
 test("filename is updated when using the pager", async () => {

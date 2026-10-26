@@ -75,7 +75,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Select a Google font in the list",
-            trigger: ".modal .dropdown-item:contains('Second test font')",
+            trigger: ".o-autocomplete--dropdown-menu .dropdown-item:contains('Second test font')",
             run: "click",
         },
         {

@@ -238,9 +238,7 @@ export class TourRecorder extends Component {
             [...this.state.editedElement.classList].includes("o-autocomplete--input") &&
             VALIDATING_KEYS.includes(ev.key)
         ) {
-            const selectedRow = queryFirst(".ui-state-active", {
-                root: this.state.editedElement.parentElement,
-            });
+            const selectedRow = queryFirst(".o-autocomplete--dropdown-menu .focus");
             this.state.steps.push({
                 trigger: `.o-autocomplete--dropdown-item > a:contains('${selectedRow.textContent}'), [data-icon='autorenew']`,
                 run: "click",

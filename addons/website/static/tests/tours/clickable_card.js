@@ -46,7 +46,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Select matching URL from autocomplete",
-            trigger: "ul.ui-autocomplete li a:contains('#bottom')",
+            trigger: ".o-autocomplete--dropdown-menu li a:contains('#bottom')",
             run: "click",
         },
         clickOnElement("card image", ":iframe .s_title .s_card img"),
@@ -58,7 +58,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Select matching URL from autocomplete",
-            trigger: "ul.ui-autocomplete li a:contains('#bottom')",
+            trigger: ".o-autocomplete--dropdown-menu li a:contains('#bottom')",
             run: "click",
         },
         ...changeOptionInPopover("Image", "Animation", "On Hover"),
@@ -71,7 +71,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Select matching URL from autocomplete",
-            trigger: "ul.ui-autocomplete li a:contains('#top')",
+            trigger: ".o-autocomplete--dropdown-menu li a:contains('#top')",
             run: "click",
         },
         changeOption("Card", "button[data-action-id='toggleBgImage']"),

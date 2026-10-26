@@ -140,13 +140,13 @@ export class Dropdown extends Component {
             closeOnEscape: false, // Handled via navigation and prevents closing root of nested dropdown
             holdOnHover: this.props.holdOnHover,
             onClose: () => this.state.close(),
-            onPositioned: (el, { direction }) => this.setTargetDirectionClass(direction),
+            onPositioned: (el, solution) => this.onPositioned(el, solution),
             popoverClass: mergeClasses(
                 "o-dropdown--menu dropdown-menu mx-0",
                 { "o-dropdown--menu-submenu": this.hasParent },
                 this.props.menuClass
             ),
-            role: "menu",
+            role: this.menuRole,
             get position() {
                 return getPosition();
             },
@@ -203,6 +203,11 @@ export class Dropdown extends Component {
 
     get hasParent() {
         return this.nesting.hasParent;
+    }
+
+    /** @type {string|undefined} */
+    get menuRole() {
+        return "menu";
     }
 
     /** @type {HTMLElement|null} */
@@ -327,6 +332,10 @@ export class Dropdown extends Component {
                 target.removeEventListener("keydown", keydownHandler);
             };
         }
+    }
+
+    onPositioned(el, { direction }) {
+        this.setTargetDirectionClass(direction);
     }
 
     setTargetDirectionClass(direction) {

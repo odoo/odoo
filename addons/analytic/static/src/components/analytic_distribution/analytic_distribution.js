@@ -683,6 +683,7 @@ export class AnalyticDistribution extends Component {
         Dropdown should be closed only if all these condition are true:
             - dropdown is open
             - click is outside widget element (widgetRef)
+            - click is not in an autocomplete menu (rendered in the overlay container)
             - there is no active modal containing a list/kanban view (search more modal)
             - there is no popover (click is not in search modal's search bar menu)
             - click is not targeting document dom element (drag and drop search more modal)
@@ -697,6 +698,7 @@ export class AnalyticDistribution extends Component {
             this.isDropdownOpen &&
             widgetEl &&
             !widgetEl.contains(ev.target) &&
+            !ev.target.closest(".o-autocomplete--dropdown-menu") &&
             (!ev.target.closest(selectors.join(",")) ||
                 document.querySelector(".modal:not(.o_inactive_modal)")?.contains(widgetEl)) &&
             !ev.target.isSameNode(document.documentElement)

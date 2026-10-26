@@ -66,7 +66,7 @@ test("Many2ManyTagsColorDotField on desktop, can open form on click tag", async 
 
     expect("[name=timmy] .o_tag").toHaveCount(0);
     await clickFieldDropdown("timmy");
-    expect("[name=timmy] .o-autocomplete.dropdown li").toHaveCount(7, {
+    expect(".o-autocomplete--dropdown-menu li").toHaveCount(7, {
         message: "autocomplete dropdown should have 7 entries (6 values + 'Search more...')",
     });
     await clickFieldDropdownItem("timmy", "blue");

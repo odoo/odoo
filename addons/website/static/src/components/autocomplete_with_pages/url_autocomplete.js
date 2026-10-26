@@ -25,14 +25,6 @@ export class UrlAutoComplete extends Component {
         return classList.join(" ");
     }
 
-    get dropdownOptions() {
-        const options = {};
-        if (this.props.options?.position) {
-            options.position = this.props.options?.position;
-        }
-        return options;
-    }
-
     get sources() {
         return [
             {

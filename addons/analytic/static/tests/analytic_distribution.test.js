@@ -236,7 +236,7 @@ test("analytic field in multi_edit list view + search more", async () => {
     // add a line
     await contains(".analytic_distribution_popup .o_field_x2many_list_row_add").click();
     await contains(".analytic_distribution_popup tr[name='line_2'] #x_plan5_id").click();
-    await contains(".analytic_distribution_popup .ui-menu-item:contains(search more)").click();
+    await contains(".ui-menu-item:contains(search more)").click();
 
     expect(".modal-dialog .o_list_renderer").toHaveCount(1);
 
@@ -351,10 +351,10 @@ test("Rounding, value suggestions, keyboard only", async () => {
     expect(".badge:contains('Belgium'):not(:contains('%'))").toHaveCount(1);
 
     // fill internal
-    const autocomplete = getActiveElement().parentNode;
     // choose Operating Costs
     while (
-        autocomplete.querySelector("a[aria-selected='true']")?.textContent !== "Operating Costs"
+        document.querySelector(".o-autocomplete--dropdown-menu a[aria-selected='true']")
+            ?.textContent !== "Operating Costs"
     ) {
         await press("ArrowDown");
         await animationFrame();

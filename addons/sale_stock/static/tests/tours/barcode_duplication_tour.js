@@ -17,7 +17,7 @@ registry.category("web_tour.tours").add("test_barcode_duplication_error", {steps
         run: "edit test-1234",
     },
     {
-        trigger: "div[name='product_uom_ids'] ul li.o_m2o_dropdown_option_create",
+        trigger: ".o-autocomplete--dropdown-menu li.o_m2o_dropdown_option_create",
         run: "click",
     },
     {

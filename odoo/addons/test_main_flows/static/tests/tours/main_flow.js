@@ -76,7 +76,7 @@ registry.category("web_tour.tours").add('main_flow_tour', {
     content: "Focus on customer taxes field.",
     async run(actions) {
         await actions.click();
-        const e = document.querySelector(".ui-menu-item:not(.o_m2o_dropdown_option) > a.ui-state-active");
+        const e = document.querySelector(".ui-menu-item:not(.o_m2o_dropdown_option) > a.focus");
         if (e) {
             await actions.click(e);
         } else {
@@ -491,7 +491,7 @@ stepUtils.autoExpandMoreButtons(),
     async run(actions) {
         await actions.click();
         const e = document.querySelector(
-            ".o_field_widget[name=taxes_id] .o-autocomplete--dropdown-item:not(.o_m2o_dropdown_option) > a"
+            ".o-autocomplete--dropdown-item:not(.o_m2o_dropdown_option) > a"
         );
         if (e) {
             await actions.click(e);

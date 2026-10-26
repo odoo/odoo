@@ -14,7 +14,7 @@ registry.category("web_tour.tours").add("mrp_bom_report_tour", {
         },
         {
             content: "Select the other variant",
-            trigger: ".o-autocomplete--dropdown-menu.show li.o-autocomplete--dropdown-item:eq(1)",
+            trigger: ".o-autocomplete--dropdown-menu li.o-autocomplete--dropdown-item:eq(1)",
             run: "click",
         },
         {

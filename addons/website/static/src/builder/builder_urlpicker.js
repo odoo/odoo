@@ -3,6 +3,7 @@ import { useActionInfo } from "@html_builder/core/utils";
 import { useProps, signal, t } from "@odoo/owl";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { _t } from "@web/core/l10n/translation";
+import { mergeClasses } from "@web/core/utils/classname";
 import { patch } from "@web/core/utils/patch";
 import wUtils from "@website/js/utils";
 
@@ -17,8 +18,8 @@ export class AutoCompleteBuilderUrlPicker extends AutoComplete {
         this.info = useActionInfo(this.props);
     }
 
-    get ulDropdownClass() {
-        return `${super.ulDropdownClass} dropdown-menu ui-autocomplete o_website_ui_autocomplete`;
+    get menuClass() {
+        return mergeClasses(super.menuClass, "o_website_ui_autocomplete");
     }
 }
 

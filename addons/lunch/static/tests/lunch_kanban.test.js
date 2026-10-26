@@ -158,10 +158,10 @@ test("Location change", async () => {
 
     await contains(".lunch_location input").click();
 
-    expect(".lunch_location .dropdown-item:contains(New Office)").toHaveCount(1);
+    expect(".o-autocomplete--dropdown-menu .dropdown-item:contains(New Office)").toHaveCount(1);
 
     await contains(
-        ".lunch_location li:not(.o_m2o_dropdown_option) .dropdown-item:not(.ui-state-active)"
+        ".o-autocomplete--dropdown-menu li:not(.o_m2o_dropdown_option) .dropdown-item:not(.focus)"
     ).click();
 
     expect("article.o_kanban_record").toHaveCount(2);
@@ -200,11 +200,11 @@ test("Manager: user change", async () => {
     expect(".lunch_user input").toHaveCount(1);
     await contains(".lunch_user input").click();
 
-    expect(".lunch_user .dropdown-item:contains(David Elora)").toHaveCount(1);
+    expect(".o-autocomplete--dropdown-menu .dropdown-item:contains(David Elora)").toHaveCount(1);
 
     expectedUserId = 2;
     await contains(
-        ".lunch_user li:not(.o_m2o_dropdown_option) .dropdown-item:contains('David Elora')"
+        ".o-autocomplete--dropdown-menu li:not(.o_m2o_dropdown_option) .dropdown-item:contains('David Elora')"
     ).click();
 
     expect(".o_lunch_banner span[name='o_lunch_balance']").toHaveText("Available Balance\n-10000.00€", {
@@ -212,7 +212,9 @@ test("Manager: user change", async () => {
     });
 
     await contains(".lunch_location input").click();
-    await contains(".lunch_location li:not(.o_m2o_dropdown_option) .dropdown-item:eq(1)").click();
+    await contains(
+        ".o-autocomplete--dropdown-menu li:not(.o_m2o_dropdown_option) .dropdown-item:eq(1)"
+    ).click();
     expect(".lunch_user input").toHaveValue("David Elora", {
         message: "changing location should not reset user",
     });

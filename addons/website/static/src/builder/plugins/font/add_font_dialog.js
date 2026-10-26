@@ -8,17 +8,10 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { Switch } from "@html_editor/components/switch/switch";
 
 class GoogleFontAutoComplete extends AutoComplete {
-    get dropdownOptions() {
-        return {
-            ...super.dropdownOptions,
-            position: "bottom-fit",
-        };
-    }
-
     onInput(ev) {
         super.onInput(ev);
-        if (this.listRef()) {
-            this.listRef().scrollTop = 0;
+        if (this.menuRef()) {
+            this.menuRef().scrollTop = 0;
         }
     }
 }

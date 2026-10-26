@@ -19,7 +19,7 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
             content: 'Click on the dropdown to open it and then start typing to search.',
             run: "edit Test"
         }, {
-            trigger: 'div[name="contact_list_ids"] .ui-state-active',
+            trigger: '.o-autocomplete--dropdown-menu .focus',
             content: 'Select item from dropdown',
             run: 'click',
         }, {
