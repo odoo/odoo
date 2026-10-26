@@ -1,7 +1,7 @@
-import { Component, proxy, t, useProps } from "@odoo/owl";
+import { Component, proxy, t, usePlugin, useProps } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
-
+import { DashboardSharePlugin } from "@spreadsheet_dashboard/bundle/owl_plugins/dashboard_share_owl_plugin";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { CopyButton } from "@web/core/copy_button/copy_button";
@@ -16,9 +16,10 @@ export class DashboardShareButton extends Component {
     static components = { Dropdown, DropdownItem, CopyButton };
     props = useProps({
         model: t.instanceOf(Model).optional(),
-        onSpreadsheetShared: t.function(),
         togglerClass: t.string().optional(),
     });
+
+    dashboardSharePlugin = usePlugin(DashboardSharePlugin);
 
     setup() {
         this.copiedText = _t("Copied");
@@ -37,7 +38,7 @@ export class DashboardShareButton extends Component {
             return;
         }
         const excelExport = await model.exportXLSX();
-        const url = await this.props.onSpreadsheetShared(data, excelExport);
+        const url = await this.dashboardSharePlugin.shareDashboard(data, excelExport);
         model.dispatch("LOG_DATASOURCE_EXPORT", { action: "freeze" });
         this.state.url = url;
         setTimeout(async () => {

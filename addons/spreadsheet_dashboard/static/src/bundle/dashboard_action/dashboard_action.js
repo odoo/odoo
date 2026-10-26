@@ -3,6 +3,7 @@ import {
     Component,
     computed,
     onWillStart,
+    providePlugins,
     proxy,
     useEffect,
     useListener,
@@ -22,6 +23,7 @@ import { Status } from "./dashboard_loader_service";
 import { DashboardSearchBar } from "./dashboard_search_bar/dashboard_search_bar";
 import { MobileFigureContainer } from "./mobile_figure_container/mobile_figure_container";
 import { DashboardMobileSearchPanel } from "./mobile_search_panel/mobile_search_panel";
+import { DashboardSharePlugin } from "../owl_plugins/dashboard_share_owl_plugin";
 
 export const dashboardActionRegistry = new Registry();
 
@@ -53,6 +55,7 @@ export class SpreadsheetDashboardAction extends Component {
         this.uiService = useService("ui");
         this.actionService = useService("action");
         this.loader = useService("spreadsheet_dashboard_loader");
+        providePlugins([DashboardSharePlugin], { resIdSignal: this.activeDashboardId });
         onWillStart(async () => {
             if (this.props.state && this.props.state.dashboardLoader) {
                 const state = this.props.state.dashboardLoader;
