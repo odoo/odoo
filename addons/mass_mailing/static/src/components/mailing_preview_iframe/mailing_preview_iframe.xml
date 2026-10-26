@@ -6,7 +6,7 @@
         <div class="o_mass_mailing_iframe_wrapper mailing_preview_iframe">
             <!-- Mobile container has fixed width -->
             <div class="o_mass_mailing_preview_container overflow-hidden"
-                t-att-class="{'o_is_mobile o_mass_mailing_preview_transparent_form': this.state.isMobileMode}">
+                t-att-class="{'o_is_mobile': this.state.isMobileMode}">
                 <div t-if="this.state.isMobileMode" class="o_is_mobile_header px-2 pb-1">
                     <!-- "Mobile Header" (placed in the padding) -->
                     <div class="position-relative">
