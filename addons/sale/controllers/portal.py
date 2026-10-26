@@ -218,6 +218,16 @@ class CustomerPortal(payment_portal.PaymentPortal):
 
         # Payment values
         if order_sudo._has_to_be_paid() or (payment_amount and not order_sudo.is_expired):
+            if payment_amount and (
+                order_sudo.currency_id.compare_amounts(prepayment_amount, payment_amount)
+                or order_sudo.currency_id.compare_amounts(order_sudo.amount_total, payment_amount)
+            ):
+                # If requested amount is different from total/down payment %, force the payment of
+                # the requested amount, without displaying the choice of down payment/full amount.
+                prepayment_available = False
+                values["from_payment_link"] = True
+                values["prepayment_available"] = False
+
             values.update(
                 self._get_payment_values(
                     order_sudo,
@@ -291,8 +301,10 @@ class CustomerPortal(payment_portal.PaymentPortal):
                 amount = payment_amount
             else:
                 amount = order_sudo._get_prepayment_required_amount()
+        elif payment_amount:
+            amount = payment_amount
         elif order_sudo.state == "sale":
-            amount = payment_amount or order_sudo.amount_total
+            amount = order_sudo.amount_total
         else:
             amount = currency.round(order_sudo.amount_total - order_sudo.amount_paid)
 
