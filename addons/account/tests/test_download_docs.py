@@ -103,6 +103,21 @@ class TestDownloadDocs(AccountTestInvoicingHttpCommon):
             file_names = sorted(zip_file.namelist())
             self.assertEqual(file_names, attachment_names)
 
+    def test_download_moves_attachments_not_sent(self):
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({'price_unit': 300})],
+        })
+        invoice.action_post()
+        self.assertFalse(invoice.invoice_pdf_report_id)
+        self.authenticate(self.env.user.login, self.env.user.login)
+        url = f'/account/download_move_attachments/{invoice.id}'
+        res = self.url_open(url)
+        self.assertEqual(res.status_code, 200)
+        with ZipFile(BytesIO(res.content)) as zip_file:
+            self.assertEqual(zip_file.namelist(), [f"{invoice.name.replace('/', '_')}.pdf"])
+
     def test_download_moves_attachments_with_bills(self):
         bill = self.init_invoice('in_invoice', products=self.product_a, post=True)
         bill.message_main_attachment_id = self.env['ir.attachment'].create({'name': "Attachment", 'mimetype': 'text/plain', 'res_model': 'account.move', 'raw': b"test_bill"})
@@ -114,6 +129,16 @@ class TestDownloadDocs(AccountTestInvoicingHttpCommon):
         with ZipFile(BytesIO(res.content)) as zip_file:
             file_names = sorted(zip_file.namelist())
             self.assertEqual(file_names, attachment_names)
+
+    def test_download_moves_bill_without_attachment(self):
+        bill = self.init_invoice('in_invoice', products=self.product_a, post=True)
+        self.assertFalse(bill.attachment_ids or bill.invoice_pdf_report_id)
+        self.authenticate(self.env.user.login, self.env.user.login)
+        url = f'/account/download_move_attachments/{bill.id}'
+        res = self.url_open(url)
+        self.assertEqual(res.status_code, 200)
+        with ZipFile(BytesIO(res.content)) as zip_file:
+            self.assertEqual(zip_file.namelist(), [f"{bill.name.replace('/', '_')}.pdf"])
 
     def test_download_moves_attachments_with_duplicate_names(self):
         bill_1 = self.init_invoice('in_invoice', products=self.product_a, post=True)
