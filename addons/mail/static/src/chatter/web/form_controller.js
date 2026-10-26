@@ -57,7 +57,9 @@ patch(FormController.prototype, {
                 }
             }
             const doc = createDocumentFragmentFromContent(changes.body);
-            const partnerElements = doc.querySelectorAll('[data-oe-model="res.partner"]');
+            const partnerElements = doc.querySelectorAll(
+                '[data-oe-model="res.partner"]:not(.o_record_redirect)'
+            );
             const partnerIds = Array.from(partnerElements).map((element) =>
                 parseInt(element.dataset.oeId)
             );

@@ -202,4 +202,15 @@
         </span>
     </t>
 
+    <t t-name="mail.Message.recordLink">
+        <span t-if="thread?.displayName">
+            <span class="oi oi-filled me-1" data-icon="description" aria-hidden="true"/>
+            <span t-out="thread.displayName"/>
+        </span>
+        <span t-else="">
+            <span class="oi oi-filled me-1" data-icon="lock" aria-hidden="true"/>
+            <span>Restricted</span>
+        </span>
+    </t>
+
 </templates>

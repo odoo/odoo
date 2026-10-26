@@ -4,6 +4,7 @@ import {
     defineMailModels,
     insertText,
     MENU_ACTIVE_IDS,
+    onRpcBefore,
     openFormView,
     openMessagingMenu,
     start,
@@ -11,9 +12,15 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 
-import { describe, expect, test } from "@odoo/hoot";
+import { advanceTime, describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click as hootClick, waitFor, waitForNone } from "@odoo/hoot-dom";
-import { contains, mockService, preloadBundle, serverState } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    defineActions,
+    mockService,
+    preloadBundle,
+    serverState,
+} from "@web/../tests/web_test_helpers";
 import { cookie } from "@web/core/browser/cookie";
 import { getOrigin } from "@web/core/utils/urls";
 
@@ -186,4 +193,102 @@ test("record link in a user notification's body opens the record", async () => {
     // hoot click: the event must be composed to reach the message outside the shadow root
     await hootClick(".o_dialog .o-mail-Message-shadowBody:shadow a:text('some.model_250')");
     await expect.waitForSteps(["do-action:some.model_250"]);
+});
+
+test("marked links to records show their name or restricted, other links keep their text", async () => {
+    defineActions([
+        { id: 1, path: "contacts", res_model: "res.partner", views: [[false, "form"]] },
+        { id: 2, type: "ir.actions.server" },
+    ]);
+    const pyEnv = await startServer();
+    const [aliceId, lenaId, zaraId] = pyEnv["res.partner"].create([
+        { name: "Alice" },
+        { name: "Lena" },
+        { name: "Zara" },
+    ]);
+    const lenaUrl = `${getOrigin()}/odoo/contacts/${lenaId}`;
+    const labelUrl = `${getOrigin()}/odoo/contacts/${lenaId}?label=1`;
+    const malformedUrl = `${getOrigin()}/odoo/contacts/${lenaId}?q=100%`;
+    const otherIdUrl = `${getOrigin()}/odoo/contacts/${zaraId}`;
+    const otherModelUrl = `${getOrigin()}/odoo/res.users/${lenaId}`;
+    const serverActionUrl = `${getOrigin()}/odoo/action-2/${lenaId}`;
+    const dotSegmentUrl = `${getOrigin()}/odoo/../web/content/1?model=res.partner&resId=${lenaId}`;
+    const unknownUrl = `${getOrigin()}/odoo/contacts/999999`;
+    const unmarkedUrl = `${getOrigin()}/odoo/res.partner/${zaraId}`;
+    const recordLink = (url, id, label = url) =>
+        `<a class="o_record_redirect" href="${url}" data-oe-model="res.partner" data-oe-id="${id}">${label}</a>`;
+    pyEnv["mail.message"].create({
+        body: `<p>${[
+            recordLink(lenaUrl, lenaId),
+            recordLink(labelUrl, lenaId, "see here"),
+            recordLink(malformedUrl, lenaId),
+            recordLink(otherIdUrl, lenaId),
+            recordLink(otherModelUrl, lenaId),
+            recordLink(serverActionUrl, lenaId),
+            recordLink(dotSegmentUrl, lenaId),
+            recordLink(unknownUrl, 999999),
+            `<a href="${unmarkedUrl}">${unmarkedUrl}</a>`,
+        ].join(" ")}</p>`,
+        model: "res.partner",
+        res_id: aliceId,
+    });
+    await start();
+    await openFormView("res.partner", aliceId);
+    await waitFor(
+        `.o-mail-Message-body a.o_record_redirect_transformed[href='${lenaUrl}']:text(Lena)`
+    );
+    await waitFor(`.o-mail-Message-body a[href='${labelUrl}']:text(see here)`);
+    await waitFor(`.o-mail-Message-body a[href='${malformedUrl}']:text('${malformedUrl}')`);
+    await waitFor(`.o-mail-Message-body a[href='${otherIdUrl}']:text('${otherIdUrl}')`);
+    await waitFor(`.o-mail-Message-body a[href='${otherModelUrl}']:text('${otherModelUrl}')`);
+    await waitFor(`.o-mail-Message-body a[href='${serverActionUrl}']:text('${serverActionUrl}')`);
+    await waitFor(`.o-mail-Message-body a[href='${dotSegmentUrl}']:text('${dotSegmentUrl}')`);
+    await waitFor(
+        `.o-mail-Message-body a.o_record_redirect_transformed[href='${unknownUrl}']:text(Restricted)`
+    );
+    await waitFor(`.o-mail-Message-body a[href='${unmarkedUrl}']:text('${unmarkedUrl}')`);
+});
+
+test("marked link to a record is rendered once its failed name fetch is retried", async () => {
+    const pyEnv = await startServer();
+    const [aliceId, lenaId] = pyEnv["res.partner"].create([{ name: "Alice" }, { name: "Lena" }]);
+    const url = `${getOrigin()}/odoo/res.partner/${lenaId}`;
+    pyEnv["mail.message"].create({
+        body: `<p><a class="o_record_redirect" href="${url}" data-oe-model="res.partner" data-oe-id="${lenaId}">${url}</a></p>`,
+        model: "res.partner",
+        res_id: aliceId,
+    });
+    let hasFailed = false;
+    onRpcBefore("/mail/store", ({ fetch_params }) => {
+        if (!hasFailed && fetch_params.some((param) => param[0] === "record_link")) {
+            hasFailed = true;
+            expect.step("record_link failed");
+            throw new Error("Network error");
+        }
+    });
+    await start();
+    await openFormView("res.partner", aliceId);
+    await expect.waitForSteps(["record_link failed"]);
+    await waitFor(`.o-mail-Message-body a[href='${url}']:text('${url}'):count(1)`);
+    await advanceTime(1000);
+    await waitFor(
+        `.o-mail-Message-body a.o_record_redirect_transformed[href='${url}']:text(Lena):count(1)`
+    );
+});
+
+test("marked link to a record is restricted for a portal user", async () => {
+    const pyEnv = await startServer();
+    const [aliceId, lenaId] = pyEnv["res.partner"].create([{ name: "Alice" }, { name: "Lena" }]);
+    pyEnv["res.users"].write([serverState.userId], { share: true });
+    const url = `${getOrigin()}/odoo/res.partner/${lenaId}`;
+    pyEnv["mail.message"].create({
+        body: `<p><a class="o_record_redirect" href="${url}" data-oe-model="res.partner" data-oe-id="${lenaId}">${url}</a></p>`,
+        model: "res.partner",
+        res_id: aliceId,
+    });
+    await start();
+    await openFormView("res.partner", aliceId);
+    await waitFor(
+        `.o-mail-Message-body a.o_record_redirect_transformed[href='${url}']:text(Restricted):count(1)`
+    );
 });
