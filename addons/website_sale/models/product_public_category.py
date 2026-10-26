@@ -203,9 +203,9 @@ class ProductPublicCategory(models.Model):
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
         product_category_model = self.env["product.public.category"]
-        for data in results_data:
+        for category, data in zip(self, results_data):
             data["url"] = "/shop/category/%s" % data["id"]
-            data["image_url"] = "/web/image/product.public.category/%s/image_128" % data["id"]
+            data["image_url"] = self.env.website.image_url(category, "image_128")
             category_ids = data.get("parents_and_self", [])
             category_names = product_category_model.browse(category_ids[:-1]).mapped("name")
             data["breadcrumb"] = " / ".join(category_names)

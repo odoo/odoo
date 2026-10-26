@@ -483,7 +483,7 @@
 <template id='slides_misc_user_image' name="User Avatar">
     <img t-attf-class="o_avatar {{img_class or 'rounded-circle'}}"
         t-att-style="img_style if img_style else ''"
-        t-att-src="'/profile/avatar/%s?field=avatar_128' % user.id"
+        t-att-src="user._get_profile_avatar_url()"
         t-att-alt="user.name"/>
 </template>
 </data></odoo>

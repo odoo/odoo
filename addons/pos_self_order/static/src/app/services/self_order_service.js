@@ -1273,9 +1273,9 @@ export class SelfOrder {
     }
 
     get kioskBackgroundImageUrl() {
-        const imageId = this.config._self_ordering_image_background_ids[0];
-        if (imageId) {
-            return `url('/web/image/ir.attachment/${imageId}/raw')`;
+        const image = this.config._self_ordering_image_background_ids[0];
+        if (image) {
+            return `url('/web/image/ir.attachment/${image.id}/raw?unique=${image.checksum}')`;
         }
         return "none";
     }

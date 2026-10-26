@@ -4,8 +4,9 @@ from datetime import datetime, timedelta
 from freezegun import freeze_time
 from werkzeug.urls import url_unquote_plus
 
-from odoo.addons.base.tests.files import GIF_RAW
+from odoo.addons.base.tests.files import GIF_RAW, PNG_RAW
 from odoo.tests.common import HttpCase, new_test_user, tagged
+from odoo.tools import BinaryBytes
 from odoo.tools.image import binary_to_image
 from odoo.tools.misc import limited_field_access_token
 
@@ -348,3 +349,14 @@ class TestImage(HttpCase):
                     "inline; filename=placeholder.png",
                     f"{user} should not have access to {attachment.description} with {token or 'no token'}",
                 )
+
+    def test_07_company_logo_cache(self):
+        """ Without a company, the logo depends on the user: not immutable. """
+        company = self.env.company
+        company.logo = BinaryBytes(PNG_RAW)
+        response = self.url_open('/logo.png?unique=1')
+        self.assertNotIn('immutable', response.headers['Cache-Control'])
+
+        logo_url = company._get_logo_url()
+        company.logo = BinaryBytes(GIF_RAW)
+        self.assertNotEqual(company._get_logo_url(), logo_url, "The URL must change with the logo")

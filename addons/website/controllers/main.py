@@ -2075,7 +2075,7 @@ class Website(Home):
             })
             attachment['url'] = f"/web/font/{attachment.id}/{font['name']}"
             font['id'] = attachment.id
-            font['url'] = f"/web/content/{attachment.id}/{font['name']}"
+            font['url'] = f"/web/content/{attachment.id}/{font['name']}?unique={attachment.checksum}"
             return font
 
         result = []
