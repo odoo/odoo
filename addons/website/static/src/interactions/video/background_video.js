@@ -42,13 +42,22 @@ export class BackgroundVideo extends Interaction {
         this.hideVideoContainer = false;
         this.videoSrc = this.el.dataset.bgVideoSrc;
         this.isVideoFile = "bgVideoIsFile" in this.el.dataset;
+        this.autoplay = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (!this.autoplay && !this.isVideoFile) {
+            const url = new URL(this.videoSrc, window.location.href);
+            const isTwitch = url.hostname === "twitch.tv" || url.hostname.endsWith(".twitch.tv");
+            url.searchParams.set("autoplay", isTwitch ? "false" : "0");
+            this.videoSrc = url.href;
+        }
         this.playerID = uniqueId("o_bg_video_player_");
         this.playerEl = null;
         this.bgVideoContainer = null;
     }
 
     start() {
-        const promise = setupAutoplay(this.videoSrc, !!this.el.dataset.needCookiesApproval);
+        const promise = this.autoplay
+            ? setupAutoplay(this.videoSrc, !!this.el.dataset.needCookiesApproval)
+            : Promise.resolve();
         if (promise) {
             this.waitFor(promise).then(this.protectSyncAfterAsync(this.appendBgVideo));
         }
@@ -118,6 +127,7 @@ export class BackgroundVideo extends Interaction {
                 videoSrc: allowedCookies || this.isVideoFile ? this.videoSrc : "about:blank",
                 playerID: this.playerID,
                 isVideoFile: this.isVideoFile,
+                autoplay: this.autoplay,
             },
             this.el,
             "afterbegin"
@@ -139,7 +149,9 @@ export class BackgroundVideo extends Interaction {
         );
 
         this.adjustPlayer();
-        triggerAutoplay(this.playerEl);
+        if (this.autoplay) {
+            triggerAutoplay(this.playerEl);
+        }
     }
 }
 
