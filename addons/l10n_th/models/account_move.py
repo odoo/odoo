@@ -176,10 +176,10 @@ class AccountMove(models.Model):
                 tax_exigibility="on_invoice",
             )
 
-            # On-invoice tax invoices have no reference, with at most one active invoice.
+            # On-invoice tax invoices have no payment_move_id, with at most one active invoice.
             tax_invoice = move.l10n_th_tax_invoice_ids.filtered(
                 lambda ti: (
-                    not ti.reference and ti.state != "cancel"
+                    not ti.payment_move_id and ti.state != "cancel"
                 ),
             )[:1]
 
@@ -261,7 +261,6 @@ class AccountMove(models.Model):
             tax_invoice_vals.append({
                 'invoice_move_id': original_move.id,
                 'payment_move_id': entry.id,
-                'reference': entry.name,
                 'date': entry.date,
                 'total_amount': total_amount,
                 'vat_amount': tax_amount,
@@ -270,7 +269,7 @@ class AccountMove(models.Model):
                 'tax_group_amounts': list(tax_group_amounts.values()),
                 'is_partially_paid': not float_is_zero(total_tax_included_amount - total_amount, precision_digits=2),
                 'tax_invoice_lines': tax_invoice_lines,
-                'state': 'posted',
+                'state': original_move.state,
             })
 
         self.env['l10n_th.tax.invoice'].create(tax_invoice_vals)
