@@ -1781,6 +1781,19 @@ class TestXMLTranslation(TransactionCase):
         self.assertEqual(view1_gb.arch_db, xml % ('Football', 'Clubs', 'Rakning'))  # "Rakning" isn't fixed in en_GB
         self.assertEqual(view1_us.arch_db, xml % ('Soccer', 'Clbus', 'Ranking'))  # fr_FR should fall back to en_US
 
+    def test_delay_translations_backend_edition(self):
+        archf = '<form string="%s"><div>%s</div><div>%s</div></form>'
+        terms_fr = ('Couteau', 'Fourchette', 'Cuiller')
+        terms_en = ('Knife', 'Fork', 'Spoon')
+        view0 = self.create_view(archf, terms_fr, en_US=terms_en)
+        original_english = view0.arch_db
+        new_french = '<form>bonjour monde</form>'
+        view0.with_context(lang='fr_FR', delay_translations=True).arch_db = new_french
+        self.assertEqual(view0.arch_db, original_english)
+        self.assertEqual(view0.with_context(check_translations=True).arch_db, new_french)
+        context = ast.literal_eval(self.env.ref('base.action_ui_view').context)
+        self.assertTrue(context.get('check_translations'))
+
 
 class TestXMLDuplicateTranslations(TransactionCase):
     """
