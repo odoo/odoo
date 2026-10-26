@@ -23,9 +23,15 @@ def float_to_time(hours, moment='am'):
     if hours == 12.0 and moment == 'pm':
         return time.max
     fractional, integral = math.modf(hours)
-    if moment == 'pm':
-        integral += 12
-    return time(int(integral), int(float_round(60 * fractional, precision_digits=0)), 0)
+    hour = int(integral) + (12 if moment == 'pm' else 0)
+    minute = int(float_round(60 * fractional, precision_digits=0))
+    # rounding the minutes can carry over to a full hour, e.g. 11.999 hours
+    if minute == 60:
+        hour += 1
+        minute = 0
+    if hour == 24:
+        return time.max
+    return time(hour, minute, 0)
 
 def time_to_float(t):
     return float_round(t.hour + t.minute/60 + t.second/3600, precision_digits=2)
