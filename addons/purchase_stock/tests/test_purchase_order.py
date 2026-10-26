@@ -987,3 +987,43 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         Form.from_action(self.env, picking.button_validate()).save().process()
         picking.backorder_ids.action_cancel()
         self.assertNotIn(po, self.env['purchase.order'].search([('is_late', '=', True)]))
+
+    def test_extra_receipt_product_vendor_price_other_uom(self):
+        """ A product added on a receipt creates a PO line in the move's UoM. Its price must come
+        from the vendor price converted in that UoM, or from the cost if no vendor price applies,
+        but never be the vendor price of another UoM. """
+        self.env.user.group_ids += self.env.ref('uom.group_uom')
+        pack_6 = self.env.ref('uom.product_uom_pack_6')
+        product_sold_by_1_pack, product_sold_by_2_packs = self.env['product.product'].create([{
+            'name': name,
+            'is_storable': True,
+            'standard_price': 10.0,
+            'seller_ids': [Command.create({
+                'partner_id': self.partner_a.id,
+                'min_qty': min_qty,
+                'price': 20.0,
+                'product_uom_id': pack_6.id,
+            })],
+        } for name, min_qty in [('Sold by 1 pack of 6', 1.0), ('Sold by 2 packs of 6', 2.0)]])
+        po = self.env['purchase.order'].create(self.po_vals)
+        po.button_confirm()
+        receipt = po.picking_ids
+        self.env['stock.move'].create([{
+            'picking_id': receipt.id,
+            'product_id': product.id,
+            'product_uom_qty': 6.0,
+            'quantity': 6.0,
+            'location_id': receipt.location_id.id,
+            'location_dest_id': receipt.location_dest_id.id,
+        } for product in (product_sold_by_1_pack, product_sold_by_2_packs)])
+        receipt.button_validate()
+
+        pol_sold_by_1_pack, pol_sold_by_2_packs = po.order_line[2:]
+        self.assertRecordValues(pol_sold_by_1_pack + pol_sold_by_2_packs, [
+            {'product_id': product_sold_by_1_pack.id, 'product_uom_id': self.env.ref('uom.product_uom_unit').id, 'qty_received': 6.0},
+            {'product_id': product_sold_by_2_packs.id, 'product_uom_id': self.env.ref('uom.product_uom_unit').id, 'qty_received': 6.0},
+        ])
+        # the vendor is found: take the price of the vendor in the right uom
+        self.assertAlmostEqual(pol_sold_by_1_pack.price_unit, 3.33, places=2)
+        # the vendor is not found: take standard price in the right uom
+        self.assertAlmostEqual(pol_sold_by_2_packs.price_unit, 10.0, places=2)

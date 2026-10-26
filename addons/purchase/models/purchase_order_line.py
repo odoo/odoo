@@ -681,6 +681,7 @@ class PurchaseOrderLine(models.Model):
         if values.get('order_id') and values.get('product_id') and any(f not in values for f in onchange_fields):
             line = self.new(values)
             line.onchange_product_id()
+            line.update({field: values[field] for field in ['product_qty', 'product_uom_id'] if field in values})
             for field in onchange_fields:
                 if field not in values:
                     res[field] = line._fields[field].convert_to_write(line[field], line)
