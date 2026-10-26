@@ -1033,6 +1033,11 @@ class SaleOrderLine(models.Model):
         We need a dedicated computation because the triggers are different and could lead to incorrect values for
         'qty_invoiced' when computed together.
         """
+        self.fetch(['invoice_lines', 'product_uom_id'])
+        invoice_lines = self.invoice_lines
+        invoice_lines.fetch(['move_id', 'product_uom_id', 'quantity'])
+        invoice_lines.move_id.fetch(['state', 'payment_state', 'move_type', 'invoice_date'])
+        line_ids_by_qty = defaultdict(list)
         for line in self:
             qty_invoiced_posted = 0.0
             for invoice_line in line._get_invoice_lines():
@@ -1040,7 +1045,10 @@ class SaleOrderLine(models.Model):
                     qty_unsigned = invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom_id)
                     qty_signed = qty_unsigned * -invoice_line.move_id.direction_sign
                     qty_invoiced_posted += qty_signed
-            line.qty_invoiced_posted = qty_invoiced_posted
+            line_ids_by_qty[qty_invoiced_posted].append(line.id)
+
+        for qty, ids in line_ids_by_qty.items():
+            self.browse(ids).qty_invoiced_posted = qty
 
     def _get_invoice_lines(self):
         self.ensure_one()
@@ -1210,14 +1218,19 @@ class SaleOrderLine(models.Model):
 
     @api.depends('discount', 'price_total', 'product_uom_qty', 'qty_invoiced_posted')
     def _compute_amount_to_invoice(self):
+        self.fetch(['price_total', 'product_uom_qty', 'currency_id', 'product_uom_id'])
+        line_ids_by_amount = defaultdict(list)
         for line in self:
+            amount_to_invoice = 0.0
             if line.product_uom_qty:
                 # The ordered quantity is what the customer committed to, delivered or not.
                 qty_to_invoice = line.product_uom_qty - line.qty_invoiced_posted
                 unit_price_total = line.price_total / line.product_uom_qty
-                line.amount_to_invoice = unit_price_total * qty_to_invoice
-            else:
-                line.amount_to_invoice = 0.0
+                amount_to_invoice = unit_price_total * qty_to_invoice
+            line_ids_by_amount[line.currency_id.id, amount_to_invoice].append(line.id)
+
+        for (_currency, amount), ids in line_ids_by_amount.items():
+            self.browse(ids).amount_to_invoice = amount
 
     def _get_gross_price_unit(self):
         """ Mirroring method in purchase """
