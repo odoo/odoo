@@ -8,14 +8,6 @@ from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class HrTimeRuleSourceMixin(models.AbstractModel):
-    _inherit = 'hr.time.rule.source.mixin'
-
-    def _on_sources_collected(self, sources):
-        """Reverse prior allocation credits before the batch is re-evaluated."""
-        self.env['hr.time.rule']._reverse_allocation_credits(self._name, sources.ids)
-
-
 class HrTimeRule(models.Model):
     _inherit = 'hr.time.rule'
 
@@ -42,7 +34,7 @@ class HrTimeRule(models.Model):
             mk = iv.rule._get_output_leave_merge_key(accumulated_pp=iv.pp)
             if merged and merged[-1][0].end == iv.start and merged[-1][1] == mk:
                 prev, _ = merged[-1]
-                merged[-1] = (prev._replace(end=iv.end, pp=prev.pp | iv.pp), mk)
+                merged[-1] = (prev._replace(end=iv.end, pp=prev.pp | iv.pp, acc=prev.acc | iv.acc), mk)
             else:
                 merged.append((iv, mk))
         return [iv for iv, _mk in merged]
@@ -83,6 +75,7 @@ class HrTimeRule(models.Model):
 
         excess_by_key = defaultdict(float)
         log_by_source = defaultdict(float)
+        earliest_date_by_key = {}
 
         for employee, rule, excess_hours, source, log_source in excess_alloc:
             if not (rule.leave_compensation_rate > 0 and rule.allocation_type_id):
@@ -90,8 +83,18 @@ class HrTimeRule(models.Model):
             hours_per_day = employee.resource_calendar_id.hours_per_day or 8.0
             alloc_days = excess_hours * rule.leave_compensation_rate / hours_per_day
             if alloc_days > 0:
-                excess_by_key[employee, rule.allocation_type_id] += alloc_days
+                key = (employee, rule.allocation_type_id)
+                excess_by_key[key] += alloc_days
                 log_by_source[log_source._name, log_source.id, employee, rule.allocation_type_id] += alloc_days
+                # track the earliest source date so new allocations start from when the
+                # credit was actually earned, not from today
+                if log_source._name == 'hr.attendance':
+                    src_date = log_source.check_in.date() if log_source.check_in else None
+                else:
+                    d = log_source.date_from
+                    src_date = d.date() if d else None
+                if src_date and (key not in earliest_date_by_key or src_date < earliest_date_by_key[key]):
+                    earliest_date_by_key[key] = src_date
 
         alloc_by_key = {}
         alloc_create_vals = []
@@ -104,12 +107,16 @@ class HrTimeRule(models.Model):
             ], limit=1)
             if allocation:
                 allocation.number_of_days += alloc_days
+                src_date = earliest_date_by_key.get((employee, alloc_type))
+                if src_date and allocation.date_from and src_date < allocation.date_from:
+                    allocation.date_from = src_date
                 alloc_by_key[employee, alloc_type] = allocation
             else:
                 alloc_create_vals.append({
                     'employee_id': employee.id,
                     'work_entry_type_id': alloc_type.id,
                     'number_of_days': alloc_days,
+                    'date_from': earliest_date_by_key.get((employee, alloc_type), fields.Date.today()),
                     'date_to': False,
                     'state': 'confirm',
                 })
@@ -231,7 +238,10 @@ class HrTimeRule(models.Model):
         if all_source_ids:
             Leave = self.env['hr.leave'].sudo()
             sources = Leave.with_context(active_test=False).browse(list(all_source_ids))
-            (sources | new_records).with_context(**Leave._time_rule_write_ctx)._create_resource_leave()
+            # only archived (excess) sources lose their RCL; deficit sources stay active and keep theirs
+            sources.filtered(lambda l: not l.active)._remove_resource_leave()
+            if new_records:
+                new_records.with_context(**Leave._time_rule_write_ctx)._create_resource_leave()
 
     @api.model
     def _reverse_allocation_credits(self, source_model, source_ids):
@@ -254,12 +264,20 @@ class HrTimeRule(models.Model):
             if not allocation.exists() or not days:
                 continue
             wet = allocation.work_entry_type_id
+            # virtual_remaining_leaves is in hours for hour-based time types
+            h = allocation.employee_id.resource_calendar_id.hours_per_day or 8.0
+            virt_remaining_days = (
+                allocation.virtual_remaining_leaves / h
+                if wet.unit_of_measure == 'hour'
+                else allocation.virtual_remaining_leaves
+            )
             allowed_floor = -wet.max_allowed_negative if wet.allows_negative else 0.0
-            remaining_after = allocation.virtual_remaining_leaves - days
+            remaining_after = round(virt_remaining_days - days, 6)
             if remaining_after < allowed_floor:
                 employee = allocation.employee_id
                 manager = employee.leave_manager_id or employee.parent_id
                 manager_name = manager.name if manager else self.env._('your HR manager')
+                taken = allocation.number_of_days - virt_remaining_days
                 if trigger_desc:
                     errors.append(self.env._(
                         "Saving %(record)s requires reducing %(employee)s's '%(leave_type)s' balance "
@@ -270,22 +288,21 @@ class HrTimeRule(models.Model):
                         employee=employee.name,
                         leave_type=wet.name,
                         days=days,
-                        taken=days - (remaining_after - allowed_floor),
+                        taken=taken,
                         manager=manager_name,
                     ))
                 else:
                     errors.append(self.env._(
                         "Cannot reduce %(employee)s's '%(leave_type)s' balance by %(days).4g day(s): "
                         "%(taken).4g day(s) have already been taken against it (balance would drop to "
-                        "%(after).4g, below the minimum of %(floor).4g). "
+                        "%(after).4g). "
                         "Please ask %(manager)s to refuse or reduce those taken leaves first, "
                         "or adjust the allocation manually.",
                         employee=employee.name,
                         leave_type=wet.name,
                         days=days,
-                        taken=days - (remaining_after - allowed_floor),
+                        taken=taken,
                         after=remaining_after,
-                        floor=allowed_floor,
                         manager=manager_name,
                     ))
         if errors:
@@ -293,5 +310,5 @@ class HrTimeRule(models.Model):
         for allocation, days in by_alloc.items():
             if not allocation.exists() or not days:
                 continue
-            allocation.number_of_days -= days
+            allocation.number_of_days = round(allocation.number_of_days - days, 6)
         logs.unlink()
