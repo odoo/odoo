@@ -168,7 +168,11 @@ class TestHrAttendance(HttpCase, TransactionCase):
             attendance.break_duration = 12
 
     def test_hours_today_splits_break_proportionally_across_cross_midnight_attendance(self):
-        employee = self.env['hr.employee'].create({'name': 'Cross Midnight', 'tz': 'UTC'})
+        employee = self.env['hr.employee'].create({
+            'name': 'Cross Midnight',
+            'date_version': date(2023, 1, 1),
+            'tz': 'UTC',
+        })
         self.env['hr.attendance'].create({
             'employee_id': employee.id,
             'check_in': datetime(2024, 1, 1, 20),
@@ -195,29 +199,34 @@ class TestHrAttendance(HttpCase, TransactionCase):
 
     @freeze_time("2024-01-02 12:00:00")
     def test_user_attendance_details_are_opt_in(self):
+        employee = self.env['hr.employee'].create({
+            'name': 'Opt-in Employee',
+            'date_version': date(2023, 1, 1),
+            'tz': 'UTC',
+        })
         now = fields.Datetime.now()
         self.env['hr.attendance'].create({
-            'employee_id': self.test_employee.id,
+            'employee_id': employee.id,
             'check_in': datetime(2024, 1, 1, 22),
             'check_out': datetime(2024, 1, 2, 2),
             'break_duration': 1,
         })
         future_attendance = self.env['hr.attendance'].create({
-            'employee_id': self.test_employee.id,
+            'employee_id': employee.id,
             'check_in': now + timedelta(hours=2),
             'check_out': now + timedelta(hours=3),
         })
         tomorrow_attendance = self.env['hr.attendance'].create({
-            'employee_id': self.test_employee.id,
+            'employee_id': employee.id,
             'check_in': now + timedelta(days=1),
             'check_out': now + timedelta(days=1, hours=1),
         })
         future_open_attendance = self.env['hr.attendance'].create({
-            'employee_id': self.test_employee.id,
+            'employee_id': employee.id,
             'check_in': now + timedelta(hours=4),
         })
 
-        public_payload = HrAttendance._get_user_attendance_data(self.test_employee)
+        public_payload = HrAttendance._get_user_attendance_data(employee)
         self.assertNotIn('last_attendance', public_payload)
         self.assertNotIn('in_location', public_payload['today_attendance_ids'][0])
         self.assertNotIn('can_edit', public_payload['today_attendance_ids'][0])
@@ -225,7 +234,7 @@ class TestHrAttendance(HttpCase, TransactionCase):
         self.assertEqual(public_payload['hours_previously_today'], 0)
 
         user_payload = HrAttendance._get_user_attendance_data(
-            self.test_employee,
+            employee,
             include_attendance_details=True,
         )
         self.assertNotIn('last_attendance', user_payload)
