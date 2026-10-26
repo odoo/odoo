@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_es_deca_wizard_form_view" model="ir.ui.view">
+        <field name="name">l10n_es.deca.wizard.form</field>
+        <field name="model">l10n_es.deca.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="tractor_license_plate"/>
+                        <field name="trailer_license_plate"/>
+                        <field name="authorization_observation"/>
+                    </group>
+                    <group>
+                        <field name="sender_id" placeholder="Empty means your company"/>
+                        <field name="carrier_id" placeholder="Empty means your company"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Generate" name="action_generate_deca" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" special="cancel" class="btn-secondary" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
