@@ -125,7 +125,6 @@ export class TranslationPlugin extends Plugin {
     };
 
     setup() {
-        this.websiteService = this.services.website;
         this.notificationService = this.services.notification;
         this.dialogService = this.services.dialog;
         this.nonTranslatedSelector =
@@ -141,19 +140,6 @@ export class TranslationPlugin extends Plugin {
             if (translatedEl.matches("input[type=hidden].o_translatable_input_hidden")) {
                 translatedEl.setAttribute("type", "text");
             }
-        }
-
-        // We don't want the BS dropdown to close when clicking in a element to
-        // translate.
-        const menuEls = this.websiteService.pageDocument.querySelectorAll(".dropdown-menu");
-        for (const menuEl of menuEls) {
-            this.addDomListener(menuEl, "click", (ev) => {
-                const editableEl = ev.target.closest(".o_savable");
-                if (editableEl && menuEl.contains(editableEl)) {
-                    ev.stopPropagation();
-                    ev.preventDefault();
-                }
-            });
         }
 
         const showNotification = (ev) => {
