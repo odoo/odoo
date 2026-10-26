@@ -216,6 +216,13 @@ class AccountEdiProxyClientUser(models.Model):
             'refresh_token': response['refresh_token'],
         })
 
+    def _get_supported_document_types(self):
+        self.ensure_one()
+        supported_types = super()._get_supported_document_types()
+        if self.proxy_type == 'pdp':
+            supported_types.update(self.company_id._pdp_supported_document_types())
+        return supported_types
+
     @handle_demo
     def _peppol_register_receiver(self):
         self.ensure_one()

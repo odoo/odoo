@@ -189,10 +189,9 @@ class ResCompany(models.Model):
         })
         super()._reset_peppol_configuration()
 
-    def _peppol_supported_document_types(self):
-        """Returns a flattened dictionary of all supported document types."""
+    def _pdp_supported_document_types(self):
+        """Returns a flattened dictionary of French PDP supported document types."""
         return {
-            **super()._peppol_supported_document_types(),
             'urn:un:unece:uncefact:data:standard:CrossDomainAcknowledgementAndResponse:100::CrossDomainAcknowledgementAndResponse##urn:peppol:france:billing:cdv:1.0::D22B': "French CDAR (Lifecycle Messages)",
             'urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017::2.1': "UBL V2.1 Invoice",
             'urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:cen.eu:en16931:2017::2.1': "UBL V2.1 CreditNote",
