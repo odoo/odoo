@@ -579,6 +579,9 @@ class Field[T]:
             if not isinstance(self.readonly, bool):
                 self._setup_warning(f'property readonly should be a boolean ({self.readonly})')
 
+            if self.groups and ' ' in self.groups:
+                self._setup_warning('groups must not contain spaces')
+
             self._setup_done = True
             # column_type might be changed during Field.setup
             reset_cached_properties(self)

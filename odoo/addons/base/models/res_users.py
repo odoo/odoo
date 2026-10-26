@@ -1178,7 +1178,7 @@ class ResUsers(models.Model):
         positives = []
         negatives = []
         for group_ext_id in group_spec.split(','):
-            group_ext_id = group_ext_id.strip()
+            assert group_ext_id == group_ext_id.strip(), "spaces detected in group definition"
             if group_ext_id.startswith('!'):
                 negatives.append(group_ext_id[1:])
             else:
