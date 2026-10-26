@@ -5,8 +5,9 @@ import re
 from contextlib import contextmanager
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, Command
 from odoo.exceptions import ValidationError, RedirectWarning, UserError
+from odoo.tools import SQL
 from odoo.tools.float_utils import json_float_round
 from odoo.tools.image import image_data_uri
 from odoo.addons.l10n_in.models.iap_account import IAP_SERVICE_NAME
@@ -638,3 +639,59 @@ class AccountMove(models.Model):
         elif company.l10n_in_gst_registration_type == 'composition':
             return 'Bill of Supply'
         return 'Invoice'
+
+    def _l10n_in_get_applied_tcs_tax(self):
+        """
+        Returns the TCS tax that is applied on all the invoice lines, if any.
+        """
+        product_lines = self.invoice_line_ids.filtered(lambda line: line.display_type == 'product')
+        tcs_taxes = product_lines.tax_ids.filtered(lambda tax: tax.l10n_in_tax_type == 'tcs')
+        return tcs_taxes.filtered(lambda tax: all(tax in line.tax_ids for line in product_lines))[:1]
+
+    def get_l10n_in_tcs_taxes(self, limit=3):
+        """
+        This method is called from the tax totals popover on the invoice form view.
+        Returns the TCS taxes, total TCS taxes and the TCS tax applied on all invoice lines.
+        """
+        applied_tax = self._l10n_in_get_applied_tcs_tax()
+        query = self.env['account.tax']._search(
+            domain=[
+                *self._check_company_domain(self.company_id or self.env.company),
+                ('l10n_in_tax_type', '=', 'tcs'),
+            ],
+            limit=limit,
+        )
+
+        result = self.env.execute_query(query.select(
+            query.table.id,
+            query.table.name,
+            SQL("COUNT(*) OVER() AS total_count"),
+        ))
+        records = [{'id': tax_id, 'name': name} for tax_id, name, _count in result]
+        if applied_tax and applied_tax.id not in [record['id'] for record in records]:
+            records = [{'id': applied_tax.id, 'name': applied_tax.name}, *records[:limit - 1]]
+        return {
+            'total_length': result[0][2] if result else 0,
+            'records': records,
+            'applied_tax_id': applied_tax.id,
+        }
+
+    def l10n_in_update_add_tcs_on_invoice_lines(self, tcs_tax_id):
+        """
+        This method is called from the tax totals popover on the invoice form view.
+        If the TCS tax is already applied on all invoice lines, it is removed from them.
+        Otherwise, it replaces any other TCS tax on all invoice lines.
+        """
+        self.ensure_one()
+        tcs_tax = self.env['account.tax'].browse(tcs_tax_id)
+        if not tcs_tax or tcs_tax.l10n_in_tax_type != 'tcs':
+            raise UserError(_("The selected tax is not a valid TCS tax."))
+        product_lines = self.invoice_line_ids.filtered(lambda line: line.display_type == 'product')
+        if tcs_tax == self._l10n_in_get_applied_tcs_tax():
+            product_lines.tax_ids = [Command.unlink(tcs_tax.id)]
+        else:
+            other_tcs_taxes = product_lines.tax_ids.filtered(lambda tax: tax.l10n_in_tax_type == 'tcs') - tcs_tax
+            product_lines.tax_ids = [
+                *(Command.unlink(tax.id) for tax in other_tcs_taxes),
+                Command.link(tcs_tax.id),
+            ]

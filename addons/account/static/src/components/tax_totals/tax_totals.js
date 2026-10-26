@@ -214,12 +214,7 @@ export class TaxTotalsComponent extends Component {
         this.props.record.save();
     }
 
-    async openCashRoundingDropdown(target) {
-        if (this.cashRoundingDropdown.isOpen) {
-            this.cashRoundingDropdown.close();
-            return;
-        }
-
+    async getCashRoundingDropdownItems() {
         const { total_length, records } = await this.orm.call(
             "account.move",
             "get_cash_roundings",
@@ -257,6 +252,16 @@ export class TaxTotalsComponent extends Component {
             class: "o_cash_rounding_dropdown_action",
             onSelected: () => this.openCashRoundingFormView(),
         });
+        return items;
+    }
+
+    async openCashRoundingDropdown(target) {
+        if (this.cashRoundingDropdown.isOpen) {
+            this.cashRoundingDropdown.close();
+            return;
+        }
+
+        const items = await this.getCashRoundingDropdownItems();
         this.cashRoundingDropdown.open(target, { items, slots: {} });
     }
 
