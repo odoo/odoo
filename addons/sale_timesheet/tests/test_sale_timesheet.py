@@ -2040,6 +2040,7 @@ class TestSaleTimesheetAnalyticPlan(TestCommonSaleTimesheet):
 
         self.env['hr.employee.departure'].sudo().with_context(employee_termination=True).create({
             'employee_id': self.employee_manager.id,
+            'dismissal_date': yesterday,
             'departure_date': yesterday,
         }).action_register()
 

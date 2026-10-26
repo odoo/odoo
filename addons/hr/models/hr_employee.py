@@ -642,9 +642,11 @@ class HrEmployee(models.Model):
         versions = self._get_last_consecutive_versions(date_limit)
         return min(versions.mapped('date_start')) if versions else False
 
+    def _get_first_contract(self, date_limit=date.max):
+        return self._get_last_consecutive_versions(date_limit).filtered('contract_date_start')[:1]
+
     def _get_first_contract_date(self, date_limit=date.max):
-        versions = self._get_last_consecutive_versions(date_limit).filtered(lambda x: x.contract_date_start)
-        return min(versions.mapped('contract_date_start')) if versions else False
+        return self._get_first_contract(date_limit).contract_date_start
 
     @api.depends('name')
     def _compute_legal_name(self):
