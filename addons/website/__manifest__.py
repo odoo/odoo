@@ -316,6 +316,9 @@
             'website/static/src/components/user_switch.*',
         ],
         'web.assets_frontend_minimal': [
+            'html_editor/static/src/main/media/video/abstract_third_party_video.js',
+            'html_editor/static/src/main/media/video/providers/**/*',
+            'html_editor/static/src/main/media/video/utils.js',
             'website/static/src/js/content/visibility.js',
             'website/static/src/js/content/inject_dom.js',
             'website/static/src/js/content/auto_hide_menu.js',
@@ -324,6 +327,9 @@
         ],
         'web.assets_frontend_lazy': [
             # Remove assets_frontend_minimal
+            ('remove', 'html_editor/static/src/main/media/video/abstract_third_party_video.js'),
+            ('remove', 'html_editor/static/src/main/media/video/providers/**/*'),
+            ('remove', 'html_editor/static/src/main/media/video/utils.js'),
             ('remove', 'website/static/src/js/content/visibility.js'),
             ('remove', 'website/static/src/js/content/inject_dom.js'),
             ('remove', 'website/static/src/js/content/auto_hide_menu.js'),
