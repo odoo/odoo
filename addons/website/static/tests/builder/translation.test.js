@@ -810,25 +810,6 @@ test("trying to translate an element inside a .o_not_editable should add a notif
     await contains(":iframe [data-oe-id='10']").click();
 });
 
-test("trying to translate an attribute of an image inside a .o_not_editable should add a notification", async () => {
-    expect.assertions(2);
-    mockService("notification", {
-        add(message, options = {}) {
-            expect(message).toBe("This translation is not editable.");
-        },
-    });
-    await setupSidebarBuilderForTranslation({
-        websiteContent: `
-            <div class="o_not_editable">
-                <img src="/web/image/website.landscape_md_9" class="img img-fluid mx-auto rounded" loading="lazy" title="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>title</span>" style=""></img>
-            <div/>
-        `,
-    });
-    await contains(".modal .btn:contains(Ok, never show me this again)").click();
-    await contains(":iframe img").click();
-    expect(".modal .modal-body input").toHaveCount(0);
-});
-
 test("it should be possible to translate the attribute of an image that has the o_editable_media even if it is inside a o_not_editable area", async () => {
     await setupSidebarBuilderForTranslation({
         websiteContent: `

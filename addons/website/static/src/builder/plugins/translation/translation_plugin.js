@@ -1,7 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 import { withSequence } from "@html_editor/utils/resource";
 import { makeContentsInline, unwrapContents } from "@html_editor/utils/dom";
 import { DISABLED_NAMESPACE } from "@html_editor/main/toolbar/toolbar_plugin";
@@ -125,7 +123,6 @@ export class TranslationPlugin extends Plugin {
     };
 
     setup() {
-        this.notificationService = this.services.notification;
         this.dialogService = this.services.dialog;
         this.nonTranslatedSelector =
             `:not(${this.config.translatedElements.join(", ")})` + `:not(.o_translate_inline)`;
@@ -140,38 +137,6 @@ export class TranslationPlugin extends Plugin {
             if (translatedEl.matches("input[type=hidden].o_translatable_input_hidden")) {
                 translatedEl.setAttribute("type", "text");
             }
-        }
-
-        const showNotification = (ev) => {
-            // Prevent duplicate notifications for the same click but allow the
-            // event to bubble (i.e. for carousel sliding)
-            if (ev.__shownNotification) {
-                return;
-            }
-            ev.__shownNotification = true;
-            let message = _t("This translation is not editable.");
-            if (ev.target.closest(".s_table_of_content_navbar_wrap")) {
-                message = _t("Translate header in the text. Menu is generated automatically.");
-            }
-            if (ev.target.closest(".o_carousel_controllers")) {
-                return;
-            }
-            this.notificationService.add(message, {
-                type: "info",
-                sticky: false,
-            });
-        };
-        const savableInsideNotEditableEls = this.editable.querySelectorAll(
-            ".o_not_editable .o_savable, .o_not_editable .o_savable_attribute"
-        );
-        for (const savableInsideNotEditableEl of savableInsideNotEditableEls) {
-            if (
-                savableInsideNotEditableEl.matches(".o_editable_media") &&
-                shouldEditableMediaBeEditable(savableInsideNotEditableEl)
-            ) {
-                continue;
-            }
-            this.addDomListener(savableInsideNotEditableEl, "click", showNotification);
         }
     }
     /**
