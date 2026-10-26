@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 19:01+0000\n"
-"PO-Revision-Date: 2025-12-29 19:01+0000\n"
+"POT-Creation-Date: 2026-10-24 18:03+0000\n"
+"PO-Revision-Date: 2026-10-24 18:03+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -303,6 +303,11 @@ msgid "Account Chart Template"
 msgstr ""
 
 #. module: l10n_ch
+#: model:ir.model,name:l10n_ch.model_account_move_send
+msgid "Account Move Send"
+msgstr ""
+
+#. module: l10n_ch
 #. odoo-python
 #: code:addons/l10n_ch/wizard/qr_invoice_wizard.py:0
 msgid "All selected invoices must belong to the same Switzerland company"
@@ -362,6 +367,12 @@ msgstr ""
 #. module: l10n_ch
 #: model:ir.model.fields,field_description:l10n_ch.field_l10n_ch_qr_invoice_wizard__display_name
 msgid "Display Name"
+msgstr ""
+
+#. module: l10n_ch
+#. odoo-python
+#: code:addons/l10n_ch/models/account_move_send.py:0
+msgid "Errors occured during the generation of the \"Swiss QR bill\" QR-code."
 msgstr ""
 
 #. module: l10n_ch
@@ -611,8 +622,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_ch/models/res_bank.py:0
 msgid ""
-"The partner must have a complete postal address (street, zip, city and "
-"country)."
+"The partner must have the necessary postal address information (zip, city "
+"and country)."
 msgstr ""
 
 #. module: l10n_ch
@@ -620,7 +631,7 @@ msgstr ""
 #: code:addons/l10n_ch/models/res_bank.py:0
 msgid ""
 "The partner set on the bank account meant to receive the payment (%s) must "
-"have a complete postal address (street, zip, city and country)."
+"have the necessary postal address information (zip, city and country)."
 msgstr ""
 
 #. module: l10n_ch
@@ -630,6 +641,12 @@ msgid ""
 "                    - check the account is a valid QR-IBAN<br/>\n"
 "                    - or check your company and the partners are located in Switzerland.<br/>\n"
 "                    Press Check Invalid Invoices to see a list of the invoices that were printed without a QR."
+msgstr ""
+
+#. module: l10n_ch
+#. odoo-python
+#: code:addons/l10n_ch/models/account_move_send.py:0
+msgid "View Partner(s)"
 msgstr ""
 
 #. module: l10n_ch
@@ -645,4 +662,10 @@ msgstr ""
 msgid ""
 "You can choose different models for each type of reference. The default one "
 "is the Odoo reference."
+msgstr ""
+
+#. module: l10n_ch
+#. odoo-python
+#: code:addons/l10n_ch/models/account_move_send.py:0
+msgid "You might want to specify an address on the following partner(s)."
 msgstr ""
