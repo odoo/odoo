@@ -331,3 +331,26 @@ class TestResourceCalendarReference(TransactionCase):
         })
         self.assertFalse(no_company.reference_calendar_id)
         self.assertRecordValues(no_company, [{'full_time_required_hours': 20, 'is_fulltime': True}])
+
+    def test_copy_calendar_rates(self):
+        """ The rates of a fixed calendar are computed from the attendances of the copy, those of a
+        variable calendar are kept. """
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Full time',
+            'attendance_ids': [(5, 0, 0)] + [
+                (0, 0, {'dayofweek': day, 'hour_from': 8, 'hour_to': 16}) for day in '01234'
+            ],
+        })
+        self.assertRecordValues(calendar, [{'days_per_week': 5, 'hours_per_week': 40, 'hours_per_day': 8}])
+        three_days = calendar.copy({
+            'attendance_ids': [(0, 0, {'dayofweek': day, 'hour_from': 8, 'hour_to': 14}) for day in '012'],
+        })
+        self.assertRecordValues(three_days, [{'days_per_week': 3, 'hours_per_week': 18, 'hours_per_day': 6}])
+
+        variable = self.env['resource.calendar'].create({
+            'name': 'Variable',
+            'calendar_type': 'variable',
+            'days_per_week': 4,
+            'hours_per_week': 30,
+        })
+        self.assertRecordValues(variable.copy(), [{'days_per_week': 4, 'hours_per_week': 30, 'hours_per_day': 7.5}])
