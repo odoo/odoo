@@ -1726,52 +1726,23 @@ class TestXMLTranslation(TransactionCase):
             )
 
     def test_translate_xml_select(self):
-        # Ensure the translation <span> wrapper is inserted inside an attribute
-        # of the <option> elements in 'edit_translations' context.
+        # Ensure escaped ampersands in select's options are rendered
         view = self.env['ir.ui.view'].create({
             'type': 'qweb',
             'key': 'test',
-            'arch': '<select><option>A</option><option>B</option></select>',
+            'arch': '<select><option>A&amp;amp;B</option></select>',
         })
         self.assertEqual(
-            view.with_context(lang='fr_FR', edit_translations=True).arch_db,
-                '<select>'
-                    '<option data-oe-translation-span-wrapper="&lt;span '
-                        'data-oe-model=&quot;ir.ui.view&quot; '
-                        f'data-oe-id=&quot;{view.id}&quot; '
-                        'data-oe-field=&quot;arch_db&quot; '
-                        'data-oe-translation-state=&quot;to_translate&quot; '
-                        f'data-oe-translation-source-sha=&quot;559aead08264d5795d3909718cdd05abd49572e84fe55590eef31a88a08fdffd&quot;'
-                        '&gt;A&lt;/span&gt;">A</option>'
-                    '<option data-oe-translation-span-wrapper="&lt;span '
-                        'data-oe-model=&quot;ir.ui.view&quot; '
-                        f'data-oe-id=&quot;{view.id}&quot; '
-                        'data-oe-field=&quot;arch_db&quot; '
-                        'data-oe-translation-state=&quot;to_translate&quot; '
-                        f'data-oe-translation-source-sha=&quot;df7e70e5021544f4834bbee64a9e3789febc4be81470df629cad6ddb03320a5c&quot;'
-                        '&gt;B&lt;/span&gt;">B</option>'
-                '</select>',
-        )
-
-        view.update_field_translations('arch_db', {'fr_FR': {'A': 'A_fr', 'B': 'B_fr'}})
-        self.assertEqual(
-            view.with_context(lang='fr_FR', edit_translations=True).arch_db,
-                '<select>'
-                    '<option data-oe-translation-span-wrapper="&lt;span '
-                        'data-oe-model=&quot;ir.ui.view&quot; '
-                        f'data-oe-id=&quot;{view.id}&quot; '
-                        'data-oe-field=&quot;arch_db&quot; '
-                        'data-oe-translation-state=&quot;translated&quot; '
-                        f'data-oe-translation-source-sha=&quot;559aead08264d5795d3909718cdd05abd49572e84fe55590eef31a88a08fdffd&quot;'
-                        '&gt;A_fr&lt;/span&gt;">A_fr</option>'
-                    '<option data-oe-translation-span-wrapper="&lt;span '
-                        'data-oe-model=&quot;ir.ui.view&quot; '
-                        f'data-oe-id=&quot;{view.id}&quot; '
-                        'data-oe-field=&quot;arch_db&quot; '
-                        'data-oe-translation-state=&quot;translated&quot; '
-                        f'data-oe-translation-source-sha=&quot;df7e70e5021544f4834bbee64a9e3789febc4be81470df629cad6ddb03320a5c&quot;'
-                        '&gt;B_fr&lt;/span&gt;">B_fr</option>'
-                '</select>',
+            str(self.env['ir.qweb'].with_context(lang='fr_FR', edit_translations=True)._render('test')),
+            '<select>'
+                '<option>'
+                    '<span data-oe-model="ir.ui.view" '
+                    f'data-oe-id="{view.id}" '
+                    'data-oe-field="arch_db" '
+                    'data-oe-translation-state="to_translate" '
+                    f'data-oe-translation-source-sha="925daff9609bfcca0d26f144a1149bcaad0016be35482fbba96588ec7861198f">'
+                    'A&amp;B</span></option>'
+            '</select>',
         )
 
     def test_delay_translations_backend_edition(self):
