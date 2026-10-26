@@ -180,7 +180,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Click on the 'Create Page' alert button.",
-            trigger: ".o_action_manager .alert a.btn",
+            trigger: ".o_action_manager .alert button",
             run: "click",
         },
         {
