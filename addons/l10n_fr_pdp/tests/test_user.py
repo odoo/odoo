@@ -240,3 +240,49 @@ class TestPdpUser(TestL10nFrPdpCommon):
             'edi_mode': 'test',
         }])
         self.assertTrue(other2_peppol_user)
+
+    def test_pdp_peppol_supported_document_types(self):
+        expected_peppol_doctypes = {
+            'urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1',
+            'urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1',
+            'urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0::2.1',
+            'urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0::2.1',
+            'urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:selfbilling:3.0::2.1',
+            'urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:selfbilling:3.0::2.1',
+            'urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2::ApplicationResponse##urn:fdc:peppol.eu:poacc:trns:invoice_response:3::2.1',
+        }
+        expected_pdp_doctypes = {
+            'urn:un:unece:uncefact:data:standard:CrossDomainAcknowledgementAndResponse:100::CrossDomainAcknowledgementAndResponse##urn:peppol:france:billing:cdv:1.0::D22B',
+            'urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017::2.1',
+            'urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:cen.eu:en16931:2017::2.1',
+            'urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100::CrossIndustryInvoice##urn:cen.eu:en16931:2017::D16B',
+            'urn:peppol:doctype:pdf+xml##urn:cen.eu:en16931:2017#conformant#urn:peppol:france:billing:Factur-X:1.0::D22B',
+            'urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:peppol:france:billing:cius:1.0::2.1',
+            'urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:cen.eu:en16931:2017#compliant#urn:peppol:france:billing:cius:1.0::2.1',
+            'urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#conformant#urn:peppol:france:billing:extended:1.0::2.1',
+            'urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:cen.eu:en16931:2017#conformant#urn:peppol:france:billing:extended:1.0::2.1',
+            'urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100::CrossIndustryInvoice##urn:cen.eu:en16931:2017#compliant#urn:peppol:france:billing:cius:1.0::D22B',
+            'urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100::CrossIndustryInvoice##urn:cen.eu:en16931:2017#conformant#urn:peppol:france:billing:extended:1.0::D22B',
+        }
+
+        # Proxy user with 'pdp' proxy_type returns both Peppol and PDP types
+        self.assertEqual(self.proxy_user.proxy_type, 'pdp')
+        pdp_user_doctypes = set(self.proxy_user._get_peppol_supported_document_types())
+        self.assertTrue((expected_peppol_doctypes | expected_pdp_doctypes).issubset(pdp_user_doctypes))
+
+        # Proxy user with 'peppol' proxy_type returns only Peppol types
+        peppol_company = self.setup_other_company(name='peppol_test_comp')['company']
+        peppol_user = self.env['account_edi_proxy_client.user'].create([{
+            'active': True,
+            'id_client': 'client-demo-peppol',
+            'company_id': peppol_company.id,
+            'edi_identification': 'client-demo',
+            'private_key_id': self.env['certificate.key'].sudo()._generate_rsa_private_key(self.env.company).id,
+            'refresh_token': False,
+            'proxy_type': 'peppol',
+            'edi_mode': 'test',
+        }])
+        peppol_user_doctypes = set(peppol_user._get_peppol_supported_document_types())
+        self.assertTrue(expected_peppol_doctypes.issubset(peppol_user_doctypes))
+        self.assertTrue(expected_pdp_doctypes.isdisjoint(peppol_user_doctypes))
+        self.assertTrue(peppol_user_doctypes.issubset(pdp_user_doctypes))
