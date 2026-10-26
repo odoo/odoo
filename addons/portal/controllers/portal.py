@@ -701,6 +701,7 @@ class CustomerPortal(Controller):
         invalid_fields = set()
         missing_fields = set()
         error_messages = []
+        unchanged_commercial_fields = set()
         current_partner = request.env['res.partner']._get_current_partner(**kwargs)
 
         if partner_sudo:
@@ -790,6 +791,8 @@ class CustomerPortal(Controller):
                         error_messages.append(get_commercial_field_error_msg(field_description))
                     else:
                         address_values.pop(commercial_field_name, None)
+                        if partner_sudo_value:
+                            unchanged_commercial_fields.add(commercial_field_name)
 
                 for additional_identifier, value in address_values.get("additional_identifiers", {}).items():
                     partner_sudo_value = partner_sudo._get_additional_identifier(additional_identifier)
@@ -871,6 +874,8 @@ class CustomerPortal(Controller):
             required_field_set |= address_fields
 
         # Verify that no required field has been left empty.
+        # Unchanged commercial values were removed from the write, but are already set.
+        required_field_set -= unchanged_commercial_fields
         for field_name in required_field_set:
             if not address_values.get(field_name):
                 missing_fields.add(field_name)
