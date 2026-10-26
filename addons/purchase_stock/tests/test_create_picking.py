@@ -3,6 +3,7 @@
 
 from datetime import date, datetime, timedelta
 
+from odoo import Command
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.product.tests import common
 from odoo.tests import Form
@@ -856,3 +857,27 @@ class TestCreatePicking(common.TestProductCommon):
         Picking = self.env['stock.picking'].with_context(restricted_picking_type_code='incoming')
         self.assertNotIn('purchase.purchase_form_action', Picking.with_user(stock_user).get_empty_list_help(''))
         self.assertIn('purchase.purchase_form_action', Picking.with_user(self.user_purchase_user).get_empty_list_help(''))
+
+    def test_add_line_to_confirmed_po_with_wave_receipt(self):
+        """ A line added to a confirmed PO must not be received in a receipt
+        that belongs to a wave transfer. """
+        if not self.env["ir.module.module"].search([("name", "=", "stock_picking_batch"), ("state", "=", "installed")]):
+            self.skipTest("stock_picking_batch module is required for this test")
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                Command.create({'product_id': self.product_id_1.id, 'product_qty': 1.0}),
+                Command.create({'product_id': self.product_id_2.id, 'product_qty': 1.0}),
+            ],
+        })
+        po.button_confirm()
+        receipt = po.picking_ids
+        # Only the first product goes to a wave: it is split from the receipt
+        po.order_line[0].move_ids.move_line_ids._add_to_wave()  # noqa: OLS03028
+        po.order_line = [Command.create({'product_id': self.product.id, 'product_qty': 1.0})]
+        self.assertEqual(po.order_line[2].move_ids.picking_id, receipt)
+
+        # The whole receipt goes to a wave: a new receipt is needed
+        receipt.move_line_ids._add_to_wave()  # noqa: OLS03028
+        po.order_line = [Command.create({'product_id': self.product_id_1.id, 'product_qty': 1.0})]
+        self.assertRecordValues(po.order_line[3].move_ids.picking_id, [{'batch_id': False}])
