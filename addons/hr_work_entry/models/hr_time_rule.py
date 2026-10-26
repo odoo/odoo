@@ -401,8 +401,10 @@ class HrTimeRule(models.Model):
             rid = emp.resource_id.id
 
             for p_start, p_stop, version in periods:
-                p_dt_start = datetime.combine(p_start, time.min, tzinfo=UTC)
-                p_dt_end = datetime.combine(p_stop, time.max, tzinfo=UTC)
+                # version periods are local dates: bound them in the employee's timezone so
+                # that the naive (local) schedule intervals cover the whole local days
+                p_dt_start = datetime.combine(p_start, time.min, tzinfo=tz)
+                p_dt_end = datetime.combine(p_stop, time.max, tzinfo=tz)
                 period = Intervals([(p_dt_start.replace(tzinfo=None), p_dt_end.replace(tzinfo=None), version)])
 
                 if version._is_fully_flexible():
