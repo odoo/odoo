@@ -5,6 +5,8 @@ import {
     Many2ManyBinaryField,
 } from "@web/views/fields/many2many_binary/many2many_binary_field";
 import { Many2XBinary } from "@web/views/fields/many2x_binary/many2x_binary";
+import { FullComposerBusPlugin } from "@mail/core/web/full_composer_bus_plugin";
+import { useMaybePlugin } from "@mail/utils/common/hooks";
 
 export class MailComposerAttachmentBinary extends Many2XBinary {
     static template = "mail.MailComposerAttachmentBinary";
@@ -20,6 +22,7 @@ export class MailComposerAttachmentList extends Many2ManyBinaryField {
         super.setup();
         this.mailStore = useService("mail.store");
         this.attachmentUploadService = useService("mail.attachment_upload");
+        this.fullComposerBus = useMaybePlugin(FullComposerBusPlugin)?.bus;
     }
     /**
      * @override
@@ -31,7 +34,7 @@ export class MailComposerAttachmentList extends Many2ManyBinaryField {
         if (attachment && attachment.res_model === "mail.compose.message") {
             await this.attachmentUploadService.unlink([attachment]);
         }
-        this.env.fullComposerBus?.trigger("ATTACHMENT_REMOVED", {
+        this.fullComposerBus?.trigger("ATTACHMENT_REMOVED", {
             id: attachment.id,
         });
     }
