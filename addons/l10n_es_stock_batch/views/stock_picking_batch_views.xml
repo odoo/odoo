@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_batch_form_inherit_deca_report" model="ir.ui.view">
+        <field name="name">view.picking.batch.form.inherit.deca.report</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_l10n_es_print_deca" type="object" string="Generate DeCA"
+                    invisible="country_code != 'ES' or state in ('draft', 'cancel')"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="DeCA" name="deca_versions" invisible="country_code != 'ES' or not l10n_es_deca_attachment_ids">
+                    <field name="l10n_es_deca_attachment_ids" readonly="1">
+                        <list>
+                            <field name="name"/>
+                            <field name="raw" string="Download" widget="binary" filename="name"/>
+                            <field name="create_date"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_l10n_es_generate_deca_batch" model="ir.actions.server">
+        <field name="name">Generate DeCA</field>
+        <field name="model_id" ref="stock_picking_batch.model_stock_picking_batch"/>
+        <field name="binding_model_id" ref="stock_picking_batch.model_stock_picking_batch"/>
+        <field name="state">code</field>
+        <field name="code">action = records.action_l10n_es_print_deca()</field>
+    </record>
+</odoo>
