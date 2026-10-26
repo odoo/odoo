@@ -41,10 +41,6 @@ class ResourceCalendar(models.Model):
         res = super().default_get(fields)
         if not res.get('name') and res.get('company_id'):
             res['name'] = self.env._('Working Hours of %s', self.env['res.company'].browse(res['company_id']).name)
-        if 'full_time_required_hours' in fields and not res.get('full_time_required_hours'):
-            company_id = res.get('company_id', self.env.company.id)
-            company = self.env['res.company'].browse(company_id)
-            res['full_time_required_hours'] = company.resource_calendar_id.full_time_required_hours
         return res
 
     name = fields.Char(required=True)
@@ -93,7 +89,6 @@ class ResourceCalendar(models.Model):
         'resource.calendar',
         string="Reference Calendar",
         index='btree_not_null',
-        default=lambda self: self.env.company.resource_calendar_id,
         check_company=True,
         help="Reference working hours used to compute the full-time equivalent.")
 

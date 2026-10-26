@@ -295,3 +295,39 @@ class TestResourceCalendar(TransactionCase):
             fully_flex_calendar._get_attendance_intervals_days_data(empty_interval),
             {'days': 0, 'hours': 0},
         )
+
+@tagged('post_install', '-at_install')
+class TestResourceCalendarReference(TransactionCase):
+
+    def test_reference_calendar_of_other_company(self):
+        """ A calendar created for another company than the current one must not get the calendar of the
+        current company as reference: its full time follows the default calendar of its own company. """
+        self.env.company.resource_calendar_id.attendance_ids.filtered(lambda a: a.dayofweek == '4').unlink()
+        company_b = self.env['res.company'].create({'name': 'Company B'})
+        self.assertFalse(company_b.resource_calendar_id.reference_calendar_id)
+        self.assertEqual(company_b.resource_calendar_id.full_time_required_hours, 40)
+
+        half_time = self.env['resource.calendar'].create({
+            'name': 'Half time B',
+            'company_id': company_b.id,
+            'attendance_ids': [(5, 0, 0)] + [
+                (0, 0, {'dayofweek': day, 'hour_from': 8, 'hour_to': 12}) for day in '01234'
+            ],
+        })
+        self.assertFalse(half_time.reference_calendar_id)
+        self.assertRecordValues(half_time, [{'full_time_required_hours': 40, 'work_time_rate': 0.5, 'is_fulltime': False}])
+
+        # The full time follows the default calendar of the company
+        company_b.resource_calendar_id.attendance_ids.filtered(lambda a: a.dayofweek == '4').unlink()
+        self.assertRecordValues(half_time, [{'full_time_required_hours': 32, 'work_time_rate': 0.625}])
+
+        # Without company, the calendar is its own reference
+        no_company = self.env['resource.calendar'].create({
+            'name': 'Half time without company',
+            'company_id': False,
+            'attendance_ids': [(5, 0, 0)] + [
+                (0, 0, {'dayofweek': day, 'hour_from': 8, 'hour_to': 12}) for day in '01234'
+            ],
+        })
+        self.assertFalse(no_company.reference_calendar_id)
+        self.assertRecordValues(no_company, [{'full_time_required_hours': 20, 'is_fulltime': True}])
