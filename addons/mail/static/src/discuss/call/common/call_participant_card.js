@@ -39,6 +39,7 @@ export class CallParticipantCard extends Component {
         this.dragPos = undefined;
         this.isDrag = false;
         this.parentBoundingRect = undefined;
+        this.stopDrag = undefined;
         onMounted(() => {
             if (!this.rtcSession) {
                 return;
@@ -48,6 +49,7 @@ export class CallParticipantCard extends Component {
             });
         });
         onWillUnmount(() => {
+            this.stopDrag?.();
             if (!this.rtcSession) {
                 return;
             }
@@ -213,6 +215,7 @@ export class CallParticipantCard extends Component {
         if (!this.props.inset) {
             return;
         }
+        this.stopDrag?.();
         const onMousemove = (ev) => this.drag(ev);
         const onMouseup = () => {
             const insetEl = this.root.el;
@@ -234,8 +237,12 @@ export class CallParticipantCard extends Component {
                 insetEl.style.bottom = this.env.inChatWindow ? "5vh" : "1vh";
                 insetEl.style.top = "unset";
             }
+            this.stopDrag();
+        };
+        this.stopDrag = () => {
             this.dragPos = undefined;
             this.parentBoundingRect = undefined;
+            this.stopDrag = undefined;
             document.removeEventListener("mouseup", onMouseup);
             document.removeEventListener("mousemove", onMousemove);
         };
