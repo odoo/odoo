@@ -26,6 +26,7 @@ const ALLOWED_TAGS = [
 export const PRESERVED_CLASSNAMES = new Set([
     "o_mail_redirect",
     "o_message_redirect",
+    "o_record_redirect",
     "o-discuss-mention",
 ]);
 

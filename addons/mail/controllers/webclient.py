@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
 
+from odoo.exceptions import AccessError, MissingError
 from odoo.fields import Domain
 from odoo.http import request
 
@@ -117,6 +118,25 @@ class WebclientController(ThreadController):
                 res.one("thread", ["display_name"], value=rec_by_m.get, as_thread=True, sudo=True),
             ),
         )
+
+    @store_handler("record_link")
+    def store_get_record_link(self, store: Store, model, ids):
+        """Names of the records linked in a message body that the user can read. Invalid params are
+        ignored, as raising would fail the other fetches of the request."""
+        if (
+            not isinstance(model, str)
+            or model not in request.env
+            or request.env[model]._abstract
+            or not isinstance(ids, list)
+            or not all(isinstance(id_, int) and not isinstance(id_, bool) for id_ in ids)
+        ):
+            return
+        records = request.env[model].browse(ids).exists()._filtered_access("read")
+        try:
+            records.mapped("display_name")
+        except (AccessError, MissingError):
+            return
+        store.add(records, ["display_name"], as_thread=True)
 
     @store_handler("/mail/poll_option/votes", audience="everyone")
     def store_poll_option_votes(self, store: Store, poll_option_id):

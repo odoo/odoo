@@ -38,10 +38,11 @@ import {
 } from "@mail/../tests/mail_test_helpers_composer";
 import { advanceTime, describe, expect, queryFirst, test } from "@odoo/hoot";
 import { animationFrame, tick } from "@odoo/hoot-mock";
-import { Component, onMounted, onWillStart, proxy, xml } from "@odoo/owl";
+import { Component, markup, onMounted, onWillStart, proxy, xml } from "@odoo/owl";
 import {
     Command,
     contains,
+    defineActions,
     destroyApp,
     getMockEnv,
     getService,
@@ -56,6 +57,7 @@ import { patch } from "@web/core/utils/patch";
 import { getOrigin } from "@web/core/utils/urls";
 
 import { Composer, MENTION_AMOUNT_WARNING } from "@mail/core/common/composer";
+import { RecordLinkPlugin } from "@mail/core/common/record_link_plugin";
 import { click as hootClick, press, waitFor, waitForNone, waitUntil } from "@odoo/hoot-dom";
 import { MailComposerFormController } from "@mail/chatter/web/mail_composer_form";
 import { getIndexedDB } from "../mail_test_helpers";
@@ -2391,6 +2393,179 @@ for (const htmlEnabled of [false, true]) {
         await waitFor(`.o-mail-Composer-html a.o_message_redirect:text('${unknownUrl}'):count(1)`);
     });
 }
+
+for (const htmlEnabled of [false, true]) {
+    test(`pasted record link is rendered in the composer and once posted (html: ${htmlEnabled})`, async () => {
+        defineActions([
+            { id: 1, path: "contacts", res_model: "res.partner", views: [[false, "form"]] },
+        ]);
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({ name: "Lena" });
+        const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+        const url = `${getOrigin()}/odoo/contacts/${partnerId}`;
+        onRpcBefore("/mail/message/post", (args) => {
+            expect.step("message_post");
+            expect(args.post_data.body).toInclude(`data-oe-model="res.partner"`);
+            expect(args.post_data.body).toInclude(`data-oe-id="${partnerId}"`);
+            expect(args.post_data.body).toInclude(`>${url}</a>`);
+        });
+        await start();
+        if (htmlEnabled) {
+            getService("mail.composer").setHtmlComposer();
+        }
+        await openDiscuss(channelId);
+        await focus(".o-mail-Composer-html");
+        await pasteText(getEditorFromComposerEl(".o-mail-Composer"), url);
+        await waitFor(
+            `.o-mail-Composer-html a.o_record_redirect_transformed[href='${url}']:text('Lena'):count(1)`
+        );
+        await press("Enter");
+        await waitFor(
+            `.o-mail-Message a.o_record_redirect_transformed[href='${url}']:text('Lena'):count(1)`
+        );
+        await expect.waitForSteps(["message_post"]);
+    });
+
+    test(`undo turns a rendered record link back into its url, posted as is (html: ${htmlEnabled})`, async () => {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({ name: "Lena" });
+        const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+        const url = `${getOrigin()}/odoo/res.partner/${partnerId}`;
+        onRpcBefore("/mail/message/post", (args) => {
+            expect.step("message_post");
+            expect(args.post_data.body).toInclude(`<a href="${url}"`);
+        });
+        await start();
+        if (htmlEnabled) {
+            getService("mail.composer").setHtmlComposer();
+        }
+        await openDiscuss(channelId);
+        await focus(".o-mail-Composer-html");
+        await pasteText(getEditorFromComposerEl(".o-mail-Composer"), url);
+        await waitFor(
+            `.o-mail-Composer-html a.o_record_redirect_transformed[href='${url}']:text('Lena'):count(1)`
+        );
+        await press(["control", "z"]);
+        await waitFor(
+            `.o-mail-Composer-html a.o_record_redirect[href='${url}']:text('${url}'):count(1)`
+        );
+        await press(["control", "y"]);
+        await waitFor(
+            `.o-mail-Composer-html a.o_record_redirect_transformed[href='${url}']:text('Lena'):count(1)`
+        );
+        await press(["control", "z"]);
+        await waitFor(
+            `.o-mail-Composer-html a.o_record_redirect[href='${url}']:text('${url}'):count(1)`
+        );
+        await press("Enter");
+        await expect.waitForSteps(["message_post"]);
+        await waitFor(`.o-mail-Message a[href='${url}']:text('${url}'):count(1)`);
+    });
+
+    test(`edited message renders its record links in the composer (html: ${htmlEnabled})`, async () => {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({ name: "Lena" });
+        const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+        const url = `${getOrigin()}/odoo/res.partner/${partnerId}`;
+        pyEnv["mail.message"].create({
+            author_id: serverState.partnerId,
+            body: `<p><a class="o_record_redirect" href="${url}" data-oe-model="res.partner" data-oe-id="${partnerId}">${url}</a></p>`,
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+        await start();
+        if (htmlEnabled) {
+            getService("mail.composer").setHtmlComposer();
+        }
+        await openDiscuss(channelId);
+        await hover(".o-mail-Message");
+        await click(".o-mail-Message [title='Expand']");
+        await click(".o-dropdown-item:text('Edit')");
+        await waitFor(
+            `.o-mail-Message .o-mail-Composer-html a.o_record_redirect_transformed[href='${url}']:text('Lena'):count(1)`
+        );
+    });
+}
+
+test("posted links to records are resolved as the web client opens them", async () => {
+    defineActions([
+        {
+            id: 1,
+            path: "contacts",
+            res_model: "res.partner",
+            views: [[false, "form"]],
+            xml_id: "base.action_partner_form",
+        },
+        { id: 2, path: "discuss-app", tag: "mail.action_discuss", type: "ir.actions.client" },
+    ]);
+    const pyEnv = await startServer();
+    const [bobId, lenaId, yanId, zaraId] = pyEnv["res.partner"].create([
+        { name: "Bob" },
+        { name: "Lena" },
+        { name: "Yan" },
+        { name: "Zara" },
+    ]);
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const pathUrl = `${getOrigin()}/odoo/contacts/${bobId}`;
+    const modelUrl = `${getOrigin()}/odoo/res.partner/${lenaId}`;
+    const xmlIdUrl = `${getOrigin()}/odoo/action-base.action_partner_form/${yanId}`;
+    const actionIdUrl = `${getOrigin()}/odoo/action-1/${zaraId}`;
+    const clientActionUrl = `${getOrigin()}/odoo/discuss-app/${zaraId}`;
+    const malformedUrl = `${getOrigin()}/odoo/contacts/${bobId}?q=100%`;
+    await start();
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html");
+    await pasteText(
+        getEditorFromComposerEl(".o-mail-Composer"),
+        [pathUrl, modelUrl, xmlIdUrl, actionIdUrl, clientActionUrl, malformedUrl].join(" ")
+    );
+    await press("Enter");
+    await waitFor(`.o-mail-Message a.o_record_redirect_transformed[href='${pathUrl}']:text(Bob)`);
+    await waitFor(`.o-mail-Message a.o_record_redirect_transformed[href='${modelUrl}']:text(Lena)`);
+    await waitFor(`.o-mail-Message a.o_record_redirect_transformed[href='${xmlIdUrl}']:text(Yan)`);
+    await waitFor(
+        `.o-mail-Message a.o_record_redirect_transformed[href='${actionIdUrl}']:text(Zara)`
+    );
+    await waitFor(`.o-mail-Message a[href='${clientActionUrl}']:text('${clientActionUrl}')`);
+    await waitFor(`.o-mail-Message a[href='${malformedUrl}']:text('${malformedUrl}')`);
+});
+
+test("posted message link beside a record link keeps its id", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Lena" });
+    const [generalId, salesId] = pyEnv["discuss.channel"].create([
+        { name: "General" },
+        { name: "Sales" },
+    ]);
+    const messageId = pyEnv["mail.message"].create({
+        body: "Hello",
+        model: "discuss.channel",
+        res_id: salesId,
+    });
+    const messageUrl = `${getOrigin()}/mail/message/${messageId}`;
+    const recordUrl = `${getOrigin()}/odoo/res.partner/${partnerId}`;
+    await start();
+    await openDiscuss(generalId);
+    await focus(".o-mail-Composer-html");
+    await pasteText(getEditorFromComposerEl(".o-mail-Composer"), `${messageUrl} ${recordUrl}`);
+    await press("Enter");
+    await waitFor(
+        `.o-mail-Message a.o_message_redirect_transformed[data-oe-id='${messageId}']:text('Sales'):count(1)`
+    );
+    await waitFor(`.o-mail-Message a.o_record_redirect_transformed:text('Lena'):count(1)`);
+});
+
+test("sent record link with its own label is unmarked", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Lena" });
+    const url = `${getOrigin()}/odoo/res.partner/${partnerId}`;
+    await start();
+    const body = await getService(RecordLinkPlugin).markRecordLinks(
+        markup`<a class="o_record_redirect" href="${url}" data-oe-model="res.partner" data-oe-id="${partnerId}">see here</a>`
+    );
+    expect(body.toString()).toBe(`<a href="${url}">see here</a>`);
+});
 
 test("message link to a message known by its id only is rendered once fetched", async () => {
     const pyEnv = await startServer();

@@ -394,7 +394,7 @@ $o-mail-utilities: map-merge(
     }
 }
 
-a.o_mail_redirect, a.o_channel_redirect, a.o-discuss-mention, a.o_message_redirect_transformed {
+a.o_mail_redirect, a.o_channel_redirect, a.o-discuss-mention, a.o_message_redirect_transformed, a.o_record_redirect_transformed {
     user-select: none;
     border-radius: var(--o-bs-btn-border-radius-lg);
     padding: 0rem 0.25rem;
@@ -405,7 +405,7 @@ a.o_mail_redirect, a.o_channel_redirect, a.o-discuss-mention, a.o_message_redire
     display: inline-block;
 }
 
-a.o_mail_redirect, a.o_channel_redirect, a.o_message_redirect_transformed {
+a.o_mail_redirect, a.o_channel_redirect, a.o_message_redirect_transformed, a.o_record_redirect_transformed {
     @include o-mention-variant(rgba($primary, .15), rgba($primary, .25), darken($primary, 10%), rgba($primary, .2), rgba($primary, .5), darken($primary, 15%));
 }
 

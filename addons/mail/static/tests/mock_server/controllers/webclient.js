@@ -100,6 +100,16 @@ registerStoreHandler("mail.message", function store_get_mail_message(store, para
     });
 });
 
+registerStoreHandler("record_link", function store_get_record_link(store, params) {
+    if (!(params.model in this.env)) {
+        return;
+    }
+    const Model = this.env[params.model];
+    store.add(Model.browse(Model.search([["id", "in", params.ids]])), ["display_name"], {
+        as_thread: true,
+    });
+});
+
 registerStoreHandler("failures", function store_get_failures(store) {
     /** @type {import("mock_models").MailMessage} */
     const MailMessage = this.env["mail.message"];
