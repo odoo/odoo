@@ -8,6 +8,7 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 class TestDashboard(WebsiteSaleCommon, HttpCase):
 
     def test_dashboard_refresh(self):
+        self.env['sale.order'].search([]).website_id = False
         self.env['sale.order'].create([
             {
                 'partner_id': self.partner.id,
