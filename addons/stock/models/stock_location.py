@@ -358,16 +358,15 @@ class StockLocation(models.Model):
                         ('product_id', '=', product.id),
                         ('location_dest_id', 'in', locations.ids),
                         ('state', 'not in', ['draft', 'done', 'cancel'])
-                    ], ['location_dest_id'], ['quantity:array_agg', 'uom_id:recordset'])
+                    ], ['location_dest_id'], ['quantity_product_uom:sum'])
                     quant_data = self.env['stock.quant']._read_group([
                         ('product_id', '=', product.id),
                         ('location_id', 'in', locations.ids),
                     ], ['location_id'], ['quantity:sum'])
 
                     qty_by_location.update({location.id: quantity_sum for location, quantity_sum in quant_data})
-                    for location_dest, quantity_list, uoms in move_line_data:
-                        current_qty = sum(ml_uom._compute_quantity(float(qty), product.uom_id) for qty, ml_uom in zip(quantity_list, uoms))
-                        qty_by_location[location_dest.id] += current_qty
+                    for location_dest, quantity_sum in move_line_data:
+                        qty_by_location[location_dest.id] += quantity_sum
 
             if additional_qty:
                 for location_id, qty in additional_qty.items():
