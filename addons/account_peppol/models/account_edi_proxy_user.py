@@ -553,6 +553,10 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         # DEPRECATED - to remove in master
         self.ensure_one()
 
+    def _get_peppol_supported_document_types(self):
+        self.ensure_one()
+        return self.company_id._peppol_supported_document_types()
+
     def _peppol_register_sender_as_receiver(self):
         self.ensure_one()
         company = self.company_id
@@ -574,7 +578,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             endpoint=self._get_peppol_proxy_endpoint('1/register_sender_as_receiver'),
             params={
                 'migration_key': company.sudo().account_peppol_migration_key,
-                'supported_identifiers': list(company._peppol_supported_document_types())
+                'supported_identifiers': list(self._get_peppol_supported_document_types())
             },
         )
         # once we sent the migration key over, we don't need it
