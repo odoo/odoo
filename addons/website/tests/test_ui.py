@@ -810,6 +810,15 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_create_missing_page(self):
         self.start_tour(self.env['website'].get_client_action_url("/", True), "create_missing_page", login="admin")
 
+    def test_publish_page_message(self):
+        page = self.env['website.page'].create({
+            'name': 'Unpublished Page',
+            'type': 'qweb',
+            'arch': '<t t-call="website.layout"><div id="wrap"/></t>',
+            'url': '/unpublished-page',
+        })
+        self.start_tour(self.env['website'].get_client_action_url(page.url), "website_publish_page_message", login="admin")
+
     def test_hiding_sidebar_header(self):
         self.start_tour(self.env['website'].get_client_action_url("/", True), "hide_sidebar_header", login="admin")
 
