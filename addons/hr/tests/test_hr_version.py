@@ -1018,3 +1018,29 @@ class TestHrVersion(TestHrCommon):
         self.assertEqual(employees[0].version_id, old_version_a)
         self.assertEqual(employees[1].version_id, employee_b.current_version_id)
         self.assertEqual(employees[0].with_context(version_id=old_version_a.id).version_id, old_version_a)
+
+    def test_date_versions_date_version_before_contract_start(self):
+        """
+        The first version starts (date_version) before its contract, and the next version starts
+        on the contract start date: the first version must end the day before the next one,
+        instead of staying open and overlapping it.
+        """
+        employee = self.env['hr.employee'].create({
+            'name': 'Version Before Contract',
+            'work_location_id': self.work_location.id,
+            'contract_date_start': date(2024, 1, 1),
+            'contract_date_end': False,
+        })
+        version_1 = employee.version_id
+        version_1.date_version = date(2022, 1, 1)
+        version_1.flush_recordset()
+        version_2 = employee.create_version({
+            'date_version': date(2024, 1, 1),
+            'contract_date_start': date(2024, 1, 1),
+            'contract_date_end': False,
+        })
+
+        self.assertEqual(version_1.date_start, date(2024, 1, 1))
+        self.assertEqual(version_1.date_end, date(2023, 12, 31))
+        self.assertEqual(version_2.date_start, date(2024, 1, 1))
+        self.assertFalse(version_2.date_end)
