@@ -4864,6 +4864,26 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 {'amount_currency':    115.0, 'balance':    230.0},  # Receivable line
             ])
 
+            # add a second line
+            with move_form.invoice_line_ids.new() as line_form:
+                line_form.product_id = self.product_a
+                line_form.price_unit = 200.0
+            self.assertRecordValues(move_form.save().line_ids, [
+                {'amount_currency':   -100.0, 'balance':   -200.0},  # Product line 1
+                {'amount_currency':    -45.0, 'balance':    -90.0},  # Tax line
+                {'amount_currency':    345.0, 'balance':    690.0},  # Receivable line
+                {'amount_currency':   -200.0, 'balance':   -400.0},  # Product line 2
+            ])
+
+            # remove the second line and change the invoice date to change the currency rate
+            move_form.invoice_date = '2025-02-01'
+            move_form.invoice_line_ids.remove(1)
+            self.assertRecordValues(move_form.save().line_ids, [
+                {'amount_currency':   -100.0, 'balance':   -250.0},  # Product line
+                {'amount_currency':    -15.0, 'balance':    -37.5},  # Tax line
+                {'amount_currency':    115.0, 'balance':    287.5},  # Receivable line
+            ])
+
     def test_narration_preserved_when_use_invoice_terms_disabled(self):
         """ Ensure narration is preserved when partner changes and invoice terms are disabled. """
         self.env['ir.config_parameter'].sudo().set_param('account.use_invoice_terms', False)
