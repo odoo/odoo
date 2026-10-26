@@ -1,14 +1,15 @@
 import { Component, proxy, t, usePlugin, useProps } from "@odoo/owl";
 
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
+import { StorePlugin } from "@mail/core/common/store_plugin";
 import { Dialog } from "@web/core/dialog/dialog";
+import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
 import { _t } from "@web/core/l10n/translation";
 import { normalize } from "@web/core/l10n/utils";
 import { registry } from "@web/core/registry";
 import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
 import { highlightText } from "@web/core/utils/html";
-import { useEnv } from "@web/owl2/utils";
 
 const commandSetupRegistry = registry.category("command_setup");
 const commandProviderRegistry = registry.category("command_provider");
@@ -26,7 +27,7 @@ class CreateChannelDialog extends Component {
             close: t.function([t.instanceOf(MouseEvent)]),
             name: t.string().optional(),
         });
-        this.store = useService("mail.store");
+        this.store = usePlugin(StorePlugin);
         this.state = proxy({
             name: this.props.name || "",
             isInvalid: false,
@@ -62,7 +63,7 @@ export class DiscussCommand extends Component {
 
     setup() {
         super.setup();
-        this.store = useService("mail.store");
+        this.store = usePlugin(StorePlugin);
         this.ui = usePlugin(UIPlugin);
         this.props = useProps({
             action: t
@@ -118,20 +119,14 @@ async function makeNewChannel(name, store, is_readonly = false) {
 }
 
 export class DiscussCommandPalette {
-    /**
-     * @param {import("@web/env").OdooEnv} env
-     * @param {import("services").ServiceFactories} env.services
-     */
-    constructor(env, options) {
-        this.env = env;
+    constructor(options) {
         this.options = options;
-        this.dialog = env.services.dialog;
+        this.dialog = usePlugin(DialogPlugin);
         /** @type {import("models").Store} */
-        this.store = env.services["mail.store"];
-        this.suggestion = env.services["mail.suggestion"];
+        this.store = usePlugin(StorePlugin);
+        this.suggestion = useService("mail.suggestion");
         this.ui = this.store.ui;
         this.commands = [];
-        this.options = options;
         this.cleanedTerm = normalize(this.options.searchValue);
     }
 
@@ -270,7 +265,7 @@ export class DiscussCommandPalette {
                 name: _t("View hidden conversations"),
                 props: { action: {} },
                 action: () => {
-                    this.env.services.action.doAction("mail.discuss_my_conversations_action");
+                    this.store.env.services.action.doAction("mail.discuss_my_conversations_action");
                 },
             };
         }
@@ -281,8 +276,7 @@ export class DiscussCommandPalette {
 commandProviderRegistry.add("find_or_start_conversation", {
     namespace: "@",
     async provide(options) {
-        const env = useEnv();
-        const palette = new DiscussCommandPalette(env, options);
+        const palette = new DiscussCommandPalette(options);
         await palette.fetch();
         palette.buildResults();
         if (!palette.store.inPublicPage) {
