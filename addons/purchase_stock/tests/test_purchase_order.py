@@ -987,3 +987,41 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         Form.from_action(self.env, picking.button_validate()).save().process()
         picking.backorder_ids.action_cancel()
         self.assertNotIn(po, self.env['purchase.order'].search([('is_late', '=', True)]))
+
+    def test_extra_receipt_product_vendor_price_other_uom(self):
+        """ Check that a product added on a receipt is priced like a purchase line manually added in
+        the received unit, with the vendor price in that unit or else the cost. """
+        self.env.user.group_ids += self.env.ref('uom.group_uom')
+        unit, pack_6 = self.env.ref('uom.product_uom_unit'), self.env.ref('uom.product_uom_pack_6')
+        product_sold_by_pack, product_sold_by_unit = self.env['product.product'].create([{
+            'name': name,
+            'is_storable': True,
+            'uom_id': unit.id,
+            'standard_price': 5.0,
+            'seller_ids': [Command.create({
+                'partner_id': self.partner_a.id,
+                'min_qty': 1.0,
+                'price': price,
+                'product_uom_id': uom.id,
+            })],
+        } for name, uom, price in [
+            ('Sold by pack of 6', pack_6, 20.0),
+            ('Sold by unit', unit, 3.0),
+        ]])
+        po = self.env['purchase.order'].create(self.po_vals)
+        po.button_confirm()
+        receipt = po.picking_ids
+        self.env['stock.move'].create([{
+            'picking_id': receipt.id,
+            'product_id': product.id,
+            'product_uom_qty': 6.0,
+            'quantity': 6.0,
+            'location_id': receipt.location_id.id,
+            'location_dest_id': receipt.location_dest_id.id,
+        } for product in (product_sold_by_pack, product_sold_by_unit)])
+        receipt.button_validate()
+
+        self.assertRecordValues(po.order_line.filtered(lambda l: l.product_id in product_sold_by_pack | product_sold_by_unit), [
+            {'product_id': product_sold_by_pack.id, 'product_uom_id': unit.id, 'qty_received': 6.0, 'price_unit': 5.0},
+            {'product_id': product_sold_by_unit.id, 'product_uom_id': unit.id, 'qty_received': 6.0, 'price_unit': 3.0},
+        ])
