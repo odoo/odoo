@@ -8435,3 +8435,58 @@ class AccountMove(models.Model):
                 and f"{legal_ident.get('label') or legal_ident.get('key')}: {legal_ident.get('value')}"
             )
         )) or ""
+
+    def _get_applied_tax(self):
+        """
+        Returns the tax that is applied on all the invoice lines, if any.
+        """
+        self.ensure_one()
+        product_lines = self.invoice_line_ids.filtered(lambda line: line.display_type == 'product')
+        return product_lines.tax_ids.filtered(lambda tax: all(tax in line.tax_ids for line in product_lines))[:1]
+
+    def _get_tax_popover_domain(self):
+        return [
+            *self.env['account.tax']._check_company_domain(self.company_id or self.env.company),
+            ('type_tax_use', '=', self.invoice_filter_type_domain),
+        ]
+
+    def get_taxes_to_show(self, limit=5):
+        """
+        This method is called from the apply tax popover on the invoice form view.
+        Returns the taxes, total taxes and the latest tax applied on all invoice lines.
+        """
+        applied_tax = self._get_applied_tax()
+        query = self.env['account.tax']._search(
+            domain=self._get_tax_popover_domain(),
+            limit=limit,
+        )
+
+        result = self.env.execute_query(query.select(
+            query.table.id,
+            query.table.name,
+            SQL("COUNT(*) OVER() AS total_count"),
+        ))
+        records = [{'id': tax_id, 'name': name} for tax_id, name, _count in result]
+        if applied_tax and applied_tax.id not in [record['id'] for record in records]:
+            records = [{'id': applied_tax.id, 'name': applied_tax.name}, *records[:limit - 1]]
+        return {
+            'total_length': result[0][2] if result else 0,
+            'records': records,
+            'applied_tax_id': applied_tax.id,
+        }
+
+    def update_or_add_tax_on_invoice_lines(self, tax_id):
+        """
+        This method is called from the tax totals popover on the invoice form view.
+        If the tax is already applied on all invoice lines, it is removed from them.
+        Otherwise, it replaces any other tax on all invoice lines.
+        """
+        self.ensure_one()
+        tax_to_apply = self.env['account.tax'].browse(tax_id)
+        product_lines = self.invoice_line_ids.filtered(lambda line: line.display_type == 'product')
+        if (applied_tax := self._get_applied_tax()) and applied_tax == tax_to_apply:
+            product_lines.tax_ids = [Command.unlink(applied_tax.id)]
+        elif applied_tax:
+            product_lines.tax_ids = [Command.unlink(applied_tax.id), Command.link(tax_to_apply.id)]
+        else:
+            product_lines.tax_ids = [Command.link(tax_to_apply.id)]
