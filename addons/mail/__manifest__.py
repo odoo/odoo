@@ -243,6 +243,7 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/tests/tours/discuss_channel_meeting_view_tour.js',
             'mail/static/tests/tours/discuss_public_self_menu_mobile_tour.js',
             'mail/static/tests/tours/discuss_public_self_menu_portal_tour.js',
+            'mail/static/tests/tours/discuss_channel_welcome_page_tour.js',
         ],
         # Unit test files
         'web.assets_unit_tests': [
