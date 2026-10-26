@@ -127,3 +127,16 @@ test("setCashier reloads the page when the session has been deleted", async () =
 
     await expect.waitForSteps(["reload"]);
 });
+test("closePos does not leave a cashier-less ProductScreen behind", async () => {
+    const store = await setupPosEnv();
+    store.session.state = "opened";
+    store.setCashier(store.models["hr.employee"].get(2));
+    store.addNewOrder();
+    store.navigate("ProductScreen", { orderUuid: store.getOrder().uuid });
+    // The redirect can be held back, e.g. by the beforeunload guard
+    patchWithCleanup(store, { redirectToBackend() {} });
+
+    await store.closePos();
+    expect(store.getCashier()).toBe(false);
+    expect(store.router.state.current).toBe("LoginScreen");
+});
