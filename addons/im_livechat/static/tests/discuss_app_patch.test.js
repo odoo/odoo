@@ -1,7 +1,6 @@
 import {
     actionPanel,
     click,
-    contains,
     hover,
     insertText,
     openDiscuss,
@@ -12,6 +11,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
 import { describe, mockDate, test } from "@odoo/hoot";
+import { waitFor, waitForNone } from "@odoo/hoot-dom";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
@@ -45,7 +45,7 @@ test("add livechat in the sidebar on visitor sending first message", async () =>
     });
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.LIVECHAT);
-    await contains(".o-mail-MessagingMenuEmpty:has(:text('No Livechat Session!'))");
+    await waitFor(".o-mail-MessagingMenuEmpty:has(:text('No Livechat Session!')):count(1)");
     // simulate livechat visitor sending a message
     withGuest(guestId, () =>
         rpc("/mail/message/post", {
@@ -58,7 +58,7 @@ test("add livechat in the sidebar on visitor sending first message", async () =>
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-MessagingMenuItem:has(:text(Visitor))");
+    await waitFor(".o-mail-MessagingMenuItem:has(:text(Visitor)):count(1)");
 });
 
 test("invite button should be present on livechat", async () => {
@@ -73,9 +73,9 @@ test("invite button should be present on livechat", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(actionPanel("Information")); // wait for auto-open of this panel
+    await waitFor(`${actionPanel("Information")}:count(1)`); // wait for auto-open of this panel
     await click("button[title='Members']");
-    await contains("button[title='Add People']");
+    await waitFor("button[title='Add People']:count(1)");
 });
 
 test("command palette search finds livechats", async () => {
@@ -92,7 +92,7 @@ test("command palette search finds livechats", async () => {
     await triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "@");
     await click("a", { text: "Visitor 11" });
-    await contains(".o-mail-ChatWindow-displayName:text('Visitor 11')");
+    await waitFor(".o-mail-ChatWindow-displayName:text('Visitor 11'):count(1)");
 });
 
 test("open visitor's partner profile if visitor has one", async () => {
@@ -108,7 +108,7 @@ test("open visitor's partner profile if visitor has one", async () => {
     await start();
     await openDiscuss(channel);
     await click("a[title='View Contact']");
-    await contains("div.o_field_widget input:value(Joel Willis)");
+    await waitFor("div.o_field_widget input:value(Joel Willis):count(1)");
 });
 
 test("Conversation description works in livechat", async () => {
@@ -124,9 +124,9 @@ test("Conversation description works in livechat", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer-html:focus");
-    await contains(
-        "input.o-mail-DiscussContent-threadDescription:value(Yup, that customer again...)"
+    await waitFor(".o-mail-Composer-html:focus:count(1)");
+    await waitFor(
+        "input.o-mail-DiscussContent-threadDescription:value(Yup, that customer again...):count(1)"
     );
 });
 
@@ -151,10 +151,10 @@ test("reply to message composer should disappear when livechat conversation ends
     await hover(".o-mail-Message:has(:text('Hello, I need help!'))");
     await click(".o-mail-Message:has(:text('Hello, I need help!')) [title='Expand']");
     await click(".o-dropdown-item:text('Reply')");
-    await contains(".o-mail-Composer:has(:text('Replying to Visitor'))");
+    await waitFor(".o-mail-Composer:has(:text('Replying to Visitor')):count(1)");
     await withGuest(guestId, () =>
         rpc("/im_livechat/visitor_leave_session", { channel_id: channelId })
     );
-    await contains("span:text('This live chat conversation has ended.')");
-    await contains(".o-mail-Composer", { count: 0 });
+    await waitFor("span:text('This live chat conversation has ended.'):count(1)");
+    await waitForNone(".o-mail-Composer");
 });

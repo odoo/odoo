@@ -44,7 +44,7 @@ test("can fold livechat chat windows in mobile", async () => {
     await click(".o-mail-ChatWindow-header [title*='Fold']", {
         parent: [".o-mail-ChatWindow", { text: "Visitor" }],
     });
-    await contains(".o-mail-ChatBubble");
+    await waitFor(".o-mail-ChatBubble:count(1)");
 });
 
 test.tags("desktop");
@@ -85,8 +85,8 @@ test("closing a chat window with no message from admin side unpins it", async ()
         parent: [".o-mail-ChatWindow", { text: "Partner 2" }],
     });
     await openDiscuss(MENU_ACTIVE_IDS.LIVECHAT);
-    await contains(".o-mail-MessagingMenuItem:has(:text('Partner 1'))");
-    await contains(".o-mail-MessagingMenuItem:has(:text('Partner 2'))", { count: 0 });
+    await waitFor(".o-mail-MessagingMenuItem:has(:text('Partner 1')):count(1)");
+    await waitForNone(".o-mail-MessagingMenuItem:has(:text('Partner 2'))");
 });
 
 test.tags("desktop", "focus required");
@@ -110,8 +110,8 @@ test("Focus should not be stolen when a new livechat open", async () => {
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem", { text: "general" });
     await contains(".o-mail-ChatWindow", { text: "general" });
-    await contains(
-        ".o-mail-Composer:has([o-we-hint-text='Message #general…']) .o-mail-Composer-html:focus"
+    await waitFor(
+        ".o-mail-Composer:has([o-we-hint-text='Message #general…']) .o-mail-Composer-html:focus:count(1)"
     );
     withGuest(guestId, () =>
         rpc("/mail/message/post", {
@@ -126,8 +126,8 @@ test("Focus should not be stolen when a new livechat open", async () => {
     );
     await contains(".o-mail-ChatWindow", { text: "Visitor 12" });
     await animationFrame();
-    await contains(
-        ".o-mail-Composer:has([o-we-hint-text='Message #general…']) .o-mail-Composer-html:focus"
+    await waitFor(
+        ".o-mail-Composer:has([o-we-hint-text='Message #general…']) .o-mail-Composer-html:focus:count(1)"
     );
 });
 
@@ -145,9 +145,9 @@ test("do not ask confirmation if other operators are present", async () => {
     });
     setupChatHub({ opened: [channelId] });
     await start();
-    await contains(".o-mail-ChatWindow");
+    await waitFor(".o-mail-ChatWindow:count(1)");
     await click("[title*='Close Chat Window']");
-    await contains(".o-mail-ChatWindow", { count: 0 });
+    await waitForNone(".o-mail-ChatWindow");
 });
 
 test.tags("desktop");
@@ -183,7 +183,7 @@ test("Show livechats with new message in chat hub even when in discuss app)", as
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Message:contains('Test')");
+    await waitFor(".o-mail-Message:contains('Test'):count(1)");
     // simulate livechat visitor sending a message
     await withGuest(guestId, () =>
         rpc("/mail/message/post", {
@@ -196,9 +196,9 @@ test("Show livechats with new message in chat hub even when in discuss app)", as
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-MessagingMenu-tab:has(:text('Live Chats')) .badge:text(1)");
+    await waitFor(".o-mail-MessagingMenu-tab:has(:text('Live Chats')) .badge:text(1):count(1)");
     await openFormView("res.partner", serverState.partnerId);
-    await contains(".o-mail-ChatWindow-header:contains('Visitor 11')");
+    await waitFor(".o-mail-ChatWindow-header:contains('Visitor 11'):count(1)");
 });
 
 test("livechat: non-member can close immediately", async () => {
@@ -214,9 +214,9 @@ test("livechat: non-member can close immediately", async () => {
     });
     await start();
     setupChatHub({ opened: [channelId] });
-    await contains(".o-mail-ChatWindow");
+    await waitFor(".o-mail-ChatWindow:count(1)");
     await click("[title*='Close Chat Window']");
-    await contains(".o-mail-ChatWindow", { count: 0 });
+    await waitForNone(".o-mail-ChatWindow");
 });
 
 test("Can close all livechat chat windows at once", async () => {
@@ -248,7 +248,7 @@ test("Can close all livechat chat windows at once", async () => {
     patchUiSize({ width: 1920 });
     setupChatHub({ opened: channelIds });
     await start();
-    await contains(".o-mail-ChatWindow", { count: 2 });
+    await waitFor(".o-mail-ChatWindow:count(2)");
     await click("button[title='Chat Options']");
     await click(".o-dropdown-item:text('Close all conversations')");
     await click("button:text('Yes, leave conversation')", {
@@ -257,7 +257,7 @@ test("Can close all livechat chat windows at once", async () => {
     await click("button:text('Yes, leave conversation')", {
         parent: [".o-mail-ChatWindow:contains('Visitor #2')"],
     });
-    await contains(".o-mail-ChatWindow", { count: 0 });
+    await waitForNone(".o-mail-ChatWindow");
 });
 
 test.tags("desktop", "focus required");
@@ -286,12 +286,12 @@ test("Opening ended livechat and seeing last messages automatically marks it as 
     setupChatHub({ folded: [channelId] });
     await start();
     await click(".o-mail-ChatBubble[name='Visitor']");
-    await contains(".o-mail-ChatWindow .o-mail-Message", { count: 2 });
-    await contains("span:text('This live chat conversation has ended.')");
-    await contains(".o-mail-ChatWindow .o-mail-Thread.o-focused");
-    await contains(".o-mail-Thread-banner:has(:text('2 new messages'))");
+    await waitFor(".o-mail-ChatWindow .o-mail-Message:count(2)");
+    await waitFor("span:text('This live chat conversation has ended.'):count(1)");
+    await waitFor(".o-mail-ChatWindow .o-mail-Thread.o-focused:count(1)");
+    await waitFor(".o-mail-Thread-banner:has(:text('2 new messages')):count(1)");
     resolve();
-    await contains(".o-mail-Thread-banner", { count: 0 });
+    await waitForNone(".o-mail-Thread-banner");
 });
 
 test.tags("desktop");

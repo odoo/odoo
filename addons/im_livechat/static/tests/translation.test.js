@@ -1,7 +1,7 @@
 import { describe, test } from "@odoo/hoot";
+import { waitFor } from "@odoo/hoot-dom";
 import {
     click,
-    contains,
     hover,
     onRpcBefore,
     openDiscuss,
@@ -37,7 +37,7 @@ test("message translation in livechat (agent is member)", async () => {
     await openDiscuss(channelId);
     await hover(".o-mail-Message");
     await click("[title='Expand']");
-    await contains(".o-dropdown-item:contains('Translate')");
+    await waitFor(".o-dropdown-item:contains('Translate'):count(1)");
 });
 
 test("message translation in livechat (agent is not member)", async () => {
@@ -60,7 +60,7 @@ test("message translation in livechat (agent is not member)", async () => {
     await openDiscuss(channelId);
     await hover(".o-mail-Message");
     await click("[title='Expand']");
-    await contains(".o-dropdown-item:contains('Translate')");
+    await waitFor(".o-dropdown-item:contains('Translate'):count(1)");
 });
 
 test("click 'translate' on message prompts for auto-translate of new messages", async () => {
@@ -108,7 +108,7 @@ test("click 'translate' on message prompts for auto-translate of new messages", 
     await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:contains('Translate')");
-    await contains(".o_notification_body span:contains('Auto-translate future messages?')");
+    await waitFor(".o_notification_body span:contains('Auto-translate future messages?'):count(1)");
     await click(".o_notification_body button:contains('Enable')");
     await withGuest(guestId, async () => {
         await rpc("/mail/message/post", {
@@ -121,11 +121,11 @@ test("click 'translate' on message prompts for auto-translate of new messages", 
             thread_model: "discuss.channel",
         });
     });
-    await contains(
-        ".o-mail-Message-body:text('Never put pineapple on pizza! (Translated from: Italian)')"
+    await waitFor(
+        ".o-mail-Message-body:text('Never put pineapple on pizza! (Translated from: Italian)'):count(1)"
     );
-    await contains(
-        ".o-mail-Message-body:text('The weather is nice today! (Translated from: Italian)')"
+    await waitFor(
+        ".o-mail-Message-body:text('The weather is nice today! (Translated from: Italian)'):count(1)"
     );
     await hover(
         ".o-mail-Message:contains('The weather is nice today! (Translated from: Italian)')"
@@ -134,7 +134,7 @@ test("click 'translate' on message prompts for auto-translate of new messages", 
         ".o-mail-Message:contains('The weather is nice today! (Translated from: Italian)') [title='Expand']"
     );
     await click(".o-dropdown-item:contains('Initial Language')");
-    await contains(".o_notification_body span:contains('Cancel auto-translate?')");
+    await waitFor(".o_notification_body span:contains('Cancel auto-translate?'):count(1)");
     await click(".o_notification_body button:contains('Disable')");
 
     await withGuest(guestId, async () => {
@@ -148,5 +148,5 @@ test("click 'translate' on message prompts for auto-translate of new messages", 
             thread_model: "discuss.channel",
         });
     });
-    await contains(".o-mail-Message-body:text('Ach, il tempo è cambiato.')");
+    await waitFor(".o-mail-Message-body:text('Ach, il tempo è cambiato.'):count(1)");
 });

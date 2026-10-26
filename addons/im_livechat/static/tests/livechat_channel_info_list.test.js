@@ -9,8 +9,8 @@ import {
     startServer,
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, press, test, waitFor } from "@odoo/hoot";
-import { queryOne } from "@odoo/hoot-dom";
+import { describe, press, test } from "@odoo/hoot";
+import { queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { serializeDate, today } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
@@ -74,9 +74,11 @@ test("chatbot answers are listed in channel info list", async () => {
     ]);
     await start();
     await openDiscuss(channelId);
-    await contains("h6:text('Chatbot answers')");
-    await contains(".o-livechat-ChannelInfoList-chatbotAnswer:text('I have a technical issue')");
-    await contains(".o-livechat-ChannelInfoList-chatbotAnswer:text('test@example.com')");
+    await waitFor("h6:text('Chatbot answers'):count(1)");
+    await waitFor(
+        ".o-livechat-ChannelInfoList-chatbotAnswer:text('I have a technical issue'):count(1)"
+    );
+    await waitFor(".o-livechat-ChannelInfoList-chatbotAnswer:text('test@example.com'):count(1)");
 });
 
 test("free input chatbot answer is rendered as plain text", async () => {
@@ -98,7 +100,9 @@ test("free input chatbot answer is rendered as plain text", async () => {
     await start();
     await openDiscuss(channelId);
     // markup would add a block element, breaking centering with the icon and truncation
-    await contains(".o-livechat-ChannelInfoList-chatbotAnswer:text('Ticket 344'):not(:has(*))");
+    await waitFor(
+        ".o-livechat-ChannelInfoList-chatbotAnswer:text('Ticket 344'):not(:has(*)):count(1)"
+    );
 });
 
 test("shows country and language in channel info list", async () => {
@@ -120,7 +124,9 @@ test("shows country and language in channel info list", async () => {
     await contains("h6", { text: "Country & Language" });
     await contains("span[title='Language']", { text: "Gujarati" });
     const [country] = pyEnv["res.country"].search_read([["id", "=", countryId]]);
-    await contains(`.o_country_flag[data-src*='/country_flags/${country.code.toLowerCase()}.png']`);
+    await waitFor(
+        `.o_country_flag[data-src*='/country_flags/${country.code.toLowerCase()}.png']:count(1)`
+    );
 });
 
 test("editing livechat note is synced between tabs", async () => {
@@ -187,11 +193,11 @@ test("shows live chat status in discuss sidebar", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(`${actionPanel("Information")} button.active:text('In progress')`);
+    await waitFor(`${actionPanel("Information")} button.active:text('In progress'):count(1)`);
     await click(`${actionPanel("Information")} button`, { text: "Looking for help" });
     await contains(`${actionPanel("Information")} button.active`, { text: "Looking for help" });
-    await contains(
-        ".o-mail-MessagingMenuItem:has(:text('Visitor #20')) [title='Looking for help']"
+    await waitFor(
+        ".o-mail-MessagingMenuItem:has(:text('Visitor #20')) [title='Looking for help']:count(1)"
     );
 });
 
@@ -266,7 +272,9 @@ test("Manage expertises from channel info list", async () => {
     await contains(`${actionPanel("Information")} .o_tag`, { text: "events", count: 0 });
     await press("Backspace");
     await contains(`${actionPanel("Information")} .o_tag`, { text: "pricing", count: 0 });
-    await contains(".o-livechat-ExpertiseTagsAutocomplete input[placeholder='Add expertise']");
+    await waitFor(
+        ".o-livechat-ExpertiseTagsAutocomplete input[placeholder='Add expertise']:count(1)"
+    );
     await click("a", { text: "events" });
     await contains(`${actionPanel("Information")} .o_tag`, { text: "events" });
 });
@@ -284,8 +292,8 @@ test("Can download transcript from channel info panel", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(
-        `a[href='${getOrigin()}/im_livechat/download_transcript/${channelId}']:text(Download)`
+    await waitFor(
+        `a[href='${getOrigin()}/im_livechat/download_transcript/${channelId}']:text(Download):count(1)`
     );
 });
 
@@ -338,17 +346,17 @@ test("info panel toggle state persists across chats", async () => {
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.LIVECHAT);
     await click(".o-mail-NotificationItem:has(:text('Visitor 1'))");
-    await contains(actionPanel("Information"));
+    await waitFor(`${actionPanel("Information")}:count(1)`);
     await click("button[name='livechat-info']");
-    await contains(actionPanel("Information"), { count: 0 });
+    await waitForNone(actionPanel("Information"));
     await click(".o-mail-NotificationItem:has(:text('Visitor 2'))");
-    await contains(".o-mail-DiscussContent-threadName[title='Visitor 2']");
-    await contains(actionPanel("Information"), { count: 0 });
+    await waitFor(".o-mail-DiscussContent-threadName[title='Visitor 2']:count(1)");
+    await waitForNone(actionPanel("Information"));
     await click("button[name='livechat-info']");
-    await contains(actionPanel("Information"));
+    await waitFor(`${actionPanel("Information")}:count(1)`);
     await click(".o-mail-NotificationItem:has(:text('Visitor 1'))");
-    await contains(".o-mail-DiscussContent-threadName[title='Visitor 1']");
-    await contains(actionPanel("Information"));
+    await waitFor(".o-mail-DiscussContent-threadName[title='Visitor 1']:count(1)");
+    await waitFor(`${actionPanel("Information")}:count(1)`);
 });
 
 test("auto-open of livechat info & members panels should combine", async () => {
@@ -373,31 +381,31 @@ test("auto-open of livechat info & members panels should combine", async () => {
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem:has(:text('General'))");
-    await contains(actionPanel("Members"));
+    await waitFor(`${actionPanel("Members")}:count(1)`);
     await click(".o-mail-MessagingMenu-tab[data-id='livechat']");
     await click(".o-mail-NotificationItem:has(:text('Visitor'))");
-    await contains(actionPanel("Members"), { count: 0 });
-    await contains(actionPanel("Information"));
+    await waitForNone(actionPanel("Members"));
+    await waitFor(`${actionPanel("Information")}:count(1)`);
     await click("button[name='livechat-info']");
-    await contains(actionPanel("Information"), { count: 0 });
-    await contains(actionPanel("Members"), { count: 0 });
+    await waitForNone(actionPanel("Information"));
+    await waitForNone(actionPanel("Members"));
     await click(".o-mail-MessagingMenu-tab[data-id='channel']");
     await click(".o-mail-NotificationItem:has(:text('General'))");
-    await contains(actionPanel("Members"));
-    await contains(actionPanel("Information"), { count: 0 });
+    await waitFor(`${actionPanel("Members")}:count(1)`);
+    await waitForNone(actionPanel("Information"));
     await click("button[name='member-list']");
-    await contains(actionPanel("Members"), { count: 0 });
-    await contains(actionPanel("Information"), { count: 0 });
+    await waitForNone(actionPanel("Members"));
+    await waitForNone(actionPanel("Information"));
     await click(".o-mail-MessagingMenu-tab[data-id='livechat']");
     await click(".o-mail-NotificationItem:has(:text('Visitor'))");
     await click("button[name='livechat-info']");
-    await contains(actionPanel("Information"));
-    await contains(actionPanel("Members"), { count: 0 });
+    await waitFor(`${actionPanel("Information")}:count(1)`);
+    await waitForNone(actionPanel("Members"));
     await click("button[name='member-list']");
-    await contains(actionPanel("Members"));
-    await contains(actionPanel("Information"), { count: 0 });
+    await waitFor(`${actionPanel("Members")}:count(1)`);
+    await waitForNone(actionPanel("Information"));
     await click(".o-mail-MessagingMenu-tab[data-id='channel']");
     await click(".o-mail-NotificationItem:has(:text('General'))");
-    await contains(actionPanel("Members"));
-    await contains(actionPanel("Information"), { count: 0 });
+    await waitFor(`${actionPanel("Members")}:count(1)`);
+    await waitForNone(actionPanel("Information"));
 });

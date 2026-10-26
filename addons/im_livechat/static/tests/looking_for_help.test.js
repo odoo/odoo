@@ -13,7 +13,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 
 import { describe, expect, test, tick } from "@odoo/hoot";
-import { waitFor } from "@odoo/hoot-dom";
+import { waitFor, waitForNone } from "@odoo/hoot-dom";
 
 import { rpc } from "@web/core/network/rpc";
 import { Command, mockService, onRpc, serverState } from "@web/../tests/web_test_helpers";
@@ -46,27 +46,27 @@ test("Show looking for help in the sidebar", async () => {
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.LIVECHAT);
     await click("button:text('Help Needed')");
-    await contains(".o-mail-MessagingMenuItem:has(:text(bob))");
+    await waitFor(".o-mail-MessagingMenuItem:has(:text(bob)):count(1)");
     await waitForChannels(["im_livechat.looking_for_help"]);
     await rpc("/im_livechat/session/update_status", {
         channel_id: bobChannelId,
         livechat_status: "in_progress",
     });
-    await contains(".o-mail-MessagingMenuItem:has(:text(bob))", { count: 0 });
+    await waitForNone(".o-mail-MessagingMenuItem:has(:text(bob))");
     await rpc("/im_livechat/session/update_status", {
         channel_id: bobChannelId,
         livechat_status: "need_help",
     });
     await click(".o-mail-NotificationItem:has(:text(bob))");
-    await contains(".o-mail-NotificationItem.o-active:has(:text(bob))");
+    await waitFor(".o-mail-NotificationItem.o-active:has(:text(bob)):count(1)");
     await waitForChannels([`discuss.channel_${bobChannelId}`]);
     await rpc("/im_livechat/session/update_status", {
         channel_id: bobChannelId,
         livechat_status: "in_progress",
     });
-    await contains(".o-livechat-LivechatStatusSelection .o-inProgress.active");
+    await waitFor(".o-livechat-LivechatStatusSelection .o-inProgress.active:count(1)");
     await click("button:text('All')");
-    await contains(".o-mail-MessagingMenuItem:has(:text(bob))");
+    await waitFor(".o-mail-MessagingMenuItem:has(:text(bob)):count(1)");
 });
 
 test("Show join button when help is required and self is not a member", async () => {
@@ -90,11 +90,11 @@ test("Show join button when help is required and self is not a member", async ()
     await contains(".o-livechat-LivechatStatusSelection .active", { text: "Looking for help" });
     await click("button[name='join-channel']");
     await contains(".o-livechat-LivechatStatusSelection .active", { text: "In progress" });
-    await contains("button[name='join-livechat-needing-help']", { count: 0 });
+    await waitForNone("button[name='join-livechat-needing-help']");
     await click(".o-livechat-LivechatStatusSelection button", { text: "Looking for help" });
     await contains(".o-livechat-LivechatStatusSelection .active", { text: "Looking for help" });
     // Now that we are members, the button is not shown, even if help is required.
-    await contains("button[name='join-channel']", { count: 0 });
+    await waitForNone("button[name='join-channel']");
 });
 
 test("Show notification when joining a channel that already received help", async () => {

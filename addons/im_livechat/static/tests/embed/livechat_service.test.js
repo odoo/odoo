@@ -25,6 +25,7 @@ import {
     insertTextInComposer,
 } from "@mail/../tests/mail_test_helpers_composer";
 import { describe, expect, test } from "@odoo/hoot";
+import { waitFor } from "@odoo/hoot-dom";
 import { Command, destroyApp, onRpc, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -90,7 +91,7 @@ test("Only necessary requests are made when creating a new chat", async () => {
     });
     listenStoreFetch(undefined, { logParams: ["init_livechat"] });
     await start({ authenticateAs: false, waitUntilSubscribe: false });
-    await contains(".o-livechat-LivechatButton");
+    await waitFor(".o-livechat-LivechatButton:count(1)");
     await waitStoreFetch([
         "init_messaging",
         // Called because mail/core/public_web is loaded in test bundle, and it cannot be

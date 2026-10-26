@@ -2,8 +2,9 @@ import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
 } from "@im_livechat/../tests/livechat_test_helpers";
-import { contains, setupChatHub, start, startServer } from "@mail/../tests/mail_test_helpers";
+import { setupChatHub, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
+import { waitFor, waitForNone } from "@odoo/hoot-dom";
 import { Command } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -34,7 +35,7 @@ test("Do not show bot IM status", async () => {
     });
     setupChatHub({ folded: [channelId1, channelId2] });
     await start({ authenticateAs: { login: "paul", password: "paul" } });
-    await contains(".o-mail-ChatBubble[name='Mitchell'] .o-mail-ImStatus");
-    await contains(".o-mail-ChatBubble[name='Dummy']");
-    await contains(".o-mail-ChatBubble[name='Dummy'] .o-mail-ImStatus", { count: 0 });
+    await waitFor(".o-mail-ChatBubble[name='Mitchell'] .o-mail-ImStatus:count(1)");
+    await waitFor(".o-mail-ChatBubble[name='Dummy']:count(1)");
+    await waitForNone(".o-mail-ChatBubble[name='Dummy'] .o-mail-ImStatus");
 });

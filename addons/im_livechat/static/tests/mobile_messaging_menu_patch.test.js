@@ -1,4 +1,5 @@
 import { describe, test } from "@odoo/hoot";
+import { waitFor } from "@odoo/hoot-dom";
 import {
     SIZES,
     click,
@@ -17,7 +18,7 @@ test("Livechat button is not present when there is no livechat thread", async ()
     patchUiSize({ size: SIZES.SM });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-MessagingMenu");
+    await waitFor(".o-mail-MessagingMenu:count(1)");
     await contains(".o-mail-MessagingMenu-navbar span", { count: 0, text: "Live Chat" });
 });
 
@@ -36,6 +37,6 @@ test("Livechat button is present when there is at least one livechat thread", as
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-MessagingMenu");
+    await waitFor(".o-mail-MessagingMenu:count(1)");
     await contains(".o-mail-MessagingMenu-navbar", { text: "Live Chats" });
 });

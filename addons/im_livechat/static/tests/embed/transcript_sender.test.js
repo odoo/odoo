@@ -7,6 +7,7 @@ import {
 } from "@im_livechat/../tests/livechat_test_helpers";
 import { click, contains, onRpcBefore, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
+import { waitFor } from "@odoo/hoot-dom";
 import { onRpc } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -23,7 +24,7 @@ test("send", async () => {
     const subscribed = waitUntilSubscribe();
     await postLivechatMessage("Hello World!");
     await subscribed;
-    await contains(".o-mail-Thread:not([data-transient])");
+    await waitFor(".o-mail-Thread:not([data-transient]):count(1)");
     await click(".o-mail-ChatWindow-header [title*='Close']");
     await click(".o-livechat-CloseConfirmation-leave");
     await contains("label", { text: "Receive a copy of this conversation" });
@@ -46,7 +47,7 @@ test("send failed", async () => {
     const subscribed = waitUntilSubscribe();
     await postLivechatMessage("Hello World!");
     await subscribed;
-    await contains(".o-mail-Thread:not([data-transient])");
+    await waitFor(".o-mail-Thread:not([data-transient]):count(1)");
     await click(".o-mail-ChatWindow-header [title*='Close']");
     await click(".o-livechat-CloseConfirmation-leave");
     await contains("input", { value: "paul@example.com" });

@@ -1,7 +1,7 @@
 import { expect } from "@odoo/hoot";
+import { waitFor, waitForNone } from "@odoo/hoot-dom";
 import {
     click,
-    contains,
     setupChatHub,
     start,
     startServer,
@@ -34,9 +34,9 @@ export async function livechatLastAgentLeaveFromChatWindow() {
         expect.step("action_unfollow");
     });
     await start();
-    await contains(".o-mail-ChatWindow");
+    await waitFor(".o-mail-ChatWindow:count(1)");
     await click("button[title*='Close Chat Window']");
     await click("button:contains('Yes, leave conversation')");
     await expect.waitForSteps(["action_unfollow"]);
-    await contains(".o-mail-ChatWindow", { count: 0 });
+    await waitForNone(".o-mail-ChatWindow");
 }

@@ -1,11 +1,11 @@
 import { click, contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
-import { describe, test, waitFor } from "@odoo/hoot";
+import { describe, test } from "@odoo/hoot";
+import { press, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
 import { defineLivechatModels } from "./livechat_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
-import { press } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -27,16 +27,16 @@ test("Thread name unchanged when inviting new users", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-DiscussContent-threadName[title='Visitor #20']");
+    await waitFor(".o-mail-DiscussContent-threadName[title='Visitor #20']:count(1)");
     await click("button[title='Members']");
     await click("button[title='Add People']");
     await click("input", {
         parent: [".o-discuss-ChannelInvitation-selectable", { text: "James" }],
     });
     await click("button:enabled", { text: "Invite" });
-    await contains(".o-discuss-ChannelInvitation", { count: 0 });
+    await waitForNone(".o-discuss-ChannelInvitation");
     await contains(".o-discuss-ChannelMember", { text: "James" });
-    await contains(".o-mail-DiscussContent-threadName[title='Visitor #20']");
+    await waitFor(".o-mail-DiscussContent-threadName[title='Visitor #20']:count(1)");
 });
 
 test("Display livechat custom username if defined", async () => {

@@ -6,6 +6,7 @@ import { SuggestionService } from "@mail/core/common/suggestion_service";
 import { click, contains, start } from "@mail/../tests/mail_test_helpers";
 import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { describe, expect, test } from "@odoo/hoot";
+import { waitForNone } from "@odoo/hoot-dom";
 import { patch } from "@web/core/utils/patch";
 
 describe.current.tags("desktop");
@@ -26,5 +27,5 @@ test("Visitor cannot use @ mentions in livechat", async () => {
     await insertTextInComposer(".o-mail-Composer", "@");
     // detected on both selection change and content change
     await expect.waitForSteps(["::,/", "::,/"]);
-    await contains(".o-mail-Composer-suggestion", { count: 0 });
+    await waitForNone(".o-mail-Composer-suggestion");
 });

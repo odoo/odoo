@@ -15,6 +15,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { expect, test } from "@odoo/hoot";
+import { waitFor, waitForNone } from "@odoo/hoot-dom";
 import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 
@@ -25,7 +26,7 @@ test("Do not ask feedback if empty", async () => {
     await loadDefaultEmbedConfig();
     await start({ authenticateAs: false, waitUntilSubscribe: false });
     await click(".o-livechat-LivechatButton");
-    await contains(".o-mail-ChatWindow");
+    await waitFor(".o-mail-ChatWindow:count(1)");
     await click("[title*='Close Chat Window']");
 });
 
@@ -39,15 +40,15 @@ test("Close without feedback", async () => {
     });
     await start({ authenticateAs: false, waitUntilSubscribe: false });
     await click(".o-livechat-LivechatButton");
-    await contains(".o-mail-ChatWindow");
+    await waitFor(".o-mail-ChatWindow:count(1)");
     const subscribed = waitUntilSubscribe();
     await postLivechatMessage("Hello World!");
     await subscribed;
-    await contains(".o-mail-Thread:not([data-transient])");
+    await waitFor(".o-mail-Thread:not([data-transient]):count(1)");
     await click("[title*='Close Chat Window']");
     await click(".o-livechat-CloseConfirmation-leave");
     await click("button", { text: "Close" });
-    await contains(".o-livechat-LivechatButton");
+    await waitFor(".o-livechat-LivechatButton:count(1)");
     await expect.waitForSteps(["/im_livechat/visitor_leave_session"]);
 });
 
@@ -57,7 +58,7 @@ test("Last operator leaving ends the livechat", async () => {
     const operatorUserId = serverState.userId;
     await start({ authenticateAs: false, waitUntilSubscribe: false });
     await click(".o-livechat-LivechatButton");
-    await contains(".o-mail-ChatWindow");
+    await waitFor(".o-mail-ChatWindow:count(1)");
     const subscribed = waitUntilSubscribe();
     await postLivechatMessage("Hello World!");
     await subscribed;
@@ -69,7 +70,7 @@ test("Last operator leaving ends the livechat", async () => {
         ])
     );
     await contains("span", { text: "This live chat conversation has ended." });
-    await contains(".o-mail-Composer-html", { count: 0 });
+    await waitForNone(".o-mail-Composer-html");
     await click("[title*='Close Chat Window']");
     await contains("p", { text: "Did we correctly answer your question?" }); // shows immediately feedback
 });
@@ -89,11 +90,11 @@ test("Feedback with rating and comment", async () => {
     });
     await start({ authenticateAs: false, waitUntilSubscribe: false });
     await click(".o-livechat-LivechatButton");
-    await contains(".o-mail-ChatWindow");
+    await waitFor(".o-mail-ChatWindow:count(1)");
     const subscribed = waitUntilSubscribe();
     await postLivechatMessage("Hello World!");
     await subscribed;
-    await contains(".o-mail-Thread:not([data-transient])");
+    await waitFor(".o-mail-Thread:not([data-transient]):count(1)");
     await click("[title*='Close Chat Window']");
     await click(".o-livechat-CloseConfirmation-leave");
     await expect.waitForSteps(["/im_livechat/visitor_leave_session"]);
@@ -112,7 +113,7 @@ test("Closing folded chat window should open it with feedback", async () => {
     const subscribed = waitUntilSubscribe();
     await postLivechatMessage("Hello World!");
     await subscribed;
-    await contains(".o-mail-Thread:not([data-transient])");
+    await waitFor(".o-mail-Thread:not([data-transient]):count(1)");
     await click("[title='Fold']");
     await click(".o-mail-ChatBubble");
     await click("[title*='Close Chat Window']");
@@ -129,7 +130,7 @@ test("Start new session from feedback panel", async () => {
     const subscribed = waitUntilSubscribe();
     await postLivechatMessage("Hello World!");
     await subscribed;
-    await contains(".o-mail-Thread:not([data-transient])");
+    await waitFor(".o-mail-Thread:not([data-transient]):count(1)");
     await click("[title*='Close Chat Window']");
     await click(".o-livechat-CloseConfirmation-leave");
     pyEnv["im_livechat.channel"].write([channelId], {
@@ -144,7 +145,7 @@ test("Start new session from feedback panel", async () => {
     });
 
     await click("button", { text: "New Session" });
-    await contains(".o-mail-ChatWindow", { count: 1 });
+    await waitFor(".o-mail-ChatWindow:count(1)");
     await contains(".o-mail-ChatWindow", { text: "Bob Operator" });
 });
 

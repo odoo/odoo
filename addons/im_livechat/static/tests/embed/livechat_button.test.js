@@ -4,13 +4,13 @@ import {
 } from "@im_livechat/../tests/livechat_test_helpers";
 import {
     click,
-    contains,
     setupChatHub,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { storeHandlerRegistry } from "@mail/../tests/mock_server/store_handler";
 import { describe, test } from "@odoo/hoot";
+import { waitFor, waitForNone } from "@odoo/hoot-dom";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 import { openClosePersistedChannel } from "./im_livechat_embed_shared_tests";
@@ -23,11 +23,11 @@ test("open/close temporary channel", async () => {
     await loadDefaultEmbedConfig();
     await start({ authenticateAs: false, waitUntilSubscribe: false });
     await click(".o-livechat-LivechatButton");
-    await contains(".o-mail-ChatWindow");
-    await contains(".o-livechat-LivechatButton", { count: 0 });
+    await waitFor(".o-mail-ChatWindow:count(1)");
+    await waitForNone(".o-livechat-LivechatButton");
     await click("[title*='Close Chat Window']");
-    await contains(".o-mail-ChatWindow", { count: 0 });
-    await contains(".o-livechat-LivechatButton", { count: 1 });
+    await waitForNone(".o-mail-ChatWindow");
+    await waitFor(".o-livechat-LivechatButton:count(1)");
 });
 
 test("open/close persisted channel", openClosePersistedChannel);
@@ -42,8 +42,8 @@ test("livechat not available", async () => {
         },
     });
     await start({ authenticateAs: false, waitUntilSubscribe: false });
-    await contains(".o-mail-ChatHub");
-    await contains(".o-livechat-LivechatButton", { count: 0 });
+    await waitFor(".o-mail-ChatHub:count(1)");
+    await waitForNone(".o-livechat-LivechatButton");
 });
 
 test("clicking on notification opens the chat", async () => {
@@ -65,7 +65,7 @@ test("clicking on notification opens the chat", async () => {
     await click(".o-livechat-LivechatButton-notification", {
         text: "Need help? Chat with us.",
     });
-    await contains(".o-mail-ChatWindow");
+    await waitFor(".o-mail-ChatWindow:count(1)");
 });
 
 test("can start a new live chat when acting as an agent in active live chats", async () => {
@@ -81,6 +81,6 @@ test("can start a new live chat when acting as an agent in active live chats", a
     });
     setupChatHub({ opened: [channelId] });
     await start();
-    await contains(".o-mail-ChatWindow");
-    await contains(".o-livechat-LivechatButton");
+    await waitFor(".o-mail-ChatWindow:count(1)");
+    await waitFor(".o-livechat-LivechatButton:count(1)");
 });
