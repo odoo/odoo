@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fidelity_product_example_1" model="product.product">
+        <field name="name">Fidelity Product Example</field>
+        <field name="list_price">100.0</field>
+        <field name="type">consu</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+    </record>
+
+    <record id="fidelity_partner_example_1" model="res.partner">
+        <field name="name">Fidelity Partner Example</field>
+        <field name="street">64 Fidelity Street</field>
+        <field name="city">Fidelity Land</field>
+        <field name="zip">11111</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+
+    <record id="fidelity_card_example_1" model="fidelity.card">
+        <field name="partner_id" ref="fidelity.fidelity_partner_example_1"/>
+    </record>
+</odoo>
