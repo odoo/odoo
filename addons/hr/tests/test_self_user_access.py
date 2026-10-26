@@ -41,7 +41,7 @@ class TestSelfAccessPreferences(TestHrCommon):
         ])
         all_groups = self.env['res.groups']
         for xml_id in all_groups_xml_ids:
-            all_groups |= self.env.ref(xml_id.strip())
+            all_groups |= self.env.ref(xml_id)
         user_all_groups = new_test_user(self.env, groups='base.group_user', login='hel', name='God')
         user_all_groups.write({'group_ids': [(4, group.id, False) for group in all_groups]})
         view_infos = self.env['res.users'].with_user(user_all_groups).get_view(view.id)
