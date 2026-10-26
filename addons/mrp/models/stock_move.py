@@ -72,11 +72,20 @@ class StockMove(models.Model):
             if move.production_id:
                 move.packaging_uom_id = move.production_id.uom_id
 
-    @api.depends('raw_material_production_id.location_src_id', 'production_id.location_src_id')
+    @api.depends('raw_material_production_id.location_src_id', 'production_id.location_src_id', 'product_id')
     def _compute_location_id(self):
         ids_to_super = set()
         for move in self:
-            if move.production_id:
+            if move.is_scrap:
+                production = move.production_id
+                if production and move.product_id and not move.id:
+                    if move.product_id in production.move_finished_ids.product_id:
+                        move.location_id = production.location_dest_id
+                    else:
+                        move.location_id = production.location_src_id
+                elif move.id or not move.location_id:
+                    ids_to_super.add(move.id)
+            elif move.production_id:
                 move.location_id = move.product_id.with_company(move.company_id).property_stock_production.id
             elif move.raw_material_production_id:
                 move.location_id = move.raw_material_production_id.location_src_id
@@ -380,6 +389,14 @@ class StockMove(models.Model):
         exploded_moves = moves_to_explode.action_explode()
         moves = (self - moves_to_explode) | exploded_moves
         return super(StockMove, moves)._action_done(cancel_backorder)
+
+    def _action_scrap(self):
+        self.ensure_one()
+        production = self.production_id
+        if production and production.state not in ('done', 'cancel') and self.product_id in production.move_finished_ids.product_id:
+            self.write(self._prepare_scrap_move_vals())
+            return self
+        return super()._action_scrap()
 
     def _should_bypass_reservation(self, forced_location=False):
         return super()._should_bypass_reservation(forced_location) or self.product_id.with_company(self.company_id).is_kits
@@ -700,6 +717,12 @@ class StockMove(models.Model):
                         for move in self):
             res = 'assigned'
         return res
+
+    def check_available_qty(self):
+        production = self.production_id
+        if production and production.state not in ('done', 'cancel') and self.product_id in production.move_finished_ids.product_id:
+            return True
+        return super().check_available_qty()
 
     def _action_replenish(self, values=False):
         self.ensure_one()
