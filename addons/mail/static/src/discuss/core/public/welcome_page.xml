@@ -32,7 +32,7 @@
                 <div class="d-flex flex-column gap-2">
                     <t t-call="mail.WelcomePage.inviteHeader"/>
                     <div class="bg-secondary-subtle rounded-2 p-2 d-flex flex-column gap-3">
-                        <t t-call="mail.WelcomePage.invitedBy"/>
+                        <t t-if="!this.channel.create_uid.is_public" t-call="mail.WelcomePage.invitedBy"/>
                         <t t-call="mail.WelcomePage.meetingDetails"/>
                         <t t-call="mail.WelcomePage.joiningAs"/>
                     </div>
