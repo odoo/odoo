@@ -27,6 +27,7 @@ class ResUsers(models.Model):
     def _search_state(self, operator, value):
         if operator != 'in':
             return NotImplemented
+<<<<<<< 352da647d2d2280f6d28a7478d6d8f65a0fcc37b
         # Note: matching 'inactive' (archived) users requires active_test=False.
         domains_by_state = {
             'new': Domain('active', '=', True) & Domain('log_ids', '=', False),
@@ -34,6 +35,22 @@ class ResUsers(models.Model):
             'inactive': Domain('active', '=', False),
         }
         return Domain.OR([domains_by_state[v] for v in value if v in domains_by_state])
+||||||| 48614c768f01d88bd48fd9d095ecc8671b68eddf
+        if len(value) > 1:
+            return Domain.TRUE
+        in_log = 'active' in value
+        return Domain('log_ids', '!=' if in_log else '=', False)
+=======
+        match 'active' in value, 'new' in value:
+            case True, True:
+                return Domain.TRUE
+            case True, False:
+                return Domain('log_ids', '!=', False)
+            case False, True:
+                return Domain('log_ids', '=', False)
+            case False, False:
+                return Domain.FALSE
+>>>>>>> 25e729ed02907ea3a66c3029b642cc4c25b26e80
 
     @api.depends('active', 'login_date')
     def _compute_state(self):
