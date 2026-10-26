@@ -5,7 +5,7 @@
             <t t-set="head">
                 <script>
                     <t t-call="im_livechat.loader"
-                        info="{ 'available': True, 'options': { 'chatbot_test_store': chatbot_test_store }, 'server_url': server_url, 'session_info': session_info }"/>
+                        info="{ 'available': True, 'options': { 'chatbot_test_store': chatbot_test_store, 'primary_color': livechat_colors['primary_color'], 'secondary_color': livechat_colors['secondary_color'] }, 'server_url': server_url, 'session_info': session_info }"/>
                 </script>
             </t>
             <t t-call="web.frontend_layout"
