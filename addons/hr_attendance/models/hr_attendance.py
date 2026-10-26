@@ -84,9 +84,15 @@ class HrAttendance(models.Model):
     )
     resource_calendar_id = fields.Many2one(related='employee_id.resource_calendar_id', string="Working Schedule")
     break_duration = fields.Float(string="Break Duration", tracking=True, help="Extra unpaid break duration (hours)")
+    # compute_sudo: the domain is computed for every user displaying the time
+    # type (e.g. My Attendances), even without read access on the time types;
+    # the dropdown itself still applies the user's access rights.
+    allowed_work_entry_type_ids = fields.Many2many(
+        'hr.work.entry.type', compute='_compute_allowed_work_entry_type_ids', compute_sudo=True)
     work_entry_type_id = fields.Many2one(
         'hr.work.entry.type', string="Time Type", index=True, required=True,
         default=lambda self: self.env.company.sudo().attendance_work_entry_type_id,
+        domain="[('id', 'in', allowed_work_entry_type_ids)]",
     )
     wet_display_code = fields.Char(related='work_entry_type_id.display_code', export_string_translation=False)
     # color index of the linked work entry type, used by calendar/gantt views
@@ -158,6 +164,34 @@ class HrAttendance(models.Model):
     def _compute_can_edit(self):
         for attendance in self:
             attendance.can_edit = attendance.is_manager or attendance.is_own
+
+    @api.depends('employee_id.company_id.country_id')
+    def _compute_allowed_work_entry_type_ids(self):
+        countries = self.employee_id.company_id.country_id
+        domain = self._get_work_entry_type_domain(
+            country_ids=countries.ids + [False])
+        # key on the country id: _read_group returns the "no country" group as
+        # an empty res.country recordset, whose id is False
+        types_by_country = {
+            country.id: work_entry_types
+            for country, work_entry_types in self.env['hr.work.entry.type']._read_group(
+                domain, ['country_id'], ['id:recordset'])
+        }
+        generic_types = types_by_country.get(False, self.env['hr.work.entry.type'])
+        for attendance in self:
+            country = attendance.employee_id.company_id.country_id
+            attendance.allowed_work_entry_type_ids = \
+                types_by_country.get(country.id, generic_types)
+
+    def _get_work_entry_type_domain(self, country_ids=None):
+        if country_ids is None:
+            country_ids = [self.employee_id.company_id.country_id.id]
+        domain = [('count_as', '=', 'working_time')]
+        if country_ids:
+            domain.append(('country_id', 'in', country_ids))
+        else:
+            domain.append(('country_id', '=', False))
+        return domain
 
     @api.depends('check_in', 'check_out', 'break_duration')
     def _compute_worked_hours(self):
