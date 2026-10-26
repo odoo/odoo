@@ -1,6 +1,7 @@
 import { fields, Record } from "@mail/model/export";
 
 export class ScheduledMessage extends Record {
+    /** @type {"mail.scheduled.message"} */
     static _name = "mail.scheduled.message";
 
     /** @type {number} */

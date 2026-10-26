@@ -1,13 +1,9 @@
 import { MailGuest } from "@mail/core/common/mail_guest_model";
-import { fields } from "@mail/model/export";
+import { fields, patchModel } from "@mail/model/export";
 
-import { patch } from "@web/core/utils/patch";
-
-/** @type {import("models").MailGuest} */
-const mailGuestPatch = {
+export const mailGuestPatch = patchModel(MailGuest, {
     setup() {
         super.setup();
         this.channelMembers = fields.Many("discuss.channel.member");
     },
-};
-patch(MailGuest.prototype, mailGuestPatch);
+});

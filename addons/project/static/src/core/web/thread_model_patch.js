@@ -1,13 +1,10 @@
 import { Thread } from "@mail/core/common/thread_model";
+import { patchModel } from "@mail/model/export";
 import { fields } from "@mail/model/misc";
 
-import { patch } from "@web/core/utils/patch";
-
-/** @type {import("models").Thread} */
-const threadPatch = {
+export const threadPatch = patchModel(Thread, {
     setup() {
         super.setup();
         this.collaborator_ids = fields.Many("res.partner");
     },
-};
-patch(Thread.prototype, threadPatch);
+});

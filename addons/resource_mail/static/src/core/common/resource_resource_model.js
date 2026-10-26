@@ -1,6 +1,7 @@
 import { fields, Record } from "@mail/model/export";
 
 export class ResourceResource extends Record {
+    /** @type {"resource.resource"} */
     static _name = "resource.resource";
 
     /** @type {number} */

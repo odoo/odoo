@@ -49,6 +49,8 @@ import { _t } from "@web/core/l10n/translation";
  * Tabs or filters without matching server-side cases raise a `BadRequest.
  */
 export class MessagingMenuTab extends Record {
+    /** @type {"MessagingMenuTab"} */
+    static _name = "MessagingMenuTab";
     setup() {
         super.setup(...arguments);
         this.onChange(

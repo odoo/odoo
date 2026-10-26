@@ -1,10 +1,9 @@
 import { _t } from "@web/core/l10n/translation";
 import { Store } from "@mail/core/common/store_plugin";
-import { patch } from "@web/core/utils/patch";
+import { patchModel } from "@mail/model/export";
 import { user } from "@web/core/user";
 
-/** @type {import("models").Store} */
-const storeServicePatch = {
+export const storeServicePatch = patchModel(Store, {
     async getChat(person) {
         const { employeeId } = person;
         if (!employeeId) {
@@ -34,6 +33,4 @@ const storeServicePatch = {
         );
         return sortedEmployees[0];
     },
-};
-
-patch(Store.prototype, storeServicePatch);
+});

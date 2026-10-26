@@ -1,6 +1,6 @@
 import { Attachment } from "@mail/core/common/attachment_model";
+import { patchModel } from "@mail/model/export";
 import { location } from "@web/core/browser/browser";
-import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
 
 /**
@@ -9,11 +9,11 @@ import { session } from "@web/session";
  *
  * @typedef {string} ExternalLivechatDisabledPdfReason
  */
-patch(Attachment.prototype, {
+export const attachmentPatch = patchModel(Attachment, {
     get isViewable() {
         if (this.isPdf && location.origin !== session.origin) {
             return false;
         }
         return super.isViewable;
-    }
+    },
 });

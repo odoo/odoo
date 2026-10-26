@@ -1,10 +1,7 @@
 import { Attachment } from "@mail/core/common/attachment_model";
-import { fields } from "@mail/model/export";
+import { fields, patchModel } from "@mail/model/export";
 
-import { patch } from "@web/core/utils/patch";
-
-/** @type {import("models").Attachment} */
-const attachmentPatch = {
+export const attachmentPatch = patchModel(Attachment, {
     setup() {
         super.setup(...arguments);
         this.voice_ids = fields.Many("discuss.voice.metadata");
@@ -15,5 +12,4 @@ const attachmentPatch = {
         }
         return super.isDeletable;
     },
-};
-patch(Attachment.prototype, attachmentPatch);
+});

@@ -1,18 +1,16 @@
 import { Thread } from "@mail/core/common/thread_model";
-import { fields } from "@mail/model/export";
+import { fields, patchModel } from "@mail/model/export";
 import { useSequential } from "@mail/utils/common/hooks";
 
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { createElementWithContent } from "@web/core/utils/html";
-import { patch } from "@web/core/utils/patch";
 
 const commandRegistry = registry.category("discuss.channel_commands");
 // Past this delay, consumers stop waiting on the prefetch rather than delaying the user further.
 export const PREFETCH_MAX_WAIT = 200;
 
-/** @type {import("models").Thread} */
-const threadPatch = {
+export const threadPatch = patchModel(Thread, {
     setup() {
         super.setup();
         this.onChange(
@@ -193,5 +191,4 @@ const threadPatch = {
         }
         return super.post(...arguments);
     },
-};
-patch(Thread.prototype, threadPatch);
+});

@@ -6,7 +6,6 @@ declare module "models" {
     export interface Store {
         "resource.resource": StaticMailRecord<ResourceResource, typeof ResourceResourceClass>;
     }
-
     export interface Models {
         "resource.resource": ResourceResource;
     }

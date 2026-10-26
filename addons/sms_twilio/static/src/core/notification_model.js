@@ -1,9 +1,8 @@
 import { Notification } from "@mail/core/common/notification_model";
+import { patchModel } from "@mail/model/export";
 import { _t } from "@web/core/l10n/translation";
-import { patch } from "@web/core/utils/patch";
 
-/** @type {import("models").Notification} */
-const notificationPatch = {
+export const notificationPatch = patchModel(Notification, {
     get failureMessage() {
         switch (this.failure_type) {
             case "twilio_authentication":
@@ -20,5 +19,4 @@ const notificationPatch = {
                 return super.failureMessage;
         }
     },
-};
-patch(Notification.prototype, notificationPatch);
+});

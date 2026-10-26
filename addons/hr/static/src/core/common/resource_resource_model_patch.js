@@ -1,8 +1,8 @@
-import { patch } from "@web/core/utils/patch";
 import { fields } from "@mail/model/misc";
 import { ResourceResource } from "@resource_mail/core/common/resource_resource_model";
+import { patchModel } from "@mail/model/export";
 
-patch(ResourceResource.prototype, {
+export const resourceResourcePatch = patchModel(ResourceResource, {
     setup() {
         super.setup();
         /** ⚠️ This field is named like a One but it is actually a Many. */

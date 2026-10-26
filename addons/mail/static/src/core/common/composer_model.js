@@ -10,6 +10,8 @@ import { isHtmlEmpty } from "@web/core/utils/html";
 import { nbsp } from "@web/core/utils/strings";
 
 export class Composer extends Record {
+    /** @type {"Composer"} */
+    static _name = "Composer";
     static id = OR("thread", "message");
 
     setup() {

@@ -1,11 +1,8 @@
 import { Thread } from "@mail/core/common/thread_model";
-import { fields } from "@mail/model/export";
+import { fields, patchModel } from "@mail/model/export";
 import { compareDatetime } from "@mail/utils/common/misc";
 
-import { patch } from "@web/core/utils/patch";
-
-/** @type {import("models").Thread} */
-const threadPatch = {
+export const threadPatch = patchModel(Thread, {
     setup() {
         super.setup();
         this.scheduledMessages = fields.Many("mail.scheduled.message", { inverse: "thread" });
@@ -15,5 +12,4 @@ const threadPatch = {
             )
         );
     },
-};
-patch(Thread.prototype, threadPatch);
+});
