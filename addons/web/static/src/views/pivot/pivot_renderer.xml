@@ -2,22 +2,24 @@
 <templates xml:space="preserve">
 
     <t t-name="web.PivotRenderer">
-        <div>
-            <t t-call="{{ this.props.buttonTemplate }}"/>
-            <div t-if="this.model.hasData() and this.model.metaData.activeMeasures.length" t-att-class="this.uiService.isSmall ? 'table-responsive' : ''" class="o_pivot o_sample_data_disabled mx-3">
+        <div class="o_pivot_renderer">
+            <div class="o_pivot_buttons_wrapper d-flex" t-ref="this.buttonsRef">
+                <t t-call="{{ this.props.buttonTemplate }}"/>
+            </div>
+            <div t-if="this.model.hasData() and this.model.metaData.activeMeasures.length" t-att-class="this.uiService.isSmall ? 'table-responsive' : ''" class="o_pivot o_sample_data_disabled">
                 <table
-                    class="table-hover table table-sm table-bordered table-borderless"
+                    class="table-hover table table-sm"
                     t-att-class="{ o_enable_linking: !this.model.metaData.disableLinking }"
                     t-ref="this.tableRef"
                 >
                     <thead>
-                        <tr t-foreach="this.table.headers" t-as="row" t-key="'header_' + row_index" class="border-top-0">
+                        <tr t-foreach="this.table.headers" t-as="row" t-key="'header_' + row_index">
                             <t t-foreach="row" t-as="cell" t-key="'header_row_' + cell_index">
                                 <t t-if="cell.measure" t-call="web.PivotMeasure"/>
                                 <t t-elif="cell.isLeaf !== undefined">
-                                    <t t-call="web.PivotHeader.title" isXAxis="true" isInHead="true"/>
+                                    <t t-call="web.PivotHeader.title" isXAxis="true"/>
                                 </t>
-                                <th t-else="" t-att-colspan="cell.width" t-att-rowspan="cell.height" class="border-0 bg-100 fw-normal" t-att-class="{ 'border-0': cell_index != 0 }"/>
+                                <th t-else="" t-att-colspan="cell.width" t-att-rowspan="cell.height" class="o_pivot_header_cell_empty fw-normal" t-att-class="{ 'border-end-0': cell_index != 0 }"/>
                             </t>
                         </tr>
                     </thead>
@@ -25,8 +27,7 @@
                         <tr t-foreach="this.table.rows" t-as="row" t-key="'row_' + row_index">
                             <t t-call="web.PivotHeader.title"
                                 cell="row"
-                                isXAxis="false"
-                                isInHead="false"/>
+                                isXAxis="false"/>
                             <t t-foreach="row.subGroupMeasurements" t-as="cell" t-key="'row_cell_' + cell_index">
                                 <td class="o_pivot_cell_value bg-100" t-att-class="{
                                         o_empty: cell.value === undefined,
@@ -116,7 +117,8 @@
             t-att-class="{
                 o_pivot_header_cell_closed: cell.isLeaf,
                 o_pivot_header_cell_opened: !cell.isLeaf,
-                'border-top': isInHead,
+                'border-top': isXAxis and row_index === 0,
+                'border-start': !isXAxis,
             }"
             t-attf-style="{{
                 isXAxis
@@ -130,8 +132,10 @@
             t-on-pointerdown.capture.stop.synthetic=""
             t-on-click.stop.synthetic="(ev) => this.onHeaderClick(ev, cell, isXAxis)"
         >
-            <i class="oi me-1" t-att-class="{'oi-filled': cell.isLeaf}" t-attf-data-icon="{{ cell.isLeaf ? 'add_box' : 'indeterminate_check_box' }}"/>
-            <span t-out="cell.title"/>
+            <div class="o_pivot_header_cell_content d-inline-block">
+                <i class="oi me-1" t-att-class="{'oi-filled': cell.isLeaf}" t-attf-data-icon="{{ cell.isLeaf ? 'add_box' : 'indeterminate_check_box' }}"/>
+                <span t-out="cell.title"/>
+            </div>
         </th>
     </t>
 
