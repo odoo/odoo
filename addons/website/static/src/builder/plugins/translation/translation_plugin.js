@@ -123,7 +123,6 @@ export class TranslationPlugin extends Plugin {
     };
 
     setup() {
-        this.dialogService = this.services.dialog;
         this.nonTranslatedSelector =
             `:not(${this.config.translatedElements.join(", ")})` + `:not(.o_translate_inline)`;
     }
