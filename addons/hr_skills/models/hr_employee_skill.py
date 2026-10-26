@@ -45,6 +45,9 @@ class HrEmployeeSkill(models.Model):
             'views': [(self.env.ref('hr_skills.employee_skill_view_inherit_certificate_form').id, 'form')],
         }
 
+    def open_new_hr_employee_skill_modal(self):
+        return self.env['hr.employee.skill'].open_hr_employee_skill_modal()
+
     def action_hr_employee_skill_certification(self):
         skill_type = self.env["hr.skill.type"].search(
             [("is_certification", "=", True)], limit=1
