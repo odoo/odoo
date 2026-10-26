@@ -9,7 +9,7 @@ import {
     useProps,
 } from "@odoo/owl";
 import { SpreadsheetComponent } from "@spreadsheet/actions/spreadsheet_component";
-import { SpreadsheetShareButton } from "@spreadsheet/components/share_button/share_button";
+import { DashboardShareButton } from "@spreadsheet_dashboard/bundle/dashboard_share_button/dashboard_share_button";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -33,7 +33,7 @@ export class SpreadsheetDashboardAction extends Component {
         SpreadsheetComponent,
         DashboardMobileSearchPanel,
         MobileFigureContainer,
-        SpreadsheetShareButton,
+        DashboardShareButton,
         DashboardSearchBar,
     };
     static displayName = _t("Dashboards");
