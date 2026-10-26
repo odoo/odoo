@@ -20,19 +20,33 @@ export class AttributeSelection extends Component {
         this.attributesToDisplay = this.props.productTemplate.attribute_line_ids.filter(
             (a) => this.availableAttributeValue(a).length > 0
         );
+        this.uomToDisplay = [
+            this.props.productTemplate.uom_id,
+            ...this.props.productTemplate.uom_ids,
+        ];
     }
 
     get selectedValues() {
         return (this.envSelectedValues[this.props.productTemplate.id] ??=
-            new AttributeSelectionHelper(this.selfOrder, this.attributesToDisplay));
+            new AttributeSelectionHelper(
+                this.selfOrder,
+                this.attributesToDisplay,
+                this.uomToDisplay
+            ));
     }
 
     isValueSelected(attribute, value) {
         return this.selectedValues.isValueSelected(attribute, value);
     }
+    isUomSelected(uom) {
+        return this.selectedValues.selectedUoMValue == uom.id;
+    }
 
     selectAttribute(attribute, value) {
         this.selectedValues.selectAttribute(attribute, value, this.props.onSelection);
+    }
+    selectUom(uom) {
+        this.selectedValues.selectUom(uom);
     }
 
     availableAttributeValue(attribute) {

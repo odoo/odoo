@@ -1,9 +1,11 @@
 export class AttributeSelectionHelper {
-    constructor(selfOrder, availableAttributes) {
+    constructor(selfOrder, availableAttributes, availableUoMs) {
         this.selectedValues = {};
+        this.selectedUoMValue = null;
         this.customValues = {};
         this.selfOrder = selfOrder;
         this.availableAttributes = new Set(availableAttributes.map((a) => a.id));
+        this.availableUoMs = new Set(availableUoMs.map((u) => u.id));
     }
 
     getCustomValue(attribute, value) {
@@ -51,6 +53,10 @@ export class AttributeSelectionHelper {
             values.add(value.id);
             onSelection(!isMultiSelection, attribute, value);
         }
+    }
+
+    selectUom(Uom) {
+        this.selectedUoMValue = Uom.id;
     }
 
     getMissingAttributeValue(attributes) {
