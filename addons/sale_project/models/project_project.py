@@ -74,7 +74,7 @@ class ProjectProject(models.Model):
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
-        self.allow_billable = bool(self.partner_id)
+        self.allow_billable = self.env.context.get('default_allow_billable') or bool(self.partner_id)
 
     @api.depends('allow_billable', 'partner_id.company_id')
     def _compute_partner_id(self):
