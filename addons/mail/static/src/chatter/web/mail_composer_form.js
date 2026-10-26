@@ -1,7 +1,6 @@
-import { useSubEnv } from "@web/owl2/utils";
 import { formView } from "@web/views/form/form_view";
 import { registry } from "@web/core/registry";
-import { EventBus, t, useOnChange, usePlugin, useProps } from "@odoo/owl";
+import { EventBus, providePlugins, t, useOnChange, usePlugin, useProps } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { formControllerProps } from "@web/views/form/form_controller";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
@@ -10,6 +9,7 @@ import { useService } from "@web/core/utils/hooks";
 import { ORM } from "@web/core/orm_plugin";
 import { useX2ManyCrud } from "@web/views/fields/relational_utils";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
+import { FullComposerBusPlugin } from "@mail/core/web/full_composer_bus_plugin";
 import { useMailComposerAttachmentsUploader } from "@mail/core/web/mail_composer_attachment_hook";
 
 export class MailComposerFormController extends formView.Controller {
@@ -20,9 +20,7 @@ export class MailComposerFormController extends formView.Controller {
     setup() {
         super.setup();
         this.env.dialogData.model = this.props.resModel;
-        useSubEnv({
-            fullComposerBus: this.props.fullComposerBus,
-        });
+        providePlugins([FullComposerBusPlugin], { bus: this.props.fullComposerBus });
         if (this.props.context.default_message_id) {
             this.dialogService = useService("dialog");
             this.stopEditingConfirmation();
@@ -99,7 +97,7 @@ export class MailComposerFormRenderer extends formView.Renderer {
         // Add file dropzone on full mail composer:
         this.attachmentUploadService = useService("mail.attachment_upload");
         this.operations = useX2ManyCrud(() => this.props.record.data["attachment_ids"], true);
-        
+
         const doUpload = useMailComposerAttachmentsUploader();
         useCustomDropzone(this.rootRef, MailAttachmentDropzone, {
             /** @param {Event} event */

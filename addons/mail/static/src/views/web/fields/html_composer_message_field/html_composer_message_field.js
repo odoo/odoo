@@ -12,24 +12,27 @@ import { fillEmpty } from "@html_editor/utils/dom";
 import { markup, onWillUnmount, useEffect } from "@odoo/owl";
 import { SIGNATURE_CLASS } from "@html_editor/main/user_signature_plugin";
 import { COMPOSER_TYPES } from "@mail/core/common/composer";
+import { FullComposerBusPlugin } from "@mail/core/web/full_composer_bus_plugin";
+import { useMaybePlugin } from "@mail/utils/common/hooks";
 
 export class HtmlComposerMessageField extends HtmlMailField {
     setup() {
         super.setup();
         this.mailStore = useService("mail.store");
-        if (this.env.fullComposerBus) {
-            useBus(this.env.fullComposerBus, "ACCIDENTAL_DISCARD", (ev) => {
+        const fullComposerBus = useMaybePlugin(FullComposerBusPlugin)?.bus;
+        if (fullComposerBus) {
+            useBus(fullComposerBus, "ACCIDENTAL_DISCARD", (ev) => {
                 const elContent = this.getNoSignatureElContent();
                 ev.detail.onAccidentalDiscard(isEmpty(elContent));
             });
-            useBus(this.env.fullComposerBus, "SAVE_CONTENT", (ev) => {
+            useBus(fullComposerBus, "SAVE_CONTENT", (ev) => {
                 const emailAddSignature = Boolean(
                     this.editor.editable.querySelector(`.${SIGNATURE_CLASS}`)
                 );
                 const composerHtml = markup(this.getNoSignatureElContent().innerHTML);
                 ev.detail.onSaveContent({ composerHtml, emailAddSignature });
             });
-            useBus(this.env.fullComposerBus, "ATTACHMENT_REMOVED", (ev) => {
+            useBus(fullComposerBus, "ATTACHMENT_REMOVED", (ev) => {
                 const attachmentElements = this.editor.editable.querySelectorAll(
                     `[data-attachment-id="${ev.detail.id}"]`
                 );
