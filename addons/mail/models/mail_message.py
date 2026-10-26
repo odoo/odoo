@@ -1606,14 +1606,17 @@ class MailMessage(models.Model):
         """ Invalidate the cache of the documents followed by ``self``. """
         fnames = ['message_ids', 'message_needaction', 'message_needaction_counter']
         self.flush_recordset(['model', 'res_id'])
-        for record in self:
-            model = model or record.model
-            res_id = res_id or record.res_id
-            if model not in self.pool:
-                continue
-            # a model can hold those fields without inheriting mail.thread
-            if to_invalidate := [f for f in fnames if f in self.env[model]._fields]:
-                self.env[model].browse(res_id).invalidate_recordset(to_invalidate)
+        # collect documents before invalidating: invalidating 'message_ids' also
+        # drops its inverse 'mail.message.res_id' from cache, for all messages
+        res_ids_by_model = defaultdict(set)
+        if model and res_id:
+            res_ids_by_model[model].add(res_id)
+        for message in self:
+            if message.model and message.model in self.pool and message.res_id:
+                res_ids_by_model[message.model].add(message.res_id)
+        for model_name, res_ids in res_ids_by_model.items():
+            if to_invalidate := [f for f in fnames if f in self.env[model_name]._fields]:
+                self.env[model_name].browse(res_ids).invalidate_recordset(to_invalidate)
 
     def _records_by_model_name(self):
         ids_by_model = defaultdict(OrderedSet)
