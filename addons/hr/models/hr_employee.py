@@ -2264,35 +2264,67 @@ class HrEmployee(models.Model):
 
     def _get_expected_attendances(self, date_from, date_to):
         self.ensure_one()
+        return self._get_expected_attendances_batch(date_from, date_to)[self.id]
+
+    def _get_expected_attendances_batch(self, date_from, date_to):
+        """Return {employee_id: Intervals} of expected worked time between date_from
+        and date_to for every employee in self.
+        """
+        result = {}
         valid_versions = self.sudo()._get_versions_with_contract_overlap_with_period(date_from.date(), date_to.date())
-        employee_tz = ZoneInfo(self.tz) if self.tz else None
-        if not valid_versions:
-            calendar = self.resource_calendar_id
-            resources_per_tz = self._get_resources_per_tz(date_from)
-            calendar_intervals = calendar._work_intervals_batch(
+        versioned_employees = valid_versions.employee_id
+        no_version_employees = self - versioned_employees
+
+        # if no version overlapping the period, use the current calendar
+        # for the whole window.
+        for calendar, employees in no_version_employees.grouped('resource_calendar_id').items():
+            resources_per_tz = employees._get_resources_per_tz(date_from)
+            intervals_per_resource = calendar._work_intervals_batch(
                 date_from,
                 date_to,
                 resources_per_tz=resources_per_tz,
                 compute_leaves=True,
-                domain=[('company_id', 'in', [False, self.company_id.id]), ('count_as', '=', 'leave')])[self.resource_id.id]
-            return calendar_intervals
-        duration_data = Intervals()
-        version_prev = datetime.combine(valid_versions[0].date_start, time.min, employee_tz)
-        for version in valid_versions:
-            version_start = datetime.combine(version.date_start, time.min, employee_tz)
-            contract_start = datetime.combine(version.contract_date_start, time.min, employee_tz)
-            version_end = datetime.combine(version.date_end or date.max, time.max, employee_tz)
-            calendar = version.resource_calendar_id
-            start_date = version_start if version_prev < version_start else contract_start
-            resources_per_tz = version._get_resources_per_tz()
-            version_intervals = calendar._work_intervals_batch(
-                                    max(date_from, start_date),
-                                    min(date_to, version_end),
-                                    resources_per_tz=resources_per_tz,
-                                    compute_leaves=True,
-                                    domain=[('company_id', 'in', [False, self.company_id.id]), ('count_as', '=', 'absence')])[self.resource_id.id]
-            duration_data = duration_data | version_intervals
-        return duration_data
+                domain=[('company_id', 'in', [False] + employees.company_id.ids), ('count_as', '=', 'absence')])
+            for employee in employees:
+                result[employee.id] = intervals_per_resource[employee.resource_id.id]
+
+        if not versioned_employees:
+            return result
+
+        pending_versions = defaultdict(lambda: self.env['hr.version'])
+        employee_requests = defaultdict(list)
+        for employee in versioned_employees:
+            result[employee.id] = Intervals()
+            employee_tz = ZoneInfo(employee.tz) if employee.tz else None
+            emp_versions = valid_versions.filtered(lambda v, e=employee: v.employee_id == e)
+            version_prev = datetime.combine(emp_versions[0].date_start, time.min, employee_tz)
+            for version in emp_versions:
+                version_start = datetime.combine(version.date_start, time.min, employee_tz)
+                contract_start = datetime.combine(version.contract_date_start, time.min, employee_tz)
+                version_end = datetime.combine(version.date_end or date.max, time.max, employee_tz)
+                calendar = version.resource_calendar_id
+                start_date = version_start if version_prev < version_start else contract_start
+                key = (calendar.id, max(date_from, start_date), min(date_to, version_end))
+                pending_versions[key] |= version
+                employee_requests[employee.id].append(key)
+
+        intervals_per_key = {}
+        for (calendar_id, w_start, w_end), versions in pending_versions.items():
+            calendar = self.env['resource.calendar'].browse(calendar_id)
+            resources_per_tz = versions._get_resources_per_tz()
+            companies = versions.employee_id.company_id
+            intervals_per_key[calendar_id, w_start, w_end] = calendar._work_intervals_batch(
+                w_start,
+                w_end,
+                resources_per_tz=resources_per_tz,
+                compute_leaves=True,
+                domain=[('company_id', 'in', [False] + companies.ids), ('count_as', '=', 'absence')])
+
+        for employee in versioned_employees:
+            for key in employee_requests[employee.id]:
+                result[employee.id] |= intervals_per_key[key][employee.resource_id.id]
+
+        return result
 
     def _get_calendar_attendances(self, date_from, date_to):
         self.ensure_one()

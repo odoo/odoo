@@ -118,7 +118,7 @@ class HrEmployee(models.Model):
         if not self._can_set_any_attendance_manager():
             for vals in vals_list:
                 if vals.get('attendance_manager_id') and vals.get('attendance_manager_id') == vals.get('user_id'):
-                    raise exceptions.UserError(_("An employee cannot be set as their own attendance approver."))
+                    raise exceptions.UserError(self.env._("An employee cannot be set as their own attendance approver."))
         officer_group = self.env.ref('hr_attendance.group_hr_attendance_officer', raise_if_not_found=False)
         group_updates = []
         for vals in vals_list:
@@ -133,7 +133,7 @@ class HrEmployee(models.Model):
             for employee in self:
                 user_id = vals['user_id'] if 'user_id' in vals else employee.user_id.id
                 if user_id and user_id == vals['attendance_manager_id']:
-                    raise exceptions.UserError(_("An employee cannot be set as their own attendance approver."))
+                    raise exceptions.UserError(self.env._("An employee cannot be set as their own attendance approver."))
         old_officers = self.env['res.users']
         if 'attendance_manager_id' in vals:
             old_officers = self.attendance_manager_id

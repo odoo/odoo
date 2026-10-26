@@ -532,7 +532,7 @@
                        decoration-warning="state == 'draft'"
                        decoration-danger="state == 'refused'"
                        readonly="1"/>
-                <field name="can_review" column_invisible="1"/>
+                <field name="can_review" column_invisible="1"/> <!-- drives invisible of the Validate/Refuse buttons-->
                 <button name="action_validate" string="Validate" type="object"
                         icon="check"
                         invisible="state != 'draft' or not can_review"
