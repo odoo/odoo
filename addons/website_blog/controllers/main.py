@@ -8,6 +8,7 @@ import werkzeug
 
 from odoo import http, tools, models
 from odoo.addons.website.controllers.main import QueryURL
+from odoo.addons.website.models.ir_http import sitemap_group
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.http.session import touch
@@ -175,10 +176,12 @@ class WebsiteBlog(http.Controller):
             'original_search': fuzzy_search_term and search,
         }
 
+    @sitemap_group("blogs")
     def sitemap_blog(env, rule, qs):
         Blog = env['blog.blog']
         domain = env.website.website_domain()
-        blogs = tools.lazy(lambda: Blog.search(domain, order="sequence"))
+        # Fetch only what the loop reads, not the HTML columns.
+        blogs = Blog.search_fetch(domain, ['seo_name', 'name'], order="sequence")
         slug = env['ir.http']._slug
 
         def match(loc):
@@ -239,7 +242,7 @@ class WebsiteBlog(http.Controller):
 
         return request.render("website_blog.blog_post_short", values)
 
-    @http.route(['''/blog/<model("blog.blog"):blog>/feed'''], type='http', auth="public", website=True, sitemap=True)
+    @http.route(['''/blog/<model("blog.blog"):blog>/feed'''], type='http', auth="public", website=True, sitemap=False)
     def blog_feed(self, blog, limit='15', **kwargs):
         v = {}
         v['blog'] = blog
@@ -259,21 +262,28 @@ class WebsiteBlog(http.Controller):
         # Compatibility pre-v14
         return request.redirect("/blog/%s/%s" % (request.env['ir.http']._slug(blog), request.env['ir.http']._slug(blog_post)), code=301)
 
+    @sitemap_group("blogs")
     def sitemap_blog_post(env, rule, qs):
         BlogPost = env['blog.post']
         IrHttp = env['ir.http']
-        posts = BlogPost.search([('website_published', '=', True)])
+        slug = IrHttp._slug
+        # Fetch only what the loop reads, here and on the related records.
+        posts = BlogPost.with_context(prefetch_fields=False).search_fetch(
+            [('website_published', '=', True)],
+            ['name', 'seo_name', 'blog_id', 'write_date'],
+        )
+        blog_slugs = {blog.id: slug(blog) for blog in posts.blog_id}
 
         for post in posts:
             # Canonical path: /blog/<blog>/<post>
             blog = post.blog_id
-            canonical_url = f"/blog/{IrHttp._slug(blog)}/{IrHttp._slug(post)}"
+            canonical_url = f"/blog/{blog_slugs[blog.id]}/{slug(post)}"
 
             if not qs or qs.lower() in canonical_url.lower():
                 # blog posts should also have lastmod for seo purposes.
                 yield {
                     "loc": canonical_url,
-                    "lastmod": (post.write_date or post.create_date).date(),
+                    "lastmod": post.write_date,
                 }
 
     @http.route([

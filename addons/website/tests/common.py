@@ -1,7 +1,25 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from urllib.parse import urlsplit
+
+from lxml import html
+
 from odoo.fields import Command
 from odoo.tests import HttpCase
+
+
+def all_sitemap_urls(case):
+    """ Return the combined body of every sub-sitemap listed in /sitemap.xml.
+
+    The index holds no page URL, and which section holds one may change.
+    """
+    # Drop cached sitemaps so the result reflects the data of the test.
+    case.env['ir.attachment'].search([('url', '=like', '/sitemap%')]).unlink()
+    index_response = case.url_open('/sitemap.xml')
+    case.assertEqual(index_response.status_code, 200, "/sitemap.xml must exist")
+    locs = html.fromstring(index_response.content).xpath('//loc/text()')
+    case.assertTrue(locs, "/sitemap.xml must list at least one sub-sitemap")
+    return '\n'.join(case.url_open(urlsplit(loc).path).text for loc in locs)
 
 
 class HttpCaseWithWebsiteUser(HttpCase):
