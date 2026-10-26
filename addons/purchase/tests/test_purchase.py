@@ -1137,6 +1137,25 @@ class TestPurchase(AccountTestInvoicingCommon):
         po.order_line.product_qty = 2
         self.assertEqual(po.order_line.price_unit, 5)
 
+    def test_purchase_order_line_vendor_price_with_given_taxes(self):
+        """Check that a purchase line created with its own taxes but without a price gets the vendor price
+        adapted to these taxes."""
+        self.tax_purchase_a.price_include_override = 'tax_included'
+        self.product_a.seller_ids = [Command.create({'partner_id': self.partner_a.id, 'price': 115.0})]
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({'product_id': self.product_a.id, 'product_qty': 1.0}),
+                Command.create({'product_id': self.product_a.id, 'product_qty': 1.0, 'tax_ids': [Command.set(self.tax_purchase_b.ids)]}),
+            ],
+        })
+
+        self.assertRecordValues(po.order_line, [
+            {'tax_ids': self.tax_purchase_a.ids, 'price_unit': 115.0, 'price_total': 115.0},
+            {'tax_ids': self.tax_purchase_b.ids, 'price_unit': 100.0, 'price_total': 115.0},
+        ])
+
     def test_purchase_order_lock(self):
         """
         Test that the purchase order can be locked and unlocked without the lock_confirmed_po setting.
