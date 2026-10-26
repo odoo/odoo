@@ -12,6 +12,9 @@ _INVALID_STATES = frozenset({'refused', 'draft'})
 class HrAttendance(models.Model):
     _inherit = 'hr.attendance'
 
+    def _get_work_entry_type_domain(self, country_ids=None):
+        return super()._get_work_entry_type_domain(country_ids=country_ids) + [('requires_allocation', '=', False)]
+
     def write(self, vals):
         """Reverse the allocation credits logged on the attendances before an invalidating
         write.
