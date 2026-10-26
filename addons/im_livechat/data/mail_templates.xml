@@ -3,7 +3,7 @@
     <data noupdate="1">
         <template id="livechat_email_template">
 <!-- sudo: visitor can access primary color -->
-<t t-set="primary_color" t-value="channel.livechat_channel_id.sudo().primary_color or '#875A7B'" />
+<t t-set="primary_color" t-value="channel.livechat_channel_id.sudo().primary_color" />
 <div style="font-size: 13px; margin: 10px; padding: 24px 32px 0px 32px; background-color: #ffffff; border: thin solid #dee2e6;">
 <div style="font-size: 13px; padding: 5px 0;">
     Here's a copy of your conversation with
