@@ -8,7 +8,7 @@ from odoo.tests import tagged
 from odoo.tests.common import TransactionCase, freeze_time
 
 
-@tagged('-at_install', 'post_install', 'work_entry_pipeline')
+@tagged('-at_install', 'post_install', 'work_entry_pipeline', 'time_rule_pipeline')
 class TestTimeRulePipeline(TransactionCase):
 
     @classmethod
@@ -2765,7 +2765,7 @@ class TestTimeRulePipeline(TransactionCase):
                          "No allocation at all → treated as insufficient → no output created")
 
 
-@tagged('-at_install', 'post_install', 'work_entry_pipeline')
+@tagged('-at_install', 'post_install', 'work_entry_pipeline', 'time_rule_pipeline')
 class TestTimeRuleCronBehavior(TransactionCase):
     """
     Attendances recorded today are not processed immediately, the daily cron handles them the next morning.
@@ -2930,7 +2930,7 @@ class TestTimeRuleCronBehavior(TransactionCase):
             self.assertEqual((cron.interval_number, cron.interval_type), (1, 'days'), xmlid)
 
 
-@tagged('-at_install', 'post_install', 'work_entry_pipeline')
+@tagged('-at_install', 'post_install', 'work_entry_pipeline', 'time_rule_pipeline')
 class TestTimeRulePipelineLeaves(TransactionCase):
     """Leave-based time rule pipeline tests.
 
