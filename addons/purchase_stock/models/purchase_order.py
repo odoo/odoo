@@ -36,20 +36,20 @@ class PurchaseOrder(models.Model):
     date_promised = fields.Datetime('Promised Date', index=True, copy=False, compute="_compute_date_promised", store=True, readonly=False,
         help="Date promised by the vendor for at least 1 or more products to be delivered by.")
 
-    def _auto_init(self):
+    def init(self):
         if not column_exists(self.env.cr, "purchase_order", "picking_type_id"):
             create_column(self.env.cr, "purchase_order", "picking_type_id", "int4")
-            self.env.cr.execute("""
-                UPDATE purchase_order po
-                   SET picking_type_id = (
-                        SELECT spt.id
-                          FROM stock_picking_type spt
-                         WHERE spt.code = 'incoming'
-                           AND spt.company_id = po.company_id
-                         LIMIT 1
-                        )
-            """)
-        return super()._auto_init()
+        self.env.cr.execute("""
+            UPDATE purchase_order po
+               SET picking_type_id = (
+                    SELECT spt.id
+                      FROM stock_picking_type spt
+                     WHERE spt.code = 'incoming'
+                       AND spt.company_id = po.company_id
+                     LIMIT 1
+                    )
+        """)
+        return super().init()
 
     @api.depends('order_line.move_ids.picking_id')
     def _compute_picking_ids(self):
