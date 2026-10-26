@@ -390,7 +390,7 @@
                             <button type="object"
                                 name="action_view_related_putaway_rules"
                                 class="oe_stat_button" icon="shuffle" groups="stock.group_stock_multi_locations"
-                                invisible="type == 'service'"
+                                invisible="type != 'consu'"
                                 context="{
                                     'invisible_handle': True,
                                     'single_product': product_variant_count == 1,
@@ -512,7 +512,7 @@
                             <button type="object"
                                 name="action_view_related_putaway_rules"
                                 class="oe_stat_button" icon="shuffle" groups="stock.group_stock_multi_locations"
-                                invisible="type == 'service'"
+                                invisible="type != 'consu'"
                                 context="{
                                     'invisible_handle': True,
                                     'single_product': product_variant_count == 1,
