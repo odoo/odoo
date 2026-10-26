@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_payment_method_view_form_inherit_pos_worldline" model="ir.ui.view">
+        <field name="name">pos.payment.method.form.inherit.worldline</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='use_payment_terminal']" position="after">
+                <field name="worldline_merchant_id" invisible="use_payment_terminal != 'worldline_api'" required="use_payment_terminal == 'worldline_api'"/>
+                <field name="worldline_terminal_id" invisible="use_payment_terminal != 'worldline_api'" required="use_payment_terminal == 'worldline_api'"/>
+                <field name="worldline_api_key" password="True" invisible="use_payment_terminal != 'worldline_api'" required="use_payment_terminal == 'worldline_api'"/>
+                <field name="worldline_test_mode" invisible="use_payment_terminal != 'worldline_api'"/>
+            </xpath>
+            <xpath expr="//field[@name='image']" position="replace">
+                <div class="d-flex flex-column align-items-center gap-2">
+                    <field name="image" class="oe_avatar" widget="image"/>
+                    <button name="action_worldline_test" type="object" string="Test" class="btn-primary text-nowrap" invisible="use_payment_terminal != 'worldline_api'"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
