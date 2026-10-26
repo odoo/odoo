@@ -93,7 +93,7 @@
                 <span>Validate</span>
             </t>
             <t t-else="">
-                <span t-out="this.payment_methods_from_config[0].name"/>
+                <span t-out="this.pos.configFastPaymentMethod[0].name"/>
             </t>
         </button>
     </t>
