@@ -154,7 +154,7 @@ describe("sendPaymentRequest: payment", () => {
 
         // Several polls answer "pending": the payment must stay open.
         await advanceTime(POLLING_START_DELAY_MS + POLLING_INTERVAL_MS * 3);
-        expect(checkoutStatusCalls).toBe(3);
+        await waitUntil(() => checkoutStatusCalls === 3);
         expect(settled).toBe(false);
         expect(lastError).toBe(null);
 
