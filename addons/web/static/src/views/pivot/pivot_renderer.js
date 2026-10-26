@@ -1,4 +1,4 @@
-import { Component, onWillUpdateProps, signal, useProps } from "@odoo/owl";
+import { Component, onWillUpdateProps, signal, useEffect, useProps } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -51,6 +51,7 @@ export class PivotRenderer extends Component {
     props = useProps(["model", "buttonTemplate"]);
 
     tableRef = signal.ref();
+    buttonsRef = signal.ref();
 
     setup() {
         this.actionService = useService("action");
@@ -79,10 +80,33 @@ export class PivotRenderer extends Component {
         }
         this.fields = sortBy(fields, "string");
 
+        const resizeObserver = new ResizeObserver(() => this.updateStickyOffsets());
+        useEffect(() => {
+            const tableEl = this.tableRef();
+            if (!tableEl) {
+                return;
+            }
+            resizeObserver.observe(this.buttonsRef());
+            resizeObserver.observe(tableEl.querySelector("thead th"));
+            return () => resizeObserver.disconnect();
+        });
         onWillUpdateProps(this.onWillUpdateProps);
     }
     onWillUpdateProps() {
         this.table = this.model.getTable();
+    }
+    /**
+     * Sets the offsets used by the sticky column headers, which can't be
+     * expressed in CSS: below the buttons, and right of the row headers.
+     */
+    updateStickyOffsets() {
+        const tableEl = this.tableRef();
+        const cornerEl = tableEl.querySelector("thead th");
+        tableEl.style.setProperty(
+            "--PivotView-buttons-height",
+            `${this.buttonsRef().offsetHeight}px`
+        );
+        tableEl.style.setProperty("--PivotView-row-headers-width", `${cornerEl.offsetWidth}px`);
     }
     /**
      * Get the formatted value of the cell.
