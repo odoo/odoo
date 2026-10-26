@@ -380,6 +380,14 @@ class StockMove(models.Model):
         moves = (self - moves_to_explode) | exploded_moves
         return super(StockMove, moves)._action_done(cancel_backorder)
 
+    def _action_scrap(self):
+        self.ensure_one()
+        production = self.production_id
+        if production and production.state not in ('done', 'cancel') and self.product_id in production.move_finished_ids.product_id:
+            self.write(self._prepare_scrap_move_vals())
+            return self
+        return super()._action_scrap()
+
     def _should_bypass_reservation(self, forced_location=False):
         return super()._should_bypass_reservation(forced_location) or self.product_id.with_company(self.company_id).is_kits
 
