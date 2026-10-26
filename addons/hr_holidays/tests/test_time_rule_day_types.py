@@ -6,7 +6,7 @@ from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
 
-@tagged('post_install', '-at_install', 'time_rule_day_types')
+@tagged('post_install', '-at_install', 'time_rule_day_types', 'time_rule_pipeline')
 class TestTimeRuleDayTypes(TransactionCase):
     """Pipeline tests for time rules operating on day and half-day leave types.
     """

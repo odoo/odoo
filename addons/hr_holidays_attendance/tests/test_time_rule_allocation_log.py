@@ -7,7 +7,7 @@ from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
 
-@tagged('-at_install', 'post_install', 'work_entry_pipeline')
+@tagged('-at_install', 'post_install', 'work_entry_pipeline', 'time_rule_pipeline')
 class TestTimeRuleAllocationLog(TransactionCase):
     """Allocation log creation, source routing, and reversal for attendance-side rules."""
 
