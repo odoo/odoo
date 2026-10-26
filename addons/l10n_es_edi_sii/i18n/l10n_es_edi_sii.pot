@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.3+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 18:21+0000\n"
-"PO-Revision-Date: 2026-06-19 18:21+0000\n"
+"POT-Creation-Date: 2026-10-24 18:18+0000\n"
+"PO-Revision-Date: 2026-10-24 18:18+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,6 +21,7 @@ msgid "Accepted"
 msgstr ""
 
 #. module: l10n_es_edi_sii
+#: model:ir.model.fields.selection,name:l10n_es_edi_sii.selection__account_move__l10n_es_edi_sii_state__accepted_with_errors
 #: model:ir.model.fields.selection,name:l10n_es_edi_sii.selection__l10n_es_edi_sii_document__state__accepted_with_errors
 msgid "Accepted with Errors"
 msgstr ""
@@ -119,6 +120,7 @@ msgid "Date when the invoice was registered in the SII system."
 msgstr ""
 
 #. module: l10n_es_edi_sii
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_journal__display_name
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move__display_name
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move_send__display_name
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move_send_wizard__display_name
@@ -142,13 +144,8 @@ msgid "Duplicated/Already processed."
 msgstr ""
 
 #. module: l10n_es_edi_sii
-#: model_terms:ir.ui.view,arch_db:l10n_es_edi_sii.view_invoice_tree_inherit_l10n_es_edi_sii
-msgid "Edi Blocking Level"
-msgstr ""
-
-#. module: l10n_es_edi_sii
-#: model_terms:ir.ui.view,arch_db:l10n_es_edi_sii.view_invoice_tree_inherit_l10n_es_edi_sii
-msgid "Electronic invoicing"
+#: model:ir.model.fields.selection,name:l10n_es_edi_sii.selection__account_journal__l10n_es_sii_kanban_state__error
+msgid "Error"
 msgstr ""
 
 #. module: l10n_es_edi_sii
@@ -173,6 +170,7 @@ msgid "Hacienda Foral de Navarra"
 msgstr ""
 
 #. module: l10n_es_edi_sii
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_journal__id
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move__id
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move_send__id
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move_send_wizard__id
@@ -209,6 +207,11 @@ msgid "JSON Filename"
 msgstr ""
 
 #. module: l10n_es_edi_sii
+#: model:ir.model,name:l10n_es_edi_sii.model_account_journal
+msgid "Journal"
+msgstr ""
+
+#. module: l10n_es_edi_sii
 #: model:ir.model,name:l10n_es_edi_sii.model_account_move
 msgid "Journal Entry"
 msgstr ""
@@ -217,6 +220,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_res_company__l10n_es_sii_certificate_ids
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_res_config_settings__l10n_es_sii_certificate_ids
 msgid "L10N Es Sii Certificate"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_journal__l10n_es_sii_kanban_state
+msgid "L10N Es Sii Kanban State"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_journal__l10n_es_sii_pending_count
+msgid "L10N Es Sii Pending Count"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_bank_statement_line__l10n_es_edi_sii_last_document_id
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move__l10n_es_edi_sii_last_document_id
+msgid "Last SII Document"
 msgstr ""
 
 #. module: l10n_es_edi_sii
@@ -330,6 +349,7 @@ msgstr ""
 #. module: l10n_es_edi_sii
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_bank_statement_line__l10n_es_edi_sii_error
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move__l10n_es_edi_sii_error
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_sii.view_invoice_tree_inherit_l10n_es_edi_sii
 msgid "SII Error"
 msgstr ""
 
@@ -341,6 +361,11 @@ msgstr ""
 #. module: l10n_es_edi_sii
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_l10n_es_edi_sii_document__attachment_id
 msgid "SII JSON Payload"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_sii.view_invoice_tree_inherit_l10n_es_edi_sii
+msgid "SII Send State"
 msgstr ""
 
 #. module: l10n_es_edi_sii
@@ -357,7 +382,7 @@ msgstr ""
 #. module: l10n_es_edi_sii
 #: model:ir.model.fields,help:l10n_es_edi_sii.field_account_bank_statement_line__l10n_es_edi_csv
 #: model:ir.model.fields,help:l10n_es_edi_sii.field_account_move__l10n_es_edi_csv
-msgid "Secure Verification Code of the last accepted document"
+msgid "Secure Verification Code of the last document"
 msgstr ""
 
 #. module: l10n_es_edi_sii
@@ -476,6 +501,7 @@ msgid "The web service is not responding"
 msgstr ""
 
 #. module: l10n_es_edi_sii
+#: model:ir.model.fields.selection,name:l10n_es_edi_sii.selection__account_move__l10n_es_edi_sii_state__to_cancel
 #: model:ir.model.fields.selection,name:l10n_es_edi_sii.selection__l10n_es_edi_sii_document__state__to_cancel
 msgid "To Cancel"
 msgstr ""
@@ -488,6 +514,14 @@ msgstr ""
 
 #. module: l10n_es_edi_sii
 #. odoo-python
+#: code:addons/l10n_es_edi_sii/models/account_journal.py:0
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_sii.account_journal_dashboard_kanban_view_sii
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_sii.view_account_invoice_filter_inherit_l10n_es_edi_sii
+msgid "To Send to SII"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#. odoo-python
 #: code:addons/l10n_es_edi_sii/models/l10n_es_edi_sii_document.py:0
 msgid "Unknown Error"
 msgstr ""
@@ -496,6 +530,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_es_edi_sii/models/l10n_es_edi_sii_document.py:0
 msgid "Unknown response state"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model:ir.model.fields.selection,name:l10n_es_edi_sii.selection__account_journal__l10n_es_sii_kanban_state__urgent
+msgid "Urgent"
 msgstr ""
 
 #. module: l10n_es_edi_sii
