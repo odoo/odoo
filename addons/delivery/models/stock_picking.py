@@ -156,6 +156,7 @@ class StockPicking(models.Model):
     shipping_weight = fields.Float("Weight for Shipping", compute='_compute_shipping_weight',
         help="Total weight of packages and products not in a package. Packages with no shipping weight specified will default to their products' total weight. This is the weight used to compute the cost of the shipping.")
     is_return_picking = fields.Boolean(compute='_compute_return_picking')
+    is_eu_import = fields.Boolean(compute='_compute_is_eu_import')
     return_label_ids = fields.One2many('ir.attachment', compute='_compute_return_label')
     destination_country_code = fields.Char(related='partner_id.country_id.code', string="Destination Country")
 
@@ -171,6 +172,25 @@ class StockPicking(models.Model):
                 picking.is_return_picking = any(m.origin_returned_move_id for m in picking.move_ids_without_package)
             else:
                 picking.is_return_picking = False
+
+    @api.depends('picking_type_id.warehouse_id.partner_id.country_id', 'partner_id.country_id', 'is_return_picking')
+    def _compute_is_eu_import(self):
+        """
+        Determines if the picking is an import into the EU where you need to provide M-PID, NS-PID and S-PID.
+        The requirements are:
+            - Shipment origin is outside the European Union
+            - Shipment destination is within the European Union
+            - Shipment is identified as Business-to-Consumer (B2C)
+            - Shipment is designated as a sale transaction ("For Sale")
+        """
+        europe_countries = self.env.ref('base.europe').country_ids
+        for picking in self:
+            source_country = picking.picking_type_id.warehouse_id.partner_id.country_id
+            destination_country = picking.partner_id.country_id
+            if source_country and destination_country:
+                picking.is_eu_import = source_country not in europe_countries and destination_country in europe_countries and bool(picking.partner_id.vat) and not picking.is_return_picking
+            else:
+                picking.is_eu_import = False
 
     def _compute_return_label(self):
         for picking in self:
