@@ -2921,7 +2921,7 @@ test(`readonly attrs on lines are re-evaluated on field change 2`, async () => {
         resId: 1,
     });
     await contains(`.o_field_many2one[name="parent_id"] input`).click();
-    await contains(`.dropdown .dropdown-item:contains(first record)`).click();
+    await contains(`.o-autocomplete--dropdown-menu .dropdown-item:contains(first record)`).click();
     expect(`.o_field_one2many[name="product_ids"]`).not.toHaveClass("o_readonly_modifier");
 
     await clear();
@@ -2930,7 +2930,7 @@ test(`readonly attrs on lines are re-evaluated on field change 2`, async () => {
     expect(`.o_field_one2many[name="product_ids"]`).toHaveClass("o_readonly_modifier");
 
     await contains(`.o_field_many2one[name="parent_id"] input`).click();
-    await contains(`.dropdown .dropdown-item:contains(second record)`).click();
+    await contains(`.o-autocomplete--dropdown-menu .dropdown-item:contains(second record)`).click();
     expect(`.o_field_one2many[name="product_ids"]`).not.toHaveClass("o_readonly_modifier");
 
     await clear();
@@ -9684,7 +9684,7 @@ test(`context is correctly passed after save & new in FormViewDialog`, async () 
     await contains(`.o_field_many2one[name="partner_type_id"] input`).click();
     expect.verifySteps(["web_name_search"]);
 
-    await contains(`.dropdown .dropdown-item:contains(gold)`).click();
+    await contains(`.o-autocomplete--dropdown-menu .dropdown-item:contains(gold)`).click();
     await contains(`.modal-footer .o_form_button_save_new`).click();
 
     // set a value on the m2o
@@ -9693,7 +9693,7 @@ test(`context is correctly passed after save & new in FormViewDialog`, async () 
         message: "No additional name search since the request is identical",
     });
 
-    await contains(`.dropdown .dropdown-item:contains(silver)`).click();
+    await contains(`.o-autocomplete--dropdown-menu .dropdown-item:contains(silver)`).click();
     await contains(`.modal-footer .o_form_button_save`).click();
 });
 
@@ -10452,7 +10452,7 @@ test(`keep editing after call_button fail`, async () => {
 
     await contains(`.o_form_view .o_field_one2many .o_data_row .o_data_cell:eq(1)`).click();
     await contains(`.o_field_many2one[name="product_id"] input`).click();
-    await contains(`.dropdown .dropdown-item:contains(xphone)`).click();
+    await contains(`.o-autocomplete--dropdown-menu .dropdown-item:contains(xphone)`).click();
     expect(`.o_field_many2one input`).toHaveValue("xphone");
 
     values = {

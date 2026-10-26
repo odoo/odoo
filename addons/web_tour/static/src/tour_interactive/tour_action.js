@@ -95,18 +95,23 @@ export class TourAction {
                     target: element.querySelector(".o-autocomplete--input"),
                     conditional: (ev) =>
                         ["Tab", "Enter"].includes(ev.key) &&
-                        ev.target.parentElement.querySelector(
-                            ".o-autocomplete--dropdown-item .ui-state-active"
+                        ev.target.ownerDocument.querySelector(
+                            ".o-autocomplete--dropdown-item .focus"
                         ),
                 });
             }
 
             // Click on an element of a dropdown should be also completed with a selection though Enter or Tab
             // This case is for the steps that click on a dropdown-item
-            if (element.closest(".o-autocomplete--dropdown-menu")) {
+            const autocompleteListEl = element.closest(
+                ".o-autocomplete--dropdown-item"
+            )?.parentElement;
+            if (autocompleteListEl) {
                 consumeEvents.push({
                     name: "keydown",
-                    target: element.closest(".o-autocomplete").querySelector("input"),
+                    target: element.ownerDocument.querySelector(
+                        `[aria-controls='${autocompleteListEl.id}']`
+                    ),
                     conditional: (ev) => ["Tab", "Enter"].includes(ev.key),
                 });
             }
@@ -156,8 +161,8 @@ export class TourAction {
                         selectsDropdownItem: true,
                         conditional: (ev) =>
                             ["Tab", "Enter"].includes(ev.key) &&
-                            ev.target.parentElement.querySelector(
-                                ".o-autocomplete--dropdown-item .ui-state-active"
+                            ev.target.ownerDocument.querySelector(
+                                ".o-autocomplete--dropdown-item .focus"
                             ),
                     });
                     consumeEvents.push({

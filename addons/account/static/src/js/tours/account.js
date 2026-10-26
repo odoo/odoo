@@ -77,7 +77,7 @@ registry.category("web_tour.tours").add('account_tour', {
     },
     {
         isActive: ["auto"],
-        trigger: `.o_form_view_container${accountTourSteps.draftInvoiceSelector} div[name=invoice_line_ids] div[name=product_id] .o_m2o_dropdown_option_create a:contains(create)`,
+        trigger: `body${accountTourSteps.draftInvoiceSelector} .o_m2o_dropdown_option_create a:contains(create)`,
         content: _t("Create the product."),
         run: "click",
     },

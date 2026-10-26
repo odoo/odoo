@@ -62,6 +62,7 @@ export class AccountLabelTextField extends ListTextField {
             autoSelect: true,
             fieldString: "Product",
             getDomain: () => this.productDomain,
+            menuCssClass: "o_account_label_text_menu",
             placeholder: "",
             resModel: this.m2XAutoCompleteModel,
             searchLimit: 8,
@@ -80,7 +81,8 @@ export class AccountLabelTextField extends ListTextField {
     }
 
     get isDropdownVisible() {
-        const menu = this.rootRef()?.querySelector(".o_m2o_overlay .o-autocomplete--dropdown-menu");
+        const listId = this.m2xInput?.getAttribute("aria-controls");
+        const menu = listId && document.getElementById(listId);
         if (!menu) {
             return false;
         }

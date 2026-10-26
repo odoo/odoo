@@ -156,7 +156,7 @@
                 content: '';
             }
 
-            .dropdown, .industry_selection, .custom-ui-autocomplete {
+            .dropdown, .industry_selection {
                 font-weight: 500;
                 cursor: pointer;
             }
@@ -208,10 +208,6 @@
                 }
             }
 
-            .o_configurator_industry_dropdown {
-                background: var(--o-bs-dropdown-bg);
-            }
-
             .dropdown {
                 box-shadow: inset 0 -3px 0 var(--primary);
 
@@ -256,46 +252,19 @@
                 }
             }
 
-            .dropdown-menu, .custom-ui-autocomplete {
+            .dropdown-menu {
                 font-size: inherit;
                 overflow-y: auto;
-                &:not(.o_configurator_industry_dropdown) {
-                    min-width: 100%;
-                }
+                min-width: 100%;
             }
 
-            .dropdown-item, [data-icon="keyboard_arrow_down"], .ui-menu-item a, .ui-menu-item a.ui-state-active {
+            .dropdown-item, [data-icon="keyboard_arrow_down"] {
                 font-size: .5em;
                 font-weight: inherit;
             }
 
-            .custom-ui-autocomplete {
-                max-height: 300px; /* <- Fallback */
-                max-height: 35vh;
-
-                .ui-menu-item {
-                    list-style: none;
-
-                    a {
-                        padding: calc(var(--o-bs-dropdown-item-padding-y) * 2) var(--o-bs-dropdown-item-padding-x);
-                        font-family: var(--o-bs-font-family-base);
-                        text-decoration: none;
-                        line-height: 1.2;
-
-                        &.o_no_result, &.o_no_result:hover {
-                            background-color: transparent !important;
-                            color: var(--gray-600) !important;
-                            cursor: default;
-                            padding: calc(var(--o-bs-dropdown-item-padding-y) * 4) var(--o-bs-dropdown-item-padding-x);
-                            font-style: italic;
-                            font-size: .5em;
-                        }
-                    }
-                }
-            }
-
-            .dropdown-item, .custom-ui-autocomplete .ui-menu-item a {
-                &:hover, &:active, &.ui-state-active {
+            .dropdown-item {
+                &:hover, &:active {
                     background-color: var(--o-bs-dropdown-link-hover-bg);
                     color: var(--o-bs-dropdown-link-color);
                 }
@@ -575,6 +544,56 @@
                     will-change: transform;
                     animation: theme_iframe_preview_scroll 8s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0.1s infinite alternate;
                 }
+            }
+        }
+    }
+}
+
+.o-autocomplete--dropdown-menu.custom-ui-autocomplete {
+    max-height: 300px; /* <- Fallback */
+    max-height: 35vh;
+    overflow-y: auto;
+    font-size: 28px;
+    font-weight: 500;
+    background: var(--o-bs-dropdown-bg);
+    cursor: pointer;
+    animation: configuratorFadeIn .35s;
+
+    @media screen and (min-width: 768px), print and (min-width: 188mm) {
+        font-size: 32px;
+    }
+
+    @media screen and (min-width: 992px), print and (min-width: 190mm) {
+        font-size: 36px;
+    }
+
+    @media screen and (min-width: 1200px), print and (min-width: 220mm) {
+        font-size: 40px;
+    }
+
+    .ui-menu-item {
+        list-style: none;
+
+        a {
+            padding: calc(var(--o-bs-dropdown-item-padding-y) * 2) var(--o-bs-dropdown-item-padding-x);
+            font-family: var(--o-bs-font-family-base);
+            font-size: .5em;
+            font-weight: inherit;
+            text-decoration: none;
+            line-height: 1.2;
+
+            &:hover, &:active, &.focus {
+                background-color: var(--o-bs-dropdown-link-hover-bg);
+                color: var(--o-bs-dropdown-link-color);
+            }
+
+            &.o_no_result, &.o_no_result:hover {
+                background-color: transparent !important;
+                color: var(--gray-600) !important;
+                cursor: default;
+                padding: calc(var(--o-bs-dropdown-item-padding-y) * 4) var(--o-bs-dropdown-item-padding-x);
+                font-style: italic;
+                font-size: .5em;
             }
         }
     }

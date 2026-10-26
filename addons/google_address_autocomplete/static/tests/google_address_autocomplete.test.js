@@ -113,9 +113,7 @@ test("correctly fill all standard fields", async () => {
     await runAllTimers();
     expect.verifySteps(["/autocomplete/address"]);
 
-    await contains(
-        ".o_field_widget[name='street'] .o-autocomplete--dropdown-item a:contains(Bourlottes)"
-    ).click();
+    await contains(".o-autocomplete--dropdown-item a:contains(Bourlottes)").click();
     expect.verifySteps(["/autocomplete/address_full"]);
     const expectedFields = {
         street: "rue des Bourlottes 9",
@@ -154,9 +152,7 @@ test("fills current field with values of unknown ones", async () => {
         confirm: false,
     });
     await runAllTimers();
-    await contains(
-        ".o_field_widget[name='some_char'] .o-autocomplete--dropdown-item a:contains(Bourlottes)"
-    ).click();
+    await contains(".o-autocomplete--dropdown-item a:contains(Bourlottes)").click();
 
     const expectedFields = {
         some_char: "rue des Bourlottes 9 Ferme 2 Brabant Wallon 1367 Belgium",
@@ -202,9 +198,7 @@ test("support field mapping in options", async () => {
         confirm: false,
     });
     await runAllTimers();
-    await contains(
-        ".o_field_widget[name='some_char'] .o-autocomplete--dropdown-item a:contains(Bourlottes)"
-    ).click();
+    await contains(".o-autocomplete--dropdown-item a:contains(Bourlottes)").click();
 
     const expectedFields = {
         some_char: "rue des Bourlottes 9 Ferme 2 Belgium",
@@ -235,9 +229,7 @@ test("select a value, then empty the input and save", async () => {
         confirm: false,
     });
     await runAllTimers();
-    await contains(
-        ".o_field_widget[name=street] .o-autocomplete--dropdown-item a:contains(Bourlottes)"
-    ).click();
+    await contains(".o-autocomplete--dropdown-item a:contains(Bourlottes)").click();
     expect(".o_field_widget[name=street] input").toHaveValue("rue des Bourlottes 9");
     await contains(".o_field_widget[name=street] input").edit("");
     await contains(".o_form_button_save").click();

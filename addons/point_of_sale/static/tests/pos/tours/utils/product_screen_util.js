@@ -880,7 +880,7 @@ export function createProductFromFrontend(name, barcode, list_price, category) {
         {
             isActive: ["desktop"],
             content: "Select category.",
-            trigger: `.o_input_dropdown .o-autocomplete--dropdown-menu li:contains(${category})`,
+            trigger: `.o-autocomplete--dropdown-menu li:contains(${category})`,
             run: "click",
         },
         {

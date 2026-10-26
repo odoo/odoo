@@ -93,7 +93,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Select the customer of your Sales Order (e.g. Brandon Freeman). Since we have a Sales Order for this customer with a prepaid service product which the remaining hours to deliver is greater than 0, the Sales Order Item in the task should be contain the Sales Order Item containing this prepaid service product.',
     run: "edit Brandon Freeman",
 }, {
-    trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',
+    trigger: '.o-autocomplete--dropdown-menu li:first-child > a:contains(Freeman)',
     content: 'Select the customer in the autocomplete dropdown.',
     run: "click",
 },
@@ -177,7 +177,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Add the customer for this project to select an SO and SOL for this customer (e.g. Brandon Freeman).',
     run: "edit Brandon Freeman",
 }, {
-    trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',
+    trigger: '.o-autocomplete--dropdown-menu li:first-child > a:contains(Freeman)',
     content: 'Select the customer in the autocomplete dropdown',
     run: "click",
 }, {
@@ -185,7 +185,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Select a Sales Order Item as Default Sales Order Item for each task in this project.',
     run: "edit S",
 }, {
-    trigger: '[name="sale_line_id"] ul.ui-autocomplete > li:first-child > a:not(:has(i.oi))',
+    trigger: '.o-autocomplete--dropdown-menu li:first-child > a:not(:has(i.oi))',
     content: 'Select the Sales Order Item in the autocomplete dropdown.',
     run: "click",
 },
@@ -205,7 +205,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Select an employee to link a Sales Order Item on his timesheets into this project.',
     run: 'click',
 }, {
-    trigger: '[name="employee_id"] ul.ui-autocomplete > li:first-child > a:not(:has(i.oi))',
+    trigger: '.o-autocomplete--dropdown-menu li:first-child > a:not(:has(i.oi))',
     content: 'Select the first employee in the autocomplete dropdown',
     run: "click",
 }, {
@@ -213,7 +213,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Select the Sales Order Item to link to the timesheets of this employee.',
     run: "edit S",
 }, {
-    trigger: '[name=sale_line_id] ul.ui-autocomplete > li:first-child > a:not(:has(i.oi))',
+    trigger: '.o-autocomplete--dropdown-menu li:first-child > a:not(:has(i.oi))',
     content: 'Select the first Sales Order Item in the autocomplete dropdown.',
     run: "click",
 }, {
@@ -235,7 +235,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Add the customer for this project to select an SO and SOL for this customer (e.g. Brandon Freeman).',
     run: "edit Brandon Freeman",
 }, {
-    trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',
+    trigger: '.o-autocomplete--dropdown-menu li:first-child > a:contains(Freeman)',
     content: 'Select the customer in the autocomplete dropdown',
     run: "click",
 },
@@ -251,7 +251,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Select the first sale order of the list',
     run: "edit Prepaid",
 }, {
-    trigger: 'ul.ui-autocomplete > li:first-child > a:not(:has(i.oi))',
+    trigger: '.o-autocomplete--dropdown-menu li:first-child > a:not(:has(i.oi))',
     content: 'Select the first item on the autocomplete dropdown',
     run: "click",
 }, {

@@ -152,10 +152,8 @@ export async function clickFieldDropdownItem(fieldName, itemContent, options) {
         await contains(`.o_kanban_record:contains('${itemContent}')`).click();
         return;
     }
-    const dropdowns = queryAll(
-        buildSelector(`[name='${fieldName}'] .dropdown .dropdown-menu`, options)
-    );
-    if (dropdowns.length === 0) {
+    const dropdowns = queryAll(".o-autocomplete--dropdown-menu");
+    if (!queryAll(`[name='${fieldName}'] .dropdown input[aria-expanded=true]`).length) {
         throw new Error(`No dropdown found for field ${fieldName}`);
     } else if (dropdowns.length > 1) {
         throw new Error(`Found ${dropdowns.length} dropdowns for field ${fieldName}`);

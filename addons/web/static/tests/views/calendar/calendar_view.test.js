@@ -547,31 +547,28 @@ test(`filter panel autocomplete: updates when typing`, async () => {
     });
     await displayCalendarPanel();
     const root = `.o_calendar_filter[data-name="attendee_ids"]`;
-    expect(`${root} .o-autocomplete--dropdown-menu`).toHaveCount(0);
-    expect(`${root} .o-autocomplete--dropdown-item`).toHaveCount(0);
+    expect(`.o-autocomplete--dropdown-menu`).toHaveCount(0);
+    expect(`.o-autocomplete--dropdown-item`).toHaveCount(0);
 
     await contains(`${root} .o-autocomplete--input`).click();
-    expect(`${root} .o-autocomplete--dropdown-menu`).toHaveCount(1);
-    expect(`${root} .o-autocomplete--dropdown-item`).toHaveCount(2);
-    expect(queryAllTexts(`${root} .o-autocomplete--dropdown-item`)).toEqual([
-        "partner 3",
-        "partner 4",
-    ]);
+    expect(`.o-autocomplete--dropdown-menu`).toHaveCount(1);
+    expect(`.o-autocomplete--dropdown-item`).toHaveCount(2);
+    expect(queryAllTexts(`.o-autocomplete--dropdown-item`)).toEqual(["partner 3", "partner 4"]);
 
     await contains(`${root} .o-autocomplete--input`).edit("partner 3", { confirm: false });
     await advanceTime(500);
-    expect(`${root} .o-autocomplete--dropdown-menu`).toHaveCount(1);
-    expect(`${root} .o-autocomplete--dropdown-item`).toHaveCount(1);
-    expect(queryAllTexts(`${root} .o-autocomplete--dropdown-item`)).toEqual(["partner 3"]);
+    expect(`.o-autocomplete--dropdown-menu`).toHaveCount(1);
+    expect(`.o-autocomplete--dropdown-item`).toHaveCount(1);
+    expect(queryAllTexts(`.o-autocomplete--dropdown-item`)).toEqual(["partner 3"]);
 
     await contains(`${root} .o-autocomplete--input`).edit(
         "a string that would yield to no result as it is too very much convoluted",
         { confirm: false }
     );
     await advanceTime(500);
-    expect(`${root} .o-autocomplete--dropdown-menu`).toHaveCount(1);
-    expect(`${root} .o-autocomplete--dropdown-item`).toHaveCount(1);
-    expect(queryAllTexts(`${root} .o-autocomplete--dropdown-item`)).toEqual(["No records"]);
+    expect(`.o-autocomplete--dropdown-menu`).toHaveCount(1);
+    expect(`.o-autocomplete--dropdown-item`).toHaveCount(1);
+    expect(queryAllTexts(`.o-autocomplete--dropdown-item`)).toEqual(["No records"]);
 });
 
 test(`check the avatar of the attendee in the calendar filter panel`, async () => {
@@ -607,8 +604,8 @@ test(`check the avatar of the attendee in the calendar filter panel`, async () =
     expect(`.o_calendar_filter:eq(0) .o-autocomplete`).toHaveCount(1);
     expect(".o_calendar_filter_item:eq(-2)").not.toHaveText("partner 3");
 
-    expect(`${section} .o-autocomplete--dropdown-menu`).toHaveCount(0);
-    expect(`${section} .o-autocomplete--dropdown-item`).toHaveCount(0);
+    expect(`.o-autocomplete--dropdown-menu`).toHaveCount(0);
+    expect(`.o-autocomplete--dropdown-item`).toHaveCount(0);
     await contains(`${section} .o-autocomplete--input`).click();
     await runAllTimers();
     expect(".o-autocomplete--dropdown-item:first-child").toHaveText("partner 3");
@@ -716,12 +713,12 @@ test(`add a filter with the search more dialog on desktop`, async () => {
     expect(queryAllTexts`.o_calendar_filter_item`).toEqual(["partner 1", "partner 2"]);
 
     // Open the autocomplete dropdown
-    expect(`${section} .o-autocomplete--dropdown-menu`).toHaveCount(0);
-    expect(`${section} .o-autocomplete--dropdown-item`).toHaveCount(0);
+    expect(`.o-autocomplete--dropdown-menu`).toHaveCount(0);
+    expect(`.o-autocomplete--dropdown-item`).toHaveCount(0);
     await contains(`${section} .o-autocomplete--input`).click();
     await advanceTime(500);
-    expect(`${section} .o-autocomplete--dropdown-menu`).toHaveCount(1);
-    expect(`${section} .o-autocomplete--dropdown-item`).toHaveCount(9);
+    expect(`.o-autocomplete--dropdown-menu`).toHaveCount(1);
+    expect(`.o-autocomplete--dropdown-item`).toHaveCount(9);
     expect(queryAllTexts`.o-autocomplete--dropdown-item`).toEqual([
         "partner 3",
         "partner 4",
@@ -737,8 +734,8 @@ test(`add a filter with the search more dialog on desktop`, async () => {
     // Change the search term
     await contains(`.o-autocomplete--input`).edit("foo", { confirm: false });
     await advanceTime(500);
-    expect(`${section} .o-autocomplete--dropdown-menu`).toHaveCount(1);
-    expect(`${section} .o-autocomplete--dropdown-item`).toHaveCount(9);
+    expect(`.o-autocomplete--dropdown-menu`).toHaveCount(1);
+    expect(`.o-autocomplete--dropdown-item`).toHaveCount(9);
     expect(queryAllTexts`.o-autocomplete--dropdown-item`).toEqual([
         "foo partner 5",
         "foo partner 6",
@@ -753,7 +750,7 @@ test(`add a filter with the search more dialog on desktop`, async () => {
 
     // Open the search more dialog
     expect(`.modal`).toHaveCount(0);
-    await contains(`${section} .o-autocomplete--dropdown-item:last-child`).click();
+    await contains(`.o-autocomplete--dropdown-item:last-child`).click();
     expect(`.modal`).toHaveCount(1);
     expect(`.modal .o_data_row`).toHaveCount(10);
     expect(queryAllTexts`.modal .o_data_row`).toEqual([
@@ -787,12 +784,12 @@ test(`add a filter with the search more dialog on desktop`, async () => {
     ]);
 
     // Open the autocomplete dropdown
-    expect(`${section} .o-autocomplete--dropdown-menu`).toHaveCount(0);
-    expect(`${section} .o-autocomplete--dropdown-item`).toHaveCount(0);
+    expect(`.o-autocomplete--dropdown-menu`).toHaveCount(0);
+    expect(`.o-autocomplete--dropdown-item`).toHaveCount(0);
     await contains(`${section} .o-autocomplete--input`).click();
     await advanceTime(500);
-    expect(`${section} .o-autocomplete--dropdown-menu`).toHaveCount(1);
-    expect(`${section} .o-autocomplete--dropdown-item`).toHaveCount(9);
+    expect(`.o-autocomplete--dropdown-menu`).toHaveCount(1);
+    expect(`.o-autocomplete--dropdown-item`).toHaveCount(9);
     expect(queryAllTexts`.o-autocomplete--dropdown-item`).toEqual([
         "partner 3",
         "partner 4",
@@ -808,8 +805,8 @@ test(`add a filter with the search more dialog on desktop`, async () => {
     // Change the search term
     await contains(`.o-autocomplete--input`).edit("foo", { confirm: false });
     await advanceTime(500);
-    expect(`${section} .o-autocomplete--dropdown-menu`).toHaveCount(1);
-    expect(`${section} .o-autocomplete--dropdown-item`).toHaveCount(9);
+    expect(`.o-autocomplete--dropdown-menu`).toHaveCount(1);
+    expect(`.o-autocomplete--dropdown-item`).toHaveCount(9);
     expect(queryAllTexts`.o-autocomplete--dropdown-item`).toEqual([
         "foo partner 7",
         "foo partner 8",
@@ -824,7 +821,7 @@ test(`add a filter with the search more dialog on desktop`, async () => {
 
     // Open the search more dialog
     expect(`.modal`).toHaveCount(0);
-    await contains(`${section} .o-autocomplete--dropdown-item:last-child`).click();
+    await contains(`.o-autocomplete--dropdown-item:last-child`).click();
     expect(`.modal`).toHaveCount(1);
     expect(`.modal .o_data_row`).toHaveCount(8);
     expect(queryAllTexts`.modal .o_data_row`).toEqual([
@@ -887,12 +884,8 @@ test(`add a filter with the search more dialog (field with a context)`, async ()
     });
     await contains(`.o_calendar_filter[data-name="attendee_ids"] .o-autocomplete--input`).click();
     await advanceTime(500);
-    expect(
-        `.o_calendar_filter[data-name="attendee_ids"] .o-autocomplete--dropdown-item:last-child`
-    ).toHaveText("Search More...");
-    await contains(
-        `.o_calendar_filter[data-name="attendee_ids"] .o-autocomplete--dropdown-item:last-child`
-    ).click();
+    expect(`.o-autocomplete--dropdown-item:last-child`).toHaveText("Search More...");
+    await contains(`.o-autocomplete--dropdown-item:last-child`).click();
     expect(`.modal`).toHaveCount(1);
     expect.verifySteps(["get_views"]);
 });
@@ -931,12 +924,12 @@ test(`add a filter with the search more dialog on mobile`, async () => {
     expect(queryAllTexts`.o_calendar_filter_item`).toEqual(["partner 1", "partner 2"]);
 
     // Open the autocomplete dropdown
-    expect(`${section} .o-autocomplete--dropdown-menu`).toHaveCount(0);
-    expect(`${section} .o-autocomplete--dropdown-item`).toHaveCount(0);
+    expect(`.o-autocomplete--dropdown-menu`).toHaveCount(0);
+    expect(`.o-autocomplete--dropdown-item`).toHaveCount(0);
     await contains(`${section} .o-autocomplete--input`).click();
     await advanceTime(500);
-    expect(`${section} .o-autocomplete--dropdown-menu`).toHaveCount(1);
-    expect(`${section} .o-autocomplete--dropdown-item`).toHaveCount(9);
+    expect(`.o-autocomplete--dropdown-menu`).toHaveCount(1);
+    expect(`.o-autocomplete--dropdown-item`).toHaveCount(9);
     expect(queryAllTexts`.o-autocomplete--dropdown-item`).toEqual([
         "partner 3",
         "partner 4",
@@ -952,8 +945,8 @@ test(`add a filter with the search more dialog on mobile`, async () => {
     // Change the search term
     await contains(`.o-autocomplete--input`).edit("foo", { confirm: false });
     await advanceTime(500);
-    expect(`${section} .o-autocomplete--dropdown-menu`).toHaveCount(1);
-    expect(`${section} .o-autocomplete--dropdown-item`).toHaveCount(9);
+    expect(`.o-autocomplete--dropdown-menu`).toHaveCount(1);
+    expect(`.o-autocomplete--dropdown-item`).toHaveCount(9);
     expect(queryAllTexts`.o-autocomplete--dropdown-item`).toEqual([
         "foo partner 5",
         "foo partner 6",
@@ -968,7 +961,7 @@ test(`add a filter with the search more dialog on mobile`, async () => {
 
     // Open the search more dialog
     expect(`.modal`).toHaveCount(0);
-    await contains(`${section} .o-autocomplete--dropdown-item:last-child`).click();
+    await contains(`.o-autocomplete--dropdown-item:last-child`).click();
     expect(`.modal`).toHaveCount(1);
     expect(`.modal .o_data_row`).toHaveCount(10);
     expect(queryAllTexts`.modal .o_data_row`).toEqual([
@@ -986,7 +979,7 @@ test(`add a filter with the search more dialog on mobile`, async () => {
     await contains(".o_data_row:eq(0)").click();
     await contains(`.o-autocomplete--input`).edit("foo", { confirm: false });
     await advanceTime(500);
-    await contains(`${section} .o-autocomplete--dropdown-item:last-child`).click();
+    await contains(`.o-autocomplete--dropdown-item:last-child`).click();
     await contains(".o_data_row:eq(0)").click();
     expect("o_dialog").toHaveCount(0);
 
@@ -1000,12 +993,12 @@ test(`add a filter with the search more dialog on mobile`, async () => {
     ]);
 
     // Open the autocomplete dropdown
-    expect(`${section} .o-autocomplete--dropdown-menu`).toHaveCount(0);
-    expect(`${section} .o-autocomplete--dropdown-item`).toHaveCount(0);
+    expect(`.o-autocomplete--dropdown-menu`).toHaveCount(0);
+    expect(`.o-autocomplete--dropdown-item`).toHaveCount(0);
     await contains(`${section} .o-autocomplete--input`).click();
     await advanceTime(500);
-    expect(`${section} .o-autocomplete--dropdown-menu`).toHaveCount(1);
-    expect(`${section} .o-autocomplete--dropdown-item`).toHaveCount(9);
+    expect(`.o-autocomplete--dropdown-menu`).toHaveCount(1);
+    expect(`.o-autocomplete--dropdown-item`).toHaveCount(9);
     expect(queryAllTexts`.o-autocomplete--dropdown-item`).toEqual([
         "partner 3",
         "partner 4",
@@ -1021,8 +1014,8 @@ test(`add a filter with the search more dialog on mobile`, async () => {
     // Change the search term
     await contains(`.o-autocomplete--input`).edit("foo", { confirm: false });
     await advanceTime(500);
-    expect(`${section} .o-autocomplete--dropdown-menu`).toHaveCount(1);
-    expect(`${section} .o-autocomplete--dropdown-item`).toHaveCount(9);
+    expect(`.o-autocomplete--dropdown-menu`).toHaveCount(1);
+    expect(`.o-autocomplete--dropdown-item`).toHaveCount(9);
     expect(queryAllTexts`.o-autocomplete--dropdown-item`).toEqual([
         "foo partner 7",
         "foo partner 8",
@@ -1037,7 +1030,7 @@ test(`add a filter with the search more dialog on mobile`, async () => {
 
     // Open the search more dialog
     expect(`.modal`).toHaveCount(0);
-    await contains(`${section} .o-autocomplete--dropdown-item:last-child`).click();
+    await contains(`.o-autocomplete--dropdown-item:last-child`).click();
     expect(`.modal`).toHaveCount(1);
     expect(`.modal .o_data_row`).toHaveCount(8);
     expect(queryAllTexts`.modal .o_data_row`).toEqual([

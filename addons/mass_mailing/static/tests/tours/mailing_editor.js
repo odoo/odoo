@@ -12,7 +12,7 @@ registry.category("web_tour.tours").add('mailing_editor', {
     trigger: 'div[name="contact_list_ids"] .o_input_dropdown input[type="text"]',
     run: "edit Test",
 }, {
-    trigger: 'div[name="contact_list_ids"] .ui-state-active',
+    trigger: '.o-autocomplete--dropdown-menu .focus',
     run: "click",
 }, {
     content: 'choose the theme "empty" to edit the mailing with snippets',
