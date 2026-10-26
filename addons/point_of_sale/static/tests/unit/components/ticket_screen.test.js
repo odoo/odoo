@@ -3,7 +3,7 @@ import { advanceTime } from "@odoo/hoot-mock";
 import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { session } from "@web/session";
 import { barcodeService } from "@barcodes/barcode_service";
-import { setupPosEnv } from "../utils";
+import { setupPosEnv, getFilledOrder } from "../utils";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 import { definePosModels } from "../data/generate_model_definitions";
 
@@ -182,4 +182,31 @@ test("searching by customer keeps the orders of a nameless address contact", asy
         [companyOrder.id, addressOrder.id],
         { message: "the address contact is searched by its company name" }
     );
+});
+
+test("reprint all prints the last preparation ticket again", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const printed = [];
+    patchWithCleanup(store.ticketPrinter, {
+        async generateIframe(template, data) {
+            printed.push(data);
+            return document.createElement("iframe");
+        },
+        async generateImage() {
+            return "fake_image_data";
+        },
+        print() {
+            return { successful: true };
+        },
+    });
+    await store.sendOrderInPreparation(order);
+    expect(printed).toHaveLength(1);
+    expect(order.lastPrints).toHaveLength(1);
+
+    const ticketScreen = await mountWithCleanup(TicketScreen);
+    await ticketScreen.onClickReprintAll(order);
+    expect(printed).toHaveLength(2);
+    expect(printed[1].extra_data.reprint).toBe(true);
+    expect(order.lastPrints).toHaveLength(1);
 });
