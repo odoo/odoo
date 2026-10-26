@@ -858,6 +858,28 @@ describe("pos_store.js", () => {
         expect(getOpts()).toEqual(expectedWithoutFastPM);
     });
 
+    test("fast payment is never pay_later even when pay_later is first", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+
+        const payLaterMethod = store.models["pos.payment.method"].find(
+            (pm) => pm.type === "pay_later"
+        );
+        const cashMethod = store.models["pos.payment.method"].find((pm) => pm.name === "Cash");
+        const cardMethod = store.models["pos.payment.method"].find((pm) => pm.name === "Card");
+
+        store.config.payment_method_ids = [payLaterMethod.id, cashMethod.id, cardMethod.id];
+
+        payLaterMethod.sequence = -1;
+        cashMethod.sequence = 0;
+        cardMethod.sequence = 1;
+
+        const opts = store.getValidationOrderOptions({ order });
+        expect(opts.fastPaymentMethod).not.toBe(undefined);
+        expect(opts.fastPaymentMethod.type).not.toBe("pay_later");
+        expect(opts.fastPaymentMethod).toBe(cashMethod);
+    });
+
     test("autoValidateOrder", async () => {
         const store = await setupPosEnv();
         const order = await getFilledOrder(store);
