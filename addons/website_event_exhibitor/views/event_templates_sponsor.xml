@@ -9,16 +9,11 @@
                     <t t-foreach="event.sponsor_ids.sorted(
                             lambda sponsor: (not sponsor.website_published, sponsor.sudo().sponsor_type_id.sequence, sponsor.sequence)
                         )" t-as="sponsor">
-                        <t t-set="popover_content">
-                            <div t-field="sponsor.name" class="h5"/>
-                            <div t-if="sponsor.url" class="d-flex align-items-baseline">
-                                <i class="oi me-2" data-icon="public" role="img" aria-hidden="true"/><a t-att-href="sponsor.url" t-field="sponsor.url" class="text-truncate"/>
-                            </div>
-                        </t>
-                        <a class="o_wevent_sponsor o_wevent_sponsor_card h-100 rounded text-decoration-none position-relative" tabindex="0" role="button"
+                        <a class="o_wevent_sponsor o_wevent_sponsor_card text-decoration-none position-relative" tabindex="0"
+                            t-att-href="sponsor.url" target="_blank" rel="noopener"
                             t-att-data-publish="'on' if sponsor.website_published else 'off'"
-                            t-att-data-bs-content="popover_content"
-                            data-bs-html="true" data-bs-trigger="focus" data-bs-toggle="popover" data-bs-placement="bottom">
+                            t-att-data-bs-content="sponsor.name"
+                            data-bs-trigger="focus hover" data-bs-toggle="popover" data-bs-placement="bottom">
                             <t t-if="not sponsor.website_published" t-call="website.unpublished_badge" is_minimal_badge="True"/>
                             <t t-call="website_event_exhibitor.event_sponsor_thumb_details"/>
                         </a>
@@ -31,12 +26,14 @@
 
 <!-- Common template for sponsor images and 'Unpublished' badge -->
 <template id="event_sponsor_thumb_details">
-    <div class="p-2">
+    <div>
         <span t-field="sponsor.image_128"
-            t-options='{"widget": "image", "class": "img img-fluid", "filename-field": "partner_name"}'/>
+            t-options='{"widget": "image", "class": "img img-fluid", "filename-field": "partner_name"}'
+            class="o_wevent_sponsor_img_container d-block mx-auto w-50"/>
+        <span class="o_line_clamp mt-2 w-100 px-1 lh-1 text-center smaller opacity-75" t-out="sponsor.name"/>
     </div>
     <span t-if="sponsor.sudo().sponsor_type_id.display_ribbon_style and sponsor.sudo().sponsor_type_id.display_ribbon_style != 'no_ribbon'"
-            t-field="sponsor.sudo().sponsor_type_id" t-attf-class="o_ribbon d-block w-100 ribbon_#{sponsor.sudo().sponsor_type_id.display_ribbon_style}"/>
+            t-field="sponsor.sudo().sponsor_type_id" t-attf-class="badge position-absolute start-0 top-0 mt-2 ms-2 ribbon_#{sponsor.sudo().sponsor_type_id.display_ribbon_style}"/>
 </template>
 
 </odoo>

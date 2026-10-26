@@ -5,7 +5,6 @@
 .o_wevent_event .o_wevent_sponsor {
     position: relative;
     display: inline-block;
-    overflow: hidden;
 }
 
 .o_wevent_event .o_ribbon {
@@ -40,24 +39,30 @@
     background-image: -moz-linear-gradient(top, #C2792A, #DB9141) !important;
     background-image: -ms-linear-gradient(top, #C2792A, #DB9141) !important;
     background-image: -o-linear-gradient(top, #C2792A, #DB9141) !important;
+
+    &.badge {
+        --badge-font-weight: 400;
+        --color: #{$o-white};
+    }
 }
 
 /*
  * EVENT TOOL: SPONSOR WIDGET
  */
 .o_wevent_event .o_wevent_sponsor_card {
-    position: relative;
-    width: 100px;
-    height: 100px;
-    border: 1px solid $gray-200;
-    background-color: $white;
-    margin: 0 -1px -1px 0;
+    --link-color-rgb: #{to-rgb($o-gray-900)};
+
+    width: 110px;
+    height: 110px;
+    border-radius: $btn-border-radius;
+    background-color: $o-gray-100;
     cursor: pointer;
 
     &:before {
         content: "";
         display: block;
         @include o-position-absolute(0,0,0,0);
+        border-radius: inherit;
         background-color: $black;
         opacity: 0;
         transition: opacity .3s;
@@ -66,4 +71,16 @@
     &:hover:before {
         opacity:.1;
     }
+}
+
+.o_wevent_sponsor_img_container {
+    padding-top: .9rem;
+}
+
+.o_wevent_sponsor_card .badge:where(:not(.o_unpublished_badge)) {
+    --badge-padding-x: 0.6em;
+    --badge-padding-y: 0.3em;
+    --badge-font-size: 0.7em;
+    --badge-font-weight: 500;
+    --color: #{$o-gray-700};
 }
