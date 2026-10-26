@@ -11,6 +11,7 @@ import { MessageReactionMenu } from "@mail/core/common/message_reaction_menu";
 import { MessageReactions } from "@mail/core/common/message_reactions";
 import { Poll } from "@mail/core/common/poll";
 import { PollResult } from "@mail/core/common/poll_result";
+import { RecordLinkPlugin } from "@mail/core/common/record_link_plugin";
 import { RelativeTime } from "@mail/core/common/relative_time";
 import { groupAttachments } from "@mail/utils/common/attachments";
 
@@ -153,6 +154,7 @@ export class Message extends Component {
         this.shadowRoot = signal(null, { type: t.ref(ShadowRoot) });
         this.dialog = useService("dialog");
         this.ui = usePlugin(UIPlugin);
+        this.recordLink = usePlugin(RecordLinkPlugin);
         this.openReactionMenu = this.openReactionMenu.bind(this);
         this.optionsDropdown = useDropdownState();
         this.isActive = computed(() => Boolean(this._isActive));
@@ -622,6 +624,7 @@ export class Message extends Component {
         const channelLinks = bodyEl.querySelectorAll("a.o_channel_redirect");
         this.store.handleValidChannelMention(Array.from(channelLinks));
         this.store.renderMessageLinks(bodyEl.querySelectorAll(".o_message_redirect"));
+        this.recordLink.renderRecordLinks(bodyEl.querySelectorAll("a.o_record_redirect"));
         return this.renderEmbeddedCodeBlocks(bodyEl);
     }
 
