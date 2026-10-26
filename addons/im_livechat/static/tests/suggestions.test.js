@@ -1,4 +1,5 @@
 import { describe, test } from "@odoo/hoot";
+import { waitForNone } from "@odoo/hoot-dom";
 import { click, contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
 import {
     containsTextInComposer,
@@ -31,7 +32,7 @@ test("Suggestions are shown after delimiter was used in text (::)", async () => 
     await insertTextInComposer(".o-mail-Composer", "::");
     await contains(".o-mail-Composer-suggestion strong", { text: "hello" });
     await insertTextInComposer(".o-mail-Composer", ")");
-    await contains(".o-mail-Composer-suggestion strong", { count: 0 });
+    await waitForNone(".o-mail-Composer-suggestion strong");
     await insertTextInComposer(".o-mail-Composer", " ::");
     await contains(".o-mail-Composer-suggestion strong", { text: "hello" });
 });

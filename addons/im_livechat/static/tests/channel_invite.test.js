@@ -8,6 +8,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, mockDate, test } from "@odoo/hoot";
+import { waitFor, waitForNone } from "@odoo/hoot-dom";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { defineLivechatModels } from "./livechat_test_helpers";
 
@@ -56,20 +57,20 @@ test("Can invite a partner to a livechat channel", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(actionPanel("Information")); // wait for auto-open of this panel
+    await waitFor(`${actionPanel("Information")}:count(1)`); // wait for auto-open of this panel
     await click("button[title='Members']");
     await click("button[title='Add People']");
     await click("input", {
         parent: [".o-discuss-ChannelInvitation-selectable", { text: "James" }],
     });
-    await contains(
-        ".o-discuss-ChannelInvitation-selectable:contains('James English French German pricing events')"
+    await waitFor(
+        ".o-discuss-ChannelInvitation-selectable:contains('James English French German pricing events'):count(1)"
     );
     await click("button:enabled", { text: "Invite" });
     await contains(".o-mail-NotificationMessage", {
         text: "Mitch (FR) invited James to the channel1:00 PM",
     });
-    await contains(".o-discuss-ChannelInvitation", { count: 0 });
+    await waitForNone(".o-discuss-ChannelInvitation");
     await contains(".o-discuss-ChannelMember", { text: "James" });
 });
 
@@ -96,10 +97,10 @@ test("Available operators come first", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(actionPanel("Information")); // wait for auto-open of this panel
+    await waitFor(`${actionPanel("Information")}:count(1)`); // wait for auto-open of this panel
     await click("button[title='Members']");
     await click("button[title='Add People']");
-    await contains(".o-discuss-ChannelInvitation-selectable", { count: 2 });
+    await waitFor(".o-discuss-ChannelInvitation-selectable:count(2)");
     await contains(":nth-child(1 of .o-discuss-ChannelInvitation-selectable)", { text: "Ron" });
     await contains(":nth-child(2 of .o-discuss-ChannelInvitation-selectable)", { text: "Harry" });
 });
@@ -150,16 +151,16 @@ test("Partners invited most frequently by the current user come first", async ()
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.LIVECHAT);
     await click(".o-mail-NotificationItem:has(:text('Visitor #1'))");
-    await contains(actionPanel("Information")); // wait for auto-open of this panel
+    await waitFor(`${actionPanel("Information")}:count(1)`); // wait for auto-open of this panel
     await click("button[title='Members']");
     await click("button[title='Add People']");
     await click("input", { parent: [".o-discuss-ChannelInvitation-selectable", { text: "John" }] });
     await click("button:enabled", { text: "Invite" });
     await contains(".o-discuss-ChannelMember", { text: "John" });
     await click(".o-mail-NotificationItem:has(:text('Visitor #2'))");
-    await contains(".o-mail-DiscussContent-threadName:value('Visitor #2')");
+    await waitFor(".o-mail-DiscussContent-threadName:value('Visitor #2'):count(1)");
     await click("button[title='Add People']");
-    await contains(".o-discuss-ChannelInvitation-selectable", { count: 2 });
+    await waitFor(".o-discuss-ChannelInvitation-selectable:count(2)");
     await contains(":nth-child(1 of .o-discuss-ChannelInvitation-selectable)", { text: "John" });
     await contains(":nth-child(2 of .o-discuss-ChannelInvitation-selectable)", { text: "Albert" });
 });
@@ -196,14 +197,12 @@ test("shows operators are in call", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(actionPanel("Information")); // wait for auto-open of this panel
+    await waitFor(`${actionPanel("Information")}:count(1)`); // wait for auto-open of this panel
     await click("button[title='Members']");
     await click("[title='Add People']");
-    await contains(".o-discuss-ChannelInvitation-selectable:contains('bob in a call')");
-    await contains(".o-discuss-ChannelInvitation-selectable:contains('john')");
-    await contains(".o-discuss-ChannelInvitation-selectable:contains('john in a call')", {
-        count: 0,
-    });
+    await waitFor(".o-discuss-ChannelInvitation-selectable:contains('bob in a call'):count(1)");
+    await waitFor(".o-discuss-ChannelInvitation-selectable:contains('john'):count(1)");
+    await waitForNone(".o-discuss-ChannelInvitation-selectable:contains('john in a call')");
 });
 
 test("Operator invite shows livechat_username", async () => {
@@ -232,7 +231,7 @@ test("Operator invite shows livechat_username", async () => {
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.LIVECHAT);
     await click(".o-mail-NotificationItem:has(:text('Visitor #1'))");
-    await contains(actionPanel("Information")); // wait for auto-open of this panel
+    await waitFor(`${actionPanel("Information")}:count(1)`); // wait for auto-open of this panel
     await click("button[title='Members']");
     await click("button[title='Add People']");
     await contains("input", {

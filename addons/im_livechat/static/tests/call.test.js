@@ -10,6 +10,7 @@ import {
 import { defineLivechatModels } from "@im_livechat/../tests/livechat_test_helpers";
 
 import { test } from "@odoo/hoot";
+import { waitFor } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 
 import { Command, serverState } from "@web/../tests/web_test_helpers";
@@ -38,7 +39,7 @@ test("should display started a call message with operator livechat username", as
     await start();
     await contains(".o-mail-ChatWindow", { text: "Visitor" });
     await click("[title='Start Call']");
-    await contains(".o-mail-NotificationMessage");
+    await waitFor(".o-mail-NotificationMessage:count(1)");
     const [{ date }] = pyEnv["mail.message"].search_read([["res_id", "=", channelId]]);
     const time = deserializeDateTime(date).toLocaleString(luxon.DateTime.TIME_SIMPLE, {
         locale: user.lang,

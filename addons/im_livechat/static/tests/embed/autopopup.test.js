@@ -2,8 +2,9 @@ import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
 } from "@im_livechat/../tests/livechat_test_helpers";
-import { contains, setupChatHub, start, startServer } from "@mail/../tests/mail_test_helpers";
+import { setupChatHub, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
+import { waitFor } from "@odoo/hoot-dom";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 import { storeHandlerRegistry } from "@mail/../tests/mock_server/store_handler";
@@ -27,7 +28,7 @@ test("persisted session", async () => {
     await start({
         authenticateAs: { ...pyEnv["mail.guest"].read(guestId)[0], _name: "mail.guest" },
     });
-    await contains(".o-mail-ChatWindow");
+    await waitFor(".o-mail-ChatWindow:count(1)");
 });
 
 test("rule received in init", async () => {
@@ -48,5 +49,5 @@ test("rule received in init", async () => {
         },
     });
     await start({ authenticateAs: false, waitUntilSubscribe: false });
-    await contains(".o-mail-ChatWindow");
+    await waitFor(".o-mail-ChatWindow:count(1)");
 });

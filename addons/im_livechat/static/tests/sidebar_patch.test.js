@@ -1,6 +1,5 @@
 import {
     click,
-    contains,
     openDiscuss,
     start,
     startServer,
@@ -32,7 +31,7 @@ test("Unknown visitor", async () => {
     });
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.LIVECHAT);
-    await contains(".o-mail-MessagingMenuItem:has(:text('Visitor 11'))");
+    await waitFor(".o-mail-MessagingMenuItem:has(:text('Visitor 11')):count(1)");
 });
 
 test("Do not show channel when visitor is typing", async () => {
@@ -58,7 +57,7 @@ test("Do not show channel when visitor is typing", async () => {
     });
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.LIVECHAT);
-    await contains(".o-mail-MessagingMenuEmpty:has(:text('No Livechat Session!'))");
+    await waitFor(".o-mail-MessagingMenuEmpty:has(:text('No Livechat Session!')):count(1)");
     // simulate livechat visitor typing
     const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
     await withGuest(guestId, () =>
@@ -69,7 +68,7 @@ test("Do not show channel when visitor is typing", async () => {
     );
     // weak test, no guaranteed that we waited long enough for the livechat to potentially appear
     await tick();
-    await contains(".o-mail-MessagingMenuEmpty:has(:text('No Livechat Session!'))");
+    await waitFor(".o-mail-MessagingMenuEmpty:has(:text('No Livechat Session!')):count(1)");
 });
 
 test("Smiley face avatar for livechat item linked to a guest", async () => {
@@ -85,12 +84,12 @@ test("Smiley face avatar for livechat item linked to a guest", async () => {
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.LIVECHAT);
     const guest = pyEnv["mail.guest"].search_read([["id", "=", guestId]])[0];
-    await contains(
+    await waitFor(
         `.o-mail-MessagingMenuItem img[data-src='${url(
             `/web/image/mail.guest/${guestId}/avatar_128?unique=${
                 deserializeDateTime(guest.write_date).ts
             }`
-        )}']`
+        )}']:count(1)`
     );
 });
 
@@ -107,12 +106,12 @@ test("Partner profile picture for livechat item linked to a partner", async () =
     await start();
     await openDiscuss(channelId);
     const partner = pyEnv["res.partner"].search_read([["id", "=", partnerId]])[0];
-    await contains(
+    await waitFor(
         `.o-mail-MessagingMenuItem img[data-src='${url(
             `/web/image/res.partner/${partnerId}/avatar_128?unique=${
                 deserializeDateTime(partner.write_date).ts
             }`
-        )}']`
+        )}']:count(1)`
     );
 });
 
@@ -136,15 +135,17 @@ test("Clicking on leave button leaves the channel", async () => {
     });
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.LIVECHAT);
-    await contains(".o-mail-MessagingMenuItem:has(:text('Visitor 11'))");
+    await waitFor(".o-mail-MessagingMenuItem:has(:text('Visitor 11')):count(1)");
     await click("[title='Chat Actions']");
     await click(".o-dropdown-item:contains('Close Conversation')");
-    await contains(
-        ".modal-header:has(:text('Closing this will end the live chat with Visitor 11. Are you sure you want to proceed?'))"
+    await waitFor(
+        ".modal-header:has(:text('Closing this will end the live chat with Visitor 11. Are you sure you want to proceed?')):count(1)"
     );
-    await contains(".modal-body .o-mail-Message-body:has(:text('Last message from Visitor'))");
+    await waitFor(
+        ".modal-body .o-mail-Message-body:has(:text('Last message from Visitor')):count(1)"
+    );
     await click("button:contains(Close Conversation)");
-    await contains(".o-mail-MessagingMenuEmpty");
+    await waitFor(".o-mail-MessagingMenuEmpty:count(1)");
 });
 
 test("Change livechat status from the dropdown of the chat actions", async () => {
@@ -169,12 +170,12 @@ test("Change livechat status from the dropdown of the chat actions", async () =>
     await openDiscuss(MENU_ACTIVE_IDS.LIVECHAT);
     const needHelpLabel =
         ".o-mail-MessagingMenuItem:has(:text('Visitor 11')) .o-livechat-LivechatStatusLabel.o-help";
-    await contains(needHelpLabel);
+    await waitFor(`${needHelpLabel}:count(1)`);
     await click("[title='Chat Actions']");
     await click("button[name='livechat-status']");
-    await contains(".o-livechat-LivechatStatusSelection .active:text('Looking for help')");
+    await waitFor(".o-livechat-LivechatStatusSelection .active:text('Looking for help'):count(1)");
     await click(".o-livechat-LivechatStatusSelection button:text('In progress')");
-    await contains(needHelpLabel, { count: 0 });
+    await waitForNone(needHelpLabel);
 });
 
 test("Message unread counter", async () => {
@@ -209,7 +210,7 @@ test("Message unread counter", async () => {
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-MessagingMenu-tab:has(:text('Live Chats')) .badge:text(1)");
+    await waitFor(".o-mail-MessagingMenu-tab:has(:text('Live Chats')) .badge:text(1):count(1)");
 });
 
 test("looking for help shows self chats first", async () => {
@@ -310,7 +311,7 @@ test("show looking for help duration in the sidebar", async () => {
         ".o-mail-MessagingMenuItem:has(:text(Visitor #1)) .o-livechat-LookingForHelp-timer:text(2d)"
     );
     await click("button[name='join-channel']");
-    await contains(".o-livechat-LivechatStatusSelection .active:text('In Progress')");
+    await waitFor(".o-livechat-LivechatStatusSelection .active:text('In Progress'):count(1)");
     await waitForNone(
         ".o-mail-MessagingMenuItem:has(:text(Visitor #1)) .o-livechat-LookingForHelp-timer"
     );
@@ -356,11 +357,11 @@ test("sidebar: leave non-livechat channel removes it from sidebar", async () => 
         ".o-mail-NotificationItem:has(:text('General')) .o-mail-MessagingMenu-actions button"
     );
     await click(".o-dropdown-item:contains('Leave Conversation')");
-    await contains(
-        ".modal-body:text('You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?')"
+    await waitFor(
+        ".modal-body:text('You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?'):count(1)"
     );
     await click("button:text('Leave Conversation')");
-    await contains(".o-mail-MessagingMenuItem:has(:text('General'))", { count: 0 });
+    await waitForNone(".o-mail-MessagingMenuItem:has(:text('General'))");
 });
 
 test("show visitor language and country flag in sidebar", async () => {
@@ -379,7 +380,7 @@ test("show visitor language and country flag in sidebar", async () => {
     });
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.LIVECHAT);
-    await contains(
-        ".o-mail-MessagingMenuItem:has(:text('Batman GU')) .o-mail-CountryFlag[title='Gotham']"
+    await waitFor(
+        ".o-mail-MessagingMenuItem:has(:text('Batman GU')) .o-mail-CountryFlag[title='Gotham']:count(1)"
     );
 });

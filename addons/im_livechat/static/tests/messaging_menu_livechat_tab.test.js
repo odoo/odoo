@@ -12,6 +12,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
+import { waitFor } from "@odoo/hoot-dom";
 
 import { Command, mockService, serverState } from "@web/../tests/web_test_helpers";
 
@@ -28,9 +29,9 @@ test("live chat tab displays kanban action when empty", async () => {
     mockService("action", { doAction: (action) => expect.step(action) });
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.LIVECHAT);
-    await contains(".o-mail-MessagingMenuEmpty .fw-bold:text('No Livechat Session!')");
-    await contains(
-        ".o-mail-MessagingMenuEmpty :text('Engage with visitors to convert leads or offer services.')"
+    await waitFor(".o-mail-MessagingMenuEmpty .fw-bold:text('No Livechat Session!'):count(1)");
+    await waitFor(
+        ".o-mail-MessagingMenuEmpty :text('Engage with visitors to convert leads or offer services.'):count(1)"
     );
     await click(".o-mail-MessagingMenuEmpty button:text(Connect)");
     await expect.waitForSteps(["im_livechat.im_livechat_channel_action"]);
@@ -88,13 +89,13 @@ test("live chat tab has a need help filter", async () => {
     ]);
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.LIVECHAT);
-    await contains(".o-mail-NotificationItem", { count: 2 });
-    await contains(".o-mail-NotificationItem:has(:text('Visitor #1'))");
-    await contains(".o-mail-NotificationItem:has(:text('Visitor #2'))");
+    await waitFor(".o-mail-NotificationItem:count(2)");
+    await waitFor(".o-mail-NotificationItem:has(:text('Visitor #1')):count(1)");
+    await waitFor(".o-mail-NotificationItem:has(:text('Visitor #2')):count(1)");
     await click("button:text('Help needed')");
     await waitForChannels(["im_livechat.looking_for_help"]);
-    await contains(".o-mail-NotificationItem", { count: 1 });
-    await contains(".o-mail-NotificationItem:has(:text('Visitor #1'))");
+    await waitFor(".o-mail-NotificationItem:count(1)");
+    await waitFor(".o-mail-NotificationItem:has(:text('Visitor #1')):count(1)");
 });
 
 test("live chat tab has an unread filter", async () => {
@@ -141,16 +142,16 @@ test("live chat tab has an unread filter", async () => {
     });
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.LIVECHAT);
-    await contains(".o-mail-NotificationItem", { count: 2 });
-    await contains(".o-mail-NotificationItem:has(:text('Visitor #1'))");
-    await contains(".o-mail-NotificationItem:has(:text('Visitor #2'))");
+    await waitFor(".o-mail-NotificationItem:count(2)");
+    await waitFor(".o-mail-NotificationItem:has(:text('Visitor #1')):count(1)");
+    await waitFor(".o-mail-NotificationItem:has(:text('Visitor #2')):count(1)");
     await click("button:text('Unread')");
-    await contains("button.o-active:text('Unread')");
-    await contains(".o-mail-NotificationItem", { count: 1 });
-    await contains(".o-mail-NotificationItem:has(:text('Visitor #1'))");
+    await waitFor("button.o-active:text('Unread'):count(1)");
+    await waitFor(".o-mail-NotificationItem:count(1)");
+    await waitFor(".o-mail-NotificationItem:has(:text('Visitor #1')):count(1)");
     await click("button:text('All')");
-    await contains("button.o-active:text('All')");
-    await contains(".o-mail-NotificationItem", { count: 2 });
-    await contains(".o-mail-NotificationItem:has(:text('Visitor #1'))");
-    await contains(".o-mail-NotificationItem:has(:text('Visitor #2'))");
+    await waitFor("button.o-active:text('All'):count(1)");
+    await waitFor(".o-mail-NotificationItem:count(2)");
+    await waitFor(".o-mail-NotificationItem:has(:text('Visitor #1')):count(1)");
+    await waitFor(".o-mail-NotificationItem:has(:text('Visitor #2')):count(1)");
 });

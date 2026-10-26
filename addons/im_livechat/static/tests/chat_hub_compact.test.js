@@ -4,6 +4,7 @@ import { defineLivechatModels } from "@im_livechat/../tests/livechat_test_helper
 import { setupChatHub, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
 import { describe, test } from "@odoo/hoot";
+import { waitFor } from "@odoo/hoot-dom";
 import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
@@ -24,7 +25,7 @@ test("Do not open chat windows automatically when chat hub is compact", async ()
     await start();
     await click("button[title='Chat Options']");
     await click(".o-dropdown-item", { text: "Hide all conversations" });
-    await contains(".o-mail-ChatHub-bubbleBtn [data-icon='forum']");
+    await waitFor(".o-mail-ChatHub-compact [data-icon='forum']:count(1)");
     await withGuest(guestId, () =>
         rpc("/mail/message/post", {
             post_data: {

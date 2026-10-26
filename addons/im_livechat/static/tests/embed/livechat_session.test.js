@@ -18,7 +18,7 @@ import { advanceTime } from "@odoo/hoot-mock";
 import { getService, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
-import { queryFirst } from "@odoo/hoot-dom";
+import { queryFirst, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
@@ -38,10 +38,10 @@ test("Session is reset after failing to persist the channel", async () => {
     await contains(".o_notification", {
         text: "No available collaborator, please try again later.",
     });
-    await contains(".o-livechat-LivechatButton");
+    await waitFor(".o-livechat-LivechatButton:count(1)");
     await advanceTime(LivechatButton.DEBOUNCE_DELAY + 10);
     await click(".o-livechat-LivechatButton");
-    await contains(".o-mail-ChatWindow");
+    await waitFor(".o-mail-ChatWindow:count(1)");
 });
 
 test("Fold state is saved", async () => {
@@ -49,14 +49,14 @@ test("Fold state is saved", async () => {
     await loadDefaultEmbedConfig();
     await start({ authenticateAs: false, waitUntilSubscribe: false });
     await click(".o-livechat-LivechatButton");
-    await contains(".o-mail-Thread");
+    await waitFor(".o-mail-Thread:count(1)");
     const subscribed = waitUntilSubscribe();
     await postLivechatMessage("Hello World!");
     await subscribed;
-    await contains(".o-mail-Thread:not([data-transient])");
+    await waitFor(".o-mail-Thread:not([data-transient]):count(1)");
     assertChatHub({ opened: [1] });
     await click(".o-mail-ChatWindow-header");
-    await contains(".o-mail-Thread", { count: 0 });
+    await waitForNone(".o-mail-Thread");
     assertChatHub({ folded: [1] });
     await click(".o-mail-ChatBubble");
     assertChatHub({ opened: [1] });
@@ -69,7 +69,7 @@ test("Seen message is saved on the server", async () => {
     const userId = serverState.userId;
     await start({ authenticateAs: false, waitUntilSubscribe: false });
     await click(".o-livechat-LivechatButton");
-    await contains(".o-mail-Thread");
+    await waitFor(".o-mail-Thread:count(1)");
     const subscribed = waitUntilSubscribe();
     await postLivechatMessage("Hello, I need help!");
     await subscribed;
@@ -89,10 +89,10 @@ test("Seen message is saved on the server", async () => {
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-Thread-newMessage");
+    await waitFor(".o-mail-Thread-newMessage:count(1)");
     await contains(".o-mail-ChatWindow-counter", { text: "1" });
     await focus(".o-mail-Composer-html");
-    await contains(".o-mail-ChatWindow-counter", { count: 0 });
+    await waitForNone(".o-mail-ChatWindow-counter");
     const guestId = pyEnv.cookie.get("dgid");
     const [member] = pyEnv["discuss.channel.member"].search_read([
         ["guest_id", "=", guestId],

@@ -10,6 +10,7 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
+import { waitFor, waitForNone } from "@odoo/hoot-dom";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
 import { rpc } from "@web/core/network/rpc";
 import { livechatLastAgentLeaveFromChatWindow } from "./im_livechat_shared_tests";
@@ -60,12 +61,12 @@ test("visitor leaving ends the livechat conversation", async () => {
     });
     setupChatHub({ opened: [channel_id] });
     await start();
-    await contains(".o-mail-ChatWindow");
+    await waitFor(".o-mail-ChatWindow:count(1)");
     // simulate visitor leaving
     await withGuest(guestId, () => rpc("/im_livechat/visitor_leave_session", { channel_id }));
     await contains("span", { text: "This live chat conversation has ended." });
     await click("button[title*='Close Chat Window']");
-    await contains(".o-mail-ChatWindow", { count: 0 });
+    await waitForNone(".o-mail-ChatWindow");
 });
 
 test("ended livechat hides join channel action", async () => {
@@ -85,11 +86,11 @@ test("ended livechat hides join channel action", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains("button[name='join-channel']");
+    await waitFor("button[name='join-channel']:count(1)");
     await withGuest(guestId, () =>
         rpc("/im_livechat/visitor_leave_session", { channel_id: channelId })
     );
-    await contains("button[name='join-channel']", { count: 0 });
+    await waitForNone("button[name='join-channel']");
 });
 
 test("leaving chat window triggers a single RPC", async () => {
@@ -110,16 +111,16 @@ test("leaving chat window triggers a single RPC", async () => {
     setupChatHub({ opened: [channelId] });
     onRpc("discuss.channel", "action_unfollow", () => expect.step("action_unfollow"));
     await start();
-    await contains(".o-mail-ChatWindow");
-    await contains(".o-mail-Message:contains('Last message from Visitor #1')");
+    await waitFor(".o-mail-ChatWindow:count(1)");
+    await waitFor(".o-mail-Message:contains('Last message from Visitor #1'):count(1)");
     await click("[title='Open Actions Menu']", {
         parent: [".o-mail-ChatWindow:contains('Visitor #1')"],
     });
     await click(".o-dropdown-item:text('Close Conversation')");
-    await contains(
-        ".modal-header:contains('Closing this will end the live chat with Visitor #1. Are you sure you want to proceed?')"
+    await waitFor(
+        ".modal-header:contains('Closing this will end the live chat with Visitor #1. Are you sure you want to proceed?'):count(1)"
     );
     await click("button:contains(Close Conversation)");
-    await contains(".o-mail-ChatWindow", { count: 0 });
+    await waitForNone(".o-mail-ChatWindow");
     await expect.waitForSteps(["action_unfollow"]);
 });

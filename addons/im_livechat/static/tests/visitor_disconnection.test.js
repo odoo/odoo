@@ -9,6 +9,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { ImStatusMixin } from "@mail/core/common/im_status_mixin";
 import { describe, test } from "@odoo/hoot";
+import { waitFor, waitForNone } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
@@ -40,7 +41,7 @@ test("Visitor going offline shows disconnection banner to operator", async () =>
     });
     setupChatHub({ opened: [channel_id] });
     await start();
-    await contains(".o-mail-ChatWindow");
+    await waitFor(".o-mail-ChatWindow:count(1)");
     mockDate("2025-01-01 12:00:00", +1);
     sendPresenceUpdate("mail.guest", guestId, "offline");
     await contains(".o-livechat-VisitorDisconnected", {
@@ -57,5 +58,5 @@ test("Visitor going offline shows disconnection banner to operator", async () =>
     await click(".o-mail-ChatBubble");
     await contains(".o-livechat-VisitorDisconnected", { text: `Visitor is disconnected` });
     sendPresenceUpdate("mail.guest", guestId, "online");
-    await contains(".o-livechat-VisitorDisconnected", { count: 0 });
+    await waitForNone(".o-livechat-VisitorDisconnected");
 });

@@ -1,6 +1,7 @@
-import { contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
+import { openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
 import { describe, test } from "@odoo/hoot";
+import { waitFor } from "@odoo/hoot-dom";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
@@ -24,10 +25,10 @@ test("Public website visitor is typing", async () => {
     await start();
     await openDiscuss(channelId);
     // thread avatar of public visitors should be visible in the header
-    await contains(
-        `.o-mail-DiscussContent-header img[data-src='${getOrigin()}/web/image/discuss.channel/${channelId}/avatar_128?unique=abc123']`
+    await waitFor(
+        `.o-mail-DiscussContent-header img[data-src='${getOrigin()}/web/image/discuss.channel/${channelId}/avatar_128?unique=abc123']:count(1)`
     );
-    await contains(".o-mail-DiscussContent-header .o-mail-ImStatus[data-icon='circle']");
+    await waitFor(".o-mail-DiscussContent-header .o-mail-ImStatus[data-icon='circle']:count(1)");
     const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
     // simulate receive typing notification from livechat visitor "is typing"
     withGuest(guestId, () =>
@@ -36,8 +37,8 @@ test("Public website visitor is typing", async () => {
             channel_id: channel.id,
         })
     );
-    await contains(".o-mail-DiscussContent-header .o-discuss-Typing-icon");
-    await contains(
-        ".o-mail-DiscussContent-header .o-discuss-Typing-icon[title='Visitor 20 is typing...']"
+    await waitFor(".o-mail-DiscussContent-header .o-discuss-Typing-icon:count(1)");
+    await waitFor(
+        ".o-mail-DiscussContent-header .o-discuss-Typing-icon[title='Visitor 20 is typing...']:count(1)"
     );
 });

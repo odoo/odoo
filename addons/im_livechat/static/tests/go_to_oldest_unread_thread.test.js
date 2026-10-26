@@ -14,7 +14,7 @@ import {
 import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
 import { describe, test } from "@odoo/hoot";
-import { press, waitFor } from "@odoo/hoot-dom";
+import { press, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { rpc } from "@web/core/network/rpc";
 import { defineLivechatModels } from "./livechat_test_helpers";
@@ -83,29 +83,27 @@ test("tab on discuss composer goes to oldest unread livechat", async () => {
     ]);
     await start();
     await openDiscuss(channelIds[0]);
-    await contains(".o-mail-NotificationItem.o-active:has(:text('Visitor 11'))");
-    await contains(
+    await waitFor(".o-mail-NotificationItem.o-active:has(:text('Visitor 11')):count(1)");
+    await waitFor(
+        ".o-mail-NotificationItem:has(:text('Visitor 13')) .o-mail-NotificationItem-counter:text(1):count(1)"
+    );
+    await waitFor(".o-mail-Composer [o-we-hint-text='Tab to next live chat']:count(1)");
+    await focus(".o-mail-Composer-html");
+    triggerHotkey("Tab");
+    await waitForNone(
         ".o-mail-NotificationItem:has(:text('Visitor 13')) .o-mail-NotificationItem-counter:text(1)"
     );
-    await contains(".o-mail-Composer [o-we-hint-text='Tab to next live chat']");
+    await waitFor(".o-mail-NotificationItem.o-active:has(:text('Visitor 13')):count(1)");
+    await waitFor(
+        ".o-mail-NotificationItem:has(:text('Visitor 12')) .o-mail-NotificationItem-counter:text(1):count(1)"
+    );
+    await waitFor(".o-mail-Composer [o-we-hint-text='Tab to next live chat']:count(1)");
     await focus(".o-mail-Composer-html");
     triggerHotkey("Tab");
-    await contains(
-        ".o-mail-NotificationItem:has(:text('Visitor 13')) .o-mail-NotificationItem-counter:text(1)",
-        { count: 0 }
-    );
-    await contains(".o-mail-NotificationItem.o-active:has(:text('Visitor 13'))");
-    await contains(
+    await waitForNone(
         ".o-mail-NotificationItem:has(:text('Visitor 12')) .o-mail-NotificationItem-counter:text(1)"
     );
-    await contains(".o-mail-Composer [o-we-hint-text='Tab to next live chat']");
-    await focus(".o-mail-Composer-html");
-    triggerHotkey("Tab");
-    await contains(
-        ".o-mail-NotificationItem:has(:text('Visitor 12')) .o-mail-NotificationItem-counter:text(1)",
-        { count: 0 }
-    );
-    await contains(".o-mail-NotificationItem.o-active:has(:text('Visitor 12'))");
+    await waitFor(".o-mail-NotificationItem.o-active:has(:text('Visitor 12')):count(1)");
 });
 
 test.tags("focus required");
@@ -160,9 +158,11 @@ test("Tab livechat picks ended livechats last", async () => {
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.LIVECHAT);
     await click(".o-mail-NotificationItem", { text: "Visitor 4" });
-    await contains(".o-mail-ChatWindow:contains('Visitor 4') .o-mail-Message:contains('Hello')");
-    await contains(".o-mail-ChatWindow:contains('Visitor 4') .o-mail-Composer.o-focused");
-    await contains(".o-mail-ChatWindow:contains('Visitor 4') .badge", { count: 0 });
+    await waitFor(
+        ".o-mail-ChatWindow:contains('Visitor 4') .o-mail-Message:contains('Hello'):count(1)"
+    );
+    await waitFor(".o-mail-ChatWindow:contains('Visitor 4') .o-mail-Composer.o-focused:count(1)");
+    await waitForNone(".o-mail-ChatWindow:contains('Visitor 4') .badge");
     await advanceTime(5_000);
     await withGuest(guestIds[1], () =>
         rpc("/mail/message/post", {
@@ -202,15 +202,19 @@ test("Tab livechat picks ended livechats last", async () => {
      *          4 | 2021-01-02 10:00:04 | false           | false
      */
     await press("Tab");
-    await contains(".o-mail-ChatWindow", { count: 2 });
-    await contains(".o-mail-ChatWindow:contains('Visitor 0') .o-mail-Message:contains('Hello')");
-    await contains(".o-mail-ChatWindow:contains('Visitor 0') .o-mail-Composer.o-focused");
-    await contains(".o-mail-ChatWindow:contains('Visitor 0') .badge", { count: 0 });
+    await waitFor(".o-mail-ChatWindow:count(2)");
+    await waitFor(
+        ".o-mail-ChatWindow:contains('Visitor 0') .o-mail-Message:contains('Hello'):count(1)"
+    );
+    await waitFor(".o-mail-ChatWindow:contains('Visitor 0') .o-mail-Composer.o-focused:count(1)");
+    await waitForNone(".o-mail-ChatWindow:contains('Visitor 0') .badge");
     await press("Tab");
-    await contains(".o-mail-ChatWindow", { count: 3 });
-    await contains(".o-mail-ChatWindow:contains('Visitor 2') .o-mail-Message:contains('Hello')");
-    await contains(".o-mail-ChatWindow:contains('Visitor 2') .o-mail-Composer.o-focused");
-    await contains(".o-mail-ChatWindow:contains('Visitor 2') .badge", { count: 0 });
+    await waitFor(".o-mail-ChatWindow:count(3)");
+    await waitFor(
+        ".o-mail-ChatWindow:contains('Visitor 2') .o-mail-Message:contains('Hello'):count(1)"
+    );
+    await waitFor(".o-mail-ChatWindow:contains('Visitor 2') .o-mail-Composer.o-focused:count(1)");
+    await waitForNone(".o-mail-ChatWindow:contains('Visitor 2') .badge");
     await advanceTime(5_000);
     await withGuest(guestIds[0], () =>
         rpc("/mail/message/post", {
@@ -236,14 +240,18 @@ test("Tab livechat picks ended livechats last", async () => {
      *          4 | 2021-01-02 10:00:04 | false           | false
      */
     await press("Tab");
-    await contains(".o-mail-ChatWindow:contains('Visitor 3') .o-mail-Message:contains('Hello')");
-    await contains(".o-mail-ChatWindow:contains('Visitor 3') .o-mail-Composer.o-focused");
-    await contains(".o-mail-ChatWindow:contains('Visitor 3') .badge", { count: 0 });
+    await waitFor(
+        ".o-mail-ChatWindow:contains('Visitor 3') .o-mail-Message:contains('Hello'):count(1)"
+    );
+    await waitFor(".o-mail-ChatWindow:contains('Visitor 3') .o-mail-Composer.o-focused:count(1)");
+    await waitForNone(".o-mail-ChatWindow:contains('Visitor 3') .badge");
     await press("Tab");
-    await contains(".o-mail-ChatWindow:contains('Visitor 0') .o-mail-Composer.o-focused");
-    await contains(".o-mail-ChatWindow:contains('Visitor 0') .badge", { count: 0 });
+    await waitFor(".o-mail-ChatWindow:contains('Visitor 0') .o-mail-Composer.o-focused:count(1)");
+    await waitForNone(".o-mail-ChatWindow:contains('Visitor 0') .badge");
     await press("Tab");
-    await contains(".o-mail-ChatWindow:contains('Visitor 1') .o-mail-Message:contains('Hello')");
+    await waitFor(
+        ".o-mail-ChatWindow:contains('Visitor 1') .o-mail-Message:contains('Hello'):count(1)"
+    );
     await contains("span", { text: "This live chat conversation has ended." });
 });
 
@@ -285,7 +293,7 @@ test("switching to folded chat window unfolds it", async () => {
     });
     setupChatHub({ opened: [channelIds[0]], folded: [channelIds[1]] });
     await start();
-    await contains(".o-mail-ChatBubble[name='Visitor 12']");
+    await waitFor(".o-mail-ChatBubble[name='Visitor 12']:count(1)");
     await focus(".o-mail-Composer-html", {
         parent: [".o-mail-ChatWindow", { text: "Visitor 11" }],
     });
@@ -340,8 +348,8 @@ test("switching to hidden chat window unhides it", async () => {
     patchUiSize({ width: 900 }); // enough for 2 chat windows max
     await start();
     // FIXME: expected order: general, 12, 11
-    await contains(".o-mail-ChatWindow", { count: 2 });
-    await contains(".o-mail-ChatWindow", { count: 0, text: "Visitor 11" });
+    await waitFor(".o-mail-ChatWindow:count(2)");
+    await waitForNone(".o-mail-ChatWindow:text('Visitor 11')");
     await focus(".o-mail-Composer-html", {
         parent: [".o-mail-ChatWindow", { text: "Visitor 12" }],
     });

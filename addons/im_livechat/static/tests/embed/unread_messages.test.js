@@ -20,7 +20,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 
-import { queryFirst } from "@odoo/hoot-dom";
+import { queryFirst, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
@@ -72,7 +72,7 @@ test("new message from operator displays unread counter", async () => {
         "/discuss/channel/messages",
     ]);
     // Composer is autofocused: blur it so that the new message is not immediately read.
-    await contains(".o-mail-Composer-html:focus");
+    await waitFor(".o-mail-Composer-html:focus:count(1)");
     queryFirst(".o-mail-Composer-html").blur();
     // send after init_messaging because bus subscription is done after init_messaging
     await withUser(userId, () =>
@@ -121,7 +121,7 @@ test("focus on unread livechat marks it as read", async () => {
     await contains(".o-mail-ChatWindow-counter", { text: "1" });
     await contains(".o-mail-Message", { text: "Are you there?" });
     await focus(".o-mail-Composer-html");
-    await contains(".o-mail-ChatWindow-counter", { count: 0 });
+    await waitForNone(".o-mail-ChatWindow-counter");
 });
 test("new message from operator is automatically translated", async () => {
     const pyEnv = await startServer();
@@ -176,5 +176,5 @@ test("new message from operator is automatically translated", async () => {
         })
     );
     await expect.waitForSteps(["translate_request"]);
-    await contains(".o-mail-Message-content:contains('How are you?')");
+    await waitFor(".o-mail-Message-content:contains('How are you?'):count(1)");
 });
