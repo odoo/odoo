@@ -13,7 +13,7 @@ _lt = LazyTranslate(__name__)
 
 
 class ResUsers(models.Model):
-    _inherit = 'res.users'
+    _inherit = ['res.users', 'website.seo.metadata']
 
     # overridden inherited fields to bypass access rights, in case you have
     # access to the user but not its corresponding partner
