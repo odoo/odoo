@@ -44,6 +44,14 @@ class LangData(Mapping):
         except KeyError:
             raise AttributeError
 
+    def __eq__(self, other):
+        if isinstance(other, LangData):
+            return self.id == other.id
+        return super().__eq__(other)
+
+    def __hash__(self):
+        return hash(self.id)
+
 
 class LangDataDict(Mapping):
     """ A ``dict`` of :class:`LangData` objects indexed by some key, which returns
