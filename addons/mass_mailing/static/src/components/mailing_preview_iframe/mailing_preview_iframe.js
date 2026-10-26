@@ -50,10 +50,16 @@ export class MailingPreviewIframe extends Component {
         );
 
         useLayoutEffect(
-            () => {
+            (isMobileMode) => {
                 this.iframeLoaded.promise.then(() => {
                     this.throttledResize();
                 });
+                if (!isMobileMode) {
+                    return;
+                }
+                const dialog = this.iframeRef().closest(".modal-dialog");
+                dialog?.classList.add("o_mass_mailing_preview_transparent_dialog");
+                return () => dialog?.classList.remove("o_mass_mailing_preview_transparent_dialog");
             },
             () => [this.state.isMobileMode]
         );
