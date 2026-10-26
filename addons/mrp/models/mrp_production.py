@@ -2459,6 +2459,7 @@ class MrpProduction(models.Model):
                 'state': 'done',
             })
 
+        self._action_done_deferred_scraps()
         # It is prudent to reserve any quantity that has become available to the backorder
         # production's move_raw_ids after the production which spawned them has been marked done.
         backorders_to_assign = backorders.filtered(
@@ -2534,6 +2535,22 @@ class MrpProduction(models.Model):
             }
         return another_action
 
+    def _action_done_deferred_scraps(self):
+        for mo in self:
+            scraps = self.env['stock.move'].search([
+                ('is_scrap', '=', True),
+                ('state', 'not in', ('done', 'cancel')),
+                ('production_id', '=', mo.id),
+                ('product_id', 'in', mo.move_finished_ids.product_id.ids),
+            ])
+            if not scraps:
+                continue
+            qty_to_scrap = {scrap: scrap.quantity for scrap in scraps}
+            scraps.location_id = mo.location_dest_id
+            for scrap, qty in qty_to_scrap.items():
+                scrap._set_quantity_done(qty)
+                scrap._action_scrap()
+
     def pre_button_mark_done(self):
         self._button_mark_done_sanity_checks()
         production_auto_ids = set()
@@ -2590,6 +2607,7 @@ class MrpProduction(models.Model):
 
     def action_scrap(self):
         self.ensure_one()
+        is_from_workorder = self.env.context.get('from_workorder', False)
         return {
             'name': _('Scrap Products'),
             'view_mode': 'form',
@@ -2597,8 +2615,12 @@ class MrpProduction(models.Model):
             'views': [[self.env.ref('stock.view_scrap_move_form').id, 'form']],
             'type': 'ir.actions.act_window',
             'context': {
-                'from_order': True,
-                'product_ids': (self.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel')) | self.move_finished_ids.filtered(lambda x: x.state == 'done')).mapped('product_id').ids,
+                'from_order': not is_from_workorder,
+                'from_workorder': is_from_workorder,
+                'product_ids': (
+                    (self.move_raw_ids | self.move_finished_ids) if self.state not in ('done', 'cancel')
+                    else self.move_finished_ids.filtered(lambda x: x.state == 'done')
+                ).mapped('product_id').ids,
                 'default_is_scrap': True,
                 'default_production_id': self.id,
                 'default_company_id': self.company_id.id,

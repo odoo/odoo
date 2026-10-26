@@ -165,7 +165,6 @@ class TestMrpReplenish(TestMrpCommon):
         scrap_form.product_id = product_to_scrap
         scrap_form.quantity = 5
         scrap_form.should_replenish_scrapped = True
-        scrap_form.company_id = self.env.company
         self.assertEqual(scrap_form.location_id, self.warehouse_1.pbm_loc_id)
         scrap_form.save().action_scrap()
 
