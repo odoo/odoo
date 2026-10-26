@@ -1,6 +1,6 @@
 declare module "models" {
     export interface Thread {
-        fetchThreadData: (requestList: string[], param0: { messageFetchRouteParams: MessageRouteParams }) => Promise<void>;
+        fetchThreadData: (requestList: string[]) => Promise<void>;
         fullComposerCloseRequestList: Readonly<string[]>;
     }
 }
