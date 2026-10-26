@@ -32,6 +32,9 @@ class AccountMove(models.Model):
         ],
         string="Payment mode",
         help="NAV expected payment mode of the invoice.",
+        compute='_compute_l10n_hu_payment_mode',
+        store=True,
+        readonly=False,
     )
 
     # === EDI Fields === #
@@ -124,6 +127,43 @@ class AccountMove(models.Model):
                 raise ValidationError(_('Cannot reset to draft or cancel invoice %s because an electronic document was already sent to NAV!', move.name))
 
     # === Computes === #
+
+    @api.depends('preferred_payment_method_line_id')
+    def _compute_l10n_hu_payment_mode(self):
+        """ Follow the payment method of the customer invoices until they are sent to NAV: cash journal means cash,
+        bank journal means transfer. Card and voucher payments are set by hand, vendor bills keep the payment mode
+        set by the vendor.
+        """
+        payment_modes = {'cash': 'CASH', 'bank': 'TRANSFER'}
+        for move in self.filtered(lambda move: not move.l10n_hu_edi_state and move.is_sale_document()):
+            journal_type = move.preferred_payment_method_line_id.journal_id.type
+            if journal_type in payment_modes:
+                move.l10n_hu_payment_mode = payment_modes[journal_type]
+
+    @api.depends('l10n_hu_payment_mode')
+    def _compute_invoice_cash_rounding_id(self):
+        # Invoices paid in cash only according to their NAV payment mode get the cash rounding of the cash journals.
+        super()._compute_invoice_cash_rounding_id()
+        cash_moves = self.filtered(lambda move: (
+            move.state == 'draft'
+            and move.is_sale_document(include_receipts=True)
+            and move.l10n_hu_payment_mode == 'CASH'
+            and not move.invoice_cash_rounding_id
+        ))
+        if not cash_moves:
+            return
+        CashRounding = self.env['account.cash.rounding']
+        cash_roundings = CashRounding.search([
+            *CashRounding._check_company_domain(cash_moves.company_id),
+            ('payment_method_line_ids.journal_id.type', '=', 'cash'),
+        ])
+        for move in cash_moves:
+            move.invoice_cash_rounding_id = next((
+                cash_rounding
+                for cash_rounding in cash_roundings
+                if (not cash_rounding.company_id or cash_rounding.company_id == move.company_id)
+                and (not cash_rounding.currency_ids or move.currency_id in cash_rounding.currency_ids)
+            ), False)
 
     @api.depends('delivery_date')
     def _compute_expected_currency_rate(self):
