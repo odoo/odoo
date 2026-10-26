@@ -114,6 +114,11 @@ class PublicPageController(http.Controller):
             inPublicPage=True,
         )
         store.add(channel, "_store_channel_fields")
+        # sudo: res.users - can access the avatar card of the creator of an accessible channel
+        store.add(
+            channel,
+            lambda res: res.one("create_uid", "_store_avatar_card_fields", sudo=True),
+        )
         store.add_model_values(
             "DiscussApp",
             lambda res: res.one("thread", [], as_thread=True, value=channel),
