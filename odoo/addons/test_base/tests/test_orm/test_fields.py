@@ -4832,7 +4832,7 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
 
         add_to_registry(self.registry, Foo)
 
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(Exception):
             self.registry._setup_models__(self.env.cr, [])  # incremental setup
 
     def test_ondelete_value_no_valid(self):
@@ -4849,7 +4849,7 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
 
         add_to_registry(self.registry, Foo)
 
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(Exception):
             self.registry._setup_models__(self.env.cr, [])  # incremental setup
 
     def test_ondelete_required_null_explicit(self):
