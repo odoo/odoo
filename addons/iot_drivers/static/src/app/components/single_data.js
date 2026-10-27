@@ -1,12 +1,12 @@
 /* global owl */
 
-const { Component, xml, props, types: t } = owl;
+const { Component, xml, useProps, types: t } = owl;
 
 const URL_REGEXP =
     /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[\w]*))?)/;
 
 export class SingleData extends Component {
-    props = props({
+    props = useProps({
         name: t.string(),
         value: t.string(),
         icon: t.string().optional(),

@@ -1,9 +1,9 @@
 /* global owl */
 
-const { Component, xml, useListener, signal, props, types: t } = owl;
+const { Component, xml, useListener, signal, useProps, types: t } = owl;
 
 export class Dialog extends Component {
-    props = props({
+    props = useProps({
         slots: t.object(),
         name: t.string(),
         help: t.string().optional(),

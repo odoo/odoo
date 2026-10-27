@@ -2,8 +2,8 @@
 
 import Store from "../store.js";
 
-const { plugin } = owl;
+const { usePlugin } = owl;
 
 export default function useStore() {
-    return plugin(Store);
+    return usePlugin(Store);
 }
