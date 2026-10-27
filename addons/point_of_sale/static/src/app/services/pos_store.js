@@ -288,11 +288,8 @@ export class PosStore extends WithLazyGetterTrap {
             return;
         }
         order.payment_ids?.forEach((payment) => {
-            if (
-                payment.payment_method_id.useBankQrCode &&
-                payment.getPaymentStatus() === "waiting"
-            ) {
-                payment.setPaymentStatus("retry");
+            if (payment.payment_method_id.useBankQrCode && payment.payment_status === "waiting") {
+                payment.payment_status = "retry";
             }
         });
     }
@@ -1975,13 +1972,16 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
 
-    getPendingPaymentLine(provider) {
-        for (const order of this.models["pos.order"].getAll()) {
+    /**
+     * @param {string} provider
+     * @param {PosOrder|PosOrder[]} [orders] - Orders to search in, all orders when not given.
+     */
+    getProcessingPaymentLine(provider, orders) {
+        orders = [orders ?? this.models["pos.order"].getAll()].flat();
+        for (const order of orders) {
             const paymentLine = order.payment_ids.find(
                 (paymentLine) =>
-                    paymentLine.payment_provider === provider &&
-                    !paymentLine.isDone() &&
-                    paymentLine.getPaymentStatus() !== "retry"
+                    paymentLine.payment_provider === provider && paymentLine.isProcessing
             );
             if (paymentLine) {
                 return paymentLine;
@@ -2485,7 +2485,7 @@ export class PosStore extends WithLazyGetterTrap {
             this.notification.add(_t("Can't create a QR for a zero amount"), { type: "warning" });
             return false;
         }
-        payment.setPaymentStatus("waiting");
+        payment.payment_status = "waiting";
         let qrCodeValue;
         try {
             qrCodeValue = await this.data.call("pos.payment.method", "get_qr_code_value", [
@@ -3188,7 +3188,7 @@ export class PosStore extends WithLazyGetterTrap {
         // No QR was explicitly pushed: default to the selected payment line's own
         // QR code while it's mid-processing (e.g. a terminal waiting to be scanned).
         const payment = this.getOrder()?.getSelectedPaymentline();
-        return payment?.isProcessing() && payment.qr_code
+        return payment?.isProcessing && payment.qr_code
             ? { title: _t("Scan the QR for payment"), ...payment.getQrPopupProps() }
             : null;
     }

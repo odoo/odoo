@@ -7,19 +7,17 @@ patch(PaymentScreen.prototype, {
     setup() {
         super.setup(...arguments);
         onMounted(async () => {
-            const pendingPaymentLine = this.currentOrder.payment_ids.find(
-                (paymentLine) =>
-                    paymentLine.payment_method_id.payment_provider === "razorpay" &&
-                    !paymentLine.isDone() &&
-                    paymentLine.getPaymentStatus() !== "pending"
+            const pendingPaymentLine = this.pos.getProcessingPaymentLine(
+                "razorpay",
+                this.currentOrder
             );
             if (pendingPaymentLine) {
                 const payment_status =
                     await pendingPaymentLine.payment_method_id.payment_interface._waitForPaymentConfirmation();
                 if (payment_status?.status === "AUTHORIZED") {
-                    pendingPaymentLine.setPaymentStatus("done");
+                    pendingPaymentLine.payment_status = "done";
                 } else {
-                    pendingPaymentLine.setPaymentStatus("force_done");
+                    pendingPaymentLine.payment_status = "force_done";
                 }
             }
         });

@@ -208,7 +208,7 @@ registry.category("web_tour.tours").add("test_auto_validate_force_done", {
             {
                 trigger: "body",
                 run: () => {
-                    posmodel.getOrder().payment_ids[0].setPaymentStatus("force_done");
+                    posmodel.getOrder().payment_ids[0].payment_status = "force_done";
                 },
             },
             PaymentScreen.clickForceDoneButton(),

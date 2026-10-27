@@ -23,7 +23,7 @@ test("_checkOrder", async () => {
 
     // Same type but already processing
     const paymentline = createPaymentLine(store, order, card1);
-    paymentline.payment_status = "waitingCard";
+    paymentline.payment_status = "waiting_card";
     expect(card1._checkOrder({ order })).toEqual(failure);
 
     // Can send the request while processing if it's the same payment line

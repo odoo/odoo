@@ -9,7 +9,7 @@ patch(PaymentScreenPaymentLines.prototype, {
         const newAmount = prevAmount + amountDiff;
 
         line.setAmount(newAmount);
-        line.setPaymentStatus("waiting");
+        line.payment_status = "waiting";
 
         const isAdjustSuccessful =
             await line.payment_method_id.payment_interface?.sendPaymentAdjust(line.uuid);
@@ -18,14 +18,17 @@ patch(PaymentScreenPaymentLines.prototype, {
             line.setAmount(prevAmount);
         }
 
-        line.setPaymentStatus("done");
+        line.payment_status = "done";
     },
 
     getPaymentActionState(line) {
         const state = super.getPaymentActionState(line);
+        if (!state) {
+            return state;
+        }
 
         if (
-            (state.id === "paid" || state.id === "refunded") &&
+            state.id === "done" &&
             line.canBeAdjusted() &&
             line.pos_order_id.amountPaid < line.pos_order_id.priceIncl
         ) {

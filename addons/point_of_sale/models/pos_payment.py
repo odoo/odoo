@@ -52,7 +52,20 @@ class PosPayment(models.Model):
     payment_method_issuer_bank = fields.Char(string='Payment Issuer Bank')
     payment_method_payment_mode = fields.Char(string='Payment Mode')
     transaction_id = fields.Char(string='Payment Transaction ID')
-    payment_status = fields.Char(string='Payment Status')
+    payment_status = fields.Selection(
+        string='Payment Status',
+        selection=[                                      # Empty for non-electronic payments (cash, bank without terminal)
+            ('pending', 'Pending'),                      # Line created, request not sent yet
+            ('waiting', 'Waiting'),                      # Request sent to the provider
+            ('waiting_card', 'Waiting for Card'),        # Terminal waiting for the customer's card
+            ('waiting_scan', 'Waiting for Scan'),        # Waiting for the customer to scan a QR code
+            ('waiting_cancel', 'Waiting for Cancel'),    # Cancel request sent
+            ('waiting_capture', 'Waiting for Capture'),  # Authorized, waiting for the capture
+            ('retry', 'Retry'),                          # Failed or cancelled, can be sent again
+            ('force_done', 'Force Done'),                # Unknown outcome (e.g. connection lost), cashier can force it
+            ('done', 'Done'),                            # Paid (or refunded)
+        ],
+    )
     ticket = fields.Char(string='Payment Receipt Info')
     is_change = fields.Boolean(string='Is this payment change?', default=False)
     account_move_id = fields.Many2one('account.move', index='btree_not_null')

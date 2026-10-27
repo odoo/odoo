@@ -1,5 +1,4 @@
 import logging
-from json import JSONDecodeError
 
 import requests
 
@@ -205,7 +204,7 @@ class PosPaymentMethod(models.Model):
             error_message, exception_class = errors[response.status_code]
             try:
                 error_data = response.json()
-            except JSONDecodeError:
+            except requests.exceptions.JSONDecodeError:
                 error_data = {}
             code = error_data.get("code", "")
 

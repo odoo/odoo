@@ -1011,7 +1011,7 @@ describe("pos_store.js", () => {
             const paymentMethod = store.models["pos.payment.method"].get(1);
             const payment = createPaymentLine(store, order, paymentMethod, {
                 qr_code: "data:image/png;base64,qr",
-                payment_status: "waitingScan",
+                payment_status: "waiting_scan",
             });
 
             // Not selected
@@ -1036,7 +1036,7 @@ describe("pos_store.js", () => {
             const paymentMethod = store.models["pos.payment.method"].get(1);
             const payment = createPaymentLine(store, order, paymentMethod, {
                 qr_code: "data:image/png;base64,qr",
-                payment_status: "waitingScan",
+                payment_status: "waiting_scan",
             });
             order.selectPaymentline(payment);
 

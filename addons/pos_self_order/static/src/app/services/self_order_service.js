@@ -1235,7 +1235,7 @@ export class SelfOrder {
         return getTimeUtil(date);
     }
 
-    getPendingPaymentLine(provider) {
+    getProcessingPaymentLine(provider) {
         const currentPaymentLine = this.currentOrder.getSelectedPaymentline();
         return currentPaymentLine?.payment_method_id?.payment_provider === provider
             ? currentPaymentLine

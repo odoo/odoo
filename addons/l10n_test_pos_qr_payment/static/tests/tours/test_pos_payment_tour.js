@@ -75,7 +75,7 @@ registry.category("web_tour.tours").add("PaymentScreenWithQRPayment", {
             addProductandPay(true),
             isQRDisplayedinDialog(),
             Dialog.confirm(),
-            PaymentScreen.hasActionState("paid"),
+            PaymentScreen.hasActionState("done"),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
         ].flat(),

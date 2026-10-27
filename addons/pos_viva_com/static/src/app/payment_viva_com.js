@@ -23,11 +23,7 @@ export class PaymentVivaCom extends PaymentInterface {
                     (line) => line.viva_com_session_id === payload.session_id
                 );
 
-                if (
-                    paymentLine &&
-                    !paymentLine.isDone() &&
-                    paymentLine.getPaymentStatus() !== "retry"
-                ) {
+                if (paymentLine?.isProcessing) {
                     paymentLine.payment_method_id.payment_interface.handleVivaComStatusResponse(
                         paymentLine,
                         payload
@@ -58,8 +54,8 @@ export class PaymentVivaCom extends PaymentInterface {
 
     _handleOdooConnectionFailure(paymentLine, data = {}) {
         // handle timeout
-        if (!paymentLine.isDone()) {
-            paymentLine.setPaymentStatus("retry");
+        if (!paymentLine.isSettled) {
+            paymentLine.payment_status = "retry";
         }
         this._show_error(
             _t(
@@ -75,7 +71,7 @@ export class PaymentVivaCom extends PaymentInterface {
             this._show_error(response.error);
             return false;
         }
-        paymentLine.setPaymentStatus("waitingCard");
+        paymentLine.payment_status = "waiting_card";
         return this.waitForPaymentConfirmation(paymentLine);
     }
 

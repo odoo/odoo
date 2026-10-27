@@ -238,13 +238,13 @@ test("bancontact_pay_success_payment: paid orders are notified and validated", a
     await Utils.closeNotifications();
 
     await Utils.clickPaymentline({ name: Utils.DISPLAY, amount: "5.00" });
-    expect(Utils.actionState()).toBe("paid");
+    expect(Utils.actionState()).toBe("done");
     await Utils.clickPaymentline({ name: Utils.DISPLAY, amount: "2.00" });
     expect(Utils.actionState()).toBe("waiting_scan");
 
     // [B] is paid while selected: no notification.
     await Utils.mockCallbackBancontactPay(store, "bancontact_success_3", "SUCCEEDED");
-    expect(Utils.actionState()).toBe("paid");
+    expect(Utils.actionState()).toBe("done");
     expect(Utils.notifications()).toHaveLength(0);
 
     // [C] settles the order, which is validated automatically. (…_4)

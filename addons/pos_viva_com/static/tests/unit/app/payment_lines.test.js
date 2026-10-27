@@ -15,7 +15,7 @@ test("getPaymentActionState", async () => {
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
     const card = store.models["pos.payment.method"].get(2);
-    const paymentline = createPaymentLine(store, order, card, { payment_status: "waitingCard" });
+    const paymentline = createPaymentLine(store, order, card, { payment_status: "waiting_card" });
     const comp = await mountWithCleanup(PaymentScreenPaymentLines, {
         props: {
             paymentLines: [paymentline],
@@ -73,7 +73,6 @@ test("getPaymentActionState", async () => {
                 title: "Send Cancel Request",
                 action: "function",
                 severity: "danger",
-                show: true,
             },
         ],
     });
@@ -103,7 +102,6 @@ test("getPaymentActionState", async () => {
                 title: "Send Cancel Request",
                 action: "function",
                 severity: "danger",
-                show: true,
             },
             {
                 id: "viva_use_app",
