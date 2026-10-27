@@ -759,6 +759,36 @@ class TestTraceability(TestMrpCommon):
             self.assertIn(smo.lot_producing_ids.name, serials)
             self.assertNotEqual(smo.state, 'done')
 
+    def test_split_and_assign_serials_after_apply(self):
+        """
+        Verify that Prepare MO button resets SNs and quantities even if Apply
+        was clicked beforehand.
+        """
+        mo, _, _, _, _ = self.generate_mo(tracking_final='serial', qty_final=3, qty_base_1=2, qty_base_2=2)
+        mo.action_confirm()
+
+        wizard = self.env['mrp.production.serials'].with_context(active_id=mo.id).create({
+            'production_id': mo.id,
+            'serial_numbers': 'SN001\nSN002\nSN003',
+        })
+        wizard.action_apply()
+
+        wizard2 = self.env['mrp.production.serials'].with_context(active_id=mo.id).create({
+            'production_id': mo.id,
+        })
+        wizard2.action_split_and_assign_serials()
+
+        split_mos = self.env['mrp.production'].search([('production_group_id', '=', mo.production_group_id.id)])
+        self.assertEqual(len(split_mos), 3)
+
+        serials = ['SN001', 'SN002', 'SN003']
+        for smo in split_mos:
+            self.assertIn(smo.lot_producing_ids.name, serials)
+            self.assertNotEqual(smo.state, 'done')
+            self.assertEqual(smo.qty_producing, 0)
+            for move in smo.move_raw_ids:
+                self.assertEqual(move.quantity, 2)
+
     @freeze_time('2024-02-03')
     def test_interpolation_in_batch_serials(self):
         """
