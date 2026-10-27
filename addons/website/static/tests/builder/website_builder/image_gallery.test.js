@@ -5,7 +5,7 @@ import {
     waitForEndOfOperation,
 } from "@html_builder/../tests/helpers";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { animationFrame, click, queryAll, queryOne, waitFor } from "@odoo/hoot-dom";
+import { animationFrame, click, press, queryAll, queryOne, waitFor } from "@odoo/hoot-dom";
 import { contains, dataURItoBlob, onRpc } from "@web/../tests/web_test_helpers";
 import { uniqueId } from "@web/core/utils/functions";
 import { patch } from "@web/core/utils/patch";
@@ -25,7 +25,7 @@ async function setupWbsiteBuilderWithImageWall() {
 }
 
 async function addImage() {
-    await contains("[data-action-id='addImage']").click();
+    await contains("[data-action-id='addImage']:not([data-action-param])").click();
     // We use "click" instead of contains.click because contains wait for
     // the image to be visible. In this test we don't want to wait ~800ms
     // for the image to be visible but we can still click on it
@@ -70,7 +70,7 @@ describe("Add image", () => {
         await contains(":iframe .o_masonry_col img[data-index='1']").click();
         await waitSidebarUpdated();
         await unfoldAllOptionsGroups();
-        expect("[data-action-id='addImage']").toHaveCount(1);
+        expect("[data-action-id='addImage']:not([data-action-param])").toHaveCount(1);
         await addImage();
         await waitFor(":iframe .o_masonry_col img[data-index='6']");
 
@@ -122,49 +122,92 @@ describe("Add image", () => {
         expect(":iframe .carousel-inner > .carousel-item").toHaveCount(4);
         expect(":iframe .o_carousel_pause").toBeVisible();
     });
+
+    for (const [snippet, imageSelector] of [
+        ["s_images_wall", ":iframe .o_masonry_col img"],
+        ["s_image_gallery", ":iframe .carousel-item img"],
+    ]) {
+        test(`Replace all images in ${snippet}`, async () => {
+            const builder = await setupWebsiteBuilderWithSnippet(snippet, {
+                loadIframeBuilderTemplates: true,
+            });
+            const originalImageEls = queryAll(imageSelector);
+            originalImageEls.forEach((imgEl) => (imgEl.src = dummyBase64Img));
+            builder.getEditor().shared.history.commit();
+            await contains(":iframe .s_image_gallery").click();
+            await builder.waitSidebarUpdated();
+            await unfoldAllOptionsGroups();
+            await contains("[data-action-id='addImage'][data-action-param*='replaceAll']").click();
+            expect(imageSelector).toHaveCount(originalImageEls.length);
+            await click(".o_existing_attachment_cell .o_button_area");
+            await contains(".modal-footer button:not([disabled]):contains(Add)").click();
+            await waitFor(`${imageSelector}[src^='data:image/webp;base64']`);
+            expect(imageSelector).toHaveCount(1);
+            expect(originalImageEls.every((imgEl) => !imgEl.isConnected)).toBe(true);
+        });
+    }
 });
 
-// TODO Re-enable once interactions run within iframe in hoot tests.
-test.skip("Remove all images in gallery", async () => {
-    await setupWebsiteBuilder(
-        `
-        <section class="s_image_gallery o_masonry" data-columns="2">
-            <div class="container">
-                <div class="o_masonry_col col-lg-6">
-                    <img class="first_img img img-fluid d-block rounded" data-index="1" src='${dummyBase64Img}'>
-                </div>
-                <div class="o_masonry_col col-lg-6">
-                    <img class="a_nice_img img img-fluid d-block rounded" data-index="5"  src='${dummyBase64Img}'>
-                </div>
-            </div>
-        </section>
-        `
-    );
-    await contains(":iframe .first_img").click();
-    expect("[data-action-id='removeAllImages']").toHaveCount(1);
-    await contains("[data-action-id='removeAllImages']").click();
-
-    expect(":iframe .s_image_gallery img").toHaveCount(0);
-    expect(":iframe .o_add_images").toHaveCount(1);
-    await contains(":iframe .o_add_images").click();
-    expect(".o_select_media_dialog").toHaveCount(1);
-});
-
-test("Empty image gallery is removed on save", async () => {
-    const resultSave = [];
-    onRpc("ir.ui.view", "save", ({ args }) => {
-        resultSave.push(args[1]);
-        return true;
-    });
-    await setupWebsiteBuilderWithSnippet("s_image_gallery", { loadIframeBuilderTemplates: true });
-    await contains(":iframe .s_image_gallery").click();
+test("Cancel replacing all images in gallery", async () => {
+    const { waitSidebarUpdated } = await setupWbsiteBuilderWithImageWall();
+    await contains(":iframe .o_masonry_col img[data-index='1']").click();
+    await waitSidebarUpdated();
     await unfoldAllOptionsGroups();
-    await contains("[data-action-id='removeAllImages']").click();
-    expect(":iframe .s_image_gallery img:not(.o_carousel_controllers img)").toHaveCount(0);
-    await contains(".o_hb_snippets_top_actions button:contains(Save)").click();
-    expect(resultSave.length).toBe(1);
-    expect(resultSave[0]).not.toInclude("s_image_gallery");
+    const imageEls = queryAll(":iframe .s_image_gallery img");
+    await contains("[data-action-id='addImage'][data-action-param*='replaceAll']").click();
+    expect(".o_select_media_dialog").toHaveCount(1);
+    expect(":iframe .s_image_gallery img").toHaveCount(imageEls.length);
+    await contains(".modal-footer button:contains(Discard)").click();
+    expect(queryAll(":iframe .s_image_gallery img")).toEqual(imageEls);
 });
+
+for (const [snippet, imageSelector] of [
+    ["s_images_wall", ":iframe .o_masonry_col img"],
+    ["s_image_gallery", ":iframe .carousel-item img"],
+]) {
+    test(`The last image in ${snippet} cannot be removed`, async () => {
+        const builder = await setupWebsiteBuilderWithSnippet(snippet, {
+            loadIframeBuilderTemplates: true,
+        });
+        queryAll(imageSelector).forEach((imgEl) => (imgEl.src = dummyBase64Img));
+        builder.getEditor().shared.history.commit();
+        while (queryAll(imageSelector).length > 1) {
+            await contains(`${imageSelector}:visible`).click();
+            await contains("[data-container-title='Image'] .oe_snippet_remove").click();
+        }
+        await contains(`${imageSelector}:visible`).click();
+        await builder.waitSidebarUpdated();
+        await unfoldAllOptionsGroups();
+        expect("[data-container-title='Image'] .oe_snippet_remove").toHaveAttribute("disabled");
+        expect("[data-action-id='addImage'][data-action-param*='replaceAll']").toBeEnabled();
+        expect(":iframe .o_empty_gallery_alert").toHaveCount(0);
+
+        await contains(`${imageSelector}:visible`).click();
+        await press("Delete");
+        await animationFrame();
+        expect(imageSelector).toHaveCount(1);
+        expect(":iframe .s_image_gallery").toHaveCount(1);
+    });
+
+    test(`Empty ${snippet} is removed on save`, async () => {
+        const resultSave = [];
+        onRpc("ir.ui.view", "save", ({ args }) => {
+            resultSave.push(args[1]);
+            return true;
+        });
+        const builder = await setupWebsiteBuilderWithSnippet(snippet, {
+            loadIframeBuilderTemplates: true,
+        });
+        expect(queryAll(imageSelector).length).toBeGreaterThan(0);
+        queryAll(imageSelector).forEach((imgEl) => imgEl.remove());
+        builder.getEditor().shared.history.commit();
+        expect(imageSelector).toHaveCount(0);
+        expect(":iframe .s_image_gallery").toHaveCount(1);
+        await contains(".o_hb_snippets_top_actions button:contains(Save)").click();
+        expect(resultSave.length).toBe(1);
+        expect(resultSave[0]).not.toInclude("s_image_gallery");
+    });
+}
 
 test("Rapidly remove an image from the gallery", async () => {
     await setupWbsiteBuilderWithImageWall();
