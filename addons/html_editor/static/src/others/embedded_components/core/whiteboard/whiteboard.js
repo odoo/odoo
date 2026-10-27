@@ -1,9 +1,9 @@
-import { Component, props, types as t } from "@odoo/owl";
+import { Component, types as t, useProps } from "@odoo/owl";
 import { getEmbeddedProps } from "@html_editor/others/embedded_component_utils";
 
 export class EmbeddedWhiteboardComponent extends Component {
     static template = "html_editor.EmbeddedWhiteboard";
-    props = props({
+    props = useProps({
         host: t.object(),
         url: t.string(),
         type: t.string(),
