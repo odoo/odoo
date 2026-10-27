@@ -159,6 +159,11 @@
                                 Break: <t t-out="attendanceTotals.breakDisplay"/>
                             </div>
                         </div>
+                        <button name="my_attendances" class="btn btn-secondary"
+                                title="My Attendances" aria-label="My Attendances"
+                                t-on-click="() => this.openMyAttendances()">
+                            <i class="oi" data-icon="checklist"/>
+                        </button>
                     </div>
                 </div>
             </t>

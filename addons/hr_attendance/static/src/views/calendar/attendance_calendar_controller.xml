@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_attendance.AttendanceCalendarController" t-inherit="web.CalendarController" t-inherit-mode="primary">
+        <!-- the period is in the navigation already: keep the header on one line -->
+        <xpath expr="//div[hasclass('o_calendar_header')]/h5" position="attributes">
+            <attribute name="t-if">this.uiService.isSmall</attribute>
+        </xpath>
+    </t>
+</templates>

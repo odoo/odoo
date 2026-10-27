@@ -1,0 +1,58 @@
+.o_attendance_dashboard {
+    background-color: var(--o-control-panel-background-color);
+    scrollbar-width: none;
+}
+
+/* Tinted tiles: each counter mixes its hue into the view background (light and dark themes alike). */
+.o_attendance_kpi {
+    --o-attendance-kpi-color: var(--o-brand-primary);
+    flex: 0 0 auto;
+    min-width: 8.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--o-bs-spacer-2) var(--o-bs-spacer-3);
+    border: 1px solid transparent;
+    border-radius: var(--border-radius-lg);
+    background-color: color-mix(in srgb, var(--o-attendance-kpi-color) 16%, var(--o-view-background-color));
+    color: var(--body-color);
+    line-height: 1.3;
+    white-space: nowrap;
+    transition: background-color .15s ease-in-out, border-color .15s ease-in-out;
+
+    &:hover,
+    &.active {
+        background-color: color-mix(in srgb, var(--o-attendance-kpi-color) 26%, var(--o-view-background-color));
+    }
+
+    &.active {
+        border-color: var(--o-attendance-kpi-color);
+        box-shadow: inset 0 0 0 1px var(--o-attendance-kpi-color);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--o-attendance-kpi-color);
+        outline-offset: 2px;
+    }
+
+    &[name="to_review"] { --o-attendance-kpi-color: var(--orange); }
+    &[name="at_work"] { --o-attendance-kpi-color: var(--success); }
+    &[name="late_check_in"] { --o-attendance-kpi-color: var(--danger); }
+    &[name="early_check_out"] { --o-attendance-kpi-color: var(--purple); }
+    &[name="overtime"] { --o-attendance-kpi-color: var(--blue); }
+
+    @media (max-width: 767.98px) {
+        min-width: 0;
+    }
+}
+
+.o_attendance_kpi_value {
+    font-size: 1.15em;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: color-mix(in srgb, var(--o-attendance-kpi-color) 55%, var(--emphasis-color));
+}
+
+.o_attendance_kpi_label {
+    font-weight: var(--o-bs-font-weight-medium);
+}
