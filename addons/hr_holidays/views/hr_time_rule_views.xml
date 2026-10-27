@@ -52,6 +52,14 @@
                         placeholder="Choose a Time Off Type"
                         help="Must require allocation and be selectable in time off requests."/>
                 </div>
+                <div class="text-muted small" colspan="2"
+                    invisible="threshold_operator != 'less_than' or not leave_compensation_rate or not allocation_type_id or allocation_type_id.allows_negative">
+                    The deficit output and deduction are skipped when the employee's allocation balance is insufficient.
+                </div>
+                <div class="text-muted small" colspan="2"
+                    invisible="threshold_operator != 'less_than' or not leave_compensation_rate or not allocation_type_id or not allocation_type_id.allows_negative">
+                    The allocation balance can go negative up to the type's limit. The deficit is skipped only when that limit is reached.
+                </div>
             </xpath>
         </field>
     </record>

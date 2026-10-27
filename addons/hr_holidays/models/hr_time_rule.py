@@ -17,10 +17,10 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         :param sources: records of the source model
         """
         reversed_ids = self.env.context.get('time_rule_reversed_ids')
-        to_reverse = sources.ids
+        to_reverse = set(sources.ids)
         if reversed_ids is not None:
-            to_reverse = [sid for sid in to_reverse if sid not in reversed_ids]
-            reversed_ids.update(sources.ids)
+            to_reverse -= reversed_ids
+            reversed_ids |= to_reverse
         if to_reverse:
             self.env['hr.time.rule']._reverse_allocation_credits(self._name, to_reverse)
 
@@ -114,12 +114,17 @@ class HrTimeRule(models.Model):
         :param dict approve_ctx: context to approve the created allocations with
         """
         approve_ctx = approve_ctx or {}
-        credit_domain = [('state', '=', 'validate'), ('date_to', '=', False)]
-        today = fields.Date.context_today(self)
-        deduct_domain = [
-            ('state', '=', 'validate'),
-            '|', ('date_to', '=', False), ('date_to', '>=', today),
-        ]
+
+        # pre-fetch version-aware hours_per_day for all (employee, source_date) pairs
+        emps_by_date = defaultdict(lambda: self.env['hr.employee'])
+        for employee, rule, _hours, source, _log in (*excess_alloc, *deficit_alloc):
+            if rule.leave_compensation_rate > 0 and rule.allocation_type_id:
+                dt = source[source._time_rule_span_start_field]
+                emps_by_date[dt.date() if hasattr(dt, 'date') else dt] |= employee
+        hpd_cache = {}
+        for source_date, employees in emps_by_date.items():
+            for emp_id, hpd in employees._get_hours_per_day_batch(source_date).items():
+                hpd_cache[emp_id, source_date] = hpd or 8.0
 
         excess_by_key = defaultdict(float)
         log_by_source = defaultdict(float)
@@ -127,24 +132,39 @@ class HrTimeRule(models.Model):
         for employee, rule, excess_hours, source, log_source in excess_alloc:
             if not (rule.leave_compensation_rate > 0 and rule.allocation_type_id):
                 continue
-            hours_per_day = employee.resource_calendar_id.hours_per_day or 8.0
+            dt = source[source._time_rule_span_start_field]
+            hours_per_day = hpd_cache[employee.id, dt.date() if hasattr(dt, 'date') else dt]
             alloc_days = excess_hours * rule.leave_compensation_rate / hours_per_day
             if alloc_days > 0:
                 excess_by_key[employee, rule.allocation_type_id] += alloc_days
                 log_by_source[log_source._name, log_source.id, employee, rule.allocation_type_id] += alloc_days
 
+        deficit_by_key = defaultdict(float)
+        for employee, rule, deficit_hours, source, log_source in deficit_alloc:
+            if not (rule.leave_compensation_rate > 0 and rule.allocation_type_id):
+                continue
+            dt = source[source._time_rule_span_start_field]
+            hours_per_day = hpd_cache[employee.id, dt.date() if hasattr(dt, 'date') else dt]
+            deduct = deficit_hours * rule.leave_compensation_rate / hours_per_day
+            if deduct > 0:
+                deficit_by_key[employee, rule.allocation_type_id] += deduct
+                log_by_source[log_source._name, log_source.id, employee, rule.allocation_type_id] -= deduct
+
+        all_keys = set(excess_by_key) | set(deficit_by_key)
+        if not all_keys:
+            return
+        employees = self.env['hr.employee'].browse({e.id for e, _ in all_keys})
+        types = self.env['hr.work.entry.type'].browse({t.id for _, t in all_keys})
+        alloc_cache = employees._fetch_valid_allocations(types, min(emps_by_date))
+
         alloc_by_key = {}
         alloc_create_vals = []
         alloc_create_keys = []
         for (employee, alloc_type), alloc_days in excess_by_key.items():
-            allocation = self.env['hr.leave.allocation'].sudo().search([
-                ('employee_id', '=', employee.id),
-                ('work_entry_type_id', '=', alloc_type.id),
-                *credit_domain,
-            ], limit=1)
-            if allocation:
-                allocation.number_of_days += alloc_days
-                alloc_by_key[employee, alloc_type] = allocation
+            open_ended = [a for a in alloc_cache.get((employee, alloc_type), []) if not a.date_to]
+            if open_ended:
+                open_ended[0].number_of_days += alloc_days
+                alloc_by_key[employee, alloc_type] = open_ended[0]
             else:
                 alloc_create_vals.append({
                     'employee_id': employee.id,
@@ -160,30 +180,37 @@ class HrTimeRule(models.Model):
             for key, alloc in zip(alloc_create_keys, new_allocs):
                 alloc_by_key[key] = alloc
 
-        deficit_by_key = defaultdict(float)
-        for employee, rule, deficit_hours, source, log_source in deficit_alloc:
-            if not (rule.leave_compensation_rate > 0 and rule.allocation_type_id):
-                continue
-            hours_per_day = employee.resource_calendar_id.hours_per_day or 8.0
-            deduct = deficit_hours * rule.leave_compensation_rate / hours_per_day
-            if deduct > 0:
-                deficit_by_key[employee, rule.allocation_type_id] += deduct
-                log_by_source[log_source._name, log_source.id, employee, rule.allocation_type_id] -= deduct
-
+        deficit_create_vals = []
+        deficit_create_keys = []
         for (employee, alloc_type), deduct in deficit_by_key.items():
-            allocations = self.env['hr.leave.allocation'].sudo().search([
-                ('employee_id', '=', employee.id),
-                ('work_entry_type_id', '=', alloc_type.id),
-                *deduct_domain,
-            ], order='date_to ASC NULLS LAST')
+            allocations = alloc_cache.get((employee, alloc_type), self.env['hr.leave.allocation'])
             remaining = deduct
             for allocation in allocations:
                 if remaining <= 0:
                     break
-                take = min(remaining, allocation.number_of_days)
-                allocation.number_of_days -= take
-                alloc_by_key.setdefault((employee, alloc_type), allocation)
-                remaining -= take
+                take = min(remaining, max(0.0, allocation.number_of_days))
+                if take > 0:
+                    allocation.number_of_days -= take
+                    alloc_by_key.setdefault((employee, alloc_type), allocation)
+                    remaining -= take
+            if remaining > 0 and alloc_type.allows_negative:
+                if allocations:
+                    allocations[-1].number_of_days -= remaining
+                    alloc_by_key.setdefault((employee, alloc_type), allocations[-1])
+                else:
+                    deficit_create_vals.append({
+                        'employee_id': employee.id,
+                        'work_entry_type_id': alloc_type.id,
+                        'number_of_days': -remaining,
+                        'date_to': False,
+                        'state': 'confirm',
+                    })
+                    deficit_create_keys.append((employee, alloc_type))
+        if deficit_create_vals:
+            new_allocs = self.env['hr.leave.allocation'].sudo().with_context(skip_time_rules=True).create(deficit_create_vals)
+            new_allocs.with_context(**approve_ctx).action_approve()
+            for key, alloc in zip(deficit_create_keys, new_allocs):
+                alloc_by_key[key] = alloc
 
         log_vals = []
         for (source_model, source_id, employee, alloc_type), days in log_by_source.items():
@@ -208,16 +235,21 @@ class HrTimeRule(models.Model):
         :return: the filtered ``deficit``
         :rtype: dict
         """
-        today = fields.Date.context_today(self)
-        deduct_domain = [
-            ('state', '=', 'validate'),
-            '|', ('date_to', '=', False), ('date_to', '>=', today),
-        ]
+        # pre-fetch version-aware hours_per_day for all (employee, date) pairs
+        emps_by_date = defaultdict(lambda: self.env['hr.employee'])
+        for employee, by_source in deficit.items():
+            for _source, intervals in by_source.items():
+                for iv_start, iv_end, rule in intervals:
+                    if iv_end > iv_start and rule.leave_compensation_rate > 0 and rule.allocation_type_id:
+                        emps_by_date[iv_start.date()] |= employee
+        hpd_cache = {}
+        for iv_date, employees in emps_by_date.items():
+            for emp_id, hpd in employees._get_hours_per_day_batch(iv_date).items():
+                hpd_cache[emp_id, iv_date] = hpd or 8.0
 
         # first pass: total deduction per (employee, alloc_type)
         total_deduct = defaultdict(float)
         for employee, by_source in deficit.items():
-            hours_per_day = employee.resource_calendar_id.hours_per_day or 8.0
             for source, intervals in by_source.items():
                 by_period = defaultdict(list)
                 for iv_start, iv_end, rule in intervals:
@@ -238,6 +270,7 @@ class HrTimeRule(models.Model):
                         if not (rule.leave_compensation_rate > 0 and rule.allocation_type_id):
                             continue
                         deficit_hours = (iv_end - iv_start).total_seconds() / 3600
+                        hours_per_day = hpd_cache[employee.id, iv_start.date()]
                         deduct = deficit_hours * rule.leave_compensation_rate / hours_per_day
                         if deduct > 0:
                             total_deduct[employee, rule.allocation_type_id] += deduct
@@ -246,14 +279,17 @@ class HrTimeRule(models.Model):
             return deficit
 
         # second pass: check which keys lack sufficient balance
+        employees = self.env['hr.employee'].browse({e.id for e, _ in total_deduct})
+        types = self.env['hr.work.entry.type'].browse({t.id for _, t in total_deduct})
+        alloc_cache = employees._fetch_valid_allocations(types, min(emps_by_date))
         skip_keys = set()
         for (employee, alloc_type), deduct in total_deduct.items():
-            allocations = self.env['hr.leave.allocation'].sudo().search([
-                ('employee_id', '=', employee.id),
-                ('work_entry_type_id', '=', alloc_type.id),
-                *deduct_domain,
-            ])
-            available = sum(allocations.mapped('number_of_days'))
+            allocations = alloc_cache.get((employee, alloc_type), self.env['hr.leave.allocation'])
+            positive_total = sum(a.number_of_days for a in allocations if a.number_of_days > 0)
+            available = positive_total
+            if alloc_type.allows_negative:
+                existing_negative = sum(abs(a.number_of_days) for a in allocations if a.number_of_days < 0)
+                available += max(0, alloc_type.max_allowed_negative - existing_negative)
             if deduct > available:
                 skip_keys.add((employee, alloc_type))
 
