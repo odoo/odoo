@@ -145,6 +145,18 @@ class ResPartner(models.Model):
             if partner.commercial_partner_id == partner and (country_code == 'ES' or (not country_code and partner.country_code == 'ES')):
                 partner.is_company = not partner._l10n_es_freelancer()
 
+    def _compute_available_additional_identifiers_metadata(self):
+        super()._compute_available_additional_identifiers_metadata()
+        if self.env.company.country_code != 'ES':
+            return
+        all_metadata = self._get_all_additional_identifiers_metadata()
+        es_metadata = {key: all_metadata[key] for key in ('ES_PASSPORT', 'ES_FOREIGN_ID', 'ES_RES_CERT', 'ES_OTHER_ID')}
+        for partner in self:
+            partner.available_additional_identifiers_metadata = {
+                **partner.available_additional_identifiers_metadata,
+                **es_metadata,
+            }
+
     @api.model
     def _get_all_additional_identifiers_metadata(self):
         return {
@@ -153,24 +165,24 @@ class ResPartner(models.Model):
                 'sequence': 100,
                 'label': 'Passport',
                 'category': 'EN',
-                'countries': False,
+                'countries': ['ES'],
             },
             'ES_FOREIGN_ID': {
                 'sequence': 110,
                 'label': 'Country of residence ID document',
                 'category': 'EN',
-                'countries': False,
+                'countries': ['ES'],
             },
             'ES_RES_CERT': {
                 'sequence': 120,
                 'label': 'Residence certificate',
                 'category': 'EN',
-                'countries': False,
+                'countries': ['ES'],
             },
             'ES_OTHER_ID': {
                 'sequence': 130,
                 'label': 'Other supporting document',
                 'category': 'EN',
-                'countries': False,
+                'countries': ['ES'],
             },
         }
