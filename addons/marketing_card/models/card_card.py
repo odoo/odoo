@@ -16,9 +16,7 @@ class CardCard(models.Model):
     lang = fields.Selection(string='Language', selection=_lang_get, required=True)
     campaign_id = fields.Many2one('card.campaign', required=True, index=True, ondelete="cascade")
     res_model = fields.Selection(related='campaign_id.res_model')
-    res_id = fields.Many2oneReference('Record ID', model_field='res_model', required=True,
-        ondelete=lambda self, model: 'cascade' if model._name in self._fields['res_model'].get_values(self.env) else 'ignore',
-    )
+    res_id = fields.Many2oneReference('Record ID', model_field='res_model', required=True, ondelete='cascade')
     image = fields.Image()
     requires_sync = fields.Boolean(help="Whether the image needs to be updated to match the campaign template.", default=True)
     share_status = fields.Selection([

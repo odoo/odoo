@@ -95,13 +95,18 @@ class Many2oneReference(Integer):
 
     def _setup(self, model):
         super()._setup(model)
+        model_field = model._fields.get(self.model_field)
+        if model_field is None:
+            raise Exception(f"Field {self} with unknown model_field {self.model_field!r}")
         if not self.related:
             if self.ondelete not in ('restrict', 'set null', 'cascade', 'ignore') and not callable(self.ondelete):
                 raise ValueError(f'Field {self}.ondelete value is invalid: {self.ondelte!r}')
             if self.ondelete == 'set null' and self.required:
                 self.ondelete = 'restrict'
-        if self.model_field not in model._fields:
-            raise Exception(f"Field {self} with unknown model_field {self.model_field!r}")
+            if self.ondelete in ('restrict', 'set null', 'cascade') and model_field.type == 'selection':
+                # if the model_field is a selection, apply the ondelete only on selectable models
+                ondelete_action = self.ondelete
+                self.ondelete = lambda self, model: ondelete_action if model._name in model_field.get_values(self.env) else 'ignore'
 
     def convert_to_cache(self, value, records, validate=True):
         # cache format: id or None
