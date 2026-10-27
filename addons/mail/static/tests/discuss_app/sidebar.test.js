@@ -2,6 +2,7 @@ import {
     click,
     contains,
     defineMailModels,
+    hover,
     insertText,
     listenStoreFetch,
     openDiscuss,
@@ -15,6 +16,7 @@ import {
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test, waitFor } from "@odoo/hoot";
+<<<<<<< 2cee9b56ec47892a262abadf6aad7f04101537d2
 import { animationFrame, press, rightClick } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 import {
@@ -24,6 +26,17 @@ import {
     onRpc,
     serverState,
 } from "@web/../tests/web_test_helpers";
+||||||| 83d8e35a2387c3867b316e6065c5d8b4205ae376
+import { animationFrame, drag, press, queryFirst, rightClick } from "@odoo/hoot-dom";
+import { mockDate } from "@odoo/hoot-mock";
+import { Command, getService, onRpc, serverState } from "@web/../tests/web_test_helpers";
+import { browser } from "@web/core/browser/browser";
+=======
+import { animationFrame, drag, press, queryFirst, rightClick } from "@odoo/hoot-dom";
+import { advanceTime, mockDate } from "@odoo/hoot-mock";
+import { Command, getService, onRpc, serverState } from "@web/../tests/web_test_helpers";
+import { browser } from "@web/core/browser/browser";
+>>>>>>> a0eeb24a8a78713cbf37bdf98a60e6825fc17dc6
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
@@ -556,7 +569,271 @@ test("Update channel data via bus notification", async () => {
     await contains(`${env1.selector} .o-mail-MessagingMenuItem:has(:text('Sales'))`);
     await insertText(`${env1.selector} .o-mail-DiscussContent-threadName`, "test");
     await triggerHotkey("Enter");
+<<<<<<< 2cee9b56ec47892a262abadf6aad7f04101537d2
     await contains(`${env2.selector} .o-mail-MessagingMenuItem:has(:text('Salestest'))`);
+||||||| 83d8e35a2387c3867b316e6065c5d8b4205ae376
+    await contains(`${env2.selector} .o-mail-DiscussSidebarChannel-itemName:text('Salestest')`);
+});
+
+test("sidebar: show loading on initial opening", async () => {
+    // This could load a lot of data (all pinned conversations)
+    const { promise, resolve } = Promise.withResolvers();
+    listenStoreFetch("channels_as_member", {
+        async onRpc() {
+            expect.step("before channels_as_member");
+            await promise;
+        },
+    });
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss();
+    await contains(
+        ".o-mail-DiscussSidebarCategory:contains('Channels') .fa.fa-circle-o-notch.fa-spin"
+    );
+    await contains(".o-mail-DiscussSidebarChannel-itemName:text('General')", { count: 0 });
+    await expect.waitForSteps(["before channels_as_member"]);
+    resolve();
+    await waitStoreFetch("channels_as_member");
+    await contains(
+        ".o-mail-DiscussSidebarCategory:contains('Channels') .fa.fa-circle-o-notch.fa-spin",
+        { count: 0 }
+    );
+    await contains(".o-mail-DiscussSidebarChannel-itemName:text('General')");
+});
+
+test("Can make sidebar smaller", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_type: "channel",
+    });
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebar");
+    const normalWidth = queryFirst(".o-mail-DiscussSidebar").getBoundingClientRect().width;
+    await (
+        await drag(".o-mail-DiscussSidebar-resizablePanelContainer .o_resizable_panel_handle")
+    ).drop(".o-mail-DiscussSidebar-resizablePanelContainer .o_resizable_panel_handle", {
+        position: { x: 0 },
+    });
+    await contains(".o-mail-DiscussSidebar.o-compact");
+    const compactWidth = queryFirst(".o-mail-DiscussSidebar").getBoundingClientRect().width;
+    expect(normalWidth).toBeGreaterThan(compactWidth);
+    expect(normalWidth).toBeGreaterThan(compactWidth / 2, {
+        message: "compact mode is at least twice smaller than nomal mode",
+    });
+});
+
+test("Sidebar compact is locally persistent (saved in local storage)", async () => {
+    const DISCUSS_SIDEBAR_COMPACT_LS = makeRecordFieldLocalId(
+        DiscussApp.localId(),
+        "isSidebarCompact"
+    );
+    browser.localStorage.setItem(DISCUSS_SIDEBAR_COMPACT_LS, toRawValue(true));
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebar.o-compact");
+    await (
+        await drag(".o-mail-DiscussSidebar-resizablePanelContainer .o_resizable_panel_handle")
+    ).drop(".o-mail-DiscussSidebar-resizablePanelContainer .o_resizable_panel_handle", {
+        position: { x: 1000 },
+    });
+    await contains(".o-mail-DiscussSidebar:not(.o-compact)");
+    expect(browser.localStorage.getItem(DISCUSS_SIDEBAR_COMPACT_LS)).toBe(null);
+    await (
+        await drag(".o-mail-DiscussSidebar-resizablePanelContainer .o_resizable_panel_handle")
+    ).drop(".o-mail-DiscussSidebar-resizablePanelContainer .o_resizable_panel_handle", {
+        position: { x: 0 },
+    });
+    await contains(".o-mail-DiscussSidebar.o-compact");
+    expect(browser.localStorage.getItem(DISCUSS_SIDEBAR_COMPACT_LS)).toBe(toRawValue(true));
+});
+
+test("Sidebar compact is crosstab synced", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        create_uid: serverState.userId,
+        name: "General",
+    });
+    const env1 = await start({ asTab: true });
+    const env2 = await start({ asTab: true, waitUntilSubscribe: false });
+    await openDiscuss(channelId, { target: env1 });
+    await openDiscuss(channelId, { target: env2 });
+    await contains(`${env1.selector} .o-mail-DiscussSidebar:not(.o-compact)`);
+    await contains(`${env2.selector} .o-mail-DiscussSidebar:not(.o-compact)`);
+    await (
+        await drag(
+            `.o-mail-Discuss-asTabContainer[data-as-tab-id='${env1.discussAsTabId}']
+            .o-mail-DiscussSidebar-resizablePanelContainer
+            .o_resizable_panel_handle`
+        )
+    ).drop(
+        `.o-mail-Discuss-asTabContainer[data-as-tab-id='${env1.discussAsTabId}']
+        .o-mail-DiscussSidebar-resizablePanelContainer
+        .o_resizable_panel_handle`,
+        { position: { x: 0 } }
+    );
+    await contains(`${env1.selector} .o-mail-DiscussSidebar.o-compact`);
+    await contains(`${env2.selector} .o-mail-DiscussSidebar.o-compact`);
+=======
+    await contains(`${env2.selector} .o-mail-DiscussSidebarChannel-itemName:text('Salestest')`);
+});
+
+test("sidebar: show loading on initial opening", async () => {
+    // This could load a lot of data (all pinned conversations)
+    const { promise, resolve } = Promise.withResolvers();
+    listenStoreFetch("channels_as_member", {
+        async onRpc() {
+            expect.step("before channels_as_member");
+            await promise;
+        },
+    });
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss();
+    await contains(
+        ".o-mail-DiscussSidebarCategory:contains('Channels') .fa.fa-circle-o-notch.fa-spin"
+    );
+    await contains(".o-mail-DiscussSidebarChannel-itemName:text('General')", { count: 0 });
+    await expect.waitForSteps(["before channels_as_member"]);
+    resolve();
+    await waitStoreFetch("channels_as_member");
+    await contains(
+        ".o-mail-DiscussSidebarCategory:contains('Channels') .fa.fa-circle-o-notch.fa-spin",
+        { count: 0 }
+    );
+    await contains(".o-mail-DiscussSidebarChannel-itemName:text('General')");
+});
+
+test("Can make sidebar smaller", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_type: "channel",
+    });
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebar");
+    const normalWidth = queryFirst(".o-mail-DiscussSidebar").getBoundingClientRect().width;
+    await (
+        await drag(".o-mail-DiscussSidebar-resizablePanelContainer .o_resizable_panel_handle")
+    ).drop(".o-mail-DiscussSidebar-resizablePanelContainer .o_resizable_panel_handle", {
+        position: { x: 0 },
+    });
+    await contains(".o-mail-DiscussSidebar.o-compact");
+    const compactWidth = queryFirst(".o-mail-DiscussSidebar").getBoundingClientRect().width;
+    expect(normalWidth).toBeGreaterThan(compactWidth);
+    expect(normalWidth).toBeGreaterThan(compactWidth / 2, {
+        message: "compact mode is at least twice smaller than nomal mode",
+    });
+});
+
+test("Sidebar compact is locally persistent (saved in local storage)", async () => {
+    const DISCUSS_SIDEBAR_COMPACT_LS = makeRecordFieldLocalId(
+        DiscussApp.localId(),
+        "isSidebarCompact"
+    );
+    browser.localStorage.setItem(DISCUSS_SIDEBAR_COMPACT_LS, toRawValue(true));
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebar.o-compact");
+    await (
+        await drag(".o-mail-DiscussSidebar-resizablePanelContainer .o_resizable_panel_handle")
+    ).drop(".o-mail-DiscussSidebar-resizablePanelContainer .o_resizable_panel_handle", {
+        position: { x: 1000 },
+    });
+    await contains(".o-mail-DiscussSidebar:not(.o-compact)");
+    expect(browser.localStorage.getItem(DISCUSS_SIDEBAR_COMPACT_LS)).toBe(null);
+    await (
+        await drag(".o-mail-DiscussSidebar-resizablePanelContainer .o_resizable_panel_handle")
+    ).drop(".o-mail-DiscussSidebar-resizablePanelContainer .o_resizable_panel_handle", {
+        position: { x: 0 },
+    });
+    await contains(".o-mail-DiscussSidebar.o-compact");
+    expect(browser.localStorage.getItem(DISCUSS_SIDEBAR_COMPACT_LS)).toBe(toRawValue(true));
+});
+
+test("Compact sidebar search panel opens on hover and closes when the mouse leaves it", async () => {
+    const DISCUSS_SIDEBAR_COMPACT_LS = makeRecordFieldLocalId(
+        DiscussApp.localId(),
+        "isSidebarCompact"
+    );
+    browser.localStorage.setItem(DISCUSS_SIDEBAR_COMPACT_LS, toRawValue(true));
+    await start();
+    await openDiscuss();
+    await hover(".o-mail-DiscussSearch-inputContainer");
+    await contains(".o-mail-DiscussSidebar-floatingMenu span:text('Search conversations')");
+    await hover(".o-mail-DiscussSidebar-floatingMenu span:text('Search conversations')");
+    await advanceTime(500);
+    await contains(".o-mail-DiscussSidebar-floatingMenu span:text('Search conversations')");
+    await hover(".o-mail-DiscussContent");
+    await contains(".o-mail-DiscussSidebar-floatingMenu", { count: 0 });
+});
+
+test("Compact sidebar search panel closes when clicking search", async () => {
+    const DISCUSS_SIDEBAR_COMPACT_LS = makeRecordFieldLocalId(
+        DiscussApp.localId(),
+        "isSidebarCompact"
+    );
+    browser.localStorage.setItem(DISCUSS_SIDEBAR_COMPACT_LS, toRawValue(true));
+    await start();
+    await openDiscuss();
+    await hover(".o-mail-DiscussSearch-inputContainer");
+    await contains(".o-mail-DiscussSidebar-floatingMenu span:text('Search conversations')");
+    await click(".o-mail-DiscussSearch-inputContainer");
+    await contains(".o_command_palette");
+    await contains(".o-mail-DiscussSidebar-floatingMenu", { count: 0 });
+    await hover(".o_command_palette");
+    await press("Escape");
+    await contains(".o_command_palette", { count: 0 });
+    await hover(".o-mail-DiscussSearch-inputContainer");
+    await contains(".o-mail-DiscussSidebar-floatingMenu span:text('Search conversations')");
+});
+
+test("Compact sidebar search panel closes when the mouse goes to the command palette", async () => {
+    const DISCUSS_SIDEBAR_COMPACT_LS = makeRecordFieldLocalId(
+        DiscussApp.localId(),
+        "isSidebarCompact"
+    );
+    browser.localStorage.setItem(DISCUSS_SIDEBAR_COMPACT_LS, toRawValue(true));
+    await start();
+    await openDiscuss();
+    await hover(".o-mail-DiscussSearch-inputContainer");
+    await contains(".o-mail-DiscussSidebar-floatingMenu span:text('Search conversations')");
+    await press(["control", "k"]);
+    await hover(".o_command_palette");
+    await contains(".o-mail-DiscussSidebar-floatingMenu", { count: 0 });
+});
+
+test("Sidebar compact is crosstab synced", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        create_uid: serverState.userId,
+        name: "General",
+    });
+    const env1 = await start({ asTab: true });
+    const env2 = await start({ asTab: true, waitUntilSubscribe: false });
+    await openDiscuss(channelId, { target: env1 });
+    await openDiscuss(channelId, { target: env2 });
+    await contains(`${env1.selector} .o-mail-DiscussSidebar:not(.o-compact)`);
+    await contains(`${env2.selector} .o-mail-DiscussSidebar:not(.o-compact)`);
+    await (
+        await drag(
+            `.o-mail-Discuss-asTabContainer[data-as-tab-id='${env1.discussAsTabId}']
+            .o-mail-DiscussSidebar-resizablePanelContainer
+            .o_resizable_panel_handle`
+        )
+    ).drop(
+        `.o-mail-Discuss-asTabContainer[data-as-tab-id='${env1.discussAsTabId}']
+        .o-mail-DiscussSidebar-resizablePanelContainer
+        .o_resizable_panel_handle`,
+        { position: { x: 0 } }
+    );
+    await contains(`${env1.selector} .o-mail-DiscussSidebar.o-compact`);
+    await contains(`${env2.selector} .o-mail-DiscussSidebar.o-compact`);
+>>>>>>> a0eeb24a8a78713cbf37bdf98a60e6825fc17dc6
 });
 
 test("Redirect to the thread containing the bookmark and highlight the message", async () => {

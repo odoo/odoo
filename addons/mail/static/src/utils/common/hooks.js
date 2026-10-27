@@ -210,6 +210,75 @@ export function useHover(refs, { onHover, onAway, stateObserver } = {}) {
     return state;
 }
 
+<<<<<<< 2cee9b56ec47892a262abadf6aad7f04101537d2
+||||||| 83d8e35a2387c3867b316e6065c5d8b4205ae376
+export class UseHoverOverlay extends Component {
+    static template = xml`<div t-custom-ref="root"><t t-call-slot="default"/></div>`;
+
+    setup() {
+        super.setup();
+        this.props = props({
+            hover: types.object({
+                _contains: types.array(
+                    types.function([types.instanceOf(EventTarget)], types.boolean())
+                ),
+                addTarget: types.function([types.object({ ref: types.any() })], types.function([])),
+            }),
+        });
+        this.root = useRef("root");
+        const overlayContains = this.env[OVERLAY_SYMBOL].contains;
+        let removeTarget;
+        onMounted(() => {
+            this.props.hover._contains.push(overlayContains);
+            removeTarget = this.props.hover.addTarget({
+                ref: { el: this.root.el.closest(".o-overlay-item") },
+            });
+        });
+        onWillUnmount(() => {
+            const idx = this.props.hover._contains.findIndex((c) => c === overlayContains);
+            if (idx !== -1) {
+                this.props.hover._contains.splice(idx, 1);
+            }
+            removeTarget?.();
+        });
+    }
+}
+
+=======
+export class UseHoverOverlay extends Component {
+    static template = xml`<div t-custom-ref="root"><t t-call-slot="default"/></div>`;
+
+    setup() {
+        super.setup();
+        this.props = props({
+            hover: types.object({
+                _contains: types.array(
+                    types.function([types.instanceOf(EventTarget)], types.boolean())
+                ),
+                addTarget: types.function([types.object({ ref: types.any() })], types.function([])),
+            }),
+        });
+        this.root = useRef("root");
+        const contains = this.env[OVERLAY_SYMBOL].contains;
+        const overlayContains = (target) => !target?.closest(".o_dialog") && contains(target);
+        let removeTarget;
+        onMounted(() => {
+            this.props.hover._contains.push(overlayContains);
+            removeTarget = this.props.hover.addTarget({
+                ref: { el: this.root.el.closest(".o-overlay-item") },
+            });
+        });
+        onWillUnmount(() => {
+            const idx = this.props.hover._contains.findIndex((c) => c === overlayContains);
+            if (idx !== -1) {
+                this.props.hover._contains.splice(idx, 1);
+            }
+            removeTarget?.();
+        });
+    }
+}
+
+>>>>>>> a0eeb24a8a78713cbf37bdf98a60e6825fc17dc6
 /**
  * Hook returning reactive scroll state for a given scrollable element.
  *
