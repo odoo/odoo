@@ -184,13 +184,13 @@ class IapAccount(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         accounts = super().create(vals_list)
-        for account in accounts:
+        db_is_neutralized = self.env['ir.config_parameter'].sudo().get_param('database.is_neutralized')
+        # Internal users may create accounts (e.g. on their first IAP request) but not write on them
+        for account in accounts.sudo():
             if not account.name:
                 account.name = account.service_id.name
-
-        if self.env['ir.config_parameter'].sudo().get_param('database.is_neutralized'):
-            # Disable new accounts on a neutralized database
-            for account in accounts:
+            if db_is_neutralized:
+                # Disable new accounts on a neutralized database
                 account.account_token = f"{account.account_token.split('+')[0]}+disabled"
         return accounts
 
