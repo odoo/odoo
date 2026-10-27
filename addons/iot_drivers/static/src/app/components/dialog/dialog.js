@@ -3,7 +3,15 @@
 const { Component, xml, useListener, signal, useProps, types: t } = owl;
 
 export class Dialog extends Component {
+<<<<<<< f5560c7657133607e9bb7f4a96d8dadd22b89823
     props = useProps({
+||||||| 9f2c735a8f9a783e666ec0d94eb692ce782c450e
+    props = props({
+        slots: t.object(),
+=======
+    props = useProps({
+        slots: t.object(),
+>>>>>>> a4453c9b47973bc206d4cda390dfcc8be134e1ff
         name: t.string(),
         help: t.string().optional(),
         btnName: t.string().optional(),
