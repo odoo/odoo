@@ -130,6 +130,66 @@ class TestAccountPayment(AccountPaymentCommon):
             msg="The refunds count should only consider transactions with operation 'refund'."
         )
 
+    def _create_refund_payment(self, source_tx, amount):
+        return self._create_transaction(
+            'dummy',
+            amount=-amount,
+            reference=f'R-{source_tx.reference}',
+            state='done',
+            operation='refund',
+            source_transaction_id=source_tx.id,
+        )._create_payment()
+
+    def _get_open_amount(self, payment):
+        return abs(sum(payment.move_id.line_ids.filtered(
+            lambda line: line.account_id == payment.destination_account_id
+        ).mapped('amount_residual_currency')))
+
+    def test_refund_is_reconciled_with_unreconciled_source_payment(self):
+        """A refund issued before the source payment is reconciled with an invoice must reduce the
+        open amount of the source payment, so that a later invoice is paid with the net amount."""
+        tx = self._create_transaction('direct', amount=500.0, state='done')
+        source_payment = tx._create_payment()
+
+        refund_payment = self._create_refund_payment(tx, 100.0)
+
+        self.assertTrue(refund_payment.is_reconciled)
+        self.assertAlmostEqual(self._get_open_amount(source_payment), 400.0, places=2)
+
+    def test_full_refund_fully_reconciles_source_payment(self):
+        tx = self._create_transaction('direct', amount=500.0, state='done')
+        source_payment = tx._create_payment()
+
+        refund_payment = self._create_refund_payment(tx, 500.0)
+
+        self.assertTrue(refund_payment.is_reconciled)
+        self.assertTrue(source_payment.is_reconciled)
+
+    def test_refund_is_not_reconciled_with_source_payment_paying_invoice(self):
+        """A refund of a payment that already pays an invoice must stay open, to be matched with a
+        credit note, and must not affect the invoice."""
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner.id,
+            'currency_id': self.currency.id,
+            'invoice_line_ids': [Command.create({
+                'name': 'test line',
+                'price_unit': 500.0,
+                'tax_ids': [Command.clear()],
+            })],
+        })
+        invoice.action_post()
+        tx = self._create_transaction(
+            'direct', amount=500.0, state='done', invoice_ids=[invoice.id]
+        )
+        tx._create_payment()
+        self.assertTrue(invoice.currency_id.is_zero(invoice.amount_residual))
+
+        refund_payment = self._create_refund_payment(tx, 100.0)
+
+        self.assertFalse(refund_payment.is_reconciled)
+        self.assertTrue(invoice.currency_id.is_zero(invoice.amount_residual))
+
     def test_refund_message_author_is_logged_in_user(self):
         """Ensure that the chatter message author is the user processing the refund."""
         self.provider.support_refund = 'full_only'
