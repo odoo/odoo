@@ -1,10 +1,4 @@
-import {
-    confirmAddSnippet,
-    getSnippetStructure,
-    getSnippetView,
-    patchImg,
-    waitForEndOfOperation,
-} from "@html_builder/../tests/helpers";
+import { getSnippetStructure, getSnippetView, patchImg } from "@html_builder/../tests/helpers";
 import { Builder } from "@html_builder/builder";
 import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
 import { Plugin } from "@html_editor/plugin";
@@ -429,16 +423,6 @@ export async function setupWebsiteBuilderWithDummySnippet(content) {
     const snippetContent = getSnippetEl(true);
 
     return { getEditor, getEditableContent, openBuilderSidebar, snippetContent };
-}
-
-export async function insertCategorySnippet({ group, snippet } = {}) {
-    await contains(
-        `.o_hb_snippets_menu #snippet_groups .o_snippet${
-            group ? `[data-snippet-group=${group}]` : ""
-        } .o_snippet_thumbnail .o_snippet_thumbnail_area`
-    ).click();
-    await confirmAddSnippet(snippet);
-    await waitForEndOfOperation();
 }
 
 export async function waitForSnippetDialog() {

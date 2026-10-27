@@ -569,6 +569,16 @@ export async function confirmAddSnippet(snippetName) {
     await animationFrame();
 }
 
+export async function insertCategorySnippet({ group, snippet } = {}) {
+    await contains(
+        `.o_hb_snippets_menu #snippet_groups .o_snippet${
+            group ? `[data-snippet-group=${group}]` : ""
+        } .o_snippet_thumbnail .o_snippet_thumbnail_area`
+    ).click();
+    await confirmAddSnippet(snippet);
+    await waitForEndOfOperation();
+}
+
 export const dummyBase64Img =
     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
 
