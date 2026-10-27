@@ -79,3 +79,14 @@ export function verifyHttpsUrl(link) {
     }
     return url;
 }
+
+export const unslugHtmlDataObject = (repr) => {
+    const match = repr && repr.match(/(.+)\((-?\d+),(.*)\)/);
+    if (!match) {
+        return null;
+    }
+    return {
+        model: match[1],
+        id: match[2] | 0,
+    };
+};
