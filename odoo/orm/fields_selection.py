@@ -149,17 +149,20 @@ class Selection(Field[str | typing.Literal[False]]):
                     if callable(val) or val in ('set null', 'cascade'):
                         continue
                     if val == 'set default':
-                        # XXX raise here and below
-                        assert self.default is not None, (
+                        if self.default is not None:
+                            continue
+                        raise Exception(
                             "%r: ondelete policy of type 'set default' is invalid for this field "
                             "as it does not define a default! Either define one in the base "
                             "field, or change the chosen ondelete policy" % self
                         )
-                    elif val.startswith('set '):
-                        assert val[4:] in values, (
+                    if val.startswith('set '):
+                        if val[4:] in values:
+                            continue
+                        raise Exception((
                             "%s: ondelete policy of type 'set %%' must be either 'set null', "
                             "'set default', or 'set value' where value is a valid selection value."
-                        ) % self
+                        ) % self)
                     else:
                         raise ValueError(
                             "%r: ondelete policy %r for selection value %r is not a valid ondelete"

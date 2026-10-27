@@ -3687,7 +3687,7 @@ class BaseModel(metaclass=MetaModel):
                 records.env[model_name].flush_model([field.name for field in fields])
 
         # collect all the many2one fields to nullify
-        cascade_many2one: list[tuple[Field, BaseModel]] = []
+        nullify_many2one: list[tuple[Field, BaseModel]] = []
         for records in all_deleted_records:
             for field in many2one_targeting.get(records._name, ()):
                 if field.ondelete != 'set null':
@@ -3696,17 +3696,17 @@ class BaseModel(metaclass=MetaModel):
                 if ids := all_deletions.get(corecords._name):
                     corecords -= corecords.browse(ids)
                 if corecords:
-                    cascade_many2one.append((field, corecords))
+                    nullify_many2one.append((field, corecords))
 
         # collect all the many2many fields that contain deleted records
-        cascade_many2many: list[tuple[Field, BaseModel]] = []
+        discard_many2many: list[tuple[Field, BaseModel]] = []
         for records in all_deleted_records:
             for field in many2many_targeting.get(records._name, ()):
                 corecords = records._get_records_linked_by(field)
                 if ids := all_deletions.get(corecords._name):
                     corecords -= corecords.browse(ids)
                 if corecords:
-                    cascade_many2many.append((field, corecords))
+                    discard_many2many.append((field, corecords))
 
         # inside this block, we should not call any ORM method or hooks
         protecting_info = [(records._fields.values(), records) for records in all_deleted_records]
@@ -3716,7 +3716,9 @@ class BaseModel(metaclass=MetaModel):
             for records in all_deleted_records:
                 records.modified(records._fields, before=True)
             # since we drop records from many2one/many2many fields, calling modify() once is enough
-            for field, records in cascade_many2one + cascade_many2many:
+            for field, records in nullify_many2one:
+                records.modified([field.name], before=True)
+            for field, records in discard_many2many:
                 records.modified([field.name], before=True)
 
             # delete the records that must be deleted from database
@@ -3735,14 +3737,14 @@ class BaseModel(metaclass=MetaModel):
                         records.env._field_dirty[field].difference_update(records._ids)
 
             # update the cache of the many2one fields that are set to NULL in database
-            for field, records in cascade_many2one:
+            for field, records in nullify_many2one:
                 field._update_cache(records, None, dirty=False)
                 # update parent_path if necessary
                 if records._parent_store and field.name == records._parent_name:
                     records._parent_store_update()
 
             # invalidate many2many fields that contained deleted records
-            for field, records in cascade_many2many:
+            for field, records in discard_many2many:
                 records.invalidate_recordset([field.name], flush=False)
 
             # invalidate the ORM cache if necessary
