@@ -343,6 +343,36 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         self.assertFalse(tx.invoice_ids)
         self.assertFalse(self.sale_order.invoice_ids)
 
+    def test_mark_as_paid_pays_the_order_invoice(self):
+        self.sale_order.action_confirm()
+        self.sale_order._force_lines_to_invoice_policy_order()
+        invoice = self.sale_order._create_invoices()
+        invoice.action_post()
+
+        action = self.sale_order.action_register_payment()
+        wizard = self.env[action["res_model"]].with_context(action["context"]).create({})
+        wizard.action_create_payments()
+
+        self.assertIn(invoice.payment_state, ("paid", "in_payment"))
+
+    def test_mark_as_paid_does_not_redirect_to_the_payment(self):
+        self.sale_order.action_confirm()
+        self.sale_order._force_lines_to_invoice_policy_order()
+        self.sale_order._create_invoices().action_post()
+
+        action = self.sale_order.action_register_payment()
+        wizard = self.env[action["res_model"]].with_context(action["context"]).create({})
+
+        self.assertIs(wizard.action_create_payments(), True)
+
+    def test_mark_as_paid_without_posted_invoice_raises(self):
+        self.sale_order.action_confirm()
+        self.sale_order._force_lines_to_invoice_policy_order()
+        self.sale_order._create_invoices()  # Draft invoice
+
+        with self.assertRaises(UserError):
+            self.sale_order.action_register_payment()
+
     def test_payment_does_not_confirm_order_pending_signature(self):
         self.sale_order.require_signature = True
         tx = self._create_transaction(
