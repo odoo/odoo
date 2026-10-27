@@ -20,9 +20,11 @@
         <Dropdown t-if="this.store.discuss.isSidebarCompact and !this.ui.isSmall" state="this.searchFloating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu mx-2 my-0 min-w-0 ' + this.store.discussDropdownMenuClass(this)" manual="true">
             <t t-call="mail.DiscussSearch.inputContainer"/>
             <t t-set-slot="content">
-                <div class="px-2" t-custom-ref="search-floating">
-                    <span class="text-muted user-select-none">Search conversations</span>
-                </div>
+                <UseHoverOverlay hover="this.searchHover">
+                    <div class="px-2">
+                        <span class="text-muted user-select-none">Search conversations</span>
+                    </div>
+                </UseHoverOverlay>
             </t>
         </Dropdown>
         <t t-else="" t-call="mail.DiscussSearch.inputContainer"/>
@@ -30,7 +32,7 @@
 </t>
 
 <t t-name="mail.DiscussSearch.inputContainer">
-    <div class="o-mail-DiscussSearch-inputContainer border border-secondary position-relative d-flex align-items-center justify-content-center gap-1 flex-grow-1 flex-basis-0 min-w-0 rounded-2" t-on-click="this.onClickSearchConversations">
+    <div class="o-mail-DiscussSearch-inputContainer border border-secondary position-relative d-flex align-items-center justify-content-center gap-1 flex-grow-1 flex-basis-0 min-w-0 rounded-2" t-on-click="this.onClickSearchConversations" t-custom-ref="search-btn">
         <div class="d-flex w-100 align-items-center justify-content-center gap-1" t-att-class="{ 'p-2': this.store.discuss.isSidebarCompact and !this.ui.isSmall }">
             <i class="oi oi-search opacity-50"/>
             <input t-if="this.ui.isSmall or !this.store.discuss.isSidebarCompact" class="form-control rounded-2 border-0 bg-inherit px-0 w-auto text-center" t-att-class="{ 'lh-1': !this.ui.isSmall }" disabled="true" placeholder="Search" size="8" tabindex="0"/>
