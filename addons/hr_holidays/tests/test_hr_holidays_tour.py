@@ -28,9 +28,9 @@ class TestHrHolidaysTour(HttpCase):
         ])
         leaves_on_freeze_date.sudo().unlink()
 
-        HrWorkEntryType = self.env['hr.work.entry.type'].with_user(admin_user)
+        HrTimeType = self.env['hr.time.type'].with_user(admin_user)
 
-        holidays_type_1 = HrWorkEntryType.create({
+        holidays_type_1 = HrTimeType.create({
             'name': 'NotLimitedHR',
             'code': 'NotLimitedHR',
             'requires_allocation': False,
@@ -43,7 +43,7 @@ class TestHrHolidaysTour(HttpCase):
         self.env['hr.leave.allocation'].create({
             'name': 'Expired Allocation',
             'employee_id': admin_employee.id,
-            'work_entry_type_id': holidays_type_1.id,
+            'time_type_id': holidays_type_1.id,
             'number_of_days': 1,
             'state': 'confirm',
             'date_from': '2022-01-01',

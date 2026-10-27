@@ -94,17 +94,17 @@ class ResourceCalendarLeaves(models.Model):
         leaves.sudo().write({
             'state': 'confirm',
         })
-        sick_time_status = self.env['hr.work.entry.type'].search([('code', '=', '013.00')])
+        sick_time_status = self.env['hr.time.type'].search([('code', '=', '013.00')])
         leaves_to_recreate = self.env['hr.leave']
         for previous_duration, leave, state in zip(previous_durations, leaves, previous_states):
             duration_difference = previous_duration - leave.number_of_days
             message = False
-            if duration_difference > 0 and leave.work_entry_type_id.requires_allocation:
+            if duration_difference > 0 and leave.time_type_id.requires_allocation:
                 message = self.env._(
                     "Due to a change in global time offs, you have been granted %s day(s) back.",
                     duration_difference)
             if leave.number_of_days > previous_duration\
-                    and (not sick_time_status or leave.work_entry_type_id not in sick_time_status):
+                    and (not sick_time_status or leave.time_type_id not in sick_time_status):
                 message = self.env._(
                     "Due to a change in global time offs, %s extra day(s) have been taken from your allocation. Please review this leave if you need it to be changed.",
                     (-1 * duration_difference))
@@ -206,7 +206,7 @@ class ResourceCalendarLeaves(models.Model):
                 companies_without_country |= company
                 continue
 
-            if not self.sudo().env['hr.work.entry.type'].search([('code', '=', '006.00'), ('country_code', '!=', company.country_code)], limit=1):
+            if not self.sudo().env['hr.time.type'].search([('code', '=', '006.00'), ('country_code', '!=', company.country_code)], limit=1):
                 continue
             try:
                 csv_file_path = file_path(f"hr_holidays/data/public_holidays/public_holidays_{company.country_code.lower()}.csv")

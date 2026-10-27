@@ -15,8 +15,8 @@ export class HrLeave extends models.Model {
     });
     date_from = fields.Datetime();
     date_to = fields.Datetime();
-    work_entry_type_id = fields.Many2one({
-        relation: "hr.work.entry.type",
+    time_type_id = fields.Many2one({
+        relation: "hr.time.type",
     });
     state = fields.Selection({
         type: "selection",
@@ -30,7 +30,7 @@ export class HrLeave extends models.Model {
     });
     number_of_days = fields.Integer();
     number_of_hours = fields.Integer();
-    work_entry_type_request_unit = fields.Selection({
+    time_type_request_unit = fields.Selection({
         string: "Leave Type Request Unit",
         type: "selection",
         selection: [

@@ -34,7 +34,7 @@ class TestFrenchWorkEntries(TransactionCase):
         })
         cls.employee_contract = cls.employee.version_id
 
-        cls.time_off_type = cls.env['hr.work.entry.type'].create({
+        cls.time_off_type = cls.env['hr.time.type'].create({
             'name': 'Time Off',
             'code': 'Time Off',
             'requires_allocation': False,
@@ -43,7 +43,7 @@ class TestFrenchWorkEntries(TransactionCase):
             'count_as': 'absence',
         })
         cls.company.write({
-            'l10n_fr_reference_work_entry_type': cls.time_off_type.id,
+            'l10n_fr_reference_time_type': cls.time_off_type.id,
         })
 
     def test_fill_gaps(self):
@@ -79,7 +79,7 @@ class TestFrenchWorkEntries(TransactionCase):
 
         leave = self.env['hr.leave'].create({
             'name': 'Test',
-            'work_entry_type_id': self.time_off_type.id,
+            'time_type_id': self.time_off_type.id,
             'employee_id': self.employee.id,
             'request_date_from': '2021-09-06',
             'request_date_to': '2021-09-08',  # This should fill the gap up to the 10th

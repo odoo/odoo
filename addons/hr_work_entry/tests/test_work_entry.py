@@ -87,7 +87,7 @@ class TestWorkEntry(TestWorkEntryBase):
             'date_from': datetime(2023, 8, 2, 0, 0, 0).replace(tzinfo=ZoneInfo('Asia/Hong_Kong')).astimezone(UTC).replace(tzinfo=None),
             'date_to': datetime(2023, 8, 2, 23, 59, 59).replace(tzinfo=ZoneInfo('Asia/Hong_Kong')).astimezone(UTC).replace(tzinfo=None),
             'calendar_id': hk_resource_calendar_id.id,
-            'work_entry_type_id': self.work_entry_type_leave.id,
+            'time_type_id': self.time_type_leave.id,
         })
         self.env.company.resource_calendar_id = hk_resource_calendar_id
         work_entries_vals = hk_employee.generate_work_entries(datetime(2023, 8, 1), datetime(2023, 8, 2))
@@ -110,7 +110,7 @@ class TestWorkEntry(TestWorkEntryBase):
         })
         calendar.attendance_ids -= calendar.attendance_ids.filtered(lambda attendance: attendance.dayofweek == '0')
 
-        entry_type_1, entry_type_2 = self.env['hr.work.entry.type'].create([
+        entry_type_1, entry_type_2 = self.env['hr.time.type'].create([
             {'name': 'Work type 1', 'count_as': 'working_time', 'code': 'ENTRY_TYPE1'},
             {'name': 'Work type 2', 'count_as': 'working_time', 'code': 'ENTRY_TYPE2'},
         ])
@@ -121,35 +121,35 @@ class TestWorkEntry(TestWorkEntryBase):
                 'dayofweek': '0',
                 'hour_from': 8,
                 'hour_to': 11,
-                'work_entry_type_id': entry_type_1.id,
+                'time_type_id': entry_type_1.id,
             },
             {
                 'calendar_id': calendar.id,
                 'dayofweek': '0',
                 'hour_from': 11,
                 'hour_to': 12,
-                'work_entry_type_id': entry_type_1.id,
+                'time_type_id': entry_type_1.id,
             },
             {
                 'calendar_id': calendar.id,
                 'dayofweek': '0',
                 'hour_from': 13,
                 'hour_to': 16,
-                'work_entry_type_id': entry_type_1.id,
+                'time_type_id': entry_type_1.id,
             },
             {
                 'calendar_id': calendar.id,
                 'dayofweek': '0',
                 'hour_from': 16,
                 'hour_to': 17,
-                'work_entry_type_id': entry_type_2.id,
+                'time_type_id': entry_type_2.id,
             },
         ])
 
         work_entries_vals = employee.generate_work_entries(datetime(2024, 9, 2), datetime(2024, 9, 2))
-        work_entry_types = [entry['work_entry_type_id'] for entry in work_entries_vals]
+        time_types = [entry['time_type_id'] for entry in work_entries_vals]
         self.assertEqual(len(work_entries_vals), 2, 'A shift should be created for each pair of attendance by day')
-        self.assertEqual((work_entry_types[0] + work_entry_types[1]), (entry_type_1 + entry_type_2))
+        self.assertEqual((time_types[0] + time_types[1]), (entry_type_1 + entry_type_2))
 
     def test_work_entry_duration(self):
         """ Test the duration of a work entry is rounded to the nearest minute and correctly calculated """
@@ -159,7 +159,7 @@ class TestWorkEntry(TestWorkEntryBase):
             'version_id': self.richard_emp.version_id,
             'date_start': datetime(2023, 10, 1, 9, 0, 0),
             'date_stop': datetime(2023, 10, 1, 9, 59, 59, 999999),
-            'work_entry_type_id': self.work_entry_type,
+            'time_type_id': self.time_type,
         }]
         vals_list = self.env['hr.version']._generate_work_entries_postprocess(vals_list)
         self.assertEqual(vals_list[0]['duration'], 1, "The duration should be 1 hour")
@@ -480,7 +480,7 @@ class TestWorkEntry(TestWorkEntryBase):
     def test_attendance_display_name_mixed_time_types(self):
         """
         Test that computing display_name for a batch of attendances with and without
-        work_entry_type_id does not overwrite the custom names with the default 'A'.
+        time_type_id does not overwrite the custom names with the default 'A'.
         """
         calendar = self.env['resource.calendar'].create({
             'name': 'Variable Calendar',
@@ -488,7 +488,7 @@ class TestWorkEntry(TestWorkEntryBase):
             'attendance_ids': False,
         })
 
-        wfh_type = self.env.ref('hr_work_entry.generic_work_entry_type_home_working')
+        wfh_type = self.env.ref('hr_work_entry.generic_time_type_home_working')
 
         attendances = self.env['resource.calendar.attendance'].create([
             {
@@ -497,7 +497,7 @@ class TestWorkEntry(TestWorkEntryBase):
                 'duration_based': True,
                 'recurrency': False,
                 'date': date(2026, 10, 5),
-                'work_entry_type_id': wfh_type.id,
+                'time_type_id': wfh_type.id,
             },
             {
                 'calendar_id': calendar.id,
@@ -505,7 +505,7 @@ class TestWorkEntry(TestWorkEntryBase):
                 'duration_based': True,
                 'recurrency': False,
                 'date': date(2026, 10, 6),
-                'work_entry_type_id': False,  # No Time Type
+                'time_type_id': False,  # No Time Type
             }
         ])
 

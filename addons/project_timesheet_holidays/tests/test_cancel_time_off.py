@@ -31,7 +31,7 @@ class TestCancelTimeOff(TransactionCase):
             'resource_calendar_id': cls.company.resource_calendar_id.id,
             'company_id': cls.company.id,
         })
-        cls.generic_time_off_type = cls.env['hr.work.entry.type'].create({
+        cls.generic_time_off_type = cls.env['hr.time.type'].create({
             'name': 'Generic Time Off',
             'code': 'Generic Time Off',
             'requires_allocation': False,
@@ -54,7 +54,7 @@ class TestCancelTimeOff(TransactionCase):
         """
         time_off = self.env['hr.leave'].create({
             'name': 'Test Time Off',
-            'work_entry_type_id': self.generic_time_off_type.id,
+            'time_type_id': self.generic_time_off_type.id,
             'employee_id': self.employee.id,
             'date_from': '2020-01-07 08:00:00',
             'date_to': '2020-01-09 17:00:00',

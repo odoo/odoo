@@ -51,7 +51,7 @@ export class TimeOffCalendarModel extends CalendarModel {
                 result.title = [employee, result.title].join(" ");
             }
         }
-        if (rawRecord.work_entry_type_request_unit === "half_day") {
+        if (rawRecord.time_type_request_unit === "half_day") {
             result.requestDateFromPeriod = rawRecord.request_date_from_period;
             result.requestDateToPeriod = rawRecord.request_date_to_period;
         }
@@ -74,7 +74,7 @@ export class TimeOffCalendarModel extends CalendarModel {
             return str.length > 10 ? deserializeDateTime(str) : deserializeDate(str);
         }
         if (["week", "day"].includes(this.scale)) {
-            context["default_work_entry_type_request_unit"] = "hour";
+            context["default_time_type_request_unit"] = "hour";
             const hour_from = deserialize(context["default_request_date_hour_from"] ?? this.date);
             const hour_to = deserialize(context["default_request_date_hour_to"] ?? this.date);
             context["default_request_hour_from"] = hour_from.hour + hour_from.minute / 60;
@@ -208,7 +208,7 @@ export class TimeOffCalendarModel extends CalendarModel {
         const fieldNamesToAdd =
             resModel === "hr.leave"
                 ? [
-                      "work_entry_type_request_unit",
+                      "time_type_request_unit",
                       "request_date_from_period",
                       "request_date_to_period",
                       "state",

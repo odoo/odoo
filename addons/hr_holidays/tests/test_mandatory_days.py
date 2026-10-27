@@ -49,7 +49,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             'parent_id': cls.manager_emp.id,
         })
 
-        cls.work_entry_type = cls.env['hr.work.entry.type'].create({
+        cls.time_type = cls.env['hr.time.type'].create({
             'name': 'Unlimited',
             'code': 'Unlimited',
             'leave_validation_type': 'hr',
@@ -82,7 +82,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
         # An employee can request time off outside mandatory days
         self.env['hr.leave'].with_user(self.employee_user.id).create({
             'name': 'coucou',
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'employee_id': self.employee_emp.id,
             'request_date_from': datetime(2021, 11, 3),
             'request_date_to': datetime(2021, 11, 3),
@@ -92,7 +92,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
         with self.assertRaises(ValidationError):
             self.env['hr.leave'].with_user(self.employee_user.id).create({
                 'name': 'coucou',
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'employee_id': self.employee_emp.id,
                 'request_date_from': datetime(2021, 11, 3),
                 'request_date_to': datetime(2021, 11, 17),
@@ -101,7 +101,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
         with self.assertRaises(ValidationError):
             self.env['hr.leave'].with_user(self.employee_user.id).create({
                 'name': 'coucou',
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'employee_id': self.employee_emp.id,
                 'request_date_from': datetime(2021, 11, 9),
                 'request_date_to': datetime(2021, 11, 9),
@@ -110,7 +110,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
         # ... but is allowed for a Time Off Officer
         self.env['hr.leave'].with_user(self.manager_user.id).create({
             'name': 'coucou',
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'employee_id': self.employee_emp.id,
             'request_date_from': datetime(2021, 11, 2),
             'request_date_to': datetime(2021, 11, 2),
@@ -129,14 +129,14 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             self.assertEqual(color, mandatory_days[day])
 
         with Form(self.env['hr.leave'].with_user(self.manager_user).with_context(default_employee_id=self.employee_emp.id)) as leave_form1:
-            leave_form1.work_entry_type_id = self.work_entry_type
+            leave_form1.time_type_id = self.time_type
             leave_form1.request_date_from = datetime(2021, 11, 1)
             leave_form1.request_date_to = datetime(2021, 11, 1)
         leave1 = leave_form1.save()     # need to be saved to have access to record
         self.assertFalse(leave1.has_mandatory_day)
 
         with Form(self.env['hr.leave'].with_user(self.manager_user).with_context(default_employee_id=self.employee_emp.id)) as leave_form2:
-            leave_form2.work_entry_type_id = self.work_entry_type
+            leave_form2.time_type_id = self.time_type
             leave_form2.request_date_from = datetime(2021, 11, 2)
             leave_form2.request_date_to = datetime(2021, 11, 5)
         leave2 = leave_form2.save()     # need to be saved to have access to record
@@ -197,7 +197,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
         with self.assertRaises(ValidationError):
             self.env['hr.leave'].with_user(self.employee_user.id).create({
                 'name': 'have been given the black spot',
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'employee_id': self.employee_emp.id,
                 'request_date_from': datetime(2021, 11, 3),
                 'request_date_to': datetime(2021, 11, 3),
@@ -205,14 +205,14 @@ class TestHrLeaveMandatoryDays(TransactionCase):
         with self.assertRaises(ValidationError):
             self.env['hr.leave'].with_user(self.employee_user.id).create({
                 'name': 'have been given the black spot',
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'employee_id': self.employee_emp.id,
                 'request_date_from': datetime(2021, 11, 4),
                 'request_date_to': datetime(2021, 11, 4),
             })
         self.env['hr.leave'].with_user(self.employee_user.id).create({
             'name': 'have been given the black spot',
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'employee_id': self.employee_emp.id,
             'request_date_from': datetime(2021, 11, 5),
             'request_date_to': datetime(2021, 11, 5),
@@ -297,7 +297,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
         with self.assertRaises(ValidationError):
             self.env['hr.leave'].with_user(self.employee_user.id).create({
                 'name': 'Vacation during Production Deadline',
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'employee_id': self.employee_emp.id,
                 'request_date_from': datetime(2021, 11, 3),
                 'request_date_to': datetime(2021, 11, 3),
@@ -305,7 +305,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
         with self.assertRaises(ValidationError):
             self.env['hr.leave'].with_user(self.employee_user.id).create({
                 'name': 'Vacation during Post-Production Deadline',
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'employee_id': self.employee_emp.id,
                 'request_date_from': datetime(2021, 11, 4),
                 'request_date_to': datetime(2021, 11, 4),
@@ -313,14 +313,14 @@ class TestHrLeaveMandatoryDays(TransactionCase):
         with self.assertRaises(ValidationError):
             self.env['hr.leave'].with_user(self.employee_user.id).create({
                 'name': 'Holiday During Team General Meating',
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'employee_id': self.employee_emp.id,
                 'request_date_from': datetime(2021, 11, 6),
                 'request_date_to': datetime(2021, 11, 6),
             })
         self.env['hr.leave'].with_user(self.employee_user.id).create({
             'name': 'Vacation during General Meeting',
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'employee_id': self.employee_emp.id,
             'request_date_from': datetime(2021, 11, 5),
             'request_date_to': datetime(2021, 11, 5),
@@ -388,14 +388,14 @@ class TestHrLeaveMandatoryDays(TransactionCase):
         # Check that has_mandatory_day is computed correctly for multiple leaves
         leave_1, leave_2 = self.env['hr.leave'].with_user(self.manager_user.id).with_context(leave_fast_create=True).create([{
             'name': 'have been given the black spot',
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'employee_id': self.employee_emp.id,
             'request_date_from': datetime(2021, 11, 3),
             'request_date_to': datetime(2021, 11, 4),
         },
         {
             'name': 'have been given the gray spot',
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'employee_id': employee_emp_2.id,
             'request_date_from': datetime(2021, 11, 6),
             'request_date_to': datetime(2021, 11, 6),
@@ -410,7 +410,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             Case: Test case for once a leave is approved, and mandatory days are added to the leave period afterward,
             Expectation: The leave requester must be able to cancel the leave unconditionally,
         """
-        work_entry_type = self.env['hr.work.entry.type'].create({
+        time_type = self.env['hr.time.type'].create({
             'name': 'Sick Time Off',
             'code': 'Sick Time Off',
             'count_as': 'absence',
@@ -420,7 +420,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
         employee_leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'name': 'Holiday 5 days',
             'employee_id': self.employee_emp.id,
-            'work_entry_type_id': work_entry_type.id,
+            'time_type_id': time_type.id,
             'request_date_from': datetime(2025, 5, 12),
             'request_date_to': datetime(2025, 5, 16),
         })
@@ -445,7 +445,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             Case: Test case for once a leave is approved, and mandatory days are added to the leave period afterward,
             Expectation: User with the "refuse" access rights must be able to refuse the leave.
         """
-        work_entry_type = self.env['hr.work.entry.type'].create({
+        time_type = self.env['hr.time.type'].create({
             'name': 'Sick Time Off',
             'code': 'Sick Time Off',
             'count_as': 'absence',
@@ -455,7 +455,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
         employee_leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'name': 'Holiday 4 days',
             'employee_id': self.employee_emp.id,
-            'work_entry_type_id': work_entry_type.id,
+            'time_type_id': time_type.id,
             'request_date_from': datetime(2025, 5, 20),
             'request_date_to': datetime(2025, 5, 23),
         })
@@ -476,7 +476,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             Case1: Test case for when a leave is raised, and mandatory days are added to the leave period afterward.
             Expectation: The timeoff officer(HR) should be able to approve/refuse the request.
         """
-        work_entry_type = self.env['hr.work.entry.type'].create({
+        time_type = self.env['hr.time.type'].create({
             'name': 'Sick Time Off',
             'code': 'Sick Time Off',
             'count_as': 'absence',
@@ -486,7 +486,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
         employee_leave = self.env['hr.leave'].create({
             'name': 'Holiday 5 days',
             'employee_id': self.employee_emp.id,
-            'work_entry_type_id': work_entry_type.id,
+            'time_type_id': time_type.id,
             'request_date_from': datetime(2025, 5, 12),
             'request_date_to': datetime(2025, 5, 16),
         })

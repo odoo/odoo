@@ -23,7 +23,7 @@ class HrLeaveEmployeeReport(models.Model):
     number_of_days = fields.Float(compute='_compute_leave_duration', readonly=True, store=True)
     number_of_hours = fields.Float(compute='_compute_leave_duration', readonly=True, store=True)
     description = fields.Char()
-    work_entry_type_id = fields.Many2one("hr.work.entry.type", string="Time Type")
+    time_type_id = fields.Many2one("hr.time.type", string="Time Type")
     state = fields.Selection([
         ('confirm', 'To Approve'),
         ('refuse', 'Refused'),
@@ -31,7 +31,7 @@ class HrLeaveEmployeeReport(models.Model):
         ('validate', 'Approved'),
         ('cancel', 'Cancelled'),
     ])
-    color = fields.Integer(string="Color", related='work_entry_type_id.color')
+    color = fields.Integer(string="Color", related='time_type_id.color')
 
     @property
     def _table_sql(self):
@@ -47,7 +47,7 @@ class HrLeaveEmployeeReport(models.Model):
                 SELECT
                     ROW_NUMBER() OVER(ORDER BY employee_id, days_included_in_request) AS id,
                     id AS leave_id, employee_id, date_from, date_to,
-                    work_entry_type_id, state, private_name AS description,
+                    time_type_id, state, private_name AS description,
                     DATE_TRUNC('day', days_included_in_request) AS day_start
                 FROM hr_leave hl
                 CROSS JOIN LATERAL GENERATE_SERIES(
@@ -59,7 +59,7 @@ class HrLeaveEmployeeReport(models.Model):
             )
             SELECT
                 id, leave_id, employee_id,
-                work_entry_type_id, state, description,
+                time_type_id, state, description,
                 GREATEST(date_from, day_start) AS working_schedule_aligned_date_from,
                 LEAST(date_to, (day_start + INTERVAL '1 day' - INTERVAL '1 second')) AS day_aligned_date_to
             FROM leave_data;
@@ -83,7 +83,7 @@ class HrLeaveEmployeeReport(models.Model):
         leaves = self.env['hr.leave'].browse(leave_ids)
         leave_info_by_id = {
             leave.id: {
-                'work_entry_type_id': leave.work_entry_type_id.id,
+                'time_type_id': leave.time_type_id.id,
                 'resource_calendar_id': leave.resource_calendar_id.id,
             }
             for leave in leaves
@@ -115,7 +115,7 @@ class HrLeaveEmployeeReport(models.Model):
                     NULL::REAL as number_of_days,
                     NULL::REAL as number_of_hours,
                     NULL::TEXT as description,
-                    NULL::INTEGER as work_entry_type_id,
+                    NULL::INTEGER as time_type_id,
                     NULL::VARCHAR as state,
                     NULL::INTEGER as color
                 WHERE FALSE

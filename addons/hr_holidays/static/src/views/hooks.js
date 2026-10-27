@@ -61,7 +61,7 @@ export function useNewAllocationRequest() {
             context["default_employee_id"] = employeeId;
         }
         if (holidayStatusId) {
-            context["default_work_entry_type_id"] = holidayStatusId;
+            context["default_time_type_id"] = holidayStatusId;
         }
         addDialog(AllocationFormViewDialog, {
             resModel: "hr.leave.allocation",

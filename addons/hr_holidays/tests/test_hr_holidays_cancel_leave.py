@@ -19,7 +19,7 @@ class TestHrHolidaysCancelLeave(TestHrHolidaysCommon):
         leave_start_date = date(2018, 2, 5)  # this is monday
         leave_end_date = leave_start_date + relativedelta(days=2)
 
-        cls.hr_work_entry_type = cls.env['hr.work.entry.type'].with_user(cls.user_hrmanager).create({
+        cls.hr_time_type = cls.env['hr.time.type'].with_user(cls.user_hrmanager).create({
             'name': 'Time Off Type',
             'code': 'Time Off Type',
             'requires_allocation': False,
@@ -29,7 +29,7 @@ class TestHrHolidaysCancelLeave(TestHrHolidaysCommon):
         cls.holiday = cls.env['hr.leave'].with_user(cls.user_employee).create({
             'name': 'Time Off 1',
             'employee_id': cls.employee_emp.id,
-            'work_entry_type_id': cls.hr_work_entry_type.id,
+            'time_type_id': cls.hr_time_type.id,
             'request_date_from': leave_start_date,
             'request_date_to': leave_end_date,
         })

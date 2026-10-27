@@ -19,7 +19,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
     def test_00_leave_request_flow_unlimited(self):
         """ Testing leave request flow: unlimited type of leave request """
         Requests = self.env['hr.leave']
-        HolidaysStatus = self.env['hr.work.entry.type']
+        HolidaysStatus = self.env['hr.time.type']
 
         # HrManager creates some holiday statuses
         HolidayStatusManagerGroup = HolidaysStatus.with_user(self.user_hrmanager_id)
@@ -54,7 +54,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         hol1_employee_group = HolidaysEmployeeGroup.create({
             'name': 'Hol11',
             'employee_id': self.employee_emp_id,
-            'work_entry_type_id': self.holidays_status_hr.id,
+            'time_type_id': self.holidays_status_hr.id,
             'request_date_from': leave_date,
             'request_date_to': leave_date,
         })
@@ -71,7 +71,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         hol12_employee_group = HolidaysEmployeeGroup.create({
             'name': 'Hol12',
             'employee_id': self.employee_emp_id,
-            'work_entry_type_id': self.holidays_status_manager.id,
+            'time_type_id': self.holidays_status_manager.id,
             'request_date_from': leave_date,
             'request_date_to': leave_date,
         })
@@ -89,11 +89,11 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         with freeze_time('2022-01-15'):
             Requests = self.env['hr.leave']
             Allocations = self.env['hr.leave.allocation']
-            HolidaysStatus = self.env['hr.work.entry.type']
+            HolidaysStatus = self.env['hr.time.type']
 
             self.admin_employee.tz = "Europe/Brussels"
 
-            work_entry_type_paid_time_off = self.env['hr.work.entry.type'].create({
+            time_type_paid_time_off = self.env['hr.time.type'].create({
                 'name': 'Paid Time Off',
                 'code': 'Paid Time Off',
                 'requires_allocation': True,
@@ -107,14 +107,14 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             self.env['hr.leave.allocation'].create([
                 {
                     'name': 'Paid Time off for David',
-                    'work_entry_type_id': work_entry_type_paid_time_off.id,
+                    'time_type_id': time_type_paid_time_off.id,
                     'number_of_days': 20,
                     'employee_id': self.employee_emp_id,
                     'state': 'confirm',
                     'date_from': time.strftime('%Y-%m-01'),
                 }, {
                     'name': 'Paid Time off for Admin',
-                    'work_entry_type_id': work_entry_type_paid_time_off.id,
+                    'time_type_id': time_type_paid_time_off.id,
                     'number_of_days': 20,
                     'employee_id': self.admin_employee.id,
                     'state': 'confirm',
@@ -122,8 +122,8 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                 }
             ])
 
-            def _check_holidays_status(work_entry_type, employee, ml, lt, rl, vrl):
-                result = work_entry_type.get_allocation_data(employee)[employee][0][1]
+            def _check_holidays_status(time_type, employee, ml, lt, rl, vrl):
+                result = time_type.get_allocation_data(employee)[employee][0][1]
                 self.assertEqual(result['max_leaves'], ml,
                                 'hr_holidays: wrong type days computation')
                 self.assertEqual(result['leaves_taken'], lt,
@@ -159,7 +159,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             Allocations.with_user(self.user_hruser_id).create({
                 'name': 'Days for limited category',
                 'employee_id': self.employee_emp_id,
-                'work_entry_type_id': self.holidays_status_limited.id,
+                'time_type_id': self.holidays_status_limited.id,
                 'number_of_days': 2,
                 'state': 'confirm',
                 'date_from': time.strftime('%Y-%m-01'),
@@ -174,7 +174,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             hol2 = HolidaysEmployeeGroup.create({
                 'name': 'Hol22',
                 'employee_id': self.employee_emp_id,
-                'work_entry_type_id': self.holidays_status_limited.id,
+                'time_type_id': self.holidays_status_limited.id,
                 'request_date_from': (date.today() + relativedelta(days=2)),
                 'request_date_to': (date.today() + relativedelta(days=2)),
             })
@@ -206,11 +206,11 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
 
             employee_id = self.admin_employee.id
             # cl can be of maximum 20 days for admin_emp
-            hol3_status = work_entry_type_paid_time_off.with_context(employee_id=employee_id)
+            hol3_status = time_type_paid_time_off.with_context(employee_id=employee_id)
             # I assign the dates in the holiday request for 1 day
             hol3 = Requests.create({
                 'name': 'Sick Time Off',
-                'work_entry_type_id': hol3_status.id,
+                'time_type_id': hol3_status.id,
                 'request_date_from': date.today() + relativedelta(day=10),
                 'request_date_to': date.today() + relativedelta(day=10),
                 'employee_id': employee_id,
@@ -227,16 +227,16 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
 
     @freeze_time("2026-04-27")  # Monday
     def test_change_request_unit(self):
-        work_entry_type = self.env['hr.work.entry.type'].create({
+        time_type = self.env['hr.time.type'].create({
             'name': 'Request Unit Change Test',
             'code': 'Request Unit Change Test',
             'requires_allocation': False,
             'request_unit': 'hour',
         })
-        work_entry_type.request_unit = 'hour'
+        time_type.request_unit = 'hour'
         leave1, leave2 = self.env['hr.leave'].create([{
             'name': 'Hour leave 1',
-            'work_entry_type_id': work_entry_type.id,
+            'time_type_id': time_type.id,
             'employee_id': self.employee_emp.id,
             'request_date_from': date.today(),
             'request_date_to': date.today(),
@@ -244,7 +244,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             'request_hour_to': 15,
         }, {
             'name': 'Hour leave 2',
-            'work_entry_type_id': work_entry_type.id,
+            'time_type_id': time_type.id,
             'employee_id': self.employee_emp.id,
             'request_date_from': date.today() + relativedelta(days=1),
             'request_date_to': date.today() + relativedelta(days=1),
@@ -256,7 +256,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         self.assertEqual(leave2.state, 'confirm')
         self.assertEqual(leave1.number_of_hours, 2)
         self.assertEqual(leave2.number_of_hours, 2)
-        work_entry_type.write({'request_unit': 'day'})
+        time_type.write({'request_unit': 'day'})
         self.assertEqual(leave1.number_of_hours, 2, 'Validated leaves should not be recomputed')
         self.assertEqual(leave2.number_of_hours, 2, 'Confirmed leaves should not be recomputed')
 
@@ -279,7 +279,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         # error message is triggered if the date_from is after
         # date_to. Coming from a bug due to the new ORM 13.0
 
-        work_entry_type_paid_time_off = self.env['hr.work.entry.type'].create({
+        time_type_paid_time_off = self.env['hr.time.type'].create({
             'name': 'Paid Time Off',
             'code': 'Paid Time Off',
             'requires_allocation': True,
@@ -292,7 +292,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
 
         self.env['hr.leave.allocation'].create({
             'name': 'Paid Time off for David',
-            'work_entry_type_id': work_entry_type_paid_time_off.id,
+            'time_type_id': time_type_paid_time_off.id,
             'number_of_days': 20,
             'employee_id': self.admin_employee.id,
             'state': 'confirm',
@@ -302,7 +302,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
 
         leave_vals = {
             'name': 'Sick Time Off',
-            'work_entry_type_id': work_entry_type_paid_time_off.id,
+            'time_type_id': time_type_paid_time_off.id,
             'request_date_from': date.today() + relativedelta(day=11),
             'request_date_to': date.today() + relativedelta(day=10),
             'employee_id': self.admin_employee.id,
@@ -312,7 +312,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
 
         leave_vals = {
             'name': 'Sick Time Off',
-            'work_entry_type_id': work_entry_type_paid_time_off.id,
+            'time_type_id': time_type_paid_time_off.id,
             'request_date_from': date.today() + relativedelta(day=10),
             'request_date_to': date.today() + relativedelta(day=11),
             'employee_id': self.admin_employee.id,

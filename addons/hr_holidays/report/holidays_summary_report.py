@@ -92,7 +92,7 @@ class ReportHr_HolidaysReport_Holidayssummary(models.AbstractModel):
             date_to = fields.Datetime.context_timestamp(holiday, date_to).date()
             for _index in range((date_to - date_from).days + 1):
                 if start_date <= date_from <= end_date:
-                    res[(date_from - start_date).days]['color'] = COLORS_MAP.get(holiday.work_entry_type_id.color, 'lightgrey')
+                    res[(date_from - start_date).days]['color'] = COLORS_MAP.get(holiday.time_type_id.color, 'lightgrey')
                 date_from += timedelta(1)
             count += holiday.number_of_days
         employee = self.env['hr.employee'].browse(empid)
@@ -147,8 +147,8 @@ class ReportHr_HolidaysReport_Holidayssummary(models.AbstractModel):
 
         holidays = self._get_leaves(fields.Date.from_string(data['date_from']), employees, data['holiday_type'])
 
-        for work_entry_type in holidays.work_entry_type_id:
-            res.append({'color': COLORS_MAP.get(work_entry_type.color, 'lightgrey'), 'name': work_entry_type.name})
+        for time_type in holidays.time_type_id:
+            res.append({'color': COLORS_MAP.get(time_type.color, 'lightgrey'), 'name': time_type.name})
 
         return res
 

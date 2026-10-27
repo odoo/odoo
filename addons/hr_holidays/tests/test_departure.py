@@ -12,7 +12,7 @@ class TestDeparture(TestHolidayContract):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.work_entry_type = cls.env['hr.work.entry.type'].create({
+        cls.time_type = cls.env['hr.time.type'].create({
             'name': 'Allocation based',
             'code': 'Allocation based',
             'leave_validation_type': 'hr',
@@ -22,7 +22,7 @@ class TestDeparture(TestHolidayContract):
 
         cls.jules_allocation = cls.env['hr.leave.allocation'].create([{
             'employee_id': cls.jules_emp.id,
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
             'date_from': date(2015, 11, 16),
             'number_of_days': 1000,
         }])
@@ -31,28 +31,28 @@ class TestDeparture(TestHolidayContract):
             {
                 'name': "Leave before the departure",
                 'employee_id': cls.jules_emp.id,
-                'work_entry_type_id': cls.work_entry_type.id,
+                'time_type_id': cls.time_type.id,
                 'request_date_from': date(2025, 12, 16),
                 'request_date_to': date(2025, 12, 20),
             },
             {
                 'name': "Leave during the departure",
                 'employee_id': cls.jules_emp.id,
-                'work_entry_type_id': cls.work_entry_type.id,
+                'time_type_id': cls.time_type.id,
                 'request_date_from': date(2026, 1, 28),
                 'request_date_to': date(2026, 2, 5),
             },
             {
                 'name': "Leave after the departure, validated",
                 'employee_id': cls.jules_emp.id,
-                'work_entry_type_id': cls.work_entry_type.id,
+                'time_type_id': cls.time_type.id,
                 'request_date_from': date(2026, 3, 3),
                 'request_date_to': date(2026, 3, 16),
             },
             {
                 'name': "Leave after the departure, draft",
                 'employee_id': cls.jules_emp.id,
-                'work_entry_type_id': cls.work_entry_type.id,
+                'time_type_id': cls.time_type.id,
                 'request_date_from': date(2026, 4, 6),
                 'request_date_to': date(2026, 4, 16),
             },

@@ -70,8 +70,8 @@ class TestAvatarCardTour(MailCommon, HttpCase):
         )
 
         # hr_holidays setup for multi-company
-        work_entry_type = (
-            cls.env['hr.work.entry.type']
+        time_type = (
+            cls.env['hr.time.type']
             .with_company(cls.company_2)
             .create(
                 {
@@ -90,7 +90,7 @@ class TestAvatarCardTour(MailCommon, HttpCase):
             {
                 "name": "Test Leave",
                 "company_id": cls.company_2.id,
-                "work_entry_type_id": work_entry_type.id,
+                "time_type_id": time_type.id,
                 "employee_id": cls.test_employee.id,
                 "request_date_from": (date.today() - timedelta(days=1)),
                 "request_date_to": (date.today() + timedelta(days=1)),

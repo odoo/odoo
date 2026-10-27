@@ -6,8 +6,8 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 
-class HrWorkEntryType(models.Model):
-    _name = 'hr.work.entry.type'
+class HrTimeType(models.Model):
+    _name = 'hr.time.type'
     _description = 'Time Type'
     _order = 'sequence'
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -61,13 +61,13 @@ class HrWorkEntryType(models.Model):
         tracking=True,
         help="The percentage of wages paid. For standard paid leave set to 100%, for unpaid leave to 0%, or for double-pay to 200%.")
     description = fields.Text(translate=True, tracking=True)
-    resource_calendar_attendance_ids = fields.One2many('resource.calendar.attendance', 'work_entry_type_id', readonly=True, copy=False)
+    resource_calendar_attendance_ids = fields.One2many('resource.calendar.attendance', 'time_type_id', readonly=True, copy=False)
     resource_calendar_selectable = fields.Boolean(string="Selectable in Working Schedule", compute='_compute_resource_calendar_selectable', store=True, readonly=False, tracking=True)
 
     @api.constrains('code', 'country_id')
     def _check_code_unicity(self):
         """
-        There should be maximum one work entry type per code, per country.
+        There should be maximum one time type per code, per country.
         """
         # check if self does not already contain duplicates
         grouped_duplicates = self.grouped(lambda wt: (wt.code, wt.country_id))
@@ -86,7 +86,7 @@ class HrWorkEntryType(models.Model):
 
         for we_type in self:
             if not related_we_types.get((we_type.code, we_type.country_id)):
-                continue  # no duplicate work entry type
+                continue  # no duplicate time type
             # we're not supposed to have more than one duplicate
             duplicate = related_we_types[we_type.code, we_type.country_id][:1]
             if we_type.country_id:
@@ -112,9 +112,9 @@ Time type "%(name)s" of code "%(code)s", with no country assigned, already exist
 
     @api.constrains('country_id')
     def _check_country_id(self):
-        for country_id, work_entry_types in self.grouped('country_id').items():
-            if work_entry_types.resource_calendar_attendance_ids.calendar_id.country_id - country_id:
-                raise ValidationError(self.env._("The country of the work entry type does not match the country of the associated resource calendar."))
+        for country_id, time_types in self.grouped('country_id').items():
+            if time_types.resource_calendar_attendance_ids.calendar_id.country_id - country_id:
+                raise ValidationError(self.env._("The country of the time type does not match the country of the associated resource calendar."))
 
     def copy_data(self, default=None):
         default = default or {}

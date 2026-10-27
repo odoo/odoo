@@ -5,17 +5,15 @@ from freezegun import freeze_time
 
 from odoo.exceptions import AccessError, ValidationError
 
-from odoo.tests import tagged
-
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
-class TestHrWorkEntryType(TestHrHolidaysCommon):
+class TestHrTimeType(TestHrHolidaysCommon):
 
     def test_count_as(self):
         employee = self.env['hr.employee'].create({'name': 'Test Employee'})
 
-        work_entry_type = self.env['hr.work.entry.type'].create({
+        time_type = self.env['hr.time.type'].create({
             'name': 'Paid Time Off',
             'code': 'Paid Time Off',
             'count_as': 'absence',
@@ -25,9 +23,9 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
         })
 
         with self.assertRaises(ValidationError):
-            work_entry_type.allow_request_on_top = True
+            time_type.allow_request_on_top = True
 
-        worked_work_entry_type = self.env['hr.work.entry.type'].create({
+        worked_time_type = self.env['hr.time.type'].create({
             'name': 'Worked Time',
             'code': 'Worked Time',
             'count_as': 'working_time',
@@ -37,12 +35,12 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
         })
 
         with self.assertRaises(ValidationError):
-            worked_work_entry_type.elligible_for_accrual_rate = False
+            worked_time_type.elligible_for_accrual_rate = False
 
         leave_0 = self.env['hr.leave'].create({
             'name': 'Remote Work',
             'employee_id': employee.id,
-            'work_entry_type_id': worked_work_entry_type.id,
+            'time_type_id': worked_time_type.id,
             'request_date_from': '2025-09-01',  # Monday
             'request_date_to': '2025-09-05',
         })
@@ -60,7 +58,7 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
         leave_1 = self.env['hr.leave'].create({
                 'name': 'Doctor Appointment',
                 'employee_id': employee.id,
-                'work_entry_type_id': work_entry_type.id,
+                'time_type_id': time_type.id,
                 'request_date_from': '2025-09-03',
                 'request_date_to': '2025-09-03',
         })
@@ -68,7 +66,7 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
             self.env['hr.leave'].create({
                 'name': 'Doctor Appointment',
                 'employee_id': employee.id,
-                'work_entry_type_id': work_entry_type.id,
+                'time_type_id': time_type.id,
                 'request_date_from': '2025-09-03',
                 'request_date_to': '2025-09-03',
             })
@@ -88,7 +86,7 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
     def test_type_creation_right(self):
         # HrUser creates some holiday statuses -> crash because only HrManagers should do this
         with self.assertRaises(AccessError):
-            self.env['hr.work.entry.type'].with_user(self.user_hruser_id).create({
+            self.env['hr.time.type'].with_user(self.user_hruser_id).create({
                 'name': 'UserCheats',
                 'requires_allocation': False,
                 'request_unit': 'day',
@@ -107,7 +105,7 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
           Valid allocation period              day
         """
         employee = self.env['hr.employee'].create({'name': 'Test Employee'})
-        work_entry_type = self.env['hr.work.entry.type'].create({
+        time_type = self.env['hr.time.type'].create({
             'name': 'Test Leave',
             'code': 'Test Leave',
             'request_unit': 'day',
@@ -116,25 +114,25 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
 
         self.env['hr.leave.allocation'].sudo().create({
             'state': 'confirm',
-            'work_entry_type_id': work_entry_type.id,
+            'time_type_id': time_type.id,
             'employee_id': employee.id,
             'date_from': '2024-08-19',
             'date_to': '2024-08-20',
         })
 
-        work_entry_types = self.env['hr.work.entry.type'].with_context(
+        time_types = self.env['hr.time.type'].with_context(
             default_date_from='2024-08-20 21:00:00',
             default_date_to='2024-08-21 09:00:00',
             tz='Pacific/Saipan',
             employee_id=employee.id,
             ).search([('has_valid_allocation', '=', True)], limit=1)
 
-        self.assertFalse(work_entry_types, "Got valid leaves outside vaild period")
+        self.assertFalse(time_types, "Got valid leaves outside vaild period")
 
     def test_valid_allocations_are_approved(self):
         """An allocation to approve does not make its type requestable"""
         employee = self.env['hr.employee'].create({'name': 'Test Employee'})
-        work_entry_type = self.env['hr.work.entry.type'].create({
+        time_type = self.env['hr.time.type'].create({
             'name': 'Accrued Leave',
             'code': 'Accrued Leave',
             'requires_allocation': True,
@@ -144,27 +142,27 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
         })
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan',
-            'work_entry_type_id': work_entry_type.id,
+            'time_type_id': time_type.id,
         })
         allocation = self.env['hr.leave.allocation'].with_context(allocation_skip_auto_approve=True).create({
             'name': 'Accrual allocation',
             'accrual_plan_id': accrual_plan.id,
             'employee_id': employee.id,
-            'work_entry_type_id': work_entry_type.id,
+            'time_type_id': time_type.id,
             'date_from': date(2024, 1, 1),
             'number_of_days': 0,
         })
         self.assertEqual(allocation.state, 'confirm')
-        self.assertFalse(work_entry_type.get_work_entry_types_with_valid_allocations(
+        self.assertFalse(time_type.get_time_types_with_valid_allocations(
             date(2024, 6, 3), date(2024, 6, 3), employee.id))
         allocation.action_approve()
-        self.assertEqual(work_entry_type.get_work_entry_types_with_valid_allocations(
-            date(2024, 6, 3), date(2024, 6, 3), employee.id), work_entry_type)
+        self.assertEqual(time_type.get_time_types_with_valid_allocations(
+            date(2024, 6, 3), date(2024, 6, 3), employee.id), time_type)
 
     def test_calendar_duration_excluding_public_holidays(self):
         """Test calendar duration calculation excluding public holidays"""
 
-        calendar_work_entry_type = self.env['hr.work.entry.type'].create({
+        calendar_time_type = self.env['hr.time.type'].create({
             'name': 'Test Time Off (Exclude PH)',
             'code': 'Test Time Off 1',
             'requires_allocation': False,
@@ -182,7 +180,7 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
 
         leave = self.env['hr.leave'].create({
             'employee_id': self.employee_hruser_id,
-            'work_entry_type_id': calendar_work_entry_type.id,
+            'time_type_id': calendar_time_type.id,
             'request_date_from': date(2024, 6, 1),
             'request_date_to': date(2024, 6, 7),
         })
@@ -194,7 +192,7 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
     def test_calendar_duration_including_public_holidays(self):
         """Test calendar duration calculation including public holidays"""
 
-        calendar_work_entry_type = self.env['hr.work.entry.type'].create({
+        calendar_time_type = self.env['hr.time.type'].create({
             'name': 'Test Time Off (Include PH)',
             'code': 'Test Time Off 2',
             'requires_allocation': False,
@@ -212,7 +210,7 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
 
         leave = self.env['hr.leave'].create({
             'employee_id': self.employee_hruser_id,
-            'work_entry_type_id': calendar_work_entry_type.id,
+            'time_type_id': calendar_time_type.id,
             'request_date_from': date(2024, 6, 1),
             'request_date_to': date(2024, 6, 7),
         })
@@ -223,7 +221,7 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
 
     def test_calendar_duration_hours_public_holidays_and_weekend(self):
         """Hourly 'calendar days' leaves count the weekend days around public holidays"""
-        calendar_work_entry_type = self.env['hr.work.entry.type'].create({
+        calendar_time_type = self.env['hr.time.type'].create({
             'name': 'Test Time Off (Hourly Calendar)',
             'code': 'Test Time Off 7',
             'requires_allocation': False,
@@ -246,7 +244,7 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
         # Thursday to Monday: the public holiday is not counted, Saturday and Sunday are
         leave = self.env['hr.leave'].create({
             'employee_id': utc_employee.id,
-            'work_entry_type_id': calendar_work_entry_type.id,
+            'time_type_id': calendar_time_type.id,
             'request_date_from': date(2024, 5, 2),
             'request_date_to': date(2024, 5, 6),
             'request_hour_from': 8,
@@ -256,7 +254,7 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
         # a Saturday morning starts on Friday in UTC
         leave = self.env['hr.leave'].create({
             'employee_id': tokyo_employee.id,
-            'work_entry_type_id': calendar_work_entry_type.id,
+            'time_type_id': calendar_time_type.id,
             'request_date_from': date(2024, 5, 11),
             'request_date_to': date(2024, 5, 11),
             'request_hour_from': 8,
@@ -272,14 +270,14 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
         calendar branch used to raise a KeyError. It has to fall back on the
         company calendar computation instead.
         """
-        calendar_work_entry_type = self.env['hr.work.entry.type'].create({
+        calendar_time_type = self.env['hr.time.type'].create({
             'name': 'Test Time Off (No Employee)',
             'code': 'Test Time Off 5',
             'requires_allocation': False,
             'count_days_as': 'calendar',
             'request_unit': 'hour',
         })
-        working_work_entry_type = calendar_work_entry_type.copy({
+        working_time_type = calendar_time_type.copy({
             'name': 'Test Time Off (No Employee, Working)',
             'code': 'Test Time Off 6',
             'count_days_as': 'working',
@@ -294,10 +292,10 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
         # this simulates opening a form with new employee ,
         # because here .new() creates an unsaved record with a NewId, the same thing the web client works with when you open the form before filling anything in.
         calendar_leave = self.env['hr.leave'].new(
-            dict(values, work_entry_type_id=calendar_work_entry_type.id))
+            dict(values, time_type_id=calendar_time_type.id))
 
         working_leave = self.env['hr.leave'].new(
-            dict(values, work_entry_type_id=working_work_entry_type.id))
+            dict(values, time_type_id=working_time_type.id))
 
         # in case of traceback this would fail first
         days, hours = calendar_leave._get_durations()[calendar_leave.id]
@@ -309,7 +307,7 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
 
     def test_count_days_as_working_days(self):
         """Test duration calculation when count_days_as is worked days"""
-        working_work_entry_type = self.env['hr.work.entry.type'].create({
+        working_time_type = self.env['hr.time.type'].create({
             'name': 'Test Time Off',
             'code': 'Test Time Off 3',
             'requires_allocation': False,
@@ -317,7 +315,7 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
         })
         leave = self.env['hr.leave'].create({
             'employee_id': self.employee_hruser_id,
-            'work_entry_type_id': working_work_entry_type.id,
+            'time_type_id': working_time_type.id,
             'request_date_from': date(2024, 6, 1),
             'request_date_to': date(2024, 6, 7),
         })
@@ -328,25 +326,25 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
 
     def test_change_count_days_as(self):
         """Changing count_days_as after leave is validated should raise ValidationError"""
-        work_entry_type = self.env['hr.work.entry.type'].create({
+        time_type = self.env['hr.time.type'].create({
             'name': 'Test Time Off',
             'code': 'Test Time Off 4',
             'requires_allocation': False,
             'count_days_as': 'working',
         })
 
-        work_entry_type.count_days_as = 'calendar'
+        time_type.count_days_as = 'calendar'
 
         leave = self.env['hr.leave'].create({
             'employee_id': self.employee_hruser_id,
-            'work_entry_type_id': work_entry_type.id,
+            'time_type_id': time_type.id,
             'request_date_from': date(2024, 7, 1),
             'request_date_to': date(2024, 7, 5),
         })
         leave.action_approve()
 
         with self.assertRaises(ValidationError):
-            work_entry_type.count_days_as = 'working'
+            time_type.count_days_as = 'working'
 
     # --- _get_durations branch coverage --------------------------------------
     # _get_durations dispatches on (has an employee, count_days_as, request
@@ -370,8 +368,8 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
         employee.resource_id.tz = 'Europe/Brussels'
         return employee
 
-    def _hourly_work_entry_type(self, code, count_days_as):
-        return self.env['hr.work.entry.type'].create({
+    def _hourly_time_type(self, code, count_days_as):
+        return self.env['hr.time.type'].create({
             'name': code,
             'code': code,
             'requires_allocation': False,
@@ -394,7 +392,7 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
         """
         calendar_leave = self.env['hr.leave'].create({
             'employee_id': self._duration_employee('Calendar Wednesday').id,
-            'work_entry_type_id': self._hourly_work_entry_type('DUR_CAL_WD', 'calendar').id,
+            'time_type_id': self._hourly_time_type('DUR_CAL_WD', 'calendar').id,
             'request_date_from': date(2024, 6, 5),
             'request_date_to': date(2024, 6, 5),
             'request_hour_from': 9,
@@ -402,7 +400,7 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
         })
         working_leave = self.env['hr.leave'].create({
             'employee_id': self._duration_employee('Working Wednesday').id,
-            'work_entry_type_id': self._hourly_work_entry_type('DUR_WRK_WD', 'working').id,
+            'time_type_id': self._hourly_time_type('DUR_WRK_WD', 'working').id,
             'request_date_from': date(2024, 6, 5),
             'request_date_to': date(2024, 6, 5),
             'request_hour_from': 9,
@@ -438,7 +436,7 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
         """
         calendar_leave = self.env['hr.leave'].create({
             'employee_id': self._duration_employee('Calendar Saturday').id,
-            'work_entry_type_id': self._hourly_work_entry_type('DUR_CAL_WE', 'calendar').id,
+            'time_type_id': self._hourly_time_type('DUR_CAL_WE', 'calendar').id,
             'request_date_from': date(2024, 6, 8),
             'request_date_to': date(2024, 6, 8),
             'request_hour_from': 9,
@@ -446,7 +444,7 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
         })
         working_leave = self.env['hr.leave'].create({
             'employee_id': self._duration_employee('Working Saturday').id,
-            'work_entry_type_id': self._hourly_work_entry_type('DUR_WRK_WE', 'working').id,
+            'time_type_id': self._hourly_time_type('DUR_WRK_WE', 'working').id,
             'request_date_from': date(2024, 6, 8),
             'request_date_to': date(2024, 6, 8),
             'request_hour_from': 9,
@@ -483,7 +481,7 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
 
         leave = self.env['hr.leave'].create({
             'employee_id': employee.id,
-            'work_entry_type_id': self._hourly_work_entry_type('DUR_FLEX', 'working').id,
+            'time_type_id': self._hourly_time_type('DUR_FLEX', 'working').id,
             'request_date_from': date(2024, 6, 5),
             'request_date_to': date(2024, 6, 5),
             'request_hour_from': 9,

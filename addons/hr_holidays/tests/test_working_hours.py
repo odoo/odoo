@@ -15,7 +15,7 @@ class TestWorkingHours(TestHrContractCalendarCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.work_entry_type = cls.env['hr.work.entry.type'].create({
+        cls.time_type = cls.env['hr.time.type'].create({
             'name': 'Unpaid Time Off',
             'code': 'Unpaid Time Off',
             'requires_allocation': False,
@@ -43,7 +43,7 @@ class TestWorkingHours(TestHrContractCalendarCommon):
         self.env['hr.leave'].create({
             'name': 'holiday from monday to tuesday',
             'employee_id': self.employeeA.id,
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'request_date_from': datetime(2023, 12, 25),
             'request_date_to': datetime(2023, 12, 26, 23, 59, 59),
         })
@@ -82,7 +82,7 @@ class TestWorkingHours(TestHrContractCalendarCommon):
         company_leave = self.env['hr.leave.generate.multi.wizard'].create({
             'name': 'holiday from monday to tuesday',
             'company_id': self.company_A.id,
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'date_from': date(2023, 12, 25),
             'date_to': date(2023, 12, 26),
         })

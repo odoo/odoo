@@ -33,17 +33,17 @@ class HrLeaveAllocation(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _mail_post_access = 'read'
 
-    def _default_work_entry_type_id(self):
+    def _default_time_type_id(self):
         if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
-            domain = [('id', 'in', self.allowed_work_entry_type_ids.ids), ('has_valid_allocation', '=', True), ('requires_allocation', '=', True)]
+            domain = [('id', 'in', self.allowed_time_type_ids.ids), ('has_valid_allocation', '=', True), ('requires_allocation', '=', True)]
         else:
-            domain = [('id', 'in', self.allowed_work_entry_type_ids.ids), ('has_valid_allocation', '=', True), ('requires_allocation', '=', True), ('employee_requests', '=', True)]
-        return self.env['hr.work.entry.type'].search(domain, limit=1)
+            domain = [('id', 'in', self.allowed_time_type_ids.ids), ('has_valid_allocation', '=', True), ('requires_allocation', '=', True), ('employee_requests', '=', True)]
+        return self.env['hr.time.type'].search(domain, limit=1)
 
     @api.model
     def default_get(self, fields):
         defaults = super().default_get(fields)
-        if self.env.context.get('default_work_entry_type_id'):
+        if self.env.context.get('default_time_type_id'):
             return defaults
         employee = defaults.get('employee_id')
         country = self.env['hr.employee'].browse(employee).company_id.country_id or self.env.company.country_id
@@ -51,19 +51,19 @@ class HrLeaveAllocation(models.Model):
                 ('country_id', '=', country.id),
                 ('requires_allocation', '=', True)
             ]
-        WorkEntryType = self.env['hr.work.entry.type']
+        TimeType = self.env['hr.time.type']
         if self.env.context.get('is_employee_allocation') or not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
             # requested by the employee: a time type allowing it, preferably one already allocated
             domain = Domain.AND([domain, [('employee_requests', '=', True), ('time_off_selectable', '=', True)]])
-            work_entry_type = WorkEntryType.search(Domain.AND([domain, [('has_valid_allocation', '=', True)]]), limit=1) \
-                or WorkEntryType.search(domain, limit=1)
+            time_type = TimeType.search(Domain.AND([domain, [('has_valid_allocation', '=', True)]]), limit=1) \
+                or TimeType.search(domain, limit=1)
         else:
-            work_entry_type = WorkEntryType.search(Domain.AND([domain, [('has_valid_allocation', '=', True)]]), limit=1)
-        if work_entry_type:
-            defaults['work_entry_type_id'] = work_entry_type.id
+            time_type = TimeType.search(Domain.AND([domain, [('has_valid_allocation', '=', True)]]), limit=1)
+        if time_type:
+            defaults['time_type_id'] = time_type.id
         return defaults
 
-    def _domain_work_entry_type_id(self):
+    def _domain_time_type_id(self):
         domain = [
             ('requires_allocation', '=', True),
             ('time_off_selectable', '=', True),
@@ -100,11 +100,11 @@ class HrLeaveAllocation(models.Model):
     date_from = fields.Date('Start Date', index=True, copy=False, default=fields.Date.context_today,
         tracking=True, required=True)
     date_to = fields.Date('End Date', copy=False, tracking=True)
-    work_entry_type_id = fields.Many2one(
-        "hr.work.entry.type", compute='_compute_work_entry_type_id', store=True, string="Time Type", required=True, index=True, readonly=False,
-        domain=_domain_work_entry_type_id)
-    allowed_work_entry_type_ids = fields.Many2many(
-        'hr.work.entry.type', compute='_compute_allowed_work_entry_type_ids')
+    time_type_id = fields.Many2one(
+        "hr.time.type", compute='_compute_time_type_id', store=True, string="Time Type", required=True, index=True, readonly=False,
+        domain=_domain_time_type_id)
+    allowed_time_type_ids = fields.Many2many(
+        'hr.time.type', compute='_compute_allowed_time_type_ids')
     employee_id = fields.Many2one(
         'hr.employee', string='Employee', default=lambda self: self.env.user.employee_id,
         index=True, ondelete="restrict", required=True, tracking=True, domain=_domain_employee_id)
@@ -132,7 +132,7 @@ class HrLeaveAllocation(models.Model):
     second_approver_id = fields.Many2one(
         'hr.employee', string='Second Approval', readonly=True, copy=False,
         help='This area is automatically filled by the user who validates the allocation with second level (If time type need second validation)')
-    validation_type = fields.Selection(string='Validation Type', related='work_entry_type_id.allocation_validation_type', readonly=True)
+    validation_type = fields.Selection(string='Validation Type', related='time_type_id.allocation_validation_type', readonly=True)
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
     can_validate = fields.Boolean('Can Validate', compute='_compute_can_validate')
     can_refuse = fields.Boolean('Can Refuse', compute='_compute_can_refuse')
@@ -168,12 +168,12 @@ class HrLeaveAllocation(models.Model):
 
     @api.constrains('accrual_plan_id')
     def _check_accrual_plan_id(self):
-        if any(allocation.accrual_plan_id and not allocation.accrual_plan_id.work_entry_type_id for allocation in self):
+        if any(allocation.accrual_plan_id and not allocation.accrual_plan_id.time_type_id for allocation in self):
             raise UserError(_("The selected accrual plan has no time type set. Please set a time type on the accrual plan."))
 
-    @api.constrains('accrual_plan_id', 'work_entry_type_id')
-    def _check_accrual_plan_work_entry_type(self):
-        if any(allocation.accrual_plan_id and allocation.accrual_plan_id.work_entry_type_id != allocation.work_entry_type_id for allocation in self):
+    @api.constrains('accrual_plan_id', 'time_type_id')
+    def _check_accrual_plan_time_type(self):
+        if any(allocation.accrual_plan_id and allocation.accrual_plan_id.time_type_id != allocation.time_type_id for allocation in self):
             raise UserError(_("Selected Time Type must be the same one set on accrual plan"))
 
     # The compute does not get triggered without a depends on record creation
@@ -199,17 +199,17 @@ class HrLeaveAllocation(models.Model):
 
     def _get_title(self):
         self.ensure_one()
-        if not self.work_entry_type_id:
+        if not self.time_type_id:
             return _("Allocation Request")
         if self.type_request_unit == 'hour':
             return _(
                 '%(name)s (%(duration)s hour(s))',
-                name=self.work_entry_type_id.name,
+                name=self.time_type_id.name,
                 duration=float_round(self.number_of_days * self.employee_id._get_hours_per_day(self.date_from), precision_digits=2),
             )
         return _(
             '%(name)s (%(duration)s day(s))',
-            name=self.work_entry_type_id.name,
+            name=self.time_type_id.name,
             duration=float_round(self.number_of_days, precision_digits=2),
         )
 
@@ -220,7 +220,7 @@ class HrLeaveAllocation(models.Model):
         elif self.name != self._get_title():
             self.is_name_custom = True
 
-    @api.depends('work_entry_type_id', 'number_of_days')
+    @api.depends('time_type_id', 'number_of_days')
     def _compute_description(self):
         for allocation in self:
             if not allocation.is_name_custom:
@@ -253,10 +253,10 @@ class HrLeaveAllocation(models.Model):
                 )
             allocation.name_validity = name_validity
 
-    @api.depends('employee_id', 'work_entry_type_id', 'nextcall')
+    @api.depends('employee_id', 'time_type_id', 'nextcall')
     def _compute_leaves(self):
         date_from = fields.Date.context_today(self)
-        employee_days_per_allocation = self.employee_id._get_consumed_leaves(self.work_entry_type_id, date_from)[0]
+        employee_days_per_allocation = self.employee_id._get_consumed_leaves(self.time_type_id, date_from)[0]
         self._set_leaves_from_consumption_data(employee_days_per_allocation)
 
     def _set_leaves_from_consumption_data(self, employee_days_per_allocation):
@@ -269,8 +269,8 @@ class HrLeaveAllocation(models.Model):
         """
         for allocation in self:
             origin = allocation._origin
-            virtual_leave = employee_days_per_allocation[origin.employee_id][origin.work_entry_type_id][origin]
-            primary_unit = 'hours' if origin.work_entry_type_id.unit_of_measure == 'hour' else 'days'
+            virtual_leave = employee_days_per_allocation[origin.employee_id][origin.time_type_id][origin]
+            primary_unit = 'hours' if origin.time_type_id.unit_of_measure == 'hour' else 'days'
             allocation.max_leaves = virtual_leave[f'{primary_unit}_max_leaves']
             allocation.leaves_taken = virtual_leave[f'{primary_unit}_leaves_taken']
             allocation.virtual_remaining_leaves = virtual_leave[f'{primary_unit}_virtual_remaining_leaves']
@@ -325,32 +325,32 @@ class HrLeaveAllocation(models.Model):
             allocation.manager_id = allocation.employee_id and allocation.employee_id.parent_id
 
     @api.depends('employee_company_id')
-    def _compute_allowed_work_entry_type_ids(self):
+    def _compute_allowed_time_type_ids(self):
         for allocation in self:
             country = allocation.employee_company_id.country_id or self.env.company.country_id
-            if not country or not self.env['hr.work.entry.type'].search_count([('country_id', '=', country.id)], limit=1):
+            if not country or not self.env['hr.time.type'].search_count([('country_id', '=', country.id)], limit=1):
                 domain = [('country_id', '=', False)]
             else:
                 domain = [('country_id', '=', country.id)]
-            domain = Domain.AND([allocation._domain_work_entry_type_id(), domain])
-            allocation.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(domain)
+            domain = Domain.AND([allocation._domain_time_type_id(), domain])
+            allocation.allowed_time_type_ids = self.env['hr.time.type'].search(domain)
 
     @api.depends('accrual_plan_id')
-    def _compute_work_entry_type_id(self):
-        default_work_entry_type_id = None
+    def _compute_time_type_id(self):
+        default_time_type_id = None
         for allocation in self:
-            if not allocation.work_entry_type_id:
-                if not default_work_entry_type_id:  # fetch when we need it
-                    default_work_entry_type_id = self._default_work_entry_type_id()
-                allocation.work_entry_type_id = default_work_entry_type_id
+            if not allocation.time_type_id:
+                if not default_time_type_id:  # fetch when we need it
+                    default_time_type_id = self._default_time_type_id()
+                allocation.time_type_id = default_time_type_id
 
-                if allocation.accrual_plan_id and allocation.work_entry_type_id != allocation.accrual_plan_id.work_entry_type_id:
-                    allocation.work_entry_type_id = allocation.accrual_plan_id.work_entry_type_id
+                if allocation.accrual_plan_id and allocation.time_type_id != allocation.accrual_plan_id.time_type_id:
+                    allocation.time_type_id = allocation.accrual_plan_id.time_type_id
 
-    @api.onchange('work_entry_type_id')
-    def _onchange_work_entry_type_id(self):
+    @api.onchange('time_type_id')
+    def _onchange_time_type_id(self):
         for allocation in self:
-            if allocation.accrual_plan_id and allocation.work_entry_type_id != allocation.accrual_plan_id.work_entry_type_id:
+            if allocation.accrual_plan_id and allocation.time_type_id != allocation.accrual_plan_id.time_type_id:
                 allocation.accrual_plan_id = False
 
     def _inverse_number_of_days_display(self):
@@ -363,7 +363,7 @@ class HrLeaveAllocation(models.Model):
             hours_per_day = allocation._get_employee_hours_per_day()
             allocation.number_of_days = allocation.number_of_hours / hours_per_day if hours_per_day else 0
 
-    @api.constrains('number_of_days', 'work_entry_type_id', 'employee_id')
+    @api.constrains('number_of_days', 'time_type_id', 'employee_id')
     def _check_negative_allocation(self):
         """Allow negative allocations only for types allowing a negative balance, within their cap.
 
@@ -371,12 +371,12 @@ class HrLeaveAllocation(models.Model):
         not exceed ``max_allowed_negative`` in total.
         """
         for allocation in self.filtered(lambda allocation: allocation.number_of_days < 0):
-            if not allocation.work_entry_type_id.allows_negative:
+            if not allocation.time_type_id.allows_negative:
                 raise ValidationError(self.env._("Negative allocations are not allowed for this time type."))
             domain = [
                 ('id', '!=', allocation.id),
                 ('employee_id', '=', allocation.employee_id.id),
-                ('work_entry_type_id', '=', allocation.work_entry_type_id.id),
+                ('time_type_id', '=', allocation.time_type_id.id),
                 ('state', 'in', ('confirm', 'validate', 'validate1')),
                 ('number_of_days', '<', 0),
             ]
@@ -392,7 +392,7 @@ class HrLeaveAllocation(models.Model):
             current_amount = allocation.number_of_hours if is_hour_allocation else allocation.number_of_days
             negative_total, = self.env['hr.leave.allocation']._read_group(domain, aggregates=[f'{aggregate_field}:sum'])[0]
             total_negative = -(current_amount + (negative_total or 0))
-            max_negative = allocation.work_entry_type_id.max_allowed_negative
+            max_negative = allocation.time_type_id.max_allowed_negative
 
             if total_negative > max_negative:
                 raise ValidationError(self.env._(
@@ -413,17 +413,17 @@ class HrLeaveAllocation(models.Model):
         self.ensure_one()
         if self.accrual_plan_id:
             return self.accrual_plan_id.sudo().added_value_type
-        return self.work_entry_type_id.unit_of_measure or "day"
+        return self.time_type_id.unit_of_measure or "day"
 
-    @api.depends("work_entry_type_id", "accrual_plan_id")
+    @api.depends("time_type_id", "accrual_plan_id")
     def _compute_type_request_unit(self):
         for allocation in self:
             allocation.type_request_unit = allocation._get_request_unit()
 
-    @api.depends("work_entry_type_id")
+    @api.depends("time_type_id")
     def _compute_hide_accrual_plan_id(self):
         for allocation in self:
-            allocation.hide_accrual_plan_id = allocation.work_entry_type_id and not self.env['hr.leave.accrual.plan'].sudo().search_count([('work_entry_type_id', '=', allocation.work_entry_type_id.id)])
+            allocation.hide_accrual_plan_id = allocation.time_type_id and not self.env['hr.leave.accrual.plan'].sudo().search_count([('time_type_id', '=', allocation.time_type_id.id)])
 
     def _get_next_carryover_date(self, date_from, date_from_included=True):
         """Return the next carry-over date of the accrual plan from ``date_from``.
@@ -835,12 +835,12 @@ class HrLeaveAllocation(models.Model):
                 allocations = {allocation: allocation_data}
             # By setting `precomputed_allocations`, avoid infinite loop (otherwise _get_consumed_leaves -> _get_additionnal_future_leaves_on -> _process_accrual_plans -> ...)
             employee_days_per_allocation = allocation.employee_id._get_consumed_leaves(
-                allocation.work_entry_type_id, allocation_data['nextcall'], ignore_future=True,
+                allocation.time_type_id, allocation_data['nextcall'], ignore_future=True,
                 precomputed_allocations=allocations)[0]
-            primary_unit = 'hours' if allocation.work_entry_type_id.unit_of_measure == 'hour' else 'days'
-            leaves_taken = employee_days_per_allocation[allocation.employee_id][allocation.work_entry_type_id][allocation][f'{primary_unit}_leaves_taken']
+            primary_unit = 'hours' if allocation.time_type_id.unit_of_measure == 'hour' else 'days'
+            leaves_taken = employee_days_per_allocation[allocation.employee_id][allocation.time_type_id][allocation][f'{primary_unit}_leaves_taken']
             return allocation._convert_to_type_request_unit(
-                leaves_taken, allocation.work_entry_type_id.unit_of_measure or 'day', allocation_data)
+                leaves_taken, allocation.time_type_id.unit_of_measure or 'day', allocation_data)
 
         accrual_allocations = self.filtered('accrual_plan_id')
         precomputed_alloc_recordset = accrual_allocations.filtered(lambda alloc: alloc in precomputed_allocations)
@@ -1008,11 +1008,11 @@ class HrLeaveAllocation(models.Model):
         future_alloc_data = self.sudo()._process_accrual_plans(accrual_date, precomputed_allocations=allocations_data)[self]
         if 'allocated_duration' in allocation_data:
             current_allocated_duration = self._convert_from_type_request_unit(
-                allocation_data['allocated_duration'], self.work_entry_type_id.unit_of_measure, allocation_data)
+                allocation_data['allocated_duration'], self.time_type_id.unit_of_measure, allocation_data)
         else:
-            current_allocated_duration = self._convert_duration(self.number_of_days, 'day', self.work_entry_type_id.unit_of_measure)
+            current_allocated_duration = self._convert_duration(self.number_of_days, 'day', self.time_type_id.unit_of_measure)
         future_allocated_duration = self._convert_from_type_request_unit(
-            future_alloc_data['allocated_duration'], self.work_entry_type_id.unit_of_measure, allocation_data)
+            future_alloc_data['allocated_duration'], self.time_type_id.unit_of_measure, allocation_data)
         return float_round(future_allocated_duration - current_allocated_duration, precision_digits=2)
 
     def _get_next_states_by_state(self):
@@ -1063,7 +1063,7 @@ class HrLeaveAllocation(models.Model):
     ####################################################
 
     def onchange(self, values, field_names, fields_spec):
-        # Try to force the work_entry_type display_name when creating new records
+        # Try to force the time_type display_name when creating new records
         # This is called right after pressing create and returns the display_name for
         # most fields in the view.
         if values and 'employee_id' in fields_spec and 'employee_id' not in self.env.context:
@@ -1071,11 +1071,11 @@ class HrLeaveAllocation(models.Model):
             self = self.with_context(employee_id=employee_id)
         return super().onchange(values, field_names, fields_spec)
 
-    @api.depends('employee_id', 'work_entry_type_id', 'type_request_unit', 'number_of_days')
+    @api.depends('employee_id', 'time_type_id', 'type_request_unit', 'number_of_days')
     def _compute_display_name(self):
         for allocation in self:
-            allocation.display_name = _("Allocation of %(work_entry_type)s: %(amount).2f %(unit)s to %(target)s",
-                work_entry_type=allocation.work_entry_type_id.sudo().name,
+            allocation.display_name = _("Allocation of %(time_type)s: %(amount).2f %(unit)s to %(target)s",
+                time_type=allocation.time_type_id.sudo().name,
                 amount=allocation.number_of_hours if allocation.type_request_unit == 'hour' else allocation.number_of_days,
                 unit=_('hours') if allocation.type_request_unit == 'hour' else _('days'),
                 target=allocation.employee_id.name,
@@ -1141,21 +1141,21 @@ class HrLeaveAllocation(models.Model):
             total = sum(leave_date['amount'] for leave_date in excess_days.values())
             return total - min(extra_data.get('exceeding_duration', 0), 0)
 
-        previous_consumed_leaves = self.employee_id._get_consumed_leaves(work_entry_types=self.work_entry_type_id)
+        previous_consumed_leaves = self.employee_id._get_consumed_leaves(time_types=self.time_type_id)
         result = super().write(values)
-        consumed_leaves = self.employee_id._get_consumed_leaves(work_entry_types=self.work_entry_type_id)
+        consumed_leaves = self.employee_id._get_consumed_leaves(time_types=self.time_type_id)
 
         for allocation in self:
             current_extra_data = dict(consumed_leaves[1]).get(allocation.employee_id, {}) \
-                .get(allocation.work_entry_type_id, {})
+                .get(allocation.time_type_id, {})
             previous_extra_data = dict(previous_consumed_leaves[1]).get(allocation.employee_id, {}) \
-                .get(allocation.work_entry_type_id, {})
+                .get(allocation.time_type_id, {})
             total_current_excess = total_excess(current_extra_data)
             total_previous_excess = total_excess(previous_extra_data)
 
             if total_current_excess <= total_previous_excess:
                 continue
-            lt = allocation.work_entry_type_id
+            lt = allocation.time_type_id
             if lt.allows_negative and total_current_excess <= lt.max_allowed_negative:
                 continue
             raise ValidationError(
@@ -1173,7 +1173,7 @@ class HrLeaveAllocation(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_no_leaves(self):
-        if any(allocation.work_entry_type_id.requires_allocation and allocation.leaves_taken > 0 for allocation in self):
+        if any(allocation.time_type_id.requires_allocation and allocation.leaves_taken > 0 for allocation in self):
             raise UserError(_('You cannot delete an allocation request which has some validated leaves.'))
 
     def copy(self, default=None):
@@ -1250,7 +1250,7 @@ class HrLeaveAllocation(models.Model):
             if allocation.state == state:
                 error_message = _('You can\'t do the same action twice.')
             elif allocation.employee_id == current_employee and \
-                allocation.work_entry_type_id.allocation_validation_type != 'no_validation' and not is_administrator:
+                allocation.time_type_id.allocation_validation_type != 'no_validation' and not is_administrator:
                 error_message = _('Only a time off Administrator can approve/refuse their own requests.')
             elif state not in dict_all_possible_state.get(allocation.state, {}):
                 if state == 'confirm':
@@ -1357,20 +1357,20 @@ class HrLeaveAllocation(models.Model):
         approval_activity = self.env.ref('hr_holidays.mail_act_leave_allocation_second_approval')
         for allocation in self:
             if allocation.state in ['confirm', 'validate1']:
-                if allocation.work_entry_type_id.allocation_validation_type != 'no_validation':
+                if allocation.time_type_id.allocation_validation_type != 'no_validation':
                     if allocation.state == 'confirm':
                         activity_type = confirm_activity
                         note = _(
                             'New Allocation Request created by %(user)s: %(count)s Days of %(leave_type)s',
                             user=allocation.create_uid.name,
                             count=float_round(allocation.number_of_days, precision_digits=2),
-                            leave_type=allocation.work_entry_type_id.name,
+                            leave_type=allocation.time_type_id.name,
                         )
                     else:
                         activity_type = approval_activity
                         note = _(
                             'Second approval request for %(leave_type)s',
-                            leave_type=allocation.work_entry_type_id.name,
+                            leave_type=allocation.time_type_id.name,
                         )
                         to_second_do |= allocation
                     user_ids = allocation.sudo()._get_responsible_for_approval().ids
@@ -1407,7 +1407,7 @@ class HrLeaveAllocation(models.Model):
         self.ensure_one()
         res = super()._track_template_parameters(tracked_fields)
         if 'state' in tracked_fields and self.state == 'validate':
-            subtype = self.work_entry_type_id.allocation_notif_subtype_id or self.env.ref('hr_holidays.mt_leave_allocation')
+            subtype = self.time_type_id.allocation_notif_subtype_id or self.env.ref('hr_holidays.mt_leave_allocation')
             if self.employee_id:
                 partner = self.employee_id.work_contact_id or self.employee_id.user_id.partner_id
             res['state'] = (self.env.ref('hr_holidays.mail_template_allocation_confirmed'), {

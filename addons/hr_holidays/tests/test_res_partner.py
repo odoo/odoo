@@ -34,7 +34,7 @@ class TestPartner(TransactionCase):
         cls.employees = cls.env['hr.employee'].create([{
             'user_id': user.id,
         } for user in cls.users])
-        cls.work_entry_type = cls.env['hr.work.entry.type'].create({
+        cls.time_type = cls.env['hr.time.type'].create({
             'requires_allocation': False,
             'name': 'Legal Leaves',
             'code': 'Legal Leaves',
@@ -46,12 +46,12 @@ class TestPartner(TransactionCase):
             'request_date_from': "2024-06-03",
             'request_date_to': "2024-06-06",
             'employee_id': cls.employees[0].id,
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         }, {
             'request_date_from': "2024-06-02",
             'request_date_to': "2024-06-05",
             'employee_id': cls.employees[1].id,
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         }])
         cls.user_no_hr_access = new_test_user(
             cls.env, login="user_no_hr_access",

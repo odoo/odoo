@@ -16,9 +16,9 @@
                         />
                     </div>
 
-                    <div class="d-flex align-items-center gap-4 py-1 ps-2" colspan="2" id="work_entry_type_id_label">
-                        <i class="oi oi-lg oi-fw flex-shrink-0" data-icon="label" title="Work Entry Types" name="work_entry_type_id"/>
-                        <field name="work_entry_type_id" widget="many2one_work_entry_type" nolabel="1" class="min-w-0"/>
+                    <div class="d-flex align-items-center gap-4 py-1 ps-2" colspan="2" id="time_type_id_label">
+                        <i class="oi oi-lg oi-fw flex-shrink-0" data-icon="label" title="Time Types" name="time_type_id"/>
+                        <field name="time_type_id" widget="many2one_time_type" nolabel="1" class="min-w-0"/>
                     </div>
 
                     <div class="d-flex align-items-center gap-4 py-1 ps-2" colspan="2" id="dates_label">
@@ -145,7 +145,7 @@
                 <filter string="Waiting for Approval" name="approve" domain="[('state','in',('confirm','validate1'))]"/>
                 <filter name="groupby_employee_id" string="Employee" context="{'group_by': 'employee_id'}"/>
                 <filter name="groupby_job_id" string="Job Position" context="{'group_by': 'job_id'}"/>
-                <filter name="groupby_time_off_type" string="Time Type" context="{'group_by': 'work_entry_type_id'}"/>
+                <filter name="groupby_time_off_type" string="Time Type" context="{'group_by': 'time_type_id'}"/>
                 <filter name="groupby_company_id" string="Company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                 <filter name="groupby_department_id" context="{'group_by': 'department_id'}"/>
             </search>

@@ -40,7 +40,7 @@ class HrVersion(models.Model):
         return super()._get_work_entry_source_fields() + ['attendance_based', 'attendance_ids']
 
     def _resolve_attendance_intervals(self, intervals):
-        """Split overlapping intervals and pick the winner by work_entry_type.sequence."""
+        """Split overlapping intervals and pick the winner by time_type.sequence."""
         return resolve_intervals_by_sequence(intervals)
 
     def _get_version_work_entries_values(self, date_start, date_stop):
@@ -67,7 +67,7 @@ class HrVersion(models.Model):
 
         # working-time leaves from the leave pipeline
         working_time_leaves = self.env['hr.leave'].sudo().search([
-            ('work_entry_type_id.count_as', '=', 'working_time'),
+            ('time_type_id.count_as', '=', 'working_time'),
             ('employee_id', 'in', self.employee_id.ids),
             ('date_from', '<=', end_dt.replace(tzinfo=None)),
             ('date_to', '>=', start_dt.replace(tzinfo=None)),
@@ -95,12 +95,12 @@ class HrVersion(models.Model):
                 ci = leave.date_from.replace(tzinfo=UTC)
                 co = leave.date_to.replace(tzinfo=UTC)
                 time_on_raw[rid].append((ci, co, dummy))
-                wt_iv_by_rid[rid].append((ci, co, leave.work_entry_type_id))
+                wt_iv_by_rid[rid].append((ci, co, leave.time_type_id))
 
         for version in self:
             tz = ZoneInfo(version._get_tz())
             rid = version.employee_id.resource_id.id
-            default_wet_id = version._get_default_work_entry_type_id()
+            default_time_type_id = version._get_default_time_type_id()
             emp_atts = attendances.filtered(lambda a: a.employee_id == version.employee_id)
 
             raw_att = []
@@ -122,15 +122,15 @@ class HrVersion(models.Model):
                 # exclude break from worked time
                 work_check_out = check_out - timedelta(hours=att.break_duration) if att.break_duration else check_out
                 if work_check_out > check_in:
-                    wet = att.work_entry_type_id or self.env['hr.work.entry.type'].browse(default_wet_id)
-                    raw_att.append((check_in, work_check_out, wet))
+                    time_type = att.time_type_id or self.env['hr.time.type'].browse(default_time_type_id)
+                    raw_att.append((check_in, work_check_out, time_type))
                     att_by_range[check_in, work_check_out] = att
 
             # priority-resolve attendance against wt-leave intervals (lower sequence wins)
-            leave_types = {wet for _, _, wet in wt_iv_by_rid.get(rid, [])}
+            leave_types = {time_type for _, _, time_type in wt_iv_by_rid.get(rid, [])}
             combined = raw_att + wt_iv_by_rid.get(rid, [])
-            for seg_start, seg_stop, wet in self._resolve_attendance_intervals(combined):
-                if wet in leave_types:
+            for seg_start, seg_stop, time_type in self._resolve_attendance_intervals(combined):
+                if time_type in leave_types:
                     # wt-leave won; so we skip and let base handle it
                     continue
                 # attendance won: look up the source record (dict miss on split sub-segments,
@@ -144,7 +144,7 @@ class HrVersion(models.Model):
                 attendance_vals.append({
                     'date_start': seg_start.replace(tzinfo=None),
                     'date_stop': seg_stop.replace(tzinfo=None),
-                    'work_entry_type_id': wet,
+                    'time_type_id': time_type,
                     'employee_id': version.employee_id,
                     'version_id': version,
                     'company_id': version.company_id,
@@ -204,7 +204,7 @@ class HrVersion(models.Model):
         if not payload:
             return [interval]
 
-        count_as = self._get_interval_work_entry_type(interval).count_as
+        count_as = self._get_interval_time_type(interval).count_as
 
         if count_as == 'absence':
             # worked time wins over absence where they overlap

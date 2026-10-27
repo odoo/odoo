@@ -43,20 +43,20 @@ class TestWorkEntryBase(TransactionCase):
             'contract_date_end': Date.today() + relativedelta(years=2),
         })
 
-        cls.work_entry_type = cls.env['hr.work.entry.type'].create({
+        cls.time_type = cls.env['hr.time.type'].create({
             'name': 'Extra attendance',
             'count_as': 'working_time',
             'code': 'WORKTEST200',
         })
 
-        cls.work_entry_type_unpaid = cls.env['hr.work.entry.type'].create({
+        cls.time_type_unpaid = cls.env['hr.time.type'].create({
             'name': 'Unpaid Time Off',
             'count_as': 'absence',
             'code': 'LEAVETEST300',
             'amount_rate': 0.0,
         })
 
-        cls.work_entry_type_leave = cls.env['hr.work.entry.type'].create({
+        cls.time_type_leave = cls.env['hr.time.type'].create({
             'name': 'Time Off',
             'count_as': 'absence',
             'code': 'LEAVETEST100',

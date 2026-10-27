@@ -27,7 +27,7 @@ class HrLeave(models.Model):
         for leave in leaves_with_active_employee:
             project, task = leave.employee_id.company_id.internal_project_id, leave.employee_id.company_id.leave_timesheet_task_id
 
-            if not project or not task or leave.work_entry_type_id.count_as == 'working_time':
+            if not project or not task or leave.time_type_id.count_as == 'working_time':
                 continue
 
             leave_ids.append(leave.id)
@@ -45,9 +45,9 @@ class HrLeave(models.Model):
 
             if leave_version_sudo._is_flexible() and leave.date_from.date() == leave.date_to.date():
                 leave_date = leave.date_from.astimezone(employee_timezone).date()
-                if leave.work_entry_type_request_unit == 'hour':
+                if leave.time_type_request_unit == 'hour':
                     hours = leave.request_hour_to - leave.request_hour_from
-                elif leave.work_entry_type_request_unit == 'half_day' and leave.request_date_from_period == leave.request_date_to_period:
+                elif leave.time_type_request_unit == 'half_day' and leave.request_date_from_period == leave.request_date_to_period:
                     hours = leave_version_sudo.resource_calendar_id.hours_per_day / 2
                 else:  # Single-day leave
                     hours = leave_version_sudo.resource_calendar_id.hours_per_day
@@ -57,7 +57,7 @@ class HrLeave(models.Model):
                 if leave in mapped_calendar_leaves:
                     ignored_resource_calendar_leaves.append(mapped_calendar_leaves[leave])
                 leave_from, leave_to = leave.date_from, leave.date_to
-                if leave.work_entry_type_request_unit == 'day':
+                if leave.time_type_request_unit == 'day':
                     leave_from = datetime.combine(leave.request_date_from, time.min, tzinfo=employee_timezone)
                     leave_to = datetime.combine(leave.request_date_to, time.max, tzinfo=employee_timezone)
                 work_hours_data = employee._list_work_time_per_day(

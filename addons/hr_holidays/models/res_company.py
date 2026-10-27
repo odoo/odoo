@@ -12,8 +12,8 @@ class ResCompany(models.Model):
         for record in self:
             conflict_domain = [
                 ('employee_company_id', '=', record.id),
-                ('work_entry_type_id.country_id', '!=', False),
-                ('work_entry_type_id.country_id', '!=', record.country_id.id),
+                ('time_type_id.country_id', '!=', False),
+                ('time_type_id.country_id', '!=', record.country_id.id),
             ]
             if (
                 self.env['hr.leave'].search_count(conflict_domain, limit=1)
