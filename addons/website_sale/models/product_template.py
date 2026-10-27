@@ -61,7 +61,9 @@ class ProductTemplate(models.Model):
         """
         start_sequence = 10000
         # Schema initialization may evaluate the default before adding the column.
-        if self.env.context.get('module') and not column_exists(self.env.cr, self._table, 'website_sequence'):
+        if self.env.context.get("module") and not column_exists(
+            self.env.cr, self._table, "website_sequence"
+        ):
             return start_sequence
         self.env.cr.execute(
             SQL("SELECT MAX(website_sequence) FROM %s", SQL.identifier(self._table))
@@ -780,14 +782,18 @@ class ProductTemplate(models.Model):
             return {}
 
         currency = website.currency_id
-        pricelist_prices = pricelist_sudo._compute_price_rule(self, 1.0)
+        pricelist_prices_and_rules = pricelist_sudo._compute_price_rule(self, 1.0)
         comparison_prices_enabled = self.env["res.groups"]._is_feature_enabled(
             "website_sale.group_product_price_comparison"
         )
         uom_price_enabled = website.show_product_reference_price
+
+        PricelistItemSudo = self.env["product.pricelist.item"].sudo()
+
         res = {}
         for template in self:
-            pricelist_price, pricelist_rule_id = pricelist_prices[template.id]
+            pricelist_price, pricelist_rule_ids = pricelist_prices_and_rules[template.id]
+            pricelist_rule_id = next(iter(pricelist_rule_ids), False)
 
             product_taxes = template.sudo().taxes_id._filter_taxes_by_company()
             taxes = fiscal_position_sudo.map_tax(product_taxes)
@@ -804,13 +810,20 @@ class ProductTemplate(models.Model):
                     website=website,
                 ),
             }
-            pricelist_item_sudo = (
-                template.env["product.pricelist.item"].sudo().browse(pricelist_rule_id)
-            )
+
+            pricelist_item_sudo = PricelistItemSudo.browse(pricelist_rule_id)
             if pricelist_item_sudo._show_discount_on_shop():
-                pricelist_base_price = pricelist_item_sudo._compute_price_before_discount(
+                applied_price_rules_sudo = PricelistItemSudo.browse(pricelist_rule_ids)
+                base_rule = PricelistItemSudo
+                for rule_sudo in applied_price_rules_sudo:
+                    if not rule_sudo._show_discount_on_shop():
+                        base_rule = rule_sudo
+                        break
+
+                pricelist_base_price = base_rule._compute_price(
                     product=template, quantity=1.0, uom=template._get_main_uom(), currency=currency
                 )
+
                 if currency.compare_amounts(pricelist_base_price, pricelist_price) == 1:
                     base_price = pricelist_base_price
                     template_price_vals["base_price"] = template._apply_taxes_to_price(
