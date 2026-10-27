@@ -1,4 +1,4 @@
-import { useHover } from "@mail/utils/common/hooks";
+import { useHover, UseHoverOverlay } from "@mail/utils/common/hooks";
 import { Component } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -12,14 +12,14 @@ import { useService } from "@web/core/utils/hooks";
 export class DiscussSearch extends Component {
     static template = "mail.DiscussSearch";
     static props = ["class?"];
-    static components = { Dropdown };
+    static components = { Dropdown, UseHoverOverlay };
 
     setup() {
         super.setup();
         this.store = useService("mail.store");
         this.command = useService("command");
         this.ui = useService("ui");
-        this.searchHover = useHover(["search-btn", "search-floating"], {
+        this.searchHover = useHover(["search-btn"], {
             onHover: () => {
                 if (this.store.discuss.isSidebarCompact) {
                     this.searchFloating.isOpen = true;
@@ -69,6 +69,7 @@ export class DiscussSearch extends Component {
     }
 
     onClickSearchConversations() {
+        this.searchFloating.close();
         this.command.openMainPalette({ searchValue: "@" });
     }
 }
