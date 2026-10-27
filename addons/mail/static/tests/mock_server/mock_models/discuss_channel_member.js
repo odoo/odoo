@@ -264,7 +264,7 @@ export class DiscussChannelMember extends models.ServerModel {
         for (const member of members) {
             if (member && member.is_pinned !== pinned) {
                 DiscussChannelMember.write([member.id], {
-                    unpin_dt: pinned ? false : serializeDateTime(today()),
+                    unpin_dt: pinned ? false : serializeDateTime(DateTime.now()),
                 });
             }
             const [partner] = ResPartner.read(this.env.user.partner_id);
