@@ -144,11 +144,12 @@ class ProductProduct(models.Model):
                 else "https://schema.org/InStock"
             )
 
+        product_url = f"{base_url}{self.env['ir.http']._url_for(self.website_url)}"
         vals = {
             "@type": "Product",
-            "@id": f"{base_url}{self.website_url}/#product-{self.id}",
+            "@id": f"{product_url}/#product-{self.id}",
             "name": self.with_context(display_default_code=False).display_name,
-            "url": f"{base_url}{self.website_url}",
+            "url": product_url,
             "offers": offer,
             "image": f"{base_url}{self._get_image_1920_url()}",
         }

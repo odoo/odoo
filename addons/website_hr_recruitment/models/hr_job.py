@@ -184,11 +184,12 @@ spirit. To be successful, you will have solid solving problem skills.''')
             # for fully remote roles).
             return None
         base_url = self.get_base_url()
+        job_url = f"{base_url}{self.env['ir.http']._url_for(self.website_url)}"
         vals = {
             '@type': 'JobPosting',
-            '@id': f'{base_url}{self.website_url}/#jobposting',
+            '@id': f'{job_url}/#jobposting',
             'title': self.name,
-            'url': f'{base_url}{self.website_url}',
+            'url': job_url,
             'description': text_from_html(self.website_description, True),
             'directApply': True,
             'hiringOrganization': {

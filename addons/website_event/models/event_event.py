@@ -692,6 +692,8 @@ class EventEvent(models.Model):
                 location['address'] = postal
             attendance_mode = 'OfflineEventAttendanceMode'
         else:
+            # Not localized on purpose: usually an external meeting link (event_url);
+            # the event page fallback only needs to resolve, not match the canonical URL.
             location = {'@type': 'VirtualLocation', 'url': self.event_share_url}
             attendance_mode = 'OnlineEventAttendanceMode'
         description = self.subtitle or (
@@ -700,11 +702,12 @@ class EventEvent(models.Model):
         event_status = (
             'EventCancelled' if self.kanban_state == 'cancel' else 'EventScheduled'
         )
+        event_url = f"{base_url}{self.env['ir.http']._url_for(self.website_url)}"
         vals = {
             '@type': 'Event',
-            '@id': f'{self.website_absolute_url}/#event',
+            '@id': f'{event_url}/#event',
             'name': self.name,
-            'url': self.website_absolute_url,
+            'url': event_url,
             'startDate': self._to_iso_datetime(self.date_begin),
             'endDate': self._to_iso_datetime(self.date_end),
             'eventStatus': f'https://schema.org/{event_status}',
@@ -758,7 +761,8 @@ class EventEvent(models.Model):
         if ticket.end_sale_datetime:
             offer['validThrough'] = self._to_iso_datetime(ticket.end_sale_datetime)
         if is_available:
-            offer['url'] = f'{self.website_absolute_url}/register'
+            register_path = self.env['ir.http']._url_for(f'{self.website_url}/register')
+            offer['url'] = f'{self.get_base_url()}{register_path}'
         return offer
 
     def _get_breadcrumb_items(self, is_detail_page=False):

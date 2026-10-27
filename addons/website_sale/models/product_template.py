@@ -1482,12 +1482,13 @@ class ProductTemplate(models.Model):
                 or None
             )
             variants = self.product_variant_ids[:limit] if limit else self.product_variant_ids
+            product_url = f"{base_url}{self.env['ir.http']._url_for(self.website_url)}"
             vals = {
                 "@type": "ProductGroup",
-                "@id": f"{base_url}{self.website_url}/#productgroup",
+                "@id": f"{product_url}/#productgroup",
                 "name": self.name,
                 "image": f"{base_url}{website.image_url(self, 'image_1920')}",
-                "url": f"{base_url}{self.website_url}",
+                "url": product_url,
                 "hasVariant": [variant._prepare_jsonld_vals() for variant in variants],
             }
             if self.description_ecommerce:

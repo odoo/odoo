@@ -1131,16 +1131,16 @@ class SlideChannel(models.Model):
         description = self.description_short and text_from_html(self.description_short, True)
         if not description and self.description:
             description = text_from_html(self.description, True)
+        course_url = f"{base_url}{self.env['ir.http']._url_for(self.website_url)}"
         vals = {
             '@type': 'Course',
-            '@id': f'{self.website_absolute_url}/#course',
+            '@id': f'{course_url}/#course',
             'name': self.name,
             'provider': {'@id': f'{base_url}/#organization'},
+            'url': course_url,
         }
         if description:
             vals['description'] = description
-        if self.website_url:
-            vals['url'] = f'{base_url}{self.website_url}'
         if image_url := self.env['website'].image_url(self, 'image_1024'):
             vals['image'] = f'{base_url}{image_url}'
         return vals

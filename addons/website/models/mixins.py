@@ -343,7 +343,7 @@ class WebsiteStructuredDataMixin(models.AbstractModel):
                     '@type': 'ListItem',
                     'position': i,
                     'name': name,
-                    'item': url_join(base_url, url),
+                    'item': url_join(base_url, self.env['ir.http']._url_for(url)),
                 }
                 for i, (name, url) in enumerate(items, start=1)
             ],
@@ -369,7 +369,7 @@ class WebsiteStructuredDataMixin(models.AbstractModel):
         return {
             '@type': 'CollectionPage',
             'name': name,
-            'url': f'{base_url}{path}',
+            'url': f"{base_url}{self.env['ir.http']._url_for(path)}",
             'publisher': {'@id': f'{base_url}/#organization'},
             'mainEntity': {
                 '@type': 'ItemList',
@@ -392,7 +392,7 @@ class WebsiteStructuredDataMixin(models.AbstractModel):
         if embed_items:
             list_item['item'] = record._prepare_jsonld_vals()
         else:
-            list_item['url'] = f'{base_url}{record.website_url}'
+            list_item['url'] = f"{base_url}{self.env['ir.http']._url_for(record.website_url)}"
             list_item['name'] = record[name_field]
         return list_item
 

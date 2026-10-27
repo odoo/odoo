@@ -838,14 +838,15 @@ class ForumPost(models.Model):
         return self._prepare_question_jsonld_vals()
 
     def _prepare_question_jsonld_vals(self):
+        post_url = f"{self.get_base_url()}{self.env['ir.http']._url_for(self.website_url)}"
         vals = {
             '@type': 'Question',
-            '@id': f'{self.website_absolute_url}/#question',
+            '@id': f'{post_url}/#question',
             'name': self.name,
             'answerCount': self.child_count,
             'upvoteCount': self.vote_count,
             'datePublished': self._to_iso_datetime(self.create_date),
-            'url': self.website_absolute_url,
+            'url': post_url,
             'author': {'@type': 'Person', 'name': self.create_uid.name},
         }
         if self.plain_content:
@@ -855,12 +856,13 @@ class ForumPost(models.Model):
         return vals
 
     def _prepare_reply_jsonld_vals(self, schema_type='Answer'):
+        post_url = f"{self.get_base_url()}{self.env['ir.http']._url_for(self.website_url)}"
         vals = {
             '@type': schema_type,
-            '@id': f'{self.website_absolute_url}/#{schema_type.lower()}-{self.id}',
+            '@id': f'{post_url}/#{schema_type.lower()}-{self.id}',
             'upvoteCount': self.vote_count,
             'datePublished': self._to_iso_datetime(self.create_date),
-            'url': self.website_absolute_url,
+            'url': post_url,
             'author': {'@type': 'Person', 'name': self.create_uid.name},
         }
         if self.plain_content:
@@ -897,14 +899,15 @@ class ForumPost(models.Model):
         self.ensure_one()
         if self.parent_id:
             return {}
+        post_url = f"{self.get_base_url()}{self.env['ir.http']._url_for(self.website_url)}"
         vals = {
             '@type': 'DiscussionForumPosting',
-            '@id': f'{self.website_absolute_url}/#discussionforumposting',
+            '@id': f'{post_url}/#discussionforumposting',
             'headline': self.name,
             'text': self.plain_content or self.name,
             'commentCount': self.child_count,
             'datePublished': self._to_iso_datetime(self.create_date),
-            'url': self.website_absolute_url,
+            'url': post_url,
             'author': {'@type': 'Person', 'name': self.create_uid.name},
         }
         if date_modified := self._to_iso_datetime(self.write_date_content):

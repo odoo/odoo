@@ -109,7 +109,7 @@ class BlogBlog(models.Model):
     def _prepare_jsonld_vals(self):
         self.ensure_one()
         base_url = self.get_base_url()
-        blog_url = f'{base_url}{self.website_url}'
+        blog_url = f"{base_url}{self.env['ir.http']._url_for(self.website_url)}"
         vals = {
             '@type': 'Blog',
             '@id': f'{blog_url}/#blog',
@@ -376,7 +376,8 @@ class BlogPost(models.Model):
     def _prepare_jsonld_vals(self):
         self.ensure_one()
         base_url = self.get_base_url()
-        post_url = f'{base_url}{self.website_url}'
+        post_url = f"{base_url}{self.env['ir.http']._url_for(self.website_url)}"
+        blog_url = f"{base_url}{self.env['ir.http']._url_for(self.blog_id.website_url)}"
         vals = {
             '@type': 'BlogPosting',
             '@id': f'{post_url}/#blogpost',
@@ -384,7 +385,7 @@ class BlogPost(models.Model):
             'url': post_url,
             'dateModified': self._to_iso_datetime(self.write_date),
             'publisher': {'@id': f'{base_url}/#organization'},
-            'isPartOf': {'@id': f'{base_url}{self.blog_id.website_url}/#blog'},
+            'isPartOf': {'@id': f'{blog_url}/#blog'},
         }
         if self.published_date:
             vals['datePublished'] = self._to_iso_datetime(self.published_date)
