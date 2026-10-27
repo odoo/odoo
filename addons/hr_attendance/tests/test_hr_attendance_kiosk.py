@@ -142,9 +142,9 @@ class TestHrAttendanceKiosk(HttpCase):
                 break_duration=1,
             )
 
-    def test_update_break_duration_does_not_change_validated_attendance(self):
+    def test_update_break_duration_does_not_change_refused_attendance(self):
         attendance = self._create_checked_out_attendance()
-        attendance.with_context(skip_time_rules=True).write({'state': 'validated'})
+        attendance.with_context(skip_time_rules=True).write({'state': 'refused'})
 
         result = self._update_break(
             employee_id=self.employee_A.id,

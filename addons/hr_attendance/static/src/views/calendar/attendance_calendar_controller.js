@@ -5,6 +5,7 @@ import { CalendarController } from "@web/views/calendar/calendar_controller";
 import { onWillStart } from "@odoo/owl";
 
 export class AttendanceCalendarController extends CalendarController {
+    static template = "hr_attendance.AttendanceCalendarController";
 
     setup() {
         super.setup();

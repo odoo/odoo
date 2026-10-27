@@ -1,0 +1,10 @@
+/* The time of a late check-in or an early check-out (first and last time of the card) in red. */
+.o_attendance_kanban {
+    .o_attendance_late_check_in .o_field_widget > div > span:first-child,
+    .o_attendance_early_check_out .o_field_daterange > div > span:last-child {
+        padding: 0 var(--o-bs-spacer-2);
+        border-radius: var(--border-radius-pill);
+        background-color: color-mix(in srgb, var(--danger) 15%, var(--o-view-background-color));
+        color: color-mix(in srgb, var(--danger) 75%, var(--emphasis-color));
+    }
+}

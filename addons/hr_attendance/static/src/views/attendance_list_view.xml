@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <t t-name="hr_attendance.AttendanceListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_list_renderer')]" position="before">
+            <AttendanceDashboard t-if="this.showDashboard" list="this.props.list"/>
+        </xpath>
         <ActionHelper position="replace"/>
         <table position="after">
             <t t-if="this.showNoContentHelper">
-                <AttendanceActionHelper noContentHelp="this.props.noContentHelp"/>
+                <!-- the onboarding helper is for the attendance managers, users get the action's help -->
+                <AttendanceActionHelper t-if="this.showDashboard" noContentHelp="this.props.noContentHelp"/>
+                <ActionHelper t-else="" noContentHelp="this.props.noContentHelp"/>
             </t>
         </table>
     </t>

@@ -37,88 +37,264 @@
             <field name="attendance_manager_id" ref="base.user_demo"/>
         </record>
 
+        <!-- last month is reviewed; the last two days go through the review policy -->
         <record id="attendance_root1" model="hr.attendance">
             <field eval="(datetime.now()+relativedelta(months=-1, days=-1)).strftime('%Y-%m-%d 08:00:24')" name="check_in"/>
             <field eval="(datetime.now()+relativedelta(months=-1, days=-1)).strftime('%Y-%m-%d 12:01:33')" name="check_out"/>
             <field name="employee_id" ref="hr.employee_admin"/>
+            <field name="state">validated</field>
+            <field name="in_mode">systray</field>
+            <field name="in_location">1367 Ramillies, Belgium</field>
+            <field name="in_latitude">50.6326412</field>
+            <field name="in_longitude">4.8670315</field>
+            <field name="in_ip_address">198.51.100.24</field>
+            <field name="in_browser">chrome</field>
+            <field name="out_mode">systray</field>
+            <field name="out_location">1367 Ramillies, Belgium</field>
+            <field name="out_latitude">50.6326412</field>
+            <field name="out_longitude">4.8670315</field>
+            <field name="out_ip_address">198.51.100.24</field>
+            <field name="out_browser">chrome</field>
         </record>
 
         <record id="attendance_root2" model="hr.attendance">
             <field eval="(datetime.now()+relativedelta(months=-1, days=-1)).strftime('%Y-%m-%d 13:02:58')" name="check_in"/>
             <field eval="(datetime.now()+relativedelta(months=-1, days=-1)).strftime('%Y-%m-%d 18:09:22')" name="check_out"/>
             <field name="employee_id" ref="hr.employee_admin"/>
+            <field name="state">validated</field>
+            <field name="in_mode">systray</field>
+            <field name="in_location">1367 Ramillies, Belgium</field>
+            <field name="in_latitude">50.6326412</field>
+            <field name="in_longitude">4.8670315</field>
+            <field name="in_ip_address">198.51.100.24</field>
+            <field name="in_browser">chrome</field>
+            <field name="out_mode">systray</field>
+            <field name="out_location">1367 Ramillies, Belgium</field>
+            <field name="out_latitude">50.6326412</field>
+            <field name="out_longitude">4.8670315</field>
+            <field name="out_ip_address">198.51.100.24</field>
+            <field name="out_browser">chrome</field>
         </record>
 
         <record id="attendance1" model="hr.attendance">
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-01 08:21')" name="check_in"/>
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-01 15:51')" name="check_out"/>
             <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="state">validated</field>
+            <field name="in_mode">kiosk</field>
+            <field name="in_location">1000 Brussels, Belgium</field>
+            <field name="in_latitude">50.8465573</field>
+            <field name="in_longitude">4.3517210</field>
+            <field name="in_ip_address">203.0.113.10</field>
+            <field name="in_browser">chrome</field>
+            <field name="out_mode">kiosk</field>
+            <field name="out_location">1000 Brussels, Belgium</field>
+            <field name="out_latitude">50.8465573</field>
+            <field name="out_longitude">4.3517210</field>
+            <field name="out_ip_address">203.0.113.10</field>
+            <field name="out_browser">chrome</field>
         </record>
 
         <record id="attendance2" model="hr.attendance">
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-02 08:47')" name="check_in"/>
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-02 15:53')" name="check_out"/>
             <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="state">validated</field>
+            <field name="in_mode">kiosk</field>
+            <field name="in_location">1000 Brussels, Belgium</field>
+            <field name="in_latitude">50.8465573</field>
+            <field name="in_longitude">4.3517210</field>
+            <field name="in_ip_address">203.0.113.10</field>
+            <field name="in_browser">chrome</field>
+            <field name="out_mode">kiosk</field>
+            <field name="out_location">1000 Brussels, Belgium</field>
+            <field name="out_latitude">50.8465573</field>
+            <field name="out_longitude">4.3517210</field>
+            <field name="out_ip_address">203.0.113.10</field>
+            <field name="out_browser">chrome</field>
         </record>
 
         <record id="attendance3" model="hr.attendance">
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-03 08:32')" name="check_in"/>
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-03 15:22')" name="check_out"/>
             <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="state">validated</field>
+            <field name="in_mode">kiosk</field>
+            <field name="in_location">1000 Brussels, Belgium</field>
+            <field name="in_latitude">50.8465573</field>
+            <field name="in_longitude">4.3517210</field>
+            <field name="in_ip_address">203.0.113.10</field>
+            <field name="in_browser">chrome</field>
+            <field name="out_mode">kiosk</field>
+            <field name="out_location">1000 Brussels, Belgium</field>
+            <field name="out_latitude">50.8465573</field>
+            <field name="out_longitude">4.3517210</field>
+            <field name="out_ip_address">203.0.113.10</field>
+            <field name="out_browser">chrome</field>
         </record>
 
         <record id="attendance4" model="hr.attendance">
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-04 08:01')" name="check_in"/>
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-04 16:21')" name="check_out"/>
             <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="state">validated</field>
+            <field name="in_mode">kiosk</field>
+            <field name="in_location">1000 Brussels, Belgium</field>
+            <field name="in_latitude">50.8465573</field>
+            <field name="in_longitude">4.3517210</field>
+            <field name="in_ip_address">203.0.113.10</field>
+            <field name="in_browser">chrome</field>
+            <field name="out_mode">kiosk</field>
+            <field name="out_location">1000 Brussels, Belgium</field>
+            <field name="out_latitude">50.8465573</field>
+            <field name="out_longitude">4.3517210</field>
+            <field name="out_ip_address">203.0.113.10</field>
+            <field name="out_browser">chrome</field>
         </record>
 
         <record id="attendance5" model="hr.attendance">
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-05 10:10')" name="check_in"/>
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-05 14:42')" name="check_out"/>
             <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="state">validated</field>
+            <field name="in_mode">kiosk</field>
+            <field name="in_location">1000 Brussels, Belgium</field>
+            <field name="in_latitude">50.8465573</field>
+            <field name="in_longitude">4.3517210</field>
+            <field name="in_ip_address">203.0.113.10</field>
+            <field name="in_browser">chrome</field>
+            <field name="out_mode">kiosk</field>
+            <field name="out_location">1000 Brussels, Belgium</field>
+            <field name="out_latitude">50.8465573</field>
+            <field name="out_longitude">4.3517210</field>
+            <field name="out_ip_address">203.0.113.10</field>
+            <field name="out_browser">chrome</field>
         </record>
 
         <record id="attendance6" model="hr.attendance">
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-06 10:10')" name="check_in"/>
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-06 17:34')" name="check_out"/>
             <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="state">validated</field>
+            <field name="in_mode">kiosk</field>
+            <field name="in_location">1000 Brussels, Belgium</field>
+            <field name="in_latitude">50.8465573</field>
+            <field name="in_longitude">4.3517210</field>
+            <field name="in_ip_address">203.0.113.10</field>
+            <field name="in_browser">chrome</field>
+            <field name="out_mode">kiosk</field>
+            <field name="out_location">1000 Brussels, Belgium</field>
+            <field name="out_latitude">50.8465573</field>
+            <field name="out_longitude">4.3517210</field>
+            <field name="out_ip_address">203.0.113.10</field>
+            <field name="out_browser">chrome</field>
         </record>
 
         <record id="attendance7" model="hr.attendance">
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-07 08:21')" name="check_in"/>
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-07 17:29')" name="check_out"/>
             <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="state">validated</field>
+            <field name="in_mode">kiosk</field>
+            <field name="in_location">1000 Brussels, Belgium</field>
+            <field name="in_latitude">50.8465573</field>
+            <field name="in_longitude">4.3517210</field>
+            <field name="in_ip_address">203.0.113.10</field>
+            <field name="in_browser">chrome</field>
+            <field name="out_mode">kiosk</field>
+            <field name="out_location">1000 Brussels, Belgium</field>
+            <field name="out_latitude">50.8465573</field>
+            <field name="out_longitude">4.3517210</field>
+            <field name="out_ip_address">203.0.113.10</field>
+            <field name="out_browser">chrome</field>
         </record>
 
         <record id="attendance8" model="hr.attendance">
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-08 09:21')" name="check_in"/>
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-08 14:54')" name="check_out"/>
             <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="state">validated</field>
+            <field name="in_mode">kiosk</field>
+            <field name="in_location">1000 Brussels, Belgium</field>
+            <field name="in_latitude">50.8465573</field>
+            <field name="in_longitude">4.3517210</field>
+            <field name="in_ip_address">203.0.113.10</field>
+            <field name="in_browser">chrome</field>
+            <field name="out_mode">kiosk</field>
+            <field name="out_location">1000 Brussels, Belgium</field>
+            <field name="out_latitude">50.8465573</field>
+            <field name="out_longitude">4.3517210</field>
+            <field name="out_ip_address">203.0.113.10</field>
+            <field name="out_browser">chrome</field>
         </record>
 
         <record id="attendance9" model="hr.attendance">
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-09 10:32')" name="check_in"/>
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-09 17:31')" name="check_out"/>
             <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="state">validated</field>
+            <field name="in_mode">kiosk</field>
+            <field name="in_location">1000 Brussels, Belgium</field>
+            <field name="in_latitude">50.8465573</field>
+            <field name="in_longitude">4.3517210</field>
+            <field name="in_ip_address">203.0.113.10</field>
+            <field name="in_browser">chrome</field>
+            <field name="out_mode">kiosk</field>
+            <field name="out_location">1000 Brussels, Belgium</field>
+            <field name="out_latitude">50.8465573</field>
+            <field name="out_longitude">4.3517210</field>
+            <field name="out_ip_address">203.0.113.10</field>
+            <field name="out_browser">chrome</field>
         </record>
 
         <record id="attendance10" model="hr.attendance">
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-10 08:00')" name="check_in"/>
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-10 17:00')" name="check_out"/>
             <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="state">validated</field>
+            <field name="in_mode">kiosk</field>
+            <field name="in_location">1000 Brussels, Belgium</field>
+            <field name="in_latitude">50.8465573</field>
+            <field name="in_longitude">4.3517210</field>
+            <field name="in_ip_address">203.0.113.10</field>
+            <field name="in_browser">chrome</field>
+            <field name="out_mode">kiosk</field>
+            <field name="out_location">1000 Brussels, Belgium</field>
+            <field name="out_latitude">50.8465573</field>
+            <field name="out_longitude">4.3517210</field>
+            <field name="out_ip_address">203.0.113.10</field>
+            <field name="out_browser">chrome</field>
         </record>
 
         <record id="attendance11" model="hr.attendance">
             <field eval="(datetime.now()+timedelta(hours=-4)).strftime('%Y-%m-%d %H:%M:00')" name="check_in"/>
             <field eval="(datetime.now()+timedelta(minutes=-30)).strftime('%Y-%m-%d %H:%M:00')" name="check_out"/>
             <field name="employee_id" ref="hr.employee_hne"/>
+            <field name="in_mode">systray</field>
+            <field name="in_location">1367 Ramillies, Belgium</field>
+            <field name="in_latitude">50.6326412</field>
+            <field name="in_longitude">4.8670315</field>
+            <field name="in_ip_address">198.51.100.31</field>
+            <field name="in_browser">firefox</field>
+            <field name="out_mode">systray</field>
+            <field name="out_location">1367 Ramillies, Belgium</field>
+            <field name="out_latitude">50.6326412</field>
+            <field name="out_longitude">4.8670315</field>
+            <field name="out_ip_address">198.51.100.31</field>
+            <field name="out_browser">firefox</field>
         </record>
 
         <record id="attendance12" model="hr.attendance">
             <field eval="(datetime.now()+timedelta(hours=-31)).strftime('%Y-%m-%d %H:%M:00')" name="check_in"/>
             <field eval="(datetime.now()+timedelta(hours=-7)).strftime('%Y-%m-%d %H:%M:00')" name="check_out"/>
             <field name="employee_id" ref="hr.employee_mit"/>
+            <field name="in_mode">systray</field>
+            <field name="in_location">1348 Ottignies-Louvain-la-Neuve, Belgium</field>
+            <field name="in_latitude">50.6683022</field>
+            <field name="in_longitude">4.6118734</field>
+            <field name="in_ip_address">198.51.100.57</field>
+            <field name="in_browser">safari</field>
+            <field name="out_mode">manual</field>
         </record>
 
         <record id="attendance12_message1" model="mail.message">
@@ -135,12 +311,36 @@
             <field eval="(datetime.now()+timedelta(hours=-7)).strftime('%Y-%m-%d %H:%M:10')" name="check_in"/>
             <field eval="(datetime.now()+timedelta(hours=-2)).strftime('%Y-%m-%d %H:%M:00')" name="check_out"/>
             <field name="employee_id" ref="hr.employee_mit"/>
+            <field name="in_mode">systray</field>
+            <field name="in_location">1300 Wavre, Belgium</field>
+            <field name="in_latitude">50.7171553</field>
+            <field name="in_longitude">4.6067541</field>
+            <field name="in_ip_address">192.0.2.88</field>
+            <field name="in_browser">safari</field>
+            <field name="out_mode">systray</field>
+            <field name="out_location">1300 Wavre, Belgium</field>
+            <field name="out_latitude">50.7171553</field>
+            <field name="out_longitude">4.6067541</field>
+            <field name="out_ip_address">192.0.2.88</field>
+            <field name="out_browser">safari</field>
         </record>
 
         <record id="attendance14" model="hr.attendance">
             <field eval="(datetime.now()+timedelta(hours=-15)).strftime('%Y-%m-%d %H:%M:00')" name="check_in"/>
             <field eval="(datetime.now()+timedelta(hours=-3)).strftime('%Y-%m-%d %H:%M:00')" name="check_out"/>
             <field name="employee_id" ref="hr.employee_chs"/>
+            <field name="in_mode">kiosk</field>
+            <field name="in_location">1000 Brussels, Belgium</field>
+            <field name="in_latitude">50.8465573</field>
+            <field name="in_longitude">4.3517210</field>
+            <field name="in_ip_address">203.0.113.10</field>
+            <field name="in_browser">chrome</field>
+            <field name="out_mode">kiosk</field>
+            <field name="out_location">1000 Brussels, Belgium</field>
+            <field name="out_latitude">50.8465573</field>
+            <field name="out_longitude">4.3517210</field>
+            <field name="out_ip_address">203.0.113.10</field>
+            <field name="out_browser">chrome</field>
         </record>
     </data>
 </odoo>
