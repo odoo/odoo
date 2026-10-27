@@ -15,6 +15,7 @@ import {
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
 import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
+import { PEEK_TAB_DELAY } from "@mail/core/public_web/messaging_menu/messaging_menu";
 import { PEEK_CLOSE_DELAY, PEEK_DELAY } from "@mail/utils/common/hooks";
 import { describe, expect, test, waitFor } from "@odoo/hoot";
 import { animationFrame, hover, press, rightClick, waitForNone } from "@odoo/hoot-dom";
@@ -838,6 +839,7 @@ test("shown sidebar list hides once the pointer is around the tabs, unless it re
     );
     expect(".o-mail-MessagingMenu-tab.o-peeked").toHaveCount(0);
     await hover(".o-mail-MessagingMenu-tab[data-id='chat']");
+    await advanceTime(PEEK_TAB_DELAY);
     await waitFor(".o-mail-MessagingMenu-tab.o-peeked[data-id='chat']:count(1)");
     await hover(".o-mail-MessagingMenu-navbar");
     await advanceTime(PEEK_CLOSE_DELAY);
@@ -846,6 +848,29 @@ test("shown sidebar list hides once the pointer is around the tabs, unless it re
     );
     expect(".o-mail-MessagingMenu-container.o-peek").toHaveCount(0);
     expect(".o-mail-MessagingMenu-tab.o-peeked").toHaveCount(0);
+});
+
+test("shown sidebar list changes to a hovered tab once the pointer rests on it, not on each tab passed", async () => {
+    await start();
+    await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
+    await click("button[title='Collapse sidebar']");
+    await waitFor(".o-mail-DiscussApp-sidebar.o-collapsed:count(1)");
+    await hover(".o-mail-MessagingMenu-tab[data-id='chat']");
+    await advanceTime(PEEK_DELAY);
+    await waitFor(
+        ".o-mail-MessagingMenu-container.o-peek .o-mail-MessagingMenu-tab.o-peeked[data-id='chat']:count(1)"
+    );
+    await hover(".o-mail-MessagingMenu-tab[data-id='channel']");
+    await hover(".o-mail-MessagingMenu-tab[data-id='meeting']");
+    await advanceTime(PEEK_TAB_DELAY - 1);
+    await animationFrame();
+    expect(".o-mail-MessagingMenu-tab.o-peeked[data-id='chat']").toHaveCount(1);
+    expect(".o-mail-MessagingMenu-tab.o-peeked").toHaveCount(1);
+    await advanceTime(1);
+    await waitFor(
+        ".o-mail-MessagingMenu-container.o-peek .o-mail-MessagingMenu-tab.o-peeked[data-id='meeting']:count(1)"
+    );
+    expect(".o-mail-MessagingMenu-tab.o-peeked").toHaveCount(1);
 });
 
 test("shown sidebar list hides with the list of the hovered tab, not the one of the active tab", async () => {

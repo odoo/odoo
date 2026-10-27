@@ -17,6 +17,10 @@ import { normalize } from "@web/core/l10n/utils";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { useDebounced } from "@web/core/utils/timing";
+
+/** How long the pointer rests on a tab for the shown list to change to it. */
+export const PEEK_TAB_DELAY = 50;
 
 /** Never a submenu of an ancestor Dropdown it's embedded in, even visually/positionally. */
 class IsolatedDropdown extends Dropdown {
@@ -162,6 +166,12 @@ export class MessagingMenu extends Component {
             triggerSelector: ".o-mail-MessagingMenu-tab",
             keep: () => Boolean(this.state().searchTerm),
         });
+        // Shown, the list changes once the pointer rests on a tab, not on each tab it passes.
+        this.peekTabLater = useDebounced((tab) => {
+            if (this.peek.isOpen()) {
+                this.peekTab(tab);
+            }
+        }, PEEK_TAB_DELAY);
         this.guestNamePopover = usePopover(GuestNamePopover, {
             arrow: false,
             position: "right-end",
@@ -325,7 +335,12 @@ export class MessagingMenu extends Component {
      * @param {import("models").MessagingMenuTab} tab
      */
     onPointerenterTab(ev, tab) {
-        if (ev.pointerType === "mouse") {
+        if (ev.pointerType !== "mouse") {
+            return;
+        }
+        if (this.peek.isOpen()) {
+            this.peekTabLater(tab);
+        } else {
             this.peekTab(tab);
         }
     }
