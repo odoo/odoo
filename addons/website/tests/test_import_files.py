@@ -53,6 +53,6 @@ class TestImportFiles(TransactionCase):
             results["messages"],
             "results should be empty on successful import of ",
         )
-        self.assertEqual(len(result), 10)
+        self.assertEqual(len(result), 11)
         self.assertEqual(result['num_rows'], 2)
         self.assertItemsEqual(result['preview'], [['301 Moved permanently'], ['Shop'], ['/shop'], ['/boutique'], ['My Website']])
