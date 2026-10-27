@@ -256,7 +256,7 @@ export class DiscussChannel extends Record {
         [...this.channel_member_ids].sort((m1, m2) => m1.id - m2.id)
     );
     channel_name_member_ids = fields.Many("discuss.channel.member");
-    /** @type {"chat"|"channel"|"group"|"livechat"|"whatsapp"|"ai_chat"|"ai_composer"} */
+    /** @type {"chat"|"channel"|"group"|"livechat"|"whatsapp"|"ai_chat"} */
     channel_type;
     /** ⚠️ {@link AwaitChatHubInit} */
     chatWindow = fields.One("ChatWindow", { inverse: "channel" });
