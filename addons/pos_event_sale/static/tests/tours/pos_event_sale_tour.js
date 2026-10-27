@@ -7,13 +7,20 @@ import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as EventTourUtils from "@pos_event/../tests/tours/utils/event_tour_utils";
 import { registry } from "@web/core/registry";
 
-// The quotation has no attendee yet: the PoS asks for them.
+// If quotation has no attendee yet: the PoS asks for them else asks for nothing
 registry.category("web_tour.tours").add("SettleEventQuotation", {
     steps: () =>
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             EventTourUtils.SettleEventRegistration(),
+            {
+                content: "No attendee is asked for",
+                trigger: "body:not(:has(.modal))",
+            },
+            ProductScreen.totalAmountIs("200.00"),
+            ProductScreen.cancelOrder(),
+            EventTourUtils.SettleEventRegistration(2),
             Dialog.is({ title: "Tickets" }),
             EventTourUtils.answerTicketQuestion("1", "Name", "Attendee 1"),
             EventTourUtils.answerTicketQuestion("1", "Email", "attendee1@test.com"),
