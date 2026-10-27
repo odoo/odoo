@@ -57,22 +57,17 @@ export class ModelMany2Many extends Component {
         this.applyOperation = this.env.editor.shared.history.makePreviewableAsyncOperation(
             this.callApply.bind(this)
         );
-        const [record] = await this.cachedModel.ormRead(
-            props.baseModel,
-            [props.recordId],
-            [props.m2oField]
-        );
+        const [[record], modelData] = await Promise.all([
+            this.cachedModel.ormRead(props.baseModel, [props.recordId], [props.m2oField]),
+            this.fields.loadFields(props.baseModel, { fieldNames: [props.m2oField] }),
+        ]);
 
         if (this.scope.isDestroyed()) {
             return;
         }
 
-        const selectedRecordIds = record[props.m2oField];
         // TODO: handle no record
-        const modelData = await this.fields.loadFields(props.baseModel, {
-            fieldNames: [props.m2oField],
-        });
-        // TODO: simultaneously fly both RPCs
+        const selectedRecordIds = record[props.m2oField];
         this.state.searchModel = modelData[props.m2oField].relation;
         this.modelEdit = this.cachedModel.useModelEdit({
             model: this.props.baseModel,

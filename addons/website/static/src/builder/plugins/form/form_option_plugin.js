@@ -570,20 +570,13 @@ export class FormOptionPlugin extends Plugin {
      * To be used in load for any action that uses getActiveField or
      * replaceField
      */
-    async prepareFields({ editingElement: fieldEl, value }) {
-        // TODO Through cache ?
-        const fieldOptionData = await this.loadFieldOptionData(fieldEl);
-        const fieldName = getFieldName(fieldEl);
-        const field = fieldOptionData.fields[fieldName];
-        const formEl = fieldEl.closest("form");
-        await this.fetchFieldRecords(field, formEl);
-        if (fieldOptionData.fields[value]) {
-            await this.fetchFieldRecords(fieldOptionData.fields[value], formEl);
-        }
-        return fieldOptionData.fields;
+    async prepareFields(context) {
+        return (await this.prepareFieldOptionData(context)).fields;
     }
-    async prepareConditionInputs({ editingElement: fieldEl, value }) {
-        // TODO Through cache ?
+    async prepareConditionInputs(context) {
+        return (await this.prepareFieldOptionData(context)).conditionInputs;
+    }
+    async prepareFieldOptionData({ editingElement: fieldEl, value }) {
         const fieldOptionData = await this.loadFieldOptionData(fieldEl);
         const fieldName = getFieldName(fieldEl);
         const field = fieldOptionData.fields[fieldName];
@@ -592,7 +585,7 @@ export class FormOptionPlugin extends Plugin {
         if (fieldOptionData.fields[value]) {
             await this.fetchFieldRecords(fieldOptionData.fields[value], formEl);
         }
-        return fieldOptionData.conditionInputs;
+        return fieldOptionData;
     }
     /**
      * Replaces the old field content with the field provided.
