@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import itertools
+from bisect import bisect_right
 from collections import defaultdict
 from datetime import datetime, time, timedelta, UTC
 from zoneinfo import ZoneInfo
@@ -9,6 +10,7 @@ from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import float_is_zero
+from odoo.tools.date_utils import localized
 from odoo.tools.intervals import Intervals
 
 
@@ -687,6 +689,65 @@ class HrVersion(models.Model):
         return work_entry_type.count_as == 'absence'
 
     @api.model
+    def _get_work_days_data_by_period(self, calendar, employees_by_period):
+        """Return the planned time of the employees on several periods, in a calendar.
+
+        Same result as ``employees._get_work_days_data_batch(date_start, date_stop,
+        compute_leaves=False, calendar=calendar)`` for each period, but the attendance intervals
+        are computed once for all the periods (the post-processing has one period per day of
+        absence), then clipped to each of them. Only when the intervals do not depend on the
+        period: neither the calendar nor any calendar of the employees is flexible (see
+        ``resource.calendar._attendance_intervals_batch``); otherwise each period is computed
+        on its own.
+
+        :param calendar: ``resource.calendar``
+        :param dict employees_by_period: ``{(date_start, date_stop): hr.employee}``, datetimes
+            in UTC (naive means UTC)
+        :return: ``{(date_start, date_stop): {employee_id: {'days': float, 'hours': float}}}``
+        :rtype: dict
+        """
+        all_employees = self.env['hr.employee'].union(employees_by_period.values())
+        employee_calendars = (
+            calendar
+            | all_employees.resource_calendar_id
+            | all_employees.sudo().with_context(active_test=False).version_ids.resource_calendar_id
+        )
+        if (len(employees_by_period) == 1 or not calendar
+                or any(employee_calendar._is_flexible() for employee_calendar in employee_calendars)):
+            return {
+                (date_start, date_stop): employees._get_work_days_data_batch(
+                    date_start, date_stop, compute_leaves=False, calendar=calendar)
+                for (date_start, date_stop), employees in employees_by_period.items()
+            }
+
+        result = defaultdict(dict)
+        start = min(localized(date_start) for date_start, _date_stop in employees_by_period)
+        stop = max(localized(date_stop) for _date_start, date_stop in employees_by_period)
+        for tz, tz_resources in all_employees.resource_id._get_resources_per_tz().items():
+            # the intervals of the calendar itself, those of any of its non flexible resources
+            intervals = list(calendar._attendance_intervals_batch(
+                start, stop, {tz: self.env['resource.resource']})[False])
+            interval_stops = [interval_stop for _interval_start, interval_stop, _records in intervals]
+            tz_resource_ids = set(tz_resources.ids)
+            for (date_start, date_stop), employees in employees_by_period.items():
+                tz_employees = employees.filtered(lambda employee: employee.resource_id.id in tz_resource_ids)
+                if not tz_employees:
+                    continue
+                period_start = localized(date_start).astimezone(tz)
+                period_stop = localized(date_stop).astimezone(tz)
+                # the intervals overlapping the period, clipped as the period alone would
+                period_intervals = []
+                index = bisect_right(interval_stops, period_start)
+                while index < len(intervals) and intervals[index][0] < period_stop:
+                    interval_start, interval_stop, records = intervals[index]
+                    period_intervals.append((max(period_start, interval_start), min(period_stop, interval_stop), records))
+                    index += 1
+                data = calendar._get_attendance_intervals_days_data(Intervals(period_intervals, keep_distinct=True))
+                for employee in tz_employees:
+                    result[date_start, date_stop][employee.id] = dict(data)
+        return result
+
+    @api.model
     def _generate_work_entries_postprocess(self, vals_list):
         """Turn raw work entry values into final ``date``/``duration`` values.
 
@@ -790,10 +851,13 @@ class HrVersion(models.Model):
 
         # {(date_start, date_stop): {calendar: {'hours': foo}}}
         mapped_version_data = defaultdict(lambda: defaultdict(lambda: {'hours': 0.0}))
-        for (date_start, date_stop), employees_by_calendar in mapped_periods.items():
+        employees_by_calendar_period = defaultdict(dict)
+        for period, employees_by_calendar in mapped_periods.items():
             for calendar, employees in employees_by_calendar.items():
-                mapped_version_data[date_start, date_stop][calendar] = employees._get_work_days_data_batch(
-                    date_start, date_stop, compute_leaves=False, calendar=calendar)
+                employees_by_calendar_period[calendar][period] = employees
+        for calendar, employees_by_period in employees_by_calendar_period.items():
+            for period, data in self._get_work_days_data_by_period(calendar, employees_by_period).items():
+                mapped_version_data[period][calendar] = data
 
         for vals in vals_list:
             if 'duration' not in vals:
