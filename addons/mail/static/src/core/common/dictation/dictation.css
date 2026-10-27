@@ -1,0 +1,47 @@
+@property --mail-Composer-dictationAngle {
+    syntax: "<angle>";
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@keyframes o-mail-Composer-dictationSpin {
+    to {
+        --mail-Composer-dictationAngle: 360deg;
+    }
+}
+
+@keyframes o-mail-Composer-dictationGlow {
+    from {
+        box-shadow: 0 0 .25rem color-mix(in srgb, var(--o-enterprise-color) 25%, transparent);
+    }
+    to {
+        box-shadow: 0 0 1rem color-mix(in srgb, var(--mail-Composer-dictationColor) 55%, transparent);
+    }
+}
+
+.o-mail-Composer-inputContainer.o-dictating {
+    --mail-Composer-dictationBg: var(--mail-Composer-bg, var(--o-view-background-color));
+    --mail-Composer-dictationColor: #71639e;
+
+    border-color: transparent !important; /* over the `border` utility */
+    background:
+        linear-gradient(var(--mail-Composer-dictationBg), var(--mail-Composer-dictationBg)) padding-box,
+        conic-gradient(
+            from var(--mail-Composer-dictationAngle),
+            var(--o-enterprise-color),
+            var(--mail-Composer-dictationColor),
+            color-mix(in srgb, var(--mail-Composer-dictationColor) 40%, #fff),
+            var(--mail-Composer-dictationColor),
+            var(--o-enterprise-color)
+        ) border-box;
+    box-shadow: 0 0 .5rem color-mix(in srgb, var(--mail-Composer-dictationColor) 40%, transparent);
+    animation: o-mail-Composer-dictationSpin 2.5s linear infinite, o-mail-Composer-dictationGlow 1.2s ease-in-out infinite alternate;
+
+    &.o-dictationFinishing {
+        animation-duration: 6s, 2.4s;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+    }
+}
