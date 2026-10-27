@@ -10,6 +10,8 @@ import { user } from "@web/core/user";
 
 import {
     addGlobalFilter,
+    copy,
+    paste,
     redo,
     selectCell,
     setCellContent,
@@ -29,6 +31,7 @@ import {
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/helpers/global_filter";
 import { createSpreadsheetWithList } from "@spreadsheet/../tests/helpers/list";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
+import { makeStoreWithModel } from "@spreadsheet/../tests/helpers/stores";
 import { TEST_LOCALES } from "@spreadsheet/../tests/helpers/locale";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
@@ -53,6 +56,7 @@ import { createSheet, deleteSheet } from "../helpers/commands";
 const { DEFAULT_LOCALE, PIVOT_STATIC_TABLE_CONFIG } = spreadsheet.constants;
 const { deepCopy, toZone } = spreadsheet.helpers;
 const { cellMenuRegistry } = spreadsheet.registries;
+const { ClipboardStore } = spreadsheet.stores;
 const Model = spreadsheet.Model;
 
 describe.current.tags("headless");
@@ -1864,6 +1868,48 @@ test("Re-insert dynamic odoo lists", async () => {
     });
 
     expect(getCellFormula(model, "U21")).toBe("=ODOO.LIST(1,5)");
+});
+
+test("copying a part of a dynamic list gives its static formulas", async () => {
+    const { model } = await createSpreadsheetWithList({ mode: "dynamic" });
+    makeStoreWithModel(model, ClipboardStore);
+    copy(model, "A1:B3");
+    paste(model, "F1");
+    expect(getCellFormula(model, "F1")).toBe('=ODOO.LIST.HEADER(1,"foo")');
+    expect(getCellFormula(model, "G1")).toBe('=ODOO.LIST.HEADER(1,"bar")');
+    expect(getCellFormula(model, "F2")).toBe('=ODOO.LIST.VALUE(1,1,"foo")');
+    expect(getCellFormula(model, "G2")).toBe('=ODOO.LIST.VALUE(1,1,"bar")');
+    expect(getCellFormula(model, "F3")).toBe('=ODOO.LIST.VALUE(1,2,"foo")');
+    expect(getCellFormula(model, "G3")).toBe('=ODOO.LIST.VALUE(1,2,"bar")');
+    expect(getEvaluatedGrid(model, "F1:G3")).toEqual(getEvaluatedGrid(model, "A1:B3"));
+});
+
+test("copying only the dynamic list formula or the entire list keeps the dynamic formula", async () => {
+    const { model } = await createSpreadsheetWithList({ mode: "dynamic" });
+    makeStoreWithModel(model, ClipboardStore);
+    copy(model, "A1");
+    paste(model, "F1");
+    expect(getCellFormula(model, "F1")).toBe("=ODOO.LIST(1,10)");
+
+    copy(model, "A1:D5");
+    paste(model, "F10");
+    expect(getCellFormula(model, "F10")).toBe("=ODOO.LIST(1,10)");
+    expect(getCell(model, "G11")).toBe(undefined);
+});
+
+test("copying a dynamic list with a hidden column gives the static formulas of the visible columns", async () => {
+    const { model } = await createSpreadsheetWithList({
+        mode: "dynamic",
+        columns: [
+            { name: "foo", string: "Foo" },
+            { name: "bar", string: "Bar", hidden: true },
+            { name: "date", string: "Date" },
+        ],
+    });
+    makeStoreWithModel(model, ClipboardStore);
+    copy(model, "B2");
+    paste(model, "F1");
+    expect(getCellFormula(model, "F1")).toBe('=ODOO.LIST.VALUE(1,1,"date")');
 });
 
 test("fields added to the field definition are fetched only when needed", async () => {
