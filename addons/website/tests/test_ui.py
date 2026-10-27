@@ -179,6 +179,7 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
         # disable undraw, no third party should be called in tests
         # Mocked for the previews in the media dialog
         mock_media_library_search.routing_type = 'json'
+        self.env.registry.clear_cache('routing')
         HTML_Editor.media_library_search = http.route(['/html_editor/media_library_search'], type='jsonrpc', auth='user', website=True)(mock_media_library_search)
 
         # The routing map is cached (the "routing" ormcache) with the controller endpoints

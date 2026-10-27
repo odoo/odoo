@@ -18,6 +18,7 @@ class TestImageUploadProgress(odoo.tests.HttpCase):
     def test_02_image_upload_progress_unsplash(self):
         BASE_URL = self.base_url()
 
+        self.env.registry.clear_cache('routing')
         @http.route('/html_editor/media_library_search', type='jsonrpc', auth="user", website=True)
         def media_library_search(self, **params):
             return {"results": 0, "media": []}
@@ -25,7 +26,7 @@ class TestImageUploadProgress(odoo.tests.HttpCase):
         media_library_search.original_endpoint.routing_type = 'json'
         # disable undraw, no third party should be called in tests
         self.patch(HTML_Editor, 'media_library_search', media_library_search)
-
+        self.env.registry.clear_cache('routing')
         @http.route("/web_unsplash/fetch_images", type='jsonrpc', auth="user")
         def fetch_unsplash_images(self, **post):
             return {
