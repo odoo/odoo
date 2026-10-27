@@ -3,7 +3,6 @@
 import logging
 import os
 import re
-import time
 from collections import Counter
 
 from odoo import api, fields, models, tools
@@ -20,11 +19,6 @@ from odoo.tools.translate import adapt_translated_field_value
 logger = logging.getLogger(__name__)
 
 
-class PageCannotBeCached(Exception):
-    def __init__(self, result):
-        self.result = result
-
-
 class WebsitePage(models.Model):
     _name = 'website.page'
     _inherits = {'ir.ui.view': 'view_id'}
@@ -37,9 +31,6 @@ class WebsitePage(models.Model):
     _website_track_field = 'page_id'
     _description = 'Page'
     _order = 'website_id'
-
-    # for how long a cache entry is considered valid (in seconds)
-    _CACHE_DURATION = 3600
 
     name = fields.Char(
         string="Page Name",
@@ -377,139 +368,9 @@ class WebsitePage(models.Model):
             return self.env['website'].get_client_action(self.website_url, False, self.website_id.id)
         return super().open_website_url()
 
-    # website cache
-
-    @api.model
-    def _allow_to_use_cache(self, request):
-        """ Checks if the generated HTML content is eligible for caching. This
-        is useful for preventing sensitive or dynamic content from being stored.
-        """
-        return (
-            request.httprequest.method == "GET"
-            and not request.params  # because the parameters are not part of the cache key
-            and request.env.user._is_public()  # only cache for unlogged user
-            and not self._get_page_info(request)['group_ids']  # do not cache elements dependent on security access
-        )
-
-    @api.model
-    def _allow_cache_insertion(self, layout):
-        """ Determines whether a page is allowed to be served from the cache
-        based on the current request, URL, or session.
-        """
-        return True
-
-    @api.model
-    def _post_process_response_from_cache(self, request, response) -> None:
-        """ A hook called after a response is retrieved from the cache. This
-        method allows for post-processing, such as incrementing counters or
-        modifying HTTP headers, without regenerating the entire page.
-        """
-        csrf_token = request.csrf_token(None)
-        html = response.response[0]
-        html = re.sub(r'csrf_token: "[^"]+"', f'csrf_token: {csrf_token!r}', html)
-        html = re.sub(r'name="csrf_token" value="[^"]+"', f'name="csrf_token" value={csrf_token!r}', html)
-        # the page may have been cached while the translations hash wasn't
-        translation_hash = self.env['ir.http']._get_cached_frontend_translations_hash(request.lang.code)
-        html = re.sub(r'"translation_hash": "[^"]*"', f'"translation_hash": "{translation_hash}"', html)
-        response.response = [html]
-
-        # used for _register_website_track
-        response._cached_view_id = self._get_page_info(request)['view_id']
-        response._cached_page = self
-
-    @api.model
-    def _get_cache_key(self, request):
-        """ Allows for supplementing the base cache key with custom components
-        (e.g., from the URL or session). This is essential for ensuring that
-        the cache serves the correct version of a page based on specific
-        parameters like user language or currency.
-        """
-        return (
-            self.env.context.get('website_id'),
-            self.env.context.get('lang'),
-            self.env.context.get('cookies_allowed'),
-            request.httprequest.path,
-            request.session.debug,
-        )
-
-    def _get_response(self, request):
-        """ Returns the response corresponding to the request.
-        The response may or may not come from the cache.
-
-        The management and logic for this cache are placed directly on the
-        `website.page` model, as it is the source of the HTML response for these
-        records. This approach makes it easy to control caching behavior through
-        a few new, overridable methods:
-        -  `_allow_to_use_cache`
-        -  `_allow_cache_insertion`
-        -  `_post_process_response_from_cache`
-        - `_get_cache_key`
-
-        The cache is an ORM cache from `_get_response_cached` with an added
-        mechanism to update its values. After a certain period, the system will
-        fetch the true response from `_get_response_raw` and update the cached
-        value. This approach reduces the need for frequent `clear_caches` for
-        non-critical changes while ensuring that the cached data remains
-        accurate over time.
-        """
+    def _get_response(self, request) -> Response | None:
+        """ Returns the response corresponding to the request. """
         self.ensure_one()
-        if self._allow_to_use_cache(request):
-            try:
-                response, cache_key = self._get_response_cached(request)
-            except PageCannotBeCached as notCache:
-                if notCache.result:
-                    return notCache.result[0]
-
-            if time.time() < response.time + self._CACHE_DURATION:
-                resp = Response(
-                    headers=response.headers.copy(),
-                    mimetype=response.mimetype,
-                    content_type=response.content_type,
-                    status=response.status,
-                    response=[response.response[0]],
-                )
-                self._post_process_response_from_cache(request, resp)
-                return resp
-
-            # The cached response is too old and considered out-of-date. Get it
-            # from scratch and update the cache accordingly.
-            response = self._get_response_raw(request)
-            if response:
-                response.flatten()
-                if self._allow_cache_insertion(response.response[-1]):
-                    self._get_response_cached.__cache__.add_value(self, request, cache_value=(response, cache_key))
-            return response
-
-        return self._get_response_raw(request)
-
-    @tools.conditional(
-        'xml' not in tools.config['dev_mode'],
-        api.ormcache('self._get_cache_key(request)', cache='templates.cached_values'),
-    )
-    def _get_response_cached(self, request) -> tuple[Response, int, str]:
-        """ Returns the response corresponding to the request.
-        If the response exists and `_allow_cache_insertio` return True, this
-        response is cached.
-        """
-        cache_key = self._get_cache_key(request)
-        response = self._get_response_raw(request)
-        result = response, cache_key
-
-        if not response:
-            raise PageCannotBeCached(result)
-
-        response.flatten()
-        if not self._allow_cache_insertion(response.response[-1]):
-            raise PageCannotBeCached(result)
-
-        return result
-
-    def _get_response_raw(self, request) -> Response | None:
-        """ Returns the raw response associated with the current request.
-        This method is called by `_get_response_cached`, which handles caching
-        the result. It is also called directly by `_get_response` if
-        `_allow_to_use_cache` returns False.
-        """
         req_page = request.httprequest.path
 
         # fetch all prefetchable fields to get all data at once. If we use the
@@ -537,7 +398,6 @@ class WebsitePage(models.Model):
             response = request.render(self.view_id.id, {
                 'main_object': self,
             }, mimetype=EXTENSION_TO_WEB_MIMETYPES.get(ext, 'text/html'))
-            response.time = time.time()
             return response
 
         return None
