@@ -53,7 +53,7 @@ class HrIndividualSkillMixin(models.AbstractModel):
                                     required=True, ondelete='cascade')
     level_progress = fields.Integer(related='skill_level_id.level_progress')
     color = fields.Integer(related="skill_type_id.color")
-    valid_from = fields.Date(string="Validity Start", default=fields.Date.today())
+    valid_from = fields.Date(string="Validity Start", default=fields.Date.today)
     valid_to = fields.Date(string="Validity Stop")
     levels_count = fields.Integer(related="skill_type_id.levels_count")
     certification_skill_type_count = fields.Integer(compute="_compute_certification_skill_type_count",
