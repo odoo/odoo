@@ -452,6 +452,14 @@ class ResCompany(models.Model):
                 company.account_fiscal_country_id.country_group_codes if company.account_fiscal_country_id else ['']
             )
 
+    @api.constrains('account_sale_tax_id', 'account_purchase_tax_id')
+    def _check_default_taxes_type(self):
+        for company in self:
+            if company.account_sale_tax_id and company.account_sale_tax_id.type_tax_use != 'sale':
+                raise ValidationError(_("Default Sale Tax must be a tax with 'Sales' type."))
+            if company.account_purchase_tax_id and company.account_purchase_tax_id.type_tax_use != 'purchase':
+                raise ValidationError(_("Default Purchase Tax must be a tax with 'Purchases' type."))
+
     @api.depends('fiscal_position_ids.foreign_vat')
     def _compute_multi_vat_foreign_country(self):
         company_to_foreign_vat_country = {
