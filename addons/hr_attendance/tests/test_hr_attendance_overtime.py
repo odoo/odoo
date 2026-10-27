@@ -891,6 +891,36 @@ class TestHrAttendanceOvertime(HttpCase):
         for att in attendances:
             self.assertEqual(att.overtime_hours, 0)
 
+    def test_overtime_flexible_resource_timezones(self):
+        """ A flexible hours employee only gets overtime for the hours worked beyond
+        their daily hours, on both sides of UTC. """
+        # A Monday per timezone, worked 07:00-12:00 and 13:00-21:00 local time (UTC below)
+        for tz, (morning, afternoon) in {
+            'America/Los_Angeles': (  # Oct 19 2026, UTC-7
+                (datetime(2026, 10, 19, 14, 0), datetime(2026, 10, 19, 19, 0)),
+                (datetime(2026, 10, 19, 20, 0), datetime(2026, 10, 20, 4, 0)),
+            ),
+            'America/New_York': (  # Oct 26 2026, UTC-4
+                (datetime(2026, 10, 26, 11, 0), datetime(2026, 10, 26, 16, 0)),
+                (datetime(2026, 10, 26, 17, 0), datetime(2026, 10, 27, 1, 0)),
+            ),
+            'Asia/Kolkata': (  # Nov 2 2026, UTC+5:30
+                (datetime(2026, 11, 2, 1, 30), datetime(2026, 11, 2, 6, 30)),
+                (datetime(2026, 11, 2, 7, 30), datetime(2026, 11, 2, 15, 30)),
+            ),
+            'Pacific/Auckland': (  # Nov 9 2026, UTC+13
+                (datetime(2026, 11, 8, 18, 0), datetime(2026, 11, 8, 23, 0)),
+                (datetime(2026, 11, 9, 0, 0), datetime(2026, 11, 9, 8, 0)),
+            ),
+        }.items():
+            with self.subTest(tz=tz):
+                self.flexible_employee.tz = tz
+                attendances = self.env['hr.attendance'].create([
+                    {'employee_id': self.flexible_employee.id, 'check_in': check_in, 'check_out': check_out}
+                    for check_in, check_out in (morning, afternoon)
+                ])
+                self.assertEqual(attendances.mapped('overtime_hours'), [0, 5])
+
     def test_expected_hours_flexible_resource_weekly_limit(self):
         calendar_flex_32h = self.env['resource.calendar'].create({
             'name': 'Flexible 32 hours/week',
