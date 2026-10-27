@@ -247,7 +247,8 @@ export class UseHoverOverlay extends Component {
     setup() {
         super.setup();
         this.root = useRef("root");
-        const overlayContains = toRaw(this.env[OVERLAY_SYMBOL].contains);
+        const contains = toRaw(this.env[OVERLAY_SYMBOL].contains);
+        const overlayContains = (target) => !target?.closest(".o_dialog") && contains(target);
         let removeTarget;
         onMounted(() => {
             this.props.hover._contains.push(overlayContains);

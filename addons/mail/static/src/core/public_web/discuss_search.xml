@@ -5,9 +5,11 @@
         <Dropdown t-if="store.discuss.isSidebarCompact and !ui.isSmall" state="searchFloating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu mx-2 my-0 min-w-0 ' + store.discussDropdownMenuClass(this)" manual="true">
             <t t-call="mail.DiscussSearch.inputContainer"/>
             <t t-set-slot="content">
-                <div class="px-2" t-ref="search-floating">
-                    <span class="text-muted user-select-none">Search conversations</span>
-                </div>
+                <UseHoverOverlay hover="searchHover">
+                    <div class="px-2">
+                        <span class="text-muted user-select-none">Search conversations</span>
+                    </div>
+                </UseHoverOverlay>
             </t>
         </Dropdown>
         <t t-else="" t-call="mail.DiscussSearch.inputContainer"/>
@@ -26,7 +28,7 @@
 </t>
 
 <t t-name="mail.DiscussSearch.inputContainer">
-    <div class="o-mail-DiscussSearch-inputContainer border border-secondary position-relative d-flex align-items-center justify-content-center gap-1 flex-grow-1" t-att-class="{ 'rounded-2': store.discuss.isSidebarCompact, 'rounded-start-2 rounded-end-0 border-end-0': !store.discuss.isSidebarCompact }" t-on-click="onClickSearchConversations">
+    <div class="o-mail-DiscussSearch-inputContainer border border-secondary position-relative d-flex align-items-center justify-content-center gap-1 flex-grow-1" t-att-class="{ 'rounded-2': store.discuss.isSidebarCompact, 'rounded-start-2 rounded-end-0 border-end-0': !store.discuss.isSidebarCompact }" t-on-click="onClickSearchConversations" t-ref="search-btn">
         <div class="d-flex w-100 align-items-center gap-2" t-att-class="{ 'p-2': store.discuss.isSidebarCompact and !ui.isSmall, 'ps-2 gap-2': !store.discuss.isSidebarCompact or ui.isSmall }">
             <i class="oi oi-search smaller"/>
             <input t-if="ui.isSmall or !store.discuss.isSidebarCompact" class="form-control rounded-2 border-0 bg-inherit ps-0" t-att-class="{ 'lh-1': !ui.isSmall }" disabled="true" placeholder="Search conversations" tabindex="0"/>
