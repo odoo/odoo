@@ -203,6 +203,28 @@ test("ticket data renders receipt change on overpayment", async () => {
     });
 });
 
+test("ticket data renders foreign currency change when payment is in different currency", async () => {
+    const store = await setupPosEnv();
+    const order = store.addNewOrder();
+    const product = store.models["product.template"].get(5);
+    const cashPm = store.models["pos.payment.method"].get(1);
+    const eurCurrency = store.models["res.currency"].get(125);
+
+    await store.addLineToOrder({ product_tmpl_id: product, qty: 1 }, order);
+    const paymentLine = addPayment(order, cashPm, 120.0);
+    paymentLine.foreign_currency_id = eurCurrency;
+    order.setOrderPrices();
+
+    const { data, ticket } = renderReceipt(store, order);
+    expect(data.order.amount_return).toBe("$\u00a0-5.00");
+    expect(data.order.amount_return_currency).toBe("-4.35\u00a0€");
+    expectTicketData(ticket, {
+        total_amount: "$ 115.00",
+        is_change: true,
+        change_amount: "4.35 €",
+    });
+});
+
 test("ticket data renders rounding amounts on receipts", async () => {
     const store = await setupPosEnv();
 
