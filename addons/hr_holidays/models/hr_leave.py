@@ -875,8 +875,8 @@ class HrLeave(models.Model):
                     ('start_date', '<=', leave.request_date_to),
                     ('end_date', '>=', leave.request_date_from),
                     '|',
-                        ('resource_calendar_id', '=', False),
-                        ('resource_calendar_id', '=', leave.resource_calendar_id.id),
+                        ('resource_calendar_ids', '=', False),
+                        ('resource_calendar_ids', '=', leave.resource_calendar_id.id),
                 ]
                 if department_ids:
                     domain += [

@@ -14,6 +14,7 @@
                         <group>
                             <field name="color" widget="color_picker"/>
                             <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="resource_calendar_ids"/>
                         </group>
                     </group>
                 </sheet>
@@ -29,6 +30,7 @@
                 <field name="name"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="department_ids" widget="many2many_tags" optional="hide"/>
+                <field name="resource_calendar_ids" widget="many2many_tags" optional="hide"/>
                 <field name="job_ids" widget="many2many_tags" optional="hide"/>
                 <field name="start_date"/>
                 <field name="end_date"/>
