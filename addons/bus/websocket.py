@@ -278,6 +278,11 @@ class CloseFrame(Frame):
 
 
 _websocket_instances = WeakSet()
+# Bounds the websockets running their on close DB work at the same time, so
+# a mass disconnect doesn't exhaust the connection pool.
+_close_semaphore = threading.BoundedSemaphore(
+    max((config["db_maxconn_gevent"] or config["db_maxconn"]) // 8, 1),
+)
 
 
 class Websocket:
@@ -664,7 +669,7 @@ class Websocket:
         self.__cmd_queue.close()
         dispatch.unsubscribe(self)
         self._trigger_lifecycle_event(LifecycleEvent.CLOSE)
-        with acquire_cursor(self._db) as cr:
+        with _close_semaphore, acquire_cursor(self._db) as cr:
             env = new_env(cr, self._session)
             env["ir.websocket"]._on_websocket_closed(self._cookies)
 

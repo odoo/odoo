@@ -3,6 +3,8 @@
 import gc
 import json
 import os
+import threading
+import time
 from collections import defaultdict
 from datetime import timedelta
 from psycopg2.pool import PoolError
@@ -301,6 +303,33 @@ class TestWebsocketCaryall(WebsocketCase):
             ws.close(CloseCode.CLEAN)
             self.wait_remaining_websocket_connections()
             self.assertTrue(mock.called)
+
+    def test_on_websocket_closed_concurrency_is_bounded(self):
+        running = 0
+        peak = 0
+        lock = threading.Lock()
+
+        def slow_on_closed(*args, **kwargs):
+            nonlocal running, peak
+            with lock:
+                running += 1
+                peak = max(peak, running)
+            time.sleep(0.2)
+            with lock:
+                running -= 1
+
+        new_env_mock = MagicMock()
+        new_env_mock.return_value.__getitem__.return_value._on_websocket_closed = slow_on_closed
+        with (
+            patch('odoo.addons.bus.websocket._close_semaphore', threading.BoundedSemaphore(2)),
+            patch('odoo.addons.bus.websocket.acquire_cursor', MagicMock()),
+            patch('odoo.addons.bus.websocket.new_env', new_env_mock),
+        ):
+            websockets = [self.websocket_connect() for _ in range(6)]
+            for ws in websockets:
+                ws.close(CloseCode.CLEAN)
+            self.wait_remaining_websocket_connections()
+        self.assertEqual(peak, 2)
 
     def test_handshake_does_not_resend_the_session_cookie(self):
         websocket = self.websocket_connect()
