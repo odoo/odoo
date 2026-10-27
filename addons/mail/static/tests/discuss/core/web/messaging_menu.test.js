@@ -24,6 +24,7 @@ import {
     mockTouch,
     pointerDown,
     pointerUp,
+    rightClick,
     test,
     waitFor,
     waitForNone,
@@ -398,6 +399,41 @@ test("opening a prefetched channel with a mention drops its needaction counter",
     await expect.waitForSteps(["mark-all-messages-as-read"]);
     await mailContains(".o-mail-Message:has(:text('Hey @Mitchell Admin'))");
     await mailContains(".o-mail-NotificationItem-badge", { count: 0 });
+});
+
+test("muting from channel actions closes them but keeps the messaging menu open", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({ name: "General", channel_type: "channel" });
+    await start();
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
+    await hover(".o-mail-NotificationItem:contains(General)");
+    await click(".o-mail-MessagingMenu-actions button");
+    await hover(".o-mail-MessagingMenu-dropdownMenu .dropdown-item:text(Notification Settings)");
+    // dropdown requires an extra delay before click (because handler is registered in useEffect)
+    await waitFor("button:text('Mute Conversation'):count(1)");
+    await hover("button:has(:text('Mute Conversation'))");
+    await click(".o-dropdown-item:text('For 15 minutes')");
+    await mailContains(".o-mail-MessagingMenu-dropdownMenu", { count: 0 });
+    await mailContains(
+        ".o-mail-MessagingMenuInDropdown .o-mail-NotificationItem:contains(General)"
+    );
+    await hover(".o-mail-NotificationItem:contains(General)");
+    await click(".o-mail-MessagingMenu-actions button");
+    await hover(".o-mail-MessagingMenu-dropdownMenu .dropdown-item:text(Notification Settings)");
+    await click("button:has(:text('Unmute Conversation'))");
+    await mailContains(".o-mail-MessagingMenu-dropdownMenu", { count: 0 });
+    await mailContains(
+        ".o-mail-MessagingMenuInDropdown .o-mail-NotificationItem:contains(General)"
+    );
+    await rightClick(".o-mail-NotificationItem:contains(General)");
+    await hover(".dropdown-item:text(Notification Settings)");
+    await waitFor("button:text('Mute Conversation'):count(1)");
+    await hover("button:has(:text('Mute Conversation'))");
+    await click(".o-dropdown-item:text('For 15 minutes')");
+    await mailContains(".dropdown-item:text(Notification Settings)", { count: 0 });
+    await mailContains(
+        ".o-mail-MessagingMenuInDropdown .o-mail-NotificationItem:contains(General)"
+    );
 });
 
 test("clicking on channel actions do not prefetches its messages", async () => {
