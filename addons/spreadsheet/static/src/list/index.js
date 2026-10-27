@@ -26,7 +26,7 @@ registerCommand("RE_INSERT_ODOO_LIST_WITH_TABLE", { category: "local" });
 registerCommand("INSERT_NEW_ODOO_LIST", { category: "local" });
 registerCommand("DUPLICATE_ODOO_LIST_IN_NEW_SHEET", { category: "local" });
 
-const { cellMenuRegistry } = spreadsheet.registries;
+const { cellMenuRegistry, dynamicToStaticFormulaRegistry } = spreadsheet.registries;
 
 cellMenuRegistry.add(
     "list_see_record",
@@ -44,5 +44,19 @@ cellMenuRegistry.add(
         icon: "o-spreadsheet-Icon.SEE_RECORDS",
     })
 );
+
+dynamicToStaticFormulaRegistry.add("list", {
+    condition: (position, getters) => getters.isDynamicList(position),
+    getStaticFormula: (position, getters) => {
+        const listId = getters.getListIdFromPosition(position);
+        const spreader = getters.getArrayFormulaSpreadingOn(position);
+        const columns = getters.getListDefinition(listId).columns.filter((col) => !col.hidden);
+        const fieldName = columns[position.col - spreader.col].name;
+        const index = position.row - spreader.row;
+        return index === 0
+            ? `=ODOO.LIST.HEADER(${listId},"${fieldName}")`
+            : `=ODOO.LIST.VALUE(${listId},${index},"${fieldName}")`;
+    },
+});
 
 export { ListCorePlugin, ListCoreViewPlugin, ListUIPlugin };
