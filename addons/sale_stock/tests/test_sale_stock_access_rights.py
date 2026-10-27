@@ -50,3 +50,39 @@ class TestControllersAccessRights(HttpCase, TestSaleCommon):
                 allow_redirects=False,
             )
             self.assertEqual(response.status_code, 200, 'Should be correct %s' % ('with a connected user' if login else 'using access token'))
+
+
+@tagged('post_install', '-at_install')
+class TestSaleOrderStockUserRules(TestSaleCommon):
+
+    def test_stock_user_keeps_salesman_own_documents_restriction(self):
+        """ A salesman restricted to own documents must not see every order
+        just because he is also an inventory user. """
+        env = self.env
+        stock_user_group = 'stock.group_stock_user'
+        salesman = mail_new_test_user(
+            env, login='own-docs-stock', groups=f'sales_team.group_sale_salesman,{stock_user_group}')
+        other_salesman = mail_new_test_user(
+            env, login='other-salesman', groups='sales_team.group_sale_salesman')
+        warehouse_only = mail_new_test_user(
+            env, login='warehouse-only', groups=stock_user_group)
+
+        other_order, own_order, free_order = env['sale.order'].create([
+            {'partner_id': self.partner_a.id, 'user_id': other_salesman.id},
+            {'partner_id': self.partner_a.id, 'user_id': salesman.id},
+            {'partner_id': self.partner_a.id, 'user_id': False},
+        ])
+        for order in (other_order, own_order, free_order):
+            env['sale.order.line'].create({
+                'order_id': order.id, 'product_id': self.product_a.id})
+        orders = other_order | own_order | free_order
+
+        visible = orders.with_user(salesman).search([('id', 'in', orders.ids)])
+        self.assertEqual(visible, own_order | free_order)
+        visible_lines = env['sale.order.line'].with_user(salesman).search(
+            [('order_id', 'in', orders.ids)])
+        self.assertEqual(visible_lines.order_id, own_order | free_order)
+
+        # a pure inventory user still sees every order (needed for deliveries)
+        visible = orders.with_user(warehouse_only).search([('id', 'in', orders.ids)])
+        self.assertEqual(visible, orders)
