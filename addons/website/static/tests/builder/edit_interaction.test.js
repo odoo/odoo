@@ -11,11 +11,7 @@ import {
 import { waitFor } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import {
-    addBuilderOption,
-    confirmAddSnippet,
-    waitForEndOfOperation,
-} from "@html_builder/../tests/helpers";
+import { addBuilderOption, insertCategorySnippet } from "@html_builder/../tests/helpers";
 
 defineWebsiteModels();
 
@@ -30,11 +26,7 @@ test("dropping a new snippet starts its interaction", async () => {
     await openBuilderSidebar();
     await waitFor(".o_website_builder_sidebar.o_builder_sidebar_open");
     expect.verifySteps(["refresh"]);
-    await contains(
-        `.o_hb_snippets_menu #snippet_groups .o_snippet[data-snippet-group='text'] .o_snippet_thumbnail_area`
-    ).click();
-    await confirmAddSnippet("s_title");
-    await waitForEndOfOperation();
+    await insertCategorySnippet({ group: "text", snippet: "s_title" });
     expect.verifySteps(["refresh"]);
 });
 
