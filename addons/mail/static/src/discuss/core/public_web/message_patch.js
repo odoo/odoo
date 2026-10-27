@@ -9,7 +9,10 @@ patch(Message.prototype, {
     /**
      * @type {ReturnType<typeof import("@mail/discuss/core/public_web/sub_channel_preview").subChannelPreviewOnClickType>["type"]}
      */
-    openLinkedSubChannel(ev, { channelAtRender }) {
-        channelAtRender.open();
+    async openLinkedSubChannel(ev, { channelAtRender }) {
+        const subChannel = await channelAtRender.store["discuss.channel"].getOrFetch(
+            channelAtRender.id
+        );
+        subChannel?.open({ focus: true });
     },
 });

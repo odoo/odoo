@@ -12,7 +12,7 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
-import { describe, test, waitFor, waitForNone } from "@odoo/hoot";
+import { describe, expect, test, waitFor, waitForNone } from "@odoo/hoot";
 import { animationFrame, mockDate } from "@odoo/hoot-mock";
 import { Command, contains, serverState, withUser } from "@web/../tests/web_test_helpers";
 import { deserializeDateTime } from "@web/core/l10n/dates";
@@ -219,6 +219,67 @@ test("view sub thread of a message when not a member of the sub thread", async (
     await mailContains(".o-mail-DiscussContent-threadName", { value: "Bob's thread" });
 });
 
+test("preview of sub thread of a message when not a member of the sub thread", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Bob" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const messageId = pyEnv["mail.message"].create({
+        model: "discuss.channel",
+        res_id: channelId,
+        body: "<p>Hello world</p>",
+    });
+    const subChannelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [Command.create({ partner_id: partnerId })],
+        from_message_id: messageId,
+        name: "Bob's thread",
+        parent_channel_id: channelId,
+    });
+    pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "<p>Hello Bob</p>",
+        model: "discuss.channel",
+        res_id: subChannelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await mailContains(".o-mail-SubChannelPreview:has(span:text('Bob\\'s thread'))");
+    await mailContains(".o-mail-SubChannelPreview-lastMessage:text('Bob: Hello Bob')");
+    await click(".o-mail-SubChannelPreview");
+    await mailContains(".o-mail-DiscussContent-threadName", { value: "Bob's thread" });
+    await mailContains(".o-mail-DiscussContent-header span:text('General')");
+});
+
+test("view sub thread of a group message when not a member of the sub thread", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Bob" });
+    const groupId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    const messageId = pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "<p>Hello world</p>",
+        model: "discuss.channel",
+        res_id: groupId,
+    });
+    pyEnv["discuss.channel"].create({
+        channel_member_ids: [Command.create({ partner_id: partnerId })],
+        from_message_id: messageId,
+        name: "Bob's thread",
+        parent_channel_id: groupId,
+    });
+    await start();
+    await openDiscuss(groupId);
+    await mailContains(".o-mail-SubChannelPreview:has(span:text('Bob\\'s thread'))");
+    await hover(".o-mail-Message");
+    await click(".o-mail-Message-actions [title='Expand']");
+    await click(".o-dropdown-item:text('View Thread')");
+    await mailContains(".o-mail-DiscussContent-threadName", { value: "Bob's thread" });
+});
+
 test("view sub thread created by another user from an open channel", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Bob" });
@@ -245,12 +306,54 @@ test("view sub thread created by another user from an open channel", async () =>
             parent_channel_id: channelId,
         })
     );
+    await mailContains(".o-mail-SubChannelPreview:has(span:text('Hello world'))");
     await hover(".o-mail-Message:has(.o-mail-Message-body:text('Hello world'))");
     await click(
         ".o-mail-Message:has(.o-mail-Message-body:text('Hello world')) .o-mail-Message-actions [title='Expand']"
     );
     await click(".o-dropdown-item:contains('View Thread')");
     await mailContains(".o-mail-DiscussContent-threadName", { value: "Hello world" });
+});
+
+test("threads panel lists sub thread created by another user", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Bob" });
+    const userId = pyEnv["res.users"].create({ name: "Bob", partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        name: "General",
+    });
+    const messageId = pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "<p>Hello world</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    pyEnv["discuss.channel"].create({
+        last_interest_dt: "2019-01-01 10:00:00",
+        name: "Old thread",
+        parent_channel_id: channelId,
+    });
+    onRpcAfter("/discuss/channel/sub_channel/fetch", () => expect.step("sub_channel/fetch"));
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(`${actionPanel("Members")}:count(1)`); // wait for auto-open of this panel
+    await click("button[title='Threads']");
+    await mailContains(".o-mail-SubChannelList .o-mail-SubChannelPreview-name:text('Old thread')");
+    await expect.waitForSteps(["sub_channel/fetch"]);
+    await withUser(userId, () =>
+        rpc("/discuss/channel/sub_channel/create", {
+            from_message_id: messageId,
+            parent_channel_id: channelId,
+        })
+    );
+    await mailContains(".o-mail-SubChannelList .o-mail-SubChannelPreview", { count: 2 });
+    await mailContains(
+        ".o-mail-SubChannelList .o-mail-SubChannelPreview:eq(0):has(span:text('Hello world'))"
+    );
 });
 
 test("create sub thread from existing message (slow network)", async () => {
