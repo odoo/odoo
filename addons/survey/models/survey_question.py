@@ -399,11 +399,22 @@ class SurveyQuestion(models.Model):
             else:
                 question.is_scored_question = False
 
+    @api.onchange('validation_email')
+    def _onchange_validation_email(self):
+        """Input must be an email and Validate entry (length limits) cannot be
+        used together: the default 0/0 length range would reject every email.
+        When the email check is enabled, disable 'validation_required' and reset
+        its parameters. Counterpart of `_onchange_validation_parameters`, which
+        unchecks the email check when 'validation_required' is enabled."""
+        if self.validation_email:
+            self.validation_required = False
+
     @api.onchange('question_type', 'validation_required')
     def _onchange_validation_parameters(self):
         """Ensure no value stays set but not visible on form,
         preventing saving (+consistency with question type)."""
-        self.validation_email = False
+        if self.validation_required or self.question_type != 'char_box':
+            self.validation_email = False
         self.validation_length_min = 0
         self.validation_length_max = 0
         self.validation_min_date = False

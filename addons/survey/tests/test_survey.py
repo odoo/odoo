@@ -8,7 +8,7 @@ from freezegun import freeze_time
 from odoo import _, Command, fields
 from odoo.addons.mail.tests.common import MailCase
 from odoo.addons.survey.tests import common
-from odoo.tests.common import users
+from odoo.tests import Form, users
 
 
 class TestSurveyInternals(common.TestSurveyCommon, MailCase):
@@ -205,6 +205,28 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
             question.validate_question('email@example.com'),
             {}
         )
+
+    @users('survey_manager')
+    def test_answer_validation_char_box_email_and_validation_required(self):
+        """ 'Input must be an email' and 'Validate entry' are mutually exclusive,
+        whatever the order in which they are checked. """
+        question = self._add_question(self.page_0, 'Q0', 'char_box')
+
+        # validation_required first, then validation_email
+        with Form(question) as question_form:
+            question_form.validation_required = True
+            question_form.validation_email = True
+            self.assertTrue(question_form.validation_email)
+            self.assertFalse(question_form.validation_required)
+        self.assertTrue(question.validation_email)
+        self.assertFalse(question.validation_required)
+        self.assertEqual(question.validate_question('email@example.com'), {})
+
+        # validation_email first, then validation_required
+        with Form(question) as question_form:
+            question_form.validation_required = True
+            self.assertTrue(question_form.validation_required)
+            self.assertFalse(question_form.validation_email)
 
     @users('survey_manager')
     def test_answer_validation_char_box_length(self):
