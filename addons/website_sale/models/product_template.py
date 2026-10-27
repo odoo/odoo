@@ -1743,19 +1743,32 @@ class ProductTemplate(models.Model):
                 or None
             )
             variants = self.product_variant_ids[:limit] if limit else self.product_variant_ids
+<<<<<<< 4cf3c24cd9de1519fe47e30d1e03b11f2d13f9a2
             prices = request.pricelist._get_products_price(
                 variants, quantity=1, currency=website.currency_id
             )
+||||||| c57279749663a96df8cd9a5cb6913fe27d4a852b
+=======
+            product_url = self._get_localized_absolute_url()
+>>>>>>> 5ee36abbbc1cdfeaf7b016c79c803bbfe005eddc
             vals = {
                 "@type": "ProductGroup",
-                "@id": f"{base_url}{self.website_url}/#productgroup",
+                "@id": f"{product_url}/#productgroup",
                 "name": self.name,
                 "image": f"{base_url}{website.image_url(self, 'image_1920')}",
+<<<<<<< 4cf3c24cd9de1519fe47e30d1e03b11f2d13f9a2
                 "url": f"{base_url}{self.website_url}",
                 "hasVariant": [
                     variant._prepare_jsonld_vals(precomputed_price=prices.get(variant.id))
                     for variant in variants
                 ],
+||||||| c57279749663a96df8cd9a5cb6913fe27d4a852b
+                "url": f"{base_url}{self.website_url}",
+                "hasVariant": [variant._prepare_jsonld_vals() for variant in variants],
+=======
+                "url": product_url,
+                "hasVariant": [variant._prepare_jsonld_vals() for variant in variants],
+>>>>>>> 5ee36abbbc1cdfeaf7b016c79c803bbfe005eddc
             }
             if self.description_ecommerce:
                 vals["description"] = text_from_html(self.description_ecommerce)

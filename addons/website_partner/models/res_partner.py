@@ -31,11 +31,12 @@ class ResPartner(models.Model):
         website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
         base_url = website.get_base_url()
         schema_type = 'Organization' if self.is_company else 'Person'
+        partner_url = self._get_localized_absolute_url()
         vals = {
             '@type': schema_type,
-            '@id': f'{base_url}{self.website_url}/#{schema_type.lower()}',
+            '@id': f'{partner_url}/#{schema_type.lower()}',
             'name': self.display_name,
-            'mainEntityOfPage': f'{base_url}{self.website_url}',
+            'mainEntityOfPage': partner_url,
         }
         if self.phone:
             vals['telephone'] = self.phone
@@ -60,11 +61,16 @@ class ResPartner(models.Model):
 
     def _build_profilepage_jsonld_vals(self):
         self.ensure_one()
+<<<<<<< 4cf3c24cd9de1519fe47e30d1e03b11f2d13f9a2
         website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
         base_url = website.get_base_url()
+||||||| c57279749663a96df8cd9a5cb6913fe27d4a852b
+        base_url = self.env['website'].get_current_website().get_base_url()
+=======
+>>>>>>> 5ee36abbbc1cdfeaf7b016c79c803bbfe005eddc
         return {
             '@type': 'ProfilePage',
-            'url': f'{base_url}{self.website_url}',
+            'url': self._get_localized_absolute_url(),
             'mainEntity': self._prepare_jsonld_vals(),
         }
 

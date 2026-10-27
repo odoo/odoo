@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
+from lxml import html
+
 from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.website_forum.controllers.website_forum import WebsiteForum
 from odoo.tests import tagged
@@ -120,3 +124,33 @@ class TestForumController(TestForumCommon, HttpCase):
             allow_redirects=False,
         )
         self.assertEqual(res.status_code, 303)
+
+    def test_forum_index_jsonld_lists_displayed_questions(self):
+        lang_fr = self.env['res.lang']._activate_lang('fr_FR')
+        self.base_website.language_ids = self.env.ref('base.lang_en') + lang_fr
+        self.user_employee_2.karma = KARMA['post']
+        self.env['forum.post'].with_user(self.user_employee_2).create([{
+            'name': f'Question {idx}',
+            'content': 'Content',
+            'forum_id': self.forum.id,
+        } for idx in range(WebsiteForum._post_per_page + 1)])
+        # Active, but hidden from the public user: its author has no karma
+        self.user_employee.karma = KARMA['post']
+        hidden_question = self.env['forum.post'].with_user(self.user_employee).create({
+            'name': 'Hidden question',
+            'content': 'Content',
+            'forum_id': self.forum.id,
+        })
+        self.user_employee.karma = 0
+
+        forum_slug = self.env['ir.http']._slug(self.forum)
+        res = self.url_open(f'/fr/forum/{forum_slug}')
+        res.raise_for_status()
+        root = html.fromstring(res.content)
+        jsonld = json.loads(root.xpath('//script[@type="application/ld+json"]')[0].text)
+        collection_page = next(node for node in jsonld['@graph'] if node['@type'] == 'CollectionPage')
+        items = collection_page['mainEntity']['itemListElement']
+        self.assertEqual(len(items), WebsiteForum._post_per_page)
+        self.assertNotIn(hidden_question.name, [item['name'] for item in items])
+        for item in items:
+            self.assertTrue(item['url'].startswith(f'{self.base_url()}/fr/forum/'))
