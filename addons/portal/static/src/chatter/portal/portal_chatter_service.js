@@ -1,7 +1,7 @@
 import { loadCssFromBundle } from "@mail/utils/common/misc";
-import { onWillDestroy, useApp } from "@odoo/owl";
 import { PortalChatter } from "@portal/chatter/portal/portal_chatter";
 import { registry } from "@web/core/registry";
+import { useRootCreator } from "@web/core/utils/hooks";
 import { session } from "@web/session";
 
 export class PortalChatterService {
@@ -9,15 +9,11 @@ export class PortalChatterService {
         this.setup(env, services);
     }
 
-    app = useApp();
-    /** @type {import("@odoo/owl").Root<PortalChatter> | null} */
-    root = null;
+    createRoot = useRootCreator();
 
     setup(env, services) {
         this.store = services["mail.store"];
         this.busService = services.bus_service;
-
-        onWillDestroy(() => this.root?.destroy());
     }
 
     async createShadow(rootEl) {
@@ -44,18 +40,18 @@ export class PortalChatterService {
     async initialize(env) {
         const chatterEl = document.querySelector(".o_portal_chatter");
         const props = this.getProps(chatterEl);
-        const root = chatterEl.querySelector("#chatterRoot");
+        const rootEl = chatterEl.querySelector("#chatterRoot");
         if (props.twoColumns) {
-            root.classList.add("p-0");
+            rootEl.classList.add("p-0");
         }
-        this.createShadow(root).then((shadow) => {
-            this.root = this.app.createRoot(PortalChatter, {
+        this.createShadow(rootEl).then((shadow) => {
+            const root = this.createRoot(PortalChatter, {
                 env: Object.assign(Object.create(env), {
-                    rootId: root.getAttribute("id"),
+                    rootId: rootEl.getAttribute("id"),
                 }),
                 props,
             });
-            return this.root.mount(shadow);
+            return root.mount(shadow);
         });
         const thread = this.store["mail.thread"].insert({ model: props.resModel, id: props.resId });
         Object.assign(thread, {

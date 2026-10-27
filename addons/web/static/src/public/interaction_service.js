@@ -5,6 +5,8 @@ import { Colibri } from "./colibri";
 import { Interaction } from "./interaction";
 import lazyloader from "./lazyloader";
 import { BUTTON_HANDLER_SELECTOR, PairSet } from "./utils";
+import { useRootCreator } from "@web/core/utils/hooks";
+import { useEnv } from "@web/owl2/utils";
 
 /**
  * Website Core
@@ -38,9 +40,9 @@ class InteractionService {
     /**
      *
      * @param {HTMLElement} el
-     * @param {Object} env
      */
-    constructor(el, env) {
+    constructor(el) {
+        this.createRoot = useRootCreator();
         this.scope = useScope();
         this.Interactions = [];
         this.el = el;
@@ -48,7 +50,7 @@ class InteractionService {
         this.initialSetupDone = false;
         // relation el <--> Interaction
         this.activeInteractions = new PairSet();
-        this.env = env;
+        this.env = useEnv();
         this.interactions = [];
         this.roots = [];
         this.owlApp = useApp();
@@ -107,7 +109,7 @@ class InteractionService {
                 rejectMount(error);
             }
         };
-        const root = this.owlApp.createRoot(C, { props, env: this.env, onError });
+        const root = this.createRoot(C, { props, onError });
         el.insertAdjacentElement(position, rootEl);
         return {
             C,
@@ -395,11 +397,11 @@ class InteractionService {
 }
 
 export const publicInteractionService = {
-    async start(env) {
+    async start() {
         // fallback if #wrapwrap is not present in the dom
         const el = document.querySelector("#wrapwrap") || document.querySelector("body");
         const Interactions = registry.category("public.interactions").getAll();
-        const service = new InteractionService(el, env);
+        const service = new InteractionService(el);
         service.activate(Interactions);
         return service;
     },

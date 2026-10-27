@@ -2,9 +2,7 @@ import { loadIframe, loadIframeBundles } from "@mail/convert_inline/iframe_utils
 import {
     Component,
     onMounted,
-    onWillUnmount,
     signal,
-    useApp,
     useEffect,
     useProps,
     useScope,
@@ -15,6 +13,7 @@ import { kanbanRendererProps } from "@web/views/kanban/kanban_renderer";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
 import { MailingTemplateKanbanWrapper } from "./mailing_template_kanban_wrapper";
 import { cookie } from "@web/core/browser/cookie";
+import { useRootCreator } from "@web/core/utils/hooks";
 
 /**
  * This is an Iframe in which the kanban renderer will be loaded
@@ -24,8 +23,9 @@ import { cookie } from "@web/core/browser/cookie";
 export class MailingTemplateKanbanIframe extends Component {
     static template = "mass_mailing.MailingTemplateKanbanIframe";
 
+    createRoot = useRootCreator();
     props = useProps(kanbanRendererProps);
-    app = useApp();
+
     iframeRef = signal.ref();
     ready = signal(false);
 
@@ -38,11 +38,6 @@ export class MailingTemplateKanbanIframe extends Component {
         };
         onMounted(() => {
             this.setupIframe();
-        });
-        onWillUnmount(() => {
-            if (this.templateKanbanRoot) {
-                this.templateKanbanRoot.destroy();
-            }
         });
         useEffect(() => {
             this.kanbanRendererProps = this.props;
@@ -75,13 +70,12 @@ export class MailingTemplateKanbanIframe extends Component {
             await loadIframe(this.iframeRef(), async (iframe) => {
                 iframe.contentDocument.head.appendChild(this.renderHeadContent());
                 iframe.contentDocument.body.style.setProperty("direction", localization.direction);
-                this.templateKanbanRoot = this.app.createRoot(MailingTemplateKanbanWrapper, {
-                    env: this.env,
-                    props: props,
+                const templateKanbanRoot = this.createRoot(MailingTemplateKanbanWrapper, {
+                    props,
                 });
                 await Promise.all([
                     this.loadIframeAssets(),
-                    this.templateKanbanRoot.mount(this.iframeRef().contentDocument.body),
+                    templateKanbanRoot.mount(this.iframeRef().contentDocument.body),
                 ]);
             });
         } catch (error) {

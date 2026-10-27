@@ -4,10 +4,8 @@ import {
     Component,
     markup,
     onMounted,
-    onWillUnmount,
     signal,
     t,
-    useApp,
     usePlugin,
     useProps,
     useScope,
@@ -17,6 +15,7 @@ import { localization } from "@web/core/l10n/localization";
 import { ORM } from "@web/core/orm_plugin";
 import { renderToFragment } from "@web/core/utils/render";
 import { ThemeSelector } from "./theme_selector";
+import { useRootCreator } from "@web/core/utils/hooks";
 
 export class ThemeSelectorIframe extends Component {
     static template = "mass_mailing.ThemeSelectorIframe";
@@ -28,7 +27,7 @@ export class ThemeSelectorIframe extends Component {
         }),
     });
 
-    app = useApp();
+    createRoot = useRootCreator();
     scope = useScope();
     orm = usePlugin(ORM);
 
@@ -50,11 +49,6 @@ export class ThemeSelectorIframe extends Component {
     setup() {
         onMounted(() => {
             this.setupIframe();
-        });
-        onWillUnmount(() => {
-            if (this.themeSelectorRoot) {
-                this.themeSelectorRoot.destroy();
-            }
         });
     }
 
@@ -95,8 +89,7 @@ export class ThemeSelectorIframe extends Component {
                 iframe.contentDocument.head.appendChild(this.renderHeadContent());
                 iframe.contentDocument.body.style.setProperty("direction", localization.direction);
 
-                this.themeSelectorRoot = this.app.createRoot(ThemeSelector, {
-                    env: this.env,
+                this.themeSelectorRoot = this.createRoot(ThemeSelector, {
                     props: {
                         config: this.props.config,
                         iframeRef: this.iframeRef,
