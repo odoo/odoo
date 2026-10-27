@@ -140,6 +140,7 @@
             t-on-click="(ev) => this.onClickTab(ev, tab)"
             t-on-focus="(ev) => this.onFocusTab(ev, tab)"
             t-on-pointerenter="(ev) => this.onPointerenterTab(ev, tab)"
+            t-on-pointerleave="() => this.peekTabLater.cancel()"
             t-att-aria-label="tab.label"
             t-att-data-id="tab.id"
             data-available-offline=""
