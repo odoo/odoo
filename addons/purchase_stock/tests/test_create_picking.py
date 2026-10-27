@@ -848,3 +848,36 @@ class TestCreatePicking(common.TestProductCommon):
         # Exchange: receipt for 1 item
         self.assertEqual(po.picking_ids[2].picking_type_id, picking_type_in)
         self.assertEqual(po.picking_ids[2].move_ids.quantity, 1)
+
+    def test_receipt_return_type_change_qty_received(self):
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.delivery_steps = 'pick_ship'
+        warehouse.in_type_id.return_picking_type_id = warehouse.pick_type_id
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [(0, 0, {
+                'product_id': self.product_id_1.id,
+                'product_qty': 1.0,
+                'product_uom': self.product_id_1.uom_id.id,
+                'price_unit': 100.0,
+            })],
+        })
+        po.button_confirm()
+        receipt = po.picking_ids
+        receipt.move_ids.quantity = 1.0
+        receipt.button_validate()
+        self.assertEqual(po.order_line.qty_received, 1.0)
+
+        return_wizard = self.env['stock.return.picking'].with_context(
+            active_ids=receipt.ids,
+            active_id=receipt.id,
+            active_model='stock.picking',
+        ).create({})
+        return_wizard.product_return_moves.quantity = 1.0
+        res = return_wizard.action_create_returns()
+        return_pick = self.env['stock.picking'].browse(res['res_id'])
+        return_pick.picking_type_id = warehouse.out_type_id
+        return_pick.move_ids.quantity = 1.0
+        return_pick.button_validate()
+        self.assertEqual(po.order_line.qty_received, 0.0)
