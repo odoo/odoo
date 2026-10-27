@@ -48,7 +48,6 @@ export class RecordListInternal {
                         self.data().pop();
                         old?._.uses.delete(recordList);
                         self.data().push(record);
-                        self.syncLength();
                         record._.uses.add(recordList);
                     }
                 },
@@ -65,7 +64,6 @@ export class RecordListInternal {
                 function recordList_AddNoInvManyInsert(record) {
                     if (self.data().indexOf(record) === -1) {
                         self.data().push(record);
-                        self.syncLength();
                         record._.uses.add(recordList);
                     }
                 },
@@ -104,7 +102,6 @@ export class RecordListInternal {
                 }
             }
             self.data.set(newRecords);
-            self.syncLength();
         });
     }
     /**
@@ -124,7 +121,6 @@ export class RecordListInternal {
                     const index = self.data().indexOf(record);
                     if (index !== -1) {
                         recordList.splice(index, 1);
-                        self.syncLength();
                     }
                 },
                 { inv: false }
@@ -259,14 +255,13 @@ export class RecordListInternal {
                 const newLength = parseInt(val);
                 if (newLength !== self.data().length) {
                     if (newLength < self.data().length) {
-                        recordList.splice(newLength, recordList.length - newLength);
+                        recordList.splice(newLength, self.data().length - newLength);
                     }
                     if (self.data().length !== newLength) {
                         const list = self.data().slice();
                         list.length = newLength;
                         self.data.set(list);
                     }
-                    self.syncLength();
                 }
             } else {
                 return Reflect.set(recordList, name, val, recordListProxy);
@@ -277,12 +272,6 @@ export class RecordListInternal {
     /** @returns {Record[]} */
     records() {
         return this.data();
-    }
-    /**
-     * Sync the data length with the array length, as to not introduce confusion while debugging
-     */
-    syncLength() {
-        this.recordList.length = this.data().length;
     }
 }
 
