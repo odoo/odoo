@@ -2,11 +2,13 @@ import {
     asyncComputed,
     onMounted,
     onPatched,
+    onWillDestroy,
     onWillStart,
     onWillUnmount,
     proxy,
     t,
     toRaw,
+    useApp,
     useEffect,
     useOnChange,
     useScope,
@@ -130,6 +132,57 @@ export function useAutofocus({ ref, selectAll, mobile }) {
 export function useBus(target, type, listener) {
     onMounted(() => target.addEventListener(type, listener));
     onWillUnmount(() => target.removeEventListener(type, listener));
+}
+
+// -----------------------------------------------------------------------------
+// useRootCreator
+// -----------------------------------------------------------------------------
+
+export function useRootCreator() {
+    const app = useApp();
+    const scope = useScope();
+
+    /** @type {Set<import("@odoo/owl").Root>} */
+    const roots = new Set();
+
+    function createPluginManagerWithEnv(env) {
+        const manager = Object.create(scope.pluginManager);
+        manager.pluginManager = manager;
+        manager.plugins = Object.create(manager.plugins);
+        manager.plugins.__ENV__ = { env };
+        return manager;
+    }
+
+    function createRoot(component, config = {}) {
+        const { env, ...rootConfig } = config;
+
+        let pluginManager = scope.pluginManager;
+        if (env) {
+            pluginManager = createPluginManagerWithEnv(env);
+        }
+
+        const root = app.createRoot(component, {
+            ...rootConfig,
+            pluginManager,
+        });
+        roots.add(root);
+
+        const destroy = root.destroy;
+        root.destroy = () => {
+            roots.delete(root);
+            return destroy();
+        };
+
+        return root;
+    }
+
+    onWillDestroy(() => {
+        for (const root of roots) {
+            root.destroy();
+        }
+    });
+
+    return createRoot;
 }
 
 // -----------------------------------------------------------------------------
