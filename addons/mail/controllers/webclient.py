@@ -13,35 +13,6 @@ from odoo.addons.mail.tools.store_handler import store_handler
 class WebclientController(ThreadController):
     """Generic store handlers for the web client."""
 
-    def _process_request_loop(self, store: Store, fetch_params):
-        # aggregate of messages to return, to batch them in a single query when all the fetch
-        # params have been processed
-        request.update_context(messages=request.env["mail.message"], add_inbox_fields=False, add_chatter_fields=False)
-        super()._process_request_loop(store, fetch_params)
-        if messages := request.env.context["messages"]:
-            fields_params = {
-                **({"inbox_fields": True} if request.env.context["add_inbox_fields"] else {}),
-                **({"chatter_fields": True} if request.env.context["add_chatter_fields"] else {}),
-            }
-            if request.env.context["add_inbox_fields"]:
-                # sudo: bus.bus: reading non-sensitive last id
-                bus_last_id = request.env["bus.bus"].sudo()._bus_last_id()
-                store.add(messages, "_store_message_fields", fields_params=fields_params)
-                for records in messages._records_by_model_name().values():
-                    if not isinstance(records, request.env.registry["mail.thread"]):
-                        continue
-                    store.add(
-                        records,
-                        lambda res: (
-                            # sudo: mail.thread: users can read their own message_needaction_counter on the thread
-                            res.attr("message_needaction_counter", sudo=True),
-                            res.attr("message_needaction_counter_bus_id", bus_last_id),
-                        ),
-                        as_thread=True,
-                    )
-            else:
-                store.add(messages, "_store_message_fields", fields_params=fields_params)
-
     @store_handler("mail.thread", audience="everyone")
     def store_mail_thread(
         self, store, thread_model, thread_id, request_list, access_params=None, **kwargs
@@ -79,7 +50,7 @@ class WebclientController(ThreadController):
                 ("channel_member_ids.partner_id", "=", odoobot.id),
             ])
             channels |= odoobot_chat
-        request.update_context(channels=request.env.context["channels"] | channels)
+        store.add(channels, "_store_channel_fields")
 
     @store_handler("res.partner", audience="everyone")
     def store_get_res_partner(self, store: Store, id):
@@ -163,7 +134,6 @@ class WebclientController(ThreadController):
         fetch_params=None,
         access_params=None,
     ):
-        request.update_context(add_chatter_fields=True)
         if thread := self._get_thread_with_access(
             thread_model,
             thread_id,
@@ -183,6 +153,11 @@ class WebclientController(ThreadController):
                 thread=thread,
                 fetch_params=fetch_params,
                 sudo=thread.env.su,
+            )
+            store.add(
+                messages.sudo(False),
+                "_store_message_attachment_fields",
+                fields_params={"chatter_fields": True},
             )
             if not request.env.user._is_public():
                 messages.set_message_done()
@@ -245,7 +220,7 @@ class WebclientController(ThreadController):
         )
         messages = fetch_res.pop("messages")
         if add_to_store:
-            request.update_context(messages=request.env.context["messages"] | messages)
+            store.add(messages.sudo(False), "_store_message_fields")
         store.resolve_data_request(
             lambda res: (
                 [res.attr(k, v) for k, v in fetch_res.items()],

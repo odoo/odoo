@@ -395,6 +395,7 @@ class TestLivechatBasicFlowHttpCase(HttpCase, TestLivechatCommon):
                     "guest_id": guest.id,
                     "id": guest_member.id,
                     "invitation_sent_dt": False,
+                    "is_favorite": False,
                     "last_interest_dt": fields.Datetime.to_string(guest_member.last_interest_dt),
                     "last_seen_dt": False,
                     "livechat_member_type": "visitor",

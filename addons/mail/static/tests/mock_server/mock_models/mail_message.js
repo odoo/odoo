@@ -83,8 +83,6 @@ export class MailMessage extends models.ServerModel {
     }
 
     _store_message_fields(res, { format_reply = true, inbox_fields = false } = {}) {
-        /** @type {import("mock_models").MailFollowers} */
-        const MailFollowers = this.env["mail.followers"];
         /** @type {import("mock_models").MailThread} */
         const MailThread = this.env["mail.thread"];
         /** @type {import("mock_models").ResFake} */
@@ -139,26 +137,6 @@ export class MailMessage extends models.ServerModel {
             res.many("notification_ids", "_store_notification_fields", { sudo: true });
         }
 
-        const followerByRecordAndPartner = {};
-        const followerKey = (model, resId) => `${model}\x00${resId}`;
-        if (res.is_for_current_user() && inbox_fields && this.env.user) {
-            for (const message of this) {
-                if (!message.model || message.model === "discuss.channel" || !message.res_id) {
-                    continue;
-                }
-                const [follower] = MailFollowers.browse(
-                    MailFollowers.search([
-                        ["res_model", "=", message.model],
-                        ["res_id", "=", message.res_id],
-                        ["partner_id", "=", this.env.user.partner_id],
-                    ])
-                );
-                if (follower) {
-                    followerByRecordAndPartner[followerKey(message.model, message.res_id)] =
-                        follower.id;
-                }
-            }
-        }
         res.one(
             "thread",
             (r) => {
@@ -168,31 +146,12 @@ export class MailMessage extends models.ServerModel {
                 r.attr("has_mail_thread", () =>
                     Boolean(this.env[threadModel]?._inherit?.includes("mail.thread"))
                 );
-                r.attr("module_icon", () => "/base/static/description/icon.png", {
-                    predicate: () => inbox_fields,
-                });
-                r.one("selfFollower", ["is_active", "partner_id"], {
-                    predicate: () =>
-                        res.is_for_current_user() &&
-                        inbox_fields &&
-                        threadModel !== "discuss.channel",
-                    value: (t) =>
-                        MailFollowers.browse(
-                            followerByRecordAndPartner[followerKey(threadModel, t.id)]
-                        ),
-                });
-                r.attr("priority", (t) => t.priority, {
-                    predicate: (t) => inbox_fields && t.priority,
-                    sudo: true,
-                });
-                r.attr(
-                    "priority_definition",
-                    () => this.env[threadModel].fields_get(["priority"])["priority"]["selection"],
-                    { predicate: (t) => inbox_fields && t.priority }
-                );
             },
             { as_thread: true }
         );
+        if (inbox_fields) {
+            this._store_message_inbox_fields(res);
+        }
         if (res.is_for_current_user()) {
             res.attr("is_bookmarked", (m) =>
                 Boolean(m.bookmarked_partner_ids?.includes(this.env.user?.partner_id))
@@ -246,6 +205,56 @@ export class MailMessage extends models.ServerModel {
                     ["is_read", "=", true],
                     ["res_partner_id", "=", this.env.user.partner_id],
                 ]).length
+        );
+    }
+
+    _store_message_inbox_fields(res) {
+        /** @type {import("mock_models").MailFollowers} */
+        const MailFollowers = this.env["mail.followers"];
+
+        const followerByRecordAndPartner = {};
+        const followerKey = (model, resId) => `${model}\x00${resId}`;
+        if (res.is_for_current_user() && this.env.user) {
+            for (const message of this) {
+                if (!message.model || message.model === "discuss.channel" || !message.res_id) {
+                    continue;
+                }
+                const [follower] = MailFollowers.browse(
+                    MailFollowers.search([
+                        ["res_model", "=", message.model],
+                        ["res_id", "=", message.res_id],
+                        ["partner_id", "=", this.env.user.partner_id],
+                    ])
+                );
+                if (follower) {
+                    followerByRecordAndPartner[followerKey(message.model, message.res_id)] =
+                        follower.id;
+                }
+            }
+        }
+        res.one(
+            "thread",
+            (r) => {
+                const threadModel = r.records?._name;
+                r.attr("module_icon", () => "/base/static/description/icon.png");
+                r.one("selfFollower", ["is_active", "partner_id"], {
+                    predicate: () => res.is_for_current_user() && threadModel !== "discuss.channel",
+                    value: (t) =>
+                        MailFollowers.browse(
+                            followerByRecordAndPartner[followerKey(threadModel, t.id)]
+                        ),
+                });
+                r.attr("priority", (t) => t.priority, {
+                    predicate: (t) => t.priority,
+                    sudo: true,
+                });
+                r.attr(
+                    "priority_definition",
+                    () => this.env[threadModel].fields_get(["priority"])["priority"]["selection"],
+                    { predicate: (t) => t.priority }
+                );
+            },
+            { as_thread: true }
         );
     }
 

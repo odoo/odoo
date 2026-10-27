@@ -51,6 +51,6 @@ class SearchController(http.Controller):
             )
             channels |= channels.browse(query)
         store = Store()
-        store.add(channels, "_store_channel_fields").add(channels.self_member_id, ["is_favorite"])
+        store.add(channels, "_store_channel_fields")
         request.env["res.partner"]._search_for_channel_invite(store, search_term=term, limit=limit)
         return store
