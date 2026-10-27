@@ -1022,7 +1022,7 @@ def get_deduced_identifiers(key, value):
     deduced = {}
     if key == 'AE_TRN':
         deduced['AE_TIN'] = NON_DIGIT_RE.sub('', value)[:10]
-    if key == 'AU_ACN':
+    if key == 'AU_ACN' and au_acn.is_valid(value):
         deduced['AU_ABN'] = au_acn.to_abn(value)
     if key == 'BE_VAT':
         deduced['BE_EN'] = get_non_prefixed_identifier('BE', value)
