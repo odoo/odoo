@@ -251,6 +251,14 @@ class AccountTax(models.Model):
             if record.tax_group_id.country_id and record.tax_group_id.country_id != record.country_id:
                 raise ValidationError(_("The tax group must have the same country_id as the tax using it."))
 
+    @api.constrains('type_tax_use')
+    def _check_default_taxes(self):
+        for tax in self:
+            if tax.company_id.account_sale_tax_id == tax and tax.type_tax_use != 'sale':
+                raise ValidationError(_("Default Sale Tax must be a tax with 'Sales' type."))
+            if tax.company_id.account_purchase_tax_id == tax and tax.type_tax_use != 'purchase':
+                raise ValidationError(_("Default Purchase Tax must be a tax with 'Purchases' type."))
+
     @api.depends('company_id')
     def _compute_country_id(self):
         for tax in self:
