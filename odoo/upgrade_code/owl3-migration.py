@@ -1084,8 +1084,8 @@ MISC_WHITELIST = {
     "pos.floor_screen_shape": {'shape'},  # didn't check
     "pos_restaurant.floor_screen_element": {'element', 'kanbanMode'},  # for each + t-call
     "pos_restaurant_appointment.PosResAppointmentListRenderer.Rows": {'list'},  # Nested t-inherit
-    "product_matrix.matrix": {'format'},  # Var passed via t-set above t-call
-    "product_matrix.extra_price": {'format'},  # nested t-call
+    "product.matrix": {'format'},  # Var passed via t-set above t-call
+    "product.extra_price": {'format'},  # nested t-call
     "project.NotebookTaskListRenderer.Rows": {'list'},  # dynamic t-call
     "project.DependOnIdsListRowsRenderer": {'list'},  # dynamic t-call
     "project_enterprise.TaskGanttRenderer.ColoredCellBorder": {'column'},  # Nested t-call or inherit

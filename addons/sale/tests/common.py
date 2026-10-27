@@ -21,7 +21,6 @@ class SaleCommon(
         super().setUpClass()
 
         cls.env.company.country_id = cls.quick_ref("base.us")
-        cls.group_discount_per_so_line = cls.quick_ref("sale.group_discount_per_so_line")
 
         if cls._disable_taxes():
             (cls.product + cls.service_product).write({"taxes_id": [Command.clear()]})
@@ -37,15 +36,9 @@ class SaleCommon(
             }
         ])
 
-        cls.group_user._remove_group(cls.group_discount_per_so_line)
-
     @classmethod
     def _disable_taxes(cls):
         return True
-
-    @classmethod
-    def _enable_discounts(cls):
-        cls.group_user._apply_group(cls.group_discount_per_so_line)
 
     @classmethod
     def _create_so(cls, **values):

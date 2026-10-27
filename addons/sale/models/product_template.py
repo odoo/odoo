@@ -62,6 +62,13 @@ class ProductTemplate(models.Model):
         "(cross-sell strategy, e.g. for computers: warranty, software, etc.).",
         check_company=True,
     )
+    product_add_mode = fields.Selection(
+        string="Variant Selection",
+        help="Configurator: choose attribute values to add the matching product variant to the"
+        " order.\nMatrix: add several variants at once from the grid of attribute values",
+        selection=[("configurator", "Configurator"), ("matrix", "Matrix")],
+        default="configurator",
+    )
     sale_delay = fields.Integer(
         "Delivery Time",
         default=0,
@@ -273,6 +280,8 @@ class ProductTemplate(models.Model):
         regardless of whether the template is configurable or not.
         Also, depending on the product type, the combo configurator might be needed instead of
         the standard product configurator.
+        The returned `mode` tells whether a configurable template is added through the product
+        configurator or the matrix.
         """
         res = super().get_single_product_variant()
         if res.get("product_id", False):
@@ -284,6 +293,7 @@ class ProductTemplate(models.Model):
                 "has_optional_products": has_optional_products,
                 "is_combo": self.type == "combo",
             })
+        res["mode"] = self.product_add_mode
         return res
 
     @api.model
