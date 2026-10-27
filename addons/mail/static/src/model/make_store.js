@@ -58,6 +58,9 @@ export function makeStore(env, { localRegistry } = {}) {
                         `${OgClass.getName()}.${name}: a computed cannot be redeclared, patch the method its compute calls`
                     );
                 }
+                if (isFieldDefinition(target[name]) && !isFieldDefinition(value)) {
+                    return true;
+                }
                 return Reflect.set(target, name, value);
             },
         });
