@@ -103,6 +103,13 @@
 .o-mail-MessagingMenu-tab {
     --mail-MessagingMenu-tabLabelOpacity: .65;
 
+    /* Hovered as a square without gaps between tabs, though its icon looks round. */
+    &::before {
+        content: "";
+        position: absolute;
+        inset: calc(-1 * var(--o-bs-spacer-1));
+    }
+
     /* Peeked: its list shows, without being the active tab. */
     &:hover, &.o-peeked {
         .o-mail-MessagingMenu-tabIcon {
