@@ -36,10 +36,9 @@ export class OrderHistoryLine extends Component {
             product_id: this.props.line.product_id,
             quantity: this.state.quantity,
             is_combo: this.props.line.is_combo,
-            ...(
-                this.props.line.is_combo
-                && { selected_combo_items: this.props.line.selected_combo_items }
-            ),
+            ...(this.props.line.is_combo && {
+                selected_combo_items: this.props.line.selected_combo_items,
+            }),
         });
     }
 }

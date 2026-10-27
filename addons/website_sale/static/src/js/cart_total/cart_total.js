@@ -14,7 +14,6 @@ export class CartTotal extends Component {
 
     setup() {
         this.state = proxy({
-            totals: {},
             notification: {
                 success: false,
                 message: "",
@@ -23,23 +22,19 @@ export class CartTotal extends Component {
         });
         this.promoInputPlaceholder = _t("Discount code...");
         this.cartService = useService("cart");
-
         onWillStart(async () => {
-            await this.updateTotals();
+            await this.cartService.mutex.exec(async () => await this.cartService.loadCartData());
         });
 
         useBus(this.cartService.bus, "cart_update", (ev) => {
-            this.updateTotals();
             if (!ev.detail?.keepAlerts) {
                 this.state.notification = {};
             }
         });
     }
 
-    async updateTotals() {
-        this.state.totals = await rpc("/shop/cart/totals", {
-            order_id: this.props.orderId ? this.props.orderId : false,
-        });
+    get data() {
+        return this.cartService.state.totals;
     }
 
     updatePromoCode(value) {
@@ -50,15 +45,13 @@ export class CartTotal extends Component {
         const data = await rpc("/shop/pricelist/apply", {
             promo: this.state.promoCode,
         });
-
         this.state.notification = data;
-
         if (data.success) {
-            this.cartService.bus.trigger("cart_update", { keepAlerts: true });
+            await this.cartService.refreshCartData(true);
         }
     }
 
     formatPrice(price) {
-        return formatCurrency(price, this.state.totals.currency_id);
+        return formatCurrency(price, this.cartService.state.currency_id);
     }
 }

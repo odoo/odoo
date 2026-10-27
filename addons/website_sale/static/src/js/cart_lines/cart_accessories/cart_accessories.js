@@ -6,7 +6,7 @@ export class CartAccessories extends Component {
     props = useProps({
         isQuantityViewActive: t.boolean(),
         templateData: t.object(),
-        accessories: t.object(),
+        accessories: t.array(),
     });
 
     setup() {
@@ -25,7 +25,7 @@ export class CartAccessories extends Component {
                 isBuyNow: true,
                 source: "cart_accessory",
                 showQuantity: this.props.isQuantityViewActive,
-            },
+            }
         );
     }
 

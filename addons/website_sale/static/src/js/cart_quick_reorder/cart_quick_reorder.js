@@ -1,10 +1,9 @@
-import { Component, onPatched, onWillStart, proxy, signal, t, useProps } from "@odoo/owl";
+import { Component, onPatched, onWillStart, signal, t, useProps } from "@odoo/owl";
 import { formatCurrency } from "@web/core/currency";
 import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
 import { useSubEnv } from "@web/owl2/utils";
 import { OrderHistoryLine } from "./order_history_line/order_history_line";
-import { useBus, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 
 export class CartQuickReorder extends Component {
     static template = "website_sale.CartQuickReorder";
@@ -13,28 +12,18 @@ export class CartQuickReorder extends Component {
     offCanvasRef = signal.ref();
 
     setup() {
-        this.state = proxy({
-            is_public_user: true,
-            order_history: [],
-            currency_id: null,
-        });
         this.cartService = useService("cart");
+        onWillStart(async () => {
+            await this.cartService.mutex.exec(async () => await this.cartService.loadCartData());
+        });
 
         useSubEnv({
             formatPrice: this.formatPrice.bind(this),
             handleReorder: this.handleReorder.bind(this),
         });
 
-        useBus(this.cartService.bus, "cart_update", () => {
-            this.loadOrderHistory();
-        });
-
-        onWillStart(async () => {
-            await this.loadOrderHistory();
-        });
-
         onPatched(() => {
-            if (!this.state.order_history.length) {
+            if (!this.data.order_history.length) {
                 const offCanvas = Offcanvas.getInstance(this.offCanvasRef());
                 if (offCanvas) {
                     offCanvas.hide();
@@ -59,21 +48,20 @@ export class CartQuickReorder extends Component {
         );
     }
 
-    async loadOrderHistory() {
-        const data = await rpc("/shop/cart/history");
-        Object.assign(this.state, data);
-    }
-
     get quickReorderTooltip() {
-        if (this.state.is_public_user) {
+        if (this.data.is_public_user) {
             return _t("Login to reorder");
-        } else if (!this.state.order_history.length) {
+        } else if (!this.data.order_history.length) {
             return _t("No previous products available for reorder.");
         }
         return "";
     }
 
+    get data() {
+        return this.cartService.state.history;
+    }
+
     formatPrice(price) {
-        return formatCurrency(price, this.state.currency_id);
+        return formatCurrency(price, this.cartService.state.currency_id);
     }
 }

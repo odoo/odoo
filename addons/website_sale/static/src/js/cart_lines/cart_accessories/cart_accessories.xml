@@ -4,7 +4,7 @@
         <h5 t-attf-class="mt-3 mb-0" t-out="this.props.templateData.accessoriesTitle"/>
         <div id="suggested_products" class="d-flex flex-column align-items-stretch">
             <div
-                t-foreach="this.props.accessories.lines"
+                t-foreach="this.props.accessories"
                 t-as="accessoryProduct"
                 t-key="accessoryProduct.id"
                 class="d-flex gap-3 py-4"

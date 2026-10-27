@@ -36,7 +36,7 @@ export class CartRewards extends Component {
         this.notification.message = data.message || "";
         this.notification.success = data.success;
         if (data.success) {
-            this.cartService.bus.trigger("cart_update", { keepAlerts: true });
+            await this.cartService.refreshCartData(true);
         }
         this.pendingRewardIds[reward.id] = false;
     }

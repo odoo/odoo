@@ -9,7 +9,7 @@
                 data-bs-toggle="offcanvas"
                 data-bs-target="#quick_reorder_sidebar"
                 aria-controls="quick_reorder_sidebar"
-                t-att-disabled="this.state.is_public_user || !this.state.order_history.length"
+                t-att-disabled="this.data.is_public_user || !this.data.order_history.length"
             >
                 <i class="oi" data-icon="undo"/>
                 <t t-out="this.props.templateData.quickReorderLabel"/>
@@ -35,8 +35,8 @@
             <div class="offcanvas-body">
                 <div
                     class="o_wsale_quick_reorder_line_group ps-sm-3"
-                    t-if="this.state.order_history.length"
-                    t-foreach="this.state.order_history"
+                    t-if="this.data.order_history.length"
+                    t-foreach="this.data.order_history"
                     t-as="order_line_group"
                     t-key="order_line_group_index"
                 >

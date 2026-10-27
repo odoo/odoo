@@ -1,10 +1,10 @@
-import { Component, onWillStart, proxy, t, useProps } from "@odoo/owl";
+import { Component, onWillStart, t, useProps } from "@odoo/owl";
 import { CartLine } from "./cart_line/cart_line";
 import { CartAccessories } from "./cart_accessories/cart_accessories";
 import wishlistUtils from "@website_sale/js/wishlist_utils";
 import { formatCurrency } from "@web/core/currency";
 import { rpc } from "@web/core/network/rpc";
-import { useService, useBus } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { useSubEnv } from "@web/owl2/utils";
 
 export class CartLines extends Component {
@@ -14,21 +14,8 @@ export class CartLines extends Component {
 
     setup() {
         this.cartService = useService("cart");
-        this.state = proxy({
-            currency_id: null,
-            cart_lines: [],
-            accessories: [],
-            is_quantity_view_active: false,
-            is_wishlist_view_active: false,
-            show_product_reference_price: false,
-        });
-
         onWillStart(async () => {
-            await this.updateLines();
-        });
-
-        useBus(this.cartService.bus, "cart_update", async () => {
-            await this.updateLines();
+            await this.cartService.mutex.exec(async () => await this.cartService.loadCartData());
         });
 
         useSubEnv({
@@ -36,11 +23,6 @@ export class CartLines extends Component {
             addToWishlist: this.addToWishlist.bind(this),
             formatPrice: this.formatPrice.bind(this),
         });
-    }
-
-    async updateLines() {
-        const data = await rpc("/shop/cart/lines");
-        Object.assign(this.state, data);
     }
 
     async updateLine(lineId, productId, quantity) {
@@ -55,23 +37,27 @@ export class CartLines extends Component {
     }
 
     formatPrice(price) {
-        return formatCurrency(price, this.state.currency_id);
+        return formatCurrency(price, this.cartService.state.currency_id);
+    }
+
+    get data() {
+        return this.cartService.state.lines;
     }
 
     get cartLinesProps() {
         return {
-            isQuantityViewActive: this.state.is_quantity_view_active,
-            isWishlistViewActive: this.state.is_wishlist_view_active,
-            showProductReferencePrice: this.state.show_product_reference_price,
+            isQuantityViewActive: this.data.is_quantity_view_active,
+            isWishlistViewActive: this.data.is_wishlist_view_active,
+            showProductReferencePrice: this.data.show_product_reference_price,
             templateData: this.props.templateData,
         };
     }
 
     get cartAccessoriesProps() {
         return {
-            isQuantityViewActive: this.state.is_quantity_view_active,
+            isQuantityViewActive: this.data.is_quantity_view_active,
             templateData: this.props.templateData,
-            accessories: this.state.accessories,
+            accessories: this.data.accessories,
         };
     }
 }

@@ -11,6 +11,7 @@ import { browser } from '@web/core/browser/browser';
 import { serializeDateTime } from '@web/core/l10n/dates';
 import { rpc } from '@web/core/network/rpc';
 import { registry } from '@web/core/registry';
+import { Mutex } from "@web/core/utils/concurrency";
 import { redirect } from '@web/core/utils/urls';
 import {
     CartNotificationContainer
@@ -68,9 +69,17 @@ export class CartService {
     setup(_env, services) {
         this.dialog = services.dialog;
         this.interactions = services["public.interactions"];
-        this.rpc = rpc;  // To be overridable in tests.
+        this.rpc = rpc; // To be overridable in tests.
         this.notifications = proxy(new Set());
         this.bus = new EventBus();
+        this.mutex = new Mutex();
+        this.state = proxy({
+            lines: {},
+            totals: {},
+            history: {},
+            currency_id: false,
+        });
+        this.cartFetched = false;
 
         // Register the notification container
         registry.category('main_components').add('CartNotificationContainer',
@@ -82,6 +91,10 @@ export class CartService {
 
         return {
             bus: this.bus,
+            mutex: this.mutex,
+            state: this.state,
+            loadCartData: (...args) => this.loadCartData(...args),
+            refreshCartData: (...args) => this.refreshCartData(...args),
             add: (...args) => this.add(...args),
             update: (...args) => this.update(...args),
             showWarning: (...args) => this.showWarning(...args),
@@ -91,6 +104,19 @@ export class CartService {
     //--------------------------------------------------------------------------
     // Methods exposed by the service.
     //--------------------------------------------------------------------------
+
+    async loadCartData(force = false) {
+        if (force || !this.cartFetched) {
+            const data = await this.rpc("/shop/cart/data");
+            this._setCartState(data);
+            this.cartFetched = true;
+        }
+    }
+
+    async refreshCartData(keepAlerts = false) {
+        await this.loadCartData(true);
+        this.bus.trigger("cart_update", { keepAlerts });
+    }
 
     /**
      * Asynchronously adds a product to the shopping cart.
@@ -287,7 +313,7 @@ export class CartService {
 
         this._updateCartIcon(data.cart_quantity);
         this.showWarning(data.warning);
-        this.bus.trigger("cart_update");
+        await this.refreshCartData();
         this.bus.trigger("cart_amount_changed", [data.amount, data.minor_amount]);
 
         if (data.tracking_info?.length) {
@@ -569,7 +595,7 @@ export class CartService {
                 items: data.tracking_info,
             });
         }
-        this.bus.trigger("cart_update");
+        await this.refreshCartData();
         if (shouldRedirectToCart) {
             redirect('/shop/cart');
             return data.quantity;
@@ -647,11 +673,18 @@ export class CartService {
         const cartTotals = document.getElementById("cart_totals");
         this.interactions.startInteractions(cartTotals);
     }
+
+    _setCartState(data) {
+        Object.assign(this.state.lines, data.lines || {});
+        Object.assign(this.state.totals, data.totals || {});
+        Object.assign(this.state.history, data.history || {});
+        this.state.currency_id = data.currency_id;
+    }
 }
 
 export const cartService = {
     dependencies: CartService.dependencies,
-    async: ["add", "update"],
+    async: ["add", "update", "loadCartData", "refreshCartData"],
     start(env, dependencies) {
         return new CartService(env, dependencies);
     },

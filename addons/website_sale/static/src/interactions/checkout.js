@@ -224,7 +224,7 @@ export class Checkout extends Interaction {
         this._showLoadingBadge(radio);
         const result = await this.waitFor(this._setDeliveryMethod(radio.dataset.dmId));
         this._updateAmountBadge(radio, result);
-        this._updateCartSummaries();
+        await this._updateCartSummaries();
         if (result.shipping_tracking_info) {
             wSaleUtils.dispatchTrackingEvent(
                 "add_shipping_info_event", result.shipping_tracking_info,
@@ -280,8 +280,8 @@ export class Checkout extends Interaction {
      * @private
      * @return {void}
      */
-    _updateCartSummaries() {
-        this.services.cart.bus.trigger("cart_update");
+    async _updateCartSummaries() {
+        await this.services.cart.refreshCartData();
     }
 
     /**

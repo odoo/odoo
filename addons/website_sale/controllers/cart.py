@@ -411,7 +411,23 @@ class Cart(PaymentPortal):
             ),
         }
 
-    @route(route="/shop/cart/history", type="jsonrpc", auth="public", website=True, readonly=True)
+    @route(route="/shop/cart/data", type="jsonrpc", auth="public", website=True)
+    def cart_data(self, order_id=None):
+        """Return the shared cart data used by the OWL cart components."""
+        order_sudo = request.cart
+        lines = self.cart_lines()
+        totals = self.cart_totals(order_id=order_id)
+        history = self.cart_history()
+        if order_sudo:
+            order_sudo._clear_alerts()
+
+        return {
+            "lines": lines,
+            "totals": totals,
+            "history": history,
+            "currency_id": order_sudo.currency_id.id,
+        }
+
     def cart_history(self):
         """Prepare the order history of the current user.
 
@@ -502,7 +518,6 @@ class Cart(PaymentPortal):
             "order_history": [
                 {"label": label, "lines": lines} for label, lines in lines_per_order_date.items()
             ],
-            "currency_id": self.env.website.currency_id.id,
         }
 
     def _prepare_order_history_line(self, line):
@@ -605,7 +620,6 @@ class Cart(PaymentPortal):
 
         return infos
 
-    @route(route="/shop/cart/lines", type="jsonrpc", auth="public", website=True)
     def cart_lines(self):
         order_sudo = request.cart
 
@@ -618,19 +632,16 @@ class Cart(PaymentPortal):
         show_product_reference_price = self.env.website.show_product_reference_price
 
         values = {
-            "currency_id": order_sudo.currency_id.id,
             "cart_lines": [],
             "is_quantity_view_active": is_quantity_view_active,
             "is_wishlist_view_active": is_wishlist_view_active,
             "show_product_reference_price": show_product_reference_price,
             "accessories": self._cart_accessories(),
+            "cart_quantity": order_sudo.cart_quantity,
         }
 
         for line in order_sudo.website_order_line:
             values["cart_lines"].append(self._prepare_cart_line_data(line))
-
-        # clear alerts once it's sent to component
-        order_sudo._clear_alerts()
 
         return values
 
@@ -687,45 +698,6 @@ class Cart(PaymentPortal):
             "description_lines": list(combo_item_line.get_description_following_lines()),
         }
 
-    @route(route="/shop/cart/summary", type="jsonrpc", auth="public", website=True)
-    def cart_summary(self):
-        """Return only the data required by the checkout cart summary."""
-        order_sudo = request.cart
-        values = {
-            "currency_id": order_sudo.currency_id.id,
-            "cart_quantity": order_sudo.cart_quantity,
-            "cart_lines": [
-                self._prepare_cart_summary_line_data(line) for line in order_sudo.website_order_line
-            ],
-        }
-        # Clear alerts once they have been sent to the component.
-        order_sudo._clear_alerts()
-        return values
-
-    def _prepare_cart_summary_line_data(self, line):
-        """Prepare the minimal data needed to render a line in CartSummary.
-
-        Addons can override this hook to expose fields used by their CartSummary
-        template extensions.
-        """
-        return {
-            "id": line.id,
-            "product_id": line.product_id.id,
-            "name_short": line.name_short,
-            "header_name": line._get_line_header(),
-            "uom_name": line.product_uom_id.name,
-            "product_price": line._get_cart_display_price(),
-            "product_uom_qty": line.product_uom_qty,
-            "image_uri": (
-                image_data_uri(line.product_id.image_128) if line.product_id.image_128 else False
-            ),
-            "combination_name": line._get_combination_name(),
-            "has_multiple_uoms": line.product_id._has_multiple_uoms(),
-            "alert_message": line._join_alert_messages(),
-            "alert_level": line._get_max_alert_level(),
-        }
-
-    @route(route="/shop/cart/totals", type="jsonrpc", auth="public", website=True)
     def cart_totals(self, order_id=None):
         if order_id:
             order_sudo = request.env["sale.order"].sudo().browse(order_id)
@@ -735,7 +707,6 @@ class Cart(PaymentPortal):
             order_sudo = request.cart
 
         return {
-            "currency_id": order_sudo.currency_id.id,
             "has_carrier": bool(order_sudo.carrier_id),
             "has_deliverable_products": order_sudo._has_deliverable_products(),
             "amount_delivery": order_sudo.amount_delivery,
@@ -747,7 +718,7 @@ class Cart(PaymentPortal):
             ),
             "amount_total": order_sudo.amount_total,
             "tax_included": (order_sudo.website_id.tax_display == "tax_included"),
-            "is_paid": order_sudo._is_paid(),
+            "is_paid": order_sudo._is_paid() if order_sudo else False,
             "amount_paid": order_sudo.amount_paid,
         }
 
@@ -755,21 +726,19 @@ class Cart(PaymentPortal):
         order_sudo = request.cart
         accessories = order_sudo._cart_accessories()
 
-        return {
-            "lines": [
-                {
-                    "id": accessory.id,
-                    "product_tmpl_id": accessory.product_tmpl_id.id,
-                    "type": accessory.type,
-                    "display_name": accessory.with_context(display_default_code=False).display_name,
-                    "website_url": accessory.website_url,
-                    "website_published": accessory.website_published,
-                    "image_uri": (
-                        image_data_uri(accessory.image_128) if accessory.image_128 else False
-                    ),
-                    "description_sale": accessory.description_sale,
-                    "combination_info": accessory._get_combination_info_variant(),
-                }
-                for accessory in accessories
-            ]
-        }
+        return [
+            {
+                "id": accessory.id,
+                "product_tmpl_id": accessory.product_tmpl_id.id,
+                "type": accessory.type,
+                "display_name": accessory.with_context(display_default_code=False).display_name,
+                "website_url": accessory.website_url,
+                "website_published": accessory.website_published,
+                "image_uri": (
+                    image_data_uri(accessory.image_128) if accessory.image_128 else False
+                ),
+                "description_sale": accessory.description_sale,
+                "combination_info": accessory._get_combination_info_variant(),
+            }
+            for accessory in accessories
+        ]

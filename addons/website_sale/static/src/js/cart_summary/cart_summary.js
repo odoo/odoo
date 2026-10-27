@@ -1,7 +1,6 @@
-import { Component, onWillStart, proxy, useProps, t } from "@odoo/owl";
+import { Component, onWillStart, useProps, t } from "@odoo/owl";
 import { formatCurrency } from "@web/core/currency";
-import { rpc } from "@web/core/network/rpc";
-import { useBus, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { formatDate } from "@web/core/l10n/dates";
 
@@ -13,32 +12,25 @@ export class CartSummary extends Component {
 
     setup() {
         this.cartService = useService("cart");
-        this.state = proxy({
-            cart_lines: [],
-            currency_id: null,
-            cart_quantity: 0,
-        });
-
         onWillStart(async () => {
-            await this.updateSummary();
-        });
-
-        useBus(this.cartService.bus, "cart_update", async () => {
-            await this.updateSummary();
+            await this.cartService.mutex.exec(async () => await this.cartService.loadCartData());
         });
     }
 
-    async updateSummary() {
-        const data = await rpc("/shop/cart/summary");
-        Object.assign(this.state, data);
+    get data() {
+        return this.cartService.state.lines;
     }
 
     get isScrollable() {
-        return this.state.cart_lines.length > 4;
+        return this.data.cart_lines.length > 4;
     }
 
     formatPrice(price) {
-        return formatCurrency(price, this.state.currency_id);
+        return formatCurrency(price, this.cartService.state.currency_id);
+    }
+
+    get cartQuantity() {
+        return this.data.cart_quantity;
     }
 
     // used in website_sale_loyalty and website_sale_renting
