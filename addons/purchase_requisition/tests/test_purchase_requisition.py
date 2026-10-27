@@ -450,6 +450,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
             }),
             ]
         })
+        product.supplier_taxes_id.price_include_override = 'tax_included'
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = vendor_a
         with po_form.order_line.new() as line:
