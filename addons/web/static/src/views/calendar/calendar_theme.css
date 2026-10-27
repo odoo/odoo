@@ -4,7 +4,7 @@
     --o-calendar-background: var(--o-view-background-color);
     --o-calendar-border: var(--border-color);
     --o-calendar-faint: color-mix(in srgb, var(--gray-200) 50%, transparent);
-    --o-calendar-non-business: color-mix(in srgb, var(--o-gray-300) 50%, transparent);
+    --o-calendar-non-business: var(--o-calendar-faint);
     --o-calendar-highlight: rgba(188, 232, 241, .3);
     --o-calendar-neutral: rgba(208, 208, 208, .3);
     --o-calendar-other-foreground: var(--gray-500);
@@ -93,7 +93,7 @@
 }
 
 .o_calendar_non_business {
-    background-color: var(--o-calendar-non-business);
+    background: var(--o-calendar-non-business);
 }
 
 .o_calendar_now_line {

@@ -137,7 +137,8 @@ class ResPartner(models.Model):
     @api.model
     def _interval_to_business_hours(self, working_intervals, start_period, stop_period):
         if not working_intervals:
-            return [self._format_fullcalendar_business_hours()]
+            # No schedule at all: leave the calendar uncolored instead of greying out every slot.
+            return []
 
         business_hours = []
         for working_interval in working_intervals:
@@ -217,18 +218,16 @@ class ResPartner(models.Model):
         return working_days
 
     @api.model
-    def _format_fullcalendar_business_hours(self, weekday=7, start_time="00:00", end_time="00:00"):
+    def _format_fullcalendar_business_hours(self, weekday, start_time, end_time):
         """
         Format business hours values for Fullcalendar so it can grey out unavailable slots in the calendar.
 
         Fullcalendar is a library that is used by the calendar view. It expects a specifically formatted dictionary for
-        the business hours API option to properly grey out areas where an employee is not available. If an employee has
-        no intervals we return the default values, with weekday=7 as a dummy value to grey out the entire week.
-        Returning nothing would leave the calendar completely uncolored.
+        the business hours API option to properly grey out areas where an employee is not available.
 
-        :param int weekday: Day of week (0-6 for Mon-Sun, 7 as dummy to grey entire week). Defaults to 7.
-        :param string start_time: Start time in "HH:MM" format. Defaults to "00:00".
-        :param string end_time: End time in "HH:MM" format. Defaults to "00:00".
+        :param int weekday: Day of week (0-6 for Sun-Sat).
+        :param string start_time: Start time in "HH:MM" format.
+        :param string end_time: End time in "HH:MM" format.
 
         :return: Fullcalendar-business-hours-configuration dict with the keys 'daysOfWeek', 'startTime', and 'endTime'.
         :rtype: dict
