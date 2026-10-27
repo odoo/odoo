@@ -54,6 +54,14 @@
       }
     }
 
+    > .o_navbar {
+      // Safari 26 blurs the top of the page below the iOS status bar unless
+      // a fixed or sticky container spans the top edge: it then fills the
+      // status bar with that container's background color instead.
+      // Without an inset, the navbar keeps its place in the flow.
+      position: sticky;
+    }
+
     .o_main_navbar {
       flex: 0 0 auto;
     }

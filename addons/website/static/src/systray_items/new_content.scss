@@ -13,6 +13,12 @@
     @include button-variant(darken($o-navbar-background, 5%), darken($o-navbar-background, 5%), $o-navbar-entry-color, darken($o-navbar-background, 10%));
 }
 
+// The choices are rendered inside the sticky navbar, which is a stacking
+// context: raise the navbar itself so that they cover the website preview.
+.o_web_client > .o_navbar:has(#o_new_content_menu_choices) {
+    z-index: $zindex-fixed - 1;
+}
+
 #o_new_content_menu_choices {
     @include o-position-absolute(0, 0, 0, 0);
     position: fixed;
