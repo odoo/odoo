@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
-import io
 
 from lxml import etree
 from odoo import fields, Command
 from odoo.addons.account_edi_ubl_cii.tests.common import TestUblCiiCommon
 from odoo.tests import tagged
-from odoo.tools.pdf import OdooPdfFileWriter
 from odoo.tools.safe_eval import datetime
 
 
@@ -158,17 +156,6 @@ class TestAccountEdiUblCii(TestUblCiiCommon):
         attachment.raw = etree.tostring(xml_tree)
         new_invoice = invoice.journal_id._create_document_from_attachment(attachment.ids)
         self.assertRecordValues(new_invoice.invoice_line_ids, line_vals)
-
-    def _get_pdf_bytes(self, xml_content=None, filename='factur-x.xml'):
-        """ Small A4 PDF, with `xml_content` embedded as `filename` if given. """
-        a4_width_pt, a4_height_pt = 595, 842
-        writer = OdooPdfFileWriter()
-        writer.addBlankPage(a4_width_pt, a4_height_pt)
-        if xml_content:
-            writer.addAttachment(filename, xml_content, subtype='text/xml', afrelationship='/Alternative')
-        buffer = io.BytesIO()
-        writer.write(buffer)
-        return buffer.getvalue()
 
     def _configure_seller_for_cii_export(self):
         """ Factur-X/ZUGFeRD/CII exports require a fully configured seller (VAT, phone, email,
