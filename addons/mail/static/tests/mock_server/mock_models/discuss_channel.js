@@ -648,7 +648,8 @@ export class DiscussChannel extends models.ServerModel {
                 new mailDataHelpers.Store(MailMessage.browse(message.id), {
                     linkedSubChannel: mailDataHelpers.Store.one(
                         subChannels,
-                        makeKwArgs({ as_thread: true, only_id: true })
+                        ["name"],
+                        makeKwArgs({ as_thread: true })
                     ),
                 }).get_result()
             );
