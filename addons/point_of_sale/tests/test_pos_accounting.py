@@ -2512,3 +2512,15 @@ class TestPosAccounting(AccountTestInvoicingCommon):
             'journal_id': company_2_data['default_journal_bank'].id,
         })
         self.assertIn(company_2_data['company'], company_2_pm.outstanding_account_id.company_ids)
+
+    def test_invoice_pos_order_without_customer(self):
+        """Test that invoicing a POS order without a customer raises a UserError."""
+        self.open_pos_session()
+        order = self.create_pos_order(
+            payment_method=[[self.cash_pm, {'amount': 10.6}]],
+            products=[[self.product_6, {}]],
+        )
+        self.close_session()
+
+        with self.assertRaisesRegex(UserError, "A customer is required on the order to create an invoice."):
+            order.action_pos_order_invoice()
