@@ -1000,3 +1000,30 @@ class TestCreatePicking(ProductVariantsCommon):
         move = po.picking_ids.move_ids
 
         self.assertEqual(move.description_picking, "[P01] Product 1", f'The vendor reference "{move.description_picking}" is not the expected one.')
+
+    def test_receipt_extra_product_first_move(self):
+        """ A product added to a receipt is added to its purchase order, also
+        when its move is the first one of the receipt. """
+        self.product_id_1.is_storable = True
+        po = self.env['purchase.order'].create(self.po_vals)
+        po.button_confirm()
+        receipt = po.picking_ids
+        receipt.move_ids.sequence = 10
+        self.env['stock.move'].create({
+            'picking_id': receipt.id,
+            'product_id': self.product_id_2.id,
+            'product_uom_qty': 2,
+            'location_id': receipt.location_id.id,
+            'location_dest_id': receipt.location_dest_id.id,
+            'sequence': 1,
+        })
+        receipt.invalidate_recordset(['move_ids'])
+        self.assertEqual(receipt.move_ids[0].product_id, self.product_id_2)
+        receipt.action_confirm()
+        for move in receipt.move_ids:
+            move.quantity = move.product_uom_qty
+        receipt.move_ids.picked = True
+        receipt.button_validate()
+
+        extra_line = po.order_line.filtered(lambda line: line.product_id == self.product_id_2)
+        self.assertEqual(extra_line.qty_received, 2)
