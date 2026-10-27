@@ -1,0 +1,38 @@
+.o-mail-ThreadPreview {
+    max-width: 225px;
+    border-color: var(--o-bubble-border-color, var(--o-gray-300)) !important;
+    background-color: var(--o-bubble-bg, var(--o-view-background-color)) !important;
+}
+
+/* the popover arrow is not a descendant of the preview: it inherits the bubble
+   color custom properties from the popover (see the
+   `.o-mail-ThreadPreview-popover:has(...)` rules in core.scss) */
+.o-mail-ThreadPreview-popover .popover-arrow {
+    /* puts arrow above preview border */
+    z-index: 1 !important;
+}
+
+/* placement is the physical side, also in RTL */
+/* rtl:begin:ignore */
+.o-mail-ThreadPreview-popover[data-popper-placement^="left"] .popover-arrow {
+    &::before {
+        right: 1px !important;
+        border-left-color: var(--o-bubble-border-color, var(--o-gray-300)) !important;
+    }
+    &::after {
+        right: 2px !important;
+        border-left-color: var(--o-bubble-bg, var(--o-view-background-color)) !important;
+    }
+}
+
+.o-mail-ThreadPreview-popover[data-popper-placement^="right"] .popover-arrow {
+    &::before {
+        left: 1px !important;
+        border-right-color: var(--o-bubble-border-color, var(--o-gray-300)) !important;
+    }
+    &::after {
+        left: 2px !important;
+        border-right-color: var(--o-bubble-bg, var(--o-view-background-color)) !important;
+    }
+}
+/* rtl:end:ignore */

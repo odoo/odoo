@@ -1,13 +1,15 @@
 import { CountryFlag } from "@mail/core/common/country_flag";
 import { useThreadActions } from "@mail/core/common/thread_actions";
+import { useThreadPreview } from "@mail/core/common/thread_preview";
 import { MessagingMenuItem } from "@mail/core/public_web/messaging_menu/messaging_menu_item";
-import { onClickIntent } from "@mail/utils/common/hooks";
+import { onClickIntent, PEEK_DELAY } from "@mail/utils/common/hooks";
 
+import { isMobileOS } from "@web/core/browser/feature_detection";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 
-import { types, useProps } from "@odoo/owl";
+import { signal, types, useListener, useProps } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
 import { PANEL_CONTAINER_TYPE } from "@mail/core/common/action";
 
@@ -19,7 +21,9 @@ Object.assign(MessagingMenuItem.components, { CountryFlag });
 const messagingMenuItemPatch = {
     setup() {
         super.setup(...arguments);
-        this.channelDropdownState = useDropdownState();
+        this.channelDropdownState = useDropdownState({
+            onOpen: () => this.threadPreview?.close(),
+        });
         this.channel = useProps.static(
             "channel",
             types.instanceOf(this.store["discuss.channel"]).optional()
@@ -29,6 +33,27 @@ const messagingMenuItemPatch = {
         onClickIntent(this.root, () => this.channel?.thread.prefetchInitialMessages(), {
             ignoreSelector: ".o-mail-MessagingMenu-actions",
         });
+        // The channel row only, not the content appended below it in the item.
+        this.channelItemRef = signal.ref();
+        if (this.channel && this.ancestors.inDiscussApp && !isMobileOS()) {
+            this.threadPreview = useThreadPreview(this.channelItemRef, {
+                canOpen: () =>
+                    this.hasThreadPreview() &&
+                    !this.isActive() &&
+                    !document.querySelector(".o-discuss-dropdownMenu") &&
+                    !this.root()?.dataset.rightClicking,
+                channel: () => this.channel,
+                delay: PEEK_DELAY,
+                position: "right-middle",
+                showName: false,
+            });
+            useListener(this.root, "contextmenu", () => this.threadPreview.close());
+            useListener(this.root, "pointerdown", () => this.threadPreview.close());
+        }
+    },
+    /** Whether hovering the item shows a preview of its last message. */
+    hasThreadPreview() {
+        return Boolean(this.threadPreview) && !this.store.ui.isSmall();
     },
     get _isActive() {
         return (
@@ -120,6 +145,7 @@ const messagingMenuItemPatch = {
             onSwipeRight: this.hasTouch() ? swipeRight : undefined,
             onSwipeLeft: this.swipeLeft ?? undefined,
             onClick: () => this.onClick(this.channel),
+            rootRef: this.channelItemRef,
         };
     },
     get parentChannelShortName() {
