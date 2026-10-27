@@ -17,7 +17,6 @@ export class TextHighlight extends Interaction {
     };
 
     setup() {
-        this.observerLock = new Map();
         this.observed = new WeakSet();
         this.resizeObserver = new window.ResizeObserver(this.updateEntries.bind(this));
         this.mutationObserver = new window.MutationObserver(this.updateEntries.bind(this));
@@ -97,8 +96,6 @@ export class TextHighlight extends Interaction {
      * @param {HTMLElement} el
      */
     onTextHighlightAdded(el) {
-        // todo: what was the purpose of this?
-        // this.lockTextHighlightObserver(el);
         this.handleEl(el);
     }
 }
