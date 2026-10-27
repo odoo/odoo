@@ -213,6 +213,18 @@ class PaymentTransaction(models.Model):
                 and not line.reconciled
             ).reconcile()
 
+        # Reconcile a refund with the open part of the source payment, e.g. when refunding before
+        # invoicing. Otherwise, the later invoice is paid with the full source payment.
+        source_payment = self.source_transaction_id.payment_id
+        if self.operation == 'refund' and source_payment.state in ('in_process', 'paid'):
+            def is_open(line):
+                return line.account_id == payment.destination_account_id and not line.reconciled
+
+            refund_lines = payment.move_id.line_ids.filtered(is_open)
+            source_lines = source_payment.move_id.line_ids.filtered(is_open)
+            if refund_lines and source_lines:
+                (refund_lines + source_lines).reconcile()
+
         return payment
 
     #=== BUSINESS METHODS - LOGGING ===#
