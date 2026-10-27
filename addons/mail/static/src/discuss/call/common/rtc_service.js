@@ -7,7 +7,7 @@ import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permi
 import { rpc } from "@web/core/network/rpc";
 import { assignDefined, closeStream } from "@mail/utils/common/misc";
 
-import { markup, proxy, toRaw } from "@odoo/owl";
+import { markup, proxy, toRaw, usePlugin } from "@odoo/owl";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -21,6 +21,7 @@ import { url } from "@web/core/utils/urls";
 import { isBrowserSafari, isMobileOS } from "@web/core/browser/feature_detection";
 import { CallAction } from "@mail/discuss/call/common/call_actions";
 import { ACTION_TAGS } from "@mail/core/common/action";
+import { BusPlugin } from "@bus/services/bus_plugin";
 
 let sequence = 1;
 const getSequence = () => sequence++;
@@ -2948,7 +2949,6 @@ Rtc.register();
 
 export const rtcService = {
     dependencies: [
-        "bus_service",
         "discuss.p2p",
         "discuss.pip_service",
         "discuss.ptt_extension",
@@ -2963,6 +2963,7 @@ export const rtcService = {
      */
     start(env, services) {
         const store = services["mail.store"];
+        const busPlugin = usePlugin(BusPlugin);
         const rtc = store.rtc;
         rtc.pipService = services["discuss.pip_service"];
         rtc.onChange(
@@ -3037,42 +3038,36 @@ export const rtcService = {
              */
             return sequence >= session?.sequence;
         };
-        services["bus_service"].subscribe(
-            "discuss.channel.rtc.session/sfu_hot_swap",
-            async ({ serverInfo }) => {
-                if (!rtc.localSession) {
-                    return;
-                }
-                if (rtc.serverInfo?.channelUUID === serverInfo.channelUUID) {
-                    // we clear peers as inbound p2p connections may still be active
-                    rtc.p2pService.removeALlPeers();
-                    // no reason to swap if the server is the same, if at some point we want to force a swap
-                    // there should be an explicit flag in the event payload.
-                    return;
-                }
-                rtc.serverInfo = serverInfo;
-                await rtc._initConnection();
+        busPlugin.subscribe("discuss.channel.rtc.session/sfu_hot_swap", async ({ serverInfo }) => {
+            if (!rtc.localSession) {
+                return;
             }
-        );
-        services["bus_service"].subscribe("discuss.channel.rtc.session/ended", ({ sessionId }) => {
+            if (rtc.serverInfo?.channelUUID === serverInfo.channelUUID) {
+                // we clear peers as inbound p2p connections may still be active
+                rtc.p2pService.removeALlPeers();
+                // no reason to swap if the server is the same, if at some point we want to force a swap
+                // there should be an explicit flag in the event payload.
+                return;
+            }
+            rtc.serverInfo = serverInfo;
+            await rtc._initConnection();
+        });
+        busPlugin.subscribe("discuss.channel.rtc.session/ended", ({ sessionId }) => {
             if (rtc.localSession?.id === sessionId) {
                 rtc.notifyServerDisconnect();
                 rtc.endCall();
             }
         });
-        services["bus_service"].subscribe(
-            "discuss.channel.rtc.session/update_and_broadcast",
-            (payload) => {
-                const { store_data, channelId } = payload;
-                /**
-                 * If this event comes from the channel of the current call, information is shared in real time
-                 * through the peer to peer connection. So we do not use this less accurate broadcast.
-                 */
-                if (channelId !== rtc.channel?.id) {
-                    rtc.store.insert(store_data);
-                }
+        busPlugin.subscribe("discuss.channel.rtc.session/update_and_broadcast", (payload) => {
+            const { store_data, channelId } = payload;
+            /**
+             * If this event comes from the channel of the current call, information is shared in real time
+             * through the peer to peer connection. So we do not use this less accurate broadcast.
+             */
+            if (channelId !== rtc.channel?.id) {
+                rtc.store.insert(store_data);
             }
-        );
+        });
         /**
          * Attempts to play RTC medias when a user shows signs of presence (interaction with the page) as
          * they cannot be played on windows that have not been interacted with.
