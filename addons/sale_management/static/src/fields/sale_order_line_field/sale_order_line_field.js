@@ -18,7 +18,7 @@ patch(SaleOrderLineOne2Many.prototype, {
         super.setup();
 
         this.sectionTemplates = useAsyncComputed(
-            () => {
+            async () => {
                 if (!this.canCreate) {
                     return [];
                 }
