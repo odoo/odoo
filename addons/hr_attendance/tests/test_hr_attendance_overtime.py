@@ -891,6 +891,17 @@ class TestHrAttendanceOvertime(HttpCase):
         for att in attendances:
             self.assertEqual(att.overtime_hours, 0)
 
+    def test_overtime_flexible_resource_timezone_behind_utc(self):
+        """ A flexible hours employee in a timezone behind UTC only gets overtime
+        for the hours worked beyond their daily hours. """
+        self.flexible_employee.tz = 'America/Los_Angeles'
+        # Oct 19 2026 = Monday, 07:00-12:00 and 13:00-21:00 in Los Angeles (UTC-7)
+        attendances = self.env['hr.attendance'].create([
+            {'employee_id': self.flexible_employee.id, 'check_in': datetime(2026, 10, 19, 14, 0), 'check_out': datetime(2026, 10, 19, 19, 0)},
+            {'employee_id': self.flexible_employee.id, 'check_in': datetime(2026, 10, 19, 20, 0), 'check_out': datetime(2026, 10, 20, 4, 0)},
+        ])
+        self.assertEqual(attendances.mapped('overtime_hours'), [0, 5])
+
     def test_expected_hours_flexible_resource_weekly_limit(self):
         calendar_flex_32h = self.env['resource.calendar'].create({
             'name': 'Flexible 32 hours/week',
