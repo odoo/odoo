@@ -174,6 +174,32 @@ class TestPurchaseOrderInvoice(PurchaseTestCommon):
             {'account_id': self.account_payable.id, 'debit': 0.0, 'credit': 150.0},
         ])
 
+    def test_invoice_avco_update_after_sale(self):
+        """ Correcting a bill's price for an already-received move must still recompute a
+        later out-move under AVCO, even though that move's own remaining_qty wasn't touched
+        by the sale: the FIFO-order remaining_qty bookkeeping deems the sale to have come
+        from the *other* receipt, not this one.
+        """
+        product = self.product_avco_auto
+        with freeze_time(fields.Datetime.now()) as frozen:
+            move1 = self._receive(self._create_purchase(product, 1, 10))
+            frozen.tick(relativedelta(seconds=1))
+            move2 = self._receive(self._create_purchase(product, 1, 20))
+            self.assertEqual(move1.value, 10)
+            self.assertEqual(move2.value, 20)
+
+            frozen.tick(relativedelta(seconds=1))
+            out_move = self._make_out_move(product, 1)
+            self.assertEqual(out_move.value, -15.0)
+            self.assertEqual(move2.remaining_qty, move2._get_valued_qty())
+
+            frozen.tick(relativedelta(seconds=1))
+            self._create_bill(purchase_order=move2.purchase_line_id.order_id, price_unit=30)
+            move2._set_value()
+
+            self.assertEqual(move2.value, 30)
+            self.assertEqual(out_move.value, -20.0)
+
     def test_invoice_fifo(self):
         po = self._create_purchase(self.product_fifo, price_unit=12)
         self._receive(po)
