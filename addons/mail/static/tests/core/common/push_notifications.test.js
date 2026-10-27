@@ -78,8 +78,17 @@ for (const preference of ["inbox", "email"]) {
                 model: "res.partner",
                 id: partnerId,
             });
+<<<<<<< 51f50a9411d70602df80bd9a0e07cc7f81ba2cfd
             await openDiscuss(`res.partner_${partnerId}`);
             await waitUntil(() => thread.isDisplayed);
+||||||| 1385a5997e921731e9a1c2ef87570f86a4c81c4a
+            thread.openChatWindow();
+            await contains(".o-mail-ChatWindow");
+=======
+            // Open the chat window without saving the chat hub, whose reload closes it in tests
+            getService("mail.store").ChatWindow.insert({ thread }).open({ notifyState: false });
+            await contains(".o-mail-ChatWindow");
+>>>>>>> 6d2b60adfbd7782f5f77936f0353817aea9a52fa
             expect(thread.isDisplayed).toBe(true);
             patchWithCleanup(parent.document, { hasFocus: () => isFocused });
             patchWithCleanup(browser.navigator.serviceWorker, {
