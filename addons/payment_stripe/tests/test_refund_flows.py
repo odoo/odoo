@@ -12,6 +12,17 @@ from odoo.addons.payment_stripe.tests.common import StripeCommon
 
 @tagged("post_install", "-at_install")
 class TestRefundFlows(StripeCommon, PaymentHttpCommon):
+    def test_send_refund_request_saves_refund_id(self):
+        """The Stripe refund ID is saved before the queued response is processed."""
+        source_tx = self._create_transaction("direct", state="done")
+        refund_tx = source_tx._create_child_transaction(source_tx.amount, is_refund=True)
+        with patch(
+            "odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request",
+            return_value=self.refund_object,
+        ):
+            refund_tx._send_refund_request()
+        self.assertEqual(refund_tx.provider_reference, self.refund_object["id"])
+
     @mute_logger("odoo.addons.payment_stripe.models.payment_transaction")
     def test_refund_id_is_set_as_provider_reference(self):
         """Test that the id of the refund object is set as the provider reference of the refund
