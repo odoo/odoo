@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-STP 227352643+STP-KAS@users.noreply.github.com https://github.com/STP-KAS
+STP STP 227352643+STP-KAS@users.noreply.github.com https://github.com/STP-KAS
