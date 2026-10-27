@@ -2,6 +2,7 @@ from datetime import date
 
 from dateutil.relativedelta import relativedelta
 
+from odoo import fields
 from odoo.tests import Form, TransactionCase, tagged
 
 
@@ -11,7 +12,7 @@ class TestApplicantSkills(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.today = date.today()
+        cls.today = fields.Date.context_today(cls.env.user)
 
         cls.t_job = cls.env["hr.job"].create({"name": "Test Job"})
         cls.t_skill_type, cls.t_cert_type = cls.env["hr.skill.type"].create(
@@ -110,8 +111,8 @@ class TestApplicantSkills(TransactionCase):
 
         self.assertTrue(new_skill)
         self.assertEqual(len(self.t_applicant.applicant_skill_ids.ids), 6)
-        self.assertEqual(new_skill.valid_from, date.today())
-        self.assertEqual(self.t_applicant_skill_1.valid_to, date.today() - relativedelta(days=1))
+        self.assertEqual(new_skill.valid_from, self.today)
+        self.assertEqual(self.t_applicant_skill_1.valid_to, self.today - relativedelta(days=1))
 
     def test_edit_skill_1_level_2_to_level_3(self):
         """
@@ -129,8 +130,8 @@ class TestApplicantSkills(TransactionCase):
 
         self.assertTrue(new_skill)
         self.assertEqual(len(self.t_applicant.applicant_skill_ids.ids), 6)
-        self.assertEqual(new_skill.valid_from, date.today())
-        self.assertEqual(self.t_applicant_skill_1.valid_to, date.today() - relativedelta(days=1))
+        self.assertEqual(new_skill.valid_from, self.today)
+        self.assertEqual(self.t_applicant_skill_1.valid_to, self.today - relativedelta(days=1))
 
     def test_edit_cert_1_level_1_to_level_2(self):
         """
@@ -148,8 +149,8 @@ class TestApplicantSkills(TransactionCase):
 
         self.assertTrue(new_skill)
         self.assertEqual(len(self.t_applicant.applicant_skill_ids.ids), 6)
-        self.assertEqual(new_skill.valid_from, date.today() - relativedelta(months=4))
-        self.assertEqual(new_skill.valid_to, date.today() + relativedelta(months=8))
+        self.assertEqual(new_skill.valid_from, self.today - relativedelta(months=4))
+        self.assertEqual(new_skill.valid_to, self.today + relativedelta(months=8))
 
     def test_edit_cert_1_stop_date(self):
         """
@@ -160,7 +161,7 @@ class TestApplicantSkills(TransactionCase):
         old_applicant_skills = self.t_applicant.applicant_skill_ids
         index = self.t_applicant.current_applicant_skill_ids.ids.index(self.t_applicant_cert_1.id)
         with applicant_form.current_applicant_skill_ids.edit(index) as cas:
-            cas.valid_to = date.today() + relativedelta(months=2)
+            cas.valid_to = self.today + relativedelta(months=2)
         applicant_form.save()
         new_skill = self.t_applicant.applicant_skill_ids - old_applicant_skills
 
@@ -186,7 +187,7 @@ class TestApplicantSkills(TransactionCase):
         self.assertTrue(new_skill)
         self.assertEqual(len(self.t_applicant.applicant_skill_ids.ids), 6)
         self.assertEqual(len(deleted_skill.ids), 0)
-        self.assertEqual(new_skill.valid_from, date.today())
+        self.assertEqual(new_skill.valid_from, self.today)
         self.assertFalse(new_skill.valid_to)
 
     def test_edit_skill_2_level_2_to_cert_full_from_1_jan_to_1_june(self):
@@ -201,16 +202,16 @@ class TestApplicantSkills(TransactionCase):
             cas.skill_type_id = self.t_cert_type
             cas.skill_id = self.t_cert_1
             cas.skill_level_id = self.t_cert_level_2
-            cas.valid_from = date.today() - relativedelta(months=5)
-            cas.valid_to = date.today() + relativedelta(months=7)
+            cas.valid_from = self.today - relativedelta(months=5)
+            cas.valid_to = self.today + relativedelta(months=7)
         applicant_form.save()
         new_skill = self.t_applicant.applicant_skill_ids - old_applicant_skills
 
         self.assertTrue(new_skill)
-        self.assertEqual(self.t_applicant_skill_2.valid_to, date.today() - relativedelta(days=1))
+        self.assertEqual(self.t_applicant_skill_2.valid_to, self.today - relativedelta(days=1))
         self.assertEqual(self.t_applicant_skill_2.valid_from, self.today - relativedelta(months=2))
-        self.assertEqual(new_skill.valid_from, date.today() - relativedelta(months=5))
-        self.assertEqual(new_skill.valid_to, date.today() + relativedelta(months=7))
+        self.assertEqual(new_skill.valid_from, self.today - relativedelta(months=5))
+        self.assertEqual(new_skill.valid_to, self.today + relativedelta(months=7))
 
     def test_add_cert_level_2_from_2_mar_to_infinity(self):
         """
@@ -285,9 +286,9 @@ class TestApplicantSkills(TransactionCase):
         applicant_form.save()
         new_skill = self.t_applicant.applicant_skill_ids - old_applicant_skills
 
-        self.assertEqual(new_skill.valid_from, date.today())
+        self.assertEqual(new_skill.valid_from, self.today)
         self.assertFalse(new_skill.valid_to)
-        self.assertEqual(self.t_applicant_skill_1.valid_to, date.today() - relativedelta(days=1))
+        self.assertEqual(self.t_applicant_skill_1.valid_to, self.today - relativedelta(days=1))
         self.assertEqual(len(self.t_applicant.applicant_skill_ids), 6)
 
     def test_add_skill_1_level_1_and_edit_it_after_to_skill_1_level_2(self):
@@ -300,7 +301,7 @@ class TestApplicantSkills(TransactionCase):
         applicant_form.save()
         new_skill = self.t_applicant.applicant_skill_ids - old_applicant_skills
 
-        self.assertEqual(new_skill.valid_from, date.today())
+        self.assertEqual(new_skill.valid_from, self.today)
         self.assertFalse(new_skill.valid_to)
         self.assertEqual(len(self.t_applicant.applicant_skill_ids), 6)
 
@@ -309,7 +310,7 @@ class TestApplicantSkills(TransactionCase):
             cas.skill_level_id = self.t_skill_level_2
         applicant_form.save()
         new_skill = self.t_applicant.applicant_skill_ids - old_applicant_skills
-        self.assertEqual(new_skill.valid_from, date.today())
+        self.assertEqual(new_skill.valid_from, self.today)
         self.assertEqual(new_skill.skill_level_id, self.t_skill_level_2)
         self.assertEqual(len(self.t_applicant.applicant_skill_ids), 6)
 
@@ -336,7 +337,7 @@ class TestApplicantSkills(TransactionCase):
         )
         self.assertEqual(
             self.t_applicant_skill_1.valid_to,
-            date.today() - relativedelta(days=1),
+            self.today - relativedelta(days=1),
             "The skill that got removed should have valid_to set to one day before now",
         )
         prev_skills = self.t_applicant.applicant_skill_ids
@@ -424,7 +425,7 @@ class TestApplicantSkills(TransactionCase):
 
         self.assertTrue(new_skill)
         self.assertEqual(len(new_skill), 1)
-        self.assertEqual(new_skill.valid_from, date.today())
+        self.assertEqual(new_skill.valid_from, self.today)
         self.assertEqual(len(self.t_applicant.applicant_skill_ids), 6)
 
     def test_multiple_same_skill_different_level_are_deduplicated_before_creation(self):
@@ -445,7 +446,7 @@ class TestApplicantSkills(TransactionCase):
 
         self.assertTrue(new_skill)
         self.assertEqual(len(new_skill), 1)
-        self.assertEqual(new_skill.valid_from, date.today())
+        self.assertEqual(new_skill.valid_from, self.today)
         self.assertEqual(len(self.t_applicant.applicant_skill_ids), 6)
 
     def test_same_certification_with_different_levels_but_same_dates_can_coexist(self):
