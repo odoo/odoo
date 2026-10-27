@@ -159,6 +159,49 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
 
         self.assertEqual(self.test_blog_post.teaser, "Test Content...")
 
+    def test_website_blog_content_sanitize(self):
+        """ Blog managers can save website snippets in the content but not
+            executable code, which is reserved to users allowed to bypass the
+            sanitization (e.g. website designers). """
+        user_designer = self.env['res.users'].with_context(no_reset_password=True).create({
+            'name': 'Jimbo Designer',
+            'login': 'jimbo',
+            'email': 'jimbo.designer@example.com',
+            'group_ids': [(6, 0, [
+                self.ref('base.group_user'),
+                self.ref('website_blog.group_website_blog_manager'),
+                self.ref('website.group_website_designer'),
+            ])],
+        })
+        snippet = (
+            '<section class="s_accordion" data-snippet="s_accordion" data-name="Accordion">'
+            '<button class="accordion-button" type="button" data-bs-toggle="collapse" '
+            'data-bs-target="#acc_1" aria-expanded="true" aria-controls="acc_1">Title</button>'
+            '<div id="acc_1" class="accordion-collapse collapse show"><p>Body</p></div>'
+            '</section>'
+        )
+        dangerous_script = '<script>alert("Looks like the joke\'s on us!");</script>'
+        for record in (self.test_blog_post, self.test_blog):
+            # keep snippets saved by a blog manager
+            record.with_user(self.user_blogmanager).content = snippet
+            for attribute in ('data-snippet="s_accordion"', 'data-bs-target="#acc_1"', 'aria-controls="acc_1"'):
+                self.assertIn(attribute, record.content)
+
+            # content with snippets remains editable by a blog manager
+            record.with_user(user_designer).content = snippet
+            record.with_user(self.user_blogmanager).content = snippet + '<p>More</p>'
+            self.assertIn('data-bs-target="#acc_1"', record.content)
+
+            # scripts are stripped for blog managers
+            record.with_user(self.user_blogmanager).content = snippet + dangerous_script
+            self.assertNotIn('<script', record.content)
+
+            # scripts are kept for designers, and the field is then locked for blog managers
+            record.with_user(user_designer).content = dangerous_script
+            self.assertIn('<script', record.content)
+            with self.assertRaises(UserError):
+                record.with_user(self.user_blogmanager).content = snippet
+
 
 @tagged('-at_install', 'post_install')
 class TestWebsiteBlogTranslationFlow(HttpCase, TestWebsiteBlogCommon):
