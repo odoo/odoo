@@ -116,6 +116,41 @@ class ProductProduct(models.Model):
             kit_product.total_value = 0.0
             kit_product.avg_cost = 0.0
 
+    def _update_standard_price(self, extra_value=None, extra_quantity=None):
+        super()._update_standard_price(extra_value=extra_value, extra_quantity=extra_quantity)
+        if not self:
+            return
+        # Existing kit BoMs using the product(s) for which cost has been updated.
+        def _bom_query(components_ids, exclude_product_ids = []):
+            return self.env['mrp.bom']._search([
+                ('type', '=', 'phantom'),
+                ('bom_line_ids.product_id', 'in', components_ids),
+                ('company_id', 'in', [False, self.env.company.id]),
+                ('active', '=', True),
+                ('product_id', 'not in', exclude_product_ids),
+            ])
+
+        def _product_query(bom_query):
+            return [
+                '|',
+                    ('variant_bom_ids', 'in', bom_query),
+                    '&', ('product_tmpl_id.bom_ids', 'in', bom_query),
+                         ('product_tmpl_id.bom_ids.product_id', '=', False),
+            ]
+        # Find product(s) for which found BoM(s) exist either for the exact product or for their product template
+        bom_query = _bom_query(self.ids)
+        kit_products = parent_bom_products = self.env['product.product'].search_fetch(_product_query(bom_query), ['id', 'cost_method'])
+
+        while True:
+            bom_query = _bom_query(parent_bom_products.ids, exclude_product_ids=kit_products.ids)
+            parent_bom_products = self.env['product.product'].search_fetch(_product_query(bom_query), ['id', 'cost_method'])
+            if not parent_bom_products:
+                break
+            kit_products += parent_bom_products
+
+        avco_kit_products = kit_products.filtered(lambda p: p.cost_method == 'average')
+        if avco_kit_products:
+            avco_kit_products.mapped(lambda p: p._set_price_from_bom())  # cost_method is a non-stored computed field with no search method
 
 class ProductCategory(models.Model):
     _inherit = 'product.category'
