@@ -28,6 +28,10 @@ ERROR_MESSAGES = {
 }
 
 
+class L10nPtSigningUnavailable(UserError):
+    """The signing service could not be reached: signing may succeed when tried again later."""
+
+
 def call_iap(env, route, params=None):
     try:
         params = params or {}
@@ -43,7 +47,7 @@ def call_iap(env, route, params=None):
             raise UserError(env._("Unknown error %s while contacting IAP. Please contact Odoo support.", error))
         return result
     except (requests.exceptions.ConnectionError, requests.exceptions.Timeout, requests.exceptions.HTTPError):
-        raise UserError(env._(ERROR_MESSAGES["error_connecting_iap"]))  # pylint: disable=gettext-variable
+        raise L10nPtSigningUnavailable(env._(ERROR_MESSAGES["error_connecting_iap"]))  # pylint: disable=gettext-variable
 
 
 def format_hash_values(hash_values):

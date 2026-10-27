@@ -49,13 +49,6 @@ class PosOrder(models.Model):
             vals['invoice_line_ids'] = self._prepare_invoice_lines('out_receipt')
         return vals
 
-    def _l10n_pt_pos_get_vat_exemptions_reasons(self):
-        self.ensure_one()
-        taxes_with_exemption = self.line_ids.tax_ids.filtered(lambda tax: tax.l10n_pt_tax_exemption_reason)
-        return sorted(set(taxes_with_exemption.mapped(
-            lambda tax: dict(tax._fields['l10n_pt_tax_exemption_reason'].selection).get(tax.l10n_pt_tax_exemption_reason)
-        )))
-
     def update_l10n_pt_print_version(self):
         # The receipt is the print of the order's invoice (FS, FR): printed at the till or from the
         # back office, the document has one Original.

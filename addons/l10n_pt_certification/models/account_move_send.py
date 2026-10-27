@@ -1,21 +1,13 @@
-import stdnum.pt.nif
+from itertools import groupby
+
 from odoo import _, api, models
 from odoo.exceptions import RedirectWarning, UserError
+
+from odoo.addons.l10n_pt_certification.utils import hashing as pt_hash_utils
 
 
 class AccountMoveSend(models.AbstractModel):
     _inherit = 'account.move.send'
-
-    def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
-        super()._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
-        if (
-            invoice.country_code == 'PT'
-            and (not invoice.company_id.vat or not stdnum.pt.nif.is_valid(invoice.company_id.vat))
-        ):
-            action = self.env.ref('base.action_res_company_form')
-            raise RedirectWarning(_('Please define the VAT on your company (e.g. PT123456789)'),
-                                  action.id,
-                                  _('Company Settings'))
 
     @api.model
     def _generate_and_send_invoices(self, moves, from_cron=False, allow_raising=True, allow_fallback_pdf=False, **custom_settings):
@@ -26,7 +18,7 @@ class AccountMoveSend(models.AbstractModel):
         # that cannot be issued is not sent, with the reason in its chatter.
         to_issue = moves.filtered(lambda m: m._l10n_pt_country_ok() and not m.l10n_pt_document_number)
         if to_issue and (from_cron or not allow_raising):
-            moves -= self._l10n_pt_issue_or_log(to_issue)
+            moves -= (to_issue - self._l10n_pt_issue_or_log(to_issue))
         else:
             to_issue._l10n_pt_issue_with_predecessors()
         return super()._generate_and_send_invoices(
@@ -35,28 +27,41 @@ class AccountMoveSend(models.AbstractModel):
 
     @api.model
     def _l10n_pt_issue_or_log(self, moves):
-        """Issue ``moves``, in one go if possible, and return those that could not be, after logging why."""
-        def issue(moves_to_issue):
-            for author_id, author_moves in moves_to_issue.grouped(lambda m: (m.sending_data or {}).get('author_user_id')).items():
-                author_moves.with_context(l10n_pt_issue_user_id=author_id)._l10n_pt_issue_with_predecessors()
+        """
+        Issue ``moves`` AT series by AT series, and return those that were issued.
 
-        try:
-            with self.env.cr.savepoint():
-                issue(moves)
-            return moves.browse()
-        except (UserError, RedirectWarning):
-            pass
-        failed = moves.browse()
-        # One by one, in the order of their numbers, so that each is issued if it can be.
-        for move in moves.sorted('sequence_number'):
+        In a series, an invoice is issued with those before it (`_l10n_pt_issue_with_predecessors`), and
+        what prevents issuing (a gap, the company's VAT or clock) holds for a whole series or company:
+        the invoices of a series are issued, or not, together. Those not issued are not sent, with the
+        reason in their chatter. While the signing service cannot be reached, no series can be: none is
+        tried further.
+        """
+        def stop_sending(moves_not_issued, error):
+            moves_not_issued.sending_data = False
+            for move in moves_not_issued:
+                move.message_post(body=self.env._("This invoice could not be issued, so it was not sent: %s", error.args[0]))
+
+        issued = failed = moves.browse()
+        for series_moves in moves.grouped('l10n_pt_at_series_id').values():
             try:
                 with self.env.cr.savepoint():
-                    issue(move)
+                    # Each issued as the user who asked for its sending. In consecutive runs, not
+                    # `grouped`: issuing a run also issues the earlier invoices, as the run's author.
+                    for author_id, author_moves in groupby(
+                        series_moves.sorted('sequence_number'),
+                        key=lambda m: (m.sending_data or {}).get('author_user_id'),
+                    ):
+                        author_moves = self.env['account.move'].concat(*author_moves)
+                        author_moves.with_context(l10n_pt_issue_user_id=author_id)._l10n_pt_issue_with_predecessors()
+            except pt_hash_utils.L10nPtSigningUnavailable as error:
+                stop_sending(moves - issued - failed, error)
+                break
             except (UserError, RedirectWarning) as error:
-                failed |= move
-                move.sending_data = False
-                move.message_post(body=_("This invoice could not be issued, so it was not sent: %s", error.args[0]))
-        return failed
+                stop_sending(series_moves, error)
+                failed |= series_moves
+            else:
+                issued |= series_moves
+        return issued
 
     def _get_alerts(self, moves, moves_data):
         """

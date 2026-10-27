@@ -9,7 +9,7 @@
                 <xpath expr="//page[@name='advanced_options']" position="inside">
                     <group invisible="country_code != 'PT'">
                         <group>
-                            <field name="l10n_pt_tax_exemption_reason" required="country_code == 'PT' and amount == 0"/>
+                            <field name="l10n_pt_tax_exemption_reason" required="country_code == 'PT' and amount_type != 'group' and amount == 0"/>
                         </group>
                     </group>
                 </xpath>

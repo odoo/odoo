@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 L10N_PT_TAX_REGIONS_SELECTION = [
@@ -18,7 +18,7 @@ L10N_PT_TAX_CATEGORIES_SELECTION = [
 # The AT table of VAT exemption reasons, v4.0 (2026-06-18), referenced by Portaria 302/2016: each code with
 # the mention printed on the document and exported as the SAF-T TaxExemptionReason (6 to 60 characters).
 # e-Fatura rejects a code outside the current table (FAQ 5002).
-# https://info.portaldasfinancas.gov.pt/pt/apoio_contribuinte/Faturacao/Fatcorews/Documents/Tabela_Codigos_Motivo_Isencao.pdf
+# https://info.portaldasfinancas.gov.pt/pt/apoio_ao_contribuinte/Negocios/Faturacao/Regras_mecanismos_comunicacao/e_Fatura/e_Fatura_Comunicacao_elementos_docs_faturacao_2022_seguintes/Documents/Tabela_Codigos_Motivo_Isencao.pdf
 L10N_PT_TAX_EXEMPTION_MENTIONS = {
     "M01": "Artigo 16.º n.º 6 do CIVA",
     "M02": "Artigo 6.º do Decreto-Lei n.º 198/90, de 19 de junho",
@@ -56,7 +56,8 @@ L10N_PT_TAX_EXEMPTION_MENTIONS = {
     "M99": "Não sujeito ou não tributado",
 }
 
-# The legal basis telling apart the codes that share a mention, shown where the code is chosen.
+# The legal basis (the same table's "Norma aplicável") telling apart the codes that share a mention, shown
+# where the code is chosen.
 L10N_PT_TAX_EXEMPTION_LEGAL_BASES = {
     "M30": "art. 2.º n.º 1 i) CIVA",
     "M31": "art. 2.º n.º 1 j) CIVA",
@@ -70,9 +71,12 @@ L10N_PT_TAX_EXEMPTION_LEGAL_BASES = {
     "M43": "DL 362/99",
 }
 
+# The reason printed on the documents: the code and its mention, without the legal basis.
+L10N_PT_TAX_EXEMPTION_PRINTED_REASONS = {code: f"{code} - {mention}" for code, mention in L10N_PT_TAX_EXEMPTION_MENTIONS.items()}
+
 L10N_PT_TAX_EXEMPTION_REASONS_SELECTION = [
-    (code, f"{code} - {mention}" + (f" ({basis})" if (basis := L10N_PT_TAX_EXEMPTION_LEGAL_BASES.get(code)) else ""))
-    for code, mention in L10N_PT_TAX_EXEMPTION_MENTIONS.items()
+    (code, reason + (f" ({basis})" if (basis := L10N_PT_TAX_EXEMPTION_LEGAL_BASES.get(code)) else ""))
+    for code, reason in L10N_PT_TAX_EXEMPTION_PRINTED_REASONS.items()
 ]
 
 
@@ -81,16 +85,18 @@ class AccountTax(models.Model):
 
     l10n_pt_tax_exemption_reason = fields.Selection(string="Tax Exemption Reason", selection=L10N_PT_TAX_EXEMPTION_REASONS_SELECTION)
 
-    @api.constrains('l10n_pt_tax_exemption_reason', 'amount', 'amount_type')
+    @api.constrains('l10n_pt_tax_exemption_reason', 'amount', 'amount_type', 'country_id')
     def _validate_l10n_pt_tax_exemption_reason(self):
         """
-        According to Portugal's tax authority: "The proram should ensure the enforceability for the user
+        According to Portugal's tax authority: "The program should ensure the enforceability for the user
         to present a reason for not assessing tax, if it is the case." (Despacho 8632/2014 3.2.6). Checked
-        whenever the rate or the reason changes, so a tax cannot become 0 % without one.
+        whenever the reason, rate, type or country changes, so a PT tax cannot become 0 % without one.
         """
-        for tax in self:
-            if tax._l10n_pt_lacks_exemption_reason():
-                raise ValidationError(_("Exempt taxes require an exemption reason."))
+        if taxes := self.filtered(lambda tax: tax._l10n_pt_lacks_exemption_reason()):
+            raise ValidationError(self.env._(
+                "Exempt taxes require an exemption reason: set one on %(taxes)s.",
+                taxes=", ".join(taxes.mapped('name')),
+            ))
 
     def _l10n_pt_lacks_exemption_reason(self):
         """Whether this PT tax charges nothing without saying why (a group of taxes charges its children)."""

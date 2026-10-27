@@ -16,11 +16,17 @@ class PoSPaymentMethod(models.Model):
     )
     country_code = fields.Char(related='company_id.country_id.code', depends=['company_id.country_id'])
 
-    @api.depends('is_cash_count', 'country_code')
+    @api.depends('is_cash_count', 'company_id.account_fiscal_country_id')
     def _compute_l10n_pt_pos_payment_mechanism(self):
-        # Default payment mechanism for cash to 'NU' (Numerário = Cash)
+        # A PT cash method is paid in cash, 'NU' (numerário). A mechanism chosen by hand is kept, but not
+        # 'NU' once the method no longer counts cash.
         for payment_method in self:
-            if payment_method.is_cash_count and payment_method.country_code == 'PT':
-                payment_method.l10n_pt_pos_payment_mechanism = 'NU'
-            else:
-                payment_method.l10n_pt_pos_payment_mechanism = None
+            mechanism = payment_method.l10n_pt_pos_payment_mechanism
+            if (
+                payment_method.is_cash_count and not mechanism
+                and payment_method.company_id.account_fiscal_country_id.code == 'PT'
+            ):
+                mechanism = 'NU'
+            elif not payment_method.is_cash_count and mechanism == 'NU':
+                mechanism = False
+            payment_method.l10n_pt_pos_payment_mechanism = mechanism

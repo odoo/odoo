@@ -232,6 +232,7 @@ class L10nPtDocumentMixin(models.AbstractModel):
         records = self.filtered(
             lambda r: r._l10n_pt_country_ok() and r.l10n_pt_at_series_id and not r._l10n_pt_is_numbered()
         )
+        records.company_id._l10n_pt_check_company_vat()
         records._l10n_pt_take_series_numbers()
         records._l10n_pt_record_issue()
         self._check_l10n_pt_document_number()

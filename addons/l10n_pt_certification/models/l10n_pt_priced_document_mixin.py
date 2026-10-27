@@ -4,6 +4,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.l10n_pt_certification.const import PT_QR_NOT_SUBJECT_EXEMPTION_REASONS
+from odoo.addons.l10n_pt_certification.models.account_tax import L10N_PT_TAX_EXEMPTION_PRINTED_REASONS
 
 
 class L10nPtPricedDocumentMixin(models.AbstractModel):
@@ -45,11 +46,10 @@ class L10nPtPricedDocumentMixin(models.AbstractModel):
                 raise ValidationError(_("Discount amounts should be between 0% and 100%."))
 
     def _l10n_pt_get_vat_exemptions_reasons(self):
-        """Every exemption reason carried by the lines holding an exempt tax."""
+        """Every exemption reason carried by the lines holding an exempt tax, as printed: code and mention."""
         self.ensure_one()
-        exemption_selection = dict(self.env['account.tax']._fields['l10n_pt_tax_exemption_reason'].selection)
         return sorted({
-            exemption_selection.get(reason_code)
+            L10N_PT_TAX_EXEMPTION_PRINTED_REASONS[reason_code]
             for line in self._l10n_pt_get_lines()
             for reason_code in line._l10n_pt_get_line_vat_exemptions_reasons(as_string=False)
         })

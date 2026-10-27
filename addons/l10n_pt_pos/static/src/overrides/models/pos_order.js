@@ -35,8 +35,8 @@ patch(PosOrder.prototype, {
                 .filter((tax) => tax.l10n_pt_tax_exemption_reason)
                 .map((tax) => tax.l10n_pt_tax_exemption_reason)
         );
-        // Map tax exemption codes to their label
-        const exemptionReasonMap = this.session._l10n_pt_tax_exemption_reason_selection;
+        // Map tax exemption codes to the reason printed: code and mention
+        const exemptionReasonMap = this.session._l10n_pt_tax_exemption_reasons;
         return Array.from(reasons)
             .map((reason) => exemptionReasonMap[reason])
             .filter((label) => label)

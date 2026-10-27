@@ -485,6 +485,7 @@ class AccountMove(models.Model):
         if not to_issue:
             return
         to_issue._l10n_pt_check_series_continuity()
+        to_issue.company_id._l10n_pt_check_company_vat()
         to_issue.company_id._l10n_pt_check_system_clock()
         # sudo: generating an invoice issues it, whoever generates it (a salesperson printing it, a
         # cron sending it); the issuing user is still recorded as the current one.

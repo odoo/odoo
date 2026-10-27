@@ -121,13 +121,9 @@ class PosConfig(models.Model):
             )
 
         payment_methods = self.env['pos.payment.method'].search([('config_ids', 'in', self.ids)])
-        missing_payment_mechanism = payment_methods.filtered(lambda pm: not pm.l10n_pt_pos_payment_mechanism)
-        msg = ""
-        if missing_payment_mechanism:
-            msg += _("All payment methods available for this Point of Sale should have a payment mechanism. ")
-        if msg:
+        if missing_payment_mechanism := payment_methods.filtered(lambda pm: not pm.l10n_pt_pos_payment_mechanism):
             raise RedirectWarning(
-                msg,
+                _("All payment methods available for this Point of Sale should have a payment mechanism."),
                 {
                     'type': 'ir.actions.act_window',
                     'name': 'Payment Methods',

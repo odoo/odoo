@@ -1,3 +1,5 @@
+from stdnum.pt import nif
+
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, RedirectWarning, UserError
 from odoo.tools.misc import format_datetime
@@ -94,6 +96,18 @@ class ResCompany(models.Model):
                     self.env.ref('l10n_pt_certification.action_l10n_pt_confirm_system_clock').id,
                     _("The clock is correct"),
                 )
+
+    def _l10n_pt_check_company_vat(self):
+        """
+        A document is issued under the NIF of its company, which it prints, signs and exports to the
+        SAF-T: a missing or invalid one has to be fixed before the document is numbered and signed.
+        """
+        if self.filtered(lambda company: not company.vat or not nif.is_valid(company.vat)):
+            raise RedirectWarning(
+                _("Please define the VAT on your company (e.g. PT123456789)"),
+                self.env.ref('base.action_res_company_form').id,
+                _("Company Settings"),
+            )
 
     @api.model
     def _l10n_pt_confirm_system_clock(self):
