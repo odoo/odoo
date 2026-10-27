@@ -2,11 +2,11 @@ import {
     contains,
     defineMailModels,
     openDiscuss,
+    openFormView,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { waitUntil } from "@odoo/hoot-dom";
 import {
     getService,
     patchWithCleanup,
@@ -75,13 +75,8 @@ for (const preference of ["inbox", "email"]) {
                 { name: "Other contact" },
             ]);
             await start();
-            const thread = getService("mail.store")["mail.thread"].insert({
-                model: "res.partner",
-                id: partnerId,
-            });
-            await openDiscuss(`res.partner_${partnerId}`);
-            await waitUntil(() => thread.isDisplayed);
-            expect(thread.isDisplayed).toBe(true);
+            await openFormView("res.partner", partnerId);
+            await contains(".o-mail-Chatter");
             patchWithCleanup(parent.document, { hasFocus: () => isFocused });
             patchWithCleanup(browser.navigator.serviceWorker, {
                 controller: {
@@ -104,9 +99,45 @@ for (const preference of ["inbox", "email"]) {
                     })
                 );
             }
-            expect.verifySteps(isFocused ? ["displayed record"] : []);
+            expect.verifySteps([]);
         });
     }
+}
+
+for (const isFocused of [false, true]) {
+    test(`channel push: focused window ${isFocused}`, async () => {
+        const pyEnv = await startServer();
+        const [channelId, otherChannelId] = pyEnv["discuss.channel"].create([
+            { name: "Displayed channel" },
+            { name: "Other channel" },
+        ]);
+        await start();
+        await openDiscuss(channelId);
+        await contains(".o-mail-DiscussContent-threadName[title='Displayed channel']");
+        patchWithCleanup(parent.document, { hasFocus: () => isFocused });
+        patchWithCleanup(browser.navigator.serviceWorker, {
+            controller: {
+                postMessage(message) {
+                    expect(message.type).toBe("notification-display-response");
+                    expect.step(message.payload.correlationId);
+                },
+            },
+        });
+        for (const [resId, correlationId] of [
+            [channelId, "displayed channel"],
+            [otherChannelId, "other channel"],
+        ]) {
+            browser.navigator.serviceWorker.dispatchEvent(
+                new MessageEvent("message", {
+                    data: {
+                        type: "notification-display-request",
+                        payload: { model: "discuss.channel", res_id: resId, correlationId },
+                    },
+                })
+            );
+        }
+        expect.verifySteps(isFocused ? ["displayed channel"] : []);
+    });
 }
 
 test("record push: message already read in inbox", async () => {
