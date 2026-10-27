@@ -25,4 +25,4 @@ class PaymentPortalSelfOrder(PaymentPortal):
         pos_order = request.env['pos.order'].sudo().browse(pos_order_id)
         pos_order._send_notification_online_payment_status(status)
         if status == 'success':
-            pos_order._send_order()
+            pos_order._notify_update_to_all_pos_devices()
