@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { advanceTime, queryOne, waitFor } from "@odoo/hoot-dom";
+import { advanceTime, queryAll, queryOne, waitFor } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
     addPlugin,
@@ -61,6 +61,23 @@ describe("Popup options: empty page before edit", () => {
             display: "block",
             "background-color": "rgb(255, 0, 0)",
         });
+    });
+
+    test("closing a duplicated popup hides it", async () => {
+        await insertCategorySnippet({ group: "content", snippet: "s_popup" });
+        await contains(":iframe .s_popup .modal section").click();
+        await contains("[data-container-title='Popup'] .oe_snippet_clone").click();
+        await waitFor(":iframe .s_popup:nth-child(2)");
+        expect(":iframe .s_popup").toHaveCount(2);
+        const [originalPopupEl, clonedPopupEl] = queryAll(":iframe .s_popup");
+        await expectToTriggerEvent(clonedPopupEl.querySelector(".modal"), "hidden.bs.modal", () =>
+            contains(clonedPopupEl.querySelector(".js_close_popup")).click()
+        );
+        expect(clonedPopupEl.querySelector(".modal")).not.toBeVisible();
+        await expectToTriggerEvent(originalPopupEl.querySelector(".modal"), "hidden.bs.modal", () =>
+            contains(originalPopupEl.querySelector(".js_close_popup")).click()
+        );
+        expect(originalPopupEl.querySelector(".modal")).not.toBeVisible();
     });
 });
 describe("Popup options: popup in page before edit", () => {
