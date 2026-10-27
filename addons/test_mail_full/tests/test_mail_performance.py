@@ -258,6 +258,8 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
                         'res_id': record.id,
                         'res_model': record._name,
                         'thumbnail_access_token': message.attachment_ids[0]._get_thumbnail_token(),
+                        'type': 'binary',
+                        'url': False,
                     }, {
                         'checksum': message.attachment_ids[1].checksum,
                         'has_thumbnail': False,
@@ -268,6 +270,8 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
                         'res_id': record.id,
                         'res_model': record._name,
                         'thumbnail_access_token': message.attachment_ids[1]._get_thumbnail_token(),
+                        'type': 'binary',
+                        'url': False,
                     }
                 ]
             )

@@ -97,7 +97,7 @@ class MailMessage(models.Model):
             related_attachments = {
                 att_read_values['id']: att_read_values
                 for att_read_values in attachments_sudo.read(
-                    ["checksum", "has_thumbnail", "id", "mimetype", "name", "res_id", "res_model"],
+                    ["checksum", "has_thumbnail", "id", "mimetype", "name", "res_id", "res_model", "type", "url"],
                 )
             }
             message_to_attachments = {
