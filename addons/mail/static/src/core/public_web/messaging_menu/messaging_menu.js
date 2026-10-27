@@ -298,20 +298,25 @@ export class MessagingMenu extends Component {
     }
 
     /**
-     * @param {PointerEvent} ev
+     * Whether the tab looks selected: with the list hidden, only the one of the conversation.
+     *
      * @param {import("models").MessagingMenuTab} tab
      */
-    onClickTab(ev, tab) {
-        if (this.canPeek() && (ev.pointerType === "touch" || ev.pointerType === "pen")) {
+    isTabSelected(tab) {
+        return (
+            tab.eq(this.selectedTab()) && (!this.canPeek() || Boolean(this.store.discuss.thread))
+        );
+    }
+
+    /** @param {import("models").MessagingMenuTab} tab */
+    onClickTab(tab) {
+        if (this.canPeek()) {
             this.peekTab(tab);
             this.peek.open();
             return;
         }
         this.clearPeekedTab();
         this.selectedState().selectTab(tab);
-        if (this.canPeek()) {
-            this.peek.open();
-        }
     }
 
     /** A conversation of the list is opened in the content. */
