@@ -41,7 +41,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_production_wip_account_id': 'l10n_jp_10A100400',
                 'account_production_wip_overhead_account_id': 'l10n_jp_10E110660',
                 'external_report_layout_id': 'l10n_jp.external_layout_jp_standard',
-                'paperformat_id': 'l10n_jp.paperformat_jp',
             },
         }
 

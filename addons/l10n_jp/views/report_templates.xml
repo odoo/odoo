@@ -2,12 +2,15 @@
 <odoo>
     <data>
         <template id="external_layout_jp_standard">
+            <div t-attf-class="header o_company_#{company.id}_layout">
+                <div class="text-end text-muted" t-if="jp_document_date">
+                    <span t-out="jp_document_date" t-options='{"widget": "date"}'/>
+                </div>
+                <h2 class="text-center" t-if="layout_document_title" t-out="layout_document_title"/>
+            </div>
+
             <t t-call="web.external_layout_body" hide_recipient_address="True" hide_title="True">
                 <div class="o_jp_standard_header">
-                    <div class="text-end text-muted" t-if="jp_document_date">
-                        <span t-out="jp_document_date" t-options='{"widget": "date"}'/>
-                    </div>
-                    <h2 class="text-center mb-4" t-if="layout_document_title" t-out="layout_document_title"/>
                     <div class="row">
                         <div class="col-6 pe-4">
                             <div t-if="address" t-out="address"/>

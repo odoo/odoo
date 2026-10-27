@@ -40,7 +40,6 @@ Note:
         'data/account_report_jct_deduction_schedule_4_3.xml',
         'data/account_report_jct_deduction_schedule_5_3.xml',
         'data/account_report_jct_return.xml',
-        'data/report_paperformat_data.xml',
         'views/report_templates.xml',
         'views/report_invoice.xml',
         'views/report_payment_receipt_templates.xml',

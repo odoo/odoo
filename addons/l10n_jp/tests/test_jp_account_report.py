@@ -65,7 +65,7 @@ class TestJPAccountReport(AccountTestInvoicingCommon):
             post=True,
         )
         html = self.env['ir.actions.report'].sudo()._render_qweb_html('account.report_invoice_with_payments', invoice.ids)[0]
-        header = lxml.html.fromstring(html).find_class('o_jp_standard_header')[0].text_content()
+        header = lxml.html.fromstring(html).find_class('header')[0].text_content()
 
         self.assertIn(format_date(self.env, invoice.invoice_date, lang_code='ja_JP'), header)
 
@@ -159,7 +159,6 @@ class TestJPAccountReport(AccountTestInvoicingCommon):
         self.env['account.chart.template'].try_loading('jp', company=company, install_demo=False)
 
         self.assertEqual(company.external_report_layout_id, self.env.ref('l10n_jp.external_layout_jp_standard'))
-        self.assertEqual(company.paperformat_id, self.env.ref('l10n_jp.paperformat_jp'))
 
     def test_a_contact_comes_under_its_company(self):
         company = self.env['res.partner'].create({'name': 'JP Trading KK', 'lang': 'ja_JP'})
