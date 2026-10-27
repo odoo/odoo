@@ -220,11 +220,10 @@ export const PEEK_CLOSE_DELAY = 300;
  * @param {() => boolean} param1.enabled whether the element is hidden, so that it can show.
  * @param {() => boolean} [param1.keep] whether it also stays shown otherwise, e.g. while
  *   searching in it.
- * @param {() => void} [param1.onClose] called when it hides, also when left before showing.
- * @param {string} [param1.ignoreSelector] parts of it that do not show it when hovered or
- *   focused, e.g. its toggle.
+ * @param {string} [param1.triggerSelector] the parts of it that show it, e.g. its tabs; the
+ *   space around them does not keep it shown.
  */
-export function usePeek(ref, { enabled, keep = () => false, onClose, ignoreSelector } = {}) {
+export function usePeek(ref, { enabled, keep = () => false, triggerSelector } = {}) {
     const isOpen = signal(false);
     /** Whether the mouse is on the element: a touch tap does not count as hovering. */
     let isHovered = false;
@@ -246,7 +245,6 @@ export function usePeek(ref, { enabled, keep = () => false, onClose, ignoreSelec
         clear();
         isReleased = false;
         isOpen.set(false);
-        onClose?.();
     }
     /** Closes now, or once the mouse on it leaves, regardless of `keep`. */
     function closeOnceLeft() {
@@ -261,8 +259,26 @@ export function usePeek(ref, { enabled, keep = () => false, onClose, ignoreSelec
         return ref().contains(el) || Boolean(el.closest(".o-overlay-container"));
     }
     /** @param {Element} el */
-    function isIgnored(el) {
-        return Boolean(ignoreSelector && el.closest(ignoreSelector));
+    function isTrigger(el) {
+        return !triggerSelector || Boolean(el.closest(triggerSelector));
+    }
+    /**
+     * Whether the pointer on the element is on it: not in the space around the triggers, i.e. on
+     * an element holding some.
+     *
+     * @param {Element} el
+     */
+    function isOn(el) {
+        return (
+            contains(el) &&
+            (isTrigger(el) || !(triggerSelector && el.querySelector(triggerSelector)))
+        );
+    }
+    /** Whether the mouse is on it, as the document has it hovered. */
+    function isPointerOn() {
+        return (
+            ref().matches(":hover") && isOn([...ref().querySelectorAll(":hover")].at(-1) ?? ref())
+        );
     }
     /** Whether an element triggered from it is active: its shown focus, or a dropdown it opened. */
     function hasActiveElement() {
@@ -271,7 +287,7 @@ export function usePeek(ref, { enabled, keep = () => false, onClose, ignoreSelec
     function isKept() {
         return isPressed || hasActiveElement() || (!isReleased && keep());
     }
-    // Over each of its parts, not only on entering it: the delay runs off the ignored ones.
+    // Over each of its parts, not only on entering it: the delay runs on its triggers only.
     useListener(ref, "pointerover", (ev) => {
         if (ev.pointerType !== "mouse") {
             return;
@@ -280,7 +296,7 @@ export function usePeek(ref, { enabled, keep = () => false, onClose, ignoreSelec
         if (!enabled() || isOpen()) {
             return;
         }
-        if (isIgnored(ev.target)) {
+        if (!isTrigger(ev.target)) {
             clear();
         } else if (!timeout) {
             timeout = setTimeout(open, PEEK_DELAY);
@@ -294,7 +310,7 @@ export function usePeek(ref, { enabled, keep = () => false, onClose, ignoreSelec
         }
     });
     useListener(ref, "focusin", (ev) => {
-        if (enabled() && ev.target.matches(":focus-visible") && !isIgnored(ev.target)) {
+        if (enabled() && ev.target.matches(":focus-visible") && isTrigger(ev.target)) {
             open();
         }
     });
@@ -302,7 +318,7 @@ export function usePeek(ref, { enabled, keep = () => false, onClose, ignoreSelec
         if (
             isOpen() &&
             !(ev.relatedTarget && contains(ev.relatedTarget)) &&
-            !ref().matches(":hover") &&
+            !isPointerOn() &&
             !isKept()
         ) {
             close();
@@ -314,7 +330,7 @@ export function usePeek(ref, { enabled, keep = () => false, onClose, ignoreSelec
         }
         /** @param {PointerEvent} ev */
         const onPointerdown = (ev) => {
-            isPressed = contains(ev.target);
+            isPressed = isOn(ev.target);
             if (!isPressed) {
                 close();
             }
@@ -326,13 +342,14 @@ export function usePeek(ref, { enabled, keep = () => false, onClose, ignoreSelec
             if (ev.pointerType !== "mouse") {
                 return;
             }
-            if (contains(ev.target) || isKept()) {
+            if (isOn(ev.target) || isKept()) {
                 clear();
             } else if (!timeout) {
-                // Some grace, for a pointer briefly out of the element on its way.
+                // Some grace, for a pointer briefly out of the element on its way, e.g. between
+                // two triggers.
                 timeout = setTimeout(() => {
                     timeout = undefined;
-                    if (!ref().matches(":hover") && !isKept()) {
+                    if (!isPointerOn() && !isKept()) {
                         close();
                     }
                 }, PEEK_CLOSE_DELAY);

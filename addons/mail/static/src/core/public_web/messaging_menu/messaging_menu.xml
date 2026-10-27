@@ -133,7 +133,7 @@
             class="o-mail-MessagingMenu-tab btn d-flex flex-column align-items-center w-100 flex-shrink-0 p-1 bg-transparent position-relative border-0"
             t-att-class="{
                 'active': this.selectedTab().eq(tab),
-                'o-peeked': this.activeTab().eq(tab) and this.selectedTab().notEq(tab),
+                'o-peeked': this.peek.isOpen() and this.activeTab().eq(tab) and this.selectedTab().notEq(tab),
                 'pb-4': this.isIosPwa,
                 'pb-2': !this.isIosPwa,
             }"

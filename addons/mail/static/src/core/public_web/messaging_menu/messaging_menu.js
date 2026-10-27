@@ -105,12 +105,15 @@ export class MessagingMenu extends Component {
         this.dialog = useService("dialog");
         this.notification = useService("mail.notification.permission");
         this.store = useService("mail.store");
+        this.ui = usePlugin(UIPlugin);
         this.selectedState = useProps.static(
             "state",
             types.signal(types.instanceOf(this.store.MessagingMenuUIState))
         );
-        /** The state of the shown list: the one of the peeked tab, if any. */
-        this.state = computed(() => this.peekedTabState() ?? this.selectedState());
+        /** The state of the shown list: the one of the peeked tab, if any, also while it hides. */
+        this.state = computed(
+            () => (this.canPeek() && this.peekedTabState()) || this.selectedState()
+        );
         this.activeTab = computed(() => this.state().activeTab);
         this.messageSearch = useSearch({
             fetch: (term) =>
@@ -137,7 +140,6 @@ export class MessagingMenu extends Component {
             types.signal(types.number()).optional(() => signal(0))
         );
         this.focusSearchInput = incrementFn(this.searchInputAutofocus);
-        this.ui = usePlugin(UIPlugin);
         // Bound once so `onClickMessage` is a stable (useProps.static) handler.
         this.onClickMessage = this.onClickMessage.bind(this);
         useOnBottomScrolled(this.tabContentRef, () =>
@@ -156,13 +158,9 @@ export class MessagingMenu extends Component {
             this.containerRef()?.closest(".o-mail-DiscussApp-sidebar") ?? this.containerRef();
         this.peek = usePeek(peekRef, {
             enabled: () => this.canPeek(),
-            // The toggle expands the list instead of showing it over the content.
-            ignoreSelector: ".o-mail-MessagingMenu-toggleSidebar",
+            // Only the tabs show the list, not the space around them nor the toggle.
+            triggerSelector: ".o-mail-MessagingMenu-tab",
             keep: () => Boolean(this.state().searchTerm),
-            onClose: () => {
-                this.clearPeekedTab();
-                this.selectedState().searchTerm = "";
-            },
         });
         this.guestNamePopover = usePopover(GuestNamePopover, {
             arrow: false,
@@ -239,6 +237,9 @@ export class MessagingMenu extends Component {
         if (!this.canPeek()) {
             return;
         }
+        if (!this.peek.isOpen()) {
+            this.resetPeek();
+        }
         if (tab.eq(this.selectedTab())) {
             this.clearPeekedTab();
         } else if (this.peekedTabState()) {
@@ -259,8 +260,18 @@ export class MessagingMenu extends Component {
         peekedTabState?.delete();
     }
 
+    /**
+     * Drops the tab and the search of the last peek. They stay once it ends, so that the list
+     * hides as it was shown, until the next one.
+     */
+    resetPeek() {
+        this.clearPeekedTab();
+        this.selectedState().searchTerm = "";
+    }
+
     onClickToggleSidebar() {
         this.peek.close();
+        this.resetPeek();
         this.onToggleSidebar();
     }
 
