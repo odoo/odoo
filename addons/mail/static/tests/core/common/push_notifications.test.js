@@ -9,7 +9,24 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { Store } from "@mail/../tests/mock_server/store";
 import { describe, expect, test } from "@odoo/hoot";
+<<<<<<< 7f56abe0445007be7213699c8a67f7e8d743e933
 import { getService, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+||||||| 16bf37bf277f603983b5b3aedc3f086e57f741df
+import { animationFrame } from "@odoo/hoot-mock";
+import {
+    getService,
+    patchWithCleanup,
+    serverState,
+    withUser,
+} from "@web/../tests/web_test_helpers";
+=======
+import {
+    getService,
+    patchWithCleanup,
+    serverState,
+    withUser,
+} from "@web/../tests/web_test_helpers";
+>>>>>>> 942c65da2ef85293ff74cc3c4c07784da3f36a97
 
 import { browser } from "@web/core/browser/browser";
 
@@ -67,6 +84,19 @@ for (const subscribed of [false, true]) {
         await expect.waitForSteps(
             subscribed ? ["get subscription"] : ["get subscription", "local notification"]
         );
+<<<<<<< 7f56abe0445007be7213699c8a67f7e8d743e933
+||||||| 16bf37bf277f603983b5b3aedc3f086e57f741df
+        await contains(".o-mail-DiscussSidebar-item:has(.badge)", { text: "Inbox" });
+        await animationFrame();
+        expect(getService("mail.store").inbox.counter).toBe(1);
+        expect.verifySteps(subscribed ? [] : ["local notification"]);
+=======
+        await contains(".o-mail-DiscussSidebar-item:has(.badge)", { text: "Inbox" });
+        expect(getService("mail.store").inbox.counter).toBe(1);
+        await expect.waitForSteps(
+            subscribed ? ["get subscription"] : ["get subscription", "local notification"]
+        );
+>>>>>>> 942c65da2ef85293ff74cc3c4c07784da3f36a97
     });
 }
 
