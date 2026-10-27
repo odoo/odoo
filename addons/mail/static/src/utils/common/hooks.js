@@ -262,7 +262,8 @@ export class UseHoverOverlay extends Component {
             }),
         });
         this.root = useRef("root");
-        const overlayContains = this.env[OVERLAY_SYMBOL].contains;
+        const contains = this.env[OVERLAY_SYMBOL].contains;
+        const overlayContains = (target) => !target?.closest(".o_dialog") && contains(target);
         let removeTarget;
         onMounted(() => {
             this.props.hover._contains.push(overlayContains);

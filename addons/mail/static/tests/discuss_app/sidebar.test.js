@@ -2,6 +2,7 @@ import {
     click,
     contains,
     defineMailModels,
+    hover,
     insertText,
     isDiscussSidebarCategoryFolded,
     listenStoreFetch,
@@ -19,7 +20,7 @@ import { DiscussApp } from "@mail/core/public_web/discuss_app/discuss_app_model"
 import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { describe, expect, test, waitFor } from "@odoo/hoot";
 import { animationFrame, drag, press, queryFirst, rightClick } from "@odoo/hoot-dom";
-import { mockDate } from "@odoo/hoot-mock";
+import { advanceTime, mockDate } from "@odoo/hoot-mock";
 import { Command, getService, onRpc, serverState } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 
@@ -1155,6 +1156,58 @@ test("Sidebar compact is locally persistent (saved in local storage)", async () 
     });
     await contains(".o-mail-DiscussSidebar.o-compact");
     expect(browser.localStorage.getItem(DISCUSS_SIDEBAR_COMPACT_LS)).toBe(toRawValue(true));
+});
+
+test("Compact sidebar search panel opens on hover and closes when the mouse leaves it", async () => {
+    const DISCUSS_SIDEBAR_COMPACT_LS = makeRecordFieldLocalId(
+        DiscussApp.localId(),
+        "isSidebarCompact"
+    );
+    browser.localStorage.setItem(DISCUSS_SIDEBAR_COMPACT_LS, toRawValue(true));
+    await start();
+    await openDiscuss();
+    await hover(".o-mail-DiscussSearch-inputContainer");
+    await contains(".o-mail-DiscussSidebar-floatingMenu span:text('Search conversations')");
+    await hover(".o-mail-DiscussSidebar-floatingMenu span:text('Search conversations')");
+    await advanceTime(500);
+    await contains(".o-mail-DiscussSidebar-floatingMenu span:text('Search conversations')");
+    await hover(".o-mail-DiscussContent");
+    await contains(".o-mail-DiscussSidebar-floatingMenu", { count: 0 });
+});
+
+test("Compact sidebar search panel closes when clicking search", async () => {
+    const DISCUSS_SIDEBAR_COMPACT_LS = makeRecordFieldLocalId(
+        DiscussApp.localId(),
+        "isSidebarCompact"
+    );
+    browser.localStorage.setItem(DISCUSS_SIDEBAR_COMPACT_LS, toRawValue(true));
+    await start();
+    await openDiscuss();
+    await hover(".o-mail-DiscussSearch-inputContainer");
+    await contains(".o-mail-DiscussSidebar-floatingMenu span:text('Search conversations')");
+    await click(".o-mail-DiscussSearch-inputContainer");
+    await contains(".o_command_palette");
+    await contains(".o-mail-DiscussSidebar-floatingMenu", { count: 0 });
+    await hover(".o_command_palette");
+    await press("Escape");
+    await contains(".o_command_palette", { count: 0 });
+    await hover(".o-mail-DiscussSearch-inputContainer");
+    await contains(".o-mail-DiscussSidebar-floatingMenu span:text('Search conversations')");
+});
+
+test("Compact sidebar search panel closes when the mouse goes to the command palette", async () => {
+    const DISCUSS_SIDEBAR_COMPACT_LS = makeRecordFieldLocalId(
+        DiscussApp.localId(),
+        "isSidebarCompact"
+    );
+    browser.localStorage.setItem(DISCUSS_SIDEBAR_COMPACT_LS, toRawValue(true));
+    await start();
+    await openDiscuss();
+    await hover(".o-mail-DiscussSearch-inputContainer");
+    await contains(".o-mail-DiscussSidebar-floatingMenu span:text('Search conversations')");
+    await press(["control", "k"]);
+    await hover(".o_command_palette");
+    await contains(".o-mail-DiscussSidebar-floatingMenu", { count: 0 });
 });
 
 test("Sidebar compact is crosstab synced", async () => {
