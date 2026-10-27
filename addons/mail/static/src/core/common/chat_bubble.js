@@ -1,44 +1,15 @@
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
-import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_indicator";
+import { useThreadPreview } from "@mail/core/common/thread_preview";
 
-import { Component, computed, signal, types, useEffect, useListener, useProps } from "@odoo/owl";
+import { Component, computed, signal, types, useEffect, useProps } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
-import { useHover } from "@mail/utils/common/hooks";
-import { usePopover } from "@web/core/popover/popover_hook";
 import { CountryFlag } from "@mail/core/common/country_flag";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { isMobileOS } from "@web/core/browser/feature_detection";
-import { _t } from "@web/core/l10n/translation";
 
 /** Minimum time the bubble keeps bouncing after important messages, in ms. */
 export const BOUNCE_DURATION = 4000;
-
-class ChatBubblePreview extends Component {
-    static components = { MessageSeenIndicator };
-    static template = "mail.ChatBubblePreview";
-
-    setup() {
-        super.setup(...arguments);
-        this.store = useService("mail.store");
-        this.props = useProps({
-            chatWindow: types.instanceOf(this.store.ChatWindow),
-        });
-    }
-
-    /** @returns {import("models").DiscussChannel} */
-    get channel() {
-        return this.props.chatWindow.channel;
-    }
-
-    get lastMessage() {
-        return this.channel.newestPersistentOfAllMessage;
-    }
-
-    get previewText() {
-        return this.lastMessage?.previewText || _t("This is the start of your conversation");
-    }
-}
 
 export class ChatBubble extends Component {
     static components = { CountryFlag, DiscussAvatar };
@@ -53,30 +24,11 @@ export class ChatBubble extends Component {
         this.props = useProps({
             chatWindow: types.instanceOf(this.store.ChatWindow),
         });
-        const popoverRef = signal.ref();
         this.isMobileOS = isMobileOS();
-        this.isPopoverOpen = signal(false);
-        this.popover = usePopover(ChatBubblePreview, {
-            animation: false,
-            onClose: () => this.isPopoverOpen.set(false),
+        this.threadPreview = useThreadPreview(this.rootRef, {
+            channel: () => this.channel,
+            className: "o-mail-ChatBubble-preview",
             position: "left-middle",
-            popoverClass: "bg-view border-0 p-0 overflow-visible o-rounded-bubble mx-1",
-            ref: popoverRef,
-            setActiveElement: false,
-        });
-        useListener(this.env.bus, "ChatBubble:preview-will-open", ({ detail }) => {
-            if (detail === this) {
-                return;
-            }
-            this.popover.close();
-        });
-        this.hover = useHover([this.rootRef, popoverRef], {
-            onHover: () => {
-                this.env.bus.trigger("ChatBubble:preview-will-open", this);
-                this.popover.open(this.rootRef(), { chatWindow: this.props.chatWindow });
-                this.isPopoverOpen.set(true);
-            },
-            onAway: () => this.popover.close(),
         });
         this.bouncing = signal(false);
         const importantCounter = computed(() => this.channel?.importantCounter ?? 0);

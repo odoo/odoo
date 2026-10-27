@@ -12,8 +12,10 @@ import {
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
 
+import { PEEK_DELAY } from "@mail/utils/common/hooks";
+
 import { describe, expect, test, tick } from "@odoo/hoot";
-import { waitFor } from "@odoo/hoot-dom";
+import { advanceTime, hover, waitFor } from "@odoo/hoot-dom";
 
 import { rpc } from "@web/core/network/rpc";
 import { Command, mockService, onRpc, serverState } from "@web/../tests/web_test_helpers";
@@ -201,4 +203,37 @@ test("Expertise matching hint is shown in the sidebar when chat is looking for h
     await waitFor(
         ".o-mail-MessagingMenuItem:has(:text(jane)):not(:has([title='Relevant to your expertise']))"
     );
+});
+
+test("Preview of a chat looking for help shows its topic", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], {
+        group_ids: pyEnv["res.groups"]
+            .search_read([["id", "=", serverState.groupLivechatId]])
+            .map(({ id }) => id),
+    });
+    const bobPartnerId = pyEnv["res.partner"].create({
+        name: "bob",
+        user_ids: [Command.create({ name: "bob" })],
+    });
+    const bobChannelId = pyEnv["discuss.channel"].create({
+        channel_type: "livechat",
+        channel_member_ids: [],
+        description: "Delivery delayed",
+        livechat_status: "need_help",
+    });
+    pyEnv["discuss.channel.member"].create({
+        channel_id: bobChannelId,
+        partner_id: bobPartnerId,
+        livechat_member_type: "visitor",
+    });
+    await start();
+    await openDiscuss(MENU_ACTIVE_IDS.LIVECHAT);
+    await click("button:text('Help needed')");
+    await waitFor(
+        ".o-mail-MessagingMenuItem:has(:text(bob)) span:text('Delivery delayed'):not([title]):count(1)"
+    );
+    await hover(".o-mail-MessagingMenuItem:has(:text(bob)) .o-mail-NotificationItem");
+    await advanceTime(PEEK_DELAY);
+    await waitFor(".o-mail-ThreadPreview-livechatTopic:text('Delivery delayed'):count(1)");
 });
