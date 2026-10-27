@@ -136,12 +136,12 @@ class ScaleDriver(SerialDriver):
             for index, bit in enumerate(binary_status_char[1:][::-1]):  # Read the bits in reverse order (LSB is at the last char) + ignore the first "parity" bit
                 if index == 5:
                     # Index 5 is Net Weight status
-                    self.tare_mode = bool(bit)
+                    self.tare_mode = bool(int(bit))
                 elif int(bit):
                     _logger.debug(
                         "Scale error: %s. Status string: %s. Scale answer: %s.",
                         status_char_error_bits[index], binary_status_char, answer
                     )
-                    self.data.update({"status": "error", "result": 0})
+                    self.data["result"] = 0
                     return 0.0
         return self.data.get("result", 0.0)
