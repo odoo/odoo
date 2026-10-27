@@ -57,7 +57,10 @@ class MrpProductionSerials(models.TransientModel):
         split_amounts = {self.production_id: [1] * len(lots)}
         mos = self.production_id._split_productions(amounts=split_amounts)
         for mo, serial in zip(mos, lots):
-            mo.lot_producing_ids = [Command.link(serial.id)]
+            mo.lot_producing_ids = [Command.set([serial.id])]
+            mo.qty_producing = 0
+            for move in mo.move_raw_ids:
+                move.quantity = move.product_uom_qty
         if new_lots and self.production_id.picking_type_id.auto_print_generated_mrp_lot:
             print_action = self.production_id._autoprint_generated_lots(new_lots)
             print_action['close_on_report_download'] = True
