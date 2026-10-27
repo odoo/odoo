@@ -22,6 +22,7 @@ import { isBrowserSafari, isMobileOS } from "@web/core/browser/feature_detection
 import { CallAction } from "@mail/discuss/call/common/call_actions";
 import { ACTION_TAGS } from "@mail/core/common/action";
 import { BusPlugin } from "@bus/services/bus_plugin";
+import { PresencePlugin } from "@bus/services/presence_plugin";
 
 let sequence = 1;
 const getSequence = () => sequence++;
@@ -2955,7 +2956,6 @@ export const rtcService = {
         "mail.fullscreen",
         "mail.sound_effects",
         "mail.store",
-        "presence",
     ],
     /**
      * @param {import("@web/env").OdooEnv} env
@@ -2964,6 +2964,7 @@ export const rtcService = {
     start(env, services) {
         const store = services["mail.store"];
         const busPlugin = usePlugin(BusPlugin);
+        const presencePlugin = usePlugin(PresencePlugin);
         const rtc = store.rtc;
         rtc.pipService = services["discuss.pip_service"];
         rtc.onChange(
@@ -3072,7 +3073,7 @@ export const rtcService = {
          * Attempts to play RTC medias when a user shows signs of presence (interaction with the page) as
          * they cannot be played on windows that have not been interacted with.
          */
-        services["presence"].bus.addEventListener(
+        presencePlugin.bus.addEventListener(
             "presence",
             () => {
                 env.bus.trigger("RTC-SERVICE:PLAY_MEDIA");
