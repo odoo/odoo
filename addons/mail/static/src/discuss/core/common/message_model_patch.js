@@ -73,6 +73,10 @@ const messagePatch = {
             mentionedRoles,
         });
     },
+    async openLinkedSubChannel() {
+        const subChannel = await this.store["discuss.channel"].getOrFetch(this.linkedSubChannel.id);
+        subChannel?.open({ focus: true });
+    },
     /**
      * @param {Thread} thread the thread being viewed
      * @returns {boolean}
