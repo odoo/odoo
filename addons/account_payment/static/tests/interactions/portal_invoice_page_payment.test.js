@@ -128,7 +128,6 @@ test("portal_invoice_page_payment is started with #portal_pay", async () => {
                                                                 </a>
                                                             </div>
                                                         </div>
-                                                        <script type="text/javascript" src="https://js.stripe.com/v3/" data-oe-model="ir.ui.view" data-oe-id="1709" data-oe-field="arch" data-oe-xpath="/t[1]/script[1]"></script>
                                                     </div>
                                                 </div>
                                             </div>
