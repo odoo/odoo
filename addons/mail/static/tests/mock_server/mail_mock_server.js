@@ -1484,6 +1484,9 @@ class Store {
         _delete = _delete ?? false;
         let model_name;
         if (data instanceof models.Model) {
+            if (!data.length) {
+                return this;
+            }
             if (fields) {
                 if (Object.keys(kwargs).length) {
                     throw new Error(

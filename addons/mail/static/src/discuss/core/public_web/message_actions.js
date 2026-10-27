@@ -5,12 +5,9 @@ registerMessageAction("create-or-view-thread", {
     condition: ({ message, channel }) =>
         message.channel_id?.eq(channel) && message.channel_id?.canCreateSubChannels,
     icon: "fa fa-comments-o",
-    onSelected: async ({ message, store }) => {
+    onSelected: async ({ message }) => {
         if (message.linkedSubChannel) {
-            const subChannel = await store["discuss.channel"].getOrFetch(
-                message.linkedSubChannel.id
-            );
-            subChannel?.open({ focus: true });
+            await message.openLinkedSubChannel();
         } else {
             message.channel_id?.createSubChannel({ initialMessage: message });
         }
