@@ -1,5 +1,4 @@
 import { useService } from "@web/core/utils/hooks";
-import { uuid } from "@web/core/utils/strings";
 
 import { Component, useState, useRef, useEffect } from "@odoo/owl";
 import { useSortable } from "@web/core/utils/sortable_owl";
@@ -95,7 +94,7 @@ export class PropertyDefinitionSelection extends Component {
     onOptionCreate(index) {
         this.state.newOption = {
             index: index,
-            name: uuid(),
+            name: "",
         };
     }
 
@@ -121,6 +120,9 @@ export class PropertyDefinitionSelection extends Component {
             // if the label is empty, remove the option
             options.splice(optionIndex, 1);
         } else {
+            if (options[optionIndex][0] === "") {
+                options[optionIndex][0] = this.generateUniqueOptionKey(newLabel, options);
+            }
             options[optionIndex][1] = newLabel;
         }
 
@@ -287,5 +289,20 @@ export class PropertyDefinitionSelection extends Component {
         }
 
         this.props.onOptionsChange(options);
+    }
+    /**
+     * Generate a unique key for a selection option.
+     *
+     * @param {string} label
+     * @param {array} options
+     * @returns {string}
+     */
+    generateUniqueOptionKey(label, options) {
+        let key = label;
+        let suffix = 1;
+        while (options.some(([existingKey]) => existingKey === key)) {
+            key = `${label}_${suffix++}`;
+        }
+        return key;
     }
 }
