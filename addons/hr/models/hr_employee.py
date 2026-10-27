@@ -2709,13 +2709,11 @@ class HrEmployee(models.Model):
         :return: ``{employee_id: hr.version}`` (sudoed versions)
         :rtype: dict[int, hr.version]
         """
-        versions = self.sudo().version_ids.filtered_domain([
-            ('contract_date_start', '!=', False),
-            ('contract_date_start', '<=', date),
-            '|',
-                ('contract_date_end', '=', False),
-                ('contract_date_end', '>=', date),
-        ])
+        # called for each day of each work entry generation: no domain to build and optimize
+        versions = self.sudo().version_ids.filtered(lambda v: (
+            v.contract_date_start and v.contract_date_start <= date
+            and (not v.contract_date_end or v.contract_date_end >= date)
+        ))
         res = {}
         for employee, employee_versions in versions.grouped('employee_id').items():
             started_versions = employee_versions.filtered(lambda v: v.date_version <= date)
