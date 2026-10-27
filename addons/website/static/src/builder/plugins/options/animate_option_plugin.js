@@ -490,10 +490,6 @@ export class SetAnimationModeAction extends BuilderAction {
         this.animationWithFadein = ["onAppearance", "onScroll"];
         this.scrollingElement = getScrollingElement(this.document);
     }
-    // todo: to remove after having the commit of louis
-    isApplied() {
-        return true;
-    }
     async clean({ editingElement, value: effectName, nextAction }) {
         this.scrollingElement.classList.remove("o_wanim_overflow_xy_hidden");
         editingElement.classList.remove(
@@ -606,10 +602,6 @@ export class SetAnimateIntensityAction extends BuilderAction {
 export class ForceAnimationAction extends BuilderAction {
     static id = "forceAnimation";
     static dependencies = ["animateOption"];
-    // todo: to remove after having the commit of louis
-    isActive() {
-        return true;
-    }
     apply({ editingElement }) {
         this.dependencies.animateOption.forceAnimation(editingElement);
     }
