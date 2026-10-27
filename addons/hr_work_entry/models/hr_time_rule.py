@@ -91,28 +91,6 @@ def _trim_hours_from_end(intervals, hours):
     return result
 
 
-def _is_duration_based_schedule(schedule):
-    """True when every attendance line in the schedule is duration-based."""
-    return schedule and all(
-        getattr(att, 'duration_based', False) for _s, _e, att in schedule
-    )
-
-
-def _duration_based_deficit_gap(start, stop, total_worked, deficit_amount, dummy):
-    """Place deficit as one block after checkout, or before checkin if the day is too short."""
-    last_end = max(e for _s, e, _ in total_worked)
-    first_start = min(s for s, _e, _ in total_worked)
-    after_slot = Intervals([(last_end, stop, dummy)]) - total_worked
-    if sum_intervals(after_slot) >= deficit_amount:
-        return _trim_hours_from_end(list(after_slot), sum_intervals(after_slot) - deficit_amount)
-    before_slot = Intervals([(start, first_start, dummy)]) - total_worked
-    before_gap = list(before_slot)
-    trim = sum_intervals(before_slot) - deficit_amount
-    if trim > 0:
-        before_gap = _trim_hours_from_start(before_gap, trim)
-    return before_gap
-
-
 def _to_utc(dt, tz):
     """Convert a naive local datetime to a naive UTC datetime."""
     return dt.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
@@ -1043,8 +1021,20 @@ class HrTimeRule(models.Model):
                 key=lambda r: max(e for _, e, _ in intervals_by_source[r]),
             )
             dummy = self.env['resource.calendar']
-            if self.calendar_source and _is_duration_based_schedule(schedule) and total_worked:
-                gap = _duration_based_deficit_gap(start, stop, total_worked, deficit_amount, dummy)
+            sched_cal = next((att.calendar_id for _s, _e, att in schedule), dummy)
+            if self.calendar_source and sched_cal._is_duration_based() and total_worked:
+                # place deficit after checkout, or before checkin if the day is too short
+                last_end = max(e for _s, e, _ in total_worked)
+                first_start = min(s for s, _e, _ in total_worked)
+                after_slot = Intervals([(last_end, stop, dummy)]) - total_worked
+                if sum_intervals(after_slot) >= deficit_amount:
+                    gap = _trim_hours_from_end(list(after_slot), sum_intervals(after_slot) - deficit_amount)
+                else:
+                    before_slot = Intervals([(start, first_start, dummy)]) - total_worked
+                    gap = list(before_slot)
+                    trim = sum_intervals(before_slot) - deficit_amount
+                    if trim > 0:
+                        gap = _trim_hours_from_start(gap, trim)
             elif self.calendar_source:
                 gap = list((schedule & period_window) - total_worked)
                 extra_outside = sum_intervals(total_worked) - sum_intervals(total_worked & schedule & period_window)

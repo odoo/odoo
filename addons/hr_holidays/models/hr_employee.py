@@ -622,6 +622,29 @@ class HrEmployee(models.Model):
             return self.browse(ctx.get('default_employee_id'))
         return self.env.user.employee_id
 
+    def _fetch_valid_allocations(self, work_entry_types, reference_date=None):
+        """Fetch validated, non-expired allocations for these employees and types in one query.
+
+        :param work_entry_types: ``hr.work.entry.type`` recordset
+        :param reference_date: allocations expiring before this date are excluded (default: today)
+        :return: ``{(employee, work_entry_type): allocations}`` sorted date_to ASC NULLS LAST
+        :rtype: dict
+        """
+        if not self or not work_entry_types:
+            return {}
+        if not reference_date:
+            reference_date = fields.Date.context_today(self)
+        allocation_groups = self.env['hr.leave.allocation'].sudo()._read_group([
+            ('employee_id', 'in', self.ids),
+            ('work_entry_type_id', 'in', work_entry_types.ids),
+            ('state', '=', 'validate'),
+            '|', ('date_to', '=', False), ('date_to', '>=', reference_date),
+        ], groupby=['employee_id', 'work_entry_type_id'], aggregates=['id:recordset'])
+        return {
+            (employee, wet): allocs.sorted(key=lambda a: (a.date_to or date.max,))
+            for employee, wet, allocs in allocation_groups
+        }
+
     def _get_consumed_leaves(self, work_entry_types, target_date=False, ignore_future=False, precomputed_allocations={}, same_year_only=False):
         """Compute, per allocation, the time off taken and the balance of the employees.
 

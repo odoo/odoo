@@ -2533,7 +2533,10 @@ class HrEmployee(models.Model):
 
         date_from = fields.Date.to_date(date_from)
         for employee_id, version in self._get_first_contract_version_at(date_from).items():
-            res[employee_id] = version.resource_calendar_id.hours_per_day
+            res[employee_id] = (
+                version.resource_calendar_id.hours_per_day
+                or version._get_reference_calendar(date_from).hours_per_day
+            )
         return res
 
     def _get_version_periods(self, start, stop, field=None, check_contract=False):

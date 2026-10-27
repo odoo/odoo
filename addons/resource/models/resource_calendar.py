@@ -116,6 +116,11 @@ class ResourceCalendar(models.Model):
         self.ensure_one()
         return self._is_flexible() and not self.hours_per_week and not self.hours_per_day
 
+    def _is_duration_based(self):
+        """Return whether every attendance line of this calendar is duration-based."""
+        self.ensure_one()
+        return self.attendance_ids and all(self.attendance_ids.mapped('duration_based'))
+
     def _get_attendances_to_unlink(self, next_calendar_type=None):
         """ Return the attendances that do not fit the calendar's ``calendar_type`` (or
         ``next_calendar_type`` when given), and must be dropped:
