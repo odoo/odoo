@@ -758,19 +758,25 @@ test("sidebar list hides and shows back", async () => {
     );
 });
 
-test("collapsing the sidebar with the mouse on it shows its list until the pointer leaves", async () => {
+test("the sidebar toggle does not show the hidden sidebar list, unlike the tabs", async () => {
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
     await hover("button[title='Collapse sidebar']");
     await click("button[title='Collapse sidebar']");
-    await waitFor(
-        ".o-mail-DiscussApp-sidebar.o-collapsed .o-mail-MessagingMenu-container.o-peek:count(1)"
-    );
+    await waitFor(".o-mail-DiscussApp-sidebar.o-collapsed button[title='Expand sidebar']:count(1)");
+    await advanceTime(PEEK_DELAY);
+    await animationFrame();
+    expect(".o-mail-MessagingMenu-container:not(.o-peek)").toHaveCount(1);
+    expect(".o-mail-MessagingMenu-container.o-peek").toHaveCount(0);
     await hover(".o-mail-DiscussContent");
-    await advanceTime(PEEK_CLOSE_DELAY);
-    await waitFor(
-        ".o-mail-DiscussApp-sidebar.o-collapsed .o-mail-MessagingMenu-container:not(.o-peek):count(1)"
-    );
+    await hover("button[title='Expand sidebar']");
+    await advanceTime(PEEK_DELAY);
+    await animationFrame();
+    expect(".o-mail-MessagingMenu-container:not(.o-peek)").toHaveCount(1);
+    expect(".o-mail-MessagingMenu-container.o-peek").toHaveCount(0);
+    await hover(".o-mail-MessagingMenu-tab[data-id='channel']");
+    await advanceTime(PEEK_DELAY);
+    await waitFor(".o-mail-MessagingMenu-container.o-peek:count(1)");
 });
 
 test("hovering the tabs shows the hidden sidebar list until the pointer leaves", async () => {

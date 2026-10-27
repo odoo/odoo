@@ -221,8 +221,10 @@ export const PEEK_CLOSE_DELAY = 300;
  * @param {() => boolean} [param1.keep] whether it also stays shown otherwise, e.g. while
  *   searching in it.
  * @param {() => void} [param1.onClose] called when it hides, also when left before showing.
+ * @param {string} [param1.ignoreSelector] parts of it that do not show it when hovered or
+ *   focused, e.g. its toggle.
  */
-export function usePeek(ref, { enabled, keep = () => false, onClose } = {}) {
+export function usePeek(ref, { enabled, keep = () => false, onClose, ignoreSelector } = {}) {
     const isOpen = signal(false);
     /** Whether the mouse is on the element: a touch tap does not count as hovering. */
     let isHovered = false;
@@ -254,15 +256,13 @@ export function usePeek(ref, { enabled, keep = () => false, onClose } = {}) {
             close();
         }
     }
-    /** Opens now if the mouse is on it. */
-    function openIfHovered() {
-        if (isHovered && enabled()) {
-            open();
-        }
-    }
     /** @param {Element} el */
     function contains(el) {
         return ref().contains(el) || Boolean(el.closest(".o-overlay-container"));
+    }
+    /** @param {Element} el */
+    function isIgnored(el) {
+        return Boolean(ignoreSelector && el.closest(ignoreSelector));
     }
     /** Whether an element triggered from it is active: its shown focus, or a dropdown it opened. */
     function hasActiveElement() {
@@ -271,7 +271,8 @@ export function usePeek(ref, { enabled, keep = () => false, onClose } = {}) {
     function isKept() {
         return isPressed || hasActiveElement() || (!isReleased && keep());
     }
-    useListener(ref, "pointerenter", (ev) => {
+    // Over each of its parts, not only on entering it: the delay runs off the ignored ones.
+    useListener(ref, "pointerover", (ev) => {
         if (ev.pointerType !== "mouse") {
             return;
         }
@@ -279,8 +280,11 @@ export function usePeek(ref, { enabled, keep = () => false, onClose } = {}) {
         if (!enabled() || isOpen()) {
             return;
         }
-        clear();
-        timeout = setTimeout(open, PEEK_DELAY);
+        if (isIgnored(ev.target)) {
+            clear();
+        } else if (!timeout) {
+            timeout = setTimeout(open, PEEK_DELAY);
+        }
     });
     // Left before the delay: nothing to show. Once shown, it hides on where the pointer goes.
     useListener(ref, "pointerleave", () => {
@@ -290,7 +294,7 @@ export function usePeek(ref, { enabled, keep = () => false, onClose } = {}) {
         }
     });
     useListener(ref, "focusin", (ev) => {
-        if (enabled() && ev.target.matches(":focus-visible")) {
+        if (enabled() && ev.target.matches(":focus-visible") && !isIgnored(ev.target)) {
             open();
         }
     });
@@ -345,7 +349,7 @@ export function usePeek(ref, { enabled, keep = () => false, onClose } = {}) {
         };
     });
     onWillUnmount(clear);
-    return { isOpen, open, close, closeOnceLeft, openIfHovered };
+    return { isOpen, open, close, closeOnceLeft };
 }
 
 /**

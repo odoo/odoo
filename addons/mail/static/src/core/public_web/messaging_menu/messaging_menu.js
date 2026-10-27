@@ -156,6 +156,8 @@ export class MessagingMenu extends Component {
             this.containerRef()?.closest(".o-mail-DiscussApp-sidebar") ?? this.containerRef();
         this.peek = usePeek(peekRef, {
             enabled: () => this.canPeek(),
+            // The toggle expands the list instead of showing it over the content.
+            ignoreSelector: ".o-mail-MessagingMenu-toggleSidebar",
             keep: () => Boolean(this.state().searchTerm),
             onClose: () => {
                 this.clearPeekedTab();
@@ -260,7 +262,6 @@ export class MessagingMenu extends Component {
     onClickToggleSidebar() {
         this.peek.close();
         this.onToggleSidebar();
-        this.peek.openIfHovered();
     }
 
     /** @param {MouseEvent} ev */
