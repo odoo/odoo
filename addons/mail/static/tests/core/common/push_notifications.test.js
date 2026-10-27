@@ -6,8 +6,13 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
+<<<<<<< e3f8e4ecbd9b96602c9d9a961d31d124d52cc8f5
 import { waitUntil } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
+||||||| 678841657e3f99f399f0262b3924a35576240585
+import { animationFrame } from "@odoo/hoot-mock";
+=======
+>>>>>>> e26eda3576a8861c3190906b2a92a2c190975c67
 import {
     getService,
     patchWithCleanup,
@@ -34,6 +39,7 @@ for (const subscribed of [false, true]) {
                 return {
                     pushManager: {
                         async getSubscription() {
+                            expect.step("get subscription");
                             return subscribed ? {} : null;
                         },
                     },
@@ -58,9 +64,10 @@ for (const subscribed of [false, true]) {
             })
         );
         await contains(".o-mail-DiscussSidebar-item:has(.badge)", { text: "Inbox" });
-        await animationFrame();
         expect(getService("mail.store").inbox.counter).toBe(1);
-        expect.verifySteps(subscribed ? [] : ["local notification"]);
+        await expect.waitForSteps(
+            subscribed ? ["get subscription"] : ["get subscription", "local notification"]
+        );
     });
 }
 
