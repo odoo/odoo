@@ -15,6 +15,9 @@ disableInDir () {
     rm -f .prettierignore
     rm -r .prettierrc.json
 
+    # installed by the eslint 10 tooling of newer versions
+    rm -f eslint.config.cjs .eslint-ignore
+
     cd - &> /dev/null
 }
 
