@@ -2,6 +2,7 @@ import {
     contains,
     defineMailModels,
     openDiscuss,
+    openFormView,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
@@ -74,6 +75,7 @@ for (const preference of ["inbox", "email"]) {
                 { name: "Other contact" },
             ]);
             await start();
+<<<<<<< 7191168096ad0bfd77eaf15e3ef00299a84f9b7f
             const thread = getService("mail.store")["mail.thread"].insert({
                 model: "res.partner",
                 id: partnerId,
@@ -81,6 +83,19 @@ for (const preference of ["inbox", "email"]) {
             await openDiscuss(`res.partner_${partnerId}`);
             await waitUntil(() => thread.isDisplayed);
             expect(thread.isDisplayed).toBe(true);
+||||||| 5c7defb49e020fec8b6bb82403a2f54eb79e92e1
+            const thread = getService("mail.store").Thread.insert({
+                model: "res.partner",
+                id: partnerId,
+            });
+            // Open the chat window without saving the chat hub, whose reload closes it in tests
+            getService("mail.store").ChatWindow.insert({ thread }).open({ notifyState: false });
+            await contains(".o-mail-ChatWindow");
+            expect(thread.isDisplayed).toBe(true);
+=======
+            await openFormView("res.partner", partnerId);
+            await contains(".o-mail-Chatter");
+>>>>>>> ccc5ffb7c53546e7567b4af7033b479be69a1bb2
             patchWithCleanup(parent.document, { hasFocus: () => isFocused });
             patchWithCleanup(browser.navigator.serviceWorker, {
                 controller: {
@@ -103,9 +118,45 @@ for (const preference of ["inbox", "email"]) {
                     })
                 );
             }
-            expect.verifySteps(isFocused ? ["displayed record"] : []);
+            expect.verifySteps([]);
         });
     }
+}
+
+for (const isFocused of [false, true]) {
+    test(`channel push: focused window ${isFocused}`, async () => {
+        const pyEnv = await startServer();
+        const [channelId, otherChannelId] = pyEnv["discuss.channel"].create([
+            { name: "Displayed channel" },
+            { name: "Other channel" },
+        ]);
+        await start();
+        await openDiscuss(channelId);
+        await contains(".o-mail-DiscussContent-threadName[title='Displayed channel']");
+        patchWithCleanup(parent.document, { hasFocus: () => isFocused });
+        patchWithCleanup(browser.navigator.serviceWorker, {
+            controller: {
+                postMessage(message) {
+                    expect(message.type).toBe("notification-display-response");
+                    expect.step(message.payload.correlationId);
+                },
+            },
+        });
+        for (const [resId, correlationId] of [
+            [channelId, "displayed channel"],
+            [otherChannelId, "other channel"],
+        ]) {
+            browser.navigator.serviceWorker.dispatchEvent(
+                new MessageEvent("message", {
+                    data: {
+                        type: "notification-display-request",
+                        payload: { model: "discuss.channel", res_id: resId, correlationId },
+                    },
+                })
+            );
+        }
+        expect.verifySteps(isFocused ? ["displayed channel"] : []);
+    });
 }
 
 test("record push: message already read in inbox", async () => {
