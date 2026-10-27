@@ -543,6 +543,32 @@ class ProductPricelistItem(models.Model):
 
         return res
 
+    def _compute_prices(self, products, quantity, uom, *, currency=None, depth=0, **kwargs):
+        base_prices_and_rules = {}
+        if self.base == 'pricelist' and self.base_pricelist_id:
+            base_prices_and_rules = self.base_pricelist_id._compute_price_rule(
+                # Do not forward currency here, as base prices are expected to be in the base
+                # pricelist currency.
+                products, quantity, uom=uom, depth=depth + 1, **kwargs
+            )
+
+        results = {}
+        for product in products:
+            base_price, base_rule_ids = base_prices_and_rules.get(product.id, (None, []))
+            price = self._compute_price(
+                product,
+                quantity,
+                uom,
+                currency=currency,
+                base_price=base_price,
+                depth=depth,
+                **kwargs,
+            )
+
+            results[product.id] = (price, [*self.ids, *base_rule_ids])
+
+        return results
+
     def _compute_price(self, product, quantity, uom, **kwargs):
         """Compute the unit price of a product in the context of a pricelist application.
 
@@ -606,7 +632,7 @@ class ProductPricelistItem(models.Model):
         return price
 
     def _compute_base_price(
-        self, product, quantity, uom, *, currency=None, depth=0, base_prices=None, **kwargs
+        self, product, quantity, uom, *, currency=None, depth=0, base_price=None, **kwargs
     ):
         """Compute the base price for a given rule.
 
@@ -622,10 +648,10 @@ class ProductPricelistItem(models.Model):
         """
         rule_base = self.base or 'list_price'
         if rule_base == 'pricelist' and self.base_pricelist_id:
-            if base_prices:
-                price = base_prices[product.id]
-            else:
-                price = self.base_pricelist_id._get_product_price(
+            price = (
+                base_price
+                if base_price is not None
+                else self.base_pricelist_id._get_product_price(
                     product,
                     quantity,
                     currency=self.base_pricelist_id.currency_id,
@@ -633,6 +659,7 @@ class ProductPricelistItem(models.Model):
                     depth=depth + 1,
                     **kwargs,
                 )
+            )
             src_currency = self.base_pricelist_id.currency_id
         elif rule_base == "standard_price":
             src_currency = product.cost_currency_id
