@@ -2797,6 +2797,179 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertFalse(output_atts,
                          "No allocation at all → treated as insufficient → no output created")
 
+    def test_deficit_creates_negative_allocation_when_none_exists(self):
+        """when no allocation exists but the type allows negative, a new negative allocation
+        is created rather than silently skipping the deduction.
+
+        4h deficit on 8h day -> 0.5d deduction. no prior allocation.
+        allows_negative with cap=2 -> new allocation created at -0.5d.
+        """
+        gap_type = self.env['hr.work.entry.type'].create({
+            'name': 'Under Time Neg Create', 'code': 'UTNC',
+            'count_as': 'absence', 'requires_allocation': False,
+        })
+        comp_type = self.env['hr.work.entry.type'].create({
+            'name': 'Comp Neg Create', 'code': 'CPNC',
+            'requires_allocation': True, 'time_off_selectable': True,
+            'allows_negative': True, 'max_allowed_negative': 2,
+            'unit_of_measure': 'day',
+            'leave_validation_type': 'no_validation',
+        })
+        self._make_deficit_alloc_rule(gap_type, comp_type)
+
+        self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 12, 8),
+            'check_out': datetime(2022, 12, 12, 12),
+        })
+        output_atts = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('time_rule_id', '!=', False),
+            ('work_entry_type_id', '=', gap_type.id),
+        ])
+        self.assertTrue(output_atts,
+                        "deficit output must be created even without prior allocation")
+        alloc = self.env['hr.leave.allocation'].sudo().search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('work_entry_type_id', '=', comp_type.id),
+        ])
+        self.assertEqual(len(alloc), 1, "a new negative allocation should be auto-created")
+        self.assertAlmostEqual(alloc.number_of_days, -0.5, places=5,
+                               msg="new allocation starts at -0.5d (4h deficit / 8h per day)")
+        self.assertEqual(alloc.state, 'validate')
+
+    def test_negative_allocation_attendance_multi_day(self):
+        """
+        initial allocation: 0.25d.
+
+        day 1-2: Undertime drains initial 0.25d allocation into negative (-0.25d), then overtime credits it back to 0.5d
+        day 3-4: Undertime depletes positive balance back to zero, then a large deficit (-0.875d) goes deep negative
+        day 5: Small deficit hits the cap exactly at -1.0d
+        day 6: Further deficit is blocked (no output attendance, balance unchanged)
+        day 7: Overtime still credits even while deeply negative (-1.0 + 0.25 = -0.75d)
+        """
+        self.time_rule.write({'active': False})
+        gap_type = self.env['hr.work.entry.type'].create({
+            'name': 'Undertime Neg', 'code': 'UTNEG',
+            'count_as': 'absence', 'requires_allocation': False,
+        })
+        comp_type = self.env['hr.work.entry.type'].create({
+            'name': 'Comp Neg Att', 'code': 'CNEGATT',
+            'requires_allocation': True, 'time_off_selectable': True,
+            'allows_negative': True, 'max_allowed_negative': 1,
+            'unit_of_measure': 'day',
+            'leave_validation_type': 'no_validation',
+        })
+        undertime_rule = self.env['hr.time.rule'].create({
+            'name': 'Undertime neg att',
+            'calendar_source': 'employee',
+            'quantity_period': 'day',
+            'threshold_operator': 'less_than',
+            'work_entry_type_id': gap_type.id,
+            'condition_work_entry_type_ids': [self.att_type.id],
+            'allocation_type_id': comp_type.id,
+            'leave_compensation_rate': 1.0,
+        })
+        self.env['hr.time.rule'].create({
+            'name': 'Overtime neg att',
+            'calendar_source': 'employee',
+            'quantity_period': 'day',
+            'threshold_operator': 'exceed',
+            'work_entry_type_id': self.overtime_type.id,
+            'condition_work_entry_type_ids': [self.att_type.id],
+            'allocation_type_id': comp_type.id,
+            'leave_compensation_rate': 1.0,
+        })
+        alloc = self.env['hr.leave.allocation'].sudo().with_context(skip_time_rules=True).create({
+            'employee_id': self.cal_emp.id,
+            'work_entry_type_id': comp_type.id,
+            'number_of_days': 0.25,
+            'date_from': '2022-01-01',
+            'date_to': False,
+            'state': 'confirm',
+        })
+        alloc.with_context(leave_skip_state_check=True).action_approve()
+
+        Att = self.env['hr.attendance']
+
+        # day 1: 4h work -> 4h deficit -> 0.5d deducted
+        Att.create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 12, 8),
+            'check_out': datetime(2022, 12, 12, 12),
+        })
+        alloc.invalidate_recordset()
+        self.assertAlmostEqual(alloc.number_of_days, -0.25, places=5,
+                                msg="day 1: 0.25 - 0.5 = -0.25")
+
+        # day 2: 14h work -> 6h excess -> 0.75d credited
+        Att.create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 13, 6),
+            'check_out': datetime(2022, 12, 13, 20),
+        })
+        alloc.invalidate_recordset()
+        self.assertAlmostEqual(alloc.number_of_days, 0.5, places=5,
+                                msg="day 2: -0.25 + 0.75 = 0.5")
+
+        # day 3: 4h work -> 4h deficit -> 0.5d deducted
+        Att.create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 14, 8),
+            'check_out': datetime(2022, 12, 14, 12),
+        })
+        alloc.invalidate_recordset()
+        self.assertAlmostEqual(alloc.number_of_days, 0.0, places=5,
+                                msg="day 3: 0.5 - 0.5 = 0.0")
+
+        # day 4: 1h work -> 7h deficit -> 0.875d deducted (within cap)
+        Att.create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 15, 8),
+            'check_out': datetime(2022, 12, 15, 9),
+        })
+        alloc.invalidate_recordset()
+        self.assertAlmostEqual(alloc.number_of_days, -0.875, places=5,
+                                msg="day 4: 0 - 0.875 = -0.875")
+
+        # day 5: 7h work -> 1h deficit -> 0.125d deducted (hits cap exactly)
+        Att.create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 16, 8),
+            'check_out': datetime(2022, 12, 16, 15),
+        })
+        alloc.invalidate_recordset()
+        self.assertAlmostEqual(alloc.number_of_days, -1.0, places=5,
+                                msg="day 5: -0.875 - 0.125 = -1.0 (at cap)")
+
+        # day 6: 7h work -> 1h deficit -> BLOCKED (cap reached)
+        Att.create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 19, 8),
+            'check_out': datetime(2022, 12, 19, 15),
+        })
+        alloc.invalidate_recordset()
+        self.assertAlmostEqual(alloc.number_of_days, -1.0, places=5,
+                                msg="day 6: blocked, stays -1.0")
+        blocked_outputs = Att.search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('time_rule_id', '=', undertime_rule.id),
+            ('check_in', '>=', datetime(2022, 12, 19)),
+            ('check_in', '<', datetime(2022, 12, 20)),
+        ])
+        self.assertFalse(blocked_outputs,
+                            "cap reached: no deficit output for day 6")
+
+        # day 7: 10h work -> 2h excess -> 0.25d credited
+        Att.create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 20, 7),
+            'check_out': datetime(2022, 12, 20, 17),
+        })
+        alloc.invalidate_recordset()
+        self.assertAlmostEqual(alloc.number_of_days, -0.75, places=5,
+                                msg="day 7: -1.0 + 0.25 = -0.75")
+
 
 @tagged('-at_install', 'post_install', 'work_entry_pipeline', 'time_rule_pipeline')
 class TestTimeRuleCronBehavior(TransactionCase):
@@ -4075,3 +4248,70 @@ class TestTimeRulePipelineLeaves(TransactionCase):
                                    msg="Allocation must be untouched when deficit is skipped")
         finally:
             rule.write({'active': False})
+
+    def test_negative_allocation_undertime_then_overtime(self):
+        """undertime pushes allocation negative (allows_negative), overtime credits it back,
+        and the resulting positive balance is usable for a time off request.
+        """
+        comp_type = self.env['hr.work.entry.type'].create({
+            'name': 'Comp Negative', 'code': 'CNEG',
+            'requires_allocation': True, 'time_off_selectable': True,
+            'allows_negative': True, 'max_allowed_negative': 5,
+            'leave_validation_type': 'no_validation',
+        })
+        alloc = self.env['hr.leave.allocation'].sudo().with_context(skip_time_rules=True).create({
+            'employee_id': self.emp.id,
+            'work_entry_type_id': comp_type.id,
+            'number_of_days': 0,
+            'date_from': '2022-01-01',
+            'date_to': False,
+            'state': 'confirm',
+        })
+        alloc.with_context(leave_skip_state_check=True).action_approve()
+
+        self.env['hr.time.rule'].create({
+            'name': 'Undertime 4h neg alloc',
+            'working_hours_mode': 'day',
+            'threshold_operator': 'less_than',
+            'expected_hours': 4,
+            'work_entry_type_id': self.out_type.id,
+            'condition_work_entry_type_ids': [self.src_type.id],
+            'allocation_type_id': comp_type.id,
+            'leave_compensation_rate': 1.0,
+        })
+        self.env['hr.time.rule'].create({
+            'name': 'Overtime 4h neg alloc',
+            'working_hours_mode': 'day',
+            'threshold_operator': 'exceed',
+            'expected_hours': 4,
+            'condition_work_entry_type_ids': [self.src_type.id],
+            'allocation_type_id': comp_type.id,
+            'leave_compensation_rate': 1.0,
+        })
+
+        # day 1: 2h source -> deficit 2h -> deducts 0.25d, allocation goes negative
+        self._make_leave(
+            datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 10),
+            skip_rules=True,
+        )
+        with freeze_time('2022-12-13'):
+            self.env['hr.leave']._cron_process_day_undertime_rules()
+        alloc.invalidate_recordset()
+        self.assertAlmostEqual(alloc.number_of_days, -0.25, places=5,
+                                msg="Undertime pushed allocation to -0.25d via allows_negative")
+
+        # day 2: 7h source -> excess 3h -> credits 0.375d
+        with freeze_time('2022-12-14'):
+            self._make_leave(
+                datetime(2022, 12, 13, 8), datetime(2022, 12, 13, 15),
+            )
+        alloc.invalidate_recordset()
+        self.assertAlmostEqual(alloc.number_of_days, 0.125, places=5,
+                                msg="Overtime credited 0.375d, net = -0.25 + 0.375 = 0.125d")
+
+        # take a 1h leave from the comp allocation (0.125d = 1h at 8h/day)
+        comp_leave = self._make_leave(
+            datetime(2022, 12, 14, 8), datetime(2022, 12, 14, 9),
+            wet=comp_type,
+        )
+        self.assertTrue(comp_leave.exists(), "1h leave from 0.125d allocation succeeds")
