@@ -141,3 +141,23 @@ test("parseTime (arabic numbers)", async () => {
         });
     }
 });
+
+describe.current.tags("headless");
+test("parseTime (localized meridiem)", async () => {
+    patchWithCleanup(Settings, { defaultLocale: "es" });
+
+    const testSet = [
+        ["01:45 p. m.", [13, 45]],
+        ["01:45\u00a0p.\u00a0m.", [13, 45]],
+        ["12:30 a. m.", [0, 30]],
+        ["8pm", [20, 0]],
+        ["13:30", [13, 30]],
+    ];
+
+    for (const [input, expected] of testSet) {
+        const time = parseTime(input);
+        expect([time.hour, time.minute]).toEqual(expected, {
+            message: `"${input}" should parse to ${expected}`,
+        });
+    }
+});
