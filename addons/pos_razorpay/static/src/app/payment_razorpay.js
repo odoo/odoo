@@ -1,3 +1,5 @@
+/* global Sha1 */
+
 import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/payment/payment_interface";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -97,7 +99,9 @@ export class PaymentRazorpay extends PaymentInterface {
             return Promise.resolve();
         }
 
-        const referenceId = `${this.pos.config.id}/${order.uuid}/${this.payment_method_id.id}/${this.pos.config.currency_id.name}/${line.amount}/${sequenceNumber}`;
+        const referenceId = Sha1.hash(
+            `${this.pos.config.id}/${order.uuid}/${this.payment_method_id.id}/${this.pos.config.currency_id.name}/${line.amount}/${sequenceNumber}`
+        );
         localStorage.setItem("referenceId", referenceId);
         const data = {
             amount: line.amount,
