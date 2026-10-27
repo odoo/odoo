@@ -3,6 +3,7 @@
 
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
+from lxml import html
 
 from odoo import fields, http
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
@@ -268,6 +269,17 @@ class TestWebsiteAccess(HttpCaseWithUserDemo, OnlineEventCase):
         resp = self.url_open('/event')
         self.assertTrue(published_events[0].name in resp.text, 'Public must see the published events.')
         self.assertFalse(unpublished_events[0].name in resp.text, 'Public should not see the unpublished events.')
+
+    def test_event_structured_data_dates(self):
+        event = self.events[0]
+        page = html.fromstring(self.url_open(f'/event/{event.id}/register').content)
+        self.assertEqual(page.xpath('//*[@itemprop="startDate"]/@content'), [f'{event.date_begin}Z'])
+        self.assertEqual(page.xpath('//*[@itemprop="endDate"]/@content'), [f'{event.date_end}Z'])
+
+        page = html.fromstring(self.url_open('/event').content)
+        start_dates = page.xpath('//*[@itemprop="startDate"]/@content')
+        self.assertIn(f'{event.date_begin}Z', start_dates)
+        self.assertTrue(all(start_date.endswith('Z') for start_date in start_dates))
 
     def test_sitemap(self):
         resp = self.url_open('/sitemap.xml')

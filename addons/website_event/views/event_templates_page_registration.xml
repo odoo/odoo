@@ -91,8 +91,6 @@
                         </div>
                         <!-- Date & Time (desktop only) -->
                         <div class="d-none d-lg-block border-bottom pb-2 mb-3">
-                            <meta itemprop="startDate" t-att-content="event.date_begin.isoformat()" />
-                            <meta itemprop="endDate" t-att-content="event.date_end.isoformat()" />
                             <t t-call="website_event.event_description_dates"/>
                         </div>
                         <header class="d-lg-none mt-4 mb-2 py-3 border-top">
