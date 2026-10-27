@@ -3,7 +3,7 @@
 from dateutil.relativedelta import relativedelta
 
 import odoo
-from odoo import fields
+from odoo import Command, fields
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
@@ -560,3 +560,27 @@ class TestPoSBasicConfig(TestPoSCommon):
 
         with self.assertRaisesRegex(UserError, "currently in use in a point of sale"):
             category1.unlink()
+
+    def test_set_journal_on_bank_payment_method_with_open_session(self):
+        bank_pm = self.env['pos.payment.method'].create({
+            'name': 'Bank without journal',
+            'type': 'bank',
+            'receivable_account_id': self.pos_receivable_bank.id,
+            'config_ids': [Command.link(self.config.id)],
+        })
+        self.open_new_session()
+        self.assertTrue(bank_pm.open_session_ids)
+
+        # Other protected fields remain locked
+        with self.assertRaisesRegex(UserError, "close and validate"):
+            bank_pm.receivable_account_id = self.cash_pm1.receivable_account_id
+
+        bank_pm.write({
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'outstanding_account_id': self.outstanding_bank.id,
+        })
+        self.assertEqual(bank_pm.journal_id, self.company_data['default_journal_bank'])
+        self.assertEqual(bank_pm.outstanding_account_id, self.outstanding_bank)
+
+        with self.assertRaisesRegex(UserError, "close and validate"):
+            bank_pm.journal_id = False
