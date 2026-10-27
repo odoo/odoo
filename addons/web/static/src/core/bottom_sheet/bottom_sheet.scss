@@ -39,13 +39,8 @@
         position: absolute;
         inset: 0;
         overflow-y: auto;
-        scrollbar-width: none;
         touch-action: pan-y;
         pointer-events: auto;
-
-        &::-webkit-scrollbar {
-            display: none;
-        }
 
         &.o_bottom_sheet_rail_prevent_overscroll,
         &.o_bottom_sheet_rail_prevent_overscroll * {
@@ -110,7 +105,6 @@
         background-color: var(--o-bs-dropdown-bg);
 
         .o_bottom_sheet_body {
-            scrollbar-width: none;
             flex: 1;
         }
     }
