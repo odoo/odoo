@@ -58,14 +58,23 @@ class ResourceCalendar(models.Model):
         default=lambda self: self.env.company, index='btree_not_null')
     country_id = fields.Many2one(related='company_id.country_id')
     country_code = fields.Char(related='country_id.code', depends=['country_id'])
-    leave_ids = fields.One2many(
-        'resource.calendar.leaves', 'calendar_id', 'Time Off')
+    leave_ids = fields.Many2many(
+        'resource.calendar.leaves',
+        'resource_calendar_leaves_calendar_rel',
+        'calendar_id',
+        'leave_id',
+        string='Time Off',
+    )
     full_time_required_hours = fields.Float(
         string="Full Time Equivalent",
         compute="_compute_full_time_required_hours", store=True, readonly=False,
         help="Number of hours to work on the company schedule to be considered as fulltime.")
-    global_leave_ids = fields.One2many(
-        'resource.calendar.leaves', 'calendar_id', 'Global Time Off',
+    global_leave_ids = fields.Many2many(
+        'resource.calendar.leaves',
+        'resource_calendar_global_leaves_rel',
+        'calendar_id',
+        'leave_id',
+        string='Global Time Off',
         compute='_compute_global_leave_ids', store=True, readonly=False,
         domain=[('resource_id', '=', False)],
     )
@@ -564,7 +573,7 @@ class ResourceCalendar(models.Model):
         if domain is None:
             domain = [('count_as', '=', 'absence')]
         if self:
-            domain = domain + [('calendar_id', 'in', [False] + self.ids)]
+            domain = domain + [('calendar_ids', 'in', [False] + self.ids)]
 
         all_resources = set()
         if not resources_per_tz or self:

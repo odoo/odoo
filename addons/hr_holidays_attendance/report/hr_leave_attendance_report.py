@@ -227,19 +227,20 @@ class HrLeaveAttendanceReport(models.Model):
                            ct.tz,
                            gs.day::date AS day
                       FROM resource_calendar_leaves AS rcl
+                      JOIN resource_calendar_leaves_calendar_rel AS rel
+                            ON rel.leave_id = rcl.id
                       JOIN (
                             SELECT DISTINCT company_id, calendar_id, tz
                               FROM emp_cal
                            ) AS ct
                         ON ct.company_id = rcl.company_id
-                       AND ct.calendar_id = rcl.calendar_id
+                       AND ct.calendar_id = rel.calendar_id
                 CROSS JOIN LATERAL generate_series(
                                (rcl.date_from AT TIME ZONE 'UTC' AT TIME ZONE ct.tz)::date,
                                (rcl.date_to AT TIME ZONE 'UTC' AT TIME ZONE ct.tz)::date,
                                INTERVAL '1 day'
                            ) AS gs(day)
                      WHERE rcl.resource_id IS NULL
-                       AND rcl.calendar_id IS NOT NULL
 
                     UNION ALL
 
@@ -259,7 +260,11 @@ class HrLeaveAttendanceReport(models.Model):
                                INTERVAL '1 day'
                            ) AS gs(day)
                      WHERE rcl.resource_id IS NULL
-                       AND rcl.calendar_id IS NULL
+                       AND NOT EXISTS (
+                            SELECT 1
+                            FROM resource_calendar_leaves_calendar_rel AS rel
+                            WHERE rel.leave_id = rcl.id
+                        )
                    ) AS closure
         """)
 

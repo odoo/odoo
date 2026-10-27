@@ -262,7 +262,7 @@ class MrpWorkorder(models.Model):
                     wo.date_finished = wo._calculate_date_finished()
                 wo.leave_id = wo.env['resource.calendar.leaves'].create({
                     'name': wo.display_name,
-                    'calendar_id': wo.workcenter_id.resource_calendar_id.id,
+                    'calendar_ids': [wo.workcenter_id.resource_calendar_id.id],
                     'date_from': wo.date_start,
                     'date_to': wo.date_finished,
                     'resource_id': wo.workcenter_id.resource_id.id,
@@ -664,7 +664,7 @@ class MrpWorkorder(models.Model):
                 'duration_expected': best_duration,
                 'leave_id': [Command.create({
                     'name': wo.display_name,
-                    'calendar_id': best_workcenter.resource_calendar_id.id,
+                    'calendar_ids': [best_workcenter.resource_calendar_id.id],
                     'date_from': best_date_start,
                     'date_to': best_date_finished,
                     'resource_id': best_workcenter.resource_id.id,
@@ -728,7 +728,7 @@ class MrpWorkorder(models.Model):
             if not wo.leave_id:
                 leave = self.env['resource.calendar.leaves'].create({
                     'name': wo.display_name,
-                    'calendar_id': wo.workcenter_id.resource_calendar_id.id,
+                    'calendar_ids': [wo.workcenter_id.resource_calendar_id.id],
                     'date_from': date_start,
                     'date_to': wo._calculate_date_finished(date_start),
                     'resource_id': wo.workcenter_id.resource_id.id,

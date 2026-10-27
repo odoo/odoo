@@ -1002,7 +1002,7 @@ class HrLeave(models.Model):
                         days = (end_date - start_date).days + 1
                     else:
                         filtered_public_holiday = public_holidays.filtered(lambda h:
-                            (h.calendar_id == calendar or not h.calendar_id) and
+                            (calendar in h.calendar_ids or not h.calendar_ids) and
                             h.company_id == leave.company_id
                         )
                         days = ceil(leave._subtract_public_holidays(filtered_public_holiday) / 24)
@@ -1063,7 +1063,7 @@ class HrLeave(models.Model):
                 # When include_public_holidays_in_duration is True ("Public Holiday Included" enabled),
                 # the leave should count the full day even if it falls on a public holiday.
                 filtered_public_holidays = public_holidays.filtered(lambda h:
-                    (h.calendar_id == calendar or not h.calendar_id) and
+                    (calendar in h.calendar_ids or not h.calendar_ids) and
                     h.company_id == leave.company_id
                 ) if not leave.work_entry_type_id.include_public_holidays_in_duration else self.env['resource.calendar.leaves']
                 hours = leave._subtract_public_holidays(filtered_public_holidays)
@@ -1995,7 +1995,7 @@ class HrLeave(models.Model):
             'count_as': self.work_entry_type_id.count_as,
             'elligible_for_accrual_rate': self.work_entry_type_id.elligible_for_accrual_rate,
             'resource_id': self.employee_id.resource_id.id,
-            'calendar_id': self.resource_calendar_id.id,
+            'calendar_ids': [self.resource_calendar_id.id],
             'holiday_id': self.id,
             'date_from': self.date_from,
             'date_to': self.date_to,

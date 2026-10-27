@@ -136,7 +136,7 @@ class HrVersion(models.Model):
 
         :rtype: odoo.fields.Domain
         """
-        return Domain('calendar_id', 'in', [False] + self.resource_calendar_id.ids)
+        return Domain('calendar_ids', 'in', [False] + self.resource_calendar_id.ids)
 
     def _get_leave_domain(self, start_dt, end_dt):
         """Return the ``resource.calendar.leaves`` domain used for work entry generation.
@@ -333,7 +333,7 @@ class HrVersion(models.Model):
             for leave in itertools.chain(all_leaves_by_resource[False], all_leaves_by_resource[resource.id]):
                 for resource in resources_list:
                     # Global time off is not for this calendar, can happen with multiple calendars in self
-                    if resource and leave.calendar_id and leave.calendar_id != calendar and not leave.resource_id:
+                    if resource and leave.calendar_ids and calendar not in leave.calendar_ids and not leave.resource_id:
                         continue
                     tz = tz if tz else ZoneInfo((resource or version).tz)
                     if (tz, start_dt) in tz_dates:

@@ -576,7 +576,7 @@ class TestFrenchLeaves(TransactionCase):
         tz = ZoneInfo(self.env.user.tz or 'UTC')
         self.env['resource.calendar.leaves'].with_company(self.company).create({
             'name': 'Public Holiday',
-            'calendar_id': False,
+            'calendar_ids': False,
             'date_from': datetime(2024, 12, 26, 0, 0, 0, tzinfo=tz).astimezone(timezone.utc).replace(tzinfo=None),
             'date_to': datetime(2024, 12, 26, 23, 59, 59, tzinfo=tz).astimezone(timezone.utc).replace(tzinfo=None),
             'resource_id': False,
