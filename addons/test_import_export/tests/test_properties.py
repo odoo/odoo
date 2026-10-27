@@ -580,6 +580,7 @@ class TestPropertiesExportImport(HttpCase):
             ('[{"type": "char", "string": "TextType"}]', "Some key are missing"),
             ('[{"name": "char_prop", "type": "char", "wrong_key": 1}]', "Some key are not allowed"),
             ('[{"name": "char_prop", "type": "wrong", "string": "TextType"}]', "Wrong property type"),
+            ('[{"name": false, "type": "char", "string": "TextType"}]', "property name False is not set"),
         ]:
             with self.subTest(definition=definition):
                 results = self.ModelDefinition.load(['properties_definition'], [[definition]])
