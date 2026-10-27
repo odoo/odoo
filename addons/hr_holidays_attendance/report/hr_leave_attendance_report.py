@@ -95,7 +95,7 @@ class HrLeaveAttendanceReport(models.Model):
               JOIN (VALUES (0), (1)) AS p(parity)
                 ON rca.week_type IS NULL
                 OR rca.week_type::integer = p.parity
-          GROUP BY rca.calendar_id, day_key, rca.week_type
+          GROUP BY rca.calendar_id, day_key
         """)
 
     def _sql_day_key(self, day_column):
