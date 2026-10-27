@@ -2,6 +2,7 @@ import {
     contains,
     defineMailModels,
     openDiscuss,
+    openFormView,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
@@ -64,6 +65,129 @@ for (const subscribed of [false, true]) {
     });
 }
 
+<<<<<<< 5216389b8c7ea6d85a7b27121f390e3beb8ffa7e
+||||||| b7f2a1d4e9bc76a11882b77be832811b6769c125
+for (const preference of ["inbox", "email"]) {
+    for (const isFocused of [false, true]) {
+        test(`record push: ${preference} preference with focused window ${isFocused}`, async () => {
+            const pyEnv = await startServer();
+            pyEnv["res.users"].write(serverState.userId, { notification_type: preference });
+            const [partnerId, otherPartnerId] = pyEnv["res.partner"].create([
+                { name: "Displayed contact" },
+                { name: "Other contact" },
+            ]);
+            await start();
+            const thread = getService("mail.store")["mail.thread"].insert({
+                model: "res.partner",
+                id: partnerId,
+            });
+            await openDiscuss(`res.partner_${partnerId}`);
+            await waitUntil(() => thread.isDisplayed);
+            expect(thread.isDisplayed).toBe(true);
+            patchWithCleanup(parent.document, { hasFocus: () => isFocused });
+            patchWithCleanup(browser.navigator.serviceWorker, {
+                controller: {
+                    postMessage(message) {
+                        expect(message.type).toBe("notification-display-response");
+                        expect.step(message.payload.correlationId);
+                    },
+                },
+            });
+            for (const [resId, correlationId] of [
+                [partnerId, "displayed record"],
+                [otherPartnerId, "other record"],
+            ]) {
+                browser.navigator.serviceWorker.dispatchEvent(
+                    new MessageEvent("message", {
+                        data: {
+                            type: "notification-display-request",
+                            payload: { model: "res.partner", res_id: resId, correlationId },
+                        },
+                    })
+                );
+            }
+            expect.verifySteps(isFocused ? ["displayed record"] : []);
+        });
+    }
+}
+
+=======
+for (const preference of ["inbox", "email"]) {
+    for (const isFocused of [false, true]) {
+        test(`record push: ${preference} preference with focused window ${isFocused}`, async () => {
+            const pyEnv = await startServer();
+            pyEnv["res.users"].write(serverState.userId, { notification_type: preference });
+            const [partnerId, otherPartnerId] = pyEnv["res.partner"].create([
+                { name: "Displayed contact" },
+                { name: "Other contact" },
+            ]);
+            await start();
+            await openFormView("res.partner", partnerId);
+            await contains(".o-mail-Chatter");
+            patchWithCleanup(parent.document, { hasFocus: () => isFocused });
+            patchWithCleanup(browser.navigator.serviceWorker, {
+                controller: {
+                    postMessage(message) {
+                        expect(message.type).toBe("notification-display-response");
+                        expect.step(message.payload.correlationId);
+                    },
+                },
+            });
+            for (const [resId, correlationId] of [
+                [partnerId, "displayed record"],
+                [otherPartnerId, "other record"],
+            ]) {
+                browser.navigator.serviceWorker.dispatchEvent(
+                    new MessageEvent("message", {
+                        data: {
+                            type: "notification-display-request",
+                            payload: { model: "res.partner", res_id: resId, correlationId },
+                        },
+                    })
+                );
+            }
+            expect.verifySteps([]);
+        });
+    }
+}
+
+for (const isFocused of [false, true]) {
+    test(`channel push: focused window ${isFocused}`, async () => {
+        const pyEnv = await startServer();
+        const [channelId, otherChannelId] = pyEnv["discuss.channel"].create([
+            { name: "Displayed channel" },
+            { name: "Other channel" },
+        ]);
+        await start();
+        await openDiscuss(channelId);
+        await contains(".o-mail-DiscussContent-threadName[title='Displayed channel']");
+        patchWithCleanup(parent.document, { hasFocus: () => isFocused });
+        patchWithCleanup(browser.navigator.serviceWorker, {
+            controller: {
+                postMessage(message) {
+                    expect(message.type).toBe("notification-display-response");
+                    expect.step(message.payload.correlationId);
+                },
+            },
+        });
+        for (const [resId, correlationId] of [
+            [channelId, "displayed channel"],
+            [otherChannelId, "other channel"],
+        ]) {
+            browser.navigator.serviceWorker.dispatchEvent(
+                new MessageEvent("message", {
+                    data: {
+                        type: "notification-display-request",
+                        payload: { model: "discuss.channel", res_id: resId, correlationId },
+                    },
+                })
+            );
+        }
+        expect.verifySteps(isFocused ? ["displayed channel"] : []);
+    });
+}
+
+>>>>>>> f47680325b1c07181005720403f9f7c356aee5c0
 test("record push: message already read in inbox", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
