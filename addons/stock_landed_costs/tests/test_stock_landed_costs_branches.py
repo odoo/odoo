@@ -45,7 +45,6 @@ class TestStockLandedCostsBranches(TestStockValuationLCCommon):
                 'product_id': self.product1.id,
                 'product_uom_qty': 1,
                 'uom_id': self.product1.uom_id.id,
-                'price_unit': 10,
             })],
         })
         receipt.action_confirm()

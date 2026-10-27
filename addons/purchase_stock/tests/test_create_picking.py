@@ -723,7 +723,6 @@ class TestCreatePicking(ProductVariantsCommon):
         self.assertEqual(len(purchase_order.picking_ids), 1)
         # check that the price list has been applied
         self.assertEqual(purchase_order.order_line.price_unit, 15)
-        self.assertEqual(purchase_order.picking_ids.move_ids.price_unit, 15)
         # update the product qty purchased
         with po_form.order_line.edit(0) as po_line:
             po_line.product_qty = 9
@@ -731,9 +730,8 @@ class TestCreatePicking(ProductVariantsCommon):
         # verify that the move for the decreased qty has been merged with the initial move
         self.assertEqual(len(purchase_order.picking_ids), 1)
         self.assertEqual(len(purchase_order.picking_ids.move_ids), 1)
-        # check that the price has been updated in the purchase order line and in the stock.move
+        # check that the price has been updated in the purchase order line
         self.assertEqual(purchase_order.order_line.price_unit, 0)
-        self.assertEqual(purchase_order.picking_ids.move_ids.price_unit, 0)
 
     def test_return_to_vendor_multi_step(self):
         self.env.user.group_ids += self.env.ref('stock.group_stock_multi_locations')

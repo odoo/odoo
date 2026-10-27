@@ -73,7 +73,6 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
                 'uom_id': self.ref('uom.product_uom_dozen'),
                 'location_id': self.ref('stock.stock_location_customers'),
                 'location_dest_id': self.warehouse.lot_stock_id.id,
-                'price_unit': 17.00 / 12.00,
             })],
         })
         picking_landed_cost_4 = self.env['stock.picking'].new(vals)
@@ -83,7 +82,6 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
 
         # We perform all the tests for LC_pick_3
         # I receive picking LC_pick_3, and check how many quants are created
-        picking_landed_cost_3.move_ids.price_unit = 1.0
         picking_landed_cost_3.action_confirm()
         picking_landed_cost_3.action_assign()
         picking_landed_cost_3._action_done()
@@ -125,7 +123,6 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
 
         # We perform all the tests for LC_pick_4
         # I receive picking LC_pick_4, and check how many quants are created
-        picking_landed_cost_4.move_ids.price_unit = 17.0/12.0
         picking_landed_cost_4.action_confirm()
         picking_landed_cost_4.action_assign()
         picking_landed_cost_4._action_done()
@@ -235,7 +232,6 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
             'location_dest_id': stock_location.id,
             'move_ids': [(0, 0, {
                 'product_id': self.product_a.id,
-                'price_unit': price,
                 'uom_id': self.product_a.uom_id.id,
                 'product_uom_qty': qty,
                 'location_id': supplier_location_id,

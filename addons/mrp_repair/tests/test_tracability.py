@@ -306,7 +306,6 @@ class TestRepairTraceability(TestMrpCommon):
                     'lot_ids': [(4, sn_lot.id)],
                     'repair_line_type': 'remove',
                     'location_dest_id': scrap_location_id,
-                    'price_unit': 0,
                 })
             ],
         })

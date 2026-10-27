@@ -41,7 +41,6 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon, TestStockValua
         move = self._make_in_move(
             self.finished,
             1,
-            unit_cost=30,
             create_picking=True,
             partner_id=self.subcontractor_partner1.id,
         )
@@ -52,12 +51,12 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon, TestStockValua
         # Cost of comp1 = 10
         # Cost of comp2 = 20
         # --> Cost of finished = 10 + 20 = 30
-        # Additionnal cost = 30 (from the purchase order line or directly set on the stock move here)
-        # Total cost of subcontracting 1 unit of finished = 30 + 30 = 60
+        # No bill, no purchase order, no vendor price means no additional cost
+        # Total cost of subcontracting 1 unit of finished = 30 + 0
         # Account move lines of the mo should only take components into account. The bill will take care of the extra cost.
-        self.assertEqual(mo1.move_finished_ids.value, 60)
+        self.assertEqual(mo1.move_finished_ids.value, 30)
         self.assertEqual(picking_receipt.move_ids.value, 0)
-        self.assertEqual(picking_receipt.move_ids.product_id.total_value, 60)
+        self.assertEqual(picking_receipt.move_ids.product_id.total_value, 30)
 
         amls = self.env['account.move.line'].search([('id', 'not in', all_amls_ids)])
         all_amls_ids += amls.ids
@@ -69,8 +68,8 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon, TestStockValua
             {'account_id': self.account_stock_valuation.id,   'product_id': self.comp2.id,       'debit': 0.0,   'credit': 20.0},
             {'account_id': self.account_production.id,    'product_id': self.comp2.id,       'debit': 20.0,  'credit': 0.0},
             # Receipt from subcontractor
-            {'account_id': self.account_production.id,    'product_id': self.finished.id,    'debit': 0.0,   'credit': 60.0},
-            {'account_id': self.account_stock_valuation.id,   'product_id': self.finished.id,    'debit': 60.0, 'credit': 0.0},
+            {'account_id': self.account_production.id, 'product_id': self.finished.id, 'debit': 0.0, 'credit': 30.0},
+            {'account_id': self.account_stock_valuation.id, 'product_id': self.finished.id, 'debit': 30.0, 'credit': 0.0},
         ])
 
         self.env.user.group_ids += self.env.ref('stock.group_stock_multi_locations')
@@ -125,7 +124,6 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon, TestStockValua
             'move_ids': [Command.create({
                 'product_id': self.finished.id,
                 'product_uom_qty': todo_nb,
-                'price_unit': 50,
             })],
         })
         picking_receipt.action_confirm()
@@ -185,10 +183,10 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon, TestStockValua
         self.assertEqual(len(f_move), 5)
         self.assertRecordValues(f_move, [
             {'is_in': False, 'value': 0, 'quantity': 4},
-            {'is_in': True, 'value': 160, 'quantity': 1},
-            {'is_in': True, 'value': 160, 'quantity': 1},
-            {'is_in': True, 'value': 160, 'quantity': 1},
-            {'is_in': True, 'value': 160, 'quantity': 1},
+            {'is_in': True, 'value': 110, 'quantity': 1},
+            {'is_in': True, 'value': 110, 'quantity': 1},
+            {'is_in': True, 'value': 110, 'quantity': 1},
+            {'is_in': True, 'value': 110, 'quantity': 1},
         ])
 
     def test_tracked_compo_and_backorder(self):
@@ -213,7 +211,6 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon, TestStockValua
             'move_ids': [Command.create({
                 'product_id': self.finished.id,
                 'product_uom_qty': 10,
-                'price_unit': 50,
             })],
         })
         receipt.action_confirm()
@@ -243,11 +240,11 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon, TestStockValua
         )])
         self.assertRecordValues(f_move, [
             {'quantity': 5, 'value': 0, 'state': 'done'},
-            {'quantity': 5, 'value': 5 * (10 + 20 + 50), 'state': 'done'},
+            {'quantity': 5, 'value': 5 * (10 + 20), 'state': 'done'},
             {'quantity': 3, 'value': 0, 'state': 'done'},
-            {'quantity': 3, 'value': 3 * (10 + 20 + 50), 'state': 'done'},
+            {'quantity': 3, 'value': 3 * (10 + 20), 'state': 'done'},
             {'quantity': 2, 'value': 0, 'state': 'done'},
-            {'quantity': 2, 'value': 2 * (10 + 20 + 50), 'state': 'done'},
+            {'quantity': 2, 'value': 2 * (10 + 20), 'state': 'done'},
         ])
 
     def test_subcontract_cost_different_when_standard_price(self):

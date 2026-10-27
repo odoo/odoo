@@ -40,9 +40,7 @@ class StockMove(models.Model):
         "Manual Value", currency_field='company_currency_id',
         compute="_compute_value_manual", inverse="_inverse_value_manual")
     standard_price = fields.Float(compute='_compute_standard_price', string='Standard Price')
-
-    # To remove and only use value
-    price_unit = fields.Float("Price Unit")
+    unit_value = fields.Float("Unit Value", compute='_compute_unit_value', store=True)
     is_in = fields.Boolean(string='Is Incoming (valued)', compute='_compute_is_in', store=True)
     is_out = fields.Boolean(string='Is Outgoing (valued)', compute='_compute_is_out', store=True)
     is_dropship = fields.Boolean(string='Is Dropship', compute='_compute_is_dropship', store=True)
@@ -129,6 +127,15 @@ class StockMove(models.Model):
 
     def _compute_sql_order_partner_id(self, table):
         return SQL("%s", table.partner_id)
+
+    @api.depends('is_out', 'product_id.uom_id', 'quantity', 'uom_id', 'value')
+    def _compute_unit_value(self):
+        for move in self:
+            if qty := move.uom_id._compute_quantity(move.quantity, move.product_id.uom_id):
+                value = -move.value if move.is_out else move.value
+                move.unit_value = value / qty
+            else:
+                move.unit_value = 0
 
     def _compute_value_manual(self):
         for move in self:

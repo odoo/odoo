@@ -121,11 +121,6 @@ class PurchaseOrderLine(models.Model):
         previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
         previous_product_qty = {line.id: line.product_qty for line in lines}
         result = super().write(values)
-        if 'price_unit' in values:
-            for line in lines:
-                # Avoid updating kit components' stock.move
-                moves = line.move_ids.filtered(lambda s: s.state not in ('cancel', 'done') and s.product_id == line.product_id)
-                moves.write({'price_unit': line._get_stock_move_price_unit()})
         if 'product_qty' in values:
             lines = lines.filtered(lambda l: l.uom_id.compare(previous_product_qty[l.id], l.product_qty) != 0)
             lines.with_context(previous_product_qty=previous_product_uom_qty)._create_or_update_picking()
@@ -240,7 +235,6 @@ class PurchaseOrderLine(models.Model):
         if self.product_id.type != 'consu':
             return res
 
-        price_unit = self._get_stock_move_price_unit()
         qty = self._get_qty_procurement()
 
         move_dests = self.move_dest_ids or self.move_ids.move_dest_ids
@@ -256,10 +250,10 @@ class PurchaseOrderLine(models.Model):
         if self.uom_id.compare(qty_to_attach, 0.0) > 0:
             qty_to_push = self.product_qty - move_dests_initial_demand
             product_uom_qty, product_uom = self.uom_id._adjust_uom_quantities(qty_to_attach, self.product_id.uom_id)
-            res.append(self._prepare_stock_move_vals(picking, price_unit, product_uom_qty, product_uom))
+            res.append(self._prepare_stock_move_vals(picking, product_uom_qty, product_uom))
         if not self.uom_id.is_zero(qty_to_push):
             product_uom_qty, product_uom = self.uom_id._adjust_uom_quantities(qty_to_push, self.product_id.uom_id)
-            extra_move_vals = self._prepare_stock_move_vals(picking, price_unit, product_uom_qty, product_uom)
+            extra_move_vals = self._prepare_stock_move_vals(picking, product_uom_qty, product_uom)
             extra_move_vals['move_dest_ids'] = False  # don't attach
             res.append(extra_move_vals)
         return res
@@ -309,7 +303,7 @@ class PurchaseOrderLine(models.Model):
             raise UserError(_('The warehouse of operation type (%(operation_type)s) is inconsistent with location (%(location)s) of reordering rule (%(reordering_rule)s) for product %(product)s. Change the operation type or cancel the request for quotation.',
                               product=self.product_id.display_name, operation_type=self.order_id.picking_type_id.display_name, location=self.orderpoint_id.location_id.display_name, reordering_rule=self.orderpoint_id.display_name))
 
-    def _prepare_stock_move_vals(self, picking, price_unit, product_uom_qty, product_uom):
+    def _prepare_stock_move_vals(self, picking, product_uom_qty, product_uom):
         self.ensure_one()
         purchase_line = self
         if self.company_id != self.order_id.sudo().picking_type_id.company_id:
@@ -341,7 +335,6 @@ class PurchaseOrderLine(models.Model):
             'state': 'draft',
             'purchase_line_id': self.id,
             'company_id': self.order_id.company_id.id,
-            'price_unit': price_unit,
             'picking_type_id': self.order_id.picking_type_id.id,
             'priority': self.order_id.priority,
             'reference_ids': [Command.set(self.order_id.reference_ids.ids)],

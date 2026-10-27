@@ -122,11 +122,6 @@ class StockMove(models.Model):
         'Picked', compute='_compute_picked', inverse='_inverse_picked',
         store=True, readonly=False, copy=False, default=False,
         help="This checkbox is just indicative, it doesn't validate or generate any product moves.")
-
-    # used to record the product cost set by the user during a picking confirmation (when costing
-    # method used is 'average price' or 'real'). Value given in company currency and in product uom.
-    # as it's a technical field, we intentionally don't provide the digits attribute
-    price_unit = fields.Float('Unit Price', copy=False)
     origin = fields.Char("Source Document")
     procure_method = fields.Selection([
         ('make_to_stock', 'Default: Take From Stock'),
@@ -1347,7 +1342,7 @@ Please change the quantity done or the rounding precision in your settings.""",
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
         fields = [
-            'product_id', 'price_unit', 'procure_method', 'location_id', 'location_dest_id', 'forecasted_location_id',
+            'product_id', 'procure_method', 'location_id', 'location_dest_id', 'forecasted_location_id',
             'uom_id', 'restrict_partner_id', 'origin_returned_move_id',
             'propagate_cancel', 'description_picking', 'never_product_template_attribute_value_ids',
         ]
@@ -1378,10 +1373,6 @@ Please change the quantity done or the rounding precision in your settings.""",
             return base_getter
 
         float_precision = {f_name: (self.env['stock.move']._fields[f_name].get_digits(self.env) or (False, 2))[1] for f_name in float_fields}
-        if 'price_unit' in float_fields:
-            price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
-            currency_precision = min(self.company_id.mapped('currency_id.decimal_places')) if self.company_id else False
-            float_precision['price_unit'] = min(currency_precision, price_unit_prec) if currency_precision else price_unit_prec
 
         def _get_formatted_float_fields(move, f_name, precision):
             # Round and cast the value of move.f_name into a string so that rounding errors do not prevent the merge
@@ -1419,7 +1410,6 @@ Please change the quantity done or the rounding precision in your settings.""",
         neg_qty_moves.picking_id = False
         excluded_fields = self._prepare_merge_negative_moves_excluded_distinct_fields()
         neg_key = self._merge_move_itemgetter(distinct_fields, excluded_fields)
-        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
 
         for candidate_moves in candidate_moves_set:
             # First step find move to merge.
@@ -1441,12 +1431,10 @@ Please change the quantity done or the rounding precision in your settings.""",
         for neg_move in neg_qty_moves:
             # Check all the candidates that matches the same limited key, and adjust their quantities to absorb negative moves
             for pos_move in moves_by_neg_key.get(neg_key(neg_move), []):
-                new_total_value = pos_move.product_qty * pos_move.price_unit + neg_move.product_qty * neg_move.price_unit
                 # If quantity can be fully absorbed by a single move, update its quantity and remove the negative move
                 if pos_move.uom_id.compare(pos_move.product_uom_qty, abs(neg_move.product_uom_qty)) >= 0:
                     pos_move.product_uom_qty += neg_move.product_uom_qty
                     pos_move.write({
-                        'price_unit': float_round(new_total_value / pos_move.product_qty, precision_digits=price_unit_prec) if pos_move.product_qty else 0,
                         'move_dest_ids': [Command.link(m.id) for m in neg_move.mapped('move_dest_ids') if m.location_id == pos_move.location_dest_id],
                         'move_orig_ids': [Command.link(m.id) for m in neg_move.mapped('move_orig_ids') if m.location_dest_id == pos_move.location_id],
                     })
@@ -1456,7 +1444,6 @@ Please change the quantity done or the rounding precision in your settings.""",
                         moves_to_cancel |= pos_move
                     break
                 neg_move.product_uom_qty += pos_move.product_uom_qty
-                neg_move.price_unit = float_round(new_total_value / neg_move.product_qty, precision_digits=price_unit_prec)
                 pos_move.product_uom_qty = 0
                 moves_to_cancel |= pos_move
 
@@ -2471,7 +2458,6 @@ Please change the quantity done or the rounding precision in your settings.""",
             'move_dest_ids': [(4, x.id) for x in self.move_dest_ids if x.state not in ('done', 'cancel')],
             'move_orig_ids': [(4, x.id) for x in self.move_orig_ids],
             'origin_returned_move_id': self.origin_returned_move_id.id,
-            'price_unit': self.price_unit,
             'date_deadline': self.date_deadline,
         }
         if self.env.context.get('force_split_uom_id'):
