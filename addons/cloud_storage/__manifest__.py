@@ -11,10 +11,18 @@
     'assets': {
         'web.assets_backend': [
             'cloud_storage/static/src/core/common/**/*',
+            'cloud_storage/static/src/core/public_web/**/*',
             'cloud_storage/static/src/**/web/**/*',
         ],
         'mail.assets_public': [
             'cloud_storage/static/src/core/common/**/*',
+            'cloud_storage/static/src/core/public_web/**/*',
+        ],
+        'portal.assets_chatter_helpers': [
+            'cloud_storage/static/src/core/common/**/*',
+        ],
+        'web.assets_unit_tests': [
+            'cloud_storage/static/tests/**/*',
         ],
     },
     'author': 'Odoo S.A.',
