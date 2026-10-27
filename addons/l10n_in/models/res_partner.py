@@ -267,3 +267,27 @@ class ResPartner(models.Model):
             self.state_id = state_id
         if self.ref_company_ids:
             self.ref_company_ids._update_l10n_in_fiscal_position()
+
+    @api.constrains("vat", "l10n_in_gst_treatment")
+    def _check_vat_and_l10n_in_gst_treatment(self):
+        b2b_treatments = [
+            "regular",
+            "composition",
+            "deemed_export",
+            "special_economic_zone",
+            "uin_holders",
+        ]
+        for partner in self:
+            vat = (partner.vat or "").strip().upper()
+            if (
+                partner.country_code == "IN"
+                and partner.l10n_in_gst_treatment in b2b_treatments
+                and vat in {"/", "NA"}
+            ):
+                raise ValidationError(
+                    partner._build_vat_error_message(
+                        partner.country_code,
+                        partner.vat,
+                        _("partner%s", f" [{partner.name}]" if partner.name else ""),
+                    )
+                )
