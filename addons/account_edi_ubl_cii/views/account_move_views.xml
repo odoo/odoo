@@ -13,5 +13,21 @@
                     records.action_group_ungroup_lines_by_tax()
             </field>
         </record>
+
+        <record id="view_move_form_xml_readable" model="ir.ui.view">
+            <field name="name">account.move.form.inherit.xml.readable</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header/field[@name='state']" position="before">
+                    <button name="action_preview_invoice_xml" type="object" string="Preview XML"
+                            groups="account.group_account_invoice"
+                            invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')"/>
+                    <button name="action_generate_readable_pdf" type="object" string="Readable PDF"
+                            groups="account.group_account_invoice"
+                            invisible="move_type not in ('in_invoice', 'in_refund')"/>
+                </xpath>
+            </field>
+        </record>
     </data>
 </odoo>
