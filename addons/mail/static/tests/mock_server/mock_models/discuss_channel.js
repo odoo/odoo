@@ -643,6 +643,7 @@ export class DiscussChannel extends models.ServerModel {
                 channel_type: "channel",
                 group_public_id: self.group_public_id,
                 from_message_id: message?.id,
+                last_interest_dt: serializeDateTime(DateTime.now().minus({ seconds: 1 })),
                 name: message
                     ? convertBrToLineBreak(markup(message.body)).substring(0, 30)
                     : name || "New Thread",
@@ -657,7 +658,14 @@ export class DiscussChannel extends models.ServerModel {
                 "mail.record/insert",
                 new Store()
                     .add(MailMessage.browse(message.id), (res) =>
-                        res.one("linkedSubChannel", [], { value: subChannels })
+                        res.one(
+                            "linkedSubChannel",
+                            (r) => {
+                                r.extend(["last_interest_dt", "name"]);
+                                r.one("parent_channel_id", []);
+                            },
+                            { value: subChannels }
+                        )
                     )
                     .as_dict()
             );
