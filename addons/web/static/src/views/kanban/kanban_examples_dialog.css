@@ -6,17 +6,19 @@
     }
 
     .o_notebook {
-        --Notebook__link-border-color: var(--border-color);
-        --Notebook__link-border-color--hover: var(--border-color);
-        --Notebook__link-border-top-color--active: var(--o-brand-primary);
-
         /* sidebar */
-        .nav-link.active {
-            background-color: var(--o-btn-primary-background);
-            color: var(--o-btn-primary-color);
-            &, &:hover, &:focus, &:active {
-                border-left-color: var(--Notebook__link-border-color--active);
-                border-right-color: var(--Notebook__link-border-color--active);
+        &.vertical {
+            --Notebook__link-border-color: var(--border-color);
+            --Notebook__link-border-color--hover: var(--border-color);
+            --Notebook__link-border-top-color--active: var(--o-brand-primary);
+
+            .nav-link.active {
+                background-color: var(--o-btn-primary-background);
+                color: var(--o-btn-primary-color);
+                &, &:hover, &:focus, &:active {
+                    border-left-color: var(--Notebook__link-border-color--active);
+                    border-right-color: var(--Notebook__link-border-color--active);
+                }
             }
         }
 
