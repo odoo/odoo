@@ -91,6 +91,7 @@ class HrLeaveAttendanceReport(models.Model):
                    week_type,
                    SUM(duration_hours) AS hours_per_day
               FROM resource_calendar_attendance
+             WHERE display_type IS NULL
           GROUP BY calendar_id, dayofweek, week_type
         """)
 
