@@ -1200,12 +1200,11 @@ class PropertiesDefinition(Field):
                     ', '.join(required_keys),
                 )
 
-            check_property_field_value_name(property_definition['name'])
-
             property_type = property_definition.get('type')
             property_name = property_definition.get('name')
             if not property_name or property_name in properties_names:
                 raise ValueError(f'The property name {property_name!r} is not set or duplicated.')
+            check_property_field_value_name(property_name)
             properties_names.add(property_name)
 
             if property_type == 'html' and not property_name.endswith('_html'):
