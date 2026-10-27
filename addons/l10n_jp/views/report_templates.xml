@@ -10,13 +10,11 @@
             </div>
 
             <t t-call="web.external_layout_body" hide_recipient_address="True" hide_title="True">
-                <div class="o_jp_standard_header">
-                    <div class="row">
-                        <div class="col-6 pe-4">
-                            <div t-if="address" t-out="address"/>
-                        </div>
+                <div class="o_jp_standard_header row mb-3">
+                    <div class="col-6 pe-4">
+                        <div t-if="address" t-out="address"/>
                     </div>
-                    <div class="text-end mt-4">
+                    <div class="col-6 text-end">
                         <img t-if="company.logo" class="o_company_logo_big mb-2" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
                         <t t-call="web.company_address_list"/>
                     </div>
