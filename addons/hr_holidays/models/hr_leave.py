@@ -625,7 +625,8 @@ class HrLeave(models.Model):
                 continue
             hours, days = (0, 0)
             if leave.employee_id:
-                if leave.work_entry_type_id.count_as != 'absence' and leave.work_entry_type_id.request_unit == 'hour':
+                work_days_data = work_days_data_mapped[leave.date_from, leave.date_to, leave.work_entry_type_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
+                if leave.work_entry_type_id.count_as != 'absence' and leave.work_entry_type_id.request_unit == 'hour' and work_days_data['days'] <= 1:
                     hours = (leave.date_to - leave.date_from).total_seconds() / 3600
                     days = 1
                 # For flexible employees, if it's a single day leave, we force it to the real duration since the virtual intervals might not match reality on that day, especially for custom hours

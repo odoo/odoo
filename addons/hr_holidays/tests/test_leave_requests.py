@@ -3093,3 +3093,25 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_date_to': '2025-09-02',
         })
         self.assertEqual(other_leave.state, 'validate')
+
+    def test_multi_day_hourly_leave_duration(self):
+        employee = self.env['hr.employee'].sudo().create({
+            'name': 'Flexible',
+            'leave_manager_id': self.user_responsible_id,
+            'resource_calendar_id': self.employee_emp.resource_calendar_id.id,
+        })
+
+        self.holidays_type_hours.count_as = 'working_time'
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Leave',
+            'employee_id': employee.id,
+            'work_entry_type_id': self.holidays_type_hours.id,
+            'request_date_from': '2026-10-26',
+            'request_date_to': '2026-10-30',
+            'request_hour_from': 8,
+            'request_hour_to': 17,
+        })
+
+        self.assertEqual(leave.number_of_days, 5)
+        self.assertEqual(leave.number_of_hours, 40)
