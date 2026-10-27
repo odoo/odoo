@@ -331,3 +331,53 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         alt_po_id = alt_po_wizard.action_create_alternative()['res_id']
         alt_po = self.env['purchase.order'].browse(alt_po_id)
         self.assertEqual(alt_po.group_id, orig_po.group_id)
+
+    def test_blanket_order_and_regular_price_same_rfq(self):
+        """ A product priced by a blanket order and a product with a regular vendor
+        price, procured together for the same vendor, must end on a single RFQ
+        linked to the blanket order, whatever their order in the batch.
+        """
+        unit = self.ref("uom.product_uom_unit")
+        warehouse = self.env.ref('stock.warehouse0')
+        route_buy = self.ref('purchase_stock.route_warehouse0_buy')
+        route_mto = warehouse.mto_pull_id.route_id.id
+        stock_location = self.env.ref('stock.stock_location_stock')
+        customer_location = self.env.ref('stock.stock_location_customers')
+        requisition_type = self.env['purchase.requisition.type'].create({
+            'name': 'Blanket test',
+            'quantity_copy': 'none',
+        })
+        for agreement_first in (False, True):
+            with self.subTest(agreement_first=agreement_first):
+                vendor = self.env['res.partner'].create({'name': 'Vendor'})
+                product_agreement, product_regular = self.env['product.product'].create([{
+                    'name': 'Product Agreement',
+                    'type': 'product',
+                    'route_ids': [Command.set([route_buy, route_mto])],
+                }, {
+                    'name': 'Product Regular',
+                    'type': 'product',
+                    'seller_ids': [Command.create({'partner_id': vendor.id, 'price': 50})],
+                    'route_ids': [Command.set([route_buy, route_mto])],
+                }])
+                requisition = self.env['purchase.requisition'].create({
+                    'type_id': requisition_type.id,
+                    'vendor_id': vendor.id,
+                    'line_ids': [Command.create({'product_id': product_agreement.id, 'product_qty': 18, 'price_unit': 41})],
+                })
+                requisition.action_in_progress()
+                products = product_agreement + product_regular if agreement_first else product_regular + product_agreement
+                moves = self.env['stock.move'].create([{
+                    'name': product.name,
+                    'procure_method': 'make_to_order',
+                    'location_id': stock_location.id,
+                    'location_dest_id': customer_location.id,
+                    'product_id': product.id,
+                    'product_uom': unit,
+                    'product_uom_qty': 10.0,
+                } for product in products])
+                moves._action_confirm()
+                purchase_order = self.env['purchase.order'].search([('partner_id', '=', vendor.id)])
+                self.assertEqual(len(purchase_order), 1, "Both products should be ordered on a single RFQ")
+                self.assertEqual(purchase_order.requisition_id, requisition)
+                self.assertEqual(purchase_order.order_line.product_id, products)

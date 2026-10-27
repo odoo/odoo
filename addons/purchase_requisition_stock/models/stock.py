@@ -24,6 +24,12 @@ class StockRule(models.Model):
             )
         return domain
 
+    def _sort_procurements_by_po_domain(self, procurements_by_po_domain):
+        return sorted(
+            super()._sort_procurements_by_po_domain(procurements_by_po_domain),
+            key=lambda item: not any(leaf[0] == 'requisition_id' for leaf in item[0]),
+        )
+
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
