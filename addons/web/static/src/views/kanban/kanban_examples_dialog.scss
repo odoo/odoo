@@ -6,18 +6,20 @@
     }
 
     .o_notebook {
-        --Notebook__link-border-color: #{$border-color};
-        --Notebook__link-border-color--hover: #{$border-color};
-        --Notebook__link-border-top-color--active: #{$o-brand-primary};
-
         // sidebar
-        .nav-link.active {
-            $o-btn-primary-theme-colors: map-get($o-btns-bs-override, "primary");
-            background-color: map-get($o-btn-primary-theme-colors, "background");
-            color: map-get($o-btn-primary-theme-colors, "color");
-            &, &:hover, &:focus, &:active {
-                border-left-color: var(--Notebook__link-border-color--active);
-                border-right-color: var(--Notebook__link-border-color--active);
+        &.vertical {
+            --Notebook__link-border-color: #{$border-color};
+            --Notebook__link-border-color--hover: #{$border-color};
+            --Notebook__link-border-top-color--active: #{$o-brand-primary};
+
+            .nav-link.active {
+                $o-btn-primary-theme-colors: map-get($o-btns-bs-override, "primary");
+                background-color: map-get($o-btn-primary-theme-colors, "background");
+                color: map-get($o-btn-primary-theme-colors, "color");
+                &, &:hover, &:focus, &:active {
+                    border-left-color: var(--Notebook__link-border-color--active);
+                    border-right-color: var(--Notebook__link-border-color--active);
+                }
             }
         }
 
