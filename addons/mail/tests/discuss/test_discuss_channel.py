@@ -1430,6 +1430,39 @@ class TestChannelInternals(MailCommon, HttpCase):
         expected_member_ids = [self.partner_employee.id, self.guest.id, self.env.user.partner_id.id]
         self.assertCountEqual(actual_member_ids, expected_member_ids)
 
+    def test_last_message_scoped_to_channels_asking_for_it(self):
+        channel_with, channel_without = self.env["discuss.channel"].create(
+            [
+                {
+                    "channel_member_ids": [
+                        Command.create({"partner_id": self.partner_employee.id})
+                    ],
+                    "name": name,
+                }
+                for name in ("With last message", "Without last message")
+            ]
+        )
+        message_with = channel_with.message_post(body="last of with", message_type="comment")
+        message_without = channel_without.message_post(
+            body="last of without", message_type="comment"
+        )
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        res = self.make_jsonrpc_request(
+            "/mail/store",
+            {
+                "fetch_params": [
+                    ["discuss.channel", {"ids": channel_with.ids, "with_last_message": True}],
+                    ["discuss.channel", {"ids": channel_without.ids}],
+                ],
+            },
+        )
+        channel_by_id = {c["id"]: c for c in res["discuss.channel"]}
+        self.assertTrue(channel_by_id[channel_with.id].get("last_message_fetched"))
+        self.assertNotIn("last_message_fetched", channel_by_id[channel_without.id])
+        message_ids = {m["id"] for m in res.get("mail.message", [])}
+        self.assertIn(message_with.id, message_ids)
+        self.assertNotIn(message_without.id, message_ids)
+
     def test_channel_add_members_push_notification(self):
         invited_user = mail_new_test_user(self.env, login="invitee_push_lang", groups="base.group_user")
         invited_user.partner_id.lang = False

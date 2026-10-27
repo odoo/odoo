@@ -59,13 +59,15 @@ const storeServicePatch = {
      * @param {{ with_last_message?: boolean }} [options]
      */
     async fetchChannel(channelId, { with_last_message = false } = {}) {
-        const fetchParam = this.fetchParams.find(([name]) => name === "discuss.channel");
+        // only batched with the fetches asking the same, so that the last message is only fetched
+        // for the channels that asked for it
+        const fetchParam = this.fetchParams.find(
+            ([name, params]) =>
+                name === "discuss.channel" && params.with_last_message === with_last_message
+        );
         if (fetchParam) {
             const [, params, dataRequest] = fetchParam;
             params.ids.push(channelId);
-            if (with_last_message) {
-                params.with_last_message = true;
-            }
             await dataRequest._resultResolvers.promise;
         } else {
             await this.fetchStoreData("discuss.channel", {

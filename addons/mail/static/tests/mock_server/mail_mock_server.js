@@ -971,83 +971,8 @@ async function mail_thread_subscribe(request) {
 }
 
 function processRequest(fetchParams) {
-    /** @type {import("mock_models").DiscussChannel} */
-    const DiscussChannel = this.env["discuss.channel"];
-    /** @type {import("mock_models").DiscussChannelMember} */
-    const DiscussChannelMember = this.env["discuss.channel.member"];
-    /** @type {import("mock_models").MailMessage} */
-    const MailMessage = this.env["mail.message"];
     const store = new Store();
-    // Per-request aggregates, batched in a single add once all fetch params have been processed
-    // (mirrors the `_process_request_loop` overrides on WebclientController and
-    // DiscussChannelWebclientController). The mock env has no mutable request context, so these
-    // live on the per-request store instead of `request.env.context`.
-    store.request_message_ids = new Set();
-    store.add_inbox_fields = false;
-    store.add_chatter_fields = false;
-    store.request_channel_ids = new Set();
-    store.add_channels_last_message = false;
-    store.add_channels_last_needaction = false;
     storeHandlerRegistry.execute_for_user(this, store, fetchParams);
-    // messages (WebclientController layer)
-    if (store.request_message_ids.size) {
-        const fields_params = {};
-        if (store.add_inbox_fields) {
-            fields_params.inbox_fields = true;
-        }
-        if (store.add_chatter_fields) {
-            fields_params.chatter_fields = true;
-        }
-        store.add(MailMessage.browse([...store.request_message_ids]), "_store_message_fields", {
-            fields_params,
-        });
-    }
-    // channels (DiscussChannelWebclientController layer)
-    if (store.request_channel_ids.size) {
-        const channelIds = [...store.request_channel_ids];
-        // is_self is a per-current-user compute only refreshed at create/write in the mock
-        DiscussChannelMember.browse(DiscussChannelMember.search([]))._compute_is_self();
-        store.add(DiscussChannel.browse(channelIds), "_store_channel_fields");
-        const selfMemberIds = channelIds
-            .map(
-                (channelId) =>
-                    DiscussChannelMember._filter([
-                        ["channel_id", "=", channelId],
-                        ["is_self", "=", true],
-                    ])[0]
-            )
-            .filter(Boolean)
-            .map((member) => member.id);
-        store.add(DiscussChannelMember.browse(selfMemberIds), ["is_favorite"]);
-        if (store.add_channels_last_message) {
-            const lastMessageIds = channelIds
-                .map(
-                    (channelId) =>
-                        MailMessage._filter([
-                            ["model", "=", "discuss.channel"],
-                            ["res_id", "=", channelId],
-                        ]).sort((a, b) => b.id - a.id)[0]
-                )
-                .filter(Boolean)
-                .map((message) => message.id);
-            store.add(MailMessage.browse(lastMessageIds), "_store_message_fields");
-            store.add(DiscussChannel.browse(channelIds), { last_message_fetched: true });
-        }
-        if (store.add_channels_last_needaction) {
-            const lastNeedactionMessageIds = channelIds
-                .map((channelId) =>
-                    MailMessage._filter([
-                        ["model", "=", "discuss.channel"],
-                        ["res_id", "=", channelId],
-                    ])
-                        .sort((a, b) => b.id - a.id)
-                        .find((message) => MailMessage._needaction(message))
-                )
-                .filter(Boolean)
-                .map((message) => message.id);
-            store.add(MailMessage.browse(lastNeedactionMessageIds), "_store_message_fields");
-        }
-    }
     return store;
 }
 
@@ -1057,9 +982,7 @@ export function _resolve_messages(store, fetch_params, { add_to_store = true } =
     const res = MailMessage._message_fetch(makeKwArgs(fetch_params));
     const messageIds = res.messages.map((message) => message.id);
     if (add_to_store) {
-        for (const messageId of messageIds) {
-            store.request_message_ids.add(messageId);
-        }
+        store.add(MailMessage.browse(messageIds), "_store_message_fields");
     }
     store.resolve_data_request((r) => {
         for (const [key, value] of Object.entries(res)) {
@@ -1068,7 +991,8 @@ export function _resolve_messages(store, fetch_params, { add_to_store = true } =
             }
         }
         // Serialize with the empty field list: messages resolve as ids in the data request; the
-        // actual `_store_message_fields` serialization happens once in the post-loop batch.
+        // actual `_store_message_fields` serialization comes from the add above, or from the
+        // caller's add when `add_to_store` is false.
         r.many("messages", [], { value: MailMessage.browse(messageIds) });
     });
     return res.messages;

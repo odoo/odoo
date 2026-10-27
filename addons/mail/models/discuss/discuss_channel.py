@@ -1767,7 +1767,7 @@ class DiscussChannel(models.Model):
                 "self_member_id",
                 lambda res: (
                     res.from_method("_store_member_fields"),
-                    res.extend(["custom_notifications"]),
+                    res.extend(["custom_notifications", "is_favorite"]),
                     res.extend(["last_interest_dt", "message_unread_counter"]),
                     res.attr("message_unread_counter_bus_id", bus_last_id),
                     res.extend(["mute_until_dt", "new_message_separator"]),
@@ -1777,6 +1777,16 @@ class DiscussChannel(models.Model):
                 ),
                 only_data=True,
             )
+
+    def _store_channel_last_message_fields(self, res: Store.FieldList):
+        res.store.add(self._get_last_messages(), "_store_message_fields")
+        res.attr("last_message_fetched", True)
+
+    def _store_channel_last_needaction_fields(self, res: Store.FieldList):
+        res.store.add(
+            self.filtered("message_needaction_counter")._get_last_needaction_messages(),
+            "_store_message_fields",
+        )
 
     # User methods
 

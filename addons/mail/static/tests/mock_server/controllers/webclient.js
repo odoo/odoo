@@ -27,13 +27,12 @@ registerStoreHandler(
         const ResUsers = this.env["res.users"];
         // is_self is a per-current-user compute only refreshed at create/write in the mock
         DiscussChannelMember.browse(DiscussChannelMember.search([]))._compute_is_self();
-        const rtcInvitedChannelIds = DiscussChannelMember._filter([
-            ["is_self", "=", true],
-            ["rtc_inviting_session_id", "!=", false],
-        ]).map((member) => member.channel_id);
-        for (const channelId of rtcInvitedChannelIds) {
-            store.request_channel_ids.add(channelId);
-        }
+        const channelIds = new Set(
+            DiscussChannelMember._filter([
+                ["is_self", "=", true],
+                ["rtc_inviting_session_id", "!=", false],
+            ]).map((member) => member.channel_id)
+        );
         if (!ResUsers._is_public(this.env.uid)) {
             const odoobotChatMemberChannelIds = DiscussChannelMember._filter([
                 ["partner_id", "=", serverState.odoobotId],
@@ -47,9 +46,11 @@ registerStoreHandler(
                 ["id", "in", myMemberChannelIds],
             ]);
             for (const channelId of odoobotChatIds) {
-                store.request_channel_ids.add(channelId);
+                channelIds.add(channelId);
             }
         }
+        const channels = DiscussChannel.browse([...channelIds]);
+        store.add(channels, "_store_channel_fields");
     },
     { audience: "everyone" }
 );
@@ -140,7 +141,6 @@ registerStoreHandler(
         const MailMessage = this.env["mail.message"];
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
-        store.add_chatter_fields = true;
         const thread = this.env[params.thread_model].browse(params.thread_id);
         const messages = _resolve_messages.call(this, store, {
             ...params.fetch_params,

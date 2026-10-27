@@ -233,6 +233,8 @@ registerStoreHandler(
 registerStoreHandler(
     "/mail/messaging_menu/mail.message/load_more",
     function store_messaging_menu_mail_message_load_more(store, params) {
+        /** @type {import("mock_models").MailMessage} */
+        const MailMessage = this.env["mail.message"];
         const { tab_id, filter_ids, exclude_ids, limit, search_term } = params;
         const domain = _get_menu_tab_full_domain(this.env, tab_id, filter_ids);
         if (exclude_ids?.length) {
@@ -240,7 +242,10 @@ registerStoreHandler(
         }
         const messages = _resolve_messages.call(this, store, { domain, limit, search_term });
         if (messages.length) {
-            store.add_inbox_fields = true;
+            store.add(
+                MailMessage.browse(messages.map((message) => message.id)),
+                "_store_message_inbox_fields"
+            );
         }
         store.resolve_data_request((res) => res.attr("is_fully_loaded", messages.length < limit));
     }
@@ -286,11 +291,10 @@ registerStoreHandler(
             );
             channelIds.push(...otherIds);
         }
-        for (const channelId of channelIds) {
-            store.request_channel_ids.add(channelId);
-        }
-        store.add_channels_last_message = true;
-        store.add_channels_last_needaction = true;
+        const channels = DiscussChannel.browse(channelIds);
+        store.add(channels, "_store_channel_fields");
+        store.add(channels, "_store_channel_last_message_fields");
+        store.add(channels, "_store_channel_last_needaction_fields");
         store.resolve_data_request({ is_fully_loaded: channelIds.length < limit });
     },
     { audience: "everyone" }
