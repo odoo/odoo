@@ -1,7 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
+
 from odoo import http
 from odoo.http import request
 from odoo.tools import verify_hash_signed
+
+_logger = logging.getLogger(__name__)
 
 
 class SafaricomController(http.Controller):
@@ -16,7 +20,10 @@ class SafaricomController(http.Controller):
             data = request.get_json_data()
 
             # Verify the signed payload to get the payment method ID
-            decoded_payload = verify_hash_signed(request.env["pos.payment.method"].sudo().env, "pos_safaricom", payload)
+            decoded_payload = verify_hash_signed(request.env["pos.payment.method"].sudo().env, "pos_safaricom_stk", payload)
+            if not decoded_payload:
+                _logger.warning("Safaricom STK push callback rejected: invalid or expired payload")
+                return request.make_json_response({"ResultCode": "1", "ResultDesc": "Error processing callback"})
 
             # Find the specific payment method using the signed payload
             payment_method = request.env['pos.payment.method'].sudo().search([
@@ -45,6 +52,9 @@ class SafaricomController(http.Controller):
             if data and decoded_payload:
                 return request.make_json_response({"ResultCode": "0", "ResultDesc": "Accepted"})
 
+            _logger.warning("Safaricom C2B validation callback rejected: invalid payload or empty body")
+            return request.make_json_response({"ResultCode": "C2B00011", "ResultDesc": "Rejected"})
+
         except ValueError:
             return request.make_json_response({"ResultCode": "C2B00011", "ResultDesc": "Rejected"})
 
@@ -71,6 +81,9 @@ class SafaricomController(http.Controller):
                     payment_method._create_payment_transaction(trans_id, trans_amount, msisdn, name)
 
                 return request.make_json_response({"ResultCode": "0", "ResultDesc": "Accepted"})
+
+            _logger.warning("Safaricom C2B confirmation callback rejected: invalid payload or empty body")
+            return request.make_json_response({"ResultCode": "C2B00011", "ResultDesc": "Rejected"})
 
         except ValueError:
             return request.make_json_response({"ResultCode": "C2B00011", "ResultDesc": "Rejected"})

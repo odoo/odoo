@@ -144,7 +144,7 @@ class PosPaymentMethod(models.Model):
             if not phone_number:
                 return {'error': _("Invalid phone number format. Please use format: 2547XXXXXXXX")}
 
-            signed_hash_payload = hash_sign(self.sudo().env, "pos_safaricom", {"payment_method_id": self.id}, expiration_hours=6)
+            signed_hash_payload = hash_sign(self.sudo().env, "pos_safaricom_stk", {"payment_method_id": self.id}, expiration_hours=6)
 
             payload = {
                 'BusinessShortCode': self._get_business_shortcode(),
@@ -278,6 +278,12 @@ class PosPaymentMethod(models.Model):
         if (self.env['transaction.lipa.na.mpesa'].search([('trans_id', '=', trans_id)])):
             return
 
+        if self.env['pos.payment'].search_count([
+            ('transaction_id', '=', trans_id),
+            ('payment_method_id.use_payment_terminal', '=', 'safaricom'),
+        ], limit=1):
+            return
+
         self.env['transaction.lipa.na.mpesa'].create({
             'trans_id': trans_id,
             'name': name,
@@ -308,7 +314,7 @@ class PosPaymentMethod(models.Model):
                 'RefNo': data.get('ref', ''),
                 'Amount': int(data.get('amount', 0)),
                 'TrxCode': data.get('trxCode', 'BG'),
-                'CPI': data.get('cpi', self._get_till_number()),
+                'CPI': data.get('cpi', self._get_business_shortcode()),
                 'Size': data.get('size', '300'),
             }
 

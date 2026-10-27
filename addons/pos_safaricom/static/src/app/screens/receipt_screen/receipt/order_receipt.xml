@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_safaricom.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('paymentlines')]" position="inside">
+            <div t-if="line.payment_method_id.use_payment_terminal === 'safaricom' and line.transaction_id">
+                Transaction ID: <t t-esc="line.transaction_id"/>
+            </div>
+        </xpath>
+    </t>
+</templates>
