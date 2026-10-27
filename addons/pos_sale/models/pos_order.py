@@ -150,7 +150,7 @@ class PosOrder(models.Model):
 
             if pos_line.sale_order_origin_id:
                 move["name"] = pos_line.display_name
-                if move['extra_tax_data'].get('computation_key') == 'down_payment' and pos_line.down_payment_details:
+                if move.get('extra_tax_data', {}).get('computation_key') == 'down_payment' and pos_line.down_payment_details:
                     downpayment_details = ast.literal_eval(pos_line.down_payment_details)
                     if downpayment_details and downpayment_details[0].get('percentage_value'):
                         move["name"] += " of " + str(downpayment_details[0].get('percentage_value')) + "%"
