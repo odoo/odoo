@@ -3,6 +3,7 @@
 import odoo
 
 from odoo import Command
+from odoo.tests import new_test_user
 from odoo.addons.pos_hr.tests.test_frontend import TestPosHrHttpCommon
 from odoo.addons.point_of_sale.tests.test_res_config_settings import TestConfigureShops
 
@@ -83,3 +84,44 @@ class TestConfigureShopsPoSHR(TestPosHrHttpCommon, TestConfigureShops):
         self.assertIn(branch_admin, branch_config.advanced_employee_ids)
         self.assertNotIn(self.manager1, branch_config.advanced_employee_ids)
         self.assertEqual(branch_config.advanced_employee_ids.company_id, branch)
+
+    def test_multi_config_write_keeps_managers_per_company(self):
+        """Writing on configs of different companies must only add the PoS
+           managers of each config's own company."""
+        branch = self.env['res.company'].create({
+            'name': 'Branch 1',
+            'parent_id': self.env.company.id,
+            'chart_template': self.env.company.chart_template,
+        })
+        branch_config = self.env['pos.config'].with_company(branch).create({'name': 'Branch Point of Sale'})
+        branch_manager_user = new_test_user(
+            self.env,
+            login="branch_manager_user",
+            groups="point_of_sale.group_pos_manager",
+            company_id=branch.id,
+            company_ids=[Command.set(branch.ids)],
+        )
+        branch_manager = self.env['hr.employee'].create({
+            'name': 'Branch Manager',
+            'company_id': branch.id,
+            'user_id': branch_manager_user.id,
+        })
+        configs = self.main_pos_config + branch_config
+        configs.write({'name': 'Multi-write'})
+        configs.sudo().write({'name': 'Multi-write sudo'})
+        branch_config.with_context(from_settings_view=True).write({'name': 'Branch settings'})
+
+        self.assertIn(self.manager1, self.main_pos_config.advanced_employee_ids)
+        self.assertIn(self.manager2, self.main_pos_config.advanced_employee_ids)
+        self.assertNotIn(branch_manager, self.main_pos_config.advanced_employee_ids)
+        self.assertEqual(self.main_pos_config.advanced_employee_ids.company_id, self.env.company)
+        self.assertIn(branch_manager, branch_config.advanced_employee_ids)
+        self.assertNotIn(self.manager1, branch_config.advanced_employee_ids)
+        self.assertNotIn(self.manager2, branch_config.advanced_employee_ids)
+        self.assertEqual(branch_config.advanced_employee_ids.company_id, branch)
+
+    def test_multi_config_write_does_not_mutate_vals(self):
+        vals = {'name': 'Multi-write', 'advanced_employee_ids': [Command.link(self.emp4.id)]}
+        second_config = self.main_pos_config.copy()
+        (self.main_pos_config + second_config).write(vals)
+        self.assertEqual(vals, {'name': 'Multi-write', 'advanced_employee_ids': [Command.link(self.emp4.id)]})
