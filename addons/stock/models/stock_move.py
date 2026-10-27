@@ -929,6 +929,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         orderpoints = self._get_orderpoints_to_update()
         orderpoints.invalidate_recordset(['qty_to_order', 'qty_forecast'])
         self.env.add_to_compute(self.env['stock.warehouse.orderpoint']._fields['qty_to_order_computed'], orderpoints)
+        self.env.add_to_compute(self.env['stock.warehouse.orderpoint']._fields['deadline_date'], orderpoints)
 
     def _get_orderpoints_to_update(self):
         domains = []
@@ -2363,6 +2364,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         orderpoints = self._get_orderpoints_to_update()
         res = super().unlink()
         self.env.add_to_compute(self.env['stock.warehouse.orderpoint']._fields['qty_to_order_computed'], orderpoints)
+        self.env.add_to_compute(self.env['stock.warehouse.orderpoint']._fields['deadline_date'], orderpoints)
         return res
 
     def _prepare_move_split_vals(self, qty):
