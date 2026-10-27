@@ -145,6 +145,10 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             TicketScreen.deleteOrder("002"),
             Dialog.confirm(),
             Chrome.closePrintingWarning(),
+            {
+                content: "wait for order 002 to be actually deleted",
+                trigger: ".ticket-screen:not(:has(.order-row:contains(002)))",
+            },
             Chrome.isSyncStatusConnected(),
             TicketScreen.selectOrder("005"),
             TicketScreen.loadSelectedOrder(),
