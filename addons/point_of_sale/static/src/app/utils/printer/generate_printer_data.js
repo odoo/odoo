@@ -238,12 +238,21 @@ export class GeneratePrinterData {
         }
 
         const order = this.order.raw;
-        let amount_return_currency = 0;
-        if (this.order.payment_ids[0]?.isDifferentCurrency) {
-            amount_return_currency = this.order.amount_return * this.order.orderCurrency.rate;
+        let amount_return_currency = false;
+        if (this.order.amount_return && this.order.payment_ids[0]?.isDifferentCurrency) {
+            amount_return_currency = this.formatCurrency(
+                this.order.amount_return * this.order.orderCurrency.rate,
+                this.order.orderCurrency
+            );
         }
         return {
-            order: { ...order, amount_return_currency: amount_return_currency },
+            order: {
+                ...order,
+                amount_return: this.order.amount_return
+                    ? this.formatCurrency(this.order.amount_return)
+                    : false,
+                amount_return_currency: amount_return_currency,
+            },
             config: this.config.raw,
             company: this.company.raw,
             partner: this.order.partner_id ? this.order.partner_id.raw : false,
