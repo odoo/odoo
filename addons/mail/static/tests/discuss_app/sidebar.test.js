@@ -17,8 +17,17 @@ import {
 import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { PEEK_TAB_DELAY } from "@mail/core/public_web/messaging_menu/messaging_menu";
 import { PEEK_CLOSE_DELAY, PEEK_DELAY } from "@mail/utils/common/hooks";
-import { describe, expect, test, waitFor } from "@odoo/hoot";
-import { animationFrame, hover, press, rightClick, waitForNone } from "@odoo/hoot-dom";
+import { describe, expect, mockTouch, test, waitFor } from "@odoo/hoot";
+import {
+    animationFrame,
+    hover,
+    leave,
+    manuallyDispatchProgrammaticEvent,
+    press,
+    queryOne,
+    rightClick,
+    waitForNone,
+} from "@odoo/hoot-dom";
 import { advanceTime, mockDate } from "@odoo/hoot-mock";
 import {
     Command,
@@ -1035,4 +1044,111 @@ test("hidden sidebar list has no tab looking selected without a conversation", a
     await waitForNone(".o-mail-MessagingMenu-tab.active");
     await click("button[title='Expand sidebar']");
     await waitFor(".o-mail-MessagingMenu-tab.active[data-id='channel']:count(1)");
+});
+
+test("hovering a conversation of the sidebar shows a preview of its last message", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "Hello!",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss();
+    await waitFor(".o-mail-MessagingMenuItem:has(:text('Demo')):count(1)");
+    await hover(".o-mail-MessagingMenuItem:has(:text('Demo')) .o-mail-NotificationItem");
+    await advanceTime(PEEK_DELAY);
+    await waitFor(".o-mail-ThreadPreview:text('Hello!'):count(1)");
+    await leave();
+    await waitForNone(".o-mail-ThreadPreview");
+});
+
+test("hovering the call participants of a conversation does not show its preview", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_id: channelId,
+        channel_member_id: pyEnv["discuss.channel.member"].create({
+            channel_id: channelId,
+            partner_id: pyEnv["res.partner"].create({ name: "Demo" }),
+        }),
+    });
+    await start();
+    await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
+    await waitFor(
+        ".o-mail-MessagingMenuItem:has(:text('General')) .o-mail-MessagingMenuCallParticipants:count(1)"
+    );
+    await hover(".o-mail-MessagingMenuCallParticipants");
+    await advanceTime(PEEK_DELAY);
+    await animationFrame();
+    expect(".o-mail-ThreadPreview").toHaveCount(0);
+    await hover(".o-mail-MessagingMenuItem:has(:text('General')) .o-mail-NotificationItem");
+    await advanceTime(PEEK_DELAY);
+    await waitFor(".o-mail-ThreadPreview:count(1)");
+});
+
+test("clicking a conversation of the sidebar closes its preview and shows none while it is open", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
+    await hover(".o-mail-MessagingMenuItem:has(:text('General')) .o-mail-NotificationItem");
+    await advanceTime(PEEK_DELAY);
+    await waitFor(".o-mail-ThreadPreview:count(1)");
+    await click(".o-mail-MessagingMenuItem:has(:text('General')) .o-mail-NotificationItem");
+    await waitFor(".o-mail-DiscussContent-threadName:value(General)");
+    await waitForNone(".o-mail-ThreadPreview");
+    await leave();
+    await hover(".o-mail-MessagingMenuItem:has(:text('General')) .o-mail-NotificationItem");
+    await advanceTime(PEEK_DELAY);
+    await animationFrame();
+    expect(".o-mail-ThreadPreview").toHaveCount(0);
+});
+
+test("hovering a conversation shows no preview while a menu of the sidebar is open", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Sales" }]);
+    await start();
+    await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
+    await click(".o-mail-MessagingMenuItem:has(:text('General')) [title='Channel Actions']");
+    await waitFor(".o-discuss-dropdownMenu:count(1)");
+    await hover(".o-mail-MessagingMenuItem:has(:text('Sales')) .o-mail-NotificationItem");
+    await advanceTime(PEEK_DELAY);
+    await animationFrame();
+    expect(".o-mail-ThreadPreview").toHaveCount(0);
+    await press("Escape");
+    await waitForNone(".o-discuss-dropdownMenu");
+    await leave();
+    await hover(".o-mail-MessagingMenuItem:has(:text('Sales')) .o-mail-NotificationItem");
+    await advanceTime(PEEK_DELAY);
+    await waitFor(".o-mail-ThreadPreview:count(1)");
+});
+
+test("tapping a conversation of the sidebar shows no preview", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
+    const channelItem = ".o-mail-MessagingMenuItem:has(:text('General')) .o-mail-NotificationItem";
+    mockTouch(true);
+    await hover(channelItem);
+    // browsers follow a tap with compatibility mouse events
+    await manuallyDispatchProgrammaticEvent(queryOne(channelItem), "mouseenter");
+    await advanceTime(PEEK_DELAY);
+    await animationFrame();
+    expect(".o-mail-ThreadPreview").toHaveCount(0);
+    mockTouch(false);
+    await leave();
+    await hover(channelItem);
+    await advanceTime(PEEK_DELAY);
+    await waitFor(".o-mail-ThreadPreview:count(1)");
 });

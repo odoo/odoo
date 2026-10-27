@@ -19,7 +19,6 @@ export class NotificationItem extends Component {
     static template = "mail.NotificationItem";
 
     markAsReadRef = signal.ref();
-    rootRef = signal.ref();
 
     setup() {
         super.setup();
@@ -45,10 +44,12 @@ export class NotificationItem extends Component {
                     t.instanceOf(this.store["mail.guest"]),
                 ])
                 .optional(),
+            rootRef: t.signal(t.instanceOf(HTMLElement)).optional(() => signal.ref()),
             slots: t.object().optional(),
             textClassName: t.string().optional(""),
             thread: t.instanceOf(this.store["mail.thread"]).optional(),
         });
+        this.rootRef = this.props.rootRef;
         this.rootHover = useHover(this.rootRef);
     }
 
