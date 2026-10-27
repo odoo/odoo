@@ -15,6 +15,7 @@ export class SkillsListRenderer extends CommonSkillsListRenderer {
         this.actionService = useService("action");
 
         onWillStart(async () => {
+<<<<<<< a7d19e144c65ec28854985160591c98ceef53e80:addons/hr/static/src/fields/skills_one2many/skills_one2many.js
             const res = await this.orm.searchCount("hr.skill.type", []);
             this.anySkills = res > 0;
             [this.user] = await this.orm.read("res.users", [user.userId], ["employee_ids"]);
@@ -26,6 +27,30 @@ export class SkillsListRenderer extends CommonSkillsListRenderer {
                     ["id"]
                 )
             ).map((record) => record["id"]);
+||||||| a5447ae78fa15f25e69ce44fd154bf1d2f1e383a:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.js
+            const res = await this.orm.searchCount('hr.skill.type', []);
+            this.anySkills = res > 0;
+            [this.user] = await this.orm.read("res.users", [user.userId], ["employee_ids"]);
+            this.IsHrUser = await user.hasGroup("hr.group_hr_user");
+            this.userSubordinates = (await this.orm.searchRead(
+                "hr.employee",
+                [["id", "child_of", this.user.employee_ids]],
+                ["id"]
+            )).map((record) => record["id"]);
+=======
+            const [skillTypeCount, isHrUser, subordinateIds] = await Promise.all([
+                this.orm.searchCount("hr.skill.type", []),
+                user.hasGroup("hr.group_hr_user"),
+                this.orm
+                    .read("res.users", [user.userId], ["employee_ids"])
+                    .then(([{ employee_ids }]) =>
+                        this.orm.search("hr.employee", [["id", "child_of", employee_ids]])
+                    ),
+            ]);
+            this.anySkills = skillTypeCount > 0;
+            this.IsHrUser = isHrUser;
+            this.userSubordinates = subordinateIds;
+>>>>>>> 2eb00bdc04fab2c7938a01e2db9ff612d778f5c5:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.js
         });
     }
 
