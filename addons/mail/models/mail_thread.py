@@ -4290,6 +4290,7 @@ class MailThread(models.AbstractModel):
                 'body': self._notify_by_push_get_body(message),
                 'icon': self._notify_by_push_get_icon(message),
                 'data': {
+                    "message_id": message.id,
                     'model': message.model or '',
                     'res_id': message.res_id or '',
                 }
