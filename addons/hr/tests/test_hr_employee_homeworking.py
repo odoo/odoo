@@ -55,6 +55,7 @@ class TestHrEmployeeHomeworking(common.TransactionCase):
         "2025-07-09 ==> Wednesday"
         self.assertEqual(self.employee_1.work_location_name, "Home")
         self.assertEqual(self.employee_1.work_location_type, "home")
+        self.assertEqual(self.employee_1.hr_icon_display, 'presence_home')
 
         self.env['hr.employee.location'].create({
             'work_location_id': self.work_office_1.id,
@@ -64,6 +65,11 @@ class TestHrEmployeeHomeworking(common.TransactionCase):
         self.employee_1._compute_exceptional_location_id()
         self.assertEqual(self.employee_1.work_location_name, "Office 1")
         self.assertEqual(self.employee_1.work_location_type, "office")
+        self.assertEqual(self.employee_1.hr_icon_display, 'presence_office')
+
+        self.work_office_1.location_type = 'other'
+        self.assertEqual(self.employee_1.work_location_type, 'other')
+        self.assertEqual(self.employee_1.hr_icon_display, 'presence_other')
 
     @freeze_time("2025-07-09")
     def test_change_current_work_location(self):
@@ -79,3 +85,15 @@ class TestHrEmployeeHomeworking(common.TransactionCase):
         test_user = new_test_user(self.env, login='test_user', groups='base.group_user', name='testuser')
         test_user.action_create_employee()
         test_user.with_user(test_user).monday_location_id = self.work_office_1
+
+    @freeze_time('2025-07-09')
+    def test_presence_icon_follows_work_location_type(self):
+        for location_type in ('home', 'office', 'other'):
+            with self.subTest(location_type=location_type):
+                self.work_home.location_type = location_type
+                self.assertEqual(self.employee_1.work_location_type, location_type)
+                self.assertEqual(self.employee_1.hr_icon_display, f'presence_{location_type}')
+
+        self.employee_1.wednesday_location_id = False
+        self.assertFalse(self.employee_1.work_location_type)
+        self.assertEqual(self.employee_1.hr_icon_display, f'presence_{self.employee_1.hr_presence_state}')
