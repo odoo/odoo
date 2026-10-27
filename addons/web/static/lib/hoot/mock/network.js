@@ -258,8 +258,12 @@ const requestResponseMixin = {
     },
 };
 
+/** @type {Set<string>} */
+const objectURLs = new Set();
 /** @type {Set<NetworkInstance>} */
 const openNetworkInstances = new Set();
+/** @type {Set<(worker: MockSharedWorker | MockWorker) => any>} */
+const workerConnections = new Set();
 
 /** @type {ReturnType<parseNetworkDelay>} */
 let getNetworkDelay = null;
@@ -267,8 +271,6 @@ let getNetworkDelay = null;
 let mockFetchFn = null;
 /** @type {((websocket: ServerWebSocket) => any) | null} */
 let mockWebSocketConnection = null;
-/** @type {((worker: MockSharedWorker | MockWorker) => any)[]} */
-const mockWorkerConnections = [];
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -278,7 +280,7 @@ export function cleanupNetwork() {
     // Mocked functions
     mockFetchFn = null;
     mockWebSocketConnection = null;
-    mockWorkerConnections.length = 0;
+    workerConnections.clear();
 
     // Network instances
     for (const instance of openNetworkInstances) {
@@ -298,6 +300,12 @@ export function cleanupNetwork() {
         }
     }
     openNetworkInstances.clear();
+
+    // Object URLs: revoked to release the blobs they retain
+    for (const url of objectURLs) {
+        URL.revokeObjectURL(url);
+    }
+    objectURLs.clear();
 
     // Cookie
     mockCookie._jar = $create(null);
@@ -479,7 +487,7 @@ export function mockWebSocket(onWebSocketConnected) {
  *  (see {@link mockFetch});
  *  - the `onWorkerConnected` callback will be called after a worker has been created.
  *
- * @param {typeof mockWorkerConnections[number]} [onWorkerConnected]
+ * @param {Parameters<(typeof workerConnections)["add"]>[0]} [onWorkerConnected]
  * @example
  *  mockWorker((worker) => {
  *      worker.addEventListener("message", (event) => {
@@ -489,7 +497,7 @@ export function mockWebSocket(onWebSocketConnected) {
  */
 export function mockWorker(onWorkerConnected) {
     ensureTest("mockWorker");
-    mockWorkerConnections.push(onWorkerConnected);
+    workerConnections.add(onWorkerConnected);
 }
 
 /**
@@ -951,13 +959,26 @@ export class MockSharedWorker extends MockEventTarget {
         // First port has to be started manually
         this._messageChannel.port2.start();
 
-        for (const onWorkerConnected of mockWorkerConnections) {
+        for (const onWorkerConnected of workerConnections) {
             onWorkerConnected(this);
         }
     }
 }
 
 export class MockURL extends URL {
+    /** @type {typeof URL["createObjectURL"]} */
+    static createObjectURL(obj) {
+        const url = super.createObjectURL(obj);
+        objectURLs.add(url);
+        return url;
+    }
+
+    /** @type {typeof URL["revokeObjectURL"]} */
+    static revokeObjectURL(url) {
+        objectURLs.delete(url);
+        return super.revokeObjectURL(url);
+    }
+
     constructor(url, base) {
         super(url, base || mockLocation);
     }
@@ -1058,7 +1079,7 @@ export class MockWorker extends MockEventTarget {
             this.dispatchEvent(new MessageEvent("message", { data: ev.data }));
         });
 
-        for (const onWorkerConnected of mockWorkerConnections) {
+        for (const onWorkerConnected of workerConnections) {
             onWorkerConnected(this);
         }
     }
