@@ -370,7 +370,7 @@
                                 <span class="o_stat_text">Packages</span>
                             </div>
                         </button>
-                        <button class="oe_stat_button" name="action_view_serial_numbers" type="object" icon="build" invisible="serial_numbers_count == 0 or state == 'draft'">
+                        <button class="oe_stat_button" name="action_view_serial_numbers" type="object" icon="build" invisible="serial_numbers_count &lt;= 1 or state == 'draft'">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value"><field name="serial_numbers_count"/></span>
                                 <span class="o_stat_text">Serial Numbers</span>
