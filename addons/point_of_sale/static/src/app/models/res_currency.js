@@ -10,7 +10,7 @@ export class ResCurrency extends numbers.AbstractNumbers {
     }
 
     get defaultCurrency() {
-        return this.config.company_id.currency_id;
+        return this.config.currency_id;
     }
 
     get precision() {
@@ -22,11 +22,11 @@ export class ResCurrency extends numbers.AbstractNumbers {
     }
 
     rawConvert(amount) {
-        return this.isDefaultCurrency ? amount : amount * this.rate;
+        return this.isDefaultCurrency ? amount : (amount * this.rate) / this.defaultCurrency.rate;
     }
 
     rawConvertToDefaultCurrency(amount) {
-        return this.isDefaultCurrency ? amount : amount / this.rate;
+        return this.isDefaultCurrency ? amount : (amount * this.defaultCurrency.rate) / this.rate;
     }
 
     convert(amount) {
