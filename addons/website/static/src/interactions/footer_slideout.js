@@ -13,6 +13,10 @@ export class FooterSlideout extends Interaction {
     };
 
     setup() {
+        this.reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (this.reducedMotion) {
+            return;
+        }
         this.mainEl = this.el.querySelector(":scope > main");
         this.updateSlideoutEffect();
         const resizeObserver = new ResizeObserver(this.throttled(this.updateSlideoutEffect));
@@ -21,6 +25,9 @@ export class FooterSlideout extends Interaction {
     }
 
     start() {
+        if (this.reducedMotion) {
+            return;
+        }
         // On safari, add a pixel div over the footer, after in the DOM, and add
         // a background attachment on it as it fixes the glitches that appear
         // when scrolling the page with a footer slide out.
