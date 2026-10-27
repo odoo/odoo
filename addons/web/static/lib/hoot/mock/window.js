@@ -27,6 +27,7 @@ import {
 import { MockConsole } from "./console";
 import { mockCrypto } from "./crypto";
 import { MockDate, MockIntl } from "./date";
+import { cleanupIndexedDB, MockIDBFactory } from "./indexed_db";
 import { MockClipboardItem, mockNavigator } from "./navigator";
 import {
     MockBlob,
@@ -501,6 +502,7 @@ const mediaElements = new Set();
 /** @type {Set<MockMediaQueryList>} */
 const mediaQueryLists = new Set();
 const mockConsole = new MockConsole();
+const mockIndexedDB = new MockIDBFactory();
 const mockLocalStorage = new MockStorage();
 const mockMediaValues = { ...DEFAULT_MEDIA_VALUES };
 const mockSessionStorage = new MockStorage();
@@ -556,6 +558,7 @@ const WINDOW_MOCK_DESCRIPTORS = {
     Date: { value: MockDate, writable: false },
     fetch: { value: interactor("server", mockedFetch).as("fetch"), writable: false },
     history: { value: mockHistory },
+    indexedDB: { value: mockIndexedDB },
     innerHeight: { get: () => _getCurrentDimensions().height },
     innerWidth: { get: () => _getCurrentDimensions().width },
     isSecureContext: { value: true, writable: false },
@@ -595,6 +598,9 @@ export function cleanupWindow() {
     // Storages
     mockLocalStorage.clear();
     mockSessionStorage.clear();
+
+    // IndexedDB
+    cleanupIndexedDB();
 
     // Media
     for (const element of mediaElements) {

@@ -5,6 +5,19 @@ import { queryOne } from "@odoo/hoot-dom";
 import { EventBus } from "@odoo/owl";
 import { mountForTest, parseUrl } from "../local_helpers";
 
+/**
+ * @param {string} name
+ * @returns {Promise<IDBDatabase>}
+ */
+function openDatabase(name) {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(name);
+        request.onupgradeneeded = () => expect.step(`upgrade:${name}`);
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => resolve(request.result);
+    });
+}
+
 describe(parseUrl(import.meta.url), () => {
     class TestBus extends EventBus {
         addEventListener(type) {
@@ -111,5 +124,23 @@ describe(parseUrl(import.meta.url), () => {
         await microTick();
 
         expect.verifySteps([]);
+    });
+
+    // ! WARNING: the following 2 tests need to be run sequentially to work, as they
+    // ! attempt to test the in-between-tests IndexedDB cleanup.
+    test("IndexedDB databases are deleted between tests: setup", async () => {
+        await openDatabase("hoot_test_db");
+        await openDatabase("hoot_test_db");
+
+        expect.verifySteps(["upgrade:hoot_test_db"]);
+
+        // Left opening at the end of the test
+        indexedDB.open("hoot_test_pending_db");
+    });
+    test("IndexedDB databases are deleted between tests: check", async () => {
+        await openDatabase("hoot_test_db");
+        await openDatabase("hoot_test_pending_db");
+
+        expect.verifySteps(["upgrade:hoot_test_db", "upgrade:hoot_test_pending_db"]);
     });
 });
