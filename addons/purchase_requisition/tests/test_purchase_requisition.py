@@ -631,3 +631,16 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         self.assertEqual(po.partner_id, purchase_requisition.vendor_id, 'The partner should have been set from the purchase requisition')
         self.assertEqual(po.order_line.price_unit, purchase_requisition.line_ids.price_unit, 'The unit price should have been set from the purchase requisition')
         self.assertEqual(po.order_line.taxes_id, purchase_requisition.line_ids.product_id.supplier_taxes_id, 'The blanket order taxes should have been set')
+
+    def test_cancel_requisition_only_cancels_draft_po(self):
+        po_draft, po_confirmed = self.env['purchase.order'].create([{
+            'requisition_id': self.bo_requisition.id,
+            'partner_id': self.res_partner_1.id,
+            'order_line': [Command.create({'product_id': self.bo_requisition.line_ids.product_id[:1].id})],
+        } for _i in range(2)])
+        po_confirmed.button_confirm()
+
+        self.bo_requisition.action_cancel()
+        self.assertEqual(self.bo_requisition.state, 'cancel')
+        self.assertEqual(po_draft.state, 'cancel')
+        self.assertEqual(po_confirmed.state, 'purchase')
