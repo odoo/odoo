@@ -1,4 +1,5 @@
 import { KanbanRecord } from "@web/views/kanban/kanban_record";
+import { isRecordRotting } from "./rotting_widget";
 
 export class RottingKanbanRecord extends KanbanRecord {
     /**
@@ -6,7 +7,7 @@ export class RottingKanbanRecord extends KanbanRecord {
      */
     getRecordClasses() {
         let classes = super.getRecordClasses();
-        if (this.props.record.data.is_rotting) {
+        if (isRecordRotting(this.props.record)) {
             classes += " oe_kanban_card_rotting";
         }
         return classes;
