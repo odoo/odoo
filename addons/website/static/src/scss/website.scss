@@ -2479,7 +2479,7 @@ header {
 }
 
 @if index(('slideout_slide_hover', 'slideout_shadow'), o-website-value('footer-effect')) {
-    @media (min-width: 992px) {
+    @media (min-width: 992px) and (prefers-reduced-motion: no-preference) {
         #wrapwrap.o_footer_effect_enable {
             > main {
                 @if o-website-value('layout') == 'full' {
