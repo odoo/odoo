@@ -160,8 +160,9 @@ class HrAttendanceOvertimeRule(models.Model):
                 if self.quantity_period == 'week':
                     date_start -= timedelta(days=date_start.weekday())  # Monday
                     date_end = date_start + timedelta(days=6)           # Sunday
-                period_start = datetime.combine(date_start, datetime.min.time(), tzinfo=UTC)
-                period_end = datetime.combine(date_end, datetime.max.time(), tzinfo=UTC)
+                tz = ZoneInfo(employee._get_tz(date_start))
+                period_start = datetime.combine(date_start, datetime.min.time(), tzinfo=tz)
+                period_end = datetime.combine(date_end, datetime.max.time(), tzinfo=tz)
 
                 expected_work_time = employee._get_expected_attendances(period_start, period_end)
                 expected_duration = sum(
@@ -239,16 +240,19 @@ class HrAttendanceOvertimeRule(models.Model):
                     ):
                         week_key = day_date + relativedelta(days=6 - day_date.weekday())
                         duration_key = (rule.id, week_key)
+                        # the day (and its week) of the attendances is a local date: the expected hours cover the
+                        # same local day, in the employee's timezone (see _get_localized_times)
+                        tz = ZoneInfo(employee._get_tz(day_date))
                         if duration_key not in weekly_expected_duration_limit:
                             week_start = datetime.combine(
-                                day_date - timedelta(days=day_date.weekday()), datetime.min.time(), tzinfo=UTC
+                                day_date - timedelta(days=day_date.weekday()), datetime.min.time(), tzinfo=tz
                             )
-                            week_end = datetime.combine(week_key, datetime.max.time(), tzinfo=UTC)
+                            week_end = datetime.combine(week_key, datetime.max.time(), tzinfo=tz)
                             weekly_expected_duration_limit[duration_key] = sum_intervals(
                                 version.employee_id._get_expected_attendances(week_start, week_end)
                             )
-                        day_start = datetime.combine(day_date, datetime.min.time(), tzinfo=UTC)
-                        day_end = datetime.combine(day_date, datetime.max.time(), tzinfo=UTC)
+                        day_start = datetime.combine(day_date, datetime.min.time(), tzinfo=tz)
+                        day_end = datetime.combine(day_date, datetime.max.time(), tzinfo=tz)
                         daily_expected_duration = sum_intervals(
                             version.employee_id._get_expected_attendances(day_start, day_end)
                         )
