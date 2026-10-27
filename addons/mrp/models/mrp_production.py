@@ -3275,6 +3275,15 @@ class MrpProduction(models.Model):
         self.qty_producing = 0
         self._set_qty_producing(False)
 
+    def action_production_forecast(self):
+        self.ensure_one()
+        action = self.env['ir.actions.actions']._for_xml_id('mrp.action_mrp_production_forecast')
+        action['context'] = {
+            **literal_eval(action.get('context', '{}')),
+            'default_production_id': self.id,
+        }
+        return action
+
     def _track_execute(self, track_init_values, trackings, track_records=None):
         """
            Extend tracking behavior to manage the `previous_date_start` field

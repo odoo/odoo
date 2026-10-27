@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_mrp_production_forecast_form" model="ir.ui.view">
+            <field name="name">Production Forecast</field>
+            <field name="model">mrp.production.forecast</field>
+            <field name="arch" type="xml">
+                <form string="Split Production" class="modal-md">
+                    <group>
+                        <label for="forecasted"/>
+                        <div class="o_row">
+                            <span><field name="forecasted"/></span>
+                            <span><field name="uom_id" groups="uom.group_uom"/></span>
+                        </div>
+                        <label for="ready_to_produce"/>
+                        <div class="o_row">
+                            <span><field name="ready_to_produce"/></span>
+                            <span><field name="uom_id" groups="uom.group_uom"/></span>
+                        </div>
+                    </group>
+                    <footer>
+                        <button string="View Forecast" name="action_view_forecast" type="object" icon="east" class="oe_link p-0"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_mrp_production_forecast" model="ir.actions.act_window">
+            <field name="name">Forecast</field>
+            <field name="res_model">mrp.production.forecast</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'dialog_size': 'medium'}</field>
+        </record>
+
+    </data>
+</odoo>
