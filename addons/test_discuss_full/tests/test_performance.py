@@ -162,6 +162,71 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search mail_message_schedule (last message of the needaction message)
     #   1: select the current db snapshot
     _query_count_messaging_menu_channels = 74
+    # Queries for _query_count_init_messaging_with_chat_hub (in order):
+    #   2: _search_is_member (for current user, first occurrence)
+    #       - fetch res_users
+    #       - search discuss_channel JOIN member
+    #   3: init_messaging:
+    #       - search_fetch discuss_channel (channels_domain)
+    #       - fetch discuss_channel (_search_is_member)
+    #       - search_fetch discuss_channel (odoobot chat)
+    #   1: search discuss_channel (chat hub channel ids)
+    #   26: store add channel, once for the channels of both fetches:
+    #       - read group member (prefetch _compute_self_member_id)
+    #       - read group member (_compute_invited_member_ids)
+    #       - fetch discuss_channel_member (invited member, _compute_invited_member_ids)
+    #       - search discuss_channel_rtc_session
+    #       - fetch discuss_channel_rtc_session
+    #       - search member (channel_member_ids)
+    #       - fetch discuss_channel_member (manual prefetch)
+    #       11: member:
+    #           11: partner:
+    #               - fetch res_partner (partner)
+    #               - search res_users (partner.user_ids, _store_im_status_fields)
+    #                 [enterprise] search ai_agent (_compute_im_status ai override)
+    #               - fetch res_users (_compute_im_status)
+    #               - search mail_presence (_compute_im_status)
+    #               - fetch mail_presence (_compute_im_status)
+    #               - search hr_employee (_store_im_status_fields override)
+    #               - fetch hr_employee (_compute_work_location_type)
+    #               - search hr_employee_location (_store_im_status_fields override)
+    #               - search hr_leave (_compute_leave_status)
+    #               - read group resource_calendar_leaves (_compute_leave_status)
+    #               - fetch res_users (_read_format)
+    #       - search bus_bus (_bus_last_id)
+    #       - search_fetch ir_attachment (_compute_avatar_cache_key -> _compute_avatar_128)
+    #       - [calendar] search calendar_event (calendar_event_ids, _compute_meeting_dt)
+    #       - count discuss_channel_member (member_count)
+    #       - _compute_message_needaction
+    #       - search discuss_channel_res_groups_rel (group_ids)
+    #       - fetch res_groups (group_public_id)
+    #       - _compute_message_unread
+    #   1: search discuss_channel (last message of every channel of the request, _get_last_messages)
+    #   22: store add message:
+    #       - search mail_message_reaction
+    #       - search mail_message (_filter_accessible_from_query)
+    #       - search mail_message (_filter_accessible_from_query, ordered)
+    #       - fetch mail_message
+    #       - search mail_message_schedule
+    #       - search mail_message_res_partner_bookmarked_rel
+    #       - search message_attachment_rel
+    #       - search mail_message_res_partner_rel
+    #       - fetch mail_message_reaction
+    #       - search_fetch mail_poll (_compute_has_poll start_message_id)
+    #       - search_fetch mail_poll (_compute_has_poll end_message_id)
+    #       - search mail_message_link_preview
+    #       - search mail_notification
+    #       - search rating_rating
+    #       - fetch mail_notification
+    #       - search discuss_call_history (call_history_ids)
+    #       - fetch mail_message_subtype
+    #       - fetch res_partner (OdooBot, author of the call message)
+    #       - search res_users (OdooBot partner.user_ids)
+    #       - fetch res_users (OdooBot)
+    #       - fetch discuss_call_history
+    #       - search mail_call_artifact
+    #   1: select the current db snapshot
+    _query_count_init_messaging_with_chat_hub = 56
 
     def setUp(self):
         super().setUp()
@@ -446,6 +511,37 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             preserve_order=False,
         )
 
+    @freeze_time("2025-04-22 21:18:33")
+    @users("emp")
+    @warmup
+    def test_40_init_messaging_with_chat_hub(self):
+        """Test performance of `init_messaging` batched with the chat hub fetching its channels
+        with their last message, as on a page reload with chat windows open: the channel fields of
+        both fetches are formatted in a single batch."""
+        chat_hub_channels = (
+            self.channel_general
+            + self.channel_chat_2
+            + self.channel_chat_3
+            + self.channel_channel_public_1
+        )
+        self._run_test(
+            fn=lambda: self.make_jsonrpc_request(
+                "/mail/store",
+                {
+                    "fetch_params": [
+                        "init_messaging",
+                        [
+                            "discuss.channel",
+                            {"ids": chat_hub_channels.ids, "with_last_message": True},
+                        ],
+                    ],
+                },
+            ),
+            count=self._query_count_init_messaging_with_chat_hub,
+            results=self._get_init_messaging_with_chat_hub_result(),
+            preserve_order=False,
+        )
+
     def _get_init_store_data_result(self):
         """Returns the result of a call to init_messaging.
         The point of having a separate getter is to allow it to be overriden.
@@ -569,6 +665,86 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._res_for_employee(self.users[0].employee_ids[0]),
                 self._res_for_employee(self.users[14].employee_ids[0]),
                 self._res_for_employee(self.users[2].employee_ids[0]),
+            ],
+        }
+
+    def _get_init_messaging_with_chat_hub_result(self):
+        """Returns the result of `init_messaging` batched with the chat hub fetching its channels
+        with their last message."""
+        partner_1 = self.users[1].partner_id
+        return {
+            "discuss.call.history": [
+                {
+                    "duration_hour": self.channel_channel_group_1.call_history_ids.duration_hour,
+                    "end_dt": False,
+                    "has_recording": False,
+                    "id": self.channel_channel_group_1.call_history_ids.id,
+                },
+            ],
+            "discuss.channel": self._filter_channels_fields(
+                self._expected_result_for_channel(
+                    self.channel_channel_group_1, last_message_fetched=True
+                ),
+                self._expected_result_for_channel(self.channel_general, last_message_fetched=True),
+                self._expected_result_for_channel(
+                    self.channel_channel_public_1, last_message_fetched=True
+                ),
+                self._expected_result_for_channel(self.channel_chat_2, last_message_fetched=True),
+                self._expected_result_for_channel(self.channel_chat_3, last_message_fetched=True),
+            ),
+            "discuss.channel.member": [
+                self._res_for_member(self.channel_channel_group_1, self.users[0].partner_id),
+                self._res_for_member(self.channel_channel_group_1, self.users[2].partner_id),
+                self._res_for_member(self.channel_general, self.users[0].partner_id),
+                self._res_for_member(self.channel_channel_public_1, self.users[0].partner_id),
+                self._res_for_member(self.channel_chat_2, self.users[0].partner_id),
+                self._res_for_member(self.channel_chat_2, self.users[15].partner_id),
+                self._res_for_member(self.channel_chat_3, self.users[0].partner_id),
+                self._res_for_member(self.channel_chat_3, self.users[2].partner_id),
+            ],
+            "discuss.channel.rtc.session": [
+                self._expected_result_for_rtc_session(self.channel_channel_group_1, self.users[2]),
+            ],
+            "mail.message": self._filter_messages_fields(
+                self._expected_result_for_message(self.channel_general),
+                self._expected_result_for_message(self.channel_channel_public_1),
+                self._expected_result_for_message(self.channel_channel_group_1),
+            ),
+            "mail.notification": [
+                self._expected_result_for_notification(self.channel_channel_public_1),
+            ],
+            "mail.message.subtype": [
+                {"description": False, "id": self.env.ref("mail.mt_note").id},
+                {"description": False, "id": self.env.ref("mail.mt_important_notification").id},
+            ],
+            "mail.thread": self._filter_threads_fields(
+                self._expected_result_for_thread(self.channel_general),
+                self._expected_result_for_thread(self.channel_channel_public_1),
+                self._expected_result_for_thread(self.channel_channel_group_1),
+            ),
+            "res.groups": [{"full_name": "Role / User", "id": self.env.ref("base.group_user").id}],
+            "res.partner": self._filter_partners_fields(
+                self._expected_result_for_persona(self.users[0], also_notification=True),
+                {
+                    "avatar_128_access_token": partner_1._get_avatar_128_access_token(),
+                    "id": partner_1.id,
+                    "name": "test1",
+                    "write_date": fields.Datetime.to_string(partner_1.write_date),
+                },
+                self._expected_result_for_persona(self.users[2]),
+                self._expected_result_for_persona(self.users[15]),
+                self._expected_result_for_persona(self.user_root),
+            ),
+            "res.users": self._filter_users_fields(
+                self._res_for_user(self.users[0]),
+                self._res_for_user(self.users[2]),
+                self._res_for_user(self.users[15]),
+                self._res_for_user(self.user_root),
+            ),
+            "hr.employee": [
+                self._res_for_employee(self.users[0].employee_ids[0]),
+                self._res_for_employee(self.users[2].employee_ids[0]),
+                self._res_for_employee(self.users[15].employee_ids[0]),
             ],
         }
 
