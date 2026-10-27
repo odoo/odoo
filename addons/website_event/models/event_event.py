@@ -14,6 +14,7 @@ from odoo.addons.website.tools import text_from_html
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools.misc import get_lang, format_date
+from odoo.tools.urls import urljoin as url_join
 
 GOOGLE_CALENDAR_URL = 'https://www.google.com/calendar/render?'
 
@@ -699,11 +700,12 @@ class EventEvent(models.Model):
         event_status = (
             'EventCancelled' if self.kanban_state == 'cancel' else 'EventScheduled'
         )
+        event_url = self._get_localized_absolute_url()
         vals = {
             '@type': 'Event',
-            '@id': f'{self.website_absolute_url}/#event',
+            '@id': f'{event_url}/#event',
             'name': self.name,
-            'url': self.website_absolute_url,
+            'url': event_url,
             'startDate': self._to_iso_datetime(self.date_begin),
             'endDate': self._to_iso_datetime(self.date_end),
             'eventStatus': f'https://schema.org/{event_status}',
@@ -757,7 +759,14 @@ class EventEvent(models.Model):
         if ticket.end_sale_datetime:
             offer['validThrough'] = self._to_iso_datetime(ticket.end_sale_datetime)
         if is_available:
-            offer['url'] = f'{self.website_absolute_url}/register'
+            # Localize the full path: an event page rewrite doesn't cover /register
+            register_path = f'{self.website_url}/register'
+            base_url = self.get_base_url()
+            website = self.env.website
+            if website:
+                register_path = self.env['ir.http']._url_for(register_path)
+                base_url = website.get_base_url()
+            offer['url'] = url_join(base_url, register_path)
         return offer
 
     def _get_breadcrumb_items(self, is_detail_page=False):
