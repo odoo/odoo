@@ -1,8 +1,8 @@
-import { Component, props, proxy, signal, types as t } from "@odoo/owl";
+import { Component, proxy, signal, types as t, useProps } from "@odoo/owl";
 
 export class WhiteboardPopover extends Component {
     static template = "html_editor.whiteboardPopover";
-    props = props({
+    props = useProps({
         close: t.function(),
         apply: t.function(),
         process: t.function(),

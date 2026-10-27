@@ -3,7 +3,7 @@ import { isScrollableY, scrollTo } from "@web/core/utils/scrolling";
 import { useDebounced } from "@web/core/utils/timing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { usePosition } from "@web/core/position/position_hook";
-import { Component, onWillUpdateProps, proxy, signal, status, t, useListener, useProps } from "@odoo/owl";
+import { Component, onWillUpdateProps, proxy, signal, t, useListener, useProps, useScope } from "@odoo/owl";
 import { mergeClasses } from "@web/core/utils/classname";
 
 export const autoCompleteProps = {
@@ -39,6 +39,8 @@ export const autoCompleteProps = {
 export class AutoComplete extends Component {
     static template = "web.AutoComplete";
     props = useProps(autoCompleteProps);
+
+    scope = useScope();
 
     listRef = signal.ref();
     root = signal.ref();
@@ -400,7 +402,7 @@ export class AutoComplete extends Component {
             }
 
             await this.loadingPromise.promise;
-            if (status(this) === "destroyed") {
+            if (this.scope.isDestroyed()) {
                 return;
             }
         }
