@@ -2,21 +2,20 @@
 <odoo>
     <data>
         <template id="external_layout_jp_standard">
-            <div t-attf-class="header o_company_#{company.id}_layout">
-                <div class="text-end text-muted" t-if="jp_document_date">
-                    <span t-out="jp_document_date" t-options='{"widget": "date"}'/>
-                </div>
-                <h2 class="text-center" t-if="layout_document_title" t-out="layout_document_title"/>
-            </div>
-
             <t t-call="web.external_layout_body" hide_recipient_address="True" hide_title="True">
-                <div class="o_jp_standard_header row mb-3">
-                    <div class="col-6 pe-4">
-                        <div t-if="address" t-out="address"/>
+                <div class="o_jp_standard_header mb-3">
+                    <div class="text-end text-muted" t-if="jp_document_date">
+                        <span t-out="jp_document_date" t-options='{"widget": "date"}'/>
                     </div>
-                    <div class="col-6 text-end">
-                        <img t-if="company.logo" class="o_company_logo_big mb-2" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
-                        <t t-call="web.company_address_list"/>
+                    <h2 class="text-center mb-4" t-if="layout_document_title" t-out="layout_document_title"/>
+                    <div class="row">
+                        <div class="col-6">
+                            <div t-if="address" t-out="address"/>
+                        </div>
+                        <div class="col-6 text-end">
+                            <img t-if="company.logo" class="o_company_logo_big mb-2" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                            <t t-call="web.company_address_list"/>
+                        </div>
                     </div>
                 </div>
                 <div class="mb-3" t-if="information_block" t-out="information_block"/>

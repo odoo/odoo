@@ -65,7 +65,7 @@ class TestJPAccountReport(AccountTestInvoicingCommon):
             post=True,
         )
         html = self.env['ir.actions.report'].sudo()._render_qweb_html('account.report_invoice_with_payments', invoice.ids)[0]
-        header = lxml.html.fromstring(html).find_class('header')[0].text_content()
+        header = lxml.html.fromstring(html).find_class('o_jp_standard_header')[0].text_content()
 
         self.assertIn(format_date(self.env, invoice.invoice_date, lang_code='ja_JP'), header)
 
