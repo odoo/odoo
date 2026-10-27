@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+from datetime import timedelta
 from zoneinfo import ZoneInfo
 
 from markupsafe import Markup
@@ -579,7 +580,7 @@ class DiscussChannel(models.Model):
         stale_sessions = self.search([
             ("channel_type", "=", "livechat"),
             ("livechat_end_dt", "=", False),
-            ("last_interest_dt", "<=", "-1d"),
+            ("last_interest_dt", "<=", fields.Datetime.now() - timedelta(days=1)),
             ("livechat_agent_partner_ids", "=", False),
         ])
         stale_sessions.livechat_end_dt = fields.Datetime.now()
