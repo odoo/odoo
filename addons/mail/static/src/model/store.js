@@ -11,7 +11,6 @@ export class Store extends Record {
     get [STORE_SYM]() {
         return true;
     }
-    storeReady = false;
 
     handleError(err) {
         this._.ERRORS.push(err);
@@ -94,7 +93,6 @@ export class Store extends Record {
                             usedRecord._.uses.delete(recordList);
                         }
                         recordList._.data.set([]);
-                        recordList._.syncLength();
                     }
                 }
                 // One at a time, so that what it queues and deletes runs before the next one.
@@ -142,7 +140,7 @@ export class Store extends Record {
                 : null;
         }
         try {
-            Record.MAKE_UPDATE(function storeInsert() {
+            this.MAKE_UPDATE(function storeInsert() {
                 const recordsDataToDelete = [];
                 for (const [modelName, data] of Object.entries(dataByModelName)) {
                     if (!store[modelName]) {
