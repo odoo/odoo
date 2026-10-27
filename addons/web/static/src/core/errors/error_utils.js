@@ -113,15 +113,17 @@ export function getErrorTechnicalName(error) {
  * @returns {string}
  */
 export function formatTraceback(error) {
-    let traceback = error.stack;
     const errorName = getErrorTechnicalName(error);
+    let traceback = error.stack;
     // ensure the proper error name and error message are present in the traceback, no matter the error.stack brower's formatting.
     // Stack example:
     // Error: Mock: Can't write value
     //     _onOpenFormView@http://localhost:8069/web/content/425-baf33f1/web.assets.js:1064:30
     //     ...
     const descriptionLine = `${errorName}: ${error.message}`;
-    if (error.stack.split("\n")[0].trim() !== descriptionLine) {
+    if (!traceback) {
+        traceback = descriptionLine;
+    } else if (traceback.split("\n")[0].trim() !== descriptionLine) {
         // avoid having the description line twice if already present
         traceback = `${descriptionLine}\n${error.stack}`.replace(/\n/g, "\n    ");
     }
