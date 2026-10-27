@@ -63,7 +63,11 @@
                             <tr>
                                 <th name="th_sm_product"><strong>Product</strong></th>
                                 <th name="th_sm_ordered"><strong>Ordered</strong></th>
-                                <th name="th_sm_quantity"><strong>Delivered</strong></th>
+                                <th name="th_sm_quantity">
+                                    <strong t-if="o.picking_type_id.code == 'incoming'">Received</strong>
+                                    <strong t-elif="o.picking_type_id.code == 'internal'">Transferred</strong>
+                                    <strong t-else="">Delivered</strong>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -104,7 +108,11 @@
                                 <th name="lot_serial" t-else="">
                                     Lot/Serial Number
                                 </th>
-                                <th name="th_sml_quantity" class="text-center"><strong>Delivered</strong></th>
+                                <th name="th_sml_quantity" class="text-center">
+                                    <strong t-if="o.picking_type_id.code == 'incoming'">Received</strong>
+                                    <strong t-elif="o.picking_type_id.code == 'internal'">Transferred</strong>
+                                    <strong t-else="">Delivered</strong>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
