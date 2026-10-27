@@ -681,9 +681,13 @@ class GeventServer(CommonServer):
             gevent.sleep(beat)
 
     def http_client_greenlet(self, client, address, prelude=b''):
+        import gevent  # noqa: PLC0415
         try:
             http_socket = HTTPSocket(client, address, prelude=prelude)
             http_socket.process_request()
+        except gevent.GreenletExit:
+            # Killed, e.g. when the server stops after its stop timeout.
+            _logger.info("Longpolling greenlet killed, processing request from %s:%s", address[0], address[1])
         except BaseException:  # noqa: BLE001
             _logger.critical(
                 "Uncaught error in longpolling greenlet, processing request from %s:%s",
