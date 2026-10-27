@@ -163,14 +163,15 @@
 
     .o_calendar_filter_color_#{$i - 1} {
         &.form-check:hover .o_calendar_filter_input_bg:not(.no_filter_color) {
-            border-color: shade-color($color, 20%);
+            border-color: shade-color($color-subtle, 20%);
         }
 
         .o_calendar_filter_input_bg {
-            border-color: $color;
+            border-color: $color-subtle;
 
             &:checked {
-                background-color: $color;
+                --form-check-bg-image: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='#{color-contrast($color-subtle)}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/></svg>"))};
+                background-color: $color-subtle;
             }
         }
     }
