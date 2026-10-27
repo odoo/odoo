@@ -226,5 +226,9 @@ registry.category("web_tour.tours").add("hr_skills_tour", {
             trigger: ".o_form_button_cancel",
             run: "click",
         },
+        {
+            content: "Wait for discard completion",
+            trigger: ".o_form_readonly, .o_form_saved",
+        },
     ],
 });
