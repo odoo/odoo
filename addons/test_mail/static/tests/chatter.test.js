@@ -14,6 +14,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { describe, test } from "@odoo/hoot";
+import { waitFor, waitForNone } from "@odoo/hoot-dom";
 import { defineTestMailModels } from "@test_mail/../tests/test_mail_test_helpers";
 import { MockServer, onRpc } from "@web/../tests/web_test_helpers";
 import { mail_store } from "@mail/../tests/mock_server/mail_mock_server";
@@ -148,12 +149,12 @@ test("basic chatter rendering with a model without activities", async () => {
     });
     await start();
     await openFormView("mail.test.simple", recordId);
-    await contains(".o-mail-Chatter");
-    await contains(".o-mail-Chatter-topbar");
-    await contains("button[aria-label='Attach files']");
-    await contains("button", { count: 0, text: "Activities" });
-    await contains(".o-mail-Followers");
-    await contains(".o-mail-Thread");
+    await waitFor(".o-mail-Chatter:count(1)");
+    await waitFor(".o-mail-Chatter-topbar:count(1)");
+    await waitFor("button[aria-label='Attach files']:count(1)");
+    await waitForNone(".o-mail-Chatter-activity");
+    await waitFor(".o-mail-Followers:count(1)");
+    await waitFor(".o-mail-Thread:count(1)");
 });
 
 test("opened attachment box should remain open after adding a new attachment", async (assert) => {
@@ -184,18 +185,18 @@ test("opened attachment box should remain open after adding a new attachment", a
                 <chatter reload_on_post="True" reload_on_attachment="True"/>
             </form>`,
     });
-    await contains(".o_attachment_preview");
+    await waitFor(".o_attachment_preview:count(1)");
     await click(".o-mail-Chatter-attachFiles");
-    await contains(".o-mail-AttachmentBox");
+    await waitFor(".o-mail-AttachmentBox:count(1)");
     await click("button", { text: "Send message" });
     await inputFiles(".o-mail-Composer .o_input_file", [
         new File(["image"], "testing.jpeg", { type: "image/jpeg" }),
     ]);
     await click(".o-mail-Composer-send:enabled");
-    await contains(".o_move_next");
+    await waitFor(".o_move_next:count(1)");
     await click("button", { text: "Send message" });
     await insertTextInComposer(".o-mail-Composer", "test");
     triggerHotkey("control+Enter");
     await contains(".o-mail-Message-body", { text: "test" });
-    await contains(".o-mail-AttachmentBox .o-mail-AttachmentImage", { count: 2 });
+    await waitFor(".o-mail-AttachmentBox .o-mail-AttachmentImage:count(2)");
 });

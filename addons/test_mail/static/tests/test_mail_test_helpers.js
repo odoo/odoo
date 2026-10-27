@@ -1,4 +1,4 @@
-import { contains, mailModels } from "@mail/../tests/mail_test_helpers";
+import { mailModels } from "@mail/../tests/mail_test_helpers";
 import { MailTestActivity } from "@test_mail/../tests/mock_server/models/mail_test_activity";
 import { MailTestMultiCompany } from "@test_mail/../tests/mock_server/models/mail_test_multi_company";
 import { MailTestMultiCompanyRead } from "@test_mail/../tests/mock_server/models/mail_test_multi_company_read";
@@ -22,11 +22,4 @@ export const testMailModels = {
 export function defineTestMailModels() {
     defineParams({ suite: "test_mail" }, "replace");
     defineModels(testMailModels);
-}
-
-export async function editSelect(selector, value) {
-    await contains(selector);
-    const el = document.querySelector(selector);
-    el.value = value;
-    el.dispatchEvent(new Event("change"));
 }

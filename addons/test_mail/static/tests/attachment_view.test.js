@@ -1,10 +1,9 @@
 import { defineTestMailModels } from "@test_mail/../tests/test_mail_test_helpers";
 import { beforeEach, describe, test, expect, mockUserAgent } from "@odoo/hoot";
-import { queryOne, waitUntil } from "@odoo/hoot-dom";
+import { queryOne, waitFor, waitForNone, waitUntil } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import {
     click,
-    contains,
     listenStoreFetch,
     openFormView,
     registerArchs,
@@ -125,12 +124,12 @@ test("Attachment view popout controls test", async () => {
     await popoutClick(".o_move_previous");
     await popoutContains("iframe");
     popoutWindow.close();
-    await contains(".o_attachment_preview:not(.d-none)");
+    await waitFor(".o_attachment_preview:not(.d-none):count(1)");
     expect(".o_attachment_preview").toBeVisible();
     await click(".o_attachment_preview .o_move_next");
-    await contains(".o_attachment_preview img");
+    await waitFor(".o_attachment_preview img:count(1)");
     await click(".o_attachment_preview .o_move_previous");
-    await contains(".o_attachment_preview iframe");
+    await waitFor(".o_attachment_preview iframe:count(1)");
     await click(".o_attachment_preview .o_attachment_control");
     await animationFrame();
     expect(".o_attachment_preview").not.toBeVisible();
@@ -160,14 +159,18 @@ test("Attachment view popout keeps its content when the main window is resized",
     await openFormView("mail.test.simple.main.attachment", recordId);
     await click(".o_attachment_preview .o_attachment_control");
     await popoutContains("img");
-    await contains(".o-mail-Form-chatter.o-isInFormSheetBg");
+    await waitFor(".o-mail-Form-chatter.o-isInFormSheetBg:count(1)");
     await patchUiSize({ size: SIZES.LG });
-    await contains(".o-mail-Form-chatter:not(.o-isInFormSheetBg)");
+    await waitFor(".o-mail-Form-chatter:not(.o-isInFormSheetBg):count(1)");
     await popoutContains("img");
 });
 
 async function hasFloatingPopoutControl(count) {
-    await contains(".o_attachment_preview .o_attachment_control", { count });
+    if (count === 0) {
+        await waitForNone(".o_attachment_preview .o_attachment_control");
+    } else {
+        await waitFor(`.o_attachment_preview .o_attachment_control:count(${count})`);
+    }
 }
 
 test("Floating popout control is shown on desktop", async () => {
@@ -219,7 +222,7 @@ test("Floating popout control is hidden on mobile", async () => {
     listenStoreFetch("mail.thread");
     await start();
     await openFormView("mail.test.simple.main.attachment", recordId);
-    await contains(".o-mail-Attachment");
+    await waitFor(".o-mail-Attachment:count(1)");
     await waitStoreFetch("mail.thread");
     await hasFloatingPopoutControl(0);
 });
@@ -287,17 +290,17 @@ test("Chatter main attachment: can change from non-viewable to viewable", async 
     patchUiSize({ size: SIZES.XXL });
     await start();
     await openFormView("mail.test.simple.main.attachment", recordId);
-    await contains("button[aria-label='Attach files']:enabled");
+    await waitFor("button[aria-label='Attach files']:enabled:count(1)");
     // Add a PDF file
     const pdfFile = new File([new Uint8Array(1)], "text.pdf", { type: "application/pdf" });
     await dragenterFiles(".o-mail-Chatter", [pdfFile]);
     await dropFiles(".o-Dropzone", [pdfFile]);
-    await contains(".o_attachment_preview");
-    await contains(".o-mail-Attachment > iframe", { count: 0 }); // The viewer tries to display the text file not the PDF
+    await waitFor(".o_attachment_preview:count(1)");
+    await waitForNone(".o-mail-Attachment > iframe"); // The viewer tries to display the text file not the PDF
 
     // Switch to the PDF file in the viewer
     await click(".o_move_next");
-    await contains(".o-mail-Attachment > iframe"); // There should be iframe for PDF viewer
+    await waitFor(".o-mail-Attachment > iframe:count(1)"); // There should be iframe for PDF viewer
 });
 
 test.skip("Attachment view / chatter popout across multiple records test", async () => {
@@ -359,7 +362,7 @@ test.skip("Attachment view / chatter popout across multiple records test", async
         await click(".o_pager_previous");
         await popoutContains("iframe");
         popoutWindow.close();
-        await contains(".o_attachment_preview:not(.d-none)");
+        await waitFor(".o_attachment_preview:not(.d-none):count(1)");
     }
 
     patchUiSize({ size: SIZES.XXL });

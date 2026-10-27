@@ -8,7 +8,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { queryFirst } from "@odoo/hoot-dom";
+import { queryFirst, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { defineResourceMailModels } from "./resource_mail_test_helpers";
 
 describe.current.tags("desktop");
@@ -103,12 +103,12 @@ test("many2one_avatar_resource widget in list view", async () => {
                 <field name="resource_id" widget="many2one_avatar_resource"/>
             </list>`,
     });
-    await contains(".o_m2o_avatar", { count: 3 });
+    await waitFor(".o_m2o_avatar:count(3)");
     // "build" icon should be displayed for the first task
-    await contains(".o_m2o_avatar > span.o_material_resource > i[data-icon='build']");
+    await waitFor(".o_m2o_avatar > span.o_material_resource > i[data-icon='build']:count(1)");
     // Second and third slots should display employee avatar
-    await contains(".o_field_many2one_avatar_resource img", { count: 2 });
-    await contains(".o_field_many2one_avatar_resource a", { count: 0 });
+    await waitFor(".o_field_many2one_avatar_resource img:count(2)");
+    await waitForNone(".o_field_many2one_avatar_resource a");
 });
 
 test("many2one_avatar_resource widget in kanban view", async () => {
@@ -123,11 +123,11 @@ test("many2one_avatar_resource widget in kanban view", async () => {
                 </templates>
             </kanban>`,
     });
-    await contains(".o_m2o_avatar", { count: 3 });
+    await waitFor(".o_m2o_avatar:count(3)");
     // "build" icon should be displayed for the first task
-    await contains(".o_m2o_avatar > span.o_material_resource > i[data-icon='build']");
+    await waitFor(".o_m2o_avatar > span.o_material_resource > i[data-icon='build']:count(1)");
     // Second and third slots should display employee avatar
-    await contains(".o_field_many2one_avatar_resource img", { count: 2 });
+    await waitFor(".o_field_many2one_avatar_resource img:count(2)");
     expect(queryFirst(".o_field_many2one_avatar_resource img").getAttribute("data-src")).toBe(
         "/web/image/resource.resource/" + data.resourceMarieId + "/avatar_128"
     );
@@ -138,14 +138,13 @@ test("many2one_avatar_resource widget in kanban view", async () => {
     ).toBe("/web/image/resource.resource/" + data.resourcePierreId + "/avatar_128");
     // 1. Clicking on material resource's icon
     await click(".o_kanban_record:nth-of-type(1) .o_m2o_avatar > span > i");
-    await contains(".o_avatar_card", { count: 0 });
+    await waitForNone(".o_avatar_card");
     // 2. Clicking on human resource's avatar with no user associated
     await click(".o_kanban_record:nth-of-type(2) .o_m2o_avatar > img");
     await contains(".o-mail-avatar-card-name", { text: "Marie" });
-    await contains(
-        ".o_avatar_card",
-        { count: 1 },
-        "Only one popover resource card should be opened at a time"
+    await waitFor(
+        ".o_avatar_card:count(1)",
+        { message: "Only one popover resource card should be opened at a time" }
     );
     await contains(
         ".o_avatar_card_buttons button",
@@ -155,14 +154,13 @@ test("many2one_avatar_resource widget in kanban view", async () => {
     // 3. Clicking on human resource's avatar with one user associated
     await click(".o_kanban_record:nth-of-type(3) .o_m2o_avatar > img");
     await contains(".o-mail-avatar-card-name", { text: "Pierre" });
-    await contains(
-        ".o_avatar_card",
-        { count: 1 },
-        "Only one popover resource card should be opened at a time"
+    await waitFor(
+        ".o_avatar_card:count(1)",
+        { message: "Only one popover resource card should be opened at a time" }
     );
     await contains(".o_card_user_infos > a", { text: "Pierre@odoo.test" });
     await contains(".o_card_user_infos > a", { text: "+32487898933" });
     await click(".o_avatar_card_buttons button:first:text(Send message)");
-    await contains(".o-mail-ChatWindow");
+    await waitFor(".o-mail-ChatWindow:count(1)");
     expect(".o-mail-ChatWindow-displayName").toHaveText("Pierre");
 });

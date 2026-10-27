@@ -6,6 +6,7 @@ import {
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
 import { test } from "@odoo/hoot";
+import { waitFor } from "@odoo/hoot-dom";
 import { defineTestMailFullModels } from "@test_mail_full/../tests/test_mail_full_test_helpers";
 import { serverState } from "@web/../tests/web_test_helpers";
 
@@ -31,8 +32,8 @@ test("rating value displayed on the preview", async () => {
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await contains(".o-mail-NotificationItem-text", { text: "Rating:" });
-    await contains(".o-rating-preview-image[alt='top']");
-    await contains(".o-rating-preview-image[data-src='/rating/static/src/img/rating_5.png']");
+    await waitFor(".o-rating-preview-image[alt='top']:count(1)");
+    await waitFor(".o-rating-preview-image[data-src='/rating/static/src/img/rating_5.png']:count(1)");
 });
 
 test("rating value displayed on the needaction preview", async () => {
@@ -63,6 +64,6 @@ test("rating value displayed on the needaction preview", async () => {
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.NOTIFICATION);
     await contains(".o-mail-NotificationItem-text", { text: "Rating:" });
-    await contains(".o-rating-preview-image[alt='top']");
-    await contains(".o-rating-preview-image[data-src='/rating/static/src/img/rating_5.png']");
+    await waitFor(".o-rating-preview-image[alt='top']:count(1)");
+    await waitFor(".o-rating-preview-image[data-src='/rating/static/src/img/rating_5.png']:count(1)");
 });
