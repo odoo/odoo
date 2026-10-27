@@ -133,7 +133,7 @@ class PosOrder(models.Model):
         inv_line_vals = super()._get_invoice_lines_values(line_values, pos_line, move_type)
         if pos_line.sale_order_origin_id:
             inv_line_vals["name"] = pos_line.display_name
-            if inv_line_vals['extra_tax_data'].get('computation_key') == 'down_payment' and pos_line.down_payment_details:
+            if inv_line_vals.get('extra_tax_data', {}).get('computation_key') == 'down_payment' and pos_line.down_payment_details:
                 downpayment_details = ast.literal_eval(pos_line.down_payment_details)
                 if downpayment_details and downpayment_details[0].get('percentage_value'):
                     inv_line_vals["name"] += " of " + str(downpayment_details[0].get('percentage_value')) + "%"
