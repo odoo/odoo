@@ -2,6 +2,8 @@
 
 import gc
 import json
+import threading
+import time
 from collections import defaultdict
 from queue import Full
 from threading import Event
@@ -226,6 +228,32 @@ class TestWebsocketCaryall(WebsocketCase):
             ws.close(CloseCode.CLEAN)
             self.wait_remaining_websocket_connections()
             self.assertTrue(mock.called)
+
+    def test_on_websocket_closed_concurrency_is_bounded(self):
+        running = peak = 0
+        lock = threading.Lock()
+
+        def slow_on_closed(*args, **kwargs):
+            nonlocal running, peak
+            with lock:
+                running += 1
+                peak = max(peak, running)
+            time.sleep(0.2)
+            with lock:
+                running -= 1
+
+        new_env_mock = MagicMock()
+        new_env_mock.return_value.__getitem__.return_value._on_websocket_closed = slow_on_closed
+        with (
+            patch('odoo.addons.bus.websocket._close_semaphore', threading.BoundedSemaphore(2)),
+            patch('odoo.addons.bus.websocket.acquire_cursor', MagicMock()),
+            patch('odoo.addons.bus.websocket.new_env', new_env_mock),
+        ):
+            websockets = [self.websocket_connect() for _ in range(6)]
+            for ws in websockets:
+                ws.close(CloseCode.CLEAN)
+            self.wait_remaining_websocket_connections()
+        self.assertEqual(peak, 2)
 
     def test_close_on_saturated_outgoing_queue(self):
         channel = new_test_user(self.env, "Jane")

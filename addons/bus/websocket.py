@@ -3,6 +3,7 @@ import contextvars
 import functools
 import hashlib
 import logging
+import math
 import os
 import queue
 import random
@@ -39,7 +40,7 @@ from odoo.modules.registry import Registry
 from odoo.service.server import CommonServer
 from odoo.tools import config
 
-from .bus_dispatcher import dispatch
+from .bus_dispatcher import BusDispatcher, dispatch
 from .session_helpers import new_env
 from .tools import orjson
 from .tools.misc import acquire_cursor
@@ -180,6 +181,11 @@ class CloseFrame(Frame):
 
 
 _websocket_instances = WeakSet()
+# Bounds the websockets running their on-close DB work at the same time, so
+# a mass disconnect doesn't take all the cursors reserved for gevent users.
+_close_semaphore = threading.BoundedSemaphore(max(1, math.ceil(
+    (config["db_maxconn_gevent"] or config["db_maxconn"]) * BusDispatcher.RESERVE_CURSORS_RATIO,
+) // 2))
 
 
 class Websocket:
@@ -533,7 +539,7 @@ class Websocket:
         self.__cmd_queue.close()
         dispatch.unsubscribe(self)
         self._trigger_lifecycle_event(LifecycleEvent.CLOSE)
-        with acquire_cursor(self._db) as cr:
+        with _close_semaphore, acquire_cursor(self._db) as cr:
             env = new_env(cr, self._session)
             env["ir.websocket"]._on_websocket_closed(self._cookies)
 
