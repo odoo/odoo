@@ -227,6 +227,189 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search mail_call_artifact
     #   1: select the current db snapshot
     _query_count_init_messaging_with_chat_hub = 56
+    # Queries for _query_count_page_load (in order):
+    #   2: _search_is_member (for current user, first occurrence)
+    #       - fetch res_users
+    #       - search discuss_channel JOIN member
+    #   3: init_messaging:
+    #       - search_fetch discuss_channel (channels_domain)
+    #       - fetch discuss_channel (_search_is_member)
+    #       - search_fetch discuss_channel (odoobot chat)
+    #   1: failures:
+    #       - search mail_notification
+    #   7: systray_get_activities:
+    #       - search bus_bus (_bus_last_id)
+    #       - search_fetch mail_activity (_search access check)
+    #       - search mail_activity (_get_activity_groups)
+    #       - fetch res_company_users_rel (company_ids, _divide_activities_in_groups)
+    #       - fetch res_partner (_systray_get_calendar_event_domain)
+    #       - search_read calendar_event (calendar _get_activity_groups override)
+    #       - fetch res_role_res_users_rel (_get_activities_to_assign_count)
+    #   5: initialize_counters, mail.message tabs:
+    #       - search mail_message (_filter_accessible_from_query)
+    #       - search mail_message_res_partner_bookmarked_rel (bookmark tab)
+    #       - fetch mail_message
+    #       - search mail_notification (notification tab)
+    #       - fetch mail_notification
+    #   3: initialize_counters, discuss.channel tabs:
+    #       - search_fetch discuss_channel (important channels)
+    #       - read group member (prefetch _compute_self_member_id)
+    #       - fetch discuss_channel_member (self member, tab domains)
+    #   1: search discuss_channel (chat hub channel ids)
+    #   1: read group member (prefetch _compute_self_member_id, chat hub channels)
+    #   1: search discuss_channel (last message of every channel of the request, _get_last_messages)
+    #   24: store add channel, once for the channels of both fetches:
+    #       - read group member (_compute_invited_member_ids)
+    #       - search discuss_channel_rtc_session
+    #       - fetch discuss_channel_rtc_session
+    #       - search member (channel_member_ids)
+    #       - fetch discuss_channel_member (manual prefetch)
+    #       11: member:
+    #           11: partner:
+    #               - search res_users (partner.user_ids, _store_im_status_fields)
+    #                 [enterprise] search ai_agent (_compute_im_status ai override)
+    #               - fetch res_users (_compute_im_status)
+    #               - search mail_presence (_compute_im_status)
+    #               - fetch mail_presence (_compute_im_status)
+    #               - search hr_employee (_store_im_status_fields override)
+    #               - fetch hr_employee (_compute_work_location_type)
+    #               - search hr_employee_location (_store_im_status_fields override)
+    #               - search hr_leave (_compute_leave_status)
+    #               - read group resource_calendar_leaves (_compute_leave_status)
+    #               - fetch res_partner (partner)
+    #               - fetch res_users (_read_format)
+    #       - search bus_bus (_bus_last_id)
+    #       - search_fetch ir_attachment (_compute_avatar_cache_key -> _compute_avatar_128)
+    #       - [calendar] search calendar_event (calendar_event_ids, _compute_meeting_dt)
+    #       - count discuss_channel_member (member_count)
+    #       - _compute_message_needaction
+    #       - search discuss_channel_res_groups_rel (group_ids)
+    #       - fetch res_groups (group_public_id)
+    #       - _compute_message_unread
+    #   21: store add message:
+    #       - search mail_message_reaction
+    #       - search mail_message (_filter_accessible_from_query)
+    #       - search mail_message (_filter_accessible_from_query, ordered)
+    #       - fetch mail_message
+    #       - search mail_message_schedule
+    #       - search mail_message_res_partner_bookmarked_rel
+    #       - search message_attachment_rel
+    #       - search mail_message_res_partner_rel
+    #       - fetch mail_message_reaction
+    #       - search_fetch mail_poll (_compute_has_poll start_message_id)
+    #       - search_fetch mail_poll (_compute_has_poll end_message_id)
+    #       - search mail_message_link_preview
+    #       - search mail_notification
+    #       - search rating_rating
+    #       - search discuss_call_history (call_history_ids)
+    #       - fetch mail_message_subtype
+    #       - fetch res_partner (OdooBot, author of the call message)
+    #       - search res_users (OdooBot partner.user_ids)
+    #       - fetch res_users (OdooBot)
+    #       - fetch discuss_call_history
+    #       - search mail_call_artifact
+    #   1: select the current db snapshot
+    _query_count_page_load = 70
+    # Queries for _query_count_open_channel (in order):
+    #   1: fetch res_users (current user)
+    #   1: search discuss_channel JOIN member (_search_is_member, first occurrence)
+    #   2: /discuss/channel/members:
+    #       - search discuss_channel
+    #       - search_fetch discuss_channel_member (unknown members)
+    #   7: /discuss/channel/messages:
+    #       - search discuss_channel
+    #       - search mail_message (around, older messages)
+    #       - search mail_message (around, newer messages)
+    #       - search mail_notification (set_message_done)
+    #       - update mail_notification (set_message_done)
+    #       - count mail_notification (_get_needaction_count)
+    #       - search discuss_channel (last message, _get_last_messages)
+    #   3: store add channel and members:
+    #       - count discuss_channel_member (member_count)
+    #       - fetch discuss_channel_member (channel_role)
+    #       - fetch discuss_channel
+    #   10: member partners:
+    #       - fetch res_partner (partner)
+    #       - search res_users (partner.user_ids, _store_im_status_fields)
+    #         [enterprise] search ai_agent (_compute_im_status ai override)
+    #       - fetch res_users (_compute_im_status)
+    #       - search mail_presence (_compute_im_status)
+    #       - search hr_employee (_store_im_status_fields override)
+    #       - fetch hr_employee (_compute_work_location_type)
+    #       - search hr_employee_location (_store_im_status_fields override)
+    #       - search hr_leave (_compute_leave_status)
+    #       - read group resource_calendar_leaves (_compute_leave_status)
+    #       - fetch res_users (_read_format)
+    #   17: store add message:
+    #       - search mail_message_reaction
+    #       - search mail_message (_filter_accessible_from_query)
+    #       - fetch mail_message
+    #       - search mail_message_schedule
+    #       - search mail_message_res_partner_bookmarked_rel
+    #       - fetch res_partner (author)
+    #       - search message_attachment_rel
+    #       - search mail_message_res_partner_rel
+    #       - fetch mail_message_reaction
+    #       - search_fetch mail_poll (_compute_has_poll start_message_id)
+    #       - search_fetch mail_poll (_compute_has_poll end_message_id)
+    #       - search mail_message_link_preview
+    #       - search mail_notification
+    #       - fetch mail_notification
+    #       - search rating_rating
+    #       - fetch res_partner (reactions)
+    #       - fetch mail_message_subtype
+    #   1: select the current db snapshot
+    #   1: insert bus_bus (mail.message/mark_as_read)
+    _query_count_open_channel = 43
+    # Queries for _query_count_open_chatter (in order):
+    #   6: /mail/thread/messages:
+    #       - search res_partner (_get_thread_with_access)
+    #       - fetch res_partner
+    #       - fetch res_company
+    #       - fetch res_users (current user)
+    #       - search mail_message (_resolve_messages)
+    #       - search mail_notification (set_message_done)
+    #   9: mail.thread:
+    #       - search res_partner (_get_thread_with_access)
+    #       - read group mail_followers (followersCount)
+    #       - search_fetch mail_followers (selfFollower)
+    #       - read group mail_followers (recipientsCount)
+    #       - read group mail_message (has_pinned_messages)
+    #       - search_fetch mail_scheduled_message (scheduledMessages)
+    #       - search_fetch mail_activity (activities)
+    #         [enterprise] search whatsapp_template (canSendWhatsapp)
+    #       - search ir_attachment (attachments)
+    #       - search_fetch mail_followers (followers)
+    #   1: search_fetch mail_followers (recipients)
+    #   10: suggestedRecipients:
+    #       - search_fetch mail_message (message_ids)
+    #       - search mail_message (_filter_accessible_from_query)
+    #       - search mail_message (_filter_accessible_from_query, ordered)
+    #       - fetch mail_message
+    #       - search mail_followers (message_follower_ids)
+    #       - fetch res_partner (author of the last message)
+    #       - search mail_alias_domain
+    #       - fetch mail_alias_domain
+    #       - search mail_alias
+    #       - search res_users (partner.user_ids)
+    #   15: store add message:
+    #       - search mail_message_reaction
+    #       - search mail_message_schedule
+    #       - search mail_message_res_partner_bookmarked_rel
+    #       - search message_attachment_rel
+    #       - search mail_message_res_partner_rel
+    #       - search mail_message_res_partner_cc_rel
+    #       - search_fetch mail_poll (_compute_has_poll start_message_id)
+    #       - search_fetch mail_poll (_compute_has_poll end_message_id)
+    #       - search mail_message_link_preview
+    #       - search mail_notification
+    #       - search rating_rating
+    #       - fetch res_partner (author)
+    #       - search res_users (author)
+    #       - fetch res_users (author)
+    #       - fetch mail_message_subtype
+    #   1: select the current db snapshot
+    _query_count_open_chatter = 42
 
     def setUp(self):
         super().setUp()
@@ -407,6 +590,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         self.authenticate(self.users[2].login, self.password)
         self._add_reactions(self.message_0, ["😊", "😁"])
         self._add_reactions(self.message_1, ["😊", "😁", "👍"])
+        self.message_2 = self.users[2].partner_id.message_post(
+            body="test",
+            message_type="comment",
+            author_id=self.users[3].partner_id.id,
+        )
         # add archive / muted on channels
         self.channel_channel_group_3.active = False
         self.channel_channel_group_4.with_user(
@@ -474,7 +662,12 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         self._run_test(
             fn=lambda: self.make_jsonrpc_request(
                 "/mail/store",
-                {"fetch_params": [["discuss.channel", [self.channel_chat_1.id]], "init_messaging"]},
+                {
+                    "fetch_params": [
+                        ["discuss.channel", {"ids": self.channel_chat_1.ids}],
+                        "init_messaging",
+                    ],
+                },
             ),
             count=self._query_count_init_messaging,
             results=self._get_init_messaging_result(),
@@ -539,6 +732,133 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             ),
             count=self._query_count_init_messaging_with_chat_hub,
             results=self._get_init_messaging_with_chat_hub_result(),
+            preserve_order=False,
+        )
+
+    @freeze_time("2025-04-22 21:18:33")
+    @users("emp")
+    @warmup
+    def test_50_page_load(self):
+        """Test performance of the fetches of a page load of an internal user with chat windows
+        open, all batched in a single request by the web client."""
+        chat_hub_channels = (
+            self.channel_general
+            + self.channel_chat_2
+            + self.channel_chat_3
+            + self.channel_channel_public_1
+        )
+        self._run_test(
+            fn=lambda: self.make_jsonrpc_request(
+                "/mail/store",
+                {
+                    "fetch_params": [
+                        "init_messaging",
+                        "failures",
+                        "systray_get_activities",
+                        [
+                            "/mail/messaging_menu/initialize_counters",
+                            {
+                                "filter_id_by_tab_id_by_record_type": {
+                                    "discuss.channel": {
+                                        "channel": None,
+                                        "chat": None,
+                                        "livechat": None,
+                                        "meeting": "meeting_today",
+                                    },
+                                    "mail.message": {
+                                        "bookmark": None,
+                                        "notification": "notification_unread",
+                                    },
+                                },
+                            },
+                        ],
+                        [
+                            "discuss.channel",
+                            {"ids": chat_hub_channels.ids, "with_last_message": True},
+                        ],
+                    ],
+                },
+            ),
+            count=self._query_count_page_load,
+            results=self._get_page_load_result(),
+            preserve_order=False,
+        )
+
+    @freeze_time("2025-04-22 21:18:33")
+    @users("emp")
+    @warmup
+    def test_60_open_channel(self):
+        """Test performance of opening a channel: its members and its messages around the last
+        seen one, in a single request."""
+        channel = self.channel_channel_public_1
+        member_0 = channel.with_user(self.users[0]).self_member_id
+        fetch_params = [
+            [
+                "/discuss/channel/members",
+                {"channel_id": channel.id, "known_member_ids": member_0.ids},
+            ],
+            [
+                "/discuss/channel/messages",
+                {
+                    "channel_id": channel.id,
+                    "fetch_params": {"around": member_0.new_message_separator, "limit": 60},
+                },
+                1,
+            ],
+        ]
+        self._run_test(
+            fn=lambda: self.make_jsonrpc_request("/mail/store", {"fetch_params": fetch_params}),
+            count=self._query_count_open_channel,
+            results=self._get_open_channel_result(),
+            preserve_order=False,
+        )
+
+    @freeze_time("2025-04-22 21:18:33")
+    @users("emp")
+    @warmup
+    def test_70_open_chatter(self):
+        """Test performance of opening the chatter of a record: its messages and its thread data,
+        in a single request."""
+        partner = self.users[2].partner_id
+        self._run_test(
+            fn=lambda: self.make_jsonrpc_request(
+                "/mail/store",
+                {
+                    "fetch_params": [
+                        [
+                            "/mail/thread/messages",
+                            {
+                                "fetch_params": {"limit": 30},
+                                "thread_id": partner.id,
+                                "thread_model": "res.partner",
+                            },
+                            1,
+                        ],
+                        [
+                            "mail.thread",
+                            {
+                                "access_params": {},
+                                "request_list": [
+                                    "activities",
+                                    "attachments",
+                                    "contact_fields",
+                                    "defaultSubject",
+                                    "followers",
+                                    "has_pinned_messages",
+                                    "scheduledMessages",
+                                    "showSubjectInSmallComposer",
+                                    "suggestedRecipients",
+                                    "suggestedSubject",
+                                ],
+                                "thread_id": partner.id,
+                                "thread_model": "res.partner",
+                            },
+                        ],
+                    ],
+                },
+            ),
+            count=self._query_count_open_chatter,
+            results=self._get_open_chatter_result(),
             preserve_order=False,
         )
 
@@ -746,6 +1066,253 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._res_for_employee(self.users[2].employee_ids[0]),
                 self._res_for_employee(self.users[15].employee_ids[0]),
             ],
+        }
+
+    def _get_page_load_result(self):
+        """Returns the result of the fetches of a page load with chat windows open."""
+        # sudo: bus.bus: reading non-sensitive last id
+        bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
+        return {
+            **self._get_init_messaging_with_chat_hub_result(),
+            "MessagingMenuTab": [
+                {"id": "bookmark", "init_counter_ids": self.message_0.ids},
+                {
+                    "id": "channel",
+                    "init_counter_ids": (
+                        self.channel_general
+                        + self.channel_channel_public_1
+                        + self.channel_channel_group_1
+                    ).ids,
+                },
+                {"id": "chat", "init_counter_ids": []},
+                {
+                    "id": "livechat",
+                    "init_counter_ids": (self.channel_livechat_1 + self.channel_livechat_2).ids,
+                },
+                {"id": "meeting", "init_counter_ids": []},
+                {"id": "notification", "init_counter_ids": []},
+            ],
+            "Store": {
+                "activities_to_assign_count": 0,
+                "activityCounter": 0,
+                "activity_counter_bus_id": bus_last_id,
+                "activity_groups": [],
+            },
+        }
+
+    def _get_open_channel_result(self):
+        """Returns the result of opening a channel: its members and its messages."""
+        channel = self.channel_channel_public_1
+        first_message = channel.message_ids.sorted("id")[:1]
+        user_0 = self.users[0]
+        partner_0 = user_0.partner_id
+        partner_1 = self.users[1].partner_id
+        other_users = self.users[2] + self.users[3] + self.users[4] + self.users[8]
+        return {
+            "DataResponse": [
+                {
+                    "_resolve": True,
+                    "id": 1,
+                    "messages": [self.message_0.id, first_message.id],
+                },
+            ],
+            "discuss.channel": [
+                {"id": channel.id, "last_message_fetched": True, "member_count": 5},
+            ],
+            "discuss.channel.member": [
+                self._res_for_member(channel, user.partner_id) for user in other_users
+            ],
+            "hr.employee": [self._res_for_employee(user.employee_ids) for user in other_users],
+            "mail.message": self._filter_messages_fields(
+                {
+                    **self._expected_result_for_message(channel),
+                    "needaction": False,
+                    "needaction_done": True,
+                },
+                {
+                    "attachment_ids": [],
+                    "author_guest_id": False,
+                    "author_id": partner_0.id,
+                    "body": [
+                        "markup",
+                        '<div class="o_mail_notification">created this channel.</div>',
+                    ],
+                    "create_date": fields.Datetime.to_string(first_message.create_date),
+                    "date": fields.Datetime.to_string(first_message.date),
+                    "default_subject": "public channel 1",
+                    "email_from": '"Ernest Employee" <e.e@example.com>',
+                    "id": first_message.id,
+                    "incoming_email_cc": False,
+                    "incoming_email_to": False,
+                    "is_bookmarked": False,
+                    "message_link_preview_ids": [],
+                    "message_type": "notification",
+                    "model": "discuss.channel",
+                    "needaction": False,
+                    "needaction_done": False,
+                    "notification_ids": [],
+                    "parent_id": False,
+                    "partner_ids": [],
+                    "pinned_at": False,
+                    "rating_id": False,
+                    "reactions": [],
+                    "record_name": "public channel 1",
+                    "reply_to": '"Ernest Employee" <catchall.test@test.mycompany.com>',
+                    "res_id": channel.id,
+                    "scheduledDatetime": False,
+                    "subject": False,
+                    "subtype_id": self.env.ref("mail.mt_comment").id,
+                    "thread": {"id": channel.id, "model": "discuss.channel"},
+                    "write_date": fields.Datetime.to_string(first_message.write_date),
+                },
+            ),
+            "mail.message.subtype": [
+                {"description": False, "id": self.env.ref("mail.mt_note").id},
+                {"description": False, "id": self.env.ref("mail.mt_comment").id},
+            ],
+            "mail.notification": [self._expected_result_for_notification(channel)],
+            "mail.thread": self._filter_threads_fields(
+                self._expected_result_for_thread(channel),
+            ),
+            "res.partner": self._filter_partners_fields(
+                *(self._expected_result_for_persona(user) for user in other_users),
+                {
+                    "avatar_128_access_token": partner_0._get_avatar_128_access_token(),
+                    "email": "e.e@example.com",
+                    "id": partner_0.id,
+                    "is_company": False,
+                    "main_user_id": user_0.id,
+                    "name": "Ernest Employee",
+                    "write_date": fields.Datetime.to_string(partner_0.write_date),
+                },
+                {
+                    "avatar_128_access_token": partner_1._get_avatar_128_access_token(),
+                    "id": partner_1.id,
+                    "name": "test1",
+                    "write_date": fields.Datetime.to_string(partner_1.write_date),
+                },
+            ),
+            "res.users": self._filter_users_fields(
+                *(self._res_for_user(user) for user in other_users),
+                {"id": user_0.id, "partner_id": partner_0.id, "share": False},
+            ),
+        }
+
+    def _get_open_chatter_result(self):
+        """Returns the result of opening the chatter of a record: its messages and its thread."""
+        partner = self.users[2].partner_id
+        partner_3 = self.users[3].partner_id
+        creation_message = partner.message_ids - self.message_2
+        common_message_data = {
+            "attachment_ids": [],
+            "author_guest_id": False,
+            "body": ["markup", "<p>test</p>"],
+            "create_date": fields.Datetime.to_string(self.message_2.create_date),
+            "default_subject": "test2",
+            "incoming_email_cc": False,
+            "incoming_email_to": False,
+            "is_bookmarked": False,
+            "message_link_preview_ids": [],
+            "message_type": "comment",
+            "model": "res.partner",
+            "needaction": False,
+            "needaction_done": False,
+            "notification_ids": [],
+            "partner_cc_ids": [],
+            "partner_ids": [],
+            "pinned_at": False,
+            "rating_id": False,
+            "reactions": [],
+            "record_name": "test2",
+            "res_id": partner.id,
+            "scheduledDatetime": False,
+            "subject": False,
+            "subtype_id": self.env.ref("mail.mt_note").id,
+            "thread": {"id": partner.id, "model": "res.partner"},
+            "write_date": fields.Datetime.to_string(self.message_2.write_date),
+        }
+        return {
+            "DataResponse": [
+                {
+                    "_resolve": True,
+                    "id": 1,
+                    "messages": [self.message_2.id, creation_message.id],
+                },
+            ],
+            "mail.message": self._filter_messages_fields(
+                {
+                    **common_message_data,
+                    "author_id": partner_3.id,
+                    "date": fields.Datetime.to_string(self.message_2.date),
+                    "email_from": False,
+                    "id": self.message_2.id,
+                    "reply_to": '"test3" <catchall.test@test.mycompany.com>',
+                },
+                {
+                    **common_message_data,
+                    "author_id": self.partner_root.id,
+                    "body": ["markup", "<p>Contact created</p>"],
+                    "create_date": fields.Datetime.to_string(creation_message.create_date),
+                    "date": fields.Datetime.to_string(creation_message.date),
+                    "email_from": '"OdooBot" <odoobot@example.com>',
+                    "id": creation_message.id,
+                    "message_type": "notification",
+                    "reply_to": '"OdooBot" <catchall.test@test.mycompany.com>',
+                    "write_date": fields.Datetime.to_string(creation_message.write_date),
+                },
+            ),
+            "mail.message.subtype": [
+                {"description": False, "id": self.env.ref("mail.mt_note").id},
+            ],
+            "mail.thread": [
+                {
+                    "activities": [],
+                    "areAttachmentsLoaded": True,
+                    "attachments": [],
+                    "canPostOnReadonly": True,
+                    "defaultSubject": "test2",
+                    "display_name": "test2",
+                    "followers": [],
+                    "followersCount": 0,
+                    "hasReadAccess": True,
+                    "hasWriteAccess": False,
+                    "has_mail_thread": True,
+                    "has_pinned_messages": False,
+                    "id": partner.id,
+                    "isLoadingAttachments": False,
+                    "model": "res.partner",
+                    "partner_fields": [],
+                    "primary_email_field": "email",
+                    "recipients": [],
+                    "recipientsCount": 0,
+                    "scheduledMessages": [],
+                    "selfFollower": False,
+                    "suggestedRecipients": [
+                        {
+                            "create_values": {},
+                            "email": "test2@example.com",
+                            "name": "test2",
+                            "partner_id": partner.id,
+                            "recipient_type": "to",
+                        },
+                    ],
+                },
+            ],
+            "res.partner": self._filter_partners_fields(
+                {
+                    "avatar_128_access_token": partner_3._get_avatar_128_access_token(),
+                    "id": partner_3.id,
+                    "is_company": False,
+                    "main_user_id": self.users[3].id,
+                    "name": "test3",
+                    "write_date": fields.Datetime.to_string(partner_3.write_date),
+                },
+                self._expected_result_for_persona(self.user_root),
+            ),
+            "res.users": self._filter_users_fields(
+                {"id": self.users[3].id, "partner_id": partner_3.id, "share": False},
+                self._res_for_user(self.user_root),
+            ),
         }
 
     def _get_messaging_menu_channels_result(self):
@@ -1612,6 +2179,19 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "seen_message_id": last_message.id,
                 "channel_id": channel.id,
             }
+        public_1_users = self.users[2] + self.users[3] + self.users[4] + self.users[8]
+        if channel == self.channel_channel_public_1 and partner in public_1_users.partner_id:
+            member = channel.channel_member_ids.filtered(lambda m: m.partner_id == partner)
+            return {
+                "channel_id": channel.id,
+                "channel_role": False,
+                "create_date": fields.Datetime.to_string(member.create_date),
+                "id": member.id,
+                "invitation_sent_dt": False,
+                "last_seen_dt": False,
+                "partner_id": partner.id,
+                "seen_message_id": False,
+            }
         return {}
 
     def _expected_result_for_livechat_channel(self):
@@ -2110,7 +2690,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "user_ids": user.ids,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
-        if user == self.users[3]:
+        if user in (self.users[3], self.users[4], self.users[8]):
             return {
                 "active": True,
                 "agent_ids": [],
@@ -2120,11 +2700,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "is_company": False,
                 "main_user_id": user.id,
                 "mention_token": user.partner_id._get_mention_token(),
-                "name": "test3",
+                "name": user.name,
                 "partner_share": False,
                 "tz": False,
                 "user_ids": user.ids,
-                "write_date": fields.Datetime.to_string(self.users[3].partner_id.write_date),
+                "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
         if user == self.users[12]:
             return {
@@ -2282,7 +2862,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "partner_id": partner.id,
                 "share": False,
             }
-        if user == self.users[3]:
+        if user in (self.users[3], self.users[4], self.users[8]):
             return {
                 "active": True,
                 "all_employee_ids": user.employee_ids.ids,
