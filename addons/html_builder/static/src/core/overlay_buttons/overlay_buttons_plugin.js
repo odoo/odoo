@@ -1,7 +1,6 @@
 import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
-import { throttleForAnimation } from "@web/core/utils/timing";
-import { getScrollingElement, getScrollingTarget } from "@web/core/utils/scrolling";
+import { addOverlayListeners } from "@html_builder/utils/utils";
 import { OverlayButtons } from "./overlay_buttons";
 import { withSequence } from "@html_editor/utils/resource";
 
@@ -80,40 +79,11 @@ export class OverlayButtonsPlugin extends Plugin {
             this.overlay.updatePosition();
         });
 
-        // TODO duplicate of builderOverlay => extract somewhere
-        // Recompute the buttons when the window is resized.
-        this.refresh = throttleForAnimation(this.refreshButtons.bind(this));
-        this.addDomListener(window, "resize", this.refresh);
-
-        // On keydown, hide the buttons and then show them again when the mouse
-        // moves.
-        const onMouseMoveOrDown = throttleForAnimation(() => {
-            this.showOverlayButtons();
-            this.editable.removeEventListener("mousemove", onMouseMoveOrDown);
-            this.editable.removeEventListener("mousedown", onMouseMoveOrDown);
+        addOverlayListeners(this, {
+            refresh: this.refreshButtons.bind(this),
+            hide: this.hideOverlayButtons.bind(this),
+            show: this.showOverlayButtons.bind(this),
         });
-        this.addDomListener(this.editable, "keydown", () => {
-            this.hideOverlayButtons();
-            this.editable.addEventListener("mousemove", onMouseMoveOrDown);
-            this.editable.addEventListener("mousedown", onMouseMoveOrDown);
-        });
-
-        // Hide the buttons when scrolling. Show them again when the scroll is
-        // over.
-        const scrollingElement = getScrollingElement(this.document);
-        const scrollingTarget = getScrollingTarget(scrollingElement);
-        this.addDomListener(
-            scrollingTarget,
-            "scroll",
-            throttleForAnimation(() => {
-                this.hideOverlayButtons();
-                clearTimeout(this.scrollingTimeout);
-                this.scrollingTimeout = setTimeout(() => {
-                    this.showOverlayButtons();
-                }, 250);
-            }),
-            { capture: true, passive: true }
-        );
 
         this._cleanups.push(() => {
             this.removeOverlayButtons();
