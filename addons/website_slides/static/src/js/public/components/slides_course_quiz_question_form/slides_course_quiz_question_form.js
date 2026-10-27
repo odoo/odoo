@@ -1,11 +1,11 @@
-import { Component, proxy, props, signal, t, useListener } from "@odoo/owl";
+import { Component, proxy, signal, t, useListener, useProps } from "@odoo/owl";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 
 export class WebsiteSlidesCourseQuizQuestionForm extends Component {
     static template = "slide.quiz.question.input";
-    props = props({
+    props = useProps({
         update: t.boolean(),
         question: t.object(),
         onSave: t.function(),
