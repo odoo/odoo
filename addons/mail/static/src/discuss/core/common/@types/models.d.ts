@@ -18,6 +18,7 @@ declare module "models" {
         hasSomeoneSeen: boolean|undefined;
         isMessagePreviousToLastSelfMessageSeenByEveryone: boolean;
         linkedSubChannel: DiscussChannel;
+        openLinkedSubChannel: () => Promise<void>;
         showSeenIndicator: (thread: Thread) => boolean;
         threadAsFirstUnread: Thread;
     }
