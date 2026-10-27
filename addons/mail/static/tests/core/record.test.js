@@ -2215,6 +2215,26 @@ test("a record made while the store is made reads the true store", async () => {
     expect(store.thread.messages._store).toBe(store);
 });
 
+test("a value written by setup() keeps the field declared on the class", async () => {
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        setup() {
+            super.setup(...arguments);
+            this.message = { id: 1 };
+        }
+        message = fields.One("Message");
+    }).register(localRegistry);
+    (class Message extends Record {
+        static id = "id";
+        id;
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert("general");
+    expect(thread.message.id).toBe(1);
+    expect(thread.message).toBe(store.Message.get(1));
+});
+
 test("forEach visits every record when the callback deletes one", async () => {
     (class Message extends Record {
         static id = "id";
