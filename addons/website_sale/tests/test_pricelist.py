@@ -437,6 +437,53 @@ class TestWebsitePriceList(WebsiteSaleCommon):
             )
             self.assertEqual(res[product_tmpl.id]["base_price"], 75)
 
+    def test_base_price_with_chained_discount_pricelists(self):
+        """The base price of chained pricelists is the price the first non plain discount rule
+        is based on, computed in batch for all the templates.
+        """
+        templates = self.env["product.template"].create([
+            {"name": f"Product {i}", "list_price": 100, "taxes_id": False} for i in range(3)
+        ])
+        discounted, fixed, no_rule = templates
+        self.pricelist.item_ids = [
+            Command.clear(),
+            Command.create({
+                "applied_on": "1_product",
+                "product_tmpl_id": discounted.id,
+                "compute_price": "discount",
+                "price_discount": 10,
+            }),
+            Command.create({
+                "applied_on": "1_product",
+                "product_tmpl_id": fixed.id,
+                "compute_price": "fixed",
+                "fixed_price": 50,
+            }),
+        ]
+        chained_pricelist = self._create_pricelist(
+            name="Chained",
+            item_ids=[
+                Command.create({
+                    "base": "pricelist",
+                    "base_pricelist_id": self.pricelist.id,
+                    "compute_price": "discount",
+                    "price_discount": 20,
+                })
+            ],
+        )
+
+        with self.mock_request(website_sale_current_pl=chained_pricelist.id) as request:
+            res = templates._get_sales_prices(
+                request.pricelist, request.fiscal_position, self.website
+            )
+
+        self.assertEqual(res[discounted.id]["price_reduce"], 72)
+        self.assertEqual(res[discounted.id]["base_price"], 100)
+        self.assertEqual(res[fixed.id]["price_reduce"], 40)
+        self.assertEqual(res[fixed.id]["base_price"], 50)
+        self.assertEqual(res[no_rule.id]["price_reduce"], 80)
+        self.assertEqual(res[no_rule.id]["base_price"], 100)
+
     def test_pricelist_item_validity_period(self):
         """Test that if a cart was created before a validity period,
         the correct prices will still apply.
