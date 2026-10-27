@@ -826,8 +826,9 @@ class ForumPost(models.Model):
         items.extend([
             (self.env._("Forums"), '/forum'),
             (self.forum_id.name, f'/forum/{forum_slug}'),
-            (self.name, self.website_url),
         ])
+        if is_detail_page:
+            items.append((self.name, self.website_url))
         return items
 
     def _prepare_jsonld_vals(self):
@@ -924,6 +925,10 @@ class ForumPost(models.Model):
             elif self.forum_id.mode == 'questions':
                 if qapage := self._build_qapage_jsonld_vals():
                     schemas.append(qapage)
+        elif self:
+            schemas.append(self._build_collectionpage_jsonld_vals(
+                self.forum_id.name, self.forum_id.website_url, self,
+            ))
         return schemas
 
     def go_to_website(self):

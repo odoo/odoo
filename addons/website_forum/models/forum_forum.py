@@ -157,14 +157,7 @@ class ForumForum(models.Model):
 
     def _get_jsonld_dict(self, is_detail_page=False):
         schemas = super()._get_jsonld_dict(is_detail_page)
-        if is_detail_page:
-            if questions := self.post_ids.filtered(
-                lambda post: not post.parent_id and post.state == 'active',
-            ):
-                schemas.append(self._build_collectionpage_jsonld_vals(
-                    self.name, self.website_url, questions,
-                ))
-        elif self:
+        if not is_detail_page and self:
             schemas.append(self._build_collectionpage_jsonld_vals(
                 self.env._("Forum"), '/forum', self,
             ))
