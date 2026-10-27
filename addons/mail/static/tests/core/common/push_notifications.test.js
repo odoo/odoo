@@ -77,7 +77,8 @@ for (const preference of ["inbox", "email"]) {
                 model: "res.partner",
                 id: partnerId,
             });
-            thread.openChatWindow();
+            // Open the chat window without saving the chat hub, whose reload closes it in tests
+            getService("mail.store").ChatWindow.insert({ thread }).open({ notifyState: false });
             await contains(".o-mail-ChatWindow");
             expect(thread.isDisplayed).toBe(true);
             patchWithCleanup(parent.document, { hasFocus: () => isFocused });
