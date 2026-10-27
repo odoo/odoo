@@ -864,6 +864,70 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         qty_valued, _ = mixed_svls._consume_all(0, 0, 10)
         self.assertGreater(qty_valued, 0)
 
+    def test_run_fifo_vacuum_multi_company(self):
+        """ Check that when in moves from different companies are validated together
+        and products where in negative quantity (at a different price then the one of the move),
+        the compensation layer is created by run_fifo_vacuum for both companies
+        """
+        company_A = self.env.company
+        company_B = self.env['res.company'].create({'name': 'Company B'})
+        self.product1.categ_id.property_cost_method = 'average'
+        self.product1.with_company(company_B).product_tmpl_id.categ_id.property_cost_method = 'average'
+        warehouse_A = self.env['stock.warehouse'].search([('company_id', '=', company_A.id)], limit=1)
+        warehouse_B = self.env['stock.warehouse'].search([('company_id', '=', company_B.id)], limit=1)
+        self.product1.standard_price = 10
+        self.product1.with_company(company_B).standard_price = 10
+
+        # Deliver 1 unit without stock in each company: negative layer valued at 10
+        self._make_out_move(self.product1, 1, force_assign=True)
+        out_move_compB = self.env['stock.move'].with_company(company_B).create({
+            'name': 'out 1 comp B',
+            'product_id': self.product1.id,
+            'location_id': warehouse_B.lot_stock_id.id,
+            'location_dest_id':  self.env.ref('stock.stock_location_customers').id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'picking_type_id': warehouse_B.out_type_id.id,
+            'move_line_ids': [Command.create({
+                'product_id': self.product1.id,
+                'product_uom_id': self.uom_unit.id,
+                'quantity': 1.0,
+                'location_id': warehouse_B.lot_stock_id.id,
+                'location_dest_id':  self.env.ref('stock.stock_location_customers').id,
+            })],
+        })
+        out_move_compB._action_confirm()
+        out_move_compB.picked = True
+        out_move_compB._action_done()
+
+        # Receive 2 units @ 30 in both companies at once
+        in_moves = self.env['stock.move'].with_context(allowed_company_ids=(company_A | company_B).ids).create([{
+            'name': 'in 20 units @ 20 per unit',
+            'product_id': self.product1.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': warehouse.lot_stock_id.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 2,
+            'price_unit': 30,
+            'picking_type_id': warehouse.in_type_id.id,
+            'company_id': warehouse.company_id.id,
+        } for warehouse in warehouse_A | warehouse_B])
+        in_moves._action_confirm()
+        in_moves._action_assign()
+        in_moves.picked = True
+        in_moves._action_done()
+
+        # Each company gets a compensation layer of -20 so that the product is valued at 30
+        for company in company_A | company_B:
+            product = self.product1.with_company(company)
+            layers = self.env['stock.valuation.layer'].search([('product_id', '=', product.id), ('company_id', '=', company.id)], order='id')
+            self.assertRecordValues(layers, [
+                {'quantity': -1, 'value': -10, 'remaining_qty': 0},
+                {'quantity': 2, 'value': 60, 'remaining_qty': 1},
+                {'quantity': 0, 'value': -20, 'remaining_qty': 0},
+            ])
+            self.assertEqual(product.standard_price, 30)
+
 
 class TestStockValuationFIFO(TestStockValuationCommon):
     @classmethod
