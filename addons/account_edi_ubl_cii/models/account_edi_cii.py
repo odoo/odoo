@@ -480,11 +480,7 @@ class AccountEdiCii(models.AbstractModel):
         invoice = vals['invoice']
         supplier = vals['supplier']
         commercial_partner = supplier.commercial_partner_id
-        scheme_id = None
-        siret = commercial_partner.company_registry
-        if 'siret' in commercial_partner._fields and commercial_partner.siret:
-            siret = commercial_partner.siret[:9]
-            scheme_id = "0002"
+        legal_organization_values = self._cii_get_partner_legal_organization_values(commercial_partner)
         supplier_vat = invoice.fiscal_position_id.foreign_vat or commercial_partner.vat
         if self._cii_is_vat_void(supplier_vat):
             supplier_vat = None
@@ -495,8 +491,7 @@ class AccountEdiCii(models.AbstractModel):
         return self._cii_get_partner_trade_party_node(vals, {
             'gln': False,
             'name': supplier.name,
-            'partner_specified_legal_organization': siret,
-            'partner_specified_legal_organization_scheme': scheme_id,
+            **legal_organization_values,
             'contact_values': {
                 'name': supplier.name,
                 'phone': supplier.phone or supplier.mobile,
@@ -515,6 +510,27 @@ class AccountEdiCii(models.AbstractModel):
             'extra_partner_tax_registrations': seller_extra_tax_registrations,
         })
 
+    def _cii_get_partner_legal_organization_values(self, commercial_partner):
+        """ The legal organization is identified by the SIREN (scheme 0002), as required by the French
+        schematrons (BR-FR-10). When a SIRET is known, it is added as global identifier (scheme 0009),
+        which is the identifier used by Chorus Pro.
+        """
+        values = {
+            'partner_specified_legal_organization': commercial_partner.company_registry,
+            'partner_specified_legal_organization_scheme': None,
+        }
+        if 'siret' in commercial_partner._fields and (siret := commercial_partner.siret):
+            values.update({
+                'partner_specified_legal_organization': siret[:9],
+                'partner_specified_legal_organization_scheme': '0002',
+            })
+            if len(siret) == 14:
+                values.update({
+                    'global_id': siret,
+                    'global_id_scheme': '0009',
+                })
+        return values
+
     def _cii_get_partner_trade_party_node(self, vals, partner_values):
         tax_registrations = partner_values.get('extra_partner_tax_registrations', [])
         if (vat := partner_values.get('partner_tax_registration', '')) and not self._cii_is_vat_void(vat):
@@ -524,6 +540,10 @@ class AccountEdiCii(models.AbstractModel):
                 'schemeID': '0088',
                 '_text': partner_values['gln'],
             } if partner_values['gln'] else None,
+            'ram:GlobalID': {
+                'schemeID': partner_values['global_id_scheme'],
+                '_text': partner_values['global_id'],
+            } if partner_values.get('global_id') else None,
             'ram:Name': {'_text': partner_values['name']},
             'ram:SpecifiedLegalOrganization': {
                 'ram:ID': {
@@ -575,17 +595,12 @@ class AccountEdiCii(models.AbstractModel):
         customer = vals['customer']
         commercial_partner = customer.commercial_partner_id
         name = customer.display_name if customer.name else commercial_partner.display_name
-        scheme_id = None
-        siret = commercial_partner.company_registry
-        if 'siret' in commercial_partner._fields and commercial_partner.siret:
-            siret = commercial_partner.siret[:9]
-            scheme_id = "0002"
+        legal_organization_values = self._cii_get_partner_legal_organization_values(commercial_partner)
         buyer_vat = customer.vat if not self._cii_is_vat_void(customer.vat) else None
         return self._cii_get_partner_trade_party_node(vals, {
             'gln': False,
             'name': name,
-            'partner_specified_legal_organization': siret,
-            'partner_specified_legal_organization_scheme': scheme_id,
+            **legal_organization_values,
             'contact_values': {
                 'name': name,
                 'phone': customer.phone or customer.mobile,
