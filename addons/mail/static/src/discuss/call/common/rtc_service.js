@@ -7,9 +7,10 @@ import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permi
 import { rpc } from "@web/core/network/rpc";
 import { assignDefined, closeStream } from "@mail/utils/common/misc";
 
-import { markup, proxy, toRaw } from "@odoo/owl";
+import { markup, proxy, toRaw, usePlugin } from "@odoo/owl";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
@@ -555,7 +556,6 @@ export class Rtc extends Record {
     start() {
         const services = this.store.env.services;
         this.notification = this.store.notification;
-        this.dialog = services.dialog;
         this.soundEffectsService = services["mail.sound_effects"];
         this.pttExtService = services["discuss.ptt_extension"];
         if (this._broadcastChannel) {
@@ -2964,6 +2964,7 @@ export const rtcService = {
     start(env, services) {
         const store = services["mail.store"];
         const rtc = store.rtc;
+        rtc.dialog = usePlugin(DialogPlugin);
         rtc.pipService = services["discuss.pip_service"];
         rtc.onChange(
             () => [rtc.pipService.state.active],
