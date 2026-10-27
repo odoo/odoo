@@ -7,4 +7,8 @@ patch(Message.prototype, {
         super.setup(...arguments);
         this.linkedSubChannel = fields.One("Thread", { inverse: "from_message_id" });
     },
+    async openLinkedSubChannel() {
+        const subChannel = await this.store.Thread.getOrFetch(this.linkedSubChannel);
+        subChannel?.open({ focus: true });
+    },
 });
