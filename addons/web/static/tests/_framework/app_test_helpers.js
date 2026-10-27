@@ -38,6 +38,11 @@ class TestApp extends App {
     test = true;
     scope = new TestScope(this);
 
+    constructor(config) {
+        super(config);
+        this.env = config.config.env;
+    }
+
     destroy() {
         this.scope.finalize(() => {});
         super.destroy();
