@@ -532,7 +532,8 @@ class TestLeaveAttendanceReport(TestHrHolidaysCommon):
                 'calendar_id': employee.resource_calendar_id.id,
                 'date_from': datetime(2025, 9, 1, 8),
                 'date_to': datetime(2025, 9, 1, 17),
-                'holiday_id': leave.id
+                'holiday_id': leave.id,
+                'count_as': 'working_time',
             })
             attendance = self.env['hr.attendance'].create(
                 {'employee_id': employee.id, 'check_in': datetime(2025, 9, 1, 9, 0, 0)}
