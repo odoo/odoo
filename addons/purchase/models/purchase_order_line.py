@@ -560,7 +560,7 @@ class PurchaseOrderLine(models.Model):
             # If no seller, use the standard price. It needs a proper currency conversion.
             if not seller_info:
                 if line.price_unit and line.uom_id == line._origin.uom_id and line.partner_id == line._origin.partner_id \
-                        and not line.product_id._has_vendor_pricelist(line.partner_id, line.company_id):
+                        and not line.product_id._has_vendor_pricelist(line.partner_id, line._get_select_sellers_params()):
                     # Avoid to modify the price unit if there is no price list for this partner and
                     # the line has already one to avoid to override unit price set manually.
                     continue
