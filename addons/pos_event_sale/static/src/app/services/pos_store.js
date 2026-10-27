@@ -25,9 +25,8 @@ patch(PosStore.prototype, {
 
         await super.settleSO(...arguments);
 
-        // Attendees are registered when the sale order is confirmed, so a confirmed one has them
-        // already. A quotation has none, and is only confirmed once this order is paid.
-        if (!["draft", "sent"].includes(saleOrder.state)) {
+        // "If the SO/quotation already has registrations (e.g. from the website), do not ask for attendee details."
+        if (saleOrder.raw._has_event_registrations) {
             return;
         }
         for (const line of this.getOrder().lines) {
