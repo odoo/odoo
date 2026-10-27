@@ -241,6 +241,35 @@ class TestDateUtils(TransactionCase):
         with freeze_time('2024-01-04 23:05:00'):
             self.assertEqual(parse('today'), date(2024, 1, 5))
 
+    @freeze_time("2026-07-15 12:00:00")
+    def test_parse_date_today_time(self):
+        for tz, offset in (("Europe/Brussels", -2), ("America/New_York", 4)):
+            parse = partial(parse_date, env=self.env(context={"tz": tz}))
+            with self.subTest(tz=tz):
+                self.assertEqual(parse("today +3H"), datetime(2026, 7, 15, 3 + offset))
+                self.assertEqual(parse("today =8H"), datetime(2026, 7, 15, 8 + offset))
+                self.assertEqual(parse("today -1d +2H"), datetime(2026, 7, 14, 2 + offset))
+                self.assertEqual(parse("today +1d"), date(2026, 7, 16))
+
+    def test_parse_date_relative_dst(self):
+        parse = partial(parse_date, env=self.env(context={"tz": "Europe/Brussels"}))
+        with freeze_time("2026-03-29 10:00:00"):
+            self.assertEqual(parse("today =8H"), datetime(2026, 3, 29, 6))
+            self.assertEqual(parse("today +3H"), datetime(2026, 3, 29, 2))
+            self.assertEqual(parse("-1d"), datetime(2026, 3, 28, 11))
+            self.assertEqual(parse("-monday"), datetime(2026, 3, 23, 11))
+        with freeze_time("2026-03-28 11:00:00"):
+            self.assertEqual(parse("+1d"), datetime(2026, 3, 29, 10))
+        with freeze_time("2026-03-29 00:50:00"):
+            self.assertEqual(parse("+2H =0M"), datetime(2026, 3, 29, 2))
+        with freeze_time("2026-10-25 00:30:00"):
+            self.assertEqual(parse("+1H =0M"), datetime(2026, 10, 25, 1))
+            self.assertEqual(parse("=0M"), datetime(2026, 10, 25, 0))
+        parse = partial(parse_date, env=self.env(context={"tz": "America/Santiago"}))
+        with freeze_time("2026-09-06 14:00:00"):
+            self.assertEqual(parse("=0H"), datetime(2026, 9, 6, 4))
+            self.assertEqual(parse("=sunday"), datetime(2026, 9, 6, 4))
+
     def test_monday_override_on_sunday_locale(self):
         locale = babel.Locale.parse('en_US')
         self.assertEqual(locale.first_week_day, 6)

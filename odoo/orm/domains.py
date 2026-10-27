@@ -1525,6 +1525,8 @@ def _value_to_date(value, env, iso_only=False):
                 return value
         else:
             value = parse_date(value, env)
+            if isinstance(value, datetime):
+                value = value.replace(tzinfo=timezone.utc).astimezone(env.tz)
         return _value_to_date(value, env)
     if isinstance(value, COLLECTION_TYPES):
         return OrderedSet(_value_to_date(v, env=env, iso_only=iso_only) for v in value)
