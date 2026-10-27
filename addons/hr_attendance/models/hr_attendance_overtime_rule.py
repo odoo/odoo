@@ -270,9 +270,10 @@ class HrAttendanceOvertimeRule(models.Model):
             date_end = date_start + relativedelta(days=6)  # Set to Sunday
         date_start = datetime.combine(date_start, datetime.min.time())
         date_end = datetime.combine(date_end, datetime.max.time())
+        tz = ZoneInfo(version.tz)
         expected_work_time = version.employee_id._get_expected_attendances(
-            date_start.replace(tzinfo=UTC),
-            date_end.replace(tzinfo=UTC)
+            date_start.replace(tzinfo=tz),
+            date_end.replace(tzinfo=tz)
         )
         delta = sum((i[1] - i[0]).total_seconds() for i in expected_work_time)
         expected_hours = delta / 3600.0
