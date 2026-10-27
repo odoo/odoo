@@ -792,7 +792,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         ])
         reported_invoice_ids = [
             invoice_node.findtext('ID')
-            for invoice_node in etree.fromstring(flow.payload_id.raw).findall(
+            for invoice_node in etree.fromstring(flow.payload_id.raw.content).findall(
                 './TransactionsReport/Invoice'
             )
         ]
