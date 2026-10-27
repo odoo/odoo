@@ -42,7 +42,6 @@ const expectRecord = (record, not = false) => {
 const localRegistry = registry.category("discuss.model.test");
 
 beforeEach(() => {
-    Record.register(localRegistry);
     Store.register(localRegistry);
     mockService("store", (env) => makeStore(env, { localRegistry }));
 });
@@ -261,6 +260,30 @@ test("Assign & Delete on fields with inverses", async () => {
     expectRecord(hello).not.toBeIn(thread.messages);
     expectRecord(thread).not.toBeIn(hello.threads);
     expect(thread.messages).toBeEmpty();
+});
+
+test("Setting the length of a record list adapts inverses", async () => {
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        members = fields.Many("Member", { inverse: "thread" });
+    }).register(localRegistry);
+    (class Member extends Record {
+        static id = "name";
+        name;
+        thread = fields.One("Thread");
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert("General");
+    const [john, marc] = store.Member.insert(["John", "Marc"]);
+    thread.members = [john, marc];
+    thread.members.length = 1;
+    expect(thread.members).toHaveLength(1);
+    expectRecord(john.thread).toEqual(thread);
+    expect(Boolean(marc.thread)).toBe(false);
+    thread.members.length = 0;
+    expect(thread.members).toBeEmpty();
+    expect(Boolean(john.thread)).toBe(false);
 });
 
 test("Assign & Delete on _inherits fields", async () => {
