@@ -239,6 +239,11 @@ class PaymentTransaction(models.Model):
             },
         )
 
+        # Save the refund ID so webhooks can match the refund before processing runs.
+        self.with_context(
+            payment_safe_write=True  # The transaction was just created; no concurrent write is possible
+        ).write({"provider_reference": data["id"]})
+
         # Process the refund request response.
         payment_data = {}
         StripeController._include_refund_in_payment_data(data, payment_data)
