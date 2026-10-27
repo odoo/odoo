@@ -8,7 +8,8 @@ class L10nFRAccountEdiCii(models.AbstractModel):
 
     def _cii_add_exchanged_document_context_node(self, vals):
         node = vals['document_node'].setdefault('rsm:ExchangedDocumentContext', {})
-        if vals['company']._get_peppol_proxy_type() == 'pdp':
+        # Chorus Pro expects A1-A12 here and defaults to A1 (supplier invoice) when absent
+        if vals['company']._get_peppol_proxy_type() == 'pdp' and not self._cii_is_customer_behind_chorus_pro(vals):
             node['ram:BusinessProcessSpecifiedDocumentContextParameter'] = {
                 'ram:ID': {'_text': self._l10n_fr_pdp_get_profile_id(vals)},
             }

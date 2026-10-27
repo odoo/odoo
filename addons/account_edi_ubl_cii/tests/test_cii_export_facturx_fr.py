@@ -184,6 +184,7 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
         self._assert_invoice_ubl_file(invoice, 'test_invoice_negative_price_unit')
 
     def test_invoice_partner_info(self):
+        self.ensure_installed("l10n_fr")
         self.partner_fr.write({
             'company_registry': '123456789',
             'phone': '+33 499 12 34 56',
@@ -279,6 +280,30 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
 
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_partner_siret')
+
+    def test_invoice_partner_siret_chorus_pro(self):
+        self.ensure_installed("l10n_fr")
+        self.partner_fr.write({
+            'siret': '12345678900012',
+        })
+        self.partner_fr.write({
+            'peppol_eas': '0009',
+            'peppol_endpoint': '11000201100044',
+        })
+        self.company.write({
+            'siret': '98765432100012',
+        })
+
+        invoice = self._create_invoice_one_line(
+            product_id=self.product,
+            tax_ids=self.tax_20,
+            partner_id=self.partner_fr,
+            partner_bank_id=self.recipient_bank,
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_partner_siret_chorus_pro')
 
     def test_invoice_tax_included(self):
         tax_20_incl = self.percent_tax(20, price_include_override='tax_included')

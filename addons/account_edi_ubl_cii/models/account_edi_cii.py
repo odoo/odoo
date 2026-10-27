@@ -486,11 +486,7 @@ class AccountEdiCii(models.AbstractModel):
         invoice = vals['invoice']
         supplier = vals['supplier']
         commercial_partner = supplier.commercial_partner_id
-        scheme_id = None
-        siret = commercial_partner.company_registry
-        if 'siret' in commercial_partner._fields and commercial_partner.siret:
-            siret = commercial_partner.siret[:9]
-            scheme_id = "0002"
+        legal_organization_values = self._cii_get_partner_legal_organization_values(vals, commercial_partner)
         supplier_vat = invoice.fiscal_position_id.foreign_vat or commercial_partner.vat
         if self._cii_is_vat_void(supplier_vat):
             supplier_vat = None
@@ -501,8 +497,7 @@ class AccountEdiCii(models.AbstractModel):
         return self._cii_get_partner_trade_party_node(vals, {
             'gln': supplier.peppol_endpoint if supplier.peppol_eas == '0088' else None,
             'name': supplier.name,
-            'partner_specified_legal_organization': siret,
-            'partner_specified_legal_organization_scheme': scheme_id,
+            **legal_organization_values,
             'contact_values': {
                 'name': supplier.name,
                 'phone': supplier.phone or supplier.mobile,
@@ -520,6 +515,33 @@ class AccountEdiCii(models.AbstractModel):
             'partner_tax_registration': supplier_vat,
             'extra_partner_tax_registrations': seller_extra_tax_registrations,
         })
+
+    def _cii_get_partner_legal_organization_values(self, vals, commercial_partner):
+        """ French partners are identified by their SIREN (scheme 0002), as required by BR-FR-10.
+        Chorus Pro (manual Factur-X upload) only accepts a SIRET there, so we use it (scheme 0009)
+        when the customer is behind Chorus Pro.
+        """
+        if (
+            hasattr(commercial_partner, '_l10n_fr_get_siret_or_siren')
+            and (commercial_partner.siret or commercial_partner.country_code in {'FR', 'GP', 'MQ', 'RE'})
+            and (siret_or_siren := commercial_partner._l10n_fr_get_siret_or_siren())
+        ):
+            if len(siret_or_siren) == 14 and self._cii_is_customer_behind_chorus_pro(vals):
+                return {
+                    'partner_specified_legal_organization': siret_or_siren,
+                    'partner_specified_legal_organization_scheme': '0009',
+                }
+            return {
+                'partner_specified_legal_organization': siret_or_siren[:9],
+                'partner_specified_legal_organization_scheme': '0002',
+            }
+        return {
+            'partner_specified_legal_organization': commercial_partner.company_registry,
+            'partner_specified_legal_organization_scheme': None,
+        }
+
+    def _cii_is_customer_behind_chorus_pro(self, vals):
+        return self.env['account.edi.xml.ubl_bis3']._is_customer_behind_chorus_pro(vals['customer'].commercial_partner_id)
 
     def _cii_get_partner_trade_party_node(self, vals, partner_values):
         tax_registrations = partner_values.get('extra_partner_tax_registrations', [])
@@ -580,17 +602,12 @@ class AccountEdiCii(models.AbstractModel):
     def _cii_get_buyer_trade_party_node(self, vals):
         customer = vals['customer']
         commercial_partner = customer.commercial_partner_id
-        scheme_id = None
-        siret = commercial_partner.company_registry
-        if 'siret' in commercial_partner._fields and commercial_partner.siret:
-            siret = commercial_partner.siret[:9]
-            scheme_id = "0002"
+        legal_organization_values = self._cii_get_partner_legal_organization_values(vals, commercial_partner)
         buyer_vat = customer.vat if not self._cii_is_vat_void(customer.vat) else None
         return self._cii_get_partner_trade_party_node(vals, {
             'gln': customer.peppol_endpoint if customer.peppol_eas == '0088' else None,
             'name': commercial_partner.name,
-            'partner_specified_legal_organization': siret,
-            'partner_specified_legal_organization_scheme': scheme_id,
+            **legal_organization_values,
             'contact_values': {
                 'name': customer.name or commercial_partner.name,
                 'phone': customer.phone or customer.mobile,
