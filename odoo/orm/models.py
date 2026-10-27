@@ -195,7 +195,7 @@ def check_companies_domain_parent_of(self, companies):
     ])]
 
 
-def get_public_method(model: BaseModel, name: str) -> callable:
+def get_public_method(model: BaseModel, name: str) -> Callable[..., typing.Any]:
     """ Get the public unbound method from a model.
 
     When the method does not exist or is inaccessible, raise appropriate errors.

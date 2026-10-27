@@ -16,6 +16,7 @@ import {
     getService,
     isSmall,
     mockService,
+    mockUpload,
     models,
     mountWebClient,
     onRpc,
@@ -315,18 +316,12 @@ onRpc("base_import.import", "execute_import", ({ args }) => executeImport(args))
 onRpc("base_import.import", "create", () => 11);
 onRpc("base_import.import", "get_fields", () => Partner._fields);
 
+function uploadAttachment(route, params) {
+    return [{ id: 10, name: params.ufile[0].name, mimetype: "text/plain" }];
+}
+
 before(() => {
-    mockService("http", {
-        async post(route, params) {
-            return JSON.stringify([
-                {
-                    id: 10,
-                    name: params.ufile[0].name,
-                    mimetype: "text/plain",
-                },
-            ]);
-        },
-    });
+    mockUpload(uploadAttachment);
 });
 
 describe("Import view", () => {
@@ -389,12 +384,10 @@ describe("Import view", () => {
     });
 
     test("import a file with multiple sheets", async () => {
-        mockService("http", {
-            post(route, params) {
-                expect.step(route);
-                expect(params.ufile[0].name).toBe("fake_file.xlsx");
-                return super.post(route, params);
-            },
+        mockUpload((route, params) => {
+            expect.step(route);
+            expect(params.ufile[0].name).toBe("fake_file.xlsx");
+            return uploadAttachment(route, params);
         });
 
         onRpc("partner", "get_import_templates", ({ route }) => expect.step(route));
@@ -456,12 +449,10 @@ describe("Import view", () => {
     });
 
     test("preview error on loading second sheet", async () => {
-        mockService("http", {
-            post(route, params) {
-                expect.step(route);
-                expect(params.ufile[0].name).toBe("fake_file.xlsx");
-                return super.post(route, params);
-            },
+        mockUpload((route, params) => {
+            expect.step(route);
+            expect(params.ufile[0].name).toBe("fake_file.xlsx");
+            return uploadAttachment(route, params);
         });
 
         let currentSheet = "Template"; // Track the current sheet being parsed-
@@ -552,12 +543,10 @@ describe("Import view", () => {
     });
 
     test(`import a CSV file with one sheet`, async () => {
-        mockService("http", {
-            post(route, params) {
-                expect.step(route);
-                expect(params.ufile[0].name).toBe("fake_file.csv");
-                return super.post(route, params);
-            },
+        mockUpload((route, params) => {
+            expect.step(route);
+            expect(params.ufile[0].name).toBe("fake_file.csv");
+            return uploadAttachment(route, params);
         });
 
         await mountWebClient();
@@ -577,12 +566,10 @@ describe("Import view", () => {
     test.tags("desktop");
     test("drag-and-drop file support", async () => {
         onRpc("has_group", () => true);
-        mockService("http", {
-            post(route, params) {
-                expect.step(route);
-                expect(params.ufile[0].name).toBe("fake_file.csv");
-                return super.post(route, params);
-            },
+        mockUpload((route, params) => {
+            expect.step(route);
+            expect(params.ufile[0].name).toBe("fake_file.csv");
+            return uploadAttachment(route, params);
         });
         mockService("notification", {
             add: (message) => {
@@ -647,9 +634,7 @@ describe("Import view", () => {
             "action",
         ]);
         expect(".o_list_view").toHaveCount(1);
-        expect(location.href).toBe(
-            "https://www.hoot.test/odoo/action-2/import/imported-records"
-        );
+        expect(location.href).toBe("https://www.hoot.test/odoo/action-2/import/imported-records");
     });
 
     test("context is forwarded to the imported records view", async () => {
@@ -687,12 +672,10 @@ describe("Import view", () => {
     });
 
     test("import a CSV file with uppercase extension", async () => {
-        mockService("http", {
-            post(route, params) {
-                expect.step(route);
-                expect(params.ufile[0].name).toBe("fake_file.CSV");
-                return super.post(route, params);
-            },
+        mockUpload((route, params) => {
+            expect.step(route);
+            expect(params.ufile[0].name).toBe("fake_file.CSV");
+            return uploadAttachment(route, params);
         });
 
         await mountWebClient();
@@ -961,16 +944,7 @@ describe("Import view", () => {
     });
 
     test("import messages are grouped and sorted", async () => {
-        mockService("http", () => ({
-            post(route, params) {
-                const file = {
-                    id: 10,
-                    name: params.ufile[0].name,
-                    mimetype: "text/plain",
-                };
-                return JSON.stringify([file]);
-            },
-        }));
+        mockUpload(uploadAttachment);
 
         await mountWebClient();
         onRpc("base_import.import", "execute_import", ({ args }) =>
@@ -1779,7 +1753,9 @@ test("locale separators only apply to CSV, not to other formats", async () => {
 
     const xlsxFile = new File(["fake_file"], "data.xlsx", { type: "text/plain" });
     if (isSmall()) {
-        await contains(".o_control_panel_main_buttons button.o-control-panel-adaptive-dropdown").click();
+        await contains(
+            ".o_control_panel_main_buttons button.o-control-panel-adaptive-dropdown"
+        ).click();
         await contains(".o-dropdown--menu .o_file_input_trigger").click();
     } else {
         await contains(".o_control_panel_main_buttons .o_file_input button").click();
@@ -1803,12 +1779,10 @@ test("locale separators only apply to CSV, not to other formats", async () => {
 
 describe("Import a CSV", () => {
     test("formatting options for date and datetime options", async () => {
-        mockService("http", {
-            post(route, params) {
-                expect.step(route);
-                expect(params.ufile[0].name).toBe("fake_file.csv");
-                return super.post(route, params);
-            },
+        mockUpload((route, params) => {
+            expect.step(route);
+            expect(params.ufile[0].name).toBe("fake_file.csv");
+            return uploadAttachment(route, params);
         });
         await mountWebClient();
         await getService("action").doAction(1);

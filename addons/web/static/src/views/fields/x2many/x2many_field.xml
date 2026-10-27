@@ -4,9 +4,9 @@
     <t t-name="web.X2ManyField">
         <div t-att-class="this.className">
             <div class="o_x2m_control_panel d-empty-none mt-1 mb-4">
-                <t t-if="this.displayControlPanelButtons">
+                <t t-if="this.displayControlPanelButtons or this.displayUploadButtons">
                     <div class="o_cp_buttons gap-1" role="toolbar" aria-label="Control panel buttons">
-                        <t t-foreach="this.controls" t-as="control" t-key="control_index">
+                        <t t-foreach="this.displayControlPanelButtons ? this.controls : []" t-as="control" t-key="control_index">
                             <button
                                 t-if="control.type === 'create' and !this.evalInvisible(control.invisible)"
                                 type="button"
@@ -25,6 +25,19 @@
                                 record="this.props.record.data[this.props.name]"
                                 string="control.string"
                                 title="control.title"
+                            />
+                        </t>
+                        <t t-foreach="this.displayUploadButtons ? this.uploadButtons : []" t-as="button" t-key="button.id">
+                            <ViewButton
+                                t-if="!this.evalInvisible(button.invisible)"
+                                className="button.className"
+                                clickParams="button.clickParams"
+                                defaultRank="'btn-secondary'"
+                                icon="button.icon"
+                                iconClass="button.iconClass"
+                                record="this.uploadRecord"
+                                string="button.string"
+                                title="button.title"
                             />
                         </t>
                     </div>

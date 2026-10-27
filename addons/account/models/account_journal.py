@@ -1177,13 +1177,19 @@ class AccountJournal(models.Model):
         """ Create the invoices from files.
          :return: A action redirecting to account.move list/form view.
         """
-        invoices = self._create_document_from_attachment(attachment_ids)
+        journal = self
+        if len(self) == 1 and 'default_move_type' not in self.env.context:
+            journal = self.with_context(default_move_type={
+                'sale': 'out_invoice',
+                'purchase': 'in_invoice',
+            }.get(self.type, 'entry'))
+        invoices = journal._create_document_from_attachment(attachment_ids)
         action_vals = {
             'name': _('Generated Documents'),
             'domain': [('id', 'in', invoices.ids)],
             'res_model': 'account.move',
             'type': 'ir.actions.act_window',
-            'context': self.env.context
+            'context': journal.env.context
         }
         if len(invoices) == 1:
             action_vals.update({

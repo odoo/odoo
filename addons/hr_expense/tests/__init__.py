@@ -8,3 +8,4 @@ from . import test_expenses_states
 from . import test_ui
 from . import test_expenses_tour
 from . import test_expense_job_position_limits
+from . import test_expense_upload

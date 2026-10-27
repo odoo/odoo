@@ -112,7 +112,7 @@ export class ViewButton extends Component {
     /**
      * @param {MouseEvent} ev
      */
-    onClick(ev, newWindow) {
+    onClick(ev, newWindow, files) {
         if (this.props.tag === "a") {
             ev.preventDefault();
         }
@@ -134,7 +134,12 @@ export class ViewButton extends Component {
                 ),
             beforeExecute: () => this.dropdownControl.close(),
             newWindow,
+            files,
         });
+    }
+
+    onUploadFiles(ev) {
+        this.onClick(ev, false, ev.detail.files);
     }
 
     getClassName() {

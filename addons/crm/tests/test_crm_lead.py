@@ -1003,6 +1003,21 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.phone, self.test_phone_data[1])
         self.assertFalse(lead.phone_sanitized)
 
+    @users('user_sales_salesman')
+    def test_create_from_uploads(self):
+        attachments = self.env['ir.attachment'].create([
+            {'name': 'card.pdf', 'raw': b'card'},
+            {'name': 'notes.txt', 'raw': b'notes'},
+        ])
+        action = self.env['crm.lead'].with_context(
+            default_team_id=self.sales_team_1.id,
+        ).action_create_from_uploads(attachments.ids)
+        lead = self.env['crm.lead'].browse(action['res_id'])
+        self.assertEqual(lead.name, 'card.pdf')
+        self.assertEqual(lead.team_id, self.sales_team_1)
+        self.assertEqual(attachments.mapped('res_model'), ['crm.lead', 'crm.lead'])
+        self.assertEqual(attachments.mapped('res_id'), [lead.id, lead.id])
+
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCRMLeadRotting(TestCrmCommon):

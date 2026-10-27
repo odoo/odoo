@@ -41,6 +41,10 @@
         <field name="model">product.document</field>
         <field name="arch" type="xml">
             <kanban js_class="product_documents_kanban" can_open="0">
+                <header>
+                    <button type="upload" name="action_create_from_uploads" string="Upload" class="btn-primary"
+                        invisible="context.get('hide_upload_button')"/>
+                </header>
                 <field name="sequence" widget="handle"/>
                 <field name="ir_attachment_id"/>
                 <field name="mimetype"/>

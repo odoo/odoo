@@ -3615,3 +3615,19 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                          (overtime_rule.work_entry_type_id,
                           self._utc(self._wall(self.monday, 16)), self._utc(self._wall(self.monday, 18))),
                          "the 2 hours beyond the schedule are overtime")
+
+    @users('enguerran')
+    def test_create_leave_from_uploads(self):
+        attachment = self.env['ir.attachment'].create({'name': 'certificate.pdf', 'raw': b'certificate'})
+        action = self.env['hr.leave'].action_create_from_uploads(attachment.ids)
+        self.assertEqual(action['context'], {'default_attachment_ids': attachment.ids})
+        self.assertEqual(attachment.res_model, 'hr.leave')
+        self.assertFalse(attachment.res_id)
+
+    @users('enguerran')
+    def test_create_leave_from_linked_attachments(self):
+        attachment = self.env['ir.attachment'].create({'name': 'certificate.pdf', 'raw': b'certificate'})
+        attachment.sudo().write({'res_model': 'res.partner', 'res_id': self.env.user.partner_id.id})
+        with self.assertRaises(UserError):
+            self.env['hr.leave'].action_create_from_uploads(attachment.ids)
+        self.assertEqual(attachment.res_model, 'res.partner')

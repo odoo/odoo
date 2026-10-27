@@ -7367,6 +7367,10 @@ class AccountMove(models.Model):
         return False
 
     @api.model
+    def create_document_from_attachment(self, attachment_ids):
+        return self.env['account.journal'].create_document_from_attachment(attachment_ids)
+
+    @api.model
     def get_sale_types(self, include_receipts=False):
         return ['out_invoice', 'out_refund'] + (include_receipts and ['out_receipt'] or [])
 
