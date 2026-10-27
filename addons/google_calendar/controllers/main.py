@@ -6,7 +6,6 @@ from odoo.http import request
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
 from odoo.addons.calendar.controllers.main import CalendarController
 
-
 class GoogleCalendarController(CalendarController):
 
     @http.route('/google_calendar/sync_data', type='json', auth='user')
@@ -19,7 +18,7 @@ class GoogleCalendarController(CalendarController):
             this URL for authorization for example
         """
         if model == 'calendar.event':
-            base_url = request.httprequest.url_root.strip('/')
+            base_url = request.env['ir.config_parameter'].get_param('web.base.url').strip().strip('/')
             GoogleCal = GoogleCalendarService(request.env['google.service'].with_context(base_url=base_url))
 
             # Checking that admin have already configured Google API for google synchronization !
