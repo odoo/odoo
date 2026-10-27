@@ -1,3 +1,4 @@
+import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Notebook } from "@web/core/notebook/notebook";
 
@@ -47,6 +48,7 @@ export class KanbanColumnExamplesDialog extends Component {
     setup() {
         this.pages = [];
         this.activePage = null;
+        this.ui = useService("ui");
         this.props.examples.forEach((eg) => {
             this.pages.push({
                 Component: KanbanExamplesNotebookTemplate,
