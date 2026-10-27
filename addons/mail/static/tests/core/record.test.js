@@ -2139,8 +2139,8 @@ test("a computed is left out of toData()", async () => {
     }).register(localRegistry);
     const store = await start();
     const thread = store.Thread.insert("general");
+    expect(thread.toData()).toEqual({ Thread: [{ name: "general" }] });
     expect(thread.label).toBe("a thread");
-    expect(Object.keys(thread.toData())).not.toInclude("label");
 });
 
 test("a read of a computed field in a child model reads it on the parent model", async () => {

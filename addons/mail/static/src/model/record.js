@@ -17,7 +17,6 @@ import {
     isRecord,
     isRelation,
     modelRegistry,
-    technicalKeysOnRecords,
     untrackFunctions,
 } from "./misc";
 import { localStorageField } from "@mail/model/local_storage_field";
@@ -625,10 +624,6 @@ export class Record {
         return ongoing.storeData;
     }
 
-    _cleanupData(data) {
-        technicalKeysOnRecords.forEach((field) => delete data[field]);
-    }
-
     /**
      * @param {Ongoing} ongoing The ongoing data conversion state.
      * @param {string} [prefix] The prefix for the current field (used for nested fields).
@@ -642,10 +637,9 @@ export class Record {
         const recordProxy = this;
         const record = recordProxy._raw;
         const Model = record.Model;
-        const data = { ...recordProxy };
+        const data = {};
         for (const name of Model._.fields.keys()) {
             if (Model._.fieldsCompute.has(name)) {
-                delete data[name];
                 continue;
             }
             const fullFieldName = prefix ? `${prefix}.${name}` : name;
@@ -680,7 +674,6 @@ export class Record {
             }
         }
 
-        this._cleanupData(data);
         const modelName = record.Model.getName();
         ongoing.storeData[modelName] ||= [];
         ongoing.storeData[modelName].push(data);

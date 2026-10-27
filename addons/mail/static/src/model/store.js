@@ -1,6 +1,6 @@
 import { PgSnapshot } from "@mail/model/field_version";
 import { Record } from "./record";
-import { STORE_SYM, modelRegistry, untrackFunctions } from "./misc";
+import { STORE_SYM, untrackFunctions } from "./misc";
 
 import { untrack } from "@odoo/owl";
 
@@ -173,15 +173,6 @@ export class Store extends Record {
         } finally {
             if (shouldCleanup) {
                 this._.currentInsertVersion = null;
-            }
-        }
-    }
-    _cleanupData(data) {
-        super._cleanupData(data);
-        if (this.Model.getName() === "Store") {
-            delete data.Models;
-            for (const [name] of modelRegistry.getEntries()) {
-                delete data[name];
             }
         }
     }
