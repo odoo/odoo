@@ -45,7 +45,7 @@ export class TextEffectPlugin extends Plugin {
                 description: _t("Apply Text Effects"),
                 Component: TextEffectSelector,
                 props: {
-                    config: this.config.getAnimateTextConfig(), // TODO obtain a more neutral method name
+                    config: this.config.getBuilderEnvConfig(),
                     prepareTextEffectSelection: this.prepareTextEffectSelection.bind(this),
                     applyTextEffect: this.applyTextEffect.bind(this),
                     previewTextEffect: this.previewTextEffect.bind(this),

@@ -53,7 +53,7 @@ export class AnimateOptionPlugin extends Plugin {
                 description: _t("Animate Text"),
                 Component: AnimateText,
                 props: {
-                    config: this.config.getAnimateTextConfig(),
+                    config: this.config.getBuilderEnvConfig(),
                     getAnimatedTextOrCreateDefault: this.getAnimatedTextOrCreateDefault.bind(this),
                     isActive: this.isAnimatedTextActive.bind(this),
                     animateOptionProps: { ...this.animateOptionProps, requireAnimation: true },
