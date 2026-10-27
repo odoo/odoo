@@ -2,23 +2,41 @@ import {
     insertSnippet,
     registerWebsitePreviewTour,
     clickToolbarButton,
+    openEffectsPanelSection,
 } from "@website/js/tours/tour_utils";
+
+function openAnimationChoices() {
+    return [
+        ...clickToolbarButton("snippet title", ".s_cover h1", "Text effects", true),
+        ...openEffectsPanelSection("animateText"),
+        {
+            content: "Open the animation choices",
+            trigger: ".o_animate_text_section [data-label='Animation'] .o_hb_select_toggle",
+            run: "click",
+        },
+    ];
+}
 
 function setTextAnimation(trigger, value) {
     return [
-        ...clickToolbarButton("snippet title", ".s_cover h1", "Animate Text", true),
+        ...openAnimationChoices(),
         {
-            content: "Open Effect options in the popover",
-            trigger: ".o_popover [data-label='Effect'] button.dropdown-toggle",
+            content: "Animate the text on appearance",
+            trigger: ".o-dropdown--menu .o-dropdown-item:contains('On Appearance')",
+            run: "click",
+        },
+        {
+            content: "Open the effect choices",
+            trigger: ".o_animate_text_section [data-label='Effect'] .o_hb_select_toggle",
             run: "click",
         },
         {
             content: "Select the text animation",
-            trigger: `.o_popover [data-action-value="${value}"]`,
+            trigger: `.o-dropdown--menu [data-action-value="${value}"]`,
             run: "click",
         },
         {
-            content: "Click away to close the popover",
+            content: "Click away to close the panel",
             trigger: `${trigger}:not(.o_popover)`,
             run: "click",
         },
@@ -41,10 +59,10 @@ registerWebsitePreviewTour(
             content: "Check that the animation was applied",
             trigger: ":iframe .s_cover .o_animated_text",
         },
-        ...clickToolbarButton("snippet title", ".s_cover h1", "Animate Text", true),
+        ...openAnimationChoices(),
         {
-            content: "Reset the text animation",
-            trigger: ".o_popover button[title='Reset']",
+            content: "Remove the text animation",
+            trigger: ".o-dropdown--menu .o-dropdown-item:contains('None')",
             run: "click",
         },
         {

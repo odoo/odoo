@@ -682,7 +682,7 @@ export function openLinkPopup({
         steps.push(
             {
                 content: "Click on Remove Link in Popover",
-                trigger: `.o-we-linkpopover .o_link_popover_container:has(.input-group) .o_we_remove_link`,
+                trigger: `.o-we-linkpopover .o_link_popover_container .o_we_remove_link`,
                 run: "click",
             },
             {
@@ -739,13 +739,46 @@ export function clickToolbarButton(elementName, selector, button, expand = false
         },
     ];
     if (expand) {
-        steps.splice(1, 0, {
-            content: "Expand the toolbar for more buttons",
-            trigger: ".o-we-toolbar button[name='expand_toolbar']",
-            run: "click",
-        });
+        steps.splice(1, 0, expandToolbar());
     }
     return steps;
+}
+
+/**
+ * Expands the editor toolbar, unless it opened expanded (it does when the
+ * compact form would hide few buttons).
+ *
+ * @returns {Object} The step expanding the toolbar.
+ */
+export function expandToolbar() {
+    return {
+        content: "Expand the toolbar for more buttons",
+        trigger: ".o-we-toolbar[data-namespace]",
+        async run() {
+            this.anchor.querySelector("button[name='expand_toolbar']")?.click();
+        },
+    };
+}
+
+/**
+ * Opens a section of the text effects panel of the toolbar, once the panel is
+ * open (see clickToolbarButton with "Text effects").
+ *
+ * @param {string} section e.g. "textEffect", "highlight", "animateText"
+ * @returns {Array} The steps to open the section.
+ */
+export function openEffectsPanelSection(section) {
+    return [
+        {
+            content: `Open the ${section} section of the text effects`,
+            trigger: `.o-we-effects-section[data-section='${section}'] .o-we-effects-section-toggle`,
+            async run(helpers) {
+                if (this.anchor.getAttribute("aria-expanded") !== "true") {
+                    await helpers.click();
+                }
+            },
+        },
+    ];
 }
 
 export function changeBackgroundShape(shape = "html_builder/Connections/01") {

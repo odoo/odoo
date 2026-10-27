@@ -27,6 +27,8 @@ export class TranslatePlugin extends Plugin {
             {
                 id: "translate",
                 groupId: "translate",
+                // The menu of the AI module, when it is installed.
+                menuId: "ai_tools",
                 description: _t("Translate with Google Translate"),
                 isAvailable: (selection) => !selection.isCollapsed && user.userId,
                 isDisabled: this.isNotReplaceableByAI.bind(this),

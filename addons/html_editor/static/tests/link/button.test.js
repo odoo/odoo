@@ -2,6 +2,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import {
     click,
     queryAll,
+    queryAllTexts,
     queryOne,
     waitFor,
     waitForNone,
@@ -63,9 +64,7 @@ describe("button style", () => {
         await waitFor(".o-we-toolbar");
         await click("button[name='link']");
         await animationFrame();
-        await click("button[name='link_type']");
-        await animationFrame();
-        await click(".o-we-link-type-dropdown .dropdown-item:contains('Button Primary')");
+        await click(".o_we_link_type [data-link-type='primary']");
         await animationFrame();
         await contains(".o-we-linkpopover input.o_we_href_input_link").edit("/test");
 
@@ -143,14 +142,7 @@ describe("Custom button style", () => {
         await waitFor(".o-we-linkpopover");
         await click(".o_we_edit_link");
         await animationFrame();
-        await click("button[name='link_type']");
-        await animationFrame();
-        const dropdownItems = queryAll(".o-we-link-type-dropdown .dropdown-item");
-        const labels = dropdownItems.map((item) => item.textContent.trim());
-        expect(labels).toInclude("Link");
-        expect(labels).toInclude("Button Primary");
-        expect(labels).toInclude("Button Secondary");
-        expect(labels).not.toInclude("Custom");
+        expect(queryAllTexts(".o_we_link_type .btn")).toEqual(["Link", "Primary", "Secondary"]);
     });
     test("Editor allow button size style by default", async () => {
         await setupEditor(
@@ -200,14 +192,7 @@ describe("Custom button style", () => {
         await waitFor(".o-we-linkpopover");
         await click(".o_we_edit_link");
         await animationFrame();
-        await click("button[name='link_type']");
-        await animationFrame();
-        const dropdownItems = queryAll(".o-we-link-type-dropdown .dropdown-item");
-        const labels = dropdownItems.map((item) => item.textContent.trim());
-        expect(labels).toInclude("Link");
-        expect(labels).toInclude("Button Primary");
-        expect(labels).toInclude("Button Secondary");
-        expect(labels).not.toInclude("Custom");
+        expect(queryAllTexts(".o_we_link_type .btn")).toEqual(["Link", "Primary", "Secondary"]);
     });
 
     test("should convert selected text to a button", async () => {
@@ -218,10 +203,7 @@ describe("Custom button style", () => {
             confirm: false,
         });
 
-        await contains("button[name='link_type']").click();
-        await contains(
-            ".o-we-link-type-dropdown .dropdown-item:contains('Button Primary')"
-        ).click();
+        await contains(".o_we_link_type [data-link-type='primary']").click();
         await contains("select[name='link_style_size']").select("lg");
         await contains("select[name='link_style_shape']").select("fill rounded-pill");
 
@@ -241,8 +223,7 @@ describe("Custom button style", () => {
         const a = queryOne("p > a");
 
         await contains(".o-we-linkpopover .o_we_edit_link").click();
-        await contains("button[name='link_type']").click();
-        await contains(".dropdown-item span:contains('Button Primary')").click();
+        await contains(".o_we_link_type [data-link-type='primary']").click();
 
         // test outline
         await contains('select[name="link_style_shape"]').select("outline");

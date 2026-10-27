@@ -4,7 +4,7 @@ import { unwrapContents } from "@html_editor/utils/dom";
 import { childNodeIndex, DIRECTIONS, nodeSize } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
-import { TextEffectSelector } from "./text_effect_selector";
+import { TextEffectSection } from "./text_effect_selector";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import {
     applyConfiguredEffects,
@@ -16,6 +16,7 @@ import {
     getTextEffectPresetId,
     hasConfiguredTextEffect,
     isShadowParam,
+    makeTextEffectCustom,
     setShadowParam,
     updateTextEffectPresetHash,
 } from "./text_effect_util";
@@ -29,6 +30,14 @@ import {
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { getDeepestEditablePosition, isTextNode } from "@html_editor/utils/dom_info";
 
+const TEXT_EFFECT_PRESET_NAMES = {
+    blurred_black: _t("Blurred (Black)"),
+    blurred_white: _t("Blurred (White)"),
+    outline: _t("Outline"),
+    flat: _t("Flat"),
+    glow: _t("Glow"),
+};
+
 export class TextEffectPlugin extends Plugin {
     static id = "textEffect";
     static dependencies = ["selection", "split", "history", "format"];
@@ -37,29 +46,28 @@ export class TextEffectPlugin extends Plugin {
         builder_actions: {
             UpdateTextEffectAction,
         },
-        toolbar_items: [
-            withSequence(15, {
-                id: "textEffect",
-                groupId: "decoration",
-                namespaces: ["expanded"],
-                description: _t("Apply Text Effects"),
-                Component: TextEffectSelector,
-                props: {
-                    config: this.config.getAnimateTextConfig(), // TODO obtain a more neutral method name
-                    prepareTextEffectSelection: this.prepareTextEffectSelection.bind(this),
-                    applyTextEffect: this.applyTextEffect.bind(this),
-                    previewTextEffect: this.previewTextEffect.bind(this),
-                    revertTextEffect: this.revertTextEffect.bind(this),
-                    getState: () => this.toolbarIconState,
-                    updateState: () => {
-                        this.toolbarIconState.isActive = this.isTextEffectActive();
-                        this.toolbarIconState.isDisabled = this.isTextEffectDisabled();
-                    },
+        effects_panel_sections: withSequence(10, {
+            id: "textEffect",
+            title: _t("Shadow & outline"),
+            Component: TextEffectSection,
+            props: {
+                config: this.config.getAnimateTextConfig(), // TODO obtain a more neutral method name
+                prepareTextEffectSelection: this.prepareTextEffectSelection.bind(this),
+                applyTextEffect: this.applyTextEffect.bind(this),
+                previewTextEffect: this.previewTextEffect.bind(this),
+                revertTextEffect: this.revertTextEffect.bind(this),
+                getLastCustomEffect: () => this.lastCustomEffect,
+                updateState: () => {
+                    this.toolbarIconState.isActive = this.isTextEffectActive();
+                    this.toolbarIconState.isDisabled = this.isTextEffectDisabled();
                 },
-                isAvailable: (selection) =>
-                    isHtmlContentSupported(selection) && !selection.isCollapsed,
-            }),
-        ],
+            },
+            isAvailable: (selection) => isHtmlContentSupported(selection) && !selection.isCollapsed,
+            isDisabled: () => this.isTextEffectDisabled(),
+            isActive: () => this.isTextEffectActive(),
+            getSummary: () => this.getTextEffectSummary(),
+            prepare: () => this.prepareTextEffectSelection(),
+        }),
         can_remove_format_predicates: (editableTargetedNodes) => {
             if (
                 editableTargetedNodes.some((node) => {
@@ -96,6 +104,9 @@ export class TextEffectPlugin extends Plugin {
             isActive: undefined,
             isDisabled: undefined,
         });
+        // The last custom effect a preset replaced: the Custom tile brings it
+        // back until the editor closes, even when the page no longer uses it.
+        this.lastCustomEffect = undefined;
     }
     /**
      * Returns the element that is a text with an effect that corresponds to the
@@ -204,8 +215,18 @@ export class TextEffectPlugin extends Plugin {
         this.completeTextEffectSelection();
         return this.getTextEffectState();
     }
-    applyTextEffect(effectJson) {
+    /**
+     * @param {string} effectJson
+     * @param {Object} [options]
+     * @param {boolean} [options.keepReplaced=true] false when the replaced
+     *      effect is not one to bring back (its last shadow was removed)
+     */
+    applyTextEffect(effectJson, { keepReplaced = true } = {}) {
+        const lastCustomEffect = this.lastCustomEffect;
         this.previewableApplyTextEffect.commit(effectJson);
+        if (!keepReplaced) {
+            this.lastCustomEffect = lastCustomEffect;
+        }
         return this.getTextEffectState();
     }
     previewTextEffect(effectJson) {
@@ -228,9 +249,20 @@ export class TextEffectPlugin extends Plugin {
             element.dataset.textEffect = JSON.stringify(textEffect);
         }
     }
+    rememberCustomEffect(element) {
+        const textEffect = JSON.parse(element.dataset.textEffect || "{}");
+        if (textEffect.preset === "custom" && hasConfiguredTextEffect(textEffect)) {
+            const presetHash = getTextEffectPresetId(textEffect);
+            this.lastCustomEffect = { ...textEffect, presetHash };
+        }
+    }
     _applyTextEffect(effectJson) {
         const effect = JSON.parse(effectJson);
         const selectedTextEffects = this.getSelectedTextEffects();
+        // Read before they are replaced, also when only previewing a preset.
+        for (const textEffect of selectedTextEffects) {
+            this.rememberCustomEffect(textEffect);
+        }
         if (!Object.keys(effect).length) {
             const cursors = this.dependencies.selection.preserveSelection();
             for (const textEffect of selectedTextEffects) {
@@ -391,6 +423,18 @@ export class TextEffectPlugin extends Plugin {
         );
         return { element: span, didRemoveOtherTextEffect };
     }
+    /**
+     * @returns {string} the name of the effect of the selection, for the
+     * Effects panel
+     */
+    getTextEffectSummary() {
+        const textEffectEl = this.getTextEffect();
+        const textEffect = JSON.parse(textEffectEl?.dataset.textEffect || "{}");
+        if (!hasConfiguredTextEffect(textEffect)) {
+            return _t("None");
+        }
+        return TEXT_EFFECT_PRESET_NAMES[getTextEffectPresetId(textEffect)] || _t("Custom");
+    }
     isTextEffectActive() {
         const textEffectEl = this.getTextEffect();
         if (!textEffectEl) {
@@ -465,7 +509,7 @@ export class UpdateTextEffectAction extends BuilderAction {
         } else {
             delete json[variable];
         }
-        updateTextEffectPresetHash(json);
+        makeTextEffectCustom(json);
         editingElement.dataset.textEffect = JSON.stringify(json);
         applyConfiguredEffects(editingElement);
     }

@@ -8,6 +8,8 @@
         <xpath expr="//a[hasclass('o_we_url_link')]" position="attributes">
             <attribute name="class" add="me-3" separator=" "/>
         </xpath>
+        <!-- Menu items are removed from the menu editor, not unlinked. -->
+        <xpath expr="//div[hasclass('o_we_link_preview_actions')]/a[hasclass('o_we_remove_link')]" position="replace"/>
         <xpath expr="//a[@title='Edit Link']" position="after">
             <button type="button"
                     class="js_edit_menu btn btn-sm btn-primary"

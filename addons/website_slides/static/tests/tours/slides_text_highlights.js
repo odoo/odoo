@@ -3,6 +3,8 @@
 import {
     clickOnEditAndWaitEditMode,
     clickOnSave,
+    expandToolbar,
+    openEffectsPanelSection,
     registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
 
@@ -67,19 +69,21 @@ registerWebsitePreviewTour("fullscreen_slide_text_highlights", {}, () => [
         run: "click",
     },
     selectText(".s_text_block > p"),
+    expandToolbar(),
     {
-        content: "Expand the text editor toolbar",
-        trigger: 'button[name="expand_toolbar"]',
+        content: "Click on the 'Text effects' button to show the effects",
+        trigger: "button.o-select-effects",
         run: "click",
     },
+    ...openEffectsPanelSection("highlight"),
     {
-        content: "Click on the 'Highlight Effects' button to show the listing",
-        trigger: "button.o_hb_select_highlight",
+        content: "Open the highlight shapes",
+        trigger: ".o_popover #highlightPicker",
         run: "click",
     },
     {
         content: "Click on the first highlight effect proposed to activate it",
-        trigger: "span.o_text_highlight",
+        trigger: ".o_popover .o_highlight_picker span.o_text_highlight",
         run: "click",
     },
     {

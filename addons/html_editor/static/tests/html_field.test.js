@@ -1245,11 +1245,9 @@ test("should display overlay on video hover and handle video replacement and rem
     await hover(queryOne("div[data-embedded='video']"));
     await expectElementCount(".video-overlay", 1);
 
-    // Click on overlay and choose Replace
-    await click(".video-overlay button");
-    await waitFor(".o-dropdown-item");
-    expect(queryAllTexts(".o-dropdown-item")[0]).toBe("Replace");
-    await click(".o-dropdown-item [data-icon='swap_horiz']");
+    // The bar of the overlay offers Replace
+    expect(".video-overlay .video-replace-button").toHaveText("Replace");
+    await click(".video-overlay .video-replace-button");
     await waitFor("textarea[id='o_video_text']");
 
     // Replace video
@@ -1273,10 +1271,8 @@ test("should display overlay on video hover and handle video replacement and rem
     // Hover VideoBlock again, and choose Remove
     await hover(queryOne("div[data-embedded='video']"));
     await expectElementCount(".video-overlay", 1);
-    await click(".video-overlay button");
-    await waitFor(".o-dropdown-item");
-    expect(queryAllTexts(".o-dropdown-item")[1]).toBe("Remove");
-    await click(".o-dropdown-item [data-icon='delete'].oi-filled");
+    expect(".video-overlay .video-delete-button").toHaveAttribute("title", "Remove");
+    await click(".video-overlay .video-delete-button");
     await expectElementCount('div[data-embedded="video"]', 0);
 });
 
@@ -1326,11 +1322,9 @@ test("should preserve vertical video setting when reopening media dialog", async
     await hover(queryOne("div[data-embedded='video']"));
     await expectElementCount(".video-overlay", 1);
 
-    // Click on overlay and choose Replace
-    await click(".video-overlay button");
-    await waitFor(".o-dropdown-item");
-    expect(queryAllTexts(".o-dropdown-item")[0]).toBe("Replace");
-    await click(".o-dropdown-item [data-icon='swap_horiz']");
+    // The bar of the overlay offers Replace
+    expect(".video-overlay .video-replace-button").toHaveText("Replace");
+    await click(".video-overlay .video-replace-button");
 
     // Ensure the vertical setting is still active
     await waitFor(".o_video_dialog_form .o_video_dialog_options label:contains(Vertical) input");

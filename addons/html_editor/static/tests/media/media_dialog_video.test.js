@@ -306,7 +306,6 @@ describe("media dialog video", () => {
 
             hover('div[data-embedded="video"]');
             await animationFrame();
-            await contains("button.video-options-button").click();
             await contains(".video-replace-button").click();
             await animationFrame();
 
@@ -378,7 +377,6 @@ describe("media dialog video", () => {
 
             hover('div[data-embedded="video"]');
             await animationFrame();
-            await contains("button.video-options-button").click();
             await contains(".video-replace-button").click();
             await animationFrame();
 
@@ -437,7 +435,6 @@ describe("media dialog video", () => {
             mockFetch(() => '{"data": "mockFetch api result data"}');
             hover('div[data-embedded="video"]');
             await animationFrame();
-            await contains("button.video-options-button").click();
             await contains(".video-delete-button").click();
             await animationFrame();
 
@@ -541,7 +538,6 @@ describe("media dialog video", () => {
             // open the media modal on the newly added media in the DOM
             hover('div[data-embedded="video"]');
             await animationFrame();
-            await contains("button.video-options-button").click();
             await contains(".video-replace-button").click();
             await animationFrame();
             mediaModal = await waitFor(`div.modal`);

@@ -8,7 +8,8 @@ import { setupEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
 
 import { TranslatePlugin } from "@html_editor/main/translate/translate_plugin";
-import { expandToolbar } from "./_helpers/toolbar";
+import { Plugin } from "@html_editor/plugin";
+import { expandToolbar, openToolbarMenu } from "./_helpers/toolbar";
 import { execCommand } from "./_helpers/userCommands";
 
 const TRANSLATE_DIALOG_TITLE = "Translate";
@@ -244,4 +245,46 @@ test("press escape to close translate dialog", async () => {
     await press("escape");
     await animationFrame();
     expect(translateDialogHeaderSelector).toHaveCount(0);
+});
+
+test("Translate goes in the AI tools menu when there is one", async () => {
+    loadLanguages.installedLanguages = false;
+    onRpc("res.lang", "get_installed", () => [
+        ["en_US", "English (US)"],
+        ["fr_BE", "French (BE) / Français (BE)"],
+    ]);
+    class AIToolsPlugin extends Plugin {
+        static id = "aiTools";
+        resources = {
+            user_commands: { id: "testAskAI", run: () => {} },
+            toolbar_groups: { id: "ai" },
+            toolbar_items: [
+                {
+                    id: "ai_tools",
+                    groupId: "ai",
+                    isMenu: true,
+                    namespaces: ["compact", "expanded"],
+                    icon: "o_ai_icon",
+                    description: "AI tools",
+                },
+                {
+                    id: "test_ask_ai",
+                    menuId: "ai_tools",
+                    commandId: "testAskAI",
+                    description: "Ask AI",
+                    label: "Ask AI…",
+                },
+            ],
+        };
+    }
+    await setupEditor("<p>te[s]t</p>", {
+        config: { includePlugins: [TranslatePlugin, AIToolsPlugin] },
+    });
+    await expandToolbar();
+    expect(".o-we-toolbar .btn[name='translate']").toHaveCount(0);
+    await openToolbarMenu("ai_tools");
+    expect(".o-we-toolbar-menu [name='test_ask_ai']").toHaveCount(1);
+    await contains(".o-we-toolbar-menu button[name='translate']").click();
+    await translateDropdownFromToolbar();
+    await waitFor(`.o_dialog .modal-header:contains("${TRANSLATE_DIALOG_TITLE}")`);
 });

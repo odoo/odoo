@@ -29,7 +29,13 @@ export class ToolbarMobile extends Component {
         useListener(this.targetWindow.visualViewport, "resize", this.fixToolbarPosition.bind(this));
         useListener(this.targetWindow.visualViewport, "scroll", this.fixToolbarPosition.bind(this));
 
-        onMounted(() => this.fixToolbarPosition());
+        onMounted(() => {
+            this.fixToolbarPosition();
+            const modal = this.props.editable.closest(".o_modal_full");
+            if (modal) {
+                modal.style.paddingBottom = `${this.toolbarRef().offsetHeight}px`;
+            }
+        });
     }
 
     /**

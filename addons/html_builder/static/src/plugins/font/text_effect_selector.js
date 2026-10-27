@@ -1,8 +1,5 @@
 import { useSubEnv } from "@web/owl2/utils";
-import { Component, proxy, useProps, t } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useDropdownCloser, useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { Component, onWillUnmount, useProps, t, xml } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { DependencyManager } from "@html_builder/core/dependency_manager";
@@ -11,11 +8,10 @@ import {
     addShadow,
     applyConfiguredEffects,
     getShadowCount,
-    getTextEffectPresetHash,
     getTextEffectPresetId,
     hasConfiguredTextEffect,
+    makeTextEffectCustom,
     removeShadow,
-    updateTextEffectPresetHash,
 } from "./text_effect_util";
 
 const DEFAULT_TEXT_EFFECT = {
@@ -27,34 +23,27 @@ const DEFAULT_TEXT_EFFECT = {
     ],
 };
 
+/**
+ * Presets as tiles, the last one "Custom": a custom effect shows one row per
+ * shadow and the outline. Nothing is applied until a tile is picked.
+ */
 export class TextEffectOption extends BaseOptionComponent {
     static template = "html_builder.TextEffectOption";
-    static components = { DropdownItem };
 
     setup() {
         super.setup();
         const editingElement = this.env.getEditingElement();
-        this.state = proxy({
+        // Read again after each edit, the rows of the builder included.
+        this.domState = useDomState(async (editingElement) => ({
             presets: this.getPresets(),
-            showPresetDropdown: !editingElement || !this.isCustom(editingElement),
-            appliedPreset: editingElement ? this.getAppliedPreset(editingElement) : undefined,
-        });
-        this.dropdownControl = useDropdownCloser();
-        this.domState = useDomState(async (editingElement) => {
-            if (!editingElement) {
-                return {
-                    hasOutline: false,
-                    shadowIndexes: [],
-                };
-            }
-            return {
-                hasOutline: this.hasOutline(editingElement),
-                shadowIndexes: this.getShadowIndexes(editingElement),
-            };
-        });
-    }
-    isCustom(editingElement) {
-        return this.getTextEffect(editingElement).preset === "custom";
+            appliedPreset: this.getAppliedPreset(editingElement),
+            hasOutline: this.hasOutline(editingElement),
+            shadowIndexes: this.getShadowIndexes(editingElement),
+        }));
+        if (!editingElement) {
+            // Nothing to read yet: the presets are offered to apply one.
+            this.domState.presets = this.getPresets();
+        }
     }
     getTextEffect(editingElement) {
         return JSON.parse(editingElement.dataset.textEffect || "{}");
@@ -73,27 +62,6 @@ export class TextEffectOption extends BaseOptionComponent {
         return values.some((value) => parseInt(value) > 0);
     }
     getPresets() {
-        const customPresetIds = new Set();
-        const customPresets = [...this.document.querySelectorAll("#wrap span[data-text-effect]")]
-            .map((el) => JSON.parse(el.dataset.textEffect))
-            .filter(
-                (textEffect) =>
-                    textEffect.preset === "custom" && hasConfiguredTextEffect(textEffect)
-            )
-            .reduce((presets, textEffect) => {
-                const presetHash = textEffect.presetHash || getTextEffectPresetHash(textEffect);
-                if (customPresetIds.has(presetHash)) {
-                    return presets;
-                }
-                customPresetIds.add(presetHash);
-                presets.push({
-                    id: presetHash,
-                    name: _t("Custom Shadow"),
-                    isCustom: true,
-                    effect: { ...textEffect, presetHash },
-                });
-                return presets;
-            }, []);
         const presets = [
             {
                 id: "no_shadow",
@@ -163,23 +131,58 @@ export class TextEffectOption extends BaseOptionComponent {
                     ],
                 },
             },
-            ...customPresets,
-            {
-                id: "custom",
-                name: _t("Custom"),
-                effect: {
-                    preset: "custom",
-                },
-            },
         ];
         for (const preset of presets) {
-            if (!preset.isCustom && preset.id !== "no_shadow" && preset.id !== "custom") {
+            if (preset.id !== "no_shadow") {
                 preset.effect.preset = preset.id;
             }
             preset.effectJson = JSON.stringify(preset.effect);
             Object.assign(preset, this.getEffectPreview(preset.effectJson));
         }
         return presets;
+    }
+    /**
+     * A custom effect: none of the presets.
+     */
+    get isCustom() {
+        const appliedPreset = this.domState.appliedPreset;
+        return (
+            !!appliedPreset &&
+            !(this.domState.presets || []).some((preset) => preset.id === appliedPreset)
+        );
+    }
+    /**
+     * The last custom effect of this editing session, or else one the page
+     * uses: the Custom tile brings it back.
+     */
+    getLastCustomEffect() {
+        const pageEffect = [...this.document.querySelectorAll("#wrap span[data-text-effect]")]
+            .map((el) => JSON.parse(el.dataset.textEffect))
+            .find(
+                (textEffect) =>
+                    textEffect.preset === "custom" && hasConfiguredTextEffect(textEffect)
+            );
+        return this.env.getLastCustomTextEffect?.() || pageEffect;
+    }
+    /**
+     * The Custom tile is the custom effect of the user: the last one, else the
+     * current preset to start from, else one shadow.
+     */
+    onClickCustom() {
+        if (this.isCustom) {
+            return;
+        }
+        const editingElement = this.env.getEditingElement();
+        const textEffect = editingElement ? this.getTextEffect(editingElement) : {};
+        let customEffect = this.getLastCustomEffect();
+        if (!customEffect && hasConfiguredTextEffect(textEffect)) {
+            customEffect = { ...textEffect, preset: "custom" };
+        }
+        if (!customEffect) {
+            customEffect = { preset: "custom" };
+            addShadow(customEffect);
+        }
+        this.onSelectedTextEffect(JSON.stringify(customEffect));
     }
     getEffectPreview(effectJson) {
         const el = this.document.createElement("span");
@@ -192,14 +195,6 @@ export class TextEffectOption extends BaseOptionComponent {
             effectStyle,
         };
     }
-    onClickBack() {
-        this.state.presets = this.getPresets();
-        const editingElement = this.env.getEditingElement();
-        this.state.appliedPreset = editingElement
-            ? this.getAppliedPreset(editingElement)
-            : undefined;
-        this.state.showPresetDropdown = true;
-    }
     async updateTextEffect(mutator) {
         const editingElement = this.env.getEditingElement();
         if (!editingElement) {
@@ -210,19 +205,33 @@ export class TextEffectOption extends BaseOptionComponent {
         if (didUpdate === false) {
             return;
         }
-        updateTextEffectPresetHash(textEffect);
+        makeTextEffectCustom(textEffect);
         editingElement.dataset.textEffect = JSON.stringify(textEffect);
         applyConfiguredEffects(editingElement);
         this.domState.shadowIndexes = this.getShadowIndexes(editingElement);
         this.domState.hasOutline = this.hasOutline(editingElement);
-        this.state.presets = this.getPresets();
-        this.state.appliedPreset = this.getAppliedPreset(editingElement);
+        this.domState.presets = this.getPresets();
+        this.domState.appliedPreset = this.getAppliedPreset(editingElement);
         this.env.editor.shared.history.commit();
     }
     onClickAddShadow() {
+        if (!this.env.getEditingElement()) {
+            const textEffect = { preset: "custom" };
+            addShadow(textEffect);
+            this.onSelectedTextEffect(JSON.stringify(textEffect));
+            return;
+        }
         this.updateTextEffect((textEffect) => addShadow(textEffect));
     }
     onClickRemoveShadow(shadowIndex) {
+        const remainingEffect = this.getTextEffect(this.env.getEditingElement());
+        removeShadow(remainingEffect, shadowIndex);
+        if (!hasConfiguredTextEffect(remainingEffect)) {
+            // Nothing would be left: the text has no effect, as after "No
+            // Shadow", and the Custom tile does not bring the shadow back.
+            this.onSelectedTextEffect("{}", { keepReplaced: false });
+            return;
+        }
         this.updateTextEffect((textEffect) => removeShadow(textEffect, shadowIndex));
     }
     onPreviewTextEffect(effectJson) {
@@ -231,87 +240,60 @@ export class TextEffectOption extends BaseOptionComponent {
     restoreTextEffectPreview() {
         this.env.revertTextEffect();
     }
-    onSelectedTextEffect(effectJson) {
-        const effect = JSON.parse(effectJson);
-        const isCustom = effect.preset === "custom";
-        const { element: editingElement, activePreset } = this.env.applyTextEffect(effectJson);
-        this.state.presets = this.getPresets();
-        this.state.appliedPreset = activePreset;
+    onSelectedTextEffect(effectJson, options) {
+        const { element: editingElement, activePreset } = this.env.applyTextEffect(
+            effectJson,
+            options
+        );
+        this.domState.presets = this.getPresets();
+        this.domState.appliedPreset = activePreset;
         if (editingElement) {
             this.domState.shadowIndexes = this.getShadowIndexes(editingElement);
             this.domState.hasOutline = this.hasOutline(editingElement);
         }
-        this.state.showPresetDropdown = !isCustom;
-        if (!isCustom) {
-            this.dropdownControl.close();
-        }
     }
 }
 
-export class TextEffectSelector extends Component {
-    static template = "html_builder.TextEffectSelector";
-    static components = { Dropdown, TextEffectOption };
+/**
+ * Text effects as a section of the Effects panel (see effects_panel_sections).
+ */
+export class TextEffectSection extends Component {
+    static template = xml`<TextEffectOption/>`;
+    static components = { TextEffectOption };
     props = useProps({
-        // from toolbarButtonProps
-        title: t.or([t.string(), t.function()]),
-        getSelection: t.function(),
-        isDisabled: t.boolean(),
         config: t.object({ editor: t.object(), editorBus: t.object() }),
         prepareTextEffectSelection: t.function(),
         applyTextEffect: t.function(),
         previewTextEffect: t.function(),
         revertTextEffect: t.function(),
-        getState: t.function(),
+        getLastCustomEffect: t.function(),
         updateState: t.function(),
     });
 
     setup() {
-        this.props.updateState();
-        this.state = this.props.getState();
-        this.dropdown = useDropdownState({
-            onClose: () => this.onCloseDropdown(),
-        });
+        this.activeElement = this.props.prepareTextEffectSelection().element;
         useSubEnv({
             dependencyManager: new DependencyManager(),
             getEditingElement: () => this.activeElement,
             getEditingElements: () => (this.activeElement ? [this.activeElement] : []),
-            applyTextEffect: (effectJson) => this.applyTextEffect(effectJson),
+            applyTextEffect: (effectJson, options) => {
+                const state = this.props.applyTextEffect(effectJson, options);
+                this.activeElement = state.element;
+                return state;
+            },
             previewTextEffect: (effectJson) => this.props.previewTextEffect(effectJson),
             revertTextEffect: () => this.props.revertTextEffect(),
+            getLastCustomTextEffect: () => this.props.getLastCustomEffect(),
             weContext: {},
             editor: this.props.config.editor,
             editorBus: this.props.config.editorBus,
             services: this.props.config.editor.services,
         });
-    }
-
-    onClickTextEffect() {
-        if (this.state.isDisabled) {
-            return;
-        }
-        if (this.dropdown.isOpen) {
-            this.dropdown.close();
-            return;
-        }
-        let state = this.props.prepareTextEffectSelection();
-        if (!state.hasTextEffect) {
-            state = this.props.applyTextEffect(JSON.stringify(DEFAULT_TEXT_EFFECT));
-        }
-        this.activeElement = state.element;
-        this.dropdown.open();
-    }
-
-    applyTextEffect(effectJson) {
-        const state = this.props.applyTextEffect(effectJson);
-        this.activeElement = state.element;
-        return state;
-    }
-
-    onCloseDropdown() {
-        this.props.revertTextEffect();
-        this.activeElement = undefined;
-        if (!this.props.config.editor.isDestroyed) {
-            this.props.updateState();
-        }
+        onWillUnmount(() => {
+            this.props.revertTextEffect();
+            if (!this.props.config.editor.isDestroyed) {
+                this.props.updateState();
+            }
+        });
     }
 }

@@ -255,7 +255,7 @@ export class FontTypePlugin extends Plugin {
     };
 
     setup() {
-        this.fontType = proxy({ displayName: "" });
+        this.fontType = proxy({ displayName: "", currentName: "" });
         this.blockFormatIsAvailableMemoized = weakMemoize(
             (selection) => isHtmlContentSupported(selection) && this.dependencies.dom.canSetBlock()
         );
@@ -278,11 +278,12 @@ export class FontTypePlugin extends Plugin {
         return root;
     }
 
-    get fontTypeName() {
+    /**
+     * @returns {Object|null|undefined} the font type item matching the block of
+     * the selection (null if no item matches its tag)
+     */
+    get currentFontTypeItem() {
         const sel = this.dependencies.selection.getSelectionData().deepEditableSelection;
-        // if (!sel) {
-        //     return "Normal";
-        // }
         const anchorNode = sel.anchorNode;
         const block = closestBlock(anchorNode);
         const tagName = block.tagName.toLowerCase();
@@ -294,13 +295,13 @@ export class FontTypePlugin extends Plugin {
         const matchingItemsWithoutExtraClass = matchingItems.filter((item) => !item.extraClass);
 
         if (!matchingItems.length) {
-            return _t("Normal");
+            return null;
         }
 
         return (
             matchingItems.find((item) => block.classList.contains(item.extraClass)) ||
-            (matchingItemsWithoutExtraClass.length && matchingItemsWithoutExtraClass[0])
-        ).name;
+            matchingItemsWithoutExtraClass[0]
+        );
     }
 
     blockFormatIsAvailable(selection) {
@@ -425,7 +426,9 @@ export class FontTypePlugin extends Plugin {
     }
 
     updateFontTypeSelectorParams() {
-        this.fontType.displayName = this.fontTypeName;
+        const item = this.currentFontTypeItem;
+        this.fontType.displayName = item === null ? _t("Normal") : item?.name;
+        this.fontType.currentName = item ? String(item.name) : "";
     }
 
     processContentForClipboard(clonedContents, selection) {

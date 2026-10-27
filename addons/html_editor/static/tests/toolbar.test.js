@@ -53,7 +53,7 @@ import {
     simulateTripleClickSelect,
     thirdClick,
 } from "./_helpers/selection";
-import { expandToolbar } from "./_helpers/toolbar";
+import { expandToolbar, openToolbarMenu } from "./_helpers/toolbar";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { insertText } from "./_helpers/user_actions";
 import { getIframeInput } from "./_helpers/iframe_input";
@@ -172,9 +172,10 @@ test("focus should be trap in toolbar on tab", async () => {
     await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
 
-    await expandToolbar();
+    // The toolbar opens expanded: Alt+F moves the focus to it.
+    await waitFor(".o-we-toolbar[data-namespace='expanded']");
+    await press(["alt", "f"]);
     const toolbarBtns = queryAll(".o-we-toolbar button:not([disabled])");
-    // First button should be focused after expanding toolbar
     expect(toolbarBtns[0]).toBeFocused();
 
     for (let i = 1; i < toolbarBtns.length; i++) {
@@ -196,9 +197,10 @@ test("focus should be trap in toolbar on arrow left/right keys", async () => {
     await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
 
-    await expandToolbar();
+    // The toolbar opens expanded: Alt+F moves the focus to it.
+    await waitFor(".o-we-toolbar[data-namespace='expanded']");
+    await press(["alt", "f"]);
     const toolbarBtns = queryAll(".o-we-toolbar button:not([disabled])");
-    // First button should be focused after expanding toolbar
     expect(toolbarBtns[0]).toBeFocused();
 
     for (let i = 1; i < toolbarBtns.length; i++) {
@@ -342,16 +344,23 @@ test("toolbar buttons react to selection change", async () => {
     // check that bold button is not active
     expect(".btn[name='bold']").not.toHaveClass("active");
     // check that remove format buton isdisabled and have correct title
-    expect(".btn[name='remove_format']").toHaveAttribute("disabled");
-    expect(".btn[name='remove_format']").toHaveAttribute("title", "Selection has no format");
+    await openToolbarMenu("more_formatting");
+    expect("[name='remove_format']").toHaveAttribute("disabled");
+    expect("[name='remove_format']").toHaveAttribute("title", "Selection has no format");
+    // On phones the menu is a bottom sheet, which hides the bar: close it.
+    await press("escape");
+    await waitForNone(".o-we-toolbar-menu");
 
     // click on toggle bold
     await contains(".btn[name='bold']").click();
     await waitFor(".btn[name='bold'].active");
     expect(getContent(el)).toBe("<p><strong>[test]</strong> some text</p>");
     expect(".btn[name='bold']").toHaveClass("active");
-    expect(".btn[name='remove_format']").not.toHaveAttribute("disabled");
-    expect(".btn[name='remove_format']").toHaveAttribute("title", "Remove Format (Ctrl + Space)");
+    await openToolbarMenu("more_formatting");
+    expect("[name='remove_format']").not.toHaveAttribute("disabled");
+    expect("[name='remove_format']").toHaveAttribute("title", "Remove Format (Ctrl + Space)");
+    await press("escape");
+    await waitForNone(".o-we-toolbar-menu");
 
     // set selection where text is not bold
     setContent(el, "<p><strong>test</strong> some [text]</p>");
@@ -484,7 +493,8 @@ test("move focus in list dropdown on Tab, Escape returns focus to dropdown butto
 });
 
 test("toolbar unlink button should be disabled when link is unremovable", async () => {
-    await setupEditor('<p>a<a class="oe_unremovable" href="http://test.test/">bc[d]</a>e</p>');
+    // Across the link and text: within one link, the bar has no unlink button.
+    await setupEditor('<p>a<a class="oe_unremovable" href="http://test.test/">bc[d</a>e]</p>');
     await waitFor(".o-we-toolbar");
     expect(".btn[name='link']").toHaveCount(1);
     expect(".btn[name='link']").toHaveClass("active");
@@ -586,6 +596,15 @@ test("toolbar works: show the right font name", async () => {
         await animationFrame();
         expect(".o-we-toolbar .btn[name='font_type']").toHaveText(name);
     }
+});
+
+test("toolbar works: mark the current font type in the menu", async () => {
+    await setupEditor("<h2>[test]</h2>");
+    await waitFor(".o-we-toolbar");
+    await contains(".o-we-toolbar [name='font_type'].dropdown-toggle").click();
+    await animationFrame();
+    expect(".o_font_type_selector_menu .dropdown-item.selected").toHaveCount(1);
+    expect(".o_font_type_selector_menu .dropdown-item.selected").toHaveText("Header 2");
 });
 
 test("toolbar works: show the right font name after undo", async () => {
@@ -691,7 +710,8 @@ test("toolbar font size selector reflects heading size after remove format", asy
     );
     expect(inputEl).toHaveValue(getFontSizeFromVar("display-3-font-size"));
 
-    await click(".btn[name='remove_format']");
+    await openToolbarMenu("more_formatting");
+    await click("[name='remove_format']");
     await animationFrame();
 
     expect(getContent(el)).toBe(`<h2>[heading 2]</h2>`);
@@ -1518,9 +1538,9 @@ test("toolbar correctly show namespace button group and stop showing when namesp
     const { el } = await setupEditor("<div>[<section><p>abc</p></section><div>d]ef</div></div>", {
         config: { includePlugins: [TestPlugin] },
     });
-    await expectElementCount(".o-we-toolbar .btn-group[name='test_group']", 1);
+    await expectElementCount(".o-we-toolbar .o-we-toolbar-group[name='test_group']", 1);
     setContent(el, "<div><section><p>[abc]</p></section><div>def</div></div>");
-    await expectElementCount(".o-we-toolbar .btn-group[name='test_group']", 0);
+    await expectElementCount(".o-we-toolbar .o-we-toolbar-group[name='test_group']", 0);
 });
 
 test("toolbar does not evaluate isActive when namespace does not match", async () => {
@@ -1565,13 +1585,21 @@ test("toolbar does not evaluate isActive when namespace does not match", async (
 });
 
 describe("compact toolbar", () => {
-    test("toolbar opens in 'compact' namespace by default", async () => {
+    test.tags("desktop");
+    test("toolbar opens expanded when the compact form would hide few buttons", async () => {
+        await setupEditor("<p>[test]</p>");
+        await waitFor(".o-we-toolbar");
+        expect(".o-we-toolbar").toHaveAttribute("data-namespace", "expanded");
+        expect(".o-we-toolbar .btn[name='expand_toolbar']").toHaveCount(0);
+    });
+
+    test.tags("mobile");
+    test("the toolbar of phones opens compact, even when it would hide few buttons", async () => {
         await setupEditor("<p>[test]</p>");
         await waitFor(".o-we-toolbar");
         expect(".o-we-toolbar").toHaveAttribute("data-namespace", "compact");
-        await expandToolbar();
-        expect(".o-we-toolbar").toHaveAttribute("data-namespace", "expanded");
     });
+
 
     const patchToUseOnlyTestButtons = () =>
         patchWithCleanup(Editor.prototype, {
@@ -1618,7 +1646,7 @@ describe("compact toolbar", () => {
         await waitFor(".o-we-toolbar");
         expect(".o-we-toolbar").toHaveAttribute("data-namespace", "expanded");
     });
-    test("toolbar should open in compact mode if expanded toolbar is big enough (>= 7 items)", async () => {
+    test("toolbar should open in compact mode if it hides enough buttons (>= 7)", async () => {
         class TestPlugin extends Plugin {
             static id = "TestPlugin";
             resources = {
@@ -1627,8 +1655,8 @@ describe("compact toolbar", () => {
                 toolbar_items: [
                     // 3 buttons in compact and expanded namespaces
                     ...repeat(3, () => makeTestButton({ namespaces: ["compact", "expanded"] })),
-                    // 4 buttons in expanded only namespace
-                    ...repeat(4, () => makeTestButton({ namespaces: ["expanded"] })),
+                    // 7 buttons in expanded only namespace
+                    ...repeat(7, () => makeTestButton({ namespaces: ["expanded"] })),
                 ],
             };
         }
@@ -1660,7 +1688,8 @@ describe("compact toolbar", () => {
         await waitFor(".o-we-toolbar");
         expect(".o-we-toolbar").toHaveAttribute("data-namespace", "expanded");
     });
-    test("toolbar should open in compact mode if expanded toolbar has more than one extra item", async () => {
+    test.tags("desktop");
+    test("toolbar should not open in compact mode if it hides fewer than 7 buttons", async () => {
         class TestPlugin extends Plugin {
             static id = "TestPlugin";
             resources = {
@@ -1669,9 +1698,8 @@ describe("compact toolbar", () => {
                 toolbar_items: [
                     // 10 buttons in compact and expanded namespaces
                     ...repeat(10, () => makeTestButton({ namespaces: ["compact", "expanded"] })),
-                    // 2 buttons in expanded only namespace
-                    makeTestButton({ namespaces: ["expanded"] }),
-                    makeTestButton({ namespaces: ["expanded"] }),
+                    // 6 buttons in expanded only namespace
+                    ...repeat(6, () => makeTestButton({ namespaces: ["expanded"] })),
                 ],
             };
         }
@@ -1680,26 +1708,38 @@ describe("compact toolbar", () => {
             config: { includePlugins: [TestPlugin] },
         });
         await waitFor(".o-we-toolbar");
+        expect(".o-we-toolbar").toHaveAttribute("data-namespace", "expanded");
+    });
+
+    test.tags("desktop");
+    test("expanded toolbar reopens in 'compact' namespace by default after closing", async () => {
+        class TestPlugin extends Plugin {
+            static id = "TestPlugin";
+            resources = {
+                user_commands: { id: "test_cmd", run: () => null },
+                toolbar_groups: { id: "test_group" },
+                toolbar_items: [
+                    ...repeat(3, () => makeTestButton({ namespaces: ["compact", "expanded"] })),
+                    ...repeat(7, () => makeTestButton({ namespaces: ["expanded"] })),
+                ],
+            };
+        }
+        patchToUseOnlyTestButtons();
+        const { el } = await setupEditor("<p>[test]</p>", {
+            config: { includePlugins: [TestPlugin] },
+        });
+        await waitFor(".o-we-toolbar");
         expect(".o-we-toolbar").toHaveAttribute("data-namespace", "compact");
         await expandToolbar();
         expect(".o-we-toolbar").toHaveAttribute("data-namespace", "expanded");
+        // Collapse selection
+        setContent(el, "<p>test[]</p>");
+        await waitForNone(".o-we-toolbar");
+        // Reopen toolbar
+        setContent(el, "<p>[test]</p>");
+        await waitFor(".o-we-toolbar");
+        expect(".o-we-toolbar").toHaveAttribute("data-namespace", "compact");
     });
-});
-
-test.tags("desktop");
-test("expanded toolbar reopens in 'compact' namespace by default after closing", async () => {
-    const { el } = await setupEditor("<p>[test]</p>");
-    await waitFor(".o-we-toolbar");
-    expect(".o-we-toolbar").toHaveAttribute("data-namespace", "compact");
-    await expandToolbar();
-    expect(".o-we-toolbar").toHaveAttribute("data-namespace", "expanded");
-    // Collapse selection
-    setContent(el, "<p>test[]</p>");
-    await waitForNone(".o-we-toolbar");
-    // Reopen toolbar
-    setContent(el, "<p>[test]</p>");
-    await waitFor(".o-we-toolbar");
-    expect(".o-we-toolbar").toHaveAttribute("data-namespace", "compact");
 });
 
 test("toolbar items without namespace default to 'expanded'", async () => {
@@ -1732,14 +1772,14 @@ test("toolbar items without namespace default to 'expanded'", async () => {
 
 test("toolbar should open with image namespace the selection spans an image and whitespace", async () => {
     const { el } = await setupEditor(`<p>[abc]</p>`);
-    // Make sure we start with a compact toolbar so we know that at the end when
+    // Make sure we start with the text toolbar so we know that at the end when
     // we don't anymore it did in fact change and we're not just lagging behind
     // the DOM.
     await animationFrame();
     await expectElementCount(".o-we-toolbar", 1);
-    expect(".o-we-toolbar").toHaveAttribute("data-namespace", "compact");
-    expect(".o-we-toolbar .btn-group[name='font']").toHaveCount(1);
-    expect(".o-we-toolbar .btn-group[name='decoration']").toHaveCount(1);
+    expect(".o-we-toolbar").not.toHaveAttribute("data-namespace", "image");
+    expect(".o-we-toolbar .o-we-toolbar-group[name='font']").toHaveCount(1);
+    expect(".o-we-toolbar .o-we-toolbar-group[name='decoration']").toHaveCount(1);
     setContent(
         el,
         `<p>[
@@ -1748,8 +1788,8 @@ test("toolbar should open with image namespace the selection spans an image and 
     );
     await waitFor(".o-we-toolbar[data-namespace='image']");
     expect(".o-we-toolbar").toHaveAttribute("data-namespace", "image");
-    expect(".o-we-toolbar .btn-group[name='font']").toHaveCount(0);
-    expect(".o-we-toolbar .btn-group[name='decoration']").toHaveCount(0);
+    expect(".o-we-toolbar .o-we-toolbar-group[name='font']").toHaveCount(0);
+    expect(".o-we-toolbar .o-we-toolbar-group[name='decoration']").toHaveCount(0);
 });
 
 test.tags("desktop");
@@ -1783,36 +1823,69 @@ test("plugins can create buttons with text in toolbar", async () => {
     expect("button[name='test_btn']").toHaveText("Text button");
 });
 
-test("toolbar buttons should have rounded corners at the edges of a group", async () => {
+test("toolbar menus list their items, or show the only available one as a button", async () => {
+    let isSecondAvailable = true;
+    class TestPlugin extends Plugin {
+        static id = "TestPlugin";
+        resources = {
+            user_commands: [
+                { id: "test_cmd_a", run: () => null },
+                { id: "test_cmd_b", run: () => null, isAvailable: () => isSecondAvailable },
+            ],
+            toolbar_groups: withSequence(24, { id: "test_group" }),
+            toolbar_items: [
+                {
+                    id: "test_menu",
+                    groupId: "test_group",
+                    isMenu: true,
+                    icon: "more_horiz",
+                    description: "Test menu",
+                },
+                {
+                    id: "test_item_a",
+                    menuId: "test_menu",
+                    commandId: "test_cmd_a",
+                    description: "Item A",
+                    label: "Item A",
+                    icon: "check",
+                },
+                {
+                    id: "test_item_b",
+                    menuId: "test_menu",
+                    commandId: "test_cmd_b",
+                    description: "Item B",
+                    label: "Item B",
+                    shortcut: "Ctrl + B",
+                    icon: "check",
+                },
+            ],
+        };
+    }
+    const { el } = await setupEditor(`<p>[Foo]</p><p>Bar</p>`, {
+        config: { includePlugins: [TestPlugin] },
+    });
+    await expandToolbar();
+    expect(".o-we-toolbar .btn[name='test_item_a']").toHaveCount(0);
+    await openToolbarMenu("test_menu");
+    expect(".o-we-toolbar-menu .dropdown-item").toHaveCount(2);
+    expect(".o-we-toolbar-menu [name='test_item_b'] span:first-of-type").toHaveText("Item B");
+    expect(".o-we-toolbar-menu [name='test_item_b'] span:last-of-type").toHaveText("Ctrl + B");
+
+    isSecondAvailable = false;
+    setContent(el, "<p>Foo</p><p>[Bar]</p>");
+    await waitFor(".o-we-toolbar .btn[name='test_item_a']");
+    expect(".o-we-toolbar .btn[name='test_menu']").toHaveCount(0);
+});
+
+test("toolbar buttons should keep their rounded corners inside a group", async () => {
     await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
-    const buttonGroups = queryAll(".o-we-toolbar .btn-group");
-    for (const group of buttonGroups) {
-        for (let i = 0; i < group.children.length; i++) {
-            const button = group.children[i];
-            const computedStyle = getComputedStyle(button);
-            const borderRadius = Object.fromEntries(
-                ["top-left", "top-right", "bottom-left", "bottom-right"].map((corner) => [
-                    corner,
-                    Number.parseInt(computedStyle[`border-${corner}-radius`]),
-                ])
-            );
-            // Should have rounded corners on the left only if first button
-            if (i === 0) {
-                expect(borderRadius["top-left"]).toBeGreaterThan(0);
-                expect(borderRadius["bottom-left"]).toBeGreaterThan(0);
-            } else {
-                expect(borderRadius["top-left"]).toBe(0);
-                expect(borderRadius["bottom-left"]).toBe(0);
-            }
-            // Should have rounded corners on the right only if last button
-            if (i === group.children.length - 1) {
-                expect(borderRadius["top-right"]).toBeGreaterThan(0);
-                expect(borderRadius["bottom-right"]).toBeGreaterThan(0);
-            } else {
-                expect(borderRadius["top-right"]).toBe(0);
-                expect(borderRadius["bottom-right"]).toBe(0);
-            }
+    const buttons = queryAll(".o-we-toolbar .o-we-toolbar-group > .btn");
+    expect(buttons.length).toBeGreaterThan(1);
+    for (const button of buttons) {
+        const computedStyle = getComputedStyle(button);
+        for (const corner of ["top-left", "top-right", "bottom-left", "bottom-right"]) {
+            expect(Number.parseInt(computedStyle[`border-${corner}-radius`])).toBeGreaterThan(0);
         }
     }
 });
@@ -2020,7 +2093,7 @@ test.tags("desktop", "iframe");
 test("toolbar should close when clicked outside the iframe (even if selection got in the toolbar)", async () => {
     await setupEditor("<p>[a]</p>", { props: { iframe: true } });
     await expectElementCount(".o-we-toolbar", 1);
-    const sepEl = queryFirst(".o-we-toolbar .o-we-toolbar-vertical-separator");
+    const sepEl = queryFirst(".o-we-toolbar .vr");
     setSelection({ anchorNode: sepEl, anchorOffset: 0 });
     await expectElementCount(".o-we-toolbar", 1);
     // click outside the iframe
@@ -2432,18 +2505,22 @@ test("toolbar strikethrough buttons should not be active when checked list is st
         '<ul class="o_checklist"><li class="o_checked">[test]</li></ul>'
     );
     await expandToolbar();
-    expect(".o-we-toolbar .btn[name='strikethrough']").toHaveCount(1);
-    expect(".o-we-toolbar .btn[name='strikethrough']").not.toHaveClass("active");
-    await contains(".o-we-toolbar .btn[name='strikethrough']").click();
-    await waitFor(".btn[name='strikethrough'].active");
+    expect(".o-we-toolbar .btn[name='more_formatting']").not.toHaveClass("active");
+    await openToolbarMenu("more_formatting");
+    expect("[name='strikethrough']").toHaveCount(1);
+    expect("[name='strikethrough']").not.toHaveAttribute("aria-checked");
+    await contains("[name='strikethrough']").click();
+    await waitFor(".o-we-toolbar .btn[name='more_formatting'].active");
     expect(getContent(el)).toBe(
         '<ul class="o_checklist"><li class="o_checked"><s>[test]</s></li></ul>'
     );
-    expect(".o-we-toolbar .btn[name='strikethrough']").toHaveClass("active");
-    await contains(".o-we-toolbar .btn[name='strikethrough']").click();
-    await waitFor(".btn[name='strikethrough']:not(.active)");
+    await openToolbarMenu("more_formatting");
+    expect("[name='strikethrough']").toHaveAttribute("aria-checked", "true");
+    await contains("[name='strikethrough']").click();
+    await waitFor(".o-we-toolbar .btn[name='more_formatting']:not(.active)");
     expect(getContent(el)).toBe('<ul class="o_checklist"><li class="o_checked">[test]</li></ul>');
-    expect(".o-we-toolbar .btn[name='strikethrough']").not.toHaveClass("active");
+    await openToolbarMenu("more_formatting");
+    expect("[name='strikethrough']").not.toHaveAttribute("aria-checked");
 });
 
 test.tags("desktop");

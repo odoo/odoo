@@ -27,7 +27,7 @@ import { removeStyle } from "@html_editor/utils/dom";
  * @property {string[]} [namespaces]
  *
  *
- * @typedef {ToolbarCommandItem | ToolbarComponentItem} ToolbarItem
+ * @typedef {ToolbarCommandItem | ToolbarComponentItem | ToolbarMenuItem} ToolbarItem
  *
  * @typedef {Object} ToolbarCommandItem
  * Regular button: derives from a user command specified by commandId.
@@ -42,12 +42,29 @@ import { removeStyle } from "@html_editor/utils/dom";
  * @property {string} [icon] *
  * @property {string} [iconClass] *
  * @property {string} [text] Can be used with (or instead of) `icon`
+ * @property {string} [menuId] Id of a toolbar menu item: the item is shown in
+ * that menu instead of on the bar. If no such menu exists, the item stays in
+ * its group.
+ * @property {TranslatedString} [label] Text of the item in a menu
+ * @property {string} [shortcut] Shortcut hint shown next to the label in a menu
  * @property {(selection: EditorSelection) => boolean} [isAvailable] ? *
  * @property {(selection: EditorSelection, nodes: Node[]) => boolean} [isActive]
  * @property {(selection: EditorSelection, nodes: Node[]) => boolean} [isDisabled]
  *
+ * @typedef {Object} ToolbarMenuItem
+ * Button opening a menu made of the items that declare its id as `menuId`.
+ * The menu is hidden when none of them is available, replaced by the item
+ * itself when only one is available, and active when one of them is active.
+ * @property {string} id
+ * @property {string} groupId
+ * @property {true} isMenu
+ * @property {string} [icon]
+ * @property {string[]} [namespaces]
+ * @property {TranslatedString | TranslatedStringGetter} [description]
+ *
  * @typedef {Object} ToolbarComponentItem
- * Adds a custom component to the toolbar.
+ * Adds a custom component to the toolbar. In a menu, the component receives
+ * `isInMenu: true` and should render as a menu item.
  * @property {string} id
  * @property {string} groupId
  * @property {string[]} [namespaces]
@@ -92,6 +109,12 @@ import { removeStyle } from "@html_editor/utils/dom";
 export const DELAY_TOOLBAR_OPEN = 300;
 /** Number of buttons below which toolbar will open directly in its expanded form */
 const MIN_SIZE_FOR_COMPACT = 7;
+/**
+ * Number of buttons that the compact toolbar must hide to be worth the click
+ * on "Expand toolbar". Below it, the floating toolbar opens expanded. The
+ * toolbar docked above the keyboard keeps its compact form.
+ */
+const MIN_HIDDEN_FOR_COMPACT = 7;
 /** Special namespace that prevents the toolbar from opening */
 export const DISABLED_NAMESPACE = "disabled";
 /** Toolbar namespaces that allow expanding to the full toolbar */
@@ -185,7 +208,7 @@ export class ToolbarPlugin extends Plugin {
             groupId: "expand_toolbar",
             commandId: "expandToolbar",
             description: _t("Expand toolbar"),
-            icon: "more_vert",
+            icon: "expand_content",
         },
         toolbar_namespace_providers: [
             withSequence(100, (targetedNodes, editableSelection) =>
@@ -295,7 +318,7 @@ export class ToolbarPlugin extends Plugin {
         }
         this.isToolbarExpanded = false;
         this.toolbarProps = {
-            class: "shadow rounded my-2",
+            class: "my-2",
             getSelection: () => this.dependencies.selection.getSelectionData(),
             focusEditable: () => this.dependencies.selection.focusEditable(),
             state: this.state,
@@ -341,9 +364,20 @@ export class ToolbarPlugin extends Plugin {
                 item.description instanceof Function ? item.description : () => item.description,
         });
 
-        return toolbarItems.map((item) =>
-            "Component" in item ? componentItemToButton(item) : commandItemToButton(item)
-        );
+        /** @type {(item: ToolbarMenuItem) => ToolbarButton} */
+        const menuItemToButton = (item) => ({
+            ...item,
+            isAvailable: () => true,
+            description:
+                item.description instanceof Function ? item.description : () => item.description,
+        });
+
+        return toolbarItems.map((item) => {
+            if (item.isMenu) {
+                return menuItemToButton(item);
+            }
+            return "Component" in item ? componentItemToButton(item) : commandItemToButton(item);
+        });
     }
 
     getButtonGroups() {
@@ -351,16 +385,22 @@ export class ToolbarPlugin extends Plugin {
         /** @type {ToolbarGroup[]} */
         const groups = this.getResource("toolbar_groups");
 
+        const menuIds = new Set(buttons.filter((button) => button.isMenu).map(({ id }) => id));
+        const isInMenu = (button) => menuIds.has(button.menuId);
+
         return groups.map((group) => {
             const groupNamespaces =
                 group.id === "expand_toolbar" ? this.expandableNamespaces : group.namespaces;
             return {
                 ...omit(group, "namespaces"),
                 buttons: buttons
-                    .filter((button) => button.groupId === group.id)
+                    .filter((button) => button.groupId === group.id && !isInMenu(button))
                     .map((button) => ({
                         ...button,
                         namespaces: button.namespaces || groupNamespaces || ["expanded"],
+                        ...(button.isMenu && {
+                            items: buttons.filter((item) => item.menuId === button.id),
+                        }),
                     })),
             };
         });
@@ -530,20 +570,49 @@ export class ToolbarPlugin extends Plugin {
                 id: group.id,
                 buttons: group.buttons
                     .filter((button) => availableButtons.has(button))
-                    .map((button) => ({
-                        id: button.id,
-                        description: button.description(selection, targetedNodes),
-                        isDisabled: !!button.isDisabled?.(selection, targetedNodes),
-                        ...(button.Component
-                            ? pick(button, "Component", "props")
-                            : {
-                                  ...pick(button, "run", "icon", "iconClass", "text"),
-                                  isActive: !!button.isActive?.(selection, targetedNodes),
-                              }),
-                    })),
+                    .map((button) => this.getButtonState(button, selection, targetedNodes))
+                    // Filter out menus left empty
+                    .filter(Boolean),
             }))
             // Filter out groups left empty
             .filter((group) => group.buttons.length > 0);
+    }
+
+    /**
+     * @param {ToolbarButton} button
+     * @param {EditorSelection} selection
+     * @param {Node[]} targetedNodes
+     */
+    getButtonState(button, selection, targetedNodes) {
+        if (button.isMenu) {
+            const items = button.items
+                .filter((item) => item.isAvailable(selection))
+                .map((item) => this.getButtonState(item, selection, targetedNodes));
+            if (items.length <= 1) {
+                // A menu of one item is that item.
+                return items[0];
+            }
+            return {
+                id: button.id,
+                description: button.description(selection, targetedNodes),
+                icon: button.icon,
+                isMenu: true,
+                items,
+                isActive: items.some((item) => item.isActive),
+                isDisabled: items.every((item) => item.isDisabled),
+            };
+        }
+        return {
+            id: button.id,
+            description: button.description(selection, targetedNodes),
+            isDisabled: !!button.isDisabled?.(selection, targetedNodes),
+            ...(button.Component
+                ? pick(button, "Component", "props")
+                : {
+                      ...pick(button, "run", "icon", "iconClass", "text", "label", "shortcut"),
+                      isActive: !!button.isActive?.(selection, targetedNodes),
+                  }),
+        };
     }
 
     /**
@@ -572,11 +641,15 @@ export class ToolbarPlugin extends Plugin {
         const isAvailable = memoize((button) => button.isAvailable(selection));
         const compact = this.getButtonsForNamespace("compact").filter(isAvailable);
         const expanded = this.getButtonsForNamespace("expanded").filter(isAvailable);
+        // The compact version includes the "Expand toolbar" button.
+        const hiddenCount = expanded.length - (compact.length - 1);
         const shouldDisplayCompactToolbar =
             // Expanded version is big enough
             expanded.length >= MIN_SIZE_FOR_COMPACT &&
             // Expanded version is bigger than the compact version
-            expanded.length > compact.length;
+            expanded.length > compact.length &&
+            // Compact version hides enough buttons
+            (this.isMobileToolbar || hiddenCount >= MIN_HIDDEN_FOR_COMPACT);
         if (shouldDisplayCompactToolbar) {
             return new Set(compact);
         }
@@ -593,14 +666,9 @@ class MobileToolbarOverlay {
     }
 
     open({ props }) {
-        props.class = "shadow";
+        props.class = "";
         props.editable = this.editable;
         if (!this.isOpen) {
-            const modal = this.editable.closest(".o_modal_full");
-            if (modal) {
-                // Same height of the toolbar
-                modal.style.paddingBottom = "40px";
-            }
             registry.category("main_components").add(this.overlayId, {
                 Component: ToolbarMobile,
                 props,
