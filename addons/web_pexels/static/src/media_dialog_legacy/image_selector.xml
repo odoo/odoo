@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+<t t-inherit="web_editor.ExternalImage" t-inherit-mode="extension">
+    <xpath expr="//t[@t-if]" position="after">
+        <t t-elif="record.mediaType == 'pexelsRecord'">
+           <AutoResizeImage src="record.url"
+                author="record.photographer"
+                authorLink="record.photographer_url"
+                name="record.photographer"
+                title="record.photographer"
+                altDescription="record.alt"
+                selected="this.selectedRecordIds.includes(record.id)"
+                onImageClick="() => this.onClickRecord(record)"
+                minRowHeight="MIN_ROW_HEIGHT"
+                onLoaded="(imgEl) => this.onImageLoaded(imgEl, record)"/>
+        </t>
+    </xpath>
+</t>
+
+<t t-name="web_pexels.ImagesListTemplate" t-inherit="web_editor.ImagesListTemplate" t-inherit-mode="extension">
+    <xpath expr="//t[@id='o_we_media_library_images']" position="replace">
+        <t id='o_we_media_library_images' t-if="['all', 'pexels', 'pexels', 'media-library'].includes(state.searchService)">
+            <t t-foreach="combinedRecords" t-as="record" t-key="record.id">
+                <t t-call="web_editor.ExternalImage"/>
+            </t>
+        </t>
+    </xpath>
+</t>
+
+<t t-inherit="web_editor.FileSelector" t-inherit-mode="extension">
+    <xpath expr="//div[@name='load_more_attachments']" position="before">
+        <div t-if="state.pexelsError" class="d-flex mt-2 pexels_error">
+            <PexelsError
+                title="errorTitle"
+                subtitle="errorSubtitle"
+                showCredentials="['key_not_found', 401].includes(state.pexelsError)"
+                submitCredentials="(key, appId)  => this.submitCredentials(key, appId)"
+                hasCredentialsError="state.pexelsError === 401"/>
+        </div>
+    </xpath>
+</t>
+
+<t t-inherit="web_editor.FileSelectorControlPanel" t-inherit-mode="extension">
+    <xpath expr="//option[@value='media-library']" position="after">
+        <option t-if="props.usePexels" t-att-selected="props.searchService === 'pexels'" value="pexels">Photos (via Pexels)</option>
+    </xpath>
+</t>
+
+<t t-inherit="web_editor.FileSelector" t-inherit-mode="extension">
+    <xpath expr="//FileSelectorControlPanel" position="attributes">
+        <attribute name="usePexels">state.usePexels</attribute>
+    </xpath>
+</t>
+</templates>
