@@ -110,6 +110,8 @@ class TestCalendarCalendar(TransactionCase):
             'stop': '2026-07-27 16:30:00',
             'user_id': user.id,
         }])
+        # The primary calendar is created by the (stored) computation of the event's calendar_id
+        event.flush_recordset(['calendar_id'])
 
         self.assertTrue(user.primary_calendar_id, "Creating an event should create a calendar for the user.")
         self.assertEqual(user.primary_calendar_id, event.calendar_id)
