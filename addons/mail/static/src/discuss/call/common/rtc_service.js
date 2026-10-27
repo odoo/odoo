@@ -23,6 +23,7 @@ import { CallAction } from "@mail/discuss/call/common/call_actions";
 import { ACTION_TAGS } from "@mail/core/common/action";
 import { BusPlugin } from "@bus/services/bus_plugin";
 import { PresencePlugin } from "@bus/services/presence_plugin";
+import { SoundEffectsPlugin } from "@mail/core/common/sound_effects_plugin";
 
 let sequence = 1;
 const getSequence = () => sequence++;
@@ -547,8 +548,8 @@ export class Rtc extends Record {
         this.pipService = undefined;
         /** @type {Services["discuss.ptt_extension"]} */
         this.pttExtService = undefined;
-        /** @type {Services["mail.sound_effects"]} */
-        this.soundEffectsService = undefined;
+        /** @type {SoundEffectsPlugin} */
+        this.soundEffects = undefined;
         this.linkVoiceActivationDebounce = debounce(this.linkVoiceActivation, 500);
         this.upgradeConnectionDebounce = debounce(this._upgradeConnection, 15000, true);
         this.blurManager = undefined;
@@ -558,7 +559,6 @@ export class Rtc extends Record {
         const services = this.store.env.services;
         this.notification = this.store.notification;
         this.dialog = services.dialog;
-        this.soundEffectsService = services["mail.sound_effects"];
         this.pttExtService = services["discuss.ptt_extension"];
         if (this._broadcastChannel) {
             this._broadcastChannel.onmessage = this._onBroadcastChannelMessage.bind(this);
@@ -795,7 +795,7 @@ export class Rtc extends Record {
         this.pttReleaseTimeout = window.setTimeout(() => {
             this.setTalking(false);
             if (!this.localSession?.isMute) {
-                this.soundEffectsService.play("ptt-release");
+                this.soundEffects.play("ptt-release");
             }
         }, Math.max(this.store.settings.voiceActiveDuration || 0, duration));
     }
@@ -810,7 +810,7 @@ export class Rtc extends Record {
         }
         window.clearTimeout(this.pttReleaseTimeout);
         if (!this.localSession.isTalking && !this.localSession.isMute) {
-            this.soundEffectsService.play("ptt-press");
+            this.soundEffects.play("ptt-press");
         }
         this.setTalking(true);
     }
@@ -897,7 +897,7 @@ export class Rtc extends Record {
             this.pttExtService.unsubscribe();
             this.network?.disconnect();
             this.clear();
-            this.soundEffectsService.play("call-leave");
+            this.soundEffects.play("call-leave");
         }
     }
 
@@ -907,7 +907,7 @@ export class Rtc extends Record {
             return;
         }
         await this.setDeaf(true);
-        this.soundEffectsService.play("earphone-off");
+        this.soundEffects.play("earphone-off");
     }
 
     /**
@@ -950,7 +950,7 @@ export class Rtc extends Record {
             return;
         }
         await this.setMute(true);
-        this.soundEffectsService.play("mic-off");
+        this.soundEffects.play("mic-off");
     }
 
     /**
@@ -1157,7 +1157,7 @@ export class Rtc extends Record {
             return;
         }
         await this.setDeaf(false);
-        this.soundEffectsService.play("earphone-on");
+        this.soundEffects.play("earphone-on");
     }
 
     stopRecording() {
@@ -1383,7 +1383,7 @@ export class Rtc extends Record {
         } else {
             await this.resetMicAudioTrack({ force: true }, options);
         }
-        this.soundEffectsService.play("mic-on");
+        this.soundEffects.play("mic-on");
     }
 
     //----------------------------------------------------------------------
@@ -2050,7 +2050,7 @@ export class Rtc extends Record {
         if (!this.localChannel?.id) {
             return;
         }
-        this.soundEffectsService.play("call-join");
+        this.soundEffects.play("call-join");
         this._host();
         this.cleanups.push(
             // only register the beforeunload event if there is a call as FireFox will not place
@@ -2498,7 +2498,7 @@ export class Rtc extends Record {
         };
         if (!activateVideo) {
             if (type === "screen") {
-                this.soundEffectsService.play("screen-sharing");
+                this.soundEffects.play("screen-sharing");
             }
             if (type === "camera" && this.blurManager) {
                 this.blurManager.close();
@@ -2538,7 +2538,7 @@ export class Rtc extends Record {
                         controller,
                     });
                 }
-                this.soundEffectsService.play("screen-sharing");
+                this.soundEffects.play("screen-sharing");
             }
         } catch {
             this.showMediaUnavailableWarning(
@@ -2954,7 +2954,6 @@ export const rtcService = {
         "discuss.pip_service",
         "discuss.ptt_extension",
         "mail.fullscreen",
-        "mail.sound_effects",
         "mail.store",
     ],
     /**
@@ -2967,6 +2966,7 @@ export const rtcService = {
         const presencePlugin = usePlugin(PresencePlugin);
         const rtc = store.rtc;
         rtc.pipService = services["discuss.pip_service"];
+        rtc.soundEffects = usePlugin(SoundEffectsPlugin);
         rtc.onChange(
             () => [rtc.pipService.state.active],
             function onChangePipMode(isPipMode) {
