@@ -40,7 +40,9 @@ class MailMessage(models.Model):
             # sudo: discuss.channel - can read the type of the channel of an accessible message
             channels = self.env["discuss.channel"].sudo().browse(channel_ids)
             top_channel_ids = channels.filtered(
-                lambda channel: channel.channel_type == "channel" and not channel.parent_channel_id,
+                lambda channel: (
+                    channel.channel_type in ("channel", "group") and not channel.parent_channel_id
+                ),
             ).ids
             if channel_messages := self.filtered(
                 lambda message: (
@@ -49,19 +51,26 @@ class MailMessage(models.Model):
             ):
                 sub_channels = self.env["discuss.channel"].search_fetch(
                     [("from_message_id", "in", channel_messages.ids)],
-                    ["from_message_id"],
+                    ["from_message_id", "name"],
                 )
                 sub_channel_by_message = {
                     channel.from_message_id: channel for channel in sub_channels
                 }
                 res.one(
                     "linkedSubChannel",
-                    [],
+                    ["name"],
                     predicate=lambda message: message in channel_messages,
                     value=lambda message: sub_channel_by_message.get(
                         message,
                         self.env["discuss.channel"],
                     ),
+                )
+                res.many(
+                    "sub_channel_last_messages",
+                    "_store_message_fields",
+                    only_data=True,
+                    predicate=lambda message: message == channel_messages[0],
+                    value=sub_channels._get_last_messages(),
                 )
             # sudo: mail.message: access to parent is allowed
             res.one(
