@@ -212,11 +212,12 @@ class EventSponsor(models.Model):
         self.ensure_one()
         base_url = self.get_base_url()
         schema_type = 'Organization' if self.partner_id.is_company else 'Person'
+        sponsor_url = self._get_localized_absolute_url()
         vals = {
             '@type': schema_type,
-            '@id': f'{base_url}{self.website_url}/#{schema_type.lower()}',
+            '@id': f'{sponsor_url}/#{schema_type.lower()}',
             'name': self.name,
-            'mainEntityOfPage': f'{base_url}{self.website_url}',
+            'mainEntityOfPage': sponsor_url,
         }
         if self.subtitle:
             vals['description'] = self.subtitle
@@ -247,10 +248,9 @@ class EventSponsor(models.Model):
 
     def _build_profilepage_jsonld_vals(self):
         self.ensure_one()
-        base_url = self.get_base_url()
         return {
             '@type': 'ProfilePage',
-            'url': f'{base_url}{self.website_url}',
+            'url': self._get_localized_absolute_url(),
             'mainEntity': self._prepare_jsonld_vals(),
         }
 

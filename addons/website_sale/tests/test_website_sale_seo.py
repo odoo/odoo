@@ -1,3 +1,5 @@
+import json
+
 from lxml import html
 
 from odoo.fields import Command
@@ -50,3 +52,8 @@ class WebsiteSaleSEO(HttpCase, WebsiteSaleCommon):
         root = html.fromstring(res.content)
         canonical = root.xpath('//link[@rel="canonical"]')[0].attrib["href"]
         self.assertEqual(canonical, self.base_url() + "/fr" + self.product.website_url)
+        jsonld = json.loads(root.xpath('//script[@type="application/ld+json"]')[0].text)
+        product_jsonld = next(node for node in jsonld["@graph"] if node["@type"] == "Product")
+        self.assertEqual(product_jsonld["url"], canonical)
+        breadcrumb_jsonld = next(node for node in jsonld["@graph"] if node["@type"] == "BreadcrumbList")
+        self.assertEqual(breadcrumb_jsonld["itemListElement"][-1]["item"], canonical)

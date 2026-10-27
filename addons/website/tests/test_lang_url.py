@@ -145,6 +145,18 @@ class TestLangUrl(TestLangUrlCommon):
                 r = self.url_open('/website/translations', params={'lang': lang})
                 self.assertEqual(get_session_info(url)['translation_hash'], r.json()['hash'])
 
+    def test_09_localized_url(self):
+        page = self.env.ref('website.contactus_page')
+        base_url = self.website.get_base_url()
+        with MockRequest(self.env, website=self.website) as request:
+            self.assertEqual(page.with_env(request.env)._get_localized_absolute_url(), f'{base_url}/contactus')
+        with MockRequest(self.env, website=self.website, context={'lang': 'fr_FR'}) as request:
+            self.assertEqual(page.with_env(request.env)._get_localized_absolute_url(), f'{base_url}/fr/contactus')
+        # The current website gives the domain, not the record's website
+        website_2 = self.env['website'].create({'name': 'Website 2', 'domain': 'https://site2.example'})
+        with MockRequest(self.env, website=website_2) as request:
+            self.assertEqual(page.with_env(request.env)._get_localized_absolute_url(), 'https://site2.example/contactus')
+
 
 @tagged('-at_install', 'post_install')
 class TestLangRedirectBots(TestLangUrlCommon):

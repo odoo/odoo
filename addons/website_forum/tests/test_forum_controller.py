@@ -126,6 +126,8 @@ class TestForumController(TestForumCommon, HttpCase):
         self.assertEqual(res.status_code, 303)
 
     def test_forum_index_jsonld_lists_displayed_questions(self):
+        lang_fr = self.env['res.lang']._activate_lang('fr_FR')
+        self.base_website.language_ids = self.env.ref('base.lang_en') + lang_fr
         self.user_employee_2.karma = KARMA['post']
         self.env['forum.post'].with_user(self.user_employee_2).create([{
             'name': f'Question {idx}',
@@ -142,7 +144,7 @@ class TestForumController(TestForumCommon, HttpCase):
         self.user_employee.karma = 0
 
         forum_slug = self.env['ir.http']._slug(self.forum)
-        res = self.url_open(f'/forum/{forum_slug}')
+        res = self.url_open(f'/fr/forum/{forum_slug}')
         res.raise_for_status()
         root = html.fromstring(res.content)
         jsonld = json.loads(root.xpath('//script[@type="application/ld+json"]')[0].text)
@@ -150,3 +152,5 @@ class TestForumController(TestForumCommon, HttpCase):
         items = collection_page['mainEntity']['itemListElement']
         self.assertEqual(len(items), WebsiteForum._post_per_page)
         self.assertNotIn(hidden_question.name, [item['name'] for item in items])
+        for item in items:
+            self.assertTrue(item['url'].startswith(f'{self.base_url()}/fr/forum/'))
