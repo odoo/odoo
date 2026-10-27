@@ -211,7 +211,11 @@ def parse_date(value: str, env: Environment) -> date | datetime:
                 if isinstance(dt, datetime):
                     dt += TRUNCATE_UNIT[unit]
                 # note: '=Nw' is not supported
-            dt += relativedelta(**{unit: number})
+            delta = relativedelta(**{unit: number})
+            if isinstance(dt, datetime) and unit in ("hours", "minutes", "seconds"):
+                dt = (dt.astimezone(UTC) + delta).astimezone(dt.tzinfo)
+            else:
+                dt += delta
         except (ValueError, TypeError, KeyError):
             raise ValueError(f"Invalid term {term!r} in expression date: {value!r}")
 
