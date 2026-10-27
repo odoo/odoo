@@ -48,13 +48,8 @@ registerWebsitePreviewTour(
             name: "Image Gallery",
         }),
         {
-            content: "Click on Remove all",
-            trigger: "button[data-action-id='removeAllImages']",
-            run: "click",
-        },
-        {
-            content: "Click on Add Images",
-            trigger: ":iframe span:contains('Add Images')",
+            content: "Click on Replace all",
+            trigger: "button[data-action-id='replaceAllImages']",
             run: "click",
         },
         {
