@@ -324,11 +324,9 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             bom_report_line['bom_unit_cost'] = bom.uom_id._compute_price(bom_report_line['bom_cost'], product.uom_id)
         bom_report_line['foldable'] = len(bom.operation_ids) > 0 or (len(bom_report_line['components']) > 0 and level > 0) or any(component.get('foldable', False) for component in bom_report_line['components'])
 
-        available_components = unavail_component_has_route = True
+        available_components = True
         expected_components = False
         for component in components:
-            if component['availability_state'] == 'unavailable':
-                unavail_component_has_route &= bool(component['route_name'])
             available_components &= component['availability_state'] == 'available'
             expected_components |= component['availability_state'] == 'expected'
         if level == 0:
@@ -338,10 +336,10 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                 bom_report_line['availability_state'] = "available"
                 bom_report_line['status'] = self.env._("%(qty)s Ready To Produce", qty=self._format_number_display(bom_report_line['producible_qty']))
             elif bom_report_line['phantom_bom']:
-                bom_report_line['availability_state'] = "unavailable" if not unavail_component_has_route else "estimated"
+                bom_report_line['availability_state'] = "estimated"
                 bom_report_line['status'] = self._format_date_display(bom_report_line['availability_state'], bom_report_line['availability_delay'])
         elif (missing_qty := max(bom_report_line['quantity'] - bom_report_line['quantity_forecasted'], 0)) and bom_report_line['route_name'] and not available_components:
-            if bom_report_line['phantom_bom'] and (not expected_components or unavail_component_has_route) or not bom_report_line['phantom_bom']:
+            if bom_report_line['phantom_bom'] and (not expected_components) or not bom_report_line['phantom_bom']:
                 bom_report_line['availability_state'] = "unavailable"
                 bom_report_line['status'] = self.env._("%(qty)s To %(route)s", qty=self._format_number_display(missing_qty), route=bom_report_line['route_name'])
 
@@ -751,10 +749,8 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         max_component_delay = 0
         for component in components:
             line_delay = component.get('availability_delay', False)
-            if line_delay is False:
-                # This component isn't available right now and cannot be resupplied, so the manufactured product can't be resupplied either.
-                return False
-            max_component_delay = max(max_component_delay, line_delay)
+            if line_delay:
+                max_component_delay = max(max_component_delay, line_delay)
         return max_component_delay
 
     @api.model
@@ -793,19 +789,14 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             self._merge_components(component_1["components"][index], component_2["components"][index])
 
     def _get_last_availability(self, report_line):
-        delay = delay_available = 0
-        component_max_delay = available_component_max_delay = False
+        delay = 0
+        component_max_delay = False
         for component in report_line["components"]:
-            if component["availability_delay"] is False:
-                component_max_delay = component
-                break
-            elif component["availability_delay"] >= delay and component['availability_state'] != 'available':
+            if not component_max_delay or component.get("availability_delay", 0) > delay:
                 component_max_delay = component
                 delay = component["availability_delay"]
-            elif component["availability_delay"] >= delay_available:
-                available_component_max_delay = component
-                delay_available = component['availability_delay']
-        return self._format_availability(component_max_delay or available_component_max_delay)
+
+        return self._format_availability(component_max_delay or {})
 
     def _format_availability(self, component):
         return {
