@@ -18,7 +18,7 @@ class TestOutOfOffice(TestHrHolidaysCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.work_entry_type = cls.env['hr.work.entry.type'].create({
+        cls.time_type = cls.env['hr.time.type'].create({
             'name': 'Legal Leaves',
             'code': 'Legal Leaves',
             'count_as': 'absence',
@@ -34,7 +34,7 @@ class TestOutOfOffice(TestHrHolidaysCommon):
         first_leave = self.env['hr.leave'].create({
             'name': 'Christmas',
             'employee_id': self.employee_hruser.id,
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'request_date_from': "2024-06-05",
             'request_date_to': "2024-06-07",
         })
@@ -43,7 +43,7 @@ class TestOutOfOffice(TestHrHolidaysCommon):
         second_leave = self.env['hr.leave'].create({
             'name': 'Christmas',
             'employee_id': self.employee_hruser.id,
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'request_date_from': "2024-06-10",
             'request_date_to': "2024-06-11",
         })
@@ -87,12 +87,12 @@ class TestOutOfOffice(TestHrHolidaysCommon):
         employees = self.employee_emp | self.employee_hruser
         leaves = self.env['hr.leave'].create([{
             'employee_id': self.employee_emp.id,
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'request_date_from': "2024-06-03",
             'request_date_to': "2024-06-06",
         }, {
             'employee_id': self.employee_hruser.id,
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'request_date_from': "2024-06-02",
             'request_date_to': "2024-06-05",
         }])
@@ -108,7 +108,7 @@ class TestOutOfOffice(TestHrHolidaysCommon):
         """
         leave = self.env['hr.leave'].create({
             'employee_id': self.employee_hruser.id,
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'request_date_from': "2024-06-03",
             'request_date_to': "2024-06-05",
         })
@@ -147,7 +147,7 @@ class TestOutOfOfficePerformance(TestHrHolidaysCommon, TransactionCaseWithUserDe
     @classmethod
     def setUpClass(cls):
         super(TestOutOfOfficePerformance, cls).setUpClass()
-        cls.work_entry_type = cls.env['hr.work.entry.type'].create({
+        cls.time_type = cls.env['hr.time.type'].create({
             'name': 'Legal Leaves',
             'code': 'Legal Leaves',
             'count_as': 'absence',
@@ -159,7 +159,7 @@ class TestOutOfOfficePerformance(TestHrHolidaysCommon, TransactionCaseWithUserDe
         cls.leave = cls.env['hr.leave'].create({
             'name': 'Christmas',
             'employee_id': cls.employee_hruser_id,
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
             'request_date_from': (date.today() - relativedelta(days=1)),
             'request_date_to': cls.leave_date_end,
         })

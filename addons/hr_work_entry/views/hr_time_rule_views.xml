@@ -35,8 +35,8 @@
                                 <field name="employee_domain" widget="domain" options="{'model': 'hr.employee'}" nolabel="1"/>
 
                                 <!-- Time Type (input filter) -->
-                                <label for="condition_work_entry_type_ids" string="Time Type" help="If set, only selected types will be considered by this rule."/>
-                                <field name="condition_work_entry_type_ids" widget="many2many_tags"
+                                <label for="condition_time_type_ids" string="Time Type" help="If set, only selected types will be considered by this rule."/>
+                                <field name="condition_time_type_ids" widget="many2many_tags"
                                     nolabel="1"
                                     placeholder="Select the time types considered in the rule's computation"/>
 
@@ -104,10 +104,10 @@
                                 <span class="o_form_label" invisible="threshold_operator == 'less_than'">Set Excess to <sup class="d-print-none text-info p-1 ms-1" data-tooltip="You can define a time type that will be created to count the amount of time in excess.">?</sup></span>
                                 <span class="o_form_label" invisible="threshold_operator != 'less_than'">Set Deficit to <sup class="d-print-none text-info p-1 ms-1" data-tooltip="You can define a time type that will be created to count the amount of time missing to fullfill the condition.">?</sup></span>
                                 <div>
-                                    <field name="work_entry_type_id" widget="many2one_work_entry_type" nolabel="1"
+                                    <field name="time_type_id" widget="many2one_time_type" nolabel="1"
                                         options="{'no_create': True}"
                                         placeholder="Leave as it is"/>
-                                    <field name="country_work_entry_type_ids" invisible="1"/> <!-- used in the python-declared domain of the work entry type fields of this page -->
+                                    <field name="country_time_type_ids" invisible="1"/> <!-- used in the python-declared domain of the time type fields of this page -->
                                 </div>
 
                             </group>

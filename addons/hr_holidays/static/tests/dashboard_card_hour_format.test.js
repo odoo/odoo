@@ -30,7 +30,7 @@ function getHourProps(floatHour) {
 			virtual_leaves_taken: floatHour,
 		},
 		requires_allocation: false,
-		holidayStatusId: 6,
+		timeTypeId: 6,
 		employeeId: null,
 	}
 }

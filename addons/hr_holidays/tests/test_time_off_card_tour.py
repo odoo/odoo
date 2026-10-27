@@ -6,7 +6,7 @@ class TestTimeOffCardTour(HttpCase):
 
     @users('admin')
     def test_time_off_card_tour(self):
-        work_entry_type = self.env['hr.work.entry.type'].create({
+        time_type = self.env['hr.time.type'].create({
             'name': 'Time Off with no validation for approval',
             'code': 'Time Off with no validation for approval',
             'count_as': 'absence',
@@ -18,7 +18,7 @@ class TestTimeOffCardTour(HttpCase):
         admin_employee = get_admin_employee(self.env)
         self.env['hr.leave.allocation'].create({
             'employee_id': admin_employee.id,
-            'work_entry_type_id': work_entry_type.id,
+            'time_type_id': time_type.id,
             'type_request_unit': 'half_day',
         })
         self.start_tour('/odoo', 'time_off_card_tour', login='admin')

@@ -52,11 +52,11 @@ class HrVersion(models.Model):
                 for vals in result:
                     employee_dates.add(vals['date_start'].date())
                     employee_dates.add(vals['date_stop'].date())
-                leave_work_entry_type = leave.work_entry_type_id
+                leave_time_type = leave.time_type_id
                 result += [{
                     'date_start': interval[0].astimezone(datetime.UTC).replace(tzinfo=None),
                     'date_stop': interval[1].astimezone(datetime.UTC).replace(tzinfo=None),
-                    'work_entry_type_id': leave_work_entry_type,
+                    'time_type_id': leave_time_type,
                     'employee_id': employee,
                     'company_id': version.company_id,
                     'version_id': version,

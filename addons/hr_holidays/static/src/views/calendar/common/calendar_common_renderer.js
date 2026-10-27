@@ -29,7 +29,7 @@ export class TimeOffCalendarCommonRenderer extends CalendarCommonRenderer {
             return super.convertRecordToEvent(record);
         }
         const rawRecord = record.rawRecord || {};
-        const isHourUnit = rawRecord.work_entry_type_request_unit === "hour";
+        const isHourUnit = rawRecord.time_type_request_unit === "hour";
         const scale = this.props.model.scale;
         const isMonth = scale === "month";
         const isTimeGrid = scale === "week" || scale === "day";

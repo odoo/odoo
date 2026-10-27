@@ -26,7 +26,7 @@ class TestTimeRuleDayTypes(TransactionCase):
         cls.env.company.resource_calendar_id = cls.calendar
 
         # source (condition) time type
-        cls.day_wet = cls.env['hr.work.entry.type'].create({
+        cls.day_time_type = cls.env['hr.time.type'].create({
             'name': 'Test Day Type',
             'code': 'TESTDAY',
             'request_unit': 'day',
@@ -34,7 +34,7 @@ class TestTimeRuleDayTypes(TransactionCase):
             'count_as': 'absence',
         })
         # target (output) time type after reclassification
-        cls.other_day_wet = cls.env['hr.work.entry.type'].create({
+        cls.other_day_time_type = cls.env['hr.time.type'].create({
             'name': 'Reclassified Day Type',
             'code': 'TESTDAY2',
             'request_unit': 'day',
@@ -42,7 +42,7 @@ class TestTimeRuleDayTypes(TransactionCase):
             'count_as': 'absence',
         })
 
-        cls.comp_wet = cls.env['hr.work.entry.type'].create({
+        cls.comp_time_type = cls.env['hr.time.type'].create({
             'name': 'Compensatory Leave',
             'code': 'COMPDAY',
             'request_unit': 'day',
@@ -63,16 +63,16 @@ class TestTimeRuleDayTypes(TransactionCase):
         self.env['hr.time.rule'].search([]).write({'active': False})
         self.time_rule = self.env['hr.time.rule'].create({
             'name': 'Reclassify day leave',
-            'condition_work_entry_type_ids': [(4, self.day_wet.id)],
-            'work_entry_type_id': self.other_day_wet.id,
+            'condition_time_type_ids': [(4, self.day_time_type.id)],
+            'time_type_id': self.other_day_time_type.id,
             # 'day' mode = fixed threshold (not schedule-based); 0.0 means any leave > 0h fires
             'working_hours_mode': 'day',
             'expected_hours': 0.0,
         })
 
-    def _make_day_leave(self, date_from, date_to, wet=None):
+    def _make_day_leave(self, date_from, date_to, time_type=None):
         """Create a validated day-unit leave with exact timestamps."""
-        wet = wet or self.day_wet
+        time_type = time_type or self.day_time_type
         return self.env['hr.leave'].with_context(
             tracking_disable=True,
             mail_activity_automation_skip=True,
@@ -82,7 +82,7 @@ class TestTimeRuleDayTypes(TransactionCase):
             leave_skip_date_from_to_computation=True,
         ).sudo().create({
             'employee_id': self.employee.id,
-            'work_entry_type_id': wet.id,
+            'time_type_id': time_type.id,
             'date_from': date_from,
             'date_to': date_to,
             'request_date_from': date_from.date(),
@@ -91,7 +91,7 @@ class TestTimeRuleDayTypes(TransactionCase):
         })
 
     def test_day_leave_reclassified_in_place(self):
-        """A day-unit leave spanning the lunch break is reclassified to the output WET.
+        """A day-unit leave spanning the lunch break is reclassified to the output time type.
         """
         # Jan 3 2022 = Monday; 8:00-16:00 spans the 12:00-13:00 lunch gap
         df = datetime(2022, 1, 3, 8, 0)
@@ -99,8 +99,8 @@ class TestTimeRuleDayTypes(TransactionCase):
         source = self._make_day_leave(df, dt)
 
         self.assertEqual(
-            source.work_entry_type_id, self.other_day_wet,
-            "Source leave must be reclassified to the rule's output WET",
+            source.time_type_id, self.other_day_time_type,
+            "Source leave must be reclassified to the rule's output time type",
         )
         self.assertEqual(
             source.time_rule_id, self.time_rule,
@@ -119,7 +119,7 @@ class TestTimeRuleDayTypes(TransactionCase):
         # afternoon block reclassified as a separate output record
         afternoon_output = self.env['hr.leave'].search([
             ('source_leave_id', '=', source.id),
-            ('work_entry_type_id', '=', self.other_day_wet.id),
+            ('time_type_id', '=', self.other_day_time_type.id),
         ])
         self.assertEqual(len(afternoon_output), 1, "One afternoon output record must exist")
         self.assertEqual(afternoon_output.date_from, datetime(2022, 1, 3, 13, 0),
@@ -137,7 +137,7 @@ class TestTimeRuleDayTypes(TransactionCase):
         """
         self.time_rule.write({
             'leave_compensation_rate': 1.0,
-            'allocation_type_id': self.comp_wet.id,
+            'allocation_type_id': self.comp_time_type.id,
         })
 
         # full wall-clock day: 08:00-17:00 clips to 08:00-12:00 + 13:00-17:00 = 8 scheduled hours
@@ -148,7 +148,7 @@ class TestTimeRuleDayTypes(TransactionCase):
 
         alloc = self.env['hr.leave.allocation'].search([
             ('employee_id', '=', self.employee.id),
-            ('work_entry_type_id', '=', self.comp_wet.id),
+            ('time_type_id', '=', self.comp_time_type.id),
         ], limit=1)
         self.assertTrue(alloc, "A compensatory allocation must be created")
         self.assertAlmostEqual(
@@ -162,14 +162,14 @@ class TestTimeRuleDayTypes(TransactionCase):
         The pipeline must treat the half-day as an atomic unit and not attempt
         any sub-day splitting.
         """
-        half_day_wet = self.env['hr.work.entry.type'].create({
+        half_day_time_type = self.env['hr.time.type'].create({
             'name': 'Test Half-Day Type',
             'code': 'TESTHALF',
             'request_unit': 'half_day',
             'requires_allocation': False,
             'count_as': 'absence',
         })
-        out_wet = self.env['hr.work.entry.type'].create({
+        out_time_type = self.env['hr.time.type'].create({
             'name': 'Reclassified Half-Day',
             'code': 'TESTHALF2',
             'request_unit': 'half_day',
@@ -178,8 +178,8 @@ class TestTimeRuleDayTypes(TransactionCase):
         })
         self.env['hr.time.rule'].create({
             'name': 'Reclassify half-day leave',
-            'condition_work_entry_type_ids': [(4, half_day_wet.id)],
-            'work_entry_type_id': out_wet.id,
+            'condition_time_type_ids': [(4, half_day_time_type.id)],
+            'time_type_id': out_time_type.id,
             'working_hours_mode': 'day',
             'expected_hours': 0.0,
         })
@@ -187,11 +187,11 @@ class TestTimeRuleDayTypes(TransactionCase):
         # morning half-day: 8:00-12:00 = 4h
         df = datetime(2022, 1, 3, 8, 0)
         dt = datetime(2022, 1, 3, 12, 0)
-        source = self._make_day_leave(df, dt, wet=half_day_wet)
+        source = self._make_day_leave(df, dt, time_type=half_day_time_type)
 
         self.assertEqual(
-            source.work_entry_type_id, out_wet,
-            "Half-day leave must be reclassified to the output WET",
+            source.time_type_id, out_time_type,
+            "Half-day leave must be reclassified to the output time type",
         )
         self.assertTrue(source.time_rule_id)
         self.assertAlmostEqual(

@@ -23,9 +23,9 @@ class HrHolidaysOvertimeCommon(TransactionCase):
         })
         cls.env.company.tz = 'UTC'
 
-        cls.att_wet = cls.env.company._get_default_attendance_work_entry_type()
-        cls.env.company.attendance_work_entry_type_id = cls.att_wet
-        cls.overtime_wet = cls.env.ref('hr_work_entry.generic_work_entry_type_overtime')
+        cls.att_time_type = cls.env.company._get_default_attendance_time_type()
+        cls.env.company.attendance_time_type_id = cls.att_time_type
+        cls.overtime_time_type = cls.env.ref('hr_work_entry.generic_time_type_overtime')
 
         # deactivate all data-file rules so tests are self-contained
         cls.env['hr.time.rule'].search([]).write({'active': False})
@@ -49,8 +49,8 @@ class HrHolidaysOvertimeCommon(TransactionCase):
         cls.daily_rule = cls.env['hr.time.rule'].create({
             'name': 'Daily OT Rule',
             'working_hours_mode': 'schedule_day',
-            'work_entry_type_id': cls.overtime_wet.id,
-            'condition_work_entry_type_ids': [Command.set([cls.att_wet.id])],
+            'time_type_id': cls.overtime_time_type.id,
+            'condition_time_type_ids': [Command.set([cls.att_time_type.id])],
         })
 
     def _output_atts(self, employee, rule=None):
@@ -93,8 +93,8 @@ class TestHolidaysOvertimeRules(HrHolidaysOvertimeCommon):
         weekly_rule = self.env['hr.time.rule'].create({
             'name': 'Weekly Schedule Rule',
             'working_hours_mode': 'schedule_week',
-            'work_entry_type_id': self.overtime_wet.id,
-            'condition_work_entry_type_ids': [Command.set([self.att_wet.id])],
+            'time_type_id': self.overtime_time_type.id,
+            'condition_time_type_ids': [Command.set([self.att_time_type.id])],
         })
         # week of 2026-05-04 (Mon-Fri): total = 8+10+5+15+12 = 50h, schedule = 40h
         for check_in, check_out in [
@@ -126,10 +126,10 @@ class TestHolidaysOvertimeRules(HrHolidaysOvertimeCommon):
         """
         self.daily_rule.active = False
 
-        daytime_wet = self.env['hr.work.entry.type'].create({
+        daytime_time_type = self.env['hr.time.type'].create({
             'name': 'Daytime OT', 'code': 'OTEST_DAY', 'requires_allocation': False,
         })
-        nighttime_wet = self.env['hr.work.entry.type'].create({
+        nighttime_time_type = self.env['hr.time.type'].create({
             'name': 'Nighttime OT', 'code': 'OTEST_NIGHT', 'requires_allocation': False,
         })
         daytime_rule = self.env['hr.time.rule'].create({
@@ -137,16 +137,16 @@ class TestHolidaysOvertimeRules(HrHolidaysOvertimeCommon):
             'working_hours_mode': 'schedule_day',
             'timing_start': 17.0,
             'timing_stop': 21.0,
-            'work_entry_type_id': daytime_wet.id,
-            'condition_work_entry_type_ids': [Command.set([self.att_wet.id])],
+            'time_type_id': daytime_time_type.id,
+            'condition_time_type_ids': [Command.set([self.att_time_type.id])],
         })
         nighttime_rule = self.env['hr.time.rule'].create({
             'name': 'Nighttime',
             'working_hours_mode': 'schedule_day',
             'timing_start': 21.0,
             'timing_stop': 24.0,
-            'work_entry_type_id': nighttime_wet.id,
-            'condition_work_entry_type_ids': [Command.set([self.att_wet.id])],
+            'time_type_id': nighttime_time_type.id,
+            'condition_time_type_ids': [Command.set([self.att_time_type.id])],
         })
         # Monday 17:00-23:59:59 UTC; schedule has 0h after 17:00 → all hours are OT
         self.env['hr.attendance'].create({

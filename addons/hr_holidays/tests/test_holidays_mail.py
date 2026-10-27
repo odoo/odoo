@@ -23,7 +23,7 @@ class TestHolidaysMail(TestHrHolidaysCommon, MailCase):
         with freeze_time('2022-01-15'):
             self.admin_employee.tz = "Europe/Brussels"
 
-            work_entry_type_paid_time_off = self.env['hr.work.entry.type'].create({
+            time_type_paid_time_off = self.env['hr.time.type'].create({
                 'name': 'Paid Time Off',
                 'code': 'Paid Time Off',
                 'requires_allocation': True,
@@ -37,7 +37,7 @@ class TestHolidaysMail(TestHrHolidaysCommon, MailCase):
             self.env['hr.leave.allocation'].create([
                 {
                     'name': 'Paid Time off for David',
-                    'work_entry_type_id': work_entry_type_paid_time_off.id,
+                    'time_type_id': time_type_paid_time_off.id,
                     'number_of_days': 20,
                     'employee_id': self.employee_emp_id,
                     'state': 'confirm',
@@ -48,7 +48,7 @@ class TestHolidaysMail(TestHrHolidaysCommon, MailCase):
             self.env['hr.leave.allocation'].create([
                 {
                     'name': 'Paid Time off for Mitchell',
-                    'work_entry_type_id': work_entry_type_paid_time_off.id,
+                    'time_type_id': time_type_paid_time_off.id,
                     'number_of_days': 20,
                     'employee_id': self.admin_employee.id,
                     'state': 'confirm',
@@ -58,7 +58,7 @@ class TestHolidaysMail(TestHrHolidaysCommon, MailCase):
 
             leave_vals = {
                 'name': 'Sick Time Off',
-                'work_entry_type_id': work_entry_type_paid_time_off.id,
+                'time_type_id': time_type_paid_time_off.id,
                 'request_date_from': date.today() + relativedelta(day=2),
                 'request_date_to': date.today() + relativedelta(day=3),
                 'employee_id': self.admin_employee.id,
@@ -73,7 +73,7 @@ class TestHolidaysMail(TestHrHolidaysCommon, MailCase):
 
     def test_refuse_cancel_notification_model_description(self):
         """ The approvers notified of a refusal or a cancellation get the model description """
-        work_entry_type = self.env['hr.work.entry.type'].create({
+        time_type = self.env['hr.time.type'].create({
             'name': 'Manager Time Off',
             'code': 'Manager Time Off',
             'requires_allocation': False,
@@ -83,7 +83,7 @@ class TestHolidaysMail(TestHrHolidaysCommon, MailCase):
         })
         leaves = self.env['hr.leave'].create([{
             'name': 'Time Off',
-            'work_entry_type_id': work_entry_type.id,
+            'time_type_id': time_type.id,
             'request_date_from': day,
             'request_date_to': day,
             'employee_id': self.employee_emp_id,

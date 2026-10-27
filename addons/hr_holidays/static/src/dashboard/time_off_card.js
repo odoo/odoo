@@ -59,7 +59,7 @@ export class TimeOffCardPopover extends Component {
                   form_view_ref: "hr_holidays.hr_leave_allocation_view_form",
               };
         const domain = [
-            ["work_entry_type_id", "=", timeOffType],
+            ["time_type_id", "=", timeOffType],
             ["employee_company_id", "=", employeeCompany],
             "|",
             ["date_to", "=", false],
@@ -80,7 +80,7 @@ export class TimeOffCardPopover extends Component {
         const name = "My Time Off";
         const domain = [
             ["state", "in", stateList],
-            ["work_entry_type_id", "=", timeOffType],
+            ["time_type_id", "=", timeOffType],
             employeeId ? ["employee_id", "=", employeeId] : ["user_id", "=", user.userId],
         ];
         const context = isInHolidaysUserGroup
@@ -107,7 +107,7 @@ export class TimeOffCard extends Component {
         data: t.any(),
         requires_allocation: t.any(),
         employeeId: t.any(),
-        holidayStatusId: t.any(),
+        timeTypeId: t.any(),
     });
 
     setup() {
@@ -153,7 +153,7 @@ export class TimeOffCard extends Component {
     }
 
     getPopoverProps() {
-        const { data, holidayStatusId, employeeId } = this.props;
+        const { data, timeTypeId, employeeId } = this.props;
         return {
             allocated: formatNumber(this.lang, data.max_leaves),
             accrual_bonus: formatNumber(this.lang, data.accrual_bonus),
@@ -168,7 +168,7 @@ export class TimeOffCard extends Component {
             max_allowed_negative: data.max_allowed_negative,
             errorLeaves: this.errorLeaves,
             accrualExcess: this.getAccrualExcess(data),
-            timeOffType: holidayStatusId,
+            timeOffType: timeTypeId,
             employeeId: employeeId,
             employeeCompany: data.employee_company,
             employeeCountry: data.employee_country,

@@ -3,8 +3,8 @@
 from odoo import fields, models
 
 
-class HrWorkEntryType(models.Model):
-    _inherit = "hr.work.entry.type"
+class HrTimeType(models.Model):
+    _inherit = "hr.time.type"
 
     l10n_in_is_sandwich_leave = fields.Boolean(
         string="Is Sandwich Leave",

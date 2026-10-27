@@ -48,7 +48,7 @@ class TestHolidaysCalendar(HttpCase, TestHrHolidaysCommon):
         Test that single-day time off requests have a single day display in calendar
         """
 
-        leave_type, leave_type_half = self.env['hr.work.entry.type'].create([
+        leave_type, leave_type_half = self.env['hr.time.type'].create([
             {
                 'name': 'Test Leave Type',
                 'code': 'Test Leave Type',
@@ -73,7 +73,7 @@ class TestHolidaysCalendar(HttpCase, TestHrHolidaysCommon):
         leave = self.env['hr.leave'].create({
             'name': 'Single Day Leave',
             'employee_id': self.employee_emp.id,
-            'work_entry_type_id': leave_type.id,
+            'time_type_id': leave_type.id,
             'request_date_from': test_date,
             'request_date_to': test_date,
         })
@@ -93,7 +93,7 @@ class TestHolidaysCalendar(HttpCase, TestHrHolidaysCommon):
         leave_half = self.env['hr.leave'].create({
             'name': 'Half Day Leave LA',
             'employee_id': self.employee_emp.id,
-            'work_entry_type_id': leave_type_half.id,
+            'time_type_id': leave_type_half.id,
             'request_date_from': test_date_half,
             'request_date_to': test_date_half,
             'request_date_from_period': 'pm',
@@ -111,7 +111,7 @@ class TestHolidaysCalendar(HttpCase, TestHrHolidaysCommon):
         Test that a refused time off request shows a warning message
         when another approved request exists for the same period.
         """
-        leave_type = self.env['hr.work.entry.type'].create({
+        leave_type = self.env['hr.time.type'].create({
             'name': 'Test Leave Type',
             'code': "TEST",
             'requires_allocation': False,
@@ -125,7 +125,7 @@ class TestHolidaysCalendar(HttpCase, TestHrHolidaysCommon):
         leave_request_a = self.env['hr.leave'].create({
             'name': 'First Time Off Request',
             'employee_id': self.employee_emp.id,
-            'work_entry_type_id': leave_type.id,
+            'time_type_id': leave_type.id,
             'request_date_from': test_date,
             'request_date_to': test_date,
         })
@@ -134,7 +134,7 @@ class TestHolidaysCalendar(HttpCase, TestHrHolidaysCommon):
         leave_request_b = self.env['hr.leave'].create({
             'name': 'Second Time Off Request',
             'employee_id': self.employee_emp.id,
-            'work_entry_type_id': leave_type.id,
+            'time_type_id': leave_type.id,
             'request_date_from': test_date,
             'request_date_to': test_date,
         })
@@ -148,7 +148,7 @@ class TestHolidaysCalendar(HttpCase, TestHrHolidaysCommon):
         have their duration computed correctly
         """
 
-        leave_type = self.env['hr.work.entry.type'].create({
+        leave_type = self.env['hr.time.type'].create({
             'name': 'Test',
             'code': 'Test',
             'requires_allocation': False,

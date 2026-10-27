@@ -6,17 +6,17 @@ from odoo import api, models
 class ResourceCalendar(models.Model):
     _inherit = 'resource.calendar'
 
-    # Override the method to add 'attendance_ids.work_entry_type_id.count_as' to
+    # Override the method to add 'attendance_ids.time_type_id.count_as' to
     # the dependencies
-    @api.depends('attendance_ids.work_entry_type_id.count_as')
+    @api.depends('attendance_ids.time_type_id.count_as')
     def _compute_hours_per_week(self):
         super()._compute_hours_per_week()
 
-    @api.depends('attendance_ids.work_entry_type_id.count_as')
+    @api.depends('attendance_ids.time_type_id.count_as')
     def _compute_days_per_week(self):
         super()._compute_days_per_week()
 
-    @api.depends('attendance_ids.work_entry_type_id.count_as')
+    @api.depends('attendance_ids.time_type_id.count_as')
     def _compute_hours_per_day(self):
         super()._compute_hours_per_day()
 
@@ -28,7 +28,7 @@ class ResourceCalendar(models.Model):
         """
         hours_per_day = super()._get_reference_hours_per_day(day)
         attendances = self.sudo().attendance_ids._filter_by_date(day)
-        has_absence = any(attendance.work_entry_type_id.count_as == 'absence' for attendance in attendances)
+        has_absence = any(attendance.time_type_id.count_as == 'absence' for attendance in attendances)
         # Only a day holding an absence needs another reference than the average day.
         if not has_absence:
             return hours_per_day
@@ -36,7 +36,7 @@ class ResourceCalendar(models.Model):
         return max(hours_per_day, sum(attendances.mapped('duration_hours')))
 
     def _work_intervals_batch(self, start_dt, end_dt, resources_per_tz=None, domain=None, compute_leaves=True):
-        """Remove the attendances whose work entry type counts as absence from the work intervals.
+        """Remove the attendances whose time type counts as absence from the work intervals.
 
         Only when ``compute_leaves`` is set: such attendances are then treated like leaves.
         See ``resource.calendar._work_intervals_batch`` for parameters and return value.
@@ -63,6 +63,6 @@ class ResourceCalendar(models.Model):
             start_dt,
             end_dt,
             resources_per_tz=resources_per_tz,
-            domain=[("work_entry_type_id.count_as", "=", "absence")],
+            domain=[("time_type_id.count_as", "=", "absence")],
         )
         return {r.id: (work_intervals[r.id] - leave_attendance_intervals[r.id]) for r in all_resources}

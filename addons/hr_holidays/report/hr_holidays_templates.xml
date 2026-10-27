@@ -67,10 +67,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="get_holidays_status" t-as="status">
-                                <span t-if="status['color']">
-                                    &lt;td style=background-color:<t t-out="status['color']"/>!important &gt;&lt;/td&gt;
-                                    <td><t t-out="status['name']"/></td>
+                            <tr t-foreach="get_time_types" t-as="time_type">
+                                <span t-if="time_type['color']">
+                                    &lt;td style=background-color:<t t-out="time_type['color']"/>!important &gt;&lt;/td&gt;
+                                    <td><t t-out="time_type['name']"/></td>
                                 </span>
                             </tr>
                         </tbody>

@@ -15,47 +15,47 @@ from odoo.tools.intervals import Intervals
 class HrVersion(models.Model):
     _inherit = 'hr.version'
 
-    def _get_default_work_entry_type_id(self):
-        """Return the id of the work entry type used for worked time without explicit type.
+    def _get_default_time_type_id(self):
+        """Return the id of the time type used for worked time without explicit type.
 
-        Used for calendar attendances without ``work_entry_type_id`` and for attendances
+        Used for calendar attendances without ``time_type_id`` and for attendances
         without type. Default: the ``002.00`` type of the version's country, else the generic
-        ``hr_work_entry.generic_work_entry_type_attendance``. ``hr_payroll`` gives precedence to
-        the structure type's ``default_work_entry_type_id``.
+        ``hr_work_entry.generic_time_type_attendance``. ``hr_payroll`` gives precedence to
+        the structure type's ``default_time_type_id``.
 
-        :return: an ``hr.work.entry.type`` id, or ``False`` if none is found
+        :return: an ``hr.time.type`` id, or ``False`` if none is found
         :rtype: int
         """
         country_code = self.country_code
-        country_attendance = self.env['hr.work.entry.type'].search([
+        country_attendance = self.env['hr.time.type'].search([
             ('code', '=', '002.00'),
             ('country_code', '=', country_code),
         ], limit=1)
-        attendance = country_attendance or self.env.ref('hr_work_entry.generic_work_entry_type_attendance', raise_if_not_found=False)
+        attendance = country_attendance or self.env.ref('hr_work_entry.generic_time_type_attendance', raise_if_not_found=False)
         return attendance.id if attendance else False
 
-    def _get_leave_work_entry_type_dates(self, leave, date_from, date_to, employee):
-        """Return the work entry type of ``leave`` for the slice ``[date_from, date_to]``.
+    def _get_leave_time_type_dates(self, leave, date_from, date_to, employee):
+        """Return the time type of ``leave`` for the slice ``[date_from, date_to]``.
 
         Override to make the type depend on the period, e.g. ``l10n_be_hr_payroll`` switches
-        a sick leave to another type after 30 days. Default: :meth:`_get_leave_work_entry_type`.
+        a sick leave to another type after 30 days. Default: :meth:`_get_leave_time_type`.
 
         :param leave: the ``resource.calendar.leaves`` record covering the slice
         :param datetime date_from: slice start, naive UTC
         :param datetime date_to: slice end, naive UTC
         :param employee: the ``hr.employee`` of the version
-        :rtype: hr.work.entry.type
+        :rtype: hr.time.type
         """
-        return self._get_leave_work_entry_type(leave)
+        return self._get_leave_time_type(leave)
 
-    def _get_leave_work_entry_type(self, leave):
-        """Return the work entry type of a ``resource.calendar.leaves`` record.
+    def _get_leave_time_type(self, leave):
+        """Return the time type of a ``resource.calendar.leaves`` record.
 
         ``hr_holidays`` returns the type of the linked time off (``holiday_id``) when there is one.
 
-        :rtype: hr.work.entry.type
+        :rtype: hr.time.type
         """
-        return leave.work_entry_type_id
+        return leave.time_type_id
 
     # Is used to add more values, for example planning_slot_id
     def _get_more_vals_attendance_interval(self, interval):
@@ -91,32 +91,32 @@ class HrVersion(models.Model):
         """
         return []
 
-    def _get_bypassing_work_entry_type_codes(self):
+    def _get_bypassing_time_type_codes(self):
         """Return the codes of the leave types that win over public holidays.
 
         When a time off and a global leave (public holiday) overlap, the global leave normally
         wins. A time off whose type code is listed here wins instead (e.g. long term sick leave
-        in ``l10n_be_hr_payroll``). Used by :meth:`_get_interval_leave_work_entry_type`.
+        in ``l10n_be_hr_payroll``). Used by :meth:`_get_interval_leave_time_type`.
 
-        :return: list of ``hr.work.entry.type`` codes
+        :return: list of ``hr.time.type`` codes
         :rtype: list[str]
         """
         return []
 
-    def _get_interval_leave_work_entry_type(self, interval, leaves, bypassing_codes):
-        """Return the work entry type of a leave interval.
+    def _get_interval_leave_time_type(self, interval, leaves, bypassing_codes):
+        """Return the time type of a leave interval.
 
         Base version: the type of the first leave of ``leaves`` that contains the whole
-        ``interval`` (through :meth:`_get_leave_work_entry_type_dates`). ``hr_holidays``
+        ``interval`` (through :meth:`_get_leave_time_type_dates`). ``hr_holidays``
         overrides it to arbitrate overlapping leaves: bypassing time off, then global leaves
         (public holidays), then other time off.
 
         :param tuple interval: ``(start, stop, payload)``, tz-aware in the employee timezone
         :param list leaves: ``(start, stop, resource.calendar.leaves)`` tuples
-        :param list bypassing_codes: result of :meth:`_get_bypassing_work_entry_type_codes`
-        :return: the leave's type, or ``hr_work_entry.generic_work_entry_type_leave`` if no
+        :param list bypassing_codes: result of :meth:`_get_bypassing_time_type_codes`
+        :return: the leave's type, or ``hr_work_entry.generic_time_type_leave`` if no
             leave contains the interval
-        :rtype: hr.work.entry.type
+        :rtype: hr.time.type
         """
         # returns the work entry time related to the leave that
         # includes the whole interval.
@@ -125,8 +125,8 @@ class HrVersion(models.Model):
             if interval[0] >= leave[0] and interval[1] <= leave[1] and leave[2]:
                 interval_start = interval[0].astimezone(UTC).replace(tzinfo=None)
                 interval_stop = interval[1].astimezone(UTC).replace(tzinfo=None)
-                return self._get_leave_work_entry_type_dates(leave[2], interval_start, interval_stop, self.employee_id)
-        return self.env.ref('hr_work_entry.generic_work_entry_type_leave')
+                return self._get_leave_time_type_dates(leave[2], interval_start, interval_stop, self.employee_id)
+        return self.env.ref('hr_work_entry.generic_time_type_leave')
 
     def _get_sub_leave_domain(self):
         """Return the calendar part of the domain of :meth:`_get_leave_domain`.
@@ -204,20 +204,20 @@ class HrVersion(models.Model):
                 ))
         return result
 
-    def _get_interval_work_entry_type(self, interval):
-        """Return the work entry type of an interval from its payload.
+    def _get_interval_time_type(self, interval):
+        """Return the time type of an interval from its payload.
 
-        The payload's ``work_entry_type_id`` (first record) if any, else the version's default
-        type (:meth:`_get_default_work_entry_type_id`).
+        The payload's ``time_type_id`` (first record) if any, else the version's default
+        type (:meth:`_get_default_time_type_id`).
 
         :param tuple interval: ``(start, stop, payload)``; ``payload`` is usually a
             ``resource.calendar.attendance`` or ``resource.calendar.leaves`` recordset
-        :rtype: hr.work.entry.type
+        :rtype: hr.time.type
         """
         self.ensure_one()
-        if 'work_entry_type_id' in interval[2] and interval[2].work_entry_type_id[:1]:
-            return interval[2].work_entry_type_id[:1]
-        return self.env['hr.work.entry.type'].browse(self._get_default_work_entry_type_id())
+        if 'time_type_id' in interval[2] and interval[2].time_type_id[:1]:
+            return interval[2].time_type_id[:1]
+        return self.env['hr.time.type'].browse(self._get_default_time_type_id())
 
     def _get_valid_leave_intervals(self, attendances, interval):
         """Filter or cut a leave interval before it is used for generation.
@@ -235,7 +235,7 @@ class HrVersion(models.Model):
         self.ensure_one()
         return [interval]
 
-    def _get_no_wet_or_wet_match(self, leave, leave_entry_type):
+    def _get_no_time_type_or_time_type_match(self, leave, leave_entry_type):
         """Tell whether ``leave`` is a source of a leave work entry of type ``leave_entry_type``.
 
         True if the calendar leave has no type or the same type. Only the matching leaves are
@@ -243,10 +243,10 @@ class HrVersion(models.Model):
         generated values.
 
         :param tuple leave: ``(start, stop, resource.calendar.leaves)``
-        :param leave_entry_type: the ``hr.work.entry.type`` chosen for the interval
+        :param leave_entry_type: the ``hr.time.type`` chosen for the interval
         :rtype: bool
         """
-        return not leave[2].work_entry_type_id or leave[2].work_entry_type_id.id == leave_entry_type.id
+        return not leave[2].time_type_id or leave[2].time_type_id.id == leave_entry_type.id
 
     # Meant for behavior override
     def _get_real_attendance_work_entry_vals(self, intervals):
@@ -256,7 +256,7 @@ class HrVersion(models.Model):
 
         :param intervals: iterable of ``(start, stop, payload)``, tz-aware
         :return: one dict per interval with ``date_start`` and ``date_stop`` (naive UTC),
-            ``work_entry_type_id`` (:meth:`_get_interval_work_entry_type`), ``employee_id``,
+            ``time_type_id`` (:meth:`_get_interval_time_type`), ``employee_id``,
             ``version_id``, ``company_id`` (all recordsets), plus the pairs of
             :meth:`_get_more_vals_attendance_interval`
         :rtype: list[dict]
@@ -265,12 +265,12 @@ class HrVersion(models.Model):
         vals = []
         employee = self.employee_id
         for interval in intervals:
-            work_entry_type = self._get_interval_work_entry_type(interval)
+            time_type = self._get_interval_time_type(interval)
             # All benefits generated here are using datetimes converted from the employee's timezone
             vals += [dict([
                       ('date_start', interval[0].astimezone(UTC).replace(tzinfo=None)),
                       ('date_stop', interval[1].astimezone(UTC).replace(tzinfo=None)),
-                      ('work_entry_type_id', work_entry_type),
+                      ('time_type_id', time_type),
                       ('employee_id', employee),
                       ('version_id', self),
                       ('company_id', self.company_id),
@@ -299,7 +299,7 @@ class HrVersion(models.Model):
         :param datetime date_start: period start; naive datetimes are considered UTC
         :param datetime date_stop: period end; naive datetimes are considered UTC
         :return: list of dicts with ``date_start`` and ``date_stop`` (naive UTC),
-            ``work_entry_type_id``, ``employee_id``, ``version_id``, ``company_id`` (recordsets)
+            ``time_type_id``, ``employee_id``, ``version_id``, ``company_id`` (recordsets)
             and the extra keys of the ``_get_more_vals_*`` hooks. Alternatively, a value may
             carry ``date`` and ``duration`` directly.
         :rtype: list[dict]
@@ -307,7 +307,7 @@ class HrVersion(models.Model):
         start_dt = date_start.replace(tzinfo=UTC) if not date_start.tzinfo else date_start
         end_dt = date_stop.replace(tzinfo=UTC) if not date_stop.tzinfo else date_stop
         version_vals = []
-        bypassing_work_entry_type_codes = self._get_bypassing_work_entry_type_codes()
+        bypassing_time_type_codes = self._get_bypassing_time_type_codes()
 
         expected_attendances_by_resource = self.sudo()._get_attendance_intervals(start_dt, end_dt)
 
@@ -409,12 +409,12 @@ class HrVersion(models.Model):
             version_vals += version._get_real_attendance_work_entry_vals(real_attendances)
 
             for interval in real_worked_leaves:
-                work_entry_type = version._get_interval_leave_work_entry_type(interval, worked_leaves, bypassing_work_entry_type_codes)
+                time_type = version._get_interval_leave_time_type(interval, worked_leaves, bypassing_time_type_codes)
                 # All benefits generated here are using datetimes converted from the employee's timezone
                 version_vals += [dict([
                     ('date_start', interval[0].astimezone(UTC).replace(tzinfo=None)),
                     ('date_stop', interval[1].astimezone(UTC).replace(tzinfo=None)),
-                    ('work_entry_type_id', work_entry_type),
+                    ('time_type_id', time_type),
                     ('employee_id', employee),
                     ('version_id', version),
                     ('company_id', version.company_id),
@@ -430,15 +430,15 @@ class HrVersion(models.Model):
                     continue
                 leaves_over_interval = [l for l in leaves_over_attendances if l[0] >= interval[0] and l[1] <= interval[1]]
                 for leave_interval in [(l[0], l[1], interval[2]) for l in leaves_over_interval]:
-                    leave_entry_type = version._get_interval_leave_work_entry_type(leave_interval, leaves, bypassing_work_entry_type_codes)
-                    # leaves don't have work_entry_type_id set if you create them before having hr_work_entry_installed
-                    interval_leaves = [leave for leave in leaves if version._get_no_wet_or_wet_match(leave, leave_entry_type)]
+                    leave_entry_type = version._get_interval_leave_time_type(leave_interval, leaves, bypassing_time_type_codes)
+                    # leaves don't have time_type_id set if you create them before having hr_work_entry_installed
+                    interval_leaves = [leave for leave in leaves if version._get_no_time_type_or_time_type_match(leave, leave_entry_type)]
                     interval_start = leave_interval[0].astimezone(UTC).replace(tzinfo=None)
                     interval_stop = leave_interval[1].astimezone(UTC).replace(tzinfo=None)
                     version_vals += [dict([
                         ('date_start', interval_start),
                         ('date_stop', interval_stop),
-                        ('work_entry_type_id', leave_entry_type),
+                        ('time_type_id', leave_entry_type),
                         ('employee_id', employee),
                         ('company_id', version.company_id),
                         ('version_id', version),
@@ -548,7 +548,7 @@ class HrVersion(models.Model):
 
             - ``date``: local day (``datetime.date``) in the version's timezone
             - ``duration``: hours (float, never zero)
-            - ``work_entry_type_id``, ``employee_id``, ``version_id``, ``company_id``: records
+            - ``time_type_id``, ``employee_id``, ``version_id``, ``company_id``: records
             - optional keys added by extensions: ``leave_ids`` (``hr.leave``),
               ``attendance_ids`` (``hr.attendance``), ``category_options_ids``,
               ``trimmed_duration`` (``hr_payroll``)...
@@ -652,7 +652,7 @@ class HrVersion(models.Model):
         """Return the key identifying the work entry values to merge into one.
 
         Values with the same key are merged by summing ``duration``. Default key:
-        ``(date, work_entry_type_id, employee_id, version_id, company_id)``. Extend the tuple
+        ``(date, time_type_id, employee_id, version_id, company_id)``. Extend the tuple
         to keep values apart (``hr_payroll`` adds ``category_options_ids``).
 
         :param dict vals: one work entry value, with ``date`` set
@@ -660,7 +660,7 @@ class HrVersion(models.Model):
         """
         return (
             vals['date'],
-            vals.get('work_entry_type_id', False),
+            vals.get('time_type_id', False),
             vals['employee_id'],
             vals['version_id'],
             vals.get('company_id', False),
@@ -681,10 +681,10 @@ class HrVersion(models.Model):
         :param dict vals: raw value (``date_start``/``date_stop`` still set)
         :rtype: bool
         """
-        if 'work_entry_type_id' not in vals:
+        if 'time_type_id' not in vals:
             return False
-        work_entry_type = vals['work_entry_type_id']
-        return work_entry_type.count_as == 'absence'
+        time_type = vals['time_type_id']
+        return time_type.count_as == 'absence'
 
     @api.model
     def _generate_work_entries_postprocess(self, vals_list):

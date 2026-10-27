@@ -19,7 +19,7 @@ test("Test request creator buttons", async () => {
         "form,hr_leave_view_form_dashboard_new_time_off": `
             <form>
                 <field name="state"/>
-                <field name="work_entry_type_id"/>
+                <field name="time_type_id"/>
                 <field name="employee_id"/>
                 <field name="user_id"/>
                 <field name="can_cancel"/>
@@ -31,7 +31,7 @@ test("Test request creator buttons", async () => {
         {
             id: 1,
             state: "confirm",
-            work_entry_type_id: 55,
+            time_type_id: 55,
             employee_id: 100,
             user_id: 100,
             date_from: "2024-01-09 09:00:00",
@@ -40,7 +40,7 @@ test("Test request creator buttons", async () => {
         {
             id: 2,
             state: "validate1",
-            work_entry_type_id: 55,
+            time_type_id: 55,
             employee_id: 100,
             can_cancel: true,
             user_id: 100,
@@ -76,7 +76,7 @@ test("Test request creator buttons", async () => {
                     hide_time="True"
                     mode="year">
                 <field name="display_name" string=""/>
-                <field name="work_entry_type_id" filters="1" invisible="1" color="color"/>
+                <field name="time_type_id" filters="1" invisible="1" color="color"/>
                 <field name="state" invisible="1"/>
                 <field name="is_hatched" invisible="1" />
                 <field name="is_striked" invisible="1"/>

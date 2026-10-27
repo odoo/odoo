@@ -13,9 +13,9 @@ class TestOvertimeRuleRegression(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        att_type = cls.env.company._get_default_attendance_work_entry_type()
+        att_type = cls.env.company._get_default_attendance_time_type()
 
-        ot_type = cls.env['hr.work.entry.type'].create({
+        ot_type = cls.env['hr.time.type'].create({
             'name': 'Test Overtime',
             'code': 'OT_REGR_TEST',
         })
@@ -26,8 +26,8 @@ class TestOvertimeRuleRegression(TransactionCase):
             'name': 'Schedule Overtime (Test)',
             'calendar_source': 'employee',
             'quantity_period': 'day',
-            'work_entry_type_id': ot_type.id,
-            'condition_work_entry_type_ids': [(4, att_type.id)],
+            'time_type_id': ot_type.id,
+            'condition_time_type_ids': [(4, att_type.id)],
         })
 
         cls.employee = cls.env['hr.employee'].create({

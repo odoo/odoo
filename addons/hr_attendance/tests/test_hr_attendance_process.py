@@ -441,8 +441,8 @@ class TestAbsenceDetectionCron(TransactionCase):
                 for h in [8, 13]
             ],
         })
-        cls.att_type = cls.env.company._get_default_attendance_work_entry_type()
-        cls.env.company.attendance_work_entry_type_id = cls.att_type
+        cls.att_type = cls.env.company._get_default_attendance_time_type()
+        cls.env.company.attendance_time_type_id = cls.att_type
 
         cls.env['hr.time.rule'].search([]).write({'active': False})
 
@@ -466,7 +466,7 @@ class TestAbsenceDetectionCron(TransactionCase):
     @freeze_time('2024-01-02 06:00:00')  # yesterday = 2024-01-01 (Monday)
     def test_absence_undertime_rule_creates_output(self):
         """Absent employee with an undertime rule: full scheduled day becomes an undertime output."""
-        undertime_wet = self.env['hr.work.entry.type'].create({
+        undertime_time_type = self.env['hr.time.type'].create({
             'name': 'Undertime', 'code': 'UT_CRON_TEST',
         })
         self.env['hr.time.rule'].create({
@@ -474,8 +474,8 @@ class TestAbsenceDetectionCron(TransactionCase):
             'threshold_operator': 'less_than',
             'calendar_source': 'employee',
             'quantity_period': 'day',
-            'work_entry_type_id': undertime_wet.id,
-            'condition_work_entry_type_ids': [(4, self.att_type.id)],
+            'time_type_id': undertime_time_type.id,
+            'condition_time_type_ids': [(4, self.att_type.id)],
         })
 
         self.env['hr.attendance']._cron_absence_detection()
@@ -499,7 +499,7 @@ class TestAbsenceDetectionCron(TransactionCase):
     @freeze_time('2024-01-02 06:00:00')  # yesterday = 2024-01-01 (Monday)
     def test_undertime_output_ignores_refused_attendance(self):
         """A refused attendance does not prevent the undertime output from covering its span."""
-        undertime_wet = self.env['hr.work.entry.type'].create({
+        undertime_time_type = self.env['hr.time.type'].create({
             'name': 'Undertime', 'code': 'UT_REFUSED_TEST',
         })
         rule = self.env['hr.time.rule'].create({
@@ -507,8 +507,8 @@ class TestAbsenceDetectionCron(TransactionCase):
             'threshold_operator': 'less_than',
             'calendar_source': 'employee',
             'quantity_period': 'day',
-            'work_entry_type_id': undertime_wet.id,
-            'condition_work_entry_type_ids': [(4, self.att_type.id)],
+            'time_type_id': undertime_time_type.id,
+            'condition_time_type_ids': [(4, self.att_type.id)],
         })
         self.env['hr.attendance'].create({
             'employee_id': self.absent_employee.id,
@@ -534,7 +534,7 @@ class TestAbsenceDetectionCron(TransactionCase):
     @freeze_time('2024-01-02 06:00:00')  # yesterday = 2024-01-01 (Monday)
     def test_absence_undertime_rule_timezones(self):
         """The absence is detected on the local day of the employee, whatever their timezone."""
-        undertime_wet = self.env['hr.work.entry.type'].create({
+        undertime_time_type = self.env['hr.time.type'].create({
             'name': 'Undertime', 'code': 'UT_CRON_TZ_TEST',
         })
         rule = self.env['hr.time.rule'].create({
@@ -542,8 +542,8 @@ class TestAbsenceDetectionCron(TransactionCase):
             'threshold_operator': 'less_than',
             'calendar_source': 'employee',
             'quantity_period': 'day',
-            'work_entry_type_id': undertime_wet.id,
-            'condition_work_entry_type_ids': [(4, self.att_type.id)],
+            'time_type_id': undertime_time_type.id,
+            'condition_time_type_ids': [(4, self.att_type.id)],
         })
         self.absent_employee.contract_date_end = '2023-12-31'
         for tz in ('Europe/Brussels', 'Asia/Tokyo', 'Pacific/Honolulu', 'UTC'):
@@ -566,7 +566,7 @@ class TestAbsenceDetectionCron(TransactionCase):
     @freeze_time('2024-01-02 06:00:00')  # yesterday = 2024-01-01 (Monday)
     def test_absence_after_contract_end(self):
         """Employee whose contract ended before yesterday is not targeted by the cron."""
-        undertime_wet = self.env['hr.work.entry.type'].create({
+        undertime_time_type = self.env['hr.time.type'].create({
             'name': 'Undertime', 'code': 'UT_CRON_TEST',
         })
         self.env['hr.time.rule'].create({
@@ -574,8 +574,8 @@ class TestAbsenceDetectionCron(TransactionCase):
             'threshold_operator': 'less_than',
             'calendar_source': 'employee',
             'quantity_period': 'day',
-            'work_entry_type_id': undertime_wet.id,
-            'condition_work_entry_type_ids': [(4, self.att_type.id)],
+            'time_type_id': undertime_time_type.id,
+            'condition_time_type_ids': [(4, self.att_type.id)],
         })
         self.absent_employee.contract_date_end = '2023-12-31'
 
@@ -617,18 +617,18 @@ class TestAttendanceValidationTimeRules(TransactionCase):
                 for h in [8, 13]
             ],
         })
-        cls.att_type = cls.env.company._get_default_attendance_work_entry_type()
-        cls.env.company.attendance_work_entry_type_id = cls.att_type
+        cls.att_type = cls.env.company._get_default_attendance_time_type()
+        cls.env.company.attendance_time_type_id = cls.att_type
         cls.env['hr.time.rule'].search([]).write({'active': False})
-        cls.overtime_type = cls.env['hr.work.entry.type'].create({
+        cls.overtime_type = cls.env['hr.time.type'].create({
             'name': 'Overtime', 'code': 'OT_VALIDATION_TEST',
         })
         cls.rule = cls.env['hr.time.rule'].create({
             'name': 'Daily Overtime',
             'calendar_source': 'employee',
             'quantity_period': 'day',
-            'work_entry_type_id': cls.overtime_type.id,
-            'condition_work_entry_type_ids': [(4, cls.att_type.id)],
+            'time_type_id': cls.overtime_type.id,
+            'condition_time_type_ids': [(4, cls.att_type.id)],
         })
         cls.employee = cls.env['hr.employee'].create({
             'name': 'Validated Employee',

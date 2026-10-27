@@ -266,7 +266,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         self.employees = self.env['hr.employee'].create([{
             'user_id': user.id,
         } for user in self.users])
-        self.work_entry_type = self.env['hr.work.entry.type'].create({
+        self.time_type = self.env['hr.time.type'].create({
             'requires_allocation': False,
             'name': 'Legal Leaves',
             'code': 'Legal Leaves',
@@ -278,7 +278,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             'request_date_from': fields.Datetime.today() + relativedelta(days=-2),
             'request_date_to': fields.Datetime.today() + relativedelta(days=2),
             'employee_id': employee.id,
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
         } for employee in self.employees])
         self.authenticate(self.users[0].login, self.password)
         Channel = self.env["discuss.channel"].with_user(self.users[0])

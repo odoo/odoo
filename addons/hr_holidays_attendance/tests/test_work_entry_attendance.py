@@ -158,7 +158,7 @@ class TestWorkentryAttendance(HrWorkEntryAttendanceCommon):
         self.env['resource.calendar.leaves'].create({
             'date_from': start,
             'date_to': end,
-            'work_entry_type_id': self.work_entry_type_leave.id,
+            'time_type_id': self.time_type_leave.id,
         })
 
         flexible_calendar = self.env['resource.calendar'].create({
@@ -188,8 +188,8 @@ class TestWorkentryAttendance(HrWorkEntryAttendanceCommon):
         ])
 
         work_entries_vals = self.richard_emp.version_ids.generate_work_entries(start.date(), end.date())
-        time_off_entries = [vals for vals in work_entries_vals if vals['work_entry_type_id'].code == 'LEAVETEST100']
-        other_entries = [vals for vals in work_entries_vals if vals['work_entry_type_id'].code != 'LEAVETEST100']
+        time_off_entries = [vals for vals in work_entries_vals if vals['time_type_id'].code == 'LEAVETEST100']
+        other_entries = [vals for vals in work_entries_vals if vals['time_type_id'].code != 'LEAVETEST100']
         # Since we are now merging similar work entries on the same day
         # we are going to have only one leave entry
         self.assertEqual(len(time_off_entries), 1)
@@ -214,7 +214,7 @@ class TestWorkentryAttendance(HrWorkEntryAttendanceCommon):
             'resource_calendar_id': fully_flexible_calendar.id,
         })
 
-        sick_work_entry_type = self.env['hr.work.entry.type'].search([('code', '=', '013.00')], limit=1)
+        sick_time_type = self.env['hr.time.type'].search([('code', '=', '013.00')], limit=1)
 
         self.env['resource.calendar.leaves'].create([
             {
@@ -222,14 +222,14 @@ class TestWorkentryAttendance(HrWorkEntryAttendanceCommon):
                 'date_from': datetime(2025, 6, 25),
                 'date_to': datetime(2025, 6, 29),
                 'resource_id': fully_flexible_emp.resource_id.id,
-                'work_entry_type_id': sick_work_entry_type.id,
+                'time_type_id': sick_time_type.id,
             },
             {
                 'name': 'Public Holiday',
                 'date_from': datetime(2025, 6, 27),
                 'date_to': datetime(2025, 6, 27, 23, 59, 59),
                 'calendar_id': False,
-                'work_entry_type_id': self.work_entry_type_leave.id,
+                'time_type_id': self.time_type_leave.id,
             }
         ])
 

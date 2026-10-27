@@ -8,19 +8,19 @@ from odoo.exceptions import ValidationError
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
-    def _default_work_entry_type_id(self):
-        return self.env.ref('hr_holidays.l10n_fr_work_entry_type_paid_time_off', raise_if_not_found=False)
+    def _default_time_type_id(self):
+        return self.env.ref('hr_holidays.l10n_fr_time_type_paid_time_off', raise_if_not_found=False)
 
-    l10n_fr_reference_work_entry_type = fields.Many2one(
-        'hr.work.entry.type',
+    l10n_fr_reference_time_type = fields.Many2one(
+        'hr.time.type',
         string='Company Paid Time Type',
-        default=_default_work_entry_type_id)
+        default=_default_time_type_id)
 
-    def _get_fr_reference_work_entry_type(self):
+    def _get_fr_reference_time_type(self):
         self.ensure_one()
-        if not self.l10n_fr_reference_work_entry_type:
-            default_type = self._default_work_entry_type_id()
+        if not self.l10n_fr_reference_time_type:
+            default_type = self._default_time_type_id()
             if not default_type:
                 raise ValidationError(_("You must first define a reference time type for the company."))
             return default_type
-        return self.l10n_fr_reference_work_entry_type
+        return self.l10n_fr_reference_time_type

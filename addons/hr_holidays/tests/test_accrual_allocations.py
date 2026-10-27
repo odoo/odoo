@@ -32,7 +32,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         })
 
         accrual_plan_by_signature = {}
-        work_entry_type_by_signature = {}
+        time_type_by_signature = {}
 
         def _create_accrual_plan(accrual_plan_by_signature, vals_list):
             """ Creates an accrual plan
@@ -52,15 +52,15 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             accrual_plan_by_signature[plan_signature] = accrual_plan.name
             return accrual_plan
 
-        def _create_work_entry_type(work_entry_type_by_signature, vals_list):
-            vals_list['name'] = vals_list['code'] = f'Work entry type line {inspect.getouterframes(inspect.currentframe())[1].frame.f_lineno}'
-            work_entry_type = cls.env['hr.work.entry.type'].create(vals_list)
-            work_entry_type_signature = _get_work_entry_type_signature(work_entry_type)
-            if work_entry_type_signature in work_entry_type_by_signature:
+        def _create_time_type(time_type_by_signature, vals_list):
+            vals_list['name'] = vals_list['code'] = f'Time type line {inspect.getouterframes(inspect.currentframe())[1].frame.f_lineno}'
+            time_type = cls.env['hr.time.type'].create(vals_list)
+            time_type_signature = _get_time_type_signature(time_type)
+            if time_type_signature in time_type_by_signature:
                 raise AccrualPlanDuplicataError(
-                    f'Work entry type duplicata detected with work entry type named:\n{work_entry_type_by_signature[work_entry_type_signature]}\nSignature:\n{work_entry_type_signature}')
-            work_entry_type_by_signature[work_entry_type_signature] = work_entry_type.name
-            return work_entry_type
+                    f'Time type duplicata detected with time type named:\n{time_type_by_signature[time_type_signature]}\nSignature:\n{time_type_signature}')
+            time_type_by_signature[time_type_signature] = time_type.name
+            return time_type
 
         def _get_accrual_plan_signature(accrual_plan):
             """ Returns the signature of the plan
@@ -78,32 +78,32 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     f"{level.action_with_unused_accruals},{level.carryover_options},{'expiring' if level.accrual_validity else 'not_expiring'},{'capped' if level.cap_accrued_time else 'uncapped'},{'capped_y' if level.cap_accrued_time_yearly else 'uncapped_y'},")
             return plan_signature[:-1]
 
-        def _get_work_entry_type_signature(work_entry_type):
-            return (f"{work_entry_type.count_as},{work_entry_type.requires_allocation},{work_entry_type.elligible_for_accrual_rate},{work_entry_type.request_unit},"
-                f"{work_entry_type.unit_of_measure},{work_entry_type.allocation_validation_type},{work_entry_type.allows_negative}")
+        def _get_time_type_signature(time_type):
+            return (f"{time_type.count_as},{time_type.requires_allocation},{time_type.elligible_for_accrual_rate},{time_type.request_unit},"
+                f"{time_type.unit_of_measure},{time_type.allocation_validation_type},{time_type.allows_negative}")
 
-        cls.work_entry_type = _create_work_entry_type(work_entry_type_by_signature, {
+        cls.time_type = _create_time_type(time_type_by_signature, {
             'count_as': 'absence',
             'requires_allocation': True,
             'allocation_validation_type': 'hr',
             'request_unit': 'day',
             'unit_of_measure': 'day',
         })
-        cls.work_entry_type_hour = _create_work_entry_type(work_entry_type_by_signature, {
+        cls.time_type_hour = _create_time_type(time_type_by_signature, {
             'count_as': 'absence',
             'requires_allocation': True,
             'allocation_validation_type': 'hr',
             'request_unit': 'hour',
             'unit_of_measure': 'hour',
         })
-        cls.work_entry_type_hour_day = _create_work_entry_type(work_entry_type_by_signature, {
+        cls.time_type_hour_day = _create_time_type(time_type_by_signature, {
             'count_as': 'absence',
             'requires_allocation': True,
             'allocation_validation_type': 'hr',
             'request_unit': 'day',
             'unit_of_measure': 'hour',
         })
-        cls.work_entry_type_day_hour = _create_work_entry_type(work_entry_type_by_signature, {
+        cls.time_type_day_hour = _create_time_type(time_type_by_signature, {
             'count_as': 'absence',
             'requires_allocation': True,
             'allocation_validation_type': 'hr',
@@ -133,7 +133,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'added_value': 2,
             }),
         ]
-        cls.work_entry_type_day = _create_work_entry_type(work_entry_type_by_signature, {
+        cls.time_type_day = _create_time_type(time_type_by_signature, {
             'count_as': 'absence',
             'requires_allocation': 'yes',
             'allocation_validation_type': 'no_validation',
@@ -146,7 +146,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'carryover_date': 'allocation',
             'can_be_carryover': True,
             'level_ids': accrual_plan1_levels,
-            'work_entry_type_id': cls.work_entry_type_day.id,
+            'time_type_id': cls.time_type_day.id,
         })
         cls.accrual_plan_end1 = _create_accrual_plan(accrual_plan_by_signature, {
             'is_based_on_worked_time': False,
@@ -154,7 +154,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'carryover_date': 'allocation',
             'can_be_carryover': True,
             'level_ids': accrual_plan1_levels,
-            'work_entry_type_id': cls.work_entry_type_day.id,
+            'time_type_id': cls.time_type_day.id,
         })
         cls.accrual_plan_monthly_end = _create_accrual_plan(accrual_plan_by_signature, {
             'is_based_on_worked_time': False,
@@ -168,7 +168,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'frequency': 'monthly',
                 'action_with_unused_accruals': 'all',
             })],
-            'work_entry_type_id': cls.work_entry_type_day.id,
+            'time_type_id': cls.time_type_day.id,
         })
 
         accrual_plan2_levels_fields = {
@@ -199,7 +199,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'added_value': 2,
                 }),
             ],
-            'work_entry_type_id': cls.work_entry_type_day.id,
+            'time_type_id': cls.time_type_day.id,
         })
         cls.accrual_plan_monthly_end_max_leaves = _create_accrual_plan(accrual_plan_by_signature, {
             'name': 'Accrual Plan For Test',
@@ -216,7 +216,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'cap_accrued_time': True,
                 'maximum_leave': 10,
             })],
-            'work_entry_type_id': cls.work_entry_type_day.id,
+            'time_type_id': cls.time_type_day.id,
         })
         cls.accrual_plan_yearly_max_carriedover_days_start = _create_accrual_plan(accrual_plan_by_signature, {
             'name': '21 days per year, 5 carryover max',
@@ -234,7 +234,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     "max_carriedover_duration": 5,
                 }),
             ],
-            'work_entry_type_id': cls.work_entry_type_day.id,
+            'time_type_id': cls.time_type_day.id,
         })
         cls.accrual_plan_monthly_start_carryover_lost = _create_accrual_plan(accrual_plan_by_signature, {
             'name': '1 day per month start - carryover 1st of Mai',
@@ -251,7 +251,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     "action_with_unused_accruals": "lost",
                 }),
             ],
-            'work_entry_type_id': cls.work_entry_type_hour_day.id,
+            'time_type_id': cls.time_type_hour_day.id,
         })
         first_accrual_plan_level = Command.create({
             'milestone_date': 'creation',
@@ -277,7 +277,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'can_be_carryover': True,
             'carryover_date': 'year_start',
             'level_ids': [first_accrual_plan_level],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_monthly_end_carryover_year_start = _create_accrual_plan(accrual_plan_by_signature, {
             'is_based_on_worked_time': False,
@@ -285,7 +285,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'can_be_carryover': True,
             'carryover_date': 'year_start',
             'level_ids': [first_accrual_plan_level],
-            'work_entry_type_id': cls.work_entry_type_day.id,
+            'time_type_id': cls.time_type_day.id,
         })
 
         cls.accrual_plan_monthly_end_carryover_year_start_2_lvls = _create_accrual_plan(accrual_plan_by_signature, {
@@ -295,7 +295,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'carryover_date': 'year_start',
             'transition_mode': 'immediately',
             'level_ids': [first_accrual_plan_level, second_accrual_plan_level],
-            'work_entry_type_id': cls.work_entry_type_day.id,
+            'time_type_id': cls.time_type_day.id,
         })
 
         cls.accrual_plan_monthly_start_carryover_year_start_2_lvls = _create_accrual_plan(accrual_plan_by_signature, {
@@ -305,7 +305,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'carryover_date': 'year_start',
             'transition_mode': 'immediately',
             'level_ids': [first_accrual_plan_level, second_accrual_plan_level],
-            'work_entry_type_id': cls.work_entry_type_day.id,
+            'time_type_id': cls.time_type_day.id,
         })
 
         cls.accrual_plan_monthly_start_carryover_lost_hour = _create_accrual_plan(accrual_plan_by_signature, {
@@ -323,7 +323,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     "action_with_unused_accruals": "lost",
                 }),
             ],
-            'work_entry_type_id': cls.work_entry_type_day_hour.id,
+            'time_type_id': cls.time_type_day_hour.id,
         })
 
         cls.based_on_work_time_accrual_plan_daily = _create_accrual_plan(accrual_plan_by_signature, {
@@ -335,7 +335,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'added_value_type': 'day',
                 'frequency': 'daily',
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
 
         cls.accrual_plan_daily_end_max_1_leave = _create_accrual_plan(accrual_plan_by_signature, {
@@ -351,7 +351,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 1,
                 'action_with_unused_accruals': 'all',
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
 
         cls.accrual_plan_daily_1_hour_4_max_leave = _create_accrual_plan(accrual_plan_by_signature, {
@@ -367,7 +367,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 4,
                 'action_with_unused_accruals': 'all',
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
 
         cls.weekly_accrual_plan = _create_accrual_plan(accrual_plan_by_signature, {
@@ -381,7 +381,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'cap_accrued_time': False,
                 'action_with_unused_accruals': 'lost',
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
 
         cls.accrual_plan_monthly_end_carry_over_lost_year_start = _create_accrual_plan(accrual_plan_by_signature, {
@@ -397,10 +397,10 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'cap_accrued_time': False,
                 'action_with_unused_accruals': 'lost',
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
 
-        cls.work_entry_type_no_negative = cls.env['hr.work.entry.type'].create({
+        cls.time_type_no_negative = cls.env['hr.time.type'].create({
             'name': 'Test Accrual - No negative',
             'code': 'Test Accrual - No negative',
             'count_as': 'absence',
@@ -411,7 +411,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'request_unit': 'day',
             'unit_of_measure': 'day',
         })
-        cls.work_entry_type_negative = cls.env['hr.work.entry.type'].create({
+        cls.time_type_negative = cls.env['hr.time.type'].create({
             'name': 'Test Accrual - Negative',
             'code': 'Test Accrual - Negative',
             'count_as': 'absence',
@@ -438,9 +438,9 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'carryover_options': 'limited',
                 'max_carriedover_duration': 5,
             })],
-            'work_entry_type_id': cls.work_entry_type_no_negative.id,
+            'time_type_id': cls.time_type_no_negative.id,
         })
-        # skipping the signature check for this as the test is batch creating allocations with diff work entry type.
+        # skipping the signature check for this as the test is batch creating allocations with diff time type.
         cls.accrual_plan_period_end_monthly_max_carryover_year_start_negative = cls.env['hr.leave.accrual.plan'].create({
             'can_be_carryover': True,
             'carryover_date': 'year_start',
@@ -455,11 +455,11 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'carryover_options': 'limited',
                 'max_carriedover_duration': 5,
             })],
-            'work_entry_type_id': cls.work_entry_type_negative.id,
+            'time_type_id': cls.time_type_negative.id,
         })
         cls.dummy_accrual_plan = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_hourly_based_on_work = _create_accrual_plan(accrual_plan_by_signature, {
             'is_based_on_worked_time': True,
@@ -473,7 +473,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'frequency': 'hourly',
                 'action_with_unused_accruals': 'all',
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_daily_end = _create_accrual_plan(accrual_plan_by_signature, {
             'is_based_on_worked_time': False,
@@ -487,7 +487,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'action_with_unused_accruals': 'all',
                 'cap_accrued_time': False,
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_daily_end_after_1d = _create_accrual_plan(accrual_plan_by_signature, {
             'is_based_on_worked_time': False,
@@ -502,7 +502,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'action_with_unused_accruals': 'all',
                 'cap_accrued_time': False,
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_weekly = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -515,7 +515,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'frequency': 'weekly',
                 'action_with_unused_accruals': 'all',
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_bimonthly = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -530,7 +530,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'second_day': 15,
                 'action_with_unused_accruals': 'all',
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_monthly = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -543,7 +543,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'frequency': 'monthly',
                 'action_with_unused_accruals': 'all',
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_biyearly = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -556,7 +556,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'frequency': 'biyearly',
                 'action_with_unused_accruals': 'all',
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_yearly = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -569,7 +569,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'frequency': 'yearly',
                 'action_with_unused_accruals': 'all',
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_hourly = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -584,7 +584,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'cap_accrued_time': True,
                 'maximum_leave': 10000,
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_based_on_worked_time = _create_accrual_plan(accrual_plan_by_signature, {
             'is_based_on_worked_time': True,
@@ -598,7 +598,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'frequency': 'weekly',
                 'action_with_unused_accruals': 'all',
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_monthly_31th_max_carryover_duration = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -614,7 +614,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'carryover_options': 'limited',
                 'max_carriedover_duration': 4,
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_2_lvls_weekly = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -637,7 +637,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 1,
                 'action_with_unused_accruals': 'all',
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_daily_carryover_lost = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -652,7 +652,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 20,
                 'action_with_unused_accruals': 'lost',
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_yearly_carryover_limited_10 = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -665,7 +665,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'carryover_options': 'limited',
                 'max_carriedover_duration': 10,
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_daily_max_leave_carryover_limited = _create_accrual_plan(accrual_plan_by_signature, {
             'accrued_gain_time': 'start',
@@ -683,7 +683,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'carryover_options': 'limited',
                 'max_carriedover_duration': 15,
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_biyearly_2_levels = _create_accrual_plan(accrual_plan_by_signature, {
             'name': 'Accrual Plan For Test',
@@ -702,7 +702,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'frequency': 'biyearly',
                 'action_with_unused_accruals': 'all',
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_3_levels_monthly_max_leaves = _create_accrual_plan(accrual_plan_by_signature, {
             'name': 'Accrual Plan For Test',
@@ -737,7 +737,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'action_with_unused_accruals': 'all',
                 'first_day': 31,
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_yearly_carryover_lost = _create_accrual_plan(accrual_plan_by_signature, {
             'accrued_gain_time': 'start',
@@ -751,7 +751,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'action_with_unused_accruals': 'lost',
                 }),
             ],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_weekly_5_max_leave = _create_accrual_plan(accrual_plan_by_signature, {
             'name': 'Accrual Plan For Test',
@@ -765,7 +765,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 5,
                 'action_with_unused_accruals': 'all',
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_weekly_hour_max_leaves = _create_accrual_plan(accrual_plan_by_signature, {
             'name': 'Accrual Plan For Test',
@@ -779,7 +779,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 10,
                 'action_with_unused_accruals': 'all',
             })],
-            'work_entry_type_id': cls.work_entry_type_hour.id,
+            'time_type_id': cls.time_type_hour.id,
         })
         cls.accrual_plan_daily_5_max_leaves = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -792,9 +792,9 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 5,
                 'action_with_unused_accruals': 'all',
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
-        cls.work_entry_type_absence_hour_hour = _create_work_entry_type(work_entry_type_by_signature, {
+        cls.time_type_absence_hour_hour = _create_time_type(time_type_by_signature, {
             'name': 'Test Leave Type 2',
             'code': 'Test Leave Type 2',
             'count_as': 'absence',
@@ -816,7 +816,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave_yearly': 16,
                 'action_with_unused_accruals': 'all',
             })],
-            'work_entry_type_id': cls.work_entry_type_absence_hour_hour.id,
+            'time_type_id': cls.time_type_absence_hour_hour.id,
         })
         cls.accrual_plan_monthly_start_15_max_leaves = _create_accrual_plan(accrual_plan_by_signature, {
             'accrued_gain_time': 'start',
@@ -831,7 +831,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 4,
                 'action_with_unused_accruals': 'all',
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
 
         cls.accrual_plan_2_lvls_start_weekly_max_leaves = _create_accrual_plan(accrual_plan_by_signature, {
@@ -858,9 +858,9 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'maximum_leave': 5,
                 }),
             ],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
-        cls.work_entry_type_absence_half_day_day = _create_work_entry_type(work_entry_type_by_signature, {
+        cls.time_type_absence_half_day_day = _create_time_type(time_type_by_signature, {
             'name': 'Paid Time Off 2',
             'code': 'Paid Time Off 2',
             'requires_allocation': False,
@@ -868,7 +868,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'request_unit': 'half_day',
             'unit_of_measure': 'day',
         })
-        cls.work_entry_type_accrual_non_elligible_absence_day_day = _create_work_entry_type(work_entry_type_by_signature, {
+        cls.time_type_accrual_non_elligible_absence_day_day = _create_time_type(time_type_by_signature, {
             'name': 'Paid Time Off 2',
             'code': 'Paid Time Off 2',
             'count_as': 'absence',
@@ -877,7 +877,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'request_unit': 'day',
             'unit_of_measure': 'day',
         })
-        cls.work_entry_type_accrual_elligible_absence_day_day = _create_work_entry_type(work_entry_type_by_signature, {
+        cls.time_type_accrual_elligible_absence_day_day = _create_time_type(time_type_by_signature, {
             'name': 'Paid Time Off 2',
             'code': 'Paid Time Off 2',
             'count_as': 'absence',
@@ -886,7 +886,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'request_unit': 'day',
             'unit_of_measure': 'day',
         })
-        cls.work_entry_type_working_time_day_day = _create_work_entry_type(work_entry_type_by_signature, {
+        cls.time_type_working_time_day_day = _create_time_type(time_type_by_signature, {
             'name': 'Remote Work',
             'code': 'Remote Work',
             'count_as': 'working_time',
@@ -910,7 +910,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'carryover_options': 'limited',
                 'max_carriedover_duration': 69,
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_3_lvls_monthly_biyearly_yearly_carryover_policy_change = _create_accrual_plan(accrual_plan_by_signature, {
             'accrued_gain_time': 'end',
@@ -962,7 +962,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'action_with_unused_accruals': 'lost',
                 }),
             ],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_weekly_carryover_lost = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -975,7 +975,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'cap_accrued_time': False,
                 'action_with_unused_accruals': 'lost',
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
 
         cls.accrual_plan_monthly_hour = _create_accrual_plan(accrual_plan_by_signature, {
@@ -991,7 +991,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'frequency': 'monthly',
                 'action_with_unused_accruals': 'all',
             })],
-            'work_entry_type_id': cls.work_entry_type_absence_hour_hour.id,
+            'time_type_id': cls.time_type_absence_hour_hour.id,
         })
         cls.accrual_plan_monthly_start_carryover_allocation_lost = _create_accrual_plan(accrual_plan_by_signature, {
             'accrued_gain_time': 'start',
@@ -1005,7 +1005,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'first_day': 27,
                 'action_with_unused_accruals': 'lost',
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_monthly_carryover_all = _create_accrual_plan(accrual_plan_by_signature, {
             'is_based_on_worked_time': False,
@@ -1023,7 +1023,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 100,
                 'action_with_unused_accruals': 'all',
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_daily_start_max_leaves_carryover_year_start = _create_accrual_plan(accrual_plan_by_signature, {
             'accrued_gain_time': 'start',
@@ -1040,7 +1040,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 10,
                 'action_with_unused_accruals': 'all',
             })],
-            'work_entry_type_id': cls.work_entry_type_day.id,
+            'time_type_id': cls.time_type_day.id,
         })
         cls.accrual_plan_daily_carryover_year_start_all_work_time = _create_accrual_plan(accrual_plan_by_signature, {
             'is_based_on_worked_time': True,
@@ -1058,7 +1058,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'action_with_unused_accruals': 'all',
                 }),
             ],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_2_lvls_yearly_carryover_lost = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -1081,7 +1081,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'start_type': 'month',
                 'action_with_unused_accruals': 'lost',
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_2_lvls_monthly_carryover_lost_limited = _create_accrual_plan(accrual_plan_by_signature, {
             'accrued_gain_time': 'start',
@@ -1107,7 +1107,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'carryover_options': 'limited',
                 'max_carriedover_duration': 5,
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_2_lvls_start_yearly_carryover_lost_all = _create_accrual_plan(accrual_plan_by_signature, {
             'accrued_gain_time': 'start',
@@ -1131,7 +1131,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'start_type': 'month',
                 'action_with_unused_accruals': 'all',
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_2_lvls_biyearly_expiring = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -1160,7 +1160,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'accrual_validity_type': 'month',
                 'accrual_validity_count': 2,
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_2_lvls_yearly_monthly_expiring = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -1189,7 +1189,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'accrual_validity_type': 'month',
                 'accrual_validity_count': 3,
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_monthly_expiring = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -1208,7 +1208,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'accrual_validity_type': 'month',
                 'accrual_validity_count': 2,
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_yearly_start_max_carriedover_expiring = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -1228,7 +1228,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'accrual_validity_type': 'month',
                 'accrual_validity_count': 4,
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_2_levels_biyearly_start_limited_expiring = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -1259,7 +1259,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'max_carriedover_duration': 10,
                 },
             )],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_yearly_carryover_limited_expiring = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -1278,7 +1278,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'accrual_validity_type': 'month',
                 'accrual_validity_count': 5,
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_yearly_start_max_leave_carryover_limited = _create_accrual_plan(accrual_plan_by_signature, {
             'transition_mode': 'immediately',
@@ -1295,14 +1295,14 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 "carryover_options": "limited",
                 "max_carriedover_duration": 7,
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_no_level_start_carryover_year_start = _create_accrual_plan(accrual_plan_by_signature, {
             'transition_mode': 'immediately',
             'can_be_carryover': True,
             'carryover_date': 'year_start',
             'accrued_gain_time': 'start',
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         calendar_without_hours = cls.env['resource.calendar'].create({
             'name': 'Calendar without working hours',
@@ -1325,7 +1325,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'frequency': 'hourly',
                 'action_with_unused_accruals': 'all',
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
         cls.accrual_plan_daily_hour = _create_accrual_plan(accrual_plan_by_signature, {
             'name': 'Accrual Plan For Test',
@@ -1337,9 +1337,9 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'added_value': 1,
                 'frequency': 'daily',
             })],
-            'work_entry_type_id': cls.work_entry_type_day.id,
+            'time_type_id': cls.time_type_day.id,
         })
-        cls.work_entry_type_absence_requires_alloc_half_day_day = _create_work_entry_type(work_entry_type_by_signature, {
+        cls.time_type_absence_requires_alloc_half_day_day = _create_time_type(time_type_by_signature, {
             'name': 'Test Leave Type 2',
             'code': 'Test Leave Type 2',
             'count_as': 'absence',
@@ -1389,7 +1389,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'maximum_leave': 28,
                 }),
             ],
-            'work_entry_type_id': cls.work_entry_type_day.id,
+            'time_type_id': cls.time_type_day.id,
         })
         cls.accrual_plan_monthly_start = _create_accrual_plan(accrual_plan_by_signature, {
             'name': '2 Days Every 1st of Month',
@@ -1402,7 +1402,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'action_with_unused_accruals': 'all',
                 'milestone_date': 'creation',
             })],
-            'work_entry_type_id': cls.work_entry_type_hour_day.id,
+            'time_type_id': cls.time_type_hour_day.id,
         })
         cls.calendar_8h_per_day = cls.env['resource.calendar'].create({
             'name': 'Standard 40h Test Calendar',
@@ -1427,9 +1427,9 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'accrual_validity_type': 'month',
                 'accrual_validity_count': 1,
             })],
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
         })
-        cls.work_entry_type_absence_requires_alloc_negativ = _create_work_entry_type(work_entry_type_by_signature, {
+        cls.time_type_absence_requires_alloc_negativ = _create_time_type(time_type_by_signature, {
             'name': 'Test Accrual',
             'code': 'Test Accrual',
             'count_as': 'absence',
@@ -1446,7 +1446,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         }])
         cls.accrual_plan_daily_hour_work_time = cls.env['hr.leave.accrual.plan'].create({
             'name': 'Daily Worked Time Accrual',
-            'work_entry_type_id': cls.work_entry_type_hour.id,
+            'time_type_id': cls.time_type_hour.id,
             'is_based_on_worked_time': True,
             'accrued_gain_time': 'end',
             'can_be_carryover': True,
@@ -1479,10 +1479,10 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         self._assert_accrual_allocation(allocation, assertions_by_date, ('number_of_days', 'nextcall'))
 
-    def _build_create_leave_command(self, employee, work_entry_type):
+    def _build_create_leave_command(self, employee, time_type):
         return (
             lambda date_from, date_to, approve=True:
-                lambda: self._create_leave(employee, work_entry_type, date_from, date_to, validate=approve))
+                lambda: self._create_leave(employee, time_type, date_from, date_to, validate=approve))
 
     def _assert_accrual_allocation(self, allocation, assertions, tested_fields):
         """ For each assertion, assert allocation `tested_fields` values after running accrual update for the given test date
@@ -1509,7 +1509,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             If values are provided, run the accrual cron before asserting.
             If it's a callable, simply call it at the given date.
             "Durations" use the allocation request unit.
-            The value for the field 'allocated_duration' should always be specified (give the work entry type allocated duration).
+            The value for the field 'allocated_duration' should always be specified (give the time type allocated duration).
             If the value for the field 'remaining_leaves' is not specified, it will be considered equal to the 'allocated_duration' (usefull for test case with no leaves).
         """
         if 'allocated_duration' not in tested_fields:
@@ -1517,13 +1517,13 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         work_entry_allocations = self.env['hr.leave.allocation'].with_context(active_test=False).search([
             ('employee_id', '=', allocation.employee_id.id),
-            ('work_entry_type_id', '=', allocation.work_entry_type_id.id),
+            ('time_type_id', '=', allocation.time_type_id.id),
             ('accrual_plan_id', '!=', False),
             ('state', '=', 'validate'),
         ])
-        self.assertEqual(work_entry_allocations, allocation, 'This test helper method only works if there is exactly one accrual allocation linked to the work entry type')
+        self.assertEqual(work_entry_allocations, allocation, 'This test helper method only works if there is exactly one accrual allocation linked to the time type')
 
-        work_entry_type = allocation.work_entry_type_id
+        time_type = allocation.time_type_id
         employee = allocation.employee_id
         for i, (target_date, *field_values) in enumerate(allocation_values_by_date):
             with freeze_time(target_date):
@@ -1533,40 +1533,40 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
                 self._run_update_accrual_cron()
                 error_msg_suffix = f'On {target_date} - assertion {i}'
-                expected_work_entry_type_remaining_leaves = None
-                expected_work_entry_type_allocated_duration = None
+                expected_time_type_remaining_leaves = None
+                expected_time_type_allocated_duration = None
                 for field, expected_value in zip(tested_fields, field_values):
                     if field == 'allocated_duration':
-                        expected_work_entry_type_allocated_duration = expected_value
+                        expected_time_type_allocated_duration = expected_value
                         continue
                     if field == 'remaining_leaves':
-                        expected_work_entry_type_remaining_leaves = expected_value
+                        expected_time_type_remaining_leaves = expected_value
                         continue
                     self.assertEqual(allocation[field], expected_value, f'{error_msg_suffix} - wrong value for field {field}')
 
-                if expected_work_entry_type_allocated_duration is None:
+                if expected_time_type_allocated_duration is None:
                     raise ArgumentsError('Could not find the field "time_off_type_allocated_duration" in the assertion_structure.')
 
-                if expected_work_entry_type_remaining_leaves is None:
-                    expected_work_entry_type_remaining_leaves = expected_work_entry_type_allocated_duration
+                if expected_time_type_remaining_leaves is None:
+                    expected_time_type_remaining_leaves = expected_time_type_allocated_duration
 
-                work_entry_type_data = work_entry_type.get_allocation_data(employee, target_date)
-                remaining_leaves = work_entry_type_data[employee][0][1]['remaining_leaves']
-                leaves_taken = work_entry_type_data[employee][0][1]['leaves_taken']
+                time_type_data = time_type.get_allocation_data(employee, target_date)
+                remaining_leaves = time_type_data[employee][0][1]['remaining_leaves']
+                leaves_taken = time_type_data[employee][0][1]['leaves_taken']
                 work_entry_duration = remaining_leaves + leaves_taken
-                self.assertAlmostEqual(work_entry_duration, expected_work_entry_type_allocated_duration,
+                self.assertAlmostEqual(work_entry_duration, expected_time_type_allocated_duration,
                     msg=f'{error_msg_suffix} - Incorrect allocated duration', delta=0.01)
-                self.assertAlmostEqual(remaining_leaves, expected_work_entry_type_remaining_leaves,
+                self.assertAlmostEqual(remaining_leaves, expected_time_type_remaining_leaves,
                     msg=f'{error_msg_suffix} - Incorrect remaining leaves', delta=0.01)
 
     def _assert_get_allocation_data_future(self, allocation, assertions):
         """ Assert allocation and balance future data from get_allocation_data for each test date.
             :param allocation_values_by_date: iterable of tuples with:
                 - test date
-                - (allocated_duration, remaining leaves) tuple for the work entry type of the given allocation,
-                using the unit `allocation.work_entry_type_id.unit_of_measure`
+                - (allocated_duration, remaining leaves) tuple for the time type of the given allocation,
+                using the unit `allocation.time_type_id.unit_of_measure`
         """
-        work_entry_type = allocation.work_entry_type_id
+        time_type = allocation.time_type_id
         employee = allocation.employee_id
         for i, (target_date, *assertion) in enumerate(assertions):
             if callable(assertion[0]):
@@ -1580,9 +1580,9 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 expected_allocated_duration = expected_left_duration = assertion[0]
             else:
                 raise ArgumentsError(f'One assertion should be compose of 1 or 2 float values, got {assertion}')
-            work_entry_type_data = work_entry_type.get_allocation_data(employee, target_date)
-            remaining_leaves = work_entry_type_data[employee][0][1]['remaining_leaves']
-            leaves_taken = work_entry_type_data[employee][0][1]['leaves_taken']
+            time_type_data = time_type.get_allocation_data(employee, target_date)
+            remaining_leaves = time_type_data[employee][0][1]['remaining_leaves']
+            leaves_taken = time_type_data[employee][0][1]['leaves_taken']
             work_entry_duration = remaining_leaves + leaves_taken
             error_msg_suffix = f'On {target_date} - Assertion {i}'
             self.assertAlmostEqual(remaining_leaves, expected_left_duration, msg=f'{error_msg_suffix} - Incorrect remaining leaves duration', delta=0.01)
@@ -1617,7 +1617,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'name': 'Brisbane Daily Accrual',
             'accrual_plan_id': accrual_plan.id,
             'employee_id': self.employee_emp.id,
-            'work_entry_type_id': self.work_entry_type_hour.id,
+            'time_type_id': self.time_type_hour.id,
             'date_from': date(2025, 9, 1),
             'number_of_days': 0,
         })
@@ -1653,7 +1653,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'name': 'Accrual allocation for employee',
             'accrual_plan_id': accrual_plan.id,
             'employee_id': self.employee_emp.id,
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'number_of_days': 0,
         })
 
@@ -1671,7 +1671,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 0,
             })
             self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
@@ -1695,7 +1695,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 0,
             })
             self.assertEqual(allocation.nextcall, False)
@@ -1706,11 +1706,11 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 ('2017-12-05', 0, False),
             ))
 
-            work_entry_type = self.work_entry_type_absence_half_day_day
+            time_type = self.time_type_absence_half_day_day
             leave = self.env['hr.leave'].create({
                 'name': 'leave',
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': work_entry_type.id,
+                'time_type_id': time_type.id,
                 'request_date_from': '2017-12-06 08:00:00',
                 'request_date_to': '2017-12-06 17:00:00',
                 'request_date_from_period': 'am',
@@ -1734,7 +1734,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 0,
             })
             self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
@@ -1759,7 +1759,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 0,
                 'date_from': '2021-09-03',
             })
@@ -1792,7 +1792,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 0,
                 'date_from': '2021-09-03',
             })
@@ -1821,7 +1821,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 0,
                 'date_from': '2021-08-31',
             })
@@ -1851,7 +1851,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 0,
             })
             self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
@@ -1881,7 +1881,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 0,
             })
             self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
@@ -1933,7 +1933,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': self.accrual_plan_weekly.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 0,
                 'state': 'confirm',
             })
@@ -1941,12 +1941,12 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': self.accrual_plan_based_on_worked_time.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 0,
                 'state': 'confirm',
             })
-            work_entry_type = self.work_entry_type_accrual_non_elligible_absence_day_day
-            self._create_leave(self.employee_emp, work_entry_type, '2021-09-02', '2021-09-02', validate=True)
+            time_type = self.time_type_accrual_non_elligible_absence_day_day
+            self._create_leave(self.employee_emp, time_type, '2021-09-02', '2021-09-02', validate=True)
             self.assertFalse(allocation_not_worked_time.nextcall, 'There should be no nextcall set on the allocation.')
             self.assertFalse(allocation_worked_time.nextcall, 'There should be no nextcall set on the allocation.')
             self.assertEqual(allocation_not_worked_time.number_of_days, 0, 'There should be no days allocated yet.')
@@ -1977,7 +1977,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     def _test_accrual_allocation_number_of_days_with_leave(self, time_off_type, deducted):
         """ Assert number of days and nextcall are computed correctly for a one level daily accrual plan
-            while taking a leave that is linked to a `work.entry.type` which is accrual allocation elligible or not
+            while taking a leave that is linked to a `hr.time.type` which is accrual allocation elligible or not
         """
         accrual_plan = self.based_on_work_time_accrual_plan_daily
         with freeze_time('2025-09-01'):  # Monday
@@ -1985,7 +1985,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 0,
             })
 
@@ -2005,15 +2005,15 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         })
 
     def test_non_elligible_leaves(self):
-        timeoff_type = self.work_entry_type_accrual_non_elligible_absence_day_day
+        timeoff_type = self.time_type_accrual_non_elligible_absence_day_day
         self._test_accrual_allocation_number_of_days_with_leave(timeoff_type, deducted=True)
 
     def test_elligible_leaves(self):
-        timeoff_eligible_type = self.work_entry_type_accrual_elligible_absence_day_day
+        timeoff_eligible_type = self.time_type_accrual_elligible_absence_day_day
         self._test_accrual_allocation_number_of_days_with_leave(timeoff_eligible_type, deducted=False)
 
     def test_worked_leaves(self):
-        remote_work_type = self.work_entry_type_working_time_day_day
+        remote_work_type = self.time_type_working_time_day_day
         self._test_accrual_allocation_number_of_days_with_leave(remote_work_type, deducted=False)
 
     def test_check_max_value(self):
@@ -2026,7 +2026,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 0,
             })
 
@@ -2049,7 +2049,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 0,
             })
 
@@ -2074,7 +2074,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'date_from': datetime.date(2025, 1, 1),
             'accrual_plan_id': accrual_plan.id,
             'employee_id': self.employee_emp.id,
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'number_of_days': 0,
         })
 
@@ -2109,7 +2109,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'name': 'Accrual allocation for employee',
             'accrual_plan_id': accrual_plan.id,
             'employee_id': self.employee_emp.id,
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'number_of_days': 0,
         })
         first_level, second_level = self.accrual_plan_2_lvls_weekly.level_ids
@@ -2132,7 +2132,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'name': 'Accrual allocation for employee',
             'accrual_plan_id': accrual_plan.id,
             'employee_id': self.employee_emp.id,
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'number_of_days': 0,
         })
         first_level, second_level = accrual_plan.level_ids
@@ -2159,7 +2159,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 10,
             })
 
@@ -2181,7 +2181,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 8,
             })
 
@@ -2211,7 +2211,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 10,
             })
 
@@ -2243,7 +2243,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual Allocation - Test',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 0,
             })
 
@@ -2270,7 +2270,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual Allocation - Test',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 2,
             })
 
@@ -2298,7 +2298,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual Allocation - Test',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 0,
             })
 
@@ -2319,7 +2319,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 0,
             })
 
@@ -2333,7 +2333,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         ))
 
         # 5 days leave
-        self._create_leave(self.employee_emp, self.work_entry_type, '2022-03-07', '2022-03-11', validate=True)
+        self._create_leave(self.employee_emp, self.time_type, '2022-03-07', '2022-03-11', validate=True)
 
         self._assert_accrual_allocation_nbr_of_days_and_nextcall(allocation, (
             ('2022-06-01', 10, date(2022, 6, 6)),
@@ -2347,7 +2347,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type_hour.id,
+                'time_type_id': self.time_type_hour.id,
                 'number_of_days': 0,
             })
 
@@ -2360,7 +2360,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         ))
 
         with freeze_time('2022-03-06'):
-            self._create_leave(self.employee_emp, self.work_entry_type_hour, '2022-03-07', '2022-03-07', validate=True)
+            self._create_leave(self.employee_emp, self.time_type_hour, '2022-03-07', '2022-03-07', validate=True)
 
         self._assert_accrual_allocation_nbr_of_days_and_nextcall(allocation, (
             # Should accrue 8 more hours (the maximum is reached once again)
@@ -2388,14 +2388,14 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     def test_yearly_cap(self):
         """ Assert combining `maximum_leave_yearly` and a `maximum_leave` works properly """
-        work_entry_type = self.work_entry_type_absence_hour_hour
+        time_type = self.time_type_absence_hour_hour
         accrual_plan = self.accrual_plan_hourly_max_leaves_capped_yearly
 
         with freeze_time('2024-12-25'):
             allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
                 'name': 'Accrual allocation for employee',
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': work_entry_type.id,
+                'time_type_id': time_type.id,
                 'accrual_plan_id': accrual_plan.id,
                 'number_of_days': 0,
             })
@@ -2411,7 +2411,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         ), assertion_structure)
 
         with freeze_time('2024-12-30'):
-            leave = self._create_leave(self.employee_emp, work_entry_type, '2024-12-27', '2024-12-27', 10, 12)
+            leave = self._create_leave(self.employee_emp, time_type, '2024-12-27', '2024-12-27', 10, 12)
             self.assertEqual(allocation.leaves_taken, 2)
             self.assertEqual(leave.number_of_hours, 2)
 
@@ -2432,7 +2432,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'name': 'Accrual allocation for employee',
             'accrual_plan_id': accrual_plan.id,
             'employee_id': self.employee_emp.id,
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'number_of_days': 0,
         })
 
@@ -2444,7 +2444,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with Form(accrual_plan) as plan_form:
             plan_form.accrued_gain_time = 'start'
 
-        allocation = self._create_form_test_accrual_allocation(self.work_entry_type, '2023-04-24',
+        allocation = self._create_form_test_accrual_allocation(self.time_type, '2023-04-24',
             self.employee_emp, accrual_plan, creator_user=self.user_hrmanager_id)
         self._assert_accrual_allocation_nbr_of_days_and_nextcall(allocation, (
             # Accruals happens at the start of the first level
@@ -2454,7 +2454,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_period_start_multiple_runs(self):
         accrual_plan = self.accrual_plan_monthly_start_15_max_leaves
         with freeze_time("2023-12-25"):
-            allocation = self._create_form_test_accrual_allocation(self.work_entry_type,
+            allocation = self._create_form_test_accrual_allocation(self.time_type,
                 '2023-12-25', self.employee_emp, accrual_plan, creator_user=self.user_hrmanager_id)
 
         self._assert_accrual_allocation_nbr_of_days_and_nextcall(allocation, (
@@ -2477,7 +2477,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         # On a Wednesday
         with freeze_time("2023-04-26"):
             allocation = self._create_form_test_accrual_allocation(
-                self.work_entry_type, '2023-04-26', self.employee_emp, accrual_plan, creator_user=self.user_hrmanager_id)
+                self.time_type, '2023-04-26', self.employee_emp, accrual_plan, creator_user=self.user_hrmanager_id)
 
         self._assert_accrual_allocation_nbr_of_days_and_nextcall(allocation, (
             # Accrual for the entire week
@@ -2495,7 +2495,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.accrual_plan_monthly_start_carryover_allocation_lost
         with freeze_time("2023-04-26"):
-            allocation = self._create_form_test_accrual_allocation(self.work_entry_type, '2023-04-26', self.employee_emp, accrual_plan)
+            allocation = self._create_form_test_accrual_allocation(self.time_type, '2023-04-26', self.employee_emp, accrual_plan)
 
         self._assert_accrual_allocation_nbr_of_days_and_nextcall(allocation, (
             ("2023-04-26", days := 1 / self._get_period_days('2023-04-26', '2023-05-26'), date(2023, 4, 27)),
@@ -2520,7 +2520,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 0,
                 'date_from': '2023-04-20',
             })
@@ -2547,7 +2547,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 9,
                 'date_from': '2023-04-04',
             })
@@ -2583,7 +2583,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         accrual_plan = self.accrual_plan_weekly_carryover_lost
         accrual_allocation = self.env['hr.leave.allocation'].new({
             'name': 'Employee allocation',
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'date_from': '2023-01-01',
             'employee_id': self.employee_emp.id,
             'accrual_plan_id': accrual_plan.id,
@@ -2603,13 +2603,13 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     @freeze_time("2023-12-31")
     def test_future_accrual_time(self):
         """ Check that the carryover is processed correctly when the 'added_value_type' is set to 'hour' """
-        work_entry_type = self.work_entry_type_absence_hour_hour
+        time_type = self.time_type_absence_hour_hour
         accrual_plan = self.accrual_plan_monthly_hour
         allocation = self.env['hr.leave.allocation'].create({
             'name': 'Accrual allocation for employee',
             'accrual_plan_id': accrual_plan.id,
             'employee_id': self.employee_emp.id,
-            'work_entry_type_id': work_entry_type.id,
+            'time_type_id': time_type.id,
             'number_of_days': 1 / self.hours_per_day,
         })
         self._assert_get_allocation_data_future(allocation, (
@@ -2619,7 +2619,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             ('2024-02-01', 2, 2),
             ('2024-03-01', 3, 3),
         ))
-        self._create_leave(self.employee_emp, work_entry_type, '2024-02-05', '2024-02-05', 10, 11)
+        self._create_leave(self.employee_emp, time_type, '2024-02-05', '2024-02-05', 10, 11)
         self._assert_get_allocation_data_future(allocation, (
             ('2024-01-01', 1, 1),
             ('2024-02-01', 2, 2),
@@ -2647,7 +2647,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             form.name = 'Test accrual allocation'
             form.accrual_plan_id = self.accrual_plan_monthly_end_carry_over_lost_year_start
             form.employee_id = self.employee_emp
-            form.work_entry_type_id = self.work_entry_type
+            form.time_type_id = self.time_type
             form.date_from = '2024-03-01'
             self.assertEqual(form.number_of_days, 0)
             form.date_from = '2023-01-01'
@@ -2666,7 +2666,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         with Form(allocation, 'hr_holidays.hr_leave_allocation_view_form_manager') as form:
             form.accrual_plan_id = self.accrual_plan_weekly_hour_max_leaves
-            form.work_entry_type_id = self.work_entry_type_hour
+            form.time_type_id = self.time_type_hour
             self.assertEqual(form.type_request_unit, 'hour')
             form.date_from = '2023-11-01'
             # Max amount of allocated duration is reached (10h)
@@ -2678,7 +2678,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         self.assertEqual(allocation.number_of_days, 0)
 
         with Form(allocation, 'hr_holidays.hr_leave_allocation_view_form_manager') as form:
-            form.work_entry_type_id = self.work_entry_type_hour
+            form.time_type_id = self.time_type_hour
             self.assertEqual(form.number_of_days, 0)
 
             form.date_from = '2024-01-01'
@@ -2706,7 +2706,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'first_day': 1,
         })
         with freeze_time('2024-03-01'):
-            accrual_allocation = self._create_form_test_accrual_allocation(self.work_entry_type, '2024-01-01', self.employee_emp, accrual_plan, creator_user=self.user_hrmanager)
+            accrual_allocation = self._create_form_test_accrual_allocation(self.time_type, '2024-01-01', self.employee_emp, accrual_plan, creator_user=self.user_hrmanager)
 
         self._assert_accrual_allocation_nbr_of_days_and_nextcall(accrual_allocation, (
             # 3 months elapsed: 3 times accrued
@@ -2727,20 +2727,20 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         self.env['hr.leave.allocation'].create([{
                 'name': 'Regular allocation',
                 'date_from': '2024-05-01',
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'employee_id': self.employee_emp.id,
                 'number_of_days': 2,
             }, {
                 'name': 'Accrual allocation',
                 'date_from': '2024-05-01',
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'employee_id': self.employee_emp.id,
                 'accrual_plan_id': accrual_plan.id,
                 'number_of_days': 3,
             },
         ])
 
-        leave = self._create_leave(self.employee_emp, self.work_entry_type, '2024-05-13', '2024-05-17', validate=True)
+        leave = self._create_leave(self.employee_emp, self.time_type, '2024-05-13', '2024-05-17', validate=True)
 
         with freeze_time('2024-05-06'):
             self.env['hr.leave']._cancel_invalid_leaves()
@@ -2749,28 +2749,28 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     @freeze_time("2024-01-01")
     def test_accrual_leaves_cancel_cron(self):
         """ Assert `hr.leave._cancel_invalid_leaves` changes the `state` of a leave that is not affordable
-            by an accrual plan, taking the `work.entry.type` `allows_negative` parameter into account
+            by an accrual plan, taking the `hr.time.type` `allows_negative` parameter into account
         """
         self.env['hr.leave.allocation'].create([{
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type_no_negative.id,
+                'time_type_id': self.time_type_no_negative.id,
                 'accrual_plan_id': self.accrual_plan_period_end_monthly_max_carryover_year_start_no_negative.id,
                 'number_of_days': 1,
             }, {
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type_negative.id,
+                'time_type_id': self.time_type_negative.id,
                 'accrual_plan_id': self.accrual_plan_period_end_monthly_max_carryover_year_start_negative.id,
                 'number_of_days': 1,
             },
         ])
 
-        excess_leave = self._create_leave(self.employee_emp, self.work_entry_type_no_negative, '2024-01-05', '2024-01-05')
-        allowed_negative_leave = self._create_leave(self.employee_emp, self.work_entry_type_negative, '2024-01-12', '2024-01-12')
+        excess_leave = self._create_leave(self.employee_emp, self.time_type_no_negative, '2024-01-05', '2024-01-05')
+        allowed_negative_leave = self._create_leave(self.employee_emp, self.time_type_negative, '2024-01-12', '2024-01-12')
 
         # As accrual allocation don't take into account future leaves,
         # it should be possible to take both leaves.
-        self._create_leave(self.employee_emp, self.work_entry_type_no_negative, '2024-01-04', '2024-01-04')
-        self._create_leave(self.employee_emp, self.work_entry_type_negative, '2024-01-11', '2024-01-11')
+        self._create_leave(self.employee_emp, self.time_type_no_negative, '2024-01-04', '2024-01-04')
+        self._create_leave(self.employee_emp, self.time_type_negative, '2024-01-11', '2024-01-11')
         self.env.flush_all()
 
         self.env['hr.leave']._cancel_invalid_leaves()
@@ -2782,7 +2782,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         self.assertEqual(excess_leave.state, 'cancel')
         self.assertEqual(allowed_negative_leave.state, 'validate')
 
-        self._create_leave(self.employee_emp, self.work_entry_type_negative, '2024-01-10', '2024-01-10')
+        self._create_leave(self.employee_emp, self.time_type_negative, '2024-01-10', '2024-01-10')
 
         self.env['hr.leave']._cancel_invalid_leaves()
 
@@ -2792,17 +2792,17 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     @freeze_time("2024-03-01")
     def test_future_accural_time_with_leaves_taken_in_the_past(self):
-        work_entry_type = self.work_entry_type_day
+        time_type = self.time_type_day
         accrual_plan = self.accrual_plan_daily_start_max_leaves_carryover_year_start
 
         allocation = self._create_form_test_accrual_allocation(
-            work_entry_type, '2024-02-01', self.employee_emp, accrual_plan, creator_user=self.user_hrmanager)
+            time_type, '2024-02-01', self.employee_emp, accrual_plan, creator_user=self.user_hrmanager)
 
         self._assert_get_allocation_data_future(allocation, (
             # The available leaves maximum is reached
             ('2024-03-01', 10, 10),
         ))
-        self._create_leave(self.employee_emp, work_entry_type, '2024-02-26', '2024-03-01', validate=True)
+        self._create_leave(self.employee_emp, time_type, '2024-02-26', '2024-03-01', validate=True)
         self._assert_get_allocation_data_future(allocation, (
             # Only 5 days left
             ('2024-03-01', 10, 5),
@@ -2813,7 +2813,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             ('2024-03-10', 15, 10),
         ))
         # 5 days leave (the 4th is a Monday)
-        self._create_leave(self.employee_emp, work_entry_type, '2024-03-04', '2024-03-08', validate=True)
+        self._create_leave(self.employee_emp, time_type, '2024-03-04', '2024-03-08', validate=True)
         self._assert_get_allocation_data_future(allocation, (
             # Only 5 hours left
             ('2024-03-04', 13, 3),
@@ -2827,16 +2827,16 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         self.env['hr.leave.allocation'].create({
             'name': 'Accrual allocation for employee',
             'employee_id': self.employee_emp.id,
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'number_of_days': 1,
         })
 
         # Should explode because the allocation doesn't give enough day to cover the entire leave
         with self.assertRaisesRegex(ValidationError, ' does not have a valid allocation for the leave type '):
-            self._create_leave(self.employee_emp, self.work_entry_type, '2024-01-09', '2024-01-12')
+            self._create_leave(self.employee_emp, self.time_type, '2024-01-09', '2024-01-12')
 
         # Number of days given by the allocation is 1 -> enough credits -> no error
-        leave = self._create_leave(self.employee_emp, self.work_entry_type, '2024-01-09 08:00:00', '2024-01-09 17:00:00', validate=True)
+        leave = self._create_leave(self.employee_emp, self.time_type, '2024-01-09 08:00:00', '2024-01-09 17:00:00', validate=True)
 
         leave.action_refuse()
         leave.write({
@@ -2874,7 +2874,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })
             self.employee_hrmanager.resource_calendar_id = calendar_emp.id
             accrual_allocation = self._create_form_test_accrual_allocation(
-                self.work_entry_type, '2024-08-07', self.employee_emp, accrual_plan, creator_user=self.user_hrmanager, skip_auto_approve=True)
+                self.time_type, '2024-08-07', self.employee_emp, accrual_plan, creator_user=self.user_hrmanager, skip_auto_approve=True)
             # First level starts on 08-08, which is a Thursday, so the guy gets 2 days for that week (Thursday and Friday),
             # plus 5 days for the next week ('til 08-17 included which is a Friday)
             self.assertEqual(accrual_allocation.number_of_days, 7.0)
@@ -2894,7 +2894,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             allocation = self.env['hr.leave.allocation'].create({
                 'name': 'Accrual allocation for employee',
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 0,
                 'accrual_plan_id': accrual_plan.id,
             })
@@ -2921,7 +2921,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             allocation = self.env['hr.leave.allocation'].create({
                 'name': 'Accrual allocation for employee',
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 0,
                 'accrual_plan_id': accrual_plan.id,
             })
@@ -2949,7 +2949,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.accrual_plan_2_lvls_start_yearly_carryover_lost_all
         with freeze_time('2024-01-01'):
-            allocation = self._create_form_test_accrual_allocation(self.work_entry_type, '2024-01-01', self.employee_emp, accrual_plan)
+            allocation = self._create_form_test_accrual_allocation(self.time_type, '2024-01-01', self.employee_emp, accrual_plan)
 
         year_2026_days = self._get_period_days('2026-01-01', '2026-12-31')
         self._assert_accrual_allocation_nbr_of_days_and_nextcall(allocation, (
@@ -2976,7 +2976,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 0,
             })
 
@@ -3016,7 +3016,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 0,
             })
 
@@ -3055,7 +3055,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 0,
             })
 
@@ -3104,7 +3104,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 0,
             })
 
@@ -3136,7 +3136,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'name': 'Accrual allocation for employee',
             'accrual_plan_id': accrual_plan.id,
             'employee_id': self.employee_emp.id,
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'number_of_days': 0,
         })
 
@@ -3145,7 +3145,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         ))
 
         # 4 days leave
-        self._create_leave(self.employee_emp, self.work_entry_type, '2024-01-02', '2024-01-07', validate=True)
+        self._create_leave(self.employee_emp, self.time_type, '2024-01-02', '2024-01-07', validate=True)
         self._assert_get_allocation_data_future(allocation, (
             # Carryover date, 4 days of leave -> 6 remaining days, only 5 days are carriedover, number of days = remaining + leaves taken
             ('2024-04-01', 9, 5),
@@ -3157,8 +3157,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             ), ('number_of_days', 'nextcall', 'allocated_duration', 'remaining_leaves'))
 
         # 2x1 day leave
-        self._create_leave(self.employee_emp, self.work_entry_type, '2024-04-02', '2024-04-02', validate=True)
-        self._create_leave(self.employee_emp, self.work_entry_type, '2024-10-01', '2024-10-01', validate=True)
+        self._create_leave(self.employee_emp, self.time_type, '2024-04-02', '2024-04-02', validate=True)
+        self._create_leave(self.employee_emp, self.time_type, '2024-10-01', '2024-10-01', validate=True)
 
         year_2024_half_days = self._get_period_days('2024-07-01', '2024-12-31')
         year_2024_added_duration_1 = self._get_period_days('2024-07-01', '2024-08-31') / year_2024_half_days * 10
@@ -3199,7 +3199,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 0,
             })
 
@@ -3207,18 +3207,18 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 # Accrual for the first period
                 ('2024-01-01', 10, date(2024, 4, 1), 10, 10),
                 ('2024-01-01', lambda:
-                    self._create_leave(self.employee_emp, self.work_entry_type, '2024-03-25', '2024-03-26', validate=True)),
+                    self._create_leave(self.employee_emp, self.time_type, '2024-03-25', '2024-03-26', validate=True)),
                 # Carryover happens: only five days are kept
                 ('2024-04-01', 7, date(2024, 9, 1), 7, 5),
                 ('2024-04-01', lambda:
-                    self._create_leave(self.employee_emp, self.work_entry_type, '2024-04-02', '2024-04-02', validate=True)),
+                    self._create_leave(self.employee_emp, self.time_type, '2024-04-02', '2024-04-02', validate=True)),
                 # Expiring date: there are 4 left days, 5 are expiring
                 # Number of days is set to the number of leaves (3d) + the left days (0)
                 ('2024-09-01', 3, date(2025, 1, 1), 3, 0),
                 # Accrual for the year 2024
                 ('2025-01-01', 13, date(2025, 4, 1), 13, 10),
                 ('2025-01-01', lambda:
-                    self._create_leave(self.employee_emp, self.work_entry_type, '2025-01-08', '2025-01-10', validate=True)),
+                    self._create_leave(self.employee_emp, self.time_type, '2025-01-08', '2025-01-10', validate=True)),
                 # Carryover date: 5 days are carriedover
                 # Number of days = 6 days of leave + the left days (5)
                 ('2025-04-01', 11, date(2025, 9, 1), 11, 5),
@@ -3237,9 +3237,9 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'first_day': 1,
         })
 
-        allocation = self._create_form_test_accrual_allocation(self.work_entry_type, '2024-09-02', self.employee_emp, accrual_plan)
+        allocation = self._create_form_test_accrual_allocation(self.time_type, '2024-09-02', self.employee_emp, accrual_plan)
 
-        create_leave_command = self._build_create_leave_command(self.employee_emp, self.work_entry_type)
+        create_leave_command = self._build_create_leave_command(self.employee_emp, self.time_type)
         first_period_days = self._get_period_days('2024-09-02', '2024-09-30')
         first_accrual_month_days = self._get_period_days('2024-09-01', '2024-09-30')
         self._assert_get_allocation_data(allocation, (
@@ -3259,12 +3259,12 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     @freeze_time('2024-11-25')
     def test_accrual_days_left_under_carryover_maximum(self):
-        """ Assert `get_allocation_data` correctly computes the future balance of a `work.entry.type` linked
+        """ Assert `get_allocation_data` correctly computes the future balance of a `hr.time.type` linked
             to an accrual allocation that accrues yearly at the start of the period, with a limited amount
             of carriedover duration
         """
         accrual_plan = self.accrual_plan_yearly_start_max_leave_carryover_limited
-        allocation = self._create_form_test_accrual_allocation(self.work_entry_type, '2024-01-01', self.employee_emp,
+        allocation = self._create_form_test_accrual_allocation(self.time_type, '2024-01-01', self.employee_emp,
             accrual_plan, creator_user=self.user_hrmanager)
 
         self._assert_get_allocation_data_future(allocation, (
@@ -3272,7 +3272,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             ('2026-01-01', 28, 28),
             # Take a 15 days leave
             ('2024-11-25', lambda:
-                self._create_leave(self.employee_emp, self.work_entry_type, '2024-10-07', '2024-10-25', validate=True)),
+                self._create_leave(self.employee_emp, self.time_type, '2024-10-07', '2024-10-25', validate=True)),
             # TBFIR: should be 28 + 15 and 28
             ('2025-01-01', 27 + 15, 27),
             ('2026-01-01', 28 + 15, 28),
@@ -3280,7 +3280,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     @freeze_time('2024-11-25')
     def test_accrual_unused_accrual_reset_to_lost(self):
-        """ Assert `get_allocation_data` correctly computes the future balance of a `work.entry.type` linked
+        """ Assert `get_allocation_data` correctly computes the future balance of a `hr.time.type` linked
             to an accrual allocation that accrues yearly at the start of the period, when all days are lost
             on carryover date
             Also assert creating the accrual plan only level using a form works
@@ -3305,7 +3305,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             # Set it back to 'lost'
             f.action_with_unused_accruals = 'lost'
 
-        allocation = self._create_form_test_accrual_allocation(self.work_entry_type, '2024-01-01', self.employee_emp,
+        allocation = self._create_form_test_accrual_allocation(self.time_type, '2024-01-01', self.employee_emp,
             accrual_plan, creator_user=self.user_hrmanager)
 
         self._assert_get_allocation_data_future(allocation, (
@@ -3313,7 +3313,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             ('2026-01-01', 21, 21),
             # Take a 15 days leave
             ('2024-11-25', lambda:
-                self._create_leave(self.employee_emp, self.work_entry_type, '2024-10-07', '2024-10-25', validate=True)),
+                self._create_leave(self.employee_emp, self.time_type, '2024-10-07', '2024-10-25', validate=True)),
             # total_allocated_duration: remaining leaves + taken leaves
             ('2025-01-01', 21 + 15, 21),
             ('2026-01-01', 21 + 15, 21),
@@ -3330,7 +3330,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'name': 'accrual allocation for employee without calendar',
             'accrual_plan_id': accrual_plan.id,
             'employee_id': employee_without_calendar.id,
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'number_of_days': 0,
             'date_from': '2017-12-04',
         })
@@ -3340,7 +3340,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """ Assert running the accrual CRON after taking a leave that isn't
             validated (virtual leave) doesn't raise a traceback
         """
-        work_entry_type = self.work_entry_type
+        time_type = self.time_type
         accrual_plan = self.accrual_plan_yearly_carryover_lost
         accrual_plan.level_ids[0].added_value = 8
 
@@ -3349,12 +3349,12 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': work_entry_type.id,
+                'time_type_id': time_type.id,
                 'date_from': '2024-12-01',
                 'number_of_days': 8,
             })
             # A virtual leave that is pending approval and will be taken after the carryover date
-            leave = self._create_leave(self.employee_emp, work_entry_type, '2025-01-02', '2025-01-03', additionnal_ctx={'leave_fast_create': True})
+            leave = self._create_leave(self.employee_emp, time_type, '2025-01-02', '2025-01-03', additionnal_ctx={'leave_fast_create': True})
             self.assertNotEqual(leave.state, 'validate', "The leave request should not be in the 'validate' state")
 
         # Run the CRON to check that no validation error appears
@@ -3369,7 +3369,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with self.assertRaisesRegex(ValidationError, 'The first day must be lower than the second day.'):
             self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan with no carryover',
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'accrued_gain_time': 'start',
                 'carryover_date': 'year_start',
                 'level_ids': [Command.create({
@@ -3386,12 +3386,12 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             Also assert the time type balance is updated correctly when taking a 1 day leave
         """
         accrual_plan = self.accrual_plan_daily_hour
-        work_entry_type_day = self.work_entry_type_day
+        time_type_day = self.time_type_day
 
         allocation = self.env['hr.leave.allocation'].create({
             'name': 'Accrual allocation for employee',
             'employee_id': self.employee_emp.id,
-            'work_entry_type_id': work_entry_type_day.id,
+            'time_type_id': time_type_day.id,
             'number_of_days': 0,
             'accrual_plan_id': accrual_plan.id,
             'date_from': '2024-01-01',
@@ -3403,7 +3403,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 # 9 days of accrual: 9x 1 hour
                 ('2024-01-10', days := 9 / self.hours_per_day, date(2024, 1, 11), days, days),
                 ('2024-01-10', lambda:
-                    self._create_leave(self.employee_emp, work_entry_type_day, '2024-01-05', '2024-01-05', validate=True)),
+                    self._create_leave(self.employee_emp, time_type_day, '2024-01-05', '2024-01-05', validate=True)),
                 # The leave should be deducted from the remaining leaves
                 ('2024-01-10', days, date(2024, 1, 11), days, days - 1),
             ),
@@ -3417,12 +3417,12 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             is an accrual allocation with `added_value_type = 'hour'`
         """
         accrual_plan = self.accrual_plan_daily_hour
-        work_entry_type_day = self.work_entry_type_absence_requires_alloc_half_day_day
-        accrual_plan.update({'work_entry_type_id': work_entry_type_day.id})
+        time_type_day = self.time_type_absence_requires_alloc_half_day_day
+        accrual_plan.update({'time_type_id': time_type_day.id})
         allocation = self.env['hr.leave.allocation'].create({
             'name': 'Accrual allocation for employee',
             'employee_id': self.employee_emp.id,
-            'work_entry_type_id': work_entry_type_day.id,
+            'time_type_id': time_type_day.id,
             'number_of_days': 0,
             'accrual_plan_id': accrual_plan.id,
         })
@@ -3438,11 +3438,11 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         with freeze_time('2025-01-01'):
             accrual_plan = self.accrual_plan_4_lvls_start_max_leaves_carryover_limited_expiring
-            work_entry_type = self.work_entry_type_day
+            time_type = self.time_type_day
             allocation = self.env['hr.leave.allocation'].create({
                 'name': 'Accrual allocation for employee',
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': work_entry_type.id,
+                'time_type_id': time_type.id,
                 'number_of_days': 20,
                 'accrual_plan_id': accrual_plan.id,
                 'date_from': '2025-01-01',
@@ -3487,7 +3487,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         accrual_plan = self.dummy_accrual_plan
         allocation = self.env['hr.leave.allocation'].with_context(allocation_skip_auto_approve=True).create({
             'name': 'Accrual allocation for employee',
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'accrual_plan_id': accrual_plan.id,
             'employee_id': self.employee_emp.id,
             'number_of_days': 10,
@@ -3508,7 +3508,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         with freeze_time('2025-07-01'):
             allocation = self._create_form_test_accrual_allocation(
-                self.work_entry_type_day, '2025-07-01', self.employee_emp, self.accrual_plan_start1)
+                self.time_type_day, '2025-07-01', self.employee_emp, self.accrual_plan_start1)
 
         self._assert_get_allocation_data(allocation, (
                 # 11 months  =>  12 accruals as "accrued_gain_time" is "start"  =>  12 * 1 (first level) = 12
@@ -3534,7 +3534,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         with freeze_time('2025-07-01'):
             allocation = self._create_form_test_accrual_allocation(
-                self.work_entry_type_day, '2025-07-01', self.employee_emp, self.accrual_plan_end1)
+                self.time_type_day, '2025-07-01', self.employee_emp, self.accrual_plan_end1)
 
         self._assert_get_allocation_data(allocation, (
                 # 11 months  =>  11 accruals as "accrued_gain_time" is "end"  =>  11 * 1 (first level) = 11
@@ -3560,7 +3560,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         allocation_day = self.env['hr.leave.allocation'].create({
             'name': 'Daily Accrual',
-            'work_entry_type_id': self.work_entry_type_day.id,
+            'time_type_id': self.time_type_day.id,
             'employee_id': self.employee_emp.id,
             'accrual_plan_id': self.accrual_plan_start1.id,
             'number_of_days': 0,
@@ -3579,10 +3579,10 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         # Assuming an 8-hour workday, 2 days = 16.0 hours
         accrual_plan = self.accrual_plan_monthly_start
         self.employee_emp.resource_calendar_id = self.calendar_8h_per_day
-        work_entry_type_hour = self.work_entry_type_hour_day
+        time_type_hour = self.time_type_hour_day
         allocation_hour = self.env['hr.leave.allocation'].create({
             'name': 'Hourly Allocation with daily accrual',
-            'work_entry_type_id': work_entry_type_hour.id,
+            'time_type_id': time_type_hour.id,
             'employee_id': self.employee_emp.id,
             'accrual_plan_id': accrual_plan.id,
             'number_of_days': 0,
@@ -3607,7 +3607,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 form.name = 'Test accrual allocation'
                 form.accrual_plan_id = accrual_plan
                 form.employee_id = self.employee_emp
-                form.work_entry_type_id = self.work_entry_type
+                form.time_type_id = self.time_type
 
                 # Accrual for November
                 form.date_from = '2024-11-01'
@@ -3644,8 +3644,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         with freeze_time('2021-01-01'):
             accrual_plan = self.accrual_plan_monthly_end
-            work_entry_type_day = self.work_entry_type_day
-            allocation = self._create_form_test_accrual_allocation(work_entry_type_day, '2021-01-01', self.employee_emp, accrual_plan)
+            time_type_day = self.time_type_day
+            allocation = self._create_form_test_accrual_allocation(time_type_day, '2021-01-01', self.employee_emp, accrual_plan)
 
         with freeze_time('2022-01-01'):
             self._run_update_accrual_cron()
@@ -3670,17 +3670,17 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         with freeze_time('2020-01-01'):
             accrual_plan = self.accrual_plan_monthly_end
-            work_entry_type_day = self.work_entry_type_day
-            allocation = self._create_form_test_accrual_allocation(work_entry_type_day, '2020-01-01', self.employee_emp, accrual_plan)
+            time_type_day = self.time_type_day
+            allocation = self._create_form_test_accrual_allocation(time_type_day, '2020-01-01', self.employee_emp, accrual_plan)
 
         with freeze_time('2022-01-01'):
             self._run_update_accrual_cron()
             # 24 * 2 accrued days
             self._assert_allocation_balance(allocation, 48, 48)
             # 35 days leave
-            self._create_leave(self.employee_emp, work_entry_type_day, '2022-01-03', '2022-02-18', validate=True)
+            self._create_leave(self.employee_emp, time_type_day, '2022-01-03', '2022-02-18', validate=True)
             # 10 days leave
-            self._create_leave(self.employee_emp, work_entry_type_day, '2022-03-07', '2022-03-18', validate=True)
+            self._create_leave(self.employee_emp, time_type_day, '2022-03-07', '2022-03-18', validate=True)
 
         with freeze_time('2022-03-01'):
             self._run_update_accrual_cron()
@@ -3711,16 +3711,16 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             self._assert_allocation_balance(allocation, 66, 21, '2023-03-01')
 
     def test_get_allocation_actual_future_leaves(self):
-        """ Assert `get_allocation_data` properly computes the balance of a `work.entry.type`
+        """ Assert `get_allocation_data` properly computes the balance of a `hr.time.type`
             which is linked to an accrual allocation that has max 10 available leaves while
             taking multiple leaves (the balance used to be frozen after the first leave)
         """
         with freeze_time('2019-01-01'):
             accrual_plan = self.accrual_plan_monthly_end_max_leaves
-            work_entry_type_day = self.work_entry_type_day
-            allocation = self._create_form_test_accrual_allocation(work_entry_type_day, '2019-01-01', self.employee_emp, accrual_plan)
+            time_type_day = self.time_type_day
+            allocation = self._create_form_test_accrual_allocation(time_type_day, '2019-01-01', self.employee_emp, accrual_plan)
 
-        create_leave_command = self._build_create_leave_command(self.employee_emp, work_entry_type_day)
+        create_leave_command = self._build_create_leave_command(self.employee_emp, time_type_day)
         self._assert_get_allocation_data(allocation, (
                 ('2022-01-01', 10, 10, 10),
                 # 10 days leave
@@ -3745,10 +3745,10 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         with freeze_time('2019-01-01'):
             accrual_plan = self.accrual_plan_monthly_end_max_leaves
-            work_entry_type_day = self.work_entry_type_day
-            allocation = self._create_form_test_accrual_allocation(work_entry_type_day, '2019-01-01', self.employee_emp, accrual_plan)
+            time_type_day = self.time_type_day
+            allocation = self._create_form_test_accrual_allocation(time_type_day, '2019-01-01', self.employee_emp, accrual_plan)
 
-        create_leave_command = self._build_create_leave_command(self.employee_emp, work_entry_type_day)
+        create_leave_command = self._build_create_leave_command(self.employee_emp, time_type_day)
 
         with freeze_time('2022-01-01'):
             self._run_update_accrual_cron()
@@ -3768,23 +3768,23 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             ))
 
     def _test_get_allocation_future_leaves_regular(self, regular_before):
-        """ Assert `_get_allocation_data` computes properly the future `work.entry.type` balance while taking multiple leaves
+        """ Assert `_get_allocation_data` computes properly the future `hr.time.type` balance while taking multiple leaves
             :param regular_before: set the `date_from` of the regular allocation before the `date_from` of the accrual allocation
         """
-        work_entry_type_day = self.work_entry_type_day
+        time_type_day = self.time_type_day
         if regular_before:
             with freeze_time('2018-01-01'):
-                self._create_form_test_regular_allocation(work_entry_type_day, '2018-01-01', self.employee_emp, 10)
+                self._create_form_test_regular_allocation(time_type_day, '2018-01-01', self.employee_emp, 10)
 
         with freeze_time('2019-01-01'):
             accrual_plan = self.accrual_plan_monthly_end_max_leaves
-            accrual_allocation = self._create_form_test_accrual_allocation(work_entry_type_day, '2019-01-01', self.employee_emp, accrual_plan)
+            accrual_allocation = self._create_form_test_accrual_allocation(time_type_day, '2019-01-01', self.employee_emp, accrual_plan)
 
         if not regular_before:
             with freeze_time('2020-01-01'):
-                self._create_form_test_regular_allocation(work_entry_type_day, '2020-01-01', self.employee_emp, 10)
+                self._create_form_test_regular_allocation(time_type_day, '2020-01-01', self.employee_emp, 10)
 
-        create_leave_command = self._build_create_leave_command(self.employee_emp, work_entry_type_day)
+        create_leave_command = self._build_create_leave_command(self.employee_emp, time_type_day)
         with freeze_time('2022-01-01'):
             self._run_update_accrual_cron()
             self._assert_get_allocation_data(accrual_allocation, (
@@ -3817,17 +3817,17 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     def test_work_entry_unit_of_measure_hour(self):
         """ Assert remaining leaves and number of days granted by an accrual plan allocation are correct when using a
-            `work.entry.type` with `unit_of_measure` set to 'hour' and `request_unit` set to 'day', knowing that
+            `hr.time.type` with `unit_of_measure` set to 'hour' and `request_unit` set to 'day', knowing that
             all days are lost on carryover day
         """
-        work_entry_type = self.work_entry_type_hour_day
+        time_type = self.time_type_hour_day
         with freeze_time('2025-01-01'):
             allocation = self._create_form_test_accrual_allocation(
-                work_entry_type, '2025-01-01', self.employee_emp, self.accrual_plan_monthly_start_carryover_lost)
+                time_type, '2025-01-01', self.employee_emp, self.accrual_plan_monthly_start_carryover_lost)
             self.assertEqual(allocation.number_of_days, 1)
             # 2x1 day leave
-            self._create_leave(self.employee_emp, work_entry_type, '2025-01-03', '2025-01-03', validate=True)
-            self._create_leave(self.employee_emp, work_entry_type, '2025-02-03', '2025-02-03', validate=True)
+            self._create_leave(self.employee_emp, time_type, '2025-01-03', '2025-01-03', validate=True)
+            self._create_leave(self.employee_emp, time_type, '2025-02-03', '2025-02-03', validate=True)
 
         self._assert_get_allocation_data(allocation, (
                 # No more remaining leave once on the first leave first day
@@ -3847,17 +3847,17 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         )
 
     def test_work_entry_unit_of_measure_day(self):
-        """ Assert the `work.entry.type` balance is correct when linked to an accrual allocation while using a
-            `work.entry.type` with `unit_of_measure` set to 'hour' and `request_unit` set to 'day', knowing that
+        """ Assert the `hr.time.type` balance is correct when linked to an accrual allocation while using a
+            `hr.time.type` with `unit_of_measure` set to 'hour' and `request_unit` set to 'day', knowing that
             all days are lost on carryover day
         """
-        work_entry_type = self.work_entry_type_day_hour
+        time_type = self.time_type_day_hour
         with freeze_time('2025-01-01'):
             allocation = self._create_form_test_accrual_allocation(
-                work_entry_type, '2025-01-01', self.employee_emp, self.accrual_plan_monthly_start_carryover_lost_hour)
+                time_type, '2025-01-01', self.employee_emp, self.accrual_plan_monthly_start_carryover_lost_hour)
             # 2x1 day leave
-            self._create_leave(self.employee_emp, work_entry_type, '2025-01-03', '2025-01-03', validate=True)
-            self._create_leave(self.employee_emp, work_entry_type, '2025-02-03', '2025-02-03', validate=True)
+            self._create_leave(self.employee_emp, time_type, '2025-01-03', '2025-01-03', validate=True)
+            self._create_leave(self.employee_emp, time_type, '2025-02-03', '2025-02-03', validate=True)
 
         # As 'unit_of_measure = day', get_allocation_data will return remaining and allocated duration in day
         self._assert_get_allocation_data(allocation, (
@@ -3883,19 +3883,19 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     @freeze_time('2024-11-25')
     def test_accrual_days_left_over_carryover_maximum_with_leaves_around_carryover(self):
-        """ Assert `get_allocation_data` properly compute the work entry type balance when it is linked to
+        """ Assert `get_allocation_data` properly compute the time type balance when it is linked to
             an accrual allocation while taking some leaves (the remaining leaves used to be frozen)
         """
         allocation = self._create_form_test_accrual_allocation(
-            self.work_entry_type_day, '2024-01-01', self.employee_emp, self.accrual_plan_yearly_max_carriedover_days_start)
+            self.time_type_day, '2024-01-01', self.employee_emp, self.accrual_plan_yearly_max_carriedover_days_start)
         allocation.action_approve()
         # The amount accrued by the onchange must be saved, otherwise the yearly cap is bypassed
         self.assertEqual(allocation.yearly_accrued_days, 21)
 
         # take 10 days in the past
-        self._create_leave(self.employee_emp, self.work_entry_type_day, '2024-12-09', '2024-12-20', validate=True)
+        self._create_leave(self.employee_emp, self.time_type_day, '2024-12-09', '2024-12-20', validate=True)
         # take 10 days in January
-        self._create_leave(self.employee_emp, self.work_entry_type_day, '2025-01-06', '2025-01-17', validate=True)
+        self._create_leave(self.employee_emp, self.time_type_day, '2025-01-06', '2025-01-17', validate=True)
 
         # The remaining leaves on a specific date should be:
         # 25/11/2024 to 08/12/2024: 21 days, no leave are deducted
@@ -3921,17 +3921,17 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """ Test that the `_cancel_invalid_leaves` cron cancels a leave that is linked to a work entry
             type having only a refused accrual allocation
         """
-        work_entry_type = self.work_entry_type_absence_requires_alloc_negativ
+        time_type = self.time_type_absence_requires_alloc_negativ
         accrual_plan = self.dummy_accrual_plan
-        accrual_plan.update({'work_entry_type_id': work_entry_type.id})
+        accrual_plan.update({'time_type_id': time_type.id})
         allocation = self.env['hr.leave.allocation'].create({
             'employee_id': self.employee_emp.id,
-            'work_entry_type_id': work_entry_type.id,
+            'time_type_id': time_type.id,
             'accrual_plan_id': accrual_plan.id,
             'number_of_days': 1,
         })
 
-        leave = self._create_leave(self.employee_emp, work_entry_type, '2024-01-05', '2024-01-05')
+        leave = self._create_leave(self.employee_emp, time_type, '2024-01-05', '2024-01-05')
 
         allocation.action_refuse()
         self.env['hr.leave']._cancel_invalid_leaves()
@@ -3944,7 +3944,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Test Plan',
-            'work_entry_type_id': self.work_entry_type_day.id,
+            'time_type_id': self.time_type_day.id,
             'accrued_gain_time': 'start',
             'carryover_date': 'year_start',
             'can_be_carryover': True,
@@ -3962,7 +3962,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             form.accrual_plan_id = accrual_plan
             # The onchange runs a first time with the default start date (today)
             form.employee_id = self.employee_emp
-            form.work_entry_type_id = self.work_entry_type_day
+            form.time_type_id = self.time_type_day
             form.date_from = '2024-05-01'
             form.date_from = '2024-03-01'
         allocation = form.record
@@ -3979,7 +3979,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         multi_employee_allocation = self.env['hr.leave.allocation.generate.multi.wizard'].create({
             'name': 'Multi-Allocation',
             'employee_ids': [Command.link(employee.id) for employee in employees],
-            'work_entry_type_id': self.work_entry_type_day.id,
+            'time_type_id': self.time_type_day.id,
             'date_from': '2026-01-01',
             'accrual_plan_id': self.accrual_plan_yearly_max_carriedover_days_start.id,
         })
@@ -4000,7 +4000,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         wizard = self.env['hr.leave.allocation.generate.multi.wizard'].create({
             'name': 'Compute Accruals',
             'employee_ids': [Command.link(self.employee_emp.id)],
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'accrual_plan_id': self.accrual_plan_daily_end.id,
             'date_from': '2026-03-01',
             'duration': 0.0,
@@ -4021,11 +4021,11 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             sets the number_of_days of the generated accrual allocation, and that it is not recomputed if
             the cron is run on the same day
         """
-        self.accrual_plan_monthly_end.update({'work_entry_type_id': self.work_entry_type.id})
+        self.accrual_plan_monthly_end.update({'time_type_id': self.time_type.id})
         wizard = self.env['hr.leave.allocation.generate.multi.wizard'].create({
             'name': 'Keep Manual Setting',
             'employee_ids': [(4, self.employee_emp.id)],
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'accrual_plan_id': self.accrual_plan_monthly_end.id,
             'date_from': '2026-03-01',
             'duration': 3.0,
@@ -4049,8 +4049,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         with freeze_time('2025-12-01'):
             accrual_plan = self.accrual_plan_monthly_start_carryover_year_start
-            accrual_plan.update({'work_entry_type_id': self.work_entry_type_day.id})
-            allocation = self._create_form_test_accrual_allocation(self.work_entry_type_day, '2025-12-01', self.employee_emp, accrual_plan)
+            accrual_plan.update({'time_type_id': self.time_type_day.id})
+            allocation = self._create_form_test_accrual_allocation(self.time_type_day, '2025-12-01', self.employee_emp, accrual_plan)
 
         first_period_days = self._get_period_days('2025-12-01', '2025-12-14')
         first_period_total_days = self._get_period_days('2025-11-15', '2025-12-14')
@@ -4073,7 +4073,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         with freeze_time('2025-12-01'):
             accrual_plan = self.accrual_plan_monthly_end_carryover_year_start
-            allocation = self._create_form_test_accrual_allocation(self.work_entry_type_day, '2025-12-01', self.employee_emp, accrual_plan)
+            allocation = self._create_form_test_accrual_allocation(self.time_type_day, '2025-12-01', self.employee_emp, accrual_plan)
 
         first_period_days = self._get_period_days('2025-12-01', '2025-12-14')
         first_period_total_days = self._get_period_days('2025-11-15', '2025-12-14')
@@ -4098,7 +4098,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         with freeze_time('2025-12-16'):
             accrual_plan = self.accrual_plan_monthly_end_carryover_year_start_2_lvls
-            allocation = self._create_form_test_accrual_allocation(self.work_entry_type_day, '2025-12-16', self.employee_emp, accrual_plan)
+            allocation = self._create_form_test_accrual_allocation(self.time_type_day, '2025-12-16', self.employee_emp, accrual_plan)
 
         self._assert_get_allocation_data(allocation, (
                 # Beginning of the accrual: 0 days
@@ -4128,7 +4128,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         with freeze_time('2025-12-16'):
             accrual_plan = self.accrual_plan_monthly_start_carryover_year_start_2_lvls
-            allocation = self._create_form_test_accrual_allocation(self.work_entry_type_day, '2025-12-16', self.employee_emp, accrual_plan)
+            allocation = self._create_form_test_accrual_allocation(self.time_type_day, '2025-12-16', self.employee_emp, accrual_plan)
 
         self._assert_get_allocation_data(allocation, (
                 # Beginning of the accrual: 2025-12-16 -> 2026-01-15: 30 / 31
@@ -4159,7 +4159,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         with freeze_time('2026-01-15'):
             allocation = self._create_form_test_accrual_allocation(
-                self.work_entry_type_day, '2026-01-15', self.employee_emp, self.accrual_plan2)
+                self.time_type_day, '2026-01-15', self.employee_emp, self.accrual_plan2)
 
         self._assert_accrual_allocation_nbr_of_days_and_nextcall(allocation, (
             # Accrual plan accrued time is 'end', so 0 days at the start
@@ -4234,7 +4234,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'name': 'Yearly Accrual',
             'accrual_plan_id': accrual_plan.id,
             'employee_id': self.employee_emp.id,
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'date_from': date(2026, 9, 21),
             'number_of_days': 0,
         })
@@ -4263,7 +4263,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'name': 'Monthly Accrual',
             'accrual_plan_id': accrual_plan.id,
             'employee_id': self.employee_emp.id,
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'date_from': date(2026, 9, 21),
             'number_of_days': 0,
         })
@@ -4291,7 +4291,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'name': 'Weekly Accrual',
             'accrual_plan_id': accrual_plan.id,
             'employee_id': self.employee_emp.id,
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'date_from': date(2026, 9, 21),
             'number_of_days': 0,
         })
@@ -4339,7 +4339,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         with freeze_time('2026-01-15'):
             allocation = self._create_form_test_accrual_allocation(
-                self.work_entry_type_day,
+                self.time_type_day,
                 '2026-01-01',
                 self.employee_emp,
                 self.accrual_plan_monthly_end,
@@ -4349,7 +4349,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
             # 2 days accrued on each of 2026-02-01, 2026-03-01 and 2026-04-01
             with Form(self.env['hr.leave'].with_context(default_employee_id=self.employee_emp.id)) as leave_form:
-                leave_form.work_entry_type_id = self.work_entry_type_day
+                leave_form.time_type_id = self.time_type_day
                 leave_form.request_date_from = date(2026, 4, 7)
                 leave_form.request_date_to = date(2026, 4, 10)
                 self.assertEqual(leave_form.number_of_days, 4)

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="hr_work_entry_type_view_form_inherit" model="ir.ui.view">
-        <field name="name">hr.work.entry.type.form.inherit</field>
-        <field name="model">hr.work.entry.type</field>
-        <field name="inherit_id" ref="hr_holidays.hr_work_entry_type_view_form"/>
+    <record id="hr_time_type_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.time.type.form.inherit</field>
+        <field name="model">hr.time.type</field>
+        <field name="inherit_id" ref="hr_holidays.hr_time_type_view_form"/>
         <field name="priority">20</field>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='configuration']//field[@name='support_document']" position="after">

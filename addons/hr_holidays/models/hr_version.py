@@ -233,7 +233,7 @@ class HrVersion(models.Model):
         if leave.resource_calendar_id == first_contract.resource_calendar_id:
             return
         leave.resource_calendar_id = first_contract.resource_calendar_id
-        if leave.work_entry_type_request_unit != 'hour':
+        if leave.time_type_request_unit != 'hour':
             leave.with_context(
                 leave_fast_create=True,
                 leave_skip_date_check=True,
@@ -307,17 +307,17 @@ class HrVersion(models.Model):
                 subtype_xmlid='mail.mt_note',
             )
 
-    # override to add work_entry_type from leave
-    def _get_leave_work_entry_type(self, leave):
+    # override to add time_type from leave
+    def _get_leave_time_type(self, leave):
         """Return the type of the time off of the leave (``holiday_id``), else the leave's type.
 
         :param leave: ``resource.calendar.leaves``
-        :rtype: hr.work.entry.type
+        :rtype: hr.time.type
         """
         if leave.holiday_id:
-            return leave.holiday_id.work_entry_type_id
+            return leave.holiday_id.time_type_id
         else:
-            return leave.work_entry_type_id
+            return leave.time_type_id
 
     def _get_more_vals_leave_interval(self, interval, leaves):
         """Add ``('leave_ids', time off)`` for the leaves of time off containing ``interval``.
@@ -331,7 +331,7 @@ class HrVersion(models.Model):
                     result.append(('leave_ids', leave[2].holiday_id))
         return result
 
-    def _get_interval_leave_work_entry_type(self, interval, leaves, bypassing_codes):
+    def _get_interval_leave_time_type(self, interval, leaves, bypassing_codes):
         """Return the type of a leave interval, arbitrating overlapping leaves.
 
         Priority: time off whose type code is in ``bypassing_codes``, then global leaves (public
@@ -340,17 +340,17 @@ class HrVersion(models.Model):
         :param tuple interval: ``(start, stop, payload)``
         :param list leaves: ``(start, stop, resource.calendar.leaves)`` tuples
         :param list bypassing_codes: codes of the types winning over public holidays
-        :rtype: hr.work.entry.type
+        :rtype: hr.time.type
         """
         # returns the work entry time related to the leave that
         # includes the whole interval.
         # Overriden in hr_work_entry_holiday to select the
         # global time off first (eg: Public Holiday > Home Working)
         self.ensure_one()
-        if 'work_entry_type_id' in interval[2]:
-            work_entry_types = interval[2].work_entry_type_id
-            if work_entry_types and work_entry_types[:1].code in bypassing_codes:
-                return work_entry_types[:1]
+        if 'time_type_id' in interval[2]:
+            time_types = interval[2].time_type_id
+            if time_types and time_types[:1].code in bypassing_codes:
+                return time_types[:1]
 
         interval_start = interval[0].astimezone(UTC).replace(tzinfo=None)
         interval_stop = interval[1].astimezone(UTC).replace(tzinfo=None)
@@ -361,7 +361,7 @@ class HrVersion(models.Model):
 
         # Example: In CP200: Long term sick > Public Holidays (which is global)
         if bypassing_codes:
-            bypassing_rc_leave = [l for l in including_holiday_rcleaves if l.holiday_id.work_entry_type_id.code in bypassing_codes]
+            bypassing_rc_leave = [l for l in including_holiday_rcleaves if l.holiday_id.time_type_id.code in bypassing_codes]
         else:
             bypassing_rc_leave = []
 
@@ -372,8 +372,8 @@ class HrVersion(models.Model):
         elif including_holiday_rcleaves:
             rc_leave = including_holiday_rcleaves[0]
         if rc_leave:
-            return self._get_leave_work_entry_type_dates(rc_leave, interval_start, interval_stop, self.employee_id)
-        return self.env.ref('hr_work_entry.generic_work_entry_type_leave')
+            return self._get_leave_time_type_dates(rc_leave, interval_start, interval_stop, self.employee_id)
+        return self.env.ref('hr_work_entry.generic_time_type_leave')
 
     def _get_sub_leave_domain(self):
         """Also accept the leaves of the time off of the employees, whatever their calendar.
@@ -393,13 +393,13 @@ class HrVersion(models.Model):
         :rtype: bool
         """
         res = super()._generate_work_entries_postprocess_adapt_to_calendar(vals)
-        if 'work_entry_type_id' not in vals or not vals.get('leave_ids'):
+        if 'time_type_id' not in vals or not vals.get('leave_ids'):
             return res
-        # time rule output leaves already carry the correct WET and span; skip calendar adaptation
+        # time rule output leaves already carry the correct time type and span; skip calendar adaptation
         if vals['leave_ids'].source_leave_id:
             return False
-        work_entry_type = vals['work_entry_type_id']
-        return res or (work_entry_type.count_as == 'absence' or work_entry_type.request_unit != 'hour')
+        time_type = vals['time_type_id']
+        return res or (time_type.count_as == 'absence' or time_type.request_unit != 'hour')
 
     @api.model
     def _get_work_entry_source_fields(self):
@@ -440,7 +440,7 @@ class HrVersion(models.Model):
                 'name': 'Compensatory Allocations for the difference in working schedules',
                 'accrual_plan_id': working_schedule.leave_accrual_plan_id.id,
                 'employee_id': version.employee_id.id,
-                'work_entry_type_id': working_schedule.leave_accrual_plan_id.work_entry_type_id.id,
+                'time_type_id': working_schedule.leave_accrual_plan_id.time_type_id.id,
                 'date_from': version.date_start,
                 'date_to': version.date_end,
                 'state': 'confirm',

@@ -24,7 +24,7 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
             domain &= Domain(['|', ('leave_manager_id', '=', self.env.user.id), ('user_id', '=', self.env.user.id)])
         return domain
 
-    def _domain_work_entry_type_id(self):
+    def _domain_time_type_id(self):
         domain = [
             ('requires_allocation', '=', True),
             ('time_off_selectable', '=', True),
@@ -35,12 +35,12 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
 
     name = fields.Char("Description", compute="_compute_name", store=True, readonly=False)
     duration = fields.Float(string="Allocation")
-    work_entry_type_id = fields.Many2one(
-        "hr.work.entry.type", string="Time Type", required=True,
-        domain=_domain_work_entry_type_id)
-    allowed_work_entry_type_ids = fields.Many2many(
-        'hr.work.entry.type', compute='_compute_allowed_work_entry_type_ids')
-    unit_of_measure = fields.Selection(related="work_entry_type_id.unit_of_measure")
+    time_type_id = fields.Many2one(
+        "hr.time.type", string="Time Type", required=True,
+        domain=_domain_time_type_id)
+    allowed_time_type_ids = fields.Many2many(
+        'hr.time.type', compute='_compute_allowed_time_type_ids')
+    unit_of_measure = fields.Selection(related="time_type_id.unit_of_measure")
     employee_ids = fields.Many2many('hr.employee', string='Employees', domain=lambda self: self._get_employee_domain())
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
     accrual_plan_id = fields.Many2one('hr.leave.accrual.plan')
@@ -49,28 +49,28 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
     notes = fields.Text('Reasons')
 
     @api.depends('company_id')
-    def _compute_allowed_work_entry_type_ids(self):
+    def _compute_allowed_time_type_ids(self):
         for wizard in self:
             country = wizard.company_id.country_id or self.env.company.country_id
-            if not country or not self.env['hr.work.entry.type'].search_count([('country_id', '=', country.id)], limit=1):
+            if not country or not self.env['hr.time.type'].search_count([('country_id', '=', country.id)], limit=1):
                 domain = [('country_id', '=', False)]
             else:
                 domain = [('country_id', '=', country.id)]
-            domain = Domain.AND([wizard._domain_work_entry_type_id(), domain])
-            wizard.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(domain)
+            domain = Domain.AND([wizard._domain_time_type_id(), domain])
+            wizard.allowed_time_type_ids = self.env['hr.time.type'].search(domain)
 
-    @api.depends('work_entry_type_id', 'duration')
+    @api.depends('time_type_id', 'duration')
     def _compute_name(self):
         for allocation_multi in self:
             allocation_multi.name = allocation_multi._get_title()
 
     def _get_title(self):
         self.ensure_one()
-        if not self.work_entry_type_id:
+        if not self.time_type_id:
             return self.env._("Allocation Request")
         return self.env._(
             '%(name)s (%(duration)s %(unit_of_measure)s(s))',
-            name=self.work_entry_type_id.name,
+            name=self.time_type_id.name,
             duration=float_round(self.duration, precision_digits=2),
             unit_of_measure=self.unit_of_measure
         )
@@ -83,7 +83,7 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
         }
         return [{
             'name': self.name,
-            'work_entry_type_id': self.work_entry_type_id.id,
+            'time_type_id': self.time_type_id.id,
             'number_of_days': self.duration if self.unit_of_measure != "hour" else self.duration / hours_per_day[employee.id],
             'employee_id': employee.id,
             'state': 'confirm',

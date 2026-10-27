@@ -152,7 +152,7 @@ class TestEmployee(TransactionCase):
         })
         old_timesheet_count = len(self.env['account.analytic.line'].search([
             ('employee_id', '=', employee.id)]))
-        work_entry_type = self.env['hr.work.entry.type'].create({
+        time_type = self.env['hr.time.type'].create({
             'name': 'Legal Leaves',
             'code': 'Legal Leaves',
             'count_as': 'absence',
@@ -163,7 +163,7 @@ class TestEmployee(TransactionCase):
         leave = self.env['hr.leave'].create({
             'employee_id': employee.id,
             'state': 'confirm',
-            'work_entry_type_id': work_entry_type.id,
+            'time_type_id': time_type.id,
             'request_date_from': '2020-01-02 08:00:00',
             'request_date_to': '2020-01-07 17:00:00',
         })

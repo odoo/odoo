@@ -147,8 +147,8 @@ export class ActivityMenu extends Component {
                     numeric: true,
                     unit: "minutes",
                 }),
-                timeTypeAbbr: att.wet_display_code || '',
-                timeTypeColor: att.wet_color ?? 0,
+                timeTypeAbbr: att.time_type_display_code || '',
+                timeTypeColor: att.time_type_color ?? 0,
             };
         });
         const checkIn = deserializeDateTime(attendance.check_in);

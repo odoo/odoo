@@ -6,8 +6,8 @@ from odoo import fields, models
 class HrTimeRule(models.Model):
     _inherit = 'hr.time.rule'
 
-    condition_work_entry_type_ids = fields.Many2many(
-        default=lambda self: self.env.company.attendance_work_entry_type_id
+    condition_time_type_ids = fields.Many2many(
+        default=lambda self: self.env.company.attendance_time_type_id
     )
 
     def _get_applicable_employees(self, employees):
@@ -26,14 +26,14 @@ class HrTimeRule(models.Model):
         :param datetime check_out: naive UTC
         :param source_attendance: the source ``hr.attendance``
         :param frozenset accumulated_pp: premium pay ids, used by overrides (``hr_payroll``)
-        :return: ``employee_id``, ``work_entry_type_id`` (the rule's output type),
+        :return: ``employee_id``, ``time_type_id`` (the rule's output type),
             ``check_in``, ``check_out``, ``source_attendance_id`` and ``time_rule_id``
         :rtype: dict
         """
         self.ensure_one()
         return {
             'employee_id': employee.id,
-            'work_entry_type_id': self.work_entry_type_id.id,
+            'time_type_id': self.time_type_id.id,
             'check_in': check_in,
             'check_out': check_out,
             'source_attendance_id': source_attendance.id if source_attendance else False,

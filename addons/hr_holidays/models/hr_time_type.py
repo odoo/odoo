@@ -27,13 +27,13 @@ PY_OPERATORS = {
 }
 
 
-class HrWorkEntryType(models.Model):
-    _inherit = 'hr.work.entry.type'
+class HrTimeType(models.Model):
+    _inherit = 'hr.time.type'
 
     @api.model
-    def _model_sorting_key(self, work_entry_type):
+    def _model_sorting_key(self, time_type):
         """Return the sort key of the types in :meth:`_search` (``sequence``)."""
-        return work_entry_type.sequence
+        return time_type.sequence
 
     create_calendar_meeting = fields.Boolean(
         string="Display Time Off in Calendar",
@@ -151,16 +151,16 @@ class HrWorkEntryType(models.Model):
 
         employee_id = self.env.context.get('default_employee_id', self.env.context.get('employee_id')) or self.env.user.employee_id.id
 
-        work_entry_types = self.env['hr.leave.allocation'].search([
+        time_types = self.env['hr.leave.allocation'].search([
             ('employee_id', '=', employee_id),
             ('state', '=', 'validate'),
             ('date_from', '<=', date_to),
             '|',
             ('date_to', '>=', date_from),
             ('date_to', '=', False),
-        ]).work_entry_type_id
+        ]).time_type_id
 
-        return [('id', operator, work_entry_types.ids)]
+        return [('id', operator, time_types.ids)]
 
     @api.constrains('allow_request_on_top')
     def _check_allow_request_on_top(self):
@@ -190,7 +190,7 @@ class HrWorkEntryType(models.Model):
         max_datetime = fields.Datetime.to_string(datetime.now().replace(month=12, day=31, hour=23, minute=59, second=59))
 
         leaves = self.env['hr.leave'].search([
-            ('work_entry_type_id', 'in', self.ids),
+            ('time_type_id', 'in', self.ids),
             ('date_from', '>=', min_datetime),
             ('date_from', '<=', max_datetime),
             ('state', 'in', ('validate', 'validate1', 'confirm')),
@@ -212,14 +212,14 @@ time type are overlapping with public holidays, meaning that the balance of thos
     def _check_leaves_for_count_days_as(self):
         """Forbid changing ``count_days_as`` once requests of the type exist."""
         leave_count = self.env['hr.leave'].search_count([
-            ('work_entry_type_id', 'in', self.ids),
+            ('time_type_id', 'in', self.ids),
             ('state', 'in', ('validate', 'validate1', 'confirm')),
         ], limit=1)
         if leave_count:
             raise ValidationError(self.env._("You cannot modify the 'Duration Count' setting because one or more leaves have already \
 been taken for this time off type. Changing it now would affect existing employee balances."))
 
-    def get_work_entry_types_with_valid_allocations(self, date_from, date_to, employee_id):
+    def get_time_types_with_valid_allocations(self, date_from, date_to, employee_id):
         """Return the types of ``self`` the employee can request time off of during a period.
 
         Types without allocation always; types requiring an allocation when a validated one
@@ -229,11 +229,11 @@ been taken for this time off type. Changing it now would affect existing employe
         :param date_from: first day
         :param date_to: last day
         :param int employee_id: employee id
-        :rtype: hr.work.entry.type
+        :rtype: hr.time.type
         """
-        allocation_by_work_entry_type = dict(self.env['hr.leave.allocation']._read_group(
+        allocation_by_time_type = dict(self.env['hr.leave.allocation']._read_group(
             domain=Domain([
-                ('work_entry_type_id', 'in', self.filtered(lambda work_entry_type: work_entry_type.requires_allocation).ids),
+                ('time_type_id', 'in', self.filtered(lambda time_type: time_type.requires_allocation).ids),
                 ('employee_id', '=', employee_id),
                 ('state', '=', 'validate'),
                 ('date_from', '<=', date_from),
@@ -241,22 +241,22 @@ been taken for this time off type. Changing it now would affect existing employe
                     ('date_to', '>=', date_to),
                     ('date_to', '=', False),
             ]),
-            groupby=['work_entry_type_id'],
+            groupby=['time_type_id'],
             aggregates=['id:recordset'],
         ))
-        valid_types = self.env['hr.work.entry.type']
-        for work_entry_type in self:
-            if work_entry_type.requires_allocation:
-                allocations = allocation_by_work_entry_type.get(work_entry_type, self.env['hr.leave.allocation'])
-                allowed_excess = work_entry_type.max_allowed_negative if work_entry_type.allows_negative else 0
+        valid_types = self.env['hr.time.type']
+        for time_type in self:
+            if time_type.requires_allocation:
+                allocations = allocation_by_time_type.get(time_type, self.env['hr.leave.allocation'])
+                allowed_excess = time_type.max_allowed_negative if time_type.allows_negative else 0
                 allocations = allocations.filtered(lambda alloc:
                     alloc.accrual_plan_id
                     or (alloc.max_leaves > 0 and alloc.virtual_remaining_leaves > -allowed_excess)
                 )
                 if allocations:
-                    valid_types += work_entry_type
+                    valid_types += time_type
             else:
-                valid_types += work_entry_type
+                valid_types += time_type
         return valid_types
 
     @api.depends('requires_allocation', 'max_leaves', 'virtual_remaining_leaves')
@@ -265,7 +265,7 @@ been taken for this time off type. Changing it now would affect existing employe
         date_from = self.env.context.get('default_date_from', self.env.context.get('date_from', fields.Datetime.today()))
         date_to = self.env.context.get('default_date_to', self.env.context.get('date_to', fields.Datetime.today()))
         employee_id = self.env.context.get('default_employee_id', self.env.context.get('employee_id', self.env.user.employee_id.id))
-        valid_types = self.get_work_entry_types_with_valid_allocations(date_from, date_to, employee_id)
+        valid_types = self.get_time_types_with_valid_allocations(date_from, date_to, employee_id)
         valid_types.has_valid_allocation = True
 
     def _load_records_write(self, values):
@@ -276,7 +276,7 @@ been taken for this time off type. Changing it now would affect existing employe
     @api.constrains('requires_allocation')
     def check_allocation_requirement_edit_validity(self):
         """Forbid changing ``requires_allocation`` once requests of the type exist."""
-        if not self.env.context.get('install_mode') and self.env['hr.leave'].search_count([('work_entry_type_id', 'in', self.ids)], limit=1):
+        if not self.env.context.get('install_mode') and self.env['hr.leave'].search_count([('time_type_id', 'in', self.ids)], limit=1):
             raise UserError(_("The allocation requirement of a time type cannot be changed once leaves of that type have been taken. You should create a new time type instead."))
 
     def _search_max_leaves(self, operator, value):
@@ -294,20 +294,20 @@ been taken for this time off type. Changing it now would affect existing employe
                 ('state', '=', 'validate')
             ])
             for allocation in allocations:
-                leaves[allocation.work_entry_type_id.id] += allocation.number_of_days
+                leaves[allocation.time_type_id.id] += allocation.number_of_days
         valid_leaves = [leaf for leaf, number in leaves.items() if op(number, value)]
         return [('id', 'in', valid_leaves)]
 
     def _search_virtual_remaining_leaves(self, operator, value):
-        def is_valid(work_entry_type):
-            return not work_entry_type.requires_allocation or op(work_entry_type.virtual_remaining_leaves, value)
+        def is_valid(time_type):
+            return not time_type.requires_allocation or op(time_type.virtual_remaining_leaves, value)
         op = PY_OPERATORS.get(operator)
         if not op:
             return NotImplemented
         if operator != 'in':
             value = float(value)
-        work_entry_types = self.env['hr.work.entry.type'].search([])
-        return [('id', 'in', work_entry_types.filtered(is_valid).ids)]
+        time_types = self.env['hr.time.type'].search([])
+        return [('id', 'in', time_types.filtered(is_valid).ids)]
 
     @api.depends_context('uid', 'employee_id', 'default_employee_id', 'leave_date_from', 'default_date_from')
     def _compute_leaves(self):
@@ -316,17 +316,17 @@ been taken for this time off type. Changing it now would affect existing employe
         # when context gets cleaned and 'default_' context keys gets removed
         target_date = self.env.context.get('leave_date_from') or self.env.context.get('default_date_from')
         data_days = self.get_allocation_data(employee, target_date)[employee]
-        for work_entry_type in self:
-            result = [item for item in data_days if item[3] == work_entry_type.id]
-            work_entry_type_tuple = result[0] if result else ('', {})
-            work_entry_type.max_leaves = work_entry_type_tuple[1].get('max_leaves', 0)
-            work_entry_type.leaves_taken = work_entry_type_tuple[1].get('leaves_taken', 0)
-            work_entry_type.virtual_remaining_leaves = work_entry_type_tuple[1].get('virtual_remaining_leaves', 0)
+        for time_type in self:
+            result = [item for item in data_days if item[3] == time_type.id]
+            time_type_tuple = result[0] if result else ('', {})
+            time_type.max_leaves = time_type_tuple[1].get('max_leaves', 0)
+            time_type.leaves_taken = time_type_tuple[1].get('leaves_taken', 0)
+            time_type.virtual_remaining_leaves = time_type_tuple[1].get('virtual_remaining_leaves', 0)
 
     def _compute_allocation_count(self):
         today = fields.Date.to_string(date.today())
         domain = [
-            ('work_entry_type_id', 'in', self.ids),
+            ('time_type_id', 'in', self.ids),
             ('date_from', '<=', today),
             '|', ('date_to', '=', False), ('date_to', '>=', today),
             ('state', 'in', ('confirm', 'validate')),
@@ -334,10 +334,10 @@ been taken for this time off type. Changing it now would affect existing employe
 
         grouped_res = self.env['hr.leave.allocation']._read_group(
             domain,
-            ['work_entry_type_id'],
+            ['time_type_id'],
             ['__count'],
         )
-        grouped_dict = {work_entry_type.id: count for work_entry_type, count in grouped_res}
+        grouped_dict = {time_type.id: count for time_type, count in grouped_res}
         for allocation in self:
             allocation.allocation_count = grouped_dict.get(allocation.id, 0)
 
@@ -345,53 +345,53 @@ been taken for this time off type. Changing it now would affect existing employe
         min_datetime = fields.Datetime.to_string(datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0))
         max_datetime = fields.Datetime.to_string(datetime.now().replace(month=12, day=31, hour=23, minute=59, second=59))
         domain = [
-            ('work_entry_type_id', 'in', self.ids),
+            ('time_type_id', 'in', self.ids),
             ('date_from', '>=', min_datetime),
             ('date_from', '<=', max_datetime),
             ('state', 'in', ('validate', 'validate1', 'confirm')),
         ]
         grouped_res = self.env['hr.leave']._read_group(
             domain,
-            ['work_entry_type_id'],
+            ['time_type_id'],
             ['__count'],
         )
-        grouped_dict = {work_entry_type.id: count for work_entry_type, count in grouped_res}
+        grouped_dict = {time_type.id: count for time_type, count in grouped_res}
         for allocation in self:
             allocation.group_days_leave = grouped_dict.get(allocation.id, 0)
 
     def _compute_is_used(self):
-        leaves_count = self._leaves_count_by_work_entry_type_id()
-        allocations_count = self._allocations_count_by_work_entry_type_id()
-        for work_entry_type in self:
-            work_entry_type.is_used = leaves_count.get(work_entry_type.id, 0) or allocations_count.get(work_entry_type.id, 0)
+        leaves_count = self._leaves_count_by_time_type_id()
+        allocations_count = self._allocations_count_by_time_type_id()
+        for time_type in self:
+            time_type.is_used = leaves_count.get(time_type.id, 0) or allocations_count.get(time_type.id, 0)
 
-    def _leaves_count_by_work_entry_type_id(self):
+    def _leaves_count_by_time_type_id(self):
         leave_domain = [
-            ('work_entry_type_id', 'in', self.ids),
+            ('time_type_id', 'in', self.ids),
         ]
         leaves_count = self.env['hr.leave']._read_group(
             leave_domain,
-            ['work_entry_type_id'],
+            ['time_type_id'],
             ['__count'],
         )
-        return {work_entry_type.id: count for work_entry_type, count in leaves_count}
+        return {time_type.id: count for time_type, count in leaves_count}
 
-    def _allocations_count_by_work_entry_type_id(self):
+    def _allocations_count_by_time_type_id(self):
         allocation_domain = [
-            ('work_entry_type_id', 'in', self.ids),
+            ('time_type_id', 'in', self.ids),
         ]
         allocations_count = self.env['hr.leave.allocation']._read_group(
             allocation_domain,
-            ['work_entry_type_id'],
+            ['time_type_id'],
             ['__count'],
         )
-        return {work_entry_type.id: count for work_entry_type, count in allocations_count}
+        return {time_type.id: count for time_type, count in allocations_count}
 
     def requested_display_name(self):
-        return self.env.context.get('work_entry_type_display_name', True) and self.env.context.get('employee_id')
+        return self.env.context.get('time_type_display_name', True) and self.env.context.get('employee_id')
 
     @api.depends('requires_allocation', 'virtual_remaining_leaves', 'max_leaves', 'unit_of_measure', 'country_id')
-    @api.depends_context('work_entry_type_display_name', 'employee_id', 'company')
+    @api.depends_context('time_type_display_name', 'employee_id', 'company')
     def _compute_display_name(self):
         display_country_name = not bool(self.env.companies and len(self.env.companies.mapped('country_id')) == 1)
         for record in self:
@@ -425,8 +425,8 @@ been taken for this time off type. Changing it now would affect existing employe
 
     @api.depends('count_as')
     def _compute_eligible_for_accrual_rate(self):
-        for work_entry_type in self:
-            work_entry_type.elligible_for_accrual_rate = work_entry_type.count_as != 'absence'
+        for time_type in self:
+            time_type.elligible_for_accrual_rate = time_type.count_as != 'absence'
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None, **kwargs):
@@ -448,11 +448,11 @@ been taken for this time off type. Changing it now would affect existing employe
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("hr_holidays.hr_leave_allocation_action_all")
         action['domain'] = [
-            ('work_entry_type_id', 'in', self.ids),
+            ('time_type_id', 'in', self.ids),
         ]
         action['context'] = {
             'employee_id': False,
-            'default_work_entry_type_id': self.ids[0],
+            'default_time_type_id': self.ids[0],
             'search_default_approved_state': 1,
             'search_default_year': 1,
         }
@@ -462,10 +462,10 @@ been taken for this time off type. Changing it now would affect existing employe
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("hr_holidays.hr_leave_action_action_approve_department")
         action['domain'] = [
-            ('work_entry_type_id', '=', self.ids[0]),
+            ('time_type_id', '=', self.ids[0]),
         ]
         action['context'] = {
-            'default_work_entry_type_id': self.ids[0],
+            'default_time_type_id': self.ids[0],
         }
         return action
 
@@ -491,19 +491,19 @@ been taken for this time off type. Changing it now would affect existing employe
         domain = []
         if not hidden_allocations:
             domain.append(('hide_on_dashboard', '=', False))
-        work_entry_types = self.search(domain, order='id')
-        employee_work_entry_type_infos = work_entry_types.get_allocation_data(employee, target_date, same_year_only=same_year_only)[
+        time_types = self.search(domain, order='id')
+        employee_time_type_infos = time_types.get_allocation_data(employee, target_date, same_year_only=same_year_only)[
             employee
         ]
         # We only need to filter allocation_data for the dashboard
         if not self.env.context.get("from_dashboard", False):
-            return employee_work_entry_type_infos
-        filtered_employee_work_entry_type_infos = [
-            work_entry_type_info
-            for work_entry_type_info in employee_work_entry_type_infos
-            if work_entry_type_info[1]["max_leaves"]
+            return employee_time_type_infos
+        filtered_employee_time_type_infos = [
+            time_type_info
+            for time_type_info in employee_time_type_infos
+            if time_type_info[1]["max_leaves"]
         ]
-        return filtered_employee_work_entry_type_infos
+        return filtered_employee_time_type_infos
 
     def get_allocation_data(self, employees, target_date=None, same_year_only=False):
         """Return the balance of the employees for each type of ``self`` on a date.
@@ -543,9 +543,9 @@ been taken for this time off type. Changing it now would affect existing employe
 
         today = fields.Date.context_today(self)
         for employee in employees:
-            for work_entry_type in self:
+            for time_type in self:
                 lt_info = (
-                    work_entry_type.name,
+                    time_type.name,
                     {
                         'remaining_leaves': 0,
                         'virtual_remaining_leaves': 0,
@@ -560,24 +560,24 @@ been taken for this time off type. Changing it now would affect existing employe
                         'holds_changes': False,
                         'total_virtual_excess': 0,
                         'virtual_excess_data': {},
-                        'exceeding_duration': extra_data[employee][work_entry_type]['exceeding_duration'],
-                        'request_unit': work_entry_type.request_unit,
-                        'unit_of_measure': work_entry_type.unit_of_measure,
-                        'allows_negative': work_entry_type.allows_negative,
-                        'max_allowed_negative': work_entry_type.max_allowed_negative,
+                        'exceeding_duration': extra_data[employee][time_type]['exceeding_duration'],
+                        'request_unit': time_type.request_unit,
+                        'unit_of_measure': time_type.unit_of_measure,
+                        'allows_negative': time_type.allows_negative,
+                        'max_allowed_negative': time_type.max_allowed_negative,
                         'employee_company': employee.company_id.id,
                         'employee_country': employee.company_id.country_id.id,
-                        'color': work_entry_type.color,
+                        'color': time_type.color,
                     },
-                    work_entry_type.requires_allocation,
-                    work_entry_type.id)
-                for excess_date, excess_days in extra_data[employee][work_entry_type]['excess_days'].items():
+                    time_type.requires_allocation,
+                    time_type.id)
+                for excess_date, excess_days in extra_data[employee][time_type]['excess_days'].items():
                     amount = excess_days['amount']
                     lt_info[1]['virtual_excess_data'].update({
                         excess_date.strftime('%Y-%m-%d'): excess_days
                     })
                     lt_info[1]['total_virtual_excess'] += amount
-                    if not work_entry_type.allows_negative:
+                    if not time_type.allows_negative:
                         continue
                     lt_info[1]['virtual_leaves_taken'] += amount
                     lt_info[1]['virtual_remaining_leaves'] -= amount
@@ -590,8 +590,8 @@ been taken for this time off type. Changing it now would affect existing employe
                 allocations_now = self.env['hr.leave.allocation']
                 allocations_date = self.env['hr.leave.allocation']
                 allocations_with_remaining_leaves = self.env['hr.leave.allocation']
-                primary_unit = 'hours' if work_entry_type.unit_of_measure == 'hour' else 'days'
-                for allocation, data in allocations_leaves_consumed[employee][work_entry_type].items():
+                primary_unit = 'hours' if time_type.unit_of_measure == 'hour' else 'days'
+                for allocation, data in allocations_leaves_consumed[employee][time_type].items():
                     # We only need the allocation that are valid at the given date
                     if allocation:
                         if allocation.date_from <= today and (not allocation.date_to or allocation.date_to >= today):
@@ -620,7 +620,7 @@ been taken for this time off type. Changing it now would affect existing employe
                         allocations_with_remaining_leaves |= allocation
                 closest_expiration_date, closest_allocation_remaining = self._get_closest_expiring_leaves_date_and_count(
                                                                             allocations_with_remaining_leaves,
-                                                                            allocations_leaves_consumed[employee][work_entry_type],
+                                                                            allocations_leaves_consumed[employee][time_type],
                                                                             target_date,
                                                                             primary_unit,
                                                                         )
@@ -638,7 +638,7 @@ been taken for this time off type. Changing it now would affect existing employe
                         resources_per_tz = employee._get_resources_per_tz(start_datetime)
                         calendar_attendance = calendar._work_intervals_batch(start_datetime, end_datetime, resources_per_tz=resources_per_tz)
                         closest_allocation_dict = calendar._get_attendance_intervals_days_data(calendar_attendance[employee.resource_id.id])
-                    if work_entry_type.unit_of_measure in ['hour']:
+                    if time_type.unit_of_measure in ['hour']:
                         closest_allocation_duration = closest_allocation_dict['hours']
                     else:
                         closest_allocation_duration = closest_allocation_dict['days']
@@ -714,7 +714,7 @@ been taken for this time off type. Changing it now would affect existing employe
                 elif carryover_date and carryover_date == closest_expiration_date:
                     current_lvl = allocation.sudo()._get_current_accrual_plan_level_idx(target_date)[0]
                     max_carried_over_duration = allocation._convert_from_type_request_unit(
-                        current_lvl.max_carriedover_duration, allocation.work_entry_type_id.unit_of_measure)
+                        current_lvl.max_carriedover_duration, allocation.time_type_id.unit_of_measure)
                     expiring_leaves_count += max(0, remaining_leaves[allocation][f'{primary_unit}_virtual_remaining_leaves'] - max_carried_over_duration)
                 elif carried_over_days_expiration_date and carried_over_days_expiration_date == closest_expiration_date:
                     expiring_leaves_count += carried_over_days_expiration_data[allocation]['no_expiring_days']
@@ -742,7 +742,7 @@ been taken for this time off type. Changing it now would affect existing employe
                 continue
             allocation_data = updated_alloc_data[allocation]
             prev_carryover_allocated_duration = allocation._convert_from_type_request_unit(
-                allocation_data['previous_carryover_allocated_duration'], allocation.work_entry_type_id.unit_of_measure, allocation_data)
+                allocation_data['previous_carryover_allocated_duration'], allocation.time_type_id.unit_of_measure, allocation_data)
             leaves_taken = allocation_data['leaves_taken']
             carried_over_days_expiration_data[allocation] = {
                 'expiration_date': allocation_data['carried_over_days_expiration_date'],

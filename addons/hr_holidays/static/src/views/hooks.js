@@ -46,7 +46,7 @@ export function useLeaveCancelWizard() {
 export function useNewAllocationRequest() {
     const addDialog = useOwnedDialogs();
     const timeOffPlugin = usePlugin(TimeOffPlugin);
-    return async ({ employeeId, holidayStatusId, forceLargeDialog }) => {
+    return async ({ employeeId, timeTypeId, forceLargeDialog }) => {
         let size = "md";
         const context = {
             form_view_ref: "hr_holidays.hr_leave_allocation_view_form_dashboard",
@@ -60,8 +60,8 @@ export function useNewAllocationRequest() {
         if (employeeId) {
             context["default_employee_id"] = employeeId;
         }
-        if (holidayStatusId) {
-            context["default_work_entry_type_id"] = holidayStatusId;
+        if (timeTypeId) {
+            context["default_time_type_id"] = timeTypeId;
         }
         addDialog(AllocationFormViewDialog, {
             resModel: "hr.leave.allocation",

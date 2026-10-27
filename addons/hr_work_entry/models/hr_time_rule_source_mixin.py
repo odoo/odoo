@@ -34,7 +34,7 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
     reclassify the source in place and/or create output records of the same model, linked to
     the source.
 
-    The inheriting model must have ``employee_id``, ``work_entry_type_id`` and ``time_rule_id``
+    The inheriting model must have ``employee_id``, ``time_type_id`` and ``time_rule_id``
     fields, set the class attributes below and implement the hooks raising
     ``NotImplementedError``:
 
@@ -154,12 +154,12 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         :param datetime end_utc: naive UTC
         :rtype: float
         """
-        if not rule.work_entry_type_id:
+        if not rule.time_type_id:
             return 0.0
         dummy = self.env['resource.calendar']
         domain = [
             ('employee_id', '=', self.employee_id.id),
-            ('work_entry_type_id', '=', rule.work_entry_type_id.id),
+            ('time_type_id', '=', rule.time_type_id.id),
             ('time_rule_id', '!=', False),
             (self._time_rule_span_start_field, '<', end_utc),
             (self._time_rule_span_end_field, '>', start_utc),
@@ -192,7 +192,7 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         """Return the creation values of a remainder record; must be implemented.
 
         A remainder is a part of the source not covered by any output, when the source is cut.
-        ``work_entry_type_id`` must be left out: the caller sets the source's original type.
+        ``time_type_id`` must be left out: the caller sets the source's original type.
 
         :param datetime df: start, naive UTC
         :param datetime dt: end, naive UTC

@@ -24,14 +24,14 @@ class TestTimeRuleAllocationLog(TransactionCase):
             ],
         })
         cls.env.company.resource_calendar_id = cls.calendar
-        cls.att_type = cls.env.company._get_default_attendance_work_entry_type()
-        cls.env.company.attendance_work_entry_type_id = cls.att_type
-        cls.overtime_type = cls.env.ref('hr_work_entry.generic_work_entry_type_overtime')
+        cls.att_type = cls.env.company._get_default_attendance_time_type()
+        cls.env.company.attendance_time_type_id = cls.att_type
+        cls.overtime_type = cls.env.ref('hr_work_entry.generic_time_type_overtime')
 
         cls.env['hr.time.rule'].search([]).write({'active': False})
 
         # compensatory leave type used across tests
-        cls.comp_type = cls.env['hr.work.entry.type'].create({
+        cls.comp_type = cls.env['hr.time.type'].create({
             'name': 'Compensatory Rest',
             'code': 'COMPLOG',
             'requires_allocation': True,
@@ -55,8 +55,8 @@ class TestTimeRuleAllocationLog(TransactionCase):
             'name': 'Test Rule',
             'calendar_source': 'employee',
             'quantity_period': 'day',
-            'work_entry_type_id': self.overtime_type.id,
-            'condition_work_entry_type_ids': [self.att_type.id],
+            'time_type_id': self.overtime_type.id,
+            'condition_time_type_ids': [self.att_type.id],
             'leave_compensation_rate': 1.0,
             'allocation_type_id': self.comp_type.id,
         }
@@ -73,7 +73,7 @@ class TestTimeRuleAllocationLog(TransactionCase):
     def _alloc(self):
         return self.env['hr.leave.allocation'].sudo().search([
             ('employee_id', '=', self.emp.id),
-            ('work_entry_type_id', '=', self.comp_type.id),
+            ('time_type_id', '=', self.comp_type.id),
         ])
 
     def _logs(self):
@@ -122,8 +122,8 @@ class TestTimeRuleAllocationLog(TransactionCase):
                                msg="3h excess (11h worked - 8h expected) * 100% / 8h = 0.375 days")
 
     def test_log_source_pponly(self):
-        """PP-only rule (no output WET): no child att created -> log references the source."""
-        self._make_rule(work_entry_type_id=False)
+        """PP-only rule (no output time type): no child att created -> log references the source."""
+        self._make_rule(time_type_id=False)
         # Saturday: 0h scheduled -> 4h excess, all pp-only (source annotated, no child)
         att = self._make_att(datetime(2022, 12, 10, 8), datetime(2022, 12, 10, 12))
         att.invalidate_recordset()
@@ -136,33 +136,33 @@ class TestTimeRuleAllocationLog(TransactionCase):
 
     def test_log_source_acc_displaced(self):
         """Acc-displaced credit: R1 tagged by R2 -> R1's credit log references the SOURCE."""
-        # R1: allocate-only (no WET), Saturday, no threshold -> tags all Saturday time
-        # R2: output WET, Saturday -> displaces R1 (R1 goes to acc)
-        alloc_r1 = self.env['hr.work.entry.type'].create({
+        # R1: allocate-only (no time type), Saturday, no threshold -> tags all Saturday time
+        # R2: output time type, Saturday -> displaces R1 (R1 goes to acc)
+        alloc_r1 = self.env['hr.time.type'].create({
             'name': 'Acc R1', 'code': 'ACCR1',
             'requires_allocation': True, 'time_off_selectable': True,
             'leave_validation_type': 'no_validation',
         })
-        ot_r2 = self.env['hr.work.entry.type'].create({
+        ot_r2 = self.env['hr.time.type'].create({
             'name': 'OT R2', 'code': 'OTR2LOG',
             'requires_allocation': False,
-            'request_unit': 'hour',   # must match condition WET's unit (att_type is 'hour')
+            'request_unit': 'hour',   # must match condition time type's unit (att_type is 'hour')
         })
 
         r1 = self.env['hr.time.rule'].create({
             'name': 'R1 Acc Alloc', 'sequence': 10,
-            'work_entry_type_id': False,
+            'time_type_id': False,
             'leave_compensation_rate': 1.0, 'allocation_type_id': alloc_r1.id,
-            'condition_work_entry_type_ids': [self.att_type.id],
+            'condition_time_type_ids': [self.att_type.id],
             'apply_monday': False, 'apply_tuesday': False, 'apply_wednesday': False,
             'apply_thursday': False, 'apply_friday': False,
             'apply_saturday': True, 'apply_sunday': False,
         })
         r2 = self.env['hr.time.rule'].create({
             'name': 'R2 OT', 'sequence': 20,
-            'work_entry_type_id': ot_r2.id,
+            'time_type_id': ot_r2.id,
             'leave_compensation_rate': 0.0,
-            'condition_work_entry_type_ids': [self.att_type.id],
+            'condition_time_type_ids': [self.att_type.id],
             'apply_monday': False, 'apply_tuesday': False, 'apply_wednesday': False,
             'apply_thursday': False, 'apply_friday': False,
             'apply_saturday': True, 'apply_sunday': False,
@@ -173,7 +173,7 @@ class TestTimeRuleAllocationLog(TransactionCase):
         att.invalidate_recordset()
 
         log_r1 = self.env['hr.time.rule.allocation.log'].sudo().search([
-            ('allocation_id.work_entry_type_id', '=', alloc_r1.id),
+            ('allocation_id.time_type_id', '=', alloc_r1.id),
         ])
         self.assertEqual(len(log_r1), 1, "R1 acc credit must produce one log entry")
         self.assertEqual(log_r1.res_model, 'hr.attendance')
@@ -266,7 +266,7 @@ class TestTimeRuleAllocationLog(TransactionCase):
         alloc.invalidate_recordset()
         self.assertAlmostEqual(
             alloc.number_of_days, 0.0, places=5,
-            msg="After write: source credit reversed; engine skips (WET mismatch) -> 0d",
+            msg="After write: source credit reversed; engine skips (time type mismatch) -> 0d",
         )
 
     def test_source_write_no_change_when_non_time_field(self):
@@ -311,12 +311,12 @@ class TestTimeRuleAllocationLog(TransactionCase):
     # leave-source reversal
     def test_leave_source_refuse_reverses_allocation(self):
         """Refusing a source leave that had triggered allocation credits must reverse those credits."""
-        leave_type = self.env['hr.work.entry.type'].create({
+        leave_type = self.env['hr.time.type'].create({
             'name': 'On Call', 'code': 'ONCALL',
             'time_off_selectable': True, 'requires_allocation': False,
             'leave_validation_type': 'no_validation',
         })
-        leave_alloc_type = self.env['hr.work.entry.type'].create({
+        leave_alloc_type = self.env['hr.time.type'].create({
             'name': 'On Call Comp', 'code': 'ONCCMP',
             'requires_allocation': True, 'time_off_selectable': True,
             'leave_validation_type': 'no_validation',
@@ -324,15 +324,15 @@ class TestTimeRuleAllocationLog(TransactionCase):
         # rule: when an on-call leave is created, allocate 100% compensation
         on_call_rule = self.env['hr.time.rule'].create({
             'name': 'On Call Compensation',
-            'work_entry_type_id': False,
+            'time_type_id': False,
             'leave_compensation_rate': 1.0,
             'allocation_type_id': leave_alloc_type.id,
-            'condition_work_entry_type_ids': [leave_type.id],
+            'condition_time_type_ids': [leave_type.id],
         })
 
         leave = self.env['hr.leave'].with_context(leave_fast_create=True, leave_skip_state_check=True).create({
             'employee_id': self.emp.id,
-            'work_entry_type_id': leave_type.id,
+            'time_type_id': leave_type.id,
             'date_from': datetime(2022, 12, 12, 8),
             'date_to': datetime(2022, 12, 12, 12),
             'state': 'validate',
@@ -340,7 +340,7 @@ class TestTimeRuleAllocationLog(TransactionCase):
 
         alloc = self.env['hr.leave.allocation'].sudo().search([
             ('employee_id', '=', self.emp.id),
-            ('work_entry_type_id', '=', leave_alloc_type.id),
+            ('time_type_id', '=', leave_alloc_type.id),
         ])
         self.assertEqual(len(alloc), 1, "Allocation must be created after leave validation")
         days_before = alloc.number_of_days
@@ -372,7 +372,7 @@ class TestTimeRuleAllocationLog(TransactionCase):
         last_friday = last_sat - timedelta(days=1)
         self.env['hr.leave'].sudo().with_context(leave_fast_create=True, leave_skip_state_check=True).create({
             'employee_id': self.emp.id,
-            'work_entry_type_id': self.comp_type.id,
+            'time_type_id': self.comp_type.id,
             'request_date_from': last_friday,
             'request_date_to': last_friday,
             'state': 'validate',
@@ -403,7 +403,7 @@ class TestTimeRuleAllocationLog(TransactionCase):
         # 4h taken, 4h left
         self.env['hr.leave'].sudo().with_context(leave_fast_create=True, leave_skip_state_check=True).create({
             'employee_id': self.emp.id,
-            'work_entry_type_id': self.comp_type.id,
+            'time_type_id': self.comp_type.id,
             'request_date_from': last_friday,
             'request_date_to': last_friday,
             'request_hour_from': 8,
@@ -423,8 +423,8 @@ class TestTimeRuleAllocationLog(TransactionCase):
             'threshold_operator': 'less_than',
             'calendar_source': 'employee',
             'quantity_period': 'day',
-            'work_entry_type_id': undertime_type.id,
-            'condition_work_entry_type_ids': [self.att_type.id],
+            'time_type_id': undertime_type.id,
+            'condition_time_type_ids': [self.att_type.id],
             'leave_compensation_rate': 1.0,
             'allocation_type_id': self.comp_type.id,
         }
@@ -434,14 +434,14 @@ class TestTimeRuleAllocationLog(TransactionCase):
     def _make_deficit_allocation(self, days=2.0):
         alloc = self.env['hr.leave.allocation'].sudo().create({
             'employee_id': self.emp.id,
-            'work_entry_type_id': self.comp_type.id,
+            'time_type_id': self.comp_type.id,
             'number_of_days': days,
             'date_to': False,
         })
         return alloc
 
     def test_deficit_output_log_keyed_to_output_record(self):
-        undertime_type = self.env['hr.work.entry.type'].create({
+        undertime_type = self.env['hr.time.type'].create({
             'name': 'Undertime', 'code': 'ULMLOG',
             'requires_allocation': False,
         })
@@ -467,7 +467,7 @@ class TestTimeRuleAllocationLog(TransactionCase):
                                msg="2h deficit * 100% / 8h = -0.25 days (deduction)")
 
     def test_deficit_output_unlink_restores_allocation(self):
-        undertime_type = self.env['hr.work.entry.type'].create({
+        undertime_type = self.env['hr.time.type'].create({
             'name': 'Undertime', 'code': 'ULMREV',
             'requires_allocation': False,
         })

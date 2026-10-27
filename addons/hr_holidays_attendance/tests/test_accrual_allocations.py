@@ -15,7 +15,7 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
     @classmethod
     def setUpClass(cls):
         super(TestAccrualAllocationsAttendance, cls).setUpClass()
-        cls.work_entry_type = cls.env['hr.work.entry.type'].create({
+        cls.time_type = cls.env['hr.time.type'].create({
             'name': 'Paid Time Off',
             'code': 'Paid Time Off',
             'count_as': 'absence',
@@ -29,7 +29,7 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
         with freeze_time("2017-12-05"):
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'is_based_on_worked_time': True,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'milestone_date': 'after',
@@ -47,7 +47,7 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 0,
             })
             self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
@@ -73,7 +73,7 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
     def test_accrual_allocation_based_on_attendance(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'is_based_on_worked_time': False,
             'accrued_gain_time': 'end',
             'can_be_carryover': True,
@@ -104,7 +104,7 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
         with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as allocation_form:
             allocation_form.accrual_plan_id = accrual_plan
             allocation_form.employee_id = self.employee_emp
-            allocation_form.work_entry_type_id = self.work_entry_type
+            allocation_form.time_type_id = self.time_type
             allocation_form.date_from = datetime.date(2024, 3, 20)
             allocation_form.name = 'Accrual allocation for employee'
             self.assertEqual(allocation_form.number_of_hours, 8.0)
@@ -115,7 +115,7 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
     def test_accrual_allocation_with_overlapping_attendance(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'is_based_on_worked_time': True,
             'accrued_gain_time': 'end',
             'carryover_date': 'year_start',
@@ -133,7 +133,7 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 0,
             })
 
@@ -157,7 +157,7 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
         self.employee_emp.tz = 'Asia/Tokyo'
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
-            'work_entry_type_id': self.work_entry_type.id,
+            'time_type_id': self.time_type.id,
             'is_based_on_worked_time': True,
             'accrued_gain_time': 'end',
             'carryover_date': 'year_start',
@@ -175,7 +175,7 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'work_entry_type_id': self.work_entry_type.id,
+                'time_type_id': self.time_type.id,
                 'number_of_days': 0,
             })
 

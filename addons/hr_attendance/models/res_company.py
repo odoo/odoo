@@ -43,15 +43,15 @@ class ResCompany(models.Model):
         string="Validation Tolerance (Hours)",
         default=0.0,
     )
-    attendance_work_entry_type_id = fields.Many2one(
-        'hr.work.entry.type',
+    attendance_time_type_id = fields.Many2one(
+        'hr.time.type',
         string="Attendance Time Type",
         domain=[('count_as', '=', 'working_time')],
         store=True,
-        compute='_compute_attendance_work_entry_type_id',
+        compute='_compute_attendance_time_type_id',
         readonly=False,
         groups="hr.group_hr_user",
-        help="Work entry type assigned to attendances and read by the time rule engine.",
+        help="Time type assigned to attendances and read by the time rule engine.",
     )
 
     attendance_device_tracking = fields.Boolean(string="Device & Location Tracking", default=False)
@@ -73,21 +73,21 @@ class ResCompany(models.Model):
             company.attendance_kiosk_url = url_join(self.env['res.company'].get_base_url(), '/hr_attendance/%s' % company.attendance_kiosk_key)
 
     @api.depends('country_id')
-    def _compute_attendance_work_entry_type_id(self):
-        fallback = self.env.ref('hr_work_entry.generic_work_entry_type_attendance', raise_if_not_found=False)
+    def _compute_attendance_time_type_id(self):
+        fallback = self.env.ref('hr_work_entry.generic_time_type_attendance', raise_if_not_found=False)
         country_codes = self.mapped('country_id.code')
-        country_types = self.env['hr.work.entry.type'].sudo().search([
+        country_types = self.env['hr.time.type'].sudo().search([
             ('count_as', '=', 'working_time'),
             ('code', '=', '002.00'),
             ('country_code', 'in', country_codes),
         ])
         type_by_country = {t.country_code: t for t in country_types}
         for company in self:
-            current = company.attendance_work_entry_type_id
+            current = company.attendance_time_type_id
             country_specific = type_by_country.get(company.country_id.code)
             if current and (not country_specific or current != fallback):
                 continue
-            company.attendance_work_entry_type_id = country_specific or fallback
+            company.attendance_time_type_id = country_specific or fallback
 
     # ---------------------------------------------------------
     # ORM Overrides

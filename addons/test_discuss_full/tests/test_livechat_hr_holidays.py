@@ -14,7 +14,7 @@ class TestLivechatHrHolidays(HttpCase, MailCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.env["mail.presence"]._update_presence(cls.user_employee)
-        work_entry_type = cls.env['hr.work.entry.type'].create(
+        time_type = cls.env['hr.time.type'].create(
             {
                 "name": "Legal Leaves",
                 "code": "Legal Leaves",
@@ -28,7 +28,7 @@ class TestLivechatHrHolidays(HttpCase, MailCommon):
         cls.env["hr.leave"].with_context(leave_skip_state_check=True).create(
             {
                 "employee_id": employee.id,
-                "work_entry_type_id": work_entry_type.id,
+                "time_type_id": time_type.id,
                 "request_date_from": fields.Datetime.today() + relativedelta(days=-2),
                 "request_date_to": fields.Datetime.today() + relativedelta(days=2),
                 "state": "validate",

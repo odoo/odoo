@@ -86,9 +86,9 @@ class HrExportWorkEntries(models.TransientModel):
             (self.env._('Date'), lambda args: format_date(self.env, args['date'])),
             (self.env._('Company'), lambda args: args['company'].name),
             (self.env._('Company External Code'), lambda args: args['company'].external_code or ''),
-            (self.env._('Name'), lambda args: args['we_collection']['work_entries'][0]['work_entry_type_id']['name'] or ''),
-            (self.env._('Code'), lambda args: args['we_collection']['work_entries'][0]['work_entry_type_id']['code'] or ''),
-            (self.env._('External Code'), lambda args: args['we_collection']['work_entries'][0]['work_entry_type_id']['external_code'] or ''),
+            (self.env._('Name'), lambda args: args['we_collection']['work_entries'][0]['time_type_id']['name'] or ''),
+            (self.env._('Code'), lambda args: args['we_collection']['work_entries'][0]['time_type_id']['code'] or ''),
+            (self.env._('External Code'), lambda args: args['we_collection']['work_entries'][0]['time_type_id']['external_code'] or ''),
             (self.env._('Employee Name'), lambda args: args['employee_id'].name),
             (self.env._('Employee Ext. Code'), lambda args: args['employee_id'].external_code or ''),
             (self.env._('Duration'), lambda args: str(round(int(args['we_collection']['duration'] // 3600), 2))),
@@ -200,7 +200,7 @@ class HrExportEmployee(models.TransientModel):
         work_entries_by_day_and_code = defaultdict(lambda: defaultdict(lambda: dict(work_entries=[], duration=0)))
         for vals in self.version_ids.generate_work_entries(self.export_id.period_start, self.export_id.period_stop):
             date = vals['date']
-            code = vals['work_entry_type_id'].code
+            code = vals['time_type_id'].code
             work_entries_by_day_and_code[date][code]['work_entries'].append(vals)
             work_entries_by_day_and_code[date][code]['duration'] += vals['duration'] * 3600
         return work_entries_by_day_and_code

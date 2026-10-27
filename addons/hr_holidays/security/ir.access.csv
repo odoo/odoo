@@ -60,8 +60,8 @@ hr_leave_allocation_rule_multicompany,Time Off: multi company global rule,hr.lea
                 ('employee_id', '=', False),
                 ('employee_id.company_id', 'in', company_ids),
         ]"
-access_hr_holidays_status_manager,hr.holidays.status manager,hr.work.entry.type,hr_holidays.group_hr_holidays_manager,crud,
-access_hr_holidays_status_employee,hr.holidays.status employee,hr.work.entry.type,hr_holidays.group_hr_holidays_employee,r,
+access_hr_time_type_manager,hr.time.type manager,hr.time.type,hr_holidays.group_hr_holidays_manager,crud,
+access_hr_time_type_employee,hr.time.type employee,hr.time.type,hr_holidays.group_hr_holidays_employee,r,
 hr_leave_report_rule_group_user,Time Off Summary / Report: Internal User,hr.leave.report,hr_holidays.group_hr_holidays_employee,r,"[('has_department_manager_access', '=', True)]"
 hr_leave_report_rule_group_holiday_user,Time Off Summary / Report: All Approver,hr.leave.report,hr_holidays.group_hr_holidays_user,r,
 hr_leave_report_rule_multi_company,Time Off Report: multi company global rule,hr.leave.report,,crud,"[('company_id', 'in', company_ids + [False])]"

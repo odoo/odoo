@@ -11,7 +11,7 @@ class TestTimeoffEvent(TestHrHolidaysCommon):
     def test_no_videocall_url_in_timeoff_event(self):
         """ Test that the timeoff event does not need a video call """
 
-        self.hr_work_entry_type = self.env['hr.work.entry.type'].with_user(self.user_hrmanager).create({
+        self.hr_time_type = self.env['hr.time.type'].with_user(self.user_hrmanager).create({
             'name': 'Time Off Type',
             'code': 'Time Off Type',
             'requires_allocation': False,
@@ -21,7 +21,7 @@ class TestTimeoffEvent(TestHrHolidaysCommon):
         self.holiday = self.env['hr.leave'].with_user(self.user_employee).create({
             'name': 'Time Off 1 sura',
             'employee_id': self.employee_emp.id,
-            'work_entry_type_id': self.hr_work_entry_type.id,
+            'time_type_id': self.hr_time_type.id,
             'request_date_from': datetime(2020, 1, 15),
             'request_date_to': datetime(2020, 1, 15) + relativedelta(days=1),
         })

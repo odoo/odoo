@@ -1,7 +1,7 @@
 import { fields, models } from "@web/../tests/web_test_helpers";
 
-export class HrWorkEntryType extends models.Model {
-    _name = "hr.work.entry.type";
+export class HrTimeType extends models.Model {
+    _name = "hr.time.type";
 
     id = fields.Integer();
     name = fields.Char();

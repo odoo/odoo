@@ -17,11 +17,11 @@ beforeEach(() => {
             department_id: 11,
             date_from: "2016-10-20 09:00:00",
             date_to: "2016-10-25 18:00:00",
-            work_entry_type_id: 55,
+            time_type_id: 55,
             state: "validate",
             number_of_days: 5,
             number_of_hours: 40,
-            work_entry_type_request_unit: "day",
+            time_type_request_unit: "day",
         },
         {
             id: 13,
@@ -29,11 +29,11 @@ beforeEach(() => {
             department_id: 11,
             date_from: "2016-10-02 09:00:00",
             date_to: "2016-10-02 18:00:00",
-            work_entry_type_id: 55,
+            time_type_id: 55,
             state: "validate",
             number_of_days: 1,
             number_of_hours: 8,
-            work_entry_type_request_unit: "day",
+            time_type_request_unit: "day",
         },
         {
             id: 14,
@@ -41,11 +41,11 @@ beforeEach(() => {
             department_id: 11,
             date_from: "2016-10-15 09:00:00",
             date_to: "2016-10-21 18:00:00",
-            work_entry_type_id: 55,
+            time_type_id: 55,
             state: "confirm",
             number_of_days: 8,
             number_of_hours: 64,
-            work_entry_type_request_unit: "day",
+            time_type_request_unit: "day",
         },
         {
             id: 15,
@@ -53,11 +53,11 @@ beforeEach(() => {
             department_id: 11,
             date_from: "2016-10-05 10:00:00",
             date_to: "2016-10-05 11:00:00",
-            work_entry_type_id: 65,
+            time_type_id: 65,
             state: "validate",
             number_of_days: 0,
             number_of_hours: 1,
-            work_entry_type_request_unit: "hour",
+            time_type_request_unit: "hour",
         },
         {
             id: 16,
@@ -65,11 +65,11 @@ beforeEach(() => {
             department_id: 11,
             date_from: "2016-09-11 09:00:00",
             date_to: "2016-09-12 18:00:00",
-            work_entry_type_id: 55,
+            time_type_id: 55,
             state: "validate",
             number_of_days: 2,
             number_of_hours: 16,
-            work_entry_type_request_unit: "day",
+            time_type_request_unit: "day",
         },
         {
             id: 17,
@@ -77,18 +77,18 @@ beforeEach(() => {
             department_id: 11,
             date_from: "2016-10-16 09:00:00",
             date_to: "2016-10-16 11:00:00",
-            work_entry_type_id: 65,
+            time_type_id: 65,
             state: "validate",
             number_of_days: 0,
             number_of_hours: 2,
-            work_entry_type_request_unit: "hour",
+            time_type_request_unit: "hour",
         },
     ];
 });
 
 test("leave stats render correctly", async () => {
     onRpc(({ method, model }) => {
-        if (model === "hr.work.entry.type" && method === "get_allocation_data_request") {
+        if (model === "hr.time.type" && method === "get_allocation_data_request") {
             return [
                 [
                     "Legal Leave",
@@ -116,7 +116,7 @@ test("leave stats render correctly", async () => {
                 ],
             ];
         }
-        if (model === "hr.work.entry.type" && method === "search_read") {
+        if (model === "hr.time.type" && method === "search_read") {
             return [
                 { id: 55, color: 1 },
                 { id: 65, color: 2 },
@@ -163,10 +163,10 @@ test("leave stats render correctly", async () => {
 
 test("leave stats reload when employee/department changes", async () => {
     onRpc(({ args, kwargs, method, model }) => {
-        if (model === "hr.work.entry.type" && method === "get_allocation_data_request") {
+        if (model === "hr.time.type" && method === "get_allocation_data_request") {
             return [];
         }
-        if (model === "hr.work.entry.type" && method === "search_read") {
+        if (model === "hr.time.type" && method === "search_read") {
             return [];
         }
 

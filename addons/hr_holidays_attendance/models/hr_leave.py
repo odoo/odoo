@@ -17,4 +17,4 @@ class HrLeave(models.Model):
             h, rem = divmod(int(total_seconds), 3600)
             m = rem // 60
             duration = f'{h}h{m:02d}' if m else f'{h}h'
-            leave.display_name = f'{leave.work_entry_type_id.name} {duration}'.strip()
+            leave.display_name = f'{leave.time_type_id.name} {duration}'.strip()

@@ -33,7 +33,7 @@ async function mountYearCalendar(context = {}, getUnusualDays = () => ({})) {
                       show_unusual_days="1"
                       mode="year">
                 <field name="display_name" string=""/>
-                <field name="work_entry_type_id" filters="1" invisible="1" color="color"/>
+                <field name="time_type_id" filters="1" invisible="1" color="color"/>
                 <field name="state" invisible="1"/>
             </calendar>`,
     });
@@ -90,7 +90,7 @@ test("a time off in days ends on the day its exclusive bound closes", async () =
             state: "validate",
             date_from: "2024-01-09 00:00:00",
             date_to: "2024-01-11 00:00:00",
-            work_entry_type_request_unit: "day",
+            time_type_request_unit: "day",
         },
     ];
     await mountYearCalendar();
@@ -120,7 +120,7 @@ test("time off covering the same days shares a group", async () => {
             state: "validate",
             date_from: "2024-01-09 00:00:00",
             date_to: "2024-01-10 00:00:00",
-            work_entry_type_request_unit: "day",
+            time_type_request_unit: "day",
         },
         {
             id: 2,
@@ -128,7 +128,7 @@ test("time off covering the same days shares a group", async () => {
             state: "validate",
             date_from: "2024-01-09 08:00:00",
             date_to: "2024-01-09 12:00:00",
-            work_entry_type_request_unit: "hour",
+            time_type_request_unit: "hour",
         },
     ];
     await mountYearCalendar();
@@ -149,7 +149,7 @@ test("a time off in hours ends inside the day it names", async () => {
             state: "validate",
             date_from: "2024-01-09 08:00:00",
             date_to: "2024-01-09 12:00:00",
-            work_entry_type_request_unit: "hour",
+            time_type_request_unit: "hour",
         },
     ];
     await mountYearCalendar();

@@ -22,7 +22,7 @@ class TestHrHolidaysAccessRightsCommon(TestHrHolidaysCommon):
             'date_to': datetime(2024, 1, 3, 19, 0, 0),
         })
         public_leave.company_id = self.company_2
-        work_entry_type = self.env['hr.work.entry.type'].create({
+        time_type = self.env['hr.time.type'].create({
             'name': 'Test Leave Type',
             'code': 'Test Leave Type',
             'requires_allocation': False,
@@ -32,7 +32,7 @@ class TestHrHolidaysAccessRightsCommon(TestHrHolidaysCommon):
         leave = self.env['hr.leave'].create({
             'name': '3 days leave',
             'employee_id': self.employee_emp_id,
-            'work_entry_type_id': work_entry_type.id,
+            'time_type_id': time_type.id,
             'request_date_from': date(2024, 1, 2),
             'request_date_to': datetime(2024, 1, 4),
         })

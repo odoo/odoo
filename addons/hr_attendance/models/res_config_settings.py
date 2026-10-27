@@ -20,8 +20,8 @@ class ResConfigSettings(models.TransientModel):
     absence_management = fields.Boolean(related="company_id.absence_management", readonly=False)
     attendance_validation = fields.Selection(related="company_id.attendance_validation", readonly=False)
     attendance_validation_tolerance = fields.Float(related="company_id.attendance_validation_tolerance", readonly=False)
-    attendance_work_entry_type_id = fields.Many2one(
-        related='company_id.attendance_work_entry_type_id',
+    attendance_time_type_id = fields.Many2one(
+        related='company_id.attendance_time_type_id',
         readonly=False,
     )
     attendance_device_tracking = fields.Boolean(related="company_id.attendance_device_tracking", readonly=False)

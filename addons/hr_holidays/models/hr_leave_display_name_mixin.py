@@ -30,20 +30,20 @@ class HrLeaveDisplayNameMixin(models.AbstractModel):
         tz,
         leave,
         employee_name,
-        work_entry_type_display,
+        time_type_display,
         duration_display,
     ):
         user_tz = ZoneInfo(tz)
         date_from_utc = leave.date_from and leave.date_from.astimezone(user_tz).date()
         date_to_utc = leave.date_to and leave.date_to.astimezone(user_tz).date()
 
-        custom_duration = self._get_leave_duration_display(leave.work_entry_type_request_unit, leave.number_of_hours, leave.number_of_days)
+        custom_duration = self._get_leave_duration_display(leave.time_type_request_unit, leave.number_of_hours, leave.number_of_days)
         display_date = self._get_leave_display_date(date_from_utc, date_to_utc, leave.number_of_days)
         is_hr_user = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
         ctx = self.env.context
 
         if ctx.get('short_name'):
-            short_name = leave.name or work_entry_type_display or self.env._('Time Off')
+            short_name = leave.name or time_type_display or self.env._('Time Off')
             return self.env._("%(name)s: %(duration)s", name=short_name, duration=duration_display)
 
         hide_employee = (
@@ -55,13 +55,13 @@ class HrLeaveDisplayNameMixin(models.AbstractModel):
                 return custom_duration
             if is_hr_user:
                 return self.env._(
-                    "%(work_entry_type)s %(duration)s",
-                    work_entry_type=work_entry_type_display,
+                    "%(time_type)s %(duration)s",
+                    time_type=time_type_display,
                     duration=custom_duration,
                 )
             return self.env._("%(duration)s", duration=duration_display)
 
-        if not work_entry_type_display:
+        if not time_type_display:
             return self.env._(
                 "%(person)s: %(duration)s (%(start)s)",
                 person=employee_name,
@@ -70,9 +70,9 @@ class HrLeaveDisplayNameMixin(models.AbstractModel):
             )
 
         return self.env._(
-            "%(person)s on %(work_entry_type)s: %(duration)s (%(start)s)",
+            "%(person)s on %(time_type)s: %(duration)s (%(start)s)",
             person=employee_name,
-            work_entry_type=work_entry_type_display,
+            time_type=time_type_display,
             duration=duration_display,
             start=display_date,
         )

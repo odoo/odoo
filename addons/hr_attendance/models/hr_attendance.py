@@ -84,13 +84,13 @@ class HrAttendance(models.Model):
     )
     resource_calendar_id = fields.Many2one(related='employee_id.resource_calendar_id', string="Working Schedule")
     break_duration = fields.Float(string="Break Duration", tracking=True, help="Extra unpaid break duration (hours)")
-    work_entry_type_id = fields.Many2one(
-        'hr.work.entry.type', string="Time Type", index=True, required=True,
-        default=lambda self: self.env.company.sudo().attendance_work_entry_type_id,
+    time_type_id = fields.Many2one(
+        'hr.time.type', string="Time Type", index=True, required=True,
+        default=lambda self: self.env.company.sudo().attendance_time_type_id,
     )
-    wet_display_code = fields.Char(related='work_entry_type_id.display_code', export_string_translation=False)
-    # color index of the linked work entry type, used by calendar/gantt views
-    wet_color = fields.Integer(string="Work Entry Color", related='work_entry_type_id.color', export_string_translation=False)
+    time_type_display_code = fields.Char(related='time_type_id.display_code', export_string_translation=False)
+    # color index of the linked time type, used by calendar/gantt views
+    time_type_color = fields.Integer(string="Work Entry Color", related='time_type_id.color', export_string_translation=False)
 
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -129,18 +129,18 @@ class HrAttendance(models.Model):
             else:
                 attendance.color = 1 if attendance.check_in < (datetime.today() - timedelta(days=1)) else 10
 
-    @api.depends('employee_id', 'check_in', 'check_out', 'work_entry_type_id', 'source_stale')
+    @api.depends('employee_id', 'check_in', 'check_out', 'time_type_id', 'source_stale')
     def _compute_display_name(self):
         for attendance in self:
-            wet = attendance.work_entry_type_id
-            wet_name = wet.display_code or wet.name or ''
+            time_type = attendance.time_type_id
+            time_type_name = time_type.display_code or time_type.name or ''
             if not attendance.check_out:
-                name = wet_name or _("In Progress")
+                name = time_type_name or _("In Progress")
             else:
                 total_mins = round(attendance.worked_hours * 60)
                 h, m = divmod(total_mins, 60)
                 dur = f"{h}h {m}m" if m else f"{h}h"
-                name = f"{wet_name} - {dur}" if wet_name else dur
+                name = f"{time_type_name} - {dur}" if time_type_name else dur
             attendance.display_name = f"⚠ {name}" if attendance.source_stale else name
 
     @api.depends_context('uid')
@@ -253,7 +253,7 @@ class HrAttendance(models.Model):
                                                        datetime=format_datetime(self.env, last_attendance_before_check_out.check_in, dt_format=False)))
 
     # fields whose change on a source attendance should warn surviving outputs
-    _STALE_TRIGGER_FIELDS = frozenset({'check_in', 'check_out', 'break_duration', 'employee_id', 'work_entry_type_id'})
+    _STALE_TRIGGER_FIELDS = frozenset({'check_in', 'check_out', 'break_duration', 'employee_id', 'time_type_id'})
 
     def write(self, vals):
         """Write ``vals``, then flag the time rule outputs and validate within tolerance.
@@ -586,7 +586,7 @@ class HrAttendance(models.Model):
             technical_attendances_vals.append({
                 'check_in': check_in_utc.strftime('%Y-%m-%d %H:%M:%S'),
                 'check_out': (check_in_utc + relativedelta(seconds=1)).strftime('%Y-%m-%d %H:%M:%S'),
-                'work_entry_type_id': emp.company_id.attendance_work_entry_type_id.id,
+                'time_type_id': emp.company_id.attendance_time_type_id.id,
                 'in_mode': 'technical',
                 'out_mode': 'technical',
                 'employee_id': emp.id,
@@ -754,11 +754,11 @@ class HrAttendance(models.Model):
         return self.break_duration or 0.0
 
     def _get_write_source_extra_source_fields(self):
-        """Writing ``work_entry_type_id``, ``state`` or ``break_duration`` also runs the rules.
+        """Writing ``time_type_id``, ``state`` or ``break_duration`` also runs the rules.
 
         :rtype: set[str]
         """
-        return {'work_entry_type_id', 'state', 'break_duration'}
+        return {'time_type_id', 'state', 'break_duration'}
 
     def _update_tolerance_state(self):
         """Validate the closed draft attendances within the tolerance of their company.
