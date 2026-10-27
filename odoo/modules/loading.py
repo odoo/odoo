@@ -392,7 +392,7 @@ def load_modules(
 
         if update_module and tools.sql.table_exists(cr, 'ir_model_fields'):
             # determine the fields which are currently translated in the database
-            cr.execute("SELECT model || '.' || name, translate FROM ir_model_fields WHERE translate IS NOT NULL AND translate IS NOT FALSE")
+            cr.execute("SELECT model || '.' || name, translate FROM ir_model_fields WHERE translate::text <> 'false'")
             registry._database_translated_fields = dict(cr.fetchall())
 
             # determine the fields which are currently company dependent in the database
