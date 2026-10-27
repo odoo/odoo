@@ -136,6 +136,10 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             // The first order made in the session is a floating order.
             TicketScreen.deleteOrder("002"),
             Dialog.confirm(),
+            {
+                content: "wait for order 002 to be actually deleted",
+                trigger: ".ticket-screen:not(:has(.order-row:contains(002)))",
+            },
             Chrome.isSyncStatusConnected(),
             TicketScreen.selectOrder("005"),
             TicketScreen.loadSelectedOrder(),
