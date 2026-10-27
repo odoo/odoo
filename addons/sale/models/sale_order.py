@@ -765,7 +765,7 @@ class SaleOrder(models.Model):
         # directly linked to the SO.
         for order in self:
             invoices = order.order_line.invoice_lines.move_id.filtered(
-                lambda r: r.move_type in ("out_invoice", "out_refund")
+                lambda r: r.move_type in ("out_invoice", "out_refund", "out_receipt")
             )
             order.invoice_ids = invoices
             order.invoice_count = len(invoices)
@@ -789,7 +789,7 @@ class SaleOrder(models.Model):
                     (
                         "order_line",
                         "not any",
-                        [("invoice_lines.move_id.move_type", "in", ("out_invoice", "out_refund"))],
+                        [("invoice_lines.move_id.move_type", "in", ("out_invoice", "out_refund", "out_receipt"))],
                     )
                 ]
                 if len(value) == 1:
@@ -803,7 +803,7 @@ class SaleOrder(models.Model):
                     JOIN account_move_line aml ON aml.id = soli_rel.invoice_line_id
                     JOIN account_move am ON am.id = aml.move_id
                 WHERE
-                    am.move_type in ('out_invoice', 'out_refund') AND
+                    am.move_type in ('out_invoice', 'out_refund', 'out_receipt') AND
                     am.id = ANY(%s)
             """,
                 (list(value),),
@@ -815,7 +815,7 @@ class SaleOrder(models.Model):
                 "order_line.invoice_lines",
                 "any",
                 [
-                    ("move_id.move_type", "in", ("out_invoice", "out_refund")),
+                    ("move_id.move_type", "in", ("out_invoice", "out_refund", "out_receipt")),
                     ("move_id", operator, value),
                 ],
             )
