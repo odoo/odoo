@@ -82,6 +82,7 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
         """ Modifications of a used tax should be logged. """
         self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
         self.set_up_and_use_tax()
+        self.company_data['company'].account_sale_tax_id = False
         self.flush_tracking()
 
         old_amount = self.company_data['default_tax_sale'].amount
