@@ -116,6 +116,20 @@ class PaymentTransaction(models.Model):
             if tx_status in const.TRANSACTION_STATUS_MAPPING["authorized"]:
                 # The payment has not been settled on Authorize.net yet. It must be voided rather
                 # than refunded. Since the funds have not moved yet, we don't create a refund tx.
+                # A void always cancels the full amount, so partial refunds must wait.
+                if self.currency_id.compare_amounts(
+                    -self.amount, self.source_transaction_id.amount
+                ) < 0:
+                    self.with_context(
+                        payment_safe_write=True  # The API call is idempotent
+                    )._set_error(
+                        self.env._(
+                            "The payment has not been settled on Authorize.net yet and can only"
+                            " be refunded in full. Partial refunds are possible once it is"
+                            " settled."
+                        )
+                    )
+                    return None
                 res_content = authorize_api.void(self.source_transaction_id.provider_reference)
             else:
                 # The payment has been settled on Authorize.net side. We can refund it.

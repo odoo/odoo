@@ -79,6 +79,44 @@ class TestRefundFlows(AuthorizeCommon):
         ])
         self.assertTrue(refund_tx)
 
+    def test_partially_refunding_authorized_tx_does_not_void_it(self):
+        """Test that a partial refund of a transaction that is not settled yet on Authorize.net side
+        is rejected rather than voiding the full amount."""
+        source_tx = self._create_transaction("direct", state="done")
+        with (
+            patch(
+                "odoo.addons.payment_authorize.models.authorize_request.AuthorizeAPI"
+                ".get_transaction_details",
+                return_value={"transaction": {"transactionStatus": "capturedPendingSettlement"}},
+            ),
+            patch(
+                "odoo.addons.payment_authorize.models.authorize_request.AuthorizeAPI.void",
+            ) as void_mock,
+        ):
+            refund_tx = source_tx._refund(amount_to_refund=source_tx.amount / 2)
+        self.assertEqual(void_mock.call_count, 0)
+        self.assertEqual(refund_tx.state, "error")
+
+    @mute_logger("odoo.addons.payment_authorize.models.payment_transaction")
+    def test_partially_refunding_captured_tx_refunds_partial_amount(self):
+        """Test that a partial refund of a settled transaction is sent to Authorize.net with the
+        partial amount."""
+        source_tx = self._create_transaction("direct", state="done")
+        with (
+            patch(
+                "odoo.addons.payment_authorize.models.authorize_request.AuthorizeAPI"
+                ".get_transaction_details",
+                return_value={"transaction": {"transactionStatus": "settledSuccessfully"}},
+            ),
+            patch(
+                "odoo.addons.payment_authorize.models.authorize_request.AuthorizeAPI.refund",
+                return_value={"dummy": True},
+            ) as refund_mock,
+        ):
+            source_tx._refund(amount_to_refund=100.0)
+        self.assertEqual(refund_mock.call_count, 1)
+        self.assertAlmostEqual(abs(refund_mock.call_args.args[1]), 100.0, places=2)
+
     def test_voided_refund_tx_is_done(self):
         """Test that voided refund transactions due to the payment not being settled yet are
         correctly marked as done."""
