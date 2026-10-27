@@ -4,7 +4,7 @@
     <t t-name="mrp_subcontracting.BomOverviewTable" t-inherit="mrp.BomOverviewTable" t-inherit-mode="extension">
         <xpath expr="//th[@name='th_mrp_bom_free_to_use']" position="after">
             <th t-if="this.forecastMode and this.env.isSubcontract" class="text-center"
-                title="Availabilities on subcontract location.">
+                title="Availability on subcontract location.">
                 Subcontractor Stock
             </th>
         </xpath>
