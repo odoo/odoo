@@ -1752,6 +1752,59 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             "The amount_unpaid for the SO should be equal to amount_paid after a postpaid transaction."
         )
 
+    def test_invoice_settled_so_with_combo_product(self):
+        self.main_pos_config.open_ui()
+        product = self.desk_pad.product_variant_id
+        combo = self.env['product.combo'].create({
+            'name': 'Desk Combo',
+            'combo_item_ids': [Command.create({'product_id': product.id, 'extra_price': 0})],
+        })
+        combo_product = self.env['product.product'].create({
+            'name': 'Combo Product',
+            'type': 'combo',
+            'list_price': product.lst_price,
+            'taxes_id': [],
+            'combo_ids': [Command.set(combo.ids)],
+        })
+        so = self.env['sale.order'].sudo().create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({'product_id': combo_product.id, 'product_uom_qty': 1})],
+        })
+        so.order_line = [Command.create({
+            'product_id': product.id,
+            'product_uom_qty': 1,
+            'linked_line_id': so.order_line.id,
+            'combo_item_id': combo.combo_item_ids.id,
+        })]
+        so.action_confirm()
+        combo_so_line, item_so_line = so.order_line.sorted('id')
+        pos_order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': self.main_pos_config.current_session_id.id,
+            'partner_id': self.partner_a.id,
+            'lines': [Command.create({
+                'product_id': combo_product.id, 'price_unit': 0.0, 'qty': 1.0,
+                'tax_ids': [], 'price_subtotal': 0.0, 'price_subtotal_incl': 0.0,
+                'sale_order_line_id': combo_so_line.id,
+                'sale_order_origin_id': so.id,
+            })],
+            'amount_total': product.lst_price, 'amount_tax': 0.0,
+            'amount_paid': 0.0, 'amount_return': 0.0,
+        })
+        pos_order.lines = [Command.create({
+            'product_id': product.id, 'price_unit': product.lst_price, 'qty': 1.0,
+            'tax_ids': [], 'price_subtotal': product.lst_price,
+            'price_subtotal_incl': product.lst_price,
+            'sale_order_line_id': item_so_line.id,
+            'sale_order_origin_id': so.id,
+            'combo_parent_id': pos_order.lines.id,
+            'combo_item_id': combo.combo_item_ids.id,
+        })]
+        pos_order.action_pos_order_invoice()
+        invoice_lines = pos_order.account_move.invoice_line_ids
+        self.assertEqual(invoice_lines.mapped('display_type'), ['line_section', 'product'])
+        self.assertEqual(invoice_lines.filtered(lambda l: l.display_type == 'product').price_subtotal, product.lst_price)
+
 
 @tagged('post_install', '-at_install')
 class TestPoSSalePayment(TestPointOfSaleHttpCommon, PaymentCommon):
