@@ -310,6 +310,53 @@ class TestProductPricelist(ProductCommon):
         # Assert: The set value is kept
         self.assertEqual(pricelist_item.min_quantity, precise_value)
 
+    def test_pricelist_child_category_rule_priority(self):
+        """Rules on a child category must take precedence over rules on its parent category,
+        regardless of the category names."""
+        all_categ = self.env['product.category'].create({'name': 'All'})
+        drinks_categ = self.env['product.category'].create({
+            'name': 'Drinks',
+            'parent_id': all_categ.id,
+        })
+        soft_categ = self.env['product.category'].create({
+            'name': 'Soft',
+            'parent_id': drinks_categ.id,
+        })
+        soft_product, drinks_product = self.env['product.product'].create([{
+            'name': 'Soft Drink',
+            'categ_id': soft_categ.id,
+            'list_price': 100.0,
+        }, {
+            'name': 'Other Drink',
+            'categ_id': drinks_categ.id,
+            'list_price': 100.0,
+        }])
+        pricelist = self.env['product.pricelist'].create({
+            'name': 'Category Pricelist',
+            'item_ids': [
+                Command.create({
+                    'applied_on': '2_product_category',
+                    'categ_id': drinks_categ.id,
+                    'compute_price': 'percentage',
+                    'percent_price': 10,
+                }),
+                Command.create({
+                    'applied_on': '2_product_category',
+                    'categ_id': soft_categ.id,
+                    'compute_price': 'percentage',
+                    'percent_price': 5,
+                }),
+            ],
+        })
+
+        self.assertEqual(pricelist._get_product_price(soft_product, 1.0), 95.0)
+        self.assertEqual(pricelist._get_product_price(drinks_product, 1.0), 90.0)
+
+        # A higher minimum quantity still takes precedence over the category depth
+        pricelist.item_ids.filtered(lambda item: item.categ_id == drinks_categ).min_quantity = 10
+        self.assertEqual(pricelist._get_product_price(soft_product, 1.0), 95.0)
+        self.assertEqual(pricelist._get_product_price(soft_product, 10.0), 90.0)
+
     def test_remove_product_on_0_product_variant_applied_on_rule(self):
         """Test generation of applied on based on rule data"""
         self.pricelist_item = self.env['product.pricelist.item'].create({
