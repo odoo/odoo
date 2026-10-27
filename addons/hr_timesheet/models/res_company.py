@@ -9,18 +9,9 @@ class ResCompany(models.Model):
     _inherit = 'res.company'
 
     @api.model
-    def _default_project_time_mode_id(self):
-        return self.env.ref('uom.product_uom_hour', raise_if_not_found=False)
-
-    @api.model
     def _default_timesheet_encode_uom_id(self):
         return self.env.ref('uom.product_uom_hour', raise_if_not_found=False)
 
-    project_time_mode_id = fields.Many2one('uom.uom', string='Project Time Unit',
-        default=_default_project_time_mode_id,
-        help="This will set the unit of measure used in projects and tasks.\n"
-             "If you use the timesheet linked to projects, don't "
-             "forget to setup the right unit of measure in your employees.")
     timesheet_encode_uom_id = fields.Many2one('uom.uom', string="Timesheet Encoding Unit",
         default=_default_timesheet_encode_uom_id)
     internal_project_id = fields.Many2one(
