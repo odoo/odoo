@@ -4,7 +4,6 @@
 <t t-name="html_builder.BackgroundOption">
     <!-- BackgroundToggler -->
     <BuilderRow label.translate="Background" t-if="this.props.withColors or this.props.withImages">
-    <!-- todo adapt when colorpicker is implemented: snippet_options_background_color_widget-->
         <t t-if="this.props.withColors" t-call="html_builder.BackgroundColorWidgetOption"/>
         <t t-if="this.props.withImages">
             <BuilderButton
