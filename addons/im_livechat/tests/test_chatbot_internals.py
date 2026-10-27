@@ -8,6 +8,7 @@ from odoo.exceptions import ValidationError
 from odoo.addons.im_livechat.tests import chatbot_common
 from odoo.addons.bus.tests.common import BusResult
 from odoo.tests.common import JsonRpcException, new_test_user
+from odoo.tools import html2plaintext
 from odoo.tools.misc import mute_logger
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools.discuss import Store
@@ -584,6 +585,49 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
         self.assertEqual(
             {message["id"] for message in data["chatbot.message"]},
             {selection_answer.id, raw_answer.id},
+        )
+
+    def test_store_all_chatbot_answers_of_free_input_multi(self):
+        chatbot_script = self.env["chatbot.script"].create({"title": "Feedback bot"})
+        feedback_step = self.env["chatbot.script.step"].create([
+            {
+                "chatbot_script_id": chatbot_script.id,
+                "message": "Any feedback?",
+                "step_type": "free_input_multi",
+            },
+            {
+                "chatbot_script_id": chatbot_script.id,
+                "message": "Thank you!",
+                "step_type": "text",
+            },
+        ])[0]
+        self.livechat_channel.rule_ids = self.env["im_livechat.channel.rule"].create({
+            "channel_id": self.livechat_channel.id,
+            "chatbot_script_id": chatbot_script.id,
+        })
+        data = self.make_jsonrpc_request("/im_livechat/get_session", {
+            "channel_id": self.livechat_channel.id,
+            "chatbot_script_id": chatbot_script.id,
+        })
+        discuss_channel = self.env["discuss.channel"].browse(data["channel_id"])
+        self.assertEqual(discuss_channel.chatbot_current_step_id, feedback_step)
+        self.make_jsonrpc_request("/mail/message/post", {
+            "thread_model": "discuss.channel",
+            "thread_id": discuss_channel.id,
+            "post_data": {
+                "body": "Great product",
+                "message_type": "comment",
+                "subtype_xmlid": "mail.mt_comment",
+            },
+        })
+        self._post_answer_and_trigger_next_step(discuss_channel, body="Needs a dark mode")
+        data = Store().add(discuss_channel, "_store_livechat_extra_fields")._build_result()
+        answers = self.env["chatbot.message"].browse(
+            sorted(message["id"] for message in data["chatbot.message"])
+        )
+        self.assertEqual(
+            [html2plaintext(answer) for answer in answers.mapped("user_raw_answer")],
+            ["Great product", "Needs a dark mode"],
         )
 
     def test_chatbot_answers_shown_in_info_panel_even_when_messages_not_loaded(self):

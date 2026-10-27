@@ -934,13 +934,18 @@ class DiscussChannel(models.Model):
                     },
                 )
 
-            self.env["chatbot.message"].sudo().create(
-                {
-                    "mail_message_id": message.id,
-                    "discuss_channel_id": self.id,
-                    "script_step_id": self.chatbot_current_step_id.id,
-                },
-            )
+            chatbot_message_vals = {
+                "mail_message_id": message.id,
+                "discuss_channel_id": self.id,
+                "script_step_id": self.chatbot_current_step_id.id,
+            }
+            # Free inputs need no validation: save each customer message as an answer
+            if self.chatbot_current_step_id.step_type in ("free_input_single", "free_input_multi") and (
+                message.author_id in self.livechat_customer_partner_ids
+                or message.author_guest_id in self.livechat_customer_guest_ids
+            ):
+                chatbot_message_vals["user_raw_answer"] = message.body
+            self.env["chatbot.message"].sudo().create(chatbot_message_vals)
 
         author_history = self.env["im_livechat.channel.member.history"]
         # sudo - discuss.channel: accessing history to update its state is acceptable
