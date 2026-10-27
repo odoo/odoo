@@ -8,7 +8,6 @@ import werkzeug
 
 from odoo import api, fields, Command, models, _
 from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
-from odoo.fields import Domain
 from odoo.tools import clean_context, email_normalize, float_repr, float_round, format_date, is_html_empty, parse_version
 
 
@@ -1308,12 +1307,10 @@ class HrExpense(models.Model):
         # - Waiting approval: contains expenses paid by the employee or paid by the company, and that have been submitted but still need to be approved/refused
         # - To be reimbursed: contains ONLY expenses paid by the employee that are approved or posted, the payment has not yet been made
         base_domain = [
-            ('employee_id', 'child_of', self.env.user.employee_ids.ids),
+            ('employee_id', 'in', self.env.user.employee_ids.ids),
             '|', ('state', 'in', ('draft', 'submitted')),
             '&', ('payment_mode', '=', 'own_account'), ('state', 'in', {'approved', 'posted'})
         ]
-        if domain := self.env.context.get('domain'):
-            base_domain = Domain.AND([base_domain, domain])
 
         fetched_expenses = self._read_group(base_domain, ['state'], ['total_amount:sum'])
         for state, total_amount_sum in fetched_expenses:

@@ -30,13 +30,7 @@ export class ExpenseDashboard extends Component {
     }
 
     async fetchExpenseDashboardData() {
-        const domain = this.env.searchModel?.domain ?? [];
-        const expense_states = await this.orm.call(
-            "hr.expense",
-            'get_expense_dashboard',
-            [],
-            { context: { domain: domain }}
-        );
+        const expense_states = await this.orm.call("hr.expense", 'get_expense_dashboard', []);
 
         this.state.expenses = expense_states;
     }
@@ -64,6 +58,11 @@ export class ExpenseDashboard extends Component {
             stateActiveFilters.forEach(item => {
                 searchModel.toggleSearchItem(item.searchItemId);
             });
+        }
+        // The stages are about the employee's own expenses so apply "My Expenses"
+        const [myExpenses] = searchModel.getSearchItems((item) => item.name === "my_open_expenses");
+        if (myExpenses && !myExpenses.isActive) {
+            searchModel.toggleSearchItem(myExpenses.id);
         }
         // Toggle the filter corresponding to the current state
         const searchItem = Object.values(searchModel.searchItems).find(
