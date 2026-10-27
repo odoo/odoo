@@ -1,6 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { throttleForAnimation } from "@web/core/utils/timing";
-import { getScrollingElement, getScrollingTarget } from "@web/core/utils/scrolling";
+import { addOverlayListeners } from "@html_builder/utils/utils";
 import { BuilderOverlay, sizingY, sizingX, sizingGrid } from "./builder_overlay";
 
 function isResizable(el) {
@@ -52,44 +51,16 @@ export class BuilderOverlayPlugin extends Plugin {
         // Refresh the overlays position everytime their target size changes.
         this.resizeObserver = new ResizeObserver(() => this.refreshPositions());
 
-        this._refreshOverlays = throttleForAnimation(this.refreshOverlays.bind(this));
-
-        // Recompute the overlay when the window is resized.
-        this.addDomListener(window, "resize", this._refreshOverlays);
+        this._refreshOverlays = addOverlayListeners(this, {
+            refresh: this.refreshOverlays.bind(this),
+            hide: () => this.toggleOverlaysVisibility(false),
+            show: () => {
+                this.toggleOverlaysVisibility(true);
+                this.refreshPositions();
+            },
+        });
         this.documentResizeObserver = new ResizeObserver(() => this._refreshOverlays());
         this.documentResizeObserver.observe(this.document.documentElement);
-
-        // On keydown, hide the overlay and then show it again when the mouse
-        // moves.
-        const onMouseMoveOrDown = throttleForAnimation(() => {
-            this.toggleOverlaysVisibility(true);
-            this.refreshPositions();
-            this.editable.removeEventListener("mousemove", onMouseMoveOrDown);
-            this.editable.removeEventListener("mousedown", onMouseMoveOrDown);
-        });
-        this.addDomListener(this.editable, "keydown", () => {
-            this.toggleOverlaysVisibility(false);
-            this.editable.addEventListener("mousemove", onMouseMoveOrDown);
-            this.editable.addEventListener("mousedown", onMouseMoveOrDown);
-        });
-
-        // Hide the overlay when scrolling. Show it again when the scroll is
-        // over and recompute its position.
-        const scrollingElement = getScrollingElement(this.document);
-        const scrollingTarget = getScrollingTarget(scrollingElement);
-        this.addDomListener(
-            scrollingTarget,
-            "scroll",
-            throttleForAnimation(() => {
-                this.toggleOverlaysVisibility(false);
-                clearTimeout(this.scrollingTimeout);
-                this.scrollingTimeout = setTimeout(() => {
-                    this.toggleOverlaysVisibility(true);
-                    this.refreshPositions();
-                }, 250);
-            }),
-            { capture: true, passive: true }
-        );
 
         this.addDomListener(this.editable, "mouseleave", () => {
             this.removeHoverOverlay();
