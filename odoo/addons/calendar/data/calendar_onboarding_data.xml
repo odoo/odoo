@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- ONBOARDING STEPS -->
+        <record id="onboarding_onboarding_step_setup_calendar_integration" model="onboarding.onboarding.step">
+            <field name="title">Connect your calendar</field>
+            <field name="description">With Outlook or Google</field>
+            <field name="button_text">Add</field>
+            <field name="done_text">Done!</field>
+            <field name="panel_step_open_action_name">action_view_start_calendar_sync</field>
+            <field name="step_image" type="base64" file="base/static/img/onboarding_calendar.png"></field>
+            <field name="step_image_filename">onboarding_calendar.png</field>
+            <field name="step_image_alt">Onboarding Calendar Synchronization</field>
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="onboarding_onboarding_calendar" model="onboarding.onboarding">
+            <field name="name">Calendar Onboarding</field>
+            <field name="step_ids" eval="[(4, ref('calendar.onboarding_onboarding_step_setup_calendar_integration'))]"/>
+            <field name="panel_close_action_name">action_close_calendar_onboarding</field>
+            <field name="route_name">calendar</field>
+        </record>
+    </data>
+</odoo>

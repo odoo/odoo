@@ -1,0 +1,185 @@
+.o_kanban_dashboard .o_kanban_renderer {
+    // ----------------------------------------------------------------------------
+    // Customize kanbanView default values
+
+    --KanbanRecord-padding-v: #{$o-kanban-dashboard-vpadding};
+    --KanbanRecord-padding-h: #{$o-kanban-dashboard-hpadding};
+
+    --KanbanRecord__dropdown-gap: 0px;
+    // ----------------------------------------------------------------------------
+
+    .o_kanban_record > div:not(.o_dropdown_kanban) {
+        position: relative;
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: space-between;
+
+        @include media-breakpoint-down(md) {
+            margin-bottom: 10px;
+        }
+
+        // ------- Generic layout adaptations -------
+        .container {
+            width: 100%;
+            max-width: none;
+        }
+
+        // -------  Kanban Record Titles -------
+        // Uniform design across different HTML layouts
+
+        // Uniform titles
+        .o_kanban_card_header_title .o_primary,
+        .o_kanban_primary_left .o_primary > span:first-child,
+        .oe_kanban_content > .o_title > h3 {
+            @include o-kanban-record-title($font-size: 16px);
+            display: block;
+        }
+
+        // Identify subtitles without classes
+        .o_kanban_primary_left .o_primary > span:nth-child(2) > strong {
+            font-weight: 500;
+            font-size: $font-size-sm;
+            color: $text-muted;
+        }
+
+        // -------  Kanban Content -------
+        .o_kanban_card_content {
+            display: inline-block;
+            vertical-align: top;
+            min-height: 80px;
+        }
+
+        .o_kanban_card_header + .container.o_kanban_card_content {
+            flex: 1 0 auto;
+            display: flex;
+            flex-flow: column nowrap;
+            justify-content: space-between;
+            margin-top: calc(var(--KanbanRecord-padding-v) * 2);
+            padding-right: 0;
+            padding-left: 0;
+
+            &::before, &::after {
+                content: normal; // so that space-between works
+            }
+
+            a {
+                position: relative;
+                @include o-text-overflow(inline-block);
+            }
+
+            @include media-breakpoint-down(lg) {
+                button + a {
+                    display: block;
+                    margin-top: map-get($spacers, 3);
+                }
+            }
+
+            .o_kanban_primary_bottom {
+                margin-top: var(--KanbanRecord-padding-v);
+                margin-bottom: calc(var(--KanbanRecord-padding-v) * -1);
+
+                &.bottom_block {
+                    border-top: 1px solid map-get($grays, '300');
+                    background-color: map-get($grays, '200');
+                    padding-top: var(--KanbanRecord-padding-v);
+                    padding-bottom: var(--KanbanRecord-padding-v);
+                }
+            }
+        }
+
+        .o_dashboard_graph {
+            overflow: hidden;
+        }
+    }
+
+    // ------- Dropdown toggle & menu -------
+    $o-kanban-manage-toggle-height: 35px;
+
+    .o_kanban_record .o_dropdown_kanban {
+        visibility: visible;
+    }
+
+    .o_kanban_record .dropdown-menu {
+        // Arbitrary value to place the dropdown-menu exactly below the
+        // dropdown-toggle (height is forced so that it works on Firefox)
+        top: $o-kanban-manage-toggle-height;
+
+        > div:not(.o_no_padding_kanban_colorpicker) {
+            padding: 3px 0 3px 20px;
+            visibility: visible;
+            margin-bottom: 5px;
+        }
+
+        > .o_kanban_card_manage_section {
+            margin-bottom: 10px;
+
+            + .o_kanban_card_manage_section {
+                border-top: 1px solid map-get($grays, '200');
+            }
+
+            > div {
+                @include o-kanban-dashboard-dropdown-link;
+            }
+        }
+
+        // Dropdown menu with complex layout
+        .container {
+            max-width: 400px;
+            margin-left: 0;
+            margin-right: 0;
+
+            .row {
+                display: flex;
+                flex-flow: row nowrap;
+                justify-content: space-between;
+                padding-left: $o-kanban-dashboard-dropdown-complex-gap*2;
+                padding-right: $o-kanban-dashboard-dropdown-complex-gap*2;
+            }
+
+            div[class*="col-"] {
+                flex: 1 1 percentage(1/3);
+                padding-left: $o-kanban-dashboard-dropdown-complex-gap;
+                padding-right: $o-kanban-dashboard-dropdown-complex-gap;
+                max-width: none;
+
+                > .o_kanban_card_manage_title {
+                    margin: (($font-size-base * $line-height-base) / 2) 0;
+                }
+                > div:not(.o_kanban_card_manage_title) {
+                    @include o-kanban-dashboard-dropdown-link($link-padding-gap: $o-kanban-dashboard-dropdown-complex-gap);
+                }
+            }
+
+            .row.o_kanban_card_manage_settings {
+                padding-top: $o-kanban-dashboard-dropdown-complex-gap*3;
+
+                &:not(:first-child) {
+                    border-top: 1px solid $dropdown-divider-bg;
+                }
+
+                .oe_kanban_colorpicker {
+                    max-width: none;
+                    padding: 0;
+                    margin-left: 2px !important;
+                }
+
+                div[class*="col-"] + div[class*="col-"] {
+                    border-left: 1px solid $dropdown-divider-bg;
+                }
+                > div:last-child {
+                    @include o-kanban-dashboard-dropdown-link($link-padding-gap: $o-kanban-dashboard-dropdown-complex-gap);
+                    padding-left: $dropdown-item-padding-x;
+                    padding-right: $dropdown-item-padding-x;
+                }
+            }
+        }
+
+    }
+}
+
+.o_kanban_dashboard.o_emphasize_colors .o_kanban_renderer {
+    // Emphasize records' colors when necessary
+    .o_kanban_record::after {
+        width: $o-kanban-color-border-width * 2;
+    }
+}

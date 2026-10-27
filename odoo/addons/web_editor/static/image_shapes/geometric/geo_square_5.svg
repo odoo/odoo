@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="800" height="600">
+    <defs>
+        <clipPath id="clip-path" clipPathUnits="objectBoundingBox">
+            <use xlink:href="#filterPath" fill="none"/>
+        </clipPath>
+        <path id="filterPath" d="M1 .7827 0 1 0 0 1 0Z">
+            <animate dur="6s" repeatCount="indefinite" attributeName="d" attributeType="XML"
+            values="
+            M1 .7827 0 1 0 0 1 0Z;
+            M1 .8027 0 .95 0 0 1 0Z;
+            M1 .7827 0 1 0 0 1 0Z"
+            calcMode="spline"
+            keySplines=".56 .37 .43 .58; .56 .37 .43 .58"/>
+        </path>
+    </defs>
+    <svg viewBox="0 0 1 1" id="preview" preserveAspectRatio="none">
+        <use xlink:href="#filterPath" fill="darkgrey"/>
+    </svg>
+    <image xlink:href="" clip-path="url(#clip-path)"/>
+</svg>

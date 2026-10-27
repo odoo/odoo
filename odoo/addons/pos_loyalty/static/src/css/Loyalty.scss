@@ -1,0 +1,101 @@
+.pos .popups .gift-card-popup {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    text-align: center;
+    margin: 1em;
+
+    .gift-card-container {
+        display: flex;
+        padding: 5px;
+        font-weight: bold;
+        text-align: center;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .gift-card-footer {
+        text-align: center;
+    }
+
+    .gift-card-input-amount {
+        border-bottom: 1px solid;
+        background-color: #F0EEEE;
+        box-shadow: none;
+        text-align: right;
+        width: 80%;
+    }
+
+    .gift-card-input-code {
+        border-bottom: 1px solid;
+        background-color: #F0EEEE;
+        box-shadow: none;
+        text-align: center;
+        width: 80%;
+    }
+
+    .gift-card-button {
+        width: auto !important;
+        height: auto !important;
+        padding: 10px;
+    }
+
+    .gift-card-button-confirm {
+        flex-grow: 1;
+        height: auto !important;
+        padding: 10px;
+    }
+
+    .gift-card-input-container {
+        width: 80%;
+    }
+
+    .footer .gift-card-footer-button {
+        margin-left: 5px;
+        width: 70px;
+    }
+
+    .gift-card-error {
+        width: 100%;
+        background-color: rgba(255, 76, 76, 0.5);
+    }
+}
+
+.pos .orderlines {
+    
+    .active-programs {
+        padding-top: 0.5em;
+        font-weight: normal;
+        font-size: 80%;
+        text-align: right;
+        padding: 0 1rem .5rem;
+        
+        .title {
+            padding-top: 0.8em;
+            padding-bottom: 0.2em;
+            font-weight: bold;
+        }
+    }
+}
+
+.pos-receipt .pos-coupon-rewards {
+    text-align: center;
+    padding: 1em;
+}
+
+.pos-coupon-rewards .coupon-container {
+    padding-top: 1em;
+    font-size: 75%;
+}
+
+// Seems unused
+.loyalty .subtitle{
+    text-align: center;
+}
+
+.loyalty .title {
+    font-size: 20px;
+    text-align: center;
+}

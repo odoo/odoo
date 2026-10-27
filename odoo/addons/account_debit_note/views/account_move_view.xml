@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form_debit" model="ir.ui.view">
+        <field name="name">account.move.form.debit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <div class="oe_button_box" position="inside">
+                <button type="object" class="oe_stat_button" name="action_view_debit_notes" icon="fa-plus" invisible="debit_note_count == 0">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value"><field name="debit_note_count"/></span>
+                        <span class="o_stat_text">Debit Notes</span>
+                    </div>
+                </button>
+            </div>
+            <field name="invoice_origin" position="after">
+                <field name="debit_origin_id" invisible="not debit_origin_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.actions.server" id="action_move_debit_note">
+        <field name="name">Debit Note</field>
+        <field name="model_id" ref="model_account_move"/>
+        <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
+        <field name="binding_model_id" ref="account.model_account_move" />
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">
+if records:
+    action = records.action_debit_note()
+        </field>
+    </record>
+
+</odoo>

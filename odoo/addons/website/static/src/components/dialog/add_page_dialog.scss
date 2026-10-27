@@ -1,0 +1,95 @@
+.o_website_page_templates_dialog {
+    max-height: $modal-lg !important;
+
+    .modal-body {
+        display: flex;
+        padding: 0;
+
+        .nav {
+            width: 200px;
+        }
+    }
+
+    .o_website_page_templates_pane.active {
+        // Avoid using "display: [none/block]" to trigger the tabs behavior
+        // because doing so would recalculate iframes' height.
+        z-index: 1;
+    }
+
+    .o_page_template {
+        $-iframe-width: 1024;
+        $-preview-width: 275; // Empirically obtained
+        $-preview-width-xl: 220; // Empirically obtained
+        $-preview-width-lg: 408; // Empirically obtained
+        width: #{$-preview-width}px;
+        @include media-breakpoint-down(xl) {
+            width: #{$-preview-width-xl}px;
+        }
+        @include media-breakpoint-down(lg) {
+            width: #{$-preview-width-lg}px;
+        }
+
+        .o_page_template_preview {
+            // Resize iframe:
+            height: 300px;
+            padding: 0;
+            overflow: hidden;
+
+            iframe {
+                width: #{$-iframe-width}px;
+                transform: scale($-preview-width / $-iframe-width);
+                @include media-breakpoint-down(xl) {
+                    transform: scale($-preview-width-xl / $-iframe-width);
+                }
+                @include media-breakpoint-down(lg) {
+                    transform: scale($-preview-width-lg / $-iframe-width);
+                }
+                transform-origin: 0 0;
+            }
+
+            &, iframe {
+                opacity: 0;
+                transition: height 300ms ease-in, opacity 300ms ease 300ms;
+            }
+        }
+
+        .placeholder {
+            transition: opacity 1s ease;
+        }
+
+        .o_button_area {
+            opacity: 0;
+        }
+
+        &:empty {
+            opacity: 0; // Hide empty column filler
+        }
+
+        &.o_loading {
+            cursor: wait;
+        }
+
+        &.o_ready {
+            .placeholder {
+                animation: none;
+                opacity: 0;
+            }
+
+            .o_page_template_preview, iframe {
+                opacity: 1;
+            }
+
+            &:hover {
+                transform: translateY(-0.15rem);
+
+                iframe {
+                    opacity: .1;
+                }
+
+                .o_button_area {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+}

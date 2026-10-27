@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="utm_campaign_view_form">
+        <field name="name">utm.campaign.view.form</field>
+        <field name="model">utm.campaign</field>
+        <field name="inherit_id" ref="utm.utm_campaign_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_create_mass_sms" type="object"  class="oe_highlight" string="Send SMS"
+                    invisible="not is_mailing_campaign_activated"
+                    groups="mass_mailing.group_mass_mailing_user"/>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button name="action_redirect_to_mailing_sms"
+                 type="object"
+                 class="oe_stat_button order-11"
+                 invisible="mailing_sms_count == 0 or not is_mailing_campaign_activated"
+                 icon="fa-mobile" groups="mass_mailing.group_mass_mailing_user">
+                    <field name="mailing_sms_count" widget="statinfo" string="SMS"/>
+                </button>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <field name="ab_testing_mailings_sms_count" invisible="1"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="SMS" name="sms"
+                    invisible="mailing_sms_count == 0 or not is_mailing_campaign_activated"
+                    groups="mass_mailing.group_mass_mailing_user">
+                    <group>
+                        <field name="mailing_sms_ids" nolabel="1">
+                            <tree>
+                                <field name="calendar_date" string="Date"/>
+                                <field name="subject" string="Title"/>
+                                <field name="mailing_type" column_invisible="True"/>
+                                <field name="mailing_model_id" string="Recipients" optional="hide"/>
+                                <field name="user_id" widget="many2one_avatar_user"/>
+                                <field name="campaign_id" string="Campaign" groups="mass_mailing.group_mass_mailing_campaign" optional="hide"/>
+                                <field name="ab_testing_enabled" string="A/B Test"
+                                    groups="mass_mailing.group_mass_mailing_campaign"
+                                    column_invisible="parent.ab_testing_mailings_sms_count == 0"/>
+                                <field name="sent" sum="Total Sent"/>
+                                <field name="clicked" string="Clicked (%)" avg="Average of Clicked"/>
+                                <field name="bounced" string="Bounced (%)" optional="hide" avg="Average of Bounced"/>
+                                <field name="state" decoration-info="state in ('draft', 'in_queue')" decoration-success="state in ('sending', 'done')" widget="badge"/>
+                                <button name="action_duplicate" type="object" string="Duplicate"/>
+                            </tree>
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//group[@name='ab_test_group']" position="attributes">
+                <attribute name="invisible">ab_testing_mailings_sms_count == 0 and ab_testing_mailings_count == 0</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="utm_campaign_view_kanban">
+        <field name="name">utm.campaign.view.kanban</field>
+        <field name="model">utm.campaign</field>
+        <field name="inherit_id" ref="utm.utm_campaign_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="mailing_sms_count" groups="mass_mailing.group_mass_mailing_user"/>
+            </xpath>
+            <xpath expr="//ul[@id='o_utm_actions']">
+                <a name="action_redirect_to_mailing_sms" type="object"
+                    t-attf-class="oe_mailings #{record.mailing_sms_count.raw_value === 0 ? 'text-muted' : ''}"
+                    t-if="record.is_mailing_campaign_activated.raw_value"
+                    groups="mass_mailing.group_mass_mailing_user">
+                    <t t-out="record.mailing_sms_count.raw_value"/> SMS
+                </a>
+            </xpath>
+        </field>
+    </record>
+</odoo>

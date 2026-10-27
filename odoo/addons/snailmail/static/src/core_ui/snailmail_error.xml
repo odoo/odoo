@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="snailmail.SnailmailError">
+        <Dialog contentClass="'o-snailmail-SnailmailError'" title="title">
+            <t t-if="props.failureType === 'sn_credit'">
+                <p class="mx-3 mb-3">
+                    The letter could not be sent due to insufficient credits on your IAP account.
+                </p>
+                <div t-if="snailmailCreditsUrl" class="text-end mx-3 mb-3">
+                    <a class="btn btn-link" t-att-href="snailmailCreditsUrl" target="_blank">
+                        <i class="oi oi-arrow-right"/> Buy credits
+                    </a>
+                </div>
+            </t>
+            <t t-elif="props.failureType === 'sn_trial'">
+                <p class="mx-3 mb-3">
+                    You need credits on your IAP account to send a letter.
+                </p>
+                <div t-if="snailmailCreditsUrlTrial" class="text-end mx-3 mb-3">
+                    <a class="btn btn-link" t-att-href="snailmailCreditsUrlTrial">
+                        <i class="oi oi-arrow-right"/> Buy credits
+                    </a>
+                </div>
+            </t>
+            <p t-elif="props.failureType === 'sn_price'" class="mx-3 mb-3">
+                The country to which you want to send the letter is not supported by our service.
+            </p>
+            <p t-elif="props.failureType === 'sn_error'" class="mx-3 mb-3">
+                An unknown error occurred. Please contact our <a href="https://www.odoo.com/help" target="new">support</a> for further assistance.
+            </p>
+            <t t-set-slot="footer">
+                <button t-if="['sn_credit', 'sn_trial'].includes(props.failureType)" class="btn btn-primary me-2" t-on-click="onClickResendLetter">Re-send letter</button>
+                <button class="btn me-2"
+                    t-att-class="{
+                    'btn-primary': !hasCreditsError,
+                    'btn-secondary': hasCreditsError,
+                    }"
+                    t-on-click="onClickCancelLetter"
+                >
+                    Cancel letter
+                </button>
+                <button class="btn btn-secondary me-2" t-on-click="() => props.close()">Close</button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mailing_subscription_optout_view_form" model="ir.ui.view">
+        <field name="name">mailing.subscription.optout.view.form</field>
+        <field name="model">mailing.subscription.optout</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="is_feedback"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="mailing_subscription_optout_view_tree" model="ir.ui.view">
+        <field name="name">mailing.subscription.optout.view.tree</field>
+        <field name="model">mailing.subscription.optout</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="mailing_subscription_optout_view_search" model="ir.ui.view">
+        <field name="name">mailing.subscription.optout.view.search</field>
+        <field name="model">mailing.subscription.optout</field>
+        <field name="arch" type="xml">
+           <search>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="mailing_subscription_optout_action" model="ir.actions.act_window">
+        <field name="name">Optout Reasons</field>
+        <field name="res_model">mailing.subscription.optout</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet.
+            </p>
+        </field>
+    </record>
+</odoo>

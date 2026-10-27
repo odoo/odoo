@@ -1,0 +1,42 @@
+.o_setting_box {
+    margin-bottom: 8px;
+    margin-top: 8px;
+    position: relative;
+ }
+
+ .o_setting_left_pane {
+    width: 24px;
+    float: left;
+ }
+
+ .o_setting_right_pane {
+    margin-left: 24px;
+    border-left: 1px solid $border-color;
+    padding-left: 12px;
+
+    .o_form_label + .fa, .o_form_label + .o_doc_link {
+        margin-left: map-get($spacers, 2);
+   }
+
+    .o_input_dropdown > .o_input {
+       width: 100%;
+    }
+
+    .o_field_widget {
+      &:not(.o_field_boolean) {
+         flex: 0 0 auto;
+
+         @include media-breakpoint-up(md) {
+            width: 50%;
+         }
+      }
+    }
+
+    button.btn-link:first-child {
+       padding: 0;
+    }
+
+    a.oe-link {
+       font-size: 12px;
+    }
+ }

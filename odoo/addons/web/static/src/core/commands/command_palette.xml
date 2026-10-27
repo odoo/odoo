@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="web.CommandPalette">
+    <Dialog header="false" footer="false" size="'md'" contentClass="'o_command_palette mt-5'">
+      <div t-ref="root">
+        <div class="o_command_palette_search input-group mb-2 px-4 py-3 border-bottom">
+          <span t-if="state.namespace !== 'default'" class="o_namespace d-flex align-items-center me-1" t-out="state.namespace"/>
+          <input class="form-control border-0 p-0" type="text" data-allow-hotkeys="true" t-att-value="state.searchValue" t-ref="autofocus" t-att-placeholder="state.placeholder" t-on-input="onSearchInput" t-on-keydown="onKeyDown"
+              role="combobox"
+              t-attf-aria-activedescendant="o_command_{{state.commands.length ? state.commands.indexOf(state.selectedCommand) : 'empty'}}"
+              aria-expanded="true"
+              aria-autocomplete="list"
+              aria-haspopup="listbox"
+          />
+          <div class="input-group-text border-0 bg-transparent">
+              <i t-att-title="state.placeholder" role="img"  t-att-aria-label="state.placeholder" class="oi oi-search"/>
+          </div>
+        </div>
+
+        <div t-ref="listbox" role="listbox" class="o_command_palette_listbox position-relative overflow-auto">
+          <div t-if="!state.commands.length" id="o_command_empty" role="option" aria-selected="true" class="o_command_palette_listbox_empty px-4 py-3 fst-italic" t-out="state.emptyMessage"/>
+          <t t-if="!isFuzzySearch" t-foreach="commandsByCategory" t-as="category" t-key="category.keyId">
+            <div class="o_command_category px-0">
+              <span t-if="category.name" class="text-truncate text-uppercase fw-bold fs-6 px-3" t-out="category.name"/>
+              <t t-foreach="category.commands" t-as="command" t-key="command.keyId">
+                <t t-set="commandIndex" t-value="state.commands.indexOf(command)"/>
+                <div t-attf-id="o_command_{{commandIndex}}" class="o_command"
+                  role="option"
+                  t-att-aria-selected="state.selectedCommand === command ? 'true' : 'false'"
+                  t-att-class="{ focused: state.selectedCommand === command }"
+                  t-on-click="(event) => this.onCommandClicked(event, commandIndex)"
+                  t-on-mouseenter="() => this.onCommandMouseEnter(commandIndex)"
+                  t-on-close="() => this.props.closeMe()">
+                  <a t-att-href="command.href">
+                    <t t-component="command.Component || DefaultCommandItem" name="command.name" searchValue="state.searchValue" t-props="command.props" executeCommand="() => this.executeCommand(command)">
+                      <t t-set-slot="name">
+                        <span class="o_command_name text-ellipsis" t-att-title="command.name">
+                          <t t-foreach="command.splitName" t-as="name" t-key="name_index">
+                            <b t-if="name_index % 2" t-out="name" class="text-primary"/>
+                            <t t-else="" t-out="name"/>
+                          </t>
+                        </span>
+                      </t>
+                      <t t-set-slot="focusMessage">
+                          <small t-if="!isMobileOS and command.href and state.selectedCommand === command" class="o_command_focus text-muted"><kbd><t t-if="isMacOS">CMD</t><t t-else="">CTRL</t></kbd>+<kbd>⏎</kbd><span class="ms-1">new tab</span></small>
+                      </t>
+                    </t>
+                  </a>
+                </div>
+              </t>
+            </div>
+
+            <hr class="my-2 mx-0" t-if="!category_last" />
+          </t>
+        </div>
+
+        <div t-if="state.FooterComponent" class="o_command_palette_footer mt-2 px-4 py-2 border-top rounded-bottom bg-100 text-muted">
+          <t t-component="state.FooterComponent" switchNamespace="(namespace) => this.debounceSearch(namespace.concat(this.state.searchValue))"/>
+        </div>
+      </div>
+    </Dialog>
+  </t>
+
+</templates>

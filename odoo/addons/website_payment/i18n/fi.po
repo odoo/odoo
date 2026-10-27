@@ -1,0 +1,548 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_payment
+# 
+# Translators:
+# Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2023
+# Kari Lindgren <karisatu@gmail.com>, 2023
+# Jukka Paulin <jukka.paulin@gmail.com>, 2023
+# Miika Nissi <miika.nissi@tawasta.fi>, 2023
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
+# Miku Laitinen <miku.laitinen@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
+msgid ""
+".\n"
+"                        <br/>\n"
+"                        We appreciate your support for our organization as such.\n"
+"                        <br/>\n"
+"                        Regards."
+msgstr ""
+".\n"
+"                       <br/>\n"
+"                        Arvostamme tukeanne organisaatiollemme .\n"
+"                       <br/>\n"
+"                        Terveisin."
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
+msgid "<b>Comment:</b>"
+msgstr "<b>Kommentti:</b>"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
+msgid "<b>Donation Date:</b>"
+msgstr "<b>Lahjoituspäivä:</b>"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
+msgid "<b>Donor Email:</b>"
+msgstr "<b>Lahjoittajan sähköpostiosoite:</b>"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
+msgid "<b>Donor Name:</b>"
+msgstr "<b>Lahjoittajan nimi:</b>"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
+msgid "<b>Payment ID:</b>"
+msgstr "<b>Maksutunnus:</b>"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
+msgid "<b>Payment Method:</b>"
+msgstr "<b>Maksutapa:</b>"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
+msgid "<option value=\"\">Country...</option>"
+msgstr "<option value=\"\">Maa...</option>"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
+msgid ""
+"<strong>No suitable payment option could be found.</strong><br/>\n"
+"                                If you believe that it is an error, please contact the website administrator."
+msgstr ""
+"<strong>Sopivaa maksuvaihtoehtoa ei löytynyt.</strong><br/>\n"
+"                                Jos uskot, että kyseessä on virhe, ota yhteyttä sivuston ylläpitäjään."
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
+msgid "<strong>Warning</strong> The currency is missing or incorrect."
+msgstr "<strong>Varoitus</strong> Valuutta puuttuu tai on virheellinen."
+
+#. module: website_payment
+#. odoo-python
+#: code:addons/website_payment/models/payment_transaction.py:0
+#, python-format
+msgid "A donation has been made on your website"
+msgstr "Verkkosivullasi on tehty lahjoitus"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
+msgid "A year of cultural awakening."
+msgstr "Kulttuurisen heräämisen vuosi."
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid "Activate Payments"
+msgstr "Aktivoi maksut"
+
+#. module: website_payment
+#: model:ir.actions.server,name:website_payment.action_activate_stripe
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid "Activate Stripe"
+msgstr "Aktivoi Stripe"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/snippets/s_donation/options.js:0
+#, python-format
+msgid "Add a description here"
+msgstr "Lisää kuvaus tähän"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/snippets/s_donation/options.js:0
+#, python-format
+msgid "Add new pre-filled option"
+msgstr "Lisää uusi esitäytetty vaihtoehto"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
+#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
+#, python-format
+msgid "Amount"
+msgstr "Arvo"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
+msgid "Amount ("
+msgstr "Määrä ("
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
+msgid "Amount("
+msgstr "Määrä("
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
+msgid "Caring for a baby for 1 month."
+msgstr "Vauvan hoitaminen 1 kuukauden ajan."
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
+#, python-format
+msgid "Choose Your Amount"
+msgstr "Valitse summa"
+
+#. module: website_payment
+#: model:ir.model,name:website_payment.model_res_config_settings
+msgid "Config Settings"
+msgstr "Asetukset"
+
+#. module: website_payment
+#. odoo-python
+#: code:addons/website_payment/models/res_config_settings.py:0
+#, python-format
+msgid "Configure %s"
+msgstr "Määritä %s"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/js/payment_form.js:0
+#: model:ir.model,name:website_payment.model_res_country
+#, python-format
+msgid "Country"
+msgstr "Maa"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
+msgid ""
+"Country\n"
+"                    <span class=\"s_website_form_mark\"> *</span>"
+msgstr ""
+"Maa\n"
+"                    <span class=\"s_website_form_mark\"> *</span>"
+
+#. module: website_payment
+#. odoo-python
+#: code:addons/website_payment/controllers/portal.py:0
+#, python-format
+msgid "Country is required."
+msgstr "Maa on pakollinen."
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
+#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_input
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+#, python-format
+msgid "Custom Amount"
+msgstr "Muu summa"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
+msgid "Dear"
+msgstr "Hyvä"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Default Amount"
+msgstr "Oletussumma"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Descriptions"
+msgstr "Kuvaukset"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Display Options"
+msgstr "Näytä valinnat"
+
+#. module: website_payment
+#. odoo-python
+#: code:addons/website_payment/controllers/portal.py:0
+#, python-format
+msgid "Donate"
+msgstr "Lahjoita"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
+msgid "Donate Now"
+msgstr "Lahjoita nyt"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
+#: model_terms:ir.ui.view,arch_db:website_payment.snippets
+msgid "Donation"
+msgstr "Lahjoitus"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.snippets
+msgid "Donation Button"
+msgstr "Lahjoituspainike"
+
+#. module: website_payment
+#. odoo-python
+#: code:addons/website_payment/controllers/portal.py:0
+#, python-format
+msgid "Donation amount must be at least %.2f."
+msgstr "Lahjoitussumman on oltava vähintään %.2f."
+
+#. module: website_payment
+#. odoo-python
+#: code:addons/website_payment/models/payment_transaction.py:0
+#, python-format
+msgid "Donation confirmation"
+msgstr "Lahjoituksen vahvistus"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
+msgid "Donation notification"
+msgstr "Lahjoitusilmoitus"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/js/payment_form.js:0
+#, python-format
+msgid "Email"
+msgstr "Sähköposti"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
+msgid ""
+"Email\n"
+"                    <span class=\"s_website_form_mark\"> *</span>"
+msgstr ""
+"Sähköposti\n"
+"                    <span class=\"s_website_form_mark\"> *</span>"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/js/payment_form.js:0
+#, python-format
+msgid "Email is invalid"
+msgstr "Sähköpostiosoite on virheellinen"
+
+#. module: website_payment
+#. odoo-python
+#: code:addons/website_payment/controllers/portal.py:0
+#, python-format
+msgid "Email is required."
+msgstr "Sähköpostiosoitteesi on pakollinen."
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/js/payment_form.js:0
+#, python-format
+msgid "Field '%s' is mandatory"
+msgstr "Kenttä '%s' on pakollinen"
+
+#. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_res_config_settings__first_provider_label
+msgid "First Provider Label"
+msgstr "Ensimmäisen palveluntarjoajan etiketti"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Input"
+msgstr "Vastaanotto"
+
+#. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_account_payment__is_donation
+msgid "Is Donation"
+msgstr "Onko lahjoitus"
+
+#. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_res_config_settings__is_stripe_supported_country
+#: model:ir.model.fields,field_description:website_payment.field_res_country__is_stripe_supported_country
+msgid "Is Stripe Supported Country"
+msgstr "Onko Stripen tukema maa"
+
+#. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_payment_transaction__is_donation
+msgid "Is donation"
+msgstr "Onko lahjoitus"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation
+msgid "Make a Donation"
+msgstr "Tee lahjoitus"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Maximum"
+msgstr "Enimmäismäärä"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Minimum"
+msgstr "Vähimmäismäärä"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/js/payment_form.js:0
+#, python-format
+msgid "Name"
+msgstr "Nimi"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
+msgid ""
+"Name\n"
+"                    <span class=\"s_website_form_mark\"> *</span>"
+msgstr ""
+"Nimi\n"
+"                    <span class=\"s_website_form_mark\"> *</span>"
+
+#. module: website_payment
+#. odoo-python
+#: code:addons/website_payment/controllers/portal.py:0
+#, python-format
+msgid "Name is required."
+msgstr "Nimi vaaditaan."
+
+#. module: website_payment
+#: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__providers_state__none
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "None"
+msgstr "Ei mitään"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
+msgid "One year in elementary school."
+msgstr "Yksi vuosi peruskoulussa."
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
+msgid "One year in high school."
+msgstr "Yksi vuosi lukiossa."
+
+#. module: website_payment
+#: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__providers_state__other_than_paypal
+msgid "Other than Paypal"
+msgstr "Muut kuin Paypal"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
+msgid "Payment Details"
+msgstr "Maksun tiedot"
+
+#. module: website_payment
+#: model:ir.model,name:website_payment.model_payment_provider
+msgid "Payment Provider"
+msgstr "Maksupalveluntarjoaja"
+
+#. module: website_payment
+#: model:ir.model,name:website_payment.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Maksutapahtuma"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/js/payment_form.js:0
+#, python-format
+msgid "Payment processing failed"
+msgstr "Maksun käsittely epäonnistui"
+
+#. module: website_payment
+#. odoo-python
+#: code:addons/website_payment/models/payment_transaction.py:0
+#, python-format
+msgid "Payment received from donation with following details:"
+msgstr "Lahjoituksesta saatu maksu seuraavilla tiedoilla:"
+
+#. module: website_payment
+#: model:ir.model,name:website_payment.model_account_payment
+msgid "Payments"
+msgstr "Maksut"
+
+#. module: website_payment
+#: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__providers_state__paypal_only
+msgid "Paypal Only"
+msgstr "Vain Paypal"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/snippets/s_donation/000.js:0
+#, python-format
+msgid "Please select or enter an amount"
+msgstr "Valitse tai syötä summa"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Pre-filled Options"
+msgstr "Esitäytetyt vaihtoehdot"
+
+#. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_res_config_settings__providers_state
+msgid "Providers State"
+msgstr "Palveluntarjoajat Valtio"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Recipient Email"
+msgstr "Vastaanottajan sähköposti"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid "Shop - Payment"
+msgstr "Kauppa - Maksaminen"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Slider"
+msgstr "Liukusäädin"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation
+msgid "Small or large, your contribution is essential."
+msgstr "Pieni tai suuri, panoksesi on olennainen."
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/js/payment_form.js:0
+#, python-format
+msgid "Some information is missing to process your payment."
+msgstr "Joitakin tietoja puuttuu maksun käsittelemiseksi."
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Step"
+msgstr "Vaihe"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid ""
+"Stripe Connect is not available in your country, please use another payment "
+"provider."
+msgstr ""
+"Stripe Connect ei ole saatavilla maassasi, käytä toista "
+"maksupalveluntarjoajaa."
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid ""
+"Support most payment methods; Visa, Mastercard, Maestro, Google Pay, Apple "
+"Pay, etc. as well as recurring charges."
+msgstr ""
+"Tukee useimpia maksutapoja: Visa, Mastercard, Maestro, Google Pay, Apple Pay"
+" jne. sekä toistuvia maksuja."
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
+msgid "Thank you for your donation of"
+msgstr "Kiitos lahjoituksestanne"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/snippets/s_donation/000.js:0
+#, python-format
+msgid "The minimum donation amount is %s%s%s"
+msgstr "Pienin lahjoitussumma on %s%s%s"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
+msgid "There is nothing to pay."
+msgstr "Ei ole mitään maksettavaa."
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid "View Alternatives"
+msgstr "Näytä vaihtoehdot"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid "View other providers"
+msgstr "Näytä muut palveluntarjoajat"
+
+#. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_payment_provider__website_id
+msgid "Website"
+msgstr "Verkkosivu"
+
+#. module: website_payment
+#: model:mail.template,name:website_payment.mail_template_donation
+msgid "Website: Donation"
+msgstr "Verkkosivusto: Lahjoitus"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
+msgid "Write us a comment"
+msgstr "Kirjoita meille kommentti"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
+msgid "Your comment"
+msgstr "Kommenttisi"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
+msgid "made on"
+msgstr "tehty"

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.X2ManyField">
+        <div t-att-class="className">
+            <div class="o_x2m_control_panel d-empty-none mb-4">
+                <t t-if="displayControlPanelButtons">
+                    <div class="o_cp_buttons gap-1" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
+                        <t t-foreach="creates" t-as="create" t-key="create_index">
+                            <button
+                                t-if="create.type === 'create'"
+                                type="button"
+                                class="btn btn-secondary"
+                                t-att-class="create.class"
+                                t-on-click.stop.prevent="() => this.onAdd({ context: create.context })"
+                            >
+                                <t t-esc="create.string"/>
+                            </button>
+                            <ViewButton
+                                t-if="create.type === 'button'"
+                                className="`${create.className}`"
+                                clickParams="create.clickParams"
+                                icon="create.icon"
+                                record="props.record.data[props.name]"
+                                string="create.string"
+                                title="create.title"
+                            />
+                        </t>
+                    </div>
+                </t>
+                <div t-if="props.record.data[props.name].count > props.record.data[props.name].limit" class="o_cp_pager" role="search">
+                    <Pager t-props="pagerProps"/>
+                </div>
+            </div>
+            <ListRenderer t-if="props.viewMode === 'list'" t-props="this.rendererProps" />
+            <KanbanRenderer t-elif="props.viewMode" t-props="this.rendererProps" />
+        </div>
+    </t>
+
+</templates>

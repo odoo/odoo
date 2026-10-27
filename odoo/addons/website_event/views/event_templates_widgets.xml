@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- Search Box -->
+<template id="events_search_box_input" name="Events search box">
+    <t t-call="website.website_search_box_input">
+        <t t-set="_classes" t-valuef="o_wevent_event_searchbar_form flex-grow-1 #{_classes}"/>
+        <t t-set="search_type" t-valuef="events"/>
+        <t t-set="action" t-valuef="/event"/>
+        <t t-set="display_description" t-valuef="true"/>
+        <t t-set="display_detail" t-valuef="false"/>
+        <t t-set="search" t-value="search or searches and searches['search']"/>
+        <t t-set="placeholder">Search an event...</t>
+        <t t-foreach="searches" t-as="item">
+            <input t-if="item != 'search' and item_value != 'all'" type="hidden"
+                t-att-name="item" t-att-value="item_value"/>
+        </t>
+        <t t-out="0"/>
+    </t>
+</template>
+
+<template id="events_search_box" inherit_id="website.website_search_box" primary="True">
+    <xpath expr="//div[@role='search']" position="replace">
+        <form t-attf-class="o_wevent_event_searchbar_form o_wait_lazy_js w-100 flex-grow-1 #{_classes}"
+              t-att-action="action if action else '/event'" method="get">
+            <t t-set="search" t-value="search or _searches and _searches['search']"/>
+            <t t-set="placeholder" t-value="placeholder or _placeholder"/>
+            <t>$0</t>
+            <t t-foreach="_searches" t-as="search">
+                <input t-if="search != 'search' and search_value != 'all'" type="hidden"
+                    t-att-name="search" t-att-value="search_value"/>
+            </t>
+            <t t-out="0"/>
+        </form>
+    </xpath>
+</template>
+
+<!-- Timer widget -->
+<template id="display_timer_widget" name="Display Timer Widget">
+    <t t-set="pre_countdown_display" t-value="bool(pre_countdown_text) or pre_countdown_display"/>
+    <t t-set="pre_countdown_time" t-value="datetime.datetime.now().timestamp() + int(pre_remaining_time)"/>
+
+    <div class="o_display_timer"
+         t-att-data-display-class="display_class"
+         t-att-data-main-countdown-time="datetime.datetime.now().timestamp() + int(main_remaining_time)"
+         t-att-data-main-countdown-text="main_countdown_text"
+         t-att-data-main-countdown-display="main_countdown_display"
+         t-att-data-pre-countdown-time="pre_countdown_time"
+         t-att-data-pre-countdown-display="pre_countdown_display"
+         t-att-data-pre-countdown-text="pre_countdown_text">
+        <t t-set="remaining_time" t-value="pre_remaining_time if pre_remaining_time else main_remaining_time"/>
+        <span class="o_display_timer_countdown d-flex justify-content-center">
+            <span class="o_countdown_text pe-1" t-out="pre_countdown_text if pre_countdown_text else main_countdown_text if not pre_countdown_display else ''"/>
+            <div t-if="int(remaining_time) > 86400"
+             class="o_countdown_metric_container"><span class="o_countdown_remaining o_timer_days pe-1">0</span><span class="o_countdown_metric pe-1">days</span></div>
+            <div t-if="int(remaining_time) > 3600"
+                 class="o_countdown_metric_container"><span class="o_countdown_remaining o_timer_hours">00</span><span class="o_countdown_metric">:</span></div>
+            <div class="o_countdown_metric_container"><span class="o_countdown_remaining o_timer_minutes">00</span><span class="o_countdown_metric">:</span></div>
+            <div class="o_countdown_metric_container"><span class="o_countdown_remaining o_timer_seconds">00</span><span class="o_countdown_metric"></span></div>
+        </span>
+    </div>
+</template>
+
+<template id="display_timer_alert_widget" name="Display Countdown widget">
+    <div class="o_we_track_timer alert alert-warning alert-dismissible fade show d-none mb-2" role="alert" t-att-data-time-to-live="time_to_live">
+        Starts <span />
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+</template>
+
+</odoo>

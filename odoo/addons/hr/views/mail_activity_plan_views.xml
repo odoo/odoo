@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mail_activity_plan_template_view_form" model="ir.ui.view">
+            <field name="name">mail.activity.plan.template.view.form.inherit.hr</field>
+            <field name="model">mail.activity.plan.template</field>
+            <field name="inherit_id" ref="mail.mail_activity_plan_template_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='responsible_type']" position="replace">
+                    <field name="responsible_type"
+                           invisible="res_model != 'hr.employee'"/>
+                    <field name="responsible_type" widget="filterable_selection"
+                           options="{'whitelisted_values': ['on_demand', 'other']}"
+                           invisible="res_model == 'hr.employee'"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="mail_activity_plan_view_form" model="ir.ui.view">
+            <field name="name">mail.activity.plan.view.form.inherit.hr</field>
+            <field name="model">mail.activity.plan</field>
+            <field name="inherit_id" ref="mail.mail_activity_plan_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='template_ids']/tree/field[@name='responsible_type']" position="replace">
+                    <!-- We can hide selection options specific to employee because employee plan templates are never
+                         edited in the list view, so that there are not present for other model that are edited in the
+                         list view. -->
+                    <field name="responsible_type" widget="filterable_selection"
+                           options="{'whitelisted_values': ['on_demand', 'other']}"/>
+                </xpath>
+                <xpath expr="//group[@name='group_plan_fields']" position="inside">
+                    <field name="department_id" invisible="res_model != 'hr.employee'"
+                            placeholder="Available for all Departments"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="mail_activity_plan_view_form_hr_employee" model="ir.ui.view">
+            <field name="name">mail.activity.plan.view.form.hr.employee</field>
+            <field name="mode">primary</field>
+            <field name="model">mail.activity.plan</field>
+            <field name="priority">32</field>
+            <field name="inherit_id" ref="mail.mail_activity_plan_view_form_fixed_model"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="editable"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="mail_activity_plan_view_tree" model="ir.ui.view">
+            <field name="name">mail.activity.plan.view.tree.inherit.hr</field>
+            <field name="model">mail.activity.plan</field>
+            <field name="inherit_id" ref="mail.mail_activity_plan_view_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='steps_count']" position="after">
+                    <field name="department_id" optional="show"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="mail_activity_plan_action" model="ir.actions.act_window">
+            <field name="name">On/Offboarding Plans</field>
+            <field name="res_model">mail.activity.plan</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="mail.mail_activity_plan_view_search"/>
+            <field name="context">{'default_res_model': 'hr.employee'}</field>
+            <field name="domain">[('res_model', '=', 'hr.employee')]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Add a new plan
+                </p>
+            </field>
+        </record>
+
+        <record id="mail_activity_plan_action_employee_view_tree" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="mail.mail_activity_plan_view_tree"/>
+            <field name="act_window_id" ref="hr.mail_activity_plan_action"/>
+        </record>
+
+        <!-- Force the hr view which do the activity template edition in a popup. -->
+        <record id="mail_activity_plan_action_employee_view_form" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="hr.mail_activity_plan_view_form_hr_employee"/>
+            <field name="act_window_id" ref="hr.mail_activity_plan_action"/>
+        </record>
+
+        <!-- This id is referenced in chatter message as a link to launch the plan -->
+        <record id="plan_wizard_action" model="ir.actions.act_window">
+            <field name="name">Launch Plan</field>
+            <field name="res_model">mail.activity.schedule</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'plan_mode': True}</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

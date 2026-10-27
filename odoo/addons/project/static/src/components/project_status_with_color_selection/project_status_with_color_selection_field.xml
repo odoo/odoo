@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="project.ProjectStatusWithColorSelectionField" t-inherit="web.SelectionField" t-inherit-mode="primary">
+        <xpath expr="//t[@t-if='props.readonly']/span" position="replace">
+            <div class="d-flex align-items-center">
+                <div>
+                    <span t-attf-class="o_status {{ statusColor(currentValue) }} d-inline-block"/>
+                </div>
+                <div class="ps-2">
+                    <div class="o_stat_text" t-if="this.props.statusLabel" t-out="this.props.statusLabel"/>
+                    <div class="o_stat_value" t-out="string" t-att-raw-value="value"/>
+                </div>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="web_editor.HistoryDialog">
+        <Dialog size="size" title="title">
+            <div class="dialog-container html-history-dialog">
+                <div class="revision-list d-flex flex-column align-content-stretch">
+                    <t t-if="!state.revisionsData.length">
+                        <div class="text-center w-100 pb-2 pt-0 px-0 fw-bolder">No history</div>
+                    </t>
+
+                    <t t-foreach="state.revisionsData" t-as="rev"
+                       t-key="rev.revision_id">
+                        <a type="object" href="#" role="button"
+                           t-attf-class="btn btn-outline-primary #{state.revisionId === rev.revision_id ? 'active' : ''}"
+                           t-on-click="() => this.updateCurrentRevision(rev.revision_id )">
+                            <strong><t t-esc="this.getRevisionDate(rev)" /></strong>
+                            <br/>
+                            <small><t t-esc="rev.create_user_name" /></small>
+                        </a>
+                    </t>
+                </div>
+                <div class="history-container o_notebook">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="history-content" data-bs-toggle="tab"
+                                    data-bs-target="#history-content-tab" type="button" role="tab"
+                                    aria-controls="content" aria-selected="true">Content</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="history-comparison" data-bs-toggle="tab"
+                                    data-bs-target="#history-comparison-tab" type="button" role="tab"
+                                    aria-controls="comparison" aria-selected="false">Comparison</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="history-content-tab" role="tabpanel"
+                             aria-labelledby="history-content">
+                            <t t-out="state.revisionContent"/>
+                        </div>
+                        <div class="tab-pane fade" id="history-comparison-tab" role="tabpanel"
+                             aria-labelledby="history-comparison">
+                            <t t-out="state.revisionComparison"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="_onRestoreRevisionClick">Restore history</button>
+                <button class="btn btn-secondary" t-on-click="props.close">Cancel</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

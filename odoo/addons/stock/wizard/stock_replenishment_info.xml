@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_stock_replenishment_info" model="ir.ui.view">
+        <field name="name">Stock Replenishment Information</field>
+        <field name="model">stock.replenishment.info</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="orderpoint_id" invisible="1"/>
+                <field name="qty_to_order" invisible="1"/>
+                <group>
+                    <group>
+                        <field nolabel="1" name="json_lead_days" colspan="2" widget="lead_days_widget"/>
+                    </group>
+                    <group>
+                        <field nolabel="1" name="json_replenishment_history" colspan="2" widget="replenishment_history_widget"/>
+                    </group>
+                </group>
+                <notebook>
+                    <field name="warehouseinfo_ids" invisible="1"/>
+                    <page string="Warehouses" name="page_warehouses" invisible="not warehouseinfo_ids">
+                        <field name="wh_replenishment_option_ids"/>
+                    </page>
+                </notebook>
+                <footer>
+                    <button string="Close" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_stock_replenishment_info" model="ir.actions.act_window">
+        <field name="name">Replenishment Information</field>
+        <field name="res_model">stock.replenishment.info</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_stock_replenishment_info"/>
+        <field name="context">{'default_orderpoint_id': active_id}</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="replenishment_option_tree_view" model="ir.ui.view">
+        <field name="name">stock.replenishment.option.tree.view</field>
+        <field name="model">stock.replenishment.option</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="qty_to_order" column_invisible="True"/>
+                <field name="warehouse_id" string="Warehouse"/>
+                <field name="location_id" string="Warehouse Location"/>
+                <field name="free_qty" decoration-danger="free_qty &lt; qty_to_order" string="Available Quantity"/>
+                <field name="uom" string="UoM"/>
+                <field name="route_id"/>
+                <field name="lead_time"/>
+                <button name="select_route" string="Select Route" type="object" class="btn btn-link"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="replenishment_option_warning_view" model="ir.ui.view">
+        <field name="name">stock.replenishment.warning.view</field>
+        <field name="model">stock.replenishment.option</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <form>
+                <div>
+                    <field name="warning_message"/>
+                </div>
+                <footer>
+                    <button name="order_avbl" type="object" class="btn-primary" invisible="free_qty &lt;= 0.0">
+                        Order <field name="free_qty"/>
+                    </button>
+                    <button name="order_all" type="object">
+                        Order <field name="qty_to_order"/>
+                    </button>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

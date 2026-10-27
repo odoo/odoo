@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.ActionpadWidget">
+        <div class="actionpad d-flex flex-column flex-grow-1 mw-50 p-0 border-end">
+            <button class="button mobile-more-button btn btn-secondary flex-fill border-bottom" t-if="ui.isSmall and props.onClickMore" t-on-click="props.onClickMore">
+                <span>More...</span>
+            </button>
+            <button class="button set-partner btn btn-light rounded-0 py-2 flex-shrink-1 fw-bolder"
+                    t-on-click="() => this.pos.selectPartner()">
+                <div class="d-flex justify-content-center align-items-center ">
+                    <span class="d-flex justify-content-center align-items-center rounded-circle me-2 text-bg-dark" t-if="!ui.isSmall">
+                        <i class="fa fa-user" role="img" aria-label="Customer" title="Customer" />
+                    </span>
+                    <div t-if="props.partner" class="text-truncate fw-bolder text-action">
+                        <t t-esc="props.partner.name" />
+                    </div>
+                    <div t-else="fw-bolder">
+                        Customer
+                    </div>
+                </div>
+            </button>
+            <button class="pay validation pay-order-button btn-primary"
+                t-attf-class="{{getMainButtonClasses()}}" 
+                t-att-class="{ 'with-more-button': props.onClickMore and ui.isSmall }" 
+                t-on-click="props.actionToTrigger ? this.props.actionToTrigger : () => pos.get_order().pay()">
+                <div class="pay-circle d-flex align-items-center justify-content-center py-2 mb-2">
+                    <i class="oi oi-chevron-right" role="img" aria-label="Pay" title="Pay" />
+                </div>
+                <t class="text-white" t-esc="props.actionName" />
+            </button>
+        </div>
+    </t>
+
+</templates>

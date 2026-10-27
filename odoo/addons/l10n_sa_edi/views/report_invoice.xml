@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="arabic_english_invoice" inherit_id="l10n_sa.arabic_english_invoice">
+
+            <!--    Add Currency Exchange rate if different currency than SAR    -->
+            <xpath expr="//div[hasclass('clearfix')]" position="after">
+                <table t-if="o.company_id.country_id.code == 'SA' and o.currency_id != o.company_id.currency_id"
+                    id="sar_amounts" style="page-break-inside: avoid;" class="clearfix mx-auto mt-3 table-sm table-borderless">
+                    <t t-set="curr_date" t-value="o.invoice_date or datetime.datetime.today()"></t>
+                    <t t-set="sar_rate"
+                    t-value="o.env['res.currency']._get_conversion_rate(o.currency_id, o.company_id.currency_id, o.company_id, curr_date)"/>
+                    <tr>
+                        <td class="w-25 text-start" dir="rtl"><strong>سعر الصرف</strong></td>
+                        <td class="w-25 text-start" dir="rtl"><strong>الإجمالي الفرعي بالريال السعودي</strong></td>
+                        <td class="w-25 text-start" dir="rtl"><strong>مبلغ ضريبة القيمة المضافة بالريال السعودي</strong></td>
+                        <td class="w-25 text-start" dir="rtl"><strong>الإجمالي بالريال السعودي</strong></td>
+                    </tr>
+                    <tr>
+                        <td class="w-25"><span class="fw-bold">Exchange Rate</span></td>
+                        <td class="w-25"><span class="fw-bold">Subtotal</span></td>
+                        <td class="w-25"><span class="fw-bold">VAT Amount</span></td>
+                        <td class="w-25"><span class="fw-bold">Total</span></td>
+                    </tr>
+                    <tr>
+                        <td><p class="m-0" t-esc="sar_rate" t-options='{"widget": "float", "precision": 5}'/></td>
+                        <td><p class="m-0" t-esc="o.amount_untaxed_signed"
+                            t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/></td>
+                        <td><p class="m-0"
+                            t-esc="o.currency_id._convert(o.amount_tax, o.company_id.currency_id, o.company_id, curr_date)"
+                            t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/></td>
+                        <td><p class="m-0" t-esc="o.amount_total_signed"
+                            t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/></td>
+                    </tr>
+                </table>
+            </xpath>
+
+            <xpath expr="//t[@t-set='address']" position="inside">
+                <div t-if="o.partner_id.l10n_sa_additional_identification_scheme and o.partner_id.l10n_sa_additional_identification_number" class="text-end mt0">
+                        <span t-field="o.partner_id.l10n_sa_additional_identification_scheme"/>:
+                        <span t-field="o.partner_id.l10n_sa_additional_identification_number"/>
+                </div>
+            </xpath>
+            <xpath expr="//div[hasclass('col-4')]//span[@t-if=&quot;o.move_type == &apos;out_invoice&apos; and o.state == &apos;posted&apos;&quot;]" position="replace">
+                <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">
+                    <t t-if="o._l10n_sa_is_simplified()">
+                        Simplified Tax Invoice
+                    </t>
+                    <t t-else="">
+                        Tax Invoice
+                    </t>
+                </span>
+            </xpath>
+            <xpath expr="//div[hasclass('col-4')][3]//span[@t-if=&quot;o.move_type == &apos;out_invoice&apos; and o.state == &apos;posted&apos;&quot;]" position="replace">
+                <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">
+                    <t t-if="o._l10n_sa_is_simplified()">
+                        فاتورة ضريبية مبسطة
+                    </t>
+                    <t t-else="">
+                        فاتورة ضريبية
+                    </t>
+                </span>
+            </xpath>
+
+        </template>
+
+    </data>
+</odoo>

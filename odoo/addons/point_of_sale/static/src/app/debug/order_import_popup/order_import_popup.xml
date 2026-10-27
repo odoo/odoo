@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.OrderImportPopup">
+        <div class="popup popup-import">
+            <div class="modal-header">
+                <h4 class="modal-title title drag-handle">
+                    Finished Importing Orders
+                </h4>
+            </div>
+            <main class="body modal-body">
+                <li>Successfully imported <b><t t-esc="props.report.paid or 0" /></b> paid orders</li>
+                <li>Successfully imported <b><t t-esc="props.report.unpaid or 0" /></b> unpaid orders</li>
+                <t t-if="unpaidSkipped">
+                    <li><b><t t-esc="unpaidSkipped"/></b> unpaid orders could not be imported
+                        <ul>
+                            <li><b><t t-esc="props.report.unpaid_skipped_existing or 0" /></b> were duplicates of existing orders</li>
+                            <li><b><t t-esc="props.report.unpaid_skipped_session or 0" /></b> belong to another session:
+                                <t t-if="props.report.unpaid_skipped_sessions">
+                                    <ul>
+                                        <li>Session ids: <b><t t-esc="props.report.unpaid_skipped_sessions" /></b></li>
+                                    </ul>
+                                </t>
+                            </li>
+                        </ul>
+                    </li>
+                </t>
+            </main>
+            <footer class="footer modal-footer">
+                <div class="button cancel btn btn-lg btn-primary" t-on-click="confirm">
+                    <t t-esc="props.confirmText" />
+                </div>
+            </footer>
+        </div>
+    </t>
+
+</templates>

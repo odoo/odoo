@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="sale_advance_payment_inv_timesheet_view_form" model="ir.ui.view">
+        <field name="name">sale_timesheet.sale.advance.payment.inv.view.form</field>
+        <field name="model">sale.advance.payment.inv</field>
+        <field name="inherit_id" ref="sale.view_sale_advance_payment_inv"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="disable_autofocus">true</attribute>
+            </xpath>
+            <group name="down_payment_specification" position="after">
+                <field name="invoicing_timesheet_enabled" invisible="1"/>
+                <group
+                    name="timesheet_invoice_date_range"
+                    invisible="not invoicing_timesheet_enabled or advance_payment_method != 'delivered'">
+                    <field
+                        class="w-75 w-md-50 w-lg-25"
+                        name="date_start_invoice_timesheet"
+                        string="Timesheets Period"
+                        widget="daterange"
+                        required="date_start_invoice_timesheet or date_end_invoice_timesheet"
+                        options="{'end_date_field': 'date_end_invoice_timesheet', 'always_range': true}"
+                        title="Only timesheets not yet invoiced (and validated, if applicable) from this period will be invoiced. If the period is not indicated, all timesheets not yet invoiced (and validated, if applicable) will be invoiced without distinction."
+                    />
+                    <field name="date_end_invoice_timesheet" invisible="1" />
+                </group>
+            </group>
+        </field>
+    </record>
+
+</odoo>

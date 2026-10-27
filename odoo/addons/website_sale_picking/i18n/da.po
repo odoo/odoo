@@ -1,0 +1,161 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_sale_picking
+# 
+# Translators:
+# lhmflexerp <lhm@flexerp.dk>, 2024
+# Sanne Kristensen <sanne@vkdata.dk>, 2024
+# Martin Trigaux, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Martin Trigaux, 2024\n"
+"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: da\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: website_sale_picking
+#: model_terms:payment.provider,pending_msg:website_sale_picking.payment_provider_onsite
+msgid ""
+"<i>Your order has been saved.</i> Please come to the store to pay for your "
+"products"
+msgstr ""
+"<i>Din ordre er blevet gemt.</i> Kom venligst til butikken for at betale for"
+" dine produkter"
+
+#. module: website_sale_picking
+#: model_terms:ir.ui.view,arch_db:website_sale_picking.payment_confirmation_status
+msgid "<span class=\"text-muted\"> (On site picking)</span>"
+msgstr "<span class=\"text-muted\"> (Udvalg på stedet)</span>"
+
+#. module: website_sale_picking
+#: model:ir.model,name:website_sale_picking.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigurer opsætning"
+
+#. module: website_sale_picking
+#: model:ir.model.fields,field_description:website_sale_picking.field_payment_provider__custom_mode
+msgid "Custom Mode"
+msgstr "Brugerdefineret tilstand"
+
+#. module: website_sale_picking
+#: model_terms:ir.ui.view,arch_db:website_sale_picking.res_config_settings_view_form
+msgid "Customize Pickup Sites"
+msgstr "Tilpas afhentningssteder"
+
+#. module: website_sale_picking
+#. odoo-javascript
+#: code:addons/website_sale_picking/static/src/js/payment_form.js:0
+#, python-format
+msgid ""
+"If you believe that it is an error, please contact the website "
+"administrator."
+msgstr ""
+"Hvis du mener, at det er en fejl, bedes du kontakte hjemmesidens "
+"administrator."
+
+#. module: website_sale_picking
+#. odoo-javascript
+#: code:addons/website_sale_picking/static/src/js/payment_form.js:0
+#, python-format
+msgid "No suitable payment method could be found."
+msgstr "Ingen passende betalingsmetode kunne findes."
+
+#. module: website_sale_picking
+#: model:ir.model.fields.selection,name:website_sale_picking.selection__payment_provider__custom_mode__onsite
+msgid "On Site"
+msgstr "På stedet"
+
+#. module: website_sale_picking
+#: model:product.template,name:website_sale_picking.onsite_delivery_product_product_template
+msgid "On site picking"
+msgstr "Vælg på stedet"
+
+#. module: website_sale_picking
+#: model:payment.provider,name:website_sale_picking.payment_provider_onsite
+#: model_terms:product.template,description:website_sale_picking.onsite_delivery_product_product_template
+msgid "Pay in Store"
+msgstr "Betal i butik"
+
+#. module: website_sale_picking
+#: model:ir.model,name:website_sale_picking.model_payment_provider
+msgid "Payment Provider"
+msgstr "Betalingsudbyder"
+
+#. module: website_sale_picking
+#: model:ir.model.fields,field_description:website_sale_picking.field_res_config_settings__picking_site_ids
+#: model:ir.model.fields,field_description:website_sale_picking.field_website__picking_site_ids
+#: model_terms:ir.ui.view,arch_db:website_sale_picking.res_config_settings_view_form
+msgid "Picking sites"
+msgstr "Udvælgelsessteder"
+
+#. module: website_sale_picking
+#: model:ir.model.fields.selection,name:website_sale_picking.selection__delivery_carrier__delivery_type__onsite
+msgid "Pickup in store"
+msgstr "Afhentning i butik"
+
+#. module: website_sale_picking
+#: model:ir.model.fields,field_description:website_sale_picking.field_delivery_carrier__delivery_type
+msgid "Provider"
+msgstr "Udbyder"
+
+#. module: website_sale_picking
+#: model:ir.model,name:website_sale_picking.model_sale_order
+msgid "Sales Order"
+msgstr "Salgsordre"
+
+#. module: website_sale_picking
+#: model:ir.model,name:website_sale_picking.model_delivery_carrier
+msgid "Shipping Methods"
+msgstr "Leveringsmetoder"
+
+#. module: website_sale_picking
+#. odoo-python
+#: code:addons/website_sale_picking/models/delivery_carrier.py:0
+#, python-format
+msgid "The picking site and warehouse must share the same company"
+msgstr "Afhentingsstedet og lageret skal dele samme virksomhed"
+
+#. module: website_sale_picking
+#: model:ir.model.fields,field_description:website_sale_picking.field_delivery_carrier__warehouse_id
+msgid "Warehouse"
+msgstr "Lagerstyring"
+
+#. module: website_sale_picking
+#: model:ir.model,name:website_sale_picking.model_website
+msgid "Website"
+msgstr "Hjemmeside"
+
+#. module: website_sale_picking
+#. odoo-python
+#: code:addons/website_sale_picking/controllers/main.py:0
+#, python-format
+msgid "You cannot pay onsite if the delivery is not onsite"
+msgstr "Du kan ikke betale på stedet, hvis leveringen ikke er på stedet"
+
+#. module: website_sale_picking
+#: model_terms:payment.provider,auth_msg:website_sale_picking.payment_provider_onsite
+msgid "Your payment has been authorized."
+msgstr "Din betaling er blevet godkendt."
+
+#. module: website_sale_picking
+#: model_terms:payment.provider,cancel_msg:website_sale_picking.payment_provider_onsite
+msgid "Your payment has been cancelled."
+msgstr "Din betaling er blevet annulleret."
+
+#. module: website_sale_picking
+#: model_terms:payment.provider,done_msg:website_sale_picking.payment_provider_onsite
+msgid "Your payment has been successfully processed."
+msgstr "Din betaling er blevet behandlet."
+
+#. module: website_sale_picking
+#: model:delivery.carrier,name:website_sale_picking.default_onsite_carrier
+msgid "[On Site Pick] My Shop 1"
+msgstr "[Vælg på stedet] Min butik 1"

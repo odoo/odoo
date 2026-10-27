@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="view_server_action_form_template">
+            <field name="name">ir.actions.server.form</field>
+            <field name="model">ir.actions.server</field>
+            <field name="inherit_id" ref="base.view_server_action_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='action_content']" position="inside">
+                    <field name="activity_type_id" options="{'no_create': True, 'no_open': True}"
+                        required="state == 'next_activity'" invisible="state != 'next_activity'"/>
+                    <field name="activity_summary" placeholder="e.g. Discuss proposal" invisible="state != 'next_activity'"/>
+                </xpath>
+                <xpath expr="//group[@name='action_content']" position="after">
+                    <group invisible="state != 'next_activity'">
+                        <label for="activity_date_deadline_range"/>
+                        <div class="o_row">
+                            <field name="activity_date_deadline_range" class="oe_inline"/>
+                            <field name="activity_date_deadline_range_type" class="oe_inline" required="state == 'next_activity' and activity_date_deadline_range &gt; 0"/>
+                        </div>
+                        <field name="activity_user_type" required="state == 'next_activity'"/>
+                        <field name="activity_user_field_name" placeholder="e.g. user_id" invisible="activity_user_type == 'specific'" required="state == 'next_activity' and activity_user_type == 'generic'"/>
+                        <field name="activity_user_id" placeholder="Choose a user..." invisible="activity_user_type == 'generic'" required="state == 'next_activity' and activity_user_type == 'specific'"/>
+                    </group>
+                    <field name="activity_note" class="oe-bordered-editor" placeholder="Add a description to your activity..." invisible="state != 'next_activity'"/>
+                </xpath>
+                <xpath expr="//field[@name='link_field_id']" position="after">
+                    <field name="partner_ids" string="Followers to add" widget="many2many_tags"
+                           placeholder="Choose a user..."
+                           invisible="state != 'followers'"
+                           required="state == 'followers'"/>
+                    <field name="partner_ids" string="Followers to remove" widget="many2many_tags"
+                           placeholder="Choose a user..."
+                           invisible="state != 'remove_followers'"
+                           required="state == 'remove_followers'"/>
+                    <field name="template_id"
+                           placeholder="Choose a template..."
+                           invisible="state != 'mail_post'"
+                           required="state == 'mail_post'"
+                           context="{'default_model': model_name,
+                                     'default_use_default_to': True}"/>
+                    <label for="mail_post_method" invisible="state != 'mail_post'"/>
+                    <div class="d-flex flex-column" invisible="state != 'mail_post'">
+                        <field name="mail_post_method" required="state == 'mail_post'"/>
+                        <div class="text-muted">
+                            <span invisible="mail_post_method != 'email'">
+                                The message will be sent as an email to the recipients of the
+                                template and will not appear in the messaging history.
+                            </span>
+                            <span invisible="mail_post_method != 'note'">
+                                The message will be posted as an internal note visible to internal
+                                users in the messaging history.
+                            </span>
+                            <span invisible="mail_post_method != 'comment'">
+                                The message will be posted as a message on the record,
+                                notifying all followers. It will appear in the messaging history.
+                            </span>
+                        </div>
+                    </div>
+                    <field name="mail_post_autofollow" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

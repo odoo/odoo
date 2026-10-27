@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="ImportDataOptions">
+        <div t-if="isVisible and state.options.length > 1" t-attf-class="o_import_dropdown o_import_field_#{props.fieldInfo.type} alert alert-danger mb-2">
+            <b>When a value cannot be matched:</b>
+            <select class="o_import_create_option form-select w-auto bg-light" t-att-type="props.fieldInfo.type" t-on-change="onSelectionChanged">
+                <option t-foreach="state.options" t-as="option" t-key="option" t-att-value="option[0]">
+                    <t t-esc="option[1]"/>
+                </option>
+            </select>
+        </div>
+    </t>
+</templates>

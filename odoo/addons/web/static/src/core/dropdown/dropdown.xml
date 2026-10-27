@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+  <t t-name="web.Dropdown">
+    <div
+      class="o-dropdown dropdown"
+      t-att-class="props.class"
+      t-attf-class="
+        {{ state.directionCaretClass || ''}}
+        {{ state.open ? 'show' : ''}}
+        {{ !showCaret ? 'o-dropdown--no-caret' : '' }}
+      "
+      t-ref="root"
+    >
+      <button
+        t-if="props.toggler !== 'parent'"
+        type="button"
+        class="dropdown-toggle"
+        t-attf-class="
+          {{props.togglerClass || ''}}
+          {{parentDropdown ? 'dropdown-item' : ''}}
+        "
+        t-att-disabled="props.disabled"
+        t-on-click.stop="onTogglerClick"
+        t-on-mouseenter="onTogglerMouseEnter"
+        t-att-title="props.title"
+        t-att-data-hotkey="props.hotkey"
+        t-att-data-tooltip="props.tooltip"
+        t-att-tabindex="props.skipTogglerTabbing ? -1 : 0"
+        t-att-aria-expanded="state.open ? 'true' : 'false'"
+        t-ref="togglerRef"
+      >
+        <t t-slot="toggler" open="state.open"/>
+      </button>
+      <div
+        t-if="state.open"
+        t-attf-class="
+          o-dropdown--menu dropdown-menu
+          {{ parentDropdown ? 'o-dropdown--menu-submenu' : '' }}
+          {{ props.menuDisplay }}
+        "
+        t-att-class="props.menuClass"
+        role="menu"
+        t-ref="menuRef"
+        t-on-pointerenter="() => props.holdOnHover and position.lock()"
+        t-on-pointerleave="() => props.holdOnHover and position.unlock()"
+        t-on-scroll="props.onScroll"
+      >
+        <t t-slot="default" />
+      </div>
+    </div>
+  </t>
+
+</templates>

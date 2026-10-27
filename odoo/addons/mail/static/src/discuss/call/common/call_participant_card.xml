@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="discuss.CallParticipantCard">
+        <div class="o-discuss-CallParticipantCard position-relative cursor-pointer d-flex flex-column align-items-center justify-content-center mh-100 mw-100 rounded-1"
+            t-att-class="{
+                'o-isTalking': !props.minimized and isTalking,
+                'o-isInvitation opacity-50': !rtcSession,
+                'o-inset': props.inset,
+                'o-small': props.inset and (ui.isSmall or props.minimized)
+            }"
+            t-att-title="name"
+            t-att-aria-label="name"
+            t-attf-class="{{ props.className }}"
+            t-on-click="onClick"
+            t-on-contextmenu="onContextMenu"
+            t-on-mousedown="onMouseDown"
+            t-on-touchmove="(ev) => this.drag(ev)"
+            t-ref="root"
+        >
+            <!-- card -->
+            <CallParticipantVideo t-if="hasVideo" session="rtcSession" type="props.cardData.type" inset="props.inset"/>
+            <div t-else="" class="o-discuss-CallParticipantCard-avatar d-flex align-items-center justify-content-center h-100 w-100 rounded-1" t-att-class="{ 'o-minimized': props.minimized }" draggable="false">
+                <img alt="Avatar"
+                        t-att-class="{
+                        'o-isTalking': isTalking,
+                        'o-isInvitation': !rtcSession,
+                        }"
+                        class="h-100 rounded-circle border-5 o_object_fit_cover"
+                        t-att-src="threadService.avatarUrl(channelMember?.persona, props.thread)"
+                        draggable="false"
+                />
+            </div>
+            <t t-if="rtcSession">
+                <!-- overlay -->
+                <span class="o-discuss-CallParticipantCard-overlay o-discuss-CallParticipantCard-overlayBottom z-index-1 position-absolute bottom-0 start-0 d-flex overflow-hidden">
+                    <span t-if="!props.minimized and !props.inset" class="p-1 rounded-1 text-truncate" t-esc="name"/>
+                    <small t-if="rtcSession.isScreenSharingOn and props.minimized and !isOfActiveCall" class="user-select-none o-minimized rounded-pill text-bg-danger d-flex align-items-center fw-bolder" title="live" aria-label="live">
+                        LIVE
+                    </small>
+                </span>
+                <div class="o-discuss-CallParticipantCard-overlay position-absolute top-0 end-0 d-flex flex-row-reverse">
+                    <span t-if="hasRaisingHand" class="d-flex flex-column justify-content-center me-1 rounded-circle bg-500" t-att-class="{'o-minimized p-1': props.minimized, 'p-2': !props.minimized }" title="raising hand" aria-label="raising hand">
+                        <i class="fa fa-hand-paper-o"/>
+                    </span>
+                    <span t-if="rtcSession.isSelfMuted and !rtcSession.isDeaf" class="d-flex flex-column justify-content-center me-1 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-class="{'o-minimized p-1': props.minimized, 'p-2': !props.minimized }" title="muted" aria-label="muted">
+                        <i class="fa fa-microphone-slash"/>
+                    </span>
+                    <span t-if="rtcSession.isDeaf" class="d-flex flex-column justify-content-center me-1 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-class="{'o-minimized p-1': props.minimized, 'p-2': !props.minimized }" title="deaf" aria-label="deaf">
+                        <i class="fa fa-deaf"/>
+                    </span>
+                    <span t-if="hasMediaError" class="o-discuss-CallParticipantCard-overlay-replayButton d-flex flex-column justify-content-center me-1 p-2 rounded-circle" title="media player Error" t-on-click.stop="onClickReplay">
+                        <i t-if="rootHover.isHover" class="fa fa-repeat text-danger"/>
+                        <i t-else="" class="fa fa-exclamation-triangle text-danger"/>
+                    </span>
+                    <span t-if="showConnectionState" class="d-flex flex-column justify-content-center me-1 p-2 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-title="rtcSession.connectionState">
+                        <i class="fa fa-exclamation-triangle text-warning"/>
+                    </span>
+                    <span t-if="showServerState" class="d-flex flex-column justify-content-center me-1 p-2 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-title="rtc.state.serverState">
+                        <i class="fa fa-exclamation-triangle text-warning"/>
+                    </span>
+                    <span t-if="rtcSession.isScreenSharingOn and !props.minimized and !isOfActiveCall" class="user-select-none rounded-pill text-bg-danger d-flex align-items-center me-1 fw-bolder" title="live" aria-label="live">
+                        LIVE
+                    </span>
+                </div>
+
+                <!-- context menu -->
+                <i t-if="isContextMenuAvailable" class="position-absolute bottom-0 start-50" t-ref="contextMenuAnchor"/>
+            </t>
+        </div>
+    </t>
+
+</templates>

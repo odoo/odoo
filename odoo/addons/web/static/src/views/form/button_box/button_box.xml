@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="web.Form.ButtonBox" >
+    <div class="o-form-buttonbox position-relative d-flex w-md-auto" t-attf-class="{{ isFull ? 'o_full w-100' : 'o_not_full'}} {{this.props.class}}">
+        <t t-slot="{{ button_value }}" t-foreach="visibleButtons" t-as="button" t-key="button_value"/>
+        <t t-if="additionalButtons.length" >
+            <Dropdown position="'bottom-end'" togglerClass="'o_button_more btn btn-outline-secondary d-flex justify-content-center align-items-center'" menuClass="'o_dropdown_more position-absolute top-100 p-0 border-0'" class="'oe_stat_button btn position-relative p-0 border-0'">
+                <t t-set-slot="toggler"><span>More</span></t>
+                <DropdownItem t-foreach="additionalButtons" t-as="button" t-key="button_value" class="'d-flex flex-column p-0'">
+                    <t t-slot="{{ button_value }}" />
+                </DropdownItem>
+            </Dropdown>
+        </t>
+    </div>
+</t>
+
+</templates>

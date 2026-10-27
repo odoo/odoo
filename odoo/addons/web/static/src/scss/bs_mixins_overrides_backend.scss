@@ -1,0 +1,33 @@
+//=============================================================================
+// Bootstrap Mixins and Functions Extensions
+// Those will affect how bootstrap is generated in the backend only
+//=============================================================================
+
+
+// Function used to retrieve a text color prioritizing our fine-tuned ones.
+// ----------------------------------------------------------------------------
+@function o-text-color($key) {
+    $-all-text-colors: map-merge($theme-colors, $o-theme-text-colors);
+
+    @if map-has-key($-all-text-colors, $key) {
+        @return map-get($-all-text-colors, $key);
+    }
+
+    @return false;
+}
+
+// Customize Bootstrap 'text-emphasis-variant' mixin allowing text colors other
+// than the '$theme-colors' ones.
+// It prioritizes the '$o-theme-text-colors' map and fallbacks to default.
+// ----------------------------------------------------------------------------
+@mixin text-emphasis-variant($-parent, $-color) {
+    #{$-parent} {
+        @include o-print-color($-color, color, text-opacity);
+    }
+
+    a#{$-parent}, button#{$-parent} {
+        &:hover, &:focus, &:active, &.active {
+            @include o-print-color(shift-color($-color, $link-shade-percentage), color, text-opacity);
+        }
+    }
+}

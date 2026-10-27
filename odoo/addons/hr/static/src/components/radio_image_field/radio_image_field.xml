@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="hr_homeworking.RadioImageField">
+        <div role="radiogroup" class="d-flex flex-wrap" t-att-aria-label="string">
+            <t t-foreach="items" t-as="item" t-key="item[0]">
+                <t t-if="['office', 'home', 'other'].includes(item[0])">
+                    <div class="form-check o_radio_item me-1" aria-atomic="true">
+                        <input
+                            type="radio"
+                            class="form-check-input o_radio_input"
+                            t-att-checked="item[0] === value"
+                            t-att-disabled="props.readonly"
+                            t-att-name="id"
+                            t-att-data-value="item[0]"
+                            t-att-data-index="item_index"
+                            t-att-id="`${id}_${item[0]}`"
+                            t-on-change="() => this.onChange(item)"
+                        />
+                        <t t-if="item[0] === 'office'">
+                            <i class="fa fa-building-o fa-2x" role="img"/>
+                        </t>
+                        <t t-elif="item[0] === 'home'">
+                            <i class="fa fa-home fa-2x" role="img"/>
+                        </t>
+                        <t t-else="">
+                            <i class="fa fa-map-marker fa-2x" role="img"/>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </div>
+    </t>
+
+
+</templates>

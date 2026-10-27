@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="sale_order_portal_content_inherit_sale_stock_inherit_website_sale"
+        name="Shipping tracking on orders followup"
+        inherit_id="sale_stock.sale_order_portal_content_inherit_sale_stock">
+        <xpath expr="//div[@name='delivery_details']" position="after">
+            <div t-if="picking.carrier_tracking_ref" class="small d-lg-inline-block">
+                Tracking:
+                <t t-set="multiple_carrier_tracking" t-value="picking.get_multiple_carrier_tracking()"/>
+                <t t-if="multiple_carrier_tracking">
+                    <t t-foreach="multiple_carrier_tracking" t-as="line">
+                        <a t-att-href="line[1]" target="_blank">
+                            <span t-esc="line[0]"/>
+                        </a>
+                        <span t-if="not line_last"> + </span>
+                    </t>
+                </t>
+                <t t-elif="picking.carrier_tracking_url">
+                    <a t-att-href="picking.carrier_tracking_url" target="_blank">
+                        <span t-field="picking.carrier_tracking_ref"/>
+                    </a>
+                </t>
+                <t t-else="">
+                    <span t-field="picking.carrier_id.name"/> <span t-field="picking.carrier_tracking_ref"/>
+                </t>
+            </div>
+            <div t-if="picking.carrier_id.get_return_label_from_portal and picking.return_label_ids">
+                <a class="ms-3" t-attf-href="/web/content/#{picking.return_label_ids[:1].id}?access_token=#{picking.return_label_ids[:1].access_token}" target="_blank">
+                    Print Return Label
+                </a>
+            </div>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_project_tree_view_account_inherit" model="ir.ui.view">
+        <field name="name">project.project.tree.view.account.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="attributes">
+                <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="project_project_form_view_account_inherit" model="ir.ui.view">
+        <field name="name">project.project.form.view.account.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="attributes">
+                <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
+            </field>
+        </field>
+    </record>
+
+</odoo>

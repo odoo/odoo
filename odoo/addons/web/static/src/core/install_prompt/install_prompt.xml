@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.InstallPrompt">
+        <Dialog contentClass="'o_install_prompt position-fixed px-2 py-3 m-2'" size="'md'" footer="false">
+            <t t-set-slot="header">
+                <div class="d-flex w-100">
+                    <h4>How to get the application</h4>
+                    <div t-on-click="onClose" type="button" class="btn-close" aria-label="Close"/>
+                </div>
+            </t>
+            <p>Install Odoo on your device to access it easily. Here are the steps to follow:</p>
+            <t t-if="isMobileSafari">
+                <ul class="list-group list-group-numbered">
+                    <li>
+                        Tap on the share icon
+                    </li>
+                    <li>
+                        Select "Add to home screen"
+                    </li>
+                </ul>
+            </t>
+            <t t-else="">
+                <ul class="list-group list-group-numbered">
+                    <li>
+                        Open "File" menu from your browser
+                    </li>
+                    <li>
+                        Select "Add to dock"
+                    </li>
+                </ul>
+            </t>
+        </Dialog>
+    </t>
+</templates>

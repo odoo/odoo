@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="sale_order_template_form" model="ir.ui.view">
+        <field name="name">sale.order.template.form</field>
+        <field name="model">sale.order.template</field>
+        <field name="inherit_id" ref="sale_management.sale_order_template_view_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page name="pdf_quote" string="PDF Quote Builder">
+                    <group>
+                        <p class="text-muted" colspan="2">
+                            Provide header pages and footer pages to compose an attractive quotation
+                            with more information about your company, your products and your services.
+                            The pdf of your quotes will be built by putting together header pages,
+                            product descriptions, details of the quote and then the footer pages.
+                            If empty, it will use those define in the company settings.<br/>
+                            <a href="https://www.odoo.com/documentation/17.0/_downloads/5f0840ed187116c425fdac2ab4b592e1/pdfquotebuilderexamples.zip">
+                                <i class="fa fa-arrow-right"/> Download examples
+                            </a>
+                        </p>
+                        <group>
+                            <field name="sale_header_name" invisible="1"/>
+                            <field name="sale_header" filename="sale_header_name" options="{'accepted_file_extensions': '.pdf'}"/>
+                            <field name="sale_footer_name" invisible="1"/>
+                            <field name="sale_footer" filename="sale_footer_name" options="{'accepted_file_extensions': '.pdf'}"/>
+                        </group>
+                        <p class="text-muted" colspan="2">
+                            Products descriptions are pdf documents you can add directly on products.
+                            To do so, go on a product, find the "product documents" button, then add a
+                            new pdf document with a visibility set as "Inside Quotes". For each product
+                            in the quote, if the product has an "inside quotes" document, this document
+                            will be added after header pages and before the quotation details.
+                        </p>
+                        <p class="text-muted" colspan="2">
+                            Some information specific to the quote (customer name, quotation reference, ... )
+                            can be injected in these documents using pdf forms.
+                            Refer to the documentation to know more about this feature.
+                            <a href="https://www.odoo.com/documentation/17.0/applications/sales/sales/send_quotations/pdf_quote_builder.html">
+                                Learn more from the documentation.
+                            </a>
+                        </p>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+</odoo>

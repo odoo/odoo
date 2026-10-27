@@ -1,0 +1,395 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* data_recycle
+# 
+# Translators:
+# Patrick-Jordan Kiudorv, 2023
+# Helen Sulaoja <helen@avalah.ee>, 2023
+# Birgit Vijar, 2023
+# Martin Trigaux, 2023
+# Rivo Zängov <eraser@eraser.ee>, 2023
+# Leaanika Randmets, 2023
+# Arma Gedonsky <armagedonsky@hot.ee>, 2023
+# Triine Aavik <triine@avalah.ee>, 2023
+# Anna, 2023
+# Eneli Õigus <enelioigus@gmail.com>, 2023
+# JanaAvalah, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: JanaAvalah, 2023\n"
+"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: et\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.notification
+msgid ""
+"' recycling rule.<br/>\n"
+"You can validate those changes"
+msgstr ""
+"' recycling rule.<br/>\n"
+"Saate need muudatused kinnitada"
+
+#. module: data_recycle
+#. odoo-python
+#: code:addons/data_recycle/models/data_recycle_record.py:0
+#, python-format
+msgid "**Record Deleted**"
+msgstr "**Kirje kustutatud**"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_merge_model_form
+msgid "<span class=\"me-1\">Every</span>"
+msgstr "<span class=\"me-1\">Iga</span>"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__active
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__active
+msgid "Active"
+msgstr "Aktiivne"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__recycle_action__archive
+msgid "Archive"
+msgstr "Arhiveeri"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__recycle_mode__automatic
+msgid "Automatic"
+msgstr "Automaatne"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__company_id
+msgid "Company"
+msgstr "Ettevõte"
+
+#. module: data_recycle
+#: model:ir.ui.menu,name:data_recycle.menu_data_cleaning_config
+msgid "Configuration"
+msgstr "Seaded"
+
+#. module: data_recycle
+#: model_terms:ir.actions.act_window,help:data_recycle.action_data_recycle_record
+#: model_terms:ir.actions.act_window,help:data_recycle.action_data_recycle_record_notification
+msgid "Configure rules to identify records to clean"
+msgstr "Seadista reeglid, et leida andmeid, mida puhastada"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__create_uid
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__create_uid
+msgid "Created by"
+msgstr "Loodud (kelle poolt?)"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__create_date
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__create_date
+msgid "Created on"
+msgstr "Loodud"
+
+#. module: data_recycle
+#: model:ir.ui.menu,name:data_recycle.menu_data_cleaning_root
+msgid "Data Cleaning"
+msgstr "Andmepuhastus"
+
+#. module: data_recycle
+#: model:ir.actions.server,name:data_recycle.ir_cron_clean_records_ir_actions_server
+msgid "Data Recycle: Clean Records"
+msgstr "Data Recycle: Clean Records"
+
+#. module: data_recycle
+#. odoo-python
+#: code:addons/data_recycle/models/data_recycle_model.py:0
+#, python-format
+msgid "Data to Recycle"
+msgstr ""
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__notify_frequency_period__days
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__time_field_delta_unit__days
+msgid "Days"
+msgstr "päevad"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__recycle_action__unlink
+msgid "Delete"
+msgstr "Kustuta"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__time_field_delta
+msgid "Delta"
+msgstr "Delta"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__time_field_delta_unit
+msgid "Delta Unit"
+msgstr "Delta üksus"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
+msgid "Discard"
+msgstr "Loobu"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_search
+msgid "Discarded"
+msgstr "Loobutud"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__display_name
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__display_name
+msgid "Display Name"
+msgstr "Kuvatav nimi"
+
+#. module: data_recycle
+#: model:ir.actions.act_window,name:data_recycle.action_data_recycle_record
+#: model:ir.actions.act_window,name:data_recycle.action_data_recycle_record_notification
+msgid "Field Recycle Records"
+msgstr "Field Recycle Records"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__domain
+msgid "Filter"
+msgstr "Filter"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__id
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__id
+msgid "ID"
+msgstr "ID"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__include_archived
+msgid "Include Archived"
+msgstr "Kaasa arhiveeritud"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__last_notification
+msgid "Last Notification"
+msgstr "Viimane teavitus"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__write_uid
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__write_uid
+msgid "Last Updated by"
+msgstr "Viimati uuendatud"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__write_date
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__write_date
+msgid "Last Updated on"
+msgstr "Viimati uuendatud"
+
+#. module: data_recycle
+#: model:ir.model.fields,help:data_recycle.field_data_recycle_model__notify_user_ids
+msgid "List of users to notify when there are new records to recycle"
+msgstr "List of users to notify when there are new records to recycle"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__recycle_mode__manual
+msgid "Manual"
+msgstr "Käsitsi"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__res_model_id
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__res_model_id
+msgid "Model"
+msgstr "Mudel"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__res_model_name
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__res_model_name
+msgid "Model Name"
+msgstr "Mudeli nimetus"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__notify_frequency_period__months
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__time_field_delta_unit__months
+msgid "Months"
+msgstr "kuu(d)"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__name
+msgid "Name"
+msgstr "Nimi"
+
+#. module: data_recycle
+#: model_terms:ir.actions.act_window,help:data_recycle.action_data_recycle_record
+#: model_terms:ir.actions.act_window,help:data_recycle.action_data_recycle_record_notification
+msgid "No cleaning suggestions"
+msgstr "Puhastamise soovitusi ei ole"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__notify_frequency
+msgid "Notify"
+msgstr "Teavita"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__notify_frequency_period
+msgid "Notify Frequency Period"
+msgstr "Teavitamise sagedus"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__notify_user_ids
+msgid "Notify Users"
+msgstr "Teavita kasutajaid"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__res_id
+msgid "Record ID"
+msgstr "Kirje ID"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__name
+msgid "Record Name"
+msgstr "Kirje nimi"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_merge_model_form
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_search
+msgid "Records"
+msgstr "Kirjed"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__records_to_recycle_count
+msgid "Records To Recycle"
+msgstr "Kirjed taaskasutamiseks"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__recycle_action
+msgid "Recycle Action"
+msgstr "Taaskasutamise tegevus"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__recycle_mode
+msgid "Recycle Mode"
+msgstr "Recycle Mode"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__recycle_model_id
+msgid "Recycle Model"
+msgstr "Recycle Model"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__recycle_record_ids
+msgid "Recycle Record"
+msgstr "Recycle Record"
+
+#. module: data_recycle
+#: model:ir.ui.menu,name:data_recycle.menu_data_cleaning_config_rules_recycle
+#: model:ir.ui.menu,name:data_recycle.menu_data_recycle_record
+msgid "Recycle Records"
+msgstr "Recycle Records"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
+msgid "Recycle Rule"
+msgstr "Recycle Rule"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_search
+msgid "Recycle Rules"
+msgstr "Recycle Rules"
+
+#. module: data_recycle
+#: model:ir.model,name:data_recycle.model_data_recycle_model
+msgid "Recycling Model"
+msgstr "Recycling Model"
+
+#. module: data_recycle
+#: model:ir.model,name:data_recycle.model_data_recycle_record
+msgid "Recycling Record"
+msgstr "Recycling Record"
+
+#. module: data_recycle
+#: model:ir.actions.act_window,name:data_recycle.action_data_recycle_config
+msgid "Recyle Records Rules"
+msgstr "Recyle Records Rules"
+
+#. module: data_recycle
+#: model:ir.ui.menu,name:data_recycle.menu_data_cleaning_config_rules
+msgid "Rules"
+msgstr "Reeglid"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_merge_model_form
+msgid "Run Now"
+msgstr "Käivita kohe"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_merge_model_form
+msgid "Select a model to configure recycling actions"
+msgstr "Vali mudel, millele soovid taaskasutamise tegevusi seadistada"
+
+#. module: data_recycle
+#: model:ir.model.constraint,message:data_recycle.constraint_data_recycle_model_check_notif_freq
+msgid "The notification frequency should be greater than 0"
+msgstr "Teavituste sagedus peaks olema suurem kui 0"
+
+#. module: data_recycle
+#. odoo-python
+#: code:addons/data_recycle/models/data_recycle_model.py:0
+#, python-format
+msgid "This model doesn't manage archived records. Only deletion is possible."
+msgstr ""
+"See mudel ei halda arhiveeritud kirjeid. Võimalik on ainult kustutamine."
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__time_field_id
+msgid "Time Field"
+msgstr "Aja väli"
+
+#. module: data_recycle
+#. odoo-python
+#: code:addons/data_recycle/models/data_recycle_record.py:0
+#, python-format
+msgid "Undefined Name"
+msgstr "Määramata nimi"
+
+#. module: data_recycle
+#. odoo-javascript
+#: code:addons/data_recycle/static/src/views/data_recycle_list_view.xml:0
+#, python-format
+msgid "Unselect"
+msgstr "Eemalda valitud"
+
+#. module: data_recycle
+#. odoo-javascript
+#: code:addons/data_recycle/static/src/views/data_recycle_list_view.xml:0
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
+#, python-format
+msgid "Validate"
+msgstr "Valideeri"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.notification
+msgid "We've identified"
+msgstr "Oleme tuvastanud"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__notify_frequency_period__weeks
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__time_field_delta_unit__weeks
+msgid "Weeks"
+msgstr "Nädal"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__time_field_delta_unit__years
+msgid "Years"
+msgstr "Aastas"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.notification
+msgid "here"
+msgstr "siin"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.notification
+msgid "records to clean with the '"
+msgstr "kirjet, mida puhastada"

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_hr_timesheet_attendance_report_search" model="ir.ui.view">
+            <field name="name">Search for HR timesheet attendance report</field>
+            <field name="model">hr.timesheet.attendance.report</field>
+            <field name="arch" type="xml">
+                <search string="Timesheet Attendance">
+                    <field name="employee_id" string="Employee"/>
+                    <filter string="My Team" name="my_team" domain="[('employee_id.parent_id.user_id', '=', uid)]"/>
+                    <filter string="My Department" name="my_department" domain="[('employee_id.member_of_department', '=', True)]"/>
+                    <separator/>
+                    <filter name="month" string="Date" date="date"/>
+                    <filter name="group_by_user" string="Employee" context="{'group_by': 'employee_id'}"/>
+                    <filter name="group_by_month" string="Date" date="date" context="{'group_by': 'date'}"/>
+                </search>
+            </field>
+        </record>
+        <record id="view_hr_timesheet_attendance_report_pivot" model="ir.ui.view">
+            <field name="name">HR timesheet attendance report: Pivot</field>
+            <field name="model">hr.timesheet.attendance.report</field>
+            <field name="arch" type="xml">
+                <pivot string="Timesheet Attendance" disable_linking="1" sample="1">
+                    <field name="date" interval="month" type="row"/>
+                    <field name="total_attendance" type="measure" widget="timesheet_uom"/>
+                    <field name="total_timesheet" type="measure" widget="timesheet_uom"/>
+                    <field name="total_difference" type="measure" widget="timesheet_uom"/>
+                    <field name="timesheets_cost"/>
+                    <field name="attendance_cost"/>
+                    <field name="cost_difference"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="hr_timesheet_attendance_report_view_graph" model="ir.ui.view">
+            <field name="name">hr.timesheet.attendance.report.view.graph</field>
+            <field name="model">hr.timesheet.attendance.report</field>
+            <field name="arch" type="xml">
+                <graph string="Timesheet Attendance" sample="1" disable_linking="1">
+                    <field name="date" interval="month"/>
+                    <field name="total_difference" type="measure" widget="timesheet_uom"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="action_hr_timesheet_attendance_report" model="ir.actions.act_window">
+            <field name="name">Timesheets / Attendance Analysis</field>
+            <field name="res_model">hr.timesheet.attendance.report</field>
+            <field name="view_mode">graph,pivot</field>
+            <field name="view_id" eval="False"/>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_empty_folder">
+                    No data yet!
+                </p><p>
+                    Compare the time recorded by your employees with their attendance.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_hr_timesheet_attendance_report_pivot" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="view_hr_timesheet_attendance_report_pivot"/>
+            <field name="act_window_id" ref="action_hr_timesheet_attendance_report"/>
+        </record>
+
+        <record id="action_hr_timesheet_attendance_report_graph" model="ir.actions.act_window.view">
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="hr_timesheet_attendance_report_view_graph"/>
+            <field name="act_window_id" ref="action_hr_timesheet_attendance_report"/>
+        </record>
+
+        <menuitem id="menu_hr_timesheet_attendance_report"
+                  parent="hr_timesheet.menu_timesheets_reports"
+                  action="action_hr_timesheet_attendance_report"
+                  name="Timesheets / Attendance Analysis"/>
+    </data>
+</odoo>
