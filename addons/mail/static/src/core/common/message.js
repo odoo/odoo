@@ -1,4 +1,4 @@
-import { mountComponent } from "@html_editor/others/embedded_component_utils";
+import { useRootComponents } from "@html_editor/others/embedded_component_utils";
 import { readonlySyntaxHighlightingEmbedding } from "@html_editor/others/embedded_components/core/syntax_highlighting/readonly_syntax_highlighting";
 
 import { AttachmentList } from "@mail/core/common/attachment_list";
@@ -24,11 +24,9 @@ import {
     shallowEqual,
     signal,
     t,
-    useApp,
     useOnChange,
     usePlugin,
     useProps,
-    useScope,
 } from "@odoo/owl";
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
 
@@ -93,9 +91,7 @@ export class Message extends Component {
     };
     static template = "mail.Message";
 
-    app = useApp();
-
-    scope = useScope();
+    rootComponents = useRootComponents();
 
     setup() {
         super.setup();
@@ -649,17 +645,13 @@ export class Message extends Component {
             // from the pre node. If call replaceChildren() first, that content is gone,
             // so value becomes empty and highlighting loses the original code text.
             const props = getProps(el);
-            const { root, mountPromise } = mountComponent(
-                this.app,
+            const { root, mountPromise } = this.rootComponents.mount(
                 Component,
                 el,
                 props,
                 this.env,
                 {
                     onBeforeComplete: () => {
-                        if (this.scope.isDestroyed()) {
-                            return false;
-                        }
                         if (!el.isConnected) {
                             return false;
                         }

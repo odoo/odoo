@@ -1,5 +1,5 @@
 import { onWillRender } from "@web/owl2/utils";
-import { Component, onMounted, onWillUnmount, useProps, proxy, signal, t, useApp } from "@odoo/owl";
+import { Component, onMounted, useProps, proxy, signal, t } from "@odoo/owl";
 import { loadBundle, loadCSS } from "@web/core/assets";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -8,7 +8,7 @@ import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { getFirstAndLastTabableElements } from "@web/core/ui/ui_utils";
 import { cookie } from "@web/core/browser/cookie";
-import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { useAutofocus, useRootCreator, useService } from "@web/core/utils/hooks";
 import { SnippetViewer } from "./snippet_viewer";
 
 /**
@@ -19,6 +19,8 @@ import { SnippetViewer } from "./snippet_viewer";
 export class AddSnippetDialog extends Component {
     static template = "html_builder.AddSnippetDialog";
     static components = { Dialog };
+
+    createRoot = useRootCreator();
     props = useProps({
         title: t.string().optional(_t("Insert a block")),
         selectedSnippet: t.object(),
@@ -59,8 +61,6 @@ export class AddSnippetDialog extends Component {
                 : "ltr",
         };
 
-        const app = useApp();
-        let root;
         onMounted(async () => {
             const isFirefox = isBrowserFirefox();
             if (isFirefox && !(this.iframeRef()?.contentDocument.readyState === "complete")) {
@@ -86,8 +86,7 @@ export class AddSnippetDialog extends Component {
 
             this.hotkeyService.registerIframe(this.iframeRef());
 
-            root = app.createRoot(SnippetViewer, {
-                env: Object.create(this.env),
+            const root = this.createRoot(SnippetViewer, {
                 props: this.snippetViewerProps,
             });
             root.mount(iframeDocument.body);
@@ -100,10 +99,6 @@ export class AddSnippetDialog extends Component {
             if (!this.props.snippetModel.hasCustomGroup && this.state.groupSelected === "custom") {
                 this.state.groupSelected = this.props.snippetModel.snippetGroups[0].groupName;
             }
-        });
-
-        onWillUnmount(() => {
-            root.destroy();
         });
     }
 

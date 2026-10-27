@@ -1,5 +1,5 @@
 import { nodeToTree } from "@html_editor/core/dom_reference_map_plugin";
-import { mountComponent } from "@html_editor/others/embedded_component_utils";
+import { useRootComponents } from "@html_editor/others/embedded_component_utils";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { selectElements } from "@html_editor/utils/dom_traversal";
@@ -63,6 +63,8 @@ export class EmbeddedComponentPlugin extends Plugin {
         /** Selectors */
         move_node_whitelist_selectors: "[data-embedded]",
     };
+
+    rootComponents = useRootComponents();
 
     setup() {
         this.components = new Set();
@@ -222,11 +224,8 @@ export class EmbeddedComponentPlugin extends Plugin {
         // an inserted blueprint, run it synchronously right after the mounted
         // callbacks, in the same call stack as the DOM insertion.
         const onComponentInserted = this.extractOnComponentInserted(host);
-        const { root } = mountComponent(this.app, Component, host, props, env, {
+        const { root } = this.rootComponents.mount(Component, host, props, env, {
             onBeforeComplete: () => {
-                if (this.isDestroyed) {
-                    return false;
-                }
                 if (!getEditableDescendants) {
                     return;
                 }

@@ -9,7 +9,9 @@ import {
     t,
     toRaw,
     useProps,
+    useScope,
 } from "@odoo/owl";
+import { useRootCreator } from "@web/core/utils/hooks";
 import { useEnv } from "@web/owl2/utils";
 
 /**
@@ -46,44 +48,43 @@ import { useEnv } from "@web/owl2/utils";
  *           @see useEmbeddedState
  */
 
-/**
- * Mount an Owl root component on a host element, patching the mount fiber to
- * synchronously clear the host's children just before the component's rendered
- * HTML is inserted (i.e., just before the original `fiber.complete` runs).
- *
- * @param {import("@odoo/owl").App} app
- * @param {typeof import("@odoo/owl").Component} Component
- * @param {HTMLElement} host
- * @param {Object} props
- * @param {Object} env
- * @param {Object} [options]
- * @param {function(): boolean|undefined} [options.onBeforeComplete] called
- *   before clearing host children; return `false` to abort the complete call
- *   entirely (skips both `replaceChildren` and the original `fiberComplete`).
- *   Not called if the root was destroyed before it was prepared.
- * @param {function()} [options.onAfterComplete] called after the original
- *   `fiber.complete`.
- * @returns {{ root: object, mountPromise: Promise }}
- */
-export function mountComponent(
-    app,
-    Component,
-    host,
-    props,
-    env,
-    { onBeforeComplete, onAfterComplete } = {}
-) {
-    const root = app.createRoot(Component, { props, env });
-    const mountPromise = root.prepare().then(() => {
-        if (root.destroyed || onBeforeComplete?.() === false) {
-            return;
-        }
-        host.replaceChildren();
-        const promise = root.mount(host);
-        onAfterComplete?.();
-        return promise;
-    });
-    return { root, mountPromise };
+export function useRootComponents() {
+    const scope = useScope();
+    const createRoot = useRootCreator();
+
+    return {
+        /**
+         * Mount an Owl root component on a host element, patching the mount fiber to
+         * synchronously clear the host's children just before the component's rendered
+         * HTML is inserted (i.e., just before the original `fiber.complete` runs).
+         *
+         * @param {typeof import("@odoo/owl").Component} Component
+         * @param {HTMLElement} host
+         * @param {Object} props
+         * @param {Object} env
+         * @param {Object} [options]
+         * @param {function(): boolean|undefined} [options.onBeforeComplete] called
+         *   before clearing host children; return `false` to abort the complete call
+         *   entirely (skips both `replaceChildren` and the original `fiberComplete`).
+         *   Not called if the root was destroyed before it was prepared.
+         * @param {function()} [options.onAfterComplete] called after the original
+         *   `fiber.complete`.
+         * @returns {{ root: object, mountPromise: Promise }}
+         */
+        mount(Component, host, props, env, { onBeforeComplete, onAfterComplete } = {}) {
+            const root = createRoot(Component, { env, props });
+            const mountPromise = root.prepare().then(() => {
+                if (root.destroyed || scope.isDestroyed() || onBeforeComplete?.() === false) {
+                    return;
+                }
+                host.replaceChildren();
+                const promise = root.mount(host);
+                onAfterComplete?.();
+                return promise;
+            });
+            return { root, mountPromise };
+        },
+    };
 }
 
 /**

@@ -1,8 +1,9 @@
 import { OverlayPlugin } from "@web/core/overlay/overlay_plugin";
-import { Component, types, useApp, usePlugin, useProps, xml } from "@odoo/owl";
+import { Component, types, usePlugin, useProps, xml } from "@odoo/owl";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { OverlayContainer } from "@web/core/overlay/overlay_container";
 import { registry } from "@web/core/registry";
+import { useRootCreator } from "@web/core/utils/hooks";
 
 const DEFAULT_ID = Symbol("default");
 
@@ -33,6 +34,8 @@ export const mailPopoutService = {
 
     dependencies: ["hotkey"],
     start(env, { hotkey }) {
+        const createRoot = useRootCreator();
+
         /**
          * @type {Map<any, {
          *  externalWindow: Window | null;
@@ -146,7 +149,7 @@ export const mailPopoutService = {
                 pipWindow: externalWindow,
                 rootId: id,
             });
-            popout.root = app.createRoot(OverlayWrapper, {
+            popout.root = createRoot(OverlayWrapper, {
                 env: rootEnv,
                 props: { component, componentProps: props },
             });
@@ -180,7 +183,7 @@ export const mailPopoutService = {
                 pollClosedWindow(id);
             }
             reset(id);
-            popout.root = app.createRoot(component, { props });
+            popout.root = createRoot(component, { props });
             popout.root.mount(externalWindow.document.body);
             return externalWindow;
         }
@@ -264,8 +267,6 @@ export const mailPopoutService = {
                 },
             };
         }
-
-        const app = useApp();
 
         return Object.assign(createManager(), { createManager, resetAll });
     },
