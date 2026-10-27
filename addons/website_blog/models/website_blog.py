@@ -35,7 +35,10 @@ class BlogBlog(models.Model):
     name = fields.Char('Blog Name', required=True, translate=True)
     subtitle = fields.Char('Blog Subtitle', translate=True)
     active = fields.Boolean('Active', default=True)
-    content = fields.Html('Content', translate=html_translate, sanitize=False)
+    content = fields.Html(
+        'Content', translate=html_translate,
+        sanitize_overridable=True,
+        sanitize_attributes=False, sanitize_form=False)
     blog_post_ids = fields.One2many('blog.post', 'blog_id', 'Blog Posts')
     blog_post_count = fields.Integer("Posts", compute='_compute_blog_post_count')
 
@@ -199,7 +202,10 @@ class BlogPost(models.Model):
     recommended_next_post_id = fields.Many2one('blog.post', string="Recommended Next Post",
         help="Next blog post that will be shown as the next article to users at the bottom of the blog post.")
     tag_ids = fields.Many2many('blog.tag', string='Tags')
-    content = fields.Html('Content', default=_default_content, translate=html_translate, sanitize=False)
+    content = fields.Html(
+        'Content', default=_default_content, translate=html_translate,
+        sanitize_overridable=True,
+        sanitize_attributes=False, sanitize_form=False)
     teaser = fields.Text('Teaser', compute='_compute_teaser', inverse='_set_teaser', translate=True)
     teaser_manual = fields.Text(string='Teaser Content', translate=True)
 
