@@ -27,6 +27,11 @@ class AccountMoveLine(models.Model):
     def _inverse_product_id(self):
         super(AccountMoveLine, self.filtered(lambda l: l.display_type != 'cogs'))._inverse_product_id()
 
+    def _copy_data_extend_business_fields(self, values):
+        # OVERRIDE to keep the origin of the COGS lines copied by a reversal
+        super()._copy_data_extend_business_fields(values)
+        values['cogs_origin_id'] = self.cogs_origin_id.id
+
     def _eligible_for_stock_account(self):
         self.ensure_one()
         if not self.product_id.is_storable:
@@ -66,6 +71,16 @@ class AccountMoveLine(models.Model):
         cogs_qty = self._get_cogs_qty()
         if moves := self._get_stock_moves().filtered(lambda m: m.state == 'done'):
             price_unit = moves._get_cogs_price_unit(cogs_qty)
+            delivered_qty = sum(m._get_valued_qty() * (-1 if m.is_in else 1) for m in moves) + moves._get_valued_consigned_qty()
+            undelivered_qty = cogs_qty - delivered_qty
+            uom = self.product_id.uom_id
+            # Invoiced but not delivered yet: estimate as if there were no done moves
+            if moves.product_id == self.product_id and uom.compare(delivered_qty, 0) > 0 and uom.compare(undelivered_qty, 0) > 0:
+                if self.product_id.cost_method in ['standard', 'average']:
+                    undelivered_value = self.product_id.standard_price * undelivered_qty
+                else:
+                    undelivered_value = self.product_id._run_fifo(undelivered_qty)
+                price_unit = (price_unit * delivered_qty + undelivered_value) / cogs_qty
         else:
             if self.product_id.cost_method in ['standard', 'average']:
                 price_unit = self.product_id.standard_price
