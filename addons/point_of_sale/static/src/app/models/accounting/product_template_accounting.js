@@ -4,6 +4,11 @@ import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { _t } from "@web/core/l10n/translation";
 import { formatCurrency } from "@web/core/currency";
 
+export const getAttributesPriceExtra = (attributeValues) =>
+    (attributeValues ?? [])
+        .filter((attr) => attr?.attribute_id?.create_variant !== "always")
+        .reduce((total, attr) => total + (attr?.price_extra || 0), 0);
+
 export class ProductTemplateAccounting extends Base {
     static pythonModel = "product.template";
 
@@ -303,12 +308,6 @@ export class ProductTemplateAccounting extends Base {
             return acc + originalPrice;
         }, 0);
 
-        const getAttributesPriceExtra = (attributeValueIds) =>
-            (attributeValueIds ?? [])
-                .filter((attr) => attr?.attribute_id?.create_variant !== "always")
-                .map((attr) => attr?.price_extra || 0)
-                .reduce((acc, price) => acc + price, 0);
-
         let remainingTotal = parentLstPrice;
         const ProductPrice =
             this.config.currency_id || decimalPrecision.find((dp) => dp.name === "Product Price");
@@ -329,11 +328,11 @@ export class ProductTemplateAccounting extends Base {
                 (id) => productTemplateAttributeValueById[id]
             );
 
-            const totalPriceExtra =
-                priceUnit + getAttributesPriceExtra(attribute_value_ids) + comboItem.extra_price;
+            const priceExtra = getAttributesPriceExtra(attribute_value_ids);
             comboItems.push({
                 combo_item_id: comboItem,
-                price_unit: totalPriceExtra,
+                price_unit: priceUnit + priceExtra + comboItem.extra_price,
+                price_extra: priceExtra,
                 attribute_value_ids:
                     attribute_value_ids ||
                     comboItem.product_id?.product_template_attribute_value_ids,
@@ -369,11 +368,11 @@ export class ProductTemplateAccounting extends Base {
                 (id) => productTemplateAttributeValueById[id]
             );
 
-            const totalPriceExtra =
-                priceUnit + getAttributesPriceExtra(attribute_value_ids) + comboItem.extra_price;
+            const priceExtra = getAttributesPriceExtra(attribute_value_ids);
             comboItems.push({
                 combo_item_id: comboItem,
-                price_unit: totalPriceExtra,
+                price_unit: priceUnit + priceExtra + comboItem.extra_price,
+                price_extra: priceExtra,
                 attribute_value_ids:
                     attribute_value_ids ||
                     comboItem.product_id?.product_template_attribute_value_ids,

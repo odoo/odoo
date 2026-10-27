@@ -169,6 +169,7 @@ export function getOrderLineValues(
                     : [],
                 combo_item_id: comboItem.combo_item_id,
                 price_unit: comboItem.price_unit,
+                price_extra: comboItem.price_extra,
                 order_id: order,
                 qty: comboItem.qty * qty,
                 attribute_value_ids: comboItem.attribute_value_ids
