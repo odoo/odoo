@@ -165,8 +165,6 @@ class StockMove(models.Model):
             })
             if move.repair_id.under_warranty:
                 invoice_lines_vals[-1]['price_unit'] = 0.0
-            elif move.price_unit:
-                invoice_lines_vals[-1]['price_unit'] = move.price_unit
 
         self.env['account.move.line'].create(invoice_lines_vals)
 
@@ -186,8 +184,6 @@ class StockMove(models.Model):
             })
             if move.repair_id.under_warranty:
                 so_line_vals[-1]['price_unit'] = 0.0
-            elif move.price_unit:
-                so_line_vals[-1]['price_unit'] = move.price_unit
 
         self.env['sale.order.line'].create(so_line_vals)
 
@@ -246,9 +242,6 @@ class StockMove(models.Model):
         lines_to_recreate.sale_line_id.unlink()
         lines_to_recreate._create_repair_sale_order_line()
 
-        if moves_to_update.repair_id.under_warranty:
-            moves_to_update.price_unit = 0.0
-
     def _update_repair_invoice_line(self):
         moves_to_update = self._pre_update_repair_linked_lines()
         lines_to_recreate = self.env['stock.move']
@@ -268,8 +261,6 @@ class StockMove(models.Model):
         lines_to_recreate.description_picking = ""
         lines_to_recreate.invoice_line_ids.unlink()
         lines_to_recreate._create_repair_invoice_line()
-        if moves_to_update.repair_id.under_warranty:
-            moves_to_update.price_unit = 0.0
 
     def _is_consuming(self):
         return super()._is_consuming() or (self.repair_id and self.repair_line_type == 'add')

@@ -148,7 +148,6 @@ class TestStockValuationStandard(TestStockValuationCommon):
                 'location_dest_id': self.stock_location.id,
                 'uom_id': self.uom.id,
                 'product_uom_qty': 2,
-                'price_unit': 10,
                 'picking_type_id': self.picking_type_in.id,
                 'picking_id': picking.id
             })
