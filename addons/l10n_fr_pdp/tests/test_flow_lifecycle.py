@@ -5,7 +5,7 @@ from lxml import etree
 
 from odoo import Command, fields
 from odoo.exceptions import UserError
-from odoo.tests import Form, tagged
+from odoo.tests import Form, new_test_user, tagged
 from odoo.tools import file_open
 
 from odoo.addons.l10n_fr_pdp.tests.common import TestL10nFrPdpCommon
@@ -1611,6 +1611,46 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         }])
         xml = self._build_flow_xml(rectificative_flow)
         self.assertEqual(xml.findtext('./ReportDocument/TypeCode'), 'RE')
+
+    def test_payment_on_sent_invoice_does_not_create_rectificative_flow(self):
+        invoice = self._create_reporting_invoice(
+            partner=self.b2c_customer,
+            invoice_date='2025-09-03',
+        )
+        initial_flow = invoice.l10n_fr_pdp_last_flow_id
+
+        self._run_send_cron('2025-09-20', identifier='FLOW-INITIAL-SENT')
+        initial_flow.invalidate_recordset(['state'])
+        self.assertRecordValues(initial_flow, [{'state': 'sent'}])
+        payment = self._register_payment(invoice, '2025-09-25')
+        (invoice + payment.move_id)._compute_l10n_fr_pdp_last_flow_id()
+        flows = self.env['l10n.fr.pdp.reports.flow'].search([
+            ('company_id', '=', self.company.id),
+            ('report_type', '=', 'transaction'),
+            ('operation_type', '=', 'sale'),
+            ('period_start', '=', fields.Date.to_date('2025-09-01')),
+            ('period_end', '=', fields.Date.to_date('2025-09-10')),
+        ])
+
+        self.assertEqual(flows, initial_flow)
+        self.assertEqual(invoice.l10n_fr_pdp_last_flow_id, initial_flow)
+
+    def test_portal_user_e_reporting_status_logged_as_odoobot(self):
+        portal_user = new_test_user(self.env, login='pdp_portal_user', groups='base.group_portal')
+        invoice = self._create_invoice_one_line(
+            partner_id=self.b2c_customer,
+            product_id=self.product_a,
+            price_unit=100.0,
+            tax_ids=self._get_tax_on_payment(),
+            invoice_date=fields.Date.to_date('2025-09-03'),
+            post=False,
+        )
+
+        # A portal user can post an invoice, e.g. when paying a quotation online.
+        invoice.with_user(portal_user).sudo().action_post()
+
+        ereporting_messages = invoice.message_ids.filtered(lambda message: 'E-reporting Status:' in message.body)
+        self.assertRecordValues(ereporting_messages, [{'author_id': self.env.ref('base.partner_root').id}])
 
     def test_error_moves_are_moved_to_rectificative_flow_when_initial_is_sent(self):
         valid_invoice = self._create_reporting_invoice(
