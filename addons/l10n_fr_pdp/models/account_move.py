@@ -373,7 +373,9 @@ class AccountMove(models.Model):
                 + Markup('</span><ul>') + error_lines + Markup('</ul></li>')
             )
         body += Markup('</ul>')
-        self._message_log(body=body)
+        # Avoid logging a message with a "random" user
+        author_id = self.env.ref('base.partner_root').id if self.env.user.share else None
+        self._message_log(body=body, author_id=author_id)
 
     def button_cancel(self):
         res = super().button_cancel()
@@ -417,7 +419,10 @@ class AccountMove(models.Model):
                 order='id desc',
                 limit=1,
             )
-            if not last_flow or (last_flow.state in FLOW_SENT_STATES and not move.l10n_fr_pdp_sent_in_flow_ids):
+            if not last_flow or (
+                last_flow.state in FLOW_SENT_STATES
+                and any(not scope_move.l10n_fr_pdp_sent_in_flow_ids for scope_move in moves)
+            ):
                 last_flow = Flow._get_open_flow_and_create_if_needed(moves[0])
             moves.l10n_fr_pdp_last_flow_id = last_flow
 
