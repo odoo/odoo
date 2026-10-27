@@ -1751,12 +1751,13 @@ class ProductTemplate(models.Model):
             prices = request.pricelist._get_products_price(
                 variants, quantity=1, currency=website.currency_id
             )
+            product_url = self._get_localized_absolute_url()
             vals = {
                 "@type": "ProductGroup",
-                "@id": f"{base_url}{self.website_url}/#productgroup",
+                "@id": f"{product_url}/#productgroup",
                 "name": self.name,
                 "image": f"{base_url}{website.image_url(self, 'image_1920')}",
-                "url": f"{base_url}{self.website_url}",
+                "url": product_url,
                 "hasVariant": [
                     variant._prepare_jsonld_vals(precomputed_price=prices.get(variant.id))
                     for variant in variants

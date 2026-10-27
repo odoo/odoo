@@ -11,6 +11,7 @@ from odoo.tests.common import tagged, users
 from odoo.addons.website.tests.test_website_visitor import MockVisitor
 from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.website_event.controllers.main import WebsiteEventController
+from odoo.addons.website_event.models.event_event import EventEvent
 from odoo.addons.event.tests.common import EventCase
 
 _logger = logging.getLogger(__name__)
@@ -317,3 +318,17 @@ class TestEventData(EventCase, MockVisitor):
             self.assertIn(self.event_public, visible_events)
             self.assertIn(self.event_link_only, visible_events, "Should now be visible because visitor is participating")
             self.assertNotIn(self.event_logged_users, visible_events)
+
+    def test_jsonld_offer_url_on_other_website(self):
+        # The offer gets the visited website's language prefix, so it needs its domain too
+        lang_fr = self.env['res.lang']._activate_lang('fr_FR')
+        website_2 = self.env['website'].create({
+            'name': 'Website 2',
+            'domain': 'https://site2.example',
+            'language_ids': [Command.set((self.env.ref('base.lang_en') + lang_fr).ids)],
+        })
+        ticket = self.env['event.event.ticket'].create({'name': 'Standard', 'event_id': self.event_public.id})
+        with MockRequest(self.env, website=website_2, context={'lang': 'fr_FR'}) as request:
+            # Only this module's builder: price overrides (website_event_sale) need a pricelist the mock lacks
+            offer = EventEvent._build_offer_jsonld_vals(self.event_public.with_env(request.env), ticket)
+        self.assertEqual(offer['url'], f'https://site2.example/fr{self.event_public.website_url}/register')
