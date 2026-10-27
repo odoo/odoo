@@ -23,7 +23,7 @@ export class ProductTemplateAttributeLine extends Component {
                 id: t.number(),
                 name: t.string(),
                 html_color: t.or([t.boolean(), t.string()]), // backend sends 'false' when there is no color
-                image: t.or([t.boolean(), t.string()]), // backend sends 'false' when there is no image set
+                image: t.or([t.boolean(), t.object()]), // backend sends 'false' when there is no image set
                 is_custom: t.boolean(),
                 price_extra: t.number(),
                 excluded: t.boolean().optional(),
