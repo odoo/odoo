@@ -57,12 +57,23 @@ class MrpProductionSerials(models.TransientModel):
         split_amounts = {self.production_id: [1] * len(lots)}
         mos = self.production_id._split_productions(amounts=split_amounts)
         for mo, serial in zip(mos, lots):
+<<<<<<< bfde5a39c6694d101c3977f5f349e7439cd687ac
             mo.lot_producing_ids = [Command.link(serial.id)]
         if new_lots and self.production_id.picking_type_id.auto_print_generated_mrp_lot:
             print_action = self.production_id._autoprint_generated_lots(new_lots)
             print_action['close_on_report_download'] = True
             return print_action
         return True
+||||||| 1385a5997e921731e9a1c2ef87570f86a4c81c4a
+            mo.lot_producing_ids = [Command.link(serial.id)]
+        return self._closing_action(mos)
+=======
+            mo.lot_producing_ids = [Command.set([serial.id])]
+            mo.qty_producing = 0
+            for move in mo.move_raw_ids:
+                move.quantity = move.product_uom_qty
+        return self._closing_action(mos)
+>>>>>>> 4bb9251e0d06ece25522ef1036d61961661df086
 
     def action_apply(self):
         self.ensure_one()
