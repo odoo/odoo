@@ -13,7 +13,7 @@ import { ActivityController } from "@mail/views/web/activity/activity_controller
 import { ActivityModel } from "@mail/views/web/activity/activity_model";
 import { ActivityRenderer } from "@mail/views/web/activity/activity_renderer";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { keyDown, waitFor } from "@odoo/hoot-dom";
+import { keyDown, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { animationFrame, disableAnimations, mockDate } from "@odoo/hoot-mock";
 import { onMounted, onWillUnmount } from "@odoo/owl";
 import { MailTestActivity } from "@test_mail/../tests/mock_server/models/mail_test_activity";
@@ -205,7 +205,7 @@ test("activity view: simple activity rendering", async () => {
         ],
     });
     await expect.waitForSteps(["doAction"]);
-    await contains(".o_activity_view_table tfoot .o_record_selector");
+    await waitFor(".o_activity_view_table tfoot .o_record_selector:count(1)");
 });
 
 test("activity view: Activity rendering with done activities", async () => {
@@ -395,14 +395,14 @@ test("activity view: a pager can be used when there are more than the limit of 1
         views: [[false, "activity"]],
         domain: [["name", "like", "pagerTestRecord"]],
     });
-    await contains(".o_activity_record", { count: 100 });
-    await contains(".o_activity_summary_cell.planned", { count: 200 });
+    await waitFor(".o_activity_record:count(100)");
+    await waitFor(".o_activity_summary_cell.planned:count(200)");
     await click(".o_pager_next");
-    await contains(".o_activity_record");
-    await contains(".o_activity_summary_cell.planned", { count: 2 });
+    await waitFor(".o_activity_record:count(1)");
+    await waitFor(".o_activity_summary_cell.planned:count(2)");
     await click(".o_pager_previous");
-    await contains(".o_activity_record", { count: 100 });
-    await contains(".o_activity_summary_cell.planned", { count: 200 });
+    await waitFor(".o_activity_record:count(100)");
+    await waitFor(".o_activity_summary_cell.planned:count(200)");
 });
 
 test("activity view: no content rendering", async () => {
@@ -413,7 +413,7 @@ test("activity view: no content rendering", async () => {
         res_model: "mail.test.activity",
         views: [[false, "activity"]],
     });
-    await contains(".o_view_nocontent");
+    await waitFor(".o_view_nocontent:count(1)");
     await contains(".o_view_nocontent .o_view_nocontent_empty_folder", {
         text: "No data to display",
     });
@@ -435,7 +435,7 @@ test("activity view: batch send mail on activity", async () => {
     await click("[data-bs-toggle=dropdown]", {
         parent: [".o_activity_view_table th", { text: "Email" }],
     });
-    await contains(".dropdown-menu.show .o_send_mail_template", { count: 2 });
+    await waitFor(".dropdown-menu.show .o_send_mail_template:count(2)");
     await click(".o_send_mail_template", { text: "Template1" });
     await expect.waitForSteps([
         [[mailTestActivityIds[0], mailTestActivityIds[1]], mailTemplateIds[0]], // template 1 sendt on activity 1 and 2
@@ -457,7 +457,7 @@ test("activity view: activity_ids condition in domain", async () => {
     });
 
     await click(".o_pager_value");
-    await contains(".o_pager_value:focus");
+    await waitFor(".o_pager_value:focus:count(1)");
     await keyDown("Enter");
 
     await expect.waitForSteps([
@@ -520,7 +520,7 @@ test("activity view: activity widget", async () => {
         },
     });
     await click(".today .o-mail-ActivityCell-deadline");
-    await contains(".o-mail-ActivityListPopover");
+    await waitFor(".o-mail-ActivityListPopover:count(1)");
     await contains(".o-mail-ActivityListPopover-todayTitle", { text: "Today" });
     await contains(".o-mail-ActivityMailTemplate-name", { text: "Template1" });
     await contains(".o-mail-ActivityMailTemplate-name", { text: "Template2" });
@@ -530,10 +530,10 @@ test("activity view: activity widget", async () => {
     await click(".o-mail-ActivityMailTemplate-send[data-mail-template-id='1']");
     await expect.waitForSteps(["activity_send_mail"]);
     await click(".overdue .o-mail-ActivityCell-deadline");
-    await contains(".o-mail-ActivityMailTemplate-name", { count: 0 });
+    await waitForNone(".o-mail-ActivityMailTemplate-name");
     await click(".o-mail-ActivityListPopover button", { text: "Schedule an activity" });
     await expect.waitForSteps(["do_action_activity"]);
-    await contains(".o-mail-ActivityListPopover", { count: 0 });
+    await waitForNone(".o-mail-ActivityListPopover");
     await click(".overdue .o-mail-ActivityCell-deadline");
     await click(".o-mail-ActivityListPopoverItem-markAsDone");
     await insertText(
@@ -575,7 +575,7 @@ test("activity widget: delete an activity from the widget", async () => {
 
     // Check if activity is scheduled
     await click(".planned .o-mail-ActivityCell-deadline");
-    await contains(".o-mail-ActivityListPopoverItem");
+    await waitFor(".o-mail-ActivityListPopoverItem:count(1)");
 
     const activityListPopoverButtons = document.querySelectorAll(
         ".overflow-auto.d-flex.align-items-baseline button"
@@ -590,7 +590,7 @@ test("activity widget: delete an activity from the widget", async () => {
     await expect.waitForSteps(["unlink"]);
 
     // Verify no activity is scheduled
-    await contains(".planned", { count: 0 });
+    await waitForNone(".planned");
 });
 
 test("activity view: Mark as done with keep done enabled", async () => {
@@ -600,7 +600,7 @@ test("activity view: Mark as done with keep done enabled", async () => {
         res_model: "mail.test.activity",
         views: [[false, "activity"]],
     });
-    await contains(".o_activity_view:not(.o_action)");
+    await waitFor(".o_activity_view:not(.o_action):count(1)");
     const domActivity = document.querySelector(".o_activity_view:not(.o_action)");
     const domHeaderEmail = domActivity.querySelector("table thead tr:first-child th:nth-child(2)");
     const selRowOfficeCellEmail = "table tbody tr:nth-child(2) td:nth-child(2)";
@@ -636,9 +636,9 @@ test("activity view: no group_by_menu and no comparison_menu", async () => {
         views: [[false, "activity"]],
     });
     await click(".o_searchview_dropdown_toggler");
-    await contains(".o-dropdown--menu .o_dropdown_container", { count: 2 });
-    await contains(".o-dropdown--menu .o_filter_menu");
-    await contains(".o-dropdown--menu .o_favorite_menu");
+    await waitFor(".o-dropdown--menu .o_dropdown_container:count(2)");
+    await waitFor(".o-dropdown--menu .o_filter_menu:count(1)");
+    await waitFor(".o-dropdown--menu .o_favorite_menu:count(1)");
 });
 
 test("activity view: group_by in the action has no effect", async () => {
@@ -727,7 +727,7 @@ test("activity view: Domain should not reset on load", async () => {
     await expect.waitForSteps(["doAction"]);
     await click(".o_activity_view .o_record_selector");
     // again open search create dialog
-    await contains(".modal-lg .o_data_row");
+    await waitFor(".modal-lg .o_data_row:count(1)");
 });
 
 test("activity view: 'scheduleActivity' does not add activity_ids condition as selectCreateDialog domain", async () => {
@@ -824,9 +824,9 @@ test("Activity view: discard an activity creation dialog", async () => {
     await click(
         ".o_activity_view  :nth-child(1 of .o_data_row) :nth-child(1 of .o_activity_empty_cell)"
     );
-    await contains(".modal.o_technical_modal");
+    await waitFor(".modal.o_technical_modal:count(1)");
     await click(".modal.o_technical_modal .btn-close");
-    await contains(".modal.o_technical_modal", { count: 0 });
+    await waitForNone(".modal.o_technical_modal");
 });
 
 test("Activity view: many2one_avatar_user widget in activity view", async () => {
@@ -854,12 +854,12 @@ test("Activity view: many2one_avatar_user widget in activity view", async () => 
         res_model: "mail.test.activity",
         views: [[false, "activity"]],
     });
-    await contains(".o_m2o_avatar", { count: 1 });
-    await contains(
-        `tr:nth-child(2) .o_m2o_avatar > img[data-src="/web/image/res.users/${resUsersId1}/avatar_128?unique=1676282400000"]`
+    await waitFor(".o_m2o_avatar:count(1)");
+    await waitFor(
+        `tr:nth-child(2) .o_m2o_avatar > img[data-src="/web/image/res.users/${resUsersId1}/avatar_128?unique=1676282400000"]:count(1)`
     );
     // "should not have text on many2one_avatar_user if onlyImage node option is passed"
-    await contains(".o_m2o_avatar > span", { count: 0 });
+    await waitForNone(".o_m2o_avatar > span");
 });
 
 test("Activity view: on_destroy_callback doesn't crash", async () => {
@@ -984,16 +984,16 @@ test("Activity view: apply progressbar filter", async () => {
         text: "Office planning",
         parent: [".o_activity_view tbody tr:first-of-type"],
     });
-    await contains(".o_activity_view .planned", { count: 2 });
+    await waitFor(".o_activity_view_table .planned:count(2)");
     await click(".progress-bar[data-tooltip='1 Planned']", {
         parent: [".o_activity_view_table th", { text: "Email" }],
     });
-    await contains(".o_activity_view thead .o_activity_filter_planned");
-    await contains(".progress-bar-striped");
+    await waitFor(".o_activity_view_table thead .o_activity_filter_planned:count(1)");
+    await waitFor(".progress-bar-striped:count(1)");
     await contains(".progress-bar-animated.progress-bar-striped[data-tooltip='1 Planned']", {
         parent: [".o_activity_view_table th", { text: "Email" }],
     });
-    await contains(".o_activity_view tbody .o_activity_filter_planned", { count: 5 });
+    await waitFor(".o_activity_view_table tbody .o_activity_filter_planned:count(5)");
     const tr = document.querySelectorAll(".o_activity_view tbody tr")[1];
     expect(tr.querySelectorAll("td")[2]).toHaveClass("o_activity_empty_cell");
 });
@@ -1011,7 +1011,7 @@ test("Activity view: hide/show columns", async () => {
             text: column,
         });
     }
-    await contains(".o_activity_view th:last-child button.dropdown-toggle");
+    await waitFor(".o_activity_view_table th:last-child button.dropdown-toggle:count(1)");
     await click("th:last-child button.dropdown-toggle");
     await click("input[name='Email']");
     for (const [index, column] of ["Call", "Call for Demo", "To Do"].entries()) {
@@ -1053,7 +1053,7 @@ test("Activity view: luxon in renderingContext", async () => {
         res_model: "mail.test.activity",
         views: [[false, "activity"]],
     });
-    await contains(".luxon", { count: 2 });
+    await waitFor(".luxon:count(2)");
 });
 
 test("test displaying image (write_date field)", async () => {
@@ -1078,7 +1078,9 @@ test("test displaying image (write_date field)", async () => {
         res_model: "mail.test.activity",
         views: [[false, "activity"]],
     });
-    await contains(`.o_activity_record img[src='${getOrigin()}/web/image/partner/2/image']`);
+    await waitFor(
+        `.o_activity_record img[src='${getOrigin()}/web/image/partner/2/image']:count(1)`
+    );
 });
 
 test("test node visibility depends on invisible attribute on the node and in the context", async () => {
@@ -1099,13 +1101,13 @@ test("test node visibility depends on invisible attribute on the node and in the
         res_model: "mail.test.activity",
         views: [[1, "activity"]],
     });
-    await contains(".invisible_node", { count: 2 });
+    await waitFor(".invisible_node:count(2)");
     await openView({
         res_model: "mail.test.activity",
         views: [[1, "activity"]],
         context: { invisible: true },
     });
-    await contains(".invisible_node", { count: 0 });
+    await waitForNone(".invisible_node");
 });
 
 test("update activity view after creating multiple activities", async () => {

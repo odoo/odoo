@@ -9,7 +9,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { contains as webContains } from "@web/../tests/web_test_helpers";
 import { animationFrame, beforeEach, describe, expect, test } from "@odoo/hoot";
-import { queryAll, queryFirst, waitFor } from "@odoo/hoot-dom";
+import { queryAll, queryFirst, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { defineResourceMailModels } from "./resource_mail_test_helpers";
 
 describe.current.tags("desktop");
@@ -83,8 +83,8 @@ test("many2many_avatar_resource widget in form view", async () => {
                 <field name="resource_ids" widget="many2many_avatar_resource"/>
             </form>`,
     });
-    await contains("img.o_m2m_avatar", { count: 2 });
-    await contains("[data-icon='build']", { count: 1 });
+    await waitFor("img.o_m2m_avatar:count(2)");
+    await waitFor("[data-icon='build']:count(1)");
     // Second and third records in widget should display employee avatars
     const avatarImages = queryAll(".many2many_tags_avatar_field_container .o_tag img");
     expect(avatarImages[0]).toHaveAttribute(
@@ -97,15 +97,14 @@ test("many2many_avatar_resource widget in form view", async () => {
     );
     // 1. Clicking on material resource's icon
     await click(".many2many_tags_avatar_field_container .o_tag i[data-icon='build']");
-    await contains(".o_avatar_card", { count: 0 });
+    await waitForNone(".o_avatar_card");
 
     // 2. Clicking on human resource's avatar with no user associated
     await click(".many2many_tags_avatar_field_container .o_tag img:first");
     await contains(".o-mail-avatar-card-name", { text: "Marie" });
-    await contains(
-        ".o_avatar_card",
-        { count: 1 },
-        "Only one popover resource card should be opened at a time"
+    await waitFor(
+        ".o_avatar_card:count(1)",
+        { message: "Only one popover resource card should be opened at a time" }
     );
     await contains(
         ".o_avatar_card_buttons button",
@@ -115,15 +114,14 @@ test("many2many_avatar_resource widget in form view", async () => {
     // 3. Clicking on human resource's avatar with one user associated
     await click(queryAll(".many2many_tags_avatar_field_container .o_tag img")[1]);
     await contains(".o-mail-avatar-card-name", { text: "Pierre" });
-    await contains(
-        ".o_avatar_card",
-        { count: 1 },
-        "Only one popover resource card should be opened at a time"
+    await waitFor(
+        ".o_avatar_card:count(1)",
+        { message: "Only one popover resource card should be opened at a time" }
     );
     await contains(".o_card_user_infos > a", { text: "Pierre@odoo.test" });
     await contains(".o_card_user_infos > a", { text: "+32487898933" });
     await click(".o_avatar_card_buttons button:first:text(Send message)");
-    await contains(".o-mail-ChatWindow");
+    await waitFor(".o-mail-ChatWindow:count(1)");
     expect(".o-mail-ChatWindow-displayName").toHaveText("Pierre");
 });
 
@@ -167,14 +165,13 @@ test("many2many_avatar_resource widget in list view", async () => {
     expect(tagPierre).toHaveAttribute("data-src", `/web/image/resource.resource/${data.resourcePierreId}/avatar_128`);
     // 1. Clicking on material resource's icon
     await click(".many2many_tags_avatar_field_container .o_tag i[data-icon='build']");
-    await contains(".o_avatar_card", { count: 0 });
+    await waitForNone(".o_avatar_card");
     // 2. Clicking on human resource's avatar with no user associated
     await click(tagMarie);
     await contains(".o-mail-avatar-card-name", { text: "Marie" });
-    await contains(
-        ".o_avatar_card",
-        { count: 1 },
-        "Only one popover resource card should be opened at a time"
+    await waitFor(
+        ".o_avatar_card:count(1)",
+        { message: "Only one popover resource card should be opened at a time" }
     );
     await contains(
         ".o_avatar_card_buttons button",
@@ -184,15 +181,14 @@ test("many2many_avatar_resource widget in list view", async () => {
     // 3. Clicking on human resource's avatar with one user associated
     await click(tagPierre);
     await contains(".o-mail-avatar-card-name", { text: "Pierre" });
-    await contains(
-        ".o_avatar_card",
-        { count: 1 },
-        "Only one popover resource card should be opened at a time"
+    await waitFor(
+        ".o_avatar_card:count(1)",
+        { message: "Only one popover resource card should be opened at a time" }
     );
     await contains(".o_card_user_infos > a", { text: "Pierre@odoo.test" });
     await contains(".o_card_user_infos > a", { text: "+32487898933" });
     await click(".o_avatar_card_buttons button:first:text(Send message)");
-    await contains(".o-mail-ChatWindow");
+    await waitFor(".o-mail-ChatWindow:count(1)");
     expect(queryFirst(".o-mail-ChatWindow-displayName").textContent).toBe("Pierre");
 });
 
@@ -262,7 +258,7 @@ test("many2many_avatar_resource widget in kanban view", async () => {
     ).click();
     await animationFrame();
     await click(".o_kanban_record:nth-child(2) .many2many_tags_avatar_field_container .o_tag i[data-icon='build']");
-    await contains(".o_avatar_card", { count: 0 });
+    await waitForNone(".o_avatar_card");
 
     // 1. Deleting the wrench
     await webContains(
@@ -283,10 +279,9 @@ test("many2many_avatar_resource widget in kanban view", async () => {
     // 3. Clicking on human resource's avatar with no user associated
     await click(tagMarie);
     await contains(".o-mail-avatar-card-name", { text: "Marie" });
-    await contains(
-        ".o_avatar_card",
-        { count: 1 },
-        "Only one popover resource card should be opened at a time"
+    await waitFor(
+        ".o_avatar_card:count(1)",
+        { message: "Only one popover resource card should be opened at a time" }
     );
     await contains(
         ".o_avatar_card_buttons button",
@@ -296,14 +291,13 @@ test("many2many_avatar_resource widget in kanban view", async () => {
     // 3. Clicking on human resource's avatar with one user associated
     await click(tagPierre);
     await contains(".o-mail-avatar-card-name", { text: "Pierre" });
-    await contains(
-        ".o_avatar_card",
-        { count: 1 },
-        "Only one popover resource card should be opened at a time"
+    await waitFor(
+        ".o_avatar_card:count(1)",
+        { message: "Only one popover resource card should be opened at a time" }
     );
     await contains(".o_card_user_infos > a", { text: "Pierre@odoo.test" });
     await contains(".o_card_user_infos > a", { text: "+32487898933" });
     await click(".o_avatar_card_buttons button:first:text(Send message)");
-    await contains(".o-mail-ChatWindow");
+    await waitFor(".o-mail-ChatWindow:count(1)");
     expect(".o-mail-ChatWindow-displayName").toHaveText("Pierre");
 });
