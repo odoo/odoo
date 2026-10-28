@@ -1413,9 +1413,17 @@ class AccountEdiUBL(models.AbstractModel):
         if not country_code:
             return
 
-        if commercial_partner.vat and commercial_partner.vat != '/':
-            vat = commercial_partner.vat
-            country_code = commercial_partner.country_id.code
+        vat = commercial_partner.vat
+        if (
+            self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note')
+            and commercial_partner == vals['company'].partner_id
+        ):
+            fiscal_position = vals['invoice'].fiscal_position_id
+            if fiscal_position.foreign_vat:
+                vat = fiscal_position.foreign_vat
+                country_code = fiscal_position.country_id.code
+
+        if vat and vat != '/':
             if country_code in GST_COUNTRY_CODES:
                 tax_scheme_id = 'GST'
             else:
