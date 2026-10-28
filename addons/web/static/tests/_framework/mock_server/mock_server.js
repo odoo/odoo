@@ -6,7 +6,7 @@ import {
     mockFetch,
     mockLocation,
     mockWebSocket,
-    registerDebugInfo,
+    trackObject,
 } from "@odoo/hoot";
 import { makeErrorFromResponse, RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
@@ -533,7 +533,8 @@ export class MockServer {
         }
         this._started = true;
 
-        registerDebugInfo("mock server", this);
+        // Retained servers also retain all their models and records
+        trackObject("mock server", this);
 
         // Intercept all server calls
         mockFetch(this._handleRequest.bind(this));
