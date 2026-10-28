@@ -508,6 +508,31 @@ describe("getUserDataFromServer", () => {
         expect(store.selectedOrderUuid).toBe(order1.uuid);
         expect(order2).not.toBeEmpty();
     });
+
+    test("keeps the qty edits made while the request is pending", async () => {
+        const store = await setupSelfPosEnv("mobile", "table", "meal");
+        const order = await getFilledSelfOrder(store);
+        await store.sendDraftOrderToServer();
+        const line = order.lines[0];
+        const syncedQty = line.qty;
+
+        const rpcStarted = Promise.withResolvers();
+        const rpcDone = Promise.withResolvers();
+        onRpc("/pos-self-order/get-user-data/", async () => {
+            rpcStarted.resolve();
+            await rpcDone.promise;
+            return MockServer.env["pos.order"].read_pos_data([order.id], {}, store.config.id);
+        });
+
+        const prom = store.getUserDataFromServer([order.access_token]);
+        await rpcStarted.promise;
+        line.qty = syncedQty + 1;
+        rpcDone.resolve();
+        await prom;
+
+        expect(line.qty).toBe(syncedQty + 1);
+        expect(order.changes[line.uuid].qty).toBe(1);
+    });
 });
 
 describe("initProducts", () => {
