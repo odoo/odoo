@@ -1,4 +1,4 @@
-import { AWAY_DELAY } from "@mail/core/common/im_status_service";
+import { AWAY_DELAY } from "@mail/core/common/im_status_plugin";
 import { fields } from "@mail/model/misc";
 import { Record } from "@mail/model/record";
 
@@ -38,7 +38,7 @@ export class ImStatusMixin extends Record {
             },
             function updateBusPresence(isPresenceOutdated) {
                 if (isPresenceOutdated) {
-                    this.store.env.services.im_status.updateBusPresence();
+                    this.store.imStatus.updateBusPresence();
                 }
             }
         );

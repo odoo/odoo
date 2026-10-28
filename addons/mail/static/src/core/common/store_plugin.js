@@ -1,3 +1,4 @@
+import { ImStatusPlugin } from "@mail/core/common/im_status_plugin";
 import { partnerCompareRegistry } from "@mail/core/common/partner_compare";
 import { SoundEffectsPlugin } from "@mail/core/common/sound_effects_plugin";
 import { Store as BaseStore, fields, makeStore } from "@mail/model/export";
@@ -199,6 +200,8 @@ export class Store extends BaseStore {
     orm;
     /** @type {SoundEffectsPlugin} */
     soundEffects;
+    /** @type {ImStatusPlugin} */
+    imStatus;
 
     /** @param {Readonly<Record<string, any>>} [ancestors] @see useAncestors */
     discussDropdownMenuClass(ancestors) {
@@ -952,6 +955,7 @@ export class StorePlugin extends Plugin {
     notification = usePlugin(NotificationPlugin);
     orm = usePlugin(ORM);
     soundEffects = usePlugin(SoundEffectsPlugin);
+    imStatus = usePlugin(ImStatusPlugin);
 
     setup() {
         /** @type {import("models").Store} */
@@ -960,6 +964,7 @@ export class StorePlugin extends Plugin {
         this.store.notification = this.notification;
         this.store.orm = this.orm;
         this.store.soundEffects = this.soundEffects;
+        this.store.imStatus = this.imStatus;
         this.store.insert(session.storeData);
         /**
          * Add a default for `self` because in livechat there could be no user and no guest yet
@@ -983,7 +988,7 @@ services.add(StorePlugin);
  * -----------------------------------------------------------------------------
  */
 export const storeService = {
-    dependencies: ["bus_service", "im_status", "discuss.upgrade"],
+    dependencies: ["bus_service", "discuss.upgrade"],
     /**
      * @returns {import("models").Store}
      */

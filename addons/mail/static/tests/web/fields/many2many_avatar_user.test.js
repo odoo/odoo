@@ -9,8 +9,9 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
+import { ImStatusPlugin } from "@mail/core/common/im_status_plugin";
 import { describe, expect, test, waitFor, waitForNone } from "@odoo/hoot";
-import { registry } from "@web/core/registry";
+import { patch } from "@web/core/utils/patch";
 import { getOrigin } from "@web/core/utils/urls";
 import { contains } from "@web/../tests/web_test_helpers";
 
@@ -279,19 +280,7 @@ test("avatar_user widget displays the appropriate user image in kanban view", as
 });
 
 test("avatar card preview", async () => {
-    registry.category("services").add(
-        "im_status",
-        {
-            start() {
-                return {
-                    registerToImStatus() {},
-                    unregisterFromImStatus() {},
-                    updateBusPresence() {},
-                };
-            },
-        },
-        { force: true }
-    );
+    patch(ImStatusPlugin.prototype, { updateBusPresence() {} });
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({
         partner_id: pyEnv["res.partner"].create({
@@ -327,19 +316,7 @@ test("avatar card preview", async () => {
 });
 
 test("avatar card preview (partner_id field)", async () => {
-    registry.category("services").add(
-        "im_status",
-        {
-            start() {
-                return {
-                    registerToImStatus() {},
-                    unregisterFromImStatus() {},
-                    updateBusPresence() {},
-                };
-            },
-        },
-        { force: true }
-    );
+    patch(ImStatusPlugin.prototype, { updateBusPresence() {} });
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({
         im_status: "online",
