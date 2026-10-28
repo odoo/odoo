@@ -353,6 +353,34 @@ function resolveAddonDependencies(dependencies) {
 }
 
 /**
+ * @param {Map<string, OdooModuleFactory>} factories
+ */
+function sortModuleNames(factories) {
+    function findJob() {
+        for (const job of remainingJobs) {
+            if (factories.get(job).deps.every((dep) => sortedNames.has(dep))) {
+                return job;
+            }
+        }
+        return null;
+    }
+
+    /** @type {Set<string>} */
+    const remainingJobs = new Set();
+    /** @type {Set<string>} */
+    const sortedNames = new Set();
+    for (const name of factories.keys()) {
+        remainingJobs.add(name);
+        let job;
+        while ((job = findJob())) {
+            remainingJobs.delete(job);
+            sortedNames.add(job);
+        }
+    }
+    return sortedNames;
+}
+
+/**
  * @param {Record<string, unknown>>} model
  */
 function unfreezeModel(model) {
@@ -673,26 +701,16 @@ export async function runTests(options) {
     }
 
     // Sort modules to accelerate loading time
-    /** @type {Record<string, Deferred>} */
-    const defs = {};
+    sortedModuleNames.push(...sortModuleNames(loader.factories));
+
+    // Register test modules
     /** @type {string[]} */
     const testModuleNames = [];
-    for (const [name, { deps }] of loader.factories) {
-        // Register test module
+    for (const name of loader.factories.keys()) {
         if (name.endsWith(fileSuffix)) {
-            const baseName = name.slice(0, -fileSuffix.length);
-            testModuleNames.push(baseName);
+            testModuleNames.push(name.slice(0, -fileSuffix.length));
         }
-
-        // Register module dependencies
-        const [modDef, ...depDefs] = [name, ...deps].map((dep) => (defs[dep] ||= new Deferred()));
-        Promise.all(depDefs).then(() => {
-            sortedModuleNames.push(name);
-            modDef.resolve();
-        });
     }
-
-    await Promise.all(Object.values(defs));
 
     // Dry run
     const { suites } = await dryRun(() => describeDrySuite(fileSuffix, testModuleNames));
