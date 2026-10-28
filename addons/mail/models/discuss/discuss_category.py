@@ -45,4 +45,8 @@ class DiscussCategory(models.Model):
     def _store_category_fields(self, res: Store.FieldList):
         res.attr("name")
         res.attr("sequence")
-        res.attr("bus_channel_access_token", lambda category: category._get_bus_channel_access_token())
+        res.attr(
+            "bus_channel_access_token",
+            lambda category: category._get_bus_channel_access_token(),
+            version=False,
+        )

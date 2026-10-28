@@ -54,6 +54,7 @@ class ResUsers(models.Model):
             "res_users_settings_id",
             "_store_settings_fields",
             value=self.env["res.users.settings"]._find_or_create_for_user,
+            version=False,
         )
 
     def _store_init_global_fields(self, res: Store.FieldList):

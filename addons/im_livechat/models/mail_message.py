@@ -33,7 +33,9 @@ class MailMessage(models.Model):
                 "selectedAnswer": answer.id if answer else False,
             }
 
-        res.attr("chatbotStep", value=chatbot_step_data, predicate=is_chatbot_authored)
+        res.attr(
+            "chatbotStep", value=chatbot_step_data, predicate=is_chatbot_authored, version=False,
+        )
         res.many(
             "chatbot_message_ids",
             lambda res: (

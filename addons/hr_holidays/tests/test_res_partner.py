@@ -4,6 +4,7 @@ from freezegun import freeze_time
 
 from odoo import Command, fields
 from odoo.tests.common import new_test_user, tagged, TransactionCase, users
+from odoo.addons.bus.tests.common import pop_store_version
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -61,8 +62,10 @@ class TestPartner(TransactionCase):
     def test_store_add_res_partner(self):
         self.leaves.write({'state': 'validate'})
         store_1 = Store().add(self.partner, "_store_partner_fields")
+        data_1 = store_1._build_result()
+        pop_store_version(data_1)
         self.assertEqual(
-            store_1._build_result()["hr.employee"],
+            data_1["hr.employee"],
             [
                 {
                     "active": True,
@@ -86,8 +89,10 @@ class TestPartner(TransactionCase):
         self.leaves[0].action_refuse()
         self.env.invalidate_all()  # No depends on _compute_leave_status/_compute_leave_date_to
         store_2 = Store().add(self.partner, "_store_partner_fields")
+        data_2 = store_2._build_result()
+        pop_store_version(data_2)
         self.assertEqual(
-            store_2._build_result()["hr.employee"],
+            data_2["hr.employee"],
             [
                 {
                     "active": True,
@@ -115,8 +120,10 @@ class TestPartner(TransactionCase):
         self.leaves.write({"state": "validate"})
         partner = self.partner.with_user(self.user_no_hr_access)
         store = Store().add(partner, "_store_partner_fields")
+        data = store._build_result()
+        pop_store_version(data)
         self.assertEqual(
-            store._build_result()["hr.employee"],
+            data["hr.employee"],
             [
                 {
                     "active": True,

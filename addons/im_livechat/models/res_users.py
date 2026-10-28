@@ -206,4 +206,5 @@ class ResUsers(models.Model):
             res.attr(
                 "is_livechat_manager",
                 lambda u: u.has_group("im_livechat.im_livechat_group_manager"),
+                version=False,
             )

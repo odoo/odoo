@@ -164,6 +164,7 @@ class LivechatChatbotScriptController(http.Controller):
                         "_store_message_fields",
                         mode="ADD",
                         value=posted_message,
+                        version=False,
                     ),
                 )
                 result["data"] = store

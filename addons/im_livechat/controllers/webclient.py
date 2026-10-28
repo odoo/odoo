@@ -20,7 +20,10 @@ class WebClient(WebclientController):
 
     @store_handler("im_livechat.channel")
     def store_im_livechat_channel(self, store: Store):
-        store.add(request.env["im_livechat.channel"].search([]), ["are_you_inside", "name"])
+        store.add(
+            request.env["im_livechat.channel"].search([]),
+            lambda res: (res.attr("are_you_inside", version=False), res.attr("name")),
+        )
 
     @store_handler("/im_livechat/session/data")
     def store_im_livechat_session_data(self, store: Store, channel_id):

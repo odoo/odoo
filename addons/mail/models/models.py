@@ -13,7 +13,7 @@ from odoo.tools import parse_contact_from_email
 from odoo.tools.mail import email_normalize, email_split_and_format
 
 from odoo.addons.mail.tools.alias_error import AliasError
-from odoo.addons.mail.tools.discuss import Store, StoreVersion
+from odoo.addons.mail.tools.discuss import Store
 
 _logger = logging.getLogger(__name__)
 
@@ -25,13 +25,6 @@ class Base(models.AbstractModel):
     # ------------------------------------------------------------
     # ORM
     # ------------------------------------------------------------
-
-    def _flush(self):
-        store_version = StoreVersion.ensure_version(self.env)
-        for field in self._fields.values():
-            if ids := self.env._field_dirty.get(field):
-                store_version.mark_field_as_written(field.model_name, ids, field.name)
-        return super()._flush()
 
     def with_user(self, user):
         """Override to ensure the guest context is removed as the target user in a with_user should
@@ -768,8 +761,9 @@ class Base(models.AbstractModel):
         res.attr(
             "modelName",
             lambda record: record.env["ir.model"]._get(record._name).display_name,
+            version=False,
         )
-        res.attr("display_name")
+        res.attr("display_name", version=False)
 
     # ------------------------------------------------------------
     # GATEWAY: NOTIFICATION
