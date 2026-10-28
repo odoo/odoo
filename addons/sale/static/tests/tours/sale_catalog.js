@@ -1,13 +1,10 @@
 import { addSectionFromProductCatalog } from "@account/js/tours/tour_utils";
 import { registry } from "@web/core/registry";
+import * as tourUtils from "@sale/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add('sale_catalog', {
     steps: () => [
-        {
-            content: "Create a new SO",
-            trigger: '.o_list_button_add',
-            run: 'click',
-        },
+        ...tourUtils.createNewSalesOrder(),
         {
             content: "Select the customer field",
             trigger: ".o_field_res_partner_many2one input.o_input",
@@ -77,11 +74,7 @@ registry.category("web_tour.tours").add('sale_catalog', {
 
 registry.category("web_tour.tours").add('test_add_section_from_product_catalog_on_sale_order', {
     steps: () => [
-        {
-            content: "Create a new SO",
-            trigger: '.o_list_button_add',
-            run: 'click',
-        },
+        ...tourUtils.createNewSalesOrder(),
         {
             content: "Select the customer field",
             trigger: '.o_field_res_partner_many2one input.o_input',
