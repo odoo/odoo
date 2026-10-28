@@ -299,7 +299,7 @@ class AccountBankStatement(models.Model):
     def action_draft(self):
         for statement in self:
             if statement.is_journal_hash:
-                raise UserError(self.env._('The journal of this statement (%(statement_name)) is hashed, the statement cannot be reset to draft', statement_name=statement.name))
+                raise UserError(self.env._('The journal of this statement (%(statement_name)s) is hashed, the statement cannot be reset to draft', statement_name=statement.name))
             statement.is_statement_posted = False
             statement.line_ids.move_id.button_draft()
 
