@@ -217,11 +217,11 @@ class ReturnPicking(models.TransientModel):
             stock_move = return_move.move_id
             if not stock_move or stock_move.state == 'cancel' or stock_move.scrapped:
                 continue
-            quantity = stock_move.quantity
+            quantity = stock_move.product_uom._compute_quantity(stock_move.quantity, return_move.uom_id, rounding_method='HALF-UP')
             for move in stock_move.move_dest_ids:
                 if not move.origin_returned_move_id or move.origin_returned_move_id != stock_move:
                     continue
-                quantity -= move.quantity
+                quantity -= move.product_uom._compute_quantity(move.quantity, return_move.uom_id, rounding_method='HALF-UP')
             quantity = float_round(quantity, precision_rounding=stock_move.product_id.uom_id.rounding)
             return_move.quantity = quantity
         return self.action_create_returns()
