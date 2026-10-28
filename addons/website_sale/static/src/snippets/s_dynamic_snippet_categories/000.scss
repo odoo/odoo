@@ -100,26 +100,12 @@
             .o_category_filter {
                 opacity: 0;
             }
-
-            .s_dynamic_category_arrow {
-                transition: transform .2s ease-in-out; // $transition-base duration & bezier
-            }
-
-            &:hover .s_dynamic_category_arrow {
-                transform: translateX(#{map-get($spacers, 1)});
-            }
         }
 
         .s_dynamic_category_item {
             &:hover .o_category_filter,
             &:has(.s_dynamic_category_button:focus-visible) .o_category_filter {
                 opacity: 100%;
-            }
-        }
-
-        &.s_dynamic_category_no_arrows {
-            .s_dynamic_category_arrow {
-                display: none;
             }
         }
     }

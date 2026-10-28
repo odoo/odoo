@@ -103,49 +103,10 @@
                     </BuilderButton>
                 </BuilderButtonGroup>
             </BuilderRow>
-            <BuilderRow label.translate="Clickable items">
-                <BuilderCheckbox
-                    id="'clickable_items_opt'"
-                    action="'toggleClickable'"
-                    classAction="'s_dynamic_category_clickable_items'"
-                    preview="false"
-                />
+            <BuilderRow label.translate="Button">
+                <BuilderCheckbox id="'button_opt'" action="'toggleButton'" preview="false"/>
             </BuilderRow>
-            <BuilderRow
-                t-if="this.isActiveItem('clickable_items_opt')"
-                label.translate="Arrows"
-                level="1"
-            >
-                <BuilderCheckbox
-                    classAction="'s_dynamic_category_no_arrows'"
-                    inverseAction="true"
-                />
-            </BuilderRow>
-            <BuilderRow
-                t-if="this.isActiveItem('clickable_items_opt')"
-                label.translate="Color Filter"
-                level="1"
-            >
-                <BuilderColorPicker
-                    styleAction="'--category-overlay-color'"
-                    defaultOpacity="50"
-                    enabledTabs="['custom', 'gradient']"
-                    grayscales="{
-                        'transparent': [
-                            'black-75',
-                            'black-50',
-                            'black-25',
-                            'black-15',
-                            'white-25',
-                            'white-50',
-                            'white-75',
-                            'white-85'
-                        ],
-                        'solid': [],
-                    }"
-                />
-            </BuilderRow>
-            <BuilderRow label.translate="Button" t-if="!this.isActiveItem('clickable_items_opt')">
+            <BuilderRow label.translate="Text" t-if="this.isActiveItem('button_opt')" level="1">
                 <BuilderTextInput dataAttributeAction="'button'" preview="false"/>
             </BuilderRow>
         </BuilderRow>

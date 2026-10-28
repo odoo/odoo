@@ -1,9 +1,6 @@
 import { Plugin } from '@html_editor/plugin';
 import { BuilderAction } from '@html_builder/core/builder_action';
 import { registry } from '@web/core/registry';
-import {
-    setDatasetIfUndefined
-} from '@website/builder/plugins/options/dynamic_snippet_option_plugin';
 
 const TEMPLATE_OPTIONS = {
     'clickable': 'website_sale.dynamic_filter_template_product_public_category_clickable_items',
@@ -18,13 +15,12 @@ export class DynamicSnippetCategoryOptionPlugin extends Plugin {
 
     modelNameFilter = modelNameFilter;
     resources = {
-        builder_actions: { ToggleClickableAction },
+        builder_actions: { ToggleButtonAction: ToggleButtonAction },
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
     };
 
     async onSnippetDropped({ snippetEl }) {
         if (snippetEl.matches("section.s_dynamic_snippet_category")) {
-            setDatasetIfUndefined(snippetEl, 'templateKey', TEMPLATE_OPTIONS.clickable);
             await this.dependencies.dynamicSnippetOption.setOptionsDefaultValues(
                 snippetEl,
                 this.modelNameFilter,
@@ -34,16 +30,21 @@ export class DynamicSnippetCategoryOptionPlugin extends Plugin {
     }
 }
 
-export class ToggleClickableAction extends BuilderAction {
-    static id = 'toggleClickable';
+export class ToggleButtonAction extends BuilderAction {
+    static id = 'toggleButton';
+    static dependencies = ['dynamicSnippetOption'];
     isApplied({ editingElement }) {
-        return editingElement.dataset.templateKey === TEMPLATE_OPTIONS.clickable;
+        return editingElement.dataset.templateKey === TEMPLATE_OPTIONS.default;
     }
     apply({ editingElement }) {
-        editingElement.dataset.templateKey = TEMPLATE_OPTIONS.clickable;
+        const { getTemplateByKey, updateTemplate } = this.dependencies.dynamicSnippetOption;
+        updateTemplate(editingElement, getTemplateByKey(TEMPLATE_OPTIONS.default));
+        editingElement.classList.remove('s_dynamic_category_clickable_items');
     }
     clean({ editingElement }) {
-        editingElement.dataset.templateKey = TEMPLATE_OPTIONS.default;
+        const { getTemplateByKey, updateTemplate } = this.dependencies.dynamicSnippetOption;
+        updateTemplate(editingElement, getTemplateByKey(TEMPLATE_OPTIONS.clickable));
+        editingElement.classList.add('s_dynamic_category_clickable_items');
     }
 }
 
