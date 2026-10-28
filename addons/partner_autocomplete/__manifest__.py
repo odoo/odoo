@@ -25,9 +25,6 @@ Auto-complete partner companies' data
             'partner_autocomplete/static/src/js/*',
             'partner_autocomplete/static/src/xml/*',
         ],
-        'web.jsvat_lib': [
-            'partner_autocomplete/static/lib/**/*',
-        ],
         'web.assets_unit_tests': [
             'partner_autocomplete/static/tests/**/*',
         ],
