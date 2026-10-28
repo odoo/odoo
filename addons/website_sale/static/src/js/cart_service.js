@@ -514,7 +514,7 @@ export class CartService {
         for (const notification of data.notifications) {
             this._showCartNotification(notification);
         }
-        if (data.quantity) {
+        if (data.quantity && data.tracking_info?.length) {
             this._trackProducts(data.tracking_info);
         }
         return data.quantity;
