@@ -529,7 +529,7 @@ class HrIndividualSkillMixin(models.AbstractModel):
             for command in commands:
                 if command[1] not in mixed_command_ids and command[0] == 1:
                     updated_commands.append(command)
-                    updated_ids.append(command[1])
+                    updated_ids.add(command[1])
         # Process individual_skill_ids values
         unlinked_commands = self.env[self._name].browse(list(unlinked_ids))._expire_individual_skills()
         updated_commands = self.env[self._name].browse(list(updated_ids))._write_individual_skills(updated_commands)
