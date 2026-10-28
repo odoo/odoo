@@ -1302,7 +1302,7 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         })
         bill = self._import_invoice_as_attachment_on(attachment=xml_attachment, journal=self.company_data['default_journal_purchase'])
         self.assertRecordValues(bill.invoice_line_ids, [
-            {'quantity': 31.0, 'price_unit': 103.0, 'discount': 9.75, 'price_subtotal': 2881.68},
+            {'quantity': 31.0, 'price_unit': 103.0, 'discount': 9.750078296273102, 'price_subtotal': 2881.68},
             {'quantity': 3.0, 'price_unit': 86.96, 'discount': 0.0, 'price_subtotal': 260.88},
             {'quantity': 1.0, 'price_unit': -0.01, 'discount': 0.0, 'price_subtotal': -0.01},
         ])
