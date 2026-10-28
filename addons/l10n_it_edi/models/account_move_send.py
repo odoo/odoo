@@ -128,19 +128,7 @@ class AccountMoveSend(models.AbstractModel):
         # EXTENDS 'account'
         super()._link_invoice_documents(invoices_data)
 
-        move_ids_to_names = {}
         for move, data in invoices_data.items():
             if values := data.get('l10n_it_edi_values'):
-                move.l10n_it_edi_attachment_file = BinaryBytes(values['raw'])
+                move.l10n_it_edi_attachment_file = BinaryBytes(values['raw'], filename=values['name'])
                 move.l10n_it_edi_attachment_name = values['name']
-                move.invalidate_recordset(fnames=['l10n_it_edi_attachment_name', 'l10n_it_edi_attachment_file'])
-                move_ids_to_names[move.id] = values['name']
-
-        if move_ids_to_names:
-            attachments = self.env['ir.attachment'].search([
-                ('res_model', '=', 'account.move'),
-                ('res_field', '=', 'l10n_it_edi_attachment_file'),
-                ('res_id', 'in', list(move_ids_to_names)),
-            ])
-            for attachment in attachments:
-                attachment.name = move_ids_to_names.get(attachment.res_id)
