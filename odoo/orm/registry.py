@@ -911,17 +911,18 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         # retrieve existing indexes with their table and access method
         cr.execute("""
-            SELECT idx.relname, tbl.relname, am.amname, ix.indpred IS NOT NULL
+            SELECT idx.relname, tbl.relname, am.amname, ix.indpred, d.description IS NOT NULL
               FROM pg_index ix
               JOIN pg_class idx ON idx.oid = ix.indexrelid
               JOIN pg_class tbl ON tbl.oid = ix.indrelid
               JOIN pg_am am ON am.oid = idx.relam
+         LEFT JOIN pg_description d ON idx.oid = d.objoid
              WHERE idx.relname IN %s
                AND idx.relnamespace = current_schema::regnamespace
         """, [tuple(row[0] for row in expected)])
         existing = {
-            indexname: (tablename, method, partial)
-            for indexname, tablename, method, partial in cr.fetchall()
+            indexname: (tablename, method, partial, bool(comment))
+            for indexname, tablename, method, partial, comment in cr.fetchall()
         }
 
         for indexname, tablename, field in expected:
@@ -939,12 +940,16 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 or (index == 'trigram' and self.has_trigram)
             )
             if indexname in existing:
-                # The index exists, check if it is stale.
-                expected_method = 'gin' if index == 'trigram' else 'btree'
-                stale = existing[indexname][1] != expected_method
-                if expected_method == 'btree':
-                    stale |= existing[indexname][2] != (index == 'btree_not_null')
-                will_index &= stale  # create only when stale
+                if not existing[indexname][3]:  # if the index has no comment
+                    _schema.info("Index %s has no comment; consider it modified by user; keep it as is", indexname)
+                    will_index = False # Don't touch indexes without comment
+                else:
+                    # The index exists, check if it is stale.
+                    expected_method = 'gin' if index == 'trigram' else 'btree'
+                    stale = existing[indexname][1] != expected_method
+                    if expected_method == 'btree':
+                        stale |= existing[indexname][2] != (index == 'btree_not_null')
+                    will_index &= stale  # create only when stale
             else:
                 stale = False
 
