@@ -1,4 +1,4 @@
-import { after, afterEach, beforeEach, registerDebugInfo } from "@odoo/hoot";
+import { after, afterEach, beforeEach, trackObject } from "@odoo/hoot";
 import { startRouter } from "@web/core/browser/router";
 import { createDebugContext } from "@web/core/debug/debug_context";
 import {
@@ -100,7 +100,8 @@ export async function makeMockEnv(partialEnv, options) {
     const env = makeEnv();
     Object.assign(env, partialEnv, createDebugContext(env)); // This is needed if the views are in debug mode
 
-    registerDebugInfo("env", env);
+    // Retained environments also retain their services, and all their state
+    trackObject("env", env);
 
     if (!currentEnv) {
         currentEnv = env;
