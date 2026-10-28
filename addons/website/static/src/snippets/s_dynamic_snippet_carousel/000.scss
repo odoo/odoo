@@ -17,8 +17,8 @@
     }
 
     &.o_dynamic_carousel_snippet {
-        // Reverse CSS to nullify the effect of CSS writen in "000.scss" of
-        // "s_dynamic_snippet" for dynamic carousel snippets.
+        /* Reverse CSS to nullify the effect of CSS writen in "000.scss" of
+           "s_dynamic_snippet" for dynamic carousel snippets. */
         > .container {
             .s_dynamic_snippet_title.s_dynamic_snippet_title_aside + .s_dynamic_snippet_content .s_dynamic_snippet_row > * {
                 @media (min-width: 992px) { /* media-breakpoint-up(lg) */
@@ -54,7 +54,7 @@
         width: auto;
     }
 
-    // Rounded arrows (default selected)
+    /* Rounded arrows (default selected) */
     .o_carousel_arrow {
         border-radius: var(--border-radius-pill);
         background-color: var(--o-bs-carousel-dark-indicator-active-bg);
