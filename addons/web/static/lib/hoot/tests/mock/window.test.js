@@ -69,6 +69,31 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     // ! WARNING: the following 2 tests need to be run sequentially to work, as they
+    // ! attempt to test the in-between-tests event listeners cleanup.
+    test("event listeners with options are properly removed: setup", async () => {
+        after(watchListeners());
+
+        const controller = new AbortController();
+        window.addEventListener("hoot-event", () => expect.step("capture"), true);
+        window.addEventListener("hoot-event", () => expect.step("signal"), {
+            signal: controller.signal,
+        });
+        window.dispatchEvent(new Event("hoot-event"));
+
+        expect.verifySteps(["capture", "signal"]);
+
+        controller.abort();
+        window.dispatchEvent(new Event("hoot-event"));
+
+        expect.verifySteps(["capture"]);
+    });
+    test("event listeners with options are properly removed: check", async () => {
+        window.dispatchEvent(new Event("hoot-event"));
+
+        expect.verifySteps([]);
+    });
+
+    // ! WARNING: the following 2 tests need to be run sequentially to work, as they
     // ! attempt to test the in-between-tests observers cleanup.
     test("observers are disconnected between tests: setup", async () => {
         expect(MutationObserver.name).toBe("MutationObserver");
