@@ -421,15 +421,19 @@ export class ProductPage extends Interaction {
      * @param {Markup} productSpecifications
      */
     _updateProductSpecifications(productSpecifications) {
-        const specsContainerEl = this.el.querySelector('.o_wsale_specs_container');
-        const newSpecsContainerEl = createElementWithContent('div', productSpecifications)
-            .querySelector('.o_wsale_specs_container');
-        if (!specsContainerEl || !newSpecsContainerEl) return;
+        const specsContainerEl = this.el.querySelector(".o_wsale_specs_container");
+        const newSpecsContainerEl = createElementWithContent(
+            "div",
+            productSpecifications
+        ).querySelector(".o_wsale_specs_container");
+        if (!specsContainerEl || !newSpecsContainerEl) {
+            return;
+        }
 
         // Keep the accordion item opened by the customer, if it is still displayed
-        const openedCollapseId = specsContainerEl.querySelector('.accordion-collapse.show')?.id;
+        const openedCollapseId = specsContainerEl.querySelector(".accordion-collapse.show")?.id;
         if (openedCollapseId) {
-            newSpecsContainerEl.querySelector(`#${openedCollapseId}`)?.classList.add('show');
+            newSpecsContainerEl.querySelector(`#${openedCollapseId}`)?.classList.add("show");
         }
         this.services["public.interactions"].stopInteractions(specsContainerEl);
         specsContainerEl.replaceWith(newSpecsContainerEl);

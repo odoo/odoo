@@ -13,7 +13,7 @@ registerWebsitePreviewTour("website_sale_add_extra_field", {}, () => [
     {
         content: "Open the extra field selector",
         trigger:
-            "[data-container-title='Specifications'] [data-label='Add Field'] .o-hb-select-toggle",
+            "[data-container-title='Specifications'] [data-label='Add Field'] .o_hb_select_toggle",
         run: "click",
     },
     {

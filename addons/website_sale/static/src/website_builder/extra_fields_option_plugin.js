@@ -70,10 +70,9 @@ export class ExtraFieldsOptionPlugin extends Plugin {
             return;
         }
 
-        const [newCategoryId] = await this.services.orm.create(
-            "product.attribute.category",
-            [{ name: categoryName }]
-        );
+        const [newCategoryId] = await this.services.orm.create("product.attribute.category", [
+            { name: categoryName },
+        ]);
 
         state.categories.push({ id: newCategoryId, name: categoryName });
 
@@ -83,7 +82,7 @@ export class ExtraFieldsOptionPlugin extends Plugin {
     }
 }
 
-class AddExtraFieldAction extends BuilderAction {
+export class AddExtraFieldAction extends BuilderAction {
     static id = "addExtraField";
     static dependencies = ["extraFieldsOptionPlugin"];
 
@@ -106,14 +105,13 @@ class AddExtraFieldAction extends BuilderAction {
         }
 
         const websiteId = this.services.website.currentWebsite.id;
-        await this.services.orm.create(
-            "website.sale.extra.field",
-            [{ website_id: websiteId, field_id: fieldId, category_id: categoryId }]
-        );
+        await this.services.orm.create("website.sale.extra.field", [
+            { website_id: websiteId, field_id: fieldId, category_id: categoryId },
+        ]);
     }
 }
 
-class CreateCategoryAction extends BuilderAction {
+export class CreateCategoryAction extends BuilderAction {
     static id = "createCategory";
     static dependencies = ["extraFieldsOptionPlugin"];
 
@@ -125,7 +123,7 @@ class CreateCategoryAction extends BuilderAction {
     }
 }
 
-class CreateRowCategoryAction extends BuilderAction {
+export class CreateRowCategoryAction extends BuilderAction {
     static id = "createRowCategory";
     static dependencies = ["extraFieldsOptionPlugin"];
 
@@ -137,7 +135,7 @@ class CreateRowCategoryAction extends BuilderAction {
     }
 }
 
-class DeleteExtraFieldAction extends BuilderAction {
+export class DeleteExtraFieldAction extends BuilderAction {
     static id = "deleteExtraField";
     static dependencies = ["extraFieldsOptionPlugin"];
 
@@ -156,7 +154,7 @@ class DeleteExtraFieldAction extends BuilderAction {
     }
 }
 
-class ChangeExtraFieldCategoryAction extends BuilderAction {
+export class ChangeExtraFieldCategoryAction extends BuilderAction {
     static id = "changeExtraFieldCategory";
     static dependencies = ["extraFieldsOptionPlugin"];
 
@@ -167,20 +165,22 @@ class ChangeExtraFieldCategoryAction extends BuilderAction {
 
     async apply({ editingElement }) {
         const extraFieldId = parseInt(editingElement.dataset.extraFieldId);
-        if (!extraFieldId) return;
+        if (!extraFieldId) {
+            return;
+        }
 
         const state = this.dependencies.extraFieldsOptionPlugin.getState();
-        if (state.rowCategoryId === null) return;
+        if (state.rowCategoryId === null) {
+            return;
+        }
 
-        await this.services.orm.write(
-            "website.sale.extra.field",
-            [extraFieldId],
-            { category_id: state.rowCategoryId }
-        );
+        await this.services.orm.write("website.sale.extra.field", [extraFieldId], {
+            category_id: state.rowCategoryId,
+        });
     }
 }
 
-class SelectExtraFieldAction extends BuilderAction {
+export class SelectExtraFieldAction extends BuilderAction {
     static id = "selectExtraField";
     static dependencies = ["extraFieldsOptionPlugin"];
 
@@ -193,7 +193,7 @@ class SelectExtraFieldAction extends BuilderAction {
     }
 }
 
-class SelectExtraFieldCategoryAction extends BuilderAction {
+export class SelectExtraFieldCategoryAction extends BuilderAction {
     static id = "selectExtraFieldCategory";
     static dependencies = ["extraFieldsOptionPlugin"];
 
@@ -206,7 +206,7 @@ class SelectExtraFieldCategoryAction extends BuilderAction {
     }
 }
 
-class SetExtraFieldCategoryNameAction extends BuilderAction {
+export class SetExtraFieldCategoryNameAction extends BuilderAction {
     static id = "setExtraFieldCategoryName";
     static dependencies = ["extraFieldsOptionPlugin"];
 
@@ -219,7 +219,7 @@ class SetExtraFieldCategoryNameAction extends BuilderAction {
     }
 }
 
-class SelectExtraFieldRowCategoryAction extends BuilderAction {
+export class SelectExtraFieldRowCategoryAction extends BuilderAction {
     static id = "selectExtraFieldRowCategory";
     static dependencies = ["extraFieldsOptionPlugin"];
 

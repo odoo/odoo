@@ -26,7 +26,7 @@ export class ExtraFieldRowOption extends BaseOptionComponent {
         });
     }
 
-    setCategoryCreateMode(value) {
+    setRowCategoryCreateMode(value) {
         this.state.rowCategoryCreateMode = value;
         this.state.newCategoryName = "";
     }
