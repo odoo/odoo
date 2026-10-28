@@ -2,7 +2,7 @@
 from dateutil.relativedelta import relativedelta
 import datetime
 
-from odoo import fields
+from odoo import Command, fields
 
 from odoo.exceptions import ValidationError
 from odoo.tests import Form
@@ -553,3 +553,22 @@ class TestEmployeeSkills(TransactionCase):
         employee_form.current_employee_skill_ids.remove(index=index)
         employee_form.save()
         self.assertEqual(len(self.employee.employee_skill_ids), 6, "the certification is removed because an other expired certification has the same validity range")
+
+    def test_update_and_delete_same_skill_in_one_write(self):
+        """ A skill both updated and deleted in the same write is only deleted, the other updates
+        are still applied. """
+        today = fields.Date.context_today(self)
+        self.employee.write({'current_employee_skill_ids': [
+            Command.update(self.line3.id, {'skill_level_id': self.language.skill_level_ids[2].id}),
+            Command.update(self.line4.id, {'skill_level_id': self.language.skill_level_ids[2].id}),
+            Command.delete(self.line4.id),
+        ]})
+        current_skills = self.employee.current_employee_skill_ids
+        self.assertEqual(self.line3.valid_to, today - relativedelta(days=1), "English A2 should be archived")
+        self.assertEqual(self.line4.valid_to, today - relativedelta(days=1), "Arabic A2 should be archived")
+        self.assertEqual(
+            current_skills.filtered(lambda s: s.skill_type_id == self.language).mapped('display_name'),
+            ['English: B1'],
+            "English should be updated to B1 and Arabic should be removed",
+        )
+
