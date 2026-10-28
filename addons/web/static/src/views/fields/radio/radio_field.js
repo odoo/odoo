@@ -1,6 +1,7 @@
 import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { evaluateExpr } from "@web/core/py_js/py";
 import { getFieldDomain } from "@web/model/relational_model/utils";
 import { useSpecialData } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "../standard_field_props";
@@ -13,9 +14,11 @@ export class RadioField extends Component {
         orientation: { type: String, optional: true },
         label: { type: String, optional: true },
         domain: { type: [Array, Function], optional: true },
+        hideValues: { type: String, optional: true },
     };
     static defaultProps = {
         orientation: "vertical",
+        hideValues: "[]",
     };
 
     setup() {
@@ -36,15 +39,22 @@ export class RadioField extends Component {
     }
 
     get items() {
+        let items;
         switch (this.type) {
             case "selection":
-                return this.props.record.fields[this.props.name].selection;
-            case "many2one": {
-                return this.specialData.data;
-            }
+                items = this.props.record.fields[this.props.name].selection;
+                break;
+            case "many2one":
+                items = this.specialData.data;
+                break;
             default:
-                return [];
+                items = [];
         }
+        const hiddenValues = evaluateExpr(this.props.hideValues, this.props.record.evalContext);
+        if (hiddenValues.length) {
+            items = items.filter(([value]) => !hiddenValues.includes(value));
+        }
+        return items;
     }
     get value() {
         switch (this.type) {
@@ -83,6 +93,14 @@ export const radioField = {
             name: "horizontal",
             type: "boolean",
         },
+        {
+            label: _t("Hide values"),
+            name: "hide_values",
+            type: "string",
+            help: _t(
+                "Python expression evaluated against the record, returning the list of values to hide (e.g. \"['company'] if parent_id else []\")"
+            ),
+        },
     ],
     supportedTypes: ["many2one", "selection"],
     isEmpty: (record, fieldName) => record.data[fieldName] === false,
@@ -90,6 +108,7 @@ export const radioField = {
         orientation: options.horizontal ? "horizontal" : "vertical",
         label: string,
         domain: dynamicInfo.domain,
+        hideValues: options.hide_values ?? "[]",
     }),
 };
 

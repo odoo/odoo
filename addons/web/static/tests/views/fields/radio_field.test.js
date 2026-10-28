@@ -234,6 +234,29 @@ test("radio field with numerical keys encoded as strings", async () => {
     expect.verifySteps(["1"]);
 });
 
+test("radio field hide_values option", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: /* xml */ `
+            <form>
+                <field name="bar" />
+                <field name="color" widget="radio" options="{'hide_values': &quot;['black'] if bar else []&quot;}"/>
+            </form>
+        `,
+    });
+
+    // bar defaults to true, so black is hidden
+    expect("div.o_radio_item").toHaveCount(1);
+    expect(".o_field_radio").toHaveText("Red");
+
+    await click(".o_field_boolean input[type='checkbox']");
+    await animationFrame();
+
+    expect("div.o_radio_item").toHaveCount(2);
+    expect(".o_field_radio").toHaveText("Red\nBlack");
+});
+
 test("radio field is empty", async () => {
     await mountView({
         type: "form",
