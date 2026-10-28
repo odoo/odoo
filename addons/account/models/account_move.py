@@ -6146,12 +6146,18 @@ class AccountMove(models.Model):
         for move in self:
             if move.move_type != 'in_invoice':
                 continue
+            # Group the lines by product: averaging them one by one would use an on hand
+            # quantity that is only updated once the whole move is processed.
+            value_qty_per_product = defaultdict(lambda: [0.0, 0.0])
             for line in move.invoice_line_ids:
                 if line.display_type != 'product' or not line.product_id.is_storable or line.product_id.cost_method == 'standard':
                     continue
                 qty = line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id)
-                line.product_id.sudo().with_company(move.company_id)._update_standard_price(
-                    extra_value=sign * abs(line.balance), extra_quantity=sign * qty,
+                value_qty_per_product[line.product_id][0] += line.balance
+                value_qty_per_product[line.product_id][1] += qty
+            for product, (value, qty) in value_qty_per_product.items():
+                product.sudo().with_company(move.company_id)._update_standard_price(
+                    extra_value=sign * value, extra_quantity=sign * qty,
                 )
 
     def _post(self, soft=True):
@@ -6357,8 +6363,9 @@ class AccountMove(models.Model):
             'posted_before': True,
         })
 
-        to_post._update_standard_price()
-        to_post._update_qty_available()
+        for move in to_post:
+            move._update_standard_price()
+            move._update_qty_available()
 
         if not self.env.context.get('move_reverse_cancel'):
             to_post._create_cogs_lines()
@@ -6957,8 +6964,9 @@ class AccountMove(models.Model):
         # We remove all the analytics entries for this journal
         self.line_ids.analytic_line_ids.with_context(skip_analytic_sync=True).unlink()
         posted_moves = self.filtered(lambda move: move.state == 'posted')
-        posted_moves._update_standard_price(reverse=True)
-        posted_moves._update_qty_available(reverse=True)
+        for move in posted_moves:
+            move._update_standard_price(reverse=True)
+            move._update_qty_available(reverse=True)
         self.state = 'draft'
         with self.env.protecting(self.env['account.move']._get_protected_vals({}, self)):
             self.line_ids.filtered(lambda line: line.display_type == 'cogs').unlink()
