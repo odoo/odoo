@@ -706,6 +706,57 @@ class TestSequenceMixin(TestSequenceMixinCommon):
             move_form.journal_id = journal
         self.assertMoveName(move, 'AJ/21-22/10/0001')
 
+    def test_sequence_different_fiscal_year_other_company_current(self):
+        """ Test confirming moves for a company with a staggered fiscal year
+        when another company with a different (calendar) fiscal year is current in env.
+        """
+        company_calendar_data = self.setup_other_company()
+        company_calendar = company_calendar_data['company']
+        company_calendar.write({'fiscalyear_last_day': 31, 'fiscalyear_last_month': '12'})
+
+        # Test customer invoice (year_range sequence)
+        # Date 2026-02-10 is in fiscal year 2025-04-01 - 2026-03-31 (25-26)
+        invoice_1 = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2026-02-10',
+            'date': '2026-02-10',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                (0, None, {
+                    'name': 'line',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                }),
+            ],
+        })
+        invoice_1.action_post()
+        self.assertMoveName(invoice_1, 'INV/25-26/0001')
+
+        # Create second invoice for company_staggered in draft
+        invoice_2 = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2026-02-10',
+            'date': '2026-02-10',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                (0, None, {
+                    'name': 'line',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                }),
+            ],
+        })
+
+        # Confirm the draft invoice while company_calendar is current in env
+        invoice_2.with_company(company_calendar).action_post()
+        self.assertMoveName(invoice_2, 'INV/25-26/0002')
+
+        # Test entry with year_range_month sequence
+        move_1 = self.create_move(date='2026-02-10', post=True)
+        self.assertMoveName(move_1, 'MISC/25-26/02/0001')
+
+        move_2 = self.create_move(date='2026-02-10', post=False)
+        move_2.with_company(company_calendar).action_post()
+        self.assertMoveName(move_2, 'MISC/25-26/02/0002')
+
     def test_sequence_move_name_related_field_well_computed(self):
         AccountMove = type(self.env['account.move'])
         _compute_name = AccountMove._compute_name
