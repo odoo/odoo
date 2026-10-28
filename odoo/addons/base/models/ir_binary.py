@@ -79,9 +79,8 @@ class IrBinary(models.AbstractModel):
         value = record[field_name]
 
         if value and record._fields[field_name].attachment:
-            from odoo.orm.fields_binary import BinaryValueAttachment  # noqa: PLC0415
-            if isinstance(value, BinaryValueAttachment):
-                field_attachment = value._BinaryValueAttachment__attachment
+            if attachment_id := getattr(value, 'attachment_id', None):
+                field_attachment = self.env['ir.attachment'].sudo().browse(attachment_id)
             else:
                 field_attachment = self.env['ir.attachment'].sudo().search(
                     domain=[('res_model', '=', record._name),
