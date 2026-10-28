@@ -826,11 +826,7 @@ export class BuilderOptionsPlugin extends Plugin {
 }
 
 function getClosestElements(element, selector) {
-    if (!element) {
-        // TODO we should remove it
-        return [];
-    }
-    const parent = element.closest(selector);
+    const parent = element?.closest(selector);
     return parent ? [parent, ...getClosestElements(parent.parentElement, selector)] : [];
 }
 
