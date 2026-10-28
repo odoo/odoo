@@ -241,6 +241,40 @@ div#total {
         th {
             border-color: $gray-300 !important;
         }
+
+        th:first-child, td:first-child {
+            padding-left: map-get($spacers, 3);
+        }
+
+        th:last-child, td:last-child {
+            padding-right: map-get($spacers, 3);
+        }
+
+        &.table-sm {
+            &::before {
+                border-radius: $border-radius;
+            }
+
+            &.o_has_total_table::before {
+                border-radius: $border-radius $border-radius 0 $border-radius;
+            }
+
+            th:first-child {
+                border-radius: $border-radius 0 0 0;
+            }
+
+            th:last-child {
+                border-radius: 0 $border-radius 0 0;
+            }
+
+            th:first-child, td:first-child {
+                padding-left: map-get($spacers, 2);
+            }
+
+            th:last-child, td:last-child {
+                padding-right: map-get($spacers, 2);
+            }
+        }
     }
 
     .o_total_table:not(.o_ignore_layout_styling) {
