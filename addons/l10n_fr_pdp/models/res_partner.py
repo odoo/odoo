@@ -4,6 +4,7 @@ import requests
 
 from markupsafe import Markup
 from urllib import parse
+from stdnum.util import get_cc_module
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
@@ -101,7 +102,13 @@ class ResPartner(models.Model):
         if siren := self._l10n_fr_pdp_get_siren():
             return '0002', siren
 
+<<<<<<< 8c1ce4e4b0d9181db175ccf34224ccecb34653a6
         partner_vat = self._l10n_fr_pdp_get_flow_10_vat()
+||||||| 4a48e6e596c27cb54f79d33cf76d5005cbd9d1b5
+        partner_vat = self.vat or ''
+=======
+        partner_vat = self._l10n_fr_pdp_get_normalized_vat(self.vat, country_code) or ''
+>>>>>>> 50cd145a8a6f168beeaf9625a81790accfd0727e
         if country_code == 'WF' and self.name:
             return '0227', country_code + self.name[:16]
         if (
@@ -308,6 +315,7 @@ class ResPartner(models.Model):
             # So the `peppol_supported_documents` would be empty for them otherwise.
             # The CPRO_INVOICE_IDENTIFIER acts as a general placeholder and does not indicate the actually
             # supported documents (i.e. credit notes and CDAR lifecycles are possible too ofc.).
+<<<<<<< 8c1ce4e4b0d9181db175ccf34224ccecb34653a6
             partner.sudo().peppol_supported_documents = [CPRO_INVOICE_IDENTIFIER]
 
     @api.model
@@ -334,3 +342,17 @@ class ResPartner(models.Model):
             'count': len(identifiers),
             'lines': lines,
         }
+||||||| 4a48e6e596c27cb54f79d33cf76d5005cbd9d1b5
+            partner.peppol_supported_documents = [CPRO_INVOICE_IDENTIFIER]
+=======
+            partner.peppol_supported_documents = [CPRO_INVOICE_IDENTIFIER]
+
+    @api.model
+    def _l10n_fr_pdp_get_normalized_vat(self, vat, country_code):
+        countries_formatter = {
+            'CH': get_cc_module('ch', 'vat').compact,
+        }
+
+        formatter = countries_formatter.get((country_code or '').upper())
+        return formatter(vat) if vat and formatter else vat
+>>>>>>> 50cd145a8a6f168beeaf9625a81790accfd0727e

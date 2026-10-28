@@ -352,7 +352,13 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
         mapped_country_code = drom_com_territories.map_country_code_for_ppf(partner.country_id.code)
         mapped_country_code = mapped_country_code.upper() if mapped_country_code else mapped_country_code
         company_scheme, company_id = partner._l10n_fr_pdp_get_flow_10_identifier()
+<<<<<<< 8c1ce4e4b0d9181db175ccf34224ccecb34653a6
         partner_vat = partner._l10n_fr_pdp_get_flow_10_vat()
+||||||| 4a48e6e596c27cb54f79d33cf76d5005cbd9d1b5
+        partner_vat = partner.vat or ''
+=======
+        partner_vat = partner._l10n_fr_pdp_get_normalized_vat(partner.vat, partner.country_id.code) or ''
+>>>>>>> 50cd145a8a6f168beeaf9625a81790accfd0727e
 
         partner_vals = {
             'CompanyId': {

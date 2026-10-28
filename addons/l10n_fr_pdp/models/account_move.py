@@ -633,8 +633,16 @@ class AccountMove(models.Model):
                     yield self.env._("Invalid partner VAT (%(vat)s).", vat=self.commercial_partner_id.vat)
                 # G2.19 limits Flow 10 VAT identifiers to 18 characters.
                 for partner in (self.company_id.partner_id, self.commercial_partner_id):
+<<<<<<< 8c1ce4e4b0d9181db175ccf34224ccecb34653a6
                     if len(partner._l10n_fr_pdp_get_flow_10_vat()) > 18:
                         yield self.env._(
+||||||| 4a48e6e596c27cb54f79d33cf76d5005cbd9d1b5
+                    if len(partner.vat or '') > 18:
+                        yield _(
+=======
+                    if len(partner._l10n_fr_pdp_get_normalized_vat(partner.vat, partner.country_id.code) or '') > 18:
+                        yield _(
+>>>>>>> 50cd145a8a6f168beeaf9625a81790accfd0727e
                             "VAT number for %s must not exceed 18 characters.",
                             partner.display_name,
                         )
