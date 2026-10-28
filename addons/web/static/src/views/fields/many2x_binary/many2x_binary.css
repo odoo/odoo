@@ -63,7 +63,7 @@
     }
 
     .o_attachment_delete {
-        background: desaturate(map-get($theme-colors, 'primary'), 50%);
+        background: hsl(from var(--primary) h calc(s - 50) l);
         color: white;
         cursor: pointer;
         font-size: 20px;

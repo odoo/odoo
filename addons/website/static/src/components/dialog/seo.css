@@ -75,9 +75,9 @@
             transition: 200ms;
             display: inline-block;
             padding: 23px 27px;
-            border: 3px dashed lighten(map-get($grays, '700'), 30%);
+            border: 3px dashed hsl(from var(--gray-700) h s calc(l + 30));
             vertical-align: top;
-            color: lighten(map-get($grays, '600'), 30%);
+            color: hsl(from var(--gray-600) h s calc(l + 30));
 
             &:hover, &:focus-visible {
                 border-color: var(--o-brand-primary);
