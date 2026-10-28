@@ -170,6 +170,7 @@
         <field name="model">fleet.vehicle.model.brand</field>
         <field name="arch" type="xml">
             <list string="Model Make">
+                <field name="sequence" widget="handle"/>
                 <field name="name" />
                 <field name="model_count" string="Models"/>
             </list>
@@ -203,7 +204,7 @@
         <field name="name">fleet.vehicle.model.brandkanban</field>
         <field name="model">fleet.vehicle.model.brand</field>
         <field name="arch" type="xml">
-            <kanban action="action_brand_model" type="object" default_order="name">
+            <kanban action="action_brand_model" type="object">
                 <field name="active"/>
                 <templates>
                     <t t-name="menu">

@@ -7,9 +7,10 @@ from odoo import api, fields, models, _
 class FleetVehicleModelBrand(models.Model):
     _name = 'fleet.vehicle.model.brand'
     _description = 'Brand of the vehicle'
-    _order = 'name asc'
+    _order = 'sequence, name asc'
 
     name = fields.Char('Name', required=True)
+    sequence = fields.Integer(default=10)
     active = fields.Boolean(default=True)
     image_128 = fields.Image("Logo", max_width=128, max_height=128)
     model_count = fields.Integer(compute="_compute_model_count", string="", store=True)
