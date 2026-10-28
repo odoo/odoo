@@ -69,18 +69,21 @@ class IrQweb(models.AbstractModel):
 
     def _get_field(self, record, field_name, expression, tagName, field_options, values):
         attributes, content, force_display = super()._get_field(record, field_name, expression, tagName, field_options, values)
-        # snippets in HTML fields are not compiled, read them at each rendering
-        if 'structured_data_snippets' in values and content and 'data-jsonld-type' in content:
-            root = html.fromstring(f'<div>{content}</div>')
-            for item in root.xpath(JSONLD_ITEMS_XPATH):
-                if vals := self.env.website._build_jsonld_item_vals(item):
-                    values['structured_data_snippets'].append(vals)
+        # snippets in HTML fields are not compiled, read them at each rendering,
+        # in the value: the content shown to visitors has lost its markers
+        if 'structured_data_snippets' in values and record._fields[field_name].type == 'html':
+            value = record[field_name]
+            if value and 'data-jsonld-type' in value:
+                root = html.fromstring(f'<div>{value}</div>')
+                for item in root.xpath(JSONLD_ITEMS_XPATH):
+                    if vals := self.env.website._build_jsonld_item_vals(item):
+                        values['structured_data_snippets'].append(vals)
         return attributes, content, force_display
 
     # assume cache will be invalidated by third party on write to ir.ui.view
     def _get_template_cache_keys(self):
         """ Return the list of context keys to use for caching ``_compile``. """
-        return super()._get_template_cache_keys() + ['website_id', 'cookies_allowed']
+        return super()._get_template_cache_keys() + ['website_id', 'cookies_allowed', 'remove_jsonld_markers']
 
     def _pre_processing_att(self, attrib):
         self._copy_translate_attributes(attrib)
@@ -107,6 +110,10 @@ class IrQweb(models.AbstractModel):
             return atts
 
         atts = super()._post_processing_att(tagName, atts)
+
+        if self.env.context.get('remove_jsonld_markers'):
+            atts.pop('data-jsonld-type', None)
+            atts.pop('data-jsonld-prop', None)
 
         website = self.env.website
         if website and tagName == 'img' and 'loading' not in atts:

@@ -233,26 +233,44 @@ class TestSnippets(HttpCase):
             'arch': f'<xpath expr="//div[@id=\'wrap\']" position="inside">{snippet}</xpath>',
         })
         view.update_field_translations('arch_db', {'fr_FR': {'CEO': 'PDG'}})
-        # dropped in an HTML field
+        # dropped in an HTML field, with another member and question
         self.env['website.menu'].create({
             'name': 'Snippet',
             'website_id': website.id,
             'parent_id': website.menu_id.id,
-            'mega_menu_content': snippet,
+            'mega_menu_content': snippet.replace('Tony', 'Tom').replace('Why?', 'How?'),
         })
 
         def get_snippet_nodes(url):
             scripts = html.fromstring(self.url_open(url).content).xpath('//script[@type="application/ld+json"]/text()')
-            return [node for script in scripts for node in json.loads(script)['@graph'] if node['@type'] != 'Organization']
+            self.assertEqual(len(scripts), 1, "The structured data of the page and of its snippets in one graph")
+            return [node for node in json.loads(scripts[0])['@graph'] if node['@type'] != 'Organization']
 
         base_url = self.base_url()
         works_for = {'@id': f'{base_url}/#organization'}
-        nodes = [
-            {'@type': 'Person', 'name': 'Tony', 'jobTitle': 'CEO', 'image': f'{base_url}/web/image/a.png', 'worksFor': works_for},
+        answer = {'@type': 'Answer', 'text': 'Because.'}
+        self.assertEqual(get_snippet_nodes('/website/info'), [
+            {'@type': 'Person', 'name': 'Tom', 'jobTitle': 'CEO', 'image': f'{base_url}/web/image/a.png', 'worksFor': works_for},
             {'@type': 'Person', 'name': 'Iris', 'image': 'https://cdn.example.com/iris.png', 'worksFor': works_for},
-            {'@type': 'FAQPage', 'mainEntity': {'@type': 'Question', 'name': 'Why?', 'acceptedAnswer': {'@type': 'Answer', 'text': 'Because.'}}},
-        ]
-        self.assertEqual(get_snippet_nodes('/website/info'), nodes * 2, "Described from the mega menu, then from the page")
+            {'@type': 'FAQPage', 'mainEntity': [
+                {'@type': 'Question', 'name': 'How?', 'acceptedAnswer': answer},
+                {'@type': 'Question', 'name': 'Why?', 'acceptedAnswer': answer},
+            ]},
+            {'@type': 'Person', 'name': 'Tony', 'jobTitle': 'CEO', 'image': f'{base_url}/web/image/a.png', 'worksFor': works_for},
+        ], "From the mega menu, then from the page: Iris once, the questions in one FAQ")
+
+        # a page also offered as template of new pages: shown to visitors, then rendered as content
+        page = self.env['website.page'].create({
+            'name': 'Template',
+            'type': 'qweb',
+            'key': 'website.test_jsonld_template',
+            'arch': f'<t t-call="website.layout"><div id="wrap">{snippet}</div></t>',
+            'url': '/test-jsonld-template',
+            'website_id': website.id,
+            'is_published': True,
+            'is_new_page_template': True,
+        })
+        self.assertNotIn(b'data-jsonld-', self.url_open(page.url).content, "Only the editor reads the markers")
 
         self.env['ir.config_parameter'].set_str('web.base.url', 'https://www.example.com')
         self.assertEqual(
@@ -260,6 +278,13 @@ class TestSnippets(HttpCase):
             "The URLs follow the base URL, which is not part of the compiled template",
         )
         self.assertEqual(get_snippet_nodes('/fr/website/info')[3]['jobTitle'], 'PDG')
+
+        self.authenticate('admin', 'admin')
+        self.assertIn(b'data-jsonld-type', self.url_open('/website/info').content, "The editor saves what it reads")
+        groups = self.make_jsonrpc_request('/website/get_new_page_templates')
+        templates = next(group['templates'] for group in groups if group['id'] == 'custom')
+        template = next(template['template'] for template in templates if template['key'] == page.key)
+        self.assertIn('data-jsonld-type', template, "A new page is made of its template")
 
 
 @tagged('post_install', '-at_install')
@@ -295,11 +320,40 @@ class TestSnippetsJsonld(TransactionCase):
         ]:
             with self.subTest(src=src):
                 self.assertEqual(build(f'{name}<img data-jsonld-prop="image" src="{src}"/>').get('image'), image)
+        place = website._build_jsonld_item_vals(html.fromstring('<section data-jsonld-type="Place" data-map-gps="(50.85,-4.3)"/>'))
+        self.assertEqual(place, {'@type': 'Place', 'geo': {'@type': 'GeoCoordinates', 'latitude': 50.85, 'longitude': -4.3}})
+        place = website._build_jsonld_item_vals(html.fromstring('<section data-jsonld-type="Place" data-map-address="" data-map-gps="(a,b)"/>'))
+        self.assertIsNone(place, "A map without its place says nothing")
+
+    def test_render_page_jsonld(self):
+        website = self.env.ref('base.default_website')
+        base_url = website.get_base_url()
+        structured_data = json.dumps({'@context': 'https://schema.org', '@graph': [
+            {'@type': 'Organization', '@id': f'{base_url}/#organization', 'name': 'Odoo'},
+        ]})
+        contact = {'@type': 'ContactPoint', 'email': 'info@example.com'}
+        why = {'@type': 'Question', 'name': 'Why?'}
+        how = {'@type': 'Question', 'name': 'How?'}
+        tony = {'@type': 'Person', 'name': 'Tony'}
+        graph = json.loads(website._render_page_jsonld(structured_data, [
+            {'@type': 'Organization', '@id': '/#organization', 'contactPoint': contact},
+            {'@type': 'FAQPage', 'mainEntity': why},
+            {'@type': 'FAQPage', 'mainEntity': [how, why]},
+            tony,
+            tony,
+        ]))['@graph']
+        self.assertEqual(graph, [
+            {'@type': 'Organization', '@id': f'{base_url}/#organization', 'name': 'Odoo', 'contactPoint': contact},
+            {'@type': 'FAQPage', 'mainEntity': [why, how]},
+            tony,
+        ])
 
     def test_snippets_jsonld(self):
         # each type of the snippets with JSON-LD markers has its required properties
         # listed, and each of their items gives a schema
         website = self.env.ref('base.default_website')
+        # the default map shows the address of the company
+        self.env.company.city = 'Brussels'
         snippets = self.env['ir.ui.view'].search([('key', '=like', '%.s\\_%'), ('arch_db', 'like', 'data-jsonld-type')])
         self.assertTrue(snippets)
         for snippet in snippets:

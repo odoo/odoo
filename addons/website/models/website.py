@@ -1716,6 +1716,9 @@ class Website(models.CachedModel):
             elif has_group_restricted_editor:
                 # will add the branding on fields (into values)
                 context['inherit_branding_auto'] = True
+            else:
+                # visitors don't edit the page: the JSON-LD markers, only read by the editor, can go
+                context['remove_jsonld_markers'] = True
 
         return self.env['ir.qweb'].with_context(**context)._render(view.id, values)
 
@@ -2754,6 +2757,8 @@ class Website(models.CachedModel):
             'ContactPoint': [],
             # all its properties come from _build_jsonld_item_vals
             'WebSite': [],
+            # an address or coordinates, read by _build_jsonld_item_vals
+            'Place': [],
         }.get(jsonld_type)
 
     @api.model
@@ -2761,18 +2766,24 @@ class Website(models.CachedModel):
         """Build the Schema.org dictionary of an item marked in HTML.
 
         :param item: element marked with ``data-jsonld-type``.
-        :return: Dictionary of Schema.org properties, or None if a required one is missing.
-            Plain JSON values (text, numbers, lists, dicts): they're written into the
-            compiled templates.
+        :return: Dictionary of Schema.org properties, or None if a required one is
+            missing or if it has none. Plain JSON values (text, numbers, lists, dicts):
+            they're written into the compiled templates.
         :rtype: dict | None
         """
         item_type = item.get('data-jsonld-type')
         props = self._get_jsonld_props(item)
         if not item_type or props is None:
             return None
+        # the map snippets keep their place in attributes, set by their options
+        address = item.get('data-map-address') or item.get('data-pin-address')
+        if address:
+            props['address'] = address
+        if gps := re.fullmatch(r'\((-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)\)', item.get('data-map-gps', '')):
+            props['geo'] = {'@type': 'GeoCoordinates', 'latitude': float(gps[1]), 'longitude': float(gps[2])}
         # what the snippets can't hold, from the website: no host in the URLs,
         # views keep them in their compiled code, so the current host is added
-        # when rendering (see _render_snippets_jsonld)
+        # when rendering (see _render_page_jsonld)
         website_props = {
             'Person': {'worksFor': {'@id': '/#organization'}},
             'Organization': {'@id': '/#organization'},
@@ -2786,7 +2797,10 @@ class Website(models.CachedModel):
                 },
             },
         }
-        return {'@type': item_type, **props, **website_props.get(item_type, {})}
+        vals = {'@type': item_type, **props, **website_props.get(item_type, {})}
+        if len(vals) == 1:
+            return None  # nothing but its type
+        return vals
 
     @api.model
     def _get_jsonld_props(self, el):
@@ -2824,13 +2838,17 @@ class Website(models.CachedModel):
             return None  # a required property is missing
         return props
 
-    def _render_snippets_jsonld(self, schemas):
-        """Render the JSON-LD of the snippets of the page.
+    def _render_page_jsonld(self, structured_data, schemas):
+        """Render the JSON-LD of the page: its structured data and the schemas
+        of its snippets, in one graph.
 
+        :param str structured_data: JSON-LD of the page, see ``_render_jsonld``.
         :param list schemas: Schema.org dictionaries of the rendered snippets.
         :return: JSON-LD string.
         :rtype: str
         """
+        if not schemas:
+            return structured_data
         base_url = self.get_base_url()
 
         # the schemas are compiled in the templates without host: add the current one
@@ -2844,8 +2862,32 @@ class Website(models.CachedModel):
                 return base_url + value
             return value
 
+        # each thing once: the nodes with the same @id are merged, so are the FAQs,
+        # the page being one FAQ whatever the number of FAQ snippets
+        nodes, nodes_by_key = [], {}
+        for node in json.loads(structured_data)['@graph'] + make_absolute(schemas):
+            key = node.get('@id')
+            if node.get('@type') == 'FAQPage':
+                key = 'FAQPage'
+            if key in nodes_by_key:
+                merged = nodes_by_key[key]
+                for prop, value in node.items():
+                    values = merged.get(prop, [])
+                    if not isinstance(values, list):
+                        values = [values]
+                    if not isinstance(value, list):
+                        value = [value]
+                    for val in value:
+                        if val not in values:
+                            values.append(val)
+                    merged[prop] = values if len(values) > 1 else values[0]
+            elif node not in nodes:  # a snippet shown twice describes the same thing
+                nodes.append(node)
+                if key:
+                    nodes_by_key[key] = node
+
         return json_safe.dumps(
-            {'@context': 'https://schema.org', '@graph': make_absolute(schemas)},
+            {'@context': 'https://schema.org', '@graph': nodes},
             ensure_ascii=False,
         )
 
