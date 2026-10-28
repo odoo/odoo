@@ -1,5 +1,6 @@
 import { contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
+import { waitFor } from "@odoo/hoot-dom";
 import { mockTimeZone } from "@odoo/hoot-mock";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { defineWebsiteLivechatModels } from "./website_livechat_test_helpers";
@@ -100,10 +101,10 @@ test("Show recent conversations in channel info list", async () => {
         count: 2,
         text: "Conversation ongoing",
     });
-    await contains(
-        ".o-livechat-LivechatChannelInfoList-recentConversation :text('question about the discuss app')"
+    await waitFor(
+        ".o-livechat-LivechatChannelInfoList-recentConversation :text('question about the discuss app'):count(1)"
     );
-    await contains(
-        ".o-livechat-LivechatChannelInfoList-recentConversation :text('question about the live chat app')"
+    await waitFor(
+        ".o-livechat-LivechatChannelInfoList-recentConversation :text('question about the live chat app'):count(1)"
     );
 });

@@ -6,6 +6,7 @@ import {
     startServer
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
+import { waitFor } from "@odoo/hoot-dom";
 import { defineSMSModels } from "@sms/../tests/sms_test_helpers";
 
 describe.current.tags("desktop");
@@ -40,8 +41,8 @@ test("Notification Error", async () => {
     await openFormView("res.partner", partnerId);
     await _assertContainsSmsNotification();
     await click(".o-mail-Message-notification");
-    await contains(".o-mail-MessageNotificationPopover");
-    await contains(".o-mail-MessageNotificationPopover [title='Error']");
+    await waitFor(".o-mail-MessageNotificationPopover:count(1)");
+    await waitFor(".o-mail-MessageNotificationPopover [title='Error']:count(1)");
 });
 
 const _prepareSmsNotification = async (notification_status) => {
@@ -63,16 +64,16 @@ const _prepareSmsNotification = async (notification_status) => {
 };
 
 const _assertContainsSmsNotification = async () => {
-    await contains(".o-mail-Message");
-    await contains(".o-mail-Message-notification");
-    await contains(".o-mail-Message-notification i");
-    await contains(".o-mail-Message-notification i[data-icon='smartphone']");
+    await waitFor(".o-mail-Message:count(1)");
+    await waitFor(".o-mail-Message-notification:count(1)");
+    await waitFor(".o-mail-Message-notification i:count(1)");
+    await waitFor(".o-mail-Message-notification i[data-icon='smartphone']:count(1)");
 };
 
 const _assertContainsPopoverWithIcon = async (iconName) => {
     await click(".o-mail-Message-notification");
-    await contains(".o-mail-MessageNotificationPopover");
-    await contains(".o-mail-MessageNotificationPopover i");
-    await contains(`.o-mail-MessageNotificationPopover i[data-icon='${iconName}']`);
+    await waitFor(".o-mail-MessageNotificationPopover:count(1)");
+    await waitFor(".o-mail-MessageNotificationPopover i:count(1)");
+    await waitFor(`.o-mail-MessageNotificationPopover i[data-icon='${iconName}']:count(1)`);
     await contains(".o-mail-MessageNotificationPopover", { text: "ToSomeone" });
 };

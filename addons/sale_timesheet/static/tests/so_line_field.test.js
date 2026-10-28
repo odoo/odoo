@@ -1,6 +1,5 @@
 import {
     click,
-    contains,
     editInput,
     insertText,
     openFormView,
@@ -11,6 +10,7 @@ import {
     mailModels,
 } from "@mail/../tests/mail_test_helpers";
 import { beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
+import { waitFor } from "@odoo/hoot-dom";
 import { onRpc, defineModels } from "@web/../tests/web_test_helpers";
 import { analyticModels } from "@analytic/../tests/analytic_test_helpers";
 import { ProjectTask } from "@project/../tests/mock_server/mock_models/project_task";
@@ -59,7 +59,7 @@ test("Check whether so_line_field widget works as intended in form view", async 
     });
     await openFormView("account.analytic.line");
     await editInput(target, ".o_field_widget[name=so_line] input", "Sale Order Line 2");
-    await contains(".ui-autocomplete");
+    await waitFor(".ui-autocomplete:count(1)");
     await click(target.querySelector(".ui-menu-item"));
     await click(".o_form_button_save");
     await expect.waitForSteps(["web_save"]);
@@ -75,7 +75,7 @@ test("Check whether so_line_field widget works as intended in list view", async 
     await openListView("account.analytic.line");
     await click(".o_data_cell");
     await insertText(".o_field_widget[name=so_line] input", "Sale Order Line 2", { replace: true });
-    await contains(".ui-autocomplete");
+    await waitFor(".ui-autocomplete:count(1)");
     await click(target.querySelector(".ui-menu-item"));
     await click(target.querySelector(".o_searchview_input"));
     await expect.waitForSteps(["web_save"]);
@@ -91,7 +91,7 @@ test("Check whether so_line_field widget works as intended in sub-tree view of t
     await openFormView("project.task");
     await click(".o_field_x2many_list_row_add button");
     await insertText(".o_field_widget[name=so_line] input", "Sale Order Line 2", { replace: true });
-    await contains(".ui-autocomplete");
+    await waitFor(".ui-autocomplete:count(1)");
     await click(target.querySelector(".ui-menu-item"));
     await click(".o_form_button_save");
     await expect.waitForSteps(["web_save"]);
