@@ -44,10 +44,12 @@ import {
     mountWithCleanup,
     onRpc,
     serverState,
+    patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { SELECTORS } from "./domain_selector_helpers";
 
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
+import { TreeEditor } from "@web/core/tree_editor/tree_editor";
 
 function addProductIds() {
     Partner._fields.product_ids = fields.Many2many({
@@ -472,6 +474,31 @@ test("cache fields_get", async () => {
         domain: "['&', ['foo', '=', 'kikou'], ['bar', '=', 'true']]",
     });
     expect.verifySteps(["fields_get"]);
+});
+
+test("re-rendering with the same props does not reload the domain", async () => {
+    patchWithCleanup(DomainSelector.prototype, {
+        async onPropsUpdated() {
+            expect.step("DomainSelector");
+            return super.onPropsUpdated(...arguments);
+        },
+    });
+    patchWithCleanup(TreeEditor.prototype, {
+        async onPropsUpdated() {
+            expect.step("TreeEditor");
+            return super.onPropsUpdated(...arguments);
+        },
+    });
+    const parent = await makeDomainSelector({ domain: `[("foo", "=", "kikou")]` });
+    expect.verifySteps(["DomainSelector", "TreeEditor"]);
+
+    parent.render(true);
+    await animationFrame();
+    expect.verifySteps([]);
+
+    await parent.set(`[("foo", "=", "abc")]`);
+    expect.verifySteps(["DomainSelector", "TreeEditor"]);
+    expect(getCurrentValue()).toBe("abc");
 });
 
 test("selection field with operator change from 'set' to '='", async () => {
