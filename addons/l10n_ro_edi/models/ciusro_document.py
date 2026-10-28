@@ -47,12 +47,7 @@ class L10n_Ro_EdiDocument(models.Model):
             Otherwise, download the received successful signature XML file from E-Factura.
         """
         self.ensure_one()
-        attachment_sudo = self.env['ir.attachment'].sudo().search([
-            ('res_model', '=', self._name),
-            ('res_field', '=', 'attachment'),
-            ('res_id', '=', self.id),
-        ])
         return {
             'type': 'ir.actions.act_url',
-            'url': f'/web/content/{attachment_sudo.id}?download=true',
+            'url': f'/web/content/{self._name}/{self.id}/attachment?download=true',
         }

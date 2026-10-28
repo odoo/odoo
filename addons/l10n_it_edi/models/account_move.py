@@ -1417,31 +1417,19 @@ class AccountMove(models.Model):
         files_data.extend(self._unwrap_attachments(files_data))
 
         moves = self.with_company(company_id).create([{
-                'l10n_it_edi_attachment_file': BinaryBytes(file_data['raw']),
+                'l10n_it_edi_attachment_file': BinaryBytes(file_data['raw'], filename=file_data['name']),
                 'l10n_it_edi_attachment_name': file_data['name'],
                 'document_tax_mode': 'tax_excluded',
                 'move_type': 'in_invoice',
             } for file_data in files_data
         ])
-        attachments_map = dict(Attachment._read_group(
-            domain=[
-                ('res_model', '=', 'account.move'),
-                ('res_field', '=', 'l10n_it_edi_attachment_file'),
-                ('res_id', 'in', moves.ids),
-            ],
-            groupby=['res_id'],
-            aggregates=['id:array_agg'],
-        ))
 
         # Extend created moves with the related attachments.
         for move, file_data in zip(moves, files_data):
-            attachment_ids = attachments_map.get(move.id)
-            Attachment.browse(attachment_ids).name = move.l10n_it_edi_attachment_name
-
             # Post the attachment in the chatter
             move.message_post(
                 body=_("This invoice was retrieved from the SdI."),
-                attachment_ids=attachment_ids
+                attachment_ids=[move.l10n_it_edi_attachment_file.attachment_id],
             )
             move._extend_with_attachments([file_data], new=True)
 
