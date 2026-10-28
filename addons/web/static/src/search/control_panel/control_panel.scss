@@ -5,6 +5,9 @@
     @include media-only(screen) {
         .o_control_panel_breadcrumbs {
             --#{$variable-prefix}breadcrumb-font-size: #{$small-font-size};
+            // Let a long record name be truncated instead of pushing the
+            // other sections (button box, pager) out of the control panel.
+            min-width: 0;
         }
 
         @include media-breakpoint-down(md) {
