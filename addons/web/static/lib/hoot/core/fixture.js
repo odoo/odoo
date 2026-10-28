@@ -7,6 +7,7 @@ import { isInstanceOf } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import { HootError } from "../hoot_utils";
 import { subscribeToTransitionChange } from "../mock/animation";
 import { getViewPortHeight, getViewPortWidth } from "../mock/window";
+import { trackObject } from "./gc";
 
 /**
  * @typedef {Parameters<typeof import("@odoo/owl").mount>[2] & {
@@ -94,6 +95,9 @@ export function makeFixtureManager(runner) {
             }
 
             document.body.appendChild(currentFixture);
+
+            // Retained fixtures also retain all elements rendered in them
+            trackObject("fixture", currentFixture);
         }
         return currentFixture;
     }
