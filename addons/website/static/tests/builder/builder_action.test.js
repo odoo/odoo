@@ -1,4 +1,4 @@
-import { onWillStart, xml } from "@odoo/owl";
+import { onMounted, onWillStart, xml } from "@odoo/owl";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, animationFrame, click, press, queryOne, waitFor } from "@odoo/hoot-dom";
 import { Builder } from "@html_builder/builder";
@@ -20,7 +20,10 @@ import {
     onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
+import { BlockTab } from "@html_builder/sidebar/block_tab";
+import { patch } from "@web/core/utils/patch";
 import {
+    addActionOption,
     addPlugin,
     defineWebsiteModels,
     setupWebsiteBuilder,
@@ -267,4 +270,44 @@ test("Builder is disabled when reloading", async () => {
     expect(".o-website-builder_sidebar .o_builder_disabled").toHaveCount(0);
     await contains(".o-snippets-tabs [data-name='blocks']").click();
     expect(".o-snippets-tabs [data-name='blocks']").toHaveClass("active");
+});
+
+test("installed module is only handled on the first builder mount", async () => {
+    const newInstalledModule = encodeURIComponent(JSON.stringify({ snippetTitle: "Test" }));
+    patch(WebsiteBuilderClientAction.prototype, {
+        setup() {
+            super.setup();
+            this.newInstalledModule = newInstalledModule;
+        },
+    });
+    patch(BlockTab.prototype, {
+        setup() {
+            super.setup();
+            onMounted(() => expect.step(`mounted ${this.props.newInstalledModule}`));
+        },
+    });
+    addActionOption({
+        testAction: class extends BuilderAction {
+            static id = "testAction";
+            reload = {};
+            apply() {}
+        },
+    });
+    addBuilderOption({
+        selector: ".test-option",
+        template: xml`<BuilderButton action="'testAction'"/>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-option">b</div>`);
+    await expect.waitForSteps([`mounted ${newInstalledModule}`]);
+
+    // reloadEditor remounts the builder
+    await contains(":iframe .test-option").click();
+    await contains("[data-action-id=testAction]").click();
+    await contains(".o_website_builder_sidebar button[data-name=blocks]").click();
+    await expect.waitForSteps(["mounted undefined"]);
+
+    // closeEditor then edit again
+    await contains(".o_hb_snippets_top_actions button[data-action='cancel']").click();
+    await contains(".o_edit_website_container button").click();
+    await expect.waitForSteps(["mounted undefined"]);
 });
