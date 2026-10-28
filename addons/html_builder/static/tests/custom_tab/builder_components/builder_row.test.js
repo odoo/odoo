@@ -267,6 +267,11 @@ describe("BuilderRow with collapse content", () => {
         const contentEl = queryOne(".o_hb_options_container .o_hb_collapse_content");
         expect(contentEl.style.height).toBe(`${ONE_ROW_HEIGHT}px`);
         expect(parseFloat(getComputedStyle(contentEl).height)).toBeLessThan(ONE_ROW_HEIGHT);
+        // Let the (real) expand transition settle, otherwise collapsing may reverse it from 0.
+        await new Promise((resolve) =>
+            contentEl.addEventListener("transitionend", resolve, { once: true })
+        );
+        expect(contentEl.style.height).toBe("auto");
         // Collapsing pins the measured height, then targets 0 for the CSS transition.
         await contains(".o_hb_collapse_toggler:not(.d-none)").click();
         expect(contentEl.style.height).toBe("0px");
