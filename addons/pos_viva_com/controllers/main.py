@@ -52,34 +52,15 @@ class PosVivaComController(http.Controller):
 
     @http.route('/pos_viva_com/<int:config_id>/payment/<string:order_uuid>', type='http', auth='public', methods=['GET'])
     def viva_payment_callback(self, config_id, order_uuid, **kwargs):
-        result = kwargs.get('status')
-        transaction_id = kwargs.get('transactionId')
-        session_id = kwargs.get('clientTransactionId')
-
-        _logger.info('received payment callback from Viva.com with result %s', result)
+        _logger.info('received payment callback from Viva.com with result %s', kwargs.get('status'))
 
         pos_order = request.env['pos.order'].sudo().search([('uuid', '=', order_uuid)], limit=1)
         if not pos_order:
             return "Order not found"
 
-        # Update payment line
-        if not session_id:
-            payment_line = pos_order.payment_ids.filtered(lambda p: p.payment_method_id.payment_provider == 'viva_com')
-        else:
-            payment_line = pos_order.payment_ids.filtered(lambda p: p.payment_method_id.payment_provider == 'viva_com' and p.viva_com_session_id == session_id)[-1:]
-
-        if result == 'success':
-            payment_line.write({
-                'transaction_id': transaction_id,
-                'payment_status': 'done',
-            })
-            if pos_order.amount_difference == 0 and all(p.payment_status == 'done' for p in pos_order.payment_ids):
-                pos_order.write({'state': 'paid'})
-
-                dynamicLink = self._create_dynamic_link(f"/pos/ui/{config_id}/resume/{order_uuid}?post_validate=1")
-                return request.redirect(dynamicLink, local=False)
-        else:
-            payment_line.write({'payment_status': 'error', 'transaction_id': transaction_id})
+        if request.env['pos.payment.method'].sudo()._viva_com_process_app_payment(pos_order, kwargs):
+            dynamicLink = self._create_dynamic_link(f"/pos/ui/{config_id}/resume/{order_uuid}?post_validate=1")
+            return request.redirect(dynamicLink, local=False)
 
         dynamicLink = self._create_dynamic_link(f"/pos/ui/{config_id}/payment/{order_uuid}")
         return request.redirect(dynamicLink, local=False)
