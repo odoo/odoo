@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { after, describe, expect, test, watchListeners } from "@odoo/hoot";
+import { after, describe, expect, microTick, test, watchListeners } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
 import { EventBus } from "@odoo/owl";
 import { mountForTest, parseUrl } from "../local_helpers";
@@ -17,6 +17,7 @@ describe(parseUrl(import.meta.url), () => {
         }
     }
 
+    let observedNode;
     let testBus;
 
     test("elementFromPoint and elementsFromPoint should be mocked", async () => {
@@ -63,6 +64,26 @@ describe(parseUrl(import.meta.url), () => {
     });
     test("event listeners are properly removed: check", async () => {
         testBus.trigger("some-event");
+
+        expect.verifySteps([]);
+    });
+
+    // ! WARNING: the following 2 tests need to be run sequentially to work, as they
+    // ! attempt to test the in-between-tests observers cleanup.
+    test("observers are disconnected between tests: setup", async () => {
+        expect(MutationObserver.name).toBe("MutationObserver");
+
+        observedNode = document.createElement("div");
+        const observer = new MutationObserver(() => expect.step("mutation"));
+        observer.observe(observedNode, { attributes: true });
+        observedNode.setAttribute("data-value", "1");
+        await microTick();
+
+        expect.verifySteps(["mutation"]);
+    });
+    test("observers are disconnected between tests: check", async () => {
+        observedNode.setAttribute("data-value", "2");
+        await microTick();
 
         expect.verifySteps([]);
     });

@@ -46,6 +46,7 @@ import {
     mockedFetch,
 } from "./network";
 import { MockNotification } from "./notification";
+import { cleanupResources, getDisposableDescriptors } from "./resources";
 import { MockStorage } from "./storage";
 
 //-----------------------------------------------------------------------------
@@ -432,18 +433,6 @@ class MockMediaQueryList extends MockEventTarget {
     }
 }
 
-class MockMutationObserver extends MutationObserver {
-    disconnect() {
-        activeMutationObservers.delete(this);
-        return super.disconnect(...arguments);
-    }
-
-    observe() {
-        activeMutationObservers.add(this);
-        return super.observe(...arguments);
-    }
-}
-
 const DEFAULT_MEDIA_VALUES = {
     "display-mode": "browser",
     pointer: "fine",
@@ -462,8 +451,6 @@ const R_OWL_SYNTHETIC_LISTENER = /\bnativeToSyntheticEvent\b/;
 const originalDescriptors = new WeakMap();
 const originalTouchFunctions = getTouchTargets(globalThis).map(getTouchDescriptors);
 
-/** @type {Set<MockMutationObserver>} */
-const activeMutationObservers = new Set();
 /** @type {Set<MockMediaQueryList>} */
 const mediaQueryLists = new Set();
 const mockConsole = new MockConsole();
@@ -501,6 +488,7 @@ const ELEMENT_MOCK_DESCRIPTORS = {
     scrollTo: { value: mockedScrollTo },
 };
 const WINDOW_MOCK_DESCRIPTORS = {
+    ...getDisposableDescriptors(globalThis),
     Animation: { value: MockAnimation },
     Blob: { value: MockBlob },
     BroadcastChannel: { value: MockBroadcastChannel },
@@ -519,7 +507,6 @@ const WINDOW_MOCK_DESCRIPTORS = {
     matchMedia: { value: mockedMatchMedia },
     MessageChannel: { value: MockMessageChannel },
     MessagePort: { value: MockMessagePort },
-    MutationObserver: { value: MockMutationObserver },
     navigator: { value: mockNavigator },
     Notification: { value: MockNotification },
     outerHeight: { get: () => _getCurrentDimensions().height },
@@ -575,10 +562,8 @@ export function cleanupWindow() {
     // Touch
     restoreTouch(view);
 
-    // Mutation observers
-    for (const observer of activeMutationObservers) {
-        observer.disconnect();
-    }
+    // Disposable resources (e.g. observers)
+    cleanupResources();
 }
 
 export function getTitle() {
