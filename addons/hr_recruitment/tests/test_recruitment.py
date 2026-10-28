@@ -259,6 +259,40 @@ class TestRecruitment(TransactionCase):
         job._compute_activities()
         self.assertEqual(job.activities_today, 0)
 
+    def test_create_employee_from_applicant_other_company(self):
+        """
+        The employee created from an applicant must be in the company of the
+        application, with its working hours, and not in the current company of the user
+        """
+        company_b = self.env['res.company'].create({'name': 'Company B'})
+        self.env.user.company_ids |= company_b
+        job = self.env['hr.job'].create({'name': 'Job B', 'company_id': company_b.id})
+        candidate = self.env['hr.candidate'].create({'partner_name': 'Test Candidate', 'company_id': company_b.id})
+        applicant = self.env['hr.applicant'].create({'candidate_id': candidate.id, 'job_id': job.id})
+
+        employee = self.env['hr.employee'].browse(applicant.create_employee_from_applicant()['res_id'])
+
+        self.assertNotEqual(self.env.company.resource_calendar_id, company_b.resource_calendar_id)
+        self.assertEqual(employee.company_id, company_b)
+        self.assertEqual(employee.resource_calendar_id, company_b.resource_calendar_id)
+
+    def test_create_employee_from_applicant_candidate_without_company(self):
+        """
+        A candidate without company (e.g. created by the mail gateway for a job
+        without company) can still be hired, in the company of the application
+        """
+        company_b = self.env['res.company'].create({'name': 'Company B'})
+        department_b = self.env['hr.department'].create({'name': 'Department B', 'company_id': company_b.id})
+        job = self.env['hr.job'].create({'name': 'Job', 'company_id': False, 'department_id': department_b.id})
+        candidate = self.env['hr.candidate'].create({'partner_name': 'Test Candidate', 'company_id': False})
+        applicant = self.env['hr.applicant'].create({'candidate_id': candidate.id, 'job_id': job.id})
+        self.assertFalse(applicant.candidate_id.company_id)
+        self.assertEqual(applicant.company_id, company_b)
+
+        employee = self.env['hr.employee'].browse(applicant.create_employee_from_applicant()['res_id'])
+
+        self.assertEqual(employee.company_id, applicant.company_id)
+
     def test_default_template_applicant_refuse_reason_when_archived(self):
         """
         Ensure that an archived email template linked to a refuse reason
