@@ -45,7 +45,7 @@ class CloudStorageSettings(models.TransientModel):
     def _get_cloud_storage_configuration(self):
         ICP = self.env['ir.config_parameter'].sudo()
         if ICP.get_param('cloud_storage_provider') != 'azure':
-            return super()._get_cloud_storage_configuration
+            return super()._get_cloud_storage_configuration()
         configuration = {
             'container_name': ICP.get_param('cloud_storage_azure_container_name'),
             'account_name': ICP.get_param('cloud_storage_azure_account_name'),
