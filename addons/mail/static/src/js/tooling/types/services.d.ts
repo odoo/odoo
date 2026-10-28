@@ -13,7 +13,6 @@ declare module "services" {
     import { mailPopoutService } from "@mail/core/common/mail_popout_service";
     import { notificationPermissionService } from "@mail/core/common/notification_permission_service";
     import { outOfFocusService } from "@mail/core/common/out_of_focus_service";
-    import { discussP2P } from "@mail/discuss/call/common/discuss_p2p_service";
     import { pttExtensionHookService } from "@mail/discuss/call/common/ptt_extension_service";
     import { rtcService } from "@mail/discuss/call/common/rtc_service";
     import { storeService } from "@mail/core/common/store_plugin";
@@ -25,7 +24,6 @@ declare module "services" {
         "discuss.core.public": typeof discussCorePublic;
         "discuss.core.public.web": typeof discussCorePublicWeb;
         "discuss.core.web": typeof discussCoreWeb;
-        "discuss.p2p": typeof discussP2P;
         "discuss.pip_service": typeof callPipService;
         "discuss.ptt_extension": typeof pttExtensionHookService;
         "discuss.rtc": typeof rtcService;
