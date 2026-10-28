@@ -20,4 +20,5 @@ Price and Cost Price.
         'views/sale_order_views.xml',
     ],
     'license': 'LGPL-3',
+    'pre_init_hook': '_pre_init_hook',
 }
