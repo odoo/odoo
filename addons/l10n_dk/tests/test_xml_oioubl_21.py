@@ -137,22 +137,22 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
     @freeze_time('2017-01-01')
     def test_export_invoice_partner_dk(self):
         invoice = self.create_post_and_send_invoice()
-        self.assertTrue(invoice.ubl_cii_xml_id)
-        self._assert_invoice_attachment(invoice.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_partner_dk.xml")
+        self.assertTrue(invoice.ubl_cii_xml_file)
+        self._assert_invoice_attachment(invoice.ubl_cii_xml_file, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_partner_dk.xml")
 
     @freeze_time('2017-01-01')
     def test_export_invoice_foreign_partner_be(self):
         # Set routing endpoint to have schemeID of 'GLN' (ISO 6523 ICD 0088)
         self.company_data['company'].partner_id.routing_identifier = '0088:5798009811639'
         invoice = self.create_post_and_send_invoice(partner=self.partner_b)
-        self.assertTrue(invoice.ubl_cii_xml_id)
-        self._assert_invoice_attachment(invoice.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_foreign_partner_be.xml")
+        self.assertTrue(invoice.ubl_cii_xml_file)
+        self._assert_invoice_attachment(invoice.ubl_cii_xml_file, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_foreign_partner_be.xml")
 
     @freeze_time('2017-01-01')
     def test_export_invoice_foreign_partner_fr(self):
         invoice = self.create_post_and_send_invoice(partner=self.partner_c)
-        self.assertTrue(invoice.ubl_cii_xml_id)
-        self._assert_invoice_attachment(invoice.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_foreign_partner_fr.xml")
+        self.assertTrue(invoice.ubl_cii_xml_file)
+        self._assert_invoice_attachment(invoice.ubl_cii_xml_file, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_foreign_partner_fr.xml")
 
     @freeze_time('2017-01-01')
     def test_export_credit_note_partner_dk(self):
@@ -163,21 +163,21 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
         })._create_payments()
 
         self._send_patched(refund)
-        self.assertTrue(refund.ubl_cii_xml_id)
-        self._assert_invoice_attachment(refund.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_refund_partner_dk.xml")
+        self.assertTrue(refund.ubl_cii_xml_file)
+        self._assert_invoice_attachment(refund.ubl_cii_xml_file, xpaths=None, expected_file_path="from_odoo/oioubl_out_refund_partner_dk.xml")
 
     @freeze_time('2017-01-01')
     def test_export_credit_note_partner_fr(self):
         refund = self.create_post_and_send_invoice(partner=self.partner_c, move_type='out_refund')
-        self.assertTrue(refund.ubl_cii_xml_id)
-        self._assert_invoice_attachment(refund.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_refund_foreign_partner_fr.xml")
+        self.assertTrue(refund.ubl_cii_xml_file)
+        self._assert_invoice_attachment(refund.ubl_cii_xml_file, xpaths=None, expected_file_path="from_odoo/oioubl_out_refund_foreign_partner_fr.xml")
 
     @freeze_time('2017-01-01')
     def test_oioubl_export_should_still_be_valid_when_currency_has_more_precision_digit(self):
         self.company_data['company'].currency_id.rounding = 0.001
         invoice = self.create_post_and_send_invoice()
-        self.assertTrue(invoice.ubl_cii_xml_id)
-        self._assert_invoice_attachment(invoice.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_partner_dk.xml")
+        self.assertTrue(invoice.ubl_cii_xml_file)
+        self._assert_invoice_attachment(invoice.ubl_cii_xml_file, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_partner_dk.xml")
 
     @freeze_time('2017-01-01')
     def test_oioubl_export_with_partner_child(self):
@@ -189,8 +189,8 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
                 'parent_id': self.partner_b.id,
         })
         invoice = self.create_post_and_send_invoice(partner=individual_partner)
-        self.assertTrue(invoice.ubl_cii_xml_id)
-        self._assert_invoice_attachment(invoice.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_child_partner.xml")
+        self.assertTrue(invoice.ubl_cii_xml_file)
+        self._assert_invoice_attachment(invoice.ubl_cii_xml_file, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_child_partner.xml")
 
     @freeze_time('2017-01-01')
     def test_oioubl_export_import_with_discount(self):
@@ -214,9 +214,9 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
         })
         invoice.action_post()
         self._send_patched(invoice)
-        self.assertTrue(invoice.ubl_cii_xml_id)
-        self._assert_invoice_attachment(invoice.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_discount.xml")
-        new_invoice = invoice.journal_id._create_document_from_attachment(invoice.ubl_cii_xml_id.ids)
+        self.assertTrue(invoice.ubl_cii_xml_file)
+        self._assert_invoice_attachment(invoice.ubl_cii_xml_file, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_discount.xml")
+        new_invoice = invoice.journal_id._create_document_from_attachment(self._create_attachment_from_binary(invoice.ubl_cii_xml_file).ids)
         self.assertRecordValues(new_invoice.invoice_line_ids, [line_vals])
 
     @freeze_time('2017-01-01')
@@ -247,6 +247,6 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
         self.partner_b.vat = None
         self.partner_b.invoice_edi_format = 'oioubl_21'  # default format recomputes when vat is changed
         invoice = self.create_post_and_send_invoice(partner=self.partner_b)
-        self.assertFalse(invoice.ubl_cii_xml_id)
+        self.assertFalse(invoice.ubl_cii_xml_file)
         self.assertEqual(len(invoice.attachment_ids), 1)
         self.assertEqual(invoice.attachment_ids[0].res_name, 'INV/2017/00001 (ref_move)')

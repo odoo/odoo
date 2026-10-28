@@ -268,7 +268,7 @@ class QRPrintTest(AccountTestInvoicingCommon):
             [self.debtor_partner_ch.id, self.debtor_partner_li.id],
         )
         # No invoice is generated or sent yet
-        self.assertEqual(self.invoices.mapped(lambda inv: bool(inv.invoice_pdf_report_id)), [False] * len(self.invoices))
+        self.assertEqual(self.invoices.mapped(lambda inv: bool(inv.invoice_pdf_report_file)), [False] * len(self.invoices))
         # Invoices are not in the queue yet
         self.assertEqual(self.invoices.mapped(lambda inv: bool(inv.sending_data)), [False] * len(self.invoices))
         batch_wizard.action_send_and_print()
@@ -278,9 +278,9 @@ class QRPrintTest(AccountTestInvoicingCommon):
         run_move_send_cron()
 
         # Both Ch and Li invoices are affected by the issue, Be is sent normally.
-        self.assertFalse(self.invoice_ch.invoice_pdf_report_id)
-        self.assertFalse(self.invoice_li.invoice_pdf_report_id)
-        self.assertTrue(self.invoice_be.invoice_pdf_report_id)
+        self.assertFalse(self.invoice_ch.invoice_pdf_report_file)
+        self.assertFalse(self.invoice_li.invoice_pdf_report_file)
+        self.assertTrue(self.invoice_be.invoice_pdf_report_file)
         # All invoices are either sent and/or removed from queue
         self.assertEqual(self.invoices.mapped(lambda inv: bool(inv.sending_data)), [False] * len(self.invoices))
 
@@ -292,8 +292,8 @@ class QRPrintTest(AccountTestInvoicingCommon):
         )
         batch_wizard.action_send_and_print()
         run_move_send_cron()
-        self.assertFalse(self.invoice_ch.invoice_pdf_report_id)
-        self.assertFalse(self.invoice_li.invoice_pdf_report_id)
+        self.assertFalse(self.invoice_ch.invoice_pdf_report_file)
+        self.assertFalse(self.invoice_li.invoice_pdf_report_file)
         # All invoices are either sent and/or removed from queue
         self.assertEqual(self.invoices.mapped(lambda inv: bool(inv.sending_data)), [False] * len(self.invoices))
 
@@ -305,8 +305,8 @@ class QRPrintTest(AccountTestInvoicingCommon):
         )
         batch_wizard.action_send_and_print()
         run_move_send_cron()
-        self.assertTrue(self.invoice_ch.invoice_pdf_report_id)
-        self.assertFalse(self.invoice_li.invoice_pdf_report_id)
+        self.assertTrue(self.invoice_ch.invoice_pdf_report_file)
+        self.assertFalse(self.invoice_li.invoice_pdf_report_file)
         self.assertEqual(self.invoices.mapped(lambda inv: bool(inv.sending_data)), [False] * len(self.invoices))
 
         self.debtor_partner_li.write({'city': 'Vaduz'})
@@ -317,9 +317,9 @@ class QRPrintTest(AccountTestInvoicingCommon):
         )
         batch_wizard.action_send_and_print()
         run_move_send_cron()
-        self.assertTrue(self.invoice_li.invoice_pdf_report_id)
+        self.assertTrue(self.invoice_li.invoice_pdf_report_file)
         self.assertEqual(self.invoices.mapped(lambda inv: bool(inv.sending_data)), [False] * len(self.invoices))
-        self.assertEqual(self.invoices.mapped(lambda inv: bool(inv.invoice_pdf_report_id)), [True] * len(self.invoices))
+        self.assertEqual(self.invoices.mapped(lambda inv: bool(inv.invoice_pdf_report_file)), [True] * len(self.invoices))
 
         self.debtor_partner_ch.write({'street': 'Street Name 1'})
         batch_wizard = get_batch_wizard(self.invoices)

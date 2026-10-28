@@ -54,11 +54,11 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
         # Asserts
         self.assertEqual((invoice1 + invoice2).mapped('sending_data'), [False, False])
         self.assertEqual(1, len(self.get_attachments(invoice1.id)))
-        self.assertTrue(invoice1.invoice_pdf_report_id)
+        self.assertTrue(invoice1.invoice_pdf_report_file)
         self.assertFalse(invoice1.l10n_it_edi_attachment_file)
         self.assertFalse(invoice1.is_being_sent)
         self.assertEqual(1, len(self.get_attachments(invoice2.id)))
-        self.assertTrue(invoice2.invoice_pdf_report_id)
+        self.assertTrue(invoice2.invoice_pdf_report_file)
         self.assertFalse(invoice2.l10n_it_edi_attachment_file)
         self.assertFalse(invoice2.is_being_sent)
 
@@ -80,11 +80,11 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
         # Asserts
         self.assertEqual((invoice1 + invoice2).mapped('sending_data'), [False, False])
         self.assertEqual(2, len(self.get_attachments(invoice1.id)))
-        self.assertTrue(invoice1.invoice_pdf_report_id)
+        self.assertTrue(invoice1.invoice_pdf_report_file)
         self.assertTrue(invoice1.l10n_it_edi_attachment_file)
         self.assertFalse(invoice1.is_being_sent)
         self.assertEqual(2, len(self.get_attachments(invoice2.id)))
-        self.assertTrue(invoice2.invoice_pdf_report_id)
+        self.assertTrue(invoice2.invoice_pdf_report_file)
         self.assertTrue(invoice2.l10n_it_edi_attachment_file)
         self.assertFalse(invoice2.is_being_sent)
 
@@ -429,7 +429,7 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
 
         settings_email = {'sending_methods': ['email'], 'extra_edis': list()}
         self.env['account.move.send']._generate_and_send_invoices(invoice, **settings_email)
-        self.assertTrue(invoice.invoice_pdf_report_id)
+        self.assertTrue(invoice.invoice_pdf_report_file)
         self.assertFalse(invoice.l10n_it_edi_attachment_file)
 
         wizard = self.env['account.move.send.wizard'].create({'move_id': invoice.id})

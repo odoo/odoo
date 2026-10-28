@@ -38,15 +38,6 @@ class AccountMove(models.Model):
         attachment=True,
         help="Jordan: technical field holding the e-invoice XML data.",
     )
-    l10n_jo_edi_xml_attachment_id = fields.Many2one(
-        comodel_name="ir.attachment",
-        string="Jordan E-Invoice XML",
-        compute=lambda self: self._compute_linked_attachment_id(
-            "l10n_jo_edi_xml_attachment_id", "l10n_jo_edi_xml_attachment_file"
-        ),
-        depends=["l10n_jo_edi_xml_attachment_file"],
-        help="Jordan: e-invoice XML.",
-    )
     reversed_entry_id = fields.Many2one(tracking=True)
     l10n_jo_edi_invoice_type = fields.Selection(
         selection=[
@@ -187,6 +178,12 @@ class AccountMove(models.Model):
         fields_list.append('l10n_jo_edi_xml_attachment_file')
         return fields_list
 
+    def _get_invoice_files(self):
+        invoice_files = super()._get_invoice_files()
+        if xml_file := self.l10n_jo_edi_xml_attachment_file:
+            invoice_files.append({'file': xml_file, 'send': True, 'chatter': True})
+        return invoice_files
+
     def _post(self, soft=True):
         # EXTENDS 'account'
         for invoice in self.filtered('l10n_jo_edi_is_needed'):
@@ -196,7 +193,7 @@ class AccountMove(models.Model):
     def _get_name_invoice_report(self):
         # EXTENDS account
         self.ensure_one()
-        if self.l10n_jo_edi_state in ['sent', 'demo'] and self.l10n_jo_edi_xml_attachment_id:
+        if self.l10n_jo_edi_state in ['sent', 'demo'] and self.l10n_jo_edi_xml_attachment_file:
             return 'l10n_jo_edi.report_invoice_document'
         return super()._get_name_invoice_report()
 
@@ -215,16 +212,8 @@ class AccountMove(models.Model):
         if 'error' in dict_response and len(dict_response) == 1:
             return dict_response['error']
         self.l10n_jo_edi_qr = str(dict_response.get('EINV_QR', ''))
-        self.invoice_pdf_report_id.res_field = False
-        self.env["ir.attachment"].create(
-            {
-                "res_model": "account.move",
-                "res_id": self.id,
-                "res_field": "l10n_jo_edi_xml_attachment_file",
-                "name": self._l10n_jo_edi_get_xml_attachment_name(),
-                "raw": xml_invoice,
-            }
-        )
+        self._detach_binary_fields(['invoice_pdf_report_file'])
+        self.l10n_jo_edi_xml_attachment_file = BinaryBytes(xml_invoice, filename=self._l10n_jo_edi_get_xml_attachment_name())
 
     def _l10n_jo_edi_get_xml_attachment_name(self):
         return f"{self.name.replace('/', '_')}_edi.xml"
@@ -307,5 +296,5 @@ class AccountMove(models.Model):
             self._mark_sent_jo_edi()
             self.message_post(
                 body=_("E-invoice (JoFotara) submitted successfully."),
-                attachment_ids=self.l10n_jo_edi_xml_attachment_id.ids,
+                attachment_ids=[self.l10n_jo_edi_xml_attachment_file.attachment_id],
             )

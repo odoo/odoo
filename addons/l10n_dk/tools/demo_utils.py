@@ -100,7 +100,7 @@ def _mock_deregister_participant(func, self, *args, **kwargs):
         'nemhandel_move_state': None,
     })
     demo_moves.message_main_attachment_id.unlink()
-    demo_moves.ubl_cii_xml_id.unlink()
+    demo_moves.ubl_cii_xml_file = False
     log_message = _('The Nemhandel status of the documents has been reset when switching from Demo to Live.')
     demo_moves._message_log_batch(bodies={move.id: log_message for move in demo_moves})
 

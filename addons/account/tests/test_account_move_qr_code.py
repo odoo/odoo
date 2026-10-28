@@ -98,9 +98,9 @@ class TestAccountMoveQrCode(TestAccountMoveSendCommon):
         self.create_send_and_print(invoice + other_invoice).action_send_and_print()
         with self.enter_registry_test_mode():
             self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
-        self.assertFalse(invoice.invoice_pdf_report_id)
+        self.assertFalse(invoice.invoice_pdf_report_file)
         self.assertIn("needs the city of the customer", self._get_mail_message(invoice).body)
-        self.assertTrue(other_invoice.invoice_pdf_report_id)
+        self.assertTrue(other_invoice.invoice_pdf_report_file)
 
     def test_qr_code_nothing_left_to_pay(self):
         """ A paid invoice has no QR-code, so its data is not checked. """

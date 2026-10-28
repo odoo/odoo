@@ -1,6 +1,7 @@
 from freezegun import freeze_time
 from odoo.addons.l10n_in.tests.common import L10nInTestInvoicingCommon
 from odoo.tests import tagged
+from odoo.tools import BinaryBytes
 
 
 @tagged("post_install_l10n", "post_install", "-at_install")
@@ -35,25 +36,13 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
             'city': "Kutch",
             'zip': "370421",
         })
-        attachment_a = cls.env['ir.attachment'].create({
-            'name': 'einvoice_a.json',
-            'res_model': 'account.move',
-            'res_id': cls.invoice_a.id,
-            'raw': b'{"Irn": "1234567890"}',
-        })
-        attachment_b = cls.env['ir.attachment'].create({
-            'name': 'einvoice_b.json',
-            'res_model': 'account.move',
-            'res_id': cls.invoice_b.id,
-            'raw': b'{"Irn": "1234567890"}',
-        })
         cls.invoice_a.write({
             "l10n_in_edi_status": "sent",
-            "l10n_in_edi_attachment_id": attachment_a.id,
+            "l10n_in_edi_attachment_file": BinaryBytes(b'{"Irn": "1234567890"}', filename='einvoice_a.json'),
         })
         cls.invoice_b.write({
             "l10n_in_edi_status": "sent",
-            "l10n_in_edi_attachment_id": attachment_b.id,
+            "l10n_in_edi_attachment_file": BinaryBytes(b'{"Irn": "1234567890"}', filename='einvoice_b.json'),
         })
         cls.invoice_b.l10n_in_gst_treatment = 'overseas'
 

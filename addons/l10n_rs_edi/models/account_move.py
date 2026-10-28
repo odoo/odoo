@@ -33,13 +33,6 @@ class AccountMove(models.Model):
         help="Serbia: technical field holding the e-invoice XML data.",
     )
 
-    l10n_rs_edi_attachment_id = fields.Many2one(
-        comodel_name='ir.attachment',
-        string="eFaktura XML Attachment",
-        compute=lambda self: self._compute_linked_attachment_id('l10n_rs_edi_attachment_id', 'l10n_rs_edi_attachment_file'),
-        depends=['l10n_rs_edi_attachment_file'],
-    )
-
     l10n_rs_edi_state = fields.Selection(
         string="Serbia E-Invoice state",
         selection=[
@@ -161,19 +154,11 @@ class AccountMove(models.Model):
         self.l10n_rs_edi_sales_invoice = dict_response.get('SalesInvoiceId')
         return xml, error_message
 
-    def _l10n_rs_edi_get_attachment_values(self, xml):
-        self.ensure_one()
-        return {
-            'name': self._l10n_rs_edi_get_xml_attachment_name(),
-            'mimetype': 'application/xml',
-            'description': _('RS E-Invoice: %s', self.move_type),
-            'company_id': self.company_id.id,
-            'res_id': self.id,
-            'res_model': self._name,
-            'res_field': 'l10n_rs_edi_attachment_file',
-            'raw': xml,
-            'type': 'binary',
-        }
-
     def _l10n_rs_edi_get_xml_attachment_name(self):
         return f"{self.name.replace('/', '_')}_edi.xml"
+
+    def _get_invoice_files(self):
+        invoice_files = super()._get_invoice_files()
+        if edi_file := self.l10n_rs_edi_attachment_file:
+            invoice_files.append({'file': edi_file, 'send': True, 'chatter': True})
+        return invoice_files

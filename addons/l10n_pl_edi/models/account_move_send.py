@@ -2,6 +2,7 @@ import logging
 from time import sleep
 
 from odoo import fields, models
+from odoo.tools import BinaryBytes
 
 from odoo.addons.l10n_pl_edi.tools.ksef_api_service import KsefApiService
 
@@ -78,22 +79,12 @@ class AccountMoveSend(models.AbstractModel):
                         'l10n_pl_edi_ref': l10n_pl_edi_ref,
                         'l10n_pl_edi_session_id': move.company_id.sudo().l10n_pl_edi_session_id,
                         'l10n_pl_edi_header': False,
-                        'l10n_pl_edi_attachment_id': self.env['ir.attachment'].sudo().create({
-                            'description': self.env._('KSeF Sent Invoice XML'),
-                            'name': f"FA3-{move.name.replace('/', '_')}.xml",
-                            'type': 'binary',
-                            'mimetype': 'application/xml',
-                            'raw': xml_content,
-                            'res_id': move.id,
-                            'res_model': move._name,
-                            'res_field': 'l10n_pl_edi_attachment_file',
-                        }).id,
+                        'l10n_pl_edi_attachment_file': BinaryBytes(xml_content, filename=f"FA3-{move.name.replace('/', '_')}.xml"),
                     })
                     move.sudo().with_context(no_new_invoice=True).message_post(
                         body=self.env._("The KSeF XML has been attached."),
-                        attachment_ids=move.l10n_pl_edi_attachment_id.ids,
+                        attachment_ids=[move.l10n_pl_edi_attachment_file.attachment_id],
                     )
-                    move.invalidate_recordset(fnames=['l10n_pl_edi_attachment_id', 'l10n_pl_edi_attachment_file'])
 
                 except Exception as errors:  # noqa: BLE001
                     set_error(move, str(errors))

@@ -29,7 +29,7 @@ class TestUblImportBis3InvoiceBEAutoGeneratePDF(TestUblImportBis3InvoiceBE):
                     journal=self.company_data["default_journal_purchase"].with_context(force_report_rendering=True),
                 )
 
-            self.assertTrue(bill.ubl_cii_xml_id)  # Original XML
+            self.assertTrue(bill.ubl_cii_xml_file)  # Original XML
             self.assertEqual(len(bill.attachment_ids), int(should_generate_pdf))  # Generated PDF
             if should_generate_pdf:
                 self.assertTrue(bill.attachment_ids.mimetype, 'pdf')

@@ -4,7 +4,6 @@ from . import account_edi_xml_ubl_my
 from . import account_journal_dashboard
 from . import account_move
 from . import account_move_line
-from . import account_move_send
 from . import account_tax
 from . import l10n_my_edi_industry_classification
 from . import myinvois_document

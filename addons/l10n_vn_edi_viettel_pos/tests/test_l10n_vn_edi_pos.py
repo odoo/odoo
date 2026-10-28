@@ -147,8 +147,8 @@ class TestVNEDIPOS(TestVNEDI, TestPointOfSaleHttpCommon):
         self.assertEqual(invoice.l10n_vn_edi_invoice_state, 'sent')
 
         # Clear the files so we can verify that fetch_invoice_files re-fetches them
-        invoice.l10n_vn_edi_sinvoice_pdf_file_id.unlink()
-        invoice.l10n_vn_edi_sinvoice_xml_file_id.unlink()
+        invoice.l10n_vn_edi_sinvoice_pdf_file = False
+        invoice.l10n_vn_edi_sinvoice_xml_file = False
         self.assertFalse(invoice.l10n_vn_edi_sinvoice_pdf_file)
         self.assertFalse(invoice.l10n_vn_edi_sinvoice_xml_file)
 
