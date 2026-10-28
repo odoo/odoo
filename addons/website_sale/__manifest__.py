@@ -188,6 +188,10 @@
             'delivery/static/src/js/location_selector/**/*',
             'website_sale/static/src/interactions/**/*',
             'website_sale/static/src/snippets/s_dynamic_snippet_products/dynamic_snippet_products.js',
+            'website_sale/static/src/js/cart_service.js',
+            'website_sale/static/src/js/cart_notification/cart_notification_container/cart_notification_container.js',
+            'website_sale/static/src/js/cart_notification/item_added_notification/item_added_notification.js',
+            'website_sale/static/src/js/cart_notification/warning_notification/warning_notification.js',
             'website_sale/static/src/js/website_sale_utils.js',
             'website_sale/static/src/js/components/website_sale_image_viewer.js',
             # TODO Find out why these do not work:
