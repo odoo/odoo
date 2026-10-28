@@ -65,6 +65,9 @@ Key Features
             'event/static/src/js/tours/**/*',
             'event/static/src/views/**/*',
         ],
+        'web.assets_web_dark': [
+            'event/static/src/scss/*.dark.scss',
+        ],
         'web.assets_frontend': [
             'event/static/src/js/tours/**/*',
         ],

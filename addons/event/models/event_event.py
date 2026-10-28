@@ -104,6 +104,10 @@ class EventEvent(models.Model):
         ('blocked', 'Blocked'),
         ('cancel', 'Cancelled')
     ], default='normal', copy=False, compute='_compute_kanban_state', readonly=False, store=True, tracking=True)
+    color = fields.Integer(string='Color Index', export_string_translation=False)
+    displayed_image_id = fields.Many2one(
+        'ir.attachment', string='Cover Image', copy=False,
+        domain="[('res_model', '=', 'event.event'), ('res_id', '=', id), ('mimetype', 'ilike', 'image')]")
     stage_id = fields.Many2one(
         'event.stage', ondelete='restrict', default=_get_default_stage_id,
         group_expand='_read_group_expand_full', tracking=True, copy=False)
