@@ -223,3 +223,39 @@ class TestWorkorder(TestMrpCommon):
         with Form(mo) as mo_form:
             with mo_form.workorder_ids.edit(0) as wo_form:
                 wo_form.qty_produced = 1
+
+    def test_workorder_states(self):
+        self.bom_3.continuous = False
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_3
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.button_plan()
+        workorders = mo.workorder_ids
+
+        workorders.qty_produced = 1
+        self.assertEqual(mo.workorder_ids.mapped('state'), ['ready', 'blocked', 'blocked'])
+
+        workorders[0].button_start()
+        self.assertEqual(workorders[0].state, 'progress')
+
+        workorders[0].button_finish()
+        self.assertEqual(workorders[0].state, 'done')
+        self.assertEqual(workorders[1].state, 'ready')
+
+        workorders[1].action_cancel()
+        self.assertEqual(workorders[1].state, 'cancel')
+        self.assertEqual(workorders[2].state, 'ready')
+
+    def test_workorder_states_continuous(self):
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_3
+        mo = mo_form.save()
+        mo.action_confirm()
+        workorders = mo.workorder_ids
+
+        workorders[0].qty_produced = 1
+        self.assertEqual(workorders.mapped('state'), ['ready', 'ready', 'blocked'])
+        workorders[1].qty_produced = 1
+        mo.button_plan()  # Retrigger states computation.. to check
+        self.assertEqual(workorders.mapped('state'), ['ready', 'ready', 'ready'])
