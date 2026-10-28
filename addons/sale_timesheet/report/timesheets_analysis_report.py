@@ -42,7 +42,7 @@ class TimesheetsAnalysisReport(models.Model):
                 WHEN T.invoice_policy = 'order'
                 THEN A.unit_amount * (SOL.price_subtotal / NULLIF(SOL.product_uom_qty, 0)) / sol_product_uom.factor * a_product_uom.factor
                 ELSE A.unit_amount * SOL.price_unit / sol_product_uom.factor * a_product_uom.factor
-            END AS timesheet_revenues,
+            END / CASE COALESCE(SO.currency_rate, 0) WHEN 0 THEN 1.0 ELSE SO.currency_rate END AS timesheet_revenues,
             CASE WHEN A.order_id IS NULL THEN 0 ELSE A.unit_amount END AS billable_time
         """
 
@@ -54,4 +54,5 @@ class TimesheetsAnalysisReport(models.Model):
             INNER JOIN uom_uom a_product_uom ON a_product_uom.id = A.product_uom_id
             LEFT JOIN product_product P ON P.id = SOL.product_id
             LEFT JOIN product_template T ON T.id = P.product_tmpl_id
+            LEFT JOIN sale_order SO ON SO.id = SOL.order_id
         """
