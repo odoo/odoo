@@ -57,7 +57,9 @@ cogMenuRegistry.add(
     {
         Component: PresenceCogMenu,
         groupNumber: 40,
-        isDisplayed: ({ searchModel }) => { return searchModel.resModel === "hr.employee" },
+        isDisplayed: ({ config, searchModel }) =>
+            searchModel.resModel === "hr.employee" &&
+            ["form", "kanban", "list"].includes(config.viewType),
     },
     { sequence: 1 }
 );
