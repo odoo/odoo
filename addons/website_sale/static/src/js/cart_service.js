@@ -105,17 +105,20 @@ export class CartService {
     // Methods exposed by the service.
     //--------------------------------------------------------------------------
 
-    async loadCartData(force = false) {
+    async loadCartData(force = false, fromConfirmationPage = false, withHistory = false) {
         if (force || !this.cartFetched) {
-            const data = await this.rpc("/shop/cart/data");
+            const data = await this.rpc("/shop/cart/data", {
+                from_confirmation_page: fromConfirmationPage,
+                with_history: withHistory,
+            });
             this._setCartState(data);
             this.cartFetched = true;
         }
     }
 
-    async refreshCartData(keepAlerts = false) {
-        await this.loadCartData(true);
-        this.bus.trigger("cart_update", { keepAlerts });
+    async refreshCartData(clearAlerts = true) {
+        await this.mutex.exec(async () => await this.loadCartData(true, false, true));
+        this.bus.trigger("cart_update", { clearAlerts });
     }
 
     /**

@@ -8,12 +8,20 @@ export class CartSummary extends Component {
     static template = "website_sale.CartSummary";
     props = useProps({
         isOffcanvas: t.boolean().optional(false),
+        fromConfirmationPage: t.boolean(),
     });
 
     setup() {
         this.cartService = useService("cart");
         onWillStart(async () => {
-            await this.cartService.mutex.exec(async () => await this.cartService.loadCartData());
+            await this.cartService.mutex.exec(
+                async () =>
+                    await this.cartService.loadCartData(
+                        false,
+                        this.props.fromConfirmationPage,
+                        false
+                    )
+            );
         });
     }
 

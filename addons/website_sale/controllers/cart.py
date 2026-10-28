@@ -412,21 +412,29 @@ class Cart(PaymentPortal):
         }
 
     @route(route="/shop/cart/data", type="jsonrpc", auth="public", website=True)
-    def cart_data(self, order_id=None):
+    def cart_data(self, from_confirmation_page=False, with_history=False):
         """Return the shared cart data used by the OWL cart components."""
-        order_sudo = request.cart
-        lines = self.cart_lines()
-        totals = self.cart_totals(order_id=order_id)
-        history = self.cart_history()
-        if order_sudo:
-            order_sudo._clear_alerts()
+        order_sudo = (
+            request.env["sale.order"].sudo().browse(request.session.get("sale_last_order_id"))
+            if from_confirmation_page
+            else request.cart
+        )
 
-        return {
-            "lines": lines,
-            "totals": totals,
-            "history": history,
+        result = {"lines": {}, "totals": {}, "history": {}, "currency_id": None}
+        if not order_sudo:
+            return result
+
+        result.update({
+            "lines": self.cart_lines(order_sudo),
+            "totals": self.cart_totals(order_sudo),
             "currency_id": order_sudo.currency_id.id,
-        }
+        })
+        order_sudo._clear_alerts()
+
+        if with_history:
+            result["history"] = self.cart_history()
+
+        return result
 
     def cart_history(self):
         """Prepare the order history of the current user.
@@ -620,9 +628,7 @@ class Cart(PaymentPortal):
 
         return infos
 
-    def cart_lines(self):
-        order_sudo = request.cart
-
+    def cart_lines(self, order_sudo):
         is_quantity_view_active = request.env["website"].is_view_active(
             "website_sale.product_quantity"
         )
@@ -636,7 +642,7 @@ class Cart(PaymentPortal):
             "is_quantity_view_active": is_quantity_view_active,
             "is_wishlist_view_active": is_wishlist_view_active,
             "show_product_reference_price": show_product_reference_price,
-            "accessories": self._cart_accessories(),
+            "accessories": self._cart_accessories(order_sudo),
             "cart_quantity": order_sudo.cart_quantity,
         }
 
@@ -698,14 +704,7 @@ class Cart(PaymentPortal):
             "description_lines": list(combo_item_line.get_description_following_lines()),
         }
 
-    def cart_totals(self, order_id=None):
-        if order_id:
-            order_sudo = request.env["sale.order"].sudo().browse(order_id)
-            if not order_sudo.exists():
-                raise NotFound
-        else:
-            order_sudo = request.cart
-
+    def cart_totals(self, order_sudo):
         return {
             "has_carrier": bool(order_sudo.carrier_id),
             "has_deliverable_products": order_sudo._has_deliverable_products(),
@@ -718,12 +717,11 @@ class Cart(PaymentPortal):
             ),
             "amount_total": order_sudo.amount_total,
             "tax_included": (order_sudo.website_id.tax_display == "tax_included"),
-            "is_paid": order_sudo._is_paid() if order_sudo else False,
+            "is_paid": order_sudo._is_paid(),
             "amount_paid": order_sudo.amount_paid,
         }
 
-    def _cart_accessories(self):
-        order_sudo = request.cart
+    def _cart_accessories(self, order_sudo):
         accessories = order_sudo._cart_accessories()
 
         return [

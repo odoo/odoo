@@ -305,7 +305,10 @@
     <template id="website_sale.cart_summary_content">
         <owl-component
             name="website_sale.CartSummary"
-            t-att-props="json.dumps({'isOffcanvas': bool(is_offcanvas)})"
+            t-att-props="json.dumps({
+                'isOffcanvas': bool(is_offcanvas),
+                'fromConfirmationPage': bool(confirmation_page),
+            })"
         />
     </template>
 
@@ -386,7 +389,7 @@
         <div
             id="cart_totals"
             t-attf-class="#{_cart_total_classes}"
-            t-att-data-order-id="website_sale_order.id if request.cart != website_sale_order else None"
+            t-att-data-from-confirmation-page="bool(confirmation_page)"
             t-att-data-hide-promotions="hide_promotions"
         />
     </template>

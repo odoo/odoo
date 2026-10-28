@@ -9,7 +9,7 @@ export class CartTotal extends Interaction {
         _root: {
             "t-component": (el) => {
                 const root = el.parentElement;
-                const orderId = parseInt(el.dataset.orderId);
+                const fromConfirmationPage = Boolean(el.dataset.fromConfirmationPage);
                 const hidePromotions = Boolean(el.dataset.hidePromotions);
 
                 const selectors = {
@@ -21,10 +21,7 @@ export class CartTotal extends Interaction {
 
                 const templateData = wSaleUtils.extractEditModeText(root, selectors);
 
-                return [
-                    CartTotalComponent,
-                    { templateData, hidePromotions, ...(Number.isInteger(orderId) && { orderId }) },
-                ];
+                return [CartTotalComponent, { templateData, hidePromotions, fromConfirmationPage }];
             },
         },
     };

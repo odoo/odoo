@@ -14,7 +14,9 @@ export class CartQuickReorder extends Component {
     setup() {
         this.cartService = useService("cart");
         onWillStart(async () => {
-            await this.cartService.mutex.exec(async () => await this.cartService.loadCartData());
+            await this.cartService.mutex.exec(
+                async () => await this.cartService.loadCartData(false, false, true)
+            );
         });
 
         useSubEnv({

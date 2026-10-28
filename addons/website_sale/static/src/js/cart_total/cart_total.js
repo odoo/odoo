@@ -8,7 +8,7 @@ export class CartTotal extends Component {
     static template = "website_sale.CartTotal";
     props = useProps({
         templateData: t.object(),
-        orderId: t.number().optional(),
+        fromConfirmationPage: t.boolean(),
         hidePromotions: t.boolean(),
     });
 
@@ -23,11 +23,18 @@ export class CartTotal extends Component {
         this.promoInputPlaceholder = _t("Discount code...");
         this.cartService = useService("cart");
         onWillStart(async () => {
-            await this.cartService.mutex.exec(async () => await this.cartService.loadCartData());
+            await this.cartService.mutex.exec(
+                async () =>
+                    await this.cartService.loadCartData(
+                        false,
+                        this.props.fromConfirmationPage,
+                        !this.props.fromConfirmationPage
+                    )
+            );
         });
 
         useBus(this.cartService.bus, "cart_update", (ev) => {
-            if (!ev.detail?.keepAlerts) {
+            if (ev.detail.clearAlerts) {
                 this.state.notification = {};
             }
         });
@@ -47,7 +54,7 @@ export class CartTotal extends Component {
         });
         this.state.notification = data;
         if (data.success) {
-            await this.cartService.refreshCartData(true);
+            await this.cartService.refreshCartData(false);
         }
     }
 

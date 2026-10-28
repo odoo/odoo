@@ -43,13 +43,6 @@ class Cart(WebsiteSaleCart):
 
     def _prepare_cart_line_data(self, line):
         line_data = super()._prepare_cart_line_data(line)
-        return self._add_reward_line_data(line_data, line)
-
-    def _prepare_cart_summary_line_data(self, line):
-        line_data = super()._prepare_cart_summary_line_data(line)
-        return self._add_reward_line_data(line_data, line)
-
-    def _add_reward_line_data(self, line_data, line):
         show_coupon_code = (
             line.coupon_id
             and line.order_id != line.coupon_id.order_id
@@ -70,10 +63,9 @@ class Cart(WebsiteSaleCart):
         })
         return line_data
 
-    @route()
-    def cart_totals(self, order_id):
-        cart_totals = super().cart_totals(order_id)
-        if order_sudo := request.cart:
+    def cart_totals(self, order_sudo):
+        cart_totals = super().cart_totals(order_sudo)
+        if order_sudo:
             cart_totals["promotion_progress_bars"] = order_sudo._get_promotion_progress_bars()
             cart_totals["cart_rewards"] = self._cart_rewards()
 
