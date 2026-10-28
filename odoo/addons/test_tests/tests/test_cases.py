@@ -114,6 +114,55 @@ class TestHttpCase(HttpCase):
                 console_log_count += 1
         self.assertEqual(console_log_count, 1)
 
+    def test_browser_tabs(self):
+        """ Every tab runs the code, and the test succeeds once all of them did. """
+        logger = logging.getLogger('odoo')
+        level = logger.level
+        logger.setLevel(logging.INFO)
+        self.addCleanup(logger.setLevel, level)
+
+        with self.assertLogs() as log_catcher:
+            code = "console.log('test successful')"
+            self.browser_js(url_path='about:blank', code=code, tabs=3)
+        self.assertEqual({
+            record.name.rsplit('.', 1)[-1]
+            for record in log_catcher.records
+            if record.getMessage().startswith('Evaluate test code')
+        }, {'tab0', 'tab1', 'tab2'})
+
+    def test_browser_tabs_failure(self):
+        """ Failing tabs let the other ones finish, and the error names all of them. """
+        wait_code_ok = ChromeBrowser._wait_code_ok
+        done_tabs = []
+
+        def tab_wait_code_ok(browser, code, *args, **kwargs):
+            if browser.name != 'tab0':
+                code = f"console.error('{browser.name} error')"
+            result = wait_code_ok(browser, code, *args, **kwargs)
+            done_tabs.append(browser.name)
+            return result
+
+        with (
+            self.assertLogs(level='ERROR'),
+            self.assertRaisesRegex(
+                AssertionError, r'(?ms)^\[tab1\] tab1 error.*^\[tab2\] tab2 error',
+            ),
+            patch.object(ChromeBrowser, '_wait_code_ok', tab_wait_code_ok),
+            patch.object(ChromeBrowser, 'take_screenshot', return_value=None),
+            patch('odoo.tests.common.save_test_file') as save_test_file,
+        ):
+            # the successful tab only finishes after the other ones failed
+            code = "setTimeout(() => console.log('test successful'), 2000)"
+            self.browser_js(url_path='about:blank', code=code, timeout=60, tabs=3)
+        self.assertEqual(done_tabs, ['tab0'], "The successful tab should have finished")
+        # the shared Chrome log is saved as a failure's
+        chrome_log_call = next(
+            call for call in save_test_file.call_args_list
+            if call.kwargs.get('prefix') == 'chrome_log_'
+        )
+        self.assertEqual(chrome_log_call.kwargs['loglevel'], logging.RUNBOT)
+
+
 @tagged('-at_install', 'post_install')
 class TestRunbotLog(HttpCase):
     def test_runbot_js_log(self):
