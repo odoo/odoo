@@ -334,7 +334,7 @@
                         <t t-else="">
                             <!-- Dropdown -->
                             <li class="breadcrumb-item dropdown">
-                                <a role="button" data-bs-toggle="dropdown">...</a>
+                                <button data-bs-toggle="dropdown">...</button>
                                 <div role="menu" class="dropdown-menu">
                                     <a t-foreach="ancestors[1:len(ancestors)-1]" t-as="ancestor" class="dropdown-item" t-att-href="ancestor.url" t-out="ancestor.name"/>
                                 </div>

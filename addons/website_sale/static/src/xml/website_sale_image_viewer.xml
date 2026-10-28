@@ -8,7 +8,10 @@
                     <div class="o_wsale_image_viewer_header d-flex w-100 text-white">
                         <div class="flex-grow-1"/>
                         <div class="d-flex align-items-center mb-0 px-3 h4 text-reset cursor-pointer">
-                            <span class="oi" data-icon="close" role="button" aria-label="Close" t-on-click="this.data.close"/>
+                            <button class="o_btn_reset text-white" t-on-click="this.data.close">
+                                <span class="oi" data-icon="close" role="img" aria-hidden="true"/>
+                                <span class="visually-hidden">Close</span>
+                            </button>
                         </div>
                     </div>
                     <!-- Content -->
@@ -53,36 +56,32 @@
                         </div>
                         <!-- Controls -->
                         <div class="o_wsale_image_viewer_control position-absolute d-flex align-items-center me-2 h-100 w-100">
-                            <a
+                            <button
                                 class="carousel-control-prev"
                                 t-on-click="this.previousImage"
-                                title="Previous (Left-Arrow)"
-                                role="button"
+                                title="Previous (Left Arrow)"
                             >
                                 <i
                                     class="oi border bg-white text-900"
                                     data-icon="chevron_backward"
                                     role="img"
-                                    aria-label="Previous"
-                                    title="Previous"
+                                    aria-hidden="true"
                                 />
-                            </a>
+                            </button>
                         </div>
                         <div class="o_wsale_image_viewer_control position-absolute d-flex align-items-center me-2 h-100 w-100">
-                            <a
+                            <button
                                 class="carousel-control-next"
                                 t-on-click="this.nextImage"
-                                title="Next (Right-Arrow)"
-                                role="button"
+                                title="Next (Right Arrow)"
                             >
                                 <i
                                     class="oi border bg-white text-900"
                                     data-icon="chevron_forward"
                                     role="img"
-                                    aria-label="Next"
-                                    title="Next"
+                                    aria-hidden="true"
                                 />
-                            </a>
+                            </button>
                         </div>
                     </t>
                 </div>

@@ -63,12 +63,12 @@ test("scroll miniatures", async () => {
                             <div class="d-flex align-items-center justify-content-center h-100 oe_unmovable"><img src="/web/image/website.library_image_01" class="img img-fluid oe_unmovable product_detail_img w-100 mh-100" loading="lazy" style=""></div>
                         </div>
                     </div>
-                    <a class="carousel-control-prev" href="#o-carousel-product" role="button" data-bs-slide="prev">
+                    <button class="carousel-control-prev" href="#o-carousel-product" data-bs-slide="prev">
                         <i class="oi oe_unmovable border bg-white text-900" data-icon="chevron_backward" role="img" aria-label="Previous" title="Previous"></i>
-                    </a>
-                    <a class="carousel-control-next" href="#o-carousel-product" role="button" data-bs-slide="next">
+                    </button>
+                    <button class="carousel-control-next" href="#o-carousel-product" data-bs-slide="next">
                         <i class="oi oe_unmovable border bg-white text-900" data-icon="chevron_forward" role="img" aria-label="Next" title="Next"></i>
-                    </a>
+                    </button>
                 </div>
                 <div class="o_carousel_product_indicators pt-2 overflow-hidden">
                     <ol class="carousel-indicators position-static pt-2 pt-lg-0 mx-auto my-0" style="justify-content: start;">
