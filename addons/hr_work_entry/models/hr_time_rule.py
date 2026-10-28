@@ -74,7 +74,13 @@ def _trim_hours_from_start(intervals, hours):
 
 
 def _to_utc(dt, tz):
-    """Convert a naive local datetime to a naive UTC datetime."""
+    """Convert a naive local datetime to a naive UTC datetime.
+
+    An end of day expressed as ``time.max`` becomes the next midnight, as
+    Datetime fields drop microseconds.
+    """
+    if dt.time() == time.max:
+        dt = datetime.combine(dt.date() + timedelta(days=1), time.min)
     return dt.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
 
 
