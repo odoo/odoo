@@ -15,6 +15,8 @@ export class ResUsers extends ImStatusMixin {
     company_id = fields.One("res.company");
     /** @type {boolean} */
     is_admin;
+    /** @type {boolean|undefined} */
+    is_in_call;
     /** @type {boolean} */
     is_public;
     /** @type {"email" | "inbox"} */

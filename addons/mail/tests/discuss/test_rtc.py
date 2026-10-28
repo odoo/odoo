@@ -136,6 +136,11 @@ class TestChannelRTC(MailCommon, HttpCase):
                     },
                 ),
                 BusResult(
+                    (self.user_employee, "presence"),
+                    "mail.record/insert",
+                    {"res.users": [{"id": self.user_employee.id, "is_in_call": True}]},
+                ),
+                BusResult(
                     self.user_employee,
                     "mail.record/insert",
                     {
@@ -179,6 +184,11 @@ class TestChannelRTC(MailCommon, HttpCase):
                             self._res_for_user(self.user_employee, internal=True),
                         ),
                     },
+                ),
+                BusResult(
+                    (self.user_employee, "presence"),
+                    "mail.record/insert",
+                    {"res.users": [{"id": self.user_employee.id, "is_in_call": True}]},
                 ),
             ]
 
@@ -545,6 +555,11 @@ class TestChannelRTC(MailCommon, HttpCase):
                     },
                 ),
                 BusResult(
+                    (self.user_employee, "presence"),
+                    "mail.record/insert",
+                    {"res.users": [{"id": self.user_employee.id, "is_in_call": True}]},
+                ),
+                BusResult(
                     # incoming invitation
                     self.test_user,
                     "mail.record/insert",
@@ -685,6 +700,11 @@ class TestChannelRTC(MailCommon, HttpCase):
                             self._res_for_user(self.user_employee, internal=True),
                         ),
                     },
+                ),
+                BusResult(
+                    (self.user_employee, "presence"),
+                    "mail.record/insert",
+                    {"res.users": [{"id": self.user_employee.id, "is_in_call": True}]},
                 ),
                 BusResult(
                     # incoming invitation
@@ -866,6 +886,11 @@ class TestChannelRTC(MailCommon, HttpCase):
                             self._res_for_user(self.test_user, internal=True),
                         ),
                     },
+                ),
+                BusResult(
+                    (self.test_user, "presence"),
+                    "mail.record/insert",
+                    {"res.users": [{"id": self.test_user.id, "is_in_call": True}]},
                 ),
             ]
 
@@ -1156,6 +1181,11 @@ class TestChannelRTC(MailCommon, HttpCase):
                         ],
                     },
                 ),
+                BusResult(
+                    (self.user_employee, "presence"),
+                    "mail.record/insert",
+                    {"res.users": [{"id": self.user_employee.id, "is_in_call": False}]},
+                ),
             ],
         ):
             self.member_of_employee_in_group_a.sudo()._rtc_leave_call()
@@ -1316,6 +1346,11 @@ class TestChannelRTC(MailCommon, HttpCase):
                         ],
                     },
                 ),
+                BusResult(
+                    (self.user_employee, "presence"),
+                    "mail.record/insert",
+                    {"res.users": [{"id": self.user_employee.id, "is_in_call": False}]},
+                ),
             ],
         ):
             now = fields.Datetime.now()
@@ -1358,6 +1393,11 @@ class TestChannelRTC(MailCommon, HttpCase):
                         ],
                     },
                 ),
+                BusResult(
+                    (self.user_employee, "presence"),
+                    "mail.record/insert",
+                    {"res.users": [{"id": self.user_employee.id, "is_in_call": False}]},
+                ),
             ],
         ):
             self.env["discuss.channel.rtc.session"].sudo()._gc_inactive_sessions()
@@ -1394,6 +1434,11 @@ class TestChannelRTC(MailCommon, HttpCase):
                             },
                         ],
                     },
+                ),
+                BusResult(
+                    (self.user_employee, "presence"),
+                    "mail.record/insert",
+                    {"res.users": [{"id": self.user_employee.id, "is_in_call": False}]},
                 ),
             ],
         ):
@@ -1519,4 +1564,6 @@ class TestChannelRTC(MailCommon, HttpCase):
         if internal:
             res["im_status"] = user.im_status
             res["im_status_access_token"] = user._get_im_status_access_token()
+            res["is_in_call"] = user.partner_id.sudo().is_in_call
+            res["is_in_meeting"] = False
         return res

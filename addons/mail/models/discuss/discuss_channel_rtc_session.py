@@ -64,6 +64,8 @@ class DiscussChannelRtcSession(models.Model):
                 "_store_rtc_update_fields",
                 fields_params={"added": rtc_session},
             )
+        for user in rtc_sessions.partner_id.user_ids:
+            stores[user, "presence"].add(user, "_store_is_in_call_fields")
         return rtc_sessions
 
     def unlink(self):
@@ -89,6 +91,8 @@ class DiscussChannelRtcSession(models.Model):
                 "_store_rtc_update_fields",
                 fields_params={"removed": rtc_session},
             )
+        for user in self.partner_id.user_ids:
+            stores[user, "presence"].add(user, "_store_is_in_call_fields")
         # sudo - dicuss.rtc.call.history: setting the end date of the call
         # after it ends is allowed.
         domain = [("channel_id", "in", call_ended_channels.ids), ("end_dt", "=", False)]

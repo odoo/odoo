@@ -5,6 +5,7 @@ import logging
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 from odoo.tools.misc import clean_context
 from odoo.tools import split_every
 
@@ -66,16 +67,41 @@ class CalendarAttendee(models.Model):
                 values['common_name'] = values.get("common_name")
         attendees = super().create(vals_list)
         attendees.event_id.check_access('write')
+        attendees.event_id._trigger_im_status_changes()
+        self.env["res.users"]._send_is_in_meeting(attendees._get_ongoing_busy_partners())
         return attendees
 
     def write(self, vals):
+        busy_before = "state" in vals and self._get_ongoing_busy_partners()
         attendees = super().write(vals)
         self.event_id.check_access('write')
+        if "state" in vals:
+            self.event_id._trigger_im_status_changes()
+            busy_after = self._get_ongoing_busy_partners()
+            self.env["res.users"]._send_is_in_meeting(
+                (busy_before - busy_after) | (busy_after - busy_before)
+            )
         return attendees
 
     def unlink(self):
         self._unsubscribe_partner()
-        return super().unlink()
+        busy_partners = self._get_ongoing_busy_partners()
+        result = super().unlink()
+        self.env["res.users"]._send_is_in_meeting(busy_partners)
+        return result
+
+    def _get_ongoing_busy_partners(self):
+        now = fields.Datetime.now()
+        # sudo: calendar.event - im_status flags are sent to the internal presence channels
+        return (
+            self.sudo()
+            .filtered_domain(
+                self.env["res.partner"]._get_busy_attendee_domain()
+                & Domain("event_id.start", "<=", now)
+                & Domain("event_id.stop", ">=", now)
+            )
+            .partner_id
+        )
 
     def copy(self, default=None):
         raise UserError(_('You cannot duplicate a calendar attendee.'))

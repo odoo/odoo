@@ -177,6 +177,14 @@ export class ResUsers extends webModels.ResUsers {
         res.attr("im_status");
         res.attr("im_status_access_token", (p) => p.id); // mock: token is the record id
         res.one("partner_id", "_store_im_status_fields");
+        res.from_method("_store_is_in_call_fields");
+    }
+
+    _store_is_in_call_fields(res) {
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+        ResPartner._compute_is_in_call();
+        res.attr("is_in_call", (u) => ResPartner.browse(u.partner_id)[0]?.is_in_call ?? false);
     }
 
     _store_manual_im_status_fields(res) {

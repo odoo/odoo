@@ -2214,6 +2214,9 @@ class MailCommon(MailCase):
             for data in users_data:
                 data.pop("has_active_call", None)
                 data.pop("should_display_in_call_im_status", None)
+        if "calendar.event" not in self.env:
+            for data in users_data:
+                data.pop("is_in_meeting", None)
         return list(users_data)
 
     def _filter_threads_fields(self, /, *threads_data):

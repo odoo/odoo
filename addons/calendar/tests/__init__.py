@@ -19,3 +19,4 @@ from . import test_res_partner
 from . import test_recurrence_rule
 from . import test_res_users
 from . import test_res_users_calendars
+from . import test_im_status_changes

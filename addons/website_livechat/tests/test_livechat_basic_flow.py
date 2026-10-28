@@ -296,6 +296,8 @@ class TestLivechatBasicFlowHttpCase(HttpCase, TestLivechatCommon):
                         "id": self.operator.id,
                         "im_status": "online",
                         "im_status_access_token": self.operator._get_im_status_access_token(),
+                        "is_in_call": False,
+                        "is_in_meeting": False,
                         "partner_id": self.operator.partner_id.id,
                     },
                 ),

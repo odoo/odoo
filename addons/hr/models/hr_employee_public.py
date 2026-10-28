@@ -41,6 +41,7 @@ class HrEmployeePublic(models.Model):
     work_location_id = fields.Many2one('hr.work.location', readonly=True)
     work_location_name = fields.Char(related='employee_id.work_location_name')
     work_location_type = fields.Selection(related='employee_id.work_location_type')
+    is_off_hours = fields.Boolean(related='employee_id.is_off_hours')
     user_id = fields.Many2one('res.users', readonly=True)
     resource_id = fields.Many2one('resource.resource', readonly=True)
     tz = fields.Selection(related='resource_id.tz')

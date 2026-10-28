@@ -181,7 +181,7 @@ class HrLeave(models.Model):
     date_from = fields.Datetime(
         'Start Date', compute='_compute_date_from_to', store=True, index=True, tracking=True)
     date_to = fields.Datetime(
-        'End Date', compute='_compute_date_from_to', store=True, tracking=True)
+        'End Date', compute='_compute_date_from_to', store=True, index=True, tracking=True)
     number_of_days = fields.Float(
         'Duration (Days)', compute='_compute_duration', store=True, tracking=True,
         help='Number of days of the time off request. Used in the calculation.')
@@ -1719,6 +1719,8 @@ class HrLeave(models.Model):
                 'type': 'danger',
                 'message': self.env._('The time off is outside the working schedule of the employee'),
             })
+        holidays._trigger_im_status_changes()
+        self.env["res.users"]._send_is_absent(holidays._get_ongoing_absent_employees())
         return holidays
 
     def _process_auto_approve_activities(self):
@@ -1757,6 +1759,20 @@ class HrLeave(models.Model):
         or cancelled requests.
         """
         values = vals
+        im_status_changed = vals.keys() & {
+            "state",
+            "date_from",
+            "date_to",
+            "request_date_from",
+            "request_date_to",
+            "request_date_from_period",
+            "request_date_to_period",
+            "request_hour_from",
+            "request_hour_to",
+            "employee_id",
+            "work_entry_type_id",
+        }
+        absent_before = im_status_changed and self._get_ongoing_absent_employees()
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.env.is_superuser()
         if not is_officer and values.keys() - {'attachment_ids', 'supported_attachment_ids', 'message_main_attachment_id'}:
             if any(hol.date_from.date() < fields.Date.today() and hol.employee_id.leave_manager_id != self.env.user
@@ -1817,7 +1833,43 @@ class HrLeave(models.Model):
                 if employee_id:
                     holiday.add_follower(employee_id)
 
+        if im_status_changed:
+            self._trigger_im_status_changes()
+            absent_after = self._get_ongoing_absent_employees()
+            self.env["res.users"]._send_is_absent(
+                (absent_before - absent_after) | (absent_after - absent_before)
+            )
         return result
+
+    @api.model
+    def _get_absence_domain(self):
+        """Leaves that make their employee absent while they last."""
+        return Domain(
+            [
+                ("state", "=", "validate"),
+                ("work_entry_type_id.count_as", "=", "absence"),
+                ("employee_id.user_id.share", "=", False),
+            ]
+        )
+
+    def _get_ongoing_absent_employees(self):
+        now = fields.Datetime.now()
+        # sudo: hr.leave - im_status flags are sent to the internal presence channels
+        return (
+            self.sudo()
+            .filtered_domain(
+                self._get_absence_domain()
+                & Domain("date_from", "<=", now)
+                & Domain("date_to", ">=", now)
+            )
+            .employee_id
+        )
+
+    def _trigger_im_status_changes(self):
+        leaves = self.filtered_domain(self._get_absence_domain())
+        self.env["res.users"]._trigger_im_status_changes_at(
+            leaves.mapped("date_from") + leaves.mapped("date_to")
+        )
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_correct_states(self):
@@ -1839,7 +1891,10 @@ class HrLeave(models.Model):
     def unlink(self):
         """Delete requests, after reversing their time rule credits and removing their leaves."""
         self._prepare_leave_unlink()
-        return super(HrLeave, self.with_context(leave_skip_date_check=True)).unlink()
+        absent_employees = self._get_ongoing_absent_employees()
+        result = super(HrLeave, self.with_context(leave_skip_date_check=True)).unlink()
+        self.env["res.users"]._send_is_absent(absent_employees)
+        return result
 
     def _prepare_leave_unlink(self):
         """Undo the effects of the requests before their deletion.
