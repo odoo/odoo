@@ -1,6 +1,7 @@
 import { defineCalendarModels } from "@calendar/../tests/calendar_test_helpers";
 import { click, contains, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { expect, test } from "@odoo/hoot";
+import { waitFor } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 import { mockService, preloadBundle, serverState } from "@web/../tests/web_test_helpers";
 
@@ -33,10 +34,10 @@ test("activity menu widget: upcoming meetings", async () => {
         },
     });
     await start();
-    await contains(".o_menu_systray i[aria-label='Activities']");
+    await waitFor(".o_menu_systray i[aria-label='Activities']:count(1)");
     await click(".o_menu_systray i[aria-label='Activities']");
     await contains(".o-mail-ActivityGroup div[name='activityTitle']", { text: "Upcoming Meetings" });
-    await contains(".o-mail-ActivityGroup .o-calendar-meeting", { count: 2 });
+    await waitFor(".o-mail-ActivityGroup .o-calendar-meeting:count(2)");
     await contains(".o-calendar-meeting:eq(0) span", { text: "meeting1" });
     await contains(".o-calendar-meeting:eq(1) span", { text: "meeting2" });
     await click(".o-mail-ActivityGroup div[name='activityTitle']", { text: "Upcoming Meetings" });

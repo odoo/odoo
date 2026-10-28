@@ -7,6 +7,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { test } from "@odoo/hoot";
+import { waitFor, waitForNone } from "@odoo/hoot-dom";
 import { preloadBundle } from "@web/../tests/web_test_helpers";
 import { serializeDateTime } from "@web/core/l10n/dates";
 
@@ -62,6 +63,6 @@ test("list activity widget: reschedule button in dropdown", async () => {
     });
     await contains(".o-mail-ListActivity-summary", { text: "OXP" });
     await click(".o-mail-ActivityButton"); // open the popover
-    await contains(".o-mail-ActivityListPopoverItem-editbtn [data-icon='edit']", { count: 0 });
-    await contains(".o-mail-ActivityListPopoverItem-editbtn [data-icon='calendar_today']");
+    await waitForNone(".o-mail-ActivityListPopoverItem-editbtn [data-icon='edit']");
+    await waitFor(".o-mail-ActivityListPopoverItem-editbtn [data-icon='calendar_today']:count(1)");
 });
