@@ -1,6 +1,15 @@
 /** @odoo-module */
 
-import { describe, expect, mockSendBeacon, mockTouch, mockVibrate, test } from "@odoo/hoot";
+import {
+    describe,
+    expect,
+    microTick,
+    mockPermission,
+    mockSendBeacon,
+    mockTouch,
+    mockVibrate,
+    test,
+} from "@odoo/hoot";
 import { parseUrl } from "../local_helpers";
 
 /**
@@ -34,6 +43,35 @@ describe(parseUrl(import.meta.url), () => {
             const value = await ensureResolvesImmediatly(blob.text());
 
             expect(value).toBe("some text");
+        });
+    });
+
+    describe("permission-gated APIs", () => {
+        test("geolocation positions are never available", async () => {
+            const onSuccess = () => expect.step("success");
+            const onError = (error) => expect.step(`error:${error.code}`);
+
+            navigator.geolocation.getCurrentPosition(onSuccess, onError);
+
+            expect.verifySteps([]);
+
+            await microTick();
+
+            expect.verifySteps(["error:1"]); // PERMISSION_DENIED
+
+            mockPermission("geolocation", "granted");
+            navigator.geolocation.watchPosition(onSuccess, onError);
+            await microTick();
+
+            expect.verifySteps(["error:2"]); // POSITION_UNAVAILABLE
+        });
+
+        test.tags("secure");
+        test("permission-gated requests are rejected", async () => {
+            await expect(navigator.credentials.get()).rejects.toThrow(/not allowed/);
+            await expect(navigator.storage.getDirectory()).rejects.toThrow(/not allowed/);
+            await expect(navigator.storage.persist()).resolves.toBe(false);
+            await expect(navigator.wakeLock.request("screen")).rejects.toThrow(/not allowed/);
         });
     });
 
