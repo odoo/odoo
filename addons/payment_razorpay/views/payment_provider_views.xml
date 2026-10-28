@@ -42,17 +42,27 @@
                         invisible="not razorpay_is_oauth_supported"
                         readonly="True"
                     />
+                    <div
+                        class="alert alert-warning"
+                        role="alert"
+                        colspan="2"
+                        groups="base.group_system"
+                        invisible="razorpay_account_id or not razorpay_is_oauth_supported"
+                    >
+                        The credentials method is deprecated in India. Click the "Connect" button
+                        above to use the recommended OAuth method.
+                    </div>
                     <field
                         name="razorpay_key_id"
                         string="Key Id"
-                        invisible="razorpay_is_oauth_supported and (not razorpay_key_id or not razorpay_key_secret)"
+                        invisible="razorpay_account_id"
                         groups="base.group_system"
                     />
                     <field
                         name="razorpay_key_secret"
                         string="Key Secret"
+                        invisible="razorpay_account_id"
                         password="True"
-                        invisible="razorpay_is_oauth_supported and (not razorpay_key_id or not razorpay_key_secret)"
                     />
                     <label for="razorpay_webhook_secret"/>
                     <div class="o_row">
@@ -60,7 +70,6 @@
                             name="razorpay_webhook_secret"
                             string="Webhook Secret"
                             password="True"
-                            readonly="razorpay_is_oauth_supported"
                         />
                         <button
                             string="Generate your webhook"
@@ -72,18 +81,6 @@
                         />
                     </div>
                 </group>
-            </group>
-            <group name="provider_credentials" position="after">
-                <div
-                    class="alert alert-warning"
-                    role="alert"
-                    groups="base.group_system"
-                    invisible="code != 'razorpay' or not razorpay_key_id or razorpay_account_id or not razorpay_is_oauth_supported"
-                >
-                    You are currently connected to Razorpay through the credentials method, which is
-                    deprecated. Click the "Connect" button above to use the recommended OAuth
-                    method.
-                </div>
             </group>
             <field name="allow_tokenization" position="after">
                 <div invisible="code != 'razorpay' or not allow_tokenization" colspan="2">
