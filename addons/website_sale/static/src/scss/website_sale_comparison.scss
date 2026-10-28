@@ -29,7 +29,7 @@
     }
 
     .o_wsale_compare_table_column {
-        --o-website-sale-comparison-table-column-width: #{map-get($container-max-widths, 'sm') * .5};
+        --o-website-sale-comparison-table-column-width: calc(var(--o-bs-container-max-width-sm) * .5);
 
         @media (min-width: 1200px) {
             --o-website-sale-comparison-table-column-width: 25%;

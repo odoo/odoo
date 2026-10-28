@@ -18,6 +18,15 @@
     --o-brand-secondary: #{$o-brand-secondary};
     --o-bs-border-color: #{$border-color};
     --o-bs-input-color: #{$input-color};
+    --o-btn-outline-secondary-active-background: #{map-get(map-get($o-btns-bs-outline-override, 'secondary') or (), 'active-background')};
+    --o-btn-outline-secondary-active-border: #{map-get(map-get($o-btns-bs-outline-override, 'secondary') or (), 'active-border')};
+    --o-btn-outline-secondary-active-color: #{map-get(map-get($o-btns-bs-outline-override, 'secondary') or (), 'active-color')};
+    --o-btn-outline-secondary-border: #{map-get(map-get($o-btns-bs-outline-override, 'secondary') or (), 'border')};
+    --o-btn-primary-background: #{map-get(map-get($o-btns-bs-override, 'primary') or (), 'background')};
+    --o-btn-primary-color: #{map-get(map-get($o-btns-bs-override, 'primary') or (), 'color')};
+    --o-btn-secondary-active-background: #{map-get(map-get($o-btns-bs-override, 'secondary') or (), 'active-background')};
+    --o-btn-secondary-active-border: #{map-get(map-get($o-btns-bs-override, 'secondary') or (), 'active-border')};
+    --o-btn-secondary-active-color: #{map-get(map-get($o-btns-bs-override, 'secondary') or (), 'active-color')};
     --o-bubble-color-size: #{$o-bubble-color-size};
     --o-bubble-color-size-xl: #{$o-bubble-color-size-xl};
     --o-burger-base-bg: #{$o-burger-base-bg};
@@ -117,6 +126,7 @@
     --o-notification-zindex: #{$o-notification-zindex};
     --o-opacity-disabled: #{$o-opacity-disabled};
     --o-opacity-muted: #{$o-opacity-muted};
+    --o-order-last: #{map-get($order-array, "last")};
     --o-root-font-size: #{$o-root-font-size};
     --o-search-bar-facet-value-width: #{$o-search-bar-facet-value-width};
     --o-search-bar-menu-max-width: calc(100vw - #{map-get($spacers, 3) * 2});
@@ -130,6 +140,8 @@
     --o-system-fonts: #{inspect($o-system-fonts)};
     --o-text-color-danger: #{map-get(map-merge($theme-colors, $o-theme-text-colors), 'danger')};
     --o-text-color-primary: #{map-get(map-merge($theme-colors, $o-theme-text-colors), 'primary')};
+    --o-text-color-success: #{map-get(map-merge($theme-colors, $o-theme-text-colors), 'success')};
+    --o-text-color-warning: #{map-get(map-merge($theme-colors, $o-theme-text-colors), 'warning')};
     --o-view-background-color: #{$o-view-background-color};
     --o-warning: #{$o-warning};
     --o-webclient-background-color: #{$o-webclient-background-color};
@@ -142,7 +154,13 @@
     --o-bs-black: #{$black};
     --o-bs-blue-400: #{$blue-400};
     --o-bs-blue-500: #{$blue-500};
+    --o-bs-border-width-2: #{map-get($border-widths, 2)};
+    --o-bs-border-width-5: #{map-get($border-widths, 5)};
     --o-bs-breadcrumb-item-padding-x: #{$breadcrumb-item-padding-x};
+    --o-bs-breakpoint-lg: #{map-get($grid-breakpoints, lg)};
+    --o-bs-breakpoint-sm: #{map-get($grid-breakpoints, sm)};
+    --o-bs-breakpoint-xl: #{map-get($grid-breakpoints, xl)};
+    --o-bs-breakpoint-xxl: #{map-get($grid-breakpoints, xxl)};
     --o-bs-btn-border-radius: #{$btn-border-radius};
     --o-bs-btn-border-radius-lg: #{$btn-border-radius-lg};
     --o-bs-btn-close-white-filter: #{$btn-close-white-filter};
@@ -174,6 +192,10 @@
     --o-bs-carousel-indicator-spacer: #{$carousel-indicator-spacer};
     --o-bs-component-active-bg: #{$component-active-bg};
     --o-bs-component-active-color: #{$component-active-color};
+    --o-bs-container-max-width-lg: #{map-get($container-max-widths, lg)};
+    --o-bs-container-max-width-md: #{map-get($container-max-widths, md)};
+    --o-bs-container-max-width-sm: #{map-get($container-max-widths, sm)};
+    --o-bs-container-max-width-xxl: #{map-get($container-max-widths, xxl)};
     --o-bs-container-padding-x: #{$container-padding-x};
     --o-bs-cyan-200: #{$cyan-200};
     --o-bs-cyan-300: #{$cyan-300};
@@ -192,6 +214,7 @@
     --o-bs-dropdown-padding-y: #{$dropdown-padding-y};
     --o-bs-focus-ring-blur: #{$focus-ring-blur};
     --o-bs-focus-ring-box-shadow: #{$focus-ring-box-shadow};
+    --o-bs-font-size-4: #{map-get($font-sizes, 4)};
     --o-bs-font-size-base: #{$font-size-base};
     --o-bs-font-size-lg: #{$font-size-lg};
     --o-bs-font-size-sm: #{$font-size-sm};

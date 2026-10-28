@@ -19,16 +19,16 @@
             }
         }
         &.s_tabs_slide_up > .tab-pane.fade:where(:not(.show)) {
-            transform: translateY(map-get($spacers, 3) * -1);
+            transform: translateY(calc(var(--o-bs-spacer-3) * -1));
         }
         &.s_tabs_slide_down > .tab-pane.fade:where(:not(.show)) {
-            transform: translateY(map-get($spacers, 3));
+            transform: translateY(var(--o-bs-spacer-3));
         }
         &.s_tabs_slide_left > .tab-pane.fade:where(:not(.show)) {
-            transform: translateX(map-get($spacers, 3) * -1);
+            transform: translateX(calc(var(--o-bs-spacer-3) * -1)) #{"/*rtl:translateX(var(--o-bs-spacer-3))*/"};
         }
         &.s_tabs_slide_right > .tab-pane.fade:where(:not(.show)) {
-            transform: translateX(map-get($spacers, 3));
+            transform: translateX(var(--o-bs-spacer-3)) #{"/*rtl:translateX(calc(var(--o-bs-spacer-3) * -1))*/"};
         }
     }
 
@@ -90,7 +90,7 @@
 
                 .nav-link {
                     margin-left: calc(var(--o-bs-border-width) * -1);
-                    padding: map-get($spacers, 1) map-get($spacers, 3);
+                    padding: var(--o-bs-spacer-1) var(--o-bs-spacer-3);
 
                     &.active {
                         border-left: calc(var(--o-bs-border-width) * 2) solid var(--link-color);

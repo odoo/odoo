@@ -4,7 +4,7 @@
     // Default icon size used by the builder RangeWithNumberInput control
     // Inherit to icons so the option panel reads 40px initially
     --oi-icon-size: 40px;
-    $-size: map-get($spacers, 5);
+    --o-icon-shape-size: var(--o-bs-spacer-5);
     > *, > span[data-oe-translation-state] > * {
         display: inline-block;
         vertical-align: middle;
@@ -33,8 +33,8 @@
                 &.rounded-circle,
                 &.rounded,
                 &.oi-stack {
-                    width: $-size - .5rem;
-                    height: $-size - .5rem;
+                    width: calc(var(--o-icon-shape-size) - .5rem);
+                    height: calc(var(--o-icon-shape-size) - .5rem);
                 }
             }
         }

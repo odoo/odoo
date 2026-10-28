@@ -826,7 +826,7 @@
 
             .oe_product_cart {
                 --o-wsale-card-flex-align-items: stretch;
-                --o-wsale-card-info-padding: #{map-get($spacers, 2) ($container-padding-x * 0.5) map-get($spacers, 2) map-get($spacers, 2)};
+                --o-wsale-card-info-padding: var(--o-bs-spacer-2) #{$container-padding-x * 0.5} var(--o-bs-spacer-2) var(--o-bs-spacer-2);
                 --o-wsale-card-info-marign: 0;
                 --o-wsale-card-sub-wrap: nowrap;
                 --o-wsale-card-sub-align-items: start;
@@ -1831,7 +1831,7 @@ $-product-radius-map: (
 
                 /* Calculate the height of 4.5 <tr> through the images height.
                    (+ spacer 3 to compensate negative margin) */
-                max-height: calc(calc(var(--o-bs-border-width) * 4 + (#{$table-cell-padding-y} + #{map-get($spacers, 3)} + (var(--o-wsale-checkout-cart-product-img-width) / var(--o-wsale-shop-thumb-aspect-ratio, 1))) * 4.5) + var(--o-bs-spacer-3));
+                max-height: calc(calc(var(--o-bs-border-width) * 4 + (#{$table-cell-padding-y} + var(--o-bs-spacer-3) + (var(--o-wsale-checkout-cart-product-img-width) / var(--o-wsale-shop-thumb-aspect-ratio, 1))) * 4.5) + var(--o-bs-spacer-3));
             }
         }
     }

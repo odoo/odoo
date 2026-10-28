@@ -67,7 +67,7 @@
     &:where(:not(.o_label_compact)) {
         .o_count_inline_text {
             .o_count_item_label {
-                margin-left: map-get($spacers, 1);
+                margin-left: var(--o-bs-spacer-1);
             }
         }
     }
@@ -130,13 +130,13 @@
 
     .o_template_wrapped_numbers {
         .o_count_item_nbs {
-            width: map-get($spacers, 5);
+            width: var(--o-bs-spacer-5);
             aspect-ratio: 1 / 1;
         }
 
         .o_count_separator {
             display: flex;
-            height: map-get($spacers, 5);
+            height: var(--o-bs-spacer-5);
         }
     }
 }

@@ -39,8 +39,8 @@
 }
 
 .o_field_invalid {
-    @include print-variable(o-input-border-color, map-get($theme-colors, 'danger'));
-    @include print-variable(o-caret-color, map-get($theme-colors, 'danger'));
+    @include print-variable(o-input-border-color, var(--danger));
+    @include print-variable(o-caret-color, var(--danger));
 }
 
 /* ------------------------------------------------------------------------------ */

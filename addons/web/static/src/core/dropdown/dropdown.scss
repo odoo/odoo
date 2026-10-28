@@ -8,11 +8,10 @@
         transition: background-color .2s ease-in-out, border-color .2s ease-in-out;
 
         &.show {
-            $-value: map-get($o-btns-bs-outline-override, 'secondary');
-            --#{$prefix}btn-active-border-color: #{map-get($-value, 'active-border')};
+            --#{$prefix}btn-active-border-color: var(--o-btn-outline-secondary-active-border);
 
-            color: map-get($-value, 'active-color');
-            background-color: map-get($-value, 'active-background');
+            color: var(--o-btn-outline-secondary-active-color);
+            background-color: var(--o-btn-outline-secondary-active-background);
         }
     }
 

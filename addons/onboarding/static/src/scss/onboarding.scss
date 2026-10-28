@@ -1,6 +1,6 @@
 /* = Onboarding Panel */
 /* ============================================================================ */
-$o-onboarding-step-width: map-get($container-max-widths, 'lg') / 4 !default;
+$o-onboarding-step-width: calc(var(--o-bs-container-max-width-lg) / 4) !default;
 
 .o_onboarding_container {
     transition: height 0.4s;
@@ -78,7 +78,7 @@ $o-onboarding-step-width: map-get($container-max-widths, 'lg') / 4 !default;
         }
 
         .o_onboarding_step_action {
-            min-width: $o-onboarding-step-width * .5;
+            min-width: calc(#{$o-onboarding-step-width} * .5);
             border: var(--border-width) solid var(--o-onboarding-color-blue);
             color: var(--o-onboarding-color-blue);
         }

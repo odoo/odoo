@@ -391,7 +391,7 @@
         @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
             --inner-group-row-gap: 0;
         }
-        gap: var(--inner-group-row-gap, map-get($spacers, 2)) var(--o-horizontal-padding);
+        gap: var(--inner-group-row-gap, var(--o-bs-spacer-2)) var(--o-horizontal-padding);
         margin-bottom: var(--o-bs-spacer-2);
 
         span, .o_field_boolean, .oe_avatar, .o_form_uri {
