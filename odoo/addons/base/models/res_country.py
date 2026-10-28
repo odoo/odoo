@@ -85,11 +85,6 @@ class ResCountry(models.CachedModel):
                          'res_country_id', 'res_country_group_id', string='Country Groups')
     country_group_codes = fields.Json(compute="_compute_country_group_codes")
     state_ids = fields.One2many('res.country.state', 'country_id', string='States')
-    name_position = fields.Selection([
-            ('before', 'Before Address'),
-            ('after', 'After Address'),
-        ], string="Customer Name Position", default="before",
-        help="Determines where the customer/company name should be placed, i.e. after or before the address.")
     vat_label = fields.Char(string='Vat Label', translate=True, prefetch=True, help="Use this field if you want to change vat label.")
 
     state_required = fields.Boolean(default=False)
