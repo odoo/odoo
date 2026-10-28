@@ -1,5 +1,5 @@
 import { describe, test, expect } from "@odoo/hoot";
-import { getFilledOrder, setupPosEnv } from "../utils";
+import { createOrderWithPrice, getFilledOrder, setupMultiCurrency, setupPosEnv } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
 
 definePosModels();
@@ -685,4 +685,191 @@ test("Ignore attribute always extra price with combo", async () => {
     );
     order.setOrderPrices();
     expect(order.amount_total).toBe(comboProduct.lst_price);
+});
+
+describe("multi-currency payments", () => {
+    // 1 Ⓐ = 15 $ and 1 $ = 15 Ⓑ, see setupMultiCurrency
+    const setup = async (price) => {
+        const store = await setupPosEnv();
+        const currencies = setupMultiCurrency(store);
+        const order = await createOrderWithPrice(store, price);
+        const card = store.models["pos.payment.method"].get(2);
+        return { store, order, card, ...currencies };
+    };
+
+    describe("getRemainingDueCurrency", () => {
+        test("without payment, the total converted in the currency", async () => {
+            const { order, usd, xtb, xta } = await setup(136.57);
+
+            expect(order.getRemainingDueCurrency(usd)).toBe(136.57);
+            expect(order.getRemainingDueCurrency(xtb)).toBe(2048.55);
+            expect(order.getRemainingDueCurrency(xta)).toBe(9.1);
+        });
+
+        test("lines in the same currency count for their own amount", async () => {
+            const { order, card, usd, xtb } = await setup(9.11);
+            const line = order.addPaymentline(card, { currency: xtb }).data;
+            line.setAmount(100, xtb);
+
+            expect(line.amount).toBe(6.67);
+            // Not 2.44 $ converted back (36.60 Ⓑ)
+            expect(order.getRemainingDueCurrency(xtb)).toBe(36.65);
+            expect(order.getRemainingDueCurrency(usd)).toBe(2.44);
+        });
+
+        test("lines in another currency are converted", async () => {
+            const { order, card, xtb, xta } = await setup(136.57);
+            order.addPaymentline(card).data.setAmount(100);
+
+            // 36.57 $ left converted once (2.438 Ⓐ), not 9.10 Ⓐ - 6.67 Ⓐ (100 $) = 2.43 Ⓐ
+            expect(order.getRemainingDueCurrency(xta)).toBe(2.44);
+            expect(order.getRemainingDueCurrency(xtb)).toBe(548.55);
+        });
+
+        test("ignores lines not done and change lines", async () => {
+            const { order, card, xta } = await setup(136.57);
+            const line = order.addPaymentline(card, { currency: xta }).data;
+            line.setAmount(5, xta);
+
+            line.payment_status = "pending";
+            expect(order.getRemainingDueCurrency(xta)).toBe(9.1);
+
+            line.payment_status = "done";
+            expect(order.getRemainingDueCurrency(xta)).toBe(4.1);
+
+            line.is_change = true;
+            expect(order.getRemainingDueCurrency(xta)).toBe(9.1);
+        });
+
+        test("negative when the order is overpaid", async () => {
+            const { order, card, xta } = await setup(136.57);
+            order.addPaymentline(card, { currency: xta }).data.setAmount(10, xta);
+
+            expect(order.getRemainingDueCurrency(xta)).toBe(-0.9);
+        });
+    });
+
+    test("getDefaultAmountDueToPayIn", async () => {
+        const { order, card, usd, xtb } = await setup(9.11);
+        order.addPaymentline(card, { currency: xtb }).data.setAmount(100, xtb);
+
+        expect(order.getDefaultAmountDueToPayIn(card)).toBe(2.44);
+        expect(order.getDefaultAmountDueToPayIn(card, usd)).toBe(2.44);
+        expect(order.getDefaultAmountDueToPayIn(card, xtb)).toBe(36.65);
+    });
+
+    describe("addPaymentline in a foreign currency", () => {
+        for (const [price, amountCurrency] of [
+            [136.57, 9.1], // 9.104666... Ⓐ = 136.50 $
+            [136.6, 9.11], // 9.106666... Ⓐ = 136.65 $
+            [136.65, 9.11],
+        ]) {
+            test(`pays exactly a $${price} order`, async () => {
+                const { order, card, xta } = await setup(price);
+                const line = order.addPaymentline(card, { currency: xta }).data;
+
+                expect(line.foreign_currency_id.id).toBe(xta.id);
+                expect(line.amount_currency).toBe(amountCurrency);
+                expect(line.amount).toBe(price);
+                expect(order.amountPaid).toBe(price);
+                expect(order.remainingDue).toBe(0);
+                expect(order.change).toBe(0);
+                expect(order.getRemainingDueCurrency(xta)).toBe(0);
+            });
+        }
+
+        test("pays the rest after a partial payment in the same currency", async () => {
+            const { order, card, xtb } = await setup(9.11);
+            order.addPaymentline(card, { currency: xtb }).data.setAmount(100, xtb);
+            const line = order.addPaymentline(card, { currency: xtb }).data;
+
+            expect(line.amount_currency).toBe(36.65);
+            expect(line.amount).toBe(2.44);
+            expect(order.amountPaid).toBe(9.11);
+            expect(order.remainingDue).toBe(0);
+            expect(order.change).toBe(0);
+        });
+
+        test("pays the rest after two lines in the same currency", async () => {
+            const { order, card, xta } = await setup(136.57);
+            const line1 = order.addPaymentline(card, { currency: xta }).data;
+            line1.setAmount(5, xta);
+
+            expect(line1.amount).toBe(75);
+
+            const line2 = order.addPaymentline(card, { currency: xta }).data;
+
+            expect(line2.amount_currency).toBe(4.1);
+            // 4.10 Ⓐ = 61.50 $, booked as the 61.57 $ left to pay
+            expect(line2.amount).toBe(61.57);
+            expect(order.amountPaid).toBe(136.57);
+            expect(order.remainingDue).toBe(0);
+            expect(order.change).toBe(0);
+        });
+
+        test("pays the rest after a payment in the POS currency", async () => {
+            const { order, card, xta } = await setup(136.57);
+            order.addPaymentline(card).data.setAmount(100);
+            const line = order.addPaymentline(card, { currency: xta }).data;
+
+            expect(line.amount_currency).toBe(2.44);
+            // 2.44 Ⓐ = 36.60 $, booked as the 36.57 $ left to pay
+            expect(line.amount).toBe(36.57);
+            expect(order.amountPaid).toBe(136.57);
+            expect(order.remainingDue).toBe(0);
+            expect(order.change).toBe(0);
+        });
+
+        test("pays a refund exactly", async () => {
+            const { order, card, xta } = await setup(136.57);
+            order.lines[0].setQuantity(-1);
+            const line = order.addPaymentline(card, { currency: xta }).data;
+
+            expect(order.totalDue).toBe(-136.57);
+            expect(line.amount_currency).toBe(-9.1);
+            expect(line.amount).toBe(-136.57);
+            expect(order.remainingDue).toBe(0);
+            expect(order.change).toBe(0);
+        });
+    });
+
+    describe("remainingDueAmount", () => {
+        test("in the POS currency", async () => {
+            const { order, card } = await setup(136.57);
+            const line = order.addPaymentline(card).data;
+            line.setAmount(100);
+
+            expect(order.remainingDueAmount).toBe(36.57);
+
+            line.setAmount(150);
+            expect(order.remainingDueAmount).toBe(-13.43);
+        });
+
+        test("remaining in the currency of the first payment line", async () => {
+            const { order, card, xtb } = await setup(9.11);
+            order.addPaymentline(card, { currency: xtb }).data.setAmount(100, xtb);
+
+            expect(order.hasRemainingDue).toBe(true);
+            expect(order.remainingDueAmount).toBe(36.65);
+        });
+
+        test("change in the currency of the first payment line", async () => {
+            const { order, card, xta } = await setup(136.57);
+            const line = order.addPaymentline(card, { currency: xta }).data;
+            line.setAmount(10, xta);
+
+            expect(line.amount).toBe(150);
+            expect(order.change).toBe(-13.43);
+            expect(order.hasRemainingDue).toBe(false);
+            expect(order.remainingDueAmount).toBe(-0.9);
+        });
+
+        test("zero when paid in full in a foreign currency", async () => {
+            const { order, card, xta } = await setup(136.57);
+            order.addPaymentline(card, { currency: xta });
+
+            expect(order.hasRemainingDue).toBe(false);
+            expect(order.remainingDueAmount).toBe(0);
+        });
+    });
 });

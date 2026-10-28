@@ -78,21 +78,22 @@ export class PosPayment extends Base {
     }
 
     setAmount(value, currency = this.pos_order_id.currency) {
-        this.pos_order_id.assertEditable();
-        const orderCurrency = this.pos_order_id.currency;
+        const order = this.pos_order_id;
+        order.assertEditable();
+        const orderCurrency = order.currency;
 
         if (currency.id !== orderCurrency.id) {
-            this.amount_currency = parseFloat(value) || 0;
-            const amountInCompanyCurrency = this.currency.convertToDefaultCurrency(
-                this.amount_currency
-            );
-            this.amount = orderCurrency.round(orderCurrency.convert(amountInCompanyCurrency));
+            this.amount_currency = currency.round(parseFloat(value) || 0);
+            this.amount = orderCurrency.convert(this.amount_currency, currency);
+
+            // When this line settles the order in its own currency, book the exact amount due
+            // in the POS currency: the converted amount can be a few cents off.
+            if (currency.isZero(order.getRemainingDueCurrency(currency))) {
+                this.amount = orderCurrency.round(this.amount + order.totalDue - order.amountPaid);
+            }
         } else {
             this.amount = orderCurrency.round(parseFloat(value) || 0);
-            this.amount_currency = this.pos_order_id.convertAmountToCurrency(
-                this.amount,
-                this.currency
-            );
+            this.amount_currency = order.convertAmountToCurrency(this.amount, this.currency);
         }
     }
 
