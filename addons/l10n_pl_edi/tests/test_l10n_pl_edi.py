@@ -657,6 +657,19 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         self.assertEqual(invoice.l10n_pl_edi_ref, False)
         self.assertEqual(invoice.l10n_pl_edi_attachment_id.name, False)
 
+    def test_l10n_pl_edi_get_invoice_upo_twice(self):
+        invoice = self.standard_invoice
+        invoice.action_post()
+        invoice.write({'l10n_pl_edi_ref': '999999', 'l10n_pl_edi_status': 'accepted'})
+
+        with patch.object(KsefApiService, 'get_invoice_upo', return_value=b'<UPO>1</UPO>'):
+            invoice.action_l10n_pl_edi_get_invoice_UPO()
+        self.assertIn(b'<UPO>1</UPO>', invoice.l10n_pl_edi_upo_file.content)
+
+        with patch.object(KsefApiService, 'get_invoice_upo', return_value=b'<UPO>2</UPO>'):
+            invoice.action_l10n_pl_edi_get_invoice_UPO()
+        self.assertIn(b'<UPO>2</UPO>', invoice.l10n_pl_edi_upo_file.content)
+
     def test_l10n_pl_edi_download_bill_success(self):
 
         def query_invoice_metadata(query_criteria, page_size=100, page_offset=0):
