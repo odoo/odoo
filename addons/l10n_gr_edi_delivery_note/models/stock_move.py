@@ -21,12 +21,12 @@ class StockMove(models.Model):
         store=True,
     )
 
-    @api.depends('picking_id.is_greek_company', 'uom_id')
+    @api.depends('picking_id.is_greek_company', 'product_id', 'product_id.uom_id')
     def _compute_l10n_gr_edi_measurement_unit(self):
         uom_map = {name: code for code, name in MEASUREMENT_UNIT_SELECTION}
         for move in self:
-            if move.picking_id.is_greek_company and move.uom_id:
-                move.l10n_gr_edi_measurement_unit = uom_map.get(move.uom_id.with_context(lang='en_US').name)
+            if move.picking_id.is_greek_company and move.product_id.uom_id:
+                move.l10n_gr_edi_measurement_unit = uom_map.get(move.product_id.uom_id.with_context(lang='en_US').name)
             else:
                 move.l10n_gr_edi_measurement_unit = False
 

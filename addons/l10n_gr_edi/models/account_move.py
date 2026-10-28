@@ -2,6 +2,7 @@ from urllib.parse import urlencode
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools.sql import column_exists, create_column
 
 from odoo.addons.l10n_gr_edi import utils
 from odoo.addons.l10n_gr_edi.models.l10n_gr_edi_document import _make_mydata_request

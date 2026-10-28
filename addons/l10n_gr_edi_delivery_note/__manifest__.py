@@ -15,7 +15,7 @@
         'views/res_partner_views.xml',
         'views/stock_picking_views.xml',
         'views/report_deliveryslip.xml',
-        'security/ir.access.csv',
+        # 'security/ir.model.access.csv',
     ],
     'auto_install': True,
     'license': 'LGPL-3',
