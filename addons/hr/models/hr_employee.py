@@ -130,6 +130,7 @@ class HrEmployee(models.Model):
         ('present', 'Present'),
         ('absent', 'Absent'),
         ('out_of_working_hour', 'Off-Hours')], compute='_compute_presence_state', compute_sql='_compute_sql_presence_state', compute_sudo=False, default='out_of_working_hour')
+    is_off_hours = fields.Boolean(compute='_compute_is_off_hours')
     last_activity = fields.Date(compute="_compute_last_activity")
     last_activity_time = fields.Char(compute="_compute_last_activity")
     hr_icon_display = fields.Selection([
@@ -1316,7 +1317,6 @@ class HrEmployee(models.Model):
     def _compute_restricted_phone_companion_fields(self):
         self._phone_update_companion_fields(('emergency_phone', 'private_phone'))
 
-    @api.model
     def _get_employee_working_now(self):
         """Return the ids of the employees of ``self`` expected to work now.
 
@@ -1324,16 +1324,20 @@ class HrEmployee(models.Model):
         work intervals within the next hour (in the employee's timezone).
         Intervals are computed per calendar, so only company-wide leaves are
         considered, not the employee's own time off. Employees without
-        calendar are never returned. Despite ``@api.model``, it works on ``self``.
+        calendar are never returned.
 
         :rtype: list[int]
         """
+        return self._get_employee_working_at(fields.Datetime.now())
+
+    def _get_employee_working_at(self, dt):
+        """Same as :meth:`_get_employee_working_now`, at the naive UTC datetime ``dt``."""
         working_now = []
         # We loop over all the employee tz and the resource calendar_id to detect working hours in batch.
         for tz_info, employee_ids in self.filtered('resource_calendar_id').grouped('tz').items():
             calendar_by_employee = employee_ids.grouped('resource_calendar_id')
             tz = ZoneInfo(tz_info or 'UTC')
-            from_datetime = fields.Datetime.now().replace(tzinfo=UTC).astimezone(tz)
+            from_datetime = dt.replace(tzinfo=UTC).astimezone(tz)
             to_datetime = from_datetime + timedelta(hours=1)
             for calendar_id, res_employee_ids in calendar_by_employee.items():
                 # Getting work interval of the first is working. Functions called on resource_calendar_id
@@ -1344,6 +1348,34 @@ class HrEmployee(models.Model):
                     # The employees should be working now according to their work schedule
                     working_now += res_employee_ids.ids
         return working_now
+
+    def _get_next_working_change(self, after):
+        """Return the first moment after ``after`` at which ``_get_employee_working_at`` may
+        change for these employees, within a week, or None."""
+        after_utc = after.replace(tzinfo=UTC)
+        changes = []
+        for tz_info, employees in self.filtered("resource_calendar_id").grouped("tz").items():
+            from_datetime = after_utc.astimezone(ZoneInfo(tz_info or "UTC"))
+            for calendar in employees.resource_calendar_id:
+                intervals = calendar._work_intervals_batch(
+                    from_datetime, from_datetime + timedelta(days=7)
+                )[False]
+                for start, stop, _record in intervals:
+                    # working means a work interval within the next hour
+                    changes += [start - timedelta(hours=1), stop]
+        return min(
+            (
+                change.astimezone(UTC).replace(tzinfo=None)
+                for change in changes
+                if change > after_utc
+            ),
+            default=None,
+        )
+
+    def _compute_is_off_hours(self):
+        working_now = set(self._get_employee_working_now())
+        for employee in self:
+            employee.is_off_hours = employee.id not in working_now
 
     @api.depends('user_id.im_status')
     def _compute_presence_state(self):
@@ -3240,6 +3272,7 @@ class HrEmployee(models.Model):
         res.extend([
             "active",
             "company_id",
+            "is_off_hours",
             "work_location_type",
         ])
 

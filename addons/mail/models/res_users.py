@@ -2,6 +2,7 @@
 
 from collections import defaultdict
 import contextlib
+from datetime import timedelta
 
 from odoo import _, api, Command, fields, models, modules, tools
 from odoo.exceptions import UserError
@@ -494,6 +495,48 @@ class ResUsers(models.Model):
         res.attr("im_status")
         res.attr("im_status_access_token", lambda p: p._get_im_status_access_token())
         res.one("partner_id", "_store_im_status_fields")
+        res.from_method("_store_is_in_call_fields")
+
+    @api.model
+    def _cron_send_im_status_changes(self):
+        # cr.now(): same clock as `lastcall`, which ir.cron sets before this transaction
+        # starts, so consecutive windows overlap instead of leaving a gap
+        until = self.env.cr.now()
+        since = self.env.context.get("lastcall") or until - timedelta(minutes=1)
+        self._add_im_status_changes(Store.Stores(), since, until)
+        if next_change := self._get_next_im_status_change(until):
+            # not filtered on now: a change that passed during this run must still run
+            self.env.ref("mail.ir_cron_send_im_status_changes")._trigger(
+                next_change + timedelta(seconds=1)
+            )
+
+    @api.model
+    def _add_im_status_changes(self, stores, since, until):
+        """Add to ``stores`` the im_status flags that changed between ``since`` and ``until``,
+        only for the records whose flag changed and only with that flag. Each record goes to
+        the ``(user, "presence_internal")`` store of the user it belongs to."""
+
+    @api.model
+    def _get_next_im_status_change(self, after):
+        """Return the first moment after ``after`` at which an im_status flag may change,
+        or None."""
+        return None
+
+    @api.model
+    def _trigger_im_status_changes_at(self, datetimes):
+        cron = self.env.ref(
+            "mail.ir_cron_send_im_status_changes", raise_if_not_found=False
+        )
+        now = fields.Datetime.now()
+        # boundaries are inclusive: run just after them
+        if cron and (
+            at_list := [dt + timedelta(seconds=1) for dt in datetimes if dt >= now]
+        ):
+            cron._trigger(at_list)
+
+    def _store_is_in_call_fields(self, res: Store.FieldList):
+        # sudo: res.partner - is_in_call is restricted to group_system
+        res.attr("is_in_call", lambda u: u.partner_id.sudo().is_in_call)
 
     def _store_manual_im_status_fields(self, res: Store.FieldList):
         res.attr("im_status")

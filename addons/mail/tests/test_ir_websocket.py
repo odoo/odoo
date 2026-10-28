@@ -80,6 +80,38 @@ class TestIrWebsocket(WebsocketCase):
                 timeout_occurred = True
             self.assertTrue(timeout_occurred)
 
+    def _subscribe_presence_and_notify(self, login, groups, channel_suffix):
+        """Subscribe ``login`` to the presence channel of bob, then notify the internal presence
+        channel of bob and his presence channel, in that order, dispatching each one."""
+        bob = new_test_user(self.env, login="bob_user", groups="base.group_user")
+        new_test_user(self.env, login=login, groups=groups)
+        session = self.authenticate(login, login)
+        websocket = self.websocket_connect(cookie=f"session_id={session.sid};")
+        self.subscribe(
+            websocket,
+            [f"odoo-presence-res.users_{bob.id}{channel_suffix(bob)}"],
+            self.env["bus.bus"]._bus_last_id(),
+        )
+        bob._bus_send("internal_check", None, subchannel="presence_internal")
+        self.trigger_notification_dispatching()
+        bob._bus_send("presence_check", None, subchannel="presence")
+        self.trigger_notification_dispatching()
+        return json.loads(websocket.recv())
+
+    def test_presence_internal_for_internal_users(self):
+        notifications = self._subscribe_presence_and_notify(
+            "alice_user", "base.group_user", lambda bob: ""
+        )
+        self.assertEqual(notifications[0]["message"]["type"], "internal_check")
+
+    def test_presence_internal_for_token_holders(self):
+        notifications = self._subscribe_presence_and_notify(
+            "portal_user",
+            "base.group_portal",
+            lambda bob: f"-{bob._get_im_status_access_token()}",
+        )
+        self.assertEqual(notifications[0]["message"]["type"], "presence_check")
+
     def test_subscribe_discuss_category_without_token(self):
         new_test_user(self.env, login="bob_user", groups="base.group_user")
         session = self.authenticate("bob_user", "bob_user")

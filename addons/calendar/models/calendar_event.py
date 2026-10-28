@@ -231,7 +231,7 @@ class CalendarEvent(models.Model):
         help="Start date of an event, without time for full days events")
     stop = fields.Datetime(
         'Stop', required=True, tracking=True, default=_default_stop,
-        compute='_compute_stop', readonly=False, store=True,
+        compute='_compute_stop', readonly=False, store=True, index=True,
         help="Stop date of an event, without time for full days events")
     display_time = fields.Char('Event Time', compute='_compute_display_time')
     allday = fields.Boolean('All Day Duration', default=False)
@@ -1023,6 +1023,10 @@ class CalendarEvent(models.Model):
 
         update_alarms = False
         update_time = False
+        im_status_changed = values.keys() & (
+            self._get_time_fields() | {"show_as", "is_draft", "active"}
+        )
+        busy_before = im_status_changed and self.attendee_ids._get_ongoing_busy_partners()
         self._set_videocall_location([values])
         if values.get('partner_ids'):
             if values['partner_ids'] and isinstance(values['partner_ids'][0], int):
@@ -1124,7 +1128,18 @@ class CalendarEvent(models.Model):
             ])
             recurrences._select_new_base_event()
 
+        if im_status_changed:
+            self._trigger_im_status_changes()
+            busy_after = self.attendee_ids._get_ongoing_busy_partners()
+            self.env["res.users"]._send_is_in_meeting(
+                (busy_before - busy_after) | (busy_after - busy_before)
+            )
         return True
+
+    def _trigger_im_status_changes(self):
+        self.env["res.users"]._trigger_im_status_changes_at(
+            self.mapped("start") + self.mapped("stop")
+        )
 
     def _check_private_event_conditions(self):
         """ Returning True if the event should be considered private and False otherwise.
@@ -1206,8 +1221,10 @@ class CalendarEvent(models.Model):
             ('base_event_id', 'in', [e.id for e in self])
         ])
         videocall_channels = self.videocall_channel_id
+        busy_partners = self.attendee_ids._get_ongoing_busy_partners()
 
         result = super().unlink()
+        self.env["res.users"]._send_is_in_meeting(busy_partners)
 
         if recurrences:
             recurrences._select_new_base_event()

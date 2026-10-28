@@ -5,6 +5,7 @@ import { CalendarUser } from "./mock_server/mock_models/calendar_user";
 import { CalendarEvent } from "./mock_server/mock_models/calendar_event";
 import { CalendarFilters } from "./mock_server/mock_models/calendar_filters";
 import { ResUsers } from "./mock_server/mock_models/res_users";
+import { ResPartner } from "./mock_server/mock_models/res_partner";
 import { MailActivity } from "./mock_server/mock_models/mail_activity";
 
 import { mailModels } from "@mail/../tests/mail_test_helpers";
@@ -23,6 +24,7 @@ export const calendarModels = {
     CalendarFilters,
     DiscussChannel,
     ResUsers,
+    ResPartner,
     MailActivity,
 };
 

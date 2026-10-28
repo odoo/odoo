@@ -468,3 +468,41 @@ class ResUsers(models.Model):
         super()._store_im_status_fields(res)
         # sudo: res.users - internal users can access employee information for the IM status
         res.many("all_employee_ids", "_store_im_status_fields", sudo=True)
+
+    @api.model
+    def _add_im_status_changes(self, stores, since, until):
+        super()._add_im_status_changes(stores, since, until)
+        employees = self._get_im_status_employees()
+        working_until = set(employees._get_employee_working_at(until))
+        changed = set(employees._get_employee_working_at(since)) ^ working_until
+        for is_off_hours, flipped in (
+            employees.browse(changed)
+            .grouped(lambda e: e.id not in working_until)
+            .items()
+        ):
+            for employee in flipped:
+                stores[employee.user_id, "presence_internal"].add(
+                    employee, {"is_off_hours": is_off_hours}
+                )
+
+    @api.model
+    def _get_next_im_status_change(self, after):
+        return min(
+            filter(
+                None,
+                [
+                    super()._get_next_im_status_change(after),
+                    self._get_im_status_employees()._get_next_working_change(after),
+                ],
+            ),
+            default=None,
+        )
+
+    @api.model
+    def _get_im_status_employees(self):
+        # sudo: hr.employee - im_status flags are sent to the internal presence channels
+        return (
+            self.env["hr.employee"]
+            .sudo()
+            .search([("user_id", "!=", False), ("user_id.share", "=", False)])
+        )
