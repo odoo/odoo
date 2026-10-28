@@ -47,6 +47,33 @@ class TestMailMessage(common.MailCommon, HttpCase):
         )
         self.assertEqual([message["id"] for message in data["mail.message"]], readable.ids)
 
+    @users("employee")
+    def test_messaging_menu_initialize_counters(self):
+        self.authenticate(self.env.user.login, self.env.user.login)
+        partner = self.env.user.partner_id
+        Message = self.env["mail.message"].sudo()
+        values = {"model": "res.partner", "res_id": partner.id, "body": "Hey"}
+        bookmarked = Message.create({**values, "bookmarked_partner_ids": [(4, partner.id)]})
+        notified = Message.create({
+            **values,
+            "notification_ids": [(0, 0, {"res_partner_id": partner.id, "notification_type": "inbox"})],
+        })
+        Message.create(values)
+        data = self.make_jsonrpc_request(
+            "/mail/store",
+            {"fetch_params": [[
+                "/mail/messaging_menu/initialize_counters",
+                {"filter_id_by_tab_id_by_record_type": {
+                    "mail.message": {"bookmark": None, "notification": "notification_unread"},
+                }},
+            ]]},
+        )
+        counter_ids_by_tab = {
+            tab["id"]: tab["init_counter_ids"] for tab in data["MessagingMenuTab"]
+        }
+        self.assertEqual(counter_ids_by_tab["bookmark"], bookmarked.ids)
+        self.assertEqual(counter_ids_by_tab["notification"], notified.ids)
+
     def test_mail_message_read_inexisting(self):
         user = new_test_user(self.env, login="Bob", email="bob@test.com")
         inexisting_message = self.env['mail.message'].with_user(user).browse(-434264)
