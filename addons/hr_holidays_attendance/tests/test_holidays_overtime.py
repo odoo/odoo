@@ -479,6 +479,22 @@ class TestHolidaysOvertime(HttpCase):
             "get_overtime_data_by_employee() did not return the expected values",
         )
 
+    def test_get_overtime_data_by_employee_approved_only(self):
+        """Check that the extra hours balance only counts approved extra hours."""
+        self.company.attendance_overtime_validation = 'by_manager'
+        self.new_attendance(check_in=datetime(2021, 1, 2, 8), check_out=datetime(2021, 1, 2, 12))
+        self.new_attendance(check_in=datetime(2021, 1, 3, 8), check_out=datetime(2021, 1, 3, 12))
+        self.new_attendance(check_in=datetime(2021, 1, 9, 8), check_out=datetime(2021, 1, 9, 12))
+        approved_overtime, refused_overtime, _pending_overtime = self.employee.overtime_ids.sorted('date')
+        approved_overtime.action_approve()
+        refused_overtime.action_refuse()
+
+        self.assertDictEqual(self.employee.get_overtime_data_by_employee()[self.employee.id], {
+            'compensable_overtime': 4.0,
+            'not_compensable_overtime': 0,
+            'unspent_compensable_overtime': 4.0,
+        })
+
     def test_overtime_update_after_leave(self):
         self.employee.ruleset_id = self.ruleset_with_timing_rule
 
