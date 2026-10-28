@@ -25,11 +25,12 @@
                         Register it with the Autoridade Tributária before sending or printing.
                     </div>
                 </xpath>
-                <!-- Hide Cancel button for PT moves and instead show a Cancel button calling the cancellation wizard -->
-                <xpath expr="//button[@name='button_cancel'][@invisible=&quot;not id or state != &apos;draft&apos; or move_type == &apos;entry&apos;&quot;]" position="attributes">
+                <!-- Hide Cancel button for PT moves and instead show a Cancel button calling the cancellation wizard.
+                     Core has two button_cancel, told apart only by their condition: this is the invoices' one. -->
+                <xpath expr="//button[@name='button_cancel'][contains(@invisible, &quot;move_type == &apos;entry&apos;&quot;)]" position="attributes">
                     <attribute name="invisible">not id or state != 'draft' or move_type == 'entry' or (country_code == 'PT' and (l10n_pt_document_number or (posted_before and l10n_pt_at_series_id)))</attribute>
                 </xpath>
-                <xpath expr="//button[@name='button_cancel']" position="after">
+                <xpath expr="//button[@name='button_cancel'][contains(@invisible, &quot;move_type == &apos;entry&apos;&quot;)]" position="after">
                     <button name="%(l10n_pt_certification.action_l10n_pt_cancel)d"
                             string="Cancel"
                             type="action"
@@ -76,7 +77,7 @@
                 </xpath>
                 <!-- Add PT Info tab in Receipts -->
                 <xpath expr="//page[@id='aml_tab']" position="after">
-                    <page id="other_tab"
+                    <page id="l10n_pt_receipt_tab"
                           string="Portugal Info"
                           name="portugal_info"
                           invisible="move_type != 'out_receipt' or country_code != 'PT'">

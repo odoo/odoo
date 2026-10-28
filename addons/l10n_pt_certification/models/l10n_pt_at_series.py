@@ -4,12 +4,12 @@ import re
 
 import requests
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import zeep
 from odoo.tools.misc import format_date
-from odoo.tools.zeep.exceptions import Fault
+from odoo.tools.zeep.exceptions import Error as ZeepError, Fault
 
 from odoo.addons.certificate.tools import CertificateAdapter
 from odoo.addons.l10n_pt_certification.const import (
@@ -87,9 +87,11 @@ class L10nPtATSeries(models.Model):
         store=True,
     )
 
-    _type_per_series_uniq = models.Constraint(
-        'unique(document_type, name, company_id)',
-        "This document type already exists for this series name in this company.",
+    # Case-insensitive, as the series' number sequence is keyed on its lowercased name
+    # (`_l10n_pt_get_document_number_sequence`).
+    _type_per_series_name_uniq = models.UniqueIndex(
+        '(document_type, lower(name), company_id)',
+        "This document type already exists for this series name in this company (names are not case-sensitive).",
     )
     _prefix_per_series_uniq = models.Constraint(
         'unique(prefix, name, company_id)',
@@ -100,6 +102,7 @@ class L10nPtATSeries(models.Model):
         "The AT code must be unique.",
     )
 
+    @api.depends('date_end')
     def _compute_active(self):
         today = fields.Date.today()
         for at_series in self:
@@ -111,7 +114,7 @@ class L10nPtATSeries(models.Model):
         if isinstance(value, bool):
             value = {value}
         if operator not in ['not in', 'in', '=', '!=']:
-            raise ValueError(_('Operator (%s) is not supported', operator))
+            raise ValueError(self.env._('Operator (%s) is not supported', operator))
         today = fields.Date.today()
         active_domain = Domain.OR([
             Domain('date_end', '=', False),
@@ -153,22 +156,22 @@ class L10nPtATSeries(models.Model):
     @api.model
     def _l10n_pt_validity_domain(self, date, prefix=''):
         """
-        ``_l10n_pt_is_valid_on`` as a domain, in prefix notation so call sites can spread it.
+        ``_l10n_pt_is_valid_on`` as a domain.
 
         ``prefix`` traverses to the series from a related model, e.g. ``'l10n_pt_at_series_id.'``.
         """
-        return [
-            '|', (f'{prefix}date_start', '=', False), (f'{prefix}date_start', '<=', date),
-            '|', (f'{prefix}date_end', '=', False), (f'{prefix}date_end', '>=', date),
-        ]
+        return (
+            (Domain(f'{prefix}date_start', '=', False) | Domain(f'{prefix}date_start', '<=', date))
+            & (Domain(f'{prefix}date_end', '=', False) | Domain(f'{prefix}date_end', '>=', date))
+        )
 
     @api.model
     def _l10n_pt_company_domain(self, company):
-        return [
-            '|',
-            '&', ('company_id', '=', company.id), ('company_exclusive_series', '=', True),
-            '&', ('company_id', 'in', company.parent_ids.ids), ('company_exclusive_series', '=', False),
-        ]
+        """The series ``company`` may use: its own exclusive ones, and the shared ones of its parents (itself included)."""
+        return (
+            (Domain('company_id', '=', company.id) & Domain('company_exclusive_series', '=', True))
+            | (Domain('company_id', 'in', company.parent_ids.ids) & Domain('company_exclusive_series', '=', False))
+        )
 
     @api.depends('document_type')
     def _compute_document_type_name(self):
@@ -197,7 +200,7 @@ class L10nPtATSeries(models.Model):
     def _check_name(self):
         for series in self:
             if not re.match(r'^[a-zA-Z0-9]+$', series.name):
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "The name of the series (%s) is invalid. It must consist of only letters and numbers (e.g. 2025, 2025B).",
                     series.name
                 ))
@@ -206,23 +209,27 @@ class L10nPtATSeries(models.Model):
     def _check_prefix(self):
         for series in self:
             if not re.match(r'^[a-zA-Z0-9]+$', series.prefix):
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "The prefix of the series (%s) is invalid. It must consist of only letters and numbers (e.g. INV, RINV).",
                     series.prefix
                 ))
 
-    @api.constrains('document_type', 'journal_id', 'journal_id')
+    @api.constrains('document_type', 'journal_id')
     def _check_journal_requirements(self):
         for series in self:
             if series.document_type == 'payment_receipt' and not series.journal_id:
-                raise ValidationError(_("A Payment Journal is required when you have Payment Receipt lines."))
+                raise ValidationError(self.env._("A Payment Journal is required when you have Payment Receipt lines."))
             if series.document_type in {'out_receipt', 'out_invoice', 'out_invoice_receipt', 'out_refund', 'debit_note'} and not series.journal_id:
-                raise ValidationError(_("A Sales Journal is required for account move document types (FT, FS, NC, ND)."))
+                raise ValidationError(self.env._("A Sales Journal is required for account move document types (FT, FS, NC, ND)."))
 
     def _get_at_code(self):
+        """
+        The AT validation code of the series, for the ATCUD of a document numbered in it. Whether the
+        series may still number documents is checked where they take their number
+        (`_check_l10n_pt_at_series_id`): a document numbered while the series was valid keeps its
+        code after the series has ended, e.g. an invoice posted on its last day and issued later.
+        """
         self.ensure_one()
-        if not self.active:
-            raise UserError(_("The series %(prefix)s is not active.", prefix=self.prefix))
         if not self.at_code:
             raise self._l10n_pt_missing_at_code_warning()
         return self.at_code
@@ -234,13 +241,13 @@ class L10nPtATSeries(models.Model):
         """
         self.ensure_one()
         return RedirectWarning(
-            _(
+            self.env._(
                 "The AT series %(series)s has no AT validation code yet. Register it with the AT, or enter "
                 "the code obtained from the Portal das Finanças, before issuing documents in it.",
                 series=self.document_identifier,
             ),
             {
-                'name': _('AT Series'),
+                'name': self.env._('AT Series'),
                 'type': 'ir.actions.act_window',
                 'res_model': 'l10n_pt.at.series',
                 'res_id': self.id,
@@ -248,7 +255,7 @@ class L10nPtATSeries(models.Model):
                 'views': [(self.env.ref('l10n_pt_certification.view_l10n_pt_at_series_form').id, 'form')],
                 'target': 'new',
             },
-            _('Open the AT Series'),
+            self.env._('Open the AT Series'),
         )
 
     def _l10n_pt_get_document_number_sequence(self):
@@ -260,11 +267,12 @@ class L10nPtATSeries(models.Model):
 
         sequence_code = f'l10n_pt_certification.{self.document_type}_{self.name.lower()}_sequence'
 
-        if not (sequence := self.env['ir.sequence'].search([
+        sequence_sudo = self.env['ir.sequence'].sudo()
+        if not (sequence := sequence_sudo.search([
             ('code', '=', sequence_code),
             ('company_id', '=', self.company_id.id),
         ])):
-            return self.env['ir.sequence'].create({
+            sequence = sequence_sudo.create({
                 'name': f'{self.document_identifier} Sequence',
                 'implementation': 'no_gap',
                 'padding': 5,
@@ -272,7 +280,7 @@ class L10nPtATSeries(models.Model):
                 'company_id': self.company_id.id,
                 'code': sequence_code,
             })
-        return sequence
+        return sequence.sudo(False)
 
     @api.onchange('company_exclusive_series')
     def _onchange_company_exclusive_series(self):
@@ -297,9 +305,12 @@ class L10nPtATSeries(models.Model):
                 continue
             if not record.company_id.sudo().l10n_pt_at_ws_username:
                 continue
+            # A series is created whether or not the AT can be reached: it can be registered later,
+            # or its code entered by hand. What registering raises is logged.
             try:
-                record.action_register_at_series()
-            except Exception:
+                with self.env.cr.savepoint():
+                    record.action_register_at_series()
+            except (UserError, ValueError, OSError, ZeepError):
                 _logger.warning(
                     "Failed to auto-register AT series %(name)s (type: %(type)s)",
                     {'name': record.name, 'type': record.document_type},
@@ -352,12 +363,12 @@ class L10nPtATSeries(models.Model):
                     last_document_dates[series.id] = max(last_document_dates.get(series.id, last_date), last_date)
         for at_series in self:
             if not at_series.active:
-                raise UserError(_("The series %(series)s has ended and cannot be reopened.", series=at_series.document_identifier))
+                raise UserError(self.env._("The series %(series)s has ended and cannot be reopened.", series=at_series.document_identifier))
             if not date_end and at_series.date_end:
-                raise UserError(_("The end date of the series %(series)s cannot be removed.", series=at_series.document_identifier))
+                raise UserError(self.env._("The end date of the series %(series)s cannot be removed.", series=at_series.document_identifier))
             last_date = last_document_dates.get(at_series.id)
             if date_end and last_date and date_end < last_date:
-                raise UserError(_(
+                raise UserError(self.env._(
                     "The series %(series)s cannot end before its last document, dated %(date)s.",
                     series=at_series.document_identifier,
                     date=format_date(self.env, last_date),
@@ -369,9 +380,9 @@ class L10nPtATSeries(models.Model):
         if protected_fields & vals.keys() or {'at_code', 'date_end'} & vals.keys():
             used_series = self._l10n_pt_get_used()
             if used_series and protected_fields & vals.keys():
-                raise UserError(_("You cannot change the properties of a series in which documents were already issued."))
+                raise UserError(self.env._("You cannot change the properties of a series in which documents were already issued."))
             if 'at_code' in vals and used_series.filtered('at_code'):
-                raise UserError(_("You cannot change the AT Validation Code of a series in which documents were already issued."))
+                raise UserError(self.env._("You cannot change the AT Validation Code of a series in which documents were already issued."))
             if 'date_end' in vals:
                 used_series._l10n_pt_check_closing(vals['date_end'])
         return super().write(vals)
@@ -379,7 +390,7 @@ class L10nPtATSeries(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_used(self):
         if used_series := self._l10n_pt_get_used():
-            raise UserError(_(
+            raise UserError(self.env._(
                 "You cannot delete a series in which documents were already issued (%(series)s). "
                 "Set its End Date to close it.",
                 series=", ".join(used_series.mapped('document_identifier')),
@@ -389,7 +400,7 @@ class L10nPtATSeries(models.Model):
         self.ensure_one()
         mapping = PT_AT_DOCUMENT_TYPE_MAPPING.get(self.document_type)
         if not mapping:
-            raise UserError(_(
+            raise UserError(self.env._(
                 "Cannot register series of type '%(type)s' with the AT webservice.",
                 type=self.document_type
             ))
@@ -412,7 +423,7 @@ class L10nPtATSeries(models.Model):
             return
 
         if not comp.l10n_pt_at_ws_username or not comp.l10n_pt_at_ws_password:
-            raise UserError(_(
+            raise UserError(self.env._(
                 "The AT webservice credentials are not configured for company %(company)s. "
                 "Please configure them in the Accounting Settings.",
                 company=self.company_id.name,
@@ -423,7 +434,7 @@ class L10nPtATSeries(models.Model):
         # credential in clear text.
         public_cert = comp.l10n_pt_at_ws_public_cert_id.with_context(bin_size=False)
         if not public_cert.pem_certificate:
-            raise UserError(_(
+            raise UserError(self.env._(
                 "The AT public key certificate is not configured for company %(company)s. "
                 "It is required to encrypt the password sent to the Autoridade Tributária. "
                 "Please configure it in the Accounting Settings.",
@@ -461,27 +472,27 @@ class L10nPtATSeries(models.Model):
         except Fault as e:
             _logger.error('AT SeriesWS registarSerie SOAP fault: %s', e)
             raise UserError(
-                _("AT Series registration failed: %(error)s", error=str(e))
+                self.env._("AT Series registration failed: %(error)s", error=str(e))
             ) from e
         except (OSError, TimeoutError, requests.exceptions.SSLError) as e:
-            msg = _("Could not connect to the AT webservice.")
+            msg = self.env._("Could not connect to the AT webservice.")
             _logger.error(msg)
             raise UserError(msg) from e
 
         if not response or not hasattr(response, 'infoResultOper'):
-            raise UserError(_("AT Series registration returned an unexpected response."))
+            raise UserError(self.env._("AT Series registration returned an unexpected response."))
 
         info_result = response.infoResultOper
         if info_result.codResultOper != 2001:
             raise UserError(
-                _("AT Series registration error (%(code)s): %(message)s",
+                self.env._("AT Series registration error (%(code)s): %(message)s",
                   code=info_result.codResultOper,
                   message=info_result.msgResultOper or '')
             )
 
         info_serie = response.infoSerie if hasattr(response, 'infoSerie') else None
         if not info_serie or not hasattr(info_serie, 'codValidacaoSerie'):
-            raise UserError(_("AT Series registration succeeded but no validation code was returned."))
+            raise UserError(self.env._("AT Series registration succeeded but no validation code was returned."))
         return info_serie.codValidacaoSerie
 
     def get_formview_action(self):

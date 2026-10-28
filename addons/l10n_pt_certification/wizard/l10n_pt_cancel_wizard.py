@@ -1,4 +1,5 @@
 from odoo import fields, models
+from odoo.exceptions import UserError
 
 
 class L10nPtCancelWizard(models.TransientModel):
@@ -19,5 +20,7 @@ class L10nPtCancelWizard(models.TransientModel):
             res = records.with_context(allow_draft_hashed_entries=True).button_cancel()
         elif model == 'account.payment':
             res = records.action_cancel()
+        else:
+            raise UserError(self.env._("Only invoices and receipts can be cancelled with this wizard."))
         records.l10n_pt_cancel_reason = self.l10n_pt_cancel_reason.strip()
         return res

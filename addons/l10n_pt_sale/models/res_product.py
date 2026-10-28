@@ -11,7 +11,7 @@ class ProductTemplate(models.Model):
         pt_product_templates = self.filtered(lambda pt: not pt.company_id or pt.company_id.account_fiscal_country_id.code == 'PT')
         if (
                 pt_product_templates
-                and self.env['sale.order.line'].search_count([
+                and self.env['sale.order.line'].sudo().search_count([
                     ('product_id.product_tmpl_id', 'in', pt_product_templates.ids),
                     ('order_id.l10n_pt_inalterable_hash', '!=', False),
                     ('order_id.country_code', '=', 'PT'),

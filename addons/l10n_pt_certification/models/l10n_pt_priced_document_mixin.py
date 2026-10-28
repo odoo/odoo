@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.l10n_pt_certification.const import PT_QR_NOT_SUBJECT_EXEMPTION_REASONS
@@ -43,7 +43,7 @@ class L10nPtPricedDocumentMixin(models.AbstractModel):
         # The PT tax authority requires that discounts are in the range between 0% and 100%.
         for document in self.filtered(lambda d: d.country_code == 'PT'):
             if document.l10n_pt_global_discount < 0.0 or document.l10n_pt_global_discount > 100.0:
-                raise ValidationError(_("Discount amounts should be between 0% and 100%."))
+                raise ValidationError(self.env._("Discount amounts should be between 0% and 100%."))
 
     def _l10n_pt_get_vat_exemptions_reasons(self):
         """Every exemption reason carried by the lines holding an exempt tax, as printed: code and mention."""
@@ -175,7 +175,7 @@ class L10nPtPricedLineMixin(models.AbstractModel):
         # The PT tax authority requires that discounts are in the range between 0% and 100%.
         for line in self:
             if line.l10n_pt_line_discount < 0.0 or line.l10n_pt_line_discount > 100.0:
-                raise ValidationError(_("Discount amounts should be between 0% and 100%."))
+                raise ValidationError(self.env._("Discount amounts should be between 0% and 100%."))
 
     def _l10n_pt_get_line_vat_exemptions_reasons(self, as_string=True):
         """

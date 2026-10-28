@@ -222,7 +222,8 @@ class TestL10nPtAtSeries(TestL10nPtCommon):
         with self.assertRaisesRegex(UserError, "You cannot delete a series in which documents were already issued"):
             series.unlink()
 
-    def test_get_at_code_raises_when_inactive(self):
+    def test_get_at_code_of_ended_series(self):
+        # A document numbered before its series ended keeps the series' code (PT-108).
         inactive_series = self.env['l10n_pt.at.series'].create({
             'name': '2020A',
             'company_id': self.company_pt.id,
@@ -234,8 +235,7 @@ class TestL10nPtAtSeries(TestL10nPtCommon):
             'prefix': 'INA',
             'at_code': 'AT-INA2020A',
         })
-        with self.assertRaisesRegex(UserError, "The series.*is not active."):
-            inactive_series._get_at_code()
+        self.assertEqual(inactive_series._get_at_code(), 'AT-INA2020A')
 
     def test_journal_required_for_different_documents(self):
         with self.assertRaisesRegex(ValidationError, "A Payment Journal is required when you have Payment Receipt lines."):

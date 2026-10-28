@@ -8,5 +8,12 @@
             <field name="domain_force">[('company_id', 'parent_of', company_ids)]</field>
         </record>
 
+        <!-- The stored prints of PT documents, readable within the companies of the user. -->
+        <record id="l10n_pt_attachment_company_rule" model="ir.rule">
+            <field name="name">L10nPt Attachment multi-company</field>
+            <field name="model_id" ref="model_l10n_pt_attachment"/>
+            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+        </record>
+
     </data>
 </odoo>

@@ -1,4 +1,3 @@
-import json
 import re
 
 from stdnum.pt import nif
@@ -19,7 +18,6 @@ from odoo.addons.l10n_pt_certification.models.l10n_pt_at_series import (
 from odoo.addons.l10n_pt_certification.models.l10n_pt_document_mixin import (
     L10N_PT_DOCUMENT_NUMBER_RE,
 )
-from odoo.addons.l10n_pt_certification.utils import hashing as pt_hash_utils
 
 AT_SERIES_TYPE_SAFT_TYPE_MAP = {
     'out_invoice': 'FT',
@@ -179,12 +177,12 @@ class AccountMove(models.Model):
         return AT_SERIES_TYPE_SAFT_TYPE_MAP[self.l10n_pt_document_type]
 
     def _l10n_pt_qr_rate_date(self):
-        # The rate is taken at `date`, the accounting date, and deliberately not at the document
-        # date the rest of the QR code uses: the `O:` amount must equal the gross total that was
-        # signed, and core converts `amount_total_signed` at `date`. Converting at a different date
-        # would make the printed total disagree with the signature.
+        # The `O:` amount must equal the gross total that was signed, `amount_total_signed`, which core
+        # converts at the rate of the invoice date, else of the accounting date
+        # (`account.move.line._compute_currency_rate`). Converting at another date would make the
+        # printed total disagree with the signature.
         self.ensure_one()
-        return self.date
+        return self.invoice_date or self.date
 
     def _l10n_pt_qr_get_totals(self):
         self.ensure_one()
@@ -217,7 +215,7 @@ class AccountMove(models.Model):
     @api.model
     def _l10n_pt_numbered_domain(self):
         # EXTENDS l10n_pt_certification (mixin)
-        return ['|', *super()._l10n_pt_numbered_domain(), '&', ('posted_before', '=', True), ('l10n_pt_at_series_id', '!=', False)]
+        return super()._l10n_pt_numbered_domain() | (Domain('posted_before', '=', True) & Domain('l10n_pt_at_series_id', '!=', False))
 
     ####################################
     # OVERRIDES
@@ -519,7 +517,7 @@ class AccountMove(models.Model):
                 & Domain('sequence_number', '<', max(moves.mapped('sequence_number')))
                 for at_series, moves in to_issue.grouped('l10n_pt_at_series_id').items()
             )
-            & Domain(self._l10n_pt_numbered_domain())
+            & self._l10n_pt_numbered_domain()
             & Domain('state', 'in', ('posted', 'cancel'))
             & Domain('l10n_pt_document_number', '=', False),
         )
@@ -662,7 +660,7 @@ class AccountMove(models.Model):
             self.company_id,
             self.invoice_date or fields.Date.context_today(self)
         )
-        limit = self._l10n_pt_simplified_invoice_limit(self.invoice_line_ids.filtered(lambda l: l.display_type == 'product'))
+        limit = self._l10n_pt_simplified_invoice_limit(self._l10n_pt_get_lines())
         if total_amount_in_eur > limit:
             raise UserError(self.env._(
                 "A sales receipt (simplified invoice) cannot exceed %(limit)s EUR. "
@@ -725,8 +723,8 @@ class AccountMove(models.Model):
         pt_moves._check_reversal_amounts_and_quantities(only_reconciled=False)
 
     def action_open_reprint_wizard(self, action_to_return=None):
-        action = self.env.ref('l10n_pt_certification.action_open_reprint_wizard').read()[0]
-        action['context'] = dict(action_to_return=action_to_return, **json.loads(action.get('context', {})))
+        action = self.env['ir.actions.act_window']._for_xml_id('l10n_pt_certification.action_open_reprint_wizard')
+        action['context'] = {'action_to_return': action_to_return}
         return action
 
     ####################################
@@ -809,7 +807,7 @@ class AccountMove(models.Model):
             alpha_suffix = re.sub(r'[^a-zA-Z]', '', raw_suffix)
             series_name = f"{series_name}{alpha_suffix}"
 
-        return {
+        vals = {
             'name': series_name,
             'prefix': prefix,
             'document_type': self.l10n_pt_document_type,
@@ -818,6 +816,18 @@ class AccountMove(models.Model):
             'date_start': fields.Date.to_string(date_start),
             'date_end': fields.Date.to_string(date_end) if date_end else False,
         }
+        # A series name identifies it per document type (whatever its case) and per prefix within the
+        # company, whatever its journal: another journal's series of the same year would collide, so
+        # take the journal code. Proposed the same way to the user (the missing series warning) and
+        # to the PoS (`_l10n_pt_create_at_series`).
+        # sudo: a clash with any series of the company counts, ended or not, whatever the user may read.
+        if self.env['l10n_pt.at.series'].sudo().with_context(active_test=False).search_count([
+            ('company_id', '=', vals['company_id']),
+            ('name', '=ilike', vals['name']),
+            '|', ('document_type', '=', vals['document_type']), ('prefix', '=', vals['prefix']),
+        ], limit=1):
+            vals['name'] = re.sub(r'[^a-zA-Z0-9]', '', self.journal_id.code).upper() + vals['name']
+        return vals
 
     @api.model
     def _l10n_pt_find_at_series(self, company, journal, document_type, date):
@@ -851,18 +861,7 @@ class AccountMove(models.Model):
         draft.l10n_pt_document_type = document_type
         draft.l10n_pt_at_series_id = False
         draft.name = '/'
-        vals = draft._l10n_pt_prepare_at_series_vals()
-
-        at_series_model = self.env['l10n_pt.at.series'].sudo().with_context(active_test=False)
-        # A series name identifies it per document type (and per prefix) within the company, whatever
-        # its journal: another journal's series of the same year would collide, so take the journal code.
-        if at_series_model.search_count([
-            ('company_id', '=', vals['company_id']),
-            ('name', '=', vals['name']),
-            '|', ('document_type', '=', vals['document_type']), ('prefix', '=', vals['prefix']),
-        ], limit=1):
-            vals['name'] = re.sub(r'[^a-zA-Z0-9]', '', journal.code).upper() + vals['name']
-        return at_series_model.create(vals).sudo(False)
+        return self.env['l10n_pt.at.series'].sudo().create(draft._l10n_pt_prepare_at_series_vals()).sudo(False)
 
     @api.depends('move_type', 'l10n_pt_document_type', 'invoice_date', 'journal_id', 'company_id')
     def _compute_l10n_pt_at_series_id(self):
@@ -884,25 +883,23 @@ class AccountMove(models.Model):
                 )
             )
         )
-        for move in moves_to_compute:
+        for (company, journal, document_type, date), moves in moves_to_compute.grouped(
+            lambda m: (m.company_id, m.journal_id, m.l10n_pt_document_type, m.invoice_date or today)
+        ).items():
             # Get the last move with an AT series for this journal and document type
             last_move = self.env['account.move'].search([
-                ('id', '!=', move.id),
-                ('company_id', '=', move.company_id.id),
-                ('journal_id', '=', move.journal_id.id),
-                ('l10n_pt_document_type', '=', move.l10n_pt_document_type),
+                ('id', 'not in', moves._origin.ids),
+                ('company_id', '=', company.id),
+                ('journal_id', '=', journal.id),
+                ('l10n_pt_document_type', '=', document_type),
                 ('l10n_pt_at_series_id', '!=', False),
                 ('l10n_pt_at_series_id.active', '=', True),
-                *at_series_model._l10n_pt_validity_domain(
-                    move.invoice_date or today, prefix='l10n_pt_at_series_id.',
-                ),
+                *at_series_model._l10n_pt_validity_domain(date, prefix='l10n_pt_at_series_id.'),
             ], order='id desc', limit=1)
             # If no AT series used in a move in this journal, fallback to an active series for this journal
-            at_series = last_move.l10n_pt_at_series_id or self._l10n_pt_find_at_series(
-                move.company_id, move.journal_id, move.l10n_pt_document_type, move.invoice_date or today,
+            moves.l10n_pt_at_series_id = last_move.l10n_pt_at_series_id or self._l10n_pt_find_at_series(
+                company, journal, document_type, date,
             )
-
-            move.l10n_pt_at_series_id = at_series
 
     ####################################
     # HASH AND QR CODE
@@ -916,15 +913,8 @@ class AccountMove(models.Model):
     def _calculate_hashes(self, previous_hash=None):
         if self.company_id.account_fiscal_country_id.code != 'PT':
             return super()._calculate_hashes(previous_hash=previous_hash)
-        previous_hash = previous_hash.split("$")[2] if previous_hash else ""
-        self.l10n_pt_hashed_on = fields.Datetime.now()
-        docs_to_sign = [{
-            'id': move.id,
-            'sorting_key': move.sequence_number,
-            **pt_hash_utils.format_hash_values(move._l10n_pt_get_hash_values()),
-            'previous_signature': previous_hash,
-        } for move in self]
-        return pt_hash_utils.sign_records(self.env, docs_to_sign, 'account.move')
+        # Core chains the full hash ($version$signature); the signature is chained bare.
+        return self._l10n_pt_sign(previous_hash.split("$")[2] if previous_hash else "")
 
     @api.model
     def _l10n_pt_compute_missing_hashes(self):

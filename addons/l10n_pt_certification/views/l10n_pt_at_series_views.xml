@@ -74,7 +74,7 @@
                 <filter string="Non-Training Series" name="non_training_series" domain="[('training_series','=',False)]"/>
                 <separator/>
                 <filter name="active" string="Active" domain="[('active','=',True)]" help="Show active series"/>
-                <filter name="inactive" string="Archived" domain="[('active','=',False)]" help="Show archived series"/>
+                <filter name="inactive" string="Ended" domain="[('active','=',False)]" help="Show the series whose end date has passed"/>
                 <group>
                     <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                 </group>

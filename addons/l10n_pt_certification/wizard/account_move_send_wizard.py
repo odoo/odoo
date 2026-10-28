@@ -1,5 +1,3 @@
-import json
-
 from odoo import models
 
 
@@ -19,6 +17,6 @@ class AccountMoveSendWizard(models.TransientModel):
         return super().action_send_and_print(allow_fallback_pdf=allow_fallback_pdf)
 
     def action_open_reprint_wizard(self):
-        action = self.env.ref('l10n_pt_certification.action_open_reprint_wizard').read()[0]
-        action['context'] = dict(action_to_return='action_send_and_print', **json.loads(action.get('context', {})))
+        action = self.env['ir.actions.act_window']._for_xml_id('l10n_pt_certification.action_open_reprint_wizard')
+        action['context'] = {'action_to_return': 'action_send_and_print'}
         return action

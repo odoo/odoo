@@ -1,6 +1,6 @@
 from stdnum.pt import nif
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import AccessError, RedirectWarning, UserError
 from odoo.tools.misc import format_datetime
 
@@ -86,7 +86,7 @@ class ResCompany(models.Model):
             confirmed = root.l10n_pt_clock_confirmed_entry_date
             if last_date and now < last_date and not (confirmed and confirmed >= last_date):
                 raise RedirectWarning(
-                    _(
+                    self.env._(
                         "The system date and time (%(now)s) are earlier than those of the last document "
                         "issued (%(last)s). Check the clock of the server. If it is correct, confirm it, "
                         "then issue the document again.",
@@ -94,7 +94,7 @@ class ResCompany(models.Model):
                         last=format_datetime(self.env, last_date),
                     ),
                     self.env.ref('l10n_pt_certification.action_l10n_pt_confirm_system_clock').id,
-                    _("The clock is correct"),
+                    self.env._("The clock is correct"),
                 )
 
     def _l10n_pt_check_company_vat(self):
@@ -104,9 +104,9 @@ class ResCompany(models.Model):
         """
         if self.filtered(lambda company: not company.vat or not nif.is_valid(company.vat)):
             raise RedirectWarning(
-                _("Please define the VAT on your company (e.g. PT123456789)"),
+                self.env._("Please define the VAT on your company (e.g. PT123456789)"),
                 self.env.ref('base.action_res_company_form').id,
-                _("Company Settings"),
+                self.env._("Company Settings"),
             )
 
     @api.model
@@ -120,7 +120,7 @@ class ResCompany(models.Model):
             'tag': 'display_notification',
             'params': {
                 'type': 'success',
-                'message': _("The system date and time are confirmed. Issue the document again."),
+                'message': self.env._("The system date and time are confirmed. Issue the document again."),
                 'next': {'type': 'ir.actions.act_window_close'},
             },
         }
@@ -172,10 +172,12 @@ class ResCompany(models.Model):
         try:
             return super()._check_hash_integrity()
         except AccessError as e:
-            if self.account_fiscal_country_id.code == 'PT':
+            # The access error suggests a company only when the user can switch to it (`ir.rule`).
+            suggested_company = getattr(e, 'context', {}).get('suggested_company')
+            if self.account_fiscal_country_id.code == 'PT' and suggested_company:
                 raise UserError(
-                    _("This company has AT Series shared across branches, and other companies also have hashed documents under this series. "
-                      "To generate the report, please also select %s in the company selector.", e.context['suggested_company']['display_name']))
+                    self.env._("This company has AT Series shared across branches, and other companies also have hashed documents under this series. "
+                      "To generate the report, please also select %s in the company selector.", suggested_company['display_name'])) from e
             raise
 
     def _verify_hashed_move(self, move, previous_hash, versioning_list, current_versioning_index):

@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 
 from odoo.addons.l10n_pt_certification.const import PT_CERTIFICATION_NUMBER
@@ -8,7 +8,10 @@ class IrActionsReport(models.Model):
     _inherit = 'ir.actions.report'
 
     def _pre_render_qweb_pdf(self, report_ref, res_ids=None, data=None):
-        if len(res_ids) > 1:
+        # As core: a report can be rendered for a single id, or for no record at all (data only).
+        if isinstance(res_ids, int):
+            res_ids = [res_ids]
+        if res_ids and len(res_ids) > 1:
             # Check that, if multiple documents being printed, only PT companies are selected,
             # as mixing companies from different countries may lead to missing template elements.
             pt_companies = self.env.companies.filtered(lambda c: c.country_code == 'PT')
@@ -21,7 +24,7 @@ class IrActionsReport(models.Model):
                 and pt_companies
                 and pt_companies != self.env.companies
             ):
-                raise UserError(_("It is not possible to print documents with the template %s for Portuguese and "
+                raise UserError(self.env._("It is not possible to print documents with the template %s for Portuguese and "
                                   "non-Portuguese companies at the same time.", report.name))
         # Every print (printing, sending, downloading) goes through here, an HTML preview does not:
         # only a print counts towards the "Original" and "2ª Via" of a PT document.
@@ -40,7 +43,7 @@ class IrActionsReport(models.Model):
         if compute_hash:
             records._l10n_pt_compute_missing_hashes()
             for record in records:
-                record.l10n_pt_verify_prerequisites_qr_code()
+                record._l10n_pt_verify_prerequisites_qr_code()
 
     def _l10n_pt_invoice_report_compliance(self, report_ref, res_ids, data=None):
         """
@@ -56,17 +59,23 @@ class IrActionsReport(models.Model):
         invoices = self.env['account.move'].browse(res_ids)
         invoices._l10n_pt_issue()
         for invoice in invoices:
-            invoice.l10n_pt_verify_prerequisites_qr_code()
+            invoice._l10n_pt_verify_prerequisites_qr_code()
+
+    def _l10n_pt_hash_integrity_report_compliance(self, report_ref):
+        """
+        Sign the invoices still missing a hash before core's integrity report checks them. That
+        report is rendered for companies (``res.company`` docids), not for the invoices it covers.
+        """
+        if self._get_report(report_ref).report_name == 'account.report_hash_integrity':
+            self.env['account.move']._l10n_pt_compute_missing_hashes()
 
     def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
-        if self._get_report(report_ref).report_name == 'account.report_hash_integrity':
-            self._l10n_pt_report_compliance('account.move', res_ids, compute_hash=True)
+        self._l10n_pt_hash_integrity_report_compliance(report_ref)
         self._l10n_pt_invoice_report_compliance(report_ref, res_ids, data)
         return super()._render_qweb_pdf_prepare_streams(report_ref, data, res_ids)
 
     def _render_qweb_html(self, report_ref, docids, data=None):
-        if self._get_report(report_ref).report_name == 'account.report_hash_integrity':
-            self._l10n_pt_report_compliance('account.move', docids, compute_hash=True)
+        self._l10n_pt_hash_integrity_report_compliance(report_ref)
         self._l10n_pt_invoice_report_compliance(report_ref, docids, data)
         return super()._render_qweb_html(report_ref, docids, data=data)
 

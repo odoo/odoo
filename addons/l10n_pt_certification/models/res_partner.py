@@ -1,6 +1,6 @@
 import re
 
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 
 L10N_PT_GENERIC_NIF = '999999990'
@@ -20,7 +20,7 @@ class ResPartner(models.Model):
         number keeps its letters (NL000099998B57 gives 000099998B57). Empty without a number.
         """
         self.ensure_one()
-        vat = re.sub(r'[^0-9A-Z]', '', (self.vat or '').upper())
+        vat = _l10n_pt_normalize_vat(self.vat)
         return vat[2:] if re.match(r'^[A-Z]{2}', vat) else vat
 
     def _l10n_pt_has_nif(self):
@@ -69,7 +69,7 @@ class ResPartner(models.Model):
             return
         issued_to = (vat_changes | name_changes)._l10n_pt_partners_with_issued_documents()
         if vat_changes.filtered(lambda p: p.commercial_partner_id in issued_to.commercial_partner_id):
-            raise UserError(_("You cannot change the VAT number of a partner that already has issued documents."))
+            raise UserError(self.env._("You cannot change the VAT number of a partner that already has issued documents."))
         # The name printed on a document is that of its partner, or of the commercial entity above it.
         if name_changes.filtered(lambda p: p in issued_to or (p == p.commercial_partner_id and p in issued_to.commercial_partner_id)):
-            raise UserError(_("You cannot change the name of a partner without a VAT number that already has issued documents."))
+            raise UserError(self.env._("You cannot change the name of a partner without a VAT number that already has issued documents."))

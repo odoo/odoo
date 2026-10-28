@@ -8,13 +8,15 @@ class AccountPaymentRegister(models.TransientModel):
         comodel_name="l10n_pt.at.series",
         string="AT Series",
         compute='_compute_l10n_pt_at_series_id',
-        domain="[('journal_id', '=', available_l10n_pt_at_series_ids)]",
+        domain="[('id', 'in', available_l10n_pt_at_series_ids)]",
         readonly=False, store=True,
     )
     available_l10n_pt_at_series_ids = fields.Many2many('l10n_pt.at.series', compute="_compute_available_l10n_pt_at_series_ids")
 
     @api.depends('payment_type', 'journal_id')
     def _compute_available_l10n_pt_at_series_ids(self):
+        # Only a PT inbound payment is issued as a receipt (RG) in an AT series.
+        self.available_l10n_pt_at_series_ids = False
         inbound_wizards = self.filtered(lambda w: w.journal_id and w.payment_type == 'inbound' and w.country_code == 'PT')
         for journal, wizards in inbound_wizards.grouped('journal_id').items():
             wizards.available_l10n_pt_at_series_ids = self.env['l10n_pt.at.series'].search([
@@ -26,10 +28,10 @@ class AccountPaymentRegister(models.TransientModel):
 
     @api.depends('payment_type', 'company_id', 'journal_id')
     def _compute_l10n_pt_at_series_id(self):
-        for wizard in self.filtered(lambda w: w.country_code == 'PT'):
+        for wizard in self:
             available_series = wizard.available_l10n_pt_at_series_ids
             if not available_series:
-                wizard.l10n_pt_at_series_id = None
+                wizard.l10n_pt_at_series_id = False
                 continue
 
             # Get the last payment with an AT series

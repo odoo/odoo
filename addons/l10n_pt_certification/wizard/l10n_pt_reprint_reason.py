@@ -1,6 +1,7 @@
 from markupsafe import Markup
 
 from odoo import fields, models
+from odoo.exceptions import UserError
 
 
 class L10nPtReprintReason(models.TransientModel):
@@ -14,13 +15,21 @@ class L10nPtReprintReason(models.TransientModel):
 
     reason = fields.Char(string='Reason for reprinting the document', required=True)
 
+    def _l10n_pt_reprint_actions(self):
+        """The print actions the wizard resumes once the reason is given, by the model it was opened from."""
+        return {
+            'account.move': {'action_print_pdf'},
+            'account.move.send.wizard': {'action_send_and_print'},
+        }
+
     def _get_report_action(self, model, documents, action_name=None):
         documents = documents.with_context(has_reprint_reason=True)
         if model == 'account.payment':
             return self.env.ref('account.action_report_payment_receipt').report_action(documents)
-        # Action name is passed in the context when calling action_log_and_print, allowing the print flow to continue
-        action = getattr(documents, action_name)
-        return action()
+        # The action to resume comes from the context, i.e. from the client: only a known print action is run.
+        if action_name not in self._l10n_pt_reprint_actions().get(model, ()):
+            raise UserError(self.env._("These documents cannot be printed from here."))
+        return getattr(documents, action_name)()
 
     def action_log_and_print(self):
         active_ids = self.env.context.get('active_ids')

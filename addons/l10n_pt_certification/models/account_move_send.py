@@ -1,6 +1,6 @@
 from itertools import groupby
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import RedirectWarning, UserError
 
 from odoo.addons.l10n_pt_certification.utils import hashing as pt_hash_utils
@@ -77,11 +77,11 @@ class AccountMoveSend(models.AbstractModel):
             ])
             if langs:
                 alerts['l10n_pt_configure_partner_language'] = {
-                    'message': _("Some partners have a language with a date format that does not match Portugal's"
+                    'message': self.env._("Some partners have a language with a date format that does not match Portugal's "
                                  "requirements (either 'YYYY-MM-DD' or 'DD-MM-YYYY'). "
                                  "Please configure the date format in these languages."),
                     'level': 'info',
-                    'action_text': _("View Language(s)"),
+                    'action_text': self.env._("View Language(s)"),
                     'action': langs._get_records_action(),
                 }
         return alerts

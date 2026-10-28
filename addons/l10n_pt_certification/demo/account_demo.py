@@ -10,7 +10,13 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     def _post_load_demo_data(self, company=False):
-        if company and company.account_fiscal_country_id.code == 'PT':
+        # EXTENDS account, called per company when its chart's demo data is loaded
+        self._l10n_pt_post_load_demo_data(company or self.env['res.company'])
+        return super()._post_load_demo_data(company)
+
+    def _l10n_pt_post_load_demo_data(self, companies):
+        """Complete the demo data of the PT companies of ``companies``: also run on install, for those that existed before."""
+        for company in companies.filtered(lambda c: c.account_fiscal_country_id.code == 'PT'):
             # The demo invoices are posted while this module is installed, before `_post_init_hook`
             # gives the chart's taxes their VAT exemption reasons, which posting requires.
             self._l10n_pt_load_certification_tax_data(company)
@@ -50,7 +56,6 @@ class AccountChartTemplate(models.AbstractModel):
                     error = e
             if unposted:
                 _logger.warning("%s Portuguese demo invoices were left in draft: %s", len(unposted), error)
-        return super()._post_load_demo_data(company)
 
     def _create_l10n_at_series_demo(self, company):
         if company and company.account_fiscal_country_id.code == "PT":
@@ -98,12 +103,13 @@ class AccountChartTemplate(models.AbstractModel):
                 'journal_id': journal_id,
                 'document_type': series_type,
                 'prefix': prefix,
-                'at_code': f'AT-{prefix}{year}',
+                # AT validation codes are unique across companies.
+                'at_code': f'AT-{prefix}{year}-{company.id}',
             } for series_type, prefix, journal_id, year in data_to_create])
 
             for series in existing_series:
                 if (series.document_type, series.prefix, series.journal_id.id, series.name) in at_series_demo_data:
                     series.write({
                         'training_series': True,
-                        'at_code': f'AT-{series.prefix}{series.name}',
+                        'at_code': f'AT-{series.prefix}{series.name}-{company.id}',
                     })

@@ -3,6 +3,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.fields import Domain
 from odoo.tools import SQL, float_repr
 from odoo.tools.misc import format_date
 
@@ -154,7 +155,7 @@ class L10nPtDocumentMixin(models.AbstractModel):
     @api.model
     def _l10n_pt_numbered_domain(self):
         """The domain of the documents that hold their number in their series: see ``_l10n_pt_is_numbered``."""
-        return [('l10n_pt_document_number', '!=', False)]
+        return Domain('l10n_pt_document_number', '!=', False)
 
     def _l10n_pt_get_gross_total(self):
         """Gross total signed in the hash (0 for documents without a monetary total, e.g. transfers)."""
@@ -179,6 +180,25 @@ class L10nPtDocumentMixin(models.AbstractModel):
             'document_number': self._l10n_pt_get_document_number(),
             'gross_total': self._l10n_pt_get_gross_total(),
         }
+
+    def _l10n_pt_sign(self, previous_signature):
+        """
+        Sign the documents of ``self`` through the IAP signing service, in chain after
+        ``previous_signature`` (the bare signature of the document before them), and record their
+        SystemEntryDate. Shared by the signed documents and ``account.move``.
+
+        :return: {record: signature}
+        """
+        self.l10n_pt_hashed_on = fields.Datetime.now()
+        docs_to_sign = [{
+            'id': record.id,
+            # The chain follows the series' numbering, not the document date: dates tie routinely
+            # (a batch of transfers validated together shares one `date_done`).
+            'sorting_key': record._l10n_pt_get_sequence_number(),
+            **pt_hash_utils.format_hash_values(record._l10n_pt_get_hash_values()),
+            'previous_signature': previous_signature,
+        } for record in self]
+        return pt_hash_utils.sign_records(self.env, docs_to_sign, self._name)
 
     @api.depends(lambda self: self._l10n_pt_document_type_depends)
     def _compute_l10n_pt_document_type(self):
@@ -297,7 +317,8 @@ class L10nPtDocumentMixin(models.AbstractModel):
                     "requirements.", number
                 ))
 
-    def update_l10n_pt_print_version(self):
+    def _l10n_pt_update_print_version(self):
+        """Count a print of the documents of ``self``: the first is the Original, every other a reprint."""
         for record in self.filtered(lambda r: r._l10n_pt_country_ok()):
             record.l10n_pt_print_version = 'reprint' if record.l10n_pt_print_version else 'original'
 
@@ -502,12 +523,13 @@ class L10nPtQrDocumentMixin(models.AbstractModel):
         self.ensure_one()
         company_region = self.company_id.l10n_pt_region_code
         res = defaultdict(lambda: defaultdict(lambda: {'base': 0.0, 'vat': 0.0}))
-        for subtotal in self.tax_totals['subtotals']:
-            for group in subtotal['tax_groups']:
-                tax_group = self.env['account.tax.group'].browse(group['id'])
-                details = res[self._l10n_pt_get_tax_region(tax_group)][tax_group.l10n_pt_tax_category]
-                details['base'] += group['base_amount_currency']
-                details['vat'] += group['tax_amount_currency']
+        groups = [group for subtotal in self.tax_totals['subtotals'] for group in subtotal['tax_groups']]
+        # Browsed together, the tax groups share one prefetch: their regions and categories are read at once.
+        tax_groups = self.env['account.tax.group'].browse([group['id'] for group in groups])
+        for group, tax_group in zip(groups, tax_groups):
+            details = res[self._l10n_pt_get_tax_region(tax_group)][tax_group.l10n_pt_tax_category]
+            details['base'] += group['base_amount_currency']
+            details['vat'] += group['tax_amount_currency']
         # `sorted` is stable: the other regions keep the order of the tax groups.
         return {
             region: dict(details)
@@ -542,7 +564,7 @@ class L10nPtQrDocumentMixin(models.AbstractModel):
         if not_subject_base:
             qr_code_dict['L:'] = f"{self._l10n_pt_qr_format_amount(not_subject_base)}*"
 
-    def l10n_pt_verify_prerequisites_qr_code(self):
+    def _l10n_pt_verify_prerequisites_qr_code(self):
         self.ensure_one()
         if self._l10n_pt_country_ok():
             return pt_hash_utils.verify_prerequisites_qr_code(
@@ -561,7 +583,7 @@ class L10nPtQrDocumentMixin(models.AbstractModel):
             and r._l10n_pt_get_inalterable_hash()
             and not r.l10n_pt_qr_code_str  # Skip if already computed
         )):
-            record.l10n_pt_verify_prerequisites_qr_code()
+            record._l10n_pt_verify_prerequisites_qr_code()
             # Most of the values needed to create the QR code string are filled in pt_hash_utils
             qr_code_dict = pt_hash_utils.l10n_pt_common_qr_code_str(record, self.env, record._l10n_pt_get_document_date())
             qr_code_dict['D:'] = f"{record._l10n_pt_get_saft_doc_type()}*"
@@ -668,16 +690,7 @@ class L10nPtHashedDocumentMixin(models.AbstractModel):
     def _calculate_hashes(self, previous_hash=None):
         if not self or not self[0]._l10n_pt_country_ok():
             return {}
-        self.l10n_pt_hashed_on = fields.Datetime.now()
-        docs_to_sign = [{
-            'id': record.id,
-            # The chain follows the series' numbering, not the document date: dates tie routinely
-            # (a batch of transfers validated together shares one `date_done`).
-            'sorting_key': record._l10n_pt_get_sequence_number(),
-            **pt_hash_utils.format_hash_values(record._l10n_pt_get_hash_values()),
-            'previous_signature': previous_hash,
-        } for record in self]
-        return pt_hash_utils.sign_records(self.env, docs_to_sign, self._name)
+        return self._l10n_pt_sign(previous_hash)
 
     def _l10n_pt_compute_missing_hashes(self, company=None):
         """
@@ -753,9 +766,12 @@ class L10nPtHashedDocumentMixin(models.AbstractModel):
                 message, record.l10n_pt_inalterable_hash, versioning_list[current_versioning_index],
             )
         except AccessError as e:
+            # The access error suggests a company only when the user can switch to it (`ir.rule`).
+            if not (suggested_company := (getattr(e, 'context', None) or {}).get('suggested_company')):
+                raise
             raise UserError(self.env._(
                 "This company has AT Series shared across branches, and other companies also have hashed documents under this series. "
-                "To generate the report, please also select %s in the company selector.", e.context['suggested_company']['display_name']))
+                "To generate the report, please also select %s in the company selector.", suggested_company['display_name'])) from e
 
     def _l10n_pt_check_hash_integrity(self, company):
         """
@@ -779,6 +795,9 @@ class L10nPtHashedDocumentMixin(models.AbstractModel):
             ('document_type', 'in', self._l10n_pt_series_document_types()),
         ])
 
+        # The public keys come from IAP: fetched once, and only if there is a signature to check.
+        versioning_list = None
+        current_versioning_index = 0
         for at_series in at_series_records:
             singular, plural, sentence_plural = self._l10n_pt_document_label(at_series)
             query = self.sudo()._search(
@@ -789,7 +808,10 @@ class L10nPtHashedDocumentMixin(models.AbstractModel):
             first_record = last_record = corrupted_record = self.browse()
 
             self.env.execute_query(SQL("DECLARE l10n_pt_hashed_documents CURSOR FOR %s", query.select()))
-            while record_ids := self.env.execute_query(SQL("FETCH %s FROM l10n_pt_hashed_documents", INTEGRITY_HASH_BATCH_SIZE)):
+            # The walk stops at the first corrupted document: the report names that one.
+            while not corrupted_record and (record_ids := self.env.execute_query(
+                SQL("FETCH %s FROM l10n_pt_hashed_documents", INTEGRITY_HASH_BATCH_SIZE)
+            )):
                 self.env.invalidate_all()
                 records = self.browse([record_id[0] for record_id in record_ids])
                 if not records and not last_record:
@@ -804,16 +826,14 @@ class L10nPtHashedDocumentMixin(models.AbstractModel):
                     })
                     continue
 
-                current_versioning_index = 0
-                versioning_list = company._get_hash_versioning_list()
+                if versioning_list is None:
+                    versioning_list = company._get_hash_versioning_list()
                 for record in records:
-                    if corrupted_record:
-                        continue
                     if not self._l10n_pt_verify_hashed_document(
                         record, last_record.l10n_pt_inalterable_hash, versioning_list, current_versioning_index
                     ):
                         corrupted_record = record
-                        continue
+                        break
                     first_record = first_record or record
                     last_record = record
 

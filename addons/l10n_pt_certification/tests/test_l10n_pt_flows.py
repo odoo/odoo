@@ -402,14 +402,14 @@ class TestL10nPtFlows(TestL10nPtCommon):
         with self.assertRaisesRegex(UserError,
             r"Some fields required for the generation of the document are missing or invalid[\s\S]*The `hash` is not defined. You can contact the support.*"
         ):
-            invoice.l10n_pt_verify_prerequisites_qr_code()
+            invoice._l10n_pt_verify_prerequisites_qr_code()
 
         self.company_pt.vat = ''
         invoice = self.create_invoice('out_invoice', do_hash=True, mock_hash=True)
         with self.assertRaisesRegex(UserError,
             r"Some fields required for the generation of the document are missing or invalid[\s\S]*The `VAT` of your company should be defined and match the following format: PT123456789.*"
         ):
-            invoice.l10n_pt_verify_prerequisites_qr_code()
+            invoice._l10n_pt_verify_prerequisites_qr_code()
         self.company_pt.vat = 'PT123456789'
 
         invoice = self.create_invoice('out_invoice', do_hash=True, mock_hash=True)
@@ -418,7 +418,7 @@ class TestL10nPtFlows(TestL10nPtCommon):
             r"Some fields required for the generation of the document are missing or invalid[\s\S]*The `ATCUD` is not defined. Please verify the AT series.*"
         ):
             invoice.flush_recordset()
-            invoice.l10n_pt_verify_prerequisites_qr_code()
+            invoice._l10n_pt_verify_prerequisites_qr_code()
 
     def test_qr_code_computed_correctly(self):
         with self._mock_sign_records():
@@ -521,8 +521,8 @@ class TestL10nPtFlows(TestL10nPtCommon):
     def test_reprint_wizard_logs_reason_in_chatter(self):
         """ Make sure reprint reason is written in chatter """
         invoice = self.create_invoice('out_invoice')
-        invoice.update_l10n_pt_print_version()
-        invoice.update_l10n_pt_print_version()
+        invoice._l10n_pt_update_print_version()
+        invoice._l10n_pt_update_print_version()
         wizard = self.env['l10n_pt.reprint.reason'].with_context(
             active_model='account.move',
             active_ids=invoice.ids,

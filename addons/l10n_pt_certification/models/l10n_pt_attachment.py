@@ -44,8 +44,12 @@ class L10nPtAttachment(models.Model):
         ``_pre_render_qweb_pdf``): an HTML preview stores nothing and leaves the version alone.
         """
         is_print = self.env.context.get('l10n_pt_print')
+        # sudo: the stored print is that of a document being rendered, which already required access
+        # to it; it must be found whichever companies are active (a cron, a branch), or the first
+        # print would be rendered again and collide on `_report_res_id_uniq`.
+        attachment_sudo = self.sudo()
         # Look the report up by exactly the key `_report_res_id_uniq` enforces.
-        attachment = self.search([
+        attachment = attachment_sudo.search([
             ('res_id', '=', doc.id),
             ('res_model', '=', values['doc_model']),
             ('report_name', '=', template),
@@ -57,7 +61,7 @@ class L10nPtAttachment(models.Model):
             if is_print:
                 try:
                     with self.env.cr.savepoint():
-                        self.create({
+                        attachment_sudo.create({
                             'res_id': doc.id,
                             'res_model': values['doc_model'],
                             'report_name': template,
@@ -83,5 +87,5 @@ class L10nPtAttachment(models.Model):
                 for label in labels
             )
         if is_print:
-            doc.update_l10n_pt_print_version()
+            doc._l10n_pt_update_print_version()
         return html.encode()

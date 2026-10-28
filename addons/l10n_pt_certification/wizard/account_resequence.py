@@ -1,6 +1,6 @@
 import json
 
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 
 
@@ -16,7 +16,7 @@ class AccountResequenceWizard(models.TransientModel):
         if not pt_moves:
             return super().resequence()
         if issued := pt_moves.filtered('l10n_pt_document_number'):
-            raise UserError(_(
+            raise UserError(self.env._(
                 "Issued Portuguese invoices cannot be resequenced: %(invoices)s.",
                 invoices=", ".join(issued.mapped('name')),
             ))
@@ -33,7 +33,7 @@ class AccountResequenceWizard(models.TransientModel):
             prefix = f"{at_series.document_identifier}/"
             new_names = [new_values[str(move.id)][new_name_key] for move in moves if str(move.id) in new_values]
             if wrong := [name for name in new_names if not name.startswith(prefix) or not name[len(prefix):].isdigit()]:
-                raise UserError(_(
+                raise UserError(self.env._(
                     "The invoices of the AT series %(series)s keep its numbering (%(prefix)s...): %(names)s.",
                     series=at_series.document_identifier,
                     prefix=prefix,
@@ -41,7 +41,7 @@ class AccountResequenceWizard(models.TransientModel):
                 ))
             last_issued = last_issued_numbers.get(at_series) or 0
             if min(int(name[len(prefix):]) for name in new_names) <= last_issued:
-                raise UserError(_(
+                raise UserError(self.env._(
                     "The invoices of the AT series %(series)s can only be renumbered after its last issued number, %(number)s.",
                     series=at_series.document_identifier,
                     number=last_issued,
