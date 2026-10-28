@@ -235,3 +235,33 @@ test("applied composite action's with no getPriority implementation is considere
     await contains(":iframe .s_test").click();
     expect(".o_hb_select_wrapper button").toHaveText("The Test Option");
 });
+
+test("composite action loads its actions when cleaning", async () => {
+    class Action1 extends BuilderAction {
+        static id = "action1";
+        load() {
+            expect.step("load");
+            return "result";
+        }
+        isApplied({ editingElement }) {
+            return editingElement.classList.contains("applied");
+        }
+        clean({ editingElement, loadResult }) {
+            expect.step(`clean: ${loadResult}`);
+            editingElement.classList.remove("applied");
+        }
+    }
+    addBuilderAction({ Action1 });
+    addBuilderOption({
+        selector: ".s_test",
+        template: xml`
+            <BuilderButton action="'composite'" actionParam="[{ action: 'action1' }]" preview="false">
+                Click
+            </BuilderButton>`,
+    });
+    await setupHTMLBuilder(`<section class="s_test applied">Test</section>`);
+    await contains(":iframe .s_test").click();
+    await contains("[data-action-id='composite']").click();
+    await expect.waitForSteps(["load", "clean: result"]);
+    expect(":iframe .s_test").not.toHaveClass("applied");
+});
