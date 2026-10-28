@@ -840,10 +840,12 @@ class AccountEdiUBL(models.AbstractModel):
         identifier_vals = commercial_partner._get_preferred_tax_identifier_vals()
         if not identifier_vals:
             return
+
         if identifier_vals.get('category') == 'GST':
             tax_scheme_id = 'GST'
         else:
             tax_scheme_id = 'VAT'
+
         if identifier_vals.get('scheme'):
             normalized_value = self.env['res.partner']._validate_identifier_by_scheme(
                 identifier_vals['scheme'],
@@ -851,6 +853,14 @@ class AccountEdiUBL(models.AbstractModel):
             ).get('value')
         else:
             normalized_value = normalize_vat_for_ubl(commercial_partner.country_code, identifier_vals['value'])
+
+        if (
+            self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note')
+            and commercial_partner == vals['company'].partner_id
+            and (fiscal_position := vals['invoice'].fiscal_position_id)
+        ):
+            if fiscal_position.foreign_vat:
+                normalized_value = normalize_vat_for_ubl(fiscal_position.country_id.code, fiscal_position.foreign_vat)
 
         nodes.append({
             'cbc:CompanyID': {'_text': normalized_value},
