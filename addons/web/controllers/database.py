@@ -40,21 +40,24 @@ def list_db_incompatible(databases: Iterable[str]) -> list[str]:
     incompatible_databases = []
     for database_name in databases:
         with db_connect(database_name, readonly=True).cursor() as cr:
+            incompatible = False
             if odoo.tools.sql.table_exists(cr, 'ir_module_module'):
                 cr.execute("SELECT latest_version FROM ir_module_module WHERE name=%s", ('base',))
                 base_version = cr.fetchone()
                 if not base_version or not base_version[0]:
-                    incompatible_databases.append(database_name)
+                    incompatible = True
                 else:
                     # e.g. 19.1.1.3 -> 19.1
                     local_version = '.'.join(base_version[0].split('.')[:2])
                     if local_version != release.serie:
-                        incompatible_databases.append(database_name)
+                        incompatible = True
             else:
+                incompatible = True
+            # don't put the connection back in the pool as we may check many
+            # different databases
+            if incompatible:
                 incompatible_databases.append(database_name)
-    for database_name in incompatible_databases:
-        # don't fill the pool with connections to incompatible databases
-        odoo.sql_db.close_db(database_name)
+                cr._cnx.close()
     return incompatible_databases
 
 
