@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_tutorial" model="web_tuto.tutorial">
+        <field name="name">account_tutorial</field>
+        <field name="title">Send your first invoice</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="account_tutorial_account_journal_dashboard_kanban_view" model="web_tuto.chapter">
+        <field name="tutorial_id" ref="account_tutorial"/>
+        <field name="sequence">10</field>
+        <field name="view_id" ref="account_journal_dashboard_kanban_view"/>
+    </record>
+    <record id="account_tutorial_account_journal_dashboard_kanban_view_action_create_new" model="web_tuto.step">
+        <field name="chapter_id" ref="account_tutorial_account_journal_dashboard_kanban_view"/>
+        <field name="sequence">20</field>
+        <field name="type">button</field>
+        <field name="name">action_create_new</field>
+        <field name="content">Ready to get paid? Create your first invoice.</field>
+    </record>
+
+    <record id="account_tutorial_view_move_form" model="web_tuto.chapter">
+        <field name="tutorial_id" ref="account_tutorial"/>
+        <field name="sequence">30</field>
+        <field name="view_id" ref="view_move_form"/>
+    </record>
+    <record id="account_tutorial_view_move_form_partner_id" model="web_tuto.step">
+        <field name="chapter_id" ref="account_tutorial_view_move_form"/>
+        <field name="sequence">40</field>
+        <field name="type">field</field>
+        <field name="name">partner_id</field>
+        <field name="content">Who are you invoicing? Type a few letters to find the customer, or create a new one.</field>
+    </record>
+    <record id="account_tutorial_view_move_form_invoice_date_due" model="web_tuto.step">
+        <field name="chapter_id" ref="account_tutorial_view_move_form"/>
+        <field name="sequence">50</field>
+        <field name="type">field</field>
+        <field name="name">invoice_date_due</field>
+        <field name="content">When should your customer pay? Set the due date or payment terms.</field>
+    </record>
+    <record id="account_tutorial_view_move_form_invoice_line_ids" model="web_tuto.step">
+        <field name="chapter_id" ref="account_tutorial_view_move_form"/>
+        <field name="sequence">60</field>
+        <field name="type">field</field>
+        <field name="name">invoice_line_ids</field>
+        <field name="content">Add a line for what you sell.</field>
+    </record>
+    <record id="account_tutorial_view_move_form_invoice_line_ids_label" model="web_tuto.step">
+        <field name="chapter_id" ref="account_tutorial_view_move_form"/>
+        <field name="sequence">70</field>
+        <field name="type">field</field>
+        <field name="name">invoice_line_ids.label</field>
+        <field name="content">Describe the product or service you're invoicing.</field>
+    </record>
+    <record id="account_tutorial_view_move_form_invoice_line_ids_price_unit" model="web_tuto.step">
+        <field name="chapter_id" ref="account_tutorial_view_move_form"/>
+        <field name="sequence">80</field>
+        <field name="type">field</field>
+        <field name="name">invoice_line_ids.price_unit</field>
+        <field name="content">How much does it cost? Enter its price.</field>
+    </record>
+    <record id="account_tutorial_view_move_form_action_post" model="web_tuto.step">
+        <field name="chapter_id" ref="account_tutorial_view_move_form"/>
+        <field name="sequence">90</field>
+        <field name="type">button</field>
+        <field name="name">action_post</field>
+        <field name="content">Everything looks right? Confirm the invoice.</field>
+    </record>
+    <record id="account_tutorial_view_move_form_action_invoice_sent" model="web_tuto.step">
+        <field name="chapter_id" ref="account_tutorial_view_move_form"/>
+        <field name="sequence">100</field>
+        <field name="type">button</field>
+        <field name="name">action_invoice_sent</field>
+        <field name="content">From here, you can send the invoice to your customer by email.</field>
+        <field name="hint" eval="True"/>
+    </record>
+    <record id="account_tutorial_view_move_form_button_draft" model="web_tuto.step">
+        <field name="chapter_id" ref="account_tutorial_view_move_form"/>
+        <field name="sequence">110</field>
+        <field name="type">button</field>
+        <field name="name">button_draft</field>
+        <field name="content">Just a test? Reset the invoice to draft to be able to delete it.</field>
+    </record>
+    <record id="account_tutorial_view_move_form_delete" model="web_tuto.step">
+        <field name="chapter_id" ref="account_tutorial_view_move_form"/>
+        <field name="sequence">120</field>
+        <field name="type">button</field>
+        <field name="name">delete</field>
+        <field name="content">And delete it to keep your books clean.</field>
+    </record>
+</odoo>

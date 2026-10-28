@@ -13,7 +13,7 @@ You could use this simplified accounting in case you work with an (external) acc
     """,
     'category': 'Accounting/Accounting',
     'website': 'https://www.odoo.com/app/invoicing',
-    'depends': ['base_setup', 'onboarding', 'product', 'analytic', 'portal', 'digest'],
+    'depends': ['base_setup', 'onboarding', 'product', 'analytic', 'portal', 'digest', 'web_tuto'],
     'data': [
         'security/account_security.xml',
         'data/account_data.xml',
@@ -88,6 +88,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'wizard/account_merge_wizard_views.xml',
         'data/ir_config_parameter_data.xml',
         'security/ir.access.csv',
+        'data/account_tutorial.xml',
     ],
     'demo': [
         'demo/account_demo.xml',
