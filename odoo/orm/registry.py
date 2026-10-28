@@ -911,7 +911,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         # retrieve existing indexes with their table and access method
         cr.execute("""
-            SELECT idx.relname, tbl.relname, am.amname, ix.indpred, d.description IS NOT NULL
+            SELECT idx.relname, tbl.relname, am.amname, ix.indpred, d.description IS NOT NULL, ix.indisvalid
               FROM pg_index ix
               JOIN pg_class idx ON idx.oid = ix.indexrelid
               JOIN pg_class tbl ON tbl.oid = ix.indrelid
@@ -921,8 +921,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
                AND idx.relnamespace = current_schema::regnamespace
         """, [tuple(row[0] for row in expected)])
         existing = {
-            indexname: (tablename, method, partial, bool(comment))
-            for indexname, tablename, method, partial, comment in cr.fetchall()
+            indexname: (tablename, method, partial, bool(comment), isvalid)
+            for indexname, tablename, method, partial, comment, isvalid in cr.fetchall()
         }
 
         for indexname, tablename, field in expected:
@@ -943,6 +943,9 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 if not existing[indexname][3]:  # if the index has no comment
                     _schema.info("Index %s has no comment; consider it modified by user; keep it as is", indexname)
                     will_index = False # Don't touch indexes without comment
+                elif not existing[indexname][4]:  # if the index is invalid
+                    _schema.info("keep invalid standard index %s as is", indexname)
+                    will_index = False # Don't touch invalid indexes
                 else:
                     # The index exists, check if it is stale.
                     expected_method = 'gin' if index == 'trigram' else 'btree'
