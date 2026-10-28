@@ -52,7 +52,7 @@ export class PaymentMercadoPago extends PaymentInterface {
 
     async sendPaymentRequest(line) {
         await super.sendPaymentRequest(...arguments);
-        if (line.amount < 0) {
+        if (line.isRefund) {
             if (!this.pos.getOrder().isRefund) {
                 this._showMsg(_t("Cannot process transactions with negative amount."), "error");
                 return false;

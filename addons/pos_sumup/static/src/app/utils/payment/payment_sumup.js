@@ -27,7 +27,7 @@ export class PaymentSumup extends PaymentInterface {
     async sendPaymentRequest(line) {
         await super.sendPaymentRequest(...arguments);
 
-        const isRefund = line.amount < 0;
+        const isRefund = line.isRefund;
         const method = isRefund ? "sumup_refund" : "sumup_pay";
         const params = [[this.payment_method_id.id], line.amount];
         if (isRefund) {

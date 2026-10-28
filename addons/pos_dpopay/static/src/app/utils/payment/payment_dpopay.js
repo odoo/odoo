@@ -15,6 +15,7 @@ const { DateTime } = luxon;
 export class PaymentDPOPay extends PaymentInterface {
     setup() {
         super.setup(...arguments);
+        this.supports_refunds = false;
         this.pollingTimeout = null;
         this.inactivityTimeout = null;
         this.paymentStopped = false;

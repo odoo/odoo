@@ -156,6 +156,23 @@ test("isCancellable", async () => {
     }
 });
 
+test("isRefund", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const card = store.models["pos.payment.method"].get(2);
+    const paymentline = createPaymentLine(store, order, card);
+    // positive amount
+    expect(paymentline.isRefund).toBe(false);
+
+    // negative amount
+    paymentline.amount = -10;
+    expect(paymentline.isRefund).toBe(true);
+
+    // zero amount
+    paymentline.amount = 0;
+    expect(paymentline.isRefund).toBe(false);
+});
+
 test("handlePaymentResponse", async () => {
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);

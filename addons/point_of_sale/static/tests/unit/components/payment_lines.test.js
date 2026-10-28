@@ -12,7 +12,7 @@ import { PaymentScreenPaymentLines } from "@point_of_sale/app/screens/payment_sc
 definePosModels();
 
 describe("getPaymentActionState", () => {
-    const setup = async (isRefundOrder) => {
+    const setup = async () => {
         const store = await setupPosEnv();
         const order = await getFilledOrder(store);
         const card = store.models["pos.payment.method"].get(2);
@@ -27,7 +27,6 @@ describe("getPaymentActionState", () => {
                 sendPaymentCancel: () => {},
                 sendPaymentRequest: () => {},
                 updateSelectedPaymentline: () => {},
-                isRefundOrder,
             },
         });
         return { comp, card, paymentline };
@@ -39,7 +38,7 @@ describe("getPaymentActionState", () => {
     };
 
     test("payment", async () => {
-        const { comp, paymentline } = await setup(false);
+        const { comp, paymentline } = await setup();
 
         // No status
         const stateNoStatus = comp.getPaymentActionState(paymentline);
@@ -211,7 +210,7 @@ describe("getPaymentActionState", () => {
     });
 
     test("refund", async () => {
-        const { comp, card, paymentline } = await setup(true);
+        const { comp, card, paymentline } = await setup();
 
         // waiting_card
         paymentline.payment_status = "waiting_card";
@@ -277,7 +276,6 @@ test("getLineControls", async () => {
             sendPaymentCancel: () => {},
             sendPaymentRequest: () => {},
             updateSelectedPaymentline: () => {},
-            isRefundOrder: false,
         },
     });
 

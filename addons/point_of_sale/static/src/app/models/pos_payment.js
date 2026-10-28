@@ -127,6 +127,10 @@ export class PosPayment extends Base {
         return !this.payment_status || ["pending", "retry"].includes(this.payment_status);
     }
 
+    get isRefund() {
+        return this.amount < 0;
+    }
+
     // ----- Payment Request -----
     async pay() {
         this.payment_status = "waiting";

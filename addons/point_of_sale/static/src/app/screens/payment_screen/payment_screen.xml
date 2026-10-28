@@ -16,8 +16,7 @@
                     sendPaymentCancel.bind="this.sendPaymentCancel"
                     sendPaymentRequest.bind="this.sendPaymentRequest"
                     selectLine.bind="this.selectPaymentLine"
-                    updateSelectedPaymentline.bind="this.updateSelectedPaymentline"
-                    isRefundOrder="this.isRefundOrder" />
+                    updateSelectedPaymentline.bind="this.updateSelectedPaymentline" />
                 <div class="payment-screen-status-mobile">
                     <PaymentScreenStatus order="this.currentOrder" />
                 </div>
@@ -56,8 +55,7 @@
                                 sendPaymentCancel.bind="this.sendPaymentCancel"
                                 sendPaymentRequest.bind="this.sendPaymentRequest"
                                 selectLine.bind="this.selectPaymentLine"
-                                updateSelectedPaymentline.bind="this.updateSelectedPaymentline"
-                                isRefundOrder="this.isRefundOrder" />
+                                updateSelectedPaymentline.bind="this.updateSelectedPaymentline" />
                             <div class="payment-screen-status">
                                 <PaymentScreenStatus order="this.currentOrder" />
                             </div>
@@ -87,7 +85,7 @@
             t-on-click="() => this.onClickValidate()"
             t-attf-class="
                 {{ this.ui.isSmall ? 'btn-switchpane flex-fill' : 'button next w-50' }}
-                {{ this.currentOrder.canBeValidated() and !this.currentOrder.isRefundInProcess() ? 'highlight' : 'disabled' }}
+                {{ this.currentOrder.canBeValidated() ? 'highlight' : 'disabled' }}
             "
         >
             <t t-if="this.paymentLines.length">

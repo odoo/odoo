@@ -17,7 +17,6 @@ export const paymentScreenPaymentLinesProps = {
     sendPaymentCancel: t.function(),
     sendPaymentRequest: t.function(),
     updateSelectedPaymentline: t.function(),
-    isRefundOrder: t.boolean(),
 };
 export class PaymentScreenPaymentLines extends Component {
     static template = "point_of_sale.PaymentScreenPaymentLines";
@@ -167,22 +166,24 @@ export class PaymentScreenPaymentLines extends Component {
      * @returns {PaymentActionState|null}
      *
      * @typedef {Object} PaymentActionState
-     * @property {string} id                      - The payment status, or `refund_available`.
+     * @property {string} id                      - The payment status.
      * @property {string} title                   - Title of the payment status section.
      * @property {Array<PaymentAction>} actions   - Actions available for the current payment state.
      * @property {string} [icon]                  - Icon shown next to the title, the spinner while processing.
      * @property {string} [iconClass]             - Additional classes for the icon.
      */
     getPaymentActionState(line) {
-        const isRefund = this.props.isRefundOrder;
+        const isRefund = line.isRefund;
         const a = this.getPaymentActions(line);
         const waitingCustomer = (title) => ({
             title: isRefund ? _t("Refund in process") : title,
             actions: isRefund ? [a.forceDone] : [a.forceDone, a.cancel],
         });
         const states = {
-            refund_available: { title: _t("Refund available"), actions: [a.refund] },
-            pending: { title: _t("Payment request pending"), actions: [a.send] },
+            pending: {
+                title: isRefund ? _t("Refund available") : _t("Payment request pending"),
+                actions: [isRefund ? a.refund : a.send],
+            },
             retry: { title: _t("Transaction failed"), actions: [a.retry] },
             force_done: { title: _t("Connection error"), actions: [a.forceDone, a.forceCancel] },
             waiting_card: waitingCustomer(_t("Waiting for card")),
@@ -196,13 +197,11 @@ export class PaymentScreenPaymentLines extends Component {
             },
         };
 
-        const key =
-            line.payment_status || (isRefund && line.payment_interface ? "refund_available" : null);
-        const state = states[key];
+        const state = states[line.payment_status];
         if (!state) {
             return null;
         }
-        state.id = key;
+        state.id = line.payment_status;
         if (line.isProcessing) {
             state.icon = "autorenew";
             state.iconClass = "oi-spin";

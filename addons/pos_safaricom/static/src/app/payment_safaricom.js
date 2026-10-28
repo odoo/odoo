@@ -9,6 +9,7 @@ import { MpesaTransactionPopup } from "@pos_safaricom/app/components/popups/mpes
 export class PaymentSafaricom extends PaymentInterface {
     setup() {
         super.setup(...arguments);
+        this.supports_refunds = false;
         this.paymentLineResolvers = {};
     }
 
@@ -134,7 +135,7 @@ export class PaymentSafaricom extends PaymentInterface {
             return false;
         }
 
-        if (line.amount < 0) {
+        if (line.isRefund) {
             this._show_error(_t("Cannot process transactions with negative amount."));
             return false;
         }
