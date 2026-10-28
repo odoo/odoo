@@ -1,5 +1,5 @@
 import { Action, ACTION_TAGS } from "@mail/core/common/action";
-import { ActionList, CircleInlineAction } from "@mail/core/common/action_list";
+import { ActionList } from "@mail/core/common/action_list";
 import {
     acceptWithCamera,
     CallAction,
@@ -15,13 +15,6 @@ import { Component, computed, proxy, signal, types, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
-/** Button to accept the call, spaced from the button next to it. */
-class AcceptCallInlineAction extends CircleInlineAction {
-    get marginClass() {
-        return { ...super.marginClass, "o-me-0_5": true };
-    }
-}
-
 export class CallInvitation extends Component {
     static template = "discuss.CallInvitation";
     static components = { ActionList, CallPreview };
@@ -30,6 +23,7 @@ export class CallInvitation extends Component {
 
     setup() {
         super.setup();
+        this.getCallActionComponent = getCallActionComponent;
         this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
         this.props = useProps({
@@ -43,14 +37,6 @@ export class CallInvitation extends Component {
             hasMicrophone: this.rtc.microphonePermission === "granted",
         });
         useAncestors({ inDiscussCallTheme: true });
-    }
-
-    /** @type {import("@mail/core/common/action_list").GetActionComponent} */
-    getActionComponent(params) {
-        if (params.inline && ["accept-with-camera", "join"].includes(params.action.id)) {
-            return AcceptCallInlineAction;
-        }
-        return getCallActionComponent(params);
     }
 
     async joinCall() {
