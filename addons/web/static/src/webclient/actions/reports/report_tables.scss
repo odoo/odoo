@@ -247,6 +247,40 @@ div#total {
         thead th {
             background-image: none, o-table-line($gray-300);
         }
+
+        th:first-child, td:first-child {
+            padding-left: map-get($spacers, 3);
+        }
+
+        th:last-child, td:last-child {
+            padding-right: map-get($spacers, 3);
+        }
+
+        &.table-sm {
+            th:first-child, &:not(.o_total_table) tbody:first-child tr:first-child td:first-child {
+                border-top-left-radius: $border-radius;
+            }
+
+            th:last-child, &:not(.o_total_table) tbody:first-child tr:first-child td:last-child {
+                border-top-right-radius: $border-radius;
+            }
+
+            tbody:last-child tr:last-child td:first-child {
+                border-bottom-left-radius: $border-radius;
+            }
+
+            &:not(.o_has_total_table) tbody:last-child tr:last-child td:last-child {
+                border-bottom-right-radius: $border-radius;
+            }
+
+            th:first-child, td:first-child {
+                padding-left: map-get($spacers, 2);
+            }
+
+            th:last-child, td:last-child {
+                padding-right: map-get($spacers, 2);
+            }
+        }
     }
 }
 
