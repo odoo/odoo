@@ -31,6 +31,7 @@ from . import (
     test_sale_report,
     test_sale_sections,
     test_sale_to_invoice,
+    test_sale_tutorial,
     test_taxes_downpayment,
     test_taxes_global_discount,
     test_taxes_tax_totals_summary,
