@@ -14,7 +14,7 @@ class MailMessage(models.Model):
             return
         res.many(
             "records",
-            ["comments_count"],
+            lambda res: res.attr("comments_count", version=False),
             as_thread=True,
             only_data=True,
             value=slides,

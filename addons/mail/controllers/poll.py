@@ -80,9 +80,18 @@ class PollController(ThreadController):
             ]
         )
         self_bus_channel = guest if self.env.user._is_public() else self.env.user
-        Store(bus_channel=self_bus_channel).add(options_sudo, ["selected_by_self"])
+        Store(bus_channel=self_bus_channel).add(
+            options_sudo,
+            lambda res: res.attr("selected_by_self", version=False),
+        )
         store = Store(*thread._store_target())
-        store.add(options_sudo.poll_id.option_ids, ["number_of_votes", "vote_percentage"])
+        store.add(
+            options_sudo.poll_id.option_ids,
+            lambda res: (
+                res.attr("number_of_votes", version=False),
+                res.attr("vote_percentage", version=False),
+            ),
+        )
         store.add(vote, "_store_vote_fields")
 
     @mail_route("/mail/poll/remove_vote", type="jsonrpc", auth="public", methods=["POST"])
@@ -96,17 +105,29 @@ class PollController(ThreadController):
             # user is allowed.
             poll_sudo = self.env["mail.poll"].sudo().search_fetch([("id", "=", poll_id)])
             store = Store(bus_channel=user or guest)
-            store.add(poll_sudo.option_ids, ["selected_by_self"])
+            store.add(
+                poll_sudo.option_ids,
+                lambda res: res.attr("selected_by_self", version=False),
+            )
             return
         options_sudo = votes_sudo.option_id
         poll_sudo = votes_sudo.option_id.poll_id
         votes_sudo.unlink()
-        Store(bus_channel=user or guest).add(options_sudo, ["selected_by_self"])
+        Store(bus_channel=user or guest).add(
+            options_sudo,
+            lambda res: res.attr("selected_by_self", version=False),
+        )
         thread = self.env[options_sudo.poll_id.start_message_id.model].browse(
             options_sudo.poll_id.start_message_id.res_id
         )
         store = Store(*thread._store_target())
-        store.add(poll_sudo.option_ids, ["number_of_votes", "vote_percentage"])
+        store.add(
+            poll_sudo.option_ids,
+            lambda res: (
+                res.attr("number_of_votes", version=False),
+                res.attr("vote_percentage", version=False),
+            ),
+        )
         store.add(
             options_sudo,
             lambda res: res.many("vote_ids", [], mode="DELETE", value=votes_sudo),

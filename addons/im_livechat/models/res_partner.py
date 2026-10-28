@@ -46,18 +46,23 @@ class ResPartner(models.Model):
             )
             for partner in self
         }
-        res.attr("invite_by_self_count", lambda p: invite_by_self_count_by_partner[p])
-        res.attr("is_available", lambda p: p in active_livechat_partners)
-        res.attr("lang_name", lambda p: languages_by_partner[p][0])
-        res.attr("livechat_languages", lambda p: languages_by_partner[p][1:])
+        res.attr(
+            "invite_by_self_count",
+            lambda p: invite_by_self_count_by_partner[p],
+            version=False,
+        )
+        res.attr("is_available", lambda p: p in active_livechat_partners, version=False)
+        res.attr("lang_name", lambda p: languages_by_partner[p][0], version=False)
+        res.attr("livechat_languages", lambda p: languages_by_partner[p][1:], version=False)
         # sudo: res.users.settings - operator can access other operators livechat usernames
-        res.attr("user_livechat_username", sudo=True)
+        res.attr("user_livechat_username", sudo=True, version=False)
         # sudo - res.partner: checking if operator is in call for live
         # chat invitation is acceptable.
-        res.attr("is_in_call", sudo=True)
+        res.attr("is_in_call", sudo=True, version=False)
         res.one(
             "main_user_id",
             lambda res: (res.attr("partner_id"), res.many("livechat_expertise_ids", ["name"])),
+            version=False,
         )
 
     @api.depends('user_ids.livechat_username')
@@ -84,7 +89,7 @@ class ResPartner(models.Model):
     def _store_livechat_username_fields(self, res: Store.FieldList):
         """Return the fields to be stored for live chat username."""
         res.attr("name", predicate=lambda p: not p.user_livechat_username)
-        res.attr("user_livechat_username")
+        res.attr("user_livechat_username", version=False)
 
     def _bus_send_history_message(self, channel, page_history):
         message_body = _("No history found")

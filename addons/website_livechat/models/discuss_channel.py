@@ -20,7 +20,7 @@ class DiscussChannel(models.Model):
             "livechat_visitor_id",
             lambda res: (
                 res.one("country_id", ["code"]),
-                res.attr("display_name"),
+                res.attr("display_name", version=False),
                 res.one("lang_id", ["name"]),
                 res.one("partner_id", lambda partner_res: partner_res.one("country_id", ["code"])),
                 res.one("website_id", ["name"]),
@@ -36,6 +36,7 @@ class DiscussChannel(models.Model):
             lambda channel: channel.create_uid
             in channel.sudo().livechat_agent_history_ids.partner_id.user_ids,
             predicate=is_livechat_channel,
+            version=False,
         )
 
     def _get_visitor_leave_message(self, correspondents=False, cancel=False):

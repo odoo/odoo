@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields
+from odoo.addons.bus.tests.common import pop_store_version
 from odoo.addons.im_livechat.tests.common import TestGetOperatorCommon
 
 
@@ -42,6 +43,7 @@ class TestUserLivechatUsername(TestGetOperatorCommon):
             {"action": "add", "content": "👍", "message_id": message.id},
             cookies={"session_id": session.sid},
         )
+        pop_store_version(data)
         self.assertEqual(
             data["res.partner"][0],
             {
