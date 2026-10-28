@@ -1,5 +1,6 @@
 import { fields, Record } from "@mail/model/export";
 import { BlurManager } from "@mail/discuss/call/common/blur_manager";
+import { DiscussP2PPlugin } from "@mail/discuss/call/common/discuss_p2p_plugin";
 import { CallPermissionDialog } from "@mail/discuss/call/common/call_permission_dialog";
 import { CALL_GRID_LAYOUT } from "@mail/discuss/call/common/call_layout";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
@@ -7,7 +8,7 @@ import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permi
 import { rpc } from "@web/core/network/rpc";
 import { assignDefined, closeStream } from "@mail/utils/common/misc";
 
-import { markup, proxy, toRaw } from "@odoo/owl";
+import { markup, proxy, toRaw, usePlugin } from "@odoo/owl";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -539,7 +540,7 @@ export class Rtc extends Record {
         this.fullscreen = undefined;
         /** @type {import("@web/core/notifications/notification_plugin").NotificationPlugin} */
         this.notification = undefined;
-        /** @type {Services["discuss.p2p"]} */
+        /** @type {import("@mail/discuss/call/common/peer_to_peer").PeerToPeer} */
         this.p2pService = undefined;
         /** @type {Services["discuss.pip_service"]} */
         this.pipService = undefined;
@@ -562,7 +563,6 @@ export class Rtc extends Record {
             this._broadcastChannel.onmessage = this._onBroadcastChannelMessage.bind(this);
             this._postToTabs({ type: CROSS_TAB_CLIENT_MESSAGE.INIT });
         }
-        this.p2pService = services["discuss.p2p"];
         this.onChange(
             () => [this.channel],
             function onChangeChannel(channel) {
@@ -2949,7 +2949,6 @@ Rtc.register();
 export const rtcService = {
     dependencies: [
         "bus_service",
-        "discuss.p2p",
         "discuss.pip_service",
         "discuss.ptt_extension",
         "mail.fullscreen",
@@ -3028,7 +3027,7 @@ export const rtcService = {
                 })
                 .catch(() => {}),
         ]);
-        rtc.p2pService = services["discuss.p2p"];
+        rtc.p2pService = usePlugin(DiscussP2PPlugin).p2p;
         rtc.p2pService.acceptOffer = async (id, sequence) => {
             const session = await store["discuss.channel.rtc.session"].getWhenReady(Number(id));
             /**
