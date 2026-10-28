@@ -1652,6 +1652,53 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         ereporting_messages = invoice.message_ids.filtered(lambda message: 'E-reporting Status:' in message.body)
         self.assertRecordValues(ereporting_messages, [{'author_id': self.env.ref('base.partner_root').id}])
 
+    def test_reset_reported_invoice_that_left_flow_10_scope(self):
+        """Resetting or cancelling a reported invoice that left the Flow 10 scope rectifies its report."""
+        invoices = (
+            self._create_reporting_invoice(partner=self.b2c_customer, invoice_date='2025-09-03')
+            | self._create_reporting_invoice(partner=self.b2c_customer, invoice_date='2025-09-04')
+        )
+        initial_flow = invoices[0].l10n_fr_pdp_last_flow_id
+        self._run_send_cron('2025-09-20', identifier='B2C-BEFORE-CUSTOMER-VAT')
+        initial_flow.invalidate_recordset(['state'])
+        self.assertEqual(initial_flow.state, 'sent')
+
+        # The customer gets a French VAT number after the B2C report was sent: the invoices are now
+        # domestic B2B and leave the Flow 10 scope, while they stay linked to the sent flow.
+        self.b2c_customer.with_context(no_vat_validation=True).vat = 'FR40303265045'
+        invoices._compute_l10n_fr_pdp_flow_10_report_type()
+        self.env.flush_all()
+        self.assertRecordValues(invoices, [
+            {'l10n_fr_pdp_flow_10_report_type': False, 'l10n_fr_pdp_sent_in_flow_ids': initial_flow.ids},
+            {'l10n_fr_pdp_flow_10_report_type': False, 'l10n_fr_pdp_sent_in_flow_ids': initial_flow.ids},
+        ])
+
+        # Both used to crash: the RE scope could not be computed for a move out of the Flow 10 scope
+        # (button_cancel resets posted moves to draft too).
+        invoices[0].button_draft()
+        invoices[1].button_cancel()
+
+        initial_flow.invalidate_recordset(['rectificative_flow_ids'])
+        rectificative_flow = initial_flow.rectificative_flow_ids
+        # Out of scope, the invoices stay in the sent moves of the initial flow.
+        self.assertRecordValues(invoices, [
+            {'state': 'draft', 'l10n_fr_pdp_sent_in_flow_ids': initial_flow.ids},
+            {'state': 'cancel', 'l10n_fr_pdp_sent_in_flow_ids': initial_flow.ids},
+        ])
+        # A single RE flow is created for the reported scope, then reused.
+        self.assertRecordValues(rectificative_flow, [{
+            'report_type': 'transaction',
+            'operation_type': 'sale',
+            'state': 'ready',
+            'transmission_type': 'rectificative',
+        }])
+        self.assertFalse(rectificative_flow._get_moves() & invoices)
+
+        # The RE differs from the initial flow, so the removal is transmitted.
+        self._run_send_cron('2025-09-21', identifier='RE-AFTER-RESET')
+        rectificative_flow.invalidate_recordset(['state'])
+        self.assertEqual(rectificative_flow.state, 'sent')
+
     def test_error_moves_are_moved_to_rectificative_flow_when_initial_is_sent(self):
         valid_invoice = self._create_reporting_invoice(
             partner=self.b2bi_customer,
