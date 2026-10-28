@@ -55,12 +55,10 @@ export class CallInvitation extends Component {
     acceptOrRejectActions = computed(() => {
         const joinUpdated = {
             ...joinAction,
-            btnClass: joinAction.btnClass + " o-me-0_5",
             onSelected: () => this.joinCall(),
         };
         const acceptWithCameraUpdated = {
             ...acceptWithCamera,
-            btnClass: acceptWithCamera.btnClass + " o-me-0_5",
             onSelected: () => {
                 this.state.hasCamera = true;
                 this.joinCall();
