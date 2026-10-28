@@ -1,7 +1,4 @@
-/* global checkVATNumber */
-
 import { useScope } from "@odoo/owl";
-import { AssetsLoadingError, loadJS } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
@@ -24,26 +21,6 @@ export function usePartnerAutocomplete() {
 
     let lastNoResultsQuery = null;
 
-    function sanitizeVAT(value) {
-        return value ? value.replace(/[^A-Za-z0-9]/g, "") : "";
-    }
-
-    async function isVATNumber(value) {
-        // Lazyload jsvat only if the component is being used.
-        try {
-            await loadJS("/partner_autocomplete/static/lib/jsvat.js");
-        } catch (e) {
-            if (e instanceof AssetsLoadingError) {
-                return new Promise(() => {});
-            }
-            throw e;
-        }
-
-        // checkVATNumber is defined in library jsvat.
-        // It validates that the input has a valid VAT number format
-        return checkVATNumber(sanitizeVAT(value));
-    }
-
     function isGSTNumber(value) {
         // Check if the input is a valid GST number.
         let isGST = false;
@@ -63,17 +40,17 @@ export function usePartnerAutocomplete() {
         return isGST;
     }
 
+    function looksLikeVATNumber(value) {
+        // Only the format is checked here, the server validates the number
+        return (value.match(/\d/g) || []).length >= 4;
+    }
+
     async function autocomplete(fieldName, value, queryCountryId, shouldIncludeBranches) {
         value = value.trim();
 
-        const isVat = await isVATNumber(value);
-        const isGST = isGSTNumber(value);
-
-        if (fieldName === 'vat' && !isGST && !isVat) {
+        if (fieldName === 'vat' && !looksLikeVATNumber(value)) {
             return [];
         }
-
-        fieldName = fieldName === 'name' && (isVat || isGST) ? 'vat' : fieldName;
 
         return await scope.run(getSuggestions, fieldName, value, queryCountryId, shouldIncludeBranches);
     }
@@ -149,25 +126,33 @@ export function usePartnerAutocomplete() {
      * @private
      */
     async function getSuggestions(fieldName, value, queryCountryId, shouldIncludeBranches) {
+        // A name that looks like a VAT number may be either: search both
+        const isNameOnly = fieldName === 'name' && !looksLikeVATNumber(value);
+        const fieldNames = fieldName === 'name' && !isNameOnly ? ['vat', 'name'] : [fieldName];
+
         // Optimization: if the search query starts with the same content as a previous query for
         // which there was no results, there won't be any results for the current query.
         // E.g., if there is no results for query "abc123", there won't be any results for query "abc1234".
-        if (fieldName === 'name' && lastNoResultsQuery && value.startsWith(lastNoResultsQuery)) {
+        if (isNameOnly && lastNoResultsQuery && value.startsWith(lastNoResultsQuery)) {
             return [];
         }
 
-        const prom = orm.silent.call('res.partner', 'autocomplete_by_field', [fieldName.toLowerCase(), value, queryCountryId], {include_branches: shouldIncludeBranches});
+        const prom = Promise.all(
+            fieldNames.map((name) =>
+                orm.silent.call('res.partner', 'autocomplete_by_field', [name.toLowerCase(), value, queryCountryId], {include_branches: shouldIncludeBranches})
+            )
+        );
 
         let suggestions = [];
         try {
-            suggestions = await keepLast.add(prom);
+            suggestions = (await keepLast.add(prom)).flat();
         } catch (e) {
             if (!(e instanceof ConnectionLostError)) {
                 throw e;
             }
         }
         if (suggestions.length === 0) {
-            if (fieldName === 'name') {
+            if (isNameOnly) {
                 lastNoResultsQuery = value;
             }
             return [];

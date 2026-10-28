@@ -91,6 +91,12 @@ class ResPartner(models.Model):
                 return self.autocomplete_by_name(query, query_country_id, include_branches=include_branches)
             case "duns":
                 return self.autocomplete_by_duns(query, query_country_id)
+            case "vat":
+                # Without country, or searching worldwide, the VAT number may come from any country
+                country = self.env['res.country'].browse(query_country_id)
+                if query_country_id and not self._run_vat_checks(country, query, validation='setnull')[0]:
+                    return []
+                return self.autocomplete_by_vat(query, query_country_id, include_branches=include_branches)
             case _:
                 return self.autocomplete_by_vat(query, query_country_id, include_branches=include_branches)
 
