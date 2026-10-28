@@ -2,13 +2,12 @@
 <templates>
     <t t-name="slide.course.join">
         <div>
-            <a role="button"
+            <button type="button"
                 class="btn btn-primary text-uppercase fw-bold o_wslides_js_course_join_link" title="Join the Course"
-                aria-label="Join the Course" t-att-data-channel-id="channel.id" data-join-after-quiz="true"
-                href="#">
+                aria-label="Join the Course" t-att-data-channel-id="channel.id" data-join-after-quiz="true">
                 <t t-if="channel.enroll == 'public'" t-out="joinMessage"/>
                 <t t-if="channel.enroll == 'invite' and channel.isMemberOrInvited" t-out="joinMessage"/>
-            </a>
+            </button>
         </div>
     </t>
 </templates>
