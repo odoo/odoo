@@ -468,12 +468,8 @@ class AccountMove(models.Model):
             # If we come from the 'cancelled' state, this means the previous XML had been confirmed
             # before it was cancelled.
             # In that case, we want to keep it as a regular invoice attachment, for future reference.
-            if invoice.l10n_hu_edi_state == 'cancelled':
-                self.env['ir.attachment'].search([
-                    ('res_model', '=', self._name),
-                    ('res_id', '=', invoice.id),
-                    ('res_field', '=', 'l10n_hu_edi_attachment'),
-                ]).write({
+            if invoice.l10n_hu_edi_state == 'cancelled' and (xml := invoice.l10n_hu_edi_attachment):
+                self.env['ir.attachment'].browse(xml.attachment_id).write({
                     'res_field': False,
                     'name': f'{invoice.name.replace("/", "_")}_cancelled_{invoice.l10n_hu_edi_transaction_code}.xml',
                 })
@@ -482,18 +478,10 @@ class AccountMove(models.Model):
             invoice._l10n_hu_edi_set_chain_index()
 
             # Generate XML
-            invoice.l10n_hu_edi_attachment = BinaryBytes(invoice._l10n_hu_edi_generate_xml())
-
-            # Set name & mimetype on newly-created attachment.
-            attachment = self.env['ir.attachment'].search([
-                ('res_model', '=', self._name),
-                ('res_id', '=', invoice.id),
-                ('res_field', '=', 'l10n_hu_edi_attachment'),
-            ])
-            attachment.write({
-                'name': invoice.l10n_hu_edi_attachment_filename,
-                'mimetype': 'application/xml',
-            })
+            invoice.l10n_hu_edi_attachment = BinaryBytes(
+                invoice._l10n_hu_edi_generate_xml(),
+                filename=invoice.l10n_hu_edi_attachment_filename,
+            )
 
         # Batch by company, with max 100 invoices per batch.
         for __, batch_company in groupby(invoices_sorted, lambda m: m.company_id):
