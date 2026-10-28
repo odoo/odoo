@@ -155,12 +155,23 @@ class MailGuest(models.Model):
         return generate_text_avatar_svg(avatar_initials(self.name), str(self.id))
 
     def _store_avatar_fields(self, res: Store.FieldList):
-        res.attr("avatar_128_access_token", lambda g: g._get_avatar_128_access_token())
+        res.attr(
+            "avatar_128_access_token", lambda g: g._get_avatar_128_access_token(), version=False,
+        )
         res.extend(["name", "write_date"])
 
+    def _get_im_status_version(self):
+        """Version of `im_status`: the last poll of the presence, which only moves forward."""
+        self.ensure_one()
+        # sudo: mail.presence - can access presence of accessible guest
+        guest = self.sudo()
+        return guest.presence_ids.last_poll or guest.create_date
+
     def _store_im_status_fields(self, res: Store.FieldList):
-        res.attr("im_status")
-        res.attr("im_status_access_token", lambda g: g._get_im_status_access_token())
+        res.attr("im_status", version=lambda g: g._get_im_status_version())
+        res.attr(
+            "im_status_access_token", lambda g: g._get_im_status_access_token(), version=False,
+        )
 
     def _set_auth_cookie(self):
         """Add a cookie to the response to identify the guest. Every route

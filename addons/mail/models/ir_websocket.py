@@ -93,8 +93,8 @@ class IrWebsocket(models.AbstractModel):
         super()._on_websocket_closed(cookies)
         if self.env.user and not self.env.user._is_public():
             # sudo: mail.presence - user can update their own presence
-            self.env.user.sudo().presence_ids.status = "offline"
+            self.env.user.sudo().presence_ids.write({"status": "offline", "last_poll": self.env.cr.now()})
         token = cookies.get(self.env["mail.guest"]._cookie_name)
         if guest := self.env["mail.guest"]._get_guest_from_token(token):
             # sudo: mail.presence - guest can update their own presence
-            guest.sudo().presence_ids.status = "offline"
+            guest.sudo().presence_ids.write({"status": "offline", "last_poll": self.env.cr.now()})

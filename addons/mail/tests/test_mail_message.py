@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.bus.tests.common import BusResult
+from odoo.addons.bus.tests.common import BusResult, pop_store_version
 from odoo.addons.mail.models import mail_message as mail_message_module
 from odoo.addons.mail.tests import common
 from odoo.exceptions import UserError
@@ -63,7 +63,7 @@ class TestMailMessage(common.MailCommon, HttpCase):
             ["record_link", {"model": "res.partner", "ids": ["x"]}],
             ["record_link", {"model": ["res.partner"], "ids": [partner.id]}],
         ]
-        data = self.make_jsonrpc_request("/mail/store", {"fetch_params": fetch_params})
+        data = pop_store_version(self.make_jsonrpc_request("/mail/store", {"fetch_params": fetch_params}))
         self.assertEqual(
             data["mail.thread"],
             [{"display_name": partner.display_name, "id": partner.id, "model": "res.partner"}],

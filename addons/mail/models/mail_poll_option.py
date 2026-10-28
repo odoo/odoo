@@ -97,6 +97,9 @@ class MailPollOption(models.Model):
             option.vote_percentage = percentage_by_option[option]
 
     def _store_poll_option_fields(self, res: Store.FieldList):
-        res.extend(["number_of_votes", "poll_id", "option_emoji", "option_label", "vote_percentage"])
+        res.extend(["poll_id", "option_emoji", "option_label"])
+        # Computed from the votes, which do not write the option.
+        res.attr("number_of_votes", version=False)
+        res.attr("vote_percentage", version=False)
         if res.is_for_current_user():
-            res.attr("selected_by_self")
+            res.attr("selected_by_self", version=False)

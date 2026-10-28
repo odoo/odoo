@@ -48,18 +48,6 @@ export class StoreInternal extends RecordInternal {
     isUpdateInProgress = signal(false);
     /** See {@link Store#MAKE_UPDATE}. */
     isDrainingQueues = false;
-    /**
-     * Current version context used in the current store insert operation.
-     *
-     * The version data is provided by the server. If no version is provided,
-     * each field falls back to its last known version.
-     *
-     * @type {{
-     *    written_fields_by_record: import("@mail/model/field_version").WrittenFieldsByRecord,
-     *    snapshot: import("@mail/model/field_version").PgSnapshot
-     * }}
-     */
-    currentInsertVersion = null;
 
     raiseUpdateDepth() {
         if (this.updateDepth++ === 0) {
@@ -179,46 +167,53 @@ export class StoreInternal extends RecordInternal {
     }
     /**
      * @param {Record} record
-     * @param {Object} vals
+     * @param {import("./field_version").VersionedValues} vals
      * @param {Object} [options={}]
-     * @param {boolean} [options.forceApply=true] Apply the values even when the
-     * current insert version is out of order. Only versioned server data turns
-     * it off.
+     * @param {boolean} [options.forceApply=true] Apply the values even when their
+     * write date is out of order. Only versioned server data turns it off.
      */
     updateFields(record, vals, { forceApply = true } = {}) {
-        const fieldEntries = Object.entries(vals).concat(
-            Object.getOwnPropertySymbols(vals).map((sym) => [sym, vals[sym]])
+        const incomingWriteDate = vals.__version__;
+        const fieldVersions = vals.__field_versions__;
+        const filteredEntries = Object.entries(vals).filter(
+            ([name]) => name !== "__version__" && name !== "__field_versions__"
         );
-        for (const [fieldName, value] of fieldEntries) {
+        for (const [fieldName, value] of filteredEntries) {
             let version = record._.fieldsVersion.get(fieldName);
             if (!version) {
                 version = isMany(record.Model, fieldName)
-                    ? new ManyFieldVersion(record.Model)
+                    ? new ManyFieldVersion(
+                          record.Model.store[record.Model._.fieldsTargetModel.get(fieldName)]
+                      )
                     : new SingleFieldVersion();
                 record._.fieldsVersion.set(fieldName, version);
             }
-            // Always use the server version if provided, the last known version for the
-            // field otherwise.
-            const revision = this.currentInsertVersion
-                ? {
-                      snapshot: this.currentInsertVersion.snapshot,
-                      isWrite:
-                          this.currentInsertVersion.written_fields_by_record?.[
-                              record.Model.getName()
-                          ]?.[record.id]?.includes(fieldName),
-                  }
-                : version.lastRevision;
-            const normalized = isMany(record.Model, fieldName)
-                ? normalizeManyCommands(value)
-                : value;
+            const isManyField = isMany(record.Model, fieldName);
+            const normalized = isManyField ? normalizeManyCommands(value) : value;
+            // An echo from the inverse many carries its version in the command.
+            const commandVersion =
+                !isManyField && isCommandList(normalized) ? normalized.at(-1)[2] : undefined;
             // ".noinv" commands only come from inverse echoes: they are
             // client-generated even when found inside server data to insert.
-            const toApply = version.resolveApply(normalized, revision, {
+            const options = {
                 forceApply:
                     forceApply ||
                     (isCommandList(normalized) &&
                         normalized.every(([mode]) => mode.endsWith(".noinv"))),
-            });
+            };
+            // A null field version means unversioned: the value is applied whatever its
+            // arrival order (e.g. a value not stored on the record).
+            const fieldVersion =
+                fieldVersions && fieldName in fieldVersions
+                    ? fieldVersions[fieldName] ?? version.lastWriteDate
+                    : undefined;
+            const toApply = isManyField
+                ? version.resolveApply(normalized, options)
+                : version.resolveApply(
+                      value,
+                      commandVersion ?? fieldVersion ?? incomingWriteDate ?? version.lastWriteDate,
+                      options
+                  );
             if (toApply === SKIP_REVISION) {
                 continue;
             }

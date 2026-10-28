@@ -1,8 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, timedelta
+
+from odoo import fields
 from odoo.tests.common import new_test_user
 
-from odoo.addons.bus.tests.common import BusResult
+from odoo.addons.bus.tests.common import BusResult, pop_store_version
 from odoo.addons.mail.tests.common import MailCase, mail_new_test_user
 from odoo.addons.mail.tools.discuss import Store
 
@@ -73,8 +76,10 @@ class TestDiscussTools(MailCase):
                 res.one("partner_id", ["country_id"]),
             ),
         )
+        data = store._build_result()
+        pop_store_version(data)
         self.assertEqual(
-            store._build_result(),
+            data,
             {
                 "res.partner": [
                     {
@@ -375,11 +380,11 @@ class TestDiscussTools(MailCase):
 
     def test_391_add_no_loop_callable_identity_obj(self):
         def _store_partner_test_fields(res):
-            res.attr("test", lambda p: p.id, predicate=lambda p: p.id)
-            res.one("main_user_id", _store_user_test_fields)
+            res.attr("test", lambda p: p.id, predicate=lambda p: p.id, version=False)
+            res.one("main_user_id", _store_user_test_fields, version=False)
 
         def _store_user_test_fields(res):
-            res.attr("test", lambda u: u.id, predicate=lambda u: u.id)
+            res.attr("test", lambda u: u.id, predicate=lambda u: u.id, version=False)
             res.one("partner_id", _store_partner_test_fields)
 
         user = new_test_user(self.env, "test_user_391@example.com")
@@ -416,6 +421,122 @@ class TestDiscussTools(MailCase):
         data = store._build_result()
         self.assertEqual({"res.users": [{"id": user_a.id, "_DELETE": True}]}, data)
 
+    def test_399_attr_version_survives_unversioned_sibling_field(self):
+        user_a = new_test_user(self.env, "test_user_399@example.com")
+        explicit_version = fields.Datetime.now() - timedelta(days=1)
+
+        def _get_fields(res):
+            res.attr("name", version=lambda u: explicit_version)
+            res.attr("email")
+
+        store = Store()
+        store.add(user_a, _get_fields)
+        data = store._build_result()
+        record = data["res.users"][0]
+        self.assertEqual(
+            record["__field_versions__"]["name"],
+            explicit_version.isoformat(timespec="microseconds"),
+        )
+        self.assertNotEqual(record["__version__"], explicit_version.isoformat(timespec="microseconds"))
+
+    def test_398_unstored_fields_are_versioned_with_their_dependencies(self):
+        user_a = new_test_user(self.env, "test_user_398@example.com")
+        older, newer = datetime(2020, 1, 1), datetime(2020, 1, 2)
+
+        def set_write_dates(user_date, partner_date):
+            # Within a test, every write shares the same transaction timestamp.
+            self.env.flush_all()
+            self.env.cr.execute(
+                "UPDATE res_users SET write_date = %s WHERE id = %s", [user_date, user_a.id],
+            )
+            self.env.cr.execute(
+                "UPDATE res_partner SET write_date = %s WHERE id = %s",
+                [partner_date, user_a.partner_id.id],
+            )
+            self.env.invalidate_all()
+
+        def _get_fields(res):
+            res.extend(["email", "name"])
+            res.attr("fake", 42)
+            res.attr("is_admin", lambda u: False)
+            res.attr("explicit_unversioned", 1, version=False)
+
+        def get_field_versions():
+            store = Store()
+            store.add(user_a, _get_fields)
+            return store._build_result()["res.users"][0]["__field_versions__"]
+
+        with self.assertLogs("odoo.addons.mail.tools.discuss", "WARNING") as logs:
+            set_write_dates(newer, older)
+            field_versions = get_field_versions()
+            set_write_dates(older, newer)
+            self.assertEqual(get_field_versions()["name"], newer.isoformat(timespec="microseconds"))
+        self.assertEqual(
+            field_versions,
+            {
+                # Related (inherited): latest write_date of the records along the path.
+                "email": newer.isoformat(timespec="microseconds"),
+                "name": newer.isoformat(timespec="microseconds"),
+                "fake": None,
+                "is_admin": None,
+                "explicit_unversioned": None,
+            },
+        )
+        # Explicit opt-out is silent.
+        self.assertEqual(
+            {line.split(" ")[1] for line in logs.output},
+            {"res.users.fake", "res.users.is_admin"},
+        )
+
+    def test_399_unstored_field_without_reliable_version(self):
+        user = new_test_user(self.env, "test_user_399@example.com")
+        # Depending on an x2many: unlinking does not write the linked record.
+        self.assertIsNone(Store._get_unstored_field_version(user, "login_date"))
+        # Depending on the context: no single version.
+        self.assertIsNone(Store._get_unstored_field_version(user, "vat_label"))
+        # Stored fields and unknown fields have no unstored version.
+        self.assertIsNone(Store._get_unstored_field_version(user, "login"))
+        self.assertIsNone(Store._get_unstored_field_version(user, "unknown_field"))
+
+    def test_399_unstored_many_add_warning(self):
+        channel = self.env["discuss.channel"].create({"name": "General"})
+        message = channel.message_post(body="Hello")
+
+        def build(**kwargs):
+            store = Store()
+            store.add(
+                channel,
+                lambda res: res.many("messages", [], value=message, mode="ADD", **kwargs),
+            )
+            store._build_result()
+
+        with self.assertLogs("odoo.addons.mail.tools.discuss", "WARNING") as logs:
+            build()
+        self.assertEqual(len(logs.output), 1)
+        self.assertIn("discuss.channel.messages", logs.output[0])
+        # Explicit versions are silent, as a callable too.
+        with self.assertNoLogs("odoo.addons.mail.tools.discuss", "WARNING"):
+            build(version=False)
+            build(version=lambda c: c.write_date)
+        # Nothing to send: nothing to warn about.
+        store = Store()
+        with self.assertNoLogs("odoo.addons.mail.tools.discuss", "WARNING"):
+            store.add(
+                channel,
+                lambda res: res.many("messages", [], value=[], mode="ADD"),
+            )
+            store._build_result()
+
+    def test_399_unversioned_field_warns_once_per_add(self):
+        users = new_test_user(self.env, "test_user_399_a@example.com") | new_test_user(
+            self.env, "test_user_399_b@example.com"
+        )
+        store = Store()
+        store.add(users, lambda res: res.attr("fake", 42))
+        with self.assertLogs("odoo.addons.mail.tools.discuss", "WARNING") as logs:
+            store._build_result()
+        self.assertEqual(len(logs.output), 1)
+
     # 4xx Tests many command modes
 
     def test_450_replace_clear_existing_data(self):
@@ -426,7 +547,7 @@ class TestDiscussTools(MailCase):
         store.add(
             general,
             lambda res: (
-                res.many("messages", [], value=general.message_ids[0], mode="ADD"),
+                res.many("messages", [], value=general.message_ids[0], mode="ADD", version=False),
                 res.many("messages", [], value=general.message_ids[1], mode="REPLACE"),
             ),
         )
@@ -454,6 +575,7 @@ class TestDiscussTools(MailCase):
             ),
         )
         data = store._build_result()
+        pop_store_version(data)
         self.assertEqual(
             data["discuss.channel"][0]["messages"],
             [("REPLACE", general.message_ids.ids), ("DELETE", general.message_ids[2].ids)],
@@ -463,8 +585,11 @@ class TestDiscussTools(MailCase):
         general = self.env["discuss.channel"].create({"name": "General"})
         store = Store()
         store.add(general, lambda res: res.many("messages", [], value=[1], mode="DELETE"))
-        store.add(general, lambda res: res.many("messages", [], value=[2], mode="ADD"))
+        store.add(
+            general, lambda res: res.many("messages", [], value=[2], mode="ADD", version=False),
+        )
         data = store._build_result()
+        pop_store_version(data)
         self.assertEqual(
             data["discuss.channel"][0]["messages"],
             [("DELETE", [1]), ("ADD", [2])],
@@ -479,6 +604,22 @@ class TestDiscussTools(MailCase):
             lambda res: res.many("messages", [], value=lambda m: [m.id], mode="DELETE"),
         )
         data = store._build_result()
+        pop_store_version(data)
         channels = data["discuss.channel"]
         self.assertEqual(channels[0]["messages"], [("DELETE", [general.id])])
         self.assertEqual(channels[1]["messages"], [("DELETE", [holiday.id])])
+
+    def test_490_many_delete_versioned_with_transaction_time(self):
+        general = self.env["discuss.channel"].create({"name": "General"})
+        store = Store()
+        store.add(general, lambda res: res.many("messages", [], value=[1], mode="DELETE"))
+        data = store._build_result()
+        self.assertEqual(
+            data["discuss.channel"][0]["messages"],
+            [
+                (
+                    "DELETE",
+                    [{"id": 1, "__version__": self.env.cr.now().isoformat(timespec="microseconds")}],
+                ),
+            ],
+        )

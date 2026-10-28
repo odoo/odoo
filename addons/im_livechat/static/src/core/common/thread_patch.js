@@ -10,6 +10,7 @@ patch(Thread.prototype, {
         return (
             this.store.self.notEq(this.channel?.livechatVisitorMember?.persona) &&
             !this.channel?.livechat_end_dt &&
+            this.channel?.livechatVisitorMember?.persona?.imStatusUI === "offline" &&
             this.channel?.livechatVisitorMember?.persona?.offline_since
         );
     },

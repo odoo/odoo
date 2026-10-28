@@ -33,7 +33,7 @@ class DiscussChannelWebclientController(WebclientController):
             # fetch channels data before messages to benefit from prefetching (channel info might
             # prefetch a lot of data that message format could use)
             store.add(channels._get_last_messages(), "_store_message_fields")
-            store.add(channels, {"last_message_fetched": True})
+            store.add(channels, lambda res: res.attr("last_message_fetched", True, version=False))
         if request.env.context["add_channels_last_needaction"] and (
             channels_with_needaction := channels.filtered("message_needaction_counter")
         ):
@@ -87,7 +87,7 @@ class DiscussChannelWebclientController(WebclientController):
             domain,
             limit=100,
         )
-        store.add(channel, ["member_count"]).add(unknown_members, "_store_member_fields")
+        store.add(channel, lambda res: res.attr("member_count", version=False)).add(unknown_members, "_store_member_fields")
 
     @store_handler("/discuss/channel/favorite", audience="everyone", readonly=False)
     def store_set_discuss_channel_favorite(self, store: Store, channel_id, is_favorite):
@@ -120,7 +120,7 @@ class DiscussChannelWebclientController(WebclientController):
             if not is_prefetch:
                 messages.set_message_done()
             if channel._get_last_messages() <= messages:
-                store.add(channel, {"last_message_fetched": True})
+                store.add(channel, lambda res: res.attr("last_message_fetched", True, version=False))
 
     @store_handler("/discuss/channel/pin", audience="everyone", readonly=False)
     def store_set_discuss_channel_pin(self, store: Store, channel_id, pinned):

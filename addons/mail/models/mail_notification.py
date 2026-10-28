@@ -138,7 +138,7 @@ class MailNotification(models.Model):
             lambda res: (
                 res.extend(["email_normalized", "name"]),
                 res.attr("email", predicate=lambda p: not p.email_normalized),
-                res.attr("display_name", predicate=lambda p: not p.name),
+                res.attr("display_name", predicate=lambda p: not p.name, version=False),
             ),
         )
         if res.is_for_internal_users():

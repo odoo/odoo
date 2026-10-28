@@ -35,8 +35,10 @@ class WebclientController(ThreadController):
                         records,
                         lambda res: (
                             # sudo: mail.thread: users can read their own message_needaction_counter on the thread
-                            res.attr("message_needaction_counter", sudo=True),
-                            res.attr("message_needaction_counter_bus_id", bus_last_id),
+                            res.attr("message_needaction_counter", sudo=True, version=False),
+                            res.attr(
+                                "message_needaction_counter_bus_id", bus_last_id, version=False,
+                            ),
                         ),
                         as_thread=True,
                     )
@@ -52,7 +54,14 @@ class WebclientController(ThreadController):
         )
         if not thread:
             thread = request.env[thread_model].browse(thread_id)
-            store.add(thread, {"hasReadAccess": False, "hasWriteAccess": False}, as_thread=True)
+            store.add(
+                thread,
+                lambda res: (
+                    res.attr("hasReadAccess", False, version=False),
+                    res.attr("hasWriteAccess", False, version=False),
+                ),
+                as_thread=True,
+            )
         else:
             if not request.env.user._is_internal() or not thread.sudo(False).with_context(
                 allowed_company_ids=[]
@@ -95,7 +104,11 @@ class WebclientController(ThreadController):
     @store_handler("res.role")
     def store_get_res_role(self, store: Store, id):
         role = request.env["res.role"].search_fetch([("id", "=", id)], ["name"])
-        store.add(role, ["name", "user_ids_count"])
+        # Counts the role members: no write_date reflects it.
+        store.add(
+            role,
+            lambda res: (res.attr("name"), res.attr("user_ids_count", version=False)),
+        )
 
     @store_handler("mail.activity")
     def store_get_mail_activity(self, store: Store, ids):
@@ -115,7 +128,14 @@ class WebclientController(ThreadController):
             lambda res: (
                 res.extend(["model", "res_id"]),
                 # sudo: mail.thread - reading record name of accessible message is acceptable
-                res.one("thread", ["display_name"], value=rec_by_m.get, as_thread=True, sudo=True),
+                res.one(
+                    "thread",
+                    lambda res: res.attr("display_name", version=False),
+                    value=rec_by_m.get,
+                    as_thread=True,
+                    sudo=True,
+                    version=lambda m: m.write_date,
+                ),
             ),
         )
 
@@ -138,7 +158,12 @@ class WebclientController(ThreadController):
             records.mapped("display_name")
         except (AccessError, MissingError):
             return
-        store.add(records, ["display_name"], as_thread=True)
+        # display_name depends on the context: no reliable version.
+        store.add(
+            records,
+            lambda res: res.attr("display_name", version=False),
+            as_thread=True,
+        )
 
     @store_handler("/mail/poll_option/votes", audience="everyone")
     def store_poll_option_votes(self, store: Store, poll_option_id):
@@ -270,8 +295,8 @@ class WebclientController(ThreadController):
             request.update_context(messages=request.env.context["messages"] | messages)
         store.resolve_data_request(
             lambda res: (
-                [res.attr(k, v) for k, v in fetch_res.items()],
-                res.many("messages", [], value=messages),
+                [res.attr(k, v, version=False) for k, v in fetch_res.items()],
+                res.many("messages", [], value=messages, version=False),
             ),
         )
         return messages
