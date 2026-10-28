@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { HeaderTemplateChoice } from "./header_template_option";
+import { HeaderTemplateChoice, isHeaderBgBlurAvailable } from "./header_template_option";
 import { HeaderTopOptions } from "./header_top_options";
 import { WebsiteConfigAction } from "../../customize_website_plugin";
 
@@ -29,6 +29,7 @@ export class HeaderOptionPlugin extends Plugin {
         builder_actions: {
             HeaderTemplateConfigAction,
         },
+        on_website_color_updated_handlers: this.syncHeaderBgBlur.bind(this),
         builder_header_middle_buttons: [
             {
                 Component: HeaderTopOptions,
@@ -111,6 +112,36 @@ export class HeaderOptionPlugin extends Plugin {
 
     getHeaderTemplates() {
         return this.headerTemplates;
+    }
+
+    /**
+     * The header blur is only visible through a transparent background, and
+     * its option is hidden otherwise. When a color change makes the header
+     * background opaque, the blur value is saved in memory and the blur is
+     * disabled. The saved value is restored when the background becomes
+     * transparent again (e.g. on undo), and is lost when leaving the editor.
+     */
+    async syncHeaderBgBlur() {
+        const headerEl = this.document.querySelector("#wrapwrap > header");
+        if (!headerEl?.querySelector("nav")) {
+            return;
+        }
+        const { customizeWebsite } = this.dependencies;
+        const blur = customizeWebsite.getWebsiteVariableValue("header-bg-blur");
+        if (!isHeaderBgBlurAvailable(headerEl)) {
+            if (Number(blur)) {
+                this.savedHeaderBgBlur = blur;
+                await customizeWebsite.customizeWebsiteVariables({ "header-bg-blur": 0 });
+            }
+        } else if (this.savedHeaderBgBlur) {
+            const savedBlur = this.savedHeaderBgBlur;
+            this.savedHeaderBgBlur = undefined;
+            if (!Number(blur)) {
+                await customizeWebsite.customizeWebsiteVariables({
+                    "header-bg-blur": savedBlur,
+                });
+            }
+        }
     }
 }
 
