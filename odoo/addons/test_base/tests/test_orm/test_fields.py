@@ -2898,6 +2898,30 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         record.invalidate_recordset(['binary'])
         self.assertEqual(record.binary.attachment_id, new_attachment.id)
 
+    def test_84_binary_attachment_invalidation(self):
+        """ Modifying the attachment of a binary field directly updates the field. """
+        record = self.env['test_orm.model_binary'].create({'binary': BinaryBytes(b'content')})
+        attachment = self.env['ir.attachment'].browse(record.binary.attachment_id)
+
+        attachment.raw = b'new content'
+        self.assertEqual(record.binary.content, b'new content')
+
+        attachment.res_field = False
+        self.assertFalse(record.binary)
+
+        attachment = self.env['ir.attachment'].create({
+            'name': 'file.txt',
+            'raw': b'created',
+            'res_model': record._name,
+            'res_id': record.id,
+            'res_field': 'binary',
+        })
+        self.assertEqual(record.binary.attachment_id, attachment.id)
+        self.assertEqual(record.binary.content, b'created')
+
+        attachment.unlink()
+        self.assertFalse(record.binary)
+
     def test_85_binary_guess_zip(self):
         # Regular ZIP files can be uploaded by non-admin users
         self.env['test_orm.binary_svg'].with_user(self.user_demo).create({
