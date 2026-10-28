@@ -2727,6 +2727,23 @@ test(`basic grouped list rendering with groupby m2m field`, async () => {
     ]);
 });
 
+test(`group aggregate cells have the same widget class as record cells`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="amount" widget="monetary" sum="Total"/>
+            </list>
+        `,
+        groupBy: ["bar"],
+    });
+
+    expect(".o_group_header td.o_monetary_cell").toHaveCount(2);
+    await contains(".o_group_name").click();
+    expect(".o_data_row td.o_monetary_cell").toHaveCount(1);
+});
+
 test(`grouped list rendering with groupby m2o and m2m field`, async () => {
     await mountView({
         resModel: "foo",
