@@ -1,5 +1,7 @@
 import re
-from stdnum.exceptions import InvalidFormat
+from stdnum.exceptions import InvalidFormat, ValidationError
+from stdnum.at import uid as at_uid
+from stdnum.at import businessid as at_businessid
 from odoo.tools import single_email_re
 
 NON_DIGIT_RE = re.compile(r'\D')
@@ -41,3 +43,15 @@ def validate_email(value):
     if not single_email_re.match(value):
         raise InvalidFormat()
     return value
+
+
+def at_en_validate(number):
+    """Austrian Firmenbuchnummer. UID values are still accepted because AT_EN used to be
+    deduced from the VAT (and migrated from company_registry with the UID validator).
+    TODO master: drop the UID fallback + upgrade script removing UID-shaped AT_EN values."""
+    try:
+        return at_businessid.validate(number.lower())
+    except ValidationError:
+        if at_uid.is_valid(number):
+            return at_uid.compact(number)  # 'ATU12345675' -> 'U12345675', same as before
+        raise
