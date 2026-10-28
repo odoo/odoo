@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
 from dateutil.relativedelta import relativedelta
+
+from odoo import api, fields, models
 
 
 class DataCleaningBase(models.Model):
@@ -73,10 +74,11 @@ class DataCleaningBase(models.Model):
     def write(self, vals):
         result = super().write(vals)
 
-        # Keep recycle records in sync with the base record's archived state.
-        # (Recycle models already follow the base `active` through their related field.)
-        if 'active' in vals:
-            self.with_context(active_test=False).recycle_ids.recycle_record_ids.write({'active': vals['active']})
+        # Archiving drops the pending suggestions, the next detection rebuilds them.
+        # Discarded ones are kept as they remember what the user rejected.
+        if 'active' in vals and not vals['active']:
+            recycle_rules = self.with_context(active_test=False).recycle_ids
+            self.env['data_recycle.record'].search([('recycle_model_id', 'in', recycle_rules.ids)]).unlink()
 
         # A configuration change only refreshes what is pending. Automatic rules
         # are only applied by the cron.
