@@ -251,6 +251,7 @@ export class BaseProductPageAction extends BuilderAction {
         const variants = await generateImageVariants({
             source: { url: imageEl.src },
             name: attachment.name,
+            smoothing: "high",
         });
         const attachmentIds = await this.services.orm.call("ir.attachment", "web_create_image_variants", [
             variants,
