@@ -35,13 +35,13 @@ class TestPortalInvoice(AccountTestInvoicingHttpCommon):
         })
         invoice_with_pdf.action_post()
         invoice_with_pdf._generate_and_send()
-        self.assertTrue(invoice_with_pdf.invoice_pdf_report_id)
+        self.assertTrue(invoice_with_pdf.invoice_pdf_report_file)
 
         url = f'/my/invoices/{invoice_with_pdf.id}?report_type=pdf&download=True'
         self.authenticate(self.user_portal.login, self.user_portal.login)
         res = self.url_open(url)
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(res.content, invoice_with_pdf.invoice_pdf_report_id.raw.content)
+        self.assertEqual(res.content, invoice_with_pdf.invoice_pdf_report_file.content)
 
     def test_portal_my_invoices_with_matched_payment(self):
         """Portal users must be able to list their invoices even when a payment

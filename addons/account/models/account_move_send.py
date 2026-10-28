@@ -239,7 +239,7 @@ class AccountMoveSend(models.AbstractModel):
     def _get_default_mail_attachments_widget(self, move, mail_template, invoice_edi_format=None, extra_edis=None, pdf_report=None):
         return self._get_placeholder_mail_attachments_data(move, invoice_edi_format=invoice_edi_format, extra_edis=extra_edis, pdf_report=pdf_report) \
             + self._get_placeholder_mail_template_dynamic_attachments_data(move, mail_template, pdf_report=pdf_report) \
-            + self._get_invoice_extra_attachments_data(move) \
+            + self._get_invoice_extra_files_data(move) \
             + self._get_mail_template_attachments_data(mail_template)
 
     @api.model
@@ -253,7 +253,7 @@ class AccountMoveSend(models.AbstractModel):
         * mimetype:         str: The mimetype of the attachment.
         * placeholder       bool: Should be true to prevent download / deletion.
         """
-        if move.invoice_pdf_report_id:
+        if move.invoice_pdf_report_file:
             return []
         filename = move._get_invoice_report_filename(report=pdf_report)
         return [{
@@ -297,20 +297,23 @@ class AccountMoveSend(models.AbstractModel):
         return attachments
 
     @api.model
-    def _get_invoice_extra_attachments(self, move):
-        return move.invoice_pdf_report_id
+    def _get_invoice_extra_files(self, move):
+        """ Returns the documents of the move that are sent along with it (see `_get_invoice_files`).
+        :returns: A list of BinaryValue.
+        """
+        return [invoice_file['file'] for invoice_file in move._get_invoice_files() if invoice_file['send']]
 
     @api.model
-    def _get_invoice_extra_attachments_data(self, move):
+    def _get_invoice_extra_files_data(self, move):
         return [
             {
-                'id': attachment.id,
-                'name': attachment.name,
-                'mimetype': attachment.mimetype,
+                'id': f'binary_{value.checksum}',
+                'name': value.filename,
+                'mimetype': value.mimetype,
                 'placeholder': False,
                 'protect_from_deletion': True,
             }
-            for attachment in self._get_invoice_extra_attachments(move)
+            for value in self._get_invoice_extra_files(move)
         ]
 
     @api.model
@@ -489,7 +492,6 @@ class AccountMoveSend(models.AbstractModel):
         for invoice, invoice_data in invoices_data.items():
             if attachment := res_id_to_attachment.get(invoice.id):
                 invoice.message_main_attachment_id = attachment
-                invoice.invalidate_recordset(fnames=['invoice_pdf_report_id', 'invoice_pdf_report_file'])
                 invoice.is_move_sent = True
 
     @api.model
@@ -527,8 +529,8 @@ class AccountMoveSend(models.AbstractModel):
                     invoice=move,
                     mail_params={
                         'attachment_ids': [
-                            Command.create({'name': attachment.name, 'raw': attachment.raw, 'mimetype': attachment.mimetype})
-                            for attachment in self._get_invoice_extra_attachments(move)
+                            Command.create({'name': value.filename, 'raw': value, 'mimetype': value.mimetype})
+                            for value in self._get_invoice_extra_files(move)
                         ]
                     },
                 )
@@ -599,9 +601,14 @@ class AccountMoveSend(models.AbstractModel):
         # We must ensure the newly created PDF are added. At this point, the PDF has been generated but not added
         # to 'mail_attachments_widget'.
         mail_attachments_widget = move_data.get('mail_attachments_widget')
-        seen_attachment_ids = set()
         to_exclude = {x['name'] for x in mail_attachments_widget if x.get('skip')}
-        for attachment_data in self._get_invoice_extra_attachments_data(move) + mail_attachments_widget:
+        extra_values = [
+            value
+            for value in self._get_invoice_extra_files(move)
+            if value.filename not in to_exclude
+        ]
+        seen_attachment_ids = set()
+        for attachment_data in mail_attachments_widget:
             if attachment_data['name'] in to_exclude and not attachment_data.get('manual'):
                 continue
 
@@ -612,9 +619,11 @@ class AccountMoveSend(models.AbstractModel):
 
             seen_attachment_ids.add(attachment_id)
 
-        mail_attachments = [
+        extra_checksums = {value.checksum for value in extra_values}
+        mail_attachments = [(value.filename, value) for value in extra_values] + [
             (attachment.name, attachment.raw)
             for attachment in self.env['ir.attachment'].browse(list(seen_attachment_ids)).exists()
+            if attachment.checksum not in extra_checksums
         ]
 
         params = {
@@ -755,7 +764,7 @@ class AccountMoveSend(models.AbstractModel):
         batches = []
         pdf_to_generate = {}
         for invoice, invoice_data in invoices_data_pdf.items():
-            if not invoice_data.get('error') and not invoice.invoice_pdf_report_id:  # we don't regenerate pdf if it already exists
+            if not invoice_data.get('error') and not invoice.invoice_pdf_report_file:  # we don't regenerate pdf if it already exists
                 pdf_to_generate[invoice] = invoice_data
 
                 if (len(pdf_to_generate) > int(batch_size)):
@@ -769,7 +778,7 @@ class AccountMoveSend(models.AbstractModel):
             self._prepare_invoice_pdf_report(batch)
 
         for invoice, invoice_data in invoices_data_pdf.items():
-            if not invoice_data.get('error') and not invoice.invoice_pdf_report_id:
+            if not invoice_data.get('error') and not invoice.invoice_pdf_report_file:
                 self._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
 
         # Cleanup the error if we don't want to block the regular pdf generation.
@@ -805,7 +814,7 @@ class AccountMoveSend(models.AbstractModel):
         :param invoices_data:   The collected data for invoices so far.
         """
         for invoice, invoice_data in invoices_data.items():
-            if not invoice.invoice_pdf_report_id and invoice_data.get('error'):
+            if not invoice.invoice_pdf_report_file and invoice_data.get('error'):
                 invoice_data.pop('error')
                 self._prepare_invoice_proforma_pdf_report(invoice, invoice_data)
                 self._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
@@ -914,10 +923,12 @@ class AccountMoveSend(models.AbstractModel):
                 continue
             move.sending_data = False
 
-        # Return generated attachments.
-        attachments = self.env['ir.attachment']
+        # Return generated documents.
+        documents = []
         for move, move_data in success.items():
-            extra_attachments = self._get_invoice_extra_attachments(move)
-            attachments += extra_attachments or move_data.get('proforma_pdf_attachment', self.env['ir.attachment'])
+            if extra_values := self._get_invoice_extra_files(move):
+                documents += extra_values
+            elif proforma := move_data.get('proforma_pdf_attachment'):
+                documents.append(proforma.raw)
 
-        return attachments
+        return documents

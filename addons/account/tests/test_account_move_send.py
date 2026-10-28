@@ -595,7 +595,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertFalse(invoice.sending_data)
 
         # The PDF has been successfully generated.
-        pdf_report = invoice.invoice_pdf_report_id
+        pdf_report = invoice.invoice_pdf_report_file
         self.assertTrue(pdf_report)
         invoice_attachments = self.env['ir.attachment'].search([
             ('res_model', '=', invoice._name),
@@ -612,7 +612,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             mocked_method.assert_not_called()
         self.assertEqual(results['type'], 'ir.actions.act_url')
         self.assertFalse(invoice.sending_data)
-        self.assertRecordValues(invoice, [{'invoice_pdf_report_id': pdf_report.id}])
+        self.assertEqual(invoice.invoice_pdf_report_file.attachment_id, pdf_report.attachment_id)
         invoice_attachments = self.env['ir.attachment'].search([
             ('res_model', '=', invoice._name),
             ('res_id', '=', invoice.id),
@@ -623,7 +623,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
 
         # Only one PDF linked to the invoice.
         invoice_attachments = self.env['ir.attachment'].search([
-            ('name', '=', pdf_report.name),
+            ('name', '=', pdf_report.filename),
             ('res_model', '=', invoice._name),
             ('res_id', '=', invoice.id),
             ('res_field', '=', False),
@@ -665,15 +665,15 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertEqual(results['params']['next']['type'], 'ir.actions.act_window_close')
 
         # Awaiting the CRON.
-        self.assertFalse(invoice1.invoice_pdf_report_id)
-        self.assertFalse(invoice2.invoice_pdf_report_id)
+        self.assertFalse(invoice1.invoice_pdf_report_file)
+        self.assertFalse(invoice2.invoice_pdf_report_file)
         self.assertTrue(invoice1.is_being_sent)
         self.assertTrue(invoice2.is_being_sent)
 
         # Run the CRON.
         with self.enter_registry_test_mode():
             self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
-        self.assertTrue(invoice1.invoice_pdf_report_id)
+        self.assertTrue(invoice1.invoice_pdf_report_file)
         invoice_attachments = self.env['ir.attachment'].search([
             ('res_model', '=', invoice1._name),
             ('res_id', '=', invoice1.id),
@@ -681,7 +681,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         ])
         self.assertTrue(self._get_mail_message(invoice1))
         self.assertEqual(len(invoice_attachments), 1)
-        self.assertTrue(invoice2.invoice_pdf_report_id)
+        self.assertTrue(invoice2.invoice_pdf_report_file)
         invoice_attachments = self.env['ir.attachment'].search([
             ('res_model', '=', invoice2._name),
             ('res_id', '=', invoice2.id),
@@ -728,7 +728,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             ('res_field', '=', 'invoice_pdf_report_file'),
         ])
         self.assertEqual(len(invoice_attachments), 1)
-        self.assertTrue(invoice1.invoice_pdf_report_id)
+        self.assertTrue(invoice1.invoice_pdf_report_file)
         invoice_attachments = self.env['ir.attachment'].search([
             ('res_model', '=', invoice3._name),
             ('res_id', '=', invoice3.id),
@@ -795,11 +795,11 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         with self.enter_registry_test_mode():
             self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
         # invoices are generated, but only partner_b got an email
-        self.assertTrue(invoice1.invoice_pdf_report_id)
+        self.assertTrue(invoice1.invoice_pdf_report_file)
         self.assertFalse(self._get_mail_message(invoice1, limit=None).partner_ids)
         # invoice1 has no applicable sending method (missing email), so it is flagged as generated but not sent
         self.assertIn('Invoice generated but not sent.', self._get_mail_message(invoice1).body)
-        self.assertTrue(invoice2.invoice_pdf_report_id)
+        self.assertTrue(invoice2.invoice_pdf_report_file)
         self.assertTrue(self._get_mail_message(invoice2, limit=None).partner_ids)
 
     def test_invoice_multi_cron_disabled_alert(self):
@@ -978,8 +978,8 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         message = self._get_mail_message(invoice)
         self.assertRecordValues(message.attachment_ids.sorted('name'), [
             {
-                'name': invoice.invoice_pdf_report_id.name,
-                'raw': invoice.invoice_pdf_report_id.raw,
+                'name': invoice.invoice_pdf_report_file.filename,
+                'raw': invoice.invoice_pdf_report_file,
             },
             {
                 'name': extra_attachment2.name,
@@ -993,7 +993,13 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
 
         # Resend.
         wizard = self.create_send_and_print(invoice, no_invoice_reminder=True, sending_methods=['email'])
-        pdf_report_values['id'] = invoice.invoice_pdf_report_id.id
+        pdf_report_values = {
+            'id': f'binary_{invoice.invoice_pdf_report_file.checksum}',
+            'mimetype': 'application/pdf',
+            'name': 'INV_2019_00001.pdf',
+            'placeholder': False,
+            'protect_from_deletion': True,
+        }
         self._assert_mail_attachments_widget(wizard, [
             pdf_report_values,
             extra_attachment_values,
@@ -1011,8 +1017,8 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         message = self._get_mail_message(invoice)
         self.assertRecordValues(message.attachment_ids.sorted('name'), [
             {
-                'name': invoice.invoice_pdf_report_id.name,
-                'raw': invoice.invoice_pdf_report_id.raw,
+                'name': invoice.invoice_pdf_report_file.filename,
+                'raw': invoice.invoice_pdf_report_file,
             },
             {
                 'name': extra_attachment2.name,
@@ -1021,9 +1027,9 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         ])
 
         # Manually remove the attachment and check the mail's attachments are not removed.
-        invoice_pdf_report_name = invoice.invoice_pdf_report_id.name
-        invoice_pdf_report_raw = invoice.invoice_pdf_report_id.raw
-        invoice.invoice_pdf_report_id.unlink()
+        invoice_pdf_report_name = invoice.invoice_pdf_report_file.filename
+        invoice_pdf_report_raw = invoice.invoice_pdf_report_file.content
+        invoice.invoice_pdf_report_file = False
         self.assertRecordValues(message.attachment_ids.sorted('name'), [
             {
                 'name': invoice_pdf_report_name,
@@ -1058,7 +1064,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
                 pass
 
         # The PDF is not generated in case of error.
-        self.assertFalse(invoice.invoice_pdf_report_id)
+        self.assertFalse(invoice.invoice_pdf_report_file)
 
     def test_proforma_pdf(self):
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
@@ -1078,7 +1084,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertFalse(invoice.sending_data)
 
         # The PDF is not generated but a proforma.
-        self.assertFalse(invoice.invoice_pdf_report_id)
+        self.assertFalse(invoice.invoice_pdf_report_file)
         self.assertEqual(invoice.message_main_attachment_id.name, 'INV_2019_00001_proforma.pdf')
 
     def test_error_but_continue(self):
@@ -1099,8 +1105,8 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertEqual(results['type'], 'ir.actions.act_window_close')
         self.assertFalse(invoice.sending_data)
 
-        # The PDF is generated even in case of error, but invoice_pdf_report_id is not set
-        self.assertFalse(invoice.invoice_pdf_report_id)
+        # The PDF is generated even in case of error, but invoice_pdf_report_file is not set
+        self.assertFalse(invoice.invoice_pdf_report_file)
         self.assertEqual(invoice.message_main_attachment_id.name, 'INV_2019_00001_proforma.pdf')
 
     def test_with_empty_mail_template_single(self):
@@ -1130,8 +1136,8 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         with self.enter_registry_test_mode():
             self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
         # generation defaulted on the generic mail_template and processed successfully
-        self.assertTrue(invoice_1.invoice_pdf_report_id)
-        self.assertTrue(invoice_2.invoice_pdf_report_id)
+        self.assertTrue(invoice_1.invoice_pdf_report_file)
+        self.assertTrue(invoice_2.invoice_pdf_report_file)
 
     def test_with_draft_invoices(self):
         """ Use Send & Print wizard on draft invoice(s) should raise an error. """
@@ -1159,7 +1165,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             wizard.action_send_and_print(allow_fallback_pdf=True)
 
         # The PDF is generated and linked
-        self.assertTrue(invoice.invoice_pdf_report_id)
+        self.assertTrue(invoice.invoice_pdf_report_file)
         # Not a proforma
         self.assertFalse(self.env['ir.attachment'].sudo().search([
             ('name', '=', invoice._get_invoice_proforma_pdf_report_filename()),
@@ -1181,7 +1187,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             wizard.action_send_and_print(allow_fallback_pdf=True)
 
         # The PDF is not generated but a proforma.
-        self.assertFalse(invoice.invoice_pdf_report_id)
+        self.assertFalse(invoice.invoice_pdf_report_file)
         self.assertTrue(self.env['ir.attachment'].sudo().search([
             ('name', '=', invoice._get_invoice_proforma_pdf_report_filename()),
         ]))
@@ -1200,11 +1206,11 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
 
         invoices = invoice_1_1 + invoice_1_2 + invoice_2_1 + invoice_2_2
         invoices = invoices.sudo()  # keep access after flush of the cron
-        self.assertFalse(invoices.invoice_pdf_report_id)
+        self.assertFalse(any(invoice.invoice_pdf_report_file for invoice in invoices))
         self.assertTrue(all(invoice.sending_data for invoice in invoices))
         with self.enter_registry_test_mode():
             self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
-        self.assertTrue(all(invoice.invoice_pdf_report_id for invoice in invoices))
+        self.assertTrue(all(invoice.invoice_pdf_report_file for invoice in invoices))
         self.assertTrue(all(not invoice.sending_data for invoice in invoices))
 
     def test_cron_notifications(self):
@@ -1275,22 +1281,22 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertTrue(invoice.is_move_sent)
         # Revert move to draft
         # get the attachment here, because button_draft detaches attachments
-        pdf_report = invoice.invoice_pdf_report_id
+        pdf_report = self.env['ir.attachment'].browse(invoice.invoice_pdf_report_file.attachment_id)
         invoice.button_draft()
         self.assertTrue(invoice.is_move_sent)
         # Unlink PDF
         self.assertTrue(pdf_report)
-        invoice.invoice_pdf_report_id.unlink()
+        pdf_report.unlink()
         self.assertTrue(invoice.is_move_sent)
 
     def test_no_sending_method_selected(self):
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
-        self.assertFalse(invoice.invoice_pdf_report_id)
+        self.assertFalse(invoice.invoice_pdf_report_file)
         wizard = self.create_send_and_print(invoice, sending_methods=[])
         self.assertFalse(wizard.sending_methods)
         wizard.action_send_and_print()
         self.assertTrue(invoice.is_move_sent)
-        self.assertTrue(invoice.invoice_pdf_report_id)
+        self.assertTrue(invoice.invoice_pdf_report_file)
 
     def test_get_sending_settings(self):
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
@@ -1407,12 +1413,10 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
 
         for call in patched_send_mail.call_args_list:
             attachments_data = call.kwargs.get('email_values', {}).get('attachment_ids', [])
-            self.assertTrue(invoice.invoice_pdf_report_id)
+            self.assertTrue(invoice.invoice_pdf_report_file)
             self.assertEqual(len(attachments_data), 1)
-            self.assertRecordValues(invoice.invoice_pdf_report_id, [{
-                'name': attachments_data[0][2]['name'],
-                'raw': attachments_data[0][2]['raw'],
-            }])
+            self.assertEqual(invoice.invoice_pdf_report_file.filename, attachments_data[0][2]['name'])
+            self.assertEqual(invoice.invoice_pdf_report_file.content, bytes(attachments_data[0][2]['raw']))
 
     def test_invoice_send_reply_to_persistence(self):
         """ Test that the reply_to set on the mail template is correctly
@@ -1469,7 +1473,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
                 mail_template=template,
             )
             self.assertFalse(calls, "Nothing should be sent before the commit")
-            self.assertFalse(invoice.invoice_pdf_report_id)
+            self.assertFalse(invoice.invoice_pdf_report_file)
             self.assertFalse(invoice.is_move_sent)
             self.assertTrue(invoice.sending_data, "The invoice must be flagged for the cron in the current transaction")
 
@@ -1485,7 +1489,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertTrue(kwargs['mail_template'].env.su, "The sudo flag must be kept on the new cursor")
 
         self.env.invalidate_all()
-        self.assertTrue(invoice.invoice_pdf_report_id)
+        self.assertTrue(invoice.invoice_pdf_report_file)
         self.assertTrue(invoice.message_ids.filtered(lambda m: m.subject == "Sent after commit"))
         self.assertTrue(invoice.is_move_sent)
         self.assertFalse(invoice.sending_data)
@@ -1509,7 +1513,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
 
         self.env.invalidate_all()
         self.assertFalse(invoice.ref)
-        self.assertFalse(invoice.invoice_pdf_report_id)
+        self.assertFalse(invoice.invoice_pdf_report_file)
         self.assertFalse(invoice.is_move_sent)
         self.assertTrue(invoice.sending_data)
 
@@ -1525,12 +1529,12 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             self.env['account.move.send']._generate_and_send_invoices_post_commit(invoice, sending_methods=['email'])
 
         self.env.invalidate_all()
-        self.assertFalse(invoice.invoice_pdf_report_id)
+        self.assertFalse(invoice.invoice_pdf_report_file)
         self.assertFalse(invoice.is_move_sent)
         self.assertTrue(invoice.sending_data)
 
         with self.enter_registry_test_mode():
             self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
-        self.assertTrue(invoice.invoice_pdf_report_id)
+        self.assertTrue(invoice.invoice_pdf_report_file)
         self.assertTrue(invoice.is_move_sent)
         self.assertFalse(invoice.sending_data)

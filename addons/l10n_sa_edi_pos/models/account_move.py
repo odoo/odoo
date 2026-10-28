@@ -30,7 +30,7 @@ class AccountMove(models.Model):
         proforma.
         """
         self.ensure_one()
-        if not self.invoice_pdf_report_id:
+        if not self.invoice_pdf_report_file:
             # sending_methods={} skips email; ZATCA is already 'accepted'/'warning' so
             # _is_sa_edi_applicable returns False and it is not re-submitted.
             self.env['account.move.send']._generate_and_send_invoices(

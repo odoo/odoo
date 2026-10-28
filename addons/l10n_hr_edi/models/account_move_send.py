@@ -60,7 +60,7 @@ class AccountMoveSend(models.AbstractModel):
                 self._is_applicable_to_company(method, move.company_id),
                 partner.vat,    # Alternatively, partner GLN when proper support for that is added
                 move._need_ubl_cii_xml(invoice_edi_format)
-                or (move.ubl_cii_xml_id and move.l10n_hr_mer_document_status not in {'20', '30', '40'}),
+                or (move.ubl_cii_xml_file and move.l10n_hr_mer_document_status not in {'20', '30', '40'}),
             ])
         return super()._is_applicable_to_move(method, move, **move_data)
 
@@ -99,8 +99,8 @@ class AccountMoveSend(models.AbstractModel):
 
             if invoice_data.get('ubl_cii_xml_attachment_values'):
                 xml_file = invoice_data['ubl_cii_xml_attachment_values']['raw']
-            elif invoice.ubl_cii_xml_id and invoice.l10n_hr_mer_document_status not in {'20', '30', '40'}:
-                xml_file = invoice.ubl_cii_xml_id.raw
+            elif invoice.ubl_cii_xml_file and invoice.l10n_hr_mer_document_status not in {'20', '30', '40'}:
+                xml_file = invoice.ubl_cii_xml_file
             else:
                 invoice.l10n_hr_edi_addendum_id.mer_document_status = '50'
                 builder = invoice.partner_id.commercial_partner_id._get_edi_builder(invoice_data['invoice_edi_format'])

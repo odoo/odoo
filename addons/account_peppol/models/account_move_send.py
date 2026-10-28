@@ -157,9 +157,9 @@ class AccountMoveSend(models.AbstractModel):
         if invoice_data.get('ubl_cii_xml_attachment_values'):
             xml_file = BinaryBytes(invoice_data['ubl_cii_xml_attachment_values']['raw'])
             filename = invoice_data['ubl_cii_xml_attachment_values']['name']
-        elif invoice.ubl_cii_xml_id and not invoice.peppol_is_sent:
-            xml_file = invoice.ubl_cii_xml_id.raw
-            filename = invoice.ubl_cii_xml_id.name
+        elif invoice.ubl_cii_xml_file and not invoice.peppol_is_sent:
+            xml_file = invoice.ubl_cii_xml_file
+            filename = invoice.ubl_cii_xml_file.filename
         else:
             invoice.peppol_move_state = 'error'
             builder = invoice.partner_id.commercial_partner_id._get_edi_builder(invoice_data['invoice_edi_format'])
@@ -169,7 +169,7 @@ class AccountMoveSend(models.AbstractModel):
             )
             return None, None
 
-        if invoice.invoice_pdf_report_id and self._needs_ubl_postprocessing(invoice_data):
+        if invoice.invoice_pdf_report_file and self._needs_ubl_postprocessing(invoice_data):
             self._postprocess_invoice_ubl_xml(invoice, invoice_data)
             xml_file = BinaryBytes(invoice_data['ubl_cii_xml_attachment_values']['raw'])
             filename = invoice_data['ubl_cii_xml_attachment_values']['name']
@@ -243,7 +243,7 @@ class AccountMoveSend(models.AbstractModel):
                 self._is_applicable_to_company(method, move.company_id),
                 partner.peppol_verification_state == 'valid',
                 move.company_id.account_peppol_proxy_state != 'rejected',
-                move._need_ubl_cii_xml(invoice_edi_format) or move.ubl_cii_xml_id and not move.peppol_is_sent,
+                move._need_ubl_cii_xml(invoice_edi_format) or move.ubl_cii_xml_file and not move.peppol_is_sent,
             ])
         else:
             return super()._is_applicable_to_move(method, move, **move_data)

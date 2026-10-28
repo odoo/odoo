@@ -13,7 +13,7 @@ from lxml import etree
 from odoo import SUPERUSER_ID, api, fields, models, modules
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import SQL, config, date_utils, split_every
+from odoo.tools import BinaryBytes, SQL, config, date_utils, split_every
 from odoo.tools.image import image_data_uri
 
 from odoo.addons.account.tools import dict_to_xml
@@ -71,13 +71,6 @@ class MyInvoisDocument(models.Model):
         copy=False,
     )
     # File fields
-    myinvois_file_id = fields.Many2one(
-        comodel_name='ir.attachment',
-        compute=lambda self: self._compute_linked_attachment_id('myinvois_file_id', 'myinvois_file'),
-        depends=['myinvois_file'],
-        copy=False,
-        export_string_translation=False,
-    )
     myinvois_file = fields.Binary(
         string='MyInvois XML File',
         copy=False,
@@ -223,21 +216,6 @@ class MyInvoisDocument(models.Model):
 
         self.filtered(lambda m: not m.name).name = '/'
 
-    def _compute_linked_attachment_id(self, attachment_field, binary_field):
-        """
-        Helper to retrieve Attachment from Binary fields
-        This is needed because fields.Many2one('ir.attachment') makes all
-        attachments available to the user.
-        """
-        attachments = self.env['ir.attachment'].search([
-            ('res_model', '=', self._name),
-            ('res_id', 'in', self.ids),
-            ('res_field', '=', binary_field),
-        ])
-        attachments_per_res_id = attachments.grouped('res_id')
-        for document in self:
-            document[attachment_field] = attachments_per_res_id.get(document._origin.id, False)
-
     @api.depends('name')
     def _compute_display_name(self):
         for document in self:
@@ -377,12 +355,11 @@ class MyInvoisDocument(models.Model):
         Generate a xml file for each of the MyInvois documents in self.
         If the document already as a file, the previous file's name is updated to include an (old) tag to avoid confusion in the attachment list.
         """
-        new_documents_data = []
         errored_doc_messages = {}
         for document in self:
-            if document.myinvois_file_id:
-                document.myinvois_file_id.write({
-                    'name': f"{document.myinvois_file_id.name} (old)",
+            if myinvois_file := document.myinvois_file:
+                self.env['ir.attachment'].browse(myinvois_file.attachment_id).write({
+                    'name': f"{myinvois_file.filename} (old)",
                     'res_field': False,  # Remove the link between the old attachment and the record's field
                 })
 
@@ -400,14 +377,10 @@ class MyInvoisDocument(models.Model):
                 errored_doc_messages[document.id] = list(errors)
                 continue
 
-            new_documents_data.append({
-                "name": f'{document.name.replace("/", "_")}_myinvois.xml' if document.name != "/" else "myinvois.xml",
-                "raw": xml_data,
-                "mimetype": "application/xml",
-                "res_model": document._name,
-                "res_id": document.id,
-                "res_field": "myinvois_file",
-            })
+            document.sudo().myinvois_file = BinaryBytes(
+                xml_data,
+                filename=f'{document.name.replace("/", "_")}_myinvois.xml' if document.name != "/" else "myinvois.xml",
+            )
 
         errored_docs = self.env['myinvois.document'].browse(errored_doc_messages)
         if errored_docs and allow_raising:
@@ -443,9 +416,6 @@ class MyInvoisDocument(models.Model):
                 action=errored_invoices._get_records_action(name=self.env._("Invoices Requiring Attention")),
                 button_text=self.env._("View Invoices"),
             )
-
-        self.env["ir.attachment"].with_user(SUPERUSER_ID).create(new_documents_data)
-        self.invalidate_recordset(fnames=['myinvois_file_id', 'myinvois_file'])
 
     def action_cancel_submission(self):
         """ Cancel the document on the platform. """
@@ -668,8 +638,10 @@ class MyInvoisDocument(models.Model):
 
     def _get_mail_thread_data_attachments(self):
         res = super()._get_mail_thread_data_attachments()
-        # else, attachments with 'res_field' get excluded
-        return res | self.myinvois_file_id
+        if myinvois_file := self.myinvois_file:
+            # else, attachments with 'res_field' get excluded
+            res |= self.env['ir.attachment'].browse(myinvois_file.attachment_id)
+        return res
 
     def _get_active_myinvois_document(self, including_in_progress=False):
         """

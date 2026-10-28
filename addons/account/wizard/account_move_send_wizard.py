@@ -198,7 +198,7 @@ class AccountMoveSendWizard(models.TransientModel):
     def _compute_display_pdf_report_id(self):
         """ Show PDF template selection if there are more than 1 template available for invoices. """
         for wizard in self:
-            wizard.display_pdf_report_id = len(wizard.available_pdf_report_ids) > 1 and not wizard.move_id.invoice_pdf_report_id
+            wizard.display_pdf_report_id = len(wizard.available_pdf_report_ids) > 1 and not wizard.move_id.invoice_pdf_report_file
 
     @api.depends('move_id')
     def _compute_template_id(self):
@@ -384,12 +384,11 @@ class AccountMoveSendWizard(models.TransientModel):
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
 
-    @api.model
-    def _action_download(self, attachments):
-        """ Download the PDF attachment, or a zip of attachments if there are more than one. """
+    def _action_download(self):
+        """ Download the PDF, or a zip of the documents if there are more than one. """
         return {
             'type': 'ir.actions.act_url',
-            'url': f'/account/download_invoice_attachments/{",".join(map(str, attachments.ids))}',
+            'url': f'/account/download_invoice_documents/{self.move_id.id}/all',
             'close': True,
         }
 
@@ -399,12 +398,12 @@ class AccountMoveSendWizard(models.TransientModel):
         if self.alerts:
             self._raise_danger_alerts(self.alerts)
         self._update_preferred_settings()
-        attachments = self._generate_and_send_invoices(
+        documents = self._generate_and_send_invoices(
             self.move_id,
             **self._get_sending_settings(),
             allow_fallback_pdf=allow_fallback_pdf,
         )
-        if attachments and self.sending_methods and 'manual' in self.sending_methods:
-            return self._action_download(attachments)
+        if documents and self.sending_methods and 'manual' in self.sending_methods:
+            return self._action_download()
         else:
             return {'type': 'ir.actions.act_window_close'}

@@ -178,12 +178,12 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
         subfolder_format, subfolder_document, subfolder_country = self.subfolders()
         subfolder = f'export/{subfolder_format}/{subfolder_document}/{subfolder_country}'
 
-        self.assertTrue(invoice.ubl_cii_xml_id)
+        self.assertTrue(invoice.ubl_cii_xml_file)
 
         if 'EXTERNAL_MODE' in config['test_tags']:
-            self._assert_iap_valid_xml(invoice.ubl_cii_xml_id.raw)
+            self._assert_iap_valid_xml(invoice.ubl_cii_xml_file)
 
-        self.assert_xml(invoice.ubl_cii_xml_id.raw, filename, subfolder=subfolder)
+        self.assert_xml(invoice.ubl_cii_xml_file, filename, subfolder=subfolder)
 
     # -------------------------------------------------------------------------
     # IMPORT HELPERS

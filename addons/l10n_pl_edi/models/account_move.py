@@ -9,10 +9,11 @@ from hashlib import sha256
 from lxml import etree
 from stdnum.pl.nip import compact
 from decimal import Decimal
+from urllib.parse import quote
 
 from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_is_zero, float_repr, mute_logger, OrderedSet
+from odoo.tools import BinaryBytes, float_compare, float_is_zero, float_repr, mute_logger, OrderedSet
 from odoo.tools.business_data import split_vat
 from odoo.tools.image import image_data_uri
 
@@ -42,19 +43,7 @@ class AccountMove(models.Model):
     l10n_pl_edi_number = fields.Char(string='KSeF Number', readonly=True, index=True, copy=False)
     l10n_pl_edi_session_id = fields.Char(string='KSeF Session Number used for sending', copy=False, readonly=True)
     l10n_pl_edi_attachment_file = fields.Binary(copy=False, attachment=True)
-    l10n_pl_edi_attachment_id = fields.Many2one(
-        comodel_name='ir.attachment',
-        string="KSeF Attachment",
-        compute=lambda self: self._compute_linked_attachment_id('l10n_pl_edi_attachment_id', 'l10n_pl_edi_attachment_file'),
-        depends=['l10n_pl_edi_attachment_file'],
-    )
     l10n_pl_edi_upo_file = fields.Binary(copy=False, attachment=True)
-    l10n_pl_edi_upo_id = fields.Many2one(
-        comodel_name='ir.attachment',
-        string="UPO Attachment",
-        compute=lambda self: self._compute_linked_attachment_id('l10n_pl_edi_upo_id', 'l10n_pl_edi_upo_file'),
-        depends=['l10n_pl_edi_upo_file'],
-    )
 
     _l10n_pl_edi_number_company_id_move_type_uniq = models.Constraint(
         'UNIQUE(l10n_pl_edi_number, company_id, move_type)',
@@ -425,28 +414,17 @@ class AccountMove(models.Model):
         dom = parseString(upo_xml_content)
         pretty_xml_bytes = dom.toprettyxml(indent="  ", encoding="utf-8")
 
-        if self.l10n_pl_edi_upo_id:
-            self.l10n_pl_edi_upo_id.raw = pretty_xml_bytes
-        else:
-            self.l10n_pl_edi_upo_id = self.env['ir.attachment'].create({
-                'name': f"UPO-{self.name.replace('/', '_')}.xml",
-                'description': self.env._('KSeF Official Confirmation of Receipt (UPO)'),
-                'type': 'binary',
-                'mimetype': 'application/xml',
-                'raw': pretty_xml_bytes,
-                'res_id': self.id,
-                'res_model': self._name,
-                'res_field': 'l10n_pl_edi_upo_file',
-            })
+        filename = f"UPO-{self.name.replace('/', '_')}.xml"
+        self.l10n_pl_edi_upo_file = BinaryBytes(pretty_xml_bytes, filename=filename)
 
         self.sudo().with_context(no_new_invoice=True).message_post(
             body=self.env._("The KSeF Official Confirmation of Receipt (UPO) has been downloaded and attached."),
-            attachment_ids=self.l10n_pl_edi_upo_id.ids,
+            attachment_ids=[self.l10n_pl_edi_upo_file.attachment_id],
         )
 
         return {
             'type': 'ir.actions.act_url',
-            'url': f'/web/content/{self.l10n_pl_edi_upo_id.id}?download=true',
+            'url': f'/web/content/{self._name}/{self.id}/l10n_pl_edi_upo_file/{quote(filename)}?download=true',
             'target': '_blank',
         }
 

@@ -125,6 +125,13 @@ class AccountMove(models.Model):
         if not self.env.context.get('force_delete') and any(m.l10n_es_tbai_chain_index for m in self):
             raise UserError(_('You cannot delete a move that has a TicketBAI chain id.'))
 
+    def _get_invoice_files(self):
+        invoice_files = super()._get_invoice_files()
+        # regular attachment of the move, already displayed in the chatter
+        if xml_attachment := self.l10n_es_tbai_post_document_id.xml_attachment_id:
+            invoice_files.append({'file': xml_attachment.raw, 'send': True, 'chatter': False})
+        return invoice_files
+
     # -------------------------------------------------------------------------
     # HELPER METHODS
     # -------------------------------------------------------------------------

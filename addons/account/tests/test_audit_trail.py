@@ -369,9 +369,10 @@ class TestAuditTrailAttachment(AccountTestInvoicingHttpCommon):
                 })
 
     def _send_and_print(self, invoice):
-        return self.env['account.move.send'].with_context(
+        self.env['account.move.send'].with_context(
             force_report_rendering=True,
         )._generate_and_send_invoices(invoice)
+        return self.env['ir.attachment'].browse(invoice.invoice_pdf_report_file.attachment_id)
 
     def test_audit_trail_attachment(self):
         invoice = self.env['account.move'].create([{

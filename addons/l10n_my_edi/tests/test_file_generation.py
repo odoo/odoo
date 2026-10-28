@@ -5,7 +5,7 @@ from lxml import etree
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tests import Form, tagged
-from odoo.tools import file_open
+from odoo.tools import BinaryBytes, file_open
 
 from odoo.addons.l10n_my_edi.tests.test_file_generation_common import (
     NS_MAP,
@@ -718,7 +718,7 @@ class L10nMyEDITestFileGeneration(L10nMyEDITestFileGenerationCommon):
         self.assertFalse(errors)
 
         myinvois_document.write({
-            'myinvois_file_id': self.env['ir.attachment'].create({'name': 'test myinvois', 'raw': bill_file}).id,
+            'myinvois_file': BinaryBytes(bill_file, filename='test myinvois'),
             'myinvois_state': 'valid',
         })
         bill.l10n_my_edi_document_ids |= myinvois_document
@@ -760,7 +760,7 @@ class L10nMyEDITestFileGeneration(L10nMyEDITestFileGenerationCommon):
         self.assertFalse(errors)
 
         myinvois_document.write({
-            'myinvois_file_id': self.env['ir.attachment'].create({'name': 'test myinvois', 'raw': bill_file}).id,
+            'myinvois_file': BinaryBytes(bill_file, filename='test myinvois'),
             'myinvois_state': 'valid',
         })
         bill.l10n_my_edi_document_ids |= myinvois_document

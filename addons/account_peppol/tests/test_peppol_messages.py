@@ -228,8 +228,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             }])
 
         # we can't send the ubl document again unless we regenerate the pdf
-        move.invoice_pdf_report_id.unlink()
-        move.invoice_pdf_report_file = False  # unlink doesn't invalidate invoice_pdf_report_id
+        move.invoice_pdf_report_file = False
         with mock_lookup_success('0208:0428759497'):
             wizard = self.create_send_and_print(move, default=True)
         self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')
@@ -264,7 +263,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
                 'peppol_message_uuid': self.MESSAGE_UUID,
             }],
         )
-        self.assertTrue(bool(move.ubl_cii_xml_id))
+        self.assertTrue(bool(move.ubl_cii_xml_file))
 
     def test_send_invalid_edi_user(self):
         # an invalid edi user should not be able to send invoices via peppol
@@ -475,7 +474,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')
         with mock_send_document():
             wizard.action_send_and_print()
-        self.assertTrue(move.ubl_cii_xml_id)
+        self.assertTrue(move.ubl_cii_xml_file)
         self.assertEqual(move.peppol_move_state, 'processing')
 
     def test_peppol_default_ubl_bis3_multi(self):
@@ -517,7 +516,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         ):
             self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
 
-        self.assertEqual(len(moves.ubl_cii_xml_id), 2)
+        self.assertEqual(len(moves.filtered('ubl_cii_xml_file')), 2)
         self.assertEqual(moves.mapped('peppol_move_state'), ['processing', 'processing'])
 
     def test_peppol_multi_moves_without_email(self):
@@ -675,7 +674,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             self.assertEqual(spoiled_move.peppol_move_state, 'processing')
 
         # Check that the supplier is the parent company in the xml (and not the branch company)
-        tree = etree.fromstring(spoiled_move.ubl_cii_xml_id.raw.content)
+        tree = etree.fromstring(spoiled_move.ubl_cii_xml_file.content)
         namespaces = {
             'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
             'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
@@ -694,7 +693,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         self.assertEqual(independent_move.peppol_move_state, 'processing')
 
         # Check that the supplier is the branch company in the xml (and not the parent)
-        tree_independent = etree.fromstring(independent_move.ubl_cii_xml_id.raw.content)
+        tree_independent = etree.fromstring(independent_move.ubl_cii_xml_file.content)
         supplier_name_independent = tree_independent.xpath('//cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name/text()', namespaces=namespaces)
         self.assertEqual(supplier_name_independent[0], branch_independent.name)
 
@@ -768,7 +767,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
                 'peppol_message_uuid': self.MESSAGE_UUID,
             }],
         )
-        self.assertTrue(bool(vendor_bill.ubl_cii_xml_id))
+        self.assertTrue(bool(vendor_bill.ubl_cii_xml_file))
 
     def test_self_billing_sending_constraints(self):
         """Test that self-billing sending constraints are properly handled."""
@@ -936,16 +935,16 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         with mock_lookup_not_found('0208:0428759497'), mock_lookup_not_found('9925:be2718281828'):
             wizard_email = self.create_send_and_print(move, sending_methods=['email'])
         wizard_email.action_send_and_print()
-        self.assertTrue(move.invoice_pdf_report_id, "PDF should be generated after sending by email")
+        self.assertTrue(move.invoice_pdf_report_file, "PDF should be generated after sending by email")
 
         with mock_lookup_success('0208:0428759497'):
             wizard_peppol = self.create_send_and_print(move, sending_methods=['peppol'])
         self.assertEqual(wizard_peppol.invoice_edi_format, 'ubl_bis3')
         with mock_send_document(messages=[{'message_uuid': self.MESSAGE_UUID}]):
             wizard_peppol.action_send_and_print()
-        self.assertTrue(move.ubl_cii_xml_id, "UBL XML should be generated")
+        self.assertTrue(move.ubl_cii_xml_file, "UBL XML should be generated")
 
-        root = etree.fromstring(move.ubl_cii_xml_id.raw.content)
+        root = etree.fromstring(move.ubl_cii_xml_file.content)
         embedded_pdfs = root.xpath(
             '//cbc:EmbeddedDocumentBinaryObject[@mimeCode="application/pdf"]',
             namespaces={

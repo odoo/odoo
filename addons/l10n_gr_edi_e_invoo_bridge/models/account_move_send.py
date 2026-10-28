@@ -25,8 +25,8 @@ class AccountMoveSend(models.AbstractModel):
         pdf_content = pdf_values and pdf_values.get('raw')
 
         # Reuse the attached PDF so a failed upload can be retried without regenerating it
-        if not pdf_content and invoice.invoice_pdf_report_id:
-            pdf_content = invoice.invoice_pdf_report_id.sudo().raw
+        if not pdf_content and invoice.invoice_pdf_report_file:
+            pdf_content = invoice.invoice_pdf_report_file
 
         if not api_token:
             error_message = str(E_INVOO_TOKEN_NOT_SET)
