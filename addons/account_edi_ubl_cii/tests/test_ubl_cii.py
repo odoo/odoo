@@ -326,12 +326,13 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
             'peppol_endpoint': 'FR23334175221',
         }])
 
-        partner.vat = '23334175221'
+        if self.env['ir.module.module']._get('base_vat').state == 'installed':
+            partner.vat = '23334175221'
 
-        self.assertRecordValues(partner, [{
-            'peppol_eas': '9957',
-            'peppol_endpoint': 'FR23334175221',
-        }])
+            self.assertRecordValues(partner, [{
+                'peppol_eas': '9957',
+                'peppol_endpoint': 'FR23334175221',
+            }])
 
         partner.write({
             'vat': 'BE0477472701',
