@@ -163,6 +163,9 @@ export class Navbar extends Component {
     get showCashMoveButton() {
         return this.pos.showCashMoveButton;
     }
+    get isCovered() {
+        return Boolean(this.pos.router.page.component.coversApp);
+    }
     getOrderTabs() {
         return this.pos.getOpenOrders().filter((order) => !order.table_id);
     }
