@@ -2,6 +2,7 @@ import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { PosOrderAccounting } from "./accounting/pos_order_accounting";
 import { getStrNotes } from "./utils/order_change";
+import { taxKey } from "@point_of_sale/app/models/utils/currency";
 
 const { DateTime } = luxon;
 
@@ -994,12 +995,6 @@ export class PosOrder extends PosOrderAccounting {
         }
     }
     recomputeServiceFees() {
-        const taxKey = (taxIds) =>
-            taxIds
-                .map((tax) => tax.id)
-                .sort((a, b) => a - b)
-                .join("_");
-
         if (this.state !== "draft") {
             return;
         }
