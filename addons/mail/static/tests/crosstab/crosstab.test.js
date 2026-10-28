@@ -226,3 +226,71 @@ test("Mark conversation as read when sole unread message has been deleted", asyn
     pyEnv["mail.message"].unlink(messageId);
     await waitForNone(".o-mail-NotificationItem-badge");
 });
+
+test("Unread counter is capped and not decremented below the cap on message deletion", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        name: "General",
+        channel_member_ids: [
+            Command.create({
+                new_message_separator: 0,
+                partner_id: serverState.partnerId,
+                seen_message_id: false,
+            }),
+        ],
+    });
+    const messageIds = pyEnv["mail.message"].create(
+        Array.from({ length: 105 }, (_, i) => ({
+            body: `Message ${i}`,
+            message_type: "comment",
+            model: "discuss.channel",
+            partner_ids: [serverState.partnerId],
+            res_id: channelId,
+        }))
+    );
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(".o-mail-Message");
+    const member = getService("mail.store")["discuss.channel"].get(channelId).self_member_id;
+    expect(member.message_unread_counter).toBe(100);
+    // Only messages loaded in the store trigger the decrement.
+    pyEnv["mail.message"].unlink(messageIds[104]);
+    await waitForNone(".o-mail-Message:has(:text('Message 104'))");
+    expect(member.message_unread_counter).toBe(100);
+});
+
+test("Unread counter above the cap is displayed as 99+", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({
+                new_message_separator: 0,
+                partner_id: serverState.partnerId,
+                seen_message_id: false,
+            }),
+        ],
+        channel_type: "chat",
+        name: "General",
+    });
+    pyEnv["mail.message"].create(
+        Array.from({ length: 105 }, (_, i) => ({
+            body: `Message ${i}`,
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        }))
+    );
+    await start();
+    await openDiscuss(MENU_ACTIVE_IDS.CHAT);
+    await waitFor(".o-mail-MessagingMenuItem .o-discuss-badge:text('99+')");
+    // The client increments on new messages, the server never sends more than 100.
+    getService("mail.store")["discuss.channel"].get(
+        channelId
+    ).self_member_id.message_unread_counter = 101;
+    await waitFor(".o-mail-MessagingMenuItem .o-discuss-badge:text('99+')");
+    getService("mail.store")["discuss.channel"].get(
+        channelId
+    ).self_member_id.message_unread_counter = 99;
+    await waitFor(".o-mail-MessagingMenuItem .o-discuss-badge:text('99')");
+});

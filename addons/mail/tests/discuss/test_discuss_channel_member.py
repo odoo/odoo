@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.mail.models.discuss.discuss_channel_member import UNREAD_COUNTER_LIMIT
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tests.common import new_test_user
@@ -113,6 +114,16 @@ class TestDiscussChannelMember(MailCommon):
         channel.message_post(body="Test 2", message_type="comment")
         member._mark_as_read(message.id)
         self.assertEqual(member.message_unread_counter, 0)
+
+    def test_unread_counter_is_capped(self):
+        channel = self.env["discuss.channel"].create({"name": "Channel"})
+        member = channel.self_member_id
+        self.env["mail.message"].create([
+            {"model": "discuss.channel", "res_id": channel.id, "body": f"Test {i}", "message_type": "comment"}
+            for i in range(UNREAD_COUNTER_LIMIT + 5)
+        ])
+        member.new_message_separator = 0
+        self.assertEqual(member.message_unread_counter, UNREAD_COUNTER_LIMIT)
 
     def test_unread_counter_with_message_post_multi_channel(self):
         channel_1_as_user_1 = self.env['discuss.channel'].with_user(self.user_1)._create_channel(group_id=None, name='wololo channel')

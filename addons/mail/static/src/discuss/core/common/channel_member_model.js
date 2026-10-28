@@ -8,6 +8,9 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 
 const { DateTime } = luxon;
 
+/** Must match `UNREAD_COUNTER_LIMIT` in discuss_channel_member.py. */
+export const UNREAD_COUNTER_LIMIT = 100;
+
 export class ChannelMember extends Record {
     static _name = "discuss.channel.member";
 

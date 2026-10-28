@@ -1,4 +1,5 @@
 import { Thread } from "@mail/core/common/thread";
+import { UNREAD_COUNTER_LIMIT } from "@mail/discuss/core/common/channel_member_model";
 
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
@@ -35,8 +36,9 @@ const threadPatch = {
         }
     },
     get newMessageBannerText() {
-        if (this.channel?.self_member_id?.message_unread_counter > 1) {
-            return _t("%s new messages", this.channel.self_member_id.message_unread_counter);
+        const counter = this.channel?.self_member_id?.message_unread_counter;
+        if (counter > 1) {
+            return _t("%s new messages", counter >= UNREAD_COUNTER_LIMIT ? "99+" : counter);
         }
         return _t("1 new message");
     },

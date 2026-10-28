@@ -1,4 +1,5 @@
 import { Store } from "@mail/../tests/mock_server/store";
+import { UNREAD_COUNTER_LIMIT } from "@mail/discuss/core/common/channel_member_model";
 
 import { fields, getKwArgs, models } from "@web/../tests/web_test_helpers";
 import { serializeDateTime, today } from "@web/core/l10n/dates";
@@ -140,12 +141,13 @@ export class DiscussChannelMember extends models.ServerModel {
 
     _compute_message_unread_counter() {
         for (const member of this) {
+            const count = this.env["mail.message"].search_count([
+                ["res_id", "=", member.channel_id],
+                ["model", "=", "discuss.channel"],
+                ["id", ">=", member.new_message_separator],
+            ]);
             this.write([member.id], {
-                message_unread_counter: this.env["mail.message"].search_count([
-                    ["res_id", "=", member.channel_id],
-                    ["model", "=", "discuss.channel"],
-                    ["id", ">=", member.new_message_separator],
-                ]),
+                message_unread_counter: Math.min(count, UNREAD_COUNTER_LIMIT),
             });
         }
     }

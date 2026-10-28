@@ -39,7 +39,7 @@
                             'o-important': this.props.important,
                             'o-empty me-1': this.props.counter === 0,
                         }">
-                            <t t-if="this.props.counter" t-out="this.props.counter"/>
+                            <t t-if="this.props.counter" t-out="this.props.counter > 99 ? '99+' : this.props.counter"/>
                         </span>
                     </div>
                 </div>

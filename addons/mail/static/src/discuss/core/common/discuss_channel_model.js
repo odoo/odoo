@@ -1,4 +1,5 @@
 import { MessagePinDialog } from "@mail/core/common/message_pin_dialog";
+import { UNREAD_COUNTER_LIMIT } from "@mail/discuss/core/common/channel_member_model";
 import { fields, Record } from "@mail/model/export";
 import { compareDatetime, nearestGreaterThanOrEqual } from "@mail/utils/common/misc";
 
@@ -435,6 +436,11 @@ export class DiscussChannel extends Record {
             }
         }
         return this.message_needaction_counter;
+    }
+    /** Counter capped for display, the server stops counting at 100. */
+    get importantCounterLabel() {
+        const counter = this.importantCounter;
+        return counter >= UNREAD_COUNTER_LIMIT ? "99+" : counter;
     }
     get invitationLink() {
         if (!this.uuid || this.channel_type === "chat") {

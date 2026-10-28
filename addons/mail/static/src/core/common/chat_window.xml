@@ -46,7 +46,7 @@
                 <t t-call="mail.ChatWindow.headerContent"/>
             </t>
             <div t-if="this.channel.importantCounter > 0" class="o-mail-ChatWindow-counter mx-1 badge rounded-pill fw-bold o-discuss-badge shadow-sm" t-ref="this.needactionCounterRef">
-                <t t-out="this.channel.importantCounter"/>
+                <t t-out="this.channel.importantCounterLabel"/>
             </div>
             <div class="ms-1 flex-grow-1"/>
             <div class="d-flex flex-shrink-0 me-1">

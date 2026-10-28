@@ -1,3 +1,5 @@
+import { UNREAD_COUNTER_LIMIT } from "@mail/discuss/core/common/channel_member_model";
+
 import { proxy } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
@@ -29,7 +31,9 @@ export class DiscussCoreCommon {
                 if (
                     self_member_id &&
                     message.id > (self_member_id.seen_message_id?.id ?? 0) &&
-                    notifId > self_member_id.message_unread_counter_bus_id
+                    notifId > self_member_id.message_unread_counter_bus_id &&
+                    // The server stopped counting, the real value is unknown.
+                    self_member_id.message_unread_counter < UNREAD_COUNTER_LIMIT
                 ) {
                     self_member_id.message_unread_counter--;
                 }

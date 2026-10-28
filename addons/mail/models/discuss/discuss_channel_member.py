@@ -17,6 +17,7 @@ from ...tools import jwt, discuss
 _logger = logging.getLogger(__name__)
 SFU_MODE_THRESHOLD = 3
 POST_LEAVE_MESSAGE = object()
+UNREAD_COUNTER_LIMIT = 100
 
 
 class DiscussChannelMember(models.Model):
@@ -180,21 +181,26 @@ class DiscussChannelMember(models.Model):
             self.env['mail.message'].flush_model()
             self.flush_recordset(['channel_id', 'new_message_separator'])
             self.env.cr.execute(SQL("""
-                     SELECT count(mail_message.id) AS count,
-                            discuss_channel_member.id
-                       FROM mail_message
-                 INNER JOIN discuss_channel_member
-                         ON %(is_channel_message)s
-                      WHERE mail_message.message_type != 'user_notification'
-                        AND (
-                            mail_message.message_type != 'notification'
-                            OR mail_message.subtype_id = %(subtype_id)s
-                        )
-                        AND mail_message.id >= discuss_channel_member.new_message_separator
-                        AND discuss_channel_member.id IN %(ids)s
+                     SELECT discuss_channel_member.id,
+                            count(unread.id) AS count
+                       FROM discuss_channel_member
+                 INNER JOIN LATERAL (
+                                SELECT mail_message.id
+                                  FROM mail_message
+                                 WHERE %(is_channel_message)s
+                                   AND mail_message.message_type != 'user_notification'
+                                   AND (
+                                       mail_message.message_type != 'notification'
+                                       OR mail_message.subtype_id = %(subtype_id)s
+                                   )
+                                   AND mail_message.id >= discuss_channel_member.new_message_separator
+                                 LIMIT %(limit)s
+                            ) AS unread ON TRUE
+                      WHERE discuss_channel_member.id IN %(ids)s
                    GROUP BY discuss_channel_member.id
             """,
                 ids=tuple(self.ids),
+                limit=UNREAD_COUNTER_LIMIT,
                 is_channel_message=self.env["discuss.channel"]._get_message_sql(
                     SQL("mail_message"),
                     SQL("discuss_channel_member.channel_id"),

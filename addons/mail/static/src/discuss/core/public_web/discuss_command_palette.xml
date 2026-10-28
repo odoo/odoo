@@ -19,7 +19,7 @@
             <span t-if="this.props.action?.searchValueSuffix" class="o-action fw-bold" t-out="this.props.searchValue"/>
             <span class="flex-grow-1"/>
             <div t-if="this.props.counter > 0">
-                <span t-attf-class="badge rounded-pill o-discuss-badge ms-3 me-1 fw-bold shadow-sm" t-out="this.props.counter"/>
+                <span t-attf-class="badge rounded-pill o-discuss-badge ms-3 me-1 fw-bold shadow-sm" t-out="this.props.counter > 99 ? '99+' : this.props.counter"/>
             </div>
         </div>
     </t>

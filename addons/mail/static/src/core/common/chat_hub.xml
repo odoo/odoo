@@ -59,7 +59,7 @@
                         <img class="o-mail-ChatHub-hiddenAvatar rounded-circle object-fit-cover" t-att-src="chatWindow.channel.avatarUrl" alt="Channel image" draggable="false"/>
                         <p class="text-truncate fw-bold mb-0" t-out="chatWindow.channel.displayName"/>
                         <div t-if="chatWindow.channel.importantCounter > 0" class="o-mail-ChatHub-hiddenCounter badge rounded-pill fw-bold o-discuss-badge" style="padding: 3px 6px">
-                            <t t-out="chatWindow.channel.importantCounter"/>
+                            <t t-out="chatWindow.channel.importantCounterLabel"/>
                         </div>
                         <button class="o-mail-ChatHub-hiddenClose o-mail-ChatBubble-close d-flex align-items-center rounded" t-on-click.stop="() => chatWindow.close()">
                             <i class="oi" data-icon="close_small"/>
