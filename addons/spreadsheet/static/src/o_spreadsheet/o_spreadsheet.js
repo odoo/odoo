@@ -71549,6 +71549,24 @@ var PivotSidePanel = class extends OSComponent {
 	}
 };
 //#endregion
+//#region src/registries/dynamic_to_static_formula_registry.ts
+/**
+* Registry to get the static formula of a cell of a dynamic table,
+* e.g. =PIVOT.HEADER(1,"Customer","Alice") for a cell of =PIVOT(1).
+* Used to paste static formulas when copying a part of a dynamic table.
+*/
+const dynamicToStaticFormulaRegistry = new Registry();
+dynamicToStaticFormulaRegistry.add("pivot", {
+	condition: (position, getters) => !!getters.getPivotIdFromPosition(position),
+	getStaticFormula: (position, getters) => {
+		const pivotId = getters.getPivotIdFromPosition(position);
+		return createPivotFormula(getters.getPivotFormulaId(pivotId), getters.getPivotCellFromPosition(position));
+	}
+});
+function getDynamicToStaticFormulaRule(position, getters) {
+	return dynamicToStaticFormulaRegistry.getAll().find((rule) => rule.condition(position, getters));
+}
+//#endregion
 //#region src/clipboard_handlers/abstract_clipboard_handler.ts
 var ClipboardHandler = class {
 	getters;
@@ -71627,22 +71645,18 @@ var CellClipboardHandler = class extends AbstractCellClipboardHandler {
 				};
 				let cell = this.getters.getCell(position);
 				const evaluatedCell = this.getters.getEvaluatedCell(position);
-				const pivotId = this.getters.getPivotIdFromPosition(position);
+				const dynamicToStaticRule = getDynamicToStaticFormulaRule(position, this.getters);
 				const spreader = this.getters.getArrayFormulaSpreadingOn(position);
-				if (mode !== "shiftCells" && pivotId && spreader) {
+				if (mode !== "shiftCells" && dynamicToStaticRule && spreader) {
 					const pivotZone = this.getters.getSpreadZone(spreader);
-					if ((!deepEquals(spreader, position) || !isCopyingOneCell) && pivotZone && !data.zones.some((z) => isZoneInside(pivotZone, z))) {
-						const pivotCell = this.getters.getPivotCellFromPosition(position);
-						const pivotFormula = createPivotFormula(this.getters.getPivotFormulaId(pivotId), pivotCell);
-						cell = {
-							id: cell?.id ?? 0,
-							style: cell?.style,
-							format: cell?.format,
-							content: pivotFormula,
-							isFormula: false,
-							parsedValue: evaluatedCell.value
-						};
-					}
+					if ((!deepEquals(spreader, position) || !isCopyingOneCell) && pivotZone && !data.zones.some((z) => isZoneInside(pivotZone, z))) cell = {
+						id: cell?.id ?? 0,
+						style: cell?.style,
+						format: cell?.format,
+						content: dynamicToStaticRule.getStaticFormula(position, this.getters),
+						isFormula: false,
+						parsedValue: evaluatedCell.value
+					};
 				} else if (mode !== "shiftCells" && spreader && !deepEquals(spreader, position)) {
 					const content = rowsIndexes.includes(spreader.row) && columnsIndexes.includes(spreader.col) ? "" : formatValue(evaluatedCell.value, { locale: this.getters.getLocale() });
 					cell = {
@@ -82280,8 +82294,9 @@ var TableClipboardHandler = class extends AbstractCellClipboardHandler {
 				}
 				const coreTable = this.getters.getCoreTable(position);
 				const tableZone = coreTable?.range.zone;
+				const isFormulaCopiedAsStatic = coreTable?.type === "dynamic" && !this.isCopiedAsDynamicFormula(position, data);
 				let copiedTable = void 0;
-				if (!copiedTablesIds.has(table.id) && coreTable && tableZone && zones.some((z) => isZoneInside(tableZone, z))) {
+				if (!copiedTablesIds.has(table.id) && coreTable && tableZone && zones.some((z) => isZoneInside(tableZone, z)) && !isFormulaCopiedAsStatic) {
 					copiedTablesIds.add(table.id);
 					let { numberOfRows } = zoneToDimension(tableZone);
 					for (let rowIndex = tableZone.top; rowIndex <= tableZone.bottom; rowIndex++) if (!isCutOperation && !rowsIndexes.includes(rowIndex)) numberOfRows--;
@@ -82293,10 +82308,13 @@ var TableClipboardHandler = class extends AbstractCellClipboardHandler {
 						type: coreTable.type
 					};
 				}
+				if (isCutOperation && isFormulaCopiedAsStatic) copiedTable = {
+					range: this.getters.getRangeData(coreTable.range),
+					config: coreTable.config,
+					type: coreTable.type
+				};
 				if (table.isPivotTable) {
-					const isTopLeft = table.range.zone.top === row && table.range.zone.left === col;
-					const isWholePivotSelected = zones.some((z) => isZoneInside(table.range.zone, z));
-					if (isTopLeft || isWholePivotSelected) copiedTablesIds.add(table.id);
+					if (table.range.zone.top === row && table.range.zone.left === col && this.isCopiedAsDynamicFormula(position, data)) copiedTablesIds.add(table.id);
 				}
 				if (mode !== "shiftCells") tableCellsInRow.push({
 					table: copiedTable,
@@ -82306,6 +82324,19 @@ var TableClipboardHandler = class extends AbstractCellClipboardHandler {
 			}
 		}
 		return this.compact(tableCells);
+	}
+	/**
+	* Whether the formula of the given cell stays dynamic when copying it, instead of being
+	* copied as static formulas, e.g. =PIVOT(1) copied as =PIVOT.HEADER(...) and
+	* =PIVOT.VALUE(...) (see `dynamicToStaticFormulaRegistry`). It stays dynamic when
+	* copying only this cell, or its whole spread zone.
+	*/
+	isCopiedAsDynamicFormula(position, data) {
+		const spreadZone = this.getters.getSpreadZone(position);
+		if (!spreadZone || !getDynamicToStaticFormulaRule(position, this.getters)) return true;
+		const isOnlyThisCellCopied = data.rowsIndexes.length === 1 && data.columnsIndexes.length === 1;
+		const isWholeSpreadZoneCopied = data.zones.some((zone) => isZoneInside(spreadZone, zone));
+		return isOnlyThisCellCopied || isWholeSpreadZoneCopied;
 	}
 	/**
 	* Get the style to copy for a cell. We need to copy both the table style and the cell style, because
@@ -82365,7 +82396,7 @@ var TableClipboardHandler = class extends AbstractCellClipboardHandler {
 		});
 	}
 	pasteTableCell(sheetId, tableCell, position, options) {
-		if (tableCell.table && !options.pasteOption) {
+		if (tableCell.table && tableCell.isWholeTableCopied && !options.pasteOption) {
 			const { range: tableRange } = tableCell.table;
 			const zoneDims = zoneToDimension(this.getters.getRangeFromRangeData(tableRange).zone);
 			const newTableZone = {
@@ -92980,6 +93011,7 @@ const registries = {
 	repeatLocalCommandTransformRegistry,
 	repeatCommandTransformRegistry,
 	clipboardHandlersRegistries,
+	dynamicToStaticFormulaRegistry,
 	pivotRegistry,
 	pivotTimeAdapterRegistry,
 	pivotSidePanelRegistry,
