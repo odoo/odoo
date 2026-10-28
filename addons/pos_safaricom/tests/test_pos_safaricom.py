@@ -1,8 +1,12 @@
+from datetime import datetime, timedelta
 from unittest.mock import MagicMock, patch
+
+from freezegun import freeze_time
 
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
+from odoo.tools import verify_hash_signed
 
 
 @tagged('post_install', '-at_install')
@@ -138,3 +142,20 @@ class TestPosSafaricom(TransactionCase):
         payload = call_args.kwargs['json']
         self.assertEqual(payload['Amount'], 150)
         self.assertEqual(payload['RefNo'], 'ORDER-001')
+
+    @patch('requests.post')
+    @patch('odoo.addons.pos_safaricom.models.pos_payment_method.PosPaymentMethod._get_bearer_token')
+    def test_lipa_na_mpesa_register_urls_payload_does_not_expire(self, mock_bearer, mock_post):
+        """Test the registered C2B URLs still work long after the registration"""
+        mock_bearer.return_value = 'test_access_token'
+
+        mock_response = MagicMock()
+        mock_response.json.return_value = {'ResponseCode': '00000000'}
+        mock_post.return_value = mock_response
+
+        self.lipa_na_mpesa.lipa_na_mpesa_register_urls()
+
+        payload = mock_post.call_args.kwargs['json']['ConfirmationURL'].split('payload=')[1]
+        with freeze_time(datetime.now() + timedelta(days=30)):
+            decoded_payload = verify_hash_signed(self.env, 'pos_safaricom', payload)
+        self.assertEqual(decoded_payload, {'payment_method_id': self.lipa_na_mpesa.id})
