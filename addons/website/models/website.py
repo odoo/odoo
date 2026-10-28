@@ -17,7 +17,7 @@ from concurrent.futures import ThreadPoolExecutor
 from lxml import etree, html
 from markupsafe import Markup
 from requests import RequestException
-from urllib.parse import urlparse, urlsplit
+from urllib.parse import quote, urljoin, urlparse, urlsplit
 from werkzeug import urls
 
 from odoo import api, fields, models, tools, release
@@ -2748,11 +2748,8 @@ class Website(models.CachedModel):
             'FAQPage': ['mainEntity'],
             'Question': ['name', 'acceptedAnswer'],
             'Answer': ['text'],
-            # the only property a snippet gives it
             'Organization': ['contactPoint'],
-            # either a telephone or an email
             'ContactPoint': [],
-            # all its properties come from _build_jsonld_item_vals
             'WebSite': [],
         }.get(jsonld_type)
 
@@ -2761,9 +2758,9 @@ class Website(models.CachedModel):
         """Build the Schema.org dictionary of an item marked in HTML.
 
         :param item: element marked with ``data-jsonld-type``.
-        :return: Dictionary of Schema.org properties, or None if a required one is missing.
-            Plain JSON values (text, numbers, lists, dicts): they're written into the
-            compiled templates.
+        :return: Dictionary of Schema.org properties, or None if a required one is
+            missing or if it has none. Plain JSON values (text, numbers, lists, dicts):
+            they're written into the compiled templates.
         :rtype: dict | None
         """
         item_type = item.get('data-jsonld-type')
@@ -2772,7 +2769,7 @@ class Website(models.CachedModel):
             return None
         # what the snippets can't hold, from the website: no host in the URLs,
         # views keep them in their compiled code, so the current host is added
-        # when rendering (see _render_snippets_jsonld)
+        # when rendering (see _render_page_jsonld)
         website_props = {
             'Person': {'worksFor': {'@id': '/#organization'}},
             'Organization': {'@id': '/#organization'},
@@ -2786,7 +2783,14 @@ class Website(models.CachedModel):
                 },
             },
         }
-        return {'@type': item_type, **props, **website_props.get(item_type, {})}
+        vals = {'@type': item_type, **props, **website_props.get(item_type, {})}
+        if item_type == 'Person':
+            # the name makes the id: a person shown twice is one node, two names
+            # never share an id
+            vals['@id'] = f"/#person-{quote(vals['name'], safe='')}"
+        if len(vals) == 1:
+            return None  # nothing but its type
+        return vals
 
     @api.model
     def _get_jsonld_props(self, el):
@@ -2824,28 +2828,28 @@ class Website(models.CachedModel):
             return None  # a required property is missing
         return props
 
-    def _render_snippets_jsonld(self, schemas):
-        """Render the JSON-LD of the snippets of the page.
+    def _render_page_jsonld(self, structured_data, schemas):
+        """Render the JSON-LD of the page: its structured data and the schemas
+        of its snippets, in one graph.
 
+        :param list structured_data: Schema.org dictionaries of the page, see ``_render_jsonld``.
         :param list schemas: Schema.org dictionaries of the rendered snippets.
         :return: JSON-LD string.
         :rtype: str
         """
-        base_url = self.get_base_url()
-
-        # the schemas are compiled in the templates without host: add the current one
-        def make_absolute(value, prop=None):
+        def make_urls_absolute(value, prop=None):
+            # the schemas are compiled in the templates without host: add the current one
             if isinstance(value, dict):
-                return {key: make_absolute(val, key) for key, val in value.items()}
+                return {key: make_urls_absolute(val, key) for key, val in value.items()}
             if isinstance(value, list):
-                return [make_absolute(val, prop) for val in value]
-            # only paths of the website get its host: other URLs stay as written
-            if prop in ('@id', 'image', 'url', 'target') and value.startswith('/') and not value.startswith('//'):
-                return base_url + value
+                return [make_urls_absolute(val, prop) for val in value]
+            if prop in ('@id', 'image', 'url', 'target'):
+                return urljoin(self.get_base_url(), value)
             return value
 
+        nodes = structured_data + make_urls_absolute(schemas)
         return json_safe.dumps(
-            {'@context': 'https://schema.org', '@graph': make_absolute(schemas)},
+            {'@context': 'https://schema.org', '@graph': nodes},
             ensure_ascii=False,
         )
 
