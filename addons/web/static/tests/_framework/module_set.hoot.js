@@ -14,6 +14,7 @@ import {
 } from "@odoo/hoot";
 import { collectGarbageAndReport } from "@web/../lib/hoot/core/gc";
 
+import { disposeBootstrapInstances } from "./bootstrap.hoot";
 import { mockBrowserFactory } from "./mock_browser.hoot";
 import { mockCurrencyFactory } from "./mock_currency.hoot";
 import { mockFunctionsFactory } from "./mock_functions.hoot";
@@ -685,6 +686,7 @@ export async function runTests(options) {
         const running = await start(suite);
 
         await moduleSetLoader.cleanup();
+        disposeBootstrapInstances();
         await collectGarbageAndReport(suite.fullName, suite.reporting.tests);
 
         if (!running) {
