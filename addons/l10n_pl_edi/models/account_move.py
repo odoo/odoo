@@ -426,7 +426,7 @@ class AccountMove(models.Model):
         pretty_xml_bytes = dom.toprettyxml(indent="  ", encoding="utf-8")
 
         if self.l10n_pl_edi_upo_id:
-            self.l10n_pl_edi_upo_file.raw = pretty_xml_bytes
+            self.l10n_pl_edi_upo_id.raw = pretty_xml_bytes
         else:
             self.l10n_pl_edi_upo_id = self.env['ir.attachment'].create({
                 'name': f"UPO-{self.name.replace('/', '_')}.xml",
