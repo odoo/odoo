@@ -19,9 +19,7 @@
         <div t-if="not (('name' in fields) or (address and 'address' in fields) or (city and 'city' in fields) or (mobile and 'mobile' in fields) or (website and 'website' in fields) or (email and 'email' in fields))" class="css_non_editable_mode_hidden">
             --<span class="text-muted" t-out="name"/>--
         </div>
-        <t t-if="object.country_id.name_position != 'after'">
-            <t t-call="base.contact_name"/>
-        </t>
+        <t t-call="base.contact_name"/>
         <div class="gap-2" t-att-itemprop="options.get('with_microdata') and 'address'" itemscope="itemscope" itemtype="http://schema.org/PostalAddress">
 
             <div t-if="address and 'address' in fields" t-attf-class="d-flex align-items-baseline gap-1">
@@ -59,9 +57,6 @@
             <div class="d-flex align-items-baseline gap-1" t-if="email and 'email' in fields"><i t-if="not options.get('no_marker')" class="oi oi-fw oi-filled" data-icon="mail" role="img" aria-label="Email" title="Email"/> <span class="text-break w-100" itemprop="email" t-out="email"/></div>
         </div>
         <div t-if="vat and 'vat' in fields"><span t-out="vat_label"/>: <span itemprop="vatID" t-out="vat"/></div>
-        <t t-if="object.country_id and object.country_id.name_position == 'after'">
-            <t t-call="base.contact_name"/>
-        </t>
     </address>
 </template>
 
