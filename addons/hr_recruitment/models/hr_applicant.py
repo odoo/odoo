@@ -1007,6 +1007,7 @@ class HrApplicant(models.Model):
     def create_employee_from_applicant(self):
         """ Create an employee from applicant """
         self.ensure_one()
+<<<<<<< 4104bb586a6a9a134fb9be4172e1e3c997c8312b
         self._check_interviewer_access()
 
         if not self.partner_id:
@@ -1027,6 +1028,13 @@ class HrApplicant(models.Model):
             lambda attachment: attachment.datas not in employee_attachments.mapped('datas')
         )
         unique_attachments.copy({'res_model': 'hr.employee', 'res_id': employee.id})
+||||||| 2cf663d24dd2bada4bf25efc972ce21340d92195
+        action = self.candidate_id.with_context(clean_context(self.env.context)).create_employee_from_candidate()
+        employee = self.env['hr.employee'].browse(action['res_id'])
+=======
+        action = self.candidate_id.with_context(clean_context(self.env.context)).with_company(self.company_id).create_employee_from_candidate()
+        employee = self.env['hr.employee'].browse(action['res_id'])
+>>>>>>> b83182d60dae34163f303c39e329887df4f7c562
         employee.write({
             'job_id': self.job_id.id,
             'job_title': self.job_id.name,
