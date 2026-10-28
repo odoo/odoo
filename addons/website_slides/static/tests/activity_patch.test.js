@@ -1,11 +1,11 @@
 import {
     click,
-    contains,
     openFormView,
     start,
     startServer
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
+import { waitFor } from "@odoo/hoot-dom";
 import { defineWebsiteSlidesModels } from "@website_slides/../tests/website_slides_test_helpers";
 
 describe.current.tags("desktop");
@@ -23,7 +23,7 @@ test("grant course access", async () => {
     });
     await start();
     await openFormView("slide.channel", channelId);
-    await contains(".o-mail-Activity");
+    await waitFor(".o-mail-Activity:count(1)");
     await click("button", { text: "Grant Access" });
 });
 
@@ -39,6 +39,6 @@ test("refuse course access", async () => {
     });
     await start();
     await openFormView("slide.channel", channelId);
-    await contains(".o-mail-Activity");
+    await waitFor(".o-mail-Activity:count(1)");
     await click("button", { text: "Refuse Access" });
 });

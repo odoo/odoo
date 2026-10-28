@@ -1,6 +1,7 @@
-import { contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
+import { openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
 
 import { describe, test } from "@odoo/hoot";
+import { waitFor } from "@odoo/hoot-dom";
 
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { url } from "@web/core/utils/urls";
@@ -26,11 +27,11 @@ test("Discuss header shows visitor avatar", async () => {
     await start();
     await openDiscuss(channelId);
     const [guest] = pyEnv["mail.guest"].search_read([["id", "=", guestId]]);
-    await contains(
+    await waitFor(
         `.o-mail-DiscussContent-header img[data-src='${url(
             `/web/image/mail.guest/${guestId}/avatar_128?unique=${
                 deserializeDateTime(guest.write_date).ts
             }`
-        )}']`
+        )}']:count(1)`
     );
 });

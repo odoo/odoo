@@ -8,6 +8,7 @@ import {
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
+import { waitFor, waitForNone } from "@odoo/hoot-dom";
 import { defineSMSModels } from "@sms/../tests/sms_test_helpers";
 import { mockService, serverState } from "@web/../tests/web_test_helpers";
 
@@ -28,14 +29,14 @@ test("mark as read", async () => {
     });
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.CHAT);
-    await contains(".o-mail-NotificationItem");
+    await waitFor(".o-mail-NotificationItem:count(1)");
     await triggerEvents(".o-mail-NotificationItem", ["mouseenter"], { text: "" });
-    await contains(".o-mail-NotificationItem [title='Mark As Read']");
+    await waitFor(".o-mail-NotificationItem [title='Mark As Read']:count(1)");
     await contains(".o-mail-NotificationItem-text", {
         text: "An error occurred when sending an SMS on “Mitchell Admin”",
     });
     await click(".o-mail-NotificationItem [title='Mark As Read']");
-    await contains(".o-mail-NotificationItem", { count: 0 });
+    await waitForNone(".o-mail-NotificationItem");
 });
 
 test("notifications grouped by notification_type", async () => {
@@ -77,7 +78,7 @@ test("notifications grouped by notification_type", async () => {
     ]);
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.CHAT);
-    await contains(".o-mail-NotificationItem", { count: 2 });
+    await waitFor(".o-mail-NotificationItem:count(2)");
     await contains(":nth-child(1 of .o-mail-NotificationItem)", {
         contains: [
             [".o-mail-NotificationItem-name", { text: "Email Failure: Contact" }],

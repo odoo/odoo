@@ -1,10 +1,10 @@
 import { defineAccountNumberModels } from "./account_number_widget_test_helpers";
 import { DELAY } from "@account/components/account_number_widget/account_number_widget";
 import { test } from "@odoo/hoot";
+import { waitFor, waitForNone } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
 import {
     click,
-    contains,
     insertText,
     openFormView,
     start,
@@ -44,27 +44,27 @@ test("Account Number Widget full flow", async () => {
                 </sheet>
             </form>`,
     });
-    await contains(".o_input");
-    await contains(".o_account_number", { count: 0 }); // "Shouldn't display any validation icon"
+    await waitFor(".o_input:count(1)");
+    await waitForNone(".o_account_number"); // "Shouldn't display any validation icon"
     await insertText(".o_input", invalidAccountNumber, { replace: true });
-    await contains(".o_account_number", { count: 0 }); // "Shouldn't change its state of display"
+    await waitForNone(".o_account_number"); // "Shouldn't change its state of display"
     await advanceTime(DELAY);
-    await contains(".o_account_number", { count: 0 }); // "Shouldn't contain a validation icon for invalid account number 400ms after edition"
+    await waitForNone(".o_account_number"); // "Shouldn't contain a validation icon for invalid account number 400ms after edition"
     await click(".o_form_button_save");
-    await contains(".o_account_number", { count: 0 }); // "Shouldn't contain a validation icon for invalid account number at any time"
+    await waitForNone(".o_account_number"); // "Shouldn't contain a validation icon for invalid account number at any time"
     await advanceTime(DELAY);
     await insertText(".o_input", validIban, { replace: true });
-    await contains(".o_account_number", { count: 0 }); // "Shouldn't change its state of display"
+    await waitForNone(".o_account_number"); // "Shouldn't change its state of display"
     await advanceTime(DELAY);
-    await contains(".o_account_number"); // "Should contain a validation icon 400ms after edition"
-    await contains(".o_account_number i[data-icon='check']"); // "The validation icon should be the successful one"
+    await waitFor(".o_account_number:count(1)"); // "Should contain a validation icon 400ms after edition"
+    await waitFor(".o_account_number i[data-icon='check']:count(1)"); // "The validation icon should be the successful one"
     await click(".o_form_button_save");
     await advanceTime(DELAY);
-    await contains(".o_account_number"); // "Should display validation icon at all time even when not editing"
+    await waitFor(".o_account_number:count(1)"); // "Should display validation icon at all time even when not editing"
     await insertText(".o_input", invalidAccountNumber, { replace: true });
     await advanceTime(DELAY);
-    await contains(".o_account_number", { count: 0 }); // "Shouldn't contain a validation icon for invalid account number"
+    await waitForNone(".o_account_number"); // "Shouldn't contain a validation icon for invalid account number"
     await insertText(".o_input", validClabe, { replace: true });
     await advanceTime(DELAY);
-    await contains(".o_account_number"); // "Shouldn't contain a validation icon for valid CLABE"
+    await waitFor(".o_account_number:count(1)"); // "Should contain a validation icon for valid CLABE"
 });
