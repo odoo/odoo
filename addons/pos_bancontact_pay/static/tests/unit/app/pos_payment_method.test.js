@@ -31,7 +31,7 @@ test("_checkOrder", async () => {
     expect(display._checkOrder({ order })).toEqual(success);
 
     // One display payment processing
-    paymentlineDisplay.payment_status = "waitingScan";
+    paymentlineDisplay.payment_status = "waiting_scan";
     expect(display._checkOrder({ order })).toEqual(success);
 
     // No sticker payment
@@ -44,7 +44,7 @@ test("_checkOrder", async () => {
     expect(sticker1._checkOrder({ order })).toEqual(success);
 
     // One sticker payment processing
-    paymentlineSticker.payment_status = "waitingScan";
+    paymentlineSticker.payment_status = "waiting_scan";
     expect(sticker1._checkOrder({ order })).toEqual(failureStickerAlreadyUsed);
 
     // Retry with the same paymentline

@@ -15,11 +15,7 @@ export class PaymentSumup extends PaymentInterface {
                 (line) => line.transaction_id === data.client_transaction_id
             );
 
-            if (
-                paymentLine &&
-                !paymentLine.isDone() &&
-                paymentLine.getPaymentStatus() !== "retry"
-            ) {
+            if (paymentLine && !paymentLine.isDone() && paymentLine.payment_status !== "retry") {
                 paymentLine.payment_method_id.payment_interface.handleSumupStatusResponse(
                     paymentLine,
                     data
@@ -70,7 +66,7 @@ export class PaymentSumup extends PaymentInterface {
             [this.payment_method_id.id],
         ]);
         if (cancelSumup) {
-            line.setPaymentStatus("retry");
+            line.payment_status = "retry";
             return true;
         }
     }

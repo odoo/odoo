@@ -38,7 +38,7 @@ export class PaymentPineLabs extends PaymentInterface {
             .catch((error) => {
                 const line = this.pendingPineLabsPaymentLine();
                 if (line) {
-                    line.setPaymentStatus("force_done");
+                    line.payment_status = "force_done";
                 }
                 if (error instanceof ConnectionLostError) {
                     offlineErrorHandler(this.env, error, error);
@@ -58,12 +58,12 @@ export class PaymentPineLabs extends PaymentInterface {
     async _makePaymentRequestHandler(response) {
         const line = this.pendingPineLabsPaymentLine();
         if (!response || response?.error) {
-            line.setPaymentStatus("retry");
+            line.payment_status = "retry";
             this._showError(response?.error || _t("Pine Labs make payment request failed"));
             return false;
         }
 
-        line.setPaymentStatus("waitingCard");
+        line.payment_status = "waiting_card";
         line.update({ pine_labs_plutus_transaction_ref: response.plutusTransactionReferenceID });
         return await this._waitForPaymentToConfirm();
     }
@@ -80,7 +80,7 @@ export class PaymentPineLabs extends PaymentInterface {
 
         if (!response || response?.error) {
             const status = response ? "retry" : "force_done";
-            line.setPaymentStatus(status);
+            line.payment_status = status;
             this._showError(response?.error || _t("Pine Labs get payment status request failed"));
             if (response) {
                 return resolve(false);
@@ -132,7 +132,7 @@ export class PaymentPineLabs extends PaymentInterface {
                 this._removePaymentHandler();
                 return false;
             }
-            line.setPaymentStatus("retry");
+            line.payment_status = "retry";
             if (this.payment_stopped) {
                 this._showError(_t("Transaction failed due to inactivity"));
             } else {
@@ -221,7 +221,7 @@ export class PaymentPineLabs extends PaymentInterface {
 
             if (this.payment_stopped) {
                 this._pineLabsCancel().then(() => {
-                    paymentLine.setPaymentStatus("retry");
+                    paymentLine.payment_status = "retry";
                     this.payment_stopped = false;
                 });
                 return resolve(false);
