@@ -88,7 +88,7 @@ class TestResCompany(common.TransactionCase, MockIAPPartnerAutocomplete):
             return response, error
 
         with patch.object(self.env.registry['iap.autocomplete.api'], '_request_partner_autocomplete', patched_request):
-            result = self.env['res.partner'].with_context(enriched_company_data=be_company_data).enrich_by_duns('BE1234567')
+            result = self.env['res.partner'].enrich_by_duns('BE1234567', company_data=be_company_data)
             self.assertEqual(result.get('vat'), '')
 
     @mute_logger('odoo.addons.base.models.res_partner')
@@ -109,7 +109,7 @@ class TestResCompany(common.TransactionCase, MockIAPPartnerAutocomplete):
             return {'data': {'additional_identifiers': {'DUNS': '672827474', 'HR_EN': '02342359'}}}, False
 
         with patch.object(self.env.registry['iap.autocomplete.api'], '_request_partner_autocomplete', patched_request):
-            result = self.env['res.partner'].with_context(enriched_company_data=hr_company_data).enrich_by_duns('672827474')
+            result = self.env['res.partner'].enrich_by_duns('672827474', company_data=hr_company_data)
         self.assertEqual(result.get('additional_identifiers'), {'DUNS': '672827474'})
 
     def test_enrich_with_industry_id(self):
@@ -130,3 +130,68 @@ class TestResCompany(common.TransactionCase, MockIAPPartnerAutocomplete):
             self.assertTrue(company._enrich())
 
         self.assertRecordValues(company.partner_id | contact, [{'industry_id': industry.id}] * 2)
+
+    def test_enrich_by_duns_vat_from_query(self):
+        """Ensure the VAT number is taken from the query when the company was found from it."""
+        for country_code, query, expected_vat in (
+            ('BE', 'BE0477472701', 'BE0477472701'),
+            ('BE', 'NotOdoo 2024', None),
+            ('US', '94-2404110', None),  # there is no validation for US TIN
+        ):
+            # The suggestion found from the query, which the enrichment completes without VAT number
+            company_data = {'name': 'Test Company', 'duns': '123456789', 'country_code': country_code}
+            suggestion = self.env['res.partner']._format_data_company({**company_data, 'query': query})
+            with (
+                self.subTest(query=query),
+                patch(
+                    'odoo.addons.partner_autocomplete.models.iap_autocomplete_api.IapAutocompleteApi._contact_iap',
+                    return_value={'data': company_data},
+                ),
+            ):
+                result = self.env['res.partner'].enrich_by_duns('123456789', company_data=suggestion)
+                self.assertEqual(result.get('vat'), expected_vat)
+
+    def test_autocomplete_by_field_name_like_vat(self):
+        """Ensure a name that looks like a VAT number is searched both as a VAT number and as a name."""
+        def contact_iap(local_endpoint, action, params, timeout=15):
+            return {'data': [{'name': f"{action}: {params['query']}"}]}
+
+        for query, expected_names in (
+            ('Odoo', ['search_by_name: Odoo']),
+            ('BE0477472701', ['search_by_vat: BE0477472701', 'search_by_name: BE0477472701']),
+            ('Odoo 2024', ['search_by_name: Odoo 2024']),  # not a Belgian VAT number
+        ):
+            with (
+                self.subTest(query=query),
+                patch(
+                    'odoo.addons.partner_autocomplete.models.iap_autocomplete_api.IapAutocompleteApi._contact_iap',
+                    side_effect=contact_iap,
+                ),
+            ):
+                suggestions = self.env['res.partner'].autocomplete_by_field('name', query, self.base_be.id)
+                self.assertEqual([suggestion['name'] for suggestion in suggestions], expected_names)
+
+    def test_autocomplete_by_vat_vies(self):
+        """Ensure VIES is only checked for the VAT numbers of the EU, when IAP does not find the company."""
+        for country, vat, expected_vies_vat in (
+            (self.base_be, '0477472701', 'BE0477472701'),
+            (self.env.ref('base.us'), '94-2404110', None),
+        ):
+            with (
+                self.subTest(vat=vat),
+                patch(
+                    'odoo.addons.partner_autocomplete.models.iap_autocomplete_api.IapAutocompleteApi._contact_iap',
+                    return_value={'error': 'Not found'},
+                ),
+                patch(
+                    'odoo.addons.partner_autocomplete.models.res_partner.check_vies',
+                    return_value={'valid': True, 'name': 'Odoo', 'address': 'Rue de Ramillies 1\n1367 Ramillies', 'countryCode': 'BE'},
+                ) as check_vies_mock,
+            ):
+                suggestions = self.env['res.partner'].autocomplete_by_vat(vat, country.id)
+                if expected_vies_vat:
+                    check_vies_mock.assert_called_once_with(expected_vies_vat, timeout=15)
+                    self.assertEqual([suggestion['vat'] for suggestion in suggestions], [expected_vies_vat])
+                else:
+                    check_vies_mock.assert_not_called()
+                    self.assertFalse(suggestions)
