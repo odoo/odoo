@@ -1,6 +1,7 @@
 import { describe, test } from "@odoo/hoot";
+import { waitFor } from "@odoo/hoot-dom";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
-import { startServer, start, openDiscuss, contains } from "@mail/../tests/mail_test_helpers";
+import { startServer, start, openDiscuss } from "@mail/../tests/mail_test_helpers";
 import { defineHrHolidaysModels } from "@hr_holidays/../tests/hr_holidays_test_helpers";
 
 describe.current.tags("desktop");
@@ -20,8 +21,8 @@ test("on leave & online", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(
-        ".o-mail-DiscussContent-header .o-mail-ImStatus[data-icon='travel'][title='User is on leave and online']"
+    await waitFor(
+        ".o-mail-DiscussContent-header .o-mail-ImStatus[data-icon='travel'][title='User is on leave and online']:count(1)"
     );
 });
 
@@ -39,8 +40,8 @@ test("on leave & away", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(
-        ".o-mail-DiscussContent-header .o-mail-ImStatus[data-icon='travel'][title='User is on leave and idle']"
+    await waitFor(
+        ".o-mail-DiscussContent-header .o-mail-ImStatus[data-icon='travel'][title='User is on leave and idle']:count(1)"
     );
 });
 
@@ -58,7 +59,7 @@ test("on leave & offline", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(
-        ".o-mail-DiscussContent-header .o-mail-ImStatus[data-icon='travel'][title='User is on leave']"
+    await waitFor(
+        ".o-mail-DiscussContent-header .o-mail-ImStatus[data-icon='travel'][title='User is on leave']:count(1)"
     );
 });

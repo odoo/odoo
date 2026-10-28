@@ -1,6 +1,7 @@
 import { defineCalendarModels } from "@calendar/../tests/calendar_test_helpers";
 import { click, contains, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { expect, test } from "@odoo/hoot";
+import { waitForNone } from "@odoo/hoot-dom";
 import { mockService, onRpc, preloadBundle, serverState } from "@web/../tests/web_test_helpers";
 
 defineCalendarModels();
@@ -22,7 +23,7 @@ test("can listen on bus and display notifications in DOM and click OK", async ()
     ]);
     await contains(".o_notification", { text: "Meeting. Very old meeting message" });
     await click(".o_notification_buttons button", { text: "OK" });
-    await contains(".o_notification", { count: 0 });
+    await waitForNone(".o_notification");
     await expect.waitForSteps(["notify_ack"]);
 });
 
@@ -46,6 +47,6 @@ test("can listen on bus and display notifications in DOM and click Detail", asyn
     ]);
     await contains(".o_notification", { text: "Meeting. Very old meeting message" });
     await click(".o_notification_buttons button", { text: "Details" });
-    await contains(".o_notification", { count: 0 });
+    await waitForNone(".o_notification");
     await expect.waitForSteps(["ir.actions.act_window"]);
 });

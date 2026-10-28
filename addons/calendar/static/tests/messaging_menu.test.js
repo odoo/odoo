@@ -2,7 +2,6 @@ import { defineCalendarModels } from "@calendar/../tests/calendar_test_helpers";
 
 import {
     click,
-    contains,
     MENU_ACTIVE_IDS,
     openDiscuss,
     start,
@@ -10,6 +9,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
+import { waitFor } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 
 import { getOrigin } from "@web/core/utils/urls";
@@ -23,9 +23,9 @@ test("meeting action is a dropdown offering to start or schedule a meeting", asy
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.MEETING);
     await click(".o-mail-MessagingMenu-searchRow .btn");
-    await contains(".o-dropdown-item", { count: 2 });
-    await contains(".o-dropdown-item:text('Start Now')");
-    await contains(".o-dropdown-item:text('Schedule for later')");
+    await waitFor(".o-dropdown-item:count(2)");
+    await waitFor(".o-dropdown-item:text('Start Now'):count(1)");
+    await waitFor(".o-dropdown-item:text('Schedule for later'):count(1)");
 });
 
 test("scheduling a meeting leaves for the calendar, video call in hand", async () => {
@@ -93,12 +93,12 @@ test("meetings tab opens on the meetings of today", async () => {
     });
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.MEETING);
-    await contains(".o-mail-MessagingMenu-filter.o-active:text('Today')");
-    await contains(".o-mail-NotificationItem", { count: 2 });
-    await contains(".o-mail-NotificationItem-name:has(:text('Product Demo'))");
-    await contains(".o-mail-NotificationItem-name:has(:text('Ad-hoc Call'))");
+    await waitFor(".o-mail-MessagingMenu-filter.o-active:text('Today'):count(1)");
+    await waitFor(".o-mail-NotificationItem:count(2)");
+    await waitFor(".o-mail-NotificationItem-name:has(:text('Product Demo')):count(1)");
+    await waitFor(".o-mail-NotificationItem-name:has(:text('Ad-hoc Call')):count(1)");
     await click(".o-mail-MessagingMenu-filter:text('All')");
-    await contains(".o-mail-NotificationItem", { count: 4 });
+    await waitFor(".o-mail-NotificationItem:count(4)");
 });
 
 test("meeting name is followed by the time it starts at", async () => {
@@ -121,9 +121,9 @@ test("meeting name is followed by the time it starts at", async () => {
     await click(".o-mail-MessagingMenu-filter:text('All')");
     const meetingStart = ".o-mail-MessagingMenuItem-meetingStart";
     const row = (name) => `.o-mail-NotificationItem:has(:text('${name}'))`;
-    await contains(`${row("Demo")} ${meetingStart}:text('@ 2:00 PM')`);
+    await waitFor(`${row("Demo")} ${meetingStart}:text('@ 2:00 PM'):count(1)`);
     // a meeting of another day is shown by its time as well
-    await contains(`${row("Retro")} ${meetingStart}:text('@ 9:00 AM')`);
+    await waitFor(`${row("Retro")} ${meetingStart}:text('@ 9:00 AM'):count(1)`);
 });
 
 test("meetings are listed as an agenda, the ones already over at the bottom", async () => {
@@ -146,14 +146,14 @@ test("meetings are listed as an agenda, the ones already over at the bottom", as
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.MEETING);
     // the meeting going on comes first, "Standup" is over
-    await contains(".o-mail-NotificationItem-name:eq(0):has(:text('Product Demo'))");
-    await contains(".o-mail-NotificationItem-name:eq(1):has(:text('Design Review'))");
-    await contains(".o-mail-NotificationItem-name:eq(2):has(:text('Standup'))");
+    await waitFor(".o-mail-NotificationItem-name:eq(0):has(:text('Product Demo')):count(1)");
+    await waitFor(".o-mail-NotificationItem-name:eq(1):has(:text('Design Review')):count(1)");
+    await waitFor(".o-mail-NotificationItem-name:eq(2):has(:text('Standup')):count(1)");
     await click(".o-mail-MessagingMenu-filter:text('All')");
-    await contains(".o-mail-NotificationItem-name:eq(0):has(:text('Product Demo'))");
-    await contains(".o-mail-NotificationItem-name:eq(1):has(:text('Design Review'))");
-    await contains(".o-mail-NotificationItem-name:eq(2):has(:text('Weekly Sync'))");
-    await contains(".o-mail-NotificationItem-name:eq(3):has(:text('Standup'))");
+    await waitFor(".o-mail-NotificationItem-name:eq(0):has(:text('Product Demo')):count(1)");
+    await waitFor(".o-mail-NotificationItem-name:eq(1):has(:text('Design Review')):count(1)");
+    await waitFor(".o-mail-NotificationItem-name:eq(2):has(:text('Weekly Sync')):count(1)");
+    await waitFor(".o-mail-NotificationItem-name:eq(3):has(:text('Standup')):count(1)");
 });
 
 test("a favorite meeting stays on top, whenever it takes place", async () => {
@@ -175,8 +175,8 @@ test("a favorite meeting stays on top, whenever it takes place", async () => {
     }
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.MEETING);
-    await contains(".o-mail-NotificationItem-name:eq(0):has(:text('Standup'))");
-    await contains(".o-mail-NotificationItem-name:eq(1):has(:text('Product Demo'))");
+    await waitFor(".o-mail-NotificationItem-name:eq(0):has(:text('Standup')):count(1)");
+    await waitFor(".o-mail-NotificationItem-name:eq(1):has(:text('Product Demo')):count(1)");
 });
 
 test("today filter comes right after All, before the mail filters", async () => {
@@ -196,11 +196,11 @@ test("today filter comes right after All, before the mail filters", async () => 
     });
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.MEETING);
-    await contains(".o-mail-MessagingMenu-filter", { count: 4 });
-    await contains(".o-mail-MessagingMenu-filter:eq(0):text('All')");
-    await contains(".o-mail-MessagingMenu-filter:eq(1):text('Today')");
-    await contains(".o-mail-MessagingMenu-filter:eq(2):text('Unread')");
-    await contains(".o-mail-MessagingMenu-filter:eq(3):text('Thread')");
+    await waitFor(".o-mail-MessagingMenu-filter:count(4)");
+    await waitFor(".o-mail-MessagingMenu-filter:eq(0):text('All'):count(1)");
+    await waitFor(".o-mail-MessagingMenu-filter:eq(1):text('Today'):count(1)");
+    await waitFor(".o-mail-MessagingMenu-filter:eq(2):text('Unread'):count(1)");
+    await waitFor(".o-mail-MessagingMenu-filter:eq(3):text('Thread'):count(1)");
 });
 
 test("today filter is only offered on the meetings tab", async () => {
@@ -225,10 +225,10 @@ test("today filter is only offered on the meetings tab", async () => {
     });
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.MEETING);
-    await contains(".o-mail-MessagingMenu-filter:text('Today')");
+    await waitFor(".o-mail-MessagingMenu-filter:text('Today'):count(1)");
     await click(".o-mail-MessagingMenu-tab[data-id='chat']");
-    await contains(".o-mail-MessagingMenu-filter", { count: 3 });
-    await contains(".o-mail-MessagingMenu-filter:text('All')");
-    await contains(".o-mail-MessagingMenu-filter:text('Unread')");
-    await contains(".o-mail-MessagingMenu-filter:text('Group')");
+    await waitFor(".o-mail-MessagingMenu-filter:count(3)");
+    await waitFor(".o-mail-MessagingMenu-filter:text('All'):count(1)");
+    await waitFor(".o-mail-MessagingMenu-filter:text('Unread'):count(1)");
+    await waitFor(".o-mail-MessagingMenu-filter:text('Group'):count(1)");
 });
