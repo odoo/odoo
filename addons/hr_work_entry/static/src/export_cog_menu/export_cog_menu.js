@@ -38,7 +38,7 @@ cogMenuRegistry.add(
         groupNumber: 40,
         isDisplayed() {
             const env = useEnv();
-            return env.searchModel.resModel === "hr.employee";
+            return env.searchModel.resModel === "hr.employee" && ["form", "kanban", "list"].includes(env.config.viewType);
         },
     },
     { sequence: 1 }
