@@ -183,7 +183,13 @@ class StockMove(models.Model):
         moves = super()._action_done(cancel_backorder=cancel_backorder)
         moves_out = moves_out.exists()
         moves_in = moves.filtered(lambda m: m.is_in or m.is_dropship)
-        moves_in.with_context(std_price_incremental_recompute=not moves_out)._set_value()
+        out_products = moves_out.product_id
+        moves_in_incremental = moves_in.filtered(lambda m: not moves_out or (
+            m.product_id not in out_products
+            and m.product_id.with_company(m.company_id).cost_method == 'average'
+        ))
+        moves_in_incremental.with_context(std_price_incremental_recompute=True)._set_value()
+        (moves_in - moves_in_incremental).with_context(std_price_incremental_recompute=False)._set_value()
         moves._create_account_move()
         # Update standard price on outgoing fifo or lot valuated average products
         moves_out.product_id.filtered(lambda p: p.cost_method == 'fifo' or (p.cost_method == 'average' and p.lot_valuated))._update_standard_price()
