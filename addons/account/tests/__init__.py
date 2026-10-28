@@ -77,3 +77,4 @@ from . import test_account_move_tax_mode
 from . import test_portal_additional_identifiers
 from . import test_document_title
 from . import test_account_move_line_mapping
+from . import test_account_tutorial

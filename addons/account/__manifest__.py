@@ -13,7 +13,7 @@ You could use this simplified accounting in case you work with an (external) acc
     """,
     'category': 'Accounting/Accounting',
     'website': 'https://www.odoo.com/app/invoicing',
-    'depends': ['base_setup', 'onboarding', 'product', 'analytic', 'portal', 'digest'],
+    'depends': ['base_setup', 'onboarding', 'product', 'analytic', 'portal', 'digest', 'web_tutorial'],
     'data': [
         'security/account_security.xml',
         'data/account_data.xml',
@@ -21,7 +21,6 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/account_report.xml',
         'data/mail_template_data.xml',
         'data/onboarding_data.xml',
-        'data/account_tour.xml',
         'data/ir_sequence.xml',
         'data/res_country_group.xml',
         'data/portal_entry_data.xml',
@@ -88,6 +87,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'wizard/account_merge_wizard_views.xml',
         'data/ir_config_parameter_data.xml',
         'security/ir.access.csv',
+        'data/account_tutorial.xml',
     ],
     'demo': [
         'demo/account_demo.xml',
@@ -103,6 +103,7 @@ You could use this simplified accounting in case you work with an (external) acc
             'account/static/src/scss/variables.scss',
         ],
         'web.assets_backend': [
+            'account/static/src/account_tutorial.js',
             'account/static/src/css/account_bank_and_cash.css',
             'account/static/src/css/account.css',
             'account/static/src/css/account_payment.css',
