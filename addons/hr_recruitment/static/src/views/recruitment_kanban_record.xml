@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <t t-name="hr_recruitment.KanbanRecord" t-inherit="web.KanbanRecord" t-inherit-mode="primary">
+        <xpath expr="//article/t[@t-call='{{ this.constructor.menuTemplate }}']" position="before">
+            <span
+                t-if="this.props.record.data.has_parallel_applications"
+                class="position-absolute top-0 end-0 me-5 mt-2 text-danger"
+                title="Parallel applications">
+                <i class="oi oi-lg" data-icon="alt_route"/>
+            </span>
+        </xpath>
+    </t>
+</odoo>
