@@ -71,12 +71,12 @@
                 </div>
             </div>
         </div>
-        <t t-if="this.thread and this.sidePanelTransition.shouldMount and !this.ui.isSmall()" t-call="mail.DiscussContent-panel" activePanel="this.sidePanel()" transitionClass="this.sidePanelTransition.className"/>
+        <t t-if="this.thread and this.sidePanel() and !this.ui.isSmall()" t-call="mail.DiscussContent-panel" activePanel="this.sidePanel()" stateClass="this.isSidePanelClosing() ? 'o-closing' : 'o-open'"/>
     </div>
 </t>
 
 <t t-name="mail.DiscussContent-panel">
-    <div class="o-mail-DiscussContent-panelContainer flex-shrink-0 d-print-none" t-att-class="{ 'w-100': this.ui.isSmall() }" t-attf-class="{{ transitionClass or '' }}">
+    <div class="o-mail-DiscussContent-panelContainer flex-shrink-0 d-print-none" t-att-class="{ 'w-100': this.ui.isSmall() }" t-attf-class="{{ stateClass or '' }}" t-ref="this.sidePanelRef">
         <t t-component="activePanel.component" t-props="activePanel.props"/>
     </div>
 </t>
