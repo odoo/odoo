@@ -1,6 +1,7 @@
 import {
     Component,
     computed,
+    onPatched,
     proxy,
     signal,
     types,
@@ -8,6 +9,7 @@ import {
     useEffect,
     useOnChange,
     usePlugin,
+    useScope,
 } from "@odoo/owl";
 
 import { useThreadActions } from "@mail/core/common/thread_actions";
@@ -22,13 +24,9 @@ import { attClassObjectToString } from "@mail/utils/common/format";
 import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { useService } from "@web/core/utils/hooks";
-import { useTransition } from "@web/core/transition";
 import { propSignal } from "@mail/utils/common/hooks";
 import { computedShallowEqual } from "@mail/utils/common/signal";
 import { ACTION_GROUP_TAGS, PANEL_CONTAINER_TYPE } from "@mail/core/common/action";
-
-/** The duration of `--mail-Discuss-transition` in `discuss_app.css`. */
-const PANEL_TRANSITION_DURATION = 150;
 
 class DiscussContentCircleAction extends CircleInlineAction {
     get classObj() {
@@ -63,6 +61,7 @@ export class DiscussContent extends Component {
         this.ui = usePlugin(UIPlugin);
         this.rootRef = signal.ref(HTMLDivElement);
         this.panelActionsRef = signal.ref(HTMLDivElement);
+        this.sidePanelRef = signal.ref(HTMLDivElement);
         this.threadAvatarRef = signal.ref(HTMLDivElement);
         this.threadActions = useThreadActions({ rootRef: this.rootRef, thread: () => this.thread });
         this.headerQuickActions = computedShallowEqual(() => this.threadActions.partition.quick);
@@ -99,20 +98,18 @@ export class DiscussContent extends Component {
         );
         /** The panel on the side, kept while it narrows once closed. */
         this.sidePanel = signal(undefined);
-        this.sidePanelTransition = useTransition({
-            name: "o-mail-DiscussContent-panelTransition",
-            initialVisibility: false,
-            leaveDuration: PANEL_TRANSITION_DURATION,
-        });
+        this.isSidePanelClosing = signal(false);
         useOnChange(
             () => [this.threadActions.activePanel],
             (panel) => {
                 if (panel) {
                     this.sidePanel.set(panel);
                 }
-                this.sidePanelTransition.shouldMount = Boolean(panel);
+                this.isSidePanelClosing.set(!panel && Boolean(this.sidePanel()));
             }
         );
+        this.scope = useScope();
+        onPatched(() => this.removeSidePanelOnceClosed());
         this.correspondentLocalDateTimeFormatted = computed(() =>
             this.store.localTimeIn(this.thread?.channel?.correspondent?.persona?.tz)
         );
@@ -135,6 +132,30 @@ export class DiscussContent extends Component {
                 rootEl.style.removeProperty("--o-mail-DiscussContent-panelActionsWidth");
             };
         });
+    }
+
+    /** Removes the closed panel on the side once it has narrowed, however long that lasts. */
+    async removeSidePanelOnceClosed() {
+        const el = this.sidePanelRef();
+        if (!this.isSidePanelClosing() || (el && el === this.closingSidePanelEl)) {
+            return;
+        }
+        if (el) {
+            this.closingSidePanelEl = el;
+            // Also through the transitions of an opening and closing again meanwhile.
+            for (let animations; (animations = el.getAnimations()).length; ) {
+                await Promise.allSettled(animations.map((animation) => animation.finished));
+            }
+            if (this.scope.isDestroyed()) {
+                return;
+            }
+            this.closingSidePanelEl = undefined;
+        }
+        // Not opened again while it narrowed.
+        if (this.isSidePanelClosing()) {
+            this.isSidePanelClosing.set(false);
+            this.sidePanel.set(undefined);
+        }
     }
 
     autoOpenPanel() {

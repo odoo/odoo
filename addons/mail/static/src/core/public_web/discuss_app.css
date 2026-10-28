@@ -133,7 +133,7 @@
         transition: padding-inline-end var(--mail-Discuss-transition);
     }
 
-    &:has(.o-mail-DiscussContent-panelTransition-enter-active) .o-mail-DiscussContent-header {
+    &:has(.o-mail-DiscussContent-panelContainer.o-open) .o-mail-DiscussContent-header {
         padding-inline-end: 0.5rem;
     }
 
@@ -160,16 +160,23 @@
         /* Under the panel actions, whatever is stacked inside. */
         isolation: isolate;
         interpolate-size: allow-keywords;
-        /* Narrower than its content while it widens, which overflows to the end. */
+        /* Its content keeps to the end while it widens, uncovered in place. */
+        display: flex;
+        justify-content: flex-end;
         min-width: 0;
+        overflow: clip;
         background-color: var(--o-webclient-background-color);
         transition: width var(--mail-Discuss-transition);
+
+        > * {
+            flex-grow: 1;
+        }
 
         @starting-style {
             width: 0;
         }
 
-        &.o-mail-DiscussContent-panelTransition-leave {
+        &.o-closing {
             width: 0;
         }
 
