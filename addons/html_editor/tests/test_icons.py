@@ -57,6 +57,6 @@ class TestIconsSearch(TransactionCase):
                 "English tags stay searchable whatever the language",
             )
             self.assertCountEqual(
-                search_icons(env, 'eto'), ['bluetooth', 'star'],
+                search_icons(env, 'eto'), ['alt_route', 'bluetooth', 'star'],
                 "a needle matches the translated tags of an icon and the English tags of another",
             )
