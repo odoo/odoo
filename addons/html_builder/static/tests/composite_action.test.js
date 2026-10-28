@@ -340,3 +340,38 @@ test("reloadComposite action saves and reloads the editor", async () => {
     // No preview: the action is applied only once before the reload.
     await expect.waitForSteps(["apply1", "save", "reload"]);
 });
+
+test("composite action loads its actions when cleaning", async () => {
+    class Action1 extends BuilderAction {
+        static id = "action1";
+        isApplied({ editingElement }) {
+            return editingElement.classList.contains("class1");
+        }
+        async load() {
+            return "result1";
+        }
+        apply({ editingElement, loadResult }) {
+            editingElement.classList.toggle("class1");
+            expect.step(`apply1: ${loadResult}`);
+        }
+    }
+    addBuilderAction({ Action1 });
+    addBuilderOption({
+        selector: ".s_test",
+        template: xml`
+            <BuilderButton
+                action="'composite'"
+                actionParam="[{ action: 'action1' }]"
+                preview="false">
+                Click
+        </BuilderButton>`,
+    });
+    await setupHTMLBuilder(`<section class="s_test">Test</section>`);
+    await contains(":iframe .s_test").click();
+    await contains("[data-action-id='composite']").click();
+    await expect.waitForSteps(["apply1: result1"]);
+    // Action1 has no clean, so it is applied again with its load result.
+    await contains("[data-action-id='composite']").click();
+    await expect.waitForSteps(["apply1: result1"]);
+    expect(":iframe .s_test").not.toHaveClass("class1");
+});

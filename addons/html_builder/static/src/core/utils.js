@@ -783,7 +783,7 @@ export function useClickableBuilderComponent(props) {
         const cleanOrApplyProms = [];
         const isAlreadyApplied = isApplied();
         for (const applySpec of applySpecs) {
-            const hasClean = !!applySpec.clean;
+            const hasClean = applySpec.action.has("clean");
             const shouldClean = _shouldClean(env, props, hasClean, isAlreadyApplied);
             if (shouldClean) {
                 cleanOrApplyProms.push(
@@ -792,7 +792,7 @@ export function useClickableBuilderComponent(props) {
                         editingElement: applySpec.editingElement,
                         params: applySpec.actionParam,
                         value: applySpec.actionValue,
-                        loadResult: applySpec.loadOnClean ? applySpec.loadResult : null,
+                        loadResult: applySpec.action.loadOnClean ? applySpec.loadResult : null,
                         dependencyManager: env.dependencyManager,
                         selectableContext: env.selectableContext,
                     })
@@ -1242,7 +1242,6 @@ export function useInputDebouncedCommit(ref, commit) {
 export function getAllActionsAndOperations(props) {
     function getActionsSpecs(actions, userInputValue) {
         const getAction = env.editor.shared.builderActions.getAction;
-        const overridableMethods = ["apply", "clean", "load", "loadOnClean"];
         const specs = [];
         for (let { actionId, actionParam, actionValue } of actions) {
             const action = getAction(actionId);
@@ -1250,21 +1249,13 @@ export function getAllActionsAndOperations(props) {
             // by the user.
             actionValue = actionValue === undefined ? userInputValue : actionValue;
             for (const editingElement of env.getEditingElements()) {
-                const spec = {
+                specs.push({
                     editingElement,
                     actionId,
                     actionParam,
                     actionValue,
                     action,
-                };
-                // TODO Since the action is now in the spec, this shouldn't be
-                // necessary anymore.
-                for (const method of overridableMethods) {
-                    if (!action.has || action.has(method)) {
-                        spec[method] = action[method];
-                    }
-                }
-                specs.push(spec);
+                });
             }
         }
         return specs;
@@ -1339,7 +1330,7 @@ export function getAllActionsAndOperations(props) {
                                 }
                                 const hasClean = !!applySpec.action.has("clean");
                                 if (
-                                    !applySpec.loadOnClean &&
+                                    !applySpec.action.loadOnClean &&
                                     _shouldClean(env, props, hasClean, isApplied())
                                 ) {
                                     // The element will be cleaned, do not load
