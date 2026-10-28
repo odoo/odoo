@@ -103,7 +103,7 @@
                             </div>
                             <div class="row mb4" style="min-height: 60px;">
                                 <em class="col-10">
-                                    <field name="name"/>
+                                    <field name="label"/>
                                 </em>
                                 <div class="col-2 text-end">
                                     <field name="partner_id" widget="image" options="{'preview_image': 'avatar_128'}"/>
@@ -169,7 +169,8 @@
                     <field name="partner_id" optional="show" readonly="move_type != 'entry'"/>
                     <field name="ref" optional="hide" readonly="False"/>
                     <field name="product_id" readonly="1" optional="hide"/>
-                    <field name="name" optional="show"/>
+                    <field name="label" optional="show"/>
+                    <field name="name" optional="hide"/>
                     <field name="analytic_distribution"
                            widget="analytic_distribution"
                            groups="analytic.group_analytic_accounting"
@@ -418,7 +419,8 @@
                     <field name="move_name" string="Journal Entry" widget="open_move_widget"/>
                     <field name="partner_id" optional="show" readonly="move_type != 'entry'"/>
                     <field name="ref" readonly="False"/>
-                    <field name="name" optional="show"/>
+                    <field name="label" optional="show"/>
+                    <field name="name" optional="hide"/>
                     <field name="discount_amount_currency" string="Discount Amount" optional="show" invisible="not discount_amount_currency"/>
                     <field name="residual_at_date" sum="Total Residual at date" string="Residual" readonly="1" invisible="not is_account_reconcile"/>
                     <field name="residual_currency_at_date" string="Residual in Currency" optional="hide" readonly="1" invisible="is_same_currency or not is_account_reconcile" groups="base.group_multi_currency"/>
@@ -1556,7 +1558,8 @@
                                                optional="show"
                                                domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"
                                                column_invisible="parent.move_type != 'entry'"/>
-                                        <field name="name" optional="show"/>
+                                        <field name="label" optional="show"/>
+                                        <field name="name" optional="hide"/>
                                         <field name="analytic_distribution" widget="analytic_distribution"
                                                groups="analytic.group_analytic_accounting"
                                                optional="show"
@@ -1629,7 +1632,8 @@
                                       <group>
                                         <field name="account_id" domain="[('company_ids', 'parent_of', company_id)]"/>
                                         <field name="partner_id" domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"/>
-                                        <field name="name"/>
+                                        <field name="label"/>
+                                        <field name="name" invisible="1"/>
                                         <field name="analytic_distribution" widget="analytic_distribution" groups="analytic.group_analytic_accounting"/>
                                         <field name="amount_currency" groups="base.group_multi_currency"/>
                                         <field name="company_currency_id" invisible="1"/>
