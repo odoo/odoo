@@ -15,6 +15,7 @@ import re
 import os
 from lxml import etree, html
 from textwrap import shorten
+from xmlrpc.client import MAXINT
 
 from odoo import api, fields, models, _, SUPERUSER_ID, modules
 from odoo.addons.account.tools import format_structured_reference_iso
@@ -4220,6 +4221,7 @@ class AccountMove(models.Model):
         self._update_sequence_made_gap(invalidate_current=True)
         self = self.with_context(skip_invoice_sync=True, dynamic_unlink=True)  # no need to sync to delete everything
         logger_message = self._get_unlink_logger_message()
+        self.filtered(lambda move: move.state == 'posted' and move == move.company_id.account_opening_move_id)._unlink_opening_balance_statements()
         self.line_ids.remove_move_reconcile()
         self.line_ids.unlink()
         res = super().unlink()
@@ -5922,6 +5924,12 @@ class AccountMove(models.Model):
         if not default_values_list:
             default_values_list = [{} for move in self]
 
+        if self.filtered(lambda move: move == move.company_id.account_opening_move_id)._get_opening_statement_links():
+            raise UserError(self.env._(
+                "You cannot reverse the opening entry as its bank balances are matched with opening bank statements. "
+                "Reset it to draft instead."
+            ))
+
         reverse_moves = self.env['account.move']
         for move, default_values in zip(self, default_values_list):
             default_values.update({
@@ -6174,6 +6182,14 @@ class AccountMove(models.Model):
         # Avoid marking is_manually_modified as True when posting an invoice
         self = self.with_context(skip_is_manually_modified=True)  # noqa: PLW0642
 
+        # The bank opening balances are booked by statement lines, the opening move only keeps their counterpart
+        opening_moves = self.filtered(lambda move: (
+            move.state == 'draft'
+            and move == move.company_id.account_opening_move_id
+            and (not soft or move.date <= fields.Date.context_today(self))
+        ))
+        opening_plan = opening_moves._move_opening_liquidity_lines_to_transfer_account()
+
         validation_msgs = set()
 
         for invoice in self.filtered(lambda move: move.is_invoice(include_receipts=True)):
@@ -6394,6 +6410,7 @@ class AccountMove(models.Model):
             .with_context(move_reverse_cancel=self.env.context.get('move_reverse_cancel', False))\
             ._reconcile_plan(reconciliation_plan)
         to_post.line_ids._reconcile_marked()
+        self._create_opening_balance_statements([(line, journal) for line, journal in opening_plan if line.move_id in to_post])
 
         customer_count, supplier_count = defaultdict(int), defaultdict(int)
         for invoice in to_post:
@@ -6867,9 +6884,6 @@ class AccountMove(models.Model):
             self._post(soft=False)
         if autopost_bills_wizard := self._show_autopost_bills_wizard():
             return autopost_bills_wizard
-        # Only the company's opening move should create opening balance statement lines
-        if self and self == self.company_id.account_opening_move_id:
-            self._create_opening_balance_bank_statements()
         return False
 
     def _get_moves_requiring_confirmation(self):
@@ -6952,6 +6966,8 @@ class AccountMove(models.Model):
             raise UserError(_("You can't reset to draft those journal entries. You need to request a cancellation instead."))
 
         self._check_draftable()
+        opening_moves = self.filtered(lambda move: move.state == 'posted' and move == move.company_id.account_opening_move_id)
+        opening_journal_by_line = opening_moves._unlink_opening_balance_statements()
         # We delete next auto_post move if draft
         self._unlink_next_draft_auto_post_moves()
         # We remove all the analytics entries for this journal
@@ -6960,6 +6976,9 @@ class AccountMove(models.Model):
         posted_moves._update_standard_price(reverse=True)
         posted_moves._update_qty_available(reverse=True)
         self.state = 'draft'
+        # Put the bank opening balances back on the bank accounts
+        for line, journal in opening_journal_by_line.items():
+            line.write({'account_id': journal.default_account_id.id, 'name': self.env._("Opening balance")})
         with self.env.protecting(self.env['account.move']._get_protected_vals({}, self)):
             self.line_ids.filtered(lambda line: line.display_type == 'cogs').unlink()
         self.sending_data = False
@@ -7801,70 +7820,159 @@ class AccountMove(models.Model):
             and self.invoice_date_due < fields.Date.context_today(self)
         )
 
-    def _create_opening_balance_bank_statements(self):
-        """Create opening balance statement lines for impacted liquidity journals."""
-        self.ensure_one()
+    def _move_opening_liquidity_lines_to_transfer_account(self):
+        """ Move the lines of the opening moves in self that are on the default account of a liquidity journal to the
+            transfer account. The bank balances will be booked by 'Opening Balance' statement lines instead, matched with
+            these lines.
 
-        journals = self.env['account.journal'].search([
-            *self.env['account.journal']._check_company_domain(self.company_id),
-            ('type', 'in', {'bank', 'cash', 'credit'}),
-            ('default_account_id', 'in', self.line_ids.account_id.ids),
-        ])
-        journal_by_account_id = {}
-        for journal in journals:
-            # If several bank/cash journals share the same default account,
-            # keep the first one so behavior is deterministic
-            journal_by_account_id.setdefault(journal.default_account_id.id, journal)
-        if not journal_by_account_id:
-            return
+            :return: a list of (opening line, liquidity journal) tuples.
+        """
+        opening_plan = []
+        for move in self:
+            journals = self.env['account.journal'].search([
+                *self.env['account.journal']._check_company_domain(move.company_id),
+                ('type', 'in', {'bank', 'cash', 'credit'}),
+                ('default_account_id', 'in', move.line_ids.account_id.ids),
+            ])
+            journal_by_account = {}
+            # If several liquidity journals share the same default account, prefer the ones of the move's company
+            # and keep the first one so behavior is deterministic
+            for journal in journals.sorted(lambda journal: journal.company_id != move.company_id):
+                journal_by_account.setdefault(journal.default_account_id, journal)
 
-        unaffected_earnings_account = self.company_id.get_unaffected_earnings_account().id
-        lines_by_journal = defaultdict(lambda: self.env['account.move.line'])
-        for line in self.line_ids:
-            if journal := journal_by_account_id.get(line.account_id.id):
-                lines_by_journal[journal] += line
-
-        opening_balance_payment_ref = self.env._("Opening balance")
-
-        existing_bank_statement_lines = dict(self.env['account.bank.statement.line']._read_group([
-            ('journal_id', 'in', [journal.id for journal in lines_by_journal]),
-            ('payment_ref', '=', opening_balance_payment_ref),
-        ], groupby=['journal_id'], aggregates=['id:recordset']))
-
-        for journal, opening_lines in lines_by_journal.items():
-            balance = sum(opening_lines.mapped('balance'))
-            if self.company_id.currency_id.is_zero(balance):
+            lines = move.line_ids.filtered(lambda line: line.account_id in journal_by_account and (line.balance or line.amount_currency))
+            if not lines:
                 continue
 
-            if journal.currency_id:
-                amount = sum(opening_lines.mapped('amount_currency'))
-                if journal.currency_id.is_zero(amount):
-                    continue
-            else:
-                amount = balance
+            transfer_account = move.company_id.transfer_account_id
+            if (
+                not transfer_account
+                or not transfer_account.reconcile
+                or transfer_account in journals.default_account_id
+                or transfer_account in journals.suspense_account_id
+            ):
+                raise UserError(self.env._(
+                    "To post the opening balance of your bank accounts, set a reconcilable Internal Transfer account, "
+                    "different from the bank and suspense accounts, in the Accounting settings.",
+                ))
 
-            statement_line = existing_bank_statement_lines.get(journal)
-            if statement_line and len(statement_line) == 1:
-                # Delete statement, statement lines and move so that everything is correctly re-created
-                move = statement_line.move_id
-                statement_line.statement_id.unlink()
-                move.button_draft()
-                move.unlink()  # Deletes move and statement line
+            for line in lines:
+                journal = journal_by_account[line.account_id]
+                line.write({
+                    'account_id': transfer_account.id,
+                    'name': self.env._("Opening balance: %s", journal.display_name),
+                })
+                opening_plan.append((line, journal))
+        return opening_plan
 
-            self.env['account.bank.statement'].create({
-                'name': self.env._("Opening Balance"),
-                'date': self.date,
-                'journal_id': journal.id,
-                'line_ids': [
-                    Command.create({
-                        'date': self.date,
-                        'payment_ref': opening_balance_payment_ref,
+    def _create_opening_balance_statements(self, opening_plan):
+        """ Create an Opening Balance statement per liquidity journal, with one statement line per opening line
+            moved to the transfer account, and match each opening line with its statement line.
+
+            :param opening_plan: a list of (opening line, liquidity journal) tuples.
+        """
+        lines_by_move_journal = defaultdict(lambda: self.env['account.move.line'])
+        for line, journal in opening_plan:
+            lines_by_move_journal[line.move_id, journal] += line
+
+        for (move, journal), opening_lines in lines_by_move_journal.items():
+            st_lines_vals = []
+            for line in opening_lines:
+                company_currency = line.company_currency_id
+                journal_currency = journal.currency_id or company_currency
+                st_line_vals = {
+                    'date': move.date,
+                    'payment_ref': self.env._("Opening balance"),
+                    'journal_id': journal.id,
+                    'sequence': MAXINT,  # First statement line of the day
+                }
+                if journal_currency == line.currency_id == company_currency:
+                    st_line_vals.update({
+                        'amount': line.balance,
+                        'counterpart_account_id': line.account_id.id,
+                    })
+                else:
+                    # Mirror the opening line exactly so the matching doesn't create any exchange difference
+                    if line.currency_id == journal_currency:
+                        amount = line.amount_currency
+                    else:
+                        amount = company_currency._convert(line.balance, journal_currency, move.company_id, move.date)
+                    st_line_vals.update({
                         'amount': amount,
-                        'journal_id': journal.id,
-                        'counterpart_account_id': unaffected_earnings_account,
-                    }),
-                ],
+                        'line_ids': [
+                            Command.create({
+                                'name': st_line_vals['payment_ref'],
+                                'account_id': journal.default_account_id.id,
+                                'currency_id': journal_currency.id,
+                                'amount_currency': amount,
+                                'balance': line.balance,
+                            }),
+                            Command.create({
+                                'name': st_line_vals['payment_ref'],
+                                'account_id': line.account_id.id,
+                                'currency_id': line.currency_id.id,
+                                'amount_currency': -line.amount_currency,
+                                'balance': -line.balance,
+                            }),
+                        ],
+                    })
+                st_lines_vals.append(st_line_vals)
+
+            statement = self.env['account.bank.statement'].sudo().with_company(move.company_id).create({
+                'name': self.env._("Opening Balance"),
+                'date': move.date,
+                'journal_id': journal.id,
+                'line_ids': [Command.create(st_line_vals) for st_line_vals in st_lines_vals],
             })
+            for line, st_line in zip(opening_lines, statement.line_ids.sorted('id')):
+                (line.sudo() + st_line.line_ids.filtered(lambda st_move_line: st_move_line.account_id == line.account_id)).reconcile()
+
+    def _get_opening_statement_links(self):
+        """ Get the 'Opening Balance' statement lines matched with the lines of the opening moves in self.
+
+            :return: a dict mapping each matched opening line to its statement line.
+        """
+        links = {}
+        for line in self.line_ids.filtered('reconciled'):
+            counterparts = line.matched_debit_ids.debit_move_id | line.matched_credit_ids.credit_move_id
+            st_line = counterparts.statement_line_id.filtered(lambda st_line: (
+                st_line.sequence == MAXINT  # Only the generated 'Opening Balance' statement lines use it
+                and st_line.journal_id.type in {'bank', 'cash', 'credit'}
+                and st_line.date == line.date
+            ))
+            if len(st_line) == 1:
+                links[line] = st_line
+        return links
+
+    def _unlink_opening_balance_statements(self):
+        """ Delete the 'Opening Balance' statement lines matched with the opening moves in self.
+
+            :return: a dict mapping each matched opening line to the journal of its deleted statement line.
+        """
+        links = self._get_opening_statement_links()
+        if not links:
+            return {}
+
+        st_lines = self.env['account.bank.statement.line'].union(links.values())
+        if hashed_st_lines := st_lines.filtered(lambda st_line: st_line.move_id.inalterable_hash):
+            raise UserError(self.env._(
+                "You cannot reset the opening entry to draft as its opening bank statement in %(journals)s is locked.",
+                journals=format_list(self.env, hashed_st_lines.journal_id.mapped('display_name')),
+            ))
+        # Check the lock dates before changing anything, the moves are only checked once written
+        moves = self | st_lines.move_id
+        moves._check_fiscal_lock_dates()
+        moves.line_ids._check_tax_lock_date()
+
+        journal_by_line = {line: st_line.journal_id for line, st_line in links.items()}
+        st_lines = st_lines.sudo()
+        # We have to unmatch first since changing the account of a matched line would reset its statement line to the suspense account
+        self.env['account.move.line'].union(links).sudo().remove_move_reconcile()
+        statements = st_lines.statement_id
+        st_lines.statement_id = False
+        statements.filtered(lambda statement: not statement.line_ids).unlink()
+        st_lines.unlink()
+        return journal_by_line
 
     # -------------------------------------------------------------------------
     # TOOLING
