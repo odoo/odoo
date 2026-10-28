@@ -2,7 +2,7 @@
 <templates>
     <t t-name="website_sale.ProductImageViewer">
         <div class="o_dialog" t-att-id="this.id" t-att-class="{ o_inactive_modal: !this.data.isActive }">
-            <div role="dialog" class="modal">
+            <div role="dialog" class="modal" t-ref="this.modalRef">
                 <div class="o_wsale_image_viewer flex-column align-items-center d-flex w-100 h-100" t-on-mousemove="this.onGlobalMousemove">
                     <!-- Header -->
                     <div class="o_wsale_image_viewer_header d-flex w-100 text-white">
