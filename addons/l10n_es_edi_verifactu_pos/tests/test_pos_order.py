@@ -3,6 +3,7 @@ import datetime
 from contextlib import contextmanager, nullcontext
 from unittest import mock
 
+from odoo import Command
 from odoo.addons.point_of_sale.models.pos_order import PosOrder
 from odoo.exceptions import UserError
 from odoo.tests import tagged
@@ -119,6 +120,21 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
                     ],
                     'payments': [(self.bank_pm1, 1210.0)],
                 })
+
+    def test_invalid_document_without_certificate(self):
+        self.company.sudo().l10n_es_edi_verifactu_certificate_ids = [Command.clear()]
+        with self.with_pos_session():
+            order = self._create_order({
+                'pos_order_lines_ui_args': [
+                    (self.product, 1.0),
+                ],
+                'payments': [(self.bank_pm1, 121.0)],
+            })
+
+        self.assertRecordValues(order.l10n_es_edi_verifactu_document_ids, [{
+            'state': 'invalid',
+            'obligado_partner_id': self.company.partner_id.id,
+        }])
 
     def test_order_not_invoiced(self):
         with self.with_pos_session():
