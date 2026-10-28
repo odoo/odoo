@@ -1479,9 +1479,10 @@ class AccountMove(models.Model):
     @api.depends('suitable_journal_ids')
     def _compute_show_journal(self):
         for move in self:
+            # compare the origins, the records being new ones in the form (onchange)
             move.show_journal = (
                 len(move.suitable_journal_ids) > 1
-                or move.journal_id and move.journal_id not in move.suitable_journal_ids
+                or move.journal_id and move.journal_id._origin not in move.suitable_journal_ids._origin
             )
 
     def _compute_payments_widget_to_reconcile_info(self):
