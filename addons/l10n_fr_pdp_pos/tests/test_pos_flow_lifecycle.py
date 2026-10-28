@@ -355,4 +355,4 @@ class TestPdpPosFlowLifecycle(TestPoSCommon):
         order = self.env['pos.order'].search([('session_id', '=', session.id)], limit=1)
         self.assertFalse(order.account_move._need_ubl_cii_xml('ubl_21_fr'))
         self.env['account.move.send']._generate_and_send_invoices(order.account_move, allow_fallback_pdf=True)
-        self.assertTrue(order.account_move.invoice_pdf_report_id)
+        self.assertTrue(order.account_move.invoice_pdf_report_file)

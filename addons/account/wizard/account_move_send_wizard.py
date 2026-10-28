@@ -198,7 +198,7 @@ class AccountMoveSendWizard(models.TransientModel):
     def _compute_display_pdf_report_id(self):
         """ Show PDF template selection if there are more than 1 template available for invoices. """
         for wizard in self:
-            wizard.display_pdf_report_id = len(wizard.available_pdf_report_ids) > 1 and not wizard.move_id.invoice_pdf_report_id
+            wizard.display_pdf_report_id = len(wizard.available_pdf_report_ids) > 1 and not wizard.move_id.invoice_pdf_report_file
 
     @api.depends('move_id')
     def _compute_template_id(self):

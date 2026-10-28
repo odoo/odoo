@@ -19,13 +19,6 @@ class AccountMove(models.Model):
     # Fields declaration
     # ------------------
 
-    l10n_tw_edi_file_id = fields.Many2one(
-        comodel_name="ir.attachment",
-        compute=lambda self: self._compute_linked_attachment_id("l10n_tw_edi_file_id", "l10n_tw_edi_file"),
-        depends=["l10n_tw_edi_file"],
-        copy=False,
-        export_string_translation=False,
-    )
     l10n_tw_edi_file = fields.Binary(
         string="Ecpay JSON File",
         copy=False,
@@ -215,7 +208,7 @@ class AccountMove(models.Model):
             "l10n_tw_edi_invoice_create_date": False,
             "l10n_tw_edi_invalidate_reason": False,
         })
-        invoices_to_reset.l10n_tw_edi_file_id.unlink()
+        invoices_to_reset.l10n_tw_edi_file = False
         return res
 
     @api.depends("l10n_tw_edi_love_code", "l10n_tw_edi_carrier_type", "partner_id")
@@ -261,9 +254,11 @@ class AccountMove(models.Model):
     # ----------------
     # Business methods
     # ----------------
-    def _get_mail_thread_data_attachments(self):
-        res = super()._get_mail_thread_data_attachments()
-        return res | self.l10n_tw_edi_file_id
+    def _get_invoice_files(self):
+        invoice_files = super()._get_invoice_files()
+        if json_file := self.l10n_tw_edi_file:
+            invoice_files.append({'file': json_file, 'send': False, 'chatter': True})
+        return invoice_files
 
     # API methods
     def _l10n_tw_edi_check_tax_type_on_invoice_lines(self):

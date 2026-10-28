@@ -4,9 +4,9 @@ import base64
 import textwrap
 import uuid
 
-from odoo import _, api, fields, models, SUPERUSER_ID
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import float_round, float_repr
+from odoo.tools import BinaryBytes, float_round, float_repr
 from odoo.addons.l10n_vn_edi_viettel.models.sinvoice_service import SInvoiceService
 
 
@@ -48,38 +48,14 @@ class AccountMove(models.Model):
         copy=False,
         readonly=True,
     )
-    l10n_vn_edi_sinvoice_file_id = fields.Many2one(
-        comodel_name='ir.attachment',
-        compute=lambda self: self._compute_linked_attachment_id('l10n_vn_edi_sinvoice_file_id', 'l10n_vn_edi_sinvoice_file'),
-        depends=['l10n_vn_edi_sinvoice_file'],
-        copy=False,
-        readonly=True,
-        export_string_translation=False,
-    )
     l10n_vn_edi_sinvoice_file = fields.Binary(
         string='SInvoice json File',
         copy=False,
         readonly=True,
         export_string_translation=False,
     )
-    l10n_vn_edi_sinvoice_xml_file_id = fields.Many2one(
-        comodel_name='ir.attachment',
-        compute=lambda self: self._compute_linked_attachment_id('l10n_vn_edi_sinvoice_xml_file_id', 'l10n_vn_edi_sinvoice_xml_file'),
-        depends=['l10n_vn_edi_sinvoice_xml_file'],
-        copy=False,
-        readonly=True,
-        export_string_translation=False,
-    )
     l10n_vn_edi_sinvoice_xml_file = fields.Binary(
         string='SInvoice xml File',
-        copy=False,
-        readonly=True,
-        export_string_translation=False,
-    )
-    l10n_vn_edi_sinvoice_pdf_file_id = fields.Many2one(
-        comodel_name='ir.attachment',
-        compute=lambda self: self._compute_linked_attachment_id('l10n_vn_edi_sinvoice_pdf_file_id', 'l10n_vn_edi_sinvoice_pdf_file'),
-        depends=['l10n_vn_edi_sinvoice_pdf_file'],
         copy=False,
         readonly=True,
         export_string_translation=False,
@@ -208,7 +184,7 @@ class AccountMove(models.Model):
     def _l10n_vn_edi_fetch_invoice_files(self):
         """
         Fetches the SInvoice XML and PDF data from the SInvoice server if self is a sent invoice.
-        The files are saved in the l10n_vn_edi_sinvoice_pdf_file_id and l10n_vn_edi_sinvoice_xml_file_id.
+        The files are saved in the l10n_vn_edi_sinvoice_pdf_file and l10n_vn_edi_sinvoice_xml_file.
         """
 
         if self.l10n_vn_edi_invoice_state != 'sent':
@@ -219,32 +195,21 @@ class AccountMove(models.Model):
 
         # Not using _link_invoice_documents for these because it depends on _need_invoice_document and I can't get it to work
         # well while allowing users to download the files before sending.
-        attachments_data = []
+        attachment_ids = []
         for file, error in [(xml_data, xml_error_message), (pdf_data, pdf_error_message)]:
             if error or not file:
                 continue
-            attachments_data.append({
-                'name': file['name'],
-                'raw': file['raw'],
-                'mimetype': file['mimetype'],
-                'res_model': self._name,
-                'res_id': self.id,
-                'res_field': file['res_field'],
-            })
+            self.sudo()[file['res_field']] = BinaryBytes(file['raw'], filename=file['name'])
+            attachment_ids.append(self[file['res_field']].attachment_id)
 
-        if attachments_data:
-            attachments = self.env['ir.attachment'].with_user(SUPERUSER_ID).create(attachments_data)
-            self.invalidate_recordset(fnames=[
-                'l10n_vn_edi_sinvoice_xml_file_id',
-                'l10n_vn_edi_sinvoice_xml_file',
-                'l10n_vn_edi_sinvoice_pdf_file_id',
-                'l10n_vn_edi_sinvoice_pdf_file',
-            ])
+        if attachment_ids:
+            if sinvoice_file := self.l10n_vn_edi_sinvoice_file:
+                attachment_ids.append(sinvoice_file.attachment_id)
 
             # Log the new attachment in the chatter for reference. Make sure to add the JSON file.
             self.with_context(no_new_invoice=True).message_post(
                 body=_('Invoice sent to SInvoice'),
-                attachment_ids=attachments.ids + self.l10n_vn_edi_sinvoice_file_id.ids,
+                attachment_ids=attachment_ids,
             )
 
         if xml_error_message or pdf_error_message:
@@ -639,7 +604,14 @@ class AccountMove(models.Model):
         sent_statuses = {'sent', 'payment_state_to_update', 'adjusted', 'replaced'}
         return self.l10n_vn_edi_invoice_state in sent_statuses
 
-    def _get_mail_thread_data_attachments(self):
-        res = super()._get_mail_thread_data_attachments()
-        # attachments with 'res_field' are excluded, and we want this in the chatter for audit/... purposes.
-        return res | self.l10n_vn_edi_sinvoice_file_id
+    def _get_invoice_files(self):
+        invoice_files = super()._get_invoice_files()
+        # we want the json file in the chatter for audit/... purposes.
+        if json_file := self.l10n_vn_edi_sinvoice_file:
+            invoice_files.append({'file': json_file, 'send': False, 'chatter': True})
+        # we require these to be downloadable for a better UX. It was also said that the xml and pdf files are
+        # important files that needs to be shared with the customer.
+        for sinvoice_file in (self.l10n_vn_edi_sinvoice_xml_file, self.l10n_vn_edi_sinvoice_pdf_file):
+            if sinvoice_file:
+                invoice_files.append({'file': sinvoice_file, 'send': True, 'chatter': True})
+        return invoice_files

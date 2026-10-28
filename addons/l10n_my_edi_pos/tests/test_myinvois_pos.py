@@ -139,7 +139,7 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
             self.assertEqual(len(consolidated_invoice), 1)  # One consolidated invoice holds up to 100 lines
             # Get the XML File, and assert the amount of lines
             consolidated_invoice.action_generate_xml_file()
-            xml_tree = etree.fromstring(consolidated_invoice.myinvois_file_id.raw.content)
+            xml_tree = etree.fromstring(consolidated_invoice.myinvois_file.content)
             self.assertEqual(len(xml_tree.xpath("cac:InvoiceLine", namespaces=NS_MAP)), 1)  # Both orders are continuous, so they are merged in a single line.
             # Finally, assert a few nodes to make sure the file make sense (line amount, customer tin (general one), ...
             self._assert_node_values(xml_tree, "cac:InvoiceLine/cbc:LineExtensionAmount", '600.00')
@@ -164,7 +164,7 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
             consolidated_invoice = (first_order | third_order).consolidated_invoice_ids
             # Get the XML File, and assert the amount of lines
             consolidated_invoice.action_generate_xml_file()
-            xml_tree = etree.fromstring(consolidated_invoice.myinvois_file_id.raw.content)
+            xml_tree = etree.fromstring(consolidated_invoice.myinvois_file.content)
             # There is an invoiced order between both consolidated orders, so there is two lines
             self.assertEqual(len(xml_tree.xpath("cac:InvoiceLine", namespaces=NS_MAP)), 2)
             # Finally, ensure that the line values are correct.
@@ -190,7 +190,7 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
 
             consolidated_invoice = (first_order | second_order).consolidated_invoice_ids
             consolidated_invoice.action_generate_xml_file()
-            xml_tree = etree.fromstring(consolidated_invoice.myinvois_file_id.raw.content)
+            xml_tree = etree.fromstring(consolidated_invoice.myinvois_file.content)
             self.assertEqual(len(xml_tree.xpath("cac:InvoiceLine", namespaces=NS_MAP)), 2)
             self._assert_node_values(xml_tree, "cac:InvoiceLine[1]/cbc:LineExtensionAmount", '100.00')
             self._assert_node_values(xml_tree, "cac:InvoiceLine[2]/cbc:LineExtensionAmount", '500.00')
@@ -220,7 +220,7 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
 
             consolidated_invoice = (first_order | second_order | third_order).consolidated_invoice_ids
             consolidated_invoice.action_generate_xml_file()
-            xml_tree = etree.fromstring(consolidated_invoice.myinvois_file_id.raw.content)
+            xml_tree = etree.fromstring(consolidated_invoice.myinvois_file.content)
             self.assertEqual(len(xml_tree.xpath("cac:InvoiceLine", namespaces=NS_MAP)), 3)
             self._assert_node_values(xml_tree, "cac:InvoiceLine[1]/cac:Item/cbc:Name", first_order.name)
             self._assert_node_values(xml_tree, "cac:InvoiceLine[2]/cac:Item/cbc:Name", second_order.name)
@@ -246,7 +246,7 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
 
             consolidated_invoice = (first_order | second_order).consolidated_invoice_ids
             consolidated_invoice.action_generate_xml_file()
-            xml_tree = etree.fromstring(consolidated_invoice.myinvois_file_id.raw.content)
+            xml_tree = etree.fromstring(consolidated_invoice.myinvois_file.content)
             self.assertEqual(len(xml_tree.xpath("cac:InvoiceLine", namespaces=NS_MAP)), 2)
             self._assert_node_values(xml_tree, "cac:InvoiceLine[1]/cac:Item/cbc:Name", first_order.name)
             self._assert_node_values(xml_tree, "cac:InvoiceLine[2]/cac:Item/cbc:Name", second_order.name)
@@ -268,7 +268,7 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
 
             consolidated_invoice = orders.consolidated_invoice_ids
             consolidated_invoice.action_generate_xml_file()
-            xml_tree = etree.fromstring(consolidated_invoice.myinvois_file_id.raw.content)
+            xml_tree = etree.fromstring(consolidated_invoice.myinvois_file.content)
             self.assertEqual(len(xml_tree.xpath("cac:InvoiceLine", namespaces=NS_MAP)), 1)
             self._assert_node_values(
                 xml_tree,
@@ -329,7 +329,7 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
 
             consolidated_invoice = first_order.consolidated_invoice_ids
             consolidated_invoice.action_generate_xml_file()
-            xml_tree = etree.fromstring(consolidated_invoice.myinvois_file_id.raw.content)
+            xml_tree = etree.fromstring(consolidated_invoice.myinvois_file.content)
             # All four receipts follow each other, but the sales and the refunds are reported apart.
             self.assertEqual(len(xml_tree.xpath("cac:InvoiceLine", namespaces=NS_MAP)), 2)
             self._assert_node_values(
@@ -413,7 +413,7 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
             self.assertEqual(len(consolidated_invoice), 1)
 
             consolidated_invoice.action_generate_xml_file()
-            xml_tree = etree.fromstring(consolidated_invoice.myinvois_file_id.raw.content)
+            xml_tree = etree.fromstring(consolidated_invoice.myinvois_file.content)
             tax_inclusive_node = xml_tree.xpath("cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount", namespaces=NS_MAP)
             self.assertTrue(tax_inclusive_node, "TaxInclusiveAmount node is missing from the XML.")
             expected_total = tax_inclusive_node[0].text
@@ -430,7 +430,7 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
                 order = self._create_order({'pos_order_lines_ui_args': [(self.product_two, 1.0)], 'customer': self.invoicing_customer, 'is_invoiced': True})
 
             invoice = order.account_move
-            xml_tree = etree.fromstring(invoice._get_active_myinvois_document().myinvois_file_id.raw.content)
+            xml_tree = etree.fromstring(invoice._get_active_myinvois_document().myinvois_file.content)
             tax_inclusive_node = xml_tree.xpath("cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount", namespaces=NS_MAP)
             self.assertTrue(tax_inclusive_node, "TaxInclusiveAmount node is missing from the XML.")
             expected_total = tax_inclusive_node[0].text
@@ -633,7 +633,7 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
             self.assertEqual(len(consolidated_invoice), 1)  # One consolidated invoice holds up to 100 lines
             # Get the XML File, and assert the amount of lines
             consolidated_invoice.action_generate_xml_file()
-            xml_tree = etree.fromstring(consolidated_invoice.myinvois_file_id.raw.content)
+            xml_tree = etree.fromstring(consolidated_invoice.myinvois_file.content)
             self.assertEqual(len(xml_tree.xpath("cac:InvoiceLine", namespaces=NS_MAP)), 1)  # Both orders are continuous, so they are merged in a single line.
             # Finally, assert a few nodes to make sure the file make sense (line amount, customer tin (general one), ...
             self._assert_node_values(xml_tree, "cac:InvoiceLine/cbc:LineExtensionAmount", '1200.00')
@@ -662,7 +662,7 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
             self.assertEqual(len(consolidated_invoice), 1)  # One consolidated invoice holds up to 100 lines
             # Get the XML File, and assert the amount of lines
             consolidated_invoice.action_generate_xml_file()
-            xml_tree = etree.fromstring(consolidated_invoice.myinvois_file_id.raw.content)
+            xml_tree = etree.fromstring(consolidated_invoice.myinvois_file.content)
             self.assertEqual(len(xml_tree.xpath("cac:InvoiceLine", namespaces=NS_MAP)), 1)
             # product 1 price is 100 and we applied a 25% discount => subtotal should be 75, 25 of discount
             # product 2 price is 500 and we applied a 15% discount => subtotal should be 425, 75 of discount
@@ -769,7 +769,7 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
             })
             wizard.button_consolidate()
             order.consolidated_invoice_ids.action_generate_xml_file()
-            root = etree.fromstring(order.consolidated_invoice_ids.myinvois_file_id.raw.content)
+            root = etree.fromstring(order.consolidated_invoice_ids.myinvois_file.content)
             with file_open('l10n_my_edi_pos/tests/expected_xmls/consolidated_invoice_tax_included.xml', 'rb') as f:
                 expected_xml = etree.fromstring(f.read())
             self.assertXmlTreeEqual(root, expected_xml)
@@ -796,7 +796,7 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
             })
             wizard.button_consolidate()
             order.consolidated_invoice_ids.action_generate_xml_file()
-            root = etree.fromstring(order.consolidated_invoice_ids.myinvois_file_id.raw.content)
+            root = etree.fromstring(order.consolidated_invoice_ids.myinvois_file.content)
             with file_open('l10n_my_edi_pos/tests/expected_xmls/consolidated_invoice_tax_included_with_discount.xml', 'rb') as f:
                 expected_xml = etree.fromstring(f.read())
             self.assertXmlTreeEqual(root, expected_xml)
@@ -833,7 +833,7 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
             wizard.button_consolidate()
             consolidated_invoice = self.env['myinvois.document'].search([])
             consolidated_invoice.action_generate_xml_file()
-            xml_tree = etree.fromstring(consolidated_invoice.myinvois_file_id.raw.content)
+            xml_tree = etree.fromstring(consolidated_invoice.myinvois_file.content)
             self.assertEqual(len(xml_tree.xpath("cac:InvoiceLine", namespaces=NS_MAP)), 2)
             # Both sales are reported together, and the refund on a line of its own.
             self._assert_node_values(xml_tree, "cac:InvoiceLine[1]/cbc:LineExtensionAmount", '600.00')
@@ -868,7 +868,7 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
             wizard.button_consolidate()
             consolidated_invoice = self.env['myinvois.document'].search([])
             consolidated_invoice.action_generate_xml_file()
-            xml_tree = etree.fromstring(consolidated_invoice.myinvois_file_id.raw.content)
+            xml_tree = etree.fromstring(consolidated_invoice.myinvois_file.content)
             self.assertEqual(len(xml_tree.xpath("cac:InvoiceLine", namespaces=NS_MAP)), 2)
             # The refunded amount is reported on its own line instead of being deducted from the sales.
             self._assert_node_values(xml_tree, "cac:InvoiceLine[1]/cbc:LineExtensionAmount", '700.00')
@@ -1027,7 +1027,7 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
 
             refund = self.env['account.move'].search([('move_type', '=', 'out_refund')], limit=1, order='id desc')
             self.assertEqual(refund.partner_id, self.invoicing_customer)  # We have the correct customer on the refund.
-            xml_tree = etree.fromstring(refund._get_active_myinvois_document().myinvois_file_id.raw.content)
+            xml_tree = etree.fromstring(refund._get_active_myinvois_document().myinvois_file.content)
             # But in the xml, we have the general public.
             self._assert_node_values(xml_tree, "cac:AccountingCustomerParty//cac:PartyIdentification/cbc:ID", 'EI00000000010')
 
@@ -1081,7 +1081,7 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
             consolidated_invoice.myinvois_custom_form_reference = '123456789'
             # Get the XML File, and assert the amount of lines
             consolidated_invoice.action_generate_xml_file()
-            root = etree.fromstring(consolidated_invoice.myinvois_file_id.raw.content)
+            root = etree.fromstring(consolidated_invoice.myinvois_file.content)
             with file_open('l10n_my_edi_pos/tests/expected_xmls/consolidated_invoice.xml', 'rb') as f:
                 expected_xml = etree.fromstring(f.read())
             self.assertXmlTreeEqual(root, expected_xml)
@@ -1152,7 +1152,7 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
                 })
 
             refund = self.env['account.move'].search([('move_type', '=', 'out_refund')], limit=1, order='id desc')
-            root = etree.fromstring(refund._get_active_myinvois_document().myinvois_file_id.raw.content)
+            root = etree.fromstring(refund._get_active_myinvois_document().myinvois_file.content)
             with file_open('l10n_my_edi_pos/tests/expected_xmls/consolidated_invoice_refund.xml', 'rb') as f:
                 expected_xml = etree.fromstring(f.read())
             self.assertXmlTreeEqual(root, expected_xml)
@@ -1225,7 +1225,7 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
             consolidated_invoice.name = "POS/2025-2026/000001"
             with patch(CONTACT_PROXY_METHOD, new=self._mock_successful_submission):
                 consolidated_invoice.action_submit_to_myinvois()
-            self.assertTrue(consolidated_invoice.myinvois_file_id)
+            self.assertTrue(consolidated_invoice.myinvois_file)
 
     #################
     # Patched methods

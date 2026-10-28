@@ -7,11 +7,11 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
 
     def _get_invoice_legal_documents(self, filetype, allow_fallback=False):
-        if filetype == 'pdf' and self.pos_order_ids and (sinvoice_attachment := self.l10n_vn_edi_sinvoice_pdf_file_id):
+        if filetype == 'pdf' and self.pos_order_ids and (sinvoice_pdf := self.l10n_vn_edi_sinvoice_pdf_file):
             return [{
-                'filename': sinvoice_attachment.name,
+                'filename': sinvoice_pdf.filename,
                 'filetype': 'pdf',
-                'content': sinvoice_attachment.raw,
+                'content': sinvoice_pdf,
             }]
         return super()._get_invoice_legal_documents(filetype, allow_fallback=allow_fallback)
 
@@ -26,6 +26,6 @@ class AccountMove(models.Model):
     def l10n_vn_edi_fetch_invoice_files(self):
         """
         Fetches the SInvoice XML and PDF data from the SInvoice server if self is a sent invoice.
-        The files are saved in the l10n_vn_edi_sinvoice_pdf_file_id and l10n_vn_edi_sinvoice_xml_file_id.
+        The files are saved in the l10n_vn_edi_sinvoice_pdf_file and l10n_vn_edi_sinvoice_xml_file.
         """
         self._l10n_vn_edi_fetch_invoice_files()

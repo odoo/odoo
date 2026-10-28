@@ -1,4 +1,5 @@
-from odoo import _, api, models, SUPERUSER_ID
+from odoo import _, api, models
+from odoo.tools import BinaryBytes
 
 
 class AccountMoveSend(models.AbstractModel):
@@ -14,11 +15,6 @@ class AccountMoveSend(models.AbstractModel):
         res.update({'rs_edi': {'label': 'eFaktura', 'is_applicable': self._is_rs_edi_applicable, 'help': 'Send the E-Invoice to Government via eFaktura'}})
         res.update({'rs_cir_checkbox': {'is_applicable': self._is_rs_edi_applicable, 'label': _("Send to CIR"), 'help': _("Send to Central Invoice Register(For B2G and the public sector)")}})
         return res
-
-    @api.model
-    def _get_invoice_extra_attachments(self, invoice):
-        # EXTENDS 'account'
-        return super()._get_invoice_extra_attachments(invoice) + invoice.l10n_rs_edi_attachment_id
 
     @api.model
     def _call_web_service_after_invoice_pdf_render(self, invoices_data):
@@ -42,9 +38,7 @@ class AccountMoveSend(models.AbstractModel):
                     "errors": [error],
                 }
                 continue
-            attachment_values = invoice._l10n_rs_edi_get_attachment_values(xml)
-            self.env['ir.attachment'].with_user(SUPERUSER_ID).create(attachment_values)
-            invoice.invalidate_recordset(fnames=['l10n_rs_edi_attachment_id', 'l10n_rs_edi_attachment_file'])
+            invoice.l10n_rs_edi_attachment_file = BinaryBytes(xml, filename=invoice._l10n_rs_edi_get_xml_attachment_name())
 
             if self._can_commit():
                 self.env.cr.commit()

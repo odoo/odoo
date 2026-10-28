@@ -139,6 +139,4 @@ class AccountMoveSend(models.AbstractModel):
         ]
 
         if attachments_vals:
-            attachments = self.env['ir.attachment'].with_user(SUPERUSER_ID).create(attachments_vals)
-            res_ids = [attachment.res_id for attachment in attachments]
-            self.env['account.move'].browse(res_ids).invalidate_recordset(fnames=['l10n_tw_edi_file_id', 'l10n_tw_edi_file'])
+            self.env['ir.attachment'].with_user(SUPERUSER_ID).create(attachments_vals)

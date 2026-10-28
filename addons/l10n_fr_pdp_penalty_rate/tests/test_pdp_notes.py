@@ -17,10 +17,10 @@ class TestPdpLatePaymentPenaltyNotes(TestL10nFrPdpCommon):
         wizard = self.create_send_and_print(invoice, sending_methods=['manual'], extra_edis=['ubl_21_fr'])
         wizard.action_send_and_print()
 
-        self.assertTrue(invoice.ubl_cii_xml_id)
+        self.assertTrue(invoice.ubl_cii_xml_file)
         self.assertIn(
             b"#PMD#Late payment penalties at an annual rate of 12.40%",
-            invoice.ubl_cii_xml_id.raw.content,
+            invoice.ubl_cii_xml_file.content,
         )
-        self.assertIn(b"#PMT#In the event of late payment", invoice.ubl_cii_xml_id.raw.content)
-        self.assertIn(b"#AAB#", invoice.ubl_cii_xml_id.raw.content)
+        self.assertIn(b"#PMT#In the event of late payment", invoice.ubl_cii_xml_file.content)
+        self.assertIn(b"#AAB#", invoice.ubl_cii_xml_file.content)

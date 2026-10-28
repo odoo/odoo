@@ -30,7 +30,7 @@ class TestKEAccountMoveSend(TestAccountMoveSendCommon):
         self.assertFalse(wizard.alerts)
         wizard.action_send_and_print()
 
-        self.assertTrue(invoice.invoice_pdf_report_id)
+        self.assertTrue(invoice.invoice_pdf_report_file)
 
     def test_not_sent_to_fiscal_device_but_allow_fallback(self):
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True, partner=self.partner_a)
@@ -39,7 +39,7 @@ class TestKEAccountMoveSend(TestAccountMoveSendCommon):
         wizard.action_send_and_print(allow_fallback_pdf=True)
 
         # The PDF is not generated but a proforma.
-        self.assertFalse(invoice.invoice_pdf_report_id)
+        self.assertFalse(invoice.invoice_pdf_report_file)
         self.assertTrue(self.env['ir.attachment'].search([
             ('name', '=', invoice._get_invoice_proforma_pdf_report_filename()),
         ]))
