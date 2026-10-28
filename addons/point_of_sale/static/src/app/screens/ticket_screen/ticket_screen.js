@@ -501,8 +501,10 @@ export class TicketScreen extends Component {
     }
 
     async onDeleteOrder(order) {
-        await this.pos.onDeleteOrder(order);
-        this.setSelectedOrder(this.pos.getOrder());
+        const isDeleted = await this.pos.onDeleteOrder(order);
+        if (isDeleted && !this.getSelectedOrder()) {
+            this.setSelectedOrder(this.pos.getOrder());
+        }
     }
 
     postRefund(destinationOrder) {}
