@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { queryAllTexts } from "@odoo/hoot-dom";
+import { queryAllTexts, waitFor, waitForNone } from "@odoo/hoot-dom";
 import {
     contains,
     makeMockServer,
@@ -63,7 +63,7 @@ test("avatar card preview with hr", async () => {
     });
     await contains(".o_m2o_avatar > img").click();
     await animationFrame();
-    await mailContains(".o_avatar_card");
+    await waitFor(".o_avatar_card:count(1)");
     expect(queryAllTexts(".o_card_user_infos > *:not(.o_avatar_card_buttons)")).toEqual([
         "Mario",
         "sub manager",
@@ -71,7 +71,7 @@ test("avatar card preview with hr", async () => {
         "+585555555",
     ]);
     await contains(".o_action_manager:eq(0)").click();
-    await mailContains(".o_avatar_card", { count: 0 });
+    await waitForNone(".o_avatar_card");
 });
 
 test("avatar card activates the employee's company before opening the profile", async () => {
@@ -111,11 +111,11 @@ test("avatar card activates the employee's company before opening the profile", 
         </kanban>`,
     });
     await contains(".o_m2o_avatar > img").click();
-    await mailContains(".o_avatar_card");
+    await waitFor(".o_avatar_card:count(1)");
     // The employee belongs to a non-active (but allowed) company: the plain
     // "View Profile" button is replaced by a dropdown that activates that company.
     await mailContains(".o_avatar_card_buttons button.dropdown-toggle", { text: "View Profile" });
-    await mailContains(".o_avatar_card_buttons button", { count: 2 });
+    await waitFor(".o_avatar_card_buttons button:count(2)");
     await mailContains(".o_avatar_card_buttons button", { text: "Send message" });
     await contains(".o_avatar_card_buttons button.dropdown-toggle").click();
     await contains(".o-dropdown-item", {
@@ -160,7 +160,7 @@ test("avatar card preview with hr (partner_id field)", async () => {
     });
     await contains(".o_m2o_avatar > img").click();
     await animationFrame();
-    await mailContains(".o_avatar_card");
+    await waitFor(".o_avatar_card:count(1)");
     expect(queryAllTexts(".o_card_user_infos > *:not(.o_avatar_card_buttons)")).toEqual([
         "Mario",
         "sub manager",
@@ -168,7 +168,7 @@ test("avatar card preview with hr (partner_id field)", async () => {
         "+585555555",
     ]);
     await contains(".o_action_manager:eq(0)").click();
-    await mailContains(".o_avatar_card", { count: 0 });
+    await waitForNone(".o_avatar_card");
 });
 
 test("avatar card displays the relevant employee info", async () => {
@@ -202,9 +202,9 @@ test("avatar card displays the relevant employee info", async () => {
         </kanban>`,
     });
     await mailClick(".o_m2o_avatar > img");
-    await mailContains(".o_avatar_card");
+    await waitFor(".o_avatar_card:count(1)");
     await mailClick(".o_action_manager:eq(0)"); // click away
-    await mailContains(".o_avatar_card", { count: 0 });
+    await waitForNone(".o_avatar_card");
     env["hr.employee"].create([
         {
             department_id: department2Id,
@@ -213,9 +213,9 @@ test("avatar card displays the relevant employee info", async () => {
         },
     ]);
     await mailClick(".o_m2o_avatar > img");
-    await mailContains(".o_avatar_card");
+    await waitFor(".o_avatar_card:count(1)");
     await mailClick(".o_action_manager:eq(0)"); // click away
-    await mailContains(".o_avatar_card", { count: 0 });
+    await waitForNone(".o_avatar_card");
     const employee3Id = env["hr.employee"].create([
         {
             department_id: department3Id,
@@ -225,14 +225,14 @@ test("avatar card displays the relevant employee info", async () => {
         },
     ]);
     await mailClick(".o_m2o_avatar > img");
-    await mailContains(".o_avatar_card");
+    await waitFor(".o_avatar_card:count(1)");
     await mailClick(".o_action_manager:eq(0)"); // click away
-    await mailContains(".o_avatar_card", { count: 0 });
+    await waitForNone(".o_avatar_card");
     env["hr.employee"].write(employee3Id, {
         active: false,
     });
     await mailClick(".o_m2o_avatar > img");
-    await mailContains(".o_avatar_card");
+    await waitFor(".o_avatar_card:count(1)");
     await mailClick(".o_action_manager:eq(0)"); // click away
-    await mailContains(".o_avatar_card", { count: 0 });
+    await waitForNone(".o_avatar_card");
 });

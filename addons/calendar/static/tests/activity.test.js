@@ -1,14 +1,13 @@
 import { defineCalendarModels } from "@calendar/../tests/calendar_test_helpers";
 import {
     click,
-    contains,
     openFormView,
     registerArchs,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-dom";
+import { animationFrame, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { clickEvent } from "@web/../tests/views/calendar/calendar_test_helpers";
 import { preloadBundle } from "@web/../tests/web_test_helpers";
@@ -46,7 +45,7 @@ test("activity click on View", async () => {
     await start();
     await openFormView("res.partner", resPartnerId);
     await click(".btn", { text: "View" });
-    await contains(".o_calendar_view");
+    await waitFor(".o_calendar_view:count(1)");
 });
 
 test("Can delete activity linked to an event", async () => {
@@ -77,10 +76,10 @@ test("Can delete activity linked to an event", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Activity .btn", { text: "View" });
-    await contains(".o_calendar_view");
+    await waitFor(".o_calendar_view:count(1)");
     await animationFrame();
     await clickEvent(calendaMeetingId);
     await click(".o-overlay-container .o_calendar_popover_delete");
     await click(".o_dialog .modal-footer button.btn.btn-danger");
-    await contains(`.o_event[data-event-id="${calendaMeetingId}"]`, { count: 0 });
+    await waitForNone(`.o_event[data-event-id="${calendaMeetingId}"]`);
 });

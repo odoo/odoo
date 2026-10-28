@@ -1,7 +1,8 @@
 import { describe, test } from "@odoo/hoot";
+import { waitFor } from "@odoo/hoot-dom";
 import { mockTimeZone } from "@odoo/hoot-mock";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
-import { startServer, start, openDiscuss, contains } from "@mail/../tests/mail_test_helpers";
+import { startServer, start, openDiscuss } from "@mail/../tests/mail_test_helpers";
 import { defineHrHolidaysModels } from "@hr_holidays/../tests/hr_holidays_test_helpers";
 
 describe.current.tags("desktop");
@@ -27,8 +28,8 @@ test("show 'Back on' in header of dm chat", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(
-        ".o-mail-DiscussContent-header .o-mail-DiscussContent-outOfOffice:text('Back on Jan 1, 2023')"
+    await waitFor(
+        ".o-mail-DiscussContent-header .o-mail-DiscussContent-outOfOffice:text('Back on Jan 1, 2023'):count(1)"
     );
 });
 
@@ -54,8 +55,8 @@ test("show 'Back on' in header of dm chat even when showing local timezone", asy
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-DiscussContent-header .o-mail-DiscussContent-localDateTime");
-    await contains(
-        ".o-mail-DiscussContent-header .o-mail-DiscussContent-outOfOffice:text('Back on Jan 3, 2023')"
+    await waitFor(".o-mail-DiscussContent-header .o-mail-DiscussContent-localDateTime:count(1)");
+    await waitFor(
+        ".o-mail-DiscussContent-header .o-mail-DiscussContent-outOfOffice:text('Back on Jan 3, 2023'):count(1)"
     );
 });
