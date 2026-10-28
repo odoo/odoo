@@ -3,12 +3,13 @@
 import json
 import selectors
 import threading
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import odoo
 from odoo.tests import TransactionCase, tagged
 from odoo.tools import config
 
+from .. import bus_dispatcher
 from ..models.bus import (
     NOTIFY_PAYLOAD_MAX_LENGTH,
     ODOO_NOTIFY_FUNCTION,
@@ -124,3 +125,30 @@ class NotifyTests(TransactionCase):
             self.env.cr.precommit.run()  # would create the bus.bus records
         self.assertEqual(bus.search_count([("channel", "like", "channel 1")]), 0)
         self.assertNotIn("bus.bus.channels", self.env.cr.postcommit.data)
+
+    def test_listener_loop_malformed_payload(self):
+        """Asserts a malformed imbus payload is skipped without stopping the dispatch of the others."""
+        stop_event = threading.Event()
+        conn = MagicMock(notifies=[
+            MagicMock(payload=json_dump([[self.env.cr.dbname, "channel 1"]])),
+            MagicMock(payload="payload=ping<time=1>"),
+            MagicMock(payload="1"),
+            MagicMock(payload='[{"a":1}]'),
+            MagicMock(payload='[["db",["x"]]]'),
+        ])
+        db_connect = MagicMock()
+        db_connect.return_value.cursor.return_value.__enter__.return_value._cnx = conn
+        selector = MagicMock()
+        selector.__enter__.return_value.select.side_effect = lambda timeout: stop_event.set() or True
+        self.patch(bus_dispatcher, "stop_event", stop_event)
+        self.patch(odoo.sql_db, "db_connect", db_connect)
+        self.patch(bus_dispatcher.selectors, "DefaultSelector", MagicMock(return_value=selector))
+        dispatcher = bus_dispatcher.BusDispatcher()
+        channel = (self.env.cr.dbname, "channel 1")
+        topic = bus_dispatcher.ChannelTopic(channel, 0)
+        dispatcher._topic_by_channel[channel] = topic
+        with self.assertLogs("odoo.addons.bus.bus_dispatcher", "WARNING") as logs:
+            dispatcher._listener_loop()
+        self.assertEqual(len(logs.output), 4)
+        self.assertIs(topic._state, bus_dispatcher.DispatchState.QUEUED)
+        self.assertEqual(dispatcher._pending_dbname_queue.get_nowait(), self.env.cr.dbname)

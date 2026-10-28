@@ -330,11 +330,14 @@ class BusDispatcher(threading.Thread):
                 conn.poll()
                 channels_by_dbname = defaultdict(list)
                 while conn.notifies:
-                    for channel in orjson.loads(conn.notifies.pop().payload):
-                        try:  # noqa: SIM105
-                            channels_by_dbname[channel[0]].append(tuplify(channel))
-                        except (IndexError, TypeError):
-                            pass  # Protect against malformed channels.
+                    payload = conn.notifies.pop().payload
+                    try:
+                        for channel in orjson.loads(payload):
+                            channel = tuplify(channel)
+                            hash(channel)  # used as a key of _topic_by_channel
+                            channels_by_dbname[channel[0]].append(channel)
+                    except (ValueError, LookupError, TypeError):
+                        _logger.warning("Bus._listener_loop ignored malformed imbus payload: %r", payload)
                 for dbname, channels in channels_by_dbname.items():
                     with self._lock_for_db(dbname):
                         for channel in channels:
