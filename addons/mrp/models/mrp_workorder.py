@@ -167,12 +167,9 @@ class MrpWorkorder(models.Model):
             all_blocked_by_workorders_done = not workorder.blocked_by_workorder_ids or all(wo.state in ('cancel', 'done') for wo in workorder.blocked_by_workorder_ids)
             has_qty_ready = workorder.uom_id.compare(workorder.qty_ready, 0) > 0
             continuous_production = not workorder.blocked_by_workorder_ids or workorder.production_bom_id.continuous
-            has_all_qties_ready = workorder.uom_id.compare(workorder.qty_ready, workorder.qty_remaining) == 0 and continuous_production
-            if workorder.qty_produced and workorder.state != 'blocked':
-                workorder.state = 'progress'
-            elif all_blocked_by_workorders_done or has_all_qties_ready or (has_qty_ready and continuous_production):
+            if all_blocked_by_workorders_done or (has_qty_ready and continuous_production):
                 workorder.state = 'ready'
-            else:
+            elif not all_blocked_by_workorders_done:
                 workorder.state = 'blocked'
 
     def set_state(self, state):

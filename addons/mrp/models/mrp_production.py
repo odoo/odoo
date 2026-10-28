@@ -510,13 +510,13 @@ class MrpProduction(models.Model):
         for production in self:
             production.duration = sum(production.workorder_ids.mapped('duration'))
 
-    @api.depends("workorder_ids.is_planned")
+    @api.depends('workorder_ids.is_planned', 'workorder_ids.state')
     def _compute_is_planned(self):
         for production in self:
-            if production.workorder_ids:
-                production.is_planned = all(wo.is_planned for wo in production.workorder_ids if wo.state != 'cancel')
-            else:
-                production.is_planned = False
+            production.is_planned = bool(
+                    production.workorder_ids and
+                    all(wo.is_planned for wo in production.workorder_ids if wo.state != 'cancel')
+                )
 
     @api.depends('move_raw_ids.delay_alert_date')
     def _compute_delay_alert_date(self):
