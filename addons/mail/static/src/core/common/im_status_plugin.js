@@ -36,7 +36,7 @@ export class ImStatusPlugin extends Plugin {
         };
         this.bus.addEventListener("BUS:CONNECT", onConnect);
         useListener(this.presence.bus, "presence", () => {
-            if (!this.lastSentInactivity || this.lastSentInactivity >= AWAY_DELAY) {
+            if (this.lastSentInactivity === undefined || this.lastSentInactivity >= AWAY_DELAY) {
                 this.updateBusPresence();
             }
             this.startAwayTimeout();
