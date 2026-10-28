@@ -151,6 +151,31 @@ class PosOrder(models.Model):
             ):
                 raise UserError(_("Invalid product attribute"))
 
+            # Only the values of the ordered variant, and the template's active no_variant values,
+            # may be attached: a sibling variant's value would add its price_extra to this line.
+            no_variant_lines = product.product_tmpl_id.attribute_line_ids.filtered(lambda ptal: ptal.attribute_id.create_variant == 'no_variant')
+            valid_ptavs = product.product_template_attribute_value_ids | no_variant_lines.product_template_value_ids._only_active()
+            if command == Command.UPDATE:
+                # A value archived since the line was ordered stays valid on that line,
+                # otherwise updating the line would change what was ordered and its price.
+                valid_ptavs |= existing_lines.filtered(lambda existing_line: existing_line.id == id_to_use).attribute_value_ids
+            if attribute_values - valid_ptavs:
+                raise UserError(_("Invalid product attribute"))
+
+            # Only 'multi' attributes accept several values; any other no_variant
+            # attribute must carry at most one value per line.
+            for attribute_line in no_variant_lines.filtered(lambda ptal: ptal.attribute_id.display_type != 'multi'):
+                if len(attribute_values & attribute_line.product_template_value_ids) > 1:
+                    raise UserError(_("Invalid product configuration"))
+
+            # Reject combinations forbidden by the template's exclusion rules
+            # (e.g. a no_variant value marked incompatible with the variant).
+            combination = product.product_template_attribute_value_ids | attribute_values
+            exclusions = product.product_tmpl_id._get_own_attribute_exclusions()
+            excluded_ids = {ptav_id for ptav in combination for ptav_id in exclusions.get(ptav.id, [])}
+            if excluded_ids & set(combination.ids):
+                raise UserError(_("Invalid product configuration"))
+
             return [command, id_to_use, {
                 'combo_id': line_data.get('combo_id'),
                 'product_id': line_data.get('product_id'),
@@ -213,6 +238,15 @@ class PosOrder(models.Model):
         if preset_id and not preset_id in pos_config.available_preset_ids:
             raise UserError(_("Preset is not available in this configuration"))
 
+        fiscal_position_id = preset_id.fiscal_position_id if preset_id else pos_config.default_fiscal_position_id
+        pricelist_id = preset_id.pricelist_id if preset_id else pos_config.pricelist_id
+        lines = [self._check_pos_order_lines(pos_config, order, line, fiscal_position_id) for line in order.get('lines', [])]
+        lines = [line for line in lines if len(line)]
+        payment_lines = self._check_pos_order_payment(device_type, order, order.get("payment_ids"))
+        payment_lines = [line for line in payment_lines if len(line)]
+
+        # The order sequence is not rolled back with the transaction: only number the
+        # order once its lines are validated, so a rejected payload leaves no gap.
         existing_order = pos_config.env['pos.order']._get_open_order(order)
         if not existing_order.exists():
             pos_reference, tracking_number = pos_config._get_next_order_refs()
@@ -232,12 +266,6 @@ class PosOrder(models.Model):
             floating_order_name = existing_order.floating_order_name
             tracking_number = existing_order.tracking_number
 
-        fiscal_position_id = preset_id.fiscal_position_id if preset_id else pos_config.default_fiscal_position_id
-        pricelist_id = preset_id.pricelist_id if preset_id else pos_config.pricelist_id
-        lines = [self._check_pos_order_lines(pos_config, order, line, fiscal_position_id) for line in order.get('lines', [])]
-        lines = [line for line in lines if len(line)]
-        payment_lines = self._check_pos_order_payment(device_type, order, order.get("payment_ids"))
-        payment_lines = [line for line in payment_lines if len(line)]
         partner = self._get_self_partner_from_token(pos_config, order.get('partner_id')) if order.get('partner_id') else False
 
         if order.get('id') and order.get('uuid') and isinstance(order['id'], int):
