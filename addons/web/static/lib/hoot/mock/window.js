@@ -55,6 +55,7 @@ import { MockStorage } from "./storage";
 //-----------------------------------------------------------------------------
 
 const {
+    AbortSignal,
     EventTarget,
     HTMLAnchorElement,
     HTMLMediaElement,
@@ -276,18 +277,24 @@ function matchesQueryPart(mediaQueryString) {
     return mediaQueryString.startsWith("not") ? !match : match;
 }
 
-/** @type {addEventListener} */
-function mockedAddEventListener(...args) {
+/** @type {typeof addEventListener} */
+function mockedAddEventListener(type, listener, options) {
     const runner = getRunner();
-    if (runner.dry || !runner.suiteStack.length) {
+    const { test, suite } = runner.getCurrent();
+    if (runner.dry || !suite) {
         // Ignore listeners during dry run or outside of a test suite
         return;
     }
-    if (!R_OWL_SYNTHETIC_LISTENER.test(String(args[1]))) {
+    if (R_OWL_SYNTHETIC_LISTENER.test(String(listener))) {
         // Ignore cleanup for Owl synthetic listeners
-        runner.after(removeEventListener.bind(this, ...args));
+        return addEventListener.call(this, type, listener, options);
     }
-    return addEventListener.call(this, ...args);
+    const jobSignal = (test || suite).abortSignal;
+    const nextOptions = typeof options === "object" ? { ...options } : { capture: !!options };
+    nextOptions.signal = nextOptions.signal
+        ? AbortSignal.any([nextOptions.signal, jobSignal])
+        : jobSignal;
+    return addEventListener.call(this, type, listener, nextOptions);
 }
 
 /** @type {Document["elementFromPoint"]} */
