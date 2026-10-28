@@ -1,5 +1,4 @@
-import { usePlugin, Plugin } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { Plugin } from "@odoo/owl";
 import { url } from "@web/core/utils/urls";
 import { services } from "@web/core/services";
 
@@ -83,17 +82,3 @@ export class SoundEffectsPlugin extends Plugin {
 }
 
 services.add(SoundEffectsPlugin);
-
-/**
- * -----------------------------------------------------------------------------
- * @todo owl3 migration
- * temporary - to remove when all use of the sound effects service are removed
- * -----------------------------------------------------------------------------
- */
-export const soundEffects = {
-    start() {
-        return usePlugin(SoundEffectsPlugin);
-    },
-};
-
-registry.category("services").add("mail.sound_effects", soundEffects);

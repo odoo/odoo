@@ -57,7 +57,7 @@ export class PosNumberBufferPlugin extends Plugin {
     // capture()) before it reaches the buffer. A signal so components basing a render
     // (e.g. disabling an action button) on it re-render as soon as it changes.
     hasPendingInput = signal(false);
-    sound = usePlugin(SoundEffectsPlugin);
+    soundEffects = usePlugin(SoundEffectsPlugin);
     overlay = usePlugin(OverlayPlugin);
     bufferHolderStack = [];
 
@@ -328,7 +328,7 @@ export class PosNumberBufferPlugin extends Plugin {
             if (isFirstInput) {
                 this.state.buffer = "" + input;
             } else if (this.state.buffer.length > 12) {
-                this.sound.play("bell");
+                this.soundEffects.play("bell");
             } else {
                 this.state.buffer += input;
             }

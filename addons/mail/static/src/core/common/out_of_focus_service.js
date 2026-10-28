@@ -1,3 +1,4 @@
+import { SoundEffectsPlugin } from "@mail/core/common/sound_effects_plugin";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 
 import { usePlugin } from "@odoo/owl";
@@ -25,7 +26,7 @@ export class OutOfFocusService {
         this.audio = undefined;
         this.multiTab = services.multi_tab;
         this.notificationService = usePlugin(NotificationPlugin);
-        this.soundEffectService = services["mail.sound_effects"];
+        this.soundEffects = usePlugin(SoundEffectsPlugin);
         /** @type {import("models").Store} */
         this.store = services["mail.store"];
         this.closeFuncs = [];
@@ -166,7 +167,7 @@ export class OutOfFocusService {
             this.store.settings.messageSound &&
             (await this.multiTab.isOnMainTab())
         ) {
-            this.soundEffectService.play("new-message");
+            this.soundEffects.play("new-message");
         }
     }
 
@@ -186,7 +187,7 @@ export class OutOfFocusService {
 }
 
 export const outOfFocusService = {
-    dependencies: ["multi_tab", "mail.sound_effects", "mail.store"],
+    dependencies: ["multi_tab", "mail.store"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services

@@ -146,11 +146,11 @@ const DiscussChannelPatch = {
             return;
         }
         if (shouldPlayJoinSound) {
-            this.store.env.services["mail.sound_effects"].play("call-join");
+            this.store.soundEffects.play("call-join");
             this.store.rtc.call({ asFallback: true });
         }
         if (shouldPlayLeaveSound) {
-            this.store.env.services["mail.sound_effects"].play("member-leave");
+            this.store.soundEffects.play("member-leave");
         }
     },
     /** ⚠️ {@link AwaitChatHubInit} */
