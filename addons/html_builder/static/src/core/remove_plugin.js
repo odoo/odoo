@@ -27,35 +27,8 @@ import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
  * @typedef {((el: HTMLElement) => boolean | undefined)[]} is_node_empty_predicates
  *
  * @typedef {CSSSelector[]} is_unremovable_selectors
+ * @typedef {((el: HTMLElement) => boolean | undefined)[]} is_element_removable_predicates
  */
-
-const removableNodePredicates = [
-    (node) => {
-        if (!isEditable(node.parentNode)) {
-            return false;
-        }
-    },
-    (node) => {
-        if (node.classList?.contains("oe_unremovable")) {
-            return false;
-        }
-    },
-    (node) => {
-        if (isUnremovableQWebElement(node)) {
-            return false;
-        }
-    },
-    (node) => {
-        if (node.parentNode.matches('[data-oe-type="image"]')) {
-            return false;
-        }
-    },
-];
-
-export function isRemovable(el) {
-    // TODO: This way of using preidcates is error-prone. Prefer using `checkPredicates`.
-    return removableNodePredicates.every((p) => p(el) ?? true);
-}
 
 export class RemovePlugin extends Plugin {
     static id = "remove";
@@ -65,6 +38,18 @@ export class RemovePlugin extends Plugin {
         get_overlay_buttons: withSequence(3, {
             getButtons: this.getActiveOverlayButtons.bind(this),
         }),
+        is_element_removable_predicates: (el) => {
+            const unremovableSelectors = this.getResource("is_unremovable_selectors");
+            if (
+                !isEditable(el.parentNode) ||
+                el.matches(".oe_unremovable") ||
+                isUnremovableQWebElement(el) ||
+                el.parentElement?.matches('[data-oe-type="image"]') ||
+                (unremovableSelectors.length && el.matches(unremovableSelectors.join(", ")))
+            ) {
+                return false;
+            }
+        },
         is_node_empty_predicates: (el) => {
             const systemNodeSelectors = this.getResource("system_node_selectors").join(",");
             if (
@@ -81,22 +66,10 @@ export class RemovePlugin extends Plugin {
     setup() {
         this.bootstrap = usePlugin(BootstrapInstance);
         this.overlayTarget = null;
-
-        const unremovableSelectors = [];
-        for (const unremovableSelector of this.getResource("is_unremovable_selectors")) {
-            unremovableSelectors.push(unremovableSelector);
-        }
-        if (unremovableSelectors.length) {
-            removableNodePredicates.push((node) => {
-                if (node.matches(unremovableSelectors.join(", "))) {
-                    return false;
-                }
-            });
-        }
     }
 
     getActiveOverlayButtons(target) {
-        if (!isRemovable(target)) {
+        if (!this.isRemovable(target)) {
             this.overlayTarget = null;
             return [];
         }
@@ -116,6 +89,10 @@ export class RemovePlugin extends Plugin {
         return buttons;
     }
 
+    isRemovable(el) {
+        return this.checkPredicates("is_element_removable_predicates", el) ?? true;
+    }
+
     isEmptyAndRemovable(el, optionsTargetEls) {
         return (
             (this.checkPredicates("is_node_empty_predicates", el) ?? false) &&
@@ -123,7 +100,7 @@ export class RemovePlugin extends Plugin {
             !el.parentElement.classList.contains("carousel-item") &&
             (!optionsTargetEls.includes(el) ||
                 optionsTargetEls.some((targetEl) => targetEl.contains(el))) &&
-            isRemovable(el)
+            this.isRemovable(el)
         );
     }
 
