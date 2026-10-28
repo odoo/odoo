@@ -19,7 +19,7 @@
     &.o_dynamic_carousel_snippet {
         /* Reverse CSS to nullify the effect of CSS writen in "000.scss" of
            "s_dynamic_snippet" for dynamic carousel snippets. */
-        > .container {
+        > .container, > .o_container_small {
             .s_dynamic_snippet_title.s_dynamic_snippet_title_aside + .s_dynamic_snippet_content .s_dynamic_snippet_row > * {
                 @media (min-width: 992px) { /* media-breakpoint-up(lg) */
                     flex: initial;
