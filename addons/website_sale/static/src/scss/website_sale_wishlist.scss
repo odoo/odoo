@@ -188,7 +188,7 @@
                 align-self: center;
             }
 
-            order: map-get($order-array, "last");
+            order: var(--o-order-last);
         }
     }
 
@@ -223,7 +223,7 @@
 
         .oe_product_cart {
             --o-wsale-card-flex-align-items: stretch;
-            --o-wsale-card-info-padding: #{map-get($spacers, 2) ($container-padding-x * 0.5) map-get($spacers, 2) map-get($spacers, 2)};
+            --o-wsale-card-info-padding: var(--o-bs-spacer-2) #{$container-padding-x * 0.5} var(--o-bs-spacer-2) var(--o-bs-spacer-2);
             --o-wsale-card-info-marign: 0;
             --o-wsale-card-sub-wrap: nowrap;
             --o-wsale-card-sub-align-items: start;

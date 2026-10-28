@@ -160,7 +160,7 @@
             inset: auto auto 0 50%;
             height: calc(var(--sheet-height) - #{$border-radius-xl * 2});
             width: calc(100% - (var(--o-bs-border-width) * 2));
-            max-width: map-get($grid-breakpoints, sm) - ($border-width * 2);
+            max-width: calc(var(--o-bs-breakpoint-sm) - #{$border-width * 2});
             background: $offcanvas-bg-color;
             z-index: var(--o-bs-zindex-offcanvas);
             transform: translateY(calc((1 - var(--BottomSheet-progress)) * 150%)) translateX(-50%);

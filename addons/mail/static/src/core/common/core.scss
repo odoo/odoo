@@ -194,11 +194,11 @@ $o-mail-spacers-sizes: () !default;
 $o-mail-spacers-sizes: map-merge(
     $o-mail-spacers-sizes,
     (
-        "0_5": map-get($spacers, 1) / 2,
-        "1_5": (map-get($spacers, 1) + map-get($spacers, 2)) / 2,
-        "2_5": (map-get($spacers, 2) + map-get($spacers, 3)) / 2,
-        "3_5": (map-get($spacers, 3) + map-get($spacers, 4)) / 2,
-        "4_5": (map-get($spacers, 4) + map-get($spacers, 5)) / 2,
+        "0_5": calc(var(--o-bs-spacer-1) / 2),
+        "1_5": calc((var(--o-bs-spacer-1) + var(--o-bs-spacer-2)) / 2),
+        "2_5": calc((var(--o-bs-spacer-2) + var(--o-bs-spacer-3)) / 2),
+        "3_5": calc((var(--o-bs-spacer-3) + var(--o-bs-spacer-4)) / 2),
+        "4_5": calc((var(--o-bs-spacer-4) + var(--o-bs-spacer-5)) / 2),
     )
 );
 

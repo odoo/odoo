@@ -3,7 +3,7 @@
     --icon-list-icon-width: 1.5em;
     --icon-list-icon-color: var(--o-cc1-btn-primary);
     --icon-list-icon-bg-color: #{fade-currentColor(10%)};
-    --icon-list-items-spacing: #{map-get($spacers, 3)};
+    --icon-list-items-spacing: var(--o-bs-spacer-3);
 
     &:not(.o_checklist):not(ol), ul:not(.o_checklist) {
         display: flex;
@@ -21,7 +21,7 @@
                 align-items: center;
                 justify-content: center;
                 width: var(--icon-list-icon-width);
-                margin-inline-start: calc((var(--icon-list-icon-width) + #{map-get($spacers, 2)}) * -1);
+                margin-inline-start: calc((var(--icon-list-icon-width) + var(--o-bs-spacer-2)) * -1);
                 border-radius: 100%;
                 background: var(--icon-list-icon-bg-color);
                 color: var(--icon-list-icon-color);

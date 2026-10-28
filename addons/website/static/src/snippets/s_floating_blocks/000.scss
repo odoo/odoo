@@ -7,8 +7,8 @@
     --floating-boxes-box-ratio-lg-container-small: 1.6;
     --floating-boxes-box-ratio-xl: 2.3;
 
-    --floating-boxes-box-padding-x-sm: #{map-get($spacers, 4)};
-    --floating-boxes-box-padding-x-lg: #{map-get($spacers, 5)};
+    --floating-boxes-box-padding-x-sm: var(--o-bs-spacer-4);
+    --floating-boxes-box-padding-x-lg: var(--o-bs-spacer-5);
 
     // Minimal number of rows LG can handle
     --floating-boxes-grid-rows: 8;
@@ -50,8 +50,8 @@
             --floating-boxes-box-ratio: var(--floating-boxes-box-ratio-lg-container-small);
         }
         > .container-fluid > div {
-            padding-left: map-get($spacers, 5);
-            padding-right: map-get($spacers, 5);
+            padding-left: var(--o-bs-spacer-5);
+            padding-right: var(--o-bs-spacer-5);
         }
 
         .s_floating_blocks_block {

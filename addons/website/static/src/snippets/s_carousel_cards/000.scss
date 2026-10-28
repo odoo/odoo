@@ -4,7 +4,7 @@
         $-margin-x: calc(var(--#{$prefix}gutter-x) * .5);
 
         --CarouselControllers-size: 2.5rem;
-        --CardBody-padding: #{map-get($spacers, 4)};
+        --CardBody-padding: var(--o-bs-spacer-4);
 
         @media (max-width: 991.98px) { /* media-breakpoint-down(lg) */
             // Remove Extra-height on mobile
@@ -12,7 +12,7 @@
         }
 
         @media (max-width: 991.98px) { /* media-breakpoint-down(lg) */
-            --CardBody-padding: #{map-get($spacers, 3)};
+            --CardBody-padding: var(--o-bs-spacer-3);
         }
 
         @extend %s_carousel_variants;

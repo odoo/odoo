@@ -129,7 +129,7 @@
                         }
 
                         .o_menu_brand {
-                            transform: translateX(-#{map-get($spacers, 2)});
+                            transform: translateX(calc(var(--o-bs-spacer-2) * -1)) #{"/*rtl:translateX(var(--o-bs-spacer-2))*/"};
                             transition: all .4s;
                         }
                     }
@@ -262,7 +262,7 @@
 /* ============================================================================ */
 body.o_is_superuser .o_menu_systray {
     border-image: repeating-linear-gradient(135deg, #d9b904, #d9b904 10px, #373435 10px, #373435 20px) 2;
-    border-image-width: map-get($border-widths, 2);
+    border-image-width: var(--o-bs-border-width-2);
 }
 
 .o_app_menu_sidebar .o_burger_menu_content.o_burger_menu_app li {

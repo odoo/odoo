@@ -152,7 +152,7 @@ body:not(.o_touch_device) .o_settings_container .o_field_selection {
                }
 
                .o_settings_container {
-                   max-width: map-get($grid-breakpoints, lg); /* Provide a maximum container size to ensure readability */
+                   max-width: var(--o-bs-breakpoint-lg); /* Provide a maximum container size to ensure readability */
                    @media screen and (min-width: 768px), print and (min-width: 188mm) {
                         @include o-base-settings-horizontal-padding(0);
                    }

@@ -311,7 +311,7 @@
         }
 
         .o_quick_create_button {
-            height: map-get($font-sizes, 4) * $line-height-lg;
+            height: calc(var(--o-bs-font-size-4) * #{$line-height-lg});
         }
     }
 
@@ -349,7 +349,7 @@
             button.o_column_unfold {
                 /* Matches .o_column_title font-size */
                 width: 1.05rem;
-                height: map-get($font-sizes, 4) * $line-height-lg;
+                height: calc(var(--o-bs-font-size-4) * #{$line-height-lg});
                 gap: .5rem;
 
                 > .oi::before {

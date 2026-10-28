@@ -14,7 +14,7 @@
         z-index: 1;
 
         .o_popover:has(&) {
-            $-margin-top: #{map-get($spacers, 5) * 3};
+            $-margin-top: calc(var(--o-bs-spacer-5) * 3);
 
             --popover-border-radius: var(--o-bs-spacer-2) var(--o-bs-spacer-2) 0 0;
             --CwPopover-max-height: calc(100dvh - #{$-margin-top});

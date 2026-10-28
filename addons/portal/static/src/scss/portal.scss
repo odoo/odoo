@@ -13,10 +13,10 @@ $o-portal-mobile-toolbar-border: $border-color;
 }
 
 /* Portal Tables */
-$o-portal-table-th-pt: map-get($spacers, 1) !default;
-$o-portal-table-th-pb: map-get($spacers, 1) !default;
-$o-portal-table-td-pt: map-get($spacers, 2) !default;
-$o-portal-table-td-pb: map-get($spacers, 2) !default;
+$o-portal-table-th-pt: var(--o-bs-spacer-1) !default;
+$o-portal-table-th-pb: var(--o-bs-spacer-1) !default;
+$o-portal-table-td-pt: var(--o-bs-spacer-2) !default;
+$o-portal-table-td-pb: var(--o-bs-spacer-2) !default;
 
 /* Frontend general */
 body {
@@ -499,7 +499,7 @@ img, .media_iframe_video, .o_image {
 
 /* Address */
 .o_portal .o_portal_addresses {
-    max-width: map-get($grid-breakpoints, xxl) / 2;
+    max-width: calc(var(--o-bs-breakpoint-xxl) / 2);
 }
 
 .o_customer_address_fill {

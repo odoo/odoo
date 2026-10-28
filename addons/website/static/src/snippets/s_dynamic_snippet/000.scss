@@ -23,8 +23,8 @@
     //
 
     // Define entries minimum size as half 'o_small_container' width.
-    $-container-small-inner-width-max: map-get($container-max-widths, md) - $grid-gutter-width;
-    $-entry-min-width: ($-container-small-inner-width-max * 0.5) - $grid-gutter-width;
+    $-container-small-inner-width-max: calc(var(--o-bs-container-max-width-md) - #{$grid-gutter-width});
+    $-entry-min-width: calc(#{$-container-small-inner-width-max} * 0.5 - #{$grid-gutter-width});
 
     > .container {
         .s_dynamic_snippet_title.s_dynamic_snippet_title_aside + .s_dynamic_snippet_content .s_dynamic_snippet_row > * {

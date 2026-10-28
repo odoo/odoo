@@ -9,7 +9,7 @@
                 --Ribbon-height: 1.9;
 
                 @media screen and (min-width: 768px) and (max-width: 1399.98px), print and (min-width: 188mm) and (max-width: 249.98mm) {
-                    min-width: calc(100vw - (#{$btn-font-size-sm} + #{$btn-padding-x-sm * 2} + #{map-get($spacers, 1) * 4})); /* cscreen size reduced by the size of the closed search panel */
+                    min-width: calc(100vw - (#{$btn-font-size-sm} + #{$btn-padding-x-sm * 2} + var(--o-bs-spacer-1) * 4)); /* cscreen size reduced by the size of the closed search panel */
                 }
 
                 &:not(.o_kanban_ghost) {

@@ -50,7 +50,7 @@
     content-visibility: auto;
 
     &:before {
-        $_y: var(--o-wsale-card-pseudobg-y, MIN(#{map-get($spacers, 3) * -0.5}, calc(var(--o-wsale-products-grid-gap-y) / 2)));
+        $_y: var(--o-wsale-card-pseudobg-y, MIN(calc(var(--o-bs-spacer-3) * -0.5), calc(var(--o-wsale-products-grid-gap-y) / 2)));
         $_x: var(--o-wsale-card-pseudobg-x, calc(var(--o-wsale-products-grid-gap) * -0.5));
 
         position: absolute;
@@ -677,7 +677,7 @@
 
     @media (min-width: 992px) {
         .o_wsale_attribute_previewer {
-            width: calc(100% - (var(--o-wsale-card-offset-x) + #{map-get($spacers, 2)}) * 2);
+            width: calc(100% - (var(--o-wsale-card-offset-x) + var(--o-bs-spacer-2)) * 2);
         }
     }
 }
@@ -1241,7 +1241,7 @@
     }
 }
 .o_wsale_products_opt_design_condensed {
-    $_padding_min: MIN(#{map-get($spacers, 1)}, 1vw);
+    $_padding_min: MIN(var(--o-bs-spacer-1), 1vw);
     --o-wsale-card-border-width: 0 0 1px;
     --o-wsale-card-padding: #{$_padding_min} 0 calc(#{$_padding_min} + var(--o-wsale-products-grid-gap));
     --o-wsale-card-thumb-size: 3.375rem;
@@ -1412,7 +1412,7 @@ $_wsale_products_roundness_map: (
 .o_wsale_products_opt_hover_shadow_out {
     &:where(.o_wsale_products_opt_design_cards), &:where(.o_wsale_products_opt_design_chips) {
         --o-wsale-card-shadow: 0px calc(var(--o-wsale-products-grid-gap) * 0.25) calc(var(--o-wsale-products-grid-gap) * 0.5) 0 RGBA(0, 0, 0, .15);
-        --o-wsale-card-transform: translateY(#{map-get($spacers, 2) * -0.25});
+        --o-wsale-card-transform: translateY(calc(var(--o-bs-spacer-2) * -0.25));
         --o-wsale-card-transform-hover: translateY(0);
         --o-wsale-card-shadow-hover: 1px 1px 0px 0 rgba(0, 0, 0, 0);
         --o-wsale-card-transition: all .15s;
@@ -1421,7 +1421,7 @@ $_wsale_products_roundness_map: (
 .o_wsale_products_opt_hover_shadow_in {
     &:where(.o_wsale_products_opt_design_cards), &:where(.o_wsale_products_opt_design_chips) {
         --o-wsale-card-shadow: 1px 1px 0px 0 rgba(0, 0, 0, 0);
-        --o-wsale-card-transform: translateY(#{map-get($spacers, 2) * -0.25});
+        --o-wsale-card-transform: translateY(calc(var(--o-bs-spacer-2) * -0.25));
         --o-wsale-card-shadow-hover: 0px calc(var(--o-wsale-products-grid-gap) * 0.25) calc(var(--o-wsale-products-grid-gap) * 0.5) 0 RGBA(0, 0, 0, .15);
         --o-wsale-card-transform-hover: translateY(0);
         --o-wsale-card-transition: all .15s;
@@ -1431,7 +1431,7 @@ $_wsale_products_roundness_map: (
     &:where(.o_wsale_products_opt_design_thumbs) {
         --o-wsale-card-thumb-shadow: 0px calc(var(--o-wsale-products-grid-gap) * 0.5) calc(var(--o-wsale-products-grid-gap) * 0.5) 0 RGBA(0, 0, 0, .15);
         --o-wsale-card-thumb-shadow-hover: 0 0 0 1px rgba(0, 0, 0, .1);
-        --o-wsale-card-thumb-transform: translateY(#{map-get($spacers, 2) * -0.25});
+        --o-wsale-card-thumb-transform: translateY(calc(var(--o-bs-spacer-2) * -0.25));
         --o-wsale-card-thumb-transform-hover: translateY(0);
         --o-wsale-card-thumb-transition: all cubic-bezier(0.645, 0.045, 0.355, 1) .25s;
     }
