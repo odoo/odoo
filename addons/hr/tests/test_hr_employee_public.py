@@ -34,3 +34,21 @@ class TestHrEmployee(TestHrCommon):
         res = self.env['resource.resource'].with_user(self.res_users_without_hr_right)
         res = res.search([('employee_id.department_id', '=', dep.id)])
         self.assertIn(emp.resource_id, res, "Resource should be found")
+
+    def test_read_pending_employee_write(self):
+        user = mail_new_test_user(self.env, login="jane", email="jane.u@example.com", name="Jane")
+        renamed, linked, archived = self.env["hr.employee"].create(
+            [
+                {"name": "Joe"},
+                {"name": "Jane"},
+                {"name": "Jim"},
+            ],
+        )
+        self.env.flush_all()
+        renamed.name = "Joseph"
+        archived.active = False
+        public_emps = self.env["hr.employee.public"].with_user(self.res_users_without_hr_right)
+        self.assertFalse(public_emps.search([("id", "=", archived.id)]))
+        self.assertEqual(public_emps.browse(renamed.id).name, "Joseph")
+        linked.user_id = user
+        self.assertEqual(public_emps.browse(linked.id).work_email, "jane.u@example.com")

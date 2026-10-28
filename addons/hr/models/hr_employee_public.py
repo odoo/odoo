@@ -270,6 +270,20 @@ class HrEmployeePublic(models.Model):
                 alias = 'v' if name in self.env['hr.version']._fields and self.env['hr.version']._fields[name].store else 'e'
                 yield SQL.identifier(alias, name)
 
+    @property
+    def _table_sql(self):
+        employee_fields = self.env["hr.employee"]._fields
+        version_fields = self.env["hr.version"]._fields
+        base_fields = ("id", "employee_id", "name", "active")
+        to_flush = [employee_fields[name] for name in ("current_version_id", "name", "active")]
+        for name, field in self._fields.items():
+            if field.store and field.column_type and name not in base_fields:
+                if name in version_fields and version_fields[name].store:
+                    to_flush.append(version_fields[name])
+                else:
+                    to_flush.append(employee_fields[name])
+        return SQL("%s", super()._table_sql, to_flush=to_flush)
+
     def init(self):
         """(Re)create the SQL view: ``hr_employee`` joined with its current ``hr_version``.
 
