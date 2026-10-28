@@ -56,6 +56,7 @@ import { MockStorage } from "./storage";
 const {
     EventTarget,
     HTMLAnchorElement,
+    HTMLMediaElement,
     MutationObserver,
     Number: { isNaN: $isNaN, parseFloat: $parseFloat },
     Object: {
@@ -350,6 +351,20 @@ function mockedRemoveEventListener(...args) {
 }
 
 /**
+ * Media elements playing a live source (e.g. a `MediaStream`) are kept alive by
+ * the browser, along with everything they reference, until their source is removed,
+ * even once detached from the DOM: they are tracked to remove it after the job.
+ *
+ * @param {MediaProvider | null} value
+ */
+function mockedSetSrcObject(value) {
+    if (value && getRunner()?.getCurrent().suite) {
+        mediaElements.add(this);
+    }
+    srcObjectDescriptor.set.call(this, value);
+}
+
+/**
  * @param {MutationRecord[]} mutations
  */
 function observeAddedNodes(mutations) {
@@ -451,6 +466,9 @@ const R_OWL_SYNTHETIC_LISTENER = /\bnativeToSyntheticEvent\b/;
 const originalDescriptors = new WeakMap();
 const originalTouchFunctions = getTouchTargets(globalThis).map(getTouchDescriptors);
 
+const hrefDescriptor = $getOwnPropertyDescriptor(HTMLAnchorElement.prototype, "href");
+/** @type {Set<HTMLMediaElement>} */
+const mediaElements = new Set();
 /** @type {Set<MockMediaQueryList>} */
 const mediaQueryLists = new Set();
 const mockConsole = new MockConsole();
@@ -459,15 +477,10 @@ const mockMediaValues = { ...DEFAULT_MEDIA_VALUES };
 const mockSessionStorage = new MockStorage();
 /** @type {WeakSet<Event>} */
 const preventedEvents = new WeakSet();
+const srcObjectDescriptor = $getOwnPropertyDescriptor(HTMLMediaElement.prototype, "srcObject");
 let mockTitle = "";
 
 // Mock descriptors
-const ANCHOR_MOCK_DESCRIPTORS = {
-    href: {
-        ...$getOwnPropertyDescriptor(HTMLAnchorElement.prototype, "href"),
-        get: mockedHref,
-    },
-};
 const DOCUMENT_MOCK_DESCRIPTORS = {
     cookie: {
         get: () => mockCookie.get(),
@@ -480,12 +493,25 @@ const DOCUMENT_MOCK_DESCRIPTORS = {
         set: (value) => (mockTitle = value),
     },
 };
-const ELEMENT_MOCK_DESCRIPTORS = {
-    animate: { value: mockedAnimate },
-    scroll: { value: mockedScroll },
-    scrollBy: { value: mockedScrollBy },
-    scrollIntoView: { value: mockedScrollIntoView },
-    scrollTo: { value: mockedScrollTo },
+/**
+ * Descriptors applied on the prototypes of the native classes they are mapped to.
+ *
+ * @type {Record<string, Record<string, PropertyDescriptor>>}
+ */
+const PROTOTYPE_MOCK_DESCRIPTORS = {
+    Element: {
+        animate: { value: mockedAnimate },
+        scroll: { value: mockedScroll },
+        scrollBy: { value: mockedScrollBy },
+        scrollIntoView: { value: mockedScrollIntoView },
+        scrollTo: { value: mockedScrollTo },
+    },
+    HTMLAnchorElement: {
+        href: { ...hrefDescriptor, get: mockedHref },
+    },
+    HTMLMediaElement: {
+        srcObject: { ...srcObjectDescriptor, set: mockedSetSrcObject },
+    },
 };
 const WINDOW_MOCK_DESCRIPTORS = {
     ...getDisposableDescriptors(globalThis),
@@ -540,6 +566,10 @@ export function cleanupWindow() {
     mockSessionStorage.clear();
 
     // Media
+    for (const element of mediaElements) {
+        srcObjectDescriptor.set.call(element, null);
+    }
+    mediaElements.clear();
     mediaQueryLists.clear();
     $assign(mockMediaValues, DEFAULT_MEDIA_VALUES);
 
@@ -661,9 +691,10 @@ export function patchWindow(view = _getWindow()) {
         // Document
         applyPropertyDescriptors(view.document, DOCUMENT_MOCK_DESCRIPTORS);
 
-        // Element prototypes
-        applyPropertyDescriptors(view.Element.prototype, ELEMENT_MOCK_DESCRIPTORS);
-        applyPropertyDescriptors(view.HTMLAnchorElement.prototype, ANCHOR_MOCK_DESCRIPTORS);
+        // Prototypes
+        for (const [name, descriptors] of $entries(PROTOTYPE_MOCK_DESCRIPTORS)) {
+            applyPropertyDescriptors(view[name].prototype, descriptors);
+        }
     });
 }
 
