@@ -55,6 +55,8 @@ import { MockStorage } from "./storage";
 //-----------------------------------------------------------------------------
 
 const {
+    AbortController,
+    AbortSignal,
     EventTarget,
     HTMLAnchorElement,
     HTMLMediaElement,
@@ -276,18 +278,42 @@ function matchesQueryPart(mediaQueryString) {
     return mediaQueryString.startsWith("not") ? !match : match;
 }
 
-/** @type {addEventListener} */
-function mockedAddEventListener(...args) {
+/**
+ * Returns the signal of the current job (test, or suite outside of tests), which
+ * is aborted after it to remove all listeners bound to it in a single native call.
+ */
+function getJobSignal() {
+    const runner = getRunner();
+    const { suite, test } = runner.getCurrent();
+    const job = test || suite;
+    if (!jobControllers.has(job)) {
+        const controller = new AbortController();
+        jobControllers.set(job, controller);
+        runner.after(() => {
+            jobControllers.delete(job);
+            controller.abort();
+        });
+    }
+    return jobControllers.get(job).signal;
+}
+
+/** @type {typeof addEventListener} */
+function mockedAddEventListener(type, listener, options) {
     const runner = getRunner();
     if (runner.dry || !runner.suiteStack.length) {
         // Ignore listeners during dry run or outside of a test suite
         return;
     }
-    if (!R_OWL_SYNTHETIC_LISTENER.test(String(args[1]))) {
+    if (R_OWL_SYNTHETIC_LISTENER.test(String(listener))) {
         // Ignore cleanup for Owl synthetic listeners
-        runner.after(removeEventListener.bind(this, ...args));
+        return addEventListener.call(this, type, listener, options);
     }
-    return addEventListener.call(this, ...args);
+    const jobSignal = getJobSignal();
+    const nextOptions = typeof options === "object" ? { ...options } : { capture: !!options };
+    nextOptions.signal = nextOptions.signal
+        ? AbortSignal.any([nextOptions.signal, jobSignal])
+        : jobSignal;
+    return addEventListener.call(this, type, listener, nextOptions);
 }
 
 /** @type {Document["elementFromPoint"]} */
@@ -463,6 +489,8 @@ const R_COMMA = /\s*,\s*/;
 const R_MEDIA_QUERY_PROPERTY = /\(\s*([\w-]+)\s*:\s*(.+)\s*\)/;
 const R_OWL_SYNTHETIC_LISTENER = /\bnativeToSyntheticEvent\b/;
 
+/** @type {WeakMap<import("../core/job").Job, AbortController>} */
+const jobControllers = new WeakMap();
 /** @type {WeakMap<unknown, Record<string, PropertyDescriptor>>} */
 const originalDescriptors = new WeakMap();
 const originalTouchFunctions = getTouchTargets(globalThis).map(getTouchDescriptors);
