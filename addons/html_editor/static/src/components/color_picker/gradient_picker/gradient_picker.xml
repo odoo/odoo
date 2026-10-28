@@ -24,7 +24,7 @@
                     </Dropdown>
                 </t>
                 <t t-else="">
-                    <span class="d-flex justify-content-between">
+                    <span class="d-flex justify-content-between gap-1">
                         <button t-attf-class="btn btn-sm btn-light {{ this.state.type === 'linear' ? 'active' : ''}}" t-on-click="() => this.selectType('linear')"> Linear </button>
                         <button t-attf-class="btn btn-sm btn-light {{ this.state.type === 'radial' ? 'active' : ''}}" t-on-click="() => this.selectType('radial')"> Radial </button>
                         <button t-attf-class="btn btn-sm btn-light {{ this.state.type === 'conic' ? 'active' : ''}}" t-on-click="() => this.selectType('conic')"> Conic </button>
