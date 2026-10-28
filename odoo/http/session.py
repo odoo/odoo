@@ -256,7 +256,11 @@ def authenticate(session: Session, env: Environment, credential: dict) -> dict:
         finalize(session, env)
 
     if request and request.session is session and request.db == env.registry.db_name:
-        request.env = env(user=session.uid, context=session.context)
+        context = dict(session.context)
+        for key in ('host_id', 'website_id'):
+            if key in request.context:
+                context[key] = request.context[key]
+        request.env = env(user=session.uid, context=context)
         request.update_context(lang=get_lang(request.env(user=pre_uid)).code)
 
     return auth_info
