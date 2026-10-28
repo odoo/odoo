@@ -64,3 +64,23 @@ class TestWebsiteCrm(odoo.tests.HttpCase, TestCrmCommon):
             'type': 'char',
         }]
         self.start_tour(self.env['website'].get_client_action_url('/contactus'), 'website_crm_form_properties', login='admin')
+
+    def test_public_form_lead_type_without_default_team(self):
+        """ Without default team, the lead type should follow the 'Leads' setting,
+        not the groups of the (public) user submitting the form. """
+        self.env['website'].search([]).crm_default_team_id = False
+        self.authenticate(None, None)
+        form_data = {
+            'contact_name': 'John Smith',
+            'email_from': 'john@smith.com',
+            'name': 'Question',
+            'description': 'Hello',
+        }
+        for use_leads, expected_type in ((True, 'lead'), (False, 'opportunity')):
+            with self.subTest(use_leads=use_leads):
+                self.env['res.config.settings'].create({'group_use_lead': use_leads}).execute()
+                response = self.url_open('/website/form/crm.lead', data=form_data)
+                lead = self.env['crm.lead'].browse(response.json().get('id'))
+                self.assertTrue(lead.exists())
+                self.assertFalse(lead.team_id)
+                self.assertEqual(lead.type, expected_type)
