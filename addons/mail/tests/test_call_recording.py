@@ -114,6 +114,7 @@ class TestCallRecording(MailCommon):
         self.assertFalse(artifact.discuss_call_history_id.has_video)
 
     def test_active_recording_action(self):
+        self.patch(self.env.registry["discuss.channel"], "_has_recording_feature", lambda channel: True)
         self.assertIsNone(self.channel._get_recording_address())
         first_call = self._create_call()
         self.assertEqual(
