@@ -3,10 +3,12 @@
 import json
 import selectors
 import threading
+from unittest.mock import MagicMock
 
 import odoo
 from odoo.tests import TransactionCase
 
+from ..models import bus
 from ..models.bus import json_dump, get_notify_payloads, NOTIFY_PAYLOAD_MAX_LENGTH, ODOO_NOTIFY_FUNCTION
 
 
@@ -106,3 +108,28 @@ class NotifyTests(TransactionCase):
         self.assertEqual(
             channels, [[self.env.cr.dbname, "channel 1"], [self.env.cr.dbname, "channel 2"]]
         )
+
+    def test_loop_malformed_payload(self):
+        """Test that a malformed imbus payload is skipped without stopping the dispatch of the others."""
+        stop_event = threading.Event()
+        conn = MagicMock(notifies=[
+            MagicMock(payload=json_dump([[self.env.cr.dbname, "channel 1"]])),
+            MagicMock(payload="payload=ping<time=1>"),
+            MagicMock(payload="1"),
+            MagicMock(payload='[{"a":1}]'),
+            MagicMock(payload='[["db",["x"]]]'),
+        ])
+        db_connect = MagicMock()
+        db_connect.return_value.cursor.return_value.__enter__.return_value._cnx = conn
+        selector = MagicMock()
+        selector.__enter__.return_value.select.side_effect = lambda timeout: stop_event.set() or True
+        self.patch(bus, "stop_event", stop_event)
+        self.patch(odoo.sql_db, "db_connect", db_connect)
+        self.patch(bus.selectors, "DefaultSelector", MagicMock(return_value=selector))
+        websocket = MagicMock()
+        dispatcher = bus.ImDispatch()
+        dispatcher._channels_to_ws[self.env.cr.dbname, "channel 1"] = {websocket}
+        with self.assertLogs("odoo.addons.bus.models.bus", "WARNING") as logs:
+            dispatcher.loop()
+        self.assertEqual(len(logs.output), 4)
+        websocket.trigger_notification_dispatching.assert_called_once()
