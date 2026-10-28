@@ -297,7 +297,7 @@ class TestDiscussSubChannels(BusCase, HttpCase):
                     self.env.user,
                     "mail.record/insert",
                     Store()
-                    .add(self.general, ["member_count"])
+                    .add(self.general, lambda res: res.attr("member_count", version=False))
                     .add(self.general.self_member_id, "_store_member_fields"),
                 ),
                 BusResult(
@@ -309,7 +309,7 @@ class TestDiscussSubChannels(BusCase, HttpCase):
                     self.env.user,
                     "mail.record/insert",
                     Store()
-                    .add(sub_channel, ["member_count"])
+                    .add(sub_channel, lambda res: res.attr("member_count", version=False))
                     .add(sub_channel.self_member_id, "_store_member_fields"),
                 ),
                 BusResult(

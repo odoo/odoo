@@ -80,8 +80,8 @@ class DiscussCallHistory(models.Model):
                 call_history,
                 lambda res: (
                     res.one("channel_id", []),
-                    res.attr("has_audio"),
-                    res.attr("has_recording"),
-                    res.attr("has_video"),
+                    res.attr("has_audio", version=False),
+                    res.attr("has_recording", version=False),
+                    res.attr("has_video", version=False),
                 ),
             )

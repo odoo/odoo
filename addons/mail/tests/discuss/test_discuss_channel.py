@@ -9,7 +9,7 @@ from psycopg2 import errors
 
 from odoo import Command, fields
 from odoo.addons.base.models.avatar_mixin import get_random_ui_color_from_seed
-from odoo.addons.bus.tests.common import BusResult
+from odoo.addons.bus.tests.common import BusResult, pop_store_version
 from odoo.addons.mail.models.discuss.discuss_channel import group_avatar
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.addons.mail.tools.discuss import Store
@@ -831,7 +831,14 @@ class TestChannelInternals(MailCommon, HttpCase):
                     .add(self.test_channel, "_store_channel_fields")
                     .add(member, "_store_member_fields")
                     .add(member, ["unpin_dt"])
-                    .add(member, {"create_date": fields.Datetime.to_string(member.create_date)})
+                    .add(
+                        member,
+                        lambda res: res.attr(
+                            "create_date",
+                            fields.Datetime.to_string(member.create_date),
+                            version=False,
+                        ),
+                    )
                     ._build_result(),
                 ),
             ]
@@ -1389,25 +1396,34 @@ class TestChannelInternals(MailCommon, HttpCase):
             return (
                 Store(bus_channel=channel)
                 .add(members, "_store_member_fields")
-                .add(channel, {"channel_name_member_ids": members.ids})
+                .add(
+                    channel,
+                    lambda res: res.attr("channel_name_member_ids", members.ids, version=False),
+                )
             )
 
         def join(channel, user):
             member = channel.channel_member_ids.filtered(lambda m: m.partner_id == user.partner_id)
             return (
                 Store(bus_channel=channel)
-                .add(channel, ["member_count"])
+                .add(channel, lambda res: res.attr("member_count", version=False))
                 .add(member, "_store_member_fields")
             )
 
         def leave(channel, member):
-            return Store(bus_channel=channel).add(channel, ["member_count"]).delete(member)
+            return Store(bus_channel=channel).add(channel, lambda res: res.attr("member_count", version=False)).delete(member)
 
         def close_window(user, channel):
             return BusResult(
                 user,
                 "mail.record/insert",
-                Store().add(channel, {"close_chat_window": True, "isLocallyPinned": False}),
+                Store().add(
+                    channel,
+                    lambda res: (
+                        res.attr("close_chat_window", True, version=False),
+                        res.attr("isLocallyPinned", False, version=False),
+                    ),
+                ),
             )
 
         def store_notifications(channel, store):
@@ -1512,7 +1528,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                             *store_notifications(
                                 group,
                                 name_update(group, [self.env.user, bob, alice])
-                                .add(group, ["member_count"])
+                                .add(group, lambda res: res.attr("member_count", version=False))
                                 .delete(member),
                             ),
                         ],
@@ -1670,7 +1686,9 @@ class TestChannelInternals(MailCommon, HttpCase):
             },
         )
         self.authenticate(self.user_employee.login, self.user_employee.password)
-        data = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["failures"]})
+        data = pop_store_version(
+            self.make_jsonrpc_request("/mail/store", {"fetch_params": ["failures"]}),
+        )
         self.assertEqual(
             data["mail.thread"],
             [

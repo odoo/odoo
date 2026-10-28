@@ -85,7 +85,10 @@ class PortalWebClientController(WebclientController):
         access_params = access_params or {}
         store.add_global_values(request.env.user.sudo(False)._store_init_global_fields)
         if request.env.user.has_group("website.group_website_restricted_editor"):
-            store.add(request.env.user.partner_id, {"is_user_publisher": True})
+            store.add(
+                request.env.user.partner_id,
+                lambda res: res.attr("is_user_publisher", True, version=False),
+            )
         if thread := self._get_thread_with_access(
             thread_model,
             thread_id,
@@ -133,19 +136,20 @@ class PortalWebClientController(WebclientController):
                 return bool(has_access and portal_partner_by_thread.get(thread))
             return bool(has_access)
 
-        res.attr("can_react", can_react)
-        res.attr("display_name")
-        res.attr("hasReadAccess", lambda t: t.sudo(False).has_access("read"))
+        res.attr("can_react", can_react, version=False)
+        res.attr("display_name", version=False)
+        res.attr("hasReadAccess", lambda t: t.sudo(False).has_access("read"), version=False)
         res.one(
             "portal_partner",
             lambda res: (
                 res.attr("active"),
-                res.one("main_user_id", ["partner_id", "share"]),
+                res.one("main_user_id", ["partner_id", "share"], version=False),
                 res.attr("name"),
                 res.from_method("_store_avatar_fields"),
             ),
             predicate=lambda t: t in portal_partner_by_thread,
             value=portal_partner_by_thread.get,
+            version=False,
         )
 
     @classmethod

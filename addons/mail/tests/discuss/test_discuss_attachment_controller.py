@@ -15,7 +15,10 @@ class TestDiscussAttachmentController(MailControllerAttachmentCommon):
         store_data = (
             Store(bus_channel=channel)
             .add(message, "_store_message_fields")
-            .add(message, {"attachment_ids": attachments.ids})
+            .add(
+                message,
+                lambda res: res.attr("attachment_ids", attachments.ids, version=False),
+            )
             ._build_result()
         )
         self.assertFalse(
@@ -115,8 +118,9 @@ class TestDiscussAttachmentController(MailControllerAttachmentCommon):
                                 member,
                                 lambda res: (
                                     res.from_method("_store_identifying_fields"),
-                                    res.extend(["message_unread_counter", "new_message_separator"]),
-                                    res.attr("message_unread_counter_bus_id", 0),
+                                    res.attr("message_unread_counter", version=False),
+                                    res.attr("new_message_separator"),
+                                    res.attr("message_unread_counter_bus_id", 0, version=False),
                                 ),
                             ),
                         ),
@@ -167,7 +171,10 @@ class TestDiscussAttachmentController(MailControllerAttachmentCommon):
                             )
                             .add(
                                 message,
-                                {"attachment_ids": (posted + added).ids, "translationValue": False},
+                                lambda res: (
+                                    res.attr("attachment_ids", (posted + added).ids, version=False),
+                                    res.attr("translationValue", False, version=False),
+                                ),
                             )
                             ._build_result(),
                         ),

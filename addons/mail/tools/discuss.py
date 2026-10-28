@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import logging
 import os
 from collections import UserList, defaultdict
 from contextlib import suppress
@@ -15,12 +16,13 @@ import odoo
 from odoo import models
 from odoo.exceptions import MissingError
 from odoo.http import request, route
-from odoo.tools import OrderedSet
 from odoo.tools.misc import hmac
 
 from odoo.addons.bus.websocket import wsrequest
 
 T = TypeVar("T")
+
+_logger = logging.getLogger(__name__)
 
 
 def add_guest_to_context(func):
@@ -48,69 +50,6 @@ def add_guest_to_context(func):
                 self = self.with_context(guest=guest)
         return func(self, *args, **kwargs)
     return add_guest_to_context__wrapper
-
-
-class StoreVersion:
-    """Store data is received from RPC and from the bus, and is applied directly to the
-    store. Without versioning, the order of arrival can cause outdated data to overwrite
-    newer data, leading to incorrect store state.
-
-    On the client side, we should be able to determine whether a field represents a newer
-    version of what is already known. This is directly linked to PostgreSQL snapshots and
-    isolation level, in our case, REPEATABLE READ.
-
-    For fields that were read, what matters is what the snapshot could see at the time.
-    For writes, what matters is whether the snapshot of the version we know could see the
-    write transaction. The combination of xmin, xmax, xip and the current transaction id
-    is enough to deduce it.
-
-    This class is a helper, used by the Store class to manage versioning, allowing written
-    fields to be observed and `Store.as_dict` to inject version metadata into its result.
-    """
-
-    def __init__(self, env):
-        self.__env = env
-        self.__version = None
-        self.__model_to_field_to_ids = defaultdict(lambda: defaultdict(OrderedSet))
-
-    def mark_field_as_written(self, model_name, record_ids, fname):
-        """Mark field as written for the given records. Done automatically when using the
-        ORM, should be done manually otherwise.
-        """
-        self.__model_to_field_to_ids[model_name][fname].update(record_ids)
-
-    def get_formatted_version(self):
-        """Get the version metadata, used by the client to determine if an incoming
-        store insert is newer than what it already knows.
-        """
-        if not self.__version:
-            self.__env.flush_all()  # Ensure TX id is assigned, if the DB was modified, before building the version.
-            self.__env.cr.execute("SELECT pg_current_snapshot(), pg_current_xact_id_if_assigned()")
-            snapshot_str, current_xact_id = self.__env.cr.fetchone()
-            xmin_str, xmax_str, xips_str = snapshot_str.split(":")
-            xip_list = [x for x in xips_str.split(",") if x]
-            written_fields_by_record = defaultdict(lambda: defaultdict(list))
-            for model, field_to_record_ids in self.__model_to_field_to_ids.items():
-                for fname, record_ids in field_to_record_ids.items():
-                    for id_ in record_ids:
-                        written_fields_by_record[model][id_].append(fname)
-            self.__version = {
-                "snapshot": {
-                    "xmin": xmin_str,
-                    "xmax": xmax_str,
-                    "xip_list": xip_list,
-                    "xip_bitmap": "",  # Deprecated, always empty.
-                    "current_xact_id": current_xact_id,
-                },
-                "written_fields_by_record": written_fields_by_record,
-            }
-        return self.__version
-
-    @staticmethod
-    def ensure_version(env):
-        if "store__version" not in env.cr.cache:
-            env.cr.cache["store__version"] = StoreVersion(env)
-        return env.cr.cache["store__version"]
 
 
 def mail_route(*route_args, **route_kwargs):
@@ -222,9 +161,7 @@ class Store:
         self.operation_queue = []
         self.target = Store.Target(bus_channel, bus_subchannel)
         self._internal_store = None
-        self.__version = None
         self._auto_send = True
-        self.__try_update_version_from_records(bus_channel)
         assert bus_channel is not None or not (notification_payload or notification_type), (
             "Notification parameters only make sense when a bus channel is passed."
         )
@@ -238,12 +175,6 @@ class Store:
             bus_channel._bus_send(type_, payload, subchannel=bus_subchannel)
             if bus_channel._name == "discuss.channel" and bus_subchannel != "internal_users":
                 self._internal_store = Store(bus_channel, bus_subchannel="internal_users")
-
-    def __try_update_version_from_records(self, records):
-        is_recordset = isinstance(records, models.Model)
-        assert not records or is_recordset, "Records must be a recordset or a falsy value."
-        if is_recordset and not self.__version:
-            self.__version = StoreVersion.ensure_version(records.env)
 
     @store_enqueue
     def add(self, records, fields, *, as_thread=False, fields_params=None, ignore_empty=False):
@@ -263,7 +194,6 @@ class Store:
 
         Use case: to add records and their fields to store. This is the preferred method.
         """
-        self.__try_update_version_from_records(records)
         if not records:
             return self
         # call _format_fields before checking identifier to always compare the final shape
@@ -305,7 +235,10 @@ class Store:
         index = self._get_record_index(model_name, [id_data or {}] + data_list)
         for data in data_list:
             self._add_values(data, model_name, index)
-        if id_data and (self.data[model_name][index] or not ignore_empty):
+        has_data = any(
+            key not in ("__version__", "__field_versions__") for key in self.data[model_name][index]
+        )
+        if id_data and (has_data or not ignore_empty):
             self._add_values(id_data, model_name, index)
         if "_DELETE" in self.data[model_name][index]:
             del self.data[model_name][index]["_DELETE"]
@@ -315,7 +248,6 @@ class Store:
         """Add the given field list to the store. This is an internal implementation method.
         In business code, Store.add() should be called instead.
         """
-        self.__try_update_version_from_records(field_list.records)
         if field_list and field_list.records:
             for record, record_data_list in self._get_records_data_list(
                 field_list,
@@ -344,7 +276,6 @@ class Store:
     @store_enqueue
     def delete(self, records, as_thread=False):
         """Delete records from the store."""
-        self.__try_update_version_from_records(records)
         if not records:
             return self
         model_name = "mail.thread" if as_thread else records._name
@@ -373,10 +304,7 @@ class Store:
         directly. Returns a dictionary representing the aggregated result of all store
         commands, versioned.
         """
-        result = self._build_result(disable_auto_send=False)
-        if result and self.__version:
-            result["__store_version__"] = self.__version.get_formatted_version()
-        return result
+        return self._build_result(disable_auto_send=False)
 
     def _build_result(self, disable_auto_send=True):
         """Do not call directly. Executes pending operations and returns the aggregated
@@ -399,7 +327,11 @@ class Store:
             if not ids_by_model[model_name]:
                 # singleton have a single item (the empty tuple), the wrapping list can be omitted
                 res[model_name] = dict(sorted(records[()].items()))
-            elif vals := [dict(sorted(record.items())) for record in records.values() if record]:
+            elif vals := [
+                dict(sorted(record.items()))
+                for record in records.values()
+                if any(key not in ("__version__", "__field_versions__") for key in record)
+            ]:
                 # skip empty records and empty models
                 res[model_name] = vals
         return res
@@ -422,7 +354,9 @@ class Store:
         target = self.data[model_name][index]
         for key, val in values.items():
             assert key != "_DELETE", f"invalid key {key} in {model_name}: {values}"
-            if isinstance(val, Store.Relation):
+            if key == "__field_versions__":
+                target.setdefault("__field_versions__", {}).update(val)
+            elif isinstance(val, Store.Relation):
                 val._add_to_store(self, target, key)
             elif isinstance(val, datetime):
                 target[key] = odoo.fields.Datetime.to_string(val)
@@ -471,17 +405,139 @@ class Store:
                 field_list.records._read_format(standard_fields, load=False),
             ):
                 records_data_list[record].append(data)
+        has_write_date = field_list.records and field_list.records._log_access
+        unversioned = set()
         for record, record_data_list in records_data_list.items():
-            self._add_abstract_fields_value(abstract_fields, record_data_list, record)
+            self._add_abstract_fields_value(abstract_fields, record_data_list, record, unversioned)
+            record_version = None
+            if has_write_date:
+                with suppress(MissingError):
+                    # sudo: the record is sent, its write_date can be read
+                    record_version = record.sudo().write_date
+            # No write_date to version with: leave the field unversioned.
+            if record_version:
+                for record_data in record_data_list:
+                    record_data["__version__"] = record_version.isoformat(timespec="microseconds")
+                field_versions = {}
+                for name in standard_fields:
+                    if (
+                        isinstance(name, str)
+                        and (field := record._fields.get(name))
+                        and not field.store
+                    ):
+                        version = Store._get_unstored_field_version(record, name)
+                        if not version:
+                            unversioned.add((record._name, name))
+                        field_versions[name] = Store._format_version(version)
+                if field_versions:
+                    record_data_list.append({"__field_versions__": field_versions})
+        for model_name, name in sorted(unversioned):
+            Store._warn_unversioned(model_name, name)
         return records_data_list
 
-    def _add_abstract_fields_value(self, abstract_fields, data_list, record=None):
+    @staticmethod
+    def _format_version(version):
+        # None means unversioned: the value is applied whatever its arrival order.
+        return version.isoformat(timespec="microseconds") if version else None
+
+    @staticmethod
+    def _warn_unversioned(model_name, field_name):
+        _logger.warning(
+            "Store: %s.%s has no reliable version and is sent unversioned. Pass an explicit "
+            "version, or version=False if applying it in arrival order is fine.",
+            model_name,
+            field_name,
+        )
+
+    @staticmethod
+    def _get_unstored_field_version(record, field_name, _seen=frozenset()):
+        """Version of a field not stored on the record, whose write_date thus does not change
+        with its value: the latest write_date among the records its value depends on.
+
+        Only dependencies through stored many2one are followed, since writing any of them
+        bumps the write_date of the record holding it. Returns None (unversioned) when the
+        version could go backward or miss a change: dependencies through x2many (unlinking
+        does not write the linked record), on the context, or none declared."""
+        field = record._fields.get(field_name)
+        registry = record.env.registry
+        if (
+            not field
+            or field in _seen
+            or not record._log_access
+            or registry.field_depends_context[field]
+            or not registry.field_depends[field]
+        ):
+            return None
+        # sudo: dependencies are walked regardless of the access to the intermediate records.
+        record = record.sudo()
+        versions = []
+        try:
+            versions.append(record.write_date)
+            for path in registry.field_depends[field]:
+                records = record
+                *hops, last = path.split(".")
+                for hop in hops:
+                    hop_field = records._fields[hop]
+                    if hop_field.type != "many2one" or not hop_field.store:
+                        return None
+                    records = records[hop]
+                    if not records:
+                        break
+                    if not records._log_access:
+                        return None
+                    versions.append(records.write_date)
+                else:
+                    # The last step is a plain field of `records`: a stored one is covered
+                    # by the write_date of `records`, already collected above.
+                    last_field = records._fields[last]
+                    if last_field.type in ("one2many", "many2many"):
+                        return None
+                    if not last_field.store:
+                        if not records:
+                            continue
+                        version = Store._get_unstored_field_version(
+                            records,
+                            last,
+                            _seen | {field},
+                        )
+                        if not version:
+                            return None
+                        versions.append(version)
+        except MissingError:
+            return None
+        return max(filter(None, versions), default=None)
+
+    def _add_abstract_fields_value(self, abstract_fields, data_list, record=None, unversioned=None):
         for field in abstract_fields:
             with suppress(MissingError):
                 if isinstance(field, dict):
                     data_list.append(field)
                 elif not field.predicate or field.predicate(record):
-                    data_list.append({field.field_name: field._get_value(record)})
+                    data = {field.field_name: field._get_value(record)}
+                    # A many's version is carried by its commands (see Many._get_id).
+                    if (
+                        not isinstance(field, Store.Many)
+                        and field.field_name
+                        and record is not None
+                    ):
+                        version = NO_VALUE
+                        if field.version is not None:
+                            version = field._get_version(record)
+                        elif field._is_fake_field(record):
+                            if field.value is NO_VALUE:
+                                version = Store._get_unstored_field_version(
+                                    record,
+                                    field.field_name,
+                                )
+                            else:
+                                version = None
+                            if not version and record._log_access:
+                                unversioned.add((record._name, field.field_name))
+                        if version is not NO_VALUE:
+                            data["__field_versions__"] = {
+                                field.field_name: Store._format_version(version),
+                            }
+                    data_list.append(data)
 
     def _get_record_index(self, model_name, data_list):
         # regroup indentifying fields into values as they might be spread accross data_list entries
@@ -577,12 +633,22 @@ class Store:
         Note: when a static value is given to a recordset, the same value is set on all records.
         """
 
-        def __init__(self, store, field_name, value=NO_VALUE, *, predicate=None, sudo=False):
+        def __init__(
+            self,
+            store,
+            field_name,
+            value=NO_VALUE,
+            *,
+            predicate=None,
+            sudo=False,
+            version=None,
+        ):
             self.store = store
             self.field_name = field_name
             self.predicate = predicate
             self.sudo = sudo
             self.value = value
+            self.version = version
 
         def _get_value(self, record):
             if self.value is NO_VALUE and record is not None and self.field_name in record._fields:
@@ -595,6 +661,18 @@ class Store:
                 return None
             return self.value
 
+        def _is_fake_field(self, record):
+            """Whether the value does not come from a stored field of the record."""
+            if self.value is not NO_VALUE:
+                return True
+            field = record._fields.get(self.field_name)
+            return field is None or not field.store
+
+        def _get_version(self, record):
+            if callable(self.version):
+                return self.version(record.sudo() if self.sudo else record)
+            return self.version
+
         def _identity(self):
             return (
                 self.__class__.__name__,
@@ -602,6 +680,7 @@ class Store:
                 self.predicate,
                 self.sudo,
                 self.value,
+                self.version,
             )
 
     class Relation(Attr):
@@ -621,9 +700,17 @@ class Store:
             predicate=None,
             sudo=False,
             value=NO_VALUE,
+            version=None,
         ):
             field_name = records_or_field_name if isinstance(records_or_field_name, str) else None
-            super().__init__(store, field_name, predicate=predicate, sudo=sudo, value=value)
+            super().__init__(
+                store,
+                field_name,
+                predicate=predicate,
+                sudo=sudo,
+                value=value,
+                version=version,
+            )
             assert (
                 not records_or_field_name
                 or isinstance(records_or_field_name, (str, models.Model))
@@ -725,6 +812,7 @@ class Store:
             predicate=None,
             sudo=False,
             value=NO_VALUE,
+            version=None,
         ):
             super().__init__(
                 store,
@@ -737,6 +825,7 @@ class Store:
                 predicate=predicate,
                 sudo=sudo,
                 value=value,
+                version=version,
             )
             assert not self.records or len(self.records) == 1, f"One received {self.records}"
 
@@ -765,6 +854,7 @@ class Store:
             sort=None,
             sudo=False,
             value=NO_VALUE,
+            version=None,
         ):
             super().__init__(
                 store,
@@ -777,9 +867,16 @@ class Store:
                 predicate=predicate,
                 sudo=sudo,
                 value=value,
+                version=version,
             )
             self.mode = mode
             self.sort = sort
+            # many2many has no FK column on either side: linking/unlinking never writes
+            # the comodel record, so its write_date can't be trusted as the relation's
+            # version. Only known when built from a named field.
+            self._is_many2many = False
+            # Not backed by a stored field: linking never writes the comodel record either.
+            self._is_unstored = False
 
         def _copy_with_records(self, records, calling_record):
             if records is None:
@@ -787,6 +884,24 @@ class Store:
             res = super()._copy_with_records(records, calling_record)
             res.mode = self.mode
             res.sort = self.sort
+            field = calling_record and calling_record._fields.get(self.field_name)
+            res._is_many2many = field and field.type == "many2many"
+            res._is_unstored = bool(calling_record) and (not field or not field.store)
+            res.version = (
+                self._get_version(calling_record)
+                if calling_record is not None
+                else self.version
+            )
+            if res.mode == "DELETE" and res.version is None and calling_record:
+                res.version = calling_record.env.cr.now()
+            if (
+                res._is_unstored
+                and res.mode == "ADD"
+                and res.version is None
+                and records
+                and calling_record._log_access
+            ):
+                Store._warn_unversioned(calling_record._name, self.field_name)
             return res
 
         def _add_to_store(self, store: "Store", target, key):
@@ -807,10 +922,41 @@ class Store:
         def _get_id(self):
             """Return the ids that can be used to insert the current relation in the store."""
             if self.value is not NO_VALUE:
-                return self._prepend_mode(self.value)
-            self._sort_records()
-            res = [Store._get_one_id(record, self.as_thread) for record in self.records]
-            return self._prepend_mode(res)
+                res = self.value
+            else:
+                self._sort_records()
+                res = [Store._get_one_id(record, self.as_thread) for record in self.records]
+            if self.mode not in ("ADD", "DELETE") or self._is_many2many:
+                # REPLACE/many2many are never versioned: their date can't be trusted.
+                return self._prepend_mode(res)
+
+            def stamp_version(val, write_date):
+                version = write_date and write_date.isoformat(timespec="microseconds")
+                if isinstance(val, dict):
+                    return {**val, "__version__": version}
+                return {"id": val, "__version__": version}
+
+            values = res if isinstance(res, list) else [res]
+            has_write_date = (
+                self.value is NO_VALUE
+                and self.mode == "ADD"
+                and self.records
+                and self.records._log_access
+            )
+            records = self.records if has_write_date else [None] * len(values)
+            versioned = []
+            for val, record in zip(values, records):
+                version = self.version
+                if version is None and record is not None:
+                    if self._is_unstored:
+                        # Linking does not write the comodel record: leave it unversioned.
+                        versioned.append(val)
+                        continue
+                    with suppress(MissingError):
+                        # sudo: the record is sent, its write_date can be read
+                        version = record.sudo().write_date
+                versioned.append(stamp_version(val, version) if version else val)
+            return self._prepend_mode(versioned if isinstance(res, list) else versioned[0])
 
         def _prepend_mode(self, res):
             if self.mode == "ADD":
@@ -845,6 +991,18 @@ class Store:
             """Store.Target of the field list. Useful to adapt fields depending on the receivers."""
             return self.store.target
 
+        def __contains__(self, field):
+            # Also match Store.Attr (not relations) by field name.
+            return any(
+                item == field
+                or (
+                    isinstance(item, Store.Attr)
+                    and not isinstance(item, Store.Relation)
+                    and item.field_name == field
+                )
+                for item in self
+            )
+
         def append(self, field, *, internal=False):
             if not internal or self.is_for_internal_users():
                 super().append(field)
@@ -857,13 +1015,35 @@ class Store:
             elif self._internal_field_list is not None:
                 self._internal_field_list.extend(fields)
 
-        def attr(self, field_name, value=NO_VALUE, *, predicate=None, sudo=False, internal=False):
+        def attr(
+            self,
+            field_name,
+            value=NO_VALUE,
+            *,
+            predicate=None,
+            sudo=False,
+            internal=False,
+            version=None,
+        ):
             """Add an attribute to the field list."""
-            if self.records is not None and value is NO_VALUE and predicate is None and not sudo:
+            if (
+                self.records is not None
+                and value is NO_VALUE
+                and predicate is None
+                and not sudo
+                and version is None
+            ):
                 self.append(field_name, internal=internal)
             else:
                 self.append(
-                    Store.Attr(self.store, field_name, value=value, predicate=predicate, sudo=sudo),
+                    Store.Attr(
+                        self.store,
+                        field_name,
+                        value=value,
+                        predicate=predicate,
+                        sudo=sudo,
+                        version=version,
+                    ),
                     internal=internal,
                 )
 
