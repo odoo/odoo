@@ -1776,7 +1776,7 @@ class Field[T]:
 
     def _insert_cache(self, records: BaseModel, values: Iterable) -> None:
         """ Update the cache of the given records with the corresponding values,
-        ignoring the records that don't have a value in cache already.  This
+        ignoring the records that already have a value in cache.  This
         enables to keep the pending updates of records, and flush them later.
         """
         field_cache = self._get_cache(records.env)
