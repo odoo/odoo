@@ -160,16 +160,16 @@ class RestaurantTable(models.Model):
                 raise UserError(error_msg)
 
     def set_parent_id(self, parent_id, parent_side, config_id):
+        self.ensure_one()
         parent = self.env['restaurant.table'].browse(parent_id).exists()
         config = self.env['pos.config'].browse(config_id).exists()
         if parent or parent_id is None:
             old_parent = self.parent_id
             old_side = self.parent_side
-            self.parent_id = parent
-            self.parent_side = parent_side
+            # PoS users can update table links while other table fields remain read-only.
+            self.write({'parent_id': parent.id, 'parent_side': parent_side})
             if self._has_cycle('parent_id'):
-                self.parent_id = old_parent
-                self.parent_side = old_side
+                self.write({'parent_id': old_parent.id, 'parent_side': old_side})
         return {
             'restaurant.table': self._load_pos_data_read(self, config) if config else [],
         }
