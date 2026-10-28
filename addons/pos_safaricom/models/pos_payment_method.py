@@ -238,8 +238,14 @@ class PosPaymentMethod(models.Model):
                 "payment_method_id": self.id,
             }
 
+<<<<<<< 8108219b909dfe5db120427004b4e70fa997d80a
             signed_hash_payload = hash_sign(self.sudo().env, "pos_safaricom", payload_hash, expiration_hours=6)
             shortcode = self.safaricom_paybill_number if self.safaricom_identifier_type == 'paybill' else self.safaricom_till_number
+||||||| c09a7e5c2f2cd0e08e853274d0c318d92a7c6432
+            signed_hash_payload = hash_sign(self.sudo().env, "pos_safaricom", payload_hash, expiration_hours=6)
+=======
+            signed_hash_payload = hash_sign(self.sudo().env, "pos_safaricom", payload_hash)
+>>>>>>> c2f55de9196a915a2b4a9c523ee3e16391fa480c
 
             payload = {
                 'ShortCode': shortcode,
