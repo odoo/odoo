@@ -102,6 +102,11 @@
 }
 
 .o_hr_attendance_kiosk_body {
-    height: 100vh;
+    height: 100dvh;
     overflow: hidden;
+
+    @include media-breakpoint-down(sm) {
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
 }
