@@ -25,7 +25,7 @@ class AccountTax(models.Model):
             ('others', 'Others'),
             ('na', 'Not Applicable'),
         ],
-        help="The income type on 50 Tawi. Select 'Not Applicable' to exclude from 50 Tawi.",
+        help="The income type on 50 Tawi and P.P.36. Select 'Not Applicable' to exclude from 50 Tawi.",
     )
     l10n_th_income_tax_type_others = fields.Char(
         string="Other Type",
@@ -34,10 +34,10 @@ class AccountTax(models.Model):
 
     # We reset the values of these fields when they are no longer visible to avoid blocking issue or storing irrelevant data.
 
-    @api.onchange('is_withholding_tax', 'type_tax_use', 'country_code')
+    @api.onchange('type_tax_use', 'country_code')
     def _onchange_l10n_th_income_tax_type_dependencies(self):
         for tax in self:
-            if not tax.is_withholding_tax or tax.type_tax_use != 'purchase' or tax.country_code != 'TH':
+            if tax.type_tax_use != 'purchase' or tax.country_code != 'TH':
                 tax.l10n_th_income_tax_type = False
 
     @api.onchange('l10n_th_income_tax_type')
