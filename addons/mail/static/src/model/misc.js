@@ -45,12 +45,14 @@ export function isCommand(data) {
  * - A command.
  * - An array of commands.
  * - An array of raw values: interpreted as a replace.
- * @returns {Array<[string, any[]]>} Normalized list of `[mode, value]` arrays.
+ * @returns {Array<[string, any[], string|undefined]>} Normalized list of
+ * `[mode, value, version]` arrays, the version being undefined when the command
+ * has none (see `ManyFieldVersion`).
  */
 export function normalizeManyCommands(command) {
-    const ensureArrayValue = (cmd) => [cmd[0], Array.isArray(cmd[1]) ? cmd[1] : [cmd[1]]];
+    const ensureArrayValue = (cmd) => [cmd[0], Array.isArray(cmd[1]) ? cmd[1] : [cmd[1]], cmd[2]];
     if (!command || (Array.isArray(command) && command.length === 0)) {
-        return [["REPLACE", []]];
+        return [["REPLACE", [], undefined]];
     }
     if (isCommandList(command)) {
         return command.map(ensureArrayValue);

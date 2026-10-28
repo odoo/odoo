@@ -25,7 +25,7 @@ class MailboxController(WebclientController):
             return
         bus_store = Store(bus_channel=request.env.user)
         for cur_store in [store, bus_store]:
-            cur_store.add(messages, ["is_bookmarked"])
+            cur_store.add(messages, lambda res: res.attr("is_bookmarked", version=False))
 
     @store_handler("add_bookmark", readonly=False)
     def store_add_bookmark(self, store: Store, message_id):

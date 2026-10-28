@@ -196,10 +196,21 @@ class ResPartner(models.Model):
         store.add(channel, ["group_public_id"])
         if allowed_group:
             for p in partners:
-                store.add(p, {"group_ids": [("ADD", (allowed_group & p.user_ids.all_group_ids).ids)]})
+                store.add(
+                    p,
+                    lambda res: res.attr(
+                        "group_ids",
+                        [("ADD", (allowed_group & p.user_ids.all_group_ids).ids)],
+                        version=False,
+                    ),
+                )
         try:
             roles = self.env["res.role"].search([("name", "ilike", search)], limit=8)
-            store.add(roles, ["name", "user_ids_count"])
+            # Counts the role members: no write_date reflects it.
+            store.add(
+                roles,
+                lambda res: (res.attr("name"), res.attr("user_ids_count", version=False)),
+            )
         except AccessError:
             pass
         return store

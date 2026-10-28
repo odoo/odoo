@@ -549,7 +549,7 @@ class DiscussChannel(models.Model):
                 "steps": [current_step],
                 "currentStep": current_step,
             }
-        res.attr("chatbot", chatbot_data, predicate=is_livechat_channel)
+        res.attr("chatbot", chatbot_data, predicate=is_livechat_channel, version=False)
         res.one(
             "chatbot_current_step_id",
             lambda res: (
@@ -558,6 +558,7 @@ class DiscussChannel(models.Model):
             ),
             value=lambda c: c.chatbot_current_step_id.sudo().with_context(lang=lang),
             predicate=is_livechat_channel,
+            version=lambda c: c.write_date,
         )
 
     @api.autovacuum

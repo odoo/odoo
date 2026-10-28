@@ -3220,26 +3220,20 @@ class HrEmployee(models.Model):
         }
 
     def _store_avatar_card_fields(self, res: Store.FieldList):
-        res.attr("resource_id", "_store_avatar_card_fields")
+        res.one("resource_id", "_store_avatar_card_fields")
         res.one("user_id", "_store_avatar_card_fields")
         res.many("employee_skill_ids", ["color", "display_name"])
-        res.extend([
-            "active",
-            "company_id",
-            "hr_icon_display",
-            "job_title",
-            "name",
-            "show_hr_icon_display",
-        ])
+        res.extend(["active", "company_id", "name"])
+        # Presence and current version: they change without writing the employee.
+        res.attr("hr_icon_display", version=False)
+        res.attr("job_title", version=False)
+        res.attr("show_hr_icon_display", version=False)
         res.extend(["work_email", "work_phone"])
 
     def _store_im_status_fields(self, res: Store.FieldList):
         res.one("user_id", "_store_im_status_fields")
-        res.extend([
-            "active",
-            "company_id",
-            "work_location_type",
-        ])
+        res.extend(["active", "company_id"])
+        res.attr("work_location_type", version=False)
 
     @api.depends('bank_account_ids')
     def _compute_primary_bank_account_id(self):

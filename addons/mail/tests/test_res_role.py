@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
+from odoo.addons.bus.tests.common import pop_store_version
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.tests.common import HttpCase
 from odoo.tools import mute_logger
@@ -12,7 +13,7 @@ class TestResRole(MailCommon, HttpCase):
         mail_new_test_user(self.env, login="user_d", role_ids=[Command.link(role.id)])
         fetch_params = {"fetch_params": [["res.role", {"id": role.id}]]}
         self.authenticate("employee", "employee")
-        data = self.make_jsonrpc_request("/mail/store", fetch_params)
+        data = pop_store_version(self.make_jsonrpc_request("/mail/store", fetch_params))
         self.assertEqual(data["res.role"], [{"id": role.id, "name": "rd-Discuss", "user_ids_count": 1}])
         portal_user = mail_new_test_user(self.env, login="portal_d", groups="base.group_portal")
         self.authenticate(portal_user.login, portal_user.login)

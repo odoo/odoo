@@ -29,7 +29,11 @@ class MailMessage(models.Model):
         super()._store_message_fields(res, **kwargs)
         res.many(
             "call_history_ids",
-            ["duration_hour", "end_dt", "has_recording"],
+            lambda res: (
+                res.attr("duration_hour"),
+                res.attr("end_dt"),
+                res.attr("has_recording", version=False),
+            ),
             predicate=lambda m: m.body and 'data-oe-type="call"' in m.body,
         )
 

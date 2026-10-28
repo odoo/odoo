@@ -216,6 +216,6 @@ class ResourceResource(models.Model):
 
     def _store_avatar_card_fields(self, res: Store.FieldList):
         super()._store_avatar_card_fields(res)
-        res.one("department_id", ["name"])
+        res.one("department_id", ["name"], version=False)
         # sudo: resource.resource - can access employee information of resource
         res.one("employee_id", "_store_avatar_card_fields", sudo=True)

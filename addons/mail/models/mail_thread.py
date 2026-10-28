@@ -5131,6 +5131,7 @@ class MailThread(models.AbstractModel):
             "_store_follower_fields",
             value=followers_by_thread,
             mode="REPLACE" if reset else "ADD",
+            version=False,
         )
 
     # ------------------------------------------------------
@@ -5289,7 +5290,12 @@ class MailThread(models.AbstractModel):
                 res.attr("write_date"),
                 res.from_method("_store_linked_messages_fields"),
                 self._store_message_update_extra_fields(res),
-                res.attr("translationValue", False, predicate=lambda m: m.body is not None),
+                res.attr(
+                    "translationValue",
+                    False,
+                    predicate=lambda m: m.body is not None,
+                    version=False,
+                ),
             ),
         )
 
@@ -5305,8 +5311,9 @@ class MailThread(models.AbstractModel):
 
     def _store_thread_fields(self, res: Store.FieldList, *, request_list, **kwargs):
         if res.is_for_current_user():
-            res.attr("hasReadAccess", lambda t: t.sudo(False).has_access("read"))
-            res.attr("hasWriteAccess", lambda t: t.sudo(False).has_access("write"))
+            # Access rights: no write_date reflects them.
+            res.attr("hasReadAccess", lambda t: t.sudo(False).has_access("read"), version=False)
+            res.attr("hasWriteAccess", lambda t: t.sudo(False).has_access("write"), version=False)
             # sudo: mail.thread - can read thread to build _mail_get_operation_for_mail_message_operation
             operation_list = self.sudo()._mail_get_operation_for_mail_message_operation("create")
 
@@ -5317,7 +5324,7 @@ class MailThread(models.AbstractModel):
                         return True
                 return False
 
-            res.attr("canPostOnReadonly", can_post_on_readonly_by_thread)
+            res.attr("canPostOnReadonly", can_post_on_readonly_by_thread, version=False)
         if "activities" in request_list and isinstance(self, self.env.registry["mail.activity.mixin"]):
             res.many(
                 "activities",
@@ -5336,17 +5343,19 @@ class MailThread(models.AbstractModel):
             )
             res.append({"areAttachmentsLoaded": True, "isLoadingAttachments": False})
         if "contact_fields" in request_list:
-            res.attr("primary_email_field", lambda t: t._mail_get_primary_email_field())
-            res.attr("partner_fields", lambda t: t._mail_get_partner_fields())
+            res.attr(
+                "primary_email_field", lambda t: t._mail_get_primary_email_field(), version=False,
+            )
+            res.attr("partner_fields", lambda t: t._mail_get_partner_fields(), version=False)
         if "defaultSubject" in request_list:
-            res.attr("defaultSubject", lambda t: t._message_compute_subject())
+            res.attr("defaultSubject", lambda t: t._message_compute_subject(), version=False)
         if "followers" in request_list:
             count_by_tid = {"groupby": ["res_id"], "aggregates": ["__count"]}
             domain = Domain("res_id", "in", self.ids) & Domain("res_model", "=", self._name)
             # follower count
             follower_count = self.env["mail.followers"]._read_group(domain, **count_by_tid)
             follower_count_by_tid = defaultdict(int, follower_count)
-            res.attr("followersCount", lambda t: follower_count_by_tid[t.id])
+            res.attr("followersCount", lambda t: follower_count_by_tid[t.id], version=False)
             # follower of current user
             self_partner_domain = Domain("partner_id", "=", self.env.user.partner_id.id)
             self_followers = self.env["mail.followers"].search_fetch(domain & self_partner_domain)
@@ -5358,6 +5367,7 @@ class MailThread(models.AbstractModel):
                 "selfFollower",
                 "_store_follower_fields",
                 value=lambda t: self_follower_by_tid[t.id],
+                version=False,
             )
             # follower list with limit
             self._store_message_followers_fields(res, reset=True)
@@ -5371,7 +5381,7 @@ class MailThread(models.AbstractModel):
                 **count_by_tid,
             )
             recipient_count_by_tid = defaultdict(int, recipient_count)
-            res.attr("recipientsCount", lambda t: recipient_count_by_tid[t.id])
+            res.attr("recipientsCount", lambda t: recipient_count_by_tid[t.id], version=False)
             # recipient list with limit
             self._store_message_followers_fields(res, filter_recipients=True, reset=True)
         pinned_domain = (
@@ -5384,7 +5394,9 @@ class MailThread(models.AbstractModel):
                 int,
                 self.env["mail.message"]._read_group(pinned_domain, ["res_id"], ["__count"]),
             )
-            res.attr("has_pinned_messages", lambda t: pinned_count_by_tid[t.id] > 0)
+            res.attr(
+                "has_pinned_messages", lambda t: pinned_count_by_tid[t.id] > 0, version=False,
+            )
         if res.is_for_internal_users() and "pinned_messages" in request_list:
             messages_by_tid = defaultdict(
                 self.env["mail.message"].browse,
@@ -5415,6 +5427,7 @@ class MailThread(models.AbstractModel):
                     reply_discussion=True,
                     no_create=True,
                 ),
+                version=False,
             )
 
     def _get_mail_thread_data_attachments(self):

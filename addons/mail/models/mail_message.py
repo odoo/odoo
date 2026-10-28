@@ -1116,6 +1116,7 @@ class MailMessage(models.Model):
             [],
             mode="ADD" if filter_content else "REPLACE",
             predicate=lambda m: not filter_content or m in reactions_by_message,
+            version=False,
             value=lambda m: [
                 {
                     "content": content,
@@ -1135,6 +1136,7 @@ class MailMessage(models.Model):
                 mode="DELETE",
                 predicate=lambda m: m not in reactions_by_message,
                 value=lambda m: {"message": m.id, "content": content},
+                version=False,
             )
         res.many(
             "reaction_ids",
@@ -1197,7 +1199,7 @@ class MailMessage(models.Model):
             "author_id",
             lambda res: (
                 res.attr("is_company"),
-                res.one("main_user_id", ["partner_id", "share"]),
+                res.one("main_user_id", ["partner_id", "share"], version=False),
                 res.from_method("_store_avatar_fields"),
             ),
             dynamic_fields="_store_author_dynamic_fields",
@@ -1289,12 +1291,17 @@ class MailMessage(models.Model):
             "thread",
             lambda res: (
                 # sudo: mail.thread - if mentionned in a non accessible thread, name is allowed
-                res.attr("display_name", sudo=True),
-                res.attr("has_mail_thread", lambda t: isinstance(t, self.env.registry["mail.thread"])),
+                res.attr("display_name", sudo=True, version=False),
+                res.attr(
+                    "has_mail_thread",
+                    lambda t: isinstance(t, self.env.registry["mail.thread"]),
+                    version=False,
+                ),
                 res.attr(
                     "module_icon",
                     lambda t: modules.module.get_module_icon(t._original_module),
                     predicate=lambda t: inbox_fields and t._original_module,
+                    version=False,
                 ),
                 res.one(
                     "selfFollower",
@@ -1303,24 +1310,28 @@ class MailMessage(models.Model):
                     and inbox_fields
                     and t._name != "discuss.channel",
                     value=lambda t: follower_by_record_and_partner[t, target_user.partner_id],
+                    version=False,
                 ),
                 res.attr(
                     "priority",
                     value=lambda t: t[t._priority_field],
                     predicate=lambda t: inbox_fields and hasattr(t, "_priority_field"),
                     sudo=True,
+                    version=lambda t: t.write_date,
                 ),
                 res.attr(
                     "priority_definition",
                     predicate=lambda t: inbox_fields and hasattr(t, "_priority_field"),
                     value=lambda t: t.fields_get([t._priority_field], ["selection"])[t._priority_field]["selection"],
+                    version=False,
                 ),
             ),
             as_thread=True,
             value=record_by_message.get,
+            version=lambda m: m.write_date,
         )
         if res.is_for_current_user():
-            res.append("is_bookmarked")
+            res.attr("is_bookmarked", version=False)
 
         def default_subject(message):
             if record := record_by_message.get(message):
@@ -1330,17 +1341,19 @@ class MailMessage(models.Model):
                 return message.record_name
             return False
 
-        res.attr("default_subject", default_subject)
-        res.attr("scheduledDatetime", lambda m: scheduled_dt_by_msg[m])
+        res.attr("default_subject", default_subject, version=False)
+        res.attr("scheduledDatetime", lambda m: scheduled_dt_by_msg[m], version=False)
         res.attr(
             "incoming_email_cc",
             lambda message: tools.mail.email_split_tuples(message.incoming_email_cc),
             predicate=lambda message: message.incoming_email_cc,
+            version=lambda m: m.write_date,
         )
         res.attr(
             "incoming_email_to",
             lambda message: tools.mail.email_split_tuples(message.incoming_email_to),
             predicate=lambda message: message.incoming_email_to,
+            version=lambda m: m.write_date,
         )
         if res.is_for_current_user():
 
@@ -1362,8 +1375,8 @@ class MailMessage(models.Model):
                     ),
                 )
 
-            res.attr("needaction", needaction)
-            res.attr("needaction_done", needaction_done)
+            res.attr("needaction", needaction, version=False)
+            res.attr("needaction_done", needaction_done, version=False)
 
         # Add extras at the end to guarantee order in result. In particular, the parent message
         # needs to be after the current message (client code assuming the first received message is
@@ -1404,7 +1417,14 @@ class MailMessage(models.Model):
             lambda res: (
                 res.extend(["model", "res_id"]),
                 # sudo: mail.thread - reading record name of accessible message is acceptable
-                res.one("thread", ["display_name"], value=rec_by_m.get, as_thread=True, sudo=True),
+                res.one(
+                    "thread",
+                    lambda res: res.attr("display_name", version=False),
+                    value=rec_by_m.get,
+                    as_thread=True,
+                    sudo=True,
+                    version=lambda m: m.write_date,
+                ),
             ),
             only_data=True,
         )
@@ -1425,7 +1445,7 @@ class MailMessage(models.Model):
             "_store_notification_fields",
             value=lambda m: m.notification_ids._filtered_for_web_client(),
         )
-        res.one("thread", "_store_model_name_fields", as_thread=True)
+        res.one("thread", "_store_model_name_fields", as_thread=True, version=lambda m: m.write_date)
 
     def _notify_message_notification_update(self):
         """Send bus notifications to update status of notifications in the web

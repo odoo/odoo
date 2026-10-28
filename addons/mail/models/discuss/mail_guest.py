@@ -155,12 +155,17 @@ class MailGuest(models.Model):
         return generate_text_avatar_svg(avatar_initials(self.name), str(self.id))
 
     def _store_avatar_fields(self, res: Store.FieldList):
-        res.attr("avatar_128_access_token", lambda g: g._get_avatar_128_access_token())
+        res.attr(
+            "avatar_128_access_token", lambda g: g._get_avatar_128_access_token(), version=False,
+        )
         res.extend(["name", "write_date"])
 
     def _store_im_status_fields(self, res: Store.FieldList):
-        res.attr("im_status")
-        res.attr("im_status_access_token", lambda g: g._get_im_status_access_token())
+        # sudo: mail.presence - can access presence of accessible guest
+        res.attr("im_status", version=lambda g: g.sudo().presence_ids.last_poll)
+        res.attr(
+            "im_status_access_token", lambda g: g._get_im_status_access_token(), version=False,
+        )
 
     def _set_auth_cookie(self):
         """Add a cookie to the response to identify the guest. Every route

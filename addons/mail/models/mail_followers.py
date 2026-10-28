@@ -552,4 +552,4 @@ class MailFollowers(models.Model):
         # sudo: res.partner - can read partners of found followers, in particular allows
         # by-passing multi-company ACL for portal partners
         res.one("partner_id", "_store_partner_fields", sudo=True)
-        res.one("thread", [], as_thread=True)
+        res.one("thread", [], as_thread=True, version=lambda f: f.write_date)

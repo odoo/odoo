@@ -113,7 +113,7 @@ class DiscussChannelMember(models.Model):
         )
         members.unpin_dt = fields.Datetime.now()
         for member, store in members._get_member_store_list():
-            store.add(member.channel_id, {"close_chat_window": True})
+            store.add(member.channel_id, lambda res: res.attr("close_chat_window", True, version=False))
 
     @api.constrains('partner_id')
     def _contrains_no_public_member(self):
@@ -352,7 +352,8 @@ class DiscussChannelMember(models.Model):
         res["channel_id", None].attr("channel_role", sudo=True)
         res["channel_id", None].attr("invitation_sent_dt")
         res[None].extend(["custom_notifications", "is_favorite"])
-        res[None].extend(["is_pinned", "last_interest_dt", "message_unread_counter"])
+        res[None].extend(["is_pinned", "last_interest_dt"])
+        res[None].attr("message_unread_counter", version=False)
         res[None].extend(["mute_until_dt", "new_message_separator"])
         # sudo: discuss.channel.rtc.session - each member can see who is inviting them
         res[None].one("rtc_inviting_session_id", "_store_extra_fields", sudo=True)
@@ -362,7 +363,11 @@ class DiscussChannelMember(models.Model):
         super()._store_sync_extra_fields(res)
         self._store_identifying_fields(res)
         if "message_unread_counter" in res:
-            res.attr("message_unread_counter_bus_id", self.env["bus.bus"].sudo()._bus_last_id())
+            res.attr(
+                "message_unread_counter_bus_id",
+                self.env["bus.bus"].sudo()._bus_last_id(),
+                version=False,
+            )
         if "is_pinned" in res:
             res.remove("is_pinned")
             res.one("channel_id", "_store_channel_fields", predicate=lambda m: m.is_pinned)
@@ -377,7 +382,13 @@ class DiscussChannelMember(models.Model):
             if close_chat_window:
                 for bus_channel in member._bus_channels():
                     custom_store = Store(bus_channel=bus_channel)
-                    custom_store.add(channel, {"close_chat_window": True, "isLocallyPinned": False})
+                    custom_store.add(
+                        channel,
+                        lambda res: (
+                            res.attr("close_chat_window", True, version=False),
+                            res.attr("isLocallyPinned", False, version=False),
+                        ),
+                    )
             if channel.channel_type != "channel" and post_leave_message:
                 notification = Markup(
                     '<div class="o_mail_notification" data-oe-type="channel-left">%s</div>',
@@ -426,7 +437,7 @@ class DiscussChannelMember(models.Model):
                 lambda res: res.many("channel_name_member_ids", "_store_member_fields", sort="id"),
             )
         for channel, members in members_by_channel.items():
-            stores[channel].delete(members).add(channel, ["member_count"])
+            stores[channel].delete(members).add(channel, lambda res: res.attr("member_count", version=False))
         return res
 
     def _bus_channels(self):
@@ -436,13 +447,14 @@ class DiscussChannelMember(models.Model):
         """ Broadcast the typing notification to channel members
             :param is_typing: (boolean) tells whether the members are typing or not
         """
+        version = self.env.cr.now()
         for member in self:
             Store(bus_channel=member.channel_id).add(
                 member,
                 lambda res: (
                     res.from_method("_store_member_fields"),
-                    res.attr("isTyping", is_typing),
-                    res.attr("is_typing_dt", fields.Datetime.now()),
+                    res.attr("isTyping", is_typing, version=version),
+                    res.attr("is_typing_dt", fields.Datetime.now(), version=version),
                 ),
             )
 
@@ -739,6 +751,7 @@ class DiscussChannelMember(models.Model):
                     "_store_avatar_card_fields",
                     value=members,
                     mode="ADD",
+                    version=False,
                 ),
             )
             devices, private_key, public_key = self.channel_id._web_push_get_partners_parameters(members.partner_id.ids)
@@ -842,8 +855,8 @@ class DiscussChannelMember(models.Model):
                 Store(bus_channel=bus_channel).add(
                     self,
                     lambda res: (
-                        res.attr("message_unread_counter"),
-                        res.attr("message_unread_counter_bus_id", bus_last_id),
+                        res.attr("message_unread_counter", version=False),
+                        res.attr("message_unread_counter_bus_id", bus_last_id, version=False),
                         res.attr("new_message_separator"),
                         res.from_method("_store_identifying_fields"),
                     ),
