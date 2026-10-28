@@ -20,7 +20,7 @@ registerWebsitePreviewTour("course_member_youtube", {}, () => [
         run: "click",
     },
     {
-        trigger: ':iframe a:contains("Join this Course")',
+        trigger: ':iframe button:contains("Join this Course")',
         run: "click",
     },
     {

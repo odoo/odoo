@@ -8,16 +8,16 @@
 <template id="track_widget_reminder">
     <t t-set="_btn_style" t-value="'btn' if not reminder_light else ''"/>
     <t t-set="_btn_size" t-value="'btn-sm' if reminder_small else ''"/>
-    <div t-att-class="'o_wetrack_js_reminder reminder_%s m-2 pt-1' % ('on' if track.is_reminder_on else 'off')" role="button"
+    <div t-att-class="'o_wetrack_js_reminder reminder_%s m-2 pt-1' % ('on' if track.is_reminder_on else 'off')"
          t-att-data-track-id="track.id"
          t-att-data-reminder-on="bool(track.is_reminder_on)"
          t-if="not track.is_track_done or track.event_id.is_finished">
-         <span t-attf-class="o_wetrack_js_reminder_on {{_btn_style}} {{_btn_size}} btn-secondary">
-            <i class="oi oi-filled" data-icon="star" title="Favorite On" /> <span class="d-none d-sm-inline">Favorited</span>
-         </span>
-         <span t-attf-class="o_wetrack_js_reminder_off {{_btn_style}} {{_btn_size}} btn-outline-secondary">
-            <i class="oi" data-icon="star" title="Set Favorite"/> <span class="">Add to favorite</span>
-         </span>
+         <button type="button" t-attf-class="o_wetrack_js_reminder_on {{_btn_style}} {{_btn_size}} btn-secondary" aria-label="In favorites, click to remove">
+            <i class="oi oi-filled" data-icon="star" role="img" aria-hidden="true" /> <span class="d-none d-sm-inline">Favorited</span>
+         </button>
+         <button type="button" t-attf-class="o_wetrack_js_reminder_off {{_btn_style}} {{_btn_size}} btn-outline-secondary">
+            <i class="oi" data-icon="star" role="img" aria-hidden="true"/> <span>Add to favorite</span>
+         </button>
     </div>
 </template>
 

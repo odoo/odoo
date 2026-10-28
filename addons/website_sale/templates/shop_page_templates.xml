@@ -541,9 +541,8 @@
                 t-value="isSortingBy and isSortingBy[0][0] or website.shop_default_sort"
             />
             <t t-set="_sort_label">Sort By</t>
-            <a
-                role="button"
-                href="#"
+            <button
+                type="button"
                 t-attf-class="dropdown-toggle btn px-2"
                 data-bs-toggle="dropdown"
             >
@@ -555,7 +554,7 @@
                     <span t-else="" t-out="dict(website_sale_sortable)[website.shop_default_sort]"/>
                 </span>
                 <i t-if="_icon_classes" t-attf-class="oi {{_icon_classes}}" data-icon="swap_vert" role="img" aria-hidden="true"/>
-            </a>
+            </button>
             <div class="dropdown-menu dropdown-menu-end" role="menu">
                 <t t-foreach="website_sale_sortable" t-as="sortby">
                     <t t-set="_is_active" t-value="_current_sort == sortby[0]"/>
