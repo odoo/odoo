@@ -13,3 +13,12 @@ class ResConfigSettings(models.TransientModel):
         help='This symbol will be used on invoices by default.',
         readonly=False,
     )
+    module_l10n_vn_edi_viettel = fields.Boolean(string="Vietnam E-invoicing (SInvoice)")
+
+    def action_l10n_vn_activate_edi_viettel(self):
+        """ Install the SInvoice (Viettel) e-invoicing module and reload the settings page to show its settings. """
+        # _get() returns a sudo record: drop it so button_immediate_install checks the user is an admin
+        module = self.env['ir.module.module']._get('l10n_vn_edi_viettel').sudo(False)
+        if module:
+            self._install_modules(module)
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
