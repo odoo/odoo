@@ -124,7 +124,7 @@ class TestUblImportBis3InvoiceBE(TestUblBis3Common, TestUblCiiBECommon):
         self.assertTrue(bill)
 
         # Ensure the created move has 2 attachments: the original XML and a generated PDF
-        self.assertTrue(bill.ubl_cii_xml_id)  # Original XML
+        self.assertTrue(bill.ubl_cii_xml_file)  # Original XML
         self.assertEqual(len(bill.attachment_ids), 1)  # Generated PDF
         self.assertTrue(any('pdf' in attachment.mimetype for attachment in bill.attachment_ids))
 

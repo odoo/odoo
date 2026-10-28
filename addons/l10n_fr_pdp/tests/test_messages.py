@@ -173,8 +173,7 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
             self.assertRecordValues(move, [{'peppol_move_state': 'error', 'peppol_message_uuid': FAKE_UUID[0]}])
 
         # we can't send the ubl document again unless we regenerate the pdf
-        move.invoice_pdf_report_id.unlink()
-        self.env.invalidate_all()  # recompute invoice_pdf_report_id
+        move.invoice_pdf_report_file = False
         with self._mock_send():
             wizard = self.create_send_and_print(move, default=True)
             self.assertEqual(wizard.invoice_edi_format, 'ubl_21_fr')
@@ -208,7 +207,7 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
                 'peppol_message_uuid': FAKE_UUID[0],
             }],
         )
-        self.assertTrue(bool(move.ubl_cii_xml_id))
+        self.assertTrue(bool(move.ubl_cii_xml_file))
 
     def test_pdp_send_success_message_peppol(self):
         # should be able to send valid invoices correctly
@@ -239,7 +238,7 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
                 'peppol_message_uuid': FAKE_UUID[0],
             }],
         )
-        self.assertTrue(bool(move.ubl_cii_xml_id))
+        self.assertTrue(bool(move.ubl_cii_xml_file))
 
     def test_pdp_einvoicing_chatter_keeps_last_status_in_fetch(self):
         move = self._create_french_invoice()
@@ -1000,5 +999,5 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
                 'peppol_message_uuid': FAKE_UUID[0],
             }],
         )
-        self.assertTrue(bool(move.ubl_cii_xml_id))
+        self.assertTrue(bool(move.ubl_cii_xml_file))
         self.assertTrue(move.pdp_can_send_response)

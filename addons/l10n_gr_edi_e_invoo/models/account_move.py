@@ -190,7 +190,7 @@ class AccountMove(models.Model):
             })
 
             # Discard any PDF generated before receiving the provider values
-            if self.invoice_pdf_report_id:
+            if self.invoice_pdf_report_file:
                 self.invoice_pdf_report_file = False
 
             self.l10n_gr_edi_document_ids.filtered(

@@ -73,8 +73,7 @@ class AccountMoveSend(models.AbstractModel):
 
         # If we need to re-generate the PDF, break the link between the existing attachment and the 'invoice_pdf_report_file' field.
         # The existing PDF will remain linked to the invoice, but no longer as primary attachment.
-        invoices_to_upload.invoice_pdf_report_id.write({'res_field': False})
-        invoices_to_upload.invalidate_recordset(fnames=['invoice_pdf_report_id', 'invoice_pdf_report_file'])
+        invoices_to_upload._detach_binary_fields(['invoice_pdf_report_file'])
 
         with L10nHuEdiConnection(self.env) as connection:
             invoices_to_upload._l10n_hu_edi_upload(connection)

@@ -12,5 +12,7 @@ class MailComposeMessage(models.TransientModel):
         for composer in self:
             if composer.model != 'account.move':
                 return
-            move = composer.env[composer.model].browse(composer._evaluate_res_ids())
-            composer.attachment_ids += move.invoice_pdf_report_id
+            moves = composer.env['account.move'].browse(composer._evaluate_res_ids())
+            composer.attachment_ids += composer.env['ir.attachment'].browse([
+                pdf.attachment_id for pdf in moves.mapped('invoice_pdf_report_file') if pdf
+            ])

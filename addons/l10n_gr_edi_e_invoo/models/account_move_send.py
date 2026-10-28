@@ -26,8 +26,8 @@ class AccountMoveSend(models.AbstractModel):
         pdf_content = pdf_values and pdf_values.get('raw')
 
         # Reuse the attached final PDF so a failed provider upload can be retried without regenerating it
-        if not pdf_content and invoice.invoice_pdf_report_id:
-            pdf_content = invoice.invoice_pdf_report_id.sudo().raw
+        if not pdf_content and invoice.invoice_pdf_report_file:
+            pdf_content = invoice.invoice_pdf_report_file
 
         error_message = self.env._(
             "The invoice was issued, but the electronic invoicing process could not be completed. "
