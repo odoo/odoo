@@ -1,7 +1,7 @@
 .s_floating_blocks {
-    // Use CSS custom properties in order to allow pro-users to performs
-    // advanced visual customizations using inline style directly in the DOM
-    // (eg. XML editor).
+    /* Use CSS custom properties in order to allow pro-users to performs
+       advanced visual customizations using inline style directly in the DOM
+       (eg. XML editor). */
     --floating-boxes-box-ratio-sm: 0.6;
     --floating-boxes-box-ratio-lg: 2;
     --floating-boxes-box-ratio-lg-container-small: 1.6;
@@ -10,15 +10,15 @@
     --floating-boxes-box-padding-x-sm: var(--o-bs-spacer-4);
     --floating-boxes-box-padding-x-lg: var(--o-bs-spacer-5);
 
-    // Minimal number of rows LG can handle
+    /* Minimal number of rows LG can handle */
     --floating-boxes-grid-rows: 8;
 
     .s_floating_blocks_block {
-        // Inherit global values from `s_floating_blocks_wrapper`
+        /* Inherit global values from `s_floating_blocks_wrapper` */
         border-radius: inherit;
         box-shadow: inherit;
 
-        // Default values. Will be tweaked in JS on initialization
+        /* Default values. Will be tweaked in JS on initialization */
         top: 0;
         opacity: 0;
 
@@ -31,13 +31,13 @@
         padding-left: var(--floating-boxes-box-padding-x, var(--floating-boxes-box-padding-x-sm));
         padding-right: var(--floating-boxes-box-padding-x, var(--floating-boxes-box-padding-x-sm));
 
-        // Cards must have all the same height in order to perform the "floating
-        // effect" correctly.
+        /* Cards must have all the same height in order to perform the "floating
+           effect" correctly. */
         aspect-ratio: var(--floating-boxes-box-ratio, var(--floating-boxes-box-ratio-sm));
 
-        // Ensure that cards will never overflow the viewport, regardless by the
-        // aspect-ratio and the viewport size.
-        max-height: calc(100vh - (var(--o-bs-spacer-5) * 2)) !important; // Fallback
+        /* Ensure that cards will never overflow the viewport, regardless by the
+           aspect-ratio and the viewport size. */
+        max-height: calc(100vh - (var(--o-bs-spacer-5) * 2)) !important; /* Fallback */
         max-height: calc(100lvh - (var(--o-bs-spacer-5) * 2)) !important;
     }
 
@@ -56,13 +56,13 @@
 
         .s_floating_blocks_block {
             > .container, > .container-fluid, > .o_container_small {
-                // Inconsistency between card sizes at different breakpoints would
-                // lead to edition usability issues. For example when elements are
-                // positioned at the bottom of a card in XXL they may disappear in
-                // LG.
+                /* Inconsistency between card sizes at different breakpoints would
+                   lead to edition usability issues. For example when elements are
+                   positioned at the bottom of a card in XXL they may disappear in
+                   LG. */
 
-                // Enforce grid to 8 rows, at any res bigger than LG, to avoid the
-                // grid size inconsistencies across breakpoints.
+                /* Enforce grid to 8 rows, at any res bigger than LG, to avoid the
+                   grid size inconsistencies across breakpoints. */
                 height: calc(50px * var(--floating-boxes-grid-rows));
             }
         }
@@ -86,7 +86,7 @@
         }
     }
 
-    // Options
+    /* Options */
     .s_floating_blocks_wrapper.s_floating_blocks_wrapper_shadow {
         box-shadow: 0px 1vh 2vh color-mix(in srgb, var(--o-bs-black) 17.5%, transparent);
     }
