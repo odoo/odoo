@@ -103,6 +103,9 @@ test("update presence when user comes back from away", async () => {
     await expect.waitForSteps([AWAY_DELAY]);
     localStorage.setItem("presence.lastPresence", Date.now());
     await expect.waitForSteps([0]);
+    // Already sent as active: further presence should not be sent again.
+    localStorage.setItem("presence.lastPresence", Date.now());
+    await expect.waitForSteps([]);
     await advanceTime(WebsocketWorker.OUTGOING_BATCH_DELAY);
     await subscribed;
 });
