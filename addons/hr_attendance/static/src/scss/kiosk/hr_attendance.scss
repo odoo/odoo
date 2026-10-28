@@ -69,17 +69,27 @@
 
 .o_hr_attendance_kiosk_card {
     min-width: 75%;
+    transform: scale(0.80);
+    transform-origin: center center;
     @include media-breakpoint-up(md) {
         min-width: 50%;
+        transform: scale(1);
     }
     @include media-breakpoint-up(xl) {
         min-width: 35%;
+        transform: scale(1);
     }
 }
 
 .o_hr_attendance_kiosk_mode {
     .o_pager_counter {
         min-width: max-content;
+    }
+}
+
+@include media-breakpoint-down(md) {
+    .o_hr_kiosk_mode_mobile {
+        max-height: calc(100% - 150px);
     }
 }
 
