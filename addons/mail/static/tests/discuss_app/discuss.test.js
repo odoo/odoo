@@ -1,6 +1,7 @@
 import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
 
 import { OutOfFocusService } from "@mail/core/common/out_of_focus_service";
+import { SoundEffectsPlugin } from "@mail/core/common/sound_effects_plugin";
 import { DiscussApp } from "@mail/core/public_web/discuss_app/discuss_app_model";
 import {
     actionPanel,
@@ -43,7 +44,6 @@ import {
     contains,
     getService,
     makeServerError,
-    mockService,
     onRpc,
     serverState,
     withUser,
@@ -1644,7 +1644,7 @@ test("receive new message plays sound", async () => {
         ],
         channel_type: "chat",
     });
-    mockService("mail.sound_effects", {
+    patch(SoundEffectsPlugin.prototype, {
         play(soundEffectName, ...args) {
             expect.step(`sound:${soundEffectName}`);
             return super.play(soundEffectName, ...args);
@@ -1679,7 +1679,7 @@ test("message sound on receiving new message based on user preferences", async (
         ],
         channel_type: "chat",
     });
-    mockService("mail.sound_effects", {
+    patch(SoundEffectsPlugin.prototype, {
         play(soundEffectName, ...args) {
             expect.step(`sound:${soundEffectName}`);
             return super.play(soundEffectName, ...args);

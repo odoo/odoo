@@ -38,9 +38,8 @@ const StorePatch = {
             () => [this.ringingChannels.length > 0],
             function onChangeRingingChannels(hasRingingChannels) {
                 if (hasRingingChannels) {
-                    const soundEffects = this.env.services["mail.sound_effects"];
-                    soundEffects.play("call-invitation", { loop: true });
-                    return () => soundEffects.stop("call-invitation");
+                    this.soundEffects.play("call-invitation", { loop: true });
+                    return () => this.soundEffects.stop("call-invitation");
                 }
             },
             { immediate: true }

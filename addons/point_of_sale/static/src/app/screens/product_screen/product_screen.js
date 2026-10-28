@@ -17,6 +17,7 @@ import {
     signal,
     usePlugin,
 } from "@odoo/owl";
+import { SoundEffectsPlugin } from "@mail/core/common/sound_effects_plugin";
 import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
 import { CategorySelector } from "@point_of_sale/app/components/category_selector/category_selector";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
@@ -108,7 +109,7 @@ export class ProductScreen extends Component {
         });
 
         this.barcodeReader = useService("barcode_reader");
-        this.sound = useService("mail.sound_effects");
+        this.soundEffects = usePlugin(SoundEffectsPlugin);
 
         useBarcodeReader({
             product: this._barcodeProductAction.bind(this),
@@ -360,11 +361,11 @@ export class ProductScreen extends Component {
     async _barcodeProductAction(code) {
         const product = await this._getProductByBarcode(code);
         if (!product) {
-            this.sound.play("scan-error");
+            this.soundEffects.play("scan-error");
             this.barcodeReader.showNotFoundNotification(code);
             return;
         }
-        this.sound.play("beep");
+        this.soundEffects.play("beep");
 
         if (!(await this.pos.canAddProductToCurrentOrder(product.product_tmpl_id))) {
             return;
@@ -394,13 +395,13 @@ export class ProductScreen extends Component {
     async _barcodePartnerAction(code) {
         const partner = await this._getPartnerByBarcode(code);
         if (partner) {
-            this.sound.play("beep");
+            this.soundEffects.play("beep");
             if (this.currentOrder.getPartner() !== partner) {
                 this.pos.setPartnerToCurrentOrder(partner);
             }
             return;
         }
-        this.sound.play("scan-error");
+        this.soundEffects.play("scan-error");
         this.barcodeReader.showNotFoundNotification(code);
     }
     _barcodeDiscountAction(code) {
@@ -421,13 +422,13 @@ export class ProductScreen extends Component {
         const product = await this._getProductByBarcode(productBarcode);
 
         if (!product) {
-            this.sound.play("scan-error");
+            this.soundEffects.play("scan-error");
             this.barcodeReader.showNotFoundNotification(
                 parsed_results.find((element) => element.type === "product")
             );
             return;
         }
-        this.sound.play("beep");
+        this.soundEffects.play("beep");
 
         if (!(await this.pos.canAddProductToCurrentOrder(product.product_tmpl_id))) {
             return;

@@ -1,3 +1,4 @@
+import { SoundEffectsPlugin } from "@mail/core/common/sound_effects_plugin";
 import { Store as BaseStore, fields, makeStore } from "@mail/model/export";
 import { formatLocalDateTime, resolveTimeZoneName } from "@mail/utils/common/dates";
 import { attClassObjectToString, generateEmojisOnHtml } from "@mail/utils/common/format";
@@ -188,6 +189,8 @@ export class Store extends BaseStore {
     notification;
     /** @type {ORM} */
     orm;
+    /** @type {SoundEffectsPlugin} */
+    soundEffects;
 
     /** @param {Readonly<Record<string, any>>} [ancestors] @see useAncestors */
     discussDropdownMenuClass(ancestors) {
@@ -895,6 +898,7 @@ export class StorePlugin extends Plugin {
     ui = usePlugin(UIPlugin);
     notification = usePlugin(NotificationPlugin);
     orm = usePlugin(ORM);
+    soundEffects = usePlugin(SoundEffectsPlugin);
 
     setup() {
         /** @type {import("models").Store} */
@@ -902,6 +906,7 @@ export class StorePlugin extends Plugin {
         this.store.ui = this.ui;
         this.store.notification = this.notification;
         this.store.orm = this.orm;
+        this.store.soundEffects = this.soundEffects;
         this.store.insert(session.storeData);
         /**
          * Add a default for `self` because in livechat there could be no user and no guest yet

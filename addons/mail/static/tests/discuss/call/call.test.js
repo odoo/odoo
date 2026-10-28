@@ -27,6 +27,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { Store } from "@mail/../tests/mock_server/store";
+import { SoundEffectsPlugin } from "@mail/core/common/sound_effects_plugin";
 import { CALL_GRID_LAYOUT } from "@mail/discuss/call/common/call_layout";
 import {
     CROSS_TAB_CLIENT_MESSAGE,
@@ -596,7 +597,7 @@ test("starting a plain call from the Discuss app stays inline (no meeting view)"
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
-    mockService("mail.sound_effects", {
+    patch(SoundEffectsPlugin.prototype, {
         play(name) {
             expect.step(`play - ${name}`);
         },
@@ -641,7 +642,7 @@ test("should display invitations", async () => {
         channel_member_id: memberId,
         channel_id: channelId,
     });
-    mockService("mail.sound_effects", {
+    patch(SoundEffectsPlugin.prototype, {
         play(name) {
             expect.step(`play - ${name}`);
         },
@@ -873,12 +874,12 @@ test("join/leave sounds are only played on main tab", async () => {
     listenStoreFetch("/mail/messaging_menu/discuss.channel/load_more");
     const env1 = await start({ asTab: true });
     const env2 = await start({ asTab: true, waitUntilSubscribe: false });
-    patch(env1.services["mail.sound_effects"], {
+    patch(env1.services["mail.store"].soundEffects, {
         play(name) {
             expect.step(`tab1 - play - ${name}`);
         },
     });
-    patch(env2.services["mail.sound_effects"], {
+    patch(env2.services["mail.store"].soundEffects, {
         play(name) {
             expect.step(`tab2 - play - ${name}`);
         },

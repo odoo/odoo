@@ -1,3 +1,4 @@
+import { SoundEffectsPlugin } from "@mail/core/common/sound_effects_plugin";
 import { proxy, usePlugin } from "@odoo/owl";
 import { Mutex } from "@web/core/utils/concurrency";
 import { registry } from "@web/core/registry";
@@ -94,7 +95,6 @@ export class PosStore extends WithLazyGetterTrap {
         "dialog",
         "notification",
         "action",
-        "mail.sound_effects",
     ];
 
     constructor() {
@@ -124,7 +124,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.dialog = dialog;
         this.bus = bus_service;
         this.action = action;
-        this.sound = env.services["mail.sound_effects"];
+        this.soundEffects = usePlugin(SoundEffectsPlugin);
         this.notification = notification;
         this.pushOrderMutex = new Mutex();
         this.router.popStateCallback = this.handleUrlParams.bind(this);
