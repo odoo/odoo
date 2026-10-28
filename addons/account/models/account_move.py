@@ -6998,6 +6998,7 @@ class AccountMove(models.Model):
             raise UserError(_("Only posted/cancelled journal entries can be reset to draft."))
         if any(move._is_draft_disabled() for move in self):
             raise UserError(_("You can't reset to draft those journal entries. You need to request a cancellation instead."))
+        self.invalidate_recordset()  # invalidate/recompute to avoid caching issues (e.g. test_credit_warning_excludes_reconciled_bank_statement_line)
 
         self._check_draftable()
         # We delete next auto_post move if draft
