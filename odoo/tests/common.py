@@ -1656,18 +1656,28 @@ else:
 
 
 class ChromeBrowser:
-    """ Helper object to control a Chrome headless process. """
+    """ Helper object to control a Chrome headless process.
+
+    If a ``parent`` browser is given, controls a new tab of its process instead.
+    A ``name`` tells apart the logs and failures of browsers running together.
+    """
     remote_debugging_port = 0  # 9222, change it in a non-git-tracked file
 
-    def __init__(self, test_case: HttpCase, success_signal: str = DEFAULT_SUCCESS_SIGNAL, headless: bool = True, debug: bool = False):
+    def __init__(self, test_case: HttpCase, success_signal: str = DEFAULT_SUCCESS_SIGNAL, headless: bool = True, debug: bool = False, parent: ChromeBrowser | None = None, name: str = ''):
         self.cleanup = ExitStack()
         self.throttling_factor = 1
-        self._logger = test_case._logger
+        self.name = name
+        self.parent = parent
+        self._logger = test_case._logger.getChild(name) if name else test_case._logger
         self.test_case = test_case
         self.success_signal = success_signal
         if websocket is None:
             self._logger.warning("websocket-client module is not installed")
             raise unittest.SkipTest("websocket-client module is not installed")
+        if parent:
+            self._init_tab(parent)
+            self._init_page()
+            return
         self.user_data_dir = self.cleanup.enter_context(
             tempfile.TemporaryDirectory(
                 suffix='_chrome_odoo',
@@ -1711,7 +1721,9 @@ class ChromeBrowser:
             self.screencaster = self.cleanup.enter_context(Screencaster(self, scs))
         else:
             self.screencaster = self.cleanup.enter_context(NoScreencast())
+        self._init_page()
 
+    def _init_page(self):
         self._request_id = itertools.count()
         self._result = Future()
         self.error_checker = None
@@ -1749,9 +1761,22 @@ class ChromeBrowser:
             'height': None,
             'deviceScaleFactor': 1,
         }
-        emulated_device['width'], emulated_device['height'] = [int(size) for size in test_case.browser_size.split(",")]
+        emulated_device['width'], emulated_device['height'] = [int(size) for size in self.test_case.browser_size.split(",")]
         self._websocket_request('Emulation.setDeviceMetricsOverride', params=emulated_device)
         self.cleanup.callback(self._ws_winddown)
+
+    def _init_tab(self, parent: ChromeBrowser):
+        self.user_data_dir = parent.user_data_dir
+        self.chrome, self.devtools_port = parent.chrome, parent.devtools_port
+        # Targets opened without opener get their own renderer process, and
+        # each window keeps its tab in the foreground (background tabs barely
+        # render animation frames)
+        self.target_id = parent._websocket_request('Target.createTarget', params={
+            'url': 'about:blank',
+            'newWindow': True,
+        })['targetId']
+        self.ws = self.cleanup.enter_context(self._open_websocket(self.target_id))
+        self.screencaster = NoScreencast()
 
     def _ws_winddown(self):
         try:
@@ -1766,8 +1791,14 @@ class ChromeBrowser:
             wait(self._responses.values(), 10)
             self._result.cancel()
 
-            self._logger.info("Closing chrome headless with pid %s", self.chrome.pid)
-            self._websocket_request('Browser.close')
+            if self.parent:
+                self._logger.info("Closing chrome headless tab")
+                self.parent._websocket_request(
+                    'Target.closeTarget', params={'targetId': self.target_id},
+                )
+            else:
+                self._logger.info("Closing chrome headless with pid %s", self.chrome.pid)
+                self._websocket_request('Browser.close')
         except ChromeBrowserException as e:
             _logger.runbot("WS error during browser shutdown: %s", e)
             self.chrome_log_level = logging.RUNBOT
@@ -1998,7 +2029,7 @@ class ChromeBrowser:
         raise unittest.SkipTest("Error during Chrome headless connection")
 
     @contextlib.contextmanager
-    def _open_websocket(self):
+    def _open_websocket(self, target_id=None):
         version = self._json_command('version')
         self._logger.info('Browser version: %s', version['Browser'])
 
@@ -2008,7 +2039,7 @@ class ChromeBrowser:
                 target['webSocketDebuggerUrl']
                 for target in self._json_command('')
                 if target['type'] == 'page'
-                if target['url'] == 'about:blank'
+                if (target['id'] == target_id if target_id else target['url'] == 'about:blank')
             ), None)
             if ws_url:
                 break
@@ -2951,7 +2982,7 @@ class HttpCase(TransactionCase):
                 ],
             }
 
-    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal=DEFAULT_SUCCESS_SIGNAL, debug=False, cpu_throttling=None, **kw):
+    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal=DEFAULT_SUCCESS_SIGNAL, debug=False, cpu_throttling=None, tabs=1, **kw):
         """ Test JavaScript code running in the browser.
 
         To signal success test do: `console.log()` with the expected `success_signal`. Default is "test successful"
@@ -2972,6 +3003,10 @@ class HttpCase(TransactionCase):
         :param bool debug: automatically open a fullscreen Chrome window with opened devtools and a debugger breakpoint set at the start of the tour.
             The tour is ran with the `debug=assets` query parameter. When an error is thrown, the debugger stops on the exception.
         :param int cpu_throttling: CPU throttling rate as a slowdown factor (1 is no throttle, 2 is 2x slowdown, etc)
+        :param int tabs: amount of browser tabs concurrently loading `url_path`
+            and running `code`, each in its own process. The test succeeds once
+            all of them have sent the `success_signal`, and fails once all of
+            them are done if any of them failed.
         """
         if not self.env.registry.loaded:
             self._logger.warning('HttpCase test should be in post_install only')
@@ -2988,7 +3023,7 @@ class HttpCase(TransactionCase):
         if watch:
             self._logger.warning('watch mode is only suitable for local testing')
 
-        browser = ChromeBrowser(self, headless=not watch, success_signal=success_signal, debug=debug)
+        browser = ChromeBrowser(self, headless=not watch, success_signal=success_signal, debug=debug, name='tab0' if tabs > 1 else '')
         with self.allow_requests(browser=browser), contextlib.ExitStack() as atexit:
             # Flush and clear the current transaction.  This is useful in case
             # we make requests to the server, as these requests are made with
@@ -2997,6 +3032,13 @@ class HttpCase(TransactionCase):
             atexit.enter_context(flushing_cursor(self.cr))
             atexit.callback(self._wait_remaining_requests)
             atexit.enter_context(browser.cleanup)
+            all_tabs = [browser]
+            for index in range(1, tabs):
+                tab = ChromeBrowser(
+                    self, success_signal=success_signal, parent=browser, name=f'tab{index}',
+                )
+                atexit.enter_context(tab.cleanup)
+                all_tabs.append(tab)
             if "bus.bus" in self.env.registry:
                 from odoo.addons.base.models.ir_http import IrHttp  # noqa: PLC0415
                 from odoo.addons.bus.websocket import CloseCode, WebsocketConnectionHandler, _kick_all  # noqa: PLC0415
@@ -3039,21 +3081,61 @@ class HttpCase(TransactionCase):
                     logging.INFO if cpu_throttling_os else logging.WARNING,
                     'CPU throttling mode is only suitable for local testing - '
                     'Throttling browser CPU to %sx slowdown and extending timeout to %s sec', cpu_throttling, timeout)
-                browser.throttle(cpu_throttling)
+                for tab in all_tabs:
+                    tab.throttle(cpu_throttling)
 
-            browser.navigate_to(url, wait_stop=not bool(ready))
+            for tab in all_tabs:
+                tab.navigate_to(url, wait_stop=not bool(ready))
 
             # Needed because tests like test01.js (qunit tests) are passing a ready
             # code = ""
-            self.assertTrue(browser._wait_ready(ready), 'The ready "%s" code was always falsy' % ready)
+            for tab in all_tabs:
+                self.assertTrue(
+                    tab._wait_ready(ready), 'The ready "%s" code was always falsy' % ready,
+                )
 
             error = None
             try:
-                browser._wait_code_ok(code, timeout, error_checker=error_checker)
+                if len(all_tabs) == 1:
+                    browser._wait_code_ok(code, timeout, error_checker=error_checker)
+                else:
+                    self._wait_tabs_code_ok(all_tabs, code, timeout, error_checker)
             except ChromeBrowserException as chrome_browser_exception:
                 error = chrome_browser_exception
             if error:  # dont keep initial traceback, keep that outside of except
                 self.fail(str(error))
+
+    def _wait_tabs_code_ok(self, tabs, code, timeout, error_checker):
+        """ Runs ``_wait_code_ok`` concurrently in all the given tabs, and waits
+        for all of them to be done, then fails with the errors of every failed
+        tab, each prefixed by its name.
+
+        A failed tab does not stop the other ones: they may share their work,
+        and stopping them would leave part of it unchecked.
+        """
+        self._logger.info('Running in %d tabs', len(tabs))
+        with concurrent.futures.ThreadPoolExecutor(
+            len(tabs), thread_name_prefix='browser_tab',
+        ) as executor:
+            futures = [
+                executor.submit(tab._wait_code_ok, code, timeout, error_checker=error_checker)
+                for tab in tabs
+            ]
+        errors = [
+            (tab, future.exception())
+            for tab, future in zip(tabs, futures)
+            if future.exception()
+        ]
+        if not errors:
+            return
+        # the shared Chrome log is saved by the first tab, even if another one failed
+        tabs[0].chrome_log_level = logging.RUNBOT
+        for _tab, error in errors:
+            if not isinstance(error, ChromeBrowserException):
+                raise error
+        raise ChromeBrowserException('\n'.join(
+            f'[{tab.name}] {error}' for tab, error in errors
+        )) from errors[0][1]
 
     def start_tour(self, url_path, tour_name, step_delay=None, **kwargs):
         """Wrapper for `browser_js` to start the given `tour_name` with the
