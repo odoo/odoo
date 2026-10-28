@@ -642,6 +642,20 @@ test(`button box rendering on big screen`, async () => {
     }
 });
 
+test.tags("desktop");
+test(`button box is not pushed out by a long record name`, async () => {
+    Partner._records[0].name = "A very long record name ".repeat(20);
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><sheet><div name="button_box"><button class="oe_stat_button" id="btn1">My Button</button></div></sheet></form>`,
+        resId: 1,
+    });
+    const buttonBoxRect = queryFirst(`.o-form-buttonbox`).getBoundingClientRect();
+    const controlPanelRect = queryFirst(`.o_control_panel_main`).getBoundingClientRect();
+    expect(buttonBoxRect.right).toBeLessThan(controlPanelRect.right);
+});
+
 test(`button box rendering invisible`, async () => {
     await mountView({
         resModel: "partner",
