@@ -546,7 +546,19 @@ export class DeletePlugin extends Plugin {
             // @todo: mind Icons?
             // Probably need to get deepest position's element
             // @todo: update fillEmpty
+<<<<<<< 70925d126f448861669c1d8a7554387cf688c731
             if (!isBlock(node) && !isTangible(node) && !isZWS(node) && !isZwnbsp(node)) {
+||||||| 0a828b7130df3d78c10f8d31fd8e6e91c663e6df
+            // @todo: check if nodes does not already have a ZWS/ZWNBSP
+            if (!isBlock(node) && !isTangible(node)) {
+=======
+            // @todo: check if nodes does not already have a ZWS/ZWNBSP
+            if (
+                !isBlock(node) &&
+                !isTangible(node) &&
+                !(node.textContent && isWhitespace(node.textContent))
+            ) {
+>>>>>>> af2242ddebaceba46fbc3143d1d07e768ea10499
                 node.appendChild(this.document.createTextNode("\u200B"));
                 node.setAttribute("data-oe-zws-empty-inline", "");
             }
