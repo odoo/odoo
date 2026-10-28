@@ -58,7 +58,7 @@
             <div t-if="isMany2X" class="o-hb-select-wrapper">
                 <t t-set="excludedRecords" t-value="this.getExcludedRecords()"></t>
                 <div class="mt-1 ms-auto">
-                    <div class="d-flex align-items-center gap-2">
+                    <div class="d-flex align-items-center gap-1">
                         <div title="Add a record to the list">
                             <SelectMenu
                                 choices="excludedRecords.map((record) => ({ value: record, label: record.display_name  }))"
