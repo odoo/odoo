@@ -745,7 +745,7 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
             attachments_vals=[self.gif1_vals, self.gif2_vals],
             expected_invoices={
                 1: {
-                    'gif1.gif': {'on_message': True},
+                    'gif1.gif': {'on_invoice': True, 'on_message': True},
                     'gif2.gif': {'on_message': True},
                 },
             },
