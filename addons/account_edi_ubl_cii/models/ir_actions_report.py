@@ -25,6 +25,6 @@ class IrActionsReport(models.Model):
             if invoice.is_sale_document() and invoice.state == 'posted':
                 pdf_stream = collected_streams[invoice.id]['stream']
                 invoice_data = {'pdf_attachment_values': {'raw': pdf_stream.getvalue()}}
-                self.env['account.move.send'].with_context(custom_template_facturx=True)._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
+                self.env['account.move.send']._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
                 collected_streams[invoice.id]['stream'] = io.BytesIO(invoice_data['pdf_attachment_values']['raw'])
         return collected_streams

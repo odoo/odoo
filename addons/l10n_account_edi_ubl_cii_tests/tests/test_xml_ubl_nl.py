@@ -123,7 +123,7 @@ class TestUBLNL(TestUBLCommon):
             ],
         )
         attachment = self._assert_invoice_attachment(
-            invoice.ubl_cii_xml_id,
+            invoice.ubl_cii_xml_file,
             xpaths=f'''
                 <xpath expr="./*[local-name()='ID']" position="replace">
                     <cbc:ID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:ID>
@@ -142,12 +142,12 @@ class TestUBLNL(TestUBLCommon):
                 </xpath>
                 <xpath expr=".//*[local-name()='AdditionalDocumentReference']/*[local-name()='Attachment']/*[local-name()='EmbeddedDocumentBinaryObject']" position="attributes">
                     <attribute name="mimeCode">application/pdf</attribute>
-                    <attribute name="filename">{invoice.invoice_pdf_report_id.name}</attribute>
+                    <attribute name="filename">{invoice.invoice_pdf_report_file.filename}</attribute>
                 </xpath>
             ''',
             expected_file_path='from_odoo/nlcius_out_invoice.xml',
         )
-        self.assertEqual(attachment.name[-10:], "nlcius.xml")
+        self.assertEqual(attachment.filename[-10:], "nlcius.xml")
         self._assert_imported_invoice_from_etree(invoice, attachment)
 
     def test_export_import_refund(self):
@@ -181,7 +181,7 @@ class TestUBLNL(TestUBLCommon):
             ],
         )
         attachment = self._assert_invoice_attachment(
-            refund.ubl_cii_xml_id,
+            refund.ubl_cii_xml_file,
             xpaths=f'''
                 <xpath expr="./*[local-name()='ID']" position="replace">
                     <cbc:ID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:ID>
@@ -200,12 +200,12 @@ class TestUBLNL(TestUBLCommon):
                 </xpath>
                 <xpath expr=".//*[local-name()='AdditionalDocumentReference']/*[local-name()='Attachment']/*[local-name()='EmbeddedDocumentBinaryObject']" position="attributes">
                     <attribute name="mimeCode">application/pdf</attribute>
-                    <attribute name="filename">{refund.invoice_pdf_report_id.name}</attribute>
+                    <attribute name="filename">{refund.invoice_pdf_report_file.filename}</attribute>
                 </xpath>
             ''',
             expected_file_path='from_odoo/nlcius_out_refund.xml',
         )
-        self.assertEqual(attachment.name[-10:], "nlcius.xml")
+        self.assertEqual(attachment.filename[-10:], "nlcius.xml")
         self._assert_imported_invoice_from_etree(refund, attachment)
 
     def test_export_fixed_tax(self):
@@ -223,7 +223,7 @@ class TestUBLNL(TestUBLCommon):
                 'tax_ids': [Command.set([self.tax_10_fixed.id, self.tax_7_purchase.id])]
             }]
         )
-        amount = etree.fromstring(invoice.ubl_cii_xml_id.raw.content).find('.//{*}LegalMonetaryTotal/{*}LineExtensionAmount').text
+        amount = etree.fromstring(invoice.ubl_cii_xml_file.content).find('.//{*}LegalMonetaryTotal/{*}LineExtensionAmount').text
         self.assertEqual(amount, '60.00')
 
     ####################################################

@@ -224,9 +224,9 @@ class TestUBLROCommon(TestUBLCommon):
         )
 
     def get_attachment(self, move):
-        self.assertTrue(move.ubl_cii_xml_id)
-        self.assertEqual(move.ubl_cii_xml_id.name[-11:], "cius_ro.xml")
-        return move.ubl_cii_xml_id
+        self.assertTrue(move.ubl_cii_xml_file)
+        self.assertEqual(move.ubl_cii_xml_file.filename[-11:], "cius_ro.xml")
+        return move.ubl_cii_xml_file
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')

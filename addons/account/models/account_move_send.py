@@ -253,7 +253,7 @@ class AccountMoveSend(models.AbstractModel):
         * mimetype:         str: The mimetype of the attachment.
         * placeholder       bool: Should be true to prevent download / deletion.
         """
-        if move.invoice_pdf_report_id:
+        if move.invoice_pdf_report_file:
             return []
         filename = move._get_invoice_report_filename(report=pdf_report)
         return [{
@@ -298,7 +298,10 @@ class AccountMoveSend(models.AbstractModel):
 
     @api.model
     def _get_invoice_extra_attachments(self, move):
-        return move.invoice_pdf_report_id
+        """ Returns the attachments of the files sent along with the move (see `_get_invoice_files`). """
+        return self.env['ir.attachment'].browse([
+            invoice_file['file'].attachment_id for invoice_file in move._get_invoice_files() if invoice_file['send']
+        ])
 
     @api.model
     def _get_invoice_extra_attachments_data(self, move):
@@ -488,7 +491,6 @@ class AccountMoveSend(models.AbstractModel):
         for invoice, invoice_data in invoices_data.items():
             if attachment := res_id_to_attachment.get(invoice.id):
                 invoice.message_main_attachment_id = attachment
-                invoice.invalidate_recordset(fnames=['invoice_pdf_report_id', 'invoice_pdf_report_file'])
                 invoice.is_move_sent = True
 
     @api.model
@@ -756,7 +758,7 @@ class AccountMoveSend(models.AbstractModel):
         batches = []
         pdf_to_generate = {}
         for invoice, invoice_data in invoices_data_pdf.items():
-            if not invoice_data.get('error') and not invoice.invoice_pdf_report_id:  # we don't regenerate pdf if it already exists
+            if not invoice_data.get('error') and not invoice.invoice_pdf_report_file:  # we don't regenerate pdf if it already exists
                 pdf_to_generate[invoice] = invoice_data
 
                 if (len(pdf_to_generate) > int(batch_size)):
@@ -770,7 +772,7 @@ class AccountMoveSend(models.AbstractModel):
             self._prepare_invoice_pdf_report(batch)
 
         for invoice, invoice_data in invoices_data_pdf.items():
-            if not invoice_data.get('error') and not invoice.invoice_pdf_report_id:
+            if not invoice_data.get('error') and not invoice.invoice_pdf_report_file:
                 self._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
 
         # Cleanup the error if we don't want to block the regular pdf generation.
@@ -806,7 +808,7 @@ class AccountMoveSend(models.AbstractModel):
         :param invoices_data:   The collected data for invoices so far.
         """
         for invoice, invoice_data in invoices_data.items():
-            if not invoice.invoice_pdf_report_id and invoice_data.get('error'):
+            if not invoice.invoice_pdf_report_file and invoice_data.get('error'):
                 invoice_data.pop('error')
                 self._prepare_invoice_proforma_pdf_report(invoice, invoice_data)
                 self._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)

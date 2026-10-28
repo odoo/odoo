@@ -78,7 +78,7 @@ class TestROEdiCommon(AccountTestInvoicingCommon):
             return_value=mock_return_value,
         ):
             invoice._l10n_ro_edi_send_invoice(
-                xml_data=invoice.ubl_cii_xml_id.raw if invoice.ubl_cii_xml_id else b"<xml>test</xml>",
+                xml_data=invoice.ubl_cii_xml_file if invoice.ubl_cii_xml_file else b"<xml>test</xml>",
             )
 
     def synchronize_with_mock(self, mock_return_value):

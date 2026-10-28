@@ -7,7 +7,7 @@ class AccountMoveSend(models.AbstractModel):
     @api.model
     def _is_ro_edi_applicable(self, move):
         return all([
-            move._need_ubl_cii_xml('ciusro') or move.ubl_cii_xml_id,
+            move._need_ubl_cii_xml('ciusro') or move.ubl_cii_xml_file,
             move.country_code == 'RO',
             not move.l10n_ro_edi_state or move.l10n_ro_edi_state == 'invoice_refused',
         ])
@@ -55,8 +55,8 @@ class AccountMoveSend(models.AbstractModel):
 
                 if invoice_data.get('ubl_cii_xml_attachment_values'):
                     xml_data = invoice_data['ubl_cii_xml_attachment_values']['raw']
-                elif invoice.ubl_cii_xml_id:
-                    xml_data = invoice.ubl_cii_xml_id.raw
+                elif invoice.ubl_cii_xml_file:
+                    xml_data = invoice.ubl_cii_xml_file
                 else:
                     invoice_data['error'] = {
                         'error_title': _("The CIUS-RO E-Factura could not be found"),

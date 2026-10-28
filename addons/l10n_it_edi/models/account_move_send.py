@@ -63,14 +63,6 @@ class AccountMoveSend(models.AbstractModel):
     # SENDING METHODS
     # -------------------------------------------------------------------------
 
-    def _get_invoice_extra_attachments(self, invoice):
-        # EXTENDS 'account'
-        return super()._get_invoice_extra_attachments(invoice) + self.env['ir.attachment'].search([
-            ('res_model', '=', 'account.move'),
-            ('res_field', '=', 'l10n_it_edi_attachment_file'),
-            ('res_id', 'in', invoice.ids),
-        ])
-
     def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
         # EXTENDS 'account'
         super()._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
