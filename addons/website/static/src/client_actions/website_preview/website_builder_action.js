@@ -605,6 +605,7 @@ export class WebsiteBuilderClientAction extends Component {
 
     async reloadEditor(url, reloadContext) {
         this.reloadContext = reloadContext || null;
+        this.newInstalledModule = undefined;
         await this.reloadIframe(this.state.isEditing, url);
         // Disable the current instance of the builder and trigger a new
         // instance of it with `t-key`
@@ -614,6 +615,8 @@ export class WebsiteBuilderClientAction extends Component {
 
     async closeEditor(reloadIframe = true) {
         this.reloadContext = null;
+        // Don't reopen the snippet dialog on the next builder mount.
+        this.newInstalledModule = undefined;
         const isEditing = false;
         this.state.isEditing = isEditing;
         this.addSystrayItems();
