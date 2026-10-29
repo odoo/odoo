@@ -100,6 +100,48 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     describe.tags("secure");
+    describe("locks", () => {
+        test("requests are granted in order", async () => {
+            const { promise, resolve } = Promise.withResolvers();
+            const first = navigator.locks.request("hoot", async (lock) => {
+                expect.step(`first:${lock.name}`);
+                await promise;
+                return "first";
+            });
+            const second = navigator.locks.request("hoot", {}, () => expect.step("second"));
+
+            // Callbacks are called asynchronously
+            expect.verifySteps([]);
+
+            await microTick();
+
+            expect.verifySteps(["first:hoot"]);
+
+            resolve();
+
+            await expect(first).resolves.toBe("first");
+            await second;
+
+            expect.verifySteps(["second"]);
+        });
+
+        // ! WARNING: the following 2 tests need to be run sequentially to work, as they
+        // ! attempt to test the in-between-tests locks cleanup.
+        test("locks are released between tests: setup", async () => {
+            navigator.locks.request("hoot", () => new Promise(() => {}));
+            navigator.locks.request("hoot", () => expect.step("pending"));
+            await microTick();
+
+            expect.verifySteps([]);
+        });
+        test("locks are released between tests: check", async () => {
+            await expect(navigator.locks.request("hoot", () => "free")).resolves.toBe("free");
+
+            expect.verifySteps([]);
+        });
+    });
+
+    describe.tags("secure");
     describe("mediaDevices", () => {
         /** @type {MediaDevices} */
         let mediaDevices;
