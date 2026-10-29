@@ -935,7 +935,7 @@ class Users(models.Model):
                     user = user.with_user(user)
                     auth_info = user._check_credentials(credential, user_agent_env)
                     tz = request.cookies.get('tz') if request else None
-                    if tz in pytz.all_timezones and (not user.tz or not user.login_date):
+                    if tz in pytz.all_timezones and tz != user.tz and (not user.tz or not user.login_date):
                         # first login or missing tz -> set tz to browser tz
                         user.tz = tz
                     user._update_last_login()
@@ -2443,6 +2443,7 @@ class APIKeys(models.Model):
         RETURNING id
         """.format(table=self._table),
         [name, self.env.user.id, scope, expiration_date or None, KEY_CRYPT_CONTEXT.hash(k), k[:INDEX_SIZE]])
+        self.env.user.invalidate_recordset(['api_key_ids'])
 
         ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
         _logger.info("%s generated: scope: <%s> for '%s' (#%s) from %s",
