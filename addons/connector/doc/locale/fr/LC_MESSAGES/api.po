@@ -1,0 +1,2946 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Connector\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-04-15 22:28+0300\n"
+"PO-Revision-Date: 2015-04-17 13:54+0200\n"
+"Last-Translator: Christophe Combelles <ccomb@free.fr>\n"
+"Language-Team: fr <LL@li.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#: ../../api/api_backend.rst:2
+msgid "Backend"
+msgstr "Backend"
+
+#: ../../api/api_backend.rst:4
+msgid ""
+"A backend for a version (for instance Magento 1.7), is represented by an "
+"instance of the :py:class:`~connector.backend.Backend` class."
+msgstr ""
+"Le backend pour une version (par exemple Magento 1.7) est représenté par une"
+" instance de la classe :py:class:`~connector.backend.Backend`."
+
+#: ../../api/api_backend.rst:7
+msgid ""
+"Each connector will also create a ``connector.backend`` which allows the "
+"users to register their backends. For instance, the Magento connector has "
+"``magento.backend`` (``_inherit`` "
+":py:class:`connector.models.backend_model.connector_backend`).  This model contains"
+" a ``version`` field which should have the same list of versions (with the "
+"exact same name) than the instances of "
+":py:class:`~connector.backend.Backend`."
+msgstr ""
+"Chaque connecteur va aussi créer un ``connector.backend`` qui permet aux "
+"utilisateurs d'inscrire leurs backends. Par exemple le connecteur Magento a "
+"un ``magento.backend`` (``_inherit`` "
+":py:class:`connector.models.backend_model.connector_backend`).  Ce modèle contient "
+"un champ ``version`` qui doit avoir la même lists de versions (avec "
+"exactement le même nom) que les instances de "
+":py:class:`~connector.backend.Backend`."
+
+#: ../../api/api_backend.rst:14
+msgid "Example with the Magento Connector::"
+msgstr "Exemple avec le connecteur Magento ::"
+
+#: ../../api/api_backend.rst:54
+msgid ""
+"In the code above, '1.7' is the matching key between the "
+":py:class:`~connector.backend.Backend` instance (``magento1700``) and the "
+"``magento_backend`` record."
+msgstr ""
+"Dans le code ci-dessus, '1.7' est la clé de correspondance entre l'instance "
+"de :py:class:`~connector.backend.Backend` (``magento1700``) et "
+"l'enregistrement ``magento_backend``."
+
+#: ../../../backend.pydocstring of connector.backend.Backend:1
+#: ../../../connector.pydocstring of
+#: connector.connector.ConnectorEnvironment:1 ../../../connector.pydocstring
+#: of connector.connector.ConnectorUnit:1 ../../../event.pydocstring of
+#: connector.event.Event:1 ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapRecord:1 ../../../queue/job.pydocstring of
+#: connector.queue.job.Job:1 ../../../queue/job.pydocstring of
+#: connector.queue.job.JobStorage:1 ../../../queue/queue.pydocstring of
+#: connector.queue.queue.JobsQueue:1 ../../../session.pydocstring of
+#: connector.session.ConnectorSession:1 ../../../session.pydocstring of
+#: connector.session.ConnectorSessionHandler:1
+msgid "Bases: :class:`object`"
+msgstr "Bases : :class:`object`"
+
+#: ../../../backend.pydocstring of connector.backend.Backend:1
+msgid ""
+"A backend represents a system to interact with, like Magento, Prestashop, "
+"Redmine, ..."
+msgstr ""
+"Un backend représente un système avec lequel interagir, comme Magento, "
+"Prestashop, Redmine, ..."
+
+#: ../../../backend.pydocstring of connector.backend.Backend:4
+msgid "It owns 3 properties:"
+msgstr "Il possède trois propriétés :"
+
+#: ../../../backend.pydocstring of connector.backend.Backend:8
+msgid "Name of the service, for instance 'magento'"
+msgstr "Le nom du service, par exemple 'magento'"
+
+#: ../../../backend.pydocstring of connector.backend.Backend:12
+msgid "The version of the service. For instance: '1.7'"
+msgstr "La version du service. Par exemple '1.7'"
+
+#: ../../../backend.pydocstring of connector.backend.Backend:16
+msgid ""
+"A parent backend. When no :py:class:`~connector.connector.ConnectorUnit` is "
+"found for a backend, it will search it in the `parent`."
+msgstr ""
+"Un backend parent. Lorsqu'aucune classe "
+":py:class:`~connector.connector.ConnectorUnit` n'est trouvée pour un "
+"backend, elle est cherchée dans le `parent`."
+
+#: ../../../backend.pydocstring of connector.backend.Backend:20
+msgid ""
+"The Backends structure is a key part of the framework, but is rather simple."
+msgstr ""
+"La structure des Backends est la partie clé du framework, mais elle est "
+"plutôt simple."
+
+#: ../../../backend.pydocstring of connector.backend.Backend:23
+msgid ""
+"A ``Backend`` instance holds a registry of "
+":py:class:`~connector.connector.ConnectorUnit` classes"
+msgstr ""
+"Une instance de ``Backend`` contient un registre de classes "
+":py:class:`~connector.connector.ConnectorUnit`"
+
+#: ../../../backend.pydocstring of connector.backend.Backend:25
+msgid ""
+"It can return the appropriate :py:class:`~connector.connector.ConnectorUnit`"
+" to use for a task"
+msgstr ""
+"Il peut renvoyer la classe :py:class:`~connector.connector.ConnectorUnit` à "
+"utiliser pour une tâche"
+
+#: ../../../backend.pydocstring of connector.backend.Backend:27
+msgid ""
+"If no :py:class:`~connector.connector.ConnectorUnit` is registered for a "
+"task, it will ask it to its direct parent (and so on)"
+msgstr ""
+"Si aucune :py:class:`~connector.connector.ConnectorUnit` n'est inscrite pour"
+" une tâche, le parent direct est interrogé (et ainsi de suite)"
+
+#: ../../../backend.pydocstring of connector.backend.Backend:31
+msgid ""
+"The Backends support 2 different extension mechanisms. One is more vertical "
+"- across the versions - and the other would be more horizontal as it allows "
+"to modify the behavior for 1 version of backend."
+msgstr ""
+"Les Backends ont deux mécanismes différents d'extension. L'un est plus "
+"vertical (entre plusieurs versions) et l'autre est plus horizontal car il "
+"permet de modifier le comportement pour une version donnée du backend."
+
+#: ../../../backend.pydocstring of connector.backend.Backend:35
+msgid ""
+"For the sake of the example, let's say we have theses backend versions::"
+msgstr ""
+"Pour l'exemple, disons que nous avons les versions suivantes de backend ::"
+
+#: ../../../backend.pydocstring of connector.backend.Backend:45
+msgid "And here is the way they are declared in Python::"
+msgstr "Et voici la façon dont elles sont déclarées en Python ::"
+
+#: ../../../backend.pydocstring of connector.backend.Backend:53
+msgid ""
+"In the graph above, ``<Magento>`` will hold all the classes shared between "
+"all the versions.  Each Magento version (``<Magento 1.7>``, ``<Magento "
+"2.0>``) will use the classes defined on ``<Magento>``, excepted if they "
+"registered their own ones instead. That's the same for ``<Magento with "
+"specific>`` but this one contains customizations which are specific to an "
+"instance (typically you want specific mappings for one instance)."
+msgstr ""
+"Dans le graphe ci-dessus, ``<Magento>`` va contenir toutes les classes "
+"partagées entre toutes les versions. Chaque version de Magento (``<Magento "
+"1.7>``, ``<Magento 2.0>``) va utiliser les classes définies sur "
+"``<Magento>``, sauf si elles ont inscrit leur propres classes. C'est la même"
+" chose pour ``<Magento avec specifique>`` mais celui-ci contient des "
+"personnalisations qui sont spécifiques à une instance (typiquement pour "
+"mettre en place des mappeurs spécifiques à une instance)."
+
+#: ../../../backend.pydocstring of connector.backend.Backend:60
+msgid ""
+"Here is how you would register classes on ``<Magento>`` and another on "
+"``<Magento 1.7>``::"
+msgstr ""
+"Voici comment inscrire des classes sur ``<Magento>`` et une autre sur "
+"``<Magento 1.7>`` ::"
+
+#: ../../../backend.pydocstring of connector.backend.Backend:75
+msgid ""
+"Here, the :py:meth:`~get_class` called on ``magento1700`` would return::"
+msgstr ""
+"Ici, la méthode :py:meth:`~get_class` appelé sur ``magento1700`` renverrait "
+"::"
+
+#: ../../../backend.pydocstring of connector.backend.Backend:82
+msgid ""
+"This is the vertical extension mechanism, it says that each child version is"
+" able to extend or replace the behavior of its parent."
+msgstr ""
+"C'est le mécanisme d'extension verticale, il dit que chaque version fille "
+"est capable d'étendre ou remplacer le comportement de son parent."
+
+#: ../../../backend.pydocstring of connector.backend.Backend:85
+msgid "when using the framework, you won't need to call"
+msgstr "en utilisant le framework, vous n'aurez pas besoin d'appeler"
+
+#: ../../../backend.pydocstring of connector.backend.Backend:86
+msgid ""
+":py:meth:`~get_class`, usually, you will call "
+":py:meth:`connector.connector.ConnectorEnvironment.get_connector_unit`."
+msgstr ""
+":py:meth:`~get_class`, habituellement vous appellerez "
+":py:meth:`connector.connector.ConnectorEnvironment.get_connector_unit`."
+
+#: ../../../backend.pydocstring of connector.backend.Backend:89
+msgid ""
+"The vertical extension is the one you will probably use the most, because "
+"most of the things you will change concern your custom adaptations or "
+"different behaviors between the versions of the backend."
+msgstr ""
+"L'extension verticale est celle que vous utiliserez probablement le plus, "
+"parce que la plupart des choses que vous modifierez concerne vos "
+"applications personnalisées ou des comportements différents selon les "
+"versions du backend."
+
+#: ../../../backend.pydocstring of connector.backend.Backend:93
+msgid ""
+"However, some time, we need to change the behavior of a connector, by "
+"installing an addon. For example, say that we already have an "
+"``ImportMapper`` for the products in the Magento Connector. We create a - "
+"generic - addon to handle the catalog in a more advanced manner. We redefine"
+" an ``AdvancedImportMapper``, which should be used when the addon is "
+"installed. This is the horizontal extension mechanism."
+msgstr ""
+"Cependant il peut arriver que nous ayons besoin de changer le comportement "
+"d'un connecteur, en installant un module. Par exemple, imaginons que nous "
+"ayons déjà un ``ImportMapper`` pour les articles dans le Connecteur Magento."
+" Nous créons un module (générique) pour gérer le catalogue d'une manière "
+"plus avancée. Nous redéfinissons un ``AdvancedImportMapper`` qui devrait "
+"être utilisé quand le module est installé. Ceci est le mécanisme d'extension"
+" horizontal."
+
+#: ../../../backend.pydocstring of connector.backend.Backend:100
+msgid ""
+"Replace a :py:class:`~connector.connector.ConnectorUnit` by another one in a"
+" backend::"
+msgstr ""
+"Remplace une clase :py:class:`~connector.connector.ConnectorUnit` par une "
+"autre dans le backend ::"
+
+#: ../../../backend.pydocstring of connector.backend.Backend:107
+msgid ""
+"The horizontal extension should be used sparingly and cautiously since as "
+"soon as 2 addons want to replace the same class, you'll have a conflict "
+"(which would need to create a third addon to glue them, ``replacing`` can "
+"take a tuple of classes to replace and this is exponential). This mechanism "
+"should be used only in some well placed circumstances for generic addons."
+msgstr ""
+"L'extension horizontale devrait être utilisée de manière très occasionnelle "
+"et précautionneuse, car dès que deux modules voudront remplacer la même "
+"classe il y aura un conflit (qui nécessiterait de créer un troisième module "
+"pour lier les deux, le remplacement pouvant prendre un tuple de classes à "
+"remplacer et ceci étant exponentiel). Ce mécanisme ne devrait être utilisé "
+"que dans certains circonstances bien précises pour des modules génériques."
+
+#: ../../../backend.pydocstring of connector.backend.Backend.get_class:1
+msgid "Find a matching subclass of ``base_class`` in the registered classes."
+msgstr ""
+"Trouve une sous-classe correspondante à ``base_class`` dans les classes "
+"inscrites."
+
+#: ../../../backend.pydocstring of connector.backend.Backend.get_class:4
+msgid "class (and its subclass) to search in the registry"
+msgstr "Classe (et sous-classe) à rechercher dans le registre"
+
+#: ../../../backend.pydocstring of connector.backend.Backend.get_class:6
+#: ../../../connector.pydocstring of connector.connector.ConnectorUnit.match:4
+#: ../../../event.pydocstring of connector.event.Event.fire:7
+msgid "current session"
+msgstr "session en cours"
+
+#: ../../../backend.pydocstring of connector.backend.Backend.match:1
+msgid "Used to find the backend for a service and a version"
+msgstr "Utilisé pour trouver le backend pour un service et une version"
+
+#: ../../../backend.pydocstring of connector.backend.Backend.register_class:1
+msgid "Register a class in the backend."
+msgstr "Inscrit une classe dans le backend"
+
+#: ../../../backend.pydocstring of connector.backend.Backend.register_class:3
+msgid "the ConnectorUnit class class to register"
+msgstr "la classe ConnectorUnit à inscrire"
+
+#: ../../../backend.pydocstring of connector.backend.Backend.register_class:5
+msgid "optional, the ConnectorUnit class to replace"
+msgstr "optionnel, la classe ConnectorUnit à remplacer"
+
+#: ../../api/api_backend.rst:64
+msgid "Backend Models"
+msgstr "Modèles du backend"
+
+#: ../../../backend_model.pydocstring of
+#: connector.models.backend_model.ConnectorBackend:1
+#: ../../../backend_model.pydocstring of
+#: connector.models.backend_model.ExternalBinding:1
+msgid "Bases: :class:`odoo.models.AbstractModel`"
+msgstr "Bases : :class:`odoo.models.AbstractModel`"
+
+#: ../../../backend_model.pydocstring of
+#: connector.models.backend_model.ConnectorBackend:1
+msgid "An instance of an external backend to synchronize with."
+msgstr "Une instance d'un backend externe auquel se synchroniser"
+
+#: ../../../backend_model.pydocstring of
+#: connector.models.backend_model.ConnectorBackend:3
+msgid ""
+"The backends have to ``_inherit`` this model in the connectors modules."
+msgstr ""
+"Les backends doivent ``_inherit`` ce modèle dans les modules des "
+"connecteurs."
+
+#: ../../../backend_model.pydocstring of
+#: connector.models.backend_model.ConnectorBackend.get_backend:1
+msgid ""
+"For a record of backend, returns the appropriate instance of "
+":py:class:`~connector.backend.Backend`."
+msgstr ""
+"Pour un enregistrement d'un backend, renvoie l'instance appropriée de "
+":py:class:`~connector.backend.Backend`."
+
+#: ../../../backend_model.pydocstring of
+#: connector.models.backend_model.ConnectorBackend.name:1
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueJob.func_string:1
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueJob.model_name:1
+#: ../../../queue/model.pydocstring of connector.queue.model.QueueJob.name:1
+#: ../../../queue/model.pydocstring of connector.queue.model.QueueJob.uuid:1
+#: ../../../queue/model.pydocstring of connector.queue.model.QueueWorker.pid:1
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueWorker.uuid:1
+msgid ""
+"Basic string field, can be length-limited, usually displayed as a single-"
+"line string in clients"
+msgstr ""
+"Champ chaîne de caractère basique, peut être limité en longeur, "
+"habituellement affiché comme ligne unique dans les clients"
+
+#: ../../../backend_model.pydocstring of
+#: connector.models.backend_model.ConnectorBackend.name:4
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueJob.func_string:4
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueJob.model_name:4
+#: ../../../queue/model.pydocstring of connector.queue.model.QueueJob.name:4
+#: ../../../queue/model.pydocstring of connector.queue.model.QueueJob.uuid:4
+#: ../../../queue/model.pydocstring of connector.queue.model.QueueWorker.pid:4
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueWorker.uuid:4
+msgid "the maximum size of values stored for that field"
+msgstr "la taille maximum des valeurs stockées dans ce champ"
+
+#: ../../../backend_model.pydocstring of
+#: connector.models.backend_model.ConnectorBackend.name:5
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueJob.func_string:5
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueJob.model_name:5
+#: ../../../queue/model.pydocstring of connector.queue.model.QueueJob.name:5
+#: ../../../queue/model.pydocstring of connector.queue.model.QueueJob.uuid:5
+#: ../../../queue/model.pydocstring of connector.queue.model.QueueWorker.pid:5
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueWorker.uuid:5
+msgid "whether the values of this field can be translated"
+msgstr "si les valeurs de ce champ peuvent être traduites"
+
+#: ../../../backend_model.pydocstring of
+#: connector.models.backend_model.ConnectorBackend.version:1
+#: ../../../queue/model.pydocstring of connector.queue.model.QueueJob.state:1
+msgid ""
+"specifies the possible values for this field. It is given as either a list "
+"of pairs (`value`, `string`), or a model method, or a method name."
+msgstr ""
+"précise les valeurs possible de ce champs. C'est donné soit comme liste de "
+"paires (`valeur`, `chaîne`), soit comme méthode de modèle, soit comme nom de"
+" méthode."
+
+#: ../../../backend_model.pydocstring of
+#: connector.models.backend_model.ConnectorBackend.version:4
+#: ../../../queue/model.pydocstring of connector.queue.model.QueueJob.state:4
+msgid ""
+"provides an extension of the selection in the case of an overridden field. "
+"It is a list of pairs (`value`, `string`)."
+msgstr ""
+"fournit une extension de la sélection dans le cas d'un champ surchargé. "
+"C'est une liste de paires (`value`, `string`)."
+
+#: ../../../backend_model.pydocstring of
+#: connector.models.backend_model.ConnectorBackend.version:7
+#: ../../../queue/model.pydocstring of connector.queue.model.QueueJob.state:7
+msgid ""
+"The attribute `selection` is mandatory except in the case of :ref:`related "
+"fields <field-related>` or :ref:`field extensions <field-incremental-"
+"definition>`."
+msgstr ""
+"L'attribut `selection` est obligatoire sauf dans le cas de :ref:`related "
+"fields <field-related>` ou :ref:`field extensions <field-incremental-"
+"definition>`."
+
+#: ../../../backend_model.pydocstring of
+#: connector.models.backend_model.ExternalBinding:1
+msgid "An abstract model for bindings to external records."
+msgstr "Un modèle abstrait pour une liaison à des enregistrements externes"
+
+#: ../../../backend_model.pydocstring of
+#: connector.models.backend_model.ExternalBinding:3
+msgid ""
+"An external binding is a binding between a backend and Odoo.  For "
+"example, for a partner, it could be ``magento.res.partner`` or for a "
+"product, ``magento.product``."
+msgstr ""
+"Un binding externe est une liaison entre un backend et Odoo. Par exemple,"
+" pour un `partner`, cela peut être ``magento.res.partner`` ou pour un "
+"article, ``magento.product``."
+
+#: ../../../backend_model.pydocstring of
+#: connector.models.backend_model.ExternalBinding:7
+msgid ""
+"The final model, will be an ``_inherits`` of the Odoo model and will "
+"``_inherit`` this model."
+msgstr ""
+"Le modèle final sera un ``_inherits`` du modèle Odoo et va ``_inherit`` "
+"ce modèle."
+
+#: ../../../backend_model.pydocstring of
+#: connector.models.backend_model.ExternalBinding:10
+msgid ""
+"It will have a relation to the record (via ``_inherits``) and to the "
+"concrete backend model (``magento.backend`` for instance)."
+msgstr ""
+"Il aura une relation vers l'enregistrement (via ``_inherits``) et vers le "
+"modèle backend concret (par exemple ``magento.backend``)."
+
+#: ../../../backend_model.pydocstring of
+#: connector.models.backend_model.ExternalBinding:13
+msgid ""
+"It will also contains all the data relative to the backend for the record."
+msgstr ""
+"Il contiendra également toutes les données relatives aux backend pour "
+"l'enregistrement."
+
+#: ../../../backend_model.pydocstring of
+#: connector.models.backend_model.ExternalBinding:16
+msgid "It needs to implements at least these fields:"
+msgstr "Il nécessite d'implémenter au moins ces champs :"
+
+#: ../../../backend_model.pydocstring of
+#: connector.models.backend_model.ExternalBinding:18
+msgid "odoo_id"
+msgstr "odoo_id"
+
+#: ../../../backend_model.pydocstring of
+#: connector.models.backend_model.ExternalBinding:20
+msgid "The many2one to the record it links (used by ``_inherits``)."
+msgstr "Le many2one vers l'enregistrement lié (utilisé par ``_inherits``)."
+
+#: ../../../backend_model.pydocstring of
+#: connector.models.backend_model.ExternalBinding:22
+msgid "backend_id"
+msgstr "backend_id"
+
+#: ../../../backend_model.pydocstring of
+#: connector.models.backend_model.ExternalBinding:24
+msgid "The many2one to the backend (for instance ``magento.backend``)."
+msgstr "Le many2one vers le backend (par exemple ``magento.backend``)."
+
+#: ../../../backend_model.pydocstring of
+#: connector.models.backend_model.ExternalBinding:26
+msgid "magento_id or prestashop_id or ..."
+msgstr "magento_id ou prestashop_id ou ..."
+
+#: ../../../backend_model.pydocstring of
+#: connector.models.backend_model.ExternalBinding:28
+msgid "The ID on the backend."
+msgstr "L'ID sur le backend."
+
+#: ../../../backend_model.pydocstring of
+#: connector.models.backend_model.ExternalBinding:30
+msgid "sync_date"
+msgstr "sync_date"
+
+#: ../../../backend_model.pydocstring of
+#: connector.models.backend_model.ExternalBinding:32
+msgid "Last date of synchronization"
+msgstr "Dernière date de synchronisation"
+
+#: ../../../backend_model.pydocstring of
+#: connector.models.backend_model.ExternalBinding:35
+msgid ""
+"The definition of the relations in ``_columns`` is to be done in the "
+"concrete classes because the relations themselves do not exist in this "
+"addon."
+msgstr ""
+"La définition des relations dans ``_columns`` doit être faite dans les "
+"classes concrètes, parce que les relations elle-mêmes n'existent pas dans ce"
+" module."
+
+#: ../../../backend_model.pydocstring of
+#: connector.models.backend_model.ExternalBinding:39
+msgid ""
+"For example, for a ``res.partner.category`` from Magento, I would have (this"
+" is a consolidation of all the columns from the abstract models, in "
+"``magentoerpconnect`` you would not find that)::"
+msgstr ""
+"Par exemple, pour un ``res.partner.category`` depuis Magento, J'aurais (ceci"
+" est une consolidation de toutes les colonnes des modèles abstraits. Dans "
+"``magentoerpconnect`` vous ne trouveriez pas ça) ::"
+
+#: ../../api/api_backend_adapter.rst:2
+msgid "Backend Adapter"
+msgstr "Adaptateur de backend"
+
+#: ../../../unit/backend_adapter.pydocstring of
+#: connector.unit.backend_adapter.BackendAdapter:1
+#: ../../../connector.pydocstring of connector.connector.Binder:1
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.MapChild:1
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.Mapper:1
+#: ../../../unit/synchronizer.pydocstring of
+#: connector.unit.synchronizer.Synchronizer:1
+msgid "Bases: :class:`connector.connector.ConnectorUnit`"
+msgstr "Bases : :class:`connector.connector.ConnectorUnit`"
+
+#: ../../../unit/backend_adapter.pydocstring of
+#: connector.unit.backend_adapter.BackendAdapter:1
+msgid "Base Backend Adapter for the connectors"
+msgstr "Adaptateur de backend de base pour les connecteurs"
+
+#: ../../../unit/backend_adapter.pydocstring of
+#: connector.unit.backend_adapter.CRUDAdapter:1
+msgid "Bases: :class:`connector.unit.backend_adapter.BackendAdapter`"
+msgstr "Bases : :class:`connector.unit.backend_adapter.BackendAdapter`"
+
+#: ../../../unit/backend_adapter.pydocstring of
+#: connector.unit.backend_adapter.CRUDAdapter:1
+msgid ""
+"Base External Adapter specialized in the handling of records on external "
+"systems."
+msgstr ""
+"Adaptateur externe de base spécialisé dans la gestion des enregistrements "
+"des systèmes externes."
+
+#: ../../../unit/backend_adapter.pydocstring of
+#: connector.unit.backend_adapter.CRUDAdapter:4
+msgid "Subclasses can implement their own implementation for the methods."
+msgstr "Sous-classes qui ont leur propre implémentation  pour les méthodes."
+
+#: ../../../unit/backend_adapter.pydocstring of
+#: connector.unit.backend_adapter.CRUDAdapter.create:1
+msgid "Create a record on the external system"
+msgstr "Crée un enregistrement dans le système externe"
+
+#: ../../../unit/backend_adapter.pydocstring of
+#: connector.unit.backend_adapter.CRUDAdapter.delete:1
+msgid "Delete a record on the external system"
+msgstr "Supprime un enregistrement sur le système externe"
+
+#: ../../../unit/backend_adapter.pydocstring of
+#: connector.unit.backend_adapter.CRUDAdapter.read:1
+msgid "Returns the information of a record"
+msgstr "Renvoie des informations sur l'enregistrement"
+
+#: ../../../unit/backend_adapter.pydocstring of
+#: connector.unit.backend_adapter.CRUDAdapter.search:1
+msgid "Search records according to some criterias and returns a list of ids"
+msgstr ""
+"Recherche des enregistrements correspondant à certains critères et renvoie "
+"une liste d'IDs"
+
+#: ../../../unit/backend_adapter.pydocstring of
+#: connector.unit.backend_adapter.CRUDAdapter.search_read:1
+msgid ""
+"Search records according to some criterias and returns their information"
+msgstr ""
+"Recherche des enregistrements correspondant à certains critères et renvoie "
+"leurs données"
+
+#: ../../../unit/backend_adapter.pydocstring of
+#: connector.unit.backend_adapter.CRUDAdapter.write:1
+msgid "Update records on the external system"
+msgstr "Met à jour les enregistrements sur le système externe"
+
+#: ../../api/api_binder.rst:2
+msgid "Binder"
+msgstr "Binder (Liant)"
+
+#: ../../api/api_connector.rst:2
+msgid "Connector"
+msgstr "Connecteur"
+
+#: ../../../connector.pydocstring of connector.connector.Binder:1
+msgid ""
+"For one record of a model, capable to find an external or internal id, or "
+"create the binding (link) between them"
+msgstr ""
+"Pour un enregistrement d'un modèle, capable de trouver un ID externe ou "
+"interne, ou crée la liaison entre eux"
+
+#: ../../../connector.pydocstring of connector.connector.Binder:4
+msgid "The Binder should be implemented in the connectors."
+msgstr "Le Binder devrait être implémenté dans les connecteurs."
+
+#: ../../../connector.pydocstring of connector.connector.Binder.bind:1
+msgid "Create the link between an external ID and an Odoo ID"
+msgstr "Crée le lien entre un ID externe et un ID Odoo"
+
+#: ../../../connector.pydocstring of connector.connector.Binder.bind:3
+msgid "external id to bind"
+msgstr "ID externe à lier"
+
+#: ../../../connector.pydocstring of connector.connector.Binder.bind:4
+msgid "Odoo ID to bind"
+msgstr "ID Odoo à lier"
+
+#: ../../../connector.pydocstring of connector.connector.Binder.to_backend:1
+msgid ""
+"Give the external ID for an Odoo binding ID (ID in a model magento.*)"
+msgstr ""
+"Donne l'ID externe pour un ID de liaison Odoo (ID dans un modèle "
+"magento.*)"
+
+#: ../../../connector.pydocstring of connector.connector.Binder.to_backend:4
+msgid "Odoo binding ID for which we want the backend id"
+msgstr "ID de liaison Odoo pour lequel on veut l'ID du backend"
+
+#: ../../../connector.pydocstring of connector.connector.Binder.to_backend:5
+msgid ""
+"if False, binding_id is the ID of the binding, if True, binding_id is the ID"
+" of the normal record, the method will search the corresponding binding and "
+"returns the backend id of the binding"
+msgstr ""
+"si Faux, binding_id est l'ID de la liaison, si Vrai, binding_id est l'ID de "
+"l'enregistrement normal, la méthode va chercher la liaison correspondante et"
+" renvoyer l'ID de backend de la liaison."
+
+#: ../../../connector.pydocstring of connector.connector.Binder.to_backend:9
+msgid "external ID of the record"
+msgstr "ID externe de l'enregistrement"
+
+#: ../../../connector.pydocstring of connector.connector.Binder.to_odoo:1
+msgid "Give the Odoo ID for an external ID"
+msgstr "Donne l'ID Odoo pour un ID externe"
+
+#: ../../../connector.pydocstring of connector.connector.Binder.to_odoo:3
+msgid "external ID for which we want the Odoo ID"
+msgstr "ID externe pour lequel on veut l'ID Odoo"
+
+#: ../../../connector.pydocstring of connector.connector.Binder.to_odoo:5
+msgid "if True, returns the odoo_id else return the id of the binding"
+msgstr "si Vrai, renvoie l'odoo_id, sinon renvoie l'ID de la liaison"
+
+#: ../../../connector.pydocstring of connector.connector.Binder.to_odoo:7
+msgid "if True, returns a recordset"
+msgstr "si Vrai, renvoie un `recordset`"
+
+#: ../../../connector.pydocstring of connector.connector.Binder.to_odoo:8
+msgid ""
+"a record ID, depending on the value of unwrap, or None if the external_id is"
+" not mapped"
+msgstr ""
+"un ID d'enregistrement, en fonction de la valeur à déballer, ou None si "
+"l'external_id n'est pas mappé"
+
+#: ../../../connector.pydocstring of
+#: connector.connector.Binder.unwrap_binding:1
+msgid "For a binding record, gives the normal record."
+msgstr "Pour un enregistrement de liaison, donne l'enregistrement normal"
+
+#: ../../../connector.pydocstring of
+#: connector.connector.Binder.unwrap_binding:3
+msgid ""
+"Example: when called with a ``magento.product.product`` id, it will return "
+"the corresponding ``product.product`` id."
+msgstr ""
+"Exemple : si appelé avec un ID de ``magento.product.product``, il va "
+"renvoyer l'ID correspondant du ``product.product``."
+
+#: ../../../connector.pydocstring of
+#: connector.connector.Binder.unwrap_binding:6
+msgid "when True, returns a browse_record instance rather than an ID"
+msgstr "si Vrai, renvoie une instance de `browse_record` à la place d'un ID"
+
+#: ../../../connector.pydocstring of connector.connector.Binder.unwrap_model:1
+msgid "For a binding model, gives the normal model."
+msgstr "Pour un modèle de liaison, donne le modèle normal."
+
+#: ../../../connector.pydocstring of connector.connector.Binder.unwrap_model:3
+msgid ""
+"Example: when called on a binder for ``magento.product.product``, it will "
+"return ``product.product``."
+msgstr ""
+"Exemple : si appelé sur une binder pour ``magento.product.product``, il va "
+"renvoyer ``product.product``."
+
+#: ../../../connector.pydocstring of
+#: connector.connector.ConnectorEnvironment:1
+msgid "Environment used by the different units for the synchronization."
+msgstr ""
+"Environnement utilisé par les différentes unités pour la synchronisation."
+
+#: ../../../connector.pydocstring of
+#: connector.connector.ConnectorEnvironment:5
+msgid ""
+"Current backend we are working with. Obtained with "
+"``backend_record.get_backend()``."
+msgstr ""
+"Backend en cours sur lesquels on travaille. Obtenu avec "
+"``backend_record.get_backend()``."
+
+#: ../../../connector.pydocstring of
+#: connector.connector.ConnectorEnvironment:8
+msgid "Instance of: :py:class:`connector.backend.Backend`"
+msgstr "Instance de : :py:class:`connector.backend.Backend`"
+
+#: ../../../connector.pydocstring of
+#: connector.connector.ConnectorEnvironment:12
+msgid ""
+"Browsable record of the backend. The backend is inherited from the model "
+"``connector.backend`` and have at least a ``type`` and a ``version``."
+msgstr ""
+"Enregistrement de type `browse` pour le backend. Le backend est hérité du "
+"modèle ``connector.backend`` et a au moins un ``type`` et une ``version``."
+
+#: ../../../connector.pydocstring of
+#: connector.connector.ConnectorEnvironment:18
+msgid ""
+"Current session we are working in. It contains the Odoo cr, uid and "
+"context."
+msgstr ""
+"Session en cours sur laquelle on travaille. Elle contient les ``cr``, "
+"``uid`` et ``context`` d'Odoo."
+
+#: ../../../connector.pydocstring of
+#: connector.connector.ConnectorEnvironment:23
+msgid "Name of the Odoo model to work with."
+msgstr "Nom du modèle Odoo avec lequel travailler."
+
+#: ../../../connector.pydocstring of
+#: connector.connector.ConnectorEnvironment.get_connector_unit:1
+msgid ""
+"Searches and returns an instance of the "
+":py:class:`~connector.connector.ConnectorUnit` for the current model and "
+"being a class or subclass of ``base_class``."
+msgstr ""
+"Recherche et renvoie une instance de "
+":py:class:`~connector.connector.ConnectorUnit` pour le modèle en cours et "
+"étant une classe ou sous-classe de ``base_class``."
+
+#: ../../../connector.pydocstring of
+#: connector.connector.ConnectorEnvironment.get_connector_unit:5
+msgid "The returned instance is built with ``self`` for its environment."
+msgstr ""
+"L'instance renvoyée est construite avec ``self`` pour son environnement."
+
+#: ../../../connector.pydocstring of
+#: connector.connector.ConnectorEnvironment.get_connector_unit:7
+#: ../../../connector.pydocstring of
+#: connector.connector.ConnectorUnit.unit_for:11
+msgid "``ConnectorUnit`` to search (class or subclass)"
+msgstr "``ConnectorUnit`` à rechercher (classe ou sous-classe)"
+
+#: ../../../connector.pydocstring of
+#: connector.connector.ConnectorEnvironment.set_lang:1
+msgid "Change the working language in the environment."
+msgstr "Change la langue de travail dans l'environnement."
+
+#: ../../../connector.pydocstring of
+#: connector.connector.ConnectorEnvironment.set_lang:3
+msgid "It changes the ``lang`` key in the session's context."
+msgstr "Ceci change la clé ``lang`` dans le ``context`` de la session."
+
+#: ../../../connector.pydocstring of connector.connector.ConnectorUnit:1
+msgid "Abstract class for each piece of the connector:"
+msgstr "Classe abstraite pour chaque composant du connecteur :"
+
+#: ../../../connector.pydocstring of connector.connector.ConnectorUnit:7
+msgid "Examples:"
+msgstr "Exemples :"
+
+#: ../../../connector.pydocstring of connector.connector.ConnectorUnit:4
+msgid ":py:class:`connector.connector.Binder`"
+msgstr ":py:class:`connector.connector.Binder`"
+
+#: ../../../connector.pydocstring of connector.connector.ConnectorUnit:5
+#: ../../../unit/synchronizer.pydocstring of
+#: connector.unit.synchronizer.Synchronizer.mapper:6
+msgid ":py:class:`connector.unit.mapper.Mapper`"
+msgstr ":py:class:`connector.unit.mapper.Mapper`"
+
+#: ../../../connector.pydocstring of connector.connector.ConnectorUnit:6
+msgid ":py:class:`connector.unit.synchronizer.Synchronizer`"
+msgstr ":py:class:`connector.unit.synchronizer.Synchronizer`"
+
+#: ../../../connector.pydocstring of connector.connector.ConnectorUnit:7
+#: ../../../unit/synchronizer.pydocstring of
+#: connector.unit.synchronizer.Synchronizer.backend_adapter:7
+msgid ":py:class:`connector.unit.backend_adapter.BackendAdapter`"
+msgstr ":py:class:`connector.unit.backend_adapter.BackendAdapter`"
+
+#: ../../../connector.pydocstring of connector.connector.ConnectorUnit:9
+msgid ""
+"Or basically any class intended to be registered in a "
+":py:class:`~connector.backend.Backend`."
+msgstr ""
+"Ou en gros n'importe quelle classe destinée à être inscrite dans un "
+":py:class:`~connector.backend.Backend`."
+
+#: ../../../connector.pydocstring of
+#: connector.connector.ConnectorUnit.binder_for:1
+#: ../../../connector.pydocstring of
+#: connector.connector.ConnectorUnit.get_binder_for_model:1
+msgid "Returns an new instance of the correct ``Binder`` for a model"
+msgstr "Renvoie une nouvelle instance du bon ``Binder`` pour un modèle"
+
+#: ../../../connector.pydocstring of connector.connector.ConnectorUnit.env:1
+msgid "Returns the odoo.api.environment"
+msgstr "Renvoie le odoo.api.environment"
+
+#: ../../../connector.pydocstring of
+#: connector.connector.ConnectorUnit.get_binder_for_model:4
+msgid "Deprecated, use ``binder_for`` now."
+msgstr "Déprécié, utilisez maintenant ``binder_for``."
+
+#: ../../../connector.pydocstring of
+#: connector.connector.ConnectorUnit.get_connector_unit_for_model:1
+msgid "Deprecated in favor of :meth:`~unit_for`"
+msgstr "Déprécié en faveur de :meth:`~unit_for`"
+
+#: ../../../connector.pydocstring of
+#: connector.connector.ConnectorUnit.localcontext:1
+msgid "It is there for compatibility."
+msgstr "Présent pour une question de compatibilité."
+
+#: ../../../connector.pydocstring of
+#: connector.connector.ConnectorUnit.localcontext:3
+msgid ""
+":func:`odoo.tools.translate._` searches for this attribute in the classes"
+" do be able to translate the strings."
+msgstr ""
+":func:`odoo.tools.translate._` recherche cet attribut dans les classes "
+"pour être capable de traduire les chaînes."
+
+#: ../../../connector.pydocstring of
+#: connector.connector.ConnectorUnit.localcontext:6
+msgid "There is no reason to use this attribute for other purposes."
+msgstr "Il n'y a aucune raison d'utiliser cet attribut à d'autres fins."
+
+#: ../../../connector.pydocstring of connector.connector.ConnectorUnit.match:1
+msgid "Returns True if the current class correspond to the searched model."
+msgstr "Renvoie True si la classe en cours correspond au modèle recherché"
+
+#: ../../../connector.pydocstring of connector.connector.ConnectorUnit.match:6
+msgid "model to match"
+msgstr "modèle à rechercher"
+
+#: ../../../connector.pydocstring of
+#: connector.connector.ConnectorUnit.unit_for:1
+msgid ""
+"According to the current "
+":py:class:`~connector.connector.ConnectorEnvironment`, search and returns an"
+" instance of the :py:class:`~connector.connector.ConnectorUnit` for the "
+"current model and being a class or subclass of ``connector_unit_class``."
+msgstr ""
+"Selon le :py:class:`~connector.connector.ConnectorEnvironment` en cours, "
+"recherche et renvoie une instance de "
+":py:class:`~connector.connector.ConnectorUnit` pour le modèle actuel et "
+"étant une classe ou sous-classe de ``connector_unit_class``."
+
+#: ../../../connector.pydocstring of
+#: connector.connector.ConnectorUnit.unit_for:7
+msgid ""
+"If a different ``model`` is given, a new "
+":py:class:`~connector.connector.ConnectorEnvironment` is built for this "
+"model."
+msgstr ""
+"Si un ``model`` différent est donné, un nouveau "
+":py:class:`~connector.connector.ConnectorEnvironment` est construit pour ce "
+"modèle."
+
+#: ../../../connector.pydocstring of
+#: connector.connector.ConnectorUnit.unit_for:14
+msgid ""
+"to give if the ``ConnectorUnit`` is for another model than the current one"
+msgstr ""
+"à donner si le ``ConnectorUnit`` est pour un autre modèle que le modèle "
+"actuel"
+
+#: ../../../connector.pydocstring of connector.connector.MetaConnectorUnit:1
+msgid "Bases: :class:`type`"
+msgstr "Bases : :class:`type`"
+
+#: ../../../connector.pydocstring of connector.connector.MetaConnectorUnit:1
+msgid "Metaclass for ConnectorUnit."
+msgstr "Metaclass pour ConnectorUnit."
+
+#: ../../../connector.pydocstring of connector.connector.MetaConnectorUnit:3
+msgid ""
+"Keeps a ``_module`` attribute on the classes, the same way Odoo does it "
+"for the Model classes. It is then used to filter them according to the state"
+" of the module (installed or not)."
+msgstr ""
+"Conserve un attribut ``_module`` sur les classes, de la même façon "
+"qu'Odoo pour les classes de modèles. Il est utilisé ensuite pour les "
+"filtrer en fonction de l'état du module (installé ou non)."
+
+#: ../../../connector.pydocstring of
+#: connector.connector.MetaConnectorUnit.for_model_names:1
+msgid ""
+"Returns the list of models on which a "
+":class:`~connector.connector.ConnectorUnit` is usable"
+msgstr ""
+"Renvoie une liste de modèles sur lesquels une "
+":class:`~connector.connector.ConnectorUnit` est utilisable"
+
+#: ../../../connector.pydocstring of
+#: connector.connector.MetaConnectorUnit.for_model_names:4
+msgid ""
+"It is used in :meth:`~connector.connector.ConnectorUnit.match` when we "
+"search the correct ``ConnectorUnit`` for a model."
+msgstr ""
+"Utilisé dans :meth:`~connector.connector.ConnectorUnit.match` lorsqu'on "
+"recherche la bonne ``ConnectorUnit`` pour un modèle."
+
+#: ../../../connector.pydocstring of connector.connector.get_odoo_module:1
+msgid ""
+"For a top level function or class, returns the name of the Odoo module "
+"where it lives."
+msgstr ""
+"Pour une fonction ou classe de niveau supérieur, renvoie le nom du module "
+"Odoo où elle réside."
+
+#: ../../../connector.pydocstring of connector.connector.get_odoo_module:4
+msgid ""
+"So we will be able to filter them according to the modules installation "
+"state."
+msgstr ""
+"Ainsi nous serons capable de les filtrer en fonction de l'état "
+"d'installation des modules."
+
+#: ../../api/api_event.rst:2
+msgid "Event"
+msgstr "Événement"
+
+#: ../../../event.pydocstring of connector.event.Event:1
+msgid "An event contains consumers called when the event is fired."
+msgstr ""
+"Un événement contient des consommateurs qui sont appelés lorsque l'événement"
+" survient."
+
+#: ../../../event.pydocstring of connector.event.Event:3
+msgid "The events are able to filter the consumers to execute by model name."
+msgstr ""
+"Les événements sont capables de filtrer par nom de modèle les consommateurs "
+"à exécuter."
+
+#: ../../../event.pydocstring of connector.event.Event:5
+msgid "The usage of an event is to instantiate an `Event` object::"
+msgstr "L'usage classique d'un événement est d'instancier un objet `Event` ::"
+
+#: ../../../event.pydocstring of connector.event.Event:9
+msgid "An event always have at least the 2 following arguments:"
+msgstr "Un événement a toujours au moins les deux arguments suivants :"
+
+#: ../../../event.pydocstring of connector.event.Event:11
+#: ../../../queue/job.pydocstring of connector.queue.job.job:13
+msgid "session"
+msgstr "session"
+
+#: ../../../event.pydocstring of connector.event.Event:12
+#: ../../../queue/job.pydocstring of connector.queue.job.job:16
+msgid "model_name"
+msgstr "model_name"
+
+#: ../../../event.pydocstring of connector.event.Event:40
+msgid "Finally, we fire the event::"
+msgstr "Finalement, on déclenche l'événement ::"
+
+#: ../../../event.pydocstring of connector.event.Event:44
+msgid "A consumer can be subscribed using a decorator::"
+msgstr "Un consommateur peut être inscrit grâce à un décorateur ::"
+
+#: ../../../event.pydocstring of connector.event.Event.fire:1
+msgid ""
+"Call each consumer subscribed on the event with the given arguments and "
+"keyword arguments."
+msgstr ""
+"Appelle chaque consommateur inscrit à l'événement avec les arguments "
+"positionnels et arguments nommés fournis."
+
+#: ../../../event.pydocstring of connector.event.Event.fire:4
+msgid ""
+"All the consumers which were subscribed globally (no model name) or which "
+"are subscribed on the same model"
+msgstr ""
+"Tous les consommateurs qui sont abonnés de manière globale (sans nom de "
+"modèle) ou qui sont abonnés au même modèle"
+
+#: ../../../event.pydocstring of connector.event.Event.fire:9
+msgid "name of the model"
+msgstr "nom du modèle"
+
+#: ../../../event.pydocstring of connector.event.Event.fire:11
+msgid ""
+"arguments propagated to the consumer The second argument of `args` is the "
+"model name. The first argument is the session."
+msgstr ""
+"arguments propagés au consommateur. Le deuxième argument de `args` est le "
+"nom de modèle. Le premier argument est la session."
+
+#: ../../../event.pydocstring of connector.event.Event.fire:14
+msgid "keyword arguments propagated to the consumer"
+msgstr "arguments nommés propagés au consommateur"
+
+#: ../../../event.pydocstring of connector.event.Event.has_consumer_for:1
+msgid "Return True if at least one consumer is registered for the model."
+msgstr "Renvoie True si au moins un consommateur est abonné pour ce modèle."
+
+#: ../../../event.pydocstring of connector.event.Event.subscribe:1
+msgid "Subscribe a consumer on the event"
+msgstr "Abonne un consommateur à l'événement"
+
+#: ../../../event.pydocstring of connector.event.Event.subscribe:3
+msgid "the function to register on the event"
+msgstr "la fonction à abonner à l'événement"
+
+#: ../../../event.pydocstring of connector.event.Event.subscribe:4
+msgid ""
+"the consumer will be active only on these models, active on all models if "
+"``None``"
+msgstr ""
+"le consommateur sera actif seulement sur ces modèles ou, si ``None``, actifs"
+" sur tous les modèles"
+
+#: ../../../event.pydocstring of connector.event.Event.subscribe:6
+msgid "the function beeing replaced by this new one."
+msgstr "la fonction à remplacer par la nouvelle."
+
+#: ../../../event.pydocstring of connector.event.Event.unsubscribe:1
+msgid "Remove a consumer from the event"
+msgstr "Retire un consommateur d'un événement"
+
+#: ../../../event.pydocstring of connector.event.Event.unsubscribe:3
+msgid "the function to unsubscribe"
+msgstr "la fonction à désinscrire"
+
+#: ../../../event.pydocstring of connector.event.Event.unsubscribe:4
+msgid ""
+"remove only for these models or remove a consumer which is active on all "
+"models if ``None``."
+msgstr ""
+"retire seulement pour ces modèles ou, si ``None``, retire un consommateur "
+"qui est actif sur tous les modèles"
+
+#: ../../../event.pydocstring of connector.event.on_record_create:1
+msgid "``on_record_create`` is fired when one record has been created."
+msgstr "``on_record_create`` est déclenché à la création d'un enregistrement."
+
+#: ../../../event.pydocstring of connector.event.on_record_create:3
+#: ../../../event.pydocstring of connector.event.on_record_unlink:3
+#: ../../../event.pydocstring of connector.event.on_record_write:3
+msgid "Listeners should take the following arguments:"
+msgstr "Les abonnés doivent prendre les arguments suivants :"
+
+#: ../../../event.pydocstring of connector.event.on_record_create:5
+#: ../../../event.pydocstring of connector.event.on_record_unlink:5
+#: ../../../event.pydocstring of connector.event.on_record_write:5
+msgid "session: :py:class:`~connector.session.ConnectorSession` object"
+msgstr "session : objet :py:class:`~connector.session.ConnectorSession`"
+
+#: ../../../event.pydocstring of connector.event.on_record_create:6
+#: ../../../event.pydocstring of connector.event.on_record_unlink:6
+#: ../../../event.pydocstring of connector.event.on_record_write:6
+msgid "model_name: name of the model"
+msgstr "model_name : nom du modèle"
+
+#: ../../../event.pydocstring of connector.event.on_record_create:7
+msgid "record_id: id of the created record"
+msgstr "record_id : Id de l'enregistrement créé"
+
+#: ../../../event.pydocstring of connector.event.on_record_create:8
+msgid "vals:  field values updated, e.g {'field_name': field_value, ...}"
+msgstr ""
+"vals :  valeurs des champs mis à jour, par ex. {'field_name': field_value, "
+"...}"
+
+#: ../../../event.pydocstring of connector.event.on_record_unlink:1
+msgid "``on_record_unlink`` is fired when one record has been deleted."
+msgstr ""
+"``on_record_unlink`` est déclenché à la suppression d'un enregistrement."
+
+#: ../../../event.pydocstring of connector.event.on_record_unlink:7
+#: ../../../event.pydocstring of connector.event.on_record_write:7
+msgid "record_id: id of the record"
+msgstr "record_id : Id de l'enregistrement"
+
+#: ../../../event.pydocstring of connector.event.on_record_write:1
+msgid "``on_record_write`` is fired when one record has been updated."
+msgstr ""
+"``on_record_write`` est déclenché à la mise à jour d'un enregistrement."
+
+#: ../../../event.pydocstring of connector.event.on_record_write:8
+msgid ""
+"vals:  field values of the new record, e.g {'field_name': field_value, ...}"
+msgstr ""
+"vals :  valeurs des champ pour le nouvel enregistrement, par ex. "
+"{'field_name': field_value, ...}"
+
+#: ../../api/api_exception.rst:2
+msgid "Exceptions"
+msgstr "Exceptions"
+
+#: ../../../exception.pydocstring of connector.exception.ConnectorException:1
+msgid "Bases: :class:`exceptions.RuntimeError`"
+msgstr "Bases : :class:`exceptions.RuntimeError`"
+
+#: ../../../exception.pydocstring of connector.exception.ConnectorException:1
+msgid "Base Exception for the connectors"
+msgstr "Exception de base pour les connecteurs"
+
+#: ../../../exception.pydocstring of connector.exception.FailedJobError:1
+#: ../../../exception.pydocstring of connector.exception.IDMissingInBackend:1
+#: ../../../exception.pydocstring of connector.exception.ManyIDSInBackend:1
+#: ../../../exception.pydocstring of connector.exception.NoSuchJobError:1
+#: ../../../exception.pydocstring of connector.exception.NotReadableJobError:1
+#: ../../../exception.pydocstring of connector.exception.NothingToDoJob:1
+#: ../../../exception.pydocstring of connector.exception.RetryableJobError:1
+msgid "Bases: :class:`connector.exception.JobError`"
+msgstr "Bases : :class:`connector.exception.JobError`"
+
+#: ../../../exception.pydocstring of connector.exception.FailedJobError:1
+msgid "A job had an error having to be resolved."
+msgstr "Un job a eu une erreur qui doit être résolue"
+
+#: ../../../exception.pydocstring of connector.exception.InvalidDataError:1
+#: ../../../exception.pydocstring of connector.exception.JobError:1
+#: ../../../exception.pydocstring of connector.exception.MappingError:1
+#: ../../../exception.pydocstring of
+#: connector.exception.NoConnectorUnitError:1
+msgid "Bases: :class:`connector.exception.ConnectorException`"
+msgstr "Bases : :class:`connector.exception.ConnectorException`"
+
+#: ../../../exception.pydocstring of connector.exception.InvalidDataError:1
+msgid "Data Invalid"
+msgstr "Donnée incorrecte"
+
+#: ../../../exception.pydocstring of connector.exception.JobError:1
+msgid "A job had an error"
+msgstr "Un job a eu une erreur"
+
+#: ../../../exception.pydocstring of connector.exception.ManyIDSInBackend:1
+msgid "Unique key exists many times in backend"
+msgstr "Une clé unique existe plusieurs fois dans le backend"
+
+#: ../../../exception.pydocstring of connector.exception.MappingError:1
+msgid "An error occurred during a mapping transformation."
+msgstr "Une erreur est survenue pendant une transformation de mapping"
+
+#: ../../../exception.pydocstring of
+#: connector.exception.NetworkRetryableError:1 ../../../exception.pydocstring
+#: of connector.exception.NoExternalId:1
+msgid "Bases: :class:`connector.exception.RetryableJobError`"
+msgstr "Bases : :class:`connector.exception.RetryableJobError`"
+
+#: ../../../exception.pydocstring of
+#: connector.exception.NetworkRetryableError:1
+msgid ""
+"A network error caused the failure of the job, it can be retried later."
+msgstr ""
+"Une erreur de réseau a causé l'échec du job, il peut être réessayé plus "
+"tard."
+
+#: ../../../exception.pydocstring of
+#: connector.exception.NoConnectorUnitError:1
+msgid "No ConnectorUnit has been found"
+msgstr "Aucune ConnectorUnit n'a été trouvé"
+
+#: ../../../exception.pydocstring of connector.exception.NoExternalId:1
+msgid "No External ID found, it can be retried later."
+msgstr "Aucun ID Externe trouvé. Peut être réessayé plus tard."
+
+#: ../../../exception.pydocstring of connector.exception.NoSuchJobError:1
+msgid "The job does not exist."
+msgstr "Le job n'existe pas."
+
+#: ../../../exception.pydocstring of connector.exception.NotReadableJobError:1
+msgid "The job cannot be read from the storage."
+msgstr "Le job ne peut pas être lu depuis l'espace de stockage."
+
+#: ../../../exception.pydocstring of connector.exception.NothingToDoJob:1
+msgid "The Job has nothing to do."
+msgstr "Le job n'a rien à faire."
+
+#: ../../../exception.pydocstring of connector.exception.RetryableJobError:1
+msgid "A job had an error but can be retried."
+msgstr "Un job a eu une erreur mais peut être réessayé."
+
+#: ../../api/api_mapper.rst:2
+msgid "Mapper"
+msgstr "Mappeur"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper:2
+msgid "Mappers"
+msgstr "Mappeurs"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper:4
+msgid ""
+"Mappers are the ConnectorUnit classes responsible to transform external "
+"records into Odoo records and conversely."
+msgstr ""
+"Les Mappeurs sont les classes ConnectorUnit responsables de la "
+"transformation d'un enregistrement externe vers un enregistrement Odoo et"
+" vice versa."
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.ExportMapChild:1
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.ImportMapChild:1
+msgid "Bases: :class:`connector.unit.mapper.MapChild`"
+msgstr "Bases : :class:`connector.unit.mapper.MapChild`"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.ExportMapChild:1
+msgid ":py:class:`MapChild` for the Exports"
+msgstr ":py:class:`MapChild` pour les exports"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.ExportMapper:1
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.ImportMapper:1
+msgid "Bases: :class:`connector.unit.mapper.Mapper`"
+msgstr "Bases : :class:`connector.unit.mapper.Mapper`"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.ExportMapper:1
+msgid ":py:class:`Mapper` for exports."
+msgstr ":py:class:`Mapper` pour les exports."
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.ExportMapper:3
+msgid "Transform a record from Odoo to a backend record"
+msgstr ""
+"Transforme un enregistrement depuis Odoo vers un enregistrement du "
+"backend"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.ImportMapChild:1
+msgid ":py:class:`MapChild` for the Imports"
+msgstr ":py:class:`MapChild` pour les imports"
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.ImportMapChild.format_items:1
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapChild.format_items:1
+msgid "Format the values of the items mapped from the child Mappers."
+msgstr "Formate les valeurs des items mappés depuis les Mappeurs enfants."
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.ImportMapChild.format_items:3
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapChild.format_items:3
+msgid ""
+"It can be overridden for instance to add the Odoo relationships commands "
+"``(6, 0, [IDs])``, ..."
+msgstr ""
+"Il peut être surchargé par exemple pour ajouter les commandes de relation "
+"d'Odoo ``(6, 0, [IDs])``, ..."
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.ImportMapChild.format_items:6
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapChild.format_items:6
+msgid ""
+"As instance, it can be modified to handle update of existing items: check if"
+" an 'id' has been defined by :py:meth:`get_item_values` then use the ``(1, "
+"ID, {values}``) command"
+msgstr ""
+"Par exemple, il peut être modifié pour pour gérer la mise à jour d'items "
+"existants : vérifier si un 'id' a bien été défini par "
+":py:meth:`get_item_values` puis utilise la commande ``(1, ID, {valeurs}``)"
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.ImportMapChild.format_items:11
+msgid "list of values for the items to create"
+msgstr "liste des valeurs pour les items à créer"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.ImportMapper:1
+msgid ":py:class:`Mapper` for imports."
+msgstr ":py:class:`Mapper` pour les imports."
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.ImportMapper:3
+msgid "Transform a record from a backend to an Odoo record"
+msgstr ""
+"Transforme un enregistrement depuis un backend vers un enregistrement "
+"Odoo"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.MapChild:1
+msgid "MapChild is responsible to convert items."
+msgstr "MapChild est responsable de la conversion des items."
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.MapChild:3
+msgid ""
+"Items are sub-records of a main record. In this example, the items are the "
+"records in ``lines``::"
+msgstr ""
+"Les items sont des sous-enregistrements d'un enregistrement principal. Dans "
+"cet exemple, les items sont les enregistrements qui sont dans ``lines`` ::"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.MapChild:10
+msgid ""
+"A MapChild is always called from another :py:class:`Mapper` which provides a"
+" ``children`` configuration."
+msgstr ""
+"Un MapChild est toujours appelé depuis un autre :py:class:`Mapper` qui "
+"fournit une configuration ``children``."
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.MapChild:13
+msgid ""
+"Considering the example above, the \"main\" :py:class:`Mapper` would returns"
+" something as follows::"
+msgstr ""
+"Compte tenu de l'exemple ci-dessus, le :py:class:`Mapper` « principal » "
+"renverrait quelque chose comme ça ::"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.MapChild:20
+msgid "A MapChild is responsible to:"
+msgstr "Un MapChild est responsable de :"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.MapChild:22
+msgid "Find the :py:class:`Mapper` to convert the items"
+msgstr "Trouver le :py:class:`Mapper` pour convertir les items"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.MapChild:25
+msgid "Convert the items' records using the found :py:class:`Mapper`"
+msgstr ""
+"Convertir les enregistrements des items en utilisant le :py:class:`Mapper` "
+"trouvé"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.MapChild:26
+msgid ""
+"Format the output values to the format expected by Odoo or the backend "
+"(as seen above with ``(0, 0, {values})``"
+msgstr ""
+"Formater les valeurs de sortie vers le format attendu par Odoo ou par le "
+"backend (comme vu ci-dessus avec ``(0, 0, {values})``"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.MapChild:29
+msgid ""
+"A MapChild can be extended like any other "
+":py:class:`~connector.connector.ConnectorUnit`. However, it is not mandatory"
+" to explicitly create a MapChild for each children mapping, the default one "
+"will be used (:py:class:`ImportMapChild` or :py:class:`ExportMapChild`)."
+msgstr ""
+"Un MapChild peut être étendu comme toute autre "
+":py:class:`~connector.connector.ConnectorUnit`. Cependant il n'est pas "
+"nécessaire de créer un MapChild pour chaque mappeur enfant, ceux par défaut "
+"seront utilisés (:py:class:`ImportMapChild` ou :py:class:`ExportMapChild`)."
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.MapChild:35
+msgid ""
+"The implementation by default does not take care of the updates: if I import"
+" a sales order 2 times, the lines will be duplicated. This is not a problem "
+"as long as an importation should only support the creation (typical for "
+"sales orders). It can be implemented on a case-by-case basis by inheriting "
+":py:meth:`get_item_values` and :py:meth:`format_items`."
+msgstr ""
+"L'implémentation par défaut ne gère pas les mises à jour : si j'importe une "
+"commande deux fois, les lignes seront dupliquées. Ceci n'est pas un problème"
+" à condition qu'un import ne prenne en charge que la création  (typique pour"
+" les commandes). Il peut être implémenté au cas par cas en héritant de "
+":py:meth:`get_item_values` et :py:meth:`format_items`."
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapChild.format_items:11
+msgid "mapped values for the items"
+msgstr "valeurs traduites pour les items"
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapChild.get_item_values:1
+msgid "Get the raw values from the child Mappers for the items."
+msgstr "Récupère la valeur brute des Mappeurs enfants depuis les items."
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapChild.get_item_values:3
+msgid "It can be overridden for instance to:"
+msgstr "I peut être surchargé par exemple pour :"
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapChild.get_item_values:5
+msgid "Change options"
+msgstr "Changer des options"
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapChild.get_item_values:6
+msgid ""
+"Use a :py:class:`~connector.connector.Binder` to know if an item already "
+"exists to modify an existing item, rather than to add it"
+msgstr ""
+"Utiliser un :py:class:`~connector.connector.Binder` pour savoir si un item "
+"existe déjà afin de le modifier au lieu de l'ajouter"
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapChild.get_item_values:10
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapChild.skip_item:7
+msgid "record that we are converting"
+msgstr "enregistrement que nous sommes en train de convertir"
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapChild.get_item_values:12
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapChild.get_items:6
+msgid "destination field (can be used for introspecting the relation)"
+msgstr "champ destination (peut être utilisé pour inspecter la relation)"
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapChild.get_item_values:15
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapChild.get_items:9
+msgid "dict of options, herited from the main mapper"
+msgstr "dictionnaire des options, hérité du mappeur principal"
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapChild.get_items:1
+msgid "Returns the formatted output values of items from a main record"
+msgstr ""
+"Renvoie la sortie formatée des valeurs des items pour un enregistrement "
+"principal"
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapChild.get_items:3
+msgid "list of item records"
+msgstr "liste d'enregistrements d'items"
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapChild.get_items:5
+msgid "parent record"
+msgstr "enregistrement parent"
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapChild.get_items:10
+msgid "formatted output values for the item"
+msgstr "valeurs de sortie formatées pour l'item"
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapChild.skip_item:1
+msgid ""
+"Hook to implement in sub-classes when some child records should be skipped."
+msgstr ""
+"Point d'accroche à implémenter dans les sous-classes lorsque certains "
+"enregistrements enfants doivent être sautés."
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapChild.skip_item:4
+msgid ""
+"The parent record is accessible in ``map_record``. If it returns True, the "
+"current child record is skipped."
+msgstr ""
+"L'enregistrement parent est accessible dans ``map_record``. S'il renvoie "
+"True, l'enregistrement enfant en cours est sauté."
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.MapOptions:1
+msgid "Bases: :class:`dict`"
+msgstr "Bases : :class:`dict`"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.MapOptions:1
+msgid "Container for the options of mappings."
+msgstr "Conteneur pour les options des mappeurs."
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.MapOptions:3
+msgid ""
+"Options can be accessed using attributes of the instance.  When an option is"
+" accessed and does not exist, it returns None."
+msgstr ""
+"Des options peuvent être accédées grâce aux attributs de l'instance. Quand "
+"une option est accédée mais n'existe pas, ceci renvoie None."
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.MapRecord:1
+msgid "A record prepared to be converted using a :py:class:`Mapper`."
+msgstr ""
+"Un enregistrement préparé à être converti en utilisans un "
+":py:class:`Mapper`."
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.MapRecord:3
+msgid "MapRecord instances are prepared by :py:meth:`Mapper.map_record`."
+msgstr ""
+"Les instances de MapRecord sont préparées par :py:meth:`Mapper.map_record`."
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.MapRecord:5
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapRecord.update:3 ../../../unit/mapper.pydocstring
+#: of connector.unit.mapper.MapRecord.values:3
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.changed_by:14
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.mapping:5
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.only_create:6
+#: ../../../session.pydocstring of
+#: connector.session.ConnectorSessionHandler:16
+msgid "Usage::"
+msgstr "Utilisation ::"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.MapRecord:11
+msgid "See :py:meth:`values` for more information on the available arguments."
+msgstr ""
+"Voir :py:meth:`values` pour avoir plus d'informations sur les arguments "
+"disponibles."
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapRecord.parent:1
+msgid "Parent record if the current record is an item"
+msgstr "Enregistrement parent si l'enregistrement en cours est un item"
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapRecord.source:1
+msgid "Source record to be converted"
+msgstr "Enregistrement source à convertir"
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapRecord.update:1
+msgid "Force values to be applied after a mapping."
+msgstr "Force des valeurs à appliquer après une conversion."
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapRecord.update:11
+msgid ""
+"The values assigned with ``update()`` are in any case applied, they have a "
+"greater priority than the mapping values."
+msgstr ""
+"Les valeurs affectées avec ``update()`` sont appliquées dans tous les cas, "
+"elles ont une priorité supérieure que les valeurs converties."
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapRecord.values:1
+msgid "Build and returns the mapped values according to the options."
+msgstr "Construit et renvoie les valeurs converties selon les options."
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapRecord.values:15
+msgid "Creation of records"
+msgstr "Création des enregistrements"
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapRecord.values:10
+msgid ""
+"When using the option ``for_create``, only the mappings decorated with "
+"``@only_create`` will be mapped."
+msgstr ""
+"En utilisant l'option ``for_create``, seuls les mappings décorés avec "
+"``@only_create`` seront mappés."
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapRecord.values:24
+msgid "Filter on fields"
+msgstr "Filtrer sur les champs"
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapRecord.values:18
+msgid ""
+"When using the ``fields`` argument, the mappings will be filtered using "
+"either the source key in ``direct`` arguments, either the ``changed_by`` "
+"arguments for the mapping methods."
+msgstr ""
+"En utilisant l'argument ``fields``, les mappings seront filtrés en utilisant"
+" soit la clé source dans les arguments ``direct``, soit les arguments "
+"``changed_by`` pour les méthodes de mapping."
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapRecord.values:33
+msgid "Custom options"
+msgstr "Options spécifiques"
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapRecord.values:27
+msgid ""
+"Arbitrary key and values can be defined in the ``kwargs`` arguments.  They "
+"can later be used in the mapping methods using ``self.options``."
+msgstr ""
+"Des clé et valeurs arbitraires peuvent être définies dans les arguments "
+"``kwargs``.  Elles peuvent être ensuites utilisées dans les méthodes de "
+"mapping en utilisant ``self.options``."
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapRecord.values:35
+msgid ""
+"specify if only the mappings for creation (``@only_create``) should be "
+"mapped."
+msgstr ""
+"précise si seuls les mappings de création (``@only_create``) doivent être "
+"mappés."
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapRecord.values:38
+msgid "filter on fields"
+msgstr "filtre sur les champs"
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MapRecord.values:40 ../../../unit/mapper.pydocstring
+#: of connector.unit.mapper.MapRecord.values:40
+msgid "custom options, they can later be used in the mapping methods"
+msgstr ""
+"options spécifiques, elles peuvent être utilisées plus tard dans les "
+"méthodes de mapping"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.Mapper:1
+msgid ""
+"A Mapper translates an external record to an Odoo record and conversely. "
+"The output of a Mapper is a ``dict``."
+msgstr ""
+"Un Mappeur convertit un enregistrement externe en enregistrement Odoo et "
+"vice versa. La sortie d'un Traducteur est un ``dict``."
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.Mapper:4
+msgid "3 types of mappings are supported:"
+msgstr "3 types de mappings sont pris en charge :"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.Mapper:55
+msgid "Direct Mappings"
+msgstr "Mappings directs"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.Mapper:7
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.backend_to_m2o:10
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.convert:5
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.m2o_to_backend:9
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.none:6
+msgid "Example::"
+msgstr "Exemples ::"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.Mapper:11
+msgid "Here, the ``source`` field will be copied in the ``target`` field."
+msgstr "Ici le champs ``source`` sera copié vers le champ ``target``."
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.Mapper:13
+msgid ""
+"A modifier can be used in the source item. The modifier will be applied to "
+"the source field before being copied in the target field. It should be a "
+"closure function respecting this idiom::"
+msgstr ""
+"Un modificateur peut être utilisé dans l'item source. Le modificateur sera "
+"appliqué au champ source avant d'être copié dans le champ destination. Il "
+"doit être une fonction de type `closure` pour respecter cet idiome ::"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.Mapper:27
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.Mapper:45
+msgid "And used like that::"
+msgstr "Et utilisé de cette façon ::"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.Mapper:33
+msgid "A more concrete example of modifier::"
+msgstr "Un exemple plus concret de modificateur ::"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.Mapper:51
+msgid "More examples of modifiers:"
+msgstr "D'autres exemples de modificateurs ::"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.Mapper:53
+msgid ":py:func:`convert`"
+msgstr ":py:func:`convert`"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.Mapper:54
+msgid ":py:func:`m2o_to_backend`"
+msgstr ":py:func:`m2o_to_backend`"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.Mapper:55
+msgid ":py:func:`backend_to_m2o`"
+msgstr ":py:func:`backend_to_m2o`"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.Mapper:76
+msgid "Method Mappings"
+msgstr "Mappings par méthode"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.Mapper:58
+msgid ""
+"A mapping method allows to execute arbitrary code and return one or many "
+"fields::"
+msgstr ""
+"Un méthode de mapping permet d'exécuter un code arbitraire et de renvoyer un"
+" ou plusieurs champs ::"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.Mapper:67
+msgid ""
+"We can also specify that a mapping methods should be applied only when an "
+"object is created, and never applied on further updates::"
+msgstr ""
+"Nous pouvons aussi préciser qu'une méthode de mapping doit être appliquée "
+"lorsqu'un objet est créé, mais jamais appliquée sur les mises à jour "
+"ultérieures ::"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.Mapper:89
+msgid "Submappings"
+msgstr "Sous-mappings"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.Mapper:79
+msgid ""
+"When a record contains sub-items, like the lines of a sales order, we can "
+"convert the children using another Mapper::"
+msgstr ""
+"Lorsqu'un enregistrement contient des sous-items, comme les lignes d'une "
+"commande, nous pouvons convertir les enfants grâce à une autre Mappeur ::"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.Mapper:84
+msgid ""
+"It allows to create the sales order and all its lines with the same call to "
+":py:meth:`odoo.models.BaseModel.create()`."
+msgstr ""
+"Il permet de créer des commandes et toutes ses lignes dans le même appel à "
+":py:meth:`odoo.models.BaseModel.create()`."
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.Mapper:87
+msgid ""
+"When using ``children`` for items of a record, we need to create a "
+":py:class:`Mapper` for the model of the items, and optionally a "
+":py:class:`MapChild`."
+msgstr ""
+"En utilisant des ``children`` pour les items d'un enregistrement, nous "
+"devons créer un :py:class:`Mapper` pour le modèle des items, et de manière "
+"optionnelle un :py:class:`MapChild`."
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.Mapper:91
+msgid "Usage of a Mapper::"
+msgstr "Utilisation d'un Mappeur ::"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.Mapper.finalize:1
+msgid "Called at the end of the mapping."
+msgstr "Appelé à la fin du mapping."
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.Mapper.finalize:3
+msgid ""
+"Can be used to modify the values before returning them, as the "
+"``on_change``."
+msgstr ""
+"Peut être utilisé pour modifier les valeurs avant de les renvoyer, comme le "
+"``on_change``."
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.Mapper.finalize:6
+msgid "source map_record"
+msgstr "map_record source"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.Mapper.finalize:8
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.Mapper.finalize:9
+msgid "mapped values"
+msgstr "valeurs mappées"
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.Mapper.map_methods:1
+msgid "Yield all the methods decorated with ``@mapping``"
+msgstr "Émets toutes les méthodes décorées avec ``@mapping``"
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.Mapper.map_record:1
+msgid ""
+"Get a :py:class:`MapRecord` with record, ready to be converted using the "
+"current Mapper."
+msgstr ""
+"Récupère un :py:class:`MapRecord` avec enregistrement, prêt à être converti "
+"avec le Mappeur en cours."
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.Mapper.map_record:4
+msgid "record to transform"
+msgstr "enregistrement à transformer"
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.Mapper.map_record:5
+msgid "optional parent record, for items"
+msgstr "enregistrement parent optionnel, pour les items"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.Mapper.options:1
+msgid "Options can be accessed in the mapping methods with ``self.options``."
+msgstr ""
+"Des options peuvent être accédées dans les méthodes de mapping avec "
+"``self.options``."
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MappingDefinition:1
+msgid "Bases: :class:`tuple`"
+msgstr "Bases : :class:`tuple`"
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MappingDefinition.changed_by:1
+msgid "Alias for field number 0"
+msgstr "Alias pour le champ numéro 0"
+
+#: ../../../unit/mapper.pydocstring of
+#: connector.unit.mapper.MappingDefinition.only_create:1
+msgid "Alias for field number 1"
+msgstr "Alias pour le champs numéro 1"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.MetaMapper:1
+msgid "Bases: :class:`connector.connector.MetaConnectorUnit`"
+msgstr "Bases : :class:`connector.connector.MetaConnectorUnit`"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.MetaMapper:1
+msgid "Metaclass for Mapper"
+msgstr "Metaclass pour Mappeur"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.MetaMapper:3
+msgid ""
+"Build a ``_map_methods`` dict of mappings methods. The keys of the dict are "
+"the method names. The values of the dict are a namedtuple containing:"
+msgstr ""
+"construit un dict ``_map_methods`` des méthodes de mapping. Les clés de ce "
+"dict sont les noms de méthode. Les valeurs sont des `namedtuple` contenant :"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.backend_to_m2o:1
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.convert:1
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.m2o_to_backend:1
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.none:1
+msgid "A modifier intended to be used on the ``direct`` mappings."
+msgstr "Un modificateur destiné à être utilisé sur les mapping ``directs``"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.backend_to_m2o:3
+msgid ""
+"For a field from a backend which is an ID, search the corresponding binding "
+"in Odoo and returns its ID."
+msgstr ""
+"Pour un champ d'un backend qui est un ID, recherche le binding correspondant"
+" dans Odoo et renvoie son ID."
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.backend_to_m2o:6
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.m2o_to_backend:5
+msgid ""
+"When the field's relation is not a binding (i.e. it does not point to "
+"something like ``magento.*``), the binding model needs to be provided in the"
+" ``binding`` keyword argument."
+msgstr ""
+"Quand la relation du champ n'est pas un binding (càd ne pointe pas vers "
+"quelque chose comme ``magento.*``), le modèle de liaison doit être fourni "
+"avec l'argument nommé ``binding``."
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.backend_to_m2o:16
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.convert:9
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.m2o_to_backend:15
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.none:11
+msgid "name of the source field in the record"
+msgstr "nom du champ source dans l'enregistrement"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.backend_to_m2o:17
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.m2o_to_backend:16
+msgid "name of the binding model is the relation is not a binding"
+msgstr "nom du modèle de liaison si la relation n'est pas une liaison"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.backend_to_m2o:18
+msgid "include the inactive records in Odoo in the search"
+msgstr "inclut les enregistrements inactifs d'Odoo dans la recherche"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.changed_by:1
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.only_create:1
+msgid "Decorator for the mapping methods (:py:func:`mapping`)"
+msgstr "Décorateur pour les méthodes de mapping (:py:func:`mapping`)"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.changed_by:3
+msgid ""
+"When fields are modified in Odoo, we want to export only the modified "
+"fields. Using this decorator, we can specify which fields updates should "
+"trigger which mapping method."
+msgstr ""
+"Lorsque des champs sont modifié dans Odoo, nous ne devrions exporter que "
+"les champs modifiés. En utilisant ce décorateur, nous pouvons préciser "
+"quelles modifications de champs doivent déclencher quelle méthode de "
+"mapping."
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.changed_by:7
+msgid "If ``changed_by`` is empty, the mapping is always active."
+msgstr "Si ``changed_by`` est vide, le mapping est toujours actif."
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.changed_by:9
+msgid ""
+"As far as possible, this decorator should be used for the exports, thus, "
+"when we do an update on only a small number of fields on a record, the size "
+"of the output record will be limited to only the fields really having to be "
+"exported."
+msgstr ""
+"Autant que possible, ce décorateur devrait être utilisé pour les exports. De"
+" cette façon lorsqu'on fait une modification sur une petite partie des "
+"champs d'un enregistrement, la taille de l'enregistrement en sortie sera "
+"limitée aux seuls champs devant être exportés."
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.changed_by:21
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.changed_by:21
+msgid "field names which trigger the mapping when modified"
+msgstr "noms de champs qui déclenchent le mapping à la modification"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.convert:3
+msgid "Convert a field's value to a given type."
+msgstr "Convertit une valeur de champ vers un type donné"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.convert:10
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.none:12
+msgid "True if the relation is a binding record"
+msgstr "True si la relation est un enregistrement de binding"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.m2o_to_backend:3
+msgid "For a many2one, get the ID on the backend and returns it."
+msgstr "Pour un many2one, récupère l'ID depuis le backend et le renvoie."
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.mapping:1
+msgid "Declare that a method is a mapping method."
+msgstr "Déclare qu'une méthode est une méthode de mapping."
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.mapping:3
+msgid "It is then used by the :py:class:`Mapper` to convert the records."
+msgstr ""
+"C'est ensuite utilisé par le :py:class:`Mapper` pour convertir les "
+"enregistrements."
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.none:3
+msgid ""
+"Replace the False-ish values by None. It can be used in a pipeline of "
+"modifiers when ."
+msgstr ""
+"Remplace les valeurs similaires à False par None. Ceci peut être utilisé "
+"dans un enchaînement de modificateurs quand ."
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.only_create:3
+msgid ""
+"A mapping decorated with ``only_create`` means that it has to be used only "
+"for the creation of the records."
+msgstr ""
+"Un mapping décoré avec ``only_create`` indique qu'il doit être utilisé "
+"uniquement pour a création d'enregistrements."
+
+#: ../../api/api_queue.rst:3 ../../api/api_queue.rst:25
+msgid "Queue"
+msgstr "Queue"
+
+#: ../../api/api_queue.rst:7
+msgid "Job"
+msgstr "Job"
+
+#: ../../../queue/job.pydocstring of connector.queue.job.Job:1
+msgid "A Job is a task to execute."
+msgstr "Un job est une tâche à exécuter."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.Job:5
+msgid "Id (UUID) of the job."
+msgstr "Id (UUID) du job."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.Job:9
+msgid "When the job is enqueued, UUID of the worker."
+msgstr "Quand le job est placé dans la queue, UUID du worker."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.Job:13
+msgid ""
+"State of the job, can pending, enqueued, started, done or failed. The start "
+"state is pending and the final state is done."
+msgstr ""
+"État du job, peut être en attente, en queue, démarré, terminé, échoué. "
+"L'état initial est `en attente` et l'état final est `terminé`."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.Job:18
+msgid ""
+"The current try, starts at 0 and each time the job is executed, it increases"
+" by 1."
+msgstr ""
+"L'essai actuel, démarre à 0 et s'incrémente de 1 chaque fois que le job est "
+"exécuté."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.Job:23
+msgid ""
+"The maximum number of retries allowed before the job is considered as "
+"failed."
+msgstr ""
+"Le nombre maximum d'essais permis avant que le job soit considéré comme "
+"échoué."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.Job:28
+msgid "Name of the function (in the form module.function_name)."
+msgstr "Nom de la fonction (sous la forme module.nom_fonction)."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.Job:32
+msgid "Arguments passed to the function when executed."
+msgstr "Arguments transmis à la fonction pendant l'exécution."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.Job:36
+msgid "Keyword arguments passed to the function when executed."
+msgstr "Arguments nommés transmis à la fonction pendant l'exécution."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.Job:40
+msgid ""
+"Full string representing the function to be executed, ie. "
+"module.function(args, kwargs)"
+msgstr ""
+"Chaîne complète représentant la fonction à exécuter, càd "
+"module.fonction(args, kwargs)"
+
+#: ../../../queue/job.pydocstring of connector.queue.job.Job:45
+msgid "Human description of the job."
+msgstr "Description du job à destination des utilisateurs."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.Job:49
+msgid "The python function itself."
+msgstr "La fonction Python elle-même."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.Job:53
+msgid "Odoo model on which the job will run."
+msgstr "Modèle Odoo pour lequel le job va fonctionner."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.Job:57
+msgid "Priority of the job, 0 being the higher priority."
+msgstr "Priorité du job, 0 étant la plus haute priorité."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.Job:61
+msgid "Date and time when the job was created."
+msgstr "Date et heure de création du job."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.Job:65
+msgid "Date and time when the job was enqueued."
+msgstr "Date et heure de mise en queue du job."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.Job:69
+msgid "Date and time when the job was started."
+msgstr "Date et heure de démarrage du job."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.Job:73
+msgid "Date and time when the job was done."
+msgstr "Date et heure d'arrêt du job."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.Job:77
+msgid "A description of the result (for humans)."
+msgstr "Une description du résultat (à destination des utilisateurs)."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.Job:81
+msgid "Exception information (traceback) when the job failed."
+msgstr ""
+"Informations sur l'`Exception` (`traceback') ayant causé l'échec du job"
+
+#: ../../../queue/job.pydocstring of connector.queue.job.Job:85
+msgid "Odoo user id which created the job"
+msgstr "Id de l'utilisateur Odoo qui a créé le job"
+
+#: ../../../queue/job.pydocstring of connector.queue.job.Job:89
+msgid ""
+"Estimated Time of Arrival of the job. It will not be executed before this "
+"date/time."
+msgstr ""
+"Heure estimée de lancement (ETA) du job. Il ne sera pas exécuté avant cette "
+"date/heure."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.Job:94
+msgid "True if the job has been canceled."
+msgstr "True si le job a été annulé."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.Job.perform:1
+msgid "Execute the job."
+msgstr "Exécute le job."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.Job.perform:3
+msgid "The job is executed with the user which has initiated it."
+msgstr "Le job est exécuté avec l'utilisateur qui l'a initié."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.Job.perform:5
+msgid "session to execute the job"
+msgstr "session d'exécution du job"
+
+#: ../../../queue/job.pydocstring of connector.queue.job.Job.postpone:1
+msgid ""
+"Write an estimated time arrival to n seconds later than now. Used when an "
+"retryable exception want to retry a job later."
+msgstr ""
+"Écrit un heure estimée de lancement dans `n` secondes. Utilisé quand une "
+"`Exception` non fatale souhaite relancer un job."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.Job.uuid:1
+msgid "Job ID, this is an UUID"
+msgstr "Id du job, c'est un UUID"
+
+#: ../../../queue/job.pydocstring of connector.queue.job.JobStorage:1
+msgid "Interface for the storage of jobs"
+msgstr "Interface pour le stockage des jobs"
+
+#: ../../../queue/job.pydocstring of connector.queue.job.JobStorage.exists:1
+#: ../../../queue/job.pydocstring of
+#: connector.queue.job.OdooJobStorage.exists:1
+msgid "Returns if a job still exists in the storage."
+msgstr "Indique si un job existe encore dans l'espace de stockage."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.JobStorage.load:1
+msgid "Read the job's data from the storage"
+msgstr "Lit les donnés du job dans l'espace de stockage"
+
+#: ../../../queue/job.pydocstring of connector.queue.job.JobStorage.store:1
+msgid "Store a job"
+msgstr "Stocke un job"
+
+#: ../../../queue/job.pydocstring of connector.queue.job.OdooJobStorage:1
+msgid "Bases: :class:`connector.queue.job.JobStorage`"
+msgstr "Bases : :class:`connector.queue.job.JobStorage`"
+
+#: ../../../queue/job.pydocstring of connector.queue.job.OdooJobStorage:1
+msgid "Store a job on Odoo"
+msgstr "Stocke un job dans Odoo"
+
+#: ../../../queue/job.pydocstring of
+#: connector.queue.job.OdooJobStorage.enqueue:1
+#: ../../../queue/job.pydocstring of
+#: connector.queue.job.OdooJobStorage.enqueue_resolve_args:1
+msgid "Create a Job and enqueue it in the queue. Return the job uuid."
+msgstr "Crée un job et le met en queue. Renvoie le UUID du job."
+
+#: ../../../queue/job.pydocstring of
+#: connector.queue.job.OdooJobStorage.enqueue:3
+msgid ""
+"This expects the arguments specific to the job to be already extracted from "
+"the ones to pass to the job function."
+msgstr ""
+"S'attend à ce que les arguments spécifiques au job soient déjà extraites de "
+"ceux à passer à la fonction du job."
+
+#: ../../../queue/job.pydocstring of
+#: connector.queue.job.OdooJobStorage.load:1
+msgid "Read a job from the Database"
+msgstr "Lit un job depuis la base de données"
+
+#: ../../../queue/job.pydocstring of
+#: connector.queue.job.OdooJobStorage.store:1
+msgid "Store the Job"
+msgstr "Stocke le job"
+
+#: ../../../queue/job.pydocstring of connector.queue.job.job:1
+msgid "Decorator for jobs."
+msgstr "Décorateur pour les jobs."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.job:3
+msgid "Add a ``delay`` attribute on the decorated function."
+msgstr "Ajoute un attribut ``delay`` sur la fonction décorée."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.job:5
+msgid ""
+"When ``delay`` is called, the function is transformed to a job and stored in"
+" the Odoo queue.job model. The arguments and keyword arguments given in "
+"``delay`` will be the arguments used by the decorated function when it is "
+"executed."
+msgstr ""
+"Quand ``delay`` est appelée, la fonction est transformée en job et stockée "
+"dans le modèle Odoo queue.job. Les arguments positionnels et nommés "
+"transmis à ``delay`` seront les arguments utilisés par la fonction décorée "
+"lorsqu'elle sera exécutée."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.job:10
+msgid "The ``delay()`` function of a job takes the following arguments:"
+msgstr "La fonction ``delay()`` d'un job reçoit les arguments suivants :"
+
+#: ../../../queue/job.pydocstring of connector.queue.job.job:13
+msgid "Current :py:class:`~odoo.addons.connector.session.ConnectorSession`"
+msgstr ""
+":py:class:`~odoo.addons.connector.session.ConnectorSession` en cours"
+
+#: ../../../queue/job.pydocstring of connector.queue.job.job:16
+msgid "name of the model on which the job has something to do"
+msgstr "nom du modèle sur lequel le job a quelque chose à faire"
+
+#: ../../../queue/job.pydocstring of connector.queue.job.job:57
+msgid "*args and **kargs"
+msgstr "*args et **kargs"
+
+#: ../../../queue/job.pydocstring of connector.queue.job.job:19
+msgid ""
+"Arguments and keyword arguments which will be given to the called function "
+"once the job is executed. They should be ``pickle-able``."
+msgstr ""
+"Arguments positionnels et nommés qui seront transmis à la fonction une fois "
+"que le job est exécuté. Ils doivent être « pickle-able »."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.job:22
+msgid "There is 4 special and reserved keyword arguments that you can use:"
+msgstr ""
+"Il existe 4 arguments nommés spéciaux et réservés que vous pouvez utiliser :"
+
+#: ../../../queue/job.pydocstring of connector.queue.job.job:24
+msgid "priority: priority of the job, the smaller is the higher priority."
+msgstr "priority : priorité du job, une valeur plus petite étant prioritaire."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.job:25
+msgid "Default is 10."
+msgstr "10 par défaut."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.job:27
+msgid "max_retries: maximum number of retries before giving up and set"
+msgstr "max_retries : nombre maximal d'essais avant d'abandonner et définir"
+
+#: ../../../queue/job.pydocstring of connector.queue.job.job:27
+msgid ""
+"the job state to 'failed'. A value of 0 means infinite retries. Default is "
+"5."
+msgstr ""
+"l'état du job à `échoué`. Une valeur de 0 signifie un nombre infini "
+"d'essais. Par défaut la valeur est 5."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.job:30
+msgid "eta: the job can be executed only after this datetime"
+msgstr "eta : le job ne peut être exécuté qu'après cette `datetime`"
+
+#: ../../../queue/job.pydocstring of connector.queue.job.job:30
+msgid "(or now + timedelta if a timedelta or integer is given)"
+msgstr ""
+"(ou maintenant + `timedelta` si un `timedelta` ou un entier est fourni)"
+
+#: ../../../queue/job.pydocstring of connector.queue.job.job:35
+msgid "description : a human description of the job,"
+msgstr "description : une description à destination des utilisateurs,"
+
+#: ../../../queue/job.pydocstring of connector.queue.job.job:33
+msgid "intended to discriminate job instances (Default is the func.__doc__ or"
+msgstr ""
+"destinée à différencier les instances de job (Par défaut func.__doc__ ou"
+
+#: ../../../queue/job.pydocstring of connector.queue.job.job:35
+msgid "'Function %s' % func.__name__)"
+msgstr "'Function %s' % func.__name__)"
+
+#: ../../../queue/job.pydocstring of connector.queue.job.job:37
+msgid "Example:"
+msgstr "Exemple :"
+
+#: ../../../queue/job.pydocstring of connector.queue.job.job:57
+msgid ""
+"See also: :py:func:`related_action` a related action can be attached to a "
+"job"
+msgstr ""
+"Voir aussi : :py:func:`related_action` une action connexe peut être attachée"
+" à un job"
+
+#: ../../../queue/job.pydocstring of connector.queue.job.related_action:1
+msgid "Attach a *Related Action* to a job."
+msgstr "Attache une *action connexe* à un job"
+
+#: ../../../queue/job.pydocstring of connector.queue.job.related_action:3
+msgid ""
+"A *Related Action* will appear as a button on the Odoo view. The button "
+"will execute the action, usually it will open the form view of the record "
+"related to the job."
+msgstr ""
+"Un *action connexe* apparaîtra comme un bouton dans la vue Odoo. Le "
+"bouton exécutera l'action, habituellement une ouverture de formulaire de "
+"l'enregistrement lié au job."
+
+#: ../../../queue/job.pydocstring of connector.queue.job.related_action:7
+msgid "The ``action`` must be a callable that responds to arguments::"
+msgstr ""
+"L'``action`` doit être un objet `callable` qui prends les arguments ::"
+
+#: ../../../queue/job.pydocstring of connector.queue.job.related_action:11
+msgid "Example usage:"
+msgstr "Exemple d'utilisation :"
+
+#: ../../../queue/job.pydocstring of connector.queue.job.related_action:34
+msgid "The kwargs are transmitted to the action:"
+msgstr "Les ``kwargs`` sont transmis à l'action :"
+
+#: ../../api/api_queue.rst:16 ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueWorker:1
+msgid "Worker"
+msgstr "Worker"
+
+#: ../../../queue/worker.pydocstring of connector.queue.worker.Worker:1
+#: ../../../queue/worker.pydocstring of connector.queue.worker.WorkerWatcher:1
+msgid "Bases: :class:`threading.Thread`"
+msgstr "Bases : :class:`threading.Thread`"
+
+#: ../../../queue/worker.pydocstring of connector.queue.worker.Worker:1
+msgid "Post and retrieve jobs from the queue, execute them"
+msgstr "Poste et récupère des jobs de la queue, les exécute"
+
+#: ../../../queue/worker.pydocstring of
+#: connector.queue.worker.Worker.enqueue_job_uuid:1
+msgid "Enqueue a job:"
+msgstr "Met un job en queue :"
+
+#: ../../../queue/worker.pydocstring of
+#: connector.queue.worker.Worker.enqueue_job_uuid:3
+msgid ""
+"It will be executed by the worker as soon as possible (according to the "
+"job's priority"
+msgstr ""
+"Il sera exécuté par le worker aussi tôt que possible (en fonction de la "
+"priorité du job)"
+
+#: ../../../queue/worker.pydocstring of connector.queue.worker.Worker.run:1
+msgid "Worker's main loop"
+msgstr "Boucle principale du worker"
+
+#: ../../../queue/worker.pydocstring of connector.queue.worker.Worker.run:3
+msgid ""
+"Check if it still exists in the ``watcher``. When it does no longer exist, "
+"it break the loop so the thread stops properly."
+msgstr ""
+"Vérifie s'il existe encore dans le ``watcher``. Quand il n'existe plus, il "
+"sort de la boucle de façon que le `thread` s'arrête proprement."
+
+#: ../../../queue/worker.pydocstring of connector.queue.worker.Worker.run:6
+msgid "Wait for jobs and execute them sequentially."
+msgstr "Attend les jobs et les exécute séquentiellement."
+
+#: ../../../queue/worker.pydocstring of
+#: connector.queue.worker.Worker.run_job:1
+msgid "Execute a job"
+msgstr "Exécute un job"
+
+#: ../../../queue/worker.pydocstring of connector.queue.worker.WorkerWatcher:1
+msgid "Keep a sight on the workers and signal their aliveness."
+msgstr "Garde un œil sur les workers et signale leur changement d'état."
+
+#: ../../../queue/worker.pydocstring of connector.queue.worker.WorkerWatcher:3
+msgid ""
+"A `WorkerWatcher` is shared between databases, so only 1 instance is "
+"necessary to check the aliveness of the workers for every database."
+msgstr ""
+"Un `WorkerWatcher` est partagé entre plusieurs bases de données, donc seule "
+"une instance est nécessaire pour vérifier l'état des workers pour chaque "
+"base de données."
+
+#: ../../../queue/worker.pydocstring of
+#: connector.queue.worker.WorkerWatcher.available_db_names:1
+msgid ""
+"Returns the databases for the server having the connector module installed."
+msgstr ""
+"Renvoie les bases de données du serveur où le module `connector` est "
+"installé"
+
+#: ../../../queue/worker.pydocstring of
+#: connector.queue.worker.WorkerWatcher.available_db_names:4
+msgid "Available means that they can be used by a `Worker`."
+msgstr "Disponible signifie qu'elles peuvent être utilisées par un `Worker`."
+
+#: ../../../queue/worker.pydocstring of
+#: connector.queue.worker.WorkerWatcher.available_db_names:6
+msgid "database names"
+msgstr "Noms des bases de données"
+
+#: ../../../queue/worker.pydocstring of
+#: connector.queue.worker.WorkerWatcher.check_alive:1
+msgid ""
+"Check if the the worker is still alive and notify its aliveness. Check if "
+"the other workers are still alive, if they are dead, remove them from the "
+"worker's pool."
+msgstr ""
+"Vérifie si le worker est toujours vivant et signale son état. Vérifie si les"
+" autres workers sont toujours vivants, et si ce n'est pas le cas, les retire"
+" du pool de workers."
+
+#: ../../../queue/worker.pydocstring of
+#: connector.queue.worker.WorkerWatcher.run:1
+msgid "`WorkerWatcher`'s main loop"
+msgstr "boucle principale du `WorkerWatcher`"
+
+#: ../../../queue/worker.pydocstring of
+#: connector.queue.worker.WorkerWatcher.worker_lost:1
+msgid "Indicate if a worker is no longer referenced by the watcher."
+msgstr "Indique si un worker n'est plus référencé par l'observateur."
+
+#: ../../../queue/worker.pydocstring of
+#: connector.queue.worker.WorkerWatcher.worker_lost:3
+msgid "Used by the worker threads to know if they have to exit."
+msgstr ""
+"Utilisé par les `threads` de worker pour savoir s'ils doivent s'arrêter."
+
+#: ../../../queue/worker.pydocstring of connector.queue.worker.start_service:1
+msgid "Start the watcher"
+msgstr "Démarre l'observateur"
+
+#: ../../../queue/queue.pydocstring of connector.queue.queue.JobsQueue:1
+msgid "Holds the jobs planned for execution in memory."
+msgstr "Contient en mémoire les jobs dont l'exécution est planifiée."
+
+#: ../../../queue/queue.pydocstring of connector.queue.queue.JobsQueue:3
+msgid ""
+"The Jobs are sorted, the higher the priority is, the earlier the jobs are "
+"dequeued."
+msgstr ""
+"Les jobs sont triés, plus la priorité est importante, plus tôt les jobs sont"
+" dépilés de la queue."
+
+#: ../../../queue/queue.pydocstring of
+#: connector.queue.queue.JobsQueue.dequeue:1
+msgid "Take the first job according to its priority and return it"
+msgstr "Dépile et renvoie le premier job en fonction de sa priorité"
+
+#: ../../api/api_queue.rst:34
+msgid "Models"
+msgstr "Modèles"
+
+#: ../../../queue/model.pydocstring of connector.queue.model.QueueJob:1
+#: ../../../queue/model.pydocstring of connector.queue.model.QueueWorker:1
+msgid "Bases: :class:`odoo.models.Model`"
+msgstr "Bases : :class:`odoo.models.Model`"
+
+#: ../../../queue/model.pydocstring of connector.queue.model.QueueJob:1
+msgid "Job status and result"
+msgstr "État du job et résultat"
+
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueJob.autovacuum:1
+msgid ""
+"Delete all jobs (active or not) done since more than ``_removal_interval`` "
+"days."
+msgstr ""
+"Efface tous les jobs (actifs ou non) qui sont terminés depuis plus de "
+"``_removal_interval`` jours."
+
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueJob.autovacuum:4
+msgid "Called from a cron."
+msgstr "Appelé depuis une tâche planifiée (`cron`)."
+
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueJob.company_id:1
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueJob.user_id:1 ../../../queue/model.pydocstring
+#: of connector.queue.model.QueueJob.worker_id:1
+msgid ""
+"The value of such a field is a recordset of size 0 (no record) or 1 (a "
+"single record)."
+msgstr ""
+"La valeur d'un tel champ est un `recordset` de taille 0 (pas "
+"d'enregistrement) ou 1 (enregistrement unique)."
+
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueJob.company_id:4
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueJob.user_id:4 ../../../queue/model.pydocstring
+#: of connector.queue.model.QueueJob.worker_id:4
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueWorker.job_ids:5
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.RequeueJob.job_ids:3
+msgid "name of the target model (string)"
+msgstr "nom du modèle cible (chaîne de caractères)"
+
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueJob.company_id:6
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueJob.user_id:6 ../../../queue/model.pydocstring
+#: of connector.queue.model.QueueJob.worker_id:6
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueWorker.job_ids:10
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.RequeueJob.job_ids:21
+msgid ""
+"an optional domain to set on candidate values on the client side (domain or "
+"string)"
+msgstr ""
+"un `domain` optionnel à définir sur les valeurs candidates côté client "
+"(`domain` ou `string`)"
+
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueJob.company_id:9
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueJob.user_id:9 ../../../queue/model.pydocstring
+#: of connector.queue.model.QueueJob.worker_id:9
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueWorker.job_ids:13
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.RequeueJob.job_ids:24
+msgid ""
+"an optional context to use on the client side when handling that field "
+"(dictionary)"
+msgstr ""
+"un `context` optionnel à utiliser côté client à la prise en charge de ce "
+"champ (dictionnaire)"
+
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueJob.company_id:12
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueJob.user_id:12 ../../../queue/model.pydocstring
+#: of connector.queue.model.QueueJob.worker_id:12
+msgid ""
+"what to do when the referred record is deleted; possible values are: ``'set "
+"null'``, ``'restrict'``, ``'cascade'``"
+msgstr ""
+"quoi faire quand l'enregistrement en rapport est effacé ; les valeurs "
+"possibles sont : ``'set null'``, ``'restrict'``, ``'cascade'``"
+
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueJob.company_id:15
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueJob.user_id:15 ../../../queue/model.pydocstring
+#: of connector.queue.model.QueueJob.worker_id:15
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueWorker.job_ids:16
+msgid ""
+"whether JOINs are generated upon search through that field (boolean, by "
+"default ``False``)"
+msgstr ""
+"si les JOINs sont générés lors de la recherche sur ce champ (booleen, par "
+"défaut ``False``)"
+
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueJob.company_id:18
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueJob.user_id:18 ../../../queue/model.pydocstring
+#: of connector.queue.model.QueueJob.worker_id:18
+msgid ""
+"set it to ``True`` to make fields of the target model accessible from the "
+"current model (corresponds to ``_inherits``)"
+msgstr ""
+"définir à ``True`` pour rendre les champs du modèle cible accessibles depuis"
+" le modèle en cours (correspond à ``_inherits``)"
+
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueJob.company_id:21
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueJob.user_id:21 ../../../queue/model.pydocstring
+#: of connector.queue.model.QueueJob.worker_id:21
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.RequeueJob.job_ids:5
+msgid ""
+"The attribute `comodel_name` is mandatory except in the case of related "
+"fields or field extensions."
+msgstr ""
+"L'attribut `comodel_name` est obligatoire sauf dans le cas des champs "
+"`related` ou des extensions de champs."
+
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueJob.exc_info:1 ../../../queue/model.pydocstring
+#: of connector.queue.model.QueueJob.result:1
+msgid ""
+"Very similar to :class:`~.Char` but used for longer contents, does not have "
+"a size and usually displayed as a multiline text box."
+msgstr ""
+"Très similaire à :class:`~.Char` mais utilisé pour des contenus plus longs, "
+"sans taille spécifiée et généralement affiché dans une boite de texte multi-"
+"lignes."
+
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueJob.exc_info:4 ../../../queue/model.pydocstring
+#: of connector.queue.model.QueueJob.result:4
+msgid "whether the value of this field can be translated"
+msgstr "si la valeur de ce champ peut être traduite ou non"
+
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueJob.open_related_action:1
+msgid "Open the related action associated to the job"
+msgstr "Ouvre l'action associée au job"
+
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueWorker.assign_jobs:1
+msgid "Assign ``n`` jobs to the worker of the current process"
+msgstr "Affecte ``n`` jobs au worker du processus en cours"
+
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueWorker.assign_jobs:3
+msgid "``n`` is ``max_jobs`` or unlimited if ``max_jobs`` is None"
+msgstr "``n`` est ``max_jobs`` ou illimité si ``max_jobs`` est None"
+
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueWorker.assign_jobs:5
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueWorker.assign_then_enqueue:11
+msgid "maximal limit of jobs to assign on a worker"
+msgstr "nombre maximal de jobs à affecter à un worker"
+
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueWorker.assign_then_enqueue:1
+msgid ""
+"Assign all the jobs not already assigned to a worker. Then enqueue all the "
+"jobs having a worker but not enqueued."
+msgstr ""
+"Affecte tous les jobs non encore affectés à un worker. Puis met en queue "
+"tous les jobs qui ont un worker mais qui ne sont pas dans la queue."
+
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueWorker.assign_then_enqueue:4
+msgid "Each operation is atomic."
+msgstr "Chaque opération est atomique."
+
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueWorker.assign_then_enqueue:6
+msgid ""
+"commit transaction ``cr.commit()`` is called, so please always call this "
+"method in your own transaction, not in the main Odoo's transaction"
+msgstr ""
+"valide la transaction. ``cr.commit()`` est appelé, donc veuillez appeler "
+"cette méthode dans vos propres transactions, pas dans la transaction "
+"principale d'Odoo"
+
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueWorker.enqueue_jobs:1
+msgid "Enqueue all the jobs assigned to the worker of the current process"
+msgstr "Met en queue tous les jobs affectés au worker du processus en cours"
+
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueWorker.job_ids:1
+msgid ""
+"One2many field; the value of such a field is the recordset of all the "
+"records in `comodel_name` such that the field `inverse_name` is equal to the"
+" current record."
+msgstr ""
+"Champ one2many ; la valeur d'un tel champ est le `recordset` de tous les "
+"enregistrements dans `comodel_name` de sorte que le champ `inverse_name` "
+"soit égal à l'enregistrement actuel."
+
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueWorker.job_ids:7
+msgid "name of the inverse `Many2one` field in `comodel_name` (string)"
+msgstr "nom du champ `many2one` réciproque côté `comodel_name` (string)"
+
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueWorker.job_ids:19
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.RequeueJob.job_ids:27
+msgid "optional limit to use upon read (integer)"
+msgstr "limite optionnelle à utiliser à la lecture (entier)"
+
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.QueueWorker.job_ids:21
+msgid ""
+"The attributes `comodel_name` and `inverse_name` are mandatory except in the"
+" case of related fields or field extensions."
+msgstr ""
+"Les attributs `comodel_name` et `inverse_name` sont obligatoires sauf dans "
+"les cas des champs `related` ou des extensions de champs."
+
+#: ../../../queue/model.pydocstring of connector.queue.model.RequeueJob:1
+msgid "Bases: :class:`odoo.models.TransientModel`"
+msgstr "Bases : :class:`odoo.models.TransientModel`"
+
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.RequeueJob.job_ids:1
+msgid "Many2many field; the value of such a field is the recordset."
+msgstr "Champ many2many ; la valeur d'un tel champ est un `recordset`."
+
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.RequeueJob.job_ids:8
+msgid ""
+"optional name of the table that stores the relation in the database (string)"
+msgstr ""
+"nom optionnel de la table qui stocke la relation dans la base de données "
+"(string)"
+
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.RequeueJob.job_ids:11
+msgid ""
+"optional name of the column referring to \"these\" records in the table "
+"`relation` (string)"
+msgstr ""
+"nom optionnel de la colonne qui se réfère à \"ces\" enregistrements dans la "
+"table `relation` (string)"
+
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.RequeueJob.job_ids:14
+msgid ""
+"optional name of the column referring to \"those\" records in the table "
+"`relation` (string)"
+msgstr ""
+"nom optionnel de la colonne qui se réfère à \"ces\" enregistrements dans la "
+"table `relation` (string)"
+
+#: ../../../queue/model.pydocstring of
+#: connector.queue.model.RequeueJob.job_ids:17
+msgid ""
+"The attributes `relation`, `column1` and `column2` are optional. If not "
+"given, names are automatically generated from model names, provided "
+"`model_name` and `comodel_name` are different!"
+msgstr ""
+"Les attributs `relation`, `column1` et `column2` sont optionnels. S'ils ne "
+"sont pas fournis, des noms sont générés automatiquement depuis les noms de "
+"modèles, à condition que `model_name` et `comodel_name` soient differents !"
+
+#: ../../api/api_session.rst:2
+msgid "Session"
+msgstr "Session"
+
+#: ../../../session.pydocstring of connector.session.ConnectorSession:1
+msgid "Container for the Odoo transactional stuff:"
+msgstr "Conteneur pour les choses transactionnelles d'Odoo :"
+
+#: ../../../session.pydocstring of connector.session.ConnectorSession:5
+msgid "The Environment"
+msgstr "L'Environnement"
+
+#: ../../../session.pydocstring of connector.session.ConnectorSession:9
+msgid "The Odoo Cursor"
+msgstr "Le curseur d'Odoo"
+
+#: ../../../session.pydocstring of connector.session.ConnectorSession:13
+#: ../../../session.pydocstring of
+#: connector.session.ConnectorSessionHandler:10
+msgid "The User ID as integer"
+msgstr "L'ID de l'utilisateur (entier)"
+
+#: ../../../session.pydocstring of connector.session.ConnectorSession:17
+msgid "The registry of models"
+msgstr "Le registre des modèles"
+
+#: ../../../session.pydocstring of connector.session.ConnectorSession:21
+#: ../../../session.pydocstring of
+#: connector.session.ConnectorSessionHandler:14
+msgid "The current Odoo's context"
+msgstr "Le `context` actuel d'Odoo"
+
+#: ../../../session.pydocstring of connector.session.ConnectorSession.browse:1
+msgid "Shortcut to :py:class:`odoo.models.BaseModel.browse`"
+msgstr "Raccourci vers :py:class:`odoo.models.BaseModel.browse`"
+
+#: ../../../session.pydocstring of
+#: connector.session.ConnectorSession.change_context:1
+msgid "Context Manager: create a new Env with an updated context"
+msgstr "`Context Manager` : crée un nouvel Env avec un `context` mis à jour"
+
+#: ../../../session.pydocstring of
+#: connector.session.ConnectorSession.change_context:3
+msgid ""
+"It generates a new :class:`odoo.api.Environment` used within the context "
+"manager, where the context is extended with the arguments. The original "
+"environment is restored at the closing of the context manager."
+msgstr ""
+"Génère un nouvel :class:`odoo.api.Environment` utilisé à l'intérieur du "
+"`context manager`, où le `context` est enrichi avec les arguments. "
+"L'environnement original est restauré à la fermeture du `context manager`."
+
+#: ../../../session.pydocstring of
+#: connector.session.ConnectorSession.change_context:8
+msgid ""
+"The extended context is either the provided ``context`` in which "
+"``overrides`` are merged or the *current* context in which ``overrides`` are"
+" merged e.g."
+msgstr ""
+"Le `context` enrichi est soit le ``context`` fourni, dans lequel les "
+"``overrides`` sont fusionnés, ou le `context` *actuel* dans lequel  les "
+"``overrides`` sont fusionné, càd"
+
+#: ../../../session.pydocstring of
+#: connector.session.ConnectorSession.change_context:20
+#: ../../../session.pydocstring of
+#: connector.session.ConnectorSession.change_user:8
+msgid ""
+"only recordsets read within the context manager will be attached to this "
+"environment. In many cases, you will prefer to use "
+":meth:`odoo.models.BaseModel.with_context`"
+msgstr ""
+"seuls les `recordset` lus à l'intérieur du `context manager` seront attachés"
+" à cet environnement. Dans beaucoup de cas, vous préférerez utiliser "
+":meth:`odoo.models.BaseModel.with_context`"
+
+#: ../../../session.pydocstring of
+#: connector.session.ConnectorSession.change_user:1
+msgid "Context Manager: create a new Env with the specified user"
+msgstr "`Context Manager` : crée un nouvel Env avec l'utilisateur spécifié"
+
+#: ../../../session.pydocstring of
+#: connector.session.ConnectorSession.change_user:3
+msgid ""
+"It generates a new :class:`odoo.api.Environment` used within the context "
+"manager, where the user is replaced by the specified one.  The original "
+"environment is restored at the closing of the context manager."
+msgstr ""
+"Ceci génère un nouvel :class:`odoo.api.Environment` utilisé à l'intérieur"
+" du `context manager`, où l'utilisateur est remplacé par celui spécifié.  "
+"L'environnement original est restaré à la fermeture du `context manager`."
+
+#: ../../../session.pydocstring of connector.session.ConnectorSession.close:1
+msgid "Close the cursor"
+msgstr "Ferme le curseur"
+
+#: ../../../session.pydocstring of connector.session.ConnectorSession.commit:1
+msgid "Commit the cursor"
+msgstr "Valide la transaction"
+
+#: ../../../session.pydocstring of connector.session.ConnectorSession.create:1
+msgid "Shortcut to :py:class:`odoo.models.BaseModel.create`"
+msgstr "Raccourci pour :py:class:`odoo.models.BaseModel.create`"
+
+#: ../../../session.pydocstring of
+#: connector.session.ConnectorSession.is_module_installed:1
+msgid ""
+"Indicates whether a module is installed or not on the current database."
+msgstr ""
+"Indique si un module est installé ou non dans la base de données en cours."
+
+#: ../../../session.pydocstring of
+#: connector.session.ConnectorSession.is_module_installed:4
+msgid ""
+"Use a convention established for the connectors addons: To know if a module "
+"is installed, it looks if an (abstract) model with name "
+"``module_name.installed`` is loaded in the registry."
+msgstr ""
+"Utilise une convention établie pour les modules connecteurs : pour savoir si"
+" un module est installé, il regarde si un modèle (abstrait) avec le nom "
+"``nom_module.installed`` est chargé dans le registre."
+
+#: ../../../session.pydocstring of connector.session.ConnectorSession.read:1
+msgid "Shortcut to :py:class:`odoo.models.BaseModel.read`"
+msgstr "Raccourci pour :py:class:`odoo.models.BaseModel.read`"
+
+#: ../../../session.pydocstring of
+#: connector.session.ConnectorSession.rollback:1
+msgid "Rollback the cursor"
+msgstr "Annule la transaction"
+
+#: ../../../session.pydocstring of connector.session.ConnectorSession.search:1
+msgid "Shortcut to :py:class:`odoo.models.BaseModel.search`"
+msgstr "Raccourci pour :py:class:`odoo.models.BaseModel.search`"
+
+#: ../../../session.pydocstring of connector.session.ConnectorSession.write:1
+msgid "Shortcut to :py:class:`odoo.models.BaseModel.write`"
+msgstr "Raccourci pour :py:class:`odoo.models.BaseModel.write`"
+
+#: ../../../session.pydocstring of connector.session.ConnectorSessionHandler:1
+msgid ""
+"Allow to create a new instance of "
+":py:class:`~connector.session.ConnectorSession` for a database."
+msgstr ""
+"Permet de créer une nouvelle instance de "
+":py:class:`~connector.session.ConnectorSession` pour une base de données."
+
+#: ../../../session.pydocstring of connector.session.ConnectorSessionHandler:6
+msgid "The name of the database we're working on"
+msgstr "Le nom de la base de données sur laquelle on travaille"
+
+#: ../../../session.pydocstring of
+#: connector.session.ConnectorSessionHandler.session:1
+msgid ""
+"Context Manager: start a new session and ensure that the session's cursor "
+"is:"
+msgstr ""
+"`Context Manager` : démarre une nouvelle session et s'assure que le curseur "
+"de la session est :"
+
+#: ../../../session.pydocstring of
+#: connector.session.ConnectorSessionHandler.session:4
+msgid "rollbacked on errors"
+msgstr "annulé en cas d'erreur"
+
+#: ../../../session.pydocstring of
+#: connector.session.ConnectorSessionHandler.session:5
+msgid "commited at the end of the ``with`` context when no error occured"
+msgstr "validé à la fin du contexte ``with`` si aucune erreur n'est apparue"
+
+#: ../../../session.pydocstring of
+#: connector.session.ConnectorSessionHandler.session:6
+msgid "always closed at the end of the ``with`` context"
+msgstr "toujours fermé à la fin d'un contexte ``with``"
+
+#: ../../../session.pydocstring of
+#: connector.session.ConnectorSessionHandler.session:7
+msgid "it handles the registry signaling"
+msgstr "il gère le signalement du registre"
+
+#: ../../api/api_synchronizer.rst:2
+msgid "Synchronizer"
+msgstr "Synchroniseur"
+
+#: ../../../unit/synchronizer.pydocstring of
+#: connector.unit.synchronizer.Deleter:1
+#: ../../../unit/synchronizer.pydocstring of
+#: connector.unit.synchronizer.Exporter:1
+#: ../../../unit/synchronizer.pydocstring of
+#: connector.unit.synchronizer.Importer:1
+msgid "Bases: :class:`connector.unit.synchronizer.Synchronizer`"
+msgstr "Bases : :class:`connector.unit.synchronizer.Synchronizer`"
+
+#: ../../../unit/synchronizer.pydocstring of
+#: connector.unit.synchronizer.Deleter:1
+msgid "Synchronizer for deleting a record on the backend"
+msgstr "Synchroniseur pour effacer un enregistrement du backend"
+
+#: ../../../unit/synchronizer.pydocstring of
+#: connector.unit.synchronizer.Exporter:1
+msgid "Synchronizer for exporting data from Odoo to a backend"
+msgstr "Synchroniseur pour exporter des donnés d'Odoo vers un backend"
+
+#: ../../../unit/synchronizer.pydocstring of
+#: connector.unit.synchronizer.Importer:1
+msgid "Synchronizer for importing data from a backend to Odoo"
+msgstr "Synchroniseur pour importer des données d'un backend vers Odoo"
+
+#: ../../../unit/synchronizer.pydocstring of
+#: connector.unit.synchronizer.Synchronizer:1
+msgid "Base class for synchronizers"
+msgstr "Classe de base des synchroniseurs"
+
+#: ../../../unit/synchronizer.pydocstring of
+#: connector.unit.synchronizer.Synchronizer.backend_adapter:1
+msgid "Return an instance of ``BackendAdapter`` for the synchronization."
+msgstr "Renvoie une instance de ``BackendAdapter`` pour la synchronisation."
+
+#: ../../../unit/synchronizer.pydocstring of
+#: connector.unit.synchronizer.Synchronizer.backend_adapter:4
+#: ../../../unit/synchronizer.pydocstring of
+#: connector.unit.synchronizer.Synchronizer.binder:3
+#: ../../../unit/synchronizer.pydocstring of
+#: connector.unit.synchronizer.Synchronizer.mapper:3
+msgid ""
+"The instanciation is delayed because some synchronisations do not need such "
+"an unit and the unit may not exist."
+msgstr ""
+"L'instanciation est retardée parce que certaines synchronisations n'ont pas "
+"besoin d'une telle unité et celle-ci peut ne pas exister."
+
+#: ../../../unit/synchronizer.pydocstring of
+#: connector.unit.synchronizer.Synchronizer.binder:1
+msgid "Return an instance of ``Binder`` for the synchronization."
+msgstr "Renvoie une instance de liaison ``Binder`` pour la synchronisation."
+
+#: ../../../unit/synchronizer.pydocstring of
+#: connector.unit.synchronizer.Synchronizer.binder:6
+msgid ":py:class:`connector.unit.binder.Binder`"
+msgstr ":py:class:`connector.unit.binder.Binder`"
+
+#: ../../../unit/synchronizer.pydocstring of
+#: connector.unit.synchronizer.Synchronizer.mapper:1
+msgid "Return an instance of ``Mapper`` for the synchronization."
+msgstr "Renvoie une instance de mappeur ``Mapper`` pour la synchronisation"
+
+#: ../../../unit/synchronizer.pydocstring of
+#: connector.unit.synchronizer.Synchronizer.run:1
+msgid "Run the synchronization"
+msgstr "Lance la synchronisation"
+
+#: ../../../event.pydocstring of connector.event.Event:14
+msgid "Then to subscribe one or more consumers, an event has a function::"
+msgstr ""
+"Ensuite pour abonner un ou plusieurs consommateurs, un événement a une "
+"fonction :"
+
+#: ../../../exception.pydocstring of connector.exception.IDMissingInBackend:1
+msgid "The ID does not exist in the backend"
+msgstr "L'ID n'existe pas dans le backend"
+
+#: ../../../unit/mapper.pydocstring of connector.unit.mapper.MapChild:23
+msgid ""
+"Possibly filter out some lines (can be done by inheriting "
+":py:meth:`skip_item`)"
+msgstr ""
+"Éventuellement exclure certaines lignes (en surchargeant "
+":py:meth:`skip_item`)"
+
+#: ../../../event.pydocstring of connector.event.Event:30
+msgid "We can also replace a consumer::"
+msgstr "On peut aussi remplacer un consommateur ::"
+
+#~ msgid "We can also replace an consumer::"
+#~ msgstr "On peut aussi remplacer un consommateur ::"
+
+#~ msgid "int"
+#~ msgstr "int"
+
+#~ msgid "dict"
+#~ msgstr "dict"
+
+#~ msgid "MappingDefinition(changed_by, only_create)"
+#~ msgstr "MappingDefinition(changed_by, only_create)"
+
+#~ msgid "list"
+#~ msgstr "list"
+
+#~ msgid "The ID of does not exist in the backend"
+#~ msgstr "L'ID "
+
+#~ msgid "Then to subscribe one or more consumers, a consumer is a function::"
+#~ msgstr ""
+#~ "Ensuite pour abonner un ou plusieurs consommateurs, un événement a une "
+#~ "fonction ``subscribe`` ::"
+
+#~ msgid "We can also replace an event::"
+#~ msgstr "On peut également remplacer un consommateur ::"

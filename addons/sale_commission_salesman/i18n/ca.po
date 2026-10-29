@@ -1,0 +1,56 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_commission_salesman
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2021-06-04 10:48+0000\n"
+"Last-Translator: jabelchi <jabelchi@gmail.com>\n"
+"Language-Team: none\n"
+"Language: ca\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.3.2\n"
+
+#. module: sale_commission_salesman
+#: model:ir.model,name:sale_commission_salesman.model_res_partner
+msgid "Contact"
+msgstr "Contacte"
+
+#. module: sale_commission_salesman
+#: model:ir.model.fields,field_description:sale_commission_salesman.field_res_partner__salesman_as_agent
+#: model:ir.model.fields,field_description:sale_commission_salesman.field_res_users__salesman_as_agent
+msgid "Convert salesman into agent"
+msgstr "Convertir venedor en agent"
+
+#. module: sale_commission_salesman
+#: model:ir.model.fields,help:sale_commission_salesman.field_res_partner__salesman_as_agent
+#: model:ir.model.fields,help:sale_commission_salesman.field_res_users__salesman_as_agent
+msgid ""
+"If the user linked to this partner is put as salesman and no other "
+"commission rule is triggered, this agent will be added as the commission "
+"agent"
+msgstr ""
+"Si l'usuari enllaçat a aquest contacte es posa com a comercial i no s'activa "
+"cap altra regla de comissions, aquest agent s'afegirà com a comissionista"
+
+#. module: sale_commission_salesman
+#: model:ir.model,name:sale_commission_salesman.model_account_move_line
+msgid "Journal Item"
+msgstr "Apunt comptable"
+
+#. module: sale_commission_salesman
+#: model:ir.model,name:sale_commission_salesman.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Línia de comanda de venda"
+
+#. module: sale_commission_salesman
+#. odoo-python
+#: code:addons/sale_commission_salesman/models/res_partner.py:0
+#, python-format
+msgid "You can't have a salesman auto-agent without commission."
+msgstr "No podeu tenir un comercial auto-agent sense comissió."

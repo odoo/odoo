@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="res_groups_view_form" model="ir.ui.view">
+        <field name="name">res.groups.form - base_user_role</field>
+        <field name="model">res.groups</field>
+        <field name="inherit_id" ref="base.view_groups_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/group" position="before">
+                <div name="button_box" class="oe_button_box">
+                    <button
+                        class="oe_stat_button"
+                        name="action_view_roles"
+                        type="object"
+                        icon="fa-gears"
+                        attrs="{'invisible': [ ('role_count', '=', 0)]}"
+                    >
+                        <field string="Roles" name="role_count" widget="statinfo" />
+                    </button>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

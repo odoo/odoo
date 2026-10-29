@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="woo_coupon_form_view">
+        <field name="name">loyalty.program.form.view.inherit</field>
+        <field name="model">loyalty.program</field>
+        <field name="inherit_id" ref="loyalty.loyalty_program_view_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='date_to']" position="after">
+                <field name="woo_id" readonly="1"/>
+                <field name="is_exported" readonly="1"/>
+                <field name="woo_instance_id" readonly="1"/>
+            </xpath>
+
+            <xpath expr="//field[@name='applies_on']" position="after">
+                <field name="product_ids" widget="many2many_tags" string="Products"/>
+                <field name="fix_product_discount"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="woo_coupon_tree_view">
+        <field name="name">loyalty.program.form.view.inherit</field>
+        <field name="model">loyalty.program</field>
+        <field name="inherit_id" ref="loyalty.loyalty_program_view_tree"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">woo_import_coupon_button</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="woo_id"/>
+                <field name="is_exported"/>
+                <field name="woo_instance_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="coupon_program_view_search_inherit_woo_commerce" model="ir.ui.view">
+        <field name="name">loyalty.program.search.inherit.woo.commerce</field>
+        <field name="model">loyalty.program</field>
+        <field name="inherit_id" ref="loyalty.loyalty_program_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='inactive']" position="after">
+                <separator/>
+                <filter string="Woo Synced Coupons" name="woo_imported_coupons" domain="[('is_exported', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_woo_coupon_program" model="ir.actions.act_window">
+        <field name="name">Coupons</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">loyalty.program</field>
+        <field name="view_id" ref="loyalty.loyalty_program_view_tree"/>
+        <field name="context">{'search_default_woo_imported_coupons': 1}</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>
+

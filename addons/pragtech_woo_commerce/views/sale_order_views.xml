@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_sale_order_form_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//header" position="inside">
+                <button name="update_on_woocommerce" string="Update on WooCommerce" type="object"/>
+                <button name="open_woocommerce_order" string="Redirect to WooCommerce" type="object"/>
+            </xpath>
+
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="woo_id" readonly="1"/>
+                <field name="woo_instance_id" readonly="1"/>
+                <field name="is_exported" readonly="1"/>
+                <field name="payment_type"/>
+<!--                <field name="woo_status"/>-->
+                <field name="status_woo"/>
+                <field name="woo_order_date" string="Woo Order Date"/>
+            </xpath>
+
+            <xpath expr="/form/sheet/notebook/page[1]/field[@name='order_line']/tree/field[@name='name']"
+                   position="after">
+                <field name="w_id" invisible="1"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_quotation_tree_inherit" model="ir.ui.view">
+        <field name="name">quotation.tree.inherit.sale</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='activity_ids']" position="after">
+                <field name="woo_id" readonly="1"/>
+                <field name="woo_instance_id" readonly="1"/>
+                <field name="is_exported" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_order_tree_inherit" model="ir.ui.view">
+        <field name="name">sale.order.tree.inherit.sale</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">woo_import_sale_order_button</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='date_order']" position="replace">
+                <field name="woo_order_date" string="Order Date"/>
+            </xpath>
+
+            <xpath expr="//field[@name='activity_ids']" position="after">
+                <field name="woo_id" readonly="1"/>
+                <field name="woo_instance_id" readonly="1"/>
+                <field name="is_exported" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_sale_order_search_inherit" model="ir.ui.view">
+        <field name="name">view.sale.order.search.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='my_sale_orders_filter']" position="after">
+                <filter string="Woo Synced Orders" name="woo_imported_orders" domain="[('is_exported', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_quotation_woo" model="ir.actions.act_window">
+        <field name="name">Quotations</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="context">{'search_default_woo_imported_orders': 1}</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_sale_order_woo" model="ir.actions.act_window">
+        <field name="name">Sale Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_id" ref="sale.view_order_tree"/>
+        <field name="context">{'search_default_woo_imported_orders': 1}</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>
+

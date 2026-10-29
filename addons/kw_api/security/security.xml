@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Look at Odoo code (openepr|odoo)/modules/db.py:create_categories
+     for info auto a way module categories are generated.
+     This xmlid is used to avoid duplication of module category -->
+    <record model="ir.module.category" id="base.module_category_kw_api">
+        <field name="name">KW API</field>
+        <field name="sequence">100</field>
+        <field name="visible" eval="1" />
+    </record>
+    <record id="group_kw_api_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="category_id"
+               ref="base.module_category_kw_api"/>
+    </record>
+    <record id="group_kw_api_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id"
+               ref="base.module_category_kw_api"/>
+        <field name="implied_ids"
+               eval="[Command.link(ref('group_kw_api_user')),]"/>
+    </record>
+    <record id="group_kw_api_admin" model="res.groups">
+        <field name="name">Admin</field>
+        <field name="category_id"
+               ref="base.module_category_kw_api"/>
+        <field name="implied_ids"
+               eval="[Command.link(ref('group_kw_api_manager')),]"/>
+        <field name="users"
+               eval="[
+                Command.link(ref('base.user_root')),
+                Command.link(ref('base.user_admin')),
+            ]"/>
+    </record>
+</odoo>

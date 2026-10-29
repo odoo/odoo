@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_multiple_invoice_layout" model="ir.ui.view">
+            <field name="name">Document Layout</field>
+            <field name="model">multiple.invoice.layout</field>
+            <field name="arch" type="xml">
+                <form class="o_document_layout">
+                    <group>
+                        <group class="o_document_layout_company">
+                            <field name="company_id" invisible="1"/>
+                            <field name="journal_id" invisible="1"/>
+                            <field name="multiple_invoice_type"/>
+                            <field name="text_position"  widget="selection"
+                                   attrs="{'invisible': [('multiple_invoice_type', '!=', 'text')]}"/>
+                            <field name="body_text_position"  widget="radio"
+                                   attrs="{'invisible': ['|', ('multiple_invoice_type', '!=', 'text'),
+                                                                ('text_position', '!=', 'body')]}"/>
+                            <field name="text_align"  widget="radio" string="Text Align"
+                                   attrs="{'invisible': ['|', ('multiple_invoice_type', '!=', 'text'),
+                                                                ('text_position', 'not in', ['header', 'footer'])]}"/>
+                        </group>
+                        <div>
+                            <field name="preview" widget="iframe_wrapper" />
+                        </div>
+                    </group>
+                    <footer>
+                        <button string="Save" class="btn-primary" type="object" name="document_layout_save"/>
+                        <button special="cancel" string="Cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_multiple_invoice_layout_configurator" model="ir.actions.act_window">
+            <field name="type">ir.actions.act_window</field>
+            <field name="name">Configure Copy layout</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="res_model">multiple.invoice.layout</field>
+            <field name="view_id" ref="base_accounting_kit.view_multiple_invoice_layout"/>
+        </record>
+
+</odoo>

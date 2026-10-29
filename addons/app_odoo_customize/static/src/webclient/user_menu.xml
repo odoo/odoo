@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="app_odoo_customize.UserMenu" t-inherit="web.UserMenu" t-inherit-mode="extension" owl="1">
+        <xpath expr="//t[@t-key='element_index']" position="before">
+            <t t-if="app_show_lang">
+                <t t-foreach="app_lang_list" t-as="lang" t-key="lang.id">
+                    <DropdownItem dataset="{ lang: lang.id, code: lang.code }" onSelected="() => this.setLang(lang.code)">
+                        <img class="flag"  t-att-src="'/app_odoo_customize/static/src/img/flags/' + lang['code'] + '.png'"/>
+                        <t t-out="lang.name"/>
+                        <i class="fa fa-check" t-if="user.lang == lang.code"></i>
+                    </DropdownItem>
+                </t>
+            </t>
+        </xpath>
+    </t>
+</templates>

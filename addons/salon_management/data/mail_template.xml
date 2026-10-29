@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="mail_template_salon_approved" model="mail.template">
+            <field name="name">Salon Approved E-mail</field>
+            <field name="email_from">{{ object.company_id and object.company_id.email or '' }}</field>
+            <field name="subject">Congrats {{ object.name }}</field>
+            <field name="email_to">{{ object.email }}</field>
+            <field name="lang">{{ object.language_id }}</field>
+            <field name="model_id" ref="salon_management.model_salon_booking" />
+            <field name="auto_delete" eval="True" />
+            <field name="body_html" type="html">
+                <div>
+                    <p>Dear <t t-out="object.name" />,<br />
+                    Thank you for choosing <t t-out="object.company_id.name" />, your booking was registered!<br /><br /></p>
+                    Regards,<br />
+                    <t t-out="object.company_id.name" />
+                </div>
+            </field>
+        </record>
+
+        <record id="mail_template_salon_rejected" model="mail.template">
+            <field name="name">Salon Rejected E-mail</field>
+            <field name="email_from">{{ object.company_id and object.company_id.email or '' }}</field>
+            <field name="subject">We are Sorry {{ object.name }}</field>
+            <field name="email_to">{{ object.email }}</field>
+            <field name="lang">{{ object.language_id }}</field>
+            <field name="model_id" ref="salon_management.model_salon_booking" />
+            <field name="auto_delete" eval="True" />
+            <field name="body_html" type="html">
+                <div>
+                    <p>Dear <t t-out="object.name" />,<br />
+                    Thank you for choosing <t t-out="object.company_id.name" />, but your booking was rejected!<br />
+                    There is no seats available for the time you chosen.<br />
+                    Better luck next time.<br /><br /></p>
+                    Regards,<br />
+                    <t t-out="object.company_id.name" />
+                </div>
+            </field>
+       </record>
+
+    </data>
+</odoo>

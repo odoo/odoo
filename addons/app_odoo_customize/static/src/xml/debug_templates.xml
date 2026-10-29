@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="web.NavBar" t-inherit-mode="extension" owl="1">
+        <xpath expr="//DropdownItem" position="attributes">
+            <attribute name="payload">currentApp</attribute>
+        </xpath>
+    </t>
+
+    <t t-inherit="web.NavBar.AppsMenu" t-inherit-mode="extension" owl="1">
+        <xpath expr="//DropdownItem" position="attributes">
+            <attribute name="payload">app</attribute>
+        </xpath>
+    </t>
+
+    <t t-inherit="web.NavBar.SectionsMenu" t-inherit-mode="extension" owl="1">
+        <xpath expr="//DropdownItem" position="attributes">
+            <attribute name="payload">section</attribute>
+        </xpath>
+        <xpath expr="//MenuDropdown" position="attributes">
+            <attribute name="payload">section</attribute>
+        </xpath>
+    </t>
+
+    <t t-inherit="web.NavBar.SectionsMenu.Dropdown.MenuSlot" t-inherit-mode="extension" owl="1">
+        <xpath expr="//DropdownItem" position="attributes">
+            <attribute name="payload">item</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('dropdown-menu_group')]" position="attributes">
+            <attribute name="t-att-data-name">item.name</attribute>
+            <attribute name="t-att-data-xmlid">item.xmlid</attribute>
+            <attribute name="t-att-data-sequence">item.sequence</attribute>
+        </xpath>
+    </t>
+
+    <t t-inherit="web.NavBar.SectionsMenu.MoreDropdown" t-inherit-mode="extension" owl="1">
+        <xpath expr="//DropdownItem" position="attributes">
+            <attribute name="payload">section</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="Menu.tooltip">
+        <div class="oe_tooltip_string" if="title" role="tooltip">
+            <t t-esc="title"/>
+        </div>
+        <ul class="oe_tooltip_technical" role="tooltip">
+            <li t-if="xmlid">
+                <span class="oe_tooltip_technical_title">XMLID:</span>
+                <t t-esc="xmlid"/>
+            </li>
+            <li t-if="typeof sequence === 'number'">
+                <span class="oe_tooltip_technical_title">Sequence:</span>
+                <t t-esc="sequence"/>
+            </li>
+        </ul>
+    </t>
+
+</templates>

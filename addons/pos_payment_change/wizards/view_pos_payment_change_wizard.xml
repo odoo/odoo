@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+Copyright (C) 2015-Today GRAP (http://www.grap.coop)
+@author: Sylvain LE GAL (https://twitter.com/legalsylvain)
+License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+-->
+<odoo>
+
+    <record id="view_pos_payment_change_wizard_form" model="ir.ui.view">
+        <field name="model">pos.payment.change.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group col="4">
+                    <field name="order_id" />
+                    <field name="amount_total" invisible="1" />
+                    <field name="old_line_ids" colspan="4">
+                        <tree>
+                            <field name="old_payment_method_id" widget="selection" />
+                            <field name="amount" sum="Total" />
+                        </tree>
+                    </field>
+                    <newline />
+                    <field
+                        name="new_line_ids"
+                        colspan="4"
+                        context="{'new_line_ids': new_line_ids, 'amount_total': amount_total}"
+                    >
+                        <tree editable="bottom">
+                            <field name="new_payment_method_id" widget="selection" />
+                            <field name="amount" sum="Total" />
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button
+                        name="button_change_payment"
+                        string="Change Payments"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_pos_payment_change_wizard" model="ir.actions.act_window">
+        <field name="name">Change Payments</field>
+        <field name="res_model">pos.payment.change.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

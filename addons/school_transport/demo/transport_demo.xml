@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <!-- HR Department -->
+    <record id="dep_school" model="hr.department">
+        <field name="name">school</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="manager_id" ref="hr.employee_jve" />
+    </record>
+
+    <record id="student_transport_1" model="student.transport">
+        <field name="name"> Transport Point-1 to Transport Point-4</field>
+        <field
+            name="start_date"
+            eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')"
+        />
+        <field
+            name="end_date"
+            eval="(DateTime.today() + relativedelta(years=+1)).strftime('%Y-%m-%d %H:%M')"
+        />
+        <field name="contact_per_id" ref="school.demo_student_student_1" />
+        <field name="state">draft</field>
+    </record>
+    <record id="student_transport_2" model="student.transport">
+        <field name="name"> Transport Point-1 to Transport Point-3</field>
+        <field
+            name="start_date"
+            eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')"
+        />
+        <field
+            name="end_date"
+            eval="(DateTime.today() + relativedelta(years=+1)).strftime('%Y-%m-%d %H:%M')"
+        />
+        <field name="contact_per_id" ref="school.demo_student_student_2" />
+        <field name="state">draft</field>
+    </record>
+    <record id="student_transport_3" model="student.transport">
+        <field name="name"> Transport Point-1 to Transport Point-2</field>
+        <field
+            name="start_date"
+            eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')"
+        />
+        <field
+            name="end_date"
+            eval="(DateTime.today() + relativedelta(years=+1)).strftime('%Y-%m-%d %H:%M')"
+        />
+        <field name="contact_per_id" ref="school.demo_student_student_3" />
+        <field name="state">draft</field>
+    </record>
+    <record id="student_transport_4" model="student.transport">
+        <field name="name"> Transport Point-2 to Transport Point-4</field>
+        <field
+            name="start_date"
+            eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')"
+        />
+        <field
+            name="end_date"
+            eval="(DateTime.today() + relativedelta(years=+1)).strftime('%Y-%m-%d %H:%M')"
+        />
+        <field name="contact_per_id" ref="school.demo_student_student_4" />
+        <field name="state">draft</field>
+    </record>
+    <record id="student_transport_5" model="student.transport">
+        <field name="name"> Transport Point-2 to Transport Point-3</field>
+        <field
+            name="start_date"
+            eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')"
+        />
+        <field
+            name="end_date"
+            eval="(DateTime.today() + relativedelta(years=+1)).strftime('%Y-%m-%d %H:%M')"
+        />
+        <field name="contact_per_id" ref="school.demo_student_student_5" />
+        <field name="state">draft</field>
+    </record>
+
+    <!-- transport.participants -->
+
+    <record id="transport_participant_1" model="transport.participant">
+        <field name="name" ref="school.demo_student_student_8" />
+        <field name="stu_pid_id">2015/07/001</field>
+        <field name="transport_id" ref="student_transport_1" />
+        <field name="tr_reg_date" eval="(DateTime.today()).strftime('%Y-01-01')" />
+        <field name="tr_end_date" eval="(DateTime.today()).strftime('%Y-12-31')" />
+        <field name="months">2</field>
+        <field name="amount">2000</field>
+    </record>
+   <record id="transport_participant_2" model="transport.participant">
+        <field name="name" ref="school.demo_student_student_5" />
+        <field name="stu_pid_id">2015/07/002</field>
+        <field name="transport_id" ref="student_transport_2" />
+        <field
+            name="tr_reg_date"
+            eval="(DateTime.today().strftime('%Y-%m-%d %H:%M'))"
+        />
+        <field
+            name="tr_end_date"
+            eval="(DateTime.today() + relativedelta(months=+2)).strftime('%Y-%m-%d %H:%M')"
+        />
+        <field name="months">2</field>
+        <field name="amount">2400</field>
+    </record>
+    <record id="transport_participant_3" model="transport.participant">
+        <field name="name" ref="school.demo_student_student_6" />
+        <field name="stu_pid_id">2015/07/003</field>
+        <field name="transport_id" ref="student_transport_3" />
+        <field
+            name="tr_reg_date"
+            eval="(DateTime.today().strftime('%Y-%m-%d %H:%M'))"
+        />
+        <field
+            name="tr_end_date"
+            eval="(DateTime.today() + relativedelta(months=+2)).strftime('%Y-%m-%d %H:%M')"
+        />
+        <field name="months">3</field>
+        <field name="amount">3000</field>
+    </record>
+    <record id="transport_participant_4" model="transport.participant">
+        <field name="name" ref="school.demo_student_student_7" />
+        <field name="stu_pid_id">2015/07/004</field>
+        <field name="transport_id" ref="student_transport_4" />
+        <field
+            name="tr_reg_date"
+            eval="(DateTime.today().strftime('%Y-%m-%d %H:%M'))"
+        />
+        <field
+            name="tr_end_date"
+            eval="(DateTime.today() + relativedelta(months=+2)).strftime('%Y-%m-%d %H:%M')"
+        />
+        <field name="months">3</field>
+        <field name="amount">3600</field>
+    </record>
+
+     <!--transport.registration-->
+    <record id="transport_registration_1" model="transport.registration">
+        <field name="name" ref="student_transport_1" />
+        <field name="student_id" ref="school.demo_student_student_8" />
+         <field name="reg_date" eval="(DateTime.today().strftime('%Y-%m-%d %H:%M'))" />
+        <!-- <field name="reg_state">draft</field> -->
+        <field name="registration_month">5</field>
+        <field name="vehicle_id" ref="fleet.vehicle_1" />
+    </record>
+    <record id="transport_registration_2" model="transport.registration">
+        <field name="name" ref="student_transport_1" />
+        <field name="student_id" ref="school.demo_student_student_7" />
+         <field name="reg_date" eval="(DateTime.today().strftime('%Y-%m-%d %H:%M'))" />
+       <!--  <field name="reg_state">draft</field> -->
+        <field name="registration_month">4</field>
+        <field name="vehicle_id" ref="fleet.vehicle_2" />
+    </record>
+    <record id="transport_registration_3" model="transport.registration">
+        <field name="name" ref="student_transport_1" />
+        <field name="student_id" ref="school.demo_student_student_6" />
+         <field name="reg_date" eval="(DateTime.today().strftime('%Y-%m-%d %H:%M'))" />
+        <!-- <field name="reg_state">draft</field> -->
+        <field name="registration_month">3</field>
+        <field name="vehicle_id" ref="fleet.vehicle_1" />
+    </record>
+    <record id="transport_registration_4" model="transport.registration">
+        <field name="name" ref="student_transport_2" />
+        <field name="student_id" ref="school.demo_student_student_5" />
+         <field name="reg_date" eval="(DateTime.today().strftime('%Y-%m-%d %H:%M'))" />
+        <!-- <field name="reg_state">draft</field> -->
+        <field name="registration_month">2</field>
+        <field name="vehicle_id" ref="fleet.vehicle_3" />
+    </record>
+
+    <!--student.student-->
+    <record id="school.demo_student_student_8" model="student.student">
+        <field name="transport_ids" eval="[(6, 0,[ref('transport_participant_1')])]" />
+    </record>
+    <record id="school.demo_student_student_7" model="student.student">
+        <field name="transport_ids" eval="[(6, 0,[ref('transport_participant_2')])]" />
+    </record>
+    <record id="school.demo_student_student_6" model="student.student">
+        <field name="transport_ids" eval="[(6, 0,[ref('transport_participant_3')])]" />
+    </record>
+    <record id="school.demo_student_student_5" model="student.student">
+        <field name="transport_ids" eval="[(6, 0,[ref('transport_participant_4')])]" />
+    </record>
+</odoo>

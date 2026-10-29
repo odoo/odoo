@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Woocommerce settings form view-->
+    <record id="view_woo_settings_form" model="ir.ui.view">
+        <field name="name">woo.settings.form</field>
+        <field name="model">woo.settings</field>
+        <field name="arch" type="xml">
+            <form string="WooCommerce Settings">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" placeholder="e.g. Lamps" />
+                            <field name="woo_type" />
+                            <field name="default" />
+                            <field name="value" />
+                            <field name="stock_update" />
+                        </group>
+                        <group>
+                            <field name="backend_id" widget="selection" />
+                            <field name="external_id" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Define the tree view -->
+    <record id="view_woo_settings_tree" model="ir.ui.view">
+        <field name="name">woo.settings.tree</field>
+        <field name="model">woo.settings</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="value" />
+            </tree>
+        </field>
+    </record>
+    <!-- Define the action for the menu item -->
+    <record id="action_woo_settings" model="ir.actions.act_window">
+        <field name="name">WooCommerce Settings</field>
+        <field name="res_model">woo.settings</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_woo_settings_tree" />
+    </record>
+</odoo>

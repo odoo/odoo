@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="ProductLine" owl="1">
+        <tr t-attf-class="partner-line {{highlight}}" t-att-data-id="props.product.id">
+            <td>
+                <div class="product-img">
+                    <img t-att-src="imageUrl" class="product_img" t-att-alt="props.product.display_name"/>
+                </div>
+            </td>
+            <td>
+                <div>
+                    <t t-esc="props.product.display_name or ''"/>
+                </div>
+            </td>
+            <td t-if="!env.isMobile">
+                <div>
+                    <t t-esc="props.product.default_code or ''"/>
+                </div>
+            </td>
+            <td t-if="!env.isMobile">
+                <div>
+                    <t t-esc="props.product.pos_categ_id[1] or ''"/>
+                </div>
+            </td>
+            <td t-if="!env.isMobile">
+                <div>
+                    <t t-esc="props.product.lst_price or ''"/>
+                </div>
+            </td>
+            <td t-if="!env.isMobile">
+                <div>
+                    <t t-esc="props.product.barcode or ''"/>
+                </div>
+            </td>
+            <td>
+                <div>
+                    <button class="edit_product" t-on-click="editCurrentProduct">
+                        <i class="fa fa-pencil" aria-hidden="true"/>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    </t>
+
+</templates>

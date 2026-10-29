@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="identity_check_wizard_inherit_base_view_form" model="ir.ui.view">
+        <field name="name">res.users.identitycheck.view.form.inherit</field>
+        <field name="model">res.users.identitycheck</field>
+        <field name="inherit_id" ref="base.identity_check_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='password']" position="attributes">
+                <attribute name="options">
+                    { 'show_or_hide': True }
+                </attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

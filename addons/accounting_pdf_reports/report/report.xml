@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="action_report_general_ledger" model="ir.actions.report">
+            <field name="name">General Ledger</field>
+            <field name="model">account.report.general.ledger</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">accounting_pdf_reports.report_general_ledger</field>
+            <field name="report_file">accounting_pdf_reports.report_general_ledger</field>
+        </record>
+
+        <record id="action_report_partnerledger" model="ir.actions.report">
+            <field name="name">Partner Ledger</field>
+            <field name="model">account.report.partner.ledger</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">accounting_pdf_reports.report_partnerledger</field>
+            <field name="report_file">accounting_pdf_reports.report_partnerledger</field>
+        </record>
+
+
+        <record id="action_report_trial_balance" model="ir.actions.report">
+            <field name="name">Trial Balance</field>
+            <field name="model">account.balance.report</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">accounting_pdf_reports.report_trialbalance</field>
+            <field name="report_file">accounting_pdf_reports.report_trialbalance</field>
+        </record>
+
+        <record id="action_report_financial" model="ir.actions.report">
+            <field name="name">Financial Report</field>
+            <field name="model">account.financial.report</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">accounting_pdf_reports.report_financial</field>
+            <field name="report_file">accounting_pdf_reports.report_financial</field>
+        </record>
+
+        <record id="action_report_account_tax" model="ir.actions.report">
+            <field name="name">Tax Report</field>
+            <field name="model">account.tax.report.wizard</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">accounting_pdf_reports.report_tax</field>
+            <field name="report_file">accounting_pdf_reports.report_tax</field>
+        </record>
+
+        <record id="action_report_aged_partner_balance" model="ir.actions.report">
+            <field name="name">Aged Partner Balance</field>
+            <field name="model">res.partner</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">accounting_pdf_reports.report_agedpartnerbalance</field>
+            <field name="report_file">accounting_pdf_reports.report_agedpartnerbalance</field>
+        </record>
+
+        <record id="action_report_journal" model="ir.actions.report">
+            <field name="name">Journals Audit</field>
+            <field name="model">account.common.journal.report</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">accounting_pdf_reports.report_journal</field>
+            <field name="report_file">accounting_pdf_reports.report_journal</field>
+        </record>
+
+        <record id="action_report_journal_entries" model="ir.actions.report">
+            <field name="name">Journals Entries</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">accounting_pdf_reports.report_journal_entries</field>
+            <field name="report_file">accounting_pdf_reports.report_journal_entries</field>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_type">report</field>
+        </record>
+
+    </data>
+</odoo>

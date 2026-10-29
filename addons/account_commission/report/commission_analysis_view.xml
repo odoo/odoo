@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_invoice_commission_analysis_pivot" model="ir.ui.view">
+        <field name="name">invoice.commission.analysis.pivot</field>
+        <field name="model">invoice.commission.analysis.report</field>
+        <field name="arch" type="xml">
+            <pivot string="invoice Commission Analysis">
+                <field name="agent_id" type="row" />
+                <field name="date_invoice" interval="month" type="col" />
+                <field name="amount" type="measure" />
+            </pivot>
+        </field>
+    </record>
+    <record id="view_invoice_commission_analysis_graph" model="ir.ui.view">
+        <field name="name">invoice.commission.analysis.graph</field>
+        <field name="model">invoice.commission.analysis.report</field>
+        <field name="arch" type="xml">
+            <graph string="invoice Commission Analysis">
+                <field name="agent_id" />
+                <field name="amount" type="measure" />
+            </graph>
+        </field>
+    </record>
+    <record id="view_invoice_commission_analysis_search" model="ir.ui.view">
+        <field name="name">invoice.commission.analysis.search</field>
+        <field name="model">invoice.commission.analysis.report</field>
+        <field name="arch" type="xml">
+            <search string="invoices Commission Analysis">
+                <field name="date_invoice" />
+                <filter
+                    string="This Year"
+                    name="year"
+                    domain="[('date_invoice','&lt;=', time.strftime('%%Y-12-31')),('date_invoice','&gt;=',time.strftime('%%Y-01-01'))]"
+                />
+                <filter
+                    string="Settled"
+                    name="settled"
+                    domain="[('settled','=',True)]"
+                />
+                <filter
+                    string="Not Settled"
+                    name="settled"
+                    domain="[('settled','=',False)]"
+                />
+                <filter
+                    name="Draft"
+                    string="Draft"
+                    domain="[('invoice_state','=','draft')]"
+                />
+                <filter
+                    name="Invoiced"
+                    string="Invoiced"
+                    domain="[('invoice_state','not in',('draft', 'cancel'))]"
+                />
+                <separator />
+                <field name="agent_id" />
+                <field name="partner_id" />
+                <field name="product_id" />
+                <group expand="0" string="Extended Filters">
+                    <field
+                        name="categ_id"
+                        filter_domain="[('categ_id', 'child_of', self)]"
+                    />
+                    <field name="company_id" groups="base.group_multi_company" />
+                </group>
+                <group expand="1" string="Group By">
+                    <filter
+                        string="Agent"
+                        name="Agent"
+                        context="{'group_by':'agent_id'}"
+                    />
+                    <filter
+                        string="Customer"
+                        name="Customer"
+                        context="{'group_by':'partner_id'}"
+                    />
+                    <filter
+                        string="Category of Product"
+                        name="Category"
+                        context="{'group_by':'categ_id'}"
+                    />
+                    <filter
+                        string="Status"
+                        name="group_by_status"
+                        context="{'group_by':'invoice_state'}"
+                    />
+                    <filter
+                        string="Company"
+                        name="group_by_company"
+                        groups="base.group_multi_company"
+                        context="{'group_by':'company_id'}"
+                    />
+                    <separator />
+                    <filter
+                        string="Invoice Month"
+                        name="group_by_invoice_month"
+                        context="{'group_by':'date_invoice:month'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+    <record
+        id="action_invoice_commission_analysis_report"
+        model="ir.actions.act_window"
+    >
+        <field name="name">Commission Analysis</field>
+        <field name="res_model">invoice.commission.analysis.report</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="search_view_id" ref="view_invoice_commission_analysis_search" />
+        <field name="view_id" ref="view_invoice_commission_analysis_graph" />
+        <field
+            name="help"
+        >This report performs analysis on your commissions added in invoice lines. You can check the amount and lines that will be settled by date, product, product category, aget, etc. Use this report to perform analysis on invoice lines agents not beeing settled yet.</field>
+    </record>
+    <menuitem
+        action="action_invoice_commission_analysis_report"
+        id="menu_invoice_commissions_analysis"
+        parent="account.account_reports_management_menu"
+        sequence="15"
+    />
+</odoo>

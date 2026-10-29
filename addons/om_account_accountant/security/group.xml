@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<odoo>
+
+	<record id="base.module_category_accounting_accounting" model="ir.module.category">	
+		<field name="name">Accounting</field>
+	</record>			
+
+	<record id="account.group_account_user" model="res.groups">
+		<field name="name">Accountant</field>
+		<field name="category_id" ref="base.module_category_accounting_accounting" />
+		<field name="implied_ids" eval="[(4, ref('account.group_account_invoice'))]" />
+		<field name="users" eval="[(4, ref('base.user_admin')), (4, ref('base.user_root'))]" />
+	</record>
+
+	<record id="account.group_account_manager" model="res.groups">	
+		<field name="implied_ids" eval="[(4, ref('account.group_account_user')), (3, ref('account.group_account_invoice'))]" />
+		<field name="name">Advisor</field>
+	</record>			
+	
+	<record id="account.group_account_readonly" model="res.groups">	
+		<field name="name">Auditor</field>
+		<field name="category_id" ref="base.module_category_accounting_accounting" />
+	</record>			
+
+</odoo>

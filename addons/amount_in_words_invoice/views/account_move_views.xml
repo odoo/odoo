@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    to inherit the account.move to showing the invoice subtotal in words-->
+    <record id="account_move_view_form" model="ir.ui.view">
+        <field name="name">account.move.view.form.inherit.amount.in.words.invoice</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='narration']" position="after">
+                <group colspan="2">
+                    <div style="padding:15px;width: 500px;display: flex;flex-direction: row;">
+                         <b><label for="number_to_words"/></b><field name="number_to_words"/>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+     </record>
+</odoo>

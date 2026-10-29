@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="partner_demo_company" model="res.partner">
+            <field name="name">Custom</field>
+            <field name="street">B-25</field>
+            <field name="city">USA</field>
+            <!-- Use the correct reference or actual ID for the country -->
+            <field name="country_id" ref="base.bd"/>
+            <field name="zip">1229</field>
+            <field name="phone">+880-258970255</field>
+            <field name="email">info@bdtask.com</field>
+            <field name="website">www.bdtask.com</field>
+        </record>
+
+        <record id="demo_company_bdtask" model="res.company">
+            <field name="name">Custom</field>
+            <field name="logo" type="base64" file="bdtask_custom_title_and_favicon/static/src/img/favicon.ico"/>
+            <field name="favicon" type="base64" file="bdtask_custom_title_and_favicon/static/src/img/favicon.ico"/>
+            <field name="partner_id" ref="partner_demo_company"/>
+        </record>
+    </data>
+</odoo>

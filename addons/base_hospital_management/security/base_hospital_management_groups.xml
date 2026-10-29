@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Hospital Management access category-->
+    <record id="base_hospital_management_access" model="ir.module.category">
+        <field name="name">Hospital Management</field>
+        <field name="description">User access levels for Hospital Management
+        </field>
+        <field name="sequence">10</field>
+    </record>
+    <!--Lab Assistant access group-->
+    <record id="base_hospital_management_group_lab_assistant"
+            model="res.groups">
+        <field name="name">Lab Assistant</field>
+        <field name="category_id" ref="base_hospital_management_access"/>
+    </record>
+    <!--Pharmacist access group-->
+    <record id="base_hospital_management_group_pharmacist" model="res.groups">
+        <field name="name">Pharmacist</field>
+        <field name="category_id" ref="base_hospital_management_access"/>
+    </record>
+    <!--    Nurse access group-->
+    <record id="base_hospital_management_group_nurse" model="res.groups">
+        <field name="name">Nurse</field>
+        <field name="category_id" ref="base_hospital_management_access"/>
+    </record>
+    <!--Doctor access group-->
+    <record id="base_hospital_management_group_doctor" model="res.groups">
+        <field name="name">Doctor</field>
+        <field name="category_id" ref="base_hospital_management_access"/>
+    </record>
+    <!--Receptionist access group-->
+    <record id="base_hospital_management_group_receptionist" model="res.groups">
+        <field name="name">Receptionist</field>
+        <field name="category_id" ref="base_hospital_management_access"/>
+    </record>
+    <!--Manager access group-->
+    <record id="base_hospital_management_group_manager"
+            model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="base_hospital_management_access"/>
+    </record>
+</odoo>

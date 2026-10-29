@@ -1,0 +1,37 @@
+<odoo>
+  <data>
+      <!-- sale quotation -->
+    <record id="sale_order_view_search_inherit_quotation_superbar" model="ir.ui.view">
+        <field name="name">sale.order.search.inherit.quotation.superbar</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search">
+                <searchpanel view_types="list,kanban,pivot,graph">
+                    <field name="state"/>
+                    <field name="invoice_status"/>
+                    <field name="partner_id" filter_domain="[('customer_rank','&gt;', 0)]" limit="1000" enable_counters="1"/>
+                    <field name="team_id" enable_counters="1" select="multi"/>
+                    <field name="company_id" groups="base.group_multi_company" icon="fa-building"/>
+                </searchpanel>
+            </xpath>
+        </field>
+    </record>
+      <!-- sale order -->
+    <record id="sale_order_view_search_inherit_sale_superbar" model="ir.ui.view">
+        <field name="name">sale.order.search.inherit.sale.superbar</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.sale_order_view_search_inherit_sale"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search">
+                <searchpanel view_types="list,kanban,pivot,graph">
+                    <field name="invoice_status"/>
+                    <field name="team_id" enable_counters="1" select="multi"/>
+                    <field name="partner_id" filter_domain="[('customer_rank','&gt;', 0)]" limit="1000"/>
+                    <field name="company_id" groups="base.group_multi_company" icon="fa-building"/>
+                </searchpanel>
+            </xpath>
+        </field>
+    </record>
+  </data>
+</odoo>

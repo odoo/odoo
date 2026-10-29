@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_export_product_attr_value_wizard" model="ir.ui.view">
+        <field name="name">product.attr.value.instance.form.view</field>
+        <field name="model">product.attr.value.instance.exp</field>
+        <field name="arch" type="xml">
+            <form string="Select Instance">
+                <sheet>
+
+                    <div>
+                        <p colspan="2" class="alert alert-warning" role="alert">
+                            <u>
+                                <h3 style="font-weight:bold;color:#7d5a29">Note :</h3>
+                            </u>
+                            <b>
+                                Are you sure to export attribute values to this instance?
+                            </b>
+                        </p>
+                    </div>
+
+                    <group>
+                        <field name="woo_instance_id" required="1" options="{'no_create':True,'no_create_edit':True}"/>
+                    </group>
+
+                    <footer>
+                        <button name="product_attr_value_instance_for_exp" string="Export Product Attribute Values"
+                                type="object" class="oe_highlight"/>
+                        <button string="Cancel" class="oe_highlight" special="cancel"/>
+                    </footer>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_import_product_attribute_value_wizard_form" model="ir.ui.view">
+        <field name="name">product.attr.value.instance.import.form.view</field>
+        <field name="model">product.attr.value.instance.imp</field>
+        <field name="arch" type="xml">
+            <form string="Select Instance">
+                <sheet>
+                    <div>
+                        <p colspan="2" class="alert alert-warning" role="alert">
+                            <u>
+                                <h3 style="font-weight:bold;color:#7d5a29">Note :</h3>
+                            </u>
+                            <b>
+                                Are you sure to import attribute values from this instance?
+                            </b>
+                        </p>
+                    </div>
+
+                    <group>
+                        <field name="woo_instance_id" required="1" options="{'no_create':True,'no_create_edit':True}"/>
+                    </group>
+
+                    <footer>
+                        <button name="product_attr_value_instance_for_imp" string="Import Product Attribute Values"
+                                type="object" class="oe_highlight"/>
+                        <button string="Cancel" class="oe_highlight" special="cancel"/>
+                    </footer>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_woo_product_attr_value_instance" model="ir.actions.act_window">
+        <field name="name">WooCommerce - Export/Import Product Attribute Value</field>
+        <field name="res_model">product.attr.value.instance.exp</field>
+        <field name="binding_model_id" ref="model_product_attribute_value"/>
+        <field name="binding_view_types">form,list</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="pragtech_woo_commerce.view_export_product_attr_value_wizard"/>
+    </record>
+
+    <record id="action_wizard_woo_import_product_attribute_value" model="ir.actions.act_window">
+        <field name="name">WooCommerce - Import Product Attribute Value</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.attr.value.instance.imp</field>
+        <field name="view_id" ref="view_import_product_attribute_value_wizard_form"/>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>
+

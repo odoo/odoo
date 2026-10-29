@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="import_shipping_method_instance_form_view" model="ir.ui.view">
+        <field name="name">import.shipping.method.wizard.form.view</field>
+        <field name="model">import.shipping.method.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Select Instance">
+                <sheet>
+
+                    <div>
+                        <p colspan="2" class="alert alert-warning" role="alert">
+                            <u>
+                                <h3 style="font-weight:bold;color:#7d5a29">Note :</h3>
+                            </u>
+                            <b>
+                                Are you sure to import Shipping from this instance?
+                            </b>
+                        </p>
+                    </div>
+
+                    <group>
+                        <field name="woo_instance_id" required="1" options="{'no_create':True,'no_create_edit':True}"/>
+                    </group>
+
+                    <footer>
+                        <button name="import_shipping_method_instance" string="Import Shipping Method" type="object"
+                                class="oe_highlight"/>
+                        <button string="Cancel" class="oe_highlight" special="cancel"/>
+                    </footer>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_wizard_woo_import_shipping_method_instance" model="ir.actions.act_window">
+        <field name="name">WooCommerce - Import Shipping Methods</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">import.shipping.method.wizard</field>
+        <field name="view_id" ref="import_shipping_method_instance_form_view"/>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>
+

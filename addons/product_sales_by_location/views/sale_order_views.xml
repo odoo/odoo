@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--This XML code extends the "sale.order" form view by adding the "line_location_id" field after the "product_template_id" field in the order line tree.-->
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">
+            sale.order.view.form.inherit.product.sales.by.location
+        </field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="/form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='product_template_id']"
+                   position="after">
+                <field name="line_location_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

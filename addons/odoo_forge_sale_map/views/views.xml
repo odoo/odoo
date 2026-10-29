@@ -1,0 +1,54 @@
+<odoo>
+  <data>
+
+  <record id="view_map_storage_form" model="ir.ui.view">
+    <field name="name">Map Form View</field>
+    <field name="model">map_storage</field>
+    <field name="arch" type="xml">
+        <form>
+          <header>
+            <button string="Update Map" 
+                        type="object" 
+                        name="update_map_html"
+                        class="btn-primary"/>
+            </header>    
+            <p>Map Update: <field name="last_updated" readonly="1" />  </p>      
+            <iframe id="folium_map_iframe" 
+                    src="/report/html/odoo_forge_sale_map.map_view_template?map_record_id=1" 
+                    width="100%" 
+                    height="700px">
+            </iframe>
+        </form>
+    </field>
+  </record>
+
+  <record id="action_view_map" model="ir.actions.act_window">
+    <field name="name">Map View Action</field>
+    <field name="res_model">map_storage</field>
+    <field name="view_mode">form</field>
+    <field name="res_id">1</field>
+    <field name="view_id" ref="view_map_storage_form"/>
+  </record>
+
+  <menuitem
+  id="sale_map_root"
+  name="Sale Map"
+  parent="sale.sale_menu_root"
+  action="action_view_map"
+  sequence="40" />  
+
+  <record id="view_partner_form_inherit" model="ir.ui.view">
+      <field name="name">res.partner.form.inherit</field>
+      <field name="model">res.partner</field>
+      <field name="inherit_id" ref="base.view_partner_form"/>
+      <field name="arch" type="xml">
+          <xpath expr="//field[@name='vat']" position="after">
+            <field name="gps_coordinates" readonly="1" force_save="1"/>
+            <field name="latitude" readonly="1" force_save="1" invisible="0"/>
+            <field name="longitude" readonly="1" force_save="1" invisible="0"/>
+          </xpath>
+      </field>
+  </record>
+        
+</data>
+</odoo>

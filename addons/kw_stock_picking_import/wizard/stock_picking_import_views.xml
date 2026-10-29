@@ -1,0 +1,60 @@
+<odoo>
+    <record id="kw_stock_picking_import_wizard_act_window"
+            model="ir.actions.act_window">
+        <field name="name">Import wizard</field>
+        <field name="res_model">kw.stock.picking.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="kw_stock_picking_import_wizard_form" model="ir.ui.view">
+        <field name="name">kw.stock.picking.import.wizard.form (kw_stock_picking_import)</field>
+        <field name="model">kw.stock.picking.import.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="upload_file"/>
+                    </group>
+                    <group>
+                        <field name="is_product_creation_needed"/>
+                    </group>
+                </group>
+                <div>
+                    Xls file should has for columns:
+                </div>
+                <div>
+                    | Barcode | Article (code) | Name | Qty |
+                </div>
+                <field name="line_ids">
+                    <tree>
+                        <field name="wizard_id" invisible="1" widget="many2one_avatar_user"/>
+                        <field name="product_id"/>
+                        <field name="quantity"/>
+                    </tree>
+                </field>
+                <footer>
+                    <button name="parse_file" string="Parse file" type="object"
+                            class="btn-primary"/>
+                    <button name="load_lines" string="Load lines" type="object"
+                            class="btn-primary"/>
+                    <button string="Cancel" class="btn-default"
+                            special="cancel"/>
+                </footer>
+                <field name="stock_picking_id" invisible="1"/>
+            </form>
+        </field>
+    </record>
+
+    <record id="kw_stock_picking_import_stock_picking_form" model="ir.ui.view">
+        <field name="name">stock.picking.form (kw_stock_picking_import)</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button name="%(kw_stock_picking_import_wizard_act_window)d"
+                        string="Import" type="action"/>
+            </header>
+        </field>
+    </record>
+</odoo>

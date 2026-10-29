@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Inherit the view of res.config.settings and add status and limit
+            fields-->
+    <record id="res_config_settings_view_form_purchase"
+            model="ir.ui.view">
+        <field name="name">
+            res.config.settings.view.form.inherit.purchase.product.history
+        </field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="10"/>
+        <field name="inherit_id"
+               ref="purchase.res_config_settings_view_form_purchase"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@data-key='purchase']/div[
+            @name='matrix_setting_container']"
+                   position="after">
+                <h2>Product Purchase History</h2>
+                <div class="row mt16 o_settings_container">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="limit"
+                                   string="Limit"/>
+                            <field name="limit"/>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="status"
+                                   string="Status"/>
+                            <field name="status"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

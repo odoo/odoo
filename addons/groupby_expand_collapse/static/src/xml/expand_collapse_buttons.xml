@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+  <t t-inherit="web.ListView.Buttons" t-inherit-mode="extension">
+    <xpath expr="//*[@class='btn btn-secondary fa fa-download o_list_export_xlsx']" position="after">
+      <button t-if="model.root.groupBy.length > 0" type="button" class="btn btn-secondary o_list_export_pdf" t-on-click="expandlist">expand</button>
+      <button t-if="model.root.groupBy.length > 0" type="button" class="btn btn-secondary o_list_export_pdf" t-on-click="collapselist">collapse</button>
+    </xpath>
+  </t>
+
+  <t t-inherit="account.ListView.Buttons" t-inherit-mode="extension">
+    <xpath expr="//*[@class='btn btn-secondary fa fa-download o_list_export_xlsx']" position="after">
+      <button t-if="model.root.groupBy.length > 0" type="button" class="btn btn-secondary o_list_export_pdf" t-on-click="expandlist">expand</button>
+      <button t-if="model.root.groupBy.length > 0" type="button" class="btn btn-secondary o_list_export_pdf" t-on-click="collapselist">collapse</button>
+    </xpath>
+  </t>
+
+
+  <t t-inherit="crm_iap_mine.LeadMiningRequestListView.buttons" t-inherit-mode="extension">
+    <xpath expr="//*[@class='btn btn-secondary fa fa-download o_list_export_xlsx']" position="after">
+      <button t-if="model.root.groupBy.length > 0" type="button" class="btn btn-secondary o_list_export_pdf" t-on-click="expandlist">expand</button>
+      <button t-if="model.root.groupBy.length > 0" type="button" class="btn btn-secondary o_list_export_pdf" t-on-click="collapselist">collapse</button>
+    </xpath>
+  </t>
+
+</templates>

@@ -1,0 +1,24 @@
+.show__password__wrapper {
+    border-radius: $border-radius;
+    display: flex;
+    align-items: center;
+}
+
+.show__password__wrapper input:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.show__password__wrapper:focus-within {
+    box-shadow: $input-box-shadow, $input-focus-box-shadow;
+}
+
+.show__password__wrapper .show__password__button {
+    outline: none;
+    border: none;
+    height: $input-height;
+    padding: $input-padding-y 5px;
+    border-top-right-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
+    box-shadow: none;
+}

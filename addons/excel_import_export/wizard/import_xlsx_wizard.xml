@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright 2019 Ecosoft Co., Ltd.
+  License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).-->
+<odoo>
+    <record id="import_xlsx_wizard" model="ir.ui.view">
+        <field name="name">import.xlsx.wizard</field>
+        <field name="model">import.xlsx.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import File Template">
+                <field name="id" invisible="1" />
+                <field name="state" invisible="1" />
+                <field name="fname" invisible="1" />
+                <field name="filename" invisible="1" />
+                <field name="res_model" invisible="1" />
+                <field name="res_id" invisible="1" />
+                <group states="choose">
+                    <group>
+                        <field
+                            name="import_file"
+                            attrs="{'invisible': [('res_id', '=', False)]}"
+                            filename="filename"
+                        />
+                        <field
+                            name="attachment_ids"
+                            widget="many2many_binary"
+                            nolabel="1"
+                            attrs="{'invisible': [('res_id', '!=', False)]}"
+                        />
+                    </group>
+                    <group>
+                        <field name="template_id" widget="selection" />
+                        <div colspan="2">
+                            <button
+                                name="get_import_sample"
+                                string="⇒ Get Sample Import Template"
+                                type="object"
+                                class="oe_link"
+                                attrs="{'invisible': [('id', '!=', False)]}"
+                            />
+                        </div>
+                        <field
+                            name="datas"
+                            filename="fname"
+                            attrs="{'invisible': [('id', '=', False)]}"
+                        />
+                    </group>
+                </group>
+                <group states="get">
+                    <p>
+                        Import Successful!
+                    </p>
+                </group>
+                <footer states="choose">
+                    <button
+                        name="action_import"
+                        string="Import"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+                <footer states="get">
+                    <button string="Close" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,102 @@
+<?xml version="1.0" ?>
+<!-- Copyright 2019-2023 Sodexis License OPL-1 (See LICENSE file for full copyright
+	and licensing details). -->
+<odoo>
+	<record model="ir.ui.view" id="crm_claims_team_form_view">
+		<field name="name">CRM Claim Team Form</field>
+		<field name="model">crm.claim.team</field>
+		<field name="arch" type="xml">
+			<form string="Claim" delete="0">
+				<sheet name="claim team">
+					<group>
+						<field name="name" />
+						<field name="description" />
+						<field name="active" />
+						<field name="claim_type" />
+						<field name="sequence" />
+						<field name="color" invisible="1" />
+						<field name="company_id" />
+						<field name="warehouse_id" />
+						<field
+                            name="member_ids"
+                            widget="many2many_tags"
+                            options="{'not_delete': True,'color_field': 'color'}"
+                        />
+					</group>
+				</sheet>
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="crm_claim_team_tree_view">
+		<field name="name">CRM Claim Team Tree</field>
+		<field name="model">crm.claim.team</field>
+		<field name="arch" type="xml">
+			<tree string="Claim Reason Code">
+				<field name="name" />
+			</tree>
+		</field>
+	</record>
+
+    <!-- action for claim team -->
+    <record id="crm_claim_action_team" model="ir.actions.act_window">
+        <field name="name">Returns</field>
+        <field name="res_model">crm.claim</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="context">{'search_default_team_id': active_id}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new return
+            </p>
+        </field>
+    </record>
+
+	<record id="crm_claim_team_view_kanban" model="ir.ui.view">
+		<field name="name">crm.claim.team.dashboard</field>
+		<field name="model">crm.claim.team</field>
+		<field name="priority">200</field>
+		<field name="arch" type="xml">
+			<kanban class="oe_background_grey o_kanban_dashboard" create="0">
+				<field name="name" />
+				<field name="color" />
+				<templates>
+					<t t-name="kanban-box">
+						<div t-attf-class="#{kanban_color(record.color.raw_value)}">
+							<span
+                                class="oe_kanban_color_help"
+                                t-attf-title="In #{kanban_getcolorname(record.color.raw_value)}"
+                                role="img"
+                                t-attf-aria-label="In #{kanban_getcolorname(record.color.raw_value)}"
+                            />
+							<div t-attf-class="o_kanban_card_header">
+								<div class="o_kanban_card_header_title">
+									<div class="o_primary">
+										<field name="name" />
+									</div>
+
+								</div>
+								<div class="o_kanban_manage_button_section">
+									<a class="o_kanban_manage_toggle_button" href="#">
+										<i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage" />
+									</a>
+								</div>
+							</div>
+							<div class="container o_kanban_card_content">
+								<div class="row">
+									<div class="col-6 o_kanban_primary_left">
+										<button
+                                            class="btn btn-primary"
+                                            name="%(sod_crm_claim.crm_claim_action_team)d"
+                                            type="action"
+                                        >Returns</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</t>
+				</templates>
+			</kanban>
+		</field>
+	</record>
+
+</odoo>
