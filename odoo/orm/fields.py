@@ -150,6 +150,36 @@ class Field[T]:
     :param bool default_export_compatible: whether the field must be exported
         by default in an import-compatible export
 
+    :param callable clean: a function ``record_value -> record_value`` that
+        returns the canonical form of a value. It is applied to the values
+        assigned to the field by create, write, compute, onchange or default.
+
+        Cleaning only happens when a value is modified: it does not guarantee
+        that all values in database are clean. In particular, the following
+        values are not cleaned:
+
+        - values stored before ``clean`` was set on the field, or written by
+          SQL queries;
+        - values given to :meth:`~odoo.models.BaseModel.new`;
+        - values assigned as ``StoredTranslations`` on translated fields;
+        - fallback values of company-dependent fields (``ir.default``);
+        - values in search domains, which should be given in canonical form.
+
+        The function receives the value in the record format, including empty
+        values like ``False`` or ``0``, and before validation (e.g. of
+        selection values). It must not modify its argument, and it must be
+        idempotent, as a value may be cleaned more than once (e.g. by default
+        and create, or by a related field and its target field).
+
+        Supported on char, text, html, integer, float, monetary, selection,
+        date, datetime and json fields. On translated fields, each translation
+        is cleaned separately. See :class:`~odoo.fields.Html` for the
+        specifics of html fields.
+
+        .. code-block:: python
+
+            vat = fields.Char(clean=lambda vat: vat and vat.replace(' ', '').upper())
+
     :param str search: name of a method that implements search on the field.
         The method takes an operator and value. Basic domain optimizations are
         ran before calling this function.
@@ -299,6 +329,7 @@ class Field[T]:
     compute_sql: str | Callable[[BaseModel, TableSQL], SQL] | None = None      # compute_sql(model, alias, query) that gets the SQL for the field
     inverse: str | Callable[[BaseModel], None] | None = None  # inverse(recs) inverses field on recs
     search: str | Callable[[BaseModel, str, typing.Any], DomainType] | None = None  # search(recs, operator, value) searches on self
+    clean: Callable[[T], T] | None = None  # clean(value) returns the canonical form of value
     related: str | None = None          # sequence of field names, for related fields
     company_dependent: bool = False     # whether ``self`` is company-dependent (property field)
     default: Callable[[BaseModel], T] | T | None = None  # default(recs) returns the default value
@@ -875,6 +906,7 @@ class Field[T]:
     _related_help = property(attrgetter('help'))
     _related_groups = property(attrgetter('groups'))
     _related_aggregator = property(attrgetter('aggregator'))
+    _related_clean = property(attrgetter('clean'))
 
     @functools.cached_property
     def column_type(self) -> tuple[str, str] | None:
@@ -1182,6 +1214,36 @@ class Field[T]:
         """
         return False if value is None else value
 
+    @functools.cached_property
+    def _must_clean(self) -> bool:
+        """ Whether the values assigned to the field go through :meth:`_clean_value`. """
+        return self.clean is not None
+
+    def _clean_value(self, value, records):
+        """ Return the cleaned form of ``value`` before it is assigned to
+        ``records``.  This hook is called on the values given to
+        :meth:`write`, :meth:`~odoo.models.BaseModel.create`, and on validated
+        values put in cache (e.g. by onchange), when :attr:`_must_clean`
+        is true.  Cleaning applies parameter ``clean``, and may be extended
+        by field types, e.g. to sanitize html values.  The whole cleaning
+        must be idempotent, as a value may be cleaned more than once.
+
+        :param value: a value in the record format
+        :return: a value in the record format
+        """
+        if self.clean is not None:
+            value = self.clean(value)
+        return value
+
+    def convert_to_cleaned_cache(self, value, records):
+        """ Convert ``value`` from the ``write`` format to the cache format,
+        and clean it with :meth:`_clean_value` in the record format.
+        """
+        if not self._must_clean:
+            return self.convert_to_cache(value, records)
+        value = self.convert_to_record(self.convert_to_cache(value, records, validate=False), records)
+        return self.convert_to_cache(self._clean_value(value, records), records)
+
     def convert_to_read(self, value, record, use_display_name=True):
         """ Convert ``value`` from the record format to the format returned by
         method :meth:`BaseModel.read`.
@@ -1243,6 +1305,8 @@ class Field[T]:
         if initialize_column and not column and not self.init_storage and self.default:
             value = self.default(model)
             value = self.convert_to_write(value, model)
+            if self._must_clean:
+                value = self.convert_to_cleaned_cache(value, model)
             init_value = self.convert_to_column_insert(value, model)
             initialize_column = init_value is None
 
@@ -1327,6 +1391,8 @@ class Field[T]:
             if value is not None and to_compute == 'default':  # we have a default, do not recompute fields
                 to_compute = False
             value = self.convert_to_write(value, model)
+            if self._must_clean:
+                value = self.convert_to_cleaned_cache(value, model)
             value = self.convert_to_column_insert(value, model)
         else:
             value = None
@@ -1691,7 +1757,7 @@ class Field[T]:
         records.env.remove_to_compute(self, records)
 
         # discard the records that are not modified
-        cache_value = self.convert_to_cache(value, records)
+        cache_value = self.convert_to_cleaned_cache(value, records)
         records = self._filter_not_equal(records, cache_value)
         if not records:
             return

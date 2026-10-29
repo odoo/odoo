@@ -2079,15 +2079,11 @@ class TestStoredTranslations(TransactionCase):
 
     def _get_xml_field(self):
         """Get xml field with translate=xml_translate (callable)"""
-        xml_field = fields.Text()
-        xml_field.translate = xml_translate
-        return xml_field
+        return self.env['translatable.cases']._fields['xml']
 
     def _get_html_field(self):
         """Get html field with translate=html_translate (callable)"""
-        html_field = fields.Html()
-        html_field.translate = html_translate
-        return html_field
+        return self.env['translatable.cases']._fields['structured_html']
 
     # --- fallback_langs() tests ---
 
@@ -2896,6 +2892,35 @@ class TestStoredTranslations(TransactionCase):
             'en_US': '<form>Knife</form>',
             'fr_FR': '<form>Canif</form>',
         })
+
+    def test_translated_html_sanitized(self):
+        html_field = self._get_html_field()
+        st = StoredTranslations({
+            'en_US': '<p><i class="fa fa-close" title="Close"></i></p><p>Knife</p>',
+            'fr_FR': '<p><i class="fa fa-close" title="Close"></i></p><p>Couteau</p>',
+        })
+
+        # the translation is sanitized, and changes inside terms are accepted
+        # as long as the translation keeps the source structure
+        for term_fr, value_fr in [
+            # a text-based quote is wrapped by the quote detection
+            ('Canif\n> cité', '<p>Canif<span data-o-mail-quote="1">\n&gt; cité</span></p>'),
+            # an unsafe attribute is removed
+            ('<span onclick="alert(1)">Canif</span>', '<p><span>Canif</span></p>'),
+        ]:
+            with self.subTest(term_fr=term_fr):
+                result = st.translated(self.env, html_field, 'en_US', {'fr_FR': {'Knife': term_fr}})
+                self.assertEqual(result['fr_FR'], '<p><i class="fa fa-close" title="Close"></i></p>' + value_fr)
+
+        # the translation is refused when it no longer has the source structure
+        for term_fr in [
+            # removing the unsafe attribute leaves the term without text
+            '<i class="fa fa-close" data-tooltip="Fermer"></i>',
+            # html normalization removes the element with an 'encoding' attribute
+            '<i class="fa fa-close" encoding="utf-8" title="Fermer"></i>',
+        ]:
+            with self.subTest(term_fr=term_fr), self.assertRaises(UserError):
+                st.translated(self.env, html_field, 'en_US', {'fr_FR': {'<i class="fa fa-close" title="Close"></i>': term_fr}})
 
     def test_translated_empty_stored_translations(self):
         html_field = self._get_html_field()

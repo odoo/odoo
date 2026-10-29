@@ -12,7 +12,7 @@ from odoo import Command, fields, models
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tests import TransactionCase, tagged, users
-from odoo.tools import BinaryBytes, float_repr, mute_logger, sql
+from odoo.tools import SQL, BinaryBytes, float_repr, mute_logger, sql
 from odoo.tools.image import binary_to_image, image_data_uri
 
 from .test_domain_expression import TransactionExpressionCase
@@ -5598,3 +5598,73 @@ class TestCompanyDependent(TransactionCase):
                              f'Please override the unlink method of {comodel_field.comodel_name} and do the ORM on '
                              f'delete cascade logic and remove/override the ondelete="cascade" of {comodel_field}'),
                         )
+
+
+class TestClean(TransactionCase):
+
+    def assertStored(self, record, fname, expected):
+        record.flush_recordset([fname])
+        self.env.cr.execute(SQL("SELECT %s FROM %s WHERE id = %s", SQL.identifier(fname), SQL.identifier(record._table), record.id))
+        self.assertEqual(self.env.cr.fetchone()[0], expected)
+
+    def test_create_write(self):
+        Model = self.env['test_orm.cleaned']
+        record = Model.create({'name': ' foo ', 'count': -3})
+        self.assertEqual(record.name, 'FOO')
+        self.assertEqual(record.count, 0)
+        self.assertStored(record, 'name', 'FOO')
+
+        record.write({'name': ' bar'})
+        self.assertEqual(record.name, 'BAR')
+        self.assertStored(record, 'name', 'BAR')
+
+        record.count = -1
+        self.assertEqual(record.count, 0)
+        self.assertStored(record, 'count', 0)
+
+        # values given to new() are not validated, hence not cleaned
+        record = Model.new({'name': ' foo '})
+        self.assertEqual(record.name, ' foo ')
+
+    def test_compute(self):
+        record = self.env['test_orm.cleaned'].create({'name': 'foo'})
+        self.assertEqual(record.code, 'FOO')
+        self.assertStored(record, 'code', 'FOO')
+
+    def test_translate(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.env['res.lang']._activate_lang('nl_NL')
+        record = self.env['test_orm.cleaned'].create({'label': ' hello '})
+        record.with_context(lang='fr_FR').label = ' bonjour '
+        self.assertStored(record, 'label', {'en_US': 'hello', 'fr_FR': 'bonjour'})
+
+        record.label = {'en_US': ' hi ', 'fr_FR': ' salut '}
+        self.assertStored(record, 'label', {'en_US': 'hi', 'fr_FR': 'salut'})
+
+        # translation dialog, with a dropped translation
+        record.update_field_translations('label', {'nl_NL': ' hallo '})
+        record.update_field_translations('label', {'fr_FR': ' coucou ', 'nl_NL': False})
+        self.assertStored(record, 'label', {'en_US': 'hi', 'fr_FR': 'coucou'})
+
+        # the cleaned empty value is written as a translation: fallback
+        # values in cache must not be stored as translations
+        self.env.invalidate_all()
+        self.assertEqual(record.with_context(lang='nl_NL').label, 'hi')
+        record.with_context(lang='fr_FR').label = False
+        self.assertStored(record, 'label', {'en_US': 'hi', 'fr_FR': 'Untitled'})
+
+    def test_translate_model_terms(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        record = self.env['test_orm.cleaned'].create({'note': '<div>The colour</div>'})
+        self.assertEqual(record.note, '<div>The color</div>')
+
+        # the translated terms are cleaned, too
+        record.update_field_translations('note', {'fr_FR': {'The color': 'La colour'}})
+        self.assertStored(record, 'note', {'en_US': '<div>The color</div>', 'fr_FR': '<div>La color</div>'})
+
+    def test_related(self):
+        Model = self.env['test_orm.cleaned']
+        parent = Model.create({'name': 'foo'})
+        record = Model.create({'parent_id': parent.id})
+        record.parent_name = ' bar '
+        self.assertEqual(parent.name, 'BAR')

@@ -113,6 +113,8 @@ class Properties(Field):
 
     def _setup(self, model):
         super()._setup(model)
+        if self.clean is not None:
+            raise TypeError(f"clean is not supported on {self.type} fields")
         if self.related and self.inherited_field and not self.definition:
             self.definition = self.inherited_field.definition
             self._setup_definition_attrs(model)
@@ -1006,6 +1008,11 @@ class PropertiesDefinition(Field):
         if not self._setup_done:
             self.properties_fields = ()  # reset in case of re-setup
         return super().setup(model)
+
+    def _setup(self, model):
+        super()._setup(model)
+        if self.clean is not None:
+            raise TypeError(f"clean is not supported on {self.type} fields")
 
     def set_properties_visibility(self, definition, property_names, hidden: bool):
         """

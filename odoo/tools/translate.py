@@ -841,18 +841,33 @@ class StoredTranslations(dict):
                 for lang, src2term in term_updates.items()
             }
 
+        records = env[field.model_name]
+        # don't clean non-html field whose `callable(field.translate) and field.clean is None``
+        # because its ``field.convert_to_cleaned_cache`` only calls ``field.translate`` which is redundant here
+        must_clean = field.type == 'html' or field.clean is not None
+        parsed_source = None  # computed lazily, as cleaning rarely changes translations
         for lang, src2term in term_updates.items():
             old_src2term = {src: term for src, lang2term in old_translation_dictionary.items() if (term := lang2term.get(lang)) and term != src}
             new_src2term = {**old_src2term, **src2term} if overwrite else {**src2term, **old_src2term}
             translation = field.translate(new_src2term.get, old_source_lang_value)
-            if field.type == 'html':
-                # a hack to sanitize html
-                translation = field._validated_cache_value(translation, env)
+            cleaned = field.convert_to_cleaned_cache(translation, records) if must_clean else translation
+            if cleaned != translation:
+                # Cleaning may change the content of terms (e.g. html sanitization
+                # removes an unsafe attribute, or adds quote markers), which is
+                # accepted as long as the translation keeps the source structure.
+                if parsed_source is None:
+                    parsed_source = ParsedTranslation(field, old_source_lang_value)
+                if ParsedTranslation(field, cleaned).structure != parsed_source.structure:
+                    raise UserError(env._(
+                        "The translation for language %(lang)s of field %(field)s does not match the "
+                        "structure of the source text once cleaned.",
+                        lang=lang, field=field.string,
+                    ))
             if delay_translations:
-                valid_self['_' + lang] = translation
+                valid_self['_' + lang] = cleaned
                 valid_self.setdefault(lang, valid_self['en_US'])
             else:
-                valid_self[lang] = translation
+                valid_self[lang] = cleaned
         return valid_self
 
     def extract_term_translations(self, env: Environment, field: BaseString, source_lang: str, target_langs: set[str] | None = None, *, include_identical: bool = False) -> dict[str, dict[str, str]]:

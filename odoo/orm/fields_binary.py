@@ -46,6 +46,11 @@ class Binary(Field[BinaryValue]):
 
     _description_attachment = property(attrgetter('attachment'))
 
+    def _setup(self, model):
+        super()._setup(model)
+        if self.clean is not None:
+            raise TypeError(f"clean is not supported on {self.type} fields")
+
     def _description_groupable(self, env):
         return False
 
