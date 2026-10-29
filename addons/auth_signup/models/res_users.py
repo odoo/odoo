@@ -74,6 +74,9 @@ class ResUsers(models.Model):
                 values.pop('country_id', None)
             if partner.lang:
                 values.pop('lang', None)
+            if partner_user and partner.tz:
+                # only keep existing users' tz, new users' tz is overwritten at first login anyway
+                values.pop('tz', None)
 
             if partner_user:
                 # user exists, modify it according to values

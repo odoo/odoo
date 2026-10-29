@@ -3,6 +3,7 @@
 
 import json
 
+import pytz
 import requests
 from werkzeug import http, datastructures
 
@@ -13,6 +14,7 @@ else:
 
 from odoo import api, fields, models
 from odoo.exceptions import AccessDenied, UserError
+from odoo.http import request
 from odoo.addons.auth_signup.models.res_users import SignupError
 
 from odoo.addons import base
@@ -75,7 +77,7 @@ class ResUsers(models.Model):
         oauth_uid = validation['user_id']
         email = validation.get('email', 'provider_%s_user_%s' % (provider, oauth_uid))
         name = validation.get('name', email)
-        return {
+        values = {
             'name': name,
             'login': email,
             'email': email,
@@ -84,6 +86,10 @@ class ResUsers(models.Model):
             'oauth_access_token': params['access_token'],
             'active': True,
         }
+        tz = request.cookies.get('tz') if request else None
+        if tz in pytz.all_timezones:
+            values['tz'] = tz
+        return values
 
     @api.model
     def _auth_oauth_signin(self, provider, validation, params):

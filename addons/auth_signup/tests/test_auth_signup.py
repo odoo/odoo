@@ -57,6 +57,63 @@ class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
             mail = self.env['mail.message'].search([('message_type', '=', 'email_outgoing'), ('model', '=', 'res.users'), ('res_id', '=', new_user.id)], limit=1)
             self.assertTrue(mail, "The new user must be informed of his registration")
 
+    def test_free_signup_does_not_clear_caches(self):
+        """
+        Check that signing up (and first login) does not clear the registry caches
+        """
+        self.env['ir.config_parameter'].sudo().set_param('auth_signup.invitation_scope', 'b2c')
+
+        self.authenticate(None, None)
+        self.opener.cookies['tz'] = 'Europe/Brussels'
+        payload = {
+            'login': 'cache@example.com',
+            'name': 'cache',
+            'password': 'mypassword',
+            'confirm_password': 'mypassword',
+            'csrf_token': http.Request.csrf_token(self),
+        }
+
+        with patch.object(self.env.registry, 'clear_cache', wraps=self.env.registry.clear_cache) as clear_cache:
+            self.url_open(self._get_free_signup_url(), data=payload)
+
+        new_user = self.env['res.users'].search([('login', '=', 'cache@example.com')])
+        self.assertTrue(new_user)
+        self.assertEqual(new_user.tz, 'Europe/Brussels')
+        self.assertTrue(new_user.login_date)
+        clear_cache.assert_not_called()
+
+    def test_token_signup_does_not_clear_caches(self):
+        """
+        Check that signing up (and first login) with a token for a partner
+        without a user, whose tz differs from the browser's, does not clear
+        the registry caches
+        """
+        partner = self.env['res.partner'].create({
+            'name': 'cache token',
+            'email': 'cache_token@example.com',
+            'tz': 'America/New_York',
+        })
+        partner.signup_prepare()
+
+        self.authenticate(None, None)
+        self.opener.cookies['tz'] = 'Europe/Brussels'
+        payload = {
+            'login': 'cache_token@example.com',
+            'name': 'cache token',
+            'password': 'mypassword',
+            'confirm_password': 'mypassword',
+            'csrf_token': http.Request.csrf_token(self),
+        }
+
+        with patch.object(self.env.registry, 'clear_cache', wraps=self.env.registry.clear_cache) as clear_cache:
+            self.url_open(partner._get_signup_url(), data=payload)
+
+        new_user = partner.user_ids
+        self.assertTrue(new_user)
+        self.assertEqual(new_user.tz, 'Europe/Brussels')
+        self.assertTrue(new_user.login_date)
+        clear_cache.assert_not_called()
+
     def test_compute_signup_url(self):
         user = self.user_demo
         user.groups_id -= self.env.ref('base.group_partner_manager')
