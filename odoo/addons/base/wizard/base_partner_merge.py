@@ -126,6 +126,13 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
 
         relations = self._get_fk_on(self.env[model]._table)
 
+        tables = {table for table, _column in relations}
+        cached_models = {
+            model_cls._table: self.env[model_name]
+            for model_name, model_cls in self.env.registry.items()
+            if model_cls._table in tables and model_cls._clear_cache_name
+        }
+
         # this guarantees cache consistency
         self.env.invalidate_all()
 
@@ -178,6 +185,9 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
                     # keeping record with nonexistent partner_id is useless, better delete it
                     query = 'DELETE FROM "%(table)s" WHERE "%(column)s" IN %%s' % query_dic
                     self.env.cr.execute(query, (tuple(src_records.ids),))
+
+            if (cached_model := cached_models.get(table)) is not None and column in cached_model._clear_cache_on_fields:
+                self.env.registry.clear_cache(cached_model._clear_cache_name)
 
     @api.model
     def _update_reference_fields_generic(self, referenced_model, src_records, dst_record, additional_update_records=None):
