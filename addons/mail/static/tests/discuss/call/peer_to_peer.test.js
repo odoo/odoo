@@ -1,16 +1,7 @@
-import { describe, expect } from "@odoo/hoot";
-import { waitUntil } from "@odoo/hoot-dom";
-import { advanceTime } from "@odoo/hoot-mock";
-import { browser } from "@web/core/browser/browser";
-import { onRpc, mountWebClient, asyncStep, waitForSteps } from "@web/../tests/web_test_helpers";
-import {
-    assertSteps,
-    defineMailModels,
-    mockGetMedia,
-    onlineTest,
-    step,
-} from "@mail/../tests/mail_test_helpers";
+import { assertSteps, defineMailModels, onlineTest, step } from "@mail/../tests/mail_test_helpers";
 import { PeerToPeer, STREAM_TYPE, UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
+import { advanceTime, describe, expect, mockPermission, waitUntil } from "@odoo/hoot";
+import { asyncStep, mountWebClient, onRpc, waitForSteps } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -121,7 +112,8 @@ onlineTest("connection recovery", async () => {
 });
 
 onlineTest("can broadcast a stream and control download", async () => {
-    mockGetMedia();
+    mockPermission("camera", "granted");
+    mockPermission("microphone", "granted");
     await mountWebClient();
     const channelId = 3;
     const network = new Network();
@@ -145,7 +137,7 @@ onlineTest("can broadcast a stream and control download", async () => {
     user2.p2p.connect(user2.id, channelId);
     user1.p2p.connect(user1.id, channelId);
     await user1.p2p.addPeer(user2.id);
-    const videoStream = await browser.navigator.mediaDevices.getUserMedia({
+    const videoStream = await navigator.mediaDevices.getUserMedia({
         video: true,
     });
     const videoTrack = videoStream.getVideoTracks()[0];

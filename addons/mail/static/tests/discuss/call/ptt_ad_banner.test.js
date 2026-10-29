@@ -2,21 +2,20 @@ import {
     click,
     contains,
     defineMailModels,
-    mockGetMedia,
     openDiscuss,
     patchUiSize,
     SIZES,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { describe, mockPermission, test } from "@odoo/hoot";
 import { mockService } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
 
 test("display banner when ptt extension is not enabled", async () => {
-    mockGetMedia();
+    mockPermission("microphone", "granted");
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     mockService("discuss.ptt_extension", {

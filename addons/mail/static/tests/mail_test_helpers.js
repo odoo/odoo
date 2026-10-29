@@ -30,7 +30,6 @@ import { contains, TIMEOUT } from "./mail_test_helpers_contains";
 
 import { mailGlobal } from "@mail/utils/common/misc";
 import { Component, onMounted, onPatched, onWillDestroy, status } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { MEDIAS_BREAKPOINTS, utils as uiUtils } from "@web/core/ui/ui_service";
 import { useServiceProtectMethodHandling } from "@web/core/utils/hooks";
@@ -437,74 +436,11 @@ export async function patchUiSize({ height, size, width }) {
 }
 
 /**
- * Mocks the browser's `navigator.mediaDevices.getUserMedia` and `navigator.mediaDevices.getDisplayMedia`
+ * `navigator.mediaDevices` is mocked by Hoot in every test
+ * @deprecated
  */
 export function mockGetMedia() {
-    class MockMediaStreamTrack extends EventTarget {
-        enabled = true;
-        readyState = "live";
-        constructor(kind) {
-            super();
-            this.kind = kind;
-        }
-        stop() {
-            this.readyState = "ended";
-        }
-        clone() {
-            return Object.assign(new MockMediaStreamTrack(this.kind), { ...this });
-        }
-    }
-    /**
-     * The audio streams are mocked as there is no way to create a MediaStream
-     * with an audio track without really requesting it from the device.
-     */
-    class MockAudioMediaStream extends MediaStream {
-        mockTracks = [new MockMediaStreamTrack("audio")];
-        getTracks() {
-            return this.mockTracks;
-        }
-        getAudioTracks() {
-            return this.mockTracks;
-        }
-        getVideoTracks() {
-            return [];
-        }
-    }
-    const streams = [];
-    /**
-     * The video streams are real MediaStreams created from a 1x1 canvas at 1fps.
-     */
-    const createVideoStream = (constraints) => {
-        const canvas = document.createElement("canvas");
-        canvas.width = 1;
-        canvas.height = 1;
-        const stream = canvas.captureStream(1);
-        return stream;
-    };
-    patchWithCleanup(browser.navigator.mediaDevices, {
-        getUserMedia(constraints) {
-            let stream;
-            if (constraints.audio) {
-                stream = new MockAudioMediaStream();
-            } else {
-                // The video streams are real MediaStreams
-                stream = createVideoStream();
-            }
-            streams.push(stream);
-            return stream;
-        },
-        getDisplayMedia() {
-            const stream = createVideoStream();
-            streams.push(stream);
-            return stream;
-        },
-    });
-    after(() => {
-        // stop all streams as some tests may not do actions that lead to the ending of tracks
-        streams.forEach((stream) => {
-            stream.getTracks().forEach((track) => track.stop());
-        });
-    });
+    console.warn("`mockGetMedia` is deprecated: media devices are already mocked by Hoot");
 }
 
 /**

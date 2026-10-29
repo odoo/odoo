@@ -49,6 +49,7 @@ import {
 import { MockNotification } from "./notification";
 import { cleanupResources, getDisposableDescriptors } from "./resources";
 import { MockStorage } from "./storage";
+import { cleanupWebAudio } from "./web_audio";
 
 //-----------------------------------------------------------------------------
 // Global
@@ -209,7 +210,6 @@ function getWatchedEventTargets(view) {
         EventBus.prototype,
         MockEventTarget.prototype,
         view.BaseAudioContext.prototype,
-        view.MediaDevices.prototype,
         view.MediaStreamTrack.prototype,
         view.RTCDataChannel.prototype,
         view.RTCPeerConnection.prototype,
@@ -637,6 +637,9 @@ export function cleanupWindow() {
 
     // Title
     mockTitle = "";
+
+    // Web Audio
+    cleanupWebAudio();
 
     // Listeners
     view.removeEventListener("click", onAnchorHrefClick);
