@@ -324,6 +324,28 @@ class ProductProduct(models.Model):
         valued_locations = self.env['stock.location'].with_context(active_test=False).search([('is_valued', '=', True)])
         return self.with_context(location=valued_locations.ids, strict=True, owners=[False, self.env.company.partner_id.id])
 
+    def _get_first_move(self, lot=False):
+        if not self:
+            return {}
+
+        domain = Domain([
+            ('product_id', 'in', self.ids),
+            ('company_id', '=', self.env.company.id),
+            '|', ('is_in', '=', True), ('is_out', '=', True),
+        ])
+        if lot:
+            domain &= Domain([('move_line_ids.lot_id', '=', lot.id)])
+
+        query = self.env['stock.move'].sudo()._search(domain)
+        query_select = SQL('DISTINCT ON (stock_move.product_id) stock_move.id')
+        # ASC order picks the chronologically first move for each product
+        query.order = SQL('stock_move.product_id, stock_move.date ASC, stock_move.id ASC')
+        query._ids = tuple(id_ for id_, in self.env.execute_query(query.select(query_select)))
+
+        moves = self.env['stock.move'].browse(query._ids)
+        moves.sudo().fetch(['product_id', 'date'])
+        return {move.product_id: move for move in moves}
+
     def _get_remaining_moves(self):
         moves_qty_by_product = {}
         for product in self:
@@ -406,23 +428,43 @@ class ProductProduct(models.Model):
                 ('date', '<=', at_date),
             ])
 
+        first_move_by_product = self._get_first_move(lot=lot)
         last_manual_value_by_product = self._get_last_product_value(at_date, lot=lot)
-        oldest_manual_value = min(pv.date for pv in last_manual_value_by_product.values()) if last_manual_value_by_product else False
-        if oldest_manual_value and self.env['product.product'].concat(last_manual_value_by_product.keys()) == self:
-            moves_domain &= Domain([('date', '>=', oldest_manual_value)])
-
-        for manual_value in last_manual_value_by_product.values():
-            product = manual_value.product_id
-            # scope the opening qty to the current company, like the replayed moves
-            if lot:
-                quantity = lot.with_context(to_date=manual_value.date, allowed_company_ids=self.env.company.ids).product_qty
+        start_date = datetime.max
+        for product in self:
+            manual_value = last_manual_value_by_product.get(product, False)
+            first_move = first_move_by_product.get(product, False)
+            if not manual_value:
+                # no manual value, can't know any value
+                if first_move:
+                    date = first_move.date
+                else:
+                    date = False
+            elif manual_value.date == datetime.min:
+                # if the first manual value is at year 1, use the value but set the date to the move date for perf
+                if first_move:
+                    date = first_move.date
+                else:
+                    date = False
+                std_price_by_product_id[product.id] = manual_value.value
+                quantity_by_product_id[product.id] = 0
+                value_by_product_id[product.id] = 0
+                date_by_product_id[product.id] = manual_value.date
             else:
-                quantity = product.with_context(to_date=manual_value.date, allowed_company_ids=self.env.company.ids).qty_available
+                # for a proper manual value, the quantity can be used as well
+                record = (lot or product).with_context(to_date=manual_value.date, allowed_company_ids=self.env.company.ids)
+                quantity = record.product_qty if lot else record.qty_available
+                date = manual_value.date
+                std_price_by_product_id[product.id] = manual_value.value
+                quantity_by_product_id[product.id] = quantity
+                value_by_product_id[product.id] = manual_value.value * quantity
+                date_by_product_id[product.id] = manual_value.date
+            if date:
+                start_date = min(start_date, date)
 
-            std_price_by_product_id[product.id] = manual_value.value
-            quantity_by_product_id[product.id] = quantity
-            value_by_product_id[product.id] = manual_value.value * quantity
-            date_by_product_id[product.id] = manual_value.date
+        moves_domain &= Domain([
+            ('date', '>=', start_date),
+        ])
 
         self.env['product.value'].invalidate_model()  # Avoid keeping too many records in cache
 
@@ -451,7 +493,7 @@ class ProductProduct(models.Model):
                 if move.product_id != product:
                     product = move.product_id
                     valuation_from_date = date_by_product_id.get(product.id)
-                if valuation_from_date and move.date <= valuation_from_date:
+                if valuation_from_date and move.date <= valuation_from_date:  # you might be able to initialize date_by_product with the first move and change this to less than so that it doesn't skip the first move but those moves are not gonna be in there anyway
                     continue
                 product_move_ids.append(move.id)
 
@@ -464,7 +506,12 @@ class ProductProduct(models.Model):
             moves_batch.move_line_ids.fetch(move_line_fields)
             for move in moves_batch:
                 quantity = quantity_by_product_id.get(move.product_id.id, 0.0)
-                average_cost = std_price_by_product_id.get(move.product_id.id, move.value / move._get_valued_qty() if move._get_valued_qty() else 0)
+                # don't use get(key, fallback) here since it doesn't shortcircuit and the fallback is expensive
+                if move.product_id.id in std_price_by_product_id:
+                    average_cost = std_price_by_product_id[move.product_id.id]
+                else:
+                    qty = move._get_valued_qty()
+                    average_cost = (move.value / qty) if qty else 0.0
                 value = value_by_product_id.get(move.product_id.id, 0.0)
                 if move.product_id != product:
                     product = move.product_id
