@@ -212,3 +212,10 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         self.assertEqual(product_template.base_unit_count, 0.0001)
         self.assertEqual(product.base_unit_price, 10000.0)
         self.assertEqual(product_template.base_unit_price, 10000.0)
+
+    def test_markup_data_has_no_offer_when_price_is_hidden(self):
+        self.website.prevent_sale = True
+        self.product.list_price = 0
+        with self.mock_request() as request:
+            markup_data = self.product.with_context(request.env.context)._prepare_jsonld_vals()
+        self.assertNotIn("offers", markup_data)
