@@ -1,20 +1,17 @@
 // Edit mode
 // =========
 // No clone is created in edit mode (see references_carousel.edit.js): the
-// single strip of logos is laid out as a wrapping grid so that every logo stays
-// visible, selectable and replaceable.
-//
-// Plain values below: Bootstrap's `_variables.scss` is not part of the builder
-// iframe bundle, so `$spacer` and `$spacers` are undefined here.
+// single strip of logos stays one row, as on the published page, and scrolls
+// horizontally so that every logo can be reached, selected and replaced.
 .s_references_carousel {
     overflow-x: visible;
 
     .s_references_carousel_marquee_container {
         // Overrides the inline parallax transform.
         transform: none !important;
-        flex-wrap: wrap;
-        justify-content: center;
-        row-gap: 1rem;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: thin;
         // Scoped to the logos: the title above must stay selectable.
         user-select: none;
     }
@@ -22,12 +19,6 @@
     .s_references_carousel_marquee_item {
         // Overrides the frontend `_ready` animation.
         animation: none !important;
-        flex-wrap: wrap;
-        justify-content: center;
-        width: 100%;
-        row-gap: 1rem;
-        // The trailing strip padding is only there to space out clones.
-        padding-inline-end: 0;
     }
 
     // Overrides the `d-flex` of frontend clones until edit mode removes them.

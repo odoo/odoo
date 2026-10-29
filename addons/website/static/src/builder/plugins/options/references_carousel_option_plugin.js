@@ -1,3 +1,4 @@
+import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
@@ -8,9 +9,14 @@ const itemSelector = ".s_references_carousel_item";
 export class ReferencesCarouselOptionPlugin extends Plugin {
     static id = "referencesCarouselOption";
     static dependencies = ["builderOptions"];
+    static shared = ["reorderItem"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
+        builder_actions: {
+            ReferencesCarouselAddItemAction,
+            ReferencesCarouselRemoveItemAction,
+        },
         builder_header_middle_buttons: {
             Component: ReferencesCarouselHeaderMiddleButtons,
             selector: itemSelector,
@@ -47,6 +53,37 @@ export class ReferencesCarouselOptionPlugin extends Plugin {
         const nextTargetEl = itemEl.previousElementSibling || itemEl.nextElementSibling;
         itemEl.remove();
         this.dependencies.builderOptions.setNextTarget(nextTargetEl);
+    }
+
+    /**
+     * Moves a logo before another one, or at the end of the strip.
+     *
+     * @param {HTMLElement} itemEl
+     * @param {HTMLElement} [nextItemEl]
+     */
+    reorderItem(itemEl, nextItemEl) {
+        if (nextItemEl) {
+            nextItemEl.before(itemEl);
+        } else {
+            itemEl.parentElement.append(itemEl);
+        }
+    }
+}
+
+export class ReferencesCarouselAddItemAction extends BuilderAction {
+    static id = "referencesCarouselAddItem";
+    apply({ editingElement }) {
+        const lastItemEl = editingElement.querySelector(`${itemSelector}:last-child`);
+        lastItemEl.after(lastItemEl.cloneNode(true));
+    }
+}
+
+export class ReferencesCarouselRemoveItemAction extends BuilderAction {
+    static id = "referencesCarouselRemoveItem";
+    apply({ editingElement }) {
+        if (!editingElement.matches(`${itemSelector}:only-child`)) {
+            editingElement.remove();
+        }
     }
 }
 

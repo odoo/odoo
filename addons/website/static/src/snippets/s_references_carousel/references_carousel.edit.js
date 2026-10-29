@@ -11,16 +11,16 @@ export const ReferencesCarouselEdit = (I) =>
     class extends I {
         start() {
             // Neither clones nor animation: `marqueeReady` stays false, so the
-            // single strip of logos is simply laid out as a wrapping grid where
-            // each logo stays visible and easy to select.
+            // single strip of logos stays still, in a row that scrolls
+            // horizontally where each logo stays easy to select.
         }
 
         onResize() {
-            // Nothing to recompute, the wrapping grid reflows on its own.
+            // Nothing to recompute, the row reflows on its own.
         }
 
         onScroll() {
-            // Nothing to drive: the grid neither moves (parallax) nor reacts
+            // Nothing to drive: the row neither moves (parallax) nor reacts
             // to hover.
         }
     };
