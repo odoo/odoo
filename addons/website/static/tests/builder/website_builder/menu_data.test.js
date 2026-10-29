@@ -1,5 +1,5 @@
 import { describe, expect, test, beforeEach, animationFrame } from "@odoo/hoot";
-import { waitFor, waitForNone, click, queryOne } from "@odoo/hoot-dom";
+import { click, press, queryAllTexts, queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
@@ -7,7 +7,7 @@ import {
 import { setupEditor } from "@html_editor/../tests/_helpers/editor";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
-import { mockService, onRpc, contains } from "@web/../tests/web_test_helpers";
+import { contains, defineParams, mockService, onRpc } from "@web/../tests/web_test_helpers";
 import { MenuDataPlugin } from "@website/builder/plugins/menu_data_plugin";
 import { MenuDialog } from "@website/components/dialog/edit_menu";
 import { SavePlugin } from "@html_builder/core/save_plugin";
@@ -291,6 +291,197 @@ describe("EditMenuDialog", () => {
         await click(".js_edit_menu");
         await waitFor(".o_website_dialog");
         expect.verifySteps(["get_tree"]);
+    });
+
+    describe("reorder menu items with keyboard", () => {
+        const menuItem = (id, name, parentId = 4, isMegaMenu = false) => ({
+            fields: {
+                id,
+                name,
+                url: "#",
+                new_window: false,
+                is_mega_menu: isMegaMenu,
+                sequence: id * 10,
+                parent_id: parentId,
+            },
+            children: [],
+            is_homepage: false,
+        });
+        const menuTree = {
+            ...sampleMenuData,
+            children: [
+                {
+                    ...sampleMenuData.children[0],
+                    children: [menuItem(6, "First Submenu", 5), menuItem(7, "Second Submenu", 5)],
+                },
+                menuItem(8, "Second Menu Item"),
+            ],
+        };
+        const megaMenuTree = {
+            ...sampleMenuData,
+            children: [
+                menuItem(5, "Top Menu Item"),
+                menuItem(9, "Mega Menu", 4, true),
+                menuItem(8, "Second Menu Item"),
+            ],
+        };
+
+        async function openMenuEditorDialog(tree) {
+            const { el } = await setupEditor(
+                `<ul class="top_menu">
+                    <li>
+                        <a class="nav-link" href="exists">
+                            <span>Top Menu Item</span>
+                        </a>
+                    </li>
+                </ul>`,
+                { config: { includePlugins: [MenuDataPlugin, SavePlugin] } }
+            );
+            onRpc("website.menu", "get_tree", () => tree);
+            setSelection({ anchorNode: el.querySelector(".nav-link > span"), anchorOffset: 0 });
+            await waitFor(".o-we-linkpopover");
+            await click(".js_edit_menu");
+            await waitFor(".oe_menu_editor");
+        }
+
+        const getMenuHandleSelector = (menuId) =>
+            `.oe_menu_editor li[data-menu-id="${menuId}"] > .input-group > .o_drag_handle`;
+        const getMenuItemLabels = (listSelector) =>
+            queryAllTexts(`${listSelector} > li > .input-group .js_menu_label`);
+        const getRootMenuItemLabels = () => getMenuItemLabels(".oe_menu_editor");
+        const getChildMenuLabels = (menuId) =>
+            getMenuItemLabels(`li[data-menu-id="${menuId}"] > ul`);
+
+        test("arrow up and arrow down should reorder within siblings", async () => {
+            await openMenuEditorDialog(menuTree);
+
+            await click(getMenuHandleSelector(5));
+            await press("ArrowDown");
+            await animationFrame();
+            expect(getRootMenuItemLabels()).toEqual(["Second Menu Item", "Top Menu Item"]);
+            expect(getMenuHandleSelector(5)).toBeFocused();
+
+            await press("ArrowUp");
+            await animationFrame();
+            expect(getRootMenuItemLabels()).toEqual(["Top Menu Item", "Second Menu Item"]);
+        });
+
+        test("arrow up and arrow down should reorder inside a submenu", async () => {
+            await openMenuEditorDialog(menuTree);
+
+            await click(getMenuHandleSelector(6));
+            await press("ArrowDown");
+            await animationFrame();
+            expect(getChildMenuLabels(5)).toEqual(["Second Submenu", "First Submenu"]);
+            expect(getMenuHandleSelector(6)).toBeFocused();
+
+            await press("ArrowUp");
+            await animationFrame();
+            expect(getChildMenuLabels(5)).toEqual(["First Submenu", "Second Submenu"]);
+            expect(getMenuHandleSelector(6)).toBeFocused();
+        });
+
+        test("arrow right nests into the previous sibling, arrow left un-nests", async () => {
+            await openMenuEditorDialog(menuTree);
+
+            // The first menu has no previous sibling to nest into.
+            await click(getMenuHandleSelector(5));
+            await press("ArrowRight");
+            await animationFrame();
+            expect(getRootMenuItemLabels()).toEqual(["Top Menu Item", "Second Menu Item"]);
+
+            await click(getMenuHandleSelector(8));
+            await press("ArrowRight");
+            await animationFrame();
+            expect(getChildMenuLabels(5)).toEqual([
+                "First Submenu",
+                "Second Submenu",
+                "Second Menu Item",
+            ]);
+            expect(getRootMenuItemLabels()).toEqual(["Top Menu Item"]);
+            expect(getMenuHandleSelector(8)).toBeFocused();
+
+            // Back to the root.
+            await press("ArrowLeft");
+            await animationFrame();
+            expect(getRootMenuItemLabels()).toEqual(["Top Menu Item", "Second Menu Item"]);
+        });
+
+        test("in RTL, arrow left nests and arrow right un-nests", async () => {
+            defineParams({ lang_parameters: { direction: "rtl" } });
+            await openMenuEditorDialog(menuTree);
+
+            // Left nests menu 8 into menu 5, as Right does in LTR.
+            await click(getMenuHandleSelector(8));
+            await press("ArrowLeft");
+            await animationFrame();
+            expect(getChildMenuLabels(5)).toEqual([
+                "First Submenu",
+                "Second Submenu",
+                "Second Menu Item",
+            ]);
+            expect(getRootMenuItemLabels()).toEqual(["Top Menu Item"]);
+            expect(getMenuHandleSelector(8)).toBeFocused();
+
+            // Right un-nests it back to the root, after its former parent.
+            await press("ArrowRight");
+            await animationFrame();
+            expect(getRootMenuItemLabels()).toEqual(["Top Menu Item", "Second Menu Item"]);
+        });
+
+        test("arrow right does not nest a menu that has children", async () => {
+            await openMenuEditorDialog(menuTree);
+            // Menu 5 has children: move it down so that it has a previous
+            // sibling to be nested into.
+            await click(getMenuHandleSelector(5));
+            await press("ArrowDown");
+            await animationFrame();
+            expect(getRootMenuItemLabels()).toEqual(["Second Menu Item", "Top Menu Item"]);
+
+            await press("ArrowRight");
+            await animationFrame();
+            expect(getRootMenuItemLabels()).toEqual(["Second Menu Item", "Top Menu Item"]);
+            expect(getChildMenuLabels(5)).toEqual(["First Submenu", "Second Submenu"]);
+        });
+
+        test("arrow right does not nest a menu that is already nested", async () => {
+            await openMenuEditorDialog(menuTree);
+            // Menu 7 is a submenu of menu 5, right after menu 6.
+            await click(getMenuHandleSelector(7));
+            await press("ArrowRight");
+            await animationFrame();
+            // Nesting it into menu 6 would make a third level.
+            expect(getChildMenuLabels(5)).toEqual(["First Submenu", "Second Submenu"]);
+            expect(getChildMenuLabels(6)).toEqual([]);
+        });
+
+        test("arrow left does not move a menu that is already at the root", async () => {
+            await openMenuEditorDialog(menuTree);
+            await click(getMenuHandleSelector(8));
+            await press("ArrowLeft");
+            await animationFrame();
+            expect(getRootMenuItemLabels()).toEqual(["Top Menu Item", "Second Menu Item"]);
+            expect(getMenuHandleSelector(8)).toBeFocused();
+        });
+
+        test("arrow right does not nest when a mega menu is involved", async () => {
+            await openMenuEditorDialog(megaMenuTree);
+            const rootMenuItemLabels = ["Top Menu Item", "Mega Menu", "Second Menu Item"];
+
+            // Mega menus stay at the root.
+            await click(getMenuHandleSelector(9));
+            await press("ArrowRight");
+            await animationFrame();
+            expect(getRootMenuItemLabels()).toEqual(rootMenuItemLabels);
+            expect(getChildMenuLabels(5)).toEqual([]);
+
+            // Mega menus don't support submenus.
+            await click(getMenuHandleSelector(8));
+            await press("ArrowRight");
+            await animationFrame();
+            expect(getRootMenuItemLabels()).toEqual(rootMenuItemLabels);
+            expect(getChildMenuLabels(9)).toEqual([]);
+        });
     });
 
     test("clicking save in the EditMenuDialog should not clear the editor changes", async () => {

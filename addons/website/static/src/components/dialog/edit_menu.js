@@ -1,8 +1,19 @@
+import { useKeyboardReorder } from "@html_builder/utils/keyboard_reorder";
+import {
+    Component,
+    onWillStart,
+    onPatched,
+    proxy,
+    signal,
+    t,
+    useApp,
+    useEffect,
+    useProps,
+} from "@odoo/owl";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { useNestedSortable } from "@web/core/utils/nested_sortable";
 import wUtils from "@website/js/utils";
 import { WebsiteDialog } from "./dialog";
-import { Component, onWillStart, proxy, signal, useApp, useEffect, useProps, t } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 import { isEmail } from "@web/core/utils/strings";
 import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
@@ -161,10 +172,15 @@ class MenuRow extends Component {
         edit: t.function(),
         delete: t.function(),
         createPage: t.function(),
+        keyboardReorder: t.object(),
     });
     static components = {
         MenuRow,
     };
+
+    setup() {
+        onPatched(() => this.props.keyboardReorder.restoreFocus());
+    }
 
     edit() {
         this.props.edit(this.props.menu.fields["id"]);
@@ -179,10 +195,165 @@ class MenuRow extends Component {
     }
 }
 
+function getMenuIdForElement(element) {
+    const menuIdStr = element.dataset.menuId;
+    return isNaN(menuIdStr) ? menuIdStr : parseInt(menuIdStr);
+}
+
+class MenuEditor extends Component {
+    static template = "website.MenuEditor";
+    static components = { MenuRow };
+    props = useProps({
+        rootMenu: t.object(),
+        menus: t.instanceOf(Map),
+        edit: t.function(),
+        delete: t.function(),
+        createPage: t.function(),
+        moveMenu: t.function(),
+    });
+
+    menuEditorRef = signal.ref();
+
+    setup() {
+        this.keyboardReorder = useKeyboardReorder({
+            getItemsInList: (menuId) =>
+                this.getParentMenu(menuId).children.map((menu) => menu.fields["id"]),
+            moveItemAfter: (menuId, previousMenuId) =>
+                this.props.moveMenu(
+                    menuId,
+                    this.getParentMenu(menuId).fields["id"],
+                    previousMenuId
+                ),
+            changeNesting: (menuId, direction) => this.changeMenuNesting(menuId, direction),
+            getHandle: (menuId) =>
+                this.menuEditorRef().querySelector(
+                    `li[data-menu-id="${menuId}"] > .input-group > .o_drag_handle`
+                ),
+        });
+
+        useNestedSortable({
+            ref: this.menuEditorRef,
+            handle: "div",
+            nest: true,
+            maxLevels: 2,
+            onDragStart: () => this.menuEditorRef().classList.add("o_menu_editor_dragging"),
+            onDragEnd: () => this.menuEditorRef().classList.remove("o_menu_editor_dragging"),
+            onDrop: ({ element, parent, previous }) =>
+                this.props.moveMenu(
+                    getMenuIdForElement(element),
+                    parent && getMenuIdForElement(parent.closest("li")),
+                    previous && getMenuIdForElement(previous)
+                ),
+            isAllowed: this.isAllowedMove.bind(this),
+            useElementSize: true,
+            /**
+             * @param {DOMElement} element - moved element
+             * @param {DOMElement} parent - parent element of where the element
+             *      was moved
+             * @param {DOMElement} placeholder - hint element showing the
+             *      current position
+             */
+            onMove: ({ element, placeholder, parent }) => {
+                // Adapt the dragged menu item to match the width and position
+                // of the placeholder.
+                element.style.width = getComputedStyle(placeholder).width;
+                element.style.marginLeft =
+                    parent && element.parentElement === this.menuEditorRef() ? "2rem" : "";
+            },
+            // Prevent starting a drag from the action buttons (edit, delete),
+            // but not from the drag handle itself, which is also a button.
+            preventDrag: (el) => el.querySelector(":scope > button:not(.o_drag_handle)"),
+        });
+    }
+
+    isAllowedMove(current, elementSelector) {
+        const currentIsMegaMenu = current.element.dataset.isMegaMenu === "true";
+        if (!currentIsMegaMenu) {
+            return (
+                current.placeHolder.parentNode.closest(
+                    `${elementSelector}[data-is-mega-menu="true"]`
+                ) === null
+            );
+        }
+        const isDropOnRoot = current.placeHolder.parentNode.closest(elementSelector) === null;
+        return currentIsMegaMenu && isDropOnRoot;
+    }
+
+    /**
+     * @param {number|string} menuId
+     * @returns {Object} the parent menu, the root menu for a top-level menu
+     */
+    getParentMenu(menuId) {
+        const parentId = this.props.menus.get(menuId).fields["parent_id"];
+        return parentId ? this.props.menus.get(parentId) : this.props.rootMenu;
+    }
+
+    /**
+     * Nests (1) or un-nests (-1) a menu, with the same restrictions as the drag
+     * and drop (see `isAllowedMove`).
+     *
+     * @param {number|string} menuId
+     * @param {1|-1} direction
+     * @returns {boolean} whether the menu moved
+     */
+    changeMenuNesting(menuId, direction) {
+        const move = direction === 1 ? this.getNestMove(menuId) : this.getUnnestMove(menuId);
+        if (!move) {
+            return false;
+        }
+        this.props.moveMenu(menuId, move.parentId, move.previousId);
+        return true;
+    }
+
+    /**
+     * Returns the move parameters for nesting a menu as the last child of its
+     * previous sibling.
+     *
+     * @param {number|string} menuId
+     * @returns {Object|null} null if the nesting is not allowed
+     */
+    getNestMove(menuId) {
+        const menu = this.props.menus.get(menuId);
+        const parentMenu = this.getParentMenu(menuId);
+        const index = parentMenu.children.findIndex((m) => m.fields["id"] === menuId);
+        const prevSiblingMenu = parentMenu.children[index - 1];
+        // Mega menus stay at the root and the tree is limited to `maxLevels`.
+        if (
+            !prevSiblingMenu ||
+            menu.fields["is_mega_menu"] ||
+            prevSiblingMenu.fields["is_mega_menu"] ||
+            menu.children.length ||
+            parentMenu.fields["id"] !== this.props.rootMenu.fields["id"]
+        ) {
+            return null;
+        }
+        return {
+            parentId: prevSiblingMenu.fields["id"],
+            previousId: prevSiblingMenu.children.at(-1)?.fields["id"],
+        };
+    }
+
+    /**
+     * Returns the move placing a menu right after its parent menu.
+     *
+     * @param {number|string} menuId
+     * @returns {Object|null} null if the menu is already at the root
+     */
+    getUnnestMove(menuId) {
+        const parentMenu = this.getParentMenu(menuId);
+        if (parentMenu.fields["id"] === this.props.rootMenu.fields["id"]) {
+            return null;
+        }
+        // The tree has two levels, so un-nesting always moves to the root (no
+        // `parentId`).
+        return { previousId: parentMenu.fields["id"] };
+    }
+}
+
 export class EditMenuDialog extends Component {
     static template = "website.EditMenuDialog";
     static components = {
-        MenuRow,
+        MenuEditor,
         WebsiteDialog,
     };
     props = useProps({
@@ -190,8 +361,6 @@ export class EditMenuDialog extends Component {
         close: t.function(),
         save: t.function().optional(),
     });
-
-    menuEditor = signal.ref();
 
     setup() {
         this.orm = useService("orm");
@@ -212,31 +381,6 @@ export class EditMenuDialog extends Component {
             this.map = new Map();
             this.populate(this.map, this.state.rootMenu);
             this.toDelete = [];
-        });
-
-        useNestedSortable({
-            ref: this.menuEditor,
-            handle: "div",
-            nest: true,
-            maxLevels: 2,
-            onDragStart: () => this.menuEditor().classList.add("o_menu_editor_dragging"),
-            onDragEnd: () => this.menuEditor().classList.remove("o_menu_editor_dragging"),
-            onDrop: this._moveMenu.bind(this),
-            isAllowed: this._isAllowedMove.bind(this),
-            useElementSize: true,
-            /**
-             * @param {DOMElement} element - moved element
-             * @param {DOMElement} parent - parent element of where the element was moved
-             * @param {DOMElement} placeholder - hint element showing the current position
-             */
-            onMove: ({ element, placeholder, parent }) => {
-                // Adapt the dragged menu item to match the width and position
-                // of the placeholder.
-                element.style.width = getComputedStyle(placeholder).width;
-                element.style.marginLeft =
-                    parent && element.parentElement === this.menuEditor() ? "2rem" : "";
-            },
-            preventDrag: (el) => el.querySelector(":scope > button"),
         });
     }
 
@@ -260,44 +404,28 @@ export class EditMenuDialog extends Component {
         );
     }
 
-    _isAllowedMove(current, elementSelector) {
-        const currentIsMegaMenu = current.element.dataset.isMegaMenu === "true";
-        if (!currentIsMegaMenu) {
-            return (
-                current.placeHolder.parentNode.closest(
-                    `${elementSelector}[data-is-mega-menu="true"]`
-                ) === null
-            );
-        }
-        const isDropOnRoot = current.placeHolder.parentNode.closest(elementSelector) === null;
-        return currentIsMegaMenu && isDropOnRoot;
-    }
-
-    _getMenuIdForElement(element) {
-        const menuIdStr = element.dataset.menuId;
-        const menuId = parseInt(menuIdStr);
-        return isNaN(menuId) ? menuIdStr : menuId;
-    }
-
-    _moveMenu({ element, parent, previous }) {
-        const menuId = this._getMenuIdForElement(element);
+    /**
+     * @param {number|string} menuId
+     * @param {number|string} [parentId] the new parent menu, none for the root
+     *      menu
+     * @param {number|string} [previousId] the new previous sibling, none to
+     *      move the menu first
+     */
+    moveMenu(menuId, parentId, previousId) {
         const menu = this.map.get(menuId);
 
         // Remove element from parent's children (since we are moving it, this is the mandatory first step)
-        const parentId = menu.fields["parent_id"] || this.state.rootMenu.fields["id"];
-        let parentMenu = this.map.get(parentId);
+        const oldParentId = menu.fields["parent_id"] || this.state.rootMenu.fields["id"];
+        let parentMenu = this.map.get(oldParentId);
         parentMenu.children = parentMenu.children.filter((m) => m.fields["id"] !== menuId);
 
         // Determine next parent
-        const menuParentId = parent
-            ? this._getMenuIdForElement(parent.closest("li"))
-            : this.state.rootMenu.fields["id"];
-        parentMenu = this.map.get(menuParentId);
+        parentMenu = this.map.get(parentId || this.state.rootMenu.fields["id"]);
         menu.fields["parent_id"] = parentMenu.fields["id"];
 
         // Determine at which position we should place the element
-        if (previous) {
-            const previousMenu = this.map.get(this._getMenuIdForElement(previous));
+        if (previousId) {
+            const previousMenu = this.map.get(previousId);
             const index = parentMenu.children.findIndex((menu) => menu === previousMenu);
             parentMenu.children.splice(index + 1, 0, menu);
         } else {
