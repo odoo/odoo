@@ -29,6 +29,7 @@ patch(GeneratePrinterData.prototype, {
             code: coupon.code,
             expiration_date: coupon.expiration_date,
             barcode_base64: coupon.barcode_base64,
+            discount_value: coupon.discount_value,
         }));
 
         return data;
