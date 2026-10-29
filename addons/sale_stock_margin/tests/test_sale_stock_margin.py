@@ -690,3 +690,19 @@ class TestSaleStockMargin(TestStockValuationCommon):
         so.picking_ids.button_validate()
         self.assertEqual(po.order_line.price_unit, 20)
         self.assertEqual(so.order_line.purchase_price, 20)
+
+    def test_fifo_return_and_redelivery_purchase_price(self):
+        """ A FIFO delivery valued at 1000 is returned, then the return is returned to the customer
+        and consumes the receipt at 2. The cost of the 10 delivered units is the one of the second
+        delivery, as the first one is cancelled by its return.
+        """
+        self._make_in_move(self.product_fifo_auto, 10, 1000)
+        self._make_in_move(self.product_fifo_auto, 10, 2)
+        sale_order = self._create_sale_order()
+        order_line = self._create_sale_order_line(sale_order, self.product_fifo_auto, 10)
+        sale_order.action_confirm()
+        delivery = sale_order.picking_ids
+        delivery.button_validate()
+        return_move = self._make_return(delivery.move_ids, 10)
+        self._make_return(return_move, 10)
+        self.assertRecordValues(order_line, [{'qty_delivered': 10, 'purchase_price': 2}])
