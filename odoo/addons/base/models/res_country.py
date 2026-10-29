@@ -101,6 +101,16 @@ class Country(models.Model):
         return result
 
     @api.model
+    def _search_display_name(self, operator, value):
+        if operator in ('=', '!=') and isinstance(value, str) and len(value) > 2:
+            return [('name', operator, value)]
+        if operator in ('in', 'not in') and isinstance(value, (list, tuple)):
+            codes = [code for code in value if not (isinstance(code, str) and len(code) > 2)]
+            aggregator = expression.AND if operator == 'not in' else expression.OR
+            return aggregator([[('name', operator, value)], [('code', operator, codes)]])
+        return super()._search_display_name(operator, value)
+
+    @api.model
     @tools.ormcache('code')
     def _phone_code_for(self, code):
         return self.search([('code', '=', code)]).phone_code
