@@ -196,7 +196,7 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
 {
     isActive: ["desktop"],
     trigger: '.o_control_panel_main_buttons button:contains("Approve")',
-    content: _t("Managers can approve the expense here, then an accountant can post the accounting entries."),
+    content: _t("Managers can approve the expense here, then it can be reimbursed."),
     run: "click",
 },
 {
@@ -208,7 +208,7 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
 {
     isActive: ["mobile"],
     trigger: '.o_statusbar_buttons button:enabled:contains("Approve"), .dropdown-item button:enabled:contains("Approve")',
-    content: _t("Managers can approve the expense here, then an accountant can post the accounting entries."),
+    content: _t("Managers can approve the expense here, then it can be reimbursed."),
     run: "click",
 },
 ]});

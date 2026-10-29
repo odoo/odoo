@@ -2,6 +2,7 @@ import io
 from collections import defaultdict
 
 from odoo import api, fields, models
+from odoo.exceptions import RedirectWarning
 from odoo.tools import format_date, pdf
 from odoo.tools.pdf import DependencyError, OdooPdfFileReader, OdooPdfFileWriter, PdfReadError
 
@@ -26,6 +27,7 @@ class IrActionsReport(models.Model):
 
         collected_streams = {}
         idx = 0
+        unreadable_receipts = []
 
         data = data or {}
         for expenses_per_employee in all_expenses.grouped('employee_id').values():
@@ -61,16 +63,11 @@ class IrActionsReport(models.Model):
                                 res_ids=expense.ids,
                             )
                             attachment_stream = attachment_prep_stream[expense.id]['stream']
-                        attachment_reader = OdooPdfFileReader(attachment_stream, strict=False)
                         try:
+                            attachment_reader = OdooPdfFileReader(attachment_stream, strict=False)
                             output_pdf.append_pages_from_reader(attachment_reader)
-                        except (PdfReadError, DependencyError) as e:
-                            expense._message_log(body=self.env._(
-                                "The attachment (%(attachment_name)s) has not been added to the report due to the following "
-                                "error: '%(error)s'",
-                                attachment_name=attachment.name,
-                                error=e
-                            ))
+                        except (PdfReadError, DependencyError):
+                            unreadable_receipts.append((expense, attachment))
                             continue
                         stream_list.append(attachment_stream)
 
@@ -81,6 +78,16 @@ class IrActionsReport(models.Model):
                 collected_streams[idx] = {'stream': new_pdf_stream, 'attachment': None}
                 idx += 1
 
+        if unreadable_receipts:
+            expenses = self.env['hr.expense'].union(*(expense for expense, _attachment in unreadable_receipts))
+            raise RedirectWarning(
+                message=self.env._(
+                    "These receipts cannot be read, replace them to print the report:\n%(receipts)s",
+                    receipts="\n".join(f"- {expense.name}: {attachment.name}" for expense, attachment in unreadable_receipts),
+                ),
+                action=expenses._get_records_action(name=self.env._("Expenses"), context={}),
+                button_text=self.env._("Go to the expenses") if len(expenses) > 1 else self.env._("Go to the expense"),
+            )
         return collected_streams
 
     def _render_qweb_html(self, report_ref, docids, data=None):
@@ -131,8 +138,6 @@ class IrActionsReport(models.Model):
         date = max(expenses_with_dates.mapped('date')) if expenses_with_dates else fields.Date.context_today(self)
 
         return {
-            'untaxed_amount': company_currency.format(sum(expenses.mapped('untaxed_amount'), start=0)),
-            'tax_amount': company_currency.format(sum(expenses.mapped('tax_amount'), start=0)),
             'total_amount': company_currency.format(sum(expenses.mapped('total_amount'), start=0)),
             'date': format_date(self.env, date, lang_code=self.env.user.lang),
             'has_foreign_currency': bool(expenses.currency_id - company_currency),

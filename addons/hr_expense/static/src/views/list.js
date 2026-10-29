@@ -21,10 +21,9 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
         this.actionService = useService('action');
 
         onWillStart(async () => {
-            [this.userIsExpenseTeamApprover, this.userIsAccountInvoicing, this.userHasEmployee] =
+            [this.userIsExpenseTeamApprover, this.userHasEmployee] =
                 await Promise.all([
                     user.hasGroup("hr_expense.group_hr_expense_team_approver"),
-                    user.hasGroup("account.group_account_invoice"),
                     rpc(
                         "/web/dataset/call_kw/res.users/read",
                         {
@@ -51,6 +50,10 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
         return menuItems;
     }
 
+    get actionAdditionalContext() {
+        return {};
+    }
+
     displaySubmit() {
         const records = this.model.root.selection;
         return records.length && records.every(record => record.data.state === 'draft');
@@ -59,6 +62,11 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
     displayApprove() {
         const records = this.model.root.selection;
         return this.userIsExpenseTeamApprover && records.length && records.every(record => record.data.state === 'submitted');
+    }
+
+    displayPay() {
+        const records = this.model.root.selection;
+        return records.length && records.every((record) => record.data.can_pay);
     }
 
     async onClickPrintSelected() {
@@ -79,9 +87,7 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
         const res = await this.orm.call(model, action, [recordIds], {context: context});
         if (res) {
             await this.actionService.doAction(res, {
-                additionalContext: {
-                    dont_redirect_to_payments: 1,
-                },
+                additionalContext: this.actionAdditionalContext,
                 onClose: async (closeParams) => {
                     if (closeParams?.noReload) {
                         return;

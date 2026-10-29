@@ -77,10 +77,11 @@ class HrExpense(models.Model):
         # When posting expense, we need the analytic entries to be generated, because reinvoicing uses analytic accounts.
         # We then ensure the proper analytic acocunt is given in the distribution and if not,
         # we create an account and set the distribution to it.
-        for expense in self:
-            if expense.sale_order_id and not expense.analytic_distribution:
-                analytic_account = self.env['account.analytic.account'].create(expense.sale_order_id._prepare_analytic_account_data())
-                expense.analytic_distribution = {analytic_account.id: 100}
+        expenses_without_distribution = self.filtered(lambda expense: expense.sale_order_id and not expense.analytic_distribution)
+        for sale_order, expenses in expenses_without_distribution.grouped('sale_order_id').items():
+            # Sudo as approvers may neither read the sale orders nor create analytic accounts
+            analytic_account_sudo = self.env['account.analytic.account'].sudo().create(sale_order.sudo()._prepare_analytic_account_data())
+            expenses.analytic_distribution = {analytic_account_sudo.id: 100}
         return super()._do_approve()
 
     def action_open_sale_order(self):
