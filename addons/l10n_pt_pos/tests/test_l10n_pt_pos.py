@@ -3,11 +3,11 @@ from odoo.exceptions import RedirectWarning, UserError
 from odoo.models import Model
 from odoo.tests import tagged
 from odoo.tests.common import freeze_time
-from odoo.addons.l10n_pt_certification.tests.common import TestL10nPtCommon
+from odoo.addons.l10n_pt_certification.tests.legacy_common import TestL10nPtLegacyCommon
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
 
-class TestL10nPtPosCommon(TestL10nPtCommon, TestPoSCommon):
+class TestL10nPtPosCommon(TestL10nPtLegacyCommon, TestPoSCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

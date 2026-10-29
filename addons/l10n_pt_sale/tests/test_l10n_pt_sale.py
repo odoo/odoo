@@ -6,11 +6,11 @@ from odoo.exceptions import UserError
 from odoo.models import Model
 from odoo.tests import tagged
 from odoo.tests.common import freeze_time
-from odoo.addons.l10n_pt_certification.tests.common import TestL10nPtCommon
+from odoo.addons.l10n_pt_certification.tests.legacy_common import TestL10nPtLegacyCommon
 from odoo.addons.sale.tests.common import TestSaleCommon
 
 
-class TestL10nPtSaleCommon(TestL10nPtCommon, TestSaleCommon):
+class TestL10nPtSaleCommon(TestL10nPtLegacyCommon, TestSaleCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

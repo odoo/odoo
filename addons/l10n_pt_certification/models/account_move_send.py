@@ -20,7 +20,7 @@ class AccountMoveSend(models.AbstractModel):
         if to_issue and (from_cron or not allow_raising):
             moves -= (to_issue - self._l10n_pt_issue_or_log(to_issue))
         else:
-            to_issue._l10n_pt_issue_with_predecessors()
+            to_issue._l10n_pt_issue()
         return super()._generate_and_send_invoices(
             moves, from_cron=from_cron, allow_raising=allow_raising, allow_fallback_pdf=allow_fallback_pdf, **custom_settings,
         )
@@ -30,7 +30,7 @@ class AccountMoveSend(models.AbstractModel):
         """
         Issue ``moves`` AT series by AT series, and return those that were issued.
 
-        In a series, an invoice is issued with those before it (`_l10n_pt_issue_with_predecessors`), and
+        In a series, an invoice is issued with those before it (`account.move._l10n_pt_issue`), and
         what prevents issuing (a gap, the company's VAT or clock) holds for a whole series or company:
         the invoices of a series are issued, or not, together. Those not issued are not sent, with the
         reason in their chatter. While the signing service cannot be reached, no series can be: none is
@@ -52,7 +52,7 @@ class AccountMoveSend(models.AbstractModel):
                         key=lambda m: (m.sending_data or {}).get('author_user_id'),
                     ):
                         author_moves = self.env['account.move'].concat(*author_moves)
-                        author_moves.with_context(l10n_pt_issue_user_id=author_id)._l10n_pt_issue_with_predecessors()
+                        author_moves.with_context(l10n_pt_issue_user_id=author_id)._l10n_pt_issue()
             except pt_hash_utils.L10nPtSigningUnavailable as error:
                 stop_sending(moves - issued - failed, error)
                 break

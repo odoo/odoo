@@ -20,3 +20,11 @@ class AccountMove(models.Model):
                 and self.line_ids.sale_line_ids.order_id.transaction_ids.filtered(lambda tx: tx.state == 'done')
             )
         )
+
+
+class AccountMoveLine(models.Model):
+    _inherit = "account.move.line"
+
+    def _l10n_pt_get_non_positive_lines(self):
+        # EXTENDS l10n_pt_certification: a final invoice deducts the down payments invoiced before as negative lines.
+        return super()._l10n_pt_get_non_positive_lines().filtered(lambda l: not l.is_downpayment)

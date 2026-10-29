@@ -1,8 +1,9 @@
 import re
+from itertools import groupby
 
 from stdnum.pt import nif
 
-from odoo import api, fields, models
+from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import float_repr
@@ -67,16 +68,20 @@ class AccountMoveLine(models.Model):
         documents a PT company receives (vendor bills and refunds) are not PT documents: they are
         recorded as their issuer made them.
         """
-        if non_positive_lines := self.filtered(
-            lambda l: l.display_type == 'product'
-            and l.move_id._l10n_pt_country_ok()
-            and (l.price_total <= 0.0 and not l.is_downpayment)
-        ):
+        if non_positive_lines := self._l10n_pt_get_non_positive_lines():
             if any(line.price_total < 0.0 for line in non_positive_lines):
                 raise ValidationError(self.env._("You cannot create an invoice with negative lines on it. "
                                         "To add a discount, add a Line Discount or a Global Discount."))
             else:
                 raise ValidationError(self.env._("Invoice lines with an amount of 0 are not allowed."))
+
+    def _l10n_pt_get_non_positive_lines(self):
+        """The product lines of PT documents among ``self`` with a total <= 0, which PT forbids."""
+        return self.filtered(
+            lambda l: l.display_type == 'product'
+            and l.move_id._l10n_pt_country_ok()
+            and l.price_total <= 0.0
+        )
 
 
 class AccountMove(models.Model):
@@ -471,8 +476,11 @@ class AccountMove(models.Model):
 
         An invoice is issued when it is first generated for the customer -- printed, sent, previewed,
         downloaded, handed out by the PoS -- or when it is annulled, not when it is posted. In each
-        series, invoices are issued in the order of their numbers (`_l10n_pt_check_series_continuity`).
-        Issuing needs the signing service.
+        series, invoices are issued in the order of their numbers: the invoices before them that are
+        posted or cancelled but not issued yet are issued with them, as the chain of signatures needs,
+        whatever issues them (PT-128). An invoice reset to draft keeps its number but cannot be
+        issued: it still blocks the invoices after it (`_l10n_pt_check_series_continuity`). Issuing
+        needs the signing service.
         """
         to_issue = self.filtered(lambda m: (
             m.state in ('posted', 'cancel')
@@ -482,36 +490,10 @@ class AccountMove(models.Model):
         ))
         if not to_issue:
             return
-        to_issue._l10n_pt_check_series_continuity()
-        to_issue.company_id._l10n_pt_check_company_vat()
-        to_issue.company_id._l10n_pt_check_system_clock()
         # sudo: generating an invoice issues it, whoever generates it (a salesperson printing it, a
-        # cron sending it); the issuing user is still recorded as the current one.
-        to_issue_sudo = to_issue.sudo()
-        for move in to_issue_sudo:
-            move.l10n_pt_document_number = move.name
-        to_issue_sudo._l10n_pt_record_issue()
-        to_issue_sudo._check_l10n_pt_document_number()
-        # The hash domain is the active company's (`_get_move_hash_domain`): sign in each invoice's own.
-        for company, moves in to_issue_sudo.grouped('company_id').items():
-            moves.with_company(company).button_hash()
-        if unsigned := to_issue.filtered(lambda m: not m.inalterable_hash):
-            raise UserError(self.env._("These invoices could not be signed: %s", ", ".join(unsigned.mapped('name'))))
-
-    def _l10n_pt_issue_with_predecessors(self):
-        """
-        Issue the PT invoices of ``self``, and first the invoices before them in their AT series that
-        are posted or cancelled but not issued yet: they are signed, as the chain of signatures needs,
-        rather than blocking ``self`` (`_l10n_pt_check_series_continuity`). An invoice reset to draft
-        keeps its number but cannot be issued: it still blocks the invoices after it.
-        """
-        to_issue = self.filtered(lambda m: (
-            m._l10n_pt_country_ok() and not m.l10n_pt_document_number and m.l10n_pt_at_series_id
-        ))
-        if not to_issue:
-            return
-        # sudo: a series shared across branches holds invoices of companies the user may not see.
-        predecessors = self.env['account.move'].sudo().search(
+        # cron sending it), and a series shared across branches holds invoices of companies the user
+        # may not see; the issuing user is still recorded as the current one.
+        to_issue = to_issue.sudo() | self.env['account.move'].sudo().search(
             Domain.OR(
                 Domain('l10n_pt_at_series_id', '=', at_series.id)
                 & Domain('sequence_number', '<', max(moves.mapped('sequence_number')))
@@ -521,7 +503,26 @@ class AccountMove(models.Model):
             & Domain('state', 'in', ('posted', 'cancel'))
             & Domain('l10n_pt_document_number', '=', False),
         )
-        (self.sudo() | predecessors)._l10n_pt_issue()
+        to_issue._l10n_pt_check_series_continuity()
+        to_issue.company_id._l10n_pt_check_company_vat()
+        to_issue.company_id._l10n_pt_check_system_clock()
+        for move in to_issue:
+            move.l10n_pt_document_number = move.name
+        to_issue._l10n_pt_record_issue()
+        to_issue._check_l10n_pt_document_number()
+        # The hash domain is the active company's (`_get_move_hash_domain`): sign in each invoice's own,
+        # in number order, as core locks a sequence prefix in that order whatever the company (a branch's
+        # invoice may come before its root's in a shared series).
+        in_number_order = to_issue.sorted(lambda m: (m.l10n_pt_at_series_id.id, m.sequence_number))
+        for company, moves in groupby(in_number_order, key=lambda m: m.company_id):
+            moves = to_issue.browse().concat(*moves)
+            if company.id not in self.env.user._get_company_ids():
+                # Core logs the signing as the user, out of sudo, in the invoice's company: a user who
+                # may not access that branch still issues its invoices before theirs, logged as the system.
+                moves = moves.with_user(SUPERUSER_ID)
+            moves.with_company(company).button_hash()
+        if unsigned := to_issue.filtered(lambda m: not m.inalterable_hash):
+            raise UserError(self.env._("These invoices could not be signed: %s", ", ".join(unsigned.mapped('name'))))
 
     def _l10n_pt_check_series_continuity(self):
         """
@@ -626,8 +627,8 @@ class AccountMove(models.Model):
                     "those of the invoices numbered right before and after it (%(previous)s, %(next)s).",
                     invoice=move.name,
                     series=move.l10n_pt_at_series_id.display_name,
-                    previous=previous_date and format_date(self.env, previous_date) or "-",
-                    next=next_date and format_date(self.env, next_date) or "-",
+                    previous=(previous_date and format_date(self.env, previous_date)) or "-",
+                    next=(next_date and format_date(self.env, next_date)) or "-",
                 ))
 
     def _check_l10n_pt_lines_products(self):

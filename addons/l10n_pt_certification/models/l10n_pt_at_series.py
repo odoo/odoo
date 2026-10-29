@@ -109,34 +109,9 @@ class L10nPtATSeries(models.Model):
             at_series.active = at_series.date_end >= today if at_series.date_end else True
 
     def _search_active(self, operator, value):
-        if value is None:
-            return Domain.FALSE
-        if isinstance(value, bool):
-            value = {value}
-        if operator not in ['not in', 'in', '=', '!=']:
-            raise ValueError(self.env._('Operator (%s) is not supported', operator))
-        today = fields.Date.today()
-        active_domain = Domain.OR([
-            Domain('date_end', '=', False),
-            Domain('date_end', '>=', today),
-        ])
-        not_active_domain = Domain.AND([
-            Domain('date_end', '!=', False),
-            Domain('date_end', '<', today),
-        ])
-        if len(value) == 1:
-            if (
-                (operator in ['=', 'in'] and True in value)             # active = True or active in [True]
-                or (operator in ['!=', 'not in'] and False in value)    # active != False or active not in [False]
-            ):
-                return active_domain
-            if (
-                (operator in ['=', 'in'] and False in value)            # active = False or active in [False]
-                or (operator in ['!=', 'not in'] and True in value)     # active != True or active not in [True]
-            ):
-                return not_active_domain
-
-        return Domain.OR([active_domain, not_active_domain])
+        if operator != 'in':
+            return NotImplemented
+        return Domain('date_end', '=', False) | Domain('date_end', '>=', fields.Date.today())
 
     def _l10n_pt_is_valid_on(self, date):
         """
