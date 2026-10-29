@@ -209,8 +209,10 @@
     </BuilderRow>
     <BuilderRow t-if="valueList and (!(this.domState.fieldName === 'state_id' and this.isActiveItem('link_state_to_country_opt')))">
         <div class="d-flex flex-column w-100">
-            <p class="o_hb_row_label mb-0 flex-grow-0 flex-shrink-0 flex-basis-auto">
+            <p class="o_hb_row_label mb-0 flex-grow-0 flex-shrink-0 flex-basis-auto"
+                t-att-data-tooltip="valueList.tooltip">
                 <t t-out="valueList.title" />
+                <i t-if="valueList.tooltip" class="oi o_hb_icon_sup" data-icon="question_mark" role="img" aria-hidden="true"/>
             </p>
             <BuilderList
                 t-key="this.getFieldKey"

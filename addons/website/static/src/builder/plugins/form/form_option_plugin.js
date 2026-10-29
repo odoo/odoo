@@ -851,6 +851,9 @@ export class FormOptionPlugin extends Plugin {
             }
             valueList = proxy({
                 title: optionText,
+                tooltip:
+                    availableRecords &&
+                    _t("Options are based on existing data and can't be edited here."),
                 addItemTitle: _t("Add New Option"),
                 checkType,
                 defaultItemName: _t("Item"),
