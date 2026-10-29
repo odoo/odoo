@@ -39,8 +39,8 @@ import { ensureTest } from "../main_runner";
 const {
     AbortController,
     Blob,
-    BroadcastChannel,
     document,
+    DOMException,
     fetch,
     FormData,
     Headers,
@@ -53,10 +53,12 @@ const {
         entries: $entries,
     },
     ProgressEvent,
+    queueMicrotask,
     ReadableStream,
     Request,
     Response,
     Set,
+    structuredClone,
     TextEncoder,
     Uint8Array,
     URL,
@@ -255,8 +257,8 @@ const requestResponseMixin = {
     },
 };
 
-/** @type {Set<MockBroadcastChannel>} */
-const broadcastChannels = new Set();
+/** @type {Map<string, Set<MockBroadcastChannel>>} */
+const broadcastChannels = new Map();
 /** @type {Set<string>} */
 const objectURLs = new Set();
 /**
@@ -289,10 +291,6 @@ export function cleanupNetwork() {
     workerConnections.clear();
 
     // Network instances
-    for (const channel of broadcastChannels) {
-        channel.close();
-    }
-    broadcastChannels.clear();
     for (const controller of pendingFetches) {
         controller.abort();
     }
@@ -301,6 +299,7 @@ export function cleanupNetwork() {
         serverWs.close();
     }
     serverWebSockets.clear();
+    broadcastChannels.clear();
     openInstances.clear();
 
     // Object URLs: revoked to release the blobs they retain
@@ -544,11 +543,72 @@ export class MockBlob extends Blob {
     }
 }
 
-export class MockBroadcastChannel extends BroadcastChannel {
-    constructor() {
+/**
+ * Broadcast channels only reach the other channels of the current page: native
+ * ones are shared with all same-origin pages, including other test runners in
+ * different tabs. Tests simulating several tabs with several channels in the same
+ * page still communicate through them.
+ */
+export class MockBroadcastChannel extends MockEventTarget {
+    static publicListeners = ["message", "messageerror"];
+
+    /**
+     * @private
+     */
+    _name;
+
+    get name() {
+        return this._name;
+    }
+
+    /**
+     * @param {string} name
+     */
+    constructor(name) {
+        if (!arguments.length) {
+            throw new TypeError(
+                `Failed to construct 'BroadcastChannel': 1 argument required, but only 0 present.`
+            );
+        }
+
         super(...arguments);
 
-        broadcastChannels.add(this);
+        this._name = String(name);
+        let channels = broadcastChannels.get(this._name);
+        if (!channels) {
+            channels = new Set();
+            broadcastChannels.set(this._name, channels);
+        }
+        channels.add(this);
+    }
+
+    /** @type {BroadcastChannel["close"]} */
+    close() {
+        broadcastChannels.get(this._name)?.delete(this);
+    }
+
+    /** @type {BroadcastChannel["postMessage"]} */
+    postMessage(message) {
+        const channels = broadcastChannels.get(this._name);
+        if (!channels?.has(this)) {
+            throw new DOMException(
+                `Failed to execute 'postMessage' on 'BroadcastChannel': Channel is closed`,
+                "InvalidStateError"
+            );
+        }
+        // Like native channels, the message is serialized right away, and only
+        // reaches the channels open at that time (and still open on delivery)
+        const data = structuredClone(message);
+        const receivers = [...channels];
+        queueMicrotask(() => {
+            for (const receiver of receivers) {
+                if (receiver !== this && broadcastChannels.get(this._name)?.has(receiver)) {
+                    receiver.dispatchEvent(
+                        new MessageEvent("message", { data: structuredClone(data) })
+                    );
+                }
+            }
+        });
     }
 }
 

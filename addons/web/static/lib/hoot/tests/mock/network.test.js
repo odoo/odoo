@@ -1,9 +1,11 @@
 /** @odoo-module */
 
-import { describe, expect, mockFetch, test } from "@odoo/hoot";
+import { describe, expect, microTick, mockFetch, test } from "@odoo/hoot";
 import { parseUrl } from "../local_helpers";
 
 describe(parseUrl(import.meta.url), () => {
+    /** @type {BroadcastChannel} */
+    let broadcastChannel;
     let objectURL;
 
     test("setup network values", async () => {
@@ -96,6 +98,56 @@ describe(parseUrl(import.meta.url), () => {
         expect(objectURL).toMatch(/^blob:/);
 
         await expect(fetch(objectURL)).rejects.toThrow();
+    });
+
+    test("broadcast channels only reach other channels of the same name", async () => {
+        const sender = new BroadcastChannel("hoot");
+        const receiver = new BroadcastChannel("hoot");
+        const other = new BroadcastChannel("other");
+        const message = { value: 1 };
+        sender.onmessage = () => expect.step("sender");
+        receiver.onmessage = (ev) => {
+            expect.step(`receiver:${ev.data.value}`);
+            expect(ev.data).not.toBe(message);
+        };
+        other.onmessage = () => expect.step("other");
+
+        expect(sender.name).toBe("hoot");
+
+        sender.postMessage(message);
+
+        // Messages are delivered asynchronously
+        expect.verifySteps([]);
+
+        await microTick();
+
+        expect.verifySteps(["receiver:1"]);
+
+        receiver.close();
+        sender.postMessage(message);
+        await microTick();
+
+        expect.verifySteps([]);
+
+        sender.close();
+
+        expect(() => sender.postMessage(message)).toThrow(/closed/);
+    });
+
+    // ! WARNING: the following 2 tests need to be run sequentially to work, as they
+    // ! attempt to test the in-between-tests broadcast channels cleanup.
+    test("broadcast channels are closed between tests: setup", async () => {
+        broadcastChannel = new BroadcastChannel("hoot");
+
+        expect(broadcastChannel.name).toBe("hoot");
+    });
+    test("broadcast channels are closed between tests: check", async () => {
+        broadcastChannel.onmessage = () => expect.step("message");
+        new BroadcastChannel("hoot").postMessage("test");
+        await microTick();
+
+        expect.verifySteps([]);
+        expect(() => broadcastChannel.postMessage("test")).toThrow(/closed/);
     });
 
     test("mock response with nested blobs", async () => {
