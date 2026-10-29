@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+from collections import defaultdict
 
 from odoo import api, fields, models
 from odoo.osv import expression
@@ -211,12 +212,27 @@ class ProjectProject(models.Model):
 
     def _update_timesheets_sale_line_id(self):
         for project in self.filtered(lambda p: p.allow_billable and p.allow_timesheets):
-            timesheet_ids = project.mapped('timesheet_ids').filtered(lambda t: not t.is_so_line_edited and t._is_updatable_timesheet())
-            if not timesheet_ids:
+            # {employee_id: sale_line_record}
+            mappings = {
+                mapping.employee_id.id: mapping.sale_line_id
+                for mapping in project.sale_line_employee_ids
+            }
+            if not mappings:
                 continue
-            for employee_id in project.sale_line_employee_ids.filtered(lambda l: l.project_id == project).employee_id:
-                sale_line_id = project.sale_line_employee_ids.filtered(lambda l: l.project_id == project and l.employee_id == employee_id).sale_line_id
-                timesheet_ids.filtered(lambda t: t.employee_id == employee_id and t.so_line != sale_line_id).sudo().so_line = sale_line_id
+
+            timesheets_per_employee = defaultdict(list)
+            for timesheet in project.timesheet_ids:
+                employee_id = timesheet.employee_id.id
+                sol = mappings.get(employee_id)
+                if (employee_id in mappings
+                    and timesheet.so_line != sol
+                    and not timesheet.is_so_line_edited
+                    and timesheet._is_updatable_timesheet()
+                ):
+                    timesheets_per_employee[employee_id].append(timesheet.id)
+
+            for employee_id, ids in timesheets_per_employee.items():
+                project.timesheet_ids.browse(ids).sudo().so_line = mappings[employee_id]
 
     def action_view_timesheet(self):
         self.ensure_one()
