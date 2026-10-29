@@ -52,7 +52,8 @@ export class ActionPanel extends Component {
 
     get classNames() {
         return attClassObjectToString({
-            "o-mail-ActionPanel rounded-4 overflow-auto o-scrollbar-thin d-flex flex-column flex-shrink-0 position-relative py-2 pt-0 h-100 bg-inherit": true,
+            "o-mail-ActionPanel rounded-4 overflow-auto o-scrollbar-thin d-flex flex-column position-relative py-2 pt-0 h-100 bg-inherit": true,
+            "flex-shrink-0": !this.env.inDialog,
             "o-mail-ActionPanel-chatter": this.ancestors.inChatter,
             "o-chatWindow": this.ancestors.inChatWindow,
             "px-2": this.ancestors.inDiscussApp || this.ancestors.inChatWindow,
