@@ -71,7 +71,7 @@ registerMessageAction("reply-all", {
 });
 registerMessageAction("forward", {
     condition: ({ message, owner }) => !owner.env.inMessagingMenu && message.canForward,
-    icon: "share",
+    icon: "forward",
     name: _t("Forward"),
     onSelected: async ({ message, owner, store, thread }) => {
         // usually reply_to is what you want people to see as being "from"
