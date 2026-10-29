@@ -2,29 +2,51 @@
 <templates xml:space="preserve">
 
     <t t-inherit="website_sale_stock.locationSelector.location" t-inherit-mode="extension">
-        <small name="location_opening_hours" position="before">
+        <small name="location_address" position="before">
             <t t-if="this.props.additionalData and !!this.props.additionalData.in_store_stock_data">
                 <t t-if="!!this.props.additionalData.in_store_stock_data.in_stock">
-                    <t t-if="!!this.props.additionalData.in_store_stock_data.show_quantity">
-                        <span class="badge text-bg-warning mt-1 align-self-start">
-                            <i class="oi oi-filled text-warning me-2" data-icon="circle" role="img" aria-hidden="true"/>
+                    <small
+                        class="fw-medium"
+                        t-att-class="this.props.additionalData.in_store_stock_data.show_quantity ? 'text-warning-emphasis' : 'text-success'"
+                    >
+                        <t t-if="!!this.props.additionalData.in_store_stock_data.show_quantity">
                             <t t-out="this.props.additionalData.in_store_stock_data.quantity"/> <t t-out="this.props.additionalData.in_store_stock_data.uom_name"/>
                             in stock
-                        </span>
-                    </t>
-                    <t t-else="">
-                        <span class="badge text-bg-success mt-1 align-self-start">
-                            <i class="oi oi-filled text-success me-2" data-icon="circle" role="img" aria-hidden="true"/>Available
-                        </span>
-                    </t>
+                        </t>
+                        <t t-else="">Available for pickup</t>
+                    </small>
                 </t>
-                <t t-else="">
-                    <span class="badge text-bg-danger mt-1 align-self-start">
-                        <i class="oi oi-filled text-danger me-2" data-icon="circle" role="img" aria-hidden="true"/>Out of stock
-                    </span>
-                </t>
+                <small t-else="" class="d-flex align-items-center gap-1 fw-medium text-danger">
+                    <i class="oi" data-icon="close" role="img" aria-hidden="true"/>Out of stock
+                </small>
             </t>
         </small>
+        <div name="location_opening_hours" position="before">
+            <div
+                t-if="this.websiteSaleCollectProps.closingDates and this.websiteSaleCollectProps.closingDates.length"
+                class="alert alert-danger small d-flex gap-2 mb-0 p-2"
+                role="alert"
+            >
+                <i class="oi lh-base" data-icon="event_busy" role="img" aria-hidden="true"/>
+                <span class="d-flex flex-column gap-1">
+                    <t t-foreach="this.websiteSaleCollectProps.closingDates" t-as="period" t-key="period_index">
+                        <span t-if="period.date_from === period.date_to">
+                            Exceptional closing on <strong t-out="this.formatClosingDate(period.date_from)"/>
+                        </span>
+                        <span t-else="">
+                            Exceptional closing from <strong t-out="this.formatClosingDate(period.date_from)"/>
+                            to <strong t-out="this.formatClosingDate(period.date_to)"/>
+                        </span>
+                    </t>
+                </span>
+            </div>
+        </div>
+    </t>
+
+    <t t-inherit="website_sale_stock.locationSelector.locationList" t-inherit-mode="extension">
+        <Location position="attributes">
+            <attribute name="closingDates">location.closing_dates</attribute>
+        </Location>
     </t>
 
 </templates>

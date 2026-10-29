@@ -1,4 +1,4 @@
-import { Component, onMounted, onPatched, onWillUnmount, useProps, proxy, t } from '@odoo/owl';
+import { Component, onMounted, onPatched, onWillUnmount, useProps, proxy, signal, t } from '@odoo/owl';
 import { browser } from '@web/core/browser/browser';
 import { Dialog } from '@web/core/dialog/dialog';
 import { _t } from '@web/core/l10n/translation';
@@ -35,6 +35,8 @@ export class LocationSelectorDialog extends Component {
             isSmall: this.uiService.isSmall,
         });
 
+        // Outside of the state, to not render the dialog when a pin is hovered.
+        this.hoveredLocationId = signal(false);
         this.getLocationUrl = '/website_sale_stock/get_pickup_locations';
 
         this.debouncedOnResize = useDebounced(this.updateSize.bind(this), 300);
@@ -65,6 +67,15 @@ export class LocationSelectorDialog extends Component {
     }
 
     get locations() { return this.state.locations; }
+
+    /**
+     * Return whether the locations are only displayed, without being selectable.
+     *
+     * @return {Boolean} Whether the locations are read-only.
+     */
+    get isReadonly() {
+        return false;
+    }
 
     /**
      * Fetch the information needed to get the closest pickup locations
@@ -137,6 +148,16 @@ export class LocationSelectorDialog extends Component {
      */
     setSelectedLocation(locationId) {
         this.state.selectedLocationId = String(locationId);
+    }
+
+    /**
+     * Set the hovered location.
+     *
+     * @param {String|false} locationId - The hovered location, or false when none is.
+     * @return {void}
+     */
+    setHoveredLocation(locationId) {
+        this.hoveredLocationId.set(locationId && String(locationId));
     }
 
     /**

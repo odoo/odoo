@@ -23,6 +23,8 @@ export class Map extends Component {
         })),
         selectedLocationId: t.or([t.string(), t.literal(false)]),
         setSelectedLocation: t.function(),
+        setHoveredLocation: t.function().optional(),
+        readonly: t.boolean().optional(),
     });
 
     mapRef = signal.ref();
@@ -90,11 +92,10 @@ export class Map extends Component {
             const isSelected = String(loc.id) === this.props.selectedLocationId
             // Icon creation
             const iconInfo = {
-                className: isSelected ? 'o_location_selector_marker_icon_selected'
-                    : 'o_location_selector_marker_icon',
+                className: 'o_location_selector_marker_icon',
                 html: renderToString(
                     'website_sale_stock.locationSelector.map.marker',
-                    { number: locations.indexOf(loc) + 1 },
+                    { number: !this.props.readonly && locations.indexOf(loc) + 1 },
                 ),
                 iconSize: [30, 40],
                 iconAnchor: [15, 40],
@@ -116,6 +117,8 @@ export class Map extends Component {
             marker.addEventListener('click', () => {
                 this.props.setSelectedLocation(loc.id);
             });
+            marker.addEventListener('mouseover', () => this.props.setHoveredLocation?.(loc.id));
+            marker.addEventListener('mouseout', () => this.props.setHoveredLocation?.(false));
 
             this.markers.push(marker);
         }

@@ -3,30 +3,38 @@
     <t t-name="website_sale_stock.locationSelector.dialog">
         <Dialog
             title="this.title"
+            size="'xl'"
+            header="this.state.isSmall"
             bodyClass="'d-flex flex-column p-0 px-md-3'"
             contentClass="'o_location_selector h-100 overflow-hidden'"
         >
             <!-- Mobile view -->
             <t t-if="this.state.isSmall">
                 <!-- Search bar -->
-                <t t-call="website_sale_stock.locationSelector.searchbar"/>
+                <div class="d-flex flex-column gap-3 p-3 border-bottom">
+                    <t t-call="website_sale_stock.locationSelector.searchbar"/>
 
-                <!-- "List view / Map view" navigation -->
-                <div class="nav nav-tabs">
-                    <button
-                        class="o_location_selector_mobile_tab btn flex-grow-1 border-0 rounded-0 py-3 bg-transparent"
-                        t-att-class="{'border-bottom active': this.state.viewMode === 'list'}"
-                        t-on-click="() => this.state.viewMode = 'list'"
-                    >
-                        List view
-                    </button>
-                    <button
-                        class="o_location_selector_mobile_tab btn flex-grow-1 border-0 rounded-0 py-3 bg-transparent"
-                        t-att-class="{'border-bottom border-primary fw-bold active' : this.state.viewMode === 'map'}"
-                        t-on-click="() => this.state.viewMode = 'map'"
-                    >
-                        Map view
-                    </button>
+                    <!-- "List view / Map view" navigation -->
+                    <div class="d-flex gap-1 rounded p-1 bg-light">
+                        <button
+                            type="button"
+                            class="flex-grow-1 border-0 rounded py-2"
+                            t-att-class="this.state.viewMode === 'list' ? 'bg-body text-body fw-bold shadow-sm' : 'bg-transparent text-muted'"
+                            t-att-aria-pressed="this.state.viewMode === 'list' ? 'true' : 'false'"
+                            t-on-click="() => this.state.viewMode = 'list'"
+                        >
+                            List view
+                        </button>
+                        <button
+                            type="button"
+                            class="flex-grow-1 border-0 rounded py-2"
+                            t-att-class="this.state.viewMode === 'map' ? 'bg-body text-body fw-bold shadow-sm' : 'bg-transparent text-muted'"
+                            t-att-aria-pressed="this.state.viewMode === 'map' ? 'true' : 'false'"
+                            t-on-click="() => this.state.viewMode = 'map'"
+                        >
+                            Map view
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Component -->
@@ -38,15 +46,9 @@
                         selectedLocationId="this.state.selectedLocationId.toString()"
                         setSelectedLocation.bind="this.setSelectedLocation"
                         validateSelection.bind="this.validateSelection"
+                        readonly="this.isReadonly"
                     />
-                    <t t-else="">
-                        <p t-if="this.state.error" class="p-3 fw-bold">No result</p>
-                        <div t-else="" class="position-absolute start-50 top-50 translate-middle">
-                            <div class="spinner-border" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                        </div>
-                    </t>
+                    <t t-else="" t-call="website_sale_stock.locationSelector.placeholder"/>
                 </div>
             </t>
 
@@ -56,60 +58,74 @@
                 <!-- List view -->
                 <section
                     id="location_selector_list_view"
-                    class="o_location_selector_view col-md-4 d-flex flex-grow-1 flex-column"
+                    class="o_location_selector_view col-md-5 col-lg-4 d-flex flex-column"
                 >
+                    <div class="d-flex flex-column gap-3 p-3">
+                        <h1 class="modal-title h5 mb-0" t-out="this.title"/>
 
-                    <!-- Search bar -->
-                    <t t-call="website_sale_stock.locationSelector.searchbar" wrapClass="'d-flex'"/>
+                        <!-- Search bar -->
+                        <t t-call="website_sale_stock.locationSelector.searchbar"/>
+                    </div>
 
                     <!-- List group -->
                     <LocationList
                         t-if="this.locations.length"
                         locations="this.locations"
                         selectedLocationId="this.state.selectedLocationId.toString()"
+                        hoveredLocationId="this.hoveredLocationId"
                         setSelectedLocation.bind="this.setSelectedLocation"
                         validateSelection.bind="this.validateSelection"
+                        readonly="this.isReadonly"
                     />
-                    <t t-else="">
-                        <p t-if="this.state.error" class="p-3 fw-bold">No result</p>
-                        <div t-else="" class="position-absolute start-50 top-50 translate-middle">
-                            <div class="spinner-border" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                        </div>
-                    </t>
+                    <t t-else="" t-call="website_sale_stock.locationSelector.placeholder"/>
                 </section>
 
                 <!-- Map view -->
-                <section class="o_location_selector_view col-md-8 d-flex flex-grow-1 border-start">
+                <section class="o_location_selector_view position-relative d-flex flex-grow-1 border-start">
                     <MapContainer
                         locations="this.locations"
                         selectedLocationId="this.state.selectedLocationId.toString()"
                         setSelectedLocation.bind="this.setSelectedLocation"
+                        setHoveredLocation.bind="this.setHoveredLocation"
                         validateSelection.bind="this.validateSelection"
+                        readonly="this.isReadonly"
                     />
+                    <div
+                        class="position-absolute top-0 end-0 z-1 d-flex m-3 rounded p-2 bg-body shadow-sm"
+                    >
+                        <button
+                            type="button"
+                            class="btn-close"
+                            title="Close"
+                            aria-label="Close"
+                            t-on-click="() => this.props.close()"
+                        />
+                    </div>
                 </section>
             </div>
 
-            <!-- Validation button in mobile view -->
-            <t t-if="this.state.isSmall" t-set-slot="footer">
-                <div class="w-100 m-0 border-top p-3">
-                    <button
-                        type="button"
-                        id="submit_location_small"
-                        class="btn btn-primary w-100"
-                        t-att-disabled="!this.state.selectedLocationId"
-                        t-on-click="this.validateSelection"
-                    >
-                        Choose this location
-                    </button>
-                </div>
-            </t>
         </Dialog>
     </t>
 
+    <t t-name="website_sale_stock.locationSelector.placeholder">
+        <p t-if="this.state.error" class="px-4 py-5 text-center text-muted">No result</p>
+        <div t-else="" class="d-flex flex-column gap-2 p-3 pt-md-0 placeholder-glow" role="status">
+            <span class="visually-hidden">Loading...</span>
+            <t t-foreach="[1, 2, 3]" t-as="skeleton" t-key="skeleton">
+                <div class="d-flex gap-3 border rounded p-3" aria-hidden="true">
+                    <span class="o_location_selector_number placeholder flex-shrink-0 rounded-circle"/>
+                    <div class="d-flex flex-column gap-2 w-100">
+                        <span class="placeholder col-7"/>
+                        <span class="placeholder placeholder-sm col-12"/>
+                        <span class="placeholder placeholder-sm col-10"/>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+
     <t t-name="website_sale_stock.locationSelector.searchbar">
-        <div role="search" class="input-group p-3 border-bottom" t-att-class="wrapClass">
+        <div role="search" class="input-group">
             <input
                 id="o_location_selector_search"
                 class="search-query form-control oe_search_box border-0 text-bg-light"

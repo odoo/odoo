@@ -5,15 +5,47 @@
             <t t-foreach="this.props.openingHours" t-as="openingHour" t-key="openingHour_index">
                 <t t-call="website_sale_stock.locationSelector.dailySchedule"
                     weekday="openingHour_index"
+                    isToday="openingHour_index == this.todayIndex"
                     openingPeriods="openingHour_value"/>
             </t>
         </span>
     </t>
 
+    <t t-name="website_sale_stock.locationSelector.openingHours">
+        <button
+            type="button"
+            class="collapsed d-flex align-items-center gap-1 w-100 border-0 px-3 py-2 bg-transparent text-body text-start small"
+            t-att-data-bs-target="'#' + collapseId"
+            aria-expanded="false"
+            t-att-aria-controls="collapseId"
+            data-bs-toggle="collapse"
+        >
+            <span
+                class="fw-medium"
+                t-att-class="todayStatus.isOpen ? 'text-success' : 'text-danger'"
+                t-out="todayStatus.label"
+            />
+            <span class="ms-auto" t-out="todayStatus.hours"/>
+            <i class="oi o_location_selector_hours_caret text-body transition-base" data-icon="keyboard_arrow_up" role="img" aria-hidden="true"/>
+        </button>
+
+        <!-- Schedule -->
+        <div class="collapse" t-att-id="collapseId" t-att-data-bs-parent="collapseParent">
+            <LocationSchedule openingHours="openingHours" wrapClass="'px-3 pb-2'"/>
+        </div>
+    </t>
+
     <t t-name="website_sale_stock.locationSelector.dailySchedule">
         <span class="d-contents">
-            <small class="me-4 text-muted" t-out="this.getWeekDay(weekday)"/>
-            <span class="o_location_selector_schedule_hours d-flex flex-wrap">
+            <small
+                class="me-4"
+                t-att-class="isToday ? 'fw-bold' : 'text-muted'"
+                t-out="this.getWeekDay(weekday)"
+            />
+            <span
+                class="o_location_selector_schedule_hours d-flex flex-wrap justify-content-end"
+                t-att-class="{'fw-bold': isToday}"
+            >
                 <t t-if="openingPeriods.length">
                     <t t-foreach="openingPeriods" t-as="openingPeriod" t-key="openingPeriod_index">
                         <small t-out="openingPeriod" class="text-nowrap"/>

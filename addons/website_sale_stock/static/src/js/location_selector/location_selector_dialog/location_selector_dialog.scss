@@ -12,17 +12,21 @@
     }
 
     .o_location_selector_number {
-        right: .75rem;
-        bottom: .75rem;
-        width: 1.75rem;
-
-        svg {
-            width: 100%;
-        }
+        width: 2rem;
+        height: 2rem;
+        background-color: color-mix(in srgb, var(--primary) 10%, transparent);
+        color: var(--primary-text-emphasis);
     }
 
     .o_location_selector_details {
         transform: translateY(-100%);
+    }
+
+    @media (hover: hover) {
+        :has(> div > .stretched-link):hover > .o_location_selector_number {
+            background-color: var(--primary);
+            color: var(--o-bs-primary-contrast);
+        }
     }
 
     .collapsed i.o_location_selector_hours_caret {
@@ -55,24 +59,18 @@
         }
 
         .o_select_menu_caret {
-            position: relative;
-            top: -1px;
-            right: 0;
+            position: static;
             visibility: visible;
         }
 
         &:disabled .o_select_menu_caret {
-            visibility: hidden;
+            display: none;
         }
     }
 
     .o_select_menu_toggler_slot {
         display: flex;
         align-items: center;
-    }
-
-    .list-group-item {
-        padding-bottom: .75rem;
     }
 }
 
