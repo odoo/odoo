@@ -5060,6 +5060,28 @@
         <field name="country_id" ref="base.tr"/>
     </record>
 
+<!-- UK : United Kingdom -->
+    <!-- The employer only owes the statutory payments, added by their salary rules -->
+    <record id="uk_work_entry_type_sick_leave" model="hr.work.entry.type">
+        <field name="name">Sick Leave</field>
+        <field name="display_code">SSP</field>
+        <field name="code">013.00</field>
+        <field name="color">9</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.uk"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <record id="uk_work_entry_type_maternity_leave" model="hr.work.entry.type">
+        <field name="name">Maternity Leave</field>
+        <field name="display_code">SMP</field>
+        <field name="code">MATERNITY</field>
+        <field name="color">5</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.uk"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
 <!-- US : United States -->
     <record id="us_work_entry_type_attendance" model="hr.work.entry.type">
         <field name="name">Work</field>
