@@ -10,7 +10,7 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { Settings } from "@mail/core/common/settings_model";
-import { pttExtensionServiceInternal } from "@mail/discuss/call/common/ptt_extension_service";
+import { PttExtensionPlugin } from "@mail/discuss/call/common/ptt_extension_plugin";
 import { PTT_RELEASE_DURATION } from "@mail/discuss/call/common/rtc_service";
 import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { toRawValue } from "@mail/utils/common/local_storage";
@@ -76,11 +76,7 @@ test("Can push-to-talk", async () => {
         makeRecordFieldLocalId(Settings.localId(), "pushToTalkKey"),
         toRawValue("...f")
     );
-    patch(pttExtensionServiceInternal, {
-        onAnswerIsEnabled(pttService) {
-            pttService.isEnabled = false;
-        },
-    });
+    patch(PttExtensionPlugin.prototype, { onMessage() {} });
     freezeTime();
     // Time is frozen, so the websocket subscription cannot complete on its own.
     // The worker connection handshake reschedules a timer on each step and the
