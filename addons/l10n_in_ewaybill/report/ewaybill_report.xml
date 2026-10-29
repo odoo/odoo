@@ -15,7 +15,7 @@
                                   font-size: 14px;
                                 }
                             </style>
-                            <t t-set="ewaybill_states" t-value="('generated', 'cancel')"/>
+                            <t t-set="ewaybill_states" t-value="('generated', 'cancel', 'extended')"/>
                             <div class="container-fluid border-bottom py-3">
                                 <div class="row align-items-center">
                                     <!-- Left: Logo -->
@@ -53,7 +53,17 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            Mode: <t t-out="dict(doc._fields['mode']._description_selection(doc.env)).get(doc.mode, '')"/>
+                                            Mode:
+                                            <t t-if="doc.state == 'extended' and doc.consignment_status == 'T'">
+                                                In Transit
+                                                (<t t-out="dict(doc._fields['transit_type']._description_selection(doc.env)).get(doc.transit_type, '')"/>)
+                                            </t>
+                                            <t t-else="">
+                                                <t t-out="dict(doc._fields['mode']._description_selection(doc.env)).get(doc.mode, '')"/>
+                                                <t t-if="doc.state == 'extended' and doc.consignment_status == 'M'">
+                                                    - In Movement
+                                                </t>
+                                            </t>
                                         </td>
                                         <td>
                                             Approx Distance: <t t-out="doc.distance"/> km
@@ -239,8 +249,16 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <t t-out="dict(doc._fields['mode']._description_selection
-                                            (doc.env)).get(doc.mode, '')"/>
+                                            <t t-if="doc.state == 'extended' and doc.consignment_status == 'T'">
+                                                In Transit
+                                                (<t t-out="dict(doc._fields['transit_type']._description_selection(doc.env)).get(doc.transit_type, '')"/>)
+                                            </t>
+                                            <t t-else="">
+                                                <t t-out="dict(doc._fields['mode']._description_selection(doc.env)).get(doc.mode, '')"/>
+                                                <t t-if="doc.state == 'extended' and doc.consignment_status == 'M'">
+                                                    <br/>In Movement
+                                                </t>
+                                            </t>
                                         </td>
                                         <td>
                                             <t t-if="doc.vehicle_no" t-out="doc.vehicle_no"/>
