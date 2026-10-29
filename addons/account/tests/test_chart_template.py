@@ -1214,3 +1214,63 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         ):
             self.env['account.chart.template'].try_loading('test', company=company, install_demo=False)
         self.assertIn("reloading the CoA for 'deleted_xmlid'", log_cm.output[0])
+
+
+@tagged('post_install', '-at_install')
+class TestDefaultJournals(AccountTestInvoicingCommon):
+
+    def test_new_company_default_journals(self):
+        """ A new company gets no Inventory Valuation journal, an archived Cash Basis journal, and the favorite
+        Misc journal is used for the inventory valuation. """
+        company = self.company_data['company']
+        misc = self.env['account.chart.template'].ref('general')
+        journals = self.env['account.journal'].search(self.env['account.journal']._check_company_domain(company))
+        self.assertFalse(journals.filtered(lambda journal: journal.code in ('STJ', 'CABA')))
+        self.assertTrue(misc.show_on_dashboard)
+        self.assertRecordValues(company, [{
+            'account_stock_journal_id': misc.id,
+            'tax_exigibility': False,
+            'tax_cash_basis_journal_id': self.env['account.chart.template'].ref('caba').id,
+        }])
+        self.assertFalse(company.tax_cash_basis_journal_id.active)
+
+    def test_enable_cash_basis_activates_journal(self):
+        """ Enabling cash basis unarchives the Cash Basis journal. """
+        company = self.company_data['company']
+        journal = company.tax_cash_basis_journal_id
+        company.tax_exigibility = True
+        self.assertRecordValues(journal, [{
+            'code': 'CABA',
+            'active': True,
+            'show_on_dashboard': False,
+        }])
+
+    def test_cash_basis_not_enabled_by_other_company_taxes(self):
+        """ Loading a chart enables cash basis only if the company itself has cash basis taxes. """
+        self.env['account.tax'].create({
+            'name': "Cash basis tax",
+            'amount': 10,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': self.company_data['default_account_tax_sale'].copy({'reconcile': True}).id,
+        })
+        ChartTemplate = self.env['account.chart.template'].sudo()
+
+        company = self.env['res.company'].sudo().create({'name': "Company without cash basis taxes"})
+        ChartTemplate.try_loading('generic_coa', company, install_demo=False)
+        self.assertFalse(company.tax_exigibility)
+        self.assertFalse(company.tax_cash_basis_journal_id.active)
+
+        get_data = AccountChartTemplate._get_chart_template_data
+
+        def get_data_with_cash_basis_tax(self, template_code, *args, **kwargs):
+            data = get_data(self, template_code, *args, **kwargs)
+            tax = next(iter(data['account.tax'].values()))
+            tax['tax_exigibility'] = 'on_payment'
+            tax['cash_basis_transition_account_id'] = next(xmlid for xmlid, vals in data['account.account'].items() if vals.get('reconcile'))
+            return data
+
+        company = self.env['res.company'].sudo().create({'name': "Company with cash basis taxes"})
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', get_data_with_cash_basis_tax):
+            ChartTemplate.try_loading('generic_coa', company, install_demo=False)
+        self.assertTrue(company.tax_exigibility)
+        self.assertTrue(company.tax_cash_basis_journal_id.active)
