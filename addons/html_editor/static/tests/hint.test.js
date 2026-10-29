@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { advanceTime, animationFrame, tick } from "@odoo/hoot-mock";
-import { waitFor } from "@odoo/hoot-dom";
+import { pointerDown, waitFor } from "@odoo/hoot-dom";
 import { setupEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
 import {
@@ -275,5 +275,19 @@ test("should keep the hint of the selected block until the debounced update", as
     await advanceTime(30);
     expect(getContent(el)).toBe(
         `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`
+    );
+});
+
+test("hint is shown again when the focus comes back to the editable", async () => {
+    const { el, editor } = await setupEditor("<p>[]<br></p>", { props: { iframe: true } });
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
+    );
+    await pointerDown(document.body);
+    editor.shared.hint.updateHints();
+    expect(getContent(el)).toBe("<p>[]<br></p>");
+    await pointerDown(el);
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
     );
 });
