@@ -33,10 +33,13 @@ class HrEmployeeSkill(models.Model):
         return result_dict
 
     def open_hr_employee_skill_modal(self):
+        # The New button must always open an empty certification form regardless
+        # of the rows selected in the list; using self.id here raised
+        # "Expected singleton" on a multi-select.
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'hr.employee.skill',
-            'res_id': self.id if self else False,
+            'res_id': False,
             'target': 'new',
             'context': {
                 'show_employee': True,
