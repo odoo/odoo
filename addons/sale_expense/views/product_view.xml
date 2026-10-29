@@ -4,7 +4,7 @@
     <record id="product_product_view_form_inherit_sale_expense" model="ir.ui.view">
         <field name="name">product.template.expense</field>
         <field name="model">product.product</field>
-        <field name="inherit_id" ref="hr_expense.product_product_expense_form_view"/>
+        <field name="inherit_id" ref="account_hr_expense.product_product_expense_view_form_inherit"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='product_details']" position="inside">
                 <group string="Invoicing">
@@ -28,7 +28,7 @@
     <record id="product_product_view_list_inherit_sale_expense" model="ir.ui.view">
         <field name="name">product.product.view.list.inherit.sale.expense</field>
         <field name="model">product.product</field>
-        <field name="inherit_id" ref="hr_expense.product_product_expense_categories_tree_view"/>
+        <field name="inherit_id" ref="account_hr_expense.product_product_expense_categories_tree_view_inherit"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='supplier_taxes_id']" position="after">
                 <field name="reinvoice_policy" optional="show"/>

@@ -5,7 +5,7 @@ from odoo.exceptions import AccessError, UserError
 from odoo.tests import Form, HttpCase, new_test_user, tagged
 from odoo.tools import mute_logger
 
-from odoo.addons.hr_expense.tests.common import TestExpenseCommon
+from odoo.addons.hr_expense.tests.common import TestExpenseCommon, account_less_only
 
 
 @tagged('-at_install', 'post_install')
@@ -48,6 +48,54 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
 
         # Employee can also revert from the submitted state to a draft state
         expense.with_user(self.expense_user_employee).action_reset()
+        self.assertEqual(expense.state, 'draft')
+
+    def test_expense_employee_resets_own_refused_expense(self):
+        """ An employee resets their own refused expense to fix and resubmit it, not an approved one nor someone else's """
+        expense_refused, expense_approved = self.create_expenses([
+            {'name': "Refused", 'total_amount_currency': 100.0},
+            {'name': "Approved", 'total_amount_currency': 200.0},
+        ])
+        (expense_refused + expense_approved).action_submit()
+        expense_refused._do_refuse("Wrong receipt")
+        expense_approved.action_approve()
+
+        expense_refused.with_user(self.expense_user_employee).action_reset()
+        self.assertEqual(expense_refused.state, 'draft')
+        with self.assertRaisesRegex(UserError, "can reset to draft"):
+            expense_approved.with_user(self.expense_user_employee).action_reset()
+
+        expense_refused.action_submit()
+        expense_refused._do_refuse("Wrong receipt again")
+        colleague = new_test_user(self.env, login='expense_colleague_reset', groups='base.group_user')
+        self.env.invalidate_all()  # The values cached by the setup would skip the access checks
+        # AccessError without Invoicing; with it, reading `account_move_state` (related, superuser) caches the expense,
+        # so `can_reset` raises a UserError
+        with self.assertRaises((AccessError, UserError)):
+            expense_refused.with_user(colleague).action_reset()
+        self.assertEqual(expense_refused.state, 'refused')
+
+    def test_expense_employee_cannot_choose_themselves_as_approver(self):
+        """ An employee with an approver does not get their expense approved on submission by making themselves its approver """
+        team_leader = self.env['hr.employee'].sudo().create({'name': 'team_leader', 'user_id': self.expense_user_manager_2.id})
+        self.expense_employee.sudo().write({'expense_manager_id': False, 'parent_id': team_leader.id})
+        expense = self.create_expenses({'name': "Self-approved?"}).with_user(self.expense_user_employee)
+        expense.manager_id = self.expense_user_employee
+        expense.action_submit()
+        self.assertEqual(expense.state, 'submitted')
+
+    @account_less_only
+    def test_expense_paid_reset_by_all_approver(self):
+        """ Without accounting, an approver of all the expenses resets a paid expense """
+        approver = new_test_user(self.env, login='expense_all_approver_reset', groups='base.group_user,hr_expense.group_hr_expense_user')
+        expense = self.create_expenses({'name': "Paid without entry"})
+        expense.action_submit()
+        expense.action_approve()
+        expense.action_pay()
+        expense = expense.with_user(approver)
+        self.assertRecordValues(expense, [{'state': 'paid', 'can_reset': True}])
+
+        expense.action_reset()
         self.assertEqual(expense.state, 'draft')
 
     def test_expense_access_rights_user(self):
@@ -351,7 +399,7 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
             to open a new expense and switch its company to retrieve their employee.
         """
         company_1 = self.env.company
-        company_2 = self.company_data_2['company']
+        company_2 = self.company_2
         user = new_test_user(
             self.env,
             login='team_approver_company_1',
@@ -371,3 +419,25 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
         expense_form.company_id = company_1
         self.assertEqual(expense_form.employee_id, employee)
         self.assertTrue(expense_form.is_editable)
+
+    def test_expense_approver_cannot_edit_own_submitted_expense(self):
+        """ The approver and the analytics of a submitted expense are locked for its employee, analytic rights or not """
+        approver = new_test_user(
+            self.env,
+            login='approver_analytic',
+            groups='base.group_user,hr_expense.group_hr_expense_team_approver,analytic.group_analytic_accounting',
+        )
+        employee = self.env['hr.employee'].sudo().create({
+            'name': 'approver_analytic',
+            'user_id': approver.id,
+            'work_contact_id': approver.partner_id.id,
+            'expense_manager_id': self.expense_user_manager.id,
+        })
+        expense = self.create_expenses({'name': 'Own expense of an approver', 'employee_id': employee.id}).with_user(approver)
+        expense.action_submit()
+        self.assertRecordValues(expense, [{'state': 'submitted', 'is_editable': False}])
+
+        with self.assertRaises(UserError):
+            expense.manager_id = approver
+        with self.assertRaises(UserError):
+            expense.analytic_distribution = {str(self.analytic_account_1.id): 100}

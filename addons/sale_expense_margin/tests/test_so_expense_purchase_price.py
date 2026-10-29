@@ -3,11 +3,11 @@
 from odoo.fields import Command
 from odoo.tests import tagged
 
-from odoo.addons.hr_expense.tests.common import TestExpenseCommon
+from odoo.addons.account_hr_expense.tests.common import TestAccountExpenseCommon
 
 
 @tagged('-at_install', 'post_install')
-class TestExpenseMargin(TestExpenseCommon):
+class TestExpenseMargin(TestAccountExpenseCommon):
 
     _test_user_groups = None  # FIXME list needed groups
 
