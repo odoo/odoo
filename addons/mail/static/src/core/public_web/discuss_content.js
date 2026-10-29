@@ -64,6 +64,8 @@ export class DiscussContent extends Component {
         this.rootRef = signal.ref(HTMLDivElement);
         this.panelActionsRef = signal.ref(HTMLDivElement);
         this.threadAvatarRef = signal.ref(HTMLDivElement);
+        // before the thread actions, which read it in their setup
+        this.isDiscussContent = true;
         this.threadActions = useThreadActions({ rootRef: this.rootRef, thread: () => this.thread });
         this.headerQuickActions = computedShallowEqual(() => this.threadActions.partition.quick);
         /** Whether the action opens a side panel and is in the group of panels. */
@@ -89,7 +91,6 @@ export class DiscussContent extends Component {
             groupedActions().filter(isPanelSwitcherAction)
         );
         this.state = proxy({ jumpThreadPresent: 0 });
-        this.isDiscussContent = true;
         this.attClassObjectToString = attClassObjectToString;
         this.threadDisplayName = computed(() => this.thread?.displayName);
         this.threadDescription = computed(() => this.thread?.description);
@@ -153,6 +154,9 @@ export class DiscussContent extends Component {
      * @type {import("@mail/core/common/action_list").GetActionComponent}
      */
     getHeaderActionComponent(params) {
+        if (!params.inline) {
+            return undefined;
+        }
         return this.getActionComponent(params) ?? DiscussContentCircleAction;
     }
 
@@ -169,6 +173,10 @@ export class DiscussContent extends Component {
         if (action.definition.panel?.component.compact) {
             return this.panelPopover;
         }
+    }
+
+    get showActionPanelSwitcher() {
+        return this.headerPanelActions().length > 0;
     }
 
     /**

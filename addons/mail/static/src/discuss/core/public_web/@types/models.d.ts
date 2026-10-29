@@ -3,6 +3,7 @@ declare module "models" {
         _computeMessagingMenuTabsWithCounter: () => unknown[];
         autoOpenChatWindowOnNewMessage: Readonly<boolean>;
         createSubChannel: (param0: { initialMessage: Message, name: string }) => Promise<void>;
+        discussAppAsSideChannel: DiscussApp;
         hasSubChannelFeature: Readonly<boolean>;
         inChathubOnNewMessage: Readonly<boolean>;
         isLocallyPinned: boolean;
@@ -13,6 +14,9 @@ declare module "models" {
         messagingMenuTabsWithCounter: MessagingMenuTab[];
         notifyDescriptionToServer: (description: string) => Promise<unknown>;
         primaryMessagingMenuTab: MessagingMenuTab;
+    }
+    export interface DiscussApp {
+        sideChannel: DiscussChannel;
     }
     export interface MessagingMenu {
         channelTab: MessagingMenuTab;

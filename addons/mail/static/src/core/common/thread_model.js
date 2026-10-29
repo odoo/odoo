@@ -26,6 +26,16 @@ import { user } from "@web/core/user";
  * @typedef {Object} MessageRouteParams Specific overrides for the RPC route metadata.
  */
 
+/**
+ * @typedef {Object} ThreadOpenOptions
+ * @property {boolean} [bypassCompact]
+ * @property {boolean} [focus]
+ * @property {boolean} [fromMessagingMenu]
+ * @property {boolean} [highlight]
+ * @property {boolean} [newWindow]
+ * @property {boolean} [swapOpened]
+ */
+
 export class Thread extends Record {
     static id = AND("model", "id");
     static _name = "mail.thread";
@@ -772,7 +782,7 @@ export class Thread extends Record {
     }
 
     /**
-     * @param {Object} [options]
+     * @param {ThreadOpenOptions} [options]
      * @return {boolean} true if the thread was opened, false otherwise
      */
     open(options) {

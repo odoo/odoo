@@ -69,7 +69,7 @@ export class Discuss extends Component {
             window,
             "keydown",
             (ev) => {
-                if (getActiveHotkey(ev) === "escape" && !this.thread?.composer?.isFocused) {
+                if (getActiveHotkey(ev) === "escape" && !ev.target.closest?.(".o-mail-Composer")) {
                     if (this.thread?.composer) {
                         this.thread.composer.autofocus++;
                     }
