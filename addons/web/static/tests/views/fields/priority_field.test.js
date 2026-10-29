@@ -51,6 +51,7 @@ class User extends models.Model {
 }
 defineModels([Partner, User]);
 
+test.tags("desktop");
 test("PriorityField when not set", async () => {
     await mountView({
         type: "form",
@@ -86,6 +87,7 @@ test("PriorityField when not set", async () => {
     });
 });
 
+test.tags("desktop");
 test("PriorityField tooltip", async () => {
     await mountView({
         type: "form",
@@ -107,6 +109,7 @@ test("PriorityField tooltip", async () => {
     expect(stars[1]).toHaveAttribute("data-tooltip", "Set Selection: Done");
 });
 
+test.tags("desktop");
 test("PriorityField in form view", async () => {
     expect.assertions(7);
 
@@ -146,6 +149,44 @@ test("PriorityField in form view", async () => {
     expect(
         ".o_field_widget .o_priority button.o_priority_star:not(.o_star_active)"
     ).toHaveCount(0);
+});
+
+test.tags("mobile");
+test("PriorityField in form view on mobile", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="selection" widget="priority" />
+                    </group>
+                </sheet>
+            </form>`,
+    });
+
+    expect(".o_field_widget .o_priority_dropdown_toggle .o_priority_star").toHaveCount(2);
+    expect(
+        ".o_field_widget .o_priority_dropdown_toggle .o_priority_star.o_star_active"
+    ).toHaveCount(1);
+
+    await click(".o_field_widget .o_priority_dropdown_toggle");
+    await animationFrame();
+    expect(queryAllTexts(".o_priority_menu .dropdown-item")).toEqual([
+        "Normal",
+        "Blocked",
+        "Done",
+    ]);
+    expect(".o_priority_menu .dropdown-item.active").toHaveText("Blocked");
+
+    await click(".o_priority_menu .dropdown-item:contains(Done)");
+    await animationFrame();
+    expect(".o_priority_menu").toHaveCount(0);
+    expect(
+        ".o_field_widget .o_priority_dropdown_toggle .o_priority_star.o_star_active"
+    ).toHaveCount(2);
 });
 
 test.tags("desktop");
@@ -203,6 +244,7 @@ test("PriorityField hover a star in form view", async () => {
     ).toHaveCount(1);
 });
 
+test.tags("desktop");
 test("PriorityField can write after adding a record -- kanban", async () => {
     Partner._fields.selection = fields.Selection({
         string: "Selection",
@@ -250,6 +292,7 @@ test("PriorityField can write after adding a record -- kanban", async () => {
     expect(".o_kanban_record .o_priority_star.o_star_active").toHaveCount(2);
 });
 
+test.tags("desktop");
 test("PriorityField in editable list view", async () => {
     onRpc("has_group", () => true);
     await mountView({
@@ -453,7 +496,7 @@ test("PriorityField with readonly attribute", async () => {
         arch: '<form><field name="selection" widget="priority" readonly="1"/></form>',
     });
 
-    expect("span.o_priority_star:not(.o_star_active)").toHaveCount(2, {
+    expect("i.o_priority_star:not(.o_star_active)").toHaveCount(2, {
         message: "stars of priority widget should rendered with span tag if readonly",
     });
     await hover(".o_priority_star:not(.o_star_active):last");
@@ -467,12 +510,13 @@ test("PriorityField with readonly attribute", async () => {
     await click(".o_priority_star:not(.o_star_active):last");
     await animationFrame();
     expect.step("click");
-    expect("span.o_priority_star:not(.o_star_active)").toHaveCount(2, {
+    expect("i.o_priority_star:not(.o_star_active)").toHaveCount(2, {
         message: "should still have two stars",
     });
     expect.verifySteps(["hover", "click"]);
 });
 
+test.tags("desktop");
 test('PriorityField edited by the smart action "Set priority..."', async () => {
     await mountView({
         type: "form",
@@ -511,7 +555,7 @@ test("PriorityField readonly tooltip", async () => {
     });
 
     // check data-tooltip attribute on readonly spans
-    const spans = queryAll(".o_field_widget .o_priority span.o_priority_star");
+    const spans = queryAll(".o_field_widget .o_priority i.o_priority_star");
     expect(spans[0]).toHaveAttribute("data-tooltip", "Blocked");
     expect(spans[1]).toHaveAttribute("data-tooltip", "Blocked");
 });

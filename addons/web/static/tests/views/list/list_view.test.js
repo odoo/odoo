@@ -3509,7 +3509,12 @@ test(`change a record field in readonly should change same record in other group
         message: "should not have any starred records",
     });
 
-    await contains(`.o_priority_star`).click();
+    if (isSmall()) {
+        await contains(`.o_priority_dropdown_toggle`).click();
+        await contains(`.o_priority_menu .dropdown-item:last`).click();
+    } else {
+        await contains(`.o_priority_star`).click();
+    }
     expect(`.o_priority_star.o_star_active`).toHaveCount(2, {
         message: "both 'yop' records should have been starred",
     });
