@@ -5,6 +5,7 @@ import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { _t } from "@web/core/l10n/translation";
 import { debounce } from "@web/core/utils/timing";
 import { PosOrderAccounting } from "@point_of_sale/app/models/accounting/pos_order_accounting";
+import { taxKey } from "@point_of_sale/app/models/utils/currency";
 
 patch(PosStore.prototype, {
     async setup() {
@@ -50,12 +51,6 @@ patch(PosStore.prototype, {
         }
     },
     async applyDiscount(value, type = "percent", order = this.getOrder()) {
-        const taxKey = (taxIds) =>
-            taxIds
-                .map((tax) => tax.id)
-                .sort((a, b) => a - b)
-                .join("_");
-
         const product = this.config.discount_product_id;
         if (product === undefined) {
             this.dialog.add(AlertDialog, {

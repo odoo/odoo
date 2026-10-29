@@ -2,6 +2,7 @@ import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { PosOrderAccounting } from "./accounting/pos_order_accounting";
 import { getStrNotes } from "./utils/order_change";
+import { taxKey } from "@point_of_sale/app/models/utils/currency";
 
 const { DateTime } = luxon;
 
@@ -994,12 +995,6 @@ export class PosOrder extends PosOrderAccounting {
         }
     }
     recomputeServiceFees() {
-        const taxKey = (taxIds) =>
-            taxIds
-                .map((tax) => tax.id)
-                .sort((a, b) => a - b)
-                .join("_");
-
         if (this.state !== "draft") {
             return;
         }
@@ -1116,6 +1111,22 @@ export class PosOrder extends PosOrderAccounting {
         Object.values(serviceFeeLinesMap).forEach((line) => {
             line.delete();
         });
+    }
+
+    /**
+     * Moves all payment lines from the current order to a target order,
+     * preserving the payment method and amount.
+     *
+     * @param {PosOrder} order - The target order receiving the payments.
+     */
+    transferPaymentLinesTo(order) {
+        for (const line of this.payment_ids) {
+            const result = order.addPaymentline(line.payment_method_id);
+            if (result.status && result.data) {
+                result.data.setAmount(line.amount);
+            }
+            this.removePaymentline(line);
+        }
     }
 }
 
