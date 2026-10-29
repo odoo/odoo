@@ -245,7 +245,7 @@ class StockRule(models.Model):
 
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):
         new_move_vals = super()._push_prepare_move_copy_values(move_to_copy, new_date)
-        new_move_vals['production_group_id'] = move_to_copy.production_group_id.id
+        new_move_vals['production_group_id'] = move_to_copy.production_group_id.id if move_to_copy.production_id else False
         new_move_vals['production_id'] = False
         return new_move_vals
 
