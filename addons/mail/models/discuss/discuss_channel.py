@@ -1975,7 +1975,10 @@ class DiscussChannel(models.Model):
         # Build the subquery, we know the model and must inject the same
         # security rules as in the `_search` method. The search is optimized to
         # return a query without executing anything if the model is fixed.
-        domain = Domain('model', '=', self._name) & Domain.custom(
+        # The ``res_id in`` filter is copied by the ORM into the channel
+        # subquery of the message access rule. Without it, that subquery lists
+        # every channel the user can read.
+        domain = Domain('model', '=', self._name) & Domain('res_id', 'in', self.ids) & Domain.custom(
             to_sql=lambda table: SQL("%s = discuss_channel.id", table.res_id),
         )
         messages_query = messages._search(domain, order='id desc', limit=1)
@@ -2000,6 +2003,7 @@ class DiscussChannel(models.Model):
             return messages
         domain = (
             Domain("model", "=", self._name)
+            & Domain("res_id", "in", self.ids)
             & Domain("needaction", "=", True)
             & Domain.custom(
                 to_sql=lambda table: SQL("%s = discuss_channel.id", table.res_id),
