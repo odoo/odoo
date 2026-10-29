@@ -4,6 +4,7 @@ from datetime import timedelta
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools.sql import escape_like_value
 
 from odoo.addons.base.models.ir_qweb_fields import nl2br_enclose
 
@@ -68,9 +69,11 @@ class WithdrawalRequest(models.Model):
             .sudo()
             .search(
                 [
-                    ("name", "=ilike", order_reference),
-                    ("partner_id.email", "=ilike", email),
+                    ("name", "=ilike", escape_like_value(order_reference)),
+                    ("partner_id.email", "=ilike", escape_like_value(email)),
                     ("state", "=", "sale"),
+                    ("company_id", "=", self.env.website.company_id.id),
+                    ("website_id", "in", [self.env.website.id, False]),
                 ],
                 limit=1,
             )

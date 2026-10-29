@@ -55,4 +55,5 @@ from . import (
     test_website_sequence,
     test_website_visitor,
     test_wishlist_ui,
+    test_withdrawal_request,
 )
