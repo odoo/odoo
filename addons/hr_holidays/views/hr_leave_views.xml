@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <graph string="Appraisal Analysis" sample="1">
                 <field name="employee_id"/>
-                <field name="work_entry_type_id"/>
+                <field name="time_type_id"/>
                 <field name="date_from"/>
                 <field name="number_of_days" type="measure"/>
             </graph>
@@ -20,7 +20,7 @@
         <field name="arch" type="xml">
             <search string="Search Time Off">
                 <field name="employee_id"/>
-                <field name="work_entry_type_id"/>
+                <field name="time_type_id"/>
                 <field name="name"/>
                 <field name="activity_user_id" string="Activities of"/>
                 <field name="activity_type_id" string="Activity type"/>
@@ -44,13 +44,13 @@
                             '|',
                                 '&amp;',
                                     ('state','=','confirm'),
-                                    ('work_entry_type_id.leave_validation_type','=','hr'),
+                                    ('time_type_id.leave_validation_type','=','hr'),
                                 ('state','=','validate1')]"
                     string="Waiting For Me"
                     name="waiting_for_me_manager"
                     groups="hr_holidays.group_hr_holidays_user"/>
                 <filter name="missing_document" string="Missing Document"
-                    domain="['&amp;', ('work_entry_type_id.support_document', '=', True), ('attachment_ids', '=', False)]"/>
+                    domain="['&amp;', ('time_type_id.support_document', '=', True), ('attachment_ids', '=', False)]"/>
                 <separator/>
                 <filter string="Status">
                     <filter domain="[('state', '=', 'confirm')]" string="First Approval" name="approve"/>
@@ -96,7 +96,7 @@
                         ]"/>
                 <group>
                     <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
-                    <filter name="group_type" string="Type" context="{'group_by':'work_entry_type_id'}"/>
+                    <filter name="group_type" string="Type" context="{'group_by':'time_type_id'}"/>
                     <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
                     <separator/>
                     <filter name="group_date_from" string="Date" context="{'group_by':'date_from'}"/>
@@ -124,7 +124,7 @@
                 <field name="supported_attachment_ids_count"/>
                 <field name="state"/>
                 <field name="employee_id"/>
-                <field name="work_entry_type_request_unit"/>
+                <field name="time_type_request_unit"/>
                 <field name="request_date_from"/>
                 <field name="request_hour_from"/>
                 <field name="request_hour_to"/>
@@ -134,7 +134,7 @@
                 <field name="can_refuse"/>
                 <field name="request_date_from_period"/>
                 <field name="request_date_to_period"/>
-                <field name="work_entry_type_requires_allocation"/>
+                <field name="time_type_requires_allocation"/>
                 <templates>
                     <t t-name="card" class="g-0">
                         <div class="o_hr_holidays_kanban w-100">
@@ -157,7 +157,7 @@
                                             <div class="col-2 o_hr_holidays_name">
                                                 <div class="d-flex flex-row fw-bold">
                                                     <t t-set="same_day" t-value="record.request_date_from.raw_value == record.request_date_to.raw_value"/>
-                                                    <t t-set="leave_unit" t-value="record.work_entry_type_request_unit.raw_value"/>
+                                                    <t t-set="leave_unit" t-value="record.time_type_request_unit.raw_value"/>
                                                     <t t-out="luxon.DateTime.fromISO(record.request_date_from.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
                                                     <t t-if="leave_unit == 'day'">
                                                         <t t-if="!same_day">
@@ -193,7 +193,7 @@
                                                         <field name="request_hour_to" widget="float_time_selection"/>
                                                     </t>
                                                 </div>
-                                                <field name="work_entry_type_id" widget="many2one_work_entry_type" class="text-muted"/>
+                                                <field name="time_type_id" widget="many2one_time_type" class="text-muted"/>
                                             </div>
                                             <div class="col-2 o_hr_holidays_card ps-3">
                                                 <div class="fw-bold d-flex me-1">
@@ -204,7 +204,7 @@
                                                 </span>
                                             </div>
                                             <div class="col-2 o_hr_holidays_card">
-                                                <div t-if="record.work_entry_type_requires_allocation.raw_value"> <!-- To keep the same space-->
+                                                <div t-if="record.time_type_requires_allocation.raw_value"> <!-- To keep the same space-->
                                                     <div class="fw-bold d-flex gap-1 me-1">
                                                         <field name="virtual_remaining_leaves" widget="float" digits="[3,2]"/>
                                                         /
@@ -252,7 +252,7 @@
                                 <div class="d-flex flex-row">
                                     <div id="date_part" class="d-flex flex-row"> <!-- To be override in my_kanban-->
                                             <t t-set="same_day" t-value="record.request_date_from.raw_value == record.request_date_to.raw_value"/>
-                                            <t t-set="leave_unit" t-value="record.work_entry_type_request_unit.raw_value"/>
+                                            <t t-set="leave_unit" t-value="record.time_type_request_unit.raw_value"/>
                                             <t t-out="luxon.DateTime.fromISO(record.request_date_from.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
                                             <t t-if="leave_unit == 'day'">
                                                 <t t-if="!same_day">
@@ -288,7 +288,7 @@
                                             </t>
                                     </div>
                                 </div>
-                                <field name="work_entry_type_id" widget="many2one_work_entry_type" class="text-muted"/>
+                                <field name="time_type_id" widget="many2one_time_type" class="text-muted"/>
                                 <span class="text-muted">
                                     (<field name="duration_display"/>)
                                 </span>
@@ -338,7 +338,7 @@
                                 <div class="text-muted text-nowrap">(<field name="number_of_days"/> days)</div>
                             </div>
                             <div class="text-muted">
-                                <field name="work_entry_type_id" widget="many2one_work_entry_type" display="full"/>
+                                <field name="time_type_id" widget="many2one_time_type" display="full"/>
                                 <field name="date_from"/> <i class="oi" data-icon="east" title="to" /> <field name="date_to"/>
                             </div>
                         </div>
@@ -380,11 +380,11 @@
                     </button>
                 </div>
                 <field name="dashboard_warning_message" class="alert alert-danger d-flex mt-2" role="alert" style="white-space: pre-wrap;" invisible="not dashboard_warning_message"/>
-                <field name="work_entry_type_increases_duration" class="alert alert-info d-flex mt-2" role="alert" style="white-space: pre-wrap;" invisible="not work_entry_type_increases_duration"/>
+                <field name="time_type_increases_duration" class="alert alert-info d-flex mt-2" role="alert" style="white-space: pre-wrap;" invisible="not time_type_increases_duration"/>
                 <div class="alert alert-info d-flex mt-2"
                         role="alert"
                         name="support_document_alert"
-                        invisible="state in ['validate', 'refuse', 'cancel'] or not work_entry_type_support_document">
+                        invisible="state in ['validate', 'refuse', 'cancel'] or not time_type_support_document">
                     A supporting document is required for this type of time type.
                 </div>
                 <div class="o_hr_leave_content row">
@@ -392,14 +392,14 @@
                         <widget name="web_ribbon" title="Cancelled" bg_color="text-bg-danger" invisible="state != 'cancel'"/>
                             <group name="col_left" class="m-0" col="1">
                                 <div class="d-flex gap-2">
-                                    <i class="oi oi-lg align-self-center" data-icon="label" title="Time Off Type" name="work_entry_type_id"/>
-                                    <label for="work_entry_type_id" string="Time Type"/>
+                                    <i class="oi oi-lg align-self-center" data-icon="label" title="Time Off Type" name="time_type_id"/>
+                                    <label for="time_type_id" string="Time Type"/>
                                 </div>
                                 <div>
-                                    <field name="work_entry_type_id" force_save="1" default_focus="1"
-                                        widget="many2one_work_entry_type"
+                                    <field name="time_type_id" force_save="1" default_focus="1"
+                                        widget="many2one_time_type"
                                         domain="[
-                                            ('id', 'in', allowed_work_entry_type_ids),
+                                            ('id', 'in', allowed_time_type_ids),
                                             '|',
                                                 ('requires_allocation', '=', False),
                                                 '&amp;',
@@ -421,7 +421,7 @@
                                     <label for="request_date_from" string="Dates"/>
                                 </div>
                                 <div>
-                                    <div id="full_date" invisible="work_entry_type_request_unit == 'hour'">
+                                    <div id="full_date" invisible="time_type_request_unit == 'hour'">
                                         <field name="request_date_from"
                                                widget="daterange"
                                                readonly="state != 'confirm'"
@@ -430,7 +430,7 @@
                                         />
                                         <field name="request_date_to" invisible="1"/> <!-- end date of the request_date_from daterange widget (end_date_field option) -->
                                     </div>
-                                    <div invisible="work_entry_type_request_unit != 'hour'">
+                                    <div invisible="time_type_request_unit != 'hour'">
                                         <field name="request_date_hour_from"
                                                widget="daterange"
                                                readonly="state != 'confirm'"
@@ -442,33 +442,33 @@
                                         <field name="request_hour_from" invisible="1"/> <!-- needed for the onchange recomputing the duration -->
                                         <field name="request_hour_to" invisible="1"/> <!-- needed for the onchange recomputing the duration -->
                                     </div>
-                                    <div class="d-flex gap-2" invisible="work_entry_type_request_unit != 'half_day' or not last_several_days">
-                                        <field name="request_date_from_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" readonly="state != 'confirm'"/>
+                                    <div class="d-flex gap-2" invisible="time_type_request_unit != 'half_day' or not last_several_days">
+                                        <field name="request_date_from_period" invisible="time_type_request_unit != 'half_day'" required="time_type_request_unit == 'half_day'" readonly="state != 'confirm'"/>
                                         <i class="oi" data-icon="east" aria-label="to" title="To"/>
-                                        <field name="request_date_to_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" readonly="state != 'confirm'"/>
+                                        <field name="request_date_to_period" invisible="time_type_request_unit != 'half_day'" required="time_type_request_unit == 'half_day'" readonly="state != 'confirm'"/>
                                     </div>
                                     <field name="is_time_rule_trimmed" invisible="1"/> <!-- read by _compute_date_from_to, which preserves the sub-day end written by the time rule instead of snapping it back to the schedule boundary -->
                                     <!-- trimmed source / output: show exact time range set by the rule engine -->
                                     <field name="time_rule_time_range" nolabel="1" readonly="1" class="text-muted"
                                            invisible="not time_rule_time_range"/>
-                                    <div class="d-flex gap-2" invisible="work_entry_type_request_unit == 'half_day' and not last_several_days">
+                                    <div class="d-flex gap-2" invisible="time_type_request_unit == 'half_day' and not last_several_days">
                                         <field name="number_of_hours" widget="float_time" nolabel="1"
-                                               readonly="state != 'confirm' or work_entry_type_request_unit != 'hour'"
-                                               invisible="work_entry_type_request_unit != 'hour'"/>
+                                               readonly="state != 'confirm' or time_type_request_unit != 'hour'"
+                                               invisible="time_type_request_unit != 'hour'"/>
                                         <field name="number_of_days" readonly="1" nolabel="1"
-                                               invisible="work_entry_type_request_unit == 'hour'"
+                                               invisible="time_type_request_unit == 'hour'"
                                                class="text-muted w-auto"/>
-                                        <span class="text-muted text-nowrap" invisible="work_entry_type_request_unit == 'hour'">day(s)</span>
+                                        <span class="text-muted text-nowrap" invisible="time_type_request_unit == 'hour'">day(s)</span>
                                         <div class="text-muted d-flex gap-1 me-1" invisible="not max_leaves">
                                             (<field name="virtual_remaining_leaves" widget="float" class="w-auto" digits="[3,2]"/>
                                             <span class="text-nowrap">remaining out of</span>
                                             <field name="max_leaves" widget="float" class="w-auto" digits="[3,2]"/>)
-                                            <span class="text-muted text-nowrap" invisible="work_entry_type_request_unit != 'hour'">hour(s)</span>
-                                            <span class="text-muted text-nowrap" invisible="work_entry_type_request_unit == 'hour'">day(s)</span>
+                                            <span class="text-muted text-nowrap" invisible="time_type_request_unit != 'hour'">hour(s)</span>
+                                            <span class="text-muted text-nowrap" invisible="time_type_request_unit == 'hour'">day(s)</span>
                                         </div>
                                     </div>
-                                    <div invisible="work_entry_type_request_unit != 'half_day' or last_several_days">
-                                        <field name="work_entry_type_request_unit" invisible="1"/> <!-- Needed -->
+                                    <div invisible="time_type_request_unit != 'half_day' or last_several_days">
+                                        <field name="time_type_request_unit" invisible="1"/> <!-- Needed -->
                                         <field name="last_several_days" invisible="1"/> <!-- Needed -->
                                         <field name="allowed_request_durations" invisible="1"/> <!-- Needed -->
                                         <field name="request_duration"
@@ -482,8 +482,8 @@
                                             <field name="virtual_remaining_leaves" widget="float" class="w-auto" digits="[3,2]"/>
                                             <span class="text-nowrap">remaining out of</span>
                                             <field name="max_leaves" widget="float" class="w-auto" digits="[3,2]"/>
-                                            <span class="text-muted text-nowrap" invisible="work_entry_type_request_unit != 'hour'">hour(s)</span>
-                                            <span class="text-muted text-nowrap" invisible="work_entry_type_request_unit == 'hour'">day(s)</span>
+                                            <span class="text-muted text-nowrap" invisible="time_type_request_unit != 'hour'">hour(s)</span>
+                                            <span class="text-muted text-nowrap" invisible="time_type_request_unit == 'hour'">day(s)</span>
                                         </div>
                                     </div>
                                     <div invisible="not allocation_display_warning">
@@ -537,7 +537,7 @@
             <label for="request_date_from" position="attributes">
                 <attribute name="invisible">1</attribute>
             </label>
-            <label for="work_entry_type_id" position="attributes">
+            <label for="time_type_id" position="attributes">
                 <attribute name="invisible">1</attribute>
             </label>
             <label for="name" position="attributes">
@@ -555,7 +555,7 @@
             <xpath expr="//group[@name='attachments_relapse']" position="inside">
                 <div class="d-flex align-items-baseline gap-2" colspan="2" invisible="not attachment_is_visible or state != 'confirm'">
                     <field name="supported_attachment_ids" widget="many2many_binary" nolabel="1" class="w-auto"/>
-                    <span class="text-danger" invisible="not work_entry_type_support_document or supported_attachment_ids">Required</span>
+                    <span class="text-danger" invisible="not time_type_support_document or supported_attachment_ids">Required</span>
                 </div>
             </xpath>
         </field>
@@ -588,8 +588,8 @@
         <field name="mode">primary</field>
         <field name="priority">17</field>
         <field name="arch" type="xml">
-            <field name="work_entry_type_id" position="attributes">
-                <attribute name="domain">[('id', 'in', allowed_work_entry_type_ids or [])]</attribute>
+            <field name="time_type_id" position="attributes">
+                <attribute name="domain">[('id', 'in', allowed_time_type_ids or [])]</attribute>
             </field>
         </field>
     </record>
@@ -610,7 +610,7 @@
                         readonly="state != 'confirm'" widget="many2one_avatar_employee"/>
                 </div>
             </xpath>
-            <field name="work_entry_type_id" position="attributes">
+            <field name="time_type_id" position="attributes">
                 <attribute name="domain">[
                     '|',
                         ('requires_allocation', '=', False),
@@ -623,7 +623,7 @@
                                     ('allows_negative', '=', False),
                 ]</attribute>
             </field>
-            <field name="work_entry_type_id" position="before">
+            <field name="time_type_id" position="before">
                 <field name="user_id" invisible="1"/> <!-- Used in HolidaysFormViewDialog -->
             </field>
             <div name="warning_wrong_company" position="replace"/>
@@ -647,7 +647,7 @@
                     hide_time="True"
                     mode="year">
                 <field name="display_name" string=""/>
-                <field name="work_entry_type_id" filters="1" invisible="1" color="color"/>
+                <field name="time_type_id" filters="1" invisible="1" color="color"/>
                 <field name="state" invisible="1"/>
                 <field name="is_hatched" invisible="1" />
                 <field name="is_striked" invisible="1"/>
@@ -685,7 +685,7 @@
                     color="color"
                     hide_time="True">
                 <field name="display_name" string=""/>
-                <field name="work_entry_type_id" filters="1" invisible="1" color="color"/>
+                <field name="time_type_id" filters="1" invisible="1" color="color"/>
                 <field name="state" invisible="1"/>
                 <field name="is_hatched" invisible="1" />
                 <field name="is_striked" invisible="1"/>
@@ -772,7 +772,7 @@
                     />
                 </header>
                 <field name="employee_id" widget="many2one_avatar_employee" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" />
-                <field name="work_entry_type_id" widget="many2one_work_entry_type" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" options="{'no_open': true}" />
+                <field name="time_type_id" widget="many2one_time_type" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" options="{'no_open': true}" />
                 <field name="date_from" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
                 <field name="date_to" string="End Date" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
                 <field name="duration_display" string="Duration"/>

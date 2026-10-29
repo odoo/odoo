@@ -17,8 +17,8 @@ class TestCalendarReschedule(TestHrHolidaysCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        WorkEntryType = cls.env["hr.work.entry.type"].with_user(cls.user_hrmanager_id)
-        cls.type_no_validation = WorkEntryType.create(
+        TimeType = cls.env["hr.time.type"].with_user(cls.user_hrmanager_id)
+        cls.type_no_validation = TimeType.create(
             {
                 "name": "Reschedule - no validation",
                 "code": "RESCH_NOVAL",
@@ -28,7 +28,7 @@ class TestCalendarReschedule(TestHrHolidaysCommon):
                 "unit_of_measure": "day",
             }
         )
-        cls.type_manager = WorkEntryType.create(
+        cls.type_manager = TimeType.create(
             {
                 "name": "Reschedule - manager validation",
                 "code": "RESCH_MGR",
@@ -38,7 +38,7 @@ class TestCalendarReschedule(TestHrHolidaysCommon):
                 "unit_of_measure": "day",
             }
         )
-        cls.type_hours = WorkEntryType.create(
+        cls.type_hours = TimeType.create(
             {
                 "name": "Reschedule - hourly",
                 "code": "RESCH_HOUR",
@@ -48,7 +48,7 @@ class TestCalendarReschedule(TestHrHolidaysCommon):
                 "unit_of_measure": "hour",
             }
         )
-        cls.type_allocated = WorkEntryType.create(
+        cls.type_allocated = TimeType.create(
             {
                 "name": "Reschedule - allocated",
                 "code": "RESCH_ALLOC",
@@ -60,7 +60,7 @@ class TestCalendarReschedule(TestHrHolidaysCommon):
             }
         )
 
-    def _create_leave(self, work_entry_type, date_from, date_to, user=None):
+    def _create_leave(self, time_type, date_from, date_to, user=None):
         model = self.env["hr.leave"]
         if user:
             model = model.with_user(user)
@@ -68,7 +68,7 @@ class TestCalendarReschedule(TestHrHolidaysCommon):
             {
                 "name": "Reschedule test",
                 "employee_id": self.employee_emp_id,
-                "work_entry_type_id": work_entry_type.id,
+                "time_type_id": time_type.id,
                 "request_date_from": date_from,
                 "request_date_to": date_to,
             }
@@ -161,7 +161,7 @@ class TestCalendarReschedule(TestHrHolidaysCommon):
                 {
                     "name": "Hourly",
                     "employee_id": self.employee_emp_id,
-                    "work_entry_type_id": self.type_hours.id,
+                    "time_type_id": self.type_hours.id,
                     "request_date_from": "2024-02-05",
                     "request_date_to": "2024-02-05",
                     "request_hour_from": 10,
@@ -169,7 +169,7 @@ class TestCalendarReschedule(TestHrHolidaysCommon):
                 }
             )
         )
-        self.assertEqual(leave.work_entry_type_request_unit, "hour")
+        self.assertEqual(leave.time_type_request_unit, "hour")
         original_to = leave.date_to
 
         leave.reschedule_from_calendar(
@@ -193,7 +193,7 @@ class TestCalendarReschedule(TestHrHolidaysCommon):
                 {
                     "name": "Reschedule allocation",
                     "employee_id": self.employee_emp_id,
-                    "work_entry_type_id": self.type_allocated.id,
+                    "time_type_id": self.type_allocated.id,
                     "number_of_days": 2,
                     "date_from": "2024-01-01",
                     "date_to": "2024-12-31",

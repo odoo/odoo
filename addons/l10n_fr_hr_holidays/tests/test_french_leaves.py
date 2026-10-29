@@ -31,7 +31,7 @@ class TestFrenchLeaves(TransactionCase):
             'company_id': cls.company.id,
         })
 
-        cls.time_off_type = cls.env['hr.work.entry.type'].create({
+        cls.time_off_type = cls.env['hr.time.type'].create({
             'name': 'Time Off',
             'code': 'Time Off',
             'requires_allocation': False,
@@ -40,7 +40,7 @@ class TestFrenchLeaves(TransactionCase):
             'count_as': 'absence',
         })
         cls.company.write({
-            'l10n_fr_reference_work_entry_type': cls.time_off_type.id,
+            'l10n_fr_reference_time_type': cls.time_off_type.id,
         })
 
         cls.base_calendar = cls.env['resource.calendar'].create({
@@ -64,7 +64,7 @@ class TestFrenchLeaves(TransactionCase):
 
         leave = self.env['hr.leave'].create({
             'name': 'Test',
-            'work_entry_type_id': self.time_off_type.id,
+            'time_type_id': self.time_off_type.id,
             'employee_id': self.employee.id,
             'request_date_from': '2021-09-06',
             'request_date_to': '2021-09-10',
@@ -88,7 +88,7 @@ class TestFrenchLeaves(TransactionCase):
 
         leave = self.env['hr.leave'].create({
             'name': 'Test',
-            'work_entry_type_id': self.time_off_type.id,
+            'time_type_id': self.time_off_type.id,
             'employee_id': self.employee.id,
             'request_date_from': '2021-09-06',
             'request_date_to': '2021-09-08',
@@ -112,7 +112,7 @@ class TestFrenchLeaves(TransactionCase):
 
         leave = self.env['hr.leave'].create({
             'name': 'Test',
-            'work_entry_type_id': self.time_off_type.id,
+            'time_type_id': self.time_off_type.id,
             'employee_id': self.employee.id,
             'request_date_from': '2021-09-08',
             'request_date_to': '2021-09-10',
@@ -136,7 +136,7 @@ class TestFrenchLeaves(TransactionCase):
 
         leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'name': 'Test',
-            'work_entry_type_id': self.time_off_type.id,
+            'time_type_id': self.time_off_type.id,
             'employee_id': self.employee.id,
             'request_date_from': '2021-09-10',
             'request_date_to': '2021-09-10',
@@ -167,7 +167,7 @@ class TestFrenchLeaves(TransactionCase):
 
         leave = self.env['hr.leave'].create({
             'name': 'Test',
-            'work_entry_type_id': self.time_off_type.id,
+            'time_type_id': self.time_off_type.id,
             'employee_id': self.employee.id,
             'request_date_from': '2021-09-06',
             'request_date_to': '2021-09-10',
@@ -189,7 +189,7 @@ class TestFrenchLeaves(TransactionCase):
 
         leave = self.env['hr.leave'].create({
             'name': 'Test',
-            'work_entry_type_id': self.time_off_type.id,
+            'time_type_id': self.time_off_type.id,
             'employee_id': self.employee.id,
             'request_date_from': '2021-09-06',
             'request_date_to': '2021-09-08',
@@ -238,7 +238,7 @@ class TestFrenchLeaves(TransactionCase):
         # Week type 0
         leave = self.env['hr.leave'].create({
             'name': 'Test',
-            'work_entry_type_id': self.time_off_type.id,
+            'time_type_id': self.time_off_type.id,
             'employee_id': self.employee.id,
             'request_date_from': '2021-09-06',
             'request_date_to': '2021-09-08',
@@ -249,7 +249,7 @@ class TestFrenchLeaves(TransactionCase):
         # Week type 1
         leave = self.env['hr.leave'].create({
             'name': 'Test',
-            'work_entry_type_id': self.time_off_type.id,
+            'time_type_id': self.time_off_type.id,
             'employee_id': self.employee.id,
             'request_date_from': '2021-09-13',
             'request_date_to': '2021-09-15',
@@ -260,7 +260,7 @@ class TestFrenchLeaves(TransactionCase):
         # Both ending with week type 1
         leave = self.env['hr.leave'].create({
             'name': 'Test',
-            'work_entry_type_id': self.time_off_type.id,
+            'time_type_id': self.time_off_type.id,
             'employee_id': self.employee.id,
             'request_date_from': '2021-09-06',
             'request_date_to': '2021-09-15',
@@ -273,7 +273,7 @@ class TestFrenchLeaves(TransactionCase):
             start_time = time.time()
             leave = self.env['hr.leave'].create({
                 'name': 'Test',
-                'work_entry_type_id': self.time_off_type.id,
+                'time_type_id': self.time_off_type.id,
                 'employee_id': self.employee.id,
                 'request_date_from': '2021-09-13',
                 'request_date_to': '2021-09-22',
@@ -283,7 +283,7 @@ class TestFrenchLeaves(TransactionCase):
         self.assertEqual(leave.number_of_days, 8, 'The number of days should be equal to 8.')
         leave.unlink()
 
-    def test_work_entry_type_half_day_different_working_hours(self):
+    def test_time_type_half_day_different_working_hours(self):
         """
         Test Case:
         ==========
@@ -328,7 +328,7 @@ class TestFrenchLeaves(TransactionCase):
         leave_1, leave_2, leave_3, leave_4, leave_5 = self.env['hr.leave'].with_context(leave_fast_create=True).create([
             {
                 'name': 'Test',
-                'work_entry_type_id': self.time_off_type.id,
+                'time_type_id': self.time_off_type.id,
                 'employee_id': self.employee.id,
                 'request_date_from': '2024-07-29',
                 'request_date_to': '2024-07-29',
@@ -337,7 +337,7 @@ class TestFrenchLeaves(TransactionCase):
             },
             {
                 'name': 'Test full day leave on tuesday',
-                'work_entry_type_id': self.time_off_type.id,
+                'time_type_id': self.time_off_type.id,
                 'employee_id': self.employee.id,
                 'request_date_from': '2024-07-30',
                 'request_date_to': '2024-07-30',
@@ -346,7 +346,7 @@ class TestFrenchLeaves(TransactionCase):
             },
             {
                 'name': 'Test Monday PM to Tuesday AM',
-                'work_entry_type_id': self.time_off_type.id,
+                'time_type_id': self.time_off_type.id,
                 'employee_id': self.employee.id,
                 'request_date_from': '2024-08-05',
                 'request_date_to': '2024-08-06',
@@ -355,7 +355,7 @@ class TestFrenchLeaves(TransactionCase):
             },
             {
                 'name': 'Test Monday AM to Tuesday AM',
-                'work_entry_type_id': self.time_off_type.id,
+                'time_type_id': self.time_off_type.id,
                 'employee_id': self.employee.id,
                 'request_date_from': '2024-08-12',
                 'request_date_to': '2024-08-13',
@@ -364,7 +364,7 @@ class TestFrenchLeaves(TransactionCase):
             },
             {
                 'name': 'Test Tuesday PM to Wednesday PM',
-                'work_entry_type_id': self.time_off_type.id,
+                'time_type_id': self.time_off_type.id,
                 'employee_id': self.employee.id,
                 'request_date_from': '2024-08-20',
                 'request_date_to': '2024-08-21',
@@ -398,7 +398,7 @@ class TestFrenchLeaves(TransactionCase):
         self.time_off_type.unit_of_measure = "day"
         leave = self.env['hr.leave'].create({
             'name': 'Test',
-            'work_entry_type_id': self.time_off_type.id,
+            'time_type_id': self.time_off_type.id,
             'employee_id': self.employee.id,
             'request_date_from': '2024-07-22',
             'request_date_to': '2024-07-22',
@@ -424,7 +424,7 @@ class TestFrenchLeaves(TransactionCase):
 
         leave_1 = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'name': 'Test leave',
-            'work_entry_type_id': self.time_off_type.id,
+            'time_type_id': self.time_off_type.id,
             'employee_id': self.employee.id,
             'request_date_from': '2025-08-04',
             'request_date_to': '2025-08-04',
@@ -467,7 +467,7 @@ class TestFrenchLeaves(TransactionCase):
 
         leave_1 = self.env['hr.leave'].create({
             'name': 'Test leave',
-            'work_entry_type_id': self.time_off_type.id,
+            'time_type_id': self.time_off_type.id,
             'employee_id': self.employee.id,
             'request_date_from': '2024-10-14',
             'request_date_to': '2024-10-14',
@@ -478,7 +478,7 @@ class TestFrenchLeaves(TransactionCase):
 
         leave_2 = self.env['hr.leave'].create({
             'name': 'Test leave',
-            'work_entry_type_id': self.time_off_type.id,
+            'time_type_id': self.time_off_type.id,
             'employee_id': self.employee.id,
             'request_date_from': '2024-10-21',
             'request_date_to': '2024-10-22',
@@ -505,7 +505,7 @@ class TestFrenchLeaves(TransactionCase):
         # 2021-09-11 is a Saturday
         leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'name': 'Test',
-            'work_entry_type_id': self.time_off_type.id,
+            'time_type_id': self.time_off_type.id,
             'employee_id': self.employee.id,
             'request_date_from': '2021-09-11',
             'request_date_to': '2021-09-11',
@@ -528,7 +528,7 @@ class TestFrenchLeaves(TransactionCase):
         self.time_off_type.requires_allocation = True
         self.env['hr.leave.allocation'].with_company(self.company).create({
             'name': 'Paid Time Off for flexible employee',
-            'work_entry_type_id': self.time_off_type.id,
+            'time_type_id': self.time_off_type.id,
             'employee_id': self.employee.id,
             'number_of_days': 5,
             'date_from': '2026-09-01',
@@ -536,7 +536,7 @@ class TestFrenchLeaves(TransactionCase):
 
         leave = self.env['hr.leave'].with_company(self.company).create({
             'name': 'Paid Time Off',
-            'work_entry_type_id': self.time_off_type.id,
+            'time_type_id': self.time_off_type.id,
             'employee_id': self.employee.id,
             'request_date_from': '2026-09-07',
             'request_date_to': '2026-09-07',
@@ -584,7 +584,7 @@ class TestFrenchLeaves(TransactionCase):
 
         leave = self.env['hr.leave'].create({
             'name': 'Test leave',
-            'work_entry_type_id': self.time_off_type.id,
+            'time_type_id': self.time_off_type.id,
             'employee_id': self.employee.id,
             'request_date_from': '2024-12-23',
             'request_date_to': '2024-12-25',

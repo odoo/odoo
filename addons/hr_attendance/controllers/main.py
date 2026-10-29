@@ -49,7 +49,7 @@ class HrAttendance(http.Controller):
         """
         response = {}
         if employee:
-            attendance_fields = ['check_in', 'check_out', 'worked_hours', 'work_entry_type_id', 'wet_color', 'wet_display_code']
+            attendance_fields = ['check_in', 'check_out', 'worked_hours', 'time_type_id', 'time_type_color', 'time_type_display_code']
             if include_attendance_details:
                 attendance_fields += [
                     'break_duration',

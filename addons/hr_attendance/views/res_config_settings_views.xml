@@ -58,9 +58,9 @@
                             help="If enabled, employees can record their total break duration after checking out.">
                             <field name="attendance_break_management"/>
                         </setting>
-                        <setting string="Attendance Work Entry Type" company_dependent="1"
-                                 help="Default work entry type assigned to attendance records. Used by the time rule engine.">
-                            <field name="attendance_work_entry_type_id" options="{'no_create': True}"/>
+                        <setting string="Attendance Time Type" company_dependent="1"
+                                 help="Default time type assigned to attendance records. Used by the time rule engine.">
+                            <field name="attendance_time_type_id" options="{'no_create': True}"/>
                         </setting>
                     </block>
                     <block title="Kiosk Settings">

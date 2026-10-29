@@ -19,9 +19,9 @@
                             <div id="no_limit_label" class="oe_read_only" invisible="date_to">No limit</div>
                         </div>
                         <field name="accrual_plan_id" placeholder="Regular allocation"/>
-                        <field name="work_entry_type_id" widget="many2one_work_entry_type"
+                        <field name="time_type_id" widget="many2one_time_type"
                             domain="[
-                                ('id','in', allowed_work_entry_type_ids),
+                                ('id','in', allowed_time_type_ids),
                             ]"/>
                         <div class="o_td_label">
                             <label for="duration"/>

@@ -73,11 +73,11 @@ export class TimeOffCalendarSidePanel extends CalendarSidePanel {
         }
         const promises = [];
         for (const section of this.props.model.filterSections) {
-            if (section.fieldName !== "work_entry_type_id") {
+            if (section.fieldName !== "time_type_id") {
                 continue;
             }
             promises.push(
-                this.orm.call("hr.work.entry.type", "get_allocation_data_request", [], {
+                this.orm.call("hr.time.type", "get_allocation_data_request", [], {
                     context: { from_dashboard: true },
                 })
             );

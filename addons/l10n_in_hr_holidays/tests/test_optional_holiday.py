@@ -15,7 +15,7 @@ class TestOptionalHoliday(TestHrHolidaysCommon):
         cls.company.country_id = cls.env.ref('base.in').id
         cls.env.user.tz = 'Asia/Kolkata'
 
-        cls.work_entry_type = cls.env['hr.work.entry.type'].create({
+        cls.time_type = cls.env['hr.time.type'].create({
             'name': 'Indian Leave Type',
             'code': 'Indian Leave Type',
             'requires_allocation': False,
@@ -32,13 +32,13 @@ class TestOptionalHoliday(TestHrHolidaysCommon):
 
     def test_optional_holiday_valid_leave_request(self):
         with Form(self.env['hr.leave'].with_context(default_employee_id=self.employee_emp_id), view="l10n_in_hr_holidays.hr_leave_view_form_inherit") as leave_form:
-            leave_form.work_entry_type_id = self.work_entry_type
+            leave_form.time_type_id = self.time_type
             leave_form.request_date_from = '2025-01-02'
             leave_form.request_date_to = '2025-01-02'
 
     def test_optional_holiday_invalid_leave_request(self):
         with self.assertRaises(ValidationError):
             with Form(self.env['hr.leave'].with_context(default_employee_id=self.employee_hruser_id), view="l10n_in_hr_holidays.hr_leave_view_form_inherit") as leave_form:
-                leave_form.work_entry_type_id = self.work_entry_type
+                leave_form.time_type_id = self.time_type
                 leave_form.request_date_from = '2025-01-03'
                 leave_form.request_date_to = '2025-01-03'

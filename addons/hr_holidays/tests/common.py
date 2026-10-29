@@ -61,9 +61,9 @@ class TestHrHolidaysCommon(common.TransactionCase):
         # For example, the tour 'time_off_request_calendar_view' would succeed (false positive) without this leave type.
         # However, the tour won't create a time-off request (as expected)because no time-off type is available to be selected on the leave
         # This would cause the test case that uses the tour to fail.
-        cls.env['hr.work.entry.type'].create({
-            'name': 'Test Work Entry Type',
-            'code': 'Test Work Entry Type',
+        cls.env['hr.time.type'].create({
+            'name': 'Test Time Type',
+            'code': 'Test Time Type',
             'requires_allocation': False,
             'request_unit': 'day',
             'unit_of_measure': 'day',
@@ -138,36 +138,36 @@ class TestHrHolidaysCommon(common.TransactionCase):
     def _assert_allocation_balance(self, allocation, expected_duration=None, expected_remaining_leaves=None,
             target_date=None, msg=None, digits=3):
         """ Assert `_get_allocation_data` returns the specified `expected_duration` and `expected_remaining_leaves`
-            for the work entry type of the given `allocation` at the given `target_date`
-            :param expected_duration: expressed in `allocation.work_entry_type_id.unit_of_measure`
+            for the time type of the given `allocation` at the given `target_date`
+            :param expected_duration: expressed in `allocation.time_type_id.unit_of_measure`
             :param target_date: default is today
         """
-        return self._assert_work_entry_type_allocations_balance(
-            allocation.work_entry_type_id, allocation.employee_id, expected_duration, expected_remaining_leaves, target_date, msg, digits)
+        return self._assert_time_type_allocations_balance(
+            allocation.time_type_id, allocation.employee_id, expected_duration, expected_remaining_leaves, target_date, msg, digits)
 
-    def _assert_work_entry_type_allocations_balance(self, work_entry_type, employee, expected_duration=None, expected_remaining_leaves=None,
+    def _assert_time_type_allocations_balance(self, time_type, employee, expected_duration=None, expected_remaining_leaves=None,
             target_date=None, msg=None, digits=3):
         """ Assert `_get_allocation_data` returns the specified `expected_duration` and `expected_remaining_leaves`
-            for the given `work_entry_type`
-            :param expected_duration: expressed in `allocation.work_entry_type_id.unit_of_measure`
+            for the given `time_type`
+            :param expected_duration: expressed in `allocation.time_type_id.unit_of_measure`
             :param target_date: default is today
         """
-        work_entry_type_data = work_entry_type.get_allocation_data(employee, target_date)
-        remaining_leaves = work_entry_type_data[employee][0][1]['remaining_leaves']
+        time_type_data = time_type.get_allocation_data(employee, target_date)
+        remaining_leaves = time_type_data[employee][0][1]['remaining_leaves']
 
         modified_msg = f'Error on {target_date or fields.Date.today()}' + (f' - {msg}' if msg else '')
         if expected_duration:
-            leaves_taken = work_entry_type_data[employee][0][1]['leaves_taken']
+            leaves_taken = time_type_data[employee][0][1]['leaves_taken']
             allocation_value = remaining_leaves + leaves_taken
             self.assertAlmostEqual(allocation_value, expected_duration, places=digits, msg=modified_msg)
         if expected_remaining_leaves:
             self.assertAlmostEqual(remaining_leaves, expected_remaining_leaves, places=digits, msg=modified_msg)
 
-    def _create_leave(self, employee, work_entry_type, date_from, date_to, hour_from=False, hour_to=False, validate=False, user=None, additionnal_ctx={}):
+    def _create_leave(self, employee, time_type, date_from, date_to, hour_from=False, hour_to=False, validate=False, user=None, additionnal_ctx={}):
         leave = self.env['hr.leave'].with_context(tracking_disable=True, **additionnal_ctx).with_user(user or self.env.user).create({
             'name': 'Leave',
             'employee_id': employee.id,
-            'work_entry_type_id': work_entry_type.id,
+            'time_type_id': time_type.id,
             'request_date_from': date_from,
             'request_date_to': date_to,
             'request_hour_from': hour_from,
@@ -177,7 +177,7 @@ class TestHrHolidaysCommon(common.TransactionCase):
             leave.action_approve()
         return leave
 
-    def _create_form_test_accrual_allocation(self, work_entry_type, date_from, employee, accrual_plan, date_to=None, creator_user=None, number_of_days=None, skip_auto_approve=False):
+    def _create_form_test_accrual_allocation(self, time_type, date_from, employee, accrual_plan, date_to=None, creator_user=None, number_of_days=None, skip_auto_approve=False):
         allocation = self.env['hr.leave.allocation'].with_context(tracking_disable=True)
         if creator_user:
             allocation = allocation.with_user(creator_user)
@@ -187,7 +187,7 @@ class TestHrHolidaysCommon(common.TransactionCase):
             form.name = 'Test accrual allocation'
             form.accrual_plan_id = accrual_plan
             form.employee_id = employee
-            form.work_entry_type_id = work_entry_type
+            form.time_type_id = time_type
             form.date_from = date_from
             if date_to:
                 form.date_to = date_to
@@ -195,16 +195,16 @@ class TestHrHolidaysCommon(common.TransactionCase):
                 form.number_of_days = number_of_days
         return form.record
 
-    def _create_form_test_regular_allocation(self, work_entry_type, date_from, employee, duration, date_to=None, creator_user=None):
+    def _create_form_test_regular_allocation(self, time_type, date_from, employee, duration, date_to=None, creator_user=None):
         allocation = self.env['hr.leave.allocation']
         if creator_user:
             allocation = allocation.with_user(creator_user)
         with Form(allocation, 'hr_holidays.hr_leave_allocation_view_form_manager') as form:
             form.name = 'Test regular allocation'
             form.employee_id = employee
-            form.work_entry_type_id = work_entry_type
+            form.time_type_id = time_type
             form.date_from = date_from
-            if not work_entry_type.unit_of_measure or work_entry_type.unit_of_measure == 'day':
+            if not time_type.unit_of_measure or time_type.unit_of_measure == 'day':
                 form.number_of_days_display = duration
             else:
                 form.number_of_hours_display = duration
@@ -233,7 +233,7 @@ class TestHolidayContract(TransactionCase):
             'name': 'Standard 40h/week',
         })
 
-        cls.work_entry_type = cls.env['hr.work.entry.type'].create({
+        cls.time_type = cls.env['hr.time.type'].create({
             'name': 'Legal Leaves',
             'code': 'Legal Leaves',
             'count_as': 'absence',
@@ -299,7 +299,7 @@ class TestHolidayContract(TransactionCase):
         return cls.env['hr.leave'].create({
             'name': name or 'Holiday!!!',
             'employee_id': employee_id or cls.richard_emp.id,
-            'work_entry_type_id': cls.work_entry_type.id,
+            'time_type_id': cls.time_type.id,
             'request_date_to': date_to or Datetime.today(),
             'request_date_from': date_from or Datetime.today(),
         })

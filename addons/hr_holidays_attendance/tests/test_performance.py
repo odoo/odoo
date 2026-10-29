@@ -53,14 +53,14 @@ class TestHrTimeRulePerformance(TransactionCase):
         # silence all pre-existing time rules
         cls.env['hr.time.rule'].search([]).write({'active': False})
 
-        cls.overtime_type = cls.env.ref('hr_work_entry.generic_work_entry_type_overtime')
-        cls.att_type = cls.company._get_default_attendance_work_entry_type()
+        cls.overtime_type = cls.env.ref('hr_work_entry.generic_time_type_overtime')
+        cls.att_type = cls.company._get_default_attendance_time_type()
 
         cls.time_rule = cls.env['hr.time.rule'].create({
             'name': 'Daily schedule overtime',
             'working_hours_mode': 'schedule_day',
-            'work_entry_type_id': cls.overtime_type.id,
-            'condition_work_entry_type_ids': [cls.att_type.id],
+            'time_type_id': cls.overtime_type.id,
+            'condition_time_type_ids': [cls.att_type.id],
         })
 
         employees = cls.env['hr.employee'].create([{

@@ -10,12 +10,12 @@ class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
     def _get_calendar_attendance_domain(self):
-        """Exclude the schedule attendances whose work entry type counts as an absence."""
+        """Exclude the schedule attendances whose time type counts as an absence."""
         return Domain.AND([
             super()._get_calendar_attendance_domain(),
             Domain.OR([
-                Domain("work_entry_type_id", "=", False),
-                Domain("work_entry_type_id.count_as", "!=", "absence")
+                Domain("time_type_id", "=", False),
+                Domain("time_type_id.count_as", "!=", "absence")
             ]),
         ])
 

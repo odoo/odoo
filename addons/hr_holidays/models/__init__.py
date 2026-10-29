@@ -12,7 +12,7 @@ from . import hr_department
 from . import hr_leave_display_name_mixin
 from . import hr_leave
 from . import hr_leave_allocation
-from . import hr_work_entry_type
+from . import hr_time_type
 from . import hr_leave_accrual_plan_level
 from . import hr_leave_accrual_plan
 from . import hr_leave_mandatory_day

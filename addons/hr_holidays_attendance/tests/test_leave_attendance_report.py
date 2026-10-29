@@ -26,7 +26,7 @@ class TestLeaveAttendanceReport(TestHrHolidaysCommon):
             'date_to': datetime(tuesday.year, tuesday.month, tuesday.day, 18, 0),
             'resource_id': False,
         })
-        work_entry_type = self.env['hr.work.entry.type'].create({
+        time_type = self.env['hr.time.type'].create({
             'code': 'LEAVE',
             'name': 'Ignore Public Holiday Leave',
             'count_as': 'absence',
@@ -35,7 +35,7 @@ class TestLeaveAttendanceReport(TestHrHolidaysCommon):
         })
         leave = self.env['hr.leave'].create({
             'name': 'Some leave',
-            'work_entry_type_id': work_entry_type.id,
+            'time_type_id': time_type.id,
             'employee_id': emp.id,
             'request_date_from': monday,
             'request_date_to': wednesday,
@@ -91,11 +91,11 @@ class TestLeaveAttendanceReport(TestHrHolidaysCommon):
                 'resource_id': False,
             })
 
-        def approve_leave(work_entry_type, date_from, date_to):
+        def approve_leave(time_type, date_from, date_to):
             self.env['hr.leave'].create({
                 'name': 'Leave',
                 'employee_id': emp.id,
-                'work_entry_type_id': work_entry_type.id,
+                'time_type_id': time_type.id,
                 'request_date_from': date_from,
                 'request_date_to': date_to,
             }).action_approve()
@@ -104,14 +104,14 @@ class TestLeaveAttendanceReport(TestHrHolidaysCommon):
             return Report.search([
                 ('employee_id', '=', emp.id), ('date', '=', d)])
 
-        leave_type_excl = self.env['hr.work.entry.type'].create({
+        leave_type_excl = self.env['hr.time.type'].create({
             'name': 'Leave excluding public holidays',
             'code': 'LEAVE_EXCL',
             'count_as': 'absence',
             'requires_allocation': False,
             'include_public_holidays_in_duration': False,
         })
-        leave_type_incl = self.env['hr.work.entry.type'].create({
+        leave_type_incl = self.env['hr.time.type'].create({
             'name': 'Leave including public holidays',
             'code': 'LEAVE_INCL',
             'count_as': 'absence',
@@ -388,7 +388,7 @@ class TestLeaveAttendanceReport(TestHrHolidaysCommon):
         })
         emp.contract_date_start = monday - timedelta(days=7)
         emp.resource_calendar_id = calendar.id
-        work_entry_type = self.env['hr.work.entry.type'].create({
+        time_type = self.env['hr.time.type'].create({
             'name': 'Leave on a variable schedule',
             'code': 'LEAVE_VARIABLE',
             'count_as': 'absence',
@@ -398,7 +398,7 @@ class TestLeaveAttendanceReport(TestHrHolidaysCommon):
         leave = self.env['hr.leave'].create({
             'name': 'Leave',
             'employee_id': emp.id,
-            'work_entry_type_id': work_entry_type.id,
+            'time_type_id': time_type.id,
             'request_date_from': monday,
             'request_date_to': friday,
         })
@@ -472,7 +472,7 @@ class TestLeaveAttendanceReport(TestHrHolidaysCommon):
             'date_to': datetime(tuesday.year, tuesday.month, tuesday.day, 18, 0),
             'resource_id': False,
         })
-        leave_type = self.env['hr.work.entry.type'].create({
+        leave_type = self.env['hr.time.type'].create({
             'name': 'Count Public Holiday Leave',
             'code': 'LEAVE',
             'count_as': 'absence',
@@ -481,7 +481,7 @@ class TestLeaveAttendanceReport(TestHrHolidaysCommon):
         })
         leave = self.env['hr.leave'].create({
             'name': 'Some leave',
-            'work_entry_type_id': leave_type.id,
+            'time_type_id': leave_type.id,
             'employee_id': emp.id,
             'request_date_from': monday,
             'request_date_to': wednesday,
@@ -513,7 +513,7 @@ class TestLeaveAttendanceReport(TestHrHolidaysCommon):
             'company_id': self.env.company.id,
             'resource_calendar_id': self.employee_emp.resource_calendar_id.id
         })
-        homework_type = self.env['hr.work.entry.type'].create({
+        homework_type = self.env['hr.time.type'].create({
             'name': 'Homework Time',
             'code': 'Test homework Time',
             'count_as': 'working_time',
@@ -522,7 +522,7 @@ class TestLeaveAttendanceReport(TestHrHolidaysCommon):
         with freeze_time('2025-09-01 10:00:00'):
             leave = self.env['hr.leave'].create({
                 'name': 'Some leave',
-                'work_entry_type_id': homework_type.id,
+                'time_type_id': homework_type.id,
                 'employee_id': employee.id,
                 'request_date_from': '2025-09-01',
                 'request_date_to': '2025-09-01',

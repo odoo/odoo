@@ -455,7 +455,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
 
         self.env = self.env(context=dict(self.env.context, allowed_company_ids=self.test_company.ids))
 
-        hr_work_entry_type_with_ts = self.env['hr.work.entry.type'].create({
+        hr_time_type_with_ts = self.env['hr.time.type'].create({
             'name': 'Leave Type with timesheet generation',
             'code': 'Leave Type with timesheet generation',
             'requires_allocation': False,
@@ -469,7 +469,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         holiday = HrLeave.with_user(test_user).create({
             'name': 'Leave 1',
             'employee_id': test_user.employee_id.id,
-            'work_entry_type_id': hr_work_entry_type_with_ts.id,
+            'time_type_id': hr_time_type_with_ts.id,
             'request_date_from': hr_leave_start_datetime,
             'request_date_to': hr_leave_end_datetime,
         })
@@ -512,7 +512,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         holiday2 = HrLeave.with_user(test_user).create({
             'name': 'Leave 2',
             'employee_id': test_user.employee_id.id,
-            'work_entry_type_id': hr_work_entry_type_with_ts.id,
+            'time_type_id': hr_time_type_with_ts.id,
             'request_date_from': hr_leave_start_datetime,
             'request_date_to': hr_leave_end_datetime,
         })
@@ -546,7 +546,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         holiday3 = HrLeave.with_user(test_user).create({
             'name': 'Leave 3',
             'employee_id': test_user.employee_id.id,
-            'work_entry_type_id': hr_work_entry_type_with_ts.id,
+            'time_type_id': hr_time_type_with_ts.id,
             'request_date_from': hr_leave_start_datetime,
             'request_date_to': hr_leave_end_datetime,
         })

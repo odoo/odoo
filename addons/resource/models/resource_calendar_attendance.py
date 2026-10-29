@@ -383,7 +383,7 @@ class ResourceCalendarAttendance(models.Model):
     def _is_work_period(self):
         """ Return whether this attendance counts as work time, e.g. for ``hours_per_week``
         and ``days_per_week``. Always ``True`` here; ``hr_work_entry`` returns ``False`` for
-        attendances whose work entry type counts as absence. """
+        attendances whose time type counts as absence. """
         self.ensure_one()
         return True
 

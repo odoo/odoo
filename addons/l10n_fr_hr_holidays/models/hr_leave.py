@@ -19,13 +19,13 @@ class HrLeave(models.Model):
         # - there is only one employee affected by the leave
         # - the company is french
         # - the employee has a working schedule different from the company's
-        # - the work_entry_type is the reference work_entry_type of that company
+        # - the time_type is the reference time_type of that company
         self.ensure_one()
         return self.employee_id and \
                self.company_id.country_id.code == 'FR' and \
                not self.resource_calendar_id._is_flexible() and \
                self.resource_calendar_id != self.company_id.resource_calendar_id and \
-               self.work_entry_type_id == self.company_id._get_fr_reference_work_entry_type()
+               self.time_type_id == self.company_id._get_fr_reference_time_type()
 
     def _get_fr_date_from_to(self, date_from, date_to):
         self.ensure_one()
@@ -36,7 +36,7 @@ class HrLeave(models.Model):
         if not (self.resource_calendar_id.attendance_ids):
             raise UserError(_("An employee can't take paid time off in a period without any work hours."))
 
-        if self.work_entry_type_request_unit != 'hour':
+        if self.time_type_request_unit != 'hour':
             # Use company's working schedule hours for the leave to avoid duration calculation issues.
             def adjust_date_range(date_from, date_to, from_period, to_period, attendance_ids, employee_id):
                 period_ids_from = attendance_ids._filter_by_date(date_from.date(), lambda a: a.day_period in from_period)
@@ -49,7 +49,7 @@ class HrLeave(models.Model):
                     date_to = self._to_utc(date_to, max_hour, employee_id)
                 return date_from, date_to
 
-            if self.work_entry_type_request_unit == 'half_day':
+            if self.time_type_request_unit == 'half_day':
                 from_period = ['morning'] if self.request_date_from_period == 'am' else ['afternoon']
                 to_period = ['morning'] if self.request_date_to_period == 'am' else ['afternoon']
             else:
@@ -58,7 +58,7 @@ class HrLeave(models.Model):
             attendance_ids = self.company_id.resource_calendar_id.attendance_ids | self.resource_calendar_id.attendance_ids
             date_from, date_to = adjust_date_range(date_from, date_to, from_period, to_period, attendance_ids, self.employee_id)
 
-        if self.work_entry_type_request_unit == 'half_day' and self.request_date_to_period == 'am':
+        if self.time_type_request_unit == 'half_day' and self.request_date_to_period == 'am':
             # In a case where we work from mon-wed and request a half day in the morning
             # we do not want to push date_to since the next work attendance is actually in the afternoon
             if self.resource_calendar_id.attendance_ids.filtered(lambda a: a.day_period in ('afternoon', 'full_day')):
@@ -102,7 +102,7 @@ class HrLeave(models.Model):
                 else:
                     leave.l10n_fr_date_to_changed = False
 
-    def _get_durations(self, check_work_entry_type=True, resource_calendar=None, additional_domain=None):
+    def _get_durations(self, check_time_type=True, resource_calendar=None, additional_domain=None):
         """
         In french time off laws, if an employee has a part time contract, when taking time off
         before one of his off day (compared to the company's calendar) it should also count the time
@@ -113,7 +113,7 @@ class HrLeave(models.Model):
         """
         if not resource_calendar:
             fr_leaves = self.filtered(lambda leave: leave._l10n_fr_leave_applies())
-            duration_by_leave_id = super(HrLeave, self - fr_leaves)._get_durations(check_work_entry_type=check_work_entry_type, resource_calendar=resource_calendar, additional_domain=additional_domain)
+            duration_by_leave_id = super(HrLeave, self - fr_leaves)._get_durations(check_time_type=check_time_type, resource_calendar=resource_calendar, additional_domain=additional_domain)
             fr_leaves_by_company = fr_leaves.grouped('company_id')
             if fr_leaves:
                 public_holidays = self.env['resource.calendar.leaves'].search([
@@ -123,7 +123,7 @@ class HrLeave(models.Model):
                     ('date_to', '>', min(fr_leaves.mapped('date_from')) - relativedelta(days=1)),
                 ])
             standard_duration = super(HrLeave, fr_leaves)._get_durations(
-                check_work_entry_type=check_work_entry_type,
+                check_time_type=check_time_type,
                 resource_calendar=resource_calendar,
                 additional_domain=additional_domain,
             )
@@ -154,12 +154,12 @@ class HrLeave(models.Model):
                     current = date_start.date()
                     end_date = extended_date_end.date()
                     legal_days = 0.0
-                    is_half_day_start = leave.work_entry_type_request_unit == 'half_day' and (
+                    is_half_day_start = leave.time_type_request_unit == 'half_day' and (
                             (leave.request_date_from == leave.request_date_to and leave.request_date_from_period == leave.request_date_to_period)
                             or (leave.request_date_from != leave.request_date_to and leave.request_date_from_period == 'pm')
                     )
                     is_half_day_end = (
-                            leave.work_entry_type_request_unit == 'half_day' and leave.request_date_to_period == 'am'
+                            leave.time_type_request_unit == 'half_day' and leave.request_date_to_period == 'am'
                             and not leave.l10n_fr_date_to_changed  # date_to was not extended -> employee works PM
                             and leave.request_date_from != leave.request_date_to  # same-day handled by is_half_day_start
                     )
@@ -178,4 +178,4 @@ class HrLeave(models.Model):
                     duration_by_leave_id[leave.id] = (legal_days, hours)
 
             return duration_by_leave_id
-        return super()._get_durations(check_work_entry_type=check_work_entry_type, resource_calendar=resource_calendar, additional_domain=additional_domain)
+        return super()._get_durations(check_time_type=check_time_type, resource_calendar=resource_calendar, additional_domain=additional_domain)

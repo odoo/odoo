@@ -17,7 +17,7 @@ class TestTimeOffOverviewMyDepartmentTour(HttpCaseWithUserDemo):
                 },
             )
 
-        leave_type = self.env["hr.work.entry.type"].create(
+        leave_type = self.env["hr.time.type"].create(
             {
                 "name": "Test Leave Type",
                 "code": "TEST_LEAVE",
@@ -29,7 +29,7 @@ class TestTimeOffOverviewMyDepartmentTour(HttpCaseWithUserDemo):
             {
                 "name": "Test Leave",
                 "employee_id": self.user_demo.employee_id.id,
-                "work_entry_type_id": leave_type.id,
+                "time_type_id": leave_type.id,
             },
         )
 

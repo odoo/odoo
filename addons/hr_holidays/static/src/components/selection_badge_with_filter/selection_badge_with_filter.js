@@ -9,7 +9,7 @@ export class HrHolidaysBadgeSelectionWithFilterField extends BadgesSelectionFiel
     get options() {
         const { name, record } = this.props;
         const forceFullDuration = record.context?.force_full_duration;
-        const isHalfDay = record.data.work_entry_type_request_unit === "half_day";
+        const isHalfDay = record.data.time_type_request_unit === "half_day";
         const allOptions = super.options;
         if (forceFullDuration && name === "request_duration" && !isHalfDay) {
             return allOptions.filter(([value]) => value === "full");

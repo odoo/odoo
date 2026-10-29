@@ -131,7 +131,7 @@ export class LeaveStatsComponent extends Component {
             return;
         }
         const allocation_data = await this.orm.call(
-            "hr.work.entry.type",
+            "hr.time.type",
             "get_allocation_data_request",
             [this.state.date_from],
             { context: { employee_id: employee.id }, same_year_only: true }

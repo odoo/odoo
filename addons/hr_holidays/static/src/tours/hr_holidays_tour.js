@@ -25,7 +25,7 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
             run: "click",
         },
         {
-            trigger: 'div[name="work_entry_type_id"] input',
+            trigger: 'div[name="time_type_id"] input',
             content: _t("Let's try to create a sick time off, select it in the list"),
             run: "click",
         },

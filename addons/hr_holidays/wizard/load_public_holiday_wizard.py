@@ -65,13 +65,13 @@ class LoadPublicHolidaysWizard(models.TransientModel):
 
     def action_add_public_holidays(self):
         self.ensure_one()
-        if self.line_ids.filtered(lambda line: not line.work_entry_type_id):
+        if self.line_ids.filtered(lambda line: not line.time_type_id):
             return {
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
                 'params': {
                     'type': 'danger',
-                    'message': self.env._("Please select a work entry type for all public holidays before adding them."),
+                    'message': self.env._("Please select a time type for all public holidays before adding them."),
                 },
             }
         start_date = date(self.year, 1, 1)
@@ -160,12 +160,12 @@ class LoadPublicHolidaysWizard(models.TransientModel):
                 'date_to': convert_timezone(datetime.combine(line.start_date, time.max), UTC, company_tz),
                 'company_id': company.id,
             }
-            work_entry_type = line.work_entry_type_id
-            if work_entry_type:
+            time_type = line.time_type_id
+            if time_type:
                 create_values.update({
-                    'work_entry_type_id': work_entry_type.id,
-                    'count_as': work_entry_type.count_as,
-                    'elligible_for_accrual_rate': work_entry_type.elligible_for_accrual_rate,
+                    'time_type_id': time_type.id,
+                    'count_as': time_type.count_as,
+                    'elligible_for_accrual_rate': time_type.elligible_for_accrual_rate,
                 })
             values_by_company[company.id].append(create_values)
         return values_by_company

@@ -59,7 +59,7 @@ export class TimeOffCardPopover extends Component {
                   form_view_ref: "hr_holidays.hr_leave_allocation_view_form",
               };
         const domain = [
-            ["work_entry_type_id", "=", timeOffType],
+            ["time_type_id", "=", timeOffType],
             ["employee_company_id", "=", employeeCompany],
             "|",
             ["date_to", "=", false],
@@ -80,7 +80,7 @@ export class TimeOffCardPopover extends Component {
         const name = "My Time Off";
         const domain = [
             ["state", "in", stateList],
-            ["work_entry_type_id", "=", timeOffType],
+            ["time_type_id", "=", timeOffType],
             employeeId ? ["employee_id", "=", employeeId] : ["user_id", "=", user.userId],
         ];
         const context = isInHolidaysUserGroup

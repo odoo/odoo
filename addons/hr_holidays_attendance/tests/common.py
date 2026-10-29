@@ -36,7 +36,7 @@ class HrWorkEntryAttendanceCommon(TransactionCase):
 
         cls.version = cls.employee.version_id
 
-        cls.work_entry_type_leave = cls.env['hr.work.entry.type'].create({
+        cls.time_type_leave = cls.env['hr.time.type'].create({
             'name': 'Time Off',
             'count_as': 'absence',
             'code': 'LEAVETEST100'

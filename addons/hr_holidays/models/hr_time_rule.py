@@ -22,8 +22,8 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
 class HrTimeRule(models.Model):
     _inherit = 'hr.time.rule'
 
-    work_entry_type_id = fields.Many2one(
-        domain="[('id', 'in', country_work_entry_type_ids), ('requires_allocation', '=', False)]",
+    time_type_id = fields.Many2one(
+        domain="[('id', 'in', country_time_type_ids), ('requires_allocation', '=', False)]",
     )
 
     leave_compensation_rate = fields.Float(
@@ -32,9 +32,9 @@ class HrTimeRule(models.Model):
         help="Leave allocated or taken at this rate of the excess or deficit. 100% = 1:1.",
     )
     allocation_type_id = fields.Many2one(
-        'hr.work.entry.type',
+        'hr.time.type',
         string="Allocate to",
-        domain="[('requires_allocation', '=', True), ('time_off_selectable', '=', True), ('id', 'in', country_work_entry_type_ids)]",
+        domain="[('requires_allocation', '=', True), ('time_off_selectable', '=', True), ('id', 'in', country_time_type_ids)]",
     )
 
     def _resolve_output_intervals(self, intervals):
@@ -74,7 +74,7 @@ class HrTimeRule(models.Model):
         dt_local = date_to.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
         return {
             'employee_id': employee.id,
-            'work_entry_type_id': rule.work_entry_type_id.id,
+            'time_type_id': rule.time_type_id.id,
             'date_from': date_from,
             'date_to': date_to,
             'request_date_from': df_local.date(),
@@ -125,7 +125,7 @@ class HrTimeRule(models.Model):
         for (employee, alloc_type), alloc_days in excess_by_key.items():
             allocation = self.env['hr.leave.allocation'].sudo().search([
                 ('employee_id', '=', employee.id),
-                ('work_entry_type_id', '=', alloc_type.id),
+                ('time_type_id', '=', alloc_type.id),
                 *search_domain,
             ], limit=1)
             if allocation:
@@ -134,7 +134,7 @@ class HrTimeRule(models.Model):
             else:
                 alloc_create_vals.append({
                     'employee_id': employee.id,
-                    'work_entry_type_id': alloc_type.id,
+                    'time_type_id': alloc_type.id,
                     'number_of_days': alloc_days,
                     'date_to': False,
                     'state': 'confirm',
@@ -158,7 +158,7 @@ class HrTimeRule(models.Model):
         for (employee, alloc_type), deduct in deficit_by_key.items():
             allocation = self.env['hr.leave.allocation'].sudo().search([
                 ('employee_id', '=', employee.id),
-                ('work_entry_type_id', '=', alloc_type.id),
+                ('time_type_id', '=', alloc_type.id),
                 *search_domain,
             ], limit=1)
             if allocation:
@@ -197,7 +197,7 @@ class HrTimeRule(models.Model):
             for source, intervals in by_source.items():
                 by_period = defaultdict(list)
                 for iv_start, iv_end, rule in intervals:
-                    if not rule.work_entry_type_id or iv_end <= iv_start:
+                    if not rule.time_type_id or iv_end <= iv_start:
                         continue
                     if rule.quantity_period == 'week':
                         ws = int(rule.week_start or '0')
@@ -226,7 +226,7 @@ class HrTimeRule(models.Model):
         for (employee, alloc_type), deduct in total_deduct.items():
             allocation = self.env['hr.leave.allocation'].sudo().search([
                 ('employee_id', '=', employee.id),
-                ('work_entry_type_id', '=', alloc_type.id),
+                ('time_type_id', '=', alloc_type.id),
                 *search_domain,
             ], limit=1)
             available = allocation.number_of_days if allocation else 0.0
@@ -297,10 +297,10 @@ class HrTimeRule(models.Model):
         for allocation, days in by_alloc.items():
             if not allocation.exists() or not days:
                 continue
-            wet = allocation.work_entry_type_id
-            allowed_floor = -wet.max_allowed_negative if wet.allows_negative else 0.0
+            time_type = allocation.time_type_id
+            allowed_floor = -time_type.max_allowed_negative if time_type.allows_negative else 0.0
             # the balance is in the unit of the type, the credits in days
-            hours_per_day = (allocation._get_employee_hours_per_day() or 8.0) if wet.unit_of_measure == 'hour' else 1.0
+            hours_per_day = (allocation._get_employee_hours_per_day() or 8.0) if time_type.unit_of_measure == 'hour' else 1.0
             remaining_after = allocation.virtual_remaining_leaves / hours_per_day - days
             allowed_floor /= hours_per_day
             if remaining_after < allowed_floor:
@@ -315,7 +315,7 @@ class HrTimeRule(models.Model):
                         "or adjust the allocation manually.",
                         record=trigger_desc,
                         employee=employee.name,
-                        leave_type=wet.name,
+                        leave_type=time_type.name,
                         days=days,
                         taken=days - (remaining_after - allowed_floor),
                         manager=manager_name,
@@ -328,7 +328,7 @@ class HrTimeRule(models.Model):
                         "Please ask %(manager)s to refuse or reduce those taken leaves first, "
                         "or adjust the allocation manually.",
                         employee=employee.name,
-                        leave_type=wet.name,
+                        leave_type=time_type.name,
                         days=days,
                         taken=days - (remaining_after - allowed_floor),
                         after=remaining_after,

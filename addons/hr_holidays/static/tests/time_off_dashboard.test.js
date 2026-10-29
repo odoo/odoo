@@ -28,31 +28,31 @@ class HrLeave extends models.Model {
                       mode="year"
             >
                 <field name="name"/>
-                <field name="work_entry_type_id" filters="1" invisible="1" color="color"/>
+                <field name="time_type_id" filters="1" invisible="1" color="color"/>
                 <field name="state" invisible="1"/>
             </calendar>
         `,
     };
 
-    color = fields.Integer({ related: "work_entry_type_id.color" });
+    color = fields.Integer({ related: "time_type_id.color" });
     date_from = fields.Datetime();
     date_to = fields.Datetime();
     department_id = fields.Many2one({ relation: "hr.department" });
     employee_id = fields.Many2one({ relation: "hr.employee" });
-    work_entry_type_id = fields.Many2one({ relation: "hr.work.entry.type" });
+    time_type_id = fields.Many2one({ relation: "hr.time.type" });
     holiday_type = fields.Char();
     name = fields.Char();
     number_of_days = fields.Integer();
     state = fields.Char();
 }
 
-class HrWorkEntryType extends models.Model {
+class HrTimeType extends models.Model {
     name = fields.Char();
     color = fields.Integer();
 }
 
 defineHrHolidaysModels();
-defineModels([HrLeave, HrWorkEntryType]);
+defineModels([HrLeave, HrTimeType]);
 
 onRpc("hr.employee", "get_time_off_dashboard_data", () => ({
     allocation_data: {},

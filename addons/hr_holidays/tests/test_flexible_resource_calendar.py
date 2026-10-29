@@ -58,7 +58,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
             'date_to': datetime(2025, 8, 1, 17),
         }])
 
-        custom_leave, half_day_leave = self.env['hr.work.entry.type'].create([{
+        custom_leave, half_day_leave = self.env['hr.time.type'].create([{
             'name': 'Custom Leave',
             'count_as': 'absence',
             'code': 'Custom Leave',
@@ -76,7 +76,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
 
         self.env['hr.leave'].create([{
             'name': 'Half 1',
-            'work_entry_type_id': half_day_leave.id,
+            'time_type_id': half_day_leave.id,
             'employee_id': self.flex_employee.id,
             'request_date_from': date(2025, 7, 28),
             'request_date_to': date(2025, 7, 28),
@@ -84,7 +84,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
             'request_date_to_period': 'am',
         }, {
             'name': 'Half 2',
-            'work_entry_type_id': half_day_leave.id,
+            'time_type_id': half_day_leave.id,
             'employee_id': self.flex_employee.id,
             'request_date_from': date(2025, 7, 30),
             'request_date_to': date(2025, 7, 30),
@@ -92,7 +92,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
             'request_date_to_period': 'pm',
         }, {
             'name': 'Custom',
-            'work_entry_type_id': custom_leave.id,
+            'time_type_id': custom_leave.id,
             'employee_id': self.flex_employee.id,
             'request_date_from': date(2025, 7, 29),
             'request_date_to': date(2025, 7, 29),
@@ -100,7 +100,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
             'request_hour_to': 16.0,
         }, {
             'name': 'Half 1',
-            'work_entry_type_id': half_day_leave.id,
+            'time_type_id': half_day_leave.id,
             'employee_id': self.fully_flex_employee.id,
             'request_date_from': date(2025, 7, 28),
             'request_date_to': date(2025, 7, 28),
@@ -108,7 +108,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
             'request_date_to_period': 'am',
         }, {
             'name': 'Half 2',
-            'work_entry_type_id': half_day_leave.id,
+            'time_type_id': half_day_leave.id,
             'employee_id': self.fully_flex_employee.id,
             'request_date_from': date(2025, 7, 30),
             'request_date_to': date(2025, 7, 30),
@@ -116,7 +116,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
             'request_date_to_period': 'pm',
         }, {
             'name': 'Custom',
-            'work_entry_type_id': custom_leave.id,
+            'time_type_id': custom_leave.id,
             'employee_id': self.fully_flex_employee.id,
             'request_date_from': date(2025, 7, 29),
             'request_date_to': date(2025, 7, 29),
@@ -191,7 +191,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
         """
         Test that creating a leave for a fully flexible employee works as expected.
         """
-        test_leave_type = self.env['hr.work.entry.type'].create({
+        test_leave_type = self.env['hr.time.type'].create({
             'name': 'Test Leave Type',
             'count_as': 'absence',
             'code': "FLEXITEST",
@@ -202,7 +202,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
 
         self.env['hr.leave'].create({
             'name': 'Test Leave',
-            'work_entry_type_id': test_leave_type.id,
+            'time_type_id': test_leave_type.id,
             'employee_id': self.fully_flex_employee.id,
             'request_date_from': date(2025, 2, 4),
             'request_date_to': date(2025, 2, 6),
@@ -228,7 +228,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
         )
 
     def test_flexible_resource_work_intervals_with_public_holiday(self):
-        leave_type = self.env['hr.work.entry.type'].create({
+        leave_type = self.env['hr.time.type'].create({
             'name': 'Test Hourly Time Off',
             'count_as': 'absence',
             'requires_allocation': False,
@@ -241,13 +241,13 @@ class TestFlexibleResourceCalendar(TransactionCase):
             'calendar_id': False,
             'date_from': datetime(2026, 8, 14, 0),
             'date_to': datetime(2026, 8, 15, 0),
-            'work_entry_type_id': leave_type.id,
+            'time_type_id': leave_type.id,
         })
 
         # Leave is automatically approved during creation.
         self.env['hr.leave'].with_context(mail_create_nolog=True, mail_notrack=True).create({
             'name': 'Test Hourly Time Off',
-            'work_entry_type_id': leave_type.id,
+            'time_type_id': leave_type.id,
             'employee_id': self.flex_employee.id,
             'request_date_from': date(2026, 8, 10),
             'request_date_to': date(2026, 8, 15),

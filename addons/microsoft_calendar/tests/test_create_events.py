@@ -588,7 +588,7 @@ class TestCreateEvents(TestCommon):
             'user_id': self.user_employee.id,
             'department_id': self.rd_dept.id,
         })
-        self.hr_work_entry_type = self.env['hr.work.entry.type'].with_user(self.user_hrmanager).create({  # noqa: OLS03001
+        self.hr_time_type = self.env['hr.time.type'].with_user(self.user_hrmanager).create({  # noqa: OLS03001
             'name': 'Time Off Type',
             'code': 'Time Off Type',
             'requires_allocation': False,
@@ -598,7 +598,7 @@ class TestCreateEvents(TestCommon):
         self.holiday = self.env['hr.leave'].with_user(self.user_employee).create({
             'name': 'Time Off Employee',
             'employee_id': self.employee_emp.id,
-            'work_entry_type_id': self.hr_work_entry_type.id,
+            'time_type_id': self.hr_time_type.id,
             'request_date_from': datetime(2020, 1, 15),
             'request_date_to': datetime(2020, 1, 15),
         })

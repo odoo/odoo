@@ -8,23 +8,23 @@ import {
 import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
 
 //List View Widget
-export class WorkEntryTypeBadgeField extends Component {
-    static template = "hr_work_entry.WorkEntryTypeBadgeField";
+export class TimeTypeBadgeField extends Component {
+    static template = "hr_work_entry.TimeTypeBadgeField";
     props = useProps(standardFieldProps);
 }
 
-export const workEntryTypeBadgeField = {
-    component: WorkEntryTypeBadgeField,
+export const timeTypeBadgeField = {
+    component: TimeTypeBadgeField,
     fieldDependencies: [
         { name: "color", type: "integer" },
         { name: "display_code", type: "char" },
         { name: "display_name", type: "char" },
     ],
 };
-registry.category("fields").add("work_entry_type_badge", workEntryTypeBadgeField);
+registry.category("fields").add("time_type_badge", timeTypeBadgeField);
 
 //Form View M2O Widget
-export class WorkEntryTypeMany2One extends Many2One {
+export class TimeTypeMany2One extends Many2One {
     /**
      * @override
      */
@@ -52,10 +52,10 @@ export class WorkEntryTypeMany2One extends Many2One {
     }
 }
 
-export class Many2OneWorkEntryTypeField extends Component {
-    static template = "hr_work_entry.Many2OneWorkEntryTypeField";
+export class Many2OneTimeTypeField extends Component {
+    static template = "hr_work_entry.Many2OneTimeTypeField";
     static components = {
-        WorkEntryTypeMany2One,
+        TimeTypeMany2One,
     };
     props = useProps(many2OneFieldProps);
     get m2oProps() {
@@ -65,13 +65,13 @@ export class Many2OneWorkEntryTypeField extends Component {
         };
     }
 
-    get workEntryTypeData() {
+    get timeTypeData() {
         return this.props.record.data[this.props.name];
     }
 }
 
-export const many2OneWorkEntryTypeField = {
-    ...buildM2OFieldDescription(Many2OneWorkEntryTypeField),
+export const many2OneTimeTypeField = {
+    ...buildM2OFieldDescription(Many2OneTimeTypeField),
     relatedFields: [
         { name: "display_code", type: "char" },
         { name: "color", type: "char" },
@@ -79,4 +79,4 @@ export const many2OneWorkEntryTypeField = {
     ],
 };
 
-registry.category("fields").add("many2one_work_entry_type", many2OneWorkEntryTypeField);
+registry.category("fields").add("many2one_time_type", many2OneTimeTypeField);

@@ -6,24 +6,24 @@ from odoo import api, models, fields
 class ResourceCalendarLeaves(models.Model):
     _inherit = 'resource.calendar.leaves'
 
-    work_entry_type_id = fields.Many2one(
-        'hr.work.entry.type', 'Time Type',
-        domain="[('id', 'in', allowed_work_entry_type_ids)]",
-        compute="_compute_work_entry_type_id",
+    time_type_id = fields.Many2one(
+        'hr.time.type', 'Time Type',
+        domain="[('id', 'in', allowed_time_type_ids)]",
+        compute="_compute_time_type_id",
         store=True, readonly=False,
         groups="hr.group_hr_user")
-    allowed_work_entry_type_ids = fields.Many2many(
-        'hr.work.entry.type', compute='_compute_allowed_work_entry_type_ids')
+    allowed_time_type_ids = fields.Many2many(
+        'hr.time.type', compute='_compute_allowed_time_type_ids')
 
     @api.depends('calendar_id.company_id', 'company_id')
-    def _compute_work_entry_type_id(self):
+    def _compute_time_type_id(self):
         """Default the type of global leaves to the public holiday type (``006.00``).
 
         The type of the leave's country is used, else the generic public holiday type. Leaves
         of a resource keep their type (set from the time off by ``hr_holidays``).
         """
         country_ids = [(leave.calendar_id.company_id.country_id or leave.company_id.country_id or self.env.company.country_id).id for leave in self]
-        public_holiday_types = self.env['hr.work.entry.type'].search([
+        public_holiday_types = self.env['hr.time.type'].search([
             ('code', '=', '006.00'),
             ('country_id', 'in', country_ids),
         ]).grouped('country_id')
@@ -31,19 +31,19 @@ class ResourceCalendarLeaves(models.Model):
             if leave.resource_id:
                 continue
             country = leave.calendar_id.company_id.country_id or leave.company_id.country_id or self.env.company.country_id
-            leave.work_entry_type_id = public_holiday_types.get(country, self.env.ref('hr_work_entry.generic_work_entry_type_public_holiday', raise_if_not_found=False))
+            leave.time_type_id = public_holiday_types.get(country, self.env.ref('hr_work_entry.generic_time_type_public_holiday', raise_if_not_found=False))
 
     @api.depends('calendar_id.company_id', 'company_id')
-    def _compute_allowed_work_entry_type_ids(self):
+    def _compute_allowed_time_type_ids(self):
         for leave in self:
             country = leave.calendar_id.company_id.country_id or leave.company_id.country_id or self.env.company.country_id
-            if not country or not self.env['hr.work.entry.type'].search_count([('country_id', '=', country.id)], limit=1):
+            if not country or not self.env['hr.time.type'].search_count([('country_id', '=', country.id)], limit=1):
                 domain = [('country_id', '=', False)]
             else:
                 domain = [('country_id', '=', country.id)]
-            leave.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(domain)
+            leave.allowed_time_type_ids = self.env['hr.time.type'].search(domain)
 
     def _copy_leave_vals(self):
         res = super()._copy_leave_vals()
-        res['work_entry_type_id'] = self.work_entry_type_id.id
+        res['time_type_id'] = self.time_type_id.id
         return res

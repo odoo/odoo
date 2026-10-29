@@ -40,7 +40,7 @@ BTREE_INDEX_IGNORE_MODELS = {  # model._name
     'hr.departure.reason',
     'hr.employee.type',
     'hr.payroll.structure.type',
-    'hr.work.entry.type',
+    'hr.time.type',
     'iap.account',
     'ir.actions.server',
     'ir.module.module',
