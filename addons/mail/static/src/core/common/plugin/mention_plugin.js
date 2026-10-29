@@ -46,7 +46,6 @@ export class MentionPlugin extends Plugin {
             return root;
         },
         on_content_updated_handlers: () => (this.mentionsChecked = this.updateMentions()),
-        on_editor_started_handlers: () => (this.mentionsChecked = this.updateMentions()),
         selectors_for_feff_providers: () => MENTION_SELECTOR,
     };
 
