@@ -3,16 +3,14 @@ import { useAutofocus, useService } from "@web/core/utils/hooks";
 
 import { Component, onPatched, proxy, signal, t, useListener, useProps } from "@odoo/owl";
 
-export const kanbanColumnQuickCreateProps = {
-    onFoldChange: t.function(),
-    onValidate: t.function(),
-    folded: t.boolean(),
-    groupByField: t.object(),
-};
-
 export class KanbanColumnQuickCreate extends Component {
     static template = "web.KanbanColumnQuickCreate";
-    props = useProps(kanbanColumnQuickCreateProps);
+    props = useProps({
+        onFoldChange: t.function(),
+        onValidate: t.function(),
+        folded: t.boolean(),
+        groupByField: t.object(),
+    });
 
     root = signal.ref();
     inputRef = signal.ref();
