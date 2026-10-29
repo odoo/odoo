@@ -39,6 +39,9 @@ touching instead of loading whole files.
 | [Performance conventions](guidelines/performance.md#performance-conventions) | code that loops over records or filters query results |
 | [Tests](guidelines/tests.md#tests) | touching `tests/` |
 | [Plain ASCII punctuation in comments and messages](guidelines/comments.md#plain-ascii-punctuation-in-comments-and-messages) | writing a comment, a docstring, a user-facing string, or a commit message |
-| [Changes in a stable version](guidelines/stable.md#changes-in-a-stable-version) | any change targeting a released branch rather than master |
+
+A change to a released version (17.0, saas-19.4, ...) also follows the
+`odoo-stable-policy` skill, which says how to tell a released version from
+master.
 
 To add or restructure a guideline, follow [AUTHORING.md](AUTHORING.md).
