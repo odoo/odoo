@@ -13,7 +13,7 @@ export class DynamicSnippetCarousel extends DynamicSnippet {
             "t-on-slid.bs.carousel": this.onSlid,
         },
         ".carousel-control-prev": {
-            "t-att-class": () => ({ "d-none": this.hidePrev }),
+            "t-att-class": () => ({ invisible: this.hidePrev }),
         },
     };
 

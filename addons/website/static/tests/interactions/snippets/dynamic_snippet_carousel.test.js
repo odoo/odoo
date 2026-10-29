@@ -157,10 +157,10 @@ test("dynamic snippet carousel loads items and displays them through template (d
     expect(itemEls[3].closest(".carousel-item")).toHaveClass("active");
     expect(itemEls[4].closest(".carousel-item")).not.toHaveClass("active");
     await animationFrame();
-    expect(".carousel-control-prev").toHaveClass("d-none");
+    expect(".carousel-control-prev").toHaveClass("invisible");
     await click(".carousel-control-next .oi");
     await advanceTime(1000); // Slide duration.
-    expect(".carousel-control-prev").not.toHaveClass("d-none");
+    expect(".carousel-control-prev").not.toHaveClass("invisible");
     expect(itemEls[4].closest(".carousel-item")).toHaveClass("active");
 
     await click(".carousel-control-next .oi");

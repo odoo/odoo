@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="website.s_dynamic_snippet.carousel.arrows">
         <div class="o_carousel_arrow_wrap align-items-center pe-none">
-            <a t-attf-href="##{this.unique_id}" t-attf-class="carousel-control-prev position-relative pe-auto #{this.hidePrev ? 'd-none' : ''}" data-bs-slide="prev" role="button" t-attf-aria-controls="#{this.unique_id}_inner" aria-label="Previous" title="Previous">
+            <a t-attf-href="##{this.unique_id}" t-attf-class="carousel-control-prev position-relative pe-auto #{this.hidePrev ? 'invisible' : ''}" data-bs-slide="prev" role="button" t-attf-aria-controls="#{this.unique_id}_inner" aria-label="Previous" title="Previous">
                 <span class="o_carousel_arrow oi p-3" data-icon="chevron_backward" role="img" aria-hidden="true"/>
                 <span class="visually-hidden">Previous</span>
             </a>
