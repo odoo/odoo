@@ -345,6 +345,22 @@ class WithContext(HttpCase):
         self.assertEqual(r.status_code, 200, "Admin should see the specific unpublished page")
         self.assertEqual('I am a specific page' in r.text, True, "Admin should see the specific unpublished page")
 
+    def test_unpublished_page_deactivated_user(self):
+        designer = common.new_test_user(
+            self.env,
+            login='designer',
+            groups='base.group_user,website.group_website_designer',
+        )
+        self.page.is_published = False
+
+        self.authenticate(designer.login, designer.login)
+        r = self.url_open(self.page.url)
+        self.assertEqual(r.status_code, 200, "Website Designers should see unpublished pages")
+
+        designer.active = False
+        r = self.url_open(self.page.url)
+        self.assertEqual(r.status_code, 404, "Deactivated users should be logged out before serving fallback pages")
+
     def test_unpublished_page_no_cache(self):
         """Ensure that a previously-published page that is now unpublished will not be cached."""
         self.authenticate(None, None)
