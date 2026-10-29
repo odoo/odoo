@@ -15,7 +15,6 @@ export class ReferencesCarouselOptionPlugin extends Plugin {
     resources = {
         builder_actions: {
             ReferencesCarouselAddItemAction,
-            ReferencesCarouselRemoveItemAction,
         },
         builder_header_middle_buttons: {
             Component: ReferencesCarouselHeaderMiddleButtons,
@@ -75,15 +74,6 @@ export class ReferencesCarouselAddItemAction extends BuilderAction {
     apply({ editingElement }) {
         const lastItemEl = editingElement.querySelector(`${itemSelector}:last-child`);
         lastItemEl.after(lastItemEl.cloneNode(true));
-    }
-}
-
-export class ReferencesCarouselRemoveItemAction extends BuilderAction {
-    static id = "referencesCarouselRemoveItem";
-    apply({ editingElement }) {
-        if (!editingElement.matches(`${itemSelector}:only-child`)) {
-            editingElement.remove();
-        }
     }
 }
 

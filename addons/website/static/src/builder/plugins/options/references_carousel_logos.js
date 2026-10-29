@@ -1,4 +1,5 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { useOperation } from "@html_builder/core/operation_plugin";
 import { useDomState } from "@html_builder/core/utils";
 import { signal } from "@odoo/owl";
 import { registry } from "@web/core/registry";
@@ -19,6 +20,7 @@ export class ReferencesCarouselLogos extends BaseOptionComponent {
 
     setup() {
         super.setup();
+        this.callOperation = useOperation();
         this.domState = useDomState((editingElement) => ({
             items: [...editingElement.querySelectorAll(itemsSelector)].map((itemEl, index) => {
                 const imgEl = itemEl.querySelector("img");
@@ -45,6 +47,21 @@ export class ReferencesCarouselLogos extends BaseOptionComponent {
                 this.dependencies.referencesCarouselOption.reorderItem(itemEl, nextItemEl);
                 this.dependencies.history.commit();
             },
+        });
+    }
+
+    /**
+     * Removes a logo, the carousel staying selected (unlike the "Remove"
+     * button of a selected logo).
+     *
+     * @param {number} position
+     */
+    removeItem(position) {
+        this.callOperation(() => {
+            const itemEls = this.env.getEditingElement().querySelectorAll(itemsSelector);
+            if (itemEls.length > 1) {
+                itemEls[position - 1].remove();
+            }
         });
     }
 }
