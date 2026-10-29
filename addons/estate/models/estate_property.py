@@ -14,11 +14,17 @@ class EstateProperty(models.Model):
     name = fields.Char(string="Title", required=True)
     description = fields.Text(string="Description")
     postcode = fields.Char(string="Postcode")
-    date_availability = fields.Date(string="Available From")
+    # A lambda default is evaluated at each record creation, not once when the server starts
+    date_availability = fields.Date(
+        string="Available From",
+        default=lambda self: fields.Date.add(fields.Date.context_today(self), months=3),
+        copy=False,
+    )
     # Float is enough for a training app; a real one would use a Monetary field with a currency
     expected_price = fields.Float(string="Expected Price", required=True)
-    selling_price = fields.Float(string="Selling Price")
-    bedrooms = fields.Integer(string="Bedrooms")
+    # Read-only for the user: it is set when an offer is accepted
+    selling_price = fields.Float(string="Selling Price", readonly=True, copy=False)
+    bedrooms = fields.Integer(string="Bedrooms", default=2)
     living_area = fields.Integer(string="Living Area (sqm)")
     facades = fields.Integer(string="Facades")
     garage = fields.Boolean(string="Garage")
@@ -28,4 +34,19 @@ class EstateProperty(models.Model):
     garden_orientation = fields.Selection(
         string="Garden Orientation",
         selection=[("north", "North"), ("south", "South"), ("east", "East"), ("west", "West")],
+    )
+    # Reserved name: records with active=False are archived and hidden from searches by default
+    active = fields.Boolean(string="Active", default=True)
+    state = fields.Selection(
+        string="Status",
+        selection=[
+            ("new", "New"),
+            ("offer_received", "Offer Received"),
+            ("offer_accepted", "Offer Accepted"),
+            ("sold", "Sold"),
+            ("cancelled", "Cancelled"),
+        ],
+        default="new",
+        required=True,
+        copy=False,
     )

@@ -145,3 +145,36 @@ Portal and public users have no access at all.
 
 **Try it.** Upgrade the addon: the "no access rules" warning is gone. In Settings > Technical >
 Security > Access, search for "estate" to find the loaded row.
+
+## Chapter 5 - Finally, some UI to play with
+
+[Official chapter](https://www.odoo.com/documentation/20.0/developer/tutorials/server_framework_101/05_firstui.html)
+
+**Functional.**
+
+- The main menu shows the "Real Estate" app with its icon. Real Estate > Advertisements >
+  Properties lists the properties and lets the user create them.
+- A new property is available three months from today and has two bedrooms by default.
+- The selling price cannot be typed: it will come from the accepted offer (chapter 9).
+- Duplicating a property does not copy its availability date, its selling price or its status.
+- Properties can be archived instead of deleted, and every property has a status, starting at
+  "New".
+
+**Technical.**
+
+- **Window action** (`ir.actions.act_window`): opens a model in the given `view_mode`s. Its
+  `help` is the message shown when the list is empty.
+- **Menus** (`<menuitem>`): nested menu items build the hierarchy; only a leaf has an `action`.
+  `web_icon` on the root menu reuses the app icon of chapter 2. Menus refer to the action by XML
+  id, so `estate_menus.xml` is loaded after `estate_property_views.xml`.
+- Odoo generates a basic list and form view when none is defined: they are replaced in chapter 6.
+- **Field attributes**:
+  - `default`: a value, or a callable evaluated at creation time. The lambda calls
+    `fields.Date.context_today(self)` so that "today" is computed in the user's time zone.
+  - `readonly=True`: the field cannot be edited in the interface (code can still write it).
+  - `copy=False`: the value is not copied by `copy()`, i.e. the "Duplicate" action.
+- **Reserved fields**: `active` gives archiving for free (archived records are hidden unless
+  searched explicitly), and `state` is the conventional name for a record's workflow status.
+
+**Try it.** Create a property and check its defaults. Duplicate it and compare the availability
+dates and statuses. Archive one (Actions > Archive) and notice it disappears from the list.

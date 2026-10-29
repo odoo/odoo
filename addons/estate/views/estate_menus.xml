@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Three levels: the app (root, with its icon), a section, then the item opening an action -->
+    <menuitem
+        id="estate_menu_root"
+        name="Real Estate"
+        web_icon="estate,static/description/icon.png"
+    >
+        <menuitem id="estate_menu_advertisements" name="Advertisements" sequence="10">
+            <menuitem
+                id="estate_menu_properties"
+                name="Properties"
+                action="estate_property_action"
+                sequence="10"
+            />
+        </menuitem>
+    </menuitem>
+</odoo>
