@@ -171,4 +171,100 @@ describe(parseUrl(import.meta.url), () => {
     test("peer connections are closed between tests: check", async () => {
         expect(peerConnection.signalingState).toBe("closed");
     });
+
+    describe("Web Audio", () => {
+        test("AudioContext lifecycle", async () => {
+            const audioContext = new AudioContext();
+            audioContext.onstatechange = () => expect.step(audioContext.state);
+
+            expect(audioContext.state).toBe("suspended");
+
+            await audioContext.resume();
+            await audioContext.close();
+
+            expect.verifySteps(["running", "closed"]);
+
+            await expect(audioContext.close()).rejects.toThrow(/closed/);
+        });
+
+        test("audio nodes are inert", async () => {
+            const audioContext = new AudioContext();
+            const analyser = audioContext.createAnalyser();
+            const gain = audioContext.createGain();
+            const frequencies = new Uint8Array(analyser.frequencyBinCount).fill(255);
+
+            expect(analyser.connect(gain)).toBe(gain);
+            expect(gain.connect(audioContext.destination)).toBe(audioContext.destination);
+
+            analyser.getByteFrequencyData(frequencies);
+
+            expect(frequencies.every((value) => value === 0)).toBe(true);
+
+            await audioContext.audioWorklet.addModule("/processor.js");
+            const processor = new AudioWorkletNode(audioContext, "processor");
+
+            expect(processor.port).toBeInstanceOf(MessagePort);
+        });
+
+        test("audio nodes constructor options", () => {
+            const audioContext = new AudioContext({ sampleRate: 8000 });
+            const analyser = new AnalyserNode(audioContext, { fftSize: 64 });
+            const gain = new GainNode(audioContext, { gain: 0.5 });
+            const destination = new MediaStreamAudioDestinationNode(audioContext, {
+                channelCount: 1,
+            });
+
+            expect(audioContext.sampleRate).toBe(8000);
+            expect(analyser.frequencyBinCount).toBe(32);
+            expect(gain.gain.value).toBe(0.5);
+            expect(gain.gain.defaultValue).toBe(1);
+            expect(destination.channelCount).toBe(1);
+            expect(destination.stream.getAudioTracks()).toHaveLength(1);
+        });
+
+        test("createMediaStreamDestination provides a real audio track", () => {
+            const { stream } = new AudioContext().createMediaStreamDestination();
+            const tracks = stream.getAudioTracks();
+
+            expect(tracks).toHaveLength(1);
+            expect(tracks[0]).toBeInstanceOf(MediaStreamTrack);
+            expect(tracks[0].readyState).toBe("live");
+        });
+
+        test("createMediaStreamSource requires an audio track", () => {
+            const audioContext = new AudioContext();
+
+            expect(() => audioContext.createMediaStreamSource(new MediaStream())).toThrow(
+                /audio track/
+            );
+        });
+
+        test("decodeAudioData decodes actual audio data", async () => {
+            // 16-bit mono PCM WAV file holding 100 samples of silence
+            const sampleCount = 100;
+            const view = new DataView(new ArrayBuffer(44 + sampleCount * 2));
+            const writeString = (offset, string) => {
+                for (let i = 0; i < string.length; i++) {
+                    view.setUint8(offset + i, string.charCodeAt(i));
+                }
+            };
+            writeString(0, "RIFF");
+            view.setUint32(4, 36 + sampleCount * 2, true);
+            writeString(8, "WAVEfmt ");
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true); // PCM
+            view.setUint16(22, 1, true); // mono
+            view.setUint32(24, 8000, true); // sample rate
+            view.setUint32(28, 16000, true); // byte rate
+            view.setUint16(32, 2, true); // block align
+            view.setUint16(34, 16, true); // bits per sample
+            writeString(36, "data");
+            view.setUint32(40, sampleCount * 2, true);
+
+            const buffer = await new AudioContext().decodeAudioData(view.buffer);
+
+            expect(buffer).toBeInstanceOf(AudioBuffer);
+            expect(buffer.duration).toBeCloseTo(sampleCount / 8000);
+        });
+    });
 });
