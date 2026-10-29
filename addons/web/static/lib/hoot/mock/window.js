@@ -79,6 +79,7 @@ const {
 } = globalThis;
 
 const { addEventListener, removeEventListener } = EventTarget.prototype;
+const { pause: $pause, play: $play } = HTMLMediaElement.prototype;
 const { preventDefault } = Event.prototype;
 
 //-----------------------------------------------------------------------------
@@ -378,6 +379,18 @@ function mockedRemoveEventListener(...args) {
 }
 
 /**
+ * Playing media elements keep playing (and are kept alive by the browser, like the
+ * ones given a source object) once detached from the DOM, and until the end of the
+ * whole run when looping: they are tracked to be paused after the job.
+ *
+ * @type {HTMLMediaElement["play"]}
+ */
+function mockedPlay() {
+    trackMediaElement(this);
+    return $play.call(this);
+}
+
+/**
  * Media elements playing a live source (e.g. a `MediaStream`) are kept alive by
  * the browser, along with everything they reference, until their source is removed,
  * even once detached from the DOM: they are tracked to remove it after the job.
@@ -385,8 +398,8 @@ function mockedRemoveEventListener(...args) {
  * @param {MediaProvider | null} value
  */
 function mockedSetSrcObject(value) {
-    if (value && getRunner()?.getCurrent().suite) {
-        mediaElements.add(this);
+    if (value) {
+        trackMediaElement(this);
     }
     srcObjectDescriptor.set.call(this, value);
 }
@@ -451,6 +464,17 @@ function restoreTouch(view) {
                 delete object[fnName];
             }
         }
+    }
+}
+
+/**
+ * Elements used outside of tests (e.g. by Hoot's own UI) are not tracked.
+ *
+ * @param {HTMLMediaElement} element
+ */
+function trackMediaElement(element) {
+    if (getRunner()?.getCurrent().suite) {
+        mediaElements.add(element);
     }
 }
 
@@ -540,6 +564,7 @@ const PROTOTYPE_MOCK_DESCRIPTORS = {
         href: { ...hrefDescriptor, get: mockedHref },
     },
     HTMLMediaElement: {
+        play: { value: mockedPlay },
         srcObject: { ...srcObjectDescriptor, set: mockedSetSrcObject },
     },
 };
@@ -601,7 +626,10 @@ export function cleanupWindow() {
 
     // Media
     for (const element of mediaElements) {
-        srcObjectDescriptor.set.call(element, null);
+        $pause.call(element);
+        if (srcObjectDescriptor.get.call(element)) {
+            srcObjectDescriptor.set.call(element, null);
+        }
     }
     mediaElements.clear();
     mediaQueryLists.clear();

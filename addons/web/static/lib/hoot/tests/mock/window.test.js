@@ -30,7 +30,11 @@ describe(parseUrl(import.meta.url), () => {
         }
     }
 
+    /** @type {HTMLAudioElement} */
+    let audioElement;
     let observedNode;
+    /** @type {RTCPeerConnection} */
+    let peerConnection;
     let testBus;
 
     test("elementFromPoint and elementsFromPoint should be mocked", async () => {
@@ -142,5 +146,29 @@ describe(parseUrl(import.meta.url), () => {
         await openDatabase("hoot_test_pending_db");
 
         expect.verifySteps(["upgrade:hoot_test_db", "upgrade:hoot_test_pending_db"]);
+    });
+
+    // ! WARNING: the following 2 tests need to be run sequentially to work, as they
+    // ! attempt to test the in-between-tests media elements cleanup.
+    test("media elements are paused between tests: setup", async () => {
+        audioElement = new Audio();
+        audioElement.loop = true;
+        audioElement.play().catch(() => {});
+
+        expect(audioElement.paused).toBe(false);
+    });
+    test("media elements are paused between tests: check", async () => {
+        expect(audioElement.paused).toBe(true);
+    });
+
+    // ! WARNING: the following 2 tests need to be run sequentially to work, as they
+    // ! attempt to test the in-between-tests peer connections cleanup.
+    test("peer connections are closed between tests: setup", async () => {
+        peerConnection = new RTCPeerConnection();
+
+        expect(peerConnection.signalingState).toBe("stable");
+    });
+    test("peer connections are closed between tests: check", async () => {
+        expect(peerConnection.signalingState).toBe("closed");
     });
 });
