@@ -1,6 +1,7 @@
 // ! WARNING: this module cannot depend on modules not ending with ".hoot" (except libs) !
 
 import {
+    claimJobIndex,
     delay,
     describe,
     dryRun,
@@ -685,20 +686,25 @@ export async function runTests(options) {
     // Dry run
     const { suites } = await dryRun(() => describeDrySuite(fileSuffix, testModuleNames));
 
-    // Run all test files
-    const filteredSuitePaths = new Set(suites.map((s) => s.fullName));
+    // Run all test files (or the ones claimed by this runner if they are shared),
+    // in the order of their suites
+    const moduleNamesBySuitePath = new Map(
+        testModuleNames.map((moduleName) => [getSuitePath(moduleName), moduleName])
+    );
+    const filteredModuleNames = suites
+        .filter((suite) => moduleNamesBySuitePath.has(suite.fullName))
+        .map((suite) => moduleNamesBySuitePath.get(suite.fullName));
     let currentAddonsKey = "";
     let lastSuiteName = null;
     let lastNumberTests = 0;
-    for (const moduleName of testModuleNames) {
+    let moduleIndex;
+    while ((moduleIndex = await claimJobIndex()) < filteredModuleNames.length) {
         if (lastSuiteName) {
             await __gcAndLogMemory(lastSuiteName, lastNumberTests);
             lastSuiteName = null;
         }
+        const moduleName = filteredModuleNames[moduleIndex];
         const suitePath = getSuitePath(moduleName);
-        if (!filteredSuitePaths.has(suitePath)) {
-            continue;
-        }
 
         const moduleSet = await defineModuleSet(fileSuffix, [moduleName], new Set());
         const moduleSetLoader = new ModuleSetLoader(moduleSet);
