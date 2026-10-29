@@ -21,6 +21,7 @@ from . import website_menu
 from . import website_page_properties
 from . import website_page
 from . import website_rewrite
+from . import website_instagram_account
 from . import ir_access
 from . import ir_ui_menu
 from . import ir_ui_view

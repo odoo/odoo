@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website.s_dynamic_snippet_instagram.post">
+        <article class="o_instagram_post card w-100 overflow-hidden">
+            <header class="o_instagram_post_header d-flex align-items-center gap-2 p-2">
+                <img t-att-src="profile.profile_picture_url" class="rounded-circle object-fit-cover" width="32" height="32" alt=""/>
+                <a t-attf-href="https://www.instagram.com/{{ profile.username }}/" target="_blank" rel="noopener" class="fw-bold text-reset text-truncate" t-out="profile.username"/>
+                <i class="oi fs-5 ms-auto" data-icon="oi_instagram" aria-hidden="true"/>
+            </header>
+            <a t-att-href="post.permalink" target="_blank" rel="noopener" class="o_instagram_post_media ratio ratio-1x1">
+                <img t-att-src="post.image_url" class="object-fit-cover" loading="lazy" alt="Instagram post"/>
+                <div class="o_instagram_post_overlay d-flex align-items-center justify-content-center text-white">
+                    <i t-if="post.media_type === 'VIDEO'" class="o_instagram_post_type oi oi-filled position-absolute top-0 end-0 m-2" data-icon="play_arrow" role="img" aria-label="Video" title="Video"/>
+                    <i t-elif="post.media_type === 'CAROUSEL_ALBUM'" class="o_instagram_post_type oi position-absolute top-0 end-0 m-2" data-icon="content_copy" role="img" aria-label="Album" title="Album"/>
+                    <i class="o_instagram_post_hover_icon oi fs-1" data-icon="oi_instagram" aria-hidden="true"/>
+                </div>
+            </a>
+            <div class="o_instagram_post_body card-body d-flex flex-column gap-1 p-2">
+                <div class="d-flex align-items-center gap-3">
+                    <span class="d-flex align-items-center"><i class="o_instagram_icon o_instagram_icon_like" role="img" aria-label="Likes" title="Likes"/><small t-if="likes" class="o_instagram_post_metric ms-1 fw-bold" t-out="likes"/></span>
+                    <span class="d-flex align-items-center"><i class="o_instagram_icon o_instagram_icon_comment" role="img" aria-label="Comments" title="Comments"/><small t-if="comments" class="o_instagram_post_metric ms-1 fw-bold" t-out="comments"/></span>
+                    <i class="o_instagram_icon o_instagram_icon_share" aria-hidden="true"/>
+                    <i class="o_instagram_icon o_instagram_icon_save ms-auto" aria-hidden="true"/>
+                </div>
+                <p t-if="post.caption" class="o_instagram_post_caption o_line_clamp text-prewrap mb-0"><span class="fw-bold me-1" t-out="profile.username"/><t t-out="post.caption"/></p>
+            </div>
+        </article>
+    </t>
+</templates>
