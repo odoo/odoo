@@ -178,3 +178,39 @@ Security > Access, search for "estate" to find the loaded row.
 
 **Try it.** Create a property and check its defaults. Duplicate it and compare the availability
 dates and statuses. Archive one (Actions > Archive) and notice it disappears from the list.
+
+## Chapter 6 - Basic views
+
+[Official chapter](https://www.odoo.com/documentation/20.0/developer/tutorials/server_framework_101/06_basicviews.html)
+
+**Functional.**
+
+- The list shows the columns an agent scans first: title, postcode, bedrooms, living area, prices
+  and availability.
+- The form puts the title in large font, the key facts in two columns, and the details in a
+  "Description" tab.
+- The search bar finds properties by title, postcode, price, bedrooms, facades, or by a *minimum*
+  living area. The "Available" filter keeps New properties and those with offers, and properties
+  can be grouped by postcode.
+
+**Technical.**
+
+- A view is an `ir.ui.view` record: `model` says which model it displays and `arch` contains its
+  XML. The first view of each type (by priority) is used by actions that do not name one.
+- **List** (`<list>`): one `<field>` per column. **Framework change**: older tutorials call it
+  `<tree>`; that tag no longer exists.
+- **Form** (`<form>`): `<sheet>` is the white page, `oe_title` styles the heading, `<group>`
+  lays out labels and values in columns (a group of groups gives two columns), and
+  `<notebook>`/`<page>` add tabs.
+- **Search** (`<search>`):
+  - `<field>` adds a search criterion; `filter_domain` customizes the domain built from the typed
+    value (`self`).
+  - `<filter domain="...">` is a predefined filter; `<filter context="{'group_by': ...}">` is a
+    predefined grouping.
+  - A **domain** is a list of `(field, operator, value)` conditions, e.g.
+    `[('state', 'in', ('new', 'offer_received'))]`.
+- Views are matched by XML id: changing the arch and upgrading the addon updates the view instead
+  of creating a new one.
+
+**Try it.** Search `80` in "Living Area" and check that only properties of 80 sqm or more remain.
+Combine the "Available" filter with the "Postcode" grouping.
