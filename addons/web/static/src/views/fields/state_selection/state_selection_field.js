@@ -1,6 +1,7 @@
 import { Component, t, useProps } from "@odoo/owl";
 import { useCommand } from "@web/core/commands/command_hook";
 import { Dropdown } from "@web/core/dropdown/dropdown";
+import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -19,6 +20,7 @@ export class StateSelectionField extends Component {
         withCommand: t.boolean().optional(),
         viewType: t.string().optional(),
     });
+    dropdownState = useDropdownState();
 
     setup() {
         this.colors = {
@@ -38,7 +40,9 @@ export class StateSelectionField extends Component {
                     {
                         category: "smart_action",
                         hotkey: hotkeys[index] && "alt+" + hotkeys[index],
-                        isAvailable: () => this.props.record.data[this.props.name] !== value,
+                        isAvailable: () =>
+                            !this.props.readonly &&
+                            this.props.record.data[this.props.name] !== value,
                     }
                 );
             }
