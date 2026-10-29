@@ -1266,7 +1266,7 @@ class MailMessage(models.Model):
                 scheduled_dt_by_msg[scheduler.mail_message_id.id] = scheduler.scheduled_datetime
         record_by_message = self._record_by_message()
         records = record_by_message.values()
-        non_channel_records = filter(lambda record: record._name != "discuss.channel", records)
+        non_channel_records = [record for record in records if record._name != "discuss.channel"]
         target_user = res.target_user()
         follower_by_record_and_partner = defaultdict(self.env["mail.followers"].browse)
         if target_user and inbox_fields and non_channel_records:
@@ -1299,7 +1299,9 @@ class MailMessage(models.Model):
                 res.one(
                     "selfFollower",
                     ["is_active", "partner_id"],
-                    predicate=lambda t: target_user and inbox_fields and non_channel_records,
+                    predicate=lambda t: target_user
+                    and inbox_fields
+                    and t._name != "discuss.channel",
                     value=lambda t: follower_by_record_and_partner[t, target_user.partner_id],
                 ),
                 res.attr(
