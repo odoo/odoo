@@ -911,7 +911,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         # retrieve existing indexes with their table and access method
         cr.execute("""
-            SELECT idx.relname, tbl.relname, am.amname, ix.indpred, d.description IS NOT NULL, ix.indisvalid
+            SELECT idx.relname, tbl.relname, am.amname, ix.indpred IS NOT NULL, d.description, ix.indisvalid
               FROM pg_index ix
               JOIN pg_class idx ON idx.oid = ix.indexrelid
               JOIN pg_class tbl ON tbl.oid = ix.indrelid
