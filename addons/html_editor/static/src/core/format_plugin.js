@@ -17,10 +17,10 @@ import {
     hasSameStyleAttributes,
     isBold,
     isContentEditable,
-    isContentEditableAncestor,
     isElement,
     isEmpty,
     isEmptyBlock,
+    isEmptyTextNode,
     isItalic,
     isPhrasingContent,
     isSelfClosingElement,
@@ -37,6 +37,7 @@ import {
     childNodes,
     closestElement,
     descendants,
+    findFurthest,
     findUpTo,
     selectElements,
 } from "../utils/dom_traversal";
@@ -49,6 +50,7 @@ const NOT_A_NUMBER = /[^\d]/g;
 /**
  * @typedef {Object} FormatShared
  * @property { FormatPlugin['canFormatContent'] } canFormatContent
+ * @property { FormatPlugin['distributeFormats'] } distributeFormats
  * @property { FormatPlugin['getOrCreateZws'] } getOrCreateZws
  * @property { FormatPlugin['isRedundantElement'] } isRedundantElement
  * @property { FormatPlugin['mergeAdjacentInlines'] } mergeAdjacentInlines
@@ -100,6 +102,7 @@ export class FormatPlugin extends Plugin {
     static shared = [
         "areSimilarElements",
         "canFormatContent",
+        "distributeFormats",
         "getOrCreateZws",
         "isRedundantElement",
         "mergeAdjacentInlines",
@@ -683,16 +686,6 @@ export class FormatPlugin extends Plugin {
                     currentNode = newLastAncestorInlineFormat;
                 }
                 parentNode = currentNode.parentElement;
-            } else if (
-                this.dependencies.split.isUnsplittable(parentNode) &&
-                this.dependencies.selection.areNodeContentsFullySelected(parentNode) &&
-                !isContentEditableAncestor(parentNode)
-            ) {
-                // Special case: if the parent node is unsplittable and
-                // fully selected, we should make sure the span is applied
-                // outside of it.
-                inlineAncestor = parentNode;
-                break;
             } else {
                 break;
             }
@@ -1097,6 +1090,42 @@ export class FormatPlugin extends Plugin {
         }
 
         return false;
+    }
+
+    /**
+     * Moves the format tags wrapping the element (bold, italic, underline,
+     * strikethrough) inside it, so that they apply to its content and can be
+     * removed from it: `<s>a<a>b</a>c</s>` becomes
+     * `<s>a</s><a><s>b</s></a><s>c</s>`. Only the formats inside the closest
+     * block or unsplittable ancestor (e.g. a QWeb directive) are moved.
+     *
+     * @param {HTMLElement} element
+     */
+    distributeFormats(element) {
+        const isFormat = (node) => this.formatSpecs.some((spec) => spec.isTag?.(node));
+        const limitAncestor = closestElement(
+            element.parentElement,
+            (ancestor) => isBlock(ancestor) || this.dependencies.split.isUnsplittable(ancestor)
+        );
+        const outerFormat = findFurthest(element.parentElement, limitAncestor, isFormat);
+        if (!outerFormat) {
+            return;
+        }
+        const cursors = this.dependencies.selection.preserveSelection();
+        // Remove the empty text nodes around the element, so that the split
+        // leaves no empty format.
+        for (const node of childNodes(element.parentElement).filter(isEmptyTextNode)) {
+            cursors.update(callbacksForCursorUpdate.remove(node));
+            node.remove();
+        }
+        const formats = this.dependencies.split.splitAroundUntil(element, outerFormat);
+        cursors.update(callbacksForCursorUpdate.unwrap(element));
+        unwrapContents(element);
+        cursors.update(callbacksForCursorUpdate.before(formats, element));
+        formats.before(element);
+        cursors.update(callbacksForCursorUpdate.append(element, formats));
+        element.append(formats);
+        cursors.restore();
     }
 
     canFormatContent(selection) {
