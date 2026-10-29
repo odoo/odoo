@@ -178,6 +178,51 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'amount_total': 1135.05,
          })
 
+    def test_fixed_tax_amount(self):
+        fixed_taxes = self.env['account.tax'].create([{
+            'name': f'Fixed 10 {tax_inc} {base_amount}',
+            'amount_type': 'fixed',
+            'amount': 10,
+            'include_base_amount': base_amount,
+            'sequence': 0,
+            'price_include_override': tax_inc,
+        } for base_amount in (True, False) for tax_inc in ('tax_excluded', 'tax_included')])
+        self.tax_sale_b.price_include = True
+        self.early_pay_10_percents_10_days.early_pay_discount_computation = 'included'
+        invoices = self.env['account.move'].create([
+                {
+                'move_type': 'out_invoice',
+                'partner_id': self.partner_a.id,
+                'invoice_date': '2019-01-01',
+                'date': '2019-01-01',
+                'invoice_line_ids': [Command.create({
+                    'name': 'line',
+                    'price_unit': 100.0,
+                    'tax_ids': [Command.set(percent_tax.ids + fixed_tax.ids)],  # 15% tax + fixed 10
+                })],
+                'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
+            }
+            for percent_tax in [self.product_a.taxes_id, self.tax_sale_b]
+            for fixed_tax in fixed_taxes])
+        invoices.action_post()
+        results = {
+            'tax excluded,     in base amount, 15%exc': [{'balance': 113.85}, {'balance': -126.50}, {'balance': 11.00}, {'balance': 1.65}],
+            'tax included,     in base amount, 15%exc': [{'balance': 103.50}, {'balance': -115.00}, {'balance': 10.00}, {'balance': 1.50}],
+            'tax excluded, not in base amount, 15%exc': [{'balance': 112.50}, {'balance': -125.00}, {'balance': 10.87}, {'balance': 1.63}],
+            'tax included, not in base amount, 15%exc': [{'balance': 102.15}, {'balance': -113.50}, {'balance':  9.87}, {'balance': 1.48}],
+            'tax excluded,     in base amount, 15%inc': [{'balance':  99.00}, {'balance': -110.00}, {'balance':  9.57}, {'balance': 1.43}],
+            'tax included,     in base amount, 15%inc': [{'balance':  90.00}, {'balance': -100.00}, {'balance':  8.70}, {'balance': 1.30}],
+            'tax excluded, not in base amount, 15%inc': [{'balance':  99.00}, {'balance': -110.00}, {'balance':  9.57}, {'balance': 1.43}],
+            'tax included, not in base amount, 15%inc': [{'balance':  90.00}, {'balance': -100.00}, {'balance':  8.70}, {'balance': 1.30}],
+        }
+        for invoice, (key, result) in zip(invoices, results.items()):
+            payment = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+                'payment_date': '2019-01-01',
+            })._create_payments()
+
+            with self.subTest(sub_test_name=key):
+                self.assertRecordValues(payment.move_id.line_ids, result)
+
     # ========================== Tests Payment Register ==========================
     def test_register_discounted_payment_on_single_invoice(self):
         self.early_pay_10_percents_10_days.early_pay_discount_computation = 'included'
