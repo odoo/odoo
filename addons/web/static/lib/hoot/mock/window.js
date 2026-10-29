@@ -49,7 +49,16 @@ import {
 import { MockNotification } from "./notification";
 import { cleanupResources, getDisposableDescriptors } from "./resources";
 import { MockStorage } from "./storage";
-import { cleanupWebAudio } from "./web_audio";
+import {
+    cleanupWebAudio,
+    MockAnalyserNode,
+    MockAudioBufferSourceNode,
+    MockAudioContext,
+    MockAudioWorkletNode,
+    MockGainNode,
+    MockMediaStreamAudioDestinationNode,
+    MockMediaStreamAudioSourceNode,
+} from "./web_audio";
 
 //-----------------------------------------------------------------------------
 // Global
@@ -209,7 +218,6 @@ function getWatchedEventTargets(view) {
         // Other event targets
         EventBus.prototype,
         MockEventTarget.prototype,
-        view.BaseAudioContext.prototype,
         view.MediaStreamTrack.prototype,
         view.RTCDataChannel.prototype,
         view.RTCPeerConnection.prototype,
@@ -568,9 +576,21 @@ const PROTOTYPE_MOCK_DESCRIPTORS = {
         srcObject: { ...srcObjectDescriptor, set: mockedSetSrcObject },
     },
 };
+/**
+ * Descriptors of the APIs only available in secure contexts, only mocked when
+ * natively available to keep feature detection intact (e.g. `if (window.x)`).
+ *
+ * @type {Record<string, PropertyDescriptor>}
+ */
+const SECURE_CONTEXT_MOCK_DESCRIPTORS = {
+    AudioWorkletNode: { value: MockAudioWorkletNode },
+};
 const WINDOW_MOCK_DESCRIPTORS = {
     ...getDisposableDescriptors(globalThis),
+    AnalyserNode: { value: MockAnalyserNode },
     Animation: { value: MockAnimation },
+    AudioBufferSourceNode: { value: MockAudioBufferSourceNode },
+    AudioContext: { value: MockAudioContext },
     Blob: { value: MockBlob },
     BroadcastChannel: { value: MockBroadcastChannel },
     cancelAnimationFrame: { value: _mockedCancelAnimationFrame, writable: false },
@@ -580,6 +600,7 @@ const WINDOW_MOCK_DESCRIPTORS = {
     console: { value: mockConsole, writable: false },
     Date: { value: MockDate, writable: false },
     fetch: { value: interactor("server", mockedFetch).as("fetch"), writable: false },
+    GainNode: { value: MockGainNode },
     history: { value: mockHistory },
     indexedDB: { value: mockIndexedDB },
     innerHeight: { get: () => _getCurrentDimensions().height },
@@ -587,6 +608,8 @@ const WINDOW_MOCK_DESCRIPTORS = {
     Intl: { value: MockIntl },
     localStorage: { value: mockLocalStorage, writable: false },
     matchMedia: { value: mockedMatchMedia },
+    MediaStreamAudioDestinationNode: { value: MockMediaStreamAudioDestinationNode },
+    MediaStreamAudioSourceNode: { value: MockMediaStreamAudioSourceNode },
     MessageChannel: { value: MockMessageChannel },
     MessagePort: { value: MockMessagePort },
     navigator: { value: mockNavigator },
@@ -751,6 +774,11 @@ export function mockTouch(setTouch) {
 export function patchWindow(view = _getWindow()) {
     // Window (doesn't need to be ready)
     applyPropertyDescriptors(view, WINDOW_MOCK_DESCRIPTORS);
+    for (const [property, descriptor] of $entries(SECURE_CONTEXT_MOCK_DESCRIPTORS)) {
+        if (property in view) {
+            applyPropertyDescriptors(view, { [property]: descriptor });
+        }
+    }
 
     waitForDocument(view.document).then(() => {
         // Document
