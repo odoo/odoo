@@ -69,7 +69,7 @@ export function usePartnerAutocomplete() {
         const isVat = await isVATNumber(value);
         const isGST = isGSTNumber(value);
 
-        if (fieldName === 'vat' && !isGST && !isVat) {
+        if (scope.isDestroyed() || (fieldName === 'vat' && !isGST && !isVat)) {
             return [];
         }
 
