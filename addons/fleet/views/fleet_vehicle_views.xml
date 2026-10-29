@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <form string="Vehicle" js_class="fleet_form">
                 <field name="service_activity" invisible="1"/>
-                <header>
+                <header groups="fleet.fleet_group_user">
                     <button string="Apply New Driver"
                         class="btn btn-primary"
                         type="object"
@@ -23,11 +23,13 @@
                         <button name="open_assignation_logs"
                             type="object"
                             class="oe_stat_button"
-                            icon="history">
+                            icon="history"
+                            groups="fleet.fleet_group_user">
                             <field name="history_count" widget="statinfo" string="Drivers History"/>
                         </button>
                         <button name="return_action_to_open"
                             type="object"
+                            groups="fleet.fleet_group_user"
                             class="oe_stat_button"
                             icon="book"
                             context="{'xml_id':'fleet_vehicle_log_contract_action', 'search_default_inactive': not active}"
@@ -36,6 +38,7 @@
                         </button>
                         <button name="return_action_to_open"
                             type="object"
+                            groups="fleet.fleet_group_user"
                             class="oe_stat_button"
                             icon="build"
                             context="{'xml_id':'fleet_vehicle_log_services_action', 'search_default_inactive': not active}"
@@ -45,6 +48,7 @@
                         </button>
                         <button name="return_action_to_open"
                             type="object"
+                            groups="fleet.fleet_group_user"
                             class="oe_stat_button text-danger"
                             icon="build"
                             context="{'xml_id':'fleet_vehicle_log_services_action', 'search_default_inactive': not active}"
@@ -54,6 +58,7 @@
                         </button>
                         <button name="return_action_to_open"
                             type="object"
+                            groups="fleet.fleet_group_user"
                             class="oe_stat_button text-warning"
                             icon="build"
                             context="{'xml_id':'fleet_vehicle_log_services_action', 'search_default_inactive': not active}"
@@ -63,6 +68,7 @@
                         </button>
                         <button name="return_action_to_open"
                             type="object"
+                            groups="fleet.fleet_group_user"
                             class="oe_stat_button"
                             icon="speed"
                             context="{'xml_id':'fleet_vehicle_odometer_action'}"
@@ -71,64 +77,59 @@
                         </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                    <field name="image_128" widget='image' class="oe_avatar"/>
+                    <field name="image_128" widget='image' class="oe_avatar float-start me-3"/>
                     <div class="oe_title">
-                        <label for="license_plate"/>
                         <h1>
-                            <field name="license_plate" class="oe_inline" placeholder="Unregistered"/>
+                            <field name="license_plate" class="oe_inline" placeholder="License Plate"/>
                         </h1>
-                        <group>
-                            <field name="model_id" placeholder="e.g. Model S" class="w-100"/>
-                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}"/>
-                        </group>
-                    </div>
-                    <group col="2">
-                        <group string="Driver">
-                            <field name="active" invisible="1"/>
-                            <field name="vehicle_type" invisible="1"/>
-                            <field name="driver_id" domain="['|', ('company_id', '=', False ), ('company_id', '=', company_id)]" widget="many2one_avatar_user"/>
-                            <field name="future_driver_id" widget="many2one_avatar_user"/>
-                            <field name="next_assignation_date" placeholder="Available"/>
-                            <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
-                        </group>
-                        <group string="Vehicle">
-                            <field name="category_id"/>
-                            <field name="order_date"/>
-                            <field name="acquisition_date"/>
-                            <field name="write_off_date"/>
-                            <field name="vin_sn"/>
-                            <label for="odometer"/>
-                            <div class="o_row o_fleet_narrow_field">
-                                <field class="o_fleet_odometer_value" name="odometer"/>
-                                <field class="o_fleet_odometer_unit" name="odometer_unit"/>
-                                <button name="action_open_odometer_report" type="object" class="oi me-1" data-icon="show_chart" title="Odometer Report"/>
+                        <field name="active" invisible="1"/>
+                        <field name="vehicle_type" invisible="1"/>
+                        <field name="model_id" invisible="1"/>
+                        <div class="row">
+                            <div class="col-md-6 d-flex flex-column">
+                                <div class="d-flex align-items-baseline gap-2">
+                                    <i class="oi" data-icon="shield_with_home" title="Brand"/>
+                                    <field name="brand_id" placeholder="Brand"/>
+                                </div>
+                                <div class="d-flex align-items-baseline gap-2" name="driver_div">
+                                    <i class="oi" data-icon="person" title="Driver"/>
+                                    <field name="driver_id" domain="['|', ('company_id', '=', False ), ('company_id', '=', company_id)]" widget="many2one_avatar_user" placeholder="Driver"/>
+                                </div>
+                                <div class="d-flex align-items-baseline gap-2">
+                                    <i class="oi" data-icon="sell" title="Tags"/>
+                                    <field name="tag_ids" widget="many2many_tags" placeholder="Tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}"/>
+                                </div>
                             </div>
-                            <field name="manager_id" widget="many2one_avatar_user"/>
-                            <field name="location"/>
-                            <label string="Make Vehicle Available" for="plan_to_change_vehicle" class="text-nowrap"/>
-                            <field name="plan_to_change_vehicle" groups="fleet.fleet_group_user" nolabel="1"
-                                help="This will allow this vehicle to be selectable for the Salary Configurator"/>
-                        </group>
-                    </group>
-                    <field name="vehicle_properties" columns="2"/>
+                            <div class="col-md-6" invisible="not brand_id" groups="fleet.fleet_group_manager">
+                                <div class="d-flex align-items-baseline gap-2">
+                                    <i class="oi" data-icon="directions_car" title="Model"/>
+                                    <field name="model_id" placeholder="Model" domain="[('brand_id', '=', brand_id)]"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <notebook>
-                        <page string="Tax Info" name="page_tax_info">
+                        <page string="Vehicle" name="page_vehicle" groups="fleet.fleet_group_user">
                             <group>
-                                <group col="1" name="fiscality_group" string="Fiscality" invisible="1">
-                                    <group col="1" name="fiscality_first_group">
-                                    </group>
+                                <group string="Vehicle" name="group_vehicle">
+                                    <field name="vin_sn"/>
+                                    <field name="manager_id" widget="many2one_avatar_user"/>
+                                    <field name="location"/>
+                                    <label for="odometer"/>
+                                    <div class="o_row o_fleet_narrow_field">
+                                        <field class="o_fleet_odometer_value" name="odometer"/>
+                                        <field class="o_fleet_odometer_unit" name="odometer_unit"/>
+                                        <button name="action_open_odometer_report" type="object" class="oi me-1" data-icon="show_chart" title="Odometer Report"/>
+                                    </div>
+                                    <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
                                 </group>
-                                <group string="Contract">
-                                    <field name="contract_date_start"/>
-                                    <field name="car_value" widget="monetary"/>
-                                    <field name="net_car_value" widget="monetary"/>
-                                    <field name="residual_value" widget="monetary"/>
+                                <group string="Future Driver" name="group_future_driver">
+                                    <field name="next_assignation_placeholder" invisible="1"/>
+                                    <field name="next_assignation_date" options="{'placeholder_field': 'next_assignation_placeholder'}"/>
+                                    <field name="future_driver_id" widget="many2one_avatar_user"/>
                                 </group>
-                            </group>
-                        </page>
-                        <page string="Model" name="page_model">
-                            <group>
                                 <group string="Model" name="group_model">
+                                    <field name="category_id"/>
                                     <field name="model_year"/>
                                     <field name="seats" invisible="vehicle_type != 'car'"/>
                                     <field name="doors" invisible="vehicle_type != 'car'"/>
@@ -141,8 +142,7 @@
                                     </div>
                                     <field name="electric_assistance" invisible="vehicle_type != 'bike'"/>
                                 </group>
-                                <group string="Engine">
-                                    <field name="fuel_type"/>
+                                <group string="Engine" name="group_engine">
                                     <field name="transmission"/>
                                     <label for="power" invisible="power_unit != 'power'"/>
                                     <div class="o_row" invisible="power_unit != 'power'">
@@ -159,12 +159,36 @@
                                         <field name="vehicle_range"/>
                                         <field name="range_unit"/>
                                     </div>
+                                    <field name="co2_standard" placeholder="eg. WLTP, Euro 6, or EPA, ..."/>
+                                </group>
+                            </group>
+                            <field name="vehicle_properties" columns="2"/>
+                        </page>
+                        <page string="Fiscal" name="page_fiscal">
+                            <group name="group_fiscal">
+                                <group string="Vehicle" name="group_fiscal_vehicle">
+                                    <label for="car_value" string="Catalog Value"/>
+                                    <div>
+                                        <field name="car_value" widget="monetary" class="oe_inline"/>
+                                        <span class="ms-2">Tax Included</span>
+                                    </div>
+                                    <field name="acquisition_date"/>
+                                    <field name="fuel_type"/>
                                     <label for="co2"/>
                                     <div class="o_row">
                                         <field name="co2"/>
                                         <field name="co2_emission_unit"/>
                                     </div>
-                                    <field name="co2_standard" placeholder="eg. WLTP, Euro 6, or EPA, ..."/>
+                                </group>
+                                <group col="1" name="fiscality_group" string="Taxes" invisible="1">
+                                    <group col="1" name="fiscality_first_group">
+                                    </group>
+                                </group>
+                                <group string="Accounting" name="group_accounting" groups="fleet.fleet_group_user">
+                                    <field name="order_date"/>
+                                    <field name="contract_date_start"/>
+                                    <field name="net_car_value" widget="monetary"/>
+                                    <field name="residual_value" widget="monetary"/>
                                 </group>
                             </group>
                         </page>

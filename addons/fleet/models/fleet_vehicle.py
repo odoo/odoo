@@ -69,7 +69,7 @@ class FleetVehicle(models.Model):
     future_driver_id = fields.Many2one('res.partner', 'Future Driver', tracking=True, help='Next Driver Address of the vehicle', copy=False, check_company=True)
     model_id = fields.Many2one('fleet.vehicle.model', 'Model',
         tracking=True, index=True)
-    brand_id = fields.Many2one('fleet.vehicle.model.brand', 'Brand', related="model_id.brand_id", store=True, readonly=False)
+    brand_id = fields.Many2one('fleet.vehicle.model.brand', 'Brand', compute='_compute_brand_id', store=True, readonly=False, index='btree_not_null')
     log_drivers = fields.One2many('fleet.vehicle.assignation.log', 'vehicle_id', string='Assignment Logs')
     log_services = fields.One2many('fleet.vehicle.log.services', 'vehicle_id', 'Services Logs')
     log_contracts = fields.One2many('fleet.vehicle.log.contract', 'vehicle_id', 'Contracts')
@@ -77,6 +77,7 @@ class FleetVehicle(models.Model):
     service_count = fields.Integer(compute="_compute_count_all", string='Services')
     odometer_count = fields.Integer(compute="_compute_count_all", string='Odometer')
     history_count = fields.Integer(compute="_compute_count_all", string="Drivers History Count")
+    next_assignation_placeholder = fields.Char(compute='_compute_next_assignation_placeholder')
     next_assignation_date = fields.Date('Available From', help="The date from which this vehicle becomes available for assignment. Leave empty if it's available immediately.",
         tracking=True)
     order_date = fields.Date('Order Date', tracking=True)
@@ -123,7 +124,7 @@ class FleetVehicle(models.Model):
             or guideline under which a vehicle's emissions are measured.")
     category_id = fields.Many2one('fleet.vehicle.model.category', 'Category', compute='_compute_category', store=True,
         readonly=False, tracking=True)
-    image_128 = fields.Image(related='model_id.image_128', readonly=True)
+    image_128 = fields.Image(related='brand_id.image_128', readonly=True)
     contract_renewal_due_soon = fields.Boolean(compute='_compute_contract_reminder', search='_search_contract_renewal_due_soon',
         string='Has Contracts to renew')
     contract_renewal_overdue = fields.Boolean(compute='_compute_contract_reminder', search='_search_get_overdue_contract_reminder',
@@ -236,16 +237,34 @@ class FleetVehicle(models.Model):
     def _compute_seats(self):
         self._load_fields_from_model(['seats'])
 
-    @api.depends('model_id.brand_id.name', 'model_id.name', 'license_plate')
+    @api.depends('brand_id.name', 'model_id.name', 'license_plate')
     def _compute_vehicle_name(self):
         for record in self:
             name_parts = []
             if record.license_plate:
                 name_parts.append(record.license_plate)
-            if model := record.model_id:
-                name_parts.append(f"{model.brand_id.name or ''}/{model.name or ''}".strip('/'))
+            if record.brand_id or record.model_id:
+                name_parts.append(f"{record.brand_id.name or ''}/{record.model_id.name or ''}".strip('/'))
 
             record.name = (name_parts and ": ".join(name_parts)) or self.env._("Unnamed Vehicle")
+
+    @api.depends('model_id')
+    def _compute_brand_id(self):
+        for record in self:
+            record.brand_id = record.model_id.brand_id or record.brand_id
+
+    @api.onchange('brand_id')
+    def _onchange_brand_id(self):
+        if self.model_id.brand_id != self.brand_id:
+            self.model_id = False
+
+    @api.depends('driver_id', 'future_driver_id')
+    def _compute_next_assignation_placeholder(self):
+        for record in self:
+            if record.driver_id or record.future_driver_id:
+                record.next_assignation_placeholder = self.env._("Not Available")
+            else:
+                record.next_assignation_placeholder = self.env._("Available")
 
     @api.depends('range_unit')
     def _compute_co2_emission_unit(self):
@@ -383,16 +402,13 @@ class FleetVehicle(models.Model):
     def create(self, vals_list):
         to_update_drivers_cars = set()
         to_update_drivers_bikes = set()
-        state_waiting_list = self.env.ref('fleet.fleet_vehicle_state_waiting_list', raise_if_not_found=False)
         for vals in vals_list:
             if vals.get('future_driver_id'):
-                state_id = vals.get('state_id')
                 model_id = self.env['fleet.vehicle.model'].browse(vals['model_id'])
-                if not state_waiting_list or state_waiting_list.id != state_id:
-                    if model_id.vehicle_type == 'bike':
-                        to_update_drivers_bikes.add(vals['future_driver_id'])
-                    elif model_id.vehicle_type == 'car':
-                        to_update_drivers_cars.add(vals['future_driver_id'])
+                if model_id.vehicle_type == 'bike':
+                    to_update_drivers_bikes.add(vals['future_driver_id'])
+                elif model_id.vehicle_type == 'car':
+                    to_update_drivers_cars.add(vals['future_driver_id'])
         if to_update_drivers_cars:
             self.search([
                 ('driver_id', 'in', to_update_drivers_cars),
@@ -429,10 +445,9 @@ class FleetVehicle(models.Model):
 
         if 'future_driver_id' in vals and vals['future_driver_id']:
             future_driver = vals['future_driver_id']
-            state_waiting_list = self.env.ref('fleet.fleet_vehicle_state_waiting_list', raise_if_not_found=False)
             state_new_request = self.env.ref('fleet.fleet_vehicle_state_new_request', raise_if_not_found=False)
             vehicle_types = set(self.filtered(lambda vehicle:
-                                vals.get('state_id', vehicle.state_id.id) not in [state_waiting_list.id, state_new_request.id]).mapped('vehicle_type'))
+                                vals.get('state_id', vehicle.state_id.id) != state_new_request.id).mapped('vehicle_type'))
             if vehicle_types:
                 vehicle_read_group = dict(self.env['fleet.vehicle']._read_group(
                     domain=[('driver_id', '=', future_driver), ('vehicle_type', 'in', vehicle_types), ('id', 'not in', self.ids)],
