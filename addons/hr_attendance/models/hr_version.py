@@ -15,6 +15,27 @@ class HrVersion(models.Model):
         default=lambda self: self.env.company.sudo().attendance_based,
     )
 
+    def _get_attendance_manager_domain(self):
+        return "[('share', '=', False), ('company_ids', 'in', company_id), ('role', 'in', ['regular_user', 'group_system']), ('all_group_ids', 'in', %s)]" % self.env.ref('hr_attendance.group_hr_attendance_own').id
+
+    attendance_manager_id = fields.Many2one(
+        'res.users', store=True, readonly=False,
+        string="Attendance Approver",
+        compute='_compute_attendance_manager',
+        domain=_get_attendance_manager_domain,
+        groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer",
+        help="The user set in Attendance will access the attendance of the employee through the dedicated app and will be able to edit them.")
+
+    @api.depends('parent_id')
+    def _compute_attendance_manager(self):
+        for version in self:
+            previous_manager = version._origin.parent_id.user_id
+            new_manager = version.parent_id.user_id
+            if new_manager and version.attendance_manager_id and version.attendance_manager_id == previous_manager:
+                version.attendance_manager_id = new_manager
+            elif not version.attendance_manager_id:
+                version.attendance_manager_id = False
+
     @api.model
     def _get_whitelist_fields_from_template(self):
         """Also copy ``attendance_based`` from contract templates."""

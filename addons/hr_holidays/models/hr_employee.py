@@ -17,14 +17,7 @@ from odoo.tools.intervals import Intervals
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
-    def _get_leave_manager_domain(self):
-        return "[('share', '=', False), ('company_ids', 'in', company_id), ('role', 'in', ['regular_user', 'group_system']), ('all_group_ids', 'in', %s)]" % self.env.ref('hr_holidays.group_hr_holidays_employee').id
-    leave_manager_id = fields.Many2one(
-        'res.users', string='Time Off Approver',
-        compute='_compute_leave_manager', store=True, readonly=False,
-        domain=_get_leave_manager_domain,
-        help='Select the user responsible for approving "Time Off" of this employee.\n'
-             'If empty, the approval is done by an Administrator or Approver (determined in settings/users).')
+    leave_manager_id = fields.Many2one(readonly=False, related='version_id.leave_manager_id', inherited=True)
     current_work_entry_type_id = fields.Many2one('hr.work.entry.type', compute='_compute_current_work_entry_type_id', string="Current Time Type",
                                        groups="hr.group_hr_user")
     current_leave_state = fields.Selection(compute='_compute_leave_status', string="Current Time Off Status",
@@ -276,16 +269,6 @@ class HrEmployee(models.Model):
             employee.leave_date_from = min(emp_holidays.mapped('date_from')).date()
             employee.current_leave_state = emp_holidays[0].state
             employee.is_absent = any(e_h.work_entry_type_id.count_as == 'absence' for e_h in emp_holidays)
-
-    @api.depends('parent_id')
-    def _compute_leave_manager(self):
-        for employee in self:
-            previous_manager = employee._origin.parent_id.user_id
-            manager = employee.parent_id.user_id
-            if manager and employee.leave_manager_id and employee.leave_manager_id == previous_manager:
-                employee.leave_manager_id = manager
-            elif not employee.leave_manager_id:
-                employee.leave_manager_id = False
 
     def _compute_show_leaves(self):
         show_leaves = self.env.user.has_group('hr_holidays.group_hr_holidays_user')

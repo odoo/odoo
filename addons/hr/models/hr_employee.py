@@ -283,9 +283,10 @@ class HrEmployee(models.Model):
         groups="hr.group_hr_user"
     )
     # Direct subordinates
-    parent_id = fields.Many2one('hr.employee', 'Manager', tracking=True, index=True,
-                                domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]")
-    child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates', domain=[('active', '=', True)])
+    parent_id = fields.Many2one(readonly=False, related='version_id.parent_id', inherited=True, tracking=True)
+    managed_version_ids = fields.One2many('hr.version', 'parent_id', groups="hr.group_hr_user")
+    child_ids = fields.One2many('hr.employee', string='Direct subordinates', compute='_compute_child_ids',
+        search='_search_child_ids')
     child_count = fields.Integer('Direct Subordinates Count', compute='_compute_child_count',
         recursive=True, compute_sudo=True)
 
@@ -297,11 +298,7 @@ class HrEmployee(models.Model):
         store=False, compute_sudo=True)
     department_color = fields.Integer("Department Color", related="department_id.color")
 
-    coach_id = fields.Many2one(
-        'hr.employee', 'Coach', compute='_compute_coach', store=True, readonly=False,
-        domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]",
-        help='Select the "Employee" who is the coach of this employee.\n'
-             'The "Coach" has no specific rights or responsibilities by default.')
+    coach_id = fields.Many2one(readonly=False, related='version_id.coach_id', inherited=True)
     category_ids = fields.Many2many(
         'hr.employee.category', 'employee_category_rel',
         'employee_id', 'category_id', groups="hr.group_hr_user",
@@ -790,6 +787,30 @@ class HrEmployee(models.Model):
                 version = employee.current_version_id
             employee.version_id = version
 
+    @api.depends_context('uid', 'allowed_company_ids')
+    @api.depends('managed_version_ids', 'managed_version_ids.employee_id.active', 'managed_version_ids.employee_id.current_version_id')
+    def _compute_child_ids(self):
+        children_per_parent = dict(self._read_group(
+            [('parent_id', 'in', self.ids), ('active', '=', True)],
+            ['parent_id'],
+            ['id:recordset'],
+        ))
+        for employee in self:
+            employee.child_ids = children_per_parent.get(employee._origin, self.browse())
+
+    def _search_child_ids(self, operator, value):
+        if operator not in ('in', 'any'):
+            return NotImplemented
+        if operator == 'any':
+            return [('id', 'in', self.env['hr.employee'].search(value).parent_id.ids)]
+        domain = Domain.FALSE
+        if child_ids := [child_id for child_id in value if child_id]:
+            domain |= Domain('id', 'in', self.env['hr.employee'].search([('id', 'in', child_ids)]).parent_id.ids)
+        if False in value:
+            domain |= Domain('id', 'not in', self.env['hr.employee'].search([('parent_id', '!=', False)]).parent_id.ids)
+        return domain
+
+    @api.depends('managed_version_ids', 'managed_version_ids.employee_id.active', 'managed_version_ids.employee_id.current_version_id')
     def _compute_child_count(self):
         employee_read_group = self._read_group(
             [('parent_id', 'in', self.ids)],
@@ -801,7 +822,7 @@ class HrEmployee(models.Model):
             employee.child_count = child_count_per_parent_id.get(employee._origin, 0)
 
     @api.depends_context('uid', 'company')
-    @api.depends('parent_id')
+    @api.depends('version_id.parent_id')
     def _compute_is_subordinate(self):
         subordinates = self.env.user.employee_id.subordinate_ids
         if not subordinates:
@@ -1259,16 +1280,6 @@ class HrEmployee(models.Model):
         } for employee in self])
         for employee, work_contact in zip(self, work_contacts):
             employee.work_contact_id = work_contact
-
-    @api.depends('parent_id')
-    def _compute_coach(self):
-        for version in self:
-            manager = version.parent_id
-            previous_manager = version._origin.parent_id
-            if manager and (version.coach_id == previous_manager or not version.coach_id):
-                version.coach_id = manager
-            elif not version.coach_id:
-                version.coach_id = False
 
     @api.depends('work_contact_id', 'work_contact_id.phone', 'work_contact_id.email')
     def _compute_work_contact_details(self):
@@ -2450,7 +2461,7 @@ class HrEmployee(models.Model):
 
         :rtype: list[str]
         """
-        return ['parent_id', 'coach_id']
+        return ['coach_id']
 
     def _get_user_m2o_to_empty_on_archived_employees(self):
         """Return the ``hr.employee`` many2one fields (to ``res.users``) emptied when the target's employee is archived.
@@ -2486,6 +2497,19 @@ class HrEmployee(models.Model):
                 for field in user_fields_to_empty:
                     if employee[field] in archived_employees.user_id:
                         employee[field] = False
+            version_employee_fields_to_empty = ['parent_id'] + [field for field in employee_fields_to_empty if self._fields[field].inherited]
+            version_user_fields_to_empty = [field for field in user_fields_to_empty if self._fields[field].inherited]
+            versions = self.env['hr.version'].sudo().search(
+                Domain.OR(Domain(field, 'in', archived_employees.ids) for field in version_employee_fields_to_empty)
+                | Domain.OR(Domain(field, 'in', archived_employees.user_id.ids) for field in version_user_fields_to_empty),
+            ).filtered(lambda v: not v.employee_id or v.date_version >= v.employee_id.current_version_id.date_version)
+            for version in versions:
+                for field in version_employee_fields_to_empty:
+                    if version[field] in archived_employees:
+                        version[field] = False
+                for field in version_user_fields_to_empty:
+                    if version[field] in archived_employees.user_id:
+                        version[field] = False
         return res
 
     @api.onchange('company_id')
