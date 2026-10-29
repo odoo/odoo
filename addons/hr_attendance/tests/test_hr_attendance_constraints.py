@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from freezegun import freeze_time
+from datetime import datetime, timedelta
 import time
 
 from odoo.tests.common import tagged, TransactionCase
@@ -86,9 +87,15 @@ class TestHrAttendance(TransactionCase):
         self.assertEqual(employee.attendance_state, 'checked_out')
 
     def test_time_format_attendance(self):
+
+        if int(time.strftime('%u')) < 6:
+            day = time.strftime('%Y-%m-%d')
+        else:
+            day = (datetime.now() + timedelta(days=2)).strftime('%Y-%m-%d')
+
         attendance_id = self.attendance.create({
             'employee_id': self.test_employee.id,
-            'check_in': time.strftime('%Y-%m-28 08:00'),
-            'check_out': time.strftime('%Y-%m-28 09:00'),
+            'check_in': f'{day} 08:00',
+            'check_out': f'{day} 09:00',
         })
         self.assertEqual(attendance_id.display_name, "A - 1h")
