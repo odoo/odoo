@@ -1644,11 +1644,7 @@ class ProductTemplate(models.Model):
             combination_info = product._get_combination_info(
                 combination=combination, only_template=not combination
             )
-            values = (
-                combination.product_attribute_value_id
-                if combination
-                else product.attribute_line_ids.value_ids
-            )
+            values = product.attribute_line_ids.value_ids
             tags = product.product_tag_ids.filtered("visible_to_customers").read(["name"])
             categories = product.public_categ_ids.filtered_domain(website_domain).read(["name"])
             data["badges"] = tags + categories + values.read(["name"])
@@ -1664,20 +1660,19 @@ class ProductTemplate(models.Model):
                 data["website_url"] = product._get_product_url(query_params={"search": search_term})
         return results_data
 
-    def _get_matched_attribute_values(self, attribute_value_ids):
-        """Return, for each attribute line, the first active value among `attribute_value_ids`
-        that belongs to it, if any.
+    def _get_combination_from_attribute_values(self, attribute_value_ids):
+        """Return the possible combination closest to the given attribute values.
 
-        The attribute lines without a matching value are simply absent from the result: it may
-        therefore not cover every attribute line of the template.
+        Matched values that can't be combined are dropped, and the other attribute lines are
+        completed with their first possible value (`multi` attributes are left empty).
 
         :param typing.Iterable[int] attribute_value_ids: The ids of the `product.attribute.value`
             records to select.
-        :return: The matched values, at most one per attribute line.
+        :return: The closest possible combination, or an empty recordset if none is possible.
         :rtype: product.template.attribute.value
         """
         self.ensure_one()
-        return self.attribute_line_ids.mapped(
+        matched_values = self.attribute_line_ids.mapped(
             lambda ptal: ptal.product_template_value_ids.filtered(
                 lambda ptav: (
                     ptav.ptav_active
@@ -1685,27 +1680,7 @@ class ProductTemplate(models.Model):
                 )
             )[:1]
         )
-
-    def _get_combination_from_attribute_values(self, attribute_value_ids):
-        """Return a possible combination using the given attribute values.
-
-        Attribute lines without a matching value fall back to their first active value, except
-        for `multi` attributes, for which no value is selected. If the matching values can't
-        all be combined (e.g. because two of them exclude each other), none of them are used
-        and the template's default combination is returned instead, rather than returning an
-        impossible one.
-
-        :param typing.Iterable[int] attribute_value_ids: The ids of the `product.attribute.value`
-            records to select.
-        :return: A possible combination.
-        :rtype: product.template.attribute.value
-        """
-        self.ensure_one()
-        matched_values = self._get_matched_attribute_values(attribute_value_ids)
-        return (
-            next(self._get_possible_combinations(matched_values), None)
-            or next(self._get_possible_combinations(), self.env['product.template.attribute.value'])
-        )
+        return self._get_closest_possible_combination(matched_values)
 
     def _get_attribute_values_from_search_term(self, search_term):
         """Return attribute values to preselect the matching product variant.
@@ -1727,9 +1702,8 @@ class ProductTemplate(models.Model):
         if matched_variant:
             return matched_variant.product_template_attribute_value_ids.product_attribute_value_id
 
-        # Fall back to matching attribute values by name.
         search_words = search_term.lower().split()
-        values = self.attribute_line_ids.value_ids
+        values = self.attribute_line_ids.value_ids._without_no_variant_attributes()
         return values.filtered(
             lambda attribute_value: any(
                 word in (attribute_value.name or "").lower() for word in search_words
