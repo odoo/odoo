@@ -75,6 +75,15 @@ describe(parseUrl(import.meta.url), () => {
         });
     });
 
+    test("permission statuses are notified of their changes", async () => {
+        const camera = await navigator.permissions.query({ name: "camera" });
+        camera.onchange = () => expect.step(camera.state);
+
+        mockPermission("camera", "granted");
+
+        expect.verifySteps(["granted"]);
+    });
+
     test("maxTouchPoints", () => {
         mockTouch(false);
 
