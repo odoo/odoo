@@ -79,3 +79,35 @@ does nothing yet: there is no model and no menu.
 **Try it.** Start the server with `-u estate` or update the Apps list in debug mode, then remove the
 "Apps" filter and search for "Real Estate". Install it: the installation succeeds although nothing
 new appears in the main menu.
+
+## Chapter 3 - Models and basic fields
+
+[Official chapter](https://www.odoo.com/documentation/20.0/developer/tutorials/server_framework_101/03_basicmodel.html)
+
+**Functional.** The application can now store properties: a title, a description, a postcode, the
+availability date, the expected and selling prices, and details such as bedrooms, areas, garage and
+garden. There is still no screen to see them (chapter 5).
+
+**Technical.**
+
+- A model is a Python class inheriting `models.Model`. `_name` is its technical name and
+  `_description` its human-readable name. When the addon is installed or upgraded, the ORM creates
+  or alters the `estate_property` table so that its columns match the fields.
+- Simple fields map to one column each: `Char` (short text), `Text` (long text), `Integer`,
+  `Float`, `Boolean`, `Date` and `Selection` (a fixed list of `(key, label)` pairs).
+- `required=True` adds a `NOT NULL` constraint in the database and makes the field mandatory in the
+  forms. `name` and `expected_price` are required because a property without them makes no sense.
+- `string` is the label shown in the interface. Without it, Odoo derives one from the field name.
+- The ORM adds automatic fields to every model: `id`, `create_date`, `create_uid`, `write_date`,
+  `write_uid` and `display_name` (computed from `name` by default).
+- `estate/__init__.py` imports `models`, and `models/__init__.py` imports each model file: a file
+  that is not imported is never loaded.
+
+**Try it.** Upgrade the addon and look at the table in `psql`:
+
+```sh
+psql <db> -c '\d estate_property'
+```
+
+Compare the columns with the fields, and find the automatic columns. The server log also warns
+`The model estate.property has no access rules`: chapter 4 fixes that.
