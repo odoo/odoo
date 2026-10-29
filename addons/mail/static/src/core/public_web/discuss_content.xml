@@ -21,8 +21,8 @@
                     </t>
                     <div class="flex-grow-1 min-w-0 align-self-center align-items-center h-100 py-1 ms-1" t-att-class="{ 'lh-sm': this.hasHeaderSubline }">
                         <div class="d-flex">
-                            <div t-if="this.thread.channel?.parent_channel_id" class="d-flex align-items-center gap-1 o-ms-1_5">
-                                <span class="fw-bold cursor-pointer opacity-75 opacity-100-hover o-hover-text-underline" t-out="this.thread.channel.parent_channel_id.displayName" t-on-click="() => this.thread?.channel?.parent_channel_id?.open({ focus: true })"/>
+                            <div t-if="this.thread.channel?.parent_channel_id" class="d-flex align-items-center gap-1 o-ms-1_5 min-w-0 flex-shrink-1">
+                                <span class="fw-bold cursor-pointer opacity-75 opacity-100-hover o-hover-text-underline text-truncate" t-out="this.thread.channel.parent_channel_id.displayName" t-on-click="() => this.thread?.channel?.parent_channel_id?.open({ focus: true })"/>
                                 <i class="oi o-xsmaller o-ms-0_5" data-icon="chevron_forward"/>
                             </div>
                             <AutoresizeInput
