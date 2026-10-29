@@ -1308,3 +1308,35 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
             {'quantity': 1.0, 'price_unit': -0.01, 'discount': 0.0, 'price_subtotal': -0.01},
         ])
         self.assertRecordValues(bill, [{'amount_untaxed': invoice.amount_untaxed, 'amount_total': invoice.amount_total}])
+
+    def test_ubl_parse_attached_document_without_binary_data(self):
+        """Test parsing an AttachedDocument without binary data."""
+        move = self.env['account.move']
+        xml = etree.fromstring('''
+            <AttachedDocument xmlns="urn:oasis:names:specification:ubl:schema:xsd:AttachedDocument-2">
+                <Attachment/>
+            </AttachedDocument>
+        ''')
+        self.assertEqual(move._ubl_parse_attached_document(xml), ('', None))
+
+    def test_ubl_parse_attached_document_with_whitespace_in_description(self):
+        """Test parsing an embedded XML document with leading whitespace."""
+        move = self.env['account.move']
+        expected_content = b'<?xml version="1.0"?><Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"/>'
+        xml = etree.fromstring('''
+            <AttachedDocument xmlns="urn:oasis:names:specification:ubl:schema:xsd:AttachedDocument-2">
+                <Attachment>
+                    <ExternalReference>
+                        <MimeCode>text/xml</MimeCode>
+                        <Description><![CDATA[
+                            <?xml version="1.0"?><Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"/>
+                        ]]></Description>
+                    </ExternalReference>
+                </Attachment>
+            </AttachedDocument>
+        ''')
+        content, tree = move._ubl_parse_attached_document(xml)
+
+        self.assertEqual(content, expected_content)
+        self.assertIsNotNone(tree)
+        self.assertEqual(etree.QName(tree).localname, 'Invoice')

@@ -320,6 +320,7 @@ class AccountMove(models.Model):
         if attachment_node is None:
             return '', None
 
+        content_1 = ''
         attachment_binary_data = attachment_node.find('./{*}EmbeddedDocumentBinaryObject')
         if attachment_binary_data is not None \
                 and attachment_binary_data.attrib.get('mimeCode') in ('application/xml', 'text/xml'):
@@ -333,7 +334,7 @@ class AccountMove(models.Model):
             mime_code = external_reference.findtext('./{*}MimeCode')
 
             if description and mime_code in ('application/xml', 'text/xml'):
-                content_2 = description.encode('utf-8')
+                content_2 = description.strip().encode('utf-8')
                 with suppress(etree.XMLSyntaxError):
                     return content_2, etree.fromstring(content_2)
 
