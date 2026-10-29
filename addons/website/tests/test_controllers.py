@@ -194,9 +194,9 @@ class TestControllers(tests.HttpCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.text, "{'message': 'Succeeded'}")
 
-    def test_07_get_alt_images(self):
+    def test_07_get_media_elements(self):
         test_view = self.env["ir.ui.view"].create({
-            "name": "Image Template Test View",
+            "name": "Media Template Test View",
             "type": "qweb",
             "arch_db": """
                 <template>
@@ -208,6 +208,10 @@ class TestControllers(tests.HttpCase):
                         <img src="/static/image2.jpg" alt="Static 2" role="presentation" />
                         <img src="/static/image3.png" />
                         <img src="/static/image4.png" role="presentation" />
+                        <div class="media_iframe_video" data-embed-url="//www.youtube.com/embed/abc">
+                            <div class="media_iframe_video_size"></div>
+                        </div>
+                        <div class="media_iframe_video" data-oe-expression="//player.vimeo.com/video/123" title="Vimeo"></div>
                     </div>
                 </template>
             """,
@@ -215,16 +219,22 @@ class TestControllers(tests.HttpCase):
         models = [{"model": "ir.ui.view", "id": test_view.id, "field": "arch"}]
 
         with MockRequest(self.env, website=self.env.ref('base.default_website')):
-            result = Website().get_alt_images(models)
+            result = Website().get_media_elements(models)
             parsed_result = json.loads(result)
 
-            expected_srcs = ["/static/image1.jpg", "/static/image3.png", "/static/image4.png"]
-            actual_srcs = [img["src"] for img in parsed_result]
+            expected_media = [
+                ("img", "/static/image1.jpg"),
+                ("img", "/static/image3.png"),
+                ("img", "/static/image4.png"),
+                ("video", "//www.youtube.com/embed/abc"),
+                ("video", "//player.vimeo.com/video/123"),
+            ]
+            actual_media = [(media["type"], media["src"]) for media in parsed_result]
 
             self.assertEqual(
-                expected_srcs,
-                actual_srcs,
-                "XPath should filter out dynamic images, include only static",
+                expected_media,
+                actual_media,
+                "XPath should filter out dynamic images, include only static images and videos",
             )
 
     def test_website_force_domain_redirect(self):
