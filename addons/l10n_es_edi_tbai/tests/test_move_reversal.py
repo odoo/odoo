@@ -69,10 +69,7 @@ class TestSendAndPrintEdiGipuzkoa(TestEsEdiTbaiCommonGipuzkoa):
 
         # Send refund
         refund_send_wizard = self._get_invoice_send_wizard(refund)
-        with patch(
-            'odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request',
-            return_value=self.mock_response_post_invoice_success,
-        ):
+        with mock_tbai_agency_request(self.mock_response_post_invoice_success):
             refund_send_wizard.action_send_and_print()
 
         self.assertEqual(refund.l10n_es_tbai_state, 'sent')

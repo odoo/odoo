@@ -1039,3 +1039,36 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
 
         all_peppol_responses = self.env['account.peppol.response'].search([])
         self.assertEqual(len(all_peppol_responses), 1)
+
+    def test_belgian_partner_eas_fallback(self):
+        """ Test fallback between Belgian EAS 0208 and 9925 when sending via Peppol.
+            If a partner is registered on Peppol under 0208 but configured with 9925 (or vice versa),
+            checking Peppol applicability on send should fall back to the inverse scheme and update the partner.
+        """
+        partner_9925 = self.env['res.partner'].create({
+            'name': 'Belgian Partner 9925',
+            'country_id': self.env.ref('base.be').id,
+            'routing_identifier': '9925:BE0477472701',
+        })
+        move_9925 = self.create_move(partner_9925)
+        move_9925.action_post()
+
+        # 9925 lookup fails, but 0208 succeeds -> should fallback to 0208
+        with mock_lookup_not_found('9925:be0477472701'), mock_lookup_success('0208:0477472701'):
+            self.create_send_and_print(move_9925, sending_methods=['peppol'])
+        self.assertEqual(partner_9925.routing_identifier, '0208:0477472701')
+        self.assertEqual(partner_9925.peppol_verification_state, 'valid')
+
+        # Inverse case: partner configured with 0208, but registered on 9925
+        partner_0208 = self.env['res.partner'].create({
+            'name': 'Belgian Partner 0208',
+            'country_id': self.env.ref('base.be').id,
+            'routing_identifier': '0208:0428759497',
+        })
+        move_0208 = self.create_move(partner_0208)
+        move_0208.action_post()
+
+        with mock_lookup_not_found('0208:0428759497'), mock_lookup_success('9925:be0428759497'):
+            self.create_send_and_print(move_0208, sending_methods=['peppol'])
+        self.assertEqual(partner_0208.routing_identifier, '9925:BE0428759497')
+        self.assertEqual(partner_0208.peppol_verification_state, 'valid')
