@@ -34,4 +34,4 @@ raise UserError(self.env._("Book %s is already borrowed, return it first", book.
   content is the character itself.
 - Existing text in a stable branch. Fixing punctuation is a cosmetic change,
   and rewording a translatable term breaks its translations (see
-  [Changes in a stable version](stable.md#changes-in-a-stable-version)).
+  [Changes in a stable version](../../odoo-stable-policy/SKILL.md#changes-in-a-stable-version)).
