@@ -170,7 +170,7 @@ class TestJPAccountReport(AccountTestInvoicingCommon):
             with self.subTest(contact=contact.display_name):
                 invoice = self._create_invoice_one_line(move_type='out_invoice', partner_id=contact, product_id=self.product_a, post=True)
                 html = self.env['ir.actions.report'].sudo()._render_qweb_html('account.report_invoice_with_payments', invoice.ids)[0]
-                recipient = lxml.html.fromstring(html).find_class('o_jp_standard_header')[0].find_class('fw-bold')[0]
+                recipient = lxml.html.fromstring(html).find_class('o_jp_standard_header')[0].xpath(".//div[@name='recipient_name']")[0]
 
                 self.assertEqual([' '.join(line.text_content().split()) for line in recipient], lines)
 

@@ -30,7 +30,7 @@
         <!-- The recipient's name heads its address: a contact comes under the name of its company,
              with 様 for a person, 御中 for a company or an address of one that names nobody. -->
         <template id="recipient_name">
-            <div class="fw-bold mb-3" t-if="partner">
+            <div name="recipient_name" class="mb-3" t-if="partner">
                 <t t-set="jp_recipient_company" t-value="partner.parent_id.commercial_partner_id"/>
                 <t t-set="jp_honorific" t-value="(partner.lang or '').startswith('ja') and (' 御中' if partner.is_company or not partner.name else ' 様') or ''"/>
                 <div t-if="jp_recipient_company">
