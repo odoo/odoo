@@ -159,22 +159,18 @@
     </t>
     <!-- Grid config -->
     <BuilderContext t-if="this.domState.isGrid" level="true">
-        <t
-            t-if="
-                this.domState.hasGrid and
+        <BuilderRow label.translate="Columns"
+            t-if="this.domState.hasGrid and
                 this.domState.multipleImages and
                 !this.isActiveItem('opt_product_page_image_width_hide') and
-                !this.isActiveItem('opt_product_page_image_width_full')
-            "
+                !this.isActiveItem('opt_product_page_image_width_full')"
         >
-            <BuilderRow label.translate="Columns">
-                <BuilderSelect action="'productPageImageGridColumns'" id="'o_wsale_grid_columns'">
-                    <BuilderSelectItem actionValue="1">1</BuilderSelectItem>
-                    <BuilderSelectItem actionValue="2">2</BuilderSelectItem>
-                    <BuilderSelectItem actionValue="3">3</BuilderSelectItem>
-                </BuilderSelect>
-            </BuilderRow>
-        </t>
+            <BuilderSelect action="'productPageImageGridColumns'" id="'o_wsale_grid_columns'">
+                <BuilderSelectItem actionValue="1">1</BuilderSelectItem>
+                <BuilderSelectItem actionValue="2">2</BuilderSelectItem>
+                <BuilderSelectItem actionValue="3">3</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
 	    <BuilderRow
             t-if="
                 this.domState.multipleImages and !this.isActiveItem('opt_product_page_image_width_hide')
@@ -317,14 +313,13 @@
         </t>
     </BuilderRow>
 
-    <t t-if="this.domState.hasImages and !this.isActiveItem('opt_product_page_image_width_hide')">
-	    <BuilderRow label.translate="Zoom on click" level="true">
-            <BuilderCheckbox
-                action="'websiteConfig'"
-                actionParam="{ views: ['website_sale.product_picture_magnify_click'] }"
-            />
-	    </BuilderRow>
-    </t>
+    <BuilderRow label.translate="Zoom on click" level="true"
+        t-if="this.domState.hasImages and !this.isActiveItem('opt_product_page_image_width_hide')">
+        <BuilderCheckbox
+            action="'websiteConfig'"
+            actionParam="{ views: ['website_sale.product_picture_magnify_click'] }"
+        />
+    </BuilderRow>
 
     <div class="o_wsale_panel_section_title ps-2 pt-2 pb-1 fw-bold">Product Details</div>
     <hr class="mx-2 mt-0 mb-2"/>

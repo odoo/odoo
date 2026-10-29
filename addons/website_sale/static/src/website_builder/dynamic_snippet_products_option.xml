@@ -15,50 +15,39 @@
     </BuilderRow>
     <BuilderRow id="this.filter_opt_row" position="after">
         <BuilderContext level="true">
-            <BuilderRow
-                label.translate="Category"
-                t-if="!isSingleMode"
-            >
-                <BuilderSelect dataAttributeAction="'productCategoryId'" preview="false" id="'product_category_opt'">
-                    <BuilderSelectItem dataAttributeActionValue="'all'">All Products</BuilderSelectItem>
-                    <BuilderSelectItem dataAttributeActionValue="'current'">Current Category or All</BuilderSelectItem>
-                    <t t-foreach="this.state.categories" t-as="category" t-key="`${category.id}`">
-                        <BuilderSelectItem dataAttributeActionValue="`${category.id}`" t-out="category.name"/>
-                    </t>
-                </BuilderSelect>
-            </BuilderRow>
-            <BuilderRow
-                label.translate="Ribbons"
-                t-if="!isSingleMode"
-                preview="false"
-            >
-                <BuilderMany2Many
-                    id="'product_ribbon_opt'"
-                    model="'product.ribbon'"
-                    dataAttributeAction="'productRibbonIds'"
-                />
-            </BuilderRow>
-            <BuilderRow
-                label.translate="Tags"
-                t-if="!isSingleMode"
-                preview="false"
-            >
-                <BuilderMany2Many id="'product_tag_opt'" model="'product.tag'" limit="10"
-                    dataAttributeAction="'productTagIds'"
-                />
-            </BuilderRow>
-            <BuilderRow
-                label.translate="Name"
-                t-if="!isSingleMode"
-                preview="false"
-            >
-                <BuilderTextInput
-                    dataAttributeAction="'productNames'"
-                    id="'product_names_opt'"
-                    placeholder.translate="e.g. lamp,bin"
-                    title.translate="Comma-separated list of parts of product names, barcodes or internal reference"
-                />
-            </BuilderRow>
+            <BuilderContext t-if="!isSingleMode" preview="false">
+                <BuilderRow
+                    label.translate="Category"
+                >
+                    <BuilderSelect dataAttributeAction="'productCategoryId'" id="'product_category_opt'">
+                        <BuilderSelectItem dataAttributeActionValue="'all'">All Products</BuilderSelectItem>
+                        <BuilderSelectItem dataAttributeActionValue="'current'">Current Category or All</BuilderSelectItem>
+                        <t t-foreach="this.state.categories" t-as="category" t-key="`${category.id}`">
+                            <BuilderSelectItem dataAttributeActionValue="`${category.id}`" t-out="category.name"/>
+                        </t>
+                    </BuilderSelect>
+                </BuilderRow>
+                <BuilderRow label.translate="Ribbons">
+                    <BuilderMany2Many
+                        id="'product_ribbon_opt'"
+                        model="'product.ribbon'"
+                        dataAttributeAction="'productRibbonIds'"
+                    />
+                </BuilderRow>
+                <BuilderRow label.translate="Tags">
+                    <BuilderMany2Many id="'product_tag_opt'" model="'product.tag'" limit="10"
+                        dataAttributeAction="'productTagIds'"
+                    />
+                </BuilderRow>
+                <BuilderRow label.translate="Name">
+                    <BuilderTextInput
+                        dataAttributeAction="'productNames'"
+                        id="'product_names_opt'"
+                        placeholder.translate="e.g. lamp,bin"
+                        title.translate="Comma-separated list of parts of product names, barcodes or internal reference"
+                    />
+                </BuilderRow>
+            </BuilderContext>
 <!-- TODO when many2many is fully supported
                     data-allow-delete="true"
                     data-fakem2m="true"
@@ -78,11 +67,8 @@
     t-inherit="website_sale.DynamicSnippetProductsOption"
 >
     <ProductsDesignPanel id="card_design_opt" position="after">
-        <BuilderContext level="true">
-            <BuilderRow
-                label.translate="Desktop"
-                t-if="!isSingleMode"
-            >
+        <BuilderContext level="true" t-if="!isSingleMode">
+            <BuilderRow label.translate="Desktop">
                 <BuilderSelect action="'gridColumns'" id="'o_wsale_grid_columns'">
                     <BuilderSelectItem actionValue="2">2 Columns</BuilderSelectItem>
                     <BuilderSelectItem actionValue="3">3 Columns</BuilderSelectItem>
@@ -91,10 +77,7 @@
                     <BuilderSelectItem actionValue="6">6 Columns</BuilderSelectItem>
                 </BuilderSelect>
             </BuilderRow>
-            <BuilderRow
-                label.translate="Mobile"
-                t-if="!isSingleMode"
-            >
+            <BuilderRow label.translate="Mobile">
                 <BuilderSelect action="'mobileColumns'" id="'o_wsale_mobile_columns'">
                     <BuilderSelectItem actionValue="1">1 Column</BuilderSelectItem>
                     <BuilderSelectItem actionValue="2">2 Columns</BuilderSelectItem>
