@@ -355,7 +355,7 @@ class PaymentTransaction(models.Model):
             return
 
         amount = payment_utils.to_major_currency_units(
-            payment_data['amount'], self.currency_id
+            payment_data['amount'] - payment_data.get('fee', 0), self.currency_id
         )
         return {
             'amount': amount,
