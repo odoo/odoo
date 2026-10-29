@@ -13,6 +13,7 @@ import { animationFrame, tick, waitFor, waitUntil } from "@odoo/hoot-dom";
 import { mountPosApp } from "@point_of_sale/../tests/unit/ui_utils";
 import { expect } from "@odoo/hoot";
 import { MainComponentsContainer } from "@web/core/main_components_container";
+import { patch } from "@web/core/utils/patch";
 import { ResCurrency } from "./data/res_currency.data";
 import { unmockedOrm } from "@web/../tests/_framework/module_set.hoot";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
@@ -90,6 +91,31 @@ export const makeOrder = (store, overrides = {}) => {
 export async function waitUntilOrdersSynced(store, options) {
     await waitUntil(() => !store.syncingOrders.size, options);
     await tick();
+}
+
+export function setupPreparationPrinting(store) {
+    const printedLines = [];
+    for (const printer of store.models["pos.printer"].getAll()) {
+        printer._instance ||= {};
+    }
+    patch(store.ticketPrinter, {
+        async generateIframe(template, ticket) {
+            if (template === "point_of_sale.pos_order_change_receipt") {
+                for (const line of ticket.changes.data || []) {
+                    printedLines.push({ product_id: line.product_id, quantity: line.quantity });
+                }
+            }
+            return {};
+        },
+        async generateImage() {
+            return "mock-image";
+        },
+        setIframeSizeFromPrinter() {},
+        async print() {
+            return { successful: true };
+        },
+    });
+    return printedLines;
 }
 
 export const mountPosDialog = async (component, props) => {

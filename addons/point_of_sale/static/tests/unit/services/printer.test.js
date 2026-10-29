@@ -1,5 +1,5 @@
 import { test, expect } from "@odoo/hoot";
-import { getFilledOrder, setupPosEnv } from "../utils";
+import { getFilledOrder, setupPosEnv, setupPreparationPrinting } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
@@ -47,6 +47,37 @@ test("Preparation ticket: order note behavior and change detection", async () =>
         expect(changes[0].extra_data.internal_note).toBe("Order Internal Note");
         expect(changes[0].changes.title).toBe("NOTE UPDATE");
     }
+});
+
+test("Preparation ticket: printing does not record the print history", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const printedLines = setupPreparationPrinting(store);
+
+    await store.ticketPrinter.printOrderChanges({ order });
+
+    expect(printedLines).toHaveLength(order.lines.length);
+    expect(order.lastPrints).toEqual([]);
+});
+
+test("Preparation ticket: sending to preparation records the print once", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const [printer] = store.config.preparation_printer_ids;
+    const secondPrinter = store.models["pos.printer"].create({
+        name: "Second Preparation Printer",
+        printer_type: "epson_epos",
+        use_type: "preparation",
+        product_categories_ids: printer.product_categories_ids,
+    });
+    store.config.preparation_printer_ids = [printer, secondPrinter];
+    const printedLines = setupPreparationPrinting(store);
+
+    await store.sendOrderInPreparation(order);
+
+    expect(printedLines).toHaveLength(2 * order.lines.length);
+    expect(order.lastPrints).toHaveLength(1);
+    expect(order.lastPrints[0].addedQuantity).toHaveLength(order.lines.length);
 });
 
 const setupSinglePrinter = async () => {

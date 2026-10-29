@@ -2039,24 +2039,29 @@ export class PosStore extends WithLazyGetterTrap {
         return true;
     }
 
+    async printPreparationChanges(order, opts = {}) {
+        if (!this.config.printerCategories.size || opts.byPassPrint) {
+            return false;
+        }
+        try {
+            return await this.ticketPrinter.printOrderChanges({ order, opts });
+        } catch (e) {
+            logPosMessage(
+                "Store",
+                "printPreparationChanges",
+                "Failed in printing the changes in the order",
+                CONSOLE_COLOR,
+                [e]
+            );
+            return false;
+        }
+    }
     // Now the printer should work in PoS without restaurant
     async sendOrderInPreparation(order, opts = {}) {
         let isPrinted = false;
         try {
             this.syncingOrders.add(order.uuid);
-            if (this.config.printerCategories.size && !opts.byPassPrint) {
-                try {
-                    isPrinted = await this.ticketPrinter.printOrderChanges({ order, opts });
-                } catch (e) {
-                    logPosMessage(
-                        "Store",
-                        "sendOrderInPreparation",
-                        "Failed in printing the changes in the order",
-                        CONSOLE_COLOR,
-                        [e]
-                    );
-                }
-            }
+            isPrinted = await this.printPreparationChanges(order, { ...opts, recordPrint: true });
             order.updateLastOrderChange(opts);
         } finally {
             this.syncingOrders.delete(order.uuid);
