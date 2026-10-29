@@ -6,12 +6,43 @@ from urllib.parse import quote as url_quote
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
+from odoo.addons.payment_mercado_pago import const
 from odoo.addons.payment_mercado_pago.tests.common import MercadoPagoCommon
 
 
 @tagged("post_install", "-at_install")
 class TestPaymentTransaction(MercadoPagoCommon, PaymentHttpCommon):
+    def test_no_item_missing_from_rendering_values(self):
+        """Test that the rendering values are conform to the transaction fields."""
+        tx = self._create_transaction(flow="redirect")
+        with self._mock_send_api_request(return_value={"sandbox_init_point": "https://dummy.com"}):
+            rendering_values = tx._get_specific_rendering_values(None)
+        self.assertDictEqual(
+            rendering_values,
+            {
+                "api_url": "https://dummy.com",
+                "http_method": "get",
+                "url_params": payment_utils.extract_url_params("https://dummy.com"),
+            },
+        )
+
+    @mute_logger("odoo.addons.payment.models.payment_transaction")
+    def test_no_input_missing_from_redirect_form(self):
+        """Test that the `api_url` key is not omitted from the rendering values."""
+        tx = self._create_transaction(flow="redirect")
+        with patch(
+            "odoo.addons.payment_mercado_pago.models.payment_transaction.PaymentTransaction"
+            "._get_specific_rendering_values",
+            return_value={"api_url": "https://dummy.com", "http_method": "get", "url_param": {}},
+        ):
+            processing_values = tx._get_processing_values()
+        form_info = self._extract_values_from_html_form(processing_values["redirect_form_html"])
+        self.assertEqual(form_info["action"], "https://dummy.com")
+        self.assertEqual(form_info["method"], "get")
+        self.assertDictEqual(form_info["inputs"], {})
+
     def test_no_item_missing_from_preference_request_payload(self):
         """Test that the request values are conform to the transaction fields."""
         tx = self._create_transaction(flow="redirect")
@@ -45,20 +76,47 @@ class TestPaymentTransaction(MercadoPagoCommon, PaymentHttpCommon):
             },
         )
 
-    @mute_logger("odoo.addons.payment.models.payment_transaction")
-    def test_no_input_missing_from_redirect_form(self):
-        """Test that the `api_url` key is not omitted from the rendering values."""
+    def test_cop_currency_rounding(self):
+        """Ensure COP payments get sent as integer amounts to Mercado Pago."""
+        self.currency = (
+            self
+            .env["res.currency"]
+            .with_context(active_test=False)
+            .search([("name", "=", "COP")], limit=1)
+        )
+        self.amount = 999.99
         tx = self._create_transaction(flow="redirect")
-        with patch(
-            "odoo.addons.payment_mercado_pago.models.payment_transaction.PaymentTransaction"
-            "._get_specific_rendering_values",
-            return_value={"api_url": "https://dummy.com", "http_method": "get", "url_param": {}},
-        ):
-            processing_values = tx._get_processing_values()
-        form_info = self._extract_values_from_html_form(processing_values["redirect_form_html"])
-        self.assertEqual(form_info["action"], "https://dummy.com")
-        self.assertEqual(form_info["method"], "get")
-        self.assertDictEqual(form_info["inputs"], {})
+        request_payload = tx._mercado_pago_prepare_preference_request_payload()
+        self.assertEqual(
+            request_payload["items"][0]["unit_price"],
+            999,
+            "COP payment amounts should be rounded down in the payload sent to Mercado Pago",
+        )
+
+    def test_extract_reference_finds_reference(self):
+        """Test that the transaction reference is found in the payment data."""
+        tx = self._create_transaction(flow="redirect")
+        reference = self.env["payment.transaction"]._extract_reference(
+            "mercado_pago", {"external_reference": tx.reference}
+        )
+        self.assertEqual(tx.reference, reference)
+
+    def test_apply_updates_sets_provider_reference(self):
+        """Test that the provider reference is set when processing the payment data."""
+        tx = self._create_transaction(flow="redirect")
+        tx.with_context(payment_safe_write=True)._apply_updates(self.verification_data)
+        self.assertEqual(tx.provider_reference, self.verification_data["id"])
+
+    def test_apply_updates_sets_payment_method(self):
+        """Test that the payment method is updated from the payment data."""
+        tx = self._create_transaction(flow="redirect")
+        payment_data = dict(
+            self.verification_data, payment_type_id="credit_card", payment_method_id="visa"
+        )
+        tx.with_context(payment_safe_write=True)._apply_updates(payment_data)
+        self.assertEqual(
+            tx.payment_method_id, self.env.ref("payment_mercado_pago.payment_method_visa")
+        )
 
     def test_apply_updates_confirms_transaction(self):
         """Test that the transaction state is set to 'done' when the payment data indicate a
@@ -77,19 +135,45 @@ class TestPaymentTransaction(MercadoPagoCommon, PaymentHttpCommon):
         )
         self.assertEqual(tx.state, "error")
 
-    def test_cop_currency_rounding(self):
-        """Ensure COP payments get sent as integer amounts to Mercado Pago."""
-        self.currency = (
-            self
-            .env["res.currency"]
-            .with_context(active_test=False)
-            .search([("name", "=", "COP")], limit=1)
-        )
-        self.amount = 999.99
+    def test_extract_amount_data_returns_amount_and_currency(self):
+        """Test that the amount and currency are returned from the payment data."""
         tx = self._create_transaction(flow="redirect")
-        request_payload = tx._mercado_pago_prepare_preference_request_payload()
-        self.assertEqual(
-            request_payload["items"][0]["unit_price"],
-            999,
-            "COP payment amounts should be rounded down in the payload sent to Mercado Pago",
+        payment_data = {
+            "additional_info": {"items": [{"unit_price": tx.amount}]},
+            "currency_id": tx.currency_id.name,
+        }
+        amount_data = tx._extract_amount_data(payment_data)
+        self.assertDictEqual(
+            amount_data,
+            {
+                "amount": tx.amount,
+                "currency_code": tx.currency_id.name,
+                "precision_digits": const.CURRENCY_DECIMALS.get(tx.currency_id.name),
+            },
+        )
+
+    def test_extract_token_values_maps_fields_correctly(self):
+        """Test that the token values are extracted correctly from the payment data."""
+        tx = self._create_transaction(flow="redirect")
+        payment_data = {
+            "token": "dummy_token",
+            "issuer_id": "25",
+            "payment_method_id": "visa",
+            "payer": {"email": self.partner.email},
+        }
+        with self._mock_send_api_request(
+            side_effect=[
+                {"results": []},
+                {"id": "customer_123"},
+                {"id": "card_456", "last_four_digits": "1234"},
+            ]
+        ):
+            token_values = tx._extract_token_values(payment_data)
+        self.assertDictEqual(
+            token_values,
+            {
+                "mercado_pago_customer_id": "customer_123",
+                "payment_details": "1234",
+                "provider_ref": "card_456",
+            },
         )
