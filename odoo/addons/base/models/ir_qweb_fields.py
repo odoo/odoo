@@ -483,7 +483,7 @@ class MonetaryConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        display_currency = options['display_currency']
+        display_currency = options.get('display_currency') or self.env.company.currency_id
 
         if not isinstance(value, (int, float)):
             raise ValueError(_("The value send to monetary field is not a number."))
@@ -537,8 +537,16 @@ class MonetaryConverter(models.AbstractModel):
             # search on the model if they are a res.currency field to set as default
             fields = record._fields.items()
             currency_fields = [k for k, v in fields if v.type == 'many2one' and v.comodel_name == 'res.currency']
-            if currency_fields:
+            if currency_fields and record[currency_fields[0]]:
                 options['display_currency'] = record[currency_fields[0]]
+            else:
+                company = (
+                    options.get('company_id')
+                    or ('company_id' in record._fields and record.company_id)
+                    or record.env.company
+                )
+                options['display_currency'] = company.currency_id
+
         if 'date' not in options:
             options['date'] = record._context.get('date')
         if 'company_id' not in options:
