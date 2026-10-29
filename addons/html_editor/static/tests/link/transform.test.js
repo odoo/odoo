@@ -43,6 +43,16 @@ describe("transform on space", () => {
             contentAfter: '<p><a href="http://test.com">http://test.com</a>&nbsp;[]</p>',
         });
     });
+    test("should transform url after space around the strikethrough", async () => {
+        await testEditor({
+            contentBefore: "<p><s>a http://test.com[] b</s></p>",
+            stepFunction: async (editor) => {
+                await insertSpace(editor);
+            },
+            contentAfter:
+                '<p><s>a </s><a href="http://test.com"><s>http://test.com</s></a><s>&nbsp;[] b</s></p>',
+        });
+    });
 
     test("typing valid URL + space should convert to link", async () => {
         const { editor, el } = await setupEditor("<p>[]</p>");

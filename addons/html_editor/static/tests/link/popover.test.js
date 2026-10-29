@@ -285,6 +285,32 @@ describe("popover should edit,copy,remove the link", () => {
             '<p>this is a <a class="text-wrap o_link_in_selection" href="http://test.com/">linknew[]</a></p>'
         );
     });
+    test("after edit the label of a formatted link, its format should be kept", async () => {
+        const { el } = await setupEditor(
+            '<p>this is a <a href="http://test.com/"><s>li[]nk</s></a></p>'
+        );
+        await waitFor(".o-we-linkpopover");
+        await click(".o_we_edit_link");
+
+        await contains(".o-we-linkpopover input.o_we_label_link").fill("new");
+        await click(".o_we_apply_link");
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>this is a <a href="http://test.com/"><s>linknew[]</s></a></p>'
+        );
+    });
+    test("after edit the label of a link with several formats, its whole label should be replaced", async () => {
+        const { el } = await setupEditor(
+            '<p>this is a <a href="http://test.com/"><s>li</s>n[]k</a></p>'
+        );
+        await waitFor(".o-we-linkpopover");
+        await click(".o_we_edit_link");
+
+        await contains(".o-we-linkpopover input.o_we_label_link").edit("new");
+        await click(".o_we_apply_link");
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>this is a <a href="http://test.com/">new[]</a></p>'
+        );
+    });
     test("when the label is empty, it should be set as the URL", async () => {
         const { el } = await setupEditor('<p>this is a <a href="http://test.com/">li[]nk</a></p>');
         await waitFor(".o-we-linkpopover");

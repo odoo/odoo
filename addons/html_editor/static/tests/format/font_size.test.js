@@ -292,6 +292,15 @@ test("should format inside of content editable boundary (setFontSize)", async ()
     });
 });
 
+test("should apply the font size inside a fully selected unsplittable element", async () => {
+    await testEditor({
+        contentBefore: '<p>a<span class="oe_unbreakable">[bc]</span>d</p>',
+        stepFunction: setFontSize("36px"),
+        contentAfter:
+            '<p>a<span class="oe_unbreakable"><span style="font-size: 36px;">[bc]</span></span>d</p>',
+    });
+});
+
 test("should set exact font size along with responsive one", async () => {
     const { el } = await setupEditor("<p>[abc]</p>");
     await waitFor('[name="font_size"]');
