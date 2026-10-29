@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import copy
+
 import werkzeug.exceptions
 import werkzeug.urls
 
@@ -345,29 +347,30 @@ class WebsiteMenu(models.Model):
 
     # would be better to take a menu_id as argument
     @api.model
-    def get_tree(self, website_id, menu_id=None):
-        website = self.env['website'].browse(website_id)
+    def get_tree(self, website_id, menu_id=None, draft=False):
+        website = self.env['website'].browse(website_id).with_context(draft_preview=draft)
 
-        def make_tree(node):
+        def make_tree(node, parent_id):
             menu_node = {
                 'fields': {
-                    'id': node.id,
+                    # draft menus are new records, referencing the saved menu
+                    'id': node._origin.id or node.id.ref,
                     'name': node.name,
                     'url': node.url,
                     'new_window': node.new_window,
                     'is_mega_menu': node.is_mega_menu,
                     'sequence': node.sequence,
-                    'parent_id': node.parent_id.id,
+                    'parent_id': parent_id,
                 },
                 'children': [],
                 'is_homepage': node.url == (website.homepage_url or '/'),
             }
             for child in node.child_id:
-                menu_node['children'].append(make_tree(child))
+                menu_node['children'].append(make_tree(child, menu_node['fields']['id']))
             return menu_node
 
         menu = menu_id and self.browse(menu_id) or website.menu_id
-        return make_tree(menu)
+        return make_tree(menu, menu.parent_id.id)
 
     @api.model
     def save(self, website_id, data):
@@ -377,7 +380,7 @@ class WebsiteMenu(models.Model):
             for menu in data['data']:
                 if menu['id'] == old_id:
                     menu['id'] = new_id
-                if menu['parent_id'] == old_id:
+                if menu.get('parent_id') == old_id:
                     menu['parent_id'] = new_id
         to_delete = data.get('to_delete')
         if to_delete:
@@ -393,3 +396,34 @@ class WebsiteMenu(models.Model):
             menu_id.write(menu)
 
         return True
+
+    @api.model
+    def save_draft(self, website_id, data):
+        """ Merge ``data`` into the draft, which keeps only what differs from
+        the saved menus: publishing doesn't undo the changes made meanwhile.
+        """
+        website = self.env['website'].browse(website_id)
+        draft = copy.deepcopy(website.menu_draft) or {'data': [], 'to_delete': []}
+        menus = {menu['id']: menu for menu in draft['data']}
+        to_delete = set(draft['to_delete'])
+        for menu_id in data.get('to_delete', []):
+            menus.pop(menu_id, None)
+            if isinstance(menu_id, int):
+                to_delete.add(menu_id)
+        for menu in data['data']:
+            menus.setdefault(menu['id'], {}).update(menu)
+
+        saved_menus = {}
+        stack = [self.get_tree(website_id)]
+        while stack:
+            node = stack.pop()
+            saved_menus[node['fields']['id']] = node['fields']
+            stack += node['children']
+        for menu_id, menu in list(menus.items()):
+            if menu_id in saved_menus:
+                changes = {key: value for key, value in menu.items() if saved_menus[menu_id].get(key) != value}
+                if changes:
+                    menus[menu_id] = {'id': menu_id, **changes}
+                else:
+                    del menus[menu_id]
+        website.menu_draft = {'data': list(menus.values()), 'to_delete': sorted(to_delete)}

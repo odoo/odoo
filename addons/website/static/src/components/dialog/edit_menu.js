@@ -205,7 +205,10 @@ export class EditMenuDialog extends Component {
                 "website.menu",
                 "get_tree",
                 [this.website.currentWebsite.id, this.props.rootID],
-                { context: { lang: this.website.currentWebsite.metadata.lang } }
+                {
+                    draft: this.website.isDraftPreview,
+                    context: { lang: this.website.currentWebsite.metadata.lang },
+                }
             );
             await this.markPageNotFound(menu);
             this.state.rootMenu = menu;
@@ -369,7 +372,7 @@ export class EditMenuDialog extends Component {
         const parent = this.map.get(parentId);
         parent.children = parent.children.filter((menu) => menu.fields["id"] !== id);
         this.map.delete(id);
-        if (parseInt(id)) {
+        if (parseInt(id) || this.website.isDraftPreview) {
             this.toDelete.push(id);
         }
     }
@@ -391,7 +394,7 @@ export class EditMenuDialog extends Component {
 
         await this.orm.call(
             "website.menu",
-            "save",
+            this.website.isDraftPreview ? "save_draft" : "save",
             [
                 this.website.currentWebsite.id,
                 {

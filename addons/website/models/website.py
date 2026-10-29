@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import copy
 import fnmatch
 import functools
 import hashlib
@@ -174,6 +175,7 @@ class Website(models.CachedModel):
     cdn_filters = fields.Text('CDN Filters', default=lambda s: '\n'.join(DEFAULT_CDN_FILTERS), help="URL matching those filters will be rewritten using the CDN Base URL")
     partner_id = fields.Many2one(related='user_id.partner_id', string='Public Partner', readonly=False)
     menu_id = fields.Many2one('website.menu', compute='_compute_menu', string='Main Menu')
+    menu_draft = fields.Json(groups='website.group_website_designer', copy=False)
     homepage_url = fields.Char(help='E.g. /contactus or /shop')
     custom_code_head = fields.Html('Custom <head> code', sanitize=False)
     custom_code_footer = fields.Html('Custom end of <body> code', sanitize=False)
@@ -228,6 +230,8 @@ class Website(models.CachedModel):
         for website in self:
             website.language_count = len(website.language_ids)
 
+    @api.depends('menu_draft')
+    @api.depends_context('draft_preview')
     def _compute_menu(self):
         # prefetch all accessible menus at once
         all_menus = self.env['website.menu'].search_fetch(Domain('website_id', 'in', self.ids + [False]))
@@ -257,6 +261,64 @@ class Website(models.CachedModel):
 
             top_menus = menus.filtered(lambda m: not m.parent_id)
             website.menu_id = top_menus[:1].id
+            if self.env.context.get('draft_preview') and website.sudo().menu_draft:
+                website.menu_id = website._get_draft_menu(website.menu_id)
+
+    def _get_draft_menu(self, root):
+        """ Return ``root`` with the draft changes applied to its menus. """
+        self.ensure_one()
+        Menu = self.env['website.menu']
+        draft = self.sudo().menu_draft
+        saved_menus = Menu.search([('id', 'child_of', root.id)]) - root
+        menus = {
+            menu.id: {'id': menu.id, 'parent_id': menu.parent_id.id, 'sequence': menu.sequence}
+            for menu in saved_menus if menu.id not in draft['to_delete']
+        }
+        for menu in draft['data']:
+            if isinstance(menu['id'], str) or menu['id'] in menus:
+                menus.setdefault(menu['id'], {}).update(menu)
+        children = defaultdict(list)
+        for menu in menus.values():
+            children[menu['parent_id']].append(menu)
+
+        def make(menu, origin):
+            child_ids = Menu
+            for child in sorted(children[menu['id']], key=lambda m: m['sequence']):
+                child_ids |= make(child, saved_menus.browse(child['id']) if isinstance(child['id'], int) else None)
+            values = {field: menu[field] for field in ('name', 'url', 'new_window', 'sequence') if field in menu}
+            return Menu.new({**values, 'child_id': child_ids}, origin=origin, ref=menu['id'])
+
+        return make({'id': root.id}, root)
+
+    def _add_draft_menu(self, page_id):
+        """ Add a menu to the draft menu tree, linking to the given page. """
+        self.ensure_one()
+        Menu = self.env['website.menu']
+        page = self.env['website.page'].browse(page_id)
+        top_menus = Menu.get_tree(self.id, draft=True)['children']
+        Menu.save_draft(self.id, {'data': [{
+            'id': f'menu_page_{page.id}',
+            'name': page.name,
+            'url': page.url,
+            'page_id': page.id,
+            'new_window': False,
+            'sequence': max((node['fields']['sequence'] for node in top_menus), default=0) + 1,
+            'parent_id': self.with_context(draft_preview=False).menu_id.id,
+        }]})
+
+    def _publish_menu_draft(self):
+        """ Save the draft changes, skipping the menus deleted meanwhile. """
+        Menu = self.env['website.menu']
+        for website in self.sudo().filtered('menu_draft'):
+            draft = copy.deepcopy(website.menu_draft)
+            saved_ids = Menu.browse(
+                [menu['id'] for menu in draft['data'] if isinstance(menu['id'], int)] + draft['to_delete']
+            ).exists().ids
+            Menu.save(website.id, {
+                'data': [menu for menu in draft['data'] if isinstance(menu['id'], str) or menu['id'] in saved_ids],
+                'to_delete': [menu_id for menu_id in draft['to_delete'] if menu_id in saved_ids],
+            })
+            website.menu_draft = False
 
     @api.depends('custom_blocked_third_party_domains')
     def _compute_blocked_third_party_domains(self):
@@ -2741,6 +2803,10 @@ class Website(models.CachedModel):
         View = self.env['ir.ui.view'].with_context(active_test=False)
         View.search(View._draft_views_domain(website_id)).publish_draft()
         self.env['website.assets'].publish_draft(website_id)
+        self.browse(website_id)._publish_menu_draft()
+        self.env['website.page'].search([
+            ('website_id', '=', website_id), ('created_in_draft', '=', True),
+        ]).publish_created_in_draft()
 
     @api.model
     def delete_draft(self, website_id):
@@ -2750,3 +2816,7 @@ class Website(models.CachedModel):
         View = self.env['ir.ui.view'].with_context(active_test=False)
         View.search(View._draft_views_domain(website_id)).delete_draft()
         self.env['website.assets'].delete_draft(website_id)
+        self.browse(website_id).sudo().menu_draft = False
+        self.env['website.page'].search([
+            ('website_id', '=', website_id), ('created_in_draft', '=', True),
+        ]).unlink()

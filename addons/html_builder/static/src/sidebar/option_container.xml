@@ -61,7 +61,16 @@
         </div>
         <div t-att-id="this.containerId" t-if="!this.props.folded" class="o_hb_bg_options_container pb-3" t-ref="this.contentRef">
             <t t-foreach="this.options()" t-as="OptionClass" t-key="OptionClass.name + '-' + OptionClass.template + '-' + OptionClass_index">
-                <BuilderContext applyTo="OptionClass.applyTo">
+                <t t-set="disabledReason" t-value="this.dependencies.builderOptions.getOptionDisabledReason(OptionClass, this.props.editingElement)"/>
+                <div t-if="disabledReason" class="o_hb_option_disabled">
+                    <p class="small text-muted px-2 pt-2 mb-0" t-out="disabledReason"/>
+                    <div class="opacity-50" inert="">
+                        <BuilderContext applyTo="OptionClass.applyTo">
+                            <t t-component="OptionClass" t-props="OptionClass.propsValue || {}"></t>
+                        </BuilderContext>
+                    </div>
+                </div>
+                <BuilderContext t-else="" applyTo="OptionClass.applyTo">
                     <t t-component="OptionClass" t-props="OptionClass.propsValue || {}"></t>
                 </BuilderContext>
             </t>
