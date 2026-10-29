@@ -5143,9 +5143,10 @@ class AccountMove(models.Model):
             for line in invoice_lines
         ]
         for base_line in base_lines:
-            base_line['tax_ids'] = base_line['tax_ids'].filtered(lambda t: t.amount_type != 'fixed')
+            base_line['tax_ids'] = base_line['tax_ids']
             remaining_part_to_consider = (100 - discount_percentage) / 100.0
             base_line['price_unit'] *= remaining_part_to_consider
+            base_line['price_unit'] -= sum(base_line['tax_ids'].filtered(lambda t: t.amount_type == 'fixed').mapped('amount')) * discount_percentage / 100
         AccountTax = self.env['account.tax']
         AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
         AccountTax._round_base_lines_tax_details(base_lines, self.company_id)
@@ -5219,6 +5220,10 @@ class AccountMove(models.Model):
             for tax_line_vals in resulting_delta_tax_details.values():
                 tax_rep = self.env['account.tax.repartition.line'].browse(tax_line_vals['tax_repartition_line_id'])
                 tax = tax_rep.tax_id
+                # New tax lines represent modification brought to tax amount.
+                # Fixed taxes are not modified, should be skipped.
+                if tax.amount_type == 'fixed':
+                    continue
 
                 grouping_dict = {
                     'account_id': tax_line_vals['account_id'],

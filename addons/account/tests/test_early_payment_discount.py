@@ -178,6 +178,39 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'amount_total': 1135.05,
          })
 
+    def test_fixed_tax_amount_included_in_subsec_taxes_discounted_payment_included(self):
+        fixed_tax = self.env['account.tax'].create({
+            'name': 'Fixed 10',
+            'amount_type': 'fixed',
+            'amount': 10,
+            'include_base_amount': True,
+            'sequence': 0,
+        })
+        self.early_pay_10_percents_10_days.early_pay_discount_computation = 'included'
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-01',
+            'date': '2019-01-01',
+            'invoice_line_ids': [Command.create({
+                'name': 'line',
+                'price_unit': 100.0,
+                'tax_ids': [Command.set(self.product_a.taxes_id.ids + fixed_tax.ids)],  # 15% tax + fixed 10
+            })],
+            'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
+        })
+        invoice.action_post()
+        payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+            'payment_date': '2019-01-01',
+        })._create_payments()
+
+        self.assertRecordValues(payments.move_id.line_ids, [
+            {'balance': 113.85},
+            {'balance': -126.50},
+            {'balance': 11.00},
+            {'balance': 1.65},
+        ])
+
     # ========================== Tests Payment Register ==========================
     def test_register_discounted_payment_on_single_invoice(self):
         self.early_pay_10_percents_10_days.early_pay_discount_computation = 'included'
