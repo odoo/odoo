@@ -50,3 +50,20 @@ class EstateProperty(models.Model):
         required=True,
         copy=False,
     )
+
+    # Many2one: a column holding the id of one record of the comodel (a foreign key)
+    property_type_id = fields.Many2one(string="Property Type", comodel_name="estate.property.type")
+    # Set from the accepted offer, hence read-only and not copied
+    partner_id = fields.Many2one(
+        string="Buyer", comodel_name="res.partner", readonly=True, copy=False
+    )
+    # The salesperson is the user creating the property, unless changed
+    user_id = fields.Many2one(
+        string="Salesperson", comodel_name="res.users", default=lambda self: self.env.user
+    )
+    # Many2many: stored in a separate relation table, each side can link to many records
+    tag_ids = fields.Many2many(string="Tags", comodel_name="estate.property.tag")
+    # One2many: no column; it is the reverse of the `property_id` Many2one on the offers
+    offer_ids = fields.One2many(
+        string="Offers", comodel_name="estate.property.offer", inverse_name="property_id"
+    )

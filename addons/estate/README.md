@@ -214,3 +214,41 @@ dates and statuses. Archive one (Actions > Archive) and notice it disappears fro
 
 **Try it.** Search `80` in "Living Area" and check that only properties of 80 sqm or more remain.
 Combine the "Available" filter with the "Postcode" grouping.
+
+## Chapter 7 - Relations between models
+
+[Official chapter](https://www.odoo.com/documentation/20.0/developer/tutorials/server_framework_101/07_relations.html)
+
+**Functional.**
+
+- Real Estate > Configuration lets the agency define **property types** (House, Apartment, ...)
+  and **tags** (cozy, renovated, ...).
+- A property has one type, any number of tags, a **salesperson** (the creator by default) and a
+  **buyer** (filled later, when an offer is accepted).
+- The "Offers" tab lists the **offers** made on the property: a price, a partner and a status.
+  Deleting a property deletes its offers.
+
+**Technical.** The three relational field types:
+
+| Field | Database | Example |
+| --- | --- | --- |
+| `Many2one` | a column with the id of one comodel record (foreign key) | `property_type_id`, `partner_id`, `user_id` |
+| `One2many` | no column: the reverse of a `Many2one` on the comodel, named by `inverse_name` | `offer_ids` (reverse of `offer.property_id`) |
+| `Many2many` | a separate relation table with one row per link | `tag_ids` (table `estate_property_estate_property_tag_rel`) |
+
+- `res.partner` (contacts) and `res.users` (users) come from `base`, so no new dependency is
+  needed.
+- `default=lambda self: self.env.user` reads the current user from the **environment** (`env`),
+  which also carries the database cursor, the context and the company.
+- `ondelete="cascade"` on `offer.property_id` deletes offers with their property. The default
+  (`set null`) would leave offers pointing to nothing, which `required=True` forbids anyway.
+- In a form, a `One2many` field is rendered with the comodel's list view (here
+  `estate_property_offer_view_list`) and opens its form view to edit a line. Offers therefore need
+  views but no action or menu.
+- `widget="many2many_tags"` shows a `Many2many` as tags instead of a list.
+- Each new model needs its own access row in `ir.access.csv`.
+
+**Try it.** Create the types "House" and "Apartment" and a few tags. On a property, choose a
+type, add tags, and add two offers from the "Offers" tab. Check that the salesperson is you.
+Delete the property, then check in Settings > Technical > Database Structure > Models that its
+offers are gone.
