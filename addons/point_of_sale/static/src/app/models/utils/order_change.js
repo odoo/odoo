@@ -98,8 +98,9 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
                 changesCount += quantityDiff;
                 changeAbsCount += Math.abs(quantityDiff);
                 if (noteChange) {
-                    lineDetails.quantity = oldChanges[relatedKey].quantity || 0;
-                    noteUpdate[lineKey] = lineDetails;
+                    const noteDetails = { ...lineDetails };
+                    noteDetails.quantity = oldChanges[relatedKey].quantity || 0;
+                    noteUpdate[lineKey] = noteDetails;
                 }
 
                 orderline.setHasChange(true);
