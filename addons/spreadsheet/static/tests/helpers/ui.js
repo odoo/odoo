@@ -1,31 +1,52 @@
-import { Model, Spreadsheet, stores, owlPlugins } from "@odoo/o-spreadsheet";
+import { Model, Spreadsheet, hooks } from "@odoo/o-spreadsheet";
 import { loadBundle } from "@web/core/assets";
 
 import { getFixture } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, onMounted, onWillUnmount, t, useProps, xml, providePlugins } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillUnmount,
+    signal,
+    t,
+    useProps,
+    xml,
+    providePlugins,
+} from "@odoo/owl";
 import { useSpreadsheetNotificationPlugin } from "@spreadsheet/hooks";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { render } from "@web/owl2/utils";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 
-const { useStoreProvider, ModelStore } = stores;
-const { ModelPlugin, NotificationPlugin, IsSmallPlugin, SpreadsheetRectPlugin } = owlPlugins;
+const { useSpreadsheetProviders } = hooks;
 
 class Parent extends Component {
     static template = xml`<Spreadsheet model="this.props.model"/>`;
     static components = { Spreadsheet, MainComponentsContainer };
     props = useProps({
         model: t.instanceOf(Model),
+        owlPlugins: t.array(),
+        owlPluginsConfig: t.object(),
     });
     setup() {
         useSpreadsheetNotificationPlugin();
+        providePlugins(this.props.owlPlugins, {
+            model: this.props.model,
+            ...this.props.owlPluginsConfig,
+        });
     }
 }
 
+/**
+ * Parent of an isolated component: the `.o-spreadsheet` element with exactly the same plugins and
+ * stores as the real Spreadsheet (see `useSpreadsheetProviders`), plus the given extra plugins.
+ */
 class ComponentWithStores extends Component {
-    static template = xml`<t t-component="this.props.component" t-props="this.props.props"/>`;
+    static template = xml`
+        <div class="o-spreadsheet" t-ref="this.ref">
+            <t t-component="this.props.component" t-props="this.props.props"/>
+        </div>`;
     props = useProps({
         component: t.component(),
         props: t.object(),
@@ -33,10 +54,15 @@ class ComponentWithStores extends Component {
         owlPlugins: t.array(),
         owlPluginsConfig: t.object(),
     });
+    ref = signal.ref();
     setup() {
-        const stores = useStoreProvider();
-        stores.inject(ModelStore, this.props.model);
-        providePlugins([ModelPlugin, NotificationPlugin, IsSmallPlugin, SpreadsheetRectPlugin, ...this.props.owlPlugins], {
+        useSpreadsheetNotificationPlugin();
+        const { stores } = useSpreadsheetProviders({
+            model: this.props.model,
+            spreadsheetRef: this.ref,
+            getPopoverContainerRect: () => this.ref().getBoundingClientRect(),
+        });
+        providePlugins(this.props.owlPlugins, {
             model: this.props.model,
             ...this.props.owlPluginsConfig,
         });
@@ -71,9 +97,18 @@ export async function mountComponentWithStores(component, model, props = {}, par
  * @param {Model} model
  * @returns {Promise<HTMLElement>}
  */
-export async function mountSpreadsheet(model, params) {
+export async function mountSpreadsheet(model, params = {}) {
     await loadBundle("web.chartjs_lib");
-    return mountComponentWithStores(Parent, model, { model }, params);
+    await mountWithCleanup(Parent, {
+        props: {
+            model,
+            owlPlugins: params.owlPlugins || [],
+            owlPluginsConfig: params.owlPluginsConfig || {},
+        },
+        noMainContainer: false,
+    });
+    await animationFrame();
+    return getFixture();
 }
 
 /**

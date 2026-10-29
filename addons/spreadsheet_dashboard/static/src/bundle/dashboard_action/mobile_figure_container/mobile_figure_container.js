@@ -6,16 +6,13 @@ import {
     signal,
     t,
     useProps,
-    providePlugins,
 } from "@odoo/owl";
 import { render } from "@web/owl2/utils";
 
-const { registries, stores, constants, owlPlugins, hooks } = spreadsheet;
+const { registries, constants, hooks } = spreadsheet;
 const { figureRegistry } = registries;
-const { ModelPlugin, PopoverContainerPlugin, IsSmallPlugin } = owlPlugins;
-const { ModelStore, useStoreProvider } = stores;
 
-const { provideSpreadsheetRect } = hooks;
+const { useSpreadsheetProviders } = hooks;
 
 const EMPTY_FIGURE = { tag: "empty" };
 const { DARK_MODE_FILTER_STRING } = constants;
@@ -30,11 +27,9 @@ export class MobileFigureContainer extends Component {
     containerWidth = signal(0);
 
     setup() {
-        provideSpreadsheetRect(this.figureContainer);
-        const stores = useStoreProvider();
-        stores.inject(ModelStore, this.props.spreadsheetModel);
-        providePlugins([ModelPlugin, IsSmallPlugin], { model: this.props.spreadsheetModel });
-        providePlugins([PopoverContainerPlugin], {
+        const { stores } = useSpreadsheetProviders({
+            model: this.props.spreadsheetModel,
+            spreadsheetRef: this.figureContainer,
             getPopoverContainerRect: () => this.getGridRect(),
         });
         const onUpdate = () => render(this, true);
