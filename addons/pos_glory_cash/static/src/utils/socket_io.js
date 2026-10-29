@@ -1,3 +1,5 @@
+import { _t } from "@web/core/l10n/translation";
+
 // https://socket.io/docs/v4/engine-io-protocol/#protocol
 const PACKET_TYPES = {
     OPEN: "0",
@@ -85,7 +87,19 @@ export class SocketIoService {
             this._reset();
         }
         this.currentUrl = url;
-        this.websocket = new WebSocket(this.currentUrl);
+        try {
+            this.websocket = new WebSocket(this.currentUrl);
+        } catch (error) {
+            if (error instanceof DOMException && error.name === "SecurityError") {
+                throw new Error(
+                    _t(
+                        "Local Network Access for the Glory machine is not supported on this browser. Please update your browser or disable Local Network Access."
+                    ),
+                    { cause: error }
+                );
+            }
+            throw error;
+        }
 
         this.websocket.onclose = () => {
             if (this.pingIntervalId) {
