@@ -10,6 +10,7 @@ import { prepareRoundingVals } from "../accounting/utils";
 import { getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { localization } from "@web/core/l10n/localization";
 import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
+import { patch } from "@web/core/utils/patch";
 
 const { DateTime } = luxon;
 
@@ -158,6 +159,49 @@ describe("pos_store.js", () => {
         // The changes printed on retry must not be printed again with the next ones
         await store.sendOrderInPreparation(order);
         expect(printed).toEqual(["Kitchen: 3 TEST", "Bar: 2 TEST 2"]);
+    });
+
+    test("reprintOrderChanges preserves the reprint data when retrying", async () => {
+        const store = await setupPosEnv();
+        const printer = store.models["pos.printer"].get(1);
+        printer.product_categories_ids = [store.models["pos.category"].get(1)];
+        store.config.preparation_printer_ids = [printer];
+        await store.ticketPrinter.initPrinters();
+        const order = await getFilledOrder(store);
+        order.updateLastOrderChange();
+
+        const printedLines = [];
+        let printAttempts = 0;
+        let retry;
+        patch(store.ticketPrinter, {
+            async generateIframe(template, ticket) {
+                return ticket;
+            },
+            setIframeSizeFromPrinter() {},
+            async generateImage(ticket) {
+                return ticket;
+            },
+            async print({ image }) {
+                printAttempts++;
+                printedLines.push(
+                    image.changes.data.map((line) => `${line.quantity} ${line.basic_name}`)
+                );
+                return printAttempts === 1
+                    ? { successful: false, message: { body: "Printer is not reachable" } }
+                    : { successful: true };
+            },
+            showPrinterErrorDialog(message, retryFunction) {
+                retry = retryFunction;
+            },
+        });
+
+        await store.ticketPrinter.reprintOrderChanges({ order });
+        expect(printAttempts).toBe(1);
+        expect(printedLines).toEqual([["3 TEST"]]);
+
+        await retry();
+        expect(printAttempts).toBe(2);
+        expect(printedLines).toEqual([["3 TEST"], ["3 TEST"]]);
     });
 
     describe("syncAllOrders", () => {
