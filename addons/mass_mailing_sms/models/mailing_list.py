@@ -87,7 +87,7 @@ class MailingList(models.Model):
         return (
             models_to_flush + [self.env['phone.blacklist']],
             SQL(
-                "%(super_condition)s AND src_contact.phone_sanitized NOT IN (select number from phone_blacklist where active = TRUE)",
+                "%(super_condition)s AND (src_contact.phone_sanitized IS NULL OR src_contact.phone_sanitized NOT IN (select number from phone_blacklist where active = TRUE))",
                 super_condition=condition
             )
         )
