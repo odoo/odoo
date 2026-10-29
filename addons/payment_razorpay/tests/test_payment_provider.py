@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 
@@ -8,6 +10,14 @@ from odoo.addons.payment_razorpay.tests.common import RazorpayCommon
 
 @tagged("post_install", "-at_install")
 class TestPaymentProvider(RazorpayCommon):
+    def test_not_available_for_unsupported_currencies(self):
+        """Test that Razorpay providers are filtered out from compatible providers when the
+        currency is not supported."""
+        available_providers = self.env["payment.provider"]._find_available_providers(
+            self.company_id, self.partner.id, self.amount, currency_id=self.env.ref("base.AFN").id
+        )
+        self.assertNotIn(self.provider, available_providers)
+
     def test_allow_setting_live_if_credentials_are_set(self):
         """Test that setting live a Razorpay provider with credentials succeeds."""
         self._assert_does_not_raise(ValidationError, self.provider.write({"is_live": True}))
@@ -19,10 +29,20 @@ class TestPaymentProvider(RazorpayCommon):
         with self.assertRaises(ValidationError):
             self.provider.is_live = True
 
-    def test_not_available_for_unsupported_currencies(self):
-        """Test that Razorpay providers are filtered out from compatible providers when the
-        currency is not supported."""
-        available_providers = self.env["payment.provider"]._find_available_providers(
-            self.company_id, self.partner.id, self.amount, currency_id=self.env.ref("base.AFN").id
+    def test_validation_amount_and_currency(self):
+        self.assertEqual(self.provider._get_validation_amount(), 1.0)
+        self.assertEqual(
+            self.provider._get_validation_currency(), self.provider.available_currency_ids[0]
         )
-        self.assertNotIn(self.provider, available_providers)
+
+    def test_signature_calculation_for_redirect_data(self):
+        signature = self.provider._razorpay_calculate_signature(
+            self.redirect_payment_data, is_redirect=True
+        )
+        self.assertEqual(signature, self.redirect_payment_data_signature)
+
+    def test_signature_calculation_for_webhook_data(self):
+        signature = self.provider._razorpay_calculate_signature(
+            json.dumps(self.webhook_payment_data).encode(), is_redirect=False
+        )
+        self.assertEqual(signature, self.webhook_payment_data_signature)
