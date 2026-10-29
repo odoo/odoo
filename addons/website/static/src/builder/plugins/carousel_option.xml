@@ -10,18 +10,17 @@
         </BuilderSelect>
     </BuilderRow>
 
-    <t t-if="this.isActiveItem('transition_slide') || this.isActiveItem('transition_fade')">
-        <BuilderRow label.translate="Duration" tooltip.translate="Adjust how long the animation effect to change slide takes" level="true">
-            <BuilderRange
-                action="'setCarouselDuration'"
-                unit="'s'"
-                saveUnit="'ms'"
-                step="0.1"
-                min="0.1"
-                max="5"
-                withNumberInput="true"/>
-        </BuilderRow>
-    </t>
+    <BuilderRow label.translate="Duration" tooltip.translate="Adjust how long the animation effect to change slide takes" level="true"
+        t-if="this.isActiveItem('transition_slide') || this.isActiveItem('transition_fade')">
+        <BuilderRange
+            action="'setCarouselDuration'"
+            unit="'s'"
+            saveUnit="'ms'"
+            step="0.1"
+            min="0.1"
+            max="5"
+            withNumberInput="true"/>
+    </BuilderRow>
 
     <BuilderRow label.translate="Autoplay">
         <BuilderSelect action="'setAutoplay'">
@@ -31,8 +30,8 @@
         </BuilderSelect>
     </BuilderRow>
 
-    <t t-if="this.isActiveItem('auto_after_first_hover') || this.isActiveItem('auto_always')">
-        <BuilderRow label.translate="Timespan" tooltip.translate="Adjust how long each slide stays on screen" level="true">
+    <BuilderContext t-if="this.isActiveItem('auto_after_first_hover') || this.isActiveItem('auto_always')" level="true">
+        <BuilderRow label.translate="Timespan" tooltip.translate="Adjust how long each slide stays on screen">
             <BuilderNumberInput
                 action="'setCarouselTimespan'"
                 unit="'s'"
@@ -42,10 +41,10 @@
                 applyWithUnit="false"/>
         </BuilderRow>
 
-        <BuilderRow t-if="this.state.hasPauseButton" label.translate="Pause Button" tooltip.translate="Allow your visitors to pause the carousel" level="true">
+        <BuilderRow t-if="this.state.hasPauseButton" label.translate="Pause Button" tooltip.translate="Allow your visitors to pause the carousel">
             <BuilderCheckbox classAction="'o_carousel_pause_btn_hidden'" inverseAction="true"/>
         </BuilderRow>
-    </t>
+    </BuilderContext>
 </t>
 
 <t t-name="website.CarouselOption">

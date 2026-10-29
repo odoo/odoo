@@ -102,12 +102,11 @@
                         <BuilderSelectItem actionValue="'image_mirror_blur'" id="'hover_effect_mirror_blur_opt'">Mirror Blur</BuilderSelectItem>
                     </BuilderSelect>
                 </BuilderRow>
-                <BuilderContext level="true">
+                <BuilderContext level="true" preview="false">
                     <BuilderRow label.translate="Intensity" tooltip.translate="Adjust how strong the hover effect is">
                         <BuilderRange
                             action="'setHoverEffectIntensity'"
                             t-if="this.isActiveItems(['hover_effect_zoom_in_opt', 'hover_effect_zoom_out_opt', 'hover_effect_mirror_blur_opt', 'hover_effect_dolly_zoom_opt'])"
-                            preview="false"
                             min="1"
                             max="100"
                             step="1"
@@ -121,13 +120,12 @@
                         <BuilderColorPicker action="'setHoverEffectColor'"
                             enabledTabs="['custom']"
                             t-if="this.isActiveItems(['hover_effect_dolly_zoom_opt', 'hover_effect_overlay_opt', 'hover_effect_zoom_in_opt', 'hover_effect_zoom_out_opt', 'hover_effect_outline_opt'])"
-                            preview="false"
                             id="'hover_effect_color_opt'"/>
                     </BuilderRow>
                     <BuilderRow label.translate="Stroke Width">
                         <BuilderNumberInput action="'setHoverEffectStrokeWidth'"
                             t-if="this.isActiveItem('hover_effect_outline_opt')"
-                            step="1" min="1" unit="'px'" preview="false"/>
+                            step="1" min="1" unit="'px'"/>
                     </BuilderRow>
                 </BuilderContext>
             </t>

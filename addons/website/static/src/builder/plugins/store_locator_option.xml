@@ -48,20 +48,20 @@
                         Tooltip</BuilderSelectItem>
                 </BuilderSelect>
             </BuilderRow>
-            <BuilderContext level="true">
-                <BuilderRow label.translate="Phone Number" preview="false">
+            <BuilderContext level="true" preview="false">
+                <BuilderRow label.translate="Phone Number">
                     <BuilderCheckbox dataAttributeAction="'mapShowPhone'" dataAttributeActionValue="'true'"
                         action="'storeLocatorOptionalField'" actionParam="'phone'"/>
                 </BuilderRow>
-                <BuilderRow label.translate="Email" preview="false">
+                <BuilderRow label.translate="Email">
                     <BuilderCheckbox dataAttributeAction="'mapShowEmail'" dataAttributeActionValue="'true'"
                         action="'storeLocatorOptionalField'" actionParam="'email'"/>
                 </BuilderRow>
-                <BuilderRow label.translate="Website" preview="false">
+                <BuilderRow label.translate="Website">
                     <BuilderCheckbox dataAttributeAction="'mapShowWebsite'" dataAttributeActionValue="'true'"
                         action="'storeLocatorOptionalField'" actionParam="'website'"/>
                 </BuilderRow>
-                <BuilderRow label.translate="Image" preview="false"
+                <BuilderRow label.translate="Image"
                     t-if="this.isActiveItem('details_area')">
                     <BuilderCheckbox dataAttributeAction="'mapShowImage'" dataAttributeActionValue="'true'"
                         action="'storeLocatorOptionalField'" actionParam="'image_256'"/>

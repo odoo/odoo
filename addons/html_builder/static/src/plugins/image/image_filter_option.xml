@@ -19,9 +19,9 @@
             <BuilderSelectItem action="'glFilter'" actionParam="'custom'" id="this.custom_glfilter_opt">Custom</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderContext t-if="this.state.isCustomFilter" level="true">
+    <BuilderContext t-if="this.state.isCustomFilter" level="true" action="'setCustomFilter'">
         <BuilderRow label.translate="Color">
-            <BuilderSelect action="'setCustomFilter'" actionParam="'blend'">
+            <BuilderSelect actionParam="'blend'">
                 <BuilderSelectItem actionValue="'normal'">Normal</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'overlay'">Overlay</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'screen'">Screen</BuilderSelectItem>
@@ -31,11 +31,10 @@
                 <BuilderSelectItem actionValue="'darken'">Darken</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'lighten'">Lighten</BuilderSelectItem>
             </BuilderSelect>
-            <BuilderColorPicker action="'setCustomFilter'" actionParam="'filterColor'" enabledTabs="['custom']" />
+            <BuilderColorPicker actionParam="'filterColor'" enabledTabs="['custom']" />
         </BuilderRow>
         <BuilderRow label.translate="Saturation">
             <BuilderRange
-                action="'setCustomFilter'"
                 actionParam="'saturation'"
                 min="-100"
                 max="100"
@@ -47,7 +46,6 @@
         </BuilderRow>
         <BuilderRow label.translate="Contrast">
             <BuilderRange
-                action="'setCustomFilter'"
                 actionParam="'contrast'"
                 min="-100"
                 max="100"
@@ -59,7 +57,6 @@
         </BuilderRow>
         <BuilderRow label.translate="Brightness">
             <BuilderRange
-                action="'setCustomFilter'"
                 actionParam="'brightness'"
                 min="-100"
                 max="100"
@@ -71,7 +68,6 @@
         </BuilderRow>
         <BuilderRow label.translate="Sepia">
             <BuilderRange
-                action="'setCustomFilter'"
                 actionParam="'sepia'"
                 min="0"
                 max="100"
@@ -82,7 +78,6 @@
         </BuilderRow>
         <BuilderRow label.translate="Blur">
             <BuilderRange
-                action="'setCustomFilter'"
                 actionParam="'blur'"
                 min="0"
                 max="2000"
