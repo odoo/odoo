@@ -30,6 +30,7 @@ function getFakeAceEditor() {
             on: () => {},
             setMode: () => {},
             setUseWorker: () => {},
+            setAnnotations: () => {},
             setOptions: () => {},
             getValue: () => {},
             setValue: () => {},
