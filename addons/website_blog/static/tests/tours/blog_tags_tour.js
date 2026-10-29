@@ -37,7 +37,7 @@ registry.category("web_tour.tours").add("blog_tags", {
         },
         {
             content: "Verify tag appears in options",
-            trigger: "[data-label='Tags'] table input[data-name='testtag']",
+            trigger: "[data-label='Tags'] table .o_hb_list_readonly_item[data-name='testtag']",
         },
         ...clickOnSave(),
         {
@@ -49,12 +49,13 @@ registry.category("web_tour.tours").add("blog_tags", {
         {
             content: "Remove tag",
             trigger:
-                "[data-label='Tags'] table tr:has(input[data-name='testtag']) button[data-icon='remove']",
+                "[data-label='Tags'] table tr:has(.o_hb_list_readonly_item[data-name='testtag']) button[data-icon='remove']",
             run: "click",
         },
         {
             content: "Verify tag does not appear in options anymore",
-            trigger: "[data-label='Tags'] table:not(:has(input[data-name='testtag']))",
+            trigger:
+                "[data-label='Tags'] table:not(:has(.o_hb_list_readonly_item[data-name='testtag']))",
         },
         ...clickOnSave(),
         {
