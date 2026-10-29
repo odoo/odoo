@@ -199,3 +199,20 @@ class TestAccountSectionAndSubsection(AccountTestInvoicingCommon):
         for expected_value, line_value in zip(expected_values, section_lines):
             for key, value in expected_value.items():
                 self.assertEqual(line_value[key], value)
+
+    def test_get_child_lines_follow_sequence(self):
+        move = self._create_invoice(
+            invoice_line_ids=[
+                Command.create({'name': "Section 1", 'display_type': 'line_section', 'collapse_prices': True, 'sequence': 1}),
+                Command.create({'product_id': self.product_a.id, 'price_unit': 100, 'tax_ids': self.tax_sale_a.ids, 'sequence': 2}),
+                Command.create({'name': "Note", 'display_type': 'line_note', 'sequence': 3}),
+            ]
+        )
+        section, product_line, note = move.invoice_line_ids.sorted('sequence')
+        # Move the note before the product line, as done with the handle widget
+        product_line.sequence, note.sequence = 3, 2
+
+        self.assertEqual(
+            [vals['name'] for vals in section._get_child_lines()],
+            ['Section 1', 'Note', 'product_a'],
+        )
