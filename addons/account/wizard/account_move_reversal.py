@@ -24,7 +24,6 @@ class AccountMoveReversal(models.TransientModel):
         readonly=False,
         store=True,
         check_company=True,
-        help='If empty, uses the journal of the journal entry to be reversed.',
     )
     company_id = fields.Many2one('res.company', required=True, readonly=True)
     available_journal_ids = fields.Many2many('account.journal', compute='_compute_available_journal_ids')
