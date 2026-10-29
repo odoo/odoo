@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.fields import Domain
-from odoo.http import request
 
 from odoo.addons.mail.controllers.webclient import WebclientController
 from odoo.addons.mail.tools.discuss import Store
@@ -128,11 +127,11 @@ class DiscussMessagingMenuController(WebclientController):
                 limit=remaining,
                 order="last_interest_dt DESC, id DESC",
             )
-        request.update_context(
-            channels=self.env.context["channels"] | channels,
-            add_channels_last_message=True,
-            add_channels_last_needaction=True,
-        )
+        store.add(channels, "_store_channel_fields")
+        # fetch channels data before messages to benefit from prefetching (channel info might
+        # prefetch a lot of data that message format could use)
+        store.add(channels, "_store_channel_last_message_fields")
+        store.add(channels, "_store_channel_last_needaction_fields")
         store.resolve_data_request(
             lambda res: res.attr("is_fully_loaded", len(channels) < limit),
         )
@@ -147,7 +146,7 @@ class DiscussMessagingMenuController(WebclientController):
             limit=3,
         )
         channels = self.env["discuss.channel"].browse([r[0].id for r in results])
-        request.update_context(channels=self.env.context["channels"] | channels)
+        store.add(channels, "_store_channel_fields")
         store.add_global_values(
             lambda res: res.many("most_popular_channels", [], value=channels.ids),
         )

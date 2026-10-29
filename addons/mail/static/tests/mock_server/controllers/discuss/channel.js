@@ -37,15 +37,14 @@ registerStoreHandler(
 
 registerStoreHandler(
     "discuss.channel",
-    function store_add_discuss_channel_to_context(store, params) {
+    function store_add_discuss_channel(store, params) {
         /** @type {import("mock_models").DiscussChannel} */
         const DiscussChannel = this.env["discuss.channel"];
         const { ids, with_last_message } = params;
-        for (const channelId of DiscussChannel.search([["id", "=", ids]])) {
-            store.request_channel_ids.add(channelId);
-        }
+        const channels = DiscussChannel.browse(DiscussChannel.search([["id", "=", ids]]));
+        store.add(channels, "_store_channel_fields");
         if (with_last_message) {
-            store.add_channels_last_message = true;
+            store.add(channels, "_store_channel_last_message_fields");
         }
     },
     { audience: "everyone" }

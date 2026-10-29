@@ -358,6 +358,7 @@ class Store {
         this.data_id = null;
         this.is_executing_operation_queue = false;
         this.operation_queue = [];
+        this.pending_records_by_merge_key = new Map();
         this.target = new Store.Target(bus_channel, bus_subchannel);
         this._internal_store = null;
         this._auto_send = true;
@@ -374,11 +375,26 @@ class Store {
      * - as a dict: mapping of field names to static values.
      */
     add(records, fields, options = {}) {
-        if (!this.is_executing_operation_queue) {
+        if (this.is_executing_operation_queue) {
+            return this._add(records, fields, options);
+        }
+        // Mirrors `store_enqueue(merge_key=store_add_merge_key)`: pending adds sharing the fields
+        // and params are merged into the first one. The mock has no env, so there is no env to
+        // group by.
+        const key = Store._get_add_merge_key(records, fields, options);
+        if (key === null) {
             this.operation_queue.push(() => this._add(records, fields, options));
             return this;
         }
-        return this._add(records, fields, options);
+        const recordsByKey = this.pending_records_by_merge_key;
+        if (recordsByKey.has(key)) {
+            const ids = new Set([...recordsByKey.get(key), ...records].map((record) => record.id));
+            recordsByKey.set(key, records.env[records._name].browse([...ids]));
+        } else {
+            recordsByKey.set(key, records);
+            this.operation_queue.push(() => this._add(recordsByKey.get(key), fields, options));
+        }
+        return this;
     }
 
     _add(records, fields, { as_thread = false, fields_params = null, ignore_empty = false } = {}) {
@@ -490,6 +506,8 @@ class Store {
     /** Delete records from the store. */
     delete(records, options = {}) {
         if (!this.is_executing_operation_queue) {
+            // a new map: the adds queued before keep their records, later adds start new ones
+            this.pending_records_by_merge_key = new Map();
             this.operation_queue.push(() => this._delete(records, options));
             return this;
         }
@@ -549,6 +567,7 @@ class Store {
                 fn();
             }
             this.operation_queue = [];
+            this.pending_records_by_merge_key.clear();
         } finally {
             this.is_executing_operation_queue = false;
         }
@@ -708,6 +727,33 @@ class Store {
             return { id: records[0].id, model: records._name };
         }
         return records[0].id;
+    }
+
+    /** Mirrors `store_add_merge_key`, its options must stay in sync with the ones of `_add`. */
+    static _get_add_merge_key(
+        records,
+        fields,
+        { as_thread = false, fields_params = null, ignore_empty = false } = {}
+    ) {
+        if (!(records instanceof models.Model) || !records.length) {
+            return null;
+        }
+        // only a fields method or a list of field names can be merged: a callable or a relation may
+        // depend on the records of its own add, and dicts of values may differ from one add to
+        // another
+        const isMergeable = Array.isArray(fields)
+            ? fields.every((field) => typeof field === "string")
+            : typeof fields === "string";
+        if (!isMergeable) {
+            return null;
+        }
+        return Store._deep_freeze([
+            records._name,
+            fields,
+            as_thread,
+            fields_params ?? {},
+            ignore_empty,
+        ]);
     }
 
     /** Recursively convert a data structure into a stable string identifier that can be compared. */

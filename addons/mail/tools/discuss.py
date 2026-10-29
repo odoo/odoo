@@ -177,19 +177,71 @@ ids_by_model.update(
 NO_VALUE = object()
 
 
-def store_enqueue(func):
-    """Wraps a Store method to postpone its execution until `Store._build_result()`."""
+def store_enqueue(func=None, *, merge_key=None, merge_barrier=False):
+    """Wraps a Store method to postpone its execution until `Store._build_result()`.
+
+    With `merge_key`, a pending call with the same key as an earlier one is merged into it: its
+    records (first positional argument) are added to the records of the earlier call, which runs
+    once for all of them, at its own position. A `None` key means the call can't be merged.
+    With `merge_barrier`, calls queued before this one can't be merged into anymore."""
+    if func is None:
+        return partial(store_enqueue, merge_key=merge_key, merge_barrier=merge_barrier)
 
     @wraps(func)
     def store_enqueue__wrapper(store, *args, **kwargs):
         if func.__name__ == "resolve_data_request" and "data_id" not in kwargs:
             kwargs["data_id"] = store.data_id
-        if not store.is_executing_operation_queue:
+        if store.is_executing_operation_queue:
+            return func(store, *args, **kwargs)
+        if merge_barrier:
+            # a new dict: the calls queued before keep their records, later calls start new ones
+            store.pending_records_by_merge_key = {}
+        # records given as a keyword are not merged
+        key = merge_key(*args, **kwargs) if merge_key and args else None
+        if key is None:
             store.operation_queue.append(lambda: func(store, *args, **kwargs))
             return store
-        return func(store, *args, **kwargs)
+        pending_key = (func.__name__, key)
+        records_by_key = store.pending_records_by_merge_key
+        if pending_key in records_by_key:
+            records_by_key[pending_key] |= args[0]
+        else:
+            records_by_key[pending_key] = args[0]
+            store.operation_queue.append(
+                lambda: func(store, records_by_key[pending_key], *args[1:], **kwargs),
+            )
+        return store
 
     return store_enqueue__wrapper
+
+
+def store_add_merge_key(
+    records, fields, *, as_thread=False, fields_params=None, ignore_empty=False
+):
+    """Merge key of `Store.add()`: adds sharing the env, model, fields and params are formatted in a
+    single batch, without ever mixing records of different envs. Its parameters must stay in sync
+    with the ones of `Store.add()`.
+
+    As a merged add runs at the position of the first one, its values are applied before what a
+    call queued between them writes on the same record (e.g. `add_model_values()`)."""
+    if not isinstance(records, models.Model) or not records:
+        return None
+    # only a fields method or a list of field names can be merged: a callable or a relation may
+    # depend on the records of its own add, and dicts of values may differ from one add to another
+    if isinstance(fields, (list, tuple)):
+        is_mergeable = all(isinstance(field, str) for field in fields)
+    else:
+        is_mergeable = isinstance(fields, str)
+    if not is_mergeable:
+        return None
+    return (
+        records.env,
+        records._name,
+        Store._deep_freeze(fields),
+        as_thread,
+        Store._deep_freeze(fields_params or {}),
+        ignore_empty,
+    )
 
 
 class Store:
@@ -220,6 +272,7 @@ class Store:
         self.data_id = None
         self.is_executing_operation_queue = False
         self.operation_queue = []
+        self.pending_records_by_merge_key = {}
         self.target = Store.Target(bus_channel, bus_subchannel)
         self._internal_store = None
         self.__version = None
@@ -245,7 +298,7 @@ class Store:
         if is_recordset and not self.__version:
             self.__version = StoreVersion.ensure_version(records.env)
 
-    @store_enqueue
+    @store_enqueue(merge_key=store_add_merge_key)
     def add(self, records, fields, *, as_thread=False, fields_params=None, ignore_empty=False):
         """Add records to the store.
 
@@ -262,6 +315,12 @@ class Store:
         string to provide extra parameters.
 
         Use case: to add records and their fields to store. This is the preferred method.
+
+        Pending adds of a fields method or a list of field names with the same env, model, fields
+        and params are merged and formatted in a single batch. Only what the fields method
+        computes runs on the merged records: a value computed by the caller before calling `add()`
+        is computed once per call. Store handlers should therefore add what they fetched and
+        leave anything derived from it to a fields method.
         """
         self.__try_update_version_from_records(records)
         if not records:
@@ -341,7 +400,7 @@ class Store:
             )
         return self
 
-    @store_enqueue
+    @store_enqueue(merge_barrier=True)
     def delete(self, records, as_thread=False):
         """Delete records from the store."""
         self.__try_update_version_from_records(records)
@@ -392,6 +451,7 @@ class Store:
             for func in self.operation_queue:
                 func()
             self.operation_queue.clear()
+            self.pending_records_by_merge_key.clear()
         finally:
             self.is_executing_operation_queue = False
         res = {}

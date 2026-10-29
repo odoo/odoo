@@ -1170,25 +1170,14 @@ class MailMessage(models.Model):
         :param format_reply: if True, also get data about the parent message if it exists.
             Only makes sense for discuss channel.
 
-        :param inbox_fields: if True, also add inbox fields: followers of the current target for
-            each thread of each message as well as module icon and priority fields.
-            Only applicable if ``res.target`` is a specific user.
+        :param inbox_fields: if True, also add the fields of ``_store_message_inbox_fields``.
 
-        :param chatter_fields: forwarded to _store_attachment_fields
+        :param chatter_fields: forwarded to ``_store_message_attachment_fields``.
 
-        :param followers: if given, use this pre-computed list of followers instead of fetching
-            them. It lessen query count in some optimized use cases.
-            Only applicable if ``inbox_fields`` is True.
+        :param followers: forwarded to ``_store_message_inbox_fields``. Only applicable if
+            ``inbox_fields`` is True.
         """
-        # sudo: mail.message - reading attachments on accessible message is allowed
-        res.many(
-            "attachment_ids",
-            "_store_attachment_fields",
-            sort="id",
-            dynamic_fields="_store_attachment_dynamic_fields",
-            sudo=True,
-            fields_params={"chatter_fields": chatter_fields},
-        )
+        self._store_message_attachment_fields(res, chatter_fields=chatter_fields)
         # sudo: mail.message: access to author_guest_id is allowed
         res.one("author_guest_id", "_store_avatar_fields", sudo=True)
         # sudo: mail.message: access to author_id is allowed
@@ -1264,58 +1253,18 @@ class MailMessage(models.Model):
             for scheduler in schedulers:
                 scheduled_dt_by_msg[scheduler.mail_message_id.id] = scheduler.scheduled_datetime
         record_by_message = self._record_by_message()
-        records = record_by_message.values()
-        non_channel_records = filter(lambda record: record._name != "discuss.channel", records)
-        target_user = res.target_user()
-        follower_by_record_and_partner = defaultdict(self.env["mail.followers"].browse)
-        if target_user and inbox_fields and non_channel_records:
-            if followers is None:
-                domain = Domain.OR(
-                    [("res_model", "=", model), ("res_id", "in", [r.id for r in records])]
-                    for model, records in groupby(non_channel_records, key=lambda r: r._name)
-                )
-                domain &= Domain("partner_id", "=", target_user.partner_id.id)
-                # sudo: mail.followers - reading followers of current partner
-                followers = self.env["mail.followers"].sudo().search(domain)
-            else:
-                followers = followers.get(self.env)
-            for follower in followers:
-                follower_by_record_and_partner[
-                    self.env[follower.res_model].browse(follower.res_id),
-                    follower.partner_id,
-                ] = follower
         res.one(
             "thread",
             lambda res: (
                 # sudo: mail.thread - if mentionned in a non accessible thread, name is allowed
                 res.attr("display_name", sudo=True),
                 res.attr("has_mail_thread", lambda t: isinstance(t, self.env.registry["mail.thread"])),
-                res.attr(
-                    "module_icon",
-                    lambda t: modules.module.get_module_icon(t._original_module),
-                    predicate=lambda t: inbox_fields and t._original_module,
-                ),
-                res.one(
-                    "selfFollower",
-                    ["is_active", "partner_id"],
-                    predicate=lambda t: target_user and inbox_fields and non_channel_records,
-                    value=lambda t: follower_by_record_and_partner[t, target_user.partner_id],
-                ),
-                res.attr(
-                    "priority",
-                    value=lambda t: t[t._priority_field],
-                    predicate=lambda t: inbox_fields and hasattr(t, "_priority_field"),
-                    sudo=True,
-                ),
-                res.attr(
-                    "priority_definition",
-                    predicate=lambda t: inbox_fields and hasattr(t, "_priority_field"),
-                    value=lambda t: t.fields_get([t._priority_field], ["selection"])[t._priority_field]["selection"],
-                ),
             ),
             as_thread=True,
             value=record_by_message.get,
         )
+        if inbox_fields:
+            self._store_message_inbox_fields(res, followers=followers)
         if res.is_for_current_user():
             res.append("is_bookmarked")
 
@@ -1366,6 +1315,81 @@ class MailMessage(models.Model):
         # needs to be after the current message (client code assuming the first received message is
         # the one just posted for example, and not the message being replied to).
         self._store_extra_fields(res, format_reply=format_reply)
+
+    def _store_message_attachment_fields(self, res: Store.FieldList, *, chatter_fields=False):
+        # sudo: mail.message - reading attachments on accessible message is allowed
+        res.many(
+            "attachment_ids",
+            "_store_attachment_fields",
+            sort="id",
+            dynamic_fields="_store_attachment_dynamic_fields",
+            sudo=True,
+            fields_params={"chatter_fields": chatter_fields},
+        )
+
+    def _store_message_inbox_fields(
+        self,
+        res: Store.FieldList,
+        *,
+        followers: Store.LazyValue[MailFollowers] = None,
+    ):
+        """Fields of the thread of the messages displayed in the inbox: followers of the current
+        target (only applicable if ``res.target`` is a specific user), module icon and priority
+        fields.
+
+        :param followers: if given, use this pre-computed list of followers instead of fetching
+            them. It lessens the query count in some optimized use cases.
+        """
+        record_by_message = self._record_by_message()
+        records = record_by_message.values()
+        non_channel_records = filter(lambda record: record._name != "discuss.channel", records)
+        target_user = res.target_user()
+        follower_by_record_and_partner = defaultdict(self.env["mail.followers"].browse)
+        if target_user and non_channel_records:
+            if followers is None:
+                domain = Domain.OR(
+                    [("res_model", "=", model), ("res_id", "in", [r.id for r in records])]
+                    for model, records in groupby(non_channel_records, key=lambda r: r._name)
+                )
+                domain &= Domain("partner_id", "=", target_user.partner_id.id)
+                # sudo: mail.followers - reading followers of current partner
+                followers = self.env["mail.followers"].sudo().search(domain)
+            else:
+                followers = followers.get(self.env)
+            for follower in followers:
+                follower_by_record_and_partner[
+                    self.env[follower.res_model].browse(follower.res_id),
+                    follower.partner_id,
+                ] = follower
+        res.one(
+            "thread",
+            lambda res: (
+                res.attr(
+                    "module_icon",
+                    lambda t: modules.module.get_module_icon(t._original_module),
+                    predicate=lambda t: t._original_module,
+                ),
+                res.one(
+                    "selfFollower",
+                    ["is_active", "partner_id"],
+                    predicate=lambda t: target_user and non_channel_records,
+                    value=lambda t: follower_by_record_and_partner[t, target_user.partner_id],
+                ),
+                res.attr(
+                    "priority",
+                    value=lambda t: t[t._priority_field],
+                    predicate=lambda t: hasattr(t, "_priority_field"),
+                    sudo=True,
+                ),
+                res.attr(
+                    "priority_definition",
+                    predicate=lambda t: hasattr(t, "_priority_field"),
+                    value=lambda t: t.fields_get([t._priority_field], ["selection"])[t._priority_field]["selection"],
+                ),
+            ),
+            as_thread=True,
+            value=record_by_message.get,
+        )
 
     def _store_message_link_previews_fields(self, res: Store.FieldList):
         res.many(

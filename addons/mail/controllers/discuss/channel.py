@@ -15,29 +15,6 @@ from odoo.addons.mail.tools.store_handler import store_handler
 
 class DiscussChannelWebclientController(WebclientController):
     """Override to add discuss channel specific features."""
-    def _process_request_loop(self, store: Store, fetch_params):
-        """Override to add discuss channel specific features."""
-        # aggregate of channels to return, to batch them in a single query when all the fetch params
-        # have been processed
-        request.update_context(
-            channels=request.env["discuss.channel"],
-            add_channels_last_message=False,
-            add_channels_last_needaction=False,
-        )
-        super()._process_request_loop(store, fetch_params)
-        channels = request.env.context["channels"]
-        if channels:
-            store.add(channels, "_store_channel_fields")
-            store.add(channels.self_member_id, ["is_favorite"])
-        if request.env.context["add_channels_last_message"]:
-            # fetch channels data before messages to benefit from prefetching (channel info might
-            # prefetch a lot of data that message format could use)
-            store.add(channels._get_last_messages(), "_store_message_fields")
-            store.add(channels, {"last_message_fetched": True})
-        if request.env.context["add_channels_last_needaction"] and (
-            channels_with_needaction := channels.filtered("message_needaction_counter")
-        ):
-            store.add(channels_with_needaction._get_last_needaction_messages(), "_store_message_fields")
 
     @store_handler("has_hidden_channels", audience="everyone")
     def store_has_hidden_channels(self, store: Store):
@@ -58,11 +35,13 @@ class DiscussChannelWebclientController(WebclientController):
         )
 
     @store_handler("discuss.channel", audience="everyone")
-    def store_add_discuss_channel_to_context(self, store: Store, ids=(), with_last_message=False):
+    def store_add_discuss_channel(self, store: Store, ids=(), with_last_message=False):
         channels = request.env["discuss.channel"].search([("id", "in", ids)])
-        request.update_context(channels=request.env.context["channels"] | channels)
+        store.add(channels, "_store_channel_fields")
         if with_last_message:
-            request.update_context(add_channels_last_message=True)
+            # fetch channels data before messages to benefit from prefetching (channel info might
+            # prefetch a lot of data that message format could use)
+            store.add(channels, "_store_channel_last_message_fields")
 
     @store_handler("/discuss/channel/members", audience="everyone")
     def store_get_discuss_channel_members(
