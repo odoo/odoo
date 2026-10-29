@@ -17,7 +17,7 @@ import { markRaw } from "@odoo/owl";
 import { makeOwlPluginManager } from "./owl_plugins";
 
 const { ModelStore, globalStores, proxifyStoreMutation, DependencyContainer } = stores;
-const { NotificationPlugin, ModelPlugin, IsSmallPlugin, SpreadsheetRectPlugin } = owlPlugins;
+const { ModelPlugin } = owlPlugins;
 
 /**
  * @typedef {import("@spreadsheet/../tests/helpers/data").ServerData} ServerData
@@ -35,22 +35,21 @@ export function makeSpreadsheetActionTestEnv(model, createMockApp = true) {
     let container = undefined;
     let getPlugin = undefined;
     if (createMockApp) {
-        ({ getPlugin, container } = makeOwlPluginManager(
-            [NotificationPlugin, ModelPlugin, IsSmallPlugin, SpreadsheetRectPlugin],
-            { model }
-        ));
+        ({ getPlugin, container } = makeOwlPluginManager([], { model }));
     } else {
         container = new DependencyContainer();
+        container.inject(ModelStore, model);
     }
 
     after(() => {
         container.dispose();
     });
 
-    container.inject(ModelStore, model);
-
-    for (const store of globalStores.getAll()) {
-        container.get(store);
+    if (createMockApp) {
+        // stores use owl plugins in their constructor, which requires the owl scope of the mock app
+        for (const store of globalStores.getAll()) {
+            container.get(store);
+        }
     }
     return {
         model: getPlugin ? getPlugin(ModelPlugin).model : undefined,

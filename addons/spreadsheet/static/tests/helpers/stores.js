@@ -1,10 +1,9 @@
 // @ts-check
 
-import { stores, owlPlugins } from "@odoo/o-spreadsheet";
+import { owlPlugins } from "@odoo/o-spreadsheet";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { makeOwlPluginManager } from "@spreadsheet/../tests/helpers/owl_plugins";
 
-const { ModelStore } = stores;
 const { NotificationPlugin } = owlPlugins;
 
 /**
@@ -37,10 +36,9 @@ export async function makeStore(Store, ...args) {
  * @return {{ store: T, container: InstanceType<DependencyContainer>, model: OdooSpreadsheetModel, getPlugin: OwlPluginGetter }}
  */
 export function makeStoreWithModel(model, Store, ...args) {
-    const { getPlugin, container } = makeOwlPluginManager([NotificationPlugin]);
+    const { getPlugin, container } = makeOwlPluginManager([], { model });
 
     const notificationPlugin = getPlugin(NotificationPlugin);
-    container.inject(ModelStore, model);
     notificationPlugin.updateNotificationCallbacks({
         notifyUser: () => {},
         raiseError: () => {},
@@ -50,7 +48,7 @@ export function makeStoreWithModel(model, Store, ...args) {
         store: container.instantiate(Store, ...args),
         container,
         // @ts-ignore
-        model: container.get(ModelStore),
+        model,
         getPlugin,
     };
 }

@@ -1,10 +1,11 @@
 // @ts-check
 
-import { stores } from "@odoo/o-spreadsheet";
+import { hooks } from "@odoo/o-spreadsheet";
 import {
     App,
     Component,
     providePlugins,
+    signal,
     types,
     usePlugin,
     useProps,
@@ -13,7 +14,7 @@ import {
 } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
-const { useStoreProvider } = stores;
+const { useSpreadsheetProviders } = hooks;
 
 /**
  * @typedef {import("@odoo/owl").PluginConstructor} PluginConstructor
@@ -56,17 +57,22 @@ class PluginParent extends Component {
     });
 
     setup() {
+        const { stores } = useSpreadsheetProviders({
+            model: this.props.configPlugins.model,
+            spreadsheetRef: signal.ref(),
+            getPopoverContainerRect: () => ({ x: 0, y: 0, width: 1000, height: 1000 }),
+        });
         providePlugins(this.props.providedPlugins, this.props.configPlugins);
 
         const scope = useScope();
         const getPlugin = createGetPluginFunctionFromScope(scope);
-        const container = useStoreProvider();
+        const container = stores;
 
         this.props.registerCallback({ getPlugin, scope, container });
     }
 }
 
-export function makeOwlPluginManager(providedPlugins, configPlugins = {}) {
+export function makeOwlPluginManager(providedPlugins, configPlugins) {
     const app = new App({ test: true, translateFn: _t });
 
     let getPlugin = undefined;
