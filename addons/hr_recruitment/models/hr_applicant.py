@@ -161,6 +161,7 @@ class HrApplicant(models.Model):
         compute="_compute_is_applicant_in_pool", search="_search_is_applicant_in_pool"
     )
     talent_pool_count = fields.Integer(compute="_compute_talent_pool_count")
+    has_parallel_applications = fields.Boolean(compute="_compute_has_parallel_applications")
 
     _job_id_stage_id_idx = models.Index("(job_id, stage_id) WHERE active IS TRUE")
 
@@ -175,6 +176,18 @@ class HrApplicant(models.Model):
         if model_name != 'hr.applicant':
             return super()._get_model_description(model_name)
         return self.env._("Application")
+
+    @api.depends("partner_id", "email_from", "partner_name", "active", "job_id", "application_status")
+    def _compute_has_parallel_applications(self):
+        for applicant in self:
+            domain = [("active", "=", True), ("id", "not in", applicant.ids), ("job_id", "!=", False), ("application_status", "=", "ongoing")]
+            if applicant.partner_id:
+                domain.append(("partner_id", "=", applicant.partner_id.id))
+            elif applicant.email_from:
+                domain.append(("email_from", "=", applicant.email_from))
+            else:
+                domain.append(("partner_name", "=", applicant.partner_name))
+            applicant.has_parallel_applications = self.env["hr.applicant"].search_count(domain)
 
     @api.depends("email_normalized", "partner_phone_sanitized", "linkedin_profile", "pool_applicant_id.talent_pool_ids")
     def _compute_talent_pool_count(self):
