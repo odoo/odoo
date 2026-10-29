@@ -263,9 +263,9 @@ export class SplitBillScreen extends Component {
         }
         await this.handleDiscountLines(originalOrder, newOrder);
         await this.handleServiceFeeLines(originalOrder, newOrder);
+        originalOrder.setCustomerCount(originalOrder.getCustomerCount() - 1);
         await this.pos.syncAllOrders({ orders: [originalOrder, newOrder] });
         await this.pos.onPrepLinesSynced(prepLinePairs);
-        originalOrder.customer_count -= 1;
         originalOrder.setScreenData({ name: "ProductScreen" });
         this.pos.selectedOrderUuid = null;
         this.pos.setOrder(newOrder);

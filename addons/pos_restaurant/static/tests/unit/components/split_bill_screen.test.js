@@ -148,6 +148,31 @@ test("createSplittedOrder", async () => {
     expect(order.getOrderlines()[0].getQuantity()).toBe(1);
 });
 
+test("createSplittedOrder syncs the guests left on the original order", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    order.table_id = store.models["restaurant.table"].get(2);
+    order.setCustomerCount(4);
+    const syncedCounts = [];
+    const originalSync = store.syncAllOrders.bind(store);
+    store.syncAllOrders = (options) => {
+        syncedCounts.push(order.getCustomerCount());
+        return originalSync(options);
+    };
+    await mountWithCleanup(SplitBillScreen, {
+        props: {
+            orderUuid: order.uuid,
+        },
+    });
+    await contains('.splitbill-screen .orderline .product-name:contains("TEST"):first').click();
+    await animationFrame();
+    await contains('.splitbill-screen .pay-button button:contains("Split")').click();
+    await animationFrame();
+
+    expect(syncedCounts).toEqual([3]);
+    expect(order.getCustomerCount()).toBe(3);
+});
+
 test("paySplittedOrder splits partial selection then calls pay", async () => {
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
