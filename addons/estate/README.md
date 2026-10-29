@@ -568,3 +568,24 @@ reports with QWeb, and the web framework (Owl).
 
 **Try it.** Create a new database with demo data, install Real Estate, and walk through the
 properties above.
+
+## Tests
+
+The last commit covers the business rules with unit tests, in `estate/tests` and
+`estate_account/tests`:
+
+- `EstateCommon` (in `tests/common.py`) extends `BaseCommon`, which runs every test as a plain
+  internal user. The tests therefore also prove that the `ir.access` rows are sufficient.
+- One test checks one observable behavior, named after it, e.g.
+  `test_offer_below_best_offer_is_refused`.
+- The tests are tagged `post_install`, so they run once all addons are installed. That catches,
+  for example, an `estate` test breaking because `estate_account` invoices on sale.
+- The `estate_account` test also runs as a user without invoicing rights, which covers the
+  `sudo()` of chapter 13.
+
+Run them on a fresh database:
+
+```sh
+./odoo-bin --addons-path=addons -d estate-test -i estate,estate_account --with-test-data \
+    --test-tags /estate,/estate_account --stop-after-init
+```
