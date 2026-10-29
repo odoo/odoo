@@ -517,3 +517,54 @@ offer is accepted, and the tags. Cards cannot be dragged to another column.
 
 **Try it.** Open Properties and switch to the kanban view. Remove the "Available" filter to see sold
 properties with their selling price, and try dragging a card to another column.
+
+## Chapter 15 - The final word
+
+[Official chapter](https://www.odoo.com/documentation/20.0/developer/tutorials/server_framework_101/15_final_word.html)
+
+**Functional.** A database created with demo data now contains three property types, three tags and
+one property in each status:
+
+| Property | Status | Shows |
+| --- | --- | --- |
+| Big Villa | New | a property without offers, with a garden |
+| Trailer Home | Offer Received | two offers waiting for a decision |
+| City Center Apartment | Offer Accepted | buyer and selling price set from the accepted offer |
+| Seaside Studio | Sold | the end of the workflow |
+| Building Plot | Cancelled | a cancelled sale, which can still be deleted |
+
+**Technical.**
+
+- Demo files are listed under the manifest's `demo` key. They are only loaded in databases created
+  with demo data (`--with-demo`), never in production databases.
+- Demo records go through the same ORM code as the user: the offers are created from the lowest
+  price to the highest because `create` refuses lower offers, and the accepted and sold states
+  come from `<function>` calls to `action_accept`/`action_sold`, not from writing the state
+  directly.
+- `Command.set([...])` replaces the content of a Many2many with the given records.
+
+**Complete sales workflow.**
+
+```
+New --(offer created)--> Offer Received --(offer accepted)--> Offer Accepted --(Sold)--> Sold
+ |                            |                                    |
+ +----------(Cancel)----------+------------------------------------+------> Cancelled
+```
+
+With `estate_account` installed, "Sold" also creates the buyer's invoice.
+
+| Rule | Where |
+| --- | --- |
+| Expected and offer prices > 0, selling price >= 0, unique type and tag names | SQL constraints, chapter 10 |
+| Selling price >= 90% of the expected price | `_check_selling_price_ratio`, chapter 10 |
+| One accepted offer per property; accepted offers cannot be refused | `action_accept`/`action_refuse`, chapter 9 |
+| New offers >= best offer, only on open properties | `estate.property.offer.create`, chapter 12 |
+| Sold requires an accepted offer; sold and cancelled exclude each other | `action_sold`/`action_cancel`, chapter 9 |
+| Only New or Cancelled properties can be deleted | `_unlink_except_in_progress`, chapter 12 |
+
+**Where to go next.** The tutorial ends here. The next tutorials cover, among others, unit tests
+(the following commit adds them), finer security (groups, record-level access, `sudo()`), PDF
+reports with QWeb, and the web framework (Owl).
+
+**Try it.** Create a new database with demo data, install Real Estate, and walk through the
+properties above.

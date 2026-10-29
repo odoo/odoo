@@ -19,6 +19,7 @@ of a property to the buyer whose offer was accepted.
         "views/estate_menus.xml",
         "views/res_users_views.xml",
     ],
+    "demo": ["demo/estate_demo.xml"],
     # Without this flag the addon would only be listed with the "Extra" filter of the Apps menu
     "application": True,
     "author": "Odoo S.A.",
