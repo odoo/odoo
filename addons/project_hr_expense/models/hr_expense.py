@@ -11,7 +11,7 @@ class HrExpense(models.Model):
         else:
             analytic_distribution = self.env['project.project'].browse(project_id)._get_analytic_distribution()
             for expense in self:
-                expense.analytic_distribution = expense.analytic_distribution or analytic_distribution
+                expense.analytic_distribution = expense.analytic_distribution or analytic_distribution or None
 
     @api.model_create_multi
     def create(self, vals_list):

@@ -20,18 +20,29 @@ class JsonFieldTest(TransactionCase):
         # Check that it is not the value of the cache return by convert_to_record
         self.assertIsNot(self.discussion_1.history, self.discussion_1._cache['history'])
 
-        self.assertEqual(self.discussion_1.history, {'delete_messages': []})
-
         self.discussion_1.history = {'delete_messages': [random_str]}
         self.discussion_1.flush_recordset()
         self.assertEqual(self.discussion_1.history, {'delete_messages': [random_str]})
 
         self.discussion_1.history = {'delete_messages': [random_str, random_str_2]}
         self.discussion_1.flush_recordset()
-
         self.assertEqual(self.discussion_1.history, {'delete_messages': [random_str, random_str_2]})
 
         self.discussion_1.history = (random_str, random_str_2)
         self.discussion_1.flush_recordset()
-
         self.assertEqual(self.discussion_1.history, [random_str, random_str_2])
+
+    def test_json_field_falsy(self):
+        for write, expected in [
+            (None, False),
+            (False, False),
+            (0, 0),
+            (0.0, 0.0),
+            ([], []),
+            ((), []),
+            ({}, {}),
+            ('', ''),
+        ]:
+            with self.subTest(write=write):
+                self.discussion_1.history = write
+                self.assertEqual(self.discussion_1.history, expected)

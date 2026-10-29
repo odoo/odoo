@@ -106,7 +106,7 @@ class TestResPartner(TestCrmCommon):
                 [{'icon': 'star', 'iconClass': 'oi-filled', 'label': 'Opportunities', 'value': 3},
                  {'icon': 'shopping_cart', 'label': 'Sale Orders', 'value': 1}],
                 [{'icon': 'star', 'iconClass': 'oi-filled', 'label': 'Opportunities', 'value': 2}],
-                False,
+                [],
             ),
             strict=True,
         ):

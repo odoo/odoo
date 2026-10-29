@@ -108,7 +108,7 @@ class HrExpenseSplit(models.TransientModel):
             'total_amount_currency': self.total_amount_currency,
             'total_amount': self.expense_id.currency_id.round(self.expense_id.currency_rate * self.total_amount_currency),
             'tax_ids': [Command.set(self.tax_ids.ids)],
-            'analytic_distribution': self.analytic_distribution,
+            'analytic_distribution': self.analytic_distribution or None,
             'employee_id': self.employee_id.id,
             'product_uom_id': self.product_id.uom_id.id,
             'approval_state': self.approval_state,

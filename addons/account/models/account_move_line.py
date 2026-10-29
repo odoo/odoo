@@ -1828,7 +1828,7 @@ class AccountMoveLine(models.Model):
             line.analytic_distribution = self._merge_distribution(
                 old_distribution=old_distributions.get(line._origin.id) or {},
                 new_distribution=line.analytic_distribution or {},
-            )
+            ) or None
         lines_to_modify.analytic_line_ids.unlink()
         lines_to_modify._create_analytic_lines()
 
@@ -3655,7 +3655,7 @@ class AccountMoveLine(models.Model):
                 analytic_line._get_distribution_key(): -analytic_line.amount / line.balance * 100
                 if line.balance else 100
                 for analytic_line in line.analytic_line_ids
-            }
+            } or None
 
     def _round_analytic_distribution_line(self, analytic_lines_vals):
         """ Round the analytic lines amount, and cancel the rounding error. """

@@ -31,10 +31,10 @@ class HrExpense(models.Model):
                         expense.analytic_distribution = {
                             **(expense.analytic_distribution or {}),
                             **(project_analytic_distribution or {})
-                        }
+                        } or None
                     else:
                         # If not we keep the most prioritized one -> project
-                        expense.analytic_distribution = expense.sale_order_id.project_id._get_analytic_distribution() or expense.analytic_distribution or {}
+                        expense.analytic_distribution = expense.sale_order_id.project_id._get_analytic_distribution() or expense.analytic_distribution or None
 
     def _create_move(self):
         """ When creating the move of the expense, if the AA is given in the project of the SO, we take it as reference in the distribution.
@@ -46,5 +46,5 @@ class HrExpense(models.Model):
                 continue
             if not project.account_id:
                 project._create_analytic_account()
-            expense.analytic_distribution = project._get_analytic_distribution()
+            expense.analytic_distribution = project._get_analytic_distribution() or None
         return super()._create_move()

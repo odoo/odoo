@@ -26,7 +26,7 @@ class PurchaseOrderLine(models.Model):
                         for account_ids, percentage in line.analytic_distribution.items()
                     }
             else:
-                line.analytic_distribution = project._get_analytic_distribution()
+                line.analytic_distribution = project._get_analytic_distribution() or None
 
     @api.model_create_multi
     def create(self, vals_list):
