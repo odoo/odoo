@@ -19,3 +19,29 @@
         max-width: 3rem;
     }
 }
+
+/* Header picture: as tall as the title block next to it, whatever its number of rows */
+.o_form_view .o_field_widget.o_fleet_form_image {
+    flex: 0 0 90px;
+    align-self: stretch;
+    width: 90px;
+    margin-bottom: 0;
+
+    @media screen and (min-width: 768px), print and (min-width: 188mm) {
+        flex-basis: 130px;
+        width: 130px;
+    }
+
+    /* Out of the flow so the picture never dictates the height of the header */
+    > div {
+        position: absolute;
+        inset: 0;
+    }
+
+    img {
+        width: 100%;
+        height: 100%;
+        max-width: none;
+        object-fit: contain;
+    }
+}
