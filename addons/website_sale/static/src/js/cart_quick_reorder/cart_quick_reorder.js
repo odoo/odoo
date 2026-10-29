@@ -53,7 +53,7 @@ export class CartQuickReorder extends Component {
     get quickReorderTooltip() {
         if (this.data.is_public_user) {
             return _t("Login to reorder");
-        } else if (!this.data.order_history.length) {
+        } else if (!this.orderHistory.length) {
             return _t("No previous products available for reorder.");
         }
         return "";
@@ -61,6 +61,10 @@ export class CartQuickReorder extends Component {
 
     get data() {
         return this.cartService.state.history;
+    }
+
+    get orderHistory() {
+        return this.data.order_history ?? [];
     }
 
     formatPrice(price) {

@@ -2,8 +2,8 @@
 <templates>
 
     <t t-name="website_sale.CartLines">
-        <div t-if="this.data.cart_lines.length" class="d-flex flex-column mb32">
-            <t t-foreach="this.data.cart_lines" t-as="line" t-key="line.id">
+        <div t-if="this.lines.length" class="d-flex flex-column mb32">
+            <t t-foreach="this.lines" t-as="line" t-key="line.id">
                 <CartLine line="line" t-props="this.cartLinesProps"/>
             </t>
             <CartAccessories

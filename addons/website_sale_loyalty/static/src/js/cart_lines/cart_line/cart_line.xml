@@ -12,6 +12,12 @@
         </t>
     </t>
 
+    <t t-inherit="website_sale.CartProductPrice" t-inherit-mode="extension">
+        <span position="attributes">
+            <attribute name="t-attf-class">o_reward_{{this.props.line.reward_type}}</attribute>
+        </span>
+    </t>
+
     <t t-name="website_sale_loyalty.usedGiftCard">
         <div
             t-if="line.is_reward_line and line.show_coupon_code"

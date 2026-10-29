@@ -181,14 +181,14 @@ class TestCheckoutFlow(WebsiteSaleCommon, PaymentCommon, HttpCase):
 
         self.assert_redirected_to(response, "/shop/checkout")  # Redirected back to the checkout
 
-    def test_alerts_cleared_when_rendering_a_checkout_step(self):
+    def test_alerts_cleared_when_rendering_cart_components(self):
         self.authenticate(None, None)
         self.update_session(**{CART_SESSION_CACHE_KEY: self.cart.id})
 
         with patch(
             "odoo.addons.website_sale.models.sale_order.SaleOrder._clear_alerts", autospec=True
         ) as clear_alerts_mock:
-            self.url_open("/shop/cart/lines")
+            self.url_open("/shop/cart/data")
 
             clear_alerts_mock.assert_called_once()
 

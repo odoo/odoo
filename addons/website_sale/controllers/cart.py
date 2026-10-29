@@ -414,11 +414,12 @@ class Cart(PaymentPortal):
     @route(route="/shop/cart/data", type="jsonrpc", auth="public", website=True)
     def cart_data(self, from_confirmation_page=False, with_history=False):
         """Return the shared cart data used by the OWL cart components."""
-        order_sudo = (
-            request.env["sale.order"].sudo().browse(request.session.get("sale_last_order_id"))
-            if from_confirmation_page
-            else request.cart
-        )
+        if from_confirmation_page:
+            order_sudo = (
+                request.env["sale.order"].sudo().browse(request.session.get("sale_last_order_id"))
+            )
+        else:
+            order_sudo = request.cart
 
         result = {"lines": {}, "totals": {}, "history": {}, "currency_id": None}
         if not order_sudo:

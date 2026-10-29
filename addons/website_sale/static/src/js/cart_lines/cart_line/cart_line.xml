@@ -160,14 +160,14 @@
                 class="me-md-2 text-muted text-nowrap opacity-50"
                 t-out="this.env.formatPrice(this.props.line.displayed_unit_price * this.props.line.product_uom_qty)"
             />
-            <span t-out="this.env.formatPrice(this.props.line.product_price)" style="white-space: nowrap;"/>
+            <t t-call="website_sale.CartProductPrice" price="this.env.formatPrice(this.props.line.product_price)"/>
         </h6>
         <div
             t-if="this.props.showProductReferencePrice and this.props.line.base_unit_price"
             class="cart_product_base_unit_price d-block text-muted text-end"
         >
             <small class="o_product_price_unit text-muted d-block">
-                (<span t-out="this.env.formatPrice(this.props.line.base_unit_price)"/>
+                (<t t-call="website_sale.CartProductPrice" price="this.env.formatPrice(this.props.line.base_unit_price)"/>
                 / <span class="oe_custom_base_unit" t-out="this.props.line.base_unit_name"/>)
             </small>
         </div>
@@ -194,6 +194,10 @@
                 </t>
             </div>
         </a>
+    </t>
+
+    <t t-name="website_sale.CartProductPrice">
+        <span t-out="price" style="white-space: nowrap;"/>
     </t>
 
     <t t-name="website_sale.CartLinesQuantity">

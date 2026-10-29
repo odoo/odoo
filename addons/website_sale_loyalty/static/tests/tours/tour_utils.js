@@ -1,11 +1,9 @@
-
 export function assertRewardAmounts(rewards) {
     const steps = [];
-    const currencyValue = `.oe_currency_value:visible`;
     for (const [reward, amount] of Object.entries(rewards)) {
         steps.push({
             content: `check if ${reward} reward is correct`,
-            trigger: `[data-reward-type=${reward}] ${currencyValue}:text(${amount})`,
+            trigger: `span.o_reward_${reward}:text($ ${amount})`,
         });
     }
     return steps;

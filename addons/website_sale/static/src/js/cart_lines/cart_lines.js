@@ -46,6 +46,10 @@ export class CartLines extends Component {
         return this.cartService.state.lines;
     }
 
+    get lines() {
+        return this.data.cart_lines ?? [];
+    }
+
     get cartLinesProps() {
         return {
             isQuantityViewActive: this.data.is_quantity_view_active,

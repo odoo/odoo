@@ -30,7 +30,7 @@ export class CartSummary extends Component {
     }
 
     get isScrollable() {
-        return this.data.cart_lines.length > 4;
+        return this.data.cart_lines?.length > 4;
     }
 
     formatPrice(price) {

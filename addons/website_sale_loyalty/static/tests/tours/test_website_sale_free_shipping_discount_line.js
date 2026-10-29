@@ -21,20 +21,14 @@ registry.category("web_tour.tours").add("website_sale_loyalty.update_shipping_af
             total: "0.00", // $100 total is covered by eWallet
             delivery: "0.00", // $100 is over $75 `free_over` amount, so free shipping
         }),
-        ...assertRewardAmounts({ discount: "- 100.00" }),
+        ...assertRewardAmounts({ discount: "-100.00" }),
         wsTourUtils.confirmOrder(),
         ...submitCouponCode('test-50pc'),
         ...wsTourUtils.assertCartAmounts({
             total: "0.00", // $50 total is covered by eWallet
             delivery: "5.00", // $50 is below $75 `free_over` amount, so no free shipping
         }),
-        {
-            content: "check discount code discount doesn't apply to shipping",
-            trigger: '[data-reward-type=discount] .oe_currency_value:text(- 50.00)',
-        },
-        {
-            content: "check eWallet discount applies to shipping ($50 for Plumbus + $5 for delivery)",
-            trigger: '[data-reward-type=discount] .oe_currency_value:text(- 55.00)',
-        },
+        ...assertRewardAmounts({ discount: "-50.00" }),
+        ...assertRewardAmounts({ discount: "-55.00" }),
     ],
 });

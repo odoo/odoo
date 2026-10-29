@@ -5,4 +5,10 @@
             <t t-call="website_sale_loyalty.usedGiftCard" line="line"/>
         </xpath>
     </t>
+
+    <t t-inherit="website_sale.CartSummaryProductPrice" t-inherit-mode="extension">
+        <span position="attributes">
+            <attribute name="t-attf-class">o_reward_{{line.reward_type}}</attribute>
+        </span>
+    </t>
 </templates>
