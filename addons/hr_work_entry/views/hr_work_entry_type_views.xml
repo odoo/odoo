@@ -63,8 +63,10 @@
                         <group name="identification" class="o_form_fw_labels">
                             <field name="active" invisible="1"/>
                             <field name="code" string="Code" placeholder="e.g. 002.00, 128.00, 000.00, ..."/>
-                            <field string="Considered as" name="count_as" widget="radio" options="{'horizontal': True}" />
-                            <span class="fw-bold">Availability</span>
+                            <field string="Considered as" name="count_as" widget="radio" options="{'horizontal': True}" /><span class="o_wrap_label">
+                                <span class="o_form_label oe_edit_only">Availability</span>
+                                <span class="o_form_label o_form_label_readonly oe_read_only">Availability</span>
+                            </span>
                             <div class="o_row" name="availability_row">
                                 <field name="resource_calendar_selectable" nolabel="1" help="Tells whether this time type can be selected in working schedules or not"/>
                                 <label for="resource_calendar_selectable" string="Working Schedule"/>
