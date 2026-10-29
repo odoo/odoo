@@ -878,3 +878,57 @@ class TestProjectSharing(TestProjectSharingCommon):
         self.assertNotIn(self.user_projectuser.partner_id, self.task_no_collabo.message_partner_ids)
         with self.assertRaises(AccessError, msg="The failed exploit should not have granted write access"):
             self.task_no_collabo.with_user(self.user_projectuser).write({'name': 'Hacked Name'})
+
+    def test_portal_share_user_tracking_visibility(self):
+        """A share user sees a model's relaxed share messages (tracking on
+        project.task) only through document access, never through the identity
+        rules (author/recipient/needaction), which keep the strict share."""
+        portal_partner = self.user_portal.partner_id
+        self.project_portal.collaborator_ids.filtered(
+            lambda c: c.partner_id == portal_partner
+        ).access_mode = "advanced_edit"
+        note = self.env.ref("mail.mt_note")  # internal subtype
+        comment = self.env.ref("mail.mt_comment")  # shared subtype
+
+        def post(record, message_type, subtype, notify=False):
+            return self.env["mail.message"].create(
+                {
+                    "body": "Message",
+                    "message_type": message_type,
+                    "model": record._name,
+                    "res_id": record.id,
+                    "subtype_id": subtype.id,
+                    "partner_ids": [Command.link(portal_partner.id)] if notify else False,
+                }
+            )
+
+        # Task the user can access (collaborator):
+        task_tracking = post(self.task_portal, "tracking", note)
+        task_comment = post(self.task_portal, "comment", comment)
+        task_internal = post(self.task_portal, "comment", note)
+        # project.project does not relax its share domain:
+        project_tracking = post(self.project_portal, "tracking", note)
+        project_comment = post(self.project_portal, "comment", comment)
+        # Task the user cannot access, but is a notified recipient of:
+        noaccess_tracking = post(self.task_no_collabo, "tracking", note, notify=True)
+        noaccess_comment = post(self.task_no_collabo, "comment", comment, notify=True)
+
+        messages = (
+            task_tracking
+            + task_comment
+            + task_internal
+            + project_tracking
+            + project_comment
+            + noaccess_tracking
+            + noaccess_comment
+        )
+        # - tracking visible on the accessible task (project.task relaxes it)
+        # - comment visible wherever shared (doc access or notified)
+        # - internal-subtype note never visible
+        # - project tracking hidden (project.project keeps the strict share)
+        # - tracking on the inaccessible task stays hidden: being a notified
+        #   recipient must not expose it (identity branches keep strict share)
+        expected = task_tracking + task_comment + project_comment + noaccess_comment
+        Message = self.env["mail.message"].with_user(self.user_portal)
+        self.assertEqual(Message.search([("id", "in", messages.ids)]), expected)
+        self.assertEqual(Message.browse(messages.ids)._filtered_access("read"), expected)

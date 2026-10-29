@@ -62,14 +62,14 @@ class PortalWebClientController(WebclientController):
         domain = self._setup_portal_message_fetch_extra_domain(
             params
         ) & self._get_portal_message_fetch_domain(thread)
-        # sudo: mail.message - thread access is validated above, and domain is massively restricted to share-only messages
+        # Sudo only for sudoed threads (token / hash-pid), else the ACL applies.
         messages = self._resolve_messages(
             store,
             domain=domain,
             thread=thread,
             fetch_params=fetch_params,
             add_to_store=False,
-            sudo=True,
+            sudo=thread.env.su,
         )
         for message_data in messages.portal_message_format(options=params):
             store.add_model_values("mail.message", message_data)
