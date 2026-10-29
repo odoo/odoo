@@ -252,3 +252,38 @@ Combine the "Available" filter with the "Postcode" grouping.
 type, add tags, and add two offers from the "Offers" tab. Check that the salesperson is you.
 Delete the property, then check in Settings > Technical > Database Structure > Models that its
 offers are gone.
+
+## Chapter 8 - Computed fields and onchanges
+
+[Official chapter](https://www.odoo.com/documentation/20.0/developer/tutorials/server_framework_101/08_compute_onchange.html)
+
+**Functional.**
+
+- A property shows its **total area** (living + garden) and its **best offer** (the highest price
+  among its offers), both updated as soon as the inputs change.
+- An offer is valid for 7 days by default. Its **deadline** follows the validity, and the agent can
+  also pick a deadline directly: the validity is then adjusted to match.
+- Ticking "Garden" pre-fills a 10 sqm garden facing north; unticking it clears both values.
+
+**Technical.**
+
+- **Computed field**: `compute="_compute_..."` names the method that sets the value. The method
+  gets a recordset and must assign the field on *every* record, on every branch.
+- `@api.depends(...)` lists what the value depends on. The ORM uses it to recompute the field when
+  a dependency changes, including in the form before saving. A dotted path such as
+  `offer_ids.price` follows a relation.
+- Computed fields are **not stored** by default and are read-only. They cannot be searched or
+  grouped by unless `store=True`, which saves them in a column and recomputes them on change.
+- **Inverse**: `inverse="_inverse_date_deadline"` makes the computed deadline editable. When the
+  user writes a deadline, the inverse turns it back into the stored `validity`.
+- `create_date` is empty until the record is saved, so `_get_validity_start()` falls back to today
+  for a new offer.
+- **Onchange**: `@api.onchange("garden")` runs only in the form view, when the user changes the
+  field, and its result can still be edited. Prefer a computed field when a value must always be
+  derived from others. Use an onchange, as here, for a *suggestion* the user may override.
+- `mapped("price")` returns the list of prices of a recordset; `max(..., default=0.0)` handles a
+  property without offers.
+
+**Try it.** Change the living area and watch the total area update before saving. Add offers of
+different prices and check the best offer. On an offer, change the deadline and look at the
+validity. Tick and untick "Garden".

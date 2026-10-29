@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class EstateProperty(models.Model):
@@ -30,6 +30,8 @@ class EstateProperty(models.Model):
     garage = fields.Boolean(string="Garage")
     garden = fields.Boolean(string="Garden")
     garden_area = fields.Integer(string="Garden Area (sqm)")
+    # Computed fields are not stored by default: they are computed on the fly when read
+    total_area = fields.Integer(string="Total Area (sqm)", compute="_compute_total_area")
     # The database stores the key (e.g. 'north'); the user sees the label (e.g. "North")
     garden_orientation = fields.Selection(
         string="Garden Orientation",
@@ -67,3 +69,34 @@ class EstateProperty(models.Model):
     offer_ids = fields.One2many(
         string="Offers", comodel_name="estate.property.offer", inverse_name="property_id"
     )
+    best_price = fields.Float(string="Best Offer", compute="_compute_best_price")
+
+    # ------------------------------------------------------------
+    # COMPUTE AND ONCHANGE METHODS
+    # ------------------------------------------------------------
+
+    # A compute method receives a recordset: it must loop and assign the field on every record
+    @api.depends("living_area", "garden_area")
+    def _compute_total_area(self):
+        for estate_property in self:
+            estate_property.total_area = estate_property.living_area + estate_property.garden_area
+
+    # A dotted dependency also triggers the recompute when an offer's price changes
+    @api.depends("offer_ids.price")
+    def _compute_best_price(self):
+        for estate_property in self:
+            estate_property.best_price = max(estate_property.offer_ids.mapped("price"), default=0.0)
+
+    @api.onchange("garden")
+    def _onchange_garden(self):
+        """Suggest typical garden values when the garden is ticked, and clear them when unticked.
+
+        An onchange only runs in the form view, before saving, and the user can still change the
+        suggested values. Code creating properties directly is not affected.
+        """
+        if self.garden:
+            self.garden_area = 10
+            self.garden_orientation = "north"
+        else:
+            self.garden_area = 0
+            self.garden_orientation = False
