@@ -287,3 +287,37 @@ offers are gone.
 **Try it.** Change the living area and watch the total area update before saving. Add offers of
 different prices and check the best offer. On an offer, change the deadline and look at the
 validity. Tick and untick "Garden".
+
+## Chapter 9 - Ready for some action?
+
+[Official chapter](https://www.odoo.com/documentation/20.0/developer/tutorials/server_framework_101/09_actions.html)
+
+**Functional.** The sales workflow becomes usable:
+
+1. The agent **accepts** an offer (check button in the offers list): its partner becomes the
+   buyer, its price becomes the selling price, and the property moves to "Offer Accepted".
+   Only one offer per property can be accepted.
+2. Other offers can be **refused** (cross button). An accepted offer cannot be refused.
+3. The agent marks the property **Sold**, or **Cancels** it.
+   - A cancelled property cannot be sold, and a sold property cannot be cancelled.
+   - Selling requires an accepted offer. This rule goes slightly beyond the tutorial: without a
+     buyer and a selling price, a sale makes no sense, and chapter 13 needs both to invoice it.
+
+**Technical.**
+
+- `<button type="object" name="method">` calls a public method of the model on the current
+  record(s). A list button acts on its line; a form button on the record in the form, which the
+  web client saves first.
+- Action methods can receive several records (e.g. from a server action), so they loop or use
+  recordset operations (`self.state = "sold"` writes all records at once, `mapped`, `any`).
+- `UserError` (from `odoo.exceptions`) stops the action with a message to the user. Raising an
+  exception rolls back the whole transaction, so nothing done before the error is kept.
+- `write({...})` updates several fields of a record in one call, instead of one assignment (and
+  potentially one query) per field.
+- `self.env._("...")` marks the message for translation, in the language of the current user.
+- Buttons without a visibility rule are always shown for now; chapter 11 hides the ones that make
+  no sense in the current state.
+
+**Try it.** Add two offers on a property. Click "Sold" first: the error asks you to accept an offer.
+Accept one offer and check the buyer and selling price, then try to accept the second one. Sell the
+property, then try to cancel it.

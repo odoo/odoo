@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 
 class EstatePropertyOffer(models.Model):
@@ -47,3 +48,28 @@ class EstatePropertyOffer(models.Model):
         """
         self.ensure_one()
         return fields.Date.to_date(self.create_date) or fields.Date.context_today(self)
+
+    # ------------------------------------------------------------
+    # ACTION METHODS
+    # ------------------------------------------------------------
+
+    def action_accept(self):
+        """Accept the offer: its partner becomes the buyer and its price the selling price."""
+        for offer in self:
+            estate_property = offer.property_id
+            if estate_property.state in ("sold", "cancelled"):
+                raise UserError(self.env._("Offers on a sold or cancelled property are closed."))
+            if "accepted" in estate_property.offer_ids.mapped("status"):
+                raise UserError(self.env._("Another offer was already accepted for this property."))
+            offer.status = "accepted"
+            # One write() call updates the three fields in a single SQL query
+            estate_property.write({
+                "partner_id": offer.partner_id.id,
+                "selling_price": offer.price,
+                "state": "offer_accepted",
+            })
+
+    def action_refuse(self):
+        if "accepted" in self.mapped("status"):
+            raise UserError(self.env._("An accepted offer cannot be refused."))
+        self.status = "refused"

@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 
 class EstateProperty(models.Model):
@@ -100,3 +101,22 @@ class EstateProperty(models.Model):
         else:
             self.garden_area = 0
             self.garden_orientation = False
+
+    # ------------------------------------------------------------
+    # ACTION METHODS
+    # ------------------------------------------------------------
+
+    # Called by the buttons of the form view; a business rule violation raises a UserError, which
+    # the web client shows as a dialog, and rolls the transaction back
+    def action_sold(self):
+        for estate_property in self:
+            if estate_property.state == "cancelled":
+                raise UserError(self.env._("A cancelled property cannot be sold."))
+            if estate_property.state != "offer_accepted":
+                raise UserError(self.env._("Accept an offer before selling the property."))
+        self.state = "sold"
+
+    def action_cancel(self):
+        if any(estate_property.state == "sold" for estate_property in self):
+            raise UserError(self.env._("A sold property cannot be cancelled."))
+        self.state = "cancelled"
