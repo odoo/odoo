@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
+from collections import defaultdict
 
 from odoo import models, _
 from odoo.tools import float_round
@@ -11,35 +12,43 @@ class PosOrderReceipt(models.AbstractModel):
 
     def order_receipt_generate_data(self, basic_receipt=False):
         data = super().order_receipt_generate_data(basic_receipt)
-        loyalties, new_coupons = [], []
-        histories = self.env['loyalty.history'].search([('order_id', '=', self.id), ('order_model', '=', 'pos.order')])
+        loyalty_data = self._get_loyalty_data([self.id]).get(self.id, {})
+
+        data['extra_data']['loyalties'] = loyalty_data.get('loyalties', [])
+        data['extra_data']['new_coupons'] = loyalty_data.get('new_coupons', [])
+        return data
+
+    def _get_loyalty_data(self, order_ids):
+        loyalty_data = defaultdict(lambda: {'loyalties': [], 'new_coupons': []})
+        histories = self.env['loyalty.history'].search([('order_id', 'in', order_ids), ('order_model', '=', 'pos.order')])
+
         for history in histories:
-            program_type = history.card_id.program_id.program_type
-            if program_type == 'loyalty':
+            card = history.card_id
+            program = card.program_id
+            order_data = loyalty_data[history.order_id]
+
+            if program.program_type == 'loyalty':
                 for field, label in [('issued', _('Won:')), ('used', _('Spent:'))]:
                     amount = history[field]
                     if amount > 0:
-                        loyalties.append({
-                            'name': history.card_id.program_id.portal_point_name,
+                        order_data['loyalties'].append({
+                            'name': program.portal_point_name,
                             'type': label,
                             'points': float_round(amount, 2),
                         })
 
-                loyalties.append({
-                    'name': history.card_id.program_id.portal_point_name,
+                order_data['loyalties'].append({
+                    'name': program.portal_point_name,
                     'type': _('Balance:'),
-                    'points': float_round(history.card_id.points, 2),
+                    'points': float_round(card.points, 2),
                 })
 
-            elif program_type == 'next_order_coupons':
-                new_coupons.append({
-                    'name': history.card_id.program_id.name,
-                    'code': history.card_id.code,
-                    'expiration_date': history.card_id.expiration_date,
-                    'barcode_base64': 'data:image/png;base64,' + base64.b64encode(self.env['ir.actions.report'].barcode('Code128', history.card_id.code, quiet=False)).decode('utf-8'),
+            elif program.program_type == 'next_order_coupons':
+                order_data['new_coupons'].append({
+                    'program_name': program.name,
+                    'code': card.code,
+                    'expiration_date': card.expiration_date,
+                    'barcode_base64': 'data:image/png;base64,' + base64.b64encode(self.env['ir.actions.report'].barcode('Code128', card.code, quiet=False)).decode('utf-8'),
                 })
 
-        data['extra_data']['loyalties'] = loyalties
-        data['extra_data']['new_coupons'] = new_coupons
-
-        return data
+        return loyalty_data
