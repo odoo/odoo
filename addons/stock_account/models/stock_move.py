@@ -826,11 +826,24 @@ class StockMove(models.Model):
         dropship_quantity = sum(m._get_valued_qty() for m in dropship_moves)
         dropship_price_unit = dropship_moves._get_price_unit_dropshipped()
         regular_quantity = sum(m._get_valued_qty() for m in regular_moves)
-        regular_price_unit = regular_moves._get_price_unit(product=product)
+        regular_value = regular_quantity * regular_moves._get_price_unit(product=product)
+        # only the returns deducted from the delivered quantity
+        returned_moves = (self - dropship_moves).filtered(lambda m: m.is_in and m.origin_returned_move_id and m.to_refund)
+        returned_quantity = sum(m._get_valued_qty() for m in returned_moves)
+        regular_value -= returned_quantity * returned_moves._get_price_unit(product=product)
+        regular_quantity -= returned_quantity
         total_quantity = dropship_quantity + regular_quantity
         if not total_quantity:
+<<<<<<< 065656c028880f98d59ce7fa5a853c30c9d8480c
             return self._get_price_unit()
         return (dropship_quantity * dropship_price_unit + regular_quantity * regular_price_unit) / total_quantity
+||||||| 068157e09828034476404eb70260a252bc9c6ed3
+            return self._get_price_unit(product=product)
+        return (dropship_quantity * dropship_price_unit + regular_quantity * regular_price_unit) / total_quantity
+=======
+            return self._get_price_unit(product=product)
+        return (dropship_quantity * dropship_price_unit + regular_value) / total_quantity
+>>>>>>> 0ea93ce0cd6537b4f57d5b9a355be5e9fbc5b818
 
     def _get_price_unit_dropshipped(self):
         """ Returns the unit price to value the dropshipped moves."""
