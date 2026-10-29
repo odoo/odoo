@@ -1,0 +1,13 @@
+# build:  the backport is correct and the build is green: the mrp fix is in the
+#         tree; after `-u`, no duplicate-label warning, both modules' tests pass
+#         with the agent's test changes, the renaming test ran and passed
+# stable: the change does not break a released version: deterministic policy
+#         checks on the diff (signatures, data model, manifest, test kept, nothing
+#         outside the three modules) and the agent's code run on a database
+#         installed with the base code and not updated
+# review: LLM judge on the l10n_it_stock_ddt code against the reference stable
+#         adaptation of the master patches
+[[reward]]
+name = "reward"
+aggregation = "weighted-mean"
+weights = { build = 1.0, stable = 2.0, review = 1.0 }

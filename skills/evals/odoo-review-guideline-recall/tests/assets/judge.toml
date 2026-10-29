@@ -1,0 +1,59 @@
+# LLM judge: recall of the seeded issues in one area.
+# Area: Assets: resources shipped in the codebase, libraries.
+# Rules: odoo-web-guidelines guidelines/assets.md.
+# One binary criterion per issue; the area's score is the share found.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/review.md"]
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "as1_image_by_url"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/static/src/components/booking_board.xml`, line 6:
+The board's header icon is loaded from a CDN (cdn.jsdelivr.net). Every
+resource a page needs ships in the codebase: copy the image into the addon
+(or use the icon font).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "as2_font_by_url"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/static/src/scss/booking_board.scss`, line 1:
+booking_board.scss imports the Inter font from Google Fonts by URL. Fonts
+ship in the codebase (or use the webclient's fonts).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "as3_minified_library"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/static/src/vendor/reltime.min.js`:
+The third-party reltime library is vendored minified (reltime.min.js) in
+static/src/vendor/. Third-party libraries go in static/lib/, unminified, so
+they can be read and diffed.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""

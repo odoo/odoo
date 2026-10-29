@@ -1,0 +1,13 @@
+diff --git a/addons/l10n_it_stock_ddt/models/stock_picking.py b/addons/l10n_it_stock_ddt/models/stock_picking.py
+index 344d5ef6..426026ad 100644
+--- a/addons/l10n_it_stock_ddt/models/stock_picking.py
++++ b/addons/l10n_it_stock_ddt/models/stock_picking.py
+@@ -21,7 +21,7 @@ class StockPicking(models.Model):
+     l10n_it_transport_method_details = fields.Char('Transport Note')
+     l10n_it_parcels = fields.Integer(string="Parcels", default=1)
+     l10n_it_ddt_number = fields.Char('DDT Number', readonly=True)
+-    l10n_it_country_code = fields.Char(related="company_id.account_fiscal_country_id.code")
++    l10n_it_country_code = fields.Char(related="company_id.account_fiscal_country_id.code", string="DDT Country Code")
+     l10n_it_show_print_ddt_button = fields.Boolean(compute="_compute_l10n_it_show_print_ddt_button")
+ 
+     @api.depends('l10n_it_country_code',

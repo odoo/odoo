@@ -1,0 +1,49 @@
+# Findings judge, The portal template and the frontend JavaScript.
+# One file per group: a single judge call with every criterion exceeds the
+# structured-output size the API accepts. The answer key is solution/security_review.md.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/security_review.md"]
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "form_without_csrf_token"
+type = "binary"
+description = """
+The review in /logs/verifier/security_review.md reports that the POST form in
+the portal_my_leases template has no csrf_token input, or recommends adding
+the csrf_token input to that form. Reporting only csrf=False on the route,
+without saying the form itself lacks the token or must carry it, fails.
+A missing or empty review fails.
+"""
+
+[[criterion]]
+name = "t_raw_legacy"
+type = "binary"
+description = """
+The review in /logs/verifier/security_review.md reports that the portal_my_leases template uses t-raw, which no longer exists (broken legacy code) or is a raw HTML sink. Either angle passes.
+The issue must be identified at that place (file, method, route, or field);
+a generic remark that does not point at it fails. A missing or empty review
+fails.
+"""
+
+[[criterion]]
+name = "t_esc_server_qweb"
+type = "binary"
+description = """
+The review in /logs/verifier/security_review.md reports that the portal_my_leases template uses t-esc, which server QWeb does not render (or is deprecated and should be t-out). Either angle passes.
+The issue must be identified at that place (file, method, route, or field);
+a generic remark that does not point at it fails. A missing or empty review
+fails.
+"""
+
+[[criterion]]
+name = "innerhtml_xss"
+type = "binary"
+description = """
+The review in /logs/verifier/security_review.md reports that static/src/js/lease_notes.js sets innerHTML from the lease notes, which the tenant writes: XSS.
+The issue must be identified at that place (file, method, route, or field);
+a generic remark that does not point at it fails. A missing or empty review
+fails.
+"""

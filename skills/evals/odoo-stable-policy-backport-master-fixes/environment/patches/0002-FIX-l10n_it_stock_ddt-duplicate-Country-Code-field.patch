@@ -1,0 +1,68 @@
+From 3b9c1f0e7d2a4c5b8e6f1a2b3c4d5e6f7a8b9c0d Mon Sep 17 00:00:00 2001
+From: Nora Beck <nobe@odoo.com>
+Date: Tue, 29 Sep 2026 15:02:47 +0000
+Subject: [PATCH] [FIX] l10n_it_stock_ddt: duplicate Country Code field
+
+stock_account defines country_code on stock.picking, so the module's own
+l10n_it_country_code duplicates it and every module load warns:
+
+    Two fields (l10n_it_country_code, country_code) of stock.picking()
+    have the same label: Country Code.
+
+Drop the field and use country_code in the compute and the views.
+
+closes odoo/odoo#292118
+
+Signed-off-by: Elias Fontaine (elfo) <elfo@odoo.com>
+---
+ addons/l10n_it_stock_ddt/models/stock_picking.py       | 5 ++---
+ addons/l10n_it_stock_ddt/views/stock_picking_views.xml | 6 +++---
+ 2 files changed, 5 insertions(+), 6 deletions(-)
+
+diff --git a/addons/l10n_it_stock_ddt/models/stock_picking.py b/addons/l10n_it_stock_ddt/models/stock_picking.py
+index 344d5ef65322..97ddb64a6b81 100644
+--- a/addons/l10n_it_stock_ddt/models/stock_picking.py
++++ b/addons/l10n_it_stock_ddt/models/stock_picking.py
+@@ -21,10 +21,9 @@ class StockPicking(models.Model):
+     l10n_it_transport_method_details = fields.Char('Transport Note')
+     l10n_it_parcels = fields.Integer(string="Parcels", default=1)
+     l10n_it_ddt_number = fields.Char('DDT Number', readonly=True)
+-    l10n_it_country_code = fields.Char(related="company_id.account_fiscal_country_id.code")
+     l10n_it_show_print_ddt_button = fields.Boolean(compute="_compute_l10n_it_show_print_ddt_button")
+ 
+-    @api.depends('l10n_it_country_code',
++    @api.depends('country_code',
+                  'picking_type_code',
+                  'state',
+                  'is_locked',
+@@ -36,7 +35,7 @@ class StockPicking(models.Model):
+         # or dropshipping (picking going from supplier to customer)
+         for picking in self:
+             picking.l10n_it_show_print_ddt_button = (
+-                picking.l10n_it_country_code == 'IT'
++                picking.country_code == 'IT'
+                 and picking.state == 'done'
+                 and picking.is_locked
+                 and (picking.picking_type_code == 'outgoing'
+diff --git a/addons/l10n_it_stock_ddt/views/stock_picking_views.xml b/addons/l10n_it_stock_ddt/views/stock_picking_views.xml
+index 3a97bed7fa48..9521ae08bcf2 100644
+--- a/addons/l10n_it_stock_ddt/views/stock_picking_views.xml
++++ b/addons/l10n_it_stock_ddt/views/stock_picking_views.xml
+@@ -12,11 +12,11 @@
+                         groups="base.group_user"/>
+             </xpath>
+             <xpath expr="//button[@name='%(stock.action_report_delivery)d']" position="attributes">
+-                <attribute name="invisible">l10n_it_show_print_ddt_button or picking_type_code == 'outgoing' and l10n_it_country_code == 'IT'</attribute>
++                <attribute name="invisible">l10n_it_show_print_ddt_button or picking_type_code == 'outgoing' and country_code == 'IT'</attribute>
+             </xpath>
+             <group name='carrier_data' position="after">
+-                <group string="DDT Information" invisible="l10n_it_country_code != 'IT' or picking_type_code not in ('outgoing', 'dropship')">
+-                    <field name="l10n_it_country_code" invisible="1"/>
++                <group string="DDT Information" invisible="country_code != 'IT' or picking_type_code not in ('outgoing', 'dropship')">
++                    <field name="country_code" invisible="1"/>
+                     <field name="l10n_it_ddt_number"/>
+                     <field name="l10n_it_transport_reason"/>
+                     <field name="l10n_it_transport_method"/>
+-- 
+2.54.0
+

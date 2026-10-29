@@ -1,0 +1,78 @@
+# LLM judge: recall of the seeded issues in one area.
+# Area: JavaScript: file layout, getters, patching.
+# Rules: odoo-web-guidelines guidelines/javascript.md.
+# One binary criterion per issue; the area's score is the share found.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/review.md"]
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "js1_files_by_type"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/static/src/components/booking_board.js`:
+static/src/ is organized by type (components/, hooks/, patches/, scss/,
+vendor/), so the booking board's component, template, hook and styles are
+spread over type folders. Code is organized by feature: one folder for the
+board holding all its files (static/src/booking_board/).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "js2_getter_title"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/static/src/components/booking_board.js`, line 21:
+BookingBoard.title is a getter: it hides that code runs and only saves a
+pair of parentheses. Use a plain method (or a plain value).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "js3_getter_derived_state"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/static/src/components/booking_board.js`, line 25:
+BookingBoard.lateCount is a getter computing derived state (the late
+bookings among the loaded ones), re-run on every read. Use an Owl computed,
+which recomputes only when the bookings change, or at least a plain method.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "js4_patch_form_controller"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/static/src/patches/form_controller_patch.js`, line 5:
+The module patches FormController.prototype.onRecordSaved, which runs for
+every form view, to notify after saving a booking. Patching is strongly
+discouraged inside Odoo: use an extension point, such as a booking form view
+with a js_class whose controller extends FormController.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""

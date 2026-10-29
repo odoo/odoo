@@ -1,0 +1,18 @@
+diff --git a/addons/payment/controllers/portal.py b/addons/payment/controllers/portal.py
+index c270578e6b20..658774071e5c 100644
+--- a/addons/payment/controllers/portal.py
++++ b/addons/payment/controllers/portal.py
+@@ -388,7 +388,12 @@ class PaymentPortal(portal.CustomerPortal):
+             # the current user's partner if logged in, or the partner on behalf of whom the payment
+             # is being made).
+             partner_sudo = self.env["res.partner"].sudo().browse(partner_id)
+-            if partner_sudo.commercial_partner_id != token_sudo.partner_id.commercial_partner_id:
++            # Allow paying with a token saved by another partner of the same company, e.g. a
++            # card one colleague saved for the company.
++            if (
++                partner_sudo.commercial_partner_id != token_sudo.partner_id.commercial_partner_id
++                and partner_sudo.company_id != token_sudo.partner_id.company_id
++            ):
+                 raise AccessError(self.env._("You do not have access to this payment token."))
+ 
+             payment_method_id = token_sudo.payment_method_id.id

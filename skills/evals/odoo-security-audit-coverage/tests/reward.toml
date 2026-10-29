@@ -1,0 +1,7 @@
+# structure: deterministic checks (review written, module untouched)
+# findings:  LLM judge, one criterion per planted issue, plus false positives and shape
+# process:   LLM judge on the trajectory (review only, honest reply)
+[[reward]]
+name = "reward"
+aggregation = "weighted-mean"
+weights = { structure = 1.0, findings = 4.0, process = 1.0 }

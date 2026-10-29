@@ -1,0 +1,29 @@
+# LLM judge: are the review's findings true of the PR? Reported next to the
+# recall, kept out of the reward (weight 0 in reward.toml). A finding that is
+# not in the seeded list but is true counts as correct: the list is a floor.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/review.md", "/logs/verifier/pr.diff"]
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "findings_correct"
+type = "likert"
+points = 5
+description = """
+/logs/verifier/pr.diff is the commit under review (message and diff, a new
+equipment_booking module and a change to maintenance, on Odoo master).
+/logs/verifier/review.md is the review. Go through every finding of the
+review and decide whether it is correct: the defect exists at the place the
+review gives, and the failure scenario or rule it states holds for this
+code. A finding about code outside the diff (callers, overrides, other
+modules) is correct when what it states about that code is plausible and
+consistent with the diff. Style findings are correct when the code does
+what the finding says. A finding is wrong when the code does not do what it
+claims, the place is wrong, or the stated consequence cannot happen.
+
+Score the share of correct findings: 5 = every finding is correct, 4 = at
+most one finding in twenty is wrong, 3 = at most one in seven, 2 = at most
+one in three, 1 = more. Name the wrong findings in your reasoning.
+"""

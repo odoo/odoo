@@ -1,0 +1,31 @@
+schema_version = "1.4"
+
+[task]
+name = "odoo/odoo-security-review-pr-flaw"
+description = "Security review of a PR that widens the token ownership check of /payment/transaction to same-company partners, which any partner without a company satisfies, bringing back CVE-2021-23178."
+keywords = ["odoo", "security", "skills", "odoo-security", "cve", "pr-review"]
+
+[metadata]
+skill = "odoo-security"
+odoo_version = "20.0"
+base_commit = "c6f3b034f29220afa236737ab79d1228bdc9f3c0"
+# The fix of CVE-2021-23178 the PR's change weakens (odoo/odoo, 15.0).
+reference_commit = "9a063023f9f7"
+advisory = "https://github.com/odoo/odoo/issues/107690"
+
+[verifier]
+timeout_sec = 900.0
+# The verifier reads the checkout as root; test.sh marks /app safe.
+user = "root"
+
+[verifier.env]
+# The LLM judges in tests/findings and tests/process need it.
+ANTHROPIC_API_KEY = "${ANTHROPIC_API_KEY}"
+
+[agent]
+timeout_sec = 1800.0
+
+[environment]
+build_timeout_sec = 2400.0
+cpus = 2
+memory_mb = 4096

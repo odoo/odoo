@@ -1,0 +1,204 @@
+# LLM judge: recall of the seeded issues in one area.
+# Area: Fields.
+# Rules: odoo-guidelines guidelines/fields.md.
+# One binary criterion per issue; the area's score is the share found.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/review.md"]
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "fd1_many2one_suffix"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 22:
+The Many2one equipment lacks the _id suffix (equipment_id).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "fd2_one2many_suffix"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 39:
+The One2many lines lacks the _ids suffix (line_ids).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "fd3_low_cardinality_index"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 44:
+reminder_sent is a boolean with index=True: an index on a low-cardinality
+field is wasted space and slows every write.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "fd4_amount_without_currency"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 41:
+price is an amount stored as a plain Float, with no currency; an amount is a
+Monetary field with its currency companion (currency_id).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "fd5_ondelete"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 25:
+The holder partner_id has ondelete='cascade': deleting (or merging away) a
+partner silently deletes their bookings and their history; restrict (or set
+null) is the sensible choice.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "fd6_reserved_active"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 43:
+is_archived is a custom archiving boolean; the reserved active field gives
+archiving for free (action_archive, the default filter) instead of the
+action's hand-written domain.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "fd7_parent_store"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/equipment_booking_location.py`, line 20:
+The location tree has parent_id but no _parent_store and parent_path
+(indexed), while _get_bookings_in_subtree searches with child_of.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "fd8_check_company"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 26:
+equipment.booking has a company_id but no company consistency: no
+_check_company_auto and no check_company on equipment and location_id, so a
+booking can link records of another company.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "fd10_field_method_collision"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 164:
+The field checkin and the method checkin() share a name: the method, defined
+later in the class, replaces the field, which silently disappears from the
+model.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "fd11_related_through_x2many"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 40:
+accessory_name is related through the One2many lines
+(lines.product_id.name): the ORM silently keeps the first line only.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "fd12_shared_inverse"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 30:
+start_date and end_date share one inverse, _inverse_dates: while it runs,
+both fields are protected and the sibling reads wrong values. Give each
+field its own inverse.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "fd13_missing_index"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/maintenance_equipment.py`, line 16:
+checkin_code is a selective code that /booking/checkin searches on, without
+an index.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""

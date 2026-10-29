@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rental_property_view_list" model="ir.ui.view">
+        <field name="name">rental.property.list</field>
+        <field name="model">rental.property</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="owner_id"/>
+                <field name="rent_amount"/>
+                <field name="active_lease_count"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="rental_property_view_form" model="ir.ui.view">
+        <field name="name">rental.property.form</field>
+        <field name="model">rental.property</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="owner_id"/>
+                        <field name="owner_bank_account"/>
+                        <field name="rent_amount"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                    <group string="Listing website">
+                        <field name="listing_api_token" password="True"/>
+                        <field name="listing_signing_key"/>
+                    </group>
+                    <field name="lease_ids"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="rental_lease_view_list" model="ir.ui.view">
+        <field name="name">rental.lease.list</field>
+        <field name="model">rental.lease</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="property_id"/>
+                <field name="tenant_id"/>
+                <field name="date_start"/>
+                <field name="rent_amount"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="rental_lease_view_form" model="ir.ui.view">
+        <field name="name">rental.lease.form</field>
+        <field name="model">rental.lease</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_sign" type="object" string="Sign" invisible="state != 'draft'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="property_id"/>
+                        <field name="tenant_id"/>
+                        <field name="date_start"/>
+                        <field name="rent_amount"/>
+                        <field name="contract_attachment_id"/>
+                    </group>
+                    <field name="notes"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="rental_property_action" model="ir.actions.act_window">
+        <field name="name">Properties</field>
+        <field name="res_model">rental.property</field>
+    </record>
+
+    <record id="rental_lease_action" model="ir.actions.act_window">
+        <field name="name">Leases</field>
+        <field name="res_model">rental.lease</field>
+    </record>
+
+    <menuitem id="rental_menu_root" name="Rental"/>
+    <menuitem id="rental_property_menu" parent="rental_menu_root" action="rental_property_action" sequence="10"/>
+    <menuitem id="rental_lease_menu" parent="rental_menu_root" action="rental_lease_action" sequence="20"/>
+</odoo>

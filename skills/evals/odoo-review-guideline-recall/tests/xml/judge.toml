@@ -1,0 +1,204 @@
+# LLM judge: recall of the seeded issues in one area.
+# Area: Views, actions, data records, view inheritance.
+# Rules: odoo-guidelines guidelines/xml.md.
+# One binary criterion per issue; the area's score is the share found.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/review.md"]
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "xm1_record_attribute_order"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/views/booking.xml`, line 4:
+The form view record is written <record model=... id=...>: id comes before
+model.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "xm2_records_grouped_by_model"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/views/booking.xml`:
+views/booking.xml interleaves records of different models (views, actions,
+views again, the equipment view, menus) instead of grouping them by model.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "xm3_menuitem_tag"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/views/booking.xml`, line 201:
+The menu equipment_booking_menu is a raw <record model="ir.ui.menu"> instead
+of a <menuitem>.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "xm4_noupdate_whole_file"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/data/mail-templates.xml`, line 3:
+data/mail-templates.xml wraps its whole content in <data noupdate="1">; for
+a fully noupdate file, set noupdate="1" on <odoo> and drop <data>.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "xm5_view_xml_id"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/views/booking.xml`, line 74:
+The list view's xml id view_booking_list does not follow <model>_view_<type>
+(equipment_booking_view_list).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "xm6_action_xml_id"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/views/booking.xml`, line 64:
+The action's xml id action_bookings does not follow <model>_action
+(equipment_booking_action).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "xm7_group_xml_id"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/security/groups.xml`, line 3:
+The group's xml id group_booking_manager does not follow
+<module>_group_<name> (equipment_booking_group_manager).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "xm8_css_class_prefix"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/views/portal.xml`, line 25:
+The portal template's CSS class o_booking_status is not prefixed by the
+module (o_equipment_booking_...); o_ alone is reserved for the web client.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "xm9_positional_xpath"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/views/booking.xml`, line 172:
+The equipment form extension anchors on position
+(//sheet/group/group[2]/field[2]) instead of a name (<field
+name="technician_user_id" position="after">); it breaks or lands elsewhere
+when maintenance or another module changes the form.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "xm10_inherit_view_name"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/views/booking.xml`, line 168:
+The inheriting view's name maintenance.equipment.form.booking lacks the
+.inherit. suffix (maintenance.equipment.form.inherit.equipment_booking).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "xm11_readded_field"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/views/booking.xml`, line 179:
+The equipment form extension adds serial_number again in its Bookings page,
+while the parent form already shows it.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "xm12_mode_primary"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/views/booking.xml`, line 108:
+equipment_booking_view_form_quick is meant as a variant of the booking form
+(the Quick Booking action) but inherits it without mode="primary": it
+extends the main form, hiding the Accessories page for everyone.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""

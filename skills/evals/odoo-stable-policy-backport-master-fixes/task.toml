@@ -1,0 +1,38 @@
+schema_version = "1.4"
+
+[task]
+name = "odoo/odoo-stable-policy-backport-master-fixes"
+description = "Make a red runbot build of the stable 20.0 branch green from master patches and a build log, adapting what master could do and stable cannot: a field removal, a private signature change, and a missing library on the build image."
+keywords = ["odoo", "stable", "backport", "bug-fix", "skills", "odoo-stable-policy", "odoo-git"]
+
+[metadata]
+skill = "odoo-stable-policy"
+odoo_version = "20.0"
+# The checkout is 20.0 at this commit, with the old l10n_it_country_code field
+# of l10n_it_stock_ddt planted back and a failing test of the DDT sequence
+# renaming added, folded into that commit.
+upstream_commit = "cd368a6d2fc65be3361f631d992fead30235cd21"
+# The one real patch: the mrp fix merged in 20.0 after the checkout, given to
+# the agent as a master fix to backport.
+backport_commit = "df9daf5ea0b5d8f40389757cd8cdc78c81cf17d4"
+
+[verifier]
+# The verifier installs l10n_it_stock_ddt and mrp_account on the base code,
+# then checks the agent's code without and with a module update, and runs the
+# tests of both modules. It grades the backport and stability only.
+timeout_sec = 2400.0
+# The verifier reads the agent's commits as root; test.sh marks /app safe.
+user = "root"
+
+[verifier.env]
+# The LLM judge in tests/review needs it.
+ANTHROPIC_API_KEY = "${ANTHROPIC_API_KEY}"
+
+[agent]
+# Long enough to install the two modules' trees and run their tests a few times.
+timeout_sec = 2400.0
+
+[environment]
+build_timeout_sec = 2400.0
+cpus = 2
+memory_mb = 4096
