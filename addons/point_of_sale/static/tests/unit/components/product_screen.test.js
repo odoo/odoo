@@ -43,6 +43,20 @@ test("fastValidate", async () => {
     expect(order.amount_paid).toBe(3.45);
 });
 
+test("fastValidate does not validate an empty order", async () => {
+    const store = await setupPosEnv();
+    store.addNewOrder();
+    const order = store.getOrder();
+    const productScreen = await mountWithCleanup(ProductScreen, {
+        props: { orderUuid: order.uuid },
+    });
+
+    await productScreen.fastValidate(order.config.fast_payment_method_ids[0]);
+
+    expect(order.state).toBe("draft");
+    expect(order.payment_ids.length).toBe(0);
+});
+
 test("addProductToOrder presets the variant matched by default_code search", async () => {
     const store = await setupPosEnv();
     store.addNewOrder();

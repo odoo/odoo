@@ -39,7 +39,8 @@ import { normalize } from "@web/core/l10n/utils";
 import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
 import { debounce } from "@web/core/utils/timing";
 import DevicesSynchronisation from "../utils/devices_synchronisation";
-import { formatDate } from "@web/core/l10n/dates";
+import { formatDate, serializeDateTime } from "@web/core/l10n/dates";
+import { downloadFile } from "@web/core/network/download";
 import { localization } from "@web/core/l10n/localization";
 import { ProductInfoPopup } from "@point_of_sale/app/components/popups/product_info_popup/product_info_popup";
 import { RetryPrintPopup } from "@point_of_sale/app/components/popups/retry_print_popup/retry_print_popup";
@@ -282,6 +283,12 @@ export class PosStore extends WithLazyGetterTrap {
         ];
     }
 
+    async exportLocalData() {
+        const data = await this.data.synchronizeLocalDataInIndexedDB();
+        const date = serializeDateTime(DateTime.now()).replace(/:|\s/gi, "-");
+        downloadFile(JSON.stringify(data), `pos_data${date}.json`, "application/json");
+    }
+
     async reloadData(fullReload = false) {
         try {
             await this.syncAllOrders();
@@ -289,14 +296,22 @@ export class PosStore extends WithLazyGetterTrap {
             logPosMessage("Store", "reloadData", "Failed to sync orders", CONSOLE_COLOR, [error]);
         }
         // Reloading wipes the local orders, a paid order must never be lost that way
-        if (this.models["pos.order"].some((o) => o.isUnsyncedPaid && o.state !== "cancel")) {
-            this.dialog.add(AlertDialog, {
+        if (
+            this.models["pos.order"].some(
+                (o) => o.isUnsyncedPaid && o.state !== "cancel" && this.shouldCreatePendingOrder(o)
+            )
+        ) {
+            const exportData = await ask(this.dialog, {
                 title: _t("Reload Data"),
                 body: _t(
                     "Some paid orders have not been synced to the server yet. Closing or reloading now may cause data loss."
                 ),
+                confirmLabel: _t("Export data"),
             });
-            return;
+            if (!exportData) {
+                return;
+            }
+            await this.exportLocalData();
         }
         const orders = this.models["pos.order"].getAll();
         this.device.saveUnusedNumber(orders);
@@ -3183,6 +3198,9 @@ export class PosStore extends WithLazyGetterTrap {
 
     async validateOrderFast(paymentMethod) {
         const order = this.getOrder();
+        if (!order.canPay()) {
+            return;
+        }
         const validation = new OrderPaymentValidation({
             pos: this,
             orderUuid: order.uuid,
