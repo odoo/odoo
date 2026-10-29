@@ -2,6 +2,7 @@ import { Component, onMounted, onWillUnmount, computed, proxy, signal } from "@o
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
+import { scrollTo } from "@web/core/utils/scrolling";
 
 import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_widget";
 import { ProductCard } from "@pos_self_order/app/components/product_card/product_card";
@@ -61,8 +62,10 @@ export class ProductListPage extends Component {
         }
 
         this.scrollShadow = useScrollShadow(this.productListRef);
-        useDraggableScroll(this.categoryListRef);
-        useHorizontalScrollShadow(this.categoryListRef, this.categoryContainerRef);
+        if (!this.isSideCategoryLayout) {
+            useDraggableScroll(this.categoryListRef);
+            useHorizontalScrollShadow(this.categoryListRef, this.categoryContainerRef);
+        }
         useDraggableScroll(this.subCategoryListRef);
         Object.defineProperty(this.state, "quantityByProductTmplId", {
             get: computed(() =>
@@ -149,10 +152,24 @@ export class ProductListPage extends Component {
             return;
         }
 
-        scrollItemIntoViewX(
-            this.categoryListRef(),
-            `[data-category-pill="${this.selectedCategory.id}"]`,
-            { edgePadding: 20, minRightGap: this.categoryListRef().offsetWidth / 3 }
+        const selector = `[data-category-pill="${this.topSelectedCategory.id}"]`;
+        if (this.isSideCategoryLayout) {
+            const pill = this.categoryListRef().querySelector(selector);
+            if (pill) {
+                scrollTo(pill, { behavior: "smooth" });
+            }
+            return;
+        }
+        scrollItemIntoViewX(this.categoryListRef(), selector, {
+            edgePadding: 20,
+            minRightGap: this.categoryListRef().offsetWidth / 3,
+        });
+    }
+
+    get isSideCategoryLayout() {
+        return (
+            this.selfOrder.kioskMode &&
+            this.selfOrder.config.self_ordering_category_layout === "side"
         );
     }
 
