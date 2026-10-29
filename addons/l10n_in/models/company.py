@@ -163,7 +163,13 @@ class ResCompany(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        # The inverse of the registration type needs access to the company, which is only
+        # granted to the current user at the end of the creation: apply it afterwards.
+        registration_types = [vals.pop('l10n_in_gst_registration_type', None) for vals in vals_list]
         res = super().create(vals_list)
+        for company, registration_type in zip(res, registration_types):
+            if registration_type:
+                company.l10n_in_gst_registration_type = registration_type
         # Update Fiscal Positions for new branch
         res._update_l10n_in_fiscal_position()
         return res
@@ -220,7 +226,8 @@ class ResCompany(models.Model):
             no_itc_tax_ids = self.env['ir.model.data'].search([
                 ('model', '=', 'account.tax'),
                 ('module', '=', 'account'),
-                ('name', '=like', f'{company.id}_%_purchase_%_composition'),
+                ('res_id', 'in', taxes.ids),
+                ('name', '=like', '%_purchase_%_composition'),
             ]).mapped('res_id')
             if company.l10n_in_gst_registration_type == 'regular':
                 activate_domain = [('id', 'not in', no_itc_tax_ids)]

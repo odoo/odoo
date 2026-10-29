@@ -136,7 +136,11 @@ class AccountChartTemplate(models.AbstractModel):
         super()._post_load_data(template_code, company, template_data)
         if template_code and template_code.startswith('in'):
             company = company or self.env.company
-            company._update_l10n_in_gst_registration_type()
+            if company.l10n_in_gst_registration_type:
+                # Activate the taxes matching the registration type
+                company._inverse_l10n_in_gst_registration_type()
+            else:
+                company._update_l10n_in_gst_registration_type()
 
             # The COA (Chart of Accounts) data is loaded after the initial compute methods are called.
             # During initial journal setup, the payment methods and accounts may not exist yet,
