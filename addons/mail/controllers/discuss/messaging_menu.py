@@ -107,18 +107,13 @@ class DiscussMessagingMenuController(WebclientController):
         filter_id_by_tab_id = filter_id_by_tab_id_by_record_type.get("discuss.channel")
         if not filter_id_by_tab_id:
             return
-        important_domain = Domain(
-            "channel_member_ids",
+        important_domain = Domain("id", "in", self._get_self_pinned_channel_ids()) & Domain(
+            "self_member_id",
             "any",
-            [
-                ("is_pinned", "=", True),
-                ("is_self", "=", True),
-                ("is_unread", "=", True),
-                ("mute_until_dt", "=", False),
-            ],
+            [("is_unread", "=", True), ("mute_until_dt", "=", False)],
         )
         if self.env.user._is_internal():
-            important_domain |= Domain("message_needaction", "=", True)
+            important_domain |= Domain("id", "in", self._get_self_needaction_channel_ids())
         important_channels = self.env["discuss.channel"].search_fetch(
             Domain("active", "=", True) & important_domain,
         )
