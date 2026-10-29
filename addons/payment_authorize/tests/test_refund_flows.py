@@ -22,7 +22,7 @@ class TestRefundFlows(AuthorizeCommon):
             child_tx = source_tx._refund(amount_to_refund=source_tx.amount)
         self.assertEqual(child_tx.state, "cancel")
 
-    def test_refunding_refunded_tx_creates_refund_tx(self):
+    def test_refund_creates_refund_tx(self):
         """Test that refunding a transaction that has been refunded from Authorize.net side creates
         a refund transaction on Odoo."""
         source_tx = self._create_transaction("direct", state="done")
@@ -80,9 +80,8 @@ class TestRefundFlows(AuthorizeCommon):
         self.assertTrue(refund_tx)
 
     def test_voided_refund_tx_is_done(self):
-        """Test that voided refund transactions due to the payment not being settled yet are
-        correctly marked as done."""
-        self._disable_process_patcher()
+        """Test that a refund transaction voided due to the payment not being settled yet is
+        marked as done."""
         source_tx = self._create_transaction("direct", state="done")
         with (
             patch(
@@ -95,9 +94,10 @@ class TestRefundFlows(AuthorizeCommon):
                 return_value={"x_response_code": "1", "x_type": "void"},
             ),
             patch(
-                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._validate_amount"
-            ),
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
+            ) as record_mock,
         ):
             refund_tx = source_tx._refund(amount_to_refund=source_tx.amount)
-            self._run_processing()
+        payload = record_mock.call_args.args[0]
+        refund_tx.with_context(payment_safe_write=True)._apply_updates(payload)
         self.assertEqual(refund_tx.state, "done")

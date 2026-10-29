@@ -45,3 +45,11 @@ class AuthorizeCommon(PaymentCommon):
             "7A0515EF579CB958D6902E7B5BE94DBB359B9CE89E9F19D92EF3D9745432BFFF474DCB3A7"
             "32DA8AC9D12D6514361EBD7F19232B1FC3D97F3DECAE8086D21CEF5"
         )
+        cls.payment_data = {
+            "response": {
+                "x_trans_id": cls.trans_id,
+                "payment_method_code": "ach_direct_debit",
+                "x_response_code": "1",
+                "x_type": "auth_capture",
+            }
+        }
