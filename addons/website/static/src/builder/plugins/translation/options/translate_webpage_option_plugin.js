@@ -140,8 +140,11 @@ export class TranslateToAction extends BuilderAction {
                 enqueueTranslation(el, uniqueId("ta_"), text, "textContent");
             }
             if (el.classList.contains("o_translatable_attribute")) {
+                const translatableAttrNames = new Set(
+                    this.dependencies.translation.getTranslatableAttributes(el)
+                );
                 for (const attr of ["alt", "title", "placeholder", "aria-label", "value"]) {
-                    if (el.hasAttribute(attr)) {
+                    if (translatableAttrNames.has(attr)) {
                         const attrValue = el.getAttribute(attr);
                         enqueueTranslation(el, uniqueId("ta_"), attrValue, attr);
                     }
@@ -254,20 +257,12 @@ export class TranslateToAction extends BuilderAction {
                 numOfFailedTranslationNodes--;
                 if (id.startsWith("t_")) {
                     node.textContent = text;
-                    const parentEl = node.parentElement?.closest("[data-oe-translation-state]");
-                    if (parentEl) {
-                        parentEl.dataset.oeTranslationState = "translated";
-                    }
                 } else if (id.startsWith("ta_")) {
                     const { el, attribute } = node;
                     const translateAction =
                         this.dependencies.builderActions.getAction("translateAttribute");
                     const translateSpec = { editingElement: el, params: { mainParam: attribute } };
-                    if (
-                        this.dependencies.translation.hasTranslatedAttribute(el, attribute) &&
-                        text != translateAction.getValue(translateSpec)
-                    ) {
-                        el.dataset.oeTranslationState = "translated";
+                    if (text != translateAction.getValue(translateSpec)) {
                         translateAction.apply({ ...translateSpec, value: text });
                     }
                 }
