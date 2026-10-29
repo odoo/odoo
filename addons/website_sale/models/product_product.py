@@ -157,18 +157,21 @@ class ProductProduct(models.Model):
         else:
             self.website_published = False
 
-    def _to_markup_data(self, website):
+    def _to_markup_data(self, website, product_price=None):
         """ Generate JSON-LD markup data for the current product.
 
         :param website website: The current website.
+        :param float product_price: The pricelist price of the product, when the caller
+            already computed it (see `product.template._to_markup_data`).
         :return: The JSON-LD markup data.
         :rtype: dict
         """
         self.ensure_one()
 
-        product_price = request.pricelist._get_product_price(
-            self, quantity=1, currency=website.currency_id
-        )
+        if product_price is None:
+            product_price = request.pricelist._get_product_price(
+                self, quantity=1, currency=website.currency_id
+            )
         # Use sudo to access cross-company taxes.
         product_taxes_sudo = self.sudo().taxes_id._filter_taxes_by_company(self.env.company)
         taxes = request.fiscal_position.map_tax(product_taxes_sudo)

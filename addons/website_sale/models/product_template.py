@@ -1054,6 +1054,11 @@ class ProductTemplate(models.Model):
         else:
             product_variant_ids = self.product_variant_ids
 
+        # One pricelist computation for all variants: computed per variant, each one
+        # searched its applicable rules again (730 searches for a 729-variant product).
+        prices = request.pricelist._get_products_price(
+            product_variant_ids, 1, currency=website.currency_id
+        )
         base_url = website.get_base_url()
         markup_data = {
             '@context': 'https://schema.org/',
@@ -1061,7 +1066,10 @@ class ProductTemplate(models.Model):
             'name': self.name,
             'image': f'{base_url}{website.image_url(self, "image_1920")}',
             'url': f'{base_url}{self.website_url}',
-            'hasVariant': [product._to_markup_data(website) for product in product_variant_ids]
+            'hasVariant': [
+                product._to_markup_data(website, product_price=prices[product.id])
+                for product in product_variant_ids
+            ],
         }
         if self.description_ecommerce:
             markup_data['description'] = text_from_html(self.description_ecommerce)

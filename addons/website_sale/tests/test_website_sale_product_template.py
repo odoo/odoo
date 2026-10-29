@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
+from unittest.mock import patch
 
 from odoo.fields import Command, Date
 from odoo.tests import tagged
@@ -51,6 +52,48 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
             markup_data = product_template._to_markup_data(self.website)
         self.assertEqual(markup_data['@type'], 'ProductGroup')
         self.assertEqual(len(markup_data['hasVariant']), 2)
+
+    def test_markup_data_prices_all_variants_in_one_call(self):
+        """The pricelist rules are searched once for the whole group, not per variant."""
+        self._enable_pricelists()
+        product_attribute = self.env['product.attribute'].create({
+            'name': 'Test attribute',
+            'create_variant': 'always',
+            'value_ids': [Command.create({'name': f'Value {i}'}) for i in range(5)],
+        })
+        product_template = self.env['product.template'].create({
+            'name': 'Test product',
+            'taxes_id': [Command.clear()],
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': product_attribute.id,
+                    'value_ids': [Command.set(product_attribute.value_ids.ids)],
+                }),
+            ],
+        })
+        variants = product_template.product_variant_ids
+        self.pricelist.item_ids = [
+            Command.create({
+                'applied_on': '0_product_variant',
+                'product_id': variant.id,
+                'compute_price': 'fixed',
+                'fixed_price': 10 + i,
+            })
+            for i, variant in enumerate(variants)
+        ]
+        website = self.website
+        Pricelist = self.registry['product.pricelist']
+        with (
+            MockRequest(website.env, website=website, website_sale_current_pl=self.pricelist.id),
+            patch.object(Pricelist, '_get_applicable_rules', autospec=True,
+                         side_effect=Pricelist._get_applicable_rules) as get_rules,
+        ):
+            markup_data = product_template._to_markup_data(website)
+        self.assertEqual(get_rules.call_count, 1)
+        self.assertEqual(
+            [variant['offers']['price'] for variant in markup_data['hasVariant']],
+            [10 + i for i in range(len(variants))],
+        )
 
     def test_markup_data_uses_product_schema_when_single_variant(self):
         product_template = self.env['product.template'].create({'name': 'Test product'})
