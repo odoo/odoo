@@ -387,6 +387,11 @@ export class LinkPlugin extends Plugin {
         on_selectionchange_handlers: this.handleSelectionChange.bind(this),
         on_inserted_handlers: this.handleAfterInsert.bind(this),
         system_classes: [FONT_SIZED_BUTTON_CLASS],
+        // The normalization does not run on undo/redo. Update the font sized
+        // button class here, as it is not recorded in the history.
+        on_history_commit_undone_handlers: () => this.updateFontSizedButtonClass(this.editable),
+        on_history_commit_redone_handlers: () => this.updateFontSizedButtonClass(this.editable),
+        on_savepoint_restored_handlers: () => this.updateFontSizedButtonClass(this.editable),
         on_will_remove_handlers: () => this.closeLinkTools(),
 
         /** Overrides */
