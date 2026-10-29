@@ -2,36 +2,27 @@
 <templates xml:space="preserve">
 
     <t t-name="web.StateSelectionField">
-        <t t-if="this.props.readonly">
-            <span
-                class="o_status_readonly d-inline-flex align-items-baseline gap-2 p-1"
-                t-att-class="this.props.showLabel ? 'fw-bold o_has_not_label' : ''"
-                t-att-data-tooltip="this.props.showLabel ? '' : this.label"
-            >
-                <i class="o_state_selection_field_icon o_status oi" t-attf-class="{{ this.stateIconClass(this.currentValue) }} {{ this.statusColor(this.currentValue) }}" t-att-data-icon="this.stateIcon(this.currentValue)"/>
-                <span t-if="this.props.showLabel" class="o_status_label text-truncate" t-out="this.label"/>
-            </span>
-        </t>
-        <t t-else="">
-            <Dropdown menuClass="'state_selection_field_menu'">
+        <!-- When readonly, the wrapper carries the tooltip -->
+        <div
+            class="o_state_selection_wrapper"
+            t-att-class="this.props.readonly ? '' : 'd-contents'"
+            t-att-data-tooltip="!this.props.showLabel and this.props.readonly ? this.label : ''"
+        >
+            <Dropdown menuClass="'state_selection_field_menu'" state="this.dropdownState" disabled="this.props.readonly">
                 <button
-                    class="btn d-flex align-items-center gap-2 mw-100"
+                    class="o_state_selection_btn btn btn-secondary mw-100 rounded-pill lh-1 text-truncate opacity-trigger-hover"
                     t-att-class="{
-                        'p-1': this.props.viewType == 'card' or (this.props.viewType == 'list' and !this.props.showLabel),
-                        'py-0 ps-1 pe-2': this.props.viewType == 'list' and this.props.showLabel,
-                        'btn-secondary rounded-pill': this.props.viewType == 'form',
-                        'btn-light': this.props.viewType != 'form',
                         'o_has_not_label': !this.props.showLabel,
+                        'btn-sm py-1 px-2': this.props.showLabel and this.props.viewType != 'form',
                     }"
                     data-available-offline=""
-                    t-att-data-tooltip="this.props.showLabel ? '' : this.label"
+                    t-att-data-tooltip="!this.props.showLabel and !this.props.readonly ? this.label : ''"
+                    t-att-disabled="this.props.readonly"
                 >
                     <i
-                        class="o_state_selection_field_icon o_status oi"
-                        t-attf-class="{{ this.stateIconClass(this.currentValue) }} {{this.statusColor(this.currentValue) }}"
-                        t-att-class="{
-                            'oi-lg': this.props.viewType == 'form',
-                        }"
+                        class="o_status oi transition-base opacity-100-hover"
+                        t-att-class="{ 'me-1': this.props.showLabel }"
+                        t-attf-class="{{ this.stateIconClass(this.currentValue) }} {{this.statusColor(this.currentValue) }} {{ this.dropdownState.isOpen ? 'opacity-100' : 'opacity-75' }}"
                         t-att-data-icon="this.stateIcon(this.currentValue)"
                     />
                     <span t-if="this.props.showLabel" class="o_status_label text-truncate" t-out="this.label"/>
@@ -39,15 +30,16 @@
                 <t t-set-slot="content">
                     <t t-foreach="this.options" t-as="option" t-key="option[0]">
                         <CheckboxItem
-                            class="`d-flex align-items-baseline gap-2 ${option[0] === this.currentValue ? 'active' : ''}`"
-                            onSelected="() => this.updateRecord(option[0])" checked="option[0] === this.currentValue">
+                            class="'d-flex align-items-baseline gap-2 ' + (option[0] === this.currentValue ? 'active' : '')"
+                            checked="option[0] === this.currentValue"
+                            onSelected="() => this.updateRecord(option[0])">
                                 <i class="oi o_status" t-attf-class="{{ this.stateIconClass(option[0]) }} {{ this.statusColor(option[0]) }}" t-att-data-icon="this.stateIcon(option[0])"/>
                                 <span t-out="option[1]"/>
                         </CheckboxItem>
                     </t>
                 </t>
             </Dropdown>
-        </t>
+        </div>
     </t>
 
 </templates>
