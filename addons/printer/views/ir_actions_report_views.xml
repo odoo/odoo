@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="act_report_xml_view" model="ir.ui.view">
+        <field name="name">ir.actions.report.form.inherit.printer</field>
+        <field name="model">ir.actions.report</field>
+        <field name="inherit_id" ref="base.act_report_xml_view"/>
+        <field name="arch" type="xml">
+            <field name="paperformat_id" position="after">
+                <field name="printer_ids" widget="many2many_tags"
+                    required="context.get('printer_required')"
+                    context="{'printer_show_kind': True}"
+                    placeholder="Download the report"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

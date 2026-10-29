@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <div t-name="printer.ResetLinkedPrinters" class="o_action o_printer_reset_linked_printers">
+        <Layout display="{ controlPanel: {} }">
+            <div class="container-fluid py-3">
+                <p class="text-muted">
+                    The printers chosen in this browser for each report. Forget a choice to choose
+                    the printers again the next time the report is printed.
+                </p>
+                <table t-if="this.state.linkedPrinters.length" class="table table-sm align-middle">
+                    <tbody>
+                        <tr t-foreach="this.state.linkedPrinters" t-as="linked" t-key="linked.reportName">
+                            <td t-out="linked.displayName"/>
+                            <td class="text-end">
+                                <button class="btn btn-secondary btn-sm" t-on-click="() => this.forget(linked.reportName)">
+                                    Forget
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p t-else="" class="o_printer_reset_linked_printers_empty">
+                    No printers are remembered in this browser.
+                </p>
+            </div>
+        </Layout>
+    </div>
+
+</templates>

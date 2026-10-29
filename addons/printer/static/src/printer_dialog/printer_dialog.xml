@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="printer.PrinterDialog">
+        <Dialog title="this.props.title" size="'md'">
+            <p>Print on:</p>
+            <div class="o_printer_dialog_printers mb-3">
+                <t t-foreach="this.props.printers" t-as="printer" t-key="printer.id">
+                    <CheckBox
+                        value="this.state.selectedIds.includes(printer.id)"
+                        onChange="(checked) => this.togglePrinter(printer.id, checked)"
+                        name="'printer_' + printer.id">
+                        <t t-out="printer.display_name"/>
+                    </CheckBox>
+                </t>
+            </div>
+            <p t-if="this.state.showError" class="o_printer_dialog_error text-danger">
+                Select at least one printer
+            </p>
+            <CheckBox value="this.state.skipDialog" onChange="(checked) => this.toggleSkipDialog(checked)" name="'skip_dialog'">
+                Do not ask me again
+            </CheckBox>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="this.onConfirm">Print</button>
+                <button class="btn btn-secondary" t-on-click="() => this.props.close()">Discard</button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>
