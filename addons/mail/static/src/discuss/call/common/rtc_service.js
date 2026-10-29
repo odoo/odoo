@@ -7,7 +7,7 @@ import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permi
 import { rpc } from "@web/core/network/rpc";
 import { assignDefined, closeStream } from "@mail/utils/common/misc";
 
-import { markup, proxy, toRaw } from "@odoo/owl";
+import { markup, proxy, toRaw, usePlugin } from "@odoo/owl";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -21,6 +21,7 @@ import { url } from "@web/core/utils/urls";
 import { isBrowserSafari, isMobileOS } from "@web/core/browser/feature_detection";
 import { CallAction } from "@mail/discuss/call/common/call_actions";
 import { ACTION_TAGS } from "@mail/core/common/action";
+import { PttExtensionPlugin } from "@mail/discuss/call/common/ptt_extension_plugin";
 
 let sequence = 1;
 const getSequence = () => sequence++;
@@ -543,7 +544,7 @@ export class Rtc extends Record {
         this.p2pService = undefined;
         /** @type {Services["discuss.pip_service"]} */
         this.pipService = undefined;
-        /** @type {Services["discuss.ptt_extension"]} */
+        /** @type {PttExtensionPlugin} */
         this.pttExtService = undefined;
         /** @type {Services["mail.sound_effects"]} */
         this.soundEffectsService = undefined;
@@ -557,7 +558,6 @@ export class Rtc extends Record {
         this.notification = this.store.notification;
         this.dialog = services.dialog;
         this.soundEffectsService = services["mail.sound_effects"];
-        this.pttExtService = services["discuss.ptt_extension"];
         if (this._broadcastChannel) {
             this._broadcastChannel.onmessage = this._onBroadcastChannelMessage.bind(this);
             this._postToTabs({ type: CROSS_TAB_CLIENT_MESSAGE.INIT });
@@ -761,7 +761,7 @@ export class Rtc extends Record {
             !this.store.settings.usePushToTalk ||
             (ev instanceof KeyboardEvent && !this.store.settings.isPushToTalkKey(ev)) ||
             !this.localSession.isTalking ||
-            this.pttExtService.voiceActivated
+            this.pttExtService.voiceActivated()
         ) {
             return false;
         }
@@ -2951,7 +2951,6 @@ export const rtcService = {
         "bus_service",
         "discuss.p2p",
         "discuss.pip_service",
-        "discuss.ptt_extension",
         "mail.fullscreen",
         "mail.sound_effects",
         "mail.store",
@@ -2964,6 +2963,7 @@ export const rtcService = {
     start(env, services) {
         const store = services["mail.store"];
         const rtc = store.rtc;
+        rtc.pttExtService = usePlugin(PttExtensionPlugin);
         rtc.pipService = services["discuss.pip_service"];
         rtc.onChange(
             () => [rtc.pipService.state.active],

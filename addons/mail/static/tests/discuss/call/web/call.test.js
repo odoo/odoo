@@ -10,12 +10,10 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { Settings } from "@mail/core/common/settings_model";
-import { pttExtensionServiceInternal } from "@mail/discuss/call/common/ptt_extension_service";
 import { PTT_RELEASE_DURATION } from "@mail/discuss/call/common/rtc_service";
 import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { toRawValue } from "@mail/utils/common/local_storage";
 import { advanceTime, freezeTime, keyDown, test, waitFor, waitForNone } from "@odoo/hoot";
-import { patch } from "@web/core/utils/patch";
 import { contains } from "@web/../tests/web_test_helpers";
 
 defineMailModels();
@@ -76,11 +74,6 @@ test("Can push-to-talk", async () => {
         makeRecordFieldLocalId(Settings.localId(), "pushToTalkKey"),
         toRawValue("...f")
     );
-    patch(pttExtensionServiceInternal, {
-        onAnswerIsEnabled(pttService) {
-            pttService.isEnabled = false;
-        },
-    });
     freezeTime();
     // Time is frozen, so the websocket subscription cannot complete on its own.
     // The worker connection handshake reschedules a timer on each step and the
