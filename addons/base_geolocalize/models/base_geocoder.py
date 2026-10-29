@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import requests
 import logging
+import datetime
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
@@ -77,6 +78,7 @@ class GeoCoder(models.AbstractModel):
         return result
 
     @api.model
+    @tools.ormcache('addr')
     def _call_openstreetmap(self, addr, **kw):
         """
         Use Openstreemap Nominatim service to retrieve location
@@ -85,6 +87,8 @@ class GeoCoder(models.AbstractModel):
         if not addr:
             _logger.info('invalid address given')
             return None
+        self._check_geocoding_rate_limit('osm')
+
         url = 'https://nominatim.openstreetmap.org/search'
         try:
             headers = {'User-Agent': 'Odoo (http://www.odoo.com/contactus)'}
@@ -99,6 +103,7 @@ class GeoCoder(models.AbstractModel):
         return float(geo['lat']), float(geo['lon'])
 
     @api.model
+    @tools.ormcache('addr')
     def _call_googlemap(self, addr, **kw):
         """ Use google maps API. It won't work without a valid API key.
         :return: (latitude, longitude) or None if not found
@@ -109,6 +114,8 @@ class GeoCoder(models.AbstractModel):
                 "API key for GeoCoding (Places) required.\n"
                 "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
             ))
+        self._check_geocoding_rate_limit('googlemap')
+
         url = "https://maps.googleapis.com/maps/api/geocode/json"
         params = {'sensor': 'false', 'address': addr, 'key': apikey}
         if kw.get('force_country'):
@@ -158,3 +165,31 @@ class GeoCoder(models.AbstractModel):
 
     def _raise_query_error(self, error):
         raise UserError(_('Error with geolocation server:') + ' %s' % error)
+
+    @api.model
+    def _check_geocoding_rate_limit(self, service_name):
+        """
+        Generic rate limiter to prevent hammering external APIs.
+        :param service_name: Unique identifier for the service (e.g., 'osm', 'googlemap')
+        :raise UserError: If the request is made too soon
+        """
+        registry = self.env.registry
+
+        param_key = f'geocoder.{service_name}.minimum_delta'
+        get_param = self.env['ir.config_parameter'].sudo().get_param
+        minimum_delta = float(get_param(param_key, default=1.0))
+
+        if not hasattr(registry, '_geocoding_last_calls'):
+            registry._geocoding_last_calls = {}
+
+        last_call_time = registry._geocoding_last_calls.get(service_name, 0.0)
+        current_time = datetime.datetime.now().timestamp()
+
+        if current_time - last_call_time < minimum_delta:
+            _logger.warning("Rate limit hit for %s. Configured delta: %ss", service_name, minimum_delta)
+            raise UserError(_(
+                "Too many requests to the %s service. Please wait %s seconds between requests.",
+                service_name.upper(), minimum_delta
+            ))
+
+        registry._geocoding_last_calls[service_name] = current_time
