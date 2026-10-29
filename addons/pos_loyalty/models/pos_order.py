@@ -4,7 +4,7 @@ import base64
 from collections import defaultdict
 from markupsafe import Markup
 
-from odoo import _, models
+from odoo import _, models, api
 from odoo.tools import float_compare
 
 
@@ -253,6 +253,22 @@ class PosOrder(models.Model):
         ).format(message=_('Loyalty coupon sold'), order_name=self._get_html_link())
         for gift_card in gift_cards:
             gift_card.message_post(body=body)
+
+    @api.model
+    def read_pos_orders(self, domain=False):
+        data = super().read_pos_orders(domain)
+        order_ids = [order['id'] for order in data['pos.order']]
+        loyalty_data = self._get_loyalty_data(order_ids)
+
+        if not loyalty_data:
+            return data
+
+        for order in data['pos.order']:
+            order_data = loyalty_data.get(order['id'], {})
+            order['loyalties'] = order_data.get('loyalties', [])
+            order['new_coupon_info'] = order_data.get('new_coupons', [])
+
+        return data
 
     def _check_existing_loyalty_cards(self, coupon_data):
         coupon_key_to_modify = []
