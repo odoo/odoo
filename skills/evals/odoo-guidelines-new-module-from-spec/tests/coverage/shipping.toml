@@ -1,0 +1,124 @@
+# LLM judge: does the feature cover the behaviours of the spec?
+# Behaviours of /home/odoo/spec.md about shipping labels and export documents; one binary criterion each,
+# judged on the agent's new modules (every text file of them) and on its
+# changes to existing modules. The reference is the code the spec was written
+# from (the printer module and what stock_delivery built on it; the agent
+# never saw it): it shows one way to implement each behaviour, not the only
+# correct one. Whether the code runs is measured in tests/runtime; how it
+# follows the house rules, in tests/guidelines.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/module_source.txt", "/logs/verifier/existing_changes.diff"]
+reference = "/tests/coverage/reference.txt"
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "shipping_reports"
+type = "binary"
+description = """
+Two printable reports on transfers, Shipping Labels and Shipping Documents,
+print the carrier's attachments from the delivery's chatter (named Label...
+and ShippingDoc...), the most recent first.
+
+Passes when the agent's code (the new modules in
+/logs/verifier/module_source.txt and the changes to existing modules in
+/logs/verifier/existing_changes.diff) implements this behaviour, in its own
+design and with its own names: the reference only shows one way to do it.
+Fails when the behaviour is missing, or when the code that implements it is
+clearly wrong (it cannot work as written).
+"""
+
+[[criterion]]
+name = "attachments_by_kind"
+type = "binary"
+description = """
+To ZPL printers they send the .zpl attachments as is; to ePOS printers the
+image attachments (.png, .jpg, .jpeg), turned into the printer's image
+format.
+
+Passes when the agent's code (the new modules in
+/logs/verifier/module_source.txt and the changes to existing modules in
+/logs/verifier/existing_changes.diff) implements this behaviour, in its own
+design and with its own names: the reference only shows one way to do it.
+Fails when the behaviour is missing, or when the code that implements it is
+clearly wrong (it cannot work as written).
+"""
+
+[[criterion]]
+name = "download_pdf"
+type = "binary"
+description = """
+Printed as a download, they download the most recent matching attachment
+when it is a PDF.
+
+Passes when the agent's code (the new modules in
+/logs/verifier/module_source.txt and the changes to existing modules in
+/logs/verifier/existing_changes.diff) implements this behaviour, in its own
+design and with its own names: the reference only shows one way to do it.
+Fails when the behaviour is missing, or when the code that implements it is
+clearly wrong (it cannot work as written).
+"""
+
+[[criterion]]
+name = "download_errors"
+type = "binary"
+description = """
+Printed as a download, they explain what is wrong instead: no matching
+attachment in the chatter; the report has no printer; or the attachment is
+not a PDF (configure the carrier to produce PDF, or use a ZPL or ePOS
+printer).
+
+Passes when the agent's code (the new modules in
+/logs/verifier/module_source.txt and the changes to existing modules in
+/logs/verifier/existing_changes.diff) implements this behaviour, in its own
+design and with its own names: the reference only shows one way to do it.
+Fails when the behaviour is missing, or when the code that implements it is
+clearly wrong (it cannot work as written).
+"""
+
+[[criterion]]
+name = "auto_print_options"
+type = "binary"
+description = """
+Operation types other than receipts get two options, Carrier Labels and
+Export Documents, next to the existing automatic printing options.
+
+Passes when the agent's code (the new modules in
+/logs/verifier/module_source.txt and the changes to existing modules in
+/logs/verifier/existing_changes.diff) implements this behaviour, in its own
+design and with its own names: the reference only shows one way to do it.
+Fails when the behaviour is missing, or when the code that implements it is
+clearly wrong (it cannot work as written).
+"""
+
+[[criterion]]
+name = "auto_print_on_validation"
+type = "binary"
+description = """
+Validating a transfer of such an operation type prints its carrier labels or
+export documents automatically, along with the other automatic prints.
+
+Passes when the agent's code (the new modules in
+/logs/verifier/module_source.txt and the changes to existing modules in
+/logs/verifier/existing_changes.diff) implements this behaviour, in its own
+design and with its own names: the reference only shows one way to do it.
+Fails when the behaviour is missing, or when the code that implements it is
+clearly wrong (it cannot work as written).
+"""
+
+[[criterion]]
+name = "notice_with_links"
+type = "binary"
+description = """
+Next to those options, a notice explains that the documents are saved in the
+chatter at validation and need a printer on the report, with a link to each
+report's form, where the printer field is then required.
+
+Passes when the agent's code (the new modules in
+/logs/verifier/module_source.txt and the changes to existing modules in
+/logs/verifier/existing_changes.diff) implements this behaviour, in its own
+design and with its own names: the reference only shows one way to do it.
+Fails when the behaviour is missing, or when the code that implements it is
+clearly wrong (it cannot work as written).
+"""

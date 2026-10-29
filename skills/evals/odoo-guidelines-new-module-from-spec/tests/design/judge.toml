@@ -1,0 +1,151 @@
+# LLM judge: how the agent's design compares with the original's.
+# One 5-point criterion per engineering aspect, relative to the code the spec
+# was written from (the printer module and what stock_delivery built on it):
+# 3 is on par, so the original itself scores 0.5 here. Behaviour is measured
+# in tests/coverage and the house rules in tests/guidelines; this judges the
+# engineering choices. Reported, kept out of the reward until calibrated
+# (weight 0 in tests/reward.toml).
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/module_source.txt", "/logs/verifier/existing_changes.diff", "/logs/verifier/spec.md"]
+reference = "/tests/coverage/reference.txt"
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "module_design"
+type = "likert"
+points = 5
+description = """
+Module design: where each part of the feature lives and what each module
+depends on. Does the split fit the feature (a reusable capability on its
+own, the parts that join two apps where both are) as well as the original's?
+
+Compare the agent's code (the new modules in /logs/verifier/module_source.txt,
+the changes to existing modules in /logs/verifier/existing_changes.diff), for
+the spec in /logs/verifier/spec.md, with the reference implementation, on this
+aspect only. Name the concrete differences, with files, before scoring. A
+different design is neither better nor worse in itself: judge what it does
+for this aspect.
+
+5: clearly better than the reference.
+4: somewhat better.
+3: on par (different choices of equal merit count as on par).
+2: somewhat worse.
+1: clearly worse.
+"""
+
+[[criterion]]
+name = "extensibility"
+type = "likert"
+points = 5
+description = """
+Extensibility: extension points for what the spec says will be extended
+(more kinds of printers, other modules preparing documents), clear enough
+that another module can plug in without copying code.
+
+Compare the agent's code (the new modules in /logs/verifier/module_source.txt,
+the changes to existing modules in /logs/verifier/existing_changes.diff), for
+the spec in /logs/verifier/spec.md, with the reference implementation, on this
+aspect only. Name the concrete differences, with files, before scoring. A
+different design is neither better nor worse in itself: judge what it does
+for this aspect.
+
+5: clearly better than the reference.
+4: somewhat better.
+3: on par (different choices of equal merit count as on par).
+2: somewhat worse.
+1: clearly worse.
+"""
+
+[[criterion]]
+name = "efficiency"
+type = "likert"
+points = 5
+description = """
+Efficiency: when and how much work is done. Rendering only what will be
+printed, not rendering when nothing will be, the number of queries and
+server round trips, work done once rather than per record.
+
+Compare the agent's code (the new modules in /logs/verifier/module_source.txt,
+the changes to existing modules in /logs/verifier/existing_changes.diff), for
+the spec in /logs/verifier/spec.md, with the reference implementation, on this
+aspect only. Name the concrete differences, with files, before scoring. A
+different design is neither better nor worse in itself: judge what it does
+for this aspect.
+
+5: clearly better than the reference.
+4: somewhat better.
+3: on par (different choices of equal merit count as on par).
+2: somewhat worse.
+1: clearly worse.
+"""
+
+[[criterion]]
+name = "robustness"
+type = "likert"
+points = 5
+description = """
+Robustness: the edge cases the spec implies (no printer configured, a
+printer that is unreachable or answers an error, missing attachments,
+translated names, records deleted meanwhile), handled with clear behaviour
+and messages rather than crashes.
+
+Compare the agent's code (the new modules in /logs/verifier/module_source.txt,
+the changes to existing modules in /logs/verifier/existing_changes.diff), for
+the spec in /logs/verifier/spec.md, with the reference implementation, on this
+aspect only. Name the concrete differences, with files, before scoring. A
+different design is neither better nor worse in itself: judge what it does
+for this aspect.
+
+5: clearly better than the reference.
+4: somewhat better.
+3: on par (different choices of equal merit count as on par).
+2: somewhat worse.
+1: clearly worse.
+"""
+
+[[criterion]]
+name = "tests"
+type = "likert"
+points = 5
+description = """
+Tests: how much of the behaviour the tests cover (server and browser side,
+success and failure paths) and how well they assert it.
+
+Compare the agent's code (the new modules in /logs/verifier/module_source.txt,
+the changes to existing modules in /logs/verifier/existing_changes.diff), for
+the spec in /logs/verifier/spec.md, with the reference implementation, on this
+aspect only. Name the concrete differences, with files, before scoring. A
+different design is neither better nor worse in itself: judge what it does
+for this aspect.
+
+5: clearly better than the reference.
+4: somewhat better.
+3: on par (different choices of equal merit count as on par).
+2: somewhat worse.
+1: clearly worse.
+"""
+
+[[criterion]]
+name = "simplicity"
+type = "likert"
+points = 5
+description = """
+Simplicity: the code is no more complex than the feature needs. Fewer moving
+parts, no speculative abstractions, no duplicated logic. Extra features
+beyond the spec are not a plus.
+
+Compare the agent's code (the new modules in /logs/verifier/module_source.txt,
+the changes to existing modules in /logs/verifier/existing_changes.diff), for
+the spec in /logs/verifier/spec.md, with the reference implementation, on this
+aspect only. Name the concrete differences, with files, before scoring. A
+different design is neither better nor worse in itself: judge what it does
+for this aspect.
+
+5: clearly better than the reference.
+4: somewhat better.
+3: on par (different choices of equal merit count as on par).
+2: somewhat worse.
+1: clearly worse.
+"""
