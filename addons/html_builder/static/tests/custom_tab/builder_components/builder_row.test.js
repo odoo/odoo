@@ -5,6 +5,7 @@ import {
     advanceTime,
     animationFrame,
     hover,
+    manuallyDispatchProgrammaticEvent,
     queryAll,
     queryAllTexts,
     queryOne,
@@ -267,11 +268,19 @@ describe("BuilderRow with collapse content", () => {
         const contentEl = queryOne(".o_hb_options_container .o_hb_collapse_content");
         expect(contentEl.style.height).toBe(`${ONE_ROW_HEIGHT}px`);
         expect(parseFloat(getComputedStyle(contentEl).height)).toBeLessThan(ONE_ROW_HEIGHT);
+<<<<<<< 8dd23357410ce4592702c0eb65e46096ce62e456
         // Let the (real) expand transition settle, otherwise collapsing may reverse it from 0.
         await new Promise((resolve) =>
             contentEl.addEventListener("transitionend", resolve, { once: true })
         );
         expect(contentEl.style.height).toBe("auto");
+||||||| 3b04715749a5fd2cca46e8a5260e4f53b8c959bd
+=======
+        // CSS transitions run on the real clock, not on Hoot's mocked one: end the
+        // expand transition explicitly so the collapse starts from the full height.
+        await manuallyDispatchProgrammaticEvent(contentEl, "transitionend");
+        expect(contentEl.style.height).toBe("auto");
+>>>>>>> 1e993361f46dec67c613258874d38a204b71c974
         // Collapsing pins the measured height, then targets 0 for the CSS transition.
         await contains(".o_hb_collapse_toggler:not(.d-none)").click();
         expect(contentEl.style.height).toBe("0px");
