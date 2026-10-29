@@ -571,7 +571,10 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
         ])
         # Warm related fields to isolate the answer lookup.
         Store().add(channels[:3], "_store_livechat_extra_fields")._build_result()
-        with self.assertQueryCount(1):
+        # Queries (in order):
+        #   - search_fetch chatbot_message (chatbot answers)
+        #   - select discuss_channel (recent conversations)
+        with self.assertQueryCount(2):
             data = Store().add(channels[:3], "_store_livechat_extra_fields")._build_result()
         self.assertEqual(
             {channel["id"]: channel["chatbot_message_ids"] for channel in data["discuss.channel"]},
