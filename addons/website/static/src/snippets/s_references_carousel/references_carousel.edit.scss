@@ -1,0 +1,33 @@
+// Edit mode
+// =========
+// No clone is created in edit mode (see references_carousel.edit.js): the
+// single strip of logos stays one row, as on the published page, and scrolls
+// horizontally so that every logo can be reached, selected and replaced.
+.s_references_carousel {
+    overflow-x: visible;
+
+    .s_references_carousel_marquee_container {
+        // Overrides the inline parallax transform.
+        transform: none !important;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: thin;
+        // Scoped to the logos: the title above must stay selectable.
+        user-select: none;
+    }
+
+    .s_references_carousel_marquee_item {
+        // Overrides the frontend `_ready` animation.
+        animation: none !important;
+    }
+
+    // Overrides the `d-flex` of frontend clones until edit mode removes them.
+    .s_references_carousel_marquee_item_clone {
+        display: none !important;
+    }
+
+    .s_references_carousel_item,
+    .s_references_carousel_item img {
+        cursor: pointer;
+    }
+}

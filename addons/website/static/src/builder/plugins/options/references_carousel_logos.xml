@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.ReferencesCarouselLogos">
+    <t t-set="items" t-value="this.domState.items"/>
+    <BuilderRow label.translate="Logos">
+        <BuilderButton action="'referencesCarouselAddItem'" icon="'add'" iconClass="'oi-fw'" preview="false">
+            Add
+        </BuilderButton>
+    </BuilderRow>
+    <div t-ref="this.rootRef" class="o_references_carousel_logos px-2 pb-2">
+        <div t-foreach="items" t-as="item" t-key="item.key"
+                class="o_references_carousel_logo d-flex align-items-center gap-1 pt-1"
+                t-att-data-position="item.position">
+            <button class="btn o_drag_handle px-1" title="Drag to reorder" aria-label="Drag to reorder">
+                <i class="oi" data-icon="drag_indicator" role="img" aria-hidden="true"/>
+            </button>
+            <span class="o_references_carousel_logo_preview d-flex align-items-center justify-content-center rounded bg-white">
+                <img t-att-src="item.src" alt=""/>
+            </span>
+            <!-- The icon of the editor's "Replace media" toolbar button. -->
+            <BuilderButton
+                action="'replaceMedia'"
+                applyTo="`.s_references_carousel_item:nth-child(${item.position}) img`"
+                icon="'image'"
+                className="'ms-auto'"
+                title.translate="Replace logo"
+                preview="false"/>
+            <!-- The icon of the builder's "Remove this block" button, in the
+                 structure of a `BuilderButton` (`iconClass` does not reach
+                 its icon). -->
+            <button class="o_hb_btn btn btn-secondary btn-danger-color-hover o_hb_btn_has_icon"
+                    title="Remove logo" aria-label="Remove logo"
+                    t-att-disabled="items.length === 1"
+                    t-on-click="() => this.removeItem(item.position)">
+                <i class="oi oi-filled" data-icon="delete" role="img" aria-hidden="true"/>
+            </button>
+        </div>
+    </div>
+</t>
+
+</templates>
