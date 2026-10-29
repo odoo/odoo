@@ -127,6 +127,9 @@ class ProjectProductEmployeeMap(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         maps = super().create(vals_list)
+        for project, employee_maps in maps.grouped('project_id').items():
+            if not project.sale_line_id and not project.partner_id and (partner := employee_maps[:1].sale_line_id.order_partner_id):
+                project.partner_id = partner
         maps._update_project_timesheet()
         return maps
 
@@ -136,4 +139,4 @@ class ProjectProductEmployeeMap(models.Model):
         return res
 
     def _update_project_timesheet(self):
-        self.filtered(lambda l: l.sale_line_id).project_id._update_timesheets_sale_line_id()
+        self.project_id._update_timesheets_sale_line_id()
