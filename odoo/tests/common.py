@@ -2394,17 +2394,17 @@ which leads to stray network requests and inconsistencies."""
             raise ChromeBrowserException('Script timeout exceeded') from err
         raise ChromeBrowserException("Unknown error") from err
 
-    def navigate_to(self, url, wait_stop=False):
+    def navigate_to(self, url) -> threading.Event:
+        """ Navigates to the given URL, and returns an event set once its frame
+        stops loading.
+        """
         self._logger.info('Navigating to: "%s"', url)
         timeout = 1e6 if DISABLE_TIMEOUTS else 20.0
         nav_result = self._websocket_request('Page.navigate', params={'url': url}, timeout=timeout)
         self._logger.info("Navigation result: %s", nav_result)
-        if wait_stop:
-            frame_id = nav_result['frameId']
-            e = threading.Event()
-            self._frames[frame_id] = e.set
-            self._logger.info('Waiting for frame %r to stop loading', frame_id)
-            e.wait(10)
+        stopped = threading.Event()
+        self._frames[nav_result['frameId']] = stopped.set
+        return stopped
 
     def _from_remoteobject(self, arg):
         """ attempts to make a CDT RemoteObject comprehensible
@@ -3084,8 +3084,11 @@ class HttpCase(TransactionCase):
                 for tab in all_tabs:
                     tab.throttle(cpu_throttling)
 
-            for tab in all_tabs:
-                tab.navigate_to(url, wait_stop=not bool(ready))
+            # All tabs load their page concurrently
+            stopped_events = [tab.navigate_to(url) for tab in all_tabs]
+            if not ready:
+                for stopped in stopped_events:
+                    stopped.wait(10)
 
             # Needed because tests like test01.js (qunit tests) are passing a ready
             # code = ""
