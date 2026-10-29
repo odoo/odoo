@@ -17,6 +17,7 @@ of a property to the buyer whose offer was accepted.
         "views/estate_property_type_views.xml",
         "views/estate_property_tag_views.xml",
         "views/estate_menus.xml",
+        "views/res_users_views.xml",
     ],
     # Without this flag the addon would only be listed with the "Extra" filter of the Apps menu
     "application": True,

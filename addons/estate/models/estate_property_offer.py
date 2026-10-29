@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools.float_utils import float_compare
 
 
 class EstatePropertyOffer(models.Model):
@@ -55,6 +56,31 @@ class EstatePropertyOffer(models.Model):
         """
         self.ensure_one()
         return fields.Date.to_date(self.create_date) or fields.Date.context_today(self)
+
+    # ------------------------------------------------------------
+    # CRUD METHODS
+    # ------------------------------------------------------------
+
+    # create() receives a list of values, one dict per record: the ORM creates them in batch
+    @api.model_create_multi
+    def create(self, vals_list):
+        """Refuse offers on closed properties or below the best offer, then flag the properties
+        as having received an offer."""
+        for vals in vals_list:
+            estate_property = self.env["estate.property"].browse(vals.get("property_id"))
+            if estate_property.state in ("offer_accepted", "sold", "cancelled"):
+                raise UserError(self.env._("This property no longer accepts offers."))
+            best_price = estate_property.best_price
+            if float_compare(vals.get("price", 0.0), best_price, precision_digits=2) < 0:
+                raise UserError(
+                    self.env._(
+                        "The offer must be at least the best offer: %(price)s.", price=best_price
+                    )
+                )
+        # super() runs the standard creation, including the overrides of other addons
+        offers = super().create(vals_list)
+        offers.property_id.filtered(lambda p: p.state == "new").state = "offer_received"
+        return offers
 
     # ------------------------------------------------------------
     # ACTION METHODS

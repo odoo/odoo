@@ -413,3 +413,40 @@ accept it after refusing the first one.
 **Try it.** Open Properties and notice the active filter. Accept an offer and watch the status bar,
 the buttons and the offers tab change. Reorder the property types by dragging them. Open a type and
 click its "Offers" button.
+
+## Chapter 12 - Inheritance
+
+[Official chapter](https://www.odoo.com/documentation/20.0/developer/tutorials/server_framework_101/12_inheritance.html)
+
+**Functional.**
+
+- A property can only be deleted while it is New or Cancelled: a property with offers or a sale
+  is history that must be kept (archive it instead).
+- Creating an offer moves a New property to "Offer Received". An offer lower than the best one,
+  or made on a property that is no longer open to offers, is refused.
+- The user form (Settings > Users) gets a "Real Estate Properties" tab listing the properties the
+  user is still selling.
+
+**Technical.** Three kinds of inheritance:
+
+1. **Overriding a CRUD method** (Python inheritance inside the class):
+   - `create` is decorated with `@api.model_create_multi` and receives a *list* of value dicts,
+     so that several records are created in one batch.
+   - `super().create(vals_list)` calls the original implementation, and through it the overrides
+     of all other addons. Checks go before it; work on the created records after it.
+   - `offers.property_id` on several offers returns the union of their properties, without
+     duplicates.
+2. **Deletion rules** use `@api.ondelete(at_uninstall=False)` instead of overriding `unlink()`.
+   The method is called before deletion and can raise. `at_uninstall=False` skips it while the
+   addon is being uninstalled, which would otherwise be impossible once a property is sold.
+3. **Extending another addon's model** (classical inheritance): `_inherit = "res.users"` without
+   `_name` adds `property_ids` to the existing `res.users` model and table. The One2many's
+   `domain` keeps only the properties still for sale.
+4. **View inheritance**: a view with `inherit_id` holds instructions, not a full arch.
+   `<page name="preferences" position="after">` finds the parent's element with that tag and
+   `name`, then inserts the content after it. Other positions are `before`, `inside`,
+   `attributes` and `replace` (avoid `replace`: it breaks other addons extending the same
+   element). An `<xpath expr="...">` is only needed when no element can be targeted by name.
+
+**Try it.** Try to delete a property with an offer. Add an offer lower than the best one. Open your
+own user in Settings > Users and look at the new tab.

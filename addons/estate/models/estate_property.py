@@ -135,6 +135,17 @@ class EstateProperty(models.Model):
             self.garden_orientation = False
 
     # ------------------------------------------------------------
+    # CRUD METHODS
+    # ------------------------------------------------------------
+
+    # Preferred over overriding unlink(): with at_uninstall=False, the check is skipped when the
+    # addon is uninstalled, otherwise uninstalling would fail as soon as one property is sold
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_in_progress(self):
+        if any(estate_property.state not in ("new", "cancelled") for estate_property in self):
+            raise UserError(self.env._("Only new or cancelled properties can be deleted."))
+
+    # ------------------------------------------------------------
     # ACTION METHODS
     # ------------------------------------------------------------
 
