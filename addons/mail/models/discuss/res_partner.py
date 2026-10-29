@@ -2,7 +2,7 @@
 
 from odoo import api, fields, models
 from odoo.fields import Domain
-from odoo.tools import email_normalize, single_email_re
+from odoo.tools import SQL, email_normalize, single_email_re
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import AccessError
 
@@ -145,6 +145,14 @@ class ResPartner(models.Model):
                 [('id', '!=', self.env.user.partner_id.id)],
             ]
         )
+        if not with_portal_users:
+            # Start from the few internal users, computed once before the main query. Otherwise
+            # the planner walks the partners by name, betting it reaches the first matches early,
+            # and checks most of them when the matches are portal partners.
+            internal_users = self.env["res.users"]._search([("share", "=", False)])
+            domain &= Domain.custom(to_sql=lambda table: SQL(
+                "%s = ANY(ARRAY%s)", table.id, internal_users.subselect(internal_users.table.partner_id),
+            ))
         selectable_partners = self.search(domain, limit=limit + 1, order="name, id")
         store.add(
             selectable_partners,

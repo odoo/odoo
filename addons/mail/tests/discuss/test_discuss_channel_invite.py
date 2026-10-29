@@ -375,3 +375,15 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
             name, channel_id=group_chat.id, with_portal_users=True
         )
         self.assertEqual(result["partner_ids"], joel.partner_id.ids)
+
+    def test_13_search_for_channel_invite_only_returns_active_internal_users_by_default(self):
+        bob = new_test_user(self.env, "bob", groups="base.group_user")
+        name = f"Joel Willis {uuid4()}"
+        internal = new_test_user(self.env, "joel", groups="base.group_user", name=name)
+        archived = new_test_user(
+            self.env, "joel2", groups="base.group_user", name=f"{name} archived"
+        )
+        archived.action_archive()
+        group_chat = self.env["discuss.channel"].with_user(bob)._create_group(users_to=bob)
+        result = self.env["res.partner"].search_for_channel_invite(name, channel_id=group_chat.id)
+        self.assertEqual(result["partner_ids"], internal.partner_id.ids)
