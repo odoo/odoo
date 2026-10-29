@@ -63,7 +63,7 @@
                                                     <field name="receipt_printer_ids"
                                                         class="w-100 pt-1"
                                                         widget="many2many_tags"
-                                                        context="{'default_use_type': 'receipt'}"
+                                                        context="{'default_use_type': 'receipt', 'default_pos_config_ids': [id]}"
                                                         options="{'no_quick_create': True}"/>
                                                 </div>
                                                 <div class="col-lg-5">
@@ -83,7 +83,7 @@
                                                     <field name="preparation_printer_ids"
                                                         class="w-100 pt-1"
                                                         widget="many2many_tags"
-                                                        context="{'default_use_type': 'preparation'}"
+                                                        context="{'default_use_type': 'preparation', 'default_preparation_pos_config_ids': [id]}"
                                                         options="{'no_quick_create': True}"/>
                                                 </div>
                                             </div>
