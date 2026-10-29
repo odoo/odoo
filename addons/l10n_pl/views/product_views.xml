@@ -9,6 +9,10 @@
                 <group name="GTU" string="GTU">
                     <field name="l10n_pl_vat_gtu"/>
                 </group>
+                <group name="Poland" string="Poland" invisible="not l10n_pl_is_current_company_pl">
+                    <field name="l10n_pl_split_payment"/>
+                    <field name="l10n_pl_pkwiu_code_id"/>
+                </group>
             </xpath>
         </field>
     </record>
