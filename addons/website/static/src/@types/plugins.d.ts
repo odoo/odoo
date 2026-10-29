@@ -4,8 +4,7 @@ declare module "plugins" {
     import { on_content_manually_updated_handlers, EditInteractionPlugin } from "@website/builder/plugins/edit_interaction_plugin";
     import { floating_snippet_scope_providers, floating_snippets_selectors, FloatingSnippetsPlugin } from "@website/builder/plugins/floating_snippets_plugin";
     import { WebsiteFontPlugin } from "@website/builder/plugins/font/font_plugin";
-    import { FormOptionPlugin } from "@website/builder/plugins/form/form_option_plugin";
-    import { ImageHoverPlugin } from "@website/builder/plugins/image/image_hover_plugin";
+    import { form_field_anchor_selectors, FormOptionPlugin } from "@website/builder/plugins/form/form_option_plugin";
     import { MenuDataPlugin } from "@website/builder/plugins/menu_data_plugin";
     import { AnimateOptionPlugin, can_have_hover_effect_predicates, on_hover_animation_mode_cleaned_handlers, on_hover_animation_mode_applied_handlers } from "@website/builder/plugins/options/animate_option_plugin";
     import { WebsiteBackgroundVideoPlugin } from "@website/builder/plugins/options/background_option_plugin";
@@ -104,6 +103,7 @@ declare module "plugins" {
         searchbar_option_order_by_items: searchbar_option_order_by_items;
         floating_snippets_selectors: floating_snippets_selectors;
         force_background_translation_state_selectors: force_background_translation_state_selectors;
+        form_field_anchor_selectors: form_field_anchor_selectors;
         theme_options: theme_options;
         visibility_selector_parameters: visibility_selector_parameters;
     }
