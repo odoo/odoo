@@ -171,8 +171,6 @@ class TestFuzzy(ProductVariantsCommon):
         self.assertIn("150.00", sofa_data["price"], "Should show the blue variant's price")
 
     def test_search_attribute_value_shows_variant_image(self):
-        self.product_template_sofa.list_price = 100.0
-        self.product_sofa_blue.product_template_attribute_value_ids.price_extra = 50.0
         sofa_data = self._render_sofa_result("blue")
         self.assertEqual(
             sofa_data["image_url"],
