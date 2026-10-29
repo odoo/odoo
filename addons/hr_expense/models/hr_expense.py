@@ -514,7 +514,7 @@ class HrExpense(models.Model):
                     "Uh-oh! You can’t edit this expense.\n\n"
                     "Reach out to the administrators, flash your best smile, and see if they'll grant you the magical access you seek."
                 ))
-            expense.price_unit = (expense.total_amount / expense.quantity) if expense.quantity != 0 else 0.
+            expense.price_unit = expense.total_amount / (expense.quantity or 1)
 
     @api.depends(
         'date',
@@ -660,7 +660,7 @@ class HrExpense(models.Model):
                     company=expense.company_id,
                 )[product_id.id]
             else:
-                expense.price_unit = expense.company_currency_id.round(expense.total_amount / expense.quantity) if expense.quantity else 0.
+                expense.price_unit = expense.company_currency_id.round(expense.total_amount / (expense.quantity or 1))
 
     @api.depends('selectable_payment_method_line_ids')
     def _compute_payment_method_line_id(self):
