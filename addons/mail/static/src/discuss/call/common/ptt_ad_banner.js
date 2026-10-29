@@ -1,4 +1,6 @@
-import { Component, signal } from "@odoo/owl";
+import { PttExtensionPlugin } from "@mail/discuss/call/common/ptt_extension_plugin";
+
+import { Component, signal, usePlugin } from "@odoo/owl";
 
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { useService } from "@web/core/utils/hooks";
@@ -9,7 +11,7 @@ export class PttAdBanner extends Component {
 
     setup() {
         super.setup();
-        this.pttExtService = useService("discuss.ptt_extension");
+        this.pttExtService = usePlugin(PttExtensionPlugin);
         this.store = useService("mail.store");
         this.wasDiscarded = signal(window.localStorage.getItem(PttAdBanner.LOCAL_STORAGE_KEY));
     }
@@ -21,7 +23,7 @@ export class PttAdBanner extends Component {
 
     get isVisible() {
         return (
-            !this.pttExtService.isEnabled &&
+            !this.pttExtService.isEnabled() &&
             this.store.settings.usePushToTalk &&
             !isMobileOS() &&
             !this.wasDiscarded()
