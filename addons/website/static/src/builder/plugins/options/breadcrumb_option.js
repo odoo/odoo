@@ -5,7 +5,15 @@ import { registry } from "@web/core/registry";
 export class BreadcrumbOption extends BaseOptionComponent {
     static id = "breadcrumb_option";
     static template = "website.BreadcrumbOption";
+}
+
+export class BreadcrumbVisibilityOption extends BaseOptionComponent {
+    static id = "breadcrumb_visibility_option";
+    static template = "website.BreadcrumbVisibilityOption";
     static components = { BaseVisibilityOption };
 }
 
 registry.category("website-options").add(BreadcrumbOption.id, BreadcrumbOption);
+registry
+    .category("website-options")
+    .add(BreadcrumbVisibilityOption.id, BreadcrumbVisibilityOption);

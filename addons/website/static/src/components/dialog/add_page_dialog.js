@@ -564,6 +564,7 @@ export class AddPageDialog extends Component {
             // converted to 'false' with a POST.
             sections_arch: sectionsArch || "",
             add_menu: addMenu || "",
+            draft: this.website.isDraftPreview ? "1" : "",
 
             website_id: this.props.websiteId,
             csrf_token: odoo.csrf_token,

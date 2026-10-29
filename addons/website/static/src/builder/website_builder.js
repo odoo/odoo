@@ -6,6 +6,8 @@ import { Component, onMounted, onWillStart, onWillUnmount, useProps, t } from "@
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useService } from "@web/core/utils/hooks";
 import { useSetupAction } from "@web/search/action_hook";
 import { ThemeTab } from "./plugins/theme/theme_tab";
@@ -33,7 +35,7 @@ class FakeRemovePlugin extends Plugin {
 
 export class WebsiteBuilder extends Component {
     static template = "website.WebsiteBuilder";
-    static components = { Builder };
+    static components = { Builder, Dropdown, DropdownItem };
     props = useProps({
         translation: t.boolean(),
         builderProps: t.object(),
