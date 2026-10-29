@@ -283,12 +283,13 @@ class SaleOrderTemplate(models.Model):
             }),
             Command.create({
                 "product_id": self.env.ref("product.product_product_4c").id,
-                "product_uom_qty": 25,
+                "product_uom_qty": 24,
             }),
-            Command.create({"product_id": acoustic_bloc_screen_product.id, "product_uom_qty": 25}),
+            Command.create({"product_id": acoustic_bloc_screen_product.id, "product_uom_qty": 24}),
             Command.create({
                 "product_id": self.env.ref("product.product_delivery_01").id,
-                "product_uom_qty": 25,
+                "product_uom_qty": 4,
+                "product_uom_id": self.env.ref("uom.product_uom_pack_6").id,
             }),
             Command.create({
                 "name": self.env._("Options"),
