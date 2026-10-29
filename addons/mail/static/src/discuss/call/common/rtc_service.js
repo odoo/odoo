@@ -22,6 +22,7 @@ import { url } from "@web/core/utils/urls";
 import { isBrowserSafari, isMobileOS } from "@web/core/browser/feature_detection";
 import { CallAction } from "@mail/discuss/call/common/call_actions";
 import { ACTION_TAGS } from "@mail/core/common/action";
+import { MailFullscreenPlugin } from "@mail/core/common/mail_fullscreen";
 
 let sequence = 1;
 const getSequence = () => sequence++;
@@ -480,7 +481,7 @@ export class Rtc extends Record {
      * @returns {boolean}
      */
     get isBrowserFullscreen() {
-        return this.isFullscreen && this.fullscreen.isBrowserFullscreen;
+        return this.isFullscreen && this.fullscreen.isBrowserFullscreen();
     }
 
     /**
@@ -536,7 +537,7 @@ export class Rtc extends Record {
         this.closeCallPermissionDialog = undefined;
         /** @type {Services["dialog"]} */
         this.dialog = undefined;
-        /** @type {Services["mail.fullscreen"]} */
+        /** @type {MailFullscreenPlugin} */
         this.fullscreen = undefined;
         /** @type {import("@web/core/notifications/notification_plugin").NotificationPlugin} */
         this.notification = undefined;
@@ -2951,7 +2952,6 @@ export const rtcService = {
         "bus_service",
         "discuss.pip_service",
         "discuss.ptt_extension",
-        "mail.fullscreen",
         "mail.sound_effects",
         "mail.store",
         "presence",
@@ -2991,9 +2991,9 @@ export const rtcService = {
             },
             { immediate: true, initialRun: false }
         );
-        rtc.fullscreen = services["mail.fullscreen"];
+        rtc.fullscreen = usePlugin(MailFullscreenPlugin);
         rtc.onChange(
-            () => [rtc.fullscreen.id],
+            () => [rtc.fullscreen.id()],
             function onChangeFullscreen(fullscreenId) {
                 const wasFullscreen = rtc.isFullscreen;
                 rtc.isFullscreen = fullscreenId === CALL_FULLSCREEN_ID;
