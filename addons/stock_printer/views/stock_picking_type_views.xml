@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_picking_type_form" model="ir.ui.view">
+        <field name="name">stock.picking.type.form.inherit.stock.printer</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.view_picking_type_form"/>
+        <field name="arch" type="xml">
+            <field name="auto_print_packages" position="after">
+                <field name="auto_print_carrier_labels" string="Carrier Labels" invisible="code not in ['internal', 'outgoing']"/>
+                <field name="auto_print_export_documents" string="Export Documents" invisible="code not in ['internal', 'outgoing']"/>
+                <div colspan="2" class="o_stock_printer_shipping_notice alert alert-info" role="alert" invisible="code not in ['internal', 'outgoing']">
+                    Carrier labels and export documents are saved in the chatter of the transfer when it is validated.
+                    To print them automatically, set a printer on the
+                    <button name="action_open_shipping_labels_report" type="object" class="btn btn-link p-0 align-baseline" string="Shipping Labels" groups="base.group_system"/>
+                    <span groups="!base.group_system">Shipping Labels</span>
+                    and
+                    <button name="action_open_shipping_documents_report" type="object" class="btn btn-link p-0 align-baseline" string="Shipping Documents" groups="base.group_system"/>
+                    <span groups="!base.group_system">Shipping Documents</span>
+                    reports.
+                </div>
+            </field>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Every inventory user resets their linked printers: open the
+         Configuration menu to them, but keep the rest of it to managers. -->
+    <record id="stock.menu_stock_config_settings" model="ir.ui.menu">
+        <field name="group_ids" eval="[Command.link(ref('stock.group_stock_user'))]"/>
+    </record>
+    <record id="stock.menu_product_in_config_stock" model="ir.ui.menu">
+        <field name="group_ids" eval="[Command.link(ref('stock.group_stock_manager'))]"/>
+    </record>
+
+    <menuitem id="menu_stock_config_reporting" name="Reporting" parent="stock.menu_stock_config_settings" sequence="60">
+        <menuitem id="menu_printer_printer" name="Manage Printers" action="printer.printer_printer_action"
+            groups="stock.group_stock_manager" sequence="1"/>
+        <menuitem id="menu_reset_linked_printers" name="Reset Linked Printers"
+            action="printer.printer_reset_linked_printers_action" sequence="2"/>
+    </menuitem>
+
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="printer_zebra_emulator" model="printer.printer">
+        <field name="name">Zebra Emulator</field>
+        <field name="kind">zpl</field>
+        <field name="address">localhost:9100</field>
+        <field name="report_ids" eval="[Command.link(ref('product.report_product_template_label_zpl'))]"/>
+    </record>
+
+    <record id="printer_epos_emulator" model="printer.printer">
+        <field name="name">ePOS Emulator</field>
+        <field name="kind">epos</field>
+        <field name="address">localhost:9101</field>
+    </record>
+
+</odoo>
