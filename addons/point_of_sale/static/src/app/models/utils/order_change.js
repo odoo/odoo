@@ -150,10 +150,19 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
                     changeAbsCount += Math.abs(quantityDiff);
                 }
                 if (noteChange) {
+<<<<<<< cf3a5c31a2c93b1335c2d07d1ff372c9fba30a74
                     noteUpdate[lineKey] = {
                         ...lineDetails,
                         quantity: oldChanges[relatedKey].quantity || 0,
                     };
+||||||| 5d4238315bf8dd8fc5de645cf54527f395b81327
+                    lineDetails.quantity = oldChanges[relatedKey].quantity || 0;
+                    noteUpdate[lineKey] = lineDetails;
+=======
+                    const noteDetails = { ...lineDetails };
+                    noteDetails.quantity = oldChanges[relatedKey].quantity || 0;
+                    noteUpdate[lineKey] = noteDetails;
+>>>>>>> 7a46570af9ce55e82f197127d5447048ee4532e2
                 }
 
                 orderline.setHasChange(true);
