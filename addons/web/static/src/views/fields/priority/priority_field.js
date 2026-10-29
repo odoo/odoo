@@ -1,18 +1,26 @@
 import { useCommand } from "@web/core/commands/command_hook";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "../standard_field_props";
 
 import { Component, proxy, t, useProps } from "@odoo/owl";
 
 export class PriorityField extends Component {
     static template = "web.PriorityField";
+    static components = {
+        Dropdown,
+        DropdownItem,
+    };
     props = useProps({
         ...standardFieldProps,
         withCommand: t.boolean().optional(),
     });
 
     setup() {
+        this.ui = useService("ui");
         this.state = proxy({
             index: -1,
         });
