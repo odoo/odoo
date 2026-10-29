@@ -4,7 +4,7 @@
     <record id="estate_property_action" model="ir.actions.act_window">
         <field name="name">Properties</field>
         <field name="res_model">estate.property</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <!-- search_default_<filter name> activates that filter when the action opens -->
         <field name="context">{'search_default_available': True}</field>
         <field name="help" type="html">
@@ -37,6 +37,36 @@
                 <!-- Loaded for the decorations above but never shown as a column -->
                 <field name="state" column_invisible="True"/>
             </list>
+        </field>
+    </record>
+
+    <record id="estate_property_view_kanban" model="ir.ui.view">
+        <field name="name">estate.property.view.kanban</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <!-- Columns per type; a property changes type in its form, not by drag and drop -->
+            <kanban default_group_by="property_type_id" records_draggable="False">
+                <!-- Used by the t-if conditions only: declared to be loaded with the records -->
+                <field name="state"/>
+                <templates>
+                    <!-- The "card" QWeb template renders each record -->
+                    <t t-name="card">
+                        <field name="name" class="fw-bold fs-5"/>
+                        <div>Expected price: <field name="expected_price"/></div>
+                        <div t-if="record.state.raw_value == 'offer_received'">
+                            Best offer: <field name="best_price"/>
+                        </div>
+                        <div t-if="['offer_accepted', 'sold'].includes(record.state.raw_value)">
+                            Selling price: <field name="selling_price"/>
+                        </div>
+                        <field
+                            name="tag_ids"
+                            widget="many2many_tags"
+                            options="{'color_field': 'color'}"
+                        />
+                    </t>
+                </templates>
+            </kanban>
         </field>
     </record>
 

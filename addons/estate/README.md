@@ -487,3 +487,33 @@ The invoice is in Invoicing > Customers > Invoices, ready to be checked and conf
 
 **Try it.** Install "Invoicing", which installs "Real Estate Accounting" automatically. Accept an
 offer, sell the property, and open the new draft invoice in Invoicing.
+
+## Chapter 14 - A brief history of QWeb
+
+[Official chapter](https://www.odoo.com/documentation/20.0/developer/tutorials/server_framework_101/14_qwebintro.html)
+
+**Functional.** Properties can be shown as cards, in one column per property type. Each card shows
+the title, the expected price, the best offer while offers come in, the selling price once an
+offer is accepted, and the tags. Cards cannot be dragged to another column.
+
+**Technical.**
+
+- **QWeb** is Odoo's XML templating engine, used for kanban cards, reports and website pages.
+  Directives are attributes starting with `t-`: `t-if`, `t-foreach`, `t-esc`/`t-out`,
+  `t-att-...`, `t-call`, ...
+- A kanban view (`<kanban>`) renders the template named `card` for each record. Inside it,
+  `<field>` displays a field with its usual widget (here `many2many_tags` with colors).
+- In kanban templates, the expressions run in the browser (JavaScript): `record.<field>.raw_value`
+  is the raw value and `value` the formatted one, and lists use `.includes(...)`.
+- A field only used in expressions (here `state`) is declared outside `<templates>` so that it is
+  loaded with the records.
+- `default_group_by="property_type_id"` groups the cards by type; `records_draggable="False"`
+  prevents moving a card to another column, which would change its type.
+- **Framework change.** Older tutorials use `<t t-name="kanban-box">` with
+  `oe_kanban_global_click` divs. Master uses the `card` template, where the whole card is
+  already clickable.
+- The view is added to the action's `view_mode` (`list,kanban,form`), which adds the kanban
+  switcher next to the list.
+
+**Try it.** Open Properties and switch to the kanban view. Remove the "Available" filter to see sold
+properties with their selling price, and try dragging a card to another column.
