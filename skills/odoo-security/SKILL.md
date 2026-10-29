@@ -109,8 +109,12 @@ the attacker's reading:
 ## Domain injection
 
 - Build/extend domains with `fields.Domain` (`domain &= Domain(...)`), never
-  by concatenating a user-provided list onto a security domain (a user could
-  inject `['|', ...]` to widen access).
+  by concatenating a user-provided list with a security domain. Domains are
+  prefix notation: a user list placed first (`user + security`) can start
+  with `'|'` and turn the whole domain into "anything OR security"; placed
+  after, it stays ANDed, but its conditions can still follow relations,
+  which under `sudo()` probes records the user cannot read. Validate or
+  whitelist user-provided domains either way.
 
 ## Don't over-sudo
 
