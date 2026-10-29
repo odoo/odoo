@@ -35,6 +35,15 @@ function assertConsentInDataLayer(expectedState) {
     }
 }
 
+/**
+ * Assert that the Google tag blocked before consent has been restored.
+ */
+function assertGoogleTagLoaded() {
+    if (!document.querySelector("script[src^='https://www.googletagmanager.com/gtag/js']")) {
+        console.error("The Google tag should be loaded once optional cookies are accepted");
+    }
+}
+
 registry.category("web_tour.tours").add("cookies_consent", {
     url: "/",
     steps: () => [
@@ -49,6 +58,7 @@ registry.category("web_tour.tours").add("cookies_consent", {
             run: function () {
                 assertOptionalCookies(true);
                 assertConsentInDataLayer("granted");
+                assertGoogleTagLoaded();
             },
         },
         {
