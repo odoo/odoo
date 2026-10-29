@@ -23,9 +23,7 @@ import { ensureTest } from "../main_runner";
  *  url?: string;
  * }} MockResponseInit
  *
- * @typedef {AbortController
- *  | MockBroadcastChannel
- *  | MockMessageChannel
+ * @typedef {MockMessageChannel
  *  | MockMessagePort
  *  | MockSharedWorker
  *  | MockWebSocket
@@ -143,7 +141,7 @@ function getHeaders(object, content) {
  * @param {...NetworkInstance} instances
  */
 function isOpen(...instances) {
-    return instances.every((i) => openNetworkInstances.has(i));
+    return instances.every((i) => openInstances.has(i));
 }
 
 /**
@@ -151,16 +149,15 @@ function isOpen(...instances) {
  */
 function markClosed(...instances) {
     for (const instance of instances) {
-        openNetworkInstances.delete(instance);
+        openInstances.delete(instance);
     }
 }
 
 /**
  * @param {NetworkInstance} instance
- * @param {Promise<any> | null} [promise]
  */
 function markOpen(instance) {
-    openNetworkInstances.add(instance);
+    openInstances.add(instance);
     return instance;
 }
 
@@ -258,10 +255,19 @@ const requestResponseMixin = {
     },
 };
 
+/** @type {Set<MockBroadcastChannel>} */
+const broadcastChannels = new Set();
 /** @type {Set<string>} */
 const objectURLs = new Set();
-/** @type {Set<NetworkInstance>} */
-const openNetworkInstances = new Set();
+/**
+ * Open network instances: clearing it closes them all at once.
+ * @type {Set<NetworkInstance>}
+ */
+const openInstances = new Set();
+/** @type {Set<AbortController>} */
+const pendingFetches = new Set();
+/** @type {Set<ServerWebSocket>} */
+const serverWebSockets = new Set();
 /** @type {Set<(worker: MockSharedWorker | MockWorker) => any>} */
 const workerConnections = new Set();
 
@@ -283,23 +289,19 @@ export function cleanupNetwork() {
     workerConnections.clear();
 
     // Network instances
-    for (const instance of openNetworkInstances) {
-        if (isInstanceOf(instance, AbortController)) {
-            instance.abort();
-        } else if (
-            instance instanceof MockBroadcastChannel ||
-            instance instanceof MockMessagePort ||
-            instance instanceof MockWebSocket ||
-            instance instanceof ServerWebSocket
-        ) {
-            instance.close();
-        } else if (instance instanceof MockSharedWorker) {
-            instance.port.close(); // Will also close `MockMessageChannel` instances
-        } else if (instance instanceof MockWorker) {
-            instance.terminate();
-        }
+    for (const channel of broadcastChannels) {
+        channel.close();
     }
-    openNetworkInstances.clear();
+    broadcastChannels.clear();
+    for (const controller of pendingFetches) {
+        controller.abort();
+    }
+    pendingFetches.clear();
+    for (const serverWs of serverWebSockets) {
+        serverWs.close();
+    }
+    serverWebSockets.clear();
+    openInstances.clear();
 
     // Object URLs: revoked to release the blobs they retain
     for (const url of objectURLs) {
@@ -332,7 +334,8 @@ export async function mockedFetch(input, init) {
             `Could not fetch "${strInput}": cannot make a request when fetch is not mocked`
         );
     }
-    const controller = markOpen(new AbortController());
+    const controller = new AbortController();
+    pendingFetches.add(controller);
 
     init = { ...init };
     init.headers = getHeaders(init, init.body);
@@ -373,9 +376,7 @@ export async function mockedFetch(input, init) {
         failed = true;
         error = err;
     }
-    if (isOpen(controller)) {
-        markClosed(controller);
-    } else {
+    if (!pendingFetches.delete(controller)) {
         return ENDLESS_PROMISE;
     }
     if (failed) {
@@ -547,7 +548,7 @@ export class MockBroadcastChannel extends BroadcastChannel {
     constructor() {
         super(...arguments);
 
-        markOpen(this);
+        broadcastChannels.add(this);
     }
 }
 
@@ -1318,6 +1319,7 @@ export class ServerWebSocket extends MockEventTarget {
         super();
 
         markOpen(this);
+        serverWebSockets.add(this);
 
         this._clientWs = websocket;
         this._logger = logger;
