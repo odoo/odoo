@@ -175,6 +175,37 @@ class ProductTemplate(models.Model):
                     )
                 )
 
+    def write(self, vals):
+        """Nullify combo_item_id on draft/sent order lines when a combo choice is removed
+        from a product template, so those lines can be safely reconfigured or deleted."""
+        track_combos = "combo_ids" in vals or ("type" in vals and vals["type"] != "combo")
+        old_combo_ids = (
+            {tmpl.id: set(tmpl.combo_ids.ids) for tmpl in self} if track_combos else None
+        )
+        res = super().write(vals)
+        if not track_combos:
+            return res
+        removed_by_template = {}
+        for tmpl in self:
+            removed = old_combo_ids[tmpl.id].difference(tmpl.combo_ids.ids)
+            if removed:
+                removed_by_template[tmpl.id] = removed
+        if not removed_by_template:
+            return res
+        all_removed = set().union(*removed_by_template.values())
+        lines = self.env["sale.order.line"].sudo().search([
+            ("state", "in", ("draft", "sent")),
+            ("linked_line_id.product_template_id", "in", list(removed_by_template)),
+            ("combo_item_id.combo_id", "in", list(all_removed)),
+        ])
+        lines_to_nullify = lines.filtered(
+            lambda l: l.combo_item_id.combo_id.id
+            in removed_by_template.get(l.linked_line_id.product_template_id.id, ())
+        )
+        if lines_to_nullify:
+            lines_to_nullify.write({"combo_item_id": False})
+        return res
+
     @api.readonly
     def action_view_sales(self):
         action = self.env["ir.actions.actions"]._for_xml_id("sale.report_all_channels_sales_action")
