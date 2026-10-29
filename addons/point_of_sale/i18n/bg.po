@@ -34,7 +34,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:38+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-10-20 16:35+0000\n"
 "Last-Translator: \"v.kanev\" <v.kanev@tutanota.com>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-18/"
@@ -253,8 +253,9 @@ msgid ""
 "(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
 "(company_name)s. </p>"
 msgstr ""
-"<p>Уважаеми %(client_name)s,<br/>Това е Вашата касова бележка %(is_invoiced)"
-"sза             %(pos_name)s на стойност %(amount)s от %(company_name)s. </p>"
+"<p>Уважаеми %(client_name)s,<br/>Това е Вашата касова бележка %"
+"(is_invoiced)sза             %(pos_name)s на стойност %(amount)s от %"
+"(company_name)s. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -437,7 +438,8 @@ msgstr "Уникален за сесията пореден номер на по
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__receipt_footer
 msgid "A short text that will be inserted as a footer in the printed receipt."
-msgstr "Кратък текст, който да бъде въведен в заключителната част на бележката."
+msgstr ""
+"Кратък текст, който да бъде въведен в заключителната част на бележката."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__receipt_header
@@ -453,7 +455,8 @@ msgstr "СУМА"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept customer tips or convert their change to a tip"
-msgstr "Приемане на бакшиши от клиенти или преобразуване на рестото им в бакшиш"
+msgstr ""
+"Приемане на бакшиши от клиенти или преобразуване на рестото им в бакшиш"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1667,7 +1670,8 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_product_product__available_in_pos
 #: model:ir.model.fields,help:point_of_sale.field_product_template__available_in_pos
 msgid "Check if you want this product to appear in the Point of Sale."
-msgstr "Проверете дали искате този продукт да се появява в точката за продажба."
+msgstr ""
+"Проверете дали искате този продукт да се появява в точката за продажба."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_uom_category__is_pos_groupable
@@ -2090,6 +2094,7 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/errors/error_handlers.js:0
+#: code:addons/point_of_sale/static/src/app/store/opening_control_popup/opening_control_popup.js:0
 msgid "Connection Lost"
 msgstr "Връзката е прекъсната"
 
@@ -2571,7 +2576,8 @@ msgstr "Дефинирайте продукти и категории за ка�
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Define the smallest coinage of the currency used to pay by cash"
-msgstr "Определете най-малката монета на валутата, използвана за плащане в брой"
+msgstr ""
+"Определете най-малката монета на валутата, използвана за плащане в брой"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__name
@@ -4665,14 +4671,20 @@ msgid "Ongoing"
 msgstr "Протичащ"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Only Point of Sale managers can modify a Point of Sale configuration."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order_line.js:0
 msgid ""
 "Only a negative quantity is allowed for this refund line. Click on +/- to "
 "modify the quantity to be refunded."
 msgstr ""
-"За този ред за връщане е разрешено само отрицателно количество. Натиснете +/-"
-", за да промените количеството за връщане."
+"За този ред за връщане е разрешено само отрицателно количество. Натиснете "
+"+/-, за да промените количеството за връщане."
 
 #. module: point_of_sale
 #. odoo-python
@@ -4694,8 +4706,8 @@ msgstr "Прилагайте закръгляне само в брой"
 msgid ""
 "Only journals of type 'Cash' or 'Bank' could be used with payment methods."
 msgstr ""
-"С начин на плащане могат да се използват само дневници от тип „В брой\" или „"
-"Банка\"."
+"С начин на плащане могат да се използват само дневници от тип „В брой\" или "
+"„Банка\"."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5752,6 +5764,7 @@ msgid "Pos Order Count"
 msgstr "Брой на ПОС поръчки"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_account_tax__pos_order_line_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__pos_order_line_id
 msgid "Pos Order Line"
 msgstr "Ред на ПОС поръчка"
@@ -7465,7 +7478,8 @@ msgstr "Лятна шапка, идеална за плажни дни и слъ
 #: model:product.template,description_sale:point_of_sale.product_pecan_pie_product_template
 msgid ""
 "Sweet pie filled with pecans, with a rich, buttery filling and flaky saltt."
-msgstr "Сладък пай с пълнеж от пекан, с богат, маслен пълнеж и ронлива коричка."
+msgstr ""
+"Сладък пай с пълнеж от пекан, с богат, маслен пълнеж и ронлива коричка."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7729,6 +7743,14 @@ msgstr ""
 "Стратегията за касово закръгляне на POS %(pos)s трябва да бъде: „%(value)s“"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid ""
+"The combo choice '%s' is no longer available in this combo. Please reload "
+"your data."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
 msgid ""
@@ -7954,6 +7976,12 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_iface_print_auto
 msgid "The receipt will automatically be printed at the end of each order."
 msgstr "Разписката автоматично ще бъде отпечатана в края на всяка поръчка."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/opening_control_popup/opening_control_popup.js:0
+msgid "The register cannot be opened while offline. Please try again."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9204,6 +9232,14 @@ msgstr "Не можете да редактирате плащане на осч
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "You cannot invoice orders belonging to different companies."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_fiscal_position_tax.py:0
+msgid ""
+"You cannot modify a fiscal position used in a POS order. You should archive "
+"it and create a new one."
 msgstr ""
 
 #. module: point_of_sale

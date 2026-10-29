@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:40+0000\n"
-"PO-Revision-Date: 2026-10-20 15:17+0000\n"
+"POT-Creation-Date: 2026-10-24 17:38+0000\n"
+"PO-Revision-Date: 2026-10-27 15:39+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-18/payment/"
 "fa/>\n"
@@ -86,10 +86,10 @@ msgid ""
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture "
-"!= 'full_only'\" title=\"برخی از تراکنش‌هایی که قصد دارید ثبت کنید فقط به "
-"صورت کامل قابل ثبت هستند. تراکنش‌ها را به صورت جداگانه مدیریت کنید تا مقدار "
-"جزئی را ثبت کنید.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" "
+"invisible=\"support_partial_capture != 'full_only'\" title=\"برخی از "
+"تراکنش‌هایی که قصد دارید ثبت کنید فقط به صورت کامل قابل ثبت هستند. تراکنش‌ها "
+"را به صورت جداگانه مدیریت کنید تا مقدار جزئی را ثبت کنید.\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
@@ -3344,10 +3344,14 @@ msgid "Zalopay"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
 #: model:payment.method,name:payment.payment_method_zip
 msgid "Zip"
 msgstr "کدپستی"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
+msgid "Zip Code"
+msgstr "کد پستی"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cofidis

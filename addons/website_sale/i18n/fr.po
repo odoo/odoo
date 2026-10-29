@@ -13,9 +13,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-10-20 14:09+0000\n"
-"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"PO-Revision-Date: 2026-10-28 06:33+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-18/"
 "website_sale/fr/>\n"
 "Language: fr\n"
@@ -600,8 +600,8 @@ msgstr ""
 "                            <hr/>\n"
 "                            <table width=\"100%\">\n"
 "                                <tr>\n"
-"                                    <td style=\"padding: 10px; "
-"width:150px;\">\n"
+"                                    <td style=\"padding: 10px; width:150px;"
+"\">\n"
 "                                        <img t-attf-src=\"/web/image/"
 "product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; "
 "height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
@@ -633,8 +633,8 @@ msgstr ""
 "                    <t t-set=\"company\" t-value=\"object.company_id or "
 "object.user_id.company_id or user.company_id\"/>\n"
 "                    <div style=\"text-align: center;\"><strong>Merci d'avoir "
-"commandé chez <t t-out=\"company.name or ''\">My Company (San Francisco)</t>"
-"!</strong></div>\n"
+"commandé chez <t t-out=\"company.name or ''\">My Company (San Francisco)</t>!"
+"</strong></div>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -683,8 +683,8 @@ msgid ""
 "on                                      this page. Use '/' to discover more "
 "features."
 msgstr ""
-"Une description détaillée et formatée pour promouvoir votre produit sur"
-"                                      cette page. Utilisez '/' pour "
+"Une description détaillée et formatée pour promouvoir votre produit "
+"sur                                      cette page. Utilisez '/' pour "
 "découvrir d'autres fonctionnalités."
 
 #. module: website_sale
@@ -2608,7 +2608,8 @@ msgstr "Paiement instantané, au lieu d'ajouter au panier"
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid "Invalid Email! Please enter a valid email address."
-msgstr "Adresse e-mail incorrecte ! Veuillez saisir une adresse e-mail valable."
+msgstr ""
+"Adresse e-mail incorrecte ! Veuillez saisir une adresse e-mail valable."
 
 #. module: website_sale
 #. odoo-python
@@ -4326,6 +4327,14 @@ msgstr "Épuisé"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
+msgid ""
+"Some products in your cart are not available for purchase in your country. "
+"Please remove them or contact us."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
 msgid "Some required fields are empty."
 msgstr "Certains champs obligatoires sont vides."
 
@@ -4457,6 +4466,14 @@ msgid "Taxes"
 msgstr "Taxes"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid ""
+"Taxes have been updated based on your address. Your payment method has not "
+"been charged."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Text"
 msgstr "Texte"
@@ -4556,6 +4573,16 @@ msgid ""
 msgstr ""
 "Le mode sélectionné ici s'applique en tant que politique de facturation de "
 "chaque nouveau produit créé, mais pas pour les produits existants."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/combo_configurator.py:0
+msgid ""
+"The number of selected combo items must match the number of available combo "
+"choices."
+msgstr ""
+"Le nombre d'articles combinés sélectionnés doit correspondre au nombre de "
+"choix combinés disponibles."
 
 #. module: website_sale
 #. odoo-python
@@ -4660,10 +4687,22 @@ msgid "This product is no longer available."
 msgstr "Ce produit n'est plus disponible."
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid "This product is not available for purchase in your country."
+msgstr ""
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_reorder.js:0
 msgid "This product is not available for purchase."
 msgstr "Ce produit n'est pas disponible à l'achat."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid "This product is part of a combo and can't be updated individually."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
@@ -5321,7 +5360,8 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "if you want to merge your previous cart into current cart."
-msgstr "si vous voulez fusionner votre panier précédent et votre panier actuel."
+msgstr ""
+"si vous voulez fusionner votre panier précédent et votre panier actuel."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart

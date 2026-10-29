@@ -15,9 +15,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-10-20 16:28+0000\n"
-"Last-Translator: Jan Zorko <jan.zorko@implex.si>\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"PO-Revision-Date: 2026-10-27 17:57+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-18/"
 "mass_mailing/sl/>\n"
 "Language: sl\n"
@@ -1056,6 +1056,11 @@ msgid "Attach a file"
 msgstr "Pripni datoteko"
 
 #. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_ir_attachment
+msgid "Attachment"
+msgstr "Priponka"
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_attachment_count
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_attachment_count
 msgid "Attachment Count"
@@ -1193,8 +1198,8 @@ msgid ""
 "Blocklist request from portal of mailing %(mailing_link)s (document %"
 "(record_link)s)"
 msgstr ""
-"Zahteva za uvrstitev na blokirni seznam s portala pošiljanja %(mailing_link)"
-"s (dokument %(record_link)s)"
+"Zahteva za uvrstitev na blokirni seznam s portala pošiljanja %"
+"(mailing_link)s (dokument %(record_link)s)"
 
 #. module: mass_mailing
 #. odoo-python
@@ -3275,8 +3280,8 @@ msgid ""
 "\">Customer Service</span>"
 msgstr ""
 "Michael Fletcher<br/>\n"
-"                   <span style=\"font-size: 12px; font-weight: bolder;\">"
-"Služba za pomoč strankam</span>"
+"                   <span style=\"font-size: 12px; font-weight: bolder;"
+"\">Služba za pomoč strankam</span>"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__mail_email_missing
@@ -3446,7 +3451,8 @@ msgstr "Še ni podatkov o množičnem pošiljanju!"
 msgid ""
 "No contacts were imported. All email addresses are already in the mailing "
 "list."
-msgstr "Stiki niso bili uvoženi. Vsi e-poštni naslovi so že na poštnem seznamu."
+msgstr ""
+"Stiki niso bili uvoženi. Vsi e-poštni naslovi so že na poštnem seznamu."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_comparisons
@@ -3729,8 +3735,8 @@ msgid ""
 msgstr ""
 "Izbirni jezik prevoda (koda ISO), ki ga je treba izbrati pri pošiljanju e-"
 "pošte. Če ni nastavljen, bo uporabljena angleška različica. Običajno naj bo "
-"to nadomestni izraz, ki ponuja ustrezen jezik, npr. {{ "
-"object.partner_id.lang }}."
+"to nadomestni izraz, ki ponuja ustrezen jezik, npr. "
+"{{ object.partner_id.lang }}."
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_subscription_optout_action

@@ -30,8 +30,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-10-20 17:01+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"PO-Revision-Date: 2026-10-28 06:34+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Estonian <https://translate.odoo.com/projects/odoo-18/"
 "website_sale/et/>\n"
@@ -259,7 +259,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid ""
 "<i class=\"oi oi-chevron-left me-1\" role=\"presentation\"/>All Products"
-msgstr "<i class=\"oi oi-chevron-left me-1\" role=\"presentation\"/>Kõik tooted"
+msgstr ""
+"<i class=\"oi oi-chevron-left me-1\" role=\"presentation\"/>Kõik tooted"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
@@ -456,8 +457,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Based "
 "on variants</span>"
 msgstr ""
-"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">"
-"Põhineb variatsioonidel</span>"
+"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= "
+"1\">Põhineb variatsioonidel</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -599,8 +600,8 @@ msgstr ""
 "width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
 "0px 0px 0px 0px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                    <h1 style=\"color:#A9A9A9;\">MIDAGI ON TEIE KONTOL.</h1>"
-"\n"
+"                    <h1 style=\"color:#A9A9A9;\">MIDAGI ON TEIE KONTOL.</"
+"h1>\n"
 "                    Kas soovite oma ostu lõpuni sooritada?<br/><br/>\n"
 "                    <t t-if=\"object.order_line\">\n"
 "                        <t t-foreach=\"object.website_order_line\" t-"
@@ -608,8 +609,8 @@ msgstr ""
 "                            <hr/>\n"
 "                            <table width=\"100%\">\n"
 "                                <tr>\n"
-"                                    <td style=\"padding: 10px; "
-"width:150px;\">\n"
+"                                    <td style=\"padding: 10px; width:150px;"
+"\">\n"
 "                                        <img t-attf-src=\"/web/image/"
 "product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; "
 "height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
@@ -641,8 +642,8 @@ msgstr ""
 "                    <t t-set=\"company\" t-value=\"object.company_id or "
 "object.user_id.company_id or user.company_id\"/>\n"
 "                    <div style=\"text-align: center;\"><strong>Tänan, et "
-"ostsite ettevõttest<t t-out=\"company.name or ''\">My Company (San Francisco)"
-"</t>!</strong></div>\n"
+"ostsite ettevõttest<t t-out=\"company.name or ''\">My Company (San "
+"Francisco)</t>!</strong></div>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -1758,8 +1759,8 @@ msgid ""
 "visit the shipping page to add a shipping fee or the shipping fee is also "
 "free, then the email won't be sent."
 msgstr ""
-"Customer needs to be signed in otherwise the mail address is not known.     "
-"\n"
+"Customer needs to be signed in otherwise the mail address is not "
+"known.     \n"
 "\n"
 "- If a potential customer creates one or more abandoned checkouts and then "
 "completes a sale before the recovery email gets sent, then the email won't "
@@ -4284,6 +4285,14 @@ msgstr "Välja müüdud"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
+msgid ""
+"Some products in your cart are not available for purchase in your country. "
+"Please remove them or contact us."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
 msgid "Some required fields are empty."
 msgstr "Mõned nõutud väljad on tühjad."
 
@@ -4413,6 +4422,14 @@ msgid "Taxes"
 msgstr "Maksud"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid ""
+"Taxes have been updated based on your address. Your payment method has not "
+"been charged."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Text"
 msgstr "Tekst"
@@ -4511,6 +4528,16 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-python
+#: code:addons/website_sale/controllers/combo_configurator.py:0
+msgid ""
+"The number of selected combo items must match the number of available combo "
+"choices."
+msgstr ""
+"Valitud kombinatsioonartiklite arv peab vastama saadaval olevate "
+"kombinatsioonide arvule."
+
+#. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/controllers/payment.py:0
 msgid "The order has been cancelled."
 msgstr "Tellimus on tühistatud."
@@ -4603,10 +4630,22 @@ msgid "This product is no longer available."
 msgstr "Seda toodet pole enam saadaval."
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid "This product is not available for purchase in your country."
+msgstr ""
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_reorder.js:0
 msgid "This product is not available for purchase."
 msgstr "See toode pole ostmiseks saadaval."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid "This product is part of a combo and can't be updated individually."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item

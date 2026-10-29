@@ -48,7 +48,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:38+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-10-20 13:04+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-18/"
@@ -111,8 +111,8 @@ msgstr "%(name)s İADESİ"
 msgid ""
 "%(old_pm)s changed to %(new_pm)s and from %(old_amount)s to %(new_amount)s"
 msgstr ""
-"%(old_pm)s, %(new_pm)s olarak değiştirildi ve  %(old_amount)s, %(new_amount)"
-"s olarak güncellendi."
+"%(old_pm)s, %(new_pm)s olarak değiştirildi ve  %(old_amount)s, %"
+"(new_amount)s olarak güncellendi."
 
 #. module: point_of_sale
 #. odoo-python
@@ -244,8 +244,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <h4>\n"
-"        Sayın <t t-out=\"object.partner_id.name or 'Valuable Customer'\">"
-"Azure Interior</t>,\n"
+"        Sayın <t t-out=\"object.partner_id.name or 'Valuable "
+"Customer'\">Azure Interior</t>,\n"
 "    </h4>\n"
 "    <p style=\"font-size: 13px;\">\n"
 "Sadece sizin için sınırlı süreli bir teklifimiz var, bizimle yapacağınız bir "
@@ -835,7 +835,8 @@ msgstr "Birbirlerinin aktif siparişlerine erişime izin ver"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Allow to log and switch between selected Employees"
-msgstr "Günlüğe kaydetmeye ve seçili Çalışanlar arasında geçiş yapmaya izin ver"
+msgstr ""
+"Günlüğe kaydetmeye ve seçili Çalışanlar arasında geçiş yapmaya izin ver"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2130,6 +2131,7 @@ msgstr "IoT Kutusuna bağlanılıyor"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/errors/error_handlers.js:0
+#: code:addons/point_of_sale/static/src/app/store/opening_control_popup/opening_control_popup.js:0
 msgid "Connection Lost"
 msgstr "Bağlantı Kesildi"
 
@@ -2169,7 +2171,8 @@ msgstr "Yazıcıya bağlantı başarısız"
 msgid ""
 "Connection to the server has been lost. Please check your internet "
 "connection."
-msgstr "Sunucu ile bağlantı kesildi. Lütfen internet bağlantınızı kontrol edin."
+msgstr ""
+"Sunucu ile bağlantı kesildi. Lütfen internet bağlantınızı kontrol edin."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2886,12 +2889,12 @@ msgid ""
 "to one of\n"
 "            its categories."
 msgstr ""
-"Her Sipariş Yazıcısı, yazıcının bulunabileceği IoT Kutusu/Donanım Proxy'sini "
-"\n"
+"Her Sipariş Yazıcısı, yazıcının bulunabileceği IoT Kutusu/Donanım "
+"Proxy'sini \n"
 "            tanımlayan bir IP Adresine ve ürün kategorilerinin bir listesine "
 "sahiptir.\n"
-"            Bir Sipariş Yazıcısı, yalnızca kendi kategorilerinden birine ait "
-"\n"
+"            Bir Sipariş Yazıcısı, yalnızca kendi kategorilerinden birine "
+"ait \n"
 "            ürünler için güncellemeleri yazdıracaktır."
 
 #. module: point_of_sale
@@ -3459,7 +3462,8 @@ msgstr "POS’ta görselleri gizle"
 #: model:product.template,description_sale:point_of_sale.product_wholemeal_loaf_product_template
 msgid ""
 "High fibre loaf. Baked with fine wholemeal flour to give a soft texture."
-msgstr "Yumuşak doku için ince tam buğday unuyla pişirilmiş yüksek lifli ekmek."
+msgstr ""
+"Yumuşak doku için ince tam buğday unuyla pişirilmiş yüksek lifli ekmek."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4697,6 +4701,12 @@ msgid "Ongoing"
 msgstr "Devam eden"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Only Point of Sale managers can modify a Point of Sale configuration."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order_line.js:0
 msgid ""
@@ -4710,7 +4720,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Only administrators can edit receipt headers and footers"
-msgstr "Yalnızca yöneticiler fiş başlıklarını ve alt bilgilerini düzenleyebilir"
+msgstr ""
+"Yalnızca yöneticiler fiş başlıklarını ve alt bilgilerini düzenleyebilir"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
@@ -5746,7 +5757,8 @@ msgstr "Satış Noktası"
 #: model:product.template,description_sale:point_of_sale.product_crocheted_poncho_unisize_product_template
 msgid ""
 "Poncho in a soft, crochet-look knit with a round, gently draped neckline."
-msgstr "Yuvarlak ve hafif dökümlü yakalı, yumuşak tığ işi görünümlü örgü panço."
+msgstr ""
+"Yuvarlak ve hafif dökümlü yakalı, yumuşak tığ işi görünümlü örgü panço."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__access_url
@@ -5790,6 +5802,7 @@ msgid "Pos Order Count"
 msgstr "Sipariş Sayısı"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_account_tax__pos_order_line_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__pos_order_line_id
 msgid "Pos Order Line"
 msgstr "POS Sipariş Satırı"
@@ -7770,6 +7783,14 @@ msgstr ""
 "(value)s'"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid ""
+"The combo choice '%s' is no longer available in this combo. Please reload "
+"your data."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
 msgid ""
@@ -7993,6 +8014,12 @@ msgstr "Makbuz her siparişin sonunda otomatik olarak yazdırılır."
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/opening_control_popup/opening_control_popup.js:0
+msgid "The register cannot be opened while offline. Please try again."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid ""
 "The requested quantity to be refunded is higher than the ordered quantity. "
@@ -8006,7 +8033,8 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/models/pos_order_line.js:0
 msgid ""
 "The requested quantity to be refunded is higher than the refundable quantity."
-msgstr "İade edilmesi talep edilen miktar, iade edilebilir miktardan yüksektir."
+msgstr ""
+"İade edilmesi talep edilen miktar, iade edilebilir miktardan yüksektir."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9198,8 +9226,8 @@ msgid ""
 "You cannot archive '%(picking_type)s' as it is used by POS configuration '%"
 "(config)s'."
 msgstr ""
-"'%(config)s' POS yapılandırması tarafından kullanıldığı için '%(picking_type)"
-"s' arşivlenemez."
+"'%(config)s' POS yapılandırması tarafından kullanıldığı için '%"
+"(picking_type)s' arşivlenemez."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9227,7 +9255,8 @@ msgstr "Siparişler hala taslaktayken POS'u kapatamazsınız"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "You cannot create a session starting before: %(lock_date_info)s"
-msgstr "%(lock_date_info)s tarihinden önce başlayan bir oturum oluşturamazsınız"
+msgstr ""
+"%(lock_date_info)s tarihinden önce başlayan bir oturum oluşturamazsınız"
 
 #. module: point_of_sale
 #. odoo-python
@@ -9266,6 +9295,14 @@ msgstr "Gönderilmiş bir siparişin ödemesini düzenleyemezsiniz."
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "You cannot invoice orders belonging to different companies."
 msgstr "Farklı şirketlere ait siparişler için fatura oluşturamazsınız."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_fiscal_position_tax.py:0
+msgid ""
+"You cannot modify a fiscal position used in a POS order. You should archive "
+"it and create a new one."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -9331,7 +9368,8 @@ msgstr "Önce bu ürünü %s kombinasyonundan kaldırmalısınız"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "You must have 'Administration Settings' access to load clothes data."
-msgstr "Giyim verilerini yüklemek için 'Yönetim Ayarları' erişiminiz olmalıdır."
+msgstr ""
+"Giyim verilerini yüklemek için 'Yönetim Ayarları' erişiminiz olmalıdır."
 
 #. module: point_of_sale
 #. odoo-python

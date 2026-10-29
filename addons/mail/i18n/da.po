@@ -21,8 +21,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-10-20 11:02+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"PO-Revision-Date: 2026-10-28 06:33+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-18/mail/da/>"
 "\n"
@@ -154,7 +154,8 @@ msgstr "%(person1)s, %(person2)s og %(person3)s har reageret med %(emoji)s"
 #. odoo-python
 #: code:addons/mail/models/models.py:0
 msgid "%(model_name)s.%(field_path)s does not seem to be a valid field path"
-msgstr "%(model_name)s.%(field_path)s ser ikke ud til at være en gyldig feltsti"
+msgstr ""
+"%(model_name)s.%(field_path)s ser ikke ud til at være en gyldig feltsti"
 
 #. module: mail
 #. odoo-javascript
@@ -189,8 +190,8 @@ msgid ""
 "(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
 "%(open_samp)sEsc%(close_samp)s %(open_em)stil %(open_cancel)sannulér%"
-"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %(open_em)"
-"stil %(open_save)sgem%(close_save)s%(close_em)s"
+"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %"
+"(open_em)stil %(open_save)sgem%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -439,8 +440,8 @@ msgid ""
 "Start your message with <i>'/'</i> to get the list of possible commands.</p>"
 msgstr ""
 "<p><b>Skriv en besked</b> til medlemmer af denne her kanal.</p>\n"
-"<p>Du kan underrette nogen med <i>'@'</i> eller linke en anden kanal med <i>"
-"'#'</i>. Start din besked med <i>'/'</i> for at få en liste over mulige "
+"<p>Du kan underrette nogen med <i>'@'</i> eller linke en anden kanal med "
+"<i>'#'</i>. Start din besked med <i>'/'</i> for at få en liste over mulige "
 "kommandoer.</p>"
 
 #. module: mail
@@ -1365,7 +1366,8 @@ msgstr "Arkiveret"
 #: code:addons/mail/models/res_users.py:0
 msgid ""
 "Archived because %(user_name)s (#%(user_id)s) deleted the portal account"
-msgstr "Arkiveret, fordi %(user_name)s (#%(user_id)s) har slettet portalkontoen"
+msgstr ""
+"Arkiveret, fordi %(user_name)s (#%(user_id)s) har slettet portalkontoen"
 
 #. module: mail
 #. odoo-javascript
@@ -1810,8 +1812,8 @@ msgid ""
 "Bounce/Catchall '%(matching_alias_name)s' is already used by %"
 "(document_name)s. Choose another alias or change it on the other document."
 msgstr ""
-"Afvist/catchall '%(matching_alias_name)s' bruges allerede af %(document_name)"
-"s. Vælg et andet alias, eller ændr det i det andet dokument."
+"Afvist/catchall '%(matching_alias_name)s' bruges allerede af %"
+"(document_name)s. Vælg et andet alias, eller ændr det i det andet dokument."
 
 #. module: mail
 #. odoo-python
@@ -2014,8 +2016,8 @@ msgstr ""
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Cannot change initial message nor parent channel of: %(channels)s."
 msgstr ""
-"Hverken den første besked eller den overordnede kanal kan ændres: %(channels)"
-"s."
+"Hverken den første besked eller den overordnede kanal kan ændres: %"
+"(channels)s."
 
 #. module: mail
 #. odoo-python
@@ -3008,8 +3010,8 @@ msgid ""
 "'notifications@example.com' to override all outgoing emails."
 msgstr ""
 "Standard, når der ikke er match med filtre for den udgående server. Kan være "
-"en lokal del, f.eks. ‘notifikationer’, eller en fuld e-mailadresse, f.eks. ‘"
-"notifications@eksempel.com' for at tilsidesætte alle udgående e-mails."
+"en lokal del, f.eks. ‘notifikationer’, eller en fuld e-mailadresse, f.eks. "
+"‘notifications@eksempel.com' for at tilsidesætte alle udgående e-mails."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
@@ -7348,8 +7350,8 @@ msgid ""
 msgstr ""
 "Valgfrit oversættelsessprog (ISO-kode) til brug ved afsendelse af en e-mail. "
 "Hvis det ikke er angivet, anvendes den engelske udgave. Normalt bør dette "
-"være et pladsholderudtryk, der angiver det passende sprog, f.eks. {{ "
-"object.partner_id.lang }}."
+"være et pladsholderudtryk, der angiver det passende sprog, f.eks. "
+"{{ object.partner_id.lang }}."
 
 #. module: mail
 #. odoo-javascript
@@ -7857,6 +7859,12 @@ msgstr ""
 #: code:addons/mail/static/src/chatter/web/chatter.xml:0
 msgid "Pop out Attachments"
 msgstr "Pop op-vedhæftninger"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_view.js:0
+msgid "Pop out is not supported on mobile."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__port
@@ -9321,6 +9329,12 @@ msgstr "Stjernemarkeret besked"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/web/channel_selector.xml:0
+msgid "Start"
+msgstr "Start"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
 msgid "Start a Call"
 msgstr ""
@@ -9858,8 +9872,8 @@ msgid ""
 "                 Please make sure you are using the correct address or "
 "contact us at %(default_email)s instead."
 msgstr ""
-"Meddelelsen nedenfor kunne ikke accepteres af adressen %(alias_display_name)"
-"s.\n"
+"Meddelelsen nedenfor kunne ikke accepteres af adressen %"
+"(alias_display_name)s.\n"
 "                 Kun %(contact_description)s har tilladelse til at kontakte "
 "denne adresse.<br /><br />\n"
 "                 Sørg for, at du bruger den korrekte adresse, eller kontakt "
@@ -10127,8 +10141,8 @@ msgstr ""
 msgid ""
 "Those values are not supported as options when rendering: %(param_names)s"
 msgstr ""
-"Disse værdier understøttes ikke som muligheder ved gengivelse: %(param_names)"
-"s"
+"Disse værdier understøttes ikke som muligheder ved gengivelse: %"
+"(param_names)s"
 
 #. module: mail
 #. odoo-python
@@ -10507,7 +10521,8 @@ msgstr "Kan ikke oprette forbindelse til SMTP-serveren"
 #. odoo-python
 #: code:addons/mail/wizard/mail_wizard_invite.py:0
 msgid "Unable to post message, please configure the sender's email address."
-msgstr "Kan ikke sende beskeder. Konfigurér venligst afsenderens e-mailadresse."
+msgstr ""
+"Kan ikke sende beskeder. Konfigurér venligst afsenderens e-mailadresse."
 
 #. module: mail
 #. odoo-python
@@ -11572,7 +11587,8 @@ msgstr "Din/dit"
 #: code:addons/mail/models/res_users.py:0
 msgid ""
 "Your account email has been changed from %(old_email)s to %(new_email)s."
-msgstr "Din kontos e-mail er blevet ændret fra %(old_email)s til %(new_email)s."
+msgstr ""
+"Din kontos e-mail er blevet ændret fra %(old_email)s til %(new_email)s."
 
 #. module: mail
 #. odoo-python
@@ -11805,8 +11821,8 @@ msgstr "f.eks. \"Velkomstmail\""
 msgid ""
 "e.g. \"Welcome to MyCompany\" or \"Nice to meet you, {{ object.name }}\""
 msgstr ""
-"f.eks. \"Velkommen til MinVirksomhed\" eller \"Hyggeligt at møde dig, {{ "
-"object.name }}\""
+"f.eks. \"Velkommen til MinVirksomhed\" eller \"Hyggeligt at møde dig, "
+"{{ object.name }}\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form

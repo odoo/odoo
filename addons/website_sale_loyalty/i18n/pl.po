@@ -6,13 +6,14 @@
 # Wil Odoo, 2024
 #
 # "Marta (wacm)" <wacm@odoo.com>, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-10-20 14:00+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"POT-Creation-Date: 2026-10-24 17:39+0000\n"
+"PO-Revision-Date: 2026-10-28 13:16+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-18/"
 "website_sale_loyalty/pl/>\n"
 "Language: pl\n"
@@ -55,6 +56,16 @@ msgstr "Wszystkie strony internetowe"
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_loyalty_program__ecommerce_ok
 msgid "Available on Website"
 msgstr "Dostępne na stronie internetowej"
+
+#. module: website_sale_loyalty
+#. odoo-python
+#: code:addons/website_sale_loyalty/controllers/payment.py:0
+msgid ""
+"Cannot process payment: Gift cards and eWallets are not compatible with on "
+"site payment"
+msgstr ""
+"Nie można przetworzyć płatności: karty podarunkowe i portfele elektroniczne "
+"nie są zgodne z płatnościami na miejscu"
 
 #. module: website_sale_loyalty
 #. odoo-python
@@ -211,6 +222,11 @@ msgid "Pay with eWallet"
 msgstr "Płać za pomocą e-portfela"
 
 #. module: website_sale_loyalty
+#: model:ir.model,name:website_sale_loyalty.model_payment_provider
+msgid "Payment Provider"
+msgstr "Operator płatności"
+
+#. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__program_id
 msgid "Program"
 msgstr "Program"
@@ -346,3 +362,9 @@ msgstr "Poniższy kod został pomyślnie zastosowany:"
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
 msgid "in your ewallet"
 msgstr "w portfelu elektronicznym"
+
+#. module: website_sale_loyalty
+#. odoo-python
+#: code:addons/website_sale_loyalty/models/payment_provider.py:0
+msgid "incompatible with gift cards and eWallets"
+msgstr "niezgodne z kartami podarunkowymi i portfelami elektronicznymi"

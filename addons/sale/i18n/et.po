@@ -28,8 +28,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-10-20 17:01+0000\n"
+"POT-Creation-Date: 2026-10-24 17:38+0000\n"
+"PO-Revision-Date: 2026-10-28 03:34+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Estonian <https://translate.odoo.com/projects/odoo-18/sale/"
 "et/>\n"
@@ -170,13 +170,14 @@ msgstr ""
 "        <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference "
 "or ''\">SOOO49</span>\n"
 "        summas\n"
-"        <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
+"        <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(transaction_sudo.amount, object.currency_id) or ''\">$ "
+"10.00</span>\n"
 "        teie tellimusele\n"
-"        <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">"
-"S00049</span>\n"
-"        <t t-if=\"transaction_sudo and transaction_sudo.state == 'pending'\">"
-"\n"
+"        <span style=\"font-weight:bold;\" t-out=\"object.name or "
+"''\">S00049</span>\n"
+"        <t t-if=\"transaction_sudo and transaction_sudo.state == "
+"'pending'\">\n"
 "            on ootel.\n"
 "            <br/>\n"
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid "
@@ -186,9 +187,9 @@ msgstr ""
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                Kui kinnitatud,\n"
-"                <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total - object.amount_paid - transaction_sudo.amount, "
-"object.currency_id) or ''\">$ 10.00</span>\n"
+"                <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total - object.amount_paid - "
+"transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
 "                jääb veel maksta.\n"
 "            </t>\n"
 "        </t>\n"
@@ -197,9 +198,9 @@ msgstr ""
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid, "
 "object.amount_total) &lt; 0\">\n"
 "                <br/>\n"
-"                <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total - object.amount_paid, object.currency_id) or ''\">$ "
-"10.00</span>\n"
+"                <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total - object.amount_paid, "
+"object.currency_id) or ''\">$ 10.00</span>\n"
 "               jääb veel maksta.\n"
 "            </t>\n"
 "        </t>\n"
@@ -644,8 +645,8 @@ msgstr ""
 "        <t t-out=\"doc_name or ''\">pakkumine</t> <strong t-"
 "out=\"object.name or ''\">S00052</strong>\n"
 "        <t t-if=\"object.origin\">\n"
-"            (dokumendi viitega: <t t-out=\"object.origin or ''\">S00052</t> )"
-"\n"
+"            (dokumendi viitega: <t t-out=\"object.origin or ''\">S00052</"
+"t> )\n"
 "        </t>\n"
 "        on tühistatud. Seepärast ei võeta teilt ka tellimuse eest rohkem "
 "tasu.\n"
@@ -819,8 +820,8 @@ msgid ""
 "email to validate the quote.\n"
 "        </span>"
 msgstr ""
-"<span><b>Õnnitleme</b>, sinu esimene pakkumine on saadetud!<br>"
-"Hinnapakkumise kinnitamiseks kontrolli oma meili.\n"
+"<span><b>Õnnitleme</b>, sinu esimene pakkumine on saadetud!"
+"<br>Hinnapakkumise kinnitamiseks kontrolli oma meili.\n"
 "        </span>"
 
 #. module: sale
@@ -3453,8 +3454,8 @@ msgid ""
 msgstr ""
 "Valikuline tõlkekeel (ISO-kood), mis valitakse meili saatmisel. Kui seda "
 "pole määratud, kasutatakse ingliskeelset versiooni. Tavaliselt peaks see "
-"olema kohahoidja avaldis, mis pakub sobivat keelt, nt. {{ "
-"object.partner_id.lang }}."
+"olema kohahoidja avaldis, mis pakub sobivat keelt, nt. "
+"{{ object.partner_id.lang }}."
 
 #. module: sale
 #. odoo-python
@@ -4822,8 +4823,8 @@ msgid ""
 "Sum of transactions made in through the online payment form that are in the "
 "state 'done' or 'authorized' and linked to this order."
 msgstr ""
-"Veebimaksevormi kaudu tehtud tehingute summa, mis on „tehtud” või „kinnitatud"
-"” olekus ja on seotud selle tellimusega."
+"Veebimaksevormi kaudu tehtud tehingute summa, mis on „tehtud” või "
+"„kinnitatud” olekus ja on seotud selle tellimusega."
 
 #. module: sale
 #: model:ir.model,name:sale.model_ir_config_parameter
@@ -5245,8 +5246,8 @@ msgid ""
 "This product is packaged by %(pack_size).2f %(pack_name)s. You should sell %"
 "(quantity).2f %(unit)s."
 msgstr ""
-"Selle toote pakkis %(pack_size).2f %(pack_name)s. Peaksite müüma %(quantity)"
-".2f %(unit)s."
+"Selle toote pakkis %(pack_size).2f %(pack_name)s. Peaksite müüma %"
+"(quantity).2f %(unit)s."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all
@@ -5565,11 +5566,9 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__validity_date
 msgid ""
-"Validity of the order, after that you will not able to sign & pay the "
-"quotation."
+"Validity of the quotation. After this date, you will no longer be able to "
+"sign and pay it."
 msgstr ""
-"Tellimuse kehtivus, pärast mida ei ole võimalik allkirjastada ja tasuda "
-"hinnapakkumise eest."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5702,17 +5701,6 @@ msgstr "Kinnitatud tellimuse hinnakirja ei saa muuta!"
 
 #. module: sale
 #. odoo-python
-#: code:addons/sale/models/product_product.py:0
-#: code:addons/sale/models/product_template.py:0
-msgid ""
-"You cannot change the product's type because it is already used in sales "
-"orders."
-msgstr ""
-"Te ei saa muuta toote tüüpi, sest seda toodet on juba kasutatud "
-"müügitellimusel."
-
-#. module: sale
-#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
@@ -5744,6 +5732,16 @@ msgid ""
 msgstr ""
 "Peate määrama toote kõigile oma ostudele,\n"
 "                    kas see on siis ladustatav toode, tarbekaup või teenus."
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+msgid ""
+"You should not change the product type because this product is already used "
+"in sales orders. Changing it may affect how the related order lines are "
+"delivered."
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
@@ -5874,7 +5872,7 @@ msgstr "ühikud"
 #. odoo-javascript
 #: code:addons/sale/static/src/xml/sale_product_field.xml:0
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5901,8 +5899,8 @@ msgid ""
 "{{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
-"(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ "
-"object.name or 'n/a' }})"
+"(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref "
+"{{ object.name or 'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_cancellation
@@ -5910,8 +5908,22 @@ msgid ""
 "{{ object.company_id.name }} {{ object.type_name }} Cancelled (Ref "
 "{{ object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} {{ object.type_name }} Tühistatud (Ref {{ "
-"object.name or 'n/a' }})"
+"{{ object.company_id.name }} {{ object.type_name }} Tühistatud (Ref "
+"{{ object.name or 'n/a' }})"
+
+#~ msgid ""
+#~ "Validity of the order, after that you will not able to sign & pay the "
+#~ "quotation."
+#~ msgstr ""
+#~ "Tellimuse kehtivus, pärast mida ei ole võimalik allkirjastada ja tasuda "
+#~ "hinnapakkumise eest."
+
+#~ msgid ""
+#~ "You cannot change the product's type because it is already used in sales "
+#~ "orders."
+#~ msgstr ""
+#~ "Te ei saa muuta toote tüüpi, sest seda toodet on juba kasutatud "
+#~ "müügitellimusel."
 
 #~ msgid "2023-12-31"
 #~ msgstr "2023-12-31"

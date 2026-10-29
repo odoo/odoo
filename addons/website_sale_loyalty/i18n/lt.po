@@ -21,9 +21,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-10-20 13:59+0000\n"
-"Last-Translator: Gailius Kazlauskas <gailius.kaz@vialaurea.com>\n"
+"POT-Creation-Date: 2026-10-24 17:39+0000\n"
+"PO-Revision-Date: 2026-10-27 12:31+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-18/"
 "website_sale_loyalty/lt/>\n"
 "Language: lt\n"
@@ -71,9 +71,20 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale_loyalty/controllers/payment.py:0
 msgid ""
+"Cannot process payment: Gift cards and eWallets are not compatible with on "
+"site payment"
+msgstr ""
+
+#. module: website_sale_loyalty
+#. odoo-python
+#: code:addons/website_sale_loyalty/controllers/payment.py:0
+msgid ""
 "Cannot process payment: applied reward was changed or has expired.\n"
 "Please refresh the page and try again."
 msgstr ""
+"Negali apdoroti mokėjimo: pritaikytas atlygis buvo pakeistas arba jo "
+"galiojimas pasibaigė.\n"
+"Atnaujinkite puslapį ir pabandykite dar kartą."
 
 #. module: website_sale_loyalty
 #. odoo-javascript
@@ -218,6 +229,11 @@ msgid "Pay with eWallet"
 msgstr "Mokėti Su El. Pinigine"
 
 #. module: website_sale_loyalty
+#: model:ir.model,name:website_sale_loyalty.model_payment_provider
+msgid "Payment Provider"
+msgstr "Mokėjimo paslaugos tiekėjas"
+
+#. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__program_id
 msgid "Program"
 msgstr "Programa"
@@ -230,7 +246,7 @@ msgstr ""
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__promo_code
 msgid "Promo Code"
-msgstr ""
+msgstr "Reklaminis kodas"
 
 #. module: website_sale_loyalty
 #. odoo-python
@@ -248,7 +264,7 @@ msgstr "Nukreipti"
 #: model:ir.model.fields,help:website_sale_loyalty.field_loyalty_program__website_id
 #: model:ir.model.fields,help:website_sale_loyalty.field_loyalty_rule__website_id
 msgid "Restrict to a specific website."
-msgstr ""
+msgstr "Apriboti iki konkrečios svetainės."
 
 #. module: website_sale_loyalty
 #: model:ir.model,name:website_sale_loyalty.model_sale_order
@@ -347,4 +363,10 @@ msgstr "Sėkmingai pritaikėte šį kodą:"
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
 msgid "in your ewallet"
+msgstr ""
+
+#. module: website_sale_loyalty
+#. odoo-python
+#: code:addons/website_sale_loyalty/models/payment_provider.py:0
+msgid "incompatible with gift cards and eWallets"
 msgstr ""

@@ -10,9 +10,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:38+0000\n"
-"PO-Revision-Date: 2026-10-20 18:00+0000\n"
-"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"PO-Revision-Date: 2026-10-27 10:33+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-18/account/lo/>"
 "\n"
 "Language: lo\n"
@@ -304,8 +304,8 @@ msgid ""
 "- A new field « Total (tax inc.) » to speed up and control the encoding by "
 "automating line creation with the right account &amp; tax."
 msgstr ""
-"- ຟິວໃໝ່ « ຍອດລວມ (ລວມພາສີ) » ເພື່ອເລັ່ງຄວາມໄວ ແລະ ຄວບຄຸມການປ້ອນຂໍ້ມູນໂດຍການສ້າງລາຍການອັດຕະ"
-"ໂນມັດດ້ວຍບັນຊີ ແລະ ພາສີທີ່ຖືກຕ້ອງ."
+"- ຟິວໃໝ່ « ຍອດລວມ (ລວມພາສີ) » ເພື່ອເລັ່ງຄວາມໄວ ແລະ "
+"ຄວບຄຸມການປ້ອນຂໍ້ມູນໂດຍການສ້າງລາຍການອັດຕະໂນມັດດ້ວຍບັນຊີ ແລະ ພາສີທີ່ຖືກຕ້ອງ."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -528,8 +528,9 @@ msgstr ""
 "        <t t-if=\"object.invoice_origin\">\n"
 "            (ອ້າງອີງ: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
 "        </t>\n"
-"        ລວມເປັນເງິນ <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        ລວມເປັນເງິນ <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143,750.00</span>\n"
 "        ຈາກ <t t-out=\"object.company_id.name or ''\">ບໍລິສັດຂອງທ່ານ</t>.\n"
 "        <br/><br/>\n"
 "        ຢ່າລັງເລທີ່ຈະຕິດຕໍ່ຫາພວກເຮົາ ຫາກທ່ານມີຄຳຖາມໃດໆ.\n"
@@ -630,8 +631,9 @@ msgstr ""
 "        <t t-if=\"object.invoice_origin\">\n"
 "            (ອ້າງອີງ: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
 "        </t>\n"
-"        ລວມເປັນເງິນ <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        ລວມເປັນເງິນ <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143,750.00</span>\n"
 "        ຈາກ <t t-out=\"object.company_id.name or ''\">ບໍລິສັດຂອງທ່ານ</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            ໃບແຈ້ງໜີ້ນີ້ຊຳລະແລ້ວ.\n"
@@ -696,14 +698,15 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        ຮຽນ <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/>"
-"<br/>\n"
+"        ຮຽນ <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/"
+"><br/>\n"
 "        ຂໍຂອບໃຈສຳລັບການຊຳລະເງິນຂອງທ່ານ.\n"
-"        ນີ້ແມ່ນໃບຮັບເງິນຂອງທ່ານ <span style=\"font-weight:bold;\" t-out=\""
-"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> \n"
-"        ລວມເປັນເງິນ <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount, object.currency_id) or ''\">$ 10.00</span> ຈາກ <t t-"
-"out=\"object.company_id.name or ''\">ບໍລິສັດຂອງທ່ານ</t>.\n"
+"        ນີ້ແມ່ນໃບຮັບເງິນຂອງທ່ານ <span style=\"font-weight:bold;\" t-"
+"out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</"
+"span> \n"
+"        ລວມເປັນເງິນ <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</"
+"span> ຈາກ <t t-out=\"object.company_id.name or ''\">ບໍລິສັດຂອງທ່ານ</t>.\n"
 "        <br/><br/>\n"
 "        ຢ່າລັງເລທີ່ຈະຕິດຕໍ່ຫາພວກເຮົາ ຫາກທ່ານມີຄຳຖາມໃດໆ.\n"
 "        <br/><br/>\n"
@@ -728,8 +731,8 @@ msgid ""
 "<i class=\"fa fa-clock-o fw-bold\" aria-label=\"Date\" role=\"img\" "
 "title=\"Date\"/>"
 msgstr ""
-"<i class=\"fa fa-clock-o fw-bold\" aria-label=\"Date\" role=\"img\" title=\"ວັ"
-"ນທີ\"/>"
+"<i class=\"fa fa-clock-o fw-bold\" aria-label=\"Date\" role=\"img\" "
+"title=\"ວັນທີ\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_kanban
@@ -737,8 +740,8 @@ msgid ""
 "<i class=\"fa fa-clock-o fw-bold\" role=\"img\" aria-label=\"Date\" "
 "title=\"Date\"/>"
 msgstr ""
-"<i class=\"fa fa-clock-o fw-bold\" role=\"img\" aria-label=\"Date\" title=\"ວັ"
-"ນທີ\"/>"
+"<i class=\"fa fa-clock-o fw-bold\" role=\"img\" aria-label=\"Date\" "
+"title=\"ວັນທີ\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
@@ -762,8 +765,8 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-fw fa-check\" aria-label=\"Paid\" title=\"Paid\" "
 "role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> ຊຳລະແ"
-"ລ້ວ</span>"
+"                                    <span class=\"d-none d-md-inline\"> "
+"ຊຳລະແລ້ວ</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -775,8 +778,8 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-fw fa-check\" aria-label=\"Reversed\" title=\"Reversed\" "
 "role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> ຄືນລາຍ"
-"ການ</span>"
+"                                    <span class=\"d-none d-md-inline\"> "
+"ຄືນລາຍການ</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -786,10 +789,10 @@ msgid ""
 "                                    <span class=\"d-none d-md-inline\"> "
 "Processing Payment</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" title=\"ກຳລັງ"
-"ດຳເນີນການຊຳລະ\" role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> ກຳລັງດ"
-"ຳເນີນການຊຳລະ</span>"
+"<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" "
+"title=\"ກຳລັງດຳເນີນການຊຳລະ\" role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> "
+"ກຳລັງດຳເນີນການຊຳລະ</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -801,8 +804,8 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Opened\" title=\"Opened\" "
 "role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> ລໍຖ້າກາ"
-"ນຊຳລະ</span>"
+"                                    <span class=\"d-none d-md-inline\"> "
+"ລໍຖ້າການຊຳລະ</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -815,8 +818,7 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-lightbulb-o\" role=\"img\"/>\n"
 "                        ບໍ່ຕ້ອງກັງວົນ, ທ່ານສາມາດປ່ຽນການຕັ້ງຄ່ານີ້ໄດ້ພາຍຫຼັງໃນຟອມຂອງຜູ້ຈຳໜ່າຍ.\n"
-"                        ທ່ານຍັງມີທາງເລືອກໃນການປິດຄຸນສົມບັດນີ້ສຳລັບຜູ້ຈຳໜ່າຍທັງໝົດໃນການຕັ້ງຄ່າບັນ"
-"ຊີ."
+"                        ທ່ານຍັງມີທາງເລືອກໃນການປິດຄຸນສົມບັດນີ້ສຳລັບຜູ້ຈຳໜ່າຍທັງໝົດໃນການຕັ້ງຄ່າບັນຊີ."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -847,8 +849,8 @@ msgid ""
 "                    </small>"
 msgstr ""
 "<small class=\"form-text text-muted\">\n"
-"                        ທ່ານສາມາດເລືອກວິທີທີ່ທ່ານຕ້ອງການໃຫ້ພວກເຮົາສົ່ງໃບແຈ້ງໜີ້ ແລະ ດ້ວຍຮູບແບບ"
-"ເອເລັກໂຕຣນິກໃດ.\n"
+"                        ທ່ານສາມາດເລືອກວິທີທີ່ທ່ານຕ້ອງການໃຫ້ພວກເຮົາສົ່ງໃບແຈ້ງໜີ້ ແລະ "
+"ດ້ວຍຮູບແບບເອເລັກໂຕຣນິກໃດ.\n"
 "                    </small>"
 
 #. module: account
@@ -864,8 +866,8 @@ msgstr ""
 "<span class=\"badge rounded-pill text-bg-warning\">\n"
 "                                    <i class=\"fa fa-fw fa-remove\" aria-"
 "label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> ຍົກເລີກ"
-"ແລ້ວ</span>\n"
+"                                    <span class=\"d-none d-md-inline\"> "
+"ຍົກເລີກແລ້ວ</span>\n"
 "                                </span>"
 
 #. module: account
@@ -891,8 +893,8 @@ msgid ""
 "<span class=\"figure-caption\">Never miss a deadline, with automated "
 "statements and alerts.</span>"
 msgstr ""
-"<span class=\"figure-caption\">ບໍ່ພາດກຳນົດເວລາ ດ້ວຍການແຈ້ງເຕືອນ ແລະ ໃບລາຍງານອັດຕະໂນມັ"
-"ດ.</span>"
+"<span class=\"figure-caption\">ບໍ່ພາດກຳນົດເວລາ ດ້ວຍການແຈ້ງເຕືອນ ແລະ "
+"ໃບລາຍງານອັດຕະໂນມັດ.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -918,8 +920,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\">"
-"%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
+"'fixed'\">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -984,14 +986,14 @@ msgid "<span class=\"o_stat_text\">Invoiced</span>"
 msgstr "<span class=\"o_stat_text\">ອອກໃບແຈ້ງໜີ້ແລ້ວ</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-msgid "<span class=\"o_stat_text\">Journal Entries</span>"
-msgstr "<span class=\"o_stat_text\">ລາຍການປຶ້ມບັນຊີ</span>"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
 msgstr "<span class=\"o_stat_text\">ລາຍການປຶ້ມບັນຊີ</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+msgid "<span class=\"o_stat_text\">Journal Items</span>"
+msgstr "<span class=\"o_stat_text\">ລາຍການບັນຊີຍ່ອຍ</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1248,8 +1250,7 @@ msgstr "<span>ໃໝ່</span>"
 msgid ""
 "<span>One or more Bank Accounts set on this partner are also used by others:"
 "</span>"
-msgstr ""
-"<span>ບັນຊີທະນາຄານໜຶ່ງ ຫຼື ຫຼາຍບັນຊີທີ່ຕັ້ງໄວ້ສຳລັບຄູ່ຄ້ານີ້ ຍັງຖືກນຳໃຊ້ໂດຍຜູ້ອື່ນ:</span>"
+msgstr "<span>ບັນຊີທະນາຄານໜຶ່ງ ຫຼື ຫຼາຍບັນຊີທີ່ຕັ້ງໄວ້ສຳລັບຄູ່ຄ້ານີ້ ຍັງຖືກນຳໃຊ້ໂດຍຜູ້ອື່ນ:</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1294,8 +1295,8 @@ msgid ""
 "<span>This entry has been generated through the Invoicing app, before "
 "installing Accounting. Its balance has been imported separately.</span>"
 msgstr ""
-"<span>ລາຍການນີ້ຖືກສ້າງຂຶ້ນຜ່ານແອັບອອກໃບແຈ້ງໜີ້ ກ່ອນການຕິດຕັ້ງແອັບການບັນຊີ. ຍອດເຫຼືອຂອງມັນໄດ້ຖືກນຳເຂົ້າ"
-"ແຍກຕ່າງຫາກ.</span>"
+"<span>ລາຍການນີ້ຖືກສ້າງຂຶ້ນຜ່ານແອັບອອກໃບແຈ້ງໜີ້ ກ່ອນການຕິດຕັ້ງແອັບການບັນຊີ. "
+"ຍອດເຫຼືອຂອງມັນໄດ້ຖືກນຳເຂົ້າແຍກຕ່າງຫາກ.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -1419,8 +1420,8 @@ msgid ""
 "the new ones."
 msgstr ""
 "<strong>ສະກຸນເງິນນີ້ໄດ້ຖືກນຳໃຊ້ເພື່ອສ້າງລາຍການບັນຊີແລ້ວ.</strong> <br/>\n"
-"                        ການປ່ຽນແປງປັດໄຈການປັດເສດໃນຕອນນີ້ ຈະບໍ່ປ່ຽນແປງການປັດເສດທີ່ເຮັດໃນລາ"
-"ຍການກ່ອນໜ້າ; ເຊິ່ງອາດຈະເຮັດໃຫ້ເກີດຄວາມບໍ່ສອດຄ່ອງກັບລາຍການໃໝ່."
+"                        ການປ່ຽນແປງປັດໄຈການປັດເສດໃນຕອນນີ້ "
+"ຈະບໍ່ປ່ຽນແປງການປັດເສດທີ່ເຮັດໃນລາຍການກ່ອນໜ້າ; ເຊິ່ງອາດຈະເຮັດໃຫ້ເກີດຄວາມບໍ່ສອດຄ່ອງກັບລາຍການໃໝ່."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1440,8 +1441,8 @@ msgid ""
 "<strong>Warning:</strong> Once the Audit Trail is enabled, it cannot be "
 "disabled again if there are any existing journal items."
 msgstr ""
-"<strong>ຄຳເຕືອນ:</strong> ເມື່ອເປີດໃຊ້ເສັ້ນທາງການກວດສອບແລ້ວ, ຈະບໍ່ສາມາດປິດໄດ້ອີກ ຫາກມີລາຍກາ"
-"ນບັນຊີຢູ່ແລ້ວ."
+"<strong>ຄຳເຕືອນ:</strong> ເມື່ອເປີດໃຊ້ເສັ້ນທາງການກວດສອບແລ້ວ, ຈະບໍ່ສາມາດປິດໄດ້ອີກ "
+"ຫາກມີລາຍການບັນຊີຢູ່ແລ້ວ."
 
 #. module: account
 #. odoo-python
@@ -1471,8 +1472,7 @@ msgstr "ຊື່ກຸ່ມບັນຊີແຍກປະເພດຕ້ອງ
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
-msgstr ""
-"Dictionary ຂອງ Python ທີ່ຈະຖືກປະເມີນເພື່ອໃຫ້ຄ່າເລີ່ມຕົ້ນ ເມື່ອສ້າງບັນທຶກໃໝ່ສຳລັບນາມແຝງນີ້."
+msgstr "Dictionary ຂອງ Python ທີ່ຈະຖືກປະເມີນເພື່ອໃຫ້ຄ່າເລີ່ມຕົ້ນ ເມື່ອສ້າງບັນທຶກໃໝ່ສຳລັບນາມແຝງນີ້."
 
 #. module: account
 #. odoo-python
@@ -1487,8 +1487,8 @@ msgid ""
 "A bank account with Account Number %(number)s already exists for Partner %"
 "(partner)s, but is archived. Please unarchive it instead."
 msgstr ""
-"ບັນຊີທະນາຄານທີ່ມີເລກບັນຊີ %(number)s ມີຢູ່ແລ້ວສຳລັບຄູ່ຄ້າ %(partner)s, ແຕ່ຖືກເກັບໄວ້. ກະລຸນານຳມັນອ"
-"ອກຈາກບ່ອນເກັບແທນ."
+"ບັນຊີທະນາຄານທີ່ມີເລກບັນຊີ %(number)s ມີຢູ່ແລ້ວສຳລັບຄູ່ຄ້າ %(partner)s, ແຕ່ຖືກເກັບໄວ້. "
+"ກະລຸນານຳມັນອອກຈາກບ່ອນເກັບແທນ."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -1542,15 +1542,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
 msgid "A line cannot have both children and a groupby value (line '%s')."
-msgstr ""
-"ແຖວບໍ່ສາມາດມີທັງແຖວຍ່ອຍ ແລະ ຄ່າການຈັດກຸ່ມ (groupby) ພ້ອມກັນໄດ້ (ແຖວ '%s')."
+msgstr "ແຖວບໍ່ສາມາດມີທັງແຖວຍ່ອຍ ແລະ ຄ່າການຈັດກຸ່ມ (groupby) ພ້ອມກັນໄດ້ (ແຖວ '%s')."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "A line of this move is using a deprecated account, you cannot post it."
-msgstr ""
-"ມີແຖວໜຶ່ງຂອງການເຄື່ອນໄຫວນີ້ກຳລັງໃຊ້ບັນຊີທີ່ຖືກຍົກເລີກແລ້ວ, ທ່ານບໍ່ສາມາດລົງບັນຊີໄດ້."
+msgstr "ມີແຖວໜຶ່ງຂອງການເຄື່ອນໄຫວນີ້ກຳລັງໃຊ້ບັນຊີທີ່ຖືກຍົກເລີກແລ້ວ, ທ່ານບໍ່ສາມາດລົງບັນຊີໄດ້."
 
 #. module: account
 #. odoo-python
@@ -1569,8 +1567,7 @@ msgstr "ໝາຍເຫດ, ເຊິ່ງເນື້ອຫາປົກກະ�
 msgid ""
 "A payment tolerance defined as a percentage should always be between 0 and "
 "100"
-msgstr ""
-"ການຍອມຮັບສ່ວນຕ່າງການຊຳລະທີ່ກຳນົດເປັນເປີເຊັນ ຄວນຢູ່ລະຫວ່າງ 0 ຫາ 100 ສະເໝີ"
+msgstr "ການຍອມຮັບສ່ວນຕ່າງການຊຳລະທີ່ກຳນົດເປັນເປີເຊັນ ຄວນຢູ່ລະຫວ່າງ 0 ຫາ 100 ສະເໝີ"
 
 #. module: account
 #. odoo-python
@@ -1602,8 +1599,8 @@ msgid ""
 "A rounding per line is advised if your prices are tax-included. That way, "
 "the sum of line subtotals equals the total with taxes."
 msgstr ""
-"ແນະນຳໃຫ້ມີການປັດເສດແຕ່ລະແຖວ ຖ້າລາຄາຂອງທ່ານລວມພາສີແລ້ວ. ດ້ວຍວິທີນັ້ນ, ຜົນລວມຂອງຍອດລວມຍ່ອຍໃນແຕ່"
-"ລະແຖວຈະເທົ່າກັບຍອດລວມທັງໝົດລວມພາສີ."
+"ແນະນຳໃຫ້ມີການປັດເສດແຕ່ລະແຖວ ຖ້າລາຄາຂອງທ່ານລວມພາສີແລ້ວ. ດ້ວຍວິທີນັ້ນ, "
+"ຜົນລວມຂອງຍອດລວມຍ່ອຍໃນແຕ່ລະແຖວຈະເທົ່າກັບຍອດລວມທັງໝົດລວມພາສີ."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1711,8 +1708,7 @@ msgstr "ບັນຊີ"
 msgid ""
 "Account %(account)s will be split in %(num_accounts)s, one for each "
 "company:\n"
-msgstr ""
-"ບັນຊີ %(account)s ຈະຖືກແຍກເປັນ %(num_accounts)s, ໜຶ່ງບັນຊີຕໍ່ແຕ່ລະບໍລິສັດ:\n"
+msgstr "ບັນຊີ %(account)s ຈະຖືກແຍກເປັນ %(num_accounts)s, ໜຶ່ງບັນຊີຕໍ່ແຕ່ລະບໍລິສັດ:\n"
 
 #. module: account
 #. odoo-python
@@ -1721,8 +1717,8 @@ msgid ""
 "Account %s cannot be unmerged as it already belongs to a single company. The "
 "unmerge operation only splits an account based on its companies."
 msgstr ""
-"ບັນຊີ %s ບໍ່ສາມາດແຍກອອກໄດ້ ເພາະມັນເປັນຂອງບໍລິສັດດຽວຢູ່ແລ້ວ. ການດຳເນີນການແຍກບັນຊີ ແມ່ນພຽງແຕ່ແຍກບັ"
-"ນຊີຕາມບໍລິສັດເທົ່ານັ້ນ."
+"ບັນຊີ %s ບໍ່ສາມາດແຍກອອກໄດ້ ເພາະມັນເປັນຂອງບໍລິສັດດຽວຢູ່ແລ້ວ. ການດຳເນີນການແຍກບັນຊີ "
+"ແມ່ນພຽງແຕ່ແຍກບັນຊີຕາມບໍລິສັດເທົ່ານັ້ນ."
 
 #. module: account
 #. odoo-python
@@ -1730,8 +1726,7 @@ msgstr ""
 msgid ""
 "Account %s does not allow reconciliation. First change the configuration of "
 "this account to allow it."
-msgstr ""
-"ບັນຊີ %s ບໍ່ອະນຸຍາດໃຫ້ມີການສົມທຽບ. ທຳອິດໃຫ້ປ່ຽນການກຳນົດຄ່າຂອງບັນຊີນີ້ເພື່ອອະນຸຍາດໃຫ້ມັນ."
+msgstr "ບັນຊີ %s ບໍ່ອະນຸຍາດໃຫ້ມີການສົມທຽບ. ທຳອິດໃຫ້ປ່ຽນການກຳນົດຄ່າຂອງບັນຊີນີ້ເພື່ອອະນຸຍາດໃຫ້ມັນ."
 
 #. module: account
 #. odoo-python
@@ -1761,8 +1756,7 @@ msgstr "ຮູບແບບຜັງບັນຊີ"
 msgid ""
 "Account Code Mapping cannot be accessed directly. It is designed to be used "
 "only through the Chart of Accounts."
-msgstr ""
-"ບໍ່ສາມາດເຂົ້າເຖິງການຈັບຄູ່ລະຫັດບັນຊີໂດຍກົງໄດ້. ມັນຖືກອອກແບບມາເພື່ອໃຊ້ຜ່ານຜັງບັນຊີເທົ່ານັ້ນ."
+msgstr "ບໍ່ສາມາດເຂົ້າເຖິງການຈັບຄູ່ລະຫັດບັນຊີໂດຍກົງໄດ້. ມັນຖືກອອກແບບມາເພື່ອໃຊ້ຜ່ານຜັງບັນຊີເທົ່ານັ້ນ."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__account_codes_formula
@@ -1852,6 +1846,11 @@ msgid "Account Mapping"
 msgstr "ການຈັບຄູ່ບັນຊີ"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__account_move_line_ids
+msgid "Account Move Line"
+msgstr "ແຖວການເຄື່ອນໄຫວບັນຊີ"
+
+#. module: account
 #: model:ir.model,name:account.model_account_move_reversal
 msgid "Account Move Reversal"
 msgstr "ການຄືນລາຍການເຄື່ອນໄຫວບັນຊີ"
@@ -1923,6 +1922,11 @@ msgid "Account Reconcile"
 msgstr "ການສົມທຽບບັນຊີ"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__account_reconcile_model_line_ids
+msgid "Account Reconcile Model Line"
+msgstr "ແຖວຮູບແບບການສົມທຽບບັນຊີ"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
 msgid "Account Root"
 msgstr "ຮາກບັນຊີ"
@@ -1977,8 +1981,8 @@ msgid ""
 "legal reports, and set the rules to close a fiscal year and generate opening "
 "entries."
 msgstr ""
-"ປະເພດບັນຊີແມ່ນໃຊ້ເພື່ອຈຸດປະສົງທາງຂໍ້ມູນ, ເພື່ອສ້າງລາຍງານທາງກົດໝາຍສະເພາະຂອງແຕ່ລະປະເທດ, ແລະ ກຳນົ"
-"ດກົດລະບຽບໃນການປິດປີງົບປະມານ ແລະ ສ້າງລາຍການເປີດບັນຊີ."
+"ປະເພດບັນຊີແມ່ນໃຊ້ເພື່ອຈຸດປະສົງທາງຂໍ້ມູນ, ເພື່ອສ້າງລາຍງານທາງກົດໝາຍສະເພາະຂອງແຕ່ລະປະເທດ, ແລະ "
+"ກຳນົດກົດລະບຽບໃນການປິດປີງົບປະມານ ແລະ ສ້າງລາຍການເປີດບັນຊີ."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_account_type
@@ -1996,8 +2000,7 @@ msgstr "ລະຫັດບັນຊີ 2 ໂຕທຳອິດ"
 msgid ""
 "Account codes must be unique. You can't create accounts with these duplicate "
 "codes: %s"
-msgstr ""
-"ລະຫັດບັນຊີຕ້ອງບໍ່ຊໍ້າກັນ. ທ່ານບໍ່ສາມາດສ້າງບັນຊີທີ່ມີລະຫັດຊໍ້າກັນເຫຼົ່ານີ້: %s"
+msgstr "ລະຫັດບັນຊີຕ້ອງບໍ່ຊໍ້າກັນ. ທ່ານບໍ່ສາມາດສ້າງບັນຊີທີ່ມີລະຫັດຊໍ້າກັນເຫຼົ່ານີ້: %s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
@@ -2070,8 +2073,7 @@ msgstr "ລາຍງານບັນຊີໂດຍບໍ່ມີແຖວລາ
 msgid ""
 "Account that will be set on lines created in cash basis journal entry and "
 "used to keep track of the tax base amount."
-msgstr ""
-"ບັນຊີທີ່ຈະຖືກຕັ້ງໃນແຖວລາຍການທີ່ສ້າງຂຶ້ນໃນປຶ້ມບັນຊີເກນເງິນສົດ ແລະ ໃຊ້ເພື່ອຕິດຕາມຈຳນວນຖານພາສີ."
+msgstr "ບັນຊີທີ່ຈະຖືກຕັ້ງໃນແຖວລາຍການທີ່ສ້າງຂຶ້ນໃນປຶ້ມບັນຊີເກນເງິນສົດ ແລະ ໃຊ້ເພື່ອຕິດຕາມຈຳນວນຖານພາສີ."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_dest_id
@@ -2101,8 +2103,9 @@ msgid ""
 "reconciled ; at reconciliation, this amount cancelled on this account and "
 "put on the regular tax account."
 msgstr ""
-"ບັນຊີທີ່ໃຊ້ເພື່ອປ່ຽນຖ່າຍຈຳນວນພາສີສຳລັບພາສີເກນເງິນສົດ. ມັນຈະມີຈຳນວນພາສີຕາບໃດທີ່ໃບແຈ້ງໜີ້ຕົ້ນສະບັບຍັງບໍ່ທັນໄ"
-"ດ້ຮັບການສົມທຽບ; ເມື່ອມີການສົມທຽບ, ຈຳນວນນີ້ຈະຖືກຍົກເລີກໃນບັນຊີນີ້ ແລະ ໄປໃສ່ໃນບັນຊີພາສີປົກກະຕິ."
+"ບັນຊີທີ່ໃຊ້ເພື່ອປ່ຽນຖ່າຍຈຳນວນພາສີສຳລັບພາສີເກນເງິນສົດ. "
+"ມັນຈະມີຈຳນວນພາສີຕາບໃດທີ່ໃບແຈ້ງໜີ້ຕົ້ນສະບັບຍັງບໍ່ທັນໄດ້ຮັບການສົມທຽບ; ເມື່ອມີການສົມທຽບ, "
+"ຈຳນວນນີ້ຈະຖືກຍົກເລີກໃນບັນຊີນີ້ ແລະ ໄປໃສ່ໃນບັນຊີພາສີປົກກະຕິ."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
@@ -2399,8 +2402,7 @@ msgstr "ເພີ່ມໝາຍເຫດ"
 msgid ""
 "Add a QR-code to your invoices so that your customers can pay instantly with "
 "their mobile banking application."
-msgstr ""
-"ເພີ່ມລະຫັດ QR ໃສ່ໃບແຈ້ງໜີ້ຂອງທ່ານ ເພື່ອໃຫ້ລູກຄ້າສາມາດຊຳລະເງິນໄດ້ທັນທີດ້ວຍແອັບທະນາຄານໃນມືຖື."
+msgstr "ເພີ່ມລະຫັດ QR ໃສ່ໃບແຈ້ງໜີ້ຂອງທ່ານ ເພື່ອໃຫ້ລູກຄ້າສາມາດຊຳລະເງິນໄດ້ທັນທີດ້ວຍແອັບທະນາຄານໃນມືຖື."
 
 #. module: account
 #. odoo-javascript
@@ -2467,8 +2469,7 @@ msgstr "ເພີ່ມຜູ້ຕິດຕໍ່ເພື່ອແຈ້ງເ
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Add your terms & conditions at the bottom of invoices/orders/quotations"
-msgstr ""
-"ເພີ່ມເງື່ອນໄຂ ແລະ ຂໍ້ກຳນົດຂອງທ່ານຢູ່ທາງລຸ່ມຂອງໃບແຈ້ງໜີ້/ໃບສັ່ງຊື້/ໃບສະເໜີລາຄາ"
+msgstr "ເພີ່ມເງື່ອນໄຂ ແລະ ຂໍ້ກຳນົດຂອງທ່ານຢູ່ທາງລຸ່ມຂອງໃບແຈ້ງໜີ້/ໃບສັ່ງຊື້/ໃບສະເໜີລາຄາ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
@@ -2538,8 +2539,9 @@ msgid ""
 "suggest automatically validating future bills. You can toggle this feature "
 "at any time in the vendor's profile."
 msgstr ""
-"ຫຼັງຈາກນຳເຂົ້າບິນສາມຄັ້ງສຳລັບຜູ້ຈຳໜ່າຍໂດຍບໍ່ມີການປ່ຽນແປງ, Odoo ຈະແນະນຳໃຫ້ກວດສອບບິນໃນອະນາຄົດໂດຍອັ"
-"ດຕະໂນມັດ. ທ່ານສາມາດເປີດ-ປິດຄຸນສົມບັດນີ້ໄດ້ທຸກເວລາໃນໂປຣໄຟລ໌ຂອງຜູ້ຈຳໜ່າຍ."
+"ຫຼັງຈາກນຳເຂົ້າບິນສາມຄັ້ງສຳລັບຜູ້ຈຳໜ່າຍໂດຍບໍ່ມີການປ່ຽນແປງ, Odoo "
+"ຈະແນະນຳໃຫ້ກວດສອບບິນໃນອະນາຄົດໂດຍອັດຕະໂນມັດ. ທ່ານສາມາດເປີດ-"
+"ປິດຄຸນສົມບັດນີ້ໄດ້ທຸກເວລາໃນໂປຣໄຟລ໌ຂອງຜູ້ຈຳໜ່າຍ."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__aggregation
@@ -2615,8 +2617,7 @@ msgstr "ລາຍການເຄື່ອນໄຫວທັງໝົດທີ່
 msgid ""
 "All unhashable moves before the selected date that are not protected by the "
 "Hard Lock Date"
-msgstr ""
-"ລາຍການເຄື່ອນໄຫວທັງໝົດທີ່ປົກປ້ອງບໍ່ໄດ້ກ່ອນວັນທີທີ່ເລືອກ ເຊິ່ງບໍ່ໄດ້ຖືກປ້ອງກັນໂດຍວັນທີລັອກຖາວອນ"
+msgstr "ລາຍການເຄື່ອນໄຫວທັງໝົດທີ່ປົກປ້ອງບໍ່ໄດ້ກ່ອນວັນທີທີ່ເລືອກ ເຊິ່ງບໍ່ໄດ້ຖືກປ້ອງກັນໂດຍວັນທີລັອກຖາວອນ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__unreconciled_bank_statement_line_ids
@@ -2700,8 +2701,7 @@ msgstr "ພາສີມີຜົນບັງຄັບໃຊ້ສະເໝີ"
 msgid ""
 "Always positive amount concerned by this matching expressed in the company "
 "currency."
-msgstr ""
-"ຈຳນວນເງິນທີ່ກ່ຽວຂ້ອງກັບການຈັບຄູ່ນີ້ເປັນບວກສະເໝີ ເຊິ່ງສະແດງໃນສະກຸນເງິນຂອງບໍລິສັດ."
+msgstr "ຈຳນວນເງິນທີ່ກ່ຽວຂ້ອງກັບການຈັບຄູ່ນີ້ເປັນບວກສະເໝີ ເຊິ່ງສະແດງໃນສະກຸນເງິນຂອງບໍລິສັດ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_partial_reconcile__credit_amount_currency
@@ -2874,8 +2874,7 @@ msgstr "ເກີດຂໍ້ຜິດພາດໃນລະຫວ່າງກາ
 msgid ""
 "An error occurred when computing the inalterability. All entries have to be "
 "reconciled."
-msgstr ""
-"ເກີດຂໍ້ຜິດພາດໃນລະຫວ່າງການຄຳນວນຄວາມປ່ຽນແປງບໍ່ໄດ້. ທຸກລາຍການຕ້ອງໄດ້ຮັບການຈັບຄູ່."
+msgstr "ເກີດຂໍ້ຜິດພາດໃນລະຫວ່າງການຄຳນວນຄວາມປ່ຽນແປງບໍ່ໄດ້. ທຸກລາຍການຕ້ອງໄດ້ຮັບການຈັບຄູ່."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2983,8 +2982,8 @@ msgid ""
 "in accordance with its journal sequence. This lock date is irreversible and "
 "does not allow any exception."
 msgstr ""
-"ທຸກລາຍການຈົນເຖິງວັນທີນີ້ ຈະຖືກເລື່ອນໄປເວລາຫຼັງ ຕາມລຳດັບຂອງປຶ້ມບັນຊີ. ວັນທີລັອກນີ້ບໍ່ສາມາດປ່ຽນແປງໄດ້ ແລ"
-"ະ ບໍ່ມີຂໍ້ຍົກເວັ້ນ."
+"ທຸກລາຍການຈົນເຖິງວັນທີນີ້ ຈະຖືກເລື່ອນໄປເວລາຫຼັງ ຕາມລຳດັບຂອງປຶ້ມບັນຊີ. ວັນທີລັອກນີ້ບໍ່ສາມາດປ່ຽນແປງໄດ້ "
+"ແລະ ບໍ່ມີຂໍ້ຍົກເວັ້ນ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__fiscalyear_lock_date
@@ -3000,8 +2999,8 @@ msgid ""
 "later time, in accordance with its journal's sequence. The tax lock date is "
 "automatically set when the tax closing entry is posted."
 msgstr ""
-"ທຸກລາຍການທີ່ມີພາສີຈົນເຖິງວັນທີນີ້ ຈະຖືກເລື່ອນໄປເວລາຫຼັງ ຕາມລຳດັບຂອງປຶ້ມບັນຊີ. ວັນທີລັອກພາສີຈະຖືກຕັ້ງອັດຕະໂ"
-"ນມັດເມື່ອມີການລົງລາຍການປິດພາສີ."
+"ທຸກລາຍການທີ່ມີພາສີຈົນເຖິງວັນທີນີ້ ຈະຖືກເລື່ອນໄປເວລາຫຼັງ ຕາມລຳດັບຂອງປຶ້ມບັນຊີ. "
+"ວັນທີລັອກພາສີຈະຖືກຕັ້ງອັດຕະໂນມັດເມື່ອມີການລົງລາຍການປິດພາສີ."
 
 #. module: account
 #. odoo-python
@@ -3022,16 +3021,14 @@ msgstr "ທຸກລາຍການບັນຊີໃນບັນຊີລູກ
 msgid ""
 "Any purchase entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
-msgstr ""
-"ທຸກລາຍການຊື້ກ່ອນໜ້າ ແລະ ຈົນເຖິງວັນທີນີ້ ຈະຖືກເລື່ອນໄປວັນທີຫຼັງ ຕາມລຳດັບຂອງປຶ້ມບັນຊີ."
+msgstr "ທຸກລາຍການຊື້ກ່ອນໜ້າ ແລະ ຈົນເຖິງວັນທີນີ້ ຈະຖືກເລື່ອນໄປວັນທີຫຼັງ ຕາມລຳດັບຂອງປຶ້ມບັນຊີ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__sale_lock_date
 msgid ""
 "Any sales entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
-msgstr ""
-"ທຸກລາຍການຂາຍກ່ອນໜ້າ ແລະ ຈົນເຖິງວັນທີນີ້ ຈະຖືກເລື່ອນໄປວັນທີຫຼັງ ຕາມລຳດັບຂອງປຶ້ມບັນຊີ."
+msgstr "ທຸກລາຍການຂາຍກ່ອນໜ້າ ແລະ ຈົນເຖິງວັນທີນີ້ ຈະຖືກເລື່ອນໄປວັນທີຫຼັງ ຕາມລຳດັບຂອງປຶ້ມບັນຊີ."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__applicability
@@ -3047,8 +3044,7 @@ msgstr "ນຳໃຊ້"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Apply VAT of the EU country to which goods and services are delivered."
-msgstr ""
-"ນຳໃຊ້ພາສີມູນຄ່າເພີ່ມ (VAT) ຂອງປະເທດໃນ EU ທີ່ສິນຄ້າ ແລະ ບໍລິການຖືກຈັດສົ່ງໄປໃຫ້."
+msgstr "ນຳໃຊ້ພາສີມູນຄ່າເພີ່ມ (VAT) ຂອງປະເທດໃນ EU ທີ່ສິນຄ້າ ແລະ ບໍລິການຖືກຈັດສົ່ງໄປໃຫ້."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__country_group_id
@@ -3070,8 +3066,7 @@ msgstr "ນຳໃຊ້ສະເພາະຖ້າຄູ່ຄ້າມີເລ
 msgid ""
 "Apply tax & account mappings on invoices automatically if the matching "
 "criterias (VAT/Country) are met."
-msgstr ""
-"ນຳໃຊ້ການຈັບຄູ່ພາສີ ແລະ ບັນຊີໃນໃບແຈ້ງໜີ້ອັດຕະໂນມັດ ຖ້າເງື່ອນໄຂ (ພາສີ/ປະເທດ) ກົງກັນ."
+msgstr "ນຳໃຊ້ການຈັບຄູ່ພາສີ ແລະ ບັນຊີໃນໃບແຈ້ງໜີ້ອັດຕະໂນມັດ ຖ້າເງື່ອນໄຂ (ພາສີ/ປະເທດ) ກົງກັນ."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__4
@@ -3478,8 +3473,8 @@ msgid ""
 "account if this is a Customer Invoice or Vendor Credit Note, otherwise a "
 "Partner bank account number."
 msgstr ""
-"ເລກບັນຊີທະນາຄານທີ່ຈະຊຳລະເງິນໃຫ້. ຈະເປັນບັນຊີທະນາຄານຂອງບໍລິສັດ ຖ້າເປັນໃບແຈ້ງໜີ້ລູກຄ້າ ຫຼື ໃບແຈ້ງຫຼຸດໜີ້ຜູ້"
-"ຂາຍ, ນອກນັ້ນຈະເປັນເລກບັນຊີທະນາຄານຂອງຄູ່ຄ້າ."
+"ເລກບັນຊີທະນາຄານທີ່ຈະຊຳລະເງິນໃຫ້. ຈະເປັນບັນຊີທະນາຄານຂອງບໍລິສັດ ຖ້າເປັນໃບແຈ້ງໜີ້ລູກຄ້າ ຫຼື "
+"ໃບແຈ້ງຫຼຸດໜີ້ຜູ້ຂາຍ, ນອກນັ້ນຈະເປັນເລກບັນຊີທະນາຄານຂອງຄູ່ຄ້າ."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_supplier_accounts
@@ -3617,8 +3612,8 @@ msgid ""
 "Bank statements transactions will be posted on the suspense account until "
 "the final reconciliation allowing finding the right account."
 msgstr ""
-"ທຸລະກຳໃນໃບລາຍງານທະນາຄານຈະຖືກລົງໃນບັນຊີພັກ ຈົນກວ່າການສົມທຽບຂັ້ນສຸດທ້າຍຈະສຳເລັດເພື່ອຊອກຫາບັນຊີທີ່ຖືກ"
-"ຕ້ອງ."
+"ທຸລະກຳໃນໃບລາຍງານທະນາຄານຈະຖືກລົງໃນບັນຊີພັກ "
+"ຈົນກວ່າການສົມທຽບຂັ້ນສຸດທ້າຍຈະສຳເລັດເພື່ອຊອກຫາບັນຊີທີ່ຖືກຕ້ອງ."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3720,8 +3715,7 @@ msgstr "ການຊຳລະແບບກຸ່ມ"
 msgid ""
 "Batch invoice sending is unavailable. Please, activate the cron to enable "
 "batch sending of invoices."
-msgstr ""
-"ການສົ່ງໃບແຈ້ງໜີ້ເປັນຊຸດບໍ່ສາມາດໃຊ້ງານໄດ້. ກະລຸນາເປີດໃຊ້ cron ເພື່ອເປີດການສົ່ງໃບແຈ້ງໜີ້ເປັນຊຸດ."
+msgstr "ການສົ່ງໃບແຈ້ງໜີ້ເປັນຊຸດບໍ່ສາມາດໃຊ້ງານໄດ້. ກະລຸນາເປີດໃຊ້ cron ເພື່ອເປີດການສົ່ງໃບແຈ້ງໜີ້ເປັນຊຸດ."
 
 #. module: account
 #. odoo-python
@@ -3729,8 +3723,7 @@ msgstr ""
 msgid ""
 "Batch invoice sending is unavailable. Please, contact your system "
 "administrator to activate the cron to enable batch sending of invoices."
-msgstr ""
-"ການສົ່ງໃບແຈ້ງໜີ້ເປັນຊຸດບໍ່ສາມາດໃຊ້ງານໄດ້. ກະລຸນາຕິດຕໍ່ຜູ້ເບິ່ງແຍງລະບົບຂອງທ່ານເພື່ອເປີດໃຊ້ cron."
+msgstr "ການສົ່ງໃບແຈ້ງໜີ້ເປັນຊຸດບໍ່ສາມາດໃຊ້ງານໄດ້. ກະລຸນາຕິດຕໍ່ຜູ້ເບິ່ງແຍງລະບົບຂອງທ່ານເພື່ອເປີດໃຊ້ cron."
 
 #. module: account
 #. odoo-javascript
@@ -3891,23 +3884,21 @@ msgid ""
 "By default, we always unfold the lines that can be. If this is checked, the "
 "line won't be unfolded by default, and a folding button will be displayed."
 msgstr ""
-"ຕາມຄ່າເລີ່ມຕົ້ນ, ພວກເຮົາຈະຂະຫຍາຍສາຍທີ່ສາມາດຂະຫຍາຍໄດ້ສະເໝີ. ຖ້າເລືອກອັນນີ້, ສາຍຈະບໍ່ຖືກຂະຫຍາຍຕາມ"
-"ຄ່າເລີ່ມຕົ້ນ ແລະ ຈະສະແດງປຸ່ມຫຍໍ້ເຂົ້າ."
+"ຕາມຄ່າເລີ່ມຕົ້ນ, ພວກເຮົາຈະຂະຫຍາຍສາຍທີ່ສາມາດຂະຫຍາຍໄດ້ສະເໝີ. ຖ້າເລືອກອັນນີ້, "
+"ສາຍຈະບໍ່ຖືກຂະຫຍາຍຕາມຄ່າເລີ່ມຕົ້ນ ແລະ ຈະສະແດງປຸ່ມຫຍໍ້ເຂົ້າ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__active
 msgid ""
 "By unchecking the active field, you may hide a fiscal position without "
 "deleting it."
-msgstr ""
-"ໂດຍການບໍ່ເລືອກຊ່ອງທີ່ເຮັດວຽກຢູ່, ທ່ານສາມາດເຊື່ອງສະຖານະທາງການເງິນໄດ້ໂດຍບໍ່ຕ້ອງລຶບມັນ."
+msgstr "ໂດຍການບໍ່ເລືອກຊ່ອງທີ່ເຮັດວຽກຢູ່, ທ່ານສາມາດເຊື່ອງສະຖານະທາງການເງິນໄດ້ໂດຍບໍ່ຕ້ອງລຶບມັນ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_incoterms__active
 msgid ""
 "By unchecking the active field, you may hide an INCOTERM you will not use."
-msgstr ""
-"ໂດຍການບໍ່ເລືອກຊ່ອງທີ່ເຮັດວຽກຢູ່, ທ່ານສາມາດເຊື່ອງ INCOTERM ທີ່ທ່ານຈະບໍ່ໃຊ້ໄດ້."
+msgstr "ໂດຍການບໍ່ເລືອກຊ່ອງທີ່ເຮັດວຽກຢູ່, ທ່ານສາມາດເຊື່ອງ INCOTERM ທີ່ທ່ານຈະບໍ່ໃຊ້ໄດ້."
 
 #. module: account
 #. odoo-python
@@ -4033,8 +4024,7 @@ msgstr "ບໍ່ສາມາດສ້າງເອກະສານການຂາ
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Cannot create an accrual entry with orders in different currencies."
-msgstr ""
-"ບໍ່ສາມາດສ້າງລາຍການຄ້າງຮັບ-ຄ້າງຈ່າຍ ດ້ວຍໃບສັ່ງຊື້/ຂາຍ ທີ່ມີຫຼາຍສະກຸນເງິນແຕກຕ່າງກັນ."
+msgstr "ບໍ່ສາມາດສ້າງລາຍການຄ້າງຮັບ-ຄ້າງຈ່າຍ ດ້ວຍໃບສັ່ງຊື້/ຂາຍ ທີ່ມີຫຼາຍສະກຸນເງິນແຕກຕ່າງກັນ."
 
 #. module: account
 #. odoo-python
@@ -4042,8 +4032,7 @@ msgstr ""
 msgid ""
 "Cannot find a chart of accounts for this company, You should configure it. \n"
 "Please go to Account Configuration."
-msgstr ""
-"ບໍ່ພົບຜັງບັນຊີສຳລັບບໍລິສັດນີ້, ທ່ານຄວນຕັ້ງຄ່າມັນກ່ອນ. ກະລຸນາໄປທີ່ການຕັ້ງຄ່າບັນຊີ."
+msgstr "ບໍ່ພົບຜັງບັນຊີສຳລັບບໍລິສັດນີ້, ທ່ານຄວນຕັ້ງຄ່າມັນກ່ອນ. ກະລຸນາໄປທີ່ການຕັ້ງຄ່າບັນຊີ."
 
 #. module: account
 #. odoo-python
@@ -4057,8 +4046,7 @@ msgstr "ບໍ່ສາມາດສ້າງລະຫັດບັນຊີທີ
 msgid ""
 "Cannot generate an unused journal code. Please change the name for journal "
 "%s."
-msgstr ""
-"ບໍ່ສາມາດສ້າງລະຫັດປຶ້ມບັນຊີທີ່ບໍ່ເຄີຍໃຊ້ໄດ້. ກະລຸນາປ່ຽນຊື່ສຳລັບປຶ້ມບັນຊີ %s."
+msgstr "ບໍ່ສາມາດສ້າງລະຫັດປຶ້ມບັນຊີທີ່ບໍ່ເຄີຍໃຊ້ໄດ້. ກະລຸນາປ່ຽນຊື່ສຳລັບປຶ້ມບັນຊີ %s."
 
 #. module: account
 #. odoo-python
@@ -4084,8 +4072,7 @@ msgstr "ທຶນ"
 msgid ""
 "Capture invoices, register payments and keep track of the discussions with "
 "your vendors."
-msgstr ""
-"ບັນທຶກໃບແຈ້ງໜີ້, ລົງທະບຽນການຊຳລະເງິນ ແລະ ຕິດຕາມການສົນທະນາກັບຜູ້ຈຳໜ່າຍຂອງທ່ານ."
+msgstr "ບັນທຶກໃບແຈ້ງໜີ້, ລົງທະບຽນການຊຳລະເງິນ ແລະ ຕິດຕາມການສົນທະນາກັບຜູ້ຈຳໜ່າຍຂອງທ່ານ."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__carryover_target
@@ -4263,8 +4250,8 @@ msgid ""
 "accordance with their internal legislation. Any withholding at source will "
 "be paid by the client to the tax authorities. Under no circumstances can"
 msgstr ""
-"ບາງປະເທດນຳໃຊ້ການຫັກພາສີ ນະ ທີ່ຈ່າຍ ຈາກມູນຄ່າໃບແຈ້ງໜີ້ ຕາມກົດໝາຍພາຍໃນຂອງພວກເຂົາ. ການຫັກພາສີ ນ"
-"ະ ທີ່ຈ່າຍ ຈະຖືກຊຳລະໂດຍລູກຄ້າໃຫ້ກັບອົງການຈັດເກັບພາສີ"
+"ບາງປະເທດນຳໃຊ້ການຫັກພາສີ ນະ ທີ່ຈ່າຍ ຈາກມູນຄ່າໃບແຈ້ງໜີ້ ຕາມກົດໝາຍພາຍໃນຂອງພວກເຂົາ. ການຫັກພາສີ "
+"ນະ ທີ່ຈ່າຍ ຈະຖືກຊຳລະໂດຍລູກຄ້າໃຫ້ກັບອົງການຈັດເກັບພາສີ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__chains_to_hash_with_gaps
@@ -4300,8 +4287,8 @@ msgid ""
 "Changing VAT number is not allowed once invoices have been issued for your "
 "account. Please contact us directly for this operation."
 msgstr ""
-"ບໍ່ອະນຸຍາດໃຫ້ປ່ຽນເລກປະຈຳຕົວຜູ້ເສຍພາສີ ຫຼັງຈາກໃບແຈ້ງໜີ້ຖືກອອກໃຫ້ບັນຊີຂອງທ່ານແລ້ວ. ກະລຸນາຕິດຕໍ່ພວກເຮົາໂດ"
-"ຍກົງ."
+"ບໍ່ອະນຸຍາດໃຫ້ປ່ຽນເລກປະຈຳຕົວຜູ້ເສຍພາສີ ຫຼັງຈາກໃບແຈ້ງໜີ້ຖືກອອກໃຫ້ບັນຊີຂອງທ່ານແລ້ວ. "
+"ກະລຸນາຕິດຕໍ່ພວກເຮົາໂດຍກົງ."
 
 #. module: account
 #. odoo-python
@@ -4381,8 +4368,7 @@ msgstr "ກວດສອບພວກມັນ"
 msgid ""
 "Check this box if this account allows invoices & payments matching of "
 "journal items."
-msgstr ""
-"ເລືອກຫ້ອງນີ້ ຖ້າບັນຊີນີ້ອະນຸຍາດໃຫ້ຈັບຄູ່ໃບແຈ້ງໜີ້ ແລະ ການຊຳລະເງິນຂອງລາຍການບັນຊີ."
+msgstr "ເລືອກຫ້ອງນີ້ ຖ້າບັນຊີນີ້ອະນຸຍາດໃຫ້ຈັບຄູ່ໃບແຈ້ງໜີ້ ແລະ ການຊຳລະເງິນຂອງລາຍການບັນຊີ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__refund_sequence
@@ -4405,8 +4391,7 @@ msgstr ""
 msgid ""
 "Check this box to negate the absolute value of the balance of the lines "
 "associated with this tag in tax report computation."
-msgstr ""
-"ເລືອກຫ້ອງນີ້ເພື່ອໃຊ້ຄ່າລົບສຳລັບຄ່າສຳບູນຂອງຍອດຄົງເຫຼືອຂອງສາຍທີ່ກ່ຽວຂ້ອງກັບແທັກນີ້ໃນການຄິດໄລ່ລາຍງານພາສີ."
+msgstr "ເລືອກຫ້ອງນີ້ເພື່ອໃຊ້ຄ່າລົບສຳລັບຄ່າສຳບູນຂອງຍອດຄົງເຫຼືອຂອງສາຍທີ່ກ່ຽວຂ້ອງກັບແທັກນີ້ໃນການຄິດໄລ່ລາຍງານພາສີ."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -4544,8 +4529,8 @@ msgid ""
 "Comma-separated list of fields from account.move.line (Journal Item). When "
 "set, this line will generate sublines grouped by those keys."
 msgstr ""
-"ລາຍຊື່ຟີວຈາກ account.move.line (ລາຍການບັນຊີ) ແຍກດ້ວຍຈຸດ. ເມື່ອຕັ້ງຄ່າແລ້ວ, ສາຍນີ້ຈະສ້າງສາຍຍ່ອຍ"
-"ທີ່ຈັດກຸ່ມຕາມຄີເຫຼົ່ານັ້ນ."
+"ລາຍຊື່ຟີວຈາກ account.move.line (ລາຍການບັນຊີ) ແຍກດ້ວຍຈຸດ. ເມື່ອຕັ້ງຄ່າແລ້ວ, "
+"ສາຍນີ້ຈະສ້າງສາຍຍ່ອຍທີ່ຈັດກຸ່ມຕາມຄີເຫຼົ່ານັ້ນ."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__commercial_partner_id
@@ -5082,8 +5067,7 @@ msgstr "ສ້າງກຸ່ມພາສີໃໝ່"
 msgid ""
 "Create a structured report with multiple sections for convenient navigation "
 "and simultaneous printing."
-msgstr ""
-"ສ້າງໃບລາຍງານທີ່ມີໂຄງສ້າງຫຼາຍພາກສ່ວນ ເພື່ອຄວາມສະດວກໃນການເຂົ້າເບິ່ງ ແລະ ການພິມພ້ອມກັນ."
+msgstr "ສ້າງໃບລາຍງານທີ່ມີໂຄງສ້າງຫຼາຍພາກສ່ວນ ເພື່ອຄວາມສະດວກໃນການເຂົ້າເບິ່ງ ແລະ ການພິມພ້ອມກັນ."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice
@@ -5104,8 +5088,8 @@ msgid ""
 "                    adjustments, ensuring compliance with diverse "
 "regulations."
 msgstr ""
-"ສ້າງກຸ່ມບັນຊີແຍກປະເພດໄດ້ຕາມຕ້ອງການ ເພື່ອແຍກບັນຊີສຳລັບ GAAP ທ້ອງຖິ່ນ, IFRS ຫຼື ການປັບປຸງທາງດ້ານພາ"
-"ສີ\n"
+"ສ້າງກຸ່ມບັນຊີແຍກປະເພດໄດ້ຕາມຕ້ອງການ ເພື່ອແຍກບັນຊີສຳລັບ GAAP ທ້ອງຖິ່ນ, IFRS ຫຼື "
+"ການປັບປຸງທາງດ້ານພາສີ\n"
 "                    ເພື່ອຮັບປະກັນຄວາມສອດຄ່ອງກັບລະບຽບການຕ່າງໆ."
 
 #. module: account
@@ -5132,8 +5116,7 @@ msgstr "ສ້າງໃບແຈ້ງໜີ້/ໃບເກັບເງິນ"
 msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your customers."
-msgstr ""
-"ສ້າງໃບແຈ້ງໜີ້, ລົງທະບຽນການຊຳລະເງິນ ແລະ ຕິດຕາມການສົນທະນາກັບລູກຄ້າຂອງທ່ານ."
+msgstr "ສ້າງໃບແຈ້ງໜີ້, ລົງທະບຽນການຊຳລະເງິນ ແລະ ຕິດຕາມການສົນທະນາກັບລູກຄ້າຂອງທ່ານ."
 
 #. module: account
 #. odoo-javascript
@@ -5737,8 +5720,8 @@ msgid ""
 "Date (inclusive) to which the numbers are resequenced. If not set, all "
 "Journal Entries up to the end of the period are resequenced."
 msgstr ""
-"ວັນທີ (ລວມທັງໝົດ) ທີ່ສິ້ນສຸດການຈັດລໍາດັບເລກຄືນໃໝ່. ຖ້າບໍ່ໄດ້ກໍານົດ, ລາຍການບັນຊີປະຈໍາວັນທັງໝົດຈົນຮອດທ້າຍງວ"
-"ດຈະຖືກຈັດລໍາດັບໃໝ່."
+"ວັນທີ (ລວມທັງໝົດ) ທີ່ສິ້ນສຸດການຈັດລໍາດັບເລກຄືນໃໝ່. ຖ້າບໍ່ໄດ້ກໍານົດ, "
+"ລາຍການບັນຊີປະຈໍາວັນທັງໝົດຈົນຮອດທ້າຍງວດຈະຖືກຈັດລໍາດັບໃໝ່."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_date_range
@@ -5983,8 +5966,7 @@ msgstr "ເງື່ອນໄຂການຄ້າເລີ່ມຕົ້ນ"
 msgid ""
 "Default on whether the sales price used on the product and invoices with "
 "this Company includes its taxes."
-msgstr ""
-"ຕັ້ງຄ່າເລີ່ມຕົ້ນວ່າ ລາຄາຂາຍທີ່ໃຊ້ໃນສິນຄ້າ ແລະ ໃບແຈ້ງໜີ້ຂອງບໍລິສັດນີ້ ລວມພາສີແລ້ວ ຫຼື ບໍ່."
+msgstr "ຕັ້ງຄ່າເລີ່ມຕົ້ນວ່າ ລາຄາຂາຍທີ່ໃຊ້ໃນສິນຄ້າ ແລະ ໃບແຈ້ງໜີ້ຂອງບໍລິສັດນີ້ ລວມພາສີແລ້ວ ຫຼື ບໍ່."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6019,8 +6001,7 @@ msgstr "ລາຍຮັບລໍຖ້າຮັບຮູ້"
 msgid ""
 "Define in which journals this account can be used. If empty, can be used in "
 "all journals."
-msgstr ""
-"ກໍານົດວ່າບັນຊີນີ້ສາມາດໃຊ້ໃນປຶ້ມບັນຊີໃດແດ່. ຖ້າຫວ່າງໄວ້, ຈະສາມາດໃຊ້ໄດ້ໃນທຸກປຶ້ມບັນຊີ."
+msgstr "ກໍານົດວ່າບັນຊີນີ້ສາມາດໃຊ້ໃນປຶ້ມບັນຊີໃດແດ່. ຖ້າຫວ່າງໄວ້, ຈະສາມາດໃຊ້ໄດ້ໃນທຸກປຶ້ມບັນຊີ."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6033,8 +6014,8 @@ msgid ""
 "Define which company can select the multi-ledger in report filters. If none "
 "is provided, available for all companies"
 msgstr ""
-"ກຳນົດບໍລິສັດທີ່ສາມາດເລືອກບັນຊີແຍກປະເພດຫຼາຍອັນໃນຕົວກອງໃບລາຍງານ. ຫາກບໍ່ມີການກຳນົດ, ຈະສາມາດໃຊ້ໄດ້ກັ"
-"ບທຸກບໍລິສັດ"
+"ກຳນົດບໍລິສັດທີ່ສາມາດເລືອກບັນຊີແຍກປະເພດຫຼາຍອັນໃນຕົວກອງໃບລາຍງານ. ຫາກບໍ່ມີການກຳນົດ, "
+"ຈະສາມາດໃຊ້ໄດ້ກັບທຸກບໍລິສັດ"
 
 #. module: account
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_fiscal_year
@@ -6136,8 +6117,7 @@ msgstr "ຄຳອະທິບາຍ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "Description on invoice (e.g. Payment terms: 30 days after invoice date)"
-msgstr ""
-"ຄຳອະທິບາຍໃນໃບແຈ້ງໜີ້ (ຕົວຢ່າງ: ເງື່ອນໄຂການຊຳລະ: 30 ວັນ ຫຼັງຈາກວັນທີໃບແຈ້ງໜີ້)"
+msgstr "ຄຳອະທິບາຍໃນໃບແຈ້ງໜີ້ (ຕົວຢ່າງ: ເງື່ອນໄຂການຊຳລະ: 30 ວັນ ຫຼັງຈາກວັນທີໃບແຈ້ງໜີ້)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__note
@@ -6163,8 +6143,8 @@ msgid ""
 "used by itself, however it can still be used in a group. 'adjustment' is "
 "used to perform tax adjustment."
 msgstr ""
-"ກໍານົດບ່ອນທີ່ສາມາດເລືອກພາສີໄດ້. ໝາຍເຫດ: 'ບໍ່ມີ' ໝາຍຄວາມວ່າພາສີບໍ່ສາມາດໃຊ້ດ້ວຍຕົວມັນເອງໄດ້, ແຕ່ຍັງສາ"
-"ມາດໃຊ້ໃນກຸ່ມໄດ້. 'ການປັບປຸງ' ແມ່ນໃຊ້ເພື່ອດໍາເນີນການປັບປຸງພາສີ."
+"ກໍານົດບ່ອນທີ່ສາມາດເລືອກພາສີໄດ້. ໝາຍເຫດ: 'ບໍ່ມີ' ໝາຍຄວາມວ່າພາສີບໍ່ສາມາດໃຊ້ດ້ວຍຕົວມັນເອງໄດ້, "
+"ແຕ່ຍັງສາມາດໃຊ້ໃນກຸ່ມໄດ້. 'ການປັບປຸງ' ແມ່ນໃຊ້ເພື່ອດໍາເນີນການປັບປຸງພາສີ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__price_include
@@ -6198,8 +6178,7 @@ msgstr "ການແປງເປັນຂໍ້ມູນດິຈິຕອນ"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Digitize your PDF or scanned documents with OCR and Artificial Intelligence"
-msgstr ""
-"ແປງໄຟລ໌ PDF ຫຼື ເອກະສານທີ່ສະແກນຂອງທ່ານໃຫ້ເປັນດິຈິຕອນດ້ວຍ OCR ແລະ ປັນຍາປະດິດ (AI)"
+msgstr "ແປງໄຟລ໌ PDF ຫຼື ເອກະສານທີ່ສະແກນຂອງທ່ານໃຫ້ເປັນດິຈິຕອນດ້ວຍ OCR ແລະ ປັນຍາປະດິດ (AI)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__direction_sign
@@ -6825,8 +6804,7 @@ msgstr "ສ່ວນຫຼຸດການຊຳລະກ່ອນກຳນົດ
 #: code:addons/account/models/account_payment_term.py:0
 msgid ""
 "Early Payment Discount: <b>%(amount)s</b> if paid before <b>%(date)s</b>"
-msgstr ""
-"ສ່ວນຫຼຸດການຊຳລະເງິນກ່ອນກຳນົດ: <b>%(amount)s</b> ຖ້າຊຳລະກ່ອນ <b>%(date)s</b>"
+msgstr "ສ່ວນຫຼຸດການຊຳລະເງິນກ່ອນກຳນົດ: <b>%(amount)s</b> ຖ້າຊຳລະກ່ອນ <b>%(date)s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6977,8 +6955,7 @@ msgstr "ລາຍການບໍ່ໄດ້ຂຶ້ນກັບບໍລິສ
 msgid ""
 "Entries in the future are set to be auto-posted by default. Check this "
 "checkbox to post them now."
-msgstr ""
-"ລາຍການໃນອະນາຄົດຖືກຕັ້ງໃຫ້ລົງບັນຊີອັດຕະໂນມັດເປັນຄ່າເລີ່ມຕົ້ນ. ໝາຍເອົາຫ້ອງນີ້ເພື່ອລົງບັນຊີດຽວນີ້."
+msgstr "ລາຍການໃນອະນາຄົດຖືກຕັ້ງໃຫ້ລົງບັນຊີອັດຕະໂນມັດເປັນຄ່າເລີ່ມຕົ້ນ. ໝາຍເອົາຫ້ອງນີ້ເພື່ອລົງບັນຊີດຽວນີ້."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -7055,8 +7032,7 @@ msgstr "ເອີຣົບ"
 msgid ""
 "Every character that is nor a digit nor this separator will be removed from "
 "the matching string"
-msgstr ""
-"ທຸກຕົວອັກສອນທີ່ບໍ່ແມ່ນຕົວເລກ ຫຼື ຕົວແຍກນີ້ ຈະຖືກເອົາອອກຈາກຂໍ້ຄວາມທີ່ກົງກັນ"
+msgstr "ທຸກຕົວອັກສອນທີ່ບໍ່ແມ່ນຕົວເລກ ຫຼື ຕົວແຍກນີ້ ຈະຖືກເອົາອອກຈາກຂໍ້ຄວາມທີ່ກົງກັນ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__example_amount
@@ -7242,8 +7218,7 @@ msgstr "ປັດໄຈທີ່ຈະໃຊ້ກັບລາຍການເຄ
 msgid ""
 "Factor to apply on the account move lines generated from this distribution "
 "line, in percents"
-msgstr ""
-"ປັດໄຈທີ່ຈະໃຊ້ກັບລາຍການເຄື່ອນໄຫວບັນຊີທີ່ສ້າງຂຶ້ນຈາກສາຍການແບ່ງສ່ວນນີ້, ເປັນເປີເຊັນ"
+msgstr "ປັດໄຈທີ່ຈະໃຊ້ກັບລາຍການເຄື່ອນໄຫວບັນຊີທີ່ສ້າງຂຶ້ນຈາກສາຍການແບ່ງສ່ວນນີ້, ເປັນເປີເຊັນ"
 
 #. module: account
 #. odoo-python
@@ -7444,8 +7419,8 @@ msgid ""
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
 msgstr ""
-"ສະຖານະທາງພາສີຖືກໃຊ້ເພື່ອປັບປ່ຽນພາສີ ແລະ ບັນຊີສຳລັບລູກຄ້າສະເພາະ ຫຼື ໃບສັ່ງຊື້/ໃບແຈ້ງໜີ້. ຄ່າເລີ່ມຕົ້ນແມ່ນມ"
-"າຈາກລູກຄ້າ."
+"ສະຖານະທາງພາສີຖືກໃຊ້ເພື່ອປັບປ່ຽນພາສີ ແລະ ບັນຊີສຳລັບລູກຄ້າສະເພາະ ຫຼື ໃບສັ່ງຊື້/ໃບແຈ້ງໜີ້. "
+"ຄ່າເລີ່ມຕົ້ນແມ່ນມາຈາກລູກຄ້າ."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__fiscalyear_last_day
@@ -7549,8 +7524,7 @@ msgstr "ສຳລັບຄຳຖາມອື່ນໆ, ກະລຸນາຂຽ�
 #: model_terms:ir.ui.view,arch_db:account.email_template_mail_gateway_failed
 msgid ""
 "For new invoices, please ensure a PDF or electronic invoice file is attached"
-msgstr ""
-"ສຳລັບໃບແຈ້ງໜີ້ໃໝ່, ກະລຸນາກວດສອບໃຫ້ແນ່ໃຈວ່າໄດ້ຄັດຕິດໄຟລ໌ PDF ຫຼື ໃບແຈ້ງໜີ້ເອເລັກໂຕຣນິກແລ້ວ"
+msgstr "ສຳລັບໃບແຈ້ງໜີ້ໃໝ່, ກະລຸນາກວດສອບໃຫ້ແນ່ໃຈວ່າໄດ້ຄັດຕິດໄຟລ໌ PDF ຫຼື ໃບແຈ້ງໜີ້ເອເລັກໂຕຣນິກແລ້ວ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value_amount
@@ -7584,8 +7558,8 @@ msgid ""
 "Forces all journal items in this account to have a specific currency (i.e. "
 "bank journals). If no currency is set, entries can use any currency."
 msgstr ""
-"ບັງຄັບໃຫ້ທຸກລາຍການບັນຊີໃນບັນຊີນີ້ມີສະກຸນເງິນສະເພາະ (ເຊັ່ນ: ປຶ້ມບັນຊີທະນາຄານ). ຖ້າບໍ່ມີການກຳນົດສະກຸນເງິ"
-"ນ, ລາຍການສາມາດໃຊ້ສະກຸນເງິນໃດກໍໄດ້."
+"ບັງຄັບໃຫ້ທຸກລາຍການບັນຊີໃນບັນຊີນີ້ມີສະກຸນເງິນສະເພາະ (ເຊັ່ນ: ປຶ້ມບັນຊີທະນາຄານ). "
+"ຖ້າບໍ່ມີການກຳນົດສະກຸນເງິນ, ລາຍການສາມາດໃຊ້ສະກຸນເງິນໃດກໍໄດ້."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__foreign_currency_id
@@ -7718,8 +7692,9 @@ msgid ""
 "vendors. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
-"ຈາກລາຍງານນີ້, ທ່ານສາມາດມີພາບລວມຂອງຈຳນວນເງິນທີ່ໄດ້ຮັບໃບແຈ້ງໜີ້ຈາກຜູ້ສະໜອງຂອງທ່ານ. ເຄື່ອງມືຄົ້ນຫາສາ"
-"ມາດຖືກນຳໃຊ້ເພື່ອປັບແຕ່ງລາຍງານໃບແຈ້ງໜີ້ຂອງທ່ານ ແລະ ປັບການວິເຄາະນີ້ໃຫ້ເຂົ້າກັບຄວາມຕ້ອງການຂອງທ່ານ."
+"ຈາກລາຍງານນີ້, ທ່ານສາມາດມີພາບລວມຂອງຈຳນວນເງິນທີ່ໄດ້ຮັບໃບແຈ້ງໜີ້ຈາກຜູ້ສະໜອງຂອງທ່ານ. "
+"ເຄື່ອງມືຄົ້ນຫາສາມາດຖືກນຳໃຊ້ເພື່ອປັບແຕ່ງລາຍງານໃບແຈ້ງໜີ້ຂອງທ່ານ ແລະ "
+"ປັບການວິເຄາະນີ້ໃຫ້ເຂົ້າກັບຄວາມຕ້ອງການຂອງທ່ານ."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_invoice_report_all
@@ -7728,8 +7703,9 @@ msgid ""
 "customers. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
-"ຈາກລາຍງານນີ້, ທ່ານສາມາດມີພາບລວມຂອງຈຳນວນເງິນທີ່ໄດ້ອອກໃບແຈ້ງໜີ້ໃຫ້ລູກຄ້າຂອງທ່ານ. ເຄື່ອງມືຄົ້ນຫາສາມາ"
-"ດຖືກນຳໃຊ້ເພື່ອປັບແຕ່ງລາຍງານໃບແຈ້ງໜີ້ຂອງທ່ານ ແລະ ປັບການວິເຄາະນີ້ໃຫ້ເຂົ້າກັບຄວາມຕ້ອງການຂອງທ່ານ."
+"ຈາກລາຍງານນີ້, ທ່ານສາມາດມີພາບລວມຂອງຈຳນວນເງິນທີ່ໄດ້ອອກໃບແຈ້ງໜີ້ໃຫ້ລູກຄ້າຂອງທ່ານ. "
+"ເຄື່ອງມືຄົ້ນຫາສາມາດຖືກນຳໃຊ້ເພື່ອປັບແຕ່ງລາຍງານໃບແຈ້ງໜີ້ຂອງທ່ານ ແລະ "
+"ປັບການວິເຄາະນີ້ໃຫ້ເຂົ້າກັບຄວາມຕ້ອງການຂອງທ່ານ."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__installments_mode__full
@@ -8043,8 +8019,8 @@ msgid ""
 "date are secured. Only journal entries after the hard lock date are "
 "considered."
 msgstr ""
-"ວັນທີສູງສຸດທີ່ທຸກລາຍການບັນຊີທີ່ລົງບັນຊີແລ້ວກ່ອນ (ລວມທັງ) ວັນທີນີ້ ຖືກປົກປ້ອງແລ້ວ. ຈະພິຈາລະນາສະເພາະລາຍກາ"
-"ນບັນຊີຫຼັງວັນທີລັອກຖາວອນເທົ່ານັ້ນ."
+"ວັນທີສູງສຸດທີ່ທຸກລາຍການບັນຊີທີ່ລົງບັນຊີແລ້ວກ່ອນ (ລວມທັງ) ວັນທີນີ້ ຖືກປົກປ້ອງແລ້ວ. "
+"ຈະພິຈາລະນາສະເພາະລາຍການບັນຊີຫຼັງວັນທີລັອກຖາວອນເທົ່ານັ້ນ."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__highest_name
@@ -8172,16 +8148,14 @@ msgstr "ຮູບສັນຍະລັກເພື່ອບົ່ງບອກກ
 msgid ""
 "If a payment is still outstanding more than sixty (60) days after the due "
 "payment date,"
-msgstr ""
-"ຖ້າການຊຳລະເງິນຍັງຄ້າງຈ່າຍເກີນກວ່າຫົກສິບ (60) ວັນ ຫຼັງຈາກວັນຄົບກຳນົດຊຳລະ,"
+msgstr "ຖ້າການຊຳລະເງິນຍັງຄ້າງຈ່າຍເກີນກວ່າຫົກສິບ (60) ວັນ ຫຼັງຈາກວັນຄົບກຳນົດຊຳລະ,"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report__filter_aml_ir_filters
 msgid ""
 "If activated, user-defined filters on journal items can be selected on this "
 "report"
-msgstr ""
-"ຫາກເປີດໃຊ້, ຕົວກອງທີ່ຜູ້ໃຊ້ກຳນົດເອງໃນລາຍການບັນຊີ ຈະສາມາດເລືອກໄດ້ໃນໃບລາຍງານນີ້"
+msgstr "ຫາກເປີດໃຊ້, ຕົວກອງທີ່ຜູ້ໃຊ້ກຳນົດເອງໃນລາຍການບັນຊີ ຈະສາມາດເລືອກໄດ້ໃນໃບລາຍງານນີ້"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_needaction
@@ -8227,8 +8201,8 @@ msgid ""
 "If empty, the discount will be discounted directly on the income/expense "
 "account. If set, discount on invoices will be realized in separate accounts."
 msgstr ""
-"ຫາກປະຫວ່າງໄວ້, ສ່ວນຫຼຸດຈະຖືກຕັດໂດຍກົງໃນບັນຊີລາຍຮັບ/ລາຍຈ່າຍ. ຫາກກຳນົດໄວ້, ສ່ວນຫຼຸດໃນໃບແຈ້ງໜີ້ຈະຖືກບັ"
-"ນທຶກໃນບັນຊີແຍກຕ່າງຫາກ."
+"ຫາກປະຫວ່າງໄວ້, ສ່ວນຫຼຸດຈະຖືກຕັດໂດຍກົງໃນບັນຊີລາຍຮັບ/ລາຍຈ່າຍ. ຫາກກຳນົດໄວ້, "
+"ສ່ວນຫຼຸດໃນໃບແຈ້ງໜີ້ຈະຖືກບັນທຶກໃນບັນຊີແຍກຕ່າງຫາກ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_reversal__journal_id
@@ -8247,8 +8221,7 @@ msgstr "ຖ້າຕັ້ງໄວ້, ພາສີທີ່ມີລຳດັ�
 msgid ""
 "If set, taxes with a lower sequence might affect this one, provided they try "
 "to do it."
-msgstr ""
-"ຖ້າຕັ້ງໄວ້, ພາສີທີ່ມີລຳດັບຕ່ຳກວ່າອາດຈະສົ່ງຜົນກະທົບຕໍ່ອັນນີ້, ຖ້າພວກເຂົາພະຍາຍາມເຮັດ."
+msgstr "ຖ້າຕັ້ງໄວ້, ພາສີທີ່ມີລຳດັບຕ່ຳກວ່າອາດຈະສົ່ງຜົນກະທົບຕໍ່ອັນນີ້, ຖ້າພວກເຂົາພະຍາຍາມເຮັດ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__analytic
@@ -8281,8 +8254,8 @@ msgid ""
 "excluding this tax group before displaying it. If not set, the tax group "
 "will be displayed after the 'Untaxed amount' subtotal."
 msgstr ""
-"ຖ້າຕັ້ງໄວ້, ຄ່ານີ້ຈະຖືກໃຊ້ໃນເອກະສານເປັນປ້າຍຊື່ຂອງຍອດລວມຍ່ອຍທີ່ບໍ່ລວມກຸ່ມພາສີນີ້ ກ່ອນທີ່ຈະສະແດງຜົນ. ຖ້າບໍ່ໄດ້"
-"ຕັ້ງໄວ້, ກຸ່ມພາສີຈະຖືກສະແດງຫຼັງຈາກຍອດລວມຍ່ອຍ 'ຈຳນວນທີ່ບໍ່ລວມພາສີ'."
+"ຖ້າຕັ້ງໄວ້, ຄ່ານີ້ຈະຖືກໃຊ້ໃນເອກະສານເປັນປ້າຍຊື່ຂອງຍອດລວມຍ່ອຍທີ່ບໍ່ລວມກຸ່ມພາສີນີ້ ກ່ອນທີ່ຈະສະແດງຜົນ. "
+"ຖ້າບໍ່ໄດ້ຕັ້ງໄວ້, ກຸ່ມພາສີຈະຖືກສະແດງຫຼັງຈາກຍອດລວມຍ່ອຍ 'ຈຳນວນທີ່ບໍ່ລວມພາສີ'."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__active
@@ -8290,8 +8263,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the payment "
 "terms without removing it."
 msgstr ""
-"ຖ້າຟິວທີ່ໃຊ້ງານຢູ່ຖືກຕັ້ງເປັນ False, ມັນຈະຊ່ວຍໃຫ້ທ່ານສາມາດເຊື່ອງເງື່ອນໄຂການຊຳລະເງິນໄດ້ໂດຍບໍ່ຕ້ອງລຶບມັນອ"
-"ອກ."
+"ຖ້າຟິວທີ່ໃຊ້ງານຢູ່ຖືກຕັ້ງເປັນ False, "
+"ມັນຈະຊ່ວຍໃຫ້ທ່ານສາມາດເຊື່ອງເງື່ອນໄຂການຊຳລະເງິນໄດ້ໂດຍບໍ່ຕ້ອງລຶບມັນອອກ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__checked
@@ -8301,8 +8274,8 @@ msgid ""
 "the related information at the time of the creation of the move and that the "
 "move needs to be checked again."
 msgstr ""
-"ຫາກບໍ່ໄດ້ໝາຍໃນຫ້ອງນີ້, ໝາຍຄວາມວ່າຜູ້ໃຊ້ບໍ່ແນ່ໃຈຂໍ້ມູນທັງໝົດໃນເວລາສ້າງລາຍການ ແລະ ລາຍການນັ້ນຈຳເປັນຕ້ອງ"
-"ໄດ້ຮັບການກວດສອບຄືນໃໝ່."
+"ຫາກບໍ່ໄດ້ໝາຍໃນຫ້ອງນີ້, ໝາຍຄວາມວ່າຜູ້ໃຊ້ບໍ່ແນ່ໃຈຂໍ້ມູນທັງໝົດໃນເວລາສ້າງລາຍການ ແລະ "
+"ລາຍການນັ້ນຈຳເປັນຕ້ອງໄດ້ຮັບການກວດສອບຄືນໃໝ່."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -8313,23 +8286,22 @@ msgid ""
 "sequence from the entry back to the last hashed entry. The hash can also be "
 "performed on demand by the Secure Entries wizard."
 msgstr ""
-"ຫາກໝາຍໄວ້, ເມື່ອມີການລົງບັນຊີ, ພວກເຮົາຈະທຳການປົກປ້ອງທຸກລາຍການໃນລຳດັບຢ້ອນຫຼັງໄປຈົນເຖິງລາຍການສຸດທ້"
-"າຍທີ່ຖືກປົກປ້ອງແລ້ວ. ການປົກປ້ອງຍັງສາມາດເຮັດໄດ້ຕາມຄວາມຕ້ອງການຜ່ານເຄື່ອງມື Secure Entries."
+"ຫາກໝາຍໄວ້, ເມື່ອມີການລົງບັນຊີ, "
+"ພວກເຮົາຈະທຳການປົກປ້ອງທຸກລາຍການໃນລຳດັບຢ້ອນຫຼັງໄປຈົນເຖິງລາຍການສຸດທ້າຍທີ່ຖືກປົກປ້ອງແລ້ວ. "
+"ການປົກປ້ອງຍັງສາມາດເຮັດໄດ້ຕາມຄວາມຕ້ອງການຜ່ານເຄື່ອງມື Secure Entries."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "If you check this box, you will be able to collect payments using SEPA "
 "Direct Debit mandates."
-msgstr ""
-"ຖ້າທ່ານໝາຍເລືອກຫ້ອງນີ້, ທ່ານຈະສາມາດເກັບເງິນໂດຍໃຊ້ການຫັກບັນຊີອັດຕະໂນມັດ SEPA."
+msgstr "ຖ້າທ່ານໝາຍເລືອກຫ້ອງນີ້, ທ່ານຈະສາມາດເກັບເງິນໂດຍໃຊ້ການຫັກບັນຊີອັດຕະໂນມັດ SEPA."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "If you check this box, you will be able to register your payment using SEPA."
-msgstr ""
-"ຖ້າທ່ານໝາຍເລືອກຫ້ອງນີ້, ທ່ານຈະສາມາດລົງທະບຽນການຊຳລະເງິນຂອງທ່ານໂດຍໃຊ້ SEPA."
+msgstr "ຖ້າທ່ານໝາຍເລືອກຫ້ອງນີ້, ທ່ານຈະສາມາດລົງທະບຽນການຊຳລະເງິນຂອງທ່ານໂດຍໃຊ້ SEPA."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
@@ -8344,8 +8316,8 @@ msgid ""
 "must charge VAT based on the delivery address. This rule applies regardless "
 "of where you are located."
 msgstr ""
-"ຖ້າທ່ານຂາຍສິນຄ້າ ແລະ ບໍລິການໃຫ້ກັບລູກຄ້າໃນປະເທດສະຫະພາບເອີຣົບ, ທ່ານຕ້ອງຄິດໄລ່ພາສີມູນຄ່າເພີ່ມໂດຍອີງໃສ່"
-"ທີ່ຢູ່ສົ່ງເຄື່ອງ. ກົດລະບຽບນີ້ຖືກນຳໃຊ້ບໍ່ວ່າທ່ານຈະຕັ້ງຢູ່ໃສກໍຕາມ."
+"ຖ້າທ່ານຂາຍສິນຄ້າ ແລະ ບໍລິການໃຫ້ກັບລູກຄ້າໃນປະເທດສະຫະພາບເອີຣົບ, "
+"ທ່ານຕ້ອງຄິດໄລ່ພາສີມູນຄ່າເພີ່ມໂດຍອີງໃສ່ທີ່ຢູ່ສົ່ງເຄື່ອງ. ກົດລະບຽບນີ້ຖືກນຳໃຊ້ບໍ່ວ່າທ່ານຈະຕັ້ງຢູ່ໃສກໍຕາມ."
 
 #. module: account
 #. odoo-python
@@ -8543,8 +8515,7 @@ msgstr "ການຊຳລະເງິນຂາເຂົ້າ"
 msgid ""
 "Incorrect fiscal year date: day is out of range for month. Month: %(month)s; "
 "Day: %(day)s"
-msgstr ""
-"ວັນທີຂອງປີງົບປະມານບໍ່ຖືກຕ້ອງ: ມື້ເກີນກຳນົດຂອງເດືອນ. ເດືອນ: %(month)s; ວັນທີ: %(day)s"
+msgstr "ວັນທີຂອງປີງົບປະມານບໍ່ຖືກຕ້ອງ: ມື້ເກີນກຳນົດຂອງເດືອນ. ເດືອນ: %(month)s; ວັນທີ: %(day)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_incoterm_id
@@ -8580,8 +8551,8 @@ msgid ""
 "costs and responsibilities between buyer and seller and reflect state-of-the-"
 "art transportation practices."
 msgstr ""
-"Incoterms ແມ່ນຊຸດຂອງເງື່ອນໄຂການຂາຍ. ພວກມັນຖືກນຳໃຊ້ເພື່ອແບ່ງຕົ້ນທຶນການເຮັດທຸລະກຳ ແລະ ຄວາມຮັບຜິດ"
-"ຊອບລະຫວ່າງຜູ້ຊື້ ແລະ ຜູ້ຂາຍ ແລະ ສະທ້ອນເຖິງແນວທາງການຂົນສົ່ງທີ່ທັນສະໄໝ."
+"Incoterms ແມ່ນຊຸດຂອງເງື່ອນໄຂການຂາຍ. ພວກມັນຖືກນຳໃຊ້ເພື່ອແບ່ງຕົ້ນທຶນການເຮັດທຸລະກຳ ແລະ "
+"ຄວາມຮັບຜິດຊອບລະຫວ່າງຜູ້ຊື້ ແລະ ຜູ້ຂາຍ ແລະ ສະທ້ອນເຖິງແນວທາງການຂົນສົ່ງທີ່ທັນສະໄໝ."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_incoterms_tree
@@ -8691,15 +8662,13 @@ msgstr "ປະເພດພາຍໃນ"
 msgid ""
 "Internal field to shorten expression_ids creation for the account_codes "
 "engine"
-msgstr ""
-"ຟິວພາຍໃນເພື່ອເຮັດໃຫ້ການສ້າງ expression_ids ສັ້ນລົງສຳລັບເຄື່ອງມື account_codes"
+msgstr "ຟິວພາຍໃນເພື່ອເຮັດໃຫ້ການສ້າງ expression_ids ສັ້ນລົງສຳລັບເຄື່ອງມື account_codes"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__aggregation_formula
 msgid ""
 "Internal field to shorten expression_ids creation for the aggregation engine"
-msgstr ""
-"ຟິວພາຍໃນເພື່ອເຮັດໃຫ້ການສ້າງ expression_ids ສັ້ນລົງສຳລັບເຄື່ອງມື aggregation"
+msgstr "ຟິວພາຍໃນເພື່ອເຮັດໃຫ້ການສ້າງ expression_ids ສັ້ນລົງສຳລັບເຄື່ອງມື aggregation"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__domain_formula
@@ -8733,8 +8702,8 @@ msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
-"ເງື່ອນໄຂການຄ້າສາກົນແມ່ນຊຸດຂອງເງື່ອນໄຂທາງການຄ້າທີ່ກຳນົດໄວ້ລ່ວງໜ້າ ເຊິ່ງໃຊ້ໃນການເຮັດທຸລະກຳລະຫວ່າງປະເ"
-"ທດ."
+"ເງື່ອນໄຂການຄ້າສາກົນແມ່ນຊຸດຂອງເງື່ອນໄຂທາງການຄ້າທີ່ກຳນົດໄວ້ລ່ວງໜ້າ "
+"ເຊິ່ງໃຊ້ໃນການເຮັດທຸລະກຳລະຫວ່າງປະເທດ."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_intrastat
@@ -8753,8 +8722,8 @@ msgid ""
 "Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values "
 "for the zip range and \"To\" should be greater than \"From\"."
 msgstr ""
-"\"Zip Range\" ບໍ່ຖືກຕ້ອງ, ທ່ານຕ້ອງກຳນົດທັງຄ່າ \"ຈາກ\" ແລະ \"ເຖິງ\" ສຳລັບຊ່ວງລະຫັດໄປສະນີ ແລ"
-"ະ \"ເຖິງ\" ຄວນຈະໃຫຍ່ກວ່າ \"ຈາກ\"."
+"\"Zip Range\" ບໍ່ຖືກຕ້ອງ, ທ່ານຕ້ອງກຳນົດທັງຄ່າ \"ຈາກ\" ແລະ \"ເຖິງ\" ສຳລັບຊ່ວງລະຫັດໄປສະນີ "
+"ແລະ \"ເຖິງ\" ຄວນຈະໃຫຍ່ກວ່າ \"ຈາກ\"."
 
 #. module: account
 #. odoo-python
@@ -8940,8 +8909,7 @@ msgstr "ຍອດລວມໃບເກັບເງິນ"
 msgid ""
 "Invoice and credit note distribution should each contain exactly one line "
 "for the base."
-msgstr ""
-"ການແຈກຢາຍໃບເກັບເງິນ ແລະ ໃບຫຼຸດໜີ້ ຄວນຈະມີຢ່າງໜ້ອຍໜຶ່ງລາຍການສຳລັບຖານພາສີ."
+msgstr "ການແຈກຢາຍໃບເກັບເງິນ ແລະ ໃບຫຼຸດໜີ້ ຄວນຈະມີຢ່າງໜ້ອຍໜຶ່ງລາຍການສຳລັບຖານພາສີ."
 
 #. module: account
 #. odoo-python
@@ -8972,8 +8940,7 @@ msgstr "ການແຈກຢາຍໃບເກັບເງິນ ແລະ ໃ�
 msgid ""
 "Invoice and credit note distribution should match (same percentages, in the "
 "same order)."
-msgstr ""
-"ການແຈກຢາຍໃບເກັບເງິນ ແລະ ໃບຫຼຸດໜີ້ ຄວນຈະກົງກັນ (ເປີເຊັນດຽວກັນ, ໃນລຳດັບດຽວກັນ)."
+msgstr "ການແຈກຢາຍໃບເກັບເງິນ ແລະ ໃບຫຼຸດໜີ້ ຄວນຈະກົງກັນ (ເປີເຊັນດຽວກັນ, ໃນລຳດັບດຽວກັນ)."
 
 #. module: account
 #. odoo-python
@@ -8981,8 +8948,7 @@ msgstr ""
 msgid ""
 "Invoice and credit note repartition should have at least one tax repartition "
 "line."
-msgstr ""
-"ການແບ່ງສ່ວນໃບເກັບເງິນ ແລະ ໃບຫຼຸດໜີ້ ຄວນຈະມີຢ່າງໜ້ອຍໜຶ່ງລາຍການແບ່ງສ່ວນພາສີ."
+msgstr "ການແບ່ງສ່ວນໃບເກັບເງິນ ແລະ ໃບຫຼຸດໜີ້ ຄວນຈະມີຢ່າງໜ້ອຍໜຶ່ງລາຍການແບ່ງສ່ວນພາສີ."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9321,8 +9287,7 @@ msgstr "ລາຍການເຄື່ອນໄຫວກຳລັງຖືກສ
 msgid ""
 "It indicates that the invoice/payment has been sent or the PDF has been "
 "generated."
-msgstr ""
-"ມັນບົ່ງບອກວ່າໃບເກັບເງິນ/ການຊຳລະໄດ້ຖືກສົ່ງແລ້ວ ຫຼື ໄຟລ໌ PDF ໄດ້ຖືກສ້າງຂຶ້ນແລ້ວ."
+msgstr "ມັນບົ່ງບອກວ່າໃບເກັບເງິນ/ການຊຳລະໄດ້ຖືກສົ່ງແລ້ວ ຫຼື ໄຟລ໌ PDF ໄດ້ຖືກສ້າງຂຶ້ນແລ້ວ."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -9640,8 +9605,8 @@ msgid ""
 "anglo-saxon accounting with automated valuation method is configured, the "
 "expense account on the product category will be used."
 msgstr ""
-"ປະຟິວນີ້ຫວ່າງໄວ້ເພື່ອໃຊ້ຄ່າເລີ່ມຕົ້ນຈາກໝວດສິນຄ້າ. ຖ້າຕັ້ງຄ່າການບັນຊີແບບ Anglo-Saxon ດ້ວຍວິທີການຕີລາຄາອັ"
-"ດຕະໂນມັດ, ບັນຊີລາຍຈ່າຍໃນໝວດສິນຄ້າຈະຖືກນຳໃຊ້."
+"ປະຟິວນີ້ຫວ່າງໄວ້ເພື່ອໃຊ້ຄ່າເລີ່ມຕົ້ນຈາກໝວດສິນຄ້າ. ຖ້າຕັ້ງຄ່າການບັນຊີແບບ Anglo-Saxon "
+"ດ້ວຍວິທີການຕີລາຄາອັດຕະໂນມັດ, ບັນຊີລາຍຈ່າຍໃນໝວດສິນຄ້າຈະຖືກນຳໃຊ້."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue_value
@@ -9818,8 +9783,7 @@ msgstr "ປີແລ້ວ"
 msgid ""
 "Last date at which the discounted amount must be paid in order for the Early "
 "Payment Discount to be granted"
-msgstr ""
-"ວັນທີສຸດທ້າຍທີ່ຕ້ອງຊຳລະຈຳນວນເງິນທີ່ຫຼຸດແລ້ວ ເພື່ອໃຫ້ໄດ້ຮັບສ່ວນຫຼຸດການຊຳລະກ່ອນກຳນົດ"
+msgstr "ວັນທີສຸດທ້າຍທີ່ຕ້ອງຊຳລະຈຳນວນເງິນທີ່ຫຼຸດແລ້ວ ເພື່ອໃຫ້ໄດ້ຮັບສ່ວນຫຼຸດການຊຳລະກ່ອນກຳນົດ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -9941,8 +9905,8 @@ msgid ""
 "Line \"%(line)s\" defines line \"%(parent_line)s\" as its parent, but "
 "appears before it in the report. The parent must always come first."
 msgstr ""
-"ແຖວ \"%(line)s\" ກຳນົດແຖວ \"%(parent_line)s\" ເປັນແຖວແມ່ຂອງມັນ, ແຕ່ປະກົດຂຶ້ນກ່ອນໃນລາຍງ"
-"ານ. ແຖວແມ່ຕ້ອງມາກ່ອນສະເໝີ."
+"ແຖວ \"%(line)s\" ກຳນົດແຖວ \"%(parent_line)s\" ເປັນແຖວແມ່ຂອງມັນ, "
+"ແຕ່ປະກົດຂຶ້ນກ່ອນໃນລາຍງານ. ແຖວແມ່ຕ້ອງມາກ່ອນສະເໝີ."
 
 #. module: account
 #. odoo-python
@@ -10457,8 +10421,8 @@ msgid ""
 "Missing a document for a banking statement? Use the Documents apps to "
 "request it and let the owner upload it at the right place."
 msgstr ""
-"ຂາດເອກະສານສຳລັບໃບລາຍງານທະນາຄານບໍ່? ໃຊ້ແອັບເອກະສານເພື່ອຮ້ອງຂໍ ແລະ ໃຫ້ເຈົ້າຂອງອັບໂຫຼດມັນໄວ້ໃນບ່ອ"
-"ນທີ່ຖືກຕ້ອງ."
+"ຂາດເອກະສານສຳລັບໃບລາຍງານທະນາຄານບໍ່? ໃຊ້ແອັບເອກະສານເພື່ອຮ້ອງຂໍ ແລະ "
+"ໃຫ້ເຈົ້າຂອງອັບໂຫຼດມັນໄວ້ໃນບ່ອນທີ່ຖືກຕ້ອງ."
 
 #. module: account
 #. odoo-python
@@ -10820,8 +10784,7 @@ msgstr "ບໍ່ມີໄຟລ໌ຄັດຕິດ"
 msgid ""
 "No journal could be found in company %(company_name)s for any of those "
 "types: %(journal_types)s"
-msgstr ""
-"ບໍ່ພົບປື້ມບັນຊີໃນບໍລິສັດ %(company_name)s ສຳລັບປະເພດເຫຼົ່ານີ້: %(journal_types)s"
+msgstr "ບໍ່ພົບປື້ມບັນຊີໃນບໍລິສັດ %(company_name)s ສຳລັບປະເພດເຫຼົ່ານີ້: %(journal_types)s"
 
 #. module: account
 #. odoo-python
@@ -10965,16 +10928,14 @@ msgstr "ຕົວພະລາມິເຕີໝາຍເຫດ"
 msgid ""
 "Note that the easiest way to create a credit note is to do it directly\n"
 "                from the customer invoice."
-msgstr ""
-"ໝາຍເຫດ: ວິທີທີ່ງ່າຍທີ່ສຸດໃນການສ້າງໃບຫຼຸດໜີ້ແມ່ນເຮັດໂດຍກົງຈາກໃບແຈ້ງໜີ້ລູກຄ້າ."
+msgstr "ໝາຍເຫດ: ວິທີທີ່ງ່າຍທີ່ສຸດໃນການສ້າງໃບຫຼຸດໜີ້ແມ່ນເຮັດໂດຍກົງຈາກໃບແຈ້ງໜີ້ລູກຄ້າ."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_refund_type
 msgid ""
 "Note that the easiest way to create a vendor credit note is to do it "
 "directly from the vendor bill."
-msgstr ""
-"ໝາຍເຫດ: ວິທີທີ່ງ່າຍທີ່ສຸດໃນການສ້າງໃບຫຼຸດໜີ້ຜູ້ສະໜອງແມ່ນເຮັດໂດຍກົງຈາກໃບເກັບເງິນຜູ້ສະໜອງ."
+msgstr "ໝາຍເຫດ: ວິທີທີ່ງ່າຍທີ່ສຸດໃນການສ້າງໃບຫຼຸດໜີ້ຜູ້ສະໜອງແມ່ນເຮັດໂດຍກົງຈາກໃບເກັບເງິນຜູ້ສະໜອງ."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__note
@@ -11121,20 +11082,17 @@ msgstr "ໂດເມນ Odoo"
 msgid ""
 "Odoo allows you to reconcile a statement line directly with\n"
 "                the related sale or purchase invoices."
-msgstr ""
-"Odoo ຊ່ວຍໃຫ້ທ່ານຈັບຄູ່ແຖວລາຍການທະນາຄານໂດຍກົງກັບໃບແຈ້ງໜີ້ຂາຍ ຫຼື ໃບເກັບເງິນຊື້ທີ່ກ່ຽວຂ້ອງ."
+msgstr "Odoo ຊ່ວຍໃຫ້ທ່ານຈັບຄູ່ແຖວລາຍການທະນາຄານໂດຍກົງກັບໃບແຈ້ງໜີ້ຂາຍ ຫຼື ໃບເກັບເງິນຊື້ທີ່ກ່ຽວຂ້ອງ."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_customer
 msgid "Odoo helps you easily track all activities related to a customer."
-msgstr ""
-"Odoo ຊ່ວຍໃຫ້ທ່ານຕິດຕາມທຸກການເຄື່ອນໄຫວທີ່ກ່ຽວຂ້ອງກັບລູກຄ້າໄດ້ຢ່າງງ່າຍດາຍ."
+msgstr "Odoo ຊ່ວຍໃຫ້ທ່ານຕິດຕາມທຸກການເຄື່ອນໄຫວທີ່ກ່ຽວຂ້ອງກັບລູກຄ້າໄດ້ຢ່າງງ່າຍດາຍ."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier
 msgid "Odoo helps you easily track all activities related to a supplier."
-msgstr ""
-"Odoo ຊ່ວຍໃຫ້ທ່ານຕິດຕາມທຸກການເຄື່ອນໄຫວທີ່ກ່ຽວຂ້ອງກັບຜູ້ສະໜອງໄດ້ຢ່າງງ່າຍດາຍ."
+msgstr "Odoo ຊ່ວຍໃຫ້ທ່ານຕິດຕາມທຸກການເຄື່ອນໄຫວທີ່ກ່ຽວຂ້ອງກັບຜູ້ສະໜອງໄດ້ຢ່າງງ່າຍດາຍ."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__off
@@ -11194,8 +11152,8 @@ msgid ""
 "Once everything is set, you are good to continue. You will be able to edit "
 "this later in the <b>Customers</b> menu."
 msgstr ""
-"ເມື່ອທຸກຢ່າງຖືກຕັ້ງຄ່າແລ້ວ, ທ່ານສາມາດດຳເນີນການຕໍ່ໄດ້. ທ່ານສາມາດແກ້ໄຂສິ່ງນີ້ໄດ້ໃນພາຍຫຼັງໃນເມນູ <b>ລູກຄ້"
-"າ</b>."
+"ເມື່ອທຸກຢ່າງຖືກຕັ້ງຄ່າແລ້ວ, ທ່ານສາມາດດຳເນີນການຕໍ່ໄດ້. ທ່ານສາມາດແກ້ໄຂສິ່ງນີ້ໄດ້ໃນພາຍຫຼັງໃນເມນູ "
+"<b>ລູກຄ້າ</b>."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11203,8 +11161,8 @@ msgid ""
 "Once installed, set 'Bank Feeds' to 'File Import' in bank account "
 "settings.This adds a button to import from the Accounting dashboard."
 msgstr ""
-"ເມື່ອຕິດຕັ້ງແລ້ວ, ໃຫ້ຕັ້ງ 'ຂໍ້ມູນທະນາຄານ' ເປັນ 'ນຳເຂົ້າໄຟລ໌' ໃນການຕັ້ງຄ່າບັນຊີທະນາຄານ. ສິ່ງນີ້ຈະເພີ່ມປຸ່ມນ"
-"ຳເຂົ້າຈາກແດຊບອດບັນຊີ."
+"ເມື່ອຕິດຕັ້ງແລ້ວ, ໃຫ້ຕັ້ງ 'ຂໍ້ມູນທະນາຄານ' ເປັນ 'ນຳເຂົ້າໄຟລ໌' ໃນການຕັ້ງຄ່າບັນຊີທະນາຄານ. "
+"ສິ່ງນີ້ຈະເພີ່ມປຸ່ມນຳເຂົ້າຈາກແດຊບອດບັນຊີ."
 
 #. module: account
 #. odoo-javascript
@@ -11230,6 +11188,12 @@ msgid "Online Payments"
 msgstr "ການຊຳລະເງິນອອນລາຍ"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid "Only Accounting managers can create foreign taxes."
+msgstr "ສະເພາະຜູ້ຈັດການບັນຊີເທົ່ານັ້ນທີ່ສາມາດສ້າງພາສີຕ່າງປະເທດໄດ້."
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__only_tax_exigible
 msgid "Only Tax Exigible Lines"
 msgstr "ສະເພາະແຖວທີ່ຕ້ອງເສຍພາສີ"
@@ -11240,8 +11204,7 @@ msgstr "ສະເພາະແຖວທີ່ຕ້ອງເສຍພາສີ"
 msgid ""
 "Only a report without a root report of its own can be selected as root "
 "report."
-msgstr ""
-"ສະເພາະບົດລາຍງານທີ່ບໍ່ມີບົດລາຍງານຫຼັກຂອງຕົນເອງເທົ່ານັ້ນ ທີ່ສາມາດເລືອກເປັນບົດລາຍງານຫຼັກໄດ້."
+msgstr "ສະເພາະບົດລາຍງານທີ່ບໍ່ມີບົດລາຍງານຫຼັກຂອງຕົນເອງເທົ່ານັ້ນ ທີ່ສາມາດເລືອກເປັນບົດລາຍງານຫຼັກໄດ້."
 
 #. module: account
 #. odoo-python
@@ -11272,8 +11235,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Only posted/cancelled journal entries can be reset to draft."
-msgstr ""
-"ສະເພາະລາຍການບັນຊີທີ່ລົງບັນຊີແລ້ວ ຫຼື ຖືກຍົກເລີກເທົ່ານັ້ນ ທີ່ສາມາດຕັ້ງຄ່າຄືນເປັນຮ່າງໄດ້."
+msgstr "ສະເພາະລາຍການບັນຊີທີ່ລົງບັນຊີແລ້ວ ຫຼື ຖືກຍົກເລີກເທົ່ານັ້ນ ທີ່ສາມາດຕັ້ງຄ່າຄືນເປັນຮ່າງໄດ້."
 
 #. module: account
 #. odoo-python
@@ -11466,8 +11428,9 @@ msgid ""
 "timeframe is indicated on either the invoice or the order. In the event of "
 "non-payment by the due date,"
 msgstr ""
-"ໃບແຈ້ງໜີ້ຂອງພວກເຮົາມີກຳນົດຊຳລະພາຍໃນ 21 ວັນລັດຖະການ, ເວັ້ນເສຍແຕ່ຈະມີການກຳນົດເວລາການຊຳລະອື່ນໃນ"
-"ໃບແຈ້ງໜີ້ ຫຼື ໃບສັ່ງຊື້. ໃນກໍລະນີທີ່ບໍ່ມີການຊຳລະພາຍໃນວັນຄົບກຳນົດ,"
+"ໃບແຈ້ງໜີ້ຂອງພວກເຮົາມີກຳນົດຊຳລະພາຍໃນ 21 ວັນລັດຖະການ, "
+"ເວັ້ນເສຍແຕ່ຈະມີການກຳນົດເວລາການຊຳລະອື່ນໃນໃບແຈ້ງໜີ້ ຫຼື ໃບສັ່ງຊື້. "
+"ໃນກໍລະນີທີ່ບໍ່ມີການຊຳລະພາຍໃນວັນຄົບກຳນົດ,"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_method__payment_type__outbound
@@ -11558,8 +11521,7 @@ msgstr "ການຊຳລະກາຍກຳນົດ, ວັນທີຄົບ�
 msgid ""
 "Overrides the Company's default on whether the price you use on the product "
 "and invoices includes this tax."
-msgstr ""
-"ຂຽນທັບຄ່າເລີ່ມຕົ້ນຂອງບໍລິສັດ ວ່າລາຄາທີ່ທ່ານໃຊ້ໃນສິນຄ້າ ແລະ ໃບແຈ້ງໜີ້ໄດ້ຮວມພາສີນີ້ແລ້ວຫຼືບໍ່."
+msgstr "ຂຽນທັບຄ່າເລີ່ມຕົ້ນຂອງບໍລິສັດ ວ່າລາຄາທີ່ທ່ານໃຊ້ໃນສິນຄ້າ ແລະ ໃບແຈ້ງໜີ້ໄດ້ຮວມພາສີນີ້ແລ້ວຫຼືບໍ່."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
@@ -12145,8 +12107,9 @@ msgid ""
 "Payments are used to register liquidity movements. You can process those "
 "payments by your own means or by using installed facilities."
 msgstr ""
-"ການຊຳລະເງິນແມ່ນໃຊ້ເພື່ອລົງທະບຽນການເຄື່ອນໄຫວຂອງສະພາບຄ່ອງ. ທ່ານສາມາດດຳເນີນການຊຳລະເຫຼົ່ານັ້ນດ້ວຍວິ"
-"ທີການຂອງທ່ານເອງ ຫຼື ໂດຍການນຳໃຊ້ສິ່ງອຳນວຍຄວາມສະດວກທີ່ຕິດຕັ້ງໄວ້."
+"ການຊຳລະເງິນແມ່ນໃຊ້ເພື່ອລົງທະບຽນການເຄື່ອນໄຫວຂອງສະພາບຄ່ອງ. "
+"ທ່ານສາມາດດຳເນີນການຊຳລະເຫຼົ່ານັ້ນດ້ວຍວິທີການຂອງທ່ານເອງ ຫຼື "
+"ໂດຍການນຳໃຊ້ສິ່ງອຳນວຍຄວາມສະດວກທີ່ຕິດຕັ້ງໄວ້."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -12350,8 +12313,8 @@ msgid ""
 "Preferred payment method when buying from this vendor. This will be set by "
 "default on all outgoing payments created for this vendor"
 msgstr ""
-"ວິທີການຊຳລະທີ່ຕ້ອງການເມື່ອຊື້ຈາກຜູ້ຈຳໜ່າຍນີ້. ຄ່ານີ້ຈະຖືກຕັ້ງເປັນຄ່າເລີ່ມຕົ້ນສຳລັບການຊຳລະອອກທັງໝົດທີ່ສ້າງຂຶ້ນສຳ"
-"ລັບຜູ້ຈຳໜ່າຍນີ້"
+"ວິທີການຊຳລະທີ່ຕ້ອງການເມື່ອຊື້ຈາກຜູ້ຈຳໜ່າຍນີ້. "
+"ຄ່ານີ້ຈະຖືກຕັ້ງເປັນຄ່າເລີ່ມຕົ້ນສຳລັບການຊຳລະອອກທັງໝົດທີ່ສ້າງຂຶ້ນສຳລັບຜູ້ຈຳໜ່າຍນີ້"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_inbound_payment_method_line_id
@@ -12360,8 +12323,8 @@ msgid ""
 "Preferred payment method when selling to this customer. This will be set by "
 "default on all incoming payments created for this customer"
 msgstr ""
-"ວິທີການຊຳລະທີ່ຕ້ອງການເມື່ອຂາຍໃຫ້ລູກຄ້ານີ້. ຄ່ານີ້ຈະຖືກຕັ້ງເປັນຄ່າເລີ່ມຕົ້ນສຳລັບການຊຳລະເຂົ້າທັງໝົດທີ່ສ້າງຂຶ້ນສຳລັ"
-"ບລູກຄ້ານີ້"
+"ວິທີການຊຳລະທີ່ຕ້ອງການເມື່ອຂາຍໃຫ້ລູກຄ້ານີ້. "
+"ຄ່ານີ້ຈະຖືກຕັ້ງເປັນຄ່າເລີ່ມຕົ້ນສຳລັບການຊຳລະເຂົ້າທັງໝົດທີ່ສ້າງຂຶ້ນສຳລັບລູກຄ້ານີ້"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__prefix_groups_threshold
@@ -12415,8 +12378,7 @@ msgstr "ເງິນຈ່າຍລ່ວງໜ້າ"
 #: model:ir.model,name:account.model_account_reconcile_model
 msgid ""
 "Preset to create journal entries during a invoices and payments matching"
-msgstr ""
-"ຕັ້ງຄ່າລ່ວງໜ້າເພື່ອສ້າງລາຍການບັນຊີໃນລະຫວ່າງການຈັບຄູ່ໃບແຈ້ງໜີ້ ແລະ ການຊຳລະເງິນ"
+msgstr "ຕັ້ງຄ່າລ່ວງໜ້າເພື່ອສ້າງລາຍການບັນຊີໃນລະຫວ່າງການຈັບຄູ່ໃບແຈ້ງໜີ້ ແລະ ການຊຳລະເງິນ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12602,6 +12564,7 @@ msgstr "ວັນທີປິດບັນຊີການຊື້"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_show_purchase_receipts
+#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__in_receipt
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_receipt
 #: model:res.groups,name:account.group_purchase_receipts
 msgid "Purchase Receipt"
@@ -12901,8 +12864,7 @@ msgstr "ອ້າງອີງ"
 msgid ""
 "Reference of the document used to issue this payment. Eg. check number, file "
 "name, etc."
-msgstr ""
-"ອ້າງອີງຂອງເອກະສານທີ່ໃຊ້ເພື່ອອອກການຊຳລະເງິນນີ້. ຕົວຢ່າງ: ເລກທີແຊັກ, ຊື່ໄຟລ໌, ແລະ ອື່ນໆ."
+msgstr "ອ້າງອີງຂອງເອກະສານທີ່ໃຊ້ເພື່ອອອກການຊຳລະເງິນນີ້. ຕົວຢ່າງ: ເລກທີແຊັກ, ຊື່ໄຟລ໌, ແລະ ອື່ນໆ."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -13429,6 +13391,7 @@ msgid "Sales Lock Date"
 msgstr "ວັນທີປິດບັນຊີການຂາຍ"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__out_receipt
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_receipt
 msgid "Sales Receipt"
 msgstr "ໃບຮັບເງິນຂາຍ"
@@ -13652,15 +13615,13 @@ msgstr "ປອດໄພ"
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 msgid ""
 "Securing these entries will also secure entries after the selected date."
-msgstr ""
-"ການເຮັດໃຫ້ລາຍການເຫຼົ່ານີ້ປອດໄພ ຈະເຮັດໃຫ້ລາຍການຫຼັງຈາກວັນທີທີ່ເລືອກປອດໄພນຳ."
+msgstr "ການເຮັດໃຫ້ລາຍການເຫຼົ່ານີ້ປອດໄພ ຈະເຮັດໃຫ້ລາຍການຫຼັງຈາກວັນທີທີ່ເລືອກປອດໄພນຳ."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 msgid "Securing these entries will create at least one gap in the sequence."
-msgstr ""
-"ການເຮັດໃຫ້ລາຍການເຫຼົ່ານີ້ປອດໄພ ຈະເຮັດໃຫ້ເກີດຊ່ອງວ່າງຢ່າງໜ້ອຍໜຶ່ງບ່ອນໃນລຳດັບ."
+msgstr "ການເຮັດໃຫ້ລາຍການເຫຼົ່ານີ້ປອດໄພ ຈະເຮັດໃຫ້ເກີດຊ່ອງວ່າງຢ່າງໜ້ອຍໜຶ່ງບ່ອນໃນລຳດັບ."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__access_token
@@ -13698,8 +13659,8 @@ msgid ""
 "create new customer invoice or Sales order if we select this product, it "
 "will automatically take this as an analytic account)"
 msgstr ""
-"ເລືອກຜະລິດຕະພັນທີ່ຈະໃຊ້ການແຈກຢາຍວິເຄາະ (ຕົວຢ່າງ: ສ້າງໃບເກັບເງິນລູກຄ້າໃໝ່ ຫຼື ໃບສັ່ງຂາຍ ຖ້າພວກເຮົາເ"
-"ລືອກຜະລິດຕະພັນນີ້, ມັນຈະຖືກນຳໃຊ້ເປັນບັນຊີວິເຄາະໂດຍອັດຕະໂນມັດ)"
+"ເລືອກຜະລິດຕະພັນທີ່ຈະໃຊ້ການແຈກຢາຍວິເຄາະ (ຕົວຢ່າງ: ສ້າງໃບເກັບເງິນລູກຄ້າໃໝ່ ຫຼື ໃບສັ່ງຂາຍ "
+"ຖ້າພວກເຮົາເລືອກຜະລິດຕະພັນນີ້, ມັນຈະຖືກນຳໃຊ້ເປັນບັນຊີວິເຄາະໂດຍອັດຕະໂນມັດ)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -13728,8 +13689,8 @@ msgid ""
 "Select this if the taxes should use cash basis, which will create an entry "
 "for such taxes on a given account during reconciliation."
 msgstr ""
-"ເລືອກສິ່ງນີ້ຖ້າອາກອນຄວນໃຊ້ເກນເງິນສົດ, ເຊິ່ງຈະສ້າງລາຍການສຳລັບອາກອນດັ່ງກ່າວໃນບັນຊີທີ່ກຳນົດໄວ້ໃນລະຫວ່າງ"
-"ການກວດສອບຍອດ."
+"ເລືອກສິ່ງນີ້ຖ້າອາກອນຄວນໃຊ້ເກນເງິນສົດ, "
+"ເຊິ່ງຈະສ້າງລາຍການສຳລັບອາກອນດັ່ງກ່າວໃນບັນຊີທີ່ກຳນົດໄວ້ໃນລະຫວ່າງການກວດສອບຍອດ."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__selected_payment_method_codes
@@ -13744,8 +13705,8 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
-"ການເລືອກຕົວເລືອກ \"ຄຳເຕືອນ\" ຈະແຈ້ງເຕືອນຜູ້ໃຊ້ດ້ວຍຂໍ້ຄວາມ, ການເລືອກ \"ຂໍ້ຄວາມປິດກັ້ນ\" ຈະສະແດງຂໍ້"
-"ຜິດພາດພ້ອມຂໍ້ຄວາມ ແລະ ປິດກັ້ນຂັ້ນຕອນການເຮັດວຽກ. ຂໍ້ຄວາມຕ້ອງຖືກຂຽນໃສ່ໃນຊ່ອງຖັດໄປ."
+"ການເລືອກຕົວເລືອກ \"ຄຳເຕືອນ\" ຈະແຈ້ງເຕືອນຜູ້ໃຊ້ດ້ວຍຂໍ້ຄວາມ, ການເລືອກ \"ຂໍ້ຄວາມປິດກັ້ນ\" "
+"ຈະສະແດງຂໍ້ຜິດພາດພ້ອມຂໍ້ຄວາມ ແລະ ປິດກັ້ນຂັ້ນຕອນການເຮັດວຽກ. ຂໍ້ຄວາມຕ້ອງຖືກຂຽນໃສ່ໃນຊ່ອງຖັດໄປ."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -13849,9 +13810,10 @@ msgid ""
 "emails are compromised. Once verified, you can activate the ability to send "
 "money."
 msgstr ""
-"ການສົ່ງໃບເກັບເງິນປອມທີ່ມີເລກບັນຊີຫຼອກລວງແມ່ນວິທີການ phishing ທີ່ພົບເລື້ອຍ. ເພື່ອປ້ອງກັນຕົນເອງ, ຄວນກວ"
-"ດສອບເລກບັນຊີທະນາຄານໃໝ່ສະເໝີ, ໂດຍການໂທຫາຜູ້ສະໜອງ, ເນື່ອງຈາກ phishing ມັກຈະເກີດຂຶ້ນເມື່ອອີເມວຂ"
-"ອງພວກເຂົາຖືກແຮັກ. ເມື່ອກວດສອບແລ້ວ, ທ່ານສາມາດເປີດໃຊ້ຄວາມສາມາດໃນການສົ່ງເງິນໄດ້."
+"ການສົ່ງໃບເກັບເງິນປອມທີ່ມີເລກບັນຊີຫຼອກລວງແມ່ນວິທີການ phishing ທີ່ພົບເລື້ອຍ. ເພື່ອປ້ອງກັນຕົນເອງ, "
+"ຄວນກວດສອບເລກບັນຊີທະນາຄານໃໝ່ສະເໝີ, ໂດຍການໂທຫາຜູ້ສະໜອງ, ເນື່ອງຈາກ phishing "
+"ມັກຈະເກີດຂຶ້ນເມື່ອອີເມວຂອງພວກເຂົາຖືກແຮັກ. ເມື່ອກວດສອບແລ້ວ, "
+"ທ່ານສາມາດເປີດໃຊ້ຄວາມສາມາດໃນການສົ່ງເງິນໄດ້."
 
 #. module: account
 #. odoo-python
@@ -13879,8 +13841,7 @@ msgstr "ໃບແຈ້ງໜີ້ທີ່ສົ່ງແລ້ວ"
 msgid ""
 "Sent manually to customer when clicking on 'Send receipt by email' in "
 "payment action"
-msgstr ""
-"ສົ່ງໃຫ້ລູກຄ້າດ້ວຍຕົນເອງເມື່ອຄລິກໃສ່ 'ສົ່ງໃບຮັບເງິນທາງອີເມວ' ໃນການດຳເນີນການຊຳລະເງິນ"
+msgstr "ສົ່ງໃຫ້ລູກຄ້າດ້ວຍຕົນເອງເມື່ອຄລິກໃສ່ 'ສົ່ງໃບຮັບເງິນທາງອີເມວ' ໃນການດຳເນີນການຊຳລະເງິນ"
 
 #. module: account
 #: model:mail.template,description:account.email_template_edi_credit_note
@@ -14064,8 +14025,7 @@ msgstr "ລະຫັດຫຍໍ້"
 msgid ""
 "Shorter name used for display. The journal entries of this journal will also "
 "be named using this prefix by default."
-msgstr ""
-"ຊື່ສັ້ນທີ່ໃຊ້ໃນການສະແດງ. ລາຍການບັນຊີປະຈຳວັນຂອງບັນຊີນີ້ຈະຖືກຕັ້ງຊື່ໂດຍໃຊ້ຄຳນຳໜ້ານີ້ເປັນຄ່າເລີ່ມຕົ້ນ."
+msgstr "ຊື່ສັ້ນທີ່ໃຊ້ໃນການສະແດງ. ລາຍການບັນຊີປະຈຳວັນຂອງບັນຊີນີ້ຈະຖືກຕັ້ງຊື່ໂດຍໃຊ້ຄຳນຳໜ້ານີ້ເປັນຄ່າເລີ່ມຕົ້ນ."
 
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
@@ -14194,8 +14154,7 @@ msgstr "ບາງເອກະສານກຳລັງຖືກສົ່ງໂດ
 msgid ""
 "Some journal items already exist in this journal but with other accounts "
 "than the allowed ones."
-msgstr ""
-"ມີບາງລາຍການບັນຊີປະຈຳວັນຢູ່ໃນບັນຊີນີ້ແລ້ວ ແຕ່ເປັນບັນຊີອື່ນນອກເໜືອຈາກບັນຊີທີ່ອະນຸຍາດ."
+msgstr "ມີບາງລາຍການບັນຊີປະຈຳວັນຢູ່ໃນບັນຊີນີ້ແລ້ວ ແຕ່ເປັນບັນຊີອື່ນນອກເໜືອຈາກບັນຊີທີ່ອະນຸຍາດ."
 
 #. module: account
 #. odoo-python
@@ -14203,8 +14162,7 @@ msgstr ""
 msgid ""
 "Some journal items already exist with this account but in other journals "
 "than the allowed ones."
-msgstr ""
-"ມີບາງລາຍການບັນຊີປະຈຳວັນຢູ່ໃນບັນຊີນີ້ແລ້ວ ແຕ່ຢູ່ໃນບັນຊີປະຈຳວັນອື່ນນອກເໜືອຈາກບັນຊີທີ່ອະນຸຍາດ."
+msgstr "ມີບາງລາຍການບັນຊີປະຈຳວັນຢູ່ໃນບັນຊີນີ້ແລ້ວ ແຕ່ຢູ່ໃນບັນຊີປະຈຳວັນອື່ນນອກເໜືອຈາກບັນຊີທີ່ອະນຸຍາດ."
 
 #. module: account
 #. odoo-python
@@ -14265,8 +14223,7 @@ msgstr ""
 msgid ""
 "Specify which way will be used to round the invoice amount to the rounding "
 "precision"
-msgstr ""
-"ລະບຸວິທີທີ່ຈະໃຊ້ໃນການປັດເສດຈຳນວນເງິນໃນໃບເກັບເງິນຕາມຄວາມລະອຽດຂອງການປັດເສດ"
+msgstr "ລະບຸວິທີທີ່ຈະໃຊ້ໃນການປັດເສດຈຳນວນເງິນໃນໃບເກັບເງິນຕາມຄວາມລະອຽດຂອງການປັດເສດ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -14515,16 +14472,14 @@ msgstr "ແທັກ"
 msgid ""
 "Tags assigned to this line by the tax creating it, if any. It determines its "
 "impact on financial reports."
-msgstr ""
-"ແທັກທີ່ຖືກມອບໝາຍໃຫ້ແຖວນີ້ໂດຍອາກອນ, ຖ້າມີ. ມັນຈະກຳນົດຜົນກະທົບຕໍ່ບົດລາຍງານທາງການເງິນ."
+msgstr "ແທັກທີ່ຖືກມອບໝາຍໃຫ້ແຖວນີ້ໂດຍອາກອນ, ຖ້າມີ. ມັນຈະກຳນົດຜົນກະທົບຕໍ່ບົດລາຍງານທາງການເງິນ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product__account_tag_ids
 #: model:ir.model.fields,help:account.field_product_template__account_tag_ids
 msgid ""
 "Tags to be set on the base and tax journal items created for this product."
-msgstr ""
-"ແທັກທີ່ຈະຖືກຕັ້ງຄ່າໃນລາຍການບັນຊີພື້ນຖານ ແລະ ອາກອນທີ່ສ້າງຂຶ້ນສຳລັບຜະລິດຕະພັນນີ້."
+msgstr "ແທັກທີ່ຈະຖືກຕັ້ງຄ່າໃນລາຍການບັນຊີພື້ນຖານ ແລະ ອາກອນທີ່ສ້າງຂຶ້ນສຳລັບຜະລິດຕະພັນນີ້."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__target_report_expression_id
@@ -14780,16 +14735,14 @@ msgstr "ວິທີການປັດເສດໃນການຄິດໄລ່
 msgid ""
 "Tax current account used as a counterpart to the Tax Closing Entry when in "
 "favor of the authorities."
-msgstr ""
-"ບັນຊີອາກອນປັດຈຸບັນທີ່ໃຊ້ເປັນລາຍການຄູ່ຊຳລະສຳລັບລາຍການປິດອາກອນ ເມື່ອຕ້ອງຈ່າຍໃຫ້ທາງການ."
+msgstr "ບັນຊີອາກອນປັດຈຸບັນທີ່ໃຊ້ເປັນລາຍການຄູ່ຊຳລະສຳລັບລາຍການປິດອາກອນ ເມື່ອຕ້ອງຈ່າຍໃຫ້ທາງການ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__tax_receivable_account_id
 msgid ""
 "Tax current account used as a counterpart to the Tax Closing Entry when in "
 "favor of the company."
-msgstr ""
-"ບັນຊີອາກອນປັດຈຸບັນທີ່ໃຊ້ເປັນລາຍການຄູ່ຊຳລະສຳລັບລາຍການປິດອາກອນ ເມື່ອບໍລິສັດມີສິດໄດ້ຮັບຄືນ."
+msgstr "ບັນຊີອາກອນປັດຈຸບັນທີ່ໃຊ້ເປັນລາຍການຄູ່ຊຳລະສຳລັບລາຍການປິດອາກອນ ເມື່ອບໍລິສັດມີສິດໄດ້ຮັບຄືນ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_repartition_line_id
@@ -14858,8 +14811,8 @@ msgid ""
 "Taxes exigible on payment and on invoice cannot be mixed on the same journal "
 "item if they share some tag."
 msgstr ""
-"ອາກອນທີ່ບັງຄັບໃຊ້ເມື່ອຊຳລະ ແລະ ໃນໃບເກັບເງິນ ບໍ່ສາມາດລວມຢູ່ໃນລາຍການບັນຊີປະຈຳວັນດຽວກັນໄດ້ ຖ້າພວກເຂົ"
-"າໃຊ້ແທັກຮ່ວມກັນ."
+"ອາກອນທີ່ບັງຄັບໃຊ້ເມື່ອຊຳລະ ແລະ ໃນໃບເກັບເງິນ ບໍ່ສາມາດລວມຢູ່ໃນລາຍການບັນຊີປະຈຳວັນດຽວກັນໄດ້ "
+"ຖ້າພວກເຂົາໃຊ້ແທັກຮ່ວມກັນ."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__display_invoice_tax_company_currency
@@ -14872,8 +14825,7 @@ msgstr "ພາສີໃນສະກຸນເງິນຂອງບໍລິສັ
 msgid ""
 "Taxes, fiscal positions, chart of accounts & legal statements for your "
 "country"
-msgstr ""
-"ອາກອນ, ສະຖານະທາງດ້ານພາສີ, ຜັງບັນຊີ ແລະ ບົດລາຍງານທາງກົດໝາຍສຳລັບປະເທດຂອງທ່ານ"
+msgstr "ອາກອນ, ສະຖານະທາງດ້ານພາສີ, ຜັງບັນຊີ ແລະ ບົດລາຍງານທາງກົດໝາຍສຳລັບປະເທດຂອງທ່ານ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_enabled_tax_country_ids
@@ -14881,16 +14833,14 @@ msgid ""
 "Technical field containing the countries for which this company is using tax-"
 "related features(hence the ones for which l10n modules need to show tax-"
 "related fields)."
-msgstr ""
-"ຊ່ອງຂໍ້ມູນທາງເຕັກນິກທີ່ບັນຈຸລາຍຊື່ປະເທດທີ່ບໍລິສັດນີ້ກຳລັງໃຊ້ຄຸນສົມບັດທີ່ກ່ຽວຂ້ອງກັບອາກອນ."
+msgstr "ຊ່ອງຂໍ້ມູນທາງເຕັກນິກທີ່ບັນຈຸລາຍຊື່ປະເທດທີ່ບໍລິສັດນີ້ກຳລັງໃຊ້ຄຸນສົມບັດທີ່ກ່ຽວຂ້ອງກັບອາກອນ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__company_lock_date
 msgid ""
 "Technical field giving the date the company lock date at the time the "
 "exception was created."
-msgstr ""
-"ຟິວທາງເຕັກນິກທີ່ລະບຸວັນທີປິດບັນຊີຂອງບໍລິສັດໃນເວລາທີ່ຂໍ້ຍົກເວັ້ນຖືກສ້າງຂຶ້ນ."
+msgstr "ຟິວທາງເຕັກນິກທີ່ລະບຸວັນທີປິດບັນຊີຂອງບໍລິສັດໃນເວລາທີ່ຂໍ້ຍົກເວັ້ນຖືກສ້າງຂຶ້ນ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__lock_date
@@ -14923,8 +14873,7 @@ msgstr ""
 msgid ""
 "Technical field used to display a warning if the account is a transfer "
 "service account."
-msgstr ""
-"ຊ່ອງຂໍ້ມູນທາງເຕັກນິກທີ່ໃຊ້ເພື່ອສະແດງຄຳເຕືອນ ຖ້າບັນຊີແມ່ນບັນຊີບໍລິການໂອນເງິນ."
+msgstr "ຊ່ອງຂໍ້ມູນທາງເຕັກນິກທີ່ໃຊ້ເພື່ອສະແດງຄຳເຕືອນ ຖ້າບັນຊີແມ່ນບັນຊີບໍລິການໂອນເງິນ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence_override_regex
@@ -14942,8 +14891,8 @@ msgstr ""
 "ນີ້ແມ່ນ Regex ທີ່ສາມາດລວມເອົາກຸ່ມຂໍ້ມູນ (capture groups) ທັງໝົດດັ່ງຕໍ່ໄປນີ້: prefix1, year, "
 "prefix2, month, prefix3, seq, suffix.\n"
 "ກຸ່ມ prefix* ແມ່ນຕົວຂັ້ນລະຫວ່າງ ປີ, ເດືອນ ແລະ ເລກລຳດັບທີ່ເພີ່ມຂຶ້ນຕົວຈິງ (seq).\n"
-"ຕົວຢ່າງ: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})"
-"(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
+"ຕົວຢ່າງ: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?"
+"P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__templates_found
@@ -15014,10 +14963,10 @@ msgid ""
 "To maintain date-based sequences, select entries and use the resequence "
 "option from the actions menu, available in developer mode."
 msgstr ""
-"%(date_field)s (%(date)s) ທີ່ທ່ານປ້ອນເຂົ້າບໍ່ສອດຄ່ອງກັບເລກລຳດັບທີ່ມີຢູ່ (%(sequence)s). ລຶບເລກ"
-"ລຳດັບອອກເພື່ອດຳເນີນການຕໍ່.\n"
-"ເພື່ອຮັກສາລຳດັບຕາມວັນທີ, ໃຫ້ເລືອກລາຍການ ແລະ ໃຊ້ຕົວເລືອກຈັດລຳດັບຄືນໃໝ່ຈາກເມນູການດຳເນີນການ, ເຊິ່ງມີ"
-"ໃຫ້ໃນໂໝດນັກພັດທະນາ."
+"%(date_field)s (%(date)s) ທີ່ທ່ານປ້ອນເຂົ້າບໍ່ສອດຄ່ອງກັບເລກລຳດັບທີ່ມີຢູ່ (%(sequence)s). "
+"ລຶບເລກລຳດັບອອກເພື່ອດຳເນີນການຕໍ່.\n"
+"ເພື່ອຮັກສາລຳດັບຕາມວັນທີ, ໃຫ້ເລືອກລາຍການ ແລະ ໃຊ້ຕົວເລືອກຈັດລຳດັບຄືນໃໝ່ຈາກເມນູການດຳເນີນການ, "
+"ເຊິ່ງມີໃຫ້ໃນໂໝດນັກພັດທະນາ."
 
 #. module: account
 #. odoo-python
@@ -15026,8 +14975,8 @@ msgid ""
 "The %s chart template shouldn't be selected directly. Instead, you should "
 "directly select the chart template related to your country."
 msgstr ""
-"ແມ່ແບບຜັງບັນຊີ %s ບໍ່ຄວນຖືກເລືອກໂດຍກົງ. ແທນທີ່ຈະເປັນແນວນັ້ນ, ທ່ານຄວນເລືອກແມ່ແບບຜັງບັນຊີທີ່ກ່ຽວຂ້ອງກັບປ"
-"ະເທດຂອງທ່ານໂດຍກົງ."
+"ແມ່ແບບຜັງບັນຊີ %s ບໍ່ຄວນຖືກເລືອກໂດຍກົງ. ແທນທີ່ຈະເປັນແນວນັ້ນ, "
+"ທ່ານຄວນເລືອກແມ່ແບບຜັງບັນຊີທີ່ກ່ຽວຂ້ອງກັບປະເທດຂອງທ່ານໂດຍກົງ."
 
 #. module: account
 #. odoo-python
@@ -15035,8 +14984,7 @@ msgstr ""
 msgid ""
 "The Availability is set to 'Country Matches' but the field Country is not "
 "set."
-msgstr ""
-"ການກວດສອບການໃຊ້ງານຖືກຕັ້ງເປັນ 'ປະເທດທີ່ກົງກັນ' ແຕ່ຟິວປະເທດຍັງບໍ່ໄດ້ຖືກຕັ້ງຄ່າ."
+msgstr "ການກວດສອບການໃຊ້ງານຖືກຕັ້ງເປັນ 'ປະເທດທີ່ກົງກັນ' ແຕ່ຟິວປະເທດຍັງບໍ່ໄດ້ຖືກຕັ້ງຄ່າ."
 
 #. module: account
 #. odoo-python
@@ -15104,8 +15052,7 @@ msgstr ""
 msgid ""
 "The Payment Term must have at least one percent line and the sum of the "
 "percent must be 100%."
-msgstr ""
-"ເງື່ອນໄຂການຊຳລະຕ້ອງມີຢ່າງໜ້ອຍໜຶ່ງແຖວເປີເຊັນ ແລະ ຜົນລວມຂອງເປີເຊັນຕ້ອງເປັນ 100%."
+msgstr "ເງື່ອນໄຂການຊຳລະຕ້ອງມີຢ່າງໜ້ອຍໜຶ່ງແຖວເປີເຊັນ ແລະ ຜົນລວມຂອງເປີເຊັນຕ້ອງເປັນ 100%."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_base_document_layout__vat
@@ -15114,8 +15061,8 @@ msgid ""
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
 msgstr ""
-"ເລກປະຈໍາຕົວຜູ້ເສຍພາສີ. ຄ່າຢູ່ທີ່ນີ້ຈະຖືກກວດສອບຕາມຮູບແບບຂອງປະເທດ. ທ່ານສາມາດໃຊ້ '/' ເພື່ອລະບຸວ່າຄູ່ຄ້າ"
-"ບໍ່ມີພັນທະເສຍພາສີ."
+"ເລກປະຈໍາຕົວຜູ້ເສຍພາສີ. ຄ່າຢູ່ທີ່ນີ້ຈະຖືກກວດສອບຕາມຮູບແບບຂອງປະເທດ. ທ່ານສາມາດໃຊ້ '/' "
+"ເພື່ອລະບຸວ່າຄູ່ຄ້າບໍ່ມີພັນທະເສຍພາສີ."
 
 #. module: account
 #. odoo-python
@@ -15124,8 +15071,8 @@ msgid ""
 "The Unit of Measure (UoM) '%(uom)s' you have selected for product '%"
 "(product)s', is incompatible with its category : %(category)s."
 msgstr ""
-"ຫົວໜ່ວຍວັດແທກ (UoM) '%(uom)s' ທີ່ທ່ານເລືອກສຳລັບສິນຄ້າ '%(product)s', ແມ່ນບໍ່ເຂົ້າກັນກັບໝວດໝູ່ຂອງ"
-"ມັນ: %(category)s."
+"ຫົວໜ່ວຍວັດແທກ (UoM) '%(uom)s' ທີ່ທ່ານເລືອກສຳລັບສິນຄ້າ '%(product)s', "
+"ແມ່ນບໍ່ເຂົ້າກັນກັບໝວດໝູ່ຂອງມັນ: %(category)s."
 
 #. module: account
 #. odoo-python
@@ -15146,8 +15093,8 @@ msgid ""
 "The account is already in use in a 'sale' or 'purchase' journal. This means "
 "that the account's type couldn't be 'receivable' or 'payable'."
 msgstr ""
-"ບັນຊີນີ້ຖືກນຳໃຊ້ແລ້ວໃນບັນຊີປະຈຳວັນ 'ການຂາຍ' ຫຼື 'ການຊື້'. ນີ້ໝາຍຄວາມວ່າປະເພດຂອງບັນຊີບໍ່ສາມາດເປັນ 'ຕ້"
-"ອງຮັບ' ຫຼື 'ຕ້ອງຈ່າຍ' ໄດ້."
+"ບັນຊີນີ້ຖືກນຳໃຊ້ແລ້ວໃນບັນຊີປະຈຳວັນ 'ການຂາຍ' ຫຼື 'ການຊື້'. ນີ້ໝາຍຄວາມວ່າປະເພດຂອງບັນຊີບໍ່ສາມາດເປັນ "
+"'ຕ້ອງຮັບ' ຫຼື 'ຕ້ອງຈ່າຍ' ໄດ້."
 
 #. module: account
 #. odoo-python
@@ -15156,8 +15103,8 @@ msgid ""
 "The account selected on your journal entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account."
 msgstr ""
-"ບັນຊີທີ່ເລືອກໃນລາຍການບັນຊີປະຈຳວັນຂອງທ່ານບັງຄັບໃຫ້ລະບຸສະກຸນເງິນສຳຮອງ. ທ່ານຄວນລຶບສະກຸນເງິນສຳຮອງອອກ"
-"ຈາກບັນຊີ."
+"ບັນຊີທີ່ເລືອກໃນລາຍການບັນຊີປະຈຳວັນຂອງທ່ານບັງຄັບໃຫ້ລະບຸສະກຸນເງິນສຳຮອງ. "
+"ທ່ານຄວນລຶບສະກຸນເງິນສຳຮອງອອກຈາກບັນຊີ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__journal_id
@@ -15188,8 +15135,8 @@ msgid ""
 "same as the one from the company, this amount must strictly be equal to the "
 "balance."
 msgstr ""
-"ຈຳນວນເງິນໃນສະກຸນເງິນສຳຮອງຕ້ອງເປັນຄ່າບວກເມື່ອເດບິດ ແລະ ເປັນຄ່າລົບເມື່ອເຄຣດິດ. ຖ້າສະກຸນເງິນດຽວກັນກັ"
-"ບບໍລິສັດ, ຈຳນວນເງິນນີ້ຕ້ອງເທົ່າກັບຍອດຄົງເຫຼືອ."
+"ຈຳນວນເງິນໃນສະກຸນເງິນສຳຮອງຕ້ອງເປັນຄ່າບວກເມື່ອເດບິດ ແລະ ເປັນຄ່າລົບເມື່ອເຄຣດິດ. "
+"ຖ້າສະກຸນເງິນດຽວກັນກັບບໍລິສັດ, ຈຳນວນເງິນນີ້ຕ້ອງເທົ່າກັບຍອດຄົງເຫຼືອ."
 
 #. module: account
 #. odoo-python
@@ -15199,8 +15146,8 @@ msgid ""
 "data, the expected amount is %(mean)s (± %(wiggle)s).\n"
 "Please verify if this amount is accurate."
 msgstr ""
-"ຈຳນວນເງິນຂອງ %(partner_name)s ເບິ່ງຄືວ່າບໍ່ປົກກະຕິ. ອີງຕາມຂໍ້ມູນປະຫວັດຂອງທ່ານ, ຈຳນວນທີ່ຄາດໄວ້ແມ່"
-"ນ %(mean)s (± %(wiggle)s).\n"
+"ຈຳນວນເງິນຂອງ %(partner_name)s ເບິ່ງຄືວ່າບໍ່ປົກກະຕິ. ອີງຕາມຂໍ້ມູນປະຫວັດຂອງທ່ານ, "
+"ຈຳນວນທີ່ຄາດໄວ້ແມ່ນ %(mean)s (± %(wiggle)s).\n"
 "ກະລຸນາກວດສອບວ່າຈຳນວນເງິນນີ້ຖືກຕ້ອງຫຼືບໍ່."
 
 #. module: account
@@ -15231,8 +15178,8 @@ msgid ""
 "The bank account of your company is not trusted. Please ask an admin or "
 "someone with approval rights to check it."
 msgstr ""
-"ບັນຊີທະນາຄານຂອງບໍລິສັດທ່ານບໍ່ໄດ້ຮັບການຢືນຢັນຄວາມເຊື່ອຖື. ກະລຸນາສອບຖາມຜູ້ດູແລລະບົບ ຫຼື ຜູ້ທີ່ມີສິດອະນຸມັດເພື່ອ"
-"ທົບທວນຄືນ."
+"ບັນຊີທະນາຄານຂອງບໍລິສັດທ່ານບໍ່ໄດ້ຮັບການຢືນຢັນຄວາມເຊື່ອຖື. ກະລຸນາສອບຖາມຜູ້ດູແລລະບົບ ຫຼື "
+"ຜູ້ທີ່ມີສິດອະນຸມັດເພື່ອທົບທວນຄືນ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
@@ -15248,9 +15195,9 @@ msgid ""
 "(expected_date)s (every %(mean)s (± %(wiggle)s) days).\n"
 "Please verify if this date is accurate."
 msgstr ""
-"ຄວາມຖີ່ໃນການອອກໃບເກັບເງິນສຳລັບ %(partner_name)s ເບິ່ງຄືວ່າຜິດປົກກະຕິ. ອີງຕາມຂໍ້ມູນປະຫວັດສາດຂອງ"
-"ທ່ານ, ວັນທີອອກໃບແຈ້ງໜີ້ຄັ້ງຖັດໄປທີ່ຄາດໄວ້ແມ່ນບໍ່ຄວນກ່ອນ %(expected_date)s (ທຸກໆ %(mean)s (± %"
-"(wiggle)s) ວັນ).\n"
+"ຄວາມຖີ່ໃນການອອກໃບເກັບເງິນສຳລັບ %(partner_name)s ເບິ່ງຄືວ່າຜິດປົກກະຕິ. "
+"ອີງຕາມຂໍ້ມູນປະຫວັດສາດຂອງທ່ານ, ວັນທີອອກໃບແຈ້ງໜີ້ຄັ້ງຖັດໄປທີ່ຄາດໄວ້ແມ່ນບໍ່ຄວນກ່ອນ %(expected_date)s "
+"(ທຸກໆ %(mean)s (± %(wiggle)s) ວັນ).\n"
 "ກະລຸນາກວດສອບວ່າວັນທີນີ້ຖືກຕ້ອງຫຼືບໍ່."
 
 #. module: account
@@ -15269,8 +15216,8 @@ msgid ""
 "order to be valid, any derogation must be expressly agreed to in advance in "
 "writing."
 msgstr ""
-"ລູກຄ້າສະລະສິດໃນຂໍ້ກຳນົດ ແລະ ເງື່ອນໄຂມາດຕະຖານຂອງຕົນເອງຢ່າງຈະແຈ້ງ. ເພື່ອໃຫ້ມີຜົນບັງຄັບໃຊ້, ການປ່ຽນແ"
-"ປງໃດໆ ຕ້ອງໄດ້ຮັບການຕົກລົງລ່ວງໜ້າເປັນລາຍລັກອັກສອນ."
+"ລູກຄ້າສະລະສິດໃນຂໍ້ກຳນົດ ແລະ ເງື່ອນໄຂມາດຕະຖານຂອງຕົນເອງຢ່າງຈະແຈ້ງ. ເພື່ອໃຫ້ມີຜົນບັງຄັບໃຊ້, "
+"ການປ່ຽນແປງໃດໆ ຕ້ອງໄດ້ຮັບການຕົກລົງລ່ວງໜ້າເປັນລາຍລັກອັກສອນ."
 
 #. module: account
 #. odoo-python
@@ -15289,8 +15236,7 @@ msgstr "ລະຫັດ ແລະ ປະເພດການຊຳລະທີ່�
 msgid ""
 "The combination of reference model and reference type on the journal is not "
 "implemented"
-msgstr ""
-"ການປະສົມປະສານຂອງຮູບແບບການອ້າງອີງ ແລະ ປະເພດການອ້າງອີງໃນບັນຊີປະຈຳວັນຍັງບໍ່ທັນໄດ້ຖືກນຳໃຊ້"
+msgstr "ການປະສົມປະສານຂອງຮູບແບບການອ້າງອີງ ແລະ ປະເພດການອ້າງອີງໃນບັນຊີປະຈຳວັນຍັງບໍ່ທັນໄດ້ຖືກນຳໃຊ້"
 
 #. module: account
 #. odoo-python
@@ -15307,9 +15253,10 @@ msgid ""
 "trusted. Go to the Bank Settings, double-check that it is yours or correct "
 "the number, and click on Send Money to trust it."
 msgstr ""
-"ບັນຊີທະນາຄານຂອງບໍລິສັດ (%(account_number)s) ທີ່ເຊື່ອມໂຍງກັບໃບແຈ້ງໜີ້ນີ້ບໍ່ໄດ້ຮັບການຢືນຢັນຄວາມເຊື່ອ"
-"ຖື. ໃຫ້ໄປທີ່ການຕັ້ງຄ່າທະນາຄານ, ກວດສອບໃຫ້ແນ່ໃຈວ່າມັນແມ່ນຂອງທ່ານ ຫຼື ແກ້ໄຂເລກບັນຊີໃຫ້ຖືກຕ້ອງ, ແລະ ຄລິ"
-"ກທີ່ ສົ່ງເງິນ ເພື່ອຢືນຢັນຄວາມເຊື່ອຖື."
+"ບັນຊີທະນາຄານຂອງບໍລິສັດ (%(account_number)s) "
+"ທີ່ເຊື່ອມໂຍງກັບໃບແຈ້ງໜີ້ນີ້ບໍ່ໄດ້ຮັບການຢືນຢັນຄວາມເຊື່ອຖື. ໃຫ້ໄປທີ່ການຕັ້ງຄ່າທະນາຄານ, "
+"ກວດສອບໃຫ້ແນ່ໃຈວ່າມັນແມ່ນຂອງທ່ານ ຫຼື ແກ້ໄຂເລກບັນຊີໃຫ້ຖືກຕ້ອງ, ແລະ ຄລິກທີ່ ສົ່ງເງິນ "
+"ເພື່ອຢືນຢັນຄວາມເຊື່ອຖື."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -15374,8 +15321,8 @@ msgid ""
 "(expected_total)s. In order to post the invoice/bill, you can adjust its "
 "lines or the expected Total (tax inc.)."
 msgstr ""
-"ຍອດລວມປັດຈຸບັນແມ່ນ %(current_total)s ແຕ່ຍອດລວມທີ່ຄາດໄວ້ແມ່ນ %(expected_total)s. ເພື່ອລົງບັ"
-"ນຊີໃບແຈ້ງໜີ້/ໃບເກັບເງິນ, ທ່ານສາມາດປັບແຖວຂອງມັນ ຫຼື ຍອດລວມທີ່ຄາດໄວ້ (ຮວມພາສີ)."
+"ຍອດລວມປັດຈຸບັນແມ່ນ %(current_total)s ແຕ່ຍອດລວມທີ່ຄາດໄວ້ແມ່ນ %(expected_total)s. "
+"ເພື່ອລົງບັນຊີໃບແຈ້ງໜີ້/ໃບເກັບເງິນ, ທ່ານສາມາດປັບແຖວຂອງມັນ ຫຼື ຍອດລວມທີ່ຄາດໄວ້ (ຮວມພາສີ)."
 
 #. module: account
 #. odoo-python
@@ -15384,8 +15331,8 @@ msgid ""
 "The date is being set prior to: %(lock_date_info)s. The Journal Entry will "
 "be accounted on %(invoice_date)s upon posting."
 msgstr ""
-"ວັນທີຖືກຕັ້ງກ່ອນ: %(lock_date_info)s. ລາຍການບັນຊີຈະຖືກລົງບັນຊີໃນວັນທີ %(invoice_date)s ເມື່ອມີ"
-"ການລົງຜັງ."
+"ວັນທີຖືກຕັ້ງກ່ອນ: %(lock_date_info)s. ລາຍການບັນຊີຈະຖືກລົງບັນຊີໃນວັນທີ %(invoice_date)s "
+"ເມື່ອມີການລົງຜັງ."
 
 #. module: account
 #. odoo-python
@@ -15422,8 +15369,7 @@ msgstr ""
 msgid ""
 "The date the Tax Lock Date is set to by this exception. If the lock date is "
 "not changed it is set to the maximal date."
-msgstr ""
-"ວັນທີທີ່ວັນທີປິດບັນຊີພາສີຖືກຕັ້ງໂດຍຂໍ້ຍົກເວັ້ນນີ້. ຖ້າວັນທີປິດບັນຊີບໍ່ຖືກປ່ຽນແປງ ມັນຈະຖືກຕັ້ງເປັນວັນທີສູງສຸດ."
+msgstr "ວັນທີທີ່ວັນທີປິດບັນຊີພາສີຖືກຕັ້ງໂດຍຂໍ້ຍົກເວັ້ນນີ້. ຖ້າວັນທີປິດບັນຊີບໍ່ຖືກປ່ຽນແປງ ມັນຈະຖືກຕັ້ງເປັນວັນທີສູງສຸດ."
 
 #. module: account
 #. odoo-python
@@ -15496,8 +15442,7 @@ msgstr "ຕ້ອງໄດ້ປ້ອນຂໍ້ມູນໃສ່ຊ່ອງ
 msgid ""
 "The field 'Customer' is required, please complete it to validate the "
 "Customer Invoice."
-msgstr ""
-"ຕ້ອງມີຂໍ້ມູນໃນຊ່ອງ 'ລູກຄ້າ', ກະລຸນາຕື່ມໃຫ້ຄົບຖ້ວນເພື່ອຢືນຢັນໃບເກັບເງິນລູກຄ້າ."
+msgstr "ຕ້ອງມີຂໍ້ມູນໃນຊ່ອງ 'ລູກຄ້າ', ກະລຸນາຕື່ມໃຫ້ຄົບຖ້ວນເພື່ອຢືນຢັນໃບເກັບເງິນລູກຄ້າ."
 
 #. module: account
 #. odoo-python
@@ -15505,8 +15450,7 @@ msgstr ""
 msgid ""
 "The field 'Vendor' is required, please complete it to validate the Vendor "
 "Bill."
-msgstr ""
-"ຕ້ອງມີຂໍ້ມູນໃນຊ່ອງ 'ຜູ້ສະໜອງ', ກະລຸນາຕື່ມໃຫ້ຄົບຖ້ວນເພື່ອຢືນຢັນໃບຮັບເງິນຜູ້ສະໜອງ."
+msgstr "ຕ້ອງມີຂໍ້ມູນໃນຊ່ອງ 'ຜູ້ສະໜອງ', ກະລຸນາຕື່ມໃຫ້ຄົບຖ້ວນເພື່ອຢືນຢັນໃບຮັບເງິນຜູ້ສະໜອງ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_position_id
@@ -15565,8 +15509,8 @@ msgid ""
 "The foreign currency set on the journal '%(journal)s' and the account '%"
 "(account)s' must be the same."
 msgstr ""
-"ສະກຸນເງິນຕ່າງປະເທດທີ່ຕັ້ງໄວ້ໃນປຶ້ມບັນຊີ '%(journal)s' ແລະ ບັນຊີ '%(account)s' ຕ້ອງແມ່ນອັນດຽວກັ"
-"ນ."
+"ສະກຸນເງິນຕ່າງປະເທດທີ່ຕັ້ງໄວ້ໃນປຶ້ມບັນຊີ '%(journal)s' ແລະ ບັນຊີ '%(account)s' "
+"ຕ້ອງແມ່ນອັນດຽວກັນ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_external_value__foreign_vat_fiscal_position_id
@@ -15581,8 +15525,8 @@ msgid ""
 "chain for subsequent parts."
 msgstr ""
 "ຕ່ອງໂສ້ hash ແມ່ນຖືກຕ້ອງຕາມກົດລະບຽບ: ມັນບໍ່ສາມາດປ່ຽນແປງ\n"
-"                                            ຂໍ້ມູນໄດ້ໂດຍບໍ່ເຮັດໃຫ້ຕ່ອງໂສ້ hash ຂອງພາກສ່ວ"
-"ນຕໍ່ໄປຂາດອອກ."
+"                                            ຂໍ້ມູນໄດ້ໂດຍບໍ່ເຮັດໃຫ້ຕ່ອງໂສ້ hash "
+"ຂອງພາກສ່ວນຕໍ່ໄປຂາດອອກ."
 
 #. module: account
 #. odoo-python
@@ -15634,8 +15578,7 @@ msgstr "ລາຍການບັນຊີທີ່ມີຍອດຄົງເຫ
 msgid ""
 "The journal entry from which this tax cash basis journal entry has been "
 "created."
-msgstr ""
-"ລາຍການບັນຊີທີ່ເປັນຕົ້ນກຳເນີດຂອງການສ້າງລາຍການບັນຊີພາສີຕາມພື້ນຖານເງິນສົດນີ້."
+msgstr "ລາຍການບັນຊີທີ່ເປັນຕົ້ນກຳເນີດຂອງການສ້າງລາຍການບັນຊີພາສີຕາມພື້ນຖານເງິນສົດນີ້."
 
 #. module: account
 #. odoo-python
@@ -15697,8 +15640,8 @@ msgid ""
 "Please change the journal entry date or the following lock dates to proceed: "
 "%(lock_date_info)s."
 msgstr ""
-"ການດຳເນີນການຖືກປະຕິເສດ ເນື່ອງຈາກມັນຈະສົ່ງຜົນກະທົບຕໍ່ໃບລາຍງານພາສີທີ່ອອກໄປແລ້ວ. ກະລຸນາປ່ຽນວັນທີລາຍກ"
-"ານບັນຊີ ຫຼື ວັນທີປິດບັນຊີຕໍ່ໄປນີ້ເພື່ອດຳເນີນການຕໍ່: %(lock_date_info)s."
+"ການດຳເນີນການຖືກປະຕິເສດ ເນື່ອງຈາກມັນຈະສົ່ງຜົນກະທົບຕໍ່ໃບລາຍງານພາສີທີ່ອອກໄປແລ້ວ. "
+"ກະລຸນາປ່ຽນວັນທີລາຍການບັນຊີ ຫຼື ວັນທີປິດບັນຊີຕໍ່ໄປນີ້ເພື່ອດຳເນີນການຕໍ່: %(lock_date_info)s."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__foreign_currency_id
@@ -15711,8 +15654,8 @@ msgid ""
 "The optional quantity expressed by this line, eg: number of product sold. "
 "The quantity is not a legal requirement but is very useful for some reports."
 msgstr ""
-"ຈຳນວນ (ທາງເລືອກ) ທີ່ລະບຸໃນແຖວນີ້, ຕົວຢ່າງ: ຈຳນວນສິນຄ້າທີ່ຂາຍ. ຈຳນວນບໍ່ແມ່ນຂໍ້ກຳນົດທາງກົດໝາຍ ແຕ່ມີປ"
-"ະໂຫຍດຫຼາຍສຳລັບບາງລາຍງານ."
+"ຈຳນວນ (ທາງເລືອກ) ທີ່ລະບຸໃນແຖວນີ້, ຕົວຢ່າງ: ຈຳນວນສິນຄ້າທີ່ຂາຍ. ຈຳນວນບໍ່ແມ່ນຂໍ້ກຳນົດທາງກົດໝາຍ "
+"ແຕ່ມີປະໂຫຍດຫຼາຍສຳລັບບາງລາຍງານ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__sequence
@@ -15721,8 +15664,8 @@ msgid ""
 "to work properly, invoice distribution lines should be arranged in the same "
 "order as the credit note distribution lines they correspond to."
 msgstr ""
-"ລຳດັບການສະແດງ ແລະ ການຈັບຄູ່ຂອງແຖວການປັນສ່ວນ. ເພື່ອໃຫ້ການຄືນເງິນເຮັດວຽກໄດ້ຢ່າງຖືກຕ້ອງ, ແຖວການປັ"
-"ນສ່ວນຂອງໃບແຈ້ງໜີ້ຄວນຖືກຈັດລຽງໃນລຳດັບດຽວກັນກັບແຖວການປັນສ່ວນຂອງໃບຫຼຸດໜີ້ທີ່ກ່ຽວຂ້ອງ."
+"ລຳດັບການສະແດງ ແລະ ການຈັບຄູ່ຂອງແຖວການປັນສ່ວນ. ເພື່ອໃຫ້ການຄືນເງິນເຮັດວຽກໄດ້ຢ່າງຖືກຕ້ອງ, "
+"ແຖວການປັນສ່ວນຂອງໃບແຈ້ງໜີ້ຄວນຖືກຈັດລຽງໃນລຳດັບດຽວກັນກັບແຖວການປັນສ່ວນຂອງໃບຫຼຸດໜີ້ທີ່ກ່ຽວຂ້ອງ."
 
 #. module: account
 #. odoo-python
@@ -15773,8 +15716,7 @@ msgstr ""
 msgid ""
 "The reconciliation model will only be applied to the selected customer/"
 "vendor categories."
-msgstr ""
-"ຮູບແບບການກວດສອບສົບທຽບຈະຖືກນໍາໃຊ້ກັບໝວດໝູ່ລູກຄ້າ/ຜູ້ສະໜອງທີ່ເລືອກເທົ່ານັ້ນ."
+msgstr "ຮູບແບບການກວດສອບສົບທຽບຈະຖືກນໍາໃຊ້ກັບໝວດໝູ່ລູກຄ້າ/ຜູ້ສະໜອງທີ່ເລືອກເທົ່ານັ້ນ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_ids
@@ -15801,8 +15743,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner
 msgid ""
 "The reconciliation model will only be applied when a customer/vendor is set."
-msgstr ""
-"ຮູບແບບການກວດສອບສົບທຽບຈະຖືກນໍາໃຊ້ເມື່ອມີການກໍານົດລູກຄ້າ/ຜູ້ສະໜອງເທົ່ານັ້ນ."
+msgstr "ຮູບແບບການກວດສອບສົບທຽບຈະຖືກນໍາໃຊ້ເມື່ອມີການກໍານົດລູກຄ້າ/ຜູ້ສະໜອງເທົ່ານັ້ນ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_amount
@@ -15938,8 +15879,8 @@ msgid ""
 "entry transferred to it will be converted into this currency, causing\n"
 "                        the loss of any pre-existing foreign currency amount."
 msgstr ""
-"ບັນຊີປາຍທາງທີ່ເລືອກຖືກຕັ້ງໃຫ້ໃຊ້ສະກຸນເງິນສະເພາະ. ທຸກໆລາຍການທີ່ໂອນເຂົ້າໄປຈະຖືກແປງເປັນສະກຸນເງິນນີ້, ເຮັ"
-"ດໃຫ້\n"
+"ບັນຊີປາຍທາງທີ່ເລືອກຖືກຕັ້ງໃຫ້ໃຊ້ສະກຸນເງິນສະເພາະ. ທຸກໆລາຍການທີ່ໂອນເຂົ້າໄປຈະຖືກແປງເປັນສະກຸນເງິນນີ້, "
+"ເຮັດໃຫ້\n"
 "                        ສູນເສຍມູນຄ່າສະກຸນເງິນຕ່າງປະເທດທີ່ມີມາກ່ອນ."
 
 #. module: account
@@ -15948,8 +15889,7 @@ msgstr ""
 msgid ""
 "The selected payment method is not available for this payment, please select "
 "the payment method again."
-msgstr ""
-"ວິທີການຊຳລະທີ່ເລືອກບໍ່ສາມາດໃຊ້ໄດ້ສຳລັບການຊຳລະນີ້, ກະລຸນາເລືອກວິທີການຊຳລະຄືນໃໝ່."
+msgstr "ວິທີການຊຳລະທີ່ເລືອກບໍ່ສາມາດໃຊ້ໄດ້ສຳລັບການຊຳລະນີ້, ກະລຸນາເລືອກວິທີການຊຳລະຄືນໃໝ່."
 
 #. module: account
 #. odoo-python
@@ -15958,8 +15898,8 @@ msgid ""
 "The sending of invoices is not set up properly, make sure the report used is "
 "set for invoices."
 msgstr ""
-"ການສົ່ງໃບແຈ້ງໜີ້ຍັງບໍ່ໄດ້ຖືກຕັ້ງຄ່າຢ່າງຖືກຕ້ອງ, ກະລຸນາກວດສອບໃຫ້ແນ່ໃຈວ່າລາຍງານທີ່ໃຊ້ໄດ້ຖືກຕັ້ງຄ່າສຳລັບໃບແຈ້ງ"
-"ໜີ້."
+"ການສົ່ງໃບແຈ້ງໜີ້ຍັງບໍ່ໄດ້ຖືກຕັ້ງຄ່າຢ່າງຖືກຕ້ອງ, "
+"ກະລຸນາກວດສອບໃຫ້ແນ່ໃຈວ່າລາຍງານທີ່ໃຊ້ໄດ້ຖືກຕັ້ງຄ່າສຳລັບໃບແຈ້ງໜີ້."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__sequence
@@ -16055,8 +15995,7 @@ msgstr ""
 msgid ""
 "The sequences of this journal are different for Invoices and Refunds but you "
 "selected some of both types."
-msgstr ""
-"ລຳດັບຂອງປຶ້ມບັນຊີນີ້ແຕກຕ່າງກັນລະຫວ່າງ ໃບແຈ້ງໜີ້ ແລະ ໃບຫຼຸດໜີ້ ແຕ່ທ່ານເລືອກທັງສອງປະເພດ."
+msgstr "ລຳດັບຂອງປຶ້ມບັນຊີນີ້ແຕກຕ່າງກັນລະຫວ່າງ ໃບແຈ້ງໜີ້ ແລະ ໃບຫຼຸດໜີ້ ແຕ່ທ່ານເລືອກທັງສອງປະເພດ."
 
 #. module: account
 #. odoo-python
@@ -16073,8 +16012,7 @@ msgstr ""
 msgid ""
 "The starting balance doesn't match the ending balance of the previous "
 "statement, or an earlier statement is missing."
-msgstr ""
-"ຍອດເລີ່ມຕົ້ນບໍ່ກົງກັບຍອດສິ້ນສຸດຂອງໃບລາຍງານກ່ອນໜ້າ, ຫຼື ມີໃບລາຍງານກ່ອນໜ້ານັ້ນຫາຍໄປ."
+msgstr "ຍອດເລີ່ມຕົ້ນບໍ່ກົງກັບຍອດສິ້ນສຸດຂອງໃບລາຍງານກ່ອນໜ້າ, ຫຼື ມີໃບລາຍງານກ່ອນໜ້ານັ້ນຫາຍໄປ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
@@ -16095,15 +16033,13 @@ msgstr ""
 msgid ""
 "The sum of total residual amount propositions matches the statement line "
 "amount under this amount/percentage."
-msgstr ""
-"ຜົນລວມຂອງຈຳນວນເງິນຄົງເຫຼືອທີ່ສະເໜີ ກົງກັບຈຳນວນເງິນໃນແຖວລາຍງານພາຍໃຕ້ ຈຳນວນ/ເປີເຊັນ ນີ້."
+msgstr "ຜົນລວມຂອງຈຳນວນເງິນຄົງເຫຼືອທີ່ສະເໜີ ກົງກັບຈຳນວນເງິນໃນແຖວລາຍງານພາຍໃຕ້ ຈຳນວນ/ເປີເຊັນ ນີ້."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__foreign_vat
 msgid ""
 "The tax ID of your company in the region mapped by this fiscal position."
-msgstr ""
-"ເລກປະຈຳຕົວຜູ້ເສຍພາສີຂອງບໍລິສັດທ່ານ ໃນພາກພື້ນທີ່ຖືກກໍານົດໂດຍສະຖານະທາງພາສີນີ້."
+msgstr "ເລກປະຈຳຕົວຜູ້ເສຍພາສີຂອງບໍລິສັດທ່ານ ໃນພາກພື້ນທີ່ຖືກກໍານົດໂດຍສະຖານະທາງພາສີນີ້."
 
 #. module: account
 #. odoo-python
@@ -16122,16 +16058,14 @@ msgstr "ກົດລະບຽບການຕັດສິນທີ່ໃຊ້ສ
 msgid ""
 "The type of the journal's default credit/debit account shouldn't be "
 "'receivable' or 'payable'."
-msgstr ""
-"ປະເພດຂອງບັນຊີ ເບື້ອງມີ/ເບື້ອງໜີ້ ເລີ່ມຕົ້ນຂອງປຶ້ມບັນຊີ ບໍ່ຄວນເປັນ 'ລູກໜີ້' ຫຼື 'ເຈົ້າໜີ້'."
+msgstr "ປະເພດຂອງບັນຊີ ເບື້ອງມີ/ເບື້ອງໜີ້ ເລີ່ມຕົ້ນຂອງປຶ້ມບັນຊີ ບໍ່ຄວນເປັນ 'ລູກໜີ້' ຫຼື 'ເຈົ້າໜີ້'."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_currency__display_rounding_warning
 msgid ""
 "The warning informs a rounding factor change might be dangerous on "
 "res.currency's form view."
-msgstr ""
-"ຄຳເຕືອນແຈ້ງວ່າການປ່ຽນແປງປັດໄຈການປັດເສດ ອາດຈະເປັນອັນຕະລາຍໃນມຸມມອງຟອມຂອງສະກຸນເງິນ."
+msgstr "ຄຳເຕືອນແຈ້ງວ່າການປ່ຽນແປງປັດໄຈການປັດເສດ ອາດຈະເປັນອັນຕະລາຍໃນມຸມມອງຟອມຂອງສະກຸນເງິນ."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -16158,8 +16092,7 @@ msgstr "ບໍ່ມີລາຍການບັນຊີໃນສະຖານະ
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "There are payments in progress. Make sure you don't pay twice."
-msgstr ""
-"ມີການຊຳລະທີ່ກຳລັງດຳເນີນຢູ່. ກະລຸນາກວດສອບໃຫ້ແນ່ໃຈວ່າທ່ານບໍ່ໄດ້ຊຳລະຊ້ຳຊ້ອນ."
+msgstr "ມີການຊຳລະທີ່ກຳລັງດຳເນີນຢູ່. ກະລຸນາກວດສອບໃຫ້ແນ່ໃຈວ່າທ່ານບໍ່ໄດ້ຊຳລະຊ້ຳຊ້ອນ."
 
 #. module: account
 #. odoo-python
@@ -16174,8 +16107,8 @@ msgid ""
 "There are still draft entries in the period you want to hard lock. You "
 "should either post or delete them."
 msgstr ""
-"ຍັງມີລາຍການສະຖານະຮ່າງໃນໄລຍະເວລາທີ່ທ່ານຕ້ອງການປິດບັນຊີແບບຖາວອນ. ທ່ານຄວນລົງບັນຊີ ຫຼື ລຶບພວກມັນອອ"
-"ກ."
+"ຍັງມີລາຍການສະຖານະຮ່າງໃນໄລຍະເວລາທີ່ທ່ານຕ້ອງການປິດບັນຊີແບບຖາວອນ. ທ່ານຄວນລົງບັນຊີ ຫຼື "
+"ລຶບພວກມັນອອກ."
 
 #. module: account
 #. odoo-python
@@ -16185,8 +16118,8 @@ msgid ""
 "The entries from journal prefixes containing them will not be secured: %"
 "(prefix_info)s"
 msgstr ""
-"ຍັງມີແຖວໃບລາຍງານທະນາຄານທີ່ຍັງບໍ່ໄດ້ທົບທວນຍອດກ່ອນວັນທີທີ່ເລືອກ. ລາຍການຈາກຄຳນຳໜ້າສະໝຸດບັນຊີທີ່ມີພວກມັນ"
-"ຢູ່ຈະບໍ່ຖືກເຮັດໃຫ້ປອດໄພ: %(prefix_info)s"
+"ຍັງມີແຖວໃບລາຍງານທະນາຄານທີ່ຍັງບໍ່ໄດ້ທົບທວນຍອດກ່ອນວັນທີທີ່ເລືອກ. "
+"ລາຍການຈາກຄຳນຳໜ້າສະໝຸດບັນຊີທີ່ມີພວກມັນຢູ່ຈະບໍ່ຖືກເຮັດໃຫ້ປອດໄພ: %(prefix_info)s"
 
 #. module: account
 #. odoo-python
@@ -16195,8 +16128,8 @@ msgid ""
 "There are still unreconciled bank statement lines in the period you want to "
 "lock.You should either reconcile or delete them."
 msgstr ""
-"ຍັງມີແຖວລາຍງານທະນາຄານທີ່ບໍ່ທັນໄດ້ກວດສອບສົບທຽບໃນໄລຍະເວລາທີ່ທ່ານຕ້ອງການປິດງວດ. ທ່ານຄວນກວດສອບສົບ"
-"ທຽບ ຫຼື ລຶບພວກມັນອອກ."
+"ຍັງມີແຖວລາຍງານທະນາຄານທີ່ບໍ່ທັນໄດ້ກວດສອບສົບທຽບໃນໄລຍະເວລາທີ່ທ່ານຕ້ອງການປິດງວດ. "
+"ທ່ານຄວນກວດສອບສົບທຽບ ຫຼື ລຶບພວກມັນອອກ."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
@@ -16204,16 +16137,15 @@ msgid ""
 "There doesn't appear to be anything to invoice for the selected order. "
 "However, you can use the amount field to force an accrual entry."
 msgstr ""
-"ເບິ່ງຄືວ່າບໍ່ມີຫຍັງທີ່ຈະອອກໃບແຈ້ງໜີ້ສໍາລັບຄໍາສັ່ງຊື້ທີ່ເລືອກ. ຢ່າງໃດກໍຕາມ, ທ່ານສາມາດນໍາໃຊ້ຫ້ອງຈຳນວນເງິນເພື່ອບັ"
-"ງຄັບໃຫ້ສ້າງລາຍການຄ້າງຮັບ/ຄ້າງຈ່າຍ."
+"ເບິ່ງຄືວ່າບໍ່ມີຫຍັງທີ່ຈະອອກໃບແຈ້ງໜີ້ສໍາລັບຄໍາສັ່ງຊື້ທີ່ເລືອກ. ຢ່າງໃດກໍຕາມ, "
+"ທ່ານສາມາດນໍາໃຊ້ຫ້ອງຈຳນວນເງິນເພື່ອບັງຄັບໃຫ້ສ້າງລາຍການຄ້າງຮັບ/ຄ້າງຈ່າຍ."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "There is no journal entry flagged for accounting data inalterability yet."
-msgstr ""
-"ຍັງບໍ່ທັນມີລາຍການບັນຊີໃດທີ່ຖືກໝາຍວ່າເປັນຂໍ້ມູນບັນຊີທີ່ປ່ຽນແປງບໍ່ໄດ້ເທື່ອ."
+msgstr "ຍັງບໍ່ທັນມີລາຍການບັນຊີໃດທີ່ຖືກໝາຍວ່າເປັນຂໍ້ມູນບັນຊີທີ່ປ່ຽນແປງບໍ່ໄດ້ເທື່ອ."
 
 #. module: account
 #. odoo-python
@@ -16283,8 +16215,7 @@ msgstr "ບັນຊີນີ້ຖືກແຍກອອກມາຈາກ %(acc
 msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
-msgstr ""
-"ບັນຊີນີ້ຈະຖືກນໍາໃຊ້ແທນບັນຊີເລີ່ມຕົ້ນ ເປັນບັນຊີເຈົ້າໜີ້ສໍາລັບຄູ່ຄ້າປັດຈຸບັນ"
+msgstr "ບັນຊີນີ້ຈະຖືກນໍາໃຊ້ແທນບັນຊີເລີ່ມຕົ້ນ ເປັນບັນຊີເຈົ້າໜີ້ສໍາລັບຄູ່ຄ້າປັດຈຸບັນ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_receivable_id
@@ -16292,8 +16223,7 @@ msgstr ""
 msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
-msgstr ""
-"ບັນຊີນີ້ຈະຖືກນໍາໃຊ້ແທນບັນຊີເລີ່ມຕົ້ນ ເປັນບັນຊີລູກໜີ້ສໍາລັບຄູ່ຄ້າປັດຈຸບັນ"
+msgstr "ບັນຊີນີ້ຈະຖືກນໍາໃຊ້ແທນບັນຊີເລີ່ມຕົ້ນ ເປັນບັນຊີລູກໜີ້ສໍາລັບຄູ່ຄ້າປັດຈຸບັນ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_income_categ_id
@@ -16313,8 +16243,8 @@ msgid ""
 "master budgets and the budgets are defined, the project managers can set the "
 "planned amount on each analytic account."
 msgstr ""
-"ສິ່ງນີ້ຊ່ວຍໃຫ້ນັກບັນຊີບໍລິຫານງົບປະມານວິເຄາະ ແລະ ງົບປະມານຂ້າມກັນໄດ້. ເມື່ອງົບປະມານຫຼັກ ແລະ ງົບປະມານຖືກ"
-"ກໍານົດແລ້ວ, ຜູ້ຈັດການໂຄງການສາມາດຕັ້ງຈຳນວນເງິນທີ່ວາງແຜນໄວ້ໃນແຕ່ລະບັນຊີວິເຄາະ."
+"ສິ່ງນີ້ຊ່ວຍໃຫ້ນັກບັນຊີບໍລິຫານງົບປະມານວິເຄາະ ແລະ ງົບປະມານຂ້າມກັນໄດ້. ເມື່ອງົບປະມານຫຼັກ ແລະ "
+"ງົບປະມານຖືກກໍານົດແລ້ວ, ຜູ້ຈັດການໂຄງການສາມາດຕັ້ງຈຳນວນເງິນທີ່ວາງແຜນໄວ້ໃນແຕ່ລະບັນຊີວິເຄາະ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__module_account_batch_payment
@@ -16331,8 +16261,7 @@ msgstr ""
 msgid ""
 "This analytic distribution will apply to all financial accounts sharing the "
 "prefix specified."
-msgstr ""
-"ການປັນສ່ວນວິເຄາະນີ້ຈະນໍາໃຊ້ກັບທຸກບັນຊີການເງິນທີ່ມີຄຳນຳໜ້າລະຫັດທີ່ລະບຸໄວ້."
+msgstr "ການປັນສ່ວນວິເຄາະນີ້ຈະນໍາໃຊ້ກັບທຸກບັນຊີການເງິນທີ່ມີຄຳນຳໜ້າລະຫັດທີ່ລະບຸໄວ້."
 
 #. module: account
 #. odoo-python
@@ -16352,8 +16281,7 @@ msgstr "ສິ່ງນີ້ສາມາດໃຊ້ໄດ້ກັບລາຍ
 msgid ""
 "This document is protected by a hash. Therefore, you cannot edit the "
 "following fields: %s."
-msgstr ""
-"ເອກະສານນີ້ຖືກປ້ອງກັນດ້ວຍ Hash. ດັ່ງນັ້ນ, ທ່ານບໍ່ສາມາດແກ້ໄຂຟິວດັ່ງຕໍ່ໄປນີ້: %s."
+msgstr "ເອກະສານນີ້ຖືກປ້ອງກັນດ້ວຍ Hash. ດັ່ງນັ້ນ, ທ່ານບໍ່ສາມາດແກ້ໄຂຟິວດັ່ງຕໍ່ໄປນີ້: %s."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__name_searchable
@@ -16363,9 +16291,9 @@ msgid ""
 "'filter_domain'.See '_search_name' and '_parse_name_search' for why this is "
 "not possible with 'filter_domain'."
 msgstr ""
-"ຫ້ອງຂໍ້ມູນສົມມຸດນີ້ຊ່ວຍໃຫ້ພວກເຮົາໃຊ້ວິທີຄົ້ນຫາອື່ນໃນຫ້ອງຂໍ້ມູນ 'ຊື່'. ນີ້ຊ່ວຍໃຫ້ມີອິດສະຫຼະໃນການຄົ້ນຫາ 'ຊື່' ຫຼາຍຂຶ້"
-"ນເມື່ອທຽບກັບ 'filter_domain'. ເບິ່ງ '_search_name' ແລະ '_parse_name_search' ສໍາລັບເຫ"
-"ດຜົນທີ່ວ່າເປັນຫຍັງສິ່ງນີ້ຈຶ່ງເປັນໄປບໍ່ໄດ້ດ້ວຍ 'filter_domain'."
+"ຫ້ອງຂໍ້ມູນສົມມຸດນີ້ຊ່ວຍໃຫ້ພວກເຮົາໃຊ້ວິທີຄົ້ນຫາອື່ນໃນຫ້ອງຂໍ້ມູນ 'ຊື່'. ນີ້ຊ່ວຍໃຫ້ມີອິດສະຫຼະໃນການຄົ້ນຫາ 'ຊື່' "
+"ຫຼາຍຂຶ້ນເມື່ອທຽບກັບ 'filter_domain'. ເບິ່ງ '_search_name' ແລະ '_parse_name_search' "
+"ສໍາລັບເຫດຜົນທີ່ວ່າເປັນຫຍັງສິ່ງນີ້ຈຶ່ງເປັນໄປບໍ່ໄດ້ດ້ວຍ 'filter_domain'."
 
 #. module: account
 #. odoo-python
@@ -16375,8 +16303,8 @@ msgid ""
 "country. Check company fiscal country in the settings and tax country in "
 "taxes configuration."
 msgstr ""
-"ລາຍການບັນຊີນີ້ປະກອບດ້ວຍພາສີໜຶ່ງ ຫຼື ຫຼາຍກວ່າທີ່ບໍ່ເຂົ້າກັນກັບປະເທດທາງພາສີຂອງທ່ານ. ກະລຸນາກວດສອບປະເທດທ"
-"າງພາສີຂອງບໍລິສັດໃນການຕັ້ງຄ່າ ແລະ ປະເທດຂອງພາສີໃນການຕັ້ງຄ່າພາສີ."
+"ລາຍການບັນຊີນີ້ປະກອບດ້ວຍພາສີໜຶ່ງ ຫຼື ຫຼາຍກວ່າທີ່ບໍ່ເຂົ້າກັນກັບປະເທດທາງພາສີຂອງທ່ານ. "
+"ກະລຸນາກວດສອບປະເທດທາງພາສີຂອງບໍລິສັດໃນການຕັ້ງຄ່າ ແລະ ປະເທດຂອງພາສີໃນການຕັ້ງຄ່າພາສີ."
 
 #. module: account
 #. odoo-python
@@ -16385,8 +16313,8 @@ msgid ""
 "This entry contains taxes that are not compatible with your fiscal position. "
 "Check the country set in fiscal position and in your tax configuration."
 msgstr ""
-"ລາຍການບັນຊີນີ້ປະກອບດ້ວຍພາສີທີ່ບໍ່ເຂົ້າກັນກັບສະຖານະທາງພາສີຂອງທ່ານ. ກະລຸນາກວດສອບປະເທດທີ່ຕັ້ງໄວ້ໃນສະຖາ"
-"ນະທາງພາສີ ແລະ ໃນການຕັ້ງຄ່າພາສີຂອງທ່ານ."
+"ລາຍການບັນຊີນີ້ປະກອບດ້ວຍພາສີທີ່ບໍ່ເຂົ້າກັນກັບສະຖານະທາງພາສີຂອງທ່ານ. "
+"ກະລຸນາກວດສອບປະເທດທີ່ຕັ້ງໄວ້ໃນສະຖານະທາງພາສີ ແລະ ໃນການຕັ້ງຄ່າພາສີຂອງທ່ານ."
 
 #. module: account
 #. odoo-python
@@ -16440,8 +16368,7 @@ msgstr "ນີ້ແມ່ນກະດານຄວບຄຸມການບັນ
 msgid ""
 "This is the default credit limit that will be used on partners that do not "
 "have a specific limit on them."
-msgstr ""
-"ນີ້ແມ່ນວົງເງິນສິນເຊື່ອເລີ່ມຕົ້ນທີ່ຈະຖືກນໍາໃຊ້ກັບຄູ່ຄ້າທີ່ບໍ່ມີການກໍານົດວົງເງິນສະເພາະ."
+msgstr "ນີ້ແມ່ນວົງເງິນສິນເຊື່ອເລີ່ມຕົ້ນທີ່ຈະຖືກນໍາໃຊ້ກັບຄູ່ຄ້າທີ່ບໍ່ມີການກໍານົດວົງເງິນສະເພາະ."
 
 #. module: account
 #. odoo-python
@@ -16478,8 +16405,7 @@ msgstr "ແຖວນີ້ ແລະ ແຖວຍ່ອຍຂອງມັນຈ�
 msgid ""
 "This matching rule is used when the user is not certain of all the "
 "information of the counterpart."
-msgstr ""
-"ກົດລະບຽບການຈັບຄູ່ນີ້ຖືກໃຊ້ເມື່ອຜູ້ໃຊ້ບໍ່ແນ່ໃຈໃນຂໍ້ມູນທັງໝົດຂອງຝ່າຍກົງກັນຂ້າມ."
+msgstr "ກົດລະບຽບການຈັບຄູ່ນີ້ຖືກໃຊ້ເມື່ອຜູ້ໃຊ້ບໍ່ແນ່ໃຈໃນຂໍ້ມູນທັງໝົດຂອງຝ່າຍກົງກັນຂ້າມ."
 
 #. module: account
 #. odoo-python
@@ -16488,8 +16414,8 @@ msgid ""
 "This move could not be locked either because some move with the same "
 "sequence prefix has a higher number. You may need to resequence it."
 msgstr ""
-"ລາຍການເຄື່ອນໄຫວນີ້ບໍ່ສາມາດຖືກລັອກໄດ້ ເນື່ອງຈາກບາງລາຍການທີ່ມີຄຳນຳໜ້າລຳດັບດຽວກັນມີເລກທີ່ສູງກວ່າ. ທ່ານອ"
-"າດຈະຕ້ອງຈັດລຳດັບມັນໃໝ່."
+"ລາຍການເຄື່ອນໄຫວນີ້ບໍ່ສາມາດຖືກລັອກໄດ້ ເນື່ອງຈາກບາງລາຍການທີ່ມີຄຳນຳໜ້າລຳດັບດຽວກັນມີເລກທີ່ສູງກວ່າ. "
+"ທ່ານອາດຈະຕ້ອງຈັດລຳດັບມັນໃໝ່."
 
 #. module: account
 #. odoo-python
@@ -16521,8 +16447,7 @@ msgstr "ການດຳເນີນການນີ້ຈະເຮັດໃຫ້
 msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
-msgstr ""
-"ເງື່ອນໄຂການຊໍາລະນີ້ຈະຖືກນໍາໃຊ້ແທນອັນເລີ່ມຕົ້ນສໍາລັບຄໍາສັ່ງຊື້ ແລະ ໃບເກັບເງິນຈາກຜູ້ສະໜອງ"
+msgstr "ເງື່ອນໄຂການຊໍາລະນີ້ຈະຖືກນໍາໃຊ້ແທນອັນເລີ່ມຕົ້ນສໍາລັບຄໍາສັ່ງຊື້ ແລະ ໃບເກັບເງິນຈາກຜູ້ສະໜອງ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_payment_term_id
@@ -16530,8 +16455,7 @@ msgstr ""
 msgid ""
 "This payment term will be used instead of the default one for sales orders "
 "and customer invoices"
-msgstr ""
-"ເງື່ອນໄຂການຊໍາລະນີ້ຈະຖືກນໍາໃຊ້ແທນອັນເລີ່ມຕົ້ນສໍາລັບຄໍາສັ່ງຂາຍ ແລະ ໃບແຈ້ງໜີ້ລູກຄ້າ"
+msgstr "ເງື່ອນໄຂການຊໍາລະນີ້ຈະຖືກນໍາໃຊ້ແທນອັນເລີ່ມຕົ້ນສໍາລັບຄໍາສັ່ງຂາຍ ແລະ ໃບແຈ້ງໜີ້ລູກຄ້າ"
 
 #. module: account
 #. odoo-python
@@ -16578,8 +16502,7 @@ msgstr "ຂໍ้ຜິດພາດສະເພາະນີ້ເກີດຂຶ
 msgid ""
 "This will update all taxes and accounts based on the currently selected "
 "fiscal position."
-msgstr ""
-"ສິ່ງນີ້ຈະອັບເດດພາສີ ແລະ ບັນຊີທັງໝົດໂດຍອີງຕາມສະຖານະທາງພາສີທີ່ເລືອກໄວ້ໃນປັດຈຸບັນ."
+msgstr "ສິ່ງນີ້ຈະອັບເດດພາສີ ແລະ ບັນຊີທັງໝົດໂດຍອີງຕາມສະຖານະທາງພາສີທີ່ເລືອກໄວ້ໃນປັດຈຸບັນ."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
@@ -16587,8 +16510,8 @@ msgid ""
 "This wizard will validate all journal entries selected. Once journal entries "
 "are validated, you can not update them anymore."
 msgstr ""
-"ຕົວຊ່ວຍນີ້ຈະຢືນຢັນລາຍການບັນຊີທັງໝົດທີ່ເລືອກ. ເມື່ອລາຍການບັນຊີຖືກຢືນຢັນແລ້ວ, ທ່ານຈະບໍ່ສາມາດອັບເດດພວກມັນໄ"
-"ດ້ອີກ."
+"ຕົວຊ່ວຍນີ້ຈະຢືນຢັນລາຍການບັນຊີທັງໝົດທີ່ເລືອກ. ເມື່ອລາຍການບັນຊີຖືກຢືນຢັນແລ້ວ, "
+"ທ່ານຈະບໍ່ສາມາດອັບເດດພວກມັນໄດ້ອີກ."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
@@ -16651,8 +16574,7 @@ msgstr "ລໍຖ້າຢືນຢັນ"
 #: model_terms:ir.ui.view,arch_db:account.email_template_mail_gateway_failed
 msgid ""
 "To add information to a previously sent invoice, reply to your \"sent\" email"
-msgstr ""
-"ເພື່ອເພີ່ມຂໍ້ມູນໃສ່ໃນໃບແຈ້ງໜີ້ທີ່ສົ່ງໄປກ່ອນໜ້ານີ້, ໃຫ້ຕອບກັບອີເມລ \"ທີ່ສົ່ງແລ້ວ\" ຂອງທ່ານ"
+msgstr "ເພື່ອເພີ່ມຂໍ້ມູນໃສ່ໃນໃບແຈ້ງໜີ້ທີ່ສົ່ງໄປກ່ອນໜ້ານີ້, ໃຫ້ຕອບກັບອີເມລ \"ທີ່ສົ່ງແລ້ວ\" ຂອງທ່ານ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -16683,8 +16605,8 @@ msgid ""
 "manually validated. You should go on the partner bank account of %(partner)s "
 "in order to validate it."
 msgstr ""
-"ເພື່ອບັນທຶກການຊຳລະດ້ວຍ %(method_name)s, ບັນຊີທະນາຄານຂອງຜູ້ຮັບຕ້ອງໄດ້ຮັບການຢືນຢັນດ້ວຍຕົນເອງ. ທ່າ"
-"ນຄວນໄປທີ່ບັນຊີທະນາຄານຂອງຄູ່ຄ້າ %(partner)s ເພື່ອຢືນຢັນມັນ."
+"ເພື່ອບັນທຶກການຊຳລະດ້ວຍ %(method_name)s, ບັນຊີທະນາຄານຂອງຜູ້ຮັບຕ້ອງໄດ້ຮັບການຢືນຢັນດ້ວຍຕົນເອງ. "
+"ທ່ານຄວນໄປທີ່ບັນຊີທະນາຄານຂອງຄູ່ຄ້າ %(partner)s ເພື່ອຢືນຢັນມັນ."
 
 #. module: account
 #. odoo-python
@@ -16694,8 +16616,8 @@ msgid ""
 "be manually validated. You should go on the partner bank account in order to "
 "validate it."
 msgstr ""
-"ເພື່ອບັນທຶກການຊຳລະດ້ວຍ %(payment_method)s, ບັນຊີທະນາຄານຂອງຜູ້ຮັບຕ້ອງໄດ້ຮັບການຢືນຢັນດ້ວຍຕົນເອ"
-"ງ. ທ່ານຄວນໄປທີ່ບັນຊີທະນາຄານຂອງຄູ່ຄ້າເພື່ອຢືນຢັນມັນ."
+"ເພື່ອບັນທຶກການຊຳລະດ້ວຍ %(payment_method)s, "
+"ບັນຊີທະນາຄານຂອງຜູ້ຮັບຕ້ອງໄດ້ຮັບການຢືນຢັນດ້ວຍຕົນເອງ. ທ່ານຄວນໄປທີ່ບັນຊີທະນາຄານຂອງຄູ່ຄ້າເພື່ອຢືນຢັນມັນ."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -17002,8 +16924,8 @@ msgid ""
 "printing it. If left blank, the first available and usable method will be "
 "used."
 msgstr ""
-"ປະເພດຂອງ QR-code ທີ່ຈະສ້າງຂຶ້ນສໍາລັບການຊໍາລະໃບແຈ້ງໜີ້ ນີ້ ເວລາພິມອອກ. ຖ້າປະວ່າງໄວ້, ລະບົບຈະໃຊ້ວິທີ"
-"ທຳອິດທີ່ມີໃຫ້."
+"ປະເພດຂອງ QR-code ທີ່ຈະສ້າງຂຶ້ນສໍາລັບການຊໍາລະໃບແຈ້ງໜີ້ ນີ້ ເວລາພິມອອກ. ຖ້າປະວ່າງໄວ້, "
+"ລະບົບຈະໃຊ້ວິທີທຳອິດທີ່ມີໃຫ້."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__activity_exception_decoration
@@ -17022,8 +16944,8 @@ msgid ""
 "Unable to create a statement due to missing transactions. You may want to "
 "reorder the transactions before proceeding."
 msgstr ""
-"ບໍ່ສາມາດສ້າງໃບລາຍງານໄດ້ ເນື່ອງຈາກບໍ່ມີລາຍການທຸລະກຳ. ທ່ານອາດຈະຕ້ອງການຈັດລຳດັບທຸລະກຳໃໝ່ກ່ອນດໍາເນີນ"
-"ການຕໍ່."
+"ບໍ່ສາມາດສ້າງໃບລາຍງານໄດ້ ເນື່ອງຈາກບໍ່ມີລາຍການທຸລະກຳ. "
+"ທ່ານອາດຈະຕ້ອງການຈັດລຳດັບທຸລະກຳໃໝ່ກ່ອນດໍາເນີນການຕໍ່."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__uncategorized
@@ -17348,9 +17270,9 @@ msgid ""
 "printed in the right country, put in an envelop and sent by snail mail. Use "
 "this feature from the list view to post hundreds of invoices in bulk."
 msgstr ""
-"ໃຊ້ທາງເລືອກ “<i>ສົ່ງທາງໄປສະນີ</i>” ເພື່ອສົ່ງໃບແຈ້ງໜີ້ອັດຕະໂນມັດ. ດ້ວຍລາຄາສະແຕມທ້ອງຖິ່ນ, ພວກເຮົາຈ"
-"ະເຮັດທຸກຢ່າງໃຫ້: ໃບແຈ້ງໜີ້ຂອງທ່ານຈະຖືກພິມໃນປະເທດທີ່ຖືກຕ້ອງ, ໃສ່ຊອງ ແລະ ສົ່ງທາງໄປສະນີ. ໃຊ້ຄຸນສົມບັດນີ້"
-"ຈາກມຸມມອງລາຍການເພື່ອສົ່ງໃບແຈ້ງໜີ້ຈຳນວນຫຼາຍໃນຄັ້ງດຽວ."
+"ໃຊ້ທາງເລືອກ “<i>ສົ່ງທາງໄປສະນີ</i>” ເພື່ອສົ່ງໃບແຈ້ງໜີ້ອັດຕະໂນມັດ. ດ້ວຍລາຄາສະແຕມທ້ອງຖິ່ນ, "
+"ພວກເຮົາຈະເຮັດທຸກຢ່າງໃຫ້: ໃບແຈ້ງໜີ້ຂອງທ່ານຈະຖືກພິມໃນປະເທດທີ່ຖືກຕ້ອງ, ໃສ່ຊອງ ແລະ ສົ່ງທາງໄປສະນີ. "
+"ໃຊ້ຄຸນສົມບັດນີ້ຈາກມຸມມອງລາຍການເພື່ອສົ່ງໃບແຈ້ງໜີ້ຈຳນວນຫຼາຍໃນຄັ້ງດຽວ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__quick_edit_total_amount
@@ -17360,8 +17282,8 @@ msgid ""
 "Odoo will automatically create one invoice line with default values to match "
 "it."
 msgstr ""
-"ໃຊ້ຫ້ອງນີ້ເພື່ອປ້ອນມູນຄ່າລວມຂອງໃບແຈ້ງໜີ້. Odoo ຈະສ້າງແຖວໃບແຈ້ງໜີ້ອັດຕະໂນມັດດ້ວຍຄ່າເລີ່ມຕົ້ນເພື່ອໃຫ້ກົງກັບມັ"
-"ນ."
+"ໃຊ້ຫ້ອງນີ້ເພື່ອປ້ອນມູນຄ່າລວມຂອງໃບແຈ້ງໜີ້. Odoo "
+"ຈະສ້າງແຖວໃບແຈ້ງໜີ້ອັດຕະໂນມັດດ້ວຍຄ່າເລີ່ມຕົ້ນເພື່ອໃຫ້ກົງກັບມັນ."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__used
@@ -17376,9 +17298,9 @@ msgid ""
 "should be reset to zero at each new fiscal year (like expenses, revenue..) "
 "should not have this option set."
 msgstr ""
-"ໃຊ້ໃນລາຍງານເພື່ອໃຫ້ຮູ້ວ່າພວກເຮົາຄວນພິຈາລະນາລາຍການບັນຊີນັບຕັ້ງແຕ່ເລີ່ມຕົ້ນ ແທນທີ່ຈະພິຈາລະນາສະເພາະປີກາ"
-"ນເງິນຫຼືບໍ່. ປະເພດບັນຊີທີ່ຄວນຖືກຕັ້ງຄ່າເປັນສູນໃນແຕ່ລະປີການເງິນໃໝ່ (ເຊັ່ນ: ຄ່າໃຊ້ຈ່າຍ, ລາຍຮັບ...) ບໍ່ຄວນເ"
-"ລືອກທາງເລືອກນີ້."
+"ໃຊ້ໃນລາຍງານເພື່ອໃຫ້ຮູ້ວ່າພວກເຮົາຄວນພິຈາລະນາລາຍການບັນຊີນັບຕັ້ງແຕ່ເລີ່ມຕົ້ນ "
+"ແທນທີ່ຈະພິຈາລະນາສະເພາະປີການເງິນຫຼືບໍ່. ປະເພດບັນຊີທີ່ຄວນຖືກຕັ້ງຄ່າເປັນສູນໃນແຕ່ລະປີການເງິນໃໝ່ (ເຊັ່ນ: "
+"ຄ່າໃຊ້ຈ່າຍ, ລາຍຮັບ...) ບໍ່ຄວນເລືອກທາງເລືອກນີ້."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence
@@ -17390,16 +17312,14 @@ msgstr "ໃຊ້ເພື່ອຈັດລຳດັບປຶ້ມບັນຊ
 msgid ""
 "Used to register a loss when the ending balance of a cash register differs "
 "from what the system computes"
-msgstr ""
-"ໃຊ້ເພື່ອບັນທຶກການຂາດທຶນ ເມື່ອຍອດເຫຼືອສິ້ນສຸດຂອງເຄື່ອງເກັບເງິນແຕກຕ່າງຈາກທີ່ລະບົບຄິດໄລ່"
+msgstr "ໃຊ້ເພື່ອບັນທຶກການຂາດທຶນ ເມື່ອຍອດເຫຼືອສິ້ນສຸດຂອງເຄື່ອງເກັບເງິນແຕກຕ່າງຈາກທີ່ລະບົບຄິດໄລ່"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__profit_account_id
 msgid ""
 "Used to register a profit when the ending balance of a cash register differs "
 "from what the system computes"
-msgstr ""
-"ໃຊ້ເພື່ອບັນທຶກກຳໄລ ເມື່ອຍອດເຫຼືອສິ້ນສຸດຂອງເຄື່ອງເກັບເງິນແຕກຕ່າງຈາກທີ່ລະບົບຄິດໄລ່"
+msgstr "ໃຊ້ເພື່ອບັນທຶກກຳໄລ ເມື່ອຍອດເຫຼືອສິ້ນສຸດຂອງເຄື່ອງເກັບເງິນແຕກຕ່າງຈາກທີ່ລະບົບຄິດໄລ່"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__user_id
@@ -17455,8 +17375,7 @@ msgstr "ຫ້ອງຂໍ້ມູນຊ່ວຍເພື່ອລະບຸສ
 msgid ""
 "Utility field to express whether the journal item is subject to storno "
 "accounting"
-msgstr ""
-"ຫ້ອງຂໍ້ມູນຊ່ວຍເພື່ອລະບຸວ່າລາຍການບັນຊີນີ້ ຢູ່ພາຍໃຕ້ການບັນຊີແບບ Storno ຫຼື ບໍ່"
+msgstr "ຫ້ອງຂໍ້ມູນຊ່ວຍເພື່ອລະບຸວ່າລາຍການບັນຊີນີ້ ຢູ່ພາຍໃຕ້ການບັນຊີແບບ Storno ຫຼື ບໍ່"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
@@ -17526,10 +17445,10 @@ msgid ""
 msgstr ""
 "ມູນຄ່າສໍາລັບຈຳນວນເງິນຂອງແຖວການຕັດໜີ້ສູນ\n"
 "    * ເປີເຊັນ: ເປີເຊັນຂອງຍອດເຫຼືອ, ລະຫວ່າງ 0 ຫາ 100.\n"
-"    * ຄົງທີ່: ມູນຄ່າຄົງທີ່ຂອງການຕັດໜີ້ສູນ. ຈຳນວນເງິນຈະນັບເປັນ ເບື້ອງໜີ້ ຖ້າມັນເປັນຄ່າລົບ, ແລະ ເປັນ ເບື້ອ"
-"ງມີ ຖ້າມັນເປັນຄ່າບວກ.\n"
-"    * ຈາກປ້າຍຊື່: ບໍ່ຈຳເປັນຕ້ອງມີ regex delimiter, ຕ້ອງການພຽງແຕ່ regex ເທົ່ານັ້ນ. ຕົວຢ່າງ ຖ້າທ່"
-"ານຕ້ອງການດຶງຈຳນວນເງິນຈາກ\n"
+"    * ຄົງທີ່: ມູນຄ່າຄົງທີ່ຂອງການຕັດໜີ້ສູນ. ຈຳນວນເງິນຈະນັບເປັນ ເບື້ອງໜີ້ ຖ້າມັນເປັນຄ່າລົບ, ແລະ ເປັນ "
+"ເບື້ອງມີ ຖ້າມັນເປັນຄ່າບວກ.\n"
+"    * ຈາກປ້າຍຊື່: ບໍ່ຈຳເປັນຕ້ອງມີ regex delimiter, ຕ້ອງການພຽງແຕ່ regex ເທົ່ານັ້ນ. ຕົວຢ່າງ "
+"ຖ້າທ່ານຕ້ອງການດຶງຈຳນວນເງິນຈາກ\n"
 "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
 "ທ່ານສາມາດປ້ອນ\n"
 "BRT: ([\\d,]+)"
@@ -17674,8 +17593,8 @@ msgid ""
 "Want to make your life even easier and automate bill validation from this "
 "vendor ?"
 msgstr ""
-"ຕ້ອງການເຮັດໃຫ້ຊີວິດຂອງທ່ານງ່າຍຂຶ້ນ ແລະ ເຮັດໃຫ້ການກວດສອບໃບເກັບເງິນຈາກຜູ້ຈຳໜ່າຍນີ້ເປັນແບບອັດຕະໂນມັດ"
-"ບໍ່?"
+"ຕ້ອງການເຮັດໃຫ້ຊີວິດຂອງທ່ານງ່າຍຂຶ້ນ ແລະ "
+"ເຮັດໃຫ້ການກວດສອບໃບເກັບເງິນຈາກຜູ້ຈຳໜ່າຍນີ້ເປັນແບບອັດຕະໂນມັດບໍ່?"
 
 #. module: account
 #. odoo-javascript
@@ -17718,8 +17637,7 @@ msgstr "ຄຳເຕືອນໃນໃບແຈ້ງໜີ້"
 msgid ""
 "We can't leave this document without any company. Please select a company "
 "for this document."
-msgstr ""
-"ພວກເຮົາບໍ່ສາມາດປະເອກະສານນີ້ໄວ້ໂດຍບໍ່ມີບໍລິສັດ. ກະລຸນາເລືອກບໍລິສັດສຳລັບເອກະສານນີ້."
+msgstr "ພວກເຮົາບໍ່ສາມາດປະເອກະສານນີ້ໄວ້ໂດຍບໍ່ມີບໍລິສັດ. ກະລຸນາເລືອກບໍລິສັດສຳລັບເອກະສານນີ້."
 
 #. module: account
 #. odoo-python
@@ -17798,8 +17716,8 @@ msgid ""
 "When targeting an expression for carryover, the label of that expression "
 "must start with _applied_carryover_"
 msgstr ""
-"ເມື່ອກຳນົດ expression ສຳລັບການຍົກຍອດ (carryover), ປ້າຍຊື່ຂອງ expression ນັ້ນຕ້ອງເລີ່ມຕົ້ນດ້ວ"
-"ຍ _applied_carryover_"
+"ເມື່ອກຳນົດ expression ສຳລັບການຍົກຍອດ (carryover), ປ້າຍຊື່ຂອງ expression "
+"ນັ້ນຕ້ອງເລີ່ມຕົ້ນດ້ວຍ _applied_carryover_"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
@@ -17869,8 +17787,7 @@ msgstr "ພິມຊື່ລູກຄ້າເພື່ອ <b>ສ້າງໃ�
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Write here <b>your own email address</b> to test the flow."
-msgstr ""
-"ຂຽນທີ່ຢູ່ <b>ອີເມວຂອງທ່ານເອງ</b> ຢູ່ບ່ອນນີ້ເພື່ອທົດສອບຂັ້ນຕອນການເຮັດວຽກ."
+msgstr "ຂຽນທີ່ຢູ່ <b>ອີເມວຂອງທ່ານເອງ</b> ຢູ່ບ່ອນນີ້ເພື່ອທົດສອບຂັ້ນຕອນການເຮັດວຽກ."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_is_exchange_account
@@ -17919,15 +17836,15 @@ msgid ""
 "You can not archive a journal containing draft journal entries.\n"
 "\n"
 "To proceed:\n"
-"1/ click on the top-right button 'Journal Entries' from this journal form\n"
-"2/ then filter on 'Draft' entries\n"
+"1/ go to Accounting > Accounting > Journal Entries\n"
+"2/ filter on this journal and on 'Unposted' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
-"ທ່ານບໍ່ສາມາດຈັດເກັບປຶ້ມບັນຊີທີ່ມີລາຍການຮ່າງໄດ້.\n"
+"ທ່ານບໍ່ສາມາດຈັດເກັບປຶ້ມບັນຊີທີ່ມີລາຍການບັນຊີສະບັບຮ່າງໄດ້.\n"
 "\n"
 "ເພື່ອດຳເນີນການ:\n"
-"1/ ຄລິກປຸ່ມ 'ລາຍການປຶ້ມບັນຊີ' ຢູ່ມຸມຂວາເທິງຂອງຟອມປຶ້ມບັນຊີນີ້\n"
-"2/ ຈາກນັ້ນກອງເອົາລາຍການ 'ຮ່າງ'\n"
+"1/ ໄປທີ່ ການບັນຊີ > ການບັນຊີ > ລາຍການບັນທຶກບັນຊີ\n"
+"2/ ກັ່ນຕອງປຶ້ມບັນຊີນີ້ ແລະ ລາຍການ 'ຍັງບໍ່ທັນລົງບັນຊີ'\n"
 "3/ ເລືອກທັງໝົດແລ້ວລົງບັນຊີ ຫຼື ລຶບພວກມັນອອກຜ່ານເມນູການດຳເນີນການ"
 
 #. module: account
@@ -17937,16 +17854,15 @@ msgid ""
 "You can not delete payment terms as other records still reference it. "
 "However, you can archive it."
 msgstr ""
-"ທ່ານບໍ່ສາມາດລຶບເງື່ອນໄຂການຊຳລະໄດ້ ເນື່ອງຈາກຍັງມີຂໍ້ມູນອື່ນອ້າງອີງເຖິງມັນ. ແນວໃດກໍຕາມ, ທ່ານສາມາດຈັດເກັ"
-"ບ (Archive) ມັນໄດ້."
+"ທ່ານບໍ່ສາມາດລຶບເງື່ອນໄຂການຊຳລະໄດ້ ເນື່ອງຈາກຍັງມີຂໍ້ມູນອື່ນອ້າງອີງເຖິງມັນ. ແນວໃດກໍຕາມ, "
+"ທ່ານສາມາດຈັດເກັບ (Archive) ມັນໄດ້."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_resequence.py:0
 msgid ""
 "You can not reorder sequence by date when the journal is locked with a hash."
-msgstr ""
-"ທ່ານບໍ່ສາມາດຈັດລຽງລຳດັບຄືນໃໝ່ຕາມວັນທີໄດ້ ເມື່ອປຶ້ມບັນຊີຖືກລັອກດ້ວຍ Hash."
+msgstr "ທ່ານບໍ່ສາມາດຈັດລຽງລຳດັບຄືນໃໝ່ຕາມວັນທີໄດ້ ເມື່ອປຶ້ມບັນຊີຖືກລັອກດ້ວຍ Hash."
 
 #. module: account
 #. odoo-python
@@ -17959,8 +17875,7 @@ msgstr "ທ່ານສາມາດປ່ຽນງວດ/ບັນຊີ ໄດ�
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "You can only change the period/account for posted journal items."
-msgstr ""
-"ທ່ານສາມາດປ່ຽນງວດ/ບັນຊີ ໄດ້ສະເພາະລາຍການປຶ້ມບັນຊີທີ່ລົງບັນຊີແລ້ວເທົ່ານັ້ນ."
+msgstr "ທ່ານສາມາດປ່ຽນງວດ/ບັນຊີ ໄດ້ສະເພາະລາຍການປຶ້ມບັນຊີທີ່ລົງບັນຊີແລ້ວເທົ່ານັ້ນ."
 
 #. module: account
 #. odoo-python
@@ -17978,8 +17893,7 @@ msgstr "ທ່ານສາມາດກະທົບຍອດໄດ້ສະເພ
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You can only register payment for posted journal entries."
-msgstr ""
-"ທ່ານສາມາດລົງທະບຽນການຊຳລະໄດ້ສະເພາະລາຍການປຶ້ມບັນຊີທີ່ລົງບັນຊີແລ້ວເທົ່ານັ້ນ."
+msgstr "ທ່ານສາມາດລົງທະບຽນການຊຳລະໄດ້ສະເພາະລາຍການປຶ້ມບັນຊີທີ່ລົງບັນຊີແລ້ວເທົ່ານັ້ນ."
 
 #. module: account
 #. odoo-python
@@ -18006,8 +17920,8 @@ msgid ""
 "invoices, once validated, to help the customer to refer to that particular "
 "invoice when making the payment."
 msgstr ""
-"ທ່ານສາມາດກຳນົດການສື່ສານເລີ່ມຕົ້ນທີ່ຈະສະແດງໃນໃບແຈ້ງໜີ້ລູກຄ້າ ເມື່ອຢືນຢັນແລ້ວ ເພື່ອຊ່ວຍໃຫ້ລູກຄ້າອ້າງອີງເຖິງໃ"
-"ບແຈ້ງໜີ້ນັ້ນເມື່ອເຮັດການຊຳລະ."
+"ທ່ານສາມາດກຳນົດການສື່ສານເລີ່ມຕົ້ນທີ່ຈະສະແດງໃນໃບແຈ້ງໜີ້ລູກຄ້າ ເມື່ອຢືນຢັນແລ້ວ "
+"ເພື່ອຊ່ວຍໃຫ້ລູກຄ້າອ້າງອີງເຖິງໃບແຈ້ງໜີ້ນັ້ນເມື່ອເຮັດການຊຳລະ."
 
 #. module: account
 #. odoo-python
@@ -18021,8 +17935,7 @@ msgstr "ທ່ານບໍ່ສາມາດບລັອກໃບແຈ້ງໜ
 msgid ""
 "You can't change the company of your journal since there are some journal "
 "entries linked to it."
-msgstr ""
-"ທ່ານບໍ່ສາມາດປ່ຽນບໍລິສັດຂອງປຶ້ມບັນຊີຂອງທ່ານໄດ້ ເນື່ອງຈາກມີບາງລາຍການປຶ້ມບັນຊີເຊື່ອມໂຍງກັບມັນ."
+msgstr "ທ່ານບໍ່ສາມາດປ່ຽນບໍລິສັດຂອງປຶ້ມບັນຊີຂອງທ່ານໄດ້ ເນື່ອງຈາກມີບາງລາຍການປຶ້ມບັນຊີເຊື່ອມໂຍງກັບມັນ."
 
 #. module: account
 #. odoo-python
@@ -18030,8 +17943,7 @@ msgstr ""
 msgid ""
 "You can't change the company of your tax since there are some journal items "
 "linked to it."
-msgstr ""
-"ທ່ານບໍ່ສາມາດປ່ຽນບໍລິສັດຂອງພາສີຂອງທ່ານໄດ້ ເນື່ອງຈາກມີບາງລາຍການປຶ້ມບັນຊີເຊື່ອມໂຍງກັບມັນ."
+msgstr "ທ່ານບໍ່ສາມາດປ່ຽນບໍລິສັດຂອງພາສີຂອງທ່ານໄດ້ ເນື່ອງຈາກມີບາງລາຍການປຶ້ມບັນຊີເຊື່ອມໂຍງກັບມັນ."
 
 #. module: account
 #. odoo-python
@@ -18041,8 +17953,8 @@ msgid ""
 "account set either on the company or the %(payment_method)s payment method "
 "in the %(journal)s journal."
 msgstr ""
-"ທ່ານບໍ່ສາມາດສ້າງການຊຳລະໃໝ່ໄດ້ໂດຍບໍ່ມີການຕັ້ງຄ່າບັນຊີການຊຳລະ/ການຮັບເງິນຄ້າງຊຳລະໃນບໍລິສັດ ຫຼື ວິທີການຊຳ"
-"ລະ %(payment_method)s ໃນສະໝຸດບັນຊີ %(journal)s."
+"ທ່ານບໍ່ສາມາດສ້າງການຊຳລະໃໝ່ໄດ້ໂດຍບໍ່ມີການຕັ້ງຄ່າບັນຊີການຊຳລະ/ການຮັບເງິນຄ້າງຊຳລະໃນບໍລິສັດ ຫຼື "
+"ວິທີການຊຳລະ %(payment_method)s ໃນສະໝຸດບັນຊີ %(journal)s."
 
 #. module: account
 #. odoo-python
@@ -18051,8 +17963,8 @@ msgid ""
 "You can't create a new statement line without a suspense account set on the "
 "%s journal."
 msgstr ""
-"ທ່ານບໍ່ສາມາດສ້າງແຖວລາຍງານທະນາຄານໃໝ່ໄດ້ ໂດຍທີ່ບໍ່ມີບັນຊີລໍຖ້າກວດສອບ (Suspense Account) ກຳນົດໄວ້"
-"ໃນປຶ້ມບັນຊີ %s."
+"ທ່ານບໍ່ສາມາດສ້າງແຖວລາຍງານທະນາຄານໃໝ່ໄດ້ ໂດຍທີ່ບໍ່ມີບັນຊີລໍຖ້າກວດສອບ (Suspense Account) "
+"ກຳນົດໄວ້ໃນປຶ້ມບັນຊີ %s."
 
 #. module: account
 #. odoo-python
@@ -18076,8 +17988,8 @@ msgid ""
 "You can't delete a posted journal item. Don’t play games with your "
 "accounting records; reset the journal entry to draft before deleting it."
 msgstr ""
-"ທ່ານບໍ່ສາມາດລຶບລາຍການບັນຊີທີ່ລົງບັນຊີແລ້ວໄດ້. ກະລຸນາຢ່າດັດແກ້ຂໍ້ມູນບັນຊີໂດຍບໍ່ຖືກຕ້ອງ; ໃຫ້ປ່ຽນສະຖານະການລົງ"
-"ບັນຊີເປັນຮ່າງກ່ອນທີ່ຈະລຶບມັນ."
+"ທ່ານບໍ່ສາມາດລຶບລາຍການບັນຊີທີ່ລົງບັນຊີແລ້ວໄດ້. ກະລຸນາຢ່າດັດແກ້ຂໍ້ມູນບັນຊີໂດຍບໍ່ຖືກຕ້ອງ; "
+"ໃຫ້ປ່ຽນສະຖານະການລົງບັນຊີເປັນຮ່າງກ່ອນທີ່ຈະລຶບມັນ."
 
 #. module: account
 #. odoo-python
@@ -18098,8 +18010,8 @@ msgid ""
 "You can't have two payment method lines of the same payment type (%"
 "(payment_type)s) and with the same name (%(name)s) on a single journal."
 msgstr ""
-"ທ່ານບໍ່ສາມາດມີຮູບແບບການຊຳລະເງິນສອງລາຍການ ທີ່ມີປະເພດການຊຳລະດຽວກັນ (%(payment_type)s) ແລ"
-"ະ ຊື່ດຽວກັນ (%(name)s) ໃນສະໝຸດບັນຊີດຽວກັນ."
+"ທ່ານບໍ່ສາມາດມີຮູບແບບການຊຳລະເງິນສອງລາຍການ ທີ່ມີປະເພດການຊຳລະດຽວກັນ (%(payment_type)s) "
+"ແລະ ຊື່ດຽວກັນ (%(name)s) ໃນສະໝຸດບັນຊີດຽວກັນ."
 
 #. module: account
 #. odoo-python
@@ -18107,8 +18019,7 @@ msgstr ""
 msgid ""
 "You can't open the register payment wizard without at least one receivable/"
 "payable line."
-msgstr ""
-"ທ່ານບໍ່ສາມາດເປີດໜ້າຕ່າງລົງທະບຽນການຊຳລະໄດ້ ໂດຍທີ່ບໍ່ມີຢ່າງໜ້ອຍໜຶ່ງແຖວບັນຊີລູກໜີ້/ເຈົ້າໜີ້."
+msgstr "ທ່ານບໍ່ສາມາດເປີດໜ້າຕ່າງລົງທະບຽນການຊຳລະໄດ້ ໂດຍທີ່ບໍ່ມີຢ່າງໜ້ອຍໜຶ່ງແຖວບັນຊີລູກໜີ້/ເຈົ້າໜີ້."
 
 #. module: account
 #. odoo-python
@@ -18125,8 +18036,7 @@ msgstr ""
 msgid ""
 "You can't provide an amount in foreign currency without specifying a foreign "
 "currency."
-msgstr ""
-"ທ່ານບໍ່ສາມາດລະບຸຈຳນວນເງິນໃນສະກຸນເງິນຕ່າງປະເທດໄດ້ ໂດຍທີ່ບໍ່ໄດ້ລະບຸສະກຸນເງິນຕ່າງປະເທດ."
+msgstr "ທ່ານບໍ່ສາມາດລະບຸຈຳນວນເງິນໃນສະກຸນເງິນຕ່າງປະເທດໄດ້ ໂດຍທີ່ບໍ່ໄດ້ລະບຸສະກຸນເງິນຕ່າງປະເທດ."
 
 #. module: account
 #. odoo-python
@@ -18134,8 +18044,7 @@ msgstr ""
 msgid ""
 "You can't register a payment because there is nothing left to pay on the "
 "selected journal items."
-msgstr ""
-"ທ່ານບໍ່ສາມາດລົງທະບຽນການຊຳລະໄດ້ ເນື່ອງຈາກບໍ່ມີຫຍັງເຫຼືອໃຫ້ຊຳລະໃນລາຍການປຶ້ມບັນຊີທີ່ເລືອກ."
+msgstr "ທ່ານບໍ່ສາມາດລົງທະບຽນການຊຳລະໄດ້ ເນື່ອງຈາກບໍ່ມີຫຍັງເຫຼືອໃຫ້ຊຳລະໃນລາຍການປຶ້ມບັນຊີທີ່ເລືອກ."
 
 #. module: account
 #. odoo-python
@@ -18143,8 +18052,7 @@ msgstr ""
 msgid ""
 "You can't register payments for both inbound and outbound moves at the same "
 "time."
-msgstr ""
-"ທ່ານບໍ່ສາມາດລົງທະບຽນການຊຳລະເງິນສຳລັບທັງລາຍການຂາເຂົ້າ ແລະ ຂາອອກໃນເວລາດຽວກັນໄດ້."
+msgstr "ທ່ານບໍ່ສາມາດລົງທະບຽນການຊຳລະເງິນສຳລັບທັງລາຍການຂາເຂົ້າ ແລະ ຂາອອກໃນເວລາດຽວກັນໄດ້."
 
 #. module: account
 #. odoo-python
@@ -18152,8 +18060,7 @@ msgstr ""
 msgid ""
 "You can't reset to draft those journal entries. You need to request a "
 "cancellation instead."
-msgstr ""
-"ທ່ານບໍ່ສາມາດປ່ຽນລາຍການບັນຊີເຫຼົ່ານີ້ໃຫ້ເປັນຮ່າງໄດ້. ທ່ານຈໍາເປັນຕ້ອງສົ່ງຄຳຮ້ອງຂໍຍົກເລີກແທນ."
+msgstr "ທ່ານບໍ່ສາມາດປ່ຽນລາຍການບັນຊີເຫຼົ່ານີ້ໃຫ້ເປັນຮ່າງໄດ້. ທ່ານຈໍາເປັນຕ້ອງສົ່ງຄຳຮ້ອງຂໍຍົກເລີກແທນ."
 
 #. module: account
 #. odoo-python
@@ -18169,8 +18076,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid ""
 "You cannot add/modify entries prior to and inclusive of: %(lock_date_info)s."
-msgstr ""
-"ທ່ານບໍ່ສາມາດເພີ່ມ/ດັດແກ້ ລາຍການກ່ອນ ແລະ ລວມເຖິງວັນທີ: %(lock_date_info)s."
+msgstr "ທ່ານບໍ່ສາມາດເພີ່ມ/ດັດແກ້ ລາຍການກ່ອນ ແລະ ລວມເຖິງວັນທີ: %(lock_date_info)s."
 
 #. module: account
 #. odoo-python
@@ -18185,8 +18091,7 @@ msgstr "ທ່ານບໍ່ສາມາດປ່ຽນແປງຈຳນວນ
 msgid ""
 "You cannot change the currency of the company since some journal items "
 "already exist"
-msgstr ""
-"ທ່ານບໍ່ສາມາດປ່ຽນສະກຸນເງິນຂອງບໍລິສັດໄດ້ ເນື່ອງຈາກມີບາງລາຍການປຶ້ມບັນຊີມີຢູ່ແລ້ວ"
+msgstr "ທ່ານບໍ່ສາມາດປ່ຽນສະກຸນເງິນຂອງບໍລິສັດໄດ້ ເນື່ອງຈາກມີບາງລາຍການປຶ້ມບັນຊີມີຢູ່ແລ້ວ"
 
 #. module: account
 #. odoo-python
@@ -18221,8 +18126,8 @@ msgid ""
 "You cannot create a move already in the posted state. Please create a draft "
 "move and post it after."
 msgstr ""
-"ທ່ານບໍ່ສາມາດສ້າງລາຍການທີ່ຢູ່ໃນສະຖານະທີ່ລົງບັນຊີແລ້ວໄດ້. ກະລຸນາສ້າງເປັນລາຍການຮ່າງກ່ອນ ແລ້ວຈຶ່ງລົງບັນຊີພາ"
-"ຍຫຼັງ."
+"ທ່ານບໍ່ສາມາດສ້າງລາຍການທີ່ຢູ່ໃນສະຖານະທີ່ລົງບັນຊີແລ້ວໄດ້. ກະລຸນາສ້າງເປັນລາຍການຮ່າງກ່ອນ "
+"ແລ້ວຈຶ່ງລົງບັນຊີພາຍຫຼັງ."
 
 #. module: account
 #. odoo-python
@@ -18236,8 +18141,7 @@ msgstr "ທ່ານບໍ່ສາມາດສ້າງກຸ່ມບັນຊ
 msgid ""
 "You cannot delete a payable/receivable line as it would not be consistent "
 "with the payment terms"
-msgstr ""
-"ທ່ານບໍ່ສາມາດລຶບແຖວເຈົ້າໜີ້/ລູກໜີ້ໄດ້ ເນື່ອງຈາກມັນຈະບໍ່ສອດຄ່ອງກັບເງື່ອນໄຂການຊຳລະ"
+msgstr "ທ່ານບໍ່ສາມາດລຶບແຖວເຈົ້າໜີ້/ລູກໜີ້ໄດ້ ເນື່ອງຈາກມັນຈະບໍ່ສອດຄ່ອງກັບເງື່ອນໄຂການຊຳລະ"
 
 #. module: account
 #. odoo-python
@@ -18257,8 +18161,7 @@ msgstr "ທ່ານບໍ່ສາມາດລຶບລາຍການບັນ
 msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
 "definition."
-msgstr ""
-"ທ່ານບໍ່ສາມາດລຶບແທັກບັນຊີນີ້ (%s) ໄດ້, ເນື່ອງຈາກມັນຖືກນໍາໃຊ້ໃນການກຳນົດຜັງບັນຊີ."
+msgstr "ທ່ານບໍ່ສາມາດລຶບແທັກບັນຊີນີ້ (%s) ໄດ້, ເນື່ອງຈາກມັນຖືກນໍາໃຊ້ໃນການກຳນົດຜັງບັນຊີ."
 
 #. module: account
 #. odoo-python
@@ -18267,16 +18170,15 @@ msgid ""
 "You cannot delete this entry, as it has already consumed a sequence number "
 "and is not the last one in the chain. You should probably revert it instead."
 msgstr ""
-"ທ່ານບໍ່ສາມາດລຶບລາຍການນີ້ໄດ້, ເນື່ອງຈາກມັນໄດ້ໃຊ້ເລກລຳດັບໄປແລ້ວ ແລະ ບໍ່ແມ່ນລາຍການສຸດທ້າຍໃນລະບົບ. ທ່າ"
-"ນຄວນຈະໃຊ້ວິທີການປີ້ນລາຍການແທນ."
+"ທ່ານບໍ່ສາມາດລຶບລາຍການນີ້ໄດ້, ເນື່ອງຈາກມັນໄດ້ໃຊ້ເລກລຳດັບໄປແລ້ວ ແລະ ບໍ່ແມ່ນລາຍການສຸດທ້າຍໃນລະບົບ. "
+"ທ່ານຄວນຈະໃຊ້ວິທີການປີ້ນລາຍການແທນ."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/mail_template.py:0
 msgid ""
 "You cannot delete this mail template, it is used in the invoice sending flow."
-msgstr ""
-"ທ່ານບໍ່ສາມາດລຶບແມ່ແບບອີເມລນີ້ໄດ້, ເນື່ອງຈາກມັນຖືກນໍາໃຊ້ໃນຂັ້ນຕອນການສົ່ງໃບແຈ້ງໜີ້."
+msgstr "ທ່ານບໍ່ສາມາດລຶບແມ່ແບບອີເມລນີ້ໄດ້, ເນື່ອງຈາກມັນຖືກນໍາໃຊ້ໃນຂັ້ນຕອນການສົ່ງໃບແຈ້ງໜີ້."
 
 #. module: account
 #. odoo-python
@@ -18284,8 +18186,7 @@ msgstr ""
 msgid ""
 "You cannot delete this report (%s), it is used by the accounting PDF "
 "generation engine."
-msgstr ""
-"ທ່ານບໍ່ສາມາດລຶບລາຍງານນີ້ (%s) ໄດ້, ເນື່ອງຈາກມັນຖືກນໍາໃຊ້ໂດຍລະບົບການສ້າງ PDF ຂອງບັນຊີ."
+msgstr "ທ່ານບໍ່ສາມາດລຶບລາຍງານນີ້ (%s) ໄດ້, ເນື່ອງຈາກມັນຖືກນໍາໃຊ້ໂດຍລະບົບການສ້າງ PDF ຂອງບັນຊີ."
 
 #. module: account
 #. odoo-python
@@ -18300,8 +18201,8 @@ msgid ""
 "You cannot disable this setting because some of your taxes are cash basis. "
 "Modify your taxes first before disabling this setting."
 msgstr ""
-"ທ່ານບໍ່ສາມາດປິດການຕັ້ງຄ່ານີ້ໄດ້ ເນື່ອງຈາກບາງພາສີຂອງທ່ານເປັນແບບເກນເງິນສົດ. ແກ້ໄຂພາສີຂອງທ່ານກ່ອນທີ່ຈະປິ"
-"ດການຕັ້ງຄ່ານີ້."
+"ທ່ານບໍ່ສາມາດປິດການຕັ້ງຄ່ານີ້ໄດ້ ເນື່ອງຈາກບາງພາສີຂອງທ່ານເປັນແບບເກນເງິນສົດ. "
+"ແກ້ໄຂພາສີຂອງທ່ານກ່ອນທີ່ຈະປິດການຕັ້ງຄ່ານີ້."
 
 #. module: account
 #. odoo-python
@@ -18341,8 +18242,8 @@ msgid ""
 "unless the name is removed or set to \"/\". This might create a gap in the "
 "sequence."
 msgstr ""
-"ທ່ານບໍ່ສາມາດດັດແກ້ສະໝຸດບັນຊີຂອງການເຄື່ອນໄຫວບັນຊີ ຖ້າມັນໄດ້ຖືກລົງບັນຊີໄປແລ້ວ, ເວັ້ນເສຍແຕ່ວ່າຊື່ຈະຖືກລຶບອອ"
-"ກ ຫຼື ຕັ້ງເປັນ \"/\". ນີ້ອາດຈະເຮັດໃຫ້ເກີດຊ່ອງຫວ່າງໃນເລກລຳດັບ."
+"ທ່ານບໍ່ສາມາດດັດແກ້ສະໝຸດບັນຊີຂອງການເຄື່ອນໄຫວບັນຊີ ຖ້າມັນໄດ້ຖືກລົງບັນຊີໄປແລ້ວ, "
+"ເວັ້ນເສຍແຕ່ວ່າຊື່ຈະຖືກລຶບອອກ ຫຼື ຕັ້ງເປັນ \"/\". ນີ້ອາດຈະເຮັດໃຫ້ເກີດຊ່ອງຫວ່າງໃນເລກລຳດັບ."
 
 #. module: account
 #. odoo-python
@@ -18361,8 +18262,7 @@ msgstr ""
 msgid ""
 "You cannot have a receivable/payable account that is not reconcilable. "
 "(account code: %s)"
-msgstr ""
-"ທ່ານບໍ່ສາມາດມີບັນຊີລູກໜີ້/ເຈົ້າໜີ້ ທີ່ບໍ່ສາມາດກະທົບຍອດໄດ້. (ລະຫັດບັນຊີ: %s)"
+msgstr "ທ່ານບໍ່ສາມາດມີບັນຊີລູກໜີ້/ເຈົ້າໜີ້ ທີ່ບໍ່ສາມາດກະທົບຍອດໄດ້. (ລະຫັດບັນຊີ: %s)"
 
 #. module: account
 #. odoo-python
@@ -18370,8 +18270,7 @@ msgstr ""
 msgid ""
 "You cannot have more than one account with \"Current Year Earnings\" as "
 "type. (accounts: %s)"
-msgstr ""
-"ທ່ານບໍ່ສາມາດມີຫຼາຍກວ່າໜຶ່ງບັນຊີທີ່ມີປະເພດເປັນ \"ກຳໄລສະສົມປີນີ້\". (ບັນຊີ: %s)"
+msgstr "ທ່ານບໍ່ສາມາດມີຫຼາຍກວ່າໜຶ່ງບັນຊີທີ່ມີປະເພດເປັນ \"ກຳໄລສະສົມປີນີ້\". (ບັນຊີ: %s)"
 
 #. module: account
 #. odoo-python
@@ -18381,8 +18280,8 @@ msgid ""
 "already posted.                 If you are absolutely sure you want to "
 "modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
-"ທ່ານບໍ່ສາມາດນໍາເຂົ້າ \"ຍອດຍົກມາ\" ໄດ້ ຖ້າການເຄື່ອນໄຫວຍອດຍົກມາ (%s) ໄດ້ຖືກລົງບັນຊີແລ້ວ. ຫາກທ່ານໝັ້ນ"
-"ໃຈວ່າຕ້ອງການດັດແກ້ຍອດຍົກມາຂອງບັນຊີ, ໃຫ້ປ່ຽນສະຖານະການເຄື່ອນໄຫວເປັນຮ່າງກ່ອນ."
+"ທ່ານບໍ່ສາມາດນໍາເຂົ້າ \"ຍອດຍົກມາ\" ໄດ້ ຖ້າການເຄື່ອນໄຫວຍອດຍົກມາ (%s) ໄດ້ຖືກລົງບັນຊີແລ້ວ. "
+"ຫາກທ່ານໝັ້ນໃຈວ່າຕ້ອງການດັດແກ້ຍອດຍົກມາຂອງບັນຊີ, ໃຫ້ປ່ຽນສະຖານະການເຄື່ອນໄຫວເປັນຮ່າງກ່ອນ."
 
 #. module: account
 #. odoo-python
@@ -18396,8 +18295,7 @@ msgstr "ທ່ານບໍ່ສາມາດຮວມບັນຊີເຂົ້
 msgid ""
 "You cannot modify the account number or partner of an account that has been "
 "trusted."
-msgstr ""
-"ທ່ານບໍ່ສາມາດແກ້ໄຂເລກບັນຊີ ຫຼື ຄູ່ຄ້າ ຂອງບັນຊີທີ່ໄດ້ຮັບການຢືນຢັນຄວາມໜ້າເຊື່ອຖືແລ້ວ."
+msgstr "ທ່ານບໍ່ສາມາດແກ້ໄຂເລກບັນຊີ ຫຼື ຄູ່ຄ້າ ຂອງບັນຊີທີ່ໄດ້ຮັບການຢືນຢັນຄວາມໜ້າເຊື່ອຖືແລ້ວ."
 
 #. module: account
 #. odoo-python
@@ -18411,8 +18309,7 @@ msgstr "ທ່ານບໍ່ສາມາດແກ້ໄຂຫ້ອງ %s ຂ�
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot modify the following readonly fields on a posted move: %s"
-msgstr ""
-"ທ່ານບໍ່ສາມາດດັດແກ້ຟິວທີ່ໃຫ້ອ່ານຢ່າງດຽວ (Readonly) ຕໍ່ໄປນີ້ໃນລາຍການທີ່ລົງບັນຊີແລ້ວ: %s"
+msgstr "ທ່ານບໍ່ສາມາດດັດແກ້ຟິວທີ່ໃຫ້ອ່ານຢ່າງດຽວ (Readonly) ຕໍ່ໄປນີ້ໃນລາຍການທີ່ລົງບັນຊີແລ້ວ: %s"
 
 #. module: account
 #. odoo-python
@@ -18421,8 +18318,8 @@ msgid ""
 "You cannot modify the taxes related to a posted journal item, you should "
 "reset the journal entry to draft to do so."
 msgstr ""
-"ທ່ານບໍ່ສາມາດແກ້ໄຂພາສີທີ່ກ່ຽວຂ້ອງກັບລາຍການປຶ້ມບັນຊີທີ່ລົງບັນຊີແລ້ວໄດ້, ທ່ານຄວນປ່ຽນລາຍການປຶ້ມບັນຊີຄືນເປັນສະຖ"
-"ານະຮ່າງເພື່ອດຳເນີນການ."
+"ທ່ານບໍ່ສາມາດແກ້ໄຂພາສີທີ່ກ່ຽວຂ້ອງກັບລາຍການປຶ້ມບັນຊີທີ່ລົງບັນຊີແລ້ວໄດ້, "
+"ທ່ານຄວນປ່ຽນລາຍການປຶ້ມບັນຊີຄືນເປັນສະຖານະຮ່າງເພື່ອດຳເນີນການ."
 
 #. module: account
 #. odoo-python
@@ -18441,8 +18338,7 @@ msgstr "ທ່ານບໍ່ສາມາດລົງບັນຊີໃນປຶ
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot post an entry with an archived analytic account: %s"
-msgstr ""
-"ທ່ານບໍ່ສາມາດລົງບັນຊີລາຍການ ທີ່ມີບັນຊີວິເຄາະທີ່ຖືກຈັດເກັບ (Archived) ແລ້ວ: %s"
+msgstr "ທ່ານບໍ່ສາມາດລົງບັນຊີລາຍການ ທີ່ມີບັນຊີວິເຄາະທີ່ຖືກຈັດເກັບ (Archived) ແລ້ວ: %s"
 
 #. module: account
 #. odoo-python
@@ -18450,8 +18346,7 @@ msgstr ""
 msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
 "already been used to make accounting entries."
-msgstr ""
-"ທ່ານບໍ່ສາມາດຫຼຸດຈຳນວນຕຳແໜ່ງທົດສະນິຍົມຂອງສະກຸນເງິນທີ່ເຄີຍຖືກນຳໃຊ້ໃນການລົງບັນຊີແລ້ວໄດ້."
+msgstr "ທ່ານບໍ່ສາມາດຫຼຸດຈຳນວນຕຳແໜ່ງທົດສະນິຍົມຂອງສະກຸນເງິນທີ່ເຄີຍຖືກນຳໃຊ້ໃນການລົງບັນຊີແລ້ວໄດ້."
 
 #. module: account
 #. odoo-python
@@ -18471,8 +18366,7 @@ msgstr "ທ່ານບໍ່ສາມາດລຶບບາງສ່ວນຂອ
 msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on a tax "
 "repartition line."
-msgstr ""
-"ທ່ານບໍ່ສາມາດລຶບ/ປິດການນຳໃຊ້ບັນຊີ \"%s\" ທີ່ຖືກກຳນົດໄວ້ໃນແຖວການແບ່ງສ່ວນພາສີໄດ້."
+msgstr "ທ່ານບໍ່ສາມາດລຶບ/ປິດການນຳໃຊ້ບັນຊີ \"%s\" ທີ່ຖືກກຳນົດໄວ້ໃນແຖວການແບ່ງສ່ວນພາສີໄດ້."
 
 #. module: account
 #. odoo-python
@@ -18480,8 +18374,7 @@ msgstr ""
 msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on the "
 "account mapping of a fiscal position."
-msgstr ""
-"ທ່ານບໍ່ສາມາດລຶບ/ປິດການນຳໃຊ້ບັນຊີ \"%s\" ທີ່ຖືກກຳນົດໄວ້ໃນການຈັບຄູ່ບັນຊີຂອງສະຖານະພາສີໄດ້."
+msgstr "ທ່ານບໍ່ສາມາດລຶບ/ປິດການນຳໃຊ້ບັນຊີ \"%s\" ທີ່ຖືກກຳນົດໄວ້ໃນການຈັບຄູ່ບັນຊີຂອງສະຖານະພາສີໄດ້."
 
 #. module: account
 #. odoo-python
@@ -18506,8 +18399,7 @@ msgstr "ທ່ານບໍ່ສາມາດປ່ຽນການລົງບັ
 #: code:addons/account/models/account_lock_exception.py:0
 msgid ""
 "You cannot revoke Lock Date Exceptions. Ask someone with the 'Adviser' role."
-msgstr ""
-"ທ່ານບໍ່ສາມາດຍົກເລີກການຍົກເວັ້ນວັນທີລັອກໄດ້. ກະລຸນາສອບຖາມຜູ້ທີ່ມີບົດບາດ 'ທີ່ປຶກສາ' (Adviser)."
+msgstr "ທ່ານບໍ່ສາມາດຍົກເລີກການຍົກເວັ້ນວັນທີລັອກໄດ້. ກະລຸນາສອບຖາມຜູ້ທີ່ມີບົດບາດ 'ທີ່ປຶກສາ' (Adviser)."
 
 #. module: account
 #. odoo-python
@@ -18516,8 +18408,8 @@ msgid ""
 "You cannot set a currency on this account as it already has some journal "
 "entries having a different foreign currency."
 msgstr ""
-"ທ່ານບໍ່ສາມາດກຳນົດສະກຸນເງິນໃຫ້ບັນຊີນີ້ໄດ້ ເນື່ອງຈາກມັນມີບາງລາຍການປຶ້ມບັນຊີທີ່ມີສະກຸນເງິນຕ່າງປະເທດທີ່ແຕກຕ່າງ"
-"ກັນຢູ່ແລ້ວ."
+"ທ່ານບໍ່ສາມາດກຳນົດສະກຸນເງິນໃຫ້ບັນຊີນີ້ໄດ້ "
+"ເນື່ອງຈາກມັນມີບາງລາຍການປຶ້ມບັນຊີທີ່ມີສະກຸນເງິນຕ່າງປະເທດທີ່ແຕກຕ່າງກັນຢູ່ແລ້ວ."
 
 #. module: account
 #. odoo-python
@@ -18534,8 +18426,7 @@ msgstr ""
 msgid ""
 "You cannot switch an account to prevent the reconciliation if some partial "
 "reconciliations are still pending."
-msgstr ""
-"ທ່ານບໍ່ສາມາດປ່ຽນບັນຊີເພື່ອປ້ອງກັນການກະທົບຍອດໄດ້ ຖ້າຍັງມີບາງການກະທົບຍອດບາງສ່ວນທີ່ຍັງຄ້າງຢູ່."
+msgstr "ທ່ານບໍ່ສາມາດປ່ຽນບັນຊີເພື່ອປ້ອງກັນການກະທົບຍອດໄດ້ ຖ້າຍັງມີບາງການກະທົບຍອດບາງສ່ວນທີ່ຍັງຄ້າງຢູ່."
 
 #. module: account
 #. odoo-python
@@ -18562,8 +18453,7 @@ msgstr "ທ່ານບໍ່ສາມາດໃຊ້ພາສີໃນແຖວ
 msgid ""
 "You cannot use the field carryover_target in an expression that does not "
 "have the label starting with _carryover_"
-msgstr ""
-"ທ່ານບໍ່ສາມາດໃຊ້ຟິວ carryover_target ໃນນິພົດທີ່ບໍ່ມີປ້າຍກຳກັບທີ່ຂຶ້ນຕົ້ນດ້ວຍ _carryover_"
+msgstr "ທ່ານບໍ່ສາມາດໃຊ້ຟິວ carryover_target ໃນນິພົດທີ່ບໍ່ມີປ້າຍກຳກັບທີ່ຂຶ້ນຕົ້ນດ້ວຍ _carryover_"
 
 #. module: account
 #. odoo-python
@@ -18581,8 +18471,8 @@ msgid ""
 "You cannot use this account (%s) in this journal, check the section 'Control-"
 "Access' under tab 'Advanced Settings' on the related journal."
 msgstr ""
-"ທ່ານບໍ່ສາມາດໃຊ້ບັນຊີນີ້ (%s) ໃນປຶ້ມບັນຊີນີ້ໄດ້, ກວດສອບພາກສ່ວນ 'ການຄວບຄຸມການເຂົ້າເຖິງ' ພາຍໃຕ້ແຖບ 'ກ"
-"ານຕັ້ງຄ່າຂັ້ນສູງ' ໃນປຶ້ມບັນຊີທີ່ກ່ຽວຂ້ອງ."
+"ທ່ານບໍ່ສາມາດໃຊ້ບັນຊີນີ້ (%s) ໃນປຶ້ມບັນຊີນີ້ໄດ້, ກວດສອບພາກສ່ວນ 'ການຄວບຄຸມການເຂົ້າເຖິງ' ພາຍໃຕ້ແຖບ "
+"'ການຕັ້ງຄ່າຂັ້ນສູງ' ໃນປຶ້ມບັນຊີທີ່ກ່ຽວຂ້ອງ."
 
 #. module: account
 #. odoo-python
@@ -18590,8 +18480,7 @@ msgstr ""
 msgid ""
 "You cannot use this wizard on journal entries belonging to different "
 "companies."
-msgstr ""
-"ທ່ານບໍ່ສາມາດໃຊ້ຕົວຊ່ວຍສ້າງ (Wizard) ນີ້ກັບລາຍການປຶ້ມບັນຊີທີ່ຂຶ້ນກັບບໍລິສັດທີ່ແຕກຕ່າງກັນໄດ້."
+msgstr "ທ່ານບໍ່ສາມາດໃຊ້ຕົວຊ່ວຍສ້າງ (Wizard) ນີ້ກັບລາຍການປຶ້ມບັນຊີທີ່ຂຶ້ນກັບບໍລິສັດທີ່ແຕກຕ່າງກັນໄດ້."
 
 #. module: account
 #. odoo-python
@@ -18607,8 +18496,8 @@ msgid ""
 "create a credit note instead. Use the action menu to transform it into a "
 "credit note or refund."
 msgstr ""
-"ທ່ານບໍ່ສາມາດຢືນຢັນໃບແຈ້ງໜີ້ທີ່ມີຈຳນວນເງິນລວມຕິດລົບໄດ້. ທ່ານຄວນສ້າງໃບຫຼຸດໜີ້ແທນ. ໃຊ້ເມນູການດຳເນີນການເພື່"
-"ອປ່ຽນມັນໃຫ້ເປັນໃບຫຼຸດໜີ້ ຫຼື ການຄືນເງິນ."
+"ທ່ານບໍ່ສາມາດຢືນຢັນໃບແຈ້ງໜີ້ທີ່ມີຈຳນວນເງິນລວມຕິດລົບໄດ້. ທ່ານຄວນສ້າງໃບຫຼຸດໜີ້ແທນ. "
+"ໃຊ້ເມນູການດຳເນີນການເພື່ອປ່ຽນມັນໃຫ້ເປັນໃບຫຼຸດໜີ້ ຫຼື ການຄືນເງິນ."
 
 #. module: account
 #. odoo-python
@@ -18617,15 +18506,13 @@ msgstr ""
 msgid ""
 "You do not have the right to perform this operation as you do not have "
 "access to the following companies: %s."
-msgstr ""
-"ທ່ານບໍ່ມີສິດໃນການດຳເນີນການນີ້ ເນື່ອງຈາກທ່ານບໍ່ມີສິດເຂົ້າເຖິງບໍລິສັດຕໍ່ໄປນີ້: %s."
+msgstr "ທ່ານບໍ່ມີສິດໃນການດຳເນີນການນີ້ ເນື່ອງຈາກທ່ານບໍ່ມີສິດເຂົ້າເຖິງບໍລິສັດຕໍ່ໄປນີ້: %s."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "You do not have the right to trust or un-trust a bank account."
-msgstr ""
-"ທ່ານບໍ່ມີສິດໃນການກຳນົດຄວາມໜ້າເຊື່ອຖື ຫຼື ຍົກເລີກຄວາມໜ້າເຊື່ອຖືຂອງບັນຊີທະນາຄານ."
+msgstr "ທ່ານບໍ່ມີສິດໃນການກຳນົດຄວາມໜ້າເຊື່ອຖື ຫຼື ຍົກເລີກຄວາມໜ້າເຊື່ອຖືຂອງບັນຊີທະນາຄານ."
 
 #. module: account
 #. odoo-python
@@ -18652,8 +18539,8 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
-"ທ່ານຕ້ອງກຳນົດຄ່າ 'ປຶ້ມບັນຊີກຳໄລ ຫຼື ຂາດທຶນຈາກອັດຕາແລກປ່ຽນ' ໃນການຕັ້ງຄ່າບໍລິສັດຂອງທ່ານ ເພື່ອຈັດການການ"
-"ບັນທຶກລາຍການບັນຊີທີ່ກ່ຽວຂ້ອງກັບສ່ວນຕ່າງລະຫວ່າງອັດຕາແລກປ່ຽນໂດຍອັດຕະໂນມັດ."
+"ທ່ານຕ້ອງກຳນົດຄ່າ 'ປຶ້ມບັນຊີກຳໄລ ຫຼື ຂາດທຶນຈາກອັດຕາແລກປ່ຽນ' ໃນການຕັ້ງຄ່າບໍລິສັດຂອງທ່ານ "
+"ເພື່ອຈັດການການບັນທຶກລາຍການບັນຊີທີ່ກ່ຽວຂ້ອງກັບສ່ວນຕ່າງລະຫວ່າງອັດຕາແລກປ່ຽນໂດຍອັດຕະໂນມັດ."
 
 #. module: account
 #. odoo-python
@@ -18661,8 +18548,7 @@ msgstr ""
 msgid ""
 "You may only use samples in demo mode, try uploading one of your invoices "
 "instead."
-msgstr ""
-"ທ່ານສາມາດໃຊ້ຕົວຢ່າງໄດ້ສະເພາະໃນໂໝດ Demo ເທົ່ານັ້ນ, ໃຫ້ລອງອັບໂຫຼດໃບແຈ້ງໜີ້ຂອງທ່ານແທນ."
+msgstr "ທ່ານສາມາດໃຊ້ຕົວຢ່າງໄດ້ສະເພາະໃນໂໝດ Demo ເທົ່ານັ້ນ, ໃຫ້ລອງອັບໂຫຼດໃບແຈ້ງໜີ້ຂອງທ່ານແທນ."
 
 #. module: account
 #. odoo-python
@@ -18690,8 +18576,8 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
-"ທ່ານຄວນກຳນົດຄ່າ 'ບັນຊີກຳໄລຈາກອັດຕາແລກປ່ຽນ' ໃນການຕັ້ງຄ່າບໍລິສັດຂອງທ່ານ ເພື່ອຈັດການການບັນທຶກລາຍການ"
-"ບັນຊີທີ່ກ່ຽວຂ້ອງກັບສ່ວນຕ່າງລະຫວ່າງອັດຕາແລກປ່ຽນໂດຍອັດຕະໂນມັດ."
+"ທ່ານຄວນກຳນົດຄ່າ 'ບັນຊີກຳໄລຈາກອັດຕາແລກປ່ຽນ' ໃນການຕັ້ງຄ່າບໍລິສັດຂອງທ່ານ "
+"ເພື່ອຈັດການການບັນທຶກລາຍການບັນຊີທີ່ກ່ຽວຂ້ອງກັບສ່ວນຕ່າງລະຫວ່າງອັດຕາແລກປ່ຽນໂດຍອັດຕະໂນມັດ."
 
 #. module: account
 #. odoo-python
@@ -18701,8 +18587,8 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
-"ທ່ານຄວນກຳນົດຄ່າ 'ບັນຊີຂາດທຶນຈາກອັດຕາແລກປ່ຽນ' ໃນການຕັ້ງຄ່າບໍລິສັດຂອງທ່ານ ເພື່ອຈັດການການບັນທຶກລາຍກາ"
-"ນບັນຊີທີ່ກ່ຽວຂ້ອງກັບສ່ວນຕ່າງລະຫວ່າງອັດຕາແລກປ່ຽນໂດຍອັດຕະໂນມັດ."
+"ທ່ານຄວນກຳນົດຄ່າ 'ບັນຊີຂາດທຶນຈາກອັດຕາແລກປ່ຽນ' ໃນການຕັ້ງຄ່າບໍລິສັດຂອງທ່ານ "
+"ເພື່ອຈັດການການບັນທຶກລາຍການບັນຊີທີ່ກ່ຽວຂ້ອງກັບສ່ວນຕ່າງລະຫວ່າງອັດຕາແລກປ່ຽນໂດຍອັດຕະໂນມັດ."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -18740,8 +18626,7 @@ msgstr "ເຖິງລະຫັດໄປສະນີ"
 msgid ""
 "[(Total Receivable/Total Revenue) * number of days since the first invoice] "
 "for this customer"
-msgstr ""
-"[(ລວມລູກໜີ້ / ລວມລາຍຮັບ) * ຈຳນວນມື້ຕັ້ງແຕ່ໃບແຈ້ງໜີ້ທຳອິດ] ສຳລັບລູກຄ້ານີ້"
+msgstr "[(ລວມລູກໜີ້ / ລວມລາຍຮັບ) * ຈຳນວນມື້ຕັ້ງແຕ່ໃບແຈ້ງໜີ້ທຳອິດ] ສຳລັບລູກຄ້ານີ້"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -18802,8 +18687,7 @@ msgstr "ເປີດໃຊ້ການລົງບັນຊີອັດຕະໂ
 msgid ""
 "become involved in costs related to a country's legislation. The amount of "
 "the invoice will therefore be due to"
-msgstr ""
-"ກ່ຽວຂ້ອງກັບຄ່າໃຊ້ຈ່າຍທີ່ກ່ຽວຂ້ອງກັບນິຕິກຳຂອງປະເທດ. ຈຳນວນເງິນຂອງໃບແຈ້ງໜີ້ຈະຕ້ອງຊຳລະໃຫ້ກັບ"
+msgstr "ກ່ຽວຂ້ອງກັບຄ່າໃຊ້ຈ່າຍທີ່ກ່ຽວຂ້ອງກັບນິຕິກຳຂອງປະເທດ. ຈຳນວນເງິນຂອງໃບແຈ້ງໜີ້ຈະຕ້ອງຊຳລະໃຫ້ກັບ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -18836,8 +18720,8 @@ msgid ""
 "third party in the context of any claim for damages filed against the client "
 "by an end consumer."
 msgstr ""
-"ບໍ່ວ່າໃນກໍລະນີໃດກໍຕາມ, ລູກຄ້າບໍ່ສາມາດຮຽກຮ້ອງໃຫ້ປະກົດຕົວເປັນບຸກຄົນທີສາມໃນກໍລະນີທີ່ມີການຮຽກຮ້ອງຄ່າເສຍຫາຍ"
-"ທີ່ຜູ້ບໍລິໂພກສຸດທ້າຍຟ້ອງຮ້ອງຕໍ່ລູກຄ້າ."
+"ບໍ່ວ່າໃນກໍລະນີໃດກໍຕາມ, "
+"ລູກຄ້າບໍ່ສາມາດຮຽກຮ້ອງໃຫ້ປະກົດຕົວເປັນບຸກຄົນທີສາມໃນກໍລະນີທີ່ມີການຮຽກຮ້ອງຄ່າເສຍຫາຍທີ່ຜູ້ບໍລິໂພກສຸດທ້າຍຟ້ອງຮ້ອງຕໍ່ລູກຄ້າ."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
@@ -18981,8 +18865,7 @@ msgstr "ໃນຈຳນວນ"
 msgid ""
 "in its entirety and does not include any costs relating to the legislation "
 "of the country in which the client is located."
-msgstr ""
-"ທັງໝົດ ແລະ ບໍ່ລວມເອົາຄ່າໃຊ້ຈ່າຍໃດໆ ທີ່ກ່ຽວຂ້ອງກັບນິຕິກຳຂອງປະເທດທີ່ລູກຄ້າຕັ້ງຢູ່."
+msgstr "ທັງໝົດ ແລະ ບໍ່ລວມເອົາຄ່າໃຊ້ຈ່າຍໃດໆ ທີ່ກ່ຽວຂ້ອງກັບນິຕິກຳຂອງປະເທດທີ່ລູກຄ້າຕັ້ງຢູ່."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__percentage
@@ -19015,8 +18898,8 @@ msgid ""
 "calling the vendor.<br/>"
 msgstr ""
 "ແມ່ນບໍລິການໂອນເງິນ ແລະ ບໍ່ແມ່ນທະນາຄານ.\n"
-"                            ກະລຸນາກວດສອບຄືນວ່າບັນຊີສາມາດເຊື່ອຖືໄດ້ຫຼືບໍ່ ໂດຍການໂທຫາຜູ້ສະໜອ"
-"ງ.<br/>"
+"                            ກະລຸນາກວດສອບຄືນວ່າບັນຊີສາມາດເຊື່ອຖືໄດ້ຫຼືບໍ່ ໂດຍການໂທຫາຜູ້ສະໜອງ."
+"<br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -19050,8 +18933,8 @@ msgid ""
 "to its registered office within 8 days of the delivery of the goods or the "
 "provision of the services."
 msgstr ""
-"ຕ້ອງໄດ້ຮັບການແຈ້ງບອກກ່ຽວກັບການຮຽກຮ້ອງໃດໆ ໂດຍຜ່ານຈົດໝາຍທີ່ສົ່ງທາງໄປສະນີລົງທະບຽນ ໄປຍັງຫ້ອງການທີ່ຈົດ"
-"ທະບຽນພາຍໃນ 8 ວັນ ນັບຈາກວັນທີ່ສົ່ງສິນຄ້າ ຫຼື ການສະໜອງການບໍລິການ."
+"ຕ້ອງໄດ້ຮັບການແຈ້ງບອກກ່ຽວກັບການຮຽກຮ້ອງໃດໆ ໂດຍຜ່ານຈົດໝາຍທີ່ສົ່ງທາງໄປສະນີລົງທະບຽນ "
+"ໄປຍັງຫ້ອງການທີ່ຈົດທະບຽນພາຍໃນ 8 ວັນ ນັບຈາກວັນທີ່ສົ່ງສິນຄ້າ ຫຼື ການສະໜອງການບໍລິການ."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
@@ -19114,8 +18997,7 @@ msgstr ""
 msgid ""
 "reserves the right to request a fixed interest payment amounting to 10% of "
 "the sum remaining due."
-msgstr ""
-"ສະຫງວນສິດໃນການຮຽກເກັບດອກເບ້ຍຄົງທີ່ໃນອັດຕາ 10% ຂອງຍອດຄົງເຫຼືອທີ່ຕ້ອງຊຳລະ."
+msgstr "ສະຫງວນສິດໃນການຮຽກເກັບດອກເບ້ຍຄົງທີ່ໃນອັດຕາ 10% ຂອງຍອດຄົງເຫຼືອທີ່ຕ້ອງຊຳລະ."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids_domain
@@ -19156,8 +19038,8 @@ msgid ""
 "accordance with the agreed timeframes. However, none of its obligations can "
 "be considered as being an obligation to achieve results."
 msgstr ""
-"ຈະພະຍາຍາມຢ່າງດີທີ່ສຸດເພື່ອສະໜອງການບໍລິການທີ່ມີປະສິດທິພາບໃນເວລາທີ່ເໝາະສົມຕາມກຳນົດເວລາທີ່ຕົກລົງກັນ. ແນ"
-"ວໃດກໍຕາມ, ພັນທະໃດໆ ຂອງຕົນບໍ່ສາມາດຖືວ່າເປັນພັນທະເພື່ອບັນລຸຜົນໄດ້."
+"ຈະພະຍາຍາມຢ່າງດີທີ່ສຸດເພື່ອສະໜອງການບໍລິການທີ່ມີປະສິດທິພາບໃນເວລາທີ່ເໝາະສົມຕາມກຳນົດເວລາທີ່ຕົກລົງກັນ. "
+"ແນວໃດກໍຕາມ, ພັນທະໃດໆ ຂອງຕົນບໍ່ສາມາດຖືວ່າເປັນພັນທະເພື່ອບັນລຸຜົນໄດ້."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -19192,8 +19074,8 @@ msgid ""
 "will be authorized to suspend any provision of services without prior "
 "warning in the event of late payment."
 msgstr ""
-"ຈະໄດ້ຮັບອະນຸຍາດໃຫ້ລະງັບການສະໜອງການບໍລິການໃດໆ ໂດຍບໍ່ຕ້ອງແຈ້ງໃຫ້ຊາບລ່ວງໜ້າ ໃນກໍລະນີທີ່ມີການຊຳລະເງິນ"
-"ຊ້າ."
+"ຈະໄດ້ຮັບອະນຸຍາດໃຫ້ລະງັບການສະໜອງການບໍລິການໃດໆ ໂດຍບໍ່ຕ້ອງແຈ້ງໃຫ້ຊາບລ່ວງໜ້າ "
+"ໃນກໍລະນີທີ່ມີການຊຳລະເງິນຊ້າ."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -19207,8 +19089,8 @@ msgid ""
 "{amount} ({debit_credit}) from <strong>{account_source_name}</strong> were "
 "transferred to <strong>{account_target_name}</strong> by {link}"
 msgstr ""
-"{amount} ({debit_credit}) ຈາກ <strong>{account_source_name}</strong> ໄດ້ຖືກໂອນໄ"
-"ປຫາ <strong>{account_target_name}</strong> ໂດຍ {link}"
+"{amount} ({debit_credit}) ຈາກ <strong>{account_source_name}</strong> "
+"ໄດ້ຖືກໂອນໄປຫາ <strong>{account_target_name}</strong> ໂດຍ {link}"
 
 #. module: account
 #. odoo-python
@@ -19220,14 +19102,12 @@ msgstr "{amount} ({debit_credit}) ຈາກ {link}"
 #: model:mail.template,subject:account.email_template_edi_credit_note
 msgid ""
 "{{ object.company_id.name }} Credit Note (Ref {{ object.name or 'n/a' }})"
-msgstr ""
-"{{ object.company_id.name }} ໃບຫຼຸດໜີ້ (ອ້າງອີງ {{ object.name or 'n/a' }})"
+msgstr "{{ object.company_id.name }} ໃບຫຼຸດໜີ້ (ອ້າງອີງ {{ object.name or 'n/a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "{{ object.company_id.name }} Invoice (Ref {{ object.name or 'n/a' }})"
-msgstr ""
-"{{ object.company_id.name }} ໃບແຈ້ງໜີ້ (ອ້າງອີງ {{ object.name or 'n/a' }})"
+msgstr "{{ object.company_id.name }} ໃບແຈ້ງໜີ້ (ອ້າງອີງ {{ object.name or 'n/a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
@@ -19235,6 +19115,25 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} ໃບຮັບເງິນ (ອ້າງອີງ {{ object.name or 'n/a' }})"
+
+#~ msgid "<span class=\"o_stat_text\">Journal Entries</span>"
+#~ msgstr "<span class=\"o_stat_text\">ລາຍການປຶ້ມບັນຊີ</span>"
+
+#~ msgid ""
+#~ "You can not archive a journal containing draft journal entries.\n"
+#~ "\n"
+#~ "To proceed:\n"
+#~ "1/ click on the top-right button 'Journal Entries' from this journal "
+#~ "form\n"
+#~ "2/ then filter on 'Draft' entries\n"
+#~ "3/ select them all and post or delete them through the action menu"
+#~ msgstr ""
+#~ "ທ່ານບໍ່ສາມາດຈັດເກັບປຶ້ມບັນຊີທີ່ມີລາຍການຮ່າງໄດ້.\n"
+#~ "\n"
+#~ "ເພື່ອດຳເນີນການ:\n"
+#~ "1/ ຄລິກປຸ່ມ 'ລາຍການປຶ້ມບັນຊີ' ຢູ່ມຸມຂວາເທິງຂອງຟອມປຶ້ມບັນຊີນີ້\n"
+#~ "2/ ຈາກນັ້ນກອງເອົາລາຍການ 'ຮ່າງ'\n"
+#~ "3/ ເລືອກທັງໝົດແລ້ວລົງບັນຊີ ຫຼື ລຶບພວກມັນອອກຜ່ານເມນູການດຳເນີນການ"
 
 #~ msgid ""
 #~ "\n"

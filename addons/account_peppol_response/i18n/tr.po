@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-10-20 17:54+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"PO-Revision-Date: 2026-10-28 00:33+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-18/"
 "account_peppol_response/tr/>\n"
@@ -28,9 +28,21 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol_response/models/account_edi_proxy_user.py:0
 msgid ""
-"A Peppol response was sent to the Peppol Access Point declaring you "
-"%(status)s this document."
+"A Peppol response declaring you %(status)s this document could not be sent "
+"to the Peppol Access Point."
 msgstr ""
+"%(status)s 'i bildiren bir Peppol yanıtı, bu belgenin Peppol Erişim "
+"Noktasına gönderilemediğini belirtir."
+
+#. module: account_peppol_response
+#. odoo-python
+#: code:addons/account_peppol_response/models/account_edi_proxy_user.py:0
+msgid ""
+"A Peppol response was sent to the Peppol Access Point declaring you %"
+"(status)s this document."
+msgstr ""
+"%(status)s 'da bu belgeye ilişkin bir Peppol yanıtı Peppol Erişim Noktasına "
+"gönderilmiştir."
 
 #. module: account_peppol_response
 #: model:ir.model,name:account_peppol_response.model_account_edi_proxy_client_user
@@ -51,9 +63,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol_response/models/account_edi_proxy_user.py:0
 msgid ""
-"An error occurred while responding to this invoice's expeditor.%(br)sStatus:"
-" %(status)s - %(error)s"
+"An error occurred while responding to this invoice's expeditor.%(br)sStatus: "
+"%(status)s - %(error)s"
 msgstr ""
+"Bu faturanın gönderenine yanıt verilirken bir hata oluştu.%(br)sDurum: %"
+"(status)s - %(error)s"
 
 #. module: account_peppol_response
 #: model:ir.model.fields.selection,name:account_peppol_response.selection__account_peppol_response__response_code__ap
@@ -70,7 +84,7 @@ msgstr "Onaylanmış"
 #: code:addons/account_peppol_response/models/account_edi_proxy_user.py:0
 #: code:addons/account_peppol_response/wizard/peppol_rejection_wizard.py:0
 msgid "At least one reason must be given when rejecting a Peppol invoice."
-msgstr ""
+msgstr "Bir Peppol faturasını reddederken en az bir neden belirtilmelidir."
 
 #. module: account_peppol_response
 #: model:ir.model,name:account_peppol_response.model_account_peppol_response
@@ -204,12 +218,12 @@ msgstr ""
 #. module: account_peppol_response
 #: model:ir.model.fields.selection,name:account_peppol_response.selection__account_peppol_clarification__list_identifier__opstatusaction
 msgid "OPStatusAction"
-msgstr ""
+msgstr "OPStatusAction"
 
 #. module: account_peppol_response
 #: model:ir.model.fields.selection,name:account_peppol_response.selection__account_peppol_clarification__list_identifier__opstatusreason
 msgid "OPStatusReason"
-msgstr ""
+msgstr "OPStatusReason"
 
 #. module: account_peppol_response
 #: model:ir.model.fields,field_description:account_peppol_response.field_account_bank_statement_line__peppol_move_state
@@ -298,7 +312,7 @@ msgstr "Nedenler"
 #. odoo-python
 #: code:addons/account_peppol_response/models/account_edi_proxy_user.py:0
 msgid "Reasons:"
-msgstr ""
+msgstr "Nedenler:"
 
 #. module: account_peppol_response
 #: model:ir.model.fields.selection,name:account_peppol_response.selection__account_move__peppol_move_state__ab
@@ -366,18 +380,20 @@ msgid ""
 "The Peppol receiver of this document has rejected it with the following "
 "information:%(br)s%(rejection_message)s"
 msgstr ""
+"Bu belgenin Peppol alıcısı, aşağıdaki bilgilerle belgeyi reddetmiştir:%(br)s%"
+"(rejection_message)s"
 
 #. module: account_peppol_response
 #. odoo-python
 #: code:addons/account_peppol_response/models/account_edi_proxy_user.py:0
 msgid "The Peppol receiver of this document replied that he has accepted it."
-msgstr ""
+msgstr "Bu belgenin Peppol alıcısı, belgeyi kabul ettiğini bildirdi."
 
 #. module: account_peppol_response
 #. odoo-python
 #: code:addons/account_peppol_response/models/account_edi_proxy_user.py:0
 msgid "The Peppol receiver of this document replied that he has received it."
-msgstr ""
+msgstr "Bu belgenin Peppol alıcısı, belgeyi aldığını bildirdi."
 
 #. module: account_peppol_response
 #: model:ir.model.fields,help:account_peppol_response.field_account_peppol_rejection_wizard__action_ids
@@ -396,6 +412,8 @@ msgid ""
 "The reasons to reject the received PEPPOL document. These will be sent to "
 "the document's sender."
 msgstr ""
+"Alınan PEPPOL belgesinin reddedilme nedenleri. Bunlar, belgenin gönderenine "
+"iletilecektir."
 
 #. module: account_peppol_response
 #: model:ir.model.fields.selection,name:account_peppol_response.selection__account_peppol_response__response_code__uq

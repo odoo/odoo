@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-10-20 14:06+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"PO-Revision-Date: 2026-10-28 06:33+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-18/"
 "website_sale/es/>\n"
@@ -601,8 +601,8 @@ msgstr ""
 "                            <hr/>\n"
 "                            <table width=\"100%\">\n"
 "                                <tr>\n"
-"                                    <td style=\"padding: 10px; "
-"width:150px;\">\n"
+"                                    <td style=\"padding: 10px; width:150px;"
+"\">\n"
 "                                        <img t-attf-src=\"/web/image/"
 "product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; "
 "height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
@@ -684,8 +684,8 @@ msgid ""
 "on                                      this page. Use '/' to discover more "
 "features."
 msgstr ""
-"Una descripción detallada y con formato para promocionar su producto en"
-"                                      esta página. Utilice «/» para "
+"Una descripción detallada y con formato para promocionar su producto "
+"en                                      esta página. Utilice «/» para "
 "descubrir más funcionalidades."
 
 #. module: website_sale
@@ -1831,7 +1831,8 @@ msgstr "DHL"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"
-msgstr "ARRASTRE BLOQUES AQUÍ PARA QUE ESTÉN DISPONIBLES EN TODOS LOS PRODUCTOS"
+msgstr ""
+"ARRASTRE BLOQUES AQUÍ PARA QUE ESTÉN DISPONIBLES EN TODOS LOS PRODUCTOS"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1937,7 +1938,8 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_form_view
 msgid "Description displayed on the eCommerce categories page."
-msgstr "Descripción mostrada en Comercio electrónico y en página de categorías."
+msgstr ""
+"Descripción mostrada en Comercio electrónico y en página de categorías."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__website_description
@@ -2491,8 +2493,8 @@ msgstr "Si está marcada, algunos mensajes tienen error de envío."
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "If product price equals 0, replace 'Add to Cart' by 'Contact us'."
 msgstr ""
-"Si el precio del producto es igual a 0, sustituya «Añadir a la cesta» por «"
-"Contacta con nosotros»."
+"Si el precio del producto es igual a 0, sustituya «Añadir a la cesta» por "
+"«Contacta con nosotros»."
 
 #. module: website_sale
 #: model:mail.template,description:website_sale.mail_template_sale_cart_recovery
@@ -4324,6 +4326,14 @@ msgstr "Agotado"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
+msgid ""
+"Some products in your cart are not available for purchase in your country. "
+"Please remove them or contact us."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
 msgid "Some required fields are empty."
 msgstr "Algunos campos obligatorios están vacíos."
 
@@ -4454,6 +4464,14 @@ msgid "Taxes"
 msgstr "Impuestos"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid ""
+"Taxes have been updated based on your address. Your payment method has not "
+"been charged."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Text"
 msgstr "Texto"
@@ -4532,7 +4550,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "The given product does not exist therefore it cannot be added to cart."
-msgstr "El producto dado no existe, por lo tanto no se puede añadir a la cesta."
+msgstr ""
+"El producto dado no existe, por lo tanto no se puede añadir a la cesta."
 
 #. module: website_sale
 #. odoo-python
@@ -4551,6 +4570,16 @@ msgid ""
 msgstr ""
 "El modo aquí seleccionado tiene validez como política de facturación de un "
 "nuevo producto creado, pero no de productos ya existentes."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/combo_configurator.py:0
+msgid ""
+"The number of selected combo items must match the number of available combo "
+"choices."
+msgstr ""
+"El número de artículos de combinación seleccionados debe coincidir con el "
+"número de opciones correspondientes disponibles."
 
 #. module: website_sale
 #. odoo-python
@@ -4655,10 +4684,22 @@ msgid "This product is no longer available."
 msgstr "Este producto ya no está disponible."
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid "This product is not available for purchase in your country."
+msgstr ""
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_reorder.js:0
 msgid "This product is not available for purchase."
 msgstr "Este producto no está disponible para su compra."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid "This product is part of a combo and can't be updated individually."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item

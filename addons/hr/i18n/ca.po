@@ -37,7 +37,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-20 18:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-10-20 10:08+0000\n"
 "Last-Translator: Santiago Payà <santiagopim@gmail.com>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-18/hr/ca/>\n"
@@ -286,7 +286,8 @@ msgstr "Lloc de temps complet<br> Salari atractiu."
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_user_uniq
 msgid "A user cannot be linked to multiple employees in the same company."
-msgstr "Un usuari no es pot vincular a diversos empleats de la mateixa empresa."
+msgstr ""
+"Un usuari no es pot vincular a diversos empleats de la mateixa empresa."
 
 #. module: hr
 #. odoo-javascript
@@ -1673,7 +1674,8 @@ msgstr "Departaments de recursos humans"
 #. module: hr
 #: model:ir.actions.server,name:hr.ir_cron_data_check_work_permit_validity_ir_actions_server
 msgid "HR Employee: check work permit validity"
-msgstr "Empleat de recursos humans: comprovar la validesa del permís de treball"
+msgstr ""
+"Empleat de recursos humans: comprovar la validesa del permís de treball"
 
 #. module: hr
 #. odoo-javascript
@@ -1820,7 +1822,8 @@ msgstr "Nº identificació"
 #: model:ir.model.fields,help:hr.field_hr_employee__message_needaction
 #: model:ir.model.fields,help:hr.field_hr_job__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Si està marcat, hi ha nous missatges que requereixen la vostra atenció."
+msgstr ""
+"Si està marcat, hi ha nous missatges que requereixen la vostra atenció."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_has_error
@@ -3234,14 +3237,6 @@ msgid "Temporary"
 msgstr "Temporal"
 
 #. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_employee.py:0
-msgid ""
-"The Badge ID must be alphanumeric without any accents and no longer than 18 "
-"characters."
-msgstr ""
-
-#. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
 msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
@@ -3249,6 +3244,14 @@ msgid ""
 msgstr ""
 "L'ID de la identificació ha de ser únic, aquest ja està assignat a un altre "
 "empleat."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"The Badge ID must contain only printable ASCII characters, without spaces, "
+"and be no longer than 18 characters."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__company_country_code

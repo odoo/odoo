@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-16 16:38+0000\n"
-"PO-Revision-Date: 2026-10-20 14:50+0000\n"
-"Last-Translator: MAHAMADASIF ANSARI <maan@odoo.com>\n"
+"PO-Revision-Date: 2026-10-25 02:33+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-18/base/"
 "uk/>\n"
 "Language: uk\n"
@@ -297,6 +297,85 @@ msgid ""
 "\n"
 "**Købskonto:**      4010 Restaurationsbesøg\n"
 msgstr ""
+"\n"
+"\n"
+"Модуль локалізації для Данії\n"
+"===============================\n"
+"\n"
+"Це модуль для управління **планом рахунків для Данії**. Покриває як "
+"індивідуальне підприємництво, так і I/S, IVS, ApS та A/S\n"
+"\n"
+"**Налаштування модуля:**\n"
+"\n"
+"- **Данський план рахунків**\n"
+"\n"
+"- Данський ПДВ\n"
+"        - 25 % moms\n"
+"        - ПДВ на ресторанні послуги 6,25 %\n"
+"        - Зворотне зобов’язання щодо сплати\n"
+"\n"
+"- Групи рахунків\n"
+"        - ЄС (підприємство)\n"
+"        - ЄС (приватна особа)\n"
+"        - Треті країни\n"
+"\n"
+"- Фінансові звіти\n"
+"        - Звіт про фінансові результати\n"
+"        - Баланс\n"
+"        - Розрахунок ПДВ\n"
+"            - Розрахунок\n"
+"            - Графи A, B та C\n"
+"\n"
+"- **Англосаксонська методологія бухгалтерського обліку**\n"
+"\n"
+".\n"
+"\n"
+"Налаштування товару:\n"
+"=================\n"
+"\n"
+"**Товар**\n"
+"\n"
+"**ПДВ з продажу:**      ПДВ з продажу 25 %\n"
+"\n"
+"**Рахунок продажів:**     1.010 Продаж товарів, включаючи ПДВ\n"
+"\n"
+"**ПДВ з купівлі:**       ПДВ з купівлі 25 %\n"
+"\n"
+"**Рахунок купівлі:**      2.010 Прямі витрати на товари, включаючи ПДВ\n"
+"\n"
+".\n"
+"\n"
+"**Послуги**\n"
+"\n"
+"**ПДВ з продажу:**      ПДВ з продажу 25 %, послуги\n"
+"\n"
+"**Рахунок продажів:**     1.011 Продаж послуг, включаючи ПДВ\n"
+"\n"
+"**ПДВ з купівлі:**       ПДВ з купівлі 25 %, послуги\n"
+"\n"
+"**Рахунок закупівлі:**      2.011 Прямі витрати на послуги, включаючи ПДВ\n"
+"\n"
+".\n"
+"\n"
+"**Товари з перевернутим обов’язком сплати ПДВ**\n"
+"\n"
+"**ПДВ з продажу:**      Продаж з перевернутим обов’язком сплати ПДВ\n"
+"\n"
+"**Рахунок з продажу:**     1 012 Продаж товарів без ПДВ\n"
+"\n"
+"**ПДВ на купівлю:**       Купівля з перекладеним обов’язком сплати ПДВ\n"
+"\n"
+"**Рахунок з купівлі:**      2 012 Прямі витрати на товари без ПДВ\n"
+"\n"
+"\n"
+".\n"
+"\n"
+"**Ресторанне обслуговування**\n"
+"\n"
+"**ПДВ на закупівлю:**       ПДВ на ресторанне обслуговування 6,25 %, ПДВ на "
+"закупівлю\n"
+"\n"
+"**Рахунок-каса:**      4010 Відвідування ресторанів\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do
@@ -794,6 +873,9 @@ msgid ""
 "\n"
 "- Send and receive documents via Nemhandel network in OIOUBL 2.1 format\n"
 msgstr ""
+"\n"
+"- Надсилайте та отримуйте документи через мережу Nemhandel у форматі OIOUBL "
+"2.1\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp_mail
@@ -1613,6 +1695,9 @@ msgid ""
 "Accounting reports for China\n"
 "============================\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Китаю\n"
+"============================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_co_reports
@@ -3684,6 +3769,8 @@ msgid ""
 "\n"
 "Base module for the Cambodian reports\n"
 msgstr ""
+"\n"
+"Базовий модуль для звітів про Камбоджу\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_kr_reports
@@ -16136,7 +16223,7 @@ msgstr "Автоматичні переміщення рахунку"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_extract
 msgid "Account Bank Statement Extract"
-msgstr ""
+msgstr "Виписка за банківським рахунком"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import
@@ -16156,7 +16243,7 @@ msgstr "Списки рахунків"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_extract
 msgid "Account Extract"
-msgstr ""
+msgstr "Виписка за рахунком"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__partner_id
@@ -23462,7 +23549,7 @@ msgstr "Деталі створення"
 #. module: base
 #: model:ir.module.category,name:base.module_category_theme_creative
 msgid "Creative"
-msgstr ""
+msgstr "Творчий"
 
 #. module: base
 #: model:res.country,name:base.hr
@@ -24441,7 +24528,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_account_extract
 msgid "Digitise and extract data from documents."
-msgstr ""
+msgstr "Оцифровуйте документи та вилучайте з них дані."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_decimal_precision__digits
@@ -26871,6 +26958,8 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_account_bank_statement_extract
 msgid "Extract data from bank statement scans to fill them automatically"
 msgstr ""
+"Отримуйте дані зі сканованих копій банківських виписок для їх автоматичного "
+"заповнення"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_expense_extract
@@ -29624,7 +29713,7 @@ msgstr "Імпортуйте дані бухобліку з файлів FEC"
 #: model:ir.module.module,summary:base.module_l10n_lt_saft_import
 #: model:ir.module.module,summary:base.module_l10n_ro_saft_import
 msgid "Import Accounting Data from SAF-T files"
-msgstr ""
+msgstr "Імпорт бухгалтерських даних із файлів SAF-T"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_se_sie4_import
@@ -30877,6 +30966,8 @@ msgid ""
 "Italy - E-invoicing - Additional module to support the debit notes (nota di "
 "debito - NDD)"
 msgstr ""
+"Італія – Електронне виставлення рахунків – Додатковий модуль для підтримки "
+"дебет-нот (nota di debito – NDD)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_edi_ndd_account_dn
@@ -30907,7 +30998,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_edi_website_sale
 msgid "Italy eCommerce eInvoicing"
-msgstr ""
+msgstr "Італія: електронні рахунки для електронної комерції"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ci
@@ -33728,6 +33819,12 @@ msgid ""
 "\n"
 "   Supported documents are invoices/credit notes.\n"
 msgstr ""
+"Модуль для синхронізації документів між кількома компаніями. Наприклад, це "
+"дозволяє автоматично створювати замовлення на продаж, коли підтверджується "
+"замовлення на закупівлю в іншої компанії системи (як постачальника), і "
+"навпаки. \n"
+"\n"
+"Підтримувані типи документів: рахунки-фактури та сторно.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_purchase_stock_inter_company_rules
@@ -37421,7 +37518,7 @@ msgstr "Автозаповнення партнера"
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_commissions
 msgid "Partner Commissions"
-msgstr ""
+msgstr "Партнерська комісія"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_category

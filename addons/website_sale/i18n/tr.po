@@ -43,8 +43,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-10-20 14:26+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"PO-Revision-Date: 2026-10-28 06:33+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-18/"
 "website_sale/tr/>\n"
@@ -270,7 +270,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid ""
 "<i class=\"oi oi-chevron-left me-1\" role=\"presentation\"/>All Products"
-msgstr "<i class=\"oi oi-chevron-left me-1\" role=\"presentation\"/>Tüm Ürünler"
+msgstr ""
+"<i class=\"oi oi-chevron-left me-1\" role=\"presentation\"/>Tüm Ürünler"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
@@ -335,9 +336,10 @@ msgid ""
 "                                                    </small>"
 msgstr ""
 "<small class=\"form-text text-muted\">\n"
-"                                                        Hesabınız için belge"
-"(ler) düzenlendikten sonra şirket adınızı veya KDV numaranızı değiştirmenize "
-"izin verilmez. Bu işlem için lütfen doğrudan bizimle iletişime geçin.\n"
+"                                                        Hesabınız için "
+"belge(ler) düzenlendikten sonra şirket adınızı veya KDV numaranızı "
+"değiştirmenize izin verilmez. Bu işlem için lütfen doğrudan bizimle "
+"iletişime geçin.\n"
 "                                                    </small>"
 
 #. module: website_sale
@@ -611,8 +613,8 @@ msgstr ""
 "width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
 "0px 0px 0px 0px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                    <h1 style=\"color:#A9A9A9;\">SEPETİNİZDE BİR ÜRÜN "
-"MEVCUT.</h1>\n"
+"                    <h1 style=\"color:#A9A9A9;\">SEPETİNİZDE BİR ÜRÜN MEVCUT."
+"</h1>\n"
 "                    Alışverişinizi tamamlamak ister misiniz?<br/><br/>\n"
 "                    <t t-if=\"object.order_line\">\n"
 "                        <t t-foreach=\"object.website_order_line\" t-"
@@ -620,8 +622,8 @@ msgstr ""
 "                            <hr/>\n"
 "                            <table width=\"100%\">\n"
 "                                <tr>\n"
-"                                    <td style=\"padding: 10px; "
-"width:150px;\">\n"
+"                                    <td style=\"padding: 10px; width:150px;"
+"\">\n"
 "                                        <img t-attf-src=\"/web/image/"
 "product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; "
 "height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
@@ -935,7 +937,8 @@ msgstr "Son kullanıcının bu fiyat listesini seçmesine izin ver"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Allow your customer to add products from previous order in their cart."
-msgstr "Müşterinizin önceki siparişten ürünleri sepetine eklemesine izin verin."
+msgstr ""
+"Müşterinizin önceki siparişten ürünleri sepetine eklemesine izin verin."
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_alternative_products
@@ -1779,8 +1782,8 @@ msgid ""
 "visit the shipping page to add a shipping fee or the shipping fee is also "
 "free, then the email won't be sent."
 msgstr ""
-"Müşterinin oturum açmamış olduğu durumda e-posta adresi bilinmemektedir.     "
-"\n"
+"Müşterinin oturum açmamış olduğu durumda e-posta adresi "
+"bilinmemektedir.     \n"
 "\n"
 "- Potansiyel bir müşteri bir veya daha fazla terk edilmiş ödeme işlemi "
 "oluşturur ve kurtarma e-postası gönderilmeden önce satışı tamamlarsa, e-"
@@ -4310,6 +4313,14 @@ msgstr "Tükendi"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
+msgid ""
+"Some products in your cart are not available for purchase in your country. "
+"Please remove them or contact us."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
 msgid "Some required fields are empty."
 msgstr "Bazı zorunlu alanlar boş."
 
@@ -4439,6 +4450,14 @@ msgid "Taxes"
 msgstr "Vergiler"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid ""
+"Taxes have been updated based on your address. Your payment method has not "
+"been charged."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Text"
 msgstr "Metin"
@@ -4533,6 +4552,16 @@ msgid ""
 msgstr ""
 "Burada seçilen yöntem, yalnızca yeni oluşturulacak ürünler için fatura "
 "politikası olarak uygulanır; mevcut ürünler için geçerli değildir."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/combo_configurator.py:0
+msgid ""
+"The number of selected combo items must match the number of available combo "
+"choices."
+msgstr ""
+"Seçilen kombo öğelerinin sayısı, mevcut kombo seçeneklerinin sayısıyla "
+"eşleşmelidir."
 
 #. module: website_sale
 #. odoo-python
@@ -4635,10 +4664,22 @@ msgid "This product is no longer available."
 msgstr "Bu ürün artık mevcut değil."
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid "This product is not available for purchase in your country."
+msgstr ""
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_reorder.js:0
 msgid "This product is not available for purchase."
 msgstr "Bu ürün satın alınamaz."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid "This product is part of a combo and can't be updated individually."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item

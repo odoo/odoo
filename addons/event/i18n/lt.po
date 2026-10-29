@@ -29,9 +29,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-10-20 10:17+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"POT-Creation-Date: 2026-10-24 17:38+0000\n"
+"PO-Revision-Date: 2026-10-27 08:52+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-18/event/"
 "lt/>\n"
 "Language: lt\n"
@@ -70,13 +70,13 @@ msgstr "%(event_name)s (Išparduota)"
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "%(event_name)s - Registration #%(registration_id)s"
-msgstr ""
+msgstr "%(event_name)s - Registracijos Nr.%(registration_id)s"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "%(event_name)s - Registration for %(attendee_name)s"
-msgstr ""
+msgstr "%(event_name)s - Registracija %(attendee_name)s"
 
 #. module: event
 #. odoo-python
@@ -136,11 +136,14 @@ msgid ""
 "'Full Page Ticket - %s - %s' % ((object.event_id.name or "
 "'Event').replace('/',''), (object.name or '').replace('/',''))"
 msgstr ""
+"'Visos puslapio bilietas – %s – %s' % ((object.event_id.name arba 'Event')"
+".replace('/',''), (object.name arba '').replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_full_page_ticket
 msgid "'Full Page Ticket - %s' % (object.name or 'Event').replace('/','')"
 msgstr ""
+"'Visos puslapio bilietas – %s' % (object.name arba 'Event').replace('/','')"
 
 #. module: event
 #. odoo-python
@@ -219,6 +222,11 @@ msgid ""
 "contribute, there is a free ticket, therefore, catering and access to "
 "evening events aren't included."
 msgstr ""
+"<b>Visas renginys atviras plačiajai visuomenei!</b> <br>Prašome sumokėti "
+"49,50 € dalyvio mokestį, skirtą padengti 3 dienų išlaidas (kavos pertraukos, "
+"maitinimas, gėrimai, taip pat netikėtas koncertas ir alaus vakarėlis).<br> "
+"Tiems, kurie nenori prisidėti, yra nemokamas bilietas, tačiau maitinimas ir "
+"patekimas į vakarinius renginius į jį neįskaičiuoti."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -316,7 +324,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "<i class=\"fa fa-ticket\" title=\"Ticket type\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-ticket\" title=\"Ticket type\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -446,7 +454,8 @@ msgid ""
 "font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" "
 "height=\"16\" alt=\"\"/> Google</a>\n"
 "                        <a t-attf-href=\"/event/{{ slug(object.event_id) }}/"
-"ics\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-"
+"ics{{ '?lang=%s' % ctx['lang'] if ctx.get('lang') else '' }}\" "
+"style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-"
 "decoration:none;border-radius:3px;\"><img src=\"/web_editor/font_to_img/"
 "61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" "
 "alt=\"\"/> iCal/Outlook</a>\n"
@@ -810,7 +819,8 @@ msgid ""
 "font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" "
 "height=\"16\" alt=\"\"/> Google</a>\n"
 "                        <a t-attf-href=\"/event/{{ slug(object.event_id) }}/"
-"ics\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-"
+"ics{{ '?lang=%s' % ctx['lang'] if ctx.get('lang') else '' }}\" "
+"style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-"
 "decoration:none;border-radius:3px;\"><img src=\"/web_editor/font_to_img/"
 "61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" "
 "alt=\"\"/> iCal/Outlook</a>\n"
@@ -1187,7 +1197,8 @@ msgid ""
 "font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" "
 "height=\"16\" alt=\"\"/> Google</a>\n"
 "                        <a t-attf-href=\"/event/{{ slug(object.event_id) }}/"
-"ics\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-"
+"ics{{ '?lang=%s' % ctx['lang'] if ctx.get('lang') else '' }}\" "
+"style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-"
 "decoration:none;border-radius:3px;\"><img src=\"/web_editor/font_to_img/"
 "61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" "
 "alt=\"\"/> iCal/Outlook</a>\n"
@@ -1577,6 +1588,10 @@ msgid ""
 "        Special discount codes will be handed out during the various "
 "streams, make sure to be there on time."
 msgstr ""
+"O šįkart viską perkeliame į INTERNETĄ! Susitikime mūsų tiesioginėse "
+"transliacijose, nesitraukdami iš savo namų.<br>\n"
+"        Įvairių transliacijų metu bus dalijami specialūs nuolaidų kodai, "
+"todėl būtinai prisijunkite laiku."
 
 #. module: event
 #: model:event.stage,name:event.event_stage_announced
@@ -1652,8 +1667,8 @@ msgid ""
 "became Odoo, the most installed open-source business software worldwide."
 msgstr ""
 "Būdamas vos 13 metų, Johnas DOE jau pradėjo kurti savo pirmąsias verslo "
-"programas klientams. Įgijęs civilinės inžinerijos specialybę, jis įkūrė „"
-"TinyERP“. Tai buvo pirmasis „OpenERP“ etapas, kuris vėliau tapo „Odoo“ – "
+"programas klientams. Įgijęs civilinės inžinerijos specialybę, jis įkūrė "
+"„TinyERP“. Tai buvo pirmasis „OpenERP“ etapas, kuris vėliau tapo „Odoo“ – "
 "dažniausiai pasaulyje diegiama atvirojo kodo verslo programine įranga."
 
 #. module: event
@@ -1755,7 +1770,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_image
 msgid "Badge Background"
-msgstr ""
+msgstr "Ženklo fonas"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_format
@@ -1906,6 +1921,8 @@ msgid ""
 "Choose a template to auto-fill tickets, communications, descriptions and "
 "other fields."
 msgstr ""
+"Pasirinkite šabloną, kad bilietai, pranešimai, aprašymai ir kiti laukai būtų "
+"užpildomi automatiškai."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__color
@@ -2119,7 +2136,7 @@ msgstr "Data"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_date_range
 msgid "Date Range"
-msgstr ""
+msgstr "Laikotarpis"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__days
@@ -2267,7 +2284,7 @@ msgstr "Pasibaigęs"
 #. module: event
 #: model:event.event,subtitle:event.event_2
 msgid "Enhance your architectural business and improve professional skills."
-msgstr ""
+msgstr "Plėskite savo architektūros verslą ir tobulinkite profesinius įgūdžius."
 
 #. module: event
 #. odoo-javascript
@@ -2471,6 +2488,10 @@ msgid ""
 "\"Workshop\",\n"
 "                \"Roadshow\", \"Online Webinar\", etc)."
 msgstr ""
+"Renginių šablonai apjungia dažnai naudojamas konfigūracijas ir\n"
+"                paprastai yra pagrįsti jūsų organizuojamų renginių tipais "
+"(pvz., „Seminaras“,\n"
+"                „Roadshow“, „Internetinis seminaras“ ir pan.)."
 
 #. module: event
 #: model:ir.model,name:event.model_event_event_ticket
@@ -2676,12 +2697,12 @@ msgstr ""
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_full_page_ticket
 msgid "Full Page Ticket"
-msgstr ""
+msgstr "Visos puslapio bilietas"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_full_page_ticket
 msgid "Full Page Ticket Example"
-msgstr ""
+msgstr "Visos puslapio bilieto pavyzdys"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -2854,7 +2875,7 @@ msgstr "Piktograma"
 #. odoo-javascript
 #: code:addons/event/static/src/icon_selection_field/icon_selection_field.js:0
 msgid "Icon Selection"
-msgstr ""
+msgstr "Piktogramų pasirinkimas"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__activity_exception_icon
@@ -2943,7 +2964,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Insert dynamic Google Maps in your email templates"
-msgstr ""
+msgstr "Įterpkite dinamiškus „Google Maps“ žemėlapius į savo el. pašto šablonus"
 
 #. module: event
 #. odoo-javascript
@@ -2972,7 +2993,7 @@ msgstr "Netinkamas renginio / bilieto pasirinkimas"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.js:0
 msgid "Invalid ticket"
-msgstr ""
+msgstr "Neteisingas bilietas"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__sale_available
@@ -3222,7 +3243,7 @@ msgstr "Būtinas atsakymas"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "Marc Demo"
-msgstr ""
+msgstr "Marc Demo"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
@@ -3637,7 +3658,8 @@ msgstr "Klausimo tipas"
 #. odoo-python
 #: code:addons/event/models/event_question.py:0
 msgid "Question cannot be linked to both an Event and an Event Type."
-msgstr "Klausimas negali būti susietas tiek su renginiu, tiek su renginio tipu."
+msgstr ""
+"Klausimas negali būti susietas tiek su renginiu, tiek su renginio tipu."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__question_ids
@@ -3827,7 +3849,7 @@ msgstr "Atsakingas vartotojas"
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_responsive_html_ticket
 msgid "Responsive Html Full Page Ticket"
-msgstr ""
+msgstr "Atsakingas HTML viso puslapio bilietas"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_formatted_event_address
@@ -3899,13 +3921,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Select Attendee"
-msgstr ""
+msgstr "Pasirinkite dalyvių"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Select printer..."
-msgstr ""
+msgstr "Pasirinkite spausdintuvą..."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_answer_view_tree
@@ -3925,7 +3947,7 @@ msgstr "Parduokite bilietus savo svetainėje"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets with Point of Sale"
-msgstr ""
+msgstr "Parduokite bilietus naudodami Prekybos sistemą"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4211,6 +4233,9 @@ msgid ""
 "The event is sold out if no more seats are available on event. If ticketing "
 "is used and all tickets are sold out, the event will be sold out."
 msgstr ""
+"Renginys laikomas išparduotu, jei jame nebėra laisvų vietų. Jei naudojama "
+"bilietų pardavimo sistema ir visi bilietai išparduoti, renginys bus laikomas "
+"išparduotu."
 
 #. module: event
 #: model_terms:event.event,description:event.event_7
@@ -4274,6 +4299,9 @@ msgid ""
 "        It will require a good Internet connection to get the best video "
 "quality."
 msgstr ""
+"Šis renginys vyks visiškai internetu ir yra NEMOKAMAS; jei sumokėjote už "
+"bilietus, turėtumėte gauti grąžinamą sumą.<br>\n"
+"        Norint gauti geriausią vaizdo kokybę, reikės gero interneto ryšio."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__ticket_instructions
@@ -4321,13 +4349,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "This ticket is for another event!"
-msgstr ""
+msgstr "Šis bilietas skirtas kitam renginiui!"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "This ticket is not for an ongoing event"
-msgstr ""
+msgstr "Šis užklausimas nėra susijęs su vykstančiu renginiu"
 
 #. module: event
 #. odoo-python
@@ -4358,7 +4386,7 @@ msgstr "Bilieto tipas"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Ticket already scanned!"
-msgstr ""
+msgstr "Bilietas jau nuskaitytas!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
@@ -4394,12 +4422,12 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_pos_event
 msgid "Tickets with PoS"
-msgstr ""
+msgstr "Bilietai su POS"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_sale
 msgid "Tickets with Sale"
-msgstr ""
+msgstr "Bilietai su nuolaida"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
@@ -4548,6 +4576,8 @@ msgstr ""
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Use the <b>breadcrumbs</b> to go back to your kanban overview."
 msgstr ""
+"Naudokite „ <b>“ navigacijos grandinę</b>, kad grįžtumėte į savo „kanban“ "
+"apžvalgą."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_used

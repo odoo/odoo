@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:38+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-10-20 16:24+0000\n"
 "Last-Translator: Žiga Trček <ziga.trcek@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-18/"
@@ -245,9 +245,9 @@ msgid ""
 "(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
 "(company_name)s. </p>"
 msgstr ""
-"<p>Spoštovani %(client_name)s,<br/>tukaj je vaš račun %(is_invoiced)sza"
-"             %(pos_name)s s skupnim zneskom %(amount)s od %(company_name)s. "
-"</p>"
+"<p>Spoštovani %(client_name)s,<br/>tukaj je vaš račun %"
+"(is_invoiced)sza             %(pos_name)s s skupnim zneskom %(amount)s od %"
+"(company_name)s. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -832,7 +832,8 @@ msgstr "Znesek dovoljene razlike"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "Amount for %(old_pm)s changed from %(old_amount)s to %(new_amount)s"
-msgstr "Znesek za %(old_pm)s se je spremenil z %(old_amount)s na %(new_amount)s"
+msgstr ""
+"Znesek za %(old_pm)s se je spremenil z %(old_amount)s na %(new_amount)s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__amount_to_balance
@@ -1585,7 +1586,8 @@ msgstr "Majica za prosti čas"
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.casual_denim_short_product_template
 msgid "Casual denim shorts, comfortable and stylish for everyday wear."
-msgstr "Ležerne džins kratke hlače, udobne in elegantne za vsakodnevno nošenje."
+msgstr ""
+"Ležerne džins kratke hlače, udobne in elegantne za vsakodnevno nošenje."
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.t_shirt_black_embroidered_product_template
@@ -2090,6 +2092,7 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/errors/error_handlers.js:0
+#: code:addons/point_of_sale/static/src/app/store/opening_control_popup/opening_control_popup.js:0
 msgid "Connection Lost"
 msgstr "Povezava je prekinjena"
 
@@ -2221,7 +2224,8 @@ msgstr "Udoben pulover"
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.cozy_sweater_product_template
 msgid "Cozy sweater, perfect for colder weather. Available in various colors."
-msgstr "Udoben pulover, popoln za hladnejše vreme. Na voljo v različnih barvah."
+msgstr ""
+"Udoben pulover, popoln za hladnejše vreme. Na voljo v različnih barvah."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4657,6 +4661,12 @@ msgid "Ongoing"
 msgstr "V teku"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Only Point of Sale managers can modify a Point of Sale configuration."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order_line.js:0
 msgid ""
@@ -5743,6 +5753,7 @@ msgid "Pos Order Count"
 msgstr "Število POS naročil"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_account_tax__pos_order_line_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__pos_order_line_id
 msgid "Pos Order Line"
 msgstr "Postavka POS-naročila"
@@ -7721,6 +7732,14 @@ msgstr ""
 "(value)s'"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid ""
+"The combo choice '%s' is no longer available in this combo. Please reload "
+"your data."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
 msgid ""
@@ -7942,6 +7961,12 @@ msgstr "Zaslon računa bo preskočen, če je račun mogoče samodejno natisniti.
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_iface_print_auto
 msgid "The receipt will automatically be printed at the end of each order."
 msgstr "Račun bo samodejno natisnjen ob zaključku vsakega naročila."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/opening_control_popup/opening_control_popup.js:0
+msgid "The register cannot be opened while offline. Please try again."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9187,6 +9212,14 @@ msgstr "Plačila za knjiženo naročilo ne morete urejati."
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "You cannot invoice orders belonging to different companies."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_fiscal_position_tax.py:0
+msgid ""
+"You cannot modify a fiscal position used in a POS order. You should archive "
+"it and create a new one."
 msgstr ""
 
 #. module: point_of_sale

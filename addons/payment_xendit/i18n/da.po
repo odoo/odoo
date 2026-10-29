@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-01 17:39+0000\n"
+"POT-Creation-Date: 2026-10-24 17:39+0000\n"
 "PO-Revision-Date: 2026-10-20 11:22+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-18/"
@@ -36,26 +36,6 @@ msgstr ""
 "igen."
 
 #. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Card Code"
-msgstr "Kortkode"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Card Holder First Name"
-msgstr "Kortholderens fornavn"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Card Holder Last Name"
-msgstr "Kortholderens efternavn"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Card Number"
-msgstr "Kortnummer"
-
-#. module: payment_xendit
 #: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__code
 msgid "Code"
 msgstr "Kode"
@@ -65,44 +45,6 @@ msgstr "Kode"
 #: code:addons/payment_xendit/models/payment_provider.py:0
 msgid "Could not establish the connection to the API."
 msgstr "Det var ikke muligt at oprette forbindelse til API'et."
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Email"
-msgstr "E-mail"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Expiration"
-msgstr "Udløbsdato"
-
-#. module: payment_xendit
-#. odoo-javascript
-#: code:addons/payment_xendit/static/src/js/payment_form.js:0
-msgid "Invalid CVN"
-msgstr "Ugyldig CVN"
-
-#. module: payment_xendit
-#. odoo-javascript
-#: code:addons/payment_xendit/static/src/js/payment_form.js:0
-msgid "Invalid Card Number"
-msgstr "Ugyldigt kortnummer"
-
-#. module: payment_xendit
-#. odoo-javascript
-#: code:addons/payment_xendit/static/src/js/payment_form.js:0
-msgid "Invalid Date"
-msgstr "Ugyldig dato"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "John"
-msgstr "John"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "MM"
-msgstr "MM"
 
 #. module: payment_xendit
 #. odoo-python
@@ -121,22 +63,6 @@ msgid "Payment Transaction"
 msgstr "Betalingstransaktion"
 
 #. module: payment_xendit
-#. odoo-javascript
-#: code:addons/payment_xendit/static/src/js/payment_form.js:0
-msgid "Payment processing failed"
-msgstr "Betalingen kunne ikke gennemføres"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Phone Number"
-msgstr "Telefonnummer"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.payment_provider_form_xendit
-msgid "Public Key"
-msgstr "Offentlig nøgle"
-
-#. module: payment_xendit
 #. odoo-python
 #: code:addons/payment_xendit/models/payment_transaction.py:0
 msgid "Received data with missing reference."
@@ -148,17 +74,6 @@ msgid "Secret Key"
 msgstr "Hemmelig nøgle"
 
 #. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Smith"
-msgstr "Smith"
-
-#. module: payment_xendit
-#. odoo-python
-#: code:addons/payment_xendit/controllers/main.py:0
-msgid "The access token doesn't match the transaction reference."
-msgstr "Adgangstokenet stemmer ikke overens med transaktionsreferencen."
-
-#. module: payment_xendit
 #. odoo-python
 #: code:addons/payment_xendit/models/payment_provider.py:0
 msgid ""
@@ -167,6 +82,14 @@ msgid ""
 msgstr ""
 "Kommunikationen med API'en mislykkedes. Xendit gav os følgende information: "
 "'%s'"
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_transaction.py:0
+msgid ""
+"The payment requires authentication from the customer, which isn't possible "
+"for this unattended transaction. Please ask the customer to pay manually."
+msgstr ""
 
 #. module: payment_xendit
 #: model:ir.model.fields,help:payment_xendit.field_payment_provider__code
@@ -180,6 +103,12 @@ msgid "The transaction is not linked to a token."
 msgstr "Transaktionen er ikke knyttet til et token."
 
 #. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_provider.py:0
+msgid "Update the Xendit webhook configuration"
+msgstr ""
+
+#. module: payment_xendit
 #: model_terms:ir.ui.view,arch_db:payment_xendit.payment_provider_form_xendit
 msgid "Webhook Token"
 msgstr "Webhook-token"
@@ -188,6 +117,12 @@ msgstr "Webhook-token"
 #: model:ir.model.fields.selection,name:payment_xendit.selection__payment_provider__code__xendit
 msgid "Xendit"
 msgstr "Xendit"
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_provider.py:0
+msgid "Xendit Dashboard"
+msgstr ""
 
 #. module: payment_xendit
 #: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__xendit_public_key
@@ -205,11 +140,71 @@ msgid "Xendit Webhook Token"
 msgstr "Xendit-webhook-token"
 
 #. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "YYYY"
-msgstr "YYYY"
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_provider.py:0
+msgid ""
+"Xendit replaced the single webhook field used by the %(provider)s payment "
+"provider with separate v3 event groups. Update the %(webhook_link)s on the %"
+"(dashboard_link)s before %(deadline)s to keep receiving payment and card "
+"token status updates."
+msgstr ""
 
 #. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "john.smith@example.com"
-msgstr "john.smith@eksempel.com"
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_provider.py:0
+msgid "webhook configuration"
+msgstr ""
+
+#~ msgid "Card Code"
+#~ msgstr "Kortkode"
+
+#~ msgid "Card Holder First Name"
+#~ msgstr "Kortholderens fornavn"
+
+#~ msgid "Card Holder Last Name"
+#~ msgstr "Kortholderens efternavn"
+
+#~ msgid "Card Number"
+#~ msgstr "Kortnummer"
+
+#~ msgid "Email"
+#~ msgstr "E-mail"
+
+#~ msgid "Expiration"
+#~ msgstr "Udløbsdato"
+
+#~ msgid "Invalid CVN"
+#~ msgstr "Ugyldig CVN"
+
+#~ msgid "Invalid Card Number"
+#~ msgstr "Ugyldigt kortnummer"
+
+#~ msgid "Invalid Date"
+#~ msgstr "Ugyldig dato"
+
+#~ msgid "John"
+#~ msgstr "John"
+
+#~ msgid "MM"
+#~ msgstr "MM"
+
+#~ msgid "Payment processing failed"
+#~ msgstr "Betalingen kunne ikke gennemføres"
+
+#~ msgid "Phone Number"
+#~ msgstr "Telefonnummer"
+
+#~ msgid "Public Key"
+#~ msgstr "Offentlig nøgle"
+
+#~ msgid "Smith"
+#~ msgstr "Smith"
+
+#~ msgid "The access token doesn't match the transaction reference."
+#~ msgstr "Adgangstokenet stemmer ikke overens med transaktionsreferencen."
+
+#~ msgid "YYYY"
+#~ msgstr "YYYY"
+
+#~ msgid "john.smith@example.com"
+#~ msgstr "john.smith@eksempel.com"

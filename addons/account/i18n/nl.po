@@ -18,9 +18,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:38+0000\n"
-"PO-Revision-Date: 2026-10-21 13:17+0000\n"
-"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"PO-Revision-Date: 2026-10-27 12:32+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-18/account/"
 "nl/>\n"
 "Language: nl\n"
@@ -541,8 +541,8 @@ msgstr ""
 "            creditfactuur\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (met referentie: <t t-out=\"object.invoice_origin or ''\">"
-"SUB003</t>)\n"
+"            (met referentie: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
 "        </t>\n"
 "        voor het bedrag van <span style=\"font-weight:bold;\" t-"
 "out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
@@ -645,8 +645,8 @@ msgstr ""
 "            factuur\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (met referentie: <t t-out=\"object.invoice_origin or ''\">"
-"SUB003</t>)\n"
+"            (met referentie: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
 "        </t>\n"
 "        voor een totaalbedrag van <span style=\"font-weight:bold;\" t-"
 "out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
@@ -671,9 +671,8 @@ msgstr ""
 "        <t t-if=\"hasattr(object, 'timesheet_count') and "
 "object.timesheet_count\">\n"
 "            <br/><br/>\n"
-"            PS: Bekijk je urenstaten <a t-att-href=\"'/my/"
-"timesheets?search_in=invoice&amp;search=%s' % object.name\">op het portaal.</"
-"a>\n"
+"            PS: Bekijk je urenstaten <a t-att-href=\"'/my/timesheets?"
+"search_in=invoice&amp;search=%s' % object.name\">op het portaal.</a>\n"
 "        </t>\n"
 "        <br/><br/>\n"
 "        Aarzel niet om contact met ons op te nemen als je nog vragen hebt.\n"
@@ -716,15 +715,15 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Beste <t t-out=\"object.partner_id.name or ''\">Azure Interior</t>"
-"<br/><br/>\n"
+"        Beste <t t-out=\"object.partner_id.name or ''\">Azure Interior</"
+"t><br/><br/>\n"
 "        Bedankt voor je betaling.\n"
-"         Hierbij vind je je betalingsbewijs <span style=\"font-"
-"weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-"
-"2021-05-0002</span> voor een bedrag van\n"
-"        <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount, object.currency_id) or ''\">$ 10.00</span> van <t t-"
-"out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"         Hierbij vind je je betalingsbewijs <span style=\"font-weight:bold;"
+"\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</"
+"span> voor een bedrag van\n"
+"        <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</"
+"span> van <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br/><br/>\n"
 "        Aarzel niet om contact met ons op te nemen als je vragen hebt.\n"
 "        <br/><br/>\n"
@@ -766,8 +765,8 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
 msgstr ""
-"<i class=\"fa fa-clock-o\" aria-label=\"Datum\" role=\"img\" "
-"title=\"Datum\"/>"
+"<i class=\"fa fa-clock-o\" aria-label=\"Datum\" role=\"img\" title=\"Datum\"/"
+">"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -942,8 +941,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\">"
-"%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
+"'fixed'\">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1008,14 +1007,14 @@ msgid "<span class=\"o_stat_text\">Invoiced</span>"
 msgstr "<span class=\"o_stat_text\">Gefactureerd</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-msgid "<span class=\"o_stat_text\">Journal Entries</span>"
-msgstr "<span class=\"o_stat_text\">Boekingen</span>"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
 msgstr "<span class=\"o_stat_text\">Boeking</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+msgid "<span class=\"o_stat_text\">Journal Items</span>"
+msgstr "<span class=\"o_stat_text\">Boekingsregels</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1112,7 +1111,8 @@ msgstr "<span invisible=\"nb_unmodified_bills &lt; 10\">10+</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "<span invisible=\"not early_discount\"> % if paid within </span>"
-msgstr "<span invisible=\"not early_discount\"> % indien betaald binnen </span>"
+msgstr ""
+"<span invisible=\"not early_discount\"> % indien betaald binnen </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -1449,8 +1449,8 @@ msgid ""
 "rounding made on previous entries; possibly causing an inconsistency with "
 "the new ones."
 msgstr ""
-"<strong>Deze valuta is al gebruikt om boekhoudkundige boekingen te "
-"genereren.</strong> <br/>\n"
+"<strong>Deze valuta is al gebruikt om boekhoudkundige boekingen te genereren."
+"</strong> <br/>\n"
 "                        Als je de afrondingsfactor nu wijzigt, wordt de "
 "afronding bij eerdere invoer niet gewijzigd wat mogelijk een inconsistentie "
 "met de nieuwe veroorzaken."
@@ -1857,7 +1857,8 @@ msgstr "Rubrieken"
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "Account Groups with the same granularity can't overlap"
-msgstr "Rekeninggroepen met hetzelfde detailniveau mogen elkaar niet overlappen"
+msgstr ""
+"Rekeninggroepen met hetzelfde detailniveau mogen elkaar niet overlappen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__account_has_hashed_entries
@@ -1906,6 +1907,11 @@ msgstr "Map rekening"
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Account Mapping"
 msgstr "Vervangingstabel grootboekrekeningen"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__account_move_line_ids
+msgid "Account Move Line"
+msgstr "Boekingsregel"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
@@ -1977,6 +1983,11 @@ msgstr "Debiteurenrekening (Kassa)"
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_account_reconcile
 msgid "Account Reconcile"
 msgstr "Rekening afletteren"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__account_reconcile_model_line_ids
+msgid "Account Reconcile Model Line"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -2689,7 +2700,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__unreconciled_bank_statement_line_ids
 msgid "All unreconciled bank statement lines before the selected date."
-msgstr "Alle niet-afgeletterde bankafschriftregels voor de geselecteerde datum."
+msgstr ""
+"Alle niet-afgeletterde bankafschriftregels voor de geselecteerde datum."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -8468,8 +8480,8 @@ msgid ""
 msgstr ""
 "Indien ingesteld, wordt deze waarde op documenten gebruikt als het label van "
 "een subtotaal exclusief deze btw-groep voordat deze wordt weergegeven. "
-"Indien niet ingesteld, wordt de btw-groep weergegeven na het subtotaal ‘"
-"Onbelast bedrag’."
+"Indien niet ingesteld, wordt de btw-groep weergegeven na het subtotaal "
+"‘Onbelast bedrag’."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__active
@@ -8739,8 +8751,8 @@ msgid ""
 "Incorrect fiscal year date: day is out of range for month. Month: %(month)s; "
 "Day: %(day)s"
 msgstr ""
-"Incorrecte boekjaardatum: dag bestaat niet voor deze maand. Maand: %(month)"
-"s; Dag: %(day)s"
+"Incorrecte boekjaardatum: dag bestaat niet voor deze maand. Maand: %"
+"(month)s; Dag: %(day)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_incoterm_id
@@ -8972,8 +8984,8 @@ msgstr ""
 msgid ""
 "Invalid domain for expression '%(label)s' of line '%(line)s': %(formula)s"
 msgstr ""
-"Ongeldig domein voor uitdrukking '%(label)s' van regel '%(line)s': %(formula)"
-"s"
+"Ongeldig domein voor uitdrukking '%(label)s' van regel '%(line)s': %"
+"(formula)s"
 
 #. module: account
 #. odoo-python
@@ -9771,7 +9783,8 @@ msgstr "Dagboek moet van hetzelfde type zijn als de tegenboeking."
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__automatic_entry_default_journal_id
 msgid "Journal used by default for moving the period of an entry"
-msgstr "Standaard dagboek gebruikt om de periode van een boeking te verplaatsen"
+msgstr ""
+"Standaard dagboek gebruikt om de periode van een boeking te verplaatsen"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_journal_id
@@ -11073,7 +11086,8 @@ msgstr "Er was geen bijlage aangeleverd"
 msgid ""
 "No journal could be found in company %(company_name)s for any of those "
 "types: %(journal_types)s"
-msgstr "Geen %(journal_types)s dagboek gevonden in het bedrijf %(company_name)s"
+msgstr ""
+"Geen %(journal_types)s dagboek gevonden in het bedrijf %(company_name)s"
 
 #. module: account
 #. odoo-python
@@ -11494,6 +11508,12 @@ msgstr "Een of meerdere regels vereisen een 100% analytisch verdeelmodel."
 #: model:ir.ui.menu,name:account.root_payment_menu
 msgid "Online Payments"
 msgstr "Online betalingen"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid "Only Accounting managers can create foreign taxes."
+msgstr "Alleen boekhouding-managers kunnen buitenlandse belastingen aanmaken."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__only_tax_exigible
@@ -12014,7 +12034,7 @@ msgstr "Kredietwaarschuwing partner"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_ledger_partner
 msgid "Partner Ledger"
-msgstr "Saldilijsten"
+msgstr "Partnergrootboek"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__use_partner_credit_limit
@@ -12889,6 +12909,7 @@ msgstr "Inkoopvergrendelingsdatum"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_show_purchase_receipts
+#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__in_receipt
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_receipt
 #: model:res.groups,name:account.group_purchase_receipts
 msgid "Purchase Receipt"
@@ -13719,6 +13740,7 @@ msgid "Sales Lock Date"
 msgstr "Verkoop vergrendelendatum"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__out_receipt
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_receipt
 msgid "Sales Receipt"
 msgstr "Betaalbewijs"
@@ -15576,8 +15598,8 @@ msgstr ""
 msgid ""
 "The bank account of a bank journal must belong to the same company (%s)."
 msgstr ""
-"De bankrekening van een bankdagboek moeten tot hetzelfde bedrijf behoren (%s)"
-"."
+"De bankrekening van een bankdagboek moeten tot hetzelfde bedrijf behoren "
+"(%s)."
 
 #. module: account
 #. odoo-python
@@ -18319,7 +18341,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__show_on_dashboard
 msgid "Whether this journal should be displayed on the dashboard or not"
-msgstr "Bepaalt of dit dagboek al dan niet getoond moet worden in het dashboard"
+msgstr ""
+"Bepaalt of dit dagboek al dan niet getoond moet worden in het dashboard"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__new_journal_name
@@ -18420,16 +18443,16 @@ msgid ""
 "You can not archive a journal containing draft journal entries.\n"
 "\n"
 "To proceed:\n"
-"1/ click on the top-right button 'Journal Entries' from this journal form\n"
-"2/ then filter on 'Draft' entries\n"
+"1/ go to Accounting > Accounting > Journal Entries\n"
+"2/ filter on this journal and on 'Unposted' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
-"Je kunt een dagboek met concept boekingen niet archiveren.\n"
+"Je kunt een dagboek met conceptboekingen niet archiveren.\n"
 "\n"
-"Verder gaan:\n"
-"1/ klik op de knop rechtsboven 'Boekingen' van dit dagboekscherm\n"
-"2/ filter vervolgens op regels in 'Concept'\n"
-"3/ selecteer ze allemaal en post of verwijder ze via het actiemenu"
+"Om verder te gaan:\n"
+"1/ ga naar Boekhouding > Boekhouding > Boekingen\n"
+"2/ filter op dit dagboek en op 'Ongeboekte' boekingen\n"
+"3/ selecteer ze allemaal en boek of verwijder ze via het actiemenu"
 
 #. module: account
 #. odoo-python
@@ -18594,7 +18617,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
 msgid "You can't delete a report that has variants."
-msgstr "Het is niet mogelijk om een rapport te verwijderen die varianten heeft."
+msgstr ""
+"Het is niet mogelijk om een rapport te verwijderen die varianten heeft."
 
 #. module: account
 #. odoo-python
@@ -19809,6 +19833,25 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} Betaalbewijs (Ref {{ object.name or 'nvt' }})"
+
+#~ msgid "<span class=\"o_stat_text\">Journal Entries</span>"
+#~ msgstr "<span class=\"o_stat_text\">Boekingen</span>"
+
+#~ msgid ""
+#~ "You can not archive a journal containing draft journal entries.\n"
+#~ "\n"
+#~ "To proceed:\n"
+#~ "1/ click on the top-right button 'Journal Entries' from this journal "
+#~ "form\n"
+#~ "2/ then filter on 'Draft' entries\n"
+#~ "3/ select them all and post or delete them through the action menu"
+#~ msgstr ""
+#~ "Je kunt een dagboek met concept boekingen niet archiveren.\n"
+#~ "\n"
+#~ "Verder gaan:\n"
+#~ "1/ klik op de knop rechtsboven 'Boekingen' van dit dagboekscherm\n"
+#~ "2/ filter vervolgens op regels in 'Concept'\n"
+#~ "3/ selecteer ze allemaal en post of verwijder ze via het actiemenu"
 
 #~ msgid "Restrict the use of taxes to a type of product."
 #~ msgstr "Beperk het gebruik van btw tot een soort product."

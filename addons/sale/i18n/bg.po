@@ -35,7 +35,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
+"POT-Creation-Date: 2026-10-24 17:38+0000\n"
 "PO-Revision-Date: 2026-10-22 07:33+0000\n"
 "Last-Translator: \"v.kanev\" <v.kanev@tutanota.com>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-18/sale/"
@@ -901,7 +901,8 @@ msgstr ""
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
 msgid "A warning can be set on a product or a customer (Sale)"
-msgstr "Прпедупреждение може да бъде настроено за продукт или клиент (продажба)"
+msgstr ""
+"Прпедупреждение може да бъде настроено за продукт или клиент (продажба)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1440,10 +1441,10 @@ msgstr ""
 "\n"
 "Ако искате да фактурирате въз основа на поръчани количества вместо това:\n"
 "   • За консумативи или складируеми продукти отворете продукта, отидете в "
-"раздела „Обща информация“ и променете „Политика на фактуриране“ от „"
-"Доставени количества“ на „Поръчани количества“.\n"
-"   • За услуги (и други продукти) променете „Политика на фактуриране“ на „"
-"Предплатено/Фиксирана цена“.\n"
+"раздела „Обща информация“ и променете „Политика на фактуриране“ от "
+"„Доставени количества“ на „Поръчани количества“.\n"
+"   • За услуги (и други продукти) променете „Политика на фактуриране“ на "
+"„Предплатено/Фиксирана цена“.\n"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3306,8 +3307,8 @@ msgid ""
 "Once the quotation is confirmed, it becomes a sales order.<br> You will be "
 "able to create an invoice and collect the payment."
 msgstr ""
-"След като офертата бъде потвърдена, тя се превръща в поръчка за "
-"продажба.<br> Ще можете да създадете фактура и да съберете плащането."
+"След като офертата бъде потвърдена, тя се превръща в поръчка за продажба."
+"<br> Ще можете да създадете фактура и да съберете плащането."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
@@ -3401,8 +3402,8 @@ msgid ""
 msgstr ""
 "Език за незадължителен превод (ISO код), който да се избере при изпращане на "
 "имейл. Ако не е зададен, ще се използва английската версия. Обикновено това "
-"трябва да бъде заместващ израз, който предоставя подходящия език, напр. {{ "
-"object.partner_id.lang }}."
+"трябва да бъде заместващ израз, който предоставя подходящия език, напр. "
+"{{ object.partner_id.lang }}."
 
 #. module: sale
 #. odoo-python
@@ -4560,8 +4561,8 @@ msgid ""
 msgstr ""
 "Изпращането на имейл е полезно, ако трябва да споделите конкретна информация "
 "или съдържание за продукт (инструкции, правила, връзки, медия и т.н.). "
-"Създайте и задайте имейл шаблона от формата с детайли на продукта (в раздел „"
-"Счетоводство“)."
+"Създайте и задайте имейл шаблона от формата с детайли на продукта (в раздел "
+"„Счетоводство“)."
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_cancellation
@@ -5111,7 +5112,8 @@ msgstr "Търговската поръчка е изтекла."
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 msgid "The value of the down payment amount must be positive."
-msgstr "Стойността на размера на авансовото плащане трябва да бъде положителна."
+msgstr ""
+"Стойността на размера на авансовото плащане трябва да бъде положителна."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -5540,11 +5542,9 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__validity_date
 msgid ""
-"Validity of the order, after that you will not able to sign & pay the "
-"quotation."
+"Validity of the quotation. After this date, you will no longer be able to "
+"sign and pay it."
 msgstr ""
-"Валидност на поръчката, след която няма да можете да подпишете и платите "
-"офертата."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5678,17 +5678,6 @@ msgstr "Не можете да промените ценоразписа на п
 
 #. module: sale
 #. odoo-python
-#: code:addons/sale/models/product_product.py:0
-#: code:addons/sale/models/product_template.py:0
-msgid ""
-"You cannot change the product's type because it is already used in sales "
-"orders."
-msgstr ""
-"Не можете да промените типа на продукта, защото той вече се използва в "
-"поръчки за продажба."
-
-#. module: sale
-#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
@@ -5721,6 +5710,16 @@ msgid ""
 msgstr ""
 "Трябва да определите продукт за всичко, което продавате или купувате, "
 "независимо дали е складируем продукт, консуматив или услуга."
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+msgid ""
+"You should not change the product type because this product is already used "
+"in sales orders. Changing it may affect how the related order lines are "
+"delivered."
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
@@ -5775,9 +5774,9 @@ msgid ""
 " Please change the company of your quotation or remove the products from "
 "other companies (%(bad_products)s)."
 msgstr ""
-"YВашето запитване за оферта съдържа продукти от компанията %(product_company)"
-"s окато самото запитване за оферта принадлежи на компанията %(quote_company)"
-"s. \n"
+"YВашето запитване за оферта съдържа продукти от компанията %"
+"(product_company)s окато самото запитване за оферта принадлежи на компанията "
+"%(quote_company)s. \n"
 "Моля, променете компанията на вашето запитване за оферта или премахнете "
 "продуктите от други компании (%(bad_products)s)."
 
@@ -5867,8 +5866,8 @@ msgid ""
 "a' }})"
 msgstr ""
 "{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
-"== 'pending') and 'Чакаща поръчка' or 'Поръчка' }} (Референция {{ "
-"object.name or 'n/a' }})"
+"== 'pending') and 'Чакаща поръчка' or 'Поръчка' }} (Референция "
+"{{ object.name or 'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -5878,8 +5877,8 @@ msgid ""
 "{{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
-"(ctx.get('proforma') and 'Проформа' or 'Оферта') or 'Поръчка' }} (Ref {{ "
-"object.name or 'n/a' }})"
+"(ctx.get('proforma') and 'Проформа' or 'Оферта') or 'Поръчка' }} (Ref "
+"{{ object.name or 'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_cancellation
@@ -5887,6 +5886,20 @@ msgid ""
 "{{ object.company_id.name }} {{ object.type_name }} Cancelled (Ref "
 "{{ object.name or 'n/a' }})"
 msgstr ""
+
+#~ msgid ""
+#~ "Validity of the order, after that you will not able to sign & pay the "
+#~ "quotation."
+#~ msgstr ""
+#~ "Валидност на поръчката, след която няма да можете да подпишете и платите "
+#~ "офертата."
+
+#~ msgid ""
+#~ "You cannot change the product's type because it is already used in sales "
+#~ "orders."
+#~ msgstr ""
+#~ "Не можете да промените типа на продукта, защото той вече се използва в "
+#~ "поръчки за продажба."
 
 #~ msgid "2023-12-31"
 #~ msgstr "2023-12-31"

@@ -1,20 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* payment_xendit
+# * payment_xendit
 #
 # Translators:
 # Emily Jia <eji@odoo.com>, 2024
 # Tiffany Chang, 2024
 # Wil Odoo, 2024
 # Chloe Wang, 2024
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-01 17:39+0000\n"
-"PO-Revision-Date: 2026-10-20 11:23+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"POT-Creation-Date: 2026-10-24 17:39+0000\n"
+"PO-Revision-Date: 2026-10-27 15:39+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-18/payment_xendit/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -33,26 +33,6 @@ msgid ""
 msgstr "处理付款过程中发生错误，请再试一次。（付款：%s）"
 
 #. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Card Code"
-msgstr "卡代码"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Card Holder First Name"
-msgstr "持卡人名字"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Card Holder Last Name"
-msgstr "持卡人姓氏"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Card Number"
-msgstr "卡号"
-
-#. module: payment_xendit
 #: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__code
 msgid "Code"
 msgstr "代码"
@@ -62,44 +42,6 @@ msgstr "代码"
 #: code:addons/payment_xendit/models/payment_provider.py:0
 msgid "Could not establish the connection to the API."
 msgstr "无法建立与API的连接。"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Email"
-msgstr "电子邮件"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Expiration"
-msgstr "到期"
-
-#. module: payment_xendit
-#. odoo-javascript
-#: code:addons/payment_xendit/static/src/js/payment_form.js:0
-msgid "Invalid CVN"
-msgstr "CVN 无效"
-
-#. module: payment_xendit
-#. odoo-javascript
-#: code:addons/payment_xendit/static/src/js/payment_form.js:0
-msgid "Invalid Card Number"
-msgstr "卡号码无效"
-
-#. module: payment_xendit
-#. odoo-javascript
-#: code:addons/payment_xendit/static/src/js/payment_form.js:0
-msgid "Invalid Date"
-msgstr "无效日期"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "John"
-msgstr "John"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "MM"
-msgstr "月"
 
 #. module: payment_xendit
 #. odoo-python
@@ -118,22 +60,6 @@ msgid "Payment Transaction"
 msgstr "付款交易"
 
 #. module: payment_xendit
-#. odoo-javascript
-#: code:addons/payment_xendit/static/src/js/payment_form.js:0
-msgid "Payment processing failed"
-msgstr "付款处理失败"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Phone Number"
-msgstr "电话号码"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.payment_provider_form_xendit
-msgid "Public Key"
-msgstr "公开密钥"
-
-#. module: payment_xendit
 #. odoo-python
 #: code:addons/payment_xendit/models/payment_transaction.py:0
 msgid "Received data with missing reference."
@@ -145,23 +71,20 @@ msgid "Secret Key"
 msgstr "密钥"
 
 #. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Smith"
-msgstr "Smith"
-
-#. module: payment_xendit
-#. odoo-python
-#: code:addons/payment_xendit/controllers/main.py:0
-msgid "The access token doesn't match the transaction reference."
-msgstr ""
-
-#. module: payment_xendit
 #. odoo-python
 #: code:addons/payment_xendit/models/payment_provider.py:0
 msgid ""
 "The communication with the API failed. Xendit gave us the following "
 "information: '%s'"
 msgstr "与 API 的通信失败。Xendit 提供了以下失败报错信息： '%s'"
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_transaction.py:0
+msgid ""
+"The payment requires authentication from the customer, which isn't possible "
+"for this unattended transaction. Please ask the customer to pay manually."
+msgstr "该付款需要客户进行身份验证，但此无人值守交易无法完成验证。请让客户手动付款。"
 
 #. module: payment_xendit
 #: model:ir.model.fields,help:payment_xendit.field_payment_provider__code
@@ -175,6 +98,12 @@ msgid "The transaction is not linked to a token."
 msgstr "该交易没有与令牌挂钩。"
 
 #. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_provider.py:0
+msgid "Update the Xendit webhook configuration"
+msgstr ""
+
+#. module: payment_xendit
 #: model_terms:ir.ui.view,arch_db:payment_xendit.payment_provider_form_xendit
 msgid "Webhook Token"
 msgstr "Webhook的令牌"
@@ -183,6 +112,12 @@ msgstr "Webhook的令牌"
 #: model:ir.model.fields.selection,name:payment_xendit.selection__payment_provider__code__xendit
 msgid "Xendit"
 msgstr "Xendit"
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_provider.py:0
+msgid "Xendit Dashboard"
+msgstr ""
 
 #. module: payment_xendit
 #: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__xendit_public_key
@@ -200,11 +135,68 @@ msgid "Xendit Webhook Token"
 msgstr "Xendit Webhook 令牌"
 
 #. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "YYYY"
-msgstr "YYYY"
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_provider.py:0
+msgid ""
+"Xendit replaced the single webhook field used by the %(provider)s payment "
+"provider with separate v3 event groups. Update the %(webhook_link)s on the %"
+"(dashboard_link)s before %(deadline)s to keep receiving payment and card "
+"token status updates."
+msgstr ""
 
 #. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "john.smith@example.com"
-msgstr "john.smith@example.com"
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_provider.py:0
+msgid "webhook configuration"
+msgstr ""
+
+#~ msgid "Card Code"
+#~ msgstr "卡代码"
+
+#~ msgid "Card Holder First Name"
+#~ msgstr "持卡人名字"
+
+#~ msgid "Card Holder Last Name"
+#~ msgstr "持卡人姓氏"
+
+#~ msgid "Card Number"
+#~ msgstr "卡号"
+
+#~ msgid "Email"
+#~ msgstr "电子邮件"
+
+#~ msgid "Expiration"
+#~ msgstr "到期"
+
+#~ msgid "Invalid CVN"
+#~ msgstr "CVN 无效"
+
+#~ msgid "Invalid Card Number"
+#~ msgstr "卡号码无效"
+
+#~ msgid "Invalid Date"
+#~ msgstr "无效日期"
+
+#~ msgid "John"
+#~ msgstr "John"
+
+#~ msgid "MM"
+#~ msgstr "月"
+
+#~ msgid "Payment processing failed"
+#~ msgstr "付款处理失败"
+
+#~ msgid "Phone Number"
+#~ msgstr "电话号码"
+
+#~ msgid "Public Key"
+#~ msgstr "公开密钥"
+
+#~ msgid "Smith"
+#~ msgstr "Smith"
+
+#~ msgid "YYYY"
+#~ msgstr "YYYY"
+
+#~ msgid "john.smith@example.com"
+#~ msgstr "john.smith@example.com"

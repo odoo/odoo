@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-10-20 10:55+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"PO-Revision-Date: 2026-10-27 17:56+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-18/"
 "mass_mailing/ar/>\n"
@@ -165,7 +165,8 @@ msgid ""
 "                                    <span class=\"text-muted\">Bounce</span>"
 msgstr ""
 "<br/>\n"
-"                                    <span class=\"text-muted\">الارتداد</span>"
+"                                    <span class=\"text-muted\">الارتداد</"
+"span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
@@ -185,7 +186,8 @@ msgid ""
 "                                    <span class=\"text-muted\">Opt-Out</span>"
 msgstr ""
 "<br/>\n"
-"                                    <span class=\"text-muted\">الانسحاب</span>"
+"                                    <span class=\"text-muted\">الانسحاب</"
+"span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.theme_default_template
@@ -257,7 +259,8 @@ msgstr "<font style=\"font-size: 48px;\">عنوان جاذب</font> "
 msgid ""
 "<font style=\"font-size: 62px; font-weight: bold;\">Catchy Headline</font>"
 msgstr ""
-"<font style=\"font-size: 62px; font-weight: bold;\">عنوان جاذب للانتباه</font>"
+"<font style=\"font-size: 62px; font-weight: bold;\">عنوان جاذب للانتباه</"
+"font>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -478,7 +481,8 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span name=\"process_text\">emails are being processed.</span>"
-msgstr "<span name=\"process_text\">تتم معالجة رسائل البريد الإلكتروني.</span> "
+msgstr ""
+"<span name=\"process_text\">تتم معالجة رسائل البريد الإلكتروني.</span> "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -514,8 +518,8 @@ msgid ""
 "<span style=\"color: rgb(12 84 96); font-size: 16px; font-weight: bolder;"
 "\">Explain the benefits you offer</span>"
 msgstr ""
-"<span style=\"color: rgb(12 84 96); font-size: 16px; font-weight: bolder;\">"
-"قم بتوضيح الفوائد التي تقدمها</span> "
+"<span style=\"color: rgb(12 84 96); font-size: 16px; font-weight: bolder;"
+"\">قم بتوضيح الفوائد التي تقدمها</span> "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_comparisons
@@ -941,9 +945,9 @@ msgid ""
 "visible in any case to allow leads and partners to re-subscribe."
 msgstr ""
 "السماح للمستلمين بإدارة وضعهم في القائمة السوداء بأنفسهم، عن طريق صفحة إلغاء "
-"الاشتراك. إذا كان هذا الخيار مفعلاً، سيكون زر 'إضافتي للقائمة السوداء' مخفيًا في "
-"صفحة إلغاء الاشتراك. سيظل زر 'العودة' ظاهراً في جميع الأحوال للسماح للعملاء "
-"المهتمين والشركاء بإعادة الاشتراك. "
+"الاشتراك. إذا كان هذا الخيار مفعلاً، سيكون زر 'إضافتي للقائمة السوداء' مخفيًا "
+"في صفحة إلغاء الاشتراك. سيظل زر 'العودة' ظاهراً في جميع الأحوال للسماح "
+"للعملاء المهتمين والشركاء بإعادة الاشتراك. "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
@@ -1057,13 +1061,18 @@ msgid ""
 "At least one of the mailing list you are trying to archive is used in an "
 "ongoing mailing campaign."
 msgstr ""
-"واحد على الأقل من القائمة البريدية التي ترغب في أرشفتها مستخدَم في حملة بريدية "
-"جارية. "
+"واحد على الأقل من القائمة البريدية التي ترغب في أرشفتها مستخدَم في حملة "
+"بريدية جارية. "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Attach a file"
 msgstr "إرفاق ملف"
+
+#. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_ir_attachment
+msgid "Attachment"
+msgstr "مرفق"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_attachment_count
@@ -1202,7 +1211,8 @@ msgid ""
 "Blocklist request from portal of mailing %(mailing_link)s (document %"
 "(record_link)s)"
 msgstr ""
-"طلب الإضافة إلى قائمة الحظر للبريد %(mailing_link)s (المستند %(record_link)s) "
+"طلب الإضافة إلى قائمة الحظر للبريد %(mailing_link)s (المستند %"
+"(record_link)s) "
 
 #. module: mass_mailing
 #. odoo-python
@@ -1221,8 +1231,8 @@ msgid ""
 "Blocklist request from unsubscribe link of mailing %(mailing_link)s "
 "(document %(record_link)s)"
 msgstr ""
-"طلب الإضافة إلى قائمة الحظر عن طريق رابط إلغاء الاشتراك للبريد %(mailing_link)"
-"s (المستند %(record_link)s) "
+"طلب الإضافة إلى قائمة الحظر عن طريق رابط إلغاء الاشتراك للبريد %"
+"(mailing_link)s (المستند %(record_link)s) "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -1655,8 +1665,8 @@ msgid ""
 "Contacts successfully imported. Number of contacts imported: %"
 "(imported_count)s. Number of duplicates ignored: %(duplicate_count)s"
 msgstr ""
-"تم استيراد جهات الاتصال بنجاح. عدد جهات الاتصال المستوردة: %(imported_count)s. "
-"عدد النسخ المكررة التي تم تجاهلها: %(duplicate_count)s "
+"تم استيراد جهات الاتصال بنجاح. عدد جهات الاتصال المستوردة: %"
+"(imported_count)s. عدد النسخ المكررة التي تم تجاهلها: %(duplicate_count)s "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
@@ -2453,9 +2463,9 @@ msgid ""
 "related mail_mail can be deleted separately from its statistics. However the "
 "ID is needed for several action and controllers."
 msgstr ""
-"معرف المتغير mail_mail المرتبط. يحتوي هذا الحقل على قيمة صحيحة لأنه من الممكن "
-"حذف المتغير mail_mail المرتبط بشكل منفصل عن إحصائياته. لكن المعرف ضروري "
-"للعديد من الإجراءات والمتحكمات."
+"معرف المتغير mail_mail المرتبط. يحتوي هذا الحقل على قيمة صحيحة لأنه من "
+"الممكن حذف المتغير mail_mail المرتبط بشكل منفصل عن إحصائياته. لكن المعرف "
+"ضروري للعديد من الإجراءات والمتحكمات."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_exception_icon
@@ -2482,8 +2492,8 @@ msgid ""
 "the effectiveness of the mailings, without causing duplicate messages."
 msgstr ""
 "إذا كان محددًا، سيتم مراسلة المستلمين مرة واحدة فقط طوال الحملة. يسمح لك هذا "
-"بإرسال رسائل مختلفة لمستلمين عشوائيين لاختبار مدى فعالية الرسائل، بدون التسبب "
-"في تكرار إرسال الرسالة لنفس المستلم."
+"بإرسال رسائل مختلفة لمستلمين عشوائيين لاختبار مدى فعالية الرسائل، بدون "
+"التسبب في تكرار إرسال الرسالة لنفس المستلم."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_has_error
@@ -3259,9 +3269,9 @@ msgid ""
 "Commercial Director in the software industry, Mich has helped the company to "
 "get where it is today. Mich is among the best minds."
 msgstr ""
-"يحب Mich أن يواجه التحديات التي تعترض طريقه، وبالاستعانة بخبرته الطويلة كمدير "
-"تجاري في مجال التكنولوجيا والبرمجيات، تمكن Mich من مساعدة الشركة على الوصول "
-"إلى ما هي عليه الآن. إنه حقاً أحد العقول النيّرة. "
+"يحب Mich أن يواجه التحديات التي تعترض طريقه، وبالاستعانة بخبرته الطويلة "
+"كمدير تجاري في مجال التكنولوجيا والبرمجيات، تمكن Mich من مساعدة الشركة على "
+"الوصول إلى ما هي عليه الآن. إنه حقاً أحد العقول النيّرة. "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.theme_default_template
@@ -3271,8 +3281,8 @@ msgid ""
 "\">Customer Service</span>"
 msgstr ""
 "مايكل فليتشر<br/>\n"
-"                   <span style=\"font-size: 12px; font-weight: bolder;\">"
-"خدمة العملاء</span> "
+"                   <span style=\"font-size: 12px; font-weight: bolder;"
+"\">خدمة العملاء</span> "
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__mail_email_missing
@@ -3483,8 +3493,8 @@ msgid ""
 "No need to import mailing lists, you can send mailings to contacts saved in "
 "other Odoo apps."
 msgstr ""
-"لا داعي لاستيراد قوائم بريدية. بوسعك إرسال المراسلات إلى جهات الاتصال المحفوظة "
-"في تطبيقات أودو الأخرى. "
+"لا داعي لاستيراد قوائم بريدية. بوسعك إرسال المراسلات إلى جهات الاتصال "
+"المحفوظة في تطبيقات أودو الأخرى. "
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_filter_action
@@ -3722,10 +3732,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. "
 "{{ object.partner_id.lang }}."
 msgstr ""
-"لغة الترجمة الاختيارية (كود ISO) لاختيارها عند إرسال بريد إلكتروني. إذا لم يتم "
-"تعيينها، سوف تُستخدم النسخة باللغة الإنجليزية. عادة ما يكون ذلك تمثيلاً للعنصر "
-"النائب المسؤول عن التزويد باللغة المناسبة، مثال: {{ object.partner_id.lang }}"
-". "
+"لغة الترجمة الاختيارية (كود ISO) لاختيارها عند إرسال بريد إلكتروني. إذا لم "
+"يتم تعيينها، سوف تُستخدم النسخة باللغة الإنجليزية. عادة ما يكون ذلك تمثيلاً "
+"للعنصر النائب المسؤول عن التزويد باللغة المناسبة، مثال: "
+"{{ object.partner_id.lang }}. "
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_subscription_optout_action
@@ -4737,8 +4747,8 @@ msgid ""
 "The winner has already been sent. Use <b>Compare Version</b> to get an "
 "overview of this A/B testing campaign."
 msgstr ""
-"لقد تم إرسال الفائز بالفعل. لاستخدم خاصية <b>مقارنة النسخ</b> للحصول على نظرة "
-"عامة على حملة اختبار A/B هذه.  "
+"لقد تم إرسال الفائز بالفعل. لاستخدم خاصية <b>مقارنة النسخ</b> للحصول على "
+"نظرة عامة على حملة اختبار A/B هذه.  "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -4769,7 +4779,8 @@ msgid ""
 "Your emails might be marked as spam on the mail clients."
 msgstr ""
 "لا يمكن استخدام صيغة البريد الإلكتروني هذه مع خادم البريد هذا. \n"
-"قد يتم تحديد رسائل البريد الإلكتروني عبريد عشوائي في عملاء البريد الإلكتروني. "
+"قد يتم تحديد رسائل البريد الإلكتروني عبريد عشوائي في عملاء البريد "
+"الإلكتروني. "
 
 #. module: mass_mailing
 #. odoo-python
@@ -4778,8 +4789,8 @@ msgid ""
 "This email has been automatically added in blocklist because of too much "
 "bounced."
 msgstr ""
-"لقد تمت إضافة هذا البريد الإلكتروني تلقائياً إلى قائمة الحظر لارتداد العديد من "
-"رسائل البريد الإلكتروني. "
+"لقد تمت إضافة هذا البريد الإلكتروني تلقائياً إلى قائمة الحظر لارتداد العديد "
+"من رسائل البريد الإلكتروني. "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_form
@@ -4852,9 +4863,9 @@ msgid ""
 "right icon of each block. Then, duplicate one of the columns to create a new "
 "one as a copy."
 msgstr ""
-"لإضافة عمود رابع، قم بتقليص حجم تلك الأعمدة الثلاثة باستخدام الأيقونة على يمين "
-"كل كتلة إنشائية. بعدها، قم بإنشاء نسخة مطابقة لأحد الأعمدة لإنشاء واحد جديد "
-"كنسخة. "
+"لإضافة عمود رابع، قم بتقليص حجم تلك الأعمدة الثلاثة باستخدام الأيقونة على "
+"يمين كل كتلة إنشائية. بعدها، قم بإنشاء نسخة مطابقة لأحد الأعمدة لإنشاء واحد "
+"جديد كنسخة. "
 
 #. module: mass_mailing
 #. odoo-python
@@ -5310,8 +5321,8 @@ msgid ""
 "                send emails<br> to any contact saved in other Odoo apps."
 msgstr ""
 "لست بحاجة إلى استيراد قوائمك البريدية، إذ أنه بمقدورك إرسال رسائل\n"
-"                البريد الإلكتروني <br>إلى أي جهة اتصال محفوظة في تطبيقات أودو "
-"الأخرى. "
+"                البريد الإلكتروني <br>إلى أي جهة اتصال محفوظة في تطبيقات "
+"أودو الأخرى. "
 
 #. module: mass_mailing
 #. odoo-python

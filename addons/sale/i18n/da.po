@@ -19,11 +19,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
+"POT-Creation-Date: 2026-10-24 17:38+0000\n"
 "PO-Revision-Date: 2026-10-20 12:26+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Danish <https://translate.odoo.com/projects/odoo-18/sale/da/>"
-"\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-18/sale/da/"
+">\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -556,20 +556,20 @@ msgstr ""
 "            <t t-if=\"object.origin\">\n"
 "                (med reference: <t t-out=\"object.origin or ''\"/> )\n"
 "           </t> \n"
-"            på <span style=\"font-weight: bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">10,00 $</span> er "
-"tilgængelig.\n"
+"            på <span style=\"font-weight: bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">10,00 "
+"$</span> er tilgængelig.\n"
 "       </t>\n"
 "        <t t-else=\"\"> \n"
 "           <t t-out=\"doc_name or ''\"> tilbud</t> <span style=\"font-"
 "weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
 "            <t t-if=\"object.origin\">\n"
-"                (med reference: <t t-out=\"object.origin or ''\">S00052</t> )"
-"\n"
+"                (med reference: <t t-out=\"object.origin or ''\">S00052</"
+"t> )\n"
 "           </t> \n"
-"            på <span style=\"font-weight: bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">10,00 $</span> er klar til "
-"gennemgang.\n"
+"            på <span style=\"font-weight: bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">10,00 "
+"$</span> er klar til gennemgang.\n"
 "       </t>\n"
 "        <br/> \n"
 "       <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/>\n"
@@ -1555,7 +1555,8 @@ msgstr "Se et eksempel på et tilbud. Det er så overskueligt!"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Click here to add some products or services to your quotation."
-msgstr "Klik her for at tilføje nogle produkter eller tjenester til dit tilbud."
+msgstr ""
+"Klik her for at tilføje nogle produkter eller tjenester til dit tilbud."
 
 #. module: sale
 #. odoo-javascript
@@ -4613,8 +4614,8 @@ msgid ""
 "and set the email template from the product detail form (in Accounting tab)."
 msgstr ""
 "Det er en god idé at sende en e-mail, hvis du vil dele specifik information "
-"eller indhold om et produkt (f.eks. vejledninger, regler, links, medier m.m.)"
-". Du kan oprette og tilknytte e-mailskabelonen direkte fra produktets "
+"eller indhold om et produkt (f.eks. vejledninger, regler, links, medier "
+"m.m.). Du kan oprette og tilknytte e-mailskabelonen direkte fra produktets "
 "detaljer (under fanen Regnskab)."
 
 #. module: sale
@@ -5583,11 +5584,9 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__validity_date
 msgid ""
-"Validity of the order, after that you will not able to sign & pay the "
-"quotation."
+"Validity of the quotation. After this date, you will no longer be able to "
+"sign and pay it."
 msgstr ""
-"Ordren er gyldig i 1 time, hvorefter det ikke længere er muligt at "
-"underskrive eller betale for tilbuddet."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5720,16 +5719,6 @@ msgstr "Du kan ikke ændre prislisten for en bekræftet ordre!"
 
 #. module: sale
 #. odoo-python
-#: code:addons/sale/models/product_product.py:0
-#: code:addons/sale/models/product_template.py:0
-msgid ""
-"You cannot change the product's type because it is already used in sales "
-"orders."
-msgstr ""
-"Du kan ikke ændre produktets type, da det allerede anvendes på en salgsordre."
-
-#. module: sale
-#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
@@ -5763,6 +5752,16 @@ msgstr ""
 "Du skal definere et produkt for alt, du sælger eller køber,\n"
 "                uanset om det er et lagervare, en forbrugsvare eller en "
 "tjenesteydelse."
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+msgid ""
+"You should not change the product type because this product is already used "
+"in sales orders. Changing it may affect how the related order lines are "
+"delivered."
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
@@ -5919,8 +5918,8 @@ msgid ""
 "{{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
-"(ctx.get('proforma') and 'Proforma' or 'Tilbud') or 'Ordre' }} (Ref {{ "
-"object.name or 'n/a' }})"
+"(ctx.get('proforma') and 'Proforma' or 'Tilbud') or 'Ordre' }} (Ref "
+"{{ object.name or 'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_cancellation
@@ -5928,8 +5927,22 @@ msgid ""
 "{{ object.company_id.name }} {{ object.type_name }} Cancelled (Ref "
 "{{ object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} {{ object.type_name }} Annulleret (Ref {{ "
-"object.name or 'n/a' }})"
+"{{ object.company_id.name }} {{ object.type_name }} Annulleret (Ref "
+"{{ object.name or 'n/a' }})"
+
+#~ msgid ""
+#~ "Validity of the order, after that you will not able to sign & pay the "
+#~ "quotation."
+#~ msgstr ""
+#~ "Ordren er gyldig i 1 time, hvorefter det ikke længere er muligt at "
+#~ "underskrive eller betale for tilbuddet."
+
+#~ msgid ""
+#~ "You cannot change the product's type because it is already used in sales "
+#~ "orders."
+#~ msgstr ""
+#~ "Du kan ikke ændre produktets type, da det allerede anvendes på en "
+#~ "salgsordre."
 
 #~ msgid "2023-12-31"
 #~ msgstr "2023-12-31"

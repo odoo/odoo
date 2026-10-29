@@ -13,9 +13,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-10-20 16:25+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"POT-Creation-Date: 2026-10-24 17:39+0000\n"
+"PO-Revision-Date: 2026-10-27 12:32+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-18/"
 "website_sale_loyalty/sl/>\n"
 "Language: sl\n"
@@ -62,6 +62,14 @@ msgstr "Na voljo na spletni strani"
 #. odoo-python
 #: code:addons/website_sale_loyalty/controllers/payment.py:0
 msgid ""
+"Cannot process payment: Gift cards and eWallets are not compatible with on "
+"site payment"
+msgstr ""
+
+#. module: website_sale_loyalty
+#. odoo-python
+#: code:addons/website_sale_loyalty/controllers/payment.py:0
+msgid ""
 "Cannot process payment: applied reward was changed or has expired.\n"
 "Please refresh the page and try again."
 msgstr ""
@@ -99,7 +107,8 @@ msgstr "Kupon"
 #. module: website_sale_loyalty
 #: model:ir.model,name:website_sale_loyalty.model_coupon_share
 msgid "Create links that apply a coupon and redirect to a specific page"
-msgstr "Ustvarite povezave, ki uporabijo kupon in preusmerijo na določeno stran"
+msgstr ""
+"Ustvarite povezave, ki uporabijo kupon in preusmerijo na določeno stran"
 
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__create_uid
@@ -210,6 +219,11 @@ msgstr "Pravilo zvestobe"
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
 msgid "Pay with eWallet"
 msgstr ""
+
+#. module: website_sale_loyalty
+#: model:ir.model,name:website_sale_loyalty.model_payment_provider
+msgid "Payment Provider"
+msgstr "Ponudnik plačil"
 
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__program_id
@@ -344,4 +358,10 @@ msgstr "Uspešno ste uporabili naslednjo kodo:"
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
 msgid "in your ewallet"
+msgstr ""
+
+#. module: website_sale_loyalty
+#. odoo-python
+#: code:addons/website_sale_loyalty/models/payment_provider.py:0
+msgid "incompatible with gift cards and eWallets"
 msgstr ""

@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-10-20 14:20+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"PO-Revision-Date: 2026-10-27 10:33+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-18/"
 "website_sale/pl/>\n"
@@ -232,8 +232,8 @@ msgid ""
 "<i class=\"oi oi-chevron-left d-lg-none me-1\" role=\"presentation\"/>All "
 "Products"
 msgstr ""
-"<i class=\"oi oi-chevron-left d-lg-none me-1\" role=\"presentation\"/>"
-"Wszystkie produkty"
+"<i class=\"oi oi-chevron-left d-lg-none me-1\" role=\"presentation\"/"
+">Wszystkie produkty"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -451,8 +451,8 @@ msgstr "<span class=\"visually-hidden\">filtry aktywne</span>"
 #: model_terms:web_tour.tour,rainbow_man_message:website_sale.test_01_admin_shop_tour
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
 msgstr ""
-"<span><b>Dobra robota!</b> Przeszedłeś przez wszystkie kroki tego "
-"samouczka.</span>"
+"<span><b>Dobra robota!</b> Przeszedłeś przez wszystkie kroki tego samouczka."
+"</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -585,8 +585,8 @@ msgstr ""
 "width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
 "0px 0px 0px 0px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                    <h1 style=\"color:#A9A9A9;\">W TWOIM KOSZYKU SĄ "
-"PRODUKTY.</h1>\n"
+"                    <h1 style=\"color:#A9A9A9;\">W TWOIM KOSZYKU SĄ PRODUKTY."
+"</h1>\n"
 "                    Czy chcesz dokończyć zakup?<br/><br/>\n"
 "                    <t t-if=\"object.order_line\">\n"
 "                        <t t-foreach=\"object.website_order_line\" t-"
@@ -594,8 +594,8 @@ msgstr ""
 "                            <hr/>\n"
 "                            <table width=\"100%\">\n"
 "                                <tr>\n"
-"                                    <td style=\"padding: 10px; "
-"width:150px;\">\n"
+"                                    <td style=\"padding: 10px; width:150px;"
+"\">\n"
 "                                        <img t-attf-src=\"/web/image/"
 "product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; "
 "height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
@@ -675,9 +675,9 @@ msgid ""
 "on                                      this page. Use '/' to discover more "
 "features."
 msgstr ""
-"Szczegółowy, sformatowany opis do promowania Twojego produktu na"
-"                                 tej stronie. Użyj \"/\", aby odkryć więcej "
-"funkcji."
+"Szczegółowy, sformatowany opis do promowania Twojego produktu "
+"na                                 tej stronie. Użyj \"/\", aby odkryć "
+"więcej funkcji."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -897,7 +897,8 @@ msgstr "Pozwól klientom porównać cechy produktów"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Allow signed-in users to save product in a wishlist"
-msgstr "Pozwól zalogowanym użytkownikom na zapisanie produktów na liście życzeń"
+msgstr ""
+"Pozwól zalogowanym użytkownikom na zapisanie produktów na liście życzeń"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_pricelist__selectable
@@ -4300,6 +4301,16 @@ msgstr "Wyprzedane"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
+msgid ""
+"Some products in your cart are not available for purchase in your country. "
+"Please remove them or contact us."
+msgstr ""
+"Niektóre produkty w Twoim koszyku nie są dostępne do zakupienia w Twoim "
+"kraju. Usuń je lub skontaktuj się z nami."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
 msgid "Some required fields are empty."
 msgstr "Niektóre wymagane pola są puste."
 
@@ -4431,6 +4442,16 @@ msgid "Taxes"
 msgstr "Podatki"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid ""
+"Taxes have been updated based on your address. Your payment method has not "
+"been charged."
+msgstr ""
+"Podatki zostały zaktualizowane na podstawie Twojego adresu. Twoja metoda "
+"płatności nie została obciążona."
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Text"
 msgstr "Tekst"
@@ -4481,8 +4502,8 @@ msgid ""
 "is different than the one you want to use (%(company)s)"
 msgstr ""
 "Firma strony internetowej, z której próbujesz dokonać sprzedaży (%"
-"(website_company)s) jest inna niż ta, z której chcesz skorzystać (%(company)"
-"s)."
+"(website_company)s) jest inna niż ta, z której chcesz skorzystać (%"
+"(company)s)."
 
 #. module: website_sale
 #. odoo-python
@@ -4502,7 +4523,8 @@ msgstr "Pełny adres URL dostępu do dokumentu przez stronę."
 #: code:addons/website_sale/models/sale_order.py:0
 msgid ""
 "The given combination does not exist therefore it cannot be added to cart."
-msgstr "Podana kombinacja nie istnieje, dlatego nie można jej dodać do koszyka."
+msgstr ""
+"Podana kombinacja nie istnieje, dlatego nie można jej dodać do koszyka."
 
 #. module: website_sale
 #. odoo-python
@@ -4526,6 +4548,16 @@ msgid ""
 msgstr ""
 "Wybrany tu tryb ma zastosowanie jako polityka fakturowania każdego nowego "
 "produktu, ale nie produktów już istniejących"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/combo_configurator.py:0
+msgid ""
+"The number of selected combo items must match the number of available combo "
+"choices."
+msgstr ""
+"Liczba wybranych pozycji combo musi odpowiadać liczbie dostępnych wyborów "
+"combo."
 
 #. module: website_sale
 #. odoo-python
@@ -4627,10 +4659,24 @@ msgid "This product is no longer available."
 msgstr "Ten produkt nie jest już dostępny."
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid "This product is not available for purchase in your country."
+msgstr "Ten produkt nie jest dostępny do kupienia w Twoim kraju."
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_reorder.js:0
 msgid "This product is not available for purchase."
 msgstr "Ten produkt nie jest dostępny w sprzedaży."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid "This product is part of a combo and can't be updated individually."
+msgstr ""
+"Ten produkt jest częścią zestawu combo i nie może zostać zaktualizowany "
+"indywidualnie."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
@@ -5105,8 +5151,8 @@ msgid ""
 "                                        If you want to modify your billing "
 "address, create a"
 msgstr ""
-"Edytujesz jednocześnie adresy<b> dostawy oraz rozliczeniowe</b>"
-"                                       <br/> \n"
+"Edytujesz jednocześnie adresy<b> dostawy oraz rozliczeniowe</"
+"b>                                       <br/> \n"
 "                                        Jeśli chcesz zmodyfikować adres "
 "rozliczeniowy, utwórz"
 
@@ -5280,7 +5326,8 @@ msgstr "Koszyk eCommerce"
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_cron_send_availability_email_ir_actions_server
 msgid "eCommerce: send email to customers about their abandoned cart"
-msgstr "eCommerce: wysyłanie wiadomości e-mail do klientów o porzuconym koszyku"
+msgstr ""
+"eCommerce: wysyłanie wiadomości e-mail do klientów o porzuconym koszyku"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart

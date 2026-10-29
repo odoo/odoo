@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-10-20 11:52+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"PO-Revision-Date: 2026-10-28 06:33+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-18/mail/it/>"
 "\n"
@@ -170,9 +170,9 @@ msgid ""
 msgstr ""
 "%(new_line)s%(new_line)sDigita %(bold_start)s@username%(bold_end)s per "
 "menzionare qualcuno e catturarne l'attenzione.%(new_line)sScrivi %"
-"(bold_start)s#channel%(bold_end)s per menzionare un canale.%(new_line)"
-"sDigita %(bold_start)s/command%(bold_end)s per eseguire un comando.%"
-"(new_line)sDigita %(bold_start)s:shortcut%(bold_end)s per inserire una "
+"(bold_start)s#channel%(bold_end)s per menzionare un canale.%"
+"(new_line)sDigita %(bold_start)s/command%(bold_end)s per eseguire un comando."
+"%(new_line)sDigita %(bold_start)s:shortcut%(bold_end)s per inserire una "
 "risposta predefinita nel messaggio."
 
 #. module: mail
@@ -192,8 +192,8 @@ msgid ""
 "(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
 "%(open_samp)sEsc%(close_samp)s %(open_em)sper %(open_cancel)sannullare%"
-"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Invio%(close_samp)s %(open_em)"
-"sper %(open_save)ssalvare%(close_save)s%(close_em)s"
+"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Invio%(close_samp)s %"
+"(open_em)sper %(open_save)ssalvare%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -432,9 +432,9 @@ msgid ""
 "<p><b>Chat with coworkers</b> in real-time using direct messages.</"
 "p><p><i>You might need to invite users from the Settings app first.</i></p>"
 msgstr ""
-"<p><b>Chat con i colleghi</b> in tempo reale usando i messaggi diretti.</p>"
-"<p><i>Potrebbe essere necessario invitare gli utenti da \"Impostazioni\".</i>"
-"</p>"
+"<p><b>Chat con i colleghi</b> in tempo reale usando i messaggi diretti.</"
+"p><p><i>Potrebbe essere necessario invitare gli utenti da \"Impostazioni\".</"
+"i></p>"
 
 #. module: mail
 #. odoo-javascript
@@ -646,7 +646,8 @@ msgstr ""
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_message_reaction_partner_or_guest_exists
 msgid "A message reaction must be from a partner or from a guest."
-msgstr "La reazione a un messaggio deve provenire da un partner o da un ospite."
+msgstr ""
+"La reazione a un messaggio deve provenire da un partner o da un ospite."
 
 #. module: mail
 #. odoo-python
@@ -3078,7 +3079,8 @@ msgstr "Utente predefinito"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__priority
 msgid "Defines the order of processing, lower values mean higher priority"
-msgstr "Definisce l'ordine di elaborazione, valori bassi indicano alta priorità"
+msgstr ""
+"Definisce l'ordine di elaborazione, valori bassi indicano alta priorità"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_label
@@ -5219,7 +5221,8 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:0
 msgid ""
 "Invalid template or view source Xml ID %(source_ref)s does not exist anymore"
-msgstr "Modello o vista origine Xml ID non valido %(source_ref)s non esiste più"
+msgstr ""
+"Modello o vista origine Xml ID non valido %(source_ref)s non esiste più"
 
 #. module: mail
 #. odoo-python
@@ -5429,8 +5432,8 @@ msgid ""
 "of Odoo"
 msgstr ""
 "Si riferisce alle chiavi del browser utilizzate dalla notifica: \n"
-"- p256dh: è la chiave d'iscrizione pubblica generata dal browser. Il browser "
-"\n"
+"- p256dh: è la chiave d'iscrizione pubblica generata dal browser. Il "
+"browser \n"
 "          manterrà segreta la chiave privata e l'utilizzerà per "
 "decrittografare il payload\n"
 "- auth: il valore auth deve essere trattato come valore segreto e non "
@@ -6368,8 +6371,8 @@ msgid ""
 msgstr ""
 "Il sottotipo fornisce un tipo di messaggio più preciso, in particolare per "
 "le notifiche di sistema. Ad esempio, può essere una notifica che riguarda un "
-"nuovo record (Nuovo) oppure un cambio di fase di un processo (Cambio di fase)"
-". I sottotipi consentono di calibrare le notifiche che l'utente vuole "
+"nuovo record (Nuovo) oppure un cambio di fase di un processo (Cambio di "
+"fase). I sottotipi consentono di calibrare le notifiche che l'utente vuole "
 "ricevere nella bacheca."
 
 #. module: mail
@@ -7924,6 +7927,12 @@ msgid "Pop out Attachments"
 msgstr "Allegati pop-out"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_view.js:0
+msgid "Pop out is not supported on mobile."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__port
 msgid "Port"
 msgstr "Porta"
@@ -9389,6 +9398,12 @@ msgstr "Messaggi preferiti"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/web/channel_selector.xml:0
+msgid "Start"
+msgstr "Inizia"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
 msgid "Start a Call"
 msgstr "Inizia una chiamata"
@@ -9465,7 +9480,8 @@ msgstr "Stato con ora"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
 msgid "Stay tuned! Enable push notifications to never miss a message."
-msgstr "Resta aggiornato! Abilita le notifiche push per non perdere i messaggi."
+msgstr ""
+"Resta aggiornato! Abilita le notifiche push per non perdere i messaggi."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__steps_count
@@ -9826,8 +9842,8 @@ msgid ""
 "(activity_type_model)s\"."
 msgstr ""
 "Il tipo di attività \"%(activity_type_name)s\" non è compativile con il "
-"piano \"%(plan_name)s\" perché limitato al modello \"%(activity_type_model)"
-"s\"."
+"piano \"%(plan_name)s\" perché limitato al modello \"%"
+"(activity_type_model)s\"."
 
 #. module: mail
 #. odoo-python
@@ -9959,8 +9975,8 @@ msgid ""
 "The message scheduled on %(model)s(%(id)s) with the following content could "
 "not be sent:%(original_message)s"
 msgstr ""
-"Non è stato possibile inviare il messaggio programmato per %(model)s (%(id)"
-"s) con il seguente contenuto: %(original_message)s"
+"Non è stato possibile inviare il messaggio programmato per %(model)s (%"
+"(id)s) con il seguente contenuto: %(original_message)s"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__from_message_id
@@ -10052,7 +10068,8 @@ msgstr "Il modello appartiene all'utente"
 #: model:ir.model.fields,help:mail.field_mail_mail__preview
 #: model:ir.model.fields,help:mail.field_mail_message__preview
 msgid "The text-only beginning of the body used as email preview."
-msgstr "L'inizio di solo testo del corpo utilizzato come anteprima dell'e-mail."
+msgstr ""
+"L'inizio di solo testo del corpo utilizzato come anteprima dell'e-mail."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_rtc_session_channel_member_unique
@@ -10115,7 +10132,8 @@ msgstr "In questa conversazione non ci sono messaggi fissati."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
-msgstr "L'e-mail è nella lista nera dell'invio massivo, fai clic per toglierla."
+msgstr ""
+"L'e-mail è nella lista nera dell'invio massivo, fai clic per toglierla."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__email
@@ -12038,7 +12056,8 @@ msgstr "alias configurato non correttamente"
 #. odoo-python
 #: code:addons/mail/models/models.py:0
 msgid "incorrectly configured alias (unknown reference record)"
-msgstr "alias configurato non correttamente (record di riferimento sconosciuto)"
+msgstr ""
+"alias configurato non correttamente (record di riferimento sconosciuto)"
 
 #. module: mail
 #. odoo-python

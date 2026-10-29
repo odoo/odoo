@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-20 18:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-10-20 10:13+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-18/hr/es/>\n"
@@ -104,8 +104,8 @@ msgid ""
 "<b>Congratulations!</b> May I recommend you to setup an <a "
 "href=\"%s\">onboarding plan?</a>"
 msgstr ""
-"<b>¡Enhorabuena!</b> ¿Puedo recomendarle que configure un <a href=\"%s\">"
-"plan de incorporación?</a>"
+"<b>¡Enhorabuena!</b> ¿Puedo recomendarle que configure un <a "
+"href=\"%s\">plan de incorporación?</a>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -2848,7 +2848,8 @@ msgstr "¿Listo para reclutar más eficazmente?"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Real responsibilities and challenges in a fast evolving company"
-msgstr "Responsabilidades y desafíos reales en una compañía en rápida evolución"
+msgstr ""
+"Responsabilidades y desafíos reales en una compañía en rápida evolución"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__name
@@ -3256,22 +3257,20 @@ msgid "Temporary"
 msgstr "Temporal"
 
 #. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_employee.py:0
-msgid ""
-"The Badge ID must be alphanumeric without any accents and no longer than 18 "
-"characters."
-msgstr ""
-"El identificador de la credencial debe ser alfanumérico, sin acentos y no "
-"puede tener más de 18 caracteres."
-
-#. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
 msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
 "employee."
 msgstr ""
 "El ID de credencial debe ser único, este ya esta asignado a otro empleado."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"The Badge ID must contain only printable ASCII characters, without spaces, "
+"and be no longer than 18 characters."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__company_country_code
@@ -3772,8 +3771,8 @@ msgid ""
 "You are not allowed to access \"Employee\" (hr.employee) records.\n"
 "We can redirect you to the public employee list."
 msgstr ""
-"No tienes permiso para acceder a los registros de «Empleados» (hr.employee)"
-".\n"
+"No tienes permiso para acceder a los registros de «Empleados» "
+"(hr.employee).\n"
 "Podemos redirigirte a la lista pública de empleados."
 
 #. module: hr
@@ -3953,3 +3952,10 @@ msgstr "restringido a empleados"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "work_permit_name"
+
+#~ msgid ""
+#~ "The Badge ID must be alphanumeric without any accents and no longer than "
+#~ "18 characters."
+#~ msgstr ""
+#~ "El identificador de la credencial debe ser alfanumérico, sin acentos y no "
+#~ "puede tener más de 18 caracteres."

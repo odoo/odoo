@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account_check_printing
+# * account_check_printing
 #
 # Translators:
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2024
@@ -11,14 +11,14 @@
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2024
 # Linas Versada <linaskrisiukenas@gmail.com>, 2024
 # Wil Odoo, 2025
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-10-20 09:25+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-10-27 10:33+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-18/"
 "account_check_printing/lt/>\n"
 "Language: lt\n"
@@ -34,12 +34,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
 msgid "%(journal)s: Check Number Sequence"
-msgstr ""
+msgstr "%(journal)s: Patikrinkite skaičių seką"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
 msgid "<span>&amp;nbsp;</span>"
-msgstr ""
+msgstr "<span>&amp;nbsp;</span>"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_margin_left
@@ -114,7 +114,7 @@ msgstr "Viršutinė kvito paraštė"
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid "Check numbers can only consist of digits"
-msgstr ""
+msgstr "Patikrinimo numeriai gali būti sudaryti tik iš skaitmenų"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
@@ -270,7 +270,7 @@ msgstr "Kito kvito numeris"
 #: code:addons/account_check_printing/models/account_journal.py:0
 #: code:addons/account_check_printing/wizard/print_prenumbered_checks.py:0
 msgid "Next Check Number should only contains numbers."
-msgstr ""
+msgstr "Kitas patikrinimo numeris turėtų būti sudarytas tik iš skaičių."
 
 #. module: account_check_printing
 #: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__disabled
@@ -376,7 +376,7 @@ msgstr "Sekos numeris turi būti kito atspausdinto kvito."
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__show_check_number
 msgid "Show Check Number"
-msgstr ""
+msgstr "Rodyti patikrinimo numerį"
 
 #. module: account_check_printing
 #. odoo-python
@@ -385,6 +385,8 @@ msgid ""
 "Something went wrong with Check Layout, please select another layout in "
 "Invoicing/Accounting Settings and try again."
 msgstr ""
+"Įvyko klaida tikrinant išdėstymą. Prašome pasirinkti kitą išdėstymą sąskaitų "
+"išrašymo / apskaitos nustatymuose ir pabandyti dar kartą."
 
 #. module: account_check_printing
 #. odoo-python
@@ -393,6 +395,8 @@ msgid ""
 "The check number you entered (%(num)s) exceeds the maximum allowed value of %"
 "(max)d. Please enter a smaller number."
 msgstr ""
+"Jūsų įvestas patikrinimo skaičius (%(num)s) viršija didžiausią leidžiamą "
+"vertę „ %(max)d “. Įveskite mažesnį skaičių."
 
 #. module: account_check_printing
 #. odoo-python
@@ -401,6 +405,8 @@ msgid ""
 "The following numbers are already used:\n"
 "%s"
 msgstr ""
+"Šie numeriai jau yra naudojami:\n"
+"%s"
 
 #. module: account_check_printing
 #. odoo-python
@@ -440,6 +446,10 @@ msgid ""
 "This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
+"Ši parinktis leidžia ant čekio atspausdinti datos etiketę pagal CPA "
+"reikalavimus.\n"
+"Išjunkite šią parinktį, jei jūsų iš anksto atspausdintame čekyje jau yra "
+"datos etiketė."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -455,7 +465,7 @@ msgstr "Atžymėti išsiųstus"
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Void Check"
-msgstr ""
+msgstr "Negaliojantis čekis"
 
 #. module: account_check_printing
 #. odoo-python
@@ -464,3 +474,6 @@ msgid ""
 "You have to choose a check layout. For this, go in Invoicing/Accounting "
 "Settings, search for 'Checks layout' and set one."
 msgstr ""
+"Turite pasirinkti čekių išdėstymą. Tam eikite į „Sąskaitų išrašymo / "
+"apskaitos nustatymus“, ieškokite „Čekių išdėstymas“ ir nustatykite vieną iš "
+"variantų."

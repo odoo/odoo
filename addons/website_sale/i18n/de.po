@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-10-20 14:04+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"PO-Revision-Date: 2026-10-28 06:33+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-18/"
 "website_sale/de/>\n"
@@ -443,8 +443,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Based "
 "on variants</span>"
 msgstr ""
-"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">"
-"Basierend auf Varianten</span>"
+"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= "
+"1\">Basierend auf Varianten</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -599,8 +599,8 @@ msgstr ""
 "                            <hr/>\n"
 "                            <table width=\"100%\">\n"
 "                                <tr>\n"
-"                                    <td style=\"padding: 10px; "
-"width:150px;\">\n"
+"                                    <td style=\"padding: 10px; width:150px;"
+"\">\n"
 "                                        <img t-attf-src=\"/web/image/"
 "product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; "
 "height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
@@ -608,9 +608,9 @@ msgstr ""
 "                                    <td>\n"
 "                                        <strong t-"
 "out=\"line.product_id.display_name or ''\">[FURN_7800] "
-"Schreibtischkombination</strong><br/><t t-out=\"line.name or ''\">"
-"[FURN_7800] Schreibtischkombination Schreibtischkombination, schwarz-braun: "
-"Stuhl + Schreibtisch + Schubladenelement.</t>\n"
+"Schreibtischkombination</strong><br/><t t-out=\"line.name or "
+"''\">[FURN_7800] Schreibtischkombination Schreibtischkombination, schwarz-"
+"braun: Stuhl + Schreibtisch + Schubladenelement.</t>\n"
 "                                    </td>\n"
 "                                    <td width=\"100px\" align=\"right\">\n"
 "                                        <t t-out=\"int(line.product_uom_qty) "
@@ -1786,8 +1786,8 @@ msgstr ""
 "\n"
 "- Wenn ein potenzieller Kunde einen oder mehrere abgebrochene "
 "Kassiervorgänge durchführt und dann einen Verkauf abschließt, bevor die "
-"Wiederherstellungs-E-Mail gesendet wird, wird die E-Mail nicht gesendet.     "
-"\n"
+"Wiederherstellungs-E-Mail gesendet wird, wird die E-Mail nicht "
+"gesendet.     \n"
 "\n"
 "- Wenn der Benutzer manuell eine Wiederherstellungs-E-Mail gesendet hat, "
 "wird die E-Mail nicht ein zweites Mal gesendet.     \n"
@@ -3195,7 +3195,8 @@ msgstr "Auf Rädern"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 msgid "Once you click on <b>Save</b>, your product is updated."
-msgstr "Sobald Sie auf <b>Speichern</b> klicken, wird Ihr Produkt aktualisiert."
+msgstr ""
+"Sobald Sie auf <b>Speichern</b> klicken, wird Ihr Produkt aktualisiert."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -4332,6 +4333,16 @@ msgstr "Vergriffen"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
+msgid ""
+"Some products in your cart are not available for purchase in your country. "
+"Please remove them or contact us."
+msgstr ""
+"Einige Artikel in Ihrem Warenkorb sind in Ihrem Land nicht erhältlich. Bitte "
+"entfernen Sie diese oder kontaktieren Sie uns."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
 msgid "Some required fields are empty."
 msgstr "Einige erforderliche Felder sind leer."
 
@@ -4461,6 +4472,14 @@ msgid "Taxes"
 msgstr "Steuern"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid ""
+"Taxes have been updated based on your address. Your payment method has not "
+"been charged."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Text"
 msgstr "Text"
@@ -4495,7 +4514,8 @@ msgstr "Das Zugriffstoken ist ungültig."
 #. odoo-python
 #: code:addons/website_sale/controllers/payment.py:0
 msgid "The cart has already been paid. Please refresh the page."
-msgstr "Der Warenkorb wurde bereits bezahlt. Bitte aktualisieren Sie die Seite."
+msgstr ""
+"Der Warenkorb wurde bereits bezahlt. Bitte aktualisieren Sie die Seite."
 
 #. module: website_sale
 #. odoo-python
@@ -4525,7 +4545,8 @@ msgstr "Die Liefermethode ist mit Ihrer Lieferadresse nicht kompatibel."
 #: model:ir.model.fields,help:website_sale.field_product_product__website_url
 #: model:ir.model.fields,help:website_sale.field_product_template__website_url
 msgid "The full URL to access the document through the website."
-msgstr "Die vollständige URL, um über die Website auf das Dokument zuzugreifen."
+msgstr ""
+"Die vollständige URL, um über die Website auf das Dokument zuzugreifen."
 
 #. module: website_sale
 #. odoo-python
@@ -4562,6 +4583,16 @@ msgid ""
 msgstr ""
 "Der hier ausgewählte Modus gilt als Abrechnungspolitik für alle neu "
 "erstellten Produkte, jedoch nicht für bestehende Produkte."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/combo_configurator.py:0
+msgid ""
+"The number of selected combo items must match the number of available combo "
+"choices."
+msgstr ""
+"Die Anzahl der ausgewählten Kombi-Artikel muss mit der Anzahl der "
+"verfügbaren Kombimöglichkeiten übereinstimmen."
 
 #. module: website_sale
 #. odoo-python
@@ -4668,10 +4699,24 @@ msgid "This product is no longer available."
 msgstr "Dieses Produkt ist nicht länger verfügbar."
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid "This product is not available for purchase in your country."
+msgstr "Dieses Produkt ist in Ihrem Land nicht erhältlich."
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_reorder.js:0
 msgid "This product is not available for purchase."
 msgstr "Dieses Produkt kann nicht gekauft werden."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid "This product is part of a combo and can't be updated individually."
+msgstr ""
+"Dieses Produkt ist Teil eines Kombi-Angebots und kann nicht einzeln "
+"aktualisiert werden."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item

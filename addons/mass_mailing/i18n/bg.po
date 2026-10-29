@@ -28,9 +28,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-10-20 16:40+0000\n"
-"Last-Translator: \"v.kanev\" <v.kanev@tutanota.com>\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"PO-Revision-Date: 2026-10-27 17:57+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-18/"
 "mass_mailing/bg/>\n"
 "Language: bg\n"
@@ -499,8 +499,8 @@ msgid ""
 "<span name=\"refresh_text\">This mailing will be sent as soon as possible.</"
 "span>"
 msgstr ""
-"<span name=\"refresh_text\">Това писмо ще бъде изпратено възможно най-"
-"скоро.</span>"
+"<span name=\"refresh_text\">Това писмо ще бъде изпратено възможно най-скоро."
+"</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -1044,7 +1044,8 @@ msgstr "Архивиран"
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 msgid "Are you sure you want to unsubscribe from our mailing list?"
-msgstr "Сигурни ли сте, че искате да се отпишете от нашия списък за разпращане?"
+msgstr ""
+"Сигурни ли сте, че искате да се отпишете от нашия списък за разпращане?"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1073,6 +1074,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Attach a file"
 msgstr "Прикачи файл"
+
+#. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_ir_attachment
+msgid "Attachment"
+msgstr "Прикачен файл"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_attachment_count
@@ -1232,8 +1238,8 @@ msgid ""
 "Blocklist request from unsubscribe link of mailing %(mailing_link)s "
 "(document %(record_link)s)"
 msgstr ""
-"Заявка за черен списък от връзката за отписване на разпращане %(mailing_link)"
-"s (документ %(record_link)s)"
+"Заявка за черен списък от връзката за отписване на разпращане %"
+"(mailing_link)s (документ %(record_link)s)"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -1859,8 +1865,8 @@ msgid ""
 "message. Click on the picture to change its <em>rounded corner</em> style."
 msgstr ""
 "Изтрийте изображението по-горе или го заменете със снимка, която илюстрира "
-"вашето послание. Щракнете върху снимката, за да промените стила на <em>"
-"заоблените ъгли</em>."
+"вашето послание. Щракнете върху снимката, за да промените стила на "
+"<em>заоблените ъгли</em>."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__delivered
@@ -3303,8 +3309,8 @@ msgid ""
 "\">Customer Service</span>"
 msgstr ""
 "Майкъл Флетчър<br/>\n"
-"                   <span style=\"font-size: 12px; font-weight: bolder;\">"
-"Обслужване на клиенти</span>"
+"                   <span style=\"font-size: 12px; font-weight: bolder;"
+"\">Обслужване на клиенти</span>"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__mail_email_missing
@@ -3759,8 +3765,8 @@ msgid ""
 msgstr ""
 "Език за незадължителен превод (ISO код), който да се избере при изпращане на "
 "имейл. Ако не е зададен, ще се използва английската версия. Обикновено това "
-"трябва да бъде заместващ израз, който предоставя подходящия език, напр. {{ "
-"object.partner_id.lang }}."
+"трябва да бъде заместващ израз, който предоставя подходящия език, напр. "
+"{{ object.partner_id.lang }}."
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_subscription_optout_action
@@ -3831,7 +3837,8 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Pick a dedicated outgoing mail server for your mass mailings"
-msgstr "Изберете специален сървър за изходяща поща за вашите масови разпращания"
+msgstr ""
+"Изберете специален сървър за изходяща поща за вашите масови разпращания"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -4279,7 +4286,8 @@ msgstr "Изберете получатели..."
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__ab_testing_winner_selection
 #: model:ir.model.fields,help:mass_mailing.field_utm_campaign__ab_testing_winner_selection
 msgid "Selection to determine the winner mailing that will be sent."
-msgstr "Избор за определяне на печелившото разпращане, което ще бъде изпратено."
+msgstr ""
+"Избор за определяне на печелившото разпращане, което ще бъде изпратено."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
@@ -5292,7 +5300,8 @@ msgstr "Вече не сте част от нашия(те) списък(ци) �
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 msgid "You are no longer part of our services and will not be contacted again."
-msgstr "Вече не сте част от нашите услуги и няма да бъдете контактувани отново."
+msgstr ""
+"Вече не сте част от нашите услуги и няма да бъдете контактувани отново."
 
 #. module: mass_mailing
 #. odoo-python

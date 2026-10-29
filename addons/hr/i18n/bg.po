@@ -24,11 +24,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-20 18:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-10-20 16:44+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-18/hr/bg/>"
-"\n"
+"Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-18/hr/bg/"
+">\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -115,8 +115,8 @@ msgid ""
 "<b>Congratulations!</b> May I recommend you to setup an <a "
 "href=\"%s\">onboarding plan?</a>"
 msgstr ""
-"<b>Поздравления!</b> Мога ли да ви препоръчам да настроите <a href=\"%s\">"
-"план за включване?</a>"
+"<b>Поздравления!</b> Мога ли да ви препоръчам да настроите <a "
+"href=\"%s\">план за включване?</a>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -3235,22 +3235,20 @@ msgid "Temporary"
 msgstr "Временно"
 
 #. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_employee.py:0
-msgid ""
-"The Badge ID must be alphanumeric without any accents and no longer than 18 "
-"characters."
-msgstr ""
-"ID на бадж трябва да е буквено-цифров, без ударения и не по-дълъг от 18 "
-"знака."
-
-#. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
 msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
 "employee."
 msgstr ""
 "№ на картата трябва да е уникален, този вече е определен за друг служител."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"The Badge ID must contain only printable ASCII characters, without spaces, "
+"and be no longer than 18 characters."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__company_country_code
@@ -3855,8 +3853,8 @@ msgstr ""
 "партньори и клиенти: проектиране, анализ, разработка, тестване, управление "
 "на проекти, поддръжка/коучинг. Ще работите самостоятелно, както и ще "
 "координирате и ръководите малки разпределени екипи за разработка по някои "
-"проекти. По избор ще провеждате обучения по Odoo за партньори и клиенти (8-"
-"10 души/сесия). Ще се отчитате пред ръководителя на отдел „Професионални "
+"проекти. По избор ще провеждате обучения по Odoo за партньори и клиенти "
+"(8-10 души/сесия). Ще се отчитате пред ръководителя на отдел „Професионални "
 "услуги“ и ще работите в тясно сътрудничество с всички разработчици и "
 "консултанти.\n"
 "\n"
@@ -3931,3 +3929,10 @@ msgstr "ограничено за служители"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "име_на разрешение_за работа"
+
+#~ msgid ""
+#~ "The Badge ID must be alphanumeric without any accents and no longer than "
+#~ "18 characters."
+#~ msgstr ""
+#~ "ID на бадж трябва да е буквено-цифров, без ударения и не по-дълъг от 18 "
+#~ "знака."

@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-10-20 18:02+0000\n"
-"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"POT-Creation-Date: 2026-10-24 17:38+0000\n"
+"PO-Revision-Date: 2026-10-28 03:34+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-18/product/lo/>"
 "\n"
 "Language: lo\n"
@@ -48,8 +48,10 @@ msgstr "# ຈຳນວນຜະລິດຕະພັນ"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid ""
-"%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra fee\n"
-"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
+"%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra "
+"fee\n"
+"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
+"(total_amount)s"
 msgstr ""
 "%(base)s ພ້ອມກັບ %(discount)s %% %(discount_type)s ແລະ ຄ່າທຳນຽມເພີ່ມເຕີມ %"
 "(surcharge)s\n"
@@ -60,8 +62,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid ""
-"%(item_name)s: end date (%(end_date)s) should be after start date "
-"(%(start_date)s)"
+"%(item_name)s: end date (%(end_date)s) should be after start date (%"
+"(start_date)s)"
 msgstr ""
 "%(item_name)s: ວັນທີສິ້ນສຸດ (%(end_date)s) ຄວນຈະຢູ່ຫຼັງວັນທີເລີ່ມຕົ້ນ (%(start_date)s)"
 
@@ -126,21 +128,24 @@ msgstr "- ສ່ວນຫຼຸດຄືນ %(amount)s"
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
-msgid "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
+msgid ""
+"- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
 msgstr "- ບາໂຄດ \"%(barcode)s\" ໄດ້ຖືກກຳນົດໃຫ້ຜະລິດຕະພັນ: %(product_list)s ແລ້ວ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
 msgid ""
-"- Instantly: All possible variants are created as soon as the attribute and its values are added to a product.\n"
-"        - Dynamically: Each variant is created only when its corresponding attributes and values are added to a sales order.\n"
+"- Instantly: All possible variants are created as soon as the attribute and "
+"its values are added to a product.\n"
+"        - Dynamically: Each variant is created only when its corresponding "
+"attributes and values are added to a sales order.\n"
 "        - Never: Variants are never created for the attribute.\n"
 "        Note: this cannot be changed once the attribute is used on a product."
 msgstr ""
-"- ທັນທີ: ຮູບແບບທີ່ເປັນໄປໄດ້ທັງໝົດຈະຖືກສ້າງຂຶ້ນທັນທີເມື່ອຄຸນລັກສະນະ ແລະ ຄ່າຂອງມັນຖືກເພີ່ມເຂົ້າໃນຜະລິດຕະພັ"
-"ນ.\n"
-"        - ແບບໄດນາມິກ: ແຕ່ລະຮູບແບບຈະຖືກສ້າງຂຶ້ນເມື່ອຄຸນລັກສະນະ ແລະ ຄ່າທີ່ກ່ຽວຂ້ອງຖືກເພີ່ມເຂົ້າໃນໃບສັ່"
-"ງຂາຍເທົ່ານັ້ນ.\n"
+"- ທັນທີ: ຮູບແບບທີ່ເປັນໄປໄດ້ທັງໝົດຈະຖືກສ້າງຂຶ້ນທັນທີເມື່ອຄຸນລັກສະນະ ແລະ "
+"ຄ່າຂອງມັນຖືກເພີ່ມເຂົ້າໃນຜະລິດຕະພັນ.\n"
+"        - ແບບໄດນາມິກ: ແຕ່ລະຮູບແບບຈະຖືກສ້າງຂຶ້ນເມື່ອຄຸນລັກສະນະ ແລະ "
+"ຄ່າທີ່ກ່ຽວຂ້ອງຖືກເພີ່ມເຂົ້າໃນໃບສັ່ງຂາຍເທົ່ານັ້ນ.\n"
 "        - ບໍ່ສ້າງ: ຈະບໍ່ມີການສ້າງຮູບແບບສຳລັບຄຸນລັກສະນະນີ້.\n"
 "        ໝາຍເຫດ: ສິ່ງນີ້ບໍ່ສາມາດປ່ຽນແປງໄດ້ເມື່ອມີການນຳໃຊ້ຄຸນລັກສະນະກັບຜະລິດຕະພັນແລ້ວ."
 
@@ -205,7 +210,9 @@ msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
-msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" title=\"Currency\"/>"
+msgid ""
+"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"title=\"Currency\"/>"
 msgstr ""
 "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
 "title=\"Currency\"/>"
@@ -216,7 +223,8 @@ msgid ""
 "<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
 "                                            Rules\n"
 "                                        </span>\n"
-"                                        <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                        <span class=\"o_stat_text\" "
+"invisible=\"pricelist_item_count != 1\">\n"
 "                                            Rule\n"
 "                                        </span>"
 msgstr ""
@@ -234,7 +242,8 @@ msgid ""
 "<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
 "                                        Pricelists\n"
 "                                    </span>\n"
-"                                    <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                    <span class=\"o_stat_text\" "
+"invisible=\"pricelist_item_count != 1\">\n"
 "                                        Pricelist\n"
 "                                    </span>"
 msgstr ""
@@ -273,8 +282,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>All general settings about this product are managed on</span>"
-msgstr ""
-"<span>ການຕັ້ງຄ່າທົ່ວໄປທັງໝົດກ່ຽວກັບຜະລິດຕະພັນນີ້ແມ່ນຖືກຈັດການຢູ່ທີ່</span>"
+msgstr "<span>ການຕັ້ງຄ່າທົ່ວໄປທັງໝົດກ່ຽວກັບຜະລິດຕະພັນນີ້ແມ່ນຖືກຈັດການຢູ່ທີ່</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -334,12 +342,12 @@ msgstr "ຜະລິດຕະພັນຄອມໂບ້ຕ້ອງມີຢ່
 #: model:ir.model.fields,help:product.field_product_product__description_sale
 #: model:ir.model.fields,help:product.field_product_template__description_sale
 msgid ""
-"A description of the Product that you want to communicate to your customers."
-" This description will be copied to every Sales Order, Delivery Order and "
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
-"ຄຳອະທິບາຍຜະລິດຕະພັນທີ່ທ່ານຕ້ອງການສື່ສານກັບລູກຄ້າ. ຄຳອະທິບາຍນີ້ຈະຖືກຄັດລອກໄປຫາທຸກໆ ໃບສັ່ງຂາຍ, ໃບສົ່ງ"
-"ສິນຄ້າ ແລະ ໃບແຈ້ງໜີ້/ໃບຫຼຸດໜີ້ລູກຄ້າ"
+"ຄຳອະທິບາຍຜະລິດຕະພັນທີ່ທ່ານຕ້ອງການສື່ສານກັບລູກຄ້າ. ຄຳອະທິບາຍນີ້ຈະຖືກຄັດລອກໄປຫາທຸກໆ ໃບສັ່ງຂາຍ, "
+"ໃບສົ່ງສິນຄ້າ ແລະ ໃບແຈ້ງໜີ້/ໃບຫຼຸດໜີ້ລູກຄ້າ"
 
 #. module: product
 #. odoo-python
@@ -350,11 +358,14 @@ msgstr "ມີການບັນຈຸພັນທີ່ໃຊ້ບາໂຄດ
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
 msgid ""
-"A price is a set of sales prices or rules to compute the price of sales order lines based on products, product categories, dates and ordered quantities.\n"
-"            This is the perfect tool to handle several pricings, seasonal discounts, etc."
+"A price is a set of sales prices or rules to compute the price of sales "
+"order lines based on products, product categories, dates and ordered "
+"quantities.\n"
+"            This is the perfect tool to handle several pricings, seasonal "
+"discounts, etc."
 msgstr ""
-"ລາຄາແມ່ນຊຸດຂອງລາຄາຂາຍ ຫຼື ກົດລະບຽບເພື່ອຄິດໄລ່ລາຄາຂອງລາຍການໃບສັ່ງຂາຍ ໂດຍອີງຕາມຜະລິດຕະພັນ, ໝວ"
-"ດໝູ່ຜະລິດຕະພັນ, ວັນທີ ແລະ ຈຳນວນທີ່ສັ່ງ.\n"
+"ລາຄາແມ່ນຊຸດຂອງລາຄາຂາຍ ຫຼື ກົດລະບຽບເພື່ອຄິດໄລ່ລາຄາຂອງລາຍການໃບສັ່ງຂາຍ ໂດຍອີງຕາມຜະລິດຕະພັນ, "
+"ໝວດໝູ່ຜະລິດຕະພັນ, ວັນທີ ແລະ ຈຳນວນທີ່ສັ່ງ.\n"
 "            ນີ້ແມ່ນເຄື່ອງມືທີ່ດີເລີດສຳລັບການຈັດການລາຄາທີ່ຫຼາກຫຼາຍ, ສ່ວນຫຼຸດຕາມລະດູການ ແລະ ອື່ນໆ."
 
 #. module: product
@@ -363,8 +374,7 @@ msgstr ""
 msgid ""
 "A pricelist item with \"Other Pricelist\" as base must have a "
 "base_pricelist_id."
-msgstr ""
-"ລາຍການໃນລາຍການລາຄາທີ່ມີ \"ລາຍການລາຄາອື່ນ\" ເປັນພື້ນຖານ ຕ້ອງມີ base_pricelist_id."
+msgstr "ລາຍການໃນລາຍການລາຄາທີ່ມີ \"ລາຍການລາຄາອື່ນ\" ເປັນພື້ນຖານ ຕ້ອງມີ base_pricelist_id."
 
 #. module: product
 #. odoo-python
@@ -615,8 +625,7 @@ msgstr "ກຳນົດລຳດັບຄວາມສຳຄັນໃຫ້ກັ
 msgid ""
 "At most %s quantities can be displayed simultaneously. Remove a selected "
 "quantity to add others."
-msgstr ""
-"ສາມາດສະແດງຈຳນວນໄດ້ສູງສຸດ %s ພ້ອມກັນ. ກະລຸນາລຶບຈຳນວນທີ່ເລືອກໄວ້ອອກເພື່ອເພີ່ມຈຳນວນອື່ນ."
+msgstr "ສາມາດສະແດງຈຳນວນໄດ້ສູງສຸດ %s ພ້ອມກັນ. ກະລຸນາລຶບຈຳນວນທີ່ເລືອກໄວ້ອອກເພື່ອເພີ່ມຈຳນວນອື່ນ."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
@@ -715,8 +724,8 @@ msgid ""
 "Barcode used for packaging identification. Scan this packaging barcode from "
 "a transfer in the Barcode app to move all the contained units"
 msgstr ""
-"ບາໂຄດທີ່ໃຊ້ສຳລັບລະບຸການບັນຈຸພັນ. ສະແກນບາໂຄດການບັນຈຸພັນນີ້ຈາກການໂອນຍ້າຍໃນແອັບບາໂຄດເພື່ອຍ້າຍທຸກຫົວໜ່"
-"ວຍທີ່ຢູ່ພາຍໃນ"
+"ບາໂຄດທີ່ໃຊ້ສຳລັບລະບຸການບັນຈຸພັນ. "
+"ສະແກນບາໂຄດການບັນຈຸພັນນີ້ຈາກການໂອນຍ້າຍໃນແອັບບາໂຄດເພື່ອຍ້າຍທຸກຫົວໜ່ວຍທີ່ຢູ່ພາຍໃນ"
 
 #. module: product
 #. odoo-python
@@ -995,8 +1004,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"ການແປງລະຫວ່າງຫົວໜ່ວຍວັດແທກສາມາດເກີດຂຶ້ນໄດ້ກໍຕໍ່ເມື່ອພວກມັນຢູ່ໃນໝວດໝູ່ດຽວກັນ. ການແປງຈະອີງຕາມອັດຕາສ່ວ"
-"ນ."
+"ການແປງລະຫວ່າງຫົວໜ່ວຍວັດແທກສາມາດເກີດຂຶ້ນໄດ້ກໍຕໍ່ເມື່ອພວກມັນຢູ່ໃນໝວດໝູ່ດຽວກັນ. "
+"ການແປງຈະອີງຕາມອັດຕາສ່ວນ."
 
 #. module: product
 #: model:product.template,name:product.product_product_13_product_template
@@ -1195,8 +1204,7 @@ msgstr "ຫົວໜ່ວຍວັດແທກເລີ່ມຕົ້ນທີ
 msgid ""
 "Default unit of measure used for purchase orders. It must be in the same "
 "category as the default unit of measure."
-msgstr ""
-"ຫົວໜ່ວຍວັດແທກເລີ່ມຕົ້ນທີ່ໃຊ້ສຳລັບໃບສັ່ງຊື້. ມັນຕ້ອງຢູ່ໃນໝວດໝູ່ດຽວກັບຫົວໜ່ວຍວັດແທກເລີ່ມຕົ້ນ."
+msgstr "ຫົວໜ່ວຍວັດແທກເລີ່ມຕົ້ນທີ່ໃຊ້ສຳລັບໃບສັ່ງຊື້. ມັນຕ້ອງຢູ່ໃນໝວດໝູ່ດຽວກັບຫົວໜ່ວຍວັດແທກເລີ່ມຕົ້ນ."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
@@ -1472,8 +1480,8 @@ msgstr "ລາຄາເພີ່ມເຕີມ"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__price_extra
 msgid ""
-"Extra price for the variant with this attribute value on sale price. eg. 200"
-" price extra, 1000 + 200 = 1200."
+"Extra price for the variant with this attribute value on sale price. eg. 200 "
+"price extra, 1000 + 200 = 1200."
 msgstr ""
 "ລາຄາເພີ່ມເຕີມສຳລັບຮູບແບບທີ່ມີຄ່າຄຸນລັກສະນະນີ້ໃນລາຄາຂາຍ. ຕົວຢ່າງ: ລາຄາເພີ່ມ 200, 1000 + 200 = "
 "1200."
@@ -1547,7 +1555,8 @@ msgstr "ໄອຄອນ Font awesome ເຊັ່ນ fa-tasks"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__min_quantity
 msgid ""
-"For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
+"For the rule to apply, bought/sold quantity must be greater than or equal to "
+"the minimum quantity specified in this field.\n"
 "Expressed in the default unit of measure of the product."
 msgstr ""
 "ເພື່ອໃຫ້ກົດລະບຽບມີຜົນນຳໃຊ້, ຈຳນວນທີ່ຊື້/ຂາຍ ຕ້ອງຫຼາຍກວ່າ ຫຼື ເທົ່າກັບຈຳນວນຕ່ຳສຸດທີ່ກຳນົດໄວ້ໃນຫ້ອງນີ້.\n"
@@ -1666,8 +1675,8 @@ msgid ""
 "Here you can set a specific HTML color index (e.g. #ff0000) to display the "
 "color if the attribute type is 'Color'."
 msgstr ""
-"ຢູ່ທີ່ນີ້ທ່ານສາມາດຕັ້ງຄ່າດັດຊະນີສີ HTML ທີ່ລະເພາະ (ເຊັ່ນ #ff0000) ເພື່ອສະແດງສີ ຖ້າປະເພດຄຸນລັກສະນະແມ່"
-"ນ 'ສີ'."
+"ຢູ່ທີ່ນີ້ທ່ານສາມາດຕັ້ງຄ່າດັດຊະນີສີ HTML ທີ່ລະເພາະ (ເຊັ່ນ #ff0000) ເພື່ອສະແດງສີ "
+"ຖ້າປະເພດຄຸນລັກສະນະແມ່ນ 'ສີ'."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
@@ -1742,23 +1751,20 @@ msgstr "ຖ້າບໍ່ໄດ້ຕັ້ງຄ່າໄວ້, ລາຄາ�
 #: model:ir.model.fields,help:product.field_product_attribute__active
 msgid ""
 "If unchecked, it will allow you to hide the attribute without removing it."
-msgstr ""
-"ຖ້າບໍ່ໝາຍໄວ້, ມັນຈະຊ່ວຍໃຫ້ທ່ານສາມາດເຊື່ອງຄຸນລັກສະນະໄດ້ໂດຍບໍ່ຕ້ອງລຶບມັນອອກ."
+msgstr "ຖ້າບໍ່ໝາຍໄວ້, ມັນຈະຊ່ວຍໃຫ້ທ່ານສາມາດເຊື່ອງຄຸນລັກສະນະໄດ້ໂດຍບໍ່ຕ້ອງລຶບມັນອອກ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__active
 msgid ""
 "If unchecked, it will allow you to hide the pricelist without removing it."
-msgstr ""
-"ຖ້າບໍ່ໝາຍໄວ້, ມັນຈະຊ່ວຍໃຫ້ທ່ານສາມາດເຊື່ອງລາຍການລາຄາໄດ້ໂດຍບໍ່ຕ້ອງລຶບມັນອອກ."
+msgstr "ຖ້າບໍ່ໝາຍໄວ້, ມັນຈະຊ່ວຍໃຫ້ທ່ານສາມາດເຊື່ອງລາຍການລາຄາໄດ້ໂດຍບໍ່ຕ້ອງລຶບມັນອອກ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__active
 #: model:ir.model.fields,help:product.field_product_template__active
 msgid ""
 "If unchecked, it will allow you to hide the product without removing it."
-msgstr ""
-"ຖ້າບໍ່ໝາຍໄວ້, ມັນຈະຊ່ວຍໃຫ້ທ່ານສາມາດເຊື່ອງຜະລິດຕະພັນໄດ້ໂດຍບໍ່ຕ້ອງລຶບມັນອອກ."
+msgstr "ຖ້າບໍ່ໝາຍໄວ້, ມັນຈະຊ່ວຍໃຫ້ທ່ານສາມາດເຊື່ອງຜະລິດຕະພັນໄດ້ໂດຍບໍ່ຕ້ອງລຶບມັນອອກ."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__image
@@ -1989,8 +1995,8 @@ msgid ""
 "receipt of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
 msgstr ""
-"ໄລຍະເວລາລໍຖ້າເປັນມື້ ລະຫວ່າງການຢືນຢັນໃບສັ່ງຊື້ ແລະ ການຮັບຜະລິດຕະພັນເຂົ້າສາງຂອງທ່ານ. ໃຊ້ໂດຍລະບົບວາ"
-"ງແຜນເພື່ອຄິດໄລ່ການວາງແຜນໃບສັ່ງຊື້ອັດຕະໂນມັດ."
+"ໄລຍະເວລາລໍຖ້າເປັນມື້ ລະຫວ່າງການຢືນຢັນໃບສັ່ງຊື້ ແລະ ການຮັບຜະລິດຕະພັນເຂົ້າສາງຂອງທ່ານ. "
+"ໃຊ້ໂດຍລະບົບວາງແຜນເພື່ອຄິດໄລ່ການວາງແຜນໃບສັ່ງຊື້ອັດຕະໂນມັດ."
 
 #. module: product
 #: model:product.attribute.value,name:product.fabric_attribute_leather
@@ -2029,8 +2035,7 @@ msgstr "ໂລຈິສຕິກ"
 msgid ""
 "Looking for a custom bamboo stain to match existing furniture? Contact us "
 "for a quote."
-msgstr ""
-"ກຳລັງຊອກຫາສີຍ້ອມໄມ້ໄຜ່ແບບພິເສດເພື່ອໃຫ້ເຂົ້າກັບເຟີນີເຈີທີ່ມີຢູ່ແລ້ວບໍ່? ຕິດຕໍ່ພວກເຮົາເພື່ອຂໍລາຄາ."
+msgstr "ກຳລັງຊອກຫາສີຍ້ອມໄມ້ໄຜ່ແບບພິເສດເພື່ອໃຫ້ເຂົ້າກັບເຟີນີເຈີທີ່ມີຢູ່ແລ້ວບໍ່? ຕິດຕໍ່ພວກເຮົາເພື່ອຂໍລາຄາ."
 
 #. module: product
 #: model:product.attribute.value,name:product.size_attribute_m
@@ -2040,11 +2045,11 @@ msgstr "M"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__exclude_for
 msgid ""
-"Make this attribute value not compatible with other values of the product or"
-" some attribute values of optional and accessory products."
+"Make this attribute value not compatible with other values of the product or "
+"some attribute values of optional and accessory products."
 msgstr ""
-"ເຮັດໃຫ້ຄ່າຄຸນລັກສະນະນີ້ບໍ່ເຂົ້າກັນໄດ້ກັບຄ່າອື່ນໆຂອງສິນຄ້າ ຫຼື ຄ່າຄຸນລັກສະນະບາງຢ່າງຂອງສິນຄ້າທາງເລືອກ ແລະ ສິ"
-"ນຄ້າປະກອບ."
+"ເຮັດໃຫ້ຄ່າຄຸນລັກສະນະນີ້ບໍ່ເຂົ້າກັນໄດ້ກັບຄ່າອື່ນໆຂອງສິນຄ້າ ຫຼື ຄ່າຄຸນລັກສະນະບາງຢ່າງຂອງສິນຄ້າທາງເລືອກ ແລະ "
+"ສິນຄ້າປະກອບ."
 
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
@@ -2208,8 +2213,7 @@ msgstr "ປະເພດການເຄື່ອນໄຫວຖັດໄປ"
 msgid ""
 "No product to print, if the product is archived please unarchive it before "
 "printing its label."
-msgstr ""
-"ບໍ່ມີສິນຄ້າທີ່ຈະພິມ, ຖ້າສິນຄ້າຖືກເກັບໄວ້ແລ້ວ ກະລຸນານຳອອກຈາກບ່ອນເກັບກ່ອນທີ່ຈະພິມປ້າຍຂອງມັນ."
+msgstr "ບໍ່ມີສິນຄ້າທີ່ຈະພິມ, ຖ້າສິນຄ້າຖືກເກັບໄວ້ແລ້ວ ກະລຸນານຳອອກຈາກບ່ອນເກັບກ່ອນທີ່ຈະພິມປ້າຍຂອງມັນ."
 
 #. module: product
 #. odoo-javascript
@@ -2318,18 +2322,18 @@ msgstr "ໂຄມໄຟຫ້ອງການ"
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid ""
-"On the product %(product)s you cannot associate the value %(value)s with the"
-" attribute %(attribute)s because they do not match."
+"On the product %(product)s you cannot associate the value %(value)s with the "
+"attribute %(attribute)s because they do not match."
 msgstr ""
-"ໃນສິນຄ້າ %(product)s ເຈົ້າບໍ່ສາມາດເຊື່ອມໂຍງຄ່າ %(value)s ເຂົ້າກັບຄຸນລັກສະນະ %(attribute)s ໄ"
-"ດ້ ເພາະພວກມັນບໍ່ເຂົ້າກັນ."
+"ໃນສິນຄ້າ %(product)s ເຈົ້າບໍ່ສາມາດເຊື່ອມໂຍງຄ່າ %(value)s ເຂົ້າກັບຄຸນລັກສະນະ %(attribute)s "
+"ໄດ້ ເພາະພວກມັນບໍ່ເຂົ້າກັນ."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid ""
-"On the product %(product)s you cannot transform the attribute "
-"%(attribute_src)s into the attribute %(attribute_dest)s."
+"On the product %(product)s you cannot transform the attribute %"
+"(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
 "ໃນສິນຄ້າ %(product)s ເຈົ້າບໍ່ສາມາດປ່ຽນຄຸນລັກສະນະ %(attribute_src)s ໄປເປັນຄຸນລັກສະນະ %"
 "(attribute_dest)s ໄດ້."
@@ -2338,8 +2342,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.js:0
 msgid "Oops! '%(fileName)s' didn’t upload since its format isn’t allowed."
-msgstr ""
-"ຂໍອະໄພ! '%(fileName)s' ບໍ່ສາມາດອັບໂຫຼດໄດ້ ເພາະຮູບແບບໄຟລ໌ບໍ່ໄດ້ຮັບອະນຸຍາດ."
+msgstr "ຂໍອະໄພ! '%(fileName)s' ບໍ່ສາມາດອັບໂຫຼດໄດ້ ເພາະຮູບແບບໄຟລ໌ບໍ່ໄດ້ຮັບອະນຸຍາດ."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__original_id
@@ -2461,8 +2464,7 @@ msgstr "ປອນ"
 msgid ""
 "Press a button and watch your desk glide effortlessly from sitting to "
 "standing height in seconds."
-msgstr ""
-"ກົດປຸ່ມແລ້ວເບິ່ງໂຕະຂອງເຈົ້າເລື່ອນຈາກລະດັບນັ່ງເປັນລະດັບຢືນໄດ້ຢ່າງງ່າຍດາຍໃນບໍ່ເທົ່າໃດວິນາທີ."
+msgstr "ກົດປຸ່ມແລ້ວເບິ່ງໂຕະຂອງເຈົ້າເລື່ອນຈາກລະດັບນັ່ງເປັນລະດັບຢືນໄດ້ຢ່າງງ່າຍດາຍໃນບໍ່ເທົ່າໃດວິນາທີ."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price
@@ -3023,10 +3025,9 @@ msgstr "ອ້າງອີງ"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid ""
-"Register the prices requested by your vendors for each product, based on the"
-" quantity and the period."
-msgstr ""
-"ລົງທະບຽນລາຄາທີ່ຜູ້ສະໜອງຮ້ອງຂໍມາ ສຳລັບແຕ່ລະສິນຄ້າ ໂດຍອີງຕາມຈຳນວນ ແລະ ໄລຍະເວລາ."
+"Register the prices requested by your vendors for each product, based on the "
+"quantity and the period."
+msgstr "ລົງທະບຽນລາຄາທີ່ຜູ້ສະໜອງຮ້ອງຂໍມາ ສຳລັບແຕ່ລະສິນຄ້າ ໂດຍອີງຕາມຈຳນວນ ແລະ ໄລຍະເວລາ."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__product_tmpl_ids
@@ -3196,6 +3197,12 @@ msgid "Size"
 msgstr "ຂະໜາດ"
 
 #. module: product
+#. odoo-python
+#: code:addons/product/report/product_pricelist_report.py:0
+msgid "Sorry, you are not allowed to access this document."
+msgstr "ຂໍໂທດ, ທ່ານບໍ່ໄດ້ຮັບອະນຸຍາດໃຫ້ເຂົ້າເຖິງເອກະສານນີ້."
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_res_partner__specific_property_product_pricelist
 #: model:ir.model.fields,field_description:product.field_res_users__specific_property_product_pricelist
 msgid "Specific Property Product Pricelist"
@@ -3214,24 +3221,21 @@ msgstr ""
 msgid ""
 "Specify a product if this rule only applies to one product. Keep empty "
 "otherwise."
-msgstr ""
-"ລະບຸສິນຄ້າ ຖ້າກົດເກນນີ້ໃຊ້ໄດ້ກັບສິນຄ້າດຽວເທົ່ານັ້ນ. ຖ້າບໍ່ດັ່ງນັ້ນໃຫ້ປະຫວ່າງໄວ້."
+msgstr "ລະບຸສິນຄ້າ ຖ້າກົດເກນນີ້ໃຊ້ໄດ້ກັບສິນຄ້າດຽວເທົ່ານັ້ນ. ຖ້າບໍ່ດັ່ງນັ້ນໃຫ້ປະຫວ່າງໄວ້."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__product_tmpl_id
 msgid ""
 "Specify a template if this rule only applies to one product template. Keep "
 "empty otherwise."
-msgstr ""
-"ລະບຸແບບຟອມ ຖ້າກົດເກນນີ້ໃຊ້ໄດ້ກັບແບບຟອມສິນຄ້າດຽວເທົ່ານັ້ນ. ຖ້າບໍ່ດັ່ງນັ້ນໃຫ້ປະຫວ່າງໄວ້."
+msgstr "ລະບຸແບບຟອມ ຖ້າກົດເກນນີ້ໃຊ້ໄດ້ກັບແບບຟອມສິນຄ້າດຽວເທົ່ານັ້ນ. ຖ້າບໍ່ດັ່ງນັ້ນໃຫ້ປະຫວ່າງໄວ້."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
 msgid ""
 "Specify the fixed amount to add or subtract (if negative) to the amount "
 "calculated with the discount."
-msgstr ""
-"ລະບຸຈຳນວນຄົງທີ່ທີ່ຈະບວກ ຫຼື ລົບ (ຖ້າເປັນຄ່າລົບ) ຈາກຈຳນວນທີ່ຄິດໄລ່ດ້ວຍສ່ວນຫຼຸດ."
+msgstr "ລະບຸຈຳນວນຄົງທີ່ທີ່ຈະບວກ ຫຼື ລົບ (ຖ້າເປັນຄ່າລົບ) ຈາກຈຳນວນທີ່ຄິດໄລ່ດ້ວຍສ່ວນຫຼຸດ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -3337,8 +3341,8 @@ msgstr "ລະຫັດອ້າງອີງ '%s' ມີຢູ່ແລ້ວ."
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid ""
-"The attribute %(attribute)s must have at least one value for the product "
-"%(product)s."
+"The attribute %(attribute)s must have at least one value for the product %"
+"(product)s."
 msgstr "ຄຸນລັກສະນະ %(attribute)s ຕ້ອງມີຢ່າງໜ້ອຍໜຶ່ງຄ່າສຳລັບສິນຄ້າ %(product)s."
 
 #. module: product
@@ -3346,8 +3350,7 @@ msgstr "ຄຸນລັກສະນະ %(attribute)s ຕ້ອງມີຢ່າ
 msgid ""
 "The attribute cannot be changed once the value is used on at least one "
 "product."
-msgstr ""
-"ຄຸນລັກສະນະບໍ່ສາມາດປ່ຽນແປງໄດ້ ເມື່ອຄ່ານັ້ນຖືກນຳໃຊ້ກັບສິນຄ້າຢ່າງໜ້ອຍໜຶ່ງລາຍການແລ້ວ."
+msgstr "ຄຸນລັກສະນະບໍ່ສາມາດປ່ຽນແປງໄດ້ ເມື່ອຄ່ານັ້ນຖືກນຳໃຊ້ກັບສິນຄ້າຢ່າງໜ້ອຍໜຶ່ງລາຍການແລ້ວ."
 
 #. module: product
 #. odoo-python
@@ -3364,8 +3367,8 @@ msgid ""
 "since the 5 boxes are loose, you can move and place them in the way that "
 "suits you and your things best."
 msgstr ""
-"ກ່ອງຈັດລະບຽບໂຕະແມ່ນເໝາະສຳລັບເກັບເຄື່ອງນ້ອຍໆທຸກປະເພດ ແລະ ເນື່ອງຈາກກ່ອງທັງ 5 ໃບແມ່ນແຍກກັນ, ເຈົ້າ"
-"ສາມາດຍ້າຍ ແລະ ວາງພວກມັນຕາມວິທີທີ່ເໝາະສົມກັບເຈົ້າ ແລະ ເຄື່ອງຂອງເຈົ້າທີ່ສຸດ."
+"ກ່ອງຈັດລະບຽບໂຕະແມ່ນເໝາະສຳລັບເກັບເຄື່ອງນ້ອຍໆທຸກປະເພດ ແລະ ເນື່ອງຈາກກ່ອງທັງ 5 ໃບແມ່ນແຍກກັນ, "
+"ເຈົ້າສາມາດຍ້າຍ ແລະ ວາງພວກມັນຕາມວິທີທີ່ເໝາະສົມກັບເຈົ້າ ແລະ ເຄື່ອງຂອງເຈົ້າທີ່ສຸດ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__display_type
@@ -3384,8 +3387,7 @@ msgstr "ລຳດັບທຳອິດແມ່ນຄ່າເລີ່ມຕົ
 msgid ""
 "The minimum height is 65 cm, and for standing work the maximum height "
 "position is 125 cm."
-msgstr ""
-"ຄວາມສູງຕ່ຳສຸດແມ່ນ 65 ຊມ, ແລະ ສຳລັບການຢືນເຮັດວຽກ ຕຳແໜ່ງຄວາມສູງສູງສຸດແມ່ນ 125 ຊມ."
+msgstr "ຄວາມສູງຕ່ຳສຸດແມ່ນ 65 ຊມ, ແລະ ສຳລັບການຢືນເຮັດວຽກ ຕຳແໜ່ງຄວາມສູງສູງສຸດແມ່ນ 125 ຊມ."
 
 #. module: product
 #. odoo-python
@@ -3398,11 +3400,11 @@ msgstr "ສ່ວນຕ່າງຕ່ຳສຸດຄວນຈະຕ່ຳກວ
 msgid ""
 "The minimum price among the products in this combo. This value will be used "
 "to prorate the price of this combo with respect to the other combos in a "
-"combo product. This heuristic ensures that whatever product the user chooses"
-" in a combo, it will always be the same price."
+"combo product. This heuristic ensures that whatever product the user chooses "
+"in a combo, it will always be the same price."
 msgstr ""
-"ລາຄາຕ່ຳສຸດໃນບັນດາສິນຄ້າໃນຊຸດນີ້. ຄ່ານີ້ຈະຖືກໃຊ້ເພື່ອແບ່ງສ່ວນລາຄາຂອງຊຸດນີ້ເມື່ອທຽບກັບຊຸດອື່ນໆໃນສິນຄ້າຊຸດ. ວິ"
-"ທີນີ້ຊ່ວຍໃຫ້ແນ່ໃຈວ່າບໍ່ວ່າລູກຄ້າຈະເລືອກສິນຄ້າໃດໃນຊຸດ, ລາຄາຈະເທົ່າກັນສະເໝີ."
+"ລາຄາຕ່ຳສຸດໃນບັນດາສິນຄ້າໃນຊຸດນີ້. ຄ່ານີ້ຈະຖືກໃຊ້ເພື່ອແບ່ງສ່ວນລາຄາຂອງຊຸດນີ້ເມື່ອທຽບກັບຊຸດອື່ນໆໃນສິນຄ້າຊຸດ. "
+"ວິທີນີ້ຊ່ວຍໃຫ້ແນ່ໃຈວ່າບໍ່ວ່າລູກຄ້າຈະເລືອກສິນຄ້າໃດໃນຊຸດ, ລາຄາຈະເທົ່າກັນສະເໝີ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category__product_count
@@ -3415,14 +3417,14 @@ msgstr "ຈຳນວນສິນຄ້າພາຍໃຕ້ໝວດນີ້ (�
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid ""
-"The number of variants to generate is above allowed limit. You should either"
-" not generate variants for each combination or generate them on demand from "
+"The number of variants to generate is above allowed limit. You should either "
+"not generate variants for each combination or generate them on demand from "
 "the sales order. To do so, open the form view of attributes and change the "
 "mode of *Create Variants*."
 msgstr ""
-"ຈຳນວນລຸ້ນສິນຄ້າທີ່ຈະສ້າງແມ່ນເກີນຂີດຈຳກັດທີ່ອະນຸຍາດ. ເຈົ້າຄວນຈະບໍ່ສ້າງລຸ້ນສິນຄ້າສຳລັບທຸກການປະສົມ ຫຼື ສ້າງພວ"
-"ກມັນຕາມຄວາມຕ້ອງການຈາກໃບສັ່ງຂາຍ. ເພື່ອເຮັດສິ່ງນີ້, ໃຫ້ເປີດເບິ່ງຄຸນລັກສະນະ ແລະ ປ່ຽນໂໝດຂອງ *ສ້າງລຸ້ນສິ"
-"ນຄ້າ*."
+"ຈຳນວນລຸ້ນສິນຄ້າທີ່ຈະສ້າງແມ່ນເກີນຂີດຈຳກັດທີ່ອະນຸຍາດ. ເຈົ້າຄວນຈະບໍ່ສ້າງລຸ້ນສິນຄ້າສຳລັບທຸກການປະສົມ ຫຼື "
+"ສ້າງພວກມັນຕາມຄວາມຕ້ອງການຈາກໃບສັ່ງຂາຍ. ເພື່ອເຮັດສິ່ງນີ້, ໃຫ້ເປີດເບິ່ງຄຸນລັກສະນະ ແລະ ປ່ຽນໂໝດຂອງ "
+"*ສ້າງລຸ້ນສິນຄ້າ*."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__price
@@ -3442,8 +3444,8 @@ msgid ""
 "expressed in the vendor Product Unit of Measure if not any, in the default "
 "unit of measure of the product otherwise."
 msgstr ""
-"ຈຳນວນທີ່ຈະຊື້ຈາກຜູ້ສະໜອງນີ້ເພື່ອໃຫ້ໄດ້ລາຄາພິເສດ, ໂດຍສະແດງເປັນຫົວໜ່ວຍວັດແທກຂອງຜູ້ສະໜອງ (ຖ້າມີ), ຖ້າບໍ່"
-"ມີຈະໃຊ້ຫົວໜ່ວຍວັດແທກເລີ່ມຕົ້ນຂອງສິນຄ້າ."
+"ຈຳນວນທີ່ຈະຊື້ຈາກຜູ້ສະໜອງນີ້ເພື່ອໃຫ້ໄດ້ລາຄາພິເສດ, ໂດຍສະແດງເປັນຫົວໜ່ວຍວັດແທກຂອງຜູ້ສະໜອງ (ຖ້າມີ), "
+"ຖ້າບໍ່ມີຈະໃຊ້ຫົວໜ່ວຍວັດແທກເລີ່ມຕົ້ນຂອງສິນຄ້າ."
 
 #. module: product
 #. odoo-python
@@ -3455,8 +3457,8 @@ msgstr "ວິທີການເຮັດເລກມົນຕ້ອງເປັ
 #: model:ir.model.fields,help:product.field_product_combo_item__lst_price
 #: model:ir.model.fields,help:product.field_product_product__lst_price
 msgid ""
-"The sale price is managed from the product template. Click on the 'Configure"
-" Variants' button to set the extra attribute prices."
+"The sale price is managed from the product template. Click on the 'Configure "
+"Variants' button to set the extra attribute prices."
 msgstr ""
 "ລາຄາຂາຍຖືກຈັດການຈາກແບບຟອມສິນຄ້າ. ກົດປຸ່ມ 'ຕັ້ງຄ່າລຸ້ນສິນຄ້າ' ເພື່ອຕັ້ງລາຄາຄຸນລັກສະນະເພີ່ມເຕີມ."
 
@@ -3466,8 +3468,7 @@ msgstr ""
 msgid ""
 "The value %(value)s is not defined for the attribute %(attribute)s on the "
 "product %(product)s."
-msgstr ""
-"ຄ່າ %(value)s ບໍ່ໄດ້ຖືກກຳນົດສຳລັບຄຸນລັກສະນະ %(attribute)s ໃນສິນຄ້າ %(product)s."
+msgstr "ຄ່າ %(value)s ບໍ່ໄດ້ຖືກກຳນົດສຳລັບຄຸນລັກສະນະ %(attribute)s ໃນສິນຄ້າ %(product)s."
 
 #. module: product
 #. odoo-python
@@ -3495,8 +3496,8 @@ msgid ""
 "to no possible variant. Please archive or delete your product directly if "
 "intended."
 msgstr ""
-"ການຕັ້ງຄ່າຄຸນລັກສະນະ, ຄ່າ ແລະ ການຍົກເວັ້ນນີ້ ຈະເຮັດໃຫ້ບໍ່ມີລຸ້ນສິນຄ້າທີ່ເປັນໄປໄດ້. ກະລຸນາເກັບໄວ້ ຫຼື ລຶບສິນຄ້"
-"າຂອງເຈົ້າໂດຍກົງ ຖ້າຕ້ອງການ."
+"ການຕັ້ງຄ່າຄຸນລັກສະນະ, ຄ່າ ແລະ ການຍົກເວັ້ນນີ້ ຈະເຮັດໃຫ້ບໍ່ມີລຸ້ນສິນຄ້າທີ່ເປັນໄປໄດ້. ກະລຸນາເກັບໄວ້ ຫຼື "
+"ລຶບສິນຄ້າຂອງເຈົ້າໂດຍກົງ ຖ້າຕ້ອງການ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
@@ -3519,22 +3520,21 @@ msgstr "ໝາຍເຫດນີ້ແມ່ນໃຊ້ສຳລັບພາຍ
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
-msgstr ""
-"ລາຍການລາຄານີ້ຈະຖືກນຳໃຊ້ ແທນທີ່ຈະເປັນຄ່າເລີ່ມຕົ້ນ ສຳລັບການຂາຍໃຫ້ຄູ່ຄ້າຄົນນີ້"
+msgstr "ລາຍການລາຄານີ້ຈະຖືກນຳໃຊ້ ແທນທີ່ຈະເປັນຄ່າເລີ່ມຕົ້ນ ສຳລັບການຂາຍໃຫ້ຄູ່ຄ້າຄົນນີ້"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid ""
 "This product is part of a combo, so its type can't be changed to \"combo\"."
-msgstr ""
-"ສິນຄ້ານີ້ແມ່ນສ່ວນໜຶ່ງຂອງຊຸດ, ດັ່ງນັ້ນປະເພດຂອງມັນຈຶ່ງບໍ່ສາມາດປ່ຽນເປັນ \"ຊຸດ (combo)\" ໄດ້."
+msgstr "ສິນຄ້ານີ້ແມ່ນສ່ວນໜຶ່ງຂອງຊຸດ, ດັ່ງນັ້ນປະເພດຂອງມັນຈຶ່ງບໍ່ສາມາດປ່ຽນເປັນ \"ຊຸດ (combo)\" ໄດ້."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/uom_uom.py:0
 msgid ""
-"This rounding precision is higher than the Decimal Accuracy (%(digits)s digits).\n"
+"This rounding precision is higher than the Decimal Accuracy (%(digits)s "
+"digits).\n"
 "This may cause inconsistencies in computations.\n"
 "Please set a precision between %(min_precision)s and 1."
 msgstr ""
@@ -3547,16 +3547,14 @@ msgstr ""
 msgid ""
 "This vendor's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr ""
-"ລະຫັດສິນຄ້າຂອງຜູ້ສະໜອງນີ້ຈະຖືກນຳໃຊ້ເມື່ອພິມໃບຂໍໃບສະເໜີລາຄາ. ປະຫວ່າງໄວ້ເພື່ອໃຊ້ລະຫັດພາຍໃນ."
+msgstr "ລະຫັດສິນຄ້າຂອງຜູ້ສະໜອງນີ້ຈະຖືກນຳໃຊ້ເມື່ອພິມໃບຂໍໃບສະເໜີລາຄາ. ປະຫວ່າງໄວ້ເພື່ອໃຊ້ລະຫັດພາຍໃນ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_name
 msgid ""
 "This vendor's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr ""
-"ຊື່ສິນຄ້າຂອງຜູ້ສະໜອງນີ້ຈະຖືກນຳໃຊ້ເມື່ອພິມໃບຂໍໃບສະເໜີລາຄາ. ປະຫວ່າງໄວ້ເພື່ອໃຊ້ຊື່ພາຍໃນ."
+msgstr "ຊື່ສິນຄ້າຂອງຜູ້ສະໜອງນີ້ຈະຖືກນຳໃຊ້ເມື່ອພິມໃບຂໍໃບສະເໜີລາຄາ. ປະຫວ່າງໄວ້ເພື່ອໃຊ້ຊື່ພາຍໃນ."
 
 #. module: product
 #: model:product.template,description_sale:product.consu_delivery_01_product_template
@@ -3695,8 +3693,7 @@ msgstr "Url"
 msgid ""
 "Use the discount rules and activate the discount settings in order to show "
 "discount to customer."
-msgstr ""
-"ໃຊ້ກົດລະບຽບສ່ວນຫຼຸດ ແລະ ເປີດໃຊ້ການຕັ້ງຄ່າສ່ວນຫຼຸດ ເພື່ອສະແດງສ່ວນຫຼຸດໃຫ້ກັບລູກຄ້າ."
+msgstr "ໃຊ້ກົດລະບຽບສ່ວນຫຼຸດ ແລະ ເປີດໃຊ້ການຕັ້ງຄ່າສ່ວນຫຼຸດ ເພື່ອສະແດງສ່ວນຫຼຸດໃຫ້ກັບລູກຄ້າ."
 
 #. module: product
 #. odoo-python
@@ -3704,8 +3701,7 @@ msgstr ""
 msgid ""
 "Use this feature to store any files you would like to share with your "
 "customers"
-msgstr ""
-"ໃຊ້ຄຸນສົມບັດນີ້ເພື່ອເກັບຮັກສາໄຟລ໌ໃດໆ ທີ່ທ່ານຕ້ອງການແບ່ງປັນກັບລູກຄ້າຂອງທ່ານ"
+msgstr "ໃຊ້ຄຸນສົມບັດນີ້ເພື່ອເກັບຮັກສາໄຟລ໌ໃດໆ ທີ່ທ່ານຕ້ອງການແບ່ງປັນກັບລູກຄ້າຂອງທ່ານ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
@@ -3750,7 +3746,8 @@ msgstr "ຈຳນວນຄ່າ"
 #: model:ir.model.fields,help:product.field_product_template__standard_price
 msgid ""
 "Value of the product (automatically computed in AVCO).\n"
-"        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
+"        Used to value the product when the purchase cost is not known (e.g. "
+"inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
 "ມູນຄ່າຂອງສິນຄ້າ (ຄິດໄລ່ອັດຕະໂນມັດໃນ AVCO).\n"
@@ -3942,8 +3939,8 @@ msgstr "ຄຳເຕືອນ"
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid ""
-"We pay special attention to detail, which is why our desks are of a superior"
-" quality."
+"We pay special attention to detail, which is why our desks are of a superior "
+"quality."
 msgstr "ພວກເຮົາໃສ່ໃຈໃນທຸກລາຍລະອຽດ, ນັ້ນຄືເຫດຜົນທີ່ໂຕະຂອງພວກເຮົາມີຄຸນນະພາບສູງ."
 
 #. module: product
@@ -4000,8 +3997,7 @@ msgstr "ເຈົ້າກຳລັງຈະອັບເດດລາຄາເພ
 msgid ""
 "You are deactivating the pricelist feature. Every active pricelist will be "
 "archived."
-msgstr ""
-"ເຈົ້າກຳລັງປິດການນຳໃຊ້ລາຍການລາຄາ. ລາຍການລາຄາທີ່ເຄື່ອນໄຫວຢູ່ທັງໝົດຈະຖືກເກັບໄວ້."
+msgstr "ເຈົ້າກຳລັງປິດການນຳໃຊ້ລາຍການລາຄາ. ລາຍການລາຄາທີ່ເຄື່ອນໄຫວຢູ່ທັງໝົດຈະຖືກເກັບໄວ້."
 
 #. module: product
 #. odoo-python
@@ -4010,7 +4006,8 @@ msgid ""
 "You are setting a Decimal Accuracy less precise than the UOMs:\n"
 "%s\n"
 "This may cause inconsistencies in computations.\n"
-"Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
+"Please increase the rounding of those units of measure, or the digits of "
+"this Decimal Accuracy."
 msgstr ""
 "ເຈົ້າກຳລັງຕັ້ງຄວາມຖືກຕ້ອງຂອງທົດສະນິຍົມໃຫ້ໜ້ອຍກວ່າຫົວໜ່ວຍວັດແທກ (UOM):\n"
 "%s\n"
@@ -4033,16 +4030,14 @@ msgstr "ເຈົ້າສາມາດບວກກຳໄລເພີ່ມຈາ
 msgid ""
 "You can assign pricelists to your customers or select one when creating a "
 "new sales quotation."
-msgstr ""
-"ເຈົ້າສາມາດກຳນົດລາຍການລາຄາໃຫ້ກັບລູກຄ້າ ຫຼື ເລືອກອັນໃດອັນໜຶ່ງເມື່ອສ້າງໃບສະເໜີລາຄາໃໝ່."
+msgstr "ເຈົ້າສາມາດກຳນົດລາຍການລາຄາໃຫ້ກັບລູກຄ້າ ຫຼື ເລືອກອັນໃດອັນໜຶ່ງເມື່ອສ້າງໃບສະເໜີລາຄາໃໝ່."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_document__type
 msgid ""
 "You can either upload a file from your computer or copy/paste an internet "
 "link to your file."
-msgstr ""
-"ເຈົ້າສາມາດອັບໂຫຼດໄຟລ໌ຈາກຄອມພິວເຕີ ຫຼື ກັອບປີ້/ວາງ ລິ້ງອິນເຕີເນັດຂອງໄຟລ໌ເຈົ້າກໍໄດ້."
+msgstr "ເຈົ້າສາມາດອັບໂຫຼດໄຟລ໌ຈາກຄອມພິວເຕີ ຫຼື ກັອບປີ້/ວາງ ລິ້ງອິນເຕີເນັດຂອງໄຟລ໌ເຈົ້າກໍໄດ້."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__image
@@ -4063,34 +4058,33 @@ msgstr "ເຈົ້າບໍ່ສາມາດແກ້ໄຂສິນຄ້າ
 #: code:addons/product/models/product_attribute.py:0
 msgid ""
 "You cannot archive this attribute as there are still products linked to it"
-msgstr ""
-"ເຈົ້າບໍ່ສາມາດເກັບຄຸນລັກສະນະນີ້ໄວ້ໄດ້ ເພາະຍັງມີສິນຄ້າທີ່ເຊື່ອມໂຍງກັບມັນຢູ່"
+msgstr "ເຈົ້າບໍ່ສາມາດເກັບຄຸນລັກສະນະນີ້ໄວ້ໄດ້ ເພາະຍັງມີສິນຄ້າທີ່ເຊື່ອມໂຍງກັບມັນຢູ່"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid ""
 "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
-msgstr ""
-"ເຈົ້າບໍ່ສາມາດກຳນົດລາຍການລາຄາຫຼັກ ເປັນລາຍການລາຄາອື່ນ ໃນລາຍການຂອງລາຍການລາຄາໄດ້"
+msgstr "ເຈົ້າບໍ່ສາມາດກຳນົດລາຍການລາຄາຫຼັກ ເປັນລາຍການລາຄາອື່ນ ໃນລາຍການຂອງລາຍການລາຄາໄດ້"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 msgid ""
-"You cannot change the Variants Creation Mode of the attribute %(attribute)s because it is used on the following products:\n"
+"You cannot change the Variants Creation Mode of the attribute %(attribute)s "
+"because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
-"ເຈົ້າບໍ່ສາມາດປ່ຽນໂໝດການສ້າງລຸ້ນສິນຄ້າຂອງຄຸນລັກສະນະ %(attribute)s ໄດ້ ເພາະມັນຖືກໃຊ້ໃນສິນຄ້າຕໍ່ໄປ"
-"ນີ້:\n"
+"ເຈົ້າບໍ່ສາມາດປ່ຽນໂໝດການສ້າງລຸ້ນສິນຄ້າຂອງຄຸນລັກສະນະ %(attribute)s ໄດ້ "
+"ເພາະມັນຖືກໃຊ້ໃນສິນຄ້າຕໍ່ໄປນີ້:\n"
 "%(products)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid ""
-"You cannot change the attribute of the value %(value)s because it is used on"
-" the following products: %(products)s"
+"You cannot change the attribute of the value %(value)s because it is used on "
+"the following products: %(products)s"
 msgstr ""
 "ເຈົ້າບໍ່ສາມາດປ່ຽນຄຸນລັກສະນະຂອງຄ່າ %(value)s ໄດ້ ເພາະມັນຖືກໃຊ້ໃນສິນຄ້າຕໍ່ໄປນີ້: %(products)s"
 
@@ -4098,19 +4092,17 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
 msgid ""
-"You cannot change the product of the value %(value)s set on product "
-"%(product)s."
-msgstr ""
-"ເຈົ້າບໍ່ສາມາດປ່ຽນສິນຄ້າຂອງຄ່າ %(value)s ທີ່ຕັ້ງໄວ້ໃນສິນຄ້າ %(product)s ໄດ້."
+"You cannot change the product of the value %(value)s set on product %"
+"(product)s."
+msgstr "ເຈົ້າບໍ່ສາມາດປ່ຽນສິນຄ້າຂອງຄ່າ %(value)s ທີ່ຕັ້ງໄວ້ໃນສິນຄ້າ %(product)s ໄດ້."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
 msgid ""
-"You cannot change the value of the value %(value)s set on product "
-"%(product)s."
-msgstr ""
-"ເຈົ້າບໍ່ສາມາດປ່ຽນຄ່າຂອງຄ່າ %(value)s ທີ່ຕັ້ງໄວ້ໃນສິນຄ້າ %(product)s ໄດ້."
+"You cannot change the value of the value %(value)s set on product %"
+"(product)s."
+msgstr "ເຈົ້າບໍ່ສາມາດປ່ຽນຄ່າຂອງຄ່າ %(value)s ທີ່ຕັ້ງໄວ້ໃນສິນຄ້າ %(product)s ໄດ້."
 
 #. module: product
 #. odoo-python
@@ -4151,7 +4143,8 @@ msgstr "ເຈົ້າບໍ່ສາມາດລຶບໝວດສິນຄ້
 #. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 msgid ""
-"You cannot delete the attribute %(attribute)s because it is used on the following products:\n"
+"You cannot delete the attribute %(attribute)s because it is used on the "
+"following products:\n"
 "%(products)s"
 msgstr ""
 "ເຈົ້າບໍ່ສາມາດລຶບຄຸນລັກສະນະ %(attribute)s ໄດ້ ເພາະມັນຖືກໃຊ້ໃນສິນຄ້າຕໍ່ໄປນີ້:\n"
@@ -4161,7 +4154,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid ""
-"You cannot delete the value %(value)s because it is used on the following products:\n"
+"You cannot delete the value %(value)s because it is used on the following "
+"products:\n"
 "%(products)s\n"
 msgstr ""
 "ເຈົ້າບໍ່ສາມາດລຶບຄ່າ %(value)s ໄດ້ ເພາະມັນຖືກໃຊ້ໃນສິນຄ້າຕໍ່ໄປນີ້:\n"
@@ -4178,8 +4172,8 @@ msgstr "ເຈົ້າບໍ່ສາມາດລຶບໝວດສິນຄ້
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid ""
-"You cannot move the attribute %(attribute)s from the product %(product_src)s"
-" to the product %(product_dest)s."
+"You cannot move the attribute %(attribute)s from the product %(product_src)s "
+"to the product %(product_dest)s."
 msgstr ""
 "ເຈົ້າບໍ່ສາມາດຍ້າຍຄຸນລັກສະນະ %(attribute)s ຈາກສິນຄ້າ %(product_src)s ໄປຍັງສິນຄ້າ %"
 "(product_dest)s ໄດ້."
@@ -4198,7 +4192,8 @@ msgstr ""
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
 msgid ""
 "You must define a product for everything you sell or purchase,\n"
-"                            whether it's a storable product, a consumable or a service."
+"                            whether it's a storable product, a consumable or "
+"a service."
 msgstr ""
 "ເຈົ້າຕ້ອງກຳນົດສິນຄ້າສຳລັບທຸກຢ່າງທີ່ເຈົ້າຂາຍ ຫຼື ຊື້,\n"
 "                            ບໍ່ວ່າຈະເປັນສິນຄ້າທີ່ເກັບສາງໄດ້, ສິນຄ້າສິ້ນເປືອງ ຫຼື ບໍລິການ."
@@ -4218,8 +4213,10 @@ msgstr ""
 msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service.\n"
-"                The product form contains information to simplify the sale process:\n"
-"                price, notes in the quotation, accounting data, procurement methods, etc."
+"                The product form contains information to simplify the sale "
+"process:\n"
+"                price, notes in the quotation, accounting data, procurement "
+"methods, etc."
 msgstr ""
 "ເຈົ້າຕ້ອງກຳນົດສິນຄ້າສຳລັບທຸກຢ່າງທີ່ເຈົ້າຂາຍ ຫຼື ຊື້,\n"
 "                ບໍ່ວ່າຈະເປັນສິນຄ້າທີ່ເກັບສາງໄດ້, ສິນຄ້າສິ້ນເປືອງ ຫຼື ບໍລິການ.\n"
@@ -4229,10 +4226,13 @@ msgstr ""
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
 msgid ""
-"You must define a product for everything you sell, whether it's a physical product,\n"
+"You must define a product for everything you sell, whether it's a physical "
+"product,\n"
 "                a consumable or a service you offer to customers.\n"
-"                The product form contains information to simplify the sale process:\n"
-"                price, notes in the quotation, accounting data, procurement methods, etc."
+"                The product form contains information to simplify the sale "
+"process:\n"
+"                price, notes in the quotation, accounting data, procurement "
+"methods, etc."
 msgstr ""
 "ເຈົ້າຕ້ອງກຳນົດສິນຄ້າສຳລັບທຸກຢ່າງທີ່ເຈົ້າຂາຍ, ບໍ່ວ່າຈະເປັນສິນຄ້າທີ່ເປັນວັດຖຸ,\n"
 "                ສິນຄ້າສິ້ນເປືອງ ຫຼື ບໍລິການທີ່ເຈົ້ານຳສະເໜີໃຫ້ລູກຄ້າ.\n"

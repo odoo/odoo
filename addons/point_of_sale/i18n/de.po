@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:38+0000\n"
-"PO-Revision-Date: 2026-10-20 11:51+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"PO-Revision-Date: 2026-10-28 03:33+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-18/"
 "point_of_sale/de/>\n"
@@ -210,8 +210,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <h4>\n"
-"        Hallo <t t-out=\"object.partner_id.name or 'Valuable Customer'\">"
-"Azure Interior</t>,\n"
+"        Hallo <t t-out=\"object.partner_id.name or 'Valuable "
+"Customer'\">Azure Interior</t>,\n"
 "    </h4>\n"
 "    <p style=\"font-size: 13px;\">\n"
 "Wir haben ein zeitlich begrenztes Angebot nur für Sie. Profitieren Sie von "
@@ -252,8 +252,9 @@ msgid ""
 "(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
 "(company_name)s. </p>"
 msgstr ""
-"<p>Hallo %(client_name)s,<br/>Hier ist Ihr Beleg %(is_invoiced)sfür"
-"             %(pos_name)s in Höhe von %(amount)s von %(company_name)s. </p>"
+"<p>Hallo %(client_name)s,<br/>Hier ist Ihr Beleg %"
+"(is_invoiced)sfür             %(pos_name)s in Höhe von %(amount)s von %"
+"(company_name)s. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -288,7 +289,8 @@ msgstr "<span class=\"o_stat_text\">Buchungszeilen</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "<span class=\"oe_inline\"><b>Skip Preview Screen</b></span>"
-msgstr "<span class=\"oe_inline\"><b>Vorschaubildschirm überspringen</b></span>"
+msgstr ""
+"<span class=\"oe_inline\"><b>Vorschaubildschirm überspringen</b></span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -2108,6 +2110,7 @@ msgstr "Verbindung zur IoT-Box"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/errors/error_handlers.js:0
+#: code:addons/point_of_sale/static/src/app/store/opening_control_popup/opening_control_popup.js:0
 msgid "Connection Lost"
 msgstr "Verbindung getrennt"
 
@@ -3448,7 +3451,8 @@ msgstr "Bild im Kassensystem verbergen"
 #: model:product.template,description_sale:point_of_sale.product_wholemeal_loaf_product_template
 msgid ""
 "High fibre loaf. Baked with fine wholemeal flour to give a soft texture."
-msgstr "Ballaststoffreicher Laib. Mit feinem Vollkornmehl gebacken, sehr weich."
+msgstr ""
+"Ballaststoffreicher Laib. Mit feinem Vollkornmehl gebacken, sehr weich."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4180,7 +4184,8 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Manage promotion that will grant customers discounts or gifts"
-msgstr "Verwalten Sie Werbeaktionen, die Kunden Rabatte oder Geschenke gewähren"
+msgstr ""
+"Verwalten Sie Werbeaktionen, die Kunden Rabatte oder Geschenke gewähren"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order_line__price_type__manual
@@ -4702,6 +4707,12 @@ msgstr "Vorrätig:"
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Ongoing"
 msgstr "Laufend"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Only Point of Sale managers can modify a Point of Sale configuration."
+msgstr "Nur Kassensystem-Manager können eine Kassensystem-Konfiguration ändern."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5366,7 +5377,8 @@ msgstr "Pekannusskuchen"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Pick which product PoS categories are available"
-msgstr "Wählen Sie aus, welche Produktkategorien im Kassensystem verfügbar sind"
+msgstr ""
+"Wählen Sie aus, welche Produktkategorien im Kassensystem verfügbar sind"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__picking_ids
@@ -5425,8 +5437,8 @@ msgstr ""
 "Bitte prüfen Sie, ob der Drucker noch angeschlossen ist. \n"
 "Einige Browser erlauben keine HTTP-Aufrufe von Websites zu Geräten im "
 "Netzwerk (aus Sicherheitsgründen). Wenn dies der Fall ist, müssen Sie die "
-"Odoo-Dokumentation für „Selbstsigniertes Zertifikat für ePOS-Drucker“ und „"
-"Sichere Verbindung (HTTPS)“ befolgen, um das Problem zu lösen."
+"Odoo-Dokumentation für „Selbstsigniertes Zertifikat für ePOS-Drucker“ und "
+"„Sichere Verbindung (HTTPS)“ befolgen, um das Problem zu lösen."
 
 #. module: point_of_sale
 #. odoo-python
@@ -5471,8 +5483,8 @@ msgstr ""
 msgid ""
 "Please enter your billing information <small class=\"text-muted\">or</small>"
 msgstr ""
-"Bitte geben Sie Ihre Rechnungsinformationen an <small class=\"text-muted\">"
-"oder</small>"
+"Bitte geben Sie Ihre Rechnungsinformationen an <small class=\"text-"
+"muted\">oder</small>"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5802,6 +5814,7 @@ msgid "Pos Order Count"
 msgstr "Anzahl Kassenaufträge"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_account_tax__pos_order_line_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__pos_order_line_id
 msgid "Pos Order Line"
 msgstr "Kassenauftragsposition"
@@ -6975,7 +6988,8 @@ msgstr "Eigenständige Rechnungserstellung"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Sell products and deliver them later."
-msgstr "Verkaufen Sie Produkte und liefern Sie sie zu einem späteren Zeitpunkt."
+msgstr ""
+"Verkaufen Sie Produkte und liefern Sie sie zu einem späteren Zeitpunkt."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7792,6 +7806,14 @@ msgstr ""
 "Die Bargeldrundungsstrategie des Kassensystems %(pos)s muss „%(value)s“ sein."
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid ""
+"The combo choice '%s' is no longer available in this combo. Please reload "
+"your data."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
 msgid ""
@@ -8028,6 +8050,13 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_iface_print_auto
 msgid "The receipt will automatically be printed at the end of each order."
 msgstr "Der Kassenbon wird automatisch am Ende jedes Aufttrags gedruckt."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/opening_control_popup/opening_control_popup.js:0
+msgid "The register cannot be opened while offline. Please try again."
+msgstr ""
+"Die Kasse kann offline nicht geöffnet werden. Bitte versuchen Sie es erneut."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9325,6 +9354,14 @@ msgid "You cannot invoice orders belonging to different companies."
 msgstr ""
 "Sie können keine Aufträge in Rechnung stellen, die zu verschiedenen "
 "Unternehmen gehören."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_fiscal_position_tax.py:0
+msgid ""
+"You cannot modify a fiscal position used in a POS order. You should archive "
+"it and create a new one."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python

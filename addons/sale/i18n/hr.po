@@ -30,11 +30,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
+"POT-Creation-Date: 2026-10-24 17:38+0000\n"
 "PO-Revision-Date: 2026-10-20 15:56+0000\n"
 "Last-Translator: Ana Matulin <ana@uvid.hr>\n"
-"Language-Team: Croatian <https://translate.odoo.com/projects/odoo-18/sale/"
-"hr/>\n"
+"Language-Team: Croatian <https://translate.odoo.com/projects/odoo-18/sale/hr/"
+">\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1012,8 +1012,8 @@ msgid ""
 msgstr ""
 "Planovi aktivnosti koriste se za dodjelu popisa aktivnosti u samo nekoliko "
 "klikova\n"
-"                (npr. 'Zakazivanje dostave', 'Praćenje naplate narudžbe', "
-"...)"
+"                (npr. 'Zakazivanje dostave', 'Praćenje naplate "
+"narudžbe', ...)"
 
 #. module: sale
 #. odoo-javascript
@@ -5487,14 +5487,15 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__validity_date
 msgid ""
-"Validity of the order, after that you will not able to sign & pay the "
-"quotation."
-msgstr "Valjanost narudžbe, nakon toga nećete moći potpisati i platiti ponudu."
+"Validity of the quotation. After this date, you will no longer be able to "
+"sign and pay it."
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Values set here are company-specific."
-msgstr "Vrijednosti koje su ovdje postavljene specifične su za pojedine tvrtke."
+msgstr ""
+"Vrijednosti koje su ovdje postavljene specifične su za pojedine tvrtke."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5622,17 +5623,6 @@ msgstr "Ne možete mijenjati cjenik potvrđene narudžbe!"
 
 #. module: sale
 #. odoo-python
-#: code:addons/sale/models/product_product.py:0
-#: code:addons/sale/models/product_template.py:0
-msgid ""
-"You cannot change the product's type because it is already used in sales "
-"orders."
-msgstr ""
-"Nije moguće mijenjanje tipa proizvoda jer je već korišten na prodajnim "
-"nalozima."
-
-#. module: sale
-#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
@@ -5665,6 +5655,16 @@ msgstr ""
 "Sve što prodajete ili kupujete potrebno je definirati kao proizvod,\n"
 "                bez obzira na to radi li se o uskladištivom proizvodu, "
 "potrošnom materijalu ili usluzi."
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+msgid ""
+"You should not change the product type because this product is already used "
+"in sales orders. Changing it may affect how the related order lines are "
+"delivered."
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
@@ -5820,8 +5820,8 @@ msgid ""
 "{{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
-"(ctx.get('proforma') and 'Proforma' or 'Ponuda') or 'ProdajniNal' }} (Ref {{ "
-"object.name or 'n/a' }})"
+"(ctx.get('proforma') and 'Proforma' or 'Ponuda') or 'ProdajniNal' }} (Ref "
+"{{ object.name or 'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_cancellation
@@ -5829,6 +5829,19 @@ msgid ""
 "{{ object.company_id.name }} {{ object.type_name }} Cancelled (Ref "
 "{{ object.name or 'n/a' }})"
 msgstr "{{ object.company_id.name }} Otkazani (Ref {{ object.name or '/' }})"
+
+#~ msgid ""
+#~ "Validity of the order, after that you will not able to sign & pay the "
+#~ "quotation."
+#~ msgstr ""
+#~ "Valjanost narudžbe, nakon toga nećete moći potpisati i platiti ponudu."
+
+#~ msgid ""
+#~ "You cannot change the product's type because it is already used in sales "
+#~ "orders."
+#~ msgstr ""
+#~ "Nije moguće mijenjanje tipa proizvoda jer je već korišten na prodajnim "
+#~ "nalozima."
 
 #~ msgid "2023-12-31"
 #~ msgstr "2023-12-31"

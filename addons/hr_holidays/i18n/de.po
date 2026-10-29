@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-10-20 10:21+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-18/"
@@ -91,8 +91,8 @@ msgstr "%(holiday_name)s wurde abgelehnt."
 msgid ""
 "%(leave_name)s has been cancelled with the justification: <br/> %(reason)s."
 msgstr ""
-"%(leave_name)s wurde mit folgender Rechtfertigung storniert: <br/> %(reason)"
-"s."
+"%(leave_name)s wurde mit folgender Rechtfertigung storniert: <br/> %"
+"(reason)s."
 
 #. module: hr_holidays
 #. odoo-python
@@ -737,8 +737,8 @@ msgid ""
 "Allocation must be confirmed \"To Approve\" or validated once \"Second "
 "Approval\" in order to approve it."
 msgstr ""
-"Urlaubsanspruch muss bestätigt („Zu genehmigen“) oder einmal validiert („"
-"Zweite Genehmigung“) sein, um ihn zu genehmigen."
+"Urlaubsanspruch muss bestätigt („Zu genehmigen“) oder einmal validiert "
+"(„Zweite Genehmigung“) sein, um ihn zu genehmigen."
 
 #. module: hr_holidays
 #. odoo-python
@@ -768,8 +768,8 @@ msgstr ""
 msgid ""
 "Allocation state must be \"Refused\" in order to be reset to \"To Approve\"."
 msgstr ""
-"Urlaubsanspruch muss im Status „Abgelehnt“ sein, um zurück auf den Status „"
-"Zu genehmigen“ zu setzen."
+"Urlaubsanspruch muss im Status „Abgelehnt“ sein, um zurück auf den Status "
+"„Zu genehmigen“ zu setzen."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
@@ -1610,9 +1610,9 @@ msgid ""
 "Due to a change in global time offs, %s extra day(s) have been taken from "
 "your allocation. Please review this leave if you need it to be changed."
 msgstr ""
-"Aufgrund einer Änderung der globalen Abwesenheiten wurde(n) %s zusätzliche"
-"(r) Tag(e) von Ihrem Urlaubsanspruch abgezogen. Bitte überprüfen Sie diesen "
-"Urlaub, wenn Sie ihn ändern möchten."
+"Aufgrund einer Änderung der globalen Abwesenheiten wurde(n) %s "
+"zusätzliche(r) Tag(e) von Ihrem Urlaubsanspruch abgezogen. Bitte überprüfen "
+"Sie diesen Urlaub, wenn Sie ihn ändern möchten."
 
 #. module: hr_holidays
 #. odoo-python
@@ -2113,12 +2113,20 @@ msgstr ""
 "ausblenden, ohne sie zu entfernen."
 
 #. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__create_calendar_meeting
+msgid ""
+"If this field is checked, every leave request of this type will have a "
+"corresponding entry in the calendar application. There will be no entry if "
+"this stays unchecked."
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_duration_check
 msgid ""
 "If you want to change the number of days you should use the 'period' mode"
 msgstr ""
-"Wenn Sie die Anzahl der Tage ändern möchten, sollten Sie den Modus „Zeitraum"
-"“ verwenden"
+"Wenn Sie die Anzahl der Tage ändern möchten, sollten Sie den Modus "
+"„Zeitraum“ verwenden"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__transition_mode__immediately
@@ -2782,7 +2790,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Manager can reset a refused leave."
-msgstr "Nur ein Abwesenheitsmanager kann einen abgelehnten Urlaub zurücksetzen."
+msgstr ""
+"Nur ein Abwesenheitsmanager kann einen abgelehnten Urlaub zurücksetzen."
 
 #. module: hr_holidays
 #. odoo-python
@@ -2816,7 +2825,8 @@ msgstr "Nur ein Manager kann einen stornierten Urlaub ändern."
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Only a time off Administrator can approve their own requests."
-msgstr "Nur Abwesenheitsadministratoren können ihre eigenen Anträge genehmigen."
+msgstr ""
+"Nur Abwesenheitsadministratoren können ihre eigenen Anträge genehmigen."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3700,7 +3710,8 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__accrual_validity_type
 msgid "This field defines the unit of time after which the accrual ends."
-msgstr "Dieses Feld definiert die Zeiteinheit, nach der die Rückstellung endet."
+msgstr ""
+"Dieses Feld definiert die Zeiteinheit, nach der die Rückstellung endet."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_type
@@ -4458,7 +4469,8 @@ msgstr "Sie können keine Abwesenheit löschen, die sich im Status %s befindet"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You cannot delete a time off which is in the past"
-msgstr "Eine in der Vergangenheit liegende Abwesenheit können Sie nicht löschen"
+msgstr ""
+"Eine in der Vergangenheit liegende Abwesenheit können Sie nicht löschen"
 
 #. module: hr_holidays
 #. odoo-python

@@ -14,9 +14,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:38+0000\n"
-"PO-Revision-Date: 2026-10-20 12:20+0000\n"
-"Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"PO-Revision-Date: 2026-10-28 03:33+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-18/"
 "point_of_sale/id/>\n"
 "Language: id\n"
@@ -206,8 +206,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <h4>\n"
-"        Dear <t t-out=\"object.partner_id.name or 'Valuable Customer'\">"
-"Azure Interior</t>,\n"
+"        Dear <t t-out=\"object.partner_id.name or 'Valuable "
+"Customer'\">Azure Interior</t>,\n"
 "    </h4>\n"
 "    <p style=\"font-size: 13px;\">\n"
 "We have a limited-time offer only for you, enjoy a flat 20% off on your next "
@@ -248,8 +248,9 @@ msgid ""
 "(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
 "(company_name)s. </p>"
 msgstr ""
-"<p>Halo, %(client_name)s.<br/>Berikut adalah Struk %(is_invoiced)suntuk"
-"             %(pos_name)s sejumlah %(amount)s dari %(company_name)s. </p>"
+"<p>Halo, %(client_name)s.<br/>Berikut adalah Struk %"
+"(is_invoiced)suntuk             %(pos_name)s sejumlah %(amount)s dari %"
+"(company_name)s. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -525,7 +526,8 @@ msgstr "Account Move"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__bank_payment_ids
 msgid "Account payments representing aggregated and bank split payments."
-msgstr "Jumlah pembayaran yang mewakili pembayaran bank yang agregat dan split."
+msgstr ""
+"Jumlah pembayaran yang mewakili pembayaran bank yang agregat dan split."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__outstanding_account_id
@@ -2088,6 +2090,7 @@ msgstr "Menghubungi IoT Box"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/errors/error_handlers.js:0
+#: code:addons/point_of_sale/static/src/app/store/opening_control_popup/opening_control_popup.js:0
 msgid "Connection Lost"
 msgstr "Koneksi Hilang"
 
@@ -2676,7 +2679,8 @@ msgstr "Selisih pada sesi closing POS"
 msgid ""
 "Difference between the theoretical closing balance and the real closing "
 "balance."
-msgstr "Selisih antara saldo penutupan teoritis dan saldo penutupan sebenarnya."
+msgstr ""
+"Selisih antara saldo penutupan teoritis dan saldo penutupan sebenarnya."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_digest_digest
@@ -3087,7 +3091,8 @@ msgstr "Flaky all butter pastry, layered for a light and golden croissant."
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_cheese_croissant_product_template
 msgid "Flaky croissant filled with creamy cheese, a savory twist on a classic."
-msgstr "Flaky croissant filled with creamy cheese, a savory twist on a classic."
+msgstr ""
+"Flaky croissant filled with creamy cheese, a savory twist on a classic."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4662,6 +4667,12 @@ msgid "Ongoing"
 msgstr "Berlangsung"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Only Point of Sale managers can modify a Point of Sale configuration."
+msgstr "Hanya manajer POS yang dapat mengubah konfigurasi POS."
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order_line.js:0
 msgid ""
@@ -5418,8 +5429,8 @@ msgstr "Mohon buat/pilih POS di atas untuk menunjukkan opsi konfigurasi."
 msgid ""
 "Please define income account for this product: '%(product)s' (id:%(id)d)."
 msgstr ""
-"Mohon definisikan akun pendapatan untuk produk ini: '%(product)s' (id: %(id)"
-"d)."
+"Mohon definisikan akun pendapatan untuk produk ini: '%(product)s' (id: %"
+"(id)d)."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -5756,6 +5767,7 @@ msgid "Pos Order Count"
 msgstr "Jumlah Order POS"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_account_tax__pos_order_line_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__pos_order_line_id
 msgid "Pos Order Line"
 msgstr "Baris Order POS"
@@ -7688,7 +7700,8 @@ msgstr ""
 msgid ""
 "The Point of Sale only supports the \"add a rounding line\" rounding "
 "strategy."
-msgstr "POS hanya mendukung strategi pembulatan \"tambahkan baris pembulatan\"."
+msgstr ""
+"POS hanya mendukung strategi pembulatan \"tambahkan baris pembulatan\"."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7730,6 +7743,14 @@ msgstr "Brand kartu pembayaran (contoh Visa, AMEX, ...)"
 msgid ""
 "The cash rounding strategy of the point of sale %(pos)s must be: '%(value)s'"
 msgstr "Strategi pembulatan kas dari POS %(pos)s harus: '%(value)s'"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid ""
+"The combo choice '%s' is no longer available in this combo. Please reload "
+"your data."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7953,6 +7974,12 @@ msgstr "Layar resi akan dilewati jika resi dapat dicetak secara otomatis."
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_iface_print_auto
 msgid "The receipt will automatically be printed at the end of each order."
 msgstr "Resi akan secara otomatis dicetak di akhir masing-masing order."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/opening_control_popup/opening_control_popup.js:0
+msgid "The register cannot be opened while offline. Please try again."
+msgstr "Kasir tidak dapat dibuka saat offline. Silakan coba lagi."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9222,6 +9249,14 @@ msgstr "Anda tidak dapat mengedit pembayaran untuk pesanan yang dipost."
 msgid "You cannot invoice orders belonging to different companies."
 msgstr ""
 "Anda tidak dapat memfaktur pesanan yang berasal dari perusahaan yang berbeda."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_fiscal_position_tax.py:0
+msgid ""
+"You cannot modify a fiscal position used in a POS order. You should archive "
+"it and create a new one."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python

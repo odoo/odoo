@@ -11,19 +11,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-20 18:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-10-22 10:29+0000\n"
 "Last-Translator: Nadiia Derkach <nadiia.derkach@self-erp.com>\n"
-"Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-18/hr/uk/>"
-"\n"
+"Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-18/hr/uk/"
+">\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
-"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
-"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
-"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 "X-Generator: Weblate 2026.8.1\n"
 
 #. module: hr
@@ -105,8 +105,8 @@ msgid ""
 "<b>Congratulations!</b> May I recommend you to setup an <a "
 "href=\"%s\">onboarding plan?</a>"
 msgstr ""
-"<b>Вітаємо!</b> Чи можемо рекомендувати вам встановити <a href=\"%s\">"
-"планування?</a>"
+"<b>Вітаємо!</b> Чи можемо рекомендувати вам встановити <a "
+"href=\"%s\">планування?</a>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -2501,8 +2501,8 @@ msgid ""
 "application."
 msgstr ""
 "PIN-код використовується для реєстрації входу/виходу в режимі Kiosk модуля "
-"відвідування (якщо ввімкнено в Налаштуваннях) і для зміни касира в програмі «"
-"Точка продажу»."
+"відвідування (якщо ввімкнено в Налаштуваннях) і для зміни касира в програмі "
+"«Точка продажу»."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
@@ -3245,21 +3245,19 @@ msgid "Temporary"
 msgstr "Тимчасовий"
 
 #. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_employee.py:0
-msgid ""
-"The Badge ID must be alphanumeric without any accents and no longer than 18 "
-"characters."
-msgstr ""
-"Id значка має бути буквенно-цифровим без будь-яких діакритичних знаків і не "
-"довше 18 символів."
-
-#. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
 msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
 "employee."
 msgstr "ID значка має бути унікальним, цей вже призначений іншому працівнику."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"The Badge ID must contain only printable ASCII characters, without spaces, "
+"and be no longer than 18 characters."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__company_country_code
@@ -3400,7 +3398,8 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "This setting block is utilized to manage the frontend design."
-msgstr "Цей блок налаштувань використовується для керування дизайном фронтенду."
+msgstr ""
+"Цей блок налаштувань використовується для керування дизайном фронтенду."
 
 #. module: hr
 #. odoo-python
@@ -3935,3 +3934,10 @@ msgstr "обмежено для співробітників"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "work_permit_name"
+
+#~ msgid ""
+#~ "The Badge ID must be alphanumeric without any accents and no longer than "
+#~ "18 characters."
+#~ msgstr ""
+#~ "Id значка має бути буквенно-цифровим без будь-яких діакритичних знаків і "
+#~ "не довше 18 символів."

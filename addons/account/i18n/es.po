@@ -15,13 +15,14 @@
 # "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
 # "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Miguel Rams <miguelenriquerams@outlook.es>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:38+0000\n"
-"PO-Revision-Date: 2026-10-20 15:02+0000\n"
-"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"PO-Revision-Date: 2026-10-28 08:33+0000\n"
+"Last-Translator: Miguel Rams <miguelenriquerams@outlook.es>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-18/account/"
 "es/>\n"
 "Language: es\n"
@@ -473,8 +474,8 @@ msgid ""
 "behavior.</span>"
 msgstr ""
 "<br/>\n"
-"                        <span>Asegúrese de que es un comportamiento "
-"deseado.</span>"
+"                        <span>Asegúrese de que es un comportamiento deseado."
+"</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -545,14 +546,14 @@ msgstr ""
 "            factura rectificativa\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (con la referencia: <t t-out=\"object.invoice_origin or ''\">"
-"SUB003</t>)\n"
+"            (con la referencia: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
 "        </t>\n"
 "        por un importe total de <span style=\"font-weight:bold;\" t-"
 "out=\"format_amount(object.amount_total, object.currency_id) or ''\">143 "
 "750,00 €</span>\n"
-"        de parte de <t t-out=\"object.company_id.name or ''\">SuCompañía</t>"
-".\n"
+"        de parte de <t t-out=\"object.company_id.name or ''\">SuCompañía</"
+"t>.\n"
 "        <br/><br/>\n"
 "        No dude en contactarnos si tiene alguna pregunta.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-"
@@ -650,8 +651,8 @@ msgstr ""
 "            factura\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (con referencia: <t t-out=\"object.invoice_origin or ''\">"
-"SUB003</t>)\n"
+"            (con referencia: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
 "        </t>\n"
 "        con un importe total de <span style=\"font-weight:bold;\" t-"
 "out=\"format_amount(object.amount_total, object.currency_id) or ''\">143 "
@@ -727,9 +728,9 @@ msgstr ""
 "        Aquí está el recibo de su pago <span style=\"font-weight:bold;\" t-"
 "out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> "
 "por un total\n"
-"        de <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount, object.currency_id) or ''\">10,00 €</span> de <t t-"
-"out=\"object.company_id.name or ''\">SuCompañía</t>.\n"
+"        de <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount, object.currency_id) or ''\">10,00 €</"
+"span> de <t t-out=\"object.company_id.name or ''\">SuCompañía</t>.\n"
 "        <br/><br/>\n"
 "        No dude en contactarnos si tiene alguna pregunta.\n"
 "        <br/><br/>\n"
@@ -947,8 +948,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\">"
-"%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
+"'fixed'\">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1012,14 +1013,14 @@ msgid "<span class=\"o_stat_text\">Invoiced</span>"
 msgstr "<span class=\"o_stat_text\">Facturado</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-msgid "<span class=\"o_stat_text\">Journal Entries</span>"
-msgstr "<span class=\"o_stat_text\">Asientos contables</span>"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
 msgstr "<span class=\"o_stat_text\">Asiento contable</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+msgid "<span class=\"o_stat_text\">Journal Items</span>"
+msgstr "<span class=\"o_stat_text\">Apuntes contables</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1917,6 +1918,11 @@ msgid "Account Mapping"
 msgstr "Mapeo de cuentas"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__account_move_line_ids
+msgid "Account Move Line"
+msgstr "Línea de movimiento de la cuenta"
+
+#. module: account
 #: model:ir.model,name:account.model_account_move_reversal
 msgid "Account Move Reversal"
 msgstr "Reversión de movimiento de cuenta"
@@ -1986,6 +1992,11 @@ msgstr "Cuentas por cobrar (TPV)"
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_account_reconcile
 msgid "Account Reconcile"
 msgstr "Conciliación de cuenta"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__account_reconcile_model_line_ids
+msgid "Account Reconcile Model Line"
+msgstr "Línea del modelo de conciliación contable"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -7774,7 +7785,8 @@ msgstr "Forzar"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__force_tax_included
 msgid "Force the tax to be managed as a price included tax."
-msgstr "Fuerce el impuesto a ser gestionado como precio con impuestos incluidos"
+msgstr ""
+"Fuerce el impuesto a ser gestionado como precio con impuestos incluidos"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__currency_id
@@ -9567,7 +9579,8 @@ msgstr "El movimiento se envía de forma asíncrona"
 msgid ""
 "It indicates that the invoice/payment has been sent or the PDF has been "
 "generated."
-msgstr "Indica que se ha enviado la factura o pago o que se ha generado el PDF."
+msgstr ""
+"Indica que se ha enviado la factura o pago o que se ha generado el PDF."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -11264,7 +11277,7 @@ msgstr "Notas"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Nothing to export."
-msgstr ""
+msgstr "No hay nada que exportar."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__11
@@ -11513,6 +11526,13 @@ msgstr "Una o más líneas requieren una distribución analítica del 100 %."
 #: model:ir.ui.menu,name:account.root_payment_menu
 msgid "Online Payments"
 msgstr "Pagos en línea"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid "Only Accounting managers can create foreign taxes."
+msgstr ""
+"Solo los responsables de contabilidad pueden crear impuestos extranjeros."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__only_tax_exigible
@@ -12903,6 +12923,7 @@ msgstr "Fecha de bloqueo de compras"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_show_purchase_receipts
+#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__in_receipt
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_receipt
 #: model:res.groups,name:account.group_purchase_receipts
 msgid "Purchase Receipt"
@@ -13548,7 +13569,6 @@ msgstr "Revertido"
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
 msgid "Reversed on"
 msgstr "Revertido el"
 
@@ -13738,6 +13758,7 @@ msgid "Sales Lock Date"
 msgstr "Fecha de bloqueo de las ventas"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__out_receipt
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_receipt
 msgid "Sales Receipt"
 msgstr "Recibo de ventas"
@@ -15308,8 +15329,8 @@ msgstr ""
 "de captura: prefijo1, año, prefijo2, mes, prefijo3, seq, sufijo.\n"
 "Los grupos de prefijo * son los separadores entre el año, el mes y el número "
 "de secuencia creciente real (seq).\n"
-"por ejemplo: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d"
-"{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
+"por ejemplo: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?"
+"P<month>\\d{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__templates_found
@@ -16006,8 +16027,8 @@ msgstr ""
 #: code:addons/account/models/account_journal.py:0
 msgid "The holder of a journal's bank account must be the company (%s)."
 msgstr ""
-"El titular de una cuenta bancaria en un diario tiene que ser la compañía (%s)"
-"."
+"El titular de una cuenta bancaria en un diario tiene que ser la compañía "
+"(%s)."
 
 #. module: account
 #. odoo-python
@@ -16027,7 +16048,8 @@ msgstr "Habiéndose enviado la factura, la prioridad del botón ha cambiado."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The invoice is not a draft, it was not updated from the attachment."
-msgstr "La factura no es un borrador, no se actualizó desde el archivo adjunto."
+msgstr ""
+"La factura no es un borrador, no se actualizó desde el archivo adjunto."
 
 #. module: account
 #. odoo-python
@@ -16363,7 +16385,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "The running balance (%s) doesn't match the specified ending balance."
-msgstr "El saldo en ejecución (%s) no coincide con el saldo final especificado."
+msgstr ""
+"El saldo en ejecución (%s) no coincide con el saldo final especificado."
 
 #. module: account
 #. odoo-python
@@ -18454,18 +18477,16 @@ msgid ""
 "You can not archive a journal containing draft journal entries.\n"
 "\n"
 "To proceed:\n"
-"1/ click on the top-right button 'Journal Entries' from this journal form\n"
-"2/ then filter on 'Draft' entries\n"
+"1/ go to Accounting > Accounting > Journal Entries\n"
+"2/ filter on this journal and on 'Unposted' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
-"No puede archivar un diario que contiene asientos contables en estado de "
-"borrador.\n"
+"No se puede archivar un diario que contenga asientos contables en borrador.\n"
 "\n"
 "Para continuar:\n"
-"1. Haga clic en el botón \"asientos contables\" en la parte superior derecha "
-"en el formulario del diario.\n"
-"2. Filtre los asientos en estado de borrador.\n"
-"3. Seleccione todos y publique o elimínelos a través del menú de acción."
+"1/ Dirígete a Contabilidad > Contabilidad > Asientos contables\n"
+"2/ Filtra por este diario y por los asientos sin registrar\n"
+"3/ Selecciónalos todos y regístralos o elimínalos desde el menú de acciones"
 
 #. module: account
 #. odoo-python
@@ -19814,9 +19835,9 @@ msgid ""
 "{amount} ({debit_credit}) from <strong>{account_source_name}</strong> were "
 "transferred to <strong>{account_target_name}</strong> by {link}"
 msgstr ""
-"Se transfirió {amount} ({debit_credit}) de la cuenta <strong>"
-"{account_source_name}</strong> a la cuenta <strong>{account_target_name}</"
-"strong> por {link}."
+"Se transfirió {amount} ({debit_credit}) de la cuenta "
+"<strong>{account_source_name}</strong> a la cuenta "
+"<strong>{account_target_name}</strong> por {link}."
 
 #. module: account
 #. odoo-python
@@ -19844,6 +19865,27 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Comprobante de pago (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid "<span class=\"o_stat_text\">Journal Entries</span>"
+#~ msgstr "<span class=\"o_stat_text\">Asientos contables</span>"
+
+#~ msgid ""
+#~ "You can not archive a journal containing draft journal entries.\n"
+#~ "\n"
+#~ "To proceed:\n"
+#~ "1/ click on the top-right button 'Journal Entries' from this journal "
+#~ "form\n"
+#~ "2/ then filter on 'Draft' entries\n"
+#~ "3/ select them all and post or delete them through the action menu"
+#~ msgstr ""
+#~ "No puede archivar un diario que contiene asientos contables en estado de "
+#~ "borrador.\n"
+#~ "\n"
+#~ "Para continuar:\n"
+#~ "1. Haga clic en el botón \"asientos contables\" en la parte superior "
+#~ "derecha en el formulario del diario.\n"
+#~ "2. Filtre los asientos en estado de borrador.\n"
+#~ "3. Seleccione todos y publique o elimínelos a través del menú de acción."
 
 #~ msgid "Restrict the use of taxes to a type of product."
 #~ msgstr "Restrinja el uso de impuestos a un tipo de producto."

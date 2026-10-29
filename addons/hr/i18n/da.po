@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-20 18:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-10-20 10:10+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-18/hr/da/>\n"
@@ -107,7 +107,8 @@ msgstr "4 dage efter interview"
 msgid ""
 "<b>Congratulations!</b> May I recommend you to setup an <a "
 "href=\"%s\">onboarding plan?</a>"
-msgstr "<b>Tillykke!</b> Hvad med at lave en <a href=\"%s\">onboardingplan?</a>"
+msgstr ""
+"<b>Tillykke!</b> Hvad med at lave en <a href=\"%s\">onboardingplan?</a>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -3240,16 +3241,6 @@ msgid "Temporary"
 msgstr "Midlertidig"
 
 #. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_employee.py:0
-msgid ""
-"The Badge ID must be alphanumeric without any accents and no longer than 18 "
-"characters."
-msgstr ""
-"Badge-ID'et skal være alfanumerisk, må ikke indeholde accenter og skal bestå "
-"af færre end 18 tegn."
-
-#. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
 msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
@@ -3257,6 +3248,14 @@ msgid ""
 msgstr ""
 "Badge-ID'et skal være entydigt. Det valgte kort bruges allerede af en anden "
 "medarbejder."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"The Badge ID must contain only printable ASCII characters, without spaces, "
+"and be no longer than 18 characters."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__company_country_code
@@ -3347,13 +3346,15 @@ msgstr ""
 msgid ""
 "The user will have access to the human resources configuration as well as "
 "statistic reports."
-msgstr "Brugeren får adgang til både HR-konfiguration og statistiske rapporter."
+msgstr ""
+"Brugeren får adgang til både HR-konfiguration og statistiske rapporter."
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "The work permit of %(employee)s expires at %(date)s."
-msgstr "Arbejdstilladelsen for medarbejderen %(employee)s udløber den %(date)s."
+msgstr ""
+"Arbejdstilladelsen for medarbejderen %(employee)s udløber den %(date)s."
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_thesis
@@ -3920,3 +3921,10 @@ msgstr "begrænset til medarbejdere"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "work_permit_name"
+
+#~ msgid ""
+#~ "The Badge ID must be alphanumeric without any accents and no longer than "
+#~ "18 characters."
+#~ msgstr ""
+#~ "Badge-ID'et skal være alfanumerisk, må ikke indeholde accenter og skal "
+#~ "bestå af færre end 18 tegn."

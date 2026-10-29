@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-10-20 12:42+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -139,8 +139,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        亲爱的 <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>"
-"\n"
+"        亲爱的 <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</"
+"t>\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
 "            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
 "Interior</t>)\n"
@@ -154,8 +154,8 @@ msgstr ""
 "        </t>\n"
 "        预计为 \n"
 "        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-out=\"format_date"
-"(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            <span style=\"font-weight:bold;\" t-"
+"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
 "        </t>\n"
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">未定义</span>.\n"
@@ -222,8 +222,9 @@ msgstr ""
 "        <t t-if=\"object.partner_ref\">，\n"
 "            参考编号：<t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
 "        </t>，\n"
-"        金额为 <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">$ 10.00</span>，\n"
+"        金额为 <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"10.00</span>，\n"
 "        来自 <t t-out=\"object.company_id.name or ''\">YourCompany</t>。\n"
 "        <br/><br/>\n"
 "        <t t-if=\"object.date_planned\">\n"
@@ -339,8 +340,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" "
 "title=\"Done\"/><span class=\"d-none d-md-inline\"> Done</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=“已完成” title=“已完成"
-"”/><span class=\"d-none d-md-inline\">已完成</span>"
+"<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=“已完成” title=“已完"
+"成”/><span class=\"d-none d-md-inline\">已完成</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -364,8 +365,8 @@ msgid ""
 "Bill\" title=\"Waiting for Bill\"/><span class=\"d-none d-md-inline\"> "
 "Waiting for Bill</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-file-text\" role=\"img\" aria-label=“等待账单 title=“"
-"等待账单”/><span class=\"d-none d-md-inline\">等待账单</span>"
+"<i class=\"fa fa-fw fa-file-text\" role=\"img\" aria-label=“等待账单 "
+"title=“等待账单”/><span class=\"d-none d-md-inline\">等待账单</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -896,7 +897,8 @@ msgstr "自动提醒收货日期到您的供应商"
 msgid ""
 "Automatically send a confirmation email to the vendor X days before the "
 "expected receipt date, asking him to confirm the exact date."
-msgstr "在预计的收货日期前X天自动向供应商发送确认电子邮件，要求供应商确认确切日期。"
+msgstr ""
+"在预计的收货日期前X天自动向供应商发送确认电子邮件，要求供应商确认确切日期。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__price_average
@@ -1305,7 +1307,8 @@ msgstr "定义您的期限和条件…"
 msgid ""
 "Delivery date expected from vendor. This date respectively defaults to "
 "vendor pricelist lead time then today's date."
-msgstr "供应商要求的交货日期。此日期分别默认为供应商价格表交货期，然后是今天的日期。"
+msgstr ""
+"供应商要求的交货日期。此日期分别默认为供应商价格表交货期，然后是今天的日期。"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__date_planned
@@ -2435,6 +2438,7 @@ msgstr "采购订单数"
 #: model:ir.actions.act_window,name:purchase.action_purchase_history
 #: model:ir.model,name:purchase.model_purchase_order_line
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_id
+#: model:ir.model.fields,field_description:purchase.field_account_tax__purchase_order_line_ids
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Purchase Order Line"
@@ -2937,8 +2941,8 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
-"选择该“警告”选项，将通过消息通知用户，选择“阻塞消息”选项，将发送异常通知消息"
-"，并阻断流。须将该消息写入下一字段。"
+"选择该“警告”选项，将通过消息通知用户，选择“阻塞消息”选项，将发送异常通知消"
+"息，并阻断流。须将该消息写入下一字段。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -3197,6 +3201,12 @@ msgid "The order receipt has been declined by %s."
 msgstr "订单收据已被%s拒绝。"
 
 #. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/res_partner.py:0
+msgid "The partner cannot be deleted because it is used as a dropship address"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid ""
 "The request for quotation is the first step of the purchases flow. Once\n"
@@ -3238,7 +3248,8 @@ msgstr "没有可添加到采购订单中的产品。这些是首付款吗？"
 msgid ""
 "There is no invoiceable line. If a product has a control policy based on "
 "received quantity, please make sure that a quantity has been received."
-msgstr "没有结算单行。 如果产品具有基于收到的数量的控制策略，请确保已收到数量。"
+msgstr ""
+"没有结算单行。 如果产品具有基于收到的数量的控制策略，请确保已收到数量。"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -3694,9 +3705,9 @@ msgid ""
 "performance statistics, click on the OTD rate."
 msgstr ""
 "创建采购订单时，请查看供应商的<i>准时交货</i>率：准时发货产品的百分比。如果太"
-"低，请激活<i>自动提醒</i>功能。在到期发货前几天，Odoo 会向供应商发送电子邮件"
-"，要求确认发货日期，并在出现任何延误时通知您。要获取供应商的业绩统计数据，请"
-"点击 \"OTD 率\"。"
+"低，请激活<i>自动提醒</i>功能。在到期发货前几天，Odoo 会向供应商发送电子邮"
+"件，要求确认发货日期，并在出现任何延误时通知您。要获取供应商的业绩统计数据，"
+"请点击 \"OTD 率\"。"
 
 #. module: purchase
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_1
@@ -3816,4 +3827,5 @@ msgstr "使用"
 #: model:mail.template,subject:purchase.email_template_edi_purchase_done
 #: model:mail.template,subject:purchase.email_template_edi_purchase_reminder
 msgid "{{ object.company_id.name }} Order (Ref {{ object.name or 'n/a' }})"
-msgstr "{{object.company_id.name }}} 采购订单（参考 {{ object.name or 'n/a' }})"
+msgstr ""
+"{{object.company_id.name }}} 采购订单（参考 {{ object.name or 'n/a' }})"

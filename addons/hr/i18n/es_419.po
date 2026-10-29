@@ -7,13 +7,14 @@
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
 # Fernanda Alvarez, 2025
 # "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-20 18:37+0000\n"
-"PO-Revision-Date: 2026-10-20 10:14+0000\n"
-"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"PO-Revision-Date: 2026-10-27 15:38+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-18/hr/es_419/>\n"
 "Language: es_419\n"
@@ -103,8 +104,8 @@ msgid ""
 "<b>Congratulations!</b> May I recommend you to setup an <a "
 "href=\"%s\">onboarding plan?</a>"
 msgstr ""
-"<b>¡Felicidades!</b> ¿Puedo recomendarle que configure un <a href=\"%s\">"
-"plan de capacitación?</a>"
+"<b>¡Felicidades!</b> ¿Puedo recomendarle que configure un <a "
+"href=\"%s\">plan de capacitación?</a>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -3260,16 +3261,6 @@ msgid "Temporary"
 msgstr "Temporal"
 
 #. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_employee.py:0
-msgid ""
-"The Badge ID must be alphanumeric without any accents and no longer than 18 "
-"characters."
-msgstr ""
-"El ID de la credencial debe ser alfanumérico, no debe tener acentos y "
-"tampoco debe exceder los 18 caracteres."
-
-#. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
 msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
@@ -3277,6 +3268,16 @@ msgid ""
 msgstr ""
 "El ID de la identificación debe ser único, este ya esta asignado a otro "
 "empleado."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"The Badge ID must contain only printable ASCII characters, without spaces, "
+"and be no longer than 18 characters."
+msgstr ""
+"El ID de la credencial solo debe contener caracteres ASCII imprimibles, sin "
+"espacios y con una longitud máxima de 18 caracteres."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__company_country_code
@@ -3317,7 +3318,8 @@ msgstr "El NIP debe ser numérico."
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "The default working hours are set in configuration."
-msgstr "Las horas de trabajo predeterminadas se establecen en la configuración."
+msgstr ""
+"Las horas de trabajo predeterminadas se establecen en la configuración."
 
 #. module: hr
 #. odoo-python
@@ -3774,8 +3776,8 @@ msgid ""
 "You are not allowed to access \"Employee\" (hr.employee) records.\n"
 "We can redirect you to the public employee list."
 msgstr ""
-"No tienes permiso para acceder a los registros de \"Empleado\" (hr.employee)"
-".\n"
+"No tienes permiso para acceder a los registros de \"Empleado\" "
+"(hr.employee).\n"
 "Podemos redirigirte a la lista pública de empleados."
 
 #. module: hr
@@ -3955,3 +3957,10 @@ msgstr "restringido a empleados"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "work_permit_name"
+
+#~ msgid ""
+#~ "The Badge ID must be alphanumeric without any accents and no longer than "
+#~ "18 characters."
+#~ msgstr ""
+#~ "El ID de la credencial debe ser alfanumérico, no debe tener acentos y "
+#~ "tampoco debe exceder los 18 caracteres."

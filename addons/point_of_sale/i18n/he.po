@@ -42,7 +42,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:38+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-10-20 12:10+0000\n"
 "Last-Translator: or balmas <or@laylinetech.com>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-18/"
@@ -534,7 +534,8 @@ msgstr "תשלומים חשבונאיים המייצגים תשלומי בנק �
 msgid ""
 "Account used as outstanding account when creating accounting payment records "
 "for bank payments."
-msgstr "חשבון המשמש כחשבון ממתין ביצירת רשומות תשלום חשבונאיות עבור תשלומי בנק."
+msgstr ""
+"חשבון המשמש כחשבון ממתין ביצירת רשומות תשלום חשבונאיות עבור תשלומי בנק."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2074,6 +2075,7 @@ msgstr "מתחבר לקופסת IoT"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/errors/error_handlers.js:0
+#: code:addons/point_of_sale/static/src/app/store/opening_control_popup/opening_control_popup.js:0
 msgid "Connection Lost"
 msgstr "החיבור אבד"
 
@@ -4589,6 +4591,12 @@ msgid "Ongoing"
 msgstr "מתמשך"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Only Point of Sale managers can modify a Point of Sale configuration."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order_line.js:0
 msgid ""
@@ -5353,7 +5361,8 @@ msgstr "נא למלא את כל השדות הדרושים."
 msgid ""
 "Please go on the %s journal and define a Loss Account. This account will be "
 "used to record cash difference."
-msgstr "נא היכנס ל %s יומן והגדר חשבון הפסד. חשבון זה ישמש לרישום הפרש מזומנים."
+msgstr ""
+"נא היכנס ל %s יומן והגדר חשבון הפסד. חשבון זה ישמש לרישום הפרש מזומנים."
 
 #. module: point_of_sale
 #. odoo-python
@@ -5661,6 +5670,7 @@ msgid "Pos Order Count"
 msgstr "כמות הזמנות קופה"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_account_tax__pos_order_line_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__pos_order_line_id
 msgid "Pos Order Line"
 msgstr "שורת הזמנה בקופה"
@@ -7620,7 +7630,16 @@ msgstr "מותג כרטיס האשראי (למשל ויזה,אמריקן אקס�
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
 "The cash rounding strategy of the point of sale %(pos)s must be: '%(value)s'"
-msgstr "אסטרטגיית עיגול המזומן של נקודת המכירה %(pos)s חייבת להיות: '%(value)s'"
+msgstr ""
+"אסטרטגיית עיגול המזומן של נקודת המכירה %(pos)s חייבת להיות: '%(value)s'"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid ""
+"The combo choice '%s' is no longer available in this combo. Please reload "
+"your data."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7642,7 +7661,8 @@ msgstr "מחירון ברירת המחדל חייב להיכלל במחירונ�
 msgid ""
 "The default pricelist must belong to no company or the company of the point "
 "of sale."
-msgstr "רשימת המחירים ברירת המחדל חייבת להשתייך או לאף חברה, או לחברה של הקופה."
+msgstr ""
+"רשימת המחירים ברירת המחדל חייבת להשתייך או לאף חברה, או לחברה של הקופה."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7650,7 +7670,8 @@ msgstr "רשימת המחירים ברירת המחדל חייבת להשתיי�
 msgid ""
 "The default tip product is missing. Please manually specify the tip product. "
 "(See Tips field.)"
-msgstr "מוצר טיפ ברירת המחדל חסר. אנא ציין ידנית את מוצר הטיפ. (ראה שדה טיפים.)"
+msgstr ""
+"מוצר טיפ ברירת המחדל חסר. אנא ציין ידנית את מוצר הטיפ. (ראה שדה טיפים.)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7820,6 +7841,12 @@ msgstr "דילוג על מסך הקבלה אם ניתן להדפיס את הקב
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_iface_print_auto
 msgid "The receipt will automatically be printed at the end of each order."
 msgstr "הקבלה תודפס אוטומטית בסוף כל הזמנה."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/opening_control_popup/opening_control_popup.js:0
+msgid "The register cannot be opened while offline. Please try again."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8650,7 +8677,8 @@ msgstr "השתמש בעמדות פיסקליות כדי לקבל מסים שונ
 msgid ""
 "Used to record product pickings. Products are consumed from its default "
 "source location."
-msgstr "משמש לרישום ליקוטי מוצרים. המוצרים נצרכים ממיקום המקור ברירת המחדל שלו."
+msgstr ""
+"משמש לרישום ליקוטי מוצרים. המוצרים נצרכים ממיקום המקור ברירת המחדל שלו."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_users
@@ -9013,6 +9041,14 @@ msgstr "אי אפשר לערוך תשלום עבור הזמנה שכבר פור�
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "You cannot invoice orders belonging to different companies."
 msgstr "אין אפשרות להנפיק חשבוניות עבור הזמנות השייכות לחברות שונות."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_fiscal_position_tax.py:0
+msgid ""
+"You cannot modify a fiscal position used in a POS order. You should archive "
+"it and create a new one."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python

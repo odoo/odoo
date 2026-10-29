@@ -11,11 +11,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
+"POT-Creation-Date: 2026-10-24 17:38+0000\n"
 "PO-Revision-Date: 2026-10-20 10:22+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
-"18/event/pt_BR/>\n"
+"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
+"odoo-18/event/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -119,15 +119,15 @@ msgid ""
 "'Full Page Ticket - %s - %s' % ((object.event_id.name or "
 "'Event').replace('/',''), (object.name or '').replace('/',''))"
 msgstr ""
-"\"Ingresso em página inteira - %s - %s\" % ((object.event_id.name or 'Event')"
-".replace('/',''), (object.name or '').replace('/',''))"
+"\"Ingresso em página inteira - %s - %s\" % ((object.event_id.name or "
+"'Event').replace('/',''), (object.name or '').replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_full_page_ticket
 msgid "'Full Page Ticket - %s' % (object.name or 'Event').replace('/','')"
 msgstr ""
-"\"Ingresso em página inteira - %s\" % (object.name or 'Event').replace('/"
-"','')"
+"\"Ingresso em página inteira - %s\" % (object.name or "
+"'Event').replace('/','')"
 
 #. module: event
 #. odoo-python
@@ -261,8 +261,9 @@ msgid ""
 "quiz to your attendees once a track is over</span>"
 msgstr ""
 "<br/>\n"
-"                                        <span class=\"text-muted\">"
-"Compartilhe questionários com os participantes no fim da palestra</span>"
+"                                        <span class=\"text-"
+"muted\">Compartilhe questionários com os participantes no fim da palestra</"
+"span>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -348,8 +349,8 @@ msgid ""
 "<span class=\"badge text-bg-secondary o_wevent_badge float-end\">SPEAKER</"
 "span>"
 msgstr ""
-"<span class=\"badge text-bg-secondary o_wevent_badge float-end\">"
-"PALESTRANTE</span>"
+"<span class=\"badge text-bg-secondary o_wevent_badge float-"
+"end\">PALESTRANTE</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
@@ -360,8 +361,8 @@ msgstr "<span class=\"me-1\">até</span>"
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_badge_card
 msgid "<span class=\"o_event_badge_font_faded\">My Placeholder Company</span>"
 msgstr ""
-"<span class=\"o_event_badge_font_faded\">Minha empresa (marcador de posição)"
-"</span>"
+"<span class=\"o_event_badge_font_faded\">Minha empresa (marcador de "
+"posição)</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -470,7 +471,8 @@ msgid ""
 "font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" "
 "height=\"16\" alt=\"\"/> Google</a>\n"
 "                        <a t-attf-href=\"/event/{{ slug(object.event_id) }}/"
-"ics\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-"
+"ics{{ '?lang=%s' % ctx['lang'] if ctx.get('lang') else '' }}\" "
+"style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-"
 "decoration:none;border-radius:3px;\"><img src=\"/web_editor/font_to_img/"
 "61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" "
 "alt=\"\"/> iCal/Outlook</a>\n"
@@ -834,7 +836,8 @@ msgid ""
 "font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" "
 "height=\"16\" alt=\"\"/> Google</a>\n"
 "                        <a t-attf-href=\"/event/{{ slug(object.event_id) }}/"
-"ics\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-"
+"ics{{ '?lang=%s' % ctx['lang'] if ctx.get('lang') else '' }}\" "
+"style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-"
 "decoration:none;border-radius:3px;\"><img src=\"/web_editor/font_to_img/"
 "61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" "
 "alt=\"\"/> iCal/Outlook</a>\n"
@@ -1211,7 +1214,8 @@ msgid ""
 "font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" "
 "height=\"16\" alt=\"\"/> Google</a>\n"
 "                        <a t-attf-href=\"/event/{{ slug(object.event_id) }}/"
-"ics\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-"
+"ics{{ '?lang=%s' % ctx['lang'] if ctx.get('lang') else '' }}\" "
+"style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-"
 "decoration:none;border-radius:3px;\"><img src=\"/web_editor/font_to_img/"
 "61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" "
 "alt=\"\"/> iCal/Outlook</a>\n"
@@ -2032,7 +2036,8 @@ msgstr "Conferência de arquitetos"
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Conferences, workshops and trainings will be organized in 6 rooms:"
-msgstr "Conferências, workshops e treinamentos serão organizados em seis salas:"
+msgstr ""
+"Conferências, workshops e treinamentos serão organizados em seis salas:"
 
 #. module: event
 #: model:ir.model,name:event.model_res_config_settings
@@ -2976,7 +2981,8 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid "If you don't have this ticket, you will <b>not</b> be allowed entry!"
-msgstr "Se você não tiver esse ingresso, sua entrada <b>não</b> será permitida!"
+msgstr ""
+"Se você não tiver esse ingresso, sua entrada <b>não</b> será permitida!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
@@ -3611,14 +3617,16 @@ msgstr ""
 msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection."
-msgstr "Substitua o valor padrão exibido no estado Bloqueado da seleção kanban."
+msgstr ""
+"Substitua o valor padrão exibido no estado Bloqueado da seleção kanban."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__legend_done
 #: model:ir.model.fields,help:event.field_event_stage__legend_done
 msgid ""
 "Override the default value displayed for the done state for kanban selection."
-msgstr "Substitua o valor padrão exibido no estado Concluído da seleção kanban."
+msgstr ""
+"Substitua o valor padrão exibido no estado Concluído da seleção kanban."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__legend_normal
@@ -3699,7 +3707,8 @@ msgstr "Propriedades"
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Purchase, Sales &amp; Purchase management, Financial accounting."
-msgstr "Compra, Vendas &amp; Gerenciamento de Compra, Contabilidade financeira."
+msgstr ""
+"Compra, Vendas &amp; Gerenciamento de Compra, Contabilidade financeira."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
@@ -4488,8 +4497,8 @@ msgid ""
 "Ticket types allow you to distinguish your attendees. Let's <b>create</b> a "
 "new one."
 msgstr ""
-"Tipos de ingressos permitem que você diferencie seus participantes. Vamos <b>"
-"criar</b> um novo."
+"Tipos de ingressos permitem que você diferencie seus participantes. Vamos "
+"<b>criar</b> um novo."
 
 #. module: event
 #. odoo-python

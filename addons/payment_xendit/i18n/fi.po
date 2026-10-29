@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-01 17:39+0000\n"
+"POT-Creation-Date: 2026-10-24 17:39+0000\n"
 "PO-Revision-Date: 2026-10-20 11:22+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-18/"
@@ -36,26 +36,6 @@ msgid ""
 msgstr "Maksun käsittelyssä tapahtui virhe (%s). Yritä uudelleen."
 
 #. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Card Code"
-msgstr "Kortin koodi"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Card Holder First Name"
-msgstr "Kortinhaltijan etunimi"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Card Holder Last Name"
-msgstr "Kortinhaltijan sukunimi"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Card Number"
-msgstr "Kortin numero"
-
-#. module: payment_xendit
 #: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__code
 msgid "Code"
 msgstr "Koodi"
@@ -65,44 +45,6 @@ msgstr "Koodi"
 #: code:addons/payment_xendit/models/payment_provider.py:0
 msgid "Could not establish the connection to the API."
 msgstr "API-yhteyden mudostaminen ei onnistunut."
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Email"
-msgstr "Sähköposti"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Expiration"
-msgstr "Voimassaolo"
-
-#. module: payment_xendit
-#. odoo-javascript
-#: code:addons/payment_xendit/static/src/js/payment_form.js:0
-msgid "Invalid CVN"
-msgstr "Virheellinen CVN"
-
-#. module: payment_xendit
-#. odoo-javascript
-#: code:addons/payment_xendit/static/src/js/payment_form.js:0
-msgid "Invalid Card Number"
-msgstr "Virheellinen kortin numero"
-
-#. module: payment_xendit
-#. odoo-javascript
-#: code:addons/payment_xendit/static/src/js/payment_form.js:0
-msgid "Invalid Date"
-msgstr "Virheellinen Päivämäärä"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "John"
-msgstr "John"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "MM"
-msgstr "KK"
 
 #. module: payment_xendit
 #. odoo-python
@@ -121,22 +63,6 @@ msgid "Payment Transaction"
 msgstr "Maksutapahtuma"
 
 #. module: payment_xendit
-#. odoo-javascript
-#: code:addons/payment_xendit/static/src/js/payment_form.js:0
-msgid "Payment processing failed"
-msgstr "Maksun käsittely epäonnistui"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Phone Number"
-msgstr "Puhelinnumero"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.payment_provider_form_xendit
-msgid "Public Key"
-msgstr "Julkinen avain"
-
-#. module: payment_xendit
 #. odoo-python
 #: code:addons/payment_xendit/models/payment_transaction.py:0
 msgid "Received data with missing reference."
@@ -148,23 +74,20 @@ msgid "Secret Key"
 msgstr "Salainen avain"
 
 #. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Smith"
-msgstr "Smith"
-
-#. module: payment_xendit
-#. odoo-python
-#: code:addons/payment_xendit/controllers/main.py:0
-msgid "The access token doesn't match the transaction reference."
-msgstr "Pääsytunniste ei vastaa tapahtuman viitettä."
-
-#. module: payment_xendit
 #. odoo-python
 #: code:addons/payment_xendit/models/payment_provider.py:0
 msgid ""
 "The communication with the API failed. Xendit gave us the following "
 "information: '%s'"
 msgstr "Yhteys API:n kanssa epäonnistui. Xendit antoi seuraavat tiedot: '%s'"
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_transaction.py:0
+msgid ""
+"The payment requires authentication from the customer, which isn't possible "
+"for this unattended transaction. Please ask the customer to pay manually."
+msgstr ""
 
 #. module: payment_xendit
 #: model:ir.model.fields,help:payment_xendit.field_payment_provider__code
@@ -178,6 +101,12 @@ msgid "The transaction is not linked to a token."
 msgstr "Transaktio ei ole sidottu valtuutuskoodiin."
 
 #. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_provider.py:0
+msgid "Update the Xendit webhook configuration"
+msgstr ""
+
+#. module: payment_xendit
 #: model_terms:ir.ui.view,arch_db:payment_xendit.payment_provider_form_xendit
 msgid "Webhook Token"
 msgstr "Webhook-pääsytunniste"
@@ -186,6 +115,12 @@ msgstr "Webhook-pääsytunniste"
 #: model:ir.model.fields.selection,name:payment_xendit.selection__payment_provider__code__xendit
 msgid "Xendit"
 msgstr "Xendit"
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_provider.py:0
+msgid "Xendit Dashboard"
+msgstr ""
 
 #. module: payment_xendit
 #: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__xendit_public_key
@@ -203,11 +138,71 @@ msgid "Xendit Webhook Token"
 msgstr "Xendit Webhook käyttötunniste"
 
 #. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "YYYY"
-msgstr "VVVV"
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_provider.py:0
+msgid ""
+"Xendit replaced the single webhook field used by the %(provider)s payment "
+"provider with separate v3 event groups. Update the %(webhook_link)s on the %"
+"(dashboard_link)s before %(deadline)s to keep receiving payment and card "
+"token status updates."
+msgstr ""
 
 #. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "john.smith@example.com"
-msgstr "matti.meikalainen@esimerkki.com"
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_provider.py:0
+msgid "webhook configuration"
+msgstr ""
+
+#~ msgid "Card Code"
+#~ msgstr "Kortin koodi"
+
+#~ msgid "Card Holder First Name"
+#~ msgstr "Kortinhaltijan etunimi"
+
+#~ msgid "Card Holder Last Name"
+#~ msgstr "Kortinhaltijan sukunimi"
+
+#~ msgid "Card Number"
+#~ msgstr "Kortin numero"
+
+#~ msgid "Email"
+#~ msgstr "Sähköposti"
+
+#~ msgid "Expiration"
+#~ msgstr "Voimassaolo"
+
+#~ msgid "Invalid CVN"
+#~ msgstr "Virheellinen CVN"
+
+#~ msgid "Invalid Card Number"
+#~ msgstr "Virheellinen kortin numero"
+
+#~ msgid "Invalid Date"
+#~ msgstr "Virheellinen Päivämäärä"
+
+#~ msgid "John"
+#~ msgstr "John"
+
+#~ msgid "MM"
+#~ msgstr "KK"
+
+#~ msgid "Payment processing failed"
+#~ msgstr "Maksun käsittely epäonnistui"
+
+#~ msgid "Phone Number"
+#~ msgstr "Puhelinnumero"
+
+#~ msgid "Public Key"
+#~ msgstr "Julkinen avain"
+
+#~ msgid "Smith"
+#~ msgstr "Smith"
+
+#~ msgid "The access token doesn't match the transaction reference."
+#~ msgstr "Pääsytunniste ei vastaa tapahtuman viitettä."
+
+#~ msgid "YYYY"
+#~ msgstr "VVVV"
+
+#~ msgid "john.smith@example.com"
+#~ msgstr "matti.meikalainen@esimerkki.com"

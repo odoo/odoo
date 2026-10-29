@@ -33,8 +33,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-10-20 15:47+0000\n"
+"POT-Creation-Date: 2026-10-24 17:38+0000\n"
+"PO-Revision-Date: 2026-10-28 04:38+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-18/"
 "product/mn/>\n"
@@ -463,7 +463,7 @@ msgstr "Нэмэх"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Add Products"
-msgstr ""
+msgstr "Бараа нэмэх"
 
 #. module: product
 #. odoo-javascript
@@ -754,7 +754,7 @@ msgstr "Хар"
 #. odoo-javascript
 #: code:addons/product/static/src/js/product_attribute_value_list.js:0
 msgid "Bye-bye, record!"
-msgstr ""
+msgstr "Баяртай, бичлэг минь!"
 
 #. module: product
 #: model:product.template,name:product.product_product_10_product_template
@@ -1040,13 +1040,13 @@ msgstr "Барааны хувилбар шинээр үүсгэх"
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
 msgid "Create a product"
-msgstr ""
+msgstr "Бараа үүсгэх"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:product.field_product_template__service_tracking
 msgid "Create on Order"
-msgstr ""
+msgstr "Захиалгаар үүсгэх"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_uid
@@ -1130,7 +1130,7 @@ msgstr "Өөриймшсөн"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__custom_value
 msgid "Custom Value"
-msgstr ""
+msgstr "Тусгай утга"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__partner_ref
@@ -1485,7 +1485,7 @@ msgstr "Файлын агуулга (base64)"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__raw
 msgid "File Content (raw)"
-msgstr ""
+msgstr "Файлын агуулга (түүхий)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__file_size
@@ -1853,7 +1853,7 @@ msgstr "Барааны Олон улсын хувийн дугаар"
 #. odoo-javascript
 #: code:addons/product/static/src/js/product_attribute_value_list.js:0
 msgid "Invalid Operation"
-msgstr ""
+msgstr "Буруу үйлдэл"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -1994,7 +1994,7 @@ msgstr "Мөрүүд"
 #. module: product
 #: model:product.template,name:product.product_product_local_delivery_product_template
 msgid "Local Delivery"
-msgstr ""
+msgstr "Орон нутгийн хүргэлт"
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
@@ -2313,7 +2313,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.js:0
 msgid "Oops! '%(fileName)s' didn’t upload since its format isn’t allowed."
-msgstr ""
+msgstr "Өө! '%(fileName)s'-ийн формат зөвшөөрөгдөөгүй тул байршуулагдсангүй."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__original_id
@@ -2626,7 +2626,7 @@ msgstr "Барааны Шинж чанарууд"
 #. module: product
 #: model:ir.model,name:product.model_product_catalog_mixin
 msgid "Product Catalog Mixin"
-msgstr ""
+msgstr "Барааны каталогийн mixin"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_category_action_form
@@ -2670,7 +2670,7 @@ msgstr "Бараа үүсгэх"
 #. module: product
 #: model:ir.model,name:product.model_product_document
 msgid "Product Document"
-msgstr ""
+msgstr "Барааны баримт"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_dymo
@@ -3161,6 +3161,12 @@ msgstr ""
 #: model:product.attribute,name:product.size_attribute
 msgid "Size"
 msgstr "Хэмжээ"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/report/product_pricelist_report.py:0
+msgid "Sorry, you are not allowed to access this document."
+msgstr "Уучлаарай, танд энэ баримт руу хандах эрх алга."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_partner__specific_property_product_pricelist
@@ -3703,6 +3709,10 @@ msgid ""
 "inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"Барааны үнэ цэнэ (AVCO-д автоматаар тооцоологдоно).\n"
+"        Худалдан авалтын өртөг тодорхойгүй үед (жишээ нь тооллогын "
+"тохируулга) барааг үнэлэхэд ашиглана.\n"
+"        Борлуулалтын захиалгын ашгийн хэмжээг тооцоолоход ашиглана."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__value_ids
@@ -3848,7 +3858,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Visible to all"
-msgstr ""
+msgstr "Бүгдэд харагдана"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__voice_ids
@@ -3872,7 +3882,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__volume_uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__volume_uom_name
 msgid "Volume unit of measure label"
-msgstr ""
+msgstr "Эзлэхүүний хэмжих нэгжийн шошго"
 
 #. module: product
 #. odoo-python
@@ -3924,7 +3934,7 @@ msgstr "Мод"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__write_date
 msgid "Write Date"
-msgstr ""
+msgstr "Бичсэн огноо"
 
 #. module: product
 #. odoo-python
@@ -4249,7 +4259,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "per"
-msgstr ""
+msgstr "тутам"
 
 #. module: product
 #. odoo-python

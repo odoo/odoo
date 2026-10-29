@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-10-20 14:19+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"PO-Revision-Date: 2026-10-28 06:33+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-18/"
 "website_sale/nl/>\n"
@@ -430,7 +430,8 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "<span class=\"s_website_form_label_content\">Upload a document</span>"
-msgstr "<span class=\"s_website_form_label_content\">Upload een document</span>"
+msgstr ""
+"<span class=\"s_website_form_label_content\">Upload een document</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -443,8 +444,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Based "
 "on variants</span>"
 msgstr ""
-"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">"
-"Gebaseerd op varianten</span>"
+"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= "
+"1\">Gebaseerd op varianten</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -483,8 +484,8 @@ msgid ""
 msgstr ""
 "<span>Helaas kan je order niet worden bevestigd omdat het bedrag van je "
 "betaling niet overeenkomt met het bedrag van het winkelmandje.\n"
-"Neem voor meer informatie contact op met de verantwoordelijke van de "
-"winkel.</span>"
+"Neem voor meer informatie contact op met de verantwoordelijke van de winkel."
+"</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -598,8 +599,8 @@ msgstr ""
 "                            <hr/>\n"
 "                            <table width=\"100%\">\n"
 "                                <tr>\n"
-"                                    <td style=\"padding: 10px; "
-"width:150px;\">\n"
+"                                    <td style=\"padding: 10px; width:150px;"
+"\">\n"
 "                                        <img t-attf-src=\"/web/image/"
 "product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; "
 "height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
@@ -631,8 +632,8 @@ msgstr ""
 "                    <t t-set=\"company\" t-value=\"object.company_id or "
 "object.user_id.company_id or user.company_id\"/>\n"
 "                    <div style=\"text-align: center;\"><strong>Bedankt om te "
-"winkelen bij <t t-out=\"company.name or ''\">My Company (San Francisco)</t>"
-"!</strong></div>\n"
+"winkelen bij <t t-out=\"company.name or ''\">My Company (San Francisco)</t>!"
+"</strong></div>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -4316,6 +4317,16 @@ msgstr "Uitverkocht"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
+msgid ""
+"Some products in your cart are not available for purchase in your country. "
+"Please remove them or contact us."
+msgstr ""
+"Sommige producten in je winkelmandje zijn niet beschikbaar in je land. "
+"Verwijder ze of neem contact met ons op."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
 msgid "Some required fields are empty."
 msgstr "Sommige verplichte velden zijn leeg."
 
@@ -4447,6 +4458,14 @@ msgid "Taxes"
 msgstr "Btw"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid ""
+"Taxes have been updated based on your address. Your payment method has not "
+"been charged."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Text"
 msgstr "Tekst"
@@ -4510,7 +4529,8 @@ msgstr "De leveringsmethode is niet compatibel met je afleveradres."
 #: model:ir.model.fields,help:website_sale.field_product_product__website_url
 #: model:ir.model.fields,help:website_sale.field_product_template__website_url
 msgid "The full URL to access the document through the website."
-msgstr "De volledige URL om toegang tot het document te krijgen via de website."
+msgstr ""
+"De volledige URL om toegang tot het document te krijgen via de website."
 
 #. module: website_sale
 #. odoo-python
@@ -4547,6 +4567,16 @@ msgid ""
 msgstr ""
 "De mode hier geselecteerd geld als factuurbeleid voor ieder nieuw aangemaakt "
 "product, maar niet voor bestaande producten."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/combo_configurator.py:0
+msgid ""
+"The number of selected combo items must match the number of available combo "
+"choices."
+msgstr ""
+"Het aantal geselecteerde combinatieproducten moet overeenkomen met het "
+"aantal beschikbare combinatiekeuzes."
 
 #. module: website_sale
 #. odoo-python
@@ -4653,10 +4683,24 @@ msgid "This product is no longer available."
 msgstr "Dit product is niet meer beschikbaar."
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid "This product is not available for purchase in your country."
+msgstr "Dit product is niet beschikbaar voor aankoop in je land."
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_reorder.js:0
 msgid "This product is not available for purchase."
 msgstr "Dit product is niet beschikbaar voor inkoop."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid "This product is part of a combo and can't be updated individually."
+msgstr ""
+"Dit product maakt deel uit van een combo en kan niet afzonderlijk worden "
+"bijgewerkt."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item

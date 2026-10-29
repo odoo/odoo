@@ -7,13 +7,14 @@
 # Larissa Manderfeld, 2025
 #
 # "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-20 18:37+0000\n"
-"PO-Revision-Date: 2026-10-20 10:11+0000\n"
-"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"PO-Revision-Date: 2026-10-27 15:38+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-18/hr/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -101,8 +102,8 @@ msgid ""
 "<b>Congratulations!</b> May I recommend you to setup an <a "
 "href=\"%s\">onboarding plan?</a>"
 msgstr ""
-"<b>Glückwunsch!</b> Darf ich Ihnen vorschlagen, einen <a href=\"%s\">"
-"Einführungsplan</a> aufzusetzen?"
+"<b>Glückwunsch!</b> Darf ich Ihnen vorschlagen, einen <a "
+"href=\"%s\">Einführungsplan</a> aufzusetzen?"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -3261,16 +3262,6 @@ msgid "Temporary"
 msgstr "Befristet"
 
 #. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_employee.py:0
-msgid ""
-"The Badge ID must be alphanumeric without any accents and no longer than 18 "
-"characters."
-msgstr ""
-"Die Ausweis-ID muss alphanumerisch sein, ohne Akzente und weniger als 18 "
-"Zeichen."
-
-#. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
 msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
@@ -3278,6 +3269,16 @@ msgid ""
 msgstr ""
 "Die Ausweis-ID muss eindeutig sein. Diese ist bereits einem anderen "
 "Mitarbeiter zugeordnet."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"The Badge ID must contain only printable ASCII characters, without spaces, "
+"and be no longer than 18 characters."
+msgstr ""
+"Die Ausweis-ID darf nur druckbare ASCII-Zeichen ohne Leerzeichen enthalten "
+"und nicht länger als 18 Zeichen sein."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__company_country_code
@@ -3962,3 +3963,10 @@ msgstr "beschränkt auf Mitarbeiter"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "work_permit_name"
+
+#~ msgid ""
+#~ "The Badge ID must be alphanumeric without any accents and no longer than "
+#~ "18 characters."
+#~ msgstr ""
+#~ "Die Ausweis-ID muss alphanumerisch sein, ohne Akzente und weniger als 18 "
+#~ "Zeichen."

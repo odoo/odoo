@@ -46,9 +46,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:38+0000\n"
-"PO-Revision-Date: 2026-10-20 12:05+0000\n"
-"Last-Translator: Deleted User <noreply+18@weblate.org>\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"PO-Revision-Date: 2026-10-27 08:34+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-18/"
 "point_of_sale/fi/>\n"
 "Language: fi\n"
@@ -238,8 +238,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <h4>\n"
-"        Hyvä <t t-out=\"object.partner_id.name or 'Valuable Customer'\">"
-"Azure Interior</t>,\n"
+"        Hyvä <t t-out=\"object.partner_id.name or 'Valuable "
+"Customer'\">Azure Interior</t>,\n"
 "    </h4>\n"
 "    <p style=\"font-size: 13px;\">\n"
 "Meillä on rajoitetun ajan tarjous vain sinulle, nauti tasainen 20% "
@@ -496,7 +496,8 @@ msgstr "Hyväksy maksuja Mercado Pago -palvelulla päätelaitteella"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with Viva Wallet on a terminal or tap on phone"
-msgstr "Hyväksy maksuja Viva Walletilla päätelaitteella tai napauta puhelimella"
+msgstr ""
+"Hyväksy maksuja Viva Walletilla päätelaitteella tai napauta puhelimella"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1020,7 +1021,8 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.sport_shoes_product_template
 msgid "Athletic sport shoes, designed for comfort and performance."
-msgstr "Urheilukengät, jotka on suunniteltu mukavuutta ja suorituskykyä varten."
+msgstr ""
+"Urheilukengät, jotka on suunniteltu mukavuutta ja suorituskykyä varten."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_attachment_count
@@ -1708,7 +1710,8 @@ msgstr "Valitse, haluatko tämän tuotteen näkyvän kassassa."
 #: model:ir.model.fields,help:point_of_sale.field_uom_uom__is_pos_groupable
 msgid ""
 "Check if you want to group products of this category in point of sale orders"
-msgstr "Valitse, haluatko ryhmitellä tämän kategorian tuotteet kassatilauksissa"
+msgstr ""
+"Valitse, haluatko ryhmitellä tämän kategorian tuotteet kassatilauksissa"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__cash_control
@@ -2124,6 +2127,7 @@ msgstr "Yhdistäminen IoT-boxiin"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/errors/error_handlers.js:0
+#: code:addons/point_of_sale/static/src/app/store/opening_control_popup/opening_control_popup.js:0
 msgid "Connection Lost"
 msgstr "Yhteys katkesi"
 
@@ -4692,6 +4696,12 @@ msgid "Ongoing"
 msgstr "Käynnissä"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Only Point of Sale managers can modify a Point of Sale configuration."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order_line.js:0
 msgid ""
@@ -4721,8 +4731,8 @@ msgstr "Sovelletaan pyöristämistä vain käteisvaroihin"
 msgid ""
 "Only journals of type 'Cash' or 'Bank' could be used with payment methods."
 msgstr ""
-"Maksutapojen kanssa voitiin käyttää vain \"Käteinen\" tai \"Pankki\" -"
-"tyyppisiä päiväkirjoja."
+"Maksutapojen kanssa voitiin käyttää vain \"Käteinen\" tai \"Pankki\" "
+"-tyyppisiä päiväkirjoja."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5787,6 +5797,7 @@ msgid "Pos Order Count"
 msgstr "Kassajärjestelmän tilausten määrä"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_account_tax__pos_order_line_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__pos_order_line_id
 msgid "Pos Order Line"
 msgstr "Kassajärjestelmän tilausrivi"
@@ -7764,6 +7775,14 @@ msgid ""
 msgstr "Kassan %(pos)s käteisvarojen pyöristyskäytännön on oltava: '%(value)s'"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid ""
+"The combo choice '%s' is no longer available in this combo. Please reload "
+"your data."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
 msgid ""
@@ -7969,7 +7988,8 @@ msgstr ""
 msgid ""
 "The rate of the currency to the currency of rate applicable at the date of "
 "the order"
-msgstr "Valuutan kurssi suhteessa tilauspäivänä sovellettavaan valuuttakurssiin"
+msgstr ""
+"Valuutan kurssi suhteessa tilauspäivänä sovellettavaan valuuttakurssiin"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_skip_screen
@@ -7984,6 +8004,12 @@ msgstr "Kuittiruutu ohitetaan, jos kuitti voidaan tulostaa automaattisesti."
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_iface_print_auto
 msgid "The receipt will automatically be printed at the end of each order."
 msgstr "Kuitti tulostuu automaattisesti jokaisen tilauksen päätteeksi."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/opening_control_popup/opening_control_popup.js:0
+msgid "The register cannot be opened while offline. Please try again."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8123,7 +8149,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "The transactions are processed by Viva Wallet on terminal or tap on phone."
-msgstr "Tapahtumat käsitellään Viva Walletilla päätelaitteella tai puhelimella."
+msgstr ""
+"Tapahtumat käsitellään Viva Walletilla päätelaitteella tai puhelimella."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__card_type
@@ -8433,7 +8460,7 @@ msgstr "Raidallinen valkoinen leipä"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 msgid "Tip"
-msgstr "Vinkki"
+msgstr "Tippi"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__tip_amount
@@ -9243,6 +9270,14 @@ msgstr "Et voi muokata lähetetyn tilauksen maksua."
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "You cannot invoice orders belonging to different companies."
 msgstr "Et voi laskuttaa eri yrityksille kuuluvia tilauksia."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_fiscal_position_tax.py:0
+msgid ""
+"You cannot modify a fiscal position used in a POS order. You should archive "
+"it and create a new one."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python

@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* payment_demo
+# * payment_demo
 #
 # Translators:
 # Arminas Grigonis <arminas@versada.lt>, 2024
@@ -10,14 +10,14 @@
 # Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2024
 # Jessica Jakara, 2024
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2024
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:41+0000\n"
-"PO-Revision-Date: 2026-10-20 11:19+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-10-27 12:31+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-18/"
 "payment_demo/lt/>\n"
 "Language: lt\n"
@@ -48,6 +48,22 @@ msgid ""
 "                    </option>\n"
 "                </select>"
 msgstr ""
+"<select id=\"simulated_payment_state\" class=\"form-select\">\n"
+"                    <option value=\"done\" title=\"Successful payment\">\n"
+"                        Sėkminga\n"
+"                   </option>\n"
+"                    <option value=\"pending\" title=\"Payment processing\"> "
+"\n"
+"                        Laukiama\n"
+"                   </option>\n"
+"                    <option value=\"cancel\" title=\"Payment cancelled by "
+"customer\"> \n"
+"                        Atšaukta\n"
+"                   </option>\n"
+"                    <option value=\"error\" title=\"Processing error\"> \n"
+"                        Klaida\n"
+"                   </option>\n"
+"                </select>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
@@ -62,7 +78,7 @@ msgstr ""
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
 msgid "<small><b>Name</b></small>"
-msgstr ""
+msgstr "<small><b>Vardas</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
@@ -82,12 +98,12 @@ msgstr ""
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
 msgid "<small>Payment Details (test data)</small>"
-msgstr ""
+msgstr "<small>Mokėjimo duomenys (bandomieji duomenys)</small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
 msgid "<small>Payment Status</small>"
-msgstr ""
+msgstr "<small>Mokėjimo būsena</small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
@@ -205,12 +221,12 @@ msgstr "Mokėjimo operacija"
 #. odoo-javascript
 #: code:addons/payment_demo/static/src/js/payment_demo_mixin.js:0
 msgid "Payment processing failed"
-msgstr ""
+msgstr "Mokėjimo apdorojimas nepavyko"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
 msgid "Payments made with this payment method will be <b>successful</b>."
-msgstr ""
+msgstr "Mokėjimai, atlikti naudojant šį mokėjimo būdą, bus <b>sėkmingi</b>."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
@@ -218,11 +234,15 @@ msgid ""
 "Payments made with this payment method will be automatically <b>cancelled</"
 "b>."
 msgstr ""
+"Mokėjimai, atlikti naudojant šį mokėjimo būdą, bus automatiškai <b>atšaukti</"
+"b>."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
 msgid "Payments made with this payment method will remain <b>pending</b>."
 msgstr ""
+"Mokėjimai, atlikti naudojant šį mokėjimo būdą, liks „ <b>“ (laukiami) "
+"statusu, kol bus atliktas „</b> “ (patvirtinimas)."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
@@ -230,6 +250,8 @@ msgid ""
 "Payments made with this payment method will simulate a processing <b>error</"
 "b>."
 msgstr ""
+"Mokėjimai, atlikti naudojant šį mokėjimo būdą, imituos apdorojimo klaidą „ "
+"<b>“</b>."
 
 #. module: payment_demo
 #: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__pending
@@ -265,7 +287,7 @@ msgstr ""
 #. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "Šio mokėjimo paslaugų teikėjo techninis kodas."
 
 #. module: payment_demo
 #. odoo-python
@@ -293,4 +315,4 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_demo/models/payment_transaction.py:0
 msgid "You selected the following demo payment status: %s"
-msgstr ""
+msgstr "Jūs pasirinkote šį demonstracinį mokėjimo statusą: %s"

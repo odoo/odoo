@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:40+0000\n"
-"PO-Revision-Date: 2026-10-20 11:59+0000\n"
+"POT-Creation-Date: 2026-10-24 17:38+0000\n"
+"PO-Revision-Date: 2026-10-27 15:39+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-18/payment/zh_Hans/>\n"
@@ -86,10 +86,10 @@ msgid ""
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture "
-"!= 'full_only'\" title=\"Some of the transactions you intend to capture can "
-"only be captured in full. Handle the transactions individually to capture a "
-"partial amount.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" "
+"invisible=\"support_partial_capture != 'full_only'\" title=\"Some of the "
+"transactions you intend to capture can only be captured in full. Handle the "
+"transactions individually to capture a partial amount.\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
@@ -255,7 +255,8 @@ msgstr "参考号码%(ref)s的交易已经被启动 (%(provider_name)s)。"
 msgid ""
 "A transaction with reference %(ref)s has been initiated to save a new "
 "payment method (%(provider_name)s)"
-msgstr "参考号码%(ref)s的交易已经被启动来保存一个新的支付方式 (%(provider_name)s)。"
+msgstr ""
+"参考号码%(ref)s的交易已经被启动来保存一个新的支付方式 (%(provider_name)s)。"
 
 #. module: payment
 #. odoo-python
@@ -264,8 +265,8 @@ msgid ""
 "A transaction with reference %(ref)s has been initiated using the payment "
 "method %(token)s (%(provider_name)s)."
 msgstr ""
-"使用支付方式%(token)s (%(provider_name)s)的带参考号码%(ref)s的交易已经被启动"
-"。"
+"使用支付方式%(token)s (%(provider_name)s)的带参考号码%(ref)s的交易已经被启"
+"动。"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ach_direct_debit
@@ -2640,7 +2641,8 @@ msgstr "公司的主要币别，用于显示币别字段。"
 msgid ""
 "The maximum payment amount that this payment provider is available for. "
 "Leave blank to make it available for any payment amount."
-msgstr "这个支付提供商可用的最大支付金额。如果没有设置，任何支付金额都是可用的。"
+msgstr ""
+"这个支付提供商可用的最大支付金额。如果没有设置，任何支付金额都是可用的。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__auth_msg
@@ -2857,7 +2859,8 @@ msgstr ""
 msgid ""
 "This payment method needs a partner in crime; you should enable a payment "
 "provider supporting this method first."
-msgstr "这种付款方式需要一个合作伙伴；您应首先启用支持这种付款方式的付款提供商。"
+msgstr ""
+"这种付款方式需要一个合作伙伴；您应首先启用支持这种付款方式的付款提供商。"
 
 #. module: payment
 #. odoo-python
@@ -2893,7 +2896,8 @@ msgstr "令牌化"
 msgid ""
 "Tokenization is the process of saving the payment details as a token that "
 "can later be reused without having to enter the payment details again."
-msgstr "令牌化是将支付信息保存为令牌的过程，以后无需再次输入支付信息即可重复使用。"
+msgstr ""
+"令牌化是将支付信息保存为令牌的过程，以后无需再次输入支付信息即可重复使用。"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_toss_pay
@@ -3297,10 +3301,14 @@ msgid "Zalopay"
 msgstr "Zalopay"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
 #: model:payment.method,name:payment.payment_method_zip
 msgid "Zip"
 msgstr "邮政编码"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
+msgid "Zip Code"
+msgstr "邮编"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cofidis

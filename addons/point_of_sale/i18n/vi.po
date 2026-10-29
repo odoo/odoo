@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:38+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-10-20 13:10+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-18/"
@@ -207,8 +207,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <h4>\n"
-"        Xin chào <t t-out=\"object.partner_id.name or 'Valuable Customer'\">"
-"Azure Interior</t>,\n"
+"        Xin chào <t t-out=\"object.partner_id.name or 'Valuable "
+"Customer'\">Azure Interior</t>,\n"
 "    </h4>\n"
 "    <p style=\"font-size: 13px;\">\n"
 "Chúng tôi có chương trình khuyến mãi dành riêng cho bạn, nhưng có giới hạn "
@@ -250,8 +250,9 @@ msgid ""
 "(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
 "(company_name)s. </p>"
 msgstr ""
-"<p>Xin chào %(client_name)s,<br/>Đây là Biên lai của bạn %(is_invoiced)s cho"
-"             %(pos_name)s với số tiền là %(amount)s từ %(company_name)s. </p>"
+"<p>Xin chào %(client_name)s,<br/>Đây là Biên lai của bạn %(is_invoiced)s "
+"cho             %(pos_name)s với số tiền là %(amount)s từ %(company_name)s. "
+"</p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -840,8 +841,8 @@ msgstr "Chênh lệch số tiền được phép"
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "Amount for %(old_pm)s changed from %(old_amount)s to %(new_amount)s"
 msgstr ""
-"Số tiền cho %(old_pm)s đã được thay đổi từ %(old_amount)s thành %(new_amount)"
-"s"
+"Số tiền cho %(old_pm)s đã được thay đổi từ %(old_amount)s thành %"
+"(new_amount)s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__amount_to_balance
@@ -2096,6 +2097,7 @@ msgstr "Đang kết nối với Hộp IoT"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/errors/error_handlers.js:0
+#: code:addons/point_of_sale/static/src/app/store/opening_control_popup/opening_control_popup.js:0
 msgid "Connection Lost"
 msgstr "Mất kết nối"
 
@@ -4500,7 +4502,8 @@ msgstr "Không tìm thấy thêm khách hàng nào cho \"%s\"."
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
 "No open session available. Please open a new session to capture the order."
-msgstr "Không có phiên đang mở nào. Vui lòng mở phiên mới để ghi nhận đơn hàng."
+msgstr ""
+"Không có phiên đang mở nào. Vui lòng mở phiên mới để ghi nhận đơn hàng."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_form
@@ -4670,6 +4673,12 @@ msgstr "Hiện có:"
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Ongoing"
 msgstr "Đang diễn ra"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Only Point of Sale managers can modify a Point of Sale configuration."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5439,8 +5448,8 @@ msgstr ""
 msgid ""
 "Please enter your billing information <small class=\"text-muted\">or</small>"
 msgstr ""
-"Vui lòng nhập thông tin nhận hoá đơn của bạn <small class=\"text-muted\">"
-"hoặc</small>"
+"Vui lòng nhập thông tin nhận hoá đơn của bạn <small class=\"text-"
+"muted\">hoặc</small>"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5724,7 +5733,8 @@ msgstr "POS"
 #: model:product.template,description_sale:point_of_sale.product_crocheted_poncho_unisize_product_template
 msgid ""
 "Poncho in a soft, crochet-look knit with a round, gently draped neckline."
-msgstr "Poncho kiểu đan móc mềm mại với đường viền cổ tròn, rủ xuống nhẹ nhàng."
+msgstr ""
+"Poncho kiểu đan móc mềm mại với đường viền cổ tròn, rủ xuống nhẹ nhàng."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__access_url
@@ -5768,6 +5778,7 @@ msgid "Pos Order Count"
 msgstr "Số đơn hàng POS"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_account_tax__pos_order_line_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__pos_order_line_id
 msgid "Pos Order Line"
 msgstr "Dòng đơn hàng Pos"
@@ -7742,6 +7753,14 @@ msgid ""
 msgstr "Chiến lược làm tròn tiền mặt của POS %(pos)s phải là: '%(value)s' "
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid ""
+"The combo choice '%s' is no longer available in this combo. Please reload "
+"your data."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
 msgid ""
@@ -7962,6 +7981,12 @@ msgstr "Màn hình biên lai sẽ được bỏ qua nếu biên lai có thể đ
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_iface_print_auto
 msgid "The receipt will automatically be printed at the end of each order."
 msgstr "Biên lai sẽ được tự động in khi kết thúc mỗi lần đặt hàng. "
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/opening_control_popup/opening_control_popup.js:0
+msgid "The register cannot be opened while offline. Please try again."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8904,7 +8929,8 @@ msgstr "Chế độ xem"
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.jean_jacket_product_template
 msgid "Vintage jean jacket, a timeless piece for any casual outfit."
-msgstr "Áo khoác jean cổ điển, món đồ vượt thời gian cho mọi trang phục casual."
+msgstr ""
+"Áo khoác jean cổ điển, món đồ vượt thời gian cho mọi trang phục casual."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -9235,6 +9261,14 @@ msgstr "Bạn không thể thay đổi thanh toán đối với đơn hàng đã
 msgid "You cannot invoice orders belonging to different companies."
 msgstr ""
 "Bạn không thể lập hoá đơn cho các đơn hàng thuộc về những công ty khác nhau."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_fiscal_position_tax.py:0
+msgid ""
+"You cannot modify a fiscal position used in a POS order. You should archive "
+"it and create a new one."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python

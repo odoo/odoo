@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-10-20 11:30+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"PO-Revision-Date: 2026-10-28 06:33+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-18/mail/fr/>"
 "\n"
@@ -169,11 +169,11 @@ msgid ""
 "(bold_end)s to insert a canned response in your message."
 msgstr ""
 "%(new_line)s%(new_line)sTapez %(bold_start)s@username%(bold_end)s pour "
-"mentionner quelqu'un et attirer son attention.%(new_line)sTapez %(bold_start)"
-"s#channel%(bold_end)s pour mentionner un canal.%(new_line)sTapez %"
-"(bold_start)s/command%(bold_end)s pour exécuter une commande.%(new_line)"
-"sTapez %(bold_start)s:shortcut%(bold_end)s pour insérer une réponse standard "
-"dans votre message."
+"mentionner quelqu'un et attirer son attention.%(new_line)sTapez %"
+"(bold_start)s#channel%(bold_end)s pour mentionner un canal.%(new_line)sTapez "
+"%(bold_start)s/command%(bold_end)s pour exécuter une commande.%"
+"(new_line)sTapez %(bold_start)s:shortcut%(bold_end)s pour insérer une "
+"réponse standard dans votre message."
 
 #. module: mail
 #. odoo-javascript
@@ -193,8 +193,8 @@ msgid ""
 "(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
 "%(open_samp)sÉchap%(close_samp)s %(open_em)spour %(open_cancel)sannuler%"
-"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %(open_em)"
-"spour %(open_save)sEnregistrer%(close_save)s%(close_em)s"
+"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %"
+"(open_em)spour %(open_save)sEnregistrer%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -205,8 +205,8 @@ msgid ""
 "(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
 "%(open_samp)sÉchap%(close_samp)s %(open_em)spour %(open_cancel)sannuler%"
-"(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %(open_em)"
-"spour %(open_save)senregistrer%(close_save)s%(close_em)s"
+"(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %"
+"(open_em)spour %(open_save)senregistrer%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -229,8 +229,8 @@ msgid ""
 "%(user)s started a thread: %(goto)s%(thread_name)s%(goto_end)s. %"
 "(goto_all)sSee all threads%(goto_all_end)s."
 msgstr ""
-"%(user)s a démarré un fil de discussion : %(goto)s%(thread_name)s%(goto_end)"
-"s%(goto_all)s Voir tous les fils de discussion %(goto_all_end)s."
+"%(user)s a démarré un fil de discussion : %(goto)s%(thread_name)s%"
+"(goto_end)s%(goto_all)s Voir tous les fils de discussion %(goto_all_end)s."
 
 #. module: mail
 #. odoo-javascript
@@ -446,8 +446,8 @@ msgid ""
 "Start your message with <i>'/'</i> to get the list of possible commands.</p>"
 msgstr ""
 "<p><b>Ecrivez un message</b> aux membres du canal ici.</p> <p>Vous pouvez "
-"notifier quelqu'un en utilisant<i> '@' </i>ou liez un autre canal avec <i>"
-"'#'</i>. Commencez votre message avec <i>'/'</i> pour avoir la liste des "
+"notifier quelqu'un en utilisant<i> '@' </i>ou liez un autre canal avec "
+"<i>'#'</i>. Commencez votre message avec <i>'/'</i> pour avoir la liste des "
 "commandes possibles. </p>"
 
 #. module: mail
@@ -648,7 +648,8 @@ msgstr ""
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_message_reaction_partner_or_guest_exists
 msgid "A message reaction must be from a partner or from a guest."
-msgstr "Une réaction à un message doit provenir d'un partenaire ou d'un invité."
+msgstr ""
+"Une réaction à un message doit provenir d'un partenaire ou d'un invité."
 
 #. module: mail
 #. odoo-python
@@ -2056,8 +2057,8 @@ msgstr ""
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Cannot change initial message nor parent channel of: %(channels)s."
 msgstr ""
-"Impossible de modifier le message initial ou le canal parent de : %(channels)"
-"s."
+"Impossible de modifier le message initial ou le canal parent de : %"
+"(channels)s."
 
 #. module: mail
 #. odoo-python
@@ -2278,7 +2279,8 @@ msgstr "Choisissez une autre valeur ou modifiez-la dans l'autre document."
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_schedule__plan_on_demand_user_id
 msgid "Choose assignation for activities with on demand assignation."
-msgstr "Choisir l'assignation pour les activités avec assignation à la demande."
+msgstr ""
+"Choisir l'assignation pour les activités avec assignation à la demande."
 
 #. module: mail
 #. odoo-javascript
@@ -3270,7 +3272,8 @@ msgstr "Discussion : réactiver le son d'un membre du canal"
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_discuss_users_settings_unmute_ir_actions_server
 msgid "Discuss: users settings unmute"
-msgstr "Discussion : désactiver la mise en sourdine des paramètres utilisateurs"
+msgstr ""
+"Discussion : désactiver la mise en sourdine des paramètres utilisateurs"
 
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_channel
@@ -4198,7 +4201,8 @@ msgstr "Le chargement de fichiers est désactivé pour les utilisateurs externes
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/attachment_panel.xml:0
 msgid "File upload is enabled for external users"
-msgstr "Le téléchargement de fichiers est activé pour les utilisateurs externes"
+msgstr ""
+"Le téléchargement de fichiers est activé pour les utilisateurs externes"
 
 #. module: mail
 #. odoo-javascript
@@ -6034,8 +6038,8 @@ msgid ""
 "found (model %(model_name)s)."
 msgstr ""
 "Le compositeur d'e-mails en mode commentaire doit fonctionner sur au moins "
-"un enregistrement. Aucun enregistrement n'a été trouvé (modèle %(model_name)"
-"s)."
+"un enregistrement. Aucun enregistrement n'a été trouvé (modèle %"
+"(model_name)s)."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__is_notification
@@ -6868,8 +6872,8 @@ msgstr ""
 msgid ""
 "No responsible specified for %(activity_type_name)s: %(activity_summary)s."
 msgstr ""
-"Aucun responsable déterminé pour %(activity_type_name)s : %(activity_summary)"
-"s."
+"Aucun responsable déterminé pour %(activity_type_name)s : %"
+"(activity_summary)s."
 
 #. module: mail
 #. odoo-javascript
@@ -7944,6 +7948,12 @@ msgid "Pop out Attachments"
 msgstr "Pièce-jointes pop-out"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_view.js:0
+msgid "Pop out is not supported on mobile."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__port
 msgid "Port"
 msgstr "Port"
@@ -8045,7 +8055,8 @@ msgstr "Appuyez sur Enter pour démarrer"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 msgid "Press a key to register it as the push-to-talk shortcut."
-msgstr "Appuyer sur une touche pour l'enregistrer comme raccourci push-to-talk."
+msgstr ""
+"Appuyer sur une touche pour l'enregistrer comme raccourci push-to-talk."
 
 #. module: mail
 #. odoo-javascript
@@ -9413,6 +9424,12 @@ msgstr "Message mis en favoris"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/web/channel_selector.xml:0
+msgid "Start"
+msgstr "Lancer"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
 msgid "Start a Call"
 msgstr "Démarrer un appel"
@@ -9854,8 +9871,8 @@ msgid ""
 "(activity_type_model)s\"."
 msgstr ""
 "Le type d'activité \"%(activity_type_name)s\" n'est pas compatible avec le "
-"plan \"%(plan_name)s\", car il est limité au modèle \"%(activity_type_model)"
-"s\"."
+"plan \"%(plan_name)s\", car il est limité au modèle \"%"
+"(activity_type_model)s\"."
 
 #. module: mail
 #. odoo-python
@@ -9953,8 +9970,8 @@ msgid ""
 "                 Please make sure you are using the correct address or "
 "contact us at %(default_email)s instead."
 msgstr ""
-"Le message ci-dessous n'a pas été accepté par l'adresse %(alias_display_name)"
-"s.\n"
+"Le message ci-dessous n'a pas été accepté par l'adresse %"
+"(alias_display_name)s.\n"
 "                 Seuls %(contact_description)s sont autorisés à contacter "
 "cette adresse.<br /><br />\n"
 "                 Veuillez vous assurer que vous utilisez la bonne adresse ou "
@@ -9968,8 +9985,8 @@ msgid ""
 "(alias_display_name)s.\n"
 "Please try again later or contact %(company_name)s instead."
 msgstr ""
-"Le message ci-dessous n'a pas été accepté par l'adresse %(alias_display_name)"
-"s.\n"
+"Le message ci-dessous n'a pas été accepté par l'adresse %"
+"(alias_display_name)s.\n"
 "Veuillez réessayer ou contacter %(company_name)s."
 
 #. module: mail
@@ -10941,7 +10958,8 @@ msgstr "Utiliser en lot"
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "Use message_notify to send a notification to an user."
-msgstr "Utiliser message_notify pour envoyer une notification à un utilisateur."
+msgstr ""
+"Utiliser message_notify pour envoyer une notification à un utilisateur."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__template_id
@@ -11939,8 +11957,8 @@ msgstr "par ex. \"E-mail de bienvenue\""
 msgid ""
 "e.g. \"Welcome to MyCompany\" or \"Nice to meet you, {{ object.name }}\""
 msgstr ""
-"par ex. \"Bienvenue à MyCompany\" or \"Ravi de vous rencontrer,  {{ "
-"object.name }}\""
+"par ex. \"Bienvenue à MyCompany\" or \"Ravi de vous rencontrer,  "
+"{{ object.name }}\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form

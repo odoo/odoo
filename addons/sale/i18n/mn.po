@@ -31,9 +31,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-10-20 15:57+0000\n"
-"Last-Translator: ca4mi <mail@ca4mi.net>\n"
+"POT-Creation-Date: 2026-10-24 17:38+0000\n"
+"PO-Revision-Date: 2026-10-28 03:34+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-18/sale/"
 "mn/>\n"
 "Language: mn\n"
@@ -67,13 +67,13 @@ msgstr "# Борлуулалтын захиалгын тоо"
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "%(attribute)s: %(values)s"
-msgstr ""
+msgstr "%(attribute)s: %(values)s"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 msgid "%s has been created"
-msgstr ""
+msgstr "%s үүслээ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -91,6 +91,8 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
+"(object.state in ('draft', 'sent') and 'Үнийн санал - %s' % (object.name)) "
+"or 'Захиалга - %s' % (object.name)"
 
 #. module: sale
 #. odoo-javascript
@@ -98,6 +100,7 @@ msgstr ""
 msgid ""
 "<b>Send the quote</b> to yourself and check what the customer will receive."
 msgstr ""
+"<b>Үнийн саналыг</b> өөртөө илгээж, захиалагч юу хүлээн авахыг шалгаарай."
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_payment_executed
@@ -718,6 +721,8 @@ msgid ""
 "<span invisible=\"advance_payment_method != 'percentage'\" "
 "class=\"oe_inline\">% </span>"
 msgstr ""
+"<span invisible=\"advance_payment_method != 'percentage'\" "
+"class=\"oe_inline\">% </span>"
 
 #. module: sale
 #: model_terms:web_tour.tour,rainbow_man_message:sale.sale_tour
@@ -726,6 +731,9 @@ msgid ""
 "email to validate the quote.\n"
 "        </span>"
 msgstr ""
+"<span><b>Баяр хүргэе</b>, таны анхны үнийн санал илгээгдлээ!<br>Үнийн "
+"саналыг баталгаажуулахын тулд имэйлээ шалгана уу.\n"
+"        </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -764,11 +772,12 @@ msgstr "<span>Татвар</span>"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<span>Warning: This quote contains archived product(s)</span>"
 msgstr ""
+"<span>Анхааруулга: Энэ үнийн санал архивлагдсан бараа агуулж байна</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<span>Warning: this order might be a duplicate of</span>"
-msgstr ""
+msgstr "<span>Анхааруулга: энэ захиалга дараахын давхардал байж магадгүй</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -784,7 +793,7 @@ msgstr "<strong class=\"mr16\">Дэд дүн</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Expiration</strong>"
-msgstr ""
+msgstr "<strong>Дуусах огноо</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -814,17 +823,17 @@ msgstr "<strong>Энэ санал хүчингүй болсон!</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>This quotation has been cancelled.</strong>"
-msgstr ""
+msgstr "<strong>Энэ үнийн санал цуцлагдсан.</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference</strong>"
-msgstr ""
+msgstr "<strong>Таны лавлах дугаар</strong>"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_date_order_conditional_required
 msgid "A confirmed sales order requires a confirmation date."
-msgstr ""
+msgstr "Батлагдсан борлуулалтын захиалгад баталсан огноо шаардлагатай."
 
 #. module: sale
 #. odoo-python
@@ -844,12 +853,15 @@ msgid ""
 "A sale order line's combo item must be among its linked line's available "
 "combo items."
 msgstr ""
+"Борлуулалтын захиалгын мөрийн комбо зүйл нь холбогдсон мөрийн боломжит комбо "
+"зүйлсийн дотор байх ёстой."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "A sale order line's product must match its combo item's product."
 msgstr ""
+"Борлуулалтын захиалгын мөрийн бараа нь комбо зүйлийн бараатай таарах ёстой."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -863,6 +875,8 @@ msgid ""
 "invoicing,according to their invoicing policy (based on ordered or delivered "
 "quantity)."
 msgstr ""
+"Стандарт нэхэмжлэл нь нэхэмжлэх бодлогын дагуу (захиалсан эсвэл хүргэсэн тоо "
+"хэмжээнд үндэслэн) нэхэмжлэхэд бэлэн бүх захиалгын мөрөөр үүснэ."
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
@@ -1003,7 +1017,7 @@ msgstr "Бүлэг нэмэх"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add note"
-msgstr ""
+msgstr "Тэмдэглэл нэмэх"
 
 #. module: sale
 #. odoo-javascript
@@ -1015,7 +1029,7 @@ msgstr "Нэгийг нэмэх"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_list/product_list.js:0
 msgid "Add optional products"
-msgstr ""
+msgstr "Нэмэлт бараа нэмэх"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1025,12 +1039,12 @@ msgstr "Бараа нэмэх"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add section"
-msgstr ""
+msgstr "Бүлэг нэмэх"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Add several variants to an order from a grid"
-msgstr ""
+msgstr "Хүснэгтээс захиалгад хэд хэдэн хувилбар нэмэх"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1064,18 +1078,18 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
 msgid "Already Paid"
-msgstr ""
+msgstr "Аль хэдийн төлсөн"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__amount_invoiced
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_invoiced
 msgid "Already invoiced"
-msgstr ""
+msgstr "Аль хэдийн нэхэмжилсэн"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_amazon
 msgid "Amazon Sync"
-msgstr ""
+msgstr "Amazon синк"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__discount_amount
@@ -1160,7 +1174,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "Are you sure you want to cancel the selected item?"
-msgstr ""
+msgstr "Сонгосон зүйлийг цуцлахдаа итгэлтэй байна уу?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1243,7 +1257,7 @@ msgstr "Баримтын дугаарт тулгуурлах"
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
 msgid "Beat competitors with stunning quotations!"
-msgstr ""
+msgstr "Гайхалтай үнийн саналаар өрсөлдөгчдөө ялаарай!"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__block
@@ -1263,6 +1277,8 @@ msgid ""
 "Boost sales with online payments or signatures, upsells, and a great "
 "customer portal."
 msgstr ""
+"Онлайн төлбөр эсвэл гарын үсэг, нэмэлт борлуулалт, гайхалтай захиалагчийн "
+"порталаар борлуулалтаа өсгөөрэй."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1282,22 +1298,22 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Build your first quotation right here!"
-msgstr ""
+msgstr "Анхны үнийн саналаа яг эндээс үүсгээрэй!"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By paying a <u>down payment</u> of"
-msgstr ""
+msgstr "<u>Урьдчилгаа төлбөр</u> болох"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By paying,"
-msgstr ""
+msgstr "Төлбөр болох"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By signing, you confirm acceptance on behalf of"
-msgstr ""
+msgstr "Гарын үсэг зурснаар та"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__campaign_id
@@ -1339,12 +1355,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_sale_mass_cancel_orders
 msgid "Cancel multiple quotations"
-msgstr ""
+msgstr "Олон үнийн санал цуцлах"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "Cancel quotations"
-msgstr ""
+msgstr "Үнийн санал цуцлах"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__cancel
@@ -1369,6 +1385,18 @@ msgid ""
 "   • For services (and other products), change the 'Invoicing Policy' to "
 "'Prepaid/Fixed Price'.\n"
 msgstr ""
+"Нэхэмжлэл үүсгэх боломжгүй. Нэхэмжлэх зүйл алга.\n"
+"\n"
+"Энэ асуудлыг шийдэхийн тулд дараахыг шалгана уу:\n"
+"   • Барааг нэхэмжлэхээс өмнө хүргэсэн байх.\n"
+"   • Барааны нэхэмжлэх бодлого зөв тохируулагдсан байх.\n"
+"\n"
+"Хэрэв захиалсан тоо хэмжээгээр нэхэмжлэхийг хүсвэл:\n"
+"   • Хэрэглээний эсвэл нөөцлөх барааны хувьд барааг нээж, 'Ерөнхий мэдээлэл' "
+"таб руу орж 'Нэхэмжлэх бодлого'-ыг 'Хүргэсэн тоо хэмжээ'-нээс 'Захиалсан тоо "
+"хэмжээ' болгоно уу.\n"
+"   • Үйлчилгээний (болон бусад барааны) хувьд 'Нэхэмжлэх бодлого'-ыг "
+"'Урьдчилж төлсөн/Тогтмол үнэ' болгоно уу.\n"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1388,7 +1416,7 @@ msgstr "Ангилал"
 #. module: sale
 #: model:product.template,name:sale.product_product_1_product_template
 msgid "Chair floor protection"
-msgstr ""
+msgstr "Сандлын шал хамгаалагч"
 
 #. module: sale
 #. odoo-python
@@ -1398,6 +1426,8 @@ msgid ""
 "adjustments in the details of the lines. You might consider updating the "
 "prices."
 msgstr ""
+"Одоо байгаа үнийн саналын компанийг өөрчлөхөд мөрийн дэлгэрэнгүйд гараар "
+"тохируулга хийх шаардлагатай байж магадгүй. Үнийг шинэчлэх талаар бодоорой."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
@@ -1435,7 +1465,7 @@ msgstr "Багцын бүрэлдэхүүн"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_commission
 msgid "Commissions"
-msgstr ""
+msgstr "Шимтгэл"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_provider__so_reference_type
@@ -1556,7 +1586,7 @@ msgstr "Тохиргоо"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_configurator_dialog/product_configurator_dialog.js:0
 msgid "Configure your product"
-msgstr ""
+msgstr "Бараагаа тохируулах"
 
 #. module: sale
 #. odoo-javascript
@@ -1574,12 +1604,12 @@ msgstr "Баталгаажуулах мэдэгдэл"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Connectors"
-msgstr ""
+msgstr "Холбогчууд"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__consolidated_billing
 msgid "Consolidated Billing"
-msgstr ""
+msgstr "Нэгтгэсэн нэхэмжлэл"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_partner
@@ -1618,7 +1648,7 @@ msgstr "Үүсгэсэн огноо"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create Draft"
-msgstr ""
+msgstr "Ноорог үүсгэх"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__advance_payment_method
@@ -1629,7 +1659,7 @@ msgstr "Нэхэмжлэл үүсгэх"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Create Invoices"
-msgstr ""
+msgstr "Нэхэмжлэл үүсгэх"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.mail_activity_plan_action_sale_order
@@ -1657,7 +1687,7 @@ msgstr "Шинэ үнийн санал бүртгэх, шинэ борлуула
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
 msgid "Create invoice(s)"
-msgstr ""
+msgstr "Нэхэмжлэл үүсгэх"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
@@ -1671,7 +1701,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__service_tracking
 msgid "Create on Order"
-msgstr ""
+msgstr "Захиалгаар үүсгэх"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__consolidated_billing
@@ -1713,6 +1743,8 @@ msgid ""
 "Creation date of draft/sent orders,\n"
 "Confirmation date of confirmed orders."
 msgstr ""
+"Ноорог/илгээсэн захиалгын үүсгэсэн огноо,\n"
+"Батлагдсан захиалгын баталсан огноо."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_provider_onboarding_wizard__payment_method__stripe
@@ -1775,7 +1807,7 @@ msgstr "Захиалагч байгууллага"
 #: model:ir.model.fields,field_description:sale.field_sale_report__industry_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Customer Industry"
-msgstr ""
+msgstr "Захиалагчийн салбар"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__access_url
@@ -1795,12 +1827,12 @@ msgstr "Гарын үсэг"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__state_id
 msgid "Customer State"
-msgstr ""
+msgstr "Захиалагчийн аймаг/муж"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__partner_zip
 msgid "Customer ZIP"
-msgstr ""
+msgstr "Захиалагчийн шуудангийн код"
 
 #. module: sale
 #. odoo-python
@@ -1842,6 +1874,8 @@ msgid ""
 "Days between quotation proposal and expiration. 0 days means automatic "
 "expiration is disabled"
 msgstr ""
+"Үнийн санал илгээснээс дуусах хүртэлх хоног. 0 хоног бол автоматаар дуусах "
+"тохиргоо идэвхгүй."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deduct_down_payments
@@ -1876,11 +1910,13 @@ msgid ""
 "Default period during which the quote is valid and can still be accepted by "
 "the customer. The default can be changed per order or template."
 msgstr ""
+"Үнийн санал хүчинтэй бөгөөд захиалагч хүлээн зөвшөөрөх боломжтой анхдагч "
+"хугацаа. Анхдагчийг захиалга эсвэл загвар бүрээр өөрчилж болно."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__sale_discount_product_id
 msgid "Default product used for discounts"
-msgstr ""
+msgstr "Хөнгөлөлтөд ашиглах анхдагч бараа"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1896,7 +1932,7 @@ msgstr "Хүргэгдсэн"
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Delivered Quantity: %s"
-msgstr ""
+msgstr "Хүргэсэн тоо хэмжээ: %s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__delivery
@@ -1927,7 +1963,7 @@ msgstr "Хүргэлтийн арга"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered
 msgid "Delivery Quantity"
-msgstr ""
+msgstr "Хүргэх тоо хэмжээ"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
@@ -1984,13 +2020,13 @@ msgstr "Хөнгөлөлт %"
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
 msgid "Discount %(percent)s%%"
-msgstr ""
+msgstr "Хөнгөлөлт %(percent)s%%"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
 msgid "Discount %(percent)s%%- On products with the following taxes %(taxes)s"
-msgstr ""
+msgstr "Хөнгөлөлт %(percent)s%%- Дараах татвартай бараанд %(taxes)s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__discount
@@ -2010,12 +2046,12 @@ msgstr "Барааны хөнгөлөлт"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__discount_type
 msgid "Discount Type"
-msgstr ""
+msgstr "Хөнгөлөлтийн төрөл"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_discount
 msgid "Discount Wizard"
-msgstr ""
+msgstr "Хөнгөлөлтийн хөтөч"
 
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
@@ -2026,7 +2062,7 @@ msgstr "Мөр дээрх хөнгөлөлт"
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
 msgid "Discount- On products with the following taxes %(taxes)s"
-msgstr ""
+msgstr "Хөнгөлөлт- Дараах татвартай бараанд %(taxes)s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2041,7 +2077,7 @@ msgstr "Хөнгөлөлт"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_draft_invoice_warning
 msgid "Display Draft Invoice Warning"
-msgstr ""
+msgstr "Ноорог нэхэмжлэлийн анхааруулга харуулах"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_invoice_amount_warning
@@ -2097,13 +2133,13 @@ msgstr "Урьдчилгаа төлбөр"
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Down Payment (Cancelled)"
-msgstr ""
+msgstr "Урьдчилгаа төлбөр (Цуцлагдсан)"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Down Payment (ref: %(reference)s on %(date)s)"
-msgstr ""
+msgstr "Урьдчилгаа төлбөр (лавлах: %(reference)s, %(date)s)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__fixed_amount
@@ -2136,13 +2172,13 @@ msgstr "Урьдчилгаа төлбөр (хувь)"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Down payment <br/>"
-msgstr ""
+msgstr "Урьдчилгаа төлбөр <br/>"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 msgid "Down payment invoice"
-msgstr ""
+msgstr "Урьдчилгаа төлбөрийн нэхэмжлэл"
 
 #. module: sale
 #. odoo-python
@@ -2163,7 +2199,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_category__property_account_downpayment_categ_id
 msgid "Downpayment Account"
-msgstr ""
+msgstr "Урьдчилгаа төлбөрийн данс"
 
 #. module: sale
 #. odoo-python
@@ -2180,7 +2216,7 @@ msgstr "Давхардсан баримтууд"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__duplicated_order_ids
 msgid "Duplicated Order"
-msgstr ""
+msgstr "Давхардсан захиалга"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_easypost
@@ -2211,13 +2247,13 @@ msgstr "Имэйл үүсгэх харилцах цонх"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__invoice_mail_template_id
 msgid "Email sent to the customer once the invoice is available."
-msgstr ""
+msgstr "Нэхэмжлэл бэлэн болмогц захиалагчид илгээх имэйл."
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_template_attribute_line/product_template_attribute_line.js:0
 msgid "Enter a customized value"
-msgstr ""
+msgstr "Тусгай утга оруулна уу"
 
 #. module: sale
 #. odoo-python
@@ -2259,13 +2295,13 @@ msgstr "Өргөтгөсөн шүүлт"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_no_variant_attribute_value_ids
 msgid "Extra Values"
-msgstr ""
+msgstr "Нэмэлт утгууд"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Extra line with %s"
-msgstr ""
+msgstr "%s-тэй нэмэлт мөр"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_fedex
@@ -2293,7 +2329,7 @@ msgstr "Тогтмол дүн"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 msgid "Follow, view or pay your orders"
-msgstr ""
+msgstr "Захиалгуудаа хянах, харах эсвэл төлөх"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
@@ -2329,7 +2365,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Full amount <br/>"
-msgstr ""
+msgstr "Бүтэн дүн <br/>"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__invoiced
@@ -2364,7 +2400,7 @@ msgstr "Онлайн төлбөр батлагдахад нэхэмжлэл ав
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Generated Orders"
-msgstr ""
+msgstr "Үүсгэсэн захиалгууд"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2376,13 +2412,13 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__so_discount
 msgid "Global Discount"
-msgstr ""
+msgstr "Ерөнхий хөнгөлөлт"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Go ahead and send the quotation."
-msgstr ""
+msgstr "Үнийн саналаа илгээгээрэй."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__product_type
@@ -2414,17 +2450,17 @@ msgstr "Бүлэглэлт"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_active_pricelist
 msgid "Has Active Pricelist"
-msgstr ""
+msgstr "Идэвхтэй үнийн хүснэгттэй"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_archived_products
 msgid "Has Archived Products"
-msgstr ""
+msgstr "Архивласан бараатай"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__has_confirmed_order
 msgid "Has Confirmed Order"
-msgstr ""
+msgstr "Батлагдсан захиалгатай"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
@@ -2490,6 +2526,8 @@ msgid ""
 "If set, the SO will invoice in this journal; otherwise the sales journal "
 "with the lowest sequence is used."
 msgstr ""
+"Тохируулсан бол борлуулалтын захиалга энэ журналд нэхэмжлэгдэнэ; үгүй бол "
+"хамгийн бага дугаарлалттай борлуулалтын журналыг ашиглана."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2513,12 +2551,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Immediate"
-msgstr ""
+msgstr "Шууд"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Import Amazon orders and sync deliveries"
-msgstr ""
+msgstr "Amazon захиалга импортлох, хүргэлтийг синк хийх"
 
 #. module: sale
 #. odoo-python
@@ -2529,7 +2567,7 @@ msgstr "Барааны загвар импортлох"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_view_search_catalog
 msgid "In the Order"
-msgstr ""
+msgstr "Захиалгад"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2540,19 +2578,19 @@ msgstr "татвар орсон)"
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
 msgid "Invalid discount amount"
-msgstr ""
+msgstr "Хөнгөлөлтийн дүн буруу"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 msgid "Invalid order."
-msgstr ""
+msgstr "Буруу захиалга."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 msgid "Invalid signature data."
-msgstr ""
+msgstr "Гарын үсгийн өгөгдөл буруу."
 
 #. module: sale
 #. odoo-python
@@ -2612,12 +2650,13 @@ msgstr "Нэхэмжлэлийн төлөв"
 #: code:addons/sale/models/product_template.py:0
 msgid "Invoice after delivery, based on quantities delivered, not ordered."
 msgstr ""
+"Захиалсан биш, хүргэсэн тоо хэмжээнд үндэслэн хүргэлтийн дараа нэхэмжлэх."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
 msgid "Invoice ordered quantities as soon as this service is sold."
-msgstr ""
+msgstr "Энэ үйлчилгээ борлуулагдмагц захиалсан тоо хэмжээгээр нэхэмжлэх."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced
@@ -2658,13 +2697,13 @@ msgstr "Нэхэмжилсэн тоо хэмжээ"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced_posted
 msgid "Invoiced Quantity (posted)"
-msgstr ""
+msgstr "Нэхэмжилсэн тоо хэмжээ (батлагдсан)"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Invoiced Quantity: %s"
-msgstr ""
+msgstr "Нэхэмжилсэн тоо хэмжээ: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced
@@ -2748,7 +2787,7 @@ msgstr "Дагагч эсэх"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_product_archived
 msgid "Is Product Archived"
-msgstr ""
+msgstr "Бараа архивлагдсан эсэх"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_downpayment
@@ -2775,7 +2814,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Issued Date"
-msgstr ""
+msgstr "Олгосон огноо"
 
 #. module: sale
 #. odoo-python
@@ -2849,7 +2888,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Let’s create a beautiful quotation in a few clicks ."
-msgstr ""
+msgstr "Хэдхэн товшилтоор гоё үнийн санал үүсгэцгээе."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__linked_line_id
@@ -2859,12 +2898,12 @@ msgstr "Холбоотой захиалгын мөр"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__linked_line_ids
 msgid "Linked Order Lines"
-msgstr ""
+msgstr "Холбогдсон захиалгын мөрүүд"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__linked_virtual_id
 msgid "Linked Virtual"
-msgstr ""
+msgstr "Холбогдсон виртуал"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2885,7 +2924,7 @@ msgstr "Түгжигдсэн"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__locked
 msgid "Locked orders cannot be modified."
-msgstr ""
+msgstr "Түгжигдсэн захиалгыг өөрчлөх боломжгүй."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__template_id
@@ -2898,16 +2937,19 @@ msgid ""
 "Make your quote attractive by adding header pages, product descriptions and "
 "footer pages to your quote."
 msgstr ""
+"Үнийн саналдаа толгой хуудас, барааны тайлбар болон хөл хуудас нэмж "
+"сонирхолтой болгоорой."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage Promotions, Coupons, Loyalty cards, Gift cards & eWallet"
 msgstr ""
+"Урамшуулал, купон, урамшууллын карт, бэлгийн карт ба цахим түрийвч удирдах"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage Sales & teams targets and commissions"
-msgstr ""
+msgstr "Борлуулалт ба багийн зорилт, шимтгэлийг удирдах"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__manual
@@ -3013,7 +3055,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Mitchell Admin"
-msgstr ""
+msgstr "Mitchell Admin"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__my_activity_date_deadline
@@ -3086,7 +3128,7 @@ msgstr "Хавсаргасан файл алга"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "No further requirements for this payment"
-msgstr ""
+msgstr "Энэ төлбөрт нэмэлт шаардлага алга"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3169,7 +3211,7 @@ msgstr "Оффисын сандал таны шалыг гэмтээж болн�
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__sol_discount
 msgid "On All Order Lines"
-msgstr ""
+msgstr "Бүх захиалгын мөрөнд"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on_sale__sale_order
@@ -3198,8 +3240,8 @@ msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales order."
 "<br> You will be able to create an invoice and collect the payment."
 msgstr ""
-"Үнийн санал захиалагчаар баталгаажвал борлуулалтын захиалга болж "
-"хувирна.<br> Улмаар та нэхэмжлэл үүсгэх, төлбөр цуглуулах боломжтой болно."
+"Үнийн санал захиалагчаар баталгаажвал борлуулалтын захиалга болж хувирна."
+"<br> Улмаар та нэхэмжлэл үүсгэх, төлбөр цуглуулах боломжтой болно."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders
@@ -3235,24 +3277,26 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__require_signature
 msgid "Online signature"
-msgstr ""
+msgstr "Онлайн гарын үсэг"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount_invoiced
 msgid "Only confirmed down payments are considered."
-msgstr ""
+msgstr "Зөвхөн батлагдсан урьдчилгаа төлбөрийг тооцно."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Only draft orders can be marked as sent directly."
-msgstr ""
+msgstr "Зөвхөн ноорог захиалгыг шууд илгээсэн гэж тэмдэглэх боломжтой."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_product_attribute_custom_value_sol_custom_value_unique
 msgid ""
 "Only one Custom Value is allowed per Attribute Value per Sales Order Line."
 msgstr ""
+"Борлуулалтын захиалгын мөр бүрт шинж чанарын утга тус бүрд зөвхөн нэг тусгай "
+"утга зөвшөөрөгдөнө."
 
 #. module: sale
 #. odoo-python
@@ -3342,12 +3386,12 @@ msgstr "Захиалгын огноо"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Order Date: Last 365 Days"
-msgstr ""
+msgstr "Захиалгын огноо: Сүүлийн 365 хоног"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__invoice_status
 msgid "Order Invoice Status"
-msgstr ""
+msgstr "Захиалгын нэхэмжлэлийн төлөв"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
@@ -3387,7 +3431,7 @@ msgstr "Нэхэмжлэвэл зохих захиалга"
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Ordered Quantity: %(old_qty)s -> %(new_qty)s"
-msgstr ""
+msgstr "Захиалсан тоо хэмжээ: %(old_qty)s -> %(new_qty)s"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__invoice_policy
@@ -3426,7 +3470,7 @@ msgstr "Дутуу нэхэмжилсэн захиалга"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Oscar Morgan"
-msgstr ""
+msgstr "Oscar Morgan"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3442,7 +3486,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "PDF Quote builder"
-msgstr ""
+msgstr "PDF үнийн санал бүтээгч"
 
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
@@ -3472,7 +3516,7 @@ msgstr "Одоо төлөх"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__other
 msgid "Pay with another payment provider"
-msgstr ""
+msgstr "Өөр төлбөрийн үйлчилгээ үзүүлэгчээр төлөх"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__paypal
@@ -3539,7 +3583,7 @@ msgstr "Төлбөрийн гүйлгээнүүд"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_paid
 msgid "Payment Transactions Amount"
-msgstr ""
+msgstr "Төлбөрийн гүйлгээний дүн"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -3568,7 +3612,7 @@ msgstr ""
 #: code:addons/sale/models/res_company.py:0
 #: code:addons/sale/models/sale_order.py:0
 msgid "Prepayment percentage must be a valid percentage."
-msgstr ""
+msgstr "Урьдчилгаа төлбөрийн хувь хүчинтэй хувь байх ёстой."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3589,7 +3633,7 @@ msgstr "Эцсийн үнэ татваргүй"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxinc
 msgid "Price Reduce Tax incl"
-msgstr ""
+msgstr "Хөнгөлөгдсөн үнэ татвартай"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__pricelist_id
@@ -3672,7 +3716,7 @@ msgstr "Барааны ангилал"
 #. module: sale
 #: model:ir.model,name:sale.model_product_document
 msgid "Product Document"
-msgstr ""
+msgstr "Барааны баримт"
 
 #. module: sale
 #. odoo-javascript
@@ -3704,7 +3748,7 @@ msgstr "Барааны төрөл"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_readonly
 msgid "Product Uom Readonly"
-msgstr ""
+msgstr "Барааны хэмжих нэгж зөвхөн унших"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_product
@@ -3750,7 +3794,7 @@ msgstr "Бараа"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Promotions, Loyalty & Gift Card"
-msgstr ""
+msgstr "Урамшуулал, урамшууллын хөтөлбөр ба бэлгийн карт"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
@@ -3800,7 +3844,7 @@ msgstr "Тоо хэмжээ"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_to_invoice
 msgid "Quantity To Invoice"
-msgstr ""
+msgstr "Нэхэмжлэх тоо хэмжээ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3846,12 +3890,13 @@ msgstr "Үнийн санал илгээгдсэн"
 #: code:addons/sale/wizard/res_config_settings.py:0
 msgid "Quotation Validity is required and must be greater or equal to 0."
 msgstr ""
+"Үнийн саналын хүчинтэй хугацаа заавал бөгөөд 0-ээс их буюу тэнцүү байх ёстой."
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_viewed
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_viewed
 msgid "Quotation Viewed"
-msgstr ""
+msgstr "Үнийн санал харагдсан"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
@@ -3869,7 +3914,7 @@ msgstr "Үнийн санал илгээгдсэн"
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 msgid "Quotation viewed by customer %s"
-msgstr ""
+msgstr "Захиалагч %s үнийн саналыг харсан"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
@@ -3890,7 +3935,7 @@ msgstr "Үнийн саналууд"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quotations & Orders"
-msgstr ""
+msgstr "Үнийн санал ба захиалгууд"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
@@ -3905,7 +3950,7 @@ msgstr "Үнийн саналууд болон Борлуулалтууд"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 msgid "Quotations to review"
-msgstr ""
+msgstr "Хянах үнийн саналууд"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__rating_ids
@@ -3916,13 +3961,13 @@ msgstr "Үнэлгээнүүд"
 #: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__expense_policy
 msgid "Re-Invoice Costs"
-msgstr ""
+msgstr "Зардлыг дахин нэхэмжлэх"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__visible_expense_policy
 msgid "Re-Invoice Policy visible"
-msgstr ""
+msgstr "Дахин нэхэмжлэх бодлого харагдах"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__recipient_ids
@@ -3932,7 +3977,7 @@ msgstr "Хүлээн авагчид"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_view_form
 msgid "Recommend when 'Adding to Cart' or quotation"
-msgstr ""
+msgstr "'Сагсанд нэмэх' эсвэл үнийн санал үүсгэх үед санал болгох"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3947,7 +3992,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__origin
 msgid "Reference of the document that generated this sales order request"
-msgstr ""
+msgstr "Энэ борлуулалтын захиалгын хүсэлтийг үүсгэсэн баримтын лавлах дугаар"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__delivered
@@ -3989,7 +4034,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_signature
 msgid "Request a online signature from the customer to confirm the order."
-msgstr ""
+msgstr "Захиалгыг баталгаажуулахын тулд захиалагчаас онлайн гарын үсэг хүсэх."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3997,6 +4042,8 @@ msgid ""
 "Request a payment to confirm orders, in full (100%) or partial. The default "
 "can be changed per order or template."
 msgstr ""
+"Захиалгыг баталгаажуулахын тулд бүтэн (100%) эсвэл хэсэгчилсэн төлбөр хүсэх. "
+"Анхдагчийг захиалга эсвэл загвар бүрээр өөрчилж болно."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4004,6 +4051,8 @@ msgid ""
 "Request customers to sign quotations to validate orders. The default can be "
 "changed per order or template."
 msgstr ""
+"Захиалгыг баталгаажуулахын тулд захиалагчдаас үнийн санал дээр гарын үсэг "
+"зурахыг хүсэх. Анхдагчийг захиалга эсвэл загвар бүрээр өөрчилж болно."
 
 #. module: sale
 #. odoo-python
@@ -4025,12 +4074,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
 msgid "Revenues"
-msgstr ""
+msgstr "Орлого"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__invoiced_amount
 msgid "Revenues generated by the campaign"
-msgstr ""
+msgstr "Кампанит ажлаас олсон орлого"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_sms_error
@@ -4040,7 +4089,7 @@ msgstr "SMS илгээлтийн алдаа"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "SO0000"
-msgstr ""
+msgstr "SO0000"
 
 #. module: sale
 #. odoo-javascript
@@ -4092,7 +4141,7 @@ msgstr "Борлуулалтын захиалга"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__sale_orders_count
 msgid "Sale Orders Count"
-msgstr ""
+msgstr "Борлуулалтын захиалгын тоо"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_provider_onboarding_wizard
@@ -4112,7 +4161,7 @@ msgstr "Борлуулалтанд хэрэглэгдэх төлбөрийн х�
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__sale_order_ids
 msgid "Sale orders to cancel"
-msgstr ""
+msgstr "Цуцлах борлуулалтын захиалгууд"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_packaging__sales
@@ -4147,17 +4196,17 @@ msgstr "Борлуулалтын шинжилгээ"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_customers
 msgid "Sales Analysis By Customers"
-msgstr ""
+msgstr "Захиалагчаарх борлуулалтын шинжилгээ"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_products
 msgid "Sales Analysis By Products"
-msgstr ""
+msgstr "Бараагаарх борлуулалтын шинжилгээ"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
 msgid "Sales Analysis By Salespersons"
-msgstr ""
+msgstr "Борлуулагчаарх борлуулалтын шинжилгээ"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
@@ -4167,7 +4216,7 @@ msgstr "Борлуулалтын шинжилгээ тайлан"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_product_matrix
 msgid "Sales Grid Entry"
-msgstr ""
+msgstr "Борлуулалтын хүснэгтэн оруулга"
 
 #. module: sale
 #. odoo-python
@@ -4284,6 +4333,9 @@ msgid ""
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
 msgstr ""
+"Захиалагчид нэхэмжлэхийн тулд зарцуулсан цагийг нэмэх борлуулалтын захиалгын "
+"мөр. Цагийн хуудасны бичилтийг нэхэмжлэхгүй болгох бол борлуулалтын "
+"захиалгын мөрийг хасна уу."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
@@ -4298,17 +4350,17 @@ msgstr ""
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_confirmation
 msgid "Sales: Order Confirmation"
-msgstr ""
+msgstr "Борлуулалт: Захиалгын баталгаажуулалт"
 
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_payment_executed
 msgid "Sales: Payment Done"
-msgstr ""
+msgstr "Борлуулалт: Төлбөр хийгдсэн"
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
 msgid "Sales: Send Quotation"
-msgstr ""
+msgstr "Борлуулалт: Үнийн санал илгээх"
 
 #. module: sale
 #. odoo-python
@@ -4329,12 +4381,12 @@ msgstr "Борлуулагч"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_reporting_salespeople
 msgid "Salespersons"
-msgstr ""
+msgstr "Борлуулагчид"
 
 #. module: sale
 #: model:ir.model,name:sale.model_mail_scheduled_message
 msgid "Scheduled Message"
-msgstr ""
+msgstr "Төлөвлөсөн зурвас"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4372,7 +4424,7 @@ msgstr "Бараа сонго, эсвэл шинийг үүсгэж ашигла
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__selected_combo_items
 msgid "Selected Combo Items"
-msgstr ""
+msgstr "Сонгосон комбо зүйлс"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__sale_line_warn
@@ -4418,7 +4470,7 @@ msgstr "Нэхэмжлэх батлагдах үед бараатай холбо
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_send_mail
 msgid "Send an email"
-msgstr ""
+msgstr "Имэйл илгээх"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
@@ -4451,7 +4503,7 @@ msgstr ""
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_confirmation
 msgid "Sent to customers on order confirmation"
-msgstr ""
+msgstr "Захиалга батлагдах үед захиалагчдад илгээнэ"
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_payment_executed
@@ -4459,6 +4511,8 @@ msgid ""
 "Sent to customers when a payment is received but doesn't immediately confirm "
 "their order"
 msgstr ""
+"Төлбөр хүлээн авсан боловч захиалга шууд батлагдаагүй үед захиалагчдад "
+"илгээнэ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sequence
@@ -4523,7 +4577,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Sign &amp; Pay"
-msgstr ""
+msgstr "Гарын үсэг зурах &amp; Төлөх"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__digital_signature
@@ -4570,12 +4624,14 @@ msgid ""
 "Some confirmed orders are selected. Their related documents might be\n"
 "                        affected by the cancellation."
 msgstr ""
+"Зарим батлагдсан захиалга сонгогдсон байна. Тэдгээрийн холбогдох баримтууд\n"
+"                        цуцлалтад өртөж болзошгүй."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Some orders are not in a state requiring confirmation."
-msgstr ""
+msgstr "Зарим захиалга баталгаажуулалт шаардах төлөвт биш байна."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__source_id
@@ -4639,17 +4695,17 @@ msgstr "Дэд дүн"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
 msgid "Sum of Quantity"
-msgstr ""
+msgstr "Тоо хэмжээний нийлбэр"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
 msgid "Sum of Total"
-msgstr ""
+msgstr "Нийт дүнгийн нийлбэр"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
 msgid "Sum of Untaxed Total"
-msgstr ""
+msgstr "Татваргүй нийт дүнгийн нийлбэр"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__amount_paid
@@ -4657,6 +4713,8 @@ msgid ""
 "Sum of transactions made in through the online payment form that are in the "
 "state 'done' or 'authorized' and linked to this order."
 msgstr ""
+"Онлайн төлбөрийн маягтаар хийгдсэн, 'хийгдсэн' эсвэл 'зөвшөөрөгдсөн' "
+"төлөвтэй, энэ захиалгатай холбогдсон гүйлгээнүүдийн нийлбэр."
 
 #. module: sale
 #: model:ir.model,name:sale.model_ir_config_parameter
@@ -4703,12 +4761,12 @@ msgstr "Татвартай."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Tax Total"
-msgstr ""
+msgstr "Татварын нийт"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_totals
 msgid "Tax Totals"
-msgstr ""
+msgstr "Татварын нийлбэр"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__tax_calculation_rounding_method
@@ -4735,11 +4793,13 @@ msgid ""
 "Team %(team_name)s has %(sale_order_count)s active sale orders. Consider "
 "cancelling them or archiving the team instead."
 msgstr ""
+"%(team_name)s баг %(sale_order_count)s идэвхтэй борлуулалтын захиалгатай "
+"байна. Тэдгээрийг цуцлах эсвэл оронд нь багийг архивлах талаар бодоорой."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__technical_price_unit
 msgid "Technical Price Unit"
-msgstr ""
+msgstr "Техникийн нэгжийн үнэ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4792,6 +4852,8 @@ msgid ""
 "The Sales Order %(order)s to be reinvoiced is cancelled. You cannot register "
 "an expense on a cancelled Sales Order."
 msgstr ""
+"Дахин нэхэмжлэх %(order)s борлуулалтын захиалга цуцлагдсан. Цуцлагдсан "
+"борлуулалтын захиалгад зардал бүртгэх боломжгүй."
 
 #. module: sale
 #. odoo-python
@@ -4800,6 +4862,8 @@ msgid ""
 "The Sales Order %(order)s to be reinvoiced is currently locked. You cannot "
 "register an expense on a locked Sales Order."
 msgstr ""
+"Дахин нэхэмжлэх %(order)s борлуулалтын захиалга одоогоор түгжигдсэн. "
+"Түгжигдсэн борлуулалтын захиалгад зардал бүртгэх боломжгүй."
 
 #. module: sale
 #. odoo-python
@@ -4808,12 +4872,14 @@ msgid ""
 "The Sales Order %(order)s to be reinvoiced must be validated before "
 "registering expenses."
 msgstr ""
+"Дахин нэхэмжлэх %(order)s борлуулалтын захиалгыг зардал бүртгэхээс өмнө "
+"батлах шаардлагатай."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 msgid "The access token is invalid."
-msgstr ""
+msgstr "Хандах токен хүчингүй байна."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount_to_invoice
@@ -4827,6 +4893,8 @@ msgid ""
 "The company is required, please select one before making any other changes "
 "to the sale order."
 msgstr ""
+"Компани заавал шаардлагатай, борлуулалтын захиалгад өөр өөрчлөлт хийхээс "
+"өмнө нэгийг сонгоно уу."
 
 #. module: sale
 #. odoo-python
@@ -4835,11 +4903,13 @@ msgid ""
 "The delivery date is sooner than the expected date. You may be unable to "
 "honor the delivery date."
 msgstr ""
+"Хүргэлтийн огноо төлөвлөсөн огнооноос эрт байна. Хүргэлтийн огноог биелүүлж "
+"чадахгүй байж магадгүй."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "The fixed amount to be invoiced in advance."
-msgstr ""
+msgstr "Урьдчилан нэхэмжлэх тогтмол дүн."
 
 #. module: sale
 #. odoo-python
@@ -4852,6 +4922,11 @@ msgid ""
 "You can archive these products and recreate them with your company "
 "restriction instead, or leave them as shared product."
 msgstr ""
+"Дараах бараанууд өөр компанийн үнийн санал эсвэл борлуулалтын захиалгад аль "
+"хэдийн ашиглагдсан тул %(company)s компаниар хязгаарлах боломжгүй:\n"
+"%(used_products)s\n"
+"Эдгээр барааг архивлаад компанийн хязгаарлалттайгаар дахин үүсгэх, эсвэл "
+"хуваалцсан бараа хэвээр үлдээж болно."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -4863,6 +4938,12 @@ msgid ""
 "This mode is advised if you issue the final invoice at the order and not "
 "after the delivery."
 msgstr ""
+"Гүйлгээг төлбөрийн үйлчилгээ үзүүлэгч баталгаажуулах үед нэхэмжлэл "
+"автоматаар үүсч, захиалагчийн порталд харагдана.\n"
+"Нэхэмжлэлийг төлөгдсөн гэж тэмдэглэж, төлбөрийн үйлчилгээ үзүүлэгчийн "
+"тохиргоонд заасан төлбөрийн журналд төлбөрийг бүртгэнэ.\n"
+"Эцсийн нэхэмжлэлийг хүргэлтийн дараа биш, захиалгын үед гаргадаг бол энэ "
+"горимыг зөвлөж байна."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4877,6 +4958,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "The new invoice will deduct draft invoices linked to this sale order."
 msgstr ""
+"Шинэ нэхэмжлэл энэ борлуулалтын захиалгатай холбогдсон ноорог "
+"нэхэмжлэлүүдийг хасна."
 
 #. module: sale
 #. odoo-python
@@ -4885,23 +4968,24 @@ msgid ""
 "The number of selected combo items must match the number of available combo "
 "choices."
 msgstr ""
+"Сонгосон комбо зүйлсийн тоо боломжит комбо сонголтын тоотой таарах ёстой."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "The order is not in a state requiring customer payment."
-msgstr ""
+msgstr "Захиалга захиалагчийн төлбөр шаардах төлөвт биш байна."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 msgid "The order is not in a state requiring customer signature."
-msgstr ""
+msgstr "Захиалга захиалагчийн гарын үсэг шаардах төлөвт биш байна."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "The ordered quantity has been updated."
-msgstr ""
+msgstr "Захиалсан тоо хэмжээг шинэчиллээ."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
@@ -4911,12 +4995,12 @@ msgstr "Уг борлуулалтын захиалгын төлбөрийн ха
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "The payment should also be transmitted with love"
-msgstr ""
+msgstr "Төлбөрийг ч бас хайраар илгээх хэрэгтэй"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
 msgid "The percentage of amount to be invoiced in advance."
-msgstr ""
+msgstr "Урьдчилан нэхэмжлэх дүнгийн хувь."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__prepayment_percent
@@ -4929,26 +5013,26 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_res_company__prepayment_percent
 #: model:ir.model.fields,help:sale.field_res_config_settings__prepayment_percent
 msgid "The percentage of the amount needed to be paid to confirm quotations."
-msgstr ""
+msgstr "Үнийн саналыг батлахын тулд төлөх шаардлагатай дүнгийн хувь."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
 msgid "The product (%(product)s) has incompatible values: %(value_list)s"
-msgstr ""
+msgstr "Бараа (%(product)s) нийцэхгүй утгуудтай байна: %(value_list)s"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 msgid "The provided parameters are invalid."
-msgstr ""
+msgstr "Өгөгдсөн параметрүүд буруу байна."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #: code:addons/sale/wizard/payment_link_wizard.py:0
 msgid "The sale order has expired."
-msgstr ""
+msgstr "Борлуулалтын захиалгын хугацаа дууссан."
 
 #. module: sale
 #. odoo-python
@@ -4964,12 +5048,12 @@ msgstr "Одоогоор таны бүртгэлд ямар нэг үнийн с
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "There are currently no sales orders for your account."
-msgstr ""
+msgstr "Таны бүртгэлд одоогоор борлуулалтын захиалга алга."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "There are existing"
-msgstr ""
+msgstr "Одоо байгаа"
 
 #. module: sale
 #. odoo-python
@@ -4979,11 +5063,14 @@ msgid ""
 "yet. You can either use a per-line discount, or ask an administrator to "
 "grant the discount the first time."
 msgstr ""
+"Энэ компанид хөнгөлөлтийн бараа хараахан тохируулаагүй бололтой. Мөр тус "
+"бүрийн хөнгөлөлт ашиглах, эсвэл анх удаа хөнгөлөлт олгохыг администратороос "
+"хүсэх боломжтой."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_category__property_account_downpayment_categ_id
 msgid "This account will be used on Downpayment invoices."
-msgstr ""
+msgstr "Энэ дансыг урьдчилгаа төлбөрийн нэхэмжлэлд ашиглана."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5037,13 +5124,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product/product.xml:0
 msgid "This option or combination of options is not available"
-msgstr ""
+msgstr "Энэ сонголт эсвэл сонголтуудын хослол боломжгүй"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/payment_link_wizard.py:0
 msgid "This payment will confirm the quotation."
-msgstr ""
+msgstr "Энэ төлбөр үнийн саналыг баталгаажуулна."
 
 #. module: sale
 #. odoo-python
@@ -5166,7 +5253,7 @@ msgstr "Нийт татвар"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Total Tax Excluded"
-msgstr ""
+msgstr "Татваргүй нийт"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
@@ -5220,12 +5307,12 @@ msgstr "Бичлэг дээрх асуудал бүхий ажилбарын т�
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Type to find a customer..."
-msgstr ""
+msgstr "Захиалагч хайхын тулд бичнэ үү..."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Type to find a product..."
-msgstr ""
+msgstr "Бараа хайхын тулд бичнэ үү..."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups
@@ -5248,7 +5335,7 @@ msgstr "UTM Аян"
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__amount_to_invoice
 msgid "Un-invoiced Balance"
-msgstr ""
+msgstr "Нэхэмжлээгүй үлдэгдэл"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_unit
@@ -5332,7 +5419,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Upsell %(order)s for customer %(customer)s"
-msgstr ""
+msgstr "%(customer)s захиалагчид %(order)s нэмэлт борлуулалт"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__upselling
@@ -5346,6 +5433,8 @@ msgstr "Давуулан борлуулах боломж"
 #: model:mail.template,description:sale.email_template_edi_sale
 msgid "Used by salespeople when they send quotations or proforma to prospects"
 msgstr ""
+"Борлуулагчид боломжит захиалагчдад үнийн санал эсвэл урьдчилсан нэхэмжлэл "
+"илгээхэд ашиглана"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -5364,18 +5453,23 @@ msgid ""
 "Validated expenses, vendor bills, or stock pickings (set up to track costs) "
 "can be invoiced to the customer at either cost or sales price."
 msgstr ""
+"Батлагдсан зардал, нийлүүлэгчийн нэхэмжлэл эсвэл (өртөг хянахаар "
+"тохируулсан) агуулахын баримтыг захиалагчид өртгөөр эсвэл борлуулалтын үнээр "
+"нэхэмжилж болно."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__validity_date
 msgid ""
-"Validity of the order, after that you will not able to sign & pay the "
-"quotation."
+"Validity of the quotation. After this date, you will no longer be able to "
+"sign and pay it."
 msgstr ""
+"Үнийн саналын хүчинтэй хугацаа. Энэ огнооноос хойш гарын үсэг зурж, төлөх "
+"боломжгүй болно."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Values set here are company-specific."
-msgstr ""
+msgstr "Энд тохируулсан утгууд компани тус бүрд хамаарна."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5385,18 +5479,18 @@ msgstr "Хувилбарын хүснэгтэн бүртгэл"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "View Details"
-msgstr ""
+msgstr "Дэлгэрэнгүй харах"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "View Quotation"
-msgstr ""
+msgstr "Үнийн санал харах"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__virtual_id
 msgid "Virtual"
-msgstr ""
+msgstr "Виртуал"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5432,7 +5526,7 @@ msgstr "%s-д зориулсан анхааруулга"
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Warning for the change of your quotation's company"
-msgstr ""
+msgstr "Үнийн саналын компани өөрчлөгдөх үеийн анхааруулга"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
@@ -5492,22 +5586,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "You cannot cancel a locked order. Please unlock it first."
-msgstr ""
+msgstr "Түгжигдсэн захиалгыг цуцлах боломжгүй. Эхлээд түгжээг тайлна уу."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "You cannot change the pricelist of a confirmed order !"
-msgstr ""
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/models/product_product.py:0
-#: code:addons/sale/models/product_template.py:0
-msgid ""
-"You cannot change the product's type because it is already used in sales "
-"orders."
-msgstr ""
+msgstr "Батлагдсан захиалгын үнийн хүснэгтийг өөрчлөх боломжгүй!"
 
 #. module: sale
 #. odoo-python
@@ -5523,7 +5608,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "You cannot modify the product of this order line."
-msgstr ""
+msgstr "Энэ захиалгын мөрийн барааг өөрчлөх боломжгүй."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
@@ -5531,6 +5616,8 @@ msgid ""
 "You cannot set a negative number for the default quotation validity. Leave "
 "empty (or 0) to disable the automatic expiration of quotations."
 msgstr ""
+"Үнийн саналын анхдагч хүчинтэй хугацаанд сөрөг тоо тохируулах боломжгүй. "
+"Үнийн саналыг автоматаар дуусгахгүй байх бол хоосон (эсвэл 0) үлдээнэ үү."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
@@ -5540,6 +5627,16 @@ msgid ""
 msgstr ""
 "Та тухайн зүйлийг нөөцлөх, үйлчилгээ эсвэл хангамж төрлөөс нь үл хамааран \n"
 "борлуулах эсвэл худалдан авч л байгаа бол бараа болон бүртгэх шаардлагатай. "
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+msgid ""
+"You should not change the product type because this product is already used "
+"in sales orders. Changing it may affect how the related order lines are "
+"delivered."
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
@@ -5556,7 +5653,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_action_helper/sale_action_helper_dialog.xml:0
 msgid "Your browser does not support iframe."
-msgstr ""
+msgstr "Таны хөтөч iframe-ийг дэмждэггүй."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5599,12 +5696,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "add the price of your product."
-msgstr ""
+msgstr "барааныхаа үнийг нэмнэ үү."
 
 #. module: sale
 #: model:ir.actions.server,name:sale.send_invoice_cron_ir_actions_server
 msgid "automatic invoicing: send ready invoice"
-msgstr ""
+msgstr "автомат нэхэмжлэл: бэлэн нэхэмжлэлийг илгээх"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
@@ -5625,23 +5722,23 @@ msgstr "өдөр"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "for the"
-msgstr ""
+msgstr "-ийн нэрийн өмнөөс"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "for this Sale Order."
-msgstr ""
+msgstr "энэ борлуулалтын захиалгад."
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "let's continue"
-msgstr ""
+msgstr "үргэлжлүүлье"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "quote."
-msgstr ""
+msgstr "дүнтэй үнийн саналыг хүлээн зөвшөөрч байгаагаа баталж байна."
 
 #. module: sale
 #. odoo-python
@@ -5665,7 +5762,7 @@ msgstr "ширхэг"
 #. odoo-javascript
 #: code:addons/sale/static/src/xml/sale_product_field.xml:0
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5680,6 +5777,9 @@ msgid ""
 "== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
+"== 'pending') and 'Pending Order' or 'Order' }} (Дугаар {{ object.name or 'n/"
+"a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale

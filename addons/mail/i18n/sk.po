@@ -17,9 +17,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-10-20 17:22+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"PO-Revision-Date: 2026-10-28 06:34+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-18/mail/sk/>"
 "\n"
 "Language: sk\n"
@@ -184,8 +184,8 @@ msgid ""
 "(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
 "%(open_samp)sEscape%(close_samp)s %(open_em)spre %(open_cancel)szrušenie%"
-"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %(open_em)"
-"spre %(open_save)suloženie%(close_save)s%(close_em)s"
+"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %"
+"(open_em)spre %(open_save)suloženie%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -418,8 +418,8 @@ msgid ""
 "<p><b>Chat with coworkers</b> in real-time using direct messages.</"
 "p><p><i>You might need to invite users from the Settings app first.</i></p>"
 msgstr ""
-"<p><b>Chatuj s kolegami</b> v reálnom čase pomocou direct messages.</p><p><i>"
-"Najprv musíte pozvať užívateľov v nastavení aplikácie.</i></p>"
+"<p><b>Chatuj s kolegami</b> v reálnom čase pomocou direct messages.</"
+"p><p><i>Najprv musíte pozvať užívateľov v nastavení aplikácie.</i></p>"
 
 #. module: mail
 #. odoo-javascript
@@ -429,9 +429,9 @@ msgid ""
 "notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. "
 "Start your message with <i>'/'</i> to get the list of possible commands.</p>"
 msgstr ""
-"<p><b>Napíšte správu</b> členom kanálu.</p> <p>Môžte upozorniť niekoho s <i>"
-"'@'</i> alebo spojiť iný kanál s <i>'#'</i>. Začnite správu s <i>'/'</i> aby "
-"ste videli zoznam všetkých možných príkazov.</p>"
+"<p><b>Napíšte správu</b> členom kanálu.</p> <p>Môžte upozorniť niekoho s "
+"<i>'@'</i> alebo spojiť iný kanál s <i>'#'</i>. Začnite správu s <i>'/'</i> "
+"aby ste videli zoznam všetkých možných príkazov.</p>"
 
 #. module: mail
 #. odoo-javascript
@@ -885,8 +885,8 @@ msgid ""
 msgstr ""
 "Plány aktivít sa používajú na priradenie zoznamu aktivít len niekoľkými "
 "kliknutiami\n"
-"                    (napr. „Nástup“, „Sledovanie potenciálnych zákazníkov“, „"
-"Stretnutie k míľnikom projektu“...)"
+"                    (napr. „Nástup“, „Sledovanie potenciálnych zákazníkov“, "
+"„Stretnutie k míľnikom projektu“...)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_schedule
@@ -1350,7 +1350,8 @@ msgstr "Archivovaný"
 #: code:addons/mail/models/res_users.py:0
 msgid ""
 "Archived because %(user_name)s (#%(user_id)s) deleted the portal account"
-msgstr "Archivovaný, pretože %(user_name)s (#%(user_id)s) zrušil portálový účet"
+msgstr ""
+"Archivovaný, pretože %(user_name)s (#%(user_id)s) zrušil portálový účet"
 
 #. module: mail
 #. odoo-javascript
@@ -2343,7 +2344,8 @@ msgstr "Čiarkou oddelené adresy prijímateľa"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__email_to
 msgid "Comma-separated recipient addresses (placeholders may be used here)"
-msgstr "Čiarkou oddelené adresy prijímateľa (môže tu byť použitý dočasný prvok)"
+msgstr ""
+"Čiarkou oddelené adresy prijímateľa (môže tu byť použitý dočasný prvok)"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__message_type__comment
@@ -4061,8 +4063,8 @@ msgid ""
 "getattr(related_document.relation_field)."
 msgstr ""
 "Pole slúžiace k prepojeniu súvisiaceho modelu k modelu podtypu pri použití "
-"automatického odberu príbuzneho dokumentu. Pole sa používa na výpočet getattr"
-"(related_document.relation_field)."
+"automatického odberu príbuzneho dokumentu. Pole sa používa na výpočet "
+"getattr(related_document.relation_field)."
 
 #. module: mail
 #. odoo-python
@@ -6926,8 +6928,8 @@ msgid ""
 "Notification should receive partners given as a list of IDs (received %"
 "(pids)s)"
 msgstr ""
-"Oznámenie by malo prijímať partnerov uvedených ako zoznam ID (prijaté %(pids)"
-"s)"
+"Oznámenie by malo prijímať partnerov uvedených ako zoznam ID (prijaté %"
+"(pids)s)"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_delete_notification_ir_actions_server
@@ -7806,6 +7808,12 @@ msgstr ""
 #: code:addons/mail/static/src/chatter/web/chatter.xml:0
 msgid "Pop out Attachments"
 msgstr "Zobraziť prílohy"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_view.js:0
+msgid "Pop out is not supported on mobile."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__port
@@ -9267,6 +9275,12 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/web/channel_selector.xml:0
+msgid "Start"
+msgstr "Štart"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
 msgid "Start a Call"
 msgstr ""
@@ -9343,7 +9357,8 @@ msgstr "Stav s časom"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
 msgid "Stay tuned! Enable push notifications to never miss a message."
-msgstr "Sledujte nás! Zapnite push notifikácie, aby vám neunikla žiadna správa."
+msgstr ""
+"Sledujte nás! Zapnite push notifikácie, aby vám neunikla žiadna správa."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__steps_count
@@ -9465,7 +9480,8 @@ msgstr "Navrhnúť ďalšiu aktivitu"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__suggested_next_type_ids
 msgid "Suggest these activities once the current one is marked as done."
-msgstr "Navrhnúť tieto aktivity, akonáhle bude aktuálna označená ako dokončená."
+msgstr ""
+"Navrhnúť tieto aktivity, akonáhle bude aktuálna označená ako dokončená."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__summary
@@ -9799,8 +9815,8 @@ msgid ""
 "contact us at %(default_email)s instead."
 msgstr ""
 "Správa nižšie nemohla byť prijatá adresou %(alias_display_name)s.\n"
-"                 Kontaktovať ju môžu iba %(contact_description)s.<br /><br />"
-"\n"
+"                 Kontaktovať ju môžu iba %(contact_description)s.<br /><br /"
+">\n"
 "                 Uistite sa, že používate správnu adresu, alebo nás "
 "kontaktujte na %(default_email)s."
 
@@ -10066,8 +10082,8 @@ msgstr ""
 msgid ""
 "Those values are not supported as options when rendering: %(param_names)s"
 msgstr ""
-"Tieto hodnoty nie sú podporované ako možnosti pri renderovaní: %(param_names)"
-"s"
+"Tieto hodnoty nie sú podporované ako možnosti pri renderovaní: %"
+"(param_names)s"
 
 #. module: mail
 #. odoo-python
@@ -11154,8 +11170,8 @@ msgid ""
 msgstr ""
 "Pri tlači dokumentov a exporte / importe údajov sa časové hodnoty počítajú "
 "podľa tohto časového pásma.\n"
-"Ak nie je nastavené časové pásmo, použije sa UTC (Coordinated Universal Time)"
-".\n"
+"Ak nie je nastavené časové pásmo, použije sa UTC (Coordinated Universal "
+"Time).\n"
 "Kdekoľvek inde sa časové hodnoty počítajú podľa časového posunu vášho "
 "webového klienta."
 
@@ -11462,7 +11478,8 @@ msgstr "Na abstraktnom modeli nemôžete definovať šablónu: %s"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/message_pin/common/message_model_patch.js:0
 msgid "You sure want this message pinned to %(conversation)s forever and ever?"
-msgstr "Naozaj chcete, aby táto správa bola navždy pripnutá v %(conversation)s?"
+msgstr ""
+"Naozaj chcete, aby táto správa bola navždy pripnutá v %(conversation)s?"
 
 #. module: mail
 #. odoo-javascript
