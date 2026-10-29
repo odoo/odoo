@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.NetworkStatusBar">
+        <!-- STATE: offline, syncing, online -->
+        <span id="pos-network-status"
+            class="ns-edge-top"
+            t-att-data-state="this.state"
+            aria-hidden="true"/>
+    </t>
+</templates>

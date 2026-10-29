@@ -37,8 +37,7 @@ export class ListContainer extends Component {
             <button t-if="this.props.onClickPlus" class="list-plus-btn btn btn-secondary btn-lg flex-shrink-0 lh-lg" t-on-click="this.props.onClickPlus">
                 <i class="oi oi-fw" data-icon="add_circle" aria-hidden="true"/>
             </button>
-            <span t-if="this.props.onClickPlus" class="navbar-separator mx-1"/>
-            <div class="overflow-hidden flex-grow-1">
+            <div class="overflow-hidden flex-grow-1" t-att-class="{'me-1': !this.isUiSmall}">
                 <div t-ref="this.container" class="list-container-items d-flex align-items-center gap-1">
                     <div t-if="!this.props.forceSmall" t-foreach="this.props.items" t-as="item" t-key="item_index" t-att-class="{'invisible order-2': this.shouldBeInvisible(item_index)}">
                         <t t-call-slot="default" item="item"/>
