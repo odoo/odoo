@@ -20,6 +20,11 @@
             <t t-call="google_recaptcha.recaptcha_legal_terms"/>
         </div>
     </t>
+    <t t-name="website.s_website_form_turnstile_legal">
+        <div class="col-12 s_website_form_turnstile" data-name="Turnstile Legal" style="text-align: right;">
+            <t t-call="website_cf_turnstile.turnstile_legal_terms"/>
+        </div>
+    </t>
 
     <!-- Generic Field Layout -->
     <!-- Changes made here needs to be reflected in the different Form view (Contact Us, Jobs, ...) -->

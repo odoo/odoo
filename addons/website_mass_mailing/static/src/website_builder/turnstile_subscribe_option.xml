@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_mass_mailing.TurnstileSubscribeOption">
+
+    <BuilderRow label.translate="Show turnstile Policy" t-if="this.hasTurnstile()">
+        <BuilderCheckbox dataAttributeAction="'toggleTurnstileLegal'" dataAttributeActionValue="'true'" action="'toggleTurnstileLegal'"/>
+    </BuilderRow>
+
+</t>
+</templates>

@@ -48,6 +48,7 @@ export class FormOption extends BaseOptionComponent {
         const { prepareFormModel, applyFormModel, fetchModels } =
             this.dependencies.websiteFormOption;
         this.hasRecaptchaKey = !!session.recaptcha_public_key;
+        this.hasTurnstileKey = !!session.turnstile_site_key;
 
         // Get potential message
         const el = this.env.getEditingElement();

@@ -55,6 +55,9 @@
     <BuilderRow t-if="this.hasRecaptchaKey" label.translate="Show reCaptcha Policy">
         <BuilderCheckbox action="'formToggleRecaptchaLegal'" preview="false"/>
     </BuilderRow>
+    <BuilderRow t-if="this.hasTurnstileKey" label.translate="Show Turnstile Policy">
+        <BuilderCheckbox action="'formToggleTurnstileLegal'" preview="false"/>
+    </BuilderRow>
 </t>
 
 <t t-name="website.s_website_form_form_action_fields_option">

@@ -1,6 +1,7 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { MailingListSubscribeOption } from "./mailing_list_subscribe_option";
 import { RecaptchaSubscribeOption } from "./recaptcha_subscribe_option";
+import { TurnstileSubscribeOption } from "./turnstile_subscribe_option"; 
 import { registry } from "@web/core/registry";
 
 export class NewsletterSubscribeCommonOption extends BaseOptionComponent {
@@ -10,6 +11,7 @@ export class NewsletterSubscribeCommonOption extends BaseOptionComponent {
     static components = {
         MailingListSubscribeOption,
         RecaptchaSubscribeOption,
+        TurnstileSubscribeOption,
     };
 }
 

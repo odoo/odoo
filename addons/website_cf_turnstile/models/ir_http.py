@@ -13,6 +13,13 @@ logger = logging.getLogger(__name__)
 class IrHttp(models.AbstractModel):
     _inherit = 'ir.http'
 
+    def session_info(self):
+        session_info = super().session_info()
+        site_key = self.env['ir.config_parameter'].sudo().get_str('cf.turnstile_site_key')
+        if site_key:
+            session_info['turnstile_site_key'] = site_key
+        return session_info
+
     @api.model
     def get_frontend_session_info(self):
         """Add the Turnstile public key to the given session_info object"""
