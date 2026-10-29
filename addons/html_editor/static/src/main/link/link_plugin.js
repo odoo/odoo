@@ -378,6 +378,7 @@ export class LinkPlugin extends Plugin {
         on_will_paste_handlers: this.updateCurrentLinkSyncState.bind(this),
         on_pasted_handlers: this.onPasteNormalizeLink.bind(this),
         on_selectionchange_handlers: this.handleSelectionChange.bind(this),
+        on_content_updated_handlers: this.updateFontSizedButtonClass.bind(this),
         on_will_remove_handlers: () => this.closeLinkTools(),
         on_content_inserted_handlers: this.onContentInserted.bind(this),
 
@@ -396,10 +397,7 @@ export class LinkPlugin extends Plugin {
             this.clearFontSizedButtonClass.bind(this),
         ],
         html_compatibility_processors: this.moveLinkColorToFont.bind(this),
-        normalize_processors: [
-            this.normalizeLink.bind(this),
-            this.updateFontSizedButtonClass.bind(this),
-        ],
+        normalize_processors: this.normalizeLink.bind(this),
         to_inline_code_processors: (node) => {
             this.removeEmptyLinks(node);
             for (const btn of selectElements(node, "a.btn")) {

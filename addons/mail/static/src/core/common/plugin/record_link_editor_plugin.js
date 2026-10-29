@@ -77,7 +77,6 @@ export class RecordLinkEditorPlugin extends Plugin {
             return fragment;
         }),
         on_content_updated_handlers: () => this.renderEditedRecordLinks(),
-        on_editor_started_handlers: () => this.renderEditedRecordLinks(),
         paste_text_overrides: this.handlePasteText.bind(this),
         // the URLs the html composer pastes as links
         paste_url_overrides: (text) => this.insertRecordLink(text.trim()),
