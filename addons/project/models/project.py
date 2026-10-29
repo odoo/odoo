@@ -1360,6 +1360,18 @@ class Task(models.Model):
     def SELF_WRITABLE_FIELDS(self):
         return PROJECT_TASK_WRITABLE_FIELDS
 
+    def _compute_display_name(self):
+        def has_read_access(record):
+            try:
+                record.check_access_rights('read')
+                record.check_access_rule('read')
+                return True
+            except AccessError:
+                return False
+        inaccessible_records = self.sudo(False).filtered(lambda r: not has_read_access(r))
+        inaccessible_records.display_name = _('Restricted Record')
+        super(Task, self - inaccessible_records)._compute_display_name()
+
     @api.depends('project_id.analytic_account_id')
     def _compute_analytic_account_id(self):
         self.env.remove_to_compute(self._fields['is_analytic_account_id_changed'], self)
