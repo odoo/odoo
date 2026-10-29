@@ -4682,6 +4682,29 @@ test(`calendar with custom quick create view`, async () => {
     expect.verifySteps(["add dialog 2"]);
 });
 
+test(`calendar with custom quick create view: reload after save`, async () => {
+    Event._views["form,2"] = /* xml */ `<form><field name="name"/></form>`;
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" date_stop="stop" all_day="is_all_day" mode="month" quick_create="1" quick_create_view_id="2">
+                <field name="name"/>
+            </calendar>
+        `,
+    });
+    expect(`.fc-event:contains("new event")`).toHaveCount(0);
+
+    await clickAllDaySlot("2016-12-14");
+    expect(`.modal .o_form_view`).toHaveCount(1);
+
+    await contains(`.modal .o_field_widget[name=name] input`).edit("new event");
+    await contains(`.modal-footer .o_form_button_save`).click();
+    expect(`.modal`).toHaveCount(0);
+    expect(`.fc-event:contains("new event")`).toHaveCount(1);
+});
+
 test(`check onWillStartModel is exectuted`, async () => {
     class TestCalendarController extends CalendarController {
         setup() {
