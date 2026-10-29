@@ -199,12 +199,17 @@ class ResPartner(models.Model):
 
     @api.model
     def _validate_partner_autocomplete_response(self, autocomplete_response):
-        if (
-            (vat_number := autocomplete_response.get('vat'))
-            and (enriched_company := self.env.context.get('enriched_company_data'))
-            ):
-            country = self.env['res.country'].browse(enriched_company['country_id']['id']).exists()
+        if not (enriched_company := self.env.context.get('enriched_company_data')):
+            return autocomplete_response
+        country = self.env['res.country'].browse((enriched_company.get('country_id') or {}).get('id')).exists()
+        if vat_number := autocomplete_response.get('vat'):
             autocomplete_response['vat'] = self._run_vat_checks(country, vat_number, validation='setnull')[0]
+        elif (query := enriched_company.get('query')) and country and self._get_vat_validation_method(country.code):
+            # The company may have been found from its VAT number, which the enrichment data does not hold. Only an
+            # actual check of the country can tell whether the query is a VAT number and not a name with digits.
+            vat_number, vat_country_code = self._run_vat_checks(country, query, validation='setnull')
+            if vat_number and vat_country_code == country.code:
+                autocomplete_response['vat'] = vat_number
         return autocomplete_response
 
     @api.model
