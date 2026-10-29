@@ -6,6 +6,7 @@ import { MoveNodePlugin } from "@html_editor/main/movenode_plugin";
 import { user } from "@web/core/user";
 import { t, usePlugin, useProps } from "@odoo/owl";
 import { AllowedQwebExpressionsPlugin } from "@web/views/fields/allowed_qweb_expressions_plugin";
+import { HTML_MAIL_FIELD_PLUGINS } from "@mail/core/common/plugin/plugin_sets";
 
 const cssRulesByElement = new WeakMap();
 
@@ -47,7 +48,10 @@ export class HtmlMailField extends HtmlField {
         if (this.props.disableMoveNodePlugin) {
             disabledPlugins.add(MoveNodePlugin);
         }
-        config.Plugins = config.Plugins.filter((plugin) => !disabledPlugins.has(plugin));
+        config.Plugins = [
+            ...config.Plugins.filter((plugin) => !disabledPlugins.has(plugin)),
+            ...HTML_MAIL_FIELD_PLUGINS,
+        ];
         config.dynamicFieldFilter = this.dynamicFieldFilter.bind(this);
         config.dynamicFieldPreprocess = ({ resModel }) => this.loadAllowedExpressions(resModel);
         config.dynamicFieldPostprocess = this.dynamicFieldPostprocess.bind(this);

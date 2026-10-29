@@ -32,6 +32,7 @@ import { SplitPlugin } from "@html_editor/core/split_plugin";
 import { UserCommandPlugin } from "@html_editor/core/user_command_plugin";
 
 import { DisableImplicitFormatShortcutsPlugin } from "@mail/core/common/plugin/disable_implicit_format_shortcuts_plugin";
+import { ImageSizeAttributesPlugin } from "@mail/core/common/plugin/image_size_attributes_plugin";
 import { MailCodeBlockPlugin } from "@mail/core/common/plugin/mail_code_block_plugin";
 import { MailComposerPlugin } from "@mail/core/common/plugin/mail_composer_plugin";
 import { MentionPlugin } from "@mail/core/common/plugin/mention_plugin";
@@ -110,3 +111,5 @@ export const MAIL_HTML_PLUGINS = [
     ToolbarPlugin,
 ];
 export const MAIL_HTML_PLUGINS_SMALL_UI = MAIL_CORE_PLUGINS;
+
+export const HTML_MAIL_FIELD_PLUGINS = [ImageSizeAttributesPlugin];
