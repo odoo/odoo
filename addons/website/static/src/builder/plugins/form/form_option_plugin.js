@@ -51,6 +51,11 @@ import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils"
 import { isZWS } from "@html_editor/utils/dom_info";
 import { withSequence } from "@html_editor/utils/resource";
 
+/**
+ * @typedef {import("plugins").CSSSelector[]} form_field_anchor_selectors
+ * Elements of a form before which new fields are inserted.
+ */
+
 export const INNER_SNIPPETS_EXCLUDED_FROM_FORMS = [
     ".s_accordion",
     ".s_add_to_cart",
@@ -188,6 +193,7 @@ export class FormOptionPlugin extends Plugin {
             ".row > div:not(.s_website_form_field, .s_website_form_submit, .s_website_form_field *, .s_website_form_submit *)",
             ".s_website_form_label_content",
         ].map((selector) => `.s_website_form form ${selector}`),
+        form_field_anchor_selectors: [".s_website_form_submit", ".s_website_form_recaptcha"],
         clean_for_save_processors: [
             this.removeSuccessMessagePreviews.bind(this),
             this.removeIncompleteRequirements.bind(this),
@@ -438,7 +444,7 @@ export class FormOptionPlugin extends Plugin {
                 const _field = { ...field, formatInfo };
                 _field.type = getDefaultFieldType(_field);
                 const locationEl = el.querySelector(
-                    ".s_website_form_submit, .s_website_form_recaptcha"
+                    this.getResource("form_field_anchor_selectors").join(", ")
                 );
                 locationEl.insertAdjacentElement(
                     "beforebegin",
@@ -541,7 +547,7 @@ export class FormOptionPlugin extends Plugin {
         const fieldEl = renderField(field, this.dependencies.websiteBridge.renderToElement);
         if (editingElement === formEl) {
             const locationEl = formEl.querySelector(
-                ".s_website_form_submit, .s_website_form_recaptcha"
+                this.getResource("form_field_anchor_selectors").join(", ")
             );
             if (locationEl) {
                 locationEl.insertAdjacentElement("beforebegin", fieldEl);
