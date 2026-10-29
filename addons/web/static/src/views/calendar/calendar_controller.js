@@ -290,6 +290,7 @@ export class CalendarController extends Component {
             viewId: this.model.quickCreateFormViewId,
             title: _t("New Event"),
             context,
+            onRecordSaved: () => this.model.load(),
         };
     }
 
