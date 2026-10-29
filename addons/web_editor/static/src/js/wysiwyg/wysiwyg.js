@@ -125,6 +125,7 @@ var Wysiwyg = Widget.extend({
     getValue: function (options) {
         var $editable = options && options.$layout || this.$editor.clone();
         $editable.find('[contenteditable]').removeAttr('contenteditable');
+        $editable.find('.o_we_selected_image').removeClass('o_we_selected_image');
         $editable.find('[class=""]').removeAttr('class');
         $editable.find('[style=""]').removeAttr('style');
         $editable.find('[title=""]').removeAttr('title');
