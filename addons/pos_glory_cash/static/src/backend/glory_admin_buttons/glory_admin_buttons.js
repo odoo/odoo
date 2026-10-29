@@ -32,12 +32,16 @@ export class GloryAdminButtons extends Component {
                     initLNA(this.notification);
                 }
                 if (glory_websocket_address) {
-                    this.gloryService.connect(
-                        glory_websocket_address,
-                        glory_username,
-                        glory_password,
-                        glory_use_lna
-                    );
+                    try {
+                        this.gloryService.connect(
+                            glory_websocket_address,
+                            glory_username,
+                            glory_password,
+                            glory_use_lna
+                        );
+                    } catch (error) {
+                        this.notification.add(error.message, { type: "danger" });
+                    }
                 }
             },
             () => [this.props.record.data]
