@@ -232,6 +232,20 @@ function rejectPosition(errorCallback) {
 }
 
 /**
+ * @param {PermissionName} name
+ * @param {PermissionState} value
+ */
+function setPermission(name, value) {
+    const permission = currentPermissions[name];
+    permission.state = value;
+    for (const permissionStatus of permissionStatuses) {
+        if (permissionStatus._permission === permission) {
+            permissionStatus.dispatchEvent(new Event("change"));
+        }
+    }
+}
+
+/**
  * @param {string} fnName
  */
 function throwNotImplemented(fnName) {
@@ -559,13 +573,7 @@ export function mockPermission(name, value) {
         );
     }
 
-    currentPermissions[name].state = value;
-
-    for (const permissionStatus of permissionStatuses) {
-        if (permissionStatus.name === name) {
-            permissionStatus.dispatchEvent(new Event("change"));
-        }
-    }
+    setPermission(name, value);
 }
 
 /**
