@@ -49,7 +49,6 @@ export class MessageLinkPlugin extends Plugin {
             return root;
         },
         on_content_updated_handlers: () => this.renderMessageLinks(),
-        on_editor_started_handlers: () => this.renderMessageLinks(),
         paste_text_overrides: this.handlePasteText.bind(this),
         selectors_for_feff_providers: () => MESSAGE_LINK_SELECTOR,
     };
