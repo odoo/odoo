@@ -26,10 +26,10 @@ class DiscussMessagingMenuController(WebclientController):
                     ],
                 )
             case "channel":
-                channel_domain = Domain("self_member_id.is_pinned", "=", True)
+                channel_ids = self._get_self_pinned_channel_ids()
                 if self.env.user._is_internal():
-                    channel_domain |= Domain("message_needaction", "=", True)
-                return Domain("channel_type", "=", "channel") & channel_domain
+                    channel_ids += self._get_self_needaction_channel_ids()
+                return Domain("channel_type", "=", "channel") & Domain("id", "in", channel_ids)
             case "meeting":
                 is_video_full_screen = Domain(
                     "default_display_mode",
@@ -68,6 +68,32 @@ class DiscussMessagingMenuController(WebclientController):
         if tab_id == "meeting":
             return self.env["discuss.channel"]._get_meeting_ongoing_domain()
         return
+
+    def _get_self_pinned_channel_ids(self):
+        """Ids of the channels pinned by the current user or guest."""
+        if (channel_ids := self.env.context.get("self_pinned_channel_ids")) is None:
+            members = self.env["discuss.channel.member"].search_fetch(
+                [("is_self", "=", True), ("is_pinned", "=", True)],
+                ["channel_id"],
+            )
+            channel_ids = tuple(members.channel_id.ids)
+            request.update_context(self_pinned_channel_ids=channel_ids)
+        return list(channel_ids)
+
+    def _get_self_needaction_channel_ids(self):
+        """Ids of the channels with messages needing the action of the current user."""
+        if (channel_ids := self.env.context.get("self_needaction_channel_ids")) is None:
+            groups = self.env["mail.message"]._read_group(
+                [
+                    ("model", "=", "discuss.channel"),
+                    ("message_type", "!=", "user_notification"),
+                    ("needaction", "=", True),
+                ],
+                ["res_id"],
+            )
+            channel_ids = tuple(res_id for [res_id] in groups)
+            request.update_context(self_needaction_channel_ids=channel_ids)
+        return list(channel_ids)
 
     def store_messaging_menu_initialize_counters(
         self,

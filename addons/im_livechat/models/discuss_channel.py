@@ -230,6 +230,9 @@ class DiscussChannel(models.Model):
     _livechat_failure_idx = models.Index(
         "(livechat_failure) WHERE livechat_failure IN ('no_answer', 'no_agent')",
     )
+    _livechat_status_need_help_idx = models.Index(
+        "(livechat_status) WHERE livechat_status = 'need_help'",
+    )
     _livechat_is_escalated_idx = models.Index(
         "(livechat_is_escalated) WHERE livechat_is_escalated IS TRUE",
     )
