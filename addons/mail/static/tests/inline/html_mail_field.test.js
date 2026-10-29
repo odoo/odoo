@@ -45,6 +45,11 @@ class CustomMessage extends models.Model {
     _records = [
         { id: 1, title: "first", body: "<p>first</p>" },
         { id: 2, title: "second", body: "<p>second</p>" },
+        {
+            id: 3,
+            title: "images",
+            body: `<p><img src="#" width="50%" height="50%"><img src="#" width="50" height="50"></p>`,
+        },
     ];
 
     _onChanges = {
@@ -94,6 +99,50 @@ test("HtmlMail save inline html", async function () {
     await press("enter");
     expect(".odoo-editor-editable").toHaveInnerHTML("<h1> first </h1>");
 
+    await clickSave();
+    await expect.waitForSteps(["web_save"]);
+});
+
+test("HtmlMail moves `width`, `height` attributes of images to style", async function () {
+    await mountView({
+        type: "form",
+        resId: 3,
+        resModel: "custom.message",
+        arch: `
+        <form>
+            <field name="body" widget="html_mail"/>
+        </form>`,
+    });
+    expect(queryOne("[name='body'] .odoo-editor-editable p").innerHTML).toBe(
+        `<img src="#" style="width: 50%; height: 50%;"><img src="#" style="width: 50px; height: 50px;">`
+    );
+});
+
+test("HtmlMail re-applies `width`, `height` attributes of images on save", async function () {
+    onRpc("web_save", ({ args }) => {
+        const images = new DOMParser()
+            .parseFromString(args[1].body, "text/html")
+            .querySelectorAll("img");
+        expect(images).toHaveLength(2);
+        for (const img of images) {
+            expect(img).toHaveAttribute("width");
+            expect(img).toHaveAttribute("height");
+        }
+        expect(images[1]).toHaveAttribute("width", "50");
+        expect(images[1]).toHaveAttribute("height", "50");
+        expect.step("web_save");
+    });
+    await mountView({
+        type: "form",
+        resId: 3,
+        resModel: "custom.message",
+        arch: `
+        <form>
+            <field name="body" widget="html_mail"/>
+        </form>`,
+    });
+    setSelectionInHtmlField();
+    await insertText(htmlEditor, "a");
     await clickSave();
     await expect.waitForSteps(["web_save"]);
 });

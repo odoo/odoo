@@ -213,24 +213,13 @@ test("Convert self closing elements to opening/closing tags", async () => {
     });
 });
 
-test("Remove `width`, `height` attributes from image and apply them to style", async () => {
-    const { el } = await setupEditor(`
-        <div>
-            <img src="#" width="50%" height="50%">
-        </div>
-    `);
-    expect(el.innerHTML.trim().replace(/\s+/g, " ")).toBe(
-        `<div class="o-paragraph"> <img src="#" style="width: 50%; height: 50%;"> </div>`
-    );
-});
-
-test("Remove `width`, `height` attributes from image and apply them to style with default unit (px)", async () => {
+test("Keep `width`, `height` attributes on image", async () => {
     const { el } = await setupEditor(`
         <div>
             <img src="#" width="50" height="50">
         </div>
     `);
     expect(el.innerHTML.trim().replace(/\s+/g, " ")).toBe(
-        `<div class="o-paragraph"> <img src="#" style="width: 50px; height: 50px;"> </div>`
+        `<div class="o-paragraph"> <img src="#" width="50" height="50"> </div>`
     );
 });
