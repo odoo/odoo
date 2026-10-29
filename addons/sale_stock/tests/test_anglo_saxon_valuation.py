@@ -1103,6 +1103,44 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
             {'account_id': self.account_expense.id, 'debit': 20, 'credit': 0},
         ])
 
+    def test_fifo_partial_invoices_cogs_decrease(self):
+        """ In FIFO, Deliver 100 at $10 -> Invoice 50 -> Deliver 900 at $1 -> Invoice 50 -> Invoice 50
+        The delivered units now cost $1.9 on average, so the 100 invoiced units cost $190 while $500
+        of COGS were already posted: the second invoice must credit $310 of COGS, the third debit $95.
+        """
+        self.product_fifo_auto.invoice_policy = 'delivery'
+        self._make_in_move(self.product_fifo_auto, 100, 10)
+        self._make_in_move(self.product_fifo_auto, 900, 1)
+
+        sale_order = self._so_deliver(self.product_fifo_auto, 1000, 20, picking=False)
+        delivery = sale_order.picking_ids
+        delivery.move_ids.write({'quantity': 100, 'picked': True})
+        Form.from_action(self.env, delivery.button_validate()).save().process()
+
+        invoice_1 = sale_order._create_invoices()
+        invoice_1.invoice_line_ids.quantity = 50
+        invoice_1.action_post()
+
+        backorder = sale_order.picking_ids - delivery
+        backorder.move_ids.write({'quantity': 900, 'picked': True})
+        backorder.button_validate()
+
+        invoice_2 = sale_order._create_invoices()
+        invoice_2.invoice_line_ids.quantity = 50
+        invoice_2.action_post()
+        invoice_3 = sale_order._create_invoices()
+        invoice_3.invoice_line_ids.quantity = 50
+        invoice_3.action_post()
+
+        self.assertRecordValues((invoice_1 | invoice_2 | invoice_3).line_ids.filtered(lambda l: l.display_type == 'cogs'), [
+            {'account_id': self.account_stock_valuation.id, 'debit': 0, 'credit': 500},
+            {'account_id': self.account_expense.id, 'debit': 500, 'credit': 0},
+            {'account_id': self.account_stock_valuation.id, 'debit': 310, 'credit': 0},
+            {'account_id': self.account_expense.id, 'debit': 0, 'credit': 310},
+            {'account_id': self.account_stock_valuation.id, 'debit': 0, 'credit': 95},
+            {'account_id': self.account_expense.id, 'debit': 95, 'credit': 0},
+        ])
+
     def test_fifo_uom_computation(self):
         self.product_fifo_auto.categ_id.property_valuation = 'real_time'
         quantity = 50.0
@@ -1942,4 +1980,44 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
             {'account_id': self.account_expense.id, 'debit': 100.0, 'credit': 0.0},
             {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 5.0},
             {'account_id': self.account_expense.id, 'debit': 5.0, 'credit': 0.0},
+        ])
+
+    def test_avco_reverse_invoice_with_cogs_decrease(self):
+        """ In AVCO, Deliver 100 at $10 -> Invoice 50 -> Deliver 900 at $1 -> Invoice 50 -> Reverse
+        the second invoice. The second invoice credits $310 of COGS to match the $1.9 average cost
+        of the delivered units, so its credit note must debit them back instead of crediting them again.
+        """
+        self.product_avco_auto.invoice_policy = 'delivery'
+        self._make_in_move(self.product_avco_auto, 100, 10)
+
+        sale_order = self._so_deliver(self.product_avco_auto, 1000, 20, picking=False)
+        delivery = sale_order.picking_ids
+        delivery.move_ids.write({'quantity': 100, 'picked': True})
+        Form.from_action(self.env, delivery.button_validate()).save().process()
+
+        invoice_1 = sale_order._create_invoices()
+        invoice_1.invoice_line_ids.quantity = 50
+        invoice_1.action_post()
+
+        self._make_in_move(self.product_avco_auto, 900, 1)
+        backorder = sale_order.picking_ids - delivery
+        backorder.move_ids.write({'quantity': 900, 'picked': True})
+        backorder.button_validate()
+
+        invoice_2 = sale_order._create_invoices()
+        invoice_2.invoice_line_ids.quantity = 50
+        invoice_2.action_post()
+
+        ctx = {'active_model': 'account.move', 'active_ids': invoice_2.ids}
+        refund_wizard = self.env['account.move.reversal'].with_context(ctx).create({'journal_id': invoice_2.journal_id.id})
+        credit_note = self.env['account.move'].browse(refund_wizard.refund_moves()['res_id'])
+        credit_note.action_post()
+
+        self.assertRecordValues((invoice_1 | invoice_2 | credit_note).line_ids.filtered(lambda l: l.display_type == 'cogs'), [
+            {'account_id': self.account_stock_valuation.id, 'debit': 0, 'credit': 500},
+            {'account_id': self.account_expense.id, 'debit': 500, 'credit': 0},
+            {'account_id': self.account_stock_valuation.id, 'debit': 310, 'credit': 0},
+            {'account_id': self.account_expense.id, 'debit': 0, 'credit': 310},
+            {'account_id': self.account_stock_valuation.id, 'debit': 0, 'credit': 310},
+            {'account_id': self.account_expense.id, 'debit': 310, 'credit': 0},
         ])
