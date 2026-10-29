@@ -1,8 +1,20 @@
-.o_kanban_project_tasks .o_field_one2many_sub_task {
-  margin-top:2px;
-  margin-right: 6px;
+.o_kanban_project_tasks {
+    .o_field_one2many_sub_task {
+        margin-top:2px;
+        margin-right: 6px;
+    }
+}
+
+.o_kanban_project_common {
+    .o_project_kanban_body {
+        row-gap: calc(var(--o-bs-spacer-1) * .5);
+    }
+
+    .o_card_record footer {
+        --Card-padding-v: calc(var(--o-bs-spacer-1) * .5);
+    }
 }
 
 .o_many2many_avatar_user_no_wrap div {
-   flex-wrap: nowrap !important;
+    flex-wrap: nowrap !important;
 }
