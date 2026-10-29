@@ -3,10 +3,8 @@ import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { Component, onMounted, onWillDestroy } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { serializeDateTime } from "@web/core/l10n/dates";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { downloadPosLogs, downloadIdbErrors } from "../pretty_console_log";
-const { DateTime } = luxon;
 
 export class DebugWidget extends Component {
     static template = "point_of_sale.DebugWidget";
@@ -145,14 +143,7 @@ export class DebugWidget extends Component {
     }
 
     async exportData() {
-        const data = await this.pos.data.synchronizeLocalDataInIndexedDB();
-        const blob = this._createBlob(data);
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        const fileName = `pos_data${serializeDateTime(DateTime.now()).replace(/:|\s/gi, "-")}.json`;
-        a.href = url;
-        a.download = fileName;
-        a.click();
+        await this.pos.exportLocalData();
     }
     async importData(event) {
         const file = event.target.files[0];
