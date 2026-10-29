@@ -523,3 +523,42 @@ class TestWorkEntry(TestWorkEntryBase):
         self.assertEqual(len(half2_entries), 1)  # 1 work entry for the entire duration
         self.assertEqual(half2_entries.duration, 15 * 24)
         self.assertTrue(all(entry.contract_id.name == 'FullyFlex Contract' for entry in half2_entries))
+
+    def test_flexible_calendar_one_day_leave_duration(self):
+        """ A one-day leave on a flexible calendar should keep its duration, even when the
+            days before it in the same week already fill the full time required hours. """
+
+        flexible_calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible Calendar',
+            'flexible_hours': True,
+            'full_time_required_hours': 40,
+            'hours_per_day': 12,
+        })
+
+        employee = self.env['hr.employee'].create({
+            'name': 'Monokuma',
+            'resource_calendar_id': flexible_calendar.id,
+        })
+
+        self.env['hr.contract'].create({
+            'employee_id': employee.id,
+            'resource_calendar_id': flexible_calendar.id,
+            'date_start': date(2025, 9, 1),
+            'name': 'Flex Contract',
+            'wage': 5000.0,
+            'state': 'open',
+        })
+
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Hopes Peak Academy Holiday',
+            'resource_id': employee.resource_id.id,
+            'calendar_id': flexible_calendar.id,
+            'date_from': self.tz.localize(datetime(2025, 9, 5, 10, 0)).astimezone(pytz.utc).replace(tzinfo=None),
+            'date_to': self.tz.localize(datetime(2025, 9, 5, 12, 0)).astimezone(pytz.utc).replace(tzinfo=None),
+            'work_entry_type_id': self.work_entry_type_leave.id,
+        })
+
+        work_entries = employee.generate_work_entries(date(2025, 9, 1), date(2025, 9, 7))
+        leave_entry = work_entries.filtered(lambda we: we.work_entry_type_id == self.work_entry_type_leave)
+        self.assertEqual(len(leave_entry), 1)
+        self.assertEqual(leave_entry.duration, 2)
