@@ -1,0 +1,30 @@
+<odoo>
+    <data>
+        <record id="product_product_expense_view_form_inherit" model="ir.ui.view">
+            <field name="name">product.product.expense.form.inherit.account.hr.expense</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="hr_expense.product_product_expense_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='product_details']" position="inside">
+                    <group>
+                        <field name="property_account_expense_id" class="w-50" groups="account.group_account_readonly"/>
+                        <field name="supplier_taxes_id" class="w-50" widget="many2many_tax_tags"
+                               context="{'default_type_tax_use':'purchase', 'default_price_include': 1}"
+                               options="{'no_quick_create': True}" placeholder="no taxes"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="product_product_expense_categories_tree_view_inherit">
+            <field name="name">product.product.expense.categories.list.view.inherit.account.hr.expense</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="hr_expense.product_product_expense_categories_tree_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='standard_price']" position="after">
+                    <field name="supplier_taxes_id" widget="many2many_tax_tags" optional="show"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

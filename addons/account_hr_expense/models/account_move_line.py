@@ -21,7 +21,7 @@ class AccountMoveLine(models.Model):
         super(AccountMoveLine, self.filtered(lambda line: line.expense_id.payment_mode != 'company_account'))._check_payable_receivable()
 
     def _get_attachment_domains(self):
-        attachment_domains = super(AccountMoveLine, self)._get_attachment_domains()
+        attachment_domains = super()._get_attachment_domains()
         if self.expense_id:
             attachment_domains.append([('res_model', '=', 'hr.expense'), ('res_id', 'in', self.expense_id.ids)])
         return attachment_domains

@@ -6,14 +6,13 @@
             <field name="model">hr.expense.split.wizard</field>
             <field name="arch" type="xml">
                 <form class="o_expense_split_form">
-                    <field name="total_amount_currency_original" invisible="1"/>
-                    <field name="expense_id" invisible="1"/>
+                    <field name="expense_id" invisible="1"/> <!-- Default of the new lines -->
                     <field name="expense_split_line_ids" widget="one2many" context="{'default_expense_id': expense_id}">
                         <list editable="bottom">
-                            <field name="currency_id" column_invisible="True"/>
-                            <field name="expense_id" column_invisible="True"/>
-                            <field name="company_id" column_invisible="True"/>
-                            <field name="product_has_cost" column_invisible="True"/>
+                            <field name="currency_id" column_invisible="True"/> <!-- Currency of the monetary fields -->
+                            <field name="expense_id" column_invisible="True"/> <!-- Default of the new lines -->
+                            <field name="company_id" column_invisible="True"/> <!-- Company-dependent domains -->
+                            <field name="product_has_cost" column_invisible="True"/> <!-- Readonly condition of the total -->
                             <field name="name" optional="hide"/>
                             <field name="product_id"
                                 context="{
@@ -25,7 +24,7 @@
                             />
                             <field name="employee_id" widget="many2one_avatar_user"/>
                             <field name="tax_ids" widget="many2many_tags"/>
-                            <field name="tax_amount_currency" string="Tax"/>
+                            <field name="tax_amount_currency" string="Taxes"/>
                             <field name="analytic_distribution"
                                 string="Analytic"
                                 widget="analytic_distribution"
@@ -34,7 +33,7 @@
                             <field name="total_amount_currency" string="Total" force_save="1" readonly="product_has_cost"/>
                         </list>
                     </field>
-                    <field name="currency_id" invisible="1"/>
+                    <field name="currency_id" invisible="1"/> <!-- Currency of the monetary fields -->
                     <group class="oe_subtotal_footer border-top-0 me-2" colspan="2" name="expense_total">
                         <label for="total_amount_currency"/>
                         <div class="d-flex mb-3 mb-md-0">
@@ -45,7 +44,7 @@
                         </div>
                         <field name="tax_amount_currency" widget='monetary' string="Taxes"/>
                     </group>
-                    <field name="split_possible" invisible="1"/>
+                    <field name="split_possible" invisible="1"/> <!-- Visibility of the totals and of the split buttons -->
                     <footer>
                         <button name="action_split_expense" invisible="split_possible" string="Split" type="object" class="oe_highlight" disabled="disabled"  data-hotkey="q"/>
                         <button name="action_split_expense" string="Split" invisible="not split_possible" type="object" class="oe_highlight"  data-hotkey="q"/>

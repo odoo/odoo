@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import Command, models, fields, api, _
+
+from odoo import Command, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import frozendict
 
@@ -9,10 +10,6 @@ class AccountMove(models.Model):
 
     expense_ids = fields.One2many(comodel_name='hr.expense', inverse_name='account_move_id')
     nb_expenses = fields.Integer(compute='_compute_nb_expenses', string='Number of Expenses', compute_sudo=True)
-
-    # Removed in master (20.1), no longer used
-    existing_expense_ids = fields.One2many(comodel_name='hr.expense', inverse_name='existing_bill_id')
-    bill_paid_by_employee = fields.Boolean(compute='_compute_bill_paid_by_employee')
 
     def _compute_nb_expenses(self):
         for move in self:
@@ -29,18 +26,12 @@ class AccountMove(models.Model):
             )
         super(AccountMove, self - own_expense_moves)._compute_commercial_partner_id()
 
-    # Removed in master (20.1)
-    @api.depends('existing_expense_ids')
-    def _compute_bill_paid_by_employee(self):
-        for move in self:
-            move.bill_paid_by_employee = move.existing_expense_ids and any(mode != 'company_account' for mode in set(move.existing_expense_ids.mapped('payment_mode')))
-
     @api.constrains('expense_ids')
     def _check_expense_ids(self):
         for move in self:
             expense_payment_modes = move.expense_ids.mapped('payment_mode')
-            if 'company_account' in expense_payment_modes and len(move.expense_ids) > 1 :
-                raise ValidationError(_("Each expense paid by the company must have a distinct and dedicated journal entry."))
+            if 'company_account' in expense_payment_modes and len(move.expense_ids) > 1:
+                raise ValidationError(self.env._("Each expense paid by the company must have a distinct and dedicated journal entry."))
 
     @api.ondelete(at_uninstall=False)
     def _reset_linked_expense_to_submitted(self):
@@ -52,7 +43,7 @@ class AccountMove(models.Model):
         linked_expenses = self.expense_ids
         if len(linked_expenses) > 1:
             return {
-            'name': _("Expenses"),
+            'name': self.env._("Expenses"),
             'type': 'ir.actions.act_window',
             'view_mode': 'list,form',
             'views': [(False, 'list'), (False, 'form')],
@@ -75,11 +66,11 @@ class AccountMove(models.Model):
     def _creation_message(self):
         if self.expense_ids:
             if len(self.expense_ids) == 1:
-                return _("Journal entry created from this expense: %(link)s", link=self.expense_ids._get_html_link())
+                return self.env._("Journal entry created from this expense: %(link)s", link=self.expense_ids._get_html_link())
             links = self.expense_ids[0]._get_html_link()
             for additional_expense in self.expense_ids[1:]:  # ', ' Destroys Markup, and each part here is safe
                 links += ', ' + additional_expense._get_html_link()
-            return _("Journal entry created from these expenses: %(links)s", links=links)
+            return self.env._("Journal entry created from these expenses: %(links)s", links=links)
         return super()._creation_message()
 
     @api.depends('expense_ids')

@@ -351,7 +351,7 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
             to open a new expense and switch its company to retrieve their employee.
         """
         company_1 = self.env.company
-        company_2 = self.company_data_2['company']
+        company_2 = self.company_2
         user = new_test_user(
             self.env,
             login='team_approver_company_1',

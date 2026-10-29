@@ -6,13 +6,6 @@ from odoo import api, fields, models
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    @api.model
-    def default_get(self, fields):
-        result = super().default_get(fields)
-        if self.env.context.get('default_can_be_expensed'):
-            result['supplier_taxes_id'] = False
-        return result
-
     can_be_expensed = fields.Boolean(string="Expenses", compute='_compute_can_be_expensed',
         init_storage=lambda model: None,  # skip initialization (False)
         store=True, readonly=False, help="Specify whether the product can be selected in an expense.")

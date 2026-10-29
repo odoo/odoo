@@ -1,0 +1,11 @@
+<odoo noupdate="1">
+
+    <!--
+        The employee rule of `hr_expense` can't reference `account_move_id`, so it is
+        replaced by `ir_rule_hr_expense_employee_account`. Disabled rather than
+        overridden so that `uninstall_hook` only has to re-enable it.
+    -->
+    <record id="hr_expense.ir_rule_hr_expense_employee" model="ir.access">
+        <field name="active" eval="False"/>
+    </record>
+</odoo>

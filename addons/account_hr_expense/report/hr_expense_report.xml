@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_expense_account" inherit_id="hr_expense.report_expense">
+        <xpath expr="//th[hasclass('o_expense_quantity_header')]" position="after">
+            <th class="text-end">Taxes</th>
+        </xpath>
+        <xpath expr="//td[hasclass('o_expense_quantity')]" position="after">
+            <t t-set="taxes" t-value="', '.join(tax.tax_label for tax in line.tax_ids if tax.tax_label)"/>
+            <td t-attf-class="text-end {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
+                <span t-out="taxes" id="line_tax_ids">Tax 15%</span>
+            </td>
+        </xpath>
+        <xpath expr="//tr[hasclass('o_expense_total')]" position="before">
+            <tr>
+                <td>Untaxed Amount</td>
+                <td class="text-end"><span t-out="general_info.get('untaxed_amount')">$500.00</span></td>
+            </tr>
+            <tr>
+                <td>Taxes</td>
+                <td class="text-end"><span t-out="general_info.get('tax_amount')">$100.00</span></td>
+            </tr>
+        </xpath>
+    </template>
+</odoo>

@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, fields, _
-from odoo.exceptions import UserError, ValidationError
+from odoo import fields, models
+from odoo.exceptions import UserError
 
 
 class AccountPayment(models.Model):
@@ -28,17 +28,16 @@ class AccountPayment(models.Model):
             'memo', 'payment_method_line_id'
         }
         if self.expense_ids and any(field_name in trigger_fields for field_name in vals):
-            raise UserError(_("You cannot do this modification since the payment is linked to an expense."))
+            raise UserError(self.env._("You cannot do this modification since the payment is linked to an expense."))
         return super().write(vals)
 
     def action_open_expense(self):
         self.ensure_one()
-        return self.expense_ids._get_records_action(name=_("Expenses"))
+        return self.expense_ids._get_records_action(name=self.env._("Expenses"))
 
     def _creation_message(self):
         # EXTENDS mail
         self.ensure_one()
         if self.move_id.expense_ids:
-            return _("Payment created for: %s", self.move_id.expense_ids._get_html_link())
+            return self.env._("Payment created for: %s", self.move_id.expense_ids._get_html_link())
         return super()._creation_message()
-
