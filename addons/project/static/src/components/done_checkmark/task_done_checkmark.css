@@ -1,23 +1,11 @@
 a.o_todo_done_button {
-    --btn-hover-color: var(--success);
-
-    &:hover:before {
+    &:hover i:before {
         content: "check_circle_f";
     }
 
     &.done_button_enabled {
-        --btn-color: var(--success);
-        --btn-hover-color: var(--body-color);
-
-        &:hover:before {
+        &:hover i:before {
             content: "check_circle";
         }
-    }
-}
-
-a.o_todo_done_button_mobile {
-    &.done_button_enabled {
-        --btn-color: var(--success);
-        --btn-hover-color: var(--btn-color);
     }
 }
