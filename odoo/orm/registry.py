@@ -944,7 +944,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     _schema.info("Index %s has no comment; consider it modified by user; keep it as is", indexname)
                     will_index = False # Don't touch indexes without comment
                 elif not existing[indexname][4]:  # if the index is invalid
-                    _schema.info("keep invalid standard index %s as is", indexname)
+                    _schema.info("Keep invalid standard index %s as is", indexname)
                     will_index = False # Don't touch invalid indexes
                 else:
                     # The index exists, check if it is stale.
