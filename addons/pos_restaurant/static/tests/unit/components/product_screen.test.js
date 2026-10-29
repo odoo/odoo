@@ -13,6 +13,7 @@ import { patch } from "@web/core/utils/patch";
 import * as PosUiUtils from "@point_of_sale/../tests/unit/ui_utils";
 import * as ResUiUtils from "@pos_restaurant/../tests/unit/ui_utils";
 const Utils = { ...PosUiUtils, ...ResUiUtils };
+import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_summary/order_summary";
 
 definePosModels();
 
@@ -265,4 +266,24 @@ test("lines of a deleted course stay visible", async () => {
     expect(order.courses).toHaveLength(1);
     expect(order.lines).toHaveLength(2);
     expect(".orderline:contains('TEST 2')").toHaveCount(1);
+});
+
+test("test_reduce_qty: reduce line qty through popup when disallowLineQuantityChange", async () => {
+    const store = await setupPosEnv();
+    store.disallowLineQuantityChange = () => true;
+    const order = await getFilledOrder(store);
+    order.updateLastOrderChange();
+    await store.syncAllOrders();
+
+    // try to update the qty of 2nd line from 2 to 1, a new line with -1 qty should be created
+    const orderSummary = await mountWithCleanup(OrderSummary);
+    orderSummary.updateQuantityNumber(1);
+    expect(order.lines.length).toBe(3);
+    expect(order.lines[1].qty).toBe(2);
+    expect(order.lines[2].qty).toBe(-1);
+
+    // In the changes the new -ve line should be there as a addedQuantity change
+    const changes = order.getChanges();
+    expect(changes.addedQuantity.length).toBe(1);
+    expect(changes.addedQuantity[0].quantity).toBe(-1);
 });
