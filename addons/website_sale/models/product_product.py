@@ -208,22 +208,27 @@ class ProductProduct(models.Model):
         # Use sudo to access cross-company taxes.
         price = self._apply_taxes_to_price(product_price, website.currency_id, website=website)
 
-        offer = {"@type": "Offer", "price": price, "priceCurrency": website.currency_id.name}
-        if self.is_product_variant and self.is_storable:
-            offer["availability"] = (
-                "https://schema.org/OutOfStock"
-                if self._is_sold_out()
-                else "https://schema.org/InStock"
-            )
+        is_zero_price = website.currency_id.is_zero(price)
+        hide_price = website._prevent_product_sale(self, is_zero_price) and is_zero_price
+        offer = None
+        if not hide_price:
+            offer = {"@type": "Offer", "price": price, "priceCurrency": website.currency_id.name}
+            if self.is_product_variant and self.is_storable:
+                offer["availability"] = (
+                    "https://schema.org/OutOfStock"
+                    if self._is_sold_out()
+                    else "https://schema.org/InStock"
+                )
 
         vals = {
             "@type": "Product",
             "@id": f"{base_url}{self.website_url}/#product-{self.id}",
             "name": self.with_context(display_default_code=False).display_name,
             "url": f"{base_url}{self.website_url}",
-            "offers": offer,
             "image": f"{base_url}{self._get_image_1920_url()}",
         }
+        if offer:
+            vals["offers"] = offer
         if description := (self.website_meta_description or self.description_sale):
             vals["description"] = description
         if self.default_code:
