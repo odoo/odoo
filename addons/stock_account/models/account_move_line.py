@@ -61,7 +61,21 @@ class AccountMoveLine(models.Model):
             else:
                 price_unit = self.product_id._get_fifo_value(cogs_qty) / cogs_qty if cogs_qty else 0
         line_quantity_uom = self.product_uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
+<<<<<<< 76809808d9536551bbe2988701b35a58ffe51729
         return abs(price_unit * cogs_qty / line_quantity_uom)
+||||||| ebdae3c57f17e0dd4093fb9f64433614aa7b590f
+        return abs((price_unit * cogs_qty - self._get_posted_cogs_value()) / line_quantity_uom)
+
+    def _get_stock_moves(self):
+        return self.env['stock.move']
+=======
+        cogs_value = (price_unit * cogs_qty - self._get_posted_cogs_value()) / line_quantity_uom
+        # The COGS of a credit note is signed when its lines are created
+        return -cogs_value if self.move_id.move_type == 'out_refund' else cogs_value
+
+    def _get_stock_moves(self):
+        return self.env['stock.move']
+>>>>>>> 64bfa7c292c3cd9ebbe601d0a6419eebf06a05b7
 
     def _get_cogs_qty(self):
         self.ensure_one()
@@ -69,3 +83,28 @@ class AccountMoveLine(models.Model):
             self.product_uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
             * (-1 if self.move_id.move_type == "out_refund" else 1)
         )
+<<<<<<< 76809808d9536551bbe2988701b35a58ffe51729
+||||||| ebdae3c57f17e0dd4093fb9f64433614aa7b590f
+
+    def _get_posted_cogs_value(self):
+        self.ensure_one()
+        return 0
+
+    def _get_lines_from_original_invoice(self):
+        return self.move_id.reversed_entry_id.line_ids.filtered(
+            lambda l: l.display_type == 'cogs' and l.product_id == self.product_id and
+            l.product_uom_id == self.product_uom_id and l.price_unit >= 0
+        )
+=======
+
+    def _get_posted_cogs_value(self):
+        self.ensure_one()
+        return 0
+
+    def _get_lines_from_original_invoice(self):
+        valuation_account = self.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=self.move_id.fiscal_position_id)['stock_valuation']
+        return self.move_id.reversed_entry_id.line_ids.filtered(
+            lambda l: l.display_type == 'cogs' and l.product_id == self.product_id and
+            l.product_uom_id == self.product_uom_id and l.account_id == valuation_account
+        )
+>>>>>>> 64bfa7c292c3cd9ebbe601d0a6419eebf06a05b7

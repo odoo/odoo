@@ -1111,6 +1111,44 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
             {'account_id': self.account_expense.id, 'debit': 20, 'credit': 0},
         ])
 
+    def test_fifo_partial_invoices_cogs_decrease(self):
+        """ In FIFO, Deliver 100 at $10 -> Invoice 50 -> Deliver 900 at $1 -> Invoice 50 -> Invoice 50
+        The delivered units now cost $1.9 on average, so the 100 invoiced units cost $190 while $500
+        of COGS were already posted: the second invoice must credit $310 of COGS, the third debit $95.
+        """
+        self.product_fifo_auto.invoice_policy = 'delivery'
+        self._make_in_move(self.product_fifo_auto, 100, 10)
+        self._make_in_move(self.product_fifo_auto, 900, 1)
+
+        sale_order = self._so_deliver(self.product_fifo_auto, 1000, 20, picking=False)
+        delivery = sale_order.picking_ids
+        delivery.move_ids.write({'quantity': 100, 'picked': True})
+        Form.from_action(self.env, delivery.button_validate()).save().process()
+
+        invoice_1 = sale_order._create_invoices()
+        invoice_1.invoice_line_ids.quantity = 50
+        invoice_1.action_post()
+
+        backorder = sale_order.picking_ids - delivery
+        backorder.move_ids.write({'quantity': 900, 'picked': True})
+        backorder.button_validate()
+
+        invoice_2 = sale_order._create_invoices()
+        invoice_2.invoice_line_ids.quantity = 50
+        invoice_2.action_post()
+        invoice_3 = sale_order._create_invoices()
+        invoice_3.invoice_line_ids.quantity = 50
+        invoice_3.action_post()
+
+        self.assertRecordValues((invoice_1 | invoice_2 | invoice_3).line_ids.filtered(lambda l: l.display_type == 'cogs'), [
+            {'account_id': self.account_stock_valuation.id, 'debit': 0, 'credit': 500},
+            {'account_id': self.account_expense.id, 'debit': 500, 'credit': 0},
+            {'account_id': self.account_stock_valuation.id, 'debit': 310, 'credit': 0},
+            {'account_id': self.account_expense.id, 'debit': 0, 'credit': 310},
+            {'account_id': self.account_stock_valuation.id, 'debit': 0, 'credit': 95},
+            {'account_id': self.account_expense.id, 'debit': 95, 'credit': 0},
+        ])
+
     def test_fifo_uom_computation(self):
         self.product_fifo_auto.categ_id.property_valuation = 'real_time'
         quantity = 50.0
@@ -1824,3 +1862,277 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
             {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 10.0},
             {'account_id': self.account_expense.id, 'debit': 10.0, 'credit': 0.0},
         ])
+<<<<<<< 76809808d9536551bbe2988701b35a58ffe51729
+||||||| ebdae3c57f17e0dd4093fb9f64433614aa7b590f
+
+    def test_cogs_avco_return_redelivered(self):
+        """
+        avco pereptual product with standard price 10
+        SO for 1 -> deliver -> invoice (cogs 10)
+        return 1 -> credit note (cogs -10)
+        change standard price to 100
+
+        check that when redelivering and reinvoicing cogs are 100
+        """
+        # SO for 1 -> deliver -> invoice (cogs 10)
+        self.product_avco_auto.invoice_policy = 'delivery'
+        self._make_in_move(self.product_avco_auto, 2, 10)
+        sale_order = self._so_deliver(self.product_avco_auto, 1)
+        original_delivery = sale_order.picking_ids
+
+        invoice = sale_order._create_invoices()
+        invoice.action_post()
+        cogs_aml = invoice.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('debit')
+        self.assertRecordValues(cogs_aml, [
+            {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 10.0},
+            {'account_id': self.account_expense.id, 'debit': 10.0, 'credit': 0.0},
+        ])
+
+        # return 1 -> credit note (cogs -10)
+        ctx = {'active_id': original_delivery.id, 'active_model': 'stock.picking'}
+        return_wizard = Form(self.env['stock.return.picking'].with_context(ctx)).save()
+        return_wizard.product_return_moves.quantity = 1
+        return_picking = return_wizard._create_return()
+        return_picking.move_ids.write({'quantity': 1, 'picked': True})
+        return_picking.button_validate()
+
+        ctx = {'active_model': 'account.move', 'active_ids': invoice.ids}
+        refund_wizard = self.env['account.move.reversal'].with_context(ctx).create({'journal_id': invoice.journal_id.id})
+        action = refund_wizard.refund_moves()
+        credit_note = self.env['account.move'].browse(action['res_id'])
+        credit_note.invoice_line_ids[0].quantity = 1
+        credit_note.action_post()
+        return_cogs_aml = credit_note.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('debit')
+        self.assertRecordValues(return_cogs_aml, [
+            {'account_id': self.account_expense.id, 'debit': 0.0, 'credit': 10.0},
+            {'account_id': self.account_stock_valuation.id, 'debit': 10.0, 'credit': 0.0},
+        ])
+
+        # change standard price, re-deliver and re-invoice
+        self.product_avco_auto.standard_price = 100
+        ctx = {'active_id': return_picking.id, 'active_model': 'stock.picking'}
+        redelivery_wizard = Form(self.env['stock.return.picking'].with_context(ctx)).save()
+        redelivery_wizard.product_return_moves.quantity = 1
+        redelivery_picking = redelivery_wizard._create_return()
+        redelivery_picking.move_ids.write({'quantity': 1, 'picked': True})
+        redelivery_picking.button_validate()
+
+        reinvoice = sale_order._create_invoices()
+        reinvoice.action_post()
+        cogs_aml = reinvoice.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('debit')
+        self.assertRecordValues(cogs_aml, [
+            {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 100.0},
+            {'account_id': self.account_expense.id, 'debit': 100.0, 'credit': 0.0},
+        ])
+
+    def test_cogs_average_multiple_invoices_and_deliveries(self):
+        """
+        In average perpetual
+        Deliver and Invoice 10 units with average cost at $10
+        In the same SO: Deliver and Invoice 1 unit with average cost at $5
+
+        The global COGS should represent both cost, not the one from the last delivery.
+        Previously, the first invoice COGS would be at $100, and the second at $-45,
+        which meant a total of $55, hence an average of $5.
+        Now, the second invoice COGS is at $5, which gives us a total of $105,
+        which give us an accurate value globally and on each invoice.
+        """
+
+        # INVOICE 1: Sell and Invoice 10 units with an average price of $10
+        self._make_in_move(self.product_avco_auto, 10, 10)
+        self.assertEqual(self.product_avco_auto.standard_price, 10)
+
+        sale_order = self._so_deliver(self.product_avco_auto, 10, 20)
+
+        invoice1 = sale_order._create_invoices()
+        invoice1.action_post()
+
+        # INVOICE 2: Add 1 unit when average price is $5
+        self._make_in_move(self.product_avco_auto, 1, 5)
+        self.assertEqual(self.product_avco_auto.standard_price, 5)
+
+        order_line = sale_order.order_line
+        order_line.product_uom_qty = 11
+
+        move = order_line.move_ids.filtered(lambda sm: sm.state != "done")
+        move.write({'quantity': 1, 'picked': True})
+        move.picking_id.button_validate()
+        self.assertEqual(move.value, 5)
+
+        # Change price to $7, should not impact the COGS
+        self._make_in_move(self.product_avco_auto, 1, 7)
+        self.assertEqual(self.product_avco_auto.standard_price, 7)
+
+        invoice2 = sale_order._create_invoices()
+        invoice2.action_post()
+
+        # COGS: Ensure the COGS and Move value matches
+        moves_value = sum(order_line.move_ids.mapped("value"))
+        self.assertEqual(moves_value, 105)
+
+        cogs_line_1 = invoice1.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('debit')
+        cogs_line_2 = invoice2.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('debit')
+
+        self.assertRecordValues((cogs_line_1 | cogs_line_2), [
+            {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 100.0},
+            {'account_id': self.account_expense.id, 'debit': 100.0, 'credit': 0.0},
+            {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 5.0},
+            {'account_id': self.account_expense.id, 'debit': 5.0, 'credit': 0.0},
+        ])
+=======
+
+    def test_cogs_avco_return_redelivered(self):
+        """
+        avco pereptual product with standard price 10
+        SO for 1 -> deliver -> invoice (cogs 10)
+        return 1 -> credit note (cogs -10)
+        change standard price to 100
+
+        check that when redelivering and reinvoicing cogs are 100
+        """
+        # SO for 1 -> deliver -> invoice (cogs 10)
+        self.product_avco_auto.invoice_policy = 'delivery'
+        self._make_in_move(self.product_avco_auto, 2, 10)
+        sale_order = self._so_deliver(self.product_avco_auto, 1)
+        original_delivery = sale_order.picking_ids
+
+        invoice = sale_order._create_invoices()
+        invoice.action_post()
+        cogs_aml = invoice.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('debit')
+        self.assertRecordValues(cogs_aml, [
+            {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 10.0},
+            {'account_id': self.account_expense.id, 'debit': 10.0, 'credit': 0.0},
+        ])
+
+        # return 1 -> credit note (cogs -10)
+        ctx = {'active_id': original_delivery.id, 'active_model': 'stock.picking'}
+        return_wizard = Form(self.env['stock.return.picking'].with_context(ctx)).save()
+        return_wizard.product_return_moves.quantity = 1
+        return_picking = return_wizard._create_return()
+        return_picking.move_ids.write({'quantity': 1, 'picked': True})
+        return_picking.button_validate()
+
+        ctx = {'active_model': 'account.move', 'active_ids': invoice.ids}
+        refund_wizard = self.env['account.move.reversal'].with_context(ctx).create({'journal_id': invoice.journal_id.id})
+        action = refund_wizard.refund_moves()
+        credit_note = self.env['account.move'].browse(action['res_id'])
+        credit_note.invoice_line_ids[0].quantity = 1
+        credit_note.action_post()
+        return_cogs_aml = credit_note.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('debit')
+        self.assertRecordValues(return_cogs_aml, [
+            {'account_id': self.account_expense.id, 'debit': 0.0, 'credit': 10.0},
+            {'account_id': self.account_stock_valuation.id, 'debit': 10.0, 'credit': 0.0},
+        ])
+
+        # change standard price, re-deliver and re-invoice
+        self.product_avco_auto.standard_price = 100
+        ctx = {'active_id': return_picking.id, 'active_model': 'stock.picking'}
+        redelivery_wizard = Form(self.env['stock.return.picking'].with_context(ctx)).save()
+        redelivery_wizard.product_return_moves.quantity = 1
+        redelivery_picking = redelivery_wizard._create_return()
+        redelivery_picking.move_ids.write({'quantity': 1, 'picked': True})
+        redelivery_picking.button_validate()
+
+        reinvoice = sale_order._create_invoices()
+        reinvoice.action_post()
+        cogs_aml = reinvoice.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('debit')
+        self.assertRecordValues(cogs_aml, [
+            {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 100.0},
+            {'account_id': self.account_expense.id, 'debit': 100.0, 'credit': 0.0},
+        ])
+
+    def test_cogs_average_multiple_invoices_and_deliveries(self):
+        """
+        In average perpetual
+        Deliver and Invoice 10 units with average cost at $10
+        In the same SO: Deliver and Invoice 1 unit with average cost at $5
+
+        The global COGS should represent both cost, not the one from the last delivery.
+        Previously, the first invoice COGS would be at $100, and the second at $-45,
+        which meant a total of $55, hence an average of $5.
+        Now, the second invoice COGS is at $5, which gives us a total of $105,
+        which give us an accurate value globally and on each invoice.
+        """
+
+        # INVOICE 1: Sell and Invoice 10 units with an average price of $10
+        self._make_in_move(self.product_avco_auto, 10, 10)
+        self.assertEqual(self.product_avco_auto.standard_price, 10)
+
+        sale_order = self._so_deliver(self.product_avco_auto, 10, 20)
+
+        invoice1 = sale_order._create_invoices()
+        invoice1.action_post()
+
+        # INVOICE 2: Add 1 unit when average price is $5
+        self._make_in_move(self.product_avco_auto, 1, 5)
+        self.assertEqual(self.product_avco_auto.standard_price, 5)
+
+        order_line = sale_order.order_line
+        order_line.product_uom_qty = 11
+
+        move = order_line.move_ids.filtered(lambda sm: sm.state != "done")
+        move.write({'quantity': 1, 'picked': True})
+        move.picking_id.button_validate()
+        self.assertEqual(move.value, 5)
+
+        # Change price to $7, should not impact the COGS
+        self._make_in_move(self.product_avco_auto, 1, 7)
+        self.assertEqual(self.product_avco_auto.standard_price, 7)
+
+        invoice2 = sale_order._create_invoices()
+        invoice2.action_post()
+
+        # COGS: Ensure the COGS and Move value matches
+        moves_value = sum(order_line.move_ids.mapped("value"))
+        self.assertEqual(moves_value, 105)
+
+        cogs_line_1 = invoice1.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('debit')
+        cogs_line_2 = invoice2.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('debit')
+
+        self.assertRecordValues((cogs_line_1 | cogs_line_2), [
+            {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 100.0},
+            {'account_id': self.account_expense.id, 'debit': 100.0, 'credit': 0.0},
+            {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 5.0},
+            {'account_id': self.account_expense.id, 'debit': 5.0, 'credit': 0.0},
+        ])
+
+    def test_avco_reverse_invoice_with_cogs_decrease(self):
+        """ In AVCO, Deliver 100 at $10 -> Invoice 50 -> Deliver 900 at $1 -> Invoice 50 -> Reverse
+        the second invoice. The second invoice credits $310 of COGS to match the $1.9 average cost
+        of the delivered units, so its credit note must debit them back instead of crediting them again.
+        """
+        self.product_avco_auto.invoice_policy = 'delivery'
+        self._make_in_move(self.product_avco_auto, 100, 10)
+
+        sale_order = self._so_deliver(self.product_avco_auto, 1000, 20, picking=False)
+        delivery = sale_order.picking_ids
+        delivery.move_ids.write({'quantity': 100, 'picked': True})
+        Form.from_action(self.env, delivery.button_validate()).save().process()
+
+        invoice_1 = sale_order._create_invoices()
+        invoice_1.invoice_line_ids.quantity = 50
+        invoice_1.action_post()
+
+        self._make_in_move(self.product_avco_auto, 900, 1)
+        backorder = sale_order.picking_ids - delivery
+        backorder.move_ids.write({'quantity': 900, 'picked': True})
+        backorder.button_validate()
+
+        invoice_2 = sale_order._create_invoices()
+        invoice_2.invoice_line_ids.quantity = 50
+        invoice_2.action_post()
+
+        ctx = {'active_model': 'account.move', 'active_ids': invoice_2.ids}
+        refund_wizard = self.env['account.move.reversal'].with_context(ctx).create({'journal_id': invoice_2.journal_id.id})
+        credit_note = self.env['account.move'].browse(refund_wizard.refund_moves()['res_id'])
+        credit_note.action_post()
+
+        self.assertRecordValues((invoice_1 | invoice_2 | credit_note).line_ids.filtered(lambda l: l.display_type == 'cogs'), [
+            {'account_id': self.account_stock_valuation.id, 'debit': 0, 'credit': 500},
+            {'account_id': self.account_expense.id, 'debit': 500, 'credit': 0},
+            {'account_id': self.account_stock_valuation.id, 'debit': 310, 'credit': 0},
+            {'account_id': self.account_expense.id, 'debit': 0, 'credit': 310},
+            {'account_id': self.account_stock_valuation.id, 'debit': 0, 'credit': 310},
+            {'account_id': self.account_expense.id, 'debit': 310, 'credit': 0},
+        ])
+>>>>>>> 64bfa7c292c3cd9ebbe601d0a6419eebf06a05b7
