@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-02 17:46+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-19/"
@@ -226,8 +226,8 @@ msgid ""
 "to cart</span>"
 msgstr ""
 "<i class=\"d-md-none fa fa-shopping-cart\" role=\"presentation\"/>\n"
-"                                    <span class=\"d-none d-md-inline\">"
-"Добави в количката</span>"
+"                                    <span class=\"d-none d-md-"
+"inline\">Добави в количката</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.navigation_buttons
@@ -259,8 +259,8 @@ msgid ""
 ">\n"
 "                    <span class=\"o_label small ms-1\">Add to Cart</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-shopping-cart o_not-animable\" role=\"presentation\"/>"
-"\n"
+"<i class=\"fa fa-fw fa-shopping-cart o_not-animable\" role=\"presentation\"/"
+">\n"
 "                    <span class=\"o_label small ms-1\">Добавете в количката</"
 "span>"
 
@@ -361,8 +361,8 @@ msgstr ""
 "                        Тук можете да намерите всички изоставени колички, "
 "т.е. количките, генерирани от посетителите на Вашия уебсайт преди повече от "
 "час, които все още не са потвърдени.</p>\n"
-"                        <p>Изпратете имейл на клиентите, за да ги "
-"насърчите!</p>\n"
+"                        <p>Изпратете имейл на клиентите, за да ги насърчите!"
+"</p>\n"
 "                    "
 
 #. module: website_sale
@@ -387,8 +387,8 @@ msgid ""
 "        </small>"
 msgstr ""
 "<small class=\"text-muted mb-0\">\n"
-"            <a href=\"/terms\" class=\"o_translate_inline text-muted\"><u>"
-"Срокове и условия</u></a><br/>\n"
+"            <a href=\"/terms\" class=\"o_translate_inline text-"
+"muted\"><u>Срокове и условия</u></a><br/>\n"
 "            30-дневна гаранция за връщане на парите<br/>\n"
 "            Доставка: 2-3 работни дни\n"
 "        </small>"
@@ -503,8 +503,8 @@ msgid ""
 "animable\"/> Fast Shipping\n"
 "                                </span>"
 msgstr ""
-"<span class=\"s_badge badge text-bg-primary o_animable\" data-name=\"Badge\">"
-"\n"
+"<span class=\"s_badge badge text-bg-primary o_animable\" data-"
+"name=\"Badge\">\n"
 "                                    <i class=\"fa fa-dollar fa-fw o_not-"
 "animable\"/> Ниски цени\n"
 "                                </span>\n"
@@ -544,8 +544,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Based "
 "on variants</span>"
 msgstr ""
-"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">"
-"Според вариантите</span>"
+"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= "
+"1\">Според вариантите</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -574,8 +574,8 @@ msgid ""
 "<span name=\"o_wsale_cta_wrapper_boxed_price_label\" class=\"text-"
 "muted\">Price</span>"
 msgstr ""
-"<span name=\"o_wsale_cta_wrapper_boxed_price_label\" class=\"text-muted\">"
-"Цена</span>"
+"<span name=\"o_wsale_cta_wrapper_boxed_price_label\" class=\"text-"
+"muted\">Цена</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_list
@@ -739,8 +739,8 @@ msgstr ""
 "width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
 "0px 0px 0px 0px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                    <h1 style=\"color:#A9A9A9;\">ИМА НЕЩО ВЪВ ВАШАТА "
-"КОЛИЧКА.</h1>\n"
+"                    <h1 style=\"color:#A9A9A9;\">ИМА НЕЩО ВЪВ ВАШАТА КОЛИЧКА."
+"</h1>\n"
 "                    Бихте ли искали да завършите покупката си?<br/><br/>\n"
 "                    <t t-if=\"object.order_line\">\n"
 "                        <t t-foreach=\"object.website_order_line\" t-"
@@ -748,8 +748,8 @@ msgstr ""
 "                            <hr/>\n"
 "                            <table width=\"100%\">\n"
 "                                <tr>\n"
-"                                    <td style=\"padding: 10px; "
-"width:150px;\">\n"
+"                                    <td style=\"padding: 10px; width:150px;"
+"\">\n"
 "                                        <img t-attf-src=\"/web/image/"
 "product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; "
 "height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
@@ -773,10 +773,10 @@ msgstr ""
 "0px; font-size: 14px;\">\n"
 "                        <a t-attf-href=\"{{ object.get_base_url() }}/shop/"
 "cart?id={{ object.id }}&amp;access_token={{ object.access_token }}\" "
-"target=\"_blank\" t-attf-style=\"background-color: {"
-"{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: "
-"8px 16px 8px 16px; text-decoration: none; color: {"
-"{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
+"target=\"_blank\" t-attf-style=\"background-color: "
+"{{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: "
+"8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
 "radius: 5px; font-size:13px;\">\n"
 "                            Възобнови поръчката\n"
 "                        </a>\n"
@@ -823,9 +823,9 @@ msgid ""
 "on                                      this page. Use '/' to discover more "
 "features."
 msgstr ""
-"Подробно, форматирано описание за популяризиране на Вашия продукт на"
-"                                      тази страница. Използвайте '/', за да "
-"откриете още функции."
+"Подробно, форматирано описание за популяризиране на Вашия продукт "
+"на                                      тази страница. Използвайте '/', за "
+"да откриете още функции."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -3073,8 +3073,8 @@ msgstr "Ако е отметнато, някои съобщения имат г�
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "If product price equals 0, replace 'Add to Cart' by 'Contact us'."
 msgstr ""
-"Ако цената на продукта е 0, замени „Добави в количката“ с „Свържете се с нас"
-"“."
+"Ако цената на продукта е 0, замени „Добави в количката“ с „Свържете се с "
+"нас“."
 
 #. module: website_sale
 #: model:mail.template,description:website_sale.mail_template_sale_cart_recovery
@@ -3882,7 +3882,8 @@ msgstr "На колела"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 msgid "Once you click on <b>Save</b>, your product is updated."
-msgstr "След като натиснете върху <b>Запазете</b>, продуктът Ви се визуализира."
+msgstr ""
+"След като натиснете върху <b>Запазете</b>, продуктът Ви се визуализира."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -5374,6 +5375,14 @@ msgstr "Изчерпано"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
+msgid ""
+"Some products in your cart are not available for purchase in your country. "
+"Please remove them or contact us."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
 msgid "Sorry, we are unable to ship your order."
 msgstr "Съжаляваме, не можем да изпратим поръчката ви."
 
@@ -5615,8 +5624,9 @@ msgid ""
 "The company of the website you are trying to sell from (%(website_company)s) "
 "is different than the one you want to use (%(company)s)"
 msgstr ""
-"Фирмата на уебсайта, от който се опитвате да продавате (%(website_company)s)"
-", е различна от тази, която искате да използвате (%(company)s)"
+"Фирмата на уебсайта, от който се опитвате да продавате (%"
+"(website_company)s), е различна от тази, която искате да използвате (%"
+"(company)s)"
 
 #. module: website_sale
 #. odoo-python
@@ -5676,7 +5686,8 @@ msgstr ""
 #: code:addons/website_sale/models/sale_order_line.py:0
 msgid ""
 "The given product does not have a price therefore it cannot be added to cart."
-msgstr "Даденият продукт няма цена, затова не може да бъде добавен в количката."
+msgstr ""
+"Даденият продукт няма цена, затова не може да бъде добавен в количката."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -5687,6 +5698,14 @@ msgid ""
 msgstr ""
 "Избраният тук режим се прилага като политика на фактуриране за всеки нов "
 "създаден продукт, но не и за вече съществуващите продукти."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/cart.py:0
+msgid ""
+"The number of selected combo items must match the number of available combo "
+"choices."
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -5704,8 +5723,8 @@ msgid ""
 "categories."
 msgstr ""
 "Продуктът ще бъде наличен във всяка посочена категория на ел.търговия. "
-"Отидете на Магазин > Редактиране, щракнете върху страницата и активирайте „"
-"Категории“, за да видите всички категории на ел.търговия."
+"Отидете на Магазин > Редактиране, щракнете върху страницата и активирайте "
+"„Категории“, за да видите всички категории на ел.търговия."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_mega_menu_images_subtitles
@@ -5807,7 +5826,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/snippets/s_add_to_cart/add_to_cart_snippet.js:0
 msgid "This product does not exist therefore it cannot be added to cart."
-msgstr "Този продукт не съществува, затова не може да бъде добавен в количката."
+msgstr ""
+"Този продукт не съществува, затова не може да бъде добавен в количката."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_title
@@ -5824,6 +5844,18 @@ msgstr "Този продукт вече не е наличен."
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "This product is not available (anymore) in this unit of measure."
 msgstr "Този продукт не е наличен (вече) в тази мерна единица."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid "This product is not available for purchase in your country."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/cart.py:0
+msgid "This product is part of a combo and can't be updated individually."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
@@ -5872,10 +5904,10 @@ msgid ""
 "ones                            in list view and click on 'Portal Access "
 "Management' option in the                            dropdown menu *Action*."
 msgstr ""
-"За да изпращате покани в B2B режим, отворете контакт или изберете няколко"
-"                            в списъчен изглед и кликнете върху опцията „"
-"Управление на достъпа до портала“ в                            падащото меню "
-"*Действие*."
+"За да изпращате покани в B2B режим, отворете контакт или изберете "
+"няколко                            в списъчен изглед и кликнете върху "
+"опцията „Управление на достъпа до портала“ в                            "
+"падащото меню *Действие*."
 
 #. module: website_sale
 #. odoo-python
@@ -6442,7 +6474,8 @@ msgstr "Количката ви е празна."
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "Your cart is not ready to be paid, please verify previous steps."
-msgstr "Количката ви не е готова за плащане, моля, проверете предишните стъпки."
+msgstr ""
+"Количката ви не е готова за плащане, моля, проверете предишните стъпки."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status

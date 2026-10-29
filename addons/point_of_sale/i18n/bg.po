@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-06 01:36+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-19/"
@@ -288,8 +288,8 @@ msgstr ""
 "                    <div>В прикачения файл ще намерите касовата си бележка "
 "за покупката от <span><t t-out=\"format_datetime(dt=object.date_order, "
 "tz=tz, dt_format=&quot;EEEE d MMMM&quot;,                          "
-"lang_code=lg) or ''\">date</t> <t t-out=\"format_time"
-"(time=object.date_order, tz=tz, "
+"lang_code=lg) or ''\">date</t> <t t-"
+"out=\"format_time(time=object.date_order, tz=tz, "
 "time_format='short',                          lang_code=lg)\">time</t>.</"
 "span>\n"
 "                    </div>\n"
@@ -322,8 +322,9 @@ msgid ""
 "(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
 "(company_name)s. </p>"
 msgstr ""
-"<p>Уважаеми %(client_name)s,<br/>Това е Вашата касова бележка %(is_invoiced)"
-"sза             %(pos_name)s на стойност %(amount)s от %(company_name)s. </p>"
+"<p>Уважаеми %(client_name)s,<br/>Това е Вашата касова бележка %"
+"(is_invoiced)sза             %(pos_name)s на стойност %(amount)s от %"
+"(company_name)s. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -473,6 +474,13 @@ msgid "? Clicking \"Confirm\" will validate the payment."
 msgstr "? Натискането на бутон \"Потвърждавам\" ще валидира плащането."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
+msgid ""
+"A QR code payment already covers the amount due. Send it or remove it first."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__uuid
 msgid ""
 "A globally unique identifier for this pos configuration, used to prevent "
@@ -522,7 +530,8 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__receipt_footer
 msgid "A short text that will be inserted as a footer in the printed receipt."
-msgstr "Кратък текст, който да бъде въведен в заключителната част на бележката."
+msgstr ""
+"Кратък текст, който да бъде въведен в заключителната част на бележката."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__receipt_header
@@ -538,7 +547,8 @@ msgstr "СУМА"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept customer tips or convert their change to a tip"
-msgstr "Приемане на бакшиши от клиенти или преобразуване на рестото им в бакшиш"
+msgstr ""
+"Приемане на бакшиши от клиенти или преобразуване на рестото им в бакшиш"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -591,20 +601,16 @@ msgstr "Токен за достъп"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid ""
-"Access printer configuration panel by puttin this URL in your search bar:"
+"Access printer configuration panel by putting this URL in your search bar:"
 msgstr ""
-"Достъп до конфигурационния панел на принтера, като въведете този URL в "
-"адресната лента:"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid ""
-"Access the below URL but replace [printer_ip] with your current Pritner IP "
+"Access the below URL but replace [printer_ip] with your current Printer IP "
 "address"
 msgstr ""
-"Отворете долния URL, но заменете [printer_ip] с текущия IP адрес на вашия "
-"принтер"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__access_warning
@@ -1677,10 +1683,8 @@ msgid "Cart"
 msgstr "Количка"
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
-#: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.js:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__is_cash_count
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_payment_method__type__cash
 #: model:pos.payment.method,name:point_of_sale.cash_payment_method_furniture
@@ -1972,7 +1976,8 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_product_product__available_in_pos
 #: model:ir.model.fields,help:point_of_sale.field_product_template__available_in_pos
 msgid "Check if you want this product to appear in the Point of Sale."
-msgstr "Проверете дали искате този продукт да се появява в точката за продажба."
+msgstr ""
+"Проверете дали искате този продукт да се появява в точката за продажба."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_uom_uom__is_pos_groupable
@@ -2127,6 +2132,7 @@ msgstr "Клиент"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_configurator_popup/product_configurator_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
@@ -2390,6 +2396,7 @@ msgstr "Конфигурирайте поне една точка за прод�
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
+#: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/money_details_popup/money_details_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
@@ -2450,6 +2457,7 @@ msgstr "Свързване към прокси"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.js:0
 #: code:addons/point_of_sale/static/src/app/utils/error_handlers.js:0
 msgid "Connection Lost"
 msgstr "Връзката е прекъсната"
@@ -3018,7 +3026,8 @@ msgstr "Дефинирайте продукти и категории за ка�
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Define the smallest coinage of the currency used to pay by cash"
-msgstr "Определете най-малката монета на валутата, използвана за плащане в брой"
+msgstr ""
+"Определете най-малката монета на валутата, използвана за плащане в брой"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__name
@@ -4298,11 +4307,9 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid ""
-"If this endpoint does not returan a 404 error and displays a blank page, "
+"If this endpoint does not return a 404 error and displays a blank page, "
 "everything is ready."
 msgstr ""
-"Ако този endpoint не връща грешка 404 и показва празна страница, всичко е "
-"готово."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__refunded_orderline_id
@@ -5036,8 +5043,8 @@ msgid ""
 "Local IP address of an Epson receipt printer, or its serial number if the "
 "'Automatic Certificate Update' option is enabled in the printer settings."
 msgstr ""
-"Локален IP адрес на касов принтер Epson или серийният му номер, ако опцията „"
-"Automatic Certificate Update“ е активирана в настройките на принтера."
+"Локален IP адрес на касов принтер Epson или серийният му номер, ако опцията "
+"„Automatic Certificate Update“ е активирана в настройките на принтера."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5318,6 +5325,14 @@ msgstr "Съобщение"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
 msgid "Message Delivery error"
 msgstr "Грешка при доставката на съобщение"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/controllers/main.py:0
+msgid ""
+"Message: %(messages)s\n"
+"Please update the %(invalid_fields)s"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_ids
@@ -5722,7 +5737,8 @@ msgstr "Няма наличен слот за този ден"
 #. odoo-python
 #: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
 msgid "No valid orders were selected. No new invoices could be generated"
-msgstr "Не бяха избрани валидни поръчки. Не можаха да се генерират нови фактури"
+msgstr ""
+"Не бяха избрани валидни поръчки. Не можаха да се генерират нови фактури"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__barcode_nomenclature_id
@@ -5923,14 +5939,20 @@ msgid "Online reservation for Point of Sale"
 msgstr "Онлайн резервация за каса"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Only Point of Sale managers can modify a Point of Sale configuration."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order_line.js:0
 msgid ""
 "Only a negative quantity is allowed for this refund line. Click on +/- to "
 "modify the quantity to be refunded."
 msgstr ""
-"За този ред за връщане е разрешено само отрицателно количество. Натиснете +/-"
-", за да промените количеството за връщане."
+"За този ред за връщане е разрешено само отрицателно количество. Натиснете "
+"+/-, за да промените количеството за връщане."
 
 #. module: point_of_sale
 #. odoo-python
@@ -5952,8 +5974,8 @@ msgstr "Прилагайте закръгляне само в брой"
 msgid ""
 "Only journals of type 'Cash' or 'Bank' could be used with payment methods."
 msgstr ""
-"С начин на плащане могат да се използват само дневници от тип „В брой\" или „"
-"Банка\"."
+"С начин на плащане могат да се използват само дневници от тип „В брой\" или "
+"„Банка\"."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -7110,6 +7132,7 @@ msgid "Pos Order Count"
 msgstr "Брой на ПОС поръчки"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_account_tax__pos_order_line_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__pos_order_line_id
 msgid "Pos Order Line"
 msgstr "Ред на ПОС поръчка"
@@ -7466,8 +7489,8 @@ msgstr "Капакът на принтера е отворен. Моля, зат
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
-msgid "Printer's local IP address is printerd"
-msgstr "Локалният IP адрес на принтера е printerd"
+msgid "Printer's local IP address is printed"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -7984,6 +8007,9 @@ msgstr "Презаредете"
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/confirmation_dialog/confirmation_dialog.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/confirmation_dialog/confirmation_dialog.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.js:0
+#: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.xml:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Reload Data"
 msgstr "Презареди данните"
 
@@ -8404,6 +8430,12 @@ msgstr "Търсене на продукти..."
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Secure printing"
 msgstr "Защитен печат"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "Secure printing enabled"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bus_mixin__access_token
@@ -8871,6 +8903,7 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/main.js:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid ""
 "Some paid orders have not been synced to the server yet. Closing or "
 "reloading now may cause data loss."
@@ -9073,7 +9106,8 @@ msgstr "Лятна шапка, идеална за плажни дни и слъ
 #: model:product.template,description_sale:point_of_sale.product_pecan_pie_product_template
 msgid ""
 "Sweet pie filled with pecans, with a rich, buttery filling and flaky saltt."
-msgstr "Сладък пай с пълнеж от пекан, с богат, маслен пълнеж и ронлива коричка."
+msgstr ""
+"Сладък пай с пълнеж от пекан, с богат, маслен пълнеж и ронлива коричка."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9236,6 +9270,12 @@ msgstr "Тест"
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Thank you."
 msgstr "Благодарим Ви."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/controllers/main.py:0
+msgid "The %s must be filled in your details."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -9639,7 +9679,8 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid ""
 "The points of sale for the payment method %s must belong to its company."
-msgstr "Касите за начина на плащане %s трябва да принадлежат на неговата фирма."
+msgstr ""
+"Касите за начина на плащане %s трябва да принадлежат на неговата фирма."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_account_bank_statement_line__reversed_pos_order_id
@@ -9716,6 +9757,12 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_iface_print_auto
 msgid "The receipt will automatically be printed at the end of each order."
 msgstr "Разписката автоматично ще бъде отпечатана в края на всяка поръчка."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.js:0
+msgid "The register cannot be opened while offline. Please try again."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10018,6 +10065,13 @@ msgstr "Тези начини на плащане ще бъдат налични
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.js:0
+msgid ""
+"This action will delete all unsaved orders and other locally stored data"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/barcode_reader_service.js:0
 msgid ""
 "This barcode is not compatible with the GS1 standard. Consider configuring a "
@@ -10107,6 +10161,7 @@ msgstr "Тази операция ще унищожи всички ${"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_configurator_popup/product_configurator_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "This option or combination of options is not available"
 msgstr "Тази опция или комбинация от опции не е налична"
 
@@ -10740,6 +10795,12 @@ msgid "Value"
 msgstr "Стойност"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "Variant does not exist"
+msgstr ""
+
+#. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_green_hood_product_template
 msgid ""
 "Versatile cotton hoodie with an adjustable drawstring hood and front zipper "
@@ -11133,6 +11194,12 @@ msgstr "Не можете да редактирате плащане на осч
 
 #. module: point_of_sale
 #. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "You cannot refund more than the outstanding quantity for this product."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
 "You cannot share open orders with configuration that does not use the same "
@@ -11169,7 +11236,8 @@ msgstr "Нямате права за достъп да изтриете касо
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "You don't have the access rights to get the cash in/out list."
-msgstr "Нямате права за достъп да получите списъка с касови внасяния/изнасяния."
+msgstr ""
+"Нямате права за достъп да получите списъка с касови внасяния/изнасяния."
 
 #. module: point_of_sale
 #. odoo-python
@@ -11546,6 +11614,18 @@ msgid "open orders planned for later."
 msgstr "отворени поръчки, планирани за по-късно."
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "order"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "orders"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
 msgid "orders per"
 msgstr "поръчки на"
@@ -11613,6 +11693,29 @@ msgstr "със стойност"
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "x"
 msgstr "x"
+
+#~ msgid ""
+#~ "Access printer configuration panel by puttin this URL in your search bar:"
+#~ msgstr ""
+#~ "Достъп до конфигурационния панел на принтера, като въведете този URL в "
+#~ "адресната лента:"
+
+#~ msgid ""
+#~ "Access the below URL but replace [printer_ip] with your current Pritner "
+#~ "IP address"
+#~ msgstr ""
+#~ "Отворете долния URL, но заменете [printer_ip] с текущия IP адрес на вашия "
+#~ "принтер"
+
+#~ msgid ""
+#~ "If this endpoint does not returan a 404 error and displays a blank page, "
+#~ "everything is ready."
+#~ msgstr ""
+#~ "Ако този endpoint не връща грешка 404 и показва празна страница, всичко е "
+#~ "готово."
+
+#~ msgid "Printer's local IP address is printerd"
+#~ msgstr "Локалният IP адрес на принтера е printerd"
 
 #~ msgid "Ok"
 #~ msgstr "Добре"

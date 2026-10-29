@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:36+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-23 06:10+0000\n"
 "Last-Translator: Heshmatkhah <maheshmatkhah.soft@gmail.com>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-19/"
@@ -102,14 +102,10 @@ msgid ""
 "* 'Show with notification' is 'Show' in addition to a floating text just "
 "next to the button.\n"
 "* 'Open automatically' displays the button and automatically opens the "
-"conversation pane.\n"
+"conversation pane on larger screens. On small screens, this behaves like "
+"'Show'.\n"
 "* 'Hide' hides the chat button on the pages.\n"
 msgstr ""
-"* 'نمایش' دکمه چت را در صفحات نمایش می‌دهد.\n"
-"* 'نمایش با اعلان' همان 'نمایش' است به‌علاوه یک متن شناور درست در کنار دکمه.\n"
-"* 'باز شدن خودکار' دکمه را نمایش می‌دهد و به‌طور خودکار صفحه گفتگو را باز "
-"می‌کند.\n"
-"* 'پنهان کردن' دکمه چت را در صفحات پنهان می‌کند.\n"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
@@ -565,7 +561,8 @@ msgstr "چت‌بات‌ها"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Choose the live chat channel you want to display on your website."
-msgstr "کانال چت زنده ای را که می خواهید در وب سایت خود نمایش دهید انتخاب کنید."
+msgstr ""
+"کانال چت زنده ای را که می خواهید در وب سایت خود نمایش دهید انتخاب کنید."
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_troubleshooting_answer_chrome_demo
@@ -1088,9 +1085,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
 "Go to <strong>Website</strong> &gt; <strong>Configuration</strong> &gt; "
-"<strong>Settings</strong> &gt; <strong>Email</strong> &amp; "
-"<strong>Marketing.</strong>"
-msgstr "وارد مسیر وب سایت، پیکربندی، تنظیمات، ایمیل، بازاریابی شوید."
+"<strong>Settings</strong> &gt; <strong>General.</strong>"
+msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2695,6 +2691,12 @@ msgid "Thank you for your feedback"
 msgstr "سپاسگزاریم از بازخورد شما"
 
 #. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/im_livechat_channel.py:0
+msgid "The URL Regex '%(regex)s' is not valid."
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__channel_id
 msgid "The channel of the rule"
 msgstr "کانال قانون"
@@ -3068,8 +3070,8 @@ msgid ""
 "When forwarding live chat conversations, the chatbot will prioritize users "
 "with matching expertise."
 msgstr ""
-"هنگام ارجاع مکالمات گفتگوی آنلاین، ربات گفتگو کاربرانی که تخصص منطبق دارند را "
-"در اولویت قرار می‌دهد."
+"هنگام ارجاع مکالمات گفتگوی آنلاین، ربات گفتگو کاربرانی که تخصص منطبق دارند "
+"را در اولویت قرار می‌دهد."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__has_call
@@ -3242,6 +3244,27 @@ msgstr "ثانیه‌ها"
 #: model:ir.model,name:im_livechat.model_ir_websocket
 msgid "websocket message handling"
 msgstr "مدیریت پیام‌های وب‌سوکت"
+
+#~ msgid ""
+#~ "* 'Show' displays the chat button on the pages.\n"
+#~ "* 'Show with notification' is 'Show' in addition to a floating text just "
+#~ "next to the button.\n"
+#~ "* 'Open automatically' displays the button and automatically opens the "
+#~ "conversation pane.\n"
+#~ "* 'Hide' hides the chat button on the pages.\n"
+#~ msgstr ""
+#~ "* 'نمایش' دکمه چت را در صفحات نمایش می‌دهد.\n"
+#~ "* 'نمایش با اعلان' همان 'نمایش' است به‌علاوه یک متن شناور درست در کنار "
+#~ "دکمه.\n"
+#~ "* 'باز شدن خودکار' دکمه را نمایش می‌دهد و به‌طور خودکار صفحه گفتگو را باز "
+#~ "می‌کند.\n"
+#~ "* 'پنهان کردن' دکمه چت را در صفحات پنهان می‌کند.\n"
+
+#~ msgid ""
+#~ "Go to <strong>Website</strong> &gt; <strong>Configuration</strong> &gt; "
+#~ "<strong>Settings</strong> &gt; <strong>Email</strong> &amp; "
+#~ "<strong>Marketing.</strong>"
+#~ msgstr "وارد مسیر وب سایت، پیکربندی، تنظیمات، ایمیل، بازاریابی شوید."
 
 #~ msgid " (copy)"
 #~ msgstr "(کپی)"

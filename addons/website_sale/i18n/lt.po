@@ -29,7 +29,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-10-08 13:33+0000\n"
 "Last-Translator: Ulevičienė <vilma.uleviciene@mededu.lt>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/"
@@ -39,8 +39,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
-"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 "
-": n % 1 != 0 ? 2: 3);\n"
+"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
+"1 : n % 1 != 0 ? 2: 3);\n"
 "X-Generator: Weblate 2026.8.1\n"
 
 #. module: website_sale
@@ -73,8 +73,8 @@ msgid ""
 "                 -"
 msgstr ""
 "&amp;copy;\n"
-"                <span class=\"o_footer_copyright_name align-baseline\">"
-"Įmonės pavadinimas</span>\n"
+"                <span class=\"o_footer_copyright_name align-"
+"baseline\">Įmonės pavadinimas</span>\n"
 "                 -"
 
 #. module: website_sale
@@ -262,8 +262,8 @@ msgid ""
 ">\n"
 "                    <span class=\"o_label small ms-1\">Add to Cart</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-shopping-cart o_not-animable\" role=\"presentation\"/>"
-"\n"
+"<i class=\"fa fa-fw fa-shopping-cart o_not-animable\" role=\"presentation\"/"
+">\n"
 "                    <span class=\"o_label small ms-1\">Į krepšelį</span>"
 
 #. module: website_sale
@@ -361,8 +361,8 @@ msgstr ""
 "                        Čia galite rasti visus paliktus krepšelius, t.y., "
 "jūsų svetainės lankytojų sugeneruotus krepšelius, kurie buvo sukurti prieš "
 "daugiau nei valandą ir dar nebuvo patvirtinti.</p>\n"
-"                        <p>Turėtumėte jiems nusiųsti paskatinantį laišką!</p>"
-"\n"
+"                        <p>Turėtumėte jiems nusiųsti paskatinantį laišką!</"
+"p>\n"
 "                    "
 
 #. module: website_sale
@@ -387,8 +387,8 @@ msgid ""
 "        </small>"
 msgstr ""
 "<small class=\"text-muted mb-0\">\n"
-"            <a href=\"/terms\" class=\"o_translate_inline text-muted\"><u>"
-"Taisyklės ir sąlygos</u></a><br/>\n"
+"            <a href=\"/terms\" class=\"o_translate_inline text-"
+"muted\"><u>Taisyklės ir sąlygos</u></a><br/>\n"
 "            30-dienų pinigų grąžinimo garantija<br/>\n"
 "            Išsiuntimas: 2-3 Darbo dienos\n"
 "        </small>"
@@ -503,8 +503,8 @@ msgid ""
 "animable\"/> Fast Shipping\n"
 "                                </span>"
 msgstr ""
-"<span class=\"s_badge badge text-bg-primary o_animable\" data-name=\"Badge\">"
-"\n"
+"<span class=\"s_badge badge text-bg-primary o_animable\" data-"
+"name=\"Badge\">\n"
 "                                    <i class=\"fa fa-dollar fa-fw o_not-"
 "animable\"/> Žema kaina\n"
 "                                </span>\n"
@@ -574,8 +574,8 @@ msgid ""
 "<span name=\"o_wsale_cta_wrapper_boxed_price_label\" class=\"text-"
 "muted\">Price</span>"
 msgstr ""
-"<span name=\"o_wsale_cta_wrapper_boxed_price_label\" class=\"text-muted\">"
-"Kaina</span>"
+"<span name=\"o_wsale_cta_wrapper_boxed_price_label\" class=\"text-"
+"muted\">Kaina</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_list
@@ -736,8 +736,8 @@ msgstr ""
 "width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
 "0px 0px 0px 0px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                    <h1 style=\"color:#A9A9A9;\">JŪSŲ KREPŠELYJE LIKO "
-"PREKIŲ.</h1>\n"
+"                    <h1 style=\"color:#A9A9A9;\">JŪSŲ KREPŠELYJE LIKO PREKIŲ."
+"</h1>\n"
 "                    Ar norėtumėte užbaigti pirkimą?<br/><br/>\n"
 "                    <t t-if=\"object.order_line\">\n"
 "                        <t t-foreach=\"object.website_order_line\" t-"
@@ -745,8 +745,8 @@ msgstr ""
 "                            <hr/>\n"
 "                            <table width=\"100%\">\n"
 "                                <tr>\n"
-"                                    <td style=\"padding: 10px; "
-"width:150px;\">\n"
+"                                    <td style=\"padding: 10px; width:150px;"
+"\">\n"
 "                                        <img t-attf-src=\"/web/image/"
 "product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; "
 "height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
@@ -770,10 +770,10 @@ msgstr ""
 "0px; font-size: 14px;\">\n"
 "                        <a t-attf-href=\"{{ object.get_base_url() }}/shop/"
 "cart?id={{ object.id }}&amp;access_token={{ object.access_token }}\" "
-"target=\"_blank\" t-attf-style=\"background-color: {"
-"{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: "
-"8px 16px 8px 16px; text-decoration: none; color: {"
-"{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
+"target=\"_blank\" t-attf-style=\"background-color: "
+"{{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: "
+"8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
 "radius: 5px; font-size:13px;\">\n"
 "                            Tęsti užsakymą\n"
 "                        </a>\n"
@@ -819,9 +819,9 @@ msgid ""
 "on                                      this page. Use '/' to discover more "
 "features."
 msgstr ""
-"Išsamus, suformatuotas aprašymas, skirtas reklamuoti jūsų produktą"
-"                                      šiame puslapyje. Naudokite '/' kad "
-"atrastumėte daugiau funkcijų."
+"Išsamus, suformatuotas aprašymas, skirtas reklamuoti jūsų "
+"produktą                                      šiame puslapyje. Naudokite '/' "
+"kad atrastumėte daugiau funkcijų."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -962,8 +962,8 @@ msgid ""
 "Add a reference price per UoM on products (i.e $/kg), in addition to "
 "the                           sale price"
 msgstr ""
-"Pridėkite referencinę kainą už vienetą prie produktų (pvz., $/kg) prie"
-"                           pardavimo kainos"
+"Pridėkite referencinę kainą už vienetą prie produktų (pvz., $/kg) "
+"prie                           pardavimo kainos"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__compare_list_price
@@ -1675,8 +1675,8 @@ msgstr "Spustelėkite ir atsiimkite"
 msgid ""
 "Click <i>'New'</i> in the top-right corner to create your first product."
 msgstr ""
-"Norėdami sukurti savo pirmąjį produktą, paspauskite <i>\"Naujas\"</i>"
-"dešiniajame viršutiniame kampe"
+"Norėdami sukurti savo pirmąjį produktą, paspauskite <i>\"Naujas\"</"
+"i>dešiniajame viršutiniame kampe"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -2071,7 +2071,8 @@ msgstr "El. pašto šablonų pritaikymas"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"
-msgstr "ĮDĖKITE ČIA STATYBOS BLOKUS, KAD JIE BŪTŲ PRIEINAMI VISUOSE PRODUKTUOSE"
+msgstr ""
+"ĮDĖKITE ČIA STATYBOS BLOKUS, KAD JIE BŪTŲ PRIEINAMI VISUOSE PRODUKTUOSE"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2244,7 +2245,8 @@ msgstr "Dizainas ir planavimas"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_category_template
 msgid "Designing elegant, inviting environments that inspire and delight."
-msgstr "Kuriame elegantiškas, patrauklias aplinkas, kurios įkvepia ir džiugina."
+msgstr ""
+"Kuriame elegantiškas, patrauklias aplinkas, kurios įkvepia ir džiugina."
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_lamps_desk
@@ -2493,7 +2495,8 @@ msgstr "Papildomi elektroninės prekybos laukeliai"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_sale_extra_field
 msgid "E-Commerce Extra Info Shown on product page"
-msgstr "Papildoma informacija apie elektroninę prekybą, rodoma prekės puslapyje"
+msgstr ""
+"Papildoma informacija apie elektroninę prekybą, rodoma prekės puslapyje"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_document_form
@@ -3001,7 +3004,8 @@ msgstr "Href"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
 msgid "Huge file size. The image should be optimized/reduced."
-msgstr "Labai didelis failo dydis. Vaizdas turėtų būti optimizuotas/sumažintas."
+msgstr ""
+"Labai didelis failo dydis. Vaizdas turėtų būti optimizuotas/sumažintas."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.accept_terms_and_conditions
@@ -5369,6 +5373,14 @@ msgstr "Išparduota"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
+msgid ""
+"Some products in your cart are not available for purchase in your country. "
+"Please remove them or contact us."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
 msgid "Sorry, we are unable to ship your order."
 msgstr "Atsiprašome, bet negalime išsiųsti jūsų užsakymo."
 
@@ -5658,13 +5670,15 @@ msgstr ""
 #: code:addons/website_sale/models/sale_order.py:0
 msgid ""
 "The given combination does not exist therefore it cannot be added to cart."
-msgstr "Duotoji kombinacija neegzistuoja, todėl negali būti pridėta į krepšelį."
+msgstr ""
+"Duotoji kombinacija neegzistuoja, todėl negali būti pridėta į krepšelį."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/cart.py:0
 msgid "The given product does not exist therefore it cannot be added to cart."
-msgstr "Duotasis produktas neegzistuoja, todėl negali būti pridėtas į krepšelį."
+msgstr ""
+"Duotasis produktas neegzistuoja, todėl negali būti pridėtas į krepšelį."
 
 #. module: website_sale
 #. odoo-python
@@ -5683,6 +5697,14 @@ msgstr ""
 "Čia pasirinktas režimas taikomas kaip sąskaitų išrašymo politika bet kuriam "
 "naujam produktui,                            kuris bus sukurtas, bet ne jau "
 "esamiems produktams."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/cart.py:0
+msgid ""
+"The number of selected combo items must match the number of available combo "
+"choices."
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -5822,6 +5844,18 @@ msgid "This product is not available (anymore) in this unit of measure."
 msgstr "Šio produkto šia matavimo vienetu (jau) nėra."
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid "This product is not available for purchase in your country."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/cart.py:0
+msgid "This product is part of a combo and can't be updated individually."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
 msgid "This product is unpublished."
 msgstr "Šis produktas yra nepaskelbtas."
@@ -5852,8 +5886,8 @@ msgstr "„TikTok“"
 #: model:ir.model.fields,field_description:website_sale.field_website__send_abandoned_cart_email_activation_time
 msgid "Time when the 'Send abandoned cart email' feature was activated."
 msgstr ""
-"Laikas, kai buvo aktyvuota funkcija „Siųsti el. laišką dėl palikto krepšelio"
-"“."
+"Laikas, kai buvo aktyvuota funkcija „Siųsti el. laišką dėl palikto "
+"krepšelio“."
 
 #. module: website_sale
 #. odoo-javascript
@@ -5869,8 +5903,8 @@ msgid ""
 "Management' option in the                            dropdown menu *Action*."
 msgstr ""
 "Norėdami siųsti kvietimus B2B režimu, atidarykite kontaktą arba pasirinkite "
-"kelis kontaktus sąrašo peržiūroje ir spustelėkite „Portalo prieigos valdymas"
-"“ parinktį išskleidžiamajame meniu *Veiksmas*."
+"kelis kontaktus sąrašo peržiūroje ir spustelėkite „Portalo prieigos "
+"valdymas“ parinktį išskleidžiamajame meniu *Veiksmas*."
 
 #. module: website_sale
 #. odoo-python
@@ -6344,7 +6378,8 @@ msgstr "Su trimis pėdomis"
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid "Wrong format: got `pricelist=%s`, expected an integer"
-msgstr "Neteisingas formatas: gauta `pricelist=%s`, tikėtasi sveikasis skaičius"
+msgstr ""
+"Neteisingas formatas: gauta `pricelist=%s`, tikėtasi sveikasis skaičius"
 
 #. module: website_sale
 #. odoo-python

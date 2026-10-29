@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"POT-Creation-Date: 2026-10-24 17:38+0000\n"
 "PO-Revision-Date: 2026-09-16 07:33+0000\n"
 "Last-Translator: Nedžad Beus <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
@@ -768,7 +768,8 @@ msgstr "Dodaj obseg"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Additional cases to try if the previous ones don't match expression."
-msgstr "Dodatni primeri, ki jih poskusite, če se prejšnji ne ujemajo z izrazom."
+msgstr ""
+"Dodatni primeri, ki jih poskusite, če se prejšnji ne ujemajo z izrazom."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1862,6 +1863,13 @@ msgstr "Vseh vrstic lista ni mogoče skriti."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Cannot open the link because the linked sheet is hidden."
 msgstr "Povezave ni mogoče odpreti, ker je povezani list skrit."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"Cannot perform this action on merged cells. Unmerge the cells and try again."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4869,8 +4877,8 @@ msgid ""
 "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must be "
 "equal to the           number of rows of the second matrix (%s)."
 msgstr ""
-"V [[FUNCTION_NAME]] mora biti število stolpcev prve matrike (%s) enako"
-"           številu vrstic druge matrike (%s)."
+"V [[FUNCTION_NAME]] mora biti število stolpcev prve matrike (%s) "
+"enako           številu vrstic druge matrike (%s)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8874,7 +8882,8 @@ msgstr "Vrednost case_sensitivity (%s) mora biti 0 ali 1."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "The cashflow_amounts and cashflow_dates ranges must have the same dimensions."
-msgstr "Obsega cashflow_amounts in cashflow_dates morata imeti enake dimenzije."
+msgstr ""
+"Obsega cashflow_amounts in cashflow_dates morata imeti enake dimenzije."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9371,8 +9380,8 @@ msgstr "Končni datum (%s) mora biti pozitiven ali nič."
 msgid ""
 "The end_period (%(end)s) must be smaller or equal to the life (%(life)s)."
 msgstr ""
-"Končno obdobje (%(end)s) mora biti manjše ali enako življenjski dobi (%(life)"
-"s)."
+"Končno obdobje (%(end)s) mora biti manjše ali enako življenjski dobi (%"
+"(life)s)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10007,8 +10016,8 @@ msgid ""
 "The maturity (%(maturity)s) must be strictly greater than the settlement (%"
 "(settlement)s)."
 msgstr ""
-"Zapadlost (%(maturity)s) mora biti strogo večja od poravnave (%(settlement)s)"
-"."
+"Zapadlost (%(maturity)s) mora biti strogo večja od poravnave (%"
+"(settlement)s)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10652,7 +10661,8 @@ msgstr "Vzorec ali preizkus, ki se uporabi za range."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The percentile whose value within data will be calculated and returned."
-msgstr "Percentil, katerega vrednost znotraj podatkov bo izračunana in vrnjena."
+msgstr ""
+"Percentil, katerega vrednost znotraj podatkov bo izračunana in vrnjena."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11723,7 +11733,8 @@ msgstr "Vrednost (%s) mora biti strogo pozitivna."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The value does not match the custom formula data validation rule"
-msgstr "Vrednost se ne ujema s pravilom preverjanja podatkov po meri za formule"
+msgstr ""
+"Vrednost se ne ujema s pravilom preverjanja podatkov po meri za formule"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11774,8 +11785,8 @@ msgid ""
 "The value for which to calculate the inverse hyperbolic tangent. Must be "
 "between -1 and 1, exclusive."
 msgstr ""
-"Vrednost, za katero se izračuna inverzni hiperbolični tangens. Mora biti "
-"med -1 in 1, brez skrajnih vrednosti."
+"Vrednost, za katero se izračuna inverzni hiperbolični tangens. Mora biti med "
+"-1 in 1, brez skrajnih vrednosti."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12419,11 +12430,9 @@ msgstr "Tega dejanja ni dovoljeno izvesti z več izbirami."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"This operation is not possible due to a merge. Please remove the merges "
-"first than try again."
+"This operation would cause tables to overlap. Move or remove the conflicting "
+"table and try again."
 msgstr ""
-"Ta operacija ni mogoča zaradi združitev. Najprej odstranite združitve in "
-"nato poskusite znova."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13338,8 +13347,8 @@ msgid ""
 "TRUE). If FALSE, empty cells values are added between consecutive delimiters."
 msgstr ""
 "Ali naj se iz rezultatov razdelitve odstranijo prazna besedilna sporočila. "
-"Privzeto vedenje je, da se zaporedna ločila obravnavajo kot eno (če je TRUE)"
-". Če je FALSE, se med zaporedna ločila dodajo vrednosti praznih celic."
+"Privzeto vedenje je, da se zaporedna ločila obravnavajo kot eno (če je "
+"TRUE). Če je FALSE, se med zaporedna ločila dodajo vrednosti praznih celic."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13536,7 +13545,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Wrong value of 'n'. Expected a positive number. Got %s."
-msgstr "Napačna vrednost za »n«. Pričakovano je pozitivno število. Prejeto: %s."
+msgstr ""
+"Napačna vrednost za »n«. Pričakovano je pozitivno število. Prejeto: %s."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -14010,3 +14020,10 @@ msgstr "včeraj"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "zero"
 msgstr "nič"
+
+#~ msgid ""
+#~ "This operation is not possible due to a merge. Please remove the merges "
+#~ "first than try again."
+#~ msgstr ""
+#~ "Ta operacija ni mogoča zaradi združitev. Najprej odstranite združitve in "
+#~ "nato poskusite znova."

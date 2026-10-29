@@ -31,8 +31,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:38+0000\n"
-"PO-Revision-Date: 2026-10-21 12:29+0000\n"
+"POT-Creation-Date: 2026-10-24 17:38+0000\n"
+"PO-Revision-Date: 2026-10-29 08:29+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/web/sv/>"
 "\n"
@@ -280,8 +280,8 @@ msgid ""
 msgstr ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa "
 "Barbara\n"
-"                                        Rd<br/>Pleasant Hill CA 94523<br/>"
-"United States</span>"
+"                                        Rd<br/>Pleasant Hill CA 94523<br/"
+">United States</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -1772,6 +1772,7 @@ msgstr "Konvertera till webp"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
 msgid "Copied"
@@ -1782,6 +1783,12 @@ msgstr "Kopierad"
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
 msgid "Copy"
 msgstr "Kopiera"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
+msgid "Copy Arch"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -3189,7 +3196,7 @@ msgstr "Dölj symbol"
 #. odoo-javascript
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 msgid "Hide technical details"
-msgstr "Dölj tekniska detaljer"
+msgstr "Dölj teknisk information"
 
 #. module: web
 #. odoo-javascript
@@ -5047,7 +5054,8 @@ msgstr "Endast sökbar"
 msgid ""
 "Only the first %(count)s records have been deleted (out of %(total)s "
 "selected)"
-msgstr "Endast de första %(count)s posterna har raderats (av %(total)s utvalda)"
+msgstr ""
+"Endast de första %(count)s posterna har raderats (av %(total)s utvalda)"
 
 #. module: web
 #. odoo-python
@@ -5056,8 +5064,8 @@ msgid ""
 "Only types %(supported_types)s are supported for category (found type %"
 "(field_type)s)"
 msgstr ""
-"Endast typer %(supported_types)s stöds för kategori (hittad typ %(field_type)"
-"s)"
+"Endast typer %(supported_types)s stöds för kategori (hittad typ %"
+"(field_type)s)"
 
 #. module: web
 #. odoo-python
@@ -6073,6 +6081,12 @@ msgstr "Sök flera..."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/reference/reference_field.js:0
+msgid "Search a record..."
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_picker.js:0
 msgid "Search emoji"
 msgstr "Sök emoj"
@@ -6379,6 +6393,12 @@ msgstr "Shinto"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/webclient/user_menu/user_menu_items.js:0
+msgid "Shortcuts"
+msgstr "Genvägar"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/search/control_panel/control_panel.js:0
 msgid "Show %s view"
 msgstr "Visa %s vy"
@@ -6466,8 +6486,8 @@ msgid ""
 "Something went wrong... If you really are stuck, share the report with your "
 "friendly support service"
 msgstr ""
-"Något verkar ha gått fel... Om du har kört fast, kan du välja att dela den "
-"här rapporten med vår kundtjänst."
+"Något verkar ha gått fel... Om problemet kvarstår, kan du välja att dela den "
+"tekniska informationen med vår kundtjänst."
 
 #. module: web
 #. odoo-javascript
@@ -6771,14 +6791,22 @@ msgid "The app seems to be installed on your device"
 msgstr "Appen verkar vara installerad på din enhet"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/search_arch_parser.js:0
+msgid ""
+"The autocomplete value for %(field)s has not been found: the record with id %"
+"(id)s doesn't seem to exist"
+msgstr ""
+
+#. module: web
 #. odoo-python
 #: code:addons/web/controllers/export.py:0
 msgid ""
 "The content of this cell is too long for an XLSX file (more than %s "
 "characters). Please use the CSV format for this export."
 msgstr ""
-"Innehållet i den här cellen är för långt för en XLSX -fil (mer än %s tecken)"
-". Använd CSV -formatet för denna export."
+"Innehållet i den här cellen är för långt för en XLSX -fil (mer än %s "
+"tecken). Använd CSV -formatet för denna export."
 
 #. module: web
 #. odoo-javascript
@@ -7889,8 +7917,8 @@ msgid ""
 "You need to start Odoo with at least two workers to print a pdf version of "
 "the reports."
 msgstr ""
-"Du måste starta Odoo med minst två arbetare för att skriva ut en pdf -"
-"version av rapporterna."
+"Du måste starta Odoo med minst två arbetare för att skriva ut en pdf "
+"-version av rapporterna."
 
 #. module: web
 #. odoo-javascript
@@ -27551,9 +27579,6 @@ msgstr ""
 
 #~ msgid "Share with all users"
 #~ msgstr "Dela med alla användare"
-
-#~ msgid "Shortcuts"
-#~ msgstr "Genvägar"
 
 #~ msgid "Size:"
 #~ msgstr "Storlek:"

@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:35+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-02 17:32+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-19/"
@@ -75,7 +75,8 @@ msgstr "%(expense_name)s: Niste ni voditelj ni HR službenik tvrtke ovog troška
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "%(user)s confirms this expense is not a duplicate with similar expense."
-msgstr "%(user)s potvrdio da ovaj trošak nije dupliciran sa sličnim postojećim."
+msgstr ""
+"%(user)s potvrdio da ovaj trošak nije dupliciran sa sličnim postojećim."
 
 #. module: hr_expense
 #: model:ir.actions.report,print_report_name:hr_expense.action_report_hr_expense
@@ -528,7 +529,8 @@ msgstr "Zadani dnevnik troškova"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Default accounting journal for expenses paid by employees."
-msgstr "Zadani računovodstveni dnevnik za troškove koje su platili zaposlenici."
+msgstr ""
+"Zadani računovodstveni dnevnik za troškove koje su platili zaposlenici."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
@@ -958,6 +960,11 @@ msgstr "Ima poruku"
 #: model_terms:product.template,description:hr_expense.expense_product_travel_accommodation_product_template
 msgid "Hotel, plane ticket, taxi, etc."
 msgstr "Kotel, avionske karte, taksi isl."
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_account_tax__hr_expense_ids
+msgid "Hr Expense"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_domain_id
@@ -2245,13 +2252,14 @@ msgid ""
 "like allowances for mileage, per diem, "
 "accommodation                                             or meal."
 msgstr ""
-"Kada je cijena proizvoda troška različita od 0, tada korisnik"
-"                                             koji koristi ovaj proizvod neće "
-"moći mijenjati iznos troška,                                             "
-"samo količinu. Koristite cijenu različitu od 0 za kategorije troškova koje "
-"tvrtka financira                                             po fiksnoj "
-"cijeni, poput naknada za kilometražu, dnevnica, smještaja"
-"                                             ili obroka."
+"Kada je cijena proizvoda troška različita od 0, tada "
+"korisnik                                             koji koristi ovaj "
+"proizvod neće moći mijenjati iznos "
+"troška,                                             samo količinu. Koristite "
+"cijenu različitu od 0 za kategorije troškova koje tvrtka "
+"financira                                             po fiksnoj cijeni, "
+"poput naknada za kilometražu, dnevnica, "
+"smještaja                                             ili obroka."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
@@ -2388,6 +2396,7 @@ msgstr "Nemate prava za uređivanje ovog troška."
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
+#: code:addons/hr_expense/wizard/hr_expense_post_wizard.py:0
 msgid "You don't have the access rights to modify this expense."
 msgstr ""
 

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-13 18:39+0000\n"
+"POT-Creation-Date: 2026-10-24 17:38+0000\n"
 "PO-Revision-Date: 2026-08-05 04:20+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -34,12 +34,12 @@ msgid ""
 "Checking</option>\n"
 "                    </select>"
 msgstr ""
-"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-select\">"
-"\n"
+"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-"
+"select\">\n"
 "                        <option value=\"checking\">個人往來</option>\n"
 "                        <option value=\"savings\">個人儲蓄</option>\n"
-"                        <option value=\"businessChecking\">商業往來</option>"
-"\n"
+"                        <option value=\"businessChecking\">商業往來</"
+"option>\n"
 "                    </select>"
 
 #. module: payment_authorize
@@ -116,6 +116,12 @@ msgid ""
 msgstr ""
 "未能讀取商戶詳細資料：\n"
 "%s"
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/models/authorize_request.py:0
+msgid "Could not retrieve the transaction details."
+msgstr ""
 
 #. module: payment_authorize
 #. odoo-python

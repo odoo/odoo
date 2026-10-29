@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:38+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-10-05 22:33+0000\n"
 "Last-Translator: Ulevičienė <vilma.uleviciene@mededu.lt>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/"
@@ -38,8 +38,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
-"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 "
-": n % 1 != 0 ? 2: 3);\n"
+"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
+"1 : n % 1 != 0 ? 2: 3);\n"
 "X-Generator: Weblate 2026.8.1\n"
 
 #. module: project
@@ -292,24 +292,24 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>"
-"\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/"
+">\n"
 "   <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
 "style=\"width:100%; margin:0px auto;\"> \n"
 "   <tbody>\n"
 "        <tr> <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            <t t-if=\"partner.name\"> \n"
-"                Sveiki, <t t-out=\"partner.name or ''\">Brandon Freeman</t>"
-",<br/><br/>\n"
+"                Sveiki, <t t-out=\"partner.name or ''\">Brandon Freeman</t>,"
+"<br/><br/>\n"
 "           </t>\n"
 "            <t t-else=\"\"> \n"
 "                Sveiki,<br/><br/>\n"
 "           </t> \n"
 "            Prašome skirti šiek tiek laiko ir įvertinti mūsų paslaugas, "
 "susijusias su užduotimi „ <strong t-out=\"object.name or ''\">“ Planavimas "
-"ir biudžetas</strong>           <t t-if=\"object._rating_get_operator()"
-".name\"> \n"
+"ir biudžetas</strong>           <t t-"
+"if=\"object._rating_get_operator().name\"> \n"
 "                priskirta <strong t-out=\"object._rating_get_operator().name "
 "or ''\">Mitchell Admin</strong>.<br/>\n"
 "            </t>\n"
@@ -362,15 +362,15 @@ msgstr ""
 "           <t t-if=\"object.stage_id.rating_status == 'stage'\">\n"
 "                <br/> <span style=\"margin: 0; font-size: 12px; opacity: "
 "0.5; color: #454748;\"> Ši pasitenkinimo apklausa buvo išsiųsta, nes jūsų "
-"užduotis buvo perkelta į „ <b t-out=\"object.stage_id.name or ''\">“ etapą „"
-"Vykdoma“</b></span>\n"
+"užduotis buvo perkelta į „ <b t-out=\"object.stage_id.name or ''\">“ etapą "
+"„Vykdoma“</b></span>\n"
 "            </t> \n"
 "           <t t-if=\"object.stage_id.rating_status == 'periodic'\">\n"
 "                <br/> <span style=\"margin: 0; font-size: 12px; opacity: "
 "0.5; color: #454748;\"> Ši pasitenkinimo apklausa siunčiama <b t-"
 "out=\"object.stage_id.rating_status_period or ''\">kas savaitę</b> tol, kol "
-"užduotis yra „ <b t-out=\"object.stage_id.name or ''\">“ etape „Vykdoma“</b>"
-".</span>\n"
+"užduotis yra „ <b t-out=\"object.stage_id.name or ''\">“ etape „Vykdoma“</b>."
+"</span>\n"
 "            </t>\n"
 "       </td></tr> \n"
 "       <tr><td> <br/> Su pagarba,</td></tr>\n"
@@ -379,19 +379,19 @@ msgstr ""
 "t>\n"
 "        </td></tr>\n"
 "        <tr> <td style=\"opacity: 0.5;\">\n"
-"            <t t-out=\"object.project_id.company_id.phone or ''\"> 1 650-123-"
-"4567</t>\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\"> 1 "
+"650-123-4567</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href=\"mailto:{{ "
-"object.project_id.company_id.email }}\" style=\"text-decoration:none; color: "
-"#454748;\" t-out=\"object.project_id.company_id.email or ''\">"
-"info@yourcompany.com</a>\n"
+"                | <a t-attf-href=\"mailto:"
+"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
+"color: #454748;\" t-out=\"object.project_id.company_id.email or "
+"''\">info@yourcompany.com</a>\n"
 "            </t>\n"
 "           <t t-if=\"object.project_id.company_id.website\"> \n"
 "                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
 "\" style=\"text-decoration:none; color: #454748;\" t-"
-"out=\"object.project_id.company_id.website or ''\">http://www.example.com</a>"
-"\n"
+"out=\"object.project_id.company_id.website or ''\">http://www.example.com</"
+"a>\n"
 "            </t>\n"
 "       </td></tr> \n"
 "   </tbody>\n"
@@ -1126,8 +1126,8 @@ msgid ""
 msgstr ""
 "Automatiškai pakeiskite būseną, kai klientas atsako į šio etapo "
 "atsiliepimą.\n"
-" * Gera kliento atsiliepimas atnaujins būseną į „Patvirtinta“ (žalias taškas)"
-".\n"
+" * Gera kliento atsiliepimas atnaujins būseną į „Patvirtinta“ (žalias "
+"taškas).\n"
 " * Neutrali arba bloga atsiliepimas nustatys kanban būseną į „Reikalaujami "
 "pakeitimai“ (oranžinis taškas).\n"
 
@@ -2074,8 +2074,9 @@ msgid ""
 "Edit: collaborators can view and edit all tasks in the Kanban view. "
 "Additionally, they can choose which tasks they want to follow."
 msgstr ""
-"Redaguoti: bendradarbiai gali peržiūrėti ir redaguoti visas užduotis „Kanban"
-"“ peržiūroje. Be to, jie gali pasirinkti, kurias užduotis nori stebėti."
+"Redaguoti: bendradarbiai gali peržiūrėti ir redaguoti visas užduotis "
+"„Kanban“ peržiūroje. Be to, jie gali pasirinkti, kurias užduotis nori "
+"stebėti."
 
 #. module: project
 #. odoo-javascript
@@ -2258,6 +2259,7 @@ msgid "Future"
 msgstr "Būsimi"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Future Activities"
@@ -2726,6 +2728,7 @@ msgid "Last Updated on"
 msgstr "Paskutinį kartą atnaujinta"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Activities"
@@ -2961,6 +2964,7 @@ msgid "Months"
 msgstr "Mėnesiai"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Activities"
@@ -4385,6 +4389,7 @@ msgid "Show Sub-Tasks"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Show all records whose next activity date is past"
@@ -5273,6 +5278,7 @@ msgid "Today"
 msgstr "Šiandien"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Today Activities"
@@ -5572,8 +5578,8 @@ msgstr "Laukia"
 msgid ""
 "Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
 msgstr ""
-"Norite geresnio būdo <b>valdyti savo projektus</b>? <i>Viskas prasideda "
-"čia.</i>"
+"Norite geresnio būdo <b>valdyti savo projektus</b>? <i>Viskas prasideda čia."
+"</i>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__website_message_ids

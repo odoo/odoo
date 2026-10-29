@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-05 19:29+0000\n"
-"PO-Revision-Date: 2026-08-07 01:05+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"PO-Revision-Date: 2026-10-28 13:33+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "html_editor/pl/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: html_editor
 #. odoo-javascript
@@ -288,12 +288,6 @@ msgstr "Automatyczne odtwarzanie"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/column_plugin.js:0
-msgid "Back to one column"
-msgstr "Powrót do jednej kolumny"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/banner_plugin.js:0
 msgid "Banner"
 msgstr "Banner"
@@ -452,6 +446,12 @@ msgstr "Zorganizuj w kolumnach"
 #: code:addons/html_editor/static/src/main/chatgpt/chatgpt_dialog.js:0
 msgid "Content generated"
 msgstr "Wygenerowana treść"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/column_plugin.js:0
+msgid "Convert columns to regular content"
+msgstr "Konwertuj kolumny na zwykłą zawartość"
 
 #. module: html_editor
 #. odoo-javascript
@@ -630,7 +630,8 @@ msgstr "Dynamiczny element zastępczy"
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid "ERROR: couldn't get download urls from media library."
-msgstr "BŁĄD: nie można pobrać adresów URL pobierania z biblioteki multimediów."
+msgstr ""
+"BŁĄD: nie można pobrać adresów URL pobierania z biblioteki multimediów."
 
 #. module: html_editor
 #. odoo-javascript
@@ -1336,6 +1337,13 @@ msgstr "Ok"
 #. module: html_editor
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
+msgid "Only internal users can use AI text generation."
+msgstr ""
+"Tylko użytkownicy wewnętrzni mogą korzystać z generowania tekstu przez AI."
+
+#. module: html_editor
+#. odoo-python
+#: code:addons/html_editor/controllers/main.py:0
 msgid "Oops, it looks like our AI is unreachable!"
 msgstr "Ups, wygląda na to, że nasze AI jest teraz niedostępne!"
 
@@ -1406,7 +1414,8 @@ msgstr "Pozycja Y"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.js:0
 msgid "Prevents the new page from accessing the original window (security)"
-msgstr "Uniemożliwia nowej stronie dostęp do oryginalnego okna (zabezpieczenie)"
+msgstr ""
+"Uniemożliwia nowej stronie dostęp do oryginalnego okna (zabezpieczenie)"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1567,8 +1576,8 @@ msgstr "Usuń link"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/column_plugin.js:0
-msgid "Remove columns"
-msgstr "Usuń kolumny"
+msgid "Remove column layout"
+msgstr "Usuń układ kolumn"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2453,6 +2462,12 @@ msgstr "obsługa komunikatów websocket"
 #: code:addons/html_editor/static/src/main/table/table_picker.xml:0
 msgid "x"
 msgstr "x"
+
+#~ msgid "Back to one column"
+#~ msgstr "Powrót do jednej kolumny"
+
+#~ msgid "Remove columns"
+#~ msgstr "Usuń kolumny"
 
 #~ msgid "Remove Format"
 #~ msgstr "Usuń format"

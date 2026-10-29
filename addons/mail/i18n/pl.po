@@ -44,11 +44,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-02 17:47+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/mail/pl/>"
-"\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/mail/pl/"
+">\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -272,12 +272,12 @@ msgid ""
 "(bold_start)s:emoji:%(bold_end)s to insert an emoji in your message."
 msgstr ""
 "%(new_line)s%(new_line)sWpisz %(bold_start)s@nazwa_użytkownika%(bold_end)s, "
-"aby wspomnieć o kimś i przykuć jego uwagę.%(new_line)sWpisz %(bold_start)"
-"s#kanał%(bold_end)s, aby wspomnieć o kanale.%(new_line)sWpisz %(bold_start)s/"
-"komenda%(bold_end)s, aby wykonać komendę.%(new_line)sWpisz %(bold_start)"
-"s::skrót%(bold_end)s, aby wkleić szybką odpowiedź w swoją wiadomość.%"
-"(new_line)sWpisz %(bold_start)s:emotikon:%(bold_end)s, aby wkleić emotikon w "
-"swoją wiadomość."
+"aby wspomnieć o kimś i przykuć jego uwagę.%(new_line)sWpisz %"
+"(bold_start)s#kanał%(bold_end)s, aby wspomnieć o kanale.%(new_line)sWpisz %"
+"(bold_start)s/komenda%(bold_end)s, aby wykonać komendę.%(new_line)sWpisz %"
+"(bold_start)s::skrót%(bold_end)s, aby wkleić szybką odpowiedź w swoją "
+"wiadomość.%(new_line)sWpisz %(bold_start)s:emotikon:%(bold_end)s, aby wkleić "
+"emotikon w swoją wiadomość."
 
 #. module: mail
 #. odoo-javascript
@@ -294,8 +294,8 @@ msgid ""
 "(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
 "%(open_samp)sEscape%(close_samp)s %(open_em)saby %(open_cancel)sanulować%"
-"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %(open_em)"
-"saby%(open_save)szapisać%(close_save)s%(close_em)s"
+"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %"
+"(open_em)saby%(open_save)szapisać%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -613,8 +613,8 @@ msgid ""
 "Start your message with <i>'/'</i> to get the list of possible commands.</p>"
 msgstr ""
 "<p><b>Napisz wiadomość</b> do członków kanału tutaj.</p> <p>Możesz "
-"powiadomić kogoś za pomocą <i>'@'</i> lub podłączyć inny kanał za pomocą <i>"
-"'#'</i>. Rozpocznij wiadomość za pomocą <i>'/'</i> aby uzyskać listę "
+"powiadomić kogoś za pomocą <i>'@'</i> lub podłączyć inny kanał za pomocą "
+"<i>'#'</i>. Rozpocznij wiadomość za pomocą <i>'/'</i> aby uzyskać listę "
 "możliwych poleceń.</p>"
 
 #. module: mail
@@ -793,8 +793,8 @@ msgstr ""
 #: model_terms:web_tour.tour,rainbow_man_message:mail.discuss_channel_tour
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
 msgstr ""
-"<span><b>Dobra robota!</b> Przeszedłeś przez wszystkie kroki tego "
-"samouczka.</span>"
+"<span><b>Dobra robota!</b> Przeszedłeś przez wszystkie kroki tego samouczka."
+"</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -1604,7 +1604,8 @@ msgstr "Wystąpił błąd podczas wysyłania wiadomości e-mail"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/failure_model.js:0
 msgid "An error occurred when sending an email on “%(record_name)s”"
-msgstr "Wystąpił błąd podczas wysyłania wiadomości e-mail w \"%(record_name)s\""
+msgstr ""
+"Wystąpił błąd podczas wysyłania wiadomości e-mail w \"%(record_name)s\""
 
 #. module: mail
 #. odoo-javascript
@@ -2238,6 +2239,12 @@ msgstr "Przez e-maile"
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "By order of server priority"
 msgstr "Według kolejności priorytetów serwera"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.js:0
+msgid "CMD"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -3584,8 +3591,8 @@ msgid ""
 "'notifications@example.com' to override all outgoing emails."
 msgstr ""
 "Domyślny, gdy nie pasuje do filtrów serwera wychodzącego. Może to być "
-"zarówno część lokalna, np. „notification”, jak i pełny adres e-mail, np. „"
-"notification@example.com”, aby zastąpić wszystkie wychodzące wiadomości e-"
+"zarówno część lokalna, np. „notification”, jak i pełny adres e-mail, np. "
+"„notification@example.com”, aby zastąpić wszystkie wychodzące wiadomości e-"
 "mail."
 
 #. module: mail
@@ -3688,7 +3695,8 @@ msgstr "Błąd dostarczenia"
 #. odoo-python
 #: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "Deprecated usage of 'default_res_id', should use 'default_res_ids'."
-msgstr "Przestarzałe użycie 'default_res_id', powinno używać 'default_res_ids'."
+msgstr ""
+"Przestarzałe użycie 'default_res_id', powinno używać 'default_res_ids'."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -6433,6 +6441,11 @@ msgid "Language"
 msgstr "Język"
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_mail_message_translation__target_lang
+msgid "Language code used as the target for the translation request."
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
 msgid "Last Error"
 msgstr "Ostatni błąd"
@@ -7897,8 +7910,8 @@ msgstr ""
 msgid ""
 "No responsible specified for %(activity_type_name)s: %(activity_summary)s."
 msgstr ""
-"Nie określono odpowiedzialnego za %(activity_type_name)s: %(activity_summary)"
-"s."
+"Nie określono odpowiedzialnego za %(activity_type_name)s: %"
+"(activity_summary)s."
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.res_role_action
@@ -9168,6 +9181,12 @@ msgstr ""
 #: code:addons/mail/static/src/chatter/web/chatter.xml:0
 msgid "Pop out Attachments"
 msgstr "Wyskakujące załączniki"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_view.js:0
+msgid "Pop out is not supported on mobile."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__port
@@ -10696,11 +10715,6 @@ msgid "Shortcut"
 msgstr "Skrót"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_message_translation__target_lang
-msgid "Shortened language code used as the target for the translation request."
-msgstr "Skrócony kod języka używany jako cel dla żądania tłumaczenia."
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/command_palette.js:0
 msgid "Show All Activities"
@@ -10733,7 +10747,8 @@ msgstr "Pokaż aktywności"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Show all records whose next action date is this week"
-msgstr "Pokaż wszystkie zapisy, których data kolejnej akcji jest w tym tygodniu"
+msgstr ""
+"Pokaż wszystkie zapisy, których data kolejnej akcji jest w tym tygodniu"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -11376,8 +11391,8 @@ msgid ""
 "(activity_type_model)s\"."
 msgstr ""
 "Typ aktywności \"%(activity_type_name)s\" nie jest zgodny z planem \"%"
-"(plan_name)s\" ponieważ jest ograniczony do modelu \"%(activity_type_model)"
-"s\"."
+"(plan_name)s\" ponieważ jest ograniczony do modelu \"%"
+"(activity_type_model)s\"."
 
 #. module: mail
 #. odoo-javascript
@@ -11600,7 +11615,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/ir_mail_server.py:0
 msgid "The server \"%s\" cannot be forced as it belongs to a user."
-msgstr "Serwer „%s ” nie może zostać wymuszony, ponieważ należy do użytkownika."
+msgstr ""
+"Serwer „%s ” nie może zostać wymuszony, ponieważ należy do użytkownika."
 
 #. module: mail
 #. odoo-python
@@ -12241,8 +12257,8 @@ msgstr ""
 "Typ akcji serwera. Dostępne są następujące wartości:\n"
 "- \"Zaktualizuj zapis\": aktualizacja wartości rekordu.\n"
 "- \"Utwórz aktywność\": tworzenie aktywności (Dyskusje)\n"
-"- \"Wyślij Email\": opublikuj wiadomość, notatkę lub wyślij e-mail (Dyskusje)"
-"\n"
+"- \"Wyślij Email\": opublikuj wiadomość, notatkę lub wyślij e-mail "
+"(Dyskusje)\n"
 "- \"Wyślij SMS\": wysyłanie wiadomości SMS, rejestrowanie ich w dokumentach "
 "(SMS)- \"Dodaj/Usuń obserwujących\": dodawanie lub usuwanie obserwujących do "
 "zapisu (Dyskusje)\n"
@@ -13719,12 +13735,6 @@ msgid "created this channel."
 msgstr "utworzył ten kanał."
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/js/rotting_mixin/rotting_statusbar.xml:0
-msgid "d"
-msgstr "d"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid "day, month dd, yyyy - hh:mm:ss (GMT)"
 msgstr "dzień, miesiąc dd, rrrr - hh:mm:ss (GMT)"
@@ -14274,6 +14284,13 @@ msgstr "“%(member_name)s” w “%(channel_name)s”"
 #: code:addons/mail/static/src/core/web/activity.js:0
 msgid "“%s”"
 msgstr "“%s”"
+
+#~ msgid ""
+#~ "Shortened language code used as the target for the translation request."
+#~ msgstr "Skrócony kod języka używany jako cel dla żądania tłumaczenia."
+
+#~ msgid "d"
+#~ msgstr "d"
 
 #~ msgid "Search for a GIF"
 #~ msgstr "Wyszukiwanie GIF-ów"

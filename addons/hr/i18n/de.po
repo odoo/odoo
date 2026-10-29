@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:35+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-02 14:26+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/hr/de/>\n"
@@ -136,8 +136,8 @@ msgid ""
 "<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
 "target=\"_blank\"><small><b>READ</b></small></a>"
 msgstr ""
-"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" target=\"_blank\">"
-"<small><b>LESEN</b></small></a>"
+"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
+"target=\"_blank\"><small><b>LESEN</b></small></a>"
 
 #. module: hr
 #. odoo-python
@@ -146,8 +146,8 @@ msgid ""
 "<b>Congratulations!</b> May I recommend you to setup an <a "
 "href=\"%s\">onboarding plan?</a>"
 msgstr ""
-"<b>Glückwunsch!</b> Darf ich Ihnen vorschlagen, einen <a href=\"%s\">"
-"Einführungsplan</a> aufzusetzen?"
+"<b>Glückwunsch!</b> Darf ich Ihnen vorschlagen, einen <a "
+"href=\"%s\">Einführungsplan</a> aufzusetzen?"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -248,7 +248,8 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<i class=\"fa fa-tags fa-fw me-1 text-primary\" title=\"Tags\"/>"
-msgstr "<i class=\"fa fa-tags fa-fw me-1 text-primary\" title=\"Stichwörter\"/>"
+msgstr ""
+"<i class=\"fa fa-tags fa-fw me-1 text-primary\" title=\"Stichwörter\"/>"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
@@ -1080,8 +1081,8 @@ msgstr ""
 "                                Wir suchen einen qualifizierten Entwickler "
 "mit einer Leidenschaft für Technologie und Innovation.\n"
 "                                <br>\n"
-"                                In dieser Position sind Sie für das <b>"
-"Schreiben von sauberem, wartbarem Code,\n"
+"                                In dieser Position sind Sie für das "
+"<b>Schreiben von sauberem, wartbarem Code,\n"
 "                                die Teilnahme an Code-Prüfungen und die "
 "Fehlerbehebung</b> verantwortlich. Ihre Arbeit umfasst sowohl\n"
 "                                kreative <b>Problemlösungen als auch "
@@ -4885,16 +4886,6 @@ msgid "Temporary"
 msgstr "Befristet"
 
 #. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_employee.py:0
-msgid ""
-"The Badge ID must be alphanumeric without any accents and no longer than 18 "
-"characters."
-msgstr ""
-"Die Ausweis-ID muss alphanumerisch sein, ohne Akzente und weniger als 18 "
-"Zeichen."
-
-#. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
 msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
@@ -4902,6 +4893,14 @@ msgid ""
 msgstr ""
 "Die Ausweis-ID muss eindeutig sein. Diese ist bereits einem anderen "
 "Mitarbeiter zugeordnet."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"The Badge ID must contain only printable ASCII characters, without spaces, "
+"and be no longer than 18 characters."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_departure_reason__country_code
@@ -5957,6 +5956,13 @@ msgstr "Arbeit"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "work_permit_name"
+
+#~ msgid ""
+#~ "The Badge ID must be alphanumeric without any accents and no longer than "
+#~ "18 characters."
+#~ msgstr ""
+#~ "Die Ausweis-ID muss alphanumerisch sein, ohne Akzente und weniger als 18 "
+#~ "Zeichen."
 
 #~ msgid "Cannot archive the only active record of an employee."
 #~ msgstr ""

@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:38+0000\n"
 "PO-Revision-Date: 2026-09-15 08:47+0000\n"
 "Last-Translator: Nedžad Beus <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
@@ -77,10 +77,10 @@ msgid ""
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture "
-"!= 'full_only'\" title=\"Nekatere od transakcij, ki jih nameravate zajeti, "
-"je mogoče zajeti le v celoti. Posamezno se ukvarjajte s transakcijami, da "
-"zajamete delni znesek.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" "
+"invisible=\"support_partial_capture != 'full_only'\" title=\"Nekatere od "
+"transakcij, ki jih nameravate zajeti, je mogoče zajeti le v celoti. "
+"Posamezno se ukvarjajte s transakcijami, da zajamete delni znesek.\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
@@ -204,8 +204,8 @@ msgid ""
 "em> button is not supported.\n"
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
-"<strong>Opozorilo</strong> Ustvarjanje ponudnika plačil iz gumba <em>"
-"USTVARI</em> ni podprto.\n"
+"<strong>Opozorilo</strong> Ustvarjanje ponudnika plačil iz gumba "
+"<em>USTVARI</em> ni podprto.\n"
 "                        Namesto tega uporabite dejanje <em>Dvojniki</em>."
 
 #. module: payment
@@ -3446,10 +3446,14 @@ msgid "Zalopay"
 msgstr "Zalopay"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
 #: model:payment.method,name:payment.payment_method_zip
 msgid "Zip"
 msgstr "Poštna št."
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
+msgid "Zip Code"
+msgstr ""
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cofidis

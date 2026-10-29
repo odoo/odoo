@@ -12,11 +12,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-02 18:37+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Bosnian <https://translate.odoo.com/projects/odoo-19/mail/bs/>"
-"\n"
+"Language-Team: Bosnian <https://translate.odoo.com/projects/odoo-19/mail/bs/"
+">\n"
 "Language: bs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -237,12 +237,12 @@ msgid ""
 "(bold_start)s:emoji:%(bold_end)s to insert an emoji in your message."
 msgstr ""
 "%(new_line)s%(new_line)sUpišite %(bold_start)s@username%(bold_end)s da "
-"spomenete nekoga i privučete njihovu pažnju.%(new_line)sUpišite %(bold_start)"
-"s#channel%(bold_end)s da spomenete kanal.%(new_line)sUpišite %(bold_start)s/"
-"command%(bold_end)s da izvršite komandu.%(new_line)sUpišite %(bold_start)"
-"s::shortcut%(bold_end)s za umetanje pripremljenog odgovora u svoju poruku.%"
-"(new_line)sUpišite %(bold_start)s:emoji:%(bold_end)s da biste umetnuli emoji "
-"u svoju poruku."
+"spomenete nekoga i privučete njihovu pažnju.%(new_line)sUpišite %"
+"(bold_start)s#channel%(bold_end)s da spomenete kanal.%(new_line)sUpišite %"
+"(bold_start)s/command%(bold_end)s da izvršite komandu.%(new_line)sUpišite %"
+"(bold_start)s::shortcut%(bold_end)s za umetanje pripremljenog odgovora u "
+"svoju poruku.%(new_line)sUpišite %(bold_start)s:emoji:%(bold_end)s da biste "
+"umetnuli emoji u svoju poruku."
 
 #. module: mail
 #. odoo-javascript
@@ -259,8 +259,8 @@ msgid ""
 "(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
 "%(open_samp)sEscape%(close_samp)s %(open_em)sza %(open_cancel)sodustajanje%"
-"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %(open_em)"
-"sza %(open_save)sspremanje%(close_save)s%(close_em)s"
+"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %"
+"(open_em)sza %(open_save)sspremanje%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -566,8 +566,8 @@ msgid ""
 "p><p><i>You might need to invite users from the Settings app first.</i></p>"
 msgstr ""
 "<p><b>Chat-ujte sa suradnicima</b> u stvarnom vremenu koristeći direktne "
-"poruke.</p><p><i>Možda prvo morate da pozovete korisnike iz menija "
-"postavki.</i></p>"
+"poruke.</p><p><i>Možda prvo morate da pozovete korisnike iz menija postavki."
+"</i></p>"
 
 #. module: mail
 #. odoo-javascript
@@ -591,8 +591,8 @@ msgid ""
 msgstr ""
 "<p>Kanali vam omogućavaju da na jednostavan način organizujete informacije "
 "preko različitih tema i grupa.</p> <p>Pokušajte da <b>kreirate vaš prvi "
-"kanal</b> (npr.: prodaj, marketing, proizvod XYZ, zabava nakon posla, itd.)"
-".</p>"
+"kanal</b> (npr.: prodaj, marketing, proizvod XYZ, zabava nakon posla, itd.)."
+"</p>"
 
 #. module: mail
 #. odoo-javascript
@@ -1619,7 +1619,8 @@ msgstr "Arhivirano"
 #: code:addons/mail/models/res_users.py:0
 msgid ""
 "Archived because %(user_name)s (#%(user_id)s) deleted the portal account"
-msgstr "Arhivirano jer je %(user_name)s(# %(user_id)s) obrisao račun sa portala"
+msgstr ""
+"Arhivirano jer je %(user_name)s(# %(user_id)s) obrisao račun sa portala"
 
 #. module: mail
 #. odoo-javascript
@@ -2192,6 +2193,12 @@ msgstr "Putem mailova"
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "By order of server priority"
 msgstr "Po redoslijedu prioriteta servera"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.js:0
+msgid "CMD"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -5897,7 +5904,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Invalid field “%(field_name)s” when creating a channel with members."
-msgstr "Nevažeće polje “%(field_name)s” prilikom kreiranja kanala sa članovima."
+msgstr ""
+"Nevažeće polje “%(field_name)s” prilikom kreiranja kanala sa članovima."
 
 #. module: mail
 #. odoo-javascript
@@ -6369,6 +6377,11 @@ msgstr "LIVE"
 #: model:ir.model.fields,field_description:mail.field_mail_template__lang
 msgid "Language"
 msgstr "Jezik"
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_message_translation__target_lang
+msgid "Language code used as the target for the translation request."
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -8507,8 +8520,8 @@ msgid ""
 msgstr ""
 "Opcioni jezik prijevoda (ISO kod) za odabir prilikom slanja e-pošte. Ako "
 "nije podešen, koristit će se jezik glavnog partnera. Ovo bi obično trebao "
-"biti izraz čuvara mjesta koji pruža odgovarajući jezik, npr. {{ "
-"object.partner_id.lang }}."
+"biti izraz čuvara mjesta koji pruža odgovarajući jezik, npr. "
+"{{ object.partner_id.lang }}."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -9087,6 +9100,12 @@ msgstr ""
 #: code:addons/mail/static/src/chatter/web/chatter.xml:0
 msgid "Pop out Attachments"
 msgstr "Iskoči priloge"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_view.js:0
+msgid "Pop out is not supported on mobile."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__port
@@ -10606,11 +10625,6 @@ msgid "Shortcut"
 msgstr "Prečica"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_message_translation__target_lang
-msgid "Shortened language code used as the target for the translation request."
-msgstr "Skraćeni kod jezika koji se koristi kao cilj za zahtjev za prijevod."
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/command_palette.js:0
 msgid "Show All Activities"
@@ -10874,7 +10888,8 @@ msgstr "Status sa vremenom"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
 msgid "Stay tuned! Enable push notifications to never miss a message."
-msgstr "Stay tuned! Omogućite push obavještenja da nikada ne propustite poruku."
+msgstr ""
+"Stay tuned! Omogućite push obavještenja da nikada ne propustite poruku."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__steps_count
@@ -11764,8 +11779,8 @@ msgstr "Ovaj sedmica"
 msgid ""
 "Those values are not supported as options when rendering: %(param_names)s"
 msgstr ""
-"Te vrijednosti nisu podržane kao opcije prilikom renderiranja: %(param_names)"
-"s"
+"Te vrijednosti nisu podržane kao opcije prilikom renderiranja: %"
+"(param_names)s"
 
 #. module: mail
 #. odoo-python
@@ -12196,7 +12211,8 @@ msgstr "Nije se moguće spojiti na SMTP Server"
 #. odoo-python
 #: code:addons/mail/wizard/mail_followers_edit.py:0
 msgid "Unable to post message, please configure the sender's email address."
-msgstr "E-mail se ne može poslati, molimo postavite e-mail adresu pošiljatelja."
+msgstr ""
+"E-mail se ne može poslati, molimo postavite e-mail adresu pošiljatelja."
 
 #. module: mail
 #. odoo-javascript
@@ -13619,12 +13635,6 @@ msgid "created this channel."
 msgstr "kreirao ovaj kanal."
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/js/rotting_mixin/rotting_statusbar.xml:0
-msgid "d"
-msgstr "d"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid "day, month dd, yyyy - hh:mm:ss (GMT)"
 msgstr "dan, mjesec dd, yyyy - hh:mm:ss (GMT)"
@@ -13707,7 +13717,8 @@ msgstr "npr. \"E-mail dobrodošlice\""
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid ""
 "e.g. \"Welcome to MyCompany\" or \"Nice to meet you, {{ object.name }}\""
-msgstr "npr. \"Dobro došli u MyCompany\" ili \"Drago mi je, {{ object.name }}\""
+msgstr ""
+"npr. \"Dobro došli u MyCompany\" ili \"Drago mi je, {{ object.name }}\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -14174,6 +14185,14 @@ msgstr "“%(member_name)s” u “%(channel_name)s”"
 #: code:addons/mail/static/src/core/web/activity.js:0
 msgid "“%s”"
 msgstr "“%s”"
+
+#~ msgid ""
+#~ "Shortened language code used as the target for the translation request."
+#~ msgstr ""
+#~ "Skraćeni kod jezika koji se koristi kao cilj za zahtjev za prijevod."
+
+#~ msgid "d"
+#~ msgstr "d"
 
 #~ msgid "Search for a GIF"
 #~ msgstr "Potražite GIF"

@@ -46,7 +46,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-10-23 22:04+0000\n"
 "Last-Translator: Ulevičienė <vilma.uleviciene@mededu.lt>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/"
@@ -56,8 +56,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
-"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 "
-": n % 1 != 0 ? 2: 3);\n"
+"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
+"1 : n % 1 != 0 ? 2: 3);\n"
 "X-Generator: Weblate 2026.8.1\n"
 
 #. module: account
@@ -73,8 +73,8 @@ msgid ""
 msgstr ""
 "Klientų sąskaitų faktūrų žurnalams pasirinkite „Pardavimas“.\n"
 "Tiekėjų sąskaitų žurnalams pasirinkite „Pirkimas“.\n"
-"Klientų arba tiekėjų mokėjimų žurnalams pasirinkite „Grynieji pinigai“, „"
-"Bankas“ arba „Kredito kortelė“.\n"
+"Klientų arba tiekėjų mokėjimų žurnalams pasirinkite „Grynieji pinigai“, "
+"„Bankas“ arba „Kredito kortelė“.\n"
 "Įvairių operacijų žurnalams pasirinkite „Bendrasis“."
 
 #. module: account
@@ -618,14 +618,14 @@ msgstr ""
 "                    kreditinę sąskaitą faktūrą\n"
 "                </t>\n"
 "                <t t-if=\"object.invoice_origin\">\n"
-"                    (nuoroda: <t t-out=\"object.invoice_origin or ''\">"
-"SUB003</t>)\n"
+"                    (nuoroda: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
 "                </t>,\n"
 "                kurios suma – <span style=\"font-weight:bold;\" t-"
 "out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
 "143,750.00</span>\n"
-"                ir kurią išrašė <t t-out=\"object.company_id.name or ''\">"
-"YourCompany</t>.\n"
+"                ir kurią išrašė <t t-out=\"object.company_id.name or "
+"''\">YourCompany</t>.\n"
 "                <br/><br/>\n"
 "                Jei turite klausimų, susisiekite su mumis.\n"
 "                <t t-if=\"not is_html_empty(object.invoice_user_id.signature)"
@@ -738,10 +738,11 @@ msgstr ""
 "        <t t-if=\"object.invoice_origin\">\n"
 "            (nuoroda: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
 "        </t>,\n"
-"        kurios suma – <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
-"        ir kurią išrašė <t t-out=\"object.company_id.name or ''\">"
-"YourCompany</t>.\n"
+"        kurios suma – <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143,750.00</span>\n"
+"        ir kurią išrašė <t t-out=\"object.company_id.name or "
+"''\">YourCompany</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            Ši sąskaita faktūra jau apmokėta.\n"
 "        </t>\n"
@@ -762,8 +763,8 @@ msgstr ""
 "object.timesheet_count\">\n"
 "            <br/><br/>\n"
 "            P. S. Savo darbo laiko apskaitos įrašus galite peržiūrėti <a t-"
-"att-href=\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">"
-"portale.</a>\n"
+"att-href=\"'/my/timesheets?search_in=invoice&amp;search=%s' % "
+"object.name\">portale.</a>\n"
 "        </t>\n"
 "        <br/><br/>\n"
 "        Jei turite klausimų, susisiekite su mumis.\n"
@@ -771,8 +772,8 @@ msgstr ""
 "o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">"
-"Mitchell Admin</t></div>\n"
+"out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
+"quote=\"1\">Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>"
@@ -855,8 +856,8 @@ msgstr ""
 "        <br/> <br/> \n"
 "        Čia yra jūsų\n"
 "       <t t-if=\"object.name\"> \n"
-"            savarankiškai išrašyta sąskaita <span style=\"font-"
-"weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"            savarankiškai išrašyta sąskaita <span style=\"font-weight:bold;"
+"\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
 "        </t>\n"
 "       <t t-else=\"\"> \n"
 "            savarankiškai išrašyta sąskaita\n"
@@ -864,8 +865,9 @@ msgstr ""
 "        <t t-if=\"object.invoice_origin\"> \n"
 "            (nuoroda: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
 "       </t> \n"
-"        sumos dydis: <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">$ 143 750,00</span>\n"
+"        sumos dydis: <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143 "
+"750,00</span>\n"
 "        iš <t t-out=\"object.company_id.name or ''\">„YourCompany“</t>.\n"
 "       <t t-if=\"object.payment_state in ('paid', 'in_payment')\"> \n"
 "            Ši savarankiškai išrašyta sąskaita jau apmokėta.\n"
@@ -874,8 +876,8 @@ msgstr ""
 "object.timesheet_count\"> \n"
 "           <br/><br/> \n"
 "            P.S.: savo darbo laiko apskaitos lenteles galite peržiūrėti <a t-"
-"att-href=\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">"
-"portale.</a>\n"
+"att-href=\"'/my/timesheets?search_in=invoice&amp;search=%s' % "
+"object.name\">portale.</a>\n"
 "        </t>\n"
 "       <br/><br/> \n"
 "        Jei turite klausimų, nedvejodami susisiekite su mumis.\n"
@@ -883,8 +885,8 @@ msgstr ""
 "o-mail-quote-container=\"1\">\n"
 "            <br/> <br/>\n"
 "            <div data-o-mail-quote=\"1\"> --<br data-o-mail-quote=\"1\"/><t "
-"t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">"
-"Mitchell Admin</t></div>\n"
+"t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
+"quote=\"1\">Mitchell Admin</t></div>\n"
 "       </t>\n"
 "    </p> \n"
 "</div>\n"
@@ -953,11 +955,12 @@ msgstr ""
 "            kredito aviza\n"
 "       </t>\n"
 "        <t t-if=\"object.invoice_origin\"> \n"
-"            (su nuoroda: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)"
-"\n"
+"            (su nuoroda: <t t-out=\"object.invoice_origin or ''\">SUB003</"
+"t>)\n"
 "       </t> \n"
-"       <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\"> , 143 750,00 $</span>\n"
+"       <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\"> , 143 "
+"750,00 $</span>\n"
 "        iš <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "       <br/><br/> \n"
 "        Jei turite klausimų, nedvejodami susisiekite su mumis.\n"
@@ -965,8 +968,8 @@ msgstr ""
 "o-mail-quote-container=\"1\">\n"
 "            <br/> <br/>\n"
 "            <div data-o-mail-quote=\"1\"> --<br data-o-mail-quote=\"1\"/><t "
-"t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">"
-"Mitchell Admin</t></div>\n"
+"t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
+"quote=\"1\">Mitchell Admin</t></div>\n"
 "       </t>\n"
 "    </p> \n"
 "</div>\n"
@@ -1002,15 +1005,15 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Gerb. <t t-out=\"object.partner_id.name or ''\">Azure Interior</t>"
-"<br/><br/> \n"
+"        Gerb. <t t-out=\"object.partner_id.name or ''\">Azure Interior</"
+"t><br/><br/> \n"
 "        Dėkojame už jūsų mokėjimą.\n"
-"        Čia rasite mokėjimo kvitą <span style=\"font-weight:bold;\" t-out=\""
-"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span>, kurio "
-"suma\n"
-"        yra <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount, object.currency_id) or ''\">$ 10,00</span> iš <t t-"
-"out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        Čia rasite mokėjimo kvitą <span style=\"font-weight:bold;\" t-"
+"out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span>, "
+"kurio suma\n"
+"        yra <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10,00</"
+"span> iš <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "       <br/><br/> \n"
 "        Jei turite klausimų, nedvejodami susisiekite su mumis.\n"
 "       <br/><br/> \n"
@@ -1120,8 +1123,8 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-trash text-danger\"/>\n"
 "                            <span class=\"text-danger\" "
-"invisible=\"duplicated_ref_ids.length == 1\">Ištrinti visus dublikatus</span>"
-"\n"
+"invisible=\"duplicated_ref_ids.length == 1\">Ištrinti visus dublikatus</"
+"span>\n"
 "                            <span class=\"text-danger\" "
 "invisible=\"duplicated_ref_ids.length &gt; 1\">Ištrinti dublikatą</span>"
 
@@ -1229,8 +1232,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\">"
-"%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
+"'fixed'\">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1306,14 +1309,15 @@ msgid "<span class=\"o_stat_text\">Invoiced</span>"
 msgstr "<span class=\"o_stat_text\">SF suma</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-msgid "<span class=\"o_stat_text\">Journal Entries</span>"
-msgstr "<span class=\"o_stat_text\">Žurnalo įrašai</span>"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
 msgstr "<span class=\"o_stat_text\">Žurnalo įrašas</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "<span class=\"o_stat_text\">Journal Items</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1903,8 +1907,8 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-family:Verdana, Arial,sans-"
 "serif; color: #454748;\">\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-"
-"top: 16px; background-color: #F1F1F1; width: 100%; border-"
-"collapse:separate;\">\n"
+"top: 16px; background-color: #F1F1F1; width: 100%; border-collapse:separate;"
+"\">\n"
 "       <tr>\n"
 "            <td align=\"center\"> \n"
 "               <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
@@ -1925,8 +1929,8 @@ msgstr ""
 "                                   <td align=\"right\" style=\"padding-"
 "right: 16px;\">\n"
 "                                        <img alt=\"Odoo\" src=\"/web/static/"
-"img/logo_inverse_white_206px.png\" style=\"height: 2em; object-fit: "
-"contain;\" class=\"align-baseline w-auto\"/> \n"
+"img/logo_inverse_white_206px.png\" style=\"height: 2em; object-fit: contain;"
+"\" class=\"align-baseline w-auto\"/> \n"
 "                                   </td>\n"
 "                                </tr> \n"
 "                           </table>\n"
@@ -1977,18 +1981,18 @@ msgstr ""
 "                                                    <span style=\"font-"
 "weight:bold;\"> Tiekėjas:</span> <t t-out=\"inv.partner_id.name\"/><br/>\n"
 "                                                </t> \n"
-"                                               <t t-if=\"inv.amount_total\">"
-"\n"
+"                                               <t t-"
+"if=\"inv.amount_total\">\n"
 "                                                    <span style=\"font-"
-"weight:bold;\"> Suma:</span> <t t-out=\"inv.amount_total\" t-options=\""
-"{'widget': 'monetary', 'display_currency': inv.currency_id or "
+"weight:bold;\"> Suma:</span> <t t-out=\"inv.amount_total\" t-"
+"options=\"{'widget': 'monetary', 'display_currency': inv.currency_id or "
 "object.company_id.currency_id}\"/><br/>\n"
 "                                                </t> \n"
 "                                               <t t-"
 "if=\"inv.invoice_date_due\">\n"
 "                                                    <span style=\"font-"
-"weight:bold;\"> Mokėjimo terminas:</span> <t t-out=\"inv.invoice_date_due\"/>"
-"\n"
+"weight:bold;\"> Mokėjimo terminas:</span> <t t-out=\"inv.invoice_date_due\"/"
+">\n"
 "                                               </t>\n"
 "                                            </p> \n"
 "                                       </t>\n"
@@ -1997,11 +2001,11 @@ msgstr ""
 "padding-top: 24px;\"> \n"
 "                                           <a t-if=\"invoice_count != 1\" t-"
 "attf-href=\"/odoo/accounting/action-"
-"account.action_account_moves_email_preview?active_ids={{ "
-"invoice_preview_ids }}\" target=\"_blank\" t-attf-style=\"padding: 12px "
-"24px; font-size: 14px; font-weight: bold; color: #FFFFFF; text-decoration: "
-"none !important; background-color: #008384; border-radius:3px; display: "
-"inline-block;\"> \n"
+"account.action_account_moves_email_preview?"
+"active_ids={{ invoice_preview_ids }}\" target=\"_blank\" t-attf-"
+"style=\"padding: 12px 24px; font-size: 14px; font-weight: bold; color: "
+"#FFFFFF; text-decoration: none !important; background-color: #008384; border-"
+"radius:3px; display: inline-block;\"> \n"
 "                                               Peržiūrėti sąskaitas "
 "faktūras\n"
 "                                           </a>\n"
@@ -2268,8 +2272,8 @@ msgid ""
 "            "
 msgstr ""
 "<t t-set=\"portal_url\" t-value=\"object.get_portal_url()\"/>\n"
-"<t t-set=\"unsubscribe_url\" t-value=\"ctx.get('unsubscribe_url', False)\"/>"
-"\n"
+"<t t-set=\"unsubscribe_url\" t-value=\"ctx.get('unsubscribe_url', False)\"/"
+">\n"
 "\n"
 "<div style=\"margin:0; padding:0; color:#2c2431;\">\n"
 "    <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" "
@@ -2281,18 +2285,19 @@ msgstr ""
 "border-radius:16px; overflow:hidden; box-shadow:0 20px 45px rgba(56, 37, 60, "
 "0.12);\">\n"
 "                    <tr> \n"
-"                       <td colspan=\"2\" style=\"background:linear-gradient"
-"(140deg,#714B67 0%,#8a6381 55%,#bfa8c2 100%); color:#ffffff; padding:38px;\">"
-"\n"
+"                       <td colspan=\"2\" style=\"background:linear-"
+"gradient(140deg,#714B67 0%,#8a6381 55%,#bfa8c2 100%); color:#ffffff; "
+"padding:38px;\">\n"
 "                            <table cellpadding=\"0\" cellspacing=\"0\" "
 "border=\"0\" style=\"width:100%;\"> \n"
 "                               <tr>\n"
 "                                    <td style=\"font-size:13px; letter-"
 "spacing:0.3px; text-transform:uppercase; opacity:0.78;\"> \n"
-"                                       <t t-if=\"object.is_sale_document"
-"(include_receipts=True)\"> Išeinanti sąskaita</t>\n"
-"                                        <t t-else=\"\">Įeinanti sąskaita</t>"
-"\n"
+"                                       <t t-"
+"if=\"object.is_sale_document(include_receipts=True)\"> Išeinanti sąskaita</"
+"t>\n"
+"                                        <t t-else=\"\">Įeinanti sąskaita</"
+"t>\n"
 "                                    </td>\n"
 "                                   <td align=\"right\">\n"
 "                                        <img alt=\"Odoo\" src=\"/web/static/"
@@ -2302,8 +2307,8 @@ msgstr ""
 "                                </tr> \n"
 "                               <tr>\n"
 "                                    <td colspan=\"2\" style=\"padding-"
-"top:22px; font-size:26px; line-height:1.45; font-weight:600; "
-"color:#ffffff;\"> \n"
+"top:22px; font-size:26px; line-height:1.45; font-weight:600; color:#ffffff;"
+"\"> \n"
 "                                        Nauja sąskaita <t t-"
 "out=\"object.journal_id.display_name\"/>\n"
 "                                    </td>\n"
@@ -2325,17 +2330,17 @@ msgstr ""
 "border=\"0\" style=\"width:100%; border-collapse:separate; border-spacing:0 "
 "16px;\"> \n"
 "                               <tr>\n"
-"                                    <td colspan=\"2\" style=\"padding:0;\"> "
-"\n"
+"                                    <td colspan=\"2\" "
+"style=\"padding:0;\"> \n"
 "                                       <table cellpadding=\"0\" "
 "cellspacing=\"0\" border=\"0\" style=\"width:100%; background:#fbf7fc; "
 "border-radius:16px;\">\n"
 "                                            <tr> \n"
-"                                               <td style=\"padding:24px "
-"26px;\">\n"
+"                                               <td style=\"padding:24px 26px;"
+"\">\n"
 "                                                    <div style=\"font-"
-"size:12px; color:#8d7a92; text-transform:uppercase; letter-"
-"spacing:0.45px;\"> Dokumentas</div>\n"
+"size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;"
+"\"> Dokumentas</div>\n"
 "                                                    <div style=\"margin-"
 "top:8px; font-size:20px; font-weight:600; color:#2c2431; word-break:break-"
 "word;\">\n"
@@ -2352,8 +2357,8 @@ msgstr ""
 "                                                    <td style=\"padding:24px "
 "26px; border-left:1px solid #efe6f3;\" align=\"right\"> \n"
 "                                                       <div style=\"font-"
-"size:12px; color:#8d7a92; text-transform:uppercase; letter-"
-"spacing:0.45px;\"> Iš viso</div>\n"
+"size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;"
+"\"> Iš viso</div>\n"
 "                                                        <div style=\"margin-"
 "top:8px; font-size:22px; font-weight:600; color:#2c2431;\">\n"
 "                                                           <t t-"
@@ -2366,15 +2371,15 @@ msgstr ""
 "                                   </td>\n"
 "                                </tr> \n"
 "                               <tr>\n"
-"                                    <td colspan=\"2\" style=\"padding:0;\"> "
-"\n"
+"                                    <td colspan=\"2\" "
+"style=\"padding:0;\"> \n"
 "                                       <table cellpadding=\"0\" "
 "cellspacing=\"0\" border=\"0\" style=\"width:100%; margin-top:18px;\">\n"
 "                                            <tr> \n"
 "                                               <td style=\"padding:0;\">\n"
 "                                                    <div "
-"style=\"display:flex; flex-wrap:wrap; gap:12px; justify-content:flex-"
-"start;\"> \n"
+"style=\"display:flex; flex-wrap:wrap; gap:12px; justify-content:flex-start;"
+"\"> \n"
 "                                                       <t t-"
 "if=\"object.partner_id\">\n"
 "                                                            <div "
@@ -2464,13 +2469,14 @@ msgstr ""
 "failai:</strong> Jūsų patogumui pridedami originalūs dokumentai.\n"
 "                           </div>\n"
 "\n"
-"                            <div style=\"margin-top:32px; text-"
-"align:center;\" t-if=\"object.move_type != 'in_invoice'\"> \n"
-"                               <a t-if=\"portal_url\" t-attf-href=\"{{ "
-"portal_url }}\" style=\"display:inline-block; margin:0 10px 14px; "
-"padding:13px 30px; min-width:210px; background:linear-gradient"
-"(135deg,#714B67 0%,#9b77a3 100%); color:#FFFFFF; text-decoration:none; "
-"border-radius:12px; font-weight:600; font-size:14px;\" target=\"_blank\"> \n"
+"                            <div style=\"margin-top:32px; text-align:center;"
+"\" t-if=\"object.move_type != 'in_invoice'\"> \n"
+"                               <a t-if=\"portal_url\" t-attf-"
+"href=\"{{ portal_url }}\" style=\"display:inline-block; margin:0 10px 14px; "
+"padding:13px 30px; min-width:210px; background:linear-"
+"gradient(135deg,#714B67 0%,#9b77a3 100%); color:#FFFFFF; text-"
+"decoration:none; border-radius:12px; font-weight:600; font-size:14px;\" "
+"target=\"_blank\"> \n"
 "                                    Peržiūrėti portale\n"
 "                               </a>\n"
 "                            </div> \n"
@@ -2486,8 +2492,8 @@ msgstr ""
 "                                <t t-if=\"unsubscribe_url\"> \n"
 "                                    Norite atsisakyti šių pranešimų? <a t-"
 "attf-href=\"{{ unsubscribe_url }}\" style=\"color:#8f8596; text-"
-"decoration:underline;\" target=\"_blank\">Atsisakyti prenumeratos galite "
-"čia:</a>.\n"
+"decoration:underline;\" target=\"_blank\">Atsisakyti prenumeratos galite čia:"
+"</a>.\n"
 "                               </t>\n"
 "                            </p> \n"
 "                       </td>\n"
@@ -2547,8 +2553,8 @@ msgid ""
 "A bank account with Account Number %(number)s already exists for Partner %"
 "(partner)s, but is archived. Please unarchive it instead."
 msgstr ""
-"Banko sąskaita su numeriu %(number)s jau yra priskirta partneriui %(partner)"
-"s, bet ji yra suarchyvuota. Prašome ją išarchyvuoti."
+"Banko sąskaita su numeriu %(number)s jau yra priskirta partneriui %"
+"(partner)s, bet ji yra suarchyvuota. Prašome ją išarchyvuoti."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -2784,7 +2790,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Account %s is of receivable type, but is used in a purchase operation."
-msgstr "Sąskaitos %s   tipas yra gautina, bet ji naudojama pirkimo operacijoje."
+msgstr ""
+"Sąskaitos %s   tipas yra gautina, bet ji naudojama pirkimo operacijoje."
 
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
@@ -2910,6 +2917,11 @@ msgid "Account Move Count"
 msgstr "Apskaitos įrašų skaičius"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__account_move_line_ids
+msgid "Account Move Line"
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_account_move_reversal
 msgid "Account Move Reversal"
 msgstr "Sąskaitos perkėlimo apsukimas"
@@ -2980,6 +2992,11 @@ msgid "Account Reconcile"
 msgstr "Sąskaitų suderinimas"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__account_reconcile_model_line_ids
+msgid "Account Reconcile Model Line"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
 msgid "Account Root"
 msgstr "Apskaitos šaknis"
@@ -3039,6 +3056,7 @@ msgstr ""
 "finansinius metus."
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__account_types
 #: model:ir.model.fields,field_description:account.field_account_report__filter_account_type
 msgid "Account Types"
 msgstr "Sąskaitų tipai"
@@ -4608,8 +4626,20 @@ msgstr "Grįžti į sąskaitą"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
+msgid "Back to Credit Note"
+msgstr ""
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Invoice"
 msgstr "Grįžti į sąskaitą faktūrą"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
+msgid "Back to Refund"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -6151,8 +6181,8 @@ msgid ""
 "Consider paying the amount with %(btn_start)searly payment discount%"
 "(btn_end)s instead."
 msgstr ""
-"Apsvarstykite galimybę vietoj to sumokėti pasinaudojant %(btn_start)"
-"sišankstinio mokėjimo nuolaida%(btn_end)s."
+"Apsvarstykite galimybę vietoj to sumokėti pasinaudojant %"
+"(btn_start)sišankstinio mokėjimo nuolaida%(btn_end)s."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_buildings
@@ -6182,7 +6212,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "Contains hashed entries, but %s also has hashed entries."
-msgstr "Yra maišos reikšme apsaugotų įrašų, tačiau %s taip pat yra tokių įrašų."
+msgstr ""
+"Yra maišos reikšme apsaugotų įrašų, tačiau %s taip pat yra tokių įrašų."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__body
@@ -6251,7 +6282,8 @@ msgstr "Prekių ar medžiagų siuntimo klientams ir atsargų gavimo išlaidos."
 msgid ""
 "Costs incurred for removal, disposal, or recycling of waste and obsolete "
 "materials"
-msgstr "Atliekų ir pasenusių medžiagų išvežimo, šalinimo ar perdirbimo išlaidos"
+msgstr ""
+"Atliekų ir pasenusių medžiagų išvežimo, šalinimo ar perdirbimo išlaidos"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_marketing
@@ -8659,16 +8691,6 @@ msgstr "Klaida importuojant prisegtuką „ %(filename)s “:"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/controllers/download_docs.py:0
-msgid ""
-"Error while creating XML:\n"
-"- %s"
-msgstr ""
-"Klaida kuriant XML:\n"
-"- %s"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid ""
 "Error while loading the localization: missing tax tag %(tag_name)s for "
@@ -9082,6 +9104,11 @@ msgstr "Kilmės šalis"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_fiscal_country_id
 msgid "Fiscal Country Code"
 msgstr "Fiskalinis šalies kodas"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__company_country_code
+msgid "Fiscal Country Code of the Company"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__fiscal_country_codes
@@ -9713,8 +9740,8 @@ msgid ""
 "Groupby feature isn't supported by '%(engine)s' engine. Please remove the "
 "groupby value on '%(report_line)s'"
 msgstr ""
-"„Groupby“ funkcija nepalaikoma „%(engine)s “ varikliu. Prašome pašalinti „"
-"groupby“ reikšmę iš „%(report_line)s “"
+"„Groupby“ funkcija nepalaikoma „%(engine)s “ varikliu. Prašome pašalinti "
+"„groupby“ reikšmę iš „%(report_line)s “"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__grouping_key
@@ -10217,8 +10244,8 @@ msgid ""
 msgstr ""
 "Jei ši reikšmė nustatyta, ji bus naudojama dokumentuose kaip tarpinių sumų, "
 "neįskaitant šios mokesčių grupės, pavadinimas prieš jas rodant. Jei "
-"nenustatyta, mokesčių grupė bus rodoma po tarpinių sumų „Neapmokestinta suma"
-"“."
+"nenustatyta, mokesčių grupė bus rodoma po tarpinių sumų „Neapmokestinta "
+"suma“."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__active
@@ -10430,8 +10457,8 @@ msgid ""
 "(label)s',\n"
 "Failed to parse the cross report id or xml_id.\n"
 msgstr ""
-"Ataskaitoje „%(report_name)s “, eilutėje „%(line_name)s “, su žyma „%(label)"
-"s “,\n"
+"Ataskaitoje „%(report_name)s “, eilutėje „%(line_name)s “, su žyma „%"
+"(label)s “,\n"
 "Nepavyko išanalizuoti tarp ataskaitų identifikatoriaus arba xml_id.\n"
 
 #. module: account
@@ -11007,6 +11034,12 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid "Invoice generated but not sent."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Invoice line discounts:"
 msgstr ""
@@ -11512,6 +11545,7 @@ msgstr "Žurnalo įrašo etiketė."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
+#: code:addons/account/models/account_move.py:0
 #: model:ir.actions.act_window,name:account.action_account_moves_all
 #: model:ir.actions.act_window,name:account.action_account_moves_all_a
 #: model:ir.actions.act_window,name:account.action_account_moves_all_grouped_matching
@@ -11586,7 +11620,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_company__account_opening_journal_id
 msgid ""
 "Journal where the opening entry of this company's accounting has been posted."
-msgstr "Žurnalas, kuriame buvo įvestas šios kompanijos pradinių likučių įrašas."
+msgstr ""
+"Žurnalas, kuriame buvo įvestas šios kompanijos pradinių likučių įrašas."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__journal_id
@@ -11705,6 +11740,12 @@ msgstr "Etiketė sąskaitoje"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_form
 msgid "Label on PoS Receipts"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sanitize_payment_reference
+#: model:ir.model.fields,field_description:account.field_account_move__sanitize_payment_reference
+msgid "Label sanitize"
 msgstr ""
 
 #. module: account
@@ -12272,13 +12313,13 @@ msgstr ""
 "partneris išsaugojo pirkimo ar prenumeratos užsakymo metu internete.\n"
 "Čekis: Mokėkite sąskaitas čekiu ir atsispausdinkite jį iš „Odoo“.\n"
 "Partijos įnešimas: Surinkite kelis klientų čekius iš karto, sugeneruodami ir "
-"pateikdami partijos įnešimą savo bankui. Būtinas modulis „"
-"account_batch_payment“.\n"
+"pateikdami partijos įnešimą savo bankui. Būtinas modulis "
+"„account_batch_payment“.\n"
 "SEPA kredito pervedimas: Mokėkite SEPA zonoje, pateikdami SEPA kredito "
 "pervedimo failą savo bankui. Būtinas modulis „account_iso20022“.\n"
 "SEPA tiesioginis debetas: Gaukite mokėjimus SEPA zonoje naudodamiesi "
-"įgaliojimu, kurį jums suteiks jūsų partneris. Būtinas modulis „"
-"account_iso20022“.\n"
+"įgaliojimu, kurį jums suteiks jūsų partneris. Būtinas modulis "
+"„account_iso20022“.\n"
 "JAV ISO20022: Atlikite mokėjimus JAV pateikdami ISO20022 failą savo bankui. "
 "Būtinas modulis „account_iso20022“.\n"
 
@@ -13025,6 +13066,14 @@ msgid "No possible action found with the selected lines."
 msgstr "Nerasta jokių galimų veiksmų su pasirinktomis eilutėmis."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"No valid sending method could be applied, so this invoice was not sent "
+"automatically. Please configure a sending method and send it manually."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__non_deductible_product
 msgid "Non Deductible Products"
 msgstr ""
@@ -13422,12 +13471,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "One or more lines require a 100% analytic distribution."
-msgstr "Vienai ar kelioms eilutėms reikalingas 100 % analitinis pasiskirstymas."
+msgstr ""
+"Vienai ar kelioms eilutėms reikalingas 100 % analitinis pasiskirstymas."
 
 #. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
 msgid "Online Payments"
 msgstr "Mokėjimai internetu"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid "Only Accounting managers can create foreign taxes."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__only_tax_exigible
@@ -14927,6 +14983,7 @@ msgid "Purchase Lock date"
 msgstr "Pirkimų užrakinimo data"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__in_receipt
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_receipt
 msgid "Purchase Receipt"
 msgstr "Pirkimo kvitas"
@@ -15857,6 +15914,7 @@ msgid "Sales Lock Date"
 msgstr "Pardavimų užrakinimo data"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__out_receipt
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_receipt
 msgid "Sales Receipt"
 msgstr "Pardavimo kvitas"
@@ -15932,7 +15990,8 @@ msgstr "Išsaugoti"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Save this page and come back here to set up the feature."
-msgstr "Išsaugokite šį puslapį ir grįžkite čia, kad nustatytumėte šią funkciją."
+msgstr ""
+"Išsaugokite šį puslapį ir grįžkite čia, kad nustatytumėte šią funkciją."
 
 #. module: account
 #. odoo-python
@@ -17798,6 +17857,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_payment_register__country_code
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__country_code
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__country_code
+#: model:ir.model.fields,help:account.field_account_tax__company_country_code
 #: model:ir.model.fields,help:account.field_account_tax__country_code
 #: model:ir.model.fields,help:account.field_account_tax_group__country_code
 #: model:ir.model.fields,help:account.field_res_config_settings__country_code
@@ -17835,7 +17895,9 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-msgid "The account code can only contain alphanumeric characters and dots."
+msgid ""
+"The account code can only contain alphanumeric characters and dots. (account "
+"code: %s)"
 msgstr ""
 
 #. module: account
@@ -19017,8 +19079,8 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "This move is configured to be auto-posted on %(date)s"
 msgstr ""
-"Šis perkėlimas sukonfigūruotas taip, kad būtų paskelbtas automatiškai %(date)"
-"s"
+"Šis perkėlimas sukonfigūruotas taip, kad būtų paskelbtas automatiškai %"
+"(date)s"
 
 #. module: account
 #. odoo-python
@@ -20042,6 +20104,7 @@ msgstr "Patvirtinta"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_bank_statement_line.py:0
 #: code:addons/account/models/account_move.py:0
 msgid "Validated entries can only be changed by your accountant."
 msgstr ""
@@ -20462,8 +20525,8 @@ msgid ""
 "You can not archive a journal containing draft journal entries.\n"
 "\n"
 "To proceed:\n"
-"1/ click on the top-right button 'Journal Entries' from this journal form\n"
-"2/ then filter on 'Draft' entries\n"
+"1/ go to Accounting > Accounting > Journal Entries\n"
+"2/ filter on this journal and on 'Unposted' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
 
@@ -20899,7 +20962,9 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid "You cannot modify the following readonly fields on a posted move: %s"
+msgid ""
+"You cannot modify the following readonly fields on the posted move %(move)s: "
+"%(fields)s"
 msgstr ""
 
 #. module: account
@@ -21808,6 +21873,16 @@ msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+
+#~ msgid "<span class=\"o_stat_text\">Journal Entries</span>"
+#~ msgstr "<span class=\"o_stat_text\">Žurnalo įrašai</span>"
+
+#~ msgid ""
+#~ "Error while creating XML:\n"
+#~ "- %s"
+#~ msgstr ""
+#~ "Klaida kuriant XML:\n"
+#~ "- %s"
 
 #~ msgid ""
 #~ "The Tax Identification Number. Values here will be validated based on the "

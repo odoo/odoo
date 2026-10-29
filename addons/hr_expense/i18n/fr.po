@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:35+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-05 16:08+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
@@ -522,7 +522,8 @@ msgstr "Journal par défaut pour les dépenses"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Default accounting journal for expenses paid by employees."
-msgstr "Journal comptable par défaut pour les dépenses payées par les employés."
+msgstr ""
+"Journal comptable par défaut pour les dépenses payées par les employés."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
@@ -954,6 +955,11 @@ msgstr "A un message"
 #: model_terms:product.template,description:hr_expense.expense_product_travel_accommodation_product_template
 msgid "Hotel, plane ticket, taxi, etc."
 msgstr "Hôtel, billet d'avion, taxi, etc."
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_account_tax__hr_expense_ids
+msgid "Hr Expense"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_domain_id
@@ -2264,8 +2270,8 @@ msgstr ""
 "seulement la quantité. Utilisez un coût différent de 0 pour les catégories "
 "de dépenses financées par                                             "
 "l'entreprise à un coût fixe, comme les indemnités kilométriques, les "
-"indemnités journalières, l'hébergement"
-"                                             ou les repas."
+"indemnités journalières, "
+"l'hébergement                                             ou les repas."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
@@ -2413,6 +2419,7 @@ msgstr "Vous n'avez pas les droits pour modifier cette dépense."
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
+#: code:addons/hr_expense/wizard/hr_expense_post_wizard.py:0
 msgid "You don't have the access rights to modify this expense."
 msgstr ""
 

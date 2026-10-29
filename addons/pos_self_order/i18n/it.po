@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 17:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:38+0000\n"
 "PO-Revision-Date: 2026-08-02 11:49+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/"
@@ -103,14 +103,15 @@ msgstr ""
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>l'ordine <t t-out=\"object.tracking_number\">...</"
-"t> per un importo pari a <t t-out=\"format_amount"
-"(object.amount_total,object.currency_id)\">xx,xx $</t> è stato confermato. "
-"<span t-if=\"object.preset_time or client.street\">Sarà pronto</span> <span "
-"t-if=\"object.preset_time\">alle <t t-out=\"format_time"
-"(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)\">12:00 "
-"</t></span> <span t-if=\"client.street\"> <t t-out=\"street\">all'indirizzo</"
-"t>, <t t-out=\"state\">stato</t>, <t t-out=\"client.zip or ''\">CAP</t>, <t "
-"t-out=\"city\">città</t>, <t t-out=\"country\">Paese</t></span></div>\n"
+"t> per un importo pari a <t t-"
+"out=\"format_amount(object.amount_total,object.currency_id)\">xx,xx $</t> è "
+"stato confermato. <span t-if=\"object.preset_time or client.street\">Sarà "
+"pronto</span> <span t-if=\"object.preset_time\">alle <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 </t></span> <span t-if=\"client.street\"> <t t-"
+"out=\"street\">all'indirizzo</t>, <t t-out=\"state\">stato</t>, <t t-"
+"out=\"client.zip or ''\">CAP</t>, <t t-out=\"city\">città</t>, <t t-"
+"out=\"country\">Paese</t></span></div>\n"
 "                    <br/>\n"
 "                    <div>Grazie,</div>\n"
 "                    <br/>\n"
@@ -160,12 +161,12 @@ msgstr ""
 "                        <t t-else=\"\">Ciao,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>il tuo ordine <t t-out=\"object.tracking_number\">"
-"...</t> corrispondente a un importo pari a <t t-out=\"format_amount"
-"(object.amount_total,object.currency_id)\">xx,xx $</t> è stato confermato. "
-"<span t-if=\"object.preset_time\">Sarà pronto alle <t t-out=\"format_time"
-"(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)\">12:00 "
-"</t></span></div>\n"
+"                    <div>il tuo ordine <t t-"
+"out=\"object.tracking_number\">...</t> corrispondente a un importo pari a <t "
+"t-out=\"format_amount(object.amount_total,object.currency_id)\">xx,xx $</t> "
+"è stato confermato. <span t-if=\"object.preset_time\">Sarà pronto alle <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 </t></span></div>\n"
 "                    <br/>\n"
 "                    <div>Grazie,</div>\n"
 "                    <br/>\n"
@@ -790,8 +791,33 @@ msgstr "Connessione internet persa"
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Invalid combo line"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
 msgid "Invalid preset"
 msgstr "Set di impostazioni non valido"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Invalid product attribute"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/controllers/orders.py:0
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Invalid product configuration"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Invalid quantity"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -952,7 +978,8 @@ msgstr "Nome"
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand_name
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand_name
 msgid "Name of the image to display on the self order screen"
-msgstr "Nome dell'immagine da visualizzare sullo schermo per l'ordine fai da te"
+msgstr ""
+"Nome dell'immagine da visualizzare sullo schermo per l'ordine fai da te"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1164,6 +1191,18 @@ msgid "Points of Sale"
 msgstr "Punti vendita"
 
 #. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Preset is not available in self-ordering"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Preset is not available in this configuration"
+msgstr ""
+
+#. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__link_html
 msgid "Preview"
 msgstr "Anteprima"
@@ -1325,12 +1364,6 @@ msgstr "Seleziona un Paese"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
-msgid "Select a hour"
-msgstr "Seleziona orario"
-
-#. module: pos_self_order
-#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Select a state"
 msgstr "Seleziona uno Stato"
@@ -1340,6 +1373,12 @@ msgstr "Seleziona uno Stato"
 #: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
 msgid "Select a table"
 msgstr "Seleziona un tavolo"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
+msgid "Select an hour"
+msgstr ""
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
@@ -1572,6 +1611,14 @@ msgstr "L'utente predefinito per l'ordine fai da te deve essere un utente POS"
 #: code:addons/pos_self_order/models/pos_order.py:0
 msgid "The mail template with xmlid %s has been deleted."
 msgstr "Il modello e-mail con xmlid %s è stato eliminato."
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid ""
+"The order ID isn't linked to the order UUID. This is a sign of a tampered "
+"payload."
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-python
@@ -1832,6 +1879,9 @@ msgstr "per unità aggiuntiva"
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "x"
 msgstr "x"
+
+#~ msgid "Select a hour"
+#~ msgstr "Seleziona orario"
 
 #~ msgid ""
 #~ "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"

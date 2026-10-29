@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:35+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-02 13:07+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
@@ -961,6 +961,11 @@ msgid "Hotel, plane ticket, taxi, etc."
 msgstr "Hotel, Flugtickets, Taxi usw."
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_account_tax__hr_expense_ids
+msgid "Hr Expense"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_domain_id
 msgid "Hr Expense Alias Domain"
 msgstr "Alias-Domain für Personalausgaben"
@@ -1509,7 +1514,8 @@ msgstr "Zahlung erstellt für: %s"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Payment method allowed for expenses paid by company."
-msgstr "Zahlungsmethode zulässig für Spesen, die vom Unternehmen bezahlt werden"
+msgstr ""
+"Zahlungsmethode zulässig für Spesen, die vom Unternehmen bezahlt werden"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -2313,8 +2319,8 @@ msgstr "Sie können es nun mit dem folgenden Link bei Ihrem Manager einreichen."
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You can only generate an accounting entry for approved expense(s)."
 msgstr ""
-"Sie können Buchungen nur für ein oder mehrere genehmigte Spesenabrechnung"
-"(en) erzeugen."
+"Sie können Buchungen nur für ein oder mehrere genehmigte "
+"Spesenabrechnung(en) erzeugen."
 
 #. module: hr_expense
 #. odoo-python
@@ -2396,7 +2402,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot edit the security fields of an expense manually"
-msgstr "Sie können die Sicherheitsfelder einer Ausgabe nicht manuell bearbeiten"
+msgstr ""
+"Sie können die Sicherheitsfelder einer Ausgabe nicht manuell bearbeiten"
 
 #. module: hr_expense
 #. odoo-python
@@ -2437,6 +2444,7 @@ msgstr "Sie sind nicht berechtigt, diese Ausgabe zu bearbeiten."
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
+#: code:addons/hr_expense/wizard/hr_expense_post_wizard.py:0
 msgid "You don't have the access rights to modify this expense."
 msgstr ""
 "Sie verfügen nicht über die Zugriffsrechte, um diese Spesenabrechnung zu "

@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-07 15:51+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-19/"
@@ -509,6 +509,11 @@ msgstr ""
 "%(versions)s"
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+msgid "A supporting document is required for this type of time off."
+msgstr ""
+
+#. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "A time off cannot be duplicated."
@@ -571,9 +576,9 @@ msgid ""
 "this period, but %(nb_days)s days will be used because this leave %"
 "(leave_type_name)s can only be taken by days."
 msgstr ""
-"De acordo com seu cronograma de trabalho, espera-se que você trabalhe %(days)"
-"s dias nesse período, mas %(nb_days)s dias serão usados porque essa licença %"
-"(leave_type_name)s só pode ser tirada por dias."
+"De acordo com seu cronograma de trabalho, espera-se que você trabalhe %"
+"(days)s dias nesse período, mas %(nb_days)s dias serão usados porque essa "
+"licença %(leave_type_name)s só pode ser tirada por dias."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2498,6 +2503,14 @@ msgstr ""
 "tipo de folga sem removê-la."
 
 #. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__create_calendar_meeting
+msgid ""
+"If this field is checked, every leave request of this type will have a "
+"corresponding entry in the calendar application. There will be no entry if "
+"this stays unchecked."
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_duration_check
 msgid ""
 "If you want to change the number of days you should use the 'period' mode"
@@ -3103,8 +3116,8 @@ msgstr "Ainda não há marcos no plano. Vamos criar um novo"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "No, always consider the entire accrual period (whole calendar days)."
 msgstr ""
-"Não, sempre considere todo o período de acúmulo (dias inteiros do calendário)"
-"."
+"Não, sempre considere todo o período de acúmulo (dias inteiros do "
+"calendário)."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3741,7 +3754,8 @@ msgstr "A sequência é gerada automaticamente pelo delta da hora de início."
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__postpone_max_days
 msgid "Set a maximum of accruals an allocation keeps at the end of the year."
-msgstr "Defina um máximo de acréscimos que uma alocação mantém no final do ano."
+msgstr ""
+"Defina um máximo de acréscimos que uma alocação mantém no final do ano."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -5045,7 +5059,8 @@ msgstr "Você só pode validar uma licença com a validação do Gerente de Folg
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
 "You can only validate an allocation with validation by Time Off Manager."
-msgstr "Você só pode validar uma alocação com a validação do Gerente de Folgas."
+msgstr ""
+"Você só pode validar uma alocação com a validação do Gerente de Folgas."
 
 #. module: hr_holidays
 #. odoo-javascript

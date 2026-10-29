@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:35+0000\n"
-"PO-Revision-Date: 2026-10-22 12:00+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"PO-Revision-Date: 2026-10-29 10:33+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/hr/uk/>"
 "\n"
@@ -139,8 +139,8 @@ msgid ""
 "<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
 "target=\"_blank\"><small><b>READ</b></small></a>"
 msgstr ""
-"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" target=\"_blank\">"
-"<small><b>ЧИТАТИ</b></small></a>"
+"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
+"target=\"_blank\"><small><b>ЧИТАТИ</b></small></a>"
 
 #. module: hr
 #. odoo-python
@@ -149,8 +149,8 @@ msgid ""
 "<b>Congratulations!</b> May I recommend you to setup an <a "
 "href=\"%s\">onboarding plan?</a>"
 msgstr ""
-"<b>Вітаємо!</b> Чи можемо рекомендувати вам встановити <a href=\"%s\">"
-"планування?</a>"
+"<b>Вітаємо!</b> Чи можемо рекомендувати вам встановити <a "
+"href=\"%s\">планування?</a>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -242,7 +242,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<i class=\"fa fa-phone fa-fw me-1 text-primary\" title=\"Work Phone\"/>"
-msgstr "<i class=\"fa fa-phone fa-fw me-1 text-primary\" title=\"Work Phone\"/>"
+msgstr ""
+"<i class=\"fa fa-phone fa-fw me-1 text-primary\" title=\"Work Phone\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1078,8 +1079,8 @@ msgstr ""
 "                                Ми шукаємо кваліфікованого розробника, який "
 "захоплюється технологіями та інноваціями.\n"
 "                                <br>\n"
-"                                На цій посаді ви будете відповідати за <b>"
-"написання чіткого, зручного в обслуговуванні коду,\n"
+"                                На цій посаді ви будете відповідати за "
+"<b>написання чіткого, зручного в обслуговуванні коду,\n"
 "                                участь у рецензуванні коду та усунення "
 "несправностей</b>. Ваша робота передбачатиме\n"
 "                                як творче <b>вирішення проблем, так і "
@@ -3932,8 +3933,8 @@ msgid ""
 "application."
 msgstr ""
 "PIN-код використовується для реєстрації входу/виходу в режимі Kiosk модуля "
-"відвідування (якщо ввімкнено в Налаштуваннях) і для зміни касира в програмі «"
-"Точка продажу»."
+"відвідування (якщо ввімкнено в Налаштуваннях) і для зміни касира в програмі "
+"«Точка продажу»."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
@@ -4709,8 +4710,8 @@ msgstr "Початкова дата"
 msgid ""
 "Start date (%(start)s) must be earlier than contract end date (%(end)s)."
 msgstr ""
-"Дата початку (%(start)s) має бути раніше за дату закінчення контракту (%(end)"
-"s)."
+"Дата початку (%(start)s) має бути раніше за дату закінчення контракту (%"
+"(end)s)."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
@@ -4855,21 +4856,21 @@ msgid "Temporary"
 msgstr "Тимчасовий"
 
 #. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_employee.py:0
-msgid ""
-"The Badge ID must be alphanumeric without any accents and no longer than 18 "
-"characters."
-msgstr ""
-"Id значка має бути буквенно-цифровим без будь-яких діакритичних знаків і не "
-"довше 18 символів."
-
-#. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
 msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
 "employee."
 msgstr "ID значка має бути унікальним, цей вже призначений іншому працівнику."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"The Badge ID must contain only printable ASCII characters, without spaces, "
+"and be no longer than 18 characters."
+msgstr ""
+"ID значка має містити лише символи ASCII, які можна надрукувати, без "
+"пробілів і бути не довше 18 символів."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_departure_reason__country_code
@@ -5067,7 +5068,8 @@ msgstr "Це юридична стать, визнана державою."
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "This setting block is utilized to manage the frontend design."
-msgstr "Цей блок налаштувань використовується для керування дизайном фронтенду."
+msgstr ""
+"Цей блок налаштувань використовується для керування дизайном фронтенду."
 
 #. module: hr
 #. odoo-python
@@ -5252,8 +5254,8 @@ msgstr "Користувач із таким ім’ям уже існує дл�
 #: code:addons/hr/models/hr_employee.py:0
 msgid "User already exists with the same email for Employees %s"
 msgstr ""
-"Користувач із такою самою електронною адресою вже існує у розділі «"
-"Співробітники» %s"
+"Користувач із такою самою електронною адресою вже існує у розділі "
+"«Співробітники» %s"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_user_active
@@ -5918,6 +5920,13 @@ msgstr "робота"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "work_permit_name"
+
+#~ msgid ""
+#~ "The Badge ID must be alphanumeric without any accents and no longer than "
+#~ "18 characters."
+#~ msgstr ""
+#~ "Id значка має бути буквенно-цифровим без будь-яких діакритичних знаків і "
+#~ "не довше 18 символів."
 
 #~ msgid "%(activity)s, assigned to %(name)s, due on the %(deadline)s"
 #~ msgstr "%(activity)s, призначено %(name)s, через %(deadline)s"

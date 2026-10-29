@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 17:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:38+0000\n"
 "PO-Revision-Date: 2026-09-14 08:37+0000\n"
 "Last-Translator: Nedžad Beus <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
@@ -107,16 +107,16 @@ msgstr ""
 "                        <t t-else=\"\">Pozdravljeni,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Vaše naročilo <t t-out=\"object.tracking_number\">"
-"...</t> v vrednosti <t t-out=\"format_amount"
-"(object.amount_total,object.currency_id)\">$xx.xx</t> je bilo potrjeno. "
-"<span t-if=\"object.preset_time or client.street\">Pripravljeno bo</span> "
-"<span t-if=\"object.preset_time\">ob <t t-out=\"format_time"
-"(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)\">12:00 "
-"pm</t></span> <span t-if=\"client.street\">na naslovu <t t-out=\"street\">"
-"ulica</t>, <t t-out=\"state\">država</t>, <t t-out=\"client.zip or ''\">"
-"poštna številka</t>, <t t-out=\"city\">mesto</t>, <t t-out=\"country\">"
-"država</t></span></div>\n"
+"                    <div>Vaše naročilo <t t-"
+"out=\"object.tracking_number\">...</t> v vrednosti <t t-"
+"out=\"format_amount(object.amount_total,object.currency_id)\">$xx.xx</t> je "
+"bilo potrjeno. <span t-if=\"object.preset_time or "
+"client.street\">Pripravljeno bo</span> <span t-if=\"object.preset_time\">ob "
+"<t t-out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 pm</t></span> <span t-if=\"client.street\">na naslovu "
+"<t t-out=\"street\">ulica</t>, <t t-out=\"state\">država</t>, <t t-"
+"out=\"client.zip or ''\">poštna številka</t>, <t t-out=\"city\">mesto</t>, "
+"<t t-out=\"country\">država</t></span></div>\n"
 "                    <br/>\n"
 "                    <div>Hvala,</div>\n"
 "                    <br/>\n"
@@ -166,12 +166,12 @@ msgstr ""
 "                        <t t-else=\"\">Pozdravljeni,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Vaše naročilo <t t-out=\"object.tracking_number\">"
-"...</t> v vrednosti <t t-out=\"format_amount"
-"(object.amount_total,object.currency_id)\">$xx.xx</t> je bilo potrjeno. "
-"<span t-if=\"object.preset_time\">Pripravljeno bo ob <t t-out=\"format_time"
-"(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)\">12:00 "
-"pm</t></span></div>\n"
+"                    <div>Vaše naročilo <t t-"
+"out=\"object.tracking_number\">...</t> v vrednosti <t t-"
+"out=\"format_amount(object.amount_total,object.currency_id)\">$xx.xx</t> je "
+"bilo potrjeno. <span t-if=\"object.preset_time\">Pripravljeno bo ob <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 pm</t></span></div>\n"
 "                    <br/>\n"
 "                    <div>Hvala,</div>\n"
 "                    <br/>\n"
@@ -796,8 +796,33 @@ msgstr "Internetna povezava je izgubljena"
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Invalid combo line"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
 msgid "Invalid preset"
 msgstr "Neveljavna prednastavitev"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Invalid product attribute"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/controllers/orders.py:0
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Invalid product configuration"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Invalid quantity"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -861,7 +886,8 @@ msgstr "Zadnjič posodobljeno"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Let your customers order using their mobile or a kiosk."
-msgstr "Omogočite svojim strankam naročanje prek mobilnega telefona ali kioska."
+msgstr ""
+"Omogočite svojim strankam naročanje prek mobilnega telefona ali kioska."
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__light
@@ -1168,6 +1194,18 @@ msgid "Points of Sale"
 msgstr "Prodajna mesta"
 
 #. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Preset is not available in self-ordering"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Preset is not available in this configuration"
+msgstr ""
+
+#. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__link_html
 msgid "Preview"
 msgstr "Predogled"
@@ -1327,12 +1365,6 @@ msgstr "Izberite državo"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
-msgid "Select a hour"
-msgstr "Izberite uro"
-
-#. module: pos_self_order
-#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Select a state"
 msgstr "Izberite državo"
@@ -1342,6 +1374,12 @@ msgstr "Izberite državo"
 #: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
 msgid "Select a table"
 msgstr "Izberite mizo"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
+msgid "Select an hour"
+msgstr ""
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
@@ -1574,6 +1612,14 @@ msgstr "Privzeti uporabnik samopostrežnega naročanja mora biti uporabnik POS-a
 #: code:addons/pos_self_order/models/pos_order.py:0
 msgid "The mail template with xmlid %s has been deleted."
 msgstr "Predloga e-poštnega sporočila z xmlid %s je bila izbrisana."
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid ""
+"The order ID isn't linked to the order UUID. This is a sign of a tampered "
+"payload."
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-python
@@ -1832,6 +1878,9 @@ msgstr "za vsako dodatno enoto"
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "x"
 msgstr "x"
+
+#~ msgid "Select a hour"
+#~ msgstr "Izberite uro"
 
 #~ msgid "Fiscal Position"
 #~ msgstr "Davčno območje"

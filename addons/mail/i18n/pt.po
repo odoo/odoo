@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-05 18:42+0000\n"
 "Last-Translator: Cristina Paniagua Ramiro <crpan@odoo.com>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-19/mail/"
@@ -85,8 +85,8 @@ msgstr ""
 "            </p><p>\n"
 "                Para te proteger de spam e loops de respostas, o Odoo "
 "automaticamente bloqueia e-mails\n"
-"                que chegam ao seu gateway acima do limite de <b>%(threshold)"
-"i</b> e-mails a cada <b>%(minutes)i</b>\n"
+"                que chegam ao seu gateway acima do limite de <b>%"
+"(threshold)i</b> e-mails a cada <b>%(minutes)i</b>\n"
 "                minutos. Caso hajam e-mails dos quais você precise receber "
 "atualizações\n"
 "                frequentes, você pode adicioná-los abaixo e o Odoo não "
@@ -236,7 +236,8 @@ msgstr "%(file1)s e %(file2)s"
 #. odoo-python
 #: code:addons/mail/models/models.py:0
 msgid "%(model_name)s.%(field_path)s does not seem to be a valid field path"
-msgstr "%(model_name)s.%(field_path)s não parece ser um caminho de campo válido"
+msgstr ""
+"%(model_name)s.%(field_path)s não parece ser um caminho de campo válido"
 
 #. module: mail
 #. odoo-javascript
@@ -259,8 +260,9 @@ msgstr ""
 "mencionar alguém.%(new_line)sDigite %(bold_start)s#canal%(bold_end)s para "
 "mencionar um canal.%(new_line)sDigite %(bold_start)s/command%(bold_end)s "
 "para executar um comando.%(new_line)sDigite %(bold_start)s:shortcut%"
-"(bold_end)s para inserir uma resposta automática em sua mensagem.%(new_line)"
-"sDigite%(bold_start)s:emoji?:%(bold_end)spara inserir um emoji na mensagem."
+"(bold_end)s para inserir uma resposta automática em sua mensagem.%"
+"(new_line)sDigite%(bold_start)s:emoji?:%(bold_end)spara inserir um emoji na "
+"mensagem."
 
 #. module: mail
 #. odoo-javascript
@@ -277,8 +279,8 @@ msgid ""
 "(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
 "%(open_samp)sEsc%(close_samp)s %(open_em)spara %(open_cancel)scancelar%"
-"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %(open_em)"
-"spara %(open_save)ssalvar%(close_save)s%(close_em)s"
+"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %"
+"(open_em)spara %(open_save)ssalvar%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -289,8 +291,8 @@ msgid ""
 "(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
 "%(open_samp)sEsc%(close_samp)s %(open_em)spara %(open_cancel)scancelar%"
-"(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %(open_em)"
-"spara %(open_save)ssalvar%(close_save)s%(close_em)s"
+"(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %"
+"(open_em)spara %(open_save)ssalvar%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-python
@@ -1639,7 +1641,8 @@ msgstr "Arquivados"
 #: code:addons/mail/models/res_users.py:0
 msgid ""
 "Archived because %(user_name)s (#%(user_id)s) deleted the portal account"
-msgstr "Arquivado porque %(user_name)s (#%(user_id)s) deletou a conta do portal"
+msgstr ""
+"Arquivado porque %(user_name)s (#%(user_id)s) deletou a conta do portal"
 
 #. module: mail
 #. odoo-javascript
@@ -2217,6 +2220,12 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "By order of server priority"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.js:0
+msgid "CMD"
 msgstr ""
 
 #. module: mail
@@ -3700,7 +3709,8 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_editable
 msgid "Determines if the canned response can be edited by the current user"
-msgstr "Determina se a resposta predefinida pode ser editada pelo usuário atual"
+msgstr ""
+"Determina se a resposta predefinida pode ser editada pelo usuário atual"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_shared
@@ -5588,7 +5598,8 @@ msgstr ""
 msgid ""
 "If set, the member will not receive notifications from the channel until "
 "this date."
-msgstr "Se definido, o membro não receberá notificações do canal até esta data."
+msgstr ""
+"Se definido, o membro não receberá notificações do canal até esta data."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__scheduled_date
@@ -5655,8 +5666,8 @@ msgid ""
 "If you don't recognize it, you should change your password immediately via "
 "this link:<br/>"
 msgstr ""
-"Se você não reconhece o acesso, troque sua senha imediatamente pelo "
-"link:<br/>"
+"Se você não reconhece o acesso, troque sua senha imediatamente pelo link:<br/"
+">"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__alias_domain_id
@@ -6383,6 +6394,11 @@ msgstr "AO VIVO"
 #: model:ir.model.fields,field_description:mail.field_mail_template__lang
 msgid "Language"
 msgstr "Idioma"
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_message_translation__target_lang
+msgid "Language code used as the target for the translation request."
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -8019,8 +8035,8 @@ msgid ""
 "Notification should receive attachments as a list of list or tuples "
 "(received %(aids)s)"
 msgstr ""
-"A notificação deve receber anexos como uma lista de listas ou tuplas (%(aids)"
-"s recebidos)"
+"A notificação deve receber anexos como uma lista de listas ou tuplas (%"
+"(aids)s recebidos)"
 
 #. module: mail
 #. odoo-python
@@ -8029,8 +8045,8 @@ msgid ""
 "Notification should receive attachments records as a list of IDs (received %"
 "(aids)s)"
 msgstr ""
-"A notificação deve receber registros de anexos como uma lista de IDs (%(aids)"
-"srecebidos)"
+"A notificação deve receber registros de anexos como uma lista de IDs (%"
+"(aids)srecebidos)"
 
 #. module: mail
 #. odoo-python
@@ -9102,6 +9118,12 @@ msgstr ""
 #: code:addons/mail/static/src/chatter/web/chatter.xml:0
 msgid "Pop out Attachments"
 msgstr "Sair dos anexos"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_view.js:0
+msgid "Pop out is not supported on mobile."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__port
@@ -10622,12 +10644,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__source
 msgid "Shortcut"
 msgstr "Atalho"
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_mail_message_translation__target_lang
-msgid "Shortened language code used as the target for the translation request."
-msgstr ""
-"Código encurtado do idioma usado como destino da solicitação de tradução."
 
 #. module: mail
 #. odoo-javascript
@@ -13027,7 +13043,8 @@ msgstr "Volume de outros usuários"
 msgid ""
 "Want to spice up your conversations with GIFs? Activate the feature in the "
 "settings!"
-msgstr "Quer animar suas conversas com GIFs? Ative o recurso nas configurações!"
+msgstr ""
+"Quer animar suas conversas com GIFs? Ative o recurso nas configurações!"
 
 #. module: mail
 #. odoo-javascript
@@ -13485,7 +13502,8 @@ msgstr "O Seu Registo de"
 #: code:addons/mail/models/res_users.py:0
 msgid ""
 "Your account email has been changed from %(old_email)s to %(new_email)s."
-msgstr "O e-mail da sua conta foi alterado de %(old_email)s para %(new_email)s."
+msgstr ""
+"O e-mail da sua conta foi alterado de %(old_email)s para %(new_email)s."
 
 #. module: mail
 #. odoo-python
@@ -13640,12 +13658,6 @@ msgstr "conversas"
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "created this channel."
 msgstr "criou este canal."
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/js/rotting_mixin/rotting_statusbar.xml:0
-msgid "d"
-msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -14198,6 +14210,11 @@ msgstr "\"%(member_name)s\" em \"%(channel_name)s\""
 #: code:addons/mail/static/src/core/web/activity.js:0
 msgid "“%s”"
 msgstr ""
+
+#~ msgid ""
+#~ "Shortened language code used as the target for the translation request."
+#~ msgstr ""
+#~ "Código encurtado do idioma usado como destino da solicitação de tradução."
 
 #~ msgid "Search for a GIF"
 #~ msgstr "Buscar um GIF"

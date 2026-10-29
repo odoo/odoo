@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:36+0000\n"
+"POT-Creation-Date: 2026-10-24 17:38+0000\n"
 "PO-Revision-Date: 2026-08-03 19:37+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
@@ -75,6 +75,7 @@ msgstr "Cash ingevoerd:"
 #. module: pos_glory_cash
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/components/cancel_dialog.xml:0
+#: code:addons/pos_glory_cash/static/src/app/components/glory_error_dialog.xml:0
 msgid "Cash machine error"
 msgstr "Fout met geldautomaat"
 
@@ -99,6 +100,7 @@ msgstr "Gegeven wisselgeld: %s"
 #. module: pos_glory_cash
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/components/cancel_dialog.xml:0
+#: code:addons/pos_glory_cash/static/src/app/components/glory_error_dialog.xml:0
 msgid "Close"
 msgstr "Sluiten"
 
@@ -167,9 +169,21 @@ msgstr "Fout"
 
 #. module: pos_glory_cash
 #. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/components/glory_error_dialog.xml:0
+msgid "Error code:"
+msgstr ""
+
+#. module: pos_glory_cash
+#. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/utils/constants.js:0
 msgid "Failed to authenticate"
 msgstr "Authenticatie mislukt"
+
+#. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
+msgid "Failed to cancel cash machine transaction."
+msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -244,9 +258,23 @@ msgid "Please configure the IP address before opening the admin page"
 msgstr "Configureer het IP-adres voordat je de admin-pagina opent"
 
 #. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
+msgid ""
+"Please remove the cash from the exit of the cash machine before starting a "
+"transaction."
+msgstr ""
+
+#. module: pos_glory_cash
 #: model:ir.model,name:pos_glory_cash.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
 msgstr "Kassa Betaalmethodes"
+
+#. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/components/glory_error_dialog.xml:0
+msgid "Reset"
+msgstr "Reset"
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -294,6 +322,14 @@ msgstr "De volgende munten/biljetten zijn op bij de geldautomaat:"
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid ""
+"The cash machine is busy counting its inventory, please wait a few seconds "
+"and retry."
+msgstr ""
+
+#. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
+msgid ""
 "The cash machine is busy with another operation. Do you want to cancel it?"
 msgstr "De geldautomaat is bezig met een andere opdracht. Wil je annuleren?"
 
@@ -321,9 +357,25 @@ msgstr "De geldautomaat wordt gebruikt door een ander kassasysteem."
 
 #. module: pos_glory_cash
 #. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
+msgid ""
+"The cash machine is not ready to start a transaction. Check all the covers "
+"are closed and then try again."
+msgstr ""
+
+#. module: pos_glory_cash
+#. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "The cash machine is running low on the following coins/bills:"
 msgstr "De volgende munten/biljetten zijn bijna op bij de geldautomaat:"
+
+#. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
+msgid ""
+"The cash machine is unable to return the inserted cash, please refund the "
+"client via another method."
+msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -351,8 +403,10 @@ msgstr "De betaling is om onbekende redenen mislukt: %s"
 #. module: pos_glory_cash
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
-msgid "There is insufficient cash in the machine to give change."
-msgstr "Er zit onvoldoende geld in de automaat om wisselgeld te geven."
+msgid ""
+"There is insufficient cash in the machine to give change. You will need to "
+"refund the difference via another method."
+msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -412,6 +466,9 @@ msgstr "Wachten tot geld wordt ingevoerd"
 msgid "Waiting for inventory"
 msgstr "Wachten op voorraad"
 
+#~ msgid "There is insufficient cash in the machine to give change."
+#~ msgstr "Er zit onvoldoende geld in de automaat om wisselgeld te geven."
+
 #~ msgid "Request sent"
 #~ msgstr "Aanvraag verzonden"
 
@@ -423,9 +480,6 @@ msgstr "Wachten op voorraad"
 
 #~ msgid "Download logs"
 #~ msgstr "Logboeken downloaden"
-
-#~ msgid "Reset"
-#~ msgstr "Reset"
 
 #~ msgid "Reset cash machine"
 #~ msgstr "Geldautomaat resetten"

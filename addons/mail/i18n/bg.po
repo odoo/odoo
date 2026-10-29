@@ -27,7 +27,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-07 04:49+0000\n"
 "Last-Translator: Toma Tomov <toma.tomov@gmail.com>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-19/mail/"
@@ -253,11 +253,11 @@ msgid ""
 msgstr ""
 "%(new_line)s%(new_line)sНапишете %(bold_start)s@username%(bold_end)s, за да "
 "споменете някого и да привлечете вниманието му.%(new_line)sНапишете %"
-"(bold_start)s#channel%(bold_end)s, за да споменете канал.%(new_line)"
-"sНапишете %(bold_start)s/command%(bold_end)s, за да изпълните команда.%"
-"(new_line)sНапишете %(bold_start)s::shortcut%(bold_end)s, за да вмъкнете "
-"готов отговор в съобщението си.%(new_line)sНапишете %(bold_start)s:emoji:%"
-"(bold_end)s, за да вмъкнете емоджи в съобщението си."
+"(bold_start)s#channel%(bold_end)s, за да споменете канал.%"
+"(new_line)sНапишете %(bold_start)s/command%(bold_end)s, за да изпълните "
+"команда.%(new_line)sНапишете %(bold_start)s::shortcut%(bold_end)s, за да "
+"вмъкнете готов отговор в съобщението си.%(new_line)sНапишете %"
+"(bold_start)s:emoji:%(bold_end)s, за да вмъкнете емоджи в съобщението си."
 
 #. module: mail
 #. odoo-javascript
@@ -274,8 +274,8 @@ msgid ""
 "(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
 "%(open_samp)sEscape%(close_samp)s %(open_em)sза %(open_cancel)sотказ%"
-"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %(open_em)"
-"sза %(open_save)sзапазване%(close_save)s%(close_em)s"
+"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %"
+"(open_em)sза %(open_save)sзапазване%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -605,9 +605,9 @@ msgid ""
 "groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
 "marketing, product XYZ, after work party, etc).</p>"
 msgstr ""
-"<p>Каналите улесняват организирането на информацията в различни теми и "
-"групи.</p> <p>Опитайте се да <b>създадете първия си канал</b> (напр. "
-"продажби, маркетинг, продукт XYZ, банкет след работа и т.н.).</p>"
+"<p>Каналите улесняват организирането на информацията в различни теми и групи."
+"</p> <p>Опитайте се да <b>създадете първия си канал</b> (напр. продажби, "
+"маркетинг, продукт XYZ, банкет след работа и т.н.).</p>"
 
 #. module: mail
 #. odoo-javascript
@@ -1176,8 +1176,8 @@ msgid ""
 msgstr ""
 "Плановете за дейности се използват за възлагане на списък с дейности само с "
 "няколко кликвания\n"
-"                    (напр. „Въвеждане“, „Проследяване на потенциални клиенти"
-"“, „Среща за етап от проект“, ...)"
+"                    (напр. „Въвеждане“, „Проследяване на потенциални "
+"клиенти“, „Среща за етап от проект“, ...)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_schedule
@@ -2236,6 +2236,12 @@ msgstr "По ред на приоритет на сървъра"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
+msgid "CMD"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.js:0
 msgid "CTRL"
 msgstr "CTRL"
 
@@ -2852,7 +2858,8 @@ msgstr "Фирми"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__company_ids
 msgid "Companies using this domain as default for sending mails"
-msgstr "Компании, използващи този домейн по подразбиране за изпращане на имейли"
+msgstr ""
+"Компании, използващи този домейн по подразбиране за изпращане на имейли"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__company_id
@@ -3720,8 +3727,8 @@ msgid ""
 "its invitation link. No value means display text (no voice/video)."
 msgstr ""
 "Определя как каналът ще се показва по подразбиране при отварянето му от "
-"връзката за покана. Без стойност означава показване на текст (без глас/видео)"
-"."
+"връзката за покана. Без стойност означава показване на текст (без глас/"
+"видео)."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_editable
@@ -3732,7 +3739,8 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_shared
 msgid "Determines if the canned_response is currently shared with other users"
-msgstr "Определя дали готовият отговор в момента е споделен с други потребители"
+msgstr ""
+"Определя дали готовият отговор в момента е споделен с други потребители"
 
 #. module: mail
 #. odoo-javascript
@@ -5949,8 +5957,8 @@ msgid ""
 "Invalid expression, it must be a literal python dictionary definition e.g. "
 "\"{'field': 'value'}\""
 msgstr ""
-"Невалиден израз, трябва да е буквално определение в речник python напр. \""
-"{'поле': 'стойност'}\""
+"Невалиден израз, трябва да е буквално определение в речник python напр. "
+"\"{'поле': 'стойност'}\""
 
 #. module: mail
 #. odoo-python
@@ -6021,8 +6029,8 @@ msgstr ""
 msgid ""
 "Invalid template or view source reference %(svalue)s, is %(model)s instead"
 msgstr ""
-"Невалидна препратка към шаблон или източник на изглед %(svalue)s, е %(model)"
-"s вместо това"
+"Невалидна препратка към шаблон или източник на изглед %(svalue)s, е %"
+"(model)s вместо това"
 
 #. module: mail
 #. odoo-python
@@ -6430,6 +6438,11 @@ msgstr "НА ЖИВО"
 #: model:ir.model.fields,field_description:mail.field_mail_template__lang
 msgid "Language"
 msgstr "Език"
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_message_translation__target_lang
+msgid "Language code used as the target for the translation request."
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -7103,7 +7116,8 @@ msgstr "Шаблон за масово изпращане: '%(name)s' (ID: %(rec
 #: code:addons/mail/static/src/discuss/call/common/call_settings.js:0
 #: code:addons/mail/static/src/discuss/call/common/device_select.js:0
 msgid "Media devices unobtainable. SSL might not be set up properly."
-msgstr "Медийните устройства са недостъпни. SSL може да не е настроен правилно."
+msgstr ""
+"Медийните устройства са недостъпни. SSL може да не е настроен правилно."
 
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_meeting
@@ -8410,7 +8424,8 @@ msgstr "Само вътрешни потребители могат да кон�
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "Only internal users can configure personal mail servers."
-msgstr "Само вътрешни потребители могат да конфигурират лични пощенски сървъри."
+msgstr ""
+"Само вътрешни потребители могат да конфигурират лични пощенски сървъри."
 
 #. module: mail
 #. odoo-python
@@ -9161,6 +9176,12 @@ msgstr ""
 #: code:addons/mail/static/src/chatter/web/chatter.xml:0
 msgid "Pop out Attachments"
 msgstr "Изведи прикачените файлове"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_view.js:0
+msgid "Pop out is not supported on mobile."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__port
@@ -10378,8 +10399,8 @@ msgstr "Изберете потребител..."
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Selected user '%(user)s' cannot upload documents on model '%(model)s'"
 msgstr ""
-"Избраният потребител '%(user)s' не може да качва документи в модел '%(model)"
-"s'"
+"Избраният потребител '%(user)s' не може да качва документи в модел '%"
+"(model)s'"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__self_member_id
@@ -10691,11 +10712,6 @@ msgstr "Споделено с всички потребители"
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__source
 msgid "Shortcut"
 msgstr "Пряк път"
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_mail_message_translation__target_lang
-msgid "Shortened language code used as the target for the translation request."
-msgstr "Съкратен езиков код, използван като цел за заявката за превод."
 
 #. module: mail
 #. odoo-javascript
@@ -11374,8 +11390,8 @@ msgid ""
 "\"%(plan_name)s\" because it is limited to the model \"%"
 "(activity_type_model)s\"."
 msgstr ""
-"Типът дейност „%(activity_type_name)s“ не е съвместим с плана „%(plan_name)s"
-"“, защото е ограничен до модела „%(activity_type_model)s“."
+"Типът дейност „%(activity_type_name)s“ не е съвместим с плана „%"
+"(plan_name)s“, защото е ограничен до модела „%(activity_type_model)s“."
 
 #. module: mail
 #. odoo-javascript
@@ -11472,8 +11488,8 @@ msgid ""
 "                 Please make sure you are using the correct address or "
 "contact us at %(default_email)s instead."
 msgstr ""
-"Съобщението по-долу не можа да бъде прието от адреса %(alias_display_name)"
-"s.\n"
+"Съобщението по-долу не можа да бъде прието от адреса %"
+"(alias_display_name)s.\n"
 "                 Само %(contact_description)s имат право да се свързват с "
 "него.<br /><br />\n"
 "                 Моля, уверете се, че използвате правилния адрес или се "
@@ -11487,8 +11503,8 @@ msgid ""
 "(alias_display_name)s.\n"
 "Please try again later or contact %(company_name)s instead."
 msgstr ""
-"Съобщението по-долу не можа да бъде прието от адреса %(alias_display_name)"
-"s.\n"
+"Съобщението по-долу не можа да бъде прието от адреса %"
+"(alias_display_name)s.\n"
 "Моля, опитайте отново по-късно или се свържете с %(company_name)s вместо "
 "това."
 
@@ -13413,7 +13429,8 @@ msgstr "Можете да разговаряте само със съществ�
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/store_service.js:0
 msgid "You can only chat with partners that have a dedicated user."
-msgstr "Можете да разговаряте само с партньори, които имат собствен потребител."
+msgstr ""
+"Можете да разговаряте само с партньори, които имат собствен потребител."
 
 #. module: mail
 #. odoo-javascript
@@ -13736,12 +13753,6 @@ msgid "created this channel."
 msgstr "създаде този канал."
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/js/rotting_mixin/rotting_statusbar.xml:0
-msgid "d"
-msgstr "д"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid "day, month dd, yyyy - hh:mm:ss (GMT)"
 msgstr "ден, месец дд, година - час:мин:сек (GMT)"
@@ -13825,8 +13836,8 @@ msgstr "напр. \"Приветствен имейл\""
 msgid ""
 "e.g. \"Welcome to MyCompany\" or \"Nice to meet you, {{ object.name }}\""
 msgstr ""
-"напр. \"Добре дошли в MyCompany\" или \"Приятно ми е да се запознаем, {{ "
-"object.name }}\""
+"напр. \"Добре дошли в MyCompany\" или \"Приятно ми е да се запознаем, "
+"{{ object.name }}\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -14293,6 +14304,13 @@ msgstr "„%(member_name)s“ в „%(channel_name)s“"
 #: code:addons/mail/static/src/core/web/activity.js:0
 msgid "“%s”"
 msgstr "„%s“"
+
+#~ msgid ""
+#~ "Shortened language code used as the target for the translation request."
+#~ msgstr "Съкратен езиков код, използван като цел за заявката за превод."
+
+#~ msgid "d"
+#~ msgstr "д"
 
 #~ msgid ""
 #~ "The Tax Identification Number. Values here will be validated based on the "

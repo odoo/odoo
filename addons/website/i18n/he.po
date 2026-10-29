@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 17:36+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-07 17:10+0000\n"
 "Last-Translator: or balmas <or@laylinetech.com>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-19/website/"
@@ -57,7 +57,8 @@ msgstr "\"שותף אמין לצמיחה <br/>מקצועי, יעיל, ותמיד
 msgid ""
 "\" Outstanding service and results! <br/>They exceeded our expectations in "
 "every project. \""
-msgstr "\" שירות ותוצאות יוצאות דופן! <br/>Tהם עלו על כל הציפיות בכל פרויקט. \""
+msgstr ""
+"\" שירות ותוצאות יוצאות דופן! <br/>Tהם עלו על כל הציפיות בכל פרויקט. \""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
@@ -300,6 +301,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.list_website_public_pages
 msgid "'. Showing results for '"
 msgstr "'. מציג תוצאות עבור '"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_searchbar/search_bar.js:0
+msgid "(%(count)s found)"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -1124,7 +1131,8 @@ msgstr "<i class=\"fa fa-check text-success\" role=\"img\"/> תמיכה באימ
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid ""
 "<i class=\"fa fa-check text-success\" role=\"img\"/>  Limited customization"
-msgstr "<i class=\"fa fa-check text-success\" role=\"img\"/> התאמה אישית מוגבלת"
+msgstr ""
+"<i class=\"fa fa-check text-success\" role=\"img\"/> התאמה אישית מוגבלת"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -1331,7 +1339,8 @@ msgstr "<i class=\"s_mega_menu_thumbnails_icon fa fa-comments me-2\"/>צור ק�
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_thumbnails
 msgid "<i class=\"s_mega_menu_thumbnails_icon fa fa-cube me-2\"/> Free returns"
-msgstr "<i class=\"s_mega_menu_thumbnails_icon fa fa-cube me-2\"/> החזרות בחינם"
+msgstr ""
+"<i class=\"s_mega_menu_thumbnails_icon fa fa-cube me-2\"/> החזרות בחינם"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_thumbnails
@@ -2105,8 +2114,8 @@ msgid ""
 "                                <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
 "<span class=\"s_website_form_label_content\">כתובת מייל</span>\n"
-"                                         <span class=\"s_website_form_mark\">"
-"*</span>"
+"                                         <span "
+"class=\"s_website_form_mark\">*</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form
@@ -6604,6 +6613,12 @@ msgstr "דונאט"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/popup_option_plugin.js:0
+msgid "Drag blocks here"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 msgid "Drag the <b>%s</b> block and drop it at the bottom of the page."
 msgstr ""
@@ -8347,6 +8362,15 @@ msgstr "גוגל מפות"
 #: model:ir.model.fields,field_description:website.field_website__google_maps_api_key
 msgid "Google Maps API Key"
 msgstr "מפתח API של גוגל מפות"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_service.js:0
+#: code:addons/website/static/src/core/website_map_service.js:0
+msgid ""
+"Google Maps configuration has changed. Please reload the page for changes to "
+"take effect."
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -12761,8 +12785,8 @@ msgid ""
 "Paragraph with <strong>bold</strong>, <span class=\"text-muted\">muted</"
 "span> and <em>italic</em> texts"
 msgstr ""
-"פסקה עם טקסטים <strong>מודגשים</strong>, <span class=\"text-muted\">"
-"מעומעמים</span> ו <em>נטויים</em> טקסטים"
+"פסקה עם טקסטים <strong>מודגשים</strong>, <span class=\"text-"
+"muted\">מעומעמים</span> ו <em>נטויים</em> טקסטים"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
@@ -12947,7 +12971,7 @@ msgstr "שומר מקום"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_api_key_dialog.xml:0
-msgid "Places API"
+msgid "Places API (NEW)"
 msgstr ""
 
 #. module: website
@@ -15848,12 +15872,6 @@ msgid "The form has been sent successfully."
 msgstr "הטופס נשלח בהצלחה."
 
 #. module: website
-#. odoo-python
-#: code:addons/website/controllers/form.py:0
-msgid "The form's specified model does not exist"
-msgstr "המודל שצוין של הטופס אינו קיים"
-
-#. module: website
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,help:website.field_ir_cron__website_url
 msgid "The full URL to access the server action through the website."
@@ -16195,6 +16213,13 @@ msgstr ""
 msgid ""
 "This font already exists, you can only add it as a local font to replace the "
 "server version."
+msgstr ""
+
+#. module: website
+#. odoo-python
+#: code:addons/website/controllers/form.py:0
+msgid ""
+"This form cannot be submitted. Please contact the website administrator."
 msgstr ""
 
 #. module: website
@@ -17481,7 +17506,8 @@ msgstr "המתן למבקרים שיגיעו לאתר שלך כדי לראות �
 msgid ""
 "Wait for visitors to come to your website to see their history and engage "
 "with them."
-msgstr "המתן עד שהמבקרים יגיעו לאתר שלך כדי לראות את ההיסטוריה שלהם ולעסוק בהם."
+msgstr ""
+"המתן עד שהמבקרים יגיעו לאתר שלך כדי לראות את ההיסטוריה שלהם ולעסוק בהם."
 
 #. module: website
 #. odoo-javascript
@@ -17547,8 +17573,8 @@ msgid ""
 "medium size companies willing to optimize their performance."
 msgstr ""
 "אנחנו צוות של אנשים נלהבים שמטרתם לשפר את החיים של כולם באמצעות מוצרים משנים "
-"מציאות. אנו בונים מוצרים מעולים כדי לפתור את הבעיות העסקיות שלך. <br/><br/>"
-"המוצרים שלנו מיועדים לחברות קטנות עד בינוניות שמעוניינות לייעל את הביצועים "
+"מציאות. אנו בונים מוצרים מעולים כדי לפתור את הבעיות העסקיות שלך. <br/><br/"
+">המוצרים שלנו מיועדים לחברות קטנות עד בינוניות שמעוניינות לייעל את הביצועים "
 "שלהן."
 
 #. module: website
@@ -18320,8 +18346,8 @@ msgid ""
 "feature.<br/> To be successful your content needs to be useful to your "
 "readers."
 msgstr ""
-"כתוב פסקה אחת או שתיים המתארות את המוצר, השירותים שלך או תכונה מסוימת.<br/>"
-"כדי להצליח התוכן שלך צריך להיות שימושי לקוראים שלך."
+"כתוב פסקה אחת או שתיים המתארות את המוצר, השירותים שלך או תכונה מסוימת.<br/"
+">כדי להצליח התוכן שלך צריך להיות שימושי לקוראים שלך."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_discovery
@@ -18444,6 +18470,12 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
 msgid "You cannot duplicate this field."
 msgstr "לא ניתן לשכפל שדה זה."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/card_image_option_plugin.js:0
+msgid "You cannot duplicate this image."
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -19864,6 +19896,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_key_benefits
 msgid "✽  What We Offer"
 msgstr ""
+
+#~ msgid "The form's specified model does not exist"
+#~ msgstr "המודל שצוין של הטופס אינו קיים"
 
 #~ msgid "$1.50"
 #~ msgstr "$1.50"
