@@ -14,7 +14,7 @@
                             </td>
                         </tr>
                     </t>
-                    <t t-foreach="info.lines" t-as="line" t-key="line_index">
+                    <t t-foreach="this.getVisibleLines(info.lines)" t-as="line" t-key="line_index">
                         <tr>
                         <t t-if="info.outstanding">
                             <td t-out="line.formattedDate"/>
@@ -55,6 +55,20 @@
                             </span>
                         </td>
                         </tr>
+                    </t>
+                    <t t-if="this.props.loadMore and info.lines.length > this.maxLines">
+                      <tr>
+                          <td>
+                              <a role="button"
+                                  class="btn-primary"
+                                  t-on-click="() => this.toggleShowAllLines()">
+                                  <t t-if="!this.showAllLines()">
+                                      Load more
+                                  </t>
+                                  <t t-else="">Show less</t>
+                              </a>
+                          </td>
+                      </tr>
                     </t>
                     <tr t-if="info.exchangeInfo?.line_ids and info.exchangeInfo.line_ids.length">
                         <td>

@@ -1,4 +1,4 @@
-import { t, Component, useProps } from "@odoo/owl";
+import { Component, onWillUpdateProps, signal, t, useProps } from "@odoo/owl";
 import { deserializeDate, formatDate } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
@@ -30,16 +30,34 @@ class AccountPaymentPopOver extends Component {
 
 export class AccountPaymentField extends Component {
     static template = "account.AccountPaymentField";
-
-    props = useProps(standardFieldProps);
+    props = useProps({ ...standardFieldProps, loadMore: t.boolean().optional(false) });
 
     setup() {
         const position = localization.direction === "rtl" ? "bottom" : "left";
         this.popover = usePopover(AccountPaymentPopOver, { position });
         this.orm = useService("orm");
         this.action = useService("action");
+        this.showAllLines = signal(false);
+        this.maxLines = 2
+
+        onWillUpdateProps((nextProps) => {
+            if (nextProps.record.resId !== this.props.record.resId) {
+                this.showAllLines.set(false);
+            }
+        });
+
     }
 
+    getVisibleLines(lines) {
+        if (!this.props.loadMore || this.showAllLines() || lines.length <= this.maxLines) {
+            return lines
+        }
+        return lines.slice(0, this.maxLines);
+    }
+
+    toggleShowAllLines() {
+        this.showAllLines.set(!this.showAllLines());
+    }
     getInfo() {
         const info = this.props.record.data[this.props.name] || {
             content: [],
@@ -104,6 +122,9 @@ export class AccountPaymentField extends Component {
 export const accountPaymentField = {
     component: AccountPaymentField,
     supportedTypes: ["json"],
+    extractProps: ({ options }) => ({
+        loadMore: options.loadMore,
+    }),
 };
 
 registry.category("fields").add("payment", accountPaymentField);
