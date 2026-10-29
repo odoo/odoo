@@ -207,6 +207,8 @@
             <search string="Event Registration">
                 <field name="id" string="Registration ID"/>
                 <field name="name" string="Participant" filter_domain="['|', '|', ('name', 'ilike', self), ('email', 'ilike', self), ('company_name', 'ilike', self)]"/>
+                <field name="phone"/>
+                <field name="email"/>
                 <field name="company_id"/>
                 <field name="partner_id"/>
                 <field name="event_ticket_id" string="Ticket"/>
