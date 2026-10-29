@@ -274,6 +274,14 @@
                                                     <t t-if="grouped_line['display_type'] == 'line_subsection'">
                                                         <t t-set="current_subsection" t-value="grouped_line"/>
                                                     </t>
+                                                    <t t-set="line_padding" t-value="
+                                                        1 if grouped_line['display_type'] == 'line_section' else
+                                                        3 if grouped_line['display_type'] == 'line_subsection' else
+                                                        0 if grouped_line['display_type'] == 'line_note' else
+                                                        4 if current_subsection else
+                                                        3 if current_section else
+                                                        0"/>
+                                                    <t t-set="padding_style" t-value="line_padding and ('padding-left:' + str(line_padding * 8) + 'px') or ''"/>
                                                 </t>
                                                 <tr t-att-class="
                                                     'fw-bolder o_line_section' if grouped_line.get('display_type') == 'line_section' and not hide_details else
