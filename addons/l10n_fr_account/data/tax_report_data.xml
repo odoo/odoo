@@ -92,7 +92,7 @@
                             </record>
                             <record id="tax_report_A3" model="account.report.line">
                                 <field name="name">A3 - Intra-Community purchases of services</field>
-                                <field name="name@fr">A3 - Achats de prestations de services intracommunautaires</field>
+                                <field name="name@fr">A3 - Achats de prestations de services réalisés auprès d’un assujetti non établi en France</field>
                                 <field name="code">box_A3</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_A3_tag" model="account.report.expression">
@@ -152,7 +152,7 @@
                             </record>
                             <record id="tax_report_A5" model="account.report.line">
                                 <field name="name">A5 - Removal from suspensive tax regime (other than petroleum products)</field>
-                                <field name="name@fr">A5 - Sorties de régime fiscal suspensif (autres que les produits pétroliers)</field>
+                                <field name="name@fr">A5 - Sorties de régime fiscal suspensif (autres que les produits pétroliers) et sorties de régime particulier douanier uniquement lorsque des livraisons ont eu lieu en cours de régime</field>
                                 <field name="code">box_A5</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_A5_tag" model="account.report.expression">
@@ -242,7 +242,7 @@
                             </record>
                             <record id="tax_report_B3" model="account.report.line">
                                 <field name="name">B3 - Taxable supplies of electricity, natural gas, heat or cooling in France</field>
-                                <field name="name@fr">B3 - Livraisons d'électricité, de gaz naturel, de chaleur ou de froid imposables en France</field>
+                                <field name="name@fr">B3 - Achats d'électricité, de gaz naturel, de chaleur ou de froid imposables en France</field>
                                 <field name="code">box_B3</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_B3_tag" model="account.report.expression">
@@ -2209,7 +2209,7 @@
                         <field name="children_ids">
                             <record id="tax_report_19" model="account.report.line">
                                 <field name="name">19 - Assets constituting fixed assets</field>
-                                <field name="name@fr">19 - Biens constituant l'actif immobilisé</field>
+                                <field name="name@fr">19 - Biens constituant des immobilisations</field>
                                 <field name="code">box_19</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_19_tag" model="account.report.expression">
@@ -2239,7 +2239,7 @@
                             </record>
                             <record id="tax_report_20" model="account.report.line">
                                 <field name="name">20 - Other goods and services</field>
-                                <field name="name@fr">20 - Autres bien et services</field>
+                                <field name="name@fr">20 - Autres biens et services</field>
                                 <field name="code">box_20</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_20_tag" model="account.report.expression">
@@ -2380,7 +2380,7 @@
                             </record>
                             <record id="tax_report_24" model="account.report.line">
                                 <field name="name">24 - Of which deductible VAT on imports</field>
-                                <field name="name@fr">24 - Dont TVA déductible sur importations</field>
+                                <field name="name@fr">24 - Dont TVA déductible sur importations hors produits pétroliers</field>
                                 <field name="code">box_24</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_24_tag" model="account.report.expression">
@@ -2432,7 +2432,7 @@
             </record>
             <record id="tax_report_credit" model="account.report.line">
                 <field name="name">Credit</field>
-                <field name="name@fr">Credit</field>
+                <field name="name@fr">TVA due ou crédit de TVA</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_25" model="account.report.line">
@@ -2471,7 +2471,7 @@
             </record>
             <record id="tax_report_regularisation" model="account.report.line">
                 <field name="name">Regularisation of domestic consumption taxes (TIC)</field>
-                <field name="name@fr">Régularisation des taxes intérieures de consommation (TIC)</field>
+                <field name="name@fr">Consommateurs d’énergie : régularisation d’accise sur les énergies</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_credit_constate" model="account.report.line">
@@ -2533,7 +2533,7 @@
                     </record>
                     <record id="tax_report_credit_impute" model="account.report.line">
                         <field name="name">Credit charged</field>
-                        <field name="name@fr">Crédit imputé</field>
+                        <field name="name@fr">Crédit imputé sur la TVA (dans la limite de la ligne TD)</field>
                         <field name="children_ids">
                             <record id="tax_report_X1" model="account.report.line">
                                 <field name="name">X1</field>
@@ -2783,7 +2783,7 @@
                 <field name="children_ids">
                     <record id="tax_report_26_external" model="account.report.line">
                         <field name="name">26 - Repayment of credit requested on form n°3519 attached</field>
-                        <field name="name@fr">26 - Remboursement de crédit demandé sur formulaire n°3519 joint</field>
+                        <field name="name@fr">26 - Remboursement de crédit demandé sur formulaire n°3519</field>
                         <field name="code">box_26_external</field>
                         <field name="expression_ids">
                             <record id="tax_report_26_external_tag" model="account.report.expression">
@@ -2846,18 +2846,18 @@
                     </record>
                     <record id="tax_report_Y5" model="account.report.line">
                         <field name="name">Y5 - Refund of TIC balance requested (carried forward from line Y4)</field>
-                        <field name="name@fr">Y5 - Remboursement de reliquat de TIC demandé (report de la ligne Y4)</field>
+                        <field name="name@fr">Y5 - Remboursement de reliquat d’accise sur les énergies demandé par les consommateurs (report de la ligne Y4)</field>
                         <field name="code">box_Y5</field>
                         <field name="aggregation_formula">box_Y4.balance</field>
                     </record>
                     <record id="tax_report_Y6" model="account.report.line">
                         <field name="name">Y6 - TIC credit transferred to the head company on the 3310-CA3G recapitulative return (carried forward from line Y4)</field>
-                        <field name="name@fr">Y6 - Crédit de TIC transféré à la société tête de groupe sur la déclaration récapitulative 3310-CA3G (report de la ligne Y4)</field>
+                        <field name="name@fr">Y6 - Remboursement de reliquat d’accise sur les énergies demandé par les consommateurs, transféré à la société tête de groupe sur la déclaration récapitulative 3310-CA3G (report de la ligne Y4)</field>
                         <field name="code">box_Y6</field>
                     </record>
                     <record id="tax_report_X5" model="account.report.line">
                         <field name="name">X5 - TIC credit offset against VAT (carried forward from line X4)</field>
-                        <field name="name@fr">X5 - Crédit de TIC imputé sur la TVA (report de la ligne X4)</field>
+                        <field name="name@fr">X5 - Crédit d’accise sur les énergies des consommateurs imputé sur la TVA (report de la ligne X4)</field>
                         <field name="code">box_X5</field>
                         <field name="aggregation_formula">box_X4.balance</field>
                     </record>
@@ -2876,7 +2876,7 @@
                     </record>
                     <record id="tax_report_29" model="account.report.line">
                         <field name="name">29 - Similar taxes calculated on schedule n°3310-A-SD</field>
-                        <field name="name@fr">29 - Taxes assimilées calculées sur annexe n°3310-A-SD</field>
+                        <field name="name@fr">29 - Taxes assimilées calculées sur l’annexe n° 3310 A</field>
                         <field name="code">box_29</field>
                         <field name="expression_ids">
                             <record id="tax_report_29_tag" model="account.report.expression">
@@ -2900,7 +2900,7 @@
                     </record>
                     <record id="tax_report_Z5" model="account.report.line">
                         <field name="name">Z5 - Total domestic consumption tax due (carried forward from line Z4)</field>
-                        <field name="name@fr">Z5 - Total des taxes intérieures de consommation dues (report de la ligne Z4)</field>
+                        <field name="name@fr">Z5 - Total de l’accise sur les énergies dû par les consommateurs (report de la ligne Z4)</field>
                         <field name="code">box_Z5</field>
                         <field name="aggregation_formula">box_Z4.balance</field>
                     </record>
