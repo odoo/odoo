@@ -321,3 +321,41 @@ validity. Tick and untick "Garden".
 **Try it.** Add two offers on a property. Click "Sold" first: the error asks you to accept an offer.
 Accept one offer and check the buyer and selling price, then try to accept the second one. Sell the
 property, then try to cancel it.
+
+## Chapter 10 - Constraints
+
+[Official chapter](https://www.odoo.com/documentation/20.0/developer/tutorials/server_framework_101/10_constraints.html)
+
+**Functional.** Invalid data is refused with a clear message:
+
+- The expected price and offer prices must be strictly positive; the selling price cannot be
+  negative.
+- Two property types, or two tags, cannot have the same name.
+- An offer below 90% of the expected price cannot be accepted, and the expected price cannot be
+  raised above the accepted price / 0.9 afterwards.
+
+**Technical.** Two kinds of constraints:
+
+| | SQL constraint | Python constraint |
+| --- | --- | --- |
+| Declared with | `_name = models.Constraint("CHECK(...)"/"UNIQUE(...)", message)` | a method decorated with `@api.constrains("field", ...)` |
+| Checked by | PostgreSQL, on every insert/update | the ORM, when one of the listed fields is written |
+| Use for | simple rules on one row (`CHECK`) or uniqueness (`UNIQUE`) | rules needing Python: other records, ratios, dates, ... |
+| Failure | the ORM turns the database error into the message | the method raises `ValidationError` |
+
+- **Framework change.** The tutorial still shows `_sql_constraints = [(name, definition, message)]`.
+  On master, each constraint is a class attribute holding a `models.Constraint`, whose name is the
+  attribute name. Indexes are declared the same way with `models.Index`.
+- A SQL constraint is added when the addon is upgraded; it fails if existing rows already violate
+  it.
+- A Python constraint runs only when a field listed in `@api.constrains` is written, and only on
+  the written records. This one lists both prices, so lowering the selling price or raising the
+  expected price are both checked.
+- **Float comparison.** Floats are not exact in binary (`0.1 + 0.2 != 0.3`), so they are compared
+  with `float_compare` and `float_is_zero` from `odoo.tools.float_utils`, at a given precision.
+- Inside a translated message using `%(name)s` placeholders, a literal percent sign is written
+  `%%`.
+
+**Try it.** Create a property with an expected price of 0. Create a second "House" type. On a
+property expecting 100,000, add an offer of 80,000 and accept it. Then add an offer of 95,000 and
+accept it after refusing the first one.

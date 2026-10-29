@@ -26,6 +26,10 @@ class EstatePropertyOffer(models.Model):
         string="Deadline", compute="_compute_date_deadline", inverse="_inverse_date_deadline"
     )
 
+    _check_price = models.Constraint(
+        "CHECK(price > 0)", "The offer price must be strictly positive."
+    )
+
     # ------------------------------------------------------------
     # COMPUTE METHODS
     # ------------------------------------------------------------

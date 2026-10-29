@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools.float_utils import float_compare, float_is_zero
 
 
 class EstateProperty(models.Model):
@@ -71,6 +72,35 @@ class EstateProperty(models.Model):
         string="Offers", comodel_name="estate.property.offer", inverse_name="property_id"
     )
     best_price = fields.Float(string="Best Offer", compute="_compute_best_price")
+
+    # SQL constraints are enforced by PostgreSQL itself, whatever the origin of the data
+    _check_expected_price = models.Constraint(
+        "CHECK(expected_price > 0)", "The expected price must be strictly positive."
+    )
+    _check_selling_price = models.Constraint(
+        "CHECK(selling_price >= 0)", "The selling price cannot be negative."
+    )
+
+    # ------------------------------------------------------------
+    # CONSTRAINT METHODS
+    # ------------------------------------------------------------
+
+    # Python constraints cover rules SQL cannot express; they run when a listed field is written
+    @api.constrains("expected_price", "selling_price")
+    def _check_selling_price_ratio(self):
+        for estate_property in self:
+            # A zero selling price means that no offer was accepted yet: nothing to check
+            if float_is_zero(estate_property.selling_price, precision_digits=2):
+                continue
+            # Floats are never compared with == or <: 0.1 + 0.2 != 0.3 in binary floating point
+            minimum_price = estate_property.expected_price * 0.9
+            if float_compare(estate_property.selling_price, minimum_price, precision_digits=2) < 0:
+                raise ValidationError(
+                    self.env._(
+                        "The selling price must be at least 90%% of the expected price: %(price)s.",
+                        price=minimum_price,
+                    )
+                )
 
     # ------------------------------------------------------------
     # COMPUTE AND ONCHANGE METHODS
