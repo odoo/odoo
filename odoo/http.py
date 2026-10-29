@@ -2357,7 +2357,7 @@ class Request:
         provided a response, a generic 404 - Not Found page is returned.
         """
         self.params = self.get_http_params()
-        self.registry['ir.http']._auth_method_public()
+        self.registry['ir.http']._authenticate_explicit('public')
         response = self.registry['ir.http']._serve_fallback()
         if response:
             self.registry['ir.http']._post_dispatch(response)
