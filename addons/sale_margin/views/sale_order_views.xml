@@ -25,6 +25,12 @@
                     invisible="display_type or price_subtotal == 0"
                     optional="hide"
                 />
+                    <field
+                    name="coefficient"
+                    widget="labeled_float_field"
+                    invisible="display_type or purchase_price == 0"
+                    optional="hide"
+                />
             </xpath>
             <xpath
                 expr="//field[@name='order_line']//list//field[@name='discount']"

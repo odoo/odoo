@@ -36,11 +36,11 @@ TAX_INCL_DISCOUNT_VALUES = [
 @tagged("at_install", "-post_install")  # LEGACY at_install
 class TestSaleMargin(SaleCommon):
     _test_user_groups = (
-        'product.group_product_manager',
-        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        "product.group_product_manager",
+        "sales_team.group_sale_manager",  # FIXME: use sales_team.group_sale_salesman
     )
 
-    _test_user_name = 'Test Sales & Product Manager'
+    _test_user_name = "Test Sales & Product Manager"
 
     @classmethod
     def setUpClass(cls):
@@ -337,3 +337,30 @@ class TestSaleMargin(SaleCommon):
                         msg=f"{k} doesn't match ({fname}: {values[fname]})",
                         delta=delta,
                     )
+
+    def test_coefficient_computation(self):
+        """Test the initial computation of coefficient."""
+        self.assertRecordValues(
+            self.sol, [{"price_unit": 100.0, "purchase_price": 50.0, "coefficient": 2.0}]
+        )
+
+    def test_coefficient_recomputes_on_price_unit_change(self):
+        """Test that coefficient is recomputed when unit price changes."""
+        self.sol.price_unit = 150.0
+
+        self.assertAlmostEqual(self.sol.coefficient, 3.0)
+
+    def test_coefficient_onchange(self):
+        """Test that changing coefficient updates unit price through onchange."""
+        with Form(self.so) as so_form, so_form.order_line.edit(0) as sol_form:
+            sol_form["coefficient"] = 3.0
+
+            # Verify that unit price is updated when coefficient changes.
+            self.assertAlmostEqual(sol_form["price_unit"], 150.0, delta=0.02)
+            self.assertAlmostEqual(sol_form["coefficient"], 3.0, delta=0.02)
+
+    def test_coefficient_recomputes_on_purchase_price_change(self):
+        """Test that coefficient is recomputed when unit cost changes."""
+        self.sol.purchase_price = 25.0
+
+        self.assertAlmostEqual(self.sol.coefficient, 4.0)

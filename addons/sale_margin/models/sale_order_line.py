@@ -2,7 +2,7 @@
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import float_round
+from odoo.tools import float_compare, float_round
 
 
 class SaleOrderLine(models.Model):
@@ -37,6 +37,13 @@ class SaleOrderLine(models.Model):
         precompute=True,
         groups="base.group_user",
     )
+    coefficient = fields.Float(
+        string="Coefficient",
+        compute="_compute_coefficient",
+        readonly=False,
+        groups="base.group_user",
+        copy=False,
+    )
 
     @api.depends("product_id", "company_id", "currency_id", "product_uom_id")
     def _compute_purchase_price(self):
@@ -69,6 +76,26 @@ class SaleOrderLine(models.Model):
                 line.margin_percent = float_round(line.margin / line_subtotal, precision_digits=4)
             else:
                 line.margin_percent = None
+
+    @api.depends("price_unit", "purchase_price")
+    def _compute_coefficient(self):
+        for line in self:
+            if line.purchase_price:
+                line.coefficient = line.price_unit / line.purchase_price
+            else:
+                line.coefficient = 0.0
+
+    @api.onchange("coefficient")
+    def _onchange_coefficient(self):
+        if not self.purchase_price:
+            return
+
+        computed_coefficient = self.price_unit / self.purchase_price
+        if float_compare(computed_coefficient, self.coefficient, precision_digits=4) == 0:
+            # Nothing to do, onchange was triggered because of the compute.
+            return
+
+        self.price_unit = self.purchase_price * self.coefficient
 
     @api.onchange("margin")
     def _onchange_margin(self):
