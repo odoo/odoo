@@ -29,7 +29,8 @@
             <xpath expr="//sheet" position="before">
                 <div class="alert alert-warning text-start o_form_header"
                     role="alert"
-                    invisible="employees_count &lt;= 1 or not context.get('employee_id')">
+                    invisible="employees_count &lt;= 1 or not context.get('employee_id')"
+                    groups="hr.group_hr_user">
                     <span>
                         This working schedule is shared across
                         <field name="employees_count" class="fw-bold"/> employees →

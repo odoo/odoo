@@ -339,3 +339,16 @@ class TestResource(TestHrCommon):
             'date_to': datetime(2026, 12, 31, 17, 0),
         })
         self.assertEqual(leave.calendar_id, self.calendar_35h)
+
+    def test_employees_count_hidden_without_hr_access(self):
+        """ Every internal user can read a working schedule, but the count behind
+            `employees_count` needs the rights on the versions, so the field must
+            not reach a user without them. """
+        user = self.env['res.users'].create({
+            'name': "Plain user",
+            'login': "plain_user",
+            'group_ids': [(6, 0, [self.env.ref('base.group_user').id])],
+        })
+        arch = self.env['resource.calendar'].with_user(user).get_view(
+            self.env.ref('resource.resource_calendar_form').id)['arch']
+        self.assertNotIn('employees_count', arch)
