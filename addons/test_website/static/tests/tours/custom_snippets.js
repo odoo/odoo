@@ -54,7 +54,7 @@ registerWebsitePreviewTour(
         {
             content: "Ensure custom snippet preview appeared in the dialog",
             trigger:
-                ":iframe .o_snippet_preview_wrap[data-snippet-id^='s_banner_'] section[data-name='Custom Banner']",
+                ":iframe .o_snippet_preview_wrap[data-snippet-id^='s_banner_'] section[data-custom-name='Custom Banner']",
         },
         {
             content: "Rename custom snippet",
@@ -74,16 +74,16 @@ registerWebsitePreviewTour(
         {
             content: "Click on the 'Bruce Banner' snippet",
             trigger:
-                ":iframe .o_snippet_preview_wrap[data-snippet-id^='s_banner_']:has(section[data-name='Bruce Banner'])",
+                ":iframe .o_snippet_preview_wrap[data-snippet-id^='s_banner_']:has(section[data-custom-name='Bruce Banner'])",
             run: "click",
         },
         {
             content: "Ensure banner section exists",
-            trigger: ":iframe #wrap section[data-name='Banner']",
+            trigger: ":iframe #wrap section.s_banner:not([data-custom-name])",
         },
         {
             content: "Ensure custom banner section exists",
-            trigger: ":iframe #wrap section[data-name='Bruce Banner']",
+            trigger: ":iframe #wrap section.s_banner[data-custom-name='Bruce Banner']",
         },
         {
             content: "Click on the Custom category block",
@@ -103,7 +103,8 @@ registerWebsitePreviewTour(
         },
         {
             content: "Ensure custom snippet disappeared",
-            trigger: ":iframe .o_add_snippets_preview:not(:has(section[data-name='Bruce Banner']))",
+            trigger:
+                ":iframe .o_add_snippets_preview:not(:has(section[data-custom-name='Bruce Banner']))",
         },
     ]
 );

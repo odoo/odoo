@@ -316,7 +316,7 @@ export class ThemeTabPlugin extends Plugin {
         // specific parameters like name, no element, no selector...
         if (!el) {
             divEl = this.document.createElement("div");
-            divEl.dataset.name = name;
+            divEl.dataset.dynamicBuilderName = name;
             this.document.body.appendChild(divEl); // Currently editingElement needs to be isConnected
             el = divEl;
         }

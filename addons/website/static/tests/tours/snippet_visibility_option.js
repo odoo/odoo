@@ -33,7 +33,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Click the 'No Desktop' visibility option.",
-            trigger: "[data-container-title='Block'] [data-action-param='no_desktop']",
+            trigger: "[data-container-title='Banner'] [data-action-param='no_desktop']",
             run: "click",
         },
         {

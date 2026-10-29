@@ -373,7 +373,7 @@ test("Drag and drop from the page should only mark the concerned elements as dir
         <section class="s_dummy_snippet_1" style="height: 100px;">
             <div>
                 <p>Test</p>
-                <div class="s_alert" data-vcss="001" data-snippet="s_alert" data-name="Alert">
+                <div class="s_alert" data-vcss="001" data-snippet="s_alert">
                     <div class="s_alert_content">
                         <p>Dummy</p>
                     </div>
@@ -747,4 +747,25 @@ test("should not add o_dirty for mutations done by normalize called by commit", 
     expect(":iframe .test-target").not.toHaveClass("o_dirty");
     expect(":iframe .test-content").toHaveAttribute("data-counter", "2");
     expect(":iframe .test-sibling").toHaveAttribute("data-counter", "2");
+});
+
+test("data-dynamic-builder-name is not saved", async () => {
+    patch(console, {
+        warn: (message) => expect.step(message),
+    });
+    const { getEditor } = await setupWebsiteBuilder(
+        `<section data-dynamic-builder-name="Generated Name">Text</section>`
+    );
+    onRpc("ir.ui.view", "save", ({ args }) => {
+        expect.step("save");
+        expect(args[1]).not.toInclude("data-dynamic-builder-name");
+        return true;
+    });
+    setSelection({ anchorNode: queryOne(":iframe section").firstChild, anchorOffset: 0 });
+    await insertText(getEditor(), "edit for dirty");
+    await contains(".o_hb_snippets_top_actions button:contains(Save)").click();
+    expect.verifySteps([
+        "data-dynamic-builder-name should only be set dynamically by the template, and not saved in view (found Generated Name)",
+        "save",
+    ]);
 });

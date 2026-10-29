@@ -274,6 +274,16 @@ export class SnippetModel {
             }
         }
         this.snippetsByCategory["snippet_custom_content"] = customInnerContent;
+
+        // Extract the names map
+        this.namesMaps = {};
+        for (const namesEl of snippetsBody.querySelectorAll("names")) {
+            const names = {};
+            for (const nameEl of namesEl.children) {
+                names[nameEl.getAttribute("key")] = nameEl.getAttribute("string");
+            }
+            this.namesMaps[namesEl.id] = names;
+        }
     }
 
     async deleteCustomSnippet(snippet) {
@@ -326,7 +336,7 @@ export class SnippetModel {
             `snippets#snippet_custom > [data-oe-snippet-key=${snippet.key}]`
         )) {
             snippetEl.setAttribute("name", newName);
-            snippetEl.firstElementChild.dataset["name"] = newName;
+            snippetEl.firstElementChild.dataset.customName = newName;
         }
         await this.orm.call("ir.ui.view", "rename_snippet", [], {
             name: newName,
@@ -360,9 +370,8 @@ export class SnippetModel {
 
         const defaultSnippetName = isButton
             ? _t("Custom Button")
-            : _t("Custom %s", snippetEl.dataset.name);
+            : _t("Custom %s", this.getSnippetName(snippetEl));
         snippetCopyEl.classList.add("s_custom_snippet");
-        delete snippetCopyEl.dataset.name;
         if (isButton) {
             snippetCopyEl.classList.remove("mb-2");
             snippetCopyEl.classList.add("o_snippet_drop_in_only", "s_custom_button");
@@ -390,9 +399,10 @@ export class SnippetModel {
     }
 
     setSnippetName(snippetsDocument) {
-        // TODO: this should probably be done in py
         for (const snippetEl of snippetsDocument.body.querySelectorAll("snippets > *")) {
-            snippetEl.children[0].dataset["name"] = snippetEl.getAttribute("name");
+            if (snippetEl.children[0].classList.contains("s_custom_snippet")) {
+                snippetEl.children[0].dataset.customName = snippetEl.getAttribute("name");
+            }
         }
     }
 
@@ -453,6 +463,66 @@ export class SnippetModel {
         for (const snippet of snippets) {
             await callback(snippet.content);
         }
+    }
+
+    /**
+     * Retrieves the default name corresponding to the edited element (to display it
+     * in the sidebar for example).
+     *
+     * @param {HTMLElement} snippetEl - the edited element
+     * @returns {String}
+     */
+    getSnippetName(snippetEl) {
+        if (snippetEl.classList.contains("s_custom_snippet") && snippetEl.dataset.customName) {
+            return snippetEl.dataset.customName;
+        }
+        if (snippetEl.dataset.dynamicBuilderName) {
+            return snippetEl.dataset.dynamicBuilderName;
+        }
+        const specificNameId = snippetEl.dataset.builderName;
+        if (specificNameId) {
+            const specificName = this.namesMaps.specific_name?.[specificNameId];
+            if (specificName) {
+                return specificName;
+            } else {
+                console.warn(`data-builder-name ${specificNameId} not found in specific_name map`);
+            }
+        }
+        const nameFromSnippet = this.getOriginalSnippet(snippetEl.dataset.snippet)?.title;
+        if (nameFromSnippet) {
+            return nameFromSnippet;
+        }
+        for (const c of snippetEl.classList) {
+            if (c.startsWith("s_")) {
+                const nameFromSnippet = this.getOriginalSnippet(c)?.title;
+                if (nameFromSnippet) {
+                    return nameFromSnippet;
+                }
+            }
+        }
+        for (const c of snippetEl.classList) {
+            if (c.startsWith("s_")) {
+                const nameFromSnippetPart = this.namesMaps.snippet_part?.[c];
+                if (nameFromSnippetPart) {
+                    return nameFromSnippetPart;
+                }
+            }
+        }
+        const snippetNameRules = [
+            { selector: "img", name: _t("Image") },
+            { selector: ".oi", name: _t("Icon") },
+            { selector: ".media_iframe_video", name: _t("Video") },
+            { selector: ".row > *", name: _t("Column") },
+            { selector: "#wrapwrap > main", name: _t("Page Options") },
+            { selector: ".btn", name: _t("Button") },
+            { selector: "#wrapwrap", name: _t("Website") },
+        ];
+        for (const { selector, name } of snippetNameRules) {
+            if (snippetEl.matches(selector)) {
+                return name;
+            }
+        }
+        return _t("Block");
     }
 }
 

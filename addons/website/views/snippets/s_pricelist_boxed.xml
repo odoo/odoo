@@ -8,13 +8,13 @@
         </span>
         <div class="container">
             <div class="row">
-                <div class="offset-lg-2 col-lg-8 rounded px-3 px-md-5 pt48 pb48 o_cc o_cc1" data-name="Menu">
+                <div class="offset-lg-2 col-lg-8 rounded px-3 px-md-5 pt48 pb48 o_cc o_cc1" data-builder-name="menu">
                     <div class="row">
-                        <div class="col-lg-12" data-name="Menu Heading">
+                        <div class="col-lg-12" data-builder-name="menu-heading">
                             <h2 style="text-align:center;">Our Menu</h2>
                             <p class="lead" style="text-align:center;">Savor our fresh, local cuisine with a modern twist.<br/>Deliciously crafted for every taste!</p>
                         </div>
-                        <div class="s_pricelist_boxed_section col-lg-12 pt48" data-name="Menu Section">
+                        <div class="s_pricelist_boxed_section col-lg-12 pt48">
                             <h3>✽  Pizzas</h3>
                             <ul class="list-unstyled m-0">
                                 <t t-set="name">Margherita</t>
@@ -40,7 +40,7 @@
                                     description="description"/>
                             </ul>
                         </div>
-                        <div class="s_pricelist_boxed_section col-lg-12 pt48" data-name="Menu Section">
+                        <div class="s_pricelist_boxed_section col-lg-12 pt48">
                             <h3>✽  Pastas</h3>
                             <ul class="list-unstyled m-0">
                                 <t t-set="name">Spaghetti Carbonara</t>
@@ -74,7 +74,7 @@
 </template>
 
 <template id="s_pricelist_boxed_item">
-    <li class="s_pricelist_boxed_item mt-4" data-name="Menu Item">
+    <li class="s_pricelist_boxed_item mt-4">
         <p class="s_pricelist_boxed_item_title d-flex align-items-baseline fw-bold">
             <span class="d-flex flex-grow-1 align-items-center">
                 <span t-out="name" class="s_pricelist_boxed_item_name"/>

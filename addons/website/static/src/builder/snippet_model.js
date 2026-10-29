@@ -10,7 +10,6 @@ export class WebsiteSnippetModel extends SnippetModel {
         for (const snippet of this.snippetStructures) {
             if (!snippet.isCustom) {
                 const contentEl = snippet.content.cloneNode(true);
-                contentEl.dataset.name = snippet.title;
                 adaptDarkPaletteContent(contentEl);
                 this.darkPaletteSnippetsById.set(snippet.id, {
                     ...snippet,

@@ -25,7 +25,7 @@ import { contains, onRpc } from "@web/../tests/web_test_helpers";
 defineWebsiteModels();
 
 const dummySnippet = `
-    <section data-name="Dummy Section" data-snippet="s_dummy">
+    <section data-test-builder-name="Dummy Section" data-snippet="s_dummy">
         <div class="container">
             <div class="row">
                 <div class="col-lg-7">
@@ -204,7 +204,7 @@ test("Saved custom snippets drop root unremovable and unmovable classes", async 
         `
         <section
             class="oe_unremovable oe_unmovable"
-            data-name="Dummy Section"
+            data-test-builder-name="Dummy Section"
             data-snippet="s_dummy"
         >
             <div class="container">
@@ -232,13 +232,13 @@ test("Saved custom snippets drop root unremovable and unmovable classes", async 
 
 test("Use the sidebar 'create anchor' buttons", async () => {
     const websiteContent = `
-        <section class="first" data-name="Dummy Section" data-snippet="s_dummy">
+        <section class="first" data-test-builder-name="Dummy Section" data-snippet="s_dummy">
             <h1>Anchor test</h1>
         </section>
-        <section class="second" data-name="Dummy Section" data-snippet="s_dummy">
+        <section class="second" data-test-builder-name="Dummy Section" data-snippet="s_dummy">
             <p>test<p>
         </section>
-        <section class="third" data-name="Dummy Section" data-snippet="s_dummy">
+        <section class="third" data-test-builder-name="Dummy Section" data-snippet="s_dummy">
             <p>test<p>
         </section>
         <section class="fourth">
@@ -255,7 +255,7 @@ test("Use the sidebar 'create anchor' buttons", async () => {
         </section>
         <section class="sixth">
             <p>test<p>
-            <div class="s_card" data-name="Card">card</div>
+            <div class="s_card">card</div>
         </section>
     `;
     await setupWebsiteBuilder(websiteContent);
@@ -284,7 +284,7 @@ test("Use the sidebar 'create anchor' buttons", async () => {
     expect(":iframe section.first").toHaveAttribute("id", "Anchor-test");
     expect(":iframe section.first").toHaveAttribute("data-anchor", "true");
 
-    // Section without title should have the `data-name` as anchor.
+    // Section without title should have the snippet's name as anchor.
     await contains(":iframe section.second").click();
     await animationFrame();
     await contains(anchorSelector).click();
@@ -293,7 +293,7 @@ test("Use the sidebar 'create anchor' buttons", async () => {
     await contains(notificationCloseSelector).click();
     expect(":iframe section.second").toHaveAttribute("id", "Dummy-Section");
 
-    // Same data-name should be suffixed by a number.
+    // Same snippet's name should be suffixed by a number.
     await contains(":iframe section.third").click();
     await animationFrame();
     await contains(anchorSelector).click();
@@ -318,7 +318,7 @@ test("Use the sidebar 'create anchor' buttons", async () => {
     expect(":iframe section.third").not.toHaveAttribute("id");
     expect(":iframe section.third").not.toHaveAttribute("data-anchor");
 
-    // Column without title nor data-name should use the default name for column
+    // Column without title should use the default name for column
     await contains(":iframe section.fourth div.row div").click();
     await animationFrame();
     await contains(
@@ -468,7 +468,7 @@ test("Custom snippet appears in block and inner content on save and is removed o
         name: "Map",
         groupName: "geo",
         structureContent: `
-            <section data-snippet="s_map" data-name="Map">
+            <section data-snippet="s_map">
                 <div class="o_map">Map</div>
             </section>
         `,
@@ -497,7 +497,7 @@ test("Custom snippet appears in block and inner content on save and is removed o
     };
 
     const snippetWithMap = `
-        <section data-snippet="s_map" data-name="Map">
+        <section data-snippet="s_map">
             <div class="o_map">Map content</div>
         </section>
     `;

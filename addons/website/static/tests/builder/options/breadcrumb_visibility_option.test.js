@@ -15,7 +15,7 @@ function insertBreadcrumb(iframe, { content = "Breadcrumb Content" } = {}) {
     const main = iframe.contentDocument.createElement("main");
     const breadcrumb = iframe.contentDocument.createElement("div");
     breadcrumb.className = "o_page_breadcrumb";
-    breadcrumb.setAttribute("data-name", "Breadcrumb");
+    breadcrumb.setAttribute("data-builder-name", "breadcrumb");
     breadcrumb.textContent = content;
     wrap.parentNode.insertBefore(main, wrap);
     main.appendChild(breadcrumb);

@@ -47,7 +47,7 @@ export async function doubleScroll(wrapwrapEl, target, source) {
 
 export const formSelectXml = `
     <form data-model_name="mail.mail">
-        <div data-name="Field" class="s_website_form_field s_website_form_custom" data-type="many2one" data-other-option-allowed="true" data-other-option-label="Other" data-other-option-placeholder="Other option...">
+        <div class="s_website_form_field s_website_form_custom" data-type="many2one" data-other-option-allowed="true" data-other-option-label="Other" data-other-option-placeholder="Other option...">
             <div class="row s_col_no_resize s_col_no_bgcolor">
                 <label class="col-form-label col-sm-auto s_website_form_label" for="o291di1too21">
                     <span class="s_website_form_label_content">Form Select</span>

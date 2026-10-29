@@ -14,7 +14,7 @@ test("TopMenuVisibility option should appear without overTheContent", async () =
         openEditor: true,
         beforeWrapwrapContent: `<input type="hidden" class="o_page_option_data" autocomplete="off" name="header_visible">`,
         headerContent: `
-            <header id="top" data-anchor="true" data-name="Header">
+            <header id="top" data-anchor="true" data-builder-name="header">
                     Menu Content
             </header>`,
     });
@@ -32,7 +32,7 @@ test("TopMenuVisibility option should appear with overTheContent", async () => {
             <input type="hidden" class="o_page_option_data" autocomplete="off" name="header_visible">
             <input type="hidden" class="o_page_option_data" autocomplete="off" name="header_overlay">`,
         headerContent: `
-            <header id="top" data-anchor="true" data-name="Header">
+            <header id="top" data-anchor="true" data-builder-name="header">
                     Menu Content
             </header>`,
     });
@@ -47,7 +47,7 @@ test("page is not customisable, TopMenuVisibility option should not appear", asy
     await setupWebsiteBuilder("", {
         openEditor: true,
         headerContent: `
-            <header id="top" data-anchor="true" data-name="Header">
+            <header id="top" data-anchor="true" data-builder-name="header">
                     Menu Content
             </header>`,
     });
@@ -62,7 +62,7 @@ test("undo overTheContent visibility", async () => {
             <input type="hidden" class="o_page_option_data" autocomplete="off" name="header_visible">
             <input type="hidden" class="o_page_option_data" autocomplete="off" name="header_overlay">`,
         headerContent: `
-            <header id="top" data-anchor="true" data-name="Header" class="">
+            <header id="top" data-anchor="true" data-builder-name="header" class="">
                     Menu Content
             </header>`,
     });
@@ -86,7 +86,7 @@ test("undo and comeback to a custom overTheContent color", async () => {
             <input type="hidden" class="o_page_option_data" autocomplete="off" name="header_overlay">
             <input type="hidden" class="o_page_option_data" autocomplete="off" name="header_color">`,
         headerContent: `
-            <header id="top" data-anchor="true" data-name="Header" class="">
+            <header id="top" data-anchor="true" data-builder-name="header" class="">
                     Menu Content
             </header>`,
     });
@@ -114,7 +114,7 @@ test("undo hidden and come back to regular", async () => {
         beforeWrapwrapContent: `
             <input type="hidden" class="o_page_option_data" autocomplete="off" name="header_visible">`,
         headerContent: `
-            <header id="top" data-anchor="true" data-name="Header">
+            <header id="top" data-anchor="true" data-builder-name="header">
                     Menu Content
             </header>`,
     });
@@ -134,7 +134,7 @@ test("regular -> hidden -> regular", async () => {
         beforeWrapwrapContent: `
             <input type="hidden" class="o_page_option_data" autocomplete="off" name="header_visible">`,
         headerContent: `
-            <header id="top" data-anchor="true" data-name="Header" class="">
+            <header id="top" data-anchor="true" data-builder-name="header" class="">
                     Menu Content
             </header>`,
     });
@@ -153,7 +153,7 @@ test("'Show Disclaimer' option should toggle dislaimer template", async () => {
     await setupWebsiteBuilder("", {
         openEditor: true,
         headerContent: `
-            <header id="top" data-anchor="true" data-name="Header">
+            <header id="top" data-anchor="true" data-builder-name="header">
                 Menu content
             </header>`,
     });

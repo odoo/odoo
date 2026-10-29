@@ -94,7 +94,7 @@ test("should set contenteditable to false on .o_not_editable elements", async ()
 
 test("should preserve iframe in the toolbar's font size input", async () => {
     const { getEditor } = await setupHTMLBuilder(`
-        <section class="s_text_block pt40 pb40 o_colored_level" data-snippet="s_text_block" data-name="Text">
+        <section class="s_text_block pt40 pb40 o_colored_level" data-snippet="s_text_block">
             <div class="container s_allow_columns">
                 <p>Some text.</p>
                 <p>Some more text.</p>
@@ -332,7 +332,7 @@ describe("font types", () => {
 
     test("should cleanup whitespace after last element removal", async () => {
         const { getEditor } = await setupHTMLBuilder(`
-            <section class="test_snippet" data-snippet="s_test" data-name="Test">
+            <section class="test_snippet" data-snippet="s_test">
                 <p>Content to remove</p>
             </section>
         `);

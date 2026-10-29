@@ -65,9 +65,6 @@ registry
             }
             el.append(renderToElement(snippetTemplateId, renderingContext));
             el.firstElementChild.dataset.snippet = el.dataset.oeSnippetKey;
-            if (!el.firstElementChild.dataset.name) {
-                el.firstElementChild.dataset.name = el.getAttribute("name");
-            }
         });
 
         // Insert MM categories into snippets document
@@ -78,5 +75,8 @@ registry
             } else {
                 documentCategoryElement.append(children(category));
             }
+        }
+        for (const names of snippets.querySelectorAll("names")) {
+            snippetsDoc.body.append(names);
         }
     });

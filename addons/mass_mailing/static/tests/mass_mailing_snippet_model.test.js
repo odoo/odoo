@@ -76,7 +76,6 @@ describe("mailing snippet model", () => {
             "s_masonry_block"
         ).content;
         snippetEl.querySelector("p").innerText = "This is our custom snippet text!";
-        snippetEl.dataset.name = "Snippet Named Bob";
         await snippetService.saveSnippet(snippetEl, (el) => el.cloneNode(true));
         expect.verifySteps(["mailing snippet info"]);
 
@@ -85,7 +84,7 @@ describe("mailing snippet model", () => {
             "snippet_custom",
             "s_masonry_block"
         );
-        expect(savedCustomSnippet.title).toBe("Custom Snippet Named Bob");
+        expect(savedCustomSnippet.title).toBe("Custom Masonry");
         expect(savedCustomSnippet.content.innerHTML).toBe(snippetEl.innerHTML);
     });
 

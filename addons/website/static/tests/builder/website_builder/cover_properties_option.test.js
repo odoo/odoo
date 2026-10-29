@@ -138,7 +138,7 @@ test("No dropzone is created in a record cover", async () => {
             snippet_content: [
                 getInnerContent({
                     name: "Quote",
-                    content: `<blockquote class="s_blockquote" data-snippet="s_blockquote" data-name="Quote">Quote</blockquote>`,
+                    content: `<blockquote class="s_blockquote" data-snippet="s_blockquote">Quote</blockquote>`,
                 }),
             ],
         },
