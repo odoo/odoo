@@ -213,11 +213,23 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_21
         vals_list = super()._get_invoice_tax_totals_vals_list(invoice, taxes_vals)
 
+        # [BR-CO-17] BT-117 = round(BT-116 * BT-119 / 100, 2).
+        # Compute the tax globally from the rounded total base instead of summing line rounded vals.
+        # In case of biggest_tax cash rounding, we leave the computation as is, because the biggest tax
+        # already absorb the exceeding amount.
         for vals in vals_list:
             vals['currency_dp'] = 2
+            subtotal_tax_total = 0.0
             for subtotal_vals in vals.get('tax_subtotal_vals', []):
-                subtotal_vals.pop('percent', None)
+                percent = subtotal_vals.pop('percent', None) or 0.0
+                if percent and invoice.invoice_cash_rounding_id.strategy != 'biggest_tax':
+                    subtotal_vals['tax_amount'] = invoice.currency_id.round(
+                        subtotal_vals['taxable_amount'] * percent / 100.0
+                    )
+                subtotal_tax_total += subtotal_vals['tax_amount']
                 subtotal_vals['currency_dp'] = 2
+            if vals.get('tax_subtotal_vals'):
+                vals['tax_amount'] = subtotal_tax_total
 
         if invoice.currency_id != invoice.company_id.currency_id:
             vals_list.append({
@@ -279,6 +291,22 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             'ubl_version_id': None,
         })
         vals['vals']['monetary_total_vals']['currency_dp'] = 2
+
+        # [BR-CO-16] TaxInclusiveAmount = TaxExclusiveAmount + TaxTotal / TaxAmount
+        # [BR-CO-25] PayableAmount = TaxInclusiveAmount - PrepaidAmount
+        # After recomputing BT-117 globally, BT-110 may differ from the tax total,
+        # so BT-112 and BT-115 must follow consistently.
+        invoice_tax_total = next(
+            (t for t in vals['vals']['tax_total_vals'] if t.get('tax_subtotal_vals')),
+            None,
+        )
+        if invoice_tax_total and invoice.invoice_cash_rounding_id.strategy != 'biggest_tax':
+            total_vals = vals['vals']['monetary_total_vals']
+            new_tax_inclusive = total_vals['tax_exclusive_amount'] + invoice_tax_total['tax_amount']
+            delta = new_tax_inclusive - total_vals['tax_inclusive_amount']
+            if not invoice.currency_id.is_zero(delta):
+                total_vals['tax_inclusive_amount'] = invoice.currency_id.round(new_tax_inclusive)
+                total_vals['payable_amount'] = invoice.currency_id.round(total_vals['payable_amount'] + delta)
 
         # [NL-R-001] For suppliers in the Netherlands, if the document is a creditnote, the document MUST
         # contain an invoice reference (cac:BillingReference/cac:InvoiceDocumentReference/cbc:ID)
