@@ -32,7 +32,7 @@
                         </div>
                         <div style="vertical-align: top;">
                             by <field name="author_id" class="oe_inline" string="User"/> on <field name="date" readonly="1" class="oe_inline"/>
-                            <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="fa-reply text-warning"
+                            <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="fa-reply" class="text-warning"
                                 context="{'default_composition_mode':'comment', 'default_parent_id': mail_message_id_int}" invisible="state not in ('received', 'sent', 'exception', 'cancel')"/>
                         </div>
                         <group>

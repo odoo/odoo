@@ -70,6 +70,7 @@
                 content: "";
                 position: absolute;
                 inset: 0;
+                z-index: -1;
                 background-color: var(--o-statusbar-border);
                 clip-path: polygon(
                     var(--o-statusbar-point-top-left),
@@ -123,6 +124,7 @@
             &.o_arrow_button_current:disabled, &:active:not(.o_last) {
                 z-index: 1;
                 background-color: var(--o-statusbar-background-active);
+                color: white;
                 
                 &::before {
                     --o-statusbar-point-inner-top-left: calc(var(--o-statusbar-border-width) * sqrt(3)) var(--o-statusbar-border-width);
