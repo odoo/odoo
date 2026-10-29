@@ -44,7 +44,8 @@ class ResPartner(models.Model):
             if self.street2:
                 result += " // %(street2)s"
             return result + "\n%(zip)s %(city)s\n%(country_name)s"
+        address_format = super()._get_address_format()
         if self.env.context.get('snailmail_layout') and self.street2:
-            return "%(street)s, %(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s"
-
-        return super(ResPartner, self)._get_address_format()
+            # keep the country format (e.g. zip before city), only merge the street lines
+            return address_format.replace("%(street)s\n%(street2)s", "%(street)s, %(street2)s")
+        return address_format
