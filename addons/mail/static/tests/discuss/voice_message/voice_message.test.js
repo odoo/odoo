@@ -2,12 +2,11 @@ import {
     click,
     contains,
     defineMailModels,
-    mockGetMedia,
     openDiscuss,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, globals, test } from "@odoo/hoot";
+import { describe, globals, mockPermission, test } from "@odoo/hoot";
 import { Deferred, mockDate } from "@odoo/hoot-mock";
 import { Command, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 
@@ -149,7 +148,7 @@ test("make voice message in chat", async () => {
             return super._fetch(...arguments);
         },
     });
-    mockGetMedia();
+    mockPermission("microphone", "granted");
     const cleanUp = patchAudio();
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });

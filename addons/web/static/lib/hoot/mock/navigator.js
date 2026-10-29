@@ -10,6 +10,7 @@ import {
     setSyncValue,
 } from "../hoot_utils";
 import { ensureTest } from "../main_runner";
+import { createSilentAudioStream } from "./web_audio";
 
 /**
  * @typedef {"android" | "ios" | "linux" | "mac" | "windows"} Platform
@@ -22,7 +23,15 @@ import { ensureTest } from "../main_runner";
 const {
     Blob,
     ClipboardItem = class NonSecureClipboardItem {},
+    document,
     DOMException,
+    MediaStream,
+    MediaStream: {
+        prototype: { clone: $cloneStream },
+    },
+    MediaStreamTrack: {
+        prototype: { clone: $cloneTrack },
+    },
     navigator,
     Object: { assign: $assign, entries: $entries },
     queueMicrotask,
@@ -34,6 +43,24 @@ const { userAgent: $userAgent } = navigator;
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
+
+/**
+ * Tracks are real ones, so that they can be used by other native APIs (e.g.
+ * `MediaStream` or `RTCPeerConnection`): audio tracks are silent, and video
+ * tracks are captured from a blank 1x1 canvas at 1 frame per second.
+ *
+ * @param {MediaStreamConstraints} constraints
+ */
+function createMediaStream({ audio, video }) {
+    const tracks = audio ? createSilentAudioStream().getTracks() : [];
+    if (video) {
+        const canvas = document.createElement("canvas");
+        canvas.width = 1;
+        canvas.height = 1;
+        tracks.push(...canvas.captureStream(1).getTracks());
+    }
+    return registerStream(new MediaStream(tracks));
+}
 
 function getBlobValue(value) {
     return isInstanceOf(value, Blob) ? value.text() : value;
@@ -51,6 +78,8 @@ function getClipboardValue(value, type) {
 
 function getMockValues() {
     return {
+        /** @type {MockMediaDevices | null} */
+        mediaDevices: null,
         sendBeacon: throwNotImplemented("sendBeacon"),
         userAgent: makeUserAgent("linux"),
         /** @type {Navigator["vibrate"]} */
@@ -63,17 +92,20 @@ function getMockValues() {
  * are natively available, to keep feature detection intact (e.g. `if (navigator.x)`).
  */
 function getPermissionGatedDescriptors() {
+    /** @type {Record<string, PropertyDescriptor>} */
     const mocks = {
-        credentials: new MockCredentialsContainer(),
-        geolocation: new MockGeolocation(),
-        storage: new MockStorageManager(),
-        wakeLock: new MockWakeLock(),
+        credentials: { value: new MockCredentialsContainer() },
+        geolocation: { value: new MockGeolocation() },
+        // Renewed after each test, as it holds the listeners given by the test
+        mediaDevices: { get: () => (mockValues.mediaDevices ||= new MockMediaDevices()) },
+        storage: { value: new MockStorageManager() },
+        wakeLock: { value: new MockWakeLock() },
     };
     /** @type {Record<string, PropertyDescriptor>} */
     const descriptors = {};
-    for (const [name, value] of $entries(mocks)) {
+    for (const [name, descriptor] of $entries(mocks)) {
         if (name in navigator) {
-            descriptors[name] = { value };
+            descriptors[name] = descriptor;
         }
     }
     return descriptors;
@@ -232,6 +264,31 @@ function rejectPosition(errorCallback) {
 }
 
 /**
+ * Tracks of the given stream (and of its clones) are stopped at the end of the
+ * test, as they hold actual resources (e.g. canvas capture).
+ *
+ * @param {MediaStream} stream
+ */
+function registerStream(stream) {
+    stream.getTracks().forEach(registerTrack);
+    stream.clone = function clone() {
+        return registerStream($cloneStream.call(this));
+    };
+    return stream;
+}
+
+/**
+ * @param {MediaStreamTrack} track
+ */
+function registerTrack(track) {
+    mediaTracks.add(track);
+    track.clone = function clone() {
+        return registerTrack($cloneTrack.call(this));
+    };
+    return track;
+}
+
+/**
  * @param {PermissionName} name
  * @param {PermissionState} value
  */
@@ -260,6 +317,8 @@ const GEOLOCATION_ERROR_CODES = {
     TIMEOUT: 3,
 };
 
+/** @type {Set<MediaStreamTrack>} */
+const mediaTracks = new Set();
 /** @type {Set<MockPermissionStatus>} */
 const permissionStatuses = new Set();
 let geolocationWatchId = 0;
@@ -306,10 +365,11 @@ export class MockClipboardItem extends ClipboardItem {
 }
 
 /**
- * Permission-gated APIs (credentials, geolocation, storage, wake lock) are mocked
- * to behave as if their permission were not granted: production code has to handle
- * that case anyway, and no prompt nor actual device/storage access is triggered.
- * Tests requiring actual results are expected to patch them.
+ * Permission-gated APIs (credentials, geolocation, media devices, storage, wake
+ * lock) are mocked to behave as if their permission were not granted: production
+ * code has to handle that case anyway, and no prompt nor actual device/storage
+ * access is triggered. Tests requiring actual results are expected to patch them,
+ * or to grant their permission when it is supported (see {@link mockPermission}).
  */
 export class MockCredentialsContainer {
     async create() {
@@ -348,6 +408,54 @@ export class MockGeolocation {
     watchPosition(_successCallback, errorCallback) {
         rejectPosition(errorCallback);
         return ++geolocationWatchId;
+    }
+}
+
+export class MockMediaDevices extends MockEventTarget {
+    static publicListeners = ["devicechange"];
+
+    async enumerateDevices() {
+        return [];
+    }
+
+    /**
+     * @param {DisplayMediaStreamOptions} [options]
+     */
+    async getDisplayMedia(options) {
+        return createMediaStream({ audio: options?.audio, video: true });
+    }
+
+    getSupportedConstraints() {
+        return {};
+    }
+
+    /**
+     * Fails if the permission of any requested device is denied (see
+     * {@link mockPermission}), while "prompt" ones are considered as accepted
+     * by the user, and thus become granted.
+     *
+     * @param {MediaStreamConstraints} [constraints]
+     */
+    async getUserMedia(constraints) {
+        if (!constraints?.audio && !constraints?.video) {
+            throw new TypeError(`getUserMedia: at least one of audio and video must be requested`);
+        }
+        const names = [];
+        if (constraints.audio) {
+            names.push("microphone");
+        }
+        if (constraints.video) {
+            names.push("camera");
+        }
+        if (names.some((name) => currentPermissions[name].state === "denied")) {
+            throw notAllowed("navigator.mediaDevices.getUserMedia");
+        }
+        for (const name of names) {
+            if (currentPermissions[name].state === "prompt") {
+                setPermission(name, "granted");
+            }
+        }
+        return createMediaStream(constraints);
     }
 }
 
@@ -556,6 +664,10 @@ export const mockNavigator = createMock(navigator, {
 
 export function cleanupNavigator() {
     geolocationWatchId = 0;
+    for (const track of mediaTracks) {
+        track.stop();
+    }
+    mediaTracks.clear();
     permissionStatuses.clear();
     $assign(currentPermissions, getPermissions());
     $assign(mockValues, getMockValues());

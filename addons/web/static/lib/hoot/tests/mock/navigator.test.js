@@ -99,6 +99,117 @@ describe(parseUrl(import.meta.url), () => {
         expect(navigator.maxTouchPoints).toBe(1);
     });
 
+    describe.tags("secure");
+    describe("mediaDevices", () => {
+        /** @type {MediaDevices} */
+        let mediaDevices;
+        /** @type {MediaStreamTrack[]} */
+        let tracks = [];
+
+        test("getUserMedia: audio and video", async () => {
+            mockPermission("camera", "granted");
+            mockPermission("microphone", "granted");
+
+            const stream = await navigator.mediaDevices.getUserMedia({
+                audio: true,
+                video: true,
+            });
+
+            expect(stream).toBeInstanceOf(MediaStream);
+            expect(stream.getAudioTracks().map((track) => track.kind)).toEqual(["audio"]);
+            expect(stream.getVideoTracks().map((track) => track.kind)).toEqual(["video"]);
+            expect(stream.getTracks()).toHaveLength(2);
+
+            const [audioTrack] = stream.getAudioTracks();
+
+            expect(stream.getTrackById(audioTrack.id)).toBe(audioTrack);
+            expect(audioTrack.readyState).toBe("live");
+
+            audioTrack.stop();
+
+            expect(audioTrack.readyState).toBe("ended");
+        });
+
+        test("getUserMedia: permissions", async () => {
+            const { mediaDevices } = navigator;
+            const microphone = await navigator.permissions.query({ name: "microphone" });
+            microphone.onchange = () => expect.step(microphone.state);
+
+            // Denied by default
+            await expect(mediaDevices.getUserMedia({ audio: true })).rejects.toThrow(/not allowed/);
+
+            expect.verifySteps([]);
+
+            // "prompt": accepted by the user
+            mockPermission("microphone", "prompt");
+
+            await expect(mediaDevices.getUserMedia({ audio: true })).resolves.toBeInstanceOf(
+                MediaStream
+            );
+
+            expect.verifySteps(["prompt", "granted"]);
+
+            // Any denied device makes the whole request fail
+            await expect(mediaDevices.getUserMedia({ audio: true, video: true })).rejects.toThrow(
+                /not allowed/
+            );
+        });
+
+        test("getUserMedia: tracks can be used by native APIs", async () => {
+            mockPermission("camera", "granted");
+            mockPermission("microphone", "granted");
+
+            const stream = await navigator.mediaDevices.getUserMedia({
+                audio: true,
+                video: true,
+            });
+
+            expect(stream.getTracks().every((track) => track instanceof MediaStreamTrack)).toBe(
+                true
+            );
+            expect(new MediaStream(stream.getAudioTracks()).getTracks()).toHaveLength(1);
+        });
+
+        test("getUserMedia: no constraints", async () => {
+            await expect(navigator.mediaDevices.getUserMedia({})).rejects.toThrow(TypeError);
+        });
+
+        test("getDisplayMedia", async () => {
+            const stream = await navigator.mediaDevices.getDisplayMedia();
+
+            expect(stream.getAudioTracks()).toHaveLength(0);
+            expect(stream.getVideoTracks()).toHaveLength(1);
+        });
+
+        // ! WARNING: the following 2 tests need to be run sequentially to work, as they
+        // ! attempt to test the in-between-tests media devices cleanup.
+        test("tracks are stopped and instance is reset between tests: setup", async () => {
+            mockPermission("camera", "granted");
+            mockPermission("microphone", "granted");
+            mediaDevices = navigator.mediaDevices;
+            const stream = await mediaDevices.getUserMedia({ audio: true, video: true });
+            tracks = [...stream.getTracks(), ...stream.clone().getTracks()];
+
+            expect(navigator.mediaDevices).toBe(mediaDevices);
+            expect(tracks.map((track) => track.readyState)).toEqual([
+                "live",
+                "live",
+                "live",
+                "live",
+            ]);
+        });
+
+        test("tracks are stopped and instance is reset between tests: check", () => {
+            expect(navigator.mediaDevices).not.toBe(mediaDevices);
+            expect(tracks.map((track) => track.readyState)).toEqual([
+                "ended",
+                "ended",
+                "ended",
+                "ended",
+            ]);
+        });
+    });
+
     test("sendBeacon", () => {
         expect(() => navigator.sendBeacon("/route", new Blob([]))).toThrow(/sendBeacon/);
 
