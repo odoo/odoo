@@ -1,4 +1,5 @@
 /* Part of Odoo. See LICENSE file for full copyright and licensing details. */
+/* global posmodel */
 
 import { registry } from "@web/core/registry";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
@@ -105,6 +106,46 @@ registry.category("web_tour.tours").add("l10n_tw_edi_ecpay_pos.ecpay_check_print
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),
+            {
+                content: "Print the POS receipt and both ECPay receipts without a printer",
+                trigger: ".feedback-screen .button.validation:not([disabled])",
+                async run() {
+                    const printer = posmodel.ticketPrinter;
+                    const order = posmodel.getOrder();
+                    const printed = [];
+                    const originalPrint = printer._print;
+                    printer._print = (printWindow) => {
+                        printed.push(printWindow.document.body.textContent);
+                    };
+                    try {
+                        await printer.printOrderReceipt({ order });
+                        if (
+                            printed.length !== 3 ||
+                            !printed[1].includes("電子發票證明聯") ||
+                            !printed[2].includes("交易明細") ||
+                            !printed[1].includes("AB11100099") ||
+                            !printed[2].includes("AB11100099")
+                        ) {
+                            throw new Error(
+                                `Expected the POS receipt and both ECPay receipts; got ${printed.length} browser prints`
+                            );
+                        }
+                        printed.length = 0;
+                        await printer.printOrderReceipt({ order, webFallback: false });
+                        if (printed.length) {
+                            throw new Error("Browser printing must respect webFallback: false");
+                        }
+                        await printer.printOrderReceipt({ order, printBillActionTriggered: true });
+                        if (printed.length !== 1) {
+                            throw new Error(
+                                `Expected only the bill on a Bill print; got ${printed.length} browser prints`
+                            );
+                        }
+                    } finally {
+                        printer._print = originalPrint;
+                    }
+                },
+            },
             Chrome.endTour(),
         ].flat(),
 });
