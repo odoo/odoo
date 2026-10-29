@@ -1121,6 +1121,7 @@ SERVICES_MAPPING = {
     "bus_service": ['BusPlugin', '@bus/services/bus_plugin'],
     "calendarNotification": ['CalendarNotificationPlugin', '@calendar/js/services/calendar_notification_plugin'],
     "check_identity": ['CheckIdentityPlugin', '@web/core/session/check_identity'],
+    "check_identity_timeout": ['CheckIdentityTimeoutPlugin', '@auth_timeout/services/check_identity/check_identity'],
     "color_scheme": ['ColorSchemePlugin', '@web_enterprise/webclient/color_scheme/color_scheme_plugin'],
     "currency": ['CurrencyPlugin', '@web/webclient/currency_plugin'],
     "dialog": ['DialogPlugin', '@web/core/dialog/dialog_plugin'],
