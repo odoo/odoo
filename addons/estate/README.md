@@ -450,3 +450,40 @@ click its "Offers" button.
 
 **Try it.** Try to delete a property with an offer. Add an offer lower than the best one. Open your
 own user in Settings > Users and look at the new tab.
+
+## Chapter 13 - Interact with other modules
+
+[Official chapter](https://www.odoo.com/documentation/20.0/developer/tutorials/server_framework_101/13_other_module.html)
+
+**Functional.** With Invoicing (or Accounting) installed, marking a property as sold creates a draft
+customer invoice for the buyer with two lines:
+
+- the agency's commission: 6% of the selling price;
+- administrative fees: 100.
+
+The invoice is in Invoicing > Customers > Invoices, ready to be checked and confirmed.
+
+**Technical.**
+
+- The feature lives in a separate **link module**, `addons/estate_account`, depending on both
+  `estate` and `account`. `estate` stays usable without accounting, and `account` knows nothing
+  about real estate.
+- `auto_install=True` installs the link module automatically once both dependencies are installed,
+  whichever is installed last.
+- `_inherit = "estate.property"` extends the model from the other addon, and overriding
+  `action_sold` adds behavior to the existing button without touching its view.
+- `super().action_sold()` runs first, so the checks of `estate` (accepted offer, not cancelled)
+  still apply and no invoice is created for a refused sale.
+- `account.move` is the model of invoices, bills and journal entries; `move_type="out_invoice"`
+  makes it a customer invoice. Its lines are created at the same time through
+  `Command.create(vals)` in the `invoice_line_ids` One2many. Other commands exist: `link`,
+  `unlink`, `update`, `delete`, `clear`, `set`.
+- The invoices of all sold properties are created with a single `create([...])` call.
+- **`sudo()`**: an agent selling a property usually has no right to create invoices, so the invoice
+  is created with `sudo()`, i.e. bypassing access rights. This is only acceptable because the
+  access was already checked: `super().action_sold()` wrote the property's state, which raises
+  an `AccessError` for a user not allowed to modify it. Every `sudo()` must be justified this
+  way; the tutorial leaves this case to the security tutorials.
+
+**Try it.** Install "Invoicing", which installs "Real Estate Accounting" automatically. Accept an
+offer, sell the property, and open the new draft invoice in Invoicing.
