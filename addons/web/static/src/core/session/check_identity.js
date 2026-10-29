@@ -1,11 +1,16 @@
-import { Component, onWillStart, proxy, t, useProps } from "@odoo/owl";
+import { Component, onWillDestroy, onWillStart, Plugin, proxy, t, useListener, usePlugin, useProps } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
+import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
+import { GlobalBusPlugin } from "@web/core/global_bus_plugin";
+import { post } from "@web/core/network/http_service";
 import { rpc, RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
+import { services } from "@web/core/services";
 import { redirect } from "@web/core/utils/urls";
-import { post } from "@web/core/network/http_service";
+import { useEnv } from "@web/owl2/utils";
 import { session } from "@web/session";
+
+const errorHandlerRegistry = registry.category("error_handlers");
 
 /**
  * CheckIdentityForm component
@@ -26,7 +31,7 @@ export class CheckIdentityForm extends Component {
         close: t.function().optional(),
     });
 
-    async setup() {
+    setup() {
         this.authMethodTemplates = {
             password: {
                 form: "web.CheckIdentityFormPassword",
@@ -34,19 +39,11 @@ export class CheckIdentityForm extends Component {
             },
         };
 
-        this.checkIdentityService = useService("check_identity");
+        this.checkIdentityService = usePlugin(CheckIdentityPlugin);
 
-        if (!this.checkIdentityService.identityCheckPromise) {
+        if (!this.checkIdentityService.isCheckingIdentity) {
             // The form is mounted directly into an HTTP page (bypassing the dialog service)
-            const { promise, resolve } = Promise.withResolvers();
-            this.checkIdentityService.identityCheckPromise = promise;
-
-            this.checkIdentityService.identityCheckCleanUp = () => {
-                this.close();
-                resolve();
-                this.checkIdentityService.identityCheckPromise = null;
-                this.checkIdentityService.identityCheckCleanUp = null;
-            };
+            this.checkIdentityService.startIdentityCheck(() => this.close());
         }
 
         this.state = proxy({
@@ -60,8 +57,7 @@ export class CheckIdentityForm extends Component {
             // Attempting to verify the identity of the device using its fingerprint
             if (data.fingerprint_check && (await this.checkIdentityService.updateFingerprint())) {
                 // There is no need to re-authenticate the user explicitly via the form
-                this.checkIdentityService.identityCheckCleanUp();
-                this.checkIdentityService.channel.postMessage("identityChecked");
+                this.checkIdentityService.confirmIdentity();
             }
 
             this.user = {
@@ -117,6 +113,7 @@ export class CheckIdentityForm extends Component {
         }
     }
 }
+registry.category("public_components").add("web.check_identity_form", CheckIdentityForm);
 
 /**
  * CheckIdentityDialog component
@@ -147,34 +144,67 @@ export class CheckIdentityDialog extends Component {
     }
 }
 
-export class CheckIdentity {
-    constructor(env, services) {
-        this.env = env;
-        this.setup(env, services);
-    }
+/**
+ * Check Identity plugin
+ *
+ * Manages global identity check logic:
+ * - Listens for `CheckIdentityException` errors from RPC
+ * - Displays dialog and synchronizes re-auth state across tabs
+ */
+export class CheckIdentityPlugin extends Plugin {
+    #env = useEnv();
 
-    setup(env, services) {
-        this.dialogService = services["dialog"];
-        this.fingerprint = null;
+    #dialog = usePlugin(DialogPlugin);
 
-        this.identityCheckPromise = null;
-        this.identityCheckCleanUp = null;
+    #fingerprint = null;
+    /** @type {Promise<void> | null} */
+    #identityCheckPromise = null;
+    /** @type {(() => void) | null} */
+    #identityCheckCleanUp = null;
 
-        // Multi-tab sync: if another tab verified the identity, clean up locally
-        this.channel = new BroadcastChannel("check_identity");
-        this.channel.addEventListener("message", (event) => {
-            if (event.data === "identityChecked" && this.identityCheckCleanUp) {
-                this.identityCheckCleanUp();
-            }
+    // Multi-tab sync: if another tab verified the identity, clean up locally
+    channel = new BroadcastChannel("check_identity");
+
+    setup() {
+        // Patch RPC to replay it automatically when the identity is verified
+        const originalRpc = rpc._rpc;
+        rpc._rpc = (...args) => {
+            const originalPromise = originalRpc(...args);
+            const promise = originalPromise.catch((error) => {
+                if (error.data?.name === "odoo.http.session.CheckIdentityException") {
+                    return this.checkIdentity().then(() => originalRpc(...args));
+                }
+                throw error;
+            });
+            promise.abort = originalPromise.abort;
+            return promise;
+        };
+        onWillDestroy(() => {
+            rpc._rpc = originalRpc;
         });
 
-        registry
-            .category("error_handlers")
-            .add("verifyUserErrorHandler", this.verifyUserErrorHandler.bind(this), { force: true });
+        useListener(this.channel, "message", (event) => {
+            if (event.data === "identityChecked" && this.#identityCheckCleanUp) {
+                this.#identityCheckCleanUp();
+            }
+        });
+        onWillDestroy(() => {
+            this.channel.close();
+        });
+
+        errorHandlerRegistry.add(
+            "verifyUserErrorHandler",
+            this.verifyUserErrorHandler.bind(this),
+            { force: true }
+        );
+        onWillDestroy(() => {
+            errorHandlerRegistry.remove("verifyUserErrorHandler");
+        });
 
         // Check the fingerprint each time webclient is loaded
         // Only for internal user
-        env.bus.addEventListener("WEB_CLIENT_READY", () => {
+        const globalBus = usePlugin(GlobalBusPlugin);
+        useListener(globalBus.bus, "WEB_CLIENT_READY", () => {
             if (session.device_salt) {
                 this.updateFingerprint()
                     .then((result) => !result && this.run())
@@ -189,8 +219,8 @@ export class CheckIdentity {
     }
 
     async getFingerprint() {
-        if (this.fingerprint) {
-            return this.fingerprint;
+        if (this.#fingerprint) {
+            return this.#fingerprint;
         }
         // Ask the machine to generate an image (canvas).
         const canvas = new OffscreenCanvas(325, 25);
@@ -217,7 +247,7 @@ export class CheckIdentity {
         const hashBuffer = await window.crypto.subtle.digest("SHA-256", buffer);
 
         try {
-            this.fingerprint = new Uint8Array(hashBuffer).toBase64();
+            this.#fingerprint = new Uint8Array(hashBuffer).toBase64();
         } catch {
             // Fallback if `Uint8Array` is not available.
             const uint16array = new Uint16Array(hashBuffer);
@@ -226,10 +256,10 @@ export class CheckIdentity {
                 const value = uint16array[i];
                 binary += String.fromCharCode(value & 0xff, value >> 8);
             }
-            this.fingerprint = window.btoa(binary);
+            this.#fingerprint = window.btoa(binary);
         }
 
-        return this.fingerprint;
+        return this.#fingerprint;
     }
 
     async getInitData() {
@@ -257,24 +287,47 @@ export class CheckIdentity {
         if (result?.mfa) {
             return { success: false, mfa: result.mfa, auth_methods: result.auth_methods };
         }
-        this.identityCheckCleanUp();
+        this.confirmIdentity();
+    }
+
+    /**
+     * Ends the ongoing identity check, here and in the other tabs.
+     */
+    confirmIdentity() {
+        this.#identityCheckCleanUp();
         this.channel.postMessage("identityChecked");
     }
 
-    async checkIdentity() {
-        if (!this.identityCheckPromise) {
-            const { promise, resolve } = Promise.withResolvers();
-            this.identityCheckPromise = promise;
-            const closeDialog = this.dialogService.add(CheckIdentityDialog);
+    get isCheckingIdentity() {
+        return Boolean(this.#identityCheckPromise);
+    }
 
-            this.identityCheckCleanUp = () => {
-                closeDialog();
+    /**
+     * Starts an identity check, unless one is already ongoing.
+     *
+     * @param {() => void} close called once the identity has been verified
+     * @returns {Promise<void>} resolved once the identity has been verified
+     */
+    startIdentityCheck(close) {
+        if (!this.#identityCheckPromise) {
+            const { promise, resolve } = Promise.withResolvers();
+            this.#identityCheckPromise = promise;
+            this.#identityCheckCleanUp = () => {
+                close();
                 resolve();
-                this.identityCheckPromise = null;
-                this.identityCheckCleanUp = null;
+                this.#identityCheckPromise = null;
+                this.#identityCheckCleanUp = null;
             };
         }
-        return this.identityCheckPromise;
+        return this.#identityCheckPromise;
+    }
+
+    async checkIdentity() {
+        if (!this.#identityCheckPromise) {
+            const closeDialog = this.#dialog.add(CheckIdentityDialog);
+            this.startIdentityCheck(closeDialog);
+        }
+        return this.#identityCheckPromise;
     }
 
     async run() {
@@ -282,23 +335,23 @@ export class CheckIdentity {
         // so confidential data is no longer displayed, even when inspecting the
         // DOM or using the browser console. In frontend-only contexts, there is
         // no action service.
-        if (this.env.services.action) {
-            this.env.bus.trigger("ACTION_MANAGER:UPDATE", {});
+        if (this.#env.services.action) {
+            this.#env.bus.trigger("ACTION_MANAGER:UPDATE", {});
         }
 
         await this.checkIdentity();
 
         // Reload the view to display back the data that was displayed before.
-        if (this.env.services.action) {
-            if (this.env.services.action.currentController) {
-                this.env.services.action.doAction("soft_reload");
+        if (this.#env.services.action) {
+            if (this.#env.services.action.currentController) {
+                this.#env.services.action.doAction("soft_reload");
             } else {
                 // In the case of multiple concurrent ``CheckIdentityException``
                 // managed by differents dispatchers.
                 // We get render from HTTP but error from JSONRPC.
                 // ``soft_reload`` leaves an empty page.
                 // Example: full refresh with an untrusted device.
-                this.env.services.action.doAction("reload");
+                this.#env.services.action.doAction("reload");
             }
         }
     }
@@ -313,50 +366,4 @@ export class CheckIdentity {
         }
     }
 }
-
-/**
- * Check Identity Service
- *
- * Manages global identity check logic:
- * - Listens for `CheckIdentityException` errors from RPC
- * - Displays dialog and synchronizes re-auth state across tabs
- *
- * @type {Object}
- * @property {string[]} dependencies Service this one relies on: ["dialog"]
- * @method start
- * @param {Object} env OWL environment
- * @param {Object} deps Injected service: dialog
- */
-export const checkIdentityService = {
-    dependencies: ["dialog"],
-
-    start(env, services) {
-        return new CheckIdentity(env, services);
-    },
-};
-
-registry.category("public_components").add("web.check_identity_form", CheckIdentityForm);
-registry.category("services").add("check_identity", checkIdentityService);
-registry.category("services").addEventListener("CLEANUP", function restorOriginalRpc() {
-    if (rpc._originalRpc) {
-        rpc._rpc = rpc._originalRpc;
-        delete rpc._originalRpc;
-    }
-});
-
-// Patch RPC to replay it automatically when the identity is verified
-const originalRpc = rpc._rpc;
-rpc._originalRpc = originalRpc;
-rpc._rpc = function (...args) {
-    const originalPromise = originalRpc(...args);
-    const promise = originalPromise.catch((error) => {
-        if (error.data?.name === "odoo.http.session.CheckIdentityException") {
-            return odoo.__WOWL_DEBUG__.root.env.services["check_identity"]
-                .checkIdentity()
-                .then(() => originalRpc(...args));
-        }
-        throw error;
-    });
-    promise.abort = originalPromise.abort;
-    return promise;
-};
+services.add(CheckIdentityPlugin);
