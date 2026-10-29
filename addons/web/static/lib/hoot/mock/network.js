@@ -612,6 +612,34 @@ export class MockBroadcastChannel extends MockEventTarget {
     }
 }
 
+/**
+ * Cache storage without any cache, as if storage were blocked: native caches are
+ * shared with all same-origin pages (including actual Odoo tabs), and persist
+ * between runs. Tests requiring actual caches are expected to patch it.
+ */
+export class MockCacheStorage {
+    async delete() {
+        return false;
+    }
+
+    async has() {
+        return false;
+    }
+
+    async keys() {
+        return [];
+    }
+
+    async match() {}
+
+    async open() {
+        throw new DOMException(
+            `caches.open: not allowed in tests (mock it to provide actual results)`,
+            "SecurityError"
+        );
+    }
+}
+
 export class MockCookie {
     /**
      * @private
