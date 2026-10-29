@@ -4791,6 +4791,133 @@
         <field name="amount_rate">0.0</field>
     </record>
 
+<!-- TN : Tunisia -->
+    <record id="tn_work_entry_type_attendance" model="hr.work.entry.type">
+        <field name="name">Work</field>
+        <field name="color">10</field>
+        <field name="display_code">A</field>
+        <field name="code">002.00</field>
+        <field name="count_as">working_time</field>
+        <field name="country_id" ref="base.tn"/>
+    </record>
+
+    <!-- Overtime (article 90 of the labour code): +75% beyond 48 hours/week, +25% between the
+         working time of a scheme under 48 hours and 48 hours -->
+    <record id="tn_work_entry_type_overtime" model="hr.work.entry.type">
+        <field name="name">Overtime hours - 175%</field>
+        <field name="color">2</field>
+        <field name="display_code">OT</field>
+        <field name="code">040.00</field>
+        <field name="amount_rate">1.75</field>
+        <field name="country_id" ref="base.tn"/>
+    </record>
+
+    <record id="tn_hr_work_entry_type_out_of_contract" model="hr.work.entry.type">
+        <field name="name">Out Of Contract</field>
+        <field name="color">0</field>
+        <field name="display_code">OoC</field>
+        <field name="code">000.00</field>
+        <field name="country_id" ref="base.tn"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <record id="tn_work_entry_type_leave" model="hr.work.entry.type">
+        <field name="name">Generic Time Off</field>
+        <field name="display_code">GTO</field>
+        <field name="code">LEAVE100</field>
+        <field name="color">8</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.tn"/>
+    </record>
+
+    <record id="tn_work_entry_type_compensatory" model="hr.work.entry.type">
+        <field name="name">Compensatory Time Off</field>
+        <field name="display_code">CTO</field>
+        <field name="code">LEAVE105</field>
+        <field name="color">4</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.tn"/>
+    </record>
+
+    <record id="tn_work_entry_type_home_working" model="hr.work.entry.type">
+        <field name="name">Work from home</field>
+        <field name="display_code">HW</field>
+        <field name="code">002.08</field>
+        <field name="color">10</field>
+        <field name="count_as">working_time</field>
+        <field name="country_id" ref="base.tn"/>
+    </record>
+
+    <record id="tn_work_entry_type_unpaid_leave" model="hr.work.entry.type">
+        <field name="name">Unpaid Leave</field>
+        <field name="color">1</field>
+        <field name="display_code">UN</field>
+        <field name="code">158.00</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.tn"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <record id="tn_work_entry_type_sick_leave" model="hr.work.entry.type">
+        <field name="name">Sick Leave</field>
+        <field name="display_code">STO</field>
+        <field name="code">013.00</field>
+        <field name="color">9</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.tn"/>
+        <field name="amount_rate">0.0</field>
+        <field name="description">The CNSS pays the daily sickness allowances to the employee. Set a rate if a collective agreement maintains the salary.</field>
+    </record>
+
+    <!-- Paid annual leave (article 112 of the labour code) -->
+    <record id="tn_work_entry_type_legal_leave" model="hr.work.entry.type">
+        <field name="name">Annual Leave</field>
+        <field name="display_code">PTO</field>
+        <field name="code">016.00</field>
+        <field name="color">8</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.tn"/>
+    </record>
+
+    <record id="tn_work_entry_type_public_holiday" model="hr.work.entry.type">
+        <field name="name">Public Holiday</field>
+        <field name="code">006.00</field>
+        <field name="display_code">PH</field>
+        <field name="color">3</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.tn"/>
+    </record>
+
+    <record id="l10n_tn_work_entry_type_overtime_125" model="hr.work.entry.type">
+        <field name="name">Overtime hours - 125%</field>
+        <field name="color">2</field>
+        <field name="display_code">OT1</field>
+        <field name="code">TNOT125</field>
+        <field name="amount_rate">1.25</field>
+        <field name="country_id" ref="base.tn"/>
+    </record>
+
+    <record id="l10n_tn_work_entry_type_maternity" model="hr.work.entry.type">
+        <field name="name">Maternity Leave</field>
+        <field name="display_code">MAT</field>
+        <field name="code">TNMAT</field>
+        <field name="color">5</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.tn"/>
+        <field name="amount_rate">0.0</field>
+        <field name="description">Law 2024-44: up to 15 days before the birth and 3 months after it (4 months for multiple births or a child needing medical care). The CNSS pays the maternity allowances to the employee.</field>
+    </record>
+
+    <record id="l10n_tn_work_entry_type_paternity" model="hr.work.entry.type">
+        <field name="name">Paternity Leave</field>
+        <field name="display_code">PAT</field>
+        <field name="code">TNPAT</field>
+        <field name="color">5</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.tn"/>
+        <field name="description">Law 2024-44: 7 fully paid days (10 days for multiple births or a child needing medical care, 3 days for a stillbirth), taken within 30 days after the birth. Paid by the employer: the law grants CNSS allowances only for the maternity leaves.</field>
+    </record>
+
 <!-- TR : Turkey -->
     <record id="tr_work_entry_type_attendance" model="hr.work.entry.type">
         <field name="name">Work</field>
