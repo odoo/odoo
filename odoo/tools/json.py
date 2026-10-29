@@ -4,7 +4,7 @@ import json as json_
 import re
 
 import markupsafe
-from .binary import BinaryValue
+from .binary import BinaryValue, BinaryBytes
 from .func import lazy
 
 JSON_SCRIPTSAFE_MAPPER = {
@@ -69,9 +69,12 @@ def json_default(obj):
     if isinstance(obj, Mapping):
         return dict(obj)
     if isinstance(obj, bytes):
-        return obj.decode()
+        try:
+            return obj.decode()
+        except UnicodeDecodeError:
+            return BinaryBytes(obj).to_base64()
     if isinstance(obj, BinaryValue):
-        return obj.content.decode()
+        return obj.to_base64()
     if isinstance(obj, fields.Domain):
         return list(obj)
     if (as_dict_func := getattr(obj, 'as_dict', None)) and callable(as_dict_func):
