@@ -227,13 +227,14 @@ class AccountMoveSend(models.AbstractModel):
             if partner.peppol_verification_state == 'not_verified':
                 partner.button_account_peppol_check_partner_endpoint(company=move.company_id)
 
-            if partner.peppol_verification_state != 'valid' and partner.routing_endpoint and partner.routing_identifier in ('0208', '9925'):
+            if partner.peppol_verification_state != 'valid' and partner.routing_endpoint and partner.routing_scheme in ('0208', '9925'):
                 # only for BE participants
-                inverse_eas = '9925' if partner.routing_identifier == '0208' else '0208'
-                inverse_endpoint = f'BE{partner.routing_endpoint}' if partner.routing_identifier == '0208' else partner.routing_endpoint[2:]
-                if partner._get_peppol_verification_state(inverse_endpoint, inverse_eas, invoice_edi_format) == 'valid':
+                inverse_scheme = '9925' if partner.routing_scheme == '0208' else '0208'
+                inverse_endpoint = f'BE{partner.routing_endpoint}' if partner.routing_scheme == '0208' else partner.routing_endpoint.removeprefix('BE')
+                inverse_identifier = f'{inverse_scheme}:{inverse_endpoint}'
+                if partner._get_peppol_verification_state(inverse_identifier, invoice_edi_format) == 'valid':
                     partner.write({
-                        'routing_identifier': inverse_eas,
+                        'routing_scheme': inverse_scheme,
                         'routing_endpoint': inverse_endpoint,
                     })
                     partner.button_account_peppol_check_partner_endpoint(company=move.company_id)
