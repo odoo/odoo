@@ -14,12 +14,18 @@ export class PaymentGlory extends PaymentInterface {
         this.dialog = this.env.services.dialog;
         this.cancellationResolver = null;
         this.gloryService = new GloryService(this.onStatusChange.bind(this));
-        this.gloryService.connect(
-            this.payment_method_id.glory_websocket_address,
-            this.payment_method_id.glory_username,
-            this.payment_method_id.glory_password,
-            this.payment_method_id.glory_use_lna
-        );
+
+        try {
+            this.gloryService.connect(
+                this.payment_method_id.glory_websocket_address,
+                this.payment_method_id.glory_username,
+                this.payment_method_id.glory_password,
+                this.payment_method_id.glory_use_lna
+            );
+        } catch (error) {
+            this.showError(error.message);
+            return;
+        }
 
         setTimeout(() => {
             if (this.gloryService.status === "DISCONNECTED") {
