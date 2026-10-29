@@ -132,6 +132,7 @@
             <t t-set="opt_wsale_attributes" t-value="is_view_active('website_sale.products_attributes')"/>
             <t t-set="opt_wsale_filter_price" t-value="is_view_active('website_sale.filter_products_price')"/>
             <t t-set="opt_wsale_filter_tags" t-value="is_view_active('website_sale.filter_products_tags')"/>
+            <t t-set="opt_wsale_filter_ribbons" t-value="is_view_active('website_sale.ribbon_filter_pills')"/>
             <t t-set="opt_wsale_design_grid" t-value="'o_wsale_products_opt_design_grid' in website.shop_opt_products_design_classes"/>
 
             <t t-set="opt_wsale_categories_top" t-value="is_view_active('website_sale.products_categories_top')"/>
@@ -146,14 +147,14 @@
             <t t-set="opt_wsale_category_align" t-value="website.align_category_content"/>
 
             <t t-set="show_price_filter" t-value="opt_wsale_filter_price and opt_wsale_attributes"/>
+            <t t-set="show_ribbon_filters" t-value="opt_wsale_filter_ribbons and opt_wsale_attributes"/>
             <t
                 t-set="hasLeftColumn"
                 t-value="
                     (opt_wsale_categories and categories)
                     or (opt_wsale_attributes and (attributes or all_tags or opt_wsale_filter_price))
                     or show_price_filter
-                    or show_on_sale_filter
-                    or show_in_stock_filter
+                    or show_ribbon_filters
                 "
             />
 
@@ -208,8 +209,8 @@
                                     t-value="(
                                         attrib_values
                                         or tags
-                                        or (show_on_sale_filter and on_sale_active)
-                                        or (show_in_stock_filter and in_stock_active)
+                                        or on_sale_active
+                                        or in_stock_active
                                         or (show_price_filter and isFilteringByPrice)
                                     )"
                                 />
@@ -223,7 +224,7 @@
                                 >
                                 </t>
                                 <div
-                                    t-if="show_on_sale_filter or show_in_stock_filter"
+                                    t-if="show_ribbon_filters"
                                     class="d-flex flex-wrap gap-2 py-3 border-top"
                                 >
                                     <t t-call="website_sale.ribbon_filter_pills"/>
@@ -1025,7 +1026,7 @@
                    _classes_title.f="ms-n1 pt-3 pb-2"
                    isOffcanvas="True"/>
                 <div
-                    t-if="show_on_sale_filter or show_in_stock_filter"
+                    t-if="opt_wsale_filter_ribbons and show_attribute_filters"
                     class="d-flex flex-wrap gap-2 px-4 py-3 border-top"
                 >
                     <t t-call="website_sale.ribbon_filter_pills"/>
@@ -1037,8 +1038,8 @@
                     t-value="(
                         attrib_values
                         or tags
-                        or (show_on_sale_filter and on_sale_active)
-                        or (show_in_stock_filter and in_stock_active)
+                        or on_sale_active
+                        or in_stock_active
                         or isFilteringByPrice
                     )"
                 />
@@ -1581,14 +1582,17 @@
         </t>
     </template>
 
-    <template id="website_sale.ribbon_filter_pills" name="Ribbon Filter Pills">
+    <template
+        id="website_sale.ribbon_filter_pills"
+        name="Filter by On Sale / In Stock"
+        active="False"
+    >
         <t
             t-set="active_pill_class"
             t-value="'btn border active bg-primary-subtle border-primary text-primary-emphasis'"
         />
         <t t-set="inactive_pill_class" t-value="'btn border'"/>
         <a
-            t-if="show_on_sale_filter"
             t-att-href="keep(on_sale=0 if on_sale_active else 1)"
             t-att-class="'o_wsale_ribbon_filter ' + (active_pill_class if on_sale_active else inactive_pill_class)"
             aria-label="Filter by on sale products"
@@ -1596,7 +1600,6 @@
             On sale
         </a>
         <a
-            t-if="show_in_stock_filter"
             t-att-href="keep(in_stock=0 if in_stock_active else 1)"
             t-att-class="'o_wsale_ribbon_filter ' + (active_pill_class if in_stock_active else inactive_pill_class)"
             aria-label="Filter by in stock products"

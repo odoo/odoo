@@ -529,36 +529,22 @@ class WebsiteSale(payment_portal.PaymentPortal):
             )
 
         # Dynamic ribbon filters ("On sale" / "In stock")
-        on_sale_active = on_sale == "1"
-        in_stock_active = in_stock == "1"
+        ribbon_filter_enabled = website.is_view_active("website_sale.ribbon_filter_pills")
+        on_sale_active = ribbon_filter_enabled and on_sale == "1"
+        in_stock_active = ribbon_filter_enabled and in_stock == "1"
         auto_assign_ribbons = (
             self.env["product.ribbon"].sudo().search_fetch([("assign", "!=", "manual")])
         )
-        ribbon_assign_values = set(auto_assign_ribbons.mapped("assign"))
 
-        on_sale_ids = set()
-        sold_out_ids = set()
-        if "sale" in ribbon_assign_values:
+        if on_sale_active:
             sales_prices = search_product._get_sales_prices(
                 request.pricelist.with_context(self.env.context),
                 request.fiscal_position.with_context(self.env.context),
                 website.with_context(self.env.context),
             )
-            on_sale_ids = {pid for pid, prices in sales_prices.items() if "base_price" in prices}
-        if "out_of_stock" in ribbon_assign_values:
-            sold_out_ids = {p.id for p in search_product if p._is_sold_out()}
-
-        show_on_sale_filter = bool(on_sale_ids) or (
-            on_sale_active and "sale" in ribbon_assign_values
-        )
-        show_in_stock_filter = bool(sold_out_ids) or (
-            in_stock_active and "out_of_stock" in ribbon_assign_values
-        )
-
-        if on_sale_active and "sale" in ribbon_assign_values:
-            search_product = search_product.filtered(lambda p: p.id in on_sale_ids)
-        if in_stock_active and "out_of_stock" in ribbon_assign_values:
-            search_product = search_product.filtered(lambda p: p.id not in sold_out_ids)
+            search_product = search_product.filtered(lambda p: "base_price" in sales_prices[p.id])
+        if in_stock_active:
+            search_product = search_product.filtered(lambda p: not p._is_sold_out())
         if on_sale_active or in_stock_active:
             product_count = len(search_product)
 
@@ -664,8 +650,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         reset_attribute_value_params, reset_filters = self._get_shop_filter_reset_params()
         values = {
             "auto_assign_ribbons": auto_assign_ribbons,
-            "show_on_sale_filter": show_on_sale_filter,
-            "show_in_stock_filter": show_in_stock_filter,
             "on_sale_active": on_sale_active,
             "in_stock_active": in_stock_active,
             "search": fuzzy_search_term or search,
