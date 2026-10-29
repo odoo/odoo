@@ -111,6 +111,8 @@ class ResCompany(models.Model):
 
     def _inverse_l10n_in_gst_registration_type(self):
         for company in self:
+            if not company.chart_template:
+                continue
             self._update_l10n_in_gst_taxes(company)
             if company.l10n_in_gst_registration_type:
                 # Set sale and purchase tax accounts when user registered under GST.
@@ -220,7 +222,7 @@ class ResCompany(models.Model):
             no_itc_tax_ids = self.env['ir.model.data'].search([
                 ('model', '=', 'account.tax'),
                 ('module', '=', 'account'),
-                ('name', '=like', f'{company.id}_%_purchase_%_composition'),
+                ('name', '=like', f'{company.root_id.id}_%_purchase_%_composition'),
             ]).mapped('res_id')
             if company.l10n_in_gst_registration_type == 'regular':
                 activate_domain = [('id', 'not in', no_itc_tax_ids)]
