@@ -688,13 +688,13 @@ test("removing bold on list item should remove neutral style from its nested lis
     });
 });
 
-test("should apply the style on the link itself (1)", async () => {
+test("should apply the style inside the link (1)", async () => {
     const { el, editor } = await setupEditor(`<p><a href="test">[abc]</a></p>`, {
         styleContent: `a {font-weight: bolder}`,
     });
     bold(editor);
     expect(getContent(el)).toBe(
-        `<p>\ufeff<a href="test" style="font-weight: normal;" class="o_link_in_selection">\ufeff[abc]\ufeff</a>\ufeff</p>`
+        `<p>\ufeff<a href="test" class="o_link_in_selection"><span style="font-weight: normal;">\ufeff[abc]\ufeff</span></a>\ufeff</p>`
     );
     bold(editor);
     expect(getContent(el)).toBe(
@@ -702,7 +702,7 @@ test("should apply the style on the link itself (1)", async () => {
     );
 });
 
-test("should apply the style on the link itself (2)", async () => {
+test("should apply the style inside the link (2)", async () => {
     const { el, editor } = await setupEditor(`<p>a[a<a href="test">bb</a>c]c</p>`, {
         styleContent: `a {font-weight: bolder}`,
     });
@@ -712,35 +712,35 @@ test("should apply the style on the link itself (2)", async () => {
     );
     bold(editor);
     expect(getContent(el)).toBe(
-        `<p>a[a\ufeff<a href="test" style="font-weight: normal;">\ufeffbb\ufeff</a>\ufeffc]c</p>`
+        `<p>a[a\ufeff<a href="test"><span style="font-weight: normal;">\ufeffbb\ufeff</span></a>\ufeffc]c</p>`
     );
 });
 
-test("should apply the style on the link itself (3)", async () => {
+test("should apply the style inside the link (3)", async () => {
     const { el, editor } = await setupEditor(`<p>aa[<a href="test">bb</a>]cc</p>`, {
         styleContent: `a {font-weight: normal}`,
     });
     bold(editor);
     expect(getContent(el)).toBe(
-        `<p>aa[\ufeff<a href="test" style="font-weight: bolder;">\ufeffbb\ufeff</a>\ufeff]cc</p>`
+        `<p>aa[\ufeff<a href="test"><strong>\ufeffbb\ufeff</strong></a>\ufeff]cc</p>`
     );
     bold(editor);
     expect(getContent(el)).toBe(`<p>aa[\ufeff<a href="test">\ufeffbb\ufeff</a>\ufeff]cc</p>`);
 });
 
-test("should apply the style on the link itself (4)", async () => {
+test("should apply the style inside the link (4)", async () => {
     const { el, editor } = await setupEditor(`<p>a[a<a href="test">bb</a>c]c</p>`, {
         styleContent: `a {font-weight: normal}`,
     });
     bold(editor);
     expect(getContent(el)).toBe(
-        `<p>a<strong>[a</strong>\ufeff<a href="test" style="font-weight: bolder;">\ufeffbb\ufeff</a>\ufeff<strong>c]</strong>c</p>`
+        `<p>a<strong>[a</strong>\ufeff<a href="test"><strong>\ufeffbb\ufeff</strong></a>\ufeff<strong>c]</strong>c</p>`
     );
     bold(editor);
     expect(getContent(el)).toBe(`<p>a[a\ufeff<a href="test">\ufeffbb\ufeff</a>\ufeffc]c</p>`);
 });
 
-test("should apply the style on the link itself (5)", async () => {
+test("should apply the style inside the link (5)", async () => {
     const { el, editor } = await setupEditor(
         `<p><strong>a[a</strong><a href="test">bb</a><strong>c]c</strong></p>`,
         {
@@ -749,10 +749,21 @@ test("should apply the style on the link itself (5)", async () => {
     );
     bold(editor);
     expect(getContent(el)).toBe(
-        `<p><strong>a[a</strong>\ufeff<a href="test" style="font-weight: bolder;">\ufeffbb\ufeff</a>\ufeff<strong>c]c</strong></p>`
+        `<p><strong>a[a</strong>\ufeff<a href="test"><strong>\ufeffbb\ufeff</strong></a>\ufeff<strong>c]c</strong></p>`
     );
     bold(editor);
     expect(getContent(el)).toBe(
         `<p><strong>a</strong>[a\ufeff<a href="test">\ufeffbb\ufeff</a>\ufeffc]<strong>c</strong></p>`
     );
+});
+
+test("should unbold a link made bold by an important css rule", async () => {
+    const { el, editor } = await setupEditor(`<p><a href="test">[abc]</a></p>`, {
+        styleContent: `a {font-weight: bold !important}`,
+    });
+    bold(editor);
+    expect(getContent(el)).toBe(
+        `<p>\ufeff<a href="test" class="o_link_in_selection"><span style="font-weight: normal;">\ufeff[abc]\ufeff</span></a>\ufeff</p>`
+    );
+    expect(getComputedStyle(el.querySelector("a > span")).fontWeight).toBe("400");
 });

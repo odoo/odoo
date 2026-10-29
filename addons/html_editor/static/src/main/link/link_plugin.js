@@ -1,5 +1,11 @@
 import { Plugin } from "@html_editor/plugin";
-import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
+import {
+    childNodes,
+    closestElement,
+    descendants,
+    findFurthest,
+    selectElements,
+} from "@html_editor/utils/dom_traversal";
 import { mergeAdjacentTextNodes, removeClass, unwrapContents } from "@html_editor/utils/dom";
 import { findInSelection, callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
@@ -8,11 +14,13 @@ import { DIRECTIONS, leftPos, nodeSize, rightPos } from "@html_editor/utils/posi
 import { EMAIL_REGEX, URL_REGEX, cleanZWChars, deduceURLfromText } from "./utils";
 import {
     isElement,
+    isEmptyTextNode,
     isStylable,
     isPhrasingContent,
     isProtected,
     isProtecting,
     isVisible,
+    isVisibleTextNode,
     isZwnbsp,
     isContentEditable,
     ICON_SELECTOR,
@@ -345,29 +353,6 @@ export class LinkPlugin extends Plugin {
                 return false;
             }
         },
-        // When the selection fully covers a link, we consider that the link is selected.
-        is_node_fully_selected_predicates: (node, selection) => {
-            if (
-                node.nodeName === "A" &&
-                cleanZWChars(selection.toString()) === cleanZWChars(node.innerText)
-            ) {
-                return true;
-            }
-        },
-
-        formattable_node_providers: (node, { formatSpec }) => {
-            // Links often have styles applied to them by css which can only be
-            // overriden by applying the style to the link itself.
-            const closestLink = closestElement(node, "A");
-            if (
-                closestLink &&
-                formatSpec.addNeutralStyle &&
-                this.dependencies.selection.areNodeContentsFullySelected(closestLink)
-            ) {
-                return closestLink;
-            }
-        },
-
         /** Handlers */
         on_beforeinput_handlers: [
             withSequence(5, this.onBeforeInputPrepareConvertToLink.bind(this)),
@@ -567,6 +552,7 @@ export class LinkPlugin extends Plugin {
         } else {
             link = this.createLink(url, label);
             this.dependencies.dom.insert(link);
+            this.moveFormatsInsideLink(link);
         }
         this.dependencies.history.commit();
         const linkParent = link.parentElement;
@@ -591,8 +577,7 @@ export class LinkPlugin extends Plugin {
                     "on_will_paste_handlers",
                     this.dependencies.selection.getEditableSelection()
                 );
-                this.dependencies.dom.insert(this.createLink(url, text));
-                this.dependencies.history.commit();
+                this.insertLink(url, text);
             },
         };
         return pasteAsURLCommand;
@@ -756,10 +741,17 @@ export class LinkPlugin extends Plugin {
                 this.applyAttributes(this.linkInDocument, attributes);
                 if (!isImage) {
                     if (
-                        this.linkInDocument.childElementCount == 0 &&
+                        !this.linkInDocument.querySelector(`img, ${ICON_SELECTOR}`) &&
                         cleanZWChars(this.linkInDocument.textContent) !== label
                     ) {
-                        this.linkInDocument.textContent = label;
+                        // A label in a single text keeps the formats wrapping
+                        // it, any other label replaces the link content.
+                        const textNodes = descendants(this.linkInDocument).filter(
+                            isVisibleTextNode
+                        );
+                        const labelNode =
+                            textNodes.length === 1 ? textNodes[0] : this.linkInDocument;
+                        labelNode.textContent = label;
                         context.cursorsToRestore = null;
                     }
                 }
@@ -801,6 +793,7 @@ export class LinkPlugin extends Plugin {
                             );
                         }
                         this.dependencies.dom.insert(link);
+                        this.moveFormatsInsideLink(link);
                     }
                     this.linkInDocument = link;
                 } else if (label) {
@@ -809,12 +802,50 @@ export class LinkPlugin extends Plugin {
                     this.linkInDocument = link;
                     context.cursorsToRestore = null;
                     this.dependencies.dom.insert(link);
+                    this.moveFormatsInsideLink(link);
                 }
             }
             if (attachmentId) {
                 this.linkInDocument.dataset.attachmentId = attachmentId;
             }
         };
+    }
+
+    /**
+     * Moves the format tags wrapping the link (bold, italic, underline,
+     * strikethrough) inside it, so that they apply to its label and can be
+     * removed from it: `<s>a<a>b</a>c</s>` becomes
+     * `<s>a</s><a><s>b</s></a><s>c</s>`. Only the formats inside the closest
+     * block or unsplittable element (e.g. a QWeb directive) are moved.
+     *
+     * @param {HTMLAnchorElement} link
+     */
+    moveFormatsInsideLink(link) {
+        const isFormat = (node) =>
+            this.getResource("format_specs").some((spec) => spec.isTag?.(node));
+        const limitAncestor = closestElement(
+            link.parentElement,
+            (element) => isBlock(element) || this.dependencies.split.isUnsplittable(element)
+        );
+        const outerFormat = findFurthest(link.parentElement, limitAncestor, isFormat);
+        if (!outerFormat) {
+            return;
+        }
+        const cursors = this.dependencies.selection.preserveSelection();
+        // Remove the empty text nodes around the link, so that the split
+        // leaves no empty format.
+        for (const node of childNodes(link.parentElement).filter(isEmptyTextNode)) {
+            cursors.update(callbacksForCursorUpdate.remove(node));
+            node.remove();
+        }
+        const formats = this.dependencies.split.splitAroundUntil(link, outerFormat);
+        cursors.update(callbacksForCursorUpdate.unwrap(link));
+        unwrapContents(link);
+        cursors.update(callbacksForCursorUpdate.before(formats, link));
+        formats.before(link);
+        cursors.update(callbacksForCursorUpdate.append(link, formats));
+        link.append(formats);
+        cursors.restore();
     }
 
     /**
@@ -1420,6 +1451,7 @@ export class LinkPlugin extends Plugin {
                 return () => {
                     textNodeToReplace.splitText(match[0].length); // this will keep the space (that will have been added in the meantime)
                     textNodeToReplace.parentNode.replaceChild(link, textNodeToReplace);
+                    this.moveFormatsInsideLink(link);
                     if (link.getAttribute("href") === link.textContent) {
                         this.newlyInsertedLinks.add(link);
                     }

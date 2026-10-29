@@ -639,7 +639,7 @@ test("should keep font element on top of underline/strike (4)", async () => {
         contentBefore: "<p><u><s><a>[a]</a>bc</s></u></p>",
         stepFunction: setColor("red", "color"),
         contentAfter:
-            '<p><font style="color: red;"><u><s><a>[a]</a></s></u></font><u><s>bc</s></u></p>',
+            '<p><a><font style="color: red;"><u><s>[a]</s></u></font></a><u><s>bc</s></u></p>',
     });
 });
 

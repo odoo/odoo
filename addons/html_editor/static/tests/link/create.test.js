@@ -2,6 +2,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { click, press, fill, queryFirst, queryOne, queryText, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { contains } from "@web/../tests/web_test_helpers";
+import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 import { setupEditor } from "../_helpers/editor";
 import { cleanLinkArtifacts } from "../_helpers/format";
 import { getContent, setSelection } from "../_helpers/selection";
@@ -106,6 +107,17 @@ describe("link creation by powerbox", () => {
             '<p>a <a href="http://test.test/">link[]</a>&nbsp;&nbsp;b</p>'
         );
     });
+    test("should insert a link around the strikethrough and underline of the text", async () => {
+        const { editor, el } = await setupEditor("<p><s><u>ab[]cd</u></s></p>");
+        await insertText(editor, "/link");
+        await animationFrame();
+        await click(".o-we-command-name:first");
+        await contains(".o-we-linkpopover input.o_we_label_link").fill("link");
+        await contains(".o-we-linkpopover input.o_we_href_input_link").fill("http://test.test/");
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p><s><u>ab</u></s><a href="http://test.test/"><s><u>link[]</u></s></a><s><u>cd</u></s></p>'
+        );
+    });
     test("should insert a link then create a new <p>", async () => {
         const { editor, el } = await setupEditor("<p>ab[]</p>");
         await insertText(editor, "/link");
@@ -172,6 +184,41 @@ describe("link creation by toolbar", () => {
         );
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p><a href="http://test.test/">Hello[]</a></p>'
+        );
+    });
+    test("should convert selected strikethrough text to a link around the strikethrough", async () => {
+        const { el } = await setupEditor("<p>a<s>b[cd]e</s>f</p>");
+        await waitFor(".o-we-toolbar");
+        await click(".o-we-toolbar [data-icon='link']");
+        await contains(".o-we-linkpopover input.o_we_href_input_link", { timeout: 1500 }).edit(
+            "http://test.test/"
+        );
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>a<s>b</s><a href="http://test.test/"><s>cd[]</s></a><s>e</s>f</p>'
+        );
+    });
+    test("should convert a whole strikethrough text to a link around the strikethrough", async () => {
+        const { el } = await setupEditor("<p><s>[Hello]</s></p>");
+        await waitFor(".o-we-toolbar");
+        await click(".o-we-toolbar [data-icon='link']");
+        await contains(".o-we-linkpopover input.o_we_href_input_link", { timeout: 1500 }).edit(
+            "http://test.test/"
+        );
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p><a href="http://test.test/"><s>Hello[]</s></a></p>'
+        );
+    });
+    test("should not split a QWeb directive around a link created inside it", async () => {
+        const { el } = await setupEditor('<p><s><t t-if="x">a[bc]d</t></s></p>', {
+            config: { includePlugins: [QWebPlugin] },
+        });
+        await waitFor(".o-we-toolbar");
+        await click(".o-we-toolbar [data-icon='link']");
+        await contains(".o-we-linkpopover input.o_we_href_input_link", { timeout: 1500 }).edit(
+            "http://test.test/"
+        );
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p><s><t t-if="x" data-oe-t-inline="true" data-oe-t-group="1" data-oe-t-group-active="true">a<a href="http://test.test/">bc[]</a>d</t></s></p>'
         );
     });
     test("discard should close the popover (in iframe)", async () => {
@@ -367,7 +414,7 @@ describe("link creation by toolbar", () => {
         expect(cleanLinkArtifacts(getContent(el))).toBe("<p><b>[Hello]</b></p>");
         await contains(".o-we-linkpopover input.o_we_href_input_link").edit("http://test.test/");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            '<p><b><a href="http://test.test/">Hello[]</a></b></p>'
+            '<p><a href="http://test.test/"><b>Hello[]</b></a></p>'
         );
         undo(editor);
         expect(cleanLinkArtifacts(getContent(el))).toBe("<p><b>[Hello]</b></p>");
