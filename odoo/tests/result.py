@@ -240,7 +240,8 @@ class OdooTestResult(object):
         self.errors.update(other.errors)
         self.testsRun += other.testsRun
         self.skipped += other.skipped
-        self.stats.update(other.stats)
+        for test_id, stat in other.stats.items():
+            self.stats[test_id] += stat
 
     def log(self, level, msg, *args, test=None, exc_info=None, extra=None, stack_info=False, caller_infos=None):
         """
@@ -280,7 +281,8 @@ class OdooTestResult(object):
                 continue
 
             stats_tree[r['module']] += stat
-            counts[r['module']] += 1
+            if r['method'] not in ('setUpClass', 'tearDownClass'):
+                counts[r['module']] += 1
             if details:
                 stats_tree['%(module)s.%(class)s' % r] += stat
                 stats_tree['%(module)s.%(class)s.%(method)s' % r] += stat
