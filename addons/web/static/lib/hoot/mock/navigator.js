@@ -88,14 +88,15 @@ function getMockValues() {
 }
 
 /**
- * Returns the descriptors of the mocked permission-gated APIs, only for those that
- * are natively available, to keep feature detection intact (e.g. `if (navigator.x)`).
+ * Returns the descriptors of the mocked APIs only available in secure contexts, only
+ * for those that are natively available, to keep feature detection intact (e.g.
+ * `if (navigator.x)`).
  */
-function getPermissionGatedDescriptors() {
+function getSecureContextDescriptors() {
     /** @type {Record<string, PropertyDescriptor>} */
     const mocks = {
         credentials: { value: new MockCredentialsContainer() },
-        geolocation: { value: new MockGeolocation() },
+        locks: { value: new MockLockManager() },
         // Renewed after each test, as it holds the listeners given by the test
         mediaDevices: { get: () => (mockValues.mediaDevices ||= new MockMediaDevices()) },
         storage: { value: new MockStorageManager() },
@@ -319,6 +320,12 @@ const GEOLOCATION_ERROR_CODES = {
 
 /** @type {Set<MediaStreamTrack>} */
 const mediaTracks = new Set();
+/**
+ * Last settled request of each lock, after which the next request is granted.
+ *
+ * @type {Map<string, Promise<void>>}
+ */
+const lockQueues = new Map();
 /** @type {Set<MockPermissionStatus>} */
 const permissionStatuses = new Set();
 let geolocationWatchId = 0;
@@ -408,6 +415,29 @@ export class MockGeolocation {
     watchPosition(_successCallback, errorCallback) {
         rejectPosition(errorCallback);
         return ++geolocationWatchId;
+    }
+}
+
+/**
+ * Locks only exist within the current page (native ones are shared with all
+ * same-origin pages, including other test runners in different tabs), and are
+ * released after each test. All locks are exclusive, and granted in order: options
+ * are ignored.
+ */
+export class MockLockManager {
+    /**
+     * @param {string} name
+     * @param {LockOptions | LockGrantedCallback} options
+     * @param {LockGrantedCallback} [callback]
+     */
+    request(name, options, callback) {
+        callback = typeof options === "function" ? options : callback;
+        const lock = { mode: "exclusive", name: String(name) };
+        const previous = lockQueues.get(lock.name) || Promise.resolve();
+        const result = previous.then(() => callback(lock));
+        const settled = result.catch(() => {});
+        lockQueues.set(lock.name, settled);
+        return result;
     }
 }
 
@@ -652,8 +682,9 @@ export const mockPermissions = new MockPermissions();
 export const mockServiceWorker = new MockServiceWorkerContainer();
 
 export const mockNavigator = createMock(navigator, {
-    ...getPermissionGatedDescriptors(),
+    ...getSecureContextDescriptors(),
     clipboard: { value: mockClipboard },
+    geolocation: { value: new MockGeolocation() },
     maxTouchPoints: { get: () => (globalThis.ontouchstart === undefined ? 0 : 1) },
     permissions: { value: mockPermissions },
     sendBeacon: { get: () => mockValues.sendBeacon },
@@ -663,6 +694,7 @@ export const mockNavigator = createMock(navigator, {
 });
 
 export function cleanupNavigator() {
+    lockQueues.clear();
     geolocationWatchId = 0;
     for (const track of mediaTracks) {
         track.stop();
