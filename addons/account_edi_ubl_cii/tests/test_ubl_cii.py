@@ -1307,3 +1307,21 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
             {'quantity': 1.0, 'price_unit': -0.01, 'discount': 0.0, 'price_subtotal': -0.01},
         ])
         self.assertRecordValues(bill, [{'amount_untaxed': invoice.amount_untaxed, 'amount_total': invoice.amount_total}])
+
+    def test_ubl_parse_attached_document_unbound_local_error(self):
+        """ Test that parsing AttachedDocument does not raise UnboundLocalError
+        when binary data is missing, and correctly handles whitespace in description.
+        """
+        move = self.env['account.move']
+        xml_empty = etree.fromstring('<AttachedDocument xmlns="urn:oasis:names:specification:ubl:schema:xsd:AttachedDocument-2"><Attachment/></AttachedDocument>')
+        self.assertEqual(move._ubl_parse_attached_document(xml_empty), ('', None))
+
+        xml_whitespace = etree.fromstring('''
+            <AttachedDocument xmlns="urn:oasis:names:specification:ubl:schema:xsd:AttachedDocument-2">
+                <Attachment><ExternalReference><MimeCode>text/xml</MimeCode><Description><![CDATA[
+                    <?xml version="1.0"?><Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"/>
+                ]]></Description></ExternalReference></Attachment>
+            </AttachedDocument>
+        ''')
+        _content, tree = move._ubl_parse_attached_document(xml_whitespace)
+        self.assertEqual(etree.QName(tree).localname, 'Invoice')
