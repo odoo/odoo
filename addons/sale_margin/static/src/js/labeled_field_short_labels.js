@@ -6,6 +6,7 @@ patch(shortLabels, {
     getShortLabels() {
         return {
             ...super.getShortLabels(),
+            coefficient: _t("C:"),
             margin: _t("M:"),
             margin_percent: _t("M%:"),
         };
