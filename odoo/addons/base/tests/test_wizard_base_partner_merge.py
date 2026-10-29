@@ -89,6 +89,20 @@ class TestMergePartner(TransactionCase):
                 self.assertEqual(partners.exists(), partners)
                 self.assertEqual(portal_users.mapped('partner_id'), partners)
 
+    def test_merge_company_partners(self):
+        company_b = self.env["res.company"].create({'name': 'Company B'})
+
+        company_partner1 = company_b.partner_id
+        company_partner2 = company_b.partner_id.copy({})
+
+        wizard = self.env['base.partner.merge.automatic.wizard'].create({})
+        wizard._merge([company_partner1.id, company_partner2.id], company_partner2)
+
+        self.assertFalse(company_partner1.exists(), "Source partner should be deleted after merge")
+        self.assertTrue(company_partner2.exists(), "Destination partner should exist after merge")
+        # Note: res.company "partner_id" is a cached model field
+        self.assertEqual(company_b.partner_id, company_partner2, "Company partner should be the destination partner")
+
     def test_merge_partners_without_bank_accounts(self):
         """ Test merging partners without any bank accounts """
         partner4 = self.Partner.create({'name': 'Partner 4', 'email': 'partner4@example.com'})
