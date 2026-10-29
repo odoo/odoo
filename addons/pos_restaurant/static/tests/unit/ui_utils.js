@@ -3,7 +3,9 @@ import { contains } from "@web/../tests/web_test_helpers";
 import { clickControlButton, ensurePane } from "@point_of_sale/../tests/unit/ui_utils";
 
 export async function clickTable(name) {
-    await contains(`.o_fp_canvas .o_fp_table:has(.o_fp_table_number:contains("${name}"))`).click();
+    await contains(
+        `.o_fp_canvas .o_fp_table:not(.syncing):has(.o_fp_table_number:contains("${name}"))`
+    ).click();
     await animationFrame();
 }
 
