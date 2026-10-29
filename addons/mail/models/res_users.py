@@ -55,8 +55,10 @@ class Users(models.Model):
     def _inverse_notification_type(self):
         inbox_group = self.env.ref('mail.group_mail_notification_type_inbox')
         inbox_users = self.filtered(lambda user: user.notification_type == 'inbox')
-        inbox_users.write({"groups_id": [Command.link(inbox_group.id)]})
-        (self - inbox_users).write({"groups_id": [Command.unlink(inbox_group.id)]})
+        if to_link := inbox_users.filtered(lambda user: inbox_group not in user.groups_id):
+            to_link.write({"groups_id": [Command.link(inbox_group.id)]})
+        if to_unlink := (self - inbox_users).filtered(lambda user: inbox_group in user.groups_id):
+            to_unlink.write({"groups_id": [Command.unlink(inbox_group.id)]})
 
     # ------------------------------------------------------------
     # CRUD
