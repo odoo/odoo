@@ -120,7 +120,7 @@ class AccountMoveSendWizard(models.TransientModel):
     @api.depends('sending_method_checkboxes')
     def _compute_sending_methods(self):
         for wizard in self:
-            wizard.sending_methods = self._get_selected_checkboxes(wizard.sending_method_checkboxes)
+            wizard.sending_methods = self._get_selected_checkboxes(wizard.sending_method_checkboxes) or None
 
     def _inverse_sending_methods(self):
         for wizard in self:
@@ -162,11 +162,11 @@ class AccountMoveSendWizard(models.TransientModel):
     @api.depends('extra_edi_checkboxes')
     def _compute_extra_edis(self):
         for wizard in self:
-            wizard.extra_edis = self._get_selected_checkboxes(wizard.extra_edi_checkboxes)
+            wizard.extra_edis = self._get_selected_checkboxes(wizard.extra_edi_checkboxes) or None
 
     def _inverse_extra_edis(self):
         for wizard in self:
-            wizard.extra_edi_checkboxes = {method_key: {'checked': True} for method_key in wizard.extra_edis or {}}
+            wizard.extra_edi_checkboxes = {method_key: {'checked': True} for method_key in wizard.extra_edis or {}} or None
 
     @api.depends('move_id')
     def _compute_extra_edi_checkboxes(self):
@@ -176,7 +176,7 @@ class AccountMoveSendWizard(models.TransientModel):
             wizard.extra_edi_checkboxes = {
                 edi_key: {'checked': edi_key in default_extra_edis, 'label': edi_vals['label'], 'help': edi_vals.get('help')}
                 for edi_key, edi_vals in all_extra_edis.items() if edi_vals['is_applicable'](wizard.move_id)
-            }
+            } or None
 
     @api.depends('move_id', 'sending_methods')
     def _compute_invoice_edi_format(self):
@@ -345,7 +345,7 @@ class AccountMoveSendWizard(models.TransientModel):
     @api.model
     def _get_selected_checkboxes(self, json_checkboxes):
         if not json_checkboxes:
-            return {}
+            return []
         return [checkbox_key for checkbox_key, checkbox_vals in json_checkboxes.items() if checkbox_vals['checked']]
 
     # -------------------------------------------------------------------------

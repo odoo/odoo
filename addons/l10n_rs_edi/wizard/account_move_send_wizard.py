@@ -13,4 +13,4 @@ class AccountMoveSendWizard(models.TransientModel):
             else:
                 checkboxes['rs_cir_checkbox']['checked'] = False
                 checkboxes['rs_cir_checkbox']['readonly'] = True
-            self.extra_edi_checkboxes = {**checkboxes}
+            self.extra_edi_checkboxes = {**checkboxes} or None

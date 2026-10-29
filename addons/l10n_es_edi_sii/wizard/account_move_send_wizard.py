@@ -15,4 +15,4 @@ class AccountMoveSendWizard(models.TransientModel):
                 for key in ('es_edi_sii', 'es_edi_sii_resend'):
                     if key in checkboxes:
                         checkboxes[key]['checked'] = False
-                wizard.extra_edi_checkboxes = checkboxes
+                wizard.extra_edi_checkboxes = checkboxes or None

@@ -186,7 +186,7 @@ class QRPrintTest(AccountTestInvoicingCommon):
 
         # No error for Belgian partners
         wizard = get_wizard(self.invoice_be)
-        self.assertEqual(wizard.alerts, False)
+        self.assertFalse(wizard.alerts)
         with self.allow_pdf_render():
             wizard.action_send_and_print()
 
@@ -223,13 +223,13 @@ class QRPrintTest(AccountTestInvoicingCommon):
 
         self.debtor_partner_ch.write({'street': 'Street Name 1'})
         wizard = get_wizard(self.invoice_ch)
-        self.assertEqual(wizard.alerts, False)
+        self.assertFalse(wizard.alerts)
         with self.allow_pdf_render():
             wizard.action_send_and_print()
 
         self.debtor_partner_li.write({'street': 'Street Name 2'})
         wizard = get_wizard(self.invoice_li)
-        self.assertEqual(wizard.alerts, False)
+        self.assertFalse(wizard.alerts)
         with self.allow_pdf_render():
             wizard.action_send_and_print()
 
@@ -331,5 +331,5 @@ class QRPrintTest(AccountTestInvoicingCommon):
 
         self.debtor_partner_li.write({'street': 'Street Name 2'})
         batch_wizard = get_batch_wizard(self.invoices)
-        self.assertEqual(batch_wizard.alerts, False)
+        self.assertFalse(batch_wizard.alerts)
         batch_wizard.action_send_and_print()

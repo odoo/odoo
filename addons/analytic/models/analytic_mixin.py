@@ -216,7 +216,7 @@ class AnalyticMixin(models.AbstractModel):
 
         for cleaned, ids in to_write.items():
             records = self.browse(ids).with_context(skip_analytic_sync=True)
-            records.analytic_distribution = cleaned
+            records.analytic_distribution = cleaned or None
             records.flush_recordset(['analytic_distribution'])
 
     @api.model_create_multi
