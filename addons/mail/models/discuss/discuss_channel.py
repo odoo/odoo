@@ -2069,7 +2069,11 @@ class DiscussChannel(models.Model):
         # Build the subquery, we know the model and must inject the same
         # security rules as in the `_search` method. The search is optimized to
         # return a query without executing anything if the model is fixed.
-        domain = self._get_correlated_message_domain(SQL("discuss_channel.id"))
+        # ``res_id in`` is copied into the message access rule subquery, which
+        # would otherwise list every readable channel.
+        domain = Domain("res_id", "in", self.ids) & self._get_correlated_message_domain(
+            SQL("discuss_channel.id")
+        )
         messages_query = messages._search(domain, order='id desc', limit=1)
         sql = SQL(
             """
@@ -2091,7 +2095,8 @@ class DiscussChannel(models.Model):
         if not self.ids:
             return messages
         domain = (
-            self._get_correlated_message_domain(SQL("discuss_channel.id"))
+            Domain("res_id", "in", self.ids)
+            & self._get_correlated_message_domain(SQL("discuss_channel.id"))
             & Domain("needaction", "=", True)
         )
         messages_query = messages._search(domain, order="id desc", limit=1)
