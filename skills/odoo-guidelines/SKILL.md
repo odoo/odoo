@@ -40,6 +40,7 @@ touching instead of loading whole files.
 | [Performance conventions](guidelines/performance.md#performance-conventions) | code that loops over records or filters query results |
 | [Tests](guidelines/tests.md#tests) | touching `tests/` |
 | [Plain ASCII punctuation in comments and messages](guidelines/comments.md#plain-ascii-punctuation-in-comments-and-messages) | writing a comment, a docstring, a user-facing string, or a commit message |
+| [Comment a deviation the requirements force](guidelines/comments.md#comment-a-deviation-the-requirements-force) | a requirement (spec, ticket, caller) makes the code break one of these guidelines |
 
 A change to a released version (17.0, saas-19.4, ...) also follows the
 `odoo-stable-policy` skill, which says how to tell a released version from
