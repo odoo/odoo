@@ -11,6 +11,8 @@
         <field name="model">estate.property.type</field>
         <field name="arch" type="xml">
             <list string="Property Types">
+                <!-- The handle widget lets the user reorder the lines by drag and drop -->
+                <field name="sequence" widget="handle"/>
                 <field name="name"/>
             </list>
         </field>
@@ -22,9 +24,32 @@
         <field name="arch" type="xml">
             <form string="Property Type">
                 <sheet>
+                    <!-- Stat button: shows a count and opens the matching records -->
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            type="action"
+                            name="%(estate_property_offer_action)d"
+                            class="oe_stat_button"
+                            icon="attach_money"
+                        >
+                            <field string="Offers" name="offer_count" widget="statinfo"/>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <h1><field name="name" placeholder="e.g. House"/></h1>
                     </div>
+                    <notebook>
+                        <page string="Properties" name="properties">
+                            <!-- Inline list: replaces the default list view for this field only -->
+                            <field name="property_ids" readonly="True">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="expected_price"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>

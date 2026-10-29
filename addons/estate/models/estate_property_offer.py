@@ -9,6 +9,7 @@ class EstatePropertyOffer(models.Model):
 
     _name = "estate.property.offer"
     _description = "Real Estate Property Offer"
+    _order = "price desc"
 
     price = fields.Float(string="Price")
     # Empty while the offer waits for the agent's decision
@@ -20,6 +21,8 @@ class EstatePropertyOffer(models.Model):
     property_id = fields.Many2one(
         string="Property", comodel_name="estate.property", ondelete="cascade", required=True
     )
+    # Stored so that offers can be searched by type, which the stat button of the type form needs
+    property_type_id = fields.Many2one(related="property_id.property_type_id", store=True)
     validity = fields.Integer(string="Validity (days)", default=7)
     # The deadline and the validity describe the same thing: editing either one updates the other
     date_deadline = fields.Date(

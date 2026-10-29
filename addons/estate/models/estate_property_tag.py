@@ -8,7 +8,10 @@ class EstatePropertyTag(models.Model):
 
     _name = "estate.property.tag"
     _description = "Real Estate Property Tag"
+    _order = "name"
 
     name = fields.Char(string="Name", required=True)
+    # Index in the palette of the web client, used by the many2many_tags widget
+    color = fields.Integer(string="Color")
 
     _unique_name = models.Constraint("UNIQUE(name)", "A tag with this name already exists.")

@@ -12,6 +12,8 @@ class EstateProperty(models.Model):
     # derives the table name from it by replacing dots with underscores: `estate_property`
     _name = "estate.property"
     _description = "Real Estate Property"
+    # Default sort order of searches and list views: the most recent properties first
+    _order = "id desc"
 
     name = fields.Char(string="Title", required=True)
     description = fields.Text(string="Description")

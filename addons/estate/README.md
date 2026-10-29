@@ -359,3 +359,57 @@ property, then try to cancel it.
 **Try it.** Create a property with an expected price of 0. Create a second "House" type. On a
 property expecting 100,000, add an offer of 80,000 and accept it. Then add an offer of 95,000 and
 accept it after refusing the first one.
+
+## Chapter 11 - Add the sprinkles
+
+[Official chapter](https://www.odoo.com/documentation/20.0/developer/tutorials/server_framework_101/11_sprinkles.html)
+
+**Functional.** The application becomes pleasant to use:
+
+- **Properties**
+  - The menu opens with the "Available" filter on.
+  - The list is colored: green with offers, bold once an offer is accepted, grey once sold. Tags
+    have colors, and the availability date can be shown from the optional columns.
+- **Property form**
+  - A status bar shows where the property stands in the sales process.
+  - "Sold" only appears once an offer is accepted, "Cancel" until the property is sold or
+    cancelled.
+  - Garden area and orientation only appear when there is a garden.
+  - Offers can no longer be added or changed once one is accepted.
+  - The type cannot be created on the fly from the property.
+- **Offers** are edited directly in the list. Accepted ones are green, refused ones red, and the
+  buttons disappear once the decision is made.
+- **Property types** can be reordered by drag and drop. Their form lists their properties and
+  shows a button counting their offers, which opens them.
+- **Tags** have a color picker.
+
+**Technical.**
+
+| Need | Tool |
+| --- | --- |
+| Status bar | `<field name="state" widget="statusbar" statusbar_visible="...">` in the `<header>` |
+| Show/hide or lock depending on the record | `invisible="..."`, `readonly="..."` (Python-like expressions on the record's fields) |
+| Hide a list column while still loading the field | `column_invisible="True"` |
+| Row colors | `decoration-success/danger/bf/muted="..."` on `<list>` |
+| Edit lines in place | `<list editable="bottom">` |
+| Optional column | `optional="hide"` (or `"show"`) |
+| Default sort order | `_order` on the model, e.g. `"sequence, name"` |
+| Manual ordering | an Integer `sequence` field with `widget="handle"` in the list |
+| Colored tags | an Integer `color` field, `options="{'color_field': 'color'}"` on `many2many_tags` |
+| Default filter | `search_default_<filter name>` in the action's `context` |
+| Different list for one field | an inline `<list>` inside the `<field>` tag |
+| No quick creation in a Many2one | `options="{'no_create': True}"` |
+
+- **Framework change.** `attrs="{'invisible': [...]}"` and `states="..."` no longer exist.
+  Visibility is a plain expression in `invisible`/`readonly`/`required`.
+- **Stat button.** `offer_count` counts the offers of the type through the `offer_ids` One2many. To
+  have that One2many, offers need a `property_type_id`: it is a **related** field
+  (`related="property_id.property_type_id"`) and `store=True` makes it searchable by the
+  action's domain. `type="action" name="%(xml_id)d"` opens that window action, and its domain uses
+  `active_id`, the id of the record the button was clicked on.
+- `_compute_offer_count` uses `_read_group` to count all types in one SQL query, rather than
+  reading every offer of every type.
+
+**Try it.** Open Properties and notice the active filter. Accept an offer and watch the status bar,
+the buttons and the offers tab change. Reorder the property types by dragging them. Open a type and
+click its "Offers" button.

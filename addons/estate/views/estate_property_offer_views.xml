@@ -1,18 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- No action or menu: offers are always managed from the form of their property -->
+    <!-- Opened by the stat button of a property type: `active_id` is the id of that type -->
+    <record id="estate_property_offer_action" model="ir.actions.act_window">
+        <field name="name">Offers</field>
+        <field name="res_model">estate.property.offer</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('property_type_id', '=', active_id)]</field>
+    </record>
+
     <record id="estate_property_offer_view_list" model="ir.ui.view">
         <field name="name">estate.property.offer.view.list</field>
         <field name="model">estate.property.offer</field>
         <field name="arch" type="xml">
-            <list string="Offers">
+            <!-- editable="bottom": lines are edited in place, new ones are added at the bottom -->
+            <list
+                string="Offers"
+                editable="bottom"
+                decoration-success="status == 'accepted'"
+                decoration-danger="status == 'refused'"
+            >
                 <field name="price"/>
                 <field name="partner_id"/>
+                <field name="property_type_id" optional="hide"/>
                 <field name="validity"/>
                 <field name="date_deadline"/>
-                <field name="status"/>
-                <button name="action_accept" type="object" title="Accept" icon="check"/>
-                <button name="action_refuse" type="object" title="Refuse" icon="close"/>
+                <!-- Once decided, the buttons are hidden: the row color shows the decision -->
+                <button
+                    title="Accept"
+                    type="object"
+                    name="action_accept"
+                    icon="check"
+                    invisible="status"
+                />
+                <button
+                    title="Refuse"
+                    type="object"
+                    name="action_refuse"
+                    icon="close"
+                    invisible="status"
+                />
+                <field name="status" column_invisible="True"/>
             </list>
         </field>
     </record>

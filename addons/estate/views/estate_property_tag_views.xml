@@ -10,8 +10,9 @@
         <field name="name">estate.property.tag.view.list</field>
         <field name="model">estate.property.tag</field>
         <field name="arch" type="xml">
-            <list string="Property Tags">
+            <list string="Property Tags" editable="bottom">
                 <field name="name"/>
+                <field name="color" widget="color_picker"/>
             </list>
         </field>
     </record>
@@ -24,6 +25,7 @@
                 <sheet>
                     <group>
                         <field name="name"/>
+                        <field name="color" widget="color_picker"/>
                     </group>
                 </sheet>
             </form>
