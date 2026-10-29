@@ -21,6 +21,9 @@ through them view by view, at their own pace and in their own order.
             'web_tutorial/static/src/**/*',
             ('remove', 'web_tutorial/static/src/tutorial/**/*'),
         ],
+        'web.assets_tests': [
+            'web_tutorial/static/tests/tours/**/*',
+        ],
         'web.assets_unit_tests': [
             ('include', 'web_tutorial.tutorial'),
             'web_tutorial/static/tests/*.test.js',
