@@ -62,8 +62,13 @@ class MessagingMenuController(WebclientController):
         if not filter_id_by_tab_id:
             return
         domain_by_tab_id = self.get_menu_counter_domain_by_tab_id(filter_id_by_tab_id)
-        messages = self.env["mail.message"].search_fetch(Domain.OR(domain_by_tab_id.values()))
-        self._add_menu_tab_counters_to_store(store, messages, domain_by_tab_id)
+        # One search per tab: ORing the tab domains prevents the use of their indexes.
+        for tab_id, domain in domain_by_tab_id.items():
+            store.add_model_values(
+                "MessagingMenuTab",
+                {"init_counter_ids": self.env["mail.message"].search(domain).ids},
+                id_data={"id": tab_id},
+            )
 
     def get_menu_counter_domain_by_tab_id(self, filter_id_by_tab_id):
         """Resolve the map of tab id to its full domain (taking `tab_id` and `filter_id`

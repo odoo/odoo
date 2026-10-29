@@ -124,3 +124,31 @@ class TestMailMessage(common.MailCommon, HttpCase):
             ],
         ):
             message.unlink()
+
+    @users("employee")
+    def test_messaging_menu_initialize_counters(self):
+        self.authenticate(self.env.user.login, self.env.user.login)
+        partner = self.env.user.partner_id
+        values = {"model": "res.partner", "res_id": partner.id, "body": "Hey"}
+        bookmarked = self.env["mail.message"].create(
+            {**values, "bookmarked_partner_ids": [(4, partner.id)]},
+        )
+        notified = self.env["mail.message"].create({
+            **values,
+            "notification_ids": [(0, 0, {"res_partner_id": partner.id, "notification_type": "inbox"})],
+        })
+        self.env["mail.message"].create(values)
+        data = self.make_jsonrpc_request(
+            "/mail/store",
+            {"fetch_params": [[
+                "/mail/messaging_menu/initialize_counters",
+                {"filter_id_by_tab_id_by_record_type": {
+                    "mail.message": {"bookmark": None, "notification": "notification_unread"},
+                }},
+            ]]},
+        )
+        counter_ids_by_tab = {
+            tab["id"]: tab["init_counter_ids"] for tab in data["MessagingMenuTab"]
+        }
+        self.assertEqual(counter_ids_by_tab["bookmark"], bookmarked.ids)
+        self.assertEqual(counter_ids_by_tab["notification"], notified.ids)
