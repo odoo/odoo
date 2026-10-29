@@ -19,7 +19,7 @@ registry.category("web_tour.tours").add('sale_catalog', {
         },
         {
             content: "Select a customer from the dropdown",
-            trigger: ".o_field_res_partner_many2one .dropdown-item:not([id$='_loading']):first",
+            trigger: ".o-autocomplete--dropdown-menu .dropdown-item:not([id$='_loading']):first",
             run: 'click',
         },
         {
@@ -93,7 +93,7 @@ registry.category("web_tour.tours").add('test_add_section_from_product_catalog_o
         },
         {
             content: "Select a customer from the dropdown",
-            trigger: '.o_field_res_partner_many2one .dropdown-item:not([id$="_loading"]):first',
+            trigger: '.o-autocomplete--dropdown-menu .dropdown-item:not([id$="_loading"]):first',
             run: 'click',
         },
         ...addSectionFromProductCatalog(),

@@ -22,9 +22,7 @@ async function _expectCreateAndEdit(rowN) {
     await edit("NonExistingTask", { confirm: false });
     await click(`${taskField} input`);
     await animationFrame();
-    return expect(
-        '.o_list_many2one[name=task_id] .dropdown ul li:contains(Create "NonExistingTask")'
-    );
+    return expect('.o-autocomplete--dropdown-menu li:contains(Create "NonExistingTask")');
 }
 
 test("hr.timesheet (tree): quick create is enabled when project_id is set", async () => {
@@ -54,7 +52,7 @@ test("hr.timesheet (tree): the text of the task includes hours in the drop down 
     await animationFrame();
     await click(`${taskField} input`);
     await animationFrame();
-    expect(`${taskField} .dropdown ul li:contains("AdditionalInfo")`).toHaveCount(3);
+    expect('.o-autocomplete--dropdown-menu li:contains("AdditionalInfo")').toHaveCount(3);
 });
 
 test("project.task (tree): progress bar color", async () => {

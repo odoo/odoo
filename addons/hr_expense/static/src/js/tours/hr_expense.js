@@ -87,7 +87,7 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
 },
 {
     isActive: ["desktop"],
-    trigger: `.o_dialog .o_field_widget[name="expense_manager_id"] .dropdown-item:contains("${user.name}")`,
+    trigger: `.o-autocomplete--dropdown-menu .dropdown-item:contains("${user.name}")`,
     content: _t("Select the expense approver."),
     run: "click",
 },

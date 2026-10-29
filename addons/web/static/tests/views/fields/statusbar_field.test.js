@@ -926,7 +926,7 @@ test("correctly load statusbar when dynamic domain changes", async () => {
     expect.verifySteps([[["project_ids", "in", 1]]]);
     await click(`[name="project_id"] .dropdown input`);
     await animationFrame();
-    await click(`[name="project_id"] .dropdown .dropdown-menu .ui-menu-item:contains("Project 2")`);
+    await click(`.o-autocomplete--dropdown-menu .ui-menu-item:contains("Project 2")`);
     await animationFrame();
 
     expect(queryAllTexts(".o_statusbar_status button:not(.d-none)")).toEqual(["Stage Project 2"]);

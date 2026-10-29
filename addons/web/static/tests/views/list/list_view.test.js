@@ -6189,9 +6189,9 @@ test(`editable list view, click on m2o dropdown does not close editable row`, as
     expect(`.o_selected_row .o_field_many2one input`).toHaveValue("");
 
     await contains(`.o_selected_row .o_field_many2one input`).click();
-    expect(`.o_field_many2one .o-autocomplete--dropdown-menu`).toHaveCount(1);
+    expect(`.o-autocomplete--dropdown-menu`).toHaveCount(1);
 
-    await contains(`.o_field_many2one .o-autocomplete--dropdown-menu .dropdown-item`).click();
+    await contains(`.o-autocomplete--dropdown-menu .dropdown-item`).click();
     expect(`.o_selected_row .o_field_many2one input`).toHaveValue("Value 1");
     expect(`.o_selected_row`).toHaveCount(1, { message: "should still have editable row" });
 });
@@ -18905,10 +18905,8 @@ test(`Properties: selection`, async () => {
 
 test(`Properties: tags`, async () => {
     const clickFieldDropdownItem = async (fieldName, itemContent, options) => {
-        const dropdowns = queryAll(
-            buildSelector(`[name='${fieldName}'] .dropdown .dropdown-menu`, options)
-        );
-        if (dropdowns.length === 0) {
+        const dropdowns = queryAll(".o-autocomplete--dropdown-menu");
+        if (!queryAll(`[name='${fieldName}'] .dropdown input[aria-expanded=true]`).length) {
             throw new Error(`No dropdown found for field ${fieldName}`);
         } else if (dropdowns.length > 1) {
             throw new Error(`Found ${dropdowns.length} dropdowns for field ${fieldName}`);
@@ -19607,7 +19605,7 @@ test(`context keys not passed down the stack and not to fields`, async () => {
     ]);
 
     await contains(
-        `.o_selected_row .o_field_many2many_tags .dropdown-item:contains(Search more...)`
+        `.o-autocomplete--dropdown-menu .dropdown-item:contains(Search more...)`
     ).click();
     expect.verifySteps([
         {

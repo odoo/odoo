@@ -14,7 +14,7 @@ registry.category('web_tour.tours').add('test_get_all_rates', {
             run: 'click',
         },
         {
-            trigger: 'ul.ui-autocomplete a:contains("Normal Delivery Charges")',
+            trigger: '.o-autocomplete--dropdown-menu a:contains("Normal Delivery Charges")',
             content: 'Click on the dropdown item',
             run: 'click',
         },
@@ -24,7 +24,7 @@ registry.category('web_tour.tours').add('test_get_all_rates', {
             run: 'click',
         },
         {
-            trigger: 'ul.ui-autocomplete',
+            trigger: '.o-autocomplete--dropdown-menu',
             content: 'check that many2many carrier_id list is opened',
         },
         {

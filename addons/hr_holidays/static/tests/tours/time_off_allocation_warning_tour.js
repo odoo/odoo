@@ -38,7 +38,7 @@ registry.category("web_tour.tours").add("time_off_allocation_warning_tour", {
             run: "click",
         },
         {
-            trigger: ".o-autocomplete--dropdown-menu > li > a[id=work_entry_type_id_0_0_0]",
+            trigger: ".o-autocomplete--dropdown-menu li > a[id=work_entry_type_id_0_0_0]",
             run: "click",
         },
         {

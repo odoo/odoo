@@ -122,7 +122,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     run: "fill marc",
 },
 {
-    trigger: ".ui-autocomplete > li > a:not(:has(i.oi))",
+    trigger: ".o-autocomplete--dropdown-menu li > a:not(:has(i.oi))",
     run: "click",
 }, {
     trigger: '.o_field_widget[name="name"] textarea',
@@ -153,7 +153,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     content: 'Create a new project that will be set to the task',
     run: "edit Project test 1",
 }, {
-    trigger: '.o_todo_conversion_form_view .o_field_many2one[name=project_id] li.o_m2o_dropdown_option_create a',
+    trigger: 'li.o_m2o_dropdown_option_create a',
     content: 'Create the new project',
     run: "click",
 }, {

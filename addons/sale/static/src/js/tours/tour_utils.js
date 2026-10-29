@@ -34,7 +34,7 @@ export function selectCustomer(customerName) {
             run: `edit ${customerName}`,
         },
         {
-            trigger: `ul.ui-autocomplete > li > a:contains("${customerName}")`,
+            trigger: `.o-autocomplete--dropdown-menu li > a:contains("${customerName}")`,
             run: 'click',
         },
     ];
@@ -48,7 +48,7 @@ export function selectPricelist(pricelistName) {
             run: `edit ${pricelistName}`,
         },
         {
-            trigger: `ul.ui-autocomplete > li > a:contains("${pricelistName}")`,
+            trigger: `.o-autocomplete--dropdown-menu li > a:contains("${pricelistName}")`,
             run: 'click',
         },
     ];
@@ -70,7 +70,7 @@ export function addProduct(productName, rowNumber=1) {
             run: `edit ${productName}`,
         },
         {
-            trigger: `ul.ui-autocomplete a:contains("${productName}")`,
+            trigger: `.o-autocomplete--dropdown-menu a:contains("${productName}")`,
             run: 'click',
         },
     ];

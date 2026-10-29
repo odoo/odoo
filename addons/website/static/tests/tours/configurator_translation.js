@@ -21,7 +21,7 @@ function runConfiguratorFlow(industrySearchText) {
         },
         {
             content: "Select a website industry from the autocomplete",
-            trigger: `.o_configurator_industry_wrapper ul li a:contains(${industrySearchText})`,
+            trigger: `.o-autocomplete--dropdown-menu li a:contains(${industrySearchText})`,
             run: "click",
         },
         {

@@ -23,7 +23,7 @@ registry.category("web_tour.tours").add("event_sale_with_product_configurator_to
             run: "edit Test",
         },
         {
-            trigger: '.modal ul.ui-autocomplete a:contains("TestEvent")',
+            trigger: '.o-autocomplete--dropdown-menu a:contains("TestEvent")',
             run: "click",
         },
         {
@@ -31,7 +31,7 @@ registry.category("web_tour.tours").add("event_sale_with_product_configurator_to
             run: "click",
         },
         {
-            trigger: '.modal ul.ui-autocomplete a:contains("Kid + meal")',
+            trigger: '.o-autocomplete--dropdown-menu a:contains("Kid + meal")',
             run: "click",
         },
         {
@@ -72,7 +72,7 @@ registry.category("web_tour.tours").add("event_sale_with_product_configurator_to
             run: "edit Test",
         },
         {
-            trigger: '.modal ul.ui-autocomplete a:contains("TestEvent")',
+            trigger: '.o-autocomplete--dropdown-menu a:contains("TestEvent")',
             run: "click",
         },
         {
@@ -80,7 +80,7 @@ registry.category("web_tour.tours").add("event_sale_with_product_configurator_to
             run: "click",
         },
         {
-            trigger: '.modal ul.ui-autocomplete a:contains("Adult")',
+            trigger: '.o-autocomplete--dropdown-menu a:contains("Adult")',
             run: "click",
         },
         {
@@ -110,7 +110,7 @@ registry.category("web_tour.tours").add("event_sale_with_product_configurator_to
             run: "edit Test",
         },
         {
-            trigger: '.modal ul.ui-autocomplete a:contains("TestEvent")',
+            trigger: '.o-autocomplete--dropdown-menu a:contains("TestEvent")',
             run: "click",
         },
         {
@@ -118,7 +118,7 @@ registry.category("web_tour.tours").add("event_sale_with_product_configurator_to
             run: "click",
         },
         {
-            trigger: '.modal ul.ui-autocomplete a:contains("VIP")',
+            trigger: '.o-autocomplete--dropdown-menu a:contains("VIP")',
             run: "click",
         },
         {

@@ -25,11 +25,7 @@ class Partner extends models.Model {
         model_field: "model",
     });
 
-    _records = [
-        { id: 1, model: "partner.type", res_id: 10 },
-        { id: 2, res_id: false },
-        { id: 3 },
-    ];
+    _records = [{ id: 1, model: "partner.type", res_id: 10 }, { id: 2, res_id: false }, { id: 3 }];
 }
 
 class PartnerType extends models.Model {
@@ -119,7 +115,7 @@ test("Many2OneReferenceField with no_open option", async () => {
 
 test.tags("desktop");
 test("Many2OneReferenceField with model_field change in form view", async () => {
-     await mountView({
+    await mountView({
         type: "form",
         resModel: "partner",
         resId: 3,
@@ -133,16 +129,16 @@ test("Many2OneReferenceField with model_field change in form view", async () => 
     await contains(".o_field_widget[name=model] input").edit("partner.type");
     await animationFrame();
     await clickFieldDropdown("res_id");
-    expect(".o_field_widget[name=res_id] .o-autocomplete--dropdown-item").toHaveCount(3);
+    expect(".o-autocomplete--dropdown-item").toHaveCount(3);
 
     await contains(".o_field_widget[name=model] input").edit("job.title");
     await animationFrame();
     await clickFieldDropdown("res_id");
-    expect(".o_field_widget[name=res_id] .o-autocomplete--dropdown-item").toHaveCount(4);
+    expect(".o-autocomplete--dropdown-item").toHaveCount(4);
 });
 
 test("Many2OneReferenceField server value in form view", async () => {
-     await mountView({
+    await mountView({
         type: "form",
         resModel: "partner",
         arch: `
@@ -254,9 +250,7 @@ test("Many2OneReferenceField: quick create a value", async () => {
 
     await contains(".o_field_widget[name='res_id'] input").edit("new value", { confirm: false });
     await runAllTimers();
-    expect(
-        ".o_field_widget[name='res_id'] .dropdown-menu .o_m2o_dropdown_option_create"
-    ).toHaveCount(1);
+    expect(".o-autocomplete--dropdown-menu .o_m2o_dropdown_option_create").toHaveCount(1);
     await clickFieldDropdownItem("res_id", `Create "new value"`);
     expect(".o_field_widget input").toHaveValue("new value");
     expect.verifySteps(["get_views", "web_read", "web_name_search", "name_create"]);
@@ -276,7 +270,5 @@ test("Many2OneReferenceField with no_create option", async () => {
 
     await contains(".o_field_widget[name='res_id'] input").edit("new value", { confirm: false });
     await runAllTimers();
-    expect(
-        ".o_field_widget[name='res_id'] .dropdown-menu .o_m2o_dropdown_option_create"
-    ).toHaveCount(0);
+    expect(".o-autocomplete--dropdown-menu .o_m2o_dropdown_option_create").toHaveCount(0);
 });

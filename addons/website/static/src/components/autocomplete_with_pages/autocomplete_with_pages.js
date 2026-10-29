@@ -18,6 +18,11 @@ export class AutoCompleteWithPages extends AutoComplete {
                 inputEl.value = this.targetDropdown.value;
             }
         });
+        useEffect(() => {
+            const targetEl = this.targetDropdown;
+            targetEl.setAttribute("aria-controls", this.listId);
+            return () => targetEl.removeAttribute("aria-controls");
+        });
         // targetDropdown outlives this component; a trailing event on teardown
         // can fire when the input ref is already null.
         const whenMounted = (handler) => (ev) => {
@@ -53,6 +58,7 @@ export class AutoCompleteWithPages extends AutoComplete {
      * @override
      */
     onInputFocus(ev) {
+        this.restoreActiveItem();
         this.targetDropdown.setSelectionRange(0, this.targetDropdown.value.length);
         this.props.onFocus(ev);
     }

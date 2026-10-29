@@ -381,9 +381,7 @@ test("SelectCreateDialog cascade x2many in create mode on desktop", async () => 
     await contains(".o_field_x2many_list_row_add button").click();
     await contains(".o_field_widget[name=instrument] input").edit("ABC", { confirm: false });
     await runAllTimers();
-    await contains(
-        `[name="instrument"] .dropdown .dropdown-menu li:contains("Create and edit...")`
-    ).click();
+    await contains(`.o-autocomplete--dropdown-menu li:contains("Create and edit...")`).click();
 
     expect(".modal .modal-lg").toHaveCount(1);
 
@@ -907,7 +905,7 @@ test("SelectCreateDialog with open action", async () => {
         `,
     });
     await contains(`.o_field_widget[name="instrument"] .dropdown input`).click();
-    await contains(`.o_field_widget[name="instrument"] .o_m2o_dropdown_option_search_more`).click();
+    await contains(`.o_m2o_dropdown_option_search_more`).click();
     await contains(
         `.o_list_renderer .o_data_row .o_field_cell.o_list_char:text("Instrument 10")`
     ).click();
@@ -916,7 +914,7 @@ test("SelectCreateDialog with open action", async () => {
 
     await contains(".o_field_widget[name=instrument] input").edit("Instrument", { confirm: false });
     await runAllTimers();
-    await contains(`.o_field_widget[name="instrument"] .o_m2o_dropdown_option_search_more`).click();
+    await contains(`.o_m2o_dropdown_option_search_more`).click();
     expect.verifySteps(["name_search"]);
     expect(searchLimit).toBe(1000, {
         message: "The name_search should have been called with a limit of 1000",
