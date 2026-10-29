@@ -496,3 +496,49 @@ class TestTimeRuleAllocationLog(TransactionCase):
             ('allocation_id', '=', alloc.id),
         ])
         self.assertFalse(logs, "Log entry must be removed after reversal")
+
+    def test_find_time_rule_allocations_in_batch(self):
+        """All the employees are searched at once; per employee, only the last validated
+        open-ended allocation of the type is returned, and employees without one are left out."""
+        other_employee = self.env['hr.employee'].create({
+            'name': 'Other Log Employee',
+            'tz': 'UTC',
+            'date_version': '2020-01-01',
+            'contract_date_start': '2020-01-01',
+            'wage': 3000,
+            'resource_calendar_id': self.calendar.id,
+        })
+        other_comp_type = self.comp_type.copy({'name': 'Other Compensatory Rest', 'code': 'COMPLOG2'})
+        allocations = self.env['hr.leave.allocation'].sudo().create([{
+            'employee_id': self.emp.id,
+            'work_entry_type_id': self.comp_type.id,
+            'number_of_days': 1,
+            'date_to': False,
+        }, {
+            # created in the same transaction: the highest id is the last created
+            'employee_id': self.emp.id,
+            'work_entry_type_id': self.comp_type.id,
+            'number_of_days': 2,
+            'date_to': False,
+        }, {
+            # not open-ended: not a time rule allocation
+            'employee_id': other_employee.id,
+            'work_entry_type_id': self.comp_type.id,
+            'number_of_days': 3,
+            'date_from': '2022-01-01',
+            'date_to': '2022-12-31',
+        }, {
+            'employee_id': other_employee.id,
+            'work_entry_type_id': other_comp_type.id,
+            'number_of_days': 4,
+            'date_to': False,
+        }])
+        _previous_allocation, last_allocation, _not_open_ended_allocation, other_type_allocation = allocations
+        employees = self.emp | other_employee
+        TimeRule = self.env['hr.time.rule']
+        self.env.invalidate_all()
+        # one query to search, one to read the employee of the allocations found
+        with self.assertQueryCount(2):
+            allocation_by_employee = TimeRule._find_time_rule_allocations(self.comp_type, employees)
+        self.assertEqual(allocation_by_employee, {self.emp: last_allocation})
+        self.assertEqual(TimeRule._find_time_rule_allocations(other_comp_type, employees), {other_employee: other_type_allocation})
