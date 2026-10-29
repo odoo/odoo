@@ -25,7 +25,7 @@
                         <i class="oi o-discuss-ChannelInvitation-iconPlus position-absolute bg-white rounded-circle" data-icon="add_circle"/>
                     </div>
                 </div>
-                <div class="d-flex flex-column o-pt-2_5">
+                <div class="d-flex flex-column o-pt-2_5 o-min-height-0">
                     <p t-if="this.selectablePartners.length === 0 and this.state.selectableEmails.length === 0" class="mx-1 my-0 smaller text-muted opacity-50">
                         <t t-if="this.props.channel">No one found to invite.</t>
                         <t t-else="">No users found.</t>
