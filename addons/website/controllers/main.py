@@ -1496,14 +1496,18 @@ class Website(Home):
         else:
             website = self.env.website
 
+        draft = kwargs.get('draft') and request.env['ir.http']._can_preview_draft()
         page = website.new_page(
             path,
-            add_menu=add_menu,
+            add_menu=add_menu and not draft,
             sections_arch=kwargs.get('sections_arch'),
             page_title=kwargs.get('page_title'),
+            page_values={'is_published': False, 'created_in_draft': True} if draft else None,
             **template
         )
         url = page['url']
+        if draft and add_menu:
+            website._add_draft_menu(page['page_id'])
         # In case the page is created through the 404 "Create Page" button, the
         # URL may use special characters which are slugified on page creation.
         # If that URL is also a menu, we update it accordingly.

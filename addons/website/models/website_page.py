@@ -56,6 +56,8 @@ class WebsitePage(models.Model):
         related='view_id.write_date')
 
     website_indexed = fields.Boolean('Is Indexed', default=True)
+    # unpublished until the draft is published, deleted with the draft
+    created_in_draft = fields.Boolean(copy=False)
     menu_ids = fields.One2many('website.menu', 'page_id', 'Related Menus')
     is_in_menu = fields.Boolean(compute='_compute_website_menu')
     is_homepage = fields.Boolean(compute='_compute_is_homepage', string='Homepage')
@@ -607,9 +609,18 @@ class WebsitePage(models.Model):
         pages = self.search([('url', '=', page_url), ('website_id', '=', website_id)])
         View = self.env['ir.ui.view'].with_context(active_test=False)
         shared_views = View.search(Domain(View._draft_views_domain(website_id)) & Domain('page_ids', '=', False))
+        # the menu is shared by all pages, like the header
         if publish:
-            (pages.filtered('can_publish').view_id | shared_views).publish_draft()
+            pages = pages.filtered('can_publish')
+            (pages.view_id | shared_views).publish_draft()
+            pages.filtered('created_in_draft').publish_created_in_draft()
             self.env['website.assets'].publish_draft(website_id)
+            self.env['website'].browse(website_id)._publish_menu_draft()
         else:
             (pages.view_id | shared_views).delete_draft()
+            pages.filtered('created_in_draft').unlink()
             self.env['website.assets'].delete_draft(website_id)
+            self.env['website'].browse(website_id).sudo().menu_draft = False
+
+    def publish_created_in_draft(self):
+        self.write({'is_published': True, 'created_in_draft': False})
