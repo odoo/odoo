@@ -19,11 +19,14 @@ class HrVersion(models.Model):
 
     def _get_more_vals_leave_interval(self, interval, leaves):
         result = super()._get_more_vals_leave_interval(interval, leaves)
+        holiday = self.env['hr.leave']
         for leave in leaves:
             if interval[0] >= leave[0] and interval[1] <= leave[1]:
-                if leave[2].holiday_id.id:
-                    result.append(('leave_id', leave[2].holiday_id.id))
-                    break
+                for rcleave in leave[2]:
+                    if rcleave.holiday_id and (not holiday or rcleave.holiday_id.id > holiday.id):
+                        holiday = rcleave.holiday_id
+        if holiday:
+            result.append(('leave_id', holiday.id))
         return result
 
     def _get_interval_leave_work_entry_type(self, interval, leaves, bypassing_codes):
@@ -39,7 +42,12 @@ class HrVersion(models.Model):
 
         interval_start = interval[0].astimezone(pytz.utc).replace(tzinfo=None)
         interval_stop = interval[1].astimezone(pytz.utc).replace(tzinfo=None)
-        including_rcleaves = [l[2] for l in leaves if l[2] and interval_start >= l[2].date_from and interval_stop <= l[2].date_to]
+        including_rcleaves = [
+            rcleave
+            for leave in leaves
+            for rcleave in leave[2]
+            if interval_start >= rcleave.date_from and interval_stop <= rcleave.date_to
+        ]
         including_global_rcleaves = [l for l in including_rcleaves if not l.holiday_id]
         including_holiday_rcleaves = [l for l in including_rcleaves if l.holiday_id]
         rc_leave = False
@@ -55,7 +63,8 @@ class HrVersion(models.Model):
         elif including_global_rcleaves:
             rc_leave = including_global_rcleaves[0]
         elif including_holiday_rcleaves:
-            rc_leave = including_holiday_rcleaves[0]
+            # A later employee time off overlays an earlier one when both are kept.
+            rc_leave = max(including_holiday_rcleaves, key=lambda leave: leave.id)
         if rc_leave:
             return self._get_leave_work_entry_type_dates(rc_leave, interval_start, interval_stop, self.employee_id)
         return self.env.ref('hr_work_entry.work_entry_type_leave')

@@ -75,10 +75,11 @@ class HrVersion(models.Model):
         # global time off first (eg: Public Holiday > Home Working)
         self.ensure_one()
         for leave in leaves:
-            if interval[0] >= leave[0] and interval[1] <= leave[1] and leave[2]:
-                interval_start = interval[0].astimezone(pytz.utc).replace(tzinfo=None)
-                interval_stop = interval[1].astimezone(pytz.utc).replace(tzinfo=None)
-                return self._get_leave_work_entry_type_dates(leave[2], interval_start, interval_stop, self.employee_id)
+            if interval[0] >= leave[0] and interval[1] <= leave[1]:
+                for rcleave in leave[2]:
+                    interval_start = interval[0].astimezone(pytz.utc).replace(tzinfo=None)
+                    interval_stop = interval[1].astimezone(pytz.utc).replace(tzinfo=None)
+                    return self._get_leave_work_entry_type_dates(rcleave, interval_start, interval_stop, self.employee_id)
         return self.env.ref('hr_work_entry.work_entry_type_leave')
 
     def _get_sub_leave_domain(self):
