@@ -607,7 +607,7 @@ function preventActualMediaUsage() {
 /**
  * Intercept the browser's native fullscreen API so tests can drive it without a real user
  * gesture. `document.fullscreenElement` and the `fullscreenchange` event are simulated, letting
- * the `mail.fullscreen` service derive its `isBrowserFullscreen` state from a controllable source.
+ * `MailFullscreenPlugin` derive its `isBrowserFullscreen` state from a controllable source.
  *
  * @param {Object} [param0]
  * @param {boolean} [param0.grant=true] Whether fullscreen requests are granted. When `false`,
