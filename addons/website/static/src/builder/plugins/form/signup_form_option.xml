@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<!-- The signup form is submitted to `/web/signup`, which then logs the user in. -->
+<t t-inherit="website.s_website_form_form_option" t-inherit-mode="extension">
+    <xpath expr="//BuilderRow[@label.translate='On Success']" position="attributes">
+        <attribute name="t-if">!this.isSignupForm</attribute>
+    </xpath>
+    <xpath expr="//BuilderRow[@label.translate='URL']" position="attributes">
+        <attribute name="t-if">!this.isSignupForm</attribute>
+    </xpath>
+</t>
+
+<!-- The standard fields of the signup form must be filled in by the visitor. -->
+<t t-inherit="website.s_website_form_field_option" t-inherit-mode="extension">
+    <xpath expr="//BuilderRow[@label.translate='Placeholder'][BuilderTextInput[@attributeAction=&quot;'placeholder'&quot;]]/BuilderTextInput" position="attributes">
+        <attribute name="applyTo">`input[type='text'], input[type='email'], input[type='number'], input[type='tel'], input[type='url'], input[type='password'], textarea`</attribute>
+    </xpath>
+    <xpath expr="//BuilderRow[@label.translate='Default Value']" position="attributes">
+        <attribute name="t-if">!this.isOtherOptionSupported and !this.isSignupField</attribute>
+    </xpath>
+    <xpath expr="//BuilderRow[@label.translate='Visibility Rule']" position="attributes">
+        <attribute name="t-if">!this.isSignupField</attribute>
+    </xpath>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//visibility_option" position="attributes">
+        <attribute name="exclude">.o_signup_form_snippet</attribute>
+    </xpath>
+    <xpath expr="//device_visibility_option" position="attributes">
+        <attribute name="exclude" add=".oe_signup_form .s_website_form_model_required" separator=", "/>
+    </xpath>
+</t>
+
+</templates>
