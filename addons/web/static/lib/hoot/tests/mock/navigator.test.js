@@ -75,6 +75,11 @@ describe(parseUrl(import.meta.url), () => {
         });
     });
 
+    test("unmocked native methods can be called", () => {
+        expect(navigator.javaEnabled()).toBe(false);
+        expect(navigator.javaEnabled).toBe(navigator.javaEnabled);
+    });
+
     test("permission statuses are notified of their changes", async () => {
         const camera = await navigator.permissions.query({ name: "camera" });
         camera.onchange = () => expect.step(camera.state);
