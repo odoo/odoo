@@ -530,7 +530,7 @@ def load_modules(
                 removing_modules = imported_modules
             else:
                 # remove at most MAX_REMOVED_MODULES in inverse order of dependencies
-                removing_modules = [p for p in reversed(list(graph)) if p.name in static_modules]
+                removing_modules = [p.name for p in reversed(list(graph)) if p.name in static_modules]
                 removing_modules = removing_modules[:MAX_REMOVED_MODULES]
 
             registry.uninstalling_modules = set(removing_modules)
