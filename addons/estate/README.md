@@ -54,3 +54,28 @@ it uses it. Installing or upgrading the addon is what creates the tables and loa
 
 **Try it.** Open an existing addon such as `addons/fleet`. Find its manifest, one model file and one
 view file, and decide which of them stores a vehicle's license plate and which one displays it.
+
+## Chapter 2 - A new application
+
+[Official chapter](https://www.odoo.com/documentation/20.0/developer/tutorials/server_framework_101/02_newapp.html)
+
+**Functional.** "Real Estate" appears in the Apps menu with its own icon and can be installed. It
+does nothing yet: there is no model and no menu.
+
+**Technical.**
+
+- Odoo discovers an addon by scanning the folders of the `--addons-path` for a `__manifest__.py`.
+- `__init__.py` makes the folder a Python package. It is empty for now; later chapters import the
+  `models` package from it.
+- The manifest is a Python dictionary:
+  - `depends` lists the addons that must be installed first. Every addon depends at least on
+    `base`, which provides users, companies, partners and the ORM models themselves.
+  - `application=True` marks the addon as an app (a top-level product) instead of a technical
+    module; only apps show up with the default filter of the Apps menu.
+  - `category` groups the addon in the Apps menu and, later, in the user access settings.
+- `static/description/icon.png` (100x100 px) is picked up automatically as the icon in the Apps
+  menu. Chapter 5 reuses it as the icon of the main menu.
+
+**Try it.** Start the server with `-u estate` or update the Apps list in debug mode, then remove the
+"Apps" filter and search for "Real Estate". Install it: the installation succeeds although nothing
+new appears in the main menu.
