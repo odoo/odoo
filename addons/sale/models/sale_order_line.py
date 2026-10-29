@@ -1592,13 +1592,13 @@ class SaleOrderLine(models.Model):
             else:
                 line.amount_to_invoice = 0.0
 
-    @api.depends("price_unit", "qty_invoiced_at_date", "qty_delivered_at_date")
+    @api.depends("price_unit", "discount", "qty_invoiced_at_date", "qty_delivered_at_date")
     @api.depends_context("accrual_entry_date")
     def _compute_amount_to_invoice_at_date(self):
         for line in self:
             line.amount_to_invoice_at_date = (
                 line.qty_delivered_at_date - line.qty_invoiced_at_date
-            ) * line.price_unit
+            ) * line._get_discounted_price()
 
     def _get_accrual_domain(self, date=False):
         """Reused by account.accrued.orders.wizard and stock_account's Stock Valuation report.
