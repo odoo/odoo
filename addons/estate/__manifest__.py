@@ -9,6 +9,8 @@ of a property to the buyer whose offer was accepted.
 """,
     "category": "Real Estate/Brokerage",
     "depends": ["base"],
+    # Data files are loaded in this order: a record can only refer to records loaded before it
+    "data": ["security/ir.access.csv"],
     # Without this flag the addon would only be listed with the "Extra" filter of the Apps menu
     "application": True,
     "author": "Odoo S.A.",

@@ -111,3 +111,37 @@ psql <db> -c '\d estate_property'
 
 Compare the columns with the fields, and find the automatic columns. The server log also warns
 `The model estate.property has no access rules`: chapter 4 fixes that.
+
+## Chapter 4 - Security: a brief introduction
+
+[Official chapter](https://www.odoo.com/documentation/20.0/developer/tutorials/server_framework_101/04_securityintro.html)
+
+**Functional.** Every internal user (employee) may create, read, update and delete properties.
+Portal and public users have no access at all.
+
+**Technical.**
+
+- A new model is closed by default: without an access row nobody but the superuser can use it,
+  and the server logs a warning.
+- Access rows are ordinary data records loaded from `security/ir.access.csv`, listed in the
+  manifest's `data` key. The CSV file name is the model the rows are loaded into (`ir.access`);
+  the columns are its fields:
+
+  | Column | Meaning |
+  | --- | --- |
+  | `id` | XML id of the row, so that upgrades update it instead of creating a duplicate |
+  | `name` | free label |
+  | `model_id` | the model the row grants access to |
+  | `group_id/id` | the group whose members get the access (`base.group_user` = internal users); empty = everyone |
+  | `operation` | the granted operations, a subset of `crud` (create, read, update, delete) |
+  | `domain` | optional: limits the access to the records matching this domain (empty = all) |
+
+- **Framework change.** The tutorial still shows `ir.model.access.csv`, with one boolean column per
+  operation (`perm_read`, `perm_write`, ...), plus separate record rules (`ir.rule`) for
+  per-record restrictions. On master, both are merged into `ir.access`: `operation` replaces the
+  four booleans and `domain` replaces the record rule.
+- The security file comes first in `data` because later files (menus) refer to models and groups,
+  and a data file can only reference what was loaded before it.
+
+**Try it.** Upgrade the addon: the "no access rules" warning is gone. In Settings > Technical >
+Security > Access, search for "estate" to find the loaded row.
