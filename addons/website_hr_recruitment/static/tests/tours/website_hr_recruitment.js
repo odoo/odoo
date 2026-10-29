@@ -117,7 +117,7 @@ registerWebsitePreviewTour('website_hr_recruitment_tour_edit_form', {}, () => [
     trigger: ":iframe .s_website_form_field[data-type=one2many_skill] .o_website_form_skills_empty input:visible",
 }, {
     content: "Enable the Tour Coding skill type",
-    trigger: "[data-container-title=Field] .o_we_table_wrapper tr:has(input:value('Tour Coding')) input[type=checkbox]",
+    trigger: "[data-container-title=Field] .o_we_table_wrapper tr:has(.o_hb_list_readonly_item:contains('Tour Coding')) input[type=checkbox]",
     run: "click",
 }, {
     content: "Check that the skills of the Tour Coding skill type are displayed",
@@ -188,6 +188,6 @@ registerWebsitePreviewTour('website_hr_recruitment_tour_edit_form', {}, () => [
     run: "click",
 }, {
     content: "Verify that the saved skills field has kept its skill type",
-    trigger: "[data-container-title=Field] .o_we_table_wrapper tr:has(input:value('Tour Coding')) input[type=checkbox]:checked",
+    trigger: "[data-container-title=Field] .o_we_table_wrapper tr:has(.o_hb_list_readonly_item:contains('Tour Coding')) input[type=checkbox]:checked",
 },
 ]);

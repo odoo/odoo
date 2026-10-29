@@ -89,7 +89,7 @@ test("model many2many: find tag, select tag, unselect tag", async () => {
     const assertStateAfterRemove = () => {
         expect(modelEdit.get("rel")).toEqual([{ id: 2, name: "Second", display_name: "Second" }]);
         expect("table tr").toHaveCount(1);
-        expect("table input").toHaveValue("Second");
+        expect("table .o_hb_list_readonly_item").toHaveText("Second");
     };
     assertStateAfterRemove();
 
@@ -104,6 +104,6 @@ test("model many2many: find tag, select tag, unselect tag", async () => {
     await contains(".o_hb_snippets_tabs button").click();
     await contains(":iframe .test-options-target").click();
     expect("table tr").toHaveCount(1);
-    expect("table input").toHaveValue("Second");
+    expect("table .o_hb_list_readonly_item").toHaveText("Second");
     expect.verifySteps(["name_search", "name_search"]);
 });

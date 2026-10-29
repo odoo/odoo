@@ -6,12 +6,11 @@
         <table class="o_hb_m2m_table">
             <tr t-foreach="this.props.selection" t-as="entry" t-key="entry.id">
                 <td>
-                    <input
-                        type="text"
-                        class="o_hb_input_base"
-                        disabled=""
+                    <span
+                        class="o_hb_list_readonly_item text-truncate"
+                        data-text-truncate-tooltip=""
                         t-att-data-name="entry[this.props.displayNameField]"
-                        t-att-value="entry[this.props.displayNameField]"
+                        t-out="entry[this.props.displayNameField]"
                     />
                 </td>
                 <td>
