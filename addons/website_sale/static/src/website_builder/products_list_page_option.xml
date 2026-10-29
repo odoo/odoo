@@ -208,6 +208,10 @@
         <BuilderRow label.translate="Tags" level="1">
             <BuilderCheckbox id="'o_wsale_tags_filter_opt'" actionParam="{views: ['website_sale.filter_products_tags']}"/>
         </BuilderRow>
+
+        <BuilderRow label.translate="Dynamic Ribbons" level="1">
+            <BuilderCheckbox actionParam="{views: ['website_sale.ribbon_filter_pills']}"/>
+        </BuilderRow>
     </BuilderContext>
 
     <t t-set="CollapsibleSidebarViews" t-value="['website_sale.products_categories_list_collapsible', 'website_sale.products_attributes_collapsible']"/>
