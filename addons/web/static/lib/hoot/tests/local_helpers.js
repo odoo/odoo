@@ -11,8 +11,11 @@ import { UiPlugin } from "../ui/ui_plugin";
 // Exports
 //-----------------------------------------------------------------------------
 
-export function makeTestRunner() {
-    const runner = new Runner();
+/**
+ * @param {Partial<import("../core/config").HootConfig>} [urlParams]
+ */
+export function makeTestRunner(urlParams) {
+    const runner = new Runner(urlParams);
     after(() => undefineTags(runner.tags.keys()));
     return runner;
 }

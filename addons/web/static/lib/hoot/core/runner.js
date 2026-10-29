@@ -117,6 +117,7 @@ const {
     clearTimeout,
     console: { error: $error },
     EventTarget,
+    indexedDB,
     Map,
     Math: { abs: $abs, floor: $floor },
     Number: { parseFloat: $parseFloat },
@@ -214,6 +215,37 @@ function formatAssertions(assertions) {
 }
 
 /**
+ * Increments the counter stored under the given key, and returns its previous
+ * value. The counter is shared with all same-origin pages: IndexedDB serializes
+ * concurrent read-write transactions on a same store, even across processes.
+ *
+ * @param {string} key
+ */
+function incrementSharedCounter(key) {
+    /** @type {PromiseWithResolvers<number>} */
+    const { promise, reject, resolve } = Promise.withResolvers();
+    const openRequest = indexedDB.open("hoot");
+    openRequest.onerror = () => reject(openRequest.error);
+    openRequest.onupgradeneeded = () => openRequest.result.createObjectStore("counters");
+    openRequest.onsuccess = () => {
+        const db = openRequest.result;
+        const transaction = db.transaction("counters", "readwrite");
+        const store = transaction.objectStore("counters");
+        const getRequest = store.get(key);
+        getRequest.onsuccess = () => store.put((getRequest.result || 0) + 1, key);
+        transaction.oncomplete = () => {
+            db.close();
+            resolve(getRequest.result || 0);
+        };
+        transaction.onabort = () => {
+            db.close();
+            reject(transaction.error);
+        };
+    };
+    return promise;
+}
+
+/**
  * @template T
  * @param {T[]} array
  */
@@ -225,6 +257,25 @@ function shuffle(array) {
         [copy[i], copy[randIndex]] = [copy[randIndex], copy[i]];
     }
     return copy;
+}
+
+/**
+ * Sorts the given suites by descending amount of the given tests they contain.
+ *
+ * @param {Suite[]} suites
+ * @param {Test[]} tests
+ */
+function sortByTestCount(suites, tests) {
+    /** @type {Map<Suite, number>} */
+    const testCounts = new Map(suites.map((suite) => [suite, 0]));
+    for (const test of tests) {
+        for (const job of test.path) {
+            if (testCounts.has(job)) {
+                testCounts.set(job, testCounts.get(job) + 1);
+            }
+        }
+    }
+    suites.sort((a, b) => testCounts.get(b) - testCounts.get(a));
 }
 
 /**
@@ -340,6 +391,12 @@ export class Runner {
     reporting = new TestReporting();
     /** @type {Suite[]} */
     rootSuites = signal.Array([], { type: t.instanceOf(Suite) });
+    /**
+     * Pool of jobs shared with other runners: only used in headless mode, as
+     * the jobs claimed by other runners are not run, and hence not shown in the
+     * UI of this one.
+     */
+    shard = "";
     /** @type {Map<string, Suite>} */
     suites = new Map();
     /** @type {Suite[]} */
@@ -395,6 +452,10 @@ export class Runner {
     _includeFilterCount = 0;
     /**
      * @private
+     */
+    _jobIndex = 0;
+    /**
+     * @private
      * @type {(() => MaybePromise<void>)[]}
      */
     _missedCallbacks = [];
@@ -448,7 +509,9 @@ export class Runner {
         // Headless cannot be configured while running since it retains much less
         // information/state that cannot be retrieved after construction.
         this.headless = this.config.headless();
-        if (!this.headless) {
+        if (this.headless) {
+            this.shard = this.config.shard();
+        } else {
             this.globalErrors = proxy(this.globalErrors);
             this.globalWarnings = proxy(this.globalWarnings);
             this.reporting = proxy(this.reporting);
@@ -812,6 +875,20 @@ export class Runner {
     }
 
     /**
+     * Claims the next index of a list of jobs. If a "shard" is used, the
+     * claimed indices are shared with all other runners having the same "shard",
+     * each index being claimed only once across all of them.
+     *
+     * @returns {Promise<number>}
+     */
+    async claimJobIndex() {
+        if (!this.shard) {
+            return this._jobIndex++;
+        }
+        return incrementSharedCounter(`shard-${this.shard}`);
+    }
+
+    /**
      * @template {(previous: any, ...args: any[]) => any} T
      * @param {T} instanceGetter
      * @param {() => any} [afterCallback]
@@ -874,6 +951,13 @@ export class Runner {
     }
 
     /**
+     * Registers the jobs defined in the given callback without running them, and
+     * returns the ones that would be run.
+     *
+     * If a "shard" is used, the suites are returned biggest first: they are
+     * meant to be claimed in that order by the runners sharing them, and leaving
+     * the small ones for the end evens out their finishing times.
+     *
      * @param {() => Promise<void>} callback
      */
     async dryRun(callback) {
@@ -893,6 +977,9 @@ export class Runner {
         await callback();
 
         const result = this._prepareRunner();
+        if (this.shard) {
+            sortByTestCount(result.suites, result.tests);
+        }
 
         this.dry = false;
 

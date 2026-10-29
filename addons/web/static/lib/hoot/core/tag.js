@@ -160,8 +160,15 @@ export function getTagSimilarities() {
  * @param {Iterable<string>} tagKeys
  */
 export function undefineTags(tagKeys) {
-    for (const tagKey of tagKeys) {
+    const keys = new Set(tagKeys);
+    for (const tagKey of keys) {
         delete existingTags[tagKey];
+    }
+    for (let i = similarities.length - 1; i >= 0; i--) {
+        const [tag, tagName] = similarities[i];
+        if (keys.has(tag.key) || keys.has(normalize(tagName.toLowerCase()))) {
+            similarities.splice(i, 1);
+        }
     }
 }
 
