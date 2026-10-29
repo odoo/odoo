@@ -54,14 +54,18 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
             ],
         })
         with self.mock_request():
-            markup_data = product_template._prepare_jsonld_vals()
+            markup_data = product_template.with_context(
+                website_id=self.website.id
+            )._prepare_jsonld_vals()
         self.assertEqual(markup_data["@type"], "ProductGroup")
         self.assertEqual(len(markup_data["hasVariant"]), 2)
 
     def test_markup_data_uses_product_schema_when_single_variant(self):
         product_template = self.env["product.template"].create({"name": "Test product"})
         with self.mock_request():
-            markup_data = product_template._prepare_jsonld_vals()
+            markup_data = product_template.with_context(
+                website_id=self.website.id
+            )._prepare_jsonld_vals()
         self.assertEqual(markup_data["@type"], "Product")
 
     def test_markup_data_uses_taxes_excluded_price_when_configured_on_website(self):
@@ -82,7 +86,9 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         self.product.price_extra = 10
         with self.mock_request():
             product_tmpl = self.product.product_tmpl_id
-            markup_data = self.product._prepare_jsonld_vals()
+            markup_data = self.product.with_context(
+                website_id=self.website.id
+            )._prepare_jsonld_vals()
             self.assertEqual(
                 markup_data["offers"]["price"],
                 self.website.currency_id.round(
@@ -212,3 +218,23 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         self.assertEqual(product_template.base_unit_count, 0.0001)
         self.assertEqual(product.base_unit_price, 10000.0)
         self.assertEqual(product_template.base_unit_price, 10000.0)
+
+    def test_markup_data_has_no_offer_when_price_is_hidden(self):
+        self.website.prevent_sale = True
+        self.product.list_price = 0
+        with self.mock_request() as request:
+            markup_data = self.product.with_context(request.env.context)._prepare_jsonld_vals()
+        self.assertNotIn("offers", markup_data)
+
+    def test_markup_data_has_offer_for_priced_product_in_restricted_category(self):
+        """The sale of the product is prevented by its category, but its price is still shown."""
+        category = self._create_public_category([{"name": "Restricted"}])
+        self.website.write({
+            "prevent_sale": True,
+            "prevent_sale_for": "specific_categories",
+            "prevent_sale_for_categories": [Command.set(category.ids)],
+        })
+        self.product.public_categ_ids = category
+        with self.mock_request() as request:
+            markup_data = self.product.with_context(request.env.context)._prepare_jsonld_vals()
+        self.assertIn("offers", markup_data)
