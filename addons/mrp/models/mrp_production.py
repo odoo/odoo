@@ -1701,8 +1701,7 @@ class MrpProduction(models.Model):
                 })
 
     def action_assign(self):
-        for production in self:
-            production.move_raw_ids._action_assign()
+        self.move_raw_ids._action_assign()
         return True
 
     def button_plan(self):
