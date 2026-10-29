@@ -9,6 +9,7 @@ import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { DeviceSelect } from "@mail/discuss/call/common/device_select";
 import { Dialog } from "@web/core/dialog/dialog";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { PttExtensionPlugin } from "@mail/discuss/call/common/ptt_extension_plugin";
 
 export class CallSettings extends Component {
     static template = "discuss.CallSettings";
@@ -27,7 +28,7 @@ export class CallSettings extends Component {
         this.store = useService("mail.store");
         this.rtc = useService("discuss.rtc");
         this.microphoneVolume = useMicrophoneVolume();
-        this.pttExtService = useService("discuss.ptt_extension");
+        this.pttExtService = usePlugin(PttExtensionPlugin);
         useListener(window, "keydown", (ev) => this._onKeyDown(ev), { capture: true });
         useListener(window, "keyup", (ev) => this._onKeyUp(ev), { capture: true });
         this.isMobileOS = isMobileOS;

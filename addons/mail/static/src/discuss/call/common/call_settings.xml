@@ -32,7 +32,7 @@
                         </div>
                         <hr class="my-3 invisible"/>
                         <div t-if="!this.isMobileOS()" class="d-flex flex-column gap-2">
-                            <span t-if="this.store.settings.usePushToTalk and !this.isMobileOS() and !this.pttExtService.isEnabled" class="small text-muted fst-italic alert alert-warning px-3 py-2 m-0" t-out="this.pttExtService.downloadText"/>
+                            <span t-if="this.store.settings.usePushToTalk and !this.isMobileOS() and !this.pttExtService.isEnabled()" class="small text-muted fst-italic alert alert-warning px-3 py-2 m-0" t-out="this.pttExtService.downloadText"/>
                             <div class="d-flex flex-column border bg-100 rounded-3">
                                 <t t-call="discuss.CallSettings.textToggler"
                                     text.translate="Enable Push-to-talk"
