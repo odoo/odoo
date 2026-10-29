@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.ImageFilterOption">
-    <BuilderRow label.translate="Filter" level="this.props.level" t-if="this.state.showFilter" disabled="this.state.disableFilter" tooltip="this.state.tooltip">
+    <BuilderRow label.translate="Filter" t-if="this.state.showFilter" disabled="this.state.disableFilter" tooltip="this.state.tooltip">
         <BuilderSelect disabled="this.state.disableFilter">
             <BuilderSelectItem action="'glFilter'" actionParam="''">None</BuilderSelectItem>
             <BuilderSelectItem action="'glFilter'" actionParam="'blur'">Blur</BuilderSelectItem>
@@ -19,8 +19,8 @@
             <BuilderSelectItem action="'glFilter'" actionParam="'custom'" id="this.custom_glfilter_opt">Custom</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
-    <t t-if="this.state.isCustomFilter">
-        <BuilderRow level="this.props.level + 1" label.translate="Color">
+    <BuilderContext t-if="this.state.isCustomFilter" level="true">
+        <BuilderRow label.translate="Color">
             <BuilderSelect action="'setCustomFilter'" actionParam="'blend'">
                 <BuilderSelectItem actionValue="'normal'">Normal</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'overlay'">Overlay</BuilderSelectItem>
@@ -33,7 +33,7 @@
             </BuilderSelect>
             <BuilderColorPicker action="'setCustomFilter'" actionParam="'filterColor'" enabledTabs="['custom']" />
         </BuilderRow>
-        <BuilderRow level="this.props.level + 1" label.translate="Saturation">
+        <BuilderRow label.translate="Saturation">
             <BuilderRange
                 action="'setCustomFilter'"
                 actionParam="'saturation'"
@@ -45,7 +45,7 @@
                 withNumberInput="true"
                 convertorRatio="{}" />
         </BuilderRow>
-        <BuilderRow level="this.props.level + 1" label.translate="Contrast">
+        <BuilderRow label.translate="Contrast">
             <BuilderRange
                 action="'setCustomFilter'"
                 actionParam="'contrast'"
@@ -57,7 +57,7 @@
                 withNumberInput="true"
                 convertorRatio="{}" />
         </BuilderRow>
-        <BuilderRow level="this.props.level + 1" label.translate="Brightness">
+        <BuilderRow label.translate="Brightness">
             <BuilderRange
                 action="'setCustomFilter'"
                 actionParam="'brightness'"
@@ -69,7 +69,7 @@
                 withNumberInput="true"
                 convertorRatio="{}" />
         </BuilderRow>
-        <BuilderRow level="this.props.level + 1" label.translate="Sepia">
+        <BuilderRow label.translate="Sepia">
             <BuilderRange
                 action="'setCustomFilter'"
                 actionParam="'sepia'"
@@ -80,7 +80,7 @@
                 applyWithUnit="false"
                 withNumberInput="true" />
         </BuilderRow>
-        <BuilderRow level="this.props.level + 1" label.translate="Blur">
+        <BuilderRow label.translate="Blur">
             <BuilderRange
                 action="'setCustomFilter'"
                 actionParam="'blur'"
@@ -92,7 +92,7 @@
                 withNumberInput="true"
                 convertorRatio="{}" />
         </BuilderRow>
-    </t>
+    </BuilderContext>
 </t>
 
 </templates>

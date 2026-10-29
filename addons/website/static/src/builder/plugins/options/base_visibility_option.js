@@ -12,7 +12,6 @@ export class BaseVisibilityOption extends BaseOptionComponent {
         textColor: t.string().optional(),
         tooltip: t.string().optional(),
         visibilityOpt: t.string().optional(),
-        level: t.number().optional(0),
     });
 
     setup() {

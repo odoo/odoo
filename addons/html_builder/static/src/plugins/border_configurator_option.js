@@ -19,7 +19,6 @@ export class BorderConfigurator extends BaseOptionComponent {
         // TODO remove, and actually configure propertly in caller
         withBSClass: t.boolean().optional(true),
         action: t.string().optional("styleAction"),
-        level: t.number().optional(),
         withRadiusPresets: t.boolean().optional(true),
     });
 

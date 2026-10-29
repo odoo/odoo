@@ -5,7 +5,7 @@
         </xpath>
         <xpath expr="//ImageTransformOption" position="replace"/>
         <xpath expr="//MediaSizeOption" position="attributes">
-            <attribute name="t-if">this.massMailingState.isImgFluid</attribute>
+            <attribute name="t-if" add="this.massMailingState.isImgFluid" separator=" and "/>
         </xpath>
     </t>
 

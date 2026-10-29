@@ -23,21 +23,21 @@
         tooltip.translate="Controls the text's font weight. &quot;Auto&quot; inherits the parent value">
         <FontWeightPicker variables="this.props.regularVariables" weights="this.state.availableWeights"/>
         <t t-set-slot="collapse">
-            <BuilderRow
-                t-if="this.props.lightVariables"
-                label.translate="Light"
-                tooltip.translate="Weight for &quot;Light&quot; in the text toolbar. Unless Font Weight is &quot;Auto&quot;, only equal or lighter values are available."
-                level="1">
-                <FontWeightPicker variables="this.props.lightVariables" weights="this.filteredLightWeights"/>
-            </BuilderRow>
-            <BuilderRow
-                t-if="this.props.boldVariables"
-                label.translate="Bold"
-                level="1"
-                disabled="this.isBoldDisabled"
-                tooltip="this.boldTooltip">
-                <FontWeightPicker variables="this.props.boldVariables" weights="this.filteredBoldWeights" disabled="this.isBoldDisabled"/>
-            </BuilderRow>
+            <BuilderContext level="true">
+                <BuilderRow
+                    t-if="this.props.lightVariables"
+                    label.translate="Light"
+                    tooltip.translate="Weight for &quot;Light&quot; in the text toolbar. Unless Font Weight is &quot;Auto&quot;, only equal or lighter values are available.">
+                    <FontWeightPicker variables="this.props.lightVariables" weights="this.filteredLightWeights"/>
+                </BuilderRow>
+                <BuilderRow
+                    t-if="this.props.boldVariables"
+                    label.translate="Bold"
+                    disabled="this.isBoldDisabled"
+                    tooltip="this.boldTooltip">
+                    <FontWeightPicker variables="this.props.boldVariables" weights="this.filteredBoldWeights" disabled="this.isBoldDisabled"/>
+                </BuilderRow>
+            </BuilderContext>
         </t>
     </BuilderRow>
 </t>

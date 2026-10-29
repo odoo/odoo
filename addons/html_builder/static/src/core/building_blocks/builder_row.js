@@ -1,6 +1,7 @@
 import { HighlightThemeRowPlugin } from "@html_builder/sidebar/highlight_theme_row_plugin";
 import {
     Component,
+    computed,
     onMounted,
     onPatched,
     onWillUnmount,
@@ -20,6 +21,8 @@ import {
     useVisibilityObserver,
 } from "../utils";
 import { BuilderComponent } from "./builder_component";
+import { BuilderLevelPlugin } from "./builder_context";
+import { useMaybePlugin } from "../hooks";
 
 const EXPAND_ANIMATION_DELAY = 150;
 const HIGHLIGHT_DURATION = 2000;
@@ -33,7 +36,7 @@ export class BuilderRow extends Component {
         label: t.string().optional(),
         tooltip: t.string().optional(),
         slots: t.object().optional(),
-        level: t.number().optional(),
+        level: t.boolean().optional(false),
         expand: t.boolean().optional(false),
         initialExpandAnim: t.boolean().optional(),
         highlightId: t.string().optional(),
@@ -72,6 +75,9 @@ export class BuilderRow extends Component {
 
         let isMounted = false;
         let expandTimeout;
+
+        const parentLevel = useMaybePlugin(BuilderLevelPlugin)?.level ?? 0;
+        this.level = computed(() => parentLevel + Number(this.props.level));
 
         onMounted(() => {
             if (expandAnim) {
@@ -131,7 +137,8 @@ export class BuilderRow extends Component {
     }
 
     getLevelClass() {
-        return this.props.level ? `o_hb_row_sublevel o_hb_row_sublevel_${this.props.level}` : "";
+        const level = this.level();
+        return level ? `o_hb_row_sublevel o_hb_row_sublevel_${level}` : "";
     }
 
     onRowContentClick() {
