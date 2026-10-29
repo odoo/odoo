@@ -1595,7 +1595,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             line.amount_to_invoice_at_date = (
                 line.qty_delivered_at_date - line.qty_invoiced_at_date
-            ) * line.price_unit
+            ) * line.price_unit * (1 - line.discount / 100)
 
     def _get_accrual_domain(self, date=False):
         """Reused by account.accrued.orders.wizard and stock_account's Stock Valuation report.
