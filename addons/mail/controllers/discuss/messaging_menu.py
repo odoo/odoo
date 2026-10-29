@@ -18,19 +18,41 @@ class DiscussMessagingMenuController(WebclientController):
                     "discuss.channel",
                 )
             case "chat":
+                # sudo: discuss.channel.member - only the user's own members, for performance:
+                # the channels are then searched with their access rules.
+                pinned_channel_ids = self.env["discuss.channel.member"].sudo().search_fetch(
+                    [("is_self", "=", True), ("is_pinned", "=", True)],
+                ).channel_id.ids
                 return Domain(
                     [
                         ("channel_type", "in", ["chat", "group"]),
                         ("default_display_mode", "!=", "video_full_screen"),
-                        ("self_member_id.is_pinned", "=", True),
+                        ("id", "in", pinned_channel_ids),
                     ],
                 )
             case "channel":
-                channel_domain = Domain("self_member_id.is_pinned", "=", True)
+                # sudo: discuss.channel.member - only the user's own members, for performance:
+                # the channels are then searched with their access rules.
+                channel_ids = self.env["discuss.channel.member"].sudo().search_fetch(
+                    [("is_self", "=", True), ("is_pinned", "=", True)],
+                ).channel_id.ids
                 if self.env.user._is_internal():
-                    channel_domain |= Domain("message_needaction", "=", True)
-                return Domain("channel_type", "=", "channel") & channel_domain
+                    groups = self.env["mail.message"]._read_group(
+                        [
+                            ("model", "=", "discuss.channel"),
+                            ("message_type", "!=", "user_notification"),
+                            ("needaction", "=", True),
+                        ],
+                        ["res_id"],
+                    )
+                    channel_ids += [res_id for [res_id] in groups]
+                return Domain("channel_type", "=", "channel") & Domain("id", "in", channel_ids)
             case "meeting":
+                # sudo: discuss.channel.member - only the user's own members, for performance:
+                # the channels are then searched with their access rules.
+                pinned_channel_ids = self.env["discuss.channel.member"].sudo().search_fetch(
+                    [("is_self", "=", True), ("is_pinned", "=", True)],
+                ).channel_id.ids
                 is_video_full_screen = Domain(
                     "default_display_mode",
                     "=",
@@ -38,7 +60,7 @@ class DiscussMessagingMenuController(WebclientController):
                 ) | Domain("parent_channel_id.default_display_mode", "=", "video_full_screen")
                 return (
                     Domain("channel_type", "=", "group")
-                    & Domain("self_member_id.is_pinned", "=", True)
+                    & Domain("id", "in", pinned_channel_ids)
                     & is_video_full_screen
                 )
             case _:
