@@ -31,6 +31,7 @@ import { MockClipboardItem, mockNavigator } from "./navigator";
 import {
     MockBlob,
     MockBroadcastChannel,
+    MockCacheStorage,
     MockMessageChannel,
     MockMessagePort,
     MockRequest,
@@ -532,6 +533,7 @@ const hrefDescriptor = $getOwnPropertyDescriptor(HTMLAnchorElement.prototype, "h
 const mediaElements = new Set();
 /** @type {Set<MockMediaQueryList>} */
 const mediaQueryLists = new Set();
+const mockCaches = new MockCacheStorage();
 const mockConsole = new MockConsole();
 const mockIndexedDB = new MockIDBFactory();
 const mockLocalStorage = new MockStorage();
@@ -584,6 +586,7 @@ const PROTOTYPE_MOCK_DESCRIPTORS = {
  */
 const SECURE_CONTEXT_MOCK_DESCRIPTORS = {
     AudioWorkletNode: { value: MockAudioWorkletNode },
+    caches: { value: mockCaches },
 };
 const WINDOW_MOCK_DESCRIPTORS = {
     ...getDisposableDescriptors(globalThis),
