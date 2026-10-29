@@ -218,6 +218,125 @@ class TestExpenses(TestExpenseCommon):
         # Only possible if no expense linked to the account
         self.analytic_account_1.unlink()
 
+<<<<<<< d6cd318f1c06b69dca2846460ea1719bc3c0deba
+||||||| 9a1a1de9bc366f433a154514076259d1506e55a5
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Expense for John Smith',
+            'employee_id': self.expense_employee.id,
+            'accounting_date': '2021-01-01',
+            'payment_method_line_id': self.outbound_payment_method_line.id,
+            'expense_line_ids': [
+                Command.create({
+                    'name': 'Car Travel Expenses',
+                    'employee_id': self.expense_employee.id,
+                    'product_id': self.product_c.id,
+                    'total_amount': 350.00,
+                    'payment_mode': 'company_account',
+                    'date': '2024-01-01',
+                }),
+                Command.create({
+                    'name': 'Lunch expense',
+                    'employee_id': self.expense_employee.id,
+                    'product_id': self.product_c.id,
+                    'total_amount': 90.00,
+                    'payment_mode': 'company_account',
+                    'date': '2024-01-12',
+                }),
+            ]
+        })
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.action_approve_expense_sheets()
+        expense_sheet.action_sheet_move_post()
+
+        move_twelve_january, move_first_january = expense_sheet.account_move_ids
+
+        self.assertEqual(
+            move_twelve_january.date,
+            fields.Date.to_date('2024-01-12'),
+            'move date should be the same as the expense date'
+        )
+        self.assertEqual(
+            move_first_january.date,
+            fields.Date.to_date('2024-01-01'),
+            'move date should be the same as the expense date'
+        )
+        self.assertEqual(expense_sheet.state, 'done', 'sheet should be marked as done')
+        self.assertTrue(90 == move_twelve_january.amount_total == move_twelve_january.origin_payment_id.amount)
+        self.assertTrue(350 == move_first_january.amount_total == move_first_january.origin_payment_id.amount)
+        self.assertEqual(440, expense_sheet.total_amount)
+        self.assertEqual(expense_sheet.payment_state, 'paid', 'payment_state should be paid')
+
+=======
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Expense for John Smith',
+            'employee_id': self.expense_employee.id,
+            'accounting_date': '2021-01-01',
+            'payment_method_line_id': self.outbound_payment_method_line.id,
+            'expense_line_ids': [
+                Command.create({
+                    'name': 'Car Travel Expenses',
+                    'employee_id': self.expense_employee.id,
+                    'product_id': self.product_c.id,
+                    'total_amount': 350.00,
+                    'payment_mode': 'company_account',
+                    'date': '2024-01-01',
+                }),
+                Command.create({
+                    'name': 'Lunch expense',
+                    'employee_id': self.expense_employee.id,
+                    'product_id': self.product_c.id,
+                    'total_amount': 90.00,
+                    'payment_mode': 'company_account',
+                    'date': '2024-01-12',
+                }),
+            ]
+        })
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.action_approve_expense_sheets()
+        expense_sheet.action_sheet_move_post()
+
+        move_twelve_january, move_first_january = expense_sheet.account_move_ids
+
+        self.assertEqual(
+            move_twelve_january.date,
+            fields.Date.to_date('2024-01-12'),
+            'move date should be the same as the expense date'
+        )
+        self.assertEqual(
+            move_first_january.date,
+            fields.Date.to_date('2024-01-01'),
+            'move date should be the same as the expense date'
+        )
+        self.assertEqual(expense_sheet.state, 'done', 'sheet should be marked as done')
+        self.assertTrue(90 == move_twelve_january.amount_total == move_twelve_january.origin_payment_id.amount)
+        self.assertTrue(350 == move_first_january.amount_total == move_first_january.origin_payment_id.amount)
+        self.assertEqual(440, expense_sheet.total_amount)
+        self.assertEqual(expense_sheet.payment_state, 'paid', 'payment_state should be paid')
+
+    def test_expense_no_cost_product_zero_quantity(self):
+        """ A zero quantity on a product without cost must not zero the receipt line """
+        expense_sheet = self.create_expense_report({
+            'expense_line_ids': [Command.create({
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_c.id,
+                'quantity': 0,
+                'total_amount_currency': 100.0,
+                'tax_ids': [Command.clear()],
+                'date': self.frozen_today,
+            })],
+        })
+        self.assertEqual(expense_sheet.expense_line_ids.price_unit, 100.0)
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.action_approve_expense_sheets()
+        self.assertRecordValues(expense_sheet.account_move_ids.invoice_line_ids, [
+            {'quantity': 1.0, 'price_unit': 100.0, 'price_total': 100.0},
+        ])
+        self.assertEqual(expense_sheet.account_move_ids.amount_total, 100.0)
+
+>>>>>>> 4e768fcb1907d5c2a5a504e1c60d1de0c6644c11
     def test_expense_split_flow(self):
         """ Check Split Expense flow. """
         # Grant Analytic Accounting rights, to be able to modify analytic_distribution from the wizard
