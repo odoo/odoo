@@ -1,13 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import Command
-from odoo.addons.hr_expense.tests.common import TestExpenseCommon
-from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 
+from odoo.addons.account_hr_expense.tests.common import TestAccountExpenseCommon
+from odoo.addons.sale.tests.common import TestSaleCommon
+
 
 @tagged('post_install', '-at_install')
-class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
+class TestSaleExpense(TestAccountExpenseCommon, TestSaleCommon):
 
     _test_user_groups = None  # FIXME list needed groups
 
@@ -87,6 +88,30 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
         # both expenses should be invoiced
         inv = so._create_invoices()
         self.assertEqual(inv.amount_untaxed, 621.5 + (prod_exp_2.list_price * 100.0), 'Sale Expense: invoicing of expense is wrong')
+
+    def test_approve_creates_one_analytic_account_per_sale_order(self):
+        sale_orders = self.env['sale.order'].create([{
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({'product_id': self.company_data['product_delivery_no'].id})],
+        }] * 2)
+        sale_orders.action_confirm()
+        own_analytic_account = self.env['account.analytic.account'].create(sale_orders[0]._prepare_analytic_account_data())
+        expenses = self.create_expenses([{**values, 'product_id': self.company_data['product_delivery_cost'].id} for values in [
+            {'name': 'first order 1', 'quantity': 1, 'sale_order_id': sale_orders[0].id},
+            {'name': 'first order 2', 'quantity': 2, 'sale_order_id': sale_orders[0].id},
+            {'name': 'first order 3', 'quantity': 3, 'sale_order_id': sale_orders[0].id,
+             'analytic_distribution': {own_analytic_account.id: 100}},
+            {'name': 'second order', 'quantity': 4, 'sale_order_id': sale_orders[1].id},
+        ]]).sorted('id')
+        expenses.action_submit()
+        expenses.with_user(self.expense_user_manager).action_approve()  # An approver without sales rights
+
+        first_order_new_distribution = expenses[0].analytic_distribution
+        self.assertEqual(len(first_order_new_distribution), 1)
+        self.assertNotEqual(first_order_new_distribution, {str(own_analytic_account.id): 100})
+        self.assertEqual(expenses[1].analytic_distribution, first_order_new_distribution)
+        self.assertEqual(expenses[2].analytic_distribution, {str(own_analytic_account.id): 100})
+        self.assertNotIn(expenses[3].analytic_distribution, (first_order_new_distribution, {str(own_analytic_account.id): 100}))
 
     def test_expense_multi_id_analytic_distribution(self):
         """
@@ -287,7 +312,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
                 'product_id': product_with_no_cost.id,
                 'total_amount_currency': 100,
                 'tax_ids': False,
-                'sale_order_id': sale_order.id
+                'sale_order_id': sale_order.id,
             },
             {
                 # expense with product with cost (1000), with 15% tax
@@ -296,7 +321,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
                 'product_id': product_with_cost.id,
                 'quantity': 3,
                 'tax_ids': [Command.set(self.company_data['default_tax_purchase'].ids)],
-                'sale_order_id': sale_order.id
+                'sale_order_id': sale_order.id,
             },
             {
                 # expense with product with cost (1000), with no tax
@@ -305,7 +330,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
                 'product_id': product_with_cost.id,
                 'quantity': 5,
                 'tax_ids': False,
-                'sale_order_id': sale_order.id
+                'sale_order_id': sale_order.id,
             },
         ]).sorted('name')
 

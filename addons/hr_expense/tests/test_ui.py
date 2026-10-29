@@ -1,6 +1,7 @@
-from odoo.addons.hr_expense.tests.common import TestExpenseCommon
-from odoo.tests import tagged, HttpCase
+from odoo.tests import HttpCase, tagged
 from odoo.tools import mute_logger
+
+from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 
 
 @tagged('-at_install', 'post_install')

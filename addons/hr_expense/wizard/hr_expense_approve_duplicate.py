@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command, api, fields, models, _
+from odoo import Command, api, fields, models
 
 
 class HrExpenseApproveDuplicate(models.TransientModel):
@@ -22,9 +22,17 @@ class HrExpenseApproveDuplicate(models.TransientModel):
         return res
 
     def action_approve(self):
-        self.expense_ids.filtered(lambda expense: expense.state == 'submitted')._do_approve()
+        # Expenses being approved, not their duplicates
+        expense_ids = self.env.context.get('active_ids', []) if self.env.context.get('active_model') == 'hr.expense' else []
+        expenses = self.env['hr.expense'].browse(expense_ids).filtered(lambda expense: expense.state == 'submitted')
+        expenses._check_can_approve()
+        expenses._do_approve()
         return {'type': 'ir.actions.act_window_close'}
 
     def action_refuse(self):
-        self.expense_ids.filtered(lambda expense: expense.state == 'submitted')._do_refuse(_('Duplicate Expense'))
+        # Expenses being approved, not their duplicates
+        expense_ids = self.env.context.get('active_ids', []) if self.env.context.get('active_model') == 'hr.expense' else []
+        expenses = self.env['hr.expense'].browse(expense_ids).filtered(lambda expense: expense.state == 'submitted')
+        expenses._check_can_refuse()
+        expenses._do_refuse(self.env._('Duplicate Expense'))
         return {'type': 'ir.actions.act_window_close'}

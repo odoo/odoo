@@ -26,15 +26,6 @@
             <field name="private_phone">(132)-553-7242</field>
         </record>
 
-        <record id="hr_expense_account_journal" model="account.journal">
-            <field name="name">Expense</field>
-            <field name="code">EXP</field>
-            <field name="type">purchase</field>
-            <!-- avoid being selected as default journal -->
-            <field name="sequence">99</field>
-            <field name="alias_name">purchase_expense</field>
-        </record>
-
         <record id="hr.employee_fme" model="hr.employee">
             <field name="private_street">Chaussée de Namur, 40</field>
             <field name="private_zip">1367</field>

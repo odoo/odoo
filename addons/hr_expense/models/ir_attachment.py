@@ -15,7 +15,7 @@ class IrAttachment(models.Model):
             (expense.exists() and expense.state in {'draft', 'submitted'} and expense.has_access('write')) or self.env.su
             for expense in expenses
         ):
-            raise AccessError(self.env._("You can't delete attachments from an expense once it has been submitted."))
+            raise AccessError(self.env._("You can't delete attachments from an expense you can no longer edit."))
 
     def write(self, vals):
         if {'res_model', 'res_id'} & vals.keys():

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.hr.expense</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="85"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//block[@name='expenses_setting_container']" position="after">
+                    <block title="Accounting">
+                        <setting company_dependent="1" help="Default accounting journal for expenses paid by employees."
+                                 string="Employee Expense Journal">
+                            <field name="expense_journal_id"
+                                   context="{'default_type': 'purchase', 'from_expense_employee_journal': True}"/>
+                        </setting>
+                        <setting company_dependent="1" string="Payment methods"
+                                 help="Payment method allowed for expenses paid by company.">
+                            <field name="company_expense_allowed_payment_method_line_ids" widget="many2many_tags"
+                                   placeholder="All payment methods allowed" options="{'no_create': True}"/>
+                        </setting>
+                    </block>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="account_journal_view_form_inherit_hr_expense" model="ir.ui.view">
+            <field name="name">account.journal.form.inherit.hr.expense</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='type']" position="attributes">
+                    <attribute name="readonly">context.get('from_expense_employee_journal')</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

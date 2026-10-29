@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.tests import tagged, HttpCase
-from odoo.addons.hr.tests.test_utils import get_admin_employee
+from odoo.tests import HttpCase, tagged
 
-from odoo.addons.hr_expense.tests.common import TestExpenseCommon
+from odoo.addons.hr.tests.test_utils import get_admin_employee
+from odoo.addons.hr_expense.tests.common import TestExpenseCommon, account_less_only
 
 
 @tagged('post_install', '-at_install')
@@ -49,3 +49,17 @@ class TestExpensesTour(TestExpenseCommon, HttpCase):
             3.0,
             "The price of Product C should be updated to 3.0",
         )
+
+    @account_less_only
+    def test_tour_expense_pay(self):
+        """ Without accounting, the Pay button of an approved expense marks it as paid """
+        expense = self.create_expenses({'name': 'Expense to pay'})
+        expense.action_submit()
+        expense.action_approve()
+        self.assertEqual(expense.state, 'approved')
+        self.start_tour(
+            f"/odoo/action-hr_expense.hr_expense_actions_all/{expense.id}",
+            "hr_expense_pay_tour",
+            login=self.expense_user_manager.login,
+        )
+        self.assertEqual(expense.state, 'paid')
