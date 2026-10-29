@@ -206,6 +206,9 @@ class StockMove(models.Model):
     def _get_available_move_lines(self, assigned_moves_ids, partially_available_moves_ids):
         return super(StockMove, self.filtered(lambda m: not m.is_subcontract))._get_available_move_lines(assigned_moves_ids, partially_available_moves_ids)
 
+    def _should_reserve_from_origins(self):
+        return super()._should_reserve_from_origins() and not self.is_subcontract
+
     def _should_count_for_quantity_received(self):
         res = super()._should_count_for_quantity_received()
         return res or self.is_subcontract or self.location_id.is_subcontract()
