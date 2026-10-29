@@ -163,9 +163,9 @@ a question; a missing section is a review round trip.
 - Rebase on the target branch before submitting and whenever it conflicts;
   squash fixups into the commit they fix. A PR carries only the commits that
   should land, never "address review" commits or merge commits.
-- A change to a stable version follows
-  [Changes in a stable version](../odoo-guidelines/guidelines/stable.md#changes-in-a-stable-version)
-  of odoo-guidelines; a PR description explains why, as the commit message
+- A change to a stable version follows the
+  [odoo-stable-policy](../odoo-stable-policy/SKILL.md) skill; a PR
+  description explains why, as the commit message
   does, and links the relevant task, ticket, or issue when one exists.
 - A bug fix comes with a test that reproduces it when one is possible.
 - An external contributor signs the CLA in the PR, once.
