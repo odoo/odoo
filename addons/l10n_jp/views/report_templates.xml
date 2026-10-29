@@ -41,5 +41,15 @@
                 </div>
             </div>
         </template>
+
+        <!-- The contact widget prints its name that way when given the jp_honorific option. -->
+        <template id="contact_name" inherit_id="base.contact_name">
+            <xpath expr="//div[@t-if=&quot;'name' in fields&quot;]" position="after">
+                <t t-if="'name' in fields and options.get('jp_honorific')" t-call="l10n_jp.recipient_name" partner="object"/>
+            </xpath>
+            <xpath expr="//div[@t-if=&quot;'name' in fields&quot;]" position="attributes">
+                <attribute name="t-if" add="not options.get('jp_honorific')" separator=" and "/>
+            </xpath>
+        </template>
     </data>
 </odoo>

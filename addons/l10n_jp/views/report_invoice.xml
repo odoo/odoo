@@ -7,19 +7,15 @@
             <t t-set="jp_document_date" t-value="o.invoice_date"/>
         </xpath>
 
-        <!-- The recipient's name heads the address with its honorific,
-             so the address drops the name in each of the three shipping cases. -->
-        <xpath expr="//t[@t-set='address']/t" position="before">
-            <t t-call="l10n_jp.recipient_name" partner="o.partner_id"/>
-        </xpath>
+        <!-- The recipient's name heads the address with its honorific, in each of the three shipping cases. -->
         <xpath expr="//t[@name='address_not_same_as_shipping']/address" position="attributes">
-            <attribute name="t-options">{"widget": "contact", "fields": ["address"], "no_marker": True}</attribute>
+            <attribute name="t-options">{"widget": "contact", "fields": ["address", "name"], "no_marker": True, "jp_honorific": True}</attribute>
         </xpath>
         <xpath expr="//t[@name='address_same_as_shipping']/address" position="attributes">
-            <attribute name="t-options">{"widget": "contact", "fields": ["address"], "no_marker": True}</attribute>
+            <attribute name="t-options">{"widget": "contact", "fields": ["address", "name"], "no_marker": True, "jp_honorific": True}</attribute>
         </xpath>
         <xpath expr="//t[@name='no_shipping']/address" position="attributes">
-            <attribute name="t-options">{"widget": "contact", "fields": ["address"], "no_marker": True}</attribute>
+            <attribute name="t-options">{"widget": "contact", "fields": ["address", "name"], "no_marker": True, "jp_honorific": True}</attribute>
         </xpath>
 
         <xpath expr="//td[@name='td_price_unit']/span" position="attributes">
