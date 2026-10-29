@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import fields, Command
+from odoo import Command, fields
+from odoo.tests import tagged
+from odoo.tools import file_open, html2plaintext
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
-from odoo.tools import file_open
 
 
 @tagged('post_install', '-at_install')
@@ -264,4 +264,4 @@ class TestAccountMoveImport(AccountTestInvoicingCommon):
             self.assertRecordValues(bill.invoice_line_ids.filtered(lambda l: l.display_type == 'product'), [
                 {'purchase_line_id': purchase_order.order_line.id, 'vehicle_id': False},
             ])
-            self.assertIn(car_1.display_name, bill.message_ids[0].body)
+            self.assertIn(car_1.display_name, html2plaintext(bill.message_ids[0].body))
