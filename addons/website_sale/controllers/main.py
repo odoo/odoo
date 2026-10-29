@@ -17,6 +17,7 @@ from odoo.tools import SQL, clean_context, float_round, lazy, str2bool
 from odoo.tools.translate import LazyTranslate
 
 from odoo.addons.payment.controllers import portal as payment_portal
+from odoo.addons.payment.controllers.payment_status import PaymentStatus
 from odoo.addons.sale.controllers import portal as sale_portal
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
@@ -1793,8 +1794,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if not order_sudo:
             return request.redirect(SHOP_PATH)
 
-        tx_sudo = order_sudo.get_portal_last_transaction()
-        if order_sudo.amount_total and not tx_sudo:
+        # The payment the customer is returning from, as opposed to any older one of this order.
+        tx_sudo = PaymentStatus._get_monitored_transaction(self.env).filtered(
+            lambda tx: order_sudo in tx.sale_order_ids
+        )
+        # The session can lose the monitored transaction, so decide from the order's payments
+        if order_sudo.amount_total and not order_sudo._is_payment_started():
             return request.redirect(SHOP_PATH)
 
         if not order_sudo.amount_total and not tx_sudo and order_sudo.state == "draft":
@@ -1850,6 +1855,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "order_tracking_info": (
                 order._get_purchase_tracking_info() if self.env.website.google_analytics_key else {}
             ),
+            # The payment the visitor has just made, if any, to give them direct feedback on it.
+            "feedback_tx_sudo": PaymentStatus._get_monitored_transaction(self.env).filtered(
+                lambda tx: order in tx.sale_order_ids
+            ),
         }
         if (
             self.env["res.users"]._get_signup_invitation_scope() == "b2c"
@@ -1884,7 +1893,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         sale_order_id = request.session.get("sale_last_order_id")
         if sale_order_id:
             sale_order = self.env["sale.order"].sudo().browse(sale_order_id)
-            filename = "%s.pdf" % (f"Order - {sale_order.name}" or "Order")
+            filename = f"Order - {sale_order.name}.pdf" if sale_order.name else "Order.pdf"
             pdf, _ = (
                 self
                 .env["ir.actions.report"]

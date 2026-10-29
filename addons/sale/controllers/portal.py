@@ -9,6 +9,7 @@ from odoo.http import request
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers import portal as payment_portal
+from odoo.addons.payment.controllers.payment_status import PaymentStatus
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 
 
@@ -125,6 +126,11 @@ class CustomerPortal(payment_portal.PaymentPortal):
     def _sale_order_get_page_view_values(
         self, order_sudo, access_token, values, history_session_key, **kwargs
     ):
+        # The payment the visitor has just made, if any, to give them direct feedback on it.
+        monitored_tx_sudo = PaymentStatus._get_monitored_transaction(order_sudo.env)
+        values["feedback_tx_sudo"] = monitored_tx_sudo.filtered(
+            lambda tx: order_sudo in tx.sale_order_ids
+        )
         return self._get_page_view_values(
             order_sudo, access_token, values, history_session_key, False, **kwargs
         )

@@ -26,6 +26,7 @@ from . import (
     test_google_merchant_center,
     test_mail,
     test_main_controller,
+    test_payment_status_matrix,
     test_performance,
     test_pricelist,
     test_product_attribute_value_config,
