@@ -3,13 +3,13 @@
 
     <t t-name="pos_glory_cash.GloryErrorDialog">
         <Dialog size="'md'" title.translate="Cash machine error">
-            <p class="fs-3">Error code: <strong t-out="props.errorCode"/></p>
-            <img class="w-100" height="458" width="328" t-att-src="props.errorGif"/>
+            <p class="fs-3">Error code: <strong t-out="this.props.errorCode"/></p>
+            <img class="w-100" height="458" width="328" t-att-src="this.props.errorGif"/>
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-on-click="() => { props.reset(); }">
+                <button class="btn btn-primary" t-on-click="() => { this.props.reset(); }">
                     Reset
                 </button>
-                <button class="btn btn-secondary" t-on-click="() => props.close()">
+                <button class="btn btn-secondary" t-on-click="() => this.props.close()">
                     Close
                 </button>
             </t>
