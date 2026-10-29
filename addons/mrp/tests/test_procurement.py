@@ -1642,3 +1642,31 @@ class TestProcurement(TestMrpCommon):
         mo = parent_mo._get_children()
         self.assertEqual(mo.product_id, finished)
         self.assertEqual(self.env['stock.move'].search([('product_id', '=', component.id)]), mo.move_raw_ids)
+
+    def test_pbm_mtso_child_mo_separate_pickings(self):
+        """ 2-steps manufacturing with the Pre-Production -> Production rule set
+        to 'mts_else_mto': each MO of a MTO chain should get its own components
+        picking. """
+        self.warehouse_1.manufacture_steps = 'pbm'
+        self.warehouse_1.pbm_route_id.rule_ids.filtered(
+            lambda r: r.location_src_id == self.warehouse_1.pbm_loc_id,
+        ).procure_method = 'mts_else_mto'
+        self.route_mto.active = True
+        self.productB.route_ids = [Command.set((self.route_mto | self.route_manufacture).ids)]
+        bom_a, _bom_b = self.env['mrp.bom'].create([{
+            'product_tmpl_id': self.productA.product_tmpl_id.id,
+            'bom_line_ids': [
+                Command.create({'product_id': self.productB.id, 'product_qty': 1}),
+                Command.create({'product_id': self.productC.id, 'product_qty': 1}),
+            ],
+        }, {
+            'product_tmpl_id': self.productB.product_tmpl_id.id,
+            'bom_line_ids': [Command.create({'product_id': self.productD.id, 'product_qty': 1})],
+        }])
+
+        mo = self.env['mrp.production'].create({'bom_id': bom_a.id})
+        mo.action_confirm()
+        child_mo = mo._get_children()
+        self.assertEqual(child_mo.product_id, self.productB)
+        self.assertEqual(mo.picking_ids.move_ids.product_id, self.productB | self.productC)
+        self.assertEqual(child_mo.picking_ids.move_ids.product_id, self.productD)
