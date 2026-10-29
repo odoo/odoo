@@ -1,4 +1,5 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { altTranslations, titleTranslations } from "@html_builder/plugins/image/image_tool_option";
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -7,16 +8,12 @@ export const TRANSLATABLE_ATTRIBUTES = [
     {
         attribute: "alt",
         name: _t("Description"),
-        tooltip: _t(
-            "'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...)."
-        ),
-        placeholder: _t("Alt tag"),
+        ...altTranslations,
     },
     {
         attribute: "title",
         name: _t("Tooltip"),
-        tooltip: _t("'Title tag' is shown as a tooltip when you hover the picture."),
-        placeholder: _t("Title tag"),
+        ...titleTranslations,
     },
     {
         attribute: "placeholder",
