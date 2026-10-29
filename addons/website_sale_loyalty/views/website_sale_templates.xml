@@ -18,16 +18,6 @@
     </template>
 
     <template
-        id="website_sale_loyalty.cart_summary"
-        inherit_id="website_sale.cart_product_price"
-        name="Payment"
-    >
-        <xpath expr="//span" position="attributes">
-            <attribute name="t-att-data-reward-type">line.reward_id.reward_type</attribute>
-        </xpath>
-    </template>
-
-    <template
         id="website_sale_loyalty.website_sale_purchased_gift_card"
         inherit_id="website_sale.confirmation"
     >

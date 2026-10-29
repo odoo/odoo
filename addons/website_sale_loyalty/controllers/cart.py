@@ -67,13 +67,11 @@ class Cart(WebsiteSaleCart):
         cart_totals = super().cart_totals(order_sudo)
         if order_sudo:
             cart_totals["promotion_progress_bars"] = order_sudo._get_promotion_progress_bars()
-            cart_totals["cart_rewards"] = self._cart_rewards()
+            cart_totals["cart_rewards"] = self._cart_rewards(order_sudo)
 
         return cart_totals
 
-    def _cart_rewards(self):
-        order_sudo = request.cart
-
+    def _cart_rewards(self, order_sudo):
         rewards_by_coupon = order_sudo._get_claimable_and_showable_rewards()
         cart_rewards = []
         for coupon, rewards in rewards_by_coupon.items():
