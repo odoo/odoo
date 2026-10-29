@@ -10,11 +10,21 @@ patch(PosTicketPrinterPlugin.prototype, {
     } = {}) {
         const isOffline = this.data.network.offline;
 
-        if (!isOffline && order?.isPrintEcpayInvoice && !order.ecpay_error) {
+        if (
+            !printBillActionTriggered &&
+            !isOffline &&
+            order?.isPrintEcpayInvoice &&
+            !order.ecpay_error
+        ) {
             await this.env.services.pos._getUniformInvoiceData(order, { throw: true });
         }
-        const result = await super.printOrderReceipt({ order });
-        if (result && !isOffline && order?.isPrintEcpayInvoice && !order.ecpay_error) {
+        const result = await super.printOrderReceipt(...arguments);
+        if (
+            !printBillActionTriggered &&
+            !isOffline &&
+            order?.isPrintEcpayInvoice &&
+            !order.ecpay_error
+        ) {
             const data = this.getOrderReceiptData(order, basic);
             const ecpay_certificate_receipt_iframe = await this.generateIframe(
                 "l10n_tw_edi_ecpay_pos.ecpay_certificate_receipt",
