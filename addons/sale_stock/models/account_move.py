@@ -192,10 +192,11 @@ class AccountMoveLine(models.Model):
     def _get_lines_from_original_invoice(self):
         original_lines = super()._get_lines_from_original_invoice()
         if self.move_id.move_type == 'out_refund' and not self.move_id.reversed_entry_id:
+            valuation_account = self.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=self.move_id.fiscal_position_id)['stock_valuation']
             original_lines += self.sale_line_ids.invoice_lines.move_id.filtered(
                 lambda m: m.move_type == "out_invoice"
             ).line_ids.filtered(
                 lambda l: l.display_type == 'cogs' and l.product_id == self.product_id and
-                l.product_uom_id == self.product_uom_id and l.price_unit >= 0
+                l.product_uom_id == self.product_uom_id and l.account_id == valuation_account
             )
         return original_lines
