@@ -1,4 +1,13 @@
-import { Component, onMounted, onPatched, proxy, signal, t, useEffect, useProps } from "@odoo/owl";
+import {
+	Component,
+	onMounted,
+	onPatched,
+	proxy,
+	signal,
+	t,
+	useEffect,
+	useProps,
+} from "@odoo/owl";
 import { useTransition } from "@web/core/transition";
 import { uniqueId } from "@web/core/utils/functions";
 import {
@@ -8,6 +17,8 @@ import {
     useVisibilityObserver,
 } from "../utils";
 import { BuilderComponent } from "./builder_component";
+import { BuilderLevelPlugin } from "./builder_context";
+import { useMaybePlugin } from "../hooks";
 
 export class BuilderRow extends Component {
     static template = "html_builder.BuilderRow";
@@ -18,7 +29,7 @@ export class BuilderRow extends Component {
         label: t.string().optional(),
         tooltip: t.string().optional(),
         slots: t.object().optional(),
-        level: t.number().optional(),
+        level: t.boolean().optional(false),
         expand: t.boolean().optional(false),
         initialExpandAnim: t.boolean().optional(),
         extraLabelClass: t.string().optional(),
@@ -47,6 +58,9 @@ export class BuilderRow extends Component {
         }
 
         let isMounted = false;
+
+        const parentLevel = useMaybePlugin(BuilderLevelPlugin)?.level ?? 0;
+        this.level = parentLevel + Number(this.props.level);
 
         onMounted(() => {
             if (this.props.initialExpandAnim) {
@@ -100,7 +114,7 @@ export class BuilderRow extends Component {
     }
 
     getLevelClass() {
-        return this.props.level ? `o_hb_row_sublevel o_hb_row_sublevel_${this.props.level}` : "";
+        return this.level ? `o_hb_row_sublevel o_hb_row_sublevel_${this.level}` : "";
     }
 
     onRowContentClick() {

@@ -19,21 +19,23 @@
             </BuilderSelect>
         </BuilderRow>
 
-        <BuilderRow label.translate="Tags" level="1">
-            <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_header_tags_display']}"/>
-        </BuilderRow>
+        <BuilderContext level="true">
+            <BuilderRow label.translate="Tags">
+                <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_header_tags_display']}"/>
+            </BuilderRow>
 
-        <BuilderRow label.translate="Author" level="1">
-            <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_header_author_avatar_display']}"/>
-        </BuilderRow>
+            <BuilderRow label.translate="Author">
+                <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_header_author_avatar_display']}"/>
+            </BuilderRow>
 
-        <BuilderRow label.translate="Share Links" level="1" t-if="this.isActiveItem('regular_cover_opt') or this.isActiveItem('split_cover_opt')">
-            <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_header_share_links_display']}"/>
-        </BuilderRow>
+            <BuilderRow label.translate="Share Links" t-if="this.isActiveItem('regular_cover_opt') or this.isActiveItem('split_cover_opt')">
+                <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_header_share_links_display']}"/>
+            </BuilderRow>
 
-        <BuilderRow label.translate="Full Width Cover" level="1" t-if="this.isActiveItem('regular_cover_opt')">
-            <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_full_width_cover']}"/>
-        </BuilderRow>
+            <BuilderRow label.translate="Full Width Cover" t-if="this.isActiveItem('regular_cover_opt')">
+                <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_full_width_cover']}"/>
+            </BuilderRow>
+        </BuilderContext>
 
         <BuilderRow label.translate="Container Size" tooltip.translate="Adapt the size of the blog post page">
             <BuilderSelect>
@@ -63,7 +65,7 @@
             <BuilderCheckbox id="'next_article_opt'" actionParam="{views: ['website_blog.opt_blog_post_read_next']}"/>
         </BuilderRow>
 
-        <BuilderRow label.translate="Recommended Post" tooltip.translate="Promote a post" level="1" t-if="this.isActiveItem('next_article_opt')">
+        <BuilderRow label.translate="Recommended Post" tooltip.translate="Promote a post" level="true" t-if="this.isActiveItem('next_article_opt')">
             <BuilderMany2One action="'setRecommendedNextPost'"
                 applyTo="'#o_wblog_post_footer'"
                 model="'blog.post'"

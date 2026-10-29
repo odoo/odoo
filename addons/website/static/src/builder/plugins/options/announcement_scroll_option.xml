@@ -22,7 +22,7 @@
         </BuilderSelect>
     </BuilderRow>
     <t t-if="!this.isActiveItem('announcement_scroll_direction_none_opt')">
-        <BuilderRow level="1" label.translate="Scroll Speed">
+        <BuilderRow level="true" label.translate="Scroll Speed">
             <BuilderRange styleAction="'--marquee-animation-speed'"
                 min="1"
                 max="10"

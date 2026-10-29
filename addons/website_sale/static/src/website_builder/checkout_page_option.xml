@@ -20,7 +20,7 @@
             <BuilderRow
                 t-if="this.isActiveItem('address_b2b')"
                 label.translate="Required"
-                level="1"
+                level="true"
             >
                 <BuilderCheckbox actionParam="{views: ['website_sale.required_attributes']}"/>
             </BuilderRow>
@@ -34,7 +34,7 @@
             <BuilderRow
                 t-if="this.isActiveItem('extra_step')"
                 label.translate="Restrict to"
-                level="1"
+                level="true"
             >
                 <BuilderMany2Many
                     model="'product.public.category'"

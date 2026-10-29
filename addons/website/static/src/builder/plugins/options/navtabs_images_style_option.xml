@@ -6,11 +6,11 @@
             <attribute name="id">'vertical_opt'</attribute>
         </xpath>
         <xpath expr="//BuilderRow[@label.translate=&quot;Style&quot;]" position="after">
-            <BuilderContext t-if="this.isActiveItem('pills_opt')" applyTo="'.s_tabs_pills_template .nav-pills'">
-                <BuilderRow label.translate="Background" level="1">
+            <BuilderContext t-if="this.isActiveItem('pills_opt')" applyTo="'.s_tabs_pills_template .nav-pills'" level="true">
+                <BuilderRow label.translate="Background">
                     <BuilderColorPicker enabledTabs="['solid', 'custom', 'gradient']" styleAction="'--nav-pills-link-active-bg'"/>
                 </BuilderRow>
-                <BuilderRow label.translate="Text" level="1">
+                <BuilderRow label.translate="Text">
                     <BuilderColorPicker enabledTabs="['solid', 'custom']" styleAction="'--nav-pills-link-active-color'"/>
                 </BuilderRow>
             </BuilderContext>

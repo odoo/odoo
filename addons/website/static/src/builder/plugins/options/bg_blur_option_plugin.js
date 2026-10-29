@@ -23,7 +23,6 @@ export class BgBlurOption extends BaseOptionComponent {
         // BaseOptionComponent.props was an empty object; applyTo is declared
         // here because this component reads this.props.applyTo.
         applyTo: t.string().optional(),
-        level: t.number().optional(2),
     });
 
     setup() {

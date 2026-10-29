@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.ImageFormat">
-    <BuilderRow label.translate="Format" level="this.props.level" t-if="this.state.showFormat">
+    <BuilderRow label.translate="Format" t-if="this.state.showFormat">
         <BuilderSelect>
             <t t-foreach="this.state.formats" t-as="format" t-key="format.id">
                 <BuilderSelectItem className="'o_we_badge_at_end'" action="'setImageFormat'" actionParam="format">
@@ -14,7 +14,7 @@
             </t>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow label.translate="Quality" tooltip.translate="Increase for more detail, decrease for speed" t-if="this.state.showQuality and this.state.formats.length" level="this.props.level">
+    <BuilderRow label.translate="Quality" tooltip.translate="Increase for more detail, decrease for speed" t-if="this.state.showQuality and this.state.formats.length">
         <BuilderRange
             action="'setImageQuality'"
             min="0"

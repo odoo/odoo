@@ -18,22 +18,16 @@
     <BuilderRow label.translate="Cards Design">
             Global options for all inner cards.
     </BuilderRow>
-    <!-- Apply global cards options to ".s_floating_blocks_wrapper".
-    Each Card will inherit these values in CSS -->
-    <BuilderRow label.translate="Roundness" level="1"
-        tooltip.translate="Applies to all cards">
-        <BuilderRange
-            applyTo="'.s_floating_blocks_wrapper'"
-            action="'floatingBlocksRoundness'"
-            max="5" />
-    </BuilderRow>
-    <BuilderRow label.translate="Shadows" level="1"
-        tooltip.translate="Applies to all cards">
-        <BuilderCheckbox
-            applyTo="'.s_floating_blocks_wrapper'"
-            classAction="'s_floating_blocks_wrapper_shadow'"
-            preview="false"/>
+    <BuilderContext level="true">
+        <!-- Apply global cards options to ".s_floating_blocks_wrapper".
+        Each Card will inherit these values in CSS -->
+        <BuilderRow label.translate="Roundness" tooltip.translate="Applies to all cards">
+            <BuilderRange applyTo="'.s_floating_blocks_wrapper'" action="'floatingBlocksRoundness'" max="5" />
         </BuilderRow>
+        <BuilderRow label.translate="Shadows" tooltip.translate="Applies to all cards">
+            <BuilderCheckbox applyTo="'.s_floating_blocks_wrapper'" classAction="'s_floating_blocks_wrapper_shadow'" preview="false"/>
+        </BuilderRow>
+    </BuilderContext>
 </t>
 
 <t t-name="website.FloatingBlocksBlockOption">
