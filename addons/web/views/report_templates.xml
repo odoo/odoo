@@ -955,8 +955,22 @@
                             background-color: mix(white, <t t-out='secondary'/>, 92%);
                         }
 
-                        table:not(.o_ignore_layout_styling)::before {
-                            border-color: <t t-out='primary'/> !important;
+                        table:not(.o_ignore_layout_styling) {
+                            thead th, tbody:first-child tr:first-child td {
+                                border-top-color: <t t-out='primary'/>;
+                            }
+
+                            tbody:last-child tr:last-child td {
+                                border-bottom-color: <t t-out='primary'/>;
+                            }
+
+                            th:first-child, td:first-child {
+                                border-left-color: <t t-out='primary'/>;
+                            }
+
+                            th:last-child, td:last-child {
+                                border-right-color: <t t-out='primary'/>;
+                            }
                         }
 
                         thead th, #total .o_total td {
