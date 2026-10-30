@@ -43,7 +43,7 @@ test("activity upload document is available", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await waitFor(".o-mail-Activity .btn:text('Upload Document'):count(1)");
+    await waitFor(".o-mail-Activity .btn:text('Upload'):count(1)");
     await waitFor(".btn [data-icon='upload']:count(1)");
     await waitFor(".o-mail-Activity .o_input_file:count(1)");
 });
@@ -67,7 +67,7 @@ test("activity can upload a document", async () => {
                 <chatter/>
             </form>`,
     });
-    await waitFor(".o-mail-Activity .btn:text('Upload Document'):count(1)");
+    await waitFor(".o-mail-Activity .btn:text('Upload'):count(1)");
     const file = new File(["hello, world"], "text.txt", { type: "text/plain" });
     await inputFiles(".o-mail-Activity .o_input_file", [file]);
 });
@@ -90,7 +90,7 @@ test("activity simplest layout", async () => {
     await waitForNone(".btn:text('Edit')");
     await waitForNone(".o-mail-Activity .btn:text('Cancel')");
     await waitForNone(".btn:text('Done')");
-    await waitForNone(".o-mail-Activity .btn:text('Upload Document')");
+    await waitForNone(".o-mail-Activity .btn:text('Upload')");
 });
 
 test("activity with note layout", async () => {
@@ -119,7 +119,7 @@ test("activity info layout when planned after tomorrow", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await waitFor(".o-mail-Activity span.text-success:text('Due in 5 days:'):count(1)");
+    await waitFor(".o-mail-Activity span.text-success:text('Due in 5 days'):count(1)");
 });
 
 test("activity info layout when planned tomorrow", async () => {
@@ -135,7 +135,7 @@ test("activity info layout when planned tomorrow", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await waitFor(".o-mail-Activity span.text-success:text('Tomorrow:'):count(1)");
+    await waitFor(".o-mail-Activity span.text-success:text('Tomorrow'):count(1)");
 });
 
 test("activity info layout when planned today", async () => {
@@ -150,7 +150,7 @@ test("activity info layout when planned today", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await waitFor(".o-mail-Activity span.text-warning:text('Today:'):count(1)");
+    await waitFor(".o-mail-Activity span.text-warning:text('Today'):count(1)");
 });
 
 test("activity info layout when planned yesterday", async () => {
@@ -166,7 +166,7 @@ test("activity info layout when planned yesterday", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await waitFor(".o-mail-Activity span.text-danger:text('Yesterday:'):count(1)");
+    await waitFor(".o-mail-Activity span.text-danger:text('Yesterday'):count(1)");
 });
 
 test("activity info layout when planned before yesterday", async () => {
@@ -181,7 +181,7 @@ test("activity info layout when planned before yesterday", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await waitFor(".o-mail-Activity span.text-danger:text('5 days overdue:'):count(1)");
+    await waitFor(".o-mail-Activity span.text-danger:text('5 days overdue'):count(1)");
 });
 
 test.skip("activity info layout change at midnight", async () => {
@@ -198,10 +198,10 @@ test.skip("activity info layout change at midnight", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await waitFor(".o-mail-Activity span.text-success:text('Tomorrow:'):count(1)");
+    await waitFor(".o-mail-Activity span.text-success:text('Tomorrow'):count(1)");
     mockDate("2023-12-08 00:00:01");
     await advanceTime(2000);
-    await waitFor(".o-mail-Activity span.text-warning:text('Today:'):count(1)");
+    await waitFor(".o-mail-Activity span.text-warning:text('Today'):count(1)");
 });
 
 test("activity with a summary layout", async () => {
@@ -579,9 +579,9 @@ test("Activity are sorted by deadline", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await waitFor(".o-mail-Activity-info:eq(0):has(:text('5 days overdue:')):count(1)");
-    await waitFor(".o-mail-Activity-info:eq(1):has(:text('Today:')):count(1)");
-    await waitFor(".o-mail-Activity-info:eq(2):has(:text('Due in 4 days:')):count(1)");
+    await waitFor(".o-mail-Activity-info:eq(0):has(:text('5 days overdue')):count(1)");
+    await waitFor(".o-mail-Activity-info:eq(1):has(:text('Today')):count(1)");
+    await waitFor(".o-mail-Activity-info:eq(2):has(:text('Due in 4 days')):count(1)");
 });
 
 test("chatter 'activity' button open the activity schedule wizard", async () => {

@@ -55,6 +55,7 @@ Featuring
         'wizard/slide_channel_invite_views.xml',
         'data/digest_data.xml',
         'data/gamification_data.xml',
+        'data/mail_activity_type_data.xml',
         'data/mail_message_subtype_data.xml',
         'data/mail_template_data.xml',
         'data/portal_entry_data.xml',
