@@ -120,8 +120,6 @@ class CalendarRecurrence(models.Model):
     weekday = fields.Selection(WEEKDAY_SELECTION, string='Weekday')
     byday = fields.Selection(BYDAY_SELECTION, string='By day')
     until = fields.Date('Repeat Until')
-    # TODO master: remove, it is not set anymore (see _setup_alarms)
-    trigger_id = fields.Many2one('ir.cron.trigger')
 
     _month_day = models.Constraint("""CHECK (
         rrule_type != 'monthly'
@@ -283,12 +281,9 @@ class CalendarRecurrence(models.Model):
         self.env['calendar.event'].with_context(context).create(event_vals)
         return detached_events
 
-    def _setup_alarms(self, recurrence_update=False):
-        """ Schedule cron triggers for future events
-        Create one ir.cron.trigger per recurrence.
-        :param recurrence_update: boolean: if true, update all recurrences in self, else only the recurrences
-               without trigger
-        """
+    def _setup_alarms(self):
+        """ Schedule cron triggers for the alarms of the next event of each recurrence,
+        starting after the date in context, or now """
         now = self.env.context.get('date') or fields.Datetime.now()
         # get next events
         self.env['calendar.event'].flush_model(fnames=['recurrence_id', 'start'])
@@ -306,9 +301,6 @@ class CalendarRecurrence(models.Model):
         if not result:
             return
         events = self.env['calendar.event'].browse(value['event_id'] for value in result)
-        # Do not link the trigger to the recurrence: when run by the reminder cron, writing
-        # trigger_id waits on the lock taken by the cron runner when it deletes the fired
-        # trigger, and the job deadlocks.
         events._setup_alarms()
 
     def _split_from(self, event, recurrence_values=None):

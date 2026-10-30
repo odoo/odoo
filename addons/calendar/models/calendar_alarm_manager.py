@@ -192,7 +192,7 @@ class CalendarAlarm_Manager(models.AbstractModel):
                 completion_log_message=_('The %s reminder was sent', Markup('<i>%s</i>') % alarm.name)
             )
 
-        events._setup_event_recurrent_alarms(events_by_alarm)
+        events._setup_event_recurrent_alarms()
 
     @api.model
     def get_next_notif(self):
