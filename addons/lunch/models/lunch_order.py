@@ -233,10 +233,11 @@ class LunchOrder(models.Model):
         self.ensure_one()
         if not self.supplier_id.available_today:
             raise UserError(_('The vendor related to this order is not available today.'))
-        self.copy({
+        reodered = self.copy({
             'date': fields.Date.context_today(self),
             'state': 'ordered',
         })
+        reodered._check_wallet()
         action = self.env['ir.actions.act_window']._for_xml_id('lunch.lunch_order_action')
         return action
 
