@@ -39,7 +39,8 @@ class StockLot(models.Model):
         partner_locations = locations.search([('usage', 'in', ('customer', 'supplier'))])
         return partner_locations + locations.warehouse_id.search([]).lot_stock_id
 
-    name = fields.Char('Lot/Serial Number', required=True, compute='_compute_name', store=True, readonly=False, help="Unique Lot/Serial Number", index='trigram', precompute=True)
+    name = fields.Char('Lot/Serial Number', required=True, compute='_compute_name', store=True,
+        readonly=False, help="Unique Lot/Serial Number", index='trigram', precompute=True, tracking=True)
     ref = fields.Char('Internal Reference', help="Internal reference number in case it differs from the manufacturer's lot/serial number")
     product_id = fields.Many2one(
         'product.product', 'Product', index=True,
