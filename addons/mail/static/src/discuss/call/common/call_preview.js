@@ -12,7 +12,7 @@ import { CallSettingsDialog } from "@mail/discuss/call/common/call_settings";
 import { DeviceSelect } from "@mail/discuss/call/common/device_select";
 import { closeStream, onChange } from "@mail/utils/common/misc";
 
-import { Component, onWillDestroy, status } from "@odoo/owl";
+import { Component, onWillDestroy, onWillUnmount, status } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -98,6 +98,16 @@ export class CallPreview extends Component {
                     this.state.blurManager.edgeBlur = this.store.settings.edgeBlurAmount;
                     this.state.blurManager.backgroundBlur =
                         this.store.settings.backgroundBlurAmount;
+                }
+            });
+            onWillUnmount(() => {
+                // A media element with an active srcObject is kept alive by the
+                // browser once detached, retaining this component through it.
+                for (const el of [this.audioRef.el, this.videoRef.el]) {
+                    if (el) {
+                        el.srcObject = null;
+                        el.load();
+                    }
                 }
             });
             onWillDestroy(() => {
