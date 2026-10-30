@@ -46,16 +46,10 @@
         display: grid;
         gap: var(--o-wsale-products-grid-gap, 16px);
 
-        grid-template-columns: repeat(
-            attr(data-grid-columns number),
-            minmax(0, 1fr)
-        );
+        grid-template-columns: repeat(var(--o-wsale-grid-columns, 4), minmax(0, 1fr));
 
         @media (max-width: 767.98px) { /* media-breakpoint-down(md) */
-            grid-template-columns: repeat(
-                attr(data-mobile-columns number),
-                minmax(0, 1fr)
-            );
+            grid-template-columns: repeat(var(--o-wsale-mobile-columns, 2), minmax(0, 1fr));
         }
     }
 }

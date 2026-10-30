@@ -173,8 +173,10 @@ test("dynamic snippet products grid loads items and displays them through grid t
     expect(core.interactions).toHaveLength(4);
     expect(".dynamic_snippet_template .carousel").toHaveCount(0);
     const gridEl = queryOne(".dynamic_snippet_template .s_dynamic_snippet_grid_container");
-    expect(gridEl).toHaveAttribute("data-grid-columns", "3");
-    expect(gridEl).toHaveAttribute("data-mobile-columns", "2");
+    expect(gridEl).toHaveAttribute(
+        "style",
+        "--o-wsale-grid-columns: 3; --o-wsale-mobile-columns: 2;"
+    );
     const itemEls = queryAll(".s_test_item");
     expect(itemEls[0]).toHaveAttribute("data-test-param", "test");
     expect(itemEls[1]).toHaveAttribute("data-test-param", "test2");
