@@ -45,3 +45,14 @@ test("Negate the unit price from the numpad in price mode", async () => {
     await orderSummary.updateSelectedOrderline({ buffer: "-0", key: "-" });
     expect(line.price_unit).toBe(-3);
 });
+
+test("Negate the weighed quantity from the numpad in price mode", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const orderSummary = await mountWithCleanup(OrderSummary, {});
+    const line = order.getSelectedOrderline();
+    line.product_id.to_weight = true;
+    store.numpadMode = "price";
+    await orderSummary.updateSelectedOrderline({ buffer: "-0", key: "-" });
+    expect(line.qty).toBe(-2);
+});
