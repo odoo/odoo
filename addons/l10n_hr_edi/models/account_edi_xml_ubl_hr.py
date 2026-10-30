@@ -273,17 +273,9 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
         super()._ubl_add_party_endpoint_id_node(vals)
         partner = vals['party_vals']['partner']
         commercial_partner = partner.commercial_partner_id
-        if commercial_partner.l10n_hr_personal_oib:
-            endpoint = commercial_partner.l10n_hr_personal_oib
-            scheme_id = '9934'
-        elif hr_en := commercial_partner._get_additional_identifier('HR_EN'):
-            endpoint = hr_en
-            scheme_id = '0088'
-        else:
-            endpoint = commercial_partner.vat.strip('HR')
-            scheme_id = '9934'
+        endpoint = commercial_partner.l10n_hr_personal_oib or commercial_partner.vat.strip('HR')
         vals['party_node']['cbc:EndpointID']['_text'] = endpoint
-        vals['party_node']['cbc:EndpointID']['schemeID'] = scheme_id
+        vals['party_node']['cbc:EndpointID']['schemeID'] = '9934'
 
     def _ubl_add_party_identification_nodes(self, vals):
         # EXTENDS account.edi.ubl_bis3
@@ -296,8 +288,6 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
             bu_code = ''
         if commercial_partner.l10n_hr_personal_oib:
             ident = f'9934:{commercial_partner.l10n_hr_personal_oib}{bu_code}'
-        elif hr_en := commercial_partner._get_additional_identifier('HR_EN'):
-            ident = f'0088:{hr_en}'
         else:
             ident = f'9934:{commercial_partner.vat.strip("HR")}{bu_code}'
         vals['party_node']['cac:PartyIdentification'] = [{
