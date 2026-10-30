@@ -181,6 +181,35 @@ class TestAccruedSaleOrders(TestSaleCommon):
             ],
         )
 
+    def test_discount_is_taken_into_account_when_accruing(self):
+        # A sale order line with a discount must accrue at the discounted price,
+        # not the list price (issue #299147).
+        order = self.env["sale.order"].create({
+            "partner_id": self.partner_a.id,
+            "order_line": [
+                Command.create({
+                    "name": "Discounted service",
+                    "product_id": self.product_a.id,
+                    "product_uom_qty": 10.0,
+                    "price_unit": 100.0,
+                    "discount": 50.0,
+                    "tax_ids": False,
+                }),
+            ],
+        })
+        order.action_confirm()
+        order.order_line[0].qty_delivered = 10.0
+        wizard = (
+            self.env["account.accrued.orders.wizard"]
+            .with_context({"active_model": "sale.order", "active_ids": order.ids, "default_accrual_type": "invoice_to_be_issued"})
+            .create({"date": fields.Date.today()})
+        )
+        wizard.create_entries()
+        accrued_moves = self.env["account.move"].search([("ref", "start=", "Invoices to be issued entry as of ")])
+        revenue_lines = accrued_moves.line_ids.filtered(lambda l: l.account_id == self.account_revenue.id)
+        # 10 delivered at 100 - 50% discount => 500, not 1000.
+        self.assertRecordValues(revenue_lines, [{"debit": 0.0, "credit": 500.0}])
+
     def test_product_name_in_accrued_revenue_entry(self):
         self.sale_order.order_line.qty_delivered = 5
 
