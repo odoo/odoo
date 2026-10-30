@@ -173,7 +173,9 @@ export class OrderSummary extends Component {
             } else if (this.pos.numpadMode === "discount") {
                 buffer = selectedLine.getDiscount() * -1;
             } else if (this.pos.numpadMode === "price") {
-                buffer = selectedLine.price_unit * -1;
+                const inversePrice = selectedLine.price_unit * -1;
+                const shouldTakeLineTotal = selectedLine.product_id.to_weight;
+                buffer = inversePrice * (shouldTakeLineTotal ? selectedLine.getQuantity() : 1);
             }
             this.numberBuffer.state.buffer = buffer.toString();
         }
@@ -276,7 +278,8 @@ export class OrderSummary extends Component {
     async setLinePrice(line, price) {
         line.price_type = "manual";
         if (line.product_id.to_weight) {
-            const val = line.price_unit ? parseFloat(price) / line.price_unit : 0;
+            const parsedPrice = typeof price === "number" ? price : parseFloat(price);
+            const val = line.price_unit ? parsedPrice / line.price_unit : 0;
             line.setQuantity(val, false);
         } else {
             line.setUnitPrice(price);
