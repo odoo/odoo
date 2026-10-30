@@ -451,6 +451,104 @@ class TestWorkEntry(TestWorkEntryBase):
             'resource_calendar_id': calendar_35h.id,
             'date_version': datetime(2025, 1, 10),
         })
+<<<<<<< 24790575aaa102a0d3bf57c7d9a2ffec33d3efa2
         work_entries_vals = employee.generate_work_entries(datetime(2025, 1, 1), datetime(2025, 1, 31))
         self.assertEqual(len(work_entries_vals), 23, "23 attendance")
         self.assertEqual(sum(vals['duration'] for vals in work_entries_vals), 178, "7 * 8h + 6 * 7h + 10 * 8h")
+||||||| af18610df639b238b21cb0b318aa490ae45a56c3
+        employee.generate_work_entries(datetime(2025, 1, 1), datetime(2025, 1, 31))
+        work_entries = self.env['hr.work.entry'].search([('employee_id', '=', employee.id)])
+        self.assertEqual(len(work_entries), 23, "23 attendance")
+        self.assertEqual(sum(work_entries.mapped("duration")), 178, "7 * 8h + 6 * 7h + 10 * 8h")
+
+    @freeze_time('2025-09-15')
+    def test_flexible_calendar_public_holiday_duration(self):
+        """ A full day public holiday on a flexible calendar should last the average hours per day,
+            not the whole 24 hours of the day, whatever its work entry type. """
+        tz = pytz.timezone('America/Costa_Rica')
+        self.env.user.tz = 'America/Costa_Rica'
+        flexible_calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible 48h',
+            'flexible_hours': True,
+            'hours_per_week': 48,
+            'full_time_required_hours': 48,
+            'hours_per_day': 8,
+            'tz': 'America/Costa_Rica',
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Flexible Employee',
+            'tz': 'America/Costa_Rica',
+            'resource_calendar_id': flexible_calendar.id,
+            'date_version': date(2025, 1, 1),
+            'contract_date_start': date(2025, 1, 1),
+        })
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Public Holiday',
+            'calendar_id': flexible_calendar.id,
+            'date_from': tz.localize(datetime(2025, 9, 1, 0, 0, 0)).astimezone(pytz.utc).replace(tzinfo=None),
+            'date_to': tz.localize(datetime(2025, 9, 1, 23, 59, 59)).astimezone(pytz.utc).replace(tzinfo=None),
+            'work_entry_type_id': self.env.ref('hr_work_entry.work_entry_type_attendance').id,
+        })
+
+        work_entries = employee.generate_work_entries(date(2025, 9, 1), date(2025, 9, 2)).sorted('date')
+        self.assertEqual(len(work_entries), 2)
+        self.assertEqual(work_entries.mapped('date'), [date(2025, 9, 1), date(2025, 9, 2)])
+        self.assertEqual(work_entries.mapped('duration'), [8.0, 8.0])
+=======
+        employee.generate_work_entries(datetime(2025, 1, 1), datetime(2025, 1, 31))
+        work_entries = self.env['hr.work.entry'].search([('employee_id', '=', employee.id)])
+        self.assertEqual(len(work_entries), 23, "23 attendance")
+        self.assertEqual(sum(work_entries.mapped("duration")), 178, "7 * 8h + 6 * 7h + 10 * 8h")
+
+    @freeze_time('2025-09-15')
+    def test_flexible_calendar_public_holiday_duration(self):
+        """ A full day public holiday on a flexible calendar should last the average hours per day,
+            not the whole 24 hours of the day, whatever its work entry type. """
+        tz = pytz.timezone('America/Costa_Rica')
+        self.env.user.tz = 'America/Costa_Rica'
+        flexible_calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible 48h',
+            'flexible_hours': True,
+            'hours_per_week': 48,
+            'full_time_required_hours': 48,
+            'hours_per_day': 8,
+            'tz': 'America/Costa_Rica',
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Flexible Employee',
+            'tz': 'America/Costa_Rica',
+            'resource_calendar_id': flexible_calendar.id,
+            'date_version': date(2025, 1, 1),
+            'contract_date_start': date(2025, 1, 1),
+        })
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Public Holiday',
+            'calendar_id': flexible_calendar.id,
+            'date_from': tz.localize(datetime(2025, 9, 1, 0, 0, 0)).astimezone(pytz.utc).replace(tzinfo=None),
+            'date_to': tz.localize(datetime(2025, 9, 1, 23, 59, 59)).astimezone(pytz.utc).replace(tzinfo=None),
+            'work_entry_type_id': self.env.ref('hr_work_entry.work_entry_type_attendance').id,
+        })
+
+        work_entries = employee.generate_work_entries(date(2025, 9, 1), date(2025, 9, 2)).sorted('date')
+        self.assertEqual(len(work_entries), 2)
+        self.assertEqual(work_entries.mapped('date'), [date(2025, 9, 1), date(2025, 9, 2)])
+        self.assertEqual(work_entries.mapped('duration'), [8.0, 8.0])
+
+    def test_fully_flexible_dst_fallback_duration(self):
+        """ On a DST fall-back day (25 elapsed hours), a fully flexible employee's daily
+            work entry duration should not exceed 24 hours. """
+        self.env.company.resource_calendar_id.tz = 'Europe/Brussels'
+        employee = self.env['hr.employee'].create({
+            'name': 'Fully Flexible Employee',
+            'tz': 'Europe/Brussels',
+            'resource_calendar_id': False,
+            'date_version': date(2026, 1, 1),
+            'contract_date_start': date(2026, 1, 1),
+        })
+
+        # 2026-10-25 is the DST fall-back date in Europe/Brussels (clocks go back 1 hour)
+        work_entries = employee.generate_work_entries(date(2026, 10, 24), date(2026, 10, 26)).sorted('date')
+        self.assertEqual(len(work_entries), 3)
+        self.assertEqual(work_entries.mapped('date'), [date(2026, 10, 24), date(2026, 10, 25), date(2026, 10, 26)])
+        self.assertEqual(work_entries.mapped('duration'), [24.0, 24.0, 24.0])
+>>>>>>> a82bfdd66a2a14468f4fce6bb20f4848d111566f
