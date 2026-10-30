@@ -6,7 +6,7 @@ from typing import NamedTuple
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
-from odoo.tools import SQL, split_every
+from odoo.tools import OrderedSet, SQL, split_every
 
 
 class FifoCandidate(NamedTuple):
@@ -360,6 +360,7 @@ class ProductProduct(models.Model):
         moves_by_product = self._get_stock_moves_with_valuation_by_product(at_date)
         std_price_history_by_product = self._get_std_price_history_by_product(at_date)
 
+        edited_move_ids = OrderedSet()
         for product in self:
             std_price = std_price_by_product_id.get(product.id, product.standard_price)
             price_changes = iter(std_price_history_by_product.get(product, self.env['product.value']))
@@ -373,7 +374,9 @@ class ProductProduct(models.Model):
                 new_value = move._get_valued_qty(signed=True) * std_price
                 if move.value != new_value:
                     move.value = new_value
+                    edited_move_ids.add(move.id)
 
+        self.env['stock.move'].browse(edited_move_ids)._update_accounting_entries()
         return std_price_by_product_id, value_by_product_id
 
     def _run_avco(self, at_date=None, lot=None, force_recompute=None, correction=False, old_values=None):
@@ -434,6 +437,7 @@ class ProductProduct(models.Model):
 
         product, valuation_from_date = False, False
         batch_size = 50000
+        edited_move_ids = OrderedSet()
 
         product_move_ids = []
         std_price_history_by_product_id = False
@@ -498,8 +502,10 @@ class ProductProduct(models.Model):
                             old_values.setdefault(move.id, move.value)
                         if lot:
                             move.value -= out_value
+                            edited_move_ids.add(move.id)
                         elif move.value != -out_value:
                             move.value = -out_value
+                            edited_move_ids.add(move.id)
                     value -= out_value
                     quantity -= out_qty
 
@@ -510,6 +516,7 @@ class ProductProduct(models.Model):
             self.env['stock.move'].invalidate_model()  # Avoid keeping too many records in cache
             self.env['stock.move.line'].invalidate_model()
 
+        self.env['stock.move'].browse(edited_move_ids)._update_accounting_entries()
         return std_price_by_product_id, value_by_product_id
 
     def _run_fifo(self, at_date=None, lot=None, correction=False, old_values=None):
@@ -571,6 +578,7 @@ class ProductProduct(models.Model):
         moves_by_product = self._get_stock_moves_with_valuation_by_product(at_date, lot=lot)
         std_price_history_by_product = self._get_std_price_history_by_product(at_date)
 
+        edited_move_ids = OrderedSet()
         for product in self:
             stack = stack_by_product[product]
             unit_price = std_price_by_product_id.get(product.id, product.standard_price)
@@ -597,6 +605,7 @@ class ProductProduct(models.Model):
                                 if old_values is not None:
                                     old_values.setdefault(shortage_move.out_move.id, shortage_move.out_move.value)
                                 shortage_move.out_move.value = new_value
+                                edited_move_ids.add(shortage_move.out_move.id)
                         in_qty -= filled
                         remaining_qty = shortage_move.quantity + filled
                         if remaining_qty < 0:
@@ -626,12 +635,15 @@ class ProductProduct(models.Model):
                         old_values.setdefault(move.id, move.value)
                     if lot:
                         move.value -= out_value
+                        edited_move_ids.add(move.id)
                     elif move.value != -out_value:
                         move.value = -out_value
+                        edited_move_ids.add(move.id)
 
             std_price_by_product_id[product.id] = unit_price
             value_by_product_id[product.id] = sum(stack_tuple.value for stack_tuple in stack)
 
+        self.env['stock.move'].browse(edited_move_ids)._update_accounting_entries()
         return std_price_by_product_id, value_by_product_id
 
     def _get_fifo_value(self, quantity, lot=None, stack_size_extra_qty=0):
