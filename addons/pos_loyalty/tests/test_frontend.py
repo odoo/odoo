@@ -1812,6 +1812,45 @@ class TestUi(TestPointOfSaleHttpCommon):
             login="pos_user",
         )
 
+    def test_buy_x_get_y_one_reward_per_rule_product(self):
+        self.env['loyalty.program'].search([]).write({'active': False})
+
+        product_a, product_b = self.env['product.product'].create([
+            {
+                'name': 'Free Product A',
+                'list_price': 1,
+                'available_in_pos': True,
+                'taxes_id': False,
+            },
+            {
+                'name': 'Free Product B',
+                'list_price': 5,
+                'available_in_pos': True,
+                'taxes_id': False,
+            },
+        ])
+
+        self.env['loyalty.program'].create({
+            'name': 'Buy X get Y',
+            'program_type': 'buy_x_get_y',
+            'applies_on': 'current',
+            'trigger': 'auto',
+            'rule_ids': [(0, 0, {
+                'reward_point_mode': 'unit',
+                'minimum_qty': 1,
+                'product_ids': [(6, 0, (product_a | product_b).ids)],
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_id': product.id,
+                'reward_product_qty': 1,
+                'required_points': 1,
+            }) for product in (product_a, product_b)],
+        })
+
+        self.main_pos_config.open_ui()
+        self.start_pos_tour("PosLoyaltyBuyXGetYOneRewardPerRuleProduct")
+
     def test_promotion_with_min_amount_and_specific_product_rule(self):
         """
         Test that the discount is applied iff the min amount is reached for the specified product.
