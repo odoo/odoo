@@ -5,7 +5,7 @@ from psycopg2.errors import UniqueViolation
 from odoo.tests import Form, users, HttpCase, tagged, new_test_user
 from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.tools import mute_logger, split_every
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
 
 class TestHrEmployee(TestHrCommon):
 
@@ -239,6 +239,34 @@ class TestHrEmployee(TestHrCommon):
         self.assertEqual(employee_B.work_email, 'new_email@example.com')
         self.assertFalse(employee_A.work_contact_id)
         self.assertEqual(employee_B.work_contact_id, user.partner_id)
+
+    def test_hr_manager_link_employee_to_user(self):
+        """
+            An HR manager can link an employee to an internal user even
+            without the rights to write on users/partners.
+        """
+        hr_manager = new_test_user(self.env, login='hrm', groups='base.group_user,hr.group_hr_manager', name='HR Manager', email='hrm@example.com')
+        user = self.env['res.users'].create({
+            'name': 'Test',
+            'login': 'test',
+            'email': 'test@example.com',
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Employee',
+            'work_email': 'employee@example.com',
+        })
+        with Form(employee.with_user(hr_manager)) as employee_form:
+            employee_form.user_id = user
+        self.assertEqual(employee.work_contact_id, user.partner_id)
+        self.assertEqual(employee.work_email, 'test@example.com')
+
+        other_employee = self.env['hr.employee'].create({
+            'name': 'Other Employee',
+            'work_contact_id': user.partner_id.id,
+        })
+        with self.assertRaises(AccessError):
+            other_employee.with_user(hr_manager).work_email = 'new_email@example.com'
+        self.assertEqual(user.email, 'test@example.com')
 
     def test_availability_user_infos_employee(self):
         """ Ensure that all the user infos needed to display the avatar popover card
