@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="pos_sales_detail_pdf_data_row" inherit_id="point_of_sale.pos_report_pdf_data_row" primary="True">
+            <xpath expr="//tr/td[1]/span" position="after">
+                <t t-set="values" t-value="row.get('values', {})"/>
+                <small t-if="values.get('combo_label')" class="text-muted ms-2" t-out="values['combo_label']"/>
+                <small t-if="values.get('uom') and values['uom'] != 'Units'" class="text-muted ms-2" t-out="values['uom']"/>
+                <small t-if="values.get('discount')" class="text-muted ms-2">
+                    Disc: <t t-out="values['discount']"/>%
+                </small>
+                <img t-if="values.get('barcode')"
+                    class="ms-2"
+                    t-att-src="'/report/barcode/Code128/' + str(values['barcode'])"
+                    alt="Barcode"
+                    style="height: 1.5rem; width: 12rem;"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>

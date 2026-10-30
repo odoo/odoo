@@ -1,0 +1,69 @@
+.o_pos_report {
+    table {
+        width: 100%;
+        table-layout: auto;
+    }
+
+    th {
+        color: $text-muted;
+        font-weight: $headings-font-weight;
+        white-space: nowrap;
+        padding-bottom: map-get($spacers, 1);
+
+        &:not(:first-child) {
+            padding-left: 1rem;
+        }
+    }
+
+    td:not(:first-child) {
+        padding-left: 1rem;
+    }
+
+    tbody {
+        td {
+            border-bottom: 1px solid $gray-200;
+        }
+
+        tr:last-child td {
+            border-bottom: 1px solid $gray-300;
+        }
+    }
+
+    .o_pdf_total_row td {
+        background-color: $gray-200;
+        font-weight: $font-weight-bold;
+        color: $body-color;
+    }
+
+    .o_pdf_bold_row td {
+        font-weight: $font-weight-bold;
+    }
+
+    .o_pdf_align_right {
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    .o_pdf_align_left {
+        text-align: left;
+    }
+
+    .o_pdf_col_0 {
+        width: 100%;
+        overflow-wrap: break-word;
+    }
+
+    .o_pdf_col_1,
+    .o_pdf_col_2,
+    .o_pdf_col_3,
+    .o_pdf_col_4 {
+        width: 1%;
+        white-space: nowrap;
+    }
+
+    @for $i from 0 through 5 {
+        .o_pdf_col_0.o_pdf_level_#{$i} {
+            padding-left: #{0.5 + ($i * 1.25)}rem;
+        }
+    }
+}

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="pos_reports.PosReportFilters">
+        <div class="d-flex gap-1 flex-wrap align-items-center">
+
+            <t t-if="this.dateFilter">
+                <Dropdown menuClass="'pos_report_filter date'">
+                    <button class="btn btn-secondary">
+                        <i class="oi me-1" data-icon="calendar_today"/>
+                        <t t-out="this.getDateDescription()"/>
+                    </button>
+
+                    <t t-set-slot="content">
+                        <t t-foreach="this.availableDateFilters" t-as="filter" t-key="filter_index">
+                            <DropdownItem
+                                tag="'div'"
+                                class="{
+                                    'd-flex justify-content-between date_filter': true,
+                                    'date_filter_month': filter.key === 'month',
+                                    'date_filter_year': filter.key === 'year',
+                                    'selected': this.state.selectedDateFilter === filter.key,
+                                }"
+                                attrs="{
+                                    'data-period-type': filter.key,
+                                }"
+                                onSelected="() => this.selectDateFilter(filter.key)"
+                                closingMode="'none'"
+                            >
+                                <div class="filter_name me-3" t-out="filter.label"/>
+                                <div class="d-flex justify-content-between">
+                                    <button class="btn_previous_date oi text-center" data-icon="chevron_backward" t-on-click.stop="() => this.selectNewPeriod(filter, -1)" />
+                                    <span class="input_current_date text-center d-inline-block mx-2">
+                                        <t t-out="this.getFilterDateDisplay(filter)"/>
+                                    </span>
+                                    <button class="btn_next_date oi text-center" data-icon="chevron_forward" t-on-click.stop="() => this.selectNewPeriod(filter, 1)" />
+                                </div>
+                            </DropdownItem>
+                        </t>
+
+                        <div class="dropdown-divider"/>
+
+                        <DropdownItem
+                            tag="'div'"
+                            class="{
+                                'date d-flex justify-content-between': true,
+                                'selected': this.state.selectedDateFilter === 'custom',
+                            }"
+                            attrs="{
+                                'data-period-type': 'custom',
+                            }"
+                            onSelected="() => this.state.selectedDateFilter = 'custom'"
+                            closingMode="'none'"
+                        >
+                            <div class="filter_name me-3">
+                                Custom Dates
+                            </div>
+
+                            <div class="d-flex justify-content-center flex-grow-1">
+                                <DateTimeInput
+                                    type="'date'"
+                                    class="'o-navigable text-center'"
+                                    value="this.state.customDateFrom"
+                                    onChange="(dateFrom) => this.setCustomDateFrom(dateFrom)"
+                                    maxDate="this.state.customDateTo"
+                                />
+                                <span class="d-flex align-items-center">
+                                    to
+                                </span>
+                                <DateTimeInput
+                                    type="'date'"
+                                    class="'o-navigable text-center'"
+                                    value="this.state.customDateTo"
+                                    onChange="(dateTo) => this.setCustomDateTo(dateTo)"
+                                    minDate="this.state.customDateFrom"
+                                />
+                            </div>
+                        </DropdownItem>
+                    </t>
+                </Dropdown>
+            </t>
+
+            <t t-foreach="this.multiSelectFilters" t-as="filter" t-key="filter_index">
+                <Dropdown menuClass="'pos_report_filter multiselect'">
+                    <button class="btn btn-secondary">
+                        <i class="oi oi-fw me-1" data-icon="shopping_bag_speed"/>
+                        <t t-out="filter.label"/>
+                    </button>
+
+                    <t t-set-slot="content">
+                        <div class="dropdown-item gap-2 align-items-center">
+                            <label class="mb-1">
+                                <t t-out="filter.label"/>
+                            </label>
+                            <MultiRecordSelector t-props="this.getMultiRecordSelectorProps(filter)"/>
+                        </div>
+                    </t>
+                </Dropdown>
+            </t>
+
+            <t t-foreach="this.singleSelectFilters" t-as="filter" t-key="filter_index">
+                <Dropdown menuClass="'pos_report_filter singleselect'">
+                    <button class="btn btn-secondary">
+                        <i class="oi oi-fw me-1" data-icon="schedule"/>
+                        <t t-out="filter.label"/>
+                    </button>
+
+                    <t t-set-slot="content">
+                        <div class="dropdown-item o-navigable d-flex gap-2 align-items-center">
+                            <label class="me-2 mb-0">
+                                <t t-out="filter.label"/>
+                            </label>
+                            <div>
+                                <RecordSelector t-props="this.getRecordSelectorProps(filter)"/>
+                            </div>
+                        </div>
+                    </t>
+                </Dropdown>
+            </t>
+
+            <t t-if="this.extraOptions.length">
+                <Dropdown>
+                    <button class="btn btn-secondary">
+                        <i class="oi me-1" data-icon="tune"/>
+                        Options
+                    </button>
+
+                    <t t-set-slot="content">
+                        <t t-foreach="this.extraOptions" t-as="option" t-key="option_index">
+                            <DropdownItem
+                                class="option.active ? 'selected' : ''"
+                                onSelected="option.onSelect"
+                            >
+                                <t t-out="option.name"/>
+                            </DropdownItem>
+                        </t>
+                    </t>
+                </Dropdown>
+            </t>
+        </div>
+    </t>
+
+</templates>

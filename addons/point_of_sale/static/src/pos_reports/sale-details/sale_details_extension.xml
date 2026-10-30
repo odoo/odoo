@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="pos_reports.SaleDetailsExtension">
+        <small t-if="this.props.line.values.combo_label"
+            class="text-muted ms-2"
+            t-out="this.props.line.values.combo_label"/>
+
+        <small t-if="this.props.line.values.uom and this.props.line.values.uom !== 'Units'"
+            class="text-muted ms-2"
+            t-out="this.props.line.values.uom"/>
+
+        <small t-if="this.props.line.values.discount"
+            class="text-muted ms-2">
+            Disc: <t t-out="this.props.line.values.discount"/>%
+        </small>
+
+        <img t-if="this.props.line.values.barcode"
+            class="ms-auto"
+            t-att-src="'/report/barcode/Code128/' + this.props.line.values.barcode"
+            alt="Barcode"
+            style="height: 1.5rem;"/>
+    </t>
+</templates>

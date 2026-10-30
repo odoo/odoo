@@ -3,6 +3,8 @@ import { SaleDetailsButton } from "@point_of_sale/app/components/navbar/sale_det
 import { ConfirmationDialog, AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { MoneyDetailsPopup } from "@point_of_sale/app/components/popups/money_details_popup/money_details_popup";
 import { useService } from "@web/core/utils/hooks";
+import { user } from "@web/core/user";
+import { download } from "@web/core/network/download";
 import { Component, proxy, useProps, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
@@ -29,7 +31,6 @@ export class ClosePosPopup extends Component {
 
     setup() {
         this.pos = usePos();
-        this.report = useService("report");
         this.dialog = useService("dialog");
         this.ui = useService("ui");
         this.state = proxy(this.getInitialState());
@@ -142,7 +143,22 @@ export class ClosePosPopup extends Component {
         });
     }
     async downloadSalesReport() {
-        return this.report.doAction("point_of_sale.sale_details_report", [this.pos.session.id]);
+        this.ui.block();
+        try {
+            await download({
+                url: "/pos_reports",
+                data: {
+                    model: "pos.sales.detail.report",
+                    export_format: "pdf",
+                    options: JSON.stringify({
+                        session_id: this.pos.session.id,
+                        allowed_company_ids: user.context.allowed_company_ids,
+                    }),
+                },
+            });
+        } finally {
+            this.ui.unblock();
+        }
     }
     setManualCashInput(amount) {
         if (this.pos.isValidFloat(amount) && this.moneyDetails) {

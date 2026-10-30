@@ -108,13 +108,6 @@ class PosController(PortalAccount):
     def pos_ping(self):
         return {'response': 'pong'}
 
-    @http.route('/pos/sale_details_report', type='http', auth='user')
-    def print_sale_details(self, date_start=False, date_stop=False, **kw):
-        r = request.env['report.point_of_sale.report_saledetails']
-        pdf, _ = request.env['ir.actions.report'].with_context(date_start=date_start, date_stop=date_stop)._render_qweb_pdf('point_of_sale.sale_details_report', r)
-        pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
-        return request.make_response(pdf, headers=pdfhttpheaders)
-
     @http.route(['/pos/ticket'], type='http', auth="public", website=True, sitemap=False)
     def invoice_request_screen(self, **kwargs):
         errors = {}

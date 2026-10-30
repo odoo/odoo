@@ -265,9 +265,10 @@ export class PosTicketPrinterPlugin extends Plugin {
     async printSaleDetailsReceipt({ webFallback = true, download = false } = {}) {
         const generator = this.getGenerator({ models: this.data.models });
         const saleDetails = await this.data.call(
-            "report.point_of_sale.report_saledetails",
-            "get_sale_details",
-            [false, false, false, [this.session.id]]
+            "pos.sales.detail.report",
+            "get_sale_details_receipt_data",
+            [],
+            { context: { session_id: this.session.id } }
         );
         const data = generator.generateSaleDetailsData(saleDetails);
         const iframe = await this.generateIframe("point_of_sale.pos_sale_details_receipt", data);
