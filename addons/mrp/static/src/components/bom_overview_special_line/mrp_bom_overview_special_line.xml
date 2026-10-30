@@ -6,7 +6,7 @@
             <span t-attf-style="margin-left: {{ this.data.level * 20 }}px"/>
             <t t-set="title_fold">Fold</t>
             <t t-set="title_unfold">Unfold</t>
-            <span t-if="this.hasFoldButton" t-attf-class="o_mrp_bom_{{ this.props.isFolded ? 'unfoldable' : 'foldable' }} btn btn-light ps-0 py-0" t-att-aria-label="this.props.isFolded ? title_unfold : title_fold" t-att-title="this.props.isFolded ? title_unfold : title_fold">
+            <span t-if="this.hasFoldButton" class="btn btn-light ps-0 py-0" t-att-aria-label="this.props.isFolded ? title_unfold : title_fold" t-att-title="this.props.isFolded ? title_unfold : title_fold">
                 <i class="oi oi-fw" t-attf-data-icon="{{ this.props.isFolded ? 'arrow_right' : 'arrow_drop_down' }}" role="img"/>
                 <t t-if="this.props.type == 'operations'">Operations</t>
                 <t t-elif="this.props.type == 'byproducts'">By-Products</t>
