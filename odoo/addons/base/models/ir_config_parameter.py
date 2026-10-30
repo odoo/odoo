@@ -3,13 +3,14 @@
 Store database-specific configuration parameters
 """
 
-import uuid
 import logging
+import uuid
 from typing import Any, Literal
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import config, mute_logger, str2bool
+from odoo.tools.urls import sanitize_url
 
 _logger = logging.getLogger(__name__)
 
@@ -78,6 +79,18 @@ class IrConfig_Parameter(models.Model):
     def set_str(self, key: str, value):
         return self._set(key, None if value is None or value is False else str(value), 'str')
 
+    @api.model
+    def set_url(self, key: str, value):
+        if value is None or value is False:
+            return self._set(key, None)
+
+        url = sanitize_url(value)
+        if url != value:
+            e = ValueError(value)
+            e.add_note(f"Use instead: {url}")
+            raise e
+        return self._set(key, url, 'str')
+
     def _set(self, key: str, value: Any, type_: Type_) -> Any:
         """
         Set the given parameter to the given value, and return the parameter's old value.
@@ -127,6 +140,14 @@ class IrConfig_Parameter(models.Model):
         if value is None or value is INVALID_VALUE:
             return default
         return value
+
+    @api.model
+    def get_url[T](self, key: str, default: T = '') -> str | T:
+        self.browse().check_access('read')
+        value = self._get(key, 'str')[0]
+        if value is None or value is INVALID_VALUE:
+            return default
+        return sanitize_url(value)
 
     @api.ormcache('key', 'type_', cache='stable')
     def _get(self, key: str, type_: Type_ = 'str') -> tuple[Any, int | None]:

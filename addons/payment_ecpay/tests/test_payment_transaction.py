@@ -25,7 +25,7 @@ class TestPaymentTransaction(EcpayCommon):
         """Test that the rendered values are conform to the transaction fields."""
         # Create a transaction with known values
         localhost_url = "http://127.0.0.1:8069"
-        self.env["ir.config_parameter"].sudo().set_str("web.base.url", localhost_url)
+        self.env["ir.config_parameter"].sudo().set_url("web.base.url", localhost_url)
 
         tx = self._create_transaction(
             "redirect", payment_method_id=self.provider._get_pm_from_code("card").id

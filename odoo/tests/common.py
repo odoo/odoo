@@ -2692,7 +2692,7 @@ class HttpCase(TransactionCase):
         cls.enterClassContext(cls.registry_test_mode())
 
         ICP = cls.env['ir.config_parameter']
-        ICP.set_str('web.base.url', cls.base_url())
+        ICP.set_url('web.base.url', cls.base_url())
         ICP.env.flush_all()
         # v8 api with correct xmlrpc exception handling.
         cls.xmlrpc_url = f'{cls.base_url()}/xmlrpc/2/'
