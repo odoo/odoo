@@ -177,7 +177,9 @@ class TestBatchPicking(TransactionCase):
         self.assertEqual(wave.user_id, self.user_demo)
 
     def test_creation_from_pickings(self):
-        """ Select all the picking_ids and create a wave from them """
+        """ Select all the picking_ids and create a wave from them.
+        Additionally, adding the proposed operations to the wave should create the new wave.
+        """
         action = self.env['ir.actions.actions']._for_xml_id('stock_picking_batch.stock_add_to_wave_action_stock_picking')
         action['context'] = {'active_model': 'stock.picking', 'active_ids': self.all_pickings.ids}
         self.assertEqual(action.get('res_model'), 'stock.add.to.wave')
@@ -186,6 +188,16 @@ class TestBatchPicking(TransactionCase):
         wizard = wizard_form.save()
         res = wizard.attach_pickings()
         self.assertEqual(set(res['context']['picking_to_wave']), set(self.all_pickings.ids))
+
+        lines = self.env['stock.move.line'].search(res['domain'])
+        lines.with_context(res['context']).action_open_add_to_wave()
+
+        wave = self.all_pickings.batch_id
+        self.assertRecordValues(wave, [{
+            'is_wave': True,
+            'picking_ids': self.all_pickings.ids,
+            'move_line_ids': self.all_pickings.move_line_ids.ids,
+        }])
 
     def test_add_to_existing_wave_from_lines(self):
         res_dict = self.picking_client_1.move_line_ids.action_open_add_to_wave()
