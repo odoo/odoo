@@ -1086,6 +1086,38 @@ export function propSignal(name, shape, { optional = false } = {}) {
     return useProps.static(name, optional ? type.optional() : type);
 }
 
+const PROP_STATIC_SYM = Symbol("propStatic");
+
+/**
+ * Static prop of a `usePropsPlus({...})` shape, read with `useProps.static`: the parent must pass
+ * the same value on every render (checked in dev mode), e.g. a signal whose inner value may change.
+ *
+ * @template S
+ * @param {S} shape shape of the prop (e.g. `t.signal(t.number())`)
+ * @returns {S}
+ */
+export function propStatic(shape) {
+    return /** @type {S} */ ({ [PROP_STATIC_SYM]: true, shape });
+}
+
+/** @type {import("@odoo/owl").PropsFunction} */
+export const usePropsPlus = (shape) => {
+    const usePropsShape = {};
+    const staticShape = {};
+    for (const [key, shapeItem] of Object.entries(shape)) {
+        if (shapeItem?.[PROP_STATIC_SYM]) {
+            staticShape[key] = shapeItem.shape;
+        } else {
+            usePropsShape[key] = shapeItem;
+        }
+    }
+    const result = useProps(usePropsShape);
+    for (const [key, shapeItem] of Object.entries(staticShape)) {
+        result[key] = useProps.static(key, shapeItem);
+    }
+    return result;
+};
+
 /**
  * This hook makes it easier to enable right-click to open a dropdown at position of cursor
  *
