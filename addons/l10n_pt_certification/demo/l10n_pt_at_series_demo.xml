@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <function model="account.chart.template" name="_post_load_demo_data">
+        <value eval="[]"/>
+        <value model="res.company" eval="obj().search([('chart_template', '=', 'pt')])"/>
+    </function>
+</odoo>
