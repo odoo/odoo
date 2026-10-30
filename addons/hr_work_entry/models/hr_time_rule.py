@@ -502,19 +502,25 @@ class HrTimeRule(models.Model):
     def _get_schedule_calendar(self):
         """Return the reference calendar of the rule.
 
-        :return: ``resource_calendar_id``, else the company's or the current company's calendar
-            when ``calendar_source`` is ``'reference'``; an empty recordset otherwise (the rule
-            relies on the employees' own calendars)
+        :return: ``resource_calendar_id``, else the company's calendar when ``calendar_source``
+            is ``'reference'``; an empty recordset otherwise (the rule relies on the employees' own
+            calendars, or on their company's calendar, see :meth:`_get_work_intervals_key`)
         :rtype: resource.calendar
         """
         self.ensure_one()
         if self.calendar_source != 'reference':
             return self.env['resource.calendar']
-        return (
-            self.resource_calendar_id
-            or self.company_id.resource_calendar_id
-            or self.env.company.resource_calendar_id
-        )
+        return self.resource_calendar_id or self.company_id.resource_calendar_id
+
+    def _get_work_intervals_key(self):
+        """Return the key of the rule's baseline in :meth:`_build_work_intervals_by_baseline`:
+        ``False`` for the employees' own schedules, the id of the reference calendar, or
+        ``'company'`` for the calendar of each employee's company (reference rule without
+        calendar nor company)."""
+        self.ensure_one()
+        if self.calendar_source != 'reference':
+            return False
+        return self._get_schedule_calendar().id or 'company'
 
     def _get_premium_pay_category_ids(self):
         """Return the premium pay ids attached to the intervals this rule classifies.
@@ -543,24 +549,34 @@ class HrTimeRule(models.Model):
     # Expected working time
     # ------------------------------------------------------------
 
-    def _build_work_intervals_by_calendar(self, employees, start_dt, end_dt):
+    def _build_work_intervals_by_baseline(self, employees, start_dt, end_dt):
         """Compute :meth:`_get_work_intervals` once per baseline calendar used by the rules of ``self``.
 
-        :return: ``{calendar_id: work_intervals}``, key ``False`` for the employees' own schedules
+        :return: ``{key: work_intervals}``, keyed by :meth:`_get_work_intervals_key`
         :rtype: dict
         """
-        work_intervals_by_calendar_id = {}
-        if any(rule.calendar_source != 'reference' for rule in self):
-            work_intervals_by_calendar_id[False] = self._get_work_intervals(employees, start_dt, end_dt)
+        work_intervals_by_baseline = {}
         for rule in self:
-            if rule.calendar_source != 'reference':
+            work_intervals_key = rule._get_work_intervals_key()
+            if work_intervals_key in work_intervals_by_baseline:
                 continue
-            reference_calendar = rule._get_schedule_calendar()
-            if reference_calendar.id not in work_intervals_by_calendar_id:
-                work_intervals_by_calendar_id[reference_calendar.id] = rule._get_work_intervals(
-                    employees, start_dt, end_dt, schedule_calendar=reference_calendar,
+            if work_intervals_key is False:
+                work_intervals = self._get_work_intervals(employees, start_dt, end_dt)
+            elif work_intervals_key == 'company':
+                # the rule belongs to no company: each employee is compared with their own company's calendar
+                work_intervals = defaultdict(lambda: defaultdict(Intervals))
+                for company, company_employees in employees.grouped('company_id').items():
+                    company_work_intervals = self._get_work_intervals(
+                        company_employees, start_dt, end_dt, schedule_calendar=company.resource_calendar_id,
+                    )
+                    for interval_type, intervals_by_employee in company_work_intervals.items():
+                        work_intervals[interval_type].update(intervals_by_employee)
+            else:
+                work_intervals = self._get_work_intervals(
+                    employees, start_dt, end_dt, schedule_calendar=rule._get_schedule_calendar(),
                 )
-        return work_intervals_by_calendar_id
+            work_intervals_by_baseline[work_intervals_key] = work_intervals
+        return work_intervals_by_baseline
 
     def _get_calendar_attendances_and_public_holidays(self, calendar, timezone, start, stop):
         """Return (attendance intervals, public holiday intervals) of `calendar`, in local naive datetimes."""
@@ -755,13 +771,13 @@ class HrTimeRule(models.Model):
         if not applicable_rules:
             return excess, deficit, source_intervals_by_employee
 
-        work_intervals_by_calendar_id = applicable_rules._build_work_intervals_by_calendar(employees, start_dt, end_dt)
-        pipeline_by_employee = self._build_initial_pipeline(records, employees, work_intervals_by_calendar_id, source_intervals_by_employee)
+        work_intervals_by_baseline = applicable_rules._build_work_intervals_by_baseline(employees, start_dt, end_dt)
+        pipeline_by_employee = self._build_initial_pipeline(records, employees, work_intervals_by_baseline, source_intervals_by_employee)
 
         for rule in applicable_rules:
             rule._apply_rule_on_pipeline(
                 pipeline_by_employee, applicable_employees_by_rule[rule],
-                work_intervals_by_calendar_id, start_dt, end_dt, deficit,
+                work_intervals_by_baseline, start_dt, end_dt, deficit,
             )
 
         # at the end of the pipeline, every interval classified by a rule is an excess
@@ -772,7 +788,7 @@ class HrTimeRule(models.Model):
 
         return excess, deficit, source_intervals_by_employee
 
-    def _build_initial_pipeline(self, records, employees, work_intervals_by_calendar_id, source_intervals_by_employee):
+    def _build_initial_pipeline(self, records, employees, work_intervals_by_baseline, source_intervals_by_employee):
         """Cut every time record into its initial, unclassified pipeline intervals.
 
         Most records give a single interval; absences are clipped to the schedule. Like
@@ -783,8 +799,8 @@ class HrTimeRule(models.Model):
         :return: {employee: [PipelineInterval]}
         """
         base_work_intervals = (
-            work_intervals_by_calendar_id.get(False)
-            or next(iter(work_intervals_by_calendar_id.values()), {})
+            work_intervals_by_baseline.get(False)
+            or next(iter(work_intervals_by_baseline.values()), {})
         )
         schedule_by_employee = base_work_intervals.get('schedule', defaultdict(Intervals))
         public_holidays_by_employee = base_work_intervals.get('public_leave', defaultdict(Intervals))
@@ -815,13 +831,13 @@ class HrTimeRule(models.Model):
             )
         return pipeline_by_employee
 
-    def _apply_rule_on_pipeline(self, pipeline_by_employee, employees, work_intervals_by_calendar_id, start_dt, end_dt, deficit):
+    def _apply_rule_on_pipeline(self, pipeline_by_employee, employees, work_intervals_by_baseline, start_dt, end_dt, deficit):
         """Apply this rule on the pipeline of each of `employees`.
 
         The excess parts are reclassified in `pipeline_by_employee`; the deficits are added to `deficit`.
         """
         self.ensure_one()
-        work_intervals = work_intervals_by_calendar_id[self._get_schedule_calendar().id or False]
+        work_intervals = work_intervals_by_baseline[self._get_work_intervals_key()]
         rule_window_by_employee = self._build_rule_day_intervals(start_dt, end_dt, employees, work_intervals)
         condition_work_entry_type_ids = set(self.condition_work_entry_type_ids.ids)
         # Without output type nor hours threshold (premium pay or allocation only rule), every
