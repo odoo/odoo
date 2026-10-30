@@ -49,6 +49,18 @@ export function buildBadgeVmlNodes({
     // => missing the logic to take the duplicated nodes and render them
     // => also if there are MSO considerations, they should only happen in the
     // MSO sub-branch, no need for them to happen in the non-MSO branch
+
+    // WORKING HERE
+    // for buttons, call buildEmailTree from the mso_plugin (to render manually)
+    // export mobileSubtree construction to the mosaic_strategy_plugin
+    // generalize subtree creation => need to know the context and when
+    // it should happen, then the render_plugin can build the tree itself
+    // using that.
+    // maybe a good idea to have a separate "context" from "facts"?
+    // => but the context is the propagation of constraints that write facts
+    // so maybe unnecessary. Merging parsingFacts with facts => definitely
+    // => grouping some facts together => definitely
+    // => implementing custom fact merging for some facts => whenever necessary
     const arcSize = cssBorderRadiusToVml({ borderRadius, height });
     const { top, right, bottom, left } = padding;
     const prefixContent = `
