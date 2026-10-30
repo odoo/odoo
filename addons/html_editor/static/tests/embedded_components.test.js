@@ -1769,4 +1769,111 @@ describe("Embedded state", () => {
             `<p>a[]<span data-embedded="counter" data-embedded-props='{"name":"customName","value":2}' data-oe-protected="true" contenteditable="false"><span class="counter">customName:5</span></span></p>`
         );
     });
+
+    test("Reverting multiple embedded state changes applies them in reverse order", async () => {
+        let counter;
+        patchWithCleanup(SavedCounter.prototype, {
+            setup() {
+                super.setup();
+                counter = this;
+            },
+        });
+        const { editor, plugins } = await setupEditor(
+            `<p><span data-embedded="counter" data-embedded-props='{"value":1}'></span></p>`,
+            { config: getConfig([savedCounter]) }
+        );
+        const embeddedComponentPlugin = plugins.get("embeddedComponents");
+        const nodeId = editor.shared.domReferenceMap.getNodeId(counter.props.host);
+
+        // 1 -> 2 -> 3
+        const changes = [
+            { nodeId, previous: { value: 1 }, next: { value: 2 } },
+            { nodeId, previous: { value: 2 }, next: { value: 3 } },
+        ];
+
+        // Apply 1 -> 2 -> 3.
+        embeddedComponentPlugin.applyStateChanges(changes);
+        expect(counter.embeddedState).toEqual({ value: 3 });
+
+        // Reverse apply 1 -> 2 -> 3 starting from 3 => 3 -> 2 -> 1.
+        embeddedComponentPlugin.applyStateChanges(changes, { reverse: true });
+        expect(counter.embeddedState).toEqual({ value: 1 });
+    });
+
+    test("Invalidating multiple pending embedded state changes reverts them in reverse order", async () => {
+        let counter;
+        patchWithCleanup(SavedCounter.prototype, {
+            setup() {
+                super.setup();
+                counter = this;
+            },
+        });
+
+        const { editor, plugins } = await setupEditor(
+            `<p><span data-embedded="counter" data-embedded-props='{"value":3}'></span></p>`,
+            { config: getConfig([savedCounter]) }
+        );
+
+        const embeddedComponentPlugin = plugins.get("embeddedComponents");
+        const nodeId = editor.shared.domReferenceMap.getNodeId(counter.props.host);
+
+        // Say we arrived at 3 by doing 1 -> 2 -> 3.
+        embeddedComponentPlugin.pendingStateChanges.push(
+            { nodeId, previous: { value: 1 }, next: { value: 2 } },
+            { nodeId, previous: { value: 2 }, next: { value: 3 } }
+        );
+
+        editor.shared.history.stash();
+
+        // History was stashed -> we reverted from 3 to 1 by doing 3 -> 2 -> 1.
+        expect(counter.embeddedState).toEqual({ value: 1 });
+        expect(embeddedComponentPlugin.pendingStateChanges).toEqual([]);
+
+        editor.shared.history.unstash();
+
+        // History was unstashed -> we restored 3 by doing 1 -> 2 -> 3.
+        expect(counter.embeddedState).toEqual({ value: 3 });
+    });
+
+    test("Restoring embedded state changes applies them in reverse order", async () => {
+        let counter;
+        patchWithCleanup(SavedCounter.prototype, {
+            setup() {
+                super.setup();
+                counter = this;
+            },
+        });
+        const { editor } = await setupEditor(
+            `<p><span data-embedded="counter" data-embedded-props='{"value":1}'></span></p>`,
+            { config: getConfig([savedCounter]) }
+        );
+
+        // Remember state 1.
+        const restoreValue1 = editor.shared.history.makeSavePoint();
+
+        await click(".counter");
+        await animationFrame();
+        expect(".counter").toHaveText("Counter:2");
+        expect(counter.embeddedState).toEqual({ value: 2 });
+
+        await click(".counter");
+        await animationFrame();
+        expect(".counter").toHaveText("Counter:3");
+        expect(counter.embeddedState).toEqual({ value: 3 });
+
+        // Remember state 3 before creating the 3 -> 2 -> 1 restore commit.
+        const restoreValue3 = editor.shared.history.makeSavePoint();
+
+        // Apply the above changes (1 -> 2 -> 3) in reverse: 3 -> 2 -> 1.
+        restoreValue1();
+        await animationFrame();
+        expect(".counter").toHaveText("Counter:1");
+        expect(counter.embeddedState).toEqual({ value: 1 });
+
+        // Reverts the above restore commit (3 -> 2 -> 1): 1 -> 2 -> 3.
+        restoreValue3();
+        await animationFrame();
+        expect(".counter").toHaveText("Counter:3");
+        expect(counter.embeddedState).toEqual({ value: 3 });
+    });
 });

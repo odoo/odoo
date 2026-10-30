@@ -260,7 +260,8 @@ export class EmbeddedComponentPlugin extends Plugin {
      * @param {boolean} [reverse = false]
      */
     applyStateChanges(changes, { reverse = false } = {}) {
-        for (const { nodeId, previous, next } of changes) {
+        const orderedChanges = reverse ? changes.toReversed() : changes;
+        for (const { nodeId, previous, next } of orderedChanges) {
             const host = this.dependencies.domReferenceMap.getNodeById(nodeId);
             const manager = host && this.getStateChangeManager(host);
             if (manager) {
