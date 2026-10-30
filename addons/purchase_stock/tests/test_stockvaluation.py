@@ -1146,3 +1146,59 @@ class TestStockValuationWithCOA(PurchaseTestCommon):
         self.assertEqual(receipt.value, 2000.0)
         self.assertEqual(out_move.value, -2000.0)
         self.assertEqual(product.total_value, 0.0)
+
+    def test_bill_during_lock_period_compensates_zero_cost_scrap(self):
+        """ A product received and scrapped at a zero cost has no valuation entry for its scrap.
+            When the bill later gives it a value while the scrap is within a lock period,
+            compensation lines should be created after the lock date for the scrap.
+        """
+        today = fields.Date.today()
+        product = self.product_avco_auto
+        accounts_data = product.product_tmpl_id.get_product_accounts()
+
+        with freeze_time(today - timedelta(days=5)):
+            product.standard_price = 0
+
+        with freeze_time(today - timedelta(days=3)):
+            self.assertEqual(product.standard_price, 0)
+            po = self.env['purchase.order'].create({
+                'partner_id': self.vendor.id,
+                'order_line': [
+                    Command.create({
+                        'product_id': product.id,
+                        'product_qty': 1.0,
+                        'price_unit': 0.0,
+                        'tax_ids': False,
+                    }),
+                ],
+            })
+            po.button_confirm()
+            receipt = self._receive(po).picking_id
+
+            scrap_form = Form.from_action(self.env, receipt.action_scrap())
+            scrap_form.product_id = product
+            scrap_form.quantity = 1
+            scrap = scrap_form.save()
+            scrap.location_dest_id.valuation_account_id = self.account_stock_variation
+            scrap.action_scrap()
+
+            # Nothing to value yet
+            self.assertEqual(scrap.value, 0)
+            self.assertFalse(self.env['account.move.line'].search([('stock_move_id', 'in', scrap.ids)]))
+
+        with freeze_time(today):
+            # Lock the period so that the scrap can't be valued within it anymore
+            self.company.sudo().fiscalyear_lock_date = today - timedelta(days=1)
+
+            bill = self.env['account.move'].browse(po.action_create_invoice()['res_id'])
+            bill.invoice_date = fields.Date.today()
+            bill.invoice_line_ids.price_unit = 10.0
+            bill.action_post()
+
+            # The scrap is now valued at 10 and compensated after the lock date
+            self.assertEqual(scrap.value, -10)
+            scrap_amls = self.env['account.move.line'].search([('stock_move_id', 'in', scrap.ids)], order='id')
+            self.assertRecordValues(scrap_amls, [
+                {'account_id': accounts_data['stock_valuation'].id, 'debit': 0.0, 'credit': 10.0, 'date': fields.Date.today()},
+                {'account_id': self.account_stock_variation.id, 'debit': 10.0, 'credit': 0.0, 'date': fields.Date.today()},
+            ])
