@@ -1266,16 +1266,17 @@ class HrEmployee(models.Model):
             else:
                 if len(employee.work_contact_id.employee_ids) <= 1:
                     partner = employee.work_contact_id
-                    if not employee.user_id and partner.user_ids:
+                    vals = {
+                        fname: value for fname, value in [('email', employee.work_email or employee.private_email), ('phone', employee.work_phone)]
+                        if partner[fname] != value
+                    }
+                    if not vals or (not employee.user_id and partner.user_ids):
                         # The partner of a user unlinked from the employee is kept (expenses, bank accounts)
                         # but is the user's: its contact details are not the employee's to change
                         continue
                     if not employee.user_id:
                         partner = partner.sudo()
-                    partner.write({
-                        'email': employee.work_email or employee.private_email,
-                        'phone': employee.work_phone,
-                    })
+                    partner.write(vals)
         if employees_without_work_contact:
             employees_without_work_contact.sudo()._create_work_contacts()
 
