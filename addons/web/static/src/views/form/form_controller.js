@@ -532,6 +532,10 @@ export class FormController extends Component {
 
     async beforeVisibilityChange() {
         const root = this.model.root;
+        if (!root) {
+            // the listener is active before the first load: nothing to save yet
+            return;
+        }
         const isEditingX2Many = Object.keys(root.activeFields).some((fieldName) => {
             const field = root.fields[fieldName];
             return (
