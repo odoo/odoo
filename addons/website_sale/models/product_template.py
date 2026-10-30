@@ -2039,8 +2039,11 @@ class ProductTemplate(models.Model):
             website = self.env.website or self.env["website"].browse(
                 self.env.context.get("host_id")
             )
-            if not website.with_context(website_id=website.id).is_view_active(
-                "website_sale.product_comment"
+            if (
+                self.env.user._is_public()
+                or not website.with_context(website_id=website.id).is_view_active(
+                    "website_sale.product_comment"
+                )
             ):
                 return [(Domain.TRUE, "write")]
         return super()._mail_get_operation_for_mail_message_operation(message_operation)
