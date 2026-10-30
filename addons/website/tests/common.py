@@ -38,3 +38,20 @@ class HttpCaseWithWebsiteUser(HttpCase):
                 Command.link(cls.env.ref("base.group_user").id),
             ],
         })
+
+
+def set_url_code(lang, url_code=None):
+    """
+    Set the URL code of a language, by default the short form of its code.
+    Tests use it for the URLs they expect (/fr for French), but another language
+    may already hold that code depending on the installed languages. That
+    language gets its full code as URL code instead.
+
+    :param lang: the ``res.lang`` record to give the URL code to
+    :param url_code: the URL code to assign to lang, short code by default
+    """
+    lang = lang.sudo()
+    url_code = url_code or lang.code.split('_')[0]
+    holder = lang.with_context(active_test=False).search([('url_code', '=', url_code), ('id', '!=', lang.id)])
+    holder.url_code = holder.code
+    lang.url_code = url_code
