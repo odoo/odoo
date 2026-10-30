@@ -69,6 +69,7 @@ export class FieldMany2ManyTagsBanks extends Many2ManyTagsField {
                 [false, "form"],
             ],
             domain: this.getDomain(),
+            context: { default_partner_id: this.props.record.resId },
             target: "current",
         }, { newWindow });
     }
