@@ -4,10 +4,6 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.addons.account.models.company import PEPPOL_MAILING_COUNTRIES
 
-# Context value letting `button_cancel` go through `_check_draftable`. A plain boolean could be
-# passed through RPC to bypass the restriction.
-_PEPPOL_CANCEL_TOKEN = object()
-
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
@@ -37,11 +33,7 @@ class AccountMove(models.Model):
     peppol_can_send_response = fields.Boolean(compute='_compute_peppol_can_send_response')
 
     def button_cancel(self):
-        # EXTENDS 'account'
-        # Cancelling a sent document stays allowed, as it is the way to void an e-invoice that
-        # must not be modified. The posted -> cancelled shortcut goes through `button_draft`,
-        # so `_check_draftable` must not block it.
-        res = super(AccountMove, self.with_context(peppol_skip_draftable_check=_PEPPOL_CANCEL_TOKEN)).button_cancel()
+        res = super().button_cancel()
         if action := self.action_peppol_open_rejection_wizard():
             action['context'] = {'cancel_res': res}
             return action
@@ -97,17 +89,6 @@ class AccountMove(models.Model):
             if move._is_exportable_as_self_invoice():
                 move.display_send_button = True
 
-    def _check_draftable(self):
-        # EXTENDS 'account'
-        if self.env.context.get('peppol_skip_draftable_check') is not _PEPPOL_CANCEL_TOKEN and self.filtered(
-            lambda move: move.is_sale_document(include_receipts=True) and move.peppol_is_sent
-        ):
-            raise UserError(self.env._(
-                "You cannot reset to draft invoices that were sent via Peppol / PDP. "
-                "If you need to modify them, you must issue a credit or debit note.",
-            ))
-        return super()._check_draftable()
-
     @api.ondelete(at_uninstall=False)
     def _unlink_except_sent_peppol(self):
         if self.filtered(lambda move: move.is_sale_document(include_receipts=True) and move.peppol_is_sent):
@@ -147,12 +128,6 @@ class AccountMove(models.Model):
     def _compute_peppol_is_sent(self):
         for move in self:
             move.peppol_is_sent = move.peppol_move_state not in {False, 'ready', 'to_send', 'error', 'skipped'}
-
-    @api.depends('peppol_is_sent')
-    def _compute_show_reset_to_draft_button(self):
-        # EXTEND 'account' to hide the reset to draft button for sent Peppol invoices
-        super()._compute_show_reset_to_draft_button()
-        self.filtered(lambda move: move.peppol_is_sent and move.is_sale_document(include_receipts=True)).show_reset_to_draft_button = False
 
     @api.depends("peppol_response_ids.peppol_state")
     def _compute_peppol_can_send_response(self):
