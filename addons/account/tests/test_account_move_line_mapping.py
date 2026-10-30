@@ -1,4 +1,4 @@
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
@@ -181,8 +181,7 @@ class TestAccountMoveLineMapping(AccountTestInvoicingCommon):
         self.assertTrue(exch_line, "Mapped Exchange Loss account was not used.")
 
     def test_update_fpos_values_without_product_do_apply(self):
-        """The 'Update Taxes and Accounts' button maps the account of lines without a product
-        to the fiscal position set on the invoice afterwards."""
+        """The account of lines without a product is automatically mapped when the fiscal position changes."""
         self.sale_journal.default_account_id = self.acc_sale_dom
         self.fiscal_position.account_ids = [
             Command.create({'account_src_id': self.acc_sale_dom.id, 'account_dest_id': self.acc_sale_exp.id}),
@@ -198,7 +197,8 @@ class TestAccountMoveLineMapping(AccountTestInvoicingCommon):
         move.fiscal_position_id = self.fiscal_position
         self.assertEqual(line.account_id, self.acc_sale_dom)
 
-        move.action_update_fpos_values()
+        with Form(move) as form:
+            form.fiscal_position_id = self.fiscal_position
         self.assertEqual(line.account_id, self.acc_sale_exp)
 
     # --- DO NOT apply fiscal position mapping ---
