@@ -157,6 +157,8 @@ class ChatbotScriptStep(models.Model):
           on" and "Please call me on" with the related email and phone. Can be
           used as a default description when creating leads or tickets, for
           example.
+        * ``lang``: the ``res.lang`` of the visitor, if known.
+        * ``country``: the ``res.country`` of the visitor, if known.
 
         :param discuss_channel: The ``discuss.channel`` holding the visitor's
             conversation with the bot.
@@ -167,7 +169,8 @@ class ChatbotScriptStep(models.Model):
             the ``res.partner`` from the environment (if not a public user)
             when those are not set yet. Defaults to ``True``.
         :returns: A dict containing the customer values
-            (``partner``, ``email``, ``phone``, ``description``).
+            (``partner``, ``email``, ``phone``, ``description``, ``lang``,
+            ``country``).
         :rtype: dict
         """
 
@@ -178,13 +181,19 @@ class ChatbotScriptStep(models.Model):
         })
         input_email = user_inputs.get('email', False)
         input_phone = user_inputs.get('phone', False)
+        country = self._chatbot_get_customer_country(discuss_channel)
+        lang = discuss_channel.livechat_lang_id
 
         if self.env.user._is_public() and create_partner:
-            partner = self.env['res.partner'].create({
+            partner_values = {
                 'name': input_email,
                 'email': input_email,
                 'phone': input_phone,
-            })
+                'country_id': country.id,
+            }
+            if lang:
+                partner_values['lang'] = lang.code
+            partner = self.env['res.partner'].create(partner_values)
         elif not self.env.user._is_public():
             partner = self.env.user.partner_id
             if update_partner:
@@ -194,6 +203,10 @@ class ChatbotScriptStep(models.Model):
                     update_values['email'] = input_email
                 if input_phone and not partner.phone:
                     update_values['phone'] = input_phone
+                if lang and not partner.lang:
+                    update_values['lang'] = lang.code
+                if country and not partner.country_id:
+                    update_values['country_id'] = country.id
                 if update_values:
                     partner.write(update_values)
 
@@ -210,7 +223,12 @@ class ChatbotScriptStep(models.Model):
             'email': input_email,
             'phone': input_phone,
             'description': description,
+            'lang': lang,
+            'country': country,
         }
+
+    def _chatbot_get_customer_country(self, discuss_channel):
+        return discuss_channel.country_id
 
     def _find_first_user_free_input(self, discuss_channel):
         """Find the first message from the visitor responding to a free_input step."""

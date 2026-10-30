@@ -61,6 +61,8 @@ class ChatbotScriptStep(models.Model):
             create_values = {
                 'email_from': customer_values['email'],
                 'phone': customer_values['phone'],
+                'lang_id': customer_values['lang'].id,
+                'country_id': customer_values['country'].id,
             }
         else:
             create_values = {"partner_id": self.env.user.partner_id.id}
