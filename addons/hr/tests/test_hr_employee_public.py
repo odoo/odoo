@@ -1,5 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
+
+from odoo import tools
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.exceptions import AccessError
 from odoo.tests import tagged
@@ -64,3 +67,10 @@ class TestHrEmployee(TestHrCommon):
                     Employee.web_read_group([], groupby, aggregates)
                 with self.assertRaises(AccessError):
                     Employee.formatted_read_grouping_sets([], [groupby], aggregates)
+
+    def test_resource_avatar_without_hr_right(self):
+        with tools.file_open("base/static/img/avatar.png", "rb") as f:
+            image = base64.b64encode(f.read()).decode()
+        emp = self.env["hr.employee"].create({"name": "Joe", "image_1920": image})
+        resource = emp.resource_id.with_user(self.res_users_without_hr_right)
+        self.assertEqual(resource.avatar_128, emp.avatar_128)
