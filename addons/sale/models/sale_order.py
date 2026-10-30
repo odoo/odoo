@@ -2627,6 +2627,15 @@ class SaleOrder(models.Model):
             return 0
         return self.currency_id.round(self.amount_total * self.prepayment_percent)
 
+    def _get_portal_full_amount(self):
+        """Return the amount to pay when the customer chooses to pay the full amount on the portal.
+
+        :return: The full amount to pay.
+        :rtype: float
+        """
+        self.ensure_one()
+        return self.amount_total
+
     def _is_confirmation_amount_reached(self):
         """Return whether `self.amount_paid` is higher than the prepayment required amount.
 
