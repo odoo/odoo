@@ -383,7 +383,7 @@ def serve_db(request: Request) -> Response:
         # get the registry and cursor (RO)
         try:
             registry = Registry(request.db)
-            cr = registry.cursor(readonly=config.has_db_replica)
+            cr = registry.cursor(readonly=config.has_db_replica or request.bearer_readonly)
             # check signaling
             request.env = Environment(cr, request.session.uid, request.session.context)
             request.update_context(host_id=request.env['ir.http']._get_host_id_from_domain(request.httprequest.host))
@@ -414,11 +414,14 @@ def serve_db(request: Request) -> Response:
 
         # keep on using the RO cursor when a replica route matched,
         # and for serve fallback
-        if replica and cr.readonly:
+        if request.bearer_readonly or (replica and cr.readonly):
+            assert cr.readonly, "readonly bearer must not use a read/write cursor"
             threading.current_thread().cursor_mode = 'ro'
             try:
                 return retrying(serve_func, env=request.env)
             except ReadOnlySqlTransaction as exc:
+                if request.bearer_readonly:
+                    raise _update_served_exception(request, exc)
                 # although the controller is marked replica, it
                 # attempted a write operation, try again on the primary
                 _logger.warning("%s, retrying with a read/write cursor", exc.args[0].rstrip(), exc_info=True)
@@ -430,6 +433,8 @@ def serve_db(request: Request) -> Response:
 
         # we must use a RW cursor when a non replica route matched, or
         # there was a ReadOnlySqlTransaction error
+        assert not request.bearer_readonly, \
+            "readonly bearer must not use a read/write cursor"
         if cr.readonly:
             cr.close()
             cr = request.env.registry.cursor()

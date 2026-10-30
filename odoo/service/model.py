@@ -12,6 +12,7 @@ from odoo.exceptions import (
 from odoo.models import BaseModel, get_public_method
 from odoo.modules.registry import Registry
 from odoo.tools import lazy
+from odoo.tools.api_key import is_readonly_api_key
 
 _logger = logging.getLogger(__name__)
 
@@ -87,7 +88,7 @@ def dispatch(method, params):
             kw = {}
     else:
         raise NameError(f"Method not available {method}")  # noqa: TRY301
-    with Registry(db).cursor() as cr:
+    with Registry(db).cursor(readonly=is_readonly_api_key(passwd)) as cr:
         api.Environment(cr, api.SUPERUSER_ID, {})['res.users']._check_uid_passwd(uid, passwd)
         return execute_cr(cr, uid, model, method_, args, kw)
 

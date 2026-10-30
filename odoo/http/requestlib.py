@@ -22,6 +22,7 @@ from werkzeug.urls import URL, url_encode, url_parse
 from werkzeug.utils import redirect
 
 from odoo.tools import consteq, json_default
+from odoo.tools.api_key import is_readonly_api_key
 
 from . import request
 from ._facade import (  # noqa: F401
@@ -180,6 +181,17 @@ class Request:
         raise ValueError()
 
     _cr = cr
+
+    @property
+    def bearer_readonly(self):
+        if auth_header := self.httprequest.headers.get("Authorization"):
+            auth_scheme, *auth_params = auth_header.split(maxsplit=1)
+            return (
+                auth_scheme.lower() == 'bearer'
+                and auth_params
+                and is_readonly_api_key(auth_params[0])
+            )
+        return False
 
     @functools.cached_property
     def best_lang(self) -> str | None:

@@ -362,6 +362,7 @@
                         <group>
                             <field name="scope" class="oe_inline" widget="badges_selection" invisible="available_scopes_count == 1"/>
                             <field name="duration" string="Expires" class="oe_inline" widget="badges_selection"/>
+                            <field name="readonly" string="Readonly"/>
                         </group>
                         <footer>
                             <button name="make_key" type="object" string="Create Key" class="btn-primary" data-hotkey="q"/>
@@ -550,6 +551,7 @@
                     <field name="user_id"/>
                     <field name="name"/>
                     <field name="scope"/>
+                    <field name="readonly"/>
                     <field name="create_date"/>
                     <button type="object" name="remove" title="Delete API key." icon="delete" icon_class="oi-filled"/>
                 </list>
