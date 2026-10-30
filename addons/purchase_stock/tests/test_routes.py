@@ -149,3 +149,36 @@ class TestRoutes(TransactionCase):
             buy_route.ids,
             'A route from the active company must still be used by default',
         )
+
+    def test_two_step_receipt_with_input_under_stock(self):
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.reception_steps = 'two_steps'
+        warehouse.wh_input_stock_loc_id.location_id = warehouse.lot_stock_id
+
+        product = self.env['product.product'].create({
+            'name': 'nested input receipt product',
+            'is_storable': True,
+        })
+        partner = self.env['res.partner'].create({'name': 'nested input receipt vendor'})
+        po = self.env['purchase.order'].create({
+            'partner_id': partner.id,
+            'picking_type_id': warehouse.in_type_id.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_qty': 1.0,
+                'price_unit': 10.0,
+            })],
+        })
+        po.button_confirm()
+
+        first_picking = po.picking_ids
+        self.assertEqual(first_picking.location_dest_id, warehouse.wh_input_stock_loc_id)
+        self.assertEqual(first_picking.move_ids.location_final_id, warehouse.lot_stock_id)
+
+        first_picking.move_ids.quantity = 1.0
+        first_picking.move_ids.picked = True
+        first_picking.button_validate()
+
+        second_picking = first_picking._get_next_transfers()
+        self.assertEqual(second_picking.location_id, warehouse.wh_input_stock_loc_id)
+        self.assertEqual(second_picking.location_dest_id, warehouse.lot_stock_id)
