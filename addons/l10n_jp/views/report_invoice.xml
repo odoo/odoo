@@ -2,8 +2,8 @@
 <odoo>
     <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
         <xpath expr="//t[@t-call='web.external_layout']" position="before">
-            <!-- A whole yen price prints without decimals, unless another price of its column needs them. -->
-            <t t-set="jp_hide_zero_decimals" t-value="all(line.price_unit.is_integer() for line in o._get_move_lines_to_report())"/>
+            <!-- A whole price in a currency without decimals prints none, unless another price of its column needs them. -->
+            <t t-set="jp_hide_zero_decimals" t-value="o.currency_id.decimal_places == 0 and all(line.price_unit.is_integer() for line in o._get_move_lines_to_report())"/>
             <t t-set="jp_document_date" t-value="o.invoice_date"/>
         </xpath>
 

@@ -131,6 +131,18 @@ class TestJPAccountReport(AccountTestInvoicingCommon):
 
         self.assertEqual(self._get_unit_price_cells(html), ['202.00', '101.50'])
 
+    def test_unit_price_column_keeps_the_decimals_of_its_currency(self):
+        invoice = self._create_invoice(
+            move_type='out_invoice',
+            partner_id=self.partner_a,
+            currency_id=self.setup_other_currency('USD'),
+            invoice_line_ids=[self._prepare_invoice_line(price_unit=202.0, product_id=self.product_a, tax_ids=self.tax_sale_a)],
+            post=True,
+        )
+        html = self.env['ir.actions.report'].sudo()._render_qweb_html('account.report_invoice_with_payments', invoice.ids)[0]
+
+        self.assertEqual(self._get_unit_price_cells(html), ['202.00'])
+
     def test_another_layout_keeps_the_name_in_the_address(self):
         self.company_data['company'].external_report_layout_id = self.env.ref('web.external_layout_standard')
         invoice = self._create_invoice_one_line(

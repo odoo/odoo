@@ -2,7 +2,7 @@
 <odoo>
     <template id="report_purchaseorder_document" inherit_id="purchase.report_purchaseorder_document" primary="True">
         <xpath expr="//t[@t-call='web.external_layout']" position="before">
-            <t t-set="jp_hide_zero_decimals" t-value="all(line.price_unit.is_integer() for line in o.order_line if line.display_type or line.product_qty)"/>
+            <t t-set="jp_hide_zero_decimals" t-value="o.currency_id.decimal_places == 0 and all(line.price_unit.is_integer() for line in o.order_line if line.display_type or line.product_qty)"/>
             <t t-set="jp_document_date" t-value="o.date_approve or o.date_order"/>
         </xpath>
 
