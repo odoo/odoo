@@ -19,7 +19,10 @@ class ForumPostMessage(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             if vals.get('body'):
-                vals['body'] = add_seo_rels_to_links(vals['body'])
+                post = self.env['forum.post'].browse(
+                    vals.get('post_id') or self.env.context.get('default_post_id')
+                )
+                vals['body'] = add_seo_rels_to_links(vals['body'], post.get_base_url())
 
         records = super().create(vals_list)
 
@@ -36,7 +39,10 @@ class ForumPostMessage(models.Model):
             raise AccessError(_('%i karma required to edit a comment.', message.post_id.karma_edit))
 
         if vals.get('body'):
-            vals['body'] = add_seo_rels_to_links(vals['body'])
+            # Comments of several posts may belong to different websites: only
+            # relative links are then considered internal.
+            base_url = self.post_id.get_base_url() if len(self.post_id) == 1 else None
+            vals['body'] = add_seo_rels_to_links(vals['body'], base_url)
 
         return super().write(vals)
 
