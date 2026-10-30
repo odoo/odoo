@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-05 19:35+0000\n"
+"POT-Creation-Date: 2026-10-24 17:43+0000\n"
 "PO-Revision-Date: 2026-06-29 17:21+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -465,7 +465,8 @@ msgid ""
 "The expense is accounted for when the manufacturing order is marked as done. "
 "If not set, it is the expense account of the final product that will be used "
 "instead."
-msgstr "製造訂單標記為完成時，便會記入開支。如果未設定，則會使用最終產品的開支賬戶。"
+msgstr ""
+"製造訂單標記為完成時，便會記入開支。如果未設定，則會使用最終產品的開支賬戶。"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_product_category__property_stock_account_production_cost_id
@@ -582,6 +583,14 @@ msgstr "工作中心"
 #: model:ir.model,name:mrp_account.model_mrp_workcenter_productivity
 msgid "Workcenter Productivity Log"
 msgstr "工作中心產能日誌"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/mrp_production.py:0
+msgid ""
+"You cannot change the end date of a manufacturing order with associated "
+"journal entries."
+msgstr ""
 
 #. module: mrp_account
 #. odoo-python

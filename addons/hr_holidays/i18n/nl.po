@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 17:36+0000\n"
+"POT-Creation-Date: 2026-10-24 17:42+0000\n"
 "PO-Revision-Date: 2026-09-29 09:11+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -579,6 +579,11 @@ msgstr ""
 "\n"
 "    Versies:\n"
 "    %(versions)s"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+msgid "A supporting document is required for this type of time off."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -1250,23 +1255,22 @@ msgid "Both Approved and Confirmed"
 msgstr "Beide bevestigd en goedgekeurd"
 
 #. module: hr_holidays
-#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__allocation_validation_type__manager
-#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__leave_validation_type__manager
-msgid "By Employee's Approver"
-msgstr "Door de verlofgoedkeurder ingesteld bij de werknemer"
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__allocation_validation_type__hr
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__leave_validation_type__hr
+msgid "By HR Responsible"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__allocation_validation_type__both
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__leave_validation_type__both
-msgid "By Employee's Approver and Time Off Officer"
+msgid "By HR Responsible and Time Off Approver"
 msgstr ""
-"Door de verlofgoedkeurder ingesteld bij de werknemer en de verlofbeheerder"
 
 #. module: hr_holidays
-#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__allocation_validation_type__hr
-#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__leave_validation_type__hr
-msgid "By Time Off Officer"
-msgstr "Door de verlofbeheerder"
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__allocation_validation_type__manager
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__leave_validation_type__manager
+msgid "By Time Off Approver"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_calendar_event
@@ -2366,6 +2370,14 @@ msgid ""
 msgstr ""
 "Als het actief veld uitstaat, kun je het resource record verbergen zonder "
 "deze te verwijderen."
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_work_entry_type__create_calendar_meeting
+msgid ""
+"If this field is checked, every leave request of this type will have a "
+"corresponding entry in the calendar application. There will be no entry if "
+"this stays unchecked."
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_duration_check
@@ -5365,6 +5377,16 @@ msgstr "bevestigen"
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
 msgid "year(s)"
 msgstr "jaar"
+
+#~ msgid "By Employee's Approver"
+#~ msgstr "Door de verlofgoedkeurder ingesteld bij de werknemer"
+
+#~ msgid "By Employee's Approver and Time Off Officer"
+#~ msgstr ""
+#~ "Door de verlofgoedkeurder ingesteld bij de werknemer en de verlofbeheerder"
+
+#~ msgid "By Time Off Officer"
+#~ msgstr "Door de verlofbeheerder"
 
 #~ msgid "(s)"
 #~ msgstr "(s)"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 17:36+0000\n"
+"POT-Creation-Date: 2026-10-24 17:42+0000\n"
 "PO-Revision-Date: 2026-08-11 10:37+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -494,7 +494,8 @@ msgstr "Образец письма был отправлен на адрес %s
 #. module: purchase
 #: model:res.groups,name:purchase.group_warning_purchase
 msgid "A warning can be set on a product or a customer (Purchase)"
-msgstr "Предупреждение может быть связано с продуктом или поставщиком (Закупка)"
+msgstr ""
+"Предупреждение может быть связано с продуктом или поставщиком (Закупка)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_warning
@@ -2372,7 +2373,8 @@ msgstr "Сообщение предупреждения для строки за
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_bill_line_match
 msgid "Purchase Line and Vendor Bill line matching view"
-msgstr "Просмотр сопоставления строк заказа на закупку и строк счета поставщика"
+msgstr ""
+"Просмотр сопоставления строк заказа на закупку и строк счета поставщика"
 
 #. module: purchase
 #. odoo-python
@@ -2429,6 +2431,7 @@ msgstr "Кол-во заказов на закупку"
 #: model:ir.actions.act_window,name:purchase.action_purchase_history
 #: model:ir.model,name:purchase.model_purchase_order_line
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_id
+#: model:ir.model.fields,field_description:purchase.field_account_tax__purchase_order_line_ids
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Purchase Order Line"
@@ -2524,7 +2527,8 @@ msgstr "Напоминание о покупке"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Purchase variants of a product using attributes (size, color, etc.)"
-msgstr "Приобретение вариантов товара, используя атрибуты (размер, цвет и т.д.)"
+msgstr ""
+"Приобретение вариантов товара, используя атрибуты (размер, цвет и т.д.)"
 
 #. module: purchase
 #: model:mail.template,name:purchase.email_template_edi_purchase_done
@@ -3223,6 +3227,12 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "The ordered quantity has been updated."
+msgstr ""
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/res_partner.py:0
+msgid "The partner cannot be deleted because it is used as a dropship address"
 msgstr ""
 
 #. module: purchase

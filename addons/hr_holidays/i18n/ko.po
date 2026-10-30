@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 17:36+0000\n"
+"POT-Creation-Date: 2026-10-24 17:42+0000\n"
 "PO-Revision-Date: 2026-06-30 04:26+0000\n"
 "Last-Translator: MAHAMADASIF ANSARI <maan@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -524,6 +524,11 @@ msgid ""
 "\n"
 "    Versions:\n"
 "    %(versions)s"
+msgstr ""
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+msgid "A supporting document is required for this type of time off."
 msgstr ""
 
 #. module: hr_holidays
@@ -1186,22 +1191,22 @@ msgid "Both Approved and Confirmed"
 msgstr "모든 승인 및 확인"
 
 #. module: hr_holidays
-#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__allocation_validation_type__manager
-#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__leave_validation_type__manager
-msgid "By Employee's Approver"
-msgstr "직원의 결재권자"
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__allocation_validation_type__hr
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__leave_validation_type__hr
+msgid "By HR Responsible"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__allocation_validation_type__both
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__leave_validation_type__both
-msgid "By Employee's Approver and Time Off Officer"
-msgstr "직원의 결재권자 및 휴가 담당자"
+msgid "By HR Responsible and Time Off Approver"
+msgstr ""
 
 #. module: hr_holidays
-#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__allocation_validation_type__hr
-#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__leave_validation_type__hr
-msgid "By Time Off Officer"
-msgstr "휴가 담당자"
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__allocation_validation_type__manager
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__leave_validation_type__manager
+msgid "By Time Off Approver"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_calendar_event
@@ -2268,6 +2273,14 @@ msgid ""
 "record without removing it."
 msgstr ""
 "사용중인 필드를 아니오로 설정하면 제거하지 않고 자원 기록을 숨길 수 있습니다."
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_work_entry_type__create_calendar_meeting
+msgid ""
+"If this field is checked, every leave request of this type will have a "
+"corresponding entry in the calendar application. There will be no entry if "
+"this stays unchecked."
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_duration_check
@@ -5150,6 +5163,15 @@ msgstr "승인"
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
 msgid "year(s)"
 msgstr ""
+
+#~ msgid "By Employee's Approver"
+#~ msgstr "직원의 결재권자"
+
+#~ msgid "By Employee's Approver and Time Off Officer"
+#~ msgstr "직원의 결재권자 및 휴가 담당자"
+
+#~ msgid "By Time Off Officer"
+#~ msgstr "휴가 담당자"
 
 #~ msgid "There is no valid allocation to cover that request."
 #~ msgstr "해당 요청을 처리할 수 있는 유효한 할당이 없습니다."

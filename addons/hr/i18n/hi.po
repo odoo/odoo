@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:39+0000\n"
+"POT-Creation-Date: 2026-10-24 17:42+0000\n"
 "PO-Revision-Date: 2026-07-01 11:27+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s19-3/hr/hi/"
@@ -4857,6 +4857,13 @@ msgid ""
 msgstr ""
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"Some of these fields %(field_name)s don't exist on this model (hr.version)."
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -5048,16 +5055,6 @@ msgid "Template for Employees"
 msgstr ""
 
 #. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_employee.py:0
-msgid ""
-"The Badge ID must be alphanumeric without any accents and no longer than 18 "
-"characters."
-msgstr ""
-"बैज की पहचान संख्या में सिर्फ़ अक्षर और अंक होने चाहिए, कोई अतिरिक्त चिह्न नहीं और उसकी "
-"लंबाई 18 से ज़्यादा न हो।"
-
-#. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
 msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
@@ -5065,6 +5062,14 @@ msgid ""
 msgstr ""
 "बैज की पहचान संख्या किसी और के पास नहीं हो सकती, यह पहले ही एक दूसरे कर्मचारी को दी "
 "जा चुकी है।"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"The Badge ID must contain only printable ASCII characters, without spaces, "
+"and be no longer than 18 characters."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_departure_reason__country_code
@@ -6323,6 +6328,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr ""
+
+#~ msgid ""
+#~ "The Badge ID must be alphanumeric without any accents and no longer than "
+#~ "18 characters."
+#~ msgstr ""
+#~ "बैज की पहचान संख्या में सिर्फ़ अक्षर और अंक होने चाहिए, कोई अतिरिक्त चिह्न नहीं और "
+#~ "उसकी लंबाई 18 से ज़्यादा न हो।"
 
 #~ msgid "Gender"
 #~ msgstr "लिंग"

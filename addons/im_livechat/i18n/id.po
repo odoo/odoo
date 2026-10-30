@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
+"POT-Creation-Date: 2026-10-24 17:42+0000\n"
 "PO-Revision-Date: 2026-10-02 09:01+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -36,8 +36,8 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"        Penilaian Live Chat terdiri dari 1 (Tidak Puas), 3 (Netral), 5 (Puas)"
-"\n"
+"        Penilaian Live Chat terdiri dari 1 (Tidak Puas), 3 (Netral), 5 "
+"(Puas)\n"
 "        atau kosong dan hanya dapat diatur di saluran Live Chat.\n"
 "        "
 
@@ -146,15 +146,10 @@ msgid ""
 "* 'Show with notification' is 'Show' in addition to a floating text just "
 "next to the button.\n"
 "* 'Open automatically' displays the button and automatically opens the "
-"conversation pane.\n"
+"conversation pane on larger screens. On small screens, this behaves like "
+"'Show'.\n"
 "* 'Hide' hides the chat button on the pages.\n"
 msgstr ""
-"* 'Tunjukkan' menampilkan tombol chat pada halaman.\n"
-"* 'Tunjukkan dengan notifikasi' adalah 'Tunjukkan' ditambah teks mengambang "
-"persis di sebelah tombol.\n"
-"* 'Buka otomatis' menampilkan tombol dan secara otomatis membuka jendela "
-"percakapan.\n"
-"* 'Sembunyikan' menyembunyikkan tombol chat pada halaman.\n"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -228,8 +223,8 @@ msgid ""
 "with visitors only when no operator is available.</span>"
 msgstr ""
 "<span>Tip: Setidaknya satu interaksi (Pertanyaan, Email, ...) dibutuhkan "
-"sebelum Bot dapat melakukan action yang lebih kompleks (Forward ke Operator, "
-"...). </span>\n"
+"sebelum Bot dapat melakukan action yang lebih kompleks (Forward ke "
+"Operator, ...). </span>\n"
 "                    <span>Gunakan Peraturan Channel bila Anda ingin Bot "
 "untuk berinteraksi dengan pengunjung hanya saat tidak ada operator yang "
 "tersedia.</span>"
@@ -242,8 +237,8 @@ msgid ""
 "span>"
 msgstr ""
 "<span>Tip: Setidaknya satu interaksi (Pertanyaan, Email, ...) dibutuhkan "
-"sebelum Bot dapat melakukan action yang lebih kompleks (Forward ke Operator, "
-"...).</span>"
+"sebelum Bot dapat melakukan action yang lebih kompleks (Forward ke "
+"Operator, ...).</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_step_view_form
@@ -1100,12 +1095,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
 "Go to <strong>Website</strong> &gt; <strong>Configuration</strong> &gt; "
-"<strong>Settings</strong> &gt; <strong>Email</strong> &amp; "
-"<strong>Marketing.</strong>"
+"<strong>Settings</strong> &gt; <strong>General.</strong>"
 msgstr ""
-"Kunjungi <strong>Website</strong> &gt; <strong>Konfigurasi</strong> &gt; "
-"<strong>Pengaturan</strong> &gt; <strong>Email</strong> &amp; <strong>"
-"Marketing.</strong>"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1375,8 +1366,8 @@ msgstr "Informasi"
 msgid ""
 "Invalid URL '%s'. The Review Link must start with 'http://' or 'https://'."
 msgstr ""
-"URL '%s' Tidak Valid. Link Review harus dimulai dengan 'http://' or 'https://"
-"'."
+"URL '%s' Tidak Valid. Link Review harus dimulai dengan 'http://' or "
+"'https://'."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__is_forward_operator_child
@@ -2390,7 +2381,8 @@ msgstr "Tanggal akhir sesi"
 msgid ""
 "Session is closed when either the visitor or the last agent leaves the "
 "conversation."
-msgstr "Sesi ditutup saat pengunjung atau agen terakhir keluar dari percakapan."
+msgstr ""
+"Sesi ditutup saat pengunjung atau agen terakhir keluar dari percakapan."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__call_percentage
@@ -2549,6 +2541,12 @@ msgstr "Teks pada Tombol"
 #: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
 msgid "Thank you for your feedback"
 msgstr "Terima kasih untuk feedback Anda"
+
+#. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/im_livechat_channel.py:0
+msgid "The URL Regex '%(regex)s' is not valid."
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__channel_id
@@ -2885,7 +2883,8 @@ msgstr "Selamat datang NamaPerusahaan! 👋"
 #. module: im_livechat
 #: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_initial_step_demo
 msgid "Welcome to the Support! How can I assist you today?"
-msgstr "Selamat datang ke Bantuan! Bagaimana saya dapat membantu Anda hari ini?"
+msgstr ""
+"Selamat datang ke Bantuan! Bagaimana saya dapat membantu Anda hari ini?"
 
 #. module: im_livechat
 #: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_dispatch
@@ -3070,3 +3069,27 @@ msgstr "penanganan pesan websocket"
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "width:40px; height:40px; border-radius:0.5rem; display:block;"
 msgstr ""
+
+#~ msgid ""
+#~ "* 'Show' displays the chat button on the pages.\n"
+#~ "* 'Show with notification' is 'Show' in addition to a floating text just "
+#~ "next to the button.\n"
+#~ "* 'Open automatically' displays the button and automatically opens the "
+#~ "conversation pane.\n"
+#~ "* 'Hide' hides the chat button on the pages.\n"
+#~ msgstr ""
+#~ "* 'Tunjukkan' menampilkan tombol chat pada halaman.\n"
+#~ "* 'Tunjukkan dengan notifikasi' adalah 'Tunjukkan' ditambah teks "
+#~ "mengambang persis di sebelah tombol.\n"
+#~ "* 'Buka otomatis' menampilkan tombol dan secara otomatis membuka jendela "
+#~ "percakapan.\n"
+#~ "* 'Sembunyikan' menyembunyikkan tombol chat pada halaman.\n"
+
+#~ msgid ""
+#~ "Go to <strong>Website</strong> &gt; <strong>Configuration</strong> &gt; "
+#~ "<strong>Settings</strong> &gt; <strong>Email</strong> &amp; "
+#~ "<strong>Marketing.</strong>"
+#~ msgstr ""
+#~ "Kunjungi <strong>Website</strong> &gt; <strong>Konfigurasi</strong> &gt; "
+#~ "<strong>Pengaturan</strong> &gt; <strong>Email</strong> &amp; "
+#~ "<strong>Marketing.</strong>"

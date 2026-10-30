@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
+"POT-Creation-Date: 2026-10-24 17:42+0000\n"
 "PO-Revision-Date: 2026-10-01 09:33+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -147,15 +147,10 @@ msgid ""
 "* 'Show with notification' is 'Show' in addition to a floating text just "
 "next to the button.\n"
 "* 'Open automatically' displays the button and automatically opens the "
-"conversation pane.\n"
+"conversation pane on larger screens. On small screens, this behaves like "
+"'Show'.\n"
 "* 'Hide' hides the chat button on the pages.\n"
 msgstr ""
-"* \"Mostrar\" muestra el botón de chat en todas las páginas.\n"
-"* \"Mostrar con notificación\" es similar a \"Mostrar\" pero cuenta con un "
-"texto flotante junto al botón.\n"
-"* \"Abrir automáticamente\" muestra el botón y abre automáticamente la "
-"ventana de conversación.\n"
-"* \"Ocultar\" oculta el botón de chat en las páginas.\n"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -216,8 +211,8 @@ msgid ""
 "<span>Reminder: This step will only be played if no operator is available.</"
 "span>"
 msgstr ""
-"<span>Recordatorio: este paso solo sucederá si no hay operadores "
-"disponibles.</span>"
+"<span>Recordatorio: este paso solo sucederá si no hay operadores disponibles."
+"</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_form
@@ -1100,12 +1095,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
 "Go to <strong>Website</strong> &gt; <strong>Configuration</strong> &gt; "
-"<strong>Settings</strong> &gt; <strong>Email</strong> &amp; "
-"<strong>Marketing.</strong>"
+"<strong>Settings</strong> &gt; <strong>General.</strong>"
 msgstr ""
-"Vaya a <strong>Sitio web</strong> &gt; <strong>Configuración</strong> &gt; "
-"<strong>Ajustes</strong> &gt; <strong>Correo electrónico</strong> &amp; "
-"<strong>Marketing.</strong>"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1377,8 +1368,8 @@ msgstr "Información"
 msgid ""
 "Invalid URL '%s'. The Review Link must start with 'http://' or 'https://'."
 msgstr ""
-"URL no válida “%s”. El enlace de reseña debe empezar con “http://” o “"
-"https://”."
+"URL no válida “%s”. El enlace de reseña debe empezar con “http://” o "
+"“https://”."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__is_forward_operator_child
@@ -2551,6 +2542,12 @@ msgid "Thank you for your feedback"
 msgstr "Gracias por sus comentarios"
 
 #. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/im_livechat_channel.py:0
+msgid "The URL Regex '%(regex)s' is not valid."
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__channel_id
 msgid "The channel of the rule"
 msgstr "El canal de la regla"
@@ -3083,3 +3080,27 @@ msgstr "gestión de mensajes de WebSocket"
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "width:40px; height:40px; border-radius:0.5rem; display:block;"
 msgstr ""
+
+#~ msgid ""
+#~ "* 'Show' displays the chat button on the pages.\n"
+#~ "* 'Show with notification' is 'Show' in addition to a floating text just "
+#~ "next to the button.\n"
+#~ "* 'Open automatically' displays the button and automatically opens the "
+#~ "conversation pane.\n"
+#~ "* 'Hide' hides the chat button on the pages.\n"
+#~ msgstr ""
+#~ "* \"Mostrar\" muestra el botón de chat en todas las páginas.\n"
+#~ "* \"Mostrar con notificación\" es similar a \"Mostrar\" pero cuenta con "
+#~ "un texto flotante junto al botón.\n"
+#~ "* \"Abrir automáticamente\" muestra el botón y abre automáticamente la "
+#~ "ventana de conversación.\n"
+#~ "* \"Ocultar\" oculta el botón de chat en las páginas.\n"
+
+#~ msgid ""
+#~ "Go to <strong>Website</strong> &gt; <strong>Configuration</strong> &gt; "
+#~ "<strong>Settings</strong> &gt; <strong>Email</strong> &amp; "
+#~ "<strong>Marketing.</strong>"
+#~ msgstr ""
+#~ "Vaya a <strong>Sitio web</strong> &gt; <strong>Configuración</strong> "
+#~ "&gt; <strong>Ajustes</strong> &gt; <strong>Correo electrónico</strong> "
+#~ "&amp; <strong>Marketing.</strong>"

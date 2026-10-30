@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:39+0000\n"
+"POT-Creation-Date: 2026-10-24 17:44+0000\n"
 "PO-Revision-Date: 2026-08-11 11:37+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-3/web/"
@@ -1786,6 +1786,7 @@ msgstr "Конвертировать в WebP"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
 msgid "Copied"
@@ -1797,6 +1798,12 @@ msgstr "Скопировано"
 #: code:addons/web/static/src/webclient/actions/action_service.js:0
 msgid "Copy"
 msgstr "Копировать"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
+msgid "Copy Arch"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6357,6 +6364,12 @@ msgstr "Искать еще..."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/reference/reference_field.js:0
+msgid "Search a record..."
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_picker.js:0
 msgid "Search emoji"
 msgstr "Поиск эмодзи"
@@ -6701,6 +6714,12 @@ msgstr "Синкансэн"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "Shinto"
 msgstr "Синто"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/webclient/user_menu/user_menu_items.js:0
+msgid "Shortcuts"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -7134,6 +7153,14 @@ msgid "The app seems to be installed on your device"
 msgstr "Приложение, похоже, уже установлено на вашем устройстве"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/search_arch_parser.js:0
+msgid ""
+"The autocomplete value for %(field)s has not been found: the record with id %"
+"(id)s doesn't seem to exist"
+msgstr ""
+
+#. module: web
 #. odoo-python
 #: code:addons/web/controllers/export.py:0
 msgid ""
@@ -7175,8 +7202,8 @@ msgid ""
 "The ids in %(field_name)s must only be integers or \"false\": “%"
 "(action_ids)s”"
 msgstr ""
-"Идентификаторы в %(field_name)s должны быть только целыми числами или «false"
-"»: «%(action_ids)s»"
+"Идентификаторы в %(field_name)s должны быть только целыми числами или "
+"«false»: «%(action_ids)s»"
 
 #. module: web
 #. odoo-javascript
@@ -7237,6 +7264,14 @@ msgid ""
 msgstr ""
 "У пользователя должен быть один уникальный встроенный параметр действия на "
 "каждый параметр пользователя, действие и идентификатор записи."
+
+#. module: web
+#. odoo-python
+#: code:addons/web/controllers/export.py:0
+msgid ""
+"There are too many columns (%(count)s columns, limit: %(limit)s) to export "
+"as Excel 2007-2013 (.xlsx) format. Consider splitting the export."
+msgstr ""
 
 #. module: web
 #. odoo-python

@@ -17,11 +17,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 17:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:42+0000\n"
 "PO-Revision-Date: 2026-10-09 13:27+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-3/mrp/"
-"de/>\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-3/mrp/de/"
+">\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -382,11 +382,11 @@ msgstr ""
 "<span class=\"o_annotation o_annotation_1 o_annotation_end position-"
 "absolute\">Stechuhr</span>\n"
 "                                        <span class=\"o_annotation "
-"o_annotation_2 o_annotation_end position-absolute\">Qualitätskontrolle</span>"
-"\n"
+"o_annotation_2 o_annotation_end position-absolute\">Qualitätskontrolle</"
+"span>\n"
 "                                        <span class=\"o_annotation "
-"o_annotation_3 o_annotation_start position-absolute\">Feedbackschleife</span>"
-"\n"
+"o_annotation_3 o_annotation_start position-absolute\">Feedbackschleife</"
+"span>\n"
 "                                        <span class=\"o_annotation "
 "o_annotation_4 o_annotation_start position-absolute\">Materialien "
 "registrieren</span>\n"
@@ -4123,7 +4123,8 @@ msgstr "Nicht bereit"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Note that another version of this BOM is available."
-msgstr "Beachten Sie, dass eine andere Version dieser Stückliste verfügbar ist."
+msgstr ""
+"Beachten Sie, dass eine andere Version dieser Stückliste verfügbar ist."
 
 #. module: mrp
 #. odoo-python
@@ -4601,7 +4602,8 @@ msgstr "Zum Datum Planen"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Plan manufacturing or purchase orders based on forecasts"
-msgstr "Planen Sie Fertigungsaufträge oder Bestellungen basierend auf Prognosen"
+msgstr ""
+"Planen Sie Fertigungsaufträge oder Bestellungen basierend auf Prognosen"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -6027,6 +6029,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "The day after tomorrow"
 msgstr "Übermorgen"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+msgid "The end date cannot be set in the future."
+msgstr ""
 
 #. module: mrp
 #. odoo-python

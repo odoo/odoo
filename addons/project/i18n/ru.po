@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 17:36+0000\n"
+"POT-Creation-Date: 2026-10-24 17:42+0000\n"
 "PO-Revision-Date: 2026-08-11 11:38+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -263,8 +263,8 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>"
-"\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/"
+">\n"
 "    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
 "style=\"width:100%; margin:0px auto;\">\n"
@@ -278,12 +278,12 @@ msgstr ""
 "                Здравствуйте!<br/><br/>\n"
 "            </t>\n"
 "            Пожалуйста, уделите минуту, чтобы оценить качество наших услуг "
-"по задаче <strong t-out=\"object.name or ''\">Планирование и бюджет</strong>"
-"\n"
+"по задаче <strong t-out=\"object.name or ''\">Планирование и бюджет</"
+"strong>\n"
 "            <t t-if=\"object._rating_get_operator().name\">, \n"
 "                за которую отвечает <strong t-"
-"out=\"object._rating_get_operator().name or ''\">Митчелл Админ</strong>.<br/>"
-"\n"
+"out=\"object._rating_get_operator().name or ''\">Митчелл Админ</strong>.<br/"
+">\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                .<br/>\n"
@@ -341,8 +341,8 @@ msgstr ""
 "                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
 "color: #454748;\">Этот опрос отправляется <b t-"
 "out=\"object.stage_id.rating_status_period or ''\"> еженедельно</b>, пока "
-"задача находится на этапе <b t-out=\"object.stage_id.name or ''\">«В работе"
-"»</b>.</span>\n"
+"задача находится на этапе <b t-out=\"object.stage_id.name or ''\">«В "
+"работе»</b>.</span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td><br/>С уважением,</td></tr>\n"
@@ -351,19 +351,19 @@ msgstr ""
 "t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"opacity: 0.5;\">\n"
-"            <t t-out=\"object.project_id.company_id.phone or ''\">1 650-123-"
-"4567</t>\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
+"650-123-4567</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href=\"mailto:{{ "
-"object.project_id.company_id.email }}\" style=\"text-decoration:none; color: "
-"#454748;\" t-out=\"object.project_id.company_id.email or ''\">"
-"info@yourcompany.com</a>\n"
+"                | <a t-attf-href=\"mailto:"
+"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
+"color: #454748;\" t-out=\"object.project_id.company_id.email or "
+"''\">info@yourcompany.com</a>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.company_id.website\">\n"
 "                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
 "\" style=\"text-decoration:none; color: #454748;\" t-"
-"out=\"object.project_id.company_id.website or ''\">http://www.example.com</a>"
-"\n"
+"out=\"object.project_id.company_id.website or ''\">http://www.example.com</"
+"a>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -2336,6 +2336,7 @@ msgid "Future"
 msgstr "Будущие"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Future Activities"
@@ -2822,6 +2823,7 @@ msgid "Last Updated on"
 msgstr "Дата последнего обновления:"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Activities"
@@ -3048,6 +3050,7 @@ msgid "Months"
 msgstr "Месяцы"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Activities"
@@ -4575,6 +4578,7 @@ msgid "Show Sub-Tasks"
 msgstr "Показать подзадачи"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Show all records whose next activity date is past"
@@ -5523,6 +5527,7 @@ msgid "Today"
 msgstr "Сегодня"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Today Activities"

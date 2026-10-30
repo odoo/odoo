@@ -10,18 +10,18 @@
 # Fabien Bourgeois <fabien@yaltik.com>, 2022
 # Martin Trigaux, 2023
 # Jolien De Paepe, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Bren Driesen <brdri@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:38+0000\n"
-"PO-Revision-Date: 2026-10-14 07:33+0000\n"
-"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"POT-Creation-Date: 2026-10-24 17:42+0000\n"
+"PO-Revision-Date: 2026-10-28 12:34+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-3/"
 "website/fr/>\n"
 "Language: fr\n"
@@ -3208,8 +3208,8 @@ msgstr "Accordéon d'images"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "Accounts are usable across all your multiple websites"
-msgstr "Les comptes peuvent être utilisés à travers vos différents sites web"
+msgid "Accounts created on this website are usable across all other websites"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_2_s_three_columns
@@ -7618,6 +7618,12 @@ msgstr "Donut"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/popup_option_plugin.js:0
+msgid "Drag blocks here"
+msgstr "Déposez les blocs ici"
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 msgid "Drag the <b>%s</b> block and drop it at the bottom of the page."
 msgstr "Faites glisser le bloc <b>%s</b> et déposez-le en bas de la page."
@@ -9461,6 +9467,12 @@ msgstr "Retour"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/interactions/website_auth_form.js:0
+msgid "Go back to the homepage"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/fields/redirect_field.xml:0
 msgid "Go to"
 msgstr "Aller au"
@@ -9548,6 +9560,15 @@ msgstr "Google Map"
 #: model:ir.model.fields,field_description:website.field_website__google_maps_api_key
 msgid "Google Maps API Key"
 msgstr "Clé d'API Google Maps"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_service.js:0
+#: code:addons/website/static/src/core/website_map_service.js:0
+msgid ""
+"Google Maps configuration has changed. Please reload the page for changes to "
+"take effect."
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -14508,8 +14529,8 @@ msgstr "Placeholder"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_api_key_dialog.xml:0
-msgid "Places API"
-msgstr "Places API"
+msgid "Places API (NEW)"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -16043,6 +16064,11 @@ msgstr "Rechercher sur notre site web"
 #: code:addons/website/static/src/builder/plugins/options/searchbar_option.xml:0
 msgid "Search within"
 msgstr "Rechercher dans"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.website_search_box_input
+msgid "Search..."
+msgstr "Rechercher..."
 
 #. module: website
 #. odoo-javascript
@@ -17753,12 +17779,6 @@ msgid "The form has been sent successfully."
 msgstr "Le formulaire a été envoyé avec succès."
 
 #. module: website
-#. odoo-python
-#: code:addons/website/controllers/form.py:0
-msgid "The form's specified model does not exist"
-msgstr "Le modèle spécifié du formulaire n'existe pas"
-
-#. module: website
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,help:website.field_ir_cron__website_url
 msgid "The full URL to access the server action through the website."
@@ -18116,6 +18136,13 @@ msgid ""
 msgstr ""
 "Cette police existe déjà, vous pouvez seulement l'ajouter en tant que police "
 "local pour remplacer la version du serveur."
+
+#. module: website
+#. odoo-python
+#: code:addons/website/controllers/form.py:0
+msgid ""
+"This form cannot be submitted. Please contact the website administrator."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -20706,6 +20733,12 @@ msgstr "Vous ne pouvez pas dupliquer ce champ."
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/card_image_option_plugin.js:0
+msgid "You cannot duplicate this image."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/facebook_option_plugin.js:0
 msgid "You didn't provide a valid Facebook link"
 msgstr "Vous n'avez pas fourni de lien Facebook valide"
@@ -22470,6 +22503,16 @@ msgstr "✽  Pizzas"
 #: model_terms:ir.ui.view,arch_db:website.s_key_benefits
 msgid "✽  What We Offer"
 msgstr "✽  Notre offre"
+
+#~ msgid "Accounts are usable across all your multiple websites"
+#~ msgstr ""
+#~ "Les comptes peuvent être utilisés à travers vos différents sites web"
+
+#~ msgid "Places API"
+#~ msgstr "Places API"
+
+#~ msgid "The form's specified model does not exist"
+#~ msgstr "Le modèle spécifié du formulaire n'existe pas"
 
 #~ msgid "Translate the whole content with AI"
 #~ msgstr "Traduire tout le contenu avec l’IA"

@@ -50,7 +50,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 17:36+0000\n"
+"POT-Creation-Date: 2026-10-24 17:42+0000\n"
 "PO-Revision-Date: 2026-10-20 09:42+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -1378,14 +1378,15 @@ msgid "<span class=\"o_stat_text\">Invoiced</span>"
 msgstr "<span class=\"o_stat_text\">Laskutettu</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-msgid "<span class=\"o_stat_text\">Journal Entries</span>"
-msgstr "<span class=\"o_stat_text\">Päiväkirjan kirjaukset</span>"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
 msgstr "<span class=\"o_stat_text\">Päiväkirjan kirjaus</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "<span class=\"o_stat_text\">Journal Items</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2938,6 +2939,11 @@ msgid "Account Move Count"
 msgstr "Tilikirjausten määrä"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__account_move_line_ids
+msgid "Account Move Line"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__name
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_name
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -2991,6 +2997,11 @@ msgstr "Myyntisaamiset"
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_receivable_active
 msgid "Account Receivable Active"
 msgstr "Aktiiviset myyntisaamiset"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__account_reconcile_model_line_ids
+msgid "Account Reconcile Model Line"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -3058,6 +3069,7 @@ msgstr ""
 "ja avauskirjauksen tekemiseksi."
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__account_types
 #: model:ir.model.fields,field_description:account.field_account_report__filter_account_type
 msgid "Account Types"
 msgstr "Tilityypit"
@@ -3346,43 +3358,43 @@ msgstr "Siirtosumma"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_buildings
-msgid "Accumulated Amortization - Buildings"
-msgstr "Kertyneet poistot - Rakennukset"
+msgid "Accumulated Depreciation - Buildings"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_furniture
-msgid "Accumulated Amortization - Furniture & Fixtures"
-msgstr "Kertyneett poistot - Huonekalut & kalusteet"
+msgid "Accumulated Depreciation - Furniture & Fixtures"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_improvements
-msgid "Accumulated Amortization - Improvements"
-msgstr "Kertyneet poistot - Parannukset"
+msgid "Accumulated Depreciation - Improvements"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_machines
-msgid "Accumulated Amortization - Machines & Tools"
-msgstr "Kertyneet poistot - Koneet & työkalut"
+msgid "Accumulated Depreciation - Machines & Tools"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_other_property
-msgid "Accumulated Amortization - Other Property"
-msgstr "Kertyneet poistot - Muu omaisuus"
+msgid "Accumulated Depreciation - Other Property"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_technology
-msgid "Accumulated Amortization - Technology"
-msgstr "Kertyneet poistot - Teknologia"
+msgid "Accumulated Depreciation - Technology"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_vehicles
-msgid "Accumulated Amortization - Vehicles"
-msgstr "Kertyneet poistot - Ajoneuvot"
+msgid "Accumulated Depreciation - Vehicles"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_acc_depreciation
-msgid "Accumulated Depreciation"
-msgstr "Kertyneet poistot"
+msgid "Accumulated Depreciation Misc"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.21_retained_earnings
@@ -4723,8 +4735,20 @@ msgstr "Takaisin laskuun"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
+msgid "Back to Credit Note"
+msgstr ""
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Invoice"
 msgstr "Takaisin laskuun"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
+msgid "Back to Refund"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -4763,7 +4787,7 @@ msgstr "Saldon prosentti ei voi olla 0"
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.21_bank_journal_default_account_163
-#: model:account.account,name:account.22_bank_journal_default_account_294
+#: model:account.account,name:account.22_bank_journal_default_account_295
 #: model:account.journal,name:account.21_bank
 #: model:account.journal,name:account.22_bank
 #: model:ir.model.fields,field_description:account.field_res_partner__bank_account_count
@@ -5031,6 +5055,8 @@ msgid "Banks"
 msgstr "Pankit"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__base
 msgid "Base"
 msgstr "Perusta"
@@ -5615,7 +5641,7 @@ msgstr "Siirrä"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
-#: model:account.account,name:account.21_cash_journal_default_account_304
+#: model:account.account,name:account.21_cash_journal_default_account_305
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -5628,12 +5654,12 @@ msgid "Cash Account"
 msgstr "Käteistili"
 
 #. module: account
-#: model:account.account,name:account.21_cash_journal_default_account_301
+#: model:account.account,name:account.21_cash_journal_default_account_302
 msgid "Cash Bakery"
 msgstr "Käteinen, leipomo"
 
 #. module: account
-#: model:account.account,name:account.21_cash_journal_default_account_303
+#: model:account.account,name:account.21_cash_journal_default_account_304
 msgid "Cash Bar"
 msgstr "Käteinen, baari"
 
@@ -5675,7 +5701,7 @@ msgid "Cash Basis Transition Account"
 msgstr "Maksuperusteinen siirtotili"
 
 #. module: account
-#: model:account.account,name:account.21_cash_journal_default_account_300
+#: model:account.account,name:account.21_cash_journal_default_account_301
 msgid "Cash Clothes Shop"
 msgstr "Käteinen, vaatekauppa"
 
@@ -5737,7 +5763,7 @@ msgid "Cash Discount Write-Off Loss Account"
 msgstr "Käteisalennuksen poistojen tappiotili"
 
 #. module: account
-#: model:account.account,name:account.21_cash_journal_default_account_299
+#: model:account.account,name:account.21_cash_journal_default_account_300
 msgid "Cash Furn. Shop"
 msgstr "Käteinen, huonekalukauppa"
 
@@ -5748,7 +5774,7 @@ msgid "Cash Registers"
 msgstr "Kassakoneet"
 
 #. module: account
-#: model:account.account,name:account.21_cash_journal_default_account_302
+#: model:account.account,name:account.21_cash_journal_default_account_303
 msgid "Cash Restaurant"
 msgstr "Käteinen, ravintola"
 
@@ -6365,6 +6391,7 @@ msgstr ""
 "(btn_start)sennakkomaksualennuksella%(btn_end)s."
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_report__availability_condition__consolidation
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Consolidation"
 msgstr "Konsolidointi"
@@ -6930,20 +6957,16 @@ msgid "Credit Move"
 msgstr "Luoton siirto"
 
 #. module: account
+#. odoo-javascript
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.js:0
 #: model:ir.model.fields.selection,name:account.selection__account_payment__reconciled_invoices_type__credit_note
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Credit Note"
 msgstr "Hyvityslasku"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
-msgid "Credit Note :"
-msgstr "Hyvityslasku:"
 
 #. module: account
 #. odoo-python
@@ -7017,41 +7040,39 @@ msgstr "Tilin kumulatiivinen saldo."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_buildings
-msgid "Cumulative amortization recorded for building assets."
-msgstr "Rakennusomaisuuserille kirjattu kumulatiivinen poisto."
+msgid "Cumulative depreciation recorded for building assets."
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_technology
-msgid "Cumulative amortization recorded for capitalized technology assets."
-msgstr "Aktivoitujen teknologiaomaisuuserien kumulatiivinen poistot."
+msgid "Cumulative depreciation recorded for capitalized technology assets."
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_furniture
-msgid "Cumulative amortization recorded for furniture and fixture assets."
-msgstr "Huonekalu- ja kalusteomaisuuserille kirjattu kumulatiivinen poisto."
+msgid "Cumulative depreciation recorded for furniture and fixture assets."
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_improvements
 msgid ""
-"Cumulative amortization recorded for leasehold or property improvements."
+"Cumulative depreciation recorded for leasehold or property improvements."
 msgstr ""
-"Vuokrasopimuksille tai kiinteistöparannuksille kirjattu kumulatiivinen "
-"poisto."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_machines
-msgid "Cumulative amortization recorded for machinery and tool assets."
-msgstr "Koneiden ja työkalujen omaisuuserille kirjattu kumulatiivinen poisto."
+msgid "Cumulative depreciation recorded for machinery and tool assets."
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_other_property
-msgid "Cumulative amortization recorded for other depreciable property assets."
-msgstr "Muiden poistokelpoisten omaisuuserien kumulatiivinen poisto."
+msgid "Cumulative depreciation recorded for other depreciable property assets."
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_vehicles
-msgid "Cumulative amortization recorded for vehicle assets."
-msgstr "Ajoneuvo-omaisuuserille kirjattu kumulatiivinen poisto."
+msgid "Cumulative depreciation recorded for vehicle assets."
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_retained_earnings
@@ -7360,6 +7381,12 @@ msgstr "TOIMITETTU PAIKALLE PURETTUNA"
 #: model:account.incoterms,name:account.incoterm_DDP
 msgid "DELIVERED DUTY PAID"
 msgstr "TOIMITETTU TULLIMAKSUT SUORITETTU"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/tools/partner_identifiers.py:0
+msgid "DIČ"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -7832,6 +7859,11 @@ msgstr "Vanhentunut linkki"
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense_depreciation
 msgid "Depreciation"
 msgstr "Poisto"
+
+#. module: account
+#: model:account.account,name:account.22_account_account_us_deprec_amort_expense
+msgid "Depreciation & Amortization Expense"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_expense_buildings
@@ -9001,16 +9033,6 @@ msgstr "Virhe tuotaessa liitettä %(filename)s:"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/controllers/download_docs.py:0
-msgid ""
-"Error while creating XML:\n"
-"- %s"
-msgstr ""
-"Virhe XML-tiedostoa luotaessa:\n"
-"- %s"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid ""
 "Error while loading the localization: missing tax tag %(tag_name)s for "
@@ -9444,6 +9466,11 @@ msgstr "Verotusmaa"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_fiscal_country_id
 msgid "Fiscal Country Code"
 msgstr "Verotusmaakoodi"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__company_country_code
+msgid "Fiscal Country Code of the Company"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__fiscal_country_codes
@@ -11307,6 +11334,7 @@ msgstr "Sijoittaminen & erikoistoiminnot"
 #. odoo-javascript
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.js:0
 #: code:addons/account/static/src/components/receipt_selector/receipt_selector.js:0
 #: model:ir.model.fields.selection,name:account.selection__account_analytic_applicability__business_domain__invoice
 #: model:ir.model.fields.selection,name:account.selection__account_payment__reconciled_invoices_type__invoice
@@ -11322,12 +11350,6 @@ msgstr "Lasku"
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 msgid "Invoice #"
 msgstr "Lasku #"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
-msgid "Invoice :"
-msgstr "Lasku:"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_account_invoice_report_all
@@ -11522,6 +11544,12 @@ msgid ""
 msgstr ""
 "Laskujen ja hyvityslaskujen jaon tulisi sisältää vähintään yksi verojen "
 "jakorivi."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid "Invoice generated but not sent."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -12035,6 +12063,8 @@ msgid "Journal Item Label"
 msgstr "Kirjausrivin nimike"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
 #: model:ir.actions.act_window,name:account.action_account_moves_all
 #: model:ir.actions.act_window,name:account.action_account_moves_all_a
 #: model:ir.actions.act_window,name:account.action_account_moves_all_grouped_matching
@@ -12234,6 +12264,12 @@ msgstr "Nimike laskuissa"
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_form
 msgid "Label on PoS Receipts"
 msgstr "Nimike Kassajärjestelmän kuiteissa"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sanitize_payment_reference
+#: model:ir.model.fields,field_description:account.field_account_move__sanitize_payment_reference
+msgid "Label sanitize"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_land
@@ -13638,6 +13674,14 @@ msgid "No possible action found with the selected lines."
 msgstr "Valituille riveille ei löytynyt mahdollisia toimintoja."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"No valid sending method could be applied, so this invoice was not sent "
+"automatically. Please configure a sending method and send it manually."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__non_deductible_amount
 msgid "Non Deductible Amount"
 msgstr "Vähennyskelvoton summa"
@@ -14075,6 +14119,12 @@ msgid "Online Payments"
 msgstr "Verkkomaksut"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid "Only Accounting managers can create foreign taxes."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__only_tax_exigible
 msgid "Only Tax Exigible Lines"
 msgstr "Vain veronalaiset rivit"
@@ -14446,6 +14496,11 @@ msgstr "Erääntynyt"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__installments_mode__overdue
 msgid "Overdue Amount"
 msgstr "Erääntynyt määrä"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_partner_view_search
+msgid "Overdue Invoices"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15716,6 +15771,7 @@ msgid "Purchase Lock date"
 msgstr "Oston lukituspäivä"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__in_receipt
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_receipt
 msgid "Purchase Receipt"
 msgstr "Ostokuitti"
@@ -16740,6 +16796,7 @@ msgid "Sales Lock Date"
 msgstr "Myynnin lukituspäivä"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__out_receipt
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_receipt
 msgid "Sales Receipt"
 msgstr "Myyntikuitti"
@@ -17611,6 +17668,12 @@ msgid "Slovak company identification number (IČO)."
 msgstr "Slovakian yritystunnus (IČO)."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/tools/partner_identifiers.py:0
+msgid "Slovak tax identification number (DIČ)."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_snailmail_account
 msgid "Snailmail"
 msgstr "Kirjeposti"
@@ -18049,6 +18112,8 @@ msgid "Target Line"
 msgstr "Kohderivi"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
 #: model:account.report.column,name:account.generic_tax_report_account_tax_column_tax
 #: model:account.report.column,name:account.generic_tax_report_column_tax
 #: model:account.report.column,name:account.generic_tax_report_tax_account_column_tax
@@ -18886,6 +18951,7 @@ msgstr "IBAN on virheellinen, sen pitäisi alkaa maakoodilla"
 #: model:ir.model.fields,help:account.field_account_payment_register__country_code
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__country_code
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__country_code
+#: model:ir.model.fields,help:account.field_account_tax__company_country_code
 #: model:ir.model.fields,help:account.field_account_tax__country_code
 #: model:ir.model.fields,help:account.field_account_tax_group__country_code
 #: model:ir.model.fields,help:account.field_base_document_layout__country_code
@@ -18927,10 +18993,9 @@ msgstr "Tili %(name)s (%(code)s) on arkistoitu."
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid ""
-"The account code can only contain alphanumeric characters, dots, and dashes."
+"The account code can only contain alphanumeric characters, dots, and dashes. "
+"(account code: %s)"
 msgstr ""
-"Tilin koodi voi sisältää vain aakkosnumeerisia merkkejä, pisteitä tai "
-"väliviivoja."
 
 #. module: account
 #. odoo-python
@@ -20197,11 +20262,8 @@ msgstr "Tämä kirjaus on kumottu kohteesta %s"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid ""
-"This entry has been reviewed, You need the bookkeeper role to change it."
+msgid "This entry has been reviewed by accountants, only them can edit it now."
 msgstr ""
-"Tämä kirjaus on jo tarkastettu. Tarvitset kirjanpitäjän roolin muuttaaksesi "
-"sitä."
 
 #. module: account
 #. odoo-python
@@ -21818,17 +21880,10 @@ msgid ""
 "You can not archive a journal containing draft journal entries.\n"
 "\n"
 "To proceed:\n"
-"1/ click on the top-right button 'Journal Entries' from this journal form\n"
-"2/ then filter on 'Draft' entries\n"
+"1/ go to Accounting > Accounting > Journal Entries\n"
+"2/ filter on this journal and on 'Unposted' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
-"Luonnoskirjauksia sisältävää päiväkirjaa ei voi arkistoida.\n"
-"\n"
-"Jatkaaksesi:\n"
-"1/ klikkaa tämän päiväkirjalomakkeen oikeassa yläkulmassa olevaa "
-"'Päiväkirjamerkinnät' -painiketta.\n"
-"2/ suodata 'Luonnos' -kirjaukset\n"
-"3/ valitse kaikki ja kirjaa tai poista ne toimintovalikon kautta"
 
 #. module: account
 #. odoo-python
@@ -22041,6 +22096,14 @@ msgid ""
 msgstr ""
 "Et voi rekisteröidä maksuja  sekä saapuville että lähteville siirroille "
 "samanaikaisesti."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"You can't reset to draft those journal entries. You need to request a "
+"cancellation instead."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -22301,8 +22364,10 @@ msgstr "Et voi muokata kenttää %s päiväkirjassa, joka sisältää jo kirjauk
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid "You cannot modify the following readonly fields on a posted move: %s"
-msgstr "Et voi muuttaa seuraavia 'vain luku' -kenttiä kirjauksessa: %s"
+msgid ""
+"You cannot modify the following readonly fields on the posted move %(move)s: "
+"%(fields)s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -23256,6 +23321,105 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Itselaskutettu lasku (viite {{ object.name or "
 "'n/a' }})"
+
+#~ msgid "<span class=\"o_stat_text\">Journal Entries</span>"
+#~ msgstr "<span class=\"o_stat_text\">Päiväkirjan kirjaukset</span>"
+
+#~ msgid "Accumulated Amortization - Buildings"
+#~ msgstr "Kertyneet poistot - Rakennukset"
+
+#~ msgid "Accumulated Amortization - Furniture & Fixtures"
+#~ msgstr "Kertyneett poistot - Huonekalut & kalusteet"
+
+#~ msgid "Accumulated Amortization - Improvements"
+#~ msgstr "Kertyneet poistot - Parannukset"
+
+#~ msgid "Accumulated Amortization - Machines & Tools"
+#~ msgstr "Kertyneet poistot - Koneet & työkalut"
+
+#~ msgid "Accumulated Amortization - Other Property"
+#~ msgstr "Kertyneet poistot - Muu omaisuus"
+
+#~ msgid "Accumulated Amortization - Technology"
+#~ msgstr "Kertyneet poistot - Teknologia"
+
+#~ msgid "Accumulated Amortization - Vehicles"
+#~ msgstr "Kertyneet poistot - Ajoneuvot"
+
+#~ msgid "Accumulated Depreciation"
+#~ msgstr "Kertyneet poistot"
+
+#~ msgid "Credit Note :"
+#~ msgstr "Hyvityslasku:"
+
+#~ msgid "Cumulative amortization recorded for building assets."
+#~ msgstr "Rakennusomaisuuserille kirjattu kumulatiivinen poisto."
+
+#~ msgid "Cumulative amortization recorded for capitalized technology assets."
+#~ msgstr "Aktivoitujen teknologiaomaisuuserien kumulatiivinen poistot."
+
+#~ msgid "Cumulative amortization recorded for furniture and fixture assets."
+#~ msgstr "Huonekalu- ja kalusteomaisuuserille kirjattu kumulatiivinen poisto."
+
+#~ msgid ""
+#~ "Cumulative amortization recorded for leasehold or property improvements."
+#~ msgstr ""
+#~ "Vuokrasopimuksille tai kiinteistöparannuksille kirjattu kumulatiivinen "
+#~ "poisto."
+
+#~ msgid "Cumulative amortization recorded for machinery and tool assets."
+#~ msgstr ""
+#~ "Koneiden ja työkalujen omaisuuserille kirjattu kumulatiivinen poisto."
+
+#~ msgid ""
+#~ "Cumulative amortization recorded for other depreciable property assets."
+#~ msgstr "Muiden poistokelpoisten omaisuuserien kumulatiivinen poisto."
+
+#~ msgid "Cumulative amortization recorded for vehicle assets."
+#~ msgstr "Ajoneuvo-omaisuuserille kirjattu kumulatiivinen poisto."
+
+#~ msgid ""
+#~ "Error while creating XML:\n"
+#~ "- %s"
+#~ msgstr ""
+#~ "Virhe XML-tiedostoa luotaessa:\n"
+#~ "- %s"
+
+#~ msgid "Invoice :"
+#~ msgstr "Lasku:"
+
+#~ msgid ""
+#~ "The account code can only contain alphanumeric characters, dots, and "
+#~ "dashes."
+#~ msgstr ""
+#~ "Tilin koodi voi sisältää vain aakkosnumeerisia merkkejä, pisteitä tai "
+#~ "väliviivoja."
+
+#~ msgid ""
+#~ "This entry has been reviewed, You need the bookkeeper role to change it."
+#~ msgstr ""
+#~ "Tämä kirjaus on jo tarkastettu. Tarvitset kirjanpitäjän roolin "
+#~ "muuttaaksesi sitä."
+
+#~ msgid ""
+#~ "You can not archive a journal containing draft journal entries.\n"
+#~ "\n"
+#~ "To proceed:\n"
+#~ "1/ click on the top-right button 'Journal Entries' from this journal "
+#~ "form\n"
+#~ "2/ then filter on 'Draft' entries\n"
+#~ "3/ select them all and post or delete them through the action menu"
+#~ msgstr ""
+#~ "Luonnoskirjauksia sisältävää päiväkirjaa ei voi arkistoida.\n"
+#~ "\n"
+#~ "Jatkaaksesi:\n"
+#~ "1/ klikkaa tämän päiväkirjalomakkeen oikeassa yläkulmassa olevaa "
+#~ "'Päiväkirjamerkinnät' -painiketta.\n"
+#~ "2/ suodata 'Luonnos' -kirjaukset\n"
+#~ "3/ valitse kaikki ja kirjaa tai poista ne toimintovalikon kautta"
+
+#~ msgid "You cannot modify the following readonly fields on a posted move: %s"
+#~ msgstr "Et voi muuttaa seuraavia 'vain luku' -kenttiä kirjauksessa: %s"
 
 #~ msgid "PEPPOL Electronic Invoicing"
 #~ msgstr "PEPPOL -sähköinen laskutus"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:38+0000\n"
+"POT-Creation-Date: 2026-10-24 17:44+0000\n"
 "PO-Revision-Date: 2026-06-30 03:42+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -80,55 +80,15 @@ msgid ""
 "                    <div>Thank you,</div>\n"
 "                    <br/>\n"
 "                    <div t-if=\"object.state == 'paid'\">\n"
-"                        <div>Attached, you will find your receipt</div>\n"
+"                        <div>You can download your receipt <a t-attf-"
+"href=\"{{ object.get_base_url() }}/pos-self-order/receipt/{{ object.id }}?"
+"access_token={{ object.access_token }}\">here</a></div>\n"
 "                        <br/>\n"
 "                    </div>\n"
 "                    <t t-out=\"store_name\">Store name</t>\n"
 "                </div>\n"
 "            "
 msgstr ""
-"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client\" t-value=\"object.partner_id\"/>\n"
-"                    <t t-set=\"client_name\" t-value=\"client.name\"/>\n"
-"                    <t t-set=\"street\" t-value=\"client.street or ''\"/>\n"
-"                    <t t-set=\"state\" t-value=\"client.state_id.name or "
-"''\"/>\n"
-"                    <t t-set=\"city\" t-value=\"client.city or ''\"/>\n"
-"                    <t t-set=\"country\" t-value=\"client.country_id.name or "
-"''\"/>\n"
-"                    <t t-set=\"store_name\" t-"
-"value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-"
-"value=\"object.company_id.partner_id.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
-"user.lang\"/>\n"
-"                    <div>\n"
-"                        <t t-if=\"client_name\">Bonjour <t t-"
-"out=\"client_name\">Nom du client</t>,</t>\n"
-"                        <t t-else=\"\">Bonjour,</t>\n"
-"                    </div>\n"
-"                    <br/>\n"
-"                    <div>Votre commande <t t-"
-"out=\"object.tracking_number\">...</t> d'un montant de <t t-"
-"out=\"format_amount(object.amount_total,object.currency_id)\">xx,xx €</t> a "
-"été confirmée. <span t-if=\"object.preset_time or client.street\">Elle sera "
-"prête</span> <span t-if=\"object.preset_time\">à <t t-"
-"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
-"lang_code=lg)\">12:00</t></span> <span t-if=\"client.street\">at <t t-"
-"out=\"street\">rue</t>, <t t-out=\"state\">état</t>, <t t-out=\"client.zip "
-"or ''\">code postal</t>, <t t-out=\"city\">ville</t>, <t t-"
-"out=\"country\">pays</t></span></div>\n"
-"                    <br/>\n"
-"                    <div>Merci,</div>\n"
-"                    <br/>\n"
-"                    <div t-if=\"object.state == 'paid'\">\n"
-"                        <div>Vous trouverez votre reçu en pièce jointe</"
-"div>\n"
-"                        <br/>\n"
-"                    </div>\n"
-"                    <t t-out=\"store_name\">Nom du magasin</t>\n"
-"                </div>\n"
-"            "
 
 #. module: pos_self_order
 #: model:mail.template,body_html:pos_self_order.takeout_email_template
@@ -156,43 +116,15 @@ msgid ""
 "                    <div>Thank you,</div>\n"
 "                    <br/>\n"
 "                    <div t-if=\"object.state == 'paid'\">\n"
-"                        <div>Attached, you will find your receipt</div>\n"
+"                        <div>You can download your receipt <a t-attf-"
+"href=\"{{ object.get_base_url() }}/pos-self-order/receipt/{{ object.id }}?"
+"access_token={{ object.access_token }}\">here</a></div>\n"
 "                        <br/>\n"
 "                    </div>\n"
 "                    <t t-out=\"store_name\">Store name</t>\n"
 "                </div>\n"
 "            "
 msgstr ""
-"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"store_name\" t-"
-"value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-"
-"value=\"object.company_id.partner_id.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
-"user.lang\"/>\n"
-"                    <div>\n"
-"                        <t t-if=\"client_name\">Bonjour <t t-"
-"out=\"client_name\">Nom du client</t>,</t>\n"
-"                        <t t-else=\"\">Bonjour,</t>\n"
-"                    </div>\n"
-"                    <br/>\n"
-"                    <div>Votre commande <t t-"
-"out=\"object.tracking_number\">...</t> d’un montant de <t t-"
-"out=\"format_amount(object.amount_total,object.currency_id)\">xx,xx €</t> a "
-"été confirmée. <span t-if=\"object.preset_time\">Elle sera prête à <t t-"
-"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
-"lang_code=lg)\">12:00</t></span></div>\n"
-"                    <br/>\n"
-"                    <div>Merci,</div>\n"
-"                    <br/>\n"
-"                    <div t-if=\"object.state == 'paid'\">\n"
-"                        <div>Vous trouverez votre reçu en pièce jointe</"
-"div>\n"
-"                        <br/>\n"
-"                    </div>\n"
-"                    <t t-out=\"store_name\">Nom du magasin</t>\n"
-"                </div>\n"
-"            "
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_user_id
@@ -229,6 +161,7 @@ msgstr "Ajouter un média"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
 msgid "Add an order note"
 msgstr "Ajouter une note à la commande"
 
@@ -910,8 +843,26 @@ msgstr "Connexion Internet perdue"
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Invalid combo line"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
 msgid "Invalid preset"
 msgstr "Préréglage invalide"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Invalid product attribute"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Invalid quantity"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1191,6 +1142,12 @@ msgstr "Commande pour"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
+msgid "Order note"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Orders not found on server"
 msgstr "Commandes non trouvées sur le serveur"
@@ -1348,6 +1305,18 @@ msgstr "Points de vente"
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Powered by Google"
 msgstr "Propulsé par Google"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Preset is not available in self-ordering"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Preset is not available in this configuration"
+msgstr ""
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__link_html
@@ -1529,7 +1498,6 @@ msgstr "Voir ce que vous avez laissé passer"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.js:0
-#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 msgid "Select a hour"
 msgstr "Sélectionner une heure"
@@ -1539,6 +1507,12 @@ msgstr "Sélectionner une heure"
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 msgid "Select a table"
 msgstr "Sélectionner une table"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
+msgid "Select an hour"
+msgstr ""
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
@@ -1649,8 +1623,8 @@ msgstr "Adresse de l'expéditeur"
 #. module: pos_self_order
 #: model:mail.template,description:pos_self_order.delivery_email_template
 #: model:mail.template,description:pos_self_order.takeout_email_template
-msgid "Sent to customers with the receipt in attachment"
-msgstr "Envoyé aux clients avec le reçu en pièce jointe"
+msgid "Sent to customers with a link to download their receipt"
+msgstr ""
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__sequence
@@ -1747,11 +1721,6 @@ msgid "Table Tracker %s"
 msgstr ""
 
 #. module: pos_self_order
-#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_order_receipt_header
-msgid "Table Tracker:"
-msgstr "Bipeur de table :"
-
-#. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order__self_ordering_table_id
 msgid "Table reference"
 msgstr "Référence de table"
@@ -1806,6 +1775,14 @@ msgstr ""
 #: code:addons/pos_self_order/models/pos_order.py:0
 msgid "The mail template with xmlid %s has been deleted."
 msgstr "Le modèle d’e-mail avec xmlid %s a été supprimé."
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid ""
+"The order ID isn't linked to the order UUID. This is a sign of a tampered "
+"payload."
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-python
@@ -2122,6 +2099,162 @@ msgstr "par unité supplémentaire"
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "x"
 msgstr "x"
+
+#~ msgid ""
+#~ "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+#~ "                    <t t-set=\"client\" t-value=\"object.partner_id\"/>\n"
+#~ "                    <t t-set=\"client_name\" t-value=\"client.name\"/>\n"
+#~ "                    <t t-set=\"street\" t-value=\"client.street or ''\"/"
+#~ ">\n"
+#~ "                    <t t-set=\"state\" t-value=\"client.state_id.name or "
+#~ "''\"/>\n"
+#~ "                    <t t-set=\"city\" t-value=\"client.city or ''\"/>\n"
+#~ "                    <t t-set=\"country\" t-value=\"client.country_id.name "
+#~ "or ''\"/>\n"
+#~ "                    <t t-set=\"store_name\" t-"
+#~ "value=\"object.config_id.name\"/>\n"
+#~ "                    <t t-set=\"tz\" t-"
+#~ "value=\"object.company_id.partner_id.tz\"/>\n"
+#~ "                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+#~ "user.lang\"/>\n"
+#~ "                    <div>\n"
+#~ "                        <t t-if=\"client_name\">Hello <t t-"
+#~ "out=\"client_name\">Client name</t>,</t>\n"
+#~ "                        <t t-else=\"\">Hello,</t>\n"
+#~ "                    </div>\n"
+#~ "                    <br/>\n"
+#~ "                    <div>Your order <t t-"
+#~ "out=\"object.tracking_number\">...</t> amounting in <t t-"
+#~ "out=\"format_amount(object.amount_total,object.currency_id)\">$xx.xx</t> "
+#~ "has been confirmed. <span t-if=\"object.preset_time or client.street\">It "
+#~ "will be ready</span> <span t-if=\"object.preset_time\">at <t t-"
+#~ "out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+#~ "lang_code=lg)\">12:00 pm</t></span> <span t-if=\"client.street\">at <t t-"
+#~ "out=\"street\">street</t>, <t t-out=\"state\">state</t>, <t t-"
+#~ "out=\"client.zip or ''\">zip</t>, <t t-out=\"city\">city</t>, <t t-"
+#~ "out=\"country\">country</t></span></div>\n"
+#~ "                    <br/>\n"
+#~ "                    <div>Thank you,</div>\n"
+#~ "                    <br/>\n"
+#~ "                    <div t-if=\"object.state == 'paid'\">\n"
+#~ "                        <div>Attached, you will find your receipt</div>\n"
+#~ "                        <br/>\n"
+#~ "                    </div>\n"
+#~ "                    <t t-out=\"store_name\">Store name</t>\n"
+#~ "                </div>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+#~ "                    <t t-set=\"client\" t-value=\"object.partner_id\"/>\n"
+#~ "                    <t t-set=\"client_name\" t-value=\"client.name\"/>\n"
+#~ "                    <t t-set=\"street\" t-value=\"client.street or ''\"/"
+#~ ">\n"
+#~ "                    <t t-set=\"state\" t-value=\"client.state_id.name or "
+#~ "''\"/>\n"
+#~ "                    <t t-set=\"city\" t-value=\"client.city or ''\"/>\n"
+#~ "                    <t t-set=\"country\" t-value=\"client.country_id.name "
+#~ "or ''\"/>\n"
+#~ "                    <t t-set=\"store_name\" t-"
+#~ "value=\"object.config_id.name\"/>\n"
+#~ "                    <t t-set=\"tz\" t-"
+#~ "value=\"object.company_id.partner_id.tz\"/>\n"
+#~ "                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+#~ "user.lang\"/>\n"
+#~ "                    <div>\n"
+#~ "                        <t t-if=\"client_name\">Bonjour <t t-"
+#~ "out=\"client_name\">Nom du client</t>,</t>\n"
+#~ "                        <t t-else=\"\">Bonjour,</t>\n"
+#~ "                    </div>\n"
+#~ "                    <br/>\n"
+#~ "                    <div>Votre commande <t t-"
+#~ "out=\"object.tracking_number\">...</t> d'un montant de <t t-"
+#~ "out=\"format_amount(object.amount_total,object.currency_id)\">xx,xx €</t> "
+#~ "a été confirmée. <span t-if=\"object.preset_time or client.street\">Elle "
+#~ "sera prête</span> <span t-if=\"object.preset_time\">à <t t-"
+#~ "out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+#~ "lang_code=lg)\">12:00</t></span> <span t-if=\"client.street\">at <t t-"
+#~ "out=\"street\">rue</t>, <t t-out=\"state\">état</t>, <t t-"
+#~ "out=\"client.zip or ''\">code postal</t>, <t t-out=\"city\">ville</t>, <t "
+#~ "t-out=\"country\">pays</t></span></div>\n"
+#~ "                    <br/>\n"
+#~ "                    <div>Merci,</div>\n"
+#~ "                    <br/>\n"
+#~ "                    <div t-if=\"object.state == 'paid'\">\n"
+#~ "                        <div>Vous trouverez votre reçu en pièce jointe</"
+#~ "div>\n"
+#~ "                        <br/>\n"
+#~ "                    </div>\n"
+#~ "                    <t t-out=\"store_name\">Nom du magasin</t>\n"
+#~ "                </div>\n"
+#~ "            "
+
+#~ msgid ""
+#~ "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+#~ "                    <t t-set=\"store_name\" t-"
+#~ "value=\"object.config_id.name\"/>\n"
+#~ "                    <t t-set=\"tz\" t-"
+#~ "value=\"object.company_id.partner_id.tz\"/>\n"
+#~ "                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+#~ "user.lang\"/>\n"
+#~ "                    <div>\n"
+#~ "                        <t t-if=\"client_name\">Hello <t t-"
+#~ "out=\"client_name\">Client name</t>,</t>\n"
+#~ "                        <t t-else=\"\">Hello,</t>\n"
+#~ "                    </div>\n"
+#~ "                    <br/>\n"
+#~ "                    <div>Your order <t t-"
+#~ "out=\"object.tracking_number\">...</t> amounting in <t t-"
+#~ "out=\"format_amount(object.amount_total,object.currency_id)\">$xx.xx</t> "
+#~ "has been confirmed. <span t-if=\"object.preset_time\">It will be ready at "
+#~ "<t t-out=\"format_time(time=object.preset_time, tz=tz, "
+#~ "time_format='short', lang_code=lg)\">12:00 pm</t></span></div>\n"
+#~ "                    <br/>\n"
+#~ "                    <div>Thank you,</div>\n"
+#~ "                    <br/>\n"
+#~ "                    <div t-if=\"object.state == 'paid'\">\n"
+#~ "                        <div>Attached, you will find your receipt</div>\n"
+#~ "                        <br/>\n"
+#~ "                    </div>\n"
+#~ "                    <t t-out=\"store_name\">Store name</t>\n"
+#~ "                </div>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+#~ "                    <t t-set=\"store_name\" t-"
+#~ "value=\"object.config_id.name\"/>\n"
+#~ "                    <t t-set=\"tz\" t-"
+#~ "value=\"object.company_id.partner_id.tz\"/>\n"
+#~ "                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+#~ "user.lang\"/>\n"
+#~ "                    <div>\n"
+#~ "                        <t t-if=\"client_name\">Bonjour <t t-"
+#~ "out=\"client_name\">Nom du client</t>,</t>\n"
+#~ "                        <t t-else=\"\">Bonjour,</t>\n"
+#~ "                    </div>\n"
+#~ "                    <br/>\n"
+#~ "                    <div>Votre commande <t t-"
+#~ "out=\"object.tracking_number\">...</t> d’un montant de <t t-"
+#~ "out=\"format_amount(object.amount_total,object.currency_id)\">xx,xx €</t> "
+#~ "a été confirmée. <span t-if=\"object.preset_time\">Elle sera prête à <t t-"
+#~ "out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+#~ "lang_code=lg)\">12:00</t></span></div>\n"
+#~ "                    <br/>\n"
+#~ "                    <div>Merci,</div>\n"
+#~ "                    <br/>\n"
+#~ "                    <div t-if=\"object.state == 'paid'\">\n"
+#~ "                        <div>Vous trouverez votre reçu en pièce jointe</"
+#~ "div>\n"
+#~ "                        <br/>\n"
+#~ "                    </div>\n"
+#~ "                    <t t-out=\"store_name\">Nom du magasin</t>\n"
+#~ "                </div>\n"
+#~ "            "
+
+#~ msgid "Sent to customers with the receipt in attachment"
+#~ msgstr "Envoyé aux clients avec le reçu en pièce jointe"
+
+#~ msgid "Table Tracker:"
+#~ msgstr "Bipeur de table :"
 
 #~ msgid ""
 #~ "The delivery address could not be geolocated. Please enter a valid "

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
+"POT-Creation-Date: 2026-10-24 17:43+0000\n"
 "PO-Revision-Date: 2026-06-30 22:39+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -23,6 +23,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_peppol_response.account_peppol_rejection_wizard_view_form
 msgid "<span>This information will be sent with your response.</span>"
 msgstr "<span>此信息将与您的回复一起发送。</span>"
+
+#. module: account_peppol_response
+#. odoo-python
+#: code:addons/account_peppol_response/models/account_edi_proxy_user.py:0
+msgid ""
+"A Peppol response declaring you %(status)s this document could not be sent "
+"to the Peppol Access Point."
+msgstr ""
 
 #. module: account_peppol_response
 #. odoo-python
@@ -53,7 +61,8 @@ msgstr "建议的操作"
 msgid ""
 "An error occurred while responding to this invoice's expeditor.%(br)sStatus: "
 "%(status)s - %(error)s"
-msgstr "发送回应至此发票的催办人时，发生错误。%(br)s状态：%(status)s - %(error)s"
+msgstr ""
+"发送回应至此发票的催办人时，发生错误。%(br)s状态：%(status)s - %(error)s"
 
 #. module: account_peppol_response
 #: model:ir.model.fields.selection,name:account_peppol_response.selection__account_peppol_response__response_code__ap
@@ -370,7 +379,8 @@ msgstr "支持发票回应"
 msgid ""
 "The Peppol receiver of this document has rejected it with the following "
 "information:%(br)s%(rejection_message)s"
-msgstr "Peppol 接收方已拒绝接收此文件，并提供以下信息：%(br)s%(rejection_message)s"
+msgstr ""
+"Peppol 接收方已拒绝接收此文件，并提供以下信息：%(br)s%(rejection_message)s"
 
 #. module: account_peppol_response
 #. odoo-python

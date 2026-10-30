@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"POT-Creation-Date: 2026-10-24 17:45+0000\n"
 "PO-Revision-Date: 2026-07-01 01:06+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -74,6 +74,12 @@ msgstr "%s Onlayn tadbirlar ilovasi"
 #, fuzzy
 msgid "(timezone:"
 msgstr "(vaqt mintaqasi:"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
+msgid ", your favorites are only available from this device."
+msgstr ""
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_17
@@ -153,9 +159,18 @@ msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_search
-#, fuzzy
-msgid "<i class=\"fa fa-bell mx-2 text-muted\"/> Favorite Talks"
-msgstr "<i class=\"fa fa-bell mx-2 text-muted\"/> Sevimli ma'ruzalar"
+msgid "<i class=\"fa fa-star mx-2 text-muted\"/> Favorite Talks"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
+msgid "<i class=\"fa fa-star\" title=\"Favorite On\"/> Favorited"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
+msgid "<i class=\"fa fa-star-o\" title=\"Set Favorite\"/> Add to favorite"
+msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_list_item
@@ -192,8 +207,8 @@ msgid ""
 "<span class=\"o_wetrack_proposal_label_content\">Talk Introduction</span>\n"
 "                                        <span>*</span>"
 msgstr ""
-"<span class=\"o_wetrack_proposal_label_content\">Suhbat kirishi</span> <span>"
-"*</span>"
+"<span class=\"o_wetrack_proposal_label_content\">Suhbat kirishi</span> "
+"<span>*</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -312,7 +327,8 @@ msgid ""
 "                                    Hello<t t-if=\"not user_id.is_public\" t-"
 "out=\"' ' + user_id.name\"/>,\n"
 "                                    <br/><br/>\n"
-"                                    You recently show interest for the talk\n"
+"                                    You recently showed interest for the "
+"talk\n"
 "                                    <a t-if=\"object.description or "
 "object.partner_biography\" t-attf-href=\"{{ object.get_base_url() }}"
 "{{ object.website_url }}\" style=\"font-weight:bold;color:#875A7B;text-"
@@ -643,7 +659,8 @@ msgstr ""
 #: model:event.track,name:website_event_track.event_track7
 #, fuzzy
 msgid "A technical explanation of how to use computer design apps"
-msgstr "Kompyuter dizayn dasturlaridan foydalanish bo‘yicha texnik tushuntirish"
+msgstr ""
+"Kompyuter dizayn dasturlaridan foydalanish bo‘yicha texnik tushuntirish"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__kanban_state
@@ -750,13 +767,6 @@ msgid "Add talk reminder: {{ object.name }}"
 msgstr "Suhbat eslatmasini qo‘shish: {{ object.name }}"
 
 #. module: website_event_track
-#. odoo-javascript
-#: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
-#, fuzzy
-msgid "Add this talk to your agenda ?"
-msgstr "Bu suhbatni kun tartibingizga qo‘shmoqchimisiz?"
-
-#. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
 #, fuzzy
 msgid "Advanced lead management: tips and tricks from the fields"
@@ -859,6 +869,12 @@ msgstr ""
 "hamkorning asosiy treklar eslatmalarini o‘chirish tanlovini saqlaydi."
 
 #. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
+msgid "As you are not"
+msgstr ""
+
+#. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_17
 msgid ""
 "As you may have heard before, making your own furniture is actually not as "
@@ -938,12 +954,6 @@ msgid "Book your seats to the best talks"
 msgstr "Eng yaxshi suhbatlarga joy band qiling"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
-#, fuzzy
-msgid "Book your talks"
-msgstr "Suhbatlaringizni band qiling"
-
-#. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_14
 #, fuzzy
 msgid "Building a DIY cabin from the ground up"
@@ -1004,14 +1014,6 @@ msgid "Category"
 msgstr "Toifa"
 
 #. module: website_event_track
-#. odoo-javascript
-#: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
-#, fuzzy
-msgid "Check your email to add the track to your agenda."
-msgstr ""
-"Trekni kun tartibingizga qo‘shish uchun elektron pochtangizni tekshiring."
-
-#. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_12
 #, fuzzy
 msgid "Climate positive"
@@ -1068,13 +1070,6 @@ msgstr "Kompaniya nomi"
 #, fuzzy
 msgid "Config Settings"
 msgstr "Konfiguratsiya sozlamalari"
-
-#. module: website_event_track
-#. odoo-javascript
-#: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
-#, fuzzy
-msgid "Confirm"
-msgstr "Tasdiqlash"
 
 #. module: website_event_track
 #: model:mail.template,subject:website_event_track.mail_template_data_track_confirmation
@@ -1306,10 +1301,10 @@ msgstr ""
 "tugmasini ko‘rsating"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
-#, fuzzy
-msgid "Done"
-msgstr "Bajarildi"
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
+msgid "Do you want an invitation by email to add to your agenda?"
+msgstr ""
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
@@ -1489,13 +1484,6 @@ msgstr "Tadbirlar ilovasi nomi"
 #, fuzzy
 msgid "Events PWA"
 msgstr "Tadbirlar PWA"
-
-#. module: website_event_track
-#. odoo-javascript
-#: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
-#, fuzzy
-msgid "Favorite On"
-msgstr "Sevimlilar yoqilgan"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
@@ -2075,7 +2063,6 @@ msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_list_item
 #, fuzzy
 msgid "Live"
@@ -2289,6 +2276,12 @@ msgid "Next Activity Type"
 msgstr "Keyingi faoliyat turi"
 
 #. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
+msgid "No Invitation"
+msgstr ""
+
+#. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
 #, fuzzy
 msgid "No Track Visitors yet!"
@@ -2297,13 +2290,7 @@ msgstr "Hali trek tashrif buyuruvchilari yo‘q!"
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
-msgid "No thanks"
-msgstr ""
-
-#. module: website_event_track
-#. odoo-javascript
-#: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
-msgid "No thanks & don't ask again"
+msgid "No don't ask again"
 msgstr ""
 
 #. module: website_event_track
@@ -2620,6 +2607,12 @@ msgid "Select Categories"
 msgstr "Toifalarni tanlash"
 
 #. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
+msgid "Send Invitation"
+msgstr ""
+
+#. module: website_event_track
 #: model:mail.template,description:website_event_track.mail_template_data_track_confirmation
 #, fuzzy
 msgid ""
@@ -2643,13 +2636,6 @@ msgstr "SEO nomi"
 #, fuzzy
 msgid "Sequence"
 msgstr "Ketma-ketlik"
-
-#. module: website_event_track
-#. odoo-javascript
-#: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
-#, fuzzy
-msgid "Set Favorite"
-msgstr "Sevimli qilib belgilash"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_delay
@@ -2764,6 +2750,12 @@ msgid "Submit Proposal"
 msgstr "Taklifni yuborish"
 
 #. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
+msgid "Successfully added to your favorites"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_tag_line
 #, fuzzy
 msgid "Tag Line"
@@ -2805,13 +2797,6 @@ msgid ""
 msgstr ""
 "Ma'ruza allaqachon sevimlilaringiz ro‘yxatida. Sahifa yangilanmaganga "
 "o‘xshaydi va yangilanishi kerak."
-
-#. module: website_event_track
-#. odoo-javascript
-#: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
-#, fuzzy
-msgid "Talk removed from your Favorites"
-msgstr "Ma'ruza sevimlilaringiz ro‘yxatidan olib tashlandi"
 
 #. module: website_event_track
 #. odoo-python
@@ -2994,7 +2979,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
 #, fuzzy
 msgid "This step is done. Click to block or set in progress."
-msgstr "Bu qadam bajarildi. Bloklash yoki jarayonda deb belgilash uchun bosing."
+msgstr ""
+"Bu qadam bajarildi. Bloklash yoki jarayonda deb belgilash uchun bosing."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
@@ -3182,17 +3168,16 @@ msgstr ""
 "jumladan treklarning necha marta istaklar ro‘yxatiga qo‘shilganini saqlaydi."
 
 #. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
+msgid "Track added to favorites"
+msgstr ""
+
+#. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_track_blocked
 #, fuzzy
 msgid "Track blocked"
 msgstr "Trek to‘xtatildi"
-
-#. module: website_event_track
-#. odoo-javascript
-#: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
-#, fuzzy
-msgid "Track successfully added to your favorites."
-msgstr "Trek muvaffaqiyatli ravishda saralanganlarga qo‘shildi."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_ids
@@ -3389,13 +3374,6 @@ msgstr ""
 #, fuzzy
 msgid "We will evaluate your proposition and get back to you shortly."
 msgstr "Taklifingizni baholab, tez orada sizga javob beramiz."
-
-#. module: website_event_track
-#. odoo-javascript
-#: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
-#, fuzzy
-msgid "We will send you a link to add this talk to your agenda."
-msgstr "Bu ma'ruzani kun tartibingizga qo‘shish uchun sizga havola yuboramiz."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -3642,6 +3620,12 @@ msgid "in %s"
 msgstr "%s da"
 
 #. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
+msgid "logged in"
+msgstr ""
+
+#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 #, fuzzy
 msgid "minutes after Track start"
@@ -3675,3 +3659,49 @@ msgstr ""
 #: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
 msgid "x"
 msgstr ""
+
+#, fuzzy
+#~ msgid "<i class=\"fa fa-bell mx-2 text-muted\"/> Favorite Talks"
+#~ msgstr "<i class=\"fa fa-bell mx-2 text-muted\"/> Sevimli ma'ruzalar"
+
+#, fuzzy
+#~ msgid "Add this talk to your agenda ?"
+#~ msgstr "Bu suhbatni kun tartibingizga qo‘shmoqchimisiz?"
+
+#, fuzzy
+#~ msgid "Book your talks"
+#~ msgstr "Suhbatlaringizni band qiling"
+
+#, fuzzy
+#~ msgid "Check your email to add the track to your agenda."
+#~ msgstr ""
+#~ "Trekni kun tartibingizga qo‘shish uchun elektron pochtangizni tekshiring."
+
+#, fuzzy
+#~ msgid "Confirm"
+#~ msgstr "Tasdiqlash"
+
+#, fuzzy
+#~ msgid "Done"
+#~ msgstr "Bajarildi"
+
+#, fuzzy
+#~ msgid "Favorite On"
+#~ msgstr "Sevimlilar yoqilgan"
+
+#, fuzzy
+#~ msgid "Set Favorite"
+#~ msgstr "Sevimli qilib belgilash"
+
+#, fuzzy
+#~ msgid "Talk removed from your Favorites"
+#~ msgstr "Ma'ruza sevimlilaringiz ro‘yxatidan olib tashlandi"
+
+#, fuzzy
+#~ msgid "Track successfully added to your favorites."
+#~ msgstr "Trek muvaffaqiyatli ravishda saralanganlarga qo‘shildi."
+
+#, fuzzy
+#~ msgid "We will send you a link to add this talk to your agenda."
+#~ msgstr ""
+#~ "Bu ma'ruzani kun tartibingizga qo‘shish uchun sizga havola yuboramiz."

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
+"POT-Creation-Date: 2026-10-24 17:42+0000\n"
 "PO-Revision-Date: 2026-09-08 03:11+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -140,13 +140,10 @@ msgid ""
 "* 'Show with notification' is 'Show' in addition to a floating text just "
 "next to the button.\n"
 "* 'Open automatically' displays the button and automatically opens the "
-"conversation pane.\n"
+"conversation pane on larger screens. On small screens, this behaves like "
+"'Show'.\n"
 "* 'Hide' hides the chat button on the pages.\n"
 msgstr ""
-"* 「顯示」，在頁面上顯示聊天按鈕。\n"
-"* 「顯示通知」，「顯示」加按鈕旁的浮動文本。\n"
-"* 「自動打開」，顯示按鈕，並自動打開對話窗。\n"
-"* 「隱藏」，隱藏頁面上的聊天按鈕。\n"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -237,7 +234,8 @@ msgstr ""
 msgid ""
 "<span>Tip: Plan further steps for the Bot in case no operator is available.</"
 "span>"
-msgstr "<span>提示：在沒有操作員可用的情況下，為機器人計劃進一步的步驟。</span>"
+msgstr ""
+"<span>提示：在沒有操作員可用的情況下，為機器人計劃進一步的步驟。</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
@@ -1068,18 +1066,15 @@ msgid ""
 "Given the order to find a matching rule. If 2 rules are matching for the "
 "given url/country, the one with the lowest sequence will be chosen."
 msgstr ""
-"幫助訂單找到匹配規則。如果2條規則同時匹配給定的網址l/國家，會選擇低序列的一個"
-"。"
+"幫助訂單找到匹配規則。如果2條規則同時匹配給定的網址l/國家，會選擇低序列的一"
+"個。"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
 "Go to <strong>Website</strong> &gt; <strong>Configuration</strong> &gt; "
-"<strong>Settings</strong> &gt; <strong>Email</strong> &amp; "
-"<strong>Marketing.</strong>"
+"<strong>Settings</strong> &gt; <strong>General.</strong>"
 msgstr ""
-"前往<strong>網站製作</strong> &gt; <strong>配置</strong> &gt; <strong>設定</"
-"strong> &gt; <strong>電郵</strong> &amp; <strong>市場推廣</strong>。"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1471,7 +1466,8 @@ msgstr "最後更新於"
 msgid ""
 "Learn how to display a live chat bubble on your website and start chatting "
 "with visitors in a few easy steps."
-msgstr "了解如何在網站上顯示即時聊天泡泡，以及只需幾個簡單步驟，便可開始與訪客聊天。"
+msgstr ""
+"了解如何在網站上顯示即時聊天泡泡，以及只需幾個簡單步驟，便可開始與訪客聊天。"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2501,6 +2497,12 @@ msgid "Thank you for your feedback"
 msgstr "感謝您對本次客服的評分回饋"
 
 #. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/im_livechat_channel.py:0
+msgid "The URL Regex '%(regex)s' is not valid."
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__channel_id
 msgid "The channel of the rule"
 msgstr "規則的頻道"
@@ -3007,3 +3009,24 @@ msgstr "WebSocket 訊息處理"
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "width:40px; height:40px; border-radius:0.5rem; display:block;"
 msgstr ""
+
+#~ msgid ""
+#~ "* 'Show' displays the chat button on the pages.\n"
+#~ "* 'Show with notification' is 'Show' in addition to a floating text just "
+#~ "next to the button.\n"
+#~ "* 'Open automatically' displays the button and automatically opens the "
+#~ "conversation pane.\n"
+#~ "* 'Hide' hides the chat button on the pages.\n"
+#~ msgstr ""
+#~ "* 「顯示」，在頁面上顯示聊天按鈕。\n"
+#~ "* 「顯示通知」，「顯示」加按鈕旁的浮動文本。\n"
+#~ "* 「自動打開」，顯示按鈕，並自動打開對話窗。\n"
+#~ "* 「隱藏」，隱藏頁面上的聊天按鈕。\n"
+
+#~ msgid ""
+#~ "Go to <strong>Website</strong> &gt; <strong>Configuration</strong> &gt; "
+#~ "<strong>Settings</strong> &gt; <strong>Email</strong> &amp; "
+#~ "<strong>Marketing.</strong>"
+#~ msgstr ""
+#~ "前往<strong>網站製作</strong> &gt; <strong>配置</strong> &gt; <strong>設定"
+#~ "</strong> &gt; <strong>電郵</strong> &amp; <strong>市場推廣</strong>。"

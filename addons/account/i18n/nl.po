@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 17:36+0000\n"
-"PO-Revision-Date: 2026-10-21 13:33+0000\n"
+"POT-Creation-Date: 2026-10-24 17:42+0000\n"
+"PO-Revision-Date: 2026-10-26 14:19+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-3/account/"
 "nl/>\n"
@@ -1346,14 +1346,15 @@ msgid "<span class=\"o_stat_text\">Invoiced</span>"
 msgstr "<span class=\"o_stat_text\">Gefactureerd</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-msgid "<span class=\"o_stat_text\">Journal Entries</span>"
-msgstr "<span class=\"o_stat_text\">Boekingen</span>"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
 msgstr "<span class=\"o_stat_text\">Boeking</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "<span class=\"o_stat_text\">Journal Items</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2922,6 +2923,11 @@ msgid "Account Move Count"
 msgstr "Aantal boekingen"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__account_move_line_ids
+msgid "Account Move Line"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__name
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_name
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -2975,6 +2981,11 @@ msgstr "Debiteurenrekening"
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_receivable_active
 msgid "Account Receivable Active"
 msgstr "Debiteurenrekening actief"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__account_reconcile_model_line_ids
+msgid "Account Reconcile Model Line"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -3042,6 +3053,7 @@ msgstr ""
 "boekjaar en het openen van de balans."
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__account_types
 #: model:ir.model.fields,field_description:account.field_account_report__filter_account_type
 msgid "Account Types"
 msgstr "Grootboekrekeningen categorieën"
@@ -3331,43 +3343,43 @@ msgstr "Totaal overlopende boekingen"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_buildings
-msgid "Accumulated Amortization - Buildings"
-msgstr "Gecumuleerde afschrijving - Gebouwen"
+msgid "Accumulated Depreciation - Buildings"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_furniture
-msgid "Accumulated Amortization - Furniture & Fixtures"
-msgstr "Gecumuleerde afschrijvingen - Meubilair & inrichting"
+msgid "Accumulated Depreciation - Furniture & Fixtures"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_improvements
-msgid "Accumulated Amortization - Improvements"
-msgstr "Gecumuleerde afschrijvingen - Verbeteringen"
+msgid "Accumulated Depreciation - Improvements"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_machines
-msgid "Accumulated Amortization - Machines & Tools"
-msgstr "Gecumuleerde afschrijvingen - Machines & gereedschappen"
+msgid "Accumulated Depreciation - Machines & Tools"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_other_property
-msgid "Accumulated Amortization - Other Property"
-msgstr "Gecumuleerde afschrijvingen - Overige eigendommen"
+msgid "Accumulated Depreciation - Other Property"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_technology
-msgid "Accumulated Amortization - Technology"
-msgstr "Gecumuleerde afschrijvingen - Technologie"
+msgid "Accumulated Depreciation - Technology"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_vehicles
-msgid "Accumulated Amortization - Vehicles"
-msgstr "Geaccumuleerde afschrijvingen - Voertuigen"
+msgid "Accumulated Depreciation - Vehicles"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_acc_depreciation
-msgid "Accumulated Depreciation"
-msgstr "Gecumuleerde afschrijving"
+msgid "Accumulated Depreciation Misc"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.21_retained_earnings
@@ -4712,8 +4724,20 @@ msgstr "Terug naar leveranciersfactuur"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
+msgid "Back to Credit Note"
+msgstr ""
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Invoice"
 msgstr "Terug naar klantfactuur"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
+msgid "Back to Refund"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -4752,7 +4776,7 @@ msgstr "Saldopercentage kan niet 0 zijn"
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.21_bank_journal_default_account_163
-#: model:account.account,name:account.22_bank_journal_default_account_294
+#: model:account.account,name:account.22_bank_journal_default_account_295
 #: model:account.journal,name:account.21_bank
 #: model:account.journal,name:account.22_bank
 #: model:ir.model.fields,field_description:account.field_res_partner__bank_account_count
@@ -5021,6 +5045,8 @@ msgid "Banks"
 msgstr "Banken"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__base
 msgid "Base"
 msgstr "Basis"
@@ -5617,7 +5643,7 @@ msgstr "Overdragen naar"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
-#: model:account.account,name:account.21_cash_journal_default_account_304
+#: model:account.account,name:account.21_cash_journal_default_account_305
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -5630,12 +5656,12 @@ msgid "Cash Account"
 msgstr "Kasrekening"
 
 #. module: account
-#: model:account.account,name:account.21_cash_journal_default_account_301
+#: model:account.account,name:account.21_cash_journal_default_account_302
 msgid "Cash Bakery"
 msgstr "Bakkerij"
 
 #. module: account
-#: model:account.account,name:account.21_cash_journal_default_account_303
+#: model:account.account,name:account.21_cash_journal_default_account_304
 msgid "Cash Bar"
 msgstr "Cash Bar"
 
@@ -5677,7 +5703,7 @@ msgid "Cash Basis Transition Account"
 msgstr "Kasstelsel tussenrekening"
 
 #. module: account
-#: model:account.account,name:account.21_cash_journal_default_account_300
+#: model:account.account,name:account.21_cash_journal_default_account_301
 msgid "Cash Clothes Shop"
 msgstr "Kledingwinkel"
 
@@ -5739,7 +5765,7 @@ msgid "Cash Discount Write-Off Loss Account"
 msgstr "Betalingskorting verliesafschrijvingsrekening"
 
 #. module: account
-#: model:account.account,name:account.21_cash_journal_default_account_299
+#: model:account.account,name:account.21_cash_journal_default_account_300
 msgid "Cash Furn. Shop"
 msgstr "Kassa. Winkel"
 
@@ -5750,7 +5776,7 @@ msgid "Cash Registers"
 msgstr "Kassasystemen"
 
 #. module: account
-#: model:account.account,name:account.21_cash_journal_default_account_302
+#: model:account.account,name:account.21_cash_journal_default_account_303
 msgid "Cash Restaurant"
 msgstr "Cash restaurant"
 
@@ -6375,6 +6401,7 @@ msgstr ""
 "(btn_end)s."
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_report__availability_condition__consolidation
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Consolidation"
 msgstr "Consolidatie"
@@ -6933,20 +6960,16 @@ msgid "Credit Move"
 msgstr "Credit boeking"
 
 #. module: account
+#. odoo-javascript
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.js:0
 #: model:ir.model.fields.selection,name:account.selection__account_payment__reconciled_invoices_type__credit_note
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Credit Note"
 msgstr "Creditfactuur"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
-msgid "Credit Note :"
-msgstr "Creditfactuur:"
 
 #. module: account
 #. odoo-python
@@ -7020,41 +7043,39 @@ msgstr "Gecumuleerd saldo voor de rekening."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_buildings
-msgid "Cumulative amortization recorded for building assets."
-msgstr "Gecumuleerde afschrijvingen geboekt voor gebouwen."
+msgid "Cumulative depreciation recorded for building assets."
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_technology
-msgid "Cumulative amortization recorded for capitalized technology assets."
+msgid "Cumulative depreciation recorded for capitalized technology assets."
 msgstr ""
-"Gecumuleerde afschrijvingen geboekt op geactiveerde technologische activa."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_furniture
-msgid "Cumulative amortization recorded for furniture and fixture assets."
-msgstr "Gecumuleerde afschrijvingen op meubilair en inrichting."
+msgid "Cumulative depreciation recorded for furniture and fixture assets."
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_improvements
 msgid ""
-"Cumulative amortization recorded for leasehold or property improvements."
-msgstr "Gecumuleerde afschrijvingen op gehuurde gebouwen en verbouwingswerken."
+"Cumulative depreciation recorded for leasehold or property improvements."
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_machines
-msgid "Cumulative amortization recorded for machinery and tool assets."
-msgstr "Gecumuleerde afschrijvingen op machines en gereedschap."
+msgid "Cumulative depreciation recorded for machinery and tool assets."
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_other_property
-msgid "Cumulative amortization recorded for other depreciable property assets."
+msgid "Cumulative depreciation recorded for other depreciable property assets."
 msgstr ""
-"Gecumuleerde afschrijvingen op overige afschrijfbare materiële vaste activa."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_vehicles
-msgid "Cumulative amortization recorded for vehicle assets."
-msgstr "Gecumuleerde afschrijvingen op voertuigen."
+msgid "Cumulative depreciation recorded for vehicle assets."
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_retained_earnings
@@ -7363,6 +7384,12 @@ msgstr "GELEVERD OP PLAATS UITGELADEN"
 #: model:account.incoterms,name:account.incoterm_DDP
 msgid "DELIVERED DUTY PAID"
 msgstr "Franco inclusief rechten"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/tools/partner_identifiers.py:0
+msgid "DIČ"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -7838,6 +7865,11 @@ msgstr "Verouderde link"
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense_depreciation
 msgid "Depreciation"
 msgstr "Afschrijving"
+
+#. module: account
+#: model:account.account,name:account.22_account_account_us_deprec_amort_expense
+msgid "Depreciation & Amortization Expense"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_expense_buildings
@@ -9011,16 +9043,6 @@ msgstr "Fout bij het importeren van bijlage %(filename)s:"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/controllers/download_docs.py:0
-msgid ""
-"Error while creating XML:\n"
-"- %s"
-msgstr ""
-"Fout bij aanmaken XML:\n"
-"- %s"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid ""
 "Error while loading the localization: missing tax tag %(tag_name)s for "
@@ -9455,6 +9477,11 @@ msgstr "Fiscale land"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_fiscal_country_id
 msgid "Fiscal Country Code"
 msgstr "Fiscale landcode"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__company_country_code
+msgid "Fiscal Country Code of the Company"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__fiscal_country_codes
@@ -11334,6 +11361,7 @@ msgstr "Investeren en buitengewone activiteiten"
 #. odoo-javascript
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.js:0
 #: code:addons/account/static/src/components/receipt_selector/receipt_selector.js:0
 #: model:ir.model.fields.selection,name:account.selection__account_analytic_applicability__business_domain__invoice
 #: model:ir.model.fields.selection,name:account.selection__account_payment__reconciled_invoices_type__invoice
@@ -11349,12 +11377,6 @@ msgstr "Factuur"
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 msgid "Invoice #"
 msgstr "Factuur #"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
-msgid "Invoice :"
-msgstr "Factuur:"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_account_invoice_report_all
@@ -11551,6 +11573,12 @@ msgid ""
 "Invoice and credit note repartition should have at least one tax repartition "
 "line."
 msgstr "Facturen en creditfacturen moeten minstens één regel voor btw hebben."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid "Invoice generated but not sent."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -12063,6 +12091,8 @@ msgid "Journal Item Label"
 msgstr "Boekingsregellabel"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
 #: model:ir.actions.act_window,name:account.action_account_moves_all
 #: model:ir.actions.act_window,name:account.action_account_moves_all_a
 #: model:ir.actions.act_window,name:account.action_account_moves_all_grouped_matching
@@ -12267,6 +12297,12 @@ msgstr "Label op facturen"
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_form
 msgid "Label on PoS Receipts"
 msgstr "Label op kassabon"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sanitize_payment_reference
+#: model:ir.model.fields,field_description:account.field_account_move__sanitize_payment_reference
+msgid "Label sanitize"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_land
@@ -13686,6 +13722,14 @@ msgid "No possible action found with the selected lines."
 msgstr "Geen mogelijke actie gevonden met de geselecteerde regels."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"No valid sending method could be applied, so this invoice was not sent "
+"automatically. Please configure a sending method and send it manually."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__non_deductible_amount
 msgid "Non Deductible Amount"
 msgstr "Niet-aftrekbaar bedrag"
@@ -14124,6 +14168,12 @@ msgid "Online Payments"
 msgstr "Online betalingen"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid "Only Accounting managers can create foreign taxes."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__only_tax_exigible
 msgid "Only Tax Exigible Lines"
 msgstr "Alleen opeisbare belastingregels"
@@ -14499,6 +14549,11 @@ msgid "Overdue Amount"
 msgstr "Vervallen bedrag"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_partner_view_search
+msgid "Overdue Invoices"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 msgid "Overdue invoices"
@@ -14708,7 +14763,7 @@ msgstr "Kredietwaarschuwing partner"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_ledger_partner
 msgid "Partner Ledger"
-msgstr "Saldilijsten"
+msgstr "Partnergrootboek"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__use_partner_credit_limit
@@ -15783,6 +15838,7 @@ msgid "Purchase Lock date"
 msgstr "Inkoopvergrendelingsdatum"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__in_receipt
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_receipt
 msgid "Purchase Receipt"
 msgstr "Inkoopbewijs"
@@ -16807,6 +16863,7 @@ msgid "Sales Lock Date"
 msgstr "Verkoop vergrendelendatum"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__out_receipt
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_receipt
 msgid "Sales Receipt"
 msgstr "Betaalbewijs"
@@ -17698,6 +17755,12 @@ msgid "Slovak company identification number (IČO)."
 msgstr "Slowaaks bedrijfsidentificatienummer (IČO)."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/tools/partner_identifiers.py:0
+msgid "Slovak tax identification number (DIČ)."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_snailmail_account
 msgid "Snailmail"
 msgstr "Briefpost"
@@ -18136,6 +18199,8 @@ msgid "Target Line"
 msgstr "Doelregel"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
 #: model:account.report.column,name:account.generic_tax_report_account_tax_column_tax
 #: model:account.report.column,name:account.generic_tax_report_column_tax
 #: model:account.report.column,name:account.generic_tax_report_tax_account_column_tax
@@ -18970,6 +19035,7 @@ msgstr "Het IBAN is ongeldig. Het zou moeten beginnen met de landcode"
 #: model:ir.model.fields,help:account.field_account_payment_register__country_code
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__country_code
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__country_code
+#: model:ir.model.fields,help:account.field_account_tax__company_country_code
 #: model:ir.model.fields,help:account.field_account_tax__country_code
 #: model:ir.model.fields,help:account.field_account_tax_group__country_code
 #: model:ir.model.fields,help:account.field_base_document_layout__country_code
@@ -19011,10 +19077,9 @@ msgstr "De rekening %(name)s (%(code)s) is gearchiveerd."
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid ""
-"The account code can only contain alphanumeric characters, dots, and dashes."
+"The account code can only contain alphanumeric characters, dots, and dashes. "
+"(account code: %s)"
 msgstr ""
-"De rekeningcode mag alleen alfanumerieke tekens, punten en streepjes "
-"bevatten."
 
 #. module: account
 #. odoo-python
@@ -20317,11 +20382,8 @@ msgstr "Deze boeking is teruggeboekt van %s"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid ""
-"This entry has been reviewed, You need the bookkeeper role to change it."
+msgid "This entry has been reviewed by accountants, only them can edit it now."
 msgstr ""
-"Deze boeking is al gecontroleerd. Je hebt de rol van boekhouder nodig om dit "
-"te wijzigen."
 
 #. module: account
 #. odoo-python
@@ -21957,16 +22019,10 @@ msgid ""
 "You can not archive a journal containing draft journal entries.\n"
 "\n"
 "To proceed:\n"
-"1/ click on the top-right button 'Journal Entries' from this journal form\n"
-"2/ then filter on 'Draft' entries\n"
+"1/ go to Accounting > Accounting > Journal Entries\n"
+"2/ filter on this journal and on 'Unposted' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
-"Je kunt een dagboek met concept boekingen niet archiveren.\n"
-"\n"
-"Verder gaan:\n"
-"1/ klik op de knop rechtsboven 'Boekingen' van dit dagboekscherm\n"
-"2/ filter vervolgens op regels in 'Concept'\n"
-"3/ selecteer ze allemaal en post of verwijder ze via het actiemenu"
 
 #. module: account
 #. odoo-python
@@ -22185,6 +22241,14 @@ msgid ""
 msgstr ""
 "Je kunt betalingen voor zowel inkomende als uitgaande boekingen niet "
 "tegelijkertijd registreren."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"You can't reset to draft those journal entries. You need to request a "
+"cancellation instead."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -22463,10 +22527,10 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid "You cannot modify the following readonly fields on a posted move: %s"
+msgid ""
+"You cannot modify the following readonly fields on the posted move %(move)s: "
+"%(fields)s"
 msgstr ""
-"Je kunt de volgende alleen lezen-velden niet wijzigen bij een geboekte "
-"boeking: %s"
 
 #. module: account
 #. odoo-python
@@ -23431,6 +23495,107 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Self-billing verkoopfactuur (Ref {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid "<span class=\"o_stat_text\">Journal Entries</span>"
+#~ msgstr "<span class=\"o_stat_text\">Boekingen</span>"
+
+#~ msgid "Accumulated Amortization - Buildings"
+#~ msgstr "Gecumuleerde afschrijving - Gebouwen"
+
+#~ msgid "Accumulated Amortization - Furniture & Fixtures"
+#~ msgstr "Gecumuleerde afschrijvingen - Meubilair & inrichting"
+
+#~ msgid "Accumulated Amortization - Improvements"
+#~ msgstr "Gecumuleerde afschrijvingen - Verbeteringen"
+
+#~ msgid "Accumulated Amortization - Machines & Tools"
+#~ msgstr "Gecumuleerde afschrijvingen - Machines & gereedschappen"
+
+#~ msgid "Accumulated Amortization - Other Property"
+#~ msgstr "Gecumuleerde afschrijvingen - Overige eigendommen"
+
+#~ msgid "Accumulated Amortization - Technology"
+#~ msgstr "Gecumuleerde afschrijvingen - Technologie"
+
+#~ msgid "Accumulated Amortization - Vehicles"
+#~ msgstr "Geaccumuleerde afschrijvingen - Voertuigen"
+
+#~ msgid "Accumulated Depreciation"
+#~ msgstr "Gecumuleerde afschrijving"
+
+#~ msgid "Credit Note :"
+#~ msgstr "Creditfactuur:"
+
+#~ msgid "Cumulative amortization recorded for building assets."
+#~ msgstr "Gecumuleerde afschrijvingen geboekt voor gebouwen."
+
+#~ msgid "Cumulative amortization recorded for capitalized technology assets."
+#~ msgstr ""
+#~ "Gecumuleerde afschrijvingen geboekt op geactiveerde technologische activa."
+
+#~ msgid "Cumulative amortization recorded for furniture and fixture assets."
+#~ msgstr "Gecumuleerde afschrijvingen op meubilair en inrichting."
+
+#~ msgid ""
+#~ "Cumulative amortization recorded for leasehold or property improvements."
+#~ msgstr ""
+#~ "Gecumuleerde afschrijvingen op gehuurde gebouwen en verbouwingswerken."
+
+#~ msgid "Cumulative amortization recorded for machinery and tool assets."
+#~ msgstr "Gecumuleerde afschrijvingen op machines en gereedschap."
+
+#~ msgid ""
+#~ "Cumulative amortization recorded for other depreciable property assets."
+#~ msgstr ""
+#~ "Gecumuleerde afschrijvingen op overige afschrijfbare materiële vaste "
+#~ "activa."
+
+#~ msgid "Cumulative amortization recorded for vehicle assets."
+#~ msgstr "Gecumuleerde afschrijvingen op voertuigen."
+
+#~ msgid ""
+#~ "Error while creating XML:\n"
+#~ "- %s"
+#~ msgstr ""
+#~ "Fout bij aanmaken XML:\n"
+#~ "- %s"
+
+#~ msgid "Invoice :"
+#~ msgstr "Factuur:"
+
+#~ msgid ""
+#~ "The account code can only contain alphanumeric characters, dots, and "
+#~ "dashes."
+#~ msgstr ""
+#~ "De rekeningcode mag alleen alfanumerieke tekens, punten en streepjes "
+#~ "bevatten."
+
+#~ msgid ""
+#~ "This entry has been reviewed, You need the bookkeeper role to change it."
+#~ msgstr ""
+#~ "Deze boeking is al gecontroleerd. Je hebt de rol van boekhouder nodig om "
+#~ "dit te wijzigen."
+
+#~ msgid ""
+#~ "You can not archive a journal containing draft journal entries.\n"
+#~ "\n"
+#~ "To proceed:\n"
+#~ "1/ click on the top-right button 'Journal Entries' from this journal "
+#~ "form\n"
+#~ "2/ then filter on 'Draft' entries\n"
+#~ "3/ select them all and post or delete them through the action menu"
+#~ msgstr ""
+#~ "Je kunt een dagboek met concept boekingen niet archiveren.\n"
+#~ "\n"
+#~ "Verder gaan:\n"
+#~ "1/ klik op de knop rechtsboven 'Boekingen' van dit dagboekscherm\n"
+#~ "2/ filter vervolgens op regels in 'Concept'\n"
+#~ "3/ selecteer ze allemaal en post of verwijder ze via het actiemenu"
+
+#~ msgid "You cannot modify the following readonly fields on a posted move: %s"
+#~ msgstr ""
+#~ "Je kunt de volgende alleen lezen-velden niet wijzigen bij een geboekte "
+#~ "boeking: %s"
 
 #~ msgid "PEPPOL Electronic Invoicing"
 #~ msgstr "PEPPOL elektronische facturatie"

@@ -16,11 +16,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 17:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:42+0000\n"
 "PO-Revision-Date: 2026-07-23 13:10+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
-"Language-Team: Danish <https://translate.odoo.com/projects/odoo-s19-3/mrp/"
-"da/>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-s19-3/mrp/da/"
+">\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,8 +43,8 @@ msgstr ""
 " * Kladde: Produktionsordren er ikke godkendt endnu.\n"
 "* Godkendt: Produktionsordren er godkendt, og lagerregler samt omrokering af "
 "komponenter er sat i gang.\n"
-"* I gang: Produktion er påbegyndt (på produktionsordren eller arbejdsordren)"
-".\n"
+"* I gang: Produktion er påbegyndt (på produktionsordren eller "
+"arbejdsordren).\n"
 "* Afslutning: Produktionen er færdig, og produktionsordren skal lukkes.\n"
 "* Fuldført: Produktionsordren er lukket, og lagerbevægelsen er bogført.\n"
 "* Annulleret: Produktionsordren er blevet annulleret og kan ikke længere "
@@ -4332,7 +4332,8 @@ msgstr "Overordnet effektivitet for udstyr, baseret på den sidste måned"
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report_oee
 msgid "Overall Equipment Effectiveness: no working or blocked time"
-msgstr "Overordnet effektivitet for udstyr: ingen arbejdstid eller blokeret tid"
+msgstr ""
+"Overordnet effektivitet for udstyr: ingen arbejdstid eller blokeret tid"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__done_mrp_lot_label_to_print__pdf
@@ -5813,7 +5814,8 @@ msgstr "Teknisk felt til arbejdscentervisninger"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__show_produce_all
 msgid "Technical field to check if produce all button can be shown"
-msgstr "Teknisk felt til at kontrollere, om knappen \"Producér alle\" kan vises"
+msgstr ""
+"Teknisk felt til at kontrollere, om knappen \"Producér alle\" kan vises"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__show_produce
@@ -5891,6 +5893,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "The day after tomorrow"
 msgstr "Overmorgen"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+msgid "The end date cannot be set in the future."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -6153,7 +6161,8 @@ msgstr "Denne produktioner er blevet slået sammen i %s"
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "This production order has been created from Replenishment Report."
-msgstr "Denne produktionsordre er blevet oprettet ud fra genopfyldningsrapport."
+msgstr ""
+"Denne produktionsordre er blevet oprettet ud fra genopfyldningsrapport."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__product_qty

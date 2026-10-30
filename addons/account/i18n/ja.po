@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 17:36+0000\n"
-"PO-Revision-Date: 2026-10-16 03:33+0000\n"
+"POT-Creation-Date: 2026-10-24 17:42+0000\n"
+"PO-Revision-Date: 2026-10-26 05:33+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
 "account/ja/>\n"
@@ -1342,14 +1342,15 @@ msgid "<span class=\"o_stat_text\">Invoiced</span>"
 msgstr "<span class=\"o_stat_text\">請求済</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-msgid "<span class=\"o_stat_text\">Journal Entries</span>"
-msgstr "<span class=\"o_stat_text\">仕訳</span>"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
 msgstr "<span class=\"o_stat_text\">仕訳</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "<span class=\"o_stat_text\">Journal Items</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2890,6 +2891,11 @@ msgid "Account Move Count"
 msgstr "会計仕訳数"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__account_move_line_ids
+msgid "Account Move Line"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__name
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_name
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -2943,6 +2949,11 @@ msgstr "売掛金勘定"
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_receivable_active
 msgid "Account Receivable Active"
 msgstr "売掛金勘定が有効"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__account_reconcile_model_line_ids
+msgid "Account Reconcile Model Line"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -3009,6 +3020,7 @@ msgstr ""
 "したり、次年度繰越金を作成したりのに、情報として使われます。"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__account_types
 #: model:ir.model.fields,field_description:account.field_account_report__filter_account_type
 msgid "Account Types"
 msgstr "勘定科目タイプ"
@@ -3296,43 +3308,43 @@ msgstr "未払金合計"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_buildings
-msgid "Accumulated Amortization - Buildings"
-msgstr "減価償却累計 - 建物"
+msgid "Accumulated Depreciation - Buildings"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_furniture
-msgid "Accumulated Amortization - Furniture & Fixtures"
-msgstr "減価償却累計 - 家具・備品"
+msgid "Accumulated Depreciation - Furniture & Fixtures"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_improvements
-msgid "Accumulated Amortization - Improvements"
-msgstr "減価償却累計 - 改良費"
+msgid "Accumulated Depreciation - Improvements"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_machines
-msgid "Accumulated Amortization - Machines & Tools"
-msgstr "減価償却累計 - 機械・工具"
+msgid "Accumulated Depreciation - Machines & Tools"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_other_property
-msgid "Accumulated Amortization - Other Property"
-msgstr "減価償却累計 - その他の不動産"
+msgid "Accumulated Depreciation - Other Property"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_technology
-msgid "Accumulated Amortization - Technology"
-msgstr "減価償却累計 - テクノロジー"
+msgid "Accumulated Depreciation - Technology"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_vehicles
-msgid "Accumulated Amortization - Vehicles"
-msgstr "減価償却累計 - 車両"
+msgid "Accumulated Depreciation - Vehicles"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_acc_depreciation
-msgid "Accumulated Depreciation"
-msgstr "減価償却累計額"
+msgid "Accumulated Depreciation Misc"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.21_retained_earnings
@@ -4654,8 +4666,20 @@ msgstr "仕入先請求書に戻る"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
+msgid "Back to Credit Note"
+msgstr ""
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Invoice"
 msgstr "顧客請求書に戻る"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
+msgid "Back to Refund"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -4694,7 +4718,7 @@ msgstr "残高割合が0になることはありません"
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.21_bank_journal_default_account_163
-#: model:account.account,name:account.22_bank_journal_default_account_294
+#: model:account.account,name:account.22_bank_journal_default_account_295
 #: model:account.journal,name:account.21_bank
 #: model:account.journal,name:account.22_bank
 #: model:ir.model.fields,field_description:account.field_res_partner__bank_account_count
@@ -4961,6 +4985,8 @@ msgid "Banks"
 msgstr "銀行"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__base
 msgid "Base"
 msgstr "ベース"
@@ -5539,7 +5565,7 @@ msgstr "以下へ繰越す："
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
-#: model:account.account,name:account.21_cash_journal_default_account_304
+#: model:account.account,name:account.21_cash_journal_default_account_305
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -5552,12 +5578,12 @@ msgid "Cash Account"
 msgstr "現金アカウント"
 
 #. module: account
-#: model:account.account,name:account.21_cash_journal_default_account_301
+#: model:account.account,name:account.21_cash_journal_default_account_302
 msgid "Cash Bakery"
 msgstr "現金 ベーカリー"
 
 #. module: account
-#: model:account.account,name:account.21_cash_journal_default_account_303
+#: model:account.account,name:account.21_cash_journal_default_account_304
 msgid "Cash Bar"
 msgstr "現金バー"
 
@@ -5599,7 +5625,7 @@ msgid "Cash Basis Transition Account"
 msgstr "現金基準移行勘定"
 
 #. module: account
-#: model:account.account,name:account.21_cash_journal_default_account_300
+#: model:account.account,name:account.21_cash_journal_default_account_301
 msgid "Cash Clothes Shop"
 msgstr "現金 洋服店"
 
@@ -5661,7 +5687,7 @@ msgid "Cash Discount Write-Off Loss Account"
 msgstr "現金値引損償却口座"
 
 #. module: account
-#: model:account.account,name:account.21_cash_journal_default_account_299
+#: model:account.account,name:account.21_cash_journal_default_account_300
 msgid "Cash Furn. Shop"
 msgstr "現金 家具屋"
 
@@ -5672,7 +5698,7 @@ msgid "Cash Registers"
 msgstr "キャッシュレジスタ"
 
 #. module: account
-#: model:account.account,name:account.21_cash_journal_default_account_302
+#: model:account.account,name:account.21_cash_journal_default_account_303
 msgid "Cash Restaurant"
 msgstr "現金レストラン"
 
@@ -6285,6 +6311,7 @@ msgstr ""
 "ださい。"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_report__availability_condition__consolidation
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Consolidation"
 msgstr "連結"
@@ -6841,20 +6868,16 @@ msgid "Credit Move"
 msgstr "貸方移動"
 
 #. module: account
+#. odoo-javascript
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.js:0
 #: model:ir.model.fields.selection,name:account.selection__account_payment__reconciled_invoices_type__credit_note
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Credit Note"
 msgstr "クレジットノート"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
-msgid "Credit Note :"
-msgstr "クレジットノート："
 
 #. module: account
 #. odoo-python
@@ -6928,39 +6951,39 @@ msgstr "口座の累積残高。"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_buildings
-msgid "Cumulative amortization recorded for building assets."
-msgstr "建物資産に計上された減価償却累計額。"
+msgid "Cumulative depreciation recorded for building assets."
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_technology
-msgid "Cumulative amortization recorded for capitalized technology assets."
-msgstr "資産計上されたテクノロジー資産に計上された減価償却累計額。"
+msgid "Cumulative depreciation recorded for capitalized technology assets."
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_furniture
-msgid "Cumulative amortization recorded for furniture and fixture assets."
-msgstr "家具・什器資産に計上された減価償却累計額。"
+msgid "Cumulative depreciation recorded for furniture and fixture assets."
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_improvements
 msgid ""
-"Cumulative amortization recorded for leasehold or property improvements."
-msgstr "賃借物件の改良費（資産）に計上された減価償却累計額。"
+"Cumulative depreciation recorded for leasehold or property improvements."
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_machines
-msgid "Cumulative amortization recorded for machinery and tool assets."
-msgstr "機械・工具資産に計上された減価償却累計額。"
+msgid "Cumulative depreciation recorded for machinery and tool assets."
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_other_property
-msgid "Cumulative amortization recorded for other depreciable property assets."
-msgstr "その他の減価償却資産(不動産)に計上された減価償却累計額。"
+msgid "Cumulative depreciation recorded for other depreciable property assets."
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_vehicles
-msgid "Cumulative amortization recorded for vehicle assets."
-msgstr "車両資産に計上された減価償却累計額。"
+msgid "Cumulative depreciation recorded for vehicle assets."
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_retained_earnings
@@ -7269,6 +7292,12 @@ msgstr "DELIVERED AT PLACE UNLOADED"
 #: model:account.incoterms,name:account.incoterm_DDP
 msgid "DELIVERED DUTY PAID"
 msgstr "DELIVERED DUTY PAID"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/tools/partner_identifiers.py:0
+msgid "DIČ"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -7737,6 +7766,11 @@ msgstr "非推奨リンク"
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense_depreciation
 msgid "Depreciation"
 msgstr "減価償却"
+
+#. module: account
+#: model:account.account,name:account.22_account_account_us_deprec_amort_expense
+msgid "Depreciation & Amortization Expense"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_expense_buildings
@@ -8897,16 +8931,6 @@ msgstr "添付ファイル %(filename)s のインポート中にエラーが発�
 
 #. module: account
 #. odoo-python
-#: code:addons/account/controllers/download_docs.py:0
-msgid ""
-"Error while creating XML:\n"
-"- %s"
-msgstr ""
-"XMLを作成中にエラーが発生しました:\n"
-"- %s"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid ""
 "Error while loading the localization: missing tax tag %(tag_name)s for "
@@ -9283,7 +9307,7 @@ msgstr "仕訳帳"
 #. module: account
 #: model:account.account.tag,name:account.account_tag_financing
 msgid "Financing Activities"
-msgstr "会計業務"
+msgstr "財務活動"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__first_date
@@ -9336,6 +9360,11 @@ msgstr "会計上の国"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_fiscal_country_id
 msgid "Fiscal Country Code"
 msgstr "会計上の国コード"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__company_country_code
+msgid "Fiscal Country Code of the Company"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__fiscal_country_codes
@@ -11169,6 +11198,7 @@ msgstr "投資・その他の活動"
 #. odoo-javascript
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.js:0
 #: code:addons/account/static/src/components/receipt_selector/receipt_selector.js:0
 #: model:ir.model.fields.selection,name:account.selection__account_analytic_applicability__business_domain__invoice
 #: model:ir.model.fields.selection,name:account.selection__account_payment__reconciled_invoices_type__invoice
@@ -11184,12 +11214,6 @@ msgstr "請求書"
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 msgid "Invoice #"
 msgstr "請求書番号"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
-msgid "Invoice :"
-msgstr "請求書 :"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_account_invoice_report_all
@@ -11384,6 +11408,12 @@ msgid ""
 "line."
 msgstr ""
 "請求書とクレジットノートの再分割には、少なくとも1つの税金の再分割が必要です。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid "Invoice generated but not sent."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11895,6 +11925,8 @@ msgid "Journal Item Label"
 msgstr "仕訳明細ラベル"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
 #: model:ir.actions.act_window,name:account.action_account_moves_all
 #: model:ir.actions.act_window,name:account.action_account_moves_all_a
 #: model:ir.actions.act_window,name:account.action_account_moves_all_grouped_matching
@@ -12095,6 +12127,12 @@ msgstr "請求書上のラベル"
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_form
 msgid "Label on PoS Receipts"
 msgstr "POS領収書上のラベル"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sanitize_payment_reference
+#: model:ir.model.fields,field_description:account.field_account_move__sanitize_payment_reference
+msgid "Label sanitize"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_land
@@ -13495,6 +13533,14 @@ msgid "No possible action found with the selected lines."
 msgstr "可能なアクションが、選択された行に対して見つかりませんでした。"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"No valid sending method could be applied, so this invoice was not sent "
+"automatically. Please configure a sending method and send it manually."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__non_deductible_amount
 msgid "Non Deductible Amount"
 msgstr "控除対象外金額"
@@ -13923,6 +13969,12 @@ msgid "Online Payments"
 msgstr "オンライン支払"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid "Only Accounting managers can create foreign taxes."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__only_tax_exigible
 msgid "Only Tax Exigible Lines"
 msgstr "税対象行のみ"
@@ -14288,6 +14340,11 @@ msgstr "期限超過"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__installments_mode__overdue
 msgid "Overdue Amount"
 msgstr "期限超過額"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_partner_view_search
+msgid "Overdue Invoices"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15548,6 +15605,7 @@ msgid "Purchase Lock date"
 msgstr "購買ロック日"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__in_receipt
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_receipt
 msgid "Purchase Receipt"
 msgstr "仕入先領収書"
@@ -16561,6 +16619,7 @@ msgid "Sales Lock Date"
 msgstr "販売ロック日"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__out_receipt
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_receipt
 msgid "Sales Receipt"
 msgstr "販売領収書"
@@ -17414,13 +17473,19 @@ msgstr "仕訳帳をダッシュボードに表示"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Singapore Unique Entity Number."
-msgstr "シンガポール固有エンティティ番号。"
+msgstr "シンガポール固有法人番号"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Slovak company identification number (IČO)."
 msgstr "スロバキアの企業識別番号（IČO）。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/tools/partner_identifiers.py:0
+msgid "Slovak tax identification number (DIČ)."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_snailmail_account
@@ -17857,6 +17922,8 @@ msgid "Target Line"
 msgstr "ターゲットライン"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
 #: model:account.report.column,name:account.generic_tax_report_account_tax_column_tax
 #: model:account.report.column,name:account.generic_tax_report_column_tax
 #: model:account.report.column,name:account.generic_tax_report_tax_account_column_tax
@@ -18680,6 +18747,7 @@ msgstr "IBANが無効です。国コードで始まる必要があります"
 #: model:ir.model.fields,help:account.field_account_payment_register__country_code
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__country_code
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__country_code
+#: model:ir.model.fields,help:account.field_account_tax__company_country_code
 #: model:ir.model.fields,help:account.field_account_tax__country_code
 #: model:ir.model.fields,help:account.field_account_tax_group__country_code
 #: model:ir.model.fields,help:account.field_base_document_layout__country_code
@@ -18721,9 +18789,9 @@ msgstr "この勘定科目 %(name)s (%(code)s) はアーカイブされていま
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid ""
-"The account code can only contain alphanumeric characters, dots, and dashes."
+"The account code can only contain alphanumeric characters, dots, and dashes. "
+"(account code: %s)"
 msgstr ""
-"勘定科目コードには、英数字・ドット（.）・ハイフン（-）のみ使用できます。"
 
 #. module: account
 #. odoo-python
@@ -19965,9 +20033,8 @@ msgstr "この仕訳は%sから逆仕訳されました"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid ""
-"This entry has been reviewed, You need the bookkeeper role to change it."
-msgstr "この仕訳は確認済みです。変更するには、記帳担当者の権限が必要です。"
+msgid "This entry has been reviewed by accountants, only them can edit it now."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -21562,16 +21629,10 @@ msgid ""
 "You can not archive a journal containing draft journal entries.\n"
 "\n"
 "To proceed:\n"
-"1/ click on the top-right button 'Journal Entries' from this journal form\n"
-"2/ then filter on 'Draft' entries\n"
+"1/ go to Accounting > Accounting > Journal Entries\n"
+"2/ filter on this journal and on 'Unposted' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
-"ドラフトの仕訳を含む仕訳をアーカイブすることはできません。\n"
-"\n"
-"続けるには：\n"
-"1 /この仕訳帳フォームの右上のボタン「仕訳」をクリックします\n"
-"2 /次に「ドラフト」仕訳でフィルターしてください\n"
-"3 /ドラフトの仕訳をすべて選択し、アクションメニューから投稿または削除します"
 
 #. module: account
 #. odoo-python
@@ -21775,6 +21836,14 @@ msgid ""
 msgstr ""
 "インバウンド仕訳とアウトバウンド仕訳の支払いを同時に登録することはできませ"
 "ん。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"You can't reset to draft those journal entries. You need to request a "
+"cancellation instead."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -22032,8 +22101,10 @@ msgstr "すでに会計仕訳がある仕訳の項目%sを変更することは�
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid "You cannot modify the following readonly fields on a posted move: %s"
-msgstr "記帳された仕訳の以下の読取り専用フィールドは変更できません:%s"
+msgid ""
+"You cannot modify the following readonly fields on the posted move %(move)s: "
+"%(fields)s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -22974,6 +23045,99 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} セルフビリング請求書 (参照番号 {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid "<span class=\"o_stat_text\">Journal Entries</span>"
+#~ msgstr "<span class=\"o_stat_text\">仕訳</span>"
+
+#~ msgid "Accumulated Amortization - Buildings"
+#~ msgstr "減価償却累計 - 建物"
+
+#~ msgid "Accumulated Amortization - Furniture & Fixtures"
+#~ msgstr "減価償却累計 - 家具・備品"
+
+#~ msgid "Accumulated Amortization - Improvements"
+#~ msgstr "減価償却累計 - 改良費"
+
+#~ msgid "Accumulated Amortization - Machines & Tools"
+#~ msgstr "減価償却累計 - 機械・工具"
+
+#~ msgid "Accumulated Amortization - Other Property"
+#~ msgstr "減価償却累計 - その他の不動産"
+
+#~ msgid "Accumulated Amortization - Technology"
+#~ msgstr "減価償却累計 - テクノロジー"
+
+#~ msgid "Accumulated Amortization - Vehicles"
+#~ msgstr "減価償却累計 - 車両"
+
+#~ msgid "Accumulated Depreciation"
+#~ msgstr "減価償却累計額"
+
+#~ msgid "Credit Note :"
+#~ msgstr "クレジットノート："
+
+#~ msgid "Cumulative amortization recorded for building assets."
+#~ msgstr "建物資産に計上された減価償却累計額。"
+
+#~ msgid "Cumulative amortization recorded for capitalized technology assets."
+#~ msgstr "資産計上されたテクノロジー資産に計上された減価償却累計額。"
+
+#~ msgid "Cumulative amortization recorded for furniture and fixture assets."
+#~ msgstr "家具・什器資産に計上された減価償却累計額。"
+
+#~ msgid ""
+#~ "Cumulative amortization recorded for leasehold or property improvements."
+#~ msgstr "賃借物件の改良費（資産）に計上された減価償却累計額。"
+
+#~ msgid "Cumulative amortization recorded for machinery and tool assets."
+#~ msgstr "機械・工具資産に計上された減価償却累計額。"
+
+#~ msgid ""
+#~ "Cumulative amortization recorded for other depreciable property assets."
+#~ msgstr "その他の減価償却資産(不動産)に計上された減価償却累計額。"
+
+#~ msgid "Cumulative amortization recorded for vehicle assets."
+#~ msgstr "車両資産に計上された減価償却累計額。"
+
+#~ msgid ""
+#~ "Error while creating XML:\n"
+#~ "- %s"
+#~ msgstr ""
+#~ "XMLを作成中にエラーが発生しました:\n"
+#~ "- %s"
+
+#~ msgid "Invoice :"
+#~ msgstr "請求書 :"
+
+#~ msgid ""
+#~ "The account code can only contain alphanumeric characters, dots, and "
+#~ "dashes."
+#~ msgstr ""
+#~ "勘定科目コードには、英数字・ドット（.）・ハイフン（-）のみ使用できます。"
+
+#~ msgid ""
+#~ "This entry has been reviewed, You need the bookkeeper role to change it."
+#~ msgstr "この仕訳は確認済みです。変更するには、記帳担当者の権限が必要です。"
+
+#~ msgid ""
+#~ "You can not archive a journal containing draft journal entries.\n"
+#~ "\n"
+#~ "To proceed:\n"
+#~ "1/ click on the top-right button 'Journal Entries' from this journal "
+#~ "form\n"
+#~ "2/ then filter on 'Draft' entries\n"
+#~ "3/ select them all and post or delete them through the action menu"
+#~ msgstr ""
+#~ "ドラフトの仕訳を含む仕訳をアーカイブすることはできません。\n"
+#~ "\n"
+#~ "続けるには：\n"
+#~ "1 /この仕訳帳フォームの右上のボタン「仕訳」をクリックします\n"
+#~ "2 /次に「ドラフト」仕訳でフィルターしてください\n"
+#~ "3 /ドラフトの仕訳をすべて選択し、アクションメニューから投稿または削除しま"
+#~ "す"
+
+#~ msgid "You cannot modify the following readonly fields on a posted move: %s"
+#~ msgstr "記帳された仕訳の以下の読取り専用フィールドは変更できません:%s"
 
 #~ msgid "PEPPOL Electronic Invoicing"
 #~ msgstr "PEPPOL電子請求"

@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
+"POT-Creation-Date: 2026-10-24 17:42+0000\n"
 "PO-Revision-Date: 2026-07-01 00:01+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -149,15 +149,10 @@ msgid ""
 "* 'Show with notification' is 'Show' in addition to a floating text just "
 "next to the button.\n"
 "* 'Open automatically' displays the button and automatically opens the "
-"conversation pane.\n"
+"conversation pane on larger screens. On small screens, this behaves like "
+"'Show'.\n"
 "* 'Hide' hides the chat button on the pages.\n"
 msgstr ""
-"* \"Mostra\" visualizza il pulsante della chat nelle pagine.\n"
-"* \"Mostra con notifica\" è \"Mostra\" con l'aggiunta di un testo fluttuante "
-"a fianco del pulsante.\n"
-"* \"Apri automaticamente\" visualizza il pulsante e apre automaticamente la "
-"conversazione.\n"
-"* \"Nascondi\" nasconde il pulsante della chat nelle pagine.\n"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -289,7 +284,8 @@ msgstr "Aggiungi esperienza"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Add the following code to the &lt;head&gt; section of your website:"
-msgstr "Aggiungi il seguente codice alla sezione &lt;head&gt; del tuo sito web:"
+msgstr ""
+"Aggiungi il seguente codice alla sezione &lt;head&gt; del tuo sito web:"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1111,12 +1107,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
 "Go to <strong>Website</strong> &gt; <strong>Configuration</strong> &gt; "
-"<strong>Settings</strong> &gt; <strong>Email</strong> &amp; "
-"<strong>Marketing.</strong>"
+"<strong>Settings</strong> &gt; <strong>General.</strong>"
 msgstr ""
-"Apri l'app <strong>Sito web</strong> &gt; <strong>Configurazione</strong> "
-"&gt; <strong>Impostazioni</strong> &gt; <strong>E-mail</strong> &amp; "
-"<strong>Marketing.</strong>"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2568,6 +2560,12 @@ msgid "Thank you for your feedback"
 msgstr "Grazie per il riscontro"
 
 #. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/im_livechat_channel.py:0
+msgid "The URL Regex '%(regex)s' is not valid."
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__channel_id
 msgid "The channel of the rule"
 msgstr "Il canale della regola"
@@ -3101,3 +3099,27 @@ msgstr "gestione messaggio websocket"
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "width:40px; height:40px; border-radius:0.5rem; display:block;"
 msgstr "width:40px; height:40px; border-radius:0.5rem; display:block;"
+
+#~ msgid ""
+#~ "* 'Show' displays the chat button on the pages.\n"
+#~ "* 'Show with notification' is 'Show' in addition to a floating text just "
+#~ "next to the button.\n"
+#~ "* 'Open automatically' displays the button and automatically opens the "
+#~ "conversation pane.\n"
+#~ "* 'Hide' hides the chat button on the pages.\n"
+#~ msgstr ""
+#~ "* \"Mostra\" visualizza il pulsante della chat nelle pagine.\n"
+#~ "* \"Mostra con notifica\" è \"Mostra\" con l'aggiunta di un testo "
+#~ "fluttuante a fianco del pulsante.\n"
+#~ "* \"Apri automaticamente\" visualizza il pulsante e apre automaticamente "
+#~ "la conversazione.\n"
+#~ "* \"Nascondi\" nasconde il pulsante della chat nelle pagine.\n"
+
+#~ msgid ""
+#~ "Go to <strong>Website</strong> &gt; <strong>Configuration</strong> &gt; "
+#~ "<strong>Settings</strong> &gt; <strong>Email</strong> &amp; "
+#~ "<strong>Marketing.</strong>"
+#~ msgstr ""
+#~ "Apri l'app <strong>Sito web</strong> &gt; <strong>Configurazione</strong> "
+#~ "&gt; <strong>Impostazioni</strong> &gt; <strong>E-mail</strong> &amp; "
+#~ "<strong>Marketing.</strong>"

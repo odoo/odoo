@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:39+0000\n"
+"POT-Creation-Date: 2026-10-24 17:42+0000\n"
 "PO-Revision-Date: 2026-09-23 05:27+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -990,6 +990,11 @@ msgstr "Hai"
 #: model_terms:product.template,description:hr_expense.expense_product_travel_accommodation_product_template
 msgid "Hotel, plane ticket, taxi, etc."
 msgstr "Hotel, tiket pesawat, taksi, dsb."
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_account_tax__hr_expense_ids
+msgid "Hr Expense"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_domain_id
@@ -2333,14 +2338,14 @@ msgid ""
 "like allowances for mileage, per diem, "
 "accommodation                                             or meal."
 msgstr ""
-"Jika biaya suatu produk pengeluaran bukan 0, user"
-"                                             yang menggunakan produk ini "
+"Jika biaya suatu produk pengeluaran bukan 0, "
+"user                                             yang menggunakan produk ini "
 "tidak akan dapat mengubah jumlah pengeluaran "
 "tersebut,                                             hanya kuantitasnya "
-"saja. Gunakan biaya selain 0 untuk produk pengeluaran yang dibiayai oleh"
-"                                             perusahaan dengan biaya tetap "
-"seperti tunjangan jarak tempuh, uang saku harian, akomodasi"
-"                                             atau makan."
+"saja. Gunakan biaya selain 0 untuk produk pengeluaran yang dibiayai "
+"oleh                                             perusahaan dengan biaya "
+"tetap seperti tunjangan jarak tempuh, uang saku harian, "
+"akomodasi                                             atau makan."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
@@ -2487,6 +2492,7 @@ msgstr "Anda tidak memiliki hak untuk mengedit pengeluaran ini."
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
+#: code:addons/hr_expense/wizard/hr_expense_post_wizard.py:0
 msgid "You don't have the access rights to modify this expense."
 msgstr "Anda tidak memiliki hak akses untuk mengubah pengeluaran ini."
 

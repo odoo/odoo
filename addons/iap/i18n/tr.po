@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:43+0000\n"
 "PO-Revision-Date: 2026-10-14 13:34+0000\n"
 "Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-3/iap/"
@@ -65,11 +65,6 @@ msgstr ""
 "destek ile iletişime geçin."
 
 #. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
-msgid "Auto-Refill"
-msgstr "Otomatik Doldurma"
-
-#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__auto_refill_pack_id
 msgid "Auto-refill Pack"
 msgstr ""
@@ -96,12 +91,6 @@ msgstr "Yasaklı"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
-msgid "Buy"
-msgstr "Satın al"
-
-#. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
 msgid "Buy Credits"
 msgstr ""
 
@@ -109,6 +98,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:iap.field_iap_account__company_ids
 msgid "Company"
 msgstr "Firma"
+
+#. module: iap
+#: model:ir.model,name:iap.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__create_uid
@@ -145,6 +139,7 @@ msgstr "Açıklama"
 #: model:ir.model.fields,field_description:iap.field_iap_enrich_api__display_name
 #: model:ir.model.fields,field_description:iap.field_iap_service__display_name
 #: model:ir.model.fields,field_description:iap.field_iap_service_pack__display_name
+#: model:ir.model.fields,field_description:iap.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "İsim Göster"
 
@@ -205,6 +200,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:iap.field_iap_enrich_api__id
 #: model:ir.model.fields,field_description:iap.field_iap_service__id
 #: model:ir.model.fields,field_description:iap.field_iap_service_pack__id
+#: model:ir.model.fields,field_description:iap.field_res_config_settings__id
 msgid "ID"
 msgstr "ID"
 
@@ -255,15 +251,15 @@ msgid "Last Updated on"
 msgstr "Son Güncelleme"
 
 #. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
+msgid "Manage"
+msgstr ""
+
+#. module: iap
 #. odoo-javascript
 #: code:addons/iap/static/src/action_buttons_widget/action_buttons_widget.xml:0
 msgid "Manage Service & Buy Credits"
 msgstr "Hizmeti Yönet & Alacak Satın Al"
-
-#. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
-msgid "Manage your auto-refill payment method"
-msgstr ""
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__name
@@ -343,6 +339,11 @@ msgid "Registered"
 msgstr "Kayıtlı"
 
 #. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
+msgid "Rotate"
+msgstr ""
+
+#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service_pack__price
 msgid "Sales Price (EUR)"
 msgstr ""
@@ -364,11 +365,6 @@ msgid "Service Packs"
 msgstr ""
 
 #. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
-msgid "Set Alerts & Auto-Refill"
-msgstr ""
-
-#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__state
 msgid "State"
 msgstr "İl/Eyalet"
@@ -383,7 +379,7 @@ msgstr "Teknik Adı"
 #. odoo-python
 #: code:addons/iap/models/iap_account.py:0
 msgid ""
-"The IAP server is unreachable and the information may not be up to date.\n"
+"The IAP server is unreachable and the information may not be up to date. "
 "Please try again later."
 msgstr ""
 
@@ -411,6 +407,31 @@ msgstr ""
 "iletişime geçin. İletişim kurmaya çalıştığı URL şöyleydi %s"
 
 #. module: iap
+#. odoo-python
+#: code:addons/iap/models/iap_account.py:0
+msgid "This feature will be available in version 20.0"
+msgstr ""
+
+#. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
+msgid ""
+"This is useful if you think it may have leaked. It will also deactivate auto-"
+"refill if set. Are you sure to rotate your IAP token?"
+msgstr ""
+
+#. module: iap
+#. odoo-python
+#: code:addons/iap/models/iap_account.py:0
+msgid "Unable to rotate token, another process is busy. Please try later."
+msgstr ""
+
+#. module: iap
+#. odoo-python
+#: code:addons/iap/models/iap_account.py:0
+msgid "Unexpected while contacting IAP. Please contact the support."
+msgstr ""
+
+#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__unit_name
 msgid "Unit Name"
 msgstr "Birim Adı"
@@ -436,3 +457,9 @@ msgstr "Hizmetlerimi Göster"
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
 msgid "View your IAP Services and recharge your credits"
 msgstr "IAP Hizmetlerinizi görüntüleyin ve kredilerinizi yeniden yükleyin"
+
+#~ msgid "Auto-Refill"
+#~ msgstr "Otomatik Doldurma"
+
+#~ msgid "Buy"
+#~ msgstr "Satın al"

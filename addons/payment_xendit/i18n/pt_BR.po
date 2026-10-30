@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"POT-Creation-Date: 2026-10-24 17:45+0000\n"
 "PO-Revision-Date: 2026-07-01 18:36+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
@@ -31,26 +31,6 @@ msgstr ""
 "novamente."
 
 #. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Card Code"
-msgstr "Código do cartão"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Card Holder First Name"
-msgstr "Nome do titular do cartão"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Card Holder Last Name"
-msgstr "Sobrenome do titular do cartão"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Card Number"
-msgstr "Número do cartão"
-
-#. module: payment_xendit
 #: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__code
 msgid "Code"
 msgstr "Código"
@@ -62,48 +42,10 @@ msgid "Display Name"
 msgstr "Exibir nome"
 
 #. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Email"
-msgstr "E-mail"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Expiration"
-msgstr "Expiração"
-
-#. module: payment_xendit
 #: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__id
 #: model:ir.model.fields,field_description:payment_xendit.field_payment_transaction__id
 msgid "ID"
 msgstr "ID"
-
-#. module: payment_xendit
-#. odoo-javascript
-#: code:addons/payment_xendit/static/src/interactions/payment_form.js:0
-msgid "Invalid CVN"
-msgstr "CVN inválido"
-
-#. module: payment_xendit
-#. odoo-javascript
-#: code:addons/payment_xendit/static/src/interactions/payment_form.js:0
-msgid "Invalid Card Number"
-msgstr "Número de cartão inválido"
-
-#. module: payment_xendit
-#. odoo-javascript
-#: code:addons/payment_xendit/static/src/interactions/payment_form.js:0
-msgid "Invalid Date"
-msgstr "Data inválida"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "John"
-msgstr "João"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "MM"
-msgstr "MM"
 
 #. module: payment_xendit
 #: model:ir.model,name:payment_xendit.model_payment_provider
@@ -116,41 +58,34 @@ msgid "Payment Transaction"
 msgstr "Transação do pagamento"
 
 #. module: payment_xendit
-#. odoo-javascript
-#: code:addons/payment_xendit/static/src/interactions/payment_form.js:0
-msgid "Payment processing failed"
-msgstr "Falha no processamento do pagamento"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Phone Number"
-msgstr "Número de telefone"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.payment_provider_form_xendit
-msgid "Public Key"
-msgstr "Chave pública"
-
-#. module: payment_xendit
 #: model_terms:ir.ui.view,arch_db:payment_xendit.payment_provider_form_xendit
 msgid "Secret Key"
 msgstr "Chave secreta"
 
 #. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Smith"
-msgstr "Silva"
-
-#. module: payment_xendit
 #. odoo-python
-#: code:addons/payment_xendit/controllers/main.py:0
-msgid "The access token doesn't match the transaction reference."
-msgstr "O token de acesso não corresponde à referência da transação."
+#: code:addons/payment_xendit/models/payment_transaction.py:0
+msgid ""
+"The payment requires authentication from the customer, which isn't possible "
+"for this unattended transaction. Please ask the customer to pay manually."
+msgstr ""
 
 #. module: payment_xendit
 #: model:ir.model.fields,help:payment_xendit.field_payment_provider__code
 msgid "The technical code of this payment provider."
 msgstr "O código técnico deste provedor de pagamento."
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_transaction.py:0
+msgid "The transaction is not linked to a token."
+msgstr ""
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_provider.py:0
+msgid "Update the Xendit webhook configuration"
+msgstr ""
 
 #. module: payment_xendit
 #: model_terms:ir.ui.view,arch_db:payment_xendit.payment_provider_form_xendit
@@ -161,6 +96,12 @@ msgstr "Token do webhook"
 #: model:ir.model.fields.selection,name:payment_xendit.selection__payment_provider__code__xendit
 msgid "Xendit"
 msgstr "Xendit"
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_provider.py:0
+msgid "Xendit Dashboard"
+msgstr ""
 
 #. module: payment_xendit
 #: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__xendit_public_key
@@ -178,11 +119,71 @@ msgid "Xendit Webhook Token"
 msgstr "Xendit - Token do webhook"
 
 #. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "YYYY"
-msgstr "AAAA"
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_provider.py:0
+msgid ""
+"Xendit replaced the single webhook field used by the %(provider)s payment "
+"provider with separate v3 event groups. Update the %(webhook_link)s on the %"
+"(dashboard_link)s before %(deadline)s to keep receiving payment and card "
+"token status updates."
+msgstr ""
 
 #. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "john.smith@example.com"
-msgstr "john.smith@exemplo.com"
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_provider.py:0
+msgid "webhook configuration"
+msgstr ""
+
+#~ msgid "Card Code"
+#~ msgstr "Código do cartão"
+
+#~ msgid "Card Holder First Name"
+#~ msgstr "Nome do titular do cartão"
+
+#~ msgid "Card Holder Last Name"
+#~ msgstr "Sobrenome do titular do cartão"
+
+#~ msgid "Card Number"
+#~ msgstr "Número do cartão"
+
+#~ msgid "Email"
+#~ msgstr "E-mail"
+
+#~ msgid "Expiration"
+#~ msgstr "Expiração"
+
+#~ msgid "Invalid CVN"
+#~ msgstr "CVN inválido"
+
+#~ msgid "Invalid Card Number"
+#~ msgstr "Número de cartão inválido"
+
+#~ msgid "Invalid Date"
+#~ msgstr "Data inválida"
+
+#~ msgid "John"
+#~ msgstr "João"
+
+#~ msgid "MM"
+#~ msgstr "MM"
+
+#~ msgid "Payment processing failed"
+#~ msgstr "Falha no processamento do pagamento"
+
+#~ msgid "Phone Number"
+#~ msgstr "Número de telefone"
+
+#~ msgid "Public Key"
+#~ msgstr "Chave pública"
+
+#~ msgid "Smith"
+#~ msgstr "Silva"
+
+#~ msgid "The access token doesn't match the transaction reference."
+#~ msgstr "O token de acesso não corresponde à referência da transação."
+
+#~ msgid "YYYY"
+#~ msgstr "AAAA"
+
+#~ msgid "john.smith@example.com"
+#~ msgstr "john.smith@exemplo.com"

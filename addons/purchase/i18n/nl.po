@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 17:36+0000\n"
+"POT-Creation-Date: 2026-10-24 17:42+0000\n"
 "PO-Revision-Date: 2026-09-02 12:39+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -153,8 +153,8 @@ msgstr ""
 "        </t>\n"
 "        wordt verwacht op \n"
 "        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-out=\"format_date"
-"(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            <span style=\"font-weight:bold;\" t-"
+"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
 "        </t>\n"
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">ongedefinieerd</span>.\n"
@@ -229,8 +229,8 @@ msgstr ""
 "        In de bijlage vind je inkooporder <span style=\"font-weight:bold;\" "
 "t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            met referentie: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>"
-"\n"
+"            met referentie: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
+"t>\n"
 "        </t>\n"
 "        voor een bedrag van <span style=\"font-weight:bold;\" t-"
 "out=\"format_amount(object.amount_total, object.currency_id) or ''\">€ "
@@ -295,11 +295,11 @@ msgstr ""
 "Interior</t>)\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        In de bijlage vind je offerteaanvraag <span style=\"font-"
-"weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        In de bijlage vind je offerteaanvraag <span style=\"font-weight:bold;"
+"\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            met referentie: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>"
-"\n"
+"            met referentie: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
+"t>\n"
 "        </t>\n"
 "        van <t t-out=\"object.company_id.name or ''\">JouwBedrijf</t>.\n"
 "        <br/><br/>\n"
@@ -400,8 +400,8 @@ msgid ""
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Purchase Order</span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">"
-"Offerteaanvraag</span><span class=\"o_form_label\" invisible=\"state in "
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')"
+"\">Offerteaanvraag</span><span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Inkooporder</span>"
 
 #. module: purchase
@@ -2541,6 +2541,7 @@ msgstr "Inkooporder aantal"
 #: model:ir.actions.act_window,name:purchase.action_purchase_history
 #: model:ir.model,name:purchase.model_purchase_order_line
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_id
+#: model:ir.model.fields,field_description:purchase.field_account_tax__purchase_order_line_ids
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Purchase Order Line"
@@ -2765,7 +2766,8 @@ msgstr "Inkoopofferte verzonden"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "RFQ merged with %(oldest_rfq_name)s and %(cancelled_rfq)s"
-msgstr "Inkoopofferte samengevoegd met %(oldest_rfq_name)s en %(cancelled_rfq)s"
+msgstr ""
+"Inkoopofferte samengevoegd met %(oldest_rfq_name)s en %(cancelled_rfq)s"
 
 #. module: purchase
 #. odoo-python
@@ -2944,8 +2946,8 @@ msgid ""
 "RFQ."
 msgstr ""
 "Reset naar de datum van vandaag om de verwachte aankomst opnieuw te "
-"berekenen op basis van de beschikbare levertijd"
-"                                     en eerdere informatie uit de "
+"berekenen op basis van de beschikbare "
+"levertijd                                     en eerdere informatie uit de "
 "Offerteaanvraag."
 
 #. module: purchase
@@ -3346,6 +3348,12 @@ msgstr "De bestelde hoeveelheid en de eenheidsprijs zijn bijgewerkt."
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "The ordered quantity has been updated."
 msgstr "Het bestelde aantal is bijgewerkt."
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/res_partner.py:0
+msgid "The partner cannot be deleted because it is used as a dropship address"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order

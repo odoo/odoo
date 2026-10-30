@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
+"POT-Creation-Date: 2026-10-24 17:42+0000\n"
 "PO-Revision-Date: 2026-07-01 17:50+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Estonian <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -129,7 +129,8 @@ msgstr "%s (koopia)"
 #: code:addons/im_livechat/models/chatbot_script.py:0
 msgid ""
 "'%(input_email)s' does not look like a valid email. Can you please try again?"
-msgstr "'%(input_email)s' ei tundu olevat kehtiv e-post. Proovige palun uuesti."
+msgstr ""
+"'%(input_email)s' ei tundu olevat kehtiv e-post. Proovige palun uuesti."
 
 #. module: im_livechat
 #. odoo-python
@@ -152,14 +153,10 @@ msgid ""
 "* 'Show with notification' is 'Show' in addition to a floating text just "
 "next to the button.\n"
 "* 'Open automatically' displays the button and automatically opens the "
-"conversation pane.\n"
+"conversation pane on larger screens. On small screens, this behaves like "
+"'Show'.\n"
 "* 'Hide' hides the chat button on the pages.\n"
 msgstr ""
-"* 'Näita' kuvab lehekülgedel vestlusnupu.\n"
-"* 'Näita koos teavitusega' on 'Näita' lisaks hõljuvale tekstile otse nupu "
-"kõrval.\n"
-"* 'Ava automaatselt' kuvab nupu ja avab automaatselt vestluspaneeli.\n"
-"* 'Peida' peidab vestlusnupu lehekülgedel.\n"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -233,8 +230,8 @@ msgid ""
 "with visitors only when no operator is available.</span>"
 msgstr ""
 "<span>Vihje: Enne roboti poolseid keerulisi tegevusi (operaatorile "
-"edastamine, ...) on vajalik lihtsamad tegevused (küsimus, email, ...).</span>"
-"\n"
+"edastamine, ...) on vajalik lihtsamad tegevused (küsimus, email, ...).</"
+"span>\n"
 "<span>Kasuta kanali reegleid kui soovite, et robot oleks aktiivne ainult "
 "siis kui ühtegi operaatorit pole saadaval.</span>"
 
@@ -506,8 +503,8 @@ msgid ""
 "persons. Channel can be freely joined (depending on its configuration)."
 msgstr ""
 "Vestlus on privaatne sõnumite vahetamine kahe inimese vahel. Grupp on "
-"privaatne kutsutud inimeste hulgas. Kanaliga on võimalik vabalt liituda"
-"(olenevalt kanali seadistustest)."
+"privaatne kutsutud inimeste hulgas. Kanaliga on võimalik vabalt "
+"liituda(olenevalt kanali seadistustest)."
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1090,8 +1087,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
 "Go to <strong>Website</strong> &gt; <strong>Configuration</strong> &gt; "
-"<strong>Settings</strong> &gt; <strong>Email</strong> &amp; "
-"<strong>Marketing.</strong>"
+"<strong>Settings</strong> &gt; <strong>General.</strong>"
 msgstr ""
 
 #. module: im_livechat
@@ -2515,6 +2511,12 @@ msgid "Thank you for your feedback"
 msgstr ""
 
 #. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/im_livechat_channel.py:0
+msgid "The URL Regex '%(regex)s' is not valid."
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__channel_id
 msgid "The channel of the rule"
 msgstr ""
@@ -3014,3 +3016,17 @@ msgstr "websocket sõnumite käsitlus"
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "width:40px; height:40px; border-radius:0.5rem; display:block;"
 msgstr ""
+
+#~ msgid ""
+#~ "* 'Show' displays the chat button on the pages.\n"
+#~ "* 'Show with notification' is 'Show' in addition to a floating text just "
+#~ "next to the button.\n"
+#~ "* 'Open automatically' displays the button and automatically opens the "
+#~ "conversation pane.\n"
+#~ "* 'Hide' hides the chat button on the pages.\n"
+#~ msgstr ""
+#~ "* 'Näita' kuvab lehekülgedel vestlusnupu.\n"
+#~ "* 'Näita koos teavitusega' on 'Näita' lisaks hõljuvale tekstile otse nupu "
+#~ "kõrval.\n"
+#~ "* 'Ava automaatselt' kuvab nupu ja avab automaatselt vestluspaneeli.\n"
+#~ "* 'Peida' peidab vestlusnupu lehekülgedel.\n"

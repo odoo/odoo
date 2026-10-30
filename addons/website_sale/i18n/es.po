@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:38+0000\n"
+"POT-Creation-Date: 2026-10-24 17:42+0000\n"
 "PO-Revision-Date: 2026-10-01 15:33+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -41,7 +41,8 @@ msgstr "\" categoría"
 #: code:addons/website_sale/models/sale_order.py:0
 msgid ""
 "%(product_name)s has not been added to your cart since it is not available."
-msgstr "%(product_name)s no se ha añadido a la cesta porque no está disponible."
+msgstr ""
+"%(product_name)s no se ha añadido a la cesta porque no está disponible."
 
 #. module: website_sale
 #. odoo-python
@@ -587,8 +588,8 @@ msgid ""
 "ms-1\">Contact Us</span>"
 msgstr ""
 "<i class=\"fa fa-envelope fa-fw\" role=\"presentation\"/>\n"
-"                                            <span class=\"o_label small ms-"
-"1\">Contacta con nosotros</span>"
+"                                            <span class=\"o_label small "
+"ms-1\">Contacta con nosotros</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -2210,7 +2211,8 @@ msgstr "Añadir automáticamente productos opcionales, accesorios y alternativos
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Automatically add optional, accessory, and alternative products."
-msgstr "Añadir automáticamente productos opcionales, accesorios y alternativos."
+msgstr ""
+"Añadir automáticamente productos opcionales, accesorios y alternativos."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__publish_on
@@ -3103,7 +3105,8 @@ msgstr "Superposición oscura"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__rating_email_delay
 #: model:ir.model.fields,field_description:website_sale.field_website__rating_email_delay
 msgid "Days After Order to Send Rating Email"
-msgstr "Días después del pedido para enviar el correo electrónico de valoración"
+msgstr ""
+"Días después del pedido para enviar el correo electrónico de valoración"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6896,6 +6899,14 @@ msgstr ""
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
+msgid ""
+"Some products in your cart are not available for purchase in your country. "
+"Please remove them or contact us."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
 msgid "Sorry, we are unable to ship your order."
 msgstr "Lo sentimos, no podemos enviar tu pedido."
 
@@ -7237,7 +7248,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/controllers/cart.py:0
 msgid "The given product does not exist therefore it cannot be added to cart."
-msgstr "El producto dado no existe, por lo tanto no se puede añadir a la cesta."
+msgstr ""
+"El producto dado no existe, por lo tanto no se puede añadir a la cesta."
 
 #. module: website_sale
 #. odoo-python
@@ -7266,6 +7278,14 @@ msgstr ""
 "El modo seleccionado aquí se aplicará como política de facturación a los "
 "nuevos productos que se                            creen, pero no a los "
 "productos ya existentes."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/cart.py:0
+msgid ""
+"The number of selected combo items must match the number of available combo "
+"choices."
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -7414,9 +7434,21 @@ msgstr "Este producto ya no está disponible en esta unidad de medida."
 
 #. module: website_sale
 #. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid "This product is not available for purchase in your country."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/controllers/wishlist.py:0
 msgid "This product is not eligible for stock notifications."
 msgstr "Este producto no permite recibir notificaciones de disponibilidad."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/cart.py:0
+msgid "This product is part of a combo and can't be updated individually."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form

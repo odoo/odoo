@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:43+0000\n"
 "PO-Revision-Date: 2026-06-30 23:58+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
@@ -58,11 +58,6 @@ msgstr ""
 "esse erro persistir."
 
 #. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
-msgid "Auto-Refill"
-msgstr "Recarga automática"
-
-#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__auto_refill_pack_id
 msgid "Auto-refill Pack"
 msgstr "Pacote de recarga automática"
@@ -89,12 +84,6 @@ msgstr "Banido"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
-msgid "Buy"
-msgstr "Comprar"
-
-#. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
 msgid "Buy Credits"
 msgstr "Comprar créditos"
 
@@ -102,6 +91,11 @@ msgstr "Comprar créditos"
 #: model:ir.model.fields,field_description:iap.field_iap_account__company_ids
 msgid "Company"
 msgstr "Empresa"
+
+#. module: iap
+#: model:ir.model,name:iap.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__create_uid
@@ -138,6 +132,7 @@ msgstr "Descrição"
 #: model:ir.model.fields,field_description:iap.field_iap_enrich_api__display_name
 #: model:ir.model.fields,field_description:iap.field_iap_service__display_name
 #: model:ir.model.fields,field_description:iap.field_iap_service_pack__display_name
+#: model:ir.model.fields,field_description:iap.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "Nome exibido"
 
@@ -197,6 +192,7 @@ msgstr "Pacote de serviços IAP"
 #: model:ir.model.fields,field_description:iap.field_iap_enrich_api__id
 #: model:ir.model.fields,field_description:iap.field_iap_service__id
 #: model:ir.model.fields,field_description:iap.field_iap_service_pack__id
+#: model:ir.model.fields,field_description:iap.field_res_config_settings__id
 msgid "ID"
 msgstr "ID"
 
@@ -247,15 +243,15 @@ msgid "Last Updated on"
 msgstr "Última atualização em"
 
 #. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
+msgid "Manage"
+msgstr ""
+
+#. module: iap
 #. odoo-javascript
 #: code:addons/iap/static/src/action_buttons_widget/action_buttons_widget.xml:0
 msgid "Manage Service & Buy Credits"
 msgstr "Gerenciar serviços e comprar créditos"
-
-#. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
-msgid "Manage your auto-refill payment method"
-msgstr "Gerencie seu método de pagamento para recarga automática"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__name
@@ -337,6 +333,11 @@ msgid "Registered"
 msgstr "Registrado"
 
 #. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
+msgid "Rotate"
+msgstr ""
+
+#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service_pack__price
 msgid "Sales Price (EUR)"
 msgstr "Preço de venda (EUR)"
@@ -358,11 +359,6 @@ msgid "Service Packs"
 msgstr "Pacotes de Serviços"
 
 #. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
-msgid "Set Alerts & Auto-Refill"
-msgstr "Definir alertas e recarga automática"
-
-#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__state
 msgid "State"
 msgstr "Estado"
@@ -377,12 +373,9 @@ msgstr "Nome técnico"
 #. odoo-python
 #: code:addons/iap/models/iap_account.py:0
 msgid ""
-"The IAP server is unreachable and the information may not be up to date.\n"
+"The IAP server is unreachable and the information may not be up to date. "
 "Please try again later."
 msgstr ""
-"O servidor IAP está inacessível e as informações podem não estar "
-"atualizadas.\n"
-"Tente novamente mais tarde."
 
 #. module: iap
 #. odoo-python
@@ -410,6 +403,31 @@ msgstr ""
 "autor do aplicativo. O URL que ele tentou contatar foi %s"
 
 #. module: iap
+#. odoo-python
+#: code:addons/iap/models/iap_account.py:0
+msgid "This feature will be available in version 20.0"
+msgstr ""
+
+#. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
+msgid ""
+"This is useful if you think it may have leaked. It will also deactivate auto-"
+"refill if set. Are you sure to rotate your IAP token?"
+msgstr ""
+
+#. module: iap
+#. odoo-python
+#: code:addons/iap/models/iap_account.py:0
+msgid "Unable to rotate token, another process is busy. Please try later."
+msgstr ""
+
+#. module: iap
+#. odoo-python
+#: code:addons/iap/models/iap_account.py:0
+msgid "Unexpected while contacting IAP. Please contact the support."
+msgstr ""
+
+#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__unit_name
 msgid "Unit Name"
 msgstr "Nome da unidade"
@@ -435,3 +453,23 @@ msgstr "Ver meus serviços"
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
 msgid "View your IAP Services and recharge your credits"
 msgstr "Visualize seus serviços de IAP e recarregue seus créditos"
+
+#~ msgid "Auto-Refill"
+#~ msgstr "Recarga automática"
+
+#~ msgid "Buy"
+#~ msgstr "Comprar"
+
+#~ msgid "Manage your auto-refill payment method"
+#~ msgstr "Gerencie seu método de pagamento para recarga automática"
+
+#~ msgid "Set Alerts & Auto-Refill"
+#~ msgstr "Definir alertas e recarga automática"
+
+#~ msgid ""
+#~ "The IAP server is unreachable and the information may not be up to date.\n"
+#~ "Please try again later."
+#~ msgstr ""
+#~ "O servidor IAP está inacessível e as informações podem não estar "
+#~ "atualizadas.\n"
+#~ "Tente novamente mais tarde."

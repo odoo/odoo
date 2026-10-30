@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:39+0000\n"
+"POT-Creation-Date: 2026-10-24 17:44+0000\n"
 "PO-Revision-Date: 2026-09-07 12:11+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -1841,6 +1841,13 @@ msgstr "Impossibile nascondere tutte le righe di un foglio."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Cannot open the link because the linked sheet is hidden."
 msgstr "Impossibile aprire il link perché il foglio collegato è nascosto."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"Cannot perform this action on merged cells. Unmerge the cells and try again."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13117,11 +13124,9 @@ msgstr "L'operazione non è consentita con selezioni multiple."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"This operation is not possible due to a merge. Please remove the merges "
-"first than try again."
+"This operation would cause tables to overlap. Move or remove the conflicting "
+"table and try again."
 msgstr ""
-"Questa operazione non è possibile a causa di una fusione. Per favore rimuovi "
-"prima le fusioni, poi riprova."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13612,12 +13617,6 @@ msgstr "Usa il primo valore come totale parziale"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Use row %(row_position)s as headers"
 msgstr "Usa la riga o le righe %(row_position)s come intestazioni"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-msgid "Use tabular form:"
-msgstr "Utilizza la forma tabellare:"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -14870,3 +14869,13 @@ msgstr "x"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "yesterday"
 msgstr "ieri"
+
+#~ msgid ""
+#~ "This operation is not possible due to a merge. Please remove the merges "
+#~ "first than try again."
+#~ msgstr ""
+#~ "Questa operazione non è possibile a causa di una fusione. Per favore "
+#~ "rimuovi prima le fusioni, poi riprova."
+
+#~ msgid "Use tabular form:"
+#~ msgstr "Utilizza la forma tabellare:"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
+"POT-Creation-Date: 2026-10-24 17:42+0000\n"
 "PO-Revision-Date: 2026-06-30 04:17+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -18,6 +18,14 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: pos_dpopay
+#. odoo-python
+#: code:addons/pos_dpopay/models/pos_payment_method.py:0
+msgid ""
+"%s. Please ensure the device is online and confirm that the Merchant ID "
+"(MID) and Terminal ID (TID) are correct."
+msgstr ""
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_bearer_token
@@ -206,16 +214,6 @@ msgid "Payment is unsuccessful."
 msgstr "Payment tidak sukses."
 
 #. module: pos_dpopay
-#. odoo-python
-#: code:addons/pos_dpopay/models/pos_payment_method.py:0
-msgid ""
-"Please ensure the device is online and confirm that the Merchant ID (MID) "
-"and Terminal ID (TID) are correct. %s"
-msgstr ""
-"Silakan pastikan perangkat online dan konfirmasi bahwa Merchant ID (MID) dan "
-"Terminal ID (TID) benar. %s"
-
-#. module: pos_dpopay
 #: model:ir.model,name:pos_dpopay.model_pos_payment
 msgid "Point of Sale Payment"
 msgstr "Pembayaran POS"
@@ -285,3 +283,10 @@ msgid ""
 msgstr ""
 "Tidak dapat menerima DPO Pay bearer token: periksa Client ID dan Client "
 "Secret."
+
+#~ msgid ""
+#~ "Please ensure the device is online and confirm that the Merchant ID (MID) "
+#~ "and Terminal ID (TID) are correct. %s"
+#~ msgstr ""
+#~ "Silakan pastikan perangkat online dan konfirmasi bahwa Merchant ID (MID) "
+#~ "dan Terminal ID (TID) benar. %s"

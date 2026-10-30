@@ -42,9 +42,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 17:36+0000\n"
-"PO-Revision-Date: 2026-06-30 19:27+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"POT-Creation-Date: 2026-10-24 17:42+0000\n"
+"PO-Revision-Date: 2026-10-27 13:06+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-3/"
 "point_of_sale/pl/>\n"
 "Language: pl\n"
@@ -54,7 +54,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -71,7 +71,7 @@ msgstr "% zniżki"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_orderline_receipt_information
 msgid "% discount off on"
-msgstr ""
+msgstr "% zniżki tak nie"
 
 #. module: point_of_sale
 #. odoo-python
@@ -97,7 +97,7 @@ msgstr "%(old_pm)s zmienione na %(new_pm)s z %(old_amount)s"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/tip_screen/tip_screen.js:0
 msgid "%(original)s + %(tip)s tip = %(overall)s"
-msgstr ""
+msgstr "%(original)s + %(tip)s napiwku = %(overall)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -555,6 +555,7 @@ msgid "<strong>INTERNAL NOTE</strong>"
 msgstr "<strong>NOTATKA WEWNĘTRZNA</strong>"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_orderline_receipt_information
 msgid "<strong>Note: </strong>"
 msgstr "<strong>Notatka: </strong>"
@@ -719,20 +720,20 @@ msgstr "Token dostępu"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid ""
-"Access printer configuration panel by puttin this URL in your search bar:"
+"Access printer configuration panel by putting this URL in your search bar:"
 msgstr ""
-"Aby uzyskać dostęp do panelu konfiguracji drukarki, wpisz ten adres URL w "
+"Uzyskaj dostęp do panelu konfiguracji drukarki, wpisując ten adres URL w "
 "pasku wyszukiwania:"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid ""
-"Access the below URL but replace [printer_ip] with your current Pritner IP "
+"Access the below URL but replace [printer_ip] with your current Printer IP "
 "address"
 msgstr ""
-"Wejdź na poniższy adres URL, ale zastąp [printer_ip] aktualnym adresem IP "
-"drukarki"
+"Przejdź na poniższy adres URL, ale zastąp [printer_ip] swoim aktualnym "
+"adresem IP drukarki"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__access_warning
@@ -1393,6 +1394,7 @@ msgstr "Obecności"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.pos_product_attribute_action
 #: model:ir.ui.menu,name:point_of_sale.pos_menu_products_attribute_action
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Attributes"
 msgstr "Atrybuty"
 
@@ -2378,6 +2380,7 @@ msgstr "Klient"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/chose_combo_popup/chose_combo_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/product_configurator_popup/product_configurator_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
@@ -2652,6 +2655,7 @@ msgstr "Skonfiguruj co najmniej jeden punkt sprzedaży."
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/money_details_popup/money_details_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.xml:0
@@ -2707,6 +2711,7 @@ msgstr "Połączone urządzenia"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.js:0
 #: code:addons/point_of_sale/static/src/app/utils/error_handlers.js:0
 msgid "Connection Lost"
 msgstr "Połączenie utracone"
@@ -4508,7 +4513,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid ""
-"If this endpoint does not returan a 404 error and displays a blank page, "
+"If this endpoint does not return a 404 error and displays a blank page, "
 "everything is ready."
 msgstr ""
 "Jeśli ten punkt końcowy nie zwraca błędu 404 i wyświetla pustą stronę, "
@@ -5493,6 +5498,16 @@ msgid "Message Delivery error"
 msgstr "Błąd doręczenia wiadomości"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/controllers/main.py:0
+msgid ""
+"Message: %(messages)s\n"
+"Please update the %(invalid_fields)s"
+msgstr ""
+"Wiadomość: %(messages)s\n"
+"Zaktualizuj %(invalid_fields)s"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_ids
 msgid "Messages"
@@ -5954,7 +5969,7 @@ msgstr "Nie dostępny/e"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
 msgid "Not implemented"
-msgstr ""
+msgstr "Nie zaimplementowano"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__identification__none
@@ -6122,6 +6137,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Online reservation for Point of Sale"
 msgstr "Rezerwacja online dla Punktu Sprzedaży"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Only Point of Sale managers can modify a Point of Sale configuration."
+msgstr ""
+"Tylko menadżerowie Punktu Sprzedaży mogą modyfikować konfigurację Punktu "
+"Sprzedaży."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7336,6 +7359,11 @@ msgid "Pos Order Count"
 msgstr "Liczba zamówień PoS"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_account_tax__pos_order_line_ids
+msgid "Pos Order Line"
+msgstr "Pozycja zamówienia PoS"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_payment_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__pos_payment_ids
 msgid "Pos Payment"
@@ -7714,8 +7742,8 @@ msgstr "Pokrywa drukarki jest otwarta. Proszę ją zamknąć i spróbować ponow
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
-msgid "Printer's local IP address is printerd"
-msgstr "Lokalny adres IP drukarki to printerd"
+msgid "Printer's local IP address is printed"
+msgstr "Lokalny adres IP drukarki jest wydrukowany"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_printer_form
@@ -7758,7 +7786,7 @@ msgstr "Kontynuuj mimo to"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
 msgid "Processing..."
-msgstr ""
+msgstr "Przetwarzanie..."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template
@@ -8250,6 +8278,9 @@ msgstr "Odśwież"
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/confirmation_dialog/confirmation_dialog.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/confirmation_dialog/confirmation_dialog.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.js:0
+#: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.xml:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Reload Data"
 msgstr "Załaduj ponownie dane"
 
@@ -8661,6 +8692,12 @@ msgid "Secure printing"
 msgstr "Bezpieczne drukowanie"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "Secure printing enabled"
+msgstr "Włączono bezpieczne drukowanie"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bus_mixin__access_token
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__access_token
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__access_token
@@ -8734,6 +8771,13 @@ msgstr "Nie ma to wpływu na interfejsy samodzielnego zamawiania."
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__point_of_sale_use_ticket_qr_code
 msgid "Self-service invoicing"
 msgstr "Samoobsługowe fakturowanie"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Sell variants of a product using attributes (size, color, etc.)."
+msgstr ""
+"Sprzedawaj warianty produktów z wykorzystaniem atrybutów (rozmiar, kolor "
+"etc.)."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8863,7 +8907,7 @@ msgstr "Statystki sesji"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Session already closed"
-msgstr ""
+msgstr "Sesja została już zamknięta"
 
 #. module: point_of_sale
 #: model:mail.activity.type,name:point_of_sale.mail_activity_old_session
@@ -9144,10 +9188,14 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/main.js:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid ""
 "Some paid orders have not been synced to the server yet. Closing or "
 "reloading now may cause data loss."
 msgstr ""
+"Niektóre opłacone zamówienia nie zostały jeszcze zsynchronizowane z "
+"serwerem. Ich zamknięcie lub ponowne załadowanie może spowodować utratę "
+"danych."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9541,6 +9589,12 @@ msgstr "Test"
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Thank you."
 msgstr "Dziękujemy."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/controllers/main.py:0
+msgid "The %s must be filled in your details."
+msgstr "Musisz wypełnić %s swoimi danymi."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9964,6 +10018,12 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.js:0
+msgid "The register cannot be opened while offline. Please try again."
+msgstr "Kasa nie może zostać otwarta offline. Spróbuj ponownie."
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid ""
 "The requested quantity to be refunded is higher than the ordered quantity. "
@@ -10282,6 +10342,15 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_fast_payment_method_ids
 msgid "These payment methods will be available for fast payment"
 msgstr "Te metody płatności będą dostępne do szybkiej płatności"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.js:0
+msgid ""
+"This action will delete all unsaved orders and other locally stored data"
+msgstr ""
+"Ta akcja usunie wszystkie niezapisane zamówienia i inne dane przechowywane "
+"lokalnie"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11024,7 +11093,7 @@ msgstr "VAT"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "VAT:"
-msgstr ""
+msgstr "VAT:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11429,6 +11498,14 @@ msgstr "Nie można usunąć sekwencji używanej w aktywnej konfiguracji PoS: %s"
 #: code:addons/point_of_sale/models/pos_payment.py:0
 msgid "You cannot edit a payment for a posted order."
 msgstr "Nie możesz edytować płatności dla opublikowanego zamówienia."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order_line.py:0
+msgid "You cannot refund more than the outstanding quantity for this product."
+msgstr ""
+"Nie możesz zwrócić więcej niż kwota pozostała do rozliczenia dla tego "
+"produktu."
 
 #. module: point_of_sale
 #. odoo-python
@@ -11845,7 +11922,19 @@ msgstr "otwartych zamówień na następne kilka dni."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "open orders planned for later."
-msgstr ""
+msgstr "otwarte zlecenia zaplanowane na później."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "order"
+msgstr "zamówienie"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "orders"
+msgstr "zamówienia"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
@@ -11927,6 +12016,29 @@ msgstr "o wartości"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr "x"
+
+#~ msgid ""
+#~ "Access printer configuration panel by puttin this URL in your search bar:"
+#~ msgstr ""
+#~ "Aby uzyskać dostęp do panelu konfiguracji drukarki, wpisz ten adres URL w "
+#~ "pasku wyszukiwania:"
+
+#~ msgid ""
+#~ "Access the below URL but replace [printer_ip] with your current Pritner "
+#~ "IP address"
+#~ msgstr ""
+#~ "Wejdź na poniższy adres URL, ale zastąp [printer_ip] aktualnym adresem IP "
+#~ "drukarki"
+
+#~ msgid ""
+#~ "If this endpoint does not returan a 404 error and displays a blank page, "
+#~ "everything is ready."
+#~ msgstr ""
+#~ "Jeśli ten punkt końcowy nie zwraca błędu 404 i wyświetla pustą stronę, "
+#~ "wszystko jest gotowe."
+
+#~ msgid "Printer's local IP address is printerd"
+#~ msgstr "Lokalny adres IP drukarki to printerd"
 
 #~ msgid "A request is still being processed in the background. Please wait."
 #~ msgstr "W tle nadal przetwarzane jest żądanie. Proszę czekać."

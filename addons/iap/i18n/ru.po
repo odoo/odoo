@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:43+0000\n"
 "PO-Revision-Date: 2026-08-11 11:40+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-3/iap/"
@@ -57,11 +57,6 @@ msgstr ""
 "в поддержку Odoo."
 
 #. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
-msgid "Auto-Refill"
-msgstr ""
-
-#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__auto_refill_pack_id
 msgid "Auto-refill Pack"
 msgstr ""
@@ -88,12 +83,6 @@ msgstr "Забанен"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
-msgid "Buy"
-msgstr ""
-
-#. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
 msgid "Buy Credits"
 msgstr ""
 
@@ -101,6 +90,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:iap.field_iap_account__company_ids
 msgid "Company"
 msgstr "Компания"
+
+#. module: iap
+#: model:ir.model,name:iap.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__create_uid
@@ -137,6 +131,7 @@ msgstr "Описание"
 #: model:ir.model.fields,field_description:iap.field_iap_enrich_api__display_name
 #: model:ir.model.fields,field_description:iap.field_iap_service__display_name
 #: model:ir.model.fields,field_description:iap.field_iap_service_pack__display_name
+#: model:ir.model.fields,field_description:iap.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "Отображаемое имя"
 
@@ -196,6 +191,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:iap.field_iap_enrich_api__id
 #: model:ir.model.fields,field_description:iap.field_iap_service__id
 #: model:ir.model.fields,field_description:iap.field_iap_service_pack__id
+#: model:ir.model.fields,field_description:iap.field_res_config_settings__id
 msgid "ID"
 msgstr "ID"
 
@@ -246,14 +242,14 @@ msgid "Last Updated on"
 msgstr "Дата последнего обновления:"
 
 #. module: iap
-#. odoo-javascript
-#: code:addons/iap/static/src/action_buttons_widget/action_buttons_widget.xml:0
-msgid "Manage Service & Buy Credits"
+#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
+msgid "Manage"
 msgstr ""
 
 #. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
-msgid "Manage your auto-refill payment method"
+#. odoo-javascript
+#: code:addons/iap/static/src/action_buttons_widget/action_buttons_widget.xml:0
+msgid "Manage Service & Buy Credits"
 msgstr ""
 
 #. module: iap
@@ -301,7 +297,8 @@ msgstr ""
 #. module: iap
 #: model:ir.model.constraint,message:iap.constraint_iap_service_unique_technical_name
 msgid "Only one service can exist with a specific technical_name"
-msgstr "Может существовать только одна услуга с указанным техническим названием"
+msgstr ""
+"Может существовать только одна услуга с указанным техническим названием"
 
 #. module: iap
 #: model:ir.model.constraint,message:iap.constraint_iap_service_pack_unique_iap_service_pack_identifier
@@ -328,6 +325,11 @@ msgid "Registered"
 msgstr "Зарегистрирован"
 
 #. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
+msgid "Rotate"
+msgstr ""
+
+#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service_pack__price
 msgid "Sales Price (EUR)"
 msgstr ""
@@ -349,11 +351,6 @@ msgid "Service Packs"
 msgstr ""
 
 #. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
-msgid "Set Alerts & Auto-Refill"
-msgstr ""
-
-#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__state
 msgid "State"
 msgstr "Область"
@@ -368,7 +365,7 @@ msgstr "Техническое название"
 #. odoo-python
 #: code:addons/iap/models/iap_account.py:0
 msgid ""
-"The IAP server is unreachable and the information may not be up to date.\n"
+"The IAP server is unreachable and the information may not be up to date. "
 "Please try again later."
 msgstr ""
 
@@ -394,6 +391,31 @@ msgid ""
 msgstr ""
 "Запрос к сервису завершился по тайм-ауту. Пожалуйста, обратитесь к "
 "разработчику приложения. URL, который пытались вызвать: %s"
+
+#. module: iap
+#. odoo-python
+#: code:addons/iap/models/iap_account.py:0
+msgid "This feature will be available in version 20.0"
+msgstr ""
+
+#. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
+msgid ""
+"This is useful if you think it may have leaked. It will also deactivate auto-"
+"refill if set. Are you sure to rotate your IAP token?"
+msgstr ""
+
+#. module: iap
+#. odoo-python
+#: code:addons/iap/models/iap_account.py:0
+msgid "Unable to rotate token, another process is busy. Please try later."
+msgstr ""
+
+#. module: iap
+#. odoo-python
+#: code:addons/iap/models/iap_account.py:0
+msgid "Unexpected while contacting IAP. Please contact the support."
+msgstr ""
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__unit_name

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:39+0000\n"
+"POT-Creation-Date: 2026-10-24 17:44+0000\n"
 "PO-Revision-Date: 2026-08-21 19:29+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -1842,6 +1842,13 @@ msgstr "No es posible ocultar todas las filas de una hoja."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Cannot open the link because the linked sheet is hidden."
 msgstr "No es posible abrir el enlace porque la hoja vinculada está oculta."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"Cannot perform this action on merged cells. Unmerge the cells and try again."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13090,11 +13097,9 @@ msgstr "Esta operación no se permite con selecciones múltiples."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"This operation is not possible due to a merge. Please remove the merges "
-"first than try again."
+"This operation would cause tables to overlap. Move or remove the conflicting "
+"table and try again."
 msgstr ""
-"Esta operación no es posible debido a una combinación. Elimine primero las "
-"combinaciones e inténtelo de nuevo."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13583,12 +13588,6 @@ msgstr "Usar el primer valor como subtotal"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Use row %(row_position)s as headers"
 msgstr "Usa la fila %(row_position)s como encabezados"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-msgid "Use tabular form:"
-msgstr "Utiliza el formato tabular:"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -14842,6 +14841,16 @@ msgstr "x"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "yesterday"
 msgstr "ayer"
+
+#~ msgid ""
+#~ "This operation is not possible due to a merge. Please remove the merges "
+#~ "first than try again."
+#~ msgstr ""
+#~ "Esta operación no es posible debido a una combinación. Elimine primero "
+#~ "las combinaciones e inténtelo de nuevo."
+
+#~ msgid "Use tabular form:"
+#~ msgstr "Utiliza el formato tabular:"
 
 #~ msgid ""
 #~ "Some list column titles have been locked to avoid translation issues."

@@ -15,11 +15,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:39+0000\n"
+"POT-Creation-Date: 2026-10-24 17:42+0000\n"
 "PO-Revision-Date: 2026-10-12 11:10+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
-"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-3/hr/ar/>"
-"\n"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-3/hr/ar/"
+">\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2533,8 +2533,8 @@ msgid ""
 "(e.g., Aadhaar, SIN, NIN). This is used for official records and statutory "
 "compliance."
 msgstr ""
-"أدخل رقم الهوية الوطنية للموظف الصادر عن الحكومة (مثل Aadhaar أو SIN أو NIN)"
-". يُستخدم هذا الرقم في السجلات الرسمية والامتثال القانوني."
+"أدخل رقم الهوية الوطنية للموظف الصادر عن الحكومة (مثل Aadhaar أو SIN أو "
+"NIN). يُستخدم هذا الرقم في السجلات الرسمية والامتثال القانوني."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -4894,6 +4894,13 @@ msgid ""
 msgstr ""
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"Some of these fields %(field_name)s don't exist on this model (hr.version)."
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -5085,21 +5092,19 @@ msgid "Template for Employees"
 msgstr ""
 
 #. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_employee.py:0
-msgid ""
-"The Badge ID must be alphanumeric without any accents and no longer than 18 "
-"characters."
-msgstr ""
-"يجب أن يكون مُعرِّف الشارة بحروف أبجدية عددية بدون أي رموز ويجب ألا يزيد عن 18 "
-"حرفاً."
-
-#. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
 msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
 "employee."
 msgstr "يجب أن يكون معرف الشارة فريدًا، هذا المعرف مستخدم لموظف آخر."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"The Badge ID must contain only printable ASCII characters, without spaces, "
+"and be no longer than 18 characters."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_departure_reason__country_code
@@ -5199,7 +5204,8 @@ msgstr ""
 msgid ""
 "The employee is already in contract on %s. Please select a date outside "
 "existing contracts"
-msgstr "لدى الموظف عقد بالفعل على %s. يرجى تحديد تاريخ خارج نطاق العقود الحالية"
+msgstr ""
+"لدى الموظف عقد بالفعل على %s. يرجى تحديد تاريخ خارج نطاق العقود الحالية"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__legal_name
@@ -5247,8 +5253,8 @@ msgid ""
 "The following users have not been archived as they are still linked to "
 "another active employees: %s"
 msgstr ""
-"لم تتم أرشفة المستخدمين التاليين لأنهم لا يزالون مرتبطين بموظفين آخرين نشطين: "
-"%s"
+"لم تتم أرشفة المستخدمين التاليين لأنهم لا يزالون مرتبطين بموظفين آخرين "
+"نشطين: %s"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_job_name_company_uniq
@@ -6360,6 +6366,13 @@ msgstr "عمل"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "work_permit_name"
+
+#~ msgid ""
+#~ "The Badge ID must be alphanumeric without any accents and no longer than "
+#~ "18 characters."
+#~ msgstr ""
+#~ "يجب أن يكون مُعرِّف الشارة بحروف أبجدية عددية بدون أي رموز ويجب ألا يزيد عن "
+#~ "18 حرفاً."
 
 #~ msgid "Gender"
 #~ msgstr "الجنس"

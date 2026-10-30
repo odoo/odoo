@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
+"POT-Creation-Date: 2026-10-24 17:42+0000\n"
 "PO-Revision-Date: 2026-07-01 00:15+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -19,10 +19,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
-"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
-"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
-"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 "X-Generator: Weblate 2026.6.1\n"
 
 #. module: pos_discount
@@ -64,21 +64,17 @@ msgid "Discount"
 msgstr "Знижка"
 
 #. module: pos_discount
-#: model_terms:ir.ui.view,arch_db:pos_discount.res_config_settings_view_form
-msgid "Discount %"
-msgstr "Знижка %"
-
-#. module: pos_discount
-#: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_pc
-#: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_pc
-msgid "Discount Percentage"
-msgstr "Відсоток знижки"
-
-#. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_product_id
 #: model_terms:ir.ui.view,arch_db:pos_discount.res_config_settings_view_form
 msgid "Discount Product"
 msgstr "Товар знижки"
+
+#. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_pc
+#: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_pc
+#: model_terms:ir.ui.view,arch_db:pos_discount.res_config_settings_view_form
+msgid "Discount Value"
+msgstr ""
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_account_move_line__display_name
@@ -143,8 +139,8 @@ msgstr ""
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_pc
 #: model:ir.model.fields,help:pos_discount.field_res_config_settings__pos_discount_pc
-msgid "The default discount percentage when clicking on the Discount button"
-msgstr "Типовий відсоток знижки при натисканні на кнопку Знижка"
+msgid "The default discount value when clicking on the Discount button"
+msgstr ""
 
 #. module: pos_discount
 #. odoo-javascript
@@ -166,3 +162,12 @@ msgstr "Товар, який використовується для засто�
 #: code:addons/pos_discount/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "You cannot edit a discount line."
 msgstr ""
+
+#~ msgid "Discount %"
+#~ msgstr "Знижка %"
+
+#~ msgid "Discount Percentage"
+#~ msgstr "Відсоток знижки"
+
+#~ msgid "The default discount percentage when clicking on the Discount button"
+#~ msgstr "Типовий відсоток знижки при натисканні на кнопку Знижка"

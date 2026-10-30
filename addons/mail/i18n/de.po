@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 17:36+0000\n"
+"POT-Creation-Date: 2026-10-24 17:42+0000\n"
 "PO-Revision-Date: 2026-08-11 12:25+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-3/mail/"
@@ -10059,6 +10059,12 @@ msgid "Pop out Attachments"
 msgstr "Pop-out-Anhänge"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_view.js:0
+msgid "Pop out is not supported on mobile."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__port
 msgid "Port"
 msgstr "Port"
@@ -11264,6 +11270,12 @@ msgstr "Suchen ..."
 #: code:addons/mail/static/src/views/web/activity/activity_controller.js:0
 msgid "Search: %s"
 msgstr "Suchen: %s"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/search_message_input.xml:0
+msgid "Searching..."
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -14799,6 +14811,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
+"You do not have the rights to change the name, description or avatar as a "
+"regular member of these read-only channels: %(channels)s."
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/discuss/discuss_channel.py:0
+msgid ""
 "You do not have the rights to change the read-only state of: %(channels)s."
 msgstr ""
 "Sie haben keine Berechtigung, den schreibgeschützten Status von %(channels)s "
@@ -15074,12 +15094,6 @@ msgstr "Unterhaltungen"
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "created this channel."
 msgstr "hat diesen Kanal erstellt."
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/js/rotting_mixin/rotting_statusbar.xml:0
-msgid "d"
-msgstr "T"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -15646,6 +15660,9 @@ msgstr "„%s“"
 #: code:addons/mail/models/mail_canned_response.py:0
 msgid "🔒 Private"
 msgstr "🔒 Privat"
+
+#~ msgid "d"
+#~ msgstr "T"
 
 #~ msgid "Search for a GIF"
 #~ msgstr "Nach einem GIF suchen"
