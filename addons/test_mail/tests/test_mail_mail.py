@@ -576,7 +576,7 @@ class TestMailMail(MailCommon):
                 self.assertEqual(mail.failure_reason, self.env['ir.mail_server'].NO_VALID_RECIPIENT)
                 self.assertEqual(mail.failure_type, 'mail_email_missing', 'Mail: missing email_to')
                 self.assertEqual(mail.state, 'exception')
-                if email_to == ' ':
+                if not email_to or email_to == ' ':
                     self.assertEqual(notification.failure_reason, self.env['ir.mail_server'].NO_VALID_RECIPIENT)
                     self.assertEqual(notification.failure_type, 'mail_email_missing')
                     self.assertEqual(notification.notification_status, 'exception')
@@ -629,6 +629,30 @@ class TestMailMail(MailCommon):
                 self.assertFalse(notification.failure_reason)
                 self.assertFalse(notification.failure_type)
                 self.assertEqual(notification.notification_status, 'sent')
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mail_mail_send_no_recipients_notification(self):
+        """Test that sending an email without recipients marks notifications as failed
+        and does not violate the check constraint on mail.notification."""
+        mail = self.env['mail.mail'].create({
+            'body_html': '<p>Test</p>',
+            'is_notification': True,
+        })
+        notification = self.env['mail.notification'].create({
+            'failure_type': 'mail_email_missing',
+            'mail_mail_id': mail.id,
+            'mail_message_id': mail.mail_message_id.id,
+            'notification_status': 'ready',
+            'notification_type': 'email',
+        })
+        with self.mock_mail_gateway():
+            mail.send(raise_exception=False)
+        # Flush to ensure the SQL check constraint 'mail_notification_notification_partner_or_email_required' is not violated
+        notification.flush_recordset()
+        self.assertEqual(mail.state, 'exception')
+        self.assertEqual(mail.failure_type, 'mail_email_missing')
+        self.assertEqual(notification.notification_status, 'exception')
+        self.assertEqual(notification.failure_type, 'mail_email_missing')
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_mail_send_exceptions_recipients_partners(self):

@@ -797,6 +797,9 @@ class MailMail(models.Model):
                 if mail.state != 'outgoing':
                     continue
                 no_recipients = (not (mail.email_to or '').strip() and not mail.recipient_ids and not (mail.email_cc or '').strip())
+                if no_recipients:
+                    failure_type = 'mail_email_missing'
+                    failure_reason = IrMailServer.NO_VALID_RECIPIENT
 
                 message_id = mail.message_id
                 # Writing on the mail object may fail (e.g. lock on user) which
@@ -804,8 +807,8 @@ class MailMail(models.Model):
                 # To avoid sending twice the same email, provoke the failure earlier
                 mail.write({
                     'state': 'exception',
-                    'failure_reason': IrMailServer.NO_VALID_RECIPIENT if no_recipients else _('Error without exception. Probably due to sending an email without computed recipients.'),
-                    'failure_type': 'mail_email_missing' if no_recipients else 'unknown',
+                    'failure_reason': failure_reason or _('Error without exception. Probably due to sending an email without computed recipients.'),
+                    'failure_type': failure_type or 'unknown',
                 })
                 # Update notification in a transient exception state to avoid concurrent
                 # update in case an email bounces while sending all emails related to current
@@ -816,10 +819,10 @@ class MailMail(models.Model):
                     ('notification_status', 'not in', ('sent', 'canceled'))
                 ])
                 if notifs:
-                    notif_msg = _('Error without exception. Probably due to concurrent access update of notification records. Please see with an administrator.')
+                    notif_msg = failure_reason or _('Error without exception. Probably due to concurrent access update of notification records. Please see with an administrator.')
                     notifs.sudo().write({
                         'notification_status': 'exception',
-                        'failure_type': 'unknown',
+                        'failure_type': failure_type or 'unknown',
                         'failure_reason': notif_msg,
                     })
                     # `test_mail_bounce_during_send`, force immediate update to obtain the lock.
@@ -838,6 +841,9 @@ class MailMail(models.Model):
                     mail_server=mail_server or mail.mail_server_id,
                     doc_to_followers=doc_to_followers,
                 )
+                if not email_list:
+                    failure_type = failure_type or 'mail_email_missing'
+                    failure_reason = failure_reason or IrMailServer.NO_VALID_RECIPIENT
 
                 # send each sub-email
                 for email in email_list:
