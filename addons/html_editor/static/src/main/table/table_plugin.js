@@ -20,6 +20,7 @@ import {
     descendants,
     firstLeaf,
     lastLeaf,
+    selectElements,
 } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { DIRECTIONS, leftPos, rightPos, nodeSize } from "@html_editor/utils/position";
@@ -348,7 +349,7 @@ export class TablePlugin extends Plugin {
      * @returns {HTMLElement | DocumentFragment}
      */
     normalizeTable(root) {
-        for (const table of root.querySelectorAll("table")) {
+        for (const table of selectElements(root, "table")) {
             this.wrapTable(table);
         }
         return root;
@@ -602,7 +603,7 @@ export class TablePlugin extends Plugin {
      * @returns {HTMLElement | DocumentFragment}
      */
     adaptTables(root) {
-        for (const table of root.querySelectorAll("table")) {
+        for (const table of selectElements(root, "table")) {
             this.fillMissingCells(table);
             let tbody = table.tBodies[0];
             const thead = table.tHead;
@@ -702,19 +703,27 @@ export class TablePlugin extends Plugin {
         return root;
     }
 
+    /**
+     * Return a table element with the specified number of rows and columns.
+     *
+     * @param {Object} [shape = {}]
+     * @param {number} [shape.rows = 2]
+     * @param {number} [shape.cols = 2]
+     * @returns {HTMLTableElement}
+     */
     createTable({ rows = 2, cols = 2 } = {}) {
         const baseContainer = this.dependencies.baseContainer.createBaseContainer();
         const baseContainerHtml = baseContainer.outerHTML;
         const tdsHtml = new Array(cols).fill(`<td>${baseContainerHtml}</td>`).join("");
         const trsHtml = new Array(rows).fill(`<tr>${tdsHtml}</tr>`).join("");
         const tableHtml = `<table class="table table-bordered o_table"><tbody>${trsHtml}</tbody></table>`;
-        return parseHTML(this.document, tableHtml);
+        return parseHTML(this.document, tableHtml).firstChild;
     }
 
     _insertTable({ rows = 2, cols = 2 } = {}) {
         const newTable = this.createTable({ rows, cols });
-        const [table] = this.dependencies.dom.insert(newTable);
-        return table;
+        this.dependencies.dom.insert(newTable);
+        return newTable;
     }
     insertTable({ rows = 2, cols = 2 } = {}) {
         const table = this._insertTable({ rows, cols });

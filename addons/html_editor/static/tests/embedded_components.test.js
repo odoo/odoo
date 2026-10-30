@@ -27,7 +27,6 @@ import {
     queryFirst,
     test,
     tick,
-    waitFor,
 } from "@odoo/hoot";
 import {
     App,
@@ -394,12 +393,13 @@ describe("Mount and Destroy embedded components", () => {
         // Validate the commit, but the mounting process already started.
         editor.shared.history.commit();
         await animationFrame();
+        cleanHints(editor);
         expect.verifySteps(["mount 1", "mount 2", "mount 3"]);
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
                 <div data-embedded="recursiveComponent" data-oe-protected="true" contenteditable="false">
-                    []<div>
+                    <div>
                         <div class="click count-2">Count:2</div>
                         <div class="innerEditable-2">
                             <div data-prop-name="innerValue" data-oe-protected="false" contenteditable="true">
@@ -430,7 +430,7 @@ describe("Mount and Destroy embedded components", () => {
                         </div>
                     </div>
                 </div>
-                <p data-selection-placeholder=""><br></p>
+                <p>[]<br></p>
             `)
         );
         for (const index of indexOrder) {
@@ -456,8 +456,8 @@ describe("Mount and Destroy embedded components", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <div data-embedded="recursiveComponent" data-oe-protected="true" contenteditable="false">[]</div>
-                <p data-selection-placeholder=""><br></p>
+                <div data-embedded="recursiveComponent" data-oe-protected="true" contenteditable="false"></div>
+                <p>[]<br></p>
             `)
         );
         // Verify that there is no potential host outside of the editable,
@@ -593,11 +593,7 @@ describe("Selection after embedded component insertion", () => {
         });
         editor.shared.dom.insert(parseHTML(editor.document, `<div data-embedded="counter"></div>`));
         editor.shared.history.commit();
-        // Insertion triggers `selectionchange` and `commit` creates a selection
-        // placeholder. `fixSelectionInsideEditableRoot` moves the selection
-        // into it and triggers another `selectionchange` that removes the
-        // selection placeholder. So we must wait for the `.o-we-hint`.
-        await waitFor(".o-we-hint");
+        await animationFrame();
         cleanHints(editor);
         expect(getContent(el)).toBe(
             unformat(`
@@ -612,11 +608,7 @@ describe("Selection after embedded component insertion", () => {
         });
         editor.shared.dom.insert(parseHTML(editor.document, `<div data-embedded="counter"></div>`));
         editor.shared.history.commit();
-        // Insertion triggers `selectionchange` and `commit` creates a selection
-        // placeholder. `fixSelectionInsideEditableRoot` moves the selection
-        // into it and triggers another `selectionchange` that removes the
-        // selection placeholder. So we must wait for the `.o-we-hint`.
-        await waitFor(".o-we-hint");
+        await animationFrame();
         cleanHints(editor);
         expect(getContent(el)).toBe(
             unformat(`

@@ -18,11 +18,11 @@ export class MentionPlugin extends Plugin {
     static shared = ["syncPartnerMentions", "whenMentionsChecked"];
     /** @type {import("plugins").EditorResources} */
     resources = {
-        before_insert_processors: (container) => {
-            for (const mentionEl of container.querySelectorAll(MENTION_SELECTOR)) {
+        fragment_to_insert_processors: (fragment) => {
+            for (const mentionEl of fragment.querySelectorAll(MENTION_SELECTOR)) {
                 this.insertMention(mentionEl);
             }
-            return container;
+            return fragment;
         },
         normalize_processors: (root) => {
             const mentionEls = [...root.querySelectorAll(MENTION_SELECTOR)];
