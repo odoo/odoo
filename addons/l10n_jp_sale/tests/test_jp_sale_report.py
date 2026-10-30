@@ -27,9 +27,21 @@ class TestJPSaleReport(AccountTestInvoicingCommon):
             ],
         })
         html = self.env['ir.actions.report']._render_qweb_html('sale.report_saleorder', order.ids)[0]
-        cells = lxml.html.fromstring(html).xpath("//td[@name='td_product_priceunit']")
 
-        self.assertEqual(cells[1].text_content().strip(), '300')
+        self.assertEqual(self._get_unit_price_cells(html), ['220', '300'])
+
+    def test_unit_price_column_keeps_its_decimals_beside_a_surcharge_that_needs_them(self):
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({'product_id': self.product_a.id, 'price_unit': 200.0, 'discount': -10.0}),
+                Command.create({'product_id': self.product_a.id, 'price_unit': 105.0, 'discount': -3.0}),
+                Command.create({'product_id': self.product_a.id, 'price_unit': 300.0}),
+            ],
+        })
+        html = self.env['ir.actions.report']._render_qweb_html('sale.report_saleorder', order.ids)[0]
+
+        self.assertEqual(self._get_unit_price_cells(html), ['220.00', '108.15', '300.00'])
 
     def test_another_layout_keeps_the_name_in_the_address(self):
         self.company_data['company'].external_report_layout_id = self.env.ref('web.external_layout_standard')
@@ -40,3 +52,6 @@ class TestJPSaleReport(AccountTestInvoicingCommon):
         html = self.env['ir.actions.report']._render_qweb_html('sale.report_saleorder', order.ids)[0]
 
         self.assertIn(self.partner_a.name, lxml.html.fromstring(html).find_class('address')[0].text_content())
+
+    def _get_unit_price_cells(self, html):
+        return [cell.text_content().strip() for cell in lxml.html.fromstring(html).xpath("//td[@name='td_product_priceunit']")]

@@ -2,7 +2,8 @@
 <odoo>
     <template id="report_saleorder_document" inherit_id="sale.report_saleorder_document" primary="True">
         <xpath expr="//t[@t-call='web.external_layout']" position="before">
-            <t t-set="jp_hide_zero_decimals" t-value="doc.currency_id.decimal_places == 0 and all(line.price_unit.is_integer() for line in doc._get_order_lines_to_report())"/>
+            <t t-set="jp_price_digits" t-value="doc.env['decimal.precision'].precision_get('Product Price')"/>
+            <t t-set="jp_hide_zero_decimals" t-value="doc.currency_id.decimal_places == 0 and all(round((1 - min(line.discount, 0) / 100.0) * line.price_unit, jp_price_digits).is_integer() for line in doc._get_order_lines_to_report())"/>
             <t t-set="jp_document_date" t-value="doc.date_order"/>
         </xpath>
 
@@ -13,6 +14,9 @@
 
         <xpath expr="//td[@name='td_product_priceunit']/span[@t-field='line.price_unit']" position="attributes">
             <attribute name="t-options">{'min_precision': 0} if jp_hide_zero_decimals else {}</attribute>
+        </xpath>
+        <xpath expr="//td[@name='td_product_priceunit']/span[@t-out]" position="attributes">
+            <attribute name="t-options">{"widget": "float", "decimal_precision": "Product Price", "min_precision": 0 if jp_hide_zero_decimals else jp_price_digits}</attribute>
         </xpath>
     </template>
 
