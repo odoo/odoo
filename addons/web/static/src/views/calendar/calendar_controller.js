@@ -20,7 +20,7 @@ import { standardViewProps } from "@web/views/standard_view_props";
 import { MultiSelectionButtons } from "@web/views/view_components/multi_selection_buttons";
 import { getLocalYearAndWeek } from "@web/core/l10n/dates";
 
-import { Component, proxy, t, useProps } from "@odoo/owl";
+import { Component, proxy, t, useProps, useScope } from "@odoo/owl";
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { omit } from "@web/core/utils/objects";
@@ -68,6 +68,7 @@ export class CalendarController extends Component {
     });
 
     setup() {
+        this.scope = useScope();
         this.action = useService("action");
         this.orm = useService("orm");
         this.displayDialog = useUniqueDialog();
@@ -375,9 +376,16 @@ export class CalendarController extends Component {
                             ? _t("Open: %s", record.title)
                             : this.editRecordDefaultDisplayText,
                         viewId: this.model.formViewId,
-                        onRecordSaved: () => this.model.load(),
                     },
-                    { onClose: () => resolve() }
+                    {
+                        onClose: async () => {
+                            await Promise.resolve();
+                            if (!this.scope.isDestroyed()) {
+                                await this.model.load();
+                            }
+                            resolve();
+                        },
+                    }
                 );
             });
         } else {
