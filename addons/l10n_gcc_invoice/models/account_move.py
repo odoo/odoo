@@ -84,8 +84,12 @@ class AccountMoveLine(models.Model):
     def _compute_l10n_gcc_line_name(self):
         def lang_product_name(line, lang):
             return line.with_context(lang=lang).product_id.display_name
+        # the arabic language may not be installed
+        installed_langs = {code for code, _name in self.env['res.lang'].get_installed()}
+        langs = [lang for lang in ('ar_001', 'en_US') if lang in installed_langs]
         for line in self:
-            if line.product_id and line.name in [lang_product_name(line, lang) for lang in ('ar_001', 'en_US')]:
-                line.l10n_gcc_line_name = lang_product_name(line, line.move_id.partner_id.lang)
+            if line.product_id and line.name in [lang_product_name(line, lang) for lang in langs]:
+                partner_lang = line.move_id.partner_id.lang
+                line.l10n_gcc_line_name = lang_product_name(line, partner_lang if partner_lang in installed_langs else None)
             else:
                 line.l10n_gcc_line_name = line.name
