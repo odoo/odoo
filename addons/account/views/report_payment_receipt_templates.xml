@@ -2,11 +2,10 @@
 <odoo>
     <template id="report_payment_receipt_document">
         <t t-set="o" t-value="o.with_context(lang=lang)"/>
-        <t t-call="web.external_layout" o="o" company="o.company_id.sudo()">
+        <t t-set="layout_document_title"><span t-field="o.payment_receipt_title">Payment Receipt</span>: <span t-field="o.name">INV0001</span></t>
+        <t t-call="web.external_layout" o="o" company="o.company_id.sudo()" layout_document_title="layout_document_title">
             <t t-set="values" t-value="o._get_payment_receipt_report_values()"/>
             <div class="page">
-                <h3><strong><span t-field="o.payment_receipt_title">Payment Receipt</span>: <span t-field="o.name">INV0001</span></strong></h3>
-
                 <div class="mb-4 mt-3">
                     <div class="oe_structure"></div>
                     <div class="row">
