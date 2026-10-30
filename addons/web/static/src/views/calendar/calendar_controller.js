@@ -20,7 +20,7 @@ import { standardViewProps } from "@web/views/standard_view_props";
 import { MultiSelectionButtons } from "@web/views/view_components/multi_selection_buttons";
 import { getLocalYearAndWeek } from "@web/core/l10n/dates";
 
-import { Component, reactive, useState } from "@odoo/owl";
+import { Component, reactive, status, useState } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 
 const { DateTime } = luxon;
@@ -336,9 +336,16 @@ export class CalendarController extends Component {
                             ? _t("Open: %s", record.title)
                             : this.editRecordDefaultDisplayText,
                         viewId: this.model.formViewId,
-                        onRecordSaved: () => this.model.load(),
                     },
-                    { onClose: () => resolve() }
+                    {
+                        onClose: async () => {
+                            await Promise.resolve();
+                            if (status(this) === "mounted") {
+                                this.model.load();
+                            }
+                            resolve();
+                        },
+                    }
                 );
             });
         } else {
