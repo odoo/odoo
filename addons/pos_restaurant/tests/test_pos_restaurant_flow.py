@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import fields
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.addons.pos_restaurant.tests.test_frontend import TestFrontendCommon
@@ -55,6 +56,65 @@ class TestPosRestaurantFlow(TestFrontendCommon):
         self.assertFalse(table_a.parent_id, "Table A should not get table B as parent because this creates a loop")
         self.assertEqual(table_b.parent_id, table_a, "Table B should keep its valid parent")
         self.assertFalse((table_a + table_b)._has_cycle('parent_id'), "Table hierarchy should remain acyclic")
+
+    def test_offline_order_merged_into_table_order_then_paid(self):
+        """An order created offline on a table is merged into the open order created meanwhile
+        by another device on the same table. Paying only the amount known by the offline device
+        keeps the payment but leaves the order draft since the other device's line is not paid."""
+        self.pos_config.open_ui()
+        session = self.pos_config.current_session_id
+        cash_payment_method = session.payment_method_ids.filtered('is_cash_count')[:1]
+        price = self.coca_cola_test.lst_price
+
+        def order_data(uuid, state, line_uuids, payments):
+            return {
+                'amount_paid': sum(payments),
+                'amount_return': 0,
+                'amount_tax': 0,
+                'amount_total': price,
+                'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+                'fiscal_position_id': False,
+                'pricelist_id': session.config_id.pricelist_id.id,
+                'name': f'Order {uuid}',
+                'last_order_preparation_change': '{}',
+                'lines': [(0, 0, {
+                    'price_unit': price,
+                    'product_id': self.coca_cola_test.id,
+                    'price_subtotal': price,
+                    'price_subtotal_incl': price,
+                    'qty': 1,
+                    'tax_ids': [],
+                    'uuid': line_uuid,
+                }) for line_uuid in line_uuids],
+                'partner_id': False,
+                'session_id': session.id,
+                'payment_ids': [(0, 0, {
+                    'amount': amount,
+                    'name': fields.Datetime.to_string(fields.Datetime.now()),
+                    'payment_method_id': cash_payment_method.id,
+                    'uuid': f'{uuid}-payment',
+                }) for amount in payments],
+                'uuid': uuid,
+                'user_id': self.env.uid,
+                'to_invoice': False,
+                'state': state,
+                'table_id': self.main_floor_table_5.id,
+            }
+
+        # Online device creates an order on the table
+        self.env['pos.order'].sync_from_ui([order_data('online-order', 'draft', ['online-line'], [])])
+        # Offline device created its own order on the same table, it is synced afterwards
+        self.env['pos.order'].sync_from_ui([order_data('offline-order', 'draft', ['offline-line'], [])])
+
+        table_order = self.env['pos.order'].search([('table_id', '=', self.main_floor_table_5.id)])
+        self.assertEqual(len(table_order), 1, "The offline order should be merged in the open order of the table")
+        self.assertEqual(table_order.uuid, 'online-order')
+        self.assertEqual(len(table_order.lines), 2)
+
+        # The offline device pays the merged order with the amount it knew
+        self.env['pos.order'].sync_from_ui([order_data('online-order', 'paid', [], [price])])
+        self.assertEqual(table_order.state, 'draft', "The line of the online device is not paid")
+        self.assertEqual(table_order.payment_ids.mapped('amount'), [price])
 
     def test_floor_plans_archive(self):
         floors = self.main_floor + self.second_floor
