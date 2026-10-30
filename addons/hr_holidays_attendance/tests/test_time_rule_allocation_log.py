@@ -542,3 +542,59 @@ class TestTimeRuleAllocationLog(TransactionCase):
             allocation_by_employee = TimeRule._find_time_rule_allocations(self.comp_type, employees)
         self.assertEqual(allocation_by_employee, {self.emp: last_allocation})
         self.assertEqual(TimeRule._find_time_rule_allocations(other_comp_type, employees), {other_employee: other_type_allocation})
+
+    def test_pending_allocation_credited_instead_of_creating_a_new_one(self):
+        """An allocation created by a run but still waiting for approval is credited by the next
+        runs, instead of a new pending allocation being created each time."""
+        type_to_approve = self.comp_type.copy({
+            'name': 'Compensatory Rest To Approve',
+            'code': 'COMPAPP',
+            'allocation_validation_type': 'hr',
+        })
+        pending_allocation = self.env['hr.leave.allocation'].sudo().with_context(allocation_skip_auto_approve=True).create({
+            'employee_id': self.emp.id,
+            'work_entry_type_id': type_to_approve.id,
+            'number_of_days': 1,
+            'date_to': False,
+        })
+        self.assertEqual(pending_allocation.state, 'confirm')
+        self._make_rule(allocation_type_id=type_to_approve.id)
+
+        # Saturday: no schedule -> the 4h are excess -> 4h * 100% / 8h = 0.5 day
+        self._make_att(datetime(2022, 12, 10, 8), datetime(2022, 12, 10, 12))
+
+        allocations = self.env['hr.leave.allocation'].sudo().search([
+            ('employee_id', '=', self.emp.id),
+            ('work_entry_type_id', '=', type_to_approve.id),
+        ])
+        self.assertEqual(allocations, pending_allocation, "No new allocation must be created")
+        self.assertAlmostEqual(pending_allocation.number_of_days, 1.5, places=5)
+
+    def test_validated_allocation_preferred_to_pending_one(self):
+        type_to_approve = self.comp_type.copy({
+            'name': 'Compensatory Rest To Approve',
+            'code': 'COMPAPP',
+            'allocation_validation_type': 'hr',
+        })
+        validated_allocation, pending_allocation = self.env['hr.leave.allocation'].sudo().with_context(
+            allocation_skip_auto_approve=True,
+        ).create([{
+            'employee_id': self.emp.id,
+            'work_entry_type_id': type_to_approve.id,
+            'number_of_days': 1,
+            'date_to': False,
+        }] * 2)
+        validated_allocation.state = 'validate'
+        self.assertEqual(pending_allocation.state, 'confirm', "The pending allocation is the last created")
+        TimeRule = self.env['hr.time.rule']
+        self.assertEqual(
+            TimeRule._find_time_rule_allocations(type_to_approve, self.emp, include_pending=True),
+            {self.emp: validated_allocation},
+        )
+
+        validated_allocation.state = 'refuse'
+        self.assertEqual(
+            TimeRule._find_time_rule_allocations(type_to_approve, self.emp, include_pending=True),
+            {self.emp: pending_allocation},
+        )
+        self.assertEqual(TimeRule._find_time_rule_allocations(type_to_approve, self.emp), {}, "Only validated allocations by default")

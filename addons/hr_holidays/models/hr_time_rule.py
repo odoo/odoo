@@ -116,24 +116,31 @@ class HrTimeRule(models.Model):
         hours_per_day = employee.resource_calendar_id.hours_per_day or 8.0
         return hours * self.leave_compensation_rate / hours_per_day
 
-    def _find_time_rule_allocations(self, allocation_type, employees):
+    def _find_time_rule_allocations(self, allocation_type, employees, include_pending=False):
         """Return the allocation of `allocation_type` credited by time rules, for each of `employees`.
 
         Time-rule allocations are always open-ended (date_to=False) so they don't
-        collide with accrual or fixed-period allocations. If several match, the last created wins.
+        collide with accrual or fixed-period allocations. If several match, a validated one
+        wins over a pending one, then the last created wins.
 
         :param employees: ``hr.employee`` recordset
+        :param bool include_pending: also return the allocations waiting for approval. Used
+            before creating an allocation: a new allocation is only validated at once when its
+            type needs no validation or when a time off officer triggers the rules; otherwise
+            the pending one must be credited instead of creating a new one at each run.
         :return: {employee: hr.leave.allocation}, only for the employees having one
         """
+        allowed_states = ['confirm', 'validate1', 'validate'] if include_pending else ['validate']
         allocations = self.env['hr.leave.allocation'].sudo().search([
             ('employee_id', 'in', employees.ids),
             ('work_entry_type_id', '=', allocation_type.id),
-            ('state', '=', 'validate'),
+            ('state', 'in', allowed_states),
             ('date_to', '=', False),
         ], order='create_date desc, id desc')
-        # grouped() keeps the search order: the first allocation of each employee is the last created
+        # grouped() keeps the search order and sorted() is stable: the validated allocations
+        # come first, each employee's ones staying ordered from the last created
         return {
-            employee: employee_allocations[:1]
+            employee: employee_allocations.sorted(lambda allocation: allocation.state != 'validate')[:1]
             for employee, employee_allocations in allocations.grouped('employee_id').items()
         }
 
@@ -163,7 +170,7 @@ class HrTimeRule(models.Model):
         keys_of_allocations_to_create = []
         for allocation_type, days_to_add_by_employee in days_to_add_by_type.items():
             employees = self.env['hr.employee'].browse([employee.id for employee in days_to_add_by_employee])
-            existing_allocation_by_employee = self._find_time_rule_allocations(allocation_type, employees)
+            existing_allocation_by_employee = self._find_time_rule_allocations(allocation_type, employees, include_pending=True)
             for employee, days_to_add in days_to_add_by_employee.items():
                 allocation = existing_allocation_by_employee.get(employee)
                 if allocation:
