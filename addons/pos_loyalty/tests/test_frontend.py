@@ -3766,9 +3766,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_pos_tour("test_discount_count_sale_report")
         session = self.main_pos_config.current_session_id
         session.close_session_from_ui()
-        report = self.env['report.point_of_sale.report_saledetails'].get_sale_details(session_ids=[session.id])
-        self.assertEqual(report['discount_number'], 2)
-        self.assertEqual(report['discount_amount'], 60.38)
+        report = self.env.ref('point_of_sale.pos_sales_detail_report')
+        sections = {s['section_id']: s['values'] for s in report.get_report_data({'session_id': session.id})['sections']}
+        self.assertEqual(sections['discounts'], {'count': 2, 'amount': 60.38})
 
     def test_reward_line_tax_grouping_key(self):
         """
