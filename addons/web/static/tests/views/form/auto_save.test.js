@@ -77,6 +77,26 @@ test("save on hiding tab (invalid field)", async () => {
     expect.verifySteps([]);
 });
 
+test("hiding tab while the form is loading", async () => {
+    const onchangeDeferred = Promise.withResolvers();
+    onRpc("partner", "onchange", () => onchangeDeferred.promise);
+    onRpc("web_save", () => {
+        expect.step("save");
+    });
+    const mountProm = mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `<form><field name="name"/></form>`,
+    });
+    await animationFrame();
+    // the root record is not loaded yet
+    await hideTab();
+    onchangeDeferred.resolve();
+    await mountProm;
+    expect(".o_form_view").toHaveCount(1);
+    expect.verifySteps([]);
+});
+
 test("save only once when hiding tab several times quickly", async () => {
     onRpc("web_save", () => {
         expect.step("save");
