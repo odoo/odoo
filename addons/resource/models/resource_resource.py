@@ -2,17 +2,21 @@
 
 from copy import deepcopy
 from collections import defaultdict
-from datetime import datetime, timedelta, time
+from datetime import UTC, datetime, timedelta, time
 from random import randint
 from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta, weekdays
+from dateutil.rrule import DAILY, rrule
 
 from odoo import api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.tools import get_lang, babel_locale_parse
+from odoo.fields import Domain
 from odoo.tools.intervals import Intervals
 from odoo.tools.date_utils import localized, sum_intervals, to_timezone, weeknumber
+
+from .utils import localize_intervals
 
 
 class ResourceResource(models.Model):
@@ -543,30 +547,242 @@ class ResourceResource(models.Model):
     # New API
     # --------------------------------------------------
 
-    def _attendance_intervals(self, dt_from, dt_to, domain=None):
-        """
-        Get the attendances between dt_from and dt_to, as intervals linked to records of resource.calendar.attendance.
-            - For variable schedule, only attendances with a date are considered. If an attendance has a recurrency rule, it will be repeated on the corresponding days.
-            - For fixed schedule, only attendances without a date are considered. They will be grouped by their dayofweek and returned on the corresponding days.
-        As calendars aren't bound to timezones, the return intervals are given back with naive datetimes.
+    def _get_calendar_tz_periods(self, start, stop):
+        """ Return the working schedule and timezone of each resource within ``[start, stop]``.
 
-        :param dt_from: start date of the period (included).
-        :param dt_to: end date of the period (included)
-        :param domain: optional domain to filter attendances
+        Here a resource keeps its own calendar and timezone for the whole period; ``hr``
+        overrides it to follow the versions (in contract) of the employee.
+
+        :param date start: first day of the period (included)
+        :param date stop: last day of the period (included)
+        :return: ``{resource: [(date_from, date_to, resource.calendar, tz_name), ...]}`` with
+            inclusive dates; a resource without any period gets no attendance
+        :rtype: dict
         """
-        intervals_per_resource = {}
-        self.resource_calendar_id
+        return {resource: [(start, stop, resource.calendar_id, resource.tz)] for resource in self}
+
+    def _get_period_windows(self, dt_from, dt_to):
+        """ Turn the periods of :meth:`_get_calendar_tz_periods` into timezone-aware windows
+        clipped to ``[dt_from, dt_to]``.
+
+        :return: ``{resource: [(window_start, window_stop, resource.calendar, ZoneInfo), ...]}``,
+            the bounds being expressed in the timezone of the period
+        :rtype: dict
+        """
+        # widen by a day so that the periods cover [dt_from, dt_to] in every timezone
+        periods = self._get_calendar_tz_periods(
+            (dt_from - timedelta(days=1)).date(), (dt_to + timedelta(days=1)).date())
+        windows = defaultdict(list)
+        zones = {}
+        for resource, resource_periods in periods.items():
+            for date_from, date_to, calendar, tz in resource_periods:
+                zone = zones.get(tz) or zones.setdefault(tz, ZoneInfo(tz or 'UTC'))
+                start = max(dt_from, datetime.combine(date_from, time.min, tzinfo=zone))
+                stop = min(dt_to, datetime.combine(date_to + timedelta(days=1), time.min, tzinfo=zone))
+                if start < stop:
+                    windows[resource].append((start.astimezone(zone), stop.astimezone(zone), calendar, zone))
+        return windows
+
+    def _attendance_intervals(self, dt_from, dt_to, domain=None, availability=False):
+        """ Return the attendance intervals of each resource between ``dt_from`` and ``dt_to``,
+        leaves not deducted. Replaces ``resource.calendar._attendance_intervals_batch``.
+
+        The calendar and timezone used are given by :meth:`_get_calendar_tz_periods`, so they
+        may change within the period (employee versions with ``hr``). The attendances of all
+        the calendars involved are computed in one call per timezone.
+
+        - regular calendars: the attendances of the calendar (see
+          ``resource.calendar._attendance_intervals``), in the timezone of the period;
+        - no calendar or fully flexible calendar: the whole period;
+        - flexible calendar with hours targets: up to ``hours_per_day`` per day centered on
+          12:00, until ``hours_per_week`` is reached in each 7-day block of the period.
+
+        Flexible periods get an unsaved attendance holding only ``duration_hours`` as payload,
+        and no interval at all when ``domain`` is given.
+
+        :param datetime dt_from: timezone-aware start of the period
+        :param datetime dt_to: timezone-aware end of the period
+        :param domain: optional domain on ``resource.calendar.attendance``
+        :param bool availability: for duration-based and flexible schedules, return the whole
+            day instead of hours placed around noon
+        :return: ``{resource: Intervals}`` (``keep_distinct=True``) for every resource of ``self``
+        :rtype: dict
+        """
+        assert dt_from.tzinfo and dt_to.tzinfo, "Timezone-aware datetimes are expected"
+        windows = self._get_period_windows(dt_from, dt_to)
+        return self._attendance_intervals_from_windows(dt_from, dt_to, windows, domain, availability)
+
+    def _attendance_intervals_from_windows(self, dt_from, dt_to, windows, domain=None, availability=False):
+        # one call per timezone, for all the regular calendars at once
+        calendars_per_zone = defaultdict(lambda: self.env['resource.calendar'])
+        for resource_windows in windows.values():
+            for _start, _stop, calendar, zone in resource_windows:
+                if calendar and not calendar._is_flexible():
+                    calendars_per_zone[zone] |= calendar
+        localized_per_calendar = {}
+        for zone, calendars in calendars_per_zone.items():
+            intervals_per_calendar = calendars._attendance_intervals(
+                dt_from.astimezone(zone).replace(tzinfo=None),
+                dt_to.astimezone(zone).replace(tzinfo=None),
+                domain=domain,
+                availability=availability,
+            )
+            for calendar in calendars:
+                localized_per_calendar[calendar, zone] = localize_intervals(
+                    intervals_per_calendar.get(calendar, Intervals(keep_distinct=True)), zone.key)
+
+        no_attendance = self.env['resource.calendar.attendance']
+        result = {}
         for resource in self:
-            intervals_per_resource[resource] = Intervals([])  # TODO BEDO
-        return intervals_per_resource
+            items = []
+            for start, stop, calendar, zone in windows.get(resource, []):
+                if calendar and not calendar._is_flexible():
+                    items.extend(localized_per_calendar[calendar, zone] & Intervals([(start, stop, no_attendance)]))
+                elif domain:
+                    continue
+                elif availability or not calendar or calendar._is_fully_flexible():
+                    hours = (stop - start).total_seconds() / 3600
+                    items.append((start, stop, no_attendance.new({'duration_hours': hours})))
+                else:
+                    items.extend(_flexible_attendance_intervals(
+                        no_attendance, start, stop, calendar.hours_per_day, calendar.hours_per_week))
+            result[resource] = Intervals(items, keep_distinct=True)
+        return result
 
     def _leave_intervals(self, dt_from, dt_to, domain=None):
-        return {}  # TODO BEDO
+        """ Return the leave intervals of each resource between ``dt_from`` and ``dt_to``.
+        Replaces ``resource.calendar._leave_intervals_batch``.
 
-    def _work_intervals(self, dt_from, dt_to, domain=None):
-        attendances = self._attendance_intervals(dt_from, dt_to, domain)
-        leaves = self._leave_intervals(dt_from, dt_to, domain)
-        return {
-            record: attendances.get(record, Intervals([])) - leaves.get(record, Intervals([]))
-            for record in self
-        }
+        A resource gets its own leaves, and the global leaves (no ``resource_id``) of its company
+        that apply to the calendar of the period (or to every calendar). Leaves are clipped to
+        ``[dt_from, dt_to]``, global ones to the periods of :meth:`_get_calendar_tz_periods`.
+        Own leaves of a flexible period go through
+        ``resource.calendar._handle_flexible_leave_interval`` (whole days by default).
+        Overlapping leaves are merged, the payload being the union of the leave records.
+
+        :param datetime dt_from: timezone-aware start of the period
+        :param datetime dt_to: timezone-aware end of the period
+        :param list domain: domain on ``resource.calendar.leaves``; ``None`` means
+            ``[('count_as', '=', 'absence')]``
+        :return: ``{resource: Intervals}`` for every resource of ``self``
+        :rtype: dict
+        """
+        assert dt_from.tzinfo and dt_to.tzinfo, "Timezone-aware datetimes are expected"
+        windows = self._get_period_windows(dt_from, dt_to)
+        return self._leave_intervals_from_windows(dt_from, dt_to, windows, domain)
+
+    def _leave_intervals_from_windows(self, dt_from, dt_to, windows, domain=None):
+        if domain is None:
+            domain = [('count_as', '=', 'absence')]
+        leaves = self.env['resource.calendar.leaves'].search_fetch(Domain.AND([
+            domain,
+            [
+                ('resource_id', 'in', [False, *self.ids]),
+                ('date_from', '<=', dt_to.astimezone(UTC).replace(tzinfo=None)),
+                ('date_to', '>=', dt_from.astimezone(UTC).replace(tzinfo=None)),
+            ],
+        ]), ['date_from', 'date_to', 'resource_id', 'company_id', 'calendar_id'])
+        own_leaves = leaves.filtered('resource_id')
+        own_leaves_per_resource = own_leaves.grouped('resource_id')
+        global_leaves = [
+            (leave.date_from.replace(tzinfo=UTC), leave.date_to.replace(tzinfo=UTC), leave)
+            for leave in leaves - own_leaves
+        ]
+        no_calendar = self.env['resource.calendar']
+
+        result = {}
+        for resource in self:
+            resource_windows = windows.get(resource, [])
+            fallback_zone = ZoneInfo(resource.tz or 'UTC')
+            items = []
+            for leave in own_leaves_per_resource.get(resource, ()):
+                leave_from = leave.date_from.replace(tzinfo=UTC)
+                leave_to = leave.date_to.replace(tzinfo=UTC)
+                # the period in which the leave starts gives its timezone and calendar
+                calendar, zone = resource.calendar_id, fallback_zone
+                for start, stop, window_calendar, window_zone in resource_windows:
+                    if start <= max(leave_from, dt_from) < stop:
+                        calendar, zone = window_calendar, window_zone
+                        break
+                leave_from, leave_to = leave_from.astimezone(zone), leave_to.astimezone(zone)
+                if not calendar or calendar._is_flexible():
+                    leave_from, leave_to = (calendar or no_calendar)._handle_flexible_leave_interval(
+                        leave_from, leave_to, leave)
+                start, stop = max(dt_from.astimezone(zone), leave_from), min(dt_to.astimezone(zone), leave_to)
+                if start < stop:
+                    items.append((start, stop, leave))
+            for start, stop, calendar, zone in resource_windows:
+                for leave_from, leave_to, leave in global_leaves:
+                    if leave_to <= start or leave_from >= stop:
+                        continue
+                    if leave.company_id and leave.company_id != resource.company_id:
+                        continue
+                    if leave.calendar_id and leave.calendar_id != calendar:
+                        continue
+                    items.append((max(start, leave_from.astimezone(zone)), min(stop, leave_to.astimezone(zone)), leave))
+            result[resource] = Intervals(items)
+        return result
+
+    def _work_intervals(self, dt_from, dt_to, domain=None, attendance_domain=None, availability=False, compute_leaves=True):
+        """ Return the work intervals of each resource: attendances minus leaves.
+        Replaces ``resource.calendar._work_intervals_batch``.
+
+        :param datetime dt_from: timezone-aware start of the period
+        :param datetime dt_to: timezone-aware end of the period
+        :param list domain: leave domain, see :meth:`_leave_intervals`
+        :param attendance_domain: attendance domain, see :meth:`_attendance_intervals`
+        :param bool availability: see :meth:`_attendance_intervals`
+        :param bool compute_leaves: when ``False``, leaves are not deducted
+        :return: ``{resource: Intervals}`` for every resource of ``self``
+        :rtype: dict
+        """
+        assert dt_from.tzinfo and dt_to.tzinfo, "Timezone-aware datetimes are expected"
+        windows = self._get_period_windows(dt_from, dt_to)
+        return self._work_intervals_from_windows(
+            dt_from, dt_to, windows, domain, attendance_domain, availability, compute_leaves)
+
+    def _work_intervals_from_windows(self, dt_from, dt_to, windows, domain=None, attendance_domain=None, availability=False, compute_leaves=True):
+        """ Compute :meth:`_work_intervals` from the windows of :meth:`_get_period_windows`.
+        Override this method (not :meth:`_work_intervals`) to remove other time from the work
+        intervals, using ``_attendance_intervals_from_windows`` with the same ``windows``. """
+        attendances = self._attendance_intervals_from_windows(dt_from, dt_to, windows, attendance_domain, availability)
+        if not compute_leaves:
+            return attendances
+        leaves = self._leave_intervals_from_windows(dt_from, dt_to, windows, domain)
+        return {resource: attendances[resource] - leaves[resource] for resource in self}
+
+
+def _flexible_attendance_intervals(attendance_model, window_start, window_stop, hours_per_day, hours_per_week):
+    """ Synthetic attendances of a flexible calendar with hours targets over a window, placed as
+    ``resource.calendar._attendance_intervals_batch`` does: up to ``hours_per_day`` per day,
+    centered on 12:00, until ``hours_per_week`` is reached in each 7-day block counted from
+    ``window_start``.
+
+    :return: list of ``(start, stop, attendance)`` with unsaved attendances
+    """
+    zone = window_start.tzinfo
+    total_hours = (window_stop - window_start).total_seconds() / 3600
+    last_day = (window_stop - timedelta(seconds=1)).date()
+    items = []
+    week_start = window_start.date()
+    while week_start <= last_day:
+        remaining = min(hours_per_week, total_hours)
+        week_days = rrule(DAILY, week_start, until=min(week_start + timedelta(days=6), last_day))
+        for day in (d.date() for d in week_days):
+            if remaining <= 0:
+                break
+            day_start = max(window_start, datetime.combine(day, time.min, tzinfo=zone))
+            day_stop = min(window_stop, datetime.combine(day, time.max, tzinfo=zone))
+            hours = min(hours_per_day, remaining, (day_stop - day_start).total_seconds() / 3600)
+            if hours <= 0:
+                continue
+            remaining -= hours
+            midpoint = datetime.combine(day, time(12), tzinfo=zone)
+            start, stop = midpoint - timedelta(hours=hours / 2), midpoint + timedelta(hours=hours / 2)
+            if start < day_start:
+                start, stop = day_start, day_start + timedelta(hours=hours)
+            elif stop > day_stop:
+                start, stop = day_stop - timedelta(hours=hours), day_stop
+            items.append((start, stop, attendance_model.new({'duration_hours': hours})))
+        week_start += timedelta(days=7)
+    return items

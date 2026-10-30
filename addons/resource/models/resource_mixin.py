@@ -1,16 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from datetime import UTC, datetime, time
-from zoneinfo import ZoneInfo
+from datetime import UTC
 
 from odoo import api, fields, models
 from odoo.tools.date_utils import localized
 from odoo.tools.intervals import Intervals
-
-from odoo.addons.resource.models.utils import localize_intervals
-import functools
-import operator
 
 
 class ResourceMixin(models.AbstractModel):
@@ -261,85 +256,31 @@ class ResourceMixin(models.AbstractModel):
     # New API
     # --------------------------------------------------
 
-    def _get_calendar_tz_periods(self, start, stop):
-        """
-        Meant to be overriden in HR for calendar versionning
-
-        :param date start: the start of the period
-        :param date stop: the stop of the period
-        :param boolean check_contract: true means that we restrict valid versions only to contract periods
-        """
-        return {record: (start, stop, record.resource_calendar_id, record.tz) for record in self}
-
     def _attendance_intervals(self, dt_from, dt_to, domain=None, availability=False):
+        """ Return the attendance intervals of each record, see
+        ``resource.resource._attendance_intervals``.
+
+        :return: ``{record: Intervals}`` for every record of ``self``
+        :rtype: dict
         """
-        Get the attendances between dt_from and dt_to, as intervals linked to records of resource.calendar.attendance.
-            - For variable schedule, only attendances with a date are considered. If an attendance has a recurrency rule, it will be repeated on the corresponding days.
-            - For fixed schedule, only attendances without a date are considered. They will be grouped by their dayofweek and returned on the corresponding days.
-        The method uses the calendar method of the same name and shifts the intervals to be fitting the resource's timezone.
-
-        :param dt_from: start datetime of the period (included).
-        :param dt_to: end datetime of the period (included)
-        :param domain: optional domain to filter attendances
-        """
-        intervals_per_resource = {}
-        calendar_tz_periods = self._get_calendar_tz_periods(dt_from.date(), dt_to.date())
-        calendar_ids_per_tz = defaultdict(set)
-        for resource in self:
-            _, _, calendar, tz = calendar_tz_periods[resource]
-            if calendar:
-                calendar_ids_per_tz[tz].add(calendar.id)
-
-        cal_att_intervals_per_tz = {}
-        for tz, calendar_ids in calendar_ids_per_tz.items():
-            naive_from = dt_from.astimezone(ZoneInfo(tz)).replace(tzinfo=None)
-            naive_to = dt_to.astimezone(ZoneInfo(tz)).replace(tzinfo=None)
-            cal_att_intervals_per_tz[tz] = self.env['resource.calendar'].browse(calendar_ids)\
-                ._attendance_intervals(naive_from, naive_to, domain, availability)
-
-        for resource in self:
-            _, _, cal, tz = calendar_tz_periods[resource]
-
-            period_interval = Intervals([(dt_from, dt_to, self.env['resource.calendar.attendance'])])
-            if cal:
-                cal_intervals = cal_att_intervals_per_tz[tz].get(cal, Intervals())
-                period_interval = localize_intervals(cal_intervals, tz) & period_interval
-            intervals_per_resource[resource] = period_interval
-
-        return intervals_per_resource
+        intervals = self.resource_id._attendance_intervals(dt_from, dt_to, domain, availability)
+        return {record: intervals.get(record.resource_id, Intervals()) for record in self}
 
     def _leave_intervals(self, dt_from, dt_to, domain=None):
-        intervals_per_resource = defaultdict(list)
-        if domain is None:
-            domain = [('count_as', '=', 'absence')]
-        domain = domain + [
-            ('resource_id', 'in', [False] + self.resource_id.ids),
-            ('date_from', '<=', dt_to.astimezone(UTC).replace(tzinfo=None)),
-            ('date_to', '>=', dt_from.astimezone(UTC).replace(tzinfo=None)),
-        ]
-        leaves_per_resource = dict(self.env['resource.calendar.leaves']._read_group(
-            domain, groupby=['resource_id'], aggregates=['id:recordset']))
-        empty_leaves = self.env['resource.calendar.leaves']
-        for resource in self:
-            for leave in leaves_per_resource.get(resource.resource_id, empty_leaves):
-                intervals_per_resource[resource].append([
-                    leave.date_from.replace(tzinfo=UTC),
-                    leave.date_to.replace(tzinfo=UTC),
-                    leave,
-                ])
-            for leave in leaves_per_resource.get(False, empty_leaves):
-                if leave.company_id in [resource.company_id, False] and leave.calendar_id in [resource.resource_calendar_id, False]:
-                    intervals_per_resource[resource].append([
-                        leave.date_from.replace(tzinfo=UTC),
-                        leave.date_to.replace(tzinfo=UTC),
-                        leave,
-                    ])
-        return {r: Intervals(intervals_per_resource[r], keep_distinct=True) for r in self}
+        """ Return the leave intervals of each record, see ``resource.resource._leave_intervals``.
 
-    def _work_intervals(self, dt_from, dt_to, domain=None, availability=False):
-        attendances = self._attendance_intervals(dt_from, dt_to, domain, availability)
-        leaves = self._leave_intervals(dt_from, dt_to, domain)
-        return {
-            record: attendances.get(record, Intervals([])) - leaves.get(record, Intervals([]))
-            for record in self
-        }
+        :return: ``{record: Intervals}`` for every record of ``self``
+        :rtype: dict
+        """
+        intervals = self.resource_id._leave_intervals(dt_from, dt_to, domain)
+        return {record: intervals.get(record.resource_id, Intervals()) for record in self}
+
+    def _work_intervals(self, dt_from, dt_to, domain=None, attendance_domain=None, availability=False, compute_leaves=True):
+        """ Return the work intervals of each record, see ``resource.resource._work_intervals``.
+
+        :return: ``{record: Intervals}`` for every record of ``self``
+        :rtype: dict
+        """
+        intervals = self.resource_id._work_intervals(
+            dt_from, dt_to, domain, attendance_domain, availability, compute_leaves)
+        return {record: intervals.get(record.resource_id, Intervals()) for record in self}

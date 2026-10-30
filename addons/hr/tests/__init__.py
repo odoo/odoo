@@ -32,3 +32,4 @@ from . import test_utils
 from . import test_hr_employee_homeworking
 from . import test_skills_self_edit
 from . import test_hr_headcount
+from . import test_resource_intervals_benchmark

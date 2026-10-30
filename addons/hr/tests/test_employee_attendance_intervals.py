@@ -139,7 +139,7 @@ class TestEmployeeAttendanceIntervals(TransactionCase):
             datetime(2026, 1, 5, 23, 59, 59, tzinfo=UTC),
             domain=[('duration_hours', '>', 3)],
         )
-        self.assertEqual(result, [(datetime(2026, 1, 5, 0, 0, tzinfo=UTC), datetime(2026, 1, 5, 4, 0, tzinfo=UTC))],
+        self.assertEqual(result, [(datetime(2026, 1, 5, 10, 0, tzinfo=UTC), datetime(2026, 1, 5, 14, 0, tzinfo=UTC))],
             "Only the 4h attendance should remain once the 2h one is filtered out by the domain")
 
     def test_employee_spanning_two_versions_with_different_calendars(self):

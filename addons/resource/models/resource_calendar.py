@@ -671,6 +671,7 @@ class ResourceCalendar(models.Model):
         """
         all_resources = set()
         if not resources_per_tz or self:
+            all_resources.add(self.env['resource.resource'])
         if resources_per_tz:
             for _, resources in resources_per_tz.items():
                 all_resources |= set(resources)
@@ -1203,7 +1204,7 @@ class ResourceCalendar(models.Model):
     # New API
     # --------------------------------------------------
 
-    def _attendance_intervals(self, dt_from, dt_to, domain=None, tz_list=[], availability=False):
+    def _attendance_intervals(self, dt_from, dt_to, domain=None, availability=False):
         """
         Get the attendances between dt_from and dt_to, as intervals linked to records of resource.calendar.attendance.
             - For variable schedule, only attendances with a date are considered. If an attendance has a recurrency rule, it will be repeated on the corresponding days.
