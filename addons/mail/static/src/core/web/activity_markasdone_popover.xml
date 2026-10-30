@@ -5,7 +5,7 @@
             <t t-set-slot="header">
                 <h6 class="fw-bolder">Mark Done</h6>
             </t>
-            <textarea class="form-control" style="min-height: 70px" rows="3" placeholder="Write Feedback" t-model.proxy="this.activity().feedback" t-ref="this.textArea"/>
+            <textarea class="form-control" style="min-height: 70px" rows="3" placeholder="Write Feedback" t-model.proxy="this.props.activity().feedback" t-ref="this.textArea"/>
             <div class="mt-2">
                 <button type="button" class="btn btn-sm btn-primary" aria-label="Done and Schedule Next" t-on-click="this.onClickDoneAndScheduleNext">
                     Done &amp; Schedule Next

@@ -3,7 +3,7 @@ import { Component, t, useProps } from "@odoo/owl";
 import { useMessageActions } from "@mail/core/common/message_actions";
 import { MessageReactionList, openReactionMenuType } from "@mail/core/common/message_reaction_list";
 import { QuickReactionMenu } from "@mail/core/common/quick_reaction_menu";
-import { propComputed, propSignal } from "@mail/utils/common/hooks";
+import { propComputed } from "@mail/utils/common/hooks";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { useService } from "@web/core/utils/hooks";
 
@@ -17,7 +17,9 @@ export class MessageReactions extends Component {
         this.store = useService("mail.store");
         this.hasActions = propComputed("hasActions", t.boolean().optional(true));
         this.message = propComputed("message", t.instanceOf(this.store["mail.message"]));
-        this.isReadOnly = propSignal("isReadOnly", t.boolean().optional(false));
+        this.props = useProps({
+            isReadOnly: t.signal(t.boolean()),
+        });
         this.openReactionMenu = useProps.static(
             "openReactionMenu",
             openReactionMenuType(this.store)
@@ -28,7 +30,7 @@ export class MessageReactions extends Component {
     get hasQuickReaction() {
         return (
             this.message().canAddReaction &&
-            !this.isReadOnly() &&
+            !this.props.isReadOnly() &&
             !(this.hasActions() && this.message().hasActions)
         );
     }

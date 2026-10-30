@@ -1,5 +1,5 @@
 import { SearchInput } from "@mail/core/common/search_input";
-import { propSignal, useSearch } from "@mail/utils/common/hooks";
+import { useSearch } from "@mail/utils/common/hooks";
 import { Component, computed, signal, types, useEffect, useProps } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { useService } from "@web/core/utils/hooks";
@@ -12,21 +12,18 @@ export class DiscussSearch extends Component {
 
     setup() {
         this.store = useService("mail.store");
-        this.autofocus = propSignal("autofocus", types.number(), { optional: true });
-        this.messagingMenuUiState = propSignal(
-            "messagingMenuUiState",
-            types.instanceOf(this.store.MessagingMenuUIState)
-        );
         this.props = useProps({
+            autofocus: types.signal(types.number()).optional(() => signal(null)),
             class: types.or([types.string(), types.object()]).optional(),
+            messagingMenuUiState: types.signal(types.instanceOf(this.store.MessagingMenuUIState)),
         });
         this.search = useSearch({
-            searchTerm: computed(() => this.messagingMenuUiState().searchTerm, {
-                set: (searchTerm) => (this.messagingMenuUiState().searchTerm = searchTerm),
+            searchTerm: computed(() => this.props.messagingMenuUiState().searchTerm, {
+                set: (searchTerm) => (this.props.messagingMenuUiState().searchTerm = searchTerm),
             }),
         });
         useEffect(() => {
-            if (this.autofocus?.()) {
+            if (this.props.autofocus()) {
                 this.searchInput()?.focus();
             }
         });

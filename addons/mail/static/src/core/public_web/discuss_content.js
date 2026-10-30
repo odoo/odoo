@@ -8,6 +8,7 @@ import {
     useEffect,
     useOnChange,
     usePlugin,
+    useProps,
 } from "@odoo/owl";
 
 import { useThreadActions } from "@mail/core/common/thread_actions";
@@ -23,7 +24,6 @@ import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { useService } from "@web/core/utils/hooks";
 import { useTransition } from "@web/core/transition";
-import { propSignal } from "@mail/utils/common/hooks";
 import { computedShallowEqual } from "@mail/utils/common/signal";
 import { ACTION_GROUP_TAGS, PANEL_CONTAINER_TYPE } from "@mail/core/common/action";
 
@@ -57,8 +57,10 @@ export class DiscussContent extends Component {
             },
         });
         this.store = useService("mail.store");
-        this.channel = propSignal("channel", types.instanceOf(this.store["discuss.channel"]), {
-            optional: true,
+        this.props = useProps({
+            channel: types
+                .signal(types.instanceOf(this.store["discuss.channel"]))
+                .optional(() => signal(null)),
         });
         this.ui = usePlugin(UIPlugin);
         this.rootRef = signal.ref(HTMLDivElement);
@@ -184,7 +186,7 @@ export class DiscussContent extends Component {
     }
 
     get thread() {
-        return this.channel?.()?.thread || this.store.discuss.thread;
+        return this.props.channel()?.thread || this.store.discuss.thread;
     }
 
     get isNotificationTabActive() {

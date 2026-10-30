@@ -1,4 +1,4 @@
-import { propComputed, propSignal, useHover } from "@mail/utils/common/hooks";
+import { propComputed, useHover } from "@mail/utils/common/hooks";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { Component, signal, t, usePlugin, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -24,7 +24,9 @@ export class MessageReactionList extends Component {
         this.ancestors = useAncestors();
         this.loadEmoji = useLoadEmoji();
         this.store = useService("mail.store");
-        this.message = propSignal("message", t.instanceOf(this.store["mail.message"]));
+        this.props = useProps({
+            message: t.signal(t.instanceOf(this.store["mail.message"])),
+        });
         this.openReactionMenu = useProps.static(
             "openReactionMenu",
             openReactionMenuType(this.store)
@@ -44,7 +46,7 @@ export class MessageReactionList extends Component {
         const { count, content: emoji } = reaction;
         const personNames = reaction.personas
             .slice(0, 3)
-            .map((persona) => this.message().getPersonaName(persona));
+            .map((persona) => this.props.message().getPersonaName(persona));
         const shortcode = emojiLoader.getShortCode(emoji);
         switch (count) {
             case 1:
