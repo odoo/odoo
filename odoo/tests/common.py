@@ -2737,6 +2737,8 @@ class HttpCase(TransactionCase):
 
         while real_time() < end_time:
             time.sleep(0.1)
+            if not get_http_request_threads():
+                break
 
         request_threads = get_http_request_threads()
         for thread in request_threads:
@@ -2746,6 +2748,8 @@ class HttpCase(TransactionCase):
         if request_threads:
             self._logger.info('remaining requests')
             odoo.tools.misc.dumpstacks()
+        else:
+            self._logger.info('All HTTP requests finished')
 
     def logout(self, keep_db=True):
         logout(self.session, keep_db=keep_db)
