@@ -1,4 +1,4 @@
-import { Component, usePlugin } from "@odoo/owl";
+import { Component, onMounted, usePlugin } from "@odoo/owl";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { Router } from "@pos_self_order/app/router";
@@ -57,6 +57,8 @@ export class selfOrderIndex extends Component {
         if (debugMode.isActive()) {
             initDebugFormatters();
         }
+
+        onMounted(() => this.selfOrder.printPendingPreparation());
     }
     get selfIsReady() {
         return this.selfOrder.models["product.product"].length > 0;
