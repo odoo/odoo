@@ -13,7 +13,6 @@ import stat
 import tempfile
 import typing
 import uuid
-import warnings
 from collections import defaultdict
 from datetime import datetime
 
@@ -536,10 +535,6 @@ class IrAttachment(models.Model):
 
     @api.model
     def _check_contents(self, values):
-        # get raw and remove db_datas
-        if 'datas' in values:
-            warnings.warn("Use raw, datas has beeen removed")
-            values.pop('datas')  # ignoring
         raw = values.pop('db_datas', None)
         raw = values.get('raw', raw) or b''
         # make sure we have a BinaryValue in raw (if we have data)
