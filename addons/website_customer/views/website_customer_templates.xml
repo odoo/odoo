@@ -261,7 +261,7 @@
                 <t t-set="right_column">
                     <div id="right_column"><t t-call="website_customer.references_block"/></div>
                 </t>
-                <t t-call="website_partner.partner_detail" contact_details="True" right_column="right_column"/>
+                <t t-call="website_partner.partner_detail" contact_details="True" hide_partners_back_button="True" right_column="right_column"/>
             </div>
         </div>
         <div class="oe_structure oe_empty" id="oe_structure_website_customer_details_2"
