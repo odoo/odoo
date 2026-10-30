@@ -932,14 +932,14 @@ class TestTimeRulePipeline(TransactionCase):
             'check_in': datetime(2022, 12, 12, 6),
             'check_out': datetime(2022, 12, 12, 20),
         })
-        excess, deficit, active_iv = self.time_rule._evaluate_rules(
+        excess, deficit, source_intervals_by_employee = self.time_rule._evaluate_rules(
             att, datetime(2022, 12, 12), datetime(2022, 12, 12, 23, 59, 59))
-        result = self.time_rule._apply_attendance_output(excess, deficit, active_iv=active_iv)
+        result = self.time_rule._apply_attendance_output(excess, deficit, source_intervals_by_employee=source_intervals_by_employee)
         self.assertIsNotNone(result)
-        new_records, source_ids, excess_alloc, _deficit_alloc = result
+        new_records, source_ids, excess_allocation_credits, _deficit_alloc = result
         self.assertEqual(set(source_ids), {att.id})
         self.assertEqual(new_records.work_entry_type_id, self.overtime_type)
-        self.assertEqual(len(excess_alloc), 1)
+        self.assertEqual(len(excess_allocation_credits), 1)
 
     def test_refuse_attendance_refuses_outputs_and_reverses_credits(self):
         """Refusing a source attendance refuses its outputs and reverses their credits."""
@@ -1158,7 +1158,7 @@ class TestTimeRulePipeline(TransactionCase):
         R2: output WET=OT, no threshold, condition=[att_type] -> reclassifies R1's intervals.
 
         Before fix: R2 overwrote cls_rule=R1 -> R1 allocation silently lost.
-        After fix:  orphaned credit for R1 is preserved and included in excess_alloc.
+        After fix:  orphaned credit for R1 is preserved and included in excess_allocation_credits.
 
         Expected: ALLOC_R1 and ALLOC_R2 each created for 6h (0.375d at 50%).
         """
@@ -3897,8 +3897,8 @@ class TestTimeRulePipelineLeaves(TransactionCase):
           rule2 fires: alloc_acc | {rule1} → (wet, src, rule2, {rule1})
 
         In _apply_output excess processing:
-          - rule1 credited via alloc_acc loop  → excess_alloc gets (emp, rule1, 6h)
-          - rule2 credited via pp-only branch  → excess_alloc gets (emp, rule2, 6h)
+          - rule1 credited via alloc_acc loop  → excess_allocation_credits gets (emp, rule1, 6h)
+          - rule2 credited via pp-only branch  → excess_allocation_credits gets (emp, rule2, 6h)
 
         Both rules target the same allocation type, so the days are accumulated into a
         single allocation record (2x credit) rather than two separate records.
@@ -3934,7 +3934,7 @@ class TestTimeRulePipelineLeaves(TransactionCase):
 
             # each rule must earn allocation credit for the full 6h interval:
             # rule1 via alloc_acc credit loop, rule2 via pp-only excess branch -> 2 credits total.
-            # both excess_alloc entries target the same allocation type so the days are
+            # both excess_allocation_credits entries target the same allocation type so the days are
             # accumulated into one allocation record with 2x the per-rule credit.
             allocations = self.env['hr.leave.allocation'].sudo().search([
                 ('employee_id', '=', leave.employee_id.id),

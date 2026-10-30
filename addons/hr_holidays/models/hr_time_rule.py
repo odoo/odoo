@@ -48,7 +48,7 @@ class HrTimeRule(models.Model):
         merged_intervals = []
         merge_key_of_last_merged_interval = None
         for interval in super()._resolve_output_intervals(intervals):
-            merge_key = interval.classifying_rule._get_output_leave_merge_key(accumulated_pp=interval.premium_pay_category_ids)
+            merge_key = interval.classifying_rule._get_output_leave_merge_key(premium_pay_category_ids=interval.premium_pay_category_ids)
             last_merged_interval = merged_intervals[-1] if merged_intervals else None
             if (
                 last_merged_interval
@@ -64,7 +64,7 @@ class HrTimeRule(models.Model):
                 merge_key_of_last_merged_interval = merge_key
         return merged_intervals
 
-    def _get_output_leave_vals(self, employee, rule, date_from, date_to, source_leave, accumulated_pp=frozenset()):
+    def _get_output_leave_vals(self, employee, rule, date_from, date_to, source_leave, premium_pay_category_ids=frozenset()):
         """Return the creation values of a validated time off output by ``rule``.
 
         The output has the rule's type, ``time_rule_id``, the given span and is linked to
@@ -75,7 +75,7 @@ class HrTimeRule(models.Model):
         :param datetime date_from: start, naive UTC
         :param datetime date_to: end, naive UTC
         :param source_leave: source ``hr.leave``
-        :param frozenset accumulated_pp: premium pay ids
+        :param frozenset premium_pay_category_ids: premium pay ids
         :rtype: dict
         """
         timezone = ZoneInfo(employee._get_tz())
@@ -96,7 +96,7 @@ class HrTimeRule(models.Model):
             'state': 'validate',
         }
 
-    def _get_output_leave_merge_key(self, accumulated_pp=frozenset()):
+    def _get_output_leave_merge_key(self, premium_pay_category_ids=frozenset()):
         """Return the hashable key deciding when consecutive excess slices make one time off.
 
         Override to add discriminators (e.g. the premium pays in Belgium). Default: the rule.
@@ -137,7 +137,7 @@ class HrTimeRule(models.Model):
             for employee, employee_allocations in allocations.grouped('employee_id').items()
         }
 
-    def _apply_allocation_credits(self, excess_alloc, deficit_alloc):
+    def _apply_allocation_credits(self, excess_allocation_credits, deficit_allocation_credits):
         """Credit (or deduct) the excess (or missing) hours of rules to allocations, and log it.
 
         For rules with ``leave_compensation_rate`` and ``allocation_type_id``, the hours times
@@ -145,14 +145,14 @@ class HrTimeRule(models.Model):
         validated allocation without end date of that type, created if needed. Each credit is
         logged in ``hr.time.rule.allocation.log`` so it can be reversed.
 
-        :param list excess_alloc: ``[employee, rule, hours, source, log_source]`` rows
-        :param list deficit_alloc: same rows for the deficits
+        :param list excess_allocation_credits: ``[employee, rule, hours, source, log_source]`` rows
+        :param list deficit_allocation_credits: same rows for the deficits
         """
         days_to_add_by_type = defaultdict(lambda: defaultdict(float))     # allocation type -> employee -> days
         days_to_remove_by_type = defaultdict(lambda: defaultdict(float))  # allocation type -> employee -> days
         logged_days_by_key = defaultdict(float)  # (log model, log id, employee, allocation type) -> days
 
-        for employee, rule, excess_hours, _source_record, log_record in excess_alloc:
+        for employee, rule, excess_hours, _source_record, log_record in excess_allocation_credits:
             days_to_add = rule._convert_hours_to_allocation_days(employee, excess_hours)
             if days_to_add > 0:
                 days_to_add_by_type[rule.allocation_type_id][employee] += days_to_add
@@ -182,7 +182,7 @@ class HrTimeRule(models.Model):
             created_allocations = self.env['hr.leave.allocation'].sudo().create(allocation_vals_list)
             allocation_by_key.update(zip(keys_of_allocations_to_create, created_allocations))
 
-        for employee, rule, deficit_hours, _source_record, log_record in deficit_alloc:
+        for employee, rule, deficit_hours, _source_record, log_record in deficit_allocation_credits:
             days_to_remove = rule._convert_hours_to_allocation_days(employee, deficit_hours)
             if days_to_remove > 0:
                 days_to_remove_by_type[rule.allocation_type_id][employee] += days_to_remove
@@ -262,7 +262,7 @@ class HrTimeRule(models.Model):
                 filtered_deficit[employee] = filtered_deficit_by_source
         return filtered_deficit
 
-    def _apply_leave_output(self, excess, deficit, active_iv=None):
+    def _apply_leave_output(self, excess, deficit, source_intervals_by_employee=None):
         """Apply the time rule result on time off sources.
 
         Creates the outputs (``_apply_output``, defined by ``hr_work_entry``), credits the
@@ -271,11 +271,11 @@ class HrTimeRule(models.Model):
 
         :param dict excess: ``{employee: {source: [PipelineInterval]}}``
         :param dict deficit: ``{employee: {source: [(start, stop, rule)]}}``
-        :param dict active_iv: ``{employee: {source: Intervals}}``
+        :param dict source_intervals_by_employee: ``{employee: {source: Intervals}}``
         """
         deficit = self._filter_deficit_exceeding_allocation(deficit)
-        created_leaves, processed_source_ids, excess_alloc, deficit_alloc = self._apply_output(excess, deficit, active_iv=active_iv)
-        self._apply_allocation_credits(excess_alloc, deficit_alloc)
+        created_leaves, processed_source_ids, excess_allocation_credits, deficit_allocation_credits = self._apply_output(excess, deficit, source_intervals_by_employee=source_intervals_by_employee)
+        self._apply_allocation_credits(excess_allocation_credits, deficit_allocation_credits)
         if not processed_source_ids:
             return
         Leave = self.env['hr.leave'].sudo()

@@ -516,7 +516,7 @@ class HrTimeRule(models.Model):
             or self.env.company.resource_calendar_id
         )
 
-    def _get_pp_frozenset(self):
+    def _get_premium_pay_category_ids(self):
         """Return the premium pay ids attached to the intervals this rule classifies.
 
         Hook for localizations (``l10n_be``); default: empty.
@@ -526,7 +526,7 @@ class HrTimeRule(models.Model):
         self.ensure_one()
         return frozenset()
 
-    def _get_source_annotation_vals(self, accumulated_pp=frozenset()):
+    def _get_source_annotation_vals(self, premium_pay_category_ids=frozenset()):
         """Return extra values written on a source record reused as the first output.
 
         When the output starts with the source, the source itself is reclassified (written)
@@ -534,7 +534,7 @@ class HrTimeRule(models.Model):
         ``_get_output_*_vals`` methods set on new output records (e.g.
         ``l10n_be_premium_pay_rule_ids``).
 
-        :param frozenset accumulated_pp: premium pay ids of the output interval(s)
+        :param frozenset premium_pay_category_ids: premium pay ids of the output interval(s)
         :rtype: dict
         """
         return {}
@@ -736,27 +736,27 @@ class HrTimeRule(models.Model):
         :param datetime start_dt: evaluated period start (only the date is used, as a day of the
             employees' timezone)
         :param datetime end_dt: evaluated period end (only the date is used)
-        :return: ``(excess, deficit, active_iv)``, each keyed by employee then source record:
+        :return: ``(excess, deficit, source_intervals_by_employee)``, each keyed by employee then source record:
             - ``excess``: ``[PipelineInterval]`` classified by a rule (premium pay ids not
               resolved yet, see :meth:`_resolve_output_intervals`),
             - ``deficit``: ``[(start, stop, rule)]`` missing hours,
-            - ``active_iv``: ``Intervals``, the pipeline segments of the source.
+            - ``source_intervals_by_employee``: ``Intervals``, the pipeline segments of the source.
         :rtype: tuple
         """
         excess = defaultdict(lambda: defaultdict(list))
         deficit = defaultdict(lambda: defaultdict(list))
-        active_iv = defaultdict(lambda: defaultdict(Intervals))
+        source_intervals_by_employee = defaultdict(lambda: defaultdict(Intervals))
         if not records:
-            return excess, deficit, active_iv
+            return excess, deficit, source_intervals_by_employee
 
         employees = records.employee_id
         applicable_employees_by_rule = {rule: rule._get_applicable_employees(employees) for rule in self}
         applicable_rules = self.filtered(lambda rule: applicable_employees_by_rule[rule])
         if not applicable_rules:
-            return excess, deficit, active_iv
+            return excess, deficit, source_intervals_by_employee
 
         work_intervals_by_calendar_id = applicable_rules._build_work_intervals_by_calendar(employees, start_dt, end_dt)
-        pipeline_by_employee = self._build_initial_pipeline(records, employees, work_intervals_by_calendar_id, active_iv)
+        pipeline_by_employee = self._build_initial_pipeline(records, employees, work_intervals_by_calendar_id, source_intervals_by_employee)
 
         for rule in applicable_rules:
             rule._apply_rule_on_pipeline(
@@ -770,16 +770,16 @@ class HrTimeRule(models.Model):
                 if interval.classifying_rule is not None and interval.end > interval.start:
                     excess[employee][interval.source_record].append(interval)
 
-        return excess, deficit, active_iv
+        return excess, deficit, source_intervals_by_employee
 
-    def _build_initial_pipeline(self, records, employees, work_intervals_by_calendar_id, active_iv):
+    def _build_initial_pipeline(self, records, employees, work_intervals_by_calendar_id, source_intervals_by_employee):
         """Cut every time record into its initial, unclassified pipeline intervals.
 
         Most records give a single interval; absences are clipped to the schedule. Like
         `_get_durations`, public holidays are removed from that schedule unless the leave
         type counts them in its duration.
 
-        :param active_iv: filled with the intervals of each record, per employee
+        :param source_intervals_by_employee: filled with the intervals of each record, per employee
         :return: {employee: [PipelineInterval]}
         """
         base_work_intervals = (
@@ -809,7 +809,7 @@ class HrTimeRule(models.Model):
             record_intervals = record._get_pipeline_intervals_local(schedule)
             if not record_intervals:
                 continue
-            active_iv[employee][record] |= Intervals([(start, stop, no_payload) for start, stop in record_intervals])
+            source_intervals_by_employee[employee][record] |= Intervals([(start, stop, no_payload) for start, stop in record_intervals])
             pipeline_by_employee[employee].extend(
                 PipelineInterval(start, stop, work_entry_type, record) for start, stop in record_intervals
             )
@@ -1054,7 +1054,7 @@ class HrTimeRule(models.Model):
             if not output_work_entry_type or interval.end <= interval.start:
                 continue
             classifying_rules = interval.displaced_rules | {interval.classifying_rule}
-            premium_pay_category_ids = frozenset().union(*(rule._get_pp_frozenset() for rule in classifying_rules))
+            premium_pay_category_ids = frozenset().union(*(rule._get_premium_pay_category_ids() for rule in classifying_rules))
             resolved_intervals.append(interval._replace(
                 work_entry_type=output_work_entry_type,
                 premium_pay_category_ids=premium_pay_category_ids,
@@ -1082,7 +1082,7 @@ class HrTimeRule(models.Model):
             ]
         return winning_intervals_by_period_last_day
 
-    def _apply_output(self, excess, deficit, active_iv=None):
+    def _apply_output(self, excess, deficit, source_intervals_by_employee=None):
         """Write the result of :meth:`_evaluate_rules` on the source records.
 
         Shared by attendances and leaves (called by ``_apply_attendance_output`` /
@@ -1102,9 +1102,9 @@ class HrTimeRule(models.Model):
 
         :param dict excess: ``{employee: {source: [PipelineInterval]}}``
         :param dict deficit: ``{employee: {source: [(start, stop, rule)]}}``
-        :param dict active_iv: ``{employee: {source: Intervals}}`` pipeline segments of the
+        :param dict source_intervals_by_employee: ``{employee: {source: Intervals}}`` pipeline segments of the
             sources, used to compute the remainders
-        :return: ``(new_records, all_source_ids, excess_alloc, deficit_alloc)``: created records,
+        :return: ``(new_records, all_source_ids, excess_allocation_credits, deficit_allocation_credits)``: created records,
             ids of the processed sources, and allocation rows
             ``[employee, rule, hours, source, log_source]`` (``log_source`` = record the credit is
             logged on, used by ``hr_holidays`` for compensatory allocations). Returns
@@ -1124,7 +1124,7 @@ class HrTimeRule(models.Model):
             timezone = ZoneInfo(employee._get_tz())
             for source_record, excess_intervals in excess_by_source.items():
                 processed_source_ids.add(source_record.id)
-                self._plan_excess_outputs(plan, employee, timezone, source_record, excess_intervals, active_iv)
+                self._plan_excess_outputs(plan, employee, timezone, source_record, excess_intervals, source_intervals_by_employee)
 
         any_source_record = next(chain(
             (source_record for excess_by_source in excess.values() for source_record in excess_by_source),
@@ -1147,7 +1147,7 @@ class HrTimeRule(models.Model):
         for period_last_day, winning_intervals in self._group_deficit_intervals_by_period(deficit_intervals).items():
             period_end_utc = local_to_utc(datetime.combine(period_last_day + timedelta(days=1), time.min), timezone)
             for deficit_start, deficit_stop, rule in winning_intervals:
-                premium_pay_category_ids = rule._get_pp_frozenset()
+                premium_pay_category_ids = rule._get_premium_pay_category_ids()
                 deficit_start_utc = local_to_utc(deficit_start, timezone)
                 occupied_intervals = source_record._get_time_rule_deficit_occupied(employee.id, deficit_start_utc, period_end_utc)
                 already_covered_hours = source_record._get_time_rule_deficit_already_covered(rule, deficit_start_utc, period_end_utc)
@@ -1166,7 +1166,7 @@ class HrTimeRule(models.Model):
                     )
                     hours_to_place -= slot_hours
 
-    def _plan_excess_outputs(self, plan, employee, timezone, source_record, excess_intervals, active_iv):
+    def _plan_excess_outputs(self, plan, employee, timezone, source_record, excess_intervals, source_intervals_by_employee):
         # Displaced rules produce no record but still earn allocation for the hours they claimed.
         for interval in excess_intervals:
             if interval.end <= interval.start:
@@ -1181,7 +1181,7 @@ class HrTimeRule(models.Model):
         if all(not interval.classifying_rule.work_entry_type_id for interval in output_intervals):
             self._annotate_source_without_split(plan, employee, source_record, output_intervals)
         else:
-            self._split_source_into_outputs(plan, employee, timezone, source_record, output_intervals, active_iv)
+            self._split_source_into_outputs(plan, employee, timezone, source_record, output_intervals, source_intervals_by_employee)
 
     def _annotate_source_without_split(self, plan, employee, source_record, output_intervals):
         """Handle rules without output type (premium pay only): every interval keeps the source type,
@@ -1191,13 +1191,13 @@ class HrTimeRule(models.Model):
         # every distinct classifying rule is asked, as overrides may depend on the rule
         annotation_vals = {}
         for classifying_rule in dict.fromkeys(interval.classifying_rule for interval in output_intervals):
-            annotation_vals |= classifying_rule._get_source_annotation_vals(accumulated_pp=all_premium_pay_category_ids)
+            annotation_vals |= classifying_rule._get_source_annotation_vals(premium_pay_category_ids=all_premium_pay_category_ids)
         if annotation_vals:
             _write_without_retriggering_rules(source_record, annotation_vals)
         for interval in output_intervals:
             plan.excess_allocation_credits.append([employee, interval.classifying_rule, interval.duration_hours(), source_record, source_record])
 
-    def _split_source_into_outputs(self, plan, employee, timezone, source_record, output_intervals, active_iv):
+    def _split_source_into_outputs(self, plan, employee, timezone, source_record, output_intervals, source_intervals_by_employee):
         """Cut the source record around its output intervals.
 
         If the first output starts at the very beginning of the source, the source itself becomes
@@ -1210,7 +1210,7 @@ class HrTimeRule(models.Model):
         end_field = source_record._time_rule_span_end_field
         source_work_entry_type_id = source_record.work_entry_type_id.id
 
-        source_intervals = (active_iv or {}).get(employee, {}).get(source_record)
+        source_intervals = (source_intervals_by_employee or {}).get(employee, {}).get(source_record)
         if source_intervals is None:
             source_intervals = Intervals([(
                 utc_to_local(source_record[start_field], timezone),
@@ -1260,7 +1260,7 @@ class HrTimeRule(models.Model):
     def _turn_source_into_output(self, source_record, output_interval, timezone):
         """Reclassify the source record in place so that it becomes `output_interval`."""
         output_end_utc = local_to_utc(output_interval.end, timezone)
-        annotation_vals = output_interval.classifying_rule._get_source_annotation_vals(accumulated_pp=output_interval.premium_pay_category_ids)
+        annotation_vals = output_interval.classifying_rule._get_source_annotation_vals(premium_pay_category_ids=output_interval.premium_pay_category_ids)
         is_already_the_output = (
             source_record.work_entry_type_id == output_interval.work_entry_type
             and source_record.time_rule_id == output_interval.classifying_rule

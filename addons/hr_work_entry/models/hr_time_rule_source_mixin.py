@@ -57,7 +57,7 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
     _time_rule_span_end_field = ''         # span end field name
     _time_rule_write_ctx = {'skip_time_rules': True, 'tracking_disable': True}
 
-    def _apply_record_output(self, rules, excess, deficit, active_iv=None):
+    def _apply_record_output(self, rules, excess, deficit, source_intervals_by_employee=None):
         """Write the pipeline result on the records; must be implemented.
 
         Implementations delegate to a ``hr.time.rule`` method built on
@@ -67,7 +67,7 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         :param rules: the ``hr.time.rule`` records that were evaluated
         :param dict excess: ``{employee: {source: [_Iv]}}``
         :param dict deficit: ``{employee: {source: [(start, stop, rule)]}}``
-        :param dict active_iv: ``{employee: {source: Intervals}}``
+        :param dict source_intervals_by_employee: ``{employee: {source: Intervals}}``
         """
         raise NotImplementedError
 
@@ -175,27 +175,27 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         ])
         return sum_intervals(existing_iv & window)
 
-    def _get_time_rule_output_vals(self, rule, df, dt, pp):
+    def _get_time_rule_output_vals(self, rule, start_utc, stop_utc, premium_pay_category_ids):
         """Return the creation values of an output record of ``rule``; must be implemented.
 
         :param rule: the ``hr.time.rule`` producing the output
-        :param datetime df: start, naive UTC
-        :param datetime dt: end, naive UTC
-        :param frozenset pp: premium pay ids
+        :param datetime start_utc: start, naive UTC
+        :param datetime stop_utc: end, naive UTC
+        :param frozenset premium_pay_category_ids: premium pay ids
         :return: values with at least the employee, the span, the rule's type, ``time_rule_id``
             and the link to the source
         :rtype: dict
         """
         raise NotImplementedError
 
-    def _get_time_rule_remainder_vals(self, df, dt):
+    def _get_time_rule_remainder_vals(self, start_utc, stop_utc):
         """Return the creation values of a remainder record; must be implemented.
 
         A remainder is a part of the source not covered by any output, when the source is cut.
         ``work_entry_type_id`` must be left out: the caller sets the source's original type.
 
-        :param datetime df: start, naive UTC
-        :param datetime dt: end, naive UTC
+        :param datetime start_utc: start, naive UTC
+        :param datetime stop_utc: end, naive UTC
         :rtype: dict
         """
         raise NotImplementedError
@@ -233,12 +233,12 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
                     merged[emp][record].extend(items)
         return merged
 
-    def _merge_active_iv(self, a, b):
+    def _merge_source_intervals(self, day_source_intervals_by_employee, week_source_intervals_by_employee):
         merged = defaultdict(lambda: defaultdict(Intervals))
-        for active_iv in (a, b):
-            for emp, by_src in active_iv.items():
-                for src, iv in by_src.items():
-                    merged[emp][src] |= iv
+        for source_intervals_by_employee in (day_source_intervals_by_employee, week_source_intervals_by_employee):
+            for employee, intervals_by_source in source_intervals_by_employee.items():
+                for source_record, source_intervals in intervals_by_source.items():
+                    merged[employee][source_record] |= source_intervals
         return merged
 
     def _collect_time_rule_outputs(self, rules, ranges_by_employee):
@@ -250,14 +250,14 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         :param rules: ``hr.time.rule`` records
         :param dict ranges_by_employee: ``{employee: (date_from, date_to)}``, dates in the
             employee's timezone
-        :return: merged ``(excess, deficit, active_iv)``, see ``hr.time.rule._evaluate_rules``
+        :return: merged ``(excess, deficit, source_intervals_by_employee)``, see ``hr.time.rule._evaluate_rules``
         :rtype: tuple
         """
         all_excess = defaultdict(lambda: defaultdict(list))
         all_deficit = defaultdict(lambda: defaultdict(list))
-        all_active_iv = defaultdict(lambda: defaultdict(Intervals))
+        all_source_intervals_by_employee = defaultdict(lambda: defaultdict(Intervals))
         if not rules:
-            return all_excess, all_deficit, all_active_iv
+            return all_excess, all_deficit, all_source_intervals_by_employee
 
         by_range = defaultdict(list)
         for employee, (date_from, date_to) in ranges_by_employee.items():
@@ -280,7 +280,7 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
                 continue
 
             self._on_sources_collected(sources)
-            excess, deficit, active_iv = rules._evaluate_rules(sources, start_dt, datetime.combine(date_to, time.min))
+            excess, deficit, source_intervals_by_employee = rules._evaluate_rules(sources, start_dt, datetime.combine(date_to, time.min))
 
             for emp, by_src in excess.items():
                 for src, items in by_src.items():
@@ -288,11 +288,11 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
             for emp, by_src in deficit.items():
                 for src, items in by_src.items():
                     all_deficit[emp][src].extend(items)
-            for emp, by_src in active_iv.items():
+            for emp, by_src in source_intervals_by_employee.items():
                 for src, iv in by_src.items():
-                    all_active_iv[emp][src] |= iv
+                    all_source_intervals_by_employee[emp][src] |= iv
 
-        return all_excess, all_deficit, all_active_iv
+        return all_excess, all_deficit, all_source_intervals_by_employee
 
     @api.model
     def _cron_process_day_undertime_rules(self):
@@ -398,13 +398,13 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
                     wdt = max(wdt, wdt + relativedelta(days=(ws - 1 - wdt.weekday()) % 7))
                 week_rules_ranges[employee] = (wdf, wdt)
 
-        day_excess, day_deficit, day_active_iv = self._collect_time_rule_outputs(day_rules, day_rules_ranges)
-        week_excess, week_deficit, week_active_iv = self._collect_time_rule_outputs(week_rules, week_rules_ranges)
+        day_excess, day_deficit, day_source_intervals_by_employee = self._collect_time_rule_outputs(day_rules, day_rules_ranges)
+        week_excess, week_deficit, week_source_intervals_by_employee = self._collect_time_rule_outputs(week_rules, week_rules_ranges)
 
         merged_excess = self._merge_rule_outputs(day_excess, week_excess)
         merged_deficit = self._merge_rule_outputs(day_deficit, week_deficit)
-        merged_active_iv = self._merge_active_iv(day_active_iv, week_active_iv)
-        self._apply_record_output(day_rules | week_rules, merged_excess, merged_deficit, merged_active_iv)
+        merged_source_intervals_by_employee = self._merge_source_intervals(day_source_intervals_by_employee, week_source_intervals_by_employee)
+        self._apply_record_output(day_rules | week_rules, merged_excess, merged_deficit, merged_source_intervals_by_employee)
 
     def _trigger_time_rules(self):
         """Run the rules for the records of ``self`` that are valid sources.

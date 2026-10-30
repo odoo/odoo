@@ -699,9 +699,9 @@ class HrAttendance(models.Model):
             ON hr_attendance (check_in, check_out, employee_id);
         """)
 
-    def _apply_record_output(self, rules, excess, deficit, active_iv=None):
+    def _apply_record_output(self, rules, excess, deficit, source_intervals_by_employee=None):
         """Apply the time rule results through ``hr.time.rule._apply_attendance_output``."""
-        rules._apply_attendance_output(excess, deficit, active_iv=active_iv)
+        rules._apply_attendance_output(excess, deficit, source_intervals_by_employee=source_intervals_by_employee)
 
     def _get_time_rule_deficit_occupied(self, employee_id, start_utc, period_end_utc):
         """Return the spans of the attendances of the employee overlapping the period, refused
@@ -718,15 +718,15 @@ class HrAttendance(models.Model):
         ])
         return Intervals([(a.check_in, a.check_out, dummy) for a in existing], keep_distinct=True)
 
-    def _get_time_rule_output_vals(self, rule, df, dt, pp):
+    def _get_time_rule_output_vals(self, rule, start_utc, stop_utc, premium_pay_category_ids):
         """Return the values of an output attendance, see
         ``hr.time.rule._get_output_attendance_vals``.
 
         :rtype: dict
         """
-        return rule._get_output_attendance_vals(self.employee_id, df, dt, self, accumulated_pp=pp)
+        return rule._get_output_attendance_vals(self.employee_id, start_utc, stop_utc, self, premium_pay_category_ids=premium_pay_category_ids)
 
-    def _get_time_rule_remainder_vals(self, df, dt):
+    def _get_time_rule_remainder_vals(self, start_utc, stop_utc):
         """Return the values of a remainder attendance: ``employee_id``, ``check_in``,
         ``check_out`` and ``source_attendance_id``.
 
@@ -734,8 +734,8 @@ class HrAttendance(models.Model):
         """
         return {
             'employee_id': self.employee_id.id,
-            'check_in': df,
-            'check_out': dt,
+            'check_in': start_utc,
+            'check_out': stop_utc,
             'source_attendance_id': self.id,
         }
 
