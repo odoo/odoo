@@ -1001,15 +1001,15 @@ class HolidaysRequest(models.Model):
             validated_leaves._remove_resource_leave()
 
         employee_id = values.get('employee_id', False)
+        if values.get('state'):
+            self._check_approval_update(values['state'])
+            if any(holiday.validation_type == 'both' for holiday in self):
+                if values.get('employee_id'):
+                    employees = self.env['hr.employee'].browse(values.get('employee_id'))
+                else:
+                    employees = self.mapped('employee_id')
+                self._check_double_validation_rules(employees, values['state'])
         if not self.env.context.get('leave_fast_create'):
-            if values.get('state'):
-                self._check_approval_update(values['state'])
-                if any(holiday.validation_type == 'both' for holiday in self):
-                    if values.get('employee_id'):
-                        employees = self.env['hr.employee'].browse(values.get('employee_id'))
-                    else:
-                        employees = self.mapped('employee_id')
-                    self._check_double_validation_rules(employees, values['state'])
             if 'date_from' in values:
                 values['request_date_from'] = values['date_from']
             if 'date_to' in values:
