@@ -335,9 +335,13 @@ export class CalendarController extends Component {
                             ? _t("Open: %s", record.title)
                             : this.editRecordDefaultDisplayText,
                         viewId: this.model.formViewId,
-                        onRecordSaved: () => this.model.load(),
                     },
-                    { onClose: () => resolve() }
+                    {
+                        onClose: () => {
+                            this.model.load();
+                            resolve();
+                        },
+                    }
                 );
             });
         } else {

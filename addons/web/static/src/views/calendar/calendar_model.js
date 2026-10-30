@@ -29,6 +29,7 @@ export class CalendarModel extends Model {
     setup(params, { notification }) {
         /** @protected */
         this.keepLast = new KeepLast();
+        this.isAlive = params.isAlive;
         this.notification = notification;
 
         const formViewFromConfig = (this.env.config.views || []).find((view) => view[1] === "form");
@@ -453,6 +454,9 @@ export class CalendarModel extends Model {
         }
 
         const { sections, dynamicFiltersInfo } = await this.loadFilters(data);
+        if (!this.isAlive()) {
+            return new Promise(() => {});
+        }
 
         // Load records and dynamic filters only with fresh filters
         data.filterSections = sections;
