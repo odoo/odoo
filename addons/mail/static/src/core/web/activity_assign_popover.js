@@ -1,5 +1,4 @@
 import { PopoverCard } from "@mail/core/common/popover_card/popover_card";
-import { propSignal } from "@mail/utils/common/hooks";
 
 import { imageUrl } from "@web/core/utils/urls";
 import { Component, signal, t, usePlugin, useProps } from "@odoo/owl";
@@ -17,15 +16,17 @@ export class ActivityAssignPopover extends Component {
         this.store = useService("mail.store");
         this.orm = usePlugin(ORM);
         this.responsibleLabel = _t("Responsible");
-        this.activity = propSignal("activity", t.instanceOf(this.store["mail.activity"]));
+        this.props = useProps({
+            activity: t.signal(t.instanceOf(this.store["mail.activity"])),
+        });
         this.close = useProps.static("close", t.function([t.instanceOf(MouseEvent)]).optional());
         this.hasHeader = useProps.static("hasHeader", t.boolean().optional(false));
         this.onActivityChanged = useProps.static(
             "onActivityChanged",
             t.function([t.instanceOf(this.store["mail.thread"])])
         );
-        this.userId = signal(this.activity().user_id?.id || false);
-        this.userName = signal(this.activity().user_id?.name || "");
+        this.userId = signal(this.props.activity().user_id?.id || false);
+        this.userName = signal(this.props.activity().user_id?.name || "");
         this.disableAssignButton = signal(false);
     }
 
@@ -58,10 +59,10 @@ export class ActivityAssignPopover extends Component {
         if (this.disableAssignButton()) {
             return;
         }
-        const thread = this.activity().thread;
+        const thread = this.props.activity().thread;
         this.disableAssignButton.set(true);
         try {
-            await this.orm.write("mail.activity", [this.activity().id], {
+            await this.orm.write("mail.activity", [this.props.activity().id], {
                 user_id: this.userId() || false,
             });
             this.onActivityChanged(thread);
