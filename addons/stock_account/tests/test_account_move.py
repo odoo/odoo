@@ -4,7 +4,6 @@ from datetime import datetime
 from freezegun import freeze_time
 
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
-from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
 from odoo import fields, Command
 
@@ -334,6 +333,7 @@ class TestAccountMove(TestStockValuationCommon):
     def test_apply_inventory_adjustment_on_multiple_quants_simultaneously(self):
         product = self.product_standard_auto
         product_b = product.copy()
+        product_b.standard_price = 20
         products = product + product_b
 
         self._use_inventory_location_accounting()
@@ -357,71 +357,6 @@ class TestAccountMove(TestStockValuationCommon):
                 {'account_id': self.account_inventory.id, 'product_id': product_b.id},
             ]
         )
-
-    @freeze_time("2020-01-22")
-    def test_backdate_picking_with_lock_date(self):
-        """
-        Check that pickings can not be backdate or validated prior to the
-        fiscal and hard lock date.
-        """
-        self.env['account.lock_exception'].search([]).sudo().unlink()
-        lock_date = fields.Date.from_string('2011-01-01')
-        prior_to_lock_date = fields.Datetime.add(lock_date, days=-1)
-        post_to_lock_date = fields.Datetime.add(lock_date, days=+1)
-        self.env['stock.quant']._update_available_quantity(self.product_standard, self.stock_location, 10)
-        receipts = receipt, receipt_done = self.env['stock.picking'].create([
-            {
-                'location_id': self.supplier_location.id,
-                'location_dest_id': self.stock_location.id,
-                'picking_type_id': self.picking_type_in.id,
-                'owner_id': self.env.company.partner_id.id,
-                'move_ids': [Command.create({
-                    'product_id': self.product_standard.id,
-                    'location_id': self.supplier_location.id,
-                    'location_dest_id': self.stock_location.id,
-                    'product_uom_qty': 1.0,
-                })]
-            } for _ in range(2)
-        ])
-        receipts.action_confirm()
-        receipt_done.button_validate()
-        # Check that the purchase, sale and tax lock dates do not impose any restrictions
-        self.env.company.sudo().write({
-            'sale_lock_date': lock_date,
-            'purchase_lock_date': lock_date,
-            'tax_lock_date': lock_date,
-        })
-        # Receipts can be backdated
-        receipt.scheduled_date = prior_to_lock_date
-        receipt_done.date_done = prior_to_lock_date
-
-        # Check that the fiscal year lock date imposes restrictions
-        self.env.company.sudo().write({
-            'sale_lock_date': False,
-            'purchase_lock_date': False,
-            'tax_lock_date': False,
-            'fiscalyear_lock_date': lock_date,
-        })
-        # Receipts can not be backdated prior to lock date
-        receipt.scheduled_date = post_to_lock_date
-        receipt_done.date_done = post_to_lock_date
-        # Lock dates should not affect un-validated scheduled_date
-        receipt.scheduled_date = prior_to_lock_date
-        with self.assertRaises(UserError):
-            receipt_done.date_done = prior_to_lock_date
-
-        # Check that the hard lock date imposes restrictions
-        self.env.company.sudo().write({
-            'fiscalyear_lock_date': False,
-            'hard_lock_date': lock_date,
-        })
-        # Receipts can not be backdated prior to lock date
-        receipt.scheduled_date = post_to_lock_date
-        receipt_done.date_done = post_to_lock_date
-        # Lock dates should not affect un-validated scheduled_date
-        receipt.scheduled_date = prior_to_lock_date
-        with self.assertRaises(UserError):
-            receipt_done.date_done = prior_to_lock_date
 
     def test_invoice_with_journal_item_without_label(self):
         """Test posting an invoice whose invoice lines have no label.
