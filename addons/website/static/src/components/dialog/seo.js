@@ -414,8 +414,11 @@ export class OptimizeSEODialog extends Component {
             this.canEditSeo = this.data.can_edit_seo;
             this.canEditDescription = this.canEditSeo && 'website_meta_description' in this.data;
             this.canEditTitle = this.canEditSeo && 'website_meta_title' in this.data;
-            // The URL must not be customizable if it does not contain an editable slug.
-            const editableSlugPattern = new RegExp(`.*/(${this.data.seo_name || ""}|${this.data.seo_name_default || ""})-\\d+.*`);
+            const slug = this.data.seo_name || this.data.seo_name_default || "";
+            // The URL is possibly customizable if:
+            // - path contains the current slug
+            // - or there is no slug and path contains number only part (eg /1/)
+            const editableSlugPattern = slug ? new RegExp(`/${slug}-\\d+`) : /\/\d+(\/|$)/;
             this.canEditUrl = this.canEditSeo && Boolean(new URL(path).pathname.match(editableSlugPattern));
             seoContext.title = this.canEditTitle && this.data.website_meta_title;
 
@@ -494,9 +497,16 @@ export class OptimizeSEODialog extends Component {
         if (this.canEditKeywords) {
             data.website_meta_keywords = seoContext.keywords.join(',');
         }
+        let url = this.url;
         if (this.canEditUrl) {
             if (seoContext.seoName !== this.previousSeoName) {
-                data.seo_name = seoContext.seoName;
+                data.seo_name = seoContext.seoName.replace(/^-|-$/g, '');
+                if (data.seo_name) {
+                    url = url.replace(
+                        new RegExp(`/${this.previousSeoName || this.seoNameDefault}-(\\d+)`),
+                        `/${data.seo_name}-$1`
+                    );
+                }
             }
         }
         data.website_meta_og_img = seoContext.metaImage;
@@ -506,6 +516,6 @@ export class OptimizeSEODialog extends Component {
                 'website_id': this.website.currentWebsite.id,
             },
         });
-        this.website.goToWebsite({path: this.url.replace(this.previousSeoName || this.seoNameDefault, seoContext.seoName)});
+        this.website.goToWebsite({path: url});
     }
 }
