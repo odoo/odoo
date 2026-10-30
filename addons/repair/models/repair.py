@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 from random import randint
 
 from odoo import api, fields, models, _
@@ -162,6 +163,9 @@ class RepairOrder(models.Model):
         'Any Part is late',
         default=False, store=True, compute='_compute_availability_boolean')
 
+    # Scraps
+    scrap_count = fields.Integer(compute='_compute_scrap_count')
+
     # Services
     repair_service_line_ids = fields.One2many(
         'repair.service.line', 'repair_id', 'Service Lines', check_company=True, copy=True)
@@ -256,6 +260,15 @@ class RepairOrder(models.Model):
     def _compute_invoice_count(self):
         for repair in self:
             repair.invoice_count = len(repair.sudo().invoice_ids)
+
+    def _compute_scrap_count(self):
+        scrap_counts_by_repair = dict(self.env['stock.move']._read_group(
+            [('repair_id', 'in', self.ids), ('is_scrap', '=', True)],
+            ['repair_id'],
+            ['__count'],
+        ))
+        for repair in self:
+            repair.scrap_count = scrap_counts_by_repair.get(repair, 0)
 
     @api.depends('invoice_ids', 'invoice_ids.state', 'partner_id', 'sale_order_id', 'state', 'move_ids', 'repair_service_line_ids')
     def _compute_can_create_sale_or_invoice(self):
@@ -643,6 +656,35 @@ class RepairOrder(models.Model):
 
     def action_unreserve(self):
         return self.move_ids.filtered(lambda m: m.state in ('assigned', 'partially_available'))._do_unreserve()
+
+    def action_scrap(self):
+        self.ensure_one()
+        is_done_or_cancel = self.state in ('done', 'cancel')
+        return {
+            'name': self.env._("Scrap Products"),
+            'res_model': 'stock.move',
+            'views': [[self.env.ref('stock.view_scrap_move_form').id, 'form']],
+            'type': 'ir.actions.act_window',
+            'context': {
+                'from_order': True,
+                'default_is_scrap': True,
+                'default_repair_id': self.id,
+                'default_company_id': self.company_id.id,
+                'product_ids': (self.product_id if is_done_or_cancel else self.move_ids.filtered(lambda m: m.repair_line_type == 'add').product_id).ids,
+                'default_product_id': self.product_id.id if is_done_or_cancel else False,
+                'default_lot_ids': self.lot_id.ids if is_done_or_cancel else [],
+                'default_quantity': 1 if is_done_or_cancel else 0,
+                'default_location_id': {'confirmed': self.location_id, 'done': self.product_location_dest_id, 'cancel': self.product_location_src_id}[self.state].id,
+            },
+            'target': 'new',
+        }
+
+    def action_see_move_scrap(self):
+        self.ensure_one()
+        action = self.env['ir.actions.actions']._for_xml_id('stock.stock_scrapped_moves_action')
+        action['domain'] = Domain.AND([ast.literal_eval(action['domain']), [('repair_id', '=', self.id)]])
+        action['context'] = dict(self.env.context, create=False)
+        return action
 
     def action_validate(self):
         self.ensure_one()

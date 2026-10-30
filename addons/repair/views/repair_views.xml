@@ -81,6 +81,9 @@
                </header>
                <sheet string="Repairs order">
                     <div class="oe_button_box" name="button_box">
+                        <button name="action_see_move_scrap" type="object" icon="height" class="oe_stat_button" invisible="not scrap_count">
+                            <field name="scrap_count" widget="statinfo" string="Scraps"/>
+                        </button>
                         <button name="%(action_repair_move_lines)d"
                             type="action"
                             string="Product Moves"
@@ -429,6 +432,18 @@
             <field name="code">
             if records:
                 records.action_unreserve()</field>
+        </record>
+
+        <record id="action_repair_order_scrap" model="ir.actions.server">
+            <field name="name">Scrap</field>
+            <field name="model_id" ref="repair.model_repair_order"/>
+            <field name="binding_model_id" ref="repair.model_repair_order"/>
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">
+            if records.state != 'draft':
+                action = records.action_scrap()
+            </field>
         </record>
 
         <menuitem id="menu_repair_order" groups="stock.group_stock_user" name="Repairs" sequence="165"

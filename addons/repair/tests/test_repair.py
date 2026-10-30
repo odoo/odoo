@@ -1110,6 +1110,40 @@ class TestRepair(TestRepairCommon):
         sale_order.with_company(main_company).action_confirm()
         self.assertEqual(sale_order.repair_order_ids.company_id, branch)
 
+    def test_scrap_from_repair_order(self):
+        """Scrapping from a repair order only allows added parts when confirmed and the repaired product when done or cancelled.
+        """
+        repair = self.repair0
+        repair1 = self.repair1
+        repair.move_ids = [
+            Command.create({'product_id': self.product_product_13.id, 'product_uom_qty': 1.0, 'repair_line_type': line_type})
+            for line_type in ('remove', 'recycle')
+        ]
+        repair.action_validate()
+        repair_dict = repair.action_scrap()
+        # Confirmed repair: only products with repair_line_type 'add' can be scrapped.
+        self.assertEqual(repair_dict['context']['product_ids'], self.product_product_12.ids)
+        scrap_form = Form.from_action(self.env, repair_dict)
+        scrap_form.product_id = self.product_product_12
+        scrap_form.quantity = 1
+        scrap_form.save().action_scrap()
+        # Done and cancelled repairs: only the product being repaired can be scrapped.
+        repair.action_repair_end()
+        repair1.action_repair_cancel()
+        for order in repair | repair1:
+            Form.from_action(self.env, order.action_scrap()).save().action_scrap()
+
+        # Each scrap move uses the correct source location based on the repair state.
+        self.assertRecordValues(repair | repair1, [{'scrap_count': 2}, {'scrap_count': 1}])
+        self.assertRecordValues(
+            self.env['stock.move'].search([('repair_id', 'in', (repair | repair1).ids), ('is_scrap', '=', True)], limit=3),
+            [
+                {'product_id': self.product_product_12.id, 'quantity': 1, 'location_id': repair.location_id.id},
+                {'product_id': self.product_product_5.id, 'quantity': 1, 'location_id': repair.product_location_dest_id.id},
+                {'product_id': self.product_product_3.id, 'quantity': 1, 'location_id': repair1.product_location_src_id.id},
+            ],
+        )
+
 
 @tagged('post_install', '-at_install')
 class TestRepairHttp(HttpCase):
