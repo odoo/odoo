@@ -269,8 +269,13 @@ export class PosStore extends WithLazyGetterTrap {
 
         return ![decimalPoint, "-"].includes(inputValue) && floatRegex.test(inputValue);
     }
+    parseLocalizedFloat(inputValue) {
+        const { thousandsSep } = localization;
+        const normalizedInput = thousandsSep ? inputValue.split(thousandsSep).join("") : inputValue;
+        return parseFloat(normalizedInput);
+    }
     parseValidFloat(inputValue) {
-        return this.isValidFloat(inputValue) ? parseFloat(inputValue) : 0;
+        return this.isValidFloat(inputValue) ? this.parseLocalizedFloat(inputValue) : 0;
     }
     formatProductQty(qty, trailingZeros = true) {
         const productUnit = this.data.models["decimal.precision"].find(

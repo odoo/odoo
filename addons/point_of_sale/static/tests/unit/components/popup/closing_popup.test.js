@@ -2,6 +2,8 @@ import { test, expect } from "@odoo/hoot";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { ClosePosPopup } from "@point_of_sale/app/components/popups/closing_popup/closing_popup";
 import { setupPosEnv } from "@point_of_sale/../tests/unit/utils";
+import { currencies } from "@web/core/currency";
+import { patch } from "@web/core/utils/patch";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 
 definePosModels();
@@ -70,4 +72,27 @@ test("validPms includes bank/cash methods with more than one payment", async () 
     });
 
     expect(popup.validPms.map((pm) => pm.id)).toEqual([10, 11]);
+});
+
+test("closing_popup getDifference() with diffrent currency digits", async () => {
+    await setupPosEnv();
+
+    const paymentMethods = [
+        { id: 10, name: "Card A", type: "bank", number: 3, amount: 60000 },
+        { id: 11, name: "Cash B", type: "cash", number: 2, amount: 30000 },
+    ];
+
+    expect(currencies[1].digits).toEqual([69, 2]);
+
+    let popup = await mountWithCleanup(ClosePosPopup, {
+        props: getProps({ non_cash_payment_methods: paymentMethods }),
+    });
+    expect(popup.validPms.map((pm) => popup.getDifference(pm.id))).toEqual([0, 0]);
+
+    patch(currencies[1], { digits: [69, 0] });
+
+    popup = await mountWithCleanup(ClosePosPopup, {
+        props: getProps({ non_cash_payment_methods: paymentMethods }),
+    });
+    expect(popup.validPms.map((pm) => popup.getDifference(pm.id))).toEqual([0, 0]);
 });
