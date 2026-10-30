@@ -642,6 +642,7 @@ class ResourceCalendar(models.Model):
         _logger.warning("The method _work_intervals_batch is deprecated. Use TODO BEDO NEW NAME instead.")
         all_resources = set()
         if not resources_per_tz or self:
+            all_resources.add(self.env['resource.resource'])
         if resources_per_tz:
             for _, resources in resources_per_tz.items():
                 all_resources |= set(resources)
@@ -1174,7 +1175,7 @@ class ResourceCalendar(models.Model):
     # New API
     # --------------------------------------------------
 
-    def _attendance_intervals(self, dt_from, dt_to, domain=None, tz_list=[], availability=False):
+    def _attendance_intervals(self, dt_from, dt_to, domain=None, availability=False):
         """
         Get the attendances between dt_from and dt_to, as intervals linked to records of resource.calendar.attendance.
             - For variable schedule, only attendances with a date are considered. If an attendance has a recurrency rule, it will be repeated on the corresponding days.
@@ -1202,15 +1203,16 @@ class ResourceCalendar(models.Model):
                 att_start = time.min
                 if attendances[0].duration_based and not availability:
                     total_duration = sum(attendances.mapped('duration_hours'))
-                    att_start = float_to_time(12 - total_duration / 2)
-                    # This part is to avoid having no attendances when we take specific schedules on a day;
-                    # For example, attendances from 9PM to 11PM should return 2 hours with a duration-based, 8 hours/day
-                    # schedule. Without this, the expected attendances would be 8AM-4PM and the period for which we called
-                    # the method would return 0. Same reasoning the other way around, if we look for attendances at 2AM-4AM.
+                    start_hour = 12 - total_duration / 2
+                    # The hours are centered around noon, and only moved into the requested period when it cuts
+                    # them on its first or last day. For example, attendances from 9PM to 11PM should return 2 hours
+                    # with a duration-based, 8 hours/day schedule; centered around noon (8AM-4PM), the period for
+                    # which we called the method would get 0. Same reasoning the other way around for 2AM-4AM.
+                    if att_date == dt_to.date():
+                        start_hour = min(start_hour, time_to_float(dt_to.time()) - total_duration)
                     if att_date == dt_from.date():
-                        att_start = dt_from.time()
-                    elif att_date == dt_to.date():
-                        att_start = time.min
+                        start_hour = max(start_hour, time_to_float(dt_from.time()))
+                    att_start = float_to_time(max(start_hour, 0))
                 for att in attendances:
                     if not att.duration_based:
                         hour_start = float_to_time(att.hour_from)

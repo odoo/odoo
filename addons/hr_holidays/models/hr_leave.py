@@ -2993,10 +2993,10 @@ class HrLeave(models.Model):
             domain = [('count_as', '=', 'absence'),
                       ('company_id', 'in', self.env.companies.ids + self.env.context.get('allowed_company_ids', [])),
                       '|', ('holiday_id', '=', False), ('holiday_id', '!=', self.id)]
-            work_intervals = self.resource_calendar_id._work_intervals_batch(
-                self.date_from.astimezone(UTC), self.date_to.astimezone(UTC), resources_per_tz=self.employee_id.resource_id._get_resources_per_tz(),
+            work_intervals = self.employee_id._work_intervals(
+                self.date_from.replace(tzinfo=UTC), self.date_to.replace(tzinfo=UTC),
                 domain=domain, compute_leaves=not self.work_entry_type_id.include_public_holidays_in_duration,
-            )[self.employee_id.resource_id.id]
+            )[self.employee_id]
             compined_intervals = {}
             for start, stop, _ in work_intervals:
                 compined_intervals[start.date()] = 1

@@ -214,6 +214,21 @@ class ResourceResource(models.Model):
             }
         return result
 
+    def _get_calendar_tz_periods(self, start, stop):
+        """Follow the versions in contract of the employees: one period per version, with its
+        working schedule and timezone. An employee without contract in the period has no period.
+        Other resources keep their own calendar and timezone."""
+        result = super()._get_calendar_tz_periods(start, stop)
+        resources_with_employee = self.filtered('employee_id')
+        version_periods = resources_with_employee.employee_id.sudo()._get_version_periods(
+            start, stop, ['resource_calendar_id', 'tz'], check_contract=True)
+        for resource in resources_with_employee:
+            result[resource] = [
+                (date_from, date_to, calendar, tz)
+                for date_from, date_to, (calendar, tz) in version_periods.get(resource.employee_id[:1], [])
+            ]
+        return result
+
     def _store_avatar_card_fields(self, res: Store.FieldList):
         super()._store_avatar_card_fields(res)
         res.one("department_id", ["name"])

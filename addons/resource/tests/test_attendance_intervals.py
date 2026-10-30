@@ -81,9 +81,9 @@ class TestCalendarAttendanceIntervals(TransactionCase):
         ], "8h duration should be centered around noon (08:00-16:00) on days strictly inside the period")
 
     def test_duration_based_front_loaded_on_boundary_day(self):
-        """When the day is the first (or last) day of the requested period, the duration-based
-        attendance is no longer centered around noon but starts from dt_from's time instead, so that
-        a narrow query at the edge of the day still returns the expected overlap."""
+        """When the requested period cuts the noon-centered hours on its first (or last) day, the
+        duration-based attendance is moved into the period, so that a narrow query at the edge of
+        the day still returns the expected overlap. When it fits, it stays centered around noon."""
         calendar = self.env['resource.calendar'].create({
             'name': 'Duration based 8h/day',
             'attendance_ids': [(5, 0, 0), (0, 0, {'dayofweek': '0', 'duration_hours': 8})],
@@ -94,11 +94,20 @@ class TestCalendarAttendanceIntervals(TransactionCase):
         self.assertEqual(result, [(datetime(2026, 1, 5, 21, 0), datetime(2026, 1, 5, 23, 0))],
             "Attendance should still be found when querying a narrow window at the end of the day")
 
-        # Querying the full day: the interval should start at dt_from (midnight) instead of being
-        # centered around noon.
+        # Querying the early hours of the day: the attendance is moved back to fit the period.
+        result = self._times(calendar, datetime(2026, 1, 5, 2, 0, 0), datetime(2026, 1, 5, 4, 0, 0))
+        self.assertEqual(result, [(datetime(2026, 1, 5, 2, 0), datetime(2026, 1, 5, 4, 0))],
+            "Attendance should still be found when querying a narrow window at the start of the day")
+
+        # Querying the full day: the hours fit, they stay centered around noon.
         result_full_day = self._times(calendar, datetime(2026, 1, 5, 0, 0, 0), datetime(2026, 1, 5, 23, 59, 59))
-        self.assertEqual(result_full_day, [(datetime(2026, 1, 5, 0, 0), datetime(2026, 1, 5, 8, 0))],
-            "On the first day of the period, the duration should start at dt_from, not be centered around noon")
+        self.assertEqual(result_full_day, [(datetime(2026, 1, 5, 8, 0), datetime(2026, 1, 5, 16, 0))],
+            "When the period does not cut them, the hours should stay centered around noon")
+
+        # Querying from 10:00: the hours are moved after the start of the period, keeping their duration.
+        result = self._times(calendar, datetime(2026, 1, 5, 10, 0, 0), datetime(2026, 1, 6, 23, 59, 59))
+        self.assertEqual(result, [(datetime(2026, 1, 5, 10, 0), datetime(2026, 1, 5, 18, 0))],
+            "On the first day, the hours should start at the period start when it is after the centered start")
 
     def test_duration_based_full_24h_coverage(self):
         """Multiple duration-based attendances summing up to 24h on a single day should cover the
@@ -133,8 +142,8 @@ class TestCalendarAttendanceIntervals(TransactionCase):
             datetime(2026, 1, 5, 23, 59, 59),
             domain=[('duration_hours', '>', 3)],
         )
-        self.assertEqual(result, [(datetime(2026, 1, 5, 0, 0), datetime(2026, 1, 5, 4, 0))],
-            "Only the 4h attendance should remain, starting at dt_from since it's the first/only remaining one")
+        self.assertEqual(result, [(datetime(2026, 1, 5, 10, 0), datetime(2026, 1, 5, 14, 0))],
+            "Only the 4h attendance should remain, centered around noon on its own")
 
     def test_multiple_calendars_batched(self):
         """Calling _attendance_intervals on a recordset of several calendars should return one

@@ -10,7 +10,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.addons.resource.models.utils import HOURS_PER_DAY
 from odoo.addons.mail.tools.discuss import Store
-from odoo.tools import OrderedSet, float_round
+from odoo.tools import float_round
 from odoo.tools.intervals import Intervals
 
 
@@ -158,34 +158,10 @@ class HrEmployee(models.Model):
         remaining.resource_id.employee_id  # prefetch data
         lookahead_days = [7, 30, 90, 180, 365, 730]
 
-        # get periods from calendar
+        # get from the calendars of the versions in contract
         for lookahead_day in lookahead_days:
-            periods = remaining._get_calendar_periods(min_dt.date(), min_dt.date() + timedelta(days=lookahead_day))
-            calendar_employee = defaultdict(OrderedSet)
-            max_end = None
-            for employee, intervals in periods.items():
-                for (_start, end, calendar) in intervals:
-                    calendar_employee[calendar].add(employee.id)
-                    if not max_end or end > max_end:
-                        max_end = end
-            for calendar, employee_ids in calendar_employee.items():
-                employees = self.browse(employee_ids).with_prefetch(remaining._ids)
-                resources_per_tz = employees._get_resources_per_tz(min_dt)
-                work_intervals = calendar._work_intervals_batch(
-                    min_dt, datetime.combine(max_end, time.max, UTC) + timedelta(1), resources_per_tz=resources_per_tz)
-                # intersect work intervals with periods
-                for resource_id, work_interval in work_intervals.items():
-                    employee_id = self.env['resource.resource'].browse(resource_id).employee_id.id
-                    if not employee_id or not work_interval or not (period := periods.get(self.browse(employee_id))):
-                        continue
-                    ctz = next(tz for tz, resources in resources_per_tz.items() if resource_id in resources._ids)
-                    work_interval &= [(
-                        datetime.combine(p[0], time.min, ctz),
-                        datetime.combine(p[1], time.max, ctz),
-                        p[2],
-                    ) for p in period if p[2] == calendar]
-                    if work_interval:
-                        collect_employees({employee_id: work_interval})
+            work_intervals = remaining._work_intervals(min_dt, min_dt + timedelta(days=lookahead_day + 1))
+            collect_employees({employee.id: intervals for employee, intervals in work_intervals.items()})
             remaining = self.filtered(lambda e: e.id not in result)
             if not remaining:
                 return result

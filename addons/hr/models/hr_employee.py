@@ -1320,30 +1320,23 @@ class HrEmployee(models.Model):
     def _get_employee_working_now(self):
         """Return the ids of the employees of ``self`` expected to work now.
 
-        An employee is "working now" when their current working schedule has
-        work intervals within the next hour (in the employee's timezone).
-        Intervals are computed per calendar, so only company-wide leaves are
-        considered, not the employee's own time off. Employees without
-        calendar are never returned. Despite ``@api.model``, it works on ``self``.
+        An employee is "working now" when the working schedule of their version
+        in contract has work intervals within the next hour. Only company-wide
+        leaves are considered, not the employee's own time off. Employees without
+        calendar or contract are never returned. Despite ``@api.model``, it works
+        on ``self``.
 
         :rtype: list[int]
         """
-        working_now = []
-        # We loop over all the employee tz and the resource calendar_id to detect working hours in batch.
-        for tz_info, employee_ids in self.filtered('resource_calendar_id').grouped('tz').items():
-            calendar_by_employee = employee_ids.grouped('resource_calendar_id')
-            tz = ZoneInfo(tz_info or 'UTC')
-            from_datetime = fields.Datetime.now().replace(tzinfo=UTC).astimezone(tz)
-            to_datetime = from_datetime + timedelta(hours=1)
-            for calendar_id, res_employee_ids in calendar_by_employee.items():
-                # Getting work interval of the first is working. Functions called on resource_calendar_id
-                # are waiting for singleton
-                work_interval = calendar_id._work_intervals_batch(from_datetime, to_datetime)[False]
-                # Employee that is not supposed to work have empty items.
-                if len(work_interval._items) > 0:
-                    # The employees should be working now according to their work schedule
-                    working_now += res_employee_ids.ids
-        return working_now
+        from_datetime = fields.Datetime.now().replace(tzinfo=UTC)
+        to_datetime = from_datetime + timedelta(hours=1)
+        work_intervals = self.filtered('resource_calendar_id')._work_intervals(
+            from_datetime, to_datetime,
+            # only the company-wide leaves, not the employee's own time off
+            domain=[('resource_id', '=', False), ('count_as', '=', 'absence')],
+        )
+        # The employees should be working now according to their work schedule
+        return [employee.id for employee, intervals in work_intervals.items() if intervals]
 
     @api.depends('user_id.im_status')
     def _compute_presence_state(self):
@@ -2881,98 +2874,46 @@ class HrEmployee(models.Model):
         :rtype: dict[int, list[dict]]
         """
 
-        unavailability_mapping = defaultdict(list)
         start_dt = start.astimezone(UTC)
         stop_dt = stop.astimezone(UTC)
         full_interval = Intervals([(start_dt, stop_dt, self.env['resource.calendar.attendance'])])
-        calendar_tz_periods_per_employee = self.sudo()._get_version_periods(
-            (start_dt - relativedelta(days=1)).date(),
-            (stop_dt + relativedelta(days=1)).date(),
-            ['resource_calendar_id', 'tz'],
-            check_contract=True,
-        )
-
-        work_resources_per_calendar = defaultdict(lambda: self.env['resource.resource'])
-        attendance_resources_per_calendar = defaultdict(lambda: self.env['resource.resource'])
-        leave_resources_per_calendar = defaultdict(lambda: self.env['resource.resource'])
-        for employee, calendar_periods in calendar_tz_periods_per_employee.items():
-            for period_start, period_stop, (calendar, tz) in calendar_periods:
-                if calendar._is_flexible():
-                    leave_resources_per_calendar[calendar, tz] += employee.resource_id
-                elif any(calendar.attendance_ids.mapped('duration_based')):
-                    attendance_resources_per_calendar[calendar, tz] += employee.resource_id
-                    leave_resources_per_calendar[calendar, tz] += employee.resource_id
-                else:
-                    work_resources_per_calendar[calendar, tz] += employee.resource_id
-
-        work_intervals_per_calendar = defaultdict()
-        attendance_intervals_per_calendar = defaultdict()
-        leave_intervals_per_calendar = defaultdict()
-        # Standard Calendars
-        for (calendar, tz), resources in work_resources_per_calendar.items():
-            work_intervals_per_calendar[calendar, tz] = calendar._work_intervals_batch(start_dt, stop_dt, resources_per_tz={ZoneInfo(tz): resources})
-
-        # Duration Based Calendars
-        for (calendar, tz), resources in attendance_resources_per_calendar.items():
-            attendance_intervals_per_calendar[calendar, tz] = calendar._attendance_intervals_batch(start_dt, stop_dt, resources_per_tz={ZoneInfo(tz): resources})
-            for resource_id, work_intervals in attendance_intervals_per_calendar[calendar, tz].items():
-                extended_intervals = Intervals([])
-                for att_start, att_end, attendance in work_intervals:
-                    if not attendance.duration_based:
-                        extended_intervals |= Intervals([(att_start, att_end, attendance)])
-                        continue
-                    extended_start = datetime.combine(att_start.date(), time.min, ZoneInfo(tz))
-                    extended_end = datetime.combine(att_end.date() + timedelta(days=1), time.min, ZoneInfo(tz))
-                    extended_intervals |= Intervals([(extended_start, extended_end, attendance)])
-                attendance_intervals_per_calendar[calendar, tz][resource_id] = extended_intervals
-
-        # Flexible and Fully Flexible Calendars
-        for (calendar, tz), resources in leave_resources_per_calendar.items():
-            leave_intervals_per_calendar[calendar, tz] = calendar._leave_intervals_batch(start_dt, stop_dt, resources_per_tz={ZoneInfo(tz): resources})
-
-        for employee, calendar_periods in calendar_tz_periods_per_employee.items():
-            employee_work_intervals = []
-            for period_start, period_stop, (calendar, tz) in calendar_periods:
-                period_start_dt = datetime.combine(period_start, time.min).replace(tzinfo=ZoneInfo(tz))
-                period_stop_dt = datetime.combine(period_stop + timedelta(days=1), time.min).replace(tzinfo=ZoneInfo(tz))
-                period_interval = Intervals([(period_start_dt, period_stop_dt, calendar)])
-                current_work_intervals = Intervals([])
-                if calendar._is_flexible():
-                    current_work_intervals = period_interval - leave_intervals_per_calendar[calendar, tz][employee.resource_id.id]
-                elif any(calendar.attendance_ids.mapped('duration_based')):
-                    current_work_intervals = period_interval & attendance_intervals_per_calendar[calendar, tz][employee.resource_id.id] \
-                                          - employee._adjust_leaves(leave_intervals_per_calendar[calendar, tz][employee.resource_id.id])
-                else:
-                    current_work_intervals = period_interval & work_intervals_per_calendar[calendar, tz][employee.resource_id.id]
-                for interval_start, interval_stop, interval_calendar in current_work_intervals:
-                    employee_work_intervals += Intervals([(
-                        interval_start.astimezone(ZoneInfo(tz)).replace(tzinfo=self.env.tz),
-                        interval_stop.astimezone(ZoneInfo(tz)).replace(tzinfo=self.env.tz),
-                        interval_calendar
-                    )])
-            unavailability_mapping[employee.resource_id.id] = full_interval - employee_work_intervals
+        # a day more on each side: the intervals are moved to the user timezone below
+        dt_from, dt_to = start_dt - relativedelta(days=1), stop_dt + relativedelta(days=1)
+        resources = self.resource_id
+        windows = resources._get_period_windows(dt_from, dt_to)
+        work_intervals = resources._work_intervals_from_windows(dt_from, dt_to, windows)
+        presence_intervals = resources._attendance_intervals_from_windows(dt_from, dt_to, windows, availability=True)
+        leave_intervals = resources._leave_intervals_from_windows(dt_from, dt_to, windows)
 
         result = {}
         for employee in self:
-            if employee not in calendar_tz_periods_per_employee:
+            resource = employee.resource_id
+            if not windows.get(resource):
                 result[employee.id] = [{'start': start_dt, 'stop': stop_dt}]
                 continue
-            result[employee.id] = [{'start': interval[0].astimezone(UTC), 'stop': interval[1].astimezone(UTC)} for interval in unavailability_mapping.get(employee.resource_id.id, [])]
-
+            employee_work_intervals = []
+            for window_start, window_stop, calendar, zone in windows[resource]:
+                window = Intervals([(window_start, window_stop, calendar)])
+                if not calendar or calendar._is_flexible():
+                    current_work_intervals = window - leave_intervals[resource]
+                elif any(calendar.attendance_ids.mapped('duration_based')):
+                    # whole attendance days, minus the leaves
+                    current_work_intervals = (window & presence_intervals[resource]) \
+                        - employee._adjust_leaves(leave_intervals[resource])
+                else:
+                    current_work_intervals = window & work_intervals[resource]
+                employee_work_intervals.extend(
+                    (interval_start.astimezone(zone).replace(tzinfo=self.env.tz),
+                     interval_stop.astimezone(zone).replace(tzinfo=self.env.tz),
+                     interval_calendar)
+                    for interval_start, interval_stop, interval_calendar in current_work_intervals
+                )
+            unavailable_intervals = full_interval - Intervals(employee_work_intervals)
+            result[employee.id] = [
+                {'start': interval[0].astimezone(UTC), 'stop': interval[1].astimezone(UTC)}
+                for interval in unavailable_intervals
+            ]
         return result
-
-    def _get_calendar_tz_periods(self, start, stop, check_contract=True):
-        """
-        :param date start: the start of the period
-        :param date stop: the stop of the period
-        :param boolean check_contract: true means that we restrict valid versions only to contract periods
-        """
-        version_periods = self.sudo()._get_version_periods(start, stop, check_contract=check_contract)
-        return {
-            emp: (start, stop, version.resource_calendar_id, version.tz)
-            for emp, (start, stop, version) in version_periods
-        }
-
 
     @api.model
     def _get_all_versions_with_contract_overlap_with_period(self, date_from, date_to):
@@ -3083,7 +3024,6 @@ class HrEmployee(models.Model):
         """
         self.ensure_one()
         valid_versions = self.sudo()._get_versions_with_contract_overlap_with_period(date_from.date(), date_to.date())
-        employee_tz = ZoneInfo(self.tz) if self.tz else None
         if not valid_versions:
             calendar = self.resource_calendar_id
             resources_per_tz = self._get_resources_per_tz(date_from)
@@ -3094,6 +3034,9 @@ class HrEmployee(models.Model):
                 compute_leaves=True,
                 domain=[('company_id', 'in', [False, self.company_id.id]), ('count_as', '=', 'absence')])[self.resource_id.id]
             return calendar_intervals
+        # The first version in contract applies from the contract start, even when it is dated later:
+        # the resource-side _work_intervals follow the version dates, so they cannot be used here.
+        employee_tz = ZoneInfo(self.tz) if self.tz else None
         duration_data = Intervals()
         version_prev = datetime.combine(valid_versions[0].date_start, time.min, employee_tz)
         for version in valid_versions:
@@ -3461,39 +3404,3 @@ class HrEmployee(models.Model):
             display_field_name = '(' + tracking_values['field_label'] + ')'
             version_changes_to_display[display_field_name] = (tracking_values['old_value'], tracking_values['new_value'])
         return version_changes_to_display
-
-    # --------------------------------------------------
-    # New API
-    # --------------------------------------------------
-
-    def _attendance_intervals(self, dt_from, dt_to, domain=None, availability=False):
-        """
-        Get the attendances between dt_from and dt_to, as intervals linked to records of resource.calendar.attendance.
-            - For variable schedule, only attendances with a date are considered. If an attendance has a recurrency rule, it will be repeated on the corresponding days.
-            - For fixed schedule, only attendances without a date are considered. They will be grouped by their dayofweek and returned on the corresponding days.
-        The method uses the calendar method of the same name and shifts the intervals to be fitting the resource's timezone.
-
-        :param dt_from: start date of the period (included).
-        :param dt_to: end date of the period (included)
-        :param domain: optional domain to filter attendances
-        """
-        intervals_per_resource = defaultdict(lambda: Intervals([], keep_distinct=True))
-        calendar_periods = self._get_calendar_periods(dt_from.date(), dt_to.date())
-        shift_calendar_intervals = defaultdict(dict)
-        all_calendars = self.env['resource.calendar']
-        for _, _, cal in functools.reduce(operator.iadd, calendar_periods.values(), []):
-            all_calendars |= cal
-        cal_att_intervals = all_calendars._attendance_intervals(dt_from, dt_to, domain, availability)
-        for resource in self:
-            tz = resource.tz
-            for start, stop, calendar in calendar_periods.get(resource, []):
-                if not shift_calendar_intervals[calendar].get(tz):
-                    shift_calendar_intervals[calendar][tz] = localize_intervals(cal_att_intervals[calendar], tz)
-                shifted_perdiod_interval = Intervals([(
-                    datetime.combine(start, time.min, tzinfo=ZoneInfo(tz)),
-                    datetime.combine(stop, time.max, tzinfo=ZoneInfo(tz)),
-                    self.env['resource.calendar.attendance'],
-                )])
-                intervals_per_resource[resource] |= (shift_calendar_intervals[calendar][tz] & shifted_perdiod_interval)
-        return intervals_per_resource
->>>>>>> ce047dd02031 (wip)
