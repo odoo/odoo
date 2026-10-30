@@ -215,6 +215,51 @@ class SaleOrder(models.Model):
             result["coupon"] = coupon
         return result
 
+    def _get_promotion_tracking_info(self, reward):
+        """Describe the products advertised by a claimable reward, not the whole cart."""
+        self.ensure_one()
+        reward.ensure_one()
+        if not self.website_id.google_analytics_key or reward.program_id.program_type in (
+            "gift_card", "ewallet"
+        ):
+            return {}
+
+        product_items = {}
+        if reward.reward_type == "product":
+            for product in reward.reward_product_ids.with_context(display_default_code=False):
+                product_items[str(product.id)] = {
+                    "item_id": str(product.default_code or product.product_tmpl_id.id),
+                    "item_name": product.display_name,
+                    "quantity": reward.reward_product_qty,
+                }
+            items = list(product_items.values())
+        elif reward.reward_type == "discount":
+            lines = self._get_order_tracking_lines()
+            if reward.discount_applicability == "specific":
+                lines &= self._get_specific_discountable_lines(reward)
+            elif reward.discount_applicability == "cheapest":
+                lines &= self._cheapest_line(reward) or self.env["sale.order.line"]
+            items = [{
+                **self._get_order_line_tracking_data(line),
+                "quantity": (
+                    1 if reward.discount_applicability == "cheapest" else line.product_uom_qty
+                ),
+            } for line in lines]
+        else:
+            return {}
+
+        if not items:
+            return {}
+        return {
+            "promotion_id": str(reward.program_id.id),
+            "promotion_name": reward.program_id.with_context(lang=False).name,
+            "creative_name": reward.description,
+            "creative_slot": "cart_rewards",
+            "currency": self.currency_id.name,
+            "items": items,
+            "product_items": product_items,
+        }
+
     def _get_applied_coupon_codes(self):
         """Return applied coupon/promotion codes as a comma-separated string for GA4 tracking.
 

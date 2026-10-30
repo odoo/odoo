@@ -51,8 +51,10 @@
                                 </div>
 
                                 <t t-foreach="rewards" t-as="reward">
+                                    <t t-set="promotion_tracking_info" t-value="website_sale_order._get_promotion_tracking_info(reward)"/>
                                     <form t-att-action="'/shop/claimreward%s' % (redirect and '?r=' + redirect or '')"
-                                        method="post" name="claim_reward">
+                                        method="post" name="claim_reward"
+                                        t-att-data-promotion-tracking-info="json.dumps(promotion_tracking_info) if promotion_tracking_info else None">
                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                         <input type="hidden" name="reward_id" t-att-value="reward.id"/>
                                         <input type="hidden" name="code" t-att-value="coupon.code"/>
