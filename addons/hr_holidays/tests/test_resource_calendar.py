@@ -3,6 +3,7 @@
 from datetime import date
 
 from odoo import Command
+from odoo.exceptions import ValidationError
 from odoo.tests.common import tagged
 
 from odoo.addons.hr_holidays.tests.common import TestHolidayContract
@@ -122,3 +123,65 @@ class TestResourceCalendar(TestHolidayContract):
         })
 
         self.assertEqual(leave.number_of_days, 5)
+
+        # Monday (pm start) -> Wednesday (am end): Monday and Wednesday are half days,
+        # Tuesday in between is a full day.
+        leave_partial = self.env['hr.leave'].create({
+            'name': 'Half day Monday to half day Wednesday',
+            'employee_id': self.jules_emp.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': date(2026, 4, 27),
+            'request_date_to': date(2026, 4, 29),
+            'request_date_from_period': 'pm',
+            'request_date_to_period': 'am',
+        })
+        self.assertEqual(leave_partial.number_of_days, 2)
+        self.assertEqual(leave_partial.number_of_hours, 13.44)
+
+        # Sunday -> Monday: Sunday is not worked, only Monday should be counted.
+        leave_non_working_start = self.env['hr.leave'].create({
+            'name': 'Sunday to Monday',
+            'employee_id': self.jules_emp.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': date(2026, 10, 11),
+            'request_date_to': date(2026, 10, 12),
+            'request_date_from_period': 'am',
+            'request_date_to_period': 'pm',
+        })
+        self.assertEqual(leave_non_working_start.number_of_days, 1)
+        self.assertEqual(leave_non_working_start.number_of_hours, 6.72)
+
+    def test_time_off_duration_based_calendar_day_hours(self):
+        """ The time off taken on a day can't exceed the hours of the day with time off in hours """
+        # 4 hours in the morning and 3 hours in the afternoon
+        self.calendar_35h.duration_based = True
+        leave_type_hour = self.env['hr.leave.type'].create({
+            'name': 'Test hour type',
+            'requires_allocation': False,
+            'request_unit': 'hour',
+        })
+        monday_vals = {
+            'employee_id': self.jules_emp.id,
+            'holiday_status_id': leave_type_hour.id,
+            'request_date_from': date(2026, 4, 20),
+            'request_date_to': date(2026, 4, 20),
+        }
+
+        # 4 + 3 hours fit in the 7 hours of the day, not 1 more
+        morning_leave, _afternoon_leave = self.env['hr.leave'].create([
+            {**monday_vals, 'request_hour_from': 8, 'request_hour_to': 12},
+            {**monday_vals, 'request_hour_from': 13, 'request_hour_to': 16},
+        ])
+        with self.assertRaises(ValidationError):
+            self.env['hr.leave'].create({**monday_vals, 'request_hour_from': 18, 'request_hour_to': 19})
+
+        # Once a time off is refused, its hours can be taken again
+        morning_leave.action_refuse()
+        leave = self.env['hr.leave'].create({**monday_vals, 'request_hour_from': 18, 'request_hour_to': 22})
+        self.assertEqual(leave.number_of_hours, 4)
+
+        # A full day leaves no hour for time off in hours outside of its hours
+        tuesday_vals = {**monday_vals, 'request_date_from': date(2026, 4, 21), 'request_date_to': date(2026, 4, 21)}
+        self.env['hr.leave'].create({**tuesday_vals, 'holiday_status_id': self.leave_type.id})
+        with self.assertRaises(ValidationError):
+            self.env['hr.leave'].create({**tuesday_vals, 'request_hour_from': 18, 'request_hour_to': 20})
