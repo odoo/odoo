@@ -1,6 +1,7 @@
 import { registry } from "@web/core/registry";
 import { Base } from "@point_of_sale/app/models/related_models";
-import { _t } from "@web/core/l10n/translation";
+
+const { DateTime, Interval } = luxon;
 
 export class RestaurantTable extends Base {
     static pythonModel = "restaurant.table";
@@ -51,7 +52,10 @@ export class RestaurantTable extends Base {
     }
     startDateForDuration() {
         const order = this.getOrder();
-        return order ? order.create_date : null;
+        if (order?.getFiredCourses.length) {
+            return order.getFiredCourses[0][1];
+        }
+        return order?.create_date;
     }
     orderDuration() {
         const startTime = this.startDateForDuration();
@@ -60,26 +64,20 @@ export class RestaurantTable extends Base {
         }
 
         const order = this.getOrder();
-        const endTime = order && order.state !== "draft" ? order.date_order : luxon.DateTime.now();
+        const endTime = order && order.state !== "draft" ? order.date_order : DateTime.now();
         if (!startTime || !endTime) {
             return false;
         }
 
-        const diff = endTime.diff(startTime, ["hours", "minutes"]).toObject();
-        const hours = Math.floor(diff.hours || 0);
-        const minutes = Math.floor(diff.minutes || 0);
-
-        if ((!hours && !minutes) || hours < 0 || minutes < 0) {
+        const duration = Interval.fromDateTimes(startTime, endTime).toDuration([
+            "hours",
+            "minutes",
+        ]);
+        if (!duration.isValid || (!duration.hours && !duration.minutes) || duration.minutes < 1) {
             return false;
         }
 
-        if (hours && minutes) {
-            return _t("%sh%s'", hours, minutes);
-        } else if (hours) {
-            return _t("%sh", hours);
-        }
-
-        return _t("%s'", minutes);
+        return duration.hours ? duration.toFormat("h'h'm''") : duration.toFormat("m''");
     }
     setParent(parent) {
         if (parent && (parent.id === this.id || parent.isParent(this))) {

@@ -158,6 +158,16 @@ patch(PosOrder.prototype, {
             return a.index - b.index;
         });
     },
+    get getFiredCourses() {
+        return this.course_ids
+            .reduce((courses, { id, fired_date }) => {
+                if (fired_date) {
+                    courses.push([id, fired_date]);
+                }
+                return courses;
+            }, [])
+            .sort((a, b) => a[1].ts - b[1].ts);
+    },
     get isTippedAfterPayment() {
         if (
             this.state === "paid" &&

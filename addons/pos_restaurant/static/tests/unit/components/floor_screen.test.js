@@ -7,6 +7,7 @@ import { setupPosEnv } from "@point_of_sale/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import { FloorScreen } from "@pos_restaurant/app/screens/floor_screen/floor_screen";
 import { FloorPlan } from "@pos_restaurant/app/screens/floor_screen/floor_plan/floor_plan";
+import { fireCourse } from "@pos_restaurant/../tests/unit/data/pos_course.data";
 
 const { DateTime } = luxon;
 
@@ -22,6 +23,23 @@ test("timer badge shows duration on floor screen table", async () => {
     expect(
         queryOne(`.o_fp_table[data-table_id="${table.id}"] .table-timer-badge`).textContent.trim()
     ).toBe("15'");
+});
+
+test("timer badge starts from the first fired course of the table order", async () => {
+    const store = await setupPosEnv();
+    const table = store.models["restaurant.table"].get(4);
+    const order = store.addNewOrder({ table_id: table });
+    // The order was created a long time ago, but the first course was fired recently.
+    order.create_date = DateTime.now().minus({ hours: 5 });
+
+    const course = store.addCourse();
+    fireCourse(course, { minutesAgo: 7 });
+
+    await mountWithCleanup(FloorScreen);
+    await waitFor(`.o_fp_table[data-table_id="${table.id}"] .table-timer-badge`);
+    expect(
+        queryOne(`.o_fp_table[data-table_id="${table.id}"] .table-timer-badge`).textContent.trim()
+    ).toBe("7'");
 });
 
 test("floor plan unmounted before the background image is loaded", async () => {

@@ -4,6 +4,7 @@ import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_mode
 import { serverState, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { SplitBillScreen } from "@pos_restaurant/app/screens/split_bill_screen/split_bill_screen";
 import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_summary/order_summary";
+import { fireCourse } from "@pos_restaurant/../tests/unit/data/pos_course.data";
 
 definePosModels();
 
@@ -366,5 +367,25 @@ describe("pos.order restaurant patches", () => {
         // The course is reindexed, but its name is left untouched
         expect(course2.index).toBe(1);
         expect(course2.name).toBe("Course 2");
+    });
+
+    test("getFiredCourses: returns fired courses sorted by firing date", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        const course1 = store.addCourse();
+        const course2 = store.addCourse();
+        const course3 = store.addCourse();
+
+        expect(order.getFiredCourses).toEqual([]);
+
+        fireCourse(course1, { minutesAgo: 40 });
+        fireCourse(course2, { minutesAgo: 20 });
+        fireCourse(course3, { minutesAgo: 30 });
+
+        expect(order.getFiredCourses).toEqual([
+            [course1.id, course1.fired_date],
+            [course3.id, course3.fired_date],
+            [course2.id, course2.fired_date],
+        ]);
     });
 });

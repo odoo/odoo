@@ -1,6 +1,7 @@
 import { test, expect } from "@odoo/hoot";
 import { setupPosEnv, getFilledOrder } from "@point_of_sale/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
+import { fireCourse } from "@pos_restaurant/../tests/unit/data/pos_course.data";
 
 definePosModels();
 
@@ -42,4 +43,37 @@ test("isSynced", async () => {
     store.addNewOrder();
     const course = store.addCourse();
     expect(course.isSynced).toBe(false);
+});
+
+test("isLive: is true only for the last fired course", async () => {
+    const store = await setupPosEnv();
+    store.addNewOrder();
+
+    const course1 = store.addCourse();
+    const course2 = store.addCourse();
+    const course3 = store.addCourse();
+    fireCourse(course1, { minutesAgo: 30 });
+    fireCourse(course2, { minutesAgo: 10 });
+    fireCourse(course3, { minutesAgo: 20 });
+
+    expect(course1.isLive).toBe(false);
+    expect(course2.isLive).toBe(true);
+    expect(course3.isLive).toBe(false);
+});
+
+test("getDuration: calculates and formats duration for fired courses", async () => {
+    const store = await setupPosEnv();
+    store.addNewOrder();
+
+    const course1 = store.addCourse();
+    const course2 = store.addCourse();
+    const course3 = store.addCourse();
+    expect(course1.getDuration()).toBe(false);
+
+    fireCourse(course1, { minutesAgo: 90 });
+    fireCourse(course2, { minutesAgo: 15 });
+
+    expect(course1.getDuration()).toBe("1h15'");
+    expect(course2.getDuration()).toBe("15'");
+    expect(course3.getDuration()).toBe(false);
 });
