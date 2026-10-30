@@ -71,11 +71,9 @@ class AccountMoveLine(models.Model):
         Override allocation for privileged lines.
 
         The mixin already computes l10n_ph_special_discount_amount on the
-        correct base for the privilege type ("special" uses the VAT-inclusive
-        gross total, SC/PWD the VAT-exclusive gross subtotal), so we simply
-        allocate that amount to the privilege's account. super() handles the
-        non-privileged lines; privileged lines are then re-routed to the
-        privilege account, since the base computation would allocate their
+        VAT-exclusive gross subtotal, so we simply allocate that amount to
+        the privilege's account. super() handles the non-privileged lines;
+        privileged lines are then re-routed to the privilege account, since the base computation would allocate their
         discount on the move's default discount allocation account (or drop
         it altogether when the company has none).
         """

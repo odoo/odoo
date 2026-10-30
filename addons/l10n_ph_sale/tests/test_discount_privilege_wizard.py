@@ -187,9 +187,9 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
             "l10n_ph_original_discount": 0.0,
         }])
 
-    def test_special_privilege_reports_on_gross_total(self):
+    def test_special_privilege_reports_on_gross_subtotal(self):
         """Without a fiscal position the line keeps its taxes and a 'special'
-        privilege reports its discount on the gross VAT-included total —
+        privilege reports its discount on the gross VAT-excluded subtotal —
         even at 100%, where price_subtotal alone would be zero."""
         sale_order = self._single_line_order()
         self._apply_privilege(
@@ -203,7 +203,7 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
             "tax_ids": self.base_tax.ids,
             "price_subtotal": 80.0,
             "price_total": 89.6,
-            "l10n_ph_special_discount_amount": 22.4,
+            "l10n_ph_special_discount_amount": 20.0,
             "l10n_ph_regular_discount_amount": 0.0,
         }])
 
@@ -215,7 +215,7 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
         self.assertRecordValues(line, [{
             "discount": 100.0,
             "price_subtotal": 0.0,
-            "l10n_ph_special_discount_amount": 112.0,
+            "l10n_ph_special_discount_amount": 100.0,
         }])
 
     # ============================================================
