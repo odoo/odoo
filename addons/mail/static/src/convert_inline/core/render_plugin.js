@@ -57,26 +57,26 @@ export class RenderPlugin extends Plugin {
         if (!this.isAllowedReferenceNode(reference) || this.isDiscarded(reference)) {
             return;
         }
-        this.renderTree = this.buildEmailTree();
+        this.renderTree = this.buildSubtree();
+        this.addBottomUpConstraints(this.renderTree);
+        this.addTopDownConstraints(this.renderTree);
+        this.enforceConstraints(this.renderTree);
     }
 
-    buildEmailTree(rootReferenceNode = this.config.reference, config = {}) {
+    buildSubtree(rootReferenceNode = this.config.reference, config = {}) {
         const context = {
             syntheticEmailNodeContainers: new Set(),
             syntheticEmailNodeContainersPile: [],
         };
         this.treeContexts.push(context);
-        let emailTree;
+        let subtree;
         try {
-            emailTree = this.createEmailNodes(rootReferenceNode, config);
+            subtree = this.createEmailNodes(rootReferenceNode, config);
             this.addSyntheticEmailNodes();
-            this.addBottomUpConstraints(emailTree);
-            this.addTopDownConstraints(emailTree);
-            this.enforceConstraints(emailTree);
         } finally {
             this.treeContexts.pop();
         }
-        return emailTree;
+        return subtree;
     }
 
     buildDesktopOnlyNode() {
@@ -215,6 +215,11 @@ export class RenderPlugin extends Plugin {
                     emailNode.analysis.parsingFacts.skippingContainerDescendantProviders;
                 contexts.push(createContext(node, providers));
             }
+            // How subtrees should work:
+            // they have a custom context map (subtreeTypes)
+            // eg responsive -> mobile/desktop
+            // if no subtree type => can create one, but if the context already
+            // has that type
             if (
                 emailNode.analysis.parsingFacts.needMobileSubtree &&
                 !emailNode.analysis.parsingFacts.isMobileSubtree
@@ -223,7 +228,19 @@ export class RenderPlugin extends Plugin {
                 // mobile subtree from spawning
                 // IMPORTANT: a layout strategy which "needMobileSubtree" should
                 // not be spawned in a mobile subtree ("isMobileSubtree")
-                emailNode.analysis.parsingFacts.mobileSubtree = this.buildEmailTree(node, {
+                // => mobilesubtree should be renamed in context with the
+                // mosaic strategy plugin
+                // => mosaicSubtree; mobile|desktop
+                // ideally subtrees should be independent from each other
+                // will cause an issue with MSO
+                // what if multiple subtrees have to start from the
+                // same node? unsupported
+                // issue if MSO background is created above 2 subtrees
+                // not really an issue if we build the tree from the DOM node;
+
+                // -> common stack of subtrees on every node (false is empty)
+                // -> creating a subtree branch pops one subtree reference
+                emailNode.analysis.parsingFacts.mobileSubtree = this.buildSubtree(node, {
                     parsingFacts: { isMobileSubtree: true },
                 });
                 console.log(emailNode.analysis.parsingFacts.mobileSubtree);
