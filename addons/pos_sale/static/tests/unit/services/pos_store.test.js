@@ -339,17 +339,21 @@ describe("onClickSaleOrder", () => {
 });
 
 describe("getConvertedQuantityFromSaleOrderline", () => {
-    test("service product, state != sent/draft → qty_to_invoice", async () => {
+    test("service product with nothing delivered → whole qty left to pay", async () => {
         const store = await setupPosEnv();
         const product = store.models["product.product"].getFirst();
         product.type = "service";
 
-        const saleOrderLine = {
-            qty_to_invoice: 2,
-            product_id: product,
-            order_id: { state: "sale" },
+        const convertedLine = {
+            product_uom_qty: 2,
+            qty_delivered: 0,
+            qty_invoiced: 0,
+            qty_to_invoice: 0,
+            product_id: product.id,
         };
-        const qty = await store.getConvertedQuantityFromSaleOrderline(saleOrderLine, saleOrderLine);
+        const soLine = { product_id: product, order_id: { state: "sale" } };
+
+        const qty = await store.getConvertedQuantityFromSaleOrderline(convertedLine, soLine);
         expect(qty).toBe(2);
     });
 
@@ -369,5 +373,23 @@ describe("getConvertedQuantityFromSaleOrderline", () => {
 
         const qty = await store.getConvertedQuantityFromSaleOrderline(saleOrderLine, saleOrderLine);
         expect(qty).toBe(6);
+    });
+
+    test("delivered but not invoiced product → whole qty left to pay", async () => {
+        const store = await setupPosEnv();
+        const product = store.models["product.product"].getFirst();
+        product.type = "consu";
+
+        const convertedLine = {
+            product_uom_qty: 1,
+            qty_delivered: 1,
+            qty_invoiced: 0,
+            qty_to_invoice: 1,
+            product_id: product.id,
+        };
+        const soLine = { product_id: product, order_id: { state: "sale" } };
+
+        const qty = await store.getConvertedQuantityFromSaleOrderline(convertedLine, soLine);
+        expect(qty).toBe(1);
     });
 });
