@@ -257,19 +257,20 @@ class MailMail(models.Model):
         """
         notif_mails_ids = [mail.id for mail in self if mail.is_notification]
         if notif_mails_ids:
-            notifications = self.env['mail.notification'].search([
+            notifications = self.env['mail.notification'].search_fetch([
                 ('notification_type', '=', 'email'),
                 ('mail_mail_id', 'in', notif_mails_ids),
-                ('notification_status', 'not in', ('sent', 'canceled'))
-            ])
+                ('notification_status', 'not in', ('sent', 'canceled')),
+            ], ['res_partner_id', 'mail_email_address'])
             if notifications:
                 # find all notification linked to a failure
-                failed = self.env['mail.notification']
-                if failure_type:
-                    failed = notifications.filtered(lambda notif:
-                        notif.res_partner_id not in success_pids
-                        and notif.mail_email_address not in success_emails
+                failed = notifications.filtered(
+                    lambda notif: (not notif.res_partner_id and not notif.mail_email_address
+                        or (failure_type and notif.res_partner_id not in success_pids
+                            and notif.mail_email_address not in success_emails
+                        )
                     )
+                )
                 (notifications - failed).sudo().write({
                     'notification_status': 'sent',
                     'failure_type': '',
@@ -278,7 +279,7 @@ class MailMail(models.Model):
                 if failed:
                     failed.sudo().write({
                         'notification_status': 'exception',
-                        'failure_type': failure_type,
+                        'failure_type': failure_type or 'mail_email_missing',
                         'failure_reason': failure_reason,
                     })
                     messages = notifications.mapped('mail_message_id').filtered(lambda m: m._is_thread_message())
