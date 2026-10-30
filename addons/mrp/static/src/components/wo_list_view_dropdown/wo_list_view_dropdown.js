@@ -1,6 +1,7 @@
 import { useProps, t } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { useService } from "@web/core/utils/hooks";
@@ -19,6 +20,7 @@ export class MOListViewDropdown extends BadgeField {
         display: t.string(),
         viewType: t.string().optional(),
     });
+    dropdownState = useDropdownState();
 
     setup() {
         this.orm = useService("orm");
