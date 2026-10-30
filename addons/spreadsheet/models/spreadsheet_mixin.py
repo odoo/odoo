@@ -13,6 +13,9 @@ from odoo.exceptions import ValidationError, MissingError
 
 from odoo.addons.spreadsheet.utils.validate_data import fields_in_spreadsheet, menus_xml_ids_in_spreadsheet
 
+B64_IMAGE_RE = re.compile(r"data:(image/[A-Za-z]+);base64,(.*)")
+
+
 class SpreadsheetMixin(models.AbstractModel):
     _name = "spreadsheet.mixin"
     _description = "Spreadsheet mixin"
@@ -117,6 +120,51 @@ class SpreadsheetMixin(models.AbstractModel):
             display_names[arg["model"]].get(arg["id"])
             for arg in args
         ]
+
+    def _extract_b64_images(self, spreadsheet_binary_data):
+        has_changed = False
+        data_json = json.loads(base64.b64decode(spreadsheet_binary_data).decode())
+        for sheet_json in data_json.get('sheets', []):
+            figures = sheet_json.get('figures', [])
+            for figure in figures:
+                figure_tag = figure.get('tag', None)
+                if figure_tag != 'image':
+                    continue
+                figure_data_base64 = figure.get('data', {}).get('path', None)
+                match = B64_IMAGE_RE.match(figure_data_base64)
+                if not match:
+                    continue
+                has_changed = True
+                mimetype = match.group(1)
+                base64_content = match.group(2)
+                record = self.env["ir.attachment"].create({
+                    "res_model": self._name,
+                    "res_id": self.id,
+                    "datas": base64_content,
+                    "mimetype": mimetype,
+                    "name": f"{self._name},{self.id}"
+                })
+                figure['data']['path'] = "/web/image/" + str(record.id)
+        new_data_b64 = base64.b64encode(json.dumps(data_json).encode())
+        return [new_data_b64, has_changed]
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        spreadsheets = super().create(vals_list)
+        for spreadsheet in spreadsheets:
+            if spreadsheet.spreadsheet_binary_data:
+                new_data_b64, has_changed = spreadsheet._extract_b64_images(spreadsheet.with_context(bin_size=False).spreadsheet_binary_data)
+                if has_changed:
+                    spreadsheet.spreadsheet_binary_data = new_data_b64
+        return spreadsheets
+
+    def write(self, vals):
+        if vals.get("spreadsheet_binary_data", False):
+            new_data_b64, has_changed = self._extract_b64_images(vals["spreadsheet_binary_data"])
+            if has_changed:
+                vals['spreadsheet_binary_data'] = new_data_b64
+                self.invalidate_recordset(["spreadsheet_data"])
+        return super().write(vals)
 
     def _empty_spreadsheet_data_base64(self):
         """Create an empty spreadsheet workbook.
