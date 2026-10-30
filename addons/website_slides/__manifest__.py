@@ -128,7 +128,7 @@ Featuring
             'web/static/lib/owl/odoo_module.js',
 
             'web/static/src/core/**/*',
-            ('remove', 'web/static/src/core/**/*.dark.scss'),
+            ('remove', 'web/static/src/core/**/*.dark.css'),
             'web/static/src/css/**/*',
             'web/static/src/env.js',
             ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),

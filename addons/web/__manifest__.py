@@ -222,7 +222,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/core/**/*',  # Note that 'web/static/src/core/utils/ui.js' is included in assets_frontend_minimal already
             ('remove', 'web/static/src/core/commands/**/*'),
             ('remove', 'web/static/src/core/debug/debug_menu.js'),
-            ('remove', 'web/static/src/core/**/*.dark.scss'),
+            ('remove', 'web/static/src/core/**/*.dark.css'),
             ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
             'web/static/src/css/**/*',
             'web/static/src/core/commands/default_providers.js',
@@ -338,7 +338,6 @@ This module provides the core of the Odoo Web Client.
         # ---------------------------------------------------------------------
         "web.assets_web_dark": [
             ('include', 'web.assets_web'),
-            'web/static/src/**/*.dark.scss',
             'web/static/src/**/*.dark.css',
         ],
 
@@ -367,7 +366,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/env.js',
             'web/static/src/session.js',
             'web/static/src/core/**/*',
-            ('remove', 'web/static/src/core/**/*.dark.scss'),
+            ('remove', 'web/static/src/core/**/*.dark.css'),
             ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'), # always lazy-loaded
             'web/static/src/css/**/*',
         ],

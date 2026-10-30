@@ -168,7 +168,7 @@
             'base/static/src/css/modules.css',
 
             'web/static/src/core/**/*',
-            ('remove', 'web/static/src/core/**/*.dark.scss'),
+            ('remove', 'web/static/src/core/**/*.dark.css'),
             'web/static/src/css/**/*',
             'web/static/src/model/**/*',
             'web/static/src/search/**/*',
