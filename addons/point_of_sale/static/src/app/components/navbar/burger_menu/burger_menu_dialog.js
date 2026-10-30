@@ -1,6 +1,7 @@
-import { Component, t, useProps } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { useGridOrphan } from "@point_of_sale/app/hooks/grid_orphan_hook";
 import { useService } from "@web/core/utils/hooks";
 import { isDisplayStandalone } from "@web/core/browser/feature_detection";
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
@@ -13,6 +14,7 @@ export class BurgerMenuDialog extends Component {
         openLnaPopup: t.function(),
         close: t.function(),
     });
+    gridRef = signal.ref();
 
     setup() {
         this.pos = usePos();
@@ -20,6 +22,7 @@ export class BurgerMenuDialog extends Component {
         this.dialog = useService("dialog");
         this.isDisplayStandalone = isDisplayStandalone();
         this.isBarcodeScannerSupported = isBarcodeScannerSupported;
+        useGridOrphan(this.gridRef);
     }
 
     get appUrl() {

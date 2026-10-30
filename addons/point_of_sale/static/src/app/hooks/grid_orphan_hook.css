@@ -1,0 +1,11 @@
+/* Last child alone on the last row of its grid (see useGridOrphan): it spans
+   the row as a wide button. */
+.o_pos_grid_orphan {
+    --oi-font-size: 1.5rem;
+
+    grid-column: 1 / -1;
+    flex-direction: row !important;
+    align-items: center !important;
+    aspect-ratio: auto !important;
+    height: 5rem;
+}

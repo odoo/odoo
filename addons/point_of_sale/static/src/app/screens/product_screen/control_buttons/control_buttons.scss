@@ -2,21 +2,6 @@
 screen size, modules installed and if product is selected – whilst keeping the
 buttons squarish */
 
-/* Prevents orphan buttons on last row using CSS grid spanning */
-/* Occurs when Cancel button falls at positions 4th, 7th, 10th, 13th, 16th (portrait) */
-/* and 3rd, 5th, 9th, 13th, or 17th (landscape). */
-@mixin orphan-last-child {
-    .control-button:last-child {
-        --controlButton-aspectRatio: auto;
-        --oi-font-size: 1.5rem;
-
-        grid-column: 1 / -1;
-        flex-direction: row !important;
-        align-items: center !important;
-        height: 5rem;
-    }
-}
-
 .modal-dialog:has(.control-button:nth-child(10)) {
     --modal-width: 80vw;
 }
@@ -38,11 +23,6 @@ buttons squarish */
         }
 
         @media (orientation: portrait) {
-            /* 4th, 7th, 10th, 13th or 16th button alone in the last row */
-            &:has(.control-button:last-child:nth-child(3n + 4)) {
-                @include orphan-last-child;
-            }
-
             /* 5:8 (very narrow and tall screens) to 17:20 (portrait tablet) aspect ratios */
             @media (min-aspect-ratio: 0.63) {
                 &:has(.control-button:nth-child(16)) {
@@ -71,16 +51,6 @@ buttons squarish */
                 --grid-columns: 4;
             }
 
-            /* 2-col context: last button at odd position (3, 5) */
-            &:has(.control-button:last-child:nth-child(3)),
-            &:has(.control-button:last-child:nth-child(5)),
-
-            /* 4-col context: last button at 4n+1 position (9, 13) */
-            &:has(.control-button:last-child:nth-child(9)),
-            &:has(.control-button:last-child:nth-child(13)) {
-                @include orphan-last-child;
-            }
-
             /* square to 7:5 (A4) aspect ratios (includes iPad's 13" aspect ratio) */
             @media (min-aspect-ratio: 1) {
                 &:has(.control-button:nth-child(4)):not(:has(.control-button:nth-child(6))) {
@@ -89,8 +59,6 @@ buttons squarish */
 
                 &:has(.control-button:nth-child(17)):not(:has(.control-button:nth-child(18))) {
                     --controlButton-aspectRatio: 1.5;
-
-                    @include orphan-last-child;
                 }
             }
 
@@ -98,10 +66,6 @@ buttons squarish */
             @media (min-aspect-ratio: 1.4) {
                 &:has(.control-button:nth-child(14)) {
                     --controlButton-aspectRatio: 1.5;
-                }
-
-                &:has(.control-button:nth-child(17)):not(:has(.control-button:nth-child(18))) {
-                    @include orphan-last-child;
                 }
 
                 &:has(.control-button:nth-child(18)) {
@@ -117,10 +81,6 @@ buttons squarish */
 
                 &:has(.control-button:nth-child(10)) {
                     --grid-columns: 5;
-                }
-
-                &:has(.control-button:nth-child(11)):not(:has(.control-button:nth-child(12))) {
-                    @include orphan-last-child;
                 }
 
                 &:has(.control-button:nth-child(14)) {

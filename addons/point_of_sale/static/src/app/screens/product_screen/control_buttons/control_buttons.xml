@@ -35,7 +35,7 @@
         </t>
         <!-- All these buttons will only be displayed in a dialog -->
         <t t-if="this.props.showRemainingButtons">
-            <div class="control-buttons control-buttons-modal d-grid grid-auto-flow-columns gap-2">
+            <div class="control-buttons control-buttons-modal d-grid grid-auto-flow-columns gap-2" t-ref="this.gridRef">
                 <t t-if="(this.pos.isSmallProductScreen and this.props.showRemainingButtons)">
                     <InternalNoteButton label.translate="Note" class="'btn-secondary '" icon="'edit'"/>
                 </t>
