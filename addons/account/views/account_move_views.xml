@@ -1064,7 +1064,6 @@
                         <field name="tax_calculation_rounding_method" invisible="1"/> <!-- read by the tax_totals widget / account_tax.js rounding helper -->
                         <field name="tax_cash_basis_created_move_ids" invisible="1"/> <!-- drives the invisible on the Cash Basis Entries stat button -->
                         <field name="invoice_cash_rounding_id" invisible="1"/> <!-- read/updated by the tax_totals widget (tax_totals.js) -->
-                        <field name="show_update_fpos" invisible="1"/> <!-- drives the invisible on the fiscal-position update button (not show_update_fpos) -->
 
                         <div class="oe_title">
                             <span class="o_form_label">
@@ -1103,11 +1102,6 @@
                                            invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')"
                                            placeholder="Search a name or Tax ID..."
                                            readonly="state != 'draft'"/>
-                                    <button name="action_update_fpos_values" type="object"
-                                            string="Update Taxes and Accounts"
-                                            help="Recompute all taxes and accounts based on this fiscal position"
-                                            class="btn-link mb-1 px-0" icon="refresh"
-                                            invisible="not show_update_fpos or state in ['cancel', 'posted']"/>
                                 </div>
 
                                 <field name="partner_shipping_id"

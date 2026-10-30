@@ -464,16 +464,11 @@ class TestDocumentTaxModeCommon(AccountTestInvoicingCommon):
             'fiscal_position_ids': self.fpos_id,
             'original_tax_ids': self.tax_10_default,
         })
+
+        form = Form(document)
         # Changing the fiscal position by setting a customer with the equivalent fiscal position of the above tax
-        if document_type == 'invoice':
-            document.partner_id = self.fpos_partner_id
-            # Clicking on 'Update Taxes and Accounts'
-            document.action_update_fpos_values()
-        else:  # for both purchase and sale orders there is an onchange for fpos that recomputes taxes
-            form = Form(document)
-            # Changing the fiscal position by setting a customer with the equivalent fiscal position of the above tax
-            form.partner_id = self.fpos_partner_id
-            form.save()
+        form.partner_id = self.fpos_partner_id
+        form.save()
 
         # Check initial document values
         self.assertEqual(document.document_tax_mode, 'tax_excluded')
@@ -506,6 +501,31 @@ class TestDocumentTaxModeCommon(AccountTestInvoicingCommon):
         self.assertEqual(line.price_unit, 2000)
         self.assertRecordValues(document, document_expected_values)
 
+    def test_account_move_fpos_change_updates_lines_before_and_after_saving(self):
+        self.tax_20_default.update({
+            'fiscal_position_ids': self.fpos_id,
+            'original_tax_ids': self.tax_10_default,
+        })
+
+        # Unsaved invoice: add the line first, then change the fiscal position
+        form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
+        form.partner_id = self.partner_a
+        with form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.test_product_a
+        form.fiscal_position_id = self.fpos_id
+        invoice = form.save()
+
+        self.assertEqual(invoice.fiscal_position_id, self.fpos_id)
+        self.assertEqual(invoice.invoice_line_ids.tax_ids, self.tax_20_default)
+        # Journal items are rebuilt on save
+        tax_line = invoice.line_ids.filtered(lambda l: l.display_type == 'tax')
+        self.assertEqual(tax_line.tax_line_id, self.tax_20_default)
+        self.assertEqual(-tax_line.balance, invoice.amount_tax)
+
+        # Saved draft: remove the fiscal position again
+        with Form(invoice) as form:
+            form.fiscal_position_id = self.env['account.fiscal.position']
+        self.assertEqual(invoice.invoice_line_ids.tax_ids, self.tax_10_default)
 
 @tagged('post_install', '-at_install')
 class TestAccountMoveTaxMode(TestDocumentTaxModeCommon):
