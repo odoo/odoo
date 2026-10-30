@@ -109,6 +109,7 @@
                             <t t-if="din5008_document_title">
                                 <t t-out="din5008_document_title"/>
                             </t>
+                            <t t-elif="layout_document_title" t-out="layout_document_title"/>
                             <span t-elif="'name' in o" t-field="o.name"/>
                         </span>
                     </h2>

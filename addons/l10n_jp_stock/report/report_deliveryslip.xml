@@ -3,13 +3,7 @@
     <template id="report_delivery_document" inherit_id="stock.report_delivery_document" primary="True">
         <xpath expr="//t[@t-call='web.external_layout']" position="before">
             <t t-set="jp_document_date" t-value="o.date_done if o.state == 'done' else o.scheduled_date"/>
-            <t t-set="layout_document_title">
-                <span t-out="o._get_deliveryslip_report_title()"/>
-                <span t-field="o.name"/>
-            </t>
         </xpath>
-        <xpath expr="//div[hasclass('page')]/h2" position="replace"/>
-
         <!-- The recipient's name heads the address with its honorific. -->
         <xpath expr="//div[@name='div_outgoing_address']" position="before">
             <t t-call="l10n_jp.recipient_name" partner="partner and partner.commercial_partner_id"/>

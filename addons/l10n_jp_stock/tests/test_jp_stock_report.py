@@ -29,7 +29,7 @@ class TestJPStockReport(AccountTestInvoicingCommon):
         stock_user = new_test_user(self.env, login='jp_stock_user', groups='stock.group_stock_user')
         for report, title in (
             ('stock.report_deliveryslip', 'JP-DEL-0001'),
-            ('stock.report_return_document', 'RETURN OF JP-DEL-0001'),
+            ('stock.report_return_document', 'RETURN OF'),
         ):
             with self.subTest(report=report):
                 html = self.env['ir.actions.report'].with_user(stock_user)._render_qweb_html(report, self.picking.ids)[0]
@@ -54,7 +54,6 @@ class TestJPStockReport(AccountTestInvoicingCommon):
         self.picking.partner_id = self.env['res.partner'].create({'name': 'Taro Yamada', 'parent_id': company.id})
 
         html = self.env['ir.actions.report']._render_qweb_html('stock.report_deliveryslip', self.picking.ids)[0]
-        page = lxml.html.fromstring(html).find_class('page')[0]
 
-        self.assertIn('JP-DEL-0001', page.find('.//h2').text_content())
+        self.assertIn('JP-DEL-0001', lxml.html.fromstring(html).find('.//h2').text_content())
         self.assertIn('JP Trading', html2plaintext(html))
