@@ -12,6 +12,7 @@ from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers.portal import PaymentPortal
 from odoo.addons.sale.controllers.portal import CustomerPortal
 from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale.models.website import CART_SESSION_CACHE_KEY
 
 
 class Cart(PaymentPortal):
@@ -39,22 +40,20 @@ class Cart(PaymentPortal):
                 abandoned_order.access_token, access_token
             ):  # wrong token (or SO has been deleted)
                 raise NotFound
-            if abandoned_order.state not in (
-                "draft",
-                "sent",
-            ) or abandoned_order.get_portal_last_transaction().state in {
-                "pending",
-                "authorized",
-                "done",
-            }:  # abandoned cart already finished, or has an ongoing/confirmed transaction
+            if (
+                abandoned_order.state != "draft"
+                or abandoned_order.get_portal_last_transaction().state
+                in {"pending", "authorized", "done"}
+            ):  # abandoned cart already finished, or has an ongoing/confirmed transaction
                 values.update({"abandoned_proceed": True})
-            elif not request.session.get("sale_order_id"):
-                request.session["sale_order_id"] = abandoned_order.id
-                request.cart = abandoned_order
-                order_sudo = abandoned_order
-                cart_revived = True
-            elif abandoned_order.id != request.session.get("sale_order_id"):
-                abandoned_order.order_line.write({"order_id": request.session["sale_order_id"]})
+            elif not request.session.get(CART_SESSION_CACHE_KEY):
+                request.session[CART_SESSION_CACHE_KEY] = abandoned_order.id
+                abandoned_order._cleanup_cart(force_update_checks=True)
+                return request.redirect("/shop/cart")
+            elif abandoned_order.id != request.session.get(CART_SESSION_CACHE_KEY):
+                abandoned_order.order_line.write({
+                    "order_id": request.session[CART_SESSION_CACHE_KEY]
+                })
                 abandoned_order.action_cancel()
                 cart_revived = True
 
@@ -139,7 +138,8 @@ class Cart(PaymentPortal):
 
         def check_selected_combo_items(combo_product, linked_products):
             combo_item_products = [
-                linked_product for linked_product in linked_products or []
+                linked_product
+                for linked_product in linked_products or []
                 if (
                     linked_product.get("combo_item_id")
                     and linked_product.get("parent_product_template_id")
@@ -147,17 +147,22 @@ class Cart(PaymentPortal):
                 )
             ]
             combos_sudo = combo_product.sudo().product_tmpl_id.combo_ids
-            selected_combos_sudo = request.env['product.combo.item'].sudo().browse([
-                combo_item['combo_item_id'] for combo_item in combo_item_products
-            ]).combo_id
-            if (
-                len(combo_item_products) != len(combos_sudo)
-                or set(selected_combos_sudo.ids) != set(combos_sudo.ids)
+            selected_combos_sudo = (
+                request
+                .env["product.combo.item"]
+                .sudo()
+                .browse([combo_item["combo_item_id"] for combo_item in combo_item_products])
+                .combo_id
+            )
+            if len(combo_item_products) != len(combos_sudo) or set(selected_combos_sudo.ids) != set(
+                combos_sudo.ids
             ):
-                raise UserError(self.env._(
-                    "The number of selected combo items must match the number of available"
-                    " combo choices."
-                ))
+                raise UserError(
+                    self.env._(
+                        "The number of selected combo items must match the number of available"
+                        " combo choices."
+                    )
+                )
 
         if product.sudo().type == "combo":
             check_selected_combo_items(product, linked_products)
