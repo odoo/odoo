@@ -534,7 +534,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if "sale" in ribbon_assign_values:
             # Without the active filter, only the existence of a product on sale matters: check
             # the first page, then the rest by batches
-            if on_sale_active:
+            if not search_product._may_be_on_sale(request.pricelist.sudo()):
+                products_batches = []
+            elif on_sale_active:
                 products_batches = [search_product]
             else:
                 products_batches = itertools.chain(

@@ -437,6 +437,28 @@ class TestWebsitePriceList(WebsiteSaleCommon):
             )
             self.assertEqual(res[product_tmpl.id]["base_price"], 75)
 
+    def test_may_be_on_sale(self):
+        """Products may only be on sale with a compare to price or a rule showing its discount."""
+        self.env["res.config.settings"].sudo().create({
+            "group_product_price_comparison": True,
+        }).execute()
+        product_tmpl = self.env["product.template"].sudo().create({
+            "name": "Test Product", "list_price": 100,
+        })
+        pricelist_sudo = self._create_pricelist(item_ids=[
+            Command.create({"compute_price": "fixed", "fixed_price": 50}),
+        ]).sudo()
+        self.assertFalse(product_tmpl._may_be_on_sale(pricelist_sudo))
+
+        product_tmpl.compare_list_price = 120
+        self.assertTrue(product_tmpl._may_be_on_sale(pricelist_sudo))
+
+        product_tmpl.compare_list_price = 0
+        pricelist_sudo.item_ids = [Command.create({
+            "compute_price": "discount", "price_discount": 10,
+        })]
+        self.assertTrue(product_tmpl._may_be_on_sale(pricelist_sudo))
+
     def test_pricelist_item_validity_period(self):
         """Test that if a cart was created before a validity period,
         the correct prices will still apply.

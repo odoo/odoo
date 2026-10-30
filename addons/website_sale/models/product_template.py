@@ -773,6 +773,25 @@ class ProductTemplate(models.Model):
                     }
         return res
 
+    def _may_be_on_sale(self, pricelist_sudo):
+        """Return whether any of the products may have a base price in `_get_sales_prices`.
+
+        Cheap check to avoid pricing products that can't be on sale: a base price comes either
+        from a compare to price, or from a pricelist rule showing its discount.
+
+        :param product.pricelist pricelist_sudo: the pricelist the products are priced with
+        :rtype: bool
+        """
+        if any(rule._show_discount_on_shop() for rule in pricelist_sudo.item_ids):
+            return True
+        return self.env["res.groups"]._is_feature_enabled(
+            "website_sale.group_product_price_comparison"
+        ) and bool(
+            self.search_count(
+                Domain("id", "in", self.ids) & Domain("compare_list_price", ">", 0), limit=1
+            )
+        )
+
     def _get_sales_prices(self, pricelist_sudo, fiscal_position_sudo, website):
         if not self:
             return {}
