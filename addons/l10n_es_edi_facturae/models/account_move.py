@@ -530,7 +530,7 @@ class AccountMove(models.Model):
             'other_party_country_code': COUNTRY_CODE_MAP[partner.country_id.code],
             'other_party_phone': partner.phone.translate(PHONE_CLEAN_TABLE) if partner.phone else False,
             'other_party_name': extract_party_name(partner),
-            'other_party_administrative_centers': self._l10n_es_edi_facturae_get_administrative_centers(partner),
+            'other_party_administrative_centers': self._l10n_es_edi_facturae_get_administrative_centers(self.partner_id),
             'is_outstanding': self.move_type.startswith('out_'),
             'float_repr': float_repr,
             'file_currency': inv_curr,
