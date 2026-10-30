@@ -4094,6 +4094,12 @@ class AccountMove(models.Model):
                     raise UserError(_('The Journal Entry sequence is not conform to the current format. Only the Accountant can change it.'))
                 move.journal_id.sequence_override_regex = False
 
+            if move._is_downpayment() and vals.get('currency_id'):
+                raise UserError(_(
+                    "You cannot change the currency of a downpayment : %(move_name)s",
+                    move_name=move.display_name,
+                ))
+
         if {'sequence_prefix', 'sequence_number', 'journal_id', 'name'} & vals.keys():
             self._update_sequence_made_gap(invalidate_current=True)
 
