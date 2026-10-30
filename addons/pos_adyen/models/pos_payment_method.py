@@ -1,14 +1,16 @@
 # coding: utf-8
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 import json
 import logging
 import pprint
+import uuid
 import requests
 from urllib.parse import parse_qs
 
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError, UserError, AccessDenied
-from odoo.tools import hmac
+from odoo.tools import file_open, hmac
 
 _logger = logging.getLogger(__name__)
 
@@ -69,6 +71,7 @@ class PosPaymentMethod(models.Model):
         return {
             'terminal_request': 'https://terminal-api-%s.adyen.com/async',
             'payment_status': 'https://terminal-api-%s.adyen.com/sync',
+            'display': 'https://terminal-api-%s.adyen.com/sync',
             'adjust': 'https://pal-%s.adyen.com/pal/servlet/Payment/v52/adjustAuthorisation',
             'capture': 'https://pal-%s.adyen.com/pal/servlet/Payment/v52/capture',
         }
@@ -81,6 +84,79 @@ class PosPaymentMethod(models.Model):
         latest_response = self.sudo().adyen_latest_response
         latest_response = json.loads(latest_response) if latest_response else False
         return latest_response
+
+    def _get_client_action(self, level, message):
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': level,
+                'message': message,
+            },
+        }
+
+    def action_adyen_test_display(self):
+        """ Show the Point of Sale logo on the terminal to test the credentials """
+        self.ensure_one()
+        if not self.env.su and not self.env.user.has_group('point_of_sale.group_pos_manager'):
+            raise AccessDenied()
+        if not self.adyen_terminal_identifier or not self.adyen_api_key or not self.adyen_merchant_account:
+            raise UserError(_('Please set all of the required fields for Adyen first.'))
+
+        with file_open('point_of_sale/static/img/terminal_connected.png', 'rb') as f:
+            image = base64.b64encode(f.read()).decode()
+
+        data = {
+            'SaleToPOIRequest': {
+                'MessageHeader': {
+                    'ProtocolVersion': '3.0',
+                    'MessageClass': 'Device',
+                    'MessageCategory': 'Display',
+                    'MessageType': 'Request',
+                    'ServiceID': uuid.uuid4().hex[:10],
+                    'SaleID': f'{self.display_name} (ID: {self.id})',
+                    'POIID': self.adyen_terminal_identifier,
+                },
+                'DisplayRequest': {
+                    'DisplayOutput': [{
+                        'Device': 'CustomerDisplay',
+                        'InfoQualify': 'Display',
+                        'OutputContent': {
+                            'OutputFormat': 'MessageRef',
+                            'PredefinedContent': {'ReferenceID': 'Image'},
+                            'OutputText': [{'Text': image}],
+                        },
+                    }],
+                },
+            },
+        }
+
+        try:
+            response = self._proxy_adyen_request_direct(data, 'display')
+        except requests.exceptions.RequestException as e:
+            return self._get_client_action('danger', str(e))
+        if error := self._adyen_get_display_error(response):
+            return self._get_client_action('danger', error)
+        message = _('Successfully sent an image to the terminal %s.', self.adyen_terminal_identifier)
+        return self._get_client_action('success', message)
+
+    @api.model
+    def _adyen_get_display_error(self, response):
+        """ Decode error message from Adyen response or return False in case of success """
+        if not isinstance(response, dict):
+            return _('Unexpected response from Adyen during a display request.')
+        # Wrong API key
+        if response.get('error', {}).get('status_code') in [401, 403]:
+            return _('Failed to contact Adyen API. Please check your Adyen API key and try again.')
+        # Success
+        output_result = response.get('SaleToPOIResponse', {}).get('DisplayResponse', {}).get('OutputResult', {})
+        if output_result and isinstance(output_result, list) and len(output_result):
+            elem = output_result[0]
+            if elem and isinstance(elem, dict):
+                if elem.get('Response', {}).get('Result') == 'Success':
+                    return False
+        # Wrong terminal id / any other error
+        return _("Failed to send image to the terminal. Please check the terminal ID is correct and it's connected.")
 
     def proxy_adyen_request(self, data, operation=False):
         ''' Necessary because Adyen's endpoints don't have CORS enabled '''
@@ -280,7 +356,9 @@ class PosPaymentMethod(models.Model):
         self.ensure_one()
         TIMEOUT = 10
 
-        _logger.info('Request to Adyen by user #%d:\n%s', self.env.uid, pprint.pformat(data))
+        # Avoid logging base64 image for display requests
+        log_data = data['SaleToPOIRequest']['MessageHeader'] if operation == 'display' else data
+        _logger.info('Request to Adyen by user #%d:\n%s', self.env.uid, pprint.pformat(log_data))
 
         environment = 'test' if self.sudo().adyen_test_mode else 'live'
         endpoint = self._get_adyen_endpoints()[operation] % environment
