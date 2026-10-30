@@ -1394,6 +1394,51 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertAlmostEqual(total_ot, 2.0, places=4,
                                msg="2h excess above 8h reference baseline expected")
 
+    def test_reference_calendar_without_company_uses_employee_company_calendar(self):
+        """A reference rule without calendar nor company compares each employee with the
+        calendar of their own company, not with the one of the current company."""
+        half_time_calendar = self.env['resource.calendar'].create({
+            'name': '20h/week',
+            'attendance_ids': [
+                (0, 0, {'dayofweek': weekday, 'hour_from': 8, 'hour_to': 12})
+                for weekday in ['0', '1', '2', '3', '4']
+            ],
+        })
+        other_company = self.env['res.company'].create({
+            'name': 'Half Time Company',
+            'resource_calendar_id': half_time_calendar.id,
+        })
+        other_company_employee = self.env['hr.employee'].create({
+            'name': 'Other Company Employee',
+            'tz': 'UTC',
+            'company_id': other_company.id,
+            'resource_calendar_id': self.calendar.id,
+            'date_version': '2020-01-01',
+            'contract_date_start': '2020-01-01',
+            'wage': 3000,
+        })
+        self.time_rule.active = False
+        self.env['hr.time.rule'].create({
+            'name': 'Reference Rule without company',
+            'calendar_source': 'reference',
+            'quantity_period': 'day',
+            'work_entry_type_id': self.overtime_type.id,
+            'condition_work_entry_type_ids': [self.att_type.id],
+        })
+        # current company: 8h/day, employee's company: 4h/day -> 6h worked is 2h of overtime
+        self.assertNotEqual(self.env.company, other_company)
+        self.env['hr.attendance'].create({
+            'employee_id': other_company_employee.id,
+            'check_in': datetime(2022, 12, 12, 8),
+            'check_out': datetime(2022, 12, 12, 14),
+        })
+        overtime_attendances = self.env['hr.attendance'].search([
+            ('employee_id', '=', other_company_employee.id),
+            ('work_entry_type_id', '=', self.overtime_type.id),
+        ])
+        overtime_hours = sum((attendance.check_out - attendance.check_in).total_seconds() / 3600 for attendance in overtime_attendances)
+        self.assertAlmostEqual(overtime_hours, 2.0, places=4)
+
     def test_sequential_rules_second_rule_finds_no_excess(self):
         """Sequential pipeline: R2 with the same threshold sees 0h excess after R1 already claimed it."""
         second_ot_type = self.env['hr.work.entry.type'].create({
