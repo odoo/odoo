@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from datetime import UTC, timedelta
+from datetime import UTC, date, timedelta
 from zoneinfo import ZoneInfo
 
 from odoo import api, fields, models
@@ -155,7 +155,25 @@ class HrTimeRule(models.Model):
             return
         employees = self.env['hr.employee'].browse({e.id for e, _ in all_keys})
         types = self.env['hr.work.entry.type'].browse({t.id for _, t in all_keys})
-        alloc_cache = employees._fetch_valid_allocations(types, min(emps_by_date))
+        consumed_data, _ = employees._get_consumed_leaves(types)
+
+        # build per-(employee, type) sorted allocation list and per-allocation remaining balance
+        alloc_cache = {}
+        remaining_cache = {}
+        for employee in employees:
+            for alloc_type in types:
+                alloc_dict = consumed_data.get(employee, {}).get(alloc_type, {})
+                unit = 'days' if alloc_type.unit_of_measure == 'day' else 'hours'
+                allocations = self.env['hr.leave.allocation']
+                for alloc, data in alloc_dict.items():
+                    if not alloc:
+                        continue
+                    allocations |= alloc
+                    remaining = data.get(f'{unit}_virtual_remaining_leaves', 0.0)
+                    if alloc_type.unit_of_measure == 'hour':
+                        remaining /= (alloc._get_employee_hours_per_day() or 8.0)
+                    remaining_cache[alloc] = remaining
+                alloc_cache[employee, alloc_type] = allocations.sorted(key=lambda a: (a.date_to or date.max,))
 
         alloc_by_key = {}
         alloc_create_vals = []
@@ -188,7 +206,8 @@ class HrTimeRule(models.Model):
             for allocation in allocations:
                 if remaining <= 0:
                     break
-                take = min(remaining, max(0.0, allocation.number_of_days))
+                available = max(0.0, remaining_cache.get(allocation, 0.0))
+                take = min(remaining, available)
                 if take > 0:
                     allocation.number_of_days -= take
                     alloc_by_key.setdefault((employee, alloc_type), allocation)
@@ -281,15 +300,21 @@ class HrTimeRule(models.Model):
         # second pass: check which keys lack sufficient balance
         employees = self.env['hr.employee'].browse({e.id for e, _ in total_deduct})
         types = self.env['hr.work.entry.type'].browse({t.id for _, t in total_deduct})
-        alloc_cache = employees._fetch_valid_allocations(types, min(emps_by_date))
+        consumed_data, _ = employees._get_consumed_leaves(types)
         skip_keys = set()
         for (employee, alloc_type), deduct in total_deduct.items():
-            allocations = alloc_cache.get((employee, alloc_type), self.env['hr.leave.allocation'])
-            positive_total = sum(a.number_of_days for a in allocations if a.number_of_days > 0)
-            available = positive_total
+            alloc_dict = consumed_data.get(employee, {}).get(alloc_type, {})
+            unit = 'days' if alloc_type.unit_of_measure == 'day' else 'hours'
+            available = 0.0
+            for alloc, data in alloc_dict.items():
+                if not alloc:
+                    continue
+                remaining = data.get(f'{unit}_virtual_remaining_leaves', 0.0)
+                if alloc_type.unit_of_measure == 'hour':
+                    remaining /= (alloc._get_employee_hours_per_day() or 8.0)
+                available += remaining
             if alloc_type.allows_negative:
-                existing_negative = sum(abs(a.number_of_days) for a in allocations if a.number_of_days < 0)
-                available += max(0, alloc_type.max_allowed_negative - existing_negative)
+                available += alloc_type.max_allowed_negative
             if deduct > available:
                 skip_keys.add((employee, alloc_type))
 
