@@ -81,18 +81,9 @@ patch(PosStore.prototype, {
         }
         return sale_order;
     },
-    getConvertedQuantityFromSaleOrderline(convertedLine, soLine) {
-        const type = soLine.product_id.type;
-        const sOrder = soLine.order_id;
-        if (
-            soLine.product_id.id !== this.config.default_product_id.id &&
-            type === "service" &&
-            !["sent", "draft"].includes(sOrder.state)
-        ) {
-            return convertedLine.qty_to_invoice;
-        } else {
-            return convertedLine.product_uom_qty - convertedLine.qty_invoiced;
-        }
+    getConvertedQuantityFromSaleOrderline(convertedLine, _soLine) {
+        // A delivered line can still be unpaid, `_get_qty_to_move` avoids delivering it twice
+        return convertedLine.product_uom_qty - convertedLine.qty_invoiced;
     },
     async settleSO(sale_order, orderFiscalPos) {
         const order = this.getOrder();
