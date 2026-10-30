@@ -1,11 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 import re
 import requests
+import urllib.parse
 
 from werkzeug.urls import url_parse
 
-from odoo import api, models
+from odoo import api, fields, models
 from odoo.tools import BinaryBytes, file_open
 from odoo.addons.base.models.assetsbundle import EXTENSIONS
 
@@ -15,6 +17,70 @@ _match_asset_file_url_regex = re.compile(r"^(/_custom/([^/]+))?/(\w+)/([/\w]+\.\
 class WebsiteAssets(models.AbstractModel):
     _name = 'website.assets'
     _description = 'Assets Utils'
+
+    @api.model
+    def _get_google_font_metadata(self):
+        """ Return the Google Fonts metadata, cached in an attachment and
+        refreshed daily. """
+        Attachment = self.env['ir.attachment']
+        metadata = Attachment.search([
+            ('name', '=', 'googleFontMetadata'),
+            ('public', '=', True),
+        ], limit=1)
+        yesterday = fields.Datetime.add(fields.Datetime.now(), days=-1)
+        if not metadata or metadata.write_date < yesterday:
+            req = requests.get('https://fonts.google.com/metadata/fonts', timeout=5)
+            if req.status_code != requests.codes.ok:
+                return {
+                    'familyMetadataList': [],
+                }
+            json_content = req.content
+            if metadata:
+                metadata.raw = json_content
+            else:
+                metadata = Attachment.create({
+                    'public': True,
+                    'name': 'googleFontMetadata',
+                    'type': 'binary',
+                    'mimetype': 'application/json',
+                    'raw': json_content,
+                })
+                metadata['url'] = f"/web/font/{metadata.id}/{metadata['name']}"
+        return json.loads(metadata.raw.content)
+
+    @api.model
+    def _get_google_font_url(self, family):
+        """ Return the Google Fonts CSS API v2 URL requesting all the styles
+        and axes of the given font family. The v2 API only serves the regular
+        400 style unless the axes are explicitly requested. """
+        family_metadata_list = self._get_google_font_metadata()['familyMetadataList']
+        font = next((font for font in family_metadata_list if font['family'] == family), None)
+        if not font:
+            return 'https://fonts.googleapis.com/css2?' + urllib.parse.urlencode({
+                'family': family,
+                'display': 'swap',
+            })
+        # {'400': {...}, '700i': {...}} -> [{'ital': 0, 'wght': 400}, {'ital': 1, 'wght': 700}]
+        variants = [
+            {'ital': int(key.endswith('i')), 'wght': int(key.rstrip('i'))}
+            for key in font['fonts']
+        ]
+        ranges = {
+            axis['tag']: f"{axis['min']:g}" if axis['min'] == axis['max'] else f"{axis['min']:g}..{axis['max']:g}"
+            for axis in font['axes']
+        }
+        tags = set(ranges) | {'wght'}
+        if any(variant['ital'] for variant in variants):
+            tags.add('ital')
+        # Google Fonts expects lowercase axes first, both alphabetically sorted
+        axes = sorted(tags, key=lambda tag: (tag.isupper(), tag))
+        # Variable ranges can make multiple static variants produce the same tuple
+        tuples = {tuple(ranges.get(tag) or str(variant[tag]) for tag in axes) for variant in variants}
+        values = sorted(tuples, key=lambda values: [float(value.split('..')[0]) for value in values])
+        return 'https://fonts.googleapis.com/css2?' + urllib.parse.urlencode({
+            'family': f"{font['family']}:{','.join(axes)}@{';'.join(','.join(value) for value in values)}",
+            'display': 'swap',
+        })
 
     @api.model
     def reset_asset(self, url, bundle):
@@ -251,7 +317,7 @@ class WebsiteAssets(models.AbstractModel):
                 else:
                     font_family_attachments = IrAttachment
                     font_content = requests.get(
-                        f'https://fonts.googleapis.com/css?family={font_name}:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap',
+                        self._get_google_font_url(font_name),
                         timeout=5, headers=headers_woff2,
                     ).content.decode()
 

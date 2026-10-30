@@ -9,7 +9,7 @@
         $-url: o-get-font-info($alias, 'url');
         @if $-url and index($-seen-urls, $-url) == null {
             $-seen-urls: append($-seen-urls, $-url);
-            --o-font-url-#{$-i}: "https://fonts.googleapis.com/css?family=#{unquote($-url)}&display=swap&subset=latin,latin-ext,vietnamese";
+            --o-font-url-#{$-i}: "https://fonts.googleapis.com/css2?family=#{o-google-font-family-param($-url)}&display=swap";
             $-i: $-i + 1;
         } @else {
             $-name: o-get-font-info($alias, 'name');
