@@ -27,7 +27,7 @@ class StockMove(models.Model):
 
     @api.model
     def _prepare_merge_negative_moves_excluded_distinct_fields(self):
-        return super()._prepare_merge_negative_moves_excluded_distinct_fields() + ['created_purchase_line_ids']
+        return super()._prepare_merge_negative_moves_excluded_distinct_fields() + ['created_purchase_line_ids', 'date_deadline']
 
     @api.depends('purchase_line_id', 'purchase_line_id.product_uom_id')
     def _compute_packaging_uom_id(self):
