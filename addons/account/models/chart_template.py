@@ -133,14 +133,15 @@ class AccountChartTemplate(models.AbstractModel):
         # This function is called many times. Avoid doing a search every time by using the ORM's cache.
         # We assume that the field is always computed for all the modules at once (by this function)
         modules = self.env['ir.module.module'].sudo()
-        modules = (
-            modules.browse(modules._fields['account_templates']._get_cache(self.env))
-            or modules.search([('state', '!=', 'uninstallable')])
+        mappings = (
+            # Read the cached values as mapped() deep-copies the Json value of every module
+            modules._fields['account_templates']._get_cache(self.env).values()
+            or modules.search([('state', '!=', 'uninstallable')]).mapped('account_templates')
         )
 
         return {
             name: template
-            for mapping in modules.mapped('account_templates')
+            for mapping in mappings
             if mapping
             for name, template in mapping.items()
             if get_all or template['visible']
@@ -735,8 +736,10 @@ class AccountChartTemplate(models.AbstractModel):
                     if '@' in key or key == '__translation_module__':
                         del record_vals[key]
 
-                # Manage ids given as database id or xml_id
-                if isinstance(xml_id, str) and (record := self.ref(xml_id, raise_if_not_found=False)):
+                # _load_records matches own xml_ids, only a branch can fall back to its root's
+                if isinstance(xml_id, str) and self.env.company.parent_id and (
+                    record := self.ref(xml_id, raise_if_not_found=False)
+                ):
                     xml_id = record.id
 
                 if isinstance(xml_id, int):
