@@ -1,10 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from copy import deepcopy
+
 from dateutil.relativedelta import relativedelta
 
 import odoo
 from odoo import fields
 from odoo.exceptions import UserError, ValidationError
+from odoo.tests import freeze_time
 
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
@@ -289,6 +292,43 @@ class TestPoSBasicConfig(TestPoSCommon):
         res = self.env['pos.order'].sync_from_ui([order_data])
         order = self.env['pos.order'].browse(res['pos.order'][0]['id'])
         self.assertEqual(order.account_move.payment_state, 'paid')
+
+    def test_change_payment_date_on_delayed_sync(self):
+        self.open_new_session()
+        order_date = fields.Datetime.to_datetime('2026-01-01 23:55:00')
+        payment_date = fields.Datetime.to_datetime('2026-01-01 23:54:00')
+        order_data = self.create_ui_order_data(
+            [(self.product1, 1)],
+            pos_order_ui_args={
+                'date_order': order_date,
+                'amount_return': -5,
+                'state': 'paid',
+            },
+            payments=[(self.cash_pm1, 15)],
+        )
+        for field in ('lines', 'payment_ids'):
+            order_data[field] = [list(command) for command in order_data[field]]
+        order_data['lines'][0][2]['uuid'] = f"{order_data['uuid']}-line"
+        order_data['payment_ids'][0][2].update({
+            'uuid': f"{order_data['uuid']}-payment",
+            'payment_date': payment_date,
+        })
+
+        for sync_date in ('2026-01-02 08:00:00', '2026-01-02 09:00:00'):
+            with self.subTest(sync_date=sync_date), freeze_time(sync_date):
+                res = self.env['pos.order'].sync_from_ui([deepcopy(order_data)])
+                order = self.env['pos.order'].browse(res['pos.order'][0]['id'])
+                self.assertEqual(order.state, 'paid')
+                self.assertEqual(order.date_order, order_date)
+                self.assertRecordValues(order.payment_ids.sorted('amount'), [{
+                    'amount': -5,
+                    'is_change': True,
+                    'payment_date': order_date,
+                }, {
+                    'amount': 15,
+                    'is_change': False,
+                    'payment_date': payment_date,
+                }])
 
     def test_pos_archived_combination(self):
         product = self.env['product.template'].create({
