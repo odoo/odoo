@@ -473,6 +473,19 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
     # Red forms, seller side
     # ------------------------------------------------------------------
 
+    def test_invoice_dated_another_day_warns_until_issued(self):
+        invoice = self.init_invoice('out_invoice', partner=self.partner_a, products=self.product_a, taxes=self.tax_sale_a, invoice_date='2026-10-01')
+        invoice.action_post()
+
+        with freeze_time('2026-10-02'):
+            invoice.invalidate_recordset(['l10n_cn_edi_date_warning'])
+            self.assertIn("Invoice Date is not today", invoice.l10n_cn_edi_date_warning)
+
+            self.responses['issue_invoice'] = {'state': 'issued', 'fapiao_no': '24442000000071309399'}
+            self._issue(invoice)
+
+            self.assertFalse(invoice.l10n_cn_edi_date_warning)
+
     def test_reversal_wizard_propagates_red_form_reason(self):
         credit_note = self._reverse(self._create_posted_invoice())
 

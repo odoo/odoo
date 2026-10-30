@@ -169,6 +169,8 @@ class L10nCnEdiDocument(models.Model):
                 'fapiao_no': result.get('fapiao_no'),
                 'fapiao_date': result.get('fapiao_date'),
                 'qr_code': result.get('qr_code'),
+                'red_form_uuid': result.get('red_form_uuid'),
+                'red_form_number': result.get('red_form_number'),
                 'error_message': False,
             })
             move.write({

@@ -152,11 +152,24 @@ class AccountMove(models.Model):
                 and not move._l10n_cn_edi_matching_inbound_red_form(),
             )
 
-    @api.depends('invoice_date', 'l10n_cn_edi_fapiao_date', 'l10n_cn_edi_fapiao_no', 'state', 'move_type')
+    @api.depends('invoice_date', 'l10n_cn_edi_fapiao_date', 'l10n_cn_edi_fapiao_no', 'l10n_cn_edi_state', 'state', 'move_type', 'country_code')
     def _compute_l10n_cn_edi_date_warning(self):
+        today = fields.Date.context_today(self)
         for move in self:
             move.l10n_cn_edi_date_warning = False
             if (
+                move.country_code == 'CN'
+                and move.move_type == 'out_invoice'
+                and move.state == 'posted'
+                and move.l10n_cn_edi_state not in ('sent', 'issued')
+                and move.invoice_date
+                and move.invoice_date != today
+            ):
+                # The fapiao is dated the day it is issued.
+                move.l10n_cn_edi_date_warning = self.env._(
+                    "Invoice Date is not today. Please be aware of the consistency between E-fapiao Date and Odoo Invoice Date.",
+                )
+            elif (
                 move.move_type == 'out_refund'
                 and move.state == 'draft'
                 and move.l10n_cn_edi_fapiao_no
@@ -185,10 +198,13 @@ class AccountMove(models.Model):
     )
     def _compute_l10n_cn_edi_latest_red_form(self):
         for move in self:
-            latest = move.l10n_cn_edi_document_ids.filtered(lambda doc: doc.kind == 'red_form').sorted('id', reverse=True)[:1]
+            # A red fapiao of our own carries the red form the bureau recorded for it.
+            latest = move.l10n_cn_edi_document_ids.filtered(
+                lambda doc: doc.kind == 'red_form' or doc.red_form_uuid,
+            ).sorted('id', reverse=True)[:1]
             move.l10n_cn_edi_red_form_uuid = latest.red_form_uuid
             move.l10n_cn_edi_red_form_number = latest.red_form_number
-            move.l10n_cn_edi_red_form_status = latest.state
+            move.l10n_cn_edi_red_form_status = latest.state if latest.kind == 'red_form' else False
             move.l10n_cn_edi_red_form_bureau_state = latest.bureau_state
             move.l10n_cn_edi_red_form_amount_untaxed = latest.amount_untaxed
             move.l10n_cn_edi_red_form_amount_tax = latest.amount_tax
