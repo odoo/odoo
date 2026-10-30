@@ -6,9 +6,12 @@ patch(ProductTemplate.prototype, {
         if (this.config.self_ordering_mode !== "kiosk") {
             return this.isConfigurable();
         }
-        return this.attribute_line_ids.some(
-            (a) =>
-                a.product_template_value_ids.length > 1 || a.attribute_id.display_type === "multi"
+        return (
+            this.attribute_line_ids.some(
+                (a) =>
+                    a.product_template_value_ids.length > 1 ||
+                    a.attribute_id.display_type === "multi"
+            ) || this.uom_ids.length
         );
     },
 

@@ -123,6 +123,7 @@ export class ProductConfiguratorPopup extends Component {
         forceVariantValue: t.array().optional(),
         line: t.instanceOf(PosOrderline).optional(),
         comboItem: t.object().optional(),
+        hideUoMSelection: t.boolean().optional(false),
     });
 
     setup() {
@@ -348,17 +349,6 @@ export class ProductConfiguratorPopup extends Component {
 
     confirm() {
         this.props.getPayload(this.computePayload());
-        this.props.close();
-    }
-
-    onDiscard() {
-        // If the user discards and there are no configurable attributes,
-        // restore the default UOM so the normal add-line flow can continue
-        // for products that have multiple UOMs.
-        if (!this.props.hasConfigurableAttributes && this.props.productTemplate.uom_ids.length) {
-            this.setSelectedUom(this.props.productTemplate.uom_id);
-            this.props.getPayload(this.computePayload());
-        }
         this.props.close();
     }
 

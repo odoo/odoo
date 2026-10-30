@@ -107,13 +107,12 @@ export class ProductPage extends Component {
 
         const order = this.selfOrder.currentOrder;
         const pricelist = order.pricelist_id;
-        const price = this.props.productTemplate.getPrice(
-            pricelist,
-            1,
-            priceExtra,
-            false,
-            productVariant
-        );
+        const product_uom = this.state.selectedValues[this.productTemplate.id]?.selectedUoMValue;
+        const isDifferentUom = this.props.productTemplate.uom_id.id !== product_uom?.id;
+        const factor = isDifferentUom ? product_uom?.relative_factor || 1 : 1;
+        const price =
+            this.props.productTemplate.getPrice(pricelist, 1, priceExtra, false, productVariant) *
+            factor;
         const product = productVariant || this.props.productTemplate;
         const fiscalPosition = order.fiscal_position_id;
         const taxDetails = product.getTaxDetails({
@@ -136,6 +135,10 @@ export class ProductPage extends Component {
         );
     }
 
+    getSelectedUom() {
+        return this.state.selectedValues[this.productTemplate.id]?.selectedUoMValue || null;
+    }
+
     addToCart() {
         if (!this.isAddToCartEnabled()) {
             return;
@@ -145,7 +148,9 @@ export class ProductPage extends Component {
             this.state.qty,
             "",
             this.getSelectedAttributesValues(),
-            this.state.selectedValues[this.productTemplate.id]?.getAllCustomValues()
+            this.state.selectedValues[this.productTemplate.id]?.getAllCustomValues(),
+            {},
+            this.getSelectedUom()
         );
 
         const historyState = history.state || {};

@@ -36,34 +36,22 @@
                 </div>
             </t>
         </t>
-        <div class="mb-2 fw-bolder">Packaging</div>
-        <div class="d-flex gap-2 flex-wrap">
-            <div t-foreach="this.uomToDisplay" t-as="uom" t-key="uom.id">
-                <button
-                    t-on-click="() => this.selectUom(uom)" style="min-height:105px;"
-                    class="btn btn-light px-3 px-sm-3 py-3 py-sm-3 w-100 d-flex flex-column align-items-start align-items-md-center text-start text-md-center justify-content-center gap-0 border-2 shadow-sm rounded-4"
-                    t-attf-class="{{ this.isUomSelected(uom) ? 'border-primary': 'border-transparent' }}">
-                    <div class="d-flex d-inline-flex justify-content-between w-100 align-items-center gap-1">
-                        <div class="text-center d-flex flex-column gap-2 align-items-center w-100">
-                            <span t-out="uom.name" class="fs-4"/>
+        <t t-if="this.props.productTemplate.uom_ids.length and !this.props.isCombo">
+            <div class="mb-2 fw-bolder">Packaging</div>
+            <div class="d-flex gap-2 flex-wrap">
+                <div t-foreach="this.uomToDisplay" t-as="uom" t-key="uom.id">
+                    <button
+                        t-on-click="() => this.selectUom(uom)" style="min-height:105px;"
+                        class="uom-selection-value btn btn-light px-3 px-sm-3 py-3 py-sm-3 w-100 d-flex flex-column align-items-start align-items-md-center text-start text-md-center justify-content-center gap-0 border-2 shadow-sm rounded-4"
+                        t-attf-class="{{ this.isUomSelected(uom) ? 'border-primary': 'border-transparent' }}">
+                        <div class="d-flex d-inline-flex justify-content-between w-100 align-items-center gap-1">
+                            <div class="text-center d-flex flex-column gap-2 align-items-center w-100">
+                                <span t-out="uom.name" class="fs-4"/>
+                            </div>
                         </div>
-                    </div>
-                </button>
-                <!-- <input
-                    class="form-check-input d-none"
-                    type="radio"
-                    name="uom"
-                    t-attf-id="uom-{{uom.id}}"
-                    t-on-change="() => this.onChange(uom)"
-                    />
-                <label
-                    role="button"
-                    t-attf-class="form-check-label uom-selection-value btn btn-secondary btn-lg lh-lg d-flex {{ uom.id == this.props.selectedUomId ? 'active' : '' }}"
-                    t-attf-name="uom-{{uom.id}}"
-                    t-attf-for="uom-{{uom.id}}">
-                    <span t-out="uom.name"/>
-                </label> -->
+                    </button>
+                </div>
             </div>
-        </div>
+        </t>
     </t>
 </templates>

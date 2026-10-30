@@ -1431,6 +1431,49 @@ test("test_slot_limit_orders: slot limit order test", async () => {
     await Utils.checkSlotDisabled("12:00");
 });
 
+test("test packaging product for self order", async () => {
+    const store = await setupSelfPosEnv("kiosk", "counter", "each", {}, true);
+    // Add packaging Pack of 6 UoM option for the product template used in the test
+    store.models["product.template"].get(11).uom_ids = [2];
+
+    await Utils.clickOrderNow();
+    await Utils.selectLocation("Out");
+    await Utils.clickCategory("Category 2");
+    await Utils.clickProduct("Steel desk");
+    await Utils.selectUomOption("Units", true);
+    await Utils.clickBtn("Add to cart");
+    expect(store.currentOrder.lines.length).toBe(1);
+    expect(store.currentOrder.lines[0].priceIncl).toBe(875);
+    expect(store.currentOrder.lines[0].qty).toBe(1);
+    expect(store.currentOrder.lines[0].product_uom_id.id).toBe(1);
+
+    await Utils.clickProduct("Steel desk");
+    await Utils.selectUomOption("Pack of 6", true);
+    await Utils.clickBtn("Add to cart");
+    expect(store.currentOrder.lines.length).toBe(2);
+    expect(store.currentOrder.lines[1].priceIncl).toBe(5250);
+    expect(store.currentOrder.lines[1].qty).toBe(1);
+    expect(store.currentOrder.lines[1].product_uom_id.id).toBe(2);
+
+    await Utils.clickProduct("Steel desk");
+    await Utils.selectUomOption("Units", true);
+    await Utils.clickBtn("Add to cart");
+    expect(store.currentOrder.lines.length).toBe(2);
+    expect(store.currentOrder.lines[0].priceIncl).toBe(1750);
+    expect(store.currentOrder.lines[0].qty).toBe(2);
+    expect(store.currentOrder.lines[0].product_uom_id.id).toBe(1);
+
+    await Utils.clickProduct("Steel desk");
+    await Utils.selectUomOption("Pack of 6", true);
+    await Utils.clickBtn("Add to cart");
+    expect(store.currentOrder.lines.length).toBe(2);
+    expect(store.currentOrder.lines[1].priceIncl).toBe(10500);
+    expect(store.currentOrder.lines[1].qty).toBe(2);
+    expect(store.currentOrder.lines[1].product_uom_id.id).toBe(2);
+
+    expect(store.orderLineNotSend.priceWithTax).toBe(12250);
+});
+
 test("test_self_order_preset_btn: check preset button displays correct preset", async () => {
     await setupSelfPosEnv("kiosk", "counter", "each", {}, true);
     await Utils.checkIsNoBtn("My Order");

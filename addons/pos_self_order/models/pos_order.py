@@ -174,6 +174,7 @@ class PosOrder(models.Model):
                 'order_id': existing_order.id if existing_order.exists() else None,
                 'combo_parent_id': line_data.get('combo_parent_id'),
                 'combo_item_id': line_data.get('combo_item_id'),
+                'product_uom_id': line_data.get('product_uom_id'),
                 'combo_line_ids': [id for id in line_data.get('combo_line_ids', []) if isinstance(id, int)],
             }]
         return []
@@ -402,7 +403,7 @@ class PosOrder(models.Model):
                 # Lines without a combo parent are priced on their own. A line whose combo
                 # parent doesn't belong to this order is never reached by _compute_combo_price,
                 # so it is priced the same way instead of keeping its frontend price.
-                self._compute_line_price(line)
+                self._compute_line_price(line, line.price_unit if line.product_uom_id != line.product_id.uom_id else False)
 
         # Then process service fee lines using the now-computed applicable lines
         self._compute_service_fee_price()

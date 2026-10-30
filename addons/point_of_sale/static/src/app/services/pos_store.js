@@ -991,7 +991,10 @@ export class PosStore extends WithLazyGetterTrap {
         );
         const skip_configure =
             opts.code && this.models["product.uom"].getBy("barcode", opts.code?.code);
-        if (hasConfigurableAttributes || (pTemplate.uom_ids.length && !skip_configure)) {
+        if (
+            hasConfigurableAttributes ||
+            (pTemplate.uom_ids.length && !skip_configure && !opts.hideUoMSelection)
+        ) {
             const forceVariantValue =
                 opts.forceVariantValue ||
                 (variantProduct ? variantProduct.product_template_attribute_value_ids : undefined);
@@ -1001,7 +1004,7 @@ export class PosStore extends WithLazyGetterTrap {
                 forceVariantValue,
                 line: opts.line,
                 comboItem: opts.comboItem,
-                hasConfigurableAttributes: hasConfigurableAttributes,
+                hideUoMSelection: opts.hideUoMSelection || false,
             });
         }
         return {

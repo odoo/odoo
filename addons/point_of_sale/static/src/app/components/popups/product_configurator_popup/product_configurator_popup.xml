@@ -252,7 +252,7 @@
                         customValue="this.state.attributes[attribute.id].custom_value" setCustomValue="this.setCustomValue(attribute)"
                         allSelectedValues="this.selectedValues" showExtraPrice="this.showExtraPrice"/>
                 </div>
-                <UomSelection t-if="this.availableUoMs.length" availableUoMs="this.availableUoMs" setSelected="this.setSelectedUom.bind(this)" selectedUomId="this.state.selectedUomId"/>
+                <UomSelection t-if="this.availableUoMs.length and !this.props.hideUoMSelection" availableUoMs="this.availableUoMs" setSelected="this.setSelectedUom.bind(this)" selectedUomId="this.state.selectedUomId"/>
             </div>
             <t t-set-slot="footer">
                 <div class="d-flex flex-row gap-2 w-100">
@@ -262,7 +262,7 @@
                             t-on-click="this.confirm">
                             Add
                         </button>
-                    <button class="btn btn-secondary w-50" t-on-click="this.onDiscard">Discard</button>
+                    <button class="btn btn-secondary w-50" t-on-click="this.props.close">Discard</button>
                 </div>
             </t>
         </Dialog>
