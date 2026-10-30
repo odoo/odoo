@@ -121,6 +121,15 @@ class AccountMove(models.Model):
         copy=False,
     )
 
+    @api.depends('pdp_is_sent')
+    def _compute_show_reset_to_draft_button(self):
+        # EXTEND 'account' to hide the reset to draft button for sent PDP invoices
+        super()._compute_show_reset_to_draft_button()
+        relevant_moves = self.filtered(
+            lambda move: move.pdp_is_sent and move.is_sale_document(include_receipts=True)
+        )
+        relevant_moves.show_reset_to_draft_button = False
+
     # TODO: remove in master
     @api.model
     def fields_get(self, allfields=None, attributes=None):
