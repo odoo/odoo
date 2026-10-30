@@ -9,7 +9,7 @@ const formEl = `<section class="s_website_form"><form data-model_name="mail.mail
         <div data-name="Country" class="s_website_form_field s_website_form_custom" data-type="many2one">
             <div>
                 <label class="s_website_form_label" for="country">
-                    <span class="s_website_form_label_content">Country</span>
+                    <span class="s_website_form_label_content o_not_translate_inline">Country</span>
                 </label>
                 <div>
                     <select class="form-select s_website_form_input" name="country_id" id="country">
@@ -24,7 +24,7 @@ const formEl = `<section class="s_website_form"><form data-model_name="mail.mail
         <div data-name="State" class="s_website_form_field s_website_form_custom" data-type="many2one">
             <div>
                 <label class="s_website_form_label" for="state">
-                    <span class="s_website_form_label_content">State</span>
+                    <span class="s_website_form_label_content o_not_translate_inline">State</span>
                 </label>
                 <div>
                     <select class="form-select s_website_form_input" data-link-state-to-country="true" name="state_id" id="state">

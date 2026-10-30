@@ -50,7 +50,7 @@ export const formSelectXml = `
         <div data-name="Field" class="s_website_form_field s_website_form_custom" data-type="many2one" data-other-option-allowed="true" data-other-option-label="Other" data-other-option-placeholder="Other option...">
             <div class="row s_col_no_resize s_col_no_bgcolor">
                 <label class="col-form-label col-sm-auto s_website_form_label" for="o291di1too21">
-                    <span class="s_website_form_label_content">Form Select</span>
+                    <span class="s_website_form_label_content o_not_translate_inline">Form Select</span>
                 </label>
                 <div class="col-sm">
                     <select class="form-select s_website_form_input" name="Form Select" id="field1">
