@@ -1,9 +1,9 @@
 html[lang] > body.editor_enable [data-oe-translation-state]:is(.o_savable, .o_savable_attribute):not(.o_not_editable *, .o_not_editable) {
-    --text-translate-highlight-color: #{rgba($o-we-content-to-translate-color, 0.5)};
+    --text-translate-highlight-color: rgb(from var(--o-we-content-to-translate-color) r g b / 0.5);
 
     &[data-oe-translation-state="translated"],
     &.o_dirty, &.oe_translated, .oe_translated {
-        --text-translate-highlight-color: #{rgba($o-we-translated-content-color, 0.5)};
+        --text-translate-highlight-color: rgb(from var(--o-we-translated-content-color) r g b / 0.5);
     }
 
     &, .oe_translated, .o_translation_state_inner_span {
