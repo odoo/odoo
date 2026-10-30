@@ -3,8 +3,6 @@ from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
 
 class TestAnalyticToSaleTimesheet(TestCommonSaleTimesheet):
 
-    _test_user_groups = None  # FIXME list needed groups
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

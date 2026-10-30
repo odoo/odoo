@@ -8,7 +8,17 @@ from odoo.addons.stock.tests.common import TestStockCommon
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestReInvoice(TestStockCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    # Delivered products of a project are re-invoiced on its sales order.
+    _test_user_groups = (
+        'stock.group_stock_manager',  # FIXME: use stock.group_stock_user
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        'account.group_account_manager',  # FIXME: use account.group_account_invoice
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'project.group_project_manager',  # FIXME: use project.group_project_user
+        'analytic.group_analytic_accounting',  # view visibility (account_id on projects)
+    )
+
+    _test_user_name = 'Test Project Stock Reinvoice Manager'
 
     @classmethod
     def setUpClass(cls):

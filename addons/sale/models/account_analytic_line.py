@@ -243,7 +243,9 @@ class AccountAnalyticLine(models.Model):
             return
 
         plan_id = self.env["account.analytic.plan"].browse(
-            self.env["ir.config_parameter"].get_int("sale.analytic_plan_sale_orders")
+            # system parameters are administrator data, any user may log an
+            # analytic line
+            self.env["ir.config_parameter"].sudo().get_int("sale.analytic_plan_sale_orders")
         )
         if not plan_id:
             plan_id, _other_plans = self.env["account.analytic.plan"]._get_all_plans()

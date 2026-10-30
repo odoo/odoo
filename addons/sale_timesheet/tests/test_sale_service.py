@@ -10,8 +10,6 @@ from odoo.tests import Form
 @tagged('-at_install', 'post_install')
 class TestSaleService(TestCommonSaleTimesheet):
     """ This test suite provide checks for miscellaneous small things. """
-    _test_user_groups = None  # FIXME list needed groups
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -746,7 +744,8 @@ class TestSaleService(TestCommonSaleTimesheet):
         self.assertEqual(16 + 8, allocated_hours,
                          "Project's allocated hours should add up correctly.")
 
-        self.env.company.timesheet_encode_uom_id = self.env.ref('uom.product_uom_day')
+        # the timesheet encoding unit is a company setting: administrator data
+        self.env.company.sudo().timesheet_encode_uom_id = self.env.ref('uom.product_uom_day')
         so_copy = self.sale_order.copy()
         so_copy.action_confirm()
         self.assertEqual(allocated_hours, so_copy.project_ids.allocated_hours,
@@ -899,7 +898,8 @@ class TestSaleService(TestCommonSaleTimesheet):
         """
         Ensure hours are rounded consistently on SO & invoice.
         """
-        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 0
+        # decimal precisions are administrator data
+        self.env['decimal.precision'].sudo().search([('name', '=', 'Product Unit')]).digits = 0
         self.env['sale.order.line'].create({
             'name': self.product_delivery_timesheet3.name,
             'product_id': self.product_delivery_timesheet3.id,
@@ -977,17 +977,19 @@ class TestSaleService(TestCommonSaleTimesheet):
         uom_cm = self.env.ref('uom.product_uom_cm')
         uom_day = self.env.ref('uom.product_uom_day')
         uom_hour = self.env.ref('uom.product_uom_hour')
-        self.user_manager_company_B.group_ids += (
+        # granting access rights to another user is an administrator action
+        self.user_manager_company_B.sudo().group_ids += (
             self.env.ref('product.group_product_manager') |
             self.env.ref('sales_team.group_sale_salesman')
         )
-        self.env['ir.default'].set(
+        # setting a default value for another user is an administrator action
+        self.env['ir.default'].sudo().set(
             'product.template',
             'uom_id',
             uom_cm.id,
             user_id=self.user_manager_company_B.id,
             company_id=self.user_manager_company_B.company_id.id)
-        self.env['ir.default'].set(
+        self.env['ir.default'].sudo().set(
             'product.product',
             'uom_id',
             uom_cm.id,
@@ -1007,7 +1009,7 @@ class TestSaleService(TestCommonSaleTimesheet):
         product = product_form.save()
         self.assertEqual(product.uom_id, uom_hour, "UoM should be hours for timesheet service when default is not a time unit")
 
-        self.env['ir.default'].set(
+        self.env['ir.default'].sudo().set(
             'product.template',
             'uom_id',
             uom_day.id,
@@ -1033,7 +1035,7 @@ class TestSaleService(TestCommonSaleTimesheet):
         product = product_form.save()
         self.assertEqual(product.uom_id, uom_hour, "UoM should be hours for timesheet service when default is not a time unit")
 
-        self.env['ir.default'].set(
+        self.env['ir.default'].sudo().set(
             'product.product',
             'uom_id',
             uom_day.id,

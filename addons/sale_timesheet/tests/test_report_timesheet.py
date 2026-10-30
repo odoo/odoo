@@ -9,8 +9,6 @@ class TestReportTimesheetSale(TestCommonSaleTimesheet):
         printed from a sales order or from an invoice.
     """
 
-    _test_user_groups = None  # FIXME list needed groups
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

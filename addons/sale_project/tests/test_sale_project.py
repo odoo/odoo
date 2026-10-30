@@ -11,8 +11,6 @@ from .common import TestSaleProjectCommon
 @tagged('post_install', '-at_install')
 class TestSaleProject(TestSaleProjectCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -843,10 +841,13 @@ class TestSaleProject(TestSaleProjectCommon):
             "allow_billable": True,
         })
 
-        company_a, company_b = self.env['res.company'].create([
+        # Companies are administrator master-data: create them as sudo, then
+        # let the test user work in them.
+        company_a, company_b = self.env['res.company'].sudo().create([
             {"name": "Company A"},
             {"name": "Company B"},
         ])
+        self.env.user.sudo().company_ids = [Command.link(company_a.id), Command.link(company_b.id)]
 
         # cannot be done in batch because of `_check_sale_product_company` constraint
         product_a, product_b = (
@@ -923,10 +924,13 @@ class TestSaleProject(TestSaleProjectCommon):
 
     def test_multi_company_so_creation(self):
         # SO with project template with non-superuser company_id able creates project with proper company
-        company = self.env['res.company'].create({
+        # A company is administrator master-data: create it as sudo, then let
+        # the test user work in it.
+        company = self.env['res.company'].sudo().create({
             'name': 'Multi-Company Test Company',
             'currency_id': self.env.ref('base.EUR').id,
         })
+        self.env.user.sudo().company_ids = [Command.link(company.id)]
 
         company_project_template = self.env['project.project'].with_company(company).create({
             'name': 'Multi-Company Test Company Project Template',
