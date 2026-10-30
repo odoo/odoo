@@ -256,8 +256,11 @@
             data-editor-message.translate="Drag blocks here to add them on all customers"/>
         <div class="container mb-3">
             <div class="row">
-                <div class="mt-4 mb-3" t-if="not edit_page">
+                <div class="mt-4 mb-3" t-if="not edit_page and not back_url">
                     <a t-attf-href="/customers" aria-label="Back to references list"><i class="oi me-2" data-icon="chevron_backward" role="img" aria-hidden="true"/>Back to references</a>
+                </div>
+                <div class="mt-4 mb-3" t-if="not edit_page and back_url">
+                    <a t-attf-href="#{back_url}" aria-label="Back to partner"><i class="oi me-2" data-icon="chevron_backward" role="img" aria-hidden="true"/>Back</a>
                 </div>
                 <t t-set="right_column">
                     <div id="right_column"><t t-call="website_customer.references_block"/></div>
@@ -325,7 +328,7 @@
                                 t-options='{"widget": "image", "qweb_img_responsive": False, "class": "img-fluid rounded mw-100"}'/>
                         </div>
                         <div class="card-body col-md-10">
-                            <a t-attf-href="/customers/#{slug(reference)}">
+                            <a t-attf-href="/customers/#{slug(reference)}?back_url=True">
                                 <span t-field="reference.self"/>
                             </a>
                             <t t-if="reference.industry_id">
@@ -341,10 +344,10 @@
 
 <template id="references_block_href" inherit_id="website_crm_partner_assign.references_block" name="Partner References Block">
     <xpath expr="//div/span" position="replace">
-        <a t-attf-href="/customers/#{slug(reference)}">$0</a>
+        <a t-attf-href="/customers/#{slug(reference)}?back_url=True">$0</a>
     </xpath>
     <xpath expr="//div[hasclass('card-body')]/span" position="replace">
-        <a t-attf-href="/customers/#{slug(reference)}">$0</a>
+        <a t-attf-href="/customers/#{slug(reference)}?back_url=True">$0</a>
     </xpath>
 </template>
 
