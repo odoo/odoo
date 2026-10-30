@@ -138,6 +138,12 @@ class TestHrAttendance(HttpCase, TransactionCase):
         with self.assertRaises(AssertionError):
             attendance_form.save()
 
+    def test_last_month_attendances_new_defaults_to_employee(self):
+        """New from the Monthly Hours smart button defaults to that employee."""
+        action = self.employee.action_open_last_month_attendances()
+        attendance_form = Form(self.env['hr.attendance'].with_context(action['context']))
+        self.assertEqual(attendance_form.employee_id, self.employee)
+
     def test_attendance_checkout_while_employee_archived(self):
         """An employee should be checked out by the system, if employee is getting archive."""
         test_attendance = self.env['hr.attendance'].create({
