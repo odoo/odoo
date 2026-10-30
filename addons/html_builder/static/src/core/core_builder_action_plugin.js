@@ -113,8 +113,10 @@ function setStyle(el, styleName, value, { extraClass, force = false, allowImport
     };
     applyAllCSS([...values]);
 
+    const isZero = values.every((v) => parseFloat(v) === 0);
+
     if (extraClass) {
-        el.classList.toggle(extraClass, hasUserValue);
+        el.classList.toggle(extraClass, hasUserValue && !isZero);
         if (hasUserValue) {
             // Might have changed because of the class.
             for (const cssProp of cssProps) {
