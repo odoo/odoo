@@ -82,7 +82,7 @@ export class MessagingMenu extends Component {
     /** @type {import("@odoo/owl").Signal<import("models").MessagingMenuUIState|undefined>} */
     peekedTabState = signal(undefined);
     /** The tab shown as active: the peeked one only has the look of a hovered tab. */
-    selectedTab = computed(() => this.selectedState().activeTab);
+    selectedTab = computed(() => this.props.state().activeTab);
     containerRef = signal.ref();
     filteredMessages = computedShallowEqual(() => {
         const filters = [...this.state().activePluginFilters];
@@ -110,13 +110,17 @@ export class MessagingMenu extends Component {
         this.notification = useService("mail.notification.permission");
         this.store = useService("mail.store");
         this.ui = usePlugin(UIPlugin);
-        this.selectedState = useProps.static(
-            "state",
-            types.signal(types.instanceOf(this.store.MessagingMenuUIState))
-        );
+        this.props = useProps({
+            close: types.function().optional().static(),
+            onToggleSidebar: types.function().optional().static(),
+            searchInputAutofocus: types
+                .signal(types.number(), { settable: true })
+                .optional(() => signal(0)),
+            state: types.signal(types.instanceOf(this.store.MessagingMenuUIState)),
+        });
         /** The state of the shown list: the one of the peeked tab, if any, also while it hides. */
         this.state = computed(
-            () => (this.canPeek() && this.peekedTabState()) || this.selectedState()
+            () => (this.canPeek() && this.peekedTabState()) || this.props.state()
         );
         this.activeTab = computed(() => this.state().activeTab);
         this.messageSearch = useSearch({
@@ -140,14 +144,8 @@ export class MessagingMenu extends Component {
                 }),
             deps: () => [this.filteredMessages()],
         });
-        this.close = useProps.static("close", types.function().optional());
-        this.onToggleSidebar = useProps.static("onToggleSidebar", types.function().optional());
-        this.searchInputAutofocus = useProps.static(
-            "searchInputAutofocus",
-            types.signal(types.number()).optional(() => signal(0))
-        );
-        this.focusSearchInput = incrementFn(this.searchInputAutofocus);
-        // Bound once so `onClickMessage` is a stable (useProps.static) handler.
+        this.focusSearchInput = incrementFn(this.props.searchInputAutofocus);
+        // Bound once so `onClickMessage` is a stable (static prop) handler.
         this.onClickMessage = this.onClickMessage.bind(this);
         useOnBottomScrolled(this.tabContentRef, () =>
             this.activeTab().loadMore({
@@ -260,7 +258,7 @@ export class MessagingMenu extends Component {
         } else {
             this.peekedTabState.set(
                 this.store.MessagingMenuUIState.insert({
-                    id: `${this.selectedState().id}.peek`,
+                    id: `${this.props.state().id}.peek`,
                     activeTab: tab,
                 })
             );
@@ -279,13 +277,13 @@ export class MessagingMenu extends Component {
      */
     resetPeek() {
         this.clearPeekedTab();
-        this.selectedState().searchTerm = "";
+        this.props.state().searchTerm = "";
     }
 
     onClickToggleSidebar() {
         this.peek.close();
         this.resetPeek();
-        this.onToggleSidebar();
+        this.props.onToggleSidebar();
     }
 
     /** @param {MouseEvent} ev */
@@ -316,7 +314,7 @@ export class MessagingMenu extends Component {
             return;
         }
         this.clearPeekedTab();
-        this.selectedState().selectTab(tab);
+        this.props.state().selectTab(tab);
     }
 
     /** A conversation of the list is opened in the content. */
@@ -324,7 +322,7 @@ export class MessagingMenu extends Component {
         if (!this.peek.isOpen()) {
             return;
         }
-        this.selectedState().activeTab = this.activeTab();
+        this.props.state().activeTab = this.activeTab();
         this.peek.closeOnceLeft();
     }
 
@@ -357,7 +355,7 @@ export class MessagingMenu extends Component {
     onClickAction(action) {
         action.onClick();
         if (!action.preventDropdownClose) {
-            this.close?.();
+            this.props.close?.();
         }
     }
 
@@ -394,6 +392,6 @@ export class MessagingMenu extends Component {
                 }
                 throw error;
             });
-        this.close?.();
+        this.props.close?.();
     }
 }
