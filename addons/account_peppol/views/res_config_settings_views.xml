@@ -108,11 +108,14 @@
                                     <span><strong>Disconnected from Peppol!</strong></span>
                                     <p>
                                         Your database is not linked to Peppol anymore. This might be due to a database duplication or restoration.
-                                        Make sure to reconnect the correct database.
+                                        <br/><a class="text-info" href="https://www.odoo.com/help-form" target="_blank"><strong>Contact us</strong></a>
+                                        to reconnect your database to Peppol.
                                     </p>
                                 </div>
                             </div>
-                            <div class="mt-3 d-flex gap-1">
+
+                            <!-- hidden for now until a proper fix is in place, buttons were not removed as we will need them later-->
+                            <div class="mt-3 d-flex gap-1" invisible="True">
                                 <button name="button_reconnect_this_database"
                                     type="object"
                                     string="Reconnect this database"
