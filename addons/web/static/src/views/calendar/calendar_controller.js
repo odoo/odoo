@@ -37,7 +37,7 @@ function useUniqueDialog() {
     let close = null;
     return (...args) => {
         if (close) {
-            close();
+            close({ noReload: true });
         }
         close = displayDialog(...args);
     };
@@ -337,7 +337,14 @@ export class CalendarController extends Component {
                         viewId: this.model.formViewId,
                         onRecordSaved: () => this.model.load(),
                     },
-                    { onClose: () => resolve() }
+                    {
+                        onClose: ({ noReload } = {}) => {
+                            if (!noReload) {
+                                this.model.load();
+                            }
+                            resolve();
+                        },
+                    }
                 );
             });
         } else {
