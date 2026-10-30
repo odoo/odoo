@@ -4,20 +4,19 @@ from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
+from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
 @tagged("post_install", "-at_install")
-class TestWebsiteSaleCartRecovery(HttpCaseWithUserPortal):
+class TestWebsiteSaleCartRecovery(WebsiteSaleCommon, HttpCaseWithUserPortal):
     def test_01_shop_cart_recovery_tour(self):
         """The goal of this test is to make sure cart recovery works."""
-        self.env.ref("base.user_admin").write({"email": "mitchell.admin@example.com"})
-        self.env["product.product"].create({
-            "name": "Acoustic Bloc Screens",
-            "list_price": 2950.0,
-            "website_published": True,
-        })
+        cart_recovery_link = "/shop/cart?id=%s&access_token=%s" % (
+            self.cart.id,
+            self.cart._portal_ensure_token(),
+        )
 
-        self.start_tour("/shop", "website_sale.cart_recovery", login="portal")
+        self.start_tour(cart_recovery_link, "website_sale.cart_recovery", login="portal")
 
 
 @tagged("post_install", "-at_install")

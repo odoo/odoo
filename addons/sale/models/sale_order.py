@@ -1537,9 +1537,6 @@ class SaleOrder(models.Model):
             "proforma": self.env.context.get("proforma", False),
         }
 
-        for order in self:
-            order._portal_ensure_token()
-
         if len(self) > 1:
             ctx["default_composition_mode"] = "mass_mail"
         else:
@@ -1548,6 +1545,9 @@ class SaleOrder(models.Model):
                 mail_template = self._find_mail_template()
                 if mail_template:
                     ctx.update({"default_template_id": mail_template.id, "mark_so_as_sent": True})
+            else:
+                for order in self:
+                    order._portal_ensure_token()
 
         action = {
             "name": self.env._("Send"),
