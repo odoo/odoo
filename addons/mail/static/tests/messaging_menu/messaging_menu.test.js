@@ -56,6 +56,14 @@ test("should have messaging menu button in systray", async () => {
     await waitFor(".o_menu_systray i[aria-label='Messages'][data-icon='forum'].oi:count(1)");
 });
 
+test("light user can start a chat from the messaging menu", async () => {
+    serverState.isRegularUser = false;
+    await start();
+    await openMessagingMenu();
+    await waitFor(".o-mail-MessagingMenu-tab.active:text('Chats')");
+    await waitFor("button:has([data-icon='add']):text('Chat')");
+});
+
 test("messaging menu should have topbar buttons", async () => {
     await start();
     await openMessagingMenu();

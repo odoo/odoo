@@ -155,3 +155,13 @@ test("live chat tab has an unread filter", async () => {
     await waitFor(".o-mail-NotificationItem:has(:text('Visitor #1')):count(1)");
     await waitFor(".o-mail-NotificationItem:has(:text('Visitor #2')):count(1)");
 });
+
+test("light user's messaging menu only has the discuss tabs", async () => {
+    serverState.isRegularUser = false;
+    await start();
+    await openMessagingMenu();
+    await waitFor(".o-mail-MessagingMenu-tab:count(3)");
+    await waitFor(".o-mail-MessagingMenu-tab[data-id='chat']:count(1)");
+    await waitFor(".o-mail-MessagingMenu-tab[data-id='channel']:count(1)");
+    await waitFor(".o-mail-MessagingMenu-tab[data-id='meeting']:count(1)");
+});
