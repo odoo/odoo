@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:38+0000\n"
 "PO-Revision-Date: 2026-08-13 12:14+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -42,8 +42,8 @@ msgid ""
 msgstr ""
 "<p class=\"o_view_nocontent_smiling_face\">Hech qanday faoliyat topilmadi. "
 "Keling, yangisini boshlaymiz!</p><p>Har kuni loyihalar bo‘yicha ish "
-"vaqtingizni kuzatib boring va bu vaqtni mijozlaringizga hisob-faktura "
-"qiling.</p>"
+"vaqtingizni kuzatib boring va bu vaqtni mijozlaringizga hisob-faktura qiling."
+"</p>"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -63,10 +63,11 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
-"<p class=\"o_view_nocontent_smiling_face\">Vaqt jadvallarini qayd eting</p>"
-"<p>Har kuni loyihalar bo‘yicha ish soatlaringizni qayd etishingiz va kuzatib "
-"borishingiz mumkin. Loyihaga sarflangan har qanday vaqt xarajatga aylanadi "
-"va zarur bo‘lsa, mijozlarga qayta hisob-faktura qilinishi mumkin.</p>"
+"<p class=\"o_view_nocontent_smiling_face\">Vaqt jadvallarini qayd eting</"
+"p><p>Har kuni loyihalar bo‘yicha ish soatlaringizni qayd etishingiz va "
+"kuzatib borishingiz mumkin. Loyihaga sarflangan har qanday vaqt xarajatga "
+"aylanadi va zarur bo‘lsa, mijozlarga qayta hisob-faktura qilinishi mumkin.</"
+"p>"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -136,8 +137,8 @@ msgid ""
 "<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
 "target=\"_blank\"><small><b>READ</b></small></a>"
 msgstr ""
-"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" target=\"_blank\">"
-"<small><b>O‘QISH</b></small></a>"
+"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
+"target=\"_blank\"><small><b>O‘QISH</b></small></a>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
@@ -403,8 +404,8 @@ msgstr ""
 "joriy etish uchun har bir bo‘lim bilan hamkorlik qilasiz.</b> Katta "
 "imkoniyatlar taqdim etadigan va tajribali rahbarlar bilan birga o‘sish hamda "
 "o‘rganish imkonini beradigan rivojlanayotgan kompaniyada ishlashga keling. "
-"Biz tajribali va iste'dodli xodim izlayapmiz. <br><br> Bu lavozim <b>"
-"ijodkorlik va puxtalikni</b> talab qiladi, siz qolipdan tashqarida "
+"Biz tajribali va iste'dodli xodim izlayapmiz. <br><br> Bu lavozim "
+"<b>ijodkorlik va puxtalikni</b> talab qiladi, siz qolipdan tashqarida "
 "fikrlashingiz kerak. Biz nomzoddan faol va \"ishni bitiruvchi\" ruhda "
 "bo‘lishini kutamiz. Muvaffaqiyatga erishish uchun sizda muammolarni hal "
 "qilishning mustahkam ko‘nikmalari bo‘lishi lozim."
@@ -586,6 +587,11 @@ msgid "Days Remaining)"
 msgstr "Qolgan kunlar)"
 
 #. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_hr_departure_wizard
+msgid "Departure Wizard"
+msgstr ""
+
+#. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
@@ -598,6 +604,7 @@ msgstr "Mahsulotlarimiz bilan tanishing."
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_move__display_name
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_move_reversal__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_hr_departure_wizard__display_name
 #: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__display_name
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__display_name
@@ -774,6 +781,7 @@ msgstr "Qolgan soatlar)"
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_move__id
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_move_line__id
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_move_reversal__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_hr_departure_wizard__id
 #: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee__id
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__id
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__id
@@ -1750,7 +1758,8 @@ msgstr "Sarflangan vaqtni hisoblashda olinadigan vaqt jadvallari"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 #, fuzzy
 msgid "Timesheets without a sales order item are reported as"
-msgstr "Sotuv buyurtmasi elementisiz vaqt jadvallari quyidagicha xabar qilinadi"
+msgstr ""
+"Sotuv buyurtmasi elementisiz vaqt jadvallari quyidagicha xabar qilinadi"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_list_inherited
@@ -1906,7 +1915,8 @@ msgstr ""
 #: code:addons/sale_timesheet/models/hr_timesheet.py:0
 #, fuzzy
 msgid "You cannot remove a timesheet that has already been invoiced."
-msgstr "Allaqachon hisob-faktura qilingan vaqt jadvalini olib tashlay olmaysiz."
+msgstr ""
+"Allaqachon hisob-faktura qilingan vaqt jadvalini olib tashlay olmaysiz."
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__billing_type__manually

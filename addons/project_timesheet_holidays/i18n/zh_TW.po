@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 17:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:38+0000\n"
 "PO-Revision-Date: 2026-10-01 15:33+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -50,7 +50,13 @@ msgid "Create a Task"
 msgstr "建立待辦任務"
 
 #. module: project_timesheet_holidays
+#: model:ir.model,name:project_timesheet_holidays.model_hr_departure_wizard
+msgid "Departure Wizard"
+msgstr ""
+
+#. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__display_name
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_departure_wizard__display_name
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave__display_name
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__display_name
@@ -67,6 +73,7 @@ msgstr "員工"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_departure_wizard__id
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_employee__id
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave__id
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__id
@@ -194,7 +201,8 @@ msgstr "查看休假"
 msgid ""
 "You cannot create timesheets for a task that is linked to a time off type. "
 "Please use the Time Off application to request new time off instead."
-msgstr "不可為連結至休假類型的任務建立工時表。請使用「休假」應用程式，申請新的休假。"
+msgstr ""
+"不可為連結至休假類型的任務建立工時表。請使用「休假」應用程式，申請新的休假。"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -208,7 +216,8 @@ msgstr "你不可刪除已連結至全域休假的工時表。"
 msgid ""
 "You cannot delete timesheets that are linked to time off requests. Please "
 "cancel your time off request from the Time Off application instead."
-msgstr "不可刪除連結至休假請求的工時表。請改為在「休假」應用程式取消你的休假請求。"
+msgstr ""
+"不可刪除連結至休假請求的工時表。請改為在「休假」應用程式取消你的休假請求。"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -217,8 +226,8 @@ msgid ""
 "You cannot modify timesheets that are linked to time off requests. Please "
 "use the Time Off application to modify your time off requests instead."
 msgstr ""
-"不可修改連結至休假請求的工時表。請改為使用「休假」應用程式，修改你的休假請求"
-"。"
+"不可修改連結至休假請求的工時表。請改為使用「休假」應用程式，修改你的休假請"
+"求。"
 
 #. module: project_timesheet_holidays
 #. odoo-python

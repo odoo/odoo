@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-13 04:36+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Estonian <https://translate.odoo.com/projects/odoo-s19-1/mail/"
@@ -305,8 +305,8 @@ msgid ""
 "(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
 "%(open_samp)s Escape%(close_samp)s %(open_em)s to %(open_cancel)s tühista %"
-"(close_cancel)s%(close_em)s%(open_samp)s CTRL-Enter%(close_samp)s %(open_em)"
-"s to %(open_save)s salvesta %(close_save)s %(close_em)s"
+"(close_cancel)s%(close_em)s%(open_samp)s CTRL-Enter%(close_samp)s %"
+"(open_em)s to %(open_save)s salvesta %(close_save)s %(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -696,9 +696,9 @@ msgid ""
 "Start your message with <i>'/'</i> to get the list of possible commands.</p>"
 msgstr ""
 "<p><b>Kirjuta siia</b>kanali liikmetele sõnum.</p> <p>Saate liikmeid "
-"teavitada kui märgite kasutaja <i>\"@\"</i> abil või märkides kanali <i>"
-"\"#\"</i>. Võimalike käskude loendi kuvamiseks alustage sõnumit märgiga <i>"
-"\"/\"</i>.</p>"
+"teavitada kui märgite kasutaja <i>\"@\"</i> abil või märkides kanali "
+"<i>\"#\"</i>. Võimalike käskude loendi kuvamiseks alustage sõnumit märgiga "
+"<i>\"/\"</i>.</p>"
 
 #. module: mail
 #. odoo-javascript
@@ -2286,8 +2286,8 @@ msgid ""
 "Bounce/Catchall '%(matching_alias_name)s' is already used by %"
 "(document_name)s. Choose another alias or change it on the other document."
 msgstr ""
-"Bounce/catchall '%(matching_alias_name)s' on juba kasutusel %(document_name)"
-"s. Kasuta teist aliast või muuda teisel dokumendil."
+"Bounce/catchall '%(matching_alias_name)s' on juba kasutusel %"
+"(document_name)s. Kasuta teist aliast või muuda teisel dokumendil."
 
 #. module: mail
 #. odoo-python
@@ -6024,7 +6024,8 @@ msgstr ""
 msgid ""
 "If you don't recognize it, you should change your password immediately via "
 "this link:<br/>"
-msgstr "Kui te ei tuvasta seda, peaksite muutma parooli selle lingi kaudu:<br/>"
+msgstr ""
+"Kui te ei tuvasta seda, peaksite muutma parooli selle lingi kaudu:<br/>"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__alias_domain_id
@@ -6755,6 +6756,11 @@ msgstr "LIVE"
 #: model:ir.model.fields,field_description:mail.field_mail_template__lang
 msgid "Language"
 msgstr "Keel"
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_message_translation__target_lang
+msgid "Language code used as the target for the translation request."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__last_interest_dt
@@ -9602,6 +9608,12 @@ msgid "Pop out Attachments"
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_view.js:0
+msgid "Pop out is not supported on mobile."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__port
 msgid "Port"
 msgstr "Port"
@@ -11189,11 +11201,6 @@ msgid "Shortcut"
 msgstr "Otsetee"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_message_translation__target_lang
-msgid "Shortened language code used as the target for the translation request."
-msgstr "Keele lühikood mida kasutatakse tõlke nõudmisel."
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/command_palette.js:0
 msgid "Show All Activities"
@@ -11884,8 +11891,8 @@ msgid ""
 "\"%(plan_name)s\" because it is limited to the model \"%"
 "(activity_type_model)s\"."
 msgstr ""
-"Tegevuse tüüp \"%(activity_type_name)s\" ei ühildu plaaniga \"%(plan_name)"
-"s\", sest see on piiratud mudelile \"%(activity_type_model)s\""
+"Tegevuse tüüp \"%(activity_type_name)s\" ei ühildu plaaniga \"%"
+"(plan_name)s\", sest see on piiratud mudelile \"%(activity_type_model)s\""
 
 #. module: mail
 #. odoo-javascript
@@ -11993,10 +12000,10 @@ msgid ""
 "                 Please make sure you are using the correct address or "
 "contact us at %(default_email)s instead."
 msgstr ""
-"Allolevat sõnumit ei saanud antud aadress %(alias_display_name)svastu võtta. "
-"\n"
-"Ainult %(contact_description)s on lubatud selle aadressiga ühendust "
-"võtta.<br /><br />\n"
+"Allolevat sõnumit ei saanud antud aadress %(alias_display_name)svastu "
+"võtta. \n"
+"Ainult %(contact_description)s on lubatud selle aadressiga ühendust võtta."
+"<br /><br />\n"
 "Veendu, et kasutas õiget aadressi või võta meiega ühendust aadressil %"
 "(default_email)s."
 
@@ -12008,8 +12015,8 @@ msgid ""
 "(alias_display_name)s.\n"
 "Please try again later or contact %(company_name)s instead."
 msgstr ""
-"Allolevat sõnumit ei saanud antud aadress%(alias_display_name)s vastu võtta. "
-"\n"
+"Allolevat sõnumit ei saanud antud aadress%(alias_display_name)s vastu "
+"võtta. \n"
 "Proovi hiljem uuesti või võta ühendust %(company_name)s-ga."
 
 #. module: mail
@@ -13755,8 +13762,8 @@ msgid ""
 msgstr ""
 "Dokumente printides ja andmete impordil/ekspordil arvutatakse ajaväärtused "
 "ajavöönditele vastavalt.\n"
-"Kui ajavöönd ei ole määratud, kasutatakse UTC'd (Coordinated Unversal Time)"
-".\n"
+"Kui ajavöönd ei ole määratud, kasutatakse UTC'd (Coordinated Unversal "
+"Time).\n"
 "Igal pool mujal arvutatakse ajaväärtused teie veebikliendi kohalikust ajast."
 
 #. module: mail
@@ -14293,12 +14300,6 @@ msgstr ""
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "created this channel."
 msgstr "lõi selle kanali."
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/js/rotting_mixin/rotting_statusbar.xml:0
-msgid "d"
-msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -14860,6 +14861,10 @@ msgstr "“%(member_name)s” selles kanalis “%(channel_name)s”"
 #: code:addons/mail/static/src/core/web/activity.js:0
 msgid "“%s”"
 msgstr ""
+
+#~ msgid ""
+#~ "Shortened language code used as the target for the translation request."
+#~ msgstr "Keele lühikood mida kasutatakse tõlke nõudmisel."
 
 #~ msgid "Search for a GIF"
 #~ msgstr "Otsi GIFi"

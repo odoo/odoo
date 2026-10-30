@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-11 00:19+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-1/hr/"
@@ -144,8 +144,8 @@ msgid ""
 "<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
 "target=\"_blank\"><small><b>READ</b></small></a>"
 msgstr ""
-"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" target=\"_blank\">"
-"<small><b>CITEȘTE</b></small></a>"
+"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
+"target=\"_blank\"><small><b>CITEȘTE</b></small></a>"
 
 #. module: hr
 #. odoo-python
@@ -174,8 +174,8 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-envelope fa-fw me-1 text-primary\" title=\"Work Email\"/>"
 msgstr ""
-"<i class=\"fa fa-envelope fa-fw me-1 text-primary\" title=\"Email de "
-"muncă\"/>"
+"<i class=\"fa fa-envelope fa-fw me-1 text-primary\" title=\"Email de muncă\"/"
+">"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -355,8 +355,8 @@ msgid ""
 msgstr ""
 "<span class=\"d-flex w-50\">\n"
 "                                                    <span "
-"invisible=\"is_trusted_bank_account\" class=\"text-muted\">Neîncredere</span>"
-"\n"
+"invisible=\"is_trusted_bank_account\" class=\"text-muted\">Neîncredere</"
+"span>\n"
 "                                                    <span invisible=\"not "
 "is_trusted_bank_account\" class=\"text-success\">Încredere</span>\n"
 "                                                </span>"
@@ -1108,8 +1108,8 @@ msgstr ""
 "                                Căutăm un dezvoltator calificat, pasionat de "
 "tehnologie și inovație.\n"
 "                                <br>\n"
-"                                În acest rol, veți fi responsabil pentru <b>"
-"scrierea unui cod curat și ușor de întreținut,\n"
+"                                În acest rol, veți fi responsabil pentru "
+"<b>scrierea unui cod curat și ușor de întreținut,\n"
 "                                participarea la revizuiri de cod și "
 "depistarea problemelor</b>. Munca dvs. va implica\n"
 "                                atât <b>rezolvarea creativă a problemelor, "
@@ -1749,7 +1749,6 @@ msgstr "Model Contract"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_contract_type
 #: model:ir.model.fields,field_description:hr.field_hr_employee__contract_type_id
-#: model:ir.model.fields,field_description:hr.field_hr_job__contract_type_id
 #: model:ir.model.fields,field_description:hr.field_hr_version__contract_type_id
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -2566,6 +2565,11 @@ msgstr "Etichete angajați"
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Employees profile"
 msgstr "Profilul angajaților"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_job__contract_type_id
+msgid "Employment Type"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
@@ -5149,16 +5153,6 @@ msgid "Temporary"
 msgstr "Temporar"
 
 #. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_employee.py:0
-msgid ""
-"The Badge ID must be alphanumeric without any accents and no longer than 18 "
-"characters."
-msgstr ""
-"ID-ul de ecuson trebuie să fie alfanumeric, fără diacritice și să nu "
-"depășească 18 caractere."
-
-#. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
 msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
@@ -5166,6 +5160,14 @@ msgid ""
 msgstr ""
 "ID-ul de Ecuson trebuie să fie unic, acesta este deja atribuit unui alt "
 "angajat."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"The Badge ID must contain only printable ASCII characters, without spaces, "
+"and be no longer than 18 characters."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_departure_reason__country_code
@@ -6251,6 +6253,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "nume_permis_muncă"
+
+#~ msgid ""
+#~ "The Badge ID must be alphanumeric without any accents and no longer than "
+#~ "18 characters."
+#~ msgstr ""
+#~ "ID-ul de ecuson trebuie să fie alfanumeric, fără diacritice și să nu "
+#~ "depășească 18 caractere."
 
 #~ msgid "SSN No"
 #~ msgstr "CNP"

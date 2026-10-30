@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-09 15:28+0000\n"
-"PO-Revision-Date: 2026-10-23 10:33+0000\n"
+"PO-Revision-Date: 2026-10-27 03:38+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/base/"
 "ja/>\n"
@@ -7265,12 +7265,12 @@ msgid ""
 "for customization purpose.\n"
 msgstr ""
 "\n"
-"カスタムデータモジュールをインポート\n"
-"===============\n"
+"カスタムデータモジュールのインポート\n"
+"===========================\n"
 "\n"
-"このモジュールを使用すると、許可されたユーザーは、カスタマイズのために\n"
-"カスタムデータモジュール(.xmlファイルとstatic assests)をインポートできます"
-"。\n"
+"このモジュールは、権限を持つユーザがカスタマイズ目的で"
+"カスタムデータモジュール(.xmlファイルおよび静的アセット)を\n"
+"インポートすることを許可します。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_amazon
@@ -9272,25 +9272,28 @@ msgid ""
 "  need or want an online import can avoid it being available to users.\n"
 msgstr ""
 "\n"
-"New extensible file import for Odoo\n"
+"Odoo向け 拡張可能な新しいファイルインポート機能\n"
 "======================================\n"
 "\n"
-"Re-implement Odoo's file import system:\n"
+"Odooのファイルインポートシステムを再実装しました:\n"
 "\n"
-"* Server side, the previous system forces most of the logic into the\n"
-"  client which duplicates the effort (between clients), makes the\n"
-"  import system much harder to use without a client (direct RPC or\n"
-"  other forms of automation) and makes knowledge about the\n"
-"  import/export system much harder to gather as it is spread over\n"
-"  3+ different projects.\n"
+"* サーバサイド処理への移行: 従来のシステムではロジックの\n"
+"  大部分がクライアント側に置かれていました。そのため、クライアント間での開発"
+"工数\n"
+"  の重複が生じ、クライアントを介さない利用(RPCの直接呼び出しや各種自動化処理)"
+"が\n"
+"  非常に困難になっていました。また、インポート/エクスポート関連のノウハウが3"
+"つ以上の\n"
+"  異なるプロジェクトに分散し、把握しづらい\n"
+"  要因にもなっていました。\n"
 "\n"
-"* In a more extensible manner, so users and partners can build their\n"
-"  own front-end to import from other file formats (e.g. OpenDocument\n"
-"  files) which may be simpler to handle in their work flow or from\n"
-"  their data production sources.\n"
+"* 拡張性の向上: ユーザーやパートナー企業が独自のフロントエンドを構築し、\n"
+"  業務フローやデータ生成元に合わせて扱いやすい他のファイル形式\n"
+"   (例：OpenDocumentファイルなど) からインポート\n"
+"  できるようにしました。\n"
 "\n"
-"* In a module, so that administrators and users of Odoo who do not\n"
-"  need or want an online import can avoid it being available to users.\n"
+"*オンラインでのインポート機能を必要としない、あるいはユーザに提供したくない\n"
+"  管理者やユーザが、機能を無効化できるようにモジュール化しました。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ng
@@ -12741,12 +12744,12 @@ msgstr ""
 "うになります。\n"
 "============================================================\n"
 "\n"
-"自動化アクションを使用して、さまざまな画面のアクションを自動的にトリガします"
+"自動化ルールを使用すると、さまざまな画面でアクションを自動的にトリガできます"
 "。\n"
 "\n"
-"**例:** 特定のユーザによって作成されたリードは、自動的に特定の営業チームに設"
-"定されるかもしれません。または案件が14日後もまだ保留のステータスの場合\n"
-"自動リマインダメールをトリガすることもできます。\n"
+"**例:** 特定のユーザによって作成されたリードを特定の販売チームに自動的に設定"
+"したり、14日経過しても保留ステータスのままの案件に対して\n"
+"自動リマインダーメールをトリガしたりできます。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_onboarding
@@ -17458,7 +17461,7 @@ msgstr "AIエージェントの情報ソースとしてドキュメントを追�
 #. module: base
 #: model:ir.module.module,summary:base.module_base_address_extended
 msgid "Add extra fields on addresses"
-msgstr "アドレスにフィールドを追加する"
+msgstr "住所にフィールドを追加"
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_crm_sale
@@ -27822,7 +27825,7 @@ msgstr "AI機能(文字起こしなど)で電話機能を拡張"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_address_extended
 msgid "Extended Addresses"
-msgstr "拡張アドレス"
+msgstr "拡張住所"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__mode__extension
@@ -30910,7 +30913,7 @@ msgstr "アプリ内課金"
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Inactive"
-msgstr "無効"
+msgstr "非アクティブ"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_search

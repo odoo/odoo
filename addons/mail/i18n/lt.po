@@ -32,7 +32,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-12 02:56+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -42,8 +42,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
-"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 "
-": n % 1 != 0 ? 2: 3);\n"
+"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
+"1 : n % 1 != 0 ? 2: 3);\n"
 "X-Generator: Weblate 2026.6.1\n"
 
 #. module: mail
@@ -675,9 +675,9 @@ msgid ""
 "Start your message with <i>'/'</i> to get the list of possible commands.</p>"
 msgstr ""
 "Čia <p><b>rašykite žinutę</b> kanalo nariams.</p> <p>Galite išsiųsti "
-"pranešimą kam nors naudodami <i>'@'</i> ar susieti kitą kanalą naudodami <i>"
-"'#'</i>. Pradėkite žinutę <i>'/'</i> , jei norite gauti visų įmanomų komandų "
-"sąrašą.</p>"
+"pranešimą kam nors naudodami <i>'@'</i> ar susieti kitą kanalą naudodami "
+"<i>'#'</i>. Pradėkite žinutę <i>'/'</i> , jei norite gauti visų įmanomų "
+"komandų sąrašą.</p>"
 
 #. module: mail
 #. odoo-javascript
@@ -6194,8 +6194,8 @@ msgid ""
 "Invalid expression, it must be a literal python dictionary definition e.g. "
 "\"{'field': 'value'}\""
 msgstr ""
-"Negalima išraiška, tai turi būti raidinė Python žodyno reikšmė, pvz.  \""
-"{'field': 'value'}\""
+"Negalima išraiška, tai turi būti raidinė Python žodyno reikšmė, pvz.  "
+"\"{'field': 'value'}\""
 
 #. module: mail
 #. odoo-python
@@ -6665,6 +6665,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_template__lang
 msgid "Language"
 msgstr "Kalba"
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_message_translation__target_lang
+msgid "Language code used as the target for the translation request."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__last_interest_dt
@@ -7182,7 +7187,8 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__is_notification
 msgid "Mail has been created to notify people of an existing mail.message"
-msgstr "Laiškas buvo sukurtas pranešti žmonėms apie egzistuojančią pašto žinutę"
+msgstr ""
+"Laiškas buvo sukurtas pranešti žmonėms apie egzistuojančią pašto žinutę"
 
 #. module: mail
 #. odoo-python
@@ -9504,6 +9510,12 @@ msgid "Pop out Attachments"
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_view.js:0
+msgid "Pop out is not supported on mobile."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__port
 msgid "Port"
 msgstr "Prievadas"
@@ -11088,11 +11100,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__source
 msgid "Shortcut"
 msgstr "Trumpinys"
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_mail_message_translation__target_lang
-msgid "Shortened language code used as the target for the translation request."
-msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -13609,8 +13616,8 @@ msgid ""
 msgstr ""
 "Spausdinant dokumentus ir eksportuojant/importuojant duomenis, laiko vertės "
 "yra skaičiuojamos pagal šią laiko juostą.\n"
-"Jei laiko juosta nenustatyta, naudojamas UTC (Koordinuotas pasaulinis laikas)"
-".\n"
+"Jei laiko juosta nenustatyta, naudojamas UTC (Koordinuotas pasaulinis "
+"laikas).\n"
 "Visur kitur laiko vertės yra skaičiuojamos pagal jūsų žiniatinklio kliento "
 "laiko poslinkį."
 
@@ -14139,12 +14146,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "created this channel."
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/js/rotting_mixin/rotting_statusbar.xml:0
-msgid "d"
 msgstr ""
 
 #. module: mail

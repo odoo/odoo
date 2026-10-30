@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-13 05:06+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -297,8 +297,8 @@ msgid ""
 "                    "
 msgstr ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
-"        您可以在此处找到所有被遗弃的购物车，即在一个小时前由您的网站访客创建"
-"，但尚未确认的购物车。</p>\n"
+"        您可以在此处找到所有被遗弃的购物车，即在一个小时前由您的网站访客创"
+"建，但尚未确认的购物车。</p>\n"
 "        <p>您应该向这些客户发送EMail，鼓励他们进行确认!</p>\n"
 "                    "
 
@@ -5392,6 +5392,14 @@ msgstr "售罄"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
+msgid ""
+"Some products in your cart are not available for purchase in your country. "
+"Please remove them or contact us."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
 msgid "Sorry, we are unable to ship your order."
 msgstr "抱歉，我们无法运送您的订单。"
 
@@ -5699,6 +5707,14 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-python
+#: code:addons/website_sale/controllers/cart.py:0
+msgid ""
+"The number of selected combo items must match the number of available combo "
+"choices."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/controllers/payment.py:0
 msgid "The order has been cancelled."
 msgstr "订单已取消。"
@@ -5712,8 +5728,8 @@ msgid ""
 "Shop > Edit Click on the page and enable 'Categories' to view all eCommerce "
 "categories."
 msgstr ""
-"该产品将在每个提到的电子商务类别中都是可用的。 转到商店>编辑点击网页并启"
-"用\"类别\"以查看所有电子商务类别。"
+"该产品将在每个提到的电子商务类别中都是可用的。 转到商店>编辑点击网页并启用"
+"\"类别\"以查看所有电子商务类别。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_mega_menu_images_subtitles
@@ -5826,6 +5842,18 @@ msgstr "此产品已停产。"
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "This product is not available (anymore) in this unit of measure."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid "This product is not available for purchase in your country."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/cart.py:0
+msgid "This product is part of a combo and can't be updated individually."
 msgstr ""
 
 #. module: website_sale
@@ -6144,7 +6172,8 @@ msgid ""
 "Warranty, issued to the purchaser of an article by its manufacturer, "
 "promising to repair or replace it if necessary within a specified period of "
 "time."
-msgstr "质保，由生产厂家发给产品的买家，厂家承诺在指定时间内对商品进行维修或更换。"
+msgstr ""
+"质保，由生产厂家发给产品的买家，厂家承诺在指定时间内对商品进行维修或更换。"
 
 #. module: website_sale
 #. odoo-python

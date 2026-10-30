@@ -17,11 +17,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-24 17:21+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
-"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-1/hr/"
-"it/>\n"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-1/hr/it/"
+">\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -145,8 +145,8 @@ msgid ""
 "<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
 "target=\"_blank\"><small><b>READ</b></small></a>"
 msgstr ""
-"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" target=\"_blank\">"
-"<small><b>LEGGI</b></small></a>"
+"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
+"target=\"_blank\"><small><b>LEGGI</b></small></a>"
 
 #. module: hr
 #. odoo-python
@@ -155,8 +155,8 @@ msgid ""
 "<b>Congratulations!</b> May I recommend you to setup an <a "
 "href=\"%s\">onboarding plan?</a>"
 msgstr ""
-"<b>Congratulazioni!</b> Posso suggerirti di impostare un <a href=\"%s\">"
-"piano di inserimento lavorativo?</a>"
+"<b>Congratulazioni!</b> Posso suggerirti di impostare un <a "
+"href=\"%s\">piano di inserimento lavorativo?</a>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -227,7 +227,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<i class=\"fa fa-phone fa-fw me-1 text-primary\" title=\"Work Phone\"/>"
-msgstr "<i class=\"fa fa-phone fa-fw me-1 text-primary\" title=\"Work Phone\"/>"
+msgstr ""
+"<i class=\"fa fa-phone fa-fw me-1 text-primary\" title=\"Work Phone\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -358,8 +359,8 @@ msgid ""
 msgstr ""
 "<span class=\"d-flex w-50\">\n"
 "                                                    <span "
-"invisible=\"is_trusted_bank_account\" class=\"text-muted\">Non sicuro</span>"
-"\n"
+"invisible=\"is_trusted_bank_account\" class=\"text-muted\">Non sicuro</"
+"span>\n"
 "                                                    <span invisible=\"not "
 "is_trusted_bank_account\" class=\"text-success\">Sicuro</span>\n"
 "                                                </span>"
@@ -448,8 +449,8 @@ msgid ""
 "<span class=\"text-uppercase fw-bolder\" style=\"font-size: "
 "13px\">Organization Chart</span>"
 msgstr ""
-"<span class=\"text-uppercase fw-bolder\" style=\"font-size: 13px\">"
-"Organigramma aziendale</span>"
+"<span class=\"text-uppercase fw-bolder\" style=\"font-size: "
+"13px\">Organigramma aziendale</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1115,8 +1116,8 @@ msgstr ""
 "                                Siamo alla ricerca di uno sviluppatore "
 "esperto con una passione per la tecnologia e l'innovazione.\n"
 "                                <br>\n"
-"                                In questo ruolo, sarai responsabile di <b>"
-"scrivere righe di codice chiare e mantenibili,\n"
+"                                In questo ruolo, sarai responsabile di "
+"<b>scrivere righe di codice chiare e mantenibili,\n"
 "                                partecipare alle revisioni e individuare "
 "problemi</b>. Il tuo lavorò sarà\n"
 "                                creativo ma anche orientato al <b>problem-"
@@ -1149,8 +1150,8 @@ msgid ""
 msgstr ""
 "Come tirocinante nella nostra azienda, <b>lavorerai con vari dipartimenti "
 "per aiutare nella\n"
-"                                creazione e nel lancio di nuovi prodotti</b>"
-". Unisciti al nostro team in continua crescita, ti offriamo\n"
+"                                creazione e nel lancio di nuovi prodotti</"
+"b>. Unisciti al nostro team in continua crescita, ti offriamo\n"
 "                                vantaggi eccellenti e opportunità di "
 "apprendimento uniche oltre alla competenza\n"
 "                                di esperti.\n"
@@ -1805,7 +1806,6 @@ msgstr "Modelli contratto"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_contract_type
 #: model:ir.model.fields,field_description:hr.field_hr_employee__contract_type_id
-#: model:ir.model.fields,field_description:hr.field_hr_job__contract_type_id
 #: model:ir.model.fields,field_description:hr.field_hr_version__contract_type_id
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -2616,6 +2616,11 @@ msgstr "Etichette dipendenti"
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Employees profile"
 msgstr "Profili dipendenti"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_job__contract_type_id
+msgid "Employment Type"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
@@ -5176,16 +5181,6 @@ msgid "Temporary"
 msgstr "Temporaneo"
 
 #. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_employee.py:0
-msgid ""
-"The Badge ID must be alphanumeric without any accents and no longer than 18 "
-"characters."
-msgstr ""
-"L'ID del badge deve essere alfanumerico senza accenti e non più lungo di 18 "
-"caratteri."
-
-#. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
 msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
@@ -5193,6 +5188,14 @@ msgid ""
 msgstr ""
 "L'ID del tesserino deve essere univoco, questo risulta già assegnato a un "
 "altro dipendente."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"The Badge ID must contain only printable ASCII characters, without spaces, "
+"and be no longer than 18 characters."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_departure_reason__country_code
@@ -6277,6 +6280,13 @@ msgstr "lavoro"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "work_permit_name"
+
+#~ msgid ""
+#~ "The Badge ID must be alphanumeric without any accents and no longer than "
+#~ "18 characters."
+#~ msgstr ""
+#~ "L'ID del badge deve essere alfanumerico senza accenti e non più lungo di "
+#~ "18 caratteri."
 
 #~ msgid "Barcode"
 #~ msgstr "Codice a barre"

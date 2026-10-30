@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:41+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-12 03:58+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -41,10 +41,10 @@ msgstr ""
 "        근무 항목 생성에 대한 기준 정의\n"
 "\n"
 "        근무 일정: 아래의 근무 시간에서 근무 항목을 생성합니다.\n"
-"        근태: 직원 근태 자료에서 근무 항목을 생성합니다. (근태 관리 앱 필요)"
-"\n"
-"        일정 수립: 직원의 일정에서 근무 항목을 생성합니다. (일정 수립 앱 "
-"필요)\n"
+"        근태: 직원 근태 자료에서 근무 항목을 생성합니다. (근태 관리 앱 필"
+"요)\n"
+"        일정 수립: 직원의 일정에서 근무 항목을 생성합니다. (일정 수립 앱 필"
+"요)\n"
 "    "
 
 #. module: hr_work_entry
@@ -91,8 +91,8 @@ msgid ""
 "<span class=\"text-muted\">Warning: The work entry regeneration will delete "
 "all manual changes on the selected period.</span>"
 msgstr ""
-"<span class=\"text-muted\">경고: 근로 항목을 다시 생성하면 선택한 기간에 "
-"대한 모든 수동 변경 사항은 삭제됩니다.</span>"
+"<span class=\"text-muted\">경고: 근로 항목을 다시 생성하면 선택한 기간에 대"
+"한 모든 수동 변경 사항은 삭제됩니다.</span>"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
@@ -844,7 +844,8 @@ msgstr "IWM"
 msgid ""
 "If the active field is set to false, it will allow you to hide the work "
 "entry type without removing it."
-msgstr "활성 필드가 false로 설정되면 작업 항목 유형을 제거하지 않고 숨길 수 있습니다."
+msgstr ""
+"활성 필드가 false로 설정되면 작업 항목 유형을 제거하지 않고 숨길 수 있습니다."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__amount_rate
@@ -946,8 +947,8 @@ msgid ""
 "Invalid option: For fully flexible calendars, the work entry source cannot "
 "be 'Working Hours'."
 msgstr ""
-"잘못된 옵션: 완전히 유연한 캘린더의 경우 근무 입력 소스를 '근무 시간'으로 "
-"설정할 수 없습니다."
+"잘못된 옵션: 완전히 유연한 캘린더의 경우 근무 입력 소스를 '근무 시간'으로 설"
+"정할 수 없습니다."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__is_checked
@@ -1278,9 +1279,24 @@ msgid "Overtime Hours not subject to social security contribution"
 msgstr ""
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.uae_work_entry_type_overtime_off_days
+msgid "Overtime Off-days"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_overtime_rest_days
 msgid "Overtime Restday"
 msgstr "초과근무 휴무일"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.uae_work_entry_type_overtime_work_days_daytime
+msgid "Overtime Weekdays Daytime"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.uae_work_entry_type_overtime_work_days_nighttime
+msgid "Overtime Weekdays Nighttime"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_overtime_work_days_daytime
@@ -1964,8 +1980,8 @@ msgid ""
 "entries time interval."
 msgstr ""
 "시작 날짜는 >= '%(earliest_available_date)s', 종료 날짜는 <= '%"
-"(latest_available_date)s'이여야 하며, 생성된 근로 항목 시간 간격에 "
-"해당됩니다."
+"(latest_available_date)s'이여야 하며, 생성된 근로 항목 시간 간격에 해당됩니"
+"다."
 
 #. module: hr_work_entry
 #. odoo-python
@@ -1993,7 +2009,8 @@ msgstr ""
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "This work entry cannot be validated. The work entry type is undefined."
-msgstr "이 근로 항목을 확인할 수 없습니다. 근로 입력 유형이 정의되지 않았습니다."
+msgstr ""
+"이 근로 항목을 확인할 수 없습니다. 근로 입력 유형이 정의되지 않았습니다."
 
 #. module: hr_work_entry
 #. odoo-python
@@ -2022,8 +2039,8 @@ msgid ""
 "Try to add some records, or make sure that there is no active filter in the "
 "search bar."
 msgstr ""
-"레코드를 일부 추가해 보거나, 검색창에서 활성화되어 있는 필터가 없는지 "
-"확인합니다."
+"레코드를 일부 추가해 보거나, 검색창에서 활성화되어 있는 필터가 없는지 확인합"
+"니다."
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
