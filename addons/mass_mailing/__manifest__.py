@@ -177,7 +177,6 @@
             'mass_mailing/static/src/scss/mass_mailing.scss',
             'mass_mailing/static/src/scss/mass_mailing_mobile.css',
             'mass_mailing/static/src/scss/mass_mailing_mobile_preview.scss',
-            'mass_mailing/static/src/js/tours/**/*',
             # Don't include dark mode files in light mode
             ('remove', 'mass_mailing/static/src/**/*.dark.css'),
             # Don't include shadowdom specific style
@@ -191,9 +190,6 @@
         ],
         'mass_mailing.assets_mail_themes': [
             'mass_mailing/static/src/scss/themes/**/*',
-        ],
-        'web.assets_frontend': [
-            'mass_mailing/static/src/js/tours/**/*',
         ],
         'web.assets_tests': [
             'mass_mailing/static/tests/tours/**/*',

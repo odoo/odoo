@@ -73,7 +73,6 @@
             'project/static/src/actions/client_actions.js',
             'project/static/src/components/**/*',
             'project/static/src/views/**/*',
-            'project/static/src/js/tours/project.js',
             'project/static/src/scss/project_dashboard.css',
             'project/static/src/scss/project_form.css',
             'project/static/src/scss/project_widgets.scss',

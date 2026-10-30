@@ -93,7 +93,10 @@ export class TourPlugin extends Plugin {
             } else {
                 tourState.clear();
             }
-        } else if (session.current_tour) {
+        } else if (
+            session.current_tour &&
+            (session.current_tour.steps.length || tourRegistry.contains(session.current_tour.name))
+        ) {
             this.startTour(session.current_tour.name, {
                 mode: "manual",
                 fromDB: true,
