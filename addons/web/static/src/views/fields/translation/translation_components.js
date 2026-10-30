@@ -166,7 +166,9 @@ export class TranslateXml extends Component {
             const attributes = Object.fromEntries(
                 node.getAttributeNames().map((attName) => [attName, node.getAttribute(attName)])
             );
-            attributes["data-width"] = this.computeInputWidth(this._getNodeInnerValue(node));
+            attributes.style = `--o-translate-width: ${this.computeInputWidth(
+                this._getNodeInnerValue(node)
+            )}ch;`;
             parsed.attributes = attributes;
             const translationKey = this.model.getTranslationKey(attributes);
             attributes["data-translation-key"] = translationKey;
@@ -195,7 +197,10 @@ export class TranslateXml extends Component {
             const key = target.getAttribute("data-translation-key");
             this.model.setHashChange(null, key, target.value);
             target.dataset.oeTranslationState = "translated";
-            target.dataset.width = this.computeInputWidth(target.value);
+            target.style.setProperty(
+                "--o-translate-width",
+                `${this.computeInputWidth(target.value)}ch`
+            );
         }
     }
 
