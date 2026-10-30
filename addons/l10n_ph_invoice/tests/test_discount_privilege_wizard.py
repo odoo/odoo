@@ -421,10 +421,10 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
         self.assertEqual(line.l10n_ph_discount_privilege_id, self.privilege_without_tax)
         self.assertAlmostEqual(line.price_subtotal, 80.0)
         self.assertAlmostEqual(line.price_total, 89.6)
-        self._assert_discount_allocation(invoice, line, 22.4)
+        self._assert_discount_allocation(invoice, line, 20.0)
 
     def test_special_privilege_on_tax_included_line(self):
-        for discount_amount, expected_amount in ((0.2, 100.0), (0.05, 25.0)):
+        for discount_amount, expected_amount in ((0.2, 89.29), (0.05, 22.32)):
             with self.subTest(discount_amount=discount_amount):
                 privilege = self._create_privilege(
                     f"Special Discount Tax-Incl {discount_amount * 100:.0f}%",
@@ -528,8 +528,8 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
 
     def test_special_privilege_on_tax_excluded_line(self):
         for discount_amount, price_unit, expected_amount in (
-            (0.2, 1000.0, 224.0),
-            (0.05, 500.0, 28.0),
+            (0.2, 1000.0, 200.0),
+            (0.05, 500.0, 25.0),
         ):
             with self.subTest(discount_amount=discount_amount):
                 privilege = self._create_privilege(
@@ -826,23 +826,23 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
     def test_apply_full_discount_100_percent(self):
         full = self._create_privilege("Full 100%", 1.0, discount_type="special")
 
-        # Tax-excluded: discount base includes VAT (112) in preview.
+        # Tax-excluded: discount base excludes VAT (100) in preview.
         invoice = self._create_invoice_with_lines(
             ("Line A", self.product_a, 100.0),
         )
         wizard = self._create_wizard(invoice, privilege_id=full.id, apply_on="all")
         self.assertEqual(wizard.line_ids.discount, 100.0)
-        self.assertAlmostEqual(wizard.line_ids.discount_amount, 112.0, places=2)
+        self.assertAlmostEqual(wizard.line_ids.discount_amount, 100.0, places=2)
 
         wizard.action_confirm()
         line = invoice.invoice_line_ids
         self.assertEqual(line.discount, 100.0)
         self.assertAlmostEqual(line.price_subtotal, 0.0)
-        self.assertAlmostEqual(line.l10n_ph_special_discount_amount, 112.0)
-        self._assert_discount_allocation(invoice, line, 112.0)
+        self.assertAlmostEqual(line.l10n_ph_special_discount_amount, 100.0)
+        self._assert_discount_allocation(invoice, line, 100.0)
 
-        # Back-calculation at 100% keeps tax-included/tax-excluded bases.
-        for tax, expected_amount in ((self.tax_incl, 500.0), (self.base_tax, 560.0)):
+        # Back-calculation at 100% is reported on the tax-excluded base.
+        for tax, expected_amount in ((self.tax_incl, 446.43), (self.base_tax, 500.0)):
             with self.subTest(tax=tax.name):
                 invoice = self._create_invoice_with_lines(
                     ("Line A", self.product_a, 500.0, {"tax_ids": tax}),
@@ -889,10 +889,10 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
         line = invoice.invoice_line_ids
         self.assertEqual(line.discount, 20.0)
         self.assertAlmostEqual(line.l10n_ph_regular_discount_amount, 0.0)
-        self.assertAlmostEqual(line.l10n_ph_special_discount_amount, 22.4)
+        self.assertAlmostEqual(line.l10n_ph_special_discount_amount, 20.0)
         self.assertAlmostEqual(line.price_subtotal, 80.0)
         self.assertAlmostEqual(line.price_total, 89.6)
-        self._assert_discount_allocation(invoice, line, 22.4)
+        self._assert_discount_allocation(invoice, line, 20.0)
 
     # ============================================================
     #  Multi-Company / Access / Security
@@ -1222,7 +1222,7 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
 
         self.assertEqual(line_c.l10n_ph_discount_privilege_id, sc5_privilege)
         self.assertEqual(line_c.discount, 5.0)
-        self.assertAlmostEqual(line_c.l10n_ph_special_discount_amount, 168.0, places=2)
+        self.assertAlmostEqual(line_c.l10n_ph_special_discount_amount, 150.0, places=2)
 
         self.assertFalse(line_d.l10n_ph_discount_privilege_id)
         self.assertEqual(line_d.discount, 0.0)
