@@ -17,10 +17,9 @@ export class ResourceCalendarFormController extends FormController {
                 this.dialogService.add(ConfirmationDialog, {
                     title: _t("Confirmation Warning"),
                     body: _t(
-                        "This working schedule is used by " +
-                            linked_employees_count +
-                            " employee(s), are you sure you want change it for all employees?"
-                    ),
+                            "This working schedule is used by %s employee(s), are you sure you want change it for all employees?",
+                            linked_employees_count
+                        ),
                     confirmLabel: _t("Confirm"),
                     confirm: () => resolve(true),
                     cancel: () => {
