@@ -18,6 +18,7 @@ import sys
 import types
 import typing
 import zoneinfo
+from importlib.util import MAGIC_NUMBER
 from opcode import opmap, opname
 from types import CodeType
 
@@ -225,6 +226,33 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'NOT_TAKEN',
 ])) - _BLACKLIST
 
+# Each magic number belongs to exactly one minor version.
+# .pyc magic numbers of the CPython releases whose code-unit layout was verified.
+# Any bytecode format change bumps it.
+_KNOWN_BYTECODE_MAGICS = {
+    3531,  # CPython 3.12
+    3571,  # CPython 3.13
+    3627,  # CPython 3.14
+}
+
+if (
+    sys.implementation.name == 'cpython'
+    and int.from_bytes(MAGIC_NUMBER[:2], 'little') in _KNOWN_BYTECODE_MAGICS
+):
+    _CACHE = opmap['CACHE']
+
+    def _code_opcodes(code_obj):
+        # co_code is a deoptimized array of 2-byte _Py_CODEUNIT {opcode, oparg}
+        # whose inline caches are zeroed by deopt_code() (CACHE == 0), so every
+        # even byte is an instruction opcode or CACHE.
+        # Layout must be re-verified for each new CPython release.
+        opcodes = set(code_obj.co_code[::2])
+        opcodes.discard(_CACHE)
+        return opcodes
+else:
+    def _code_opcodes(code_obj):
+        return {instr.opcode for instr in dis.get_instructions(code_obj)}
+
 
 def assert_no_dunder_name(code_obj, expr):
     """ assert_no_dunder_name(code_obj, expr) -> None
@@ -270,9 +298,7 @@ def assert_valid_codeobj(allowed_codes, code_obj, expr):
     """
     assert_no_dunder_name(code_obj, expr)
 
-    # set operations are almost twice as fast as a manual iteration + condition
-    # when loading /web according to line_profiler
-    code_codes = {i.opcode for i in dis.get_instructions(code_obj)}
+    code_codes = _code_opcodes(code_obj)
     if not allowed_codes >= code_codes:
         raise ValueError("forbidden opcode(s) in %r: %s" % (expr, ', '.join(opname[x] for x in (code_codes - allowed_codes))))
 
