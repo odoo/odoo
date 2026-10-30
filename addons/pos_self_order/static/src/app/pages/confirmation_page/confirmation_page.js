@@ -162,7 +162,9 @@ export class ConfirmationPage extends Component {
         this.state.onReload = true;
 
         // Print later (after reload) so the prep ticket will print in Kiosk lang
-        this.selfOrder.setPendingPreparation(this.props.orderAccessToken);
+        if (!this.selfOrder.hasPaymentMethod() || this.confirmedOrder?.state === "paid") {
+            this.selfOrder.setPendingPreparation(this.props.orderAccessToken);
+        }
         cookie.set("frontend_lang", this.defaultLanguage.code);
 
         // A full page load, to apply the restored language
