@@ -22,7 +22,8 @@ export class PaymentCashdro extends PaymentInterface {
 
     /** @returns {import("@point_of_sale/app/models/pos_payment").PosPayment | null} */
     get paymentLine() {
-        const order = this.pos.getOrder();
+        // Read the selected order directly: self-order's getOrder() creates one when none exists
+        const order = this.pos.models["pos.order"].getBy("uuid", this.pos.selectedOrderUuid);
         if (!order) {
             return null;
         }
