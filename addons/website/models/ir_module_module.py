@@ -102,6 +102,11 @@ class IrModuleModule(models.Model):
                     for website in websites_to_update:
                         module._theme_load(website)
 
+            elif module.name == 'website' and vals.get('state') == 'installed' and module.state in ('to install', 'to upgrade'):
+                # The assets of the module can only be compiled once it is
+                # loaded, and its default fonts may have changed.
+                self.env['website'].search([])._update_font_preloads()
+
         return super(IrModuleModule, self).write(vals)
 
     def _get_module_data(self, model_name):
@@ -251,6 +256,9 @@ class IrModuleModule(models.Model):
                 # and web_studio. This could become a parameter in master.
                 self.env['theme.utils'].with_context(website_id=website.id)._post_copy(module)
 
+        # The theme assets may change the fonts.
+        website._update_font_preloads()
+
     def _theme_unload(self, website):
         """
             For every type of model in ``self._theme_model_names``, and for every theme in ``self``:
@@ -387,6 +395,7 @@ class IrModuleModule(models.Model):
         for theme in reversed(website.theme_id._theme_get_stream_themes()):
             theme._theme_unload(website)
         website.theme_id = False
+        website._update_font_preloads()
 
     def button_choose_theme(self):
         """

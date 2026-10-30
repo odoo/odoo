@@ -11,6 +11,14 @@ from odoo.addons.base.models.assetsbundle import EXTENSIONS
 
 _match_asset_file_url_regex = re.compile(r"^(/_custom/([^/]+))?/(\w+)/([/\w]+\.\w+)$")
 
+# The website values changing the preloaded font files (see the
+# `.o-website-font-preload` rule of `font_urls_export.scss`).
+FONT_PRELOAD_VALUES = {
+    'font', 'headings-font', 'buttons-font',
+    'font-weight-normal', 'headings-font-weight', 'btn-font-weight',
+    'google-fonts', 'google-local-fonts', 'uploaded-local-fonts',
+}
+
 
 class WebsiteAssets(models.AbstractModel):
     _name = 'website.assets'
@@ -316,6 +324,9 @@ class WebsiteAssets(models.AbstractModel):
                 updatedFileContent = re.sub(r'^( *)(.*hook.*)', r'\1%s\1\2' % replacement, updatedFileContent, count=1, flags=re.MULTILINE)
 
         self.save_asset(url, 'web.assets_frontend', updatedFileContent, 'scss')
+
+        if url == '/website/static/src/scss/options/user_values.scss' and not FONT_PRELOAD_VALUES.isdisjoint(values):
+            self.env.website._update_font_preloads()
 
     @api.model
     def _get_custom_attachment(self, custom_url, op='='):
