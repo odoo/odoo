@@ -598,3 +598,50 @@ class TestTimeRuleAllocationLog(TransactionCase):
             {self.emp: pending_allocation},
         )
         self.assertEqual(TimeRule._find_time_rule_allocations(type_to_approve, self.emp), {}, "Only validated allocations by default")
+
+    def test_only_the_deficits_of_the_overdrawn_allocation_are_dropped(self):
+        """Monday's deficit is deducted from an allocation having enough days, Tuesday's from an
+        allocation type without balance: only Tuesday's deficit is dropped."""
+        undertime_type = self.env['hr.work.entry.type'].create({
+            'name': 'Undertime', 'code': 'ULMPART',
+            'requires_allocation': False,
+        })
+        empty_type = self.comp_type.copy({'name': 'Empty Compensatory Rest', 'code': 'COMPEMPTY'})
+        no_weekday = {f'apply_{weekday}': False for weekday in ('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday')}
+        self._make_deficit_rule(undertime_type, **{**no_weekday, 'apply_monday': True})
+        self._make_deficit_rule(undertime_type, **{**no_weekday, 'apply_tuesday': True}, allocation_type_id=empty_type.id)
+        self._make_deficit_allocation(days=2.0)
+
+        # 6h worked on Monday and Tuesday, both evaluated in the same run -> 2h of deficit each
+        monday_attendance, tuesday_attendance = self.env['hr.attendance'].create([{
+            'employee_id': self.emp.id,
+            'check_in': datetime(2022, 12, day, 8),
+            'check_out': datetime(2022, 12, day, 14),
+        } for day in (12, 13)])
+        (monday_attendance | tuesday_attendance).invalidate_recordset()
+        self.assertTrue(monday_attendance.overtime_attendance_ids)
+        self.assertFalse(tuesday_attendance.overtime_attendance_ids)
+
+    def test_reversal_blocked_by_another_saved_record_names_it(self):
+        """Saving a record runs the rules again on the day of an already credited attendance: the
+        error tells which saved record requires the reversal."""
+        self._make_rule()
+        # most recent saturday: no schedule -> all 8h are excess -> engine credits 1.0d (8h)
+        today = datetime.now().date()
+        last_sat = today - timedelta(days=(today.weekday() + 2) % 7)
+        self._make_att(datetime.combine(last_sat, datetime.min.time().replace(hour=8)),
+                       datetime.combine(last_sat, datetime.min.time().replace(hour=16)))
+        self._alloc().date_from = '2020-01-01'
+        last_friday = last_sat - timedelta(days=1)
+        self.env['hr.leave'].sudo().with_context(leave_fast_create=True, leave_skip_state_check=True).create({
+            'employee_id': self.emp.id,
+            'work_entry_type_id': self.comp_type.id,
+            'request_date_from': last_friday,
+            'request_date_to': last_friday,
+            'state': 'validate',
+        })
+
+        # the new attendance runs the rules of the day again, which first reverses the 1.0d already taken
+        with self.assertRaisesRegex(ValidationError, 'Saving'):
+            self._make_att(datetime.combine(last_sat, datetime.min.time().replace(hour=17)),
+                           datetime.combine(last_sat, datetime.min.time().replace(hour=18)))

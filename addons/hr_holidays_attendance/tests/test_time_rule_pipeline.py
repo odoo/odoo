@@ -1473,6 +1473,87 @@ class TestTimeRulePipeline(TransactionCase):
         for undertime_attendance in undertime_attendances:
             self.assertAlmostEqual((undertime_attendance.check_out - undertime_attendance.check_in).total_seconds() / 3600, 2.0, places=4)
 
+    def test_rule_of_a_company_only_applies_to_its_employees(self):
+        other_company = self.env['res.company'].create({'name': 'Other Rule Company'})
+        other_company_employee = self.env['hr.employee'].create({
+            'name': 'Other Company Employee',
+            'tz': 'UTC',
+            'company_id': other_company.id,
+            'resource_calendar_id': self.calendar.id,
+            'date_version': '2020-01-01',
+            'contract_date_start': '2020-01-01',
+            'wage': 3000,
+        })
+        self.time_rule.company_id = other_company
+        # 10h worked by an employee of each company, the rules of both companies being evaluated
+        self.env['hr.attendance'].with_context(allowed_company_ids=[self.env.company.id, other_company.id]).create([{
+            'employee_id': employee.id,
+            'check_in': datetime(2022, 12, 12, 8),
+            'check_out': datetime(2022, 12, 12, 18),
+        } for employee in (self.cal_emp, other_company_employee)])
+        overtime_attendances = self.env['hr.attendance'].search([
+            ('employee_id', 'in', (self.cal_emp | other_company_employee).ids),
+            ('work_entry_type_id', '=', self.overtime_type.id),
+        ])
+        self.assertEqual(overtime_attendances.employee_id, other_company_employee)
+
+    def test_invalid_employee_domain_raises_when_evaluated(self):
+        """A domain that can be parsed but not evaluated on the employees raises when the rule runs."""
+        self.time_rule.employee_domain = "[('unknown_field', '=', 1)]"
+        with self.assertRaises(ValidationError):
+            self.env['hr.attendance'].create({
+                'employee_id': self.cal_emp.id,
+                'check_in': datetime(2022, 12, 12, 8),
+                'check_out': datetime(2022, 12, 12, 18),
+            })
+
+    def _create_undertime_rule(self):
+        self.time_rule.active = False
+        undertime_type = self.env['hr.work.entry.type'].create({'name': 'Undertime', 'code': 'UNDTST'})
+        self.env['hr.time.rule'].create({
+            'name': 'Undertime Rule',
+            'threshold_operator': 'less_than',
+            'calendar_source': 'employee',
+            'quantity_period': 'day',
+            'work_entry_type_id': undertime_type.id,
+            'condition_work_entry_type_ids': [self.att_type.id],
+        })
+        return undertime_type
+
+    def test_deficit_due_to_break_placed_at_the_end_of_the_day(self):
+        undertime_type = self._create_undertime_rule()
+        # the whole 8h schedule is covered, but the 2h break leaves 7h worked: the missing hour
+        # is due to the break, so it is placed at the very end of the day
+        self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 12, 8),
+            'check_out': datetime(2022, 12, 12, 17),
+            'break_duration': 2,
+        })
+        undertime_attendance = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('work_entry_type_id', '=', undertime_type.id),
+        ])
+        self.assertEqual(len(undertime_attendance), 1)
+        self.assertAlmostEqual((undertime_attendance.check_out - undertime_attendance.check_in).total_seconds() / 3600, 1.0, places=3)
+        self.assertGreaterEqual(undertime_attendance.check_in, datetime(2022, 12, 12, 22, 59))
+
+    def test_deficit_already_placed_by_a_previous_run_is_not_placed_twice(self):
+        undertime_type = self._create_undertime_rule()
+        # 6h worked on a day of 8h -> 2h of undertime
+        self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 12, 8),
+            'check_out': datetime(2022, 12, 12, 14),
+        })
+        self.env['hr.attendance']._process_time_rules_for([(self.cal_emp, date(2022, 12, 12), date(2022, 12, 12))])
+        undertime_attendances = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('work_entry_type_id', '=', undertime_type.id),
+        ])
+        self.assertEqual(len(undertime_attendances), 1)
+        self.assertAlmostEqual(sum((attendance.check_out - attendance.check_in).total_seconds() / 3600 for attendance in undertime_attendances), 2.0, places=4)
+
     def test_sequential_rules_second_rule_finds_no_excess(self):
         """Sequential pipeline: R2 with the same threshold sees 0h excess after R1 already claimed it."""
         second_ot_type = self.env['hr.work.entry.type'].create({
@@ -3083,6 +3164,46 @@ class TestTimeRulePipelineLeaves(TransactionCase):
                                    msg="6h leave with 4h threshold -> 2h output")
         finally:
             rule.write({'active': False})
+
+    def test_consecutive_slices_of_the_same_rule_make_one_time_off(self):
+        """A first rule without output type tags 8:00-10:00, a second one classifies the whole
+        8:00-12:00: its two slices touch at 10:00 and make a single time off."""
+        self.env['hr.time.rule'].create({
+            'name': 'Tag the morning',
+            'sequence': 1,
+            'working_hours_mode': 'day',
+            'expected_hours': 0,
+            'timing_start': 8,
+            'timing_stop': 10,
+            'condition_work_entry_type_ids': [self.src_type.id],
+        })
+        classifying_rule = self.env['hr.time.rule'].create({
+            'name': 'Classify everything',
+            'sequence': 2,
+            'working_hours_mode': 'day',
+            'expected_hours': 0,
+            'work_entry_type_id': self.out_type.id,
+            'condition_work_entry_type_ids': [self.src_type.id],
+        })
+        leave = self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 12))
+        self.assertEqual(leave.work_entry_type_id, self.out_type)
+        self.assertEqual(leave.time_rule_id, classifying_rule)
+        self.assertEqual(leave.date_to, datetime(2022, 12, 12, 12))
+        self.assertFalse(self._outputs(leave), "The source itself is the only time off")
+
+    def test_output_time_off_shows_its_time_range(self):
+        self.env['hr.time.rule'].create({
+            'name': 'Exceed 4h/day',
+            'working_hours_mode': 'day',
+            'expected_hours': 4,
+            'work_entry_type_id': self.out_type.id,
+            'condition_work_entry_type_ids': [self.src_type.id],
+        })
+        leave = self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 14))
+        output_leaves = self._outputs(leave)
+        self.assertTrue(output_leaves)
+        for output_leave in output_leaves:
+            self.assertEqual(output_leave.time_rule_time_range, f"{output_leave.date_from:%H:%M} → {output_leave.date_to:%H:%M}")
 
     def test_past_leave_less_than_creates_output(self):
 
