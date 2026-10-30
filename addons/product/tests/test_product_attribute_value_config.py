@@ -793,6 +793,48 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
         self.assertTrue(product.active, 'The product should be unarchived.')
         self.assertEqual(product_attribut.number_related_products, 0, 'The product attribute must not have an associated product')
 
+    @mute_logger('odoo.models.unlink')
+    def test_unlink_line_with_unused_archived_value(self):
+        """
+            Removing a line whose only other value is archived and on no variant
+            must keep the template and its last variant.
+        """
+        attribute = self.env['product.attribute'].create({
+            'name': 'PA',
+            'create_variant': 'always',
+            'value_ids': [Command.create({'name': 'old'}), Command.create({'name': 'new'})],
+        })
+        value_old, value_new = attribute.value_ids
+        template = self.env['product.template'].create({
+            'name': 'P1',
+            'attribute_line_ids': [Command.create({
+                'attribute_id': attribute.id,
+                'value_ids': [Command.set((value_old + value_new).ids)],
+            })],
+        })
+        line = template.attribute_line_ids
+        ptav_old = line.product_template_value_ids.filtered(
+            lambda ptav: ptav.product_attribute_value_id == value_old
+        )
+        # A reference on the value makes it archived instead of deleted.
+        custom_value = self.env['product.attribute.custom.value'].create({
+            'custom_product_template_attribute_value_id': ptav_old.id,
+        })
+        line.value_ids = [Command.unlink(value_old.id)]
+        custom_value.unlink()
+        self.assertFalse(ptav_old.ptav_active)
+        self.assertFalse(ptav_old.with_context(active_test=False).ptav_product_variant_ids)
+        variant = template.product_variant_id
+        variant.default_code = 'SKU'
+
+        template.attribute_line_ids = [Command.delete(line.id)]
+
+        self.assertTrue(template.exists())
+        self.assertFalse(line.exists())
+        self.assertEqual(template.product_variant_id, variant)
+        self.assertEqual(variant.default_code, 'SKU')
+        self.assertFalse(variant.product_template_attribute_value_ids)
+
     def test_copy_extra_prices_of_product_attribute_values(self):
         """
         Check that the extra price of attributes are copied along the duplication of a product.
