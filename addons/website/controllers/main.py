@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
+from collections import defaultdict
 import colorsys
 import datetime
 import logging
@@ -1743,28 +1744,62 @@ class Website(Home):
     def _get_image_id(model, model_id, field, index):
         return f"{model}-{model_id}-{field}-{index}"
 
+    def _matches_link(self, href, old_link):
+        if not href or not old_link:
+            return False
+        return href == old_link or href.rstrip('/') == old_link.rstrip('/')
+
+    def _modify_tree_links(self, tree, links):
+        modified = False
+        for a in tree.xpath('.//a'):
+            href = a.get('href')
+            if not href:
+                continue
+            for link in links:
+                if self._matches_link(href, link['oldLink']):
+                    if link.get('remove'):
+                        a.drop_tag()
+                    else:
+                        a.set('href', markup_escape(link['newLink']))
+                    modified = True
+                    break
+        return modified
+
+    def _modify_record_html(self, record, field_name, links):
+        tree = html.fromstring(str(record[field_name]))
+        if self._modify_tree_links(tree, links):
+            new_html = html.tostring(tree, encoding='unicode', method='html')
+            record.write({field_name: new_html})
+
     @http.route(['/website/update_broken_links'], type='jsonrpc', auth="user", website=True)
-    def update_broken_links(self, links):
+    def update_broken_links(self, links, lang=None):
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             raise werkzeug.exceptions.Forbidden()
+
+        website = self.env.website
+        default_lang = website.default_lang_id.code
+        valid_lang_codes = website.language_ids.mapped('code')
+        current_lang = lang if lang in valid_lang_codes else default_lang
+
+        # Group links by (res_model, res_id, field)
+        links_by_record = defaultdict(list)
         for link in links:
-            record = request.env[link['res_model']].browse(link['res_id'])
-            if not record.has_access('write'):
+            field_name = 'arch_db' if link.get('field') == 'arch' else (link.get('field') or 'arch_db')
+            links_by_record[link['res_model'], link['res_id'], field_name].append(link)
+
+        for (res_model, res_id, field_name), record_links in links_by_record.items():
+            record = request.env[res_model].browse(res_id)
+            if not record.exists() or not record.has_access('write'):
                 continue
-            link['field'] = 'arch_db' if link['field'] == 'arch' else link['field']
-            tree = html.fromstring(str(record[link['field']]))
-            modified = False
-            for element in tree.xpath('//a'):
-                href = element.get('href')
-                if href and (link['oldLink'] == href or link['oldLink'] == href + '/'):
-                    if link['remove']:
-                        element.drop_tag()
-                    else:
-                        element.set('href', markup_escape(link['newLink']))
-                    modified = True
-            if modified:
-                new_html_content = html.tostring(tree, encoding='unicode', method='html')
-                record.with_context(delay_translations=self._get_delay_translations()).write({link['field']: new_html_content})
+            if not record._fields.get(field_name):
+                continue
+            # The ORM handles translation storage transparently: writing with
+            # lang=current_lang in the context only updates that language's
+            # translation, leaving all other languages untouched.
+            self._modify_record_html(
+                record.with_context(lang=current_lang, delay_translations=self._get_delay_translations()),
+                field_name, record_links,
+            )
 
     @http.route(['/website/get_seo_data'], type='jsonrpc', auth="user", website=True, replica=True)
     def get_seo_data(self, res_id, res_model):
