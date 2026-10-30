@@ -12,6 +12,7 @@ export class SelectionPopup extends Component {
         close: t.function(),
         size: t.string().optional("lg"),
         bodyClass: t.string().optional(""),
+        displayType: t.selection(["list", "pills"]).optional("list"),
     });
 
     /**
@@ -20,6 +21,7 @@ export class SelectionPopup extends Component {
      *
      * @param {Object} props
      * @param {String} [props.title='Select']
+     * @param {'list'|'pills'} [props.displayType='list']
      * @param {Array<Selection>} [props.list=[]]
      *      Selection {
      *          id: integer,
