@@ -155,6 +155,9 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
                     invoice_sent_before_original = self.search(domain, order="date", limit=1)
                     if invoice_sent_before_original:  # No error if the original invoice was imported from a previous system
                         return _("TicketBAI: Cannot post a reversal document while the source document has not been posted")
+        elif not values['is_sale'] and not self.is_cancel and values['is_refund'] and not values['refund_reason']:
+            # the reason of a vendor credit note is required as well (LROE)
+            return _('Refund reason must be specified (TicketBAI)')
 
     # -------------------------------------------------------------------------
     # WEB SERVICE CALLS

@@ -44,6 +44,26 @@ class TestSendBillEdiBizkaia(TestEsEdiTbaiCommonBizkaia):
         self.assertEqual(bill.state, 'cancel')
         self.assertTrue(bill.l10n_es_tbai_cancel_document_id.xml_attachment_id)
 
+    def test_post_refund_bill_without_refund_reason(self):
+        bill = self._create_posted_bill()
+        with patch(
+            'odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request',
+            return_value=self.mock_response_post_bill_success,
+        ):
+            bill.l10n_es_tbai_send_bill()
+        refund = bill._reverse_moves([{'invoice_date': bill.invoice_date, 'ref': 'RINV123'}])
+        refund.action_post()
+        # Credit notes default to R4 through the shared invoice type field.
+        refund.l10n_es_invoice_type = False
+        self.assertFalse(refund.l10n_es_invoice_type)
+
+        with patch(
+            'odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request',
+            return_value=self.mock_response_post_bill_success,
+        ) as mock_request, self.assertRaisesRegex(UserError, 'Refund reason must be specified'):
+            refund.l10n_es_tbai_send_bill()
+        mock_request.assert_not_called()
+
     def test_post_bill_tbai_failure(self):
         bill = self._create_posted_bill()
 
