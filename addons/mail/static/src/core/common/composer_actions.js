@@ -11,7 +11,7 @@ import {
     useAction,
     UseActions,
 } from "@mail/core/common/action";
-import { SUGGESTION_DELIMITERS } from "@mail/core/common/plugin/suggestion_plugin";
+import { CannedResponseSuggestionPlugin } from "@mail/core/common/plugin/suggestion/canned_response_suggestion_plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -126,12 +126,10 @@ registerComposerAction("open-full-composer", {
             : undefined,
 });
 registerComposerAction("add-canned-response", {
-    condition: ({ composer, store }) =>
+    condition: ({ composer, owner, store }) =>
         store.hasCannedResponses &&
         composer.targetThread &&
-        store.env.services["mail.suggestion"]
-            .getSupportedDelimiters(composer.targetThread)
-            .find(([delimiter]) => delimiter === SUGGESTION_DELIMITERS.CANNED_RESPONSE),
+        Boolean(owner.readyEditor()?.shared[CannedResponseSuggestionPlugin.id]),
     icon: "article",
     name: _t("Insert Canned Response"),
     onSelected: ({ owner }, ev) => owner.onClickInsertCannedResponse(ev),

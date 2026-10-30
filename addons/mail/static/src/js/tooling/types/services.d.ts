@@ -16,7 +16,6 @@ declare module "services" {
     import { pttExtensionHookService } from "@mail/discuss/call/common/ptt_extension_service";
     import { rtcService } from "@mail/discuss/call/common/rtc_service";
     import { storeService } from "@mail/core/common/store_plugin";
-    import { suggestionService } from "@mail/core/common/suggestion_service";
     import { voiceMessageService } from "@mail/discuss/voice_message/common/voice_message_service";
 
     export interface Services {
@@ -36,7 +35,6 @@ declare module "services" {
         "mail.out_of_focus": typeof outOfFocusService;
         "mail.popout": typeof mailPopoutService;
         "mail.store": typeof storeService;
-        "mail.suggestion": typeof suggestionService;
         im_status: typeof im_status;
     }
 }
