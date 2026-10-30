@@ -316,7 +316,9 @@ test("'Thread' menu available in threads", async () => {
     await contains("button[title='Threads']:count(1)").click();
     await insertText(".o-mail-ActionPanel input[placeholder='Search by name']", "ThreadTwo");
     await contains(".o-mail-ActionPanel button:text('Create'):count(1)").click();
-    await contains(".o-mail-NotificationItem:has(:text('ThreadTwo')):count(1)").click();
+    await contains(
+        ".o-mail-NotificationItem:has(.o-mail-NotificationItem-name :text('ThreadTwo')):count(1)"
+    ).click();
 });
 
 test("sub thread is available for channel and group, not for chat", async () => {
@@ -350,7 +352,7 @@ test("sub thread is available for channel and group, not for chat", async () => 
     );
     await contains(".o-mail-ActionPanel button:text('Create'):count(1)").click();
     await contains(
-        ".o-mail-NotificationItem:has(:text('Sub thread for channel')):count(1)"
+        ".o-mail-NotificationItem:has(.o-mail-NotificationItem-name :text('Sub thread for channel')):count(1)"
     ).click();
     await contains(".o-mail-MessagingMenu-tab[data-id='chat']:count(1)").click();
     await contains(".o-mail-NotificationItem:has(:text('Group')):count(1)").click();
