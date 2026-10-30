@@ -291,6 +291,19 @@ export class Store extends BaseStore {
                 } catch {
                     // assumes tab not focused: parent.document from iframe triggers CORS error
                 }
+<<<<<<< c84fbd6b53c64b9b2aaa6168c47a1ca4378ab63c:addons/mail/static/src/core/common/store_plugin.js
+||||||| 6dca29109f4076cc6fe1edba242602a12191638f:addons/mail/static/src/core/common/store_service.js
+                const isMessageSeen =
+                    model === "discuss.channel"
+                        ? thread?.channel?.self_member_id?.seen_message_id?.id >= message_id
+                        : thread?.messages.some((m) => m.id === message_id);
+=======
+                const isMessageSeen =
+                    model === "discuss.channel"
+                        ? thread?.channel?.self_member_id?.seen_message_id?.id >= message_id
+                        : thread?.messages.some((m) => m.id === message_id) ||
+                          this["mail.message"].get(message_id)?.needaction === false;
+>>>>>>> d9763fb5abee638a30f0636018d1de145599d56c:addons/mail/static/src/core/common/store_service.js
                 if (
                     this.self_user?.im_status === "busy" ||
                     (isTabFocused && thread?.channel?.isDisplayed)
