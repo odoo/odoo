@@ -1,3 +1,5 @@
+from hashlib import sha1
+
 from odoo import models
 from odoo.tools.misc import hmac
 
@@ -22,7 +24,8 @@ class PosPaymentMethod(models.Model):
     def _razorpay_get_reference_id(self, order):
         """ Deterministic reference binding a Razorpay transaction to an order and its amount. """
         self.ensure_one()
-        return f'{order.config_id.id}/{order.uuid}/{self.id}/{order.currency_id.name}/{order.amount_total}'
+        reference = f'{order.config_id.id}/{order.uuid}/{self.id}/{order.currency_id.name}/{order.amount_total}'
+        return sha1(reference.encode()).hexdigest()
 
     def _razorpay_sign_transaction(self, p2p_request_id, reference_id):
         """ Signature binding a Razorpay p2p request ID to the reference ID it was issued for.
