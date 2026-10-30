@@ -27,25 +27,20 @@
             </div>
         </template>
 
-        <!-- The recipient's name heads its address: a contact comes under the name of its company,
-             with 様 for a person, 御中 for a company or an address of one that names nobody. -->
-        <template id="recipient_name">
-            <div name="recipient_name" class="mb-3" t-if="partner">
-                <t t-set="jp_recipient_company" t-value="partner.parent_id.commercial_partner_id"/>
-                <t t-set="jp_honorific" t-value="(partner.lang or '').startswith('ja') and (' 御中' if partner.is_company or not partner.name else ' 様') or ''"/>
-                <div t-if="jp_recipient_company">
-                    <span t-out="jp_recipient_company.name"/><span t-if="not partner.name" t-out="jp_honorific"/>
-                </div>
-                <div t-if="partner.name">
-                    <span t-out="partner.name"/><span t-out="jp_honorific"/>
-                </div>
-            </div>
-        </template>
-
-        <!-- The contact widget prints its name that way when given the jp_honorific option. -->
+        <!-- Given the jp_honorific option, the contact widget prints its name the Japanese way: a contact comes
+             under the name of its company, with 様 for a person, 御中 for a company or an address of one that names nobody. -->
         <template id="contact_name" inherit_id="base.contact_name">
             <xpath expr="//div[@t-if=&quot;'name' in fields&quot;]" position="after">
-                <t t-if="'name' in fields and options.get('jp_honorific')" t-call="l10n_jp.recipient_name" partner="object"/>
+                <div t-if="'name' in fields and options.get('jp_honorific')" name="recipient_name" class="mb-3">
+                    <t t-set="jp_recipient_company" t-value="object.parent_id.commercial_partner_id"/>
+                    <t t-set="jp_honorific" t-value="(object.lang or '').startswith('ja') and (' 御中' if object.is_company or not object.name else ' 様') or ''"/>
+                    <div t-if="jp_recipient_company">
+                        <span t-out="jp_recipient_company.name"/><span t-if="not object.name" t-out="jp_honorific"/>
+                    </div>
+                    <div t-if="object.name">
+                        <span t-out="object.name"/><span t-out="jp_honorific"/>
+                    </div>
+                </div>
             </xpath>
             <xpath expr="//div[@t-if=&quot;'name' in fields&quot;]" position="attributes">
                 <attribute name="t-if" add="not options.get('jp_honorific')" separator=" and "/>
