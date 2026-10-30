@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="pos_sales_detail_pdf_header" inherit_id="point_of_sale.pos_report_pdf_header" primary="True">
+            <xpath expr="//div[@id='meta']" position="inside">
+                <div t-if="report_context.get('session_name')">
+                    Session ID: <span t-out="report_context['session_name']"/>
+                </div>
+                <div t-if="report_context.get('session_name') and report_context['session_state'] != 'closed' and report_context.get('date_start')">
+                    Opening Date: <span t-out="report_context['date_start']"/>
+                </div>
+                <div t-elif="report_context.get('date_start') and report_context.get('date_stop')">
+                    <t t-if="report_context['session_state'] == 'closed'">Session: </t>
+                    <t t-else="">Period: </t>
+                    <span t-out="report_context['date_start']"/> - <span t-out="report_context['date_stop']"/>
+                </div>
+            </xpath>
+            <xpath expr="//header" position="after">
+                <div t-if="report_context.get('session_state') == 'multiple' and report_context.get('config_names')" class="text-center mt-2">
+                    <strong>Config names: </strong><span t-out="', '.join(report_context['config_names'])"/>
+                </div>
+            </xpath>
+        </template>
+
+        <template id="pos_sales_detail_pdf_data_row" inherit_id="point_of_sale.pos_report_pdf_data_row" primary="True">
+            <xpath expr="//tr/td[1]/span" position="after">
+                <t t-set="values" t-value="row.get('values', {})"/>
+                <small t-if="values.get('combo_label')" class="text-muted ms-2" t-out="values['combo_label']"/>
+                <small t-if="values.get('discount')" class="text-muted ms-2">
+                    Disc: <t t-out="values['discount']"/>%
+                </small>
+                <img t-if="values.get('barcode')"
+                    class="ms-2"
+                    t-att-src="'/report/barcode/Code128/' + str(values['barcode'])"
+                    alt="Barcode"
+                    style="height: 1.5rem; width: 12rem;"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>
