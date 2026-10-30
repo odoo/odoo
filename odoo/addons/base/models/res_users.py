@@ -8,7 +8,6 @@ import hmac
 import ipaddress
 import json
 import logging
-import secrets
 import time
 from functools import wraps
 from hashlib import sha256
@@ -26,6 +25,7 @@ from odoo.http import request
 from odoo.http.session import DEFAULT_LANG
 from odoo.tools import (
     SQL,
+    api_key,
     email_domain_extract,
     frozendict,
     is_html_empty,
@@ -1593,10 +1593,9 @@ class ChangePasswordOwn(models.TransientModel):
         return {'type': 'ir.actions.client', 'tag': 'reload'}
 
 
-# API keys support
-API_KEY_SIZE = 20  # in bytes
-API_KEY_SUFFIX = '_oak'
 INDEX_SIZE = 8  # in hex digits, so 4 bytes, or 20% of the key
+assert api_key.TOKEN_LENGTH * 8 - INDEX_SIZE * 4 >= 128, \
+    "the hidden part of the API key must have at least 128 bits of entropy"
 KEY_CRYPT_CONTEXT = CryptContext(
     # default is 29000 rounds which is 25~50ms, which is probably unnecessary
     # given in this case all the keys are completely random data: dictionary
@@ -1619,6 +1618,7 @@ class ResUsersApikeys(models.Model):
     expiration_date = fields.Datetime("Expiration Date", readonly=True)
     index = fields.Char("Identifier", required=True, readonly=True,
         help="First characters of the key, used to identify it (e.g. in the server logs)")
+    readonly = fields.Boolean("Readonly", compute='_compute_readonly', readonly=True)
 
     def init(self):
         table = SQL.identifier(self._table)
@@ -1680,11 +1680,19 @@ class ResUsersApikeys(models.Model):
         if date <= datetime.datetime.now():
             raise ValidationError(_("You cannot set an expiration date in the past."))
 
-    def _generate(self, scope, name, expiration_date):
+    @api.depends('index')
+    def _compute_readonly(self):
+        for record in self:
+            record.readonly = record.index.startswith(api_key.READONLY_PREFIX)
+
+    def _generate(self, scope, name, expiration_date, readonly=False):
         """Generates an api key.
+
         :param str scope: the scope of the key.
         :param str name: the name of the key, mainly intended to be displayed in the UI.
         :param datetime.datetime expiration_date: the expiration date of the key.
+        :param bool readonly: whether the generated token be granted read/write or
+            read-only accesses.
         :returns: the key.
         :rtype: str
 
@@ -1695,7 +1703,7 @@ class ResUsersApikeys(models.Model):
         """
         self._check_expiration_date(expiration_date)
         # no need to clear the LRU when *adding* a key, only when removing
-        k = secrets.token_hex(API_KEY_SIZE) + API_KEY_SUFFIX
+        k = api_key.new_api_key(readonly=readonly)
         self.env.cr.execute(SQL("""
             INSERT INTO %s (name, user_id, scope, expiration_date, key, index)
             VALUES (%s, %s, %s, %s, %s, %s)
@@ -1728,7 +1736,7 @@ class ResUsersApikeys(models.Model):
             raise UserError(_("Programmatic API keys are not enabled"))
 
     @api.model
-    def generate(self, key, scope, name, expiration_date):
+    def generate(self, key, scope, name, expiration_date, readonly=False):
         """
         Generate a new API key with an existing API key.
         The provided `key` must be an existing API key that belongs to the current user.
@@ -1743,6 +1751,8 @@ class ResUsersApikeys(models.Model):
         :param str|datetime.datetime expiration_date: the expiration date of the key. String values
             may be either ISO 8601 dates (``"2026-12-30"``) or space-separated datetimes
             (``"2026-12-30 14:30:00"``).
+        :param bool readonly: whether the generated token be granted read/write or
+            read-only accesses.
         :returns: the key.
         :rtype: str
         """
@@ -1771,7 +1781,7 @@ class ResUsersApikeys(models.Model):
             uid = self.env['res.users.apikeys']._check_credentials(scope=scope, key=key)
             if not uid or uid != self.env.uid:
                 raise AccessDenied(_("The provided API key is invalid or does not belong to the current user."))
-            new_key = self._generate(scope, name, expiration_date)
+            new_key = self._generate(scope, name, expiration_date, readonly)
             _logger.info("%s %r generated from %r", self._description, new_key[:INDEX_SIZE], key[:INDEX_SIZE])
 
             return new_key
@@ -1842,6 +1852,7 @@ def _check_apikey_credentials(cr, *, scope, key, table='res_users_apikeys'):
     for user_id, current_key in cr.fetchall():
         if key and KEY_CRYPT_CONTEXT.verify(key, current_key):
             return user_id
+    return None
 
 
 class ResUsersApikeysDescription(models.TransientModel):
@@ -1886,6 +1897,7 @@ class ResUsersApikeysDescription(models.TransientModel):
         default=_default_duration,
     )
     expiration_date = fields.Datetime('Expiration Date', compute='_compute_expiration_date', store=True, readonly=False)
+    readonly = fields.Boolean("Readonly", help="Whether the generated token be granted read/write or read-only accesses.", default=False)
 
     @api.depends('duration')
     def _compute_expiration_date(self):
@@ -1928,7 +1940,12 @@ class ResUsersApikeysDescription(models.TransientModel):
         self.check_access_make_key()
 
         description = self.sudo()
-        k = self.env['res.users.apikeys']._generate(description.scope, description.name, self.expiration_date)
+        k = self.env['res.users.apikeys']._generate(
+            description.scope,
+            description.name,
+            self.expiration_date,
+            self.readonly,
+        )
         scope = description.scope
         base_url = ((request and request.httprequest.url_root) or "<Your URL>").rstrip('/')
         description.unlink()
