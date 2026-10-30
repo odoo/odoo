@@ -12,6 +12,7 @@ from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers.portal import PaymentPortal
 from odoo.addons.sale.controllers.portal import CustomerPortal
 from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale.models.website import CART_SESSION_CACHE_KEY
 
 
 class Cart(PaymentPortal):
@@ -38,21 +39,19 @@ class Cart(PaymentPortal):
                 abandoned_order.access_token, access_token
             ):  # wrong token (or SO has been deleted)
                 raise NotFound
-            if abandoned_order.state not in (
-                "draft",
-                "sent",
-            ) or abandoned_order.get_portal_last_transaction().state in {
-                "pending",
-                "authorized",
-                "done",
-            }:  # abandoned cart already finished, or has an ongoing/confirmed transaction
+            if (
+                abandoned_order.state != "draft"
+                or abandoned_order.get_portal_last_transaction().state
+                in {"pending", "authorized", "done"}
+            ):  # abandoned cart already finished, or has an ongoing/confirmed transaction
                 values.update({"abandoned_proceed": True})
-            elif not request.session.get("sale_order_id"):
-                request.session["sale_order_id"] = abandoned_order.id
-                request.cart = abandoned_order
-                order_sudo = abandoned_order
-            elif abandoned_order.id != request.session.get("sale_order_id"):
-                abandoned_order.order_line.write({"order_id": request.session["sale_order_id"]})
+            elif not request.session.get(CART_SESSION_CACHE_KEY):
+                request.session[CART_SESSION_CACHE_KEY] = abandoned_order.id
+                return request.redirect("/shop/cart")
+            elif abandoned_order.id != request.session.get(CART_SESSION_CACHE_KEY):
+                abandoned_order.order_line.write({
+                    "order_id": request.session[CART_SESSION_CACHE_KEY]
+                })
                 abandoned_order.action_cancel()
 
         values.update({
