@@ -773,6 +773,13 @@ class SlideSlide(models.Model):
         return embed_entry
 
     def _post_publication(self):
+        if self.env.context.get('install_demo'):
+            # Publishing in demo comes with its own set of issues
+            # Notably the "website_share_url" being incorrect and pointing to "localhost" on runbot
+            # This template is meant to notify existing course members when content is added and is
+            # not supposed to be ran in a big loop during demo data setup anyway -> disable it
+            return True
+
         for slide in self.filtered(lambda slide: slide.website_published and slide.channel_id.publish_template_id):
             publish_template = slide.channel_id.publish_template_id
             html_body = publish_template.with_context(base_url=slide.get_base_url())._render_field('body_html', slide.ids)[slide.id]
