@@ -1,0 +1,115 @@
+import logging
+
+from odoo import fields, models
+from odoo.exceptions import UserError, ValidationError
+
+_logger = logging.getLogger(__name__)
+
+
+class AccountChartTemplate(models.AbstractModel):
+    _inherit = "account.chart.template"
+
+    def _post_load_demo_data(self, company=False):
+        # EXTENDS account, called per company when its chart's demo data is loaded
+        self._l10n_pt_post_load_demo_data(company or self.env['res.company'])
+        return super()._post_load_demo_data(company)
+
+    def _l10n_pt_post_load_demo_data(self, companies):
+        """Complete the demo data of the PT companies of ``companies``: also run on install, for those that existed before."""
+        for company in companies.filtered(lambda c: c.account_fiscal_country_id.code == 'PT'):
+            # The demo invoices are posted while this module is installed, before `_post_init_hook`
+            # gives the chart's taxes their VAT exemption reasons, which posting requires.
+            self._l10n_pt_load_certification_tax_data(company)
+            self._create_l10n_at_series_demo(company)
+            invoices = self.env['account.move'].search([
+                ('company_id', '=', company.id),
+                ('state', '=', 'draft'),
+            ]).sorted('date')
+
+            # ensuring that credit notes reference original invoices
+            out_invoices = invoices.filtered(lambda m: m.move_type == 'out_invoice')
+            out_refunds = invoices.filtered(lambda m: m.move_type == 'out_refund')
+            for refund in out_refunds:
+                if not refund.reversed_entry_id:
+                    orig_inv = out_invoices.filtered(
+                        lambda inv: inv.partner_id == refund.partner_id and not inv.reversal_move_ids
+                    )[:1]
+                    if orig_inv:
+                        refund.write({
+                            'reversed_entry_id': orig_inv.id,
+                            'ref': 'Reversal demo',
+                        })
+
+            # we need to ensure AT Series created after the moves are added to the demo moves
+            invoices._compute_l10n_pt_at_series_id()
+            # Posting numbers a demo invoice without issuing it: it is signed, through the IAP signing
+            # service, when first printed or sent. What cannot be posted is left as a clean draft.
+            unposted, error = self.env['account.move'], None
+            for move in invoices:
+                if move.move_type == 'out_refund' and not move.reversed_entry_id:
+                    continue
+                try:
+                    with self.env.cr.savepoint():
+                        move.action_post()
+                except (UserError, ValidationError) as e:
+                    unposted |= move
+                    error = e
+            if unposted:
+                _logger.warning("%s Portuguese demo invoices were left in draft: %s", len(unposted), error)
+
+    def _create_l10n_at_series_demo(self, company):
+        if company and company.account_fiscal_country_id.code == "PT":
+            # Create demo AT series. Demo data contains moves from the current and previous month,
+            # which can occasionally fall in the year prior
+            if fields.Date.context_today(self).month == 1:
+                years = (str(fields.Date.context_today(self).year), str(fields.Date.context_today(self).year - 1))
+            else:
+                years = (str(fields.Date.context_today(self).year),)
+            sale_journal = self.env['account.journal'].search([
+                *self.env['account.journal']._check_company_domain(company),
+                ('type', '=', 'sale'),
+            ], limit=1)
+            bank_journal = self.env['account.journal'].search([
+                *self.env['account.journal']._check_company_domain(company),
+                ('type', '=', 'bank'),
+            ], limit=1)
+
+            at_series_document_data = [
+                ('out_invoice', 'INV', sale_journal),
+                ('out_refund', 'RINV', sale_journal),
+                ('payment_receipt', 'RG', bank_journal),
+            ]
+            at_series_demo_data = {
+                (move_type, prefix, journal.id, year)
+                for move_type, prefix, journal in at_series_document_data
+                for year in years
+            }
+            existing_series = self.env['l10n_pt.at.series'].search([
+                ('company_id', '=', company.id),
+                ('name', 'in', years),
+                ('journal_id', 'in', [sale_journal.id, bank_journal.id])
+            ])
+            existing_data = {
+                (record.document_type, record.prefix, record.journal_id.id, record.name)
+                for record in existing_series
+            }
+            data_to_create = at_series_demo_data - existing_data
+
+            self.env['l10n_pt.at.series'].create([{
+                'name': year,
+                'company_id': company.id,
+                'training_series': True,
+                'date_start': f'{year}-01-01',
+                'journal_id': journal_id,
+                'document_type': series_type,
+                'prefix': prefix,
+                # AT validation codes are unique across companies.
+                'at_code': f'AT-{prefix}{year}-{company.id}',
+            } for series_type, prefix, journal_id, year in data_to_create])
+
+            for series in existing_series:
+                if (series.document_type, series.prefix, series.journal_id.id, series.name) in at_series_demo_data:
+                    series.write({
+                        'training_series': True,
+                        'at_code': f'AT-{series.prefix}{series.name}-{company.id}',
+                    })

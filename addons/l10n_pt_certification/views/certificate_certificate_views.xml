@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="certificate_certificate_view_search" model="ir.ui.view">
+        <field name="name">certificate.certificate.view.search.inherit.l10n_pt</field>
+        <field name="model">certificate.certificate</field>
+        <field name="inherit_id" ref="certificate.certificate_certificate_view_search"/>
+        <field name="arch" type="xml">
+            <filter name="scope_general" position="after">
+                <filter string="AT Series" name="scope_at_series" domain="[('scope', '=', 'at_series')]" help="AT Series Webservice certificates"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="certificate_certificate_view_form_inherit" model="ir.ui.view">
+        <field name="name">certificate.certificate.view.form.inherit.l10n_pt</field>
+        <field name="model">certificate.certificate</field>
+        <field name="inherit_id" ref="certificate.certificate_certificate_view_form"/>
+        <field name="arch" type="xml">
+            <field name="scope" position="attributes">
+                <attribute name="invisible" add="not (country_code == 'PT')" separator="or"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="l10n_pt_at_ws_certificate_action" model="ir.actions.act_window">
+        <field name="name">Certificates (AT Series)</field>
+        <field name="res_model">certificate.certificate</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_scope_at_series': 1}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Create the first certificate
+            </p>
+        </field>
+    </record>
+</odoo>
