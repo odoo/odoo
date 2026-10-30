@@ -151,6 +151,39 @@ class TestMailingListMerge(MassMailCommon):
         contact_2 = contact_1.with_context(default_list_ids=self.mailing_list_3.ids).copy()
         self.assertEqual(contact_1.list_ids, contact_2.list_ids, 'Should copy the existing mailing list(s)')
 
+    @users('user_marketing')
+    def test_mailing_list_merge_with_non_empty_blacklist(self):
+        # The blacklist must not make the merge drop contacts without a valid email:
+        # with a non-empty blacklist the merge used to delete them instead of moving
+        # them to the destination list, because `NOT IN` on a NULL/empty email returns
+        # NULL (falsy). They must be moved to the destination list and kept.
+        self.env['mail.blacklist'].create({'email': 'someone.else@example.com'})
+        dest = self.env['mailing.list'].create({
+            'name': 'ListA',
+            'contact_ids': [
+                Command.create({'name': 'A1', 'email': 'a1@example.com'}),
+                Command.create({'name': 'A2', 'email': 'a2@example.com'}),
+                Command.create({'name': 'A3', 'email': 'a3@example.com'}),
+                Command.create({'name': 'A4', 'email': 'a4@example.com'}),
+            ],
+        })
+        source = self.env['mailing.list'].create({
+            'name': 'ListB',
+            'contact_ids': [
+                Command.create({'name': 'Good', 'email': 'good@example.com'}),
+                Command.create({'name': 'NoEmail'}),
+                Command.create({'name': 'BadEmail', 'email': 'not-an-email'}),
+            ],
+        })
+        dest.action_merge(source)
+
+        merged = dest.contact_ids.sorted('name')
+        self.assertEqual(
+            merged.mapped('name'),
+            ['A1', 'A2', 'A3', 'A4', 'BadEmail', 'Good', 'NoEmail'],
+        )
+        self.assertEqual(merged.contact_count, 7)
+
 
 @tagged('mailing_list')
 @tagged('at_install', '-post_install')  # LEGACY at_install
