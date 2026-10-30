@@ -225,6 +225,7 @@
                                         <field name="api_key_ids" mode="kanban" invisible="not api_key_ids" class="w-sm-75 w-md-100 w-lg-75 w-xl-50 o_base_api_keys_kanban_view"/>
                                         <div>
                                             <button name="api_key_wizard" string="Create API Key" type="object" class="btn btn-secondary h-100"/>
+                                            <button name="api_key_wizard" string="Create Read-only API Key" type="object" class="btn btn-secondary h-100 ms-2" context="{'make_readonly_token': True}"/>
                                         </div>
                                     </div>
                                 </div>
@@ -501,6 +502,7 @@
                                         <field name="api_key_ids" mode="kanban" invisible="not api_key_ids" class="w-lg-75 o_base_api_keys_kanban_view"/>
                                         <div>
                                             <button name="api_key_wizard" string="Create API Key" type="object" class="btn btn-secondary h-100"/>
+                                            <button name="api_key_wizard" string="Create Read-only API Key" type="object" class="btn btn-secondary h-100 ms-2" context="{'make_readonly_token': True}"/>
                                         </div>
                                     </div>
                                 </div>
