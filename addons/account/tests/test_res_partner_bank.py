@@ -93,7 +93,7 @@ class TestResPartnerBank(AccountTestInvoicingCommon, MailCase):
                 'subtype_id': self.env.ref('mail.mt_note'),
                 'tracking_values': [
                     ('active', 'boolean', True, False, {'html_string': 'Active'}),
-                    ('allow_out_payment', 'boolean', False, True, {'html_string': 'Send Money'}),
+                    ('allow_out_payment', 'boolean', False, True, {'html_string': 'Trust Bank Account'}),
                     ('account_number', 'char', '12345', '99999', {'html_string': 'Account Number'}),
                     ('clearing_number', 'char', False, '123456789', {'html_string': 'Clearing Number'}),
                     ('bank_bic', 'char', False, '9999', {'html_string': 'BIC/SWIFT'}),
