@@ -4,7 +4,7 @@ import { formatFloatTime, formatFloatFactor } from "@web/views/fields/formatters
 import { formatFloat } from "@web/core/utils/numbers";
 import { FloatFactorField } from "@web/views/fields/float_factor/float_factor_field";
 import { user } from "@web/core/user";
-import { onWillDestroy, Plugin, usePlugin } from "@odoo/owl";
+import { onWillDestroy, Plugin } from "@odoo/owl";
 import { services } from "@web/core/services";
 
 const formatterRegistry = registry.category("formatters");
@@ -70,17 +70,3 @@ export class TimesheetUOMPlugin extends Plugin {
     }
 }
 services.add(TimesheetUOMPlugin);
-
-/**
- * ----------------------------------------------------------------------------
- * @todo owl3 migration
- * Temporary - to remove when all uses of the "timesheet_uom" service are
- * removed
- * ----------------------------------------------------------------------------
- */
-const timesheetUOMService = {
-    start() {
-        return usePlugin(TimesheetUOMPlugin);
-    },
-};
-registry.category("services").add("timesheet_uom", timesheetUOMService);
