@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_warehouse_inherited" model="ir.ui.view">
+        <field name="name">stock.warehouse.inherited.pos</field>
+        <field name="model">stock.warehouse</field>
+        <field name="inherit_id" ref="stock.view_warehouse"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='xdock_type_id']" position="after">
+                <field name="pos_type_id" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
