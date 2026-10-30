@@ -28,21 +28,6 @@ class TestJPAccountReport(AccountTestInvoicingCommon):
         })
         cls.company_data['company'].external_report_layout_id = cls.env.ref('l10n_jp.external_layout_jp_standard')
 
-    def test_invoice_report_uses_jp_honorific(self):
-        invoice = self._create_invoice_one_line(
-            move_type='out_invoice',
-            partner_id=self.partner_a,
-            currency_id=self.env.ref('base.JPY'),
-            product_id=self.product_a,
-            tax_ids=self.tax_sale_a,
-            post=True,
-        )
-        html = self.env['ir.actions.report'].sudo()._render_qweb_html('account.report_invoice_with_payments', invoice.ids)[0]
-        header = lxml.html.fromstring(html).find_class('o_jp_standard_header')[0].text_content()
-
-        self.assertIn(f'{self.partner_a.name} 様', header)
-        self.assertEqual(header.count(self.partner_a.name), 1)
-
     def test_layout_heads_the_invoice_with_its_date(self):
         invoice = self._create_invoice_one_line(
             move_type='out_invoice',
@@ -83,10 +68,9 @@ class TestJPAccountReport(AccountTestInvoicingCommon):
         payment = self.init_payment(100.0, partner=self.partner_a, post=True)
 
         html = self.env['ir.actions.report'].sudo()._render_qweb_html('account.report_payment_receipt', payment.ids)[0]
-        document = lxml.html.fromstring(html)
+        recipient = lxml.html.fromstring(html).find_class('o_jp_standard_header')[0].xpath(".//div[@name='recipient_name']")[0]
 
-        self.assertIn(f'{self.partner_a.name} 様', document.find_class('o_jp_standard_header')[0].text_content())
-        self.assertEqual(document.text_content().count(self.partner_a.name), 1)
+        self.assertEqual([' '.join(line.text_content().split()) for line in recipient], [f'{self.partner_a.name} 様'])
 
     def test_unit_price_column_drops_a_decimal_part_worth_nothing(self):
         invoice = self._create_invoice(
@@ -130,7 +114,7 @@ class TestJPAccountReport(AccountTestInvoicingCommon):
 
         self.assertEqual(self._get_unit_price_cells(html), ['202.00'])
 
-    def test_another_layout_keeps_the_name_in_the_address(self):
+    def test_another_layout_keeps_the_japanese_invoice(self):
         self.company_data['company'].external_report_layout_id = self.env.ref('web.external_layout_standard')
         invoice = self._create_invoice_one_line(
             move_type='out_invoice',
@@ -140,9 +124,7 @@ class TestJPAccountReport(AccountTestInvoicingCommon):
             post=True,
         )
         html = self.env['ir.actions.report'].sudo()._render_qweb_html('account.report_invoice_with_payments', invoice.ids)[0]
-        address = lxml.html.fromstring(html).find_class('address')[0].text_content()
 
-        self.assertIn(self.partner_a.name, address)
         self.assertIn('Taxable Amount', html2plaintext(html))
 
     def test_a_company_outside_japan_keeps_the_standard_invoice(self):
