@@ -1,12 +1,14 @@
 import { registerThreadAction } from "@mail/core/common/thread_actions";
 
 import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
 
 export const expandDiscussSequenceGroup = 5;
 export const expandDiscussSequenceQuick = 0;
 
 registerThreadAction("expand-discuss", {
     condition: ({ ancestors, channel, owner, store }) =>
+        user.isRegularUser &&
         channel &&
         ancestors.inChatWindow &&
         !store.ui.isSmall() &&

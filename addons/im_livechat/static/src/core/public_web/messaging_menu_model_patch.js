@@ -5,6 +5,7 @@ import {
 import { fields } from "@mail/model/export";
 
 import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
 import { patch } from "@web/core/utils/patch";
 
 MENU_TABS.LIVECHAT = "livechat";
@@ -15,6 +16,9 @@ const messagingMenuModelPatch = {
         super.setup(...arguments);
         this.livechatTab = fields.One("MessagingMenuTab", {
             compute() {
+                if (user.isInternalUser && !user.isRegularUser) {
+                    return;
+                }
                 return {
                     id: MENU_TABS.LIVECHAT,
                     icon: "mode_comment",

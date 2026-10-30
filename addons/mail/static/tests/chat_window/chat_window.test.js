@@ -137,6 +137,31 @@ test("chat window: basic rendering", async () => {
     await waitFor(".o-dropdown-item:text('Leave Conversation'):count(1)");
 });
 
+test("light user's chat window has no Open in Discuss action", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({ name: "General" });
+    serverState.isRegularUser = false;
+    await start();
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
+    await contains(".o-mail-NotificationItem:count(1)").click();
+    await waitFor(".o-mail-ChatWindow .o-mail-Thread:has(:text('Welcome to #General!')):count(1)");
+    await contains("[title='Open Actions Menu']:count(1)").click();
+    await waitFor(".o-dropdown-item:count(13)");
+    await waitFor(".o-dropdown-item:text('Attachments'):count(1)");
+    await waitFor(".o-dropdown-item:text('Pinned Messages'):count(1)");
+    await waitFor(".o-dropdown-item:text('Members'):count(1)");
+    await waitFor(".o-dropdown-item:text('Threads'):count(1)");
+    await waitFor(".o-dropdown-item:text('Invite People'):count(1)");
+    await waitFor(".o-dropdown-item:text('Search Messages'):count(1)");
+    await waitFor(".o-dropdown-item:text('Rename Thread'):count(1)");
+    await waitFor(".o-dropdown-item:text('Notification Settings'):count(1)");
+    await waitFor(".o-dropdown-item:text('Add to Favorites'):count(1)");
+    await waitFor(".o-dropdown-item:text('Voice & Video Settings'):count(1)");
+    await waitFor(".o-dropdown-item:text('View Recordings'):count(1)");
+    await waitFor(".o-dropdown-item:text('Hide Until New Message'):count(1)");
+    await waitFor(".o-dropdown-item:text('Leave Conversation'):count(1)");
+});
+
 test("chat window: clicking chat correspondent avatars in start message opens avatar card", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
