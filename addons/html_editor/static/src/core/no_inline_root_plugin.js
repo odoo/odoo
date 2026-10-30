@@ -1,15 +1,21 @@
-import { getDeepestPosition, isParagraphRelatedElement } from "@html_editor/utils/dom_info";
+import {
+    containsAnyInline,
+    getDeepestPosition,
+    isParagraphRelatedElement,
+} from "@html_editor/utils/dom_info";
 import { Plugin } from "../plugin";
 import { isNotAllowedContent } from "./selection_plugin";
 import { endPos, startPos } from "@html_editor/utils/position";
 import { childNodes } from "@html_editor/utils/dom_traversal";
+import { withSequence } from "@html_editor/utils/resource";
 
 export class NoInlineRootPlugin extends Plugin {
     static id = "noInlineRoot";
-    static dependencies = ["baseContainer", "selection", "history"];
+    static dependencies = ["baseContainer", "dom", "selection", "history"];
 
     /** @type {import("plugins").EditorResources} */
     resources = {
+        on_editor_started_handlers: withSequence(-1, this.wrapRootInlines.bind(this)),
         fix_selection_on_no_inline_root_overrides: this.fixSelectionOnNoInlineRoot.bind(this),
         is_no_inline_root_predicates: (node) => {
             if (node === this.editable) {
@@ -28,6 +34,24 @@ export class NoInlineRootPlugin extends Plugin {
         this.addDomListener(this.editable, "pointerup", () => {
             this.isPointerDown = false;
         });
+    }
+
+    /**
+     * Wraps the inline content loaded at the root of the editable in blocks,
+     * unless inlines are allowed there.
+     */
+    wrapRootInlines() {
+        if (!this.config.allowInlineAtRoot && containsAnyInline(this.editable)) {
+            const cursors = this.dependencies.selection.preserveSelection();
+            // No matter the inline content, it will be wrapped in a DIV to try
+            // and match the current style of the content as much as possible.
+            // (P has a margin-bottom, DIV does not).
+            this.dependencies.dom.wrapInlinesInBlocks(this.editable, {
+                baseContainerNodeName: "DIV",
+                cursors,
+            });
+            cursors.restore();
+        }
     }
 
     /**

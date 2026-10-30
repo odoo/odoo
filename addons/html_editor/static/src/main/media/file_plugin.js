@@ -40,11 +40,6 @@ export class FilePlugin extends Plugin {
             commandId: "uploadFile",
             description: _t("Upload a file"),
         }),
-        is_node_splittable_predicates: (node) => {
-            if (node.classList?.contains("o_file_box")) {
-                return false;
-            }
-        },
         ...(this.config.allowFile &&
             this.config.allowMediaDocuments && {
                 media_dialog_extra_tabs: {
@@ -55,31 +50,15 @@ export class FilePlugin extends Plugin {
                 },
             }),
         selectors_for_feff_providers: () => ".o_file_box",
-        toolbar_namespace_providers: withSequence(
-            80,
-            (targetedNodes, editableSelection) =>
-                closestElement(editableSelection.anchorNode, ".o_file_box") && DISABLED_NAMESPACE
-        ),
-        is_functional_empty_node_predicates: (node) => {
-            if (node?.nodeName === "SPAN" && node.classList.contains("o_file_box")) {
-                return true;
-            }
-        },
-        is_node_editable_predicates: (node) => {
-            if (node?.nodeName === "SPAN" && node.classList.contains("o_file_box")) {
-                return false;
-            }
-        },
-        is_powerbox_available_predicates: (node) => {
-            if (closestElement(node, ".o_file_box")) {
-                return false;
-            }
-        },
-        are_shorthands_available_predicates: (node) => {
-            if (closestElement(node, ".o_file_box")) {
-                return false;
-            }
-        },
+        properties: [
+            {
+                predicate: (node) => closestElement(node, ".o_file_box"),
+                powerbox: false,
+                shorthands: false,
+                toolbar: DISABLED_NAMESPACE,
+            },
+            { predicate: ".o_file_box", editable: false, functionalEmpty: true, splittable: false },
+        ],
 
         /** Predicates */
         should_paste_as_text_predicates: (selection) => {

@@ -70,13 +70,9 @@ export class DynamicFieldPlugin extends Plugin {
         clipboard_content_processors: withSequence(11, this.cleanQwebExpressionsForCopy.bind(this)),
         clean_for_save_processors: withSequence(11, this.cleanQwebExpressionsForSave.bind(this)),
 
-        /** Predicates */
-        is_selectable_on_click_predicates: (el) => {
-            // Select dynamic field elements on click.
-            if (this.isSelectable(el)) {
-                return true;
-            }
-        },
+        /** Properties */
+        // Select dynamic field elements on click.
+        properties: { predicate: this.isSelectable.bind(this), selectableOnClick: true },
     };
 
     fieldTagName = "T";

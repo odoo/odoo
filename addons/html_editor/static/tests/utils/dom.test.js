@@ -11,6 +11,7 @@ import { getContent } from "../_helpers/selection";
 import { parseHTML } from "@html_editor/utils/html";
 import { unformat } from "../_helpers/format";
 import { queryOne } from "@odoo/hoot-dom";
+import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 
 describe("splitAroundUntil", () => {
     test("should split a slice of text from its inline ancestry (1)", async () => {
@@ -342,7 +343,7 @@ describe("wrapInlinesInBlocks", () => {
         );
     });
     test("wrap block with display style inline in div", async () => {
-        // Second part should be wrapped automatically during initElementForEdition
+        // Second part should be wrapped automatically when the editor starts
         const { el, editor } = await setupEditor(
             `<div><br></div><div contenteditable="false" style="display: inline;">inline</div>`
         );
@@ -378,7 +379,7 @@ describe("wrapInlinesInBlocks", () => {
         );
     });
     test("wrap a mix of inline elements in div", async () => {
-        // Second part should be wrapped automatically during initElementForEdition
+        // Second part should be wrapped automatically when the editor starts
         const { el, editor } = await setupEditor(
             `<div><br></div>text<div contenteditable="false" style="display: inline;">inline</div><span class="a">span</span>`
         );
@@ -412,7 +413,7 @@ describe("wrapInlinesInBlocks", () => {
         );
     });
     test("wrap a mix of inline elements in div with br", async () => {
-        // Second part should be wrapped automatically during initElementForEdition
+        // Second part should be wrapped automatically when the editor starts
         const { el, editor } = await setupEditor(
             `<div>[]<br></div>text<br><div contenteditable="false" style="display: inline;">inline</div><br><span class="a">span</span>`
         );
@@ -467,6 +468,13 @@ describe("wrapInlinesInBlocks", () => {
         div.innerHTML = "text<span></span>more";
         editor.shared.dom.wrapInlinesInBlocks(div);
         expect(div.innerHTML).toBe("<p>textmore</p>");
+    });
+    test("should keep t-set descendants of removed invisible nodes", async () => {
+        const { editor } = await setupEditor("", { config: { includePlugins: [QWebPlugin] } });
+        const div = document.createElement("div");
+        div.innerHTML = 'text<span><t t-set="x" t-value="1"></t></span>more';
+        editor.shared.dom.wrapInlinesInBlocks(div);
+        expect(div.innerHTML).toBe('<div>text<t t-set="x" t-value="1"></t>more</div>');
     });
 });
 

@@ -79,13 +79,10 @@ export class HighlightPlugin extends Plugin {
                 isAvailable: isHtmlContentSupported,
             },
         ],
-        toolbar_namespace_providers: [
-            withSequence(
-                90,
-                (targetedNodes, editableSelection) =>
-                    closestElement(editableSelection.anchorNode, ".o_text_highlight") && "compact"
-            ),
-        ],
+        properties: withSequence(20, {
+            predicate: (node) => closestElement(node, ".o_text_highlight"),
+            toolbar: "compact",
+        }),
         normalize_processors: withSequence(0, (root) => {
             for (const node of root.querySelectorAll(".o_text_highlight")) {
                 // Signal to the interaction that there is (maybe) a new element

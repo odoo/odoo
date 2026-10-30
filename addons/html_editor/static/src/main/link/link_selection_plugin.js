@@ -1,4 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
+import { isBlock } from "@html_editor/utils/blocks";
 import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
 import { removeClass } from "@html_editor/utils/dom";
 import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
@@ -28,12 +29,11 @@ import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
 
 /**
  * @typedef {((link: HTMLLinkElement) => boolean | void)[]} is_link_eligible_for_visual_indication_predicates
- * @typedef {((link: HTMLLinkElement) => boolean | void)[]} is_link_eligible_for_zwnbsp_predicates
  */
 
 export class LinkSelectionPlugin extends Plugin {
     static id = "linkSelection";
-    static dependencies = ["selection", "feff"];
+    static dependencies = ["selection", "feff", "properties"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
@@ -48,6 +48,13 @@ export class LinkSelectionPlugin extends Plugin {
 
         /** Providers */
         feff_providers: this.addFeffsToLinks.bind(this),
+
+        /** Properties */
+        properties: {
+            predicate: (link) =>
+                selectElements(link, "*").some((el) => el.nodeName === "IMG" || isBlock(el)),
+            feff: false,
+        },
 
         system_classes: ["o_link_in_selection"],
     };
@@ -73,7 +80,7 @@ export class LinkSelectionPlugin extends Plugin {
             this.editable.contains(link) &&
             !isProtected(link) &&
             !isProtecting(link) &&
-            (this.checkPredicates("is_link_eligible_for_zwnbsp_predicates", link) ?? true)
+            this.dependencies.properties.get(link, "feff", true)
         );
     }
 

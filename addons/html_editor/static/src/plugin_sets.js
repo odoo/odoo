@@ -12,6 +12,7 @@ import { InputPlugin } from "./core/input_plugin";
 import { LineBreakPlugin } from "./core/line_break_plugin";
 import { NoInlineRootPlugin } from "./core/no_inline_root_plugin";
 import { OverlayPlugin } from "./core/overlay_plugin";
+import { PropertiesPlugin } from "./core/properties_plugin";
 import { ProtectedNodePlugin } from "./core/protected_node_plugin";
 import { SanitizePlugin } from "./core/sanitize_plugin";
 import { SelectionPlugin } from "./core/selection_plugin";
@@ -34,7 +35,6 @@ import { HintPlugin } from "./main/hint_plugin";
 import { InlineCodePlugin } from "./main/inline_code";
 import { LinkPastePlugin } from "./main/link/link_paste_plugin";
 import { LinkPlugin } from "./main/link/link_plugin";
-import { OdooLinkSelectionPlugin } from "./main/link/link_selection_odoo_plugin";
 import { LinkSelectionPlugin } from "./main/link/link_selection_plugin";
 import { ListPlugin } from "./main/list/list_plugin";
 import { LocalOverlayPlugin } from "./main/local_overlay_plugin";
@@ -100,6 +100,7 @@ export const CORE_PLUGINS = [
     LineBreakPlugin,
     NoInlineRootPlugin,
     OverlayPlugin,
+    PropertiesPlugin,
     ProtectedNodePlugin,
     SanitizePlugin,
     SelectionPlugin,
@@ -149,7 +150,6 @@ export const MAIN_PLUGINS = [
     LinkPastePlugin,
     FeffPlugin,
     LinkSelectionPlugin,
-    OdooLinkSelectionPlugin,
     PowerButtonsPlugin,
     MoveNodePlugin,
     LocalOverlayPlugin,

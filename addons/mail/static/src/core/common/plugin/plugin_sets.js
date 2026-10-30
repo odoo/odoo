@@ -10,7 +10,6 @@ import { LinkPlugin } from "@html_editor/main/link/link_plugin";
 import { ProtectedNodePlugin } from "@html_editor/core/protected_node_plugin";
 import { SelectionPlaceholderPlugin } from "@html_editor/main/selection_placeholder_plugin";
 import { LinkSelectionPlugin } from "@html_editor/main/link/link_selection_plugin";
-import { OdooLinkSelectionPlugin } from "@html_editor/main/link/link_selection_odoo_plugin";
 import { ShortCutPlugin } from "@html_editor/core/shortcut_plugin";
 import { SyntaxHighlightingPlugin } from "@html_editor/others/embedded_components/plugins/syntax_highlighting_plugin/syntax_highlighting_plugin";
 import { TabulationPlugin } from "@html_editor/main/tabulation_plugin";
@@ -24,7 +23,9 @@ import { DomReferenceMapPlugin } from "@html_editor/core/dom_reference_map_plugi
 import { HistoryPlugin } from "@html_editor/core/history_plugin";
 import { InputPlugin } from "@html_editor/core/input_plugin";
 import { LineBreakPlugin } from "@html_editor/core/line_break_plugin";
+import { NoInlineRootPlugin } from "@html_editor/core/no_inline_root_plugin";
 import { OverlayPlugin } from "@html_editor/core/overlay_plugin";
+import { PropertiesPlugin } from "@html_editor/core/properties_plugin";
 import { SanitizePlugin } from "@html_editor/core/sanitize_plugin";
 import { SelectionPlugin } from "@html_editor/core/selection_plugin";
 import { SplitPlugin } from "@html_editor/core/split_plugin";
@@ -60,8 +61,10 @@ export const MAIL_TEXT_PLUGINS = [
     MailSuggestionPlugin,
     MentionPlugin,
     MessageLinkPlugin,
+    NoInlineRootPlugin,
     OverlayPlugin,
     PersistSelectionPlugin,
+    PropertiesPlugin,
     SanitizePlugin,
     SelectionPlugin,
     SplitPlugin,
@@ -86,7 +89,6 @@ export const MAIL_CORE_PLUGINS = [
     MailSuggestionPlugin,
     MentionPlugin,
     MessageLinkPlugin,
-    OdooLinkSelectionPlugin,
     PersistSelectionPlugin,
     ProtectedNodePlugin,
     SelectionPlaceholderPlugin,

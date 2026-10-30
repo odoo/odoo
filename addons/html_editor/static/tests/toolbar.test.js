@@ -1,6 +1,10 @@
 import { Editor } from "@html_editor/editor";
 import { ImageCrop } from "@html_editor/main/media/image_crop";
-import { DELAY_TOOLBAR_OPEN, ToolbarPlugin } from "@html_editor/main/toolbar/toolbar_plugin";
+import {
+    DELAY_TOOLBAR_OPEN,
+    DISABLED_NAMESPACE,
+    ToolbarPlugin,
+} from "@html_editor/main/toolbar/toolbar_plugin";
 import { nodeSize } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import {
@@ -57,6 +61,7 @@ import { expandToolbar } from "./_helpers/toolbar";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { insertText } from "./_helpers/user_actions";
 import { getIframeInput } from "./_helpers/iframe_input";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 
 test.tags("desktop");
 test("toolbar is only visible when selection is not collapsed in desktop", async () => {
@@ -315,6 +320,24 @@ test("expanding toolbar from table cell selection should focus first expanded bu
     expect(".o-we-toolbar").toHaveAttribute("data-namespace", "expanded");
     const toolbarBtns = queryAll(".o-we-toolbar button:not([disabled])");
     expect(toolbarBtns[0]).toBeFocused();
+});
+
+test.tags("desktop");
+test("selecting table cells containing text and an image shows the table toolbar", async () => {
+    await setupEditor(
+        unformat(`
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr>
+                        <td><p>[ab</p></td>
+                        <td><p><img class="img-fluid" src="/web/static/img/logo.png">]</p></td>
+                    </tr>
+                </tbody>
+            </table>
+        `)
+    );
+    await waitFor(".o-we-toolbar");
+    expect(".o-we-toolbar").toHaveAttribute("data-namespace", "table");
 });
 
 test.tags("desktop");
@@ -1549,10 +1572,10 @@ test("toolbar correctly show namespace button group and stop showing when namesp
     class TestPlugin extends Plugin {
         static id = "TestPlugin";
         resources = {
-            toolbar_namespace_providers: [
-                (nodeList) =>
-                    nodeList.find((node) => node.tagName === "DIV") ? "aNamespace" : undefined,
-            ],
+            properties: {
+                predicate: (node) => closestElement(node, ".test_namespace"),
+                toolbar: "aNamespace",
+            },
             user_commands: { id: "test_cmd", run: () => null },
             toolbar_groups: withSequence(24, { id: "test_group", namespaces: ["aNamespace"] }),
             toolbar_items: [
@@ -1567,9 +1590,10 @@ test("toolbar correctly show namespace button group and stop showing when namesp
             ],
         };
     }
-    const { el } = await setupEditor("<div>[<section><p>abc</p></section><div>d]ef</div></div>", {
-        config: { includePlugins: [TestPlugin] },
-    });
+    const { el } = await setupEditor(
+        `<div class="test_namespace">[<section><p>abc</p></section><div>d]ef</div></div>`,
+        { config: { includePlugins: [TestPlugin] } }
+    );
     await expectElementCount(".o-we-toolbar .btn-group[name='test_group']", 1);
     setContent(el, "<div><section><p>[abc]</p></section><div>def</div></div>");
     await expectElementCount(".o-we-toolbar .btn-group[name='test_group']", 0);
@@ -2042,13 +2066,7 @@ test("toolbar shouldn't be visible if namespace === disabled", async () => {
     const { el } = await setupEditor("<p>[test]<img></p>", {
         config: {
             resources: {
-                toolbar_namespace_providers: [
-                    withSequence(1, (targetedNodes) =>
-                        targetedNodes.find((node) => node.tagName === "IMG")
-                            ? "disabled"
-                            : undefined
-                    ),
-                ],
+                properties: withSequence(1, { predicate: "IMG", toolbar: DISABLED_NAMESPACE }),
             },
         },
     });

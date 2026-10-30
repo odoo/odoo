@@ -93,8 +93,6 @@ const ONLY_ALLOW_INLINE_TAGS = new Set([
  * @typedef {((nodeToInsert: Node, container: HTMLElement) => nodeToInsert)[]} node_to_insert_processors
  *
  * @typedef {((el: HTMLElement) => boolean)[]} are_inlines_allowed_at_root_predicates
- * @typedef {((block: HTMLElement) => boolean)[]} is_retagging_safe_predicates
- * Allows to bypass the check in `isRetaggingSafe`, to handle the block in `on_will_set_tag_handlers`
  *
  * @typedef {string[]} system_attributes
  * @typedef {string[]} system_classes
@@ -103,7 +101,15 @@ const ONLY_ALLOW_INLINE_TAGS = new Set([
 
 export class DomPlugin extends Plugin {
     static id = "dom";
-    static dependencies = ["baseContainer", "selection", "history", "split", "delete", "lineBreak"];
+    static dependencies = [
+        "baseContainer",
+        "selection",
+        "history",
+        "split",
+        "delete",
+        "lineBreak",
+        "properties",
+    ];
     static shared = [
         "normalize",
         "insert",
@@ -130,10 +136,9 @@ export class DomPlugin extends Plugin {
             return root;
         },
         clipboard_content_processors: this.removeEmptyClassAndStyleAttributes.bind(this),
-        is_functional_empty_node_predicates: (node) => {
-            if (isSelfClosingElement(node) || isEditorTab(node)) {
-                return true;
-            }
+        properties: {
+            predicate: (node) => isSelfClosingElement(node) || isEditorTab(node),
+            functionalEmpty: true,
         },
     };
 
@@ -218,14 +223,26 @@ export class DomPlugin extends Plugin {
 
         let currentBlock;
         let shouldBreakLine = true;
-        for (const node of children) {
+        for (let i = 0; i < children.length; i++) {
+            const node = children[i];
             if (isBlock(node)) {
                 shouldBreakLine = true;
-            } else if (
-                !visibleNodes.has(node) &&
-                (this.checkPredicates("is_node_removable_predicates", node) ?? true)
-            ) {
+            } else if (!visibleNodes.has(node) && !this.dependencies.delete.isUnremovable(node)) {
+                // Unremovable descendants take the place of the removed node.
+                const unremovableDescendants = [];
+                for (const descendant of descendants(node)) {
+                    if (
+                        !unremovableDescendants.at(-1)?.contains(descendant) &&
+                        this.dependencies.delete.isUnremovable(descendant, { cascade: true })
+                    ) {
+                        cursors.update(callbacksForCursorUpdate.before(node, descendant));
+                        node.before(descendant);
+                        unremovableDescendants.push(descendant);
+                    }
+                }
                 removeNode(node, cursors);
+                // Handle them next, like any other child.
+                children.splice(i + 1, 0, ...unremovableDescendants);
             } else if (node.nodeName === "BR") {
                 if (shouldBreakLine) {
                     wrapInBlock(node, cursors);
@@ -710,7 +727,7 @@ export class DomPlugin extends Plugin {
      */
     isRetaggingSafe(block) {
         return (
-            this.checkPredicates("is_retagging_safe_predicates", block) ??
+            this.dependencies.properties.get(block, "retaggable") ??
             !(
                 (isParagraphRelatedElement(block) ||
                     isListItemElement(block) ||
