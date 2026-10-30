@@ -159,6 +159,23 @@ class PdpFlow(models.Model):
         but it DOES NOT verify if move is eligible for flow 10
         """
         report_type = move.l10n_fr_pdp_flow_10_report_type
+<<<<<<< 98d4356003faa4f302d8480f04ea0ba0aa2bb065
+||||||| 6ef82a462ba70b7d9218d05ed6c989bbeb590401
+        transaction = move if report_type == 'transaction' else move._l10n_fr_pdp_get_matched_transactions()[0]
+=======
+        last_sent_flow = move.l10n_fr_pdp_sent_in_flow_ids.sorted('id')[-1:]
+        if not report_type and last_sent_flow:
+            # The move left the Flow 10 scope after being reported (e.g. the customer got a VAT
+            # number). Its RE must target the scope it was reported in, not its current (empty) one.
+            return {
+                'company_id': last_sent_flow.company_id.id,
+                'period_start': last_sent_flow.period_start,
+                'period_end': last_sent_flow.period_end,
+                'operation_type': last_sent_flow.operation_type,
+                'report_type': last_sent_flow.report_type,
+            }
+        transaction = move if report_type == 'transaction' else move._l10n_fr_pdp_get_matched_transactions()[0]
+>>>>>>> d193dd7bb460c62e86c71ab36d73aee95920ddf2
         period_data = self._get_period_flow_properties(move.company_id, move.date, report_type)
         if report_type == 'transaction':
             operation_type = 'purchase' if move._l10n_fr_pdp_is_purchase() else 'sale'
