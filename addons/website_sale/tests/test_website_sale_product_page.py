@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
 from odoo import Command, http
 from odoo.tests import HttpCase, new_test_user, tagged
-from odoo.tools import file_open
+from odoo.tools import file_open, mute_logger
 
 from odoo.addons.product.tests.common import ProductVariantsCommon
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
@@ -37,9 +39,7 @@ class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCom
         manager = self.env.ref("base.user_admin")
         manager.write({"password": password})
 
-        self.env["ir.ui.view"].with_context(active_test=False).search([
-            ("key", "=", "website_sale.product_comment")
-        ]).write({"active": True})
+        self._enable_reviews()
 
         self.product_product_7 = self.env["product.product"].create({
             "name": "Storage Box Test",
@@ -75,10 +75,7 @@ class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCom
             self.env, login='product_review_portal', groups='base.group_portal',
             password='product_review_portal',
         )
-        generic_view = self.env['ir.ui.view'].with_context(active_test=False).search([
-            ('key', '=', 'website_sale.product_comment'),
-        ], limit=1)
-        generic_view.with_context(website_id=self.website.id).write({'active': True})
+        self._enable_reviews()
 
         self.product_template_sofa.website_published = True
 
@@ -113,6 +110,43 @@ class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCom
             }),
         ]
         self.start_tour(self.product.website_url, 'website_sale_product_pricelist_qty_change')
+
+    @mute_logger("odoo.http")
+    def test_public_user_cannot_post_product_review(self):
+        self._enable_reviews()
+        public_user = self.env.ref("base.public_user")
+        for product in (self.product_template_sofa, self.product_template_sofa.product_variant_id):
+            with self.subTest(model=product._name):
+                self.assertFalse(self._post_review(product, public_user))
+
+    def test_portal_user_can_post_product_review(self):
+        self._enable_reviews()
+        portal_user = new_test_user(
+            self.env, login="product_review_portal", groups="base.group_portal",
+            password="product_review_portal",
+        )
+        self.authenticate(portal_user.login, "product_review_portal")
+        for product in (self.product_template_sofa, self.product_template_sofa.product_variant_id):
+            with self.subTest(model=product._name):
+                self.assertTrue(self._post_review(product, portal_user))
+
+    def _enable_reviews(self):
+        self.env["ir.ui.view"].with_context(active_test=False).search([
+            ("key", "=", "website_sale.product_comment"),
+        ]).write({"active": True})
+
+    def _post_review(self, product, user):
+        self.url_open("/mail/message/post", data=json.dumps({"params": {
+            "thread_model": product._name,
+            "thread_id": product.id,
+            "post_data": {
+                "body": "Review",
+                "message_type": "comment",
+                "subtype_xmlid": "mail.mt_comment",
+                "rating_value": 1,
+            },
+        }}), headers={"Content-Type": "application/json"})
+        return product.message_ids.filtered(lambda message: message.author_id == user.partner_id)
 
     def test_product_unpublished_without_category(self):
         """Test that products created from frontend are unpublished without category"""
