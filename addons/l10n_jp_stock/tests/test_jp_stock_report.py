@@ -70,7 +70,6 @@ class TestJPStockReport(AccountTestInvoicingCommon):
         self.picking.partner_id = self.env['res.partner'].create({'name': 'Taro Yamada', 'parent_id': company.id})
 
         html = self.env['ir.actions.report']._render_qweb_html('stock.report_deliveryslip', self.picking.ids)[0]
-        page = lxml.html.fromstring(html).find_class('page')[0]
 
-        self.assertIn('JP-DEL-0001', page.find('.//h2').text_content())
+        self.assertIn('JP-DEL-0001', lxml.html.fromstring(html).find('.//h2').text_content())
         self.assertIn('JP Trading', html2plaintext(html))
