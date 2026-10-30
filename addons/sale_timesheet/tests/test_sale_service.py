@@ -205,6 +205,41 @@ class TestSaleService(TestCommonSaleTimesheet):
         timesheet2.unlink()
         self.assertEqual(so_line_deliver_new_task_project.qty_delivered, timesheet3.unit_amount, 'Delivered quantity should be reset to the sum of remaining timesheets unit amounts.')
 
+    def test_qty_to_invoice_rounding(self):
+        sol = self.env['sale.order.line'].create({
+            'product_id': self.product_delivery_timesheet3.id,
+            'product_uom_qty': 1,
+            'order_id': self.sale_order.id,
+        })
+        self.sale_order.action_confirm()
+        self.env['account.analytic.line'].create({
+            'name': 'Test Line 1',
+            'project_id': sol.project_id.id,
+            'task_id': sol.task_id.id,
+            'unit_amount': 1 / 3,   # 20 minutes
+            'employee_id': self.employee_user.id,
+        })
+        wizard = self.env['sale.advance.payment.inv'].with_context(
+            active_model='sale.order', active_ids=self.sale_order.ids, active_id=self.sale_order.id,
+        ).create({
+            'advance_payment_method': 'delivered',
+        })
+        first_invoice = wizard._create_invoices(self.sale_order)
+        self.assertEqual(first_invoice.line_ids[0].quantity, 0.33)
+        self.assertEqual(sol.qty_delivered, 0.33)
+        self.assertEqual(sol.qty_invoiced, 0.33)
+        self.env['account.analytic.line'].create({
+            'name': 'Test Line 2',
+            'project_id': sol.project_id.id,
+            'task_id': sol.task_id.id,
+            'unit_amount': 1 / 3,   # 20 minutes
+            'employee_id': self.employee_user.id,
+        })
+        self.assertEqual(sol.qty_delivered, 0.67)
+        second_invoice = wizard._create_invoices(self.sale_order)
+        self.assertEqual(second_invoice.line_ids[0].quantity, 0.34, "Should invoice the difference between the delivered and invoiced quantities.")
+        self.assertEqual(sol.qty_invoiced, 0.67)
+
     def test_sale_create_task(self):
         """ Check that confirming SO create correctly a task, and reconfirming it does not create a second one. Also check changing
             the ordered quantity of a SO line that have created a task should update the planned hours of this task.
