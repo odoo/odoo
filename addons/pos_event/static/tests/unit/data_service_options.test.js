@@ -6,6 +6,7 @@ import "@pos_event/app/models/data_service_options";
 function makeOrder(state, id) {
     const order = Object.create(PosOrder.prototype);
     order.state = state;
+    order.payment_ids = [];
     Object.defineProperty(order, "id", { value: id });
     return order;
 }
