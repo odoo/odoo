@@ -7,6 +7,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
+# TODO: remove in master, along with `ProductProduct._search_qty_available_new` below.
 PY_OPERATORS = {
     '<': py_operator.lt,
     '>': py_operator.gt,
@@ -279,6 +280,9 @@ class ProductProduct(models.Model):
         This override is used to get the correct quantities of products
         with 'phantom' as BoM type.
         """
+        # Callers that never value kits (e.g. stock valuation) can skip the kit BoM expansion.
+        if self.env.context.get('skip_kit_qty_available'):
+            return super()._compute_quantities_dict(lot_id, owner_id, package_id, from_date=from_date, to_date=to_date)
         bom_kits = self.env['mrp.bom']._bom_find(self, bom_type='phantom', company_id=self.env.company.id)
         kits = self.filtered(lambda p: bom_kits.get(p))
         regular_products = self - kits
@@ -410,6 +414,8 @@ class ProductProduct(models.Model):
         ])
         return super()._count_returned_sn_products_domain(sn_lot, or_domains)
 
+    # TODO: remove in master. `stock.product.product._search_qty_available_new` is no longer
+    # called, so this override is dead; kept only to minimize this stable-branch fix's diff.
     def _search_qty_available_new(self, operator, value, lot_id=False, owner_id=False, package_id=False):
         '''extending the method in stock.product to take into account kits'''
         op = PY_OPERATORS.get(operator)
