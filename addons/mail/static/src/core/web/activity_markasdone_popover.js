@@ -1,7 +1,7 @@
 import { Component, onMounted, signal, t, useListener, useProps } from "@odoo/owl";
 
 import { PopoverCard } from "@mail/core/common/popover_card/popover_card";
-import { propSignal } from "@mail/utils/common/hooks";
+import { propStatic, usePropsPlus } from "@mail/utils/common/hooks";
 import { useService } from "@web/core/utils/hooks";
 
 export class ActivityMarkAsDone extends Component {
@@ -13,7 +13,9 @@ export class ActivityMarkAsDone extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.activity = propSignal("activity", t.instanceOf(this.store["mail.activity"]));
+        this.props = usePropsPlus({
+            activity: propStatic(t.signal(t.instanceOf(this.store["mail.activity"]))),
+        });
         this.close = useProps.static("close", t.function([t.instanceOf(MouseEvent)]).optional());
         this.hasHeader = useProps.static("hasHeader", t.boolean().optional(false));
         this.onActivityChanged = useProps.static(
@@ -42,7 +44,7 @@ export class ActivityMarkAsDone extends Component {
         if (this.disableDoneButton()) {
             return;
         }
-        const { res_id, res_model } = this.activity();
+        const { res_id, res_model } = this.props.activity();
         const thread = this.env.services["mail.store"]["mail.thread"].insert({
             model: res_model,
             id: res_id,
@@ -52,7 +54,7 @@ export class ActivityMarkAsDone extends Component {
             if (this.onClickDoneProp) {
                 this.onClickDoneProp();
             }
-            await this.activity().markAsDone();
+            await this.props.activity().markAsDone();
             this.onActivityChanged(thread);
             await thread.fetchNewMessages();
         } finally {
@@ -61,14 +63,14 @@ export class ActivityMarkAsDone extends Component {
     }
 
     async onClickDoneAndScheduleNext() {
-        const { res_id, res_model } = this.activity();
+        const { res_id, res_model } = this.props.activity();
         const thread = this.env.services["mail.store"]["mail.thread"].insert({
             model: res_model,
             id: res_id,
         });
         this.onClickDoneAndScheduleNextProp?.();
         this.close?.();
-        const action = await this.activity().markAsDoneAndScheduleNext();
+        const action = await this.props.activity().markAsDoneAndScheduleNext();
         thread.fetchNewMessages();
         this.onActivityChanged(thread);
         if (!action) {

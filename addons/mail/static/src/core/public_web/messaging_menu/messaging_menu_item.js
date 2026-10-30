@@ -3,7 +3,12 @@ import { useMessageActions } from "@mail/core/common/message_actions";
 import { Priority } from "@mail/core/common/priority";
 import { MessagingMenuItemContextMenu } from "@mail/core/public_web/messaging_menu/messaging_menu_item_context_menu";
 import { NotificationItem } from "@mail/core/public_web/notification_item";
-import { propSignal, useLongPress, useRightClickMenu } from "@mail/utils/common/hooks";
+import {
+    propStatic,
+    useLongPress,
+    usePropsPlus,
+    useRightClickMenu,
+} from "@mail/utils/common/hooks";
 import { computedShallowEqual } from "@mail/utils/common/signal";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
@@ -51,7 +56,9 @@ export class MessagingMenuItem extends Component {
             "message",
             types.instanceOf(this.store["mail.message"]).optional()
         );
-        this.activeTab = propSignal("activeTab", types.instanceOf(this.store["MessagingMenuTab"]));
+        this.props = usePropsPlus({
+            activeTab: propStatic(types.signal(types.instanceOf(this.store["MessagingMenuTab"]))),
+        });
         this.onClick = useProps.static("onClick", types.function());
         this.hasTouch = hasTouch;
         this.isActive = computed(() => this._isActive);
@@ -114,7 +121,7 @@ export class MessagingMenuItem extends Component {
 
     _computeActionsPartition() {
         const { quick, other, group, panelActions } = this.messageActions.partition;
-        const isBookmarkTab = this.activeTab().eq(this.store.messagingMenu.bookmarkTab);
+        const isBookmarkTab = this.props.activeTab().eq(this.store.messagingMenu.bookmarkTab);
         const filter = (actions) =>
             actions.filter((a) =>
                 isBookmarkTab ? BOOKMARK_TAB_ACTIONS.has(a.id) : !EXCLUDED_ACTIONS.has(a.id)
@@ -164,11 +171,11 @@ export class MessagingMenuItem extends Component {
     get notificationItemProps() {
         const menu = this.store.messagingMenu;
         const message = this.message;
-        const activeTab = this.activeTab();
+        const activeTab = this.props.activeTab();
         // Distinct `eq()` instead of `in()` as `notificationTab` can be missing,
         // according to user preferences (i.e. "Handle by email").
         if (message && (activeTab.eq(menu.notificationTab) || activeTab.eq(menu.bookmarkTab))) {
-            const isNotificationTab = this.activeTab().eq(menu.notificationTab);
+            const isNotificationTab = this.props.activeTab().eq(menu.notificationTab);
             return {
                 thread: message.thread,
                 message,
