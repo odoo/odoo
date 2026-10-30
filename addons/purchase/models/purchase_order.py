@@ -926,23 +926,46 @@ class PurchaseOrder(models.Model):
             if oldest_rfq:
                 # Merge RFQs into the oldest purchase order
                 rfqs -= oldest_rfq
-                for rfq_line in rfqs.order_line:
-                    existing_line = oldest_rfq.order_line.filtered(lambda l: l.display_type not in ['line_section', 'line_subsection', 'line_note'] and
-                                                                                l.product_id == rfq_line.product_id and
-                                                                                l.uom_id == rfq_line.uom_id and
-                                                                                l.analytic_distribution == rfq_line.analytic_distribution and
-                                                                                l.discount == rfq_line.discount and
-                                                                                abs(l.date_planned - rfq_line.date_planned).total_seconds() <= 86400  # 24 hours in seconds
-                                                                        )
-                    if len(existing_line) > 1:
-                        existing_line[0].product_qty += sum(existing_line[1:].mapped('product_qty'))
-                        existing_line[1:].unlink()
-                        existing_line = existing_line[0]
+                # Only lines before the first section are merged, as we can't know which sections belong together
+                unsectioned_lines = self.env['purchase.order.line']
+                lines_to_merge = {}
+                for rfq in oldest_rfq + rfqs:
+                    for rfq_line in rfq.order_line:
+                        if rfq_line.display_type in ['line_section', 'line_subsection']:
+                            break
+                        if rfq == oldest_rfq:
+                            unsectioned_lines += rfq_line
+                            continue
+                        existing_line = unsectioned_lines.filtered(
+                            lambda line: not line.display_type
+                            and line.product_id == rfq_line.product_id
+                            and line.uom_id == rfq_line.uom_id
+                            and line.analytic_distribution == rfq_line.analytic_distribution
+                            and line.discount == rfq_line.discount
+                            and line.name == rfq_line.name
+                            and line.price_unit == rfq_line.price_unit
+                            and abs(line.date_planned - rfq_line.date_planned).total_seconds() <= 86400  # 24 hours in seconds
+                        )
+                        if len(existing_line) > 1:
+                            existing_line[0].product_qty += sum(existing_line[1:].mapped('product_qty'))
+                            unsectioned_lines -= existing_line[1:]
+                            existing_line[1:].unlink()
+                            existing_line = existing_line[0]
 
-                    if existing_line:
-                        existing_line._merge_po_line(rfq_line)
-                    else:
-                        rfq_line.order_id = oldest_rfq
+                        if existing_line:
+                            lines_to_merge[rfq_line] = existing_line
+                        else:
+                            unsectioned_lines += rfq_line
+                section_lines = (oldest_rfq + rfqs).order_line - unsectioned_lines - self.env['purchase.order.line'].concat(lines_to_merge)
+
+                # Keep a copy of the moved lines on their cancelled RFQ, before merging the quantities
+                ((unsectioned_lines + section_lines) - oldest_rfq.order_line).copy()
+                for rfq_line, existing_line in lines_to_merge.items():
+                    existing_line._merge_po_line(rfq_line)
+                oldest_rfq.write({'order_line': [
+                    Command.update(line.id, {'order_id': oldest_rfq.id, 'sequence': sequence})
+                    for sequence, line in enumerate(unsectioned_lines + section_lines, start=10)
+                ]})
 
                 # Merge source documents and vendor references
                 all_origin = rfqs.mapped('origin')
