@@ -459,18 +459,36 @@
                     </td>
                 </tr>
                 <t t-if="not tax_included" t-call="website_sale.order_tax_lines"/>
+                <!-- Due today, when only part of the total is paid upfront: it is highlighted instead
+                     of the total -->
+                <t t-set="amount_to_pay" t-value="website_sale_order._get_amount_to_pay()"/>
+                <t
+                    t-set="show_amount_to_pay"
+                    t-value="website_sale_order.currency_id.compare_amounts(amount_to_pay, website_sale_order.amount_total)"
+                />
                 <!-- Total -->
                 <tr name="o_order_total" class="border-top">
                     <td
                         colspan="2"
-                        t-attf-class="border-0 ps-0 pt-2 #{'pb-1' if tax_included else 'pb-2'}"
+                        t-attf-class="border-0 ps-0 pt-2 #{'pb-1' if tax_included or show_amount_to_pay else 'pb-2'}"
                     >
-                        <strong>Total</strong>
+                        <strong t-att-class="show_amount_to_pay and 'fw-normal'">Total</strong>
                     </td>
-                    <td t-attf-class="text-end border-0 px-0 pt-2 #{'pb-1' if tax_included else 'pb-2'}">
+                    <td t-attf-class="text-end border-0 px-0 pt-2 #{'pb-1' if tax_included or show_amount_to_pay else 'pb-2'}">
                         <strong
                             t-field="website_sale_order.amount_total"
-                            class="monetary_field"
+                            t-attf-class="monetary_field #{'fw-normal' if show_amount_to_pay else ''}"
+                            t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"
+                        />
+                    </td>
+                </tr>
+                <tr t-if="show_amount_to_pay" name="o_order_amount_to_pay">
+                    <td colspan="2" class="border-0 ps-0 pt-0 pb-1">
+                        <strong>Due today</strong>
+                    </td>
+                    <td class="text-end border-0 px-0 pt-0 pb-1">
+                        <strong
+                            t-out="amount_to_pay"
                             t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"
                         />
                     </td>
