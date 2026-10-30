@@ -211,7 +211,7 @@ class ResourceCalendar(models.Model):
     global_leave_ids = fields.One2many(
         'resource.calendar.leaves', 'calendar_id', 'Global Time Off',
         compute='_compute_global_leave_ids', store=True, readonly=False,
-        domain=[('resource_id', '=', False)], copy=True,
+        domain=[('resource_id', '=', False)], copy=False,
     )
     hours_per_day = fields.Float("Average Hour per Day", default=HOURS_PER_DAY,
                                  help="Average hours per day a resource is supposed to work with this calendar.")
