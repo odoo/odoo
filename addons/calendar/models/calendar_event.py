@@ -1085,7 +1085,7 @@ class CalendarEvent(models.Model):
         # Notify attendees if there is an alarm on the modified event, or if there was an alarm
         # that has just been removed, as it might have changed their next event notification
         if not self.env.context.get('dont_notify') and update_alarms:
-            self.recurrence_id._setup_alarms(recurrence_update=True)
+            self.recurrence_id._setup_alarms()
             if not self.recurrence_id:
                 self._setup_alarms()
         attendee_update_events = self.filtered(lambda ev: ev.user_id and ev.user_id != self.env.user)
@@ -1642,11 +1642,11 @@ class CalendarEvent(models.Model):
     def _get_trigger_alarm_types(self):
         return ['email']
 
-    def _setup_event_recurrent_alarms(self, events_by_alarm):
+    def _setup_event_recurrent_alarms(self):
         """ Setup alarms for recurrent events """
         for event in self:
             if event.recurrence_id:
-                next_date = event.get_next_alarm_date(events_by_alarm)
+                next_date = event.get_next_alarm_date()
                 # In cron, setup alarm only when there is a next date on the target. Otherwise the 'now()'
                 # check in the call below can generate undeterministic behavior and setup random alarms.
                 if next_date:
@@ -1680,21 +1680,13 @@ class CalendarEvent(models.Model):
                 cron._trigger(at=sorted(self.env.cr.precommit.data.pop('calendar.alarm_triggers')))
         return self.env.cr.precommit.data['calendar.alarm_triggers']
 
-    def get_next_alarm_date(self, events_by_alarm):
+    def get_next_alarm_date(self):
         self.ensure_one()
-        now = fields.Datetime.now()
         sorted_alarms = self.alarm_ids.sorted("duration_minutes")
-        triggered_alarms = sorted_alarms.filtered(lambda alarm: alarm.id in events_by_alarm)[0]
-        event_has_future_alarms = sorted_alarms[0] != triggered_alarms
         next_date = None
-        if self.recurrence_id.trigger_id and self.recurrence_id.trigger_id.call_at <= now:
-            next_date = self.start - timedelta(minutes=sorted_alarms[0].duration_minutes) \
-                if event_has_future_alarms \
-                else self.start
-        # For recurrent events, when there is no next_date and no trigger in the recurence, set the next
-        # date as the date of the next event. This keeps the single alarm alive in the recurrence.
-        recurrence_has_no_trigger = self.recurrence_id and not self.recurrence_id.trigger_id
-        if recurrence_has_no_trigger and not next_date and len(sorted_alarms) > 0:
+        # For recurrent events, set the next date as the date of the next event. This keeps the
+        # single alarm alive in the recurrence.
+        if self.recurrence_id and len(sorted_alarms) > 0:
             future_recurrent_events = self.recurrence_id.calendar_event_ids.filtered(lambda ev: ev.start > self.start)
             if future_recurrent_events:
                 # The next event (minus the alarm duration) will be the next date.

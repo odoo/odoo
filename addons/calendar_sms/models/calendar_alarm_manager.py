@@ -21,4 +21,4 @@ class CalendarAlarm_Manager(models.AbstractModel):
             alarm = self.env['calendar.alarm'].browse(alarm_id).with_prefetch(list(events_by_alarm.keys()))
             events = self.env['calendar.event'].browse(event_ids).with_prefetch(all_events_ids)
             events._do_sms_reminder(alarm)
-            events._setup_event_recurrent_alarms(events_by_alarm)
+            events._setup_event_recurrent_alarms()
