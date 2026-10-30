@@ -4,9 +4,16 @@ from odoo.fields import Command
 from odoo.tests import tagged
 from odoo.tests.common import HttpCase
 
+from odoo.addons.website.tests.common import set_url_code
+
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleStockMultilang(HttpCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        set_url_code(cls.env.ref('base.lang_fr'))
+
     def test_website_sale_stock_multilang(self):
         # Install French
         website = self.env.ref("base.default_website")

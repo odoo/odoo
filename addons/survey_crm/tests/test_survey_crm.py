@@ -1,5 +1,6 @@
 from markupsafe import Markup
 
+from odoo import Command
 from odoo.addons.survey.tests import common
 from odoo.tests import tagged
 from odoo.tests.common import HttpCase
@@ -17,6 +18,7 @@ class TestSurveyCrm(common.TestSurveyCommon, HttpCase):
             'questions_layout': 'page_per_question',
             'survey_type': 'survey',
             'title': 'Questionnaire for the position of software developer',
+            'lang_ids': [Command.set(cls.env.ref('base.lang_en').ids)],
             'users_login_required': False,
         })
 

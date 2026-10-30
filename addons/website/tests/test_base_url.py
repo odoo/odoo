@@ -5,8 +5,15 @@ from lxml.html import document_fromstring
 import odoo.tests
 from odoo.exceptions import ValidationError
 
+from odoo.addons.website.tests.common import set_url_code
+
 
 class TestUrlCommon(odoo.tests.HttpCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        set_url_code(cls.env.ref('base.lang_fr'))
+
     def setUp(self):
         super(TestUrlCommon, self).setUp()
         self.domain = 'http://' + odoo.tests.HOST
