@@ -541,8 +541,6 @@ export class Composer extends Component {
             composerPluginDependencies: {
                 // Read lazily: the config is only read once, at editor
                 // creation, but the placeholder can change afterwards.
-                getAncestors: () => this.ancestors,
-                getComposerType: () => this.props.type,
                 getPlaceholder: () => this.placeholder,
                 getSavedSelection: () => {
                     const { composerHtml, editorSelection } = this.props.composer;
@@ -555,6 +553,7 @@ export class Composer extends Component {
                 getSuggestionTarget: () => this.inputContainerRef(),
                 getThread: () => this.props.composer.targetThread,
                 isEditable: () => !this.isEditorReadonly && !this.isEditorDisabled,
+                isNote: () => this.props.type === COMPOSER_TYPES.NOTE,
                 onBeforePaste: (selection, ev) => this.onPaste(ev),
                 onFocusin: this.onFocusin.bind(this),
                 onFocusout: this.onFocusout.bind(this),
