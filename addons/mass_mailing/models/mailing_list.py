@@ -286,7 +286,7 @@ class MassMailingList(models.Model):
         :param str email: email address that should opt-in or opt-out from
           mailing lists;
         :param boolean opt_out: if True, opt-out from lists given by self if
-          'email' is member of it. If False, opt-in in lists givben by self
+          'email' is member of it. If False, opt-in in lists given by self
           and create membership if not already member;
         :param str force_message: if given, post a note using that body on
           contact instead of generated update message. Give False to entirely
@@ -299,11 +299,11 @@ class MassMailingList(models.Model):
         contacts = self.env['mailing.contact'].with_context(active_test=False).search(
             [('email_normalized', '=', email_normalized)]
         )
-        if not contacts:
-            return
 
         # switch opted-in subscriptions
         if opt_out:
+            if not contacts:
+                return
             current_opt_in = contacts.subscription_ids.filtered(
                 lambda sub: not sub.opt_out and sub.list_id in self
             )
@@ -311,6 +311,16 @@ class MassMailingList(models.Model):
                 current_opt_in.write({'opt_out': True})
         # switch opted-out subscription and create missing subscriptions
         else:
+            if not contacts:
+                contact_values = {
+                    'email': email_normalized,
+                }
+                if partner := self.env['res.partner'].search([('email_normalized', '=', email_normalized)]):
+                    contact_values.update({
+                        'name': partner.name,
+                    })
+                contacts = self.env['mailing.contact'].create(contact_values)
+
             subscriptions = contacts.subscription_ids.filtered(lambda sub: sub.list_id in self)
             current_opt_out = subscriptions.filtered('opt_out')
             if current_opt_out:
