@@ -435,6 +435,29 @@ test("should not add history step for bold on collapsed selection", async () => 
     expect(getContent(el)).toBe(`<p>abcd[]</p>`);
 });
 
+test("should remove bold formatting from empty block", async () => {
+    const { editor, el } = await setupEditor(
+        `<p><strong>ab</strong></p><p><strong>[]<br></strong></p><p><strong>cd</strong></p>`
+    );
+
+    patchWithCleanup(console, { warn: () => {} });
+
+    await press(["ctrl", "b"]);
+    await insertText(editor, "test");
+    await tick();
+    expect(getContent(el)).toBe(
+        `<p><strong>ab</strong></p><p>test[]</p><p><strong>cd</strong></p>`
+    );
+});
+
+test("should remove bold formatting from multiple selected empty blocks", async () => {
+    const { el } = await setupEditor(
+        `<p><strong>[<br></strong></p><p><strong><br></strong></p><p><strong>]cd</strong></p>`
+    );
+    await press(["ctrl", "b"]);
+    expect(getContent(el)).toBe(`<p>[<br></p><p><br></p><p><strong>]cd</strong></p>`);
+});
+
 test("should not apply bold formatting for partial selection inside contenteditable false", async () => {
     const { editor, el } = await setupEditor(`<p contenteditable="false">T[e]st</p>`);
     bold(editor);
