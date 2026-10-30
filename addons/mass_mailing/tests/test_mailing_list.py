@@ -318,15 +318,16 @@ class TestSubscriptionManagement(MassMailCommon):
         self.assertEqual(ml_3.contact_count_email, 3)
         self.assertEqual(ml_3.contact_count_opt_out, 0)
 
-        # create a new test contact
-        contact = self.env['mailing.contact'].browse(
-            self.env['mailing.contact'].name_create(_email_formatted)[0]
-        )
-        self.assertEqual(contact.email, _email_normalized)
-        self.assertEqual(contact.name, 'Mireille Labeille')
+        self.assertFalse(self.env['mailing.contact'].search([
+            ('email', '=', _email_normalized),
+        ]))
 
         # add new subscriptions (and ensure email_normalized is used)
         (ml_1 + ml_2)._update_subscription_from_email(_email_formatted_upd, opt_out=False)
+        contact = self.env['mailing.contact'].search([
+            ('email', '=', _email_normalized),
+        ])
+        self.assertEqual(len(contact), 1)
         subs = self.env['mailing.subscription'].search(
             [('contact_id', '=', contact.id)]
         )
