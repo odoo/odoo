@@ -34,7 +34,7 @@ export async function clickControlButton(label) {
             await contains(".product-screen .more-btn").click();
         }
         await animationFrame();
-        await contains(`.control-buttons-modal .control-button:contains("${label}")`).click();
+        await contains(`.modal .control-buttons .control-button:contains("${label}")`).click();
     }
     await animationFrame();
 }

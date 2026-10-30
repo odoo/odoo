@@ -37,7 +37,7 @@ export function waitForMenuOptionsToOpen() {
 export function clickMenuDialogOption(name, { expectUnloadPage = false } = {}) {
     return {
         content: `click on something in the burger menu`,
-        trigger: `.o_pos_burger_menu_buttons > button.btn:contains(${name})`,
+        trigger: `.o_pos_burger_menu_buttons > button.btn:contains(${name}), .o_pos_burger_menu_actions > button.btn:contains(${name})`,
         run: "click",
         expectUnloadPage,
     };
@@ -54,7 +54,7 @@ export function existMenuOption(name) {
         clickMenuButton(),
         {
             content: `check that ${name} exists in the burger menu`,
-            trigger: `.o_pos_burger_menu_buttons > button.btn:contains(${name})`,
+            trigger: `.o_pos_burger_menu_buttons > button.btn:contains(${name}), .o_pos_burger_menu_actions > button.btn:contains(${name})`,
         },
         closeBurgerMenu(),
     ];
@@ -65,7 +65,9 @@ export function notExistMenuOption(name) {
         waitForMenuOptionsToOpen(),
         {
             content: `check that ${name} doesn't exist in the burger menu`,
-            trigger: negate(`.o_pos_burger_menu_buttons > button.btn:contains(${name})`),
+            trigger: negate(
+                `.o_pos_burger_menu_buttons > button.btn:contains(${name}), .o_pos_burger_menu_actions > button.btn:contains(${name})`
+            ),
         },
         closeBurgerMenu(),
     ];

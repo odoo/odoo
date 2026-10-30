@@ -1,0 +1,14 @@
+/* Action buttons of a dialog, as cancelling the order or closing the
+   register, on a row of their own under its other buttons: they share its
+   width. */
+.o_pos_dialog_actions > .btn {
+    flex: 1 1 0;
+
+    @media (min-width: 768px) {
+        --oi-font-size: 1.5rem;
+
+        flex-direction: row !important;
+        align-items: center !important;
+        height: 5rem;
+    }
+}
