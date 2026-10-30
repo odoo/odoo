@@ -1,8 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import lxml.html
+
 from odoo import Command
 from odoo.tests import tagged
-from odoo.tools import html2plaintext
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
@@ -22,7 +23,7 @@ class TestJPPurchaseReport(AccountTestInvoicingCommon):
             'order_line': [Command.create({'product_id': self.product_a.id, 'product_qty': 2.0, 'price_unit': 105.0})],
         })
         html = self.env['ir.actions.report']._render_qweb_html('purchase.report_purchaseorder', order.ids)[0]
-        text = html2plaintext(html)
+        table = lxml.html.fromstring(html).find_class('o_main_table')[0]
+        column = [th.get('name') for th in table.xpath('./thead/tr/th')].index('th_price_unit')
 
-        self.assertIn('105', text)
-        self.assertNotIn('105.00', text)
+        self.assertEqual([row.xpath('./td')[column].text_content().strip() for row in table.xpath('./tbody/tr')], ['105'])

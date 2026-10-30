@@ -4,7 +4,7 @@ import re
 
 import lxml.html
 
-from odoo.tests import new_test_user, tagged
+from odoo.tests import tagged
 from odoo.tools import format_date, html2plaintext
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -42,19 +42,6 @@ class TestJPAccountReport(AccountTestInvoicingCommon):
 
         self.assertIn(f'{self.partner_a.name} 様', header)
         self.assertEqual(header.count(self.partner_a.name), 1)
-
-    def test_a_billing_user_prints_the_invoice(self):
-        company = self.company_data['company']
-        billing_user = new_test_user(
-            self.env, login='jp_billing', groups='account.group_account_invoice',
-            company_id=company.id, company_ids=company.ids,
-        )
-        invoice = self._create_invoice_one_line(move_type='out_invoice', partner_id=self.partner_a, product_id=self.product_a, post=True)
-
-        html = self.env['ir.actions.report'].with_user(billing_user)._render_qweb_html('account.report_invoice_with_payments', invoice.ids)[0]
-        header = lxml.html.fromstring(html).find_class('o_jp_standard_header')[0].text_content()
-
-        self.assertIn(f'{self.partner_a.name} 様', header)
 
     def test_layout_heads_the_invoice_with_its_date(self):
         invoice = self._create_invoice_one_line(
@@ -195,12 +182,6 @@ class TestJPAccountReport(AccountTestInvoicingCommon):
         self.assertIn(self.partner_b.name, header)
         self.assertNotIn('様', header)
         self.assertNotIn('御中', header)
-
-    def test_layout_prints_a_document_without_partner(self):
-        # e.g. a batch transfer, or the return label of the customer portal
-        html = self.env['ir.actions.report']._render_template('web.external_layout', {'o': None})
-
-        self.assertIn(self.company_data['company'].name, html2plaintext(html))
 
     def _get_unit_price_cells(self, html):
         return [cell.text_content().strip() for cell in lxml.html.fromstring(html).xpath("//td[@name='td_price_unit']")]

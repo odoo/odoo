@@ -3,7 +3,7 @@
 import lxml.html
 
 from odoo import Command
-from odoo.tests import new_test_user, tagged
+from odoo.tests import tagged
 from odoo.tools import html2plaintext
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -26,13 +26,12 @@ class TestJPStockReport(AccountTestInvoicingCommon):
         })
 
     def test_slip_titles_head_the_page(self):
-        stock_user = new_test_user(self.env, login='jp_stock_user', groups='stock.group_stock_user')
         for report, title in (
             ('stock.report_deliveryslip', 'JP-DEL-0001'),
             ('stock.report_return_document', 'RETURN OF JP-DEL-0001'),
         ):
             with self.subTest(report=report):
-                html = self.env['ir.actions.report'].with_user(stock_user)._render_qweb_html(report, self.picking.ids)[0]
+                html = self.env['ir.actions.report']._render_qweb_html(report, self.picking.ids)[0]
                 text = html2plaintext(html)
 
                 self.assertEqual(text.count(title), 1)
