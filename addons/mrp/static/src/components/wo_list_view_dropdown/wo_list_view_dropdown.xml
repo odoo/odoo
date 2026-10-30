@@ -2,18 +2,25 @@
 <templates xml:space="preserve">
 
     <t t-name="mrp.MOViewListDropdown" style="btn">
-        <Dropdown t-if="this.props.record.data.production_state !== 'done'">
+        <Dropdown t-if="this.props.record.data.production_state !== 'done'" state="this.dropdownState">
             <button
-                class="btn d-flex align-items-center gap-2 mw-100"
+                class="o_state_selection_btn btn btn-secondary mw-100 rounded-pill lh-1 text-truncate opacity-trigger-hover"
                 t-att-class="{
-                    'p-1': this.props.display != 'badge',
-                    'py-0 ps-1 pe-2': this.props.viewType == 'list' and this.props.display == 'badge',
-                    'btn-secondary rounded-pill': this.props.viewType == 'form',
-                    'btn-light': this.props.viewType != 'form',
+                    'o_has_not_label': this.props.display != 'badge',
+                    'btn-sm py-1 px-2': this.props.display == 'badge' and this.props.viewType != 'form',
                     'invisible': !this.props.record.resId,
                 }"
                 t-att-data-tooltip="this.props.display == 'badge' ? '' : this.formattedValue">
-                <i t-attf-class="o_status {{this.statusColor}} oi {{this.props.record.data.state != 'ready' ? 'oi-filled' : ''}}" t-att-data-icon="this.statusIcon"/>
+                <i
+                    class="o_status oi transition-base opacity-100-hover"
+                    t-attf-class="
+                        {{this.statusColor}}
+                        {{this.props.record.data.state != 'ready' ? 'oi-filled' : ''}}
+                        {{this.dropdownState.isOpen ? 'opacity-100' : 'opacity-75'}}
+                        {{this.props.display == 'badge' ? 'me-1' : ''}}
+                    "
+                    t-att-data-icon="this.statusIcon"
+                />
                 <span t-out="this.formattedValue" class="o_status_label text-truncate" t-if="this.props.display === 'badge'"/>
             </button>
             <t t-set-slot="content">
