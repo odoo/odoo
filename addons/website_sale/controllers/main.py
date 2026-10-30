@@ -564,7 +564,15 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 sold_out_ids = {p.id for p in stock_candidates if p._is_sold_out()}
                 show_in_stock_filter = True
             else:
-                show_in_stock_filter = any(p._is_sold_out() for p in stock_candidates)
+                # Each batch gets its own prefetch, otherwise the first `_is_sold_out` computes
+                # the stock of every variant of every candidate
+                show_in_stock_filter = any(
+                    product._is_sold_out()
+                    for products_batch in split_every(
+                        100, stock_candidates.ids, stock_candidates.browse
+                    )
+                    for product in products_batch.with_prefetch()
+                )
 
         if on_sale_active and "sale" in ribbon_assign_values:
             search_product = search_product.filtered(lambda p: p.id in on_sale_ids)
