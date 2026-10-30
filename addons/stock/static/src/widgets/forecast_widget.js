@@ -3,29 +3,55 @@ import { formatDate } from "@web/core/l10n/dates";
 import { formatFloat } from "@web/views/fields/formatters";
 import { registry } from "@web/core/registry";
 import { ActionPlugin } from "@web/webclient/actions/action_plugin";
+import { onWillStart, usePlugin } from "@odoo/owl";
 import { ORM } from "@web/core/orm_plugin";
-import { usePlugin } from "@odoo/owl";
 
 export class ForecastWidgetField extends FloatField {
     static template = "stock.ForecastWidget";
     setup() {
-        const { data, fields, resId } = this.props.record;
         this.actionPlugin = usePlugin(ActionPlugin);
         this.orm = usePlugin(ORM);
-        this.resId = resId;
 
-        this.forecastExpectedDate = formatDate(
-            data.forecast_expected_date,
-            fields.forecast_expected_date
+        const digits = this.props.record.fields.forecast_availability.digits;
+        this.options = { digits, thousandsSep: "", decimalPoint: "." };
+
+        onWillStart(async () => {
+            const rootContext = this.env.model.root.context;
+            if (
+                rootContext.onReloadForecastProduct &&
+                rootContext.onReloadForecastProduct === this.props.record.data.product_id.id
+            ) {
+                this._openReport();
+            }
+        });
+    }
+
+    get forecastExpectedDate() {
+        return formatDate(
+            this.props.record.data.forecast_expected_date,
+            this.props.record.fields.forecast_expected_date
         );
-        if (data.forecast_expected_date && data.date_deadline) {
-            this.forecastIsLate = data.forecast_expected_date > data.date_deadline;
-        }
-        const digits = fields.forecast_availability.digits;
-        const options = { digits, thousandsSep: "", decimalPoint: "." };
-        const forecast_availability = parseFloat(formatFloat(data.forecast_availability, options));
-        this.product_qty = parseFloat(formatFloat(data.product_qty, options));
-        this.willBeFulfilled = forecast_availability >= this.product_qty;
+    }
+
+    get forecastIsLate() {
+        const data = this.props.record.data;
+        return (
+            data.forecast_expected_date &&
+            data.date_deadline &&
+            data.forecast_expected_date > data.date_deadline
+        );
+    }
+
+    get forecastAvailability() {
+        return parseFloat(formatFloat(this.props.record.data.forecast_availability, this.options));
+    }
+
+    get productQty() {
+        return parseFloat(formatFloat(this.props.record.data.product_qty, this.options));
+    }
+
+    get willBeFulfilled() {
+        return this.forecastAvailability >= this.productQty;
     }
 
     //--------------------------------------------------------------------------
@@ -36,13 +62,20 @@ export class ForecastWidgetField extends FloatField {
      * Opens the Forecast Report for the `stock.move` product.
      */
     async _openReport(ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
+        ev?.preventDefault();
+        ev?.stopPropagation();
         if (!this.props.record.data.is_storable) {
             return;
         }
+        if (!this.props.record.resId) {
+            await this.env.model.root.save();
+            this.env.config.setDisplayName(this.env.model.root.data.display_name);
+            this.env.model.root.context.onReloadForecastProduct =
+                this.props.record.data.product_id.id;
+            return;
+        }
         const action = await this.orm.call("stock.move", "action_product_forecast_report", [
-            this.resId,
+            this.props.record.resId,
         ]);
         this.actionPlugin.doAction(action);
     }
