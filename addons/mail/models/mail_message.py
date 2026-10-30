@@ -1342,11 +1342,11 @@ class Message(models.Model):
         """ Invalidate the cache of the documents followed by ``self``. """
         fnames = ['message_ids', 'message_needaction', 'message_needaction_counter']
         self.flush_recordset(['model', 'res_id'])
-        for record in self:
-            model = model or record.model
-            res_id = res_id or record.res_id
+        if model and res_id and model in self.pool and issubclass(self.pool[model], self.pool['mail.thread']):
+            self.env[model].browse(res_id).invalidate_recordset(fnames)
+        for model, messages in self.grouped('model').items():
             if model in self.pool and issubclass(self.pool[model], self.pool['mail.thread']):
-                self.env[model].browse(res_id).invalidate_recordset(fnames)
+                self.env[model].browse(set(filter(None, messages.mapped('res_id')))).invalidate_recordset(fnames)
 
     def _get_search_domain_share(self):
         return ['&', '&', ('is_internal', '=', False), ('subtype_id', '!=', False), ('subtype_id.internal', '=', False)]
