@@ -10,6 +10,7 @@ import {
     delay,
     describe,
     expect,
+    freezeTime,
     keyDown,
     keyUp,
     manuallyDispatchProgrammaticEvent,
@@ -1934,6 +1935,9 @@ describe("toolbar open and close on user interaction", () => {
 
             // Double click: first click is synchronous, second schedules debounced update
             await firstClick(p);
+            // Freeze time so the clock only moves with advanceTime, not with real time.
+            // Done after the first click, which waits for its update on the real clock.
+            freezeTime();
             await secondClick(p);
             expect(getContent(el)).toBe("<p>[test] text</p>");
             expect.verifySteps(["updateToolbar", "triggerDebouncedUpdateToolbar"]);
