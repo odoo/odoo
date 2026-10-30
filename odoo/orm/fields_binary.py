@@ -164,7 +164,8 @@ class Binary(Field[BinaryValue, BinaryValue]):
             return
         # create the attachments that store the values
         env = record_values[0][0].env
-        env['ir.attachment'].sudo().create([
+        record_values = [(record, value) for record, value in record_values if value]
+        atts = env['ir.attachment'].sudo().create([
             {
                 'res_model': self.model_name,
                 'res_field': self.name,
@@ -173,8 +174,9 @@ class Binary(Field[BinaryValue, BinaryValue]):
                 'raw': value,
             }
             for record, value in record_values
-            if value
         ])
+        for (record, _value), att in zip(record_values, atts):
+            self._update_cache(record, BinaryValueAttachment(att))
 
     def write(self, records, value):
         if not self.attachment:
@@ -212,7 +214,7 @@ class Binary(Field[BinaryValue, BinaryValue]):
                 # create the missing attachments
                 missing = (real_records - atts_records)
                 if missing:
-                    atts.create([{
+                    atts |= atts.create([{
                             'res_model': record._name,
                             'res_field': self.name,
                             'res_id': record.id,
@@ -221,6 +223,9 @@ class Binary(Field[BinaryValue, BinaryValue]):
                         }
                         for record in missing
                     ])
+                # cache the value as read from the attachments
+                for att in atts:
+                    self._update_cache(records.browse(att.res_id), BinaryValueAttachment(att))
             else:
                 atts.unlink()
 
@@ -302,16 +307,17 @@ class Image(Binary):
             self._setup_warning("image requires the model to have _log_access = True")
 
     def create(self, record_values):
-        new_record_values = []
-        for record, value in record_values:
-            new_value = self._image_process(value, record.env)
-            new_record_values.append((record, new_value))
+        new_record_values = [
+            (record, self._image_process(value, record.env))
+            for record, value in record_values
+        ]
+        super().create(new_record_values)
+        if self.related:
             # when setting related image field, keep the unprocessed image in
             # cache to let the inverse method use the original image; the image
             # will be resized once the inverse has been applied
-            cache_value = self.convert_to_cache(value if self.related else new_value, record)
-            self._update_cache(record, cache_value)
-        super().create(new_record_values)
+            for record, value in record_values:
+                self._update_cache(record, self.convert_to_cache(value, record))
 
     def write(self, records, value):
         try:
@@ -327,13 +333,19 @@ class Image(Binary):
             raise
 
         super().write(records, new_value)
-        cache_value = self.convert_to_cache(value if self.related else new_value, records)
-        self._update_cache(records, cache_value, dirty=True)
+        if self.related:
+            # keep the unprocessed image in cache for the inverse, see create()
+            self._update_cache(records, self.convert_to_cache(value, records), dirty=True)
 
     def _inverse_related(self, records):
         super()._inverse_related(records)
         if not (self.max_width and self.max_height):
             return
+        if self.store and self.attachment:
+            # the attachments already hold the resized images
+            real_records = records.filtered('id')
+            real_records.invalidate_recordset([self.name], flush=False)
+            records -= real_records
         # the inverse has been applied with the original image; now we fix the
         # cache with the resized value
         for record in records:
@@ -439,6 +451,12 @@ class BinaryValueAttachment(BinaryValue):
     @property
     def checksum(self):
         return self.__checksum
+
+    @property
+    def attachment_id(self) -> int:
+        """ Id of the ``ir.attachment`` holding the contents. """
+        self._check_concurrent_modification()
+        return self.__attachment.id
 
     def open(self):
         self._check_concurrent_modification()

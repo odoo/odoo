@@ -2863,6 +2863,65 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         content = base64.b64encode(binary_value.content).decode()
         assertBinaryValue({'size': binary_value.size, 'content': content})
 
+    def test_83_binary_attachment_id(self):
+        def get_attachment(record):
+            return self.env['ir.attachment'].search([
+                ('res_model', '=', record._name),
+                ('res_field', '=', 'binary'),
+                ('res_id', '=', record.id),
+            ])
+
+        record = self.env['test_orm.model_binary'].create({'binary': BinaryBytes(b'content', filename='file.txt')})
+        attachment = get_attachment(record)
+        self.assertEqual(attachment.name, 'file.txt')
+        self.assertEqual(attachment.raw.content, b'content')
+        # the value is cached from the created attachment
+        with self.assertQueries([]):
+            self.assertEqual(record.binary.attachment_id, attachment.id)
+
+        # writing updates the existing attachment
+        record.binary = BinaryBytes(b'other content')
+        with self.assertQueries([]):
+            self.assertEqual(record.binary.attachment_id, attachment.id)
+        self.assertEqual(attachment.raw.content, b'other content')
+
+        # removing the value removes the attachment, setting it again creates a new one
+        record.binary = False
+        self.assertFalse(attachment.exists())
+        record.binary = BinaryBytes(b'content')
+        new_attachment = get_attachment(record)
+        self.assertTrue(new_attachment)
+        with self.assertQueries([]):
+            self.assertEqual(record.binary.attachment_id, new_attachment.id)
+
+        # the value read from the database
+        record.invalidate_recordset(['binary'])
+        self.assertEqual(record.binary.attachment_id, new_attachment.id)
+
+    def test_84_binary_attachment_invalidation(self):
+        """ Modifying the attachment of a binary field directly updates the field. """
+        record = self.env['test_orm.model_binary'].create({'binary': BinaryBytes(b'content')})
+        attachment = self.env['ir.attachment'].browse(record.binary.attachment_id)
+
+        attachment.raw = b'new content'
+        self.assertEqual(record.binary.content, b'new content')
+
+        attachment.res_field = False
+        self.assertFalse(record.binary)
+
+        attachment = self.env['ir.attachment'].create({
+            'name': 'file.txt',
+            'raw': b'created',
+            'res_model': record._name,
+            'res_id': record.id,
+            'res_field': 'binary',
+        })
+        self.assertEqual(record.binary.attachment_id, attachment.id)
+        self.assertEqual(record.binary.content, b'created')
+
+        attachment.unlink()
+        self.assertFalse(record.binary)
+
     def test_85_binary_guess_zip(self):
         # Regular ZIP files can be uploaded by non-admin users
         self.env['test_orm.binary_svg'].with_user(self.user_demo).create({
@@ -2970,7 +3029,9 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             for field_name, size in sizes.items():
                 self.assertEqual(binary_to_image(record[field_name]).size, size, f"Image {field_name} incorrectly sized")
 
-        record = self.env['test_orm.model_image'].create({
+        # the attachments would resize the images above 1920px
+        ModelImage = self.env['test_orm.model_image'].with_context(image_no_postprocess=True)
+        record = ModelImage.create({
             'name': 'image',
             'image': image_w,
             'image_128': image_w,
@@ -2978,6 +3039,10 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
         # test create (no resize)
         self.assertEqual(record.image.content, image_w.content)
+        # the attachments are cached for the stored, non-related fields
+        with self.assertQueries([]):
+            self.assertTrue(record.image.attachment_id)
+            self.assertTrue(record.image_128.attachment_id)
         # test create (resize)
         # 64: related stored on column
         # 128: store
@@ -2994,7 +3059,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(record.image.content, image_h.content)
         assertResized(record, image_64=(32, 64), image_128=(64, 128), image_256=(128, 256), image_512=(256, 512))
 
-        record = self.env['test_orm.model_image'].create({
+        record = ModelImage.create({
             'name': 'image',
             'image': image_h,
             'image_128': image_h,
@@ -3014,11 +3079,13 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         assertResized(record, image_64=(64, 32), image_128=(128, 64), image_256=(256, 128), image_512=(512, 256))
 
         # test create inverse store
-        record = self.env['test_orm.model_image'].create({
+        record = ModelImage.create({
             'name': 'image',
             'image_512': image_w,
         })
         assertResized(record, image_512=(512, 256), image=(4000, 2000), image_256=(256, 128), image_64=(64, 32))
+        # the related stored field is read from its attachment, which holds the resized image
+        self.assertTrue(record.image_512.attachment_id)
         # test write inverse store
         record.write({
             'image_512': image_h,
@@ -3026,7 +3093,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         assertResized(record, image_512=(256, 512), image=(2000, 4000), image_256=(128, 256), image_64=(32, 64))
 
         # test create inverse no store
-        record = self.env['test_orm.model_image'].with_context(image_no_postprocess=True).create({
+        record = ModelImage.create({
             'name': 'image',
             'image_256': image_w,
         })
@@ -3038,7 +3105,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         assertResized(record, image_512=(256, 512), image=(2000, 4000), image_256=(128, 256), image_64=(32, 64))
 
         # test create inverse stored column
-        record = self.env['test_orm.model_image'].with_context(image_no_postprocess=True).create({
+        record = ModelImage.create({
             'name': 'image',
             'image_64': image_w,
         })

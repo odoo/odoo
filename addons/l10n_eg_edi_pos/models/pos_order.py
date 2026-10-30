@@ -94,17 +94,11 @@ class PosOrder(models.Model):
             response_data = data
         envelope = {'request': payload, 'response': response_data}
         self.l10n_eg_edi_pos_json_doc_file = BinaryBytes(json.dumps(envelope, ensure_ascii=False, indent=2).encode())
-        self.invalidate_recordset(fnames=['l10n_eg_edi_pos_json_doc_file'])
         error_message = self._l10n_eg_edi_pos_postprocess_response(response_data)
         if not error_message:
-            attachment = self.env['ir.attachment'].search([
-                ('res_model', '=', self._name),
-                ('res_id', '=', self.id),
-                ('res_field', '=', 'l10n_eg_edi_pos_json_doc_file'),
-            ], limit=1)
             self.message_post(
                 body=_("Receipt submitted to ETA."),
-                attachment_ids=attachment.ids,
+                attachment_ids=[self.l10n_eg_edi_pos_json_doc_file.attachment_id],
             )
         return error_message
 

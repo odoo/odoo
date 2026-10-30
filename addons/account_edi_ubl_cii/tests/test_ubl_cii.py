@@ -160,8 +160,7 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         self.assertEqual(print_wiz.invoice_edi_format, 'facturx')
         print_wiz.action_send_and_print()
 
-        attachment = invoice.ubl_cii_xml_id
-        xml_tree = etree.fromstring(attachment.raw.content)
+        xml_tree = etree.fromstring(invoice.ubl_cii_xml_file.content)
 
         # Testing the case where a product on the invoice has a UoM with a different category than the one in the DB
         wrong_uom_line = xml_tree.findall('./{*}SupplyChainTradeTransaction/{*}IncludedSupplyChainTradeLineItem')[1]
@@ -171,7 +170,7 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         self.assertEqual(last_line_product.find('./{*}SellerAssignedID').text, '1111')
         self.assertEqual(last_line_product.find('./{*}Name').text, 'YYY')
 
-        attachment.raw = etree.tostring(xml_tree)
+        attachment = self.env['ir.attachment'].create({'name': invoice.ubl_cii_xml_file.filename, 'raw': etree.tostring(xml_tree)})
         new_invoice = invoice.journal_id._create_document_from_attachment(attachment.ids)
         self.assertRecordValues(new_invoice.invoice_line_ids, line_vals)
 
@@ -229,16 +228,15 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
                 wizard.action_send_and_print()
 
                 # no wkhtmltopdf in tests: the hook doesn't embed the XML, so put it in the PDF here
-                xml_content = invoice.ubl_cii_xml_id.raw.content
+                xml_content = invoice.ubl_cii_xml_file.content
                 pdf_bytes = self._get_pdf_bytes(xml_content, filename='factur-x.xml')
                 invoice.invoice_pdf_report_file = base64.b64encode(pdf_bytes).decode()
 
                 # the XML was generated and embedded in the PDF...
-                self.assertTrue(invoice.ubl_cii_xml_id)
+                self.assertTrue(invoice.ubl_cii_xml_file)
                 # ...but must not be listed as an extra attachment (it would duplicate the email attachment)
-                extra_attachments = self.env['account.move.send']._get_invoice_extra_attachments(invoice)
-                self.assertEqual(extra_attachments, invoice.invoice_pdf_report_id)
-                self.assertNotIn(invoice.ubl_cii_xml_id, extra_attachments)
+                extra_checksums = [value.checksum for value in self.env['account.move.send']._get_invoice_extra_files(invoice)]
+                self.assertEqual(extra_checksums, [invoice.invoice_pdf_report_file.checksum])
 
     def test_facturx_zugferd_keeps_xml_attachment_if_pdf_not_hybrid(self):
         """ The PDF is not regenerated when it already exists, so it can be a plain PDF without the
@@ -258,9 +256,9 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         wizard = self._create_account_move_send_wizard_single(invoice, sending_methods=['manual'])
         wizard.action_send_and_print()
 
-        self.assertTrue(invoice.ubl_cii_xml_id)
-        extra_attachments = self.env['account.move.send']._get_invoice_extra_attachments(invoice)
-        self.assertIn(invoice.ubl_cii_xml_id, extra_attachments)
+        self.assertTrue(invoice.ubl_cii_xml_file)
+        extra_checksums = [value.checksum for value in self.env['account.move.send']._get_invoice_extra_files(invoice)]
+        self.assertIn(invoice.ubl_cii_xml_file.checksum, extra_checksums)
 
     def test_ubl_bis3_keeps_xml_attachment(self):
         """ Unlike Factur-X/ZUGFeRD, Peppol UBL formats don't embed an identical XML in the PDF,
@@ -279,12 +277,12 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         wizard = self._create_account_move_send_wizard_single(invoice, sending_methods=['manual'])
         wizard.action_send_and_print()
 
-        extra_attachments = self.env['account.move.send']._get_invoice_extra_attachments(invoice)
-        self.assertIn(invoice.ubl_cii_xml_id, extra_attachments)
-        self.assertIn(invoice.invoice_pdf_report_id, extra_attachments)
+        extra_checksums = [value.checksum for value in self.env['account.move.send']._get_invoice_extra_files(invoice)]
+        self.assertIn(invoice.ubl_cii_xml_file.checksum, extra_checksums)
+        self.assertIn(invoice.invoice_pdf_report_file.checksum, extra_checksums)
 
-    def test_get_invoice_extra_attachments_no_partner(self):
-        """ `_get_invoice_extra_attachments` is called for any account.move opened in the chatter
+    def test_get_invoice_extra_files_no_partner(self):
+        """ `_get_invoice_files` is called for any account.move opened in the chatter
         (see `_get_mail_thread_data_attachments`), not just from the Send & Print wizard, so it
         must not crash on a move without a `partner_id` (lik a plain journal entry). """
         move = self.env['account.move'].create({
@@ -292,13 +290,13 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
             'journal_id': self.company_data['default_journal_misc'].id,
         })
         self.assertFalse(move.partner_id)
-        extra_attachments = self.env['account.move.send']._get_invoice_extra_attachments(move)
-        self.assertFalse(extra_attachments)
+        extra_files = self.env['account.move.send']._get_invoice_extra_files(move)
+        self.assertFalse(extra_files)
 
         # even if a ubl_cii_xml_file ends up set on a partner-less move, it must not crash either
         move.ubl_cii_xml_file = base64.b64encode(b"<test/>").decode()
-        extra_attachments = self.env['account.move.send']._get_invoice_extra_attachments(move)
-        self.assertIn(move.ubl_cii_xml_id, extra_attachments)
+        extra_checksums = [value.checksum for value in self.env['account.move.send']._get_invoice_extra_files(move)]
+        self.assertIn(move.ubl_cii_xml_file.checksum, extra_checksums)
 
     def test_import_partner_peppol_fields(self):
         """ Check that the peppol fields are used to retrieve the partner when importing a Bis 3 xml. """

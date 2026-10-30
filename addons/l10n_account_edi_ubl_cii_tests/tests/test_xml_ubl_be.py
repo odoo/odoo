@@ -145,7 +145,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             ],
         )
         attachment = self._assert_invoice_attachment(
-            invoice.ubl_cii_xml_id,
+            invoice.ubl_cii_xml_file,
             xpaths=f'''
                 <xpath expr="./*[local-name()='ID']" position="replace">
                     <cbc:ID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:ID>
@@ -164,12 +164,12 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
                 </xpath>
                 <xpath expr=".//*[local-name()='AdditionalDocumentReference']/*[local-name()='Attachment']/*[local-name()='EmbeddedDocumentBinaryObject']" position="attributes">
                     <attribute name="mimeCode">application/pdf</attribute>
-                    <attribute name="filename">{invoice.invoice_pdf_report_id.name}</attribute>
+                    <attribute name="filename">{invoice.invoice_pdf_report_file.filename}</attribute>
                 </xpath>
             ''',
             expected_file_path='from_odoo/bis3_out_invoice.xml',
         )
-        self.assertEqual(attachment.name[-12:], "ubl_bis3.xml")
+        self.assertEqual(attachment.filename[-12:], "ubl_bis3.xml")
         self._assert_imported_invoice_from_etree(invoice, attachment)
 
     def test_export_import_refund(self):
@@ -203,7 +203,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             ],
         )
         attachment = self._assert_invoice_attachment(
-            refund.ubl_cii_xml_id,
+            refund.ubl_cii_xml_file,
             xpaths=f'''
                 <xpath expr="./*[local-name()='ID']" position="replace">
                     <cbc:ID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:ID>
@@ -222,12 +222,12 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
                 </xpath>
                 <xpath expr=".//*[local-name()='AdditionalDocumentReference']/*[local-name()='Attachment']/*[local-name()='EmbeddedDocumentBinaryObject']" position="attributes">
                     <attribute name="mimeCode">application/pdf</attribute>
-                    <attribute name="filename">{refund.invoice_pdf_report_id.name}</attribute>
+                    <attribute name="filename">{refund.invoice_pdf_report_file.filename}</attribute>
                 </xpath>
             ''',
             expected_file_path='from_odoo/bis3_out_refund.xml',
         )
-        self.assertEqual(attachment.name[-12:], "ubl_bis3.xml")
+        self.assertEqual(attachment.filename[-12:], "ubl_bis3.xml")
         self._assert_imported_invoice_from_etree(refund, attachment)
 
     def test_encoding_in_attachment_ubl(self):
@@ -237,7 +237,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             move_type='out_invoice',
             invoice_line_ids=[{'product_id': self.product_a.id}],
         )
-        self._test_encoding_in_attachment(invoice.ubl_cii_xml_id, 'ubl_bis3.xml')
+        self._test_encoding_in_attachment(invoice.ubl_cii_xml_file, 'ubl_bis3.xml')
 
     ####################################################
     # Test import
@@ -250,7 +250,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             move_type='out_invoice',
             invoice_line_ids=[{'product_id': self.product_a.id}],
         )
-        self._test_import_partner(invoice.ubl_cii_xml_id, self.partner_1, self.partner_2)
+        self._test_import_partner(invoice.ubl_cii_xml_file, self.partner_1, self.partner_2)
 
     def test_import_in_journal_ubl(self):
         invoice = self._generate_move(
@@ -259,7 +259,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             move_type='out_invoice',
             invoice_line_ids=[{'product_id': self.product_a.id}],
         )
-        self._test_import_in_journal(invoice.ubl_cii_xml_id)
+        self._test_import_in_journal(invoice.ubl_cii_xml_file)
 
     def test_import_and_create_partner_ubl(self):
         """ Tests whether the partner is created at import if no match is found when decoding the EDI attachment
@@ -317,10 +317,10 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             }],
         )
 
-        attachment = invoice.ubl_cii_xml_id
-        self.assertTrue(attachment)
+        xml_file = invoice.ubl_cii_xml_file
+        self.assertTrue(xml_file)
 
-        xml_content = attachment.raw.content
+        xml_content = xml_file.content
         xml_etree = self.get_xml_tree_from_string(xml_content)
 
         self.assertEqual(
@@ -338,7 +338,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         # Import:
         created_bill = self.env['account.move'].create({'move_type': 'in_invoice'})
         self.env['res.partner'].search([('vat', '=', 'BE0246697724'), ('id', '!=', self.company_data['company'].id)]).vat = False  # clean demo company to avoid picking it as a partner
-        created_bill.message_post(attachment_ids=[attachment.id])
+        created_bill.message_post(attachment_ids=self._create_attachment_from_binary(xml_file).ids)
         self.assertTrue(created_bill)
 
     def test_import_invoice_xml(self):
@@ -573,13 +573,13 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
                 'placeholder': True,
             },
         ])
-        self.assertFalse(invoice.invoice_pdf_report_id)
-        self.assertFalse(invoice.ubl_cii_xml_id)
+        self.assertFalse(invoice.invoice_pdf_report_file)
+        self.assertFalse(invoice.ubl_cii_xml_file)
 
         # Send.
         wizard.action_send_and_print()
-        self.assertTrue(invoice.invoice_pdf_report_id)
-        self.assertTrue(invoice.ubl_cii_xml_id)
+        self.assertTrue(invoice.invoice_pdf_report_file)
+        self.assertTrue(invoice.ubl_cii_xml_file)
         invoice_attachments = self.env['ir.attachment'].search([
             ('res_model', '=', invoice._name),
             ('res_id', '=', invoice.id),
@@ -595,19 +595,23 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         }])
         self._assert_mail_attachments_widget(wizard, [
             {
-                'id': invoice.invoice_pdf_report_id.id,
+                'id': f'binary_{invoice.invoice_pdf_report_file.checksum}',
                 'mimetype': 'application/pdf',
-                'name': 'INV_2019_00001.pdf',
+                'name': 'INV_2017_00001.pdf',
+                'placeholder': False,
+                'protect_from_deletion': True,
             },
             {
-                'id': invoice.ubl_cii_xml_id.id,
+                'id': f'binary_{invoice.ubl_cii_xml_file.checksum}',
                 'mimetype': 'application/xml',
-                'name': 'INV_2019_00001_ubl_bis3.xml',
+                'name': 'INV_2017_00001_ubl_bis3.xml',
+                'placeholder': False,
+                'protect_from_deletion': True,
             },
         ])
         wizard.action_send_and_print()
-        self.assertTrue(invoice.invoice_pdf_report_id)
-        self.assertTrue(invoice.ubl_cii_xml_id)
+        self.assertTrue(invoice.invoice_pdf_report_file)
+        self.assertTrue(invoice.ubl_cii_xml_file)
         invoice_attachments = self.env['ir.attachment'].search([
             ('res_model', '=', invoice._name),
             ('res_id', '=', invoice.id),

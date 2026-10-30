@@ -17,7 +17,7 @@
                 <button
                     name="action_l10n_pl_edi_get_invoice_UPO"
                     string="Download UPO"
-                    invisible="(l10n_pl_edi_status != 'accepted') or l10n_pl_edi_upo_id"
+                    invisible="(l10n_pl_edi_status != 'accepted') or l10n_pl_edi_upo_file"
                     type="object"
                     class="oe_highlight"
                     data-hotkey="shift+U"
@@ -43,8 +43,8 @@
                     <field name="l10n_pl_edi_number" groups="base.group_no_one" readonly="1"/>
                     <field name="l10n_pl_edi_ref" groups="base.group_no_one" readonly="1"/>
                     <field name="l10n_pl_edi_session_id" groups="base.group_no_one" readonly="1"/>
-                    <field name="l10n_pl_edi_attachment_id" groups="base.group_no_one" readonly="1"/>
-                    <field name="l10n_pl_edi_upo_id" groups="base.group_no_one" readonly="1"/>
+                    <field name="l10n_pl_edi_attachment_file" groups="base.group_no_one" readonly="1"/>
+                    <field name="l10n_pl_edi_upo_file" groups="base.group_no_one" readonly="1"/>
                 </group>
             </xpath>
         </field>

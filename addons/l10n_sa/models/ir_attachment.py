@@ -12,7 +12,7 @@ class IrAttachment(models.Model):
         '''
         restricted_moves = self._get_posted_pdf_moves_to_check().filtered(lambda move: move.country_code == 'SA' and move.state == 'posted')
         if restricted_moves:
-            raise UserError(_("The Invoice PDF(s) cannot be deleted according to ZATCA rules: %s", ', '.join(restricted_moves.mapped('invoice_pdf_report_id.name'))))
+            raise UserError(_("The Invoice PDF(s) cannot be deleted according to ZATCA rules: %s", ', '.join(pdf.filename for pdf in restricted_moves.mapped('invoice_pdf_report_file') if pdf)))
 
     def _get_posted_pdf_moves_to_check(self):
         '''

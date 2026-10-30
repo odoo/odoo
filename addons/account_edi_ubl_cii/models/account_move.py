@@ -23,12 +23,6 @@ class AccountMove(models.Model):
         string="UBL/CII Filename",
         compute='_compute_filename',
     )
-    ubl_cii_xml_id = fields.Many2one(
-        comodel_name='ir.attachment',
-        string="Attachment",
-        compute=lambda self: self._compute_linked_attachment_id('ubl_cii_xml_id', 'ubl_cii_xml_file'),
-        depends=['ubl_cii_xml_file']
-    )
 
     # -------------------------------------------------------------------------
     # COMPUTE
@@ -38,7 +32,7 @@ class AccountMove(models.Model):
     def _compute_filename(self):
         """ Compute the filename based on the uploaded file. """
         for record in self:
-            record.ubl_cii_xml_filename = record.ubl_cii_xml_id.name
+            record.ubl_cii_xml_filename = record.ubl_cii_xml_file.filename
 
     # -------------------------------------------------------------------------
     # BUSINESS
@@ -50,15 +44,30 @@ class AccountMove(models.Model):
         fields_list.append("ubl_cii_xml_file")
         return fields_list
 
+    def _get_invoice_files(self):
+        invoice_files = super()._get_invoice_files()
+        if xml_file := self.ubl_cii_xml_file:
+            # The XML is already embedded in the PDF for those hybrid formats
+            # (see _hook_invoice_document_after_pdf_report_render), sending it a second time as a
+            # standalone file makes some recipient systems detect two separate invoices. But if the PDF
+            # doesn't contain the XML, the standalone file is the only copy, so we send it.
+            comm_partner = self.commercial_partner_id.with_company(self.company_id)
+            is_embedded = (
+                comm_partner.invoice_edi_format in ('facturx', 'zugferd')
+                and self.env['account.move.send']._is_xml_embedded_in_pdf(self)
+            )
+            invoice_files.append({'file': xml_file, 'send': not is_embedded, 'chatter': True})
+        return invoice_files
+
     def _get_invoice_legal_documents(self, filetype, allow_fallback=False):
         # EXTENDS account
         self.ensure_one()
         if filetype == 'ubl':
-            if ubl_attachment := self.ubl_cii_xml_id:
+            if ubl_xml := self.ubl_cii_xml_file:
                 return [{
-                    'filename': ubl_attachment.name,
+                    'filename': ubl_xml.filename,
                     'filetype': 'xml',
-                    'content': ubl_attachment.raw,
+                    'content': ubl_xml,
                 }]
             elif allow_fallback:
                 if (
@@ -96,10 +105,10 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         error_message = self.env._("Cannot find the origin file, try by importing it again")
-        if not self.ubl_cii_xml_id:
+        if not (ubl_xml := self.ubl_cii_xml_file):
             raise UserError(error_message)
 
-        files_data = self._to_files_data(self.ubl_cii_xml_id)
+        files_data = self._to_files_data(self.env['ir.attachment'].browse(ubl_xml.attachment_id))
         files_data.extend(self._unwrap_attachments(files_data))
         file_data_group = self._group_files_data_into_groups_of_mixed_types(files_data)[0]
 
@@ -189,7 +198,7 @@ class AccountMove(models.Model):
         except UserError:
             return
 
-        if not invoice.partner_id or not invoice.ubl_cii_xml_id:
+        if not invoice.partner_id or not invoice.ubl_cii_xml_file:
             return
 
         # Group lines
@@ -325,7 +334,7 @@ class AccountMove(models.Model):
 
     def _need_ubl_cii_xml(self, ubl_cii_format):
         self.ensure_one()
-        return not self.ubl_cii_xml_id \
+        return not self.ubl_cii_xml_file \
             and (self.is_sale_document() or self._is_exportable_as_self_invoice()) \
             and ubl_cii_format in self.env['res.partner']._get_ubl_cii_formats()
 

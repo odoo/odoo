@@ -28,10 +28,13 @@ class TestDownloadDocs(AccountTestInvoicingHttpCommon):
         cls.invoices = invoice_1 + invoice_2
         cls.invoices.action_post()
         cls.invoices._generate_and_send()
-        assert invoice_1.invoice_pdf_report_id and invoice_2.invoice_pdf_report_id
+        assert invoice_1.invoice_pdf_report_file and invoice_2.invoice_pdf_report_file
+        cls.pdf_attachments = cls.env['ir.attachment'].browse([
+            invoice.invoice_pdf_report_file.attachment_id for invoice in cls.invoices
+        ])
 
     def test_download_invoice_attachments_not_auth(self):
-        url = f'/account/download_invoice_attachments/{",".join(map(str, self.invoices.invoice_pdf_report_id.ids))}'
+        url = f'/account/download_invoice_attachments/{",".join(map(str, self.pdf_attachments.ids))}'
         res = self.url_open(url)
         self.assertEqual(res.status_code, 200)
         self.assertIn(
@@ -41,7 +44,7 @@ class TestDownloadDocs(AccountTestInvoicingHttpCommon):
         )
 
     def test_download_invoice_attachments_one(self):
-        attachment = self.invoices[0].invoice_pdf_report_id
+        attachment = self.pdf_attachments[0]
         url = f'/account/download_invoice_attachments/{attachment.id}'
         self.authenticate(self.env.user.login, self.env.user.login)
         res = self.url_open(url)
@@ -49,7 +52,7 @@ class TestDownloadDocs(AccountTestInvoicingHttpCommon):
         self.assertEqual(res.content, attachment.raw.content)
 
     def test_download_invoice_attachments_multiple(self):
-        attachments = self.invoices.invoice_pdf_report_id
+        attachments = self.pdf_attachments
         url = f'/account/download_invoice_attachments/{",".join(map(str, attachments.ids))}'
         self.authenticate(self.env.user.login, self.env.user.login)
         res = self.url_open(url)
@@ -57,7 +60,7 @@ class TestDownloadDocs(AccountTestInvoicingHttpCommon):
         with ZipFile(BytesIO(res.content)) as zip_file:
             self.assertEqual(
                 zip_file.namelist(),
-                self.invoices.invoice_pdf_report_id.mapped('name'),
+                attachments.mapped('name'),
             )
 
     def test_download_invoice_documents_filetype_one(self):
@@ -65,7 +68,7 @@ class TestDownloadDocs(AccountTestInvoicingHttpCommon):
         self.authenticate(self.env.user.login, self.env.user.login)
         res = self.url_open(url)
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(res.content, self.invoices[0].invoice_pdf_report_id.raw.content)
+        self.assertEqual(res.content, self.invoices[0].invoice_pdf_report_file.content)
 
     def test_download_invoice_documents_filetype_multiple(self):
         url = f'/account/download_invoice_documents/{",".join(map(str, self.invoices.ids))}/pdf'
@@ -75,7 +78,7 @@ class TestDownloadDocs(AccountTestInvoicingHttpCommon):
         with ZipFile(BytesIO(res.content)) as zip_file:
             self.assertEqual(
                 zip_file.namelist(),
-                self.invoices.invoice_pdf_report_id.mapped('name'),
+                [invoice.invoice_pdf_report_file.filename for invoice in self.invoices],
             )
 
     def test_download_invoice_documents_filetype_all(self):
@@ -86,8 +89,8 @@ class TestDownloadDocs(AccountTestInvoicingHttpCommon):
         with ZipFile(BytesIO(res.content)) as zip_file:
             file_names = zip_file.namelist()
             self.assertEqual(len(file_names), 2)
-            self.assertTrue(self.invoices[0].invoice_pdf_report_id.name in file_names)
-            self.assertTrue(self.invoices[1].invoice_pdf_report_id.name in file_names)
+            self.assertTrue(self.invoices[0].invoice_pdf_report_file.filename in file_names)
+            self.assertTrue(self.invoices[1].invoice_pdf_report_file.filename in file_names)
 
     def test_download_moves_attachments(self):
         self.authenticate(self.env.user.login, self.env.user.login)

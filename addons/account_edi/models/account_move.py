@@ -387,3 +387,11 @@ class AccountMove(models.Model):
                 move_result.setdefault('attachment_ids', []).extend(edi_attachments.get('attachment_ids', []))
                 move_result.setdefault('attachments', []).extend(edi_attachments.get('attachments', []))
         return result
+
+    def _get_invoice_files(self):
+        invoice_files = super()._get_invoice_files()
+        for doc in self.edi_document_ids:
+            # regular attachments of the move, already displayed in the chatter
+            if attachment := self.env['account.move.send']._get_mail_attachment_from_doc(doc):
+                invoice_files.append({'file': attachment.raw, 'send': True, 'chatter': False})
+        return invoice_files

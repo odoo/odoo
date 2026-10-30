@@ -83,8 +83,7 @@ class AccountMoveSend(models.AbstractModel):
         it can be a plain one made before the XML embedding
         (check _hook_invoice_document_after_pdf_report_render)
         """
-        pdf = move.invoice_pdf_report_id
-        pdf_content = pdf.raw.content if pdf else b''
+        pdf_content = move.invoice_pdf_report_file.content
         if b'%PDF-' not in pdf_content[:1024]:
             return False
         try:
@@ -93,30 +92,12 @@ class AccountMoveSend(models.AbstractModel):
         except Exception:  # noqa: BLE001
             return False
 
-    def _get_invoice_extra_attachments(self, move):
-        """ The XML is already embedded in the PDF for those hybrid formats
-        (see _hook_invoice_document_after_pdf_report_render), attaching it a second time as a
-        standalone file makes some recipient systems detect two separate invoices. But if the PDF
-        doesn't contain the XML, the standalone file is the only copy, so we keep it. """
-        # EXTENDS 'account'
-        extra_attachments = super()._get_invoice_extra_attachments(move)
-        if (
-            not move.ubl_cii_xml_id
-            or (
-                (comm_partner := move.commercial_partner_id.with_company(move.company_id))
-                and comm_partner.invoice_edi_format in ('facturx', 'zugferd')
-                and self._is_xml_embedded_in_pdf(move)
-            )
-        ):
-            return extra_attachments
-        return extra_attachments + move.ubl_cii_xml_id
-
     def _get_placeholder_mail_attachments_data(self, move, invoice_edi_format=None, extra_edis=None, pdf_report=None):
         # EXTENDS 'account'
         results = super()._get_placeholder_mail_attachments_data(move, invoice_edi_format=invoice_edi_format, extra_edis=extra_edis, pdf_report=pdf_report)
-        if invoice_edi_format in ('facturx', 'zugferd') and (not move.invoice_pdf_report_id or self._is_xml_embedded_in_pdf(move)):
+        if invoice_edi_format in ('facturx', 'zugferd') and (not move.invoice_pdf_report_file or self._is_xml_embedded_in_pdf(move)):
             # The XML is embedded in the PDF itself and never added as a separate attachment
-            # (see _get_invoice_extra_attachments), so no placeholder for it. If the PDF is already
+            # (see _get_invoice_files), so no placeholder for it. If the PDF is already
             # there without the XML, the XML is sent separately, so the placeholder stays.
             return results
 
@@ -217,8 +198,7 @@ class AccountMoveSend(models.AbstractModel):
             return
 
         # Read pdf content.
-        pdf_values = (not self.env.context.get('custom_template_facturx') and invoice.invoice_pdf_report_id) or \
-            invoice_data.get('pdf_attachment_values') or invoice_data['proforma_pdf_attachment_values']
+        pdf_values = invoice_data.get('pdf_attachment_values') or invoice_data['proforma_pdf_attachment_values']
         reader_buffer = io.BytesIO(pdf_values['raw'])
         reader = OdooPdfFileReader(reader_buffer, strict=False)
 
@@ -291,7 +271,10 @@ class AccountMoveSend(models.AbstractModel):
             return
 
         anchor_index = tree.index(anchor_elements[0])
-        pdf_values = invoice.invoice_pdf_report_id or invoice_data.get('pdf_attachment_values') or invoice_data['proforma_pdf_attachment_values']
+        if invoice_pdf := invoice.invoice_pdf_report_file:
+            pdf_values = {'name': invoice_pdf.filename, 'raw': invoice_pdf, 'mimetype': invoice_pdf.mimetype}
+        else:
+            pdf_values = invoice_data.get('pdf_attachment_values') or invoice_data['proforma_pdf_attachment_values']
 
         edi_model = invoice_data["ubl_cii_xml_options"]["builder"]
         doc_type_code_node = edi_model._get_document_type_code_node(invoice, invoice_data)
@@ -346,6 +329,4 @@ class AccountMoveSend(models.AbstractModel):
             if invoice_data.get('ubl_cii_xml_attachment_values')
         ]
         if attachments_vals:
-            attachments = self.env['ir.attachment'].with_user(SUPERUSER_ID).create(attachments_vals)
-            res_ids = [a.res_id for a in attachments if a.res_id]
-            self.env['account.move'].browse(res_ids).invalidate_recordset(fnames=['ubl_cii_xml_id', 'ubl_cii_xml_file'])
+            self.env['ir.attachment'].with_user(SUPERUSER_ID).create(attachments_vals)

@@ -374,6 +374,12 @@ class AccountMove(models.Model):
         fields_list.append('l10n_it_edi_attachment_file')
         return fields_list
 
+    def _get_invoice_files(self):
+        invoice_files = super()._get_invoice_files()
+        if edi_file := self.l10n_it_edi_attachment_file:
+            invoice_files.append({'file': edi_file, 'send': True, 'chatter': True})
+        return invoice_files
+
     def _should_detach_attachments(self):
         # EXTENDS account
         return self.l10n_it_edi_is_self_invoice or super()._should_detach_attachments()
@@ -427,9 +433,8 @@ class AccountMove(models.Model):
             self.message_post(body=body)
 
         attachment_vals = self._l10n_it_edi_get_attachment_values(pdf_values=None)
-        self.l10n_it_edi_attachment_file = BinaryBytes(attachment_vals['raw'])
+        self.l10n_it_edi_attachment_file = BinaryBytes(attachment_vals['raw'], filename=attachment_vals['name'])
         self.l10n_it_edi_attachment_name = attachment_vals['name']
-        self.invalidate_recordset(fnames=['l10n_it_edi_attachment_name', 'l10n_it_edi_attachment_file'])
         self.message_post(attachments=[(self.l10n_it_edi_attachment_name, attachment_vals['raw'])])
         self._l10n_it_edi_send({self: attachment_vals})
         self.is_move_sent = True
@@ -1410,31 +1415,19 @@ class AccountMove(models.Model):
         files_data.extend(self._unwrap_attachments(files_data))
 
         moves = self.with_company(company_id).create([{
-                'l10n_it_edi_attachment_file': BinaryBytes(file_data['raw']),
+                'l10n_it_edi_attachment_file': BinaryBytes(file_data['raw'], filename=file_data['name']),
                 'l10n_it_edi_attachment_name': file_data['name'],
                 'document_tax_mode': 'tax_excluded',
                 'move_type': 'in_invoice',
             } for file_data in files_data
         ])
-        attachments_map = dict(Attachment._read_group(
-            domain=[
-                ('res_model', '=', 'account.move'),
-                ('res_field', '=', 'l10n_it_edi_attachment_file'),
-                ('res_id', 'in', moves.ids),
-            ],
-            groupby=['res_id'],
-            aggregates=['id:array_agg'],
-        ))
 
         # Extend created moves with the related attachments.
         for move, file_data in zip(moves, files_data):
-            attachment_ids = attachments_map.get(move.id)
-            Attachment.browse(attachment_ids).name = move.l10n_it_edi_attachment_name
-
             # Post the attachment in the chatter
             move.message_post(
                 body=_("This invoice was retrieved from the SdI."),
-                attachment_ids=attachment_ids
+                attachment_ids=[move.l10n_it_edi_attachment_file.attachment_id],
             )
             move._extend_with_attachments([file_data], new=True)
 
@@ -2163,7 +2156,7 @@ class AccountMove(models.Model):
 
         build_error = self._l10n_it_edi_build_move_error
 
-        if pdf_moves := self.filtered(lambda move: move.invoice_pdf_report_id and not move.l10n_it_edi_attachment_file):
+        if pdf_moves := self.filtered(lambda move: move.invoice_pdf_report_file and not move.l10n_it_edi_attachment_file):
             message = _("Please delete the PDF attachment before sending to the SDI. Odoo will regenerate the PDF, making sure everything is consistent with the XML.")
             errors['l10n_it_edi_pdf_already_generated'] = build_error(message=message, records=pdf_moves)
 

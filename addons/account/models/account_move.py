@@ -755,12 +755,6 @@ class AccountMove(models.Model):
         store=True, readonly=False, index=True,
     )
     sending_data = fields.Json(copy=False)
-    invoice_pdf_report_id = fields.Many2one(
-        comodel_name='ir.attachment',
-        string="PDF Attachment",
-        compute=lambda self: self._compute_linked_attachment_id('invoice_pdf_report_id', 'invoice_pdf_report_file'),
-        depends=['invoice_pdf_report_file']
-    )
     invoice_pdf_report_file = fields.Binary(
         attachment=True,
         string="PDF File",
@@ -2354,20 +2348,6 @@ class AccountMove(models.Model):
             if move.move_type.startswith('out_'):
                 move.invoice_incoterm_id = move.company_id.incoterm_id
 
-    def _compute_linked_attachment_id(self, attachment_field, binary_field):
-        """Helper to retreive Attachment from Binary fields
-        This is needed because fields.Many2one('ir.attachment') makes all
-        attachments available to the user.
-        """
-        attachments = self.env['ir.attachment'].search([
-            ('res_model', '=', self._name),
-            ('res_id', 'in', self.ids),
-            ('res_field', '=', binary_field)
-        ])
-        move_vals = {att.res_id: att for att in attachments}
-        for move in self:
-            move[attachment_field] = move_vals.get(move._origin.id, False)
-
     def _compute_incoterm_location(self):
         pass
 
@@ -2507,10 +2487,10 @@ class AccountMove(models.Model):
         for move in self:
             move.display_send_button = move.is_sale_document() and move.state == 'posted'
 
-    @api.depends('is_being_sent', 'invoice_pdf_report_id')
+    @api.depends('is_being_sent', 'invoice_pdf_report_file')
     def _compute_highlight_send_button(self):
         for move in self:
-            move.highlight_send_button = not move.is_being_sent and not move.invoice_pdf_report_id
+            move.highlight_send_button = not move.is_being_sent and not move.invoice_pdf_report_file
 
     @api.depends('line_ids.matched_debit_ids', 'line_ids.matched_credit_ids', 'matched_payment_ids', 'matched_payment_ids.state')
     def _compute_reconciled_payment_ids(self):
@@ -7077,6 +7057,14 @@ class AccountMove(models.Model):
                     date=today,
                 )
 
+    def _detach_binary_fields(self, fnames):
+        """ Break the link between the attachments and the given binary fields: the
+        attachments remain linked to the records, but the fields become empty.
+        """
+        self.env['ir.attachment'].browse([
+            value.attachment_id for fname in fnames for value in self.mapped(fname) if value
+        ]).res_field = False
+
     def _unlink_next_draft_auto_post_moves(self):
         """
         Deletes auto_post recurrence following each move in self
@@ -7705,6 +7693,20 @@ class AccountMove(models.Model):
             'content': content_by_id[self.id],
         }
 
+    def _get_invoice_files(self):
+        """ Return the files generated for this invoice, along with what they are used for:
+
+        * file:     BinaryValue: The file, which must not be empty.
+        * send:     bool: Whether the file is sent along with the invoice.
+        * chatter:  bool: Whether the file is displayed in the chatter (it must be stored in an attachment).
+
+        :returns: A list of dictionaries.
+        """
+        self.ensure_one()
+        if invoice_pdf := self.invoice_pdf_report_file:
+            return [{'file': invoice_pdf, 'send': True, 'chatter': True}]
+        return []
+
     def _get_invoice_legal_documents(self, filetype, allow_fallback=False):
         """ Retrieve the invoice legal document of type filetype.
         :param filetype: the type of legal document to retrieve. Example: 'pdf'.
@@ -7715,11 +7717,11 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         if filetype == 'pdf':
-            if invoice_pdf := self.invoice_pdf_report_id:
+            if invoice_pdf := self.invoice_pdf_report_file:
                 return [{
-                    'filename': invoice_pdf.name,
+                    'filename': invoice_pdf.filename,
                     'filetype': invoice_pdf.mimetype,
-                    'content': invoice_pdf.raw,
+                    'content': invoice_pdf,
                 }]
             elif allow_fallback:
                 return [self._get_invoice_pdf_proforma()]
@@ -7733,15 +7735,14 @@ class AccountMove(models.Model):
         [{'filename': 'INV_2024_0001.pdf', 'filetype': 'pdf', 'content': ...}, ...]
         """
         self.ensure_one()
-        if self.invoice_pdf_report_id:
-            attachments = self.env['account.move.send']._get_invoice_extra_attachments(self)
+        if self.invoice_pdf_report_file:
             return [
                 {
-                    'filename': attachment.name,
-                    'filetype': attachment.mimetype,
-                    'content': attachment.raw,
+                    'filename': value.filename,
+                    'filetype': value.mimetype,
+                    'content': value,
                 }
-                for attachment in attachments
+                for value in self.env['account.move.send']._get_invoice_extra_files(self)
             ]
         elif allow_fallback:
             return [self._get_invoice_pdf_proforma()]
@@ -8197,7 +8198,9 @@ class AccountMove(models.Model):
     def _get_mail_thread_data_attachments(self):
         res = super()._get_mail_thread_data_attachments()
         # else, attachments with 'res_field' get excluded
-        return res | self.env['account.move.send']._get_invoice_extra_attachments(self)
+        return res | self.env['ir.attachment'].browse([
+            invoice_file['file'].attachment_id for invoice_file in self._get_invoice_files() if invoice_file['chatter']
+        ])
 
     def _get_lang(self):
         self.ensure_one()
@@ -8313,15 +8316,15 @@ class AccountMove(models.Model):
         self.ensure_one()
 
         if self.is_purchase_document(include_receipts=True):
-            attachments = self.env['account.move.send']._get_invoice_extra_attachments(self)
+            values = self.env['account.move.send']._get_invoice_extra_files(self)
             main = self.message_main_attachment_id
-            if main and main not in attachments:
-                attachments = main | attachments
+            if main and main.checksum not in {value.checksum for value in values}:
+                values = [main.raw, *values]
             return [{
-                'filename': a.name,
-                'filetype': a.mimetype,
-                'content': a.raw,
-            } for a in attachments]
+                'filename': value.filename,
+                'filetype': value.mimetype,
+                'content': value,
+            } for value in values]
 
         if self.state == 'draft' and (main := self.message_main_attachment_id):
             return [{

@@ -631,7 +631,7 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         self.assertEqual(invoice.l10n_pl_edi_session_id, invoice.company_id.l10n_pl_edi_session_id)
         self.assertEqual(invoice.l10n_pl_edi_ref, '999999')
         self.assertEqual(invoice.l10n_pl_edi_number, '7492091229-20260210-0700A043714A-5E')
-        self.assertEqual(invoice.l10n_pl_edi_attachment_id.name, 'FA3-INV_2026_00001.xml')
+        self.assertEqual(invoice.l10n_pl_edi_attachment_file.filename, 'FA3-INV_2026_00001.xml')
 
     def test_l10n_pl_edi_send_api_error(self):
         invoice = self.standard_invoice
@@ -655,7 +655,24 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         self.assertEqual(invoice.l10n_pl_edi_status, False)
         self.assertEqual(invoice.l10n_pl_edi_session_id, False)
         self.assertEqual(invoice.l10n_pl_edi_ref, False)
-        self.assertEqual(invoice.l10n_pl_edi_attachment_id.name, False)
+        self.assertFalse(invoice.l10n_pl_edi_attachment_file)
+
+    def test_l10n_pl_edi_get_invoice_upo_twice(self):
+        invoice = self.standard_invoice
+        invoice.action_post()
+        invoice.write({'l10n_pl_edi_ref': '999999', 'l10n_pl_edi_status': 'accepted'})
+
+        with patch.object(KsefApiService, 'get_invoice_upo', return_value=b'<UPO>1</UPO>'):
+            action = invoice.action_l10n_pl_edi_get_invoice_UPO()
+        self.assertIn(b'<UPO>1</UPO>', invoice.l10n_pl_edi_upo_file.content)
+        # the download is named after the UPO, not after the invoice
+        filename = f"UPO-{invoice.name.replace('/', '_')}.xml"
+        self.assertEqual(invoice.l10n_pl_edi_upo_file.filename, filename)
+        self.assertTrue(action['url'].endswith(f'/l10n_pl_edi_upo_file/{filename}?download=true'))
+
+        with patch.object(KsefApiService, 'get_invoice_upo', return_value=b'<UPO>2</UPO>'):
+            invoice.action_l10n_pl_edi_get_invoice_UPO()
+        self.assertIn(b'<UPO>2</UPO>', invoice.l10n_pl_edi_upo_file.content)
 
     def test_l10n_pl_edi_download_bill_success(self):
 

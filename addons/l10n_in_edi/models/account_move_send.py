@@ -42,10 +42,6 @@ class AccountMoveSend(models.AbstractModel):
     # SENDING METHODS
     # -------------------------------------------------------------------------
 
-    def _get_invoice_extra_attachments(self, invoice):
-        # EXTENDS 'account'
-        return super()._get_invoice_extra_attachments(invoice) + invoice.l10n_in_edi_attachment_id
-
     def _call_web_service_before_invoice_pdf_render(self, invoices_data):
         # EXTENDS 'account'
         super()._call_web_service_before_invoice_pdf_render(invoices_data)
@@ -59,7 +55,7 @@ class AccountMoveSend(models.AbstractModel):
                         'errors': error['messages'],
                         'retry': error.get('is_warning'),
                     }
-                elif invoice.invoice_pdf_report_id:
+                elif invoice.invoice_pdf_report_file:
                     invoice.write({'invoice_pdf_report_file': False})
                 if self._can_commit():
                     self.env.cr.commit()

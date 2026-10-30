@@ -11,7 +11,7 @@ from odoo import Command, fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
 from odoo.tests import tagged
-from odoo.tools import file_open
+from odoo.tools import BinaryBytes, file_open
 
 _logger = logging.getLogger(__name__)
 
@@ -581,15 +581,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             self.assertFalse(errors)
             self.assertTrue(xml_content)
 
-            # Create attachment for testing
-            attachment = self.env['ir.attachment'].create({
-                'name': invoice._l10n_es_edi_facturae_get_filename(),
-                'raw': xml_content,
-                'res_model': 'account.move',
-                'res_id': invoice.id,
-            })
-
-            invoice.l10n_es_edi_facturae_xml_id = attachment
+            invoice.l10n_es_edi_facturae_xml_file = BinaryBytes(xml_content, filename=invoice._l10n_es_edi_facturae_get_filename())
 
             # Test get_extra_print_items includes Factura-e download option
             print_items = invoice.get_extra_print_items()
@@ -622,25 +614,18 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             xml_content, errors = invoice._l10n_es_edi_facturae_render_facturae()
             self.assertFalse(errors)
 
-            # Create attachment for testing
-            attachment = self.env['ir.attachment'].create({
-                'name': invoice._l10n_es_edi_facturae_get_filename(),
-                'raw': xml_content,
-                'res_model': 'account.move',
-                'res_id': invoice.id,
-            })
-            invoice.l10n_es_edi_facturae_xml_id = attachment
+            invoice.l10n_es_edi_facturae_xml_file = BinaryBytes(xml_content, filename=invoice._l10n_es_edi_facturae_get_filename())
 
             legal_documents = invoice._get_invoice_legal_documents('facturae')
             self.assertEqual(len(legal_documents), 1)
             self.assertEqual(legal_documents[0], {
-                'filename': attachment.name,
+                'filename': invoice.l10n_es_edi_facturae_xml_file.filename,
                 'filetype': 'xml',
-                'content': attachment.raw,
+                'content': invoice.l10n_es_edi_facturae_xml_file,
             })
 
             # Test with no XML file
-            invoice.l10n_es_edi_facturae_xml_id = False
+            invoice.l10n_es_edi_facturae_xml_file = False
             self.assertFalse(invoice._get_invoice_legal_documents('facturae'),
                              "Should return [] when no XML file exists")
 
@@ -660,13 +645,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             )
             invoice1.action_post()
             xml_content1, _ = invoice1._l10n_es_edi_facturae_render_facturae()
-            attachment1 = self.env['ir.attachment'].create({
-                'name': invoice1._l10n_es_edi_facturae_get_filename(),
-                'raw': xml_content1,
-                'res_model': 'account.move',
-                'res_id': invoice1.id,
-            })
-            invoice1.l10n_es_edi_facturae_xml_id = attachment1
+            invoice1.l10n_es_edi_facturae_xml_file = BinaryBytes(xml_content1, filename=invoice1._l10n_es_edi_facturae_get_filename())
             invoices |= invoice1
 
             # Invoice 2: With Factura-e XML
@@ -677,13 +656,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             )
             invoice2.action_post()
             xml_content2, _ = invoice2._l10n_es_edi_facturae_render_facturae()
-            attachment2 = self.env['ir.attachment'].create({
-                'name': invoice2._l10n_es_edi_facturae_get_filename(),
-                'raw': xml_content2,
-                'res_model': 'account.move',
-                'res_id': invoice2.id,
-            })
-            invoice2.l10n_es_edi_facturae_xml_id = attachment2
+            invoice2.l10n_es_edi_facturae_xml_file = BinaryBytes(xml_content2, filename=invoice2._l10n_es_edi_facturae_get_filename())
             invoices |= invoice2
 
             # Invoice 3: Without Factura-e XML (should be excluded)
@@ -824,4 +797,4 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             wizard = self.create_send_and_print(refund)
             result = wizard.action_send_and_print()
             self.assertEqual(result['type'], 'ir.actions.act_window_close')
-            self.assertTrue(refund.l10n_es_edi_facturae_xml_id)
+            self.assertTrue(refund.l10n_es_edi_facturae_xml_file)

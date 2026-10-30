@@ -788,12 +788,12 @@
                         <button name="action_print_pdf"
                                 type="object"
                                 class="oe_highlight"
-                                invisible="state != 'posted' or is_being_sent or invoice_pdf_report_id or move_type in ('entry', 'in_invoice','in_refund','in_receipt')"
+                                invisible="state != 'posted' or is_being_sent or invoice_pdf_report_file or move_type in ('entry', 'in_invoice','in_refund','in_receipt')"
                                 string="Print"
                                 data-hotkey="p"/>
                         <button name="action_print_pdf"
                                 type="object"
-                                invisible="state != 'posted' or (not is_being_sent and not invoice_pdf_report_id) or move_type in ('in_invoice','in_refund','in_receipt')"
+                                invisible="state != 'posted' or (not is_being_sent and not invoice_pdf_report_file) or move_type in ('in_invoice','in_refund','in_receipt')"
                                 string="Print"
                                 data-hotkey="p"/>
                         <!-- Register Payment (only invoices / receipts) -->

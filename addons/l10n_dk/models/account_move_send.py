@@ -34,7 +34,7 @@ class AccountMoveSend(models.AbstractModel):
                 self._is_applicable_to_company(method, move.company_id),
                 partner.nemhandel_verification_state == 'valid',
                 move._need_ubl_cii_xml(invoice_edi_format)
-                or move.ubl_cii_xml_id and move.nemhandel_move_state not in {'processing', 'done'},
+                or move.ubl_cii_xml_file and move.nemhandel_move_state not in {'processing', 'done'},
             ])
 
         return super()._is_applicable_to_move(method, move, **move_data)
@@ -79,9 +79,9 @@ class AccountMoveSend(models.AbstractModel):
             if invoice_data.get('ubl_cii_xml_attachment_values'):
                 xml_file = invoice_data['ubl_cii_xml_attachment_values']['raw']
                 filename = invoice_data['ubl_cii_xml_attachment_values']['name']
-            elif invoice.ubl_cii_xml_id and invoice.nemhandel_move_state not in {'processing', 'done'}:
-                xml_file = invoice.ubl_cii_xml_id.raw
-                filename = invoice.ubl_cii_xml_id.name
+            elif invoice.ubl_cii_xml_file and invoice.nemhandel_move_state not in {'processing', 'done'}:
+                xml_file = invoice.ubl_cii_xml_file
+                filename = invoice.ubl_cii_xml_file.filename
             else:
                 invoice.nemhandel_move_state = 'error'
                 builder = invoice.partner_id.commercial_partner_id._get_edi_builder(invoice_data['invoice_edi_format'])

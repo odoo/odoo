@@ -274,3 +274,10 @@ class AccountMove(models.Model):
     def _get_active_myinvois_document(self, including_in_progress=False):
         """ Shortcut to get the active document of all invoice in self. """
         return self.env['myinvois.document'].union(invoice.l10n_my_edi_document_ids._get_active_myinvois_document(including_in_progress) for invoice in self)
+
+    def _get_invoice_files(self):
+        invoice_files = super()._get_invoice_files()
+        # Sharing the XML file may be a requirement, as it doesn't hurt we will do so.
+        if myinvois_file := self._get_active_myinvois_document().myinvois_file:
+            invoice_files.append({'file': myinvois_file, 'send': True, 'chatter': True})
+        return invoice_files

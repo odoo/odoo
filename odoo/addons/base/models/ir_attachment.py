@@ -40,6 +40,8 @@ if typing.TYPE_CHECKING:
 
 _logger = logging.getLogger(__name__)
 SECURITY_FIELDS = ('res_model', 'res_id', 'create_uid', 'public', 'res_field')
+# fields of an attachment determining the value of the binary field it stores
+BINARY_FIELD_VALUE_FIELDS = frozenset(('res_model', 'res_id', 'res_field', 'raw', 'checksum'))
 MAX_COMODELS_FOR_DOMAIN = 5
 MAX_SEARCH_LIMIT = IN_MAX * 10
 CREATE_FROM_STREAM_FLAG = object()  # sentinel that cannot be given over RPC
@@ -892,7 +894,12 @@ class IrAttachment(models.Model):
             vals.pop(field, False)
         if 'mimetype' in vals or 'raw' in vals:
             vals = self._check_contents(vals)
+        binary_fields_changed = not BINARY_FIELD_VALUE_FIELDS.isdisjoint(vals)
+        if binary_fields_changed:
+            self._invalidate_binary_fields()
         res = super().write(vals)
+        if binary_fields_changed:
+            self._invalidate_binary_fields()
         if 'url' in vals or 'type' in vals:
             self._check_serving_attachments()
         return res
@@ -905,6 +912,21 @@ class IrAttachment(models.Model):
                 # ensure the content is kept and recomputes checksum/store_fname
                 vals['raw'] = attachment.raw
         return vals_list
+
+    @api.ondelete(at_uninstall=True)
+    def _invalidate_binary_fields(self):
+        """ Invalidate the binary fields whose values are stored in ``self``,
+        as their cache is not updated when modifying the attachments directly.
+        """
+        res_ids_per_field = defaultdict(OrderedSet)
+        for attachment in self.sudo():
+            if attachment.res_field and attachment.res_id and attachment.res_model in self.env:
+                res_ids_per_field[attachment.res_model, attachment.res_field].add(attachment.res_id)
+        for (res_model, res_field), res_ids in res_ids_per_field.items():
+            field = self.env[res_model]._fields.get(res_field)
+            if field and field.type == 'binary' and field.attachment:
+                # don't flush: flushing binary fields writes on attachments
+                self.env[res_model].browse(res_ids).invalidate_recordset([res_field], flush=False)
 
     @api.ondelete(at_uninstall=True)
     def _delete_file_hook(self):
@@ -958,6 +980,7 @@ class IrAttachment(models.Model):
             with raw.open() as f:
                 self._file_write(fname, f)
         records._check_serving_attachments()
+        records._invalidate_binary_fields()
         return records
 
     def _post_add_create(self, **kwargs):
