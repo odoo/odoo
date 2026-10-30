@@ -416,8 +416,25 @@ class ProductProduct(models.Model):
         return self._search_product_quantity(operator, value, 'outgoing_qty')
 
     def _search_product_quantity(self, operator, value, field):
-        # Order the search on `id` to prevent the default order on the product name which slows down the search.
-        ids = self.with_context(prefetch_fields=False).search_fetch([], [field], order='id').filtered_domain([(field, operator, value)]).ids
+        op = PY_OPERATORS.get(operator)
+        if not op:
+            # Order the search on `id` to prevent the default order on the product name which slows
+            # down the search.
+            ids = self.with_context(prefetch_fields=False).search_fetch([], [field], order='id').filtered_domain(
+                [(field, operator, value)]).ids
+            return [('id', 'in', ids)]
+
+        if isinstance(value, Iterable) and not isinstance(value, str):
+            cmp_value = {float(v) for v in value}
+        else:
+            cmp_value = float(value)
+
+        products = self.with_context(prefetch_fields=False).search([])
+        quantities = products.with_context(search_all=True)._compute_quantities_dict(
+            self.env.context.get('lot_id'), self.env.context.get('owner_id'), self.env.context.get('package_id'),
+            self.env.context.get('from_date'), self.env.context.get('to_date'),
+        )
+        ids = [product_id for product_id, qties in quantities.items() if op(qties[field], cmp_value)]
         return [('id', 'in', ids)]
 
     def _compute_product_document_count(self):
