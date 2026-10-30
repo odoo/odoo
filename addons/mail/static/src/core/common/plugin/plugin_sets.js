@@ -37,13 +37,16 @@ import { MentionPlugin } from "@mail/core/common/plugin/mention_plugin";
 import { MessageLinkPlugin } from "@mail/core/common/plugin/message_link_plugin";
 import { PersistSelectionPlugin } from "@mail/core/common/plugin/persist_selection_plugin";
 import { StripPastedFormatPlugin } from "@mail/core/common/plugin/strip_pasted_format_plugin";
-import { MailSuggestionPlugin } from "@mail/core/common/plugin/suggestion_plugin";
+import { CannedResponseSuggestionPlugin } from "@mail/core/common/plugin/suggestion/canned_response_suggestion_plugin";
+import { PartnerSuggestionPlugin } from "@mail/core/common/plugin/suggestion/partner_suggestion_plugin";
+import { MailSuggestionPlugin } from "@mail/core/common/plugin/suggestion/suggestion_plugin";
 import { TextLineBreakPlugin } from "@mail/core/common/plugin/text_line_break_plugin";
 import { UndoRedoShortcutPlugin } from "@mail/core/common/plugin/undo_redo_shortcut_plugin";
 import { VisualLinkPlugin } from "@mail/core/common/plugin/visual_link_plugin";
 
 export const MAIL_TEXT_PLUGINS = [
     BaseContainerPlugin,
+    CannedResponseSuggestionPlugin,
     ClipboardPlugin,
     DeletePlugin,
     DisableImplicitFormatShortcutsPlugin,
@@ -61,6 +64,7 @@ export const MAIL_TEXT_PLUGINS = [
     MentionPlugin,
     MessageLinkPlugin,
     OverlayPlugin,
+    PartnerSuggestionPlugin,
     PersistSelectionPlugin,
     SanitizePlugin,
     SelectionPlugin,
@@ -74,6 +78,7 @@ export const MAIL_TEXT_PLUGINS = [
 
 export const MAIL_CORE_PLUGINS = [
     ...CORE_PLUGINS,
+    CannedResponseSuggestionPlugin,
     ColorPlugin,
     EmojiPlugin,
     FeffPlugin,
@@ -87,6 +92,7 @@ export const MAIL_CORE_PLUGINS = [
     MentionPlugin,
     MessageLinkPlugin,
     OdooLinkSelectionPlugin,
+    PartnerSuggestionPlugin,
     PersistSelectionPlugin,
     ProtectedNodePlugin,
     SelectionPlaceholderPlugin,

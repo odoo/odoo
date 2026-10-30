@@ -1,6 +1,8 @@
 import { proxy } from "@odoo/owl";
 import { PortalChatterPlugin } from "@portal/chatter/portal/portal_chatter_plugin";
 import { Composer } from "@mail/core/common/composer";
+import { CannedResponseSuggestionPlugin } from "@mail/core/common/plugin/suggestion/canned_response_suggestion_plugin";
+import { PartnerSuggestionPlugin } from "@mail/core/common/plugin/suggestion/partner_suggestion_plugin";
 import { useMaybePlugin } from "@mail/utils/common/hooks";
 
 import { patch } from "@web/core/utils/patch";
@@ -97,5 +99,18 @@ patch(Composer.prototype, {
             postData.rating_value = this.portalState.ratingValue;
         }
         return postData;
+    },
+
+    get wysiwygConfig() {
+        const config = super.wysiwygConfig;
+        if (!this.props.composer.targetThread?.reviewChatter) {
+            return config;
+        }
+        return {
+            ...config,
+            Plugins: config.Plugins.filter(
+                (P) => ![CannedResponseSuggestionPlugin, PartnerSuggestionPlugin].includes(P)
+            ),
+        };
     },
 });

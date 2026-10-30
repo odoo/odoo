@@ -8,7 +8,6 @@ import { _t } from "@web/core/l10n/translation";
 import { normalize } from "@web/core/l10n/utils";
 import { registry } from "@web/core/registry";
 import { UIPlugin } from "@web/core/ui/ui_plugin";
-import { useService } from "@web/core/utils/hooks";
 import { highlightText } from "@web/core/utils/html";
 
 const commandSetupRegistry = registry.category("command_setup");
@@ -124,7 +123,6 @@ export class DiscussCommandPalette {
         this.dialog = usePlugin(DialogPlugin);
         /** @type {import("models").Store} */
         this.store = usePlugin(StorePlugin);
-        this.suggestion = useService("mail.suggestion");
         this.ui = this.store.ui;
         this.commands = [];
         this.cleanedTerm = normalize(this.options.searchValue);
@@ -148,7 +146,7 @@ export class DiscussCommandPalette {
                         normalize(partner.email || "").includes(this.cleanedTerm)) &&
                     (!filtered || !filtered.has(partner))
             );
-            partners = this.suggestion
+            partners = this.store
                 .sortPartnerSuggestions(partners, this.cleanedTerm)
                 .slice(0, TOTAL_LIMIT);
         }

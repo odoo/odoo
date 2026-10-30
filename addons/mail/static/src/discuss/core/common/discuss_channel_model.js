@@ -5,9 +5,11 @@ import { compareDatetime, nearestGreaterThanOrEqual } from "@mail/utils/common/m
 import { _t } from "@web/core/l10n/translation";
 import { formatList } from "@web/core/l10n/utils";
 import { rpc } from "@web/core/network/rpc";
+import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { imageUrl } from "@web/core/utils/urls";
 
+const commandRegistry = registry.category("discuss.channel_commands");
 const { DateTime } = luxon;
 
 /** @import { AwaitChatHubInit } from "@mail/core/common/chat_hub_model" */
@@ -620,6 +622,21 @@ export class DiscussChannel extends Record {
         if (command.methodName) {
             await this.store.orm.call("discuss.channel", command.methodName, [[this.id]], { body });
         }
+    }
+
+    /** The commands that can be typed in the composer of this channel. */
+    getCommands() {
+        return commandRegistry
+            .getEntries()
+            .map(([name, command]) => ({
+                condition: command.condition,
+                help: command.help,
+                id: command.id,
+                name,
+            }))
+            .filter(
+                ({ condition }) => !condition || condition({ store: this.store, channel: this })
+            );
     }
 
     async fetchChannelMembers() {
