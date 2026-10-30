@@ -5,17 +5,22 @@ import lxml.html
 from urllib.parse import urlparse
 
 from odoo.addons.http_routing.tests.common import MockRequest
+from odoo.addons.website.tests.common import set_url_code
 from odoo.tests import HttpCase, tagged
 
 
 class TestLangUrlCommon(HttpCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        set_url_code(cls.env.ref('base.lang_fr'))
+
     def setUp(self):
         super().setUp()
 
         # Simulate multi lang without loading translations
         self.website = self.env.ref('base.default_website')
         self.lang_fr = self.env['res.lang']._activate_lang('fr_FR')
-        self.lang_fr.write({'url_code': 'fr'})
         self.website.language_ids = self.env.ref('base.lang_en') + self.lang_fr
         self.website.default_lang_id = self.env.ref('base.lang_en')
 

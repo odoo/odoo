@@ -7,9 +7,15 @@ from odoo.tools import mute_logger
 from unittest.mock import patch
 from werkzeug.urls import url_parse
 
+from odoo.addons.website.tests.common import set_url_code
+
 
 @tagged('-at_install', 'post_install')
 class TestRedirect(HttpCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        set_url_code(cls.env.ref('base.lang_fr'))
 
     def setUp(self):
         super(TestRedirect, self).setUp()
