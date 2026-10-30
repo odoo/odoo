@@ -48,7 +48,7 @@ class ResPartnerBank(models.Model):
         required=True,
     )
     allow_out_payment = fields.Boolean(
-        string="Send Money",
+        string="Trust Bank Account",
         help="This account can be used for outgoing payments",
         default=False,
         copy=False,
