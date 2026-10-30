@@ -1,4 +1,4 @@
-import { Component, useExternalListener, useState } from "@odoo/owl";
+import { Component, onWillDestroy, useExternalListener, useState } from "@odoo/owl";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import { registry } from "@web/core/registry";
 import { ImageTransformation } from "./image_transformation";
@@ -47,7 +47,10 @@ export function useImageTransform({ document, closeImageTransformation, buttonSe
         if (node.matches(buttonSelector)) {
             return true;
         }
-        if (isImageTransformationOpen() && node.matches(".transfo-controls, .transfo-controls *")) {
+        if (
+            isImageTransformationOpen() &&
+            node.matches(".transfo-controls, .transfo-controls *, .transfo-dragger")
+        ) {
             return true;
         }
         return false;
@@ -82,6 +85,7 @@ export class ImageTransformButton extends Component {
             closeImageTransformation: this.closeImageTransformation.bind(this),
             buttonSelector: '[name="image_transform"], [name="image_transform"] *',
         });
+        onWillDestroy(this.closeImageTransformation);
     }
 
     onButtonClick() {
