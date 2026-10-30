@@ -331,8 +331,18 @@ class MailControllerUpdateCommon(MailControllerCommon):
                 if allowed:
                     with freeze_time('2025-04-08 12:00:00'):
                         self._update_content(message.id, self.alter_message_body, route_kw)
-                    self.assertEqual(message.body,
-                                     Markup('<p>Altered message body<span class="o-mail-Message-edited" data-o-datetime="2025-04-08 12:00:00"></span></p>'))
+                    edited_by = (
+                        f' data-o-edited-by="{user.partner_id.id}"'
+                        if user and not user._is_public()
+                        else ""
+                    )
+                    self.assertEqual(
+                        message.body,
+                        Markup(
+                            '<p>Altered message body<span class="o-mail-Message-edited" '
+                            f'data-o-datetime="2025-04-08 12:00:00"{edited_by}></span></p>',
+                        ),
+                    )
                 else:
                     with self.assertRaises(
                         JsonRpcException,

@@ -1353,6 +1353,7 @@ class TestChannelInternals(MailCommon, HttpCase):
             "model": "discuss.channel",
             "res_id": channel.id,
         })
+        editor = self.env.user.partner_id
         with self.mock_datetime_and_now('2025-04-08 10:00:00'), \
             self.assertBus(
             [
@@ -1363,7 +1364,8 @@ class TestChannelInternals(MailCommon, HttpCase):
                         "mail.message": [
                             {
                                 "attachment_ids": [],
-                                "body": ['markup', '<p>Test update <span class="o-mail-Message-edited" data-o-datetime="2025-04-08 10:00:00"></span></p>'],
+                                "body": ['markup', f'<p>Test update <span class="o-mail-Message-edited" data-o-datetime="2025-04-08 10:00:00" data-o-edited-by="{editor.id}"></span></p>'],
+                                "edited_by_partner_id": editor.id,
                                 "id": message.id,
                                 "parent_id": False,
                                 "partner_ids": message.partner_ids.ids,
@@ -1373,6 +1375,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 "write_date": '2025-04-08 10:00:00',
                             },
                         ],
+                        "res.partner": [{"id": editor.id, "name": editor.name}],
                     },
                 ),
             ],

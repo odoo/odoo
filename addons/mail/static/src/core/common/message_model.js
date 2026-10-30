@@ -92,6 +92,7 @@ export class Message extends Record {
         const editedDate = this.bodyEl?.querySelector(".o-mail-Message-edited")?.dataset.oDatetime;
         return editedDate ? deserializeDateTime(editedDate) : undefined;
     });
+    edited_by_partner_id = fields.One("res.partner");
     /** attachments not already clearly visible in the body, unlike inlined images */
     extra_body_attachment_ids = this.computedShallowEqual(() => {
         const inlinedImageAttachmentIds = [
@@ -317,6 +318,12 @@ export class Message extends Record {
     }
 
     get editedText() {
+        if (this.edited_by_partner_id?.notEq(this.author)) {
+            return _t("Last edited by %(name)s %(editedDate)s", {
+                name: this.edited_by_partner_id.name,
+                editedDate: this.editedDatetimeMedium,
+            });
+        }
         return _t("Last edited %(editedDate)s", { editedDate: this.editedDatetimeMedium });
     }
 

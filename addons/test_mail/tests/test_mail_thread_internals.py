@@ -195,7 +195,7 @@ class TestAPI(ThreadRecipients):
         self.assertEqual(message.body, expected)
         with freeze_time('2025-04-08 10:00:00'):
             ticket_record._message_update_content(message, body="Hello <R&D/>")
-        self.assertEqual(message.body, Markup('<p>Hello &lt;R&amp;D/&gt;<span class="o-mail-Message-edited" data-o-datetime="2025-04-08 10:00:00"></span></p>'))
+        self.assertEqual(message.body, Markup(f'<p>Hello &lt;R&amp;D/&gt;<span class="o-mail-Message-edited" data-o-datetime="2025-04-08 10:00:00" data-o-edited-by="{self.env.user.partner_id.id}"></span></p>'))
 
     @users('employee')
     def test_mail_partner_find_from_emails(self):
@@ -1062,6 +1062,7 @@ class TestAPI(ThreadRecipients):
     def test_message_update_content(self):
         """ Test updating message content. """
         ticket_record = self.ticket_record.with_env(self.env)
+        editor_id = self.env.user.partner_id.id
         attachments = self.env['ir.attachment'].create(
             self._generate_attachments_data(2, 'mail.compose.message', 0)
         )
@@ -1083,10 +1084,10 @@ class TestAPI(ThreadRecipients):
         with freeze_time('2025-04-08 10:00:00'):
             ticket_record._message_update_content(message, body="")
         self.assertEqual(message.attachment_ids, attachments)
-        self.assertEqual(message.body, Markup('<span class="o-mail-Message-edited" data-o-datetime="2025-04-08 10:00:00"></span>'))
+        self.assertEqual(message.body, Markup(f'<span class="o-mail-Message-edited" data-o-datetime="2025-04-08 10:00:00" data-o-edited-by="{editor_id}"></span>'))
         # update the content with new attachments
         new_attachments = self.env['ir.attachment'].create(
-            self._generate_attachments_data(2, 'mail.compose.message', 0)
+            self._generate_attachments_data(2, 'mail.compose.message', 0),
         )
         with freeze_time('2025-04-08 11:00:00'):
             ticket_record._message_update_content(
@@ -1097,7 +1098,7 @@ class TestAPI(ThreadRecipients):
         self.assertEqual(message.attachment_ids, attachments + new_attachments)
         self.assertEqual(set(message.mapped('attachment_ids.res_id')), set(ticket_record.ids))
         self.assertEqual(set(message.mapped('attachment_ids.res_model')), set([ticket_record._name]))
-        self.assertEqual(message.body, Markup('<div>New Body <span class="o-mail-Message-edited" data-o-datetime="2025-04-08 11:00:00"></span></div>'))
+        self.assertEqual(message.body, Markup(f'<div>New Body <span class="o-mail-Message-edited" data-o-datetime="2025-04-08 11:00:00" data-o-edited-by="{editor_id}"></span></div>'))
 
         # void attachments when attachment_ids is an empty list
         with freeze_time('2025-04-08 12:00:00'):
@@ -1108,7 +1109,7 @@ class TestAPI(ThreadRecipients):
             )
         self.assertFalse(message.attachment_ids)
         self.assertFalse((attachments + new_attachments).exists())
-        self.assertEqual(message.body, Markup('<p>Another Body, void attachments <span class="o-mail-Message-edited" data-o-datetime="2025-04-08 12:00:00"></span></p>'))
+        self.assertEqual(message.body, Markup(f'<p>Another Body, void attachments <span class="o-mail-Message-edited" data-o-datetime="2025-04-08 12:00:00" data-o-edited-by="{editor_id}"></span></p>'))
 
         # void attachments when attachment_ids is False (should behave like an empty list)
         new_attachments_3 = self.env['ir.attachment'].create(
@@ -1136,7 +1137,7 @@ class TestAPI(ThreadRecipients):
             self.assertEqual(
                 message.body,
                 Markup(
-                    '<p>line1<br>edit<br>line2<br>line3 <span class="o-mail-Message-edited" data-o-datetime="2025-04-08 13:00:00"></span></p>'
+                    f'<p>line1<br>edit<br>line2<br>line3 <span class="o-mail-Message-edited" data-o-datetime="2025-04-08 13:00:00" data-o-edited-by="{editor_id}"></span></p>',
                 ),
             )
 
@@ -1144,7 +1145,7 @@ class TestAPI(ThreadRecipients):
             self.assertEqual(
                 message.body,
                 Markup(
-                    '<p>Hello<b>world</b><span class="o-mail-Message-edited" data-o-datetime="2025-04-08 13:00:00"></span></p>'
+                    f'<p>Hello<b>world</b><span class="o-mail-Message-edited" data-o-datetime="2025-04-08 13:00:00" data-o-edited-by="{editor_id}"></span></p>',
                 ),
             )
 
@@ -1152,7 +1153,7 @@ class TestAPI(ThreadRecipients):
             self.assertEqual(
                 message.body,
                 Markup(
-                    '<p>Hello <b>world</b><span class="o-mail-Message-edited" data-o-datetime="2025-04-08 13:00:00"></span></p>'
+                    f'<p>Hello <b>world</b><span class="o-mail-Message-edited" data-o-datetime="2025-04-08 13:00:00" data-o-edited-by="{editor_id}"></span></p>',
                 ),
             )
 

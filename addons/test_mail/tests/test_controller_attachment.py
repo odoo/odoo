@@ -209,7 +209,7 @@ class TestAttachmentController(MailControllerAttachmentCommon):
         thread = self.env["mail.test.simple"].create({"name": "Test"})
         self._authenticate_pseudo_user(self.user_employee)
         IrAttachment = self.env["ir.attachment"].with_user(self.user_employee)
-        edited_span = '<span class="o-mail-Message-edited" data-o-datetime="%(datetime)s"></span>'
+        edited_span = f'<span class="o-mail-Message-edited" data-o-datetime="%(datetime)s" data-o-edited-by="{self.user_employee.partner_id.id}"></span>'
         for body, expected_body in (
             ("Edited", "<p>Edited %(edited_span)s</p>"),
             ("", "%(edited_span)s"),

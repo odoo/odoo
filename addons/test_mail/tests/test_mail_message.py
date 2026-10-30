@@ -5,13 +5,14 @@ from datetime import datetime
 from unittest.mock import patch
 
 from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
 from markupsafe import Markup
 
 from odoo import Command
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.mail.tools.discuss import Store
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from odoo.tests.common import tagged, users, HttpCase
 from odoo.tools import is_html_empty, mute_logger, formataddr
 
@@ -524,6 +525,115 @@ class TestMessageValues(MailCommon):
         for record in records[:2]:
             self.assertFalse(record.message_ids)
         self.assertEqual(records[2].message_ids, messages)
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mail_message_write_edited_by(self):
+        """ Message posted by an employee, edited by an administrator through
+        Manage Messages: the edited tooltip shows the administrator name. When
+        the author edits it again from the chatter, the tooltip no longer names
+        anybody, as the last editor is the author. """
+        employee_partner = self.user_employee.partner_id
+        admin_partner = self.user_admin.partner_id
+        record = self.env['mail.test.simple'].with_context(self._test_context).create({'name': 'Test'})
+        record = record.with_user(self.user_employee)
+        message = record.message_post(
+            body=Markup("<p>Initial Body</p>"),
+            message_type="comment",
+        )
+        self.assertEqual(message.author_id, employee_partner)
+        self.assertFalse(message._get_edited_by_partner())
+
+        # administrator edits the body from Manage Messages (direct write)
+        with freeze_time('2025-04-08 10:00:00'):
+            message.with_user(self.user_admin).with_context(mail_message_mark_edited=True).write({
+                'body': Markup("<p>Edited by admin</p>"),
+            })
+        self.assertEqual(
+            message.body,
+            Markup(f'<p>Edited by admin <span class="o-mail-Message-edited" data-o-datetime="2025-04-08 10:00:00" data-o-edited-by="{admin_partner.id}"></span></p>'),
+        )
+        self.assertEqual(message.author_id, employee_partner, "Editing the body must not change the author")
+        store_data = Store().add(message.with_user(self.user_employee), "_store_message_fields")._build_result()
+        self.assertEqual(store_data["mail.message"][0]["edited_by_partner_id"], admin_partner.id,
+                         "Edited by someone else than the author: tooltip shows the editor name")
+
+        # author edits it again from the chatter
+        with freeze_time('2025-04-08 11:00:00'):
+            record._message_update_content(message.with_user(self.user_employee), body=Markup("<p>Edited by author</p>"))
+        self.assertEqual(
+            message.body,
+            Markup(f'<p>Edited by author <span class="o-mail-Message-edited" data-o-datetime="2025-04-08 11:00:00" data-o-edited-by="{employee_partner.id}"></span></p>'),
+            "Only one edited marker is kept, with the last editor",
+        )
+        self.assertEqual(message.author_id, employee_partner)
+        store_data = Store().add(message.with_user(self.user_employee), "_store_message_fields")._build_result()
+        self.assertEqual(store_data["mail.message"][0]["edited_by_partner_id"], employee_partner.id,
+                         "Last editor is the author: tooltip does not show a name")
+
+    @mute_logger('odoo.addons.base.models.ir_access')
+    def test_mail_message_write_manage_messages(self):
+        """ Manage Messages (direct write on mail.message): normal users cannot
+        edit messages of others; administrators can edit the body only, never
+        the author, the date or the document of the message. """
+        self.assertFalse(self.user_employee._is_admin())
+        self.assertTrue(self.user_admin._is_admin())
+        admin_partner = self.user_admin.partner_id
+        record = self.env['mail.test.simple'].with_context(self._test_context).create({'name': 'Test'})
+        other_record = self.env['mail.test.simple'].with_context(self._test_context).create({'name': 'Other'})
+        with freeze_time('2025-04-08 09:00:00'):
+            message = record.with_user(self.user_admin).message_post(
+                body=Markup("<p>Initial Body</p>"),
+                message_type="comment",
+            )
+        initial_values = {
+            'author_guest_id': message.author_guest_id,
+            'author_id': message.author_id,
+            'date': message.date,
+            'email_from': message.email_from,
+            'model': message.model,
+            'res_id': message.res_id,
+        }
+        self.assertEqual(message.author_id, admin_partner)
+
+        # normal user cannot edit the content of a message written by someone else
+        with self.assertRaises(AccessError):
+            message.with_user(self.user_employee).write({'body': Markup("<p>Edited by employee</p>")})
+        self.assertEqual(message.body, "<p>Initial Body</p>")
+
+        # nobody but superuser can change author, date or document, administrators included
+        guest = self.env['mail.guest'].create({'name': 'Guest'})
+        for user in (self.user_employee, self.user_admin):
+            for fname, value in [
+                ('author_id', self.user_employee.partner_id.id),
+                ('author_guest_id', guest.id),
+                ('email_from', 'hacker@test.example.com'),
+                ('date', '2020-01-01 10:00:00'),
+                ('model', other_record._name),
+                ('res_id', other_record.id),
+            ]:
+                with self.subTest(user=user.login, fname=fname), self.assertRaises(AccessError):
+                    message.with_user(user).write({fname: value})
+        # locked fields block the whole write, body included
+        with self.assertRaises(AccessError):
+            message.with_user(self.user_admin).write({
+                'author_id': self.user_employee.partner_id.id,
+                'body': Markup("<p>Edited with author</p>"),
+            })
+        self.assertEqual(message.body, "<p>Initial Body</p>")
+        for fname, value in initial_values.items():
+            self.assertEqual(message[fname], value, f"{fname} should not have been modified")
+
+        # administrator can edit the body, which is marked as edited
+        with freeze_time('2025-04-08 10:00:00'):
+            message.with_user(self.user_admin).with_context(mail_message_mark_edited=True).write({
+                'body': Markup("<p>Edited by admin</p>"),
+            })
+        self.assertEqual(
+            message.body,
+            Markup(f'<p>Edited by admin <span class="o-mail-Message-edited" data-o-datetime="2025-04-08 10:00:00" data-o-edited-by="{admin_partner.id}"></span></p>'),
+        )
+        for fname, value in initial_values.items():
+            self.assertEqual(message[fname], value, f"{fname} should not have been modified")
 
 
 @tagged("mail_message", "mail_gc")

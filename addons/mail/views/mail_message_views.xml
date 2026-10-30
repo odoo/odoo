@@ -36,19 +36,19 @@
                         </div>
                         <group>
                             <group>
-                                <field name="subject"/>
-                                <field name="date"/>
-                                <field name="email_from"/>
-                                <field name="author_id"/>
-                                <field name="message_type"/>
-                                <field name="subtype_id"/>
-                                <field name="is_internal"/>
+                                <field name="subject" readonly="1"/>
+                                <field name="date" readonly="1"/>
+                                <field name="email_from" readonly="1"/>
+                                <field name="author_id" readonly="1"/>
+                                <field name="message_type" readonly="1"/>
+                                <field name="subtype_id" readonly="1"/>
+                                <field name="is_internal" readonly="1"/>
                             </group>
                             <group>
-                                <field name="model"/>
-                                <field name="res_id"/>
-                                <field name="record_name"/>
-                                <field name="parent_id"/>
+                                <field name="model" readonly="1"/>
+                                <field name="res_id" readonly="1"/>
+                                <field name="record_name" readonly="1"/>
+                                <field name="parent_id" readonly="1"/>
                             </group>
                         </group>
                         <notebook>
@@ -58,29 +58,29 @@
                             <page string="Gateway" name="gateway">
                                 <group>
                                     <group>
-                                        <field name="reply_to"/>
-                                        <field name="reply_to_force_new"/>
+                                        <field name="reply_to" readonly="1"/>
+                                        <field name="reply_to_force_new" readonly="1"/>
                                     </group>
                                     <group>
-                                        <field name="message_id"/>
-                                        <field name="mail_server_id"/>
+                                        <field name="message_id" readonly="1"/>
+                                        <field name="mail_server_id" readonly="1"/>
                                     </group>
                                 </group>
                             </page>
                             <page string="Recipients" name="recipients">
                                 <group>
                                     <group>
-                                        <field name="partner_ids" widget="many2many_tags"/>
-                                        <field name="incoming_email_to"/>
-                                        <field name="incoming_email_cc"/>
+                                        <field name="partner_ids" widget="many2many_tags" readonly="1"/>
+                                        <field name="incoming_email_to" readonly="1"/>
+                                        <field name="incoming_email_cc" readonly="1"/>
                                     </group>
                                     <group>
-                                        <field name="notified_partner_ids" widget="many2many_tags"/>
-                                        <field name="bookmarked_partner_ids" widget="many2many_tags"/>
+                                        <field name="notified_partner_ids" widget="many2many_tags" readonly="1"/>
+                                        <field name="bookmarked_partner_ids" widget="many2many_tags" readonly="1"/>
                                     </group>
                                 </group>
                                 <group>
-                                    <field name="notification_ids">
+                                    <field name="notification_ids" readonly="1">
                                         <list>
                                             <field name="res_partner_id"/>
                                             <field name="read_date"/>
@@ -130,6 +130,8 @@
             <field name="res_model">mail.message</field>
             <field name="view_mode">list,form</field>
             <field name="search_view_id" ref="view_message_search"/>
+            <field name="context">{'mail_message_mark_edited': True}</field>
+            <field name="group_ids" eval="[(4, ref('base.group_system'))]"/>
         </record>
 
         <record model="ir.ui.view" id="view_document_file_kanban">
