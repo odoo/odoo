@@ -137,6 +137,7 @@ module.exports = [
             "**/static/lib/**",
             "**/o_spreadsheet/o_spreadsheet.css",
             // nesting that @eslint/css cannot parse yet
+            "**/account_asset/static/src/scss/account_asset.css",
             "**/ai/static/src/editor/embedded_components/core/voice_transcription.css",
             "**/appointment/static/src/scss/appointment_type_views.css",
             "**/appointment/static/src/scss/web_calendar.css",
@@ -147,6 +148,10 @@ module.exports = [
             "**/spreadsheet/static/src/global_filters/components/filter_value/filter_value.css",
             "**/spreadsheet_dashboard/static/src/bundle/chart/chart_menu.css",
             "**/web_studio/static/src/client_action/report_editor/qweb_table_plugin.css",
+            // valid values mixing var() that @eslint/css resolves with ones it cannot, which it reports as invalid
+            "**/hr_referral/static/src/scss/progress_bar.css",
+            "**/im_livechat/static/src/core/web/notification_item.css",
+            "**/web/static/src/views/fields/statusbar/statusbar_field.css",
         ],
         plugins: { css },
         language: "css/css",
