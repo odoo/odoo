@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.tools import OrderedSet, groupby
 
@@ -313,3 +314,9 @@ class AccountMove(models.Model):
                 )
             )
         )
+
+    @api.constrains('currency_id')
+    def _constrains_currency_id(self):
+        for move in self:
+            if len(move.currency_id | move.line_ids.sale_line_ids.order_id.currency_id) != 1:
+                raise ValidationError(self.env._("Invoices should be in the same currency as linked sale orders."))

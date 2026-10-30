@@ -132,6 +132,10 @@ class TestValuationReconciliationCommon(TestStockValuationCommon, TestSaleStockC
         product_1 = self.product_fifo_auto
         product_1.standard_price = 10
         product_1.list_price = 10
+        pricelist = self.env['product.pricelist'].create({
+            'name': 'EUR',
+            'currency_id': self.other_currency.id,
+        })
 
         # product_2 similar to product_1 but with different output account
         product_2 = product_1.copy({'name': 'P2', 'standard_price': 20, 'list_price': 20})
@@ -147,7 +151,7 @@ class TestValuationReconciliationCommon(TestStockValuationCommon, TestSaleStockC
         # Create out_svls
         so = self.env['sale.order'].sudo().create({
             'partner_id': self.partner_b.id,
-            'currency_id': self.other_currency.id,
+            'pricelist_id': pricelist.id,
             'order_line': [
                 (0, 0, {
                     'name': product.name,
