@@ -856,3 +856,51 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
 
         # CASE: the variant already exists, so it should return it
         self.assertEqual(variant, self.computer._create_product_variant(combination))
+
+
+@tagged('post_install', '-at_install')
+class TestUnlinkLineWithUnusedArchivedValue(BaseCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        attribute = cls.env['product.attribute'].create({
+            'name': 'PA',
+            'create_variant': 'always',
+            'value_ids': [Command.create({'name': 'old'}), Command.create({'name': 'new'})],
+        })
+        value_old, value_new = attribute.value_ids
+        cls.template = cls.env['product.template'].create({
+            'name': 'P1',
+            'attribute_line_ids': [Command.create({
+                'attribute_id': attribute.id,
+                'value_ids': [Command.set((value_old + value_new).ids)],
+            })],
+        })
+        cls.line = cls.template.attribute_line_ids
+        ptav_old = cls.line.product_template_value_ids.filtered(
+            lambda ptav: ptav.product_attribute_value_id == value_old
+        )
+        # A reference on the value makes it archived instead of deleted.
+        custom_value = cls.env['product.attribute.custom.value'].create({
+            'custom_product_template_attribute_value_id': ptav_old.id,
+        })
+        cls.line.value_ids = [Command.unlink(value_old.id)]
+        custom_value.unlink()
+        cls.variant = cls.template.product_variant_id
+        cls.variant.default_code = 'SKU'
+
+        with mute_logger('odoo.models.unlink'):
+            cls.template.attribute_line_ids = [Command.delete(cls.line.id)]
+
+    def test_line_is_deleted(self):
+        self.assertFalse(self.line.exists())
+
+    def test_template_keeps_its_variant(self):
+        self.assertEqual(self.template.product_variant_id, self.variant)
+
+    def test_variant_keeps_its_default_code(self):
+        self.assertEqual(self.variant.default_code, 'SKU')
+
+    def test_variant_has_no_attribute_value_left(self):
+        self.assertFalse(self.variant.product_template_attribute_value_ids)
