@@ -240,3 +240,7 @@ class CalendarAttendee(models.Model):
                 subtype_xmlid="calendar.subtype_invitation",
             )
         return self.write({'state': 'declined'})
+
+    def _get_meeting_changedate_subject(self):
+        self.ensure_one()
+        return f'{ self.event_id.name }: Date updated'
