@@ -249,6 +249,7 @@ class PaymentProvider(models.Model):
             "merchant_id": self.paypal_account_id,
             "currency_code": currency and currency.name,
             "country_code": partner and partner.country_code,
+            "merchant_name": self.company_id.name,
         }
         return json.dumps(inline_form_values)
 

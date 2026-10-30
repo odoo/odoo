@@ -7,7 +7,7 @@ import { patch } from '@web/core/utils/patch';
 
 import { PaymentForm } from '@payment/interactions/payment_form';
 
-const PAYPAL_SDK_METHODS = ["venmo", "paypal_paylater", "card", "google_pay"];
+const PAYPAL_SDK_METHODS = ["venmo", "paypal_paylater", "card", "google_pay", "apple_pay"];
 const CARD_INPUT_STYLE = {
     "body": {
         "padding": "0",
@@ -157,7 +157,7 @@ patch(PaymentForm.prototype, {
             const paypalSDKParams = new URLSearchParams({
                 "client-id": client_id,
                 "merchant-id": merchant_id,
-                "components": "buttons,card-fields,payment-fields,funding-eligibility,googlepay",
+                "components": "buttons,card-fields,payment-fields,funding-eligibility,googlepay,applepay",
                 "buyer-country": country_code,
                 "currency": currency_code,
                 "enable-funding": "paylater,venmo",
@@ -173,6 +173,9 @@ patch(PaymentForm.prototype, {
                     break;
                 case "google_pay":
                     await this.waitFor(this._paypalRenderGooglePayButton(paymentOptionId));
+                    break;
+                case "apple_pay":
+                    await this.waitFor(this._paypalRenderApplePayButton(paymentOptionId));
                     break;
                 default:
                     this._paypalRenderButtons(paymentOptionId, paymentMethodCode);
@@ -292,6 +295,45 @@ patch(PaymentForm.prototype, {
     },
 
     /**
+     * Render the Apple Pay button provided by the Apple Pay SDK in its container.
+     *
+     * The button is only rendered if the browser supports Apple Pay and PayPal confirms that the
+     * merchant is eligible for it.
+     *
+     * @private
+     * @param {number} paymentOptionId - The id of the selected payment option.
+     * @return {void}
+     */
+    async _paypalRenderApplePayButton(paymentOptionId) {
+        if (paypal.Applepay === undefined) {
+            this._paypalDisplayNotAvailablePMDialog();
+            return;
+        }
+        await this.waitFor(
+            loadJS("https://applepay.cdn-apple.com/jsapi/1.latest/apple-pay-sdk.js")
+        );
+        const applePayConfig = window.ApplePaySession?.canMakePayments()
+            && await this.waitFor(paypal.Applepay().config());
+        if (!applePayConfig?.isEligible) {
+            this._paypalDisplayNotAvailablePMDialog();
+            return;
+        }
+        this.paypalData[paymentOptionId].applePayConfig = applePayConfig;
+        for (const container of document.querySelectorAll("#o_paypal_button_container")) {
+            const button = document.createElement("apple-pay-button");
+            // button.setAttribute("buttonstyle", "black");
+            // button.setAttribute("type", "pay");
+            // button.setAttribute("locale", document.documentElement.lang || "en-US");
+            // button.style.setProperty("--apple-pay-button-width", "100%");
+            // button.style.setProperty("--apple-pay-button-height", "40px");
+            this.addListener(button, "click", () =>
+                this._paypalOnApplePayButtonClicked(paymentOptionId)
+            );
+            container.replaceChildren(button);
+        }
+    },
+
+    /**
      * Render the PayPal buttons of the selected payment method if the payment method is eligible
      * for the account.
      *
@@ -394,8 +436,7 @@ patch(PaymentForm.prototype, {
             const currentPayPalData = this.paypalData[paymentOptionId];
             if (currentPayPalData && currentPayPalData.cardFields) {
                 currentPayPalData.cardFields.submit().catch(error => {
-                    this._displayErrorDialog("Validation Error", error.message);
-                    this._enableButton();
+                    this._paypalDisplayErrorDialog(error.message, _t("Validation Error"));
                 });
             }
         }
@@ -422,8 +463,7 @@ patch(PaymentForm.prototype, {
             window.location = '/payment/status';
         } catch (error) {
             if (error instanceof RPCError) {
-                this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
-                this._enableButton(); // The button has been disabled before initiating the flow.
+                this._paypalDisplayErrorDialog(error.data.message);
             }
             return Promise.reject(error);
         }
@@ -507,8 +547,7 @@ patch(PaymentForm.prototype, {
             window.location = "/payment/status";
         } catch (error) {
             if (error instanceof RPCError) {
-                this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
-                this._enableButton(); // The button has been disabled before initiating the flow.
+                this._paypalDisplayErrorDialog(error.data.message);
             }
             return Promise.reject(error);
         }
@@ -570,4 +609,105 @@ patch(PaymentForm.prototype, {
         }
         return errorResponse;
     },
+
+    // #=== APPLE PAY FLOW ===#
+
+    /**
+     * Open the Apple Pay payment sheet when the Apple Pay button is clicked.
+     *
+     * The `ApplePaySession` must be created synchronously within the click handler, as Apple only
+     * allows opening the payment sheet in response to a user gesture.
+     *
+     * @private
+     * @param {number} paymentOptionId - The id of the selected payment option.
+     * @return {void}
+     */
+    _paypalOnApplePayButtonClicked(paymentOptionId) {
+        const applePayConfig = this.paypalData[paymentOptionId].applePayConfig;
+        const radio = document.querySelector('input[name="o_payment_radio"]:checked');
+        const { currency_code, merchant_name } = JSON.parse(
+            radio.dataset["paypalInlineFormValues"]
+        );
+        const session = new ApplePaySession(4, {
+            countryCode: applePayConfig.countryCode,
+            currencyCode: currency_code,
+            merchantCapabilities: applePayConfig.merchantCapabilities,
+            supportedNetworks: applePayConfig.supportedNetworks,
+            // requiredBillingContactFields: ["postalAddress"],
+            total: {
+                label: merchant_name,
+                amount: this.paymentContext["amount"],
+            },
+        });
+        session.onvalidatemerchant = (event) =>
+            this._paypalOnApplePayValidateMerchant(session, event);
+        session.onpaymentauthorized = (event) =>
+            this._paypalOnApplePayPaymentAuthorized(paymentOptionId, session, event);
+        session.oncancel = () => this._enableButton();
+        session.begin();
+    },
+
+    /**
+     * Validate the merchant with PayPal when Apple requests it before showing the payment sheet.
+     *
+     * @private
+     * @param {ApplePaySession} session - The current Apple Pay session.
+     * @param {Event} event - The `validatemerchant` event of the session.
+     * @return {void}
+     */
+    async _paypalOnApplePayValidateMerchant(session, event) {
+        try {
+            const { merchantSession } = await this.waitFor(
+                paypal.Applepay().validateMerchant({ validationUrl: event.validationURL }),
+            );
+            session.completeMerchantValidation(merchantSession);
+        } catch (error) {
+            session.abort();
+            this._paypalDisplayErrorDialog(error.message);
+        }
+    },
+
+    /**
+     * Create, confirm, and capture the order once the payer authorizes the Apple Pay payment.
+     *
+     * @private
+     * @param {number} paymentOptionId - The id of the selected payment option.
+     * @param {ApplePaySession} session - The current Apple Pay session.
+     * @param {Event} event - The `paymentauthorized` event of the session.
+     * @return {void}
+     */
+    async _paypalOnApplePayPaymentAuthorized(paymentOptionId, session, event) {
+        const paypalData = this.paypalData[paymentOptionId];
+        // Reset order id in case it was set from previous attempt
+        paypalData.paypalOrderId = undefined;
+        try {
+            await this.waitFor(this.submitForm(new Event("ApplePayAuthorizedEvent")));
+            const orderId = paypalData.paypalOrderId;
+            if (!orderId) {
+                session.completePayment(ApplePaySession.STATUS_FAILURE);
+                return;
+            }
+            await this.waitFor(
+                paypal.Applepay().confirmOrder({
+                    orderId: orderId,
+                    token: event.payment.token,
+                    billingContact: event.payment.billingContact,
+                }),
+            );
+            await this.waitFor(
+                rpc("/payment/paypal/complete_order", { reference: paypalData.paypalTxRef }),
+            );
+            session.completePayment(ApplePaySession.STATUS_SUCCESS);
+            window.location = "/payment/status";
+        } catch (error) {
+            session.completePayment(ApplePaySession.STATUS_FAILURE);
+            const message = error instanceof RPCError ? error.data.message : error.message;
+            this._paypalDisplayErrorDialog(message);
+        }
+    },
+
+    _paypalDisplayErrorDialog(message, title=_t("Payment processing failed")){
+        this._displayErrorDialog(title, message);
+        this._enableButton();  // The button has been disabled before initiating the flow.
+    }
 });
