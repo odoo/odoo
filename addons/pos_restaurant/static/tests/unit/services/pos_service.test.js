@@ -37,6 +37,44 @@ describe("restaurant pos_store.js", () => {
         expect(newOrder.lines.length).toBe(1);
     });
 
+    test("postSyncAllOrders removes the empty local order merged on the same table", async () => {
+        const store = await setupPosEnv();
+        const table = store.models["restaurant.table"].get(2);
+        const order = store.addNewOrder({ table_id: table });
+        await store.addLineToOrder(
+            { product_tmpl_id: store.models["product.template"].get(5), qty: 1 },
+            order
+        );
+        // Empty order left by the server merging it in the open order of the table
+        const emptyOrder = store.createNewOrder({ table_id: table });
+        store.setOrder(emptyOrder);
+        await store.syncAllOrders({ orders: [order] });
+        expect(order.isSynced).toBe(true);
+        expect(Boolean(store.models["pos.order"].getBy("uuid", emptyOrder.uuid))).toBe(false);
+        expect(store.getOrder().uuid).toBe(order.uuid);
+    });
+
+    test("addNewOrder keeps the table of an order paid from another device", async () => {
+        const store = await setupPosEnv();
+        const table = store.models["restaurant.table"].get(2);
+        const otherTable = store.models["restaurant.table"].get(3);
+        const order = store.addNewOrder({ table_id: table });
+
+        // Table order still open: a new order without table is a direct sale
+        expect(Boolean(store.addNewOrder().table_id)).toBe(false);
+
+        // Table order paid from another device: the new order stays on the table
+        store.setOrder(order);
+        order.state = "paid";
+        expect(store.addNewOrder().table_id.id).toBe(table.id);
+
+        // An explicit table and refunds are kept as requested
+        store.setOrder(order);
+        expect(store.addNewOrder({ table_id: otherTable }).table_id.id).toBe(otherTable.id);
+        store.setOrder(order);
+        expect(Boolean(store.addNewOrder({ is_refund: true }).table_id)).toBe(false);
+    });
+
     test("fireCourse", async () => {
         const store = await setupPosEnv();
         store.addNewOrder();
