@@ -283,7 +283,8 @@ class TestL10nPtCommon(L10nPtSigningFakeMixin, AccountTestInvoicingCommon):
             'at_code': next(_at_codes),
             **overrides,
         }
-        vals.setdefault('prefix', SERIES_PREFIXES[vals['document_type']])
+        if 'prefix' not in vals:
+            vals['prefix'] = SERIES_PREFIXES[vals['document_type']]
         if 'journal_id' not in vals:
             company = cls.env['res.company'].browse(vals['company_id'])
             vals['journal_id'] = cls.env['account.journal'].search([

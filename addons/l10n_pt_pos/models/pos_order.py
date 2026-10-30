@@ -53,7 +53,8 @@ class PosOrder(models.Model):
         # The receipt is the print of the order's invoice (FS, FR): printed at the till or from the
         # back office, the document has one Original.
         self.ensure_one()
-        self.account_move._l10n_pt_update_print_version()
+        # sudo: every print at the till counts, and a cashier may not write invoices.
+        self.account_move.sudo()._l10n_pt_update_print_version()
 
     def post_reprint_reason(self, reason):
         self.ensure_one()

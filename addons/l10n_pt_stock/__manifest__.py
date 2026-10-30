@@ -9,6 +9,7 @@
         'stock',
     ],
     'data': [
+        'security/ir.model.access.csv',
         'data/ir_cron.xml',
         'views/stock_picking_views.xml',
         'views/stock_picking_type_views.xml',

@@ -141,12 +141,13 @@ def l10n_pt_common_qr_code_str(record, env, date):
     :return: Dictionary containing some of the values needed for the QR code string
     """
     company_vat = re.sub(r'\D', '', record.company_id.vat)
-    partner_vat = record.partner_id and record.partner_id._l10n_pt_get_vat() or '999999990'
+    customer = record._l10n_pt_qr_get_customer()
+    partner_vat = customer and customer._l10n_pt_get_vat() or '999999990'
 
     qr_code_dict = {}
     qr_code_dict['A:'] = f"{company_vat}*"
     qr_code_dict['B:'] = f"{partner_vat}*"
-    qr_code_dict['C:'] = f"{record.partner_id.country_id.code if record.partner_id and record.partner_id.country_id else 'Desconhecido'}*"
+    qr_code_dict['C:'] = f"{customer.country_id.code if customer and customer.country_id else 'Desconhecido'}*"
     qr_code_dict['E:'] = f"{'A' if record._l10n_pt_is_cancelled() else 'N'}*"
     qr_code_dict['F:'] = f"{format_date(env, date, date_format='yyyyMMdd')}*"
     qr_code_dict['G:'] = f"{record.l10n_pt_document_number}*"

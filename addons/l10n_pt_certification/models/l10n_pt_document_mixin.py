@@ -416,6 +416,7 @@ class L10nPtQrDocumentMixin(models.AbstractModel):
     Models mixing this in must implement:
       - ``_l10n_pt_get_saft_doc_type``: the SAF-T (PT) type code printed in ``D:``.
     They may override:
+      - ``_l10n_pt_qr_get_customer``: the customer of ``B:`` and ``C:``, the document's partner by default.
       - ``_l10n_pt_qr_get_totals``: the ``N:`` and ``O:`` amounts, 0 by default.
       - ``_l10n_pt_get_tax_details_by_region``: the base and VAT per tax region and category,
         filled from ``tax_totals`` by default and overridden to nothing by documents that carry
@@ -456,6 +457,14 @@ class L10nPtQrDocumentMixin(models.AbstractModel):
         """The ``(N, O)`` amounts (tax total, grand total), formatted for the QR code."""
         self.ensure_one()
         return "0.00", "0.00"
+
+    def _l10n_pt_qr_get_customer(self):
+        """
+        The customer whose NIF and country the QR code holds in ``B:`` and ``C:``: the SAF-T's
+        ``CustomerTaxID`` of the document (QR code specification v1.1, section 4).
+        """
+        self.ensure_one()
+        return self.partner_id
 
     def _l10n_pt_qr_get_withholding_amount(self):
         """The tax withheld at source on the document, in document currency, for the ``P:`` field."""

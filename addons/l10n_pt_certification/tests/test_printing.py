@@ -221,7 +221,7 @@ class TestL10nPtPrinting(TestL10nPtCommon):
 
     def test_not_subject(self):
         """
-        Bases not subject to VAT (M99, M12–M15) are in L, apart from the exempt ones in I2 (PT-72).
+        Bases not subject to VAT (M99, M12-M15) are in L, apart from the exempt ones in I2 (PT-72).
         Withholding (P) comes with `l10n_pt_saft_withholding`, and is tested there.
         """
         invoice = self.issue(self.post(self.make_invoice(lines=[

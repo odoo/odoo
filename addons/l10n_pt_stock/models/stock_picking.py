@@ -300,6 +300,11 @@ class StockPicking(models.Model):
     def _l10n_pt_document_label(self, at_series):
         return 'delivery order', 'delivery orders', self.env._('Delivery orders')
 
+    def _l10n_pt_qr_get_customer(self):
+        # The recipient the transport document prints: the company itself between its own sites
+        # (Portaria 302/2016 4.2.3.11).
+        return self._l10n_pt_get_recipient()
+
     def _l10n_pt_get_tax_details_by_region(self):
         # A transfer has no monetary total and no taxes: its QR code reads I1:0.
         return {}

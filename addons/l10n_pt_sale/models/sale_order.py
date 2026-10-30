@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 
 from odoo.addons.l10n_pt_sale.models.l10n_pt_at_series import (
@@ -188,6 +188,14 @@ class SaleOrder(models.Model):
         self._l10n_pt_issue()
         return super().action_preview_sale_order()
 
+    def action_confirm(self):
+        # A quotation confirmed in place (portal sign & pay) is the quotation the customer accepted: one
+        # nobody issued yet (e.g. opened from a shared link) is issued as such first, so that it keeps its
+        # quotation type and series. The back-office Confirm confirms a new sales order instead.
+        if not self.env.context.get('create_sales_order'):
+            self.filtered(lambda o: o.state in ('draft', 'sent'))._l10n_pt_issue()
+        return super().action_confirm()
+
     def _l10n_pt_issued_orders(self):
         return self.filtered(lambda o: o.country_code == 'PT' and o.l10n_pt_document_number)
 
@@ -227,6 +235,21 @@ class SaleOrder(models.Model):
         self.filtered(lambda so: so.state == 'sale')._l10n_pt_issue()
         return super()._create_invoices(grouped=grouped, final=final, date=date)
 
+    def _prepare_confirmation_values(self):
+        values = super()._prepare_confirmation_values()
+        # A quotation confirmed in place (portal sign & pay) is already issued when the customer sees
+        # it: it keeps the date it was signed with.
+        if any(order._l10n_pt_country_ok() and order.l10n_pt_inalterable_hash for order in self):
+            values.pop('date_order', None)
+        return values
+
+    def _has_to_be_signed(self):
+        # A quotation confirmed into a sales order is accepted: it is not signed, paid or confirmed again.
+        return super()._has_to_be_signed() and not self.sales_order_ids
+
+    def _has_to_be_paid(self):
+        return super()._has_to_be_paid() and not self.sales_order_ids
+
     def _prepare_invoice(self):
         invoice_vals = super()._prepare_invoice()
         if self.country_code == 'PT':
@@ -239,15 +262,25 @@ class SaleOrder(models.Model):
 
     def action_l10n_pt_create_sales_order(self):
         self.ensure_one()
-        self._l10n_pt_issue()
-
         action = self.env["ir.actions.actions"]._for_xml_id("sale.action_orders")
         action['context'] = dict(self.env.context)
         action['views'] = [(self.env.ref('sale.view_order_form').id, 'form')]
-        sales_order = self.with_context(create_sales_order=True).copy(default={'quotation_id': self.id, 'locked': False})
-        sales_order.action_confirm()
-        action['res_id'] = sales_order.id
+        action['res_id'] = self._l10n_pt_create_sales_order().id
         return action
+
+    def _l10n_pt_create_sales_order(self, transactions=None):
+        """
+        Confirm the quotation as a PT company does (D-6): the quotation stays as it was issued, and a
+        new sales order is created from it and confirmed. ``transactions`` paying the quotation are
+        moved to the sales order before it is confirmed: they pay for it.
+        """
+        self.ensure_one()
+        self._l10n_pt_issue()
+        sales_order = self.with_context(create_sales_order=True).copy(default={'quotation_id': self.id, 'locked': False})
+        if transactions:
+            transactions.sale_order_ids = [Command.set(sales_order.ids)]
+        sales_order.action_confirm()
+        return sales_order
 
     def action_view_sale_orders(self):
         self.ensure_one()
