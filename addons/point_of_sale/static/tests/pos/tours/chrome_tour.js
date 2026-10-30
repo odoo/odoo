@@ -21,6 +21,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
             Dialog.confirm(),
             Chrome.clickMenuButton(),
             negateStep(Chrome.orderTrackerShown()),
+            Chrome.closeBurgerMenu(),
 
             // Order 1 is at Product Screen
             ProductScreen.addOrderline("Desk Pad", "1", "2", "2.0"),
@@ -103,7 +104,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
             FeedbackScreen.checkTicketData({
                 cssRules: [
                     {
-                        css: ".pos-config-name",
+                        css: "tbody[name=company_info]",
                         text: "Shop",
                     },
                 ],

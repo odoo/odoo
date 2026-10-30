@@ -14,22 +14,22 @@ from odoo.tools import (
     DEFAULT_SERVER_DATETIME_FORMAT,
     BinaryBytes,
 )
-from odoo.addons.point_of_sale.tests.common import CommonPosTest
-from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
-from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
+
+from odoo.addons.point_of_sale.tests.common import CommonPosTest, PosHttpCommon
 
 _logger = logging.getLogger(__name__)
 
 
-@tagged('post_install', '-at_install')
-class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
+class PosReceiptCommon(CommonPosTest):
+    """Shared receipt fixtures and comparison helpers."""
+
     _test_user_groups = None  # FIXME list needed groups
 
     @classmethod
-    def setUpClass(self):
+    def setUpClass(cls):
         super().setUpClass()
 
-        self.tax = self.env['account.tax'].create({
+        cls.tax = cls.env['account.tax'].create({
             'name': 'Tax 15%',
             'amount': 25,
             'price_include_override': 'tax_included',
@@ -37,36 +37,35 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
             'type_tax_use': 'sale',
         })
 
-        self.category = self.env['pos.category'].create({
+        cls.category = cls.env['pos.category'].create({
             'name': 'Misc test',
         })
 
-        self.example_simple_product = self.env['product.template'].create({
-            'name': 'Example Simple Product',
-            'available_in_pos': True,
-            'list_price': 5.80,
-            'taxes_id': [(6, 0, [self.tax.id])],
-            'weight': 0.01,
-            'to_weight': True,
-            'pos_categ_ids': [(4, self.category.id)],
-            'company_id': self.env.company.id,
-        })
+        cls.example_simple_product = cls.create_product_template(
+            'Example Simple Product', 5.80,
+            pos_categ_ids=cls.category.ids,
+            tax_ids=cls.tax.ids,
+            is_storable=False,
+            weight=0.01,
+            to_weight=True,
+            company_id=cls.env.company.id,
+        )
 
-        self.example_partner = self.env['res.partner'].create({
+        cls.example_partner = cls.env['res.partner'].create({
             'name': 'Example Partner',
             'street': '123 Example St',
             'city': 'Example City',
             'zip': '12345',
-            'country_id': self.env.ref('base.us').id,
+            'country_id': cls.env.ref('base.us').id,
             'email': 'example.partner@example.com',
         })
 
-        self.main_pos_config.write({
-            'iface_available_categ_ids': [(6, 0, [self.category.id])],
+        cls.main_pos_config.write({
+            'iface_available_categ_ids': [Command.set(cls.category.ids)],
             'limit_categories': True,
         })
 
-        self.key_to_skip = {
+        cls.key_to_skip = {
             'pos.order': ['lines', 'payment_ids', 'message_ids', 'write_date'],
             'pos.order.line': ['write_date'],
             'pos.payment': ['write_date'],
@@ -198,6 +197,47 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
             self.comparator(pm_data1, pm_data2)
             self.comparator(payments[0], payments[1], 'pos.payment')
 
+    def compare_change_receipt_data(self, frontend, backend):
+        for key, value in frontend.items():
+            self.assertIn(key, backend, f"Key '{key}' not found in backend data")
+            if isinstance(value, dict):
+                self.compare_change_receipt_data(value, backend[key])
+            else:
+                self.assertEqual(value, backend[key], f"Mismatch on field '{key}': frontend='{value}' vs backend='{backend[key]}'")
+
+    def _create_receipt_test_order(self, date_order, preset_time=False):
+        preset = self.env['pos.preset'].create({
+            'name': 'Online Order',
+            'use_timing': True,
+        })
+        return self.create_pos_order(
+            [[self.example_simple_product.product_variant_id]],
+            state='draft',
+            date_order=date_order,
+            preset_id=preset.id,
+            preset_time=preset_time,
+        )
+
+    def _get_preparation_extra_data(self, order):
+        changes = order._generate_preparation_change_for_categories(set(self.category.ids))
+        data = order._generate_preparation_receipt_data(changes)
+        self.assertTrue(data, "the order has one new line, it must produce a ticket")
+        return data[0]['extra_data']
+
+    def _create_receipt_printer(self, **vals):
+        return self.env['pos.printer'].create({
+            'name': 'Receipt Printer',
+            'printer_type': 'epson_epos',
+            'printer_ip': '0.0.0.0',
+            'use_type': 'receipt',
+            **vals,
+        })
+
+
+@tagged('post_install', '-at_install')
+class TestPosReceiptHttp(PosReceiptCommon, PosHttpCommon):
+    """Compare receipt data produced by the frontend and backend."""
+
     def test_receipt_data(self):
         image = """<?xml version='1.0' encoding='UTF-8' ?>
         <svg height='180' width='180' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
@@ -226,9 +266,8 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
                 self.compare_receipt_data(data['frontend_data'], data['backend_data'])
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        session = self.main_pos_config.current_session_id
         run_tour_and_compare()
-        session.close_session_from_ui()
+        self.close_pos_session()
 
         self.main_pos_config.iface_tax_included = "subtotal"
         self.main_pos_config.with_user(self.pos_user).open_ui()
@@ -237,24 +276,14 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
         logo_image = data['backend_data']['image']['logo']
         self.assertTrue(logo_image.startswith('data:image/svg+xml;base64,'))
 
-    def compare_change_receipt_data(self, frontend, backend):
-        for key, value in frontend.items():
-            self.assertIn(key, backend, f"Key '{key}' not found in backend data")
-            if isinstance(value, dict):
-                self.compare_change_receipt_data(value, backend[key])
-            else:
-                self.assertEqual(value, backend[key], f"Mismatch on field '{key}': frontend='{value}' vs backend='{backend[key]}'")
-
     def test_change_receipt_data(self):
-        printer = self.env['pos.printer'].create({
-            'name': 'Printer',
-            'printer_type': 'epson_epos',
-            'printer_ip': '0.0.0.0',
-            'use_type': 'preparation',
-            'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
-        })
+        printer = self._create_receipt_printer(
+            name='Printer',
+            use_type='preparation',
+            product_categories_ids=[Command.set(self.env['pos.category'].search([]).ids)],
+        )
         self.main_pos_config.write({
-            'preparation_printer_ids': [(4, printer.id)],
+            'preparation_printer_ids': [Command.link(printer.id)],
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         data = {
@@ -277,6 +306,11 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
             self.start_pos_tour("test_change_receipt_data")
             self.compare_change_receipt_data(data['frontend_data'], data['backend_data'])
 
+
+@tagged('post_install', '-at_install')
+class TestPosReceipt(PosReceiptCommon):
+    """Receipt generation and preparation ticket tests without a browser."""
+
     def _get_service_fee_receipt_info(self, service_fee_type):
         preset = self.env['pos.preset'].create({
             'name': 'Service fee preset',
@@ -285,35 +319,14 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
             'service_fee_amount': 0.1 if service_fee_type == 'percent' else 2,
             'service_fee_based_on': 'pre_discount',
         })
-        self.main_pos_config.with_user(self.pos_user).open_ui()
         product = self.example_simple_product.product_variant_id
         fee_product = preset.service_fee_product_id
         fee_amount = 0.58 if service_fee_type == 'percent' else 2
-        order = self.env['pos.order'].create({
-            'session_id': self.main_pos_config.current_session_id.id,
-            'company_id': self.env.company.id,
-            'preset_id': preset.id,
-            'amount_total': product.lst_price + fee_amount,
-            'amount_paid': 0,
-            'amount_tax': 0,
-            'amount_return': 0,
-            'lines': [
-                Command.create({
-                    'product_id': product.id,
-                    'qty': 1,
-                    'price_unit': product.lst_price,
-                    'price_subtotal': product.lst_price,
-                    'price_subtotal_incl': product.lst_price,
-                }),
-                Command.create({
-                    'product_id': fee_product.id,
-                    'qty': 1,
-                    'price_unit': fee_amount,
-                    'price_subtotal': fee_amount,
-                    'price_subtotal_incl': fee_amount,
-                }),
-            ],
-        })
+        order = self.create_pos_order(
+            [[product], [fee_product, 1, 0, {'price_unit': fee_amount}]],
+            state='draft',
+            preset_id=preset.id,
+        )
         fee_line = next(
             line for line in order._order_receipt_generate_line_data()
             if line['is_service_fee_line']
@@ -340,64 +353,45 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
         category_a = self.env['pos.category'].create({'name': 'Category A'})
         category_b = self.env['pos.category'].create({'name': 'Category B'})
 
-        product_a = self.env['product.product'].create({
-            'name': 'Product A',
-            'available_in_pos': True,
-            'list_price': 10.0,
-            'pos_categ_ids': [(4, category_a.id)],
-        })
-        product_b = self.env['product.product'].create({
-            'name': 'Product B',
-            'available_in_pos': True,
-            'list_price': 5.0,
-            'pos_categ_ids': [(4, category_b.id)],
-        })
-        product_c = self.env['product.product'].create({
-            'name': 'Product C',
-            'available_in_pos': True,
-            'list_price': 3.0,
-            'pos_categ_ids': [(4, category_b.id)],
-        })
-
-        combo = self.env['product.combo'].create({'name': 'Test Combo'})
-        self.env['product.combo.item'].create({
-            'product_id': product_b.id,
-            'combo_id': combo.id,
-        })
-        self.env['product.combo.item'].create({
-            'product_id': product_c.id,
-            'combo_id': combo.id,
-        })
-
-        combo_template = self.env['product.template'].create({
-            'name': 'Combo Product',
-            'type': 'combo',
-            'combo_ids': [(4, combo.id)],
-            'list_price': 15.0,
-        })
-        combo_product = combo_template.product_variant_id
-
-        printer = self.env['pos.printer'].create({
-            'name': 'Split Printer',
-            'printer_type': 'epson_epos',
-            'printer_ip': '0.0.0.0',
-            'use_type': 'preparation',
-            'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
-            'is_split_per_product': True,
-        })
-        self.main_pos_config.write({
-            'preparation_printer_ids': [(4, printer.id)],
-        })
-
-        order, _ = self.create_backend_pos_order({
-            'pos_config': self.main_pos_config,
-            'line_data': [
-                {'product_id': combo_product.id, 'qty': 2},
-                {'product_id': product_b.id, 'qty': 2},
-                {'product_id': product_c.id, 'qty': 2},
-                {'product_id': product_a.id, 'qty': 2},
+        product_a = self.create_product(
+            'Product A', 10.0, is_storable=False,
+            pos_categ_ids=[Command.set(category_a.ids)],
+        )
+        product_b = self.create_product(
+            'Product B', 5.0, is_storable=False,
+            pos_categ_ids=[Command.set(category_b.ids)],
+        )
+        product_c = self.create_product(
+            'Product C', 3.0, is_storable=False,
+            pos_categ_ids=[Command.set(category_b.ids)],
+        )
+        combo = self.env['product.combo'].create({
+            'name': 'Test Combo',
+            'company_id': self.env.company.id,
+            'combo_item_ids': [
+                Command.create({'product_id': product.id})
+                for product in (product_b, product_c)
             ],
         })
+        combo_product = self.create_product(
+            'Combo Product', 15.0, type='combo', is_storable=False,
+            combo_ids=[Command.set(combo.ids)],
+        )
+
+        printer = self._create_receipt_printer(
+            name='Split Printer',
+            use_type='preparation',
+            product_categories_ids=[Command.set(self.env['pos.category'].search([]).ids)],
+            is_split_per_product=True,
+        )
+        self.main_pos_config.write({
+            'preparation_printer_ids': [Command.link(printer.id)],
+        })
+
+        order = self.create_pos_order(
+            [[product, 2] for product in (combo_product, product_b, product_c, product_a)],
+            state='draft',
+        )
 
         parent_line = order.lines.filtered(lambda l: l.product_id == combo_product)[:1]
         order.lines.filtered(lambda l: l.product_id == product_b).write({'combo_parent_id': parent_line.id})
@@ -489,25 +483,23 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
         )
 
     def test_total_item_count(self):
-        setup_product_combo_items(self)
-        self.weighted_product = self.env['product.template'].create({
-            'name': 'Weighted Product',
-            'available_in_pos': True,
-            'list_price': 4.20,
-            'taxes_id': [(6, 0, [self.tax.id])],
-            'uom_id': self.env.ref('uom.product_uom_kgm').id,
-            'pos_categ_ids': [(4, self.category.id)],
-            'company_id': self.env.company.id,
-        })
-        self.main_pos_config.with_user(self.pos_user).open_ui()
-        order, _ = self.create_backend_pos_order({
-            'pos_config': self.main_pos_config,
-            'line_data': [
-                {'product_id': self.example_simple_product.product_variant_id.id, 'qty': 2, 'price_subtotal': 0.0, 'price_subtotal_incl': 0.0},
-                {'product_id': self.weighted_product.product_variant_id.id, 'qty': 2.5, 'price_subtotal': 0.0, 'price_subtotal_incl': 0.0},
-                {'product_id': self.office_combo.id, 'qty': 1, 'price_subtotal': 0.0, 'price_subtotal_incl': 0.0},
+        self._setup_combo_product()
+        self.weighted_product = self.create_product_template(
+            'Weighted Product', 4.20,
+            pos_categ_ids=self.category.ids,
+            tax_ids=self.tax.ids,
+            is_storable=False,
+            uom_id=self.env.ref('uom.product_uom_kgm').id,
+            company_id=self.env.company.id,
+        )
+        order = self.create_pos_order(
+            [
+                [self.example_simple_product.product_variant_id, 2],
+                [self.weighted_product.product_variant_id, 2.5],
+                [self.office_combo],
             ],
-        })
+            state='draft',
+        )
         order.lines.filtered(lambda line: line.product_id == self.office_combo).write({
             "combo_line_ids": [
                 Command.create({
@@ -522,36 +514,6 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
         })
         self.assertEqual(order.order_receipt_generate_data()['extra_data']['total_item_count'], 5)
 
-    def _create_receipt_test_order(self, date_order, preset_time=False):
-        preset = self.env['pos.preset'].create({
-            'name': 'Online Order',
-            'use_timing': True,
-        })
-        return self.env['pos.order'].create({
-            'company_id': self.env.company.id,
-            'session_id': self.main_pos_config.current_session_id.id,
-            'date_order': date_order,
-            'preset_id': preset.id,
-            'preset_time': preset_time,
-            'amount_total': 0,
-            'amount_paid': 0,
-            'amount_tax': 0,
-            'amount_return': 0,
-            'lines': [Command.create({
-                'product_id': self.example_simple_product.product_variant_id.id,
-                'qty': 1,
-                'price_unit': 5.80,
-                'price_subtotal': 5.80,
-                'price_subtotal_incl': 5.80,
-            })],
-        })
-
-    def _get_preparation_extra_data(self, order):
-        changes = order._generate_preparation_change_for_categories(set(self.category.ids))
-        data = order._generate_preparation_receipt_data(changes)
-        self.assertTrue(data, "the order has one new line, it must produce a ticket")
-        return data[0]['extra_data']
-
     def test_change_receipt_times_use_shop_timezone(self):
         """
         Preparation ticket times must use the shop timezone, not the acting user's,
@@ -561,7 +523,7 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
         public_user = self.env.ref('base.public_user')
         self.assertFalse(public_user.tz, "the public user carries no timezone")
 
-        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.open_new_session()
         with freeze_time('2026-08-27 11:16:53'):
             order = self._create_receipt_test_order('2026-08-27 11:16:53', '2026-08-27 16:15:00')
             extra_data = self._get_preparation_extra_data(order.with_user(public_user).sudo())
@@ -576,7 +538,7 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
         is what makes the first order below same-day despite spanning two UTC days.
         """
         self.env.company.tz = 'Europe/Brussels'  # UTC+2
-        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.open_new_session()
 
         # 08-27 23:30 UTC is already 08-28 01:30 in Brussels, the pickup's own day
         same_day = self._create_receipt_test_order('2026-08-27 23:30:00', '2026-08-28 09:00:00')
@@ -593,23 +555,13 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
             "a pickup on another day needs its date spelled out",
         )
 
-    def _create_receipt_printer(self, **vals):
-        return self.env['pos.printer'].create({
-            'name': 'Receipt Printer',
-            'printer_type': 'epson_epos',
-            'printer_ip': '0.0.0.0',
-            'use_type': 'receipt',
-            **vals,
-        })
-
     def test_receipt_print_data_without_printer(self):
         """
         Without a receipt printer, the backend can only use the browser printing flow.
         """
-        order, _ = self.create_backend_pos_order({
-            'pos_config': self.main_pos_config,
-            'line_data': [{'product_id': self.example_simple_product.product_variant_id.id, 'qty': 1}],
-        })
+        order = self.create_pos_order(
+            [[self.example_simple_product.product_variant_id]], state='draft',
+        )
 
         data = order.get_receipt_print_data()
         self.assertFalse(data['printers'])
@@ -625,10 +577,9 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
             'receipt_printer_ids': [Command.set((printer + label_printer).ids)],
         })
 
-        order, _ = self.create_backend_pos_order({
-            'pos_config': self.main_pos_config,
-            'line_data': [{'product_id': self.example_simple_product.product_variant_id.id, 'qty': 1}],
-        })
+        order = self.create_pos_order(
+            [[self.example_simple_product.product_variant_id]], state='draft',
+        )
         data = order.get_receipt_print_data()
 
         self.assertEqual(
@@ -643,10 +594,9 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
         """
         Printers behind an IoT box are given an image, the ePOS ones a document.
         """
-        order, _ = self.create_backend_pos_order({
-            'pos_config': self.main_pos_config,
-            'line_data': [{'product_id': self.example_simple_product.product_variant_id.id, 'qty': 1}],
-        })
+        order = self.create_pos_order(
+            [[self.example_simple_product.product_variant_id]], state='draft',
+        )
         self.assertIn('<epos-print', order._order_receipt_generate_for_format('epos', '80'))
         self.assertTrue(
             base64.b64decode(order._order_receipt_generate_for_format('image', '80')),
@@ -657,10 +607,9 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
         """
         The receipt is rendered for the paper size of the printer it is sent to.
         """
-        order, _ = self.create_backend_pos_order({
-            'pos_config': self.main_pos_config,
-            'line_data': [{'product_id': self.example_simple_product.product_variant_id.id, 'qty': 1}],
-        })
+        order = self.create_pos_order(
+            [[self.example_simple_product.product_variant_id]], state='draft',
+        )
         self.assertIn('width: 360px', order._order_receipt_paper_style_css('58'))
         self.assertIn('width: 512px', order._order_receipt_paper_style_css('80'))
         self.assertIn('width: 240px', order._order_receipt_paper_style_css('tm_l100_40'))
@@ -668,3 +617,8 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
             'width: 512px', order._order_receipt_paper_style_css(False),
             "An unknown paper size falls back on the size the receipt is designed for",
         )
+
+
+# TODO-PARP: Migrate subclasses to the appropriate PosReceiptCommon or TestPosReceiptHttp receipt test class.
+# Remove TestPosOrderReceipt once all modules have migrated.
+TestPosOrderReceipt = TestPosReceiptHttp

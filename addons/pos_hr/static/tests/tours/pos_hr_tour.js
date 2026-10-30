@@ -199,6 +199,7 @@ registry
 
                 // Manager that opened the session, not connected user
                 PosHr.clickCashierName(),
+                CashierSelectionPopup.clickMore(),
                 CashierSelectionPopup.has("Test Manager 1", { run: "click" }),
                 PosHr.enterPin("5651"),
                 Chrome.existMenuOption("Backend"),

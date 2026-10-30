@@ -1,6 +1,7 @@
 from odoo.fields import Command
 
 
+# TODO-PARP: Remove after migrating all modules to `_setup_combo_product`.
 def setup_product_combo_items(self):
     tax10 = self.env["account.tax"].create(
         {

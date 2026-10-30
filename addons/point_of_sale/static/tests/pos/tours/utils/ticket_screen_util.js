@@ -99,11 +99,15 @@ export function search(field, searchWord) {
                     : "TSJ/" + new Date().getFullYear() + "/" + searchWord
             }`,
         },
-        suggestionIsOnTop(field),
-        {
-            trigger: `.pos-search-bar .search ul li:contains("${field}")`,
-            run: "click",
-        },
+        ...(searchWord
+            ? [
+                  suggestionIsOnTop(field),
+                  {
+                      trigger: `.pos-search-bar .search ul li:contains("${field}")`,
+                      run: "click",
+                  },
+              ]
+            : []),
     ];
 }
 /**
@@ -232,10 +236,11 @@ export function filterIs(name) {
         },
     ];
 }
-export function invoicePrinted() {
+export function orderIsInvoiced(orderNumber) {
     return [
         {
-            trigger: ProductScreen.controlButtonTrigger("Print Invoice"),
+            content: `wait for order ${orderNumber} to be invoiced`,
+            trigger: ".ticket-screen",
         },
     ];
 }
