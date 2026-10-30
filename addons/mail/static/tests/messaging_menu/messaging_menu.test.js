@@ -34,6 +34,8 @@ import {
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
+import { user } from "@web/core/user";
+import { patch } from "@web/core/utils/patch";
 import { getOrigin } from "@web/core/utils/urls";
 
 describe.current.tags("desktop");
@@ -44,6 +46,15 @@ test("should have messaging menu button in systray", async () => {
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu", { count: 0 });
     await contains(".o_menu_systray i[aria-label='Messages'][data-icon='forum'].oi");
+});
+
+test("light user has messaging menu button in systray", async () => {
+    await startServer();
+    const started = start();
+    // start() resets the user from the server state before rendering the systray
+    patch(user, { isRegularUser: false });
+    await started;
+    await contains(".o_menu_systray i[aria-label='Messages']");
 });
 
 test("messaging menu should have topbar buttons", async () => {
