@@ -106,8 +106,12 @@ class classproperty[T]:
 class lazy_classproperty[T](classproperty[T]):
     SENTINEL = object()
 
+    def __set_name__(self, owner, name):
+        # key the cache on the attribute, two lambdas share the name '<lambda>'
+        self.cache_name = f'__lazy_classproperty__{name}'
+
     def __get__(self, instance, owner: type | None = None, /) -> T:
-        cache_name = f'__lazy_classproperty__{self.fget.__name__}'
+        cache_name = getattr(self, 'cache_name', None) or f'__lazy_classproperty__{self.fget.__name__}'
         value = vars(owner).get(cache_name, self.SENTINEL)
         if value is self.SENTINEL:
             value = super().__get__(instance, owner)
