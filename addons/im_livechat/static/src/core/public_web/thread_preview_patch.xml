@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ThreadPreview" t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o-mail-ThreadPreview-name')]" position="after">
+            <div
+                t-if="this.props.channel.livechat_status === 'need_help' and this.props.channel.description"
+                class="o-mail-ThreadPreview-livechatTopic mx-2 px-1 text-muted fst-italic o-xsmaller"
+                t-out="this.props.channel.description"
+            />
+        </xpath>
+    </t>
+</templates>

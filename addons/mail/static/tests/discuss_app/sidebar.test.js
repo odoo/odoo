@@ -17,7 +17,7 @@ import {
 import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { PEEK_CLOSE_DELAY, PEEK_DELAY } from "@mail/utils/common/hooks";
 import { describe, expect, test, waitFor } from "@odoo/hoot";
-import { animationFrame, hover, press, rightClick, waitForNone } from "@odoo/hoot-dom";
+import { animationFrame, hover, leave, press, rightClick, waitForNone } from "@odoo/hoot-dom";
 import { advanceTime, mockDate } from "@odoo/hoot-mock";
 import {
     Command,
@@ -906,4 +906,54 @@ test("clicking a tab shows the hidden sidebar list of the tab", async () => {
     );
     await click(".o-mail-DiscussContent");
     await waitFor(".o-mail-MessagingMenu-container:not(.o-peek):count(1)");
+});
+
+test("hovering a conversation of the sidebar shows a preview of its last message", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "Hello!",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss();
+    await waitFor(".o-mail-MessagingMenuItem:has(:text('Demo')):count(1)");
+    await hover(".o-mail-MessagingMenuItem:has(:text('Demo')) .o-mail-NotificationItem");
+    await advanceTime(PEEK_DELAY);
+    await waitFor(".o-mail-ThreadPreview:text('Demo Hello!'):count(1)");
+    await leave();
+    await waitForNone(".o-mail-ThreadPreview");
+});
+
+test("hovering the call participants of a conversation does not show its preview", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_id: channelId,
+        channel_member_id: pyEnv["discuss.channel.member"].create({
+            channel_id: channelId,
+            partner_id: pyEnv["res.partner"].create({ name: "Demo" }),
+        }),
+    });
+    await start();
+    await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
+    await waitFor(
+        ".o-mail-MessagingMenuItem:has(:text('General')) .o-mail-MessagingMenuCallParticipants:count(1)"
+    );
+    await hover(".o-mail-MessagingMenuCallParticipants");
+    await advanceTime(PEEK_DELAY);
+    await animationFrame();
+    expect(".o-mail-ThreadPreview").toHaveCount(0);
+    await hover(".o-mail-MessagingMenuItem:has(:text('General')) .o-mail-NotificationItem");
+    await advanceTime(PEEK_DELAY);
+    await waitFor(".o-mail-ThreadPreview:has(:text('General')):count(1)");
 });
