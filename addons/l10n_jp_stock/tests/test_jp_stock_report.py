@@ -38,15 +38,32 @@ class TestJPStockReport(AccountTestInvoicingCommon):
                 self.assertEqual(text.count(title), 1)
                 self.assertLess(text.index(title), text.index(self.partner_a.name))
 
-    def test_delivery_slip_addresses_the_company_of_a_contact(self):
+    def test_delivery_slip_addresses_the_contact_under_its_company(self):
         self.env['res.lang']._activate_lang('ja_JP')
         company = self.env['res.partner'].create({'name': 'JP Trading', 'vat': 'T7000012050002', 'lang': 'ja_JP'})
-        contact = self.env['res.partner'].create({'name': 'Taro Yamada', 'parent_id': company.id, 'lang': 'ja_JP'})
-        self.picking.partner_id = contact
+        self.picking.partner_id = self.env['res.partner'].create({'name': 'Taro Yamada', 'parent_id': company.id, 'lang': 'ja_JP'})
 
         html = self.env['ir.actions.report']._render_qweb_html('stock.report_deliveryslip', self.picking.ids)[0]
+        recipient = lxml.html.fromstring(html).xpath("//div[@name='outgoing_delivery_address']//div[@name='recipient_name']")[0]
 
-        self.assertRegex(html2plaintext(html), r'JP Trading\s+御中')
+        self.assertEqual([' '.join(line.text_content().split()) for line in recipient], ['JP Trading', 'Taro Yamada 様'])
+
+    def test_receipt_slip_keeps_the_name_of_our_warehouse(self):
+        self.env['res.lang']._activate_lang('ja_JP')
+        self.partner_a.lang = 'ja_JP'
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        receipt = self.env['stock.picking'].create({
+            'partner_id': self.partner_a.id,
+            'picking_type_id': warehouse.in_type_id.id,
+            'move_ids': [Command.create({'product_id': self.product_a.id, 'product_uom_qty': 1})],
+        })
+
+        html = self.env['ir.actions.report']._render_qweb_html('stock.report_deliveryslip', receipt.ids)[0]
+        header = lxml.html.fromstring(html).find_class('o_jp_standard_header')[0]
+
+        self.assertIn(warehouse.partner_id.name, header.xpath(".//div[@name='outgoing_warehouse_address']")[0].text_content())
+        self.assertNotIn(self.partner_a.name, header.text_content())
+        self.assertNotIn('様', header.text_content())
 
     def test_a_company_outside_japan_keeps_the_standard_slip(self):
         self.company_data['company'].account_fiscal_country_id = self.env.ref('base.us')
