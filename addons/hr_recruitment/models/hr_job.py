@@ -3,8 +3,6 @@
 import ast
 from collections import defaultdict
 
-from markupsafe import Markup
-
 from odoo import SUPERUSER_ID, Command, _, api, fields, models
 from odoo.tools import SQL, sql
 from odoo.tools.convert import convert_file
@@ -530,39 +528,6 @@ class HrJob(models.Model):
                 'expand': 1
             },
         }
-
-    def action_search_matching_applicants(self):
-        self.ensure_one()
-        help_message_1 = self.env._("No Matching Talents")
-        help_message_2 = self.env._("We do not have any talents who meet the skill requirements for this job position in the database at the moment.")
-        action = self.env['ir.actions.actions']._for_xml_id('hr_recruitment.crm_case_categ0_act_job')
-        context = ast.literal_eval(action['context'])
-        context['matching_job_id'] = self.id
-        # This action always comes with search_default_applicant. However,
-        # we want talents to always be the default search.
-        del context['search_default_applicants']
-        context['search_default_talents'] = True
-        # Since matching_score is not stored, we use the sequence field to sort
-        talents = self.env['hr.applicant'].with_context(matching_job_id=self.id).search([
-            ('job_id', '!=', self.id),
-            ('skill_ids', 'in', self.job_skill_ids.skill_id.ids),
-        ])
-        for seq, talent in enumerate(talents.sorted('matching_score DESC')):
-            talent.sequence = seq
-        action.update({
-            'name': self.env._("Matching Applicants"),
-            'views': [
-                (self.env.ref('hr_recruitment.crm_case_tree_view_inherit_hr_recruitment_skills').id, 'list'),
-                (False, 'form'),
-            ],
-            'context': context,
-            'domain': [
-                ('job_id', '!=', self.id),
-                ('skill_ids', 'in', self.job_skill_ids.skill_id.ids),
-            ],
-            'help': Markup("<p class='o_view_nocontent_empty_folder'>%s</p><p>%s</p>") % (help_message_1, help_message_2),
-        })
-        return action
 
     def action_job_add_applicants(self):
         action = {

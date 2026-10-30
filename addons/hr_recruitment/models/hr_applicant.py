@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
-from ast import literal_eval
 
 from markupsafe import Markup
 from collections import defaultdict
@@ -1048,15 +1047,6 @@ class HrApplicant(models.Model):
                 domain = self._get_similar_applicants_domain()
                 applicant_job_ids += self.env["hr.applicant"].search(domain).job_id
             action["context"]["active_applicant_job_ids"] = applicant_job_ids.ids
-        return action
-
-    def action_add_to_job(self):
-        self.with_context(just_moved=True).write({
-            "job_id": self.env["hr.job"].browse(self.env.context.get("matching_job_id")).id,
-            "stage_id": self.env.ref("hr_recruitment.stage_job0").id,
-        })
-        action = self.env["ir.actions.actions"]._for_xml_id("hr_recruitment.action_hr_job_applications")
-        action["context"] = literal_eval(action["context"].replace("active_id", str(self.job_id.id)))
         return action
 
     def _track_template_parameters(self, tracked_fields):
