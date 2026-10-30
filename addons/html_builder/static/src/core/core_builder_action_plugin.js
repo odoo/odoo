@@ -72,7 +72,12 @@ function getStyleValue(el, styleName) {
     return cssValues.join(" ");
 }
 
-function setStyle(el, styleName, value, { extraClass, force = false, allowImportant = true } = {}) {
+export function setStyle(
+    el,
+    styleName,
+    value,
+    { extraClass, force = false, allowImportant = true } = {}
+) {
     const computedStyle = window.getComputedStyle(el);
     const cssProps = CSS_SHORTHANDS[styleName] || [styleName];
     // Always reset the inline style first to not put inline style on an

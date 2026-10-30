@@ -2,6 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
 import { CSS_SHORTHANDS } from "@html_builder/utils/utils_css";
+import { setStyle } from "@html_builder/core/core_builder_action_plugin";
 
 /**
  * Compatibility plugin to handle border-width and border-radius inline style
@@ -16,7 +17,6 @@ const EXTRA_CLASSES = { "border-width": "border", "border-radius": "rounded" };
 
 export class CompatibilityInlineBorderRemovalPlugin extends Plugin {
     static id = "compatibilityInlineBorderRemoval";
-    static dependencies = ["builderActions"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
         apply_custom_css_style: withSequence(20, this.removeInlineBorderIfNecessary.bind(this)),
@@ -35,18 +35,12 @@ export class CompatibilityInlineBorderRemovalPlugin extends Plugin {
             // Replace all old inline styles related to border-width/radius as
             // the new CSS rules + variables rely on both being right, i.e. not
             // messed up by any inline style...
-            const styleAction = this.dependencies.builderActions.getAction("styleAction");
             for (const oldStyle of OLD_STYLES) {
                 // Convert non-edited legacy style to new CSS variable.
                 const inlineValue = editingElement.style.getPropertyValue(oldStyle);
                 if (inlineValue && oldStyle !== relatedOldStyle) {
-                    styleAction.apply({
-                        editingElement,
-                        params: {
-                            mainParam: `--box-${oldStyle}`,
-                            extraClass: EXTRA_CLASSES[oldStyle],
-                        },
-                        value: inlineValue,
+                    setStyle(editingElement, `--box-${oldStyle}`, inlineValue, {
+                        extraClass: EXTRA_CLASSES[oldStyle],
                     });
                 }
                 // TODO even though the part about inner layers below is pure
