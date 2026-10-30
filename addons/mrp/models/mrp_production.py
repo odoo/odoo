@@ -1400,18 +1400,22 @@ class MrpProduction(models.Model):
         self.move_byproduct_ids.picked = True
 
     def _set_qty_producing(self, pick_manual_consumption_moves=True):
-        if self.product_id.tracking == 'serial':
-            qty_producing_uom = self.product_uom_id._compute_quantity(self.qty_producing, self.product_id.uom_id, rounding_method='HALF-UP')
-            qty_production_uom = self.product_uom_id._compute_quantity(self.product_qty, self.product_id.uom_id, rounding_method='HALF-UP')
+        serial_tracked_productions = self.filtered(lambda p: p.product_id.tracking == 'serial')
+        for serial_production in serial_tracked_productions:
+            qty_producing_uom = serial_production.product_uom_id._compute_quantity(serial_production.qty_producing, serial_production.product_id.uom_id, rounding_method='HALF-UP')
+            qty_production_uom = serial_production.product_uom_id._compute_quantity(serial_production.product_qty, serial_production.product_id.uom_id, rounding_method='HALF-UP')
             # allow changing a non-zero value to a 0 to not block mass produce feature
-            if qty_producing_uom != qty_production_uom and not (qty_producing_uom == 0 and self._origin.qty_producing != self.qty_producing):
-                self.qty_producing = self.product_id.uom_id._compute_quantity(len(self.lot_producing_ids), self.product_uom_id, rounding_method='HALF-UP')
+            if qty_producing_uom != qty_production_uom and not (qty_producing_uom == 0 and serial_production._origin.qty_producing != serial_production.qty_producing):
+                serial_production.qty_producing = serial_production.product_id.uom_id._compute_quantity(len(serial_production.lot_producing_ids), serial_production.product_uom_id, rounding_method='HALF-UP')
 
-        for move in (
-            self.move_raw_ids
-            | self.move_finished_ids.filtered(lambda m: m.product_id != self.product_id or m.product_id.tracking == 'serial')
-        ):
-            is_byproduct = move in self.move_byproduct_ids
+        moves = self.move_raw_ids | self.move_finished_ids.filtered(
+            lambda m: m.product_id != m.production_id.product_id or m.product_id.tracking == 'serial')
+        byproduct_ids = set(self.move_byproduct_ids.ids)
+        # What the origins brought and what their destinations took, computed once per set of origins.
+        origin_quantities = {}
+        picked_moves_ids = []
+        for move in moves:
+            is_byproduct = move.id in byproduct_ids
             # Never update already produced by-product moves.
             if move.picked and (is_byproduct or move.manual_consumption):
                 continue
@@ -1420,27 +1424,32 @@ class MrpProduction(models.Model):
             if move.sudo()._should_bypass_set_qty_producing():
                 continue
 
-            new_qty = move.product_uom.round((self.qty_producing - self.qty_produced) * move.unit_factor)
-            if move.has_tracking != 'none':
-                relevant_orig_ids = set()
-                qty_available = 0
-                for move_orig in move.move_orig_ids:
-                    if move_orig.state not in ('draft', 'cancel'):
-                        relevant_orig_ids.add(move_orig.id)
-                    if move_orig.state == 'done':
-                        qty_available += move_orig.product_uom._compute_quantity(move_orig.quantity, move.product_uom)
-                qty_taken = 0
-                for move_sibling in move.move_orig_ids.move_dest_ids - move:
-                    if move_sibling.state == 'done':
-                        qty_taken += move_sibling.product_uom._compute_quantity(move_sibling.quantity, move.product_uom)
-                if relevant_orig_ids and move.product_uom.compare(qty_available, qty_taken) >= 0:
-                    new_qty = min(new_qty, qty_available - qty_taken)
+            production = move.raw_material_production_id or move.production_id
+            new_qty = move.product_uom.round((production.qty_producing - production.qty_produced) * move.unit_factor)
+            if move.has_tracking != 'none' and move.move_orig_ids:
+                product_uom = move.product_id.uom_id
+                origin_ids = frozenset(move.move_orig_ids.ids)
+                # [PERF]: Cache the quantities brought by the origins and taken by their destinations,
+                # so that the siblings are not gone through again for every move. Moves sharing origins
+                # usually share the exact same set of them, as a move rarely has more than one or two
+                # origins, so most moves reuse an entry already computed.
+                if origin_ids not in origin_quantities:
+                    origin_quantities[origin_ids] = (
+                        any(move_orig.state not in ('draft', 'cancel') for move_orig in move.move_orig_ids),
+                        sum(move_orig.product_uom._compute_quantity(move_orig.quantity, product_uom, round=False) for move_orig in move.move_orig_ids if move_orig.state == 'done'),
+                        sum(move_sibling.product_uom._compute_quantity(move_sibling.quantity, product_uom, round=False) for move_sibling in move.move_orig_ids.move_dest_ids if move_sibling.state == 'done'),
+                    )
+                has_relevant_orig, qty_available, qty_taken = origin_quantities[origin_ids]
+                if has_relevant_orig and product_uom.compare(qty_available, qty_taken) >= 0:
+                    new_qty = min(new_qty, product_uom._compute_quantity(qty_available - qty_taken, move.product_uom))
             move._set_quantity_done(new_qty)
             if (not move.manual_consumption or pick_manual_consumption_moves) \
                     and move.quantity \
                     and not is_byproduct \
                     and (move.raw_material_production_id or move.product_id.tracking != 'serial'):
-                move.picked = True
+                picked_moves_ids.append(move.id)
+        if picked_moves_ids:
+            self.env['stock.move'].browse(picked_moves_ids).picked = True
 
     def _should_postpone_date_finished(self, date_finished):
         self.ensure_one()
@@ -2361,8 +2370,7 @@ class MrpProduction(models.Model):
             return self.env['mrp.production'].browse(production_missing_lot_ids).action_generate_serial()
 
         productions_auto = self.env['mrp.production'].browse(production_auto_ids)
-        for production in productions_auto:
-            production._set_quantities()
+        productions_auto._set_quantities_batched()
         productions_auto.move_raw_ids.filtered(
             lambda m: not m.manual_consumption and not m.picked and m.product_uom.compare(m.quantity, m.product_uom_qty) == 0
         ).picked = True
@@ -2943,13 +2951,17 @@ class MrpProduction(models.Model):
 
     def _set_quantities(self):
         self.ensure_one()
-        missing_lot_id_products = ""
-        if self.product_tracking in ('lot', 'serial') and not self.lot_producing_ids:
-            self.action_generate_serial()
+        return self._set_quantities_batched()
 
-        if not self.qty_producing:
-            self.qty_producing = self.product_qty - self.qty_produced
-            self._set_qty_producing()
+    def _set_quantities_batched(self):
+        for production in self:
+            if production.product_tracking in ('lot', 'serial') and not production.lot_producing_ids:
+                production.action_generate_serial()
+
+        productions_to_set = self.filtered(lambda p: not p.qty_producing)
+        for production in productions_to_set:
+            production.qty_producing = production.product_qty - production.qty_produced
+        productions_to_set._set_qty_producing()
 
         self._mark_byproducts_as_produced()
 
