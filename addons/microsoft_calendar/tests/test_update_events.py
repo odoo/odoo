@@ -878,6 +878,96 @@ class TestUpdateEvents(TestCommon):
             "The added attendee should only be on the modified occurrence",
         )
 
+    @freeze_time('2021-09-22')
+    @patch.object(MicrosoftCalendarService, 'get_events')
+    @patch.object(MicrosoftCalendarService, 'insert')
+    @patch.object(MicrosoftCalendarService, 'patch')
+    def test_moved_exception_of_outlook_recurrence_keeps_outlook_ids(self, mock_patch, mock_insert, mock_get_events):
+        """
+        An attendee syncs a recurrence organized outside Odoo. One occurrence has lost
+        its Outlook ids on Odoo side (the series was rebuilt), then the organizer moves
+        that occurrence in Outlook. The exception cannot be matched by id, so it is
+        recreated by `_apply_recurrence`: the new event must keep the Outlook ids and
+        must never be pushed back to Outlook as a new event, otherwise the attendee
+        becomes the organizer of a duplicate meeting and Outlook invites everybody.
+        """
+
+        # arrange: the recurrence belongs to an organizer who is not an Odoo user
+        external_organizer = {'emailAddress': {'address': 'external@organizer.com', 'name': 'External Organizer'}}
+        self.recurrence.calendar_event_ids.with_context(dont_notify=True).write({'user_id': False, 'need_sync_m': False})
+        events = [
+            dict(e, organizer=external_organizer, isOrganizer=False)
+            for e in self.recurrent_event_from_outlook_attendee
+        ]
+        from_event_index = 3
+        odoo_event = self.recurrent_events[from_event_index - 1]
+        odoo_event.with_context(dont_notify=True).write({
+            'microsoft_id': False,
+            'ms_universal_event_id': False,
+            'need_sync_m': False,
+        })
+        new_start = odoo_event.start + timedelta(hours=1)
+        new_stop = odoo_event.stop + timedelta(hours=1)
+        events[from_event_index] = dict(
+            events[from_event_index],
+            type="exception",
+            start={'dateTime': new_start.strftime("%Y-%m-%dT%H:%M:%S.0000000"), 'timeZone': 'UTC'},
+            end={'dateTime': new_stop.strftime("%Y-%m-%dT%H:%M:%S.0000000"), 'timeZone': 'UTC'},
+        )
+        # the series master is the one compared with the recurrence write date
+        events[0] = dict(events[0], lastModifiedDateTime=_modified_date_in_the_future(self.recurrence))
+        ms_event_id = events[from_event_index]['id']
+        ms_event_uid = events[from_event_index]['iCalUId']
+        mock_get_events.return_value = (MicrosoftEvent(events), None)
+
+        # act: two syncs, the second one would push back any event left without Outlook id
+        self.attendee_user.with_user(self.attendee_user).sudo()._sync_microsoft_calendar()
+        mock_get_events.return_value = ([], None)
+        self.attendee_user.with_user(self.attendee_user).sudo()._sync_microsoft_calendar()
+        self.call_post_commit_hooks()
+
+        # assert: the moved occurrence exists once and is still linked to Outlook
+        moved_event = self.env["calendar.event"].search([('recurrence_id', '=', self.recurrence.id), ('start', '=', new_start)])
+        self.assertEqual(len(moved_event), 1)
+        self.assertEqual(moved_event.microsoft_id, ms_event_id)
+        self.assertEqual(moved_event.ms_universal_event_id, ms_event_uid)
+        # ... and nothing of this Outlook recurrence has been pushed back as a new Outlook event
+        mock_insert.assert_not_called()
+        to_sync = self.env["calendar.event"].with_user(self.attendee_user)._get_microsoft_records_to_sync()
+        self.assertFalse(to_sync & self.recurrence.calendar_event_ids)
+
+    @freeze_time('2021-09-22')
+    @patch.object(MicrosoftCalendarService, 'get_events')
+    @patch.object(MicrosoftCalendarService, 'insert')
+    @patch.object(MicrosoftCalendarService, 'patch')
+    def test_outlook_occurrence_without_outlook_id_is_not_inserted(self, mock_patch, mock_insert, mock_get_events):
+        """
+        An occurrence of an Outlook recurrence that lost its Outlook ids must never be
+        inserted into Outlook by an attendee: Outlook owns the series, and the insert
+        would create a new meeting organized by the attendee.
+        """
+
+        # arrange: a detached occurrence of an external recurrence, not linked to Outlook anymore
+        self.recurrence.calendar_event_ids.with_context(dont_notify=True).write({'user_id': False, 'need_sync_m': False})
+        orphan = self.recurrent_events[2]
+        orphan.with_context(dont_notify=True).write({
+            'microsoft_id': False,
+            'ms_universal_event_id': False,
+            'follow_recurrence': False,
+            'need_sync_m': False,
+        })
+        mock_get_events.return_value = ([], None)
+
+        # act
+        to_sync = self.env["calendar.event"].with_user(self.attendee_user)._get_microsoft_records_to_sync()
+        self.attendee_user.with_user(self.attendee_user).sudo()._sync_microsoft_calendar()
+        self.call_post_commit_hooks()
+
+        # assert: the event was a candidate for the sync but has not been inserted
+        self.assertIn(orphan, to_sync)
+        mock_insert.assert_not_called()
+        self.assertFalse(orphan.ms_universal_event_id)
+
     @patch.object(MicrosoftSync, '_write_from_microsoft', autospec=True)
     def test_recreate_recurrence_when_only_serialized_dtstart_changes(self, mock_write_from_microsoft):
         recurrence = self.recurrence.with_context(dont_notify=True)
