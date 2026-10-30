@@ -405,6 +405,38 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
         imported_invoice = self.import_attachment(xml_attachment, self.company_data["default_journal_sale"])
         self.assertEqual(imported_invoice.partner_id, partner)
 
+    def test_import_peppol_endpoint_not_overwritten(self):
+        """ The partner of a document may be retrieved on a weak criterion (phone, mail or name) and be somebody
+        else than the sender. Its Peppol endpoint must then be kept: replacing it with the one of the sender would route the
+        documents sent to that partner to the sender
+        """
+        partner = self.env['res.partner'].create({
+            'name': "Partner",
+            'email': "info@partner.test",
+            'peppol_eas': '0208',
+            'peppol_endpoint': '0202239951',
+        })
+        bill = self.env['account.move'].create({'move_type': 'in_invoice'})
+        edi = self.env['account.edi.xml.ubl_bis3'].with_context(_from_peppol_get_new_documents=True)
+        # unknown sender, matched on the mail of the partner
+        sender_values = {
+            'name': "Sender",
+            'phone': False,
+            'mail': "info@partner.test",
+            'vat': False,
+            'peppol_eas': '0208',
+            'peppol_endpoint': '0477472701',
+        }
+
+        edi._import_retrieve_and_fill_partner(bill, **sender_values)
+        self.assertEqual(bill.partner_id, partner)
+        self.assertRecordValues(partner, [{'peppol_eas': '0208', 'peppol_endpoint': '0202239951'}])
+
+        # a partner without endpoint is still completed with the one of the document
+        partner.peppol_endpoint = False
+        edi._import_retrieve_and_fill_partner(bill, **sender_values)
+        self.assertRecordValues(partner, [{'peppol_eas': '0208', 'peppol_endpoint': '0477472701'}])
+
     def test_export_pdf_contains_facturx(self):
         """ Check that we generate a Factur-x xml when we render the invoice action report. """
         invoice = self.env['account.move'].create({

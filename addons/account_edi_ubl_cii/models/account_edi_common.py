@@ -469,7 +469,7 @@ class AccountEdiCommon(models.AbstractModel):
                 invoice.partner_id.vat = vat
         if not invoice.partner_id or not self.env.context.get('_from_peppol_get_new_documents'):
             return
-        if peppol_eas and peppol_endpoint:
+        if peppol_eas and peppol_endpoint and not (invoice.partner_id.peppol_eas and invoice.partner_id.peppol_endpoint):
             invoice.partner_id.write({'peppol_eas': peppol_eas, 'peppol_endpoint': peppol_endpoint})
         if not invoice.partner_id.ubl_cii_format:
             # Set the `ubl_cii_format` to be the same as the imported document
