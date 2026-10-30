@@ -12,6 +12,7 @@ class CalendarAlarm_Manager(models.AbstractModel):
         """ Cron method, overridden here to send SMS reminders as well
         """
         super()._send_reminder()
+        print("calendar.event send_reminder")
         events_by_alarm = self._get_events_by_alarm_to_notify('sms')
         if not events_by_alarm:
             return
