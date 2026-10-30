@@ -4,7 +4,7 @@ import { animationFrame, tick, advanceTime } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
-import { getContent } from "../_helpers/selection";
+import { getContent, setSelection } from "../_helpers/selection";
 import {
     bold,
     insertText,
@@ -433,6 +433,24 @@ test("should not add history step for bold on collapsed selection", async () => 
 
     undo(editor);
     expect(getContent(el)).toBe(`<p>abcd[]</p>`);
+});
+
+test("should remove bold formatting from empty block", async () => {
+    const { editor, el } = await setupEditor(`<p>[ab</p><p><br></p><p>cd]</p>`);
+
+    patchWithCleanup(console, { warn: () => {} });
+
+    await press(["ctrl", "b"]);
+    expect(getContent(el)).toBe(
+        `<p><strong>[ab</strong></p><p><strong><br></strong></p><p><strong>cd]</strong></p>`
+    );
+
+    const pEl = el.firstElementChild.nextElementSibling;
+    setSelection({ anchorNode: pEl.firstChild, anchorOffset: 0 });
+    await press(["ctrl", "b"]);
+    await insertText(editor, "test");
+    await tick();
+    expect(getContent(el)).toBe(`<p><strong>ab</strong></p><p>test[]</p><p><strong>cd</strong></p>`);
 });
 
 test("should not apply bold formatting for partial selection inside contenteditable false", async () => {
