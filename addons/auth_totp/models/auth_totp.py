@@ -17,8 +17,8 @@ class Auth_TotpDevice(models.Model):
     _description = "Authentication Device"
     _auto = False
 
-    def _generate(self, scope, name, expiration_date):
-        key = super()._generate(scope, name, expiration_date)
+    def _generate(self, scope, name, expiration_date, readonly=False):
+        key = super()._generate(scope, name, expiration_date, readonly=readonly)
         # the device is inserted with raw SQL, which bypasses the ORM cache
         self.env.user.invalidate_recordset(['totp_trusted_device_ids'])
         return key

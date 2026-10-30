@@ -1,4 +1,5 @@
 from . import (
+    test_api_key,
     test_barcode,
     test_binary,
     test_cloc,
