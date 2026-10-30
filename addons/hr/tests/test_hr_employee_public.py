@@ -1,5 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
+
+from odoo import tools
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests import tagged
 
@@ -34,3 +37,11 @@ class TestHrEmployee(TestHrCommon):
         res = self.env['resource.resource'].with_user(self.res_users_without_hr_right)
         res = res.search([('employee_id.department_id', '=', dep.id)])
         self.assertIn(emp.resource_id, res, "Resource should be found")
+
+    def test_resource_avatar_without_hr_right(self):
+        emp = self.env['hr.employee'].create({
+            'name': 'Joe',
+            'image_1920': base64.b64encode(tools.file_open('base/static/img/avatar.png', 'rb').read()).decode(),
+        })
+        resource = emp.resource_id.with_user(self.res_users_without_hr_right)
+        self.assertEqual(resource.avatar_128, emp.avatar_128)
