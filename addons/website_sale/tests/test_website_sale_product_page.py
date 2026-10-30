@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
 from odoo import http
 from odoo.tests import HttpCase, new_test_user, tagged
-from odoo.tools import file_open
+from odoo.tools import file_open, mute_logger
 
 from odoo.addons.product.tests.common import ProductVariantsCommon
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
@@ -78,6 +80,34 @@ class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCom
         self.assertNotIn('error', result.get('data', {}), result.get('data'))
         attachment_id = result['data']['ir.attachment'][0]['id']
         self.assertTrue(self.env['ir.attachment'].sudo().browse(attachment_id).exists())
+
+    @mute_logger('odoo.http')
+    def test_public_user_cannot_post_product_review(self):
+        portal_user = new_test_user(
+            self.env, login='product_review_portal', groups='base.group_portal',
+            password='product_review_portal',
+        )
+        self.env['ir.ui.view'].with_context(active_test=False).search([
+            ('key', '=', 'website_sale.product_comment'),
+        ]).write({'active': True})
+
+        for user, can_post in ((self.env.ref('base.public_user'), False), (portal_user, True)):
+            self.authenticate(None if user._is_public() else user.login, user.login)
+            for record in (self.product_template_sofa, self.product_template_sofa.product_variant_id):
+                with self.subTest(user=user.login, model=record._name):
+                    self.url_open('/mail/message/post', data=json.dumps({'params': {
+                        'thread_model': record._name,
+                        'thread_id': record.id,
+                        'post_data': {
+                            'body': 'Review',
+                            'message_type': 'comment',
+                            'subtype_xmlid': 'mail.mt_comment',
+                            'rating_value': 1,
+                        },
+                    }}), headers={'Content-Type': 'application/json'})
+                    self.assertEqual(bool(record.message_ids.filtered(
+                        lambda message: message.author_id == user.partner_id
+                    )), can_post)
 
     def _add_reaction(self, message, reaction):
         self.make_jsonrpc_request(
