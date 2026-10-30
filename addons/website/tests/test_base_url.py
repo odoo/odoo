@@ -15,8 +15,14 @@ class TestUrlCommon(odoo.tests.HttpCase):
             'domain': self.domain,
         })
 
-        lang_fr = self.env['res.lang']._activate_lang('fr_FR')
-        self.website.language_ids = self.env.ref('base.lang_en') + lang_fr
+        lang_pa = self.env['res.lang'].create({
+            'name': 'Parseltongue',
+            'code': 'pa_GB',
+            'iso_code': 'pa_GB',
+            'url_code': 'pa',
+        })
+        self.env['res.lang']._activate_lang(lang_pa.code)
+        self.website.language_ids = self.env.ref('base.lang_en') + lang_pa
         self.website.default_lang_id = self.env.ref('base.lang_en')
 
     def _assertCanonical(self, url, canonical_url):
@@ -85,7 +91,7 @@ class TestBaseUrl(TestUrlCommon):
         self._assertCanonical('/?debug=1', self.website.get_base_url() + '/')
         self._assertCanonical('/a-page', self.website.get_base_url() + '/a-page')
         self._assertCanonical('/en_US', self.website.get_base_url() + '/')
-        self._assertCanonical('/fr_FR', self.website.get_base_url() + '/fr')
+        self._assertCanonical('/pa_GB', self.website.get_base_url() + '/pa')
 
 
 @odoo.tests.tagged('-at_install', 'post_install')

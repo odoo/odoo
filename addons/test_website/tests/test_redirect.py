@@ -305,6 +305,7 @@ class TestRedirect(HttpCase):
     @mute_logger('odoo.http')
     def test_08_redirect_404_unslug_translated_record(self):
         lang_fr = self.env['res.lang']._activate_lang('fr_FR')
+        fr_prefix = '/' + lang_fr.url_code
         self.env['website'].search([]).language_ids = self.env.ref('base.lang_en') + lang_fr
         rec_unpublished = self.env['test.model'].create({'name': 'name-unpub', 'website_published': False})
         rec_published = self.env['test.model'].create({'name': 'name-pub', 'website_published': True})
@@ -330,13 +331,13 @@ class TestRedirect(HttpCase):
 
         # 3. Accessing translated nonexisting record (without exact slug matching) with redirect to an unslugified url:
         # expecting 301 to slugified record. E.g. /shop/1 => /shop/2 ==> /shop/old-prod-1 -> /shop/new-prod-2
-        r = self.url_open('/fr' + url_rec1, allow_redirects=False)
+        r = self.url_open(fr_prefix + url_rec1, allow_redirects=False)
         self.assertEqual(r.status_code, 301)
-        self.assertURLEqual(r.headers.get('Location'), '/fr/test_website/200/nom-publi%%C3%%A9-%d' % rec_published.id)
+        self.assertURLEqual(r.headers.get('Location'), fr_prefix + '/test_website/200/nom-publi%%C3%%A9-%d' % rec_published.id)
 
-        r = self.url_open('/fr' + url_rec1, allow_redirects=True)
+        r = self.url_open(fr_prefix + url_rec1, allow_redirects=True)
         self.assertEqual(r.status_code, 200)
-        self.assertURLEqual(r.url, '/fr/test_website/200/nom-publi%%C3%%A9-%d' % rec_published.id)
+        self.assertURLEqual(r.url, fr_prefix + '/test_website/200/nom-publi%%C3%%A9-%d' % rec_published.id)
 
     @mute_logger('odoo.http')
     def test_09_redirect_absolute_url(self):

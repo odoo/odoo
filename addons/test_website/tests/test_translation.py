@@ -18,13 +18,15 @@ class TestTranslation(HttpCase):
     # FIXME: race condition for this following tests
 
     def _multi_language_fr_user_fr_en_site(self):
-        self.start_tour(self.env['website'].get_client_action_url('/fr'), 'translation_multi_language_fr_user_fr_en_site', login='admin', timeout=250)
+        fr_prefix = '/' + self.env.ref('base.lang_fr').url_code
+        self.start_tour(self.env['website'].get_client_action_url(fr_prefix), 'translation_multi_language_fr_user_fr_en_site', login='admin', timeout=250)
 
     def _multi_language_fr_user_en_fr_site(self):
         self.start_tour(self.env['website'].get_client_action_url('/en'), 'translation_multi_language_fr_user_en_fr_site', login='admin', timeout=250)
 
     def _multi_language_en_user_fr_en_site(self):
-        self.start_tour(self.env['website'].get_client_action_url('/fr'), 'translation_multi_language_en_user_fr_en_site', login='admin', timeout=250)
+        fr_prefix = '/' + self.env.ref('base.lang_fr').url_code
+        self.start_tour(self.env['website'].get_client_action_url(fr_prefix), 'translation_multi_language_en_user_fr_en_site', login='admin', timeout=250)
 
     def _multi_language_en_user_en_fr_site(self):
         self.start_tour(self.env['website'].get_client_action_url('/en'), 'translation_multi_language_en_user_en_fr_site', login='admin', timeout=250)
@@ -103,29 +105,33 @@ class TestTranslation(HttpCase):
 
     def test_en_fr_db_fr_site(self):
         self._en_fr_db()
-        lang_en = self.env.ref('base.lang_en')
         lang_fr = self.env.ref('base.lang_fr')
         self.env["base.language.install"].create({
             'overwrite': True,
             'lang_ids': [(6, 0, [lang_fr.id])],
         }).lang_install()
-        for website in self.env['website'].search([]):
-            website.language_ids += lang_fr
-            website.default_lang_id = lang_fr
-            website.language_ids -= lang_en
+        self.env['website'].search([]).write({
+            'language_ids': [Command.set(lang_fr.ids)],
+            'default_lang_id': lang_fr.id,
+        })
         self._single_language_en_user_fr_site()
 
     def test_en_fr_db_fr_en_site(self):
         self._en_fr_db()
+        lang_en = self.env.ref('base.lang_en')
         lang_fr = self.env.ref('base.lang_fr')
-        for website in self.env['website'].search([]):
-            website.language_ids += lang_fr
-            website.default_lang_id = lang_fr
+        self.env['website'].search([]).write({
+            'language_ids': [Command.set((lang_en + lang_fr).ids)],
+            'default_lang_id': lang_fr.id,
+        })
         self._multi_language_en_user_fr_en_site()
 
     def test_en_fr_db_en_fr_site(self):
         self._en_fr_db()
+        lang_en = self.env.ref('base.lang_en')
         lang_fr = self.env.ref('base.lang_fr')
-        for website in self.env['website'].search([]):
-            website.language_ids += lang_fr
+        self.env['website'].search([]).write({
+            'language_ids': [Command.set((lang_en + lang_fr).ids)],
+            'default_lang_id': lang_en.id,
+        })
         self._multi_language_en_user_en_fr_site()

@@ -75,13 +75,13 @@ export function changeLanguage(language) {
         openLanguageSelector(),
         {
             content: `Check that the language is available`,
-            trigger: `.self_order_language_popup .btn:contains(${language})`,
+            trigger: `.self_order_language_popup .btn:text("${language}")`,
             run: "click",
             expectUnloadPage: true,
         },
         {
             content: `Check that the language changed`,
-            trigger: `.o_self_language_selector:contains(${language})`,
+            trigger: `.o_self_language_selector:text("${language}")`,
         },
     ];
 }

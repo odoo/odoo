@@ -17,6 +17,7 @@ class TestSurveyCrm(common.TestSurveyCommon, HttpCase):
             'questions_layout': 'page_per_question',
             'survey_type': 'survey',
             'title': 'Questionnaire for the position of software developer',
+            'lang_ids': [(6, 0, cls.env.ref('base.lang_en').ids)],
             'users_login_required': False,
         })
 

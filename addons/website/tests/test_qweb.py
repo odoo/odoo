@@ -305,7 +305,8 @@ class TestQwebProcessAtt(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.website = cls.env.ref('base.default_website')
-        cls.env['res.lang']._activate_lang('fr_FR')
+        lang_fr = cls.env['res.lang']._activate_lang('fr_FR')
+        cls.fr_prefix = '/' + lang_fr.url_code
         cls.website.language_ids = cls.env.ref('base.lang_en') + cls.env.ref('base.lang_fr')
         cls.website.default_lang_id = cls.env.ref('base.lang_en')
         cls.website.cdn_activated = True
@@ -347,31 +348,31 @@ class TestQwebProcessAtt(TransactionCase):
         with MockRequest(self.env, website=self.website) as request:
             self._test_att(request.env, '/', {'href': '/'})
             self._test_att(request.env, '/en/', {'href': '/'})
-            self._test_att(request.env, '/fr/', {'href': '/fr/'})
-            self._test_att(request.env, '/fr', {'href': '/fr'})
+            self._test_att(request.env, self.fr_prefix + '/', {'href': self.fr_prefix + '/'})
+            self._test_att(request.env, self.fr_prefix, {'href': self.fr_prefix})
 
     def test_process_att_with_request_lang(self):
         with MockRequest(self.env, website=self.website, context={'lang': 'fr_FR'}) as request:
-            self._test_att(request.env, '/', {'href': '/fr'})
+            self._test_att(request.env, '/', {'href': self.fr_prefix})
             self._test_att(request.env, '/en/', {'href': '/'})
-            self._test_att(request.env, '/fr/', {'href': '/fr/'})
-            self._test_att(request.env, '/fr', {'href': '/fr'})
+            self._test_att(request.env, self.fr_prefix + '/', {'href': self.fr_prefix + '/'})
+            self._test_att(request.env, self.fr_prefix, {'href': self.fr_prefix})
 
     def test_process_att_matching_cdn_and_lang(self):
         with MockRequest(self.env, website=self.website) as request:
             # lang prefix is added before CDN
             self._test_att(request.env, '/a', {'href': 'http://test.cdn/a'})
             self._test_att(request.env, '/en/a', {'href': 'http://test.cdn/a'})
-            self._test_att(request.env, '/fr/a', {'href': 'http://test.cdn/fr/a'})
+            self._test_att(request.env, self.fr_prefix + '/a', {'href': 'http://test.cdn' + self.fr_prefix + '/a'})
             self._test_att(request.env, '/b', {'href': 'http://test.cdn/b'})
             self._test_att(request.env, '/en/b', {'href': 'http://test.cdn/b'})
-            self._test_att(request.env, '/fr/b', {'href': '/fr/b'})
+            self._test_att(request.env, self.fr_prefix + '/b', {'href': self.fr_prefix + '/b'})
 
     def test_process_att_no_route(self):
         with MockRequest(self.env, website=self.website, context={'lang': 'fr_FR'}, routing=False) as request:
             # default on multilang=True if route is not /{module}/static/
             self._test_att(request.env, '/web/static/hi', {'href': '/web/static/hi'})
-            self._test_att(request.env, '/my-page', {'href': '/fr/my-page'})
+            self._test_att(request.env, '/my-page', {'href': self.fr_prefix + '/my-page'})
 
     def test_process_att_url_crap(self):
         with MockRequest(self.env, website=self.website) as request:

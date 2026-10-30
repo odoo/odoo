@@ -9,7 +9,7 @@ export function changeLanguageAndOpenTranslateMode() {
     return [
         {
             content: "Change the language to French",
-            trigger: ':iframe .js_language_selector .js_change_lang[data-url_code="fr"]',
+            trigger: ':iframe .js_language_selector .js_change_lang[title$="Français"]',
             run: "click",
         },
         {
@@ -85,7 +85,7 @@ registerWebsitePreviewTour(
         ...clickOnSave(),
         {
             content: "Change the language to French",
-            trigger: ':iframe .js_language_selector .js_change_lang[data-url_code="fr"]',
+            trigger: ':iframe .js_language_selector .js_change_lang[title$="Français"]',
             run: "click",
         },
         ...changeLanguageAndOpenTranslateMode(), // Open the delayed translation

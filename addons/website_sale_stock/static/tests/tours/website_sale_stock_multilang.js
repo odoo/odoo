@@ -34,7 +34,7 @@ registry.category("web_tour.tours").add('website_sale_stock.product_warning_mult
             run: "click",
         }, {
             content: "Switch to French",
-            trigger: '.js_change_lang[data-url_code="fr"]',
+            trigger: '.js_change_lang[title$="Français"]',
             run: "click",
             expectUnloadPage: true,
         }, {
