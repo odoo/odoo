@@ -216,6 +216,10 @@ export class PosOrderlineAccounting extends Base {
         return this.displayPriceUnit ? price / this.order_id.orderSign / this.displayPriceUnit : 0;
     }
 
+    getDisplayPriceFromQuantity(quantity) {
+        return quantity * this.order_id.orderSign * this.displayPriceUnit;
+    }
+
     /**
      * Prepare extra values for the base line used in taxes computation.
      */
