@@ -17,8 +17,8 @@
                         Peppol e-Address (EAS)
                     </label>
                 </div>
-            </div>
-            <div t-if="routing_scheme_list" class="col-lg-6 portal_peppol_toggle">
+            </fieldset>
+            <fieldset t-if="routing_scheme_list" class="col-lg-6 portal_peppol_toggle">
                 <t
                     t-set="current_endpoint"
                     t-value="(partner_sudo.routing_identifier or '').partition(':')[2]"
@@ -35,7 +35,7 @@
                         Peppol Endpoint
                     </label>
                 </div>
-            </div>
+            </fieldset>
         </div>
     </template>
 </odoo>
