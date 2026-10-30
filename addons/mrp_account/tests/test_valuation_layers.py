@@ -94,6 +94,20 @@ class TestMrpValuationStandard(TestBomPriceCommon):
     def test_avco_incoming_component_value_update_revalues_finished_product(self):
         self._assert_incoming_component_value_update_revalues_finished_product(self.category_avco)
 
+    def test_avco_auto_incoming_component_value_update_revalues_finished_product(self):
+        self._assert_incoming_component_value_update_revalues_finished_product(self.category_avco_auto)
+        mo = self.env['mrp.production'].search([('bom_id', '=', self.bom_1.id), ('state', '=', 'done')], limit=1)
+        component_move = mo.move_raw_ids.filtered(lambda move: move.product_id == self.glass)
+        self.assertRecordValues(component_move.account_move_id.line_ids, [
+            {'account_id': self.category_avco_auto.property_stock_valuation_account_id.id, 'debit': 0.0, 'credit': 100.0},
+            {'account_id': self.account_production.id, 'debit': 100.0, 'credit': 0.0},
+        ])
+        finished_move = mo.move_finished_ids.filtered(lambda move: move.product_id == self.dining_table)
+        self.assertRecordValues(finished_move.account_move_id.line_ids, [
+            {'account_id': self.account_production.id, 'debit': 0.0, 'credit': PRICE + 100},
+            {'account_id': self.category_avco_auto.property_stock_valuation_account_id.id, 'debit': PRICE + 100, 'credit': 0.0},
+        ])
+
     def test_fifo_incoming_component_value_update_revalues_finished_product(self):
         self._assert_incoming_component_value_update_revalues_finished_product(self.category_fifo)
 

@@ -150,6 +150,15 @@ class StockMove(models.Model):
         distinct_fields.append('sale_line_id')
         return distinct_fields
 
+    def _get_moves_by_invoice(self):
+        moves_by_invoice = defaultdict(lambda: self.env['stock.move'])
+        for move in self:
+            for invoice in move.sale_line_id.invoice_lines.move_id:
+                if invoice.state != 'posted':
+                    continue
+                moves_by_invoice[invoice] |= move
+        return moves_by_invoice
+
     def _get_origin_company_domains(self, operator, value):
         domains = super()._get_origin_company_domains(operator, value)
         domains.append(Domain.AND([

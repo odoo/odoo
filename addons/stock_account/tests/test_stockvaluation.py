@@ -2919,9 +2919,14 @@ class TestStockValuation(TestStockValuationCommon):
 
     def test_scrap_valuation_from_done_picking(self):
         """A scrap from a done picking must still post its valuation entry (real_time)."""
-        product = self.product_standard_auto
+        product = self.product_avco_auto
+        with freeze_time(Datetime.now() - timedelta(seconds=5)):
+            # Freeze a few seconds before the rest of the test to avoid issues with the generated product.value
+            # having the same date as the move in, thus missing the recomputation of the standard_price.
+            product.standard_price = 0
+
         accounts_data = product.product_tmpl_id.get_product_accounts()
-        receipt = self._make_in_move(product, 10, create_picking=True).picking_id
+        receipt = self._make_in_move(product, 10, 10, create_picking=True).picking_id
 
         scrap_form = Form.from_action(self.env, receipt.action_scrap())
         scrap_form.product_id = product
@@ -2933,6 +2938,60 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertRecordValues(scrap.account_move_id.line_ids, [
             {'account_id': accounts_data['stock_valuation'].id, 'debit': 0.0, 'credit': 20.0},
             {'account_id': self.account_stock_variation.id, 'debit': 20.0, 'credit': 0.0},
+        ])
+
+        # Update the receipt value & check that the journal items were updated accordingly
+        receipt.move_ids.value_manual = 150
+        receipt.move_ids._set_value()
+
+        self.assertEqual(scrap.value, -30)
+        self.assertRecordValues(scrap.account_move_id.line_ids, [
+            {'account_id': accounts_data['stock_valuation'].id, 'debit': 0.0, 'credit': 30.0},
+            {'account_id': self.account_stock_variation.id, 'debit': 30.0, 'credit': 0.0},
+        ])
+
+    def test_scrap_valuation_from_done_picking_in_lock_period(self):
+        product = self.product_avco_auto
+        now = Datetime.now()
+        with freeze_time(now - timedelta(seconds=5, days=5)):
+            # Freeze a few seconds before the rest of the test to avoid issues with the generated product.value
+            # having the same date as the move in, thus missing the recomputation of the standard_price.
+            product.standard_price = 0
+
+        accounts_data = product.product_tmpl_id.get_product_accounts()
+        with freeze_time(now - timedelta(days=5)) as frozen_date:
+            receipt = self._make_in_move(product, 10, 10, create_picking=True).picking_id
+
+            scrap_form = Form.from_action(self.env, receipt.action_scrap())
+            scrap_form.product_id = product
+            scrap_form.quantity = 2
+            scrap = scrap_form.save()
+            scrap.location_dest_id.valuation_account_id = self.account_stock_variation
+            scrap.action_scrap()
+
+            self.assertRecordValues(scrap.account_move_id.line_ids, [
+                {'account_id': accounts_data['stock_valuation'].id, 'debit': 0.0, 'credit': 20.0},
+                {'account_id': self.account_stock_variation.id, 'debit': 20.0, 'credit': 0.0},
+            ])
+
+            # Lock the journal entries so that the moves are within the lock period
+            self.company.sudo().fiscalyear_lock_date = frozen_date.time_to_freeze.date()
+
+            # Update the receipt value & check that the journal items were updated accordingly
+            receipt.move_ids.value_manual = 150
+            receipt.move_ids._set_value()
+
+        self.assertEqual(scrap.value, -30)
+        # As the journal items are within the lock date, they should remain unchanges
+        self.assertRecordValues(scrap.account_move_id.line_ids, [
+            {'account_id': accounts_data['stock_valuation'].id, 'debit': 0.0, 'credit': 20.0},
+            {'account_id': self.account_stock_variation.id, 'debit': 20.0, 'credit': 0.0},
+        ])
+        # However, a compensation entry must have been generated
+        correction = self.env['account.move'].search([('ref', 'like', 'Valuation correction following a cost change')])
+        self.assertRecordValues(correction.line_ids, [
+            {'account_id': accounts_data['stock_valuation'].id, 'debit': 0.0, 'credit': 10.0},
+            {'account_id': self.account_stock_variation.id, 'debit': 10.0, 'credit': 0.0},
         ])
 
     def test_positive_stock_adjustment_valuation(self):

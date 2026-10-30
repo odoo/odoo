@@ -1016,3 +1016,60 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
             {'account_id': self.account_stock_valuation.id, 'debit': 0.02, 'credit': 0},
             {'account_id': self.account_stock_variation.id, 'debit': 0, 'credit': 0.02},
         ])
+
+    def test_replay_valo_after_component_bill_price_change(self):
+        """ Billing a component at a different price than the one it was purchased at should
+        replay the valuation of the MO that consumed it, and update the stock accounting
+        entries of both the component and the finished moves.
+        """
+        cost_of_production_account = self.env['account.account'].search([
+            ('name', '=', 'Cost of Production'),
+            ('company_ids', 'in', self.env.company.id),
+        ], limit=1)
+        self.category_avco_auto.property_stock_account_production_cost_id = cost_of_production_account
+        production_loc = self.product_avco_auto.with_company(self.company).property_stock_production
+        production_loc.valuation_account_id = cost_of_production_account
+        account_stock_valuation = self.category_avco_auto.property_stock_valuation_account_id
+
+        component = self.env['product.product'].create({
+            'name': 'Component',
+            'is_storable': True,
+            'categ_id': self.product_avco_auto.categ_id.id,
+        })
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.vendor.id,
+            'order_line': [Command.create({
+                'product_id': component.id,
+                'product_qty': 1,
+                'price_unit': 10,
+            })],
+        })
+        purchase_order.button_confirm()
+        purchase_order.picking_ids.button_validate()
+
+        production = self.env['mrp.production'].create({
+            'product_id': self.product_avco_auto.id,
+            'product_qty': 1,
+            'move_raw_ids': [Command.create({
+                'product_id': component.id,
+                'product_uom_qty': 1,
+            })],
+        })
+        production.action_confirm()
+        production.move_raw_ids.write({'quantity': 1, 'picked': True})
+        production.button_mark_done()
+
+        bill = self.env['account.move'].browse(purchase_order.action_create_invoice()['res_id'])
+        bill.invoice_date = Date.today()
+        bill.invoice_line_ids.price_unit = 20
+        bill.action_post()
+
+        self.assertRecordValues(production.move_raw_ids.account_move_id.line_ids, [
+            {'account_id': account_stock_valuation.id, 'debit': 0.0, 'credit': 20.0},
+            {'account_id': cost_of_production_account.id, 'debit': 20.0, 'credit': 0.0},
+        ])
+        self.assertRecordValues(production.move_finished_ids.account_move_id.line_ids, [
+            {'account_id': cost_of_production_account.id, 'debit': 0.0, 'credit': 20.0},
+            {'account_id': account_stock_valuation.id, 'debit': 20.0, 'credit': 0.0},
+        ])
