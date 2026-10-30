@@ -4998,6 +4998,9 @@ class AccountMove(models.Model):
         if not self.invoice_payment_term_id and self.invoice_date_due:
             # no payment terms: maintain timedelta between due date and accounting date
             values.update({'invoice_date_due': values['date'] + (self.invoice_date_due - self.date)})
+        if self.is_sale_document(include_receipts=True) and self.ref:
+            values['ref'] = self.ref
+
         return values
 
     # -------------------------------------------------------------------------
