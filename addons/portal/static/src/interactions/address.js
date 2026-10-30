@@ -170,8 +170,10 @@ export class CustomerAddress extends Interaction {
      */
     async onChangeZip() {}
 
+    /** The field's grid column, one level above the floating label wrapper. */
     _getInputDiv(name) {
-        return this.addressForm[name].parentElement;
+        const input = this.addressForm[name];
+        return input.closest(".form-floating")?.parentElement ?? input.parentElement;
     }
 
     _getInputLabel(name) {
@@ -181,13 +183,13 @@ export class CustomerAddress extends Interaction {
 
     _showInput(name) {
         // show parent div, containing label and input
-        this.addressForm[name].parentElement.style.display = "";
+        this._getInputDiv(name).style.display = "";
         this.addressForm[name].disabled = false;
     }
 
     _hideInput(name, clearValue = true) {
         // hide parent div, containing label and input
-        this.addressForm[name].parentElement.style.display = "none";
+        this._getInputDiv(name).style.display = "none";
         if (!clearValue) {
             return;
         }

@@ -1841,10 +1841,78 @@ $-product-radius-map: (
         font-size: var(--o-bs-font-size-sm);
     }
 
-    .o_wsale_address_fill {
-        .col-form-label:not(.label-optional)::after {
-            content: " *";
-            font-weight: normal;
+    #o_wsale_address_form {
+        &:is(.o_mark_none, .o_mark_optional) .col-form-label:not(.label-optional)::after {
+            content: none;
+        }
+
+        &:not(:is(.o_mark_none, .o_mark_optional)) .col-form-label:not(.label-optional),
+        &.o_mark_optional .col-form-label.label-optional {
+            &::after {
+                content: " " var(--form-mark);
+                color: var(--form-mark-color);
+                font-weight: normal;
+            }
+        }
+
+        // a field nested in an input group keeps its floating label, so the
+        // group stays a single row
+        &.o_labels_top,
+        &.o_labels_left,
+        &.o_labels_right {
+            .form-floating:not(.input-group > *) {
+                display: flex;
+                flex-direction: column;
+                margin-top: 0;
+
+                > label {
+                    order: -1;
+                    position: static;
+                    // back to plain `.col-form-label` metrics
+                    padding: add($input-padding-y, $input-border-width) 0;
+                    background: none;
+                    color: inherit;
+                    font-size: inherit;
+                    line-height: $input-line-height;
+                    transform: none;
+                }
+            }
+        }
+
+        &.o_labels_left > .row > *,
+        &.o_labels_right > .row > * {
+            flex: 0 0 100%;
+        }
+
+        &.o_labels_left .form-floating:not(.input-group > *),
+        &.o_labels_right .form-floating:not(.input-group > *) {
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-items: center;
+            column-gap: map-get($spacers, 3);
+
+            > label {
+                flex: 0 0 var(--form-label-width);
+                text-align: var(--form-label-align, start);
+            }
+
+            > .form-control,
+            > .form-control-plaintext,
+            > .form-select {
+                flex: 1;
+                min-width: 0;
+            }
+
+            > .form-text,
+            > .invalid-feedback,
+            > .dropdown-menu {
+                flex: 0 0 100%;
+                padding-left: calc(var(--form-label-width) + #{map-get($spacers, 3)});
+            }
+        }
+
+        &.o_labels_right {
+            --form-label-align: end;
         }
     }
 
