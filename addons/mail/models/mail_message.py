@@ -9,8 +9,9 @@ import typing
 from binascii import Error as binascii_error
 from collections import defaultdict
 from html import escape
-from lxml import html
+from lxml import etree, html
 from typing import Self
+from markupsafe import Markup
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import AccessError, MissingError, UserError
@@ -873,6 +874,12 @@ class MailMessage(models.Model):
         return messages
 
     def write(self, vals):
+        if vals.get('body') and self.env.context.get('mail_message_mark_edited'):
+            if len(self) != 1:
+                for message in self:
+                    message.write(vals)
+                return True
+            vals = dict(vals, body=self._get_body_with_edited_marker(vals['body']))
         if not (self.env.su or self.env.user.has_group('base.group_user')):
             vals.pop('author_id', None)
             vals.pop('email_from', None)
@@ -1203,6 +1210,7 @@ class MailMessage(models.Model):
             dynamic_fields="_store_author_dynamic_fields",
             sudo=True,
         )
+        res.one("edited_by_partner_id", ["name"], value=lambda m: m._get_edited_by_partner(), internal=True)
         res.extend(["body", "create_date", "date"])
         res.attr(
             "email_from",
@@ -1469,6 +1477,45 @@ class MailMessage(models.Model):
         return self.filtered_domain(self._get_empty_domain()).filtered(
             lambda m: tools.is_html_empty(m.body)
         )
+
+    def _get_body_with_edited_marker(self, body):
+        self.ensure_one()
+        marker_attrs = {
+            "class": "o-mail-Message-edited",
+            "data-o-datetime": fields.Datetime.to_string(fields.Datetime.now()),
+        }
+        if not self.env.user._is_public():
+            marker_attrs["data-o-edited-by"] = str(self.env.user.partner_id.id)
+        tree = html.fragment_fromstring(body, create_parent="div")
+        for old_marker in tree.xpath(".//span[contains(@class, 'o-mail-Message-edited')]"):
+            old_marker.drop_tree()
+        children = tree.getchildren()
+        if children:  # body is a valid html
+            # If the last element is a div or p, add the edited span inside it to avoid the edit markup
+            # to be on its own line. Otherwise, append it to the end of the last element.  # ruff: ignore[over-indented]
+            target_index = -2 if not self.email_add_signature and len(children) >= 2 else -1
+            last_div_element = (
+                children[target_index] if children[target_index].tag in ["div", "p"] else tree
+            )
+            last_div_element.text = (last_div_element.text or '') + (' ' if last_div_element.text else '')
+        else:  # body is plain text
+            last_div_element = tree
+        etree.SubElement(last_div_element, "span", attrib=marker_attrs)
+        # markup: it is considered safe, as coming from html.fragment_fromstring
+        return (tree.text or "") + Markup("".join(etree.tostring(child, encoding="unicode") for child in tree))
+
+    def _get_edited_by_partner(self):
+        self.ensure_one()
+        Partner = self.env["res.partner"]
+        if not self.body or "data-o-edited-by" not in self.body:
+            return Partner
+        tree = html.fragment_fromstring(self.body, create_parent="div")
+        marker = next(iter(tree.xpath(".//span[@data-o-edited-by]")), None)
+        partner_id = marker.get("data-o-edited-by", "") if marker is not None else ""
+        if not partner_id.isdigit():
+            return Partner
+        partner = Partner.browse(int(partner_id)).exists()
+        return partner if partner.has_access("read") else Partner
 
     def _get_empty_domain(self):
         """Return a domain matching messages considered empty."""
