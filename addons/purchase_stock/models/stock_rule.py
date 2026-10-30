@@ -86,7 +86,7 @@ class StockRule(models.Model):
         if errors:
             raise ProcurementException(errors)
 
-        for domain, procurements_rules in procurements_by_po_domain.items():
+        for domain, procurements_rules in self._sort_procurements_by_po_domain(procurements_by_po_domain):
             # Get the procurements for the current domain.
             # Get the rules for the current domain. Their only use is to create
             # the PO if it does not exist.
@@ -155,6 +155,9 @@ class StockRule(models.Model):
                     if fields.Date.to_date(order_date_planned) < fields.Date.to_date(po.date_order):
                         po.date_order = order_date_planned
             self.env['purchase.order.line'].sudo().create(po_line_values)
+
+    def _sort_procurements_by_po_domain(self, procurements_by_po_domain):
+        return procurements_by_po_domain.items()
 
     def _get_lead_days(self, product, **values):
         """Add the company security lead time and the supplier delay to the cumulative delay
