@@ -8,4 +8,25 @@
         <field name="domain">[('move_id.repair_id', '=', active_id)]</field>
     </record>
 
+    <record id="view_scrap_move_form" model="ir.ui.view">
+        <field name="name">stock.move.view.form.scrap.inherit.repair</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_scrap_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id'][last()]" position="attributes">
+                <attribute name="readonly" add="repair_id and context.get('default_product_id')" separator="or"/>
+            </xpath>
+            <field name="quantity" position="attributes">
+                <attribute name="readonly" add="repair_id and context.get('default_product_id')" separator="or"/>
+                <attribute name="force_save">1</attribute>
+            </field>
+            <field name="picking_id" position="after">
+                <field name="repair_id" invisible="not repair_id" readonly="1"/>
+            </field>
+            <field name="should_replenish_scrapped" position="attributes">
+                <attribute name="invisible">repair_id and context.get('default_product_id')</attribute>
+            </field>
+        </field>
+    </record>
+
 </odoo>
