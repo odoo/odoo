@@ -8,10 +8,12 @@ from odoo.addons.website_sale.controllers.cart import Cart as WebsiteSaleCart
 class Cart(WebsiteSaleCart):
     @route()
     def cart(self, **post):
+        values = super().cart(**post)
         if order_sudo := request.cart:
             order_sudo._update_programs_and_rewards()
             order_sudo._auto_apply_rewards()
-        return super().cart(**post)
+
+        return values
 
     def _cart_values(self, **post):
         values = super()._cart_values(**post)

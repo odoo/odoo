@@ -43,9 +43,9 @@ class TestCheckoutFlow(WebsiteSaleCommon, PaymentCommon, HttpCase):
 
         self.assert_redirected_to(response, "/shop")
 
-    def test_impossible_to_checkout_without_cart_in_draft(self):
+    def test_impossible_to_checkout_without_cart_in_draft_or_sent_state(self):
         with self.mock_request(path="/shop/checkout", sale_order_id=self.cart.id):
-            for state in ("sent", "sale", "cancel"):
+            for state in ("sale", "cancel"):
                 with self.subTest(state=state):
                     self.cart.state = state
 
