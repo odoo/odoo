@@ -29,6 +29,7 @@ QUERY_RESULT = 'ele.encrypt.queryResult'
 LOGIN = 'ele.eleLogin'
 GET_CREDIT_LINE = 'ele.creditLine'
 DOWNLOAD_INVOICE = 'ele.invoice.download'
+QUERY_RED_FORM = 'ele.hzqrd.query'
 
 INVOICE_KIND = {'01': '81', '02': '82'}
 RED_REASONS = {'01': '01', '02': '02', '03': '03', '04': '04'}
@@ -229,11 +230,11 @@ class YunshuiClient:
     def _query_outcome(self, document, code, response, just_submitted):
         """Return the result of a queryResult code that isn't a definitive failure, else None."""
         if code == ISSUED:
-            return self._issued_result(
-                response,
-                serial_no=document.serial_no,
-                invoice_kind=INVOICE_KIND[document.move_id.l10n_cn_edi_invoice_type_code],
-            )
+            invoice_kind = INVOICE_KIND[document.move_id.l10n_cn_edi_invoice_type_code]
+            result = self._issued_result(response, serial_no=document.serial_no, invoice_kind=invoice_kind)
+            if document.move_id.move_type == 'out_refund':
+                result.update(self._red_form_of(document.serial_no, invoice_kind))
+            return result
         if code == RELOGIN:
             # Recorded rather than raised: the poll cron's savepoint would roll the flag back with the error.
             self.company.sudo().l10n_cn_edi_yunshui_relogin = True
@@ -243,6 +244,15 @@ class YunshuiClient:
         if code == PENDING or just_submitted:
             return {'state': 'sent'}
         return None
+
+    def _red_form_of(self, serial_no, invoice_kind):
+        """The red form the bureau recorded for the red fapiao issued under ``serial_no`` (2.1.11)."""
+        try:
+            response = self._call(QUERY_RED_FORM, {'fpqqlsh': serial_no, 'invoiceKind': invoice_kind})
+        except UserError as e:
+            _logger.warning("Yunshui: could not read the red form of %s for company %s: %s", serial_no, self.company.vat, e)
+            return {}
+        return {'red_form_uuid': response.get('uuid'), 'red_form_number': response.get('hzfpxxqrdbh')}
 
     def _prepare_simple_issue_payload(self, values):
         for line in values['lines']:

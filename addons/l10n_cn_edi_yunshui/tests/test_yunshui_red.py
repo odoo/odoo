@@ -8,6 +8,7 @@ from odoo.tests import tagged
 
 from .common import HOST, L10nCnEdiYunshuiTestCommon, MockResponse, MockYunshuiGateway
 from odoo.addons.l10n_cn_edi_yunshui.tools.yunshui_client import (
+    QUERY_RED_FORM,
     QUERY_RESULT,
     SIMPLE_ISSUE,
 )
@@ -59,11 +60,18 @@ class TestYunshuiRed(L10nCnEdiYunshuiTestCommon):
             'fphm': '29746948242065126876',
             'kprq': '2026-09-30 14:58:27',
         }
+        self.gateway.handlers[QUERY_RED_FORM] = {'code': 'y', 'uuid': 'a' * 32, 'hzfpxxqrdbh': '44030025093000012345'}
         self.env['account.move']._cron_l10n_cn_edi_poll_invoices()
 
         self.assertEqual(self._fapiao(credit_note).state, 'issued')
-        self.assertEqual(credit_note.l10n_cn_edi_state, 'issued')
-        self.assertEqual(credit_note.l10n_cn_edi_fapiao_no, '29746948242065126876')
+        self.assertRecordValues(credit_note, [{
+            'l10n_cn_edi_state': 'issued',
+            'l10n_cn_edi_fapiao_no': '29746948242065126876',
+            'l10n_cn_edi_red_form_number': '44030025093000012345',
+            'l10n_cn_edi_red_form_uuid': 'a' * 32,
+            'l10n_cn_edi_red_form_status': False,
+        }])
+        self.assertEqual(self.gateway.requests[-1]['inner'], {'fpqqlsh': self._fapiao(credit_note).serial_no, 'invoiceKind': '82'})
 
     def test_red_definitive_failure_asks_for_new_serial(self):
         credit_note = self._credit_note(reason='02')
