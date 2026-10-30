@@ -164,7 +164,10 @@ class Product(models.Model):
             (not model_name or model_name == 'product.product')
             and operation == 'create'
             and not self.env.user._is_internal()
-            and not self.env['website'].is_view_active('website_sale.product_comment')
+            and (
+                self.env.user._is_public()
+                or not self.env['website'].is_view_active('website_sale.product_comment')
+            )
         ):
             return 'write'
         return super()._get_mail_message_access(res_ids, operation, model_name=model_name)

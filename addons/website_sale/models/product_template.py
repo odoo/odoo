@@ -966,6 +966,9 @@ class ProductTemplate(models.Model):
             and not self.env.user._is_internal()
         ):
             website = self.env['website'].get_current_website()
-            if not website.with_context(website_id=website.id).is_view_active('website_sale.product_comment'):
+            if (
+                self.env.user._is_public()
+                or not website.with_context(website_id=website.id).is_view_active('website_sale.product_comment')
+            ):
                 return 'write'
         return super()._get_mail_message_access(res_ids, operation, model_name=model_name)
