@@ -102,6 +102,7 @@ class StockLandedCost(models.Model):
         return self.write({'state': 'cancel'})
 
     def button_validate(self):
+        self._lock_for_processing()
         self._check_can_validate()
         cost_without_adjusment_lines = self.filtered(lambda c: not c.valuation_adjustment_lines)
         if cost_without_adjusment_lines:
@@ -245,7 +246,18 @@ class StockLandedCost(models.Model):
             raise UserError(_("You cannot apply landed costs on the chosen %s(s). Landed costs can only be applied for products with FIFO or average costing method.", target_model_descriptions[self.target_model]))
         return lines
 
+    def _lock_for_processing(self):
+        if not self.ids:
+            return
+        self.env.cr.execute(
+            "SELECT id FROM stock_landed_cost WHERE id IN %s FOR NO KEY UPDATE SKIP LOCKED",
+            [tuple(self.ids)],
+        )
+        if len(self.env.cr.fetchall()) != len(self.ids):
+            raise UserError(_("This landed cost is already being processed. Please wait and reload the page."))
+
     def compute_landed_cost(self):
+        self._lock_for_processing()
         AdjustementLines = self.env['stock.valuation.adjustment.lines']
         AdjustementLines.search([('cost_id', 'in', self.ids)]).unlink()
 
