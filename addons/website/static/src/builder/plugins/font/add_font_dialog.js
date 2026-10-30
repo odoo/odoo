@@ -133,12 +133,26 @@ export class AddFontDialog extends Component {
         }
     }
     async onUploadChange(e) {
-        this.state.googleFontFamily = undefined;
         const file = this.fileInput.el.files[0];
-        if (!file) {
+        const fontName = file?.name.replace(/\.[^.]+$/, "");
+        const isInvalidName = file && (!fontName.trim() || /[,:'"\\#?%]/.test(fontName));
+        if (!file || isInvalidName) {
             this.state.uploadedFonts = [];
             this.state.uploadedFontName = undefined;
             this.state.uploadedFontFaces = undefined;
+        }
+        if (isInvalidName) {
+            this.fileInput.el.value = "";
+            this.dialog.add(ConfirmationDialog, {
+                title: _t("Invalid font name"),
+                body: _t(
+                    "A font name cannot be empty or contain any of these characters: , : ' \" \\ # ? %\nTry renaming the uploaded file."
+                ),
+            });
+            return;
+        }
+        this.state.googleFontFamily = undefined;
+        if (!file) {
             return;
         }
         const reader = new FileReader();
@@ -149,7 +163,7 @@ export class AddFontDialog extends Component {
                 data: base64,
             }).then((result) => {
                 this.state.uploadedFonts = result;
-                this.updateFontStyle(file.name.substr(0, file.name.lastIndexOf(".")));
+                this.updateFontStyle(fontName);
             });
         };
         reader.readAsDataURL(file);
