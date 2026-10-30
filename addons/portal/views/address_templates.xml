@@ -174,90 +174,102 @@
 
     <template id="portal.address_form_fields" name="Address Details">
         <div id="div_name" class="col-lg-12 mb-2">
-            <label class="col-form-label" for="o_name">Name</label>
-            <input
-                id="o_name"
-                type="text"
-                name="name"
-                t-att-value="partner_sudo.name"
-                class="form-control"
-            />
+            <div class="form-floating">
+                <input
+                    id="o_name"
+                    type="text"
+                    name="name"
+                    t-att-value="partner_sudo.name"
+                    class="form-control"
+                    placeholder=" "
+                />
+                <label class="col-form-label" for="o_name">Name</label>
+            </div>
         </div>
         <div class="w-100"/>
         <div
             id="div_email"
             class="col-lg-6 mb-2"
         >
-            <label class="col-form-label" for="o_email">Email</label>
-            <input
-                id="o_email"
-                type="email"
-                name="email"
-                t-att-value="email"
-                class="form-control"
-            />
+            <div class="form-floating">
+                <input
+                    id="o_email"
+                    type="email"
+                    name="email"
+                    t-att-value="email"
+                    class="form-control"
+                    placeholder=" "
+                />
+                <label class="col-form-label" for="o_email">Email</label>
+            </div>
         </div>
         <div id="div_phone" class="col-lg-6 mb-2">
-            <label
-                class="col-form-label"
-                for="o_phone"
-            >
-                Phone
-            </label>
-            <input
-                id="o_phone"
-                type="tel"
-                name="phone"
-                t-att-value="phone"
-                t-att-placeholder="phone_code"
-                class="form-control"
-            />
+            <div class="form-floating">
+                <input
+                    id="o_phone"
+                    type="tel"
+                    name="phone"
+                    t-att-value="phone"
+                    t-att-placeholder="phone_code or ' '"
+                    class="form-control"
+                />
+                <label
+                    class="col-form-label"
+                    for="o_phone"
+                >
+                    Phone
+                </label>
+            </div>
         </div>
         <div class="w-100 mt-4"/>
         <div id="div_country" class="mb-2 col-lg-6">
-            <label class="col-form-label" for="o_country_id">
-                Country
-            </label>
-            <t t-call="portal.address_warning_icon" warning="country_warning"/>
-            <select
-                id="o_country_id"
-                name="country_id"
-                t-att-class="'pe-none opacity-50 form-select' if country_warning else 'form-select'"
-            >
-                <option value="">Country...</option>
-                <option
-                    t-foreach="countries"
-                    t-as="c"
-                    t-att-value="c.id"
-                    t-att-selected="c.id == country.id"
-                    t-att-data-code="c.code"
-                    t-out="c.name"
-                />
-            </select>
+            <div class="form-floating">
+                <select
+                    id="o_country_id"
+                    name="country_id"
+                    t-att-class="'pe-none opacity-50 form-select' if country_warning else 'form-select'"
+                >
+                    <option value="">Country...</option>
+                    <option
+                        t-foreach="countries"
+                        t-as="c"
+                        t-att-value="c.id"
+                        t-att-selected="c.id == country.id"
+                        t-att-data-code="c.code"
+                        t-out="c.name"
+                    />
+                </select>
+                <label class="col-form-label" for="o_country_id">
+                    Country
+                    <t t-call="portal.address_warning_icon" warning="country_warning"/>
+                </label>
+            </div>
         </div>
         <div
             id="div_state"
             class="col-lg-6 mb-2"
             t-att-style="not states and 'display: none'"
         >
-            <label class="col-form-label label-optional" for="o_state_id">
-                State / Province
-            </label>
-            <select
-                id="o_state_id"
-                name="state_id"
-                class="form-select"
-            >
-                <option value="">State / Province...</option>
-                <option
-                    t-foreach="states"
-                    t-as="s"
-                    t-att-value="s.id"
-                    t-att-selected="s.id == state.id"
-                    t-att-data-code="s.code"
-                    t-out="s.name"
-                />
-            </select>
+            <div class="form-floating">
+                <select
+                    id="o_state_id"
+                    name="state_id"
+                    class="form-select"
+                >
+                    <option value="">State / Province...</option>
+                    <option
+                        t-foreach="states"
+                        t-as="s"
+                        t-att-value="s.id"
+                        t-att-selected="s.id == state.id"
+                        t-att-data-code="s.code"
+                        t-out="s.name"
+                    />
+                </select>
+                <label class="col-form-label label-optional" for="o_state_id">
+                    State / Province
+                </label>
+            </div>
         </div>
         <div class="w-100"/>
         <t t-if="zip_before_city">
@@ -266,19 +278,22 @@
                 class="col-md-4 mb-2"
                 t-att-style="country.zip_applicability == 'not_applicable' and 'display:none;'"
             >
-                <label
-                    for="o_zip_before_city"
-                    class="col-form-label label-optional"
-                >
-                    Zip Code
-                </label>
-                <input
-                    id="o_zip_before_city"
-                    type="text"
-                    name="zip"
-                    class="form-control"
-                    t-att-value="partner_sudo.zip"
-                />
+                <div class="form-floating">
+                    <input
+                        id="o_zip_before_city"
+                        type="text"
+                        name="zip"
+                        class="form-control"
+                        t-att-value="partner_sudo.zip"
+                        placeholder=" "
+                    />
+                    <label
+                        for="o_zip_before_city"
+                        class="col-form-label label-optional"
+                    >
+                        Zip Code
+                    </label>
+                </div>
             </div>
         </t>
         <div
@@ -286,34 +301,39 @@
             class="col-md-8 mb-2"
             t-att-style="cities_data and 'display:none;'"
         >
-            <label class="col-form-label" for="o_city">City</label>
-            <input
-                id="o_city"
-                type="text"
-                name="city"
-                class="form-control"
-                t-att-value="partner_sudo.city"
-            />
+            <div class="form-floating">
+                <input
+                    id="o_city"
+                    type="text"
+                    name="city"
+                    class="form-control"
+                    t-att-value="partner_sudo.city"
+                    placeholder=" "
+                />
+                <label class="col-form-label" for="o_city">City</label>
+            </div>
         </div>
         <div
             id="div_city_id"
             class="col-md-8 mb-2"
             t-att-style="not cities_data and 'display:none;'"
         >
-            <label class="col-form-label" for="city_id">City</label>
-            <select id="city_id" name="city_id" class="form-select">
-                <option value="">City...</option>
-                <option
-                    name="city_options"
-                    t-foreach="cities_data"
-                    t-as="c"
-                    t-att-value="c['id']"
-                    t-att-selected="c['id'] == city.id"
-                    t-att-data-state-id="c['state_id']"
-                    t-att-data-zipcode="c['zipcode']"
-                    t-out="c['name']"
-                />
-            </select>
+            <div class="form-floating">
+                <select id="city_id" name="city_id" class="form-select">
+                    <option value="">City...</option>
+                    <option
+                        name="city_options"
+                        t-foreach="cities_data"
+                        t-as="c"
+                        t-att-value="c['id']"
+                        t-att-selected="c['id'] == city.id"
+                        t-att-data-state-id="c['state_id']"
+                        t-att-data-zipcode="c['zipcode']"
+                        t-out="c['name']"
+                    />
+                </select>
+                <label class="col-form-label" for="city_id">City</label>
+            </div>
         </div>
         <t t-if="not zip_before_city">
             <div
@@ -321,88 +341,104 @@
                 class="col-md-4 mb-2"
                 t-att-style="country.zip_applicability == 'not_applicable' and 'display:none;'"
             >
-                <label
-                    for="o_zip_after_city"
-                    class="col-form-label label-optional"
-                >
-                    Zip Code
-                </label>
-                <input
-                    id="o_zip_after_city"
-                    type="text"
-                    name="zip"
-                    class="form-control"
-                    t-att-value="partner_sudo.zip"
-                />
+                <div class="form-floating">
+                    <input
+                        id="o_zip_after_city"
+                        type="text"
+                        name="zip"
+                        class="form-control"
+                        t-att-value="partner_sudo.zip"
+                        placeholder=" "
+                    />
+                    <label
+                        for="o_zip_after_city"
+                        class="col-form-label label-optional"
+                    >
+                        Zip Code
+                    </label>
+                </div>
             </div>
         </t>
         <div id="div_street" class="col-lg-12 mb-2">
-            <label class="col-form-label" for="o_street">
-                Street and Number
-            </label>
-            <input
-                name="street"
-                id="o_street"
-                type="text"
-                class="form-control"
-                t-att-value="partner_sudo.street"
-            />
+            <div class="form-floating">
+                <input
+                    name="street"
+                    id="o_street"
+                    type="text"
+                    class="form-control"
+                    t-att-value="partner_sudo.street"
+                    placeholder=" "
+                />
+                <label class="col-form-label" for="o_street">
+                    Street and Number
+                </label>
+            </div>
         </div>
         <div id="div_street2" class="col-lg-12 mb-2">
-            <label class="col-form-label label-optional" for="o_street2">
-                Apartment, suite, etc.
-            </label>
-            <input
-                id="o_street2"
-                type="text"
-                name="street2"
-                class="form-control"
-                t-att-value="partner_sudo.street2"
-            />
+            <div class="form-floating">
+                <input
+                    id="o_street2"
+                    type="text"
+                    name="street2"
+                    class="form-control"
+                    t-att-value="partner_sudo.street2"
+                    placeholder=" "
+                />
+                <label class="col-form-label label-optional" for="o_street2">
+                    Apartment, suite, etc.
+                </label>
+            </div>
         </div>
         <div class="w-100 "/>
         <t name="b2b_fields">
             <div class="w-100 mt-4"/>
             <t t-if="is_used_as_billing">
                 <div id="company_name_div" class="col-lg-6 mb-2">
-                    <label
-                        class="col-form-label fw-normal label-optional"
-                        for="o_company_name"
-                    >
-                        Company
-                    </label>
-                    <t
-                        t-if="not is_main_address"
-                        t-call="portal.address_warning_icon"
-                        warning="commercial_fields_warning"
-                    />
-                    <input
-                        id="o_company_name"
-                        type="text"
-                        name="parent_name"
-                        t-att-value="current_partner.parent_name"
-                        t-att-readonly="'1' if not is_main_address else None"
-                        class="form-control"
-                    />
+                    <div class="form-floating">
+                        <input
+                            id="o_company_name"
+                            type="text"
+                            name="parent_name"
+                            t-att-value="current_partner.parent_name"
+                            t-att-readonly="'1' if not is_main_address else None"
+                            class="form-control"
+                            placeholder=" "
+                        />
+                        <label
+                            class="col-form-label fw-normal label-optional"
+                            for="o_company_name"
+                        >
+                            Company
+                            <t
+                                t-if="not is_main_address"
+                                t-call="portal.address_warning_icon"
+                                warning="commercial_fields_warning"
+                            />
+                        </label>
+                    </div>
                 </div>
                 <div id="div_vat" class="col-lg-6 mb-2">
-                    <label
-                        t-out="vat_label"
-                        for="o_vat"
-                        class="col-form-label fw-normal label-optional"
-                    />
-                    <t
-                        t-call="portal.address_warning_icon"
-                        warning="commercial_fields_warning or vat_warning"
-                    />
-                    <input
-                        type="text"
-                        id="o_vat"
-                        name="vat"
-                        t-att-value="current_partner.vat"
-                        t-att-readonly="'1' if (commercial_fields_warning or vat_warning) else None"
-                        class="form-control"
-                    />
+                    <div class="form-floating">
+                        <input
+                            type="text"
+                            id="o_vat"
+                            name="vat"
+                            t-att-value="current_partner.vat"
+                            t-att-readonly="'1' if (commercial_fields_warning or vat_warning) else None"
+                            class="form-control"
+                            placeholder=" "
+                        />
+                        <label
+                            for="o_vat"
+                            class="col-form-label fw-normal label-optional"
+                        >
+                            <t t-out="vat_label"/>
+                            <t
+                                t-call="portal.address_warning_icon"
+                                warning="commercial_fields_warning or vat_warning"
+                            />
+                        </label>
+                    </div>
                 </div>
                 <div t-if="commercial_address_update_url" class="col-12 d-none d-lg-block mb-1">
                     <small class="form-text text-muted">

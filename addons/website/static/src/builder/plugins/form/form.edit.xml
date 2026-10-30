@@ -36,8 +36,20 @@
                     <t t-call="website.form_field_description"/>
                 </div>
             </div>
+            <div t-elif="this.field.formatInfo.labelPosition === 'none' and !this.field.isCheck
+                         and !['date', 'datetime'].includes(this.field.type)" class="form-floating">
+                <t t-out="0"/>
+                <label class="s_website_form_label" t-att-for="this.field.id">
+                     <t t-call="website.form_label_content"/>
+                </label>
+                <t t-call="website.form_field_description"/>
+            </div>
             <t t-else="">
-                <label t-attf-class="s_website_form_label #{this.field.formatInfo.labelPosition === 'none' and 'd-none' or ''}" t-attf-style="width: #{this.field.formatInfo.labelWidth or '200px'}" t-att-for="this.field.id">
+                <label
+                    t-attf-class="s_website_form_label #{this.field.formatInfo.labelPosition === 'none' and 'd-none' or ''}"
+                    t-attf-style="width: #{this.field.formatInfo.labelWidth or '200px'}"
+                    t-att-for="this.field.id"
+                >
                      <t t-call="website.form_label_content"/>
                 </label>
                 <t t-out="0"/>
