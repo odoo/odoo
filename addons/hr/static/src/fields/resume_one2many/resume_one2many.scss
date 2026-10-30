@@ -1,6 +1,6 @@
 .o_field_resume_one2many {
     --o-hrs-timeline-entry-padding: .5rem;
-    $o-hrs-timeline-dot-size: .6rem;
+    --o-hrs-timeline-dot-size: .6rem;
 
     .o_data_row {
         border-bottom: none;
@@ -8,7 +8,7 @@
 
     .o_resume_timeline_header {
         box-sizing: content-box;
-        width: $o-hrs-timeline-dot-size;
+        width: var(--o-hrs-timeline-dot-size);
     }
 
     .o_data_row td {
@@ -16,8 +16,8 @@
 
         &.o_resume_timeline_cell {
             div {
-                width: $o-hrs-timeline-dot-size;
-                height: $o-hrs-timeline-dot-size;
+                width: var(--o-hrs-timeline-dot-size);
+                height: var(--o-hrs-timeline-dot-size);
             }
 
             &:before {
@@ -25,7 +25,7 @@
                 top: 0;
                 left: auto;
                 bottom: auto;
-                right: $o-hrs-timeline-dot-size * .5;
+                right: calc(var(--o-hrs-timeline-dot-size) * .5);
                 width: var(--border-width);
                 height: 100%;
                 background-color: var(--border-color);
