@@ -189,10 +189,10 @@ class IrModuleModule(models.Model):
                         if model_name == 'ir.ui.view' and (find.arch_updated or find.arch == rec_data['arch']):
                             rec_data.pop('arch')
                         find.update(rec_data)
-                        self._post_copy(rec, find)
+                        self._copy_theme_translations(rec, find)
                 else:
                     new_rec = self.env[model_name].create(rec_data)
-                    self._post_copy(rec, new_rec)
+                    self._copy_theme_translations(rec, new_rec)
 
                 remaining -= rec
 
@@ -203,7 +203,7 @@ class IrModuleModule(models.Model):
 
         self._theme_cleanup(model_name, website)
 
-    def _post_copy(self, old_rec, new_rec):
+    def _copy_theme_translations(self, old_rec, new_rec):
         self.ensure_one()
         translated_fields = self._theme_translated_fields.get(old_rec._name, [])
         cur_lang = self.env.lang or 'en_US'
@@ -249,7 +249,7 @@ class IrModuleModule(models.Model):
             if self.env.context.get('apply_new_theme'):
                 # TODO Kept for backward compatibility with design-themes tests
                 # and web_studio. This could become a parameter in master.
-                self.env['theme.utils'].with_context(website_id=website.id)._post_copy(module)
+                self.env['theme.utils'].with_context(website_id=website.id)._apply_theme_config(module)
 
     def _theme_unload(self, website):
         """
@@ -411,7 +411,7 @@ class IrModuleModule(models.Model):
 
         # this will install 'self' if it is not installed yet
         self._theme_upgrade_upstream()
-        self.env['theme.utils'].with_context(website_id=website.id)._post_copy(self)
+        self.env['theme.utils'].with_context(website_id=website.id)._apply_theme_config(self)
 
         result = website.button_go_website()
         return result
