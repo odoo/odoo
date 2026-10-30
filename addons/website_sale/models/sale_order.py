@@ -389,9 +389,9 @@ class SaleOrder(models.Model):
             "tax": self.amount_tax,
         }
 
-        delivery_line = self.order_line.filtered("is_delivery")
-        if delivery_line:
-            tracking_dict["shipping"] = delivery_line.price_subtotal
+        delivery_lines = self.order_line.filtered("is_delivery")
+        if delivery_lines:
+            tracking_dict["shipping"] = sum(delivery_lines.mapped("price_subtotal"))
 
         has_previous = bool(
             self
