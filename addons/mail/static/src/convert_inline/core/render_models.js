@@ -308,8 +308,8 @@ export class Analysis {
             canMerge: false, // authorization to attempt merging the layout and analysis of a descendant onto oneself
             canParentMerge: false, // authorization for a parent to attempt merging the layout and analysis of oneself onto them
         };
-        this.facts = { ...(options.facts ?? {}) };
-        this.parsingFacts = { ...(options.parsingFacts ?? {}) };
+        this.facts = { ...options.facts };
+        this.parsingFacts = { ...options.parsingFacts };
         // constraints are functions: (emailNode) => ({ shouldPropagate: bool, facts: {}, constraint: (emailNode) => (...) })
         this.bottomUpConstraints = [...(options.bottomUpConstraints ?? [])];
         this.topDownConstraints = [...(options.topDownConstraints ?? [])];

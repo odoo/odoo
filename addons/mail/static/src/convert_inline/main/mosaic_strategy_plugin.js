@@ -20,8 +20,14 @@ export class MosaicStrategyPlugin extends Plugin {
     ];
     resources = {
         accept_table_strategy_report_overrides: this.acceptTableStrategyReport.bind(this),
-        element_layout_analysis_processors: this.analyzeElementLayout.bind(this),
-        synthetic_email_node_processors: this.processSyntheticEmailNodes.bind(this),
+        element_layout_analysis_processors: [
+            this.detectMosaicSubtreeLayout.bind(this),
+            this.analyzeElementLayout.bind(this),
+        ],
+        synthetic_email_node_processors: [
+            this.processMosaicSyntheticEmailNodes.bind(this),
+            this.processResponsiveSyntheticEmailNodes.bind(this),
+        ],
         on_measure_ancestor_handlers: this.handleOverlappingBorders.bind(this),
         on_measure_cell_with_ancestors: this.handleOverlappingBackgroundColors.bind(this),
     };
@@ -30,12 +36,18 @@ export class MosaicStrategyPlugin extends Plugin {
         return emailNode.analysis.facts.useMosaicStrategy;
     }
 
-    analyzeElementLayout(defaultEmailNodeArguments, { referenceNode, parentEmailNode }) {
-        const { layout, analysis } = defaultEmailNodeArguments;
+    isEligibleMosaic(analysis) {
+        return (
+            analysis.facts.isTableContainer ||
+            (analysis.facts.isHybridFluidContainer && !analysis.facts.isResponsiveElement)
+        );
+    }
+
+    detectMosaicSubtreeLayout(defaultEmailNodeArguments, { referenceNode, parentEmailNode }) {
+        const { analysis } = defaultEmailNodeArguments;
         if (
-            analysis.parsingFacts.isMobileSubtree ||
-            (!analysis.facts.isTableContainer &&
-                (!analysis.facts.isHybridFluidContainer || analysis.facts.isResponsiveElement))
+            analysis.parsingFacts.subtreeContext?.responsiveSubtree ||
+            !this.isEligibleMosaic(analysis)
         ) {
             return defaultEmailNodeArguments;
         }
@@ -48,20 +60,55 @@ export class MosaicStrategyPlugin extends Plugin {
         if (cellsProviders.length === 0) {
             return defaultEmailNodeArguments;
         }
-        delete analysis.facts.isHybridFluidContainer;
-        delete analysis.facts.isTableContainer;
         Object.assign(analysis.parsingFacts, {
             canMerge: false,
-            needMobileSubtree: true,
-            needSyntheticEmailNode: true,
-            isSkippingContainer: true,
-            skippingContainerDescendantProviders: cellsProviders,
+            subtree: { type: "responsiveSubtree", variants: ["desktop", "mobile"] },
         });
-        analysis.facts.isMosaicContainer = true;
-        analysis.facts.cellsProviders = cellsProviders;
-        layout.pluginIds.add(MosaicStrategyPlugin.id);
         return defaultEmailNodeArguments;
     }
+
+    analyzeElementLayout(defaultEmailNodeArguments, { referenceNode, parentEmailNode }) {
+        const { layout, analysis } = defaultEmailNodeArguments;
+        if (
+            !analysis.parsingFacts.subtreeContext?.responsiveSubtree ||
+            !this.isEligibleMosaic(analysis)
+        ) {
+            return defaultEmailNodeArguments;
+        }
+        const cellsProviders = this.processThrough(
+            "mosaic_cells_providers_processors",
+            [],
+            defaultEmailNodeArguments,
+            { referenceNode, parentEmailNode }
+        );
+        if (cellsProviders.length === 0) {
+            return defaultEmailNodeArguments;
+        }
+        const responsiveSubtree = analysis.parsingFacts.subtreeContext.responsiveSubtree;
+        if (responsiveSubtree.variant !== "mobile") {
+            delete analysis.facts.isHybridFluidContainer;
+            delete analysis.facts.isTableContainer;
+            Object.assign(analysis.parsingFacts, {
+                needSyntheticEmailNode: true,
+                isSkippingContainer: true,
+                skippingContainerDescendantProviders: cellsProviders,
+            });
+            analysis.facts.isMosaicContainer = true;
+            analysis.facts.cellsProviders = cellsProviders;
+            layout.pluginIds.add(MosaicStrategyPlugin.id);
+        }
+        if (responsiveSubtree.root === referenceNode) {
+            analysis.parsingFacts.needSyntheticEmailNode = true;
+            if (responsiveSubtree.variant === "mobile") {
+                analysis.facts.isMobileOnly = true;
+            } else {
+                analysis.facts.isDesktopOnly = true;
+            }
+            return defaultEmailNodeArguments;
+        }
+        return defaultEmailNodeArguments;
+    }
+
     // TODO EGGMAIL: cleanup comment/docstring
     // request for mosaic cells providers => check ancestor snippet class
     // s_comparisons -> card (columns) -> card-body | card-footer = cells
@@ -453,17 +500,28 @@ export class MosaicStrategyPlugin extends Plugin {
         return tableMeasures;
     }
 
-    processSyntheticEmailNodes(emailNode) {
+    // TODO EGGMAIL: maybe move to a more generic plugin (responsive)
+    // that will handle desktop-only | mobile-only subtrees
+    processResponsiveSyntheticEmailNodes(emailNode) {
+        let processedNode;
+        if (emailNode.analysis.facts.isMobileOnly) {
+            processedNode = this.buildMobileOnlyNode();
+        } else if (emailNode.analysis.facts.isDesktopOnly) {
+            processedNode = this.buildDesktopOnlyNode();
+        }
+        if (processedNode) {
+            if (emailNode.parent) {
+                const index = emailNode.parent?.children.indexOf(emailNode);
+                emailNode.parent.spliceChildren(index, 1, processedNode);
+            }
+            processedNode.appendChild(emailNode);
+        }
+        return emailNode;
+    }
+
+    processMosaicSyntheticEmailNodes(emailNode) {
         if (!emailNode.analysis.facts.isMosaicContainer) {
             return emailNode;
-        }
-        if (emailNode.analysis.parsingFacts.mobileSubtree && emailNode.parent) {
-            const index = emailNode.parent.children.indexOf(emailNode);
-            const desktopNode = this.buildDesktopOnlyNode();
-            const mobileNode = this.buildMobileOnlyNode();
-            emailNode.parent.spliceChildren(index, 1, desktopNode, mobileNode);
-            desktopNode.appendChild(emailNode);
-            mobileNode.appendChild(emailNode.analysis.parsingFacts.mobileSubtree);
         }
         const tableMeasures = this.extractTableInfo(emailNode);
         return this.fillMosaicContainer(emailNode, tableMeasures);
