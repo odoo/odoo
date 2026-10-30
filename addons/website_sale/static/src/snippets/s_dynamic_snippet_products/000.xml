@@ -4,8 +4,7 @@
     <t t-name="website_sale.s_dynamic_snippet.grid.layout">
         <div
             class="s_dynamic_snippet_grid_container py-3"
-            t-att-data-grid-columns="gridColumns"
-            t-att-data-mobile-columns="mobileColumns"
+            t-attf-style="--o-wsale-grid-columns: #{gridColumns}; --o-wsale-mobile-columns: #{mobileColumns};"
         >
             <t t-foreach="data" t-as="record" t-key="record_index">
                 <t t-out="record"/>
