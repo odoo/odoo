@@ -26,6 +26,11 @@ class BaseDocumentLayout(models.TransientModel):
 
     @api.model
     def _default_report_footer(self):
+        footer = self._default_report_footer_content()
+        return footer and Markup('<span class="o_small-fs">%s</span>') % footer
+
+    @api.model
+    def _default_report_footer_content(self):
         company = self.env.company
         footer_fields = [field for field in [company.phone, company.email, company.website, company.vat] if isinstance(field, str) and len(field) > 0]
         return Markup(' ').join(footer_fields)
