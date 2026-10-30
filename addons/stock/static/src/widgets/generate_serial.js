@@ -108,7 +108,7 @@ export class GenerateDialog extends Component {
                 default_quantity: qtyToProcess,
                 default_uom_id:
                     this.props.move.data.has_tracking === "lot"
-                        ? this.props.move.data.product_uom?.id
+                        ? this.props.move.data.uom_id?.id
                         : undefined,
             },
             this.props.mode,
