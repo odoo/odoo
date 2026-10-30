@@ -127,7 +127,7 @@
         <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
             <div
                 class="row o_portal_sale_sidebar"
-                t-att-data-order-amount-total="sale_order.amount_total"
+                t-att-data-order-amount-total="sale_order.amount_to_pay"
                 t-att-data-is-partially-paid="'true' if sale_order._is_partially_paid() else 'false'"
             >
                 <t t-set="sidebar_invoices"
@@ -202,7 +202,7 @@
                                 t-elif="sale_order._has_to_be_paid()
                                             or (
                                                 payment_amount
-                                                and sale_order.amount_paid &lt; sale_order.amount_total
+                                                and sale_order.amount_paid &lt; sale_order.amount_to_pay
                                                 and sale_order.state != 'cancel'
                                             )"
                                 id="o_sale_portal_paynow"
@@ -415,7 +415,7 @@
 
                 <!-- Mobile sticky action bar -->
                 <t t-set="mobile_has_to_be_signed" t-value="sale_order._has_to_be_signed() and not payment_amount"/>
-                <t t-set="mobile_has_to_be_paid" t-value="sale_order._has_to_be_paid() or (payment_amount and sale_order.amount_paid &lt; sale_order.amount_total and sale_order.state != 'cancel')"/>
+                <t t-set="mobile_has_to_be_paid" t-value="sale_order._has_to_be_paid() or (payment_amount and sale_order.amount_paid &lt; sale_order.amount_to_pay and sale_order.state != 'cancel')"/>
                 <t t-set="mobile_can_reorder" t-value="'website_id' in env['sale.order']._fields and sale_order.with_user(env.user).sudo()._is_reorder_allowed()"/>
                 <!-- Set by the modules contributing an action to the bar, e.g. `sale_stock` for the returns. -->
                 <t t-set="mobile_additional_action" t-value="False"/>
@@ -430,7 +430,7 @@
                                     <t t-out="sale_order._get_prepayment_required_amount()" t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"/>
                                     <small class="fw-normal text-muted ms-1">(<t t-out="sale_order.prepayment_percent * 100" t-options="{'widget': 'float'}"/>%)</small>
                                 </t>
-                                <span t-else="" t-field="sale_order.amount_total"/>
+                                <span t-else="" t-field="sale_order.amount_to_pay"/>
                             </span>
                             <t t-if="not sale_order.is_expired
                                     and sale_order.state in ['draft', 'sent']
@@ -618,7 +618,7 @@
             <button name="o_sale_portal_amount_prepayment_button" class="btn btn-light active">
                 Down payment <br/>
                 <span
-                    t-if="not payment_amount or payment_amount == sale_order.amount_total"
+                    t-if="not payment_amount or payment_amount == sale_order.amount_to_pay"
                     t-out="prepayment_amount"
                     t-options="{
                         'widget': 'monetary',
@@ -639,7 +639,7 @@
             <button name="o_sale_portal_amount_total_button" class="btn btn-light">
                 Full amount <br/>
                 <span
-                    t-out="sale_order.amount_total"
+                    t-out="sale_order.amount_to_pay"
                     t-options="{
                         'widget': 'monetary',
                         'display_currency': sale_order.currency_id,

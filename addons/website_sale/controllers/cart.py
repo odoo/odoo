@@ -441,11 +441,11 @@ class Cart(PaymentPortal):
             "cart_has_blocking_alerts": order_sudo._has_blocking_alerts(),
             "cart_quantity": order_sudo.cart_quantity,
             "currency": order_sudo.currency_id.name,
-            "amount": order_sudo.amount_total,
+            "amount": order_sudo.amount_to_pay,
             "minor_amount": (
-                order_sudo.amount_total
+                order_sudo.amount_to_pay
                 and payment_utils.to_minor_currency_units(
-                    order_sudo.amount_total, order_sudo.currency_id
+                    order_sudo.amount_to_pay, order_sudo.currency_id
                 )
             ),
             "website_sale.cart_lines": IrUiView._render_template(
