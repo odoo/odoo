@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_compare_image" name="Compare Image">
+    <figure class="s_compare_image w-100 mb-0" style="--compare-pos: 50%;">
+        <div class="s_compare_image_frame position-relative overflow-hidden rounded w-100">
+            <img class="s_compare_image_before img img-fluid o_snippet_not_selectable" src="/web/image/website.landscape_md_8" alt=""/>
+            <img class="s_compare_image_after img img-fluid o_snippet_not_selectable" src="/web/image/website.landscape_md_8" alt=""/>
+            <div class="s_compare_image_labels">
+                <span class="s_compare_image_label s_compare_image_label_before badge text-bg-dark">Before</span>
+                <span class="s_compare_image_label s_compare_image_label_after badge text-bg-dark">After</span>
+            </div>
+            <div class="s_compare_image_divider o_not_editable" aria-hidden="true">
+                <span class="s_compare_image_handle">
+                    <i class="oi" data-icon="keyboard_arrow_left"/>
+                    <i class="oi" data-icon="keyboard_arrow_right"/>
+                </span>
+            </div>
+        </div>
+        <figcaption class="s_compare_image_caption figure-caption text-center text-muted mt-2">Where innovation meets performance</figcaption>
+    </figure>
+</template>
+
+<asset id="website.s_compare_image_000_scss" name="Compare Image 000 scss">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_compare_image/000.scss</path>
+</asset>
+
+</odoo>
