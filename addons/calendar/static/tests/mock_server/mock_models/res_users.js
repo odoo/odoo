@@ -4,6 +4,17 @@ import { serializeDateTime } from "@web/core/l10n/dates";
 const { DateTime } = luxon;
 
 export class ResUsers extends mailModels.ResUsers {
+    _store_im_status_fields(res) {
+        super._store_im_status_fields(res);
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+        ResPartner._compute_is_in_meeting();
+        res.attr(
+            "is_in_meeting",
+            (u) => ResPartner.browse(u.partner_id)[0]?.is_in_meeting ?? false
+        );
+    }
+
     /**
      * Simulates `_systray_get_calendar_event_domain` on `res.users`.
      *

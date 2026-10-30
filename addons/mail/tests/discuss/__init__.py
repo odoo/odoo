@@ -28,3 +28,4 @@ from . import test_toggle_upload
 from . import test_load_messages
 from . import test_rtc
 from . import test_ui
+from . import test_im_status_changes

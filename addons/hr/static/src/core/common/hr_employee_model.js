@@ -17,6 +17,8 @@ export class HrEmployee extends Record {
     first_contract_date;
     /** @type {string} */
     hr_icon_display;
+    /** @type {boolean} */
+    is_off_hours;
     /** @type {string} */
     job_title;
     /** @type {string} */

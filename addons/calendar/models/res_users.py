@@ -4,6 +4,7 @@ import datetime
 from zoneinfo import ZoneInfo
 
 from odoo import api, Command, fields, models, modules, _
+from odoo.addons.mail.tools.discuss import Store
 from odoo.fields import Domain
 
 
@@ -202,3 +203,70 @@ class ResUsers(models.Model):
         :return: boolean indicating if any synchronization is active.
         """
         return False
+
+    def _store_im_status_fields(self, res: Store.FieldList):
+        super()._store_im_status_fields(res)
+        res.attr("is_in_meeting", lambda u: u.partner_id.is_in_meeting)
+
+    @api.model
+    def _add_im_status_changes(self, stores, since, until):
+        super()._add_im_status_changes(stores, since, until)
+        # sudo: calendar.attendee - im_status flags are sent to the internal presence channels
+        attendees = (
+            self.env["calendar.attendee"]
+            .sudo()
+            .search(
+                self.env["res.partner"]._get_busy_attendee_domain()
+                & Domain("event_id.start", "<=", until)
+                & Domain("event_id.stop", ">=", since)
+            )
+        )
+
+        def busy_at(dt):
+            return attendees.filtered(
+                lambda a: a.event_id.start <= dt <= a.event_id.stop
+            ).partner_id
+
+        busy_since, busy_until = busy_at(since), busy_at(until)
+        for is_in_meeting, partners in (
+            (True, busy_until - busy_since),
+            (False, busy_since - busy_until),
+        ):
+            for user in partners.user_ids.filtered(lambda u: not u.share):
+                stores[user, "presence_internal"].add(
+                    user, {"is_in_meeting": is_in_meeting}
+                )
+
+    @api.model
+    def _send_is_in_meeting(self, partners):
+        """Send the current is_in_meeting value of ``partners`` on their internal presence
+        channel.
+
+        Used when an event or attendee is edited in a way that changes whether someone
+        is in a meeting right now, e.g. adding them to an ongoing event or deleting it.
+        The im_status cron only picks up meetings that start or end as time passes, so
+        it would miss these changes.
+        """
+        if not partners:
+            return
+        partners.invalidate_recordset(["is_in_meeting"])
+        stores = Store.Stores()
+        for user in partners.user_ids.filtered(lambda u: not u.share):
+            stores[user, "presence_internal"].add(
+                user, {"is_in_meeting": user.partner_id.is_in_meeting}
+            )
+
+    @api.model
+    def _get_next_im_status_change(self, after):
+        next_changes = [super()._get_next_im_status_change(after)]
+        # sudo: calendar.event - im_status flags are sent to the internal presence channels
+        events_sudo = self.env["calendar.event"].sudo()
+        busy = Domain(
+            "attendee_ids", "any", self.env["res.partner"]._get_busy_attendee_domain()
+        )
+        for field, operator in [("start", ">"), ("stop", ">=")]:
+            event = events_sudo.search(
+                busy & Domain(field, operator, after), order=field, limit=1
+            )
+            next_changes.append(event[field])
+        return min(filter(None, next_changes), default=None)

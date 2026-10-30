@@ -334,6 +334,8 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                             "id": self.user_employee.id,
                             "im_status": "offline",
                             "im_status_access_token": self.user_employee._get_im_status_access_token(),
+                            "is_in_call": False,
+                            "is_in_meeting": False,
                             "partner_id": self.partner_employee.id,
                         }),
                     },
