@@ -68,6 +68,10 @@ class PurchaseOrder(models.Model):
             (created | forward_pickings).action_confirm()
         return True
 
+    def _is_dropshipped(self):
+        self.ensure_one()
+        return self.picking_type_id and self.picking_type_id.code == 'dropship'
+
 
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
@@ -79,3 +83,6 @@ class PurchaseOrderLine(models.Model):
             for vals in res:
                 vals['group_id'] = sale_group.id
         return res
+
+    def _is_dropshipped(self):
+        return self.order_id._is_dropshipped()
