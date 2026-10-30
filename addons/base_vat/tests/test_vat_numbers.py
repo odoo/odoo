@@ -301,3 +301,32 @@ class TestStructure(TransactionCase):
         ro_country = self.env.ref('base.ro').id
         partner_ro = self.env['res.partner'].create({'name': 'Test Peppol RO', 'country_id': ro_country, 'vat': '1234567897'})
         self.assertEqual(partner_ro.vat, '1234567897', "The RO prefix should not be appended for Romania (CUI exception).")
+
+    def test_vat_uz(self):
+        uz = self.env.ref('base.uz')
+        Partner = self.env['res.partner']
+
+        # Company and its child contact accept both TIN (9) and PINFL (14)
+        for vat in ('123456789', '12345678901234'):
+            company_contact = Partner.create({
+                'name': 'UZ Company Contact',
+                'is_company': True,
+                'country_id': uz.id,
+                'vat': vat,
+            })
+            child_contact = Partner.create({
+                'name': 'UZ Child Contact',
+                'parent_id': company_contact.id,
+            })
+            self.assertEqual(company_contact.vat, vat)
+            self.assertEqual(child_contact.vat, vat)
+
+        # Any other length (or non-digit) is rejected
+        for vat in ('12345678', '1234567890', '123456789012345', '12345678A'):
+            with self.assertRaises(ValidationError):
+                Partner.create({
+                    'name': 'UZ Invalid Contact',
+                    'is_company': True,
+                    'country_id': uz.id,
+                    'vat': vat,
+                })
