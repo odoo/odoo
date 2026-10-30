@@ -20,6 +20,7 @@ import { getBundle } from "@web/core/assets";
 import { location } from "@web/core/browser/browser";
 import { memoize } from "@web/core/utils/functions";
 import { TABLE_WRAPPER_SELECTOR, wrapTableInScrollContainer } from "@html_editor/utils/table";
+import { unwrapContents } from "@html_editor/utils/dom";
 
 export class HtmlViewer extends Component {
     static template = "html_editor.HtmlViewer";
@@ -46,6 +47,9 @@ export class HtmlViewer extends Component {
         useEffect(() => {
             const newValue = this.formatValue(this.props.config.value);
             if (newValue.toString() !== this.state.value.toString()) {
+                // Owl removes the nodes it rendered from '.o_readonly' when the
+                // value changes, so the tables have to be back there first.
+                this.unwrapTables();
                 this.state.value = newValue;
                 if (this.props.config.embeddedComponents) {
                     this.destroyComponents();
@@ -163,6 +167,14 @@ export class HtmlViewer extends Component {
                 wrapTableInScrollContainer(table);
             }
         }
+    }
+
+    /**
+     * Remove the scroll containers added by 'wrapTables', putting the tables
+     * back where they were rendered.
+     */
+    unwrapTables() {
+        this.readonlyElementRef()?.querySelectorAll(TABLE_WRAPPER_SELECTOR).forEach(unwrapContents);
     }
 
     /**
