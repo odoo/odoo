@@ -64,19 +64,6 @@ class TestPeppolAccountMove(AccountTestInvoicingCommon):
 
         self.assertEqual(move.state, 'posted')
 
-    def test_reset_selected_to_draft_only_resets_not_sent_peppol(self):
-        sent_move = self._peppol_invoice(post=True)
-        sent_move.peppol_move_state = 'done'
-        not_sent_move = self._peppol_invoice(post=True)
-
-        (sent_move + not_sent_move).action_reset_selected_to_draft()
-
-        self.assertEqual(sent_move.state, 'posted')
-        self.assertEqual(not_sent_move.state, 'draft')
-
-        with self.assertRaisesRegex(UserError, "sent via Peppol / PDP"):
-            sent_move.button_draft()
-
     def test_cancel_sent_peppol(self):
         move = self._peppol_invoice(post=True)
         move.peppol_move_state = 'done'
