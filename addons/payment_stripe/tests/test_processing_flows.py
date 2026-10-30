@@ -17,20 +17,28 @@ from odoo.addons.payment_stripe.tests.common import StripeCommon
 @tagged("post_install", "-at_install")
 class TestProcessingFlows(StripeCommon, PaymentHttpCommon):
     @mute_logger("odoo.addons.payment_stripe.controllers.main")
-    def test_redirect_notification_triggers_processing(self):
+    def test_returning_from_payment_triggers_processing(self):
         self._create_transaction("redirect")
         url = self._build_url(StripeController._return_url)
         with (
-            patch(
-                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._send_api_request",
-                self._mock_setup_intent_request,
-            ),
+            self._mock_send_api_request(new=self._mock_setup_intent_request),
             patch(
                 "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
             ) as record_mock,
         ):
             self._make_http_get_request(url, params={"reference": self.reference})
             self.assertEqual(record_mock.call_count, 1)
+
+    @mute_logger("odoo.addons.payment_stripe.controllers.main")
+    def test_return_from_tokenization_request(self):
+        tx = self._create_transaction("direct", amount=0, operation="validation", tokenize=True)
+        url = self._build_url(StripeController._return_url)
+        with (
+            patch.object(StripeController, "_verify_signature"),
+            self._mock_send_api_request(new=self._mock_setup_intent_request),
+        ):
+            res = self._make_http_get_request(url, params={"reference": tx.reference})
+            self.assertTrue(res.ok, msg=res.content.decode())
 
     @mute_logger("odoo.addons.payment_stripe.controllers.main")
     def test_webhook_notification_triggers_processing(self):

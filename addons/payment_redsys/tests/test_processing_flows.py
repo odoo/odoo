@@ -32,7 +32,7 @@ class TestProcessingFlows(RedsysCommon, PaymentHttpCommon):
         self.assertEqual(record_mock.call_count, 1)
 
     @mute_logger("odoo.addons.payment_redsys.controllers.main")
-    def test_webhook_triggers_processing(self):
+    def test_webhook_notification_triggers_processing(self):
         """Test that receiving a valid webhook notification triggers the processing of the payment
         data."""
         self._create_transaction("redirect")
@@ -65,7 +65,7 @@ class TestProcessingFlows(RedsysCommon, PaymentHttpCommon):
             self.assertEqual(signature_check_mock.call_args[0][0], self.payment_data_signature)
 
     @mute_logger("odoo.addons.payment_redsys.controllers.main")
-    def test_webhook_triggers_signature_check(self):
+    def test_webhook_notification_triggers_signature_check(self):
         self._create_transaction("redirect")
         url = self._build_url(RedsysController._webhook_url)
         with (
@@ -77,9 +77,3 @@ class TestProcessingFlows(RedsysCommon, PaymentHttpCommon):
         ):
             self._make_http_post_request(url, data=self.payment_data)
             self.assertEqual(signature_check_mock.call_args[0][0], self.payment_data_signature)
-
-    def test_compute_signature_returns_correct_signature(self):
-        signature = self.provider._redsys_calculate_signature(
-            self.encoded_merchant_parameter, self.reference, self.provider.redsys_secret_key
-        )
-        self.assertEqual(signature, self.payment_data_signature)

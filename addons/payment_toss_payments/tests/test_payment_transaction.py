@@ -1,11 +1,27 @@
-from odoo.tests import tagged
+from unittest.mock import patch
 
+from freezegun import freeze_time
+
+from odoo.tests import tagged
+from odoo.tools.urls import urljoin as url_join
+
+from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment_toss_payments import const
 from odoo.addons.payment_toss_payments.tests.common import TossPaymentsCommon
 
 
 @tagged("post_install", "-at_install")
 class TestPaymentTransaction(TossPaymentsCommon):
-    def test_reference_uses_only_alphanumeric_chars(self):
+    @freeze_time("2011-11-02 12:00:21")  # Freeze time for consistent singularization behavior.
+    def test_reference_is_singularized(self):
+        """Test that the reference is always recomputed with a singularized prefix, regardless of
+        any custom prefix passed."""
+        reference = self.env["payment.transaction"]._compute_reference(
+            "toss_payments", prefix="should not be used"
+        )
+        self.assertEqual(reference, "tx-20111102120021")
+
+    def test_reference_contains_only_valid_characters(self):
         """The computed reference must be made of alphanumeric and symbols '-' and '_'."""
         reference = self.env["payment.transaction"]._compute_reference("toss_payments")
         self.assertRegex(reference, r"^[a-zA-Z0-9_-]+$")
@@ -15,6 +31,29 @@ class TestPaymentTransaction(TossPaymentsCommon):
         reference = self.env["payment.transaction"]._compute_reference("toss_payments")
         self.assertTrue(6 <= len(reference) <= 64)
 
+    def test_no_item_missing_from_processing_values(self):
+        tx = self._create_transaction(flow="direct")
+        with patch(
+            "odoo.addons.payment.utils.generate_access_token", new=self._generate_test_access_token
+        ):
+            processing_values = tx._get_specific_processing_values(None)
+            access_token = payment_utils.generate_access_token(self.reference)
+
+        base_url = self.provider.get_base_url()
+        self.assertDictEqual(
+            processing_values,
+            {
+                "order_name": self.reference,
+                "partner_name": self.partner.name,
+                "partner_email": self.partner.email,
+                "partner_phone": self.partner.phone,
+                "success_url": url_join(base_url, const.PAYMENT_SUCCESS_RETURN_ROUTE),
+                "fail_url": url_join(
+                    base_url, f"{const.PAYMENT_FAILURE_RETURN_ROUTE}?access_token={access_token}"
+                ),
+            },
+        )
+
     def test_extract_reference_finds_reference(self):
         """Test that the transaction reference is found in the payment data."""
         tx = self._create_transaction("direct")
@@ -22,14 +61,6 @@ class TestPaymentTransaction(TossPaymentsCommon):
             "toss_payments", self.payment_result_data
         )
         self.assertEqual(tx.reference, reference)
-
-    def test_extract_amount_data_returns_amount_and_currency(self):
-        """Test that the amount and currency are returned from the payment data."""
-        tx = self._create_transaction("direct")
-        amount_data = tx._extract_amount_data(self.payment_result_data)
-        self.assertDictEqual(
-            amount_data, {"amount": tx.amount, "currency_code": tx.currency_id.name}
-        )
 
     def test_apply_updates_sets_provider_reference(self):
         """Test that the provider reference is set when processing the payment data."""
@@ -49,3 +80,11 @@ class TestPaymentTransaction(TossPaymentsCommon):
         tx = self._create_transaction("direct")
         tx.with_context(payment_safe_write=True)._apply_updates(self.payment_result_data)
         self.assertEqual(tx.state, "done")
+
+    def test_extract_amount_data_returns_amount_and_currency(self):
+        """Test that the amount and currency are returned from the payment data."""
+        tx = self._create_transaction("direct")
+        amount_data = tx._extract_amount_data(self.payment_result_data)
+        self.assertDictEqual(
+            amount_data, {"amount": tx.amount, "currency_code": tx.currency_id.name}
+        )
