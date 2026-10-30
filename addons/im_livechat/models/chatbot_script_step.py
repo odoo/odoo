@@ -363,5 +363,5 @@ class ChatbotScriptStep(models.Model):
 
     def _store_script_step_fields(self, res: Store.FieldList):
         res.many("answer_ids", "_store_script_answer_fields")
-        res.attr("is_last", lambda step: step._is_last_step())
+        res.attr("is_last", lambda step: step._is_last_step(), version=False)
         res.extend(["message", "step_type"])

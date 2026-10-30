@@ -181,8 +181,8 @@ class LivechatController(http.Controller):
                 channel,
                 lambda res: (
                     res.from_method("_store_channel_fields"),
-                    res.attr("isLoaded", not is_chatbot_script),
-                    res.attr("scrollUnread", False),
+                    res.attr("isLoaded", not is_chatbot_script, version=False),
+                    res.attr("scrollUnread", False, version=False),
                 ),
             )
         if not request.env.user._is_public():

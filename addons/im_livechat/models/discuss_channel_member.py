@@ -159,7 +159,7 @@ class DiscussChannelMember(models.Model):
         sessions_to_be_unpinned = members.filtered(lambda m: m.message_unread_counter == 0)
         sessions_to_be_unpinned.channel_id.livechat_end_dt = fields.Datetime.now()
         for member, store in sessions_to_be_unpinned._get_member_store_list():
-            store.add(member.channel_id, {"close_chat_window": True})
+            store.add(member.channel_id, lambda res: res.attr("close_chat_window", True, version=False))
         sessions_to_be_unpinned.unpin_dt = fields.Datetime.now()
 
     def _store_member_fields(self, res: Store.FieldList):
@@ -167,6 +167,7 @@ class DiscussChannelMember(models.Model):
         res.attr(
             "livechat_member_type",
             predicate=lambda m: m.channel_id.channel_type == "livechat",
+            version=False,
         )
 
     def _store_partner_dynamic_fields(self, partner_res: Store.FieldList):
@@ -176,13 +177,15 @@ class DiscussChannelMember(models.Model):
         partner_res.clear()
         partner_res.attr("active")
         partner_res.one("country_id", ["code", "name"])
-        partner_res.attr("is_public")
+        partner_res.attr("is_public", version=False)
         partner_res.from_method("_store_avatar_fields")
         partner_res.from_method("_store_livechat_username_fields")
         partner_res.from_method("_store_mention_fields")
         if self.livechat_member_type == "visitor":
             partner_res.attr("email")
-            partner_res.many("user_ids", ["offline_since"])
+            partner_res.many(
+                "user_ids", lambda res: res.attr("offline_since", version=False),
+            )
         partner_res.from_method("_store_im_status_fields", internal=True)
 
     def _store_guest_dynamic_fields(self, guest_res: Store.FieldList):
@@ -191,7 +194,7 @@ class DiscussChannelMember(models.Model):
             return
         guest_res.clear()
         guest_res.one("country_id", ["code", "name"])
-        guest_res.attr("offline_since")
+        guest_res.attr("offline_since", version=False)
         guest_res.from_method("_store_avatar_fields")
         guest_res.from_method("_store_im_status_fields", internal=True)
 

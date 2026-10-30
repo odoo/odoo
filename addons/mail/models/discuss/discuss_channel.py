@@ -723,16 +723,23 @@ class DiscussChannel(models.Model):
     def _sync_field_names(self, res):
         # keys are bus subchannel names, values are lists of field names to sync
         super()._sync_field_names(res)
-        res[None].attr("avatar_cache_key")
-        res[None].attr("avatar_128_access_token", lambda c: c._get_avatar_128_access_token())
+        res[None].attr("avatar_cache_key", version=False)
+        res[None].attr(
+            "avatar_128_access_token", lambda c: c._get_avatar_128_access_token(), version=False,
+        )
         # sudo: discuss.category - guests can read categories of accessible channels
         res[None].one("discuss_category_id", "_store_category_fields", sudo=True)
         res[None].extend(["channel_type", "create_uid", "default_display_mode"])
         res[None].attr("description", predicate=is_channel_or_group)
         res[None].many("group_ids", [], predicate=is_channel)
-        res[None].one("group_public_id", ["full_name"], predicate=is_channel)
+        res[None].one(
+            "group_public_id",
+            lambda res: res.attr("full_name", version=False),
+            predicate=is_channel,
+        )
         res[None].attr("is_readonly", predicate=is_channel)
-        res[None].extend(["last_interest_dt", "member_count", "name", "uuid"])
+        res[None].extend(["last_interest_dt", "name", "uuid"])
+        res[None].attr("member_count", version=False)
 
     def _update_last_interest_dt(self, date=None):
         """Update last_interest_dt while avoiding concurrency errors between parallel posters.
@@ -893,7 +900,10 @@ class DiscussChannel(models.Model):
                 for bus_channel in (user.partner_id or guest)._bus_channels():
                     Store(bus_channel=bus_channel).add(
                         self,
-                        {"close_chat_window": True, "isLocallyPinned": False},
+                        lambda res: (
+                            res.attr("close_chat_window", True, version=False),
+                            res.attr("isLocallyPinned", False, version=False),
+                        ),
                     )
         else:
             self.self_member_id.unpin_dt = fields.Datetime.now()
@@ -969,7 +979,7 @@ class DiscussChannel(models.Model):
                         subtype_xmlid="mail.mt_comment",
                     )
             if new_members:
-                stores[channel].add(channel, ["member_count"])
+                stores[channel].add(channel, lambda res: res.attr("member_count", version=False))
                 stores[channel].add(new_members, "_store_member_fields")
                 if channel.channel_type == "channel":
                     invited_partner_ids = new_members.filtered(lambda m: not m.is_self).partner_id.ids
@@ -1000,7 +1010,7 @@ class DiscussChannel(models.Model):
                 # If the current user invited these members but they are already present, notify the current user about their existence as well.
                 # In particular this fixes issues where the current user is not aware of its own member in the following case:
                 # create channel from form view, and then join from discuss without refreshing the page.
-                stores[bus_channel].add(channel, ["member_count"])
+                stores[bus_channel].add(channel, lambda res: res.attr("member_count", version=False))
                 stores[bus_channel].add(existing_members, "_store_member_fields")
         if invite_to_rtc_call:
             for channel in self:
@@ -1222,6 +1232,7 @@ class DiscussChannel(models.Model):
                     "_store_avatar_card_fields",
                     mode="DELETE",
                     value=members,
+                    version=False,
                 ),
             )
             devices, private_key, public_key = self._web_push_get_partners_parameters(members.partner_id.ids)
@@ -1393,7 +1404,8 @@ class DiscussChannel(models.Model):
             notification_payload=payload,
         ).add(message, "_store_message_fields")
         if message.channel_id.parent_channel_id:
-            store.add(message.channel_id, ["message_count"])
+            # Counts messages: no write_date reflects it.
+            store.add(message.channel_id, lambda res: res.attr("message_count", version=False))
         self._bus_send_attachment_ownership(message)
         return rdata
 
@@ -1722,8 +1734,8 @@ class DiscussChannel(models.Model):
             all_members,
             "_store_member_fields",
         )._build_result()
-        res.attr("avatar_cache_key")
-        res.attr("avatar_128_access_token", lambda c: c._get_avatar_128_access_token())
+        res.attr("avatar_cache_key", version=False)
+        res.attr("avatar_128_access_token", lambda c: c._get_avatar_128_access_token(), version=False)
         # sudo: discuss.category - guests can read categories of accessible channels
         res.one("discuss_category_id", "_store_category_fields", sudo=True)
         res.attr("channel_type")
@@ -1741,7 +1753,11 @@ class DiscussChannel(models.Model):
         res.one("from_message_id", "_store_message_fields", predicate=is_channel_or_group)
         # sudo: we are reading only the ids (comodel is inaccessible)
         res.many("group_ids", [], predicate=is_channel, sudo=True)
-        res.one("group_public_id", ["full_name"], predicate=is_channel)
+        res.one(
+            "group_public_id",
+            lambda res: res.attr("full_name", version=False),
+            predicate=is_channel,
+        )
         videocalls = self.filtered(is_videocall)
         today_meetings = self.browse()
         if videocalls:
@@ -1749,21 +1765,27 @@ class DiscussChannel(models.Model):
             today_meetings = videocalls.sudo().search(
                 Domain("id", "in", videocalls.ids) & self._get_meeting_today_domain()
             )
-        res.attr("has_meeting_today", lambda channel: channel in today_meetings, predicate=is_videocall)
-        res.many("invited_member_ids", "_store_avatar_card_fields", mode="ADD")
+        res.attr(
+            "has_meeting_today",
+            lambda channel: channel in today_meetings,
+            predicate=is_videocall,
+            version=False,
+        )
+        res.many("invited_member_ids", "_store_avatar_card_fields", mode="ADD", version=False)
         res.attr("is_readonly", predicate=is_channel)
         res.attr("last_interest_dt")
-        res.attr("meeting_start_dt", predicate=is_meeting)
-        res.attr("meeting_stop_dt", predicate=is_meeting)
-        res.attr("member_count")
+        res.attr("meeting_start_dt", predicate=is_meeting, version=False)
+        res.attr("meeting_stop_dt", predicate=is_meeting, version=False)
+        res.attr("member_count", version=False)
         res.attr("member_indices", predicate=lambda c: c.channel_type == "chat")
-        res.attr("message_count", predicate=lambda c: c.parent_channel_id)
+        res.attr("message_count", predicate=lambda c: c.parent_channel_id, version=False)
         res.attr("name")
         res.many(
             "channel_name_member_ids",
             "_store_member_fields",
             sort="id",
             predicate=lambda c: c.channel_type in c._member_based_naming_channel_types(),
+            version=False,
         )
         res.one("parent_channel_id", "_store_channel_fields", predicate=is_channel_or_group)
         # sudo: discuss.channel: reading sessions of accessible channel is acceptable
@@ -1772,23 +1794,26 @@ class DiscussChannel(models.Model):
         if res.is_for_current_user():
             # sudo: bus.bus: reading non-sensitive last id
             bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
-            res.attr("fetchChannelInfoState", "fetched")
-            res.attr("is_editable")
-            res.attr("message_needaction_counter")
-            res.attr("message_needaction_counter_bus_id", bus_last_id)
+            res.attr("fetchChannelInfoState", "fetched", version=False)
+            res.attr("is_editable", version=False)
+            # Counters are ordered by their bus id instead.
+            res.attr("message_needaction_counter", version=False)
+            res.attr("message_needaction_counter_bus_id", bus_last_id, version=False)
             res.one(
                 "self_member_id",
                 lambda res: (
                     res.from_method("_store_member_fields"),
                     res.extend(["custom_notifications"]),
-                    res.extend(["last_interest_dt", "message_unread_counter"]),
-                    res.attr("message_unread_counter_bus_id", bus_last_id),
+                    res.extend(["last_interest_dt"]),
+                    res.attr("message_unread_counter", version=False),
+                    res.attr("message_unread_counter_bus_id", bus_last_id, version=False),
                     res.extend(["mute_until_dt", "new_message_separator"]),
                     # sudo: discuss.channel.rtc.session - each member can see who is inviting them
                     res.one("rtc_inviting_session_id", "_store_rtc_session_fields", sudo=True),
                     res.attr("unpin_dt"),
                 ),
                 only_data=True,
+                version=False,
             )
 
     # User methods
@@ -2082,7 +2107,7 @@ class DiscussChannel(models.Model):
 
     def _store_open_chat_window_fields(self, res: Store.FieldList):
         self._store_channel_fields(res)
-        res.attr("open_chat_window", True)
+        res.attr("open_chat_window", True, version=False)
 
     # ------------------------------------------------------------
     # COMMANDS

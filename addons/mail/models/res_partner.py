@@ -228,7 +228,9 @@ class ResPartner(models.Model):
         return limited_field_access_token(self, "id", scope="mail.message_mention")
 
     def _store_avatar_fields(self, res: Store.FieldList):
-        res.attr("avatar_128_access_token", lambda p: p._get_avatar_128_access_token())
+        res.attr(
+            "avatar_128_access_token", lambda p: p._get_avatar_128_access_token(), version=False,
+        )
         res.attr("write_date")
 
     def _store_im_status_fields(self, res: Store.FieldList):
@@ -236,14 +238,14 @@ class ResPartner(models.Model):
         res.many("user_ids", "_store_im_status_fields", sudo=True)
 
     def _store_mention_fields(self, res: Store.FieldList):
-        res.attr("mention_token", lambda p: p._get_mention_token())
+        res.attr("mention_token", lambda p: p._get_mention_token(), version=False)
 
     def _store_avatar_card_fields(self, res: Store.FieldList):
         res.extend(["name", "partner_share"])
         self._store_avatar_fields(res)
         res.from_method("_store_im_status_fields", internal=True)
         # sudo: can access avatar card fields of user of accessible partner
-        res.one("main_user_id", "_store_avatar_card_fields", sudo=True)
+        res.one("main_user_id", "_store_avatar_card_fields", sudo=True, version=False)
         if res.is_for_internal_users():
             res.extend(["email", "phone", "tz"])
 
@@ -252,7 +254,7 @@ class ResPartner(models.Model):
         self._store_avatar_fields(res)
         res.from_method("_store_im_status_fields", internal=True)
         # sudo: to access portal user of another company in chatter
-        res.one("main_user_id", "_store_main_user_fields", sudo=True)
+        res.one("main_user_id", "_store_main_user_fields", sudo=True, version=False)
         res.extend(["email", "tz"], internal=True)
 
     @api.readonly
@@ -273,7 +275,11 @@ class ResPartner(models.Model):
         )
         try:
             roles = self.env["res.role"].search([("name", "ilike", search)], limit=8)
-            store.add(roles, ["name", "user_ids_count"])
+            # Counts the role members: no write_date reflects it.
+            store.add(
+                roles,
+                lambda res: (res.attr("name"), res.attr("user_ids_count", version=False)),
+            )
         except AccessError:
             pass
         return store

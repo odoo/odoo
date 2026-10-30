@@ -110,19 +110,31 @@ class IrAttachment(models.Model):
         """
         self.write({"res_model": message._name, "res_id": message.id})
         for attachment in self:
-            Store(bus_channel=attachment).add(attachment, {"res_model": message._name, "thread": False})
+            Store(bus_channel=attachment).add(
+                attachment,
+                lambda res: (
+                    res.attr("res_model"),
+                    res.attr("thread", False, version=lambda a: a.write_date),
+                ),
+            )
 
     def _store_ownership_fields(self, res: Store.FieldList):
-        res.attr("ownership_token", lambda a: a._get_ownership_token())
+        res.attr("ownership_token", lambda a: a._get_ownership_token(), version=False)
 
     def _store_attachment_fields(self, res: Store.FieldList, **kwargs):
         res.extend(["checksum", "create_date", "file_size", "has_thumbnail", "mimetype", "name"])
-        res.attr("raw_access_token", lambda a: a._get_raw_access_token())
-        res.attr("res_name")
+        res.attr("raw_access_token", lambda a: a._get_raw_access_token(), version=False)
+        res.attr("res_name", version=False)
         res.attr("res_model")
         # an attachment kept on its message alone has no thread to belong to
-        res.one("thread", [], as_thread=True, predicate=lambda a: a.res_model != "mail.message")
-        res.attr("thumbnail_access_token", lambda a: a._get_thumbnail_token())
+        res.one(
+            "thread",
+            [],
+            as_thread=True,
+            predicate=lambda a: a.res_model != "mail.message",
+            version=lambda a: a.write_date,
+        )
+        res.attr("thumbnail_access_token", lambda a: a._get_thumbnail_token(), version=False)
         res.extend(["type", "url"])
 
     def _store_thread_message_fields(self, res: Store.FieldList, *, thread):
@@ -135,7 +147,7 @@ class IrAttachment(models.Model):
                 res.attr("message_type"),
                 res.one("author_guest_id", []),
                 res.one("author_id", []),
-                res.one("thread", [], as_thread=True),
+                res.one("thread", [], as_thread=True, version=lambda m: m.write_date),
             ),
             value=lambda a: a.message_ids.filtered(
                 lambda m: (m.model, m.res_id) == (thread._name, thread.id),

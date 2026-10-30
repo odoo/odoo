@@ -41,7 +41,7 @@ class MailMessage(models.Model):
     def _store_message_fields(self, res: Store.FieldList, **kwargs):
         super()._store_message_fields(res, **kwargs)
         # sudo: mail.message - guest and portal user can receive rating of accessible message
-        res.one("rating_id", "_store_rating_fields", sudo=True)
+        res.one("rating_id", "_store_rating_fields", sudo=True, version=False)
         records_by_model = self._records_by_model_name()
         r_stats = {}
 
@@ -55,11 +55,18 @@ class MailMessage(models.Model):
         for records in records_by_model.values():
             if has_rating_access(records) and records._allow_publish_rating_stats():
                 r_stats.update(records._rating_get_stats_per_record())
+        # Aggregates of the thread ratings: no write_date reflects them.
         res.many(
             "records",
             lambda res: (
-                res.extend(["rating_avg", "rating_count"]),
-                res.attr("rating_stats", lambda t: r_stats[t], predicate=lambda t: t in r_stats),
+                res.attr("rating_avg", version=False),
+                res.attr("rating_count", version=False),
+                res.attr(
+                    "rating_stats",
+                    lambda t: r_stats[t],
+                    predicate=lambda t: t in r_stats,
+                    version=False,
+                ),
             ),
             as_thread=True,
             only_data=True,

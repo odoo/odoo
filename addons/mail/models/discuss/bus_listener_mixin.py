@@ -29,8 +29,8 @@ class BusListenerMixin(models.AbstractModel):
         store.add(
             channel,
             lambda res: (
-                res.many("messages", [], value=[message_id], mode="ADD"),
-                res.many("transientMessages", [], value=[message_id], mode="ADD"),
+                res.many("messages", [], value=[message_id], mode="ADD", version=False),
+                res.many("transientMessages", [], value=[message_id], mode="ADD", version=False),
             ),
             as_thread=True,
         )
