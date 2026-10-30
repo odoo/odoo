@@ -572,8 +572,7 @@ class TestEventNotifications(CalendarMailCommon):
                 self.assertEqual(capt.records.call_at, datetime(2022, 4, 15, 10, 10))
 
     def test_email_alarm_recurrence_rescheduled_by_cron(self):
-        """The reminder cron re-arms the next occurrence without writing the recurrence:
-        the cron runner locks it while the job runs, writing it would deadlock the job."""
+        """The reminder cron schedules the alarms of the next occurrence of the recurrence."""
         alarm, alarm_15 = self.env['calendar.alarm'].create([{
             'name': 'Alarm',
             'alarm_type': 'email',
@@ -599,7 +598,6 @@ class TestEventNotifications(CalendarMailCommon):
                 'count': 3,
                 'alarm_ids': (alarm + alarm_15).ids,
             })
-        self.assertFalse(event.recurrence_id.trigger_id)
 
         with self.capture_triggers('calendar.ir_cron_scheduler_alarm') as capt, \
                 self.mock_mail_gateway(mail_unlink_sent=False), \
@@ -609,7 +607,6 @@ class TestEventNotifications(CalendarMailCommon):
         self.assertMailMail(self.customers[0], 'sent', author=self.user_root.partner_id)
         self.assertEqual(capt.records.mapped('call_at'), [datetime(2022, 4, 14, 10, 5), datetime(2022, 4, 14, 10, 15)],
             "The alarms of the next occurrence should be scheduled")
-        self.assertFalse(event.recurrence_id.trigger_id)
 
         # the runner sets lastcall with the real database time, set it back in the frozen timeline
         cron.lastcall = datetime(2022, 4, 13, 10, 6)
