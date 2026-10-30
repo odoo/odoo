@@ -20,6 +20,7 @@ test("default state", () => {
         db: "test",
         debug: "",
         groupId: 11,
+        isRegularUser: true,
         lang: "en",
         multiLang: false,
         odoobotId: 418,

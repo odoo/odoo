@@ -24,7 +24,7 @@ import {
     waitStoreFetch,
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, test, waitFor } from "@odoo/hoot";
 import { mockDate, tick } from "@odoo/hoot-mock";
 import {
     Command,
@@ -134,6 +134,31 @@ test("chat window: basic rendering", async () => {
     await contains(".o-dropdown-item:text('View Recordings')");
     await contains(".o-dropdown-item:text('Hide Until New Message')");
     await contains(".o-dropdown-item:text('Leave Conversation')");
+});
+
+test("light user's chat window has no Open in Discuss action", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({ name: "General" });
+    serverState.isRegularUser = false;
+    await start();
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
+    await click(".o-mail-NotificationItem");
+    await waitFor(".o-mail-ChatWindow .o-mail-Thread:has(:text('Welcome to #General!'))");
+    await click("[title='Open Actions Menu']");
+    await waitFor(".o-dropdown-item:count(13)");
+    await waitFor(".o-dropdown-item:text('Attachments')");
+    await waitFor(".o-dropdown-item:text('Pinned Messages')");
+    await waitFor(".o-dropdown-item:text('Members')");
+    await waitFor(".o-dropdown-item:text('Threads')");
+    await waitFor(".o-dropdown-item:text('Invite People')");
+    await waitFor(".o-dropdown-item:text('Search Messages')");
+    await waitFor(".o-dropdown-item:text('Rename Thread')");
+    await waitFor(".o-dropdown-item:text('Notification Settings')");
+    await waitFor(".o-dropdown-item:text('Add to Favorites')");
+    await waitFor(".o-dropdown-item:text('Voice & Video Settings')");
+    await waitFor(".o-dropdown-item:text('View Recordings')");
+    await waitFor(".o-dropdown-item:text('Hide Until New Message')");
+    await waitFor(".o-dropdown-item:text('Leave Conversation')");
 });
 
 test("chat window: clicking chat correspondent avatars in start message opens avatar card", async () => {
