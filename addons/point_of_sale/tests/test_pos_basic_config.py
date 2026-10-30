@@ -1161,6 +1161,19 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.env['pos.order'].sync_from_ui([self.create_ui_order_data([(self.product3, 1)])])
         self.assertEqual(get_top_product_ids(3), [self.product1.id, self.product2.id, self.product3.id])
 
+    def test_limited_partners_loading_skips_archived(self):
+        session = self.open_new_session(0)
+        partners_with_orders = self.env['pos.order'].search([]).partner_id
+        self.env['ir.config_parameter'].sudo().set_param('point_of_sale.limited_customer_count', len(partners_with_orders) + 5)
+        # Archived partners sort before the active ones and must not use up the limit
+        self.env['res.partner'].create([{'name': f'000 Archived {i}', 'active': False} for i in range(5)])
+        active_partners = self.env['res.partner'].create([{'name': f'001 Active {i}'} for i in range(5)])
+
+        loaded_ids = {p['id'] for p in session.load_data([])['res.partner']}
+        self.assertEqual(set(active_partners.ids) - loaded_ids, set())
+        new_partner_ids = {p['id'] for p in self.env['res.partner'].get_new_partner(self.config.id, [], 0)['res.partner']}
+        self.assertEqual(set(active_partners.ids) - new_partner_ids, set())
+
     def test_closing_entry_by_product(self):
         # set the Group by Product at Closing Entry
         self.config.is_closing_entry_by_product = True
