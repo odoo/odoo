@@ -429,6 +429,25 @@ class TestHrEmployee(TestHrCommon):
         self.assertEqual(new_employee.work_contact_id, user.partner_id)
         self.assertEqual(new_employee.user_id, user)
 
+    def test_change_work_email_after_removing_user(self):
+        """ The partner of a user removed from the employee is kept, but changing the work email or phone of
+            the employee doesn't change the ones of the user. """
+        user = self.env['res.users'].create({
+            'name': 'Test User',
+            'login': 'test_user',
+            'email': 'user@example.com',
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Test User - employee',
+            'user_id': user.id,
+        })
+        employee.user_id = None
+        employee.write({'work_email': 'employee@example.com', 'work_phone': '+32 470 00 00 00'})
+        self.assertEqual(employee.work_contact_id, user.partner_id)
+        self.assertEqual(employee.work_email, 'employee@example.com')
+        self.assertEqual(user.email, 'user@example.com')
+        self.assertFalse(user.partner_id.phone)
+
     def test_change_user_on_employee_multi_company(self):
         """
             Removing user from employee keeps the link in work_contact_id in the correct company until the user
