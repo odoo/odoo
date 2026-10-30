@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { parseHTML } from "@html_editor/utils/html";
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, test, freezeTime } from "@odoo/hoot";
 import { click, pointerDown, pointerUp, press, queryOne, microTick } from "@odoo/hoot-dom";
 import { animationFrame, mockUserAgent, tick } from "@odoo/hoot-mock";
 import { setupEditor, testEditor } from "./_helpers/editor";
@@ -1281,6 +1281,7 @@ describe("mutations order", () => {
 describe("grouped undo/redo", () => {
     test("should undo, then redo all changes on common text node", async () => {
         const { editor, el } = await setupEditor("<p>[]</p>");
+        freezeTime();
         await insertText(editor, "abc");
         const abc = getContent(el);
         await splitBlock(editor);
