@@ -57,7 +57,6 @@ export class ChannelInvitation extends Component {
                 .optional(),
         });
         this.rtc = useService("discuss.rtc");
-        this.suggestionService = useService("mail.suggestion");
         this.sequential = useSequential();
         this.state = proxy({
             hasPendingRequest: false,
@@ -158,7 +157,7 @@ export class ChannelInvitation extends Component {
         const selectablePartners = results.partner_ids.map((id) =>
             this.store["res.partner"].get(id)
         );
-        this.selectablePartners = this.suggestionService.sortPartnerSuggestions(
+        this.selectablePartners = this.store.sortPartnerSuggestions(
             selectablePartners,
             this.searchStr,
             this.props.channel?.thread

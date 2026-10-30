@@ -101,6 +101,17 @@ const storeServicePatch = {
     sortMembers(m1, m2) {
         return localeCompare(m1.name, m2.name) || m1.id - m2.id;
     },
+    /** @override */
+    sortPartnerSuggestionsContext(thread) {
+        return Object.assign(super.sortPartnerSuggestionsContext(...arguments), {
+            recentChatPartnerIds: this.getRecentChatPartnerIds(),
+            memberPartnerIds: new Set(
+                thread?.channel?.channel_member_ids
+                    .filter((member) => member.partner_id)
+                    .map((member) => member.partner_id.id)
+            ),
+        });
+    },
     /** @param {number[]} partnerIds */
     async startChat(partnerIds) {
         const partners_to = [...new Set([this.self.id, ...partnerIds])];

@@ -3,42 +3,34 @@ import { getDeepestPosition, isContentEditable, isTextNode } from "@html_editor/
 import { rightPos } from "@html_editor/utils/position";
 
 import { NavigableList } from "@mail/core/common/navigable_list";
-import {
-    generatePartnerMentionElement,
-    generateRoleMentionElement,
-    generateSpecialMentionElement,
-} from "@mail/utils/common/format";
 import { useSearch } from "@mail/utils/common/hooks";
 
 import { markRaw, proxy, untrack, useOnChange } from "@odoo/owl";
 
+import { normalize } from "@web/core/l10n/utils";
 import { ConnectionAbortedError } from "@web/core/network/rpc";
-
-/**
- * Delimiters that trigger suggestion lists in the composer.
- *
- * @typedef {typeof SUGGESTION_DELIMITERS[keyof typeof SUGGESTION_DELIMITERS]} SuggestionDelimiter
- */
-export const SUGGESTION_DELIMITERS = Object.freeze({
-    PARTNER: "@",
-    CANNED_RESPONSE: "::",
-    CHANNEL_COMMAND: "/",
-});
 
 /** @typedef {import("@mail/core/common/navigable_list").Option} Option */
 
 /**
- * @typedef {import("models").ResPartner
- *   | import("models").ResRole
- *   | import("models").CannedResponse
- *   | import("@mail/core/common/store_plugin").SpecialMention} Suggestion
+ * @typedef {Object} SuggestionSource
+ * @property {number} [allowedPosition] the only position of the delimiter in its text node
+ * @property {string} delimiter
+ * @property {(cleanedTerm: string, options: { abortSignal: AbortSignal }) => Promise<void>} [fetch]
+ * @property {() => boolean} [isAvailable]
+ * @property {boolean} [keepsDelimiter] whether the suggestion is inserted after the delimiter
+ * @property {(cleanedTerm: string) => Object[]} search
+ * @property {(option: Option) => Node} [toNode] the inserted node, a text of the label by default
+ * @property {(suggestions: Object[]) => { optionTemplate?: string, options: Option[] }} toOptions
  */
+
+/** @typedef {SuggestionSource[]} suggestion_sources */
 
 /** Suggests what can follow a delimiter typed in the editable (e.g. `@` for a partner). */
 export class MailSuggestionPlugin extends Plugin {
     static id = "suggestion";
     static dependencies = ["dom", "history", "overlay", "selection"];
-    static shared = ["hasSuggestions"];
+    static shared = ["getSources", "hasSuggestions"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         on_committed_to_history_handlers: () => {
@@ -59,16 +51,13 @@ export class MailSuggestionPlugin extends Plugin {
     abortController;
     /**
      * @type {{
-     *   getAncestors?: () => Readonly<Record<string, any>>,
-     *   getComposerType: () => "message"|"note"|false|undefined,
      *   getSuggestionPosition?: () => string,
      *   getSuggestionTarget?: () => HTMLElement|null,
-     *   getThread: () => import("models").Thread|null,
-     *   onInsertSuggestion: (option: Option) => void,
+     *   onInsertSuggestion?: (option: Option) => void,
      * }}
      */
     deps;
-    /** @type {{ delimiter: SuggestionDelimiter|undefined, position: number|undefined, term: string }} */
+    /** @type {{ position: number|undefined, source: SuggestionSource|undefined }} */
     detection;
     /** Set after the attachment, whose commits come from the initial content, not from typing. */
     isAttached = false;
@@ -95,7 +84,7 @@ export class MailSuggestionPlugin extends Plugin {
 
     setup() {
         this.deps = this.config.composerPluginDependencies;
-        this.detection = proxy({ delimiter: undefined, position: undefined, term: "" });
+        this.detection = proxy({ position: undefined, source: undefined });
         this.listProps = proxy({
             class: "o-mail-Composer-suggestionList",
             isLoading: false,
@@ -120,19 +109,24 @@ export class MailSuggestionPlugin extends Plugin {
         this.search = useSearch({
             fetch: this.fetchSuggestions.bind(this),
             filter: this.update.bind(this),
-            deps: () => [this.detection.delimiter, this.detection.position],
-            isActive: () => !!this.detection.delimiter,
+            deps: () => [this.detection.source, this.detection.position],
+            isActive: () => !!this.detection.source,
         });
         useOnChange(
             () => [this.search.results, this.search.loading, this.search.searchTerm],
             (results, loading, searchTerm) => {
-                const { optionTemplate, options } = results
-                    ? this.mapSuggestionsToOptions(results.type, results.suggestions)
+                const { optionTemplate, options } = results?.source
+                    ? results.source.toOptions(results.suggestions)
                     : { options: [] };
                 // raw: the list sorts its options in place while rendering
                 Object.assign(this.listProps, {
                     isLoading: !!searchTerm && loading,
-                    options: markRaw(options),
+                    options: markRaw(
+                        options.map((option) => ({
+                            ...option,
+                            classList: "o-mail-Composer-suggestion",
+                        }))
+                    ),
                     optionTemplate,
                 });
             }
@@ -140,11 +134,7 @@ export class MailSuggestionPlugin extends Plugin {
     }
 
     clearSearch() {
-        Object.assign(this.detection, {
-            delimiter: undefined,
-            position: undefined,
-            term: "",
-        });
+        Object.assign(this.detection, { position: undefined, source: undefined });
         this.search.reset();
         if (this.overlay.isOpen) {
             this.overlay.close();
@@ -185,43 +175,40 @@ export class MailSuggestionPlugin extends Plugin {
         if (this.detection.position !== undefined && this.detection.position < start) {
             candidatePositions.push(this.detection.position);
         }
-        const supportedDelimiters = this.services["mail.suggestion"].getSupportedDelimiters(
-            this.deps.getThread(),
-            this.deps.getAncestors?.()
-        );
+        const sources = this.getSources();
         for (const candidatePosition of candidatePositions) {
             if (candidatePosition < 0 || candidatePosition >= text.length) {
                 continue;
             }
 
-            const findAppropriateDelimiter = () => {
+            const findAppropriateSource = () => {
                 let goodCandidate;
-                for (const [delimiter, allowedPosition] of supportedDelimiters) {
+                for (const source of sources) {
+                    const { allowedPosition, delimiter } = source;
                     if (
                         text.substring(candidatePosition).startsWith(delimiter) && // delimiter is used
                         (allowedPosition === undefined || allowedPosition === candidatePosition) && // delimiter is allowed position
-                        (!goodCandidate || delimiter.length > goodCandidate.length) // delimiter is more specific
+                        (!goodCandidate || delimiter.length > goodCandidate.delimiter.length) // delimiter is more specific
                     ) {
-                        goodCandidate = delimiter;
+                        goodCandidate = source;
                     }
                 }
                 return goodCandidate;
             };
 
-            const candidateDelimiter = findAppropriateDelimiter();
-            if (!candidateDelimiter) {
+            const candidateSource = findAppropriateSource();
+            if (!candidateSource) {
                 continue;
             }
             const charBeforeCandidate = text[candidatePosition - 1];
             if (charBeforeCandidate && !/\s/.test(charBeforeCandidate)) {
                 continue;
             }
-            Object.assign(this.detection, {
-                delimiter: candidateDelimiter,
-                position: candidatePosition,
-                term: text.substring(candidatePosition + candidateDelimiter.length, start),
-            });
-            this.search.searchTerm = this.detection.term;
+            Object.assign(this.detection, { position: candidatePosition, source: candidateSource });
+            this.search.searchTerm = text.substring(
+                candidatePosition + candidateSource.delimiter.length,
+                start
+            );
             this.overlay.open({ target: this.deps.getSuggestionTarget?.(), props: this.listProps });
             return;
         }
@@ -232,23 +219,16 @@ export class MailSuggestionPlugin extends Plugin {
         this.isDismissed = true;
     }
 
-    async fetchSuggestions() {
-        const thread = this.deps.getThread();
+    /** @param {string} term */
+    async fetchSuggestions(term) {
         if (this.isDestroyed) {
             return;
         }
-        if (!this.services["mail.store"].self_user) {
-            return; // guests cannot access fetch suggestion method
-        }
-        const composerType = this.deps.getComposerType();
+        const { source } = this.detection;
         try {
             this.abortController?.abort();
             this.abortController = new AbortController();
-            await this.services["mail.suggestion"].fetchSuggestions(this.detection, {
-                thread,
-                abortSignal: this.abortController.signal,
-                composerType,
-            });
+            await source.fetch?.(normalize(term), { abortSignal: this.abortController.signal });
         } catch (e) {
             if (e instanceof ConnectionAbortedError) {
                 return;
@@ -258,11 +238,7 @@ export class MailSuggestionPlugin extends Plugin {
         if (this.isDestroyed) {
             return;
         }
-        const { suggestions } = this.services["mail.suggestion"].searchSuggestions(this.detection, {
-            composerType,
-            thread: this.deps.getThread(),
-        });
-        return suggestions.length === 0 ? false : undefined;
+        return this.searchSuggestions(term).length === 0 ? false : undefined;
     }
 
     /**
@@ -274,16 +250,25 @@ export class MailSuggestionPlugin extends Plugin {
         return getDeepestPosition(endContainer, endOffset);
     }
 
+    getSources() {
+        return this.getResource("suggestion_sources").filter(
+            (source) => source.isAvailable?.() ?? true
+        );
+    }
+
     hasSuggestions() {
         return Boolean(this.search.results);
     }
 
     /** @param {Option} option */
     insert(option) {
-        const position =
-            this.detection.delimiter === SUGGESTION_DELIMITERS.CHANNEL_COMMAND
-                ? this.detection.position + 1
-                : this.detection.position;
+        const { position: delimiterPosition, source } = this.detection;
+        if (!source) {
+            return;
+        }
+        const position = source.keepsDelimiter
+            ? delimiterPosition + source.delimiter.length
+            : delimiterPosition;
         const [node, offset] = this.getCursorPosition();
         this.dependencies.selection.setSelection({
             anchorNode: node,
@@ -291,8 +276,8 @@ export class MailSuggestionPlugin extends Plugin {
             focusNode: node,
             focusOffset: offset,
         });
-        this.deps.onInsertSuggestion(option);
-        const inlineElement = this.makeMentionFromOption(option);
+        this.deps.onInsertSuggestion?.(option);
+        const inlineElement = source.toNode?.(option) ?? this.document.createTextNode(option.label);
         this.dependencies.dom.insert(inlineElement);
         const [anchorNode, anchorOffset] = rightPos(inlineElement);
         this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
@@ -300,107 +285,27 @@ export class MailSuggestionPlugin extends Plugin {
         this.dependencies.history.commit();
     }
 
-    /** @param {Option} option */
-    makeMentionFromOption(option) {
-        if (option.partner) {
-            return generatePartnerMentionElement(option.partner, { thread: this.deps.getThread() });
-        }
-        if (option.isSpecial) {
-            return generateSpecialMentionElement(option.label);
-        }
-        if (option.role) {
-            return generateRoleMentionElement(option.role);
-        }
-        return this.document.createTextNode(option.label);
+    /** @param {string} term */
+    searchSuggestions(term) {
+        return this.detection.source?.search(normalize(term)) ?? [];
     }
 
-    /**
-     * @param {string} type
-     * @param {Suggestion[]} suggestions
-     */
-    mapSuggestionsToOptions(type, suggestions) {
-        const classList = "o-mail-Composer-suggestion";
-        const thread = this.deps.getThread();
-        switch (type) {
-            case "Partner":
-                return {
-                    optionTemplate: "mail.Composer.suggestionPartner",
-                    options: suggestions.map((suggestion) => {
-                        if (suggestion.isSpecial) {
-                            return {
-                                ...suggestion,
-                                group: 3,
-                                optionTemplate: "mail.Composer.suggestionSpecial",
-                                classList,
-                            };
-                        }
-                        if (suggestion?.Model?.getName?.() === "res.role") {
-                            return {
-                                group: 2,
-                                label: suggestion.name,
-                                role: suggestion,
-                                thread,
-                                optionTemplate: "mail.Composer.suggestionRole",
-                                classList,
-                            };
-                        }
-                        return {
-                            group: 1,
-                            label: (
-                                thread?.getPersonaName(suggestion) ||
-                                suggestion.displayName ||
-                                suggestion.email ||
-                                ""
-                            ).trim(),
-                            partner: suggestion,
-                            thread,
-                            classList,
-                        };
-                    }),
-                };
-            case "ChannelCommand":
-                return {
-                    optionTemplate: "mail.Composer.suggestionChannelCommand",
-                    options: suggestions.map((suggestion) => ({
-                        label: suggestion.name,
-                        help: suggestion.help,
-                        classList,
-                    })),
-                };
-            case "mail.canned.response":
-                return {
-                    optionTemplate: "mail.Composer.suggestionCannedResponse",
-                    options: suggestions.map((suggestion) => ({
-                        cannedResponse: suggestion,
-                        label: suggestion.substitution,
-                        source: suggestion.source,
-                        title: suggestion.substitution,
-                        classList,
-                    })),
-                };
-            default:
-                return { options: [] };
-        }
-    }
-
-    update() {
-        if (!this.detection.delimiter) {
+    /** @param {string} term */
+    update(term) {
+        const { source } = this.detection;
+        if (!source) {
             return undefined;
         }
         if (this.isDismissed) {
             return this.search.results;
         }
-        const { type, suggestions } = this.services["mail.suggestion"].searchSuggestions(
-            this.detection,
-            { composerType: this.deps.getComposerType(), thread: this.deps.getThread() }
-        );
+        const suggestions = this.searchSuggestions(term);
         if (!suggestions.length) {
             return undefined;
         }
         // arbitrary limit to avoid displaying too many elements at once
         // ideally a load more mechanism should be introduced
         const limit = 8;
-        suggestions.length = Math.min(suggestions.length, limit);
-        return { type, suggestions };
+        return { source, suggestions: suggestions.slice(0, limit) };
     }
 }

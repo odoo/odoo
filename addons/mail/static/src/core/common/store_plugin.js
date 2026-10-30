@@ -1,3 +1,4 @@
+import { partnerCompareRegistry } from "@mail/core/common/partner_compare";
 import { SoundEffectsPlugin } from "@mail/core/common/sound_effects_plugin";
 import { Store as BaseStore, fields, makeStore } from "@mail/model/export";
 import { formatLocalDateTime, resolveTimeZoneName } from "@mail/utils/common/dates";
@@ -10,6 +11,7 @@ import { cookie } from "@web/core/browser/cookie";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { _t } from "@web/core/l10n/translation";
+import { normalize } from "@web/core/l10n/utils";
 import { rpc } from "@web/core/network/rpc";
 import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
 import { ORM } from "@web/core/orm_plugin";
@@ -869,6 +871,45 @@ export class Store extends BaseStore {
             loadMore: messages.length === this.FETCH_LIMIT,
             messages,
         };
+    }
+
+    /**
+     * @param {Array<import("models").ResPartner|SpecialMention>} partners
+     * @param {string} [searchTerm]
+     * @param {import("models").Thread} [thread]
+     */
+    sortPartnerSuggestions(partners, searchTerm = "", thread = undefined) {
+        const cleanedSearchTerm = normalize(searchTerm);
+        const compareFunctions = partnerCompareRegistry.getAll();
+        const context = this.sortPartnerSuggestionsContext(thread);
+        return partners.sort((p1, p2) => {
+            if (p1.isSpecial || p2.isSpecial) {
+                return 0;
+            }
+            for (const fn of compareFunctions) {
+                const result = fn(p1, p2, {
+                    store: this,
+                    searchTerm: cleanedSearchTerm,
+                    thread,
+                    context,
+                });
+                if (result !== undefined) {
+                    return result;
+                }
+            }
+            return 0;
+        });
+    }
+
+    /** @param {import("models").Thread} [thread] the thread from which the suggestions are triggered */
+    sortPartnerSuggestionsContext(thread) {
+        const latestMessageIdByAuthorId = new Map();
+        for (const { author_id, id } of thread?.messages || []) {
+            if (author_id && !latestMessageIdByAuthorId.has(author_id.id)) {
+                latestMessageIdByAuthorId.set(author_id.id, id);
+            }
+        }
+        return { latestMessageIdByAuthorId };
     }
 }
 Store.register();

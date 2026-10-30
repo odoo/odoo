@@ -5,13 +5,14 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { isHtmlEmpty } from "@web/core/utils/html";
 import { renderToMarkup } from "@web/core/utils/render";
 import { HtmlMailField, htmlMailField } from "../html_mail_field/html_mail_field";
-import { MailSuggestionPlugin } from "@mail/core/common/plugin/suggestion_plugin";
+import { CannedResponseSuggestionPlugin } from "@mail/core/common/plugin/suggestion/canned_response_suggestion_plugin";
+import { PartnerSuggestionPlugin } from "@mail/core/common/plugin/suggestion/partner_suggestion_plugin";
+import { MailSuggestionPlugin } from "@mail/core/common/plugin/suggestion/suggestion_plugin";
 import { ContentExpandablePlugin } from "./content_expandable_plugin";
 import { DisableBannerCommandsPlugin } from "./disable_banner_commands_plugin";
 import { fillEmpty } from "@html_editor/utils/dom";
 import { markup, onWillUnmount, useEffect } from "@odoo/owl";
 import { SIGNATURE_CLASS } from "@html_editor/main/user_signature_plugin";
-import { COMPOSER_TYPES } from "@mail/core/common/composer";
 import { FullComposerBusPlugin } from "@mail/core/web/full_composer_bus_plugin";
 import { useMaybePlugin } from "@mail/utils/common/hooks";
 
@@ -78,8 +79,10 @@ export class HtmlComposerMessageField extends HtmlMailField {
         const config = super.getConfig(...arguments);
         config.Plugins = [
             ...config.Plugins.filter((plugin) => !["video"].includes(plugin.id)),
+            CannedResponseSuggestionPlugin,
             DisableBannerCommandsPlugin,
             MailSuggestionPlugin,
+            PartnerSuggestionPlugin,
         ];
         if (this.props.record.data.composition_comment_option === "reply_all") {
             config.Plugins.push(ContentExpandablePlugin);
@@ -117,12 +120,10 @@ export class HtmlComposerMessageField extends HtmlMailField {
                 subtree: true,
             });
         };
-        const composerType = this.props.record.data.subtype_is_log
-            ? COMPOSER_TYPES.NOTE
-            : COMPOSER_TYPES.MESSAGE;
+        const isNote = Boolean(this.props.record.data.subtype_is_log);
         config.composerPluginDependencies = {
-            getComposerType: () => composerType,
             getThread: () => thread,
+            isNote: () => isNote,
             // mentions are links only: the recipients are those of the form
             onInsertSuggestion: (option) => {
                 if (option.cannedResponse) {
