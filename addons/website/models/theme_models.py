@@ -270,13 +270,8 @@ class ThemeUtils(models.AbstractModel):
         'website.footer_no_copyright',
     ]
 
-    def _post_copy(self, mod):
-        # Call specific theme post copy
-        theme_post_copy = '_%s_post_copy' % mod.name
-        if hasattr(self, theme_post_copy):
-            _logger.info('Executing method %s' % theme_post_copy)
-            method = getattr(self, theme_post_copy)
-            return method(mod)
+    def _apply_theme_config(self, module):
+        # Overridden by each theme, which only acts when ``module`` is itself
         return False
 
     @api.model
@@ -352,9 +347,9 @@ class ThemeUtils(models.AbstractModel):
             obj = obj.with_context(active_test=False)
             obj = obj.copy_ids.filtered(lambda x: x.website_id == self.env.website)
         else:
-            # If a theme post copy wants to enable/disable a view, this is to
+            # If a theme configuration wants to enable/disable a view, this is to
             # enable/disable a given functionality which is disabled/enabled
-            # by default. So if a post copy asks to enable/disable a view which
+            # by default. So if a configuration asks to enable/disable a view which
             # is already enabled/disabled, we would not consider it otherwise it
             # would COW the view for nothing.
             View = self.env['ir.ui.view'].with_context(active_test=False)
