@@ -41,8 +41,6 @@ MODEL_METHODS_TO_IGNORE = {
     ('propose.change', '_do_remove_step'),
     ('propose.change', '_do_set_picture'),
     ('propose.change', '_do_update_step'),
-    ('report.pos_hr.single_employee_sales_report', '_get_domain'),
-    ('report.pos_hr.single_employee_sales_report', 'get_sale_details'),
 }
 
 

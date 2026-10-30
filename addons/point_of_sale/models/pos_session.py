@@ -1336,3 +1336,14 @@ class PosSession(models.Model):
                     'display_type': 'rounding',
                 })]
         return move
+
+    def action_pos_sales_detail_report(self):
+        self.ensure_one()
+        action = self.env['ir.actions.client']._for_xml_id('point_of_sale.action_pos_sales_detail')
+        action['context'] = {
+            'report_id': self.env.ref('point_of_sale.pos_sales_detail_report').id,
+            'default_filters': {'session_id': self.id},
+            'ignore_session': True,
+            'hidden_filters': ['date_range', 'config_ids'],
+        }
+        return action
