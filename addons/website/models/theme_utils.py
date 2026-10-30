@@ -17,18 +17,13 @@ class ThemeUtils(models.AbstractModel):
     _description = 'Theme Utils'
     _auto = False
 
-    # The order is important because of dependencies (page need view, menu need page)
     _theme_model_names = OrderedDict([
         ('ir.ui.view', 'theme.ir.ui.view'),
         ('ir.asset', 'theme.ir.asset'),
-        ('website.page', 'theme.website.page'),
-        ('website.menu', 'theme.website.menu'),
         ('ir.attachment', 'theme.ir.attachment'),
     ])
     _theme_translated_fields = {
         'theme.ir.ui.view': [('theme.ir.ui.view,arch', 'ir.ui.view,arch_db')],
-        'theme.website.menu': [('theme.website.menu,name', 'website.menu,name')],
-        'theme.website.page': [('theme.website.page,url', 'website.page,url')],
     }
 
     _header_templates = [
@@ -324,8 +319,6 @@ class ThemeUtils(models.AbstractModel):
     @api.model
     def _copy_theme_translations(self, old_rec, new_rec):
         translated_fields = self._theme_translated_fields.get(old_rec._name, [])
-        cur_lang = self.env.lang or 'en_US'
-        valid_langs = set(code for code, _ in self.env['res.lang'].get_installed()) | {'en_US'}
         old_rec.flush_recordset()
         for (src_field, dst_field) in translated_fields:
             __, src_fname = src_field.split(',')
@@ -336,20 +329,13 @@ class ThemeUtils(models.AbstractModel):
             old_stored_translations = old_rec._get_stored_translations(src_fname)
             if not old_stored_translations:
                 continue
-            if old_field.translate is True:
-                if old_rec[src_fname] != new_rec[dst_fname]:
-                    continue
-                new_rec.update_field_translations(dst_fname, {
-                    k: v for k, v in old_stored_translations.items() if k in valid_langs and k != cur_lang
-                })
-            else:
-                # {lang: {old_term: new_term}}
-                translations = old_stored_translations.extract_term_translations(
-                    self.env, old_field, 'en_US',
-                )
-                new_rec.with_context(install_filename='dummy').update_field_translations(
-                    dst_fname, translations, source_lang='en_US',
-                )
+            # {lang: {old_term: new_term}}
+            translations = old_stored_translations.extract_term_translations(
+                self.env, old_field, 'en_US',
+            )
+            new_rec.with_context(install_filename='dummy').update_field_translations(
+                dst_fname, translations, source_lang='en_US',
+            )
 
     @api.model
     def _theme_load(self, themes, website):
@@ -402,7 +388,6 @@ class ThemeUtils(models.AbstractModel):
             will be lost. However we do want the ophan to be deleted from the website when
             we upgrade or delete the theme from the website.
 
-            ``website.page`` and ``website.menu`` don't have ``key`` field so we don't clean them.
             TODO in master: add a field ``theme_id`` on the models to more cleanly compute orphans.
 
             :param theme: theme ``ir.module.module`` whose orphans are removed
@@ -417,8 +402,6 @@ class ThemeUtils(models.AbstractModel):
         theme.ensure_one()
         model_sudo = self.env[model_name].sudo()
 
-        if model_name in ('website.page', 'website.menu'):
-            return model_sudo
         # use active_test to also unlink archived models
         # and use 'force_delete' to also unlink inherited models
         orphans = model_sudo.with_context(active_test=False, force_delete=True).search([
