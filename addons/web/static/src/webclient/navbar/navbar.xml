@@ -192,7 +192,7 @@
                 <t t-if="currentAppSectionsExtra.length" t-call="web.NavBar.SectionsMenu.MoreDropdown">
                     <t t-set="sections" t-value="currentAppSectionsExtra" />
                     <t t-if="sectionsVisibleCount lt 10">
-                        <t t-set="hotkey" t-value="(sectionsVisibleCount + 1 % 10).toString()" />
+                        <t t-set="hotkey" t-value="((sectionsVisibleCount + 1) % 10).toString()" />
                     </t>
                 </t>
             </DropdownGroup>
