@@ -327,7 +327,7 @@ class MailingList(models.Model):
         deleted as unused source contacts, instead of being moved to the destination.
         """
         return (
-            self.env['mail.subscription'],
+            [],
             SQL("TRUE"),
         )
 
