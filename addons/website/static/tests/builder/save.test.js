@@ -283,13 +283,12 @@ test("preview shouldn't let o_dirty", async () => {
     class TestPlugin extends Plugin {
         static id = "TestPlugin";
         resources = {
-            normalize_processors: (root) => {
-                const el = root.querySelector(".test-option");
+            on_history_commit_restored_handlers: () => {
+                const el = this.editable.querySelector(".test-option");
                 if (editorIsStart && el.dataset.applied !== "true") {
                     // apply a mutation when we remove the preview
                     el.classList.add("test");
                 }
-                return root;
             },
         };
     }
