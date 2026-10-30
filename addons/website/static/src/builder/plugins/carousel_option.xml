@@ -94,33 +94,29 @@
     <t t-set="slidePrev" t-value="() => this.slide('prev')"/>
     <t t-set="slideNext" t-value="() => this.slide('next')"/>
     <t t-set="sameLangDir" t-value="this.env.langDir.content === this.env.langDir.builder"/>
-    <button class="btn btn-primary ms-0 py-0 px-1 me-1"
+    <button class="oi oi-fw o_hb_btn btn ms-0 me-1"
+            data-icon="keyboard_arrow_left"
+            t-att-disabled="!this.state.hasMultiItems"
             t-att-title="sameLangDir ? backward : forward"
             t-att-aria-label="sameLangDir ? backward : forward"
-            t-att-class="{ disabled: !this.state.hasMultiItems }"
-            t-on-click="sameLangDir ? slidePrev : slideNext">
-        <span class="oi oi-fw" data-icon="keyboard_arrow_left" role="img" aria-hidden="true"/>
-    </button>
-    <button class="btn btn-primary py-0 px-1 me-2"
+            t-on-click="sameLangDir ? slidePrev : slideNext"/>
+    <button class="oi oi-fw o_hb_btn btn me-2"
+            data-icon="keyboard_arrow_right"
+            t-att-disabled="!this.state.hasMultiItems"
             t-att-title="sameLangDir ? forward : backward"
             t-att-aria-label="sameLangDir ? forward : backward"
-            t-att-class="{ disabled: !this.state.hasMultiItems }"
-            t-on-click="sameLangDir ? slideNext : slidePrev">
-        <span class="oi oi-fw" data-icon="keyboard_arrow_right" role="img" aria-hidden="true"/>
-    </button>
-    <button class="btn btn-success ms-0 py-0 px-1 me-1"
+            t-on-click="sameLangDir ? slideNext : slidePrev"/>
+    <button class="oi oi-fw o_hb_btn btn btn-success-color-hover ms-0 me-1"
+            data-icon="add"
             title="Add Slide"
             aria-label="Add Slide"
-            t-on-click="this.addSlide">
-        <span class="oi oi-fw" data-icon="add" role="img" aria-hidden="true"/>
-    </button>
-    <button class="btn btn-danger py-0 px-1"
-            t-att-class="{ disabled: !this.state.hasMultiItems }"
+            t-on-click="this.addSlide"/>
+    <button class="oi oi-fw o_hb_btn btn btn-danger-color-hover"
+            data-icon="remove"
+            t-att-disabled="!this.state.hasMultiItems"
             title="Remove Slide"
             aria-label="Remove Slide"
-            t-on-click="this.removeSlide">
-        <span class="oi oi-fw" data-icon="remove" role="img" aria-hidden="true"/>
-    </button>
+            t-on-click="this.removeSlide"/>
 </t>
 
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
