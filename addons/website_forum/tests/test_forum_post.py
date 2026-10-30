@@ -93,8 +93,31 @@ class TestForumPost(TestForumCommon):
     def test_add_seo_rels_to_new_posts_created_by_users(self):
         self.user_employee.karma = KARMA['post']
         post = self.env['forum.post'].with_user(self.user_employee).create({
-            'content': 'hello <a href="#">world</a>',
+            'content': 'hello <a href="https://example.com">world</a>',
             'forum_id': self.forum.id,
         })
 
-        self.assertEqual(post['content'], '<p>hello <a href="#" rel="nofollow noopener noreferrer ugc">world</a></p>')
+        self.assertEqual(post['content'], '<p>hello <a href="https://example.com" rel="nofollow noopener noreferrer ugc">world</a></p>')
+
+    def test_add_seo_rels_only_to_links_to_other_websites(self):
+        website, other_website = self.env['website'].create([
+            {'name': 'My Website', 'domain': 'https://my-website.com'},
+            {'name': 'Other Website', 'domain': 'https://other-website.com'},
+        ])
+        self.forum.website_id = website
+        self.user_employee.karma = KARMA['post']
+        post = self.env['forum.post'].with_user(self.user_employee).create({
+            'content': '<p><a href="https://my-website.com/shop">A</a> <a href="https://other-website.com/shop">B</a></p>',
+            'forum_id': self.forum.id,
+        })
+
+        self.assertEqual(
+            post.content,
+            '<p><a href="https://my-website.com/shop">A</a> '
+            '<a href="https://other-website.com/shop" rel="nofollow noopener noreferrer ugc">B</a></p>',
+        )
+
+        self.forum.website_id = other_website
+        post.with_user(self.user_employee).content = '<p><a href="https://my-website.com/shop">A</a></p>'
+
+        self.assertEqual(post.content, '<p><a href="https://my-website.com/shop" rel="nofollow noopener noreferrer ugc">A</a></p>')
