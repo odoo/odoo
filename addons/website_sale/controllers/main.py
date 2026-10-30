@@ -532,15 +532,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
         show_on_sale_filter = False
         show_in_stock_filter = False
         if "sale" in ribbon_assign_values:
-            # Without the active filter, only the existence of a product on sale matters:
-            # on big catalogs, check the first page, then the rest by batches
-            batch_size = 1000
-            if on_sale_active or len(search_product) <= batch_size:
+            # Without the active filter, only the existence of a product on sale matters: check
+            # the first page, then the rest by batches
+            if on_sale_active:
                 products_batches = [search_product]
             else:
                 products_batches = itertools.chain(
                     [search_product[:ppg]],
-                    split_every(batch_size, search_product[ppg:].ids, search_product.browse),
+                    split_every(1000, search_product[ppg:].ids, search_product.browse),
                 )
             for products_batch in products_batches:
                 sales_prices = products_batch.with_prefetch()._get_sales_prices(
