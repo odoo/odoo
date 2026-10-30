@@ -20,10 +20,16 @@ export class ForecastWidgetField extends FloatField {
             this.forecastIsLate = data.forecast_expected_date > data.date_deadline;
         }
         const digits = fields.forecast_availability.digits;
-        const options = { digits, thousandsSep: "", decimalPoint: "." };
-        const forecast_availability = parseFloat(formatFloat(data.forecast_availability, options));
-        this.product_qty = parseFloat(formatFloat(data.product_qty, options));
-        this.willBeFulfilled = forecast_availability >= this.product_qty;
+        this.options = { digits, thousandsSep: "", decimalPoint: "." };
+        this.forecast_availability = parseFloat(formatFloat(data.forecast_availability, this.options));
+    }
+
+    get productQty() {
+        return parseFloat(formatFloat(this.props.record.data.product_qty, this.options));
+    }
+
+    get willBeFulfilled() {
+        return this.forecast_availability >= this.product_qty;
     }
 
     //--------------------------------------------------------------------------
