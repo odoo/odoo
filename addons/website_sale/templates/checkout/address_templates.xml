@@ -233,27 +233,19 @@
                             <t t-else="">New address</t>
                         </h4>
                     </t>
-                    <div
-                        t-if="use_delivery_as_billing and not only_services and partner_sudo"
-                        class="alert alert-warning"
-                        role="alert"
-                    >
-                        <p class="mb-0">
-                            You are editing your <b>delivery and billing</b> addresses
-                            at the same time!<br/>
-                            If you want to modify your billing address, create a
-                            <a class="o_translate_inline" href="/shop/address?address_type=billing">new address</a>.
-                        </p>
-                    </div>
                     <div id="errors"/> <!-- for js -->
                     <form
+                        id="o_wsale_address_form"
                         action="/shop/address/submit"
                         method="post"
                         name="address_form"
-                        class="address_autoformat o_address_autocomplete"
+                        t-attf-class="address_autoformat o_address_autocomplete
+                            o_mark_{{website.address_form_marked_fields}}
+                            o_labels_{{website.address_form_label_position}}"
                         t-att-data-company-country-code="res_company.country_id.code"
                         t-att-data-default-required-fields="','.join(required_fields)"
                         t-att-data-submit-url="'/shop/address/submit'"
+                        t-att-style="website._get_address_form_style()"
                     >
                         <t t-if="is_anonymous_cart">
                             <div class="d-flex flex-column flex-md-row align-items-center justify-content-between mb-1">

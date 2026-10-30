@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="website_sale_loyalty.sale_coupon_result" inherit_id="website_sale.coupon_form">
-        <xpath expr="//form[@name='coupon_code']//input[@name='promo']" position="attributes">
-            <attribute name="placeholder">Gift card or discount code...</attribute>
-        </xpath>
+        <label for="promo" position="replace">
+            <label for="promo">Gift card or discount code</label>
+        </label>
         <xpath expr="//t[@name='code_not_available']" position="replace"/>
     </template>
 

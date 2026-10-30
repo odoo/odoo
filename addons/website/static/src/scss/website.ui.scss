@@ -91,6 +91,12 @@ body {
     max-width: 300px;
     position: relative;
     margin: 50px auto;
+
+    /* An auto margin only pushes a block, and `.btn` is inline-block */
+    .field-password > .btn-link {
+        display: block;
+        width: fit-content;
+    }
 }
 
 /* POPOVER NAVIGATION */

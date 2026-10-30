@@ -346,3 +346,107 @@ $-color-for-gray-200-bg: adjust-color-to-background($body-color, $gray-200);
 .form-range:disabled::-webkit-slider-thumb {
     border-color: $input-disabled-border-color;
 }
+
+// Bootstrap's floating labels, resized to the theme's inputs, with the label
+// raised onto the border rather than sitting inside the control.
+.form-floating {
+    $-label-line-height: 1.25;
+    // Half the label's line box, which is how far it rises
+    $-label-offset: $input-font-size * $-label-line-height * .5;
+    // Capped, so the label can never end up outside the control's border. Unquoted CSS
+    // `min()`, because the two are not always in the same unit
+    $-label-padding-x: unquote("min(#{$input-padding-x}, #{map-get($spacers, 1)})");
+    // The border the label has to clear, which a theme can set per side
+    $-border-top: if(variable-exists(input-border-top-width), $input-border-top-width, null)
+        or $input-border-width;
+    $-border-left: if(variable-exists(input-border-left-width), $input-border-left-width, null)
+        or $input-border-width;
+
+    // The raised label is out of the flow, so the field reserves its room
+    margin-top: $-label-offset;
+
+    > .form-control,
+    > .form-control-plaintext,
+    > .form-select {
+        height: auto;
+        min-height: 0;
+        padding: $input-padding-y $input-padding-x;
+        line-height: $input-line-height;
+    }
+
+    // The label leaves the control, so the value must not move down
+    > .form-control:focus,
+    > .form-control:not(:placeholder-shown),
+    > .form-control-plaintext:not(:placeholder-shown),
+    > .form-select {
+        padding-top: $input-padding-y;
+        padding-bottom: $input-padding-y;
+    }
+
+    > .form-control:focus::placeholder {
+        color: $input-placeholder-color;
+    }
+
+    > label {
+        top: calc(#{$input-padding-y}
+            + #{$input-font-size * ($input-line-height - $-label-line-height) * .5}
+            + #{$-border-top});
+        left: calc(#{$input-padding-x} - #{$-label-padding-x} + #{$-border-left});
+        height: auto;
+        padding: 0 $-label-padding-x;
+        border: 0;
+        font-size: $input-font-size;
+        line-height: $-label-line-height;
+        color: $input-placeholder-color;
+        // Scaled about its middle, so `top` alone places it
+        transform-origin: left center;
+        @include transition(top .1s ease-in-out, transform .1s ease-in-out);
+
+        .oi {
+            margin-left: map-get($spacers, 1);
+            pointer-events: auto;
+        }
+    }
+
+    > .form-control:focus,
+    > .form-control:not(:placeholder-shown),
+    > .form-control-plaintext,
+    > .form-select {
+        ~ label {
+            top: -$-label-offset;
+            background: $input-bg;
+            color: $input-placeholder-color;
+            transform: scale(.85);
+            @include border-radius($input-border-radius);
+
+            // Bootstrap masks the border here, the required mark needs it back
+            &::after {
+                position: static;
+                inset: auto;
+                z-index: auto;
+                height: auto;
+                background: none;
+                content: none;
+            }
+        }
+    }
+
+    // A plaintext value carries no box, it lines up with the text around it
+    > .form-control-plaintext {
+        padding-right: 0;
+        padding-left: 0;
+
+        // Nothing indents the value, and there is no border to mask
+        ~ label {
+            left: 0;
+            padding: 0;
+            background: none;
+        }
+    }
+
+    // An addon stretches to the whole group, so it follows the field down
+    .input-group > & ~ .btn,
+    .input-group > & ~ .input-group-text {
+        margin-top: $-label-offset;
+    }
+}
