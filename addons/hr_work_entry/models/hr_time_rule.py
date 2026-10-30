@@ -1132,9 +1132,8 @@ class HrTimeRule(models.Model):
 
         for employee, deficit_by_source in deficit.items():
             timezone = ZoneInfo(employee._get_tz())
-            for source_record, deficit_intervals in deficit_by_source.items():
-                processed_source_ids.add(source_record.id)
-                self._plan_deficit_outputs(plan, employee, timezone, source_record, deficit_intervals)
+            processed_source_ids.update(source_record.id for source_record in deficit_by_source)
+            self._plan_deficit_outputs(plan, employee, timezone, deficit_by_source)
 
         for employee, excess_by_source in excess.items():
             timezone = ZoneInfo(employee._get_tz())
@@ -1154,33 +1153,52 @@ class HrTimeRule(models.Model):
         plan.link_allocation_credits_to_created_records(created_records)
         return created_records, processed_source_ids, plan.excess_allocation_credits, plan.deficit_allocation_credits
 
-    def _plan_deficit_outputs(self, plan, employee, timezone, source_record, deficit_intervals):
+    def _plan_deficit_outputs(self, plan, employee, timezone, deficit_by_source):
         """Place the missing hours in the free time following each deficit, until the end of its period.
 
-        Hours already covered by a previous run are not placed twice.
+        The time already occupied by the employee is fetched once, for all the deficits. Hours
+        already covered by a previous run are not placed twice.
         """
         no_payload = self.env['resource.calendar']
-        for period_last_day, winning_intervals in self._group_deficit_intervals_by_period(deficit_intervals).items():
+        deficits_to_place = [
+            (source_record, period_last_day, deficit_start, deficit_stop, rule)
+            for source_record, deficit_intervals in deficit_by_source.items()
+            for period_last_day, winning_intervals in self._group_deficit_intervals_by_period(deficit_intervals).items()
+            for deficit_start, deficit_stop, rule in winning_intervals
+        ]
+        if not deficits_to_place:
+            return
+
+        # one search, from the first deficit to the end of the last period; each deficit then only
+        # looks at its own slot of it
+        first_deficit_start = min(deficit_start for _source, _period_last_day, deficit_start, _stop, _rule in deficits_to_place)
+        last_period_last_day = max(period_last_day for _source, period_last_day, _start, _stop, _rule in deficits_to_place)
+        any_source_record = next(iter(deficit_by_source))
+        occupied_intervals = any_source_record._get_time_rule_deficit_occupied(
+            employee.id,
+            local_to_utc(first_deficit_start, timezone),
+            local_to_utc(datetime.combine(last_period_last_day + timedelta(days=1), time.min), timezone),
+        )
+
+        for source_record, period_last_day, deficit_start, deficit_stop, rule in deficits_to_place:
             period_end_utc = local_to_utc(datetime.combine(period_last_day + timedelta(days=1), time.min), timezone)
-            for deficit_start, deficit_stop, rule in winning_intervals:
-                premium_pay_category_ids = rule._get_premium_pay_category_ids()
-                deficit_start_utc = local_to_utc(deficit_start, timezone)
-                occupied_intervals = source_record._get_time_rule_deficit_occupied(employee.id, deficit_start_utc, period_end_utc)
-                already_covered_hours = source_record._get_time_rule_deficit_already_covered(rule, deficit_start_utc, period_end_utc)
-                hours_to_place = max(0.0, _hours_between(deficit_start, deficit_stop) - already_covered_hours)
-                free_slots = Intervals([(deficit_start_utc, period_end_utc, no_payload)]) - occupied_intervals
-                for slot_start, slot_stop, _payload in free_slots:
-                    if hours_to_place <= HOURS_EPSILON:
-                        break
-                    slot_hours = _hours_between(slot_start, slot_stop)
-                    if slot_hours > hours_to_place:
-                        slot_stop = slot_start + timedelta(hours=hours_to_place)
-                        slot_hours = hours_to_place
-                    plan.add_output_record_to_create(
-                        source_record._get_time_rule_output_vals(rule, slot_start, slot_stop, premium_pay_category_ids),
-                        plan.deficit_allocation_credits, employee, rule, slot_hours, source_record,
-                    )
-                    hours_to_place -= slot_hours
+            deficit_start_utc = local_to_utc(deficit_start, timezone)
+            already_covered_hours = source_record._get_time_rule_deficit_already_covered(rule, deficit_start_utc, period_end_utc)
+            hours_to_place = max(0.0, _hours_between(deficit_start, deficit_stop) - already_covered_hours)
+            free_slots = Intervals([(deficit_start_utc, period_end_utc, no_payload)]) - occupied_intervals
+            premium_pay_category_ids = rule._get_premium_pay_category_ids()
+            for slot_start, slot_stop, _payload in free_slots:
+                if hours_to_place <= HOURS_EPSILON:
+                    break
+                slot_hours = _hours_between(slot_start, slot_stop)
+                if slot_hours > hours_to_place:
+                    slot_stop = slot_start + timedelta(hours=hours_to_place)
+                    slot_hours = hours_to_place
+                plan.add_output_record_to_create(
+                    source_record._get_time_rule_output_vals(rule, slot_start, slot_stop, premium_pay_category_ids),
+                    plan.deficit_allocation_credits, employee, rule, slot_hours, source_record,
+                )
+                hours_to_place -= slot_hours
 
     def _plan_excess_outputs(self, plan, employee, timezone, source_record, excess_intervals, source_intervals_by_employee):
         # Displaced rules produce no record but still earn allocation for the hours they claimed.

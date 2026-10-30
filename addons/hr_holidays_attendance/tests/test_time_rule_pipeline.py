@@ -2,6 +2,7 @@
 
 import unittest
 from datetime import date, datetime, timedelta
+from unittest.mock import patch
 
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
@@ -1438,6 +1439,39 @@ class TestTimeRulePipeline(TransactionCase):
         ])
         overtime_hours = sum((attendance.check_out - attendance.check_in).total_seconds() / 3600 for attendance in overtime_attendances)
         self.assertAlmostEqual(overtime_hours, 2.0, places=4)
+
+    def test_deficit_occupied_time_fetched_once_per_employee(self):
+        """The time already occupied by an employee is fetched once for all their deficits."""
+        undertime_type = self.env['hr.work.entry.type'].create({'name': 'Undertime', 'code': 'UNDOCC'})
+        self.time_rule.active = False
+        self.env['hr.time.rule'].create({
+            'name': 'Undertime Rule',
+            'threshold_operator': 'less_than',
+            'calendar_source': 'employee',
+            'quantity_period': 'day',
+            'work_entry_type_id': undertime_type.id,
+            'condition_work_entry_type_ids': [self.att_type.id],
+        })
+        Attendance = self.env['hr.attendance']
+        AttendanceModel = self.registry['hr.attendance']
+        with patch.object(
+            AttendanceModel, '_get_time_rule_deficit_occupied', autospec=True,
+            side_effect=AttendanceModel._get_time_rule_deficit_occupied,
+        ) as deficit_occupied_mock:
+            # 6h worked on 3 days of 8h -> 3 deficits of 2h
+            Attendance.create([{
+                'employee_id': self.cal_emp.id,
+                'check_in': datetime(2022, 12, day, 8),
+                'check_out': datetime(2022, 12, day, 14),
+            } for day in (12, 13, 14)])
+        self.assertEqual(deficit_occupied_mock.call_count, 1)
+        undertime_attendances = Attendance.search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('work_entry_type_id', '=', undertime_type.id),
+        ])
+        self.assertEqual(len(undertime_attendances), 3)
+        for undertime_attendance in undertime_attendances:
+            self.assertAlmostEqual((undertime_attendance.check_out - undertime_attendance.check_in).total_seconds() / 3600, 2.0, places=4)
 
     def test_sequential_rules_second_rule_finds_no_excess(self):
         """Sequential pipeline: R2 with the same threshold sees 0h excess after R1 already claimed it."""
