@@ -208,7 +208,8 @@ class PosConfig(models.Model):
 
         res = super().write(vals)
         self._ensure_public_attachments()
-        self._prepare_self_order_custom_btn()
+        if 'self_ordering_image_background_ids' in vals or 'self_ordering_image_home_ids' in vals:
+            self._prepare_self_order_custom_btn()
         return res
 
     def _get_paid_orders_config_domain(self):
