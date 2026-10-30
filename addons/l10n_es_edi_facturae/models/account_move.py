@@ -520,6 +520,9 @@ class AccountMove(models.Model):
             + invoice_values['TotalGeneralSurcharges']
         )
         refund_multiplier = -1 if self.is_refund() else 1
+        check_partner = partner
+        if check_partner != self.partner_id and self.partner_id.child_ids.filtered(lambda p: p.type == 'facturae_ac'):
+            check_partner = self.partner_id
 
         template_values = {
             'self_party': company.partner_id,
@@ -530,7 +533,7 @@ class AccountMove(models.Model):
             'other_party_country_code': COUNTRY_CODE_MAP[partner.country_id.code],
             'other_party_phone': partner.phone.translate(PHONE_CLEAN_TABLE) if partner.phone else False,
             'other_party_name': extract_party_name(partner),
-            'other_party_administrative_centers': self._l10n_es_edi_facturae_get_administrative_centers(partner),
+            'other_party_administrative_centers': self._l10n_es_edi_facturae_get_administrative_centers(check_partner),
             'is_outstanding': self.move_type.startswith('out_'),
             'float_repr': float_repr,
             'file_currency': inv_curr,
