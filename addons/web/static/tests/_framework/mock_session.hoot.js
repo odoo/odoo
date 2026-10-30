@@ -12,6 +12,7 @@ import { onServerStateChange, serverState } from "./mock_server_state.hoot";
 const makeSession = ({
     companies,
     db,
+    isRegularUser,
     lang,
     partnerId,
     partnerName,
@@ -34,7 +35,7 @@ const makeSession = ({
     home_action_id: false,
     is_admin: true,
     is_internal_user: true,
-    is_regular_user: true,
+    is_regular_user: isRegularUser,
     is_system: true,
     max_file_upload_size: 134217728,
     name: partnerName,

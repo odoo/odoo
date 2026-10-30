@@ -11,7 +11,7 @@ import {
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
 
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, test, waitFor } from "@odoo/hoot";
 
 import { Command, mockService, serverState } from "@web/../tests/web_test_helpers";
 
@@ -153,4 +153,14 @@ test("live chat tab has an unread filter", async () => {
     await contains(".o-mail-NotificationItem", { count: 2 });
     await contains(".o-mail-NotificationItem:has(:text('Visitor #1'))");
     await contains(".o-mail-NotificationItem:has(:text('Visitor #2'))");
+});
+
+test("light user's messaging menu only has the discuss tabs", async () => {
+    serverState.isRegularUser = false;
+    await start();
+    await openMessagingMenu();
+    await waitFor(".o-mail-MessagingMenu-tab:count(3)");
+    await waitFor(".o-mail-MessagingMenu-tab[data-id='chat']");
+    await waitFor(".o-mail-MessagingMenu-tab[data-id='channel']");
+    await waitFor(".o-mail-MessagingMenu-tab[data-id='meeting']");
 });
