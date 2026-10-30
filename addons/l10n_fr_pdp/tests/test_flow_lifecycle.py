@@ -715,23 +715,29 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         self.assertIsNone(seller.find('TaxRegistrationId'))
 
     def test_non_eu_vendor_vat_is_not_used_as_company_identifier(self):
-        us_vendor = self.env['res.partner'].with_context(no_vat_validation=True).create({
-            'name': 'CREATORS COUTURE COMPANY',
-            'street': '1 Main Street',
-            'zip': '10001',
-            'city': 'New York',
-            'country_id': self.env.ref('base.us').id,
-            'vat': 'US123456789',
-        })
-        bill = self._create_reporting_vendor_bill(partner=us_vendor)
+        for country_code, vat, expected_vat in (
+            ('US', 'US123456789', 'US123456789'),
+            ('CH', 'CHE-168.036.626 TVA', 'CHE168036626TVA'),
+        ):
+            with self.subTest(country_code=country_code):
+                vendor = self.env['res.partner'].with_context(no_vat_validation=True).create({
+                    'name': 'CREATORS COUTURE COMPANY',
+                    'street': '1 Main Street',
+                    'zip': '10001',
+                    'city': 'New York',
+                    'country_id': self.env.ref(f'base.{country_code.lower()}').id,
+                    'vat': vat,
+                })
+                bill = self._create_reporting_vendor_bill(partner=vendor)
 
-        seller = self._build_flow_xml(bill.l10n_fr_pdp_last_flow_id).find(
-            './TransactionsReport/Invoice/Seller'
-        )
+                self.assertFalse(bill._get_l10n_fr_pdp_errors())
+                seller = self._build_flow_xml(bill.l10n_fr_pdp_last_flow_id).find(
+                    f"./TransactionsReport/Invoice[ID='{bill.name}']/Seller"
+                )
 
-        self.assertEqual(seller.find('CompanyId').get('schemeId'), '0227')
-        self.assertEqual(seller.findtext('CompanyId'), 'USCREATORS COUTURE')
-        self.assertEqual(seller.findtext('TaxRegistrationId'), us_vendor.vat)
+                self.assertEqual(seller.find('CompanyId').get('schemeId'), '0227')
+                self.assertEqual(seller.findtext('CompanyId'), f'{country_code}CREATORS COUTURE')
+                self.assertEqual(seller.findtext('TaxRegistrationId'), expected_vat)
 
     def test_wallis_and_futuna_vendor_without_vat_uses_0227_identifier(self):
         wf_vendor = self.env['res.partner'].create({
