@@ -243,7 +243,10 @@ class ProductProduct(models.Model):
         if (
             message_operation == 'create'
             and not self.env.user._is_internal()
-            and not self.env['website'].is_view_active('website_sale.product_comment')
+            and (
+                self.env.user._is_public()
+                or not self.env['website'].is_view_active('website_sale.product_comment')
+            )
         ):
             return dict.fromkeys(self, 'write')
         return super()._mail_get_operation_for_mail_message_operation(message_operation)
