@@ -82,10 +82,13 @@ patch(PosStore.prototype, {
         return sale_order;
     },
     getConvertedQuantityFromSaleOrderline(convertedLine, soLine) {
-        const type = convertedLine.product_id.type;
+        const type = soLine.product_id.type;
         const sOrder = soLine.order_id;
         if (type === "service" && !["sent", "draft"].includes(sOrder.state)) {
             return convertedLine.qty_to_invoice;
+        } else if (convertedLine.qty_delivered_method === "manual") {
+            // Not delivered through stock (e.g. rentals): a delivered line can still be unpaid
+            return convertedLine.product_uom_qty - convertedLine.qty_invoiced;
         } else {
             return (
                 convertedLine.product_uom_qty -
