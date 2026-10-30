@@ -10,7 +10,7 @@
     </t>
 
     <t t-name="pos_hr.BurgerMenuDialog" t-inherit="point_of_sale.BurgerMenuDialog" t-inherit-mode="extension">
-        <xpath expr="//div[hasclass('o_pos_burger_menu_buttons')]//t[@t-name='close_register']" position="before">
+        <xpath expr="//div[hasclass('o_pos_burger_menu_buttons')]" position="inside">
             <t t-if="this.pos.config.module_pos_hr and this.ui.isSmall"
                 t-call="point_of_sale.BurgerDialogMenuButton"
                 dataIcon="'lock'"

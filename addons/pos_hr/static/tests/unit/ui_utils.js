@@ -119,7 +119,7 @@ export async function openMenu() {
     await waitFor(".o_pos_burger_menu_buttons");
 }
 
-const MENU_ITEM_SELECTOR = ".o_pos_burger_menu_buttons button";
+const MENU_ITEM_SELECTOR = ".o_pos_burger_menu_buttons button, .o_pos_burger_menu_actions button";
 
 export function menuOptionNames() {
     return queryAll(MENU_ITEM_SELECTOR).map((el) => el.textContent.trim());

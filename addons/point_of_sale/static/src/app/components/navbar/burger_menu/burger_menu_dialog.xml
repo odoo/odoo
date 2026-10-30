@@ -84,8 +84,9 @@
                    onClick="() => this.pos.closePos()"
                    btnLabel.translate="Backend"
                 />
+            </div>
+            <div t-if="this.pos.accessRight.canCloseSession" class="o_pos_burger_menu_actions o_pos_dialog_actions d-flex gap-2 mt-2">
                 <t t-call="point_of_sale.BurgerDialogMenuButton"
-                   t-if="this.pos.accessRight.canCloseSession"
                    t-name="close_register"
                    dataIcon="'key'"
                    onClick="() => this.pos.closeSession()"

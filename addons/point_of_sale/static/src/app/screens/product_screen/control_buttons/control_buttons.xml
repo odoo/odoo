@@ -95,9 +95,10 @@
                     btnClasses="'break-combo-button btn-secondary '"
                     onClick="() => this.breakSelectedCombo()">
                 </t>
+            </div>
+            <div t-if="this.pos.accessRight.canCancelOrder" class="control-buttons o_pos_dialog_actions d-flex gap-2 mt-2">
                 <!-- Cancel Order Button -->
                 <t t-call="point_of_sale.controlButton"
-                    t-if="this.pos.accessRight.canCancelOrder"
                     icon="'delete'"
                     btnText.translate="Cancel Order"
                     btnClasses="'btn-danger '"
