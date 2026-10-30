@@ -2826,7 +2826,12 @@ class AccountMove(models.Model):
 
     @api.onchange('fiscal_position_id')
     def _onchange_fpos_id_show_update_fpos(self):
-        self.show_update_fpos = self.line_ids and self._origin.fiscal_position_id != self.fiscal_position_id
+        has_lines = any(
+        line.display_type not in ('line_section', 'line_note')
+        for line in self.invoice_line_ids
+        )
+
+        self.show_update_fpos = has_lines and (self._origin.fiscal_position_id != self.fiscal_position_id or not self._origin)
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
