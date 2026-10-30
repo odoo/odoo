@@ -267,6 +267,42 @@ class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
             self.assertEqual(res.status_code, 403)
             self.assertEqual(journal.incoming_einvoice_notification_email, email)
 
+    def test_cash_journal_cash_rounding(self):
+        """ A cash journal in HUF gets the rounding to 5 forints, applied to the invoices paid in cash. """
+        huf = self.setup_other_currency('HUF', rates=[('1900-01-01', 1.0)])
+        cash_journal_huf, other_cash_journal_huf = self.env['account.journal'].create([
+            {'name': f'Cash HUF {index}', 'type': 'cash', 'code': f'CHUF{index}', 'currency_id': huf.id}
+            for index in range(2)
+        ])
+        cash_rounding = self.env['account.cash.rounding'].search([('currency_ids', 'in', huf.ids)])
+        self.assertRecordValues(cash_rounding, [{
+            'rounding': 5.0,
+            'rounding_method': 'HALF-UP',
+            'strategy': 'add_invoice_line',
+            'profit_account_id': cash_journal_huf.profit_account_id.id,
+            'loss_account_id': cash_journal_huf.loss_account_id.id,
+        }])
+        self.assertEqual(
+            cash_rounding.payment_method_line_ids,
+            (cash_journal_huf | other_cash_journal_huf).inbound_payment_method_line_ids,
+        )
+
+        for journal_type, currency in (('bank', huf), ('cash', self.other_currency)):
+            with self.subTest(journal_type=journal_type, currency=currency.name):
+                journal = self.env['account.journal'].create({
+                    'name': 'Not rounded', 'type': journal_type, 'code': 'NROUN', 'currency_id': currency.id,
+                })
+                self.assertFalse(cash_rounding.payment_method_line_ids & journal.inbound_payment_method_line_ids)
+                self.assertFalse(self.env['account.cash.rounding'].search([('payment_method_line_ids', 'in', journal.inbound_payment_method_line_ids.ids)]))
+                journal.unlink()
+
+        invoice_cash, invoice_bank = (
+            self._create_invoice_one_line(price_unit=1002.0, currency_id=huf, preferred_payment_method_line_id=payment_method_line)
+            for payment_method_line in (cash_journal_huf.inbound_payment_method_line_ids[:1], self.company_data['default_journal_bank'].inbound_payment_method_line_ids[:1])
+        )
+        self.assertRecordValues(invoice_cash, [{'invoice_cash_rounding_id': cash_rounding.id, 'amount_total': 1000.0}])
+        self.assertRecordValues(invoice_bank, [{'invoice_cash_rounding_id': False, 'amount_total': 1002.0}])
+
 
 @tagged('post_install', '-at_install', 'mail_alias')
 class TestAccountJournalAlias(MailCommon, AccountTestInvoicingCommon):
