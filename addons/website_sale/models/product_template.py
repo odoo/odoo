@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import itertools
 import logging
 import random
 from collections import defaultdict
@@ -12,7 +13,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.modules.db import FunctionStatus
-from odoo.tools import float_round, is_html_empty, lazy
+from odoo.tools import float_round, is_html_empty, lazy, split_every
 from odoo.tools.sql import SQL, column_exists
 from odoo.tools.translate import adapt_translated_field_value, html_translate
 
@@ -773,24 +774,66 @@ class ProductTemplate(models.Model):
                     }
         return res
 
-    def _may_be_on_sale(self, pricelist_sudo):
-        """Return whether any of the products may have a base price in `_get_sales_prices`.
+    def _get_on_sale_ids(self, pricelist_sudo, website, first_batch_size):
+        """Yield the ids of the products `_get_sales_prices` would give a base price.
 
-        Cheap check to avoid pricing products that can't be on sale: a base price comes either
-        from a compare to price, or from a pricelist rule showing its discount.
+        Taxes don't change whether a product has a base price, so they aren't computed. The
+        products are priced by batches, the first one of `first_batch_size` products, so that
+        stopping at the first id doesn't price the whole recordset. Without any pricelist rule
+        showing its discount, only a compare to price can give a base price: nothing is priced.
 
         :param product.pricelist pricelist_sudo: the pricelist the products are priced with
-        :rtype: bool
+        :param website website: the website the products are priced for
+        :param int first_batch_size: the size of the first batch, e.g. a page of products
+        :rtype: Iterator[int]
         """
-        if any(rule._show_discount_on_shop() for rule in pricelist_sudo.item_ids):
-            return True
-        return self.env["res.groups"]._is_feature_enabled(
-            "website_sale.group_product_price_comparison"
-        ) and bool(
-            self.search_count(
-                Domain("id", "in", self.ids) & Domain("compare_list_price", ">", 0), limit=1
-            )
+        comparison_prices_enabled = self.env["res.groups"]._is_feature_enabled(
+            "website_sale.group_product_price_comparison",
         )
+        if not any(rule._show_discount_on_shop() for rule in pricelist_sudo.item_ids):
+            if comparison_prices_enabled:
+                yield from self.search(
+                    Domain("id", "in", self.ids) & Domain("compare_list_price", ">", 0),
+                    order="id",
+                ).ids
+            return
+
+        currency = website.currency_id
+        PricelistItem = self.env["product.pricelist.item"].sudo()
+        batches = itertools.chain(
+            [self[:first_batch_size]],
+            split_every(1000, self[first_batch_size:].ids, self.browse),
+        )
+        for batch in batches:
+            batch = batch.with_prefetch()
+            prices = pricelist_sudo._compute_price_rule(batch, 1.0)
+            for template in batch:
+                price, rule_id = prices[template.id]
+                if (comparison_prices_enabled and template.compare_list_price) or (
+                    template._get_pricelist_base_price(
+                        price, PricelistItem.browse(rule_id), currency,
+                    ) is not None
+                ):
+                    yield template.id
+
+    def _get_pricelist_base_price(self, pricelist_price, pricelist_rule_sudo, currency):
+        """Return the price the discount of the pricelist rule is taken from, if shown.
+
+        :param float pricelist_price: the price of the product given by the rule
+        :param product.pricelist.item pricelist_rule_sudo: the rule the price comes from
+        :param res.currency currency: the currency of `pricelist_price`
+        :return: the price before the discount, or None if not shown or not higher
+        :rtype: float | None
+        """
+        self.ensure_one()
+        if not pricelist_rule_sudo._show_discount_on_shop():
+            return None
+        base_price = pricelist_rule_sudo._compute_price_before_discount(
+            product=self, quantity=1.0, uom=self._get_main_uom(), currency=currency,
+        )
+        if currency.compare_amounts(base_price, pricelist_price) == 1:
+            return base_price
+        return None
 
     def _get_sales_prices(self, pricelist_sudo, fiscal_position_sudo, website):
         if not self:
@@ -809,7 +852,6 @@ class ProductTemplate(models.Model):
             product_taxes = template.sudo().taxes_id._filter_taxes_by_company()
             taxes = fiscal_position_sudo.map_tax(product_taxes)
 
-            base_price = None
             template_price_vals = {
                 "raw_pricelist_price": pricelist_price,
                 "pricelist_rule_id": pricelist_rule_id,
@@ -824,19 +866,17 @@ class ProductTemplate(models.Model):
             pricelist_item_sudo = (
                 template.env["product.pricelist.item"].sudo().browse(pricelist_rule_id)
             )
-            if pricelist_item_sudo._show_discount_on_shop():
-                pricelist_base_price = pricelist_item_sudo._compute_price_before_discount(
-                    product=template, quantity=1.0, uom=template._get_main_uom(), currency=currency
+            base_price = template._get_pricelist_base_price(
+                pricelist_price, pricelist_item_sudo, currency,
+            )
+            if base_price is not None:
+                template_price_vals["base_price"] = template._apply_taxes_to_price(
+                    base_price,
+                    currency,
+                    product_taxes=product_taxes,
+                    taxes=taxes,
+                    website=website,
                 )
-                if currency.compare_amounts(pricelist_base_price, pricelist_price) == 1:
-                    base_price = pricelist_base_price
-                    template_price_vals["base_price"] = template._apply_taxes_to_price(
-                        base_price,
-                        currency,
-                        product_taxes=product_taxes,
-                        taxes=taxes,
-                        website=website,
-                    )
 
             if not base_price and comparison_prices_enabled and template.compare_list_price:
                 template_price_vals["base_price"] = template.currency_id._convert(

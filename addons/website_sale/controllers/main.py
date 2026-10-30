@@ -532,29 +532,15 @@ class WebsiteSale(payment_portal.PaymentPortal):
         show_on_sale_filter = False
         show_in_stock_filter = False
         if "sale" in ribbon_assign_values:
-            # Without the active filter, only the existence of a product on sale matters: check
-            # the first page, then the rest by batches
-            if not search_product._may_be_on_sale(request.pricelist.sudo()):
-                products_batches = []
-            elif on_sale_active:
-                products_batches = [search_product]
+            on_sale_ids_iter = search_product._get_on_sale_ids(
+                request.pricelist.with_context(self.env.context).sudo(), website, ppg,
+            )
+            if on_sale_active:
+                on_sale_ids = set(on_sale_ids_iter)
+                show_on_sale_filter = True
             else:
-                products_batches = itertools.chain(
-                    [search_product[:ppg]],
-                    split_every(1000, search_product[ppg:].ids, search_product.browse),
-                )
-            for products_batch in products_batches:
-                sales_prices = products_batch.with_prefetch()._get_sales_prices(
-                    request.pricelist.with_context(self.env.context),
-                    request.fiscal_position.with_context(self.env.context),
-                    website.with_context(self.env.context),
-                )
-                on_sale_ids.update(
-                    pid for pid, prices in sales_prices.items() if "base_price" in prices
-                )
-                if on_sale_ids and not on_sale_active:
-                    break
-            show_on_sale_filter = on_sale_active or bool(on_sale_ids)
+                # Only the existence of a product on sale matters
+                show_on_sale_filter = next(on_sale_ids_iter, None) is not None
         if "out_of_stock" in ribbon_assign_values:
             # Only storable products that can't be sold out of stock may be sold out
             stock_candidates = search_product.search(

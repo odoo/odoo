@@ -437,8 +437,8 @@ class TestWebsitePriceList(WebsiteSaleCommon):
             )
             self.assertEqual(res[product_tmpl.id]["base_price"], 75)
 
-    def test_may_be_on_sale(self):
-        """Products may only be on sale with a compare to price or a rule showing its discount."""
+    def test_get_on_sale_ids_without_discount_rule(self):
+        """Without a rule showing its discount, only compare to prices matter: nothing is priced."""
         self.env["res.config.settings"].sudo().create({
             "group_product_price_comparison": True,
         }).execute()
@@ -448,16 +448,61 @@ class TestWebsitePriceList(WebsiteSaleCommon):
         pricelist_sudo = self._create_pricelist(item_ids=[
             Command.create({"compute_price": "fixed", "fixed_price": 50}),
         ]).sudo()
-        self.assertFalse(product_tmpl._may_be_on_sale(pricelist_sudo))
+        with patch.object(
+            self.registry["product.pricelist"], "_compute_price_rule",
+            side_effect=AssertionError("products should not be priced"),
+        ):
+            self.assertFalse(list(product_tmpl._get_on_sale_ids(pricelist_sudo, self.website, 1)))
+            product_tmpl.compare_list_price = 120
+            self.assertEqual(
+                list(product_tmpl._get_on_sale_ids(pricelist_sudo, self.website, 1)),
+                product_tmpl.ids,
+            )
 
-        product_tmpl.compare_list_price = 120
-        self.assertTrue(product_tmpl._may_be_on_sale(pricelist_sudo))
-
-        product_tmpl.compare_list_price = 0
-        pricelist_sudo.item_ids = [Command.create({
-            "compute_price": "discount", "price_discount": 10,
-        })]
-        self.assertTrue(product_tmpl._may_be_on_sale(pricelist_sudo))
+    def test_get_on_sale_ids(self):
+        """The products on sale are the ones `_get_sales_prices` gives a base price."""
+        self.env["res.config.settings"].sudo().create({
+            "group_product_price_comparison": True,
+        }).execute()
+        self.pricelist = self._enable_pricelists()
+        tax = self.env["account.tax"].sudo().create({
+            "name": "21%", "type_tax_use": "sale", "amount": 21,
+        })
+        products = self.env["product.template"].sudo().create([{
+            "name": name, "list_price": 100, "taxes_id": [Command.set(tax.ids)], **vals,
+        } for name, vals in [
+            ("Discounted", {}),
+            ("Zero discount", {}),
+            ("Fixed price", {}),
+            ("Compare price", {"compare_list_price": 80}),
+            ("Regular", {}),
+        ]])
+        discounted, zero_discount, fixed_price = products[:3]
+        self.pricelist.sudo().item_ids = [
+            Command.create({
+                "compute_price": "discount", "price_discount": 10,
+                "applied_on": "1_product", "product_tmpl_id": discounted.id,
+            }),
+            Command.create({
+                "compute_price": "discount", "price_discount": 0,
+                "applied_on": "1_product", "product_tmpl_id": zero_discount.id,
+            }),
+            Command.create({
+                "compute_price": "fixed", "fixed_price": 50,
+                "applied_on": "1_product", "product_tmpl_id": fixed_price.id,
+            }),
+        ]
+        with self.mock_request(website_sale_current_pl=self.pricelist.id) as request:
+            sales_prices = products._get_sales_prices(
+                request.pricelist, request.fiscal_position, self.website
+            )
+            on_sale_ids = set(
+                products._get_on_sale_ids(request.pricelist.sudo(), self.website, 2)
+            )
+        self.assertEqual(
+            on_sale_ids, {pid for pid, prices in sales_prices.items() if "base_price" in prices}
+        )
+        self.assertEqual(on_sale_ids, set((discounted | products[3]).ids))
 
     def test_pricelist_item_validity_period(self):
         """Test that if a cart was created before a validity period,
