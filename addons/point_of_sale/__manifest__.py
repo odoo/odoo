@@ -102,7 +102,7 @@
 
         # web assets
         'web.assets_backend': [
-            'point_of_sale/static/src/scss/pos_dashboard.scss',
+            'point_of_sale/static/src/scss/pos_dashboard.css',
             'point_of_sale/static/src/backend/tours/point_of_sale.js',
             'point_of_sale/static/src/backend/pos_kanban_view/*',
             ('remove', 'point_of_sale/static/src/backend/pos_kanban_view/*.dark.css'),
@@ -231,6 +231,7 @@
             'point_of_sale/static/src/**/*',
             ('remove', 'point_of_sale/static/src/backend/**/*'),
             ('remove', 'point_of_sale/static/src/customer_display/**/*'),
+            ('remove', 'point_of_sale/static/src/scss/pos_dashboard.dark.css'),
             ('include', 'point_of_sale.payment_terminals'),
             # main.js boots the pos app, it is only included in the prod bundle as tests mount the app themselves
             ('remove', 'point_of_sale/static/src/app/main.js'),

@@ -97,7 +97,7 @@
             'base/static/src/css/modules.css',
 
             'web/static/src/core/**/*',
-            ('remove', 'web/static/src/core/**/*.dark.scss'),
+            ('remove', 'web/static/src/core/**/*.dark.css'),
             ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
             'web/static/src/css/**/*',
             'web/static/src/search/**/*',
