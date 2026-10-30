@@ -10,13 +10,13 @@
             <cbc:Amount currencyID="EUR">50.0</cbc:Amount>
             <cbc:AllowanceChargeReasonCode>AA</cbc:AllowanceChargeReasonCode>
         </cac:AllowanceCharge>
-        <cac:AllowanceCharge>
-            <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
-            <cbc:Amount currencyID="EUR">100.0</cbc:Amount>
-            <cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
-        </cac:AllowanceCharge>
         <cac:Price>
-			<cbc:PriceAmount currencyID="EUR">1000.0</cbc:PriceAmount>
-		</cac:Price>
+            <cbc:PriceAmount currencyID="EUR">900.0</cbc:PriceAmount>
+            <cac:AllowanceCharge>
+                <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+                <cbc:Amount currencyID="EUR">100.0</cbc:Amount>
+                <cbc:BaseAmount currencyID="EUR">1000.0</cbc:BaseAmount>
+            </cac:AllowanceCharge>
+        </cac:Price>
     </cac:InvoiceLine>
 </Invoice>

@@ -288,13 +288,12 @@ class AccountEdiCii(models.AbstractModel):
         }
 
     def _cii_get_applied_trade_allowance_charge_node(self, vals, base_line):
-        discount_percentage = abs(base_line['discount']) / 100.0
         return {
             'ram:ChargeIndicator': {
                 'udt:Indicator': {'_text': 'false' if base_line['discount'] > 0 else 'true'},
             },
             'ram:ActualAmount': {
-                '_text': FloatFmt(vals['currency_id'].round(base_line['tax_details']['raw_gross_price_unit_currency'] * discount_percentage), max_dp=2),
+                '_text': FloatFmt(vals['currency_id'].round(base_line['tax_details']['raw_discount_amount_currency'] / (base_line['quantity'] or 1.0)), max_dp=2),
             }
         }
 

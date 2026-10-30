@@ -535,27 +535,27 @@ class AccountEdiUBL(models.AbstractModel):
         currency = base_line['currency_id'] if in_foreign_currency else vals['company_currency']
         suffix = '_currency' if in_foreign_currency else ''
         tax_details = base_line['tax_details']
-        raw_discount_amount = tax_details[f'discount_amount{suffix}']
+        raw_net_price_unit = tax_details[f'raw_total_excluded{suffix}'] / (base_line['quantity'] or 1.0)
         raw_gross_price_unit = tax_details[f'raw_gross_price_unit{suffix}']
+        raw_discount_amount = tax_details[f'discount_amount{suffix}'] / (base_line['quantity'] or 1.0)
 
         line_node['cac:Price'] = {
             'cbc:PriceAmount': {
-                '_text': FloatFmt(raw_gross_price_unit, min_dp=1, max_dp=10),
+                '_text': FloatFmt(raw_net_price_unit, min_dp=1, max_dp=10),
                 'currencyID': currency.name,
             },
         }
-
         if not currency.is_zero(raw_discount_amount):
             line_node['cac:Price']['cac:AllowanceCharge'] = {
                 'cbc:ChargeIndicator': {
                     '_text': 'false',
                 },
                 'cbc:Amount': {
-                    '_text': FloatFmt(base_line['discount'], min_dp=1, max_dp=10),
+                    '_text': FloatFmt(raw_discount_amount, min_dp=1, max_dp=10),
                     'currencyID': currency.name,
                 },
                 'cbc:BaseAmount': {
-                    '_text': FloatFmt(base_line['discount'], min_dp=1, max_dp=10),
+                    '_text': FloatFmt(raw_gross_price_unit, min_dp=1, max_dp=10),
                     'currencyID': currency.name,
                 },
             }
@@ -657,13 +657,13 @@ class AccountEdiUBL(models.AbstractModel):
         suffix = '_currency' if in_foreign_currency else ''
         tax_details = base_line['tax_details']
 
-        gross_total_excluded = currency.round(tax_details[f'raw_gross_total_excluded{suffix}'])
+        net_total_excluded = currency.round(tax_details[f'raw_total_excluded{suffix}'])
         for allowance_charge_node in line_node['cac:AllowanceCharge']:
             sign = 1 if allowance_charge_node['cbc:ChargeIndicator']['_text'] == 'true' else -1
-            gross_total_excluded += sign * allowance_charge_node['cbc:Amount']['_text']
+            net_total_excluded += sign * allowance_charge_node['cbc:Amount']['_text']
 
         line_node['cbc:LineExtensionAmount'] = {
-            '_text': FloatFmt(gross_total_excluded, min_dp=currency.decimal_places),
+            '_text': FloatFmt(net_total_excluded, min_dp=currency.decimal_places),
             'currencyID': currency.name,
         }
 
@@ -2371,7 +2371,6 @@ class AccountEdiUBL(models.AbstractModel):
     def _import_ubl_invoice_line_add_allowance_charges_values(self, collected_values):
         line_tree = collected_values['line_tree']
         allowance_charge_vals = collected_values['allowance_charge_vals'] = []
-        discount_vals = []
         has_invalid_nodes = False
 
         for allowance_charge_elem in line_tree.iterfind('./{*}AllowanceCharge'):
@@ -2418,9 +2417,8 @@ class AccountEdiUBL(models.AbstractModel):
                 'reason': reason,
                 'reason_code': reason_code,
             }
-        return discount_vals
 
-    def _import_ubl_invoice_line_add_price_unit_quantity_discount(self, collected_values, discount_vals):
+    def _import_ubl_invoice_line_add_price_unit_quantity_discount(self, collected_values):
         file_document_sign = collected_values['file_document_sign']
         line_tree = collected_values['line_tree']
         currency = collected_values['currency_values']['currency']
@@ -2775,11 +2773,11 @@ class AccountEdiUBL(models.AbstractModel):
                 }
 
                 # Extract information about allowance / charges.
-                discount_vals = self._import_ubl_invoice_line_add_allowance_charges_values(line_collected_values)
+                self._import_ubl_invoice_line_add_allowance_charges_values(line_collected_values)
 
                 # name / quantity / price_unit / discount/ deferred_start_date / deferred_end_date
                 self._import_ubl_invoice_line_add_name(line_collected_values)
-                self._import_ubl_invoice_line_add_price_unit_quantity_discount(line_collected_values, discount_vals)
+                self._import_ubl_invoice_line_add_price_unit_quantity_discount(line_collected_values)
                 self._import_ubl_invoice_line_add_deferred_dates(line_collected_values)
 
                 # vehicle

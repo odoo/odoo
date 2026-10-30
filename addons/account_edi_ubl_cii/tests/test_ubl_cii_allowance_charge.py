@@ -32,6 +32,17 @@ class TestAllowanceChargeCommon(TestUblCiiBECommon):
             type_tax_use='sale',
         )
 
+        cls.line_discount_allowance_2 = cls._create_allowance_charge_tax(
+            name='Line Discount Allowance 2',
+            amount_type='percent',
+            amount=-10.0,
+            reason_code='100',
+            reason='Line Discount Allowance Reason',
+            is_charge=False,
+            is_emptying=False,
+            type_tax_use='sale',
+        )
+
         cls.rebate_allowance = cls._create_allowance_charge_tax(
             name='Special Rebate Allowance',
             amount_type='percent',
@@ -211,8 +222,8 @@ class TestBis3AllowanceCharge(TestAllowanceChargeCommon):
             test_name='test_ubl_allowance_charge_correct_import_algo',
             journal=self.company_data["default_journal_sale"],
         )
-        self.assertEqual(len(imported_invoice.invoice_line_ids.tax_ids), 3)
-        expected_tax_ids = (self.tax_20 | self.rebate_allowance | self.rent_and_lease_charge)
+        self.assertEqual(len(imported_invoice.invoice_line_ids.tax_ids), 4)
+        expected_tax_ids = (self.tax_20 | self.rebate_allowance | self.rent_and_lease_charge | self.line_discount_allowance_2)
         self.assertEqual(imported_invoice.invoice_line_ids.tax_ids, expected_tax_ids)
 
 

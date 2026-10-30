@@ -1964,6 +1964,7 @@ class AccountEdiCommon(models.AbstractModel):
             allowance_charge_vals = line_collected_values['allowance_charge_vals']
             attempt_tax_values = [allowance_charge.get('attempt_tax_values') for allowance_charge in allowance_charge_vals]
             if all(val.get('tax') for val in attempt_tax_values):
+                currency = line_collected_values['currency_values']['currency']
                 for allowance_charge in allowance_charge_vals:
                     # Suppose price_unit = 19, quantity = 10, discount = 10%
                     # for a total of 190 (before discount) and 171 (after discount).
@@ -1982,7 +1983,12 @@ class AccountEdiCommon(models.AbstractModel):
                     price_subtotal_after = price_subtotal_before - (allowance_charge['amount'] * charge_sign)
                     to_write['price_unit'] -= ((allowance_charge['amount'] / to_write['quantity']) * charge_sign)
                     new_price_subtotal_before_discount = to_write['price_unit'] * to_write['quantity']
-                    to_write['discount'] = (1 - (price_subtotal_after / new_price_subtotal_before_discount)) * 100.0
+                    # The whole line amount may come from the allowance/charge (e.g. a charge on a line with a zero net price).
+                    # In that case, there is nothing left to discount.
+                    if currency.is_zero(new_price_subtotal_before_discount):
+                        to_write['discount'] = 0.0
+                    else:
+                        to_write['discount'] = (1 - (price_subtotal_after / new_price_subtotal_before_discount)) * 100.0
             else:
                 for val in attempt_tax_values:
                     val.pop('tax', None)
