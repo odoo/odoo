@@ -60,6 +60,12 @@ export class DebugConvertInlineDialog extends Component {
                     referenceElement.innerHTML = template.innerHTML;
                 }
                 iframe.contentDocument.body.append(referenceElement);
+                iframe.contentDocument.body.setAttribute(
+                    "style",
+                    `margin: 0 !important;
+                    padding: 0 !important;
+                    background-color: transparent !important;`
+                );
             });
         });
     }
