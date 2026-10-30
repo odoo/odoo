@@ -115,6 +115,21 @@ class Website(models.Model):
 
     shop_gap = fields.Char(string="Grid-gap on the shop", default="16px", required=False)
 
+    # Options of the checkout address form labels
+    address_form_marked_fields = fields.Selection(
+        selection=[("none", "None"), ("required", "Required"), ("optional", "Optional")],
+        required=True,
+        default="required",
+    )
+    address_form_label_marker = fields.Char()
+    address_form_label_marker_color = fields.Char()
+    address_form_label_position = fields.Selection(
+        selection=[("floating", "Floating"), ("top", "Top"), ("left", "Left"), ("right", "Right")],
+        required=True,
+        default="floating",
+    )
+    address_form_label_width = fields.Char()
+
     shop_opt_products_design_classes = fields.Char(
         string="Shop Design Class",
         default=(
@@ -1262,54 +1277,6 @@ class Website(models.Model):
         query = urlencode([*parse_qsl(parsed.query), ("subject", subject)])
         return parsed._replace(query=query).geturl()
 
-    def _get_shop_products_design_classes(self):
-        """Return the website's design classes for the product cards, as configured on the
-        shop page, falling back to the default catalog layout if not yet configured.
-        """
-        design_classes = self.shop_opt_products_design_classes or ""
-        if "o_wsale_products_opt_layout_catalog" not in design_classes:
-            return (
-                "o_wsale_products_opt_name_color_regular "
-                "o_wsale_products_opt_thumb_cover o_wsale_products_opt_img_secondary_show "
-                "o_wsale_products_opt_img_hover_zoom_out_light o_wsale_products_opt_cc1 "
-                "o_wsale_products_opt_rounded_2 o_wsale_products_opt_layout_catalog "
-                "o_wsale_products_opt_design_thumbs o_wsale_products_opt_has_description "
-                "o_wsale_products_opt_name_size_body o_wsale_products_opt_actions_onhover "
-                "o_wsale_products_opt_wishlist_fixed o_wsale_products_opt_actions_theme "
-                "o_wsale_products_opt_has_cta"
-            )
-        return design_classes
-
-    def _get_product_image_ratio_classes(self):
-        """Return the classes defining the product image aspect ratio from the website's design
-        classes.
-        """
-        if design_classes := self.shop_opt_products_design_classes:
-            image_ratio_class_regex = r"o_wsale_products_opt_thumb_\d+_\d+(?:_mobile)?\b"
-            ratio_classes = re.findall(image_ratio_class_regex, design_classes)
-            has_mobile_ratio = (
-                "o_wsale_products_opt_design_list_large" in design_classes
-                or "o_wsale_products_opt_design_showcase" in design_classes
-            )
-            if has_mobile_ratio:
-                ratio_classes.append("o_wsale_has_mobile_ratio")
-            return " ".join(ratio_classes)
-        return ""
-
-    def _get_product_image_ratio_height(self):
-        """Return the image height of products images, used in `sale.mail_template_data.xml`."""
-        design_classes = self.shop_opt_products_design_classes or ""
-        image_ratio_height_mapping = {
-            "o_wsale_products_opt_thumb_16_9": "36px",
-            "o_wsale_products_opt_thumb_4_3": "48px",
-            "o_wsale_products_opt_thumb_6_5": "53px",
-            "o_wsale_products_opt_thumb_4_5": "96px",
-        }
-        for class_name, image_height in image_ratio_height_mapping.items():
-            if class_name in design_classes:
-                return image_height
-        return "64px"
-
     def _get_basic_feed_product_domain(self):
         return (
             Domain("type", "in", {"consu", "combo"})
@@ -1351,3 +1318,72 @@ class Website(models.Model):
             "salesperson_id",
             "salesteam_id",
         ]
+
+    # === STYLING METHODS === #
+
+    def _get_shop_products_design_classes(self):
+        """Return the website's design classes for the product cards, as configured on the
+        shop page, falling back to the default catalog layout if not yet configured.
+        """
+        design_classes = self.shop_opt_products_design_classes or ""
+        if "o_wsale_products_opt_layout_catalog" not in design_classes:
+            return (
+                "o_wsale_products_opt_name_color_regular "
+                "o_wsale_products_opt_thumb_cover o_wsale_products_opt_img_secondary_show "
+                "o_wsale_products_opt_img_hover_zoom_out_light o_wsale_products_opt_cc1 "
+                "o_wsale_products_opt_rounded_2 o_wsale_products_opt_layout_catalog "
+                "o_wsale_products_opt_design_thumbs o_wsale_products_opt_has_description "
+                "o_wsale_products_opt_name_size_body o_wsale_products_opt_actions_onhover "
+                "o_wsale_products_opt_wishlist_fixed o_wsale_products_opt_actions_theme "
+                "o_wsale_products_opt_has_cta"
+            )
+        return design_classes
+
+    def _get_address_form_style(self):
+        """Return the address form options as custom properties for its stylesheet.
+
+        The marker is text, so it is quoted as a css string, the others are css values.
+        """
+        self.ensure_one()
+        style_variables = []
+        # Unset, the stylesheet falls back to a "*" in the label's colour and default-width labels
+        if self.address_form_label_marker:
+            marker = json.dumps(self.address_form_label_marker, ensure_ascii=False)
+            style_variables.append(f"--form-label-marker: {marker}")
+        if self.address_form_label_marker_color:
+            style_variables.append(
+                f"--form-label-marker-color: {self.address_form_label_marker_color}"
+            )
+        if self.address_form_label_width:
+            style_variables.append(f"--form-label-width: {self.address_form_label_width}")
+        return "; ".join(style_variables)
+
+    def _get_product_image_ratio_classes(self):
+        """Return the classes defining the product image aspect ratio from the website's design
+        classes.
+        """
+        if design_classes := self.shop_opt_products_design_classes:
+            image_ratio_class_regex = r"o_wsale_products_opt_thumb_\d+_\d+(?:_mobile)?\b"
+            ratio_classes = re.findall(image_ratio_class_regex, design_classes)
+            has_mobile_ratio = (
+                "o_wsale_products_opt_design_list_large" in design_classes
+                or "o_wsale_products_opt_design_showcase" in design_classes
+            )
+            if has_mobile_ratio:
+                ratio_classes.append("o_wsale_has_mobile_ratio")
+            return " ".join(ratio_classes)
+        return ""
+
+    def _get_product_image_ratio_height(self):
+        """Return the image height of products images, used in `sale.mail_template_data.xml`."""
+        design_classes = self.shop_opt_products_design_classes or ""
+        image_ratio_height_mapping = {
+            "o_wsale_products_opt_thumb_16_9": "36px",
+            "o_wsale_products_opt_thumb_4_3": "48px",
+            "o_wsale_products_opt_thumb_6_5": "53px",
+            "o_wsale_products_opt_thumb_4_5": "96px",
+        }
+        for class_name, image_height in image_ratio_height_mapping.items():
+            if class_name in design_classes:
+                return image_height
+        return "64px"

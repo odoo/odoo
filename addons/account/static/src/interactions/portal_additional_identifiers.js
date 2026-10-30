@@ -168,9 +168,9 @@ export class PortalAdditionalIdentifiers extends Interaction {
         input.className = 'form-control';
         input.id = `o_additional_identifier_${key}`;
         input.name = key;
-        if (meta.placeholder) {
-            input.placeholder = meta.placeholder;
-        }
+        // `:placeholder-shown` only matches with a placeholder set, and that is how the
+        // floating label tells an empty field from a filled one
+        input.placeholder = meta.placeholder || " ";
         if (meta.help) {
             input.setAttribute('aria-describedby', `o_additional_identifier_${key}_help`);
         }
@@ -185,8 +185,11 @@ export class PortalAdditionalIdentifiers extends Interaction {
         icon.dataset.icon = 'delete';
         button.appendChild(icon);
 
-        group.append(input, button);
-        field.append(label, group);
+        const floating = document.createElement('div');
+        floating.className = 'form-floating';
+        floating.append(input, label);
+        group.append(floating, button);
+        field.append(group);
         if (meta.help) {
             const help = document.createElement('div');
             help.className = 'form-text';

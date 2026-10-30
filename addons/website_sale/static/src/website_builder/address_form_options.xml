@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website_sale.AddressFormOptions">
+        <BuilderRow
+            label.translate="Marked Fields"
+            tooltip.translate="Add an icon to the labels of required or optional fields"
+        >
+            <BuilderSelect>
+                <BuilderSelectItem id="'address_mark_none_opt'" classAction="'o_mark_none'">
+                    None
+                </BuilderSelectItem>
+                <BuilderSelectItem classAction="'o_mark_required'">Required</BuilderSelectItem>
+                <BuilderSelectItem classAction="'o_mark_optional'">Optional</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow
+            t-if="!this.isActiveItem('address_mark_none_opt')"
+            label.translate="Marker"
+            level="1"
+        >
+            <BuilderTextInput action="'setAddressFormMarker'" placeholder="'*'"/>
+            <BuilderColorPicker
+                enabledTabs="['solid', 'custom']"
+                action="'setAddressFormMarkerColor'"
+            />
+        </BuilderRow>
+        <BuilderRow label.translate="Labels Position">
+            <BuilderButtonGroup>
+                <BuilderButton title.translate="Hide" classAction="'o_labels_floating'">
+                    <i class="oi" data-icon="visibility_off"/>
+                </BuilderButton>
+                <BuilderButton
+                    title.translate="Top"
+                    classAction="'o_labels_top'"
+                    iconImg="'/website/static/src/img/snippets_options/pos_top.svg'"
+                />
+                <BuilderButton
+                    id="'address_labels_left_opt'"
+                    ltrRtlMapping="'left-right'"
+                    title.translate="Left"
+                    classAction="'o_labels_left'"
+                    iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"
+                />
+                <BuilderButton
+                    id="'address_labels_right_opt'"
+                    ltrRtlMapping="'left-right'"
+                    title.translate="Right"
+                    classAction="'o_labels_right'"
+                    iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"
+                />
+            </BuilderButtonGroup>
+        </BuilderRow>
+        <BuilderRow
+            t-if="this.isActiveItem('address_labels_left_opt')
+                || this.isActiveItem('address_labels_right_opt')"
+            label.translate="Labels Width"
+            level="1"
+        >
+            <BuilderNumberInput
+                styleAction="'--form-label-width'"
+                unit="'px'"
+                default="200"
+                placeholder="'200'"
+            />
+        </BuilderRow>
+    </t>
+
+</templates>
