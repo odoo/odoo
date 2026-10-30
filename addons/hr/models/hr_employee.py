@@ -2312,15 +2312,7 @@ class HrEmployee(models.Model):
                 else:
                     first_version_sudo = employee.version_id.sudo()
                     last_version_sudo = first_version_sudo
-                start = format_date_abbr(self.env, first_version_sudo.date_start) if first_version_sudo.date_start else False
-                end = format_date_abbr(self.env, last_version_sudo.date_end) if last_version_sudo.date_end else False
-                if start and end:
-                    msg = self.env._("As of %(start)s to %(end)s") % {'start': start, 'end': end}
-                elif start:
-                    msg = self.env._("As of %s") % (start)
-                else:
-                    msg = self.env._("As of")
-                employee._track_set_log_message(Markup("<b>%s</b>") % msg)
+                employee._track_set_version_log_message(first_version_sudo, last_version_sudo)
         if vals.get('department_id') or vals.get('user_id'):
             department_id = vals['department_id'] if vals.get('department_id') else self[:1].department_id.id
             # When added to a department or changing user, subscribe to the channels auto-subscribed by department
@@ -2334,6 +2326,19 @@ class HrEmployee(models.Model):
                     resources |= employee.resource_id
             resources.write({'calendar_id': vals.get('resource_calendar_id')})
         return res
+
+    def _track_set_version_log_message(self, first_version, last_version=None):
+        """ Prefix the next tracking message of the employees with the period of the
+        versions it applies to, from the start of `first_version` to the end of `last_version`. """
+        if not first_version.date_start:
+            return
+        last_version = last_version or first_version
+        start = format_date_abbr(self.env, first_version.date_start)
+        if last_version.date_end:
+            msg = self.env._("As of %(start)s to %(end)s", start=start, end=format_date_abbr(self.env, last_version.date_end))
+        else:
+            msg = self.env._("As of %s", start)
+        self._track_set_log_message(Markup("<b>%s</b>") % msg)
 
     def unlink(self):
         """Delete the employees, their versions and their ``resource.resource``.
