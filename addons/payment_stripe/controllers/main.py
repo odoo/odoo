@@ -208,10 +208,9 @@ class StripeController(http.Controller):
         :rtype: recordset of `payment.transaction`
         """
         amount_to_refund = refund_object["amount"]
-        converted_amount = payment_utils.to_major_currency_units(
+        converted_amount = source_tx_sudo.provider_id._to_major_currency_units(
             amount_to_refund,
             source_tx_sudo.currency_id,
-            arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(source_tx_sudo.currency_id.name),
         )
         return source_tx_sudo._create_child_transaction(converted_amount, is_refund=True)
 
