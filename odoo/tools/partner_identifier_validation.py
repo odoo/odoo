@@ -4,6 +4,8 @@ from stdnum.sg import uen as sg_uen
 from odoo.tools import single_email_re
 
 NON_DIGIT_RE = re.compile(r'\D')
+# AE TIN: 10-digit
+AE_TIN_RE = re.compile(r'\d{10}')
 # KVK: 8-digit
 NL_KVK_RE = re.compile(r'\d{8}')
 # OIN: 20-digit
@@ -23,6 +25,14 @@ SG_PEPPOL_PREFIX_RE = re.compile(r'(?P<uen_prefix>SGUEN|SGUXN)|(?P<other_prefix>
 # ===========================================================
 # Validators when no library provides it (typically stdnum) =
 # ===========================================================
+def ae_tin_validate(value):
+    """Normalize and validate a UAE TIN (10 digits)."""
+    value = NON_DIGIT_RE.sub('', value)
+    if not AE_TIN_RE.fullmatch(value):
+        raise InvalidFormat()
+    return value
+
+
 def nl_kvk_validate(value):
     """Normalize and validate a Dutch KVK number."""
     value = NON_DIGIT_RE.sub('', value)
