@@ -70,7 +70,9 @@ class StockMove(models.Model):
     def _action_synch_order(self):
         purchase_order_lines_vals = []
         for move in self:
-            purchase_order = move.picking_id.purchase_id or move.picking_id.return_id.purchase_id
+            picking = move.picking_id
+            purchase_order = (picking | picking.backorder_ids).move_ids.purchase_line_id.order_id[:1] \
+                or picking.return_id.purchase_id
             # Creates new PO line only when pickings linked to a purchase order and
             # for moves with qty. done and not already linked to a PO line.
             if not purchase_order \
