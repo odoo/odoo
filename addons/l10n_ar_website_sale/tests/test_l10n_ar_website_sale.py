@@ -159,11 +159,10 @@ class TestL10nArWebsiteSale(TestArCommon):
             'order_line': [Command.create({'product_id': self.product_1.product_variant_id.id})],
         })
         self.ar_company.l10n_ar_final_consumer_limit = cart.amount_total
-        self.assertFalse(buyer._get_mandatory_additional_identifiers(ar, order_sudo=cart))
+        self.assertFalse(buyer._get_portal_additional_identifiers(ar, order_sudo=cart)[1])
 
         self.ar_company.l10n_ar_final_consumer_limit = cart.amount_total - 0.01
-        self.assertEqual(buyer._get_mandatory_additional_identifiers(ar, order_sudo=cart), {'AR_DNI'})
-        self.assertIn('AR_DNI', buyer._get_portal_additional_identifiers_whitelist(company=cart.company_id, country=ar))
+        self.assertEqual(buyer._get_portal_additional_identifiers(ar, order_sudo=cart)[1], {'AR_DNI'})
         self.assertIn("order requires", step._get_billing_address_alert(cart))
         buyer.additional_identifiers = {'AR_DNI': '12345678'}
         self.assertNotIn("identification", step._get_billing_address_alert(cart))
@@ -183,9 +182,9 @@ class TestL10nArWebsiteSale(TestArCommon):
         self.assertEqual(self.ar_company.currency_id, self.env.ref('base.ARS'))
         amount_ars = cart.amount_total * 1000
         self.ar_company.l10n_ar_final_consumer_limit = amount_ars
-        self.assertFalse(buyer._get_mandatory_additional_identifiers(ar, order_sudo=cart))
+        self.assertFalse(buyer._get_portal_additional_identifiers(ar, order_sudo=cart)[1])
         self.ar_company.l10n_ar_final_consumer_limit = amount_ars - 1
-        self.assertEqual(buyer._get_mandatory_additional_identifiers(ar, order_sudo=cart), {'AR_DNI'})
+        self.assertEqual(buyer._get_portal_additional_identifiers(ar, order_sudo=cart)[1], {'AR_DNI'})
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')

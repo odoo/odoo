@@ -44,13 +44,13 @@ class ResPartner(models.Model):
         return {**super()._get_all_additional_identifiers_metadata(), **EC_ADDITIONAL_IDENTIFIERS_METADATA}
 
     @api.model
-    def _get_portal_additional_identifiers_whitelist(self, company=None, country=None):
-        whitelist = super()._get_portal_additional_identifiers_whitelist(company=company, country=country)
-        if company and company.account_fiscal_country_id.code == 'EC':
-            whitelist.add('PASSPORT')
-            if country and country.code == 'EC':
-                whitelist.add('EC_DNI')
-        return whitelist
+    def _get_portal_additional_identifiers(self, country_sudo, **kwargs):
+        optional, mandatory = super()._get_portal_additional_identifiers(country_sudo, **kwargs)
+        if self.env.company.account_fiscal_country_id.code == 'EC':
+            optional.add('PASSPORT')
+            if country_sudo.code == 'EC':
+                optional.add('EC_DNI')
+        return optional, mandatory
 
     @api.depends("vat", "country_id", "additional_identifiers",
                  "commercial_partner_id.vat", "commercial_partner_id.additional_identifiers")

@@ -18,8 +18,8 @@ class TestPortalAdditionalIdentifiers(BaseCommon, HttpCase):
         # additional identifiers are opt-in, whitelist FR_CN for the sake of the test
         cls.classPatch(
             cls.env.registry['res.partner'],
-            '_get_portal_additional_identifiers_whitelist',
-            lambda self, company=None, country=None: {'FR_CN'},
+            '_get_portal_additional_identifiers',
+            lambda *_args, **_kwargs: ({'FR_CN'}, set()),
         )
         cls.portal_user = cls._create_new_portal_user()
         cls.partner = cls.portal_user.partner_id

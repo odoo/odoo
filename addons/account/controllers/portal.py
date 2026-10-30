@@ -236,37 +236,30 @@ class PortalAccount(CustomerPortal):
     # Address form - additional identifiers
     # ------------------------------------------------------------
 
-    def _get_checkout_additional_identifiers_metadata(self, country):
-        """Return additional identifiers for a country."""
-        if not country:
+    def _get_checkout_additional_identifiers_metadata(self, country_sudo, **kwargs):
+        """Return the additional identifiers shown for a country, with their required flag."""
+        if not country_sudo:
             return {}
         ResPartner = request.env['res.partner']
-        partner = ResPartner.new({'country_id': country.id})
+        partner = ResPartner.new({'country_id': country_sudo.id})
         metadata = partner.available_additional_identifiers_metadata
-        whitelist = ResPartner._get_portal_additional_identifiers_whitelist(
-            company=request.env.company,
-            country=country,
-        )
+        optional, mandatory = ResPartner._get_portal_additional_identifiers(country_sudo, **kwargs)
         return {
             key: {
                 'label': entry.get('label') or key,
                 'placeholder': entry.get('placeholder') or '',
                 'help': entry.get('help') or '',
                 'individual': partner._is_individual_identifier(key),
+                'required': key in mandatory,
             }
             for key, entry in sorted(metadata.items(), key=lambda item: item[1].get('sequence', 100))
-            if key in whitelist
+            if key in optional | mandatory
         }
 
     def _prepare_address_form_values(self, partner_sudo, *args, **kwargs):
         rendering_values = super()._prepare_address_form_values(partner_sudo, *args, **kwargs)
         if rendering_values['is_used_as_billing']:
-            metadata = self._get_checkout_additional_identifiers_metadata(rendering_values['country'])
-            mandatory_keys = request.env['res.partner']._get_mandatory_additional_identifiers(
-                rendering_values['country'], **kwargs,
-            )
-            for key, meta in metadata.items():
-                meta['required'] = key in mandatory_keys
+            metadata = self._get_checkout_additional_identifiers_metadata(rendering_values['country'], **kwargs)
             current_partner = partner_sudo or rendering_values['current_partner']
             rendering_values.update({
                 'additional_identifiers_metadata': metadata,
@@ -277,11 +270,7 @@ class PortalAccount(CustomerPortal):
     @http.route()
     def portal_address_country_info(self, country, address_type, **kw):
         res = super().portal_address_country_info(country, address_type, **kw)
-        metadata = self._get_checkout_additional_identifiers_metadata(country)
-        mandatory_keys = request.env['res.partner']._get_mandatory_additional_identifiers(country, **kw)
-        for key, meta in metadata.items():
-            meta['required'] = key in mandatory_keys
-        res['additional_identifiers_metadata'] = metadata
+        res['additional_identifiers_metadata'] = self._get_checkout_additional_identifiers_metadata(country, **kw)
         return res
 
     def _validate_address_values(
@@ -303,7 +292,8 @@ class PortalAccount(CustomerPortal):
             country = request.env['res.country'].browse(address_values.get('country_id'))
             # The VAT is absent from the payload when hidden or popped as a commercial field.
             vat = address_values.get('vat', partner_sudo.vat)
-            for key in ResPartner.sudo()._get_mandatory_additional_identifiers(country, **kwargs):
+            _optional, mandatory = ResPartner._get_portal_additional_identifiers(country, **kwargs)
+            for key in mandatory:
                 if vat and ResPartner._is_individual_identifier(key):
                     continue
                 # An unchanged identifier is popped from the payload by the commercial-field block.

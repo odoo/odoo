@@ -58,3 +58,12 @@ class TestL10nBrPortalAddress(BaseCommon, HttpCase):
         res = self._submit(partner, BR_CN='39053344705')
         self.assertEqual(res, {'redirectUrl': '/my/addresses'})
         self.assertEqual(partner.additional_identifiers, {'BR_CN': '39053344705'})
+
+        us_company = self.env['res.company'].sudo().create({
+            'name': "US Company",
+            'country_id': self.quick_ref('base.us').id,
+        })
+        _optional, mandatory = partner.with_company(us_company)._get_portal_additional_identifiers(
+            self.quick_ref('base.br'),
+        )
+        self.assertNotIn('BR_CN', mandatory)

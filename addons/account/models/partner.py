@@ -810,21 +810,22 @@ class ResPartner(models.Model):
         )
 
     def _check_billing_address(self, **kwargs):
-        mandatory_identifiers = self._get_mandatory_additional_identifiers(self.country_id, **kwargs)
+        _optional, mandatory = self._get_portal_additional_identifiers(self.country_id, **kwargs)
         return super()._check_billing_address(**kwargs) and all(
             self._get_additional_identifier(key)
-            for key in mandatory_identifiers
+            for key in mandatory
             if not (self.vat and self._is_individual_identifier(key))
         )
 
-    def _get_mandatory_additional_identifiers(self, country_sudo, **_kwargs):  # noqa: ARG002
-        """Return the set of `additional_identifiers` keys mandatory on a billing address.
+    @api.model
+    def _get_portal_additional_identifiers(self, country_sudo, **_kwargs):  # noqa: ARG002
+        """Return the `additional_identifiers` keys of the portal and checkout address forms.
 
-        :param res.country country_sudo: The country to use to build the set of mandatory keys.
-        :return: The set of mandatory additional identifier keys.
-        :rtype: set
+        :param res.country country_sudo: The country of the address.
+        :return: The optional keys and the mandatory keys, a mandatory key always being shown.
+        :rtype: tuple[set, set]
         """
-        return set()
+        return set(), set()
 
     @api.constrains('additional_identifiers', 'vat')
     def _check_identifier_combination(self):
@@ -845,14 +846,6 @@ class ResPartner(models.Model):
                     individual=str(partner._get_identifier_label(individual) or individual),
                     company=str(partner._get_identifier_label(company) or company),
                 ))
-
-    @api.model
-    def _get_portal_additional_identifiers_whitelist(self, company=None, country=None):
-        """ Returns the additional identifier keys that should be
-        exposed on the portal and eCommerce checkout address forms.
-        TO BE OVERRIDDEN
-        """
-        return set()
 
     def write(self, vals):
         parent_write = self.env["res.partner"]

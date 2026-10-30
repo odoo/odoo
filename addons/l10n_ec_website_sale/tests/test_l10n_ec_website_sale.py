@@ -28,11 +28,10 @@ class TestL10nEcWebsiteSale(AccountTestInvoicingCommon):
             'website_id': self.website.id,
             'order_line': [Command.create({'product_id': self.product.id})],
         })
-        self.assertFalse(buyer._get_mandatory_additional_identifiers(ec, order_sudo=cart))
+        self.assertFalse(buyer._get_portal_additional_identifiers(ec, order_sudo=cart)[1])
 
         self.company_data['company'].l10n_ec_final_consumer_limit = 49.99
-        self.assertEqual(buyer._get_mandatory_additional_identifiers(ec, order_sudo=cart), {'EC_DNI'})
-        self.assertIn('EC_DNI', buyer._get_portal_additional_identifiers_whitelist(company=cart.company_id, country=ec))
+        self.assertEqual(buyer._get_portal_additional_identifiers(ec, order_sudo=cart)[1], {'EC_DNI'})
         self.assertIn("order requires", step._get_billing_address_alert(cart))
         buyer.additional_identifiers = {'EC_DNI': '1714616123'}
         self.assertNotIn("identification", step._get_billing_address_alert(cart))
