@@ -23,6 +23,7 @@ export default class DevicesSynchronisation {
         this.staticModels = new Set(staticModels);
         this.pos = posStore;
         this.models = posStore.models;
+        this.inSync = false;
 
         // Connect websocket to receive synchronisation notification
         this.pos.data.connectWebSocket("SYNCHRONISATION", this.collect.bind(this));
@@ -95,7 +96,12 @@ export default class DevicesSynchronisation {
         const serverOpenOrders = this.pos.getOpenOrders().filter((o) => o.isSynced);
         const { domain, recordIds } = this.constructOrdersDomain(serverOpenOrders);
         let response = {};
+        if (this.inSync) {
+            return;
+        }
+
         try {
+            this.inSync = true;
             response = await this.pos.data.call("pos.config", "read_config_open_orders", [
                 odoo.pos_config_id,
                 domain,
@@ -109,9 +115,25 @@ export default class DevicesSynchronisation {
                 CONSOLE_COLOR
             );
             return;
+        } finally {
+            this.inSync = false;
         }
 
         if (Object.keys(response.dynamic_records).length) {
+            // A paid order not yet received by the server must not be reopened by its draft version
+            const serverPaymentUuids = new Set(
+                (response.dynamic_records["pos.payment"] || []).map((p) => p.uuid)
+            );
+            for (const vals of response.dynamic_records["pos.order"] || []) {
+                const order = this.models["pos.order"].get(vals.id);
+                if (
+                    order?.isUnsyncedPaid &&
+                    vals.state === "draft" &&
+                    order.payment_ids.some((p) => !p.isSynced && !serverPaymentUuids.has(p.uuid))
+                ) {
+                    vals.state = order.state;
+                }
+            }
             const missing = await this.pos.data.missingRecursive(response.dynamic_records);
             const { dynamicR, staticR } = Object.entries(missing).reduce(
                 (acc, [model, records]) => {

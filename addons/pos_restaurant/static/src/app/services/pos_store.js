@@ -83,6 +83,22 @@ patch(PosStore.prototype, {
         }
         return super.preSyncAllOrders(...arguments);
     },
+    postSyncAllOrders(orders) {
+        super.postSyncAllOrders(...arguments);
+        // The server merges an order synced on a table into the open order of that table,
+        // the local order is left empty (its lines are moved) and must be removed
+        for (const order of orders.filter((o) => o.table_id && !o.finalized)) {
+            const mergedOrders = this.models["pos.order"].filter(
+                (o) => !o.isSynced && o.table_id?.id === order.table_id.id && !o.lines.length
+            );
+            for (const mergedOrder of mergedOrders) {
+                if (this.getOrder()?.uuid === mergedOrder.uuid) {
+                    this.setOrder(order);
+                }
+                this.removeOrder(mergedOrder, false); // Not synced so no need server delete
+            }
+        }
+    },
     async setCustomerCount(o = false, removeEmptyOrder = true) {
         const currentOrder = o || this.getOrder();
         const count = await makeAwaitable(this.dialog, NumberPopup, {
@@ -625,7 +641,14 @@ patch(PosStore.prototype, {
     },
     //@override
     addNewOrder(data = {}) {
-        const order = super.addNewOrder(...arguments);
+        if (!data.table_id && !data.is_refund && this.getOrder()?.finalized && this.selectedTable) {
+            // When a table isn't synchronized and paid from another device
+            // clicking on a table will re-create a direct sales.
+            // But the user might not be aware of this and expects the table
+            // to be linked to the new order.
+            data = { ...data, table_id: this.selectedTable };
+        }
+        const order = super.addNewOrder(data);
         if (this.config.module_pos_restaurant) {
             this.addPendingOrder([order.id]);
         }

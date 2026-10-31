@@ -122,6 +122,17 @@ class PosOrder(models.Model):
 
         self = self.with_company(pos_order.company_id)
         self._process_payment_lines(order, pos_order, pos_session, draft)
+
+        # Lines changed on another device while this one was paying offline: keep the
+        # payments but leave the order draft so the difference can be settled
+        if not draft and existing_order:
+            # The order total comes from the device, it doesn't include the lines added meanwhile by another device
+            total = pos_order.with_context(active_test=False)._get_order_tax_totals()['total_amount_currency']
+            # The frontend and backend may apply the cash rounding differently
+            tolerance = pos_order.config_id.cash_rounding and pos_order.config_id.rounding_method.rounding or 0.0
+            if pos_order.currency_id.compare_amounts(abs(abs(total) - abs(pos_order.amount_paid)), tolerance) > 0:
+                draft = True
+
         return pos_order._process_saved_order(draft)
 
     def _process_saved_order(self, draft):

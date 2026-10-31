@@ -776,9 +776,10 @@ export class PosStore extends WithLazyGetterTrap {
 
     async afterProcessServerData() {
         // Adding the not synced paid orders to the pending orders
-        const paidUnsyncedOrderIds = this.models["pos.order"]
-            .filter((order) => order.isUnsyncedPaid)
-            .map((order) => order.id);
+        const paidUnsyncedOrders = this.models["pos.order"].filter((order) => order.isUnsyncedPaid);
+        // Orders known by the server aren't dirty after a reload, they would be skipped by the sync
+        paidUnsyncedOrders.forEach((order) => order._markDirty());
+        const paidUnsyncedOrderIds = paidUnsyncedOrders.map((order) => order.id);
 
         if (paidUnsyncedOrderIds.length > 0) {
             this.addPendingOrder(paidUnsyncedOrderIds);

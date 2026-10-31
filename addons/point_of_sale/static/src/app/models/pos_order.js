@@ -109,7 +109,7 @@ export class PosOrder extends PosOrderAccounting {
     }
 
     get canBeRemovedFromIndexedDB() {
-        return (this.finalized && this.isSynced) || this.state === "cancel";
+        return (this.finalized && !this.isUnsyncedPaid) || this.state === "cancel";
     }
 
     get totalQuantity() {
@@ -117,7 +117,8 @@ export class PosOrder extends PosOrderAccounting {
     }
 
     get isUnsyncedPaid() {
-        return this.finalized && !this.isSynced;
+        // An order synced as draft then paid offline has a server id but unsynced payments
+        return this.finalized && (!this.isSynced || this.payment_ids.some((p) => !p.isSynced));
     }
 
     get originalSplittedOrder() {
