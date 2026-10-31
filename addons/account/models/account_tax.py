@@ -93,6 +93,7 @@ class AccountTax(models.Model):
             ('is_domestic', '=', True),
         ]""",
         ondelete='cascade',
+        copy=False,  # a duplicated replacement tax must not replace the same source tax twice
         help="List of taxes to replace when applying any of the stipulated fiscal positions.",
     )
     replacing_tax_ids = fields.Many2many(
