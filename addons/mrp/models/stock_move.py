@@ -716,3 +716,10 @@ class StockMove(models.Model):
         else:
             res['raw_material_production_id'] = self.production_id.id
         return res
+
+    def _action_scrap(self):
+        scraps_to_defer = self.filtered(lambda m: m.production_id and m.production_id.state not in ('done', 'cancel') and m.product_id in m.production_id.move_finished_ids.product_id)
+        for move in scraps_to_defer:
+            move.write(move._prepare_scrap_move_vals())
+        scraps_to_validate = self - scraps_to_defer
+        return super(StockMove, scraps_to_validate)._action_scrap() if scraps_to_validate else scraps_to_defer

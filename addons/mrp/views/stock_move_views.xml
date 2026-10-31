@@ -72,11 +72,14 @@
             <field name="inherit_id" ref="stock.view_scrap_move_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='picking_id']" position="after">
-                    <field name="production_id" invisible="not production_id" readonly="1"/>
+                    <field name="production_id" invisible="not production_id or context.get('from_order')" readonly="1"/>
                     <field name="raw_material_production_id" invisible="not raw_material_production_id" readonly="1"/>
                 </xpath>
                 <xpath expr="//field[@name='product_id']" position="attributes">
                     <attribute name="domain">[('id', 'in', context.get('product_ids')), ('type', '=', 'consu'), ('is_kits', '=', False)] if 'product_ids' in context else [('type', '=', 'consu'), ('is_kits', '=', False)]</attribute>
+                </xpath>
+                <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="invisible">context.get('from_order')</attribute>
                 </xpath>
             </field>
         </record>
