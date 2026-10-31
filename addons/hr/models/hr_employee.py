@@ -1974,7 +1974,7 @@ class HrEmployee(models.Model):
         :rtype: dict
         """
         vals = dict(
-            work_contact_id=user.partner_id.id if user else self.work_contact_id.id,
+            work_contact_id=user.partner_id.id,
             user_id=user.id,
         )
         if not employee_has_image:
@@ -2261,13 +2261,14 @@ class HrEmployee(models.Model):
         the resource; ``department_id``/``user_id`` subscribe the
         user to the department's auto-subscription channels.
         """
-        if 'work_contact_id' in vals:
-            self.message_unsubscribe(self.work_contact_id.ids)
         if 'user_id' in vals:
             # Update the profile pictures with user, except if provided
             user = self.env['res.users'].browse(vals['user_id'])
             vals.update(self._sync_user(user, (bool(all(emp.image_1920 for emp in self)))))
-            self._remove_work_contact_id(user, vals.get('company_id'))
+            if user:
+                self._remove_work_contact_id(user, vals.get('company_id'))
+        if 'work_contact_id' in vals:
+            self.message_unsubscribe(self.work_contact_id.ids)
         if 'work_permit_expiration_date' in vals:
             vals['work_permit_scheduled_activity'] = False
         if vals.get('tz'):
