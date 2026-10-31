@@ -38,6 +38,8 @@ class AdyenCommon(PaymentCommon):
             "originalReference": cls.original_reference,
             "pspReference": cls.psp_reference,
             "success": "true",
+            "resultCode": "Authorised",
+            "paymentMethod": "ach_direct_debit",
         }  # Include all keys used in the computation of the signature to the payload
         cls.webhook_notification_batch_data = {
             "notificationItems": [{"NotificationRequestItem": cls.webhook_notification_payload}]
