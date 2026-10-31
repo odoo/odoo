@@ -71,6 +71,10 @@ function align(editor, mode) {
         if (isVisibleTextNode(node)) {
             const block = closestBlock(node);
             if (!visitedBlocks.has(block)) {
+                // Remove Bootstrap alignment class before applying the inline
+                // `text-align`, since its CSS rules take precedence over the
+                // inline style.
+                block.classList.remove("text-start", "text-center", "text-end", "text-justify");
                 const hasModifier = getComputedStyle(block).textAlign === mode;
                 if (!hasModifier && block.isContentEditable) {
                     block.oAlign(sel.anchorOffset, mode);
