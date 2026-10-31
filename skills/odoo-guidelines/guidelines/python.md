@@ -74,3 +74,35 @@ raise UserError(self.env._("Missing fields: %s", ", ".join(missing_names)))
   the language is known, by passing it through `self.env._(LABEL)`.
 - Field *values* are translated via the field's `translate` flag, never `_()`.
 - Prefer `%`-style placeholders over `.format()`.
+
+# Compare floats with the precision they are shown with
+
+No `==`, `!=`, `<`, `>` or truthiness test on a float amount, price or quantity. Use the
+core helpers with the precision the value is displayed or stored with:
+
+- amounts: `currency.compare_amounts(a, b)`, `currency.is_zero(a)`, `currency.round(a)`;
+- quantities: `float_compare(a, b, precision_rounding=uom.rounding)`,
+  `float_is_zero(...)`, `float_round(...)` from `odoo.tools`;
+- other values: the same helpers with
+  `precision_digits=self.env["decimal.precision"].precision_get("<name>")`.
+
+```python
+# bad: 10.001 != 10.0 although both print as 10.00
+book.show_old_price = book.old_price and book.old_price != book.price
+# good
+currency = book.currency_id
+book.show_old_price = (
+    not currency.is_zero(book.old_price)
+    and currency.compare_amounts(book.old_price, book.price) != 0
+)
+```
+
+## Why
+
+Floats carry binary rounding errors and more digits than the UI or PDF shows. A raw
+comparison can disagree with what the user sees: a total that "is" zero but isn't, a
+price flagged as changed that prints the same.
+
+## Exceptions and notes
+
+- Add the currency or uom field to `@api.depends` when a compute uses it.
