@@ -4,9 +4,10 @@ from datetime import datetime, date, timedelta, UTC
 from unittest.mock import patch
 from zoneinfo import ZoneInfo
 
+import psycopg2
 from dateutil.relativedelta import relativedelta
 
-from odoo.tests.common import tagged, new_test_user, users
+from odoo.tests.common import TransactionCase, tagged, new_test_user, users
 from odoo.exceptions import ValidationError
 from odoo.addons.google_calendar.models.res_users import ResUsers
 from odoo.addons.google_calendar.tests.test_sync_common import TestSyncGoogle, patch_api
@@ -2714,3 +2715,80 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             "No event should be created on Oct 26 (the UTC boundary date)",
         )
         self.assertGoogleAPINotCalled()
+
+
+@tagged('-at_install', 'post_install')
+class TestDuplicatePrevention(TransactionCase):
+
+    def _event_values(self, **kwargs):
+        values = {
+            'name': 'Google meeting',
+            'start': '2026-08-12 10:00:00',
+            'stop': '2026-08-12 11:00:00',
+            'google_id': 'GID-SHARED',
+            'need_sync': False,
+        }
+        values.update(kwargs)
+        return values
+
+    def _recurrence_values(self, **kwargs):
+        values = {
+            'rrule_type': 'weekly',
+            'mon': True,
+            'end_type': 'count',
+            'count': 3,
+            'google_id': 'GID-RECURRENCE',
+            'need_sync': False,
+        }
+        values.update(kwargs)
+        return values
+
+    def test_records_outside_the_index_scope_do_not_conflict(self):
+        """ Archived records and records without a Google id may share it. """
+        CalendarEvent = self.env['calendar.event']
+        CalendarRecurrence = self.env['calendar.recurrence']
+
+        # _apply_recurrence keeps an archived copy with the old Google id
+        with self.subTest('archived event'):
+            CalendarEvent.create(self._event_values(google_id='GID-A', active=False))
+            CalendarEvent.create(self._event_values(google_id='GID-A'))
+            self.env.flush_all()
+
+        with self.subTest('archived recurrence'):
+            CalendarRecurrence.create(self._recurrence_values(google_id='GID-B', active=False))
+            CalendarRecurrence.create(self._recurrence_values(google_id='GID-B'))
+            self.env.flush_all()
+
+        with self.subTest('no google id'):
+            CalendarEvent.create(self._event_values(google_id=False))
+            CalendarEvent.create(self._event_values(google_id=False))
+            self.env.flush_all()
+
+    def test_create_from_google_skips_existing_google_id(self):
+        """ An event whose Google id is already taken is skipped, the others are created. """
+        CalendarEvent = self.env['calendar.event']
+        CalendarEvent.create(self._event_values(name='Existing meeting', google_id='GID-CONCURRENT'))
+        self.env.flush_all()
+
+        google_ids = ['GID-BEFORE', 'GID-CONCURRENT', 'GID-AFTER']
+        gevents = GoogleEvent([{'id': google_id} for google_id in google_ids])
+        vals_list = [self._event_values(name=google_id, google_id=google_id) for google_id in google_ids]
+
+        with tools.mute_logger('odoo.sql_db'):
+            created = CalendarEvent._create_from_google(gevents, self.env.user.primary_calendar_id, vals_list)
+
+        self.assertEqual(created.mapped('google_id'), ['GID-BEFORE', 'GID-AFTER'])
+        self.assertEqual(CalendarEvent.search_count([('google_id', '=', 'GID-CONCURRENT')]), 1)
+
+    def test_create_from_google_reraises_unrelated_violations(self):
+        """ A unique violation from another index is raised. """
+        CalendarEvent = self.env['calendar.event']
+        self.env.cr.execute("CREATE UNIQUE INDEX calendar_event_name_uniq ON calendar_event (name)")
+        CalendarEvent.create(self._event_values(name='Taken', google_id='GID-TAKEN'))
+        self.env.flush_all()
+
+        gevents = GoogleEvent([{'id': 'GID-OTHER'}])
+        vals_list = [self._event_values(name='Taken', google_id='GID-OTHER')]
+
+        with self.assertRaises(psycopg2.errors.UniqueViolation), tools.mute_logger('odoo.sql_db'):
+            CalendarEvent._create_from_google(gevents, self.env.user.primary_calendar_id, vals_list)
