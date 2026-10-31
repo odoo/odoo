@@ -8278,11 +8278,15 @@ class AccountMove(models.Model):
             main = self.message_main_attachment_id
             if main and main not in attachments:
                 attachments = main | attachments
-            return [{
-                'filename': a.name,
-                'filetype': a.mimetype,
-                'content': a.raw,
-            } for a in attachments]
+            if not attachments:
+                attachments = self.attachment_ids
+            if attachments:
+                return [{
+                    'filename': a.name,
+                    'filetype': a.mimetype,
+                    'content': a.raw,
+                } for a in attachments]
+            return self._get_invoice_legal_documents_all(allow_fallback=self.state == 'posted')
 
         if self.state == 'draft' and (main := self.message_main_attachment_id):
             return [{
@@ -8291,7 +8295,7 @@ class AccountMove(models.Model):
                 'content': main.raw,
             }]
 
-        return self._get_invoice_legal_documents_all()
+        return self._get_invoice_legal_documents_all(allow_fallback=self.state == 'posted')
 
     def _get_move_lines_to_report(self):
         def show_line(line):
