@@ -291,7 +291,7 @@ function parseSmartDateInput(value) {
     var now = DateTime.local().startOf("second");
     if (terms[0] == "today") {
         terms.shift();
-        now = now.startOf("day");
+        now = now.setZone("UTC", { keepLocalTime: true }).startOf("day");
     } else if (terms[0] == "now") {
         terms.shift();
     } else if (terms.length == 1 && /^[=+-]\d+$/.test(terms[0])) {
