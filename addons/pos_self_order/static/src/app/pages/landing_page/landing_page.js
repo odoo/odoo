@@ -13,7 +13,6 @@ export class LandingPage extends Component {
         this.selfOrder = useSelfOrder();
         this.router = useService("router");
         this.dialog = useService("dialog");
-        this.activeSelected = false;
 
         onWillStart(() => {
             if (this.selfOrder.config.self_ordering_mode === "kiosk") {
@@ -37,14 +36,6 @@ export class LandingPage extends Component {
 
     get languages() {
         return this.selfOrder.config.self_ordering_available_language_ids;
-    }
-
-    get activeImage() {
-        if (!this.activeSelected) {
-            this.activeSelected = true;
-            return "active";
-        }
-        return "";
     }
 
     get draftOrder() {
