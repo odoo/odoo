@@ -135,4 +135,63 @@ describe(parseUrl(import.meta.url), () => {
         await expect.waitForErrors(["boom"]);
         await prom; // crash and end the test
     });
+
+    test("claims job indices on its own without shard", async () => {
+        const runnerA = makeTestRunner();
+        const runnerB = makeTestRunner();
+
+        expect(await runnerA.claimJobIndex()).toBe(0);
+        expect(await runnerA.claimJobIndex()).toBe(1);
+        expect(await runnerB.claimJobIndex()).toBe(0);
+    });
+
+    test("ignores shard outside of headless mode", async () => {
+        const shard = `runner-test-${Date.now()}`;
+        const runnerA = makeTestRunner({ shard });
+        const runnerB = makeTestRunner({ shard });
+
+        expect(await runnerA.claimJobIndex()).toBe(0);
+        expect(await runnerB.claimJobIndex()).toBe(0);
+    });
+
+    test("dry run returns the biggest suites first in a shard", async () => {
+        /**
+         * @param {import("../../core/runner").Runner} runner
+         */
+        function describeSuites(runner) {
+            runner.describe("small", () => {
+                runner.test("test 1", () => {});
+            });
+            runner.describe("big", () => {
+                runner.test("test 2", () => {});
+                runner.test("test 3", () => {});
+            });
+        }
+
+        const runner = makeTestRunner();
+        const shardRunner = makeTestRunner({ headless: true, shard: "dry-run-test" });
+        const { suites } = await runner.dryRun(() => describeSuites(runner));
+        const { suites: shardSuites } = await shardRunner.dryRun(() => describeSuites(shardRunner));
+
+        expect(suites.map((suite) => suite.name)).toEqual(["small", "big"]);
+        expect(shardSuites.map((suite) => suite.name)).toEqual(["big", "small"]);
+    });
+
+    test("shares claimed job indices between runners of the same shard", async () => {
+        // The shared counter persists in the browser profile: only the claimed
+        // indices relative to each other are deterministic
+        const shard = `runner-test-${Date.now()}`;
+        const runnerA = makeTestRunner({ headless: true, shard });
+        const runnerB = makeTestRunner({ headless: true, shard });
+
+        const indices = await Promise.all(
+            [runnerA, runnerB, runnerA, runnerB, runnerA, runnerB].map((runner) =>
+                runner.claimJobIndex()
+            )
+        );
+        const first = Math.min(...indices);
+        const expected = [0, 1, 2, 3, 4, 5].map((i) => first + i);
+
+        expect(indices.toSorted((a, b) => a - b)).toEqual(expected);
+    });
 });

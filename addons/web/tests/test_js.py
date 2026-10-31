@@ -2,7 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import os
 import re
+import uuid
 from contextlib import suppress
 
 import odoo.tests
@@ -31,6 +33,14 @@ def _get_filters(test_params):
                 part_sign = '-' if sign == '+' else '+'
             filters.append((part_sign, part))
     return sorted(filters)
+
+
+def _get_hoot_tabs():
+    """ Amount of browser tabs running unit tests concurrently: the
+    ``ODOO_TEST_TABS`` environment variable if set, otherwise a single one.
+    """
+    environment_tabs = os.environ.get('ODOO_TEST_TABS')
+    return max(1, int(environment_tabs)) if environment_tabs else 1
 
 
 class HootCommon(odoo.tests.HttpCase):
@@ -198,7 +208,9 @@ class WebSuite(HootCommon, odoo.tests.CrossModule):
         if not filters:
             return
         timeout = 5400 if self.is_test_all else 1800
-        self.browser_js(f'/web/tests?&headless&loglevel=2&preset=desktop&timeout=15000{filters}', "", "", login='admin', timeout=timeout, success_signal="[HOOT] Test suite succeeded", error_checker=unit_test_error_checker)
+        tabs = _get_hoot_tabs()
+        shard = f'&shard={uuid.uuid4().hex}' if tabs > 1 else ''
+        self.browser_js(f'/web/tests?&headless&loglevel=2&preset=desktop&timeout=15000{shard}{filters}', "", "", login='admin', timeout=timeout, success_signal="[HOOT] Test suite succeeded", error_checker=unit_test_error_checker, tabs=tabs)
 
 
 @odoo.tests.tagged('hoot', 'post_install', '-at_install')
@@ -214,4 +226,6 @@ class MobileWebSuite(HootCommon, odoo.tests.CrossModule):
         if not filters:
             return
         timeout = 5400 if self.is_test_all else 1800
-        self.browser_js(f'/web/tests?&headless&loglevel=2&preset=mobile&tag=-headless&timeout=15000{filters}', "", "", login='admin', timeout=timeout, success_signal="[HOOT] Test suite succeeded", error_checker=unit_test_error_checker)
+        tabs = _get_hoot_tabs()
+        shard = f'&shard={uuid.uuid4().hex}' if tabs > 1 else ''
+        self.browser_js(f'/web/tests?&headless&loglevel=2&preset=mobile&tag=-headless&timeout=15000{shard}{filters}', "", "", login='admin', timeout=timeout, success_signal="[HOOT] Test suite succeeded", error_checker=unit_test_error_checker, tabs=tabs)
