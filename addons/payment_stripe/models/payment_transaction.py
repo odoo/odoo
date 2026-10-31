@@ -117,7 +117,11 @@ class PaymentTransaction(models.Model):
                 self.payment_method_code, self.payment_method_code
             ),
         }
-        if self.currency_id.name in const.INDIAN_MANDATES_SUPPORTED_CURRENCIES:
+        if self.payment_method_code == "acss_direct_debit":
+            setup_intent_payload.update(
+                self._stripe_prepare_acss_mandate_options(is_setup_intent=True)
+            )
+        elif self.currency_id.name in const.INDIAN_MANDATES_SUPPORTED_CURRENCIES:
             setup_intent_payload.update(**self._stripe_prepare_mandate_options())
         return setup_intent_payload
 
@@ -146,17 +150,11 @@ class PaymentTransaction(models.Model):
             "expand[]": "payment_method",
             **stripe_utils.include_shipping_address(self),
         }
-
         if self.payment_method_code == "acss_direct_debit" and self.operation not in (
             "online_token",
             "offline",
         ):
-            OPTION_PATH_PREFIX = "payment_method_options[acss_debit][mandate_options]"
-            mandate_options = {
-                f"{OPTION_PATH_PREFIX}[payment_schedule]": "sporadic",
-                f"{OPTION_PATH_PREFIX}[transaction_type]": "business",
-            }
-            payment_intent_payload.update(mandate_options)
+            payment_intent_payload.update(self._stripe_prepare_acss_mandate_options())
 
         if self.operation in ["online_token", "offline"]:
             if not self.token_id.stripe_payment_method:  # Pre-SCA token, migrate it.
@@ -174,7 +172,10 @@ class PaymentTransaction(models.Model):
             payment_intent_payload["customer"] = customer["id"]
             if self.tokenize:
                 payment_intent_payload["setup_future_usage"] = "off_session"
-                if self.currency_id.name in const.INDIAN_MANDATES_SUPPORTED_CURRENCIES:
+                if (
+                    self.payment_method_code != "acss_direct_debit"
+                    and self.currency_id.name in const.INDIAN_MANDATES_SUPPORTED_CURRENCIES
+                ):
                     payment_intent_payload.update(**self._stripe_prepare_mandate_options())
         return payment_intent_payload
 
@@ -199,6 +200,23 @@ class PaymentTransaction(models.Model):
                 "phone": (self.partner_phone and self.partner_phone[:20]) or None,
             },
         )
+
+    def _stripe_prepare_acss_mandate_options(self, is_setup_intent=False):
+        """Prepare the ACSS Debit mandate options to send along with an intent.
+
+        :param bool is_setup_intent: Whether the options are meant for a SetupIntent, which
+        requires the currency of the mandate to be specified.
+        :return: The Stripe-formatted payload for the ACSS Debit mandate options.
+        :rtype: dict
+        """
+        OPTION_PATH_PREFIX = "payment_method_options[acss_debit]"
+        acss_options = {
+            f"{OPTION_PATH_PREFIX}[mandate_options][payment_schedule]": "sporadic",
+            f"{OPTION_PATH_PREFIX}[mandate_options][transaction_type]": "business",
+        }
+        if is_setup_intent:
+            acss_options[f"{OPTION_PATH_PREFIX}[currency]"] = self._stripe_get_currency_name()
+        return acss_options
 
     def _stripe_prepare_mandate_options(self):
         """Prepare the configuration options for setting up an eMandate along with an intent.
