@@ -13,7 +13,7 @@
         </xpath>
         <xpath expr="//OrderDisplay/t[@t-set-slot='details']" position="inside">
             <t t-set="order" t-value="this.pos.getOrder()"/>
-            <t t-if="order.partner_id">
+            <t t-if="order.partner_id and this.pos.accessRight.canApplyRewards">
                 <t t-foreach="this.pos.models['loyalty.program'].filter((p) => p.program_type === 'loyalty')" t-as="program" t-key="program.id">
                     <t t-set="won" t-value="this.roundPoints(program.getEarnedPoints(order))"/>
                     <t t-set="spent" t-value="this.roundPoints(program.getSpentPoints(order))"/>

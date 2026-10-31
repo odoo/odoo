@@ -82,9 +82,12 @@ patch(PosAccessRightPlugin.prototype, {
         return this.hasEmployeeRole(["cashier", "manager"]);
     },
     get canCloseSession() {
-        return this.hasEmployeeRole(["manager"]);
+        return this.hasEmployeeRole(["cashier", "manager"]);
     },
     get canPrintReport() {
+        return this.hasEmployeeRole(["manager"]);
+    },
+    get canSeeExpectedCash() {
         return this.hasEmployeeRole(["manager"]);
     },
     get canSelectPrinter() {
