@@ -2,6 +2,8 @@
 from odoo import Command
 from odoo.tests import HttpCase, tagged
 
+from odoo.addons.http_routing.tests.common import MockRequest
+
 
 @tagged('post_install', '-at_install', 'is_tour')
 class TestTranslation(HttpCase):
@@ -127,3 +129,93 @@ class TestTranslation(HttpCase):
         for website in self.env['website'].search([]):
             website.language_ids += lang_fr
         self._multi_language_en_user_en_fr_site()
+
+
+@tagged('post_install', '-at_install')
+class TestFieldTranslation(HttpCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['res.lang']._activate_lang('fr_FR')
+        cls.env['res.lang']._activate_lang('nl_NL')
+        lang_fr = cls.env.ref('base.lang_fr')
+        cls.website = cls.env['website'].create({
+            'name': 'Test Website',
+            'language_ids': [lang_fr.id],
+            'default_lang_id': lang_fr.id,
+        })
+
+    def _test_translation_sequence(self, view, record_to_translate, view_record):
+        def render_view_with_lang(lang):
+            return view.with_context(edit_translations=True)._render_template(
+                view.id, {'record': view_record.with_context(lang=lang), 'translatable': True},
+            )
+
+        with MockRequest(self.env, website=self.website):
+            self.assertIn('translated', render_view_with_lang('fr_FR'))
+            self.assertIn('to_translate', render_view_with_lang('en_US'))
+            self.assertIn('to_translate', render_view_with_lang('nl_NL'))
+
+        record_to_translate.update_field_translations('name', {'en_US': 'In English'})
+        with MockRequest(self.env, website=self.website):
+            self.assertIn('translated', render_view_with_lang('fr_FR'))
+            self.assertIn('translated', render_view_with_lang('en_US'))
+            self.assertIn('to_translate', render_view_with_lang('nl_NL'))
+
+        record_to_translate.update_field_translations('name', {'nl_NL': 'In het Nederlands'})
+        with MockRequest(self.env, website=self.website):
+            self.assertIn('translated', render_view_with_lang('fr_FR'))
+            self.assertIn('translated', render_view_with_lang('en_US'))
+            self.assertIn('translated', render_view_with_lang('nl_NL'))
+
+    def test_view_string_field_translation(self):
+        record = self.env['test.model'].with_context(lang='fr_FR').create({
+            'name': 'En Français',
+        })
+        view = self.env['ir.ui.view'].create({
+            'type': 'qweb',
+            'arch_db': """
+                <div>
+                    <span t-field="record.name"/>
+                </div>
+            """,
+        })
+        self._test_translation_sequence(view, record, record)
+
+    def test_view_related_string_field_translation(self):
+        record = self.env['test.model'].with_context(lang='fr_FR').create({
+            'name': 'En Français',
+        })
+        sub_record = self.env['test.submodel'].create({
+            'name': 'Subrecord', 'test_model_id': record.id,
+        })
+        view = self.env['ir.ui.view'].create({
+            'type': 'qweb',
+            'arch_db': """
+                <div>
+                    <span t-field="record.test_model_name"/>
+                </div>
+            """,
+        })
+        self._test_translation_sequence(view, record, sub_record)
+
+    def test_view_deeply_related_string_field_translation(self):
+        record = self.env['test.model'].with_context(lang='fr_FR').create({
+            'name': 'En Français',
+        })
+        sub_record = self.env['test.submodel'].create({
+            'name': 'Subrecord', 'test_model_id': record.id,
+        })
+        sub_sub_record = self.env['test.subsubmodel'].create({
+            'test_submodel_id': sub_record.id,
+        })
+        view = self.env['ir.ui.view'].create({
+            'type': 'qweb',
+            'arch_db': """
+                <div>
+                    <span t-field="record.test_submodel_name"/>
+                </div>
+            """,
+        })
+        self._test_translation_sequence(view, record, sub_sub_record)
