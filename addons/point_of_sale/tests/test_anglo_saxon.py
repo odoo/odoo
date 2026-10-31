@@ -408,6 +408,43 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         order.action_pos_order_invoice()
         self.assertEqual(len(order.picking_ids), 1, "Repeated call must not create a duplicate picking")
 
+    def test_cogs_invoice_wizard_update_stock_at_closing(self):
+        """Invoicing an order with the invoice wizard before closing the session
+        must post its COGS on the invoice only, not again in the closing entry."""
+        self.company.point_of_sale_update_stock_quantities = 'closing'
+
+        self.pos_config.open_ui()
+        session = self.pos_config.current_session_id
+        order = self.PosOrder.create({
+            'company_id': self.company.id,
+            'partner_id': self.partner.id,
+            'session_id': session.id,
+            'lines': [Command.create({
+                'product_id': self.product.id,
+                'price_unit': 450,
+                'qty': 1.0,
+                'price_subtotal': 450,
+                'price_subtotal_incl': 450,
+            })],
+            'amount_total': 450,
+            'amount_tax': 0,
+            'amount_paid': 0,
+            'amount_return': 0,
+        })
+        payment_context = {'active_ids': order.ids, 'active_id': order.id}
+        self.PosMakePayment.with_context(payment_context).create({
+            'amount': 450.0,
+            'payment_method_id': self.cash_payment_method.id,
+        }).with_context(payment_context).check()
+
+        self.env['pos.make.invoice'].with_context(active_ids=order.ids).create({}).action_create_invoices()
+        session.post_closing_cash_details(450.0)
+        session.close_session_from_ui()
+
+        expense_account = self.category.property_account_expense_categ_id
+        self.assertEqual(order.account_move.line_ids.filtered(lambda l: l.account_id == expense_account).debit, 100)
+        self.assertFalse(session.move_id.line_ids.filtered(lambda l: l.account_id == expense_account))
+
     def test_action_pos_order_invoice_with_discount(self):
         """This test make sure that the line containing 'Discoun from' is correctly added to the invoice"""
 
