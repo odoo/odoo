@@ -141,6 +141,15 @@ test("Return display_name of many2one field", async () => {
     expect(getCellValue(model, "A2")).toBe("xphone");
 });
 
+test("Return display_name of reference field", async () => {
+    const { model } = await createSpreadsheetWithList({
+        columns: [{ name: "ref", string: "Reference" }],
+    });
+    expect(getCellValue(model, "A2")).toBe("xphone");
+    expect(getCellValue(model, "A3")).toBe("EUR");
+    expect(getCellValue(model, "A4")).toBe("");
+});
+
 test("Boolean fields are correctly formatted", async () => {
     const { model } = await createSpreadsheetWithList({
         columns: [{ name: "bar", string: "Bar" }],
@@ -1563,6 +1572,20 @@ test("Field chaining can be more than 1 deep", async function () {
     setCellContent(model, "A1", `=ODOO.LIST.VALUE(${listId}, 2, "product_id.template_id.name")`);
     await animationFrame();
     expect(getCellValue(model, "A1")).toBe("xphone");
+});
+
+test("Support reference field at the end of a field chain", async function () {
+    Product._fields.ref = fields.Reference({
+        string: "Reference",
+        selection: [["res.currency", "Currency"]],
+    });
+    Product._records = [{ id: 37, ref: "res.currency,2" }];
+    Partner._records = [{ id: 1, product_id: 37 }];
+    const { model } = await createSpreadsheetWithList();
+    const listId = model.getters.getListIds()[0];
+    setCellContent(model, "A1", `=ODOO.LIST.VALUE(${listId}, 1, "product_id.ref")`);
+    await animationFrame();
+    expect(getCellValue(model, "A1")).toBe("USD");
 });
 
 test("Chaining fields are fetched with the same web_search_read", async function () {

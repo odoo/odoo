@@ -724,8 +724,9 @@ function orderByField(model, orderBy, records) {
         let v1 = r1[fieldNameSpec];
         let v2 = r2[fieldNameSpec];
         switch (field.type) {
-            case "integer": {
-                // For id fields grouped as [id, label]
+            case "integer":
+            case "reference": {
+                // For id and reference fields grouped as [value, label]
                 if (Array.isArray(v1)) {
                     v1 = v1[0];
                 }
@@ -2033,6 +2034,13 @@ export class Model extends Array {
                             this._getFormattedDisplayName(relatedRecord) || "";
                         group[groupbySpec] = [value, formattedDisplayName];
                     }
+                } else if (type === "reference" && value) {
+                    const [model, resId] = value.split(",");
+                    const relatedRecord = this.env[model]?.find(({ id }) => id === Number(resId));
+                    group[groupbySpec] = [
+                        value,
+                        relatedRecord ? this._getFormattedDisplayName(relatedRecord) : value,
+                    ];
                 }
                 if (isDateField(type)) {
                     if (value) {

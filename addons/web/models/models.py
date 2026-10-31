@@ -464,6 +464,9 @@ class Base(models.AbstractModel):
                     vals['id']: vals
                     for vals in values_list
                 }
+                has_non_id_fields = any(fname != 'id' for fname in field_spec.get('fields', ()))
+                references_to_fill = []  # [(record_values, co_record)]
+                co_records_by_model = defaultdict(list)
                 for record in self:
                     if not record[field_name]:
                         continue
@@ -480,13 +483,24 @@ class Base(models.AbstractModel):
 
                     if 'context' in field_spec:
                         co_record = co_record.with_context(**field_spec['context'])
+                    references_to_fill.append((record_values, co_record))
+                    co_records_by_model[co_record._name].append(co_record)
 
+                if has_non_id_fields:
+                    for model_co_records in co_records_by_model.values():
+                        try:
+                            # fetch in batch; web_read() below reads from the cache
+                            model_co_records[0].browse().union(model_co_records).fetch(field_spec['fields'])
+                        except AccessError:
+                            pass  # handled record by record in the loop below
+
+                for record_values, co_record in references_to_fill:
                     if 'fields' in field_spec:
                         try:
                             reference_read = co_record.web_read(field_spec['fields'])
                         except AccessError:
                             reference_read = [{'id': co_record.id, 'display_name': self.env._("You don't have access to this record")}]
-                        if any(fname != 'id' for fname in field_spec['fields']):
+                        if has_non_id_fields:
                             # we can infer that if we can read fields for the co-record, it exists
                             co_record_exists = bool(reference_read)
                         else:
@@ -1424,6 +1438,28 @@ class Base(models.AbstractModel):
                 return (id_, value.sudo().display_name), Domain(field_name, '=', id_)
 
             return formatter_many2one
+
+        if field.type == 'reference':
+            # read the display names in batch, one model at a time
+            ids_by_model = defaultdict(list)
+            for value in values:
+                if value:
+                    model_name, record_id = value.split(',')
+                    if model_name in self.env:
+                        ids_by_model[model_name].append(int(record_id))
+            display_names = {
+                f'{model_name},{record.id}': record.display_name
+                for model_name, record_ids in ids_by_model.items()
+                for record in self.env[model_name].browse(record_ids).exists()._filtered_access('read')
+            }
+
+            def formatter_reference(value):
+                if not value:
+                    return value, Domain(field_name, '=', value)
+                # records the user can't read, deleted records and uninstalled models keep their raw value
+                return (value, display_names.get(value) or str(value)), Domain(field_name, '=', value)
+
+            return formatter_reference
 
         if field.type in ('date', 'datetime'):
             assert ':' in groupby_spec, "Granularity is missing"
