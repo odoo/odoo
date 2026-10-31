@@ -314,6 +314,14 @@ class ResCompany(models.Model):
             if move_count:
                 raise UserError(_("Can't disable audit trail when there are existing records."))
 
+    @api.constrains('account_sale_tax_id', 'account_purchase_tax_id')
+    def _check_default_taxes_type(self):
+        for company in self:
+            if company.account_sale_tax_id and company.account_sale_tax_id.type_tax_use != 'sale':
+                raise ValidationError(_("Default Sale Tax must be a tax with 'Sales' type."))
+            if company.account_purchase_tax_id and company.account_purchase_tax_id.type_tax_use != 'purchase':
+                raise ValidationError(_("Default Purchase Tax must be a tax with 'Purchases' type."))
+
     @api.depends('fiscal_position_ids.foreign_vat')
     def _compute_multi_vat_foreign_country(self):
         company_to_foreign_vat_country = {

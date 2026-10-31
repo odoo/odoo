@@ -74,10 +74,31 @@ class TestAccountTax(AccountTestInvoicingCommon):
         with self.assertRaises(UserError), self.cr.savepoint():
             self.company_data['default_tax_sale'].company_id = self.company_data_2['company']
 
+    def test_default_sale_tax_type_cannot_be_changed(self):
+        company = self.company_data['company']
+        tax = self.company_data['default_tax_sale']
+        company.account_sale_tax_id = tax
+
+        with self.assertRaisesRegex(
+            ValidationError, "Default Sale Tax must be a tax with 'Sales' type."
+        ), self.cr.savepoint():
+            tax.type_tax_use = 'purchase'
+
+    def test_default_purchase_tax_type_cannot_be_changed(self):
+        company = self.company_data['company']
+        tax = self.company_data['default_tax_purchase']
+        company.account_purchase_tax_id = tax
+
+        with self.assertRaisesRegex(
+            ValidationError, "Default Purchase Tax must be a tax with 'Purchases' type."
+        ), self.cr.savepoint():
+            tax.type_tax_use = 'sale'
+
     def test_logging_of_tax_update_when_tax_is_used(self):
         """ Modifications of a used tax should be logged. """
 
         self.set_up_and_use_tax()
+        self.company_data['company'].account_sale_tax_id = False
 
         self.company_data['default_tax_sale'].write({
             'name': self.company_data['default_tax_sale'].name + ' MODIFIED',
