@@ -668,6 +668,12 @@ class HrLeave(models.Model):
                     work_time_per_day_list = work_time_per_day_mapped[leave.date_from, leave.date_to, leave.work_entry_type_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
                     days = len(work_time_per_day_list)
                     hours = sum(map(lambda t: t[1], work_time_per_day_list))
+                elif (
+                    leave.work_entry_type_request_unit == 'half_day'
+                    and leave.request_date_from != leave.request_date_to
+                    and any(calendar.attendance_ids.mapped('duration_based'))
+                ):
+                    days, hours = leave._get_duration_based_half_day_duration(calendar)
                 else:
                     work_days_data = work_days_data_mapped[leave.date_from, leave.date_to, leave.work_entry_type_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
                     hours, days = work_days_data['hours'], work_days_data['days']
@@ -684,6 +690,59 @@ class HrLeave(models.Model):
                 days = float_round(days, precision_rounding=0.5)
             result[leave.id] = (days, hours)
         return result
+
+    def _get_duration_based_half_day_duration(self, calendar):
+        """Compute the (days, hours) duration of a multi-day half-day request on a calendar
+        that has at least one duration-based attendance.
+        """
+        self.ensure_one()
+        public_holiday_dates = set()
+        if not self.work_entry_type_id.include_public_holidays_in_duration:
+            tz = ZoneInfo(self.tz) if self.tz else UTC
+            public_holidays = self.env['resource.calendar.leaves'].search([
+                ('resource_id', '=', False),
+                ('date_from', '<', self.date_to),
+                ('date_to', '>', self.date_from),
+                ('calendar_id', 'in', [False, calendar.id]),
+                ('company_id', '=', self.company_id.id),
+                ('count_as', '=', 'absence'),
+            ])
+            for ph in public_holidays:
+                day = ph.date_from.replace(tzinfo=UTC).astimezone(tz).date()
+                last_day = (ph.date_to.replace(tzinfo=UTC).astimezone(tz) - timedelta(microseconds=1)).date()
+                while day <= last_day:
+                    public_holiday_dates.add(day)
+                    day += timedelta(days=1)
+
+        total_days = 0.0
+        total_hours = 0.0
+        current = self.request_date_from
+        while current <= self.request_date_to:
+            if current not in public_holiday_dates:
+                is_half, day_contribution = self._get_half_day_leave_hours_on_date(current, calendar=calendar)
+                if day_contribution:
+                    total_days += 0.5 if is_half else 1.0
+                    total_hours += day_contribution
+            current += timedelta(days=1)
+        return total_days, total_hours
+
+    def _get_half_day_leave_hours_on_date(self, date, calendar=None):
+        self.ensure_one()
+        calendar = calendar or self.resource_calendar_id
+        is_half = (
+            date == self.request_date_from and self.request_date_from_period == 'pm'
+        ) or (
+            date == self.request_date_to and self.request_date_to_period == 'am'
+        )
+        if calendar._is_duration_based_on_date(date):
+            day_hours = calendar._get_duration_based_work_hours_on_date(date)
+            hours = day_hours * 0.5 if is_half else day_hours
+        else:
+            day_period = None
+            if is_half:
+                day_period = 'afternoon' if date == self.request_date_from else 'morning'
+            hours = calendar._get_fixed_hours_on_date(date, day_period=day_period)
+        return is_half, hours
 
     @api.depends('date_from', 'date_to', 'resource_calendar_id')
     def _compute_duration(self):
