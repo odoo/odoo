@@ -110,6 +110,8 @@ class StockLandedCost(models.Model):
 
         for cost in self:
             cost = cost.with_company(cost.company_id)
+            # before the landed cost is done, as the value of the moves doesn't include it yet
+            moves_to_revalue = cost.valuation_adjustment_lines.move_id._with_cost_before_landed_costs()
             move = self.env['account.move']
             move_vals = {
                 'journal_id': cost.account_journal_id.id,
@@ -149,7 +151,7 @@ class StockLandedCost(models.Model):
             cost.write(cost_vals)
             if cost.account_move_id:
                 move._post()
-            cost.valuation_adjustment_lines.move_id._set_value()
+            moves_to_revalue._set_value()
         return True
 
     def get_valuation_lines(self):
@@ -166,7 +168,7 @@ class StockLandedCost(models.Model):
                 'product_id': move.product_id.id,
                 'move_id': move.id,
                 'quantity': qty,
-                'former_cost': move._get_value(),
+                'former_cost': move._with_cost_before_landed_costs()._get_value(),
                 'weight': move.product_id.weight * qty,
                 'volume': move.product_id.volume * qty
             }
