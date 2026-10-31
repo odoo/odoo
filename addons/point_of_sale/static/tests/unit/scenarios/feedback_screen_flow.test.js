@@ -11,7 +11,6 @@ test("test_automatic_receipt_printing: auto print and auto-skip feedback screen"
     const store = await setupAndMountPosApp({
         use_pricelist: false,
         iface_print_auto: true,
-        other_devices: true,
         preparation_printer_ids: false,
         receipt_printer_ids: [3, 4],
     });
