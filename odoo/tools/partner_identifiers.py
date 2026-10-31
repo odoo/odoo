@@ -2,7 +2,6 @@ from stdnum import (
     ean,
     lei,
 )
-from stdnum.at import uid as at_en
 from stdnum.au import acn as au_acn, abn as au_abn
 from stdnum.be import vat as be_vat
 from stdnum.br import cpf as br_cn
@@ -22,7 +21,7 @@ from stdnum.se import orgnr as se_en
 from stdnum.sg import uen as sg_en
 
 from odoo.tools.translate import LazyTranslate
-from odoo.tools.partner_identifier_validation import nl_kvk_validate, nl_oin_validate, th_branch_code_validate
+from odoo.tools.partner_identifier_validation import nl_kvk_validate, nl_oin_validate, th_branch_code_validate, at_en_validate, at_steuernummer_validate
 
 from odoo.addons.base.models.res_country import (
     FR_AND_OVERSEAS_TERRITORIES,
@@ -463,9 +462,20 @@ ADDITIONAL_IDENTIFIERS_METADATA = {
         'sequence': 10,
         'scheme': '9915',
         'label': _lt('Company ID'),
-        'help': _lt('Austrian company ID number (UID).'),
+        'help': _lt('Austrian Commercial Register Number (Firmenbuchnummer).'),
+        'placeholder': '199081t',
+        'examples': ['123456a', '123456a001'],
         'category': 'EN',
-        'validation_function': at_en.validate,
+        'validation_function': at_en_validate,
+        'countries': ['AT'],
+    },
+    'AT_STEUERNUMMER': {
+        'label': _lt('Steuernummer'),
+        'help': _lt('Austrian Steuernummer/Abgabenkontonummer (FBN).'),
+        'placeholder': '59-119/9013',
+        'examples': ['59-119/9013', '591199013'],
+        'category': 'TIN',
+        'validation_function': at_steuernummer_validate,
         'countries': ['AT'],
     },
     'AU_ACN': {
@@ -948,8 +958,6 @@ def get_deduced_identifiers(key, value):
     Example: FR_SIRET => FR_SIREN, BE_VAT => BE_EN.
     """
     deduced = {}
-    if key == 'AT_VAT':
-        deduced['AT_EN'] = get_non_prefixed_identifier('AT', value)
     if key == 'AU_ACN':
         deduced['AU_ABN'] = au_acn.to_abn(value)
     if key == 'BE_VAT':
