@@ -3,13 +3,13 @@ import {
     addBuilderOption,
     setupHTMLBuilder,
 } from "@html_builder/../tests/helpers";
+import { Builder } from "@html_builder/builder";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { SavePlugin } from "@html_builder/core/save_plugin";
 import { describe, expect, test } from "@odoo/hoot";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
-
-// TODO: test composite with each spec: prepare, load
-// TODO: test reloadComposite
+import { patch } from "@web/core/utils/patch";
 
 describe.current.tags("desktop");
 
@@ -234,4 +234,144 @@ test("applied composite action's with no getPriority implementation is considere
     await setupHTMLBuilder(`<section class="s_test" data-test="something">Test</section>`);
     await contains(":iframe .s_test").click();
     expect(".o_hb_select_wrapper button").toHaveText("The Test Option");
+});
+
+test("composite action calls the prepare of its actions", async () => {
+    class Action1 extends BuilderAction {
+        static id = "action1";
+        async prepare({ actionParam, actionValue }) {
+            expect.step(`prepare1: ${actionParam.mainParam} ${actionValue}`);
+        }
+        apply() {}
+    }
+    class Action2 extends BuilderAction {
+        static id = "action2";
+        apply() {}
+    }
+    addBuilderAction({ Action1, Action2 });
+    addBuilderOption({
+        selector: ".s_test",
+        template: xml`
+            <BuilderButton
+                action="'composite'"
+                actionParam="[
+                    { action: 'action1', actionParam: { mainParam: 'class1' } },
+                    { action: 'action2' },
+                ]"
+                actionValue="'value'">
+                Click
+        </BuilderButton>`,
+    });
+    await setupHTMLBuilder(`<section class="s_test">Test</section>`);
+    await contains(":iframe .s_test").click();
+    expect.verifySteps(["prepare1: class1 value"]);
+});
+
+test("composite action loads its actions in order and gives each its result", async () => {
+    class Action1 extends BuilderAction {
+        static id = "action1";
+        async load() {
+            await new Promise((resolve) => setTimeout(resolve, 10));
+            expect.step("load1");
+            return "result1";
+        }
+        apply({ loadResult }) {
+            expect.step(`apply1: ${loadResult}`);
+        }
+    }
+    class Action2 extends BuilderAction {
+        static id = "action2";
+        async load() {
+            expect.step("load2");
+            return "result2";
+        }
+        apply({ loadResult }) {
+            expect.step(`apply2: ${loadResult}`);
+        }
+    }
+    addBuilderAction({ Action1, Action2 });
+    addBuilderOption({
+        selector: ".s_test",
+        template: xml`
+            <BuilderButton
+                action="'composite'"
+                actionParam="[{ action: 'action1' }, { action: 'action2' }]"
+                preview="false">
+                Click
+        </BuilderButton>`,
+    });
+    await setupHTMLBuilder(`<section class="s_test">Test</section>`);
+    await contains(":iframe .s_test").click();
+    await contains("[data-action-id='composite']").click();
+    await expect.waitForSteps(["load1", "load2", "apply1: result1", "apply2: result2"]);
+});
+
+test("reloadComposite action saves and reloads the editor", async () => {
+    patch(SavePlugin.prototype, {
+        async save() {
+            expect.step("save");
+            await super.save();
+        },
+    });
+    patch(Builder.prototype, {
+        setup() {
+            super.setup();
+            this.editor.config.reloadEditor = async () => expect.step("reload");
+        },
+    });
+    class Action1 extends BuilderAction {
+        static id = "action1";
+        apply({ editingElement }) {
+            editingElement.classList.add("class1");
+            expect.step("apply1");
+        }
+    }
+    addBuilderAction({ Action1 });
+    addBuilderOption({
+        selector: ".s_test",
+        template: xml`
+            <BuilderButton action="'reloadComposite'" actionParam="[{ action: 'action1' }]">
+                Click
+            </BuilderButton>`,
+    });
+    await setupHTMLBuilder(`<section class="s_test">Test</section>`);
+    await contains(":iframe .s_test").click();
+    await contains("[data-action-id='reloadComposite']").click();
+    // No preview: the action is applied only once before the reload.
+    await expect.waitForSteps(["apply1", "save", "reload"]);
+});
+
+test("composite action loads its actions when cleaning", async () => {
+    class Action1 extends BuilderAction {
+        static id = "action1";
+        isApplied({ editingElement }) {
+            return editingElement.classList.contains("class1");
+        }
+        async load() {
+            return "result1";
+        }
+        apply({ editingElement, loadResult }) {
+            editingElement.classList.toggle("class1");
+            expect.step(`apply1: ${loadResult}`);
+        }
+    }
+    addBuilderAction({ Action1 });
+    addBuilderOption({
+        selector: ".s_test",
+        template: xml`
+            <BuilderButton
+                action="'composite'"
+                actionParam="[{ action: 'action1' }]"
+                preview="false">
+                Click
+        </BuilderButton>`,
+    });
+    await setupHTMLBuilder(`<section class="s_test">Test</section>`);
+    await contains(":iframe .s_test").click();
+    await contains("[data-action-id='composite']").click();
+    await expect.waitForSteps(["apply1: result1"]);
+    // Action1 has no clean, so it is applied again with its load result.
+    await contains("[data-action-id='composite']").click();
+    await expect.waitForSteps(["apply1: result1"]);
+    expect(":iframe .s_test").not.toHaveClass("class1");
 });

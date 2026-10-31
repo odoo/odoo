@@ -1,11 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest.mock import patch
+from unittest.mock import Mock, patch
+
+from requests import RequestException
 
 import odoo.tests
+from odoo.tests.common import new_test_user
+
 from odoo.addons.website.controllers.main import Website as WebsiteController
 from odoo.addons.website.models.website import Website as WebsiteModel
-from odoo.tests.common import new_test_user
+
 
 class TestConfiguratorCommon(odoo.tests.HttpCase):
 
@@ -154,6 +158,37 @@ class TestConfigurator(TestConfiguratorCommon):
         self.assertIn("Industry: youtuber", website.brief)
         self.assertIn("Website aim: present the business and get contacted", website.brief)
         self.assertIn("Vibe: eco-friendly", website.brief)
+
+    def test_configurator_apply_failed_image_download(self):
+        def requests_get(url, timeout):
+            if url == 'https://img/fail':
+                raise RequestException
+            return Mock(content=b'image', raise_for_status=Mock())
+
+        website = self.env['website'].create({'name': "New website"})
+        images = {
+            'website.s_cover_default_image': 'https://img/fail',
+            'website.s_image_text_default_image': 'https://img/ok',
+        }
+        with (
+            patch.object(WebsiteModel, 'configurator_get_images', return_value=images),
+            patch('odoo.addons.website.models.website.requests.get', requests_get),
+            self.assertLogs('odoo.addons.website.models.website', 'WARNING') as logs,
+        ):
+            self.env['website'].with_context(website_id=website.id).configurator_apply(
+                theme_name='theme_default',
+                industry_id=1,
+                industry_name='youtuber',
+            )
+        self.assertEqual(len(logs.records), 1)
+        self.assertIn('https://img/fail', logs.output[0])
+        # The fallback of the failed image is skipped, the others are created.
+        self.assertFalse(self.env.ref(
+            f'website.configurator_{website.id}_s_text_cover_default_image', raise_if_not_found=False,
+        ))
+        self.assertTrue(self.env.ref(
+            f'website.configurator_{website.id}_s_showcase_default_image', raise_if_not_found=False,
+        ))
 
     def test_configurator_params_step(self):
         self.start_tour('/website/configurator/2', 'configurator_params_step', login='admin')

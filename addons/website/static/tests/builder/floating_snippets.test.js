@@ -1,18 +1,14 @@
 import {
     confirmAddSnippet,
     getDragHelper,
+    insertCategorySnippet,
     waitForEndOfOperation,
 } from "@html_builder/../tests/helpers";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { expect, test } from "@odoo/hoot";
 import { contains } from "@web/../tests/web_test_helpers";
-import {
-    addPlugin,
-    defineWebsiteModels,
-    insertCategorySnippet,
-    setupWebsiteBuilder,
-} from "./website_helpers";
+import { addPlugin, defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 
 defineWebsiteModels();
 

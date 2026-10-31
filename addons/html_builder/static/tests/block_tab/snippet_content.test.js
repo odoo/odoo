@@ -1,4 +1,5 @@
 import {
+    confirmAddSnippet,
     setupHTMLBuilder,
     getDragHelper,
     waitForEndOfOperation,
@@ -7,9 +8,8 @@ import { BuilderOptionsPlugin } from "@html_builder/core/builder_options_plugin"
 import { BuilderSelectionRestrictionPlugin } from "@html_builder/core/builder_selection_restriction_plugin";
 import { Operation } from "@html_builder/core/operation";
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, click, queryAll, queryAllTexts, queryOne, waitFor } from "@odoo/hoot-dom";
+import { animationFrame, click, queryAll, queryAllTexts, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
-import { loadBundle } from "@web/core/assets";
 import { patch } from "@web/core/utils/patch";
 
 describe.current.tags("desktop");
@@ -174,19 +174,10 @@ test("click just after drop is redispatched in next operation", async () => {
             }`,
     });
 
-    // TODO: the next lines replicate website's `insertCategorySnippet` helper.
-    // It should be moved to html_builder.
+    // Not using `insertCategorySnippet`: the operation must be observed while
+    // the loading screen is displayed.
     await contains(".o_hb_snippets_menu #snippet_groups .o_snippet_thumbnail_area").click();
-    await animationFrame();
-    await loadBundle("html_builder.iframe_add_dialog", {
-        targetDoc: queryOne("iframe.o_add_snippet_iframe").contentDocument,
-        js: false,
-    });
-    await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe");
-    await contains(
-        ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap"
-    ).click();
-    await animationFrame();
+    await confirmAddSnippet();
     expect.verifySteps(["next should intercept"]); // On snippet selected
 
     await waitFor(":iframe .o_loading_screen");

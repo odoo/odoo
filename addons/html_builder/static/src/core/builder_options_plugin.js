@@ -1,7 +1,6 @@
 import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { uniqueId } from "@web/core/utils/functions";
-import { isRemovable } from "./remove_plugin";
 import { getElementsWithOption, isElementInViewport } from "@html_builder/utils/utils";
 import { OptionsContainer } from "@html_builder/sidebar/option_container";
 import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
@@ -61,6 +60,7 @@ import { omit } from "@web/core/utils/objects";
  * @property { BuilderOptionsPlugin['getRemoveDisabledReason'] } getRemoveDisabledReason
  * @property { BuilderOptionsPlugin['getCloneDisabledReason'] } getCloneDisabledReason
  * @property { BuilderOptionsPlugin['isClonable'] } isClonable
+ * @property { BuilderOptionsPlugin['isRemovable'] } isRemovable
  * @property { BuilderOptionsPlugin['setNextTarget'] } setNextTarget
  * @property { BuilderOptionsPlugin['getBuilderOptionContext'] } getBuilderOptionContext
  * @property { BuilderOptionsPlugin['getBuilderOptions'] } getBuilderOptions
@@ -144,6 +144,7 @@ export class BuilderOptionsPlugin extends Plugin {
         "getBuilderOptionContext",
         "getBuilderOptions",
         "isClonable",
+        "isRemovable",
     ];
     /** @type {import("plugins").BuilderResources} */
     resources = {
@@ -425,7 +426,7 @@ export class BuilderOptionsPlugin extends Plugin {
                         : {},
                     hideOverlay: Options.length && Options.every((Option) => Option.hideOverlay),
                     hasOverlayOptions: this.hasOverlayOptions(element),
-                    isRemovable: isRemovable(element),
+                    isRemovable: this.isRemovable(element),
                     removeDisabledReason: this.getRemoveDisabledReason(element),
                     isClonable: this.isClonable(element),
                     cloneDisabledReason: this.getCloneDisabledReason(element),
@@ -598,6 +599,16 @@ export class BuilderOptionsPlugin extends Plugin {
     }
 
     /**
+     * Checks if the given element can be removed.
+     *
+     * @param {HTMLElement} el
+     * @returns {boolean}
+     */
+    isRemovable(el) {
+        return this.checkPredicates("is_element_removable_predicates", el) ?? true;
+    }
+
+    /**
      * Checks if the given element can be cloned.
      *
      * @param {HTMLElement} el
@@ -605,7 +616,7 @@ export class BuilderOptionsPlugin extends Plugin {
      */
     isClonable(el) {
         // TODO and isDraggable
-        return el.matches(this.clonableSelector) || isRemovable(el);
+        return el.matches(this.clonableSelector) || this.isRemovable(el);
     }
 
     /**
@@ -815,11 +826,7 @@ export class BuilderOptionsPlugin extends Plugin {
 }
 
 function getClosestElements(element, selector) {
-    if (!element) {
-        // TODO we should remove it
-        return [];
-    }
-    const parent = element.closest(selector);
+    const parent = element?.closest(selector);
     return parent ? [parent, ...getClosestElements(parent.parentElement, selector)] : [];
 }
 
