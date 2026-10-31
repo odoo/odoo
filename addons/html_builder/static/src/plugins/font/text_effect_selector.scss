@@ -1,6 +1,4 @@
 .o_text_effect_popover {
-    --o-hb-text-effect-border-radius: .25rem; /* Bootstrap's, not the backend's */
-
     max-height: 440px !important;
     min-width: unset;
     overflow-y: auto;
@@ -10,7 +8,7 @@
         height: 40px;
         width: 48px;
         border: var(--o-bs-border-width) solid $border-color;
-        border-radius: var(--o-hb-text-effect-border-radius);
+        border-radius: var(--o-bs-border-radius);
         background-color: $white;
         color: $black;
 
@@ -26,51 +24,11 @@
         }
     }
 
-    .o_hb_text_effect_options {
-        --o-hb-text-effect-option-bg: $white;
-        --o-hb-text-effect-shadow-bg: rgba(0, 0, 0, 0.05);
-
+    .o_popover_sliding_panel {
         width: 330px;
-        font-size: var(--o-we-font-size);
-        background-color: var(--o-hb-text-effect-option-bg);
 
-        [data-icon='chevron_backward'] {
-            aspect-ratio: 1 / 1;
-        }
-
-        .o_hb_text_effect_shadow {
-            border-radius: var(--o-hb-text-effect-border-radius);
-            background-color: var(--o-hb-text-effect-shadow-bg);
-
-            .o_hb_text_effect_shadow_options {
-                border-right: var(--o-bs-border-width) solid var(--o-hb-text-effect-option-bg);
-
-                .o_hb_row_label {
-                    background-color: transparent;
-                }
-            }
-
-
-            .o_hb_text_effect_remove_shadow {
-                width: 32px;
-            }
-        }
-
-        .o_hb_text_effect_add_shadow {
-            border-style: dashed;
-
-            &, &:focus, &:hover, &:active {
-                border-color: var(
-                    --o-hb-text-effect-add-shadow-border-color,
-                    var(--btn-border-color)
-                );
-            }
-        }
-
-        .o_hb_text_effect_add_shadow, .o_hb_text_effect_remove_shadow {
-            &, &:focus, &:hover {
-                background-color: transparent !important;
-            }
+        .o_popover_sliding_panel_card_content .o_hb_row_label {
+            background-color: transparent;
         }
     }
 }
