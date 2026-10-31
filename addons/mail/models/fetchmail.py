@@ -4,7 +4,6 @@
 import imaplib
 import logging
 import poplib
-import socket
 
 from imaplib import IMAP4, IMAP4_SSL
 from poplib import POP3, POP3_SSL
@@ -22,11 +21,6 @@ MAIL_TIMEOUT = 60
 # Workaround for Python 2.7.8 bug https://bugs.python.org/issue23906
 poplib._MAXLINE = 65536
 
-# Add timeout to IMAP connections
-# HACK https://bugs.python.org/issue38615
-# TODO: clean in Python 3.9
-IMAP4._create_socket = lambda self, timeout=MAIL_TIMEOUT: socket.create_connection((self.host or None, self.port), timeout)
-
 
 def make_wrap_property(name):
     return property(
@@ -37,8 +31,8 @@ def make_wrap_property(name):
 
 class IMAP4Connection:
     """Wrapper around IMAP4 and IMAP4_SSL"""
-    def __init__(self, server, port, is_ssl):
-        self.__obj__ = IMAP4_SSL(server, port) if is_ssl else IMAP4(server, port)
+    def __init__(self, server, port, is_ssl, timeout=MAIL_TIMEOUT):
+        self.__obj__ = IMAP4_SSL(server, port, timeout=timeout) if is_ssl else IMAP4(server, port, timeout=timeout)
 
 
 class POP3Connection:
