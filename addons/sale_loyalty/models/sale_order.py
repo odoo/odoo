@@ -152,6 +152,10 @@ class SaleOrder(models.Model):
             all_coupons = order.applied_coupon_ids | order.coupon_point_ids.coupon_id | order.order_line.coupon_id
             if any(order._get_real_points_for_coupon(coupon) < 0 for coupon in all_coupons):
                 raise ValidationError(_("One or more rewards on the sale order is invalid. Please check them."))
+        # Discount rewards are priced from tax-inclusive amounts, so the taxes
+        # have to be final before the rewards are computed below.
+        self._ensure_final_taxes()
+        for order in self:
             order._update_programs_and_rewards()
             order._add_loyalty_history_lines()
         has_claimable_rewards = len(self) == 1 and bool(self._get_claimable_rewards())
@@ -166,7 +170,7 @@ class SaleOrder(models.Model):
         # Add/remove the points to our coupons
         for coupon, change in self.filtered(lambda s: s.state != 'sale')._get_point_changes().items():
             coupon.points += change
-        res = super().action_confirm()
+        res = super(SaleOrder, self.with_context(external_taxes_are_final=True)).action_confirm()
         # Prioritize any action from super()
         if isinstance(res, bool) and has_claimable_rewards:
             res = {
@@ -383,7 +387,7 @@ class SaleOrder(models.Model):
                 continue
 
             taxes = grouping_key['taxes'] if grouping_key else self.env['account.tax']
-            discountable += values['raw_base_amount_currency'] + values['raw_tax_amount_currency']
+            discountable += values['raw_base_amount_currency'] + values['target_tax_amount_currency']
             discountable_per_tax[taxes] += (
                 values['raw_base_amount_currency']
                 + sum(
@@ -645,6 +649,7 @@ class SaleOrder(models.Model):
                     " - On products with the following taxes: %(taxes)s",
                     taxes=", ".join(mapped_taxes.mapped('name')),
                 )
+            price_unit = -(price * discount_factor)
             reward_dict[tax] = {
                 **base_reward_line_values,
                 'name': _(
@@ -652,15 +657,40 @@ class SaleOrder(models.Model):
                     desc=reward.description,
                     tax_str=tax_desc,
                 ) if mapped_taxes else reward.description,
-                'price_unit': -(price * discount_factor),
+                'price_unit': price_unit,
                 'points_cost': 0,
-                'tax_ids': [Command.clear()] + [Command.link(tax.id) for tax in mapped_taxes]
+                'tax_ids': [Command.clear()] + [Command.link(tax.id) for tax in mapped_taxes],
+                'extra_tax_data': self._get_reward_extra_tax_data(tax, mapped_taxes, price_unit)
             }
         # We only assign the point cost to one line to avoid counting the cost multiple times
         if reward_dict:
             reward_dict[next(iter(reward_dict))]['points_cost'] = point_cost
         # Returning .values() directly does not return a subscribable list
         return list(reward_dict.values())
+
+    def _get_reward_extra_tax_data(self, tax, mapped_taxes, price_unit):
+        """Tax-exempt orders: an external tax service keeps the nominal taxes but charges 0 on them.
+        Mirror that on the reward line so it isn't taxed at the nominal rate (which would
+        post a negative tax). Returns false otherwise."""
+        if not mapped_taxes:
+            return False
+
+        parent_lines = self.order_line.filtered(
+            lambda l: not l.is_reward_line and l.tax_ids == tax and l.extra_tax_data
+        )
+
+        if parent_lines and self.currency_id.is_zero(sum(parent_lines.mapped("price_tax"))):
+            return {
+                "price_unit": price_unit,
+                "discount": 0.0,
+                "quantity": 1.0,
+                "currency_id": self.currency_id.id,
+                "manual_tax_amounts": {
+                    str(t.id): {"tax_amount_currency": 0.0} for t in mapped_taxes
+                }
+            }
+
+        return False
 
     def _get_program_domain(self):
         """
@@ -1563,3 +1593,12 @@ class SaleOrder(models.Model):
                         send_context['mail_template'] = mail_template
 
                 self.env['account.move.send']._generate_and_send_invoices_post_commit(invoice, **send_context)
+
+    def _recompute_tax_dependent_prices(self):
+        for order in self:
+            if order.state not in ("draft", "sent"):
+                continue
+            if not any(line.is_reward_line for line in order.order_line):
+                continue
+            order._update_programs_and_rewards()
+        return super()._recompute_tax_dependent_prices()
