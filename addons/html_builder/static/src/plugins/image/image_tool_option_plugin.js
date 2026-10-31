@@ -59,7 +59,10 @@ class ImageToolOptionPlugin extends Plugin {
             SetNewWindowAction,
             AltAction,
         },
-        on_media_dialog_saved_handlers: async (elements, { node }) => {
+        on_media_dialog_saved_handlers: async (elements, { node, skipImagePostProcess }) => {
+            if (skipImagePostProcess) {
+                return;
+            }
             for (const image of elements) {
                 if (image && image.tagName === "IMG") {
                     const imgInfo = await loadImageInfo(image);
