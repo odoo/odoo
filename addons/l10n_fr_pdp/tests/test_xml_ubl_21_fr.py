@@ -1,3 +1,6 @@
+from lxml import etree
+from unittest.mock import patch
+
 from odoo import Command
 from odoo.tests import tagged
 
@@ -206,3 +209,37 @@ class TestL10nFrPdpXml(TestL10nFrPdpCommon):
         bill = self._import_invoice_as_attachment_on('ubl_21_fr_in_invoice_establishment')
         self.assertEqual(bill.partner_id, other_establishment)
         self.assertEqual(bill.partner_bank_id.partner_id, other_establishment)
+
+# Tests below tests unusuals invoice line.
+# Since ubl 2.1 doesn't include the peppol rule https://docs.peppol.eu/poacc/billing/3.0/rules/ubl-peppol/PEPPOL-EN16931-R120/
+# People can ends up with weird invoices that were validated by the Approved Plateform
+# At the end, the imported line subtotal should match LineExtensionAmount
+
+    def test_import_partial_invoice_line_charges_price_details(self):
+        # Some invoice provider (FedEx) uses allowances and charges to details the price of an items
+        invoice = self._import_invoice_as_attachment_on('ubl_21_fr_in_partial_invoice_line_charges_price_details')
+        self.assertRecordValues(invoice.invoice_line_ids, [
+            {'quantity': 1, 'price_subtotal': 100.0},
+        ])
+
+    def test_import_partial_invoice_line_wrong_unit_price(self):
+        # Some invoice provider puts the subtotal of the line (without charges and allowances) on the PriceAmount in the price section.
+        # Without taking into account the invoiced quantity or the implicite PriceAmount quantity.
+        invoice = self._import_invoice_as_attachment_on('ubl_21_fr_in_partial_invoice_line_wrong_unit_price')
+        self.assertRecordValues(invoice.invoice_line_ids, [
+            {'quantity': 10, 'price_subtotal': 100.0},
+        ])
+
+    def test_import_en16931_customization_id(self):
+        # Some Approved Platforms only set the EN16931 CustomizationID, but the documents still follow the French rules
+        attachment = self._import_invoice_as_attachment('ubl_21_fr_in_partial_invoice_en16931_customization_id')
+        tree = etree.fromstring(attachment.raw)
+        self.assertEqual(self.env['account.move']._get_ubl_cii_builder_from_xml_tree(tree)._name, 'account.edi.xml.ubl_21_fr')
+        invoice = self._import_invoice_as_attachment_on(attachment=attachment)
+        self.assertRecordValues(invoice.invoice_line_ids, [
+            {'quantity': 10, 'price_unit': 10.0, 'discount': 0.0, 'price_subtotal': 100.0},
+        ])
+
+        # Without PDP, the generic format is used
+        with patch.object(self.env.registry['res.company'], '_get_peppol_proxy_type', return_value='peppol'):
+            self.assertEqual(self.env['account.move']._get_ubl_cii_builder_from_xml_tree(tree)._name, 'account.edi.xml.ubl_21')

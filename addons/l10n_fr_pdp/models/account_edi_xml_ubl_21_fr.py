@@ -6,6 +6,7 @@ from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
 PDP_CUSTOMIZATION_ID = 'urn:cen.eu:en16931:2017#conformant#urn.cpro.gouv.fr:1p0:extended-ctc-fr'  # Not accepted by SuperPDP due to missing validator
 
 CPRO_CUSTOMIZATION_ID = 'urn:cen.eu:en16931:2017#conformant#urn.cpro.gouv.fr:1p0:extended-ctc-fr'
+EN16931_CUSTOMIZATION_ID = 'urn:cen.eu:en16931:2017'
 CPRO_INVOICE_IDENTIFIER = f'busdox-docid-qns::urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##{CPRO_CUSTOMIZATION_ID}::2.1'
 
 PAID_STATES = frozenset({'in_payment', 'paid'})
@@ -296,3 +297,8 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
                 invoice._sync_dynamic_lines(container),
             ):
                 downpayment_lines.move_id = invoice.id
+
+    def _fix_price_unit_quantity_discount(self, quantity, discount, price_unit, line_extension_amount, currency):
+        # EXTENDS account.edi.ubl
+        # TODO: Remove this when french enforces stricter rules
+        return self._import_fix_line_price_unit_quantity_discount(quantity, discount, price_unit, line_extension_amount, currency)

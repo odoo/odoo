@@ -3099,6 +3099,12 @@ class AccountEdiUBL(models.AbstractModel):
                 'reason_code': reason_code,
             }
 
+    def _fix_price_unit_quantity_discount(self, quantity, discount, price_unit, line_extension_amount, currency):
+        """Used in l10n_fr_pdp to recompute the quantity, discount and price unit so they match the line extension amounts"""
+        # TO OVERRIDE
+        # TODO: Remove this when french enforces stricter rules
+        return quantity, discount, price_unit
+
     def _import_ubl_invoice_line_add_price_unit_quantity_discount(self, collected_values):
         file_document_sign = collected_values['file_document_sign']
         line_tree = collected_values['line_tree']
@@ -3212,6 +3218,8 @@ class AccountEdiUBL(models.AbstractModel):
         # Turn discount_amount to a percentage
         gross_subtotal = price_unit * quantity
         discount = (discount_amount * 100 / gross_subtotal) if gross_subtotal else 0.0
+
+        quantity, discount, price_unit = self._fix_price_unit_quantity_discount(quantity, discount, price_unit, line_extension_amount, currency)
 
         to_write = collected_values['to_write']
         to_write['quantity'] = quantity
