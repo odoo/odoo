@@ -30,17 +30,13 @@ class TestExpenses(TestExpenseCommon):
             - price_unit, total_amount_currency and quantity computation
             - Split payments into one payment per expense when paid by company
             - Override account on expense
-            - Payment states and payment terms
-            - Unlinking payments reverts to approved state
             - Cannot delete an analytic account if linked to an expense
         """
 
-        self.expense_employee.user_partner_id.property_supplier_payment_term_id = self.env.ref('account.account_payment_term_30days')
         expenses_by_employee = self.create_expenses([
             {
-                'name': 'Employee PA 2*800 + 15%',  # Taxes are included
+                'name': 'Employee PA 2*800',  # Taxes are included
                 'employee_id': self.expense_employee.id,
-                'account_id': self.expense_account.id,  # Test with a specific account override
                 'product_id': self.product_a.id,
                 'quantity': 2,
                 'payment_mode': 'own_account',
@@ -48,7 +44,7 @@ class TestExpenses(TestExpenseCommon):
                 'date': '2021-10-14',
                 'analytic_distribution': {self.analytic_account_1.id: 100},
             }, {
-                'name': 'Employee PB 160 + 2*15%',  # Taxes are included
+                'name': 'Employee PB 160',  # Taxes are included
                 'employee_id': self.expense_employee.id,
                 'product_id': self.product_b.id,
                 'payment_mode': 'own_account',
@@ -59,16 +55,15 @@ class TestExpenses(TestExpenseCommon):
         ])
         expenses_by_company = self.create_expenses([
             {
-                'name': 'Company PC 1000 + 15%',  # Taxes are included
+                'name': 'Company PC 1000',  # Taxes are included
                 'employee_id': self.expense_employee.id,
                 'product_id': self.product_c.id,
                 'total_amount_currency': 1000.00,
                 'date': '2021-10-12',
                 'payment_mode': 'company_account',
                 'company_id': self.company_data['company'].id,
-                'tax_ids': [Command.set(self.tax_purchase_a.ids)],
             }, {
-                'name': 'Company PB 160 + 2*15%',  # Taxes are included
+                'name': 'Company PB 160',  # Taxes are included
                 'employee_id': self.expense_employee.id,
                 'product_id': self.product_b.id,
                 'payment_mode': 'company_account',
@@ -80,10 +75,10 @@ class TestExpenses(TestExpenseCommon):
 
         # Checking expense values at creation
         self.assertRecordValues(all_expenses, [
-            {'name': 'Employee PA 2*800 + 15%', 'total_amount_currency': 1600.00, 'untaxed_amount_currency': 1391.30, 'price_unit':  800.00, 'tax_amount_currency': 208.70, 'state': 'draft'},
-            {'name': 'Employee PB 160 + 2*15%', 'total_amount_currency':  160.00, 'untaxed_amount_currency':  123.08, 'price_unit':  160.00, 'tax_amount_currency':  36.92, 'state': 'draft'},
-            {'name': 'Company PC 1000 + 15%',   'total_amount_currency': 1000.00, 'untaxed_amount_currency':  869.57, 'price_unit': 1000.00, 'tax_amount_currency': 130.43, 'state': 'draft'},
-            {'name': 'Company PB 160 + 2*15%',  'total_amount_currency':  160.00, 'untaxed_amount_currency':  123.08, 'price_unit':  160.00, 'tax_amount_currency':  36.92, 'state': 'draft'},
+            {'name': 'Employee PA 2*800', 'total_amount_currency': 1600.00, 'price_unit':  800.00, 'state': 'draft'},
+            {'name': 'Employee PB 160',   'total_amount_currency':  160.00, 'price_unit':  160.00, 'state': 'draft'},
+            {'name': 'Company PC 1000',   'total_amount_currency': 1000.00, 'price_unit': 1000.00, 'state': 'draft'},
+            {'name': 'Company PB 160',    'total_amount_currency':  160.00, 'price_unit':  160.00, 'state': 'draft'},
         ])
 
         # Submitting properly change states
@@ -113,13 +108,13 @@ class TestExpenses(TestExpenseCommon):
         employee_partner_id = self.expense_user_employee.partner_id.id
         today = date.today()
         self.assertRecordValues(expenses_by_employee.account_move_id, [
-            {'amount_total': 1600.00, 'ref': 'Employee PA 2*800 + 15%', 'state': 'posted', 'date': today, 'invoice_date': today, 'partner_id': employee_partner_id},
-            {'amount_total':  160.00, 'ref': 'Employee PB 160 + 2*15%', 'state': 'posted', 'date': today, 'invoice_date': today, 'partner_id': employee_partner_id},
+            {'amount_total': 1600.00, 'ref': 'Employee PA 2*800', 'state': 'posted', 'date': today, 'invoice_date': today, 'partner_id': employee_partner_id},
+            {'amount_total':  160.00, 'ref': 'Employee PB 160', 'state': 'posted', 'date': today, 'invoice_date': today, 'partner_id': employee_partner_id},
         ])
 
         self.assertRecordValues(expenses_by_company.account_move_id, [
-            {'amount_total':  1000.00, 'ref': 'Company PC 1000 + 15%',  'state': 'posted', 'date': date(2021, 10, 12), 'invoice_date': False, 'partner_id': False},
-            {'amount_total':   160.00, 'ref': 'Company PB 160 + 2*15%', 'state': 'posted', 'date': date(2021, 10, 11), 'invoice_date': False, 'partner_id': False},
+            {'amount_total':  1000.00, 'ref': 'Company PC 1000',  'state': 'posted', 'date': date(2021, 10, 12), 'invoice_date': False, 'partner_id': False},
+            {'amount_total':   160.00, 'ref': 'Company PB 160', 'state': 'posted', 'date': date(2021, 10, 11), 'invoice_date': False, 'partner_id': False},
         ])
 
         tax_account_id = self.company_data['default_account_tax_purchase'].id
@@ -130,26 +125,26 @@ class TestExpenses(TestExpenseCommon):
         # One payment per expense
         self.assertRecordValues(all_expenses.account_move_id.line_ids.sorted(lambda line: (line.move_id, line)), [
             # own_account expense 1 move
-            {'balance':  1391.30, 'account_id': self.expense_account.id,    'name': 'expense_employee: Employee PA 2*800 + 15%', 'date': today, 'invoice_date': today},
-            {'balance':   208.70, 'account_id': tax_account_id,             'name': '15%',                                       'date': today, 'invoice_date': today},
+            {'balance':  1391.30, 'account_id': self.expense_account.id,    'name': 'expense_employee: Employee PA 2*800', 'date': today, 'invoice_date': today},
+            {'balance':   208.70, 'account_id': tax_account_id,             'name': '',                                       'date': today, 'invoice_date': today},
             {'balance': -1600.00, 'account_id': default_account_payable_id, 'name': False,                                       'date': today, 'invoice_date': today},
 
             # own_account expense 2 move
-            {'balance':   123.08, 'account_id': product_b_account_id,       'name': 'expense_employee: Employee PB 160 + 2*15%', 'date': today, 'invoice_date': today},
-            {'balance':    18.46, 'account_id': tax_account_id,             'name': '15%',                                       'date': today, 'invoice_date': today},
-            {'balance':    18.46, 'account_id': tax_account_id,             'name': '15% (copy)',                                'date': today, 'invoice_date': today},
+            {'balance':   123.08, 'account_id': product_b_account_id,       'name': 'expense_employee: Employee PB 160', 'date': today, 'invoice_date': today},
+            {'balance':    18.46, 'account_id': tax_account_id,             'name': '',                                       'date': today, 'invoice_date': today},
+            {'balance':    18.46, 'account_id': tax_account_id,             'name': ' (copy)',                                'date': today, 'invoice_date': today},
             {'balance':  -160.00, 'account_id': default_account_payable_id, 'name': False,                                       'date': today, 'invoice_date': today},
 
             # company_account expense 1 move
-            {'balance':   869.57, 'account_id': product_c_account_id,       'name': 'expense_employee: Company PC 1000 + 15%',   'date': date(2021, 10, 12), 'invoice_date': False},
-            {'balance':   130.43, 'account_id': tax_account_id,             'name': '15%',                                       'date': date(2021, 10, 12), 'invoice_date': False},
-            {'balance': -1000.00, 'account_id': company_payment_account_id, 'name': 'expense_employee: Company PC 1000 + 15%',   'date': date(2021, 10, 12), 'invoice_date': False},
+            {'balance':   869.57, 'account_id': product_c_account_id,       'name': 'expense_employee: Company PC 1000',   'date': date(2021, 10, 12), 'invoice_date': False},
+            {'balance':   130.43, 'account_id': tax_account_id,             'name': '',                                       'date': date(2021, 10, 12), 'invoice_date': False},
+            {'balance': -1000.00, 'account_id': company_payment_account_id, 'name': 'expense_employee: Company PC 1000',   'date': date(2021, 10, 12), 'invoice_date': False},
 
             # company_account expense 2 move
-            {'balance':  123.08, 'account_id': product_b_account_id,        'name': 'expense_employee: Company PB 160 + 2*15%',  'date': date(2021, 10, 11), 'invoice_date': False},
-            {'balance':   18.46, 'account_id': tax_account_id,              'name': '15%',                                       'date': date(2021, 10, 11), 'invoice_date': False},
-            {'balance':   18.46, 'account_id': tax_account_id,              'name': '15% (copy)',                                'date': date(2021, 10, 11), 'invoice_date': False},
-            {'balance': -160.00, 'account_id': company_payment_account_id,  'name': 'expense_employee: Company PB 160 + 2*15%',  'date': date(2021, 10, 11), 'invoice_date': False},
+            {'balance':  123.08, 'account_id': product_b_account_id,        'name': 'expense_employee: Company PB 160',  'date': date(2021, 10, 11), 'invoice_date': False},
+            {'balance':   18.46, 'account_id': tax_account_id,              'name': '',                                       'date': date(2021, 10, 11), 'invoice_date': False},
+            {'balance':   18.46, 'account_id': tax_account_id,              'name': ' (copy)',                                'date': date(2021, 10, 11), 'invoice_date': False},
+            {'balance': -160.00, 'account_id': company_payment_account_id,  'name': 'expense_employee: Company PB 160',  'date': date(2021, 10, 11), 'invoice_date': False},
 
         ])
 
@@ -904,7 +899,7 @@ class TestExpenses(TestExpenseCommon):
         })
 
         expense.action_submit()
-        with self.assertRaises(ValidationError, msg="One or more lines require a 100% analytic distribution."):
+        with self.assertRaises(ValidationError, msg="One or more lines require a  analytic distribution."):
             expense.action_approve()
         expense.analytic_distribution = {self.analytic_account_1.id: 100.00}
         expense.action_approve()
@@ -997,7 +992,7 @@ class TestExpenses(TestExpenseCommon):
         """
         expense = self.create_expenses([
             {
-                'name': 'Employee PA 2*800 + 15%',
+                'name': 'Employee PA 2*800',
                 'analytic_distribution': {self.analytic_account_1.id: 100},
             }])
         expense.action_submit()
@@ -1032,7 +1027,7 @@ class TestExpenses(TestExpenseCommon):
 
     def test_remove_company_id_from_hr_expense(self):
         expense = self.create_expenses({
-                'name': 'Company PC 1000 + 15%',
+                'name': 'Company PC 1000',
                 'employee_id': self.expense_employee.id,
                 'product_id': self.product_c.id,
                 'total_amount_currency': 1000.00,

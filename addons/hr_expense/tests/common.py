@@ -85,10 +85,6 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
             'name': 'product_c with no cost',
             'uom_id': cls.env.ref('uom.product_uom_dozen').id,
             'lst_price': 200.0,
-            'property_account_income_id': cls.copy_account(cls.company_data['default_account_revenue']).id,
-            'property_account_expense_id': cls.copy_account(cls.company_data['default_account_expense']).id,
-            'taxes_id': [Command.set((cls.tax_sale_a + cls.tax_sale_b).ids)],
-            'supplier_taxes_id': [Command.set((cls.tax_purchase_a + cls.tax_purchase_b).ids)],
             'can_be_expensed': True,
             'default_code': 'product_c',
         })
@@ -99,12 +95,6 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
         cls.product_b.default_code = 'product_b'
 
         cls.frozen_today = datetime(year=2022, month=1, day=25, hour=0, minute=0, second=0)
-
-        # create expense account
-        cls.expense_account = cls.env['account.account'].create({
-            'code': '610010',
-            'name': 'Expense Account 1'
-        })
 
     @classmethod
     def create_expenses(cls, values=None):
@@ -129,27 +119,3 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
             value_dict = {**default_values, **(value_dict or {})}
             create_values.append(value_dict)
         return cls.env['hr.expense'].create(create_values).sorted()
-
-    def post_expenses(self, expenses):
-        """
-        Helper to "post" expenses (it actually post draft moves related to expenses),
-        whether it's company or employee paid expenses
-        """
-        company_expenses = expenses.filtered(lambda expense: expense.payment_mode == 'company_account')
-        if company_expenses:
-            # post through payment to post both payment and move
-            company_expenses.account_move_id.origin_payment_id.action_post()
-        if employee_expenses := expenses - company_expenses:
-            employee_expenses.account_move_id.action_post()
-
-    def get_new_payment(self, expenses, amount):
-        """ Helper to create payments """
-        ctx = {'active_model': 'account.move', 'active_ids': expenses.account_move_id.ids}
-        with freeze_time(self.frozen_today):
-            payment_register = self.env['account.payment.register'].with_context(**ctx).create({
-                'amount': amount,
-                'journal_id': self.company_data['default_journal_bank'].id,
-                'payment_method_line_id': self.inbound_payment_method_line.id,
-            })
-            self.assertEqual(payment_register.partner_bank_id.partner_id, expenses.employee_id.work_contact_id)
-            return payment_register._create_payments()

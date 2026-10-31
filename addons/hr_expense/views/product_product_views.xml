@@ -65,22 +65,6 @@
                                 <field name="company_id" class="w-50" groups="base.group_multi_company"/>
                                 <field name="description" string="Guideline" placeholder="e.g. Restaurants: only week days, for lunch"/>
                             </group>
-                            <group>
-                                <field name="property_account_expense_id" class="w-50" groups="account.group_account_readonly"/>
-                                <field name="supplier_taxes_id" class="w-50" widget="many2many_tax_tags"
-                                       context="{'default_type_tax_use':'purchase', 'default_price_include': 1}"
-                                       options="{'no_quick_create': True}" placeholder="no taxes"/>
-                            </group>
-                            <group string="Limits" name="expense_limits">
-                                <field name="expense_job_position_limit_ids" nolabel="1" colspan="2">
-                                    <list editable="bottom" class="o_expense_job_position_limits">
-                                        <field name="sequence" widget="handle"/>
-                                        <field name="company_currency_id" column_invisible="1"/>
-                                        <field name="job_ids" widget="many2many_tags"/>
-                                        <field name="limit_amount" widget="monetary"/>
-                                    </list>
-                                </field>
-                            </group>
                         </group>
                     </sheet>
                 </form>
@@ -145,7 +129,6 @@
                     <field name="description" string="Note" optional="show" readonly="1"/>
                     <field name="lst_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" optional="show" string="Sales Price"/>
                     <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" optional="show"/>
-                    <field name="supplier_taxes_id" widget="many2many_tax_tags" optional="show"/>
                 </list>
             </field>
         </record>
