@@ -245,7 +245,8 @@ class SaleOrderLine(models.Model):
                 ('product_id.service_tracking', 'in', ['project_only', 'task_in_project']),
             ])
             if project_only_sol_count == 1:
-                values['name'] = "%s - [%s] %s" % (values['name'], self.product_id.default_code, self.product_id.name) if self.product_id.default_code else "%s - %s" % (values['name'], self.product_id.name)
+                product = self.product_id.with_context(lang=self.order_id._get_lang())
+                values['name'] = "%s - [%s] %s" % (values['name'], product.default_code, product.name) if product.default_code else "%s - %s" % (values['name'], product.name)
             values.update(self._timesheet_create_project_account_vals(self.order_id.project_id))
             project = self.env['project.project'].create(values)
 
@@ -278,15 +279,18 @@ class SaleOrderLine(models.Model):
         if self.product_id.service_type != 'milestones':
             allocated_hours = self._convert_qty_company_hours(self.company_id)
         sale_line_name_parts = self.name.split('\n')
+        # The line description is written in the order's language (see `_compute_name`), which
+        # may differ from the language of the user confirming the order (e.g. a portal visitor).
+        product = self.product_id.with_context(lang=self.order_id._get_lang())
 
-        if sale_line_name_parts and sale_line_name_parts[0] == self.product_id.display_name:
+        if sale_line_name_parts and sale_line_name_parts[0] == product.display_name:
             sale_line_name_parts.pop(0)
 
         if len(sale_line_name_parts) == 1 and sale_line_name_parts[0]:
             title = sale_line_name_parts[0]
             description = ''
         else:
-            title = self.product_id.display_name
+            title = product.display_name
             description = '<br/>'.join(sale_line_name_parts)
 
         return {

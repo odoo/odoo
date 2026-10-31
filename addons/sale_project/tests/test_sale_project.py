@@ -1350,3 +1350,29 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         })
         so.action_confirm()
         self.assertEqual(sol.task_id.allocated_hours, 10, "The allocated hours should be 10.")
+
+    def test_task_and_project_names_use_order_language(self):
+        """
+        Test that the generated project and task are named in the order's language,
+        not in the language of the user confirming the order (e.g. a portal visitor
+        whose browser is set to another language).
+        """
+        self.env['res.lang']._activate_lang('fr_FR')
+        product = self.product_order_service3
+        product.with_context(lang='fr_FR').name = "Service en français"
+        self.partner.lang = 'en_US'
+        product_display_name = product.with_context(lang='en_US').display_name
+
+        so_single, so_multi = self.env['sale.order'].create([{
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'name': f"{product_display_name}\n{description}",
+            })],
+        } for description in ("Single line", "First line\nSecond line")])
+        (so_single | so_multi).with_context(lang='fr_FR').action_confirm()
+
+        self.assertEqual(so_single.order_line.task_id.name, "Single line")
+        self.assertEqual(so_multi.order_line.task_id.name, product_display_name)
+        self.assertIn("Second line", so_multi.order_line.task_id.description)
+        self.assertIn(product.with_context(lang='en_US').name, so_multi.order_line.project_id.name)
