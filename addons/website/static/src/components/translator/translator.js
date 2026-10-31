@@ -276,6 +276,20 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
             .attr('data-oe-readonly', true)
             .removeAttr('contenteditable');
 
+        // On Firefox, the caret cannot be placed inside the editable content
+        // of a non-editable link, as the browser waits for a possible drag of
+        // the link instead.
+        for (const translationEl of $editable) {
+            const linkEl = translationEl.parentElement.closest("a[href]");
+            if (
+                linkEl &&
+                !linkEl.closest(".o_editable:not([data-oe-readonly])") &&
+                !linkEl.hasAttribute("draggable")
+            ) {
+                linkEl.setAttribute("draggable", "false");
+            }
+        }
+
         const styleEl = document.createElement('style');
         styleEl.id = "translate-stylesheet";
         this.websiteService.pageDocument.head.appendChild(styleEl);

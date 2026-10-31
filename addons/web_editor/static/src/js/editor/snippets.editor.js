@@ -2508,8 +2508,7 @@ class SnippetsMenu extends Component {
                 // all snippet editors destroyed after disabling text options.
                 // We still want to keep the toolbar available in this case.
                 const isEditableTextElementSelected =
-                    currentlySelectedNode?.nodeType === Node.TEXT_NODE &&
-                    !!currentlySelectedNode?.parentNode?.isContentEditable;
+                    !!closestElement(currentlySelectedNode)?.isContentEditable;
                 if (!isEditableTextElementSelected) {
                     this._activateEmptyOptionsTab();
                 }
