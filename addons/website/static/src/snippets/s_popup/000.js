@@ -635,7 +635,7 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
         const modalEl = this.el.querySelector(".modal");
         const currCookie = cookie.get(this.el.id);
 
-        if (currCookie && JSON.parse(currCookie).optional || !this._popupAlreadyShown) {
+        if (wUtils.parseJSON(currCookie)?.optional || !this._popupAlreadyShown) {
             return;
         }
         $(modalEl).modal("show");
