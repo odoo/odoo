@@ -3,6 +3,7 @@ import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { CalendarEventFormView } from "./calendar_event_form_view";
 import { CalendarEventFormController } from "./calendar_event_form_controller";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
+import { user } from "@web/core/user";
 
 export const QUICK_CREATE_CALENDAR_EVENT_FIELDS = {
     name: { type: "string" },
@@ -40,6 +41,16 @@ function getDefaultValuesFromRecord(data) {
 }
 
 export class CalendarEventQuickCreateFormController extends CalendarEventFormController {
+
+    setup() {
+        super.setup();
+        const attendeeIds = new Set(this.props.context.default_partner_ids || []);
+        attendeeIds.delete(user.partnerId);
+        this.props.context.default_partner_ids = attendeeIds.size
+            ? [user.partnerId, ...attendeeIds]
+            : [];
+        this.props.context.default_current_user_handled = attendeeIds.size > 0;
+    }
 
     getFullEventContext() {
         const context = getDefaultValuesFromRecord(this.model.root.data);
