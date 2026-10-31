@@ -12,7 +12,7 @@ from decimal import Decimal
 
 from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_is_zero, float_repr, mute_logger, OrderedSet
+from odoo.tools import float_compare, float_is_zero, float_repr
 
 from odoo.addons.l10n_pl_edi.tools.ksef_api_service import KsefApiService
 

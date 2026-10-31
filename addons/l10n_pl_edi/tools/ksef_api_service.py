@@ -30,6 +30,22 @@ class KsefApiService:
         self.raw_symmetric_key = base64.b64decode(company_sudo.l10n_pl_edi_session_key) if company_sudo.l10n_pl_edi_session_key else None
         self.raw_iv = base64.b64decode(company_sudo.l10n_pl_edi_session_iv) if company_sudo.l10n_pl_edi_session_iv else None
 
+    @staticmethod
+    def b64(value):
+        if not value:
+            return False
+        if isinstance(value, str):
+            value = value.encode()
+        return base64.b64encode(value).decode()
+
+    @staticmethod
+    def u64(value):
+        if not value:
+            return False
+        if isinstance(value, str):
+            value = value.encode()
+        return base64.b64decode(value)
+
     def _get_api_url(self):
         """Gets the correct KSeF API URL from the company's settings."""
         if self.mode == 'prod':
@@ -52,26 +68,24 @@ class KsefApiService:
         """
         kwargs.setdefault('headers', {})
         kwargs.setdefault('timeout', TIMEOUT)
-        kwargs['headers'].update(self._make_headers(self.company.sudo().l10n_pl_edi_access_token))
+        if kwargs.pop('set_auth_header', True):
+            kwargs['headers'].update(self._make_headers(self.company.sudo().l10n_pl_edi_access_token))
         try:
             response = requests.request(method, endpoint, **kwargs)
-
-            if response.status_code == 401 and not is_auth_retry:
-                _logger.info("KSeF access token expired, refreshing...")
-                self.refresh_access_token()
-                # Pass is_auth_retry=True to prevent looping
-                return self._make_request(method, endpoint, is_auth_retry=True, **kwargs)
-            elif response.status_code == 429:
-                retry_after = response.headers.get('Retry-After')
-                raise KSeFRateLimitError("Too Many Requests", retry_after=retry_after)
-            else:
-                response.raise_for_status()
-                return response
-
         except requests.exceptions.RequestException as e:
             error_text = e.response.text if e.response is not None else str(e)
             _logger.exception("KSeF API request failed: %s", error_text)
             raise UserError(self.env._("KSeF API Error: %s", error_text))
+        if response.status_code == 401 and not is_auth_retry:
+            _logger.info("KSeF access token expired, refreshing...")
+            self.refresh_access_token()
+            # Pass is_auth_retry=True to prevent looping
+            return self._make_request(method, endpoint, is_auth_retry=True, **kwargs)
+        if response.status_code == 429:
+            retry_after = response.headers.get('Retry-After')
+            raise KSeFRateLimitError("Too Many Requests", retry_after=retry_after)
+        response.raise_for_status()
+        return response
 
     def _get_public_keys(self):
         """
