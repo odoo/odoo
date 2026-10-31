@@ -2580,16 +2580,16 @@
     </xpath>
 </template>
 
-<!-- Copyright Content Width -->
-<template id="footer_copyright_content_width_small" inherit_id="website.layout" name="Footer Copyright Width Small" active="False">
-    <xpath expr="//*[hasclass('o_footer_copyright')]/div" position="attributes">
-        <attribute name="class" remove="container" add="o_container_small" separator=" "/>
+<!-- Footer Content Width -->
+<template id="footer_content_width_small" inherit_id="website.layout" name="Footer Content Width Small" active="False">
+    <xpath expr="//footer[@id='bottom']" position="attributes">
+        <attribute name="t-attf-class" add="o_footer_content_width_small" separator=" "/>
     </xpath>
 </template>
 
-<template id="footer_copyright_content_width_fluid" inherit_id="website.layout" name="Footer Copyright Width Fluid" active="False">
-    <xpath expr="//*[hasclass('o_footer_copyright')]/div" position="attributes">
-        <attribute name="class" remove="container" add="container-fluid" separator=" "/>
+<template id="footer_content_width_fluid" inherit_id="website.layout" name="Footer Content Width Fluid" active="False">
+    <xpath expr="//footer[@id='bottom']" position="attributes">
+        <attribute name="t-attf-class" add="o_footer_content_width_fluid" separator=" "/>
     </xpath>
 </template>
 
