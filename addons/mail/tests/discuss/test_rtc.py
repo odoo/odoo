@@ -501,6 +501,7 @@ class TestChannelRTC(MailCommon, HttpCase):
                     },
                 ),
                 BusResult(self.chat, "discuss.channel/new_message"),
+                BusResult((self.chat, "internal_users"), "mail.record/insert"),
                 BusResult(
                     self.chat,
                     "mail.record/insert",
@@ -643,6 +644,7 @@ class TestChannelRTC(MailCommon, HttpCase):
                     },
                 ),
                 BusResult(self.channel_group_a, "discuss.channel/new_message"),
+                BusResult((self.channel_group_a, "internal_users"), "mail.record/insert"),
                 BusResult(
                     self.channel_group_a,
                     "mail.record/insert",
@@ -1184,10 +1186,12 @@ class TestChannelRTC(MailCommon, HttpCase):
                 # discuss.channel.member (message_unread_counter, new_message_separator, …)
                 BusResult(self.user_employee, "mail.record/insert"),
                 BusResult(self.channel_group_b, "discuss.channel/new_message"),
+                BusResult((self.channel_group_b, "internal_users"), "mail.record/insert"),
                 BusResult(self.guest, "discuss.channel/joined"),
                 # discuss.channel.member (message_unread_counter, new_message_separator, …)
                 BusResult(self.user_employee, "mail.record/insert"),
                 BusResult(self.channel_group_b, "discuss.channel/new_message"),
+                BusResult((self.channel_group_b, "internal_users"), "mail.record/insert"),
                 # discuss.channel (member_count), discuss.channel.member
                 BusResult(self.channel_group_b, "mail.record/insert"),
                 BusResult((self.channel_group_b, "internal_users"), "mail.record/insert"),
