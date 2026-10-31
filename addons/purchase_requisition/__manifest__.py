@@ -22,6 +22,12 @@ are agreements you have with vendors to benefit from a predetermined pricing.
         'report/report_purchaserequisition.xml',
         'security/ir.access.csv',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'purchase_requisition/static/src/deadline_warning/deadline_warning_widget.js',
+            'purchase_requisition/static/src/deadline_warning/deadline_warning_widget.xml',
+        ],
+    },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }
