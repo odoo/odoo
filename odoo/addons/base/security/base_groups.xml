@@ -107,6 +107,12 @@
             <field name="value" ref="template_portal_user_id"/>
         </record>
 
+        <record model="res.groups" id="group_check_session_device">
+            <field name="name">Check Session Device</field>
+            <field name="comment">Users who agree to have their devices automatically verified to prevent session hijacking.
+                Device verification may trigger reauthentication, depending on the browser settings.</field>
+        </record>
+
     </data>
 
     <data noupdate="1">

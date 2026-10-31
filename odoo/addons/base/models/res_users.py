@@ -1303,6 +1303,12 @@ class ResUsers(models.Model):
         """ If an MFA method is enabled, returns the URL for its second step. """
         return
 
+    def _must_check_session_device(self) -> bool:
+        return (
+            self._is_internal() and self.has_group('base.group_check_session_device')
+            and self.env['ir.config_parameter'].sudo().get_bool('base.session_check_device')
+        )
+
 
 ResUsersPatchedInTest = ResUsers
 
