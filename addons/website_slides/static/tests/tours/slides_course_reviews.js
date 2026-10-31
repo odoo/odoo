@@ -8,7 +8,8 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add("course_reviews", {
     steps: () => [
         {
-            trigger: "a:contains(Basics of Gardening - Test)",
+            trigger:
+                '.card:has(a:contains("Basics of Gardening - Test")) .card-footer a:contains("Start now"), a:contains("Continue")',
             run: "click",
             expectUnloadPage: true,
         },
