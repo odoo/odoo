@@ -47,7 +47,7 @@
         <field name="model">pos.preset</field>
         <field name="inherit_id" ref="point_of_sale.view_pos_preset_tree"/>
         <field name="arch" type="xml">
-            <field name="color" position="before">
+            <field name="identification" position="after">
                 <field name="available_in_self" widget="boolean_toggle"/>
             </field>
         </field>
