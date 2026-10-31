@@ -339,6 +339,15 @@ class PdpRegistration(models.TransientModel):
 
     def button_cancel_authentication(self):
         self.ensure_one()
+        base_url = self.company_id._pdp_get_iap_url()
+        response = iap_tools.iap_jsonrpc(f'{base_url}/api/id_authentication/1/cancel_authentication', params={
+            'db_uuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
+            'object_uuid': self.pdp_authentication_uuid,
+        })
+        if response.get('kyc_status') == 'success' and response.get('active'):
+            raise UserError(self.env._("This authentication was already successful. Please use the refresh button to update its status."))
+        if error := response.get('error'):
+            _logger.warning("Received error while cancelling process %s : %s", self.pdp_authentication_uuid, error)
         self.pdp_kyc_status = 'fail'
         return {
             'type': 'ir.actions.client',
@@ -347,7 +356,7 @@ class PdpRegistration(models.TransientModel):
                 'message': self.env._("Authentication cancelled"),
                 'type': 'danger',
                 'next': {'type': 'ir.actions.act_window_close'},
-            }
+            },
         }
 
     def button_register_pdp_participant(self):
