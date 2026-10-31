@@ -1,10 +1,10 @@
-import { animationFrame, describe, expect, queryFirst, queryOne, test } from "@odoo/hoot";
+import { describe, expect, queryFirst, queryOne, test } from "@odoo/hoot";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
+    waitForThemeReveal,
 } from "@website/../tests/builder/website_helpers";
 import { contains } from "@web/../tests/web_test_helpers";
-import { delay } from "@web/core/utils/concurrency";
 
 describe.current.tags("desktop");
 defineWebsiteModels();
@@ -112,7 +112,7 @@ test("should preview button styles in dropdown", async () => {
     });
 });
 
-test("should have a button linking to theme tab", async () => {
+test("pencil icon opens to theme tab and highlights targeted row", async () => {
     await setupWebsiteBuilder(
         `<p>
             <a href="#" class="btn btn-custom test-target">clickme</a>
@@ -123,14 +123,13 @@ test("should have a button linking to theme tab", async () => {
     );
 
     await contains(":iframe p > a.test-target").click();
-    await contains("a.o_hb_theme_tab_link").click();
+    await contains("[data-label='Type'] .o_hb_select_toggle").click();
+    await contains(".o_popover a.o_hb_theme_tab_link").click();
 
-    // Hoot disables transitions by default, so the tab switch relies on the
-    // fallback instead of a transitionend event.
-    await delay(500);
-    await animationFrame();
+    await waitForThemeReveal();
     expect("button[data-name='customize']").not.toHaveClass("active");
     expect("button[data-name='theme']").toHaveClass("active");
+    expect(".o_hb_row[data-label='Primary Buttons']").toHaveClass("o_hb_row_highlight");
 });
 
 test("button border width is not previewed", async () => {

@@ -1,3 +1,4 @@
+import { HighlightThemeRowPlugin } from "@html_builder/sidebar/highlight_theme_row_plugin";
 import { getAllUsedColors } from "@html_builder/utils/utils_css";
 import {
     DEFAULT_COLORS,
@@ -5,7 +6,7 @@ import {
     useColorPicker,
 } from "@html_editor/components/color_picker/color_picker";
 import { ColorSelector } from "@html_editor/main/font/color_selector";
-import { Component, signal, t, useProps } from "@odoo/owl";
+import { Component, signal, t, usePlugin, useProps } from "@odoo/owl";
 import { isCSSColor, isColorGradient } from "@web/core/utils/colors";
 import { useEnv } from "@web/owl2/utils";
 import {
@@ -183,6 +184,9 @@ export class BuilderColorPicker extends Component {
 
     setup() {
         useBuilderComponent(this.props);
+        if (this.props.enabledTabs.includes("theme")) {
+            this.highlightThemeRow = usePlugin(HighlightThemeRowPlugin);
+        }
         const { state, onApply, onPreview, onPreviewRevert } = useColorPickerBuilderComponent(
             this.props
         );
@@ -203,7 +207,7 @@ export class BuilderColorPicker extends Component {
                 grayscales: this.props.grayscales,
                 defaultOpacity: this.props.defaultOpacity,
                 className: this.props.colorPickerClassName,
-                editColorCombination: this.env.editColorCombination,
+                editColorCombination: this.highlightThemeRow?.editColorCombination,
             },
             options: {
                 onClose: onPreviewRevert,

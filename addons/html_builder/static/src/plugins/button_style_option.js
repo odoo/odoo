@@ -6,7 +6,10 @@ import { BuilderSelectItem } from "@html_builder/core/building_blocks/builder_se
 import { BuilderNumberInput } from "@html_builder/core/building_blocks/builder_number_input";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { StyleAction, withoutTransition } from "@html_builder/core/core_builder_action_plugin";
+import { HighlightThemeRowPlugin } from "@html_builder/sidebar/highlight_theme_row_plugin";
 import { Plugin } from "@html_editor/plugin";
+import { usePlugin } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
 import {
@@ -44,6 +47,7 @@ export class ButtonStyleOption extends BaseOptionComponent {
 
     setup() {
         super.setup();
+        this.highlightThemeRow = usePlugin(HighlightThemeRowPlugin);
         this.state = useDomState(async (el) => {
             const currentButtonType = getButtonType(el);
             const buttonStyles = await this.getButtonStyles(el);
@@ -61,10 +65,15 @@ export class ButtonStyleOption extends BaseOptionComponent {
         });
     }
 
-    goToThemeTab() {
-        this.env.editColorCombination(
-            parseInt(this.state.buttonCombinationClass.replace("o_cc", ""))
-        );
+    getEditAction(buttonType) {
+        return {
+            title: _t("Edit color in Theme Tab"),
+            onClick: () =>
+                this.highlightThemeRow.editColorCombination(
+                    parseInt(this.state.buttonCombinationClass.replace("o_cc", "")),
+                    `btn-${buttonType}`
+                ),
+        };
     }
 
     async getButtonStyles(el) {
