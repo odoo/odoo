@@ -201,6 +201,18 @@ export class SurveyResultChart extends Interaction {
                 ],
             },
             options: {
+                plugins: {
+                    legend: {
+                        labels: {
+                            generateLabels: (chart) => this.generateShortLegendLabels(chart),
+                        },
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: this.splitTooltipTitle,
+                        },
+                    },
+                },
                 aspectRatio: 2,
             },
         };
@@ -361,6 +373,60 @@ export class SurveyResultChart extends Interaction {
      */
     markIfCorrect(value) {
         return value.text + (this.rightAnswers.indexOf(value.text) >= 0 ? " \u2713" : "");
+    }
+
+    /**
+     * Returns the default pie chart legend items with a shortened text.
+     *
+     * @param {Chart} chart
+     */
+    generateShortLegendLabels(chart) {
+        const legendItems = Chart.overrides.pie.plugins.legend.labels.generateLabels(chart);
+        const labelLimit = 20;
+        for (const item of legendItems) {
+            const answerText = this.graphData[item.index].text;
+            if (answerText.length > labelLimit) {
+                item.text = `${answerText.slice(0, labelLimit)}…${item.text.slice(answerText.length)}`;
+            }
+        }
+        return legendItems;
+    }
+
+    /**
+     * Returns the tooltip title split into lines that fit in the chart width.
+     *
+     * @param {Object[]} tooltipItems
+     */
+    splitTooltipTitle(tooltipItems) {
+        const { chart, label } = tooltipItems[0];
+        const { titleFont, padding } = chart.tooltip.options;
+        const maxWidth = chart.width - Chart.helpers.toPadding(padding).width;
+        const ctx = chart.ctx;
+        ctx.save();
+        ctx.font = Chart.helpers.toFont(titleFont).string;
+        const lines = [];
+        let line = "";
+        for (const word of label.split(" ")) {
+            const lineWithWord = line ? `${line} ${word}` : word;
+            if (ctx.measureText(lineWithWord).width <= maxWidth) {
+                line = lineWithWord;
+                continue;
+            }
+            if (line) {
+                lines.push(line);
+                line = "";
+            }
+            for (const char of word) {
+                if (line && ctx.measureText(line + char).width > maxWidth) {
+                    lines.push(line);
+                    line = "";
+                }
+                line += char;
+            }
+        }
+        lines.push(line);
+        ctx.restore();
+        return lines;
     }
 
     /**
