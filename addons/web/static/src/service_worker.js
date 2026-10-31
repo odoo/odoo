@@ -8,6 +8,7 @@ const offLineURL = `${homepageURL}/offline`;
 let sessionInfo = null;
 
 self.addEventListener("install", (event) => {
+    self.skipWaiting();
     event.waitUntil(
         Promise.all([
             // Needed because the sw is register after the initial fetch
@@ -16,6 +17,10 @@ self.addEventListener("install", (event) => {
             caches.open(cacheName).then((cache) => cache.add(offLineURL)),
         ])
     );
+});
+
+self.addEventListener("activate", (event) => {
+    event.waitUntil(self.clients.claim());
 });
 
 const extractSessionInfo = (htmlContent) => {
