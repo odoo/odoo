@@ -14,10 +14,33 @@ class TestSaleProjectStockProfitability(TestProjectProfitabilityCommon):
             'name': 'sale_project_stock project template',
             'account_id': cls.analytic_account.id,
         })
+        stock_input_account, stock_output_account, stock_valuation_account = cls.env['account.account'].create([
+            {
+                'name': 'Stock Interim Input - sale_project_stock',
+                'code': 'SPSStockIn',
+                'account_type': 'asset_current',
+                'reconcile': True,
+            },
+            {
+                'name': 'Stock Interim Output - sale_project_stock',
+                'code': 'SPSStockOut',
+                'account_type': 'asset_current',
+                'reconcile': True,
+            },
+            {
+                'name': 'Stock Valuation - sale_project_stock',
+                'code': 'SPSStockVal',
+                'account_type': 'asset_current',
+                'reconcile': True,
+            },
+        ])
         avco_real_time_product_category = cls.env['product.category'].create({
             'name': 'avco real time',
             'property_valuation': 'real_time',
             'property_cost_method': 'average',
+            'property_stock_account_input_categ_id': stock_input_account.id,
+            'property_stock_account_output_categ_id': stock_output_account.id,
+            'property_stock_valuation_account_id': stock_valuation_account.id,
         })
         cls.cogs_account = cls.env['account.account'].search([
             ('name', '=', 'Cost of Goods Sold'),
