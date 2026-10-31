@@ -19,3 +19,4 @@ from . import test_routes
 from . import test_i18n
 from . import test_test_holes
 from . import test_security_files
+from . import test_typescript

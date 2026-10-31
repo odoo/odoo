@@ -3,6 +3,7 @@ import { registry } from "../registry";
 
 import { EventBus, proxy } from "@odoo/owl";
 
+/** @satisfies {import("registries").ServicesRegistryItemShape} */
 export const fileUploadService = {
     dependencies: ["notification"],
     /**
