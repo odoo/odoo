@@ -608,3 +608,55 @@ class TestReportSession(TestPoSCommon):
             report['cash_rounding_total'], 10.40 - 10.42, places=2,
             msg="Cash rounding total should equal sum of (amount_paid - amount_total) across orders"
         )
+
+    def test_report_bank_difference_per_payment_method(self):
+        """Each bank payment method must only show its own closing difference."""
+        product = self.create_product('Product A', self.categ_basic, 100)
+
+        def create_paid_order(session, payments):
+            order = self.env['pos.order'].create({
+                'company_id': self.env.company.id,
+                'session_id': session.id,
+                'partner_id': self.partner_a.id,
+                'lines': [Command.create({
+                    'name': "OL/0001",
+                    'product_id': product.id,
+                    'price_unit': 100,
+                    'qty': 1,
+                    'tax_ids': [],
+                    'price_subtotal': 100,
+                    'price_subtotal_incl': 100,
+                })],
+                'pricelist_id': self.config.pricelist_id.id,
+                'amount_paid': 100.0,
+                'amount_total': 100.0,
+                'amount_tax': 0.0,
+                'amount_return': 0.0,
+                'to_invoice': False,
+            })
+            for pm, amount in payments:
+                self.make_payment(order, pm, amount)
+
+        def get_differences(session):
+            report = self.env['report.point_of_sale.report_saledetails'].get_sale_details(session_ids=[session.id])
+            return {
+                p['id']: p.get('money_difference', 0)
+                for p in report['payments']
+                if p.get('id') in (self.bank_pm1.id, self.bank_split_pm1.id)
+            }
+
+        # Both bank payment methods have a closing difference
+        self.config.open_ui()
+        session = self.config.current_session_id
+        create_paid_order(session, [(self.bank_pm1, 60), (self.bank_split_pm1, 40)])
+        session.close_session_from_ui(payment_method_closing={self.bank_pm1.id: 40, self.bank_split_pm1.id: 30})
+        self.assertEqual(len(session.correction_move_ids), 2)
+        self.assertEqual(get_differences(session), {self.bank_pm1.id: -20, self.bank_split_pm1.id: -10})
+
+        # Only one bank payment method has a closing difference
+        self.config.open_ui()
+        session = self.config.current_session_id
+        create_paid_order(session, [(self.bank_pm1, 60), (self.bank_split_pm1, 40)])
+        session.close_session_from_ui(payment_method_closing={self.bank_pm1.id: 40, self.bank_split_pm1.id: 40})
+        self.assertEqual(len(session.correction_move_ids), 1)
+        self.assertEqual(get_differences(session), {self.bank_pm1.id: -20, self.bank_split_pm1.id: 0})
