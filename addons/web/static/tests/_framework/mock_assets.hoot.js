@@ -1,5 +1,7 @@
 // ! WARNING: this module cannot depend on modules not ending with ".hoot" (except libs) !
 
+import { after } from "@odoo/hoot";
+
 const { loader } = odoo;
 
 /**
@@ -46,6 +48,26 @@ export function mockAssetsFactory(name) {
         if (loader.modules.has(name)) {
             return loader.modules.get(name);
         }
-        return startWithMockModules(name, { "@web/session": { session: {} } });
+        const assetsModule = startWithMockModules(name, { "@web/session": { session: {} } });
+        const { assets } = assetsModule;
+        const { getBundle } = assets;
+        assets.getBundle = function mockGetBundle(bundleName) {
+            const { globalCache } = assets;
+            const isCached = globalCache.has(bundleName);
+            const promise = getBundle(bundleName);
+            if (!isCached) {
+                let isPending = true;
+                const onSettled = () => (isPending = false);
+                promise.then(onSettled, onSettled);
+                // Remove a bundle pending at the end of its test: Hoot never settles its fetch.
+                after(() => {
+                    if (isPending && globalCache.get(bundleName) === promise) {
+                        globalCache.delete(bundleName);
+                    }
+                });
+            }
+            return promise;
+        };
+        return assetsModule;
     };
 }
