@@ -15,12 +15,18 @@ class ChatbotScriptStep(models.Model):
              "assign the created lead/opportunity to the defined team")
 
     def _chatbot_crm_prepare_lead_values(self, discuss_channel, description):
+        if self.crm_team_id:
+            use_leads = self.crm_team_id.use_leads
+        else:
+            # sudo: res.groups - reading the global Leads setting is allowed for chatbot visitors.
+            employee_group = self.env.ref('base.group_user').sudo()
+            use_leads = self.env.ref('crm.group_use_lead') in employee_group.implied_ids
         return {
             'description': description + discuss_channel._get_channel_history(),
             'name': _("%s's New Lead", self.chatbot_script_id.title),
             'source_id': self.chatbot_script_id.source_id.id,
             'team_id': self.crm_team_id.id,
-            'type': 'lead' if self.crm_team_id.use_leads else 'opportunity',
+            'type': 'lead' if use_leads else 'opportunity',
             'user_id': False,
         }
 
