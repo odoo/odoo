@@ -983,3 +983,15 @@ class TestHrAttendanceOvertime(TransactionCase):
         expected_values = [8, 8, 8, 8, 0]
         for attendance, expected in zip(attendances, expected_values):
             self.assertEqual(attendance.expected_hours, expected, f"Day {attendance.check_in.date()} should have {expected} expected hours")
+
+    def test_overtime_attendance_over_dst_change(self):
+        """ An attendance over the change of daylight saving time (Sunday
+        2025-10-26 in Brussels) gives one overtime for its day. """
+        self.env['hr.attendance'].create({
+            'employee_id': self.europe_employee.id,
+            'check_in': datetime(2025, 10, 25, 23, 0),  # 01:00 CEST on Sunday
+            'check_out': datetime(2025, 10, 26, 6, 0),  # 07:00 CET
+        })
+        overtime = self.env['hr.attendance.overtime'].search([('employee_id', '=', self.europe_employee.id)])
+        self.assertEqual(overtime.mapped('date'), [date(2025, 10, 26)])
+        self.assertAlmostEqual(overtime.duration, 7)
