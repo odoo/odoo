@@ -28,11 +28,13 @@ class StockMove(models.Model):
         return [('picking_id.project_id', '!=', False)]
 
     def _prepare_analytic_lines(self):
-        res = super()._prepare_analytic_lines()
-        if res and self.picking_id:
+        analytic_lines_per_move = super()._prepare_analytic_lines()
+        for move in analytic_lines_per_move:
+            if not move.picking_id:
+                continue
             # Check that all mandatory plans are set on the project linked to the picking of the stock move before generating the AALs
-            project = self.picking_id.project_id
-            mandatory_plans = project._get_mandatory_plans(self.company_id, business_domain='stock_picking')
+            project = move.picking_id.project_id
+            mandatory_plans = project._get_mandatory_plans(move.company_id, business_domain='stock_picking')
             missing_plan_names = [plan['name'] for plan in mandatory_plans if not project[plan['column_name']]]
             if missing_plan_names:
                 raise ValidationError(_(
@@ -40,4 +42,4 @@ class StockMove(models.Model):
                     missing_plan_names=missing_plan_names,
                     project_name=project.name,
                 ))
-        return res
+        return analytic_lines_per_move

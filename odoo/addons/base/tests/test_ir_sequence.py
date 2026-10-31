@@ -168,6 +168,19 @@ class TestIrSequenceGenerate(BaseCase):
                 n = env['ir.sequence'].next_by_code('test_sequence_type_5')
                 self.assertEqual(n, str(i))
 
+    def test_ir_sequence_create_batch(self):
+        """ Try to create a sequence object. """
+        with environment() as env:
+            seq = env['ir.sequence'].create({
+                'code': 'test_sequence_type_5_batch',
+                'name': 'Test sequence',
+            })
+            self.assertTrue(seq)
+
+        with environment() as env:
+            ns = env['ir.sequence'].next_by_code('test_sequence_type_5_batch', count=9)
+            self.assertEqual(ns, [str(i) for i in range(1, 10)])
+
     def test_ir_sequence_create_no_gap(self):
         """ Try to create a sequence object. """
         with environment() as env:
@@ -182,6 +195,20 @@ class TestIrSequenceGenerate(BaseCase):
             for i in range(1, 10):
                 n = env['ir.sequence'].next_by_code('test_sequence_type_6')
                 self.assertEqual(n, str(i))
+
+    def test_ir_sequence_create_no_gap_batch(self):
+        """ Try to create a sequence object. """
+        with environment() as env:
+            seq = env['ir.sequence'].create({
+                'code': 'test_sequence_type_6_batch',
+                'name': 'Test sequence',
+                'implementation': 'no_gap',
+            })
+            self.assertTrue(seq)
+
+        with environment() as env:
+            ns = env['ir.sequence'].next_by_code('test_sequence_type_6_batch', count=9)
+            self.assertEqual(ns, [str(i) for i in range(1, 10)])
 
     def test_ir_sequence_prefix(self):
         """ test whether the raise a user error for an invalid sequence """

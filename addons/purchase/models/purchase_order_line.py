@@ -339,7 +339,7 @@ class PurchaseOrderLine(models.Model):
     def _compute_selected_seller_id(self):
         for line in self:
             if line.product_id:
-                line.selected_seller_id = line._get_seller_info().get('supplierinfo')
+                line.selected_seller_id = line._get_seller_info(force_supplier_info=True).get('supplierinfo')
             else:
                 line.selected_seller_id = False
 
@@ -919,10 +919,11 @@ class PurchaseOrderLine(models.Model):
         self.ensure_one()
         return {
             "order_id": self.order_id,
+            "force_supplier_info": True,
             "force_uom": True,
         }
 
-    def _get_seller_info(self):
+    def _get_seller_info(self, force_supplier_info=False):
         self.ensure_one()
         return self.product_id._select_seller(
             partner_id=self.partner_id,
