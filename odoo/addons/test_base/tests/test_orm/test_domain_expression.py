@@ -2156,11 +2156,12 @@ class TestMany2one(TransactionCase):
         with self.assertQueries(['''
             SELECT "test_orm_partner"."id"
             FROM "test_orm_partner"
-            WHERE ("test_orm_partner"."business_id" IS NULL OR "test_orm_partner"."business_id" NOT IN (
-                SELECT "test_orm_business"."id"
+            WHERE NOT EXISTS (SELECT 1 FROM (SELECT "test_orm_business"."id"
                 FROM "test_orm_business"
                 WHERE "test_orm_business"."name" LIKE %s
-            ))
+                ) AS "test_orm_partner__business_id__exists"
+                WHERE "test_orm_partner__business_id__exists"."id" = "test_orm_partner"."business_id"
+            )
             ORDER BY ...
         ''']):
             self.Partner.search(['!', ('business_id.name', 'like', self.business.name)])
@@ -2378,11 +2379,12 @@ class TestMany2one(TransactionCase):
         with self.assertQueries(['''
             SELECT "test_orm_partner"."id"
             FROM "test_orm_partner"
-            WHERE ("test_orm_partner"."business_id" IS NULL OR "test_orm_partner"."business_id" NOT IN (
-                SELECT "test_orm_business"."id"
+            WHERE NOT EXISTS (SELECT 1 FROM (SELECT "test_orm_business"."id"
                 FROM "test_orm_business"
                 WHERE "test_orm_business"."name" LIKE %s
-            ))
+                ) AS "test_orm_partner__business_id__exists"
+                WHERE "test_orm_partner__business_id__exists"."id" = "test_orm_partner"."business_id"
+            )
             ORDER BY ...
         ''']):
             self.Partner.search([('business_id', 'not like', "blablabla")])
