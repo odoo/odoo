@@ -2,8 +2,8 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { statusBarField, StatusBarField } from "@web/views/fields/statusbar/statusbar_field";
 
-export class StockPickingLockedStatusBarField extends StatusBarField {
-    static template = "stock.PickingLockedStatusBarField";
+export class LockedStatusBarField extends StatusBarField {
+    static template = "stock.LockedStatusBarField";
 
     get isLocked() {
         return this.props.record.data.is_locked;
@@ -14,12 +14,12 @@ export class StockPickingLockedStatusBarField extends StatusBarField {
     }
 }
 
-export const stockPickingLockedStatusBarField = {
+export const lockedStatusBarField = {
     ...statusBarField,
-    component: StockPickingLockedStatusBarField,
-    displayName: _t("Status bar with lock/unlock indicator for Pickings"),
+    component: LockedStatusBarField,
+    displayName: _t("Status bar with lock/unlock indicator"),
     supportedTypes: ["selection"],
     additionalClasses: ["o_field_statusbar"],
 };
 
-registry.category("fields").add("stock_picking_locked_statusbar", stockPickingLockedStatusBarField);
+registry.category("fields").add("locked_statusbar", lockedStatusBarField);
