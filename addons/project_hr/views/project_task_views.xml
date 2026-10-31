@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
     <record id="view_task_search_form_project_fsm_base_inherit" model="ir.ui.view">
         <field name="name">search.view.inherit.project.hr.skills</field>
         <field name="model">project.task</field>
@@ -10,4 +11,14 @@
             </field>
         </field>
     </record>
+
+    <record id="view_task_template_search_form_inherit" model="ir.ui.view">
+        <field name="name">project.task.template.search.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_template_search_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_skill_ids']" position="replace"/>
+        </field>
+    </record>
+
 </odoo>
