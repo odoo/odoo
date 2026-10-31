@@ -8,3 +8,4 @@ from . import test_flexible_resource_calendar
 from . import test_variable_resource_calendar
 from . import test_stress_check_collision
 from . import test_performance
+from . import test_resource_resource
