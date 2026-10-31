@@ -16,6 +16,7 @@ const formatterRegistry = registry.category("formatters");
 const viewRegistry = registry.category("views");
 const fieldRegistry = registry.category("fields");
 
+<<<<<<< 76d262c6021fa239a5acc6b7d73934961b09cfff
 const validFieldTypes = {
     binary: { availableOffline: false },
     boolean: { availableOffline: true },
@@ -37,6 +38,51 @@ const validFieldTypes = {
     text: { availableOffline: true },
     html: { availableOffline: true },
 };
+||||||| 18a960f0b4830e5b978ae5bc9de0577422db3fcf
+const validFieldTypes = [
+    "binary",
+    "boolean",
+    "json",
+    "integer",
+    "float",
+    "monetary",
+    "properties",
+    "properties_definition",
+    "reference",
+    "many2one_reference",
+    "many2one",
+    "one2many",
+    "many2many",
+    "selection",
+    "date",
+    "datetime",
+    "char",
+    "text",
+    "html",
+];
+=======
+export const validFieldTypes = [
+    "binary",
+    "boolean",
+    "json",
+    "integer",
+    "float",
+    "monetary",
+    "properties",
+    "properties_definition",
+    "reference",
+    "many2one_reference",
+    "many2one",
+    "one2many",
+    "many2many",
+    "selection",
+    "date",
+    "datetime",
+    "char",
+    "text",
+    "html",
+];
+>>>>>>> 25cf974dbf61c52865656bda613b93f9f8213ae2
 
 const supportedInfoValidation = {
     type: Array,
