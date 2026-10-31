@@ -649,105 +649,176 @@ class TestAccountAccount(TestAccountMergeCommon):
         account.action_validate_opening_move()
         self.assertTrue(company.account_opening_move_id.posted_before)
 
-    def test_create_opening_balance_bank_statements(self):
-        """ Posting the company's opening move should create an 'Opening Balance'
-        bank statement for each liquidity journal whose default account has a
-        non zero opening balance, with the unaffected earnings account as counterpart.
+    def _assert_opening_balance_statement(self, opening_move, journal, amount, bank_balance=None):
+        """ Assert the bank opening balance of `journal` is booked once, by an 'Opening Balance' statement line
+            matched with the opening move through the transfer account.
         """
-        def get_lines(amounts_payment_ref, journal_id):
-            return [{
-                'payment_ref': name[0] if name else 'Opening balance',
-                'amount': amount,
-                'journal_id': journal_id,
-            } for (amount, *name) in amounts_payment_ref]
+        transfer_account = opening_move.company_id.transfer_account_id
+        statement = self.env['account.bank.statement'].search([('journal_id', '=', journal.id), ('name', '=', 'Opening Balance')])
+        self.assertRecordValues(statement, [{'date': opening_move.date, 'balance_start': 0.0, 'balance_end_real': amount}])
+        self.assertRecordValues(statement.line_ids, [{'payment_ref': 'Opening balance', 'amount': amount, 'is_reconciled': True}])
+        self.assertRecordValues(statement.line_ids.move_id.line_ids.sorted('balance', reverse=True), [
+            {'account_id': journal.default_account_id.id, 'balance': amount},
+            {'account_id': transfer_account.id, 'balance': -amount},
+        ])
+        opening_line = opening_move.line_ids.filtered(lambda line: line.account_id == transfer_account)
+        self.assertRecordValues(opening_line, [{'balance': amount, 'reconciled': True}])
+        self.assertEqual(opening_line.full_reconcile_id, statement.line_ids.line_ids.full_reconcile_id)
+        posted_bank_balance = journal._get_journal_bank_account_balance([('parent_state', '=', 'posted')])[0]
+        self.assertEqual(posted_bank_balance, amount if bank_balance is None else bank_balance)
 
+    def test_create_opening_balance_bank_statements(self):
+        """ Posting the company's opening move should book the bank opening balances with an 'Opening Balance'
+        statement line per liquidity journal, matched with the opening move through the transfer account, so that
+        the bank opening balance is only booked once.
+        """
         company = self.env.company
-        statement = self.env['account.bank.statement']
-
         bank_journal = self.company_data['default_journal_bank']
         bank_account = bank_journal.default_account_id
+        transfer_account = company.transfer_account_id
         unaffected_earnings_account = company.get_unaffected_earnings_account()
 
         bank_account.opening_debit = 1000.0
-        self.cr.flush()
+        self.cr.precommit.run()
 
         opening_move = company.account_opening_move_id
         self.assertRecordValues(opening_move.line_ids.sorted(), [
             {'account_id': bank_account.id, 'balance': 1000.0},
             {'account_id': unaffected_earnings_account.id, 'balance': -1000.0},
         ])
+        self.assertFalse(self.env['account.bank.statement'].search([('journal_id', '=', bank_journal.id)]))
 
-        # No statement should exist before the opening move is posted.
-        self.assertFalse(statement.search([('journal_id', '=', bank_journal.id)]))
-
-        # Posting the opening move creates the opening balance statement.
         opening_move.action_post()
+        self.assertRecordValues(opening_move.line_ids.sorted(), [
+            {'account_id': transfer_account.id, 'balance': 1000.0},
+            {'account_id': unaffected_earnings_account.id, 'balance': -1000.0},
+        ])
+        self._assert_opening_balance_statement(opening_move, bank_journal, 1000.0)
+        (bank_account + transfer_account).invalidate_recordset(['opening_debit', 'opening_balance'])
+        self.assertRecordValues(bank_account + transfer_account, [
+            {'opening_debit': 1000.0, 'opening_balance': 1000.0},
+            {'opening_debit': 0.0, 'opening_balance': 0.0},
+        ])
 
-        statement = statement.search([('journal_id', '=', bank_journal.id)])
-        self.assertRecordValues(statement, [{
-            'name': 'Opening Balance',
-            'date': opening_move.date,
-            'journal_id': bank_journal.id,
-        }])
-        self.assertRecordValues(statement.line_ids, get_lines([(1000.0,)], bank_journal.id))
-
-        # The statement line's counterpart is the unaffected earnings account.
-        counterpart_line = statement.line_ids.move_id.line_ids.filtered(lambda line: line.account_id != bank_account)
-        self.assertEqual(counterpart_line.account_id, unaffected_earnings_account)
-
-        # The unaffected earnings account is not a liquidity journal's default account,
-        # so no statement is created for it.
-        self.assertFalse(statement.search([('journal_id.default_account_id', '=', unaffected_earnings_account.id)]))
-
-        # Resetting the opening move to draft and posting it again shouldn't create a duplicate opening statement
+        # Resetting the opening move puts the opening balance back on the bank account and deletes the statement
+        statement = self.env['account.bank.statement'].search([('journal_id', '=', bank_journal.id)])
+        st_line = statement.line_ids
         opening_move.button_draft()
-        bank_account.opening_debit = 2000.0  # update to make sure everything is balanced at the end
-        self.cr.flush()
-        opening_move.action_post()
-
-        # Previous statement should have been deleted
         self.assertFalse(statement.exists())
+        self.assertFalse(st_line.exists())
+        self.assertRecordValues(opening_move.line_ids.sorted(), [
+            {'account_id': bank_account.id, 'balance': 1000.0},
+            {'account_id': unaffected_earnings_account.id, 'balance': -1000.0},
+        ])
 
-        statement = statement.search([('journal_id', '=', bank_journal.id)])
-        self.assertRecordValues(statement, [{
-            'name': 'Opening Balance',
-            'date': opening_move.date,
+        # A transaction labelled 'Opening balance' by the user is never touched
+        user_st_line = self.env['account.bank.statement.line'].create({
+            'payment_ref': 'Opening balance',
+            'amount': 450.0,
             'journal_id': bank_journal.id,
-        }])
-        self.assertRecordValues(statement.line_ids, get_lines([(2000.0,)], bank_journal.id))
-
-        # Even when another statement was recorded on the journal, only the opening should be deleted and re-created
-        self.env['account.bank.statement'].create({
-            'name': 'statement_1',
-            'balance_start': 0.0,
-            'balance_end_real': 600.0,
-            'line_ids': [
-                Command.create({'payment_ref': 'line_1', 'amount': 600.0, 'journal_id': bank_journal.id}),
-            ],
         })
 
-        opening_move.button_draft()
-        bank_account.opening_debit = 5000.0
-        self.cr.flush()
+        bank_account.opening_debit = 2000.0
+        self.cr.precommit.run()
         opening_move.action_post()
-        statement = statement.search([('journal_id', '=', bank_journal.id)])
-        self.assertRecordValues(statement.line_ids.sorted('amount'), get_lines([(600.0, 'line_1'), (5000.0,)], bank_journal.id))
+        self._assert_opening_balance_statement(opening_move, bank_journal, 2000.0, bank_balance=2450.0)
 
-        # But if there's another statement line with the same payment_ref, none should be deleted and a new one should be created
-        self.env['account.bank.statement'].create({
-            'name': 'statement_2',
-            'balance_start': 0.0,
-            'balance_end_real': 450.0,
+        # Without any bank opening balance, no opening statement is created
+        opening_move.button_draft()
+        bank_account.opening_debit = 0.0
+        self.company_data['default_account_revenue'].opening_debit = 100.0
+        self.cr.precommit.run()
+        opening_move.action_post()
+        self.assertFalse(self.env['account.bank.statement'].search([('journal_id', '=', bank_journal.id)]))
+        self.assertEqual(
+            bank_journal._get_journal_bank_account_balance([('parent_state', '=', 'posted')])[0],
+            450.0,
+        )
+        self.assertRecordValues(
+            user_st_line,
+            [{
+                'payment_ref': 'Opening balance',
+                'amount': 450.0,
+                'state': 'posted',
+            }],
+        )
+
+        # With the restrictive audit trail setting, the statement line move is cancelled instead of deleted
+        opening_move.button_draft()
+        bank_account.opening_debit = 3000.0
+        self.cr.precommit.run()
+        opening_move.action_post()
+        st_move = self.env['account.bank.statement'].search([('journal_id', '=', bank_journal.id)]).line_ids.move_id
+        company.restrictive_audit_trail = True
+        opening_move.button_draft()
+        self.assertRecordValues(st_move, [{'state': 'cancel'}])
+        opening_move.action_post()
+        self._assert_opening_balance_statement(opening_move, bank_journal, 3000.0, bank_balance=3450.0)
+
+    def test_opening_balance_bank_statements_post_paths(self):
+        """ The opening balance statements are created whatever the way the opening move is posted. """
+        bank_journal = self.company_data['default_journal_bank']
+        bank_journal.default_account_id.opening_debit = 1000.0
+        self.cr.precommit.run()
+        opening_move = self.env.company.account_opening_move_id
+
+        wizard = self.env['validate.account.move'].with_context(active_model='account.move', active_ids=opening_move.ids).create({})
+        wizard.validate_move()
+        self._assert_opening_balance_statement(opening_move, bank_journal, 1000.0)
+
+        opening_move.button_draft()
+        other_move = self.env['account.move'].create({
             'line_ids': [
-                Command.create({'payment_ref': 'Opening balance', 'amount': 450.0, 'journal_id': bank_journal.id}),
+                Command.create({'account_id': self.company_data['default_account_revenue'].id, 'balance': -100.0}),
+                Command.create({'account_id': self.company_data['default_account_expense'].id, 'balance': 100.0}),
             ],
         })
-        opening_move.button_draft()
-        bank_account.opening_debit = 999.0
-        self.cr.flush()
+        (opening_move + other_move).action_post()
+        self._assert_opening_balance_statement(opening_move, bank_journal, 1000.0)
+
+    def test_opening_balance_bank_statements_foreign_currency(self):
+        """ The opening balance of a foreign currency bank journal is matched without any exchange difference. """
+        bank_journal = self.env['account.journal'].create({
+            'name': 'Foreign Bank',
+            'code': 'FBNK',
+            'type': 'bank',
+            'currency_id': self.other_currency.id,
+        })
+        bank_account = bank_journal.default_account_id
+        bank_account.opening_debit = 1000.0
+        self.cr.precommit.run()
+        opening_move = self.env.company.account_opening_move_id
         opening_move.action_post()
-        statement = statement.search([('journal_id', '=', bank_journal.id)])
-        self.assertRecordValues(statement.line_ids.sorted('amount'), get_lines([(450.0,), (600.0, 'line_1'), (999.0,), (5000.0,)], bank_journal.id))
+
+        transfer_account = self.env.company.transfer_account_id
+        opening_line = opening_move.line_ids.filtered(lambda line: line.account_id == transfer_account)
+        st_line = self.env['account.bank.statement'].search([('journal_id', '=', bank_journal.id)]).line_ids
+        self.assertRecordValues(st_line, [{'amount': 2000.0, 'is_reconciled': True}])
+        self.assertRecordValues(st_line.line_ids.sorted('balance', reverse=True), [
+            {'account_id': bank_account.id, 'currency_id': self.other_currency.id, 'amount_currency': 2000.0, 'balance': 1000.0},
+            {'account_id': transfer_account.id, 'currency_id': self.other_currency.id, 'amount_currency': -2000.0, 'balance': -1000.0},
+        ])
+        self.assertRecordValues(opening_line, [{'currency_id': self.other_currency.id, 'amount_currency': 2000.0, 'balance': 1000.0, 'reconciled': True}])
+        self.assertFalse(opening_line.matched_credit_ids.exchange_move_id)
+        self.assertEqual(bank_journal._get_journal_bank_account_balance([('parent_state', '=', 'posted')])[0], 2000.0)
+
+    def test_opening_balance_bank_statements_errors(self):
+        company = self.env.company
+        bank_journal = self.company_data['default_journal_bank']
+        bank_journal.default_account_id.opening_debit = 1000.0
+        self.cr.precommit.run()
+        opening_move = company.account_opening_move_id
+        transfer_account = company.transfer_account_id
+
+        for invalid_transfer_account in [self.env['account.account'], bank_journal.suspense_account_id]:
+            company.transfer_account_id = invalid_transfer_account
+            with self.assertRaisesRegex(UserError, "Internal Transfer account"):
+                opening_move.action_post()
+
+        company.transfer_account_id = transfer_account
+        opening_move.action_post()
+        with self.assertRaisesRegex(UserError, "Reset it to draft instead"):
+            opening_move._reverse_moves()
 
     def test_unmerge(self):
         company_1 = self.company_data['company']

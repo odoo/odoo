@@ -102,6 +102,15 @@ class AccountChartTemplate(models.AbstractModel):
             except (UserError, ValidationError):
                 _logger.exception('Error while posting demo data')
 
+        # The bank opening balance is booked by the 'Opening Balance' statement, before the demo statement starting from it
+        company = self.env.company
+        try:
+            company.account_opening_date = fields.Date.start_of(fields.Date.today() + relativedelta(months=-2), 'month')
+            company._update_opening_move({self.ref('bank').default_account_id: (4253.0, None)})
+            company.account_opening_move_id.action_post()
+        except (UserError, ValidationError):
+            _logger.exception('Error while posting demo data')
+
     @template(model='res.partner.bank', demo=True)
     def _get_demo_data_bank(self, template_code):
         company = self.env.company
@@ -317,7 +326,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'journal_id': 'general',
                 'line_ids': [
                     Command.create({'debit': 0.0, 'credit': 2500.0, 'account_id': default_receivable.id}),
-                    Command.create({'debit': 2500.0, 'credit': 0.0, 'account_id': self.ref('bank').default_account_id.id}),
+                    Command.create({'debit': 2500.0, 'credit': 0.0, 'account_id': self.ref('account_journal_payment_debit_account_id').id}),
                 ],
             },
             self.company_xmlid('demo_move_auto_reconcile_7'): {

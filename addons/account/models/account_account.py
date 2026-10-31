@@ -657,6 +657,15 @@ class AccountAccount(models.Model):
             opening_move_id=opening_move.id,
         ))
         result = {r['account_id']: r for r in self.env.cr.dictfetchall()}
+        if opening_move.state == 'posted':
+            # The bank opening balances are moved to the transfer account when posting, show them on the bank accounts
+            # to avoid misleading the users
+            for line, st_line in opening_move._get_opening_statement_links().items():
+                for account, sign in ((line.account_id, -1), (st_line.journal_id.default_account_id, 1)):
+                    res = result.setdefault(account.id, {'debit': 0, 'credit': 0, 'balance': 0})
+                    res['debit'] += sign * line.debit
+                    res['credit'] += sign * line.credit
+                    res['balance'] += sign * line.balance
         for record in self:
             res = result.get(record.id) or {'debit': 0, 'credit': 0, 'balance': 0}
             record.opening_debit = record.opening_debit or res['debit']
