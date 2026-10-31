@@ -118,3 +118,10 @@ class AccountMoveLine(models.Model):
     def _compute_name(self):
         amls = self.filtered(lambda l: not l.move_id.pos_session_ids)
         super(AccountMoveLine, amls)._compute_name()
+
+    def _compute_is_refund(self):
+        super()._compute_is_refund()
+        if self.env.context.get('linked_to_pos'):
+            out_lines = self.filtered(lambda line: line.move_id.move_type == 'out_invoice')
+            for line in out_lines:
+                line.is_refund = line.price_unit * line.quantity < 0
