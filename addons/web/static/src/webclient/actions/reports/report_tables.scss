@@ -103,19 +103,36 @@ div#total {
     }
 }
 
+// A 1px GIF of $color: wkhtmltopdf paints a 1px image as a plain rectangle
+@function o-table-line($color) {
+    $hex: ie-hex-str($color);
+    @return url('data:image/gif,GIF89a%01%00%01%00%80%00%00%#{str-slice($hex, 4, 5)}%#{str-slice($hex, 6, 7)}%#{str-slice($hex, 8, 9)}%00%00%00,%00%00%00%00%01%00%01%00%00%02%02D%01%00;');
+}
+
 .o_table_boxed, .o_table_boxed-rounded {
     table:not(.o_ignore_layout_styling) {
-        position: relative;
+        border-collapse: separate;
+        border-spacing: 0;
 
-        &::before {
-            // Avoid inner borders overlapping the table borders
-            content: '';
-            // Position absolute will place the pseudo-element
-            // above the table. We need to prevent events on this pseudo-element
-            // to avoid messing up eventual user interaction with the table itself (report editor)
-            @include o-position-absolute(0, 0, 0, 0);
-            pointer-events: none;
-            border: $border-width solid $gray-700;
+        th, td {
+            // Right and bottom inner lines, hidden under the frame on the outer cells
+            background-image: o-table-line($gray-400), o-table-line($gray-400);
+            background-origin: border-box;
+            background-position: right top, left bottom;
+            background-size: $border-width 100%, 100% $border-width;
+            background-repeat: no-repeat;
+        }
+
+        th:first-child, td:first-child {
+            border-left: $border-width solid $gray-700;
+        }
+
+        th:last-child, td:last-child {
+            border-right: $border-width solid $gray-700;
+        }
+
+        &:not(.o_total_table) tbody:first-child tr:first-child td {
+            border-top: $border-width solid $gray-700;
         }
 
         thead {
@@ -126,17 +143,14 @@ div#total {
             }
 
             th {
-                border-bottom: $border-width solid $border-color;
+                border-top: $border-width solid $gray-700;
+                background-image: none, o-table-line($border-color);
             }
         }
 
         tbody {
-            tr:not(:last-child) td {
-                border-bottom: $border-width solid $gray-400;
-            }
-
-            td:not(:last-child) {
-                border-right: $border-width solid $gray-400;
+            &:last-child tr:last-child td {
+                border-bottom: $border-width solid $gray-700;
             }
 
             &.o_line_section td,
@@ -158,16 +172,12 @@ div#total {
 
     .o_total_table:not(.o_ignore_layout_styling) {
         td {
-            border-right: none;
-        }
-
-        &::before {
-            border-top: none;
+            background-image: none, o-table-line($gray-400);
         }
     }
 
     .mt-5 .o_total_table:not(.o_ignore_layout_styling) {
-        &::before {
+        tbody:first-child tr:first-child td {
             border-top: $border-width solid $border-color;
         }
     }
@@ -175,39 +185,27 @@ div#total {
 
 .o_table_boxed-rounded {
     table:not(.o_ignore_layout_styling) {
-        &::before {
-            border-radius: $border-radius-lg;
+        th:first-child, &:not(.o_total_table) tbody:first-child tr:first-child td:first-child {
+            border-top-left-radius: $border-radius-lg;
         }
 
-        &.o_has_total_table::before {
-            border-radius: $border-radius-lg $border-radius-lg 0 $border-radius-lg ;
+        th:last-child, &:not(.o_total_table) tbody:first-child tr:first-child td:last-child {
+            border-top-right-radius: $border-radius-lg;
         }
 
-        th:first-child {
-            border-radius: $border-radius-lg 0 0 0;
+        tbody:last-child tr:last-child td:first-child {
+            border-bottom-left-radius: $border-radius-lg;
         }
 
-        th:last-child {
-            border-radius: 0 $border-radius-lg 0 0;
+        &:not(.o_has_total_table) tbody:last-child tr:last-child td:last-child {
+            border-bottom-right-radius: $border-radius-lg;
         }
 
-        th {
-            border-color: $gray-300 !important;
-        }
-    }
+        thead th {
+            background-image: o-table-line($gray-300), o-table-line($gray-300);
 
-    .o_total_table:not(.o_ignore_layout_styling) {
-        &::before {
-            border-radius: 0 0 $border-radius-lg $border-radius-lg;
-        }
-
-        tr:last-child {
-            td:first-child {
-                border-radius: 0 0 0 $border-radius-lg;
-            }
-
-            td:last-child {
-                border-radius: 0 0 $border-radius-lg 0;
+            &:not(:last-child) {
+                border-right: none;
             }
         }
     }
@@ -261,7 +259,8 @@ table[name="table_optional_products"] {
             }
 
             td {
-                border-bottom: $border-width solid $border-color;
+                border-top: $border-width solid $gray-700;
+                background-image: none, o-table-line($border-color);
             }
         }
     }
@@ -287,7 +286,11 @@ table[name="table_optional_products"] {
         }
 
         td {
-            border-color: $gray-300 !important;
+            background-image: o-table-line($gray-300), o-table-line($gray-300);
+
+            &:not(:last-child) {
+                border-right: none;
+            }
         }
     }
 }
