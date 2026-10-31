@@ -497,6 +497,21 @@ class TestPointOfSaleFlow(CommonPosTest):
             "The shipping address should be 'Delivery Address 2' as selected in the POS order."
         )
 
+    def test_order_without_company(self):
+        """ An order sent with an empty company gets the company of its session. """
+        self.pos_config_eur.open_ui()
+        current_session = self.pos_config_eur.current_session_id
+        pos_order = self.env['pos.order'].create({
+            'company_id': False,
+            'session_id': current_session.id,
+            'lines': [],
+            'amount_tax': 0.0,
+            'amount_total': 0.0,
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
+        })
+        self.assertEqual(pos_order.company_id, self.pos_config_eur.company_id)
+
     def test_order_with_deleted_tax(self):
         order, _ = self.create_backend_pos_order({
             'line_data': [
