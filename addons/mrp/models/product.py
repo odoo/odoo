@@ -455,3 +455,7 @@ class ProductProduct(models.Model):
             productions.uom_id = to_uom_id
 
         return super()._update_uom(to_uom_id)
+
+    def get_first_bom(self):
+        """ Returns the first BoM found for the product. """
+        return self.variant_bom_ids[:1] or self.product_tmpl_id.bom_ids.filtered(lambda b: not b.product_id)[:1]
