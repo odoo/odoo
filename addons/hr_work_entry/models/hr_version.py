@@ -572,7 +572,7 @@ class HrVersion(models.Model):
                     vals['duration'] = cached_periods[date_start, date_stop]
                 else:
                     dt = date_stop - date_start
-                    duration = round(dt.total_seconds()) / 3600  # Number of hours
+                    duration = min(24, round(dt.total_seconds()) / 3600)  # Cap at 24h to avoid error due to DST
                     cached_periods[date_start, date_stop] = duration
                     vals['duration'] = duration
                 continue
