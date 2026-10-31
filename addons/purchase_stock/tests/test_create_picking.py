@@ -853,17 +853,14 @@ class TestCreatePicking(ProductVariantsCommon):
         """
         Test that the pol description is correctly propagated to the move description
         """
-        product_matrix_installed = 'purchase_product_matrix' in self.env['ir.module.module']._installed()
         # product with all description items: vendor product name, vendor product code, receipt description, purchase description, attribute variant value, attribute no variant value
         attribute_vals = [{
             'attribute_id': self.color_attribute.id,
             'value_ids': [Command.set(self.color_attribute.value_ids.ids)],
+        }, {
+            'attribute_id': self.no_variant_attribute.id,
+            'value_ids': [Command.set(self.no_variant_attribute.value_ids.ids)],
         }]
-        if product_matrix_installed:
-            attribute_vals.append({
-                'attribute_id': self.no_variant_attribute.id,
-                'value_ids': [Command.set(self.no_variant_attribute.value_ids.ids)],
-            })
         product_with_description = self.env['product.template'].create({
             'name': 'Product with description',
             'description_pickingin': 'Receive with care',
@@ -883,15 +880,15 @@ class TestCreatePicking(ProductVariantsCommon):
             'partner_id': self.partner_id.id,
             'order_line': [Command.create({
                     'product_id': product_with_description.product_variant_ids.filtered(lambda p: p.product_template_attribute_value_ids.name == 'red').id,
-                    'product_no_variant_attribute_value_ids': product_matrix_installed and [Command.set(product_with_description.attribute_line_ids[1].product_template_value_ids[0].ids)],
+                    'product_no_variant_attribute_value_ids': [Command.set(product_with_description.attribute_line_ids[1].product_template_value_ids[0].ids)],
                     'product_qty': 1,
                 }),
             ]
         })
-        self.assertEqual(po.order_line.name, 'Purchase description' + ('\nNo variant: extra' if product_matrix_installed else ''))
+        self.assertEqual(po.order_line.name, 'Purchase description\nNo variant: extra')
         po.order_line.name += '\nRandom purchase notes'
         po.button_confirm()
-        self.assertEqual(po.picking_ids.move_ids.description_picking, ('No variant: extra\n' if product_matrix_installed else '') + '[123] ABC\nReceive with care')
+        self.assertEqual(po.picking_ids.move_ids.description_picking, 'No variant: extra\n[123] ABC\nReceive with care')
 
     def test_receipt_return_type_change_qty_received(self):
         """

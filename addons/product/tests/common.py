@@ -77,6 +77,41 @@ class ProductCommon(UomCommon):
             **create_vals,
         })
 
+    @classmethod
+    def _create_matrix_template(cls):
+        """Create a template with 4 attributes (always, always, dynamic, no_variant) of 2 values
+        each, for the matrix."""
+        product_attributes = cls.env['product.attribute'].create([
+            {'name': "PA1", 'create_variant': 'always', 'sequence': 1},
+            {'name': "PA2", 'create_variant': 'always', 'sequence': 2},
+            {'name': "PA3", 'create_variant': 'dynamic', 'sequence': 3},
+            {'name': "PA4", 'create_variant': 'no_variant', 'sequence': 4},
+        ])
+        cls.env['product.attribute.value'].create([
+            {
+                'name': "PAV" + str(product_attribute.sequence) + str(i),
+                'attribute_id': product_attribute.id,
+            }
+            for i in range(1, 3)
+            for product_attribute in product_attributes
+        ])
+        matrix_template = cls.env['product.template'].create({
+            'name': "Matrix",
+            'type': 'consu',
+            'uom_id': cls.uom_unit.id,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': attribute.id,
+                    'value_ids': [Command.set(attribute.value_ids.ids)],
+                })
+                for attribute in product_attributes
+            ],
+        })
+        ptavs = matrix_template.attribute_line_ids.product_template_value_ids
+        ptavs.filtered(lambda ptav: ptav.name == "PAV12").price_extra = 50
+        ptavs.filtered(lambda ptav: ptav.name == "PAV31").price_extra = -25
+        return matrix_template
+
 
 class ProductVariantsCommon(ProductCommon):
 

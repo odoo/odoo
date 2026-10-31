@@ -10,8 +10,6 @@ class TestSaleProjectWarning(BaseCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.group_warning_sale = cls.quick_ref('sale.group_warning_sale')
-        cls.group_user._apply_group(cls.group_warning_sale)
 
         cls.partner_with_warning = cls.env['res.partner'].create({
             'name': 'Partner With Warning',
@@ -164,33 +162,3 @@ class TestSaleProjectWarning(BaseCommon):
                 self.child_partner_warning,
                 "The warning should be updated when the customer changes in the wizard.",
             )
-
-    def test_sale_warning_text_without_warning_group(self):
-        self.group_user.sudo()._remove_group(self.group_warning_sale)
-        project = self.env['project.project'].create({
-            'name': 'Project',
-            'allow_billable': True,
-            'partner_id': self.child_partner_with_warning.id,
-        })
-        task = self.env['project.task'].create({
-            'name': 'Task',
-            'project_id': project.id,
-            'partner_id': self.child_partner_with_warning.id,
-        })
-        wizard = self.env['project.template.create.wizard'].create({
-            'name': 'Project From Template',
-            'template_id': self.project_template.id,
-            'partner_id': self.child_partner_with_warning.id,
-        })
-        self.assertFalse(
-            project.sale_warning_text,
-            "No warning should be displayed on the project without the sale warning group.",
-        )
-        self.assertFalse(
-            task.sale_warning_text,
-            "No warning should be displayed on the task without the sale warning group.",
-        )
-        self.assertFalse(
-            wizard.sale_warning_text,
-            "No warning should be displayed in the wizard without the sale warning group.",
-        )
