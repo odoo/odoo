@@ -409,6 +409,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
     def _invoice_add_allowance_charges(self, invoice, move, seller, buyer):
         # TODO: This is for disounts (ChargeIndicator = false). What about "Charges ou frais" see TG-21
         invoice['AllowanceCharge'] = []
+        uses_foreign_vat = move._l10n_fr_pdp_uses_foreign_vat()
         for line in move.invoice_line_ids:
             if not all((line.discount, line.price_unit, line.quantity)):
                 continue
@@ -423,7 +424,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
                 invoice['AllowanceCharge'].append({
                     'Amount': {'_text': amount},
                     'TaxCategoryCode': {'_text': tax_code},
-                    'TaxPercent': {'_text': tax.amount if tax else 0},
+                    'TaxPercent': {'_text': tax.amount if tax and not uses_foreign_vat else 0},
                     'ChargeIndicator': 'false',
                 })
 
@@ -432,14 +433,15 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
         fixed_tax_lines = move.line_ids.filtered(
             lambda line: line.tax_line_id and line.tax_line_id.amount_type == 'fixed'
         )
+        tax_amount = 0 if move._l10n_fr_pdp_uses_foreign_vat() else (
+            abs(move.amount_tax_signed) - abs(sum(fixed_tax_lines.mapped('balance')))
+        )
         invoice['MonetaryTotal'] = {
             'TaxExclusiveAmount': {
                 '_text': move.amount_untaxed + abs(sum(fixed_tax_lines.mapped('amount_currency'))),
             },  # invoice currency, including fixed charges
             'TaxAmount': {
-                '_text': float_round(
-                    abs(move.amount_tax_signed) - abs(sum(fixed_tax_lines.mapped('balance'))), 2,
-                ),  # G1.14: only VAT, in company currency
+                '_text': float_round(tax_amount, 2),  # G1.14: only VAT, in company currency
                 'CurrencyCode': 'EUR',
             },
         }
@@ -548,13 +550,15 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
     def _invoice_add_tax_sub_total(self, invoice, move, seller, buyer):
         invoice['TaxSubTotal'] = []
         tax_summary = self._get_tax_summary(move.line_ids, buyer, seller)
+        uses_foreign_vat = move._l10n_fr_pdp_uses_foreign_vat()
         for tax, tax_sub_total in tax_summary['subtotals'].items():
+            tax_amount = 0 if uses_foreign_vat else float_round(tax_sub_total['tax_amount'], 2)
             invoice['TaxSubTotal'].append({
                 'TaxableAmount': {'_text': float_round(tax_sub_total['taxable_amount'], 2)},  # G1.14
-                'TaxAmount': {'_text': float_round(tax_sub_total['tax_amount'], 2)},  # G1.14
+                'TaxAmount': {'_text': tax_amount},  # G1.14
                 'TaxCategory': {
                     'Code': {'_text': tax_sub_total['tax_category_code']},
-                    'Percent': {'_text': tax.amount if tax and not isinstance(tax, str) else 0},
+                    'Percent': {'_text': tax.amount if tax and not isinstance(tax, str) and not uses_foreign_vat else 0},
                     **({
                         'TaxExemptionReason': {'_text': tax_sub_total['exemption_reason']},
                         'TaxExemptionReasonCode': {'_text': tax_sub_total['exemption_code']},
@@ -621,6 +625,8 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
     @api.model
     def _get_tax_codes_and_exemption(self, buyer, seller, tax, move):
         tax = tax or self.env['account.tax']
+        if move._l10n_fr_pdp_uses_foreign_vat():
+            return 'S', None, None
         if tax and tax.ubl_cii_tax_category_code:
             # Keep the values configured by account_edi_ubl_cii_tax_extension.
             res = self._get_tax_unece_codes(move, tax)
