@@ -409,6 +409,29 @@ test("Option containers should update reactively", async () => {
     expect(".o_hb_options_container_label").toHaveText("Test disabled clone");
 });
 
+test("Options can be disabled with a reason", async () => {
+    class TestPlugin extends Plugin {
+        static id = "test";
+        resources = {
+            option_disabled_reason_providers: (Option) =>
+                Option.title === "Disabled" ? "Not available" : undefined,
+        };
+    }
+    addBuilderPlugin(TestPlugin);
+    for (const title of ["Enabled", "Disabled"]) {
+        addBuilderOption({
+            title,
+            selector: ".test-options-target",
+            template: xml`<BuilderButton classAction="'${title.toLowerCase()}'">${title}</BuilderButton>`,
+        });
+    }
+    await setupHTMLBuilder(`<div class="test-options-target target1">Homepage</div>`);
+    await contains(":iframe .target1").click();
+    expect(".o_hb_option_disabled").toHaveText(/^Not available/);
+    expect("[inert] [data-class-action='disabled']").toHaveCount(1);
+    expect("[inert] [data-class-action='enabled']").toHaveCount(0);
+});
+
 test("Option containers dispatched to plugins are updated reactively", async () => {
     class TestPlugin extends Plugin {
         static id = "testPlugin";

@@ -60,6 +60,7 @@ import { omit } from "@web/core/utils/objects";
  * @property { BuilderOptionsPlugin['getPageContainers'] } getPageContainers
  * @property { BuilderOptionsPlugin['getRemoveDisabledReason'] } getRemoveDisabledReason
  * @property { BuilderOptionsPlugin['getCloneDisabledReason'] } getCloneDisabledReason
+ * @property { BuilderOptionsPlugin['getOptionDisabledReason'] } getOptionDisabledReason
  * @property { BuilderOptionsPlugin['isClonable'] } isClonable
  * @property { BuilderOptionsPlugin['setNextTarget'] } setNextTarget
  * @property { BuilderOptionsPlugin['getBuilderOptionContext'] } getBuilderOptionContext
@@ -116,6 +117,13 @@ import { omit } from "@web/core/utils/objects";
  *      el: HTMLElement
  * ) => string|Markup|LazyTranslatedString|undefined)[]} remove_disabled_reason_providers
  *
+ * @typedef {((
+ *      Option: typeof BaseOptionComponent,
+ *      el: HTMLElement
+ * ) => string|Markup|LazyTranslatedString|undefined)[]} option_disabled_reason_providers
+ *
+ * Returns why the given option can't be used on the given element, if so.
+ *
  * Appends new reasons to the `reasons` array given as a parameter.
  *
  * Example:
@@ -140,6 +148,7 @@ export class BuilderOptionsPlugin extends Plugin {
         "getPageContainers",
         "getRemoveDisabledReason",
         "getCloneDisabledReason",
+        "getOptionDisabledReason",
         "setNextTarget",
         "getBuilderOptionContext",
         "getBuilderOptions",
@@ -592,6 +601,15 @@ export class BuilderOptionsPlugin extends Plugin {
         return (
             this.getResource("clone_disabled_reason_providers")
                 .map((p) => p(el))
+                .filter(Boolean)
+                .join(" ") || undefined
+        );
+    }
+
+    getOptionDisabledReason(Option, el) {
+        return (
+            this.getResource("option_disabled_reason_providers")
+                .map((p) => p(Option, el))
                 .filter(Boolean)
                 .join(" ") || undefined
         );

@@ -42,7 +42,7 @@ export class MenuDataPlugin extends Plugin {
                                 };
                                 const result = await this.services.orm.call(
                                     "website.menu",
-                                    "save",
+                                    this.services.website.isDraftPreview ? "save_draft" : "save",
                                     [websiteId, { data: [data] }]
                                 );
                                 menuEl.parentElement.attributes["href"].nodeValue = url;

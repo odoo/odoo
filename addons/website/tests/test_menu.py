@@ -334,6 +334,77 @@ class TestMenu(common.TransactionCase):
         with self.assertRaises(UserError):
             self.main_menu.parent_id = self.another_menu.id
 
+    def test_draft_menu(self):
+        Menu = self.env['website.menu']
+        Website = self.env['website']
+        website = self.env.ref('base.default_website')
+        root = website.menu_id
+        shop, blog = Menu.create([
+            {'name': name, 'url': f'/{name.lower()}', 'parent_id': root.id, 'website_id': website.id}
+            for name in ('Shop', 'Blog')
+        ])
+
+        # as the menu editor: rename a menu, add one and delete one
+        Menu.save_draft(website.id, {
+            'data': [
+                {'id': shop.id, 'name': 'Draft Shop'},
+                {'id': 'menu_new', 'name': 'Draft New', 'url': '/contactus', 'new_window': False, 'sequence': 99, 'parent_id': root.id},
+            ],
+            'to_delete': [blog.id],
+        })
+        self.assertEqual(shop.name, 'Shop')
+        self.assertTrue(blog.exists())
+        self.assertNotIn('Draft New', root.child_id.mapped('name'))
+
+        draft_menus = website.with_context(draft_preview=True).menu_id.child_id
+        self.assertIn('Draft Shop', draft_menus.mapped('name'))
+        self.assertIn('Draft New', draft_menus.mapped('name'))
+        self.assertNotIn('Blog', draft_menus.mapped('name'))
+        tree_ids = [node['fields']['id'] for node in Menu.get_tree(website.id, draft=True)['children']]
+        self.assertIn(shop.id, tree_ids)
+        self.assertIn('menu_new', tree_ids)
+
+        # changes made to the saved menus meanwhile are kept
+        shop.url = '/live-shop'
+        live_menu = Menu.create({'name': 'Live', 'url': '/live', 'parent_id': root.id, 'website_id': website.id})
+
+        Website.publish_draft(website.id)
+        self.assertEqual(shop.name, 'Draft Shop')
+        self.assertEqual(shop.url, '/live-shop')
+        self.assertTrue(live_menu.exists())
+        self.assertFalse(blog.exists())
+        self.assertIn('Draft New', root.child_id.mapped('name'))
+        self.assertFalse(website.menu_draft)
+
+        Menu.save_draft(website.id, {'data': [{'id': shop.id, 'name': 'Discarded'}]})
+        Website.delete_draft(website.id)
+        self.assertFalse(website.menu_draft)
+        self.assertEqual(shop.name, 'Draft Shop')
+
+    def test_draft_page(self):
+        Website = self.env['website']
+        website = self.env.ref('base.default_website').with_context(website_id=self.ref('base.default_website'))
+
+        def new_draft_page(name):
+            page_id = website.new_page(name, page_values={'is_published': False, 'created_in_draft': True})['page_id']
+            website._add_draft_menu(page_id)
+            return self.env['website.page'].browse(page_id)
+
+        page = new_draft_page('Draft Page')
+        self.assertFalse(page.is_published)
+        self.assertNotIn(page, website.menu_id.child_id.page_id)
+        self.assertIn(page.url, website.with_context(draft_preview=True).menu_id.child_id.mapped('url'))
+
+        Website.publish_draft(website.id)
+        self.assertTrue(page.is_published)
+        self.assertFalse(page.created_in_draft)
+        self.env.invalidate_all()
+        self.assertIn(page, website.menu_id.child_id.page_id)
+
+        discarded = new_draft_page('Discarded Page')
+        Website.delete_draft(website.id)
+        self.assertFalse(discarded.exists())
+
     def test_menu_search(self):
         Menu = self.env['website.menu']
         page_url = '/page_specific'

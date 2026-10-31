@@ -6,6 +6,7 @@ import { MobilePreviewSystrayItem } from "./mobile_preview_systray";
 import { NewContentSystrayItem } from "./new_content_systray_item";
 import { PublishSystrayItem } from "./publish_website_systray_item";
 import { WebsiteSwitcherSystrayItem } from "./website_switcher_systray_item";
+import { DraftPreviewSystrayItem } from "./draft_preview_systray_item";
 
 export class WebsiteSystrayItem extends Component {
     static template = "website.WebsiteSystrayItem";
@@ -22,13 +23,15 @@ export class WebsiteSystrayItem extends Component {
         NewContentSystrayItem,
         EditWebsiteSystrayItem,
         PublishSystrayItem,
+        DraftPreviewSystrayItem,
     };
 
     setup() {
+        this.website = useService("website");
         onWillStart(async () => {
             this.iframeEl = await this.props.iframeLoaded;
+            this.canHaveDraftPreview = await this.website.getCanHaveDraftPreview();
         });
-        this.website = useService("website");
     }
 
     get hasMultiWebsites() {
