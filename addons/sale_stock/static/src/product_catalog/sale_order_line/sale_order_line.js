@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 
 export class ProductCatalogSaleOrderLine extends ProductCatalogOrderLine {
     deliveryProps = useProps({
-        deliveredQty: t.number(),
+        deliveredQty: t.number().optional(0),
     });
 
     get disableRemove() {

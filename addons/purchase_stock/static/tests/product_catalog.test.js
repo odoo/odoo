@@ -57,36 +57,24 @@ const purchaseOrderLineInfo = {
         min_qty: 1.0,
         suggested_qty: 0, // We will test adding without suggested qty works as expected
         price: 35.0,
-        productType: "consu",
-        uomDisplayName: "Units",
-        uomId: 1,
     },
     2: {
         quantity: 0,
         min_qty: 1.0,
         suggested_qty: 10, // We will test adding with suggested qty works as expected
         price: 35.0,
-        productType: "consu",
-        uomDisplayName: "Units",
-        uomId: 1,
     },
     3: {
         quantity: 0,
         min_qty: 5.0, // We will test adding with suggested qty < min_qty works as expected
         suggested_qty: 1,
         price: 35.0,
-        productType: "consu",
-        uomDisplayName: "Units",
-        uomId: 1,
     },
     4: {
         quantity: 0,
         min_qty: 0.0, // We will test adding with min_qty = 0 works as expected (should add 1 not 0)
         suggested_qty: 0,
         price: 35.0,
-        productType: "consu",
-        uomDisplayName: "Units",
-        uomId: 1,
     },
 };
 
