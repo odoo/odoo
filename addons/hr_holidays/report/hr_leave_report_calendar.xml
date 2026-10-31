@@ -75,11 +75,20 @@
                         </div>
                     </group>
                     <field name="description"/>
-                    <div class="d-flex justify-content-end gap-1">
-                        <button name="action_approve" string="Approve" type="object" close="1" invisible="state not in ['confirm', 'refuse'] or not is_manager"/>
-                        <button name="action_refuse" string="Refuse" type="object" close="1" invisible="state == 'refuse' or not is_manager"/>
+
+                    <div class="o_hr_holidays_gantt_button">
+                        <button name="action_approve" string="Approve" class="btn btn-sm btn-primary" type="object" close="1" invisible="state not in ['confirm', 'refuse'] or not is_manager"/>
+                        <button name="action_refuse" string="Refuse" class="btn btn-sm btn-secondary" type="object" close="1" invisible="state == 'refuse' or not is_manager"/>
                     </div>
                 </sheet>
+
+                <footer>
+                    <div class="o_hr_holidays_calendar_footer">
+                        <button name="action_approve" string="Approve" class="btn btn-primary" type="object" close="1" invisible="state not in ['confirm', 'refuse'] or not is_manager"/>
+                        <button name="action_refuse" string="Refuse" class="btn btn-secondary" type="object" close="1" invisible="state == 'refuse' or not is_manager"/>
+                        <button string="Discard" class="btn btn-secondary" special="cancel"/>
+                    </div>
+                </footer>
             </form>
         </field>
     </record>
