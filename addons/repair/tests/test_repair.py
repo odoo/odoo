@@ -714,6 +714,29 @@ class TestRepair(common.TransactionCase):
         repair_order.picking_type_id = picking_type_1
         self.assertEqual(repair_order.name, "PT1/00002")
 
+    def test_onchange_picking_type_and_delete_part(self):
+        """
+        Test changing the picking type while deleting a Parts line
+        in the same write operation should not raise any error.
+        """
+        self._create_simple_part_move(self.repair1.id, 5, self.product_product_6)
+        picking_type_1 = self.env['stock.picking.type'].create({
+            'name': 'new_picking_type_1',
+            'code': 'repair_operation',
+            'sequence_code': 'PT1/',
+            'default_location_src_id': self.stock_location_14.id,
+            'default_location_dest_id': self.stock_location_14.id,
+        })
+        move = self.repair1.move_ids[0]
+        self.repair1.write({
+            'move_ids': [Command.delete(move.id)],
+            'picking_type_id': picking_type_1.id,
+        })
+        self.assertRecordValues(self.repair1.move_ids, [{
+            'picking_type_id': picking_type_1.id,
+            'location_id': self.stock_location_14.id,
+        }])
+
     def test_repair_components_lots_show_in_invoice(self):
         """
         Test that the lots of the components of a repair order are shown in the invoice
