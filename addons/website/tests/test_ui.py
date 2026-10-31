@@ -956,3 +956,16 @@ class TestUi(HttpCaseWithWebsiteUser):
             'header_over_the_content_bg_blur_option',
             login='admin',
         )
+
+    def test_website_img_width_height(self):
+        self.env['res.lang'].create({
+            'name': 'Parseltongue',
+            'code': 'pa_GB',
+            'iso_code': 'pa_GB',
+            'url_code': 'pa_GB',
+        })
+        self.start_tour(
+            self.env['website'].get_client_action_url('/', True),
+            'website_img_width_height',
+            login='admin',
+        )
