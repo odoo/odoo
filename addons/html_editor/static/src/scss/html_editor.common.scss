@@ -252,6 +252,11 @@ img.padding-xl, .img.padding-xl, span.fa.padding-xl, iframe.padding-xl {
 img.ms-auto, img.mx-auto {
     display: block;
 }
+figure > img.float-start + figcaption {
+    // Keep the caption under its floating image so text wraps around both.
+    float: left;
+    clear: left;
+}
 
 .fa-6x {
     font-size: 6em;
