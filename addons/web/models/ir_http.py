@@ -164,7 +164,7 @@ class IrHttp(models.AbstractModel):
                     'allowed_companies': {
                         comp.id: {
                             'id': comp.id,
-                            'name': comp.name,
+                            'name': comp.display_name,
                             'sequence': comp.sequence,
                             'child_ids': (comp.child_ids & all_companies_in_hierarchy_sudo).ids,
                             'parent_id': comp.parent_id.id,
@@ -174,7 +174,7 @@ class IrHttp(models.AbstractModel):
                     'disallowed_ancestor_companies': {
                         comp.id: {
                             'id': comp.id,
-                            'name': comp.name,
+                            'name': comp.display_name,
                             'sequence': comp.sequence,
                             'child_ids': (comp.child_ids & all_companies_in_hierarchy_sudo).ids,
                             'parent_id': comp.parent_id.id,

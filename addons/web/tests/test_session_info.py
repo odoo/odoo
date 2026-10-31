@@ -84,6 +84,19 @@ class TestSessionInfo(common.HttpCase):
             expected_user_companies,
             "The session_info['user_companies'] does not have the expected structure")
 
+    def test_session_info_company_names(self):
+        """ Companies sharing a name are told apart by their country in the company switcher. """
+        self.company_a.country_id = self.env.ref('base.be')
+        self.company_a_fr = self.env['res.company'].create({'name': "A", 'country_id': self.env.ref('base.fr').id})
+        self.user.write({'company_ids': [Command.link(self.company_a_fr.id)]})
+        self.authenticate(self.user.login, self.user_password)
+        self.env['res.users.settings']._find_or_create_for_user(self.user)
+        response = self.url_open("/web/session/get_session_info", data=self.payload, headers=self.headers)
+        allowed_companies = response.json()['result']['user_companies']['allowed_companies']
+        self.assertEqual(allowed_companies[str(self.company_a.id)]['name'], "A (Belgium)")
+        self.assertEqual(allowed_companies[str(self.company_a_fr.id)]['name'], "A (France)")
+        self.assertEqual(allowed_companies[str(self.company_c.id)]['name'], "C")
+
     def test_session_info_translation_hash(self):
         """ Once cached, the session info gives the hash of the translations
         served by /web/webclient/translations, so the client doesn't need to
