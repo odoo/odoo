@@ -80,6 +80,16 @@ class AccountChartTemplate(models.AbstractModel):
                 ('type', '=', 'purchase')
             ], limit=1,
         )
+        sale_vat_10 = self.env['account.tax'].search(
+            domain = [
+                ('country_code', '=', 'UY'), ('type_tax_use', '=', 'sale'), ('amount', '=', 10.0), ('l10n_uy_tax_category', '=', 'vat')
+            ], limit=1
+        )
+        purchase_vat_10 = self.env['account.tax'].search(
+            domain = [
+                ('country_code', '=', 'UY'), ('type_tax_use', '=', 'purchase'), ('amount', '=', 10.0), ('l10n_uy_tax_category', '=', 'vat')
+            ], limit=1
+        )
         return {
             # Customer invoice demo
             'demo_invoice_1': {
@@ -90,10 +100,10 @@ class AccountChartTemplate(models.AbstractModel):
                 'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
                 'invoice_date': time.strftime('%Y-%m-01'),
                 'invoice_line_ids': [
-                    Command.create({'product_id': 'product.product_product_2', 'price_unit': 642.0, 'quantity': 1}),
+                    Command.create({'product_id': 'product.product_product_2', 'price_unit': 642.0, 'quantity': 1, 'tax_ids': sale_vat_10.ids}),
                     Command.create({'product_id': 'product.product_product_12', 'price_unit': 120.0, 'quantity': 4}),
                     Command.create({'product_id': 'product.product_product_16', 'price_unit': 25.0, 'quantity': 20}),
-                    Command.create({'product_id': 'product.product_product_20', 'price_unit': 1950.0, 'quantity': 4}),
+                    Command.create({'product_id': 'product.product_product_20', 'price_unit': 1950.0, 'quantity': 4, 'tax_ids': sale_vat_10.ids}),
                 ],
             },
             'demo_invoice_2': {
@@ -138,10 +148,10 @@ class AccountChartTemplate(models.AbstractModel):
                 'invoice_date': time.strftime('%Y-%m-13'),
                 'l10n_latam_document_type_id': 'l10n_uy.dc_e_inv',
                 'invoice_line_ids': [
-                    Command.create({'product_id': 'product.product_product_27', 'price_unit': 1000.0, 'quantity': 5}),
+                    Command.create({'product_id': 'product.product_product_27', 'price_unit': 1000.0, 'quantity': 5, 'tax_ids': sale_vat_10.ids}),
                     Command.create({'product_id': 'product.product_product_3', 'price_unit': 450.0, 'quantity': 2}),
                     Command.create({'product_id': 'product.product_product_12', 'price_unit': 120.0, 'quantity': 4}),
-                    Command.create({'product_id': 'product.product_product_13', 'price_unit': 85.0, 'quantity': 3}),
+                    Command.create({'product_id': 'product.product_product_13', 'price_unit': 85.0, 'quantity': 3, 'tax_ids': sale_vat_10.ids}),
                 ],
                 'currency_id': 'base.USD',
             },
@@ -228,10 +238,10 @@ class AccountChartTemplate(models.AbstractModel):
                 'invoice_date': time.strftime('%Y-%m-05'),
                 'l10n_latam_document_type_id': 'l10n_uy.dc_e_ticket',
                 'invoice_line_ids': [
-                    Command.create({'product_id': 'product.product_product_27', 'price_unit': 642.0, 'quantity': 5}),
+                    Command.create({'product_id': 'product.product_product_27', 'price_unit': 642.0, 'quantity': 5, 'tax_ids': sale_vat_10.ids}),
                     Command.create({'product_id': 'product.product_product_25', 'price_unit': 3245.0, 'quantity': 2}),
                     Command.create({'product_id': 'product.consu_delivery_01', 'price_unit': 4000.0, 'quantity': 5}),
-                    Command.create({'product_id': 'product.product_delivery_02', 'price_unit': 4000.0, 'quantity': 1}),
+                    Command.create({'product_id': 'product.product_delivery_02', 'price_unit': 4000.0, 'quantity': 1, 'tax_ids': sale_vat_10.ids}),
                 ],
             },
 
@@ -247,7 +257,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'l10n_latam_document_type_id': 'l10n_uy.dc_e_inv',
                 'l10n_latam_document_number': 'AA0000008',
                 'invoice_line_ids': [
-                    Command.create({'product_id': 'product.product_product_2', 'price_unit': 642.0, 'quantity': 3}),
+                    Command.create({'product_id': 'product.product_product_2', 'price_unit': 642.0, 'quantity': 3, 'tax_ids': purchase_vat_10.ids}),
                     Command.create({'product_id': 'product.product_product_27', 'price_unit': 228.0, 'quantity': 1}),
                 ],
             },
@@ -334,10 +344,10 @@ class AccountChartTemplate(models.AbstractModel):
                 'l10n_latam_document_type_id': 'l10n_uy.dc_e_ticket',
                 'l10n_latam_document_number': 'AA0000014',
                 'invoice_line_ids': [
-                    Command.create({'product_id': 'product.product_product_27', 'price_unit': 642.0, 'quantity': 5}),
+                    Command.create({'product_id': 'product.product_product_27', 'price_unit': 642.0, 'quantity': 5, 'tax_ids': purchase_vat_10.ids}),
                     Command.create({'product_id': 'product.product_product_25', 'price_unit': 3245.0, 'quantity': 2}),
                     Command.create({'product_id': 'product.consu_delivery_01', 'price_unit': 4000.0, 'quantity': 5}),
-                    Command.create({'product_id': 'product.product_delivery_02', 'price_unit': 4000.0, 'quantity': 1}),
+                    Command.create({'product_id': 'product.product_delivery_02', 'price_unit': 4000.0, 'quantity': 1, 'tax_ids': purchase_vat_10.ids}),
                 ],
             },
             'demo_sup_invoice_8': {
@@ -350,11 +360,11 @@ class AccountChartTemplate(models.AbstractModel):
                 'l10n_latam_document_type_id': 'l10n_uy.dc_e_ticket',
                 'l10n_latam_document_number': 'AA0000015',
                 'invoice_line_ids': [
-                    Command.create({'product_id': 'product.consu_delivery_02', 'price_unit': 4000.0, 'quantity': 7}),
+                    Command.create({'product_id': 'product.consu_delivery_02', 'price_unit': 4000.0, 'quantity': 7, 'tax_ids': purchase_vat_10.ids}),
                     Command.create({'product_id': 'product.product_product_3', 'price_unit': 450.0, 'quantity': 6}),
                     Command.create({'product_id': 'product.product_product_12', 'price_unit': 120.0, 'quantity': 1}),
                     Command.create({'product_id': 'product.product_product_13', 'price_unit': 85.0, 'quantity': 1}),
-                    Command.create({'product_id': 'product.consu_delivery_03', 'price_unit': 2350.0, 'quantity': 4}),
+                    Command.create({'product_id': 'product.consu_delivery_03', 'price_unit': 2350.0, 'quantity': 4, 'tax_ids': purchase_vat_10.ids}),
                 ],
             },
             'demo_sup_invoice_9': {
@@ -382,10 +392,10 @@ class AccountChartTemplate(models.AbstractModel):
                 'invoice_date': time.strftime('%Y-%m') + '-01',
                 'l10n_latam_document_number': 'AA0000017',
                 'invoice_line_ids': [
-                    Command.create({'product_id': 'product.product_product_2', 'price_unit': 642.0, 'quantity': 1}),
+                    Command.create({'product_id': 'product.product_product_2', 'price_unit': 642.0, 'quantity': 1, 'tax_ids': purchase_vat_10.ids}),
                     Command.create({'product_id': 'product.product_product_12', 'price_unit': 120.0, 'quantity': 4}),
                     Command.create({'product_id': 'product.product_product_16', 'price_unit': 25.0, 'quantity': 20}),
-                    Command.create({'product_id': 'product.product_product_20', 'price_unit': 1950.0, 'quantity': 4}),
+                    Command.create({'product_id': 'product.product_product_20', 'price_unit': 1950.0, 'quantity': 4, 'tax_ids': purchase_vat_10.ids}),
                 ],
             },
         }
