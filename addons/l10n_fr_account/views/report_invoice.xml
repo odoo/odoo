@@ -2,6 +2,7 @@
 <odoo>
     <template id="report_invoice_document" inherit_id="account.report_invoice_document">
         <xpath expr="(//address)[1]" position="after">
+<<<<<<< 8c6c6d824d9ef100b18f776a742c044f8e7a3431
             <t t-set="partner_siret" t-value="o.partner_id.commercial_partner_id.l10n_fr_siret"/>
             <t t-set="partner_siren" t-value="o.partner_id.commercial_partner_id.l10n_fr_siren"/>
             <div class="mb-0" t-if="o.l10n_fr_is_company_french and partner_siret">
@@ -9,9 +10,22 @@
             </div>
             <div class="mb-0" t-if="o.l10n_fr_is_company_french and partner_siren">
                 SIREN: <t t-out="partner_siren"/>
+||||||| 023017c49899b33e23e3130144deda9ebbe99731
+            <div class="mb-0" t-if="o.l10n_fr_is_company_french and o.partner_id.commercial_partner_id.company_registry">
+                SIRET: <t t-out="o.partner_id.commercial_partner_id.company_registry"/>
+=======
+            <t t-set="partner_siret" t-value="o.partner_id and o.partner_id.commercial_partner_id._l10n_fr_get_siret()"/>
+            <t t-set="partner_siren" t-value="o.partner_id and o.partner_id.commercial_partner_id._l10n_fr_get_siren()"/>
+            <div class="mb-0" t-if="o.l10n_fr_is_company_french and partner_siret">
+                SIRET: <t t-out="partner_siret"/>
+            </div>
+            <div class="mb-0" t-if="o.l10n_fr_is_company_french and partner_siren">
+                SIREN: <t t-out="partner_siren"/>
+>>>>>>> 088f2712bb7d73ee947f4001ab15ef791df43e89
             </div>
         </xpath>
         <xpath expr="(//address)[2]" position="after">
+<<<<<<< 8c6c6d824d9ef100b18f776a742c044f8e7a3431
             <t t-set="partner_siret" t-value="o.partner_id.commercial_partner_id.l10n_fr_siret"/>
             <t t-set="partner_siren" t-value="o.partner_id.commercial_partner_id.l10n_fr_siren"/>
             <div class="mb-0" t-if="o.l10n_fr_is_company_french and partner_siret">
@@ -19,9 +33,22 @@
             </div>
             <div class="mb-0" t-if="o.l10n_fr_is_company_french and partner_siren">
                 SIREN: <t t-out="partner_siren"/>
+||||||| 023017c49899b33e23e3130144deda9ebbe99731
+            <div class="mb-0" t-if="o.l10n_fr_is_company_french and o.partner_id.commercial_partner_id.company_registry">
+                SIRET: <t t-out="o.partner_id.commercial_partner_id.company_registry"/>
+=======
+            <t t-set="partner_siret" t-value="o.partner_id and o.partner_id.commercial_partner_id._l10n_fr_get_siret()"/>
+            <t t-set="partner_siren" t-value="o.partner_id and o.partner_id.commercial_partner_id._l10n_fr_get_siren()"/>
+            <div class="mb-0" t-if="o.l10n_fr_is_company_french and partner_siret">
+                SIRET: <t t-out="partner_siret"/>
+            </div>
+            <div class="mb-0" t-if="o.l10n_fr_is_company_french and partner_siren">
+                SIREN: <t t-out="partner_siren"/>
+>>>>>>> 088f2712bb7d73ee947f4001ab15ef791df43e89
             </div>
         </xpath>
         <xpath expr="(//address)[3]" position="after">
+<<<<<<< 8c6c6d824d9ef100b18f776a742c044f8e7a3431
             <t t-set="partner_siret" t-value="o.partner_id.commercial_partner_id.l10n_fr_siret"/>
             <t t-set="partner_siren" t-value="o.partner_id.commercial_partner_id.l10n_fr_siren"/>
             <div class="mb-0" t-if="o.l10n_fr_is_company_french and partner_siret">
@@ -29,6 +56,18 @@
             </div>
             <div class="mb-0" t-if="o.l10n_fr_is_company_french and partner_siren">
                 SIREN: <t t-out="partner_siren"/>
+||||||| 023017c49899b33e23e3130144deda9ebbe99731
+            <div class="mb-0" t-if="o.l10n_fr_is_company_french and o.partner_id.commercial_partner_id.company_registry">
+                SIRET: <t t-out="o.partner_id.commercial_partner_id.company_registry"/>
+=======
+            <t t-set="partner_siret" t-value="o.partner_id and o.partner_id.commercial_partner_id._l10n_fr_get_siret()"/>
+            <t t-set="partner_siren" t-value="o.partner_id and o.partner_id.commercial_partner_id._l10n_fr_get_siren()"/>
+            <div class="mb-0" t-if="o.l10n_fr_is_company_french and partner_siret">
+                SIRET: <t t-out="partner_siret"/>
+            </div>
+            <div class="mb-0" t-if="o.l10n_fr_is_company_french and partner_siren">
+                SIREN: <t t-out="partner_siren"/>
+>>>>>>> 088f2712bb7d73ee947f4001ab15ef791df43e89
             </div>
         </xpath>
 

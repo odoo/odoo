@@ -139,6 +139,44 @@ class ResPartner(models.Model):
             return '0227', country_code + self.name[:16]
         return False, False
 
+<<<<<<< 8c6c6d824d9ef100b18f776a742c044f8e7a3431
+||||||| 023017c49899b33e23e3130144deda9ebbe99731
+    def _l10n_fr_pdp_get_base_identifier(self):
+        self.ensure_one()
+
+        if not self._peppol_is_french_partner():
+            return None, None
+
+        candidates = [
+            self.additional_identifiers['FR_SIRET'] if self.additional_identifiers and siren_siret_re.match(self.additional_identifiers.get('FR_SIRET', '')) else '',
+            self.additional_identifiers['FR_SIREN'] if self.additional_identifiers and siren_siret_re.match(self.additional_identifiers.get('FR_SIREN', '')) else '',
+            self.company_registry if self.company_registry and siren_siret_re.match(self.company_registry) else '',
+            self._l10n_fr_get_siren_from_vat(),
+        ]
+        for identifier in candidates:
+            if not identifier:
+                continue
+            if len(identifier) == 9:
+                return 'siren', identifier
+            elif len(identifier) == 14:
+                return 'siret', identifier
+        return None, None
+
+=======
+    def _l10n_fr_pdp_get_base_identifier(self):
+        self.ensure_one()
+
+        if not self._peppol_is_french_partner():
+            return None, None
+
+        siren_or_siret = self._l10n_fr_get_siret_or_siren()
+        if len(siren_or_siret) == 9:
+            return 'siren', siren_or_siret
+        elif len(siren_or_siret) == 14:
+            return 'siret', siren_or_siret
+        return None, None
+
+>>>>>>> 088f2712bb7d73ee947f4001ab15ef791df43e89
     @api.model
     def _import_retrieve_customer_from_siret(self, customer_values):
         if siret := customer_values.get('siret'):
