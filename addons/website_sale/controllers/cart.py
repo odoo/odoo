@@ -115,7 +115,8 @@ class Cart(PaymentPortal):
             of `product.template.attribute.value` ids.
         :param list linked_products: A list of objects representing additional products linked to
             the product added to the cart. Can be combo item or optional products.
-        :param dict kwargs: Optional data. This parameter is not used here.
+        :param dict kwargs: Optional data, given to `_cart_add`. If `skip_order_alert` is set, the
+            warning isn't stored on the order when no line is created.
         :return: The values
         :rtype: dict
         """
@@ -280,8 +281,14 @@ class Cart(PaymentPortal):
             notifications.append({"type": "item_added", "data": notification})
 
         if warning:
-            # Store the warning on the order line so the cart page can show its source to the user.
-            (updated_line or order_sudo)._add_warning_alert(warning)
+            if updated_line:
+                # Store the warning on the order line so the cart page can show its source to the
+                # user.
+                updated_line._add_warning_alert(warning)
+            elif not kwargs.pop("skip_order_alert", False):
+                # No line to attach the warning to: keep it on the order so that it is shown on the
+                # cart page for flows redirecting there.
+                order_sudo._add_warning_alert(warning)
             notifications.append({"type": "warning", "data": {"warning_message": warning}})
 
         return {
@@ -299,7 +306,11 @@ class Cart(PaymentPortal):
         route="/shop/cart/quick_add", type="jsonrpc", auth="user", methods=["POST"], website=True
     )
     def quick_add(self, product_template_id, product_id, quantity=1.0, **kwargs):
-        values = self.add_to_cart(product_template_id, product_id, quantity=quantity, **kwargs)
+        # The customer is already on the cart page and gets the warning as a notification, don't
+        # keep it on the order to show it again on the next page load.
+        values = self.add_to_cart(
+            product_template_id, product_id, quantity=quantity, skip_order_alert=True, **kwargs
+        )
 
         order_sudo = request.cart
         values.update(self._get_updated_cart_page_values(order_sudo))
