@@ -1,11 +1,19 @@
-import { Component, signal, toRaw, types, usePlugin, useProps } from "@odoo/owl";
+import {
+    Component,
+    computed,
+    signal,
+    toRaw,
+    types,
+    useEffect,
+    usePlugin,
+    useProps,
+} from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
 import { useCallActions } from "@mail/discuss/call/common/call_actions";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { Tooltip } from "@web/core/tooltip/tooltip";
 import {
     ActionList,
     CircleInlineAction,
@@ -16,6 +24,7 @@ import { ACTION_TAGS, PANEL_CONTAINER_TYPE } from "@mail/core/common/action";
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { computedShallowEqual } from "@mail/utils/common/signal";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
+import { FullscreenTooltip } from "@mail/discuss/call/common/fullscreen_tooltip";
 
 /**
  * What a small screen keeps in its bar; everything else goes into "More". "deafen" is there
@@ -294,8 +303,28 @@ export class CallActionList extends Component {
         this.ui = usePlugin(UIPlugin);
         this.pipService = useService("discuss.pip_service");
         this.callActions = useCallActions(this.callActionsParams);
-        this.popover = usePopover(Tooltip, {
+        this.fullscreenHintPopover = usePopover(FullscreenTooltip, {
+            closeOnClickAway: false,
+            closeOnEscape: false,
             position: "top-middle",
+        });
+        this.layoutActions = computed(() =>
+            toRaw(this.callActions).actions.filter((a) => a.tags.includes(ACTION_TAGS.CALL_LAYOUT))
+        );
+        this.callLayoutMoreAction = computed(() => {
+            const layoutActions = this.layoutActions();
+            if (!layoutActions.length) {
+                return null;
+            }
+            return this.callActions.more(
+                this.callActionsParams,
+                {
+                    actions: [layoutActions],
+                    id: "call-layout",
+                    name: this.MORE,
+                },
+                "call-layout"
+            );
         });
         this.actions = computedShallowEqual(
             () => {
@@ -338,21 +367,9 @@ export class CallActionList extends Component {
                 }
                 // Gather the layout actions (Fullscreen, Adjust view, Picture in Picture) into a "More"
                 // menu placed between Raise Hand and the end-call button.
-                const layoutActions = toRaw(this.callActions).actions.filter((a) =>
-                    a.tags.includes(ACTION_TAGS.CALL_LAYOUT)
-                );
-                if (layoutActions.length) {
-                    const layoutGroup = [
-                        this.callActions.more(
-                            this.callActionsParams,
-                            {
-                                actions: [layoutActions],
-                                id: "call-layout",
-                                name: this.MORE,
-                            },
-                            "call-layout"
-                        ),
-                    ];
+                const moreAction = this.callLayoutMoreAction();
+                if (moreAction) {
+                    const layoutGroup = [moreAction];
                     group2.splice(
                         disconnectGroupIndex === -1 ? group2.length : disconnectGroupIndex,
                         0,
@@ -363,6 +380,22 @@ export class CallActionList extends Component {
             },
             { nested: true }
         );
+
+        useEffect(() => {
+            const moreAction = this.callLayoutMoreAction();
+            const referenceEl = moreAction?.actionRef();
+            const hasFullscreenAction = this.layoutActions().some((a) => a.id === "fullscreen");
+            const showHint =
+                this.rtc.showFullscreenHint &&
+                hasFullscreenAction &&
+                !moreAction?.overlayState.isOpen;
+            const isOpen = this.fullscreenHintPopover.isOpen;
+            if (moreAction && referenceEl && showHint && !isOpen) {
+                this.fullscreenHintPopover.open(referenceEl, {});
+            } else if (!showHint && isOpen) {
+                this.fullscreenHintPopover.close();
+            }
+        });
     }
 
     /**
