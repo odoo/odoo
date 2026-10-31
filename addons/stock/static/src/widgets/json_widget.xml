@@ -4,12 +4,12 @@
         <h2>Replenishment Time (<span t-out="this.jsonValue['lead_time']"/> days)</h2>
         <table t-if="this.jsonValue.lead_days_description" class="table table-borderless table-sm">
             <tbody>
-                <tr class="table-secondary">
+                <tr class="bg-100">
                     <td>Today</td>
                     <td class="text-end" t-out="this.jsonValue.today"/>
                 </tr>
                 <tr t-foreach="this.jsonValue.lead_days_description" t-key="descr_index" t-as="descr"
-                    t-attf-class="{{ descr[2] ? 'table-secondary' : '' }}">
+                    t-attf-class="{{ descr[2] ? 'bg-100' : '' }}">
                     <td t-out="descr[0]"/>
                     <td class="text-end" t-out="descr[1]"/>
                 </tr>
