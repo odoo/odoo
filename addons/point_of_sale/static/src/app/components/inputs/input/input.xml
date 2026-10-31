@@ -3,7 +3,7 @@
     <t t-name="point_of_sale.input">
         <div t-attf-class="{{this.props.class}} {{ this.state.isOpen ? 'flex-grow-1' : '' }} d-flex">
             <button t-if="this.props.isSmall"
-                class="btn btn-light btn-lg lh-lg"
+                class="btn btn-light btn-lg lh-lg border-0"
                 t-on-click="() => {
                     this.state.isOpen = !this.state.isOpen;
                     this.props.isOpenCallback?.(this.state.isOpen);
@@ -13,7 +13,7 @@
             </button>
             <div t-if="!this.props.isSmall || this.state.isOpen"
                 class="input-group">
-                <div class="form-control form-control-lg input-container d-flex align-items-center bg-view"
+                <div class="form-control form-control-lg input-container d-flex align-items-center bg-view border"
                     t-att-class="{'is-invalid': !this.props.isValid(this.getValue())}">
                     <t t-if="this.props.iconOnLeftSide" t-call="point_of_sale.inputIcon" />
                     <input class="o_input border-0 mx-2 text-body" type="text" style="min-width: 60px;"

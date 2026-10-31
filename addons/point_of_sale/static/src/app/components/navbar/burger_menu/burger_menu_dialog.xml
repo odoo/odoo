@@ -14,6 +14,9 @@
                 <button t-att-class="'btn btn-lg btn-outline-' + (this.pos.lnaState.type)" title="Local Network Access" t-on-click="() => this.openLnaPopup()">
                     <i class="oi oi-fw" t-att-data-icon="(this.pos.lnaState.type === 'success' ? 'wifi' : 'link_off')" aria-hidden="true"/> LNA
                 </button>
+                <button class="btn btn-lg btn-danger" t-if="this.pos.data.network.offline" t-on-click="this.offlinePopup">
+                    Working offline
+                </button>
                 <button class="btn btn-lg btn-close ms-auto" aria-label="Close" title="Close" t-on-click="() => this.props.close()"/>
             </div>
             <div class="o_pos_burger_menu_buttons d-grid gap-2">
@@ -78,14 +81,14 @@
                    btnLabel.translate="Print Report"
                 />
                 <t t-call="point_of_sale.BurgerDialogMenuButton"
-                   t-if="this.pos.accessRight.canGoToBackend" 
+                   t-if="this.pos.accessRight.canGoToBackend"
                    t-name="backend"
                    dataIcon="'chevron_left'"
                    onClick="() => this.pos.closePos()"
                    btnLabel.translate="Backend"
                 />
                 <t t-call="point_of_sale.BurgerDialogMenuButton"
-                   t-if="this.pos.accessRight.canCloseSession"
+                   t-if="this.pos.accessRight.canCloseSession and !this.pos.data.network.offline"
                    t-name="close_register"
                    dataIcon="'key'"
                    onClick="() => this.pos.closeSession()"

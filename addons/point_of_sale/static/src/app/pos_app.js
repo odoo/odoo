@@ -1,6 +1,7 @@
 import { Transition } from "@web/core/transition";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { Navbar } from "@point_of_sale/app/components/navbar/navbar";
+import { NetworkStatusBar } from "@point_of_sale/app/components/network_status_bar/network_status_bar";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Component, onMounted, useProps, t, usePlugin } from "@odoo/owl";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
@@ -17,7 +18,7 @@ import { DebugModePlugin } from "@web/core/debug_mode_plugin";
  */
 export class Chrome extends Component {
     static template = "point_of_sale.Chrome";
-    static components = { Transition, MainComponentsContainer, Navbar };
+    static components = { Transition, MainComponentsContainer, Navbar, NetworkStatusBar };
     props = useProps({ disableLoader: t.function() });
     router = usePlugin(PosRouterPlugin);
 
