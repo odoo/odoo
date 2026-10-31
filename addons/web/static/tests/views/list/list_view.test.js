@@ -14304,6 +14304,43 @@ test(`keyboard navigation from last cell in editable list`, async () => {
 });
 
 test.tags("desktop");
+test(`editing then pressing TAB repeatedly in editable="top" grouped list`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list editable="top"><field name="foo"/></list>`,
+        groupBy: ["bar"],
+    });
+
+    // open two groups
+    await contains(`.o_group_header:eq(0)`).click();
+    await contains(`.o_group_header:eq(1)`).click();
+    expect(`.o_data_row`).toHaveCount(4);
+
+    // add a new row in second group
+    await contains(`.o_group_field_row_add a:eq(1)`).click();
+    expect(`.o_data_row`).toHaveCount(5);
+    expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
+
+    // fill first new record and press tab -> creates second new record
+    await contains(`.o_selected_row [name=foo] input`).edit("new record 1", { confirm: "tab" });
+    await animationFrame();
+    expect(`.o_data_row`).toHaveCount(6);
+    expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
+
+    // fill second new record and press tab -> creates third new record
+    await contains(`.o_selected_row [name=foo] input`).edit("new record 2", { confirm: "tab" });
+    await animationFrame();
+    expect(`.o_data_row`).toHaveCount(7);
+    expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
+
+    // press tab on empty row -> discards and leaves edit mode
+    await press("tab");
+    await animationFrame();
+    expect(`.o_data_row`).toHaveCount(6);
+});
+
+test.tags("desktop");
 test(`keyboard navigation from last cell in editable grouped list`, async () => {
     await mountView({
         resModel: "foo",
