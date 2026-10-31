@@ -85,9 +85,19 @@ class StockMove(models.Model):
             remaining_value = total_invoiced_value - receipt_value
             # TODO qty_received in product uom
             remaining_qty = invoiced_qty - line.product_uom._compute_quantity(received_qty, line.product_id.uom_id, rounding_method="HALF-UP")
+            # When receiving more than the billed and not yet received quantity, the remaining value
+            # would be spread over the whole receipt: use the average bill price instead
+            rounding = line.product_id.uom_id.rounding
+            move_qty = self.product_uom._compute_quantity(self.quantity, line.product_id.uom_id, rounding_method="HALF-UP")
+            if (
+                float_compare(min(remaining_qty, invoiced_qty), 0, precision_rounding=rounding) > 0
+                and float_compare(move_qty, remaining_qty, precision_rounding=rounding) > 0
+            ):
+                remaining_value = total_invoiced_value
+                remaining_qty = invoiced_qty
             has_remaining = (
-                not order.currency_id.is_zero(remaining_value)
-                and not float_is_zero(remaining_qty, precision_rounding=line.product_id.uom_id.rounding)
+                order.currency_id.compare_amounts(remaining_value, 0) > 0
+                and float_compare(remaining_qty, 0, precision_rounding=rounding) > 0
             )
             if order.currency_id != order.company_id.currency_id and has_remaining:
                 # will be rounded during currency conversion
