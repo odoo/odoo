@@ -244,6 +244,14 @@ export class WebsocketWorker {
                 );
                 return;
             }
+            case "bus/subscribe_again": {
+                this._scheduleUpdateChannels({ force: true });
+                this.nextSubscribeData.minId = Math.min(
+                    this.nextSubscribeData.minId ?? payload,
+                    payload
+                );
+                return;
+            }
         }
     }
 
