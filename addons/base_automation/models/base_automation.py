@@ -59,6 +59,7 @@ def _keep_to_compute(env, changed_fields):
     """ Keep the computed fields depending on ``changed_fields`` as-is, so that
     they are recomputed once the values of ``changed_fields`` are set.
     """
+    protected = {field: env.protected(field) for field in changed_fields}
     to_compute = {
         dep: comp
         for f in changed_fields
@@ -66,6 +67,9 @@ def _keep_to_compute(env, changed_fields):
         if (comp := env.records_to_compute(dep))
     }
     yield
+    # Protected field assignments do not notify their dependents.
+    for field, records in protected.items():
+        records.modified([field.name])
     for dep, comp in to_compute.items():
         env.add_to_compute(dep, comp)
 

@@ -28,6 +28,7 @@ class BaseAutomationLeadTest(models.Model):
     stage_id = fields.Many2one(
         'test_base_automation.stage', string='Stage',
         compute='_compute_stage_id', readonly=False, store=True)
+    stage_name = fields.Char(related='stage_id.name')
 
     @api.depends('state')
     def _compute_stage_id(self):
