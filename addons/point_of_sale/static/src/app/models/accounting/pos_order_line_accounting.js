@@ -12,6 +12,7 @@ export class PosOrderlineAccounting extends Base {
         "tax_ids",
         "price_type",
         "price_extra",
+        "document_tax_mode",
     ]);
 
     /**
@@ -171,6 +172,13 @@ export class PosOrderlineAccounting extends Base {
         return this.qty * this.price_unit < 0;
     }
 
+    get documentTaxMode() {
+        // Force the price to be interpreted as tax included/excluded consistently with the
+        // originating document (e.g. a settled sale order whose tax mode differs from the
+        // tax's own price_include configuration). When not set, the tax's own mode is used.
+        return null;
+    }
+
     /**
      * Prepare extra values for the base line used in taxes computation.
      */
@@ -191,6 +199,7 @@ export class PosOrderlineAccounting extends Base {
             product_id: product,
             rate: 1.0,
             is_refund: this.isRefund(),
+            document_tax_mode: this.documentTaxMode,
             ...customValues,
         };
         if (order?.fiscal_position_id && product !== this.config.discount_product_id) {

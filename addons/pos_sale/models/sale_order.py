@@ -26,7 +26,7 @@ class SaleOrder(models.Model):
     @api.model
     def _load_pos_data_fields(self, config):
         return ['name', 'state', 'user_id', 'order_line', 'partner_id', 'pricelist_id', 'fiscal_position_id', 'amount_total', 'amount_untaxed', 'amount_unpaid',
-            'partner_shipping_id', 'partner_invoice_id', 'date_order', 'write_date', 'amount_paid']
+            'partner_shipping_id', 'partner_invoice_id', 'date_order', 'write_date', 'amount_paid', 'document_tax_mode']
 
     def load_sale_order_from_pos(self, config_id):
         product_ids = self.order_line.product_id.ids
