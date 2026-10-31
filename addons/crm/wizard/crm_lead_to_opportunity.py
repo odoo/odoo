@@ -20,7 +20,8 @@ class CrmLead2opportunityPartner(models.TransientModel):
             result['lead_id'] = self.env.context.get('active_id')
 
         if result.get('lead_id'):
-            if self.env['crm.lead'].browse(result['lead_id']).probability == 100:
+            lead = self.env['crm.lead'].browse(result['lead_id'])
+            if not lead.active or lead.won_status == 'won':
                 raise UserError(_("Closed/Dead leads cannot be converted into opportunities."))
 
         return result
