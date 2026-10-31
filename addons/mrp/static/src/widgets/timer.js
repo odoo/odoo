@@ -108,7 +108,7 @@ class MrpTimerField extends Component {
 
         useRecordObserver(async (record) => {
             const useSampleModel = untrack(() => record.model.useSampleModel);
-            if (!useSampleModel && record.data.state === "progress") {
+            if (!useSampleModel && record.resId && record.data.state === "progress") {
                 this.duration = await this.orm.call(
                     "mrp.workorder",
                     "get_duration",
