@@ -1,4 +1,4 @@
-from odoo import fields
+from odoo import fields, Command
 from odoo.tests import tagged
 from odoo.tools import file_open
 
@@ -97,3 +97,43 @@ class TestTRNilveraEreceiptUpload(TestStockCommon):
                 {'name': 'PL02', 'plate_number_type': 'trailer'},
             ],
         )
+
+    def test_regenerate_edispatch_xml_links_latest_attachment(self):
+        """Test that regenerating e-Dispatch XML links the latest attachment."""
+        self.receipt_partner.write({
+            'state_id': self.env.ref('base.state_tr_01').id,
+            'city': 'Adana',
+            'zip': '321123',
+            'street': '12th dec. street',
+        })
+        self.env.company.write({
+            'vat': '1234567890',
+            'country_id': self.tr_country_id,
+        })
+        warehouse = self.env.user._get_default_warehouse_id()
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': warehouse.out_type_id.id,
+            'location_id': self.env.ref('stock.stock_location_customers').id,
+            'location_dest_id': warehouse.lot_stock_id.id,
+            'partner_id': self.receipt_partner.id,
+            'move_ids': [Command.create({
+                'product_id': self.move_product.id,
+                'product_uom_qty': 1,
+            })],
+            'l10n_tr_nilvera_carrier_id': self.driver_partner.id,
+        })
+        picking.action_confirm()
+        picking.button_validate()
+
+        # Generate first XML
+        picking.action_generate_l10n_tr_edispatch_xml()
+        first_attachment = picking.l10n_tr_nilvera_edispatch_xml_id
+        self.assertTrue(first_attachment)
+
+        # Regenerate XML
+        picking.action_generate_l10n_tr_edispatch_xml()
+        second_attachment = picking.l10n_tr_nilvera_edispatch_xml_id
+        self.assertTrue(second_attachment)
+        self.assertNotEqual(first_attachment, second_attachment)
+        self.assertGreater(second_attachment.id, first_attachment.id)
+        self.assertEqual(picking.l10n_tr_nilvera_edispatch_xml_id, second_attachment)
