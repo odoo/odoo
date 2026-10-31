@@ -1,11 +1,16 @@
-import { Component, onWillStart, proxy, t, useProps } from "@odoo/owl";
+import { Component, onWillDestroy, onWillStart, Plugin, proxy, t, useListener, usePlugin, useProps } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
+import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
+import { GlobalBusPlugin } from "@web/core/global_bus_plugin";
+import { post } from "@web/core/network/http_service";
 import { rpc, RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
+import { services } from "@web/core/services";
 import { redirect } from "@web/core/utils/urls";
-import { post } from "@web/core/network/http_service";
+import { useEnv } from "@web/owl2/utils";
 import { session } from "@web/session";
+
+const errorHandlerRegistry = registry.category("error_handlers");
 
 /**
  * CheckIdentityForm component
@@ -26,7 +31,7 @@ export class CheckIdentityForm extends Component {
         close: t.function().optional(),
     });
 
-    async setup() {
+    setup() {
         this.authMethodTemplates = {
             password: {
                 form: "web.CheckIdentityFormPassword",
@@ -34,7 +39,7 @@ export class CheckIdentityForm extends Component {
             },
         };
 
-        this.checkIdentityService = useService("check_identity");
+        this.checkIdentityService = usePlugin(CheckIdentityPlugin);
 
         if (!this.checkIdentityService.identityCheckPromise) {
             // The form is mounted directly into an HTTP page (bypassing the dialog service)
@@ -117,6 +122,7 @@ export class CheckIdentityForm extends Component {
         }
     }
 }
+registry.category("public_components").add("web.check_identity_form", CheckIdentityForm);
 
 /**
  * CheckIdentityDialog component
@@ -147,34 +153,68 @@ export class CheckIdentityDialog extends Component {
     }
 }
 
-export class CheckIdentity {
-    constructor(env, services) {
-        this.env = env;
-        this.setup(env, services);
-    }
+/**
+ * Check Identity plugin
+ *
+ * Manages global identity check logic:
+ * - Listens for `CheckIdentityException` errors from RPC
+ * - Displays dialog and synchronizes re-auth state across tabs
+ */
+export class CheckIdentityPlugin extends Plugin {
+    /** @private */
+    env = useEnv();
 
-    setup(env, services) {
-        this.dialogService = services["dialog"];
-        this.fingerprint = null;
+    /** @private */
+    dialog = usePlugin(DialogPlugin);
 
-        this.identityCheckPromise = null;
-        this.identityCheckCleanUp = null;
+    fingerprint = null;
+    identityCheckPromise = null;
+    /** @private {(() => void) | null} */
+    identityCheckCleanUp = null;
 
-        // Multi-tab sync: if another tab verified the identity, clean up locally
-        this.channel = new BroadcastChannel("check_identity");
-        this.channel.addEventListener("message", (event) => {
+    // Multi-tab sync: if another tab verified the identity, clean up locally
+    channel = new BroadcastChannel("check_identity");
+
+    setup() {
+        // Patch RPC to replay it automatically when the identity is verified
+        const originalRpc = rpc._rpc;
+        rpc._rpc = (...args) => {
+            const originalPromise = originalRpc(...args);
+            const promise = originalPromise.catch((error) => {
+                if (error.data?.name === "odoo.http.session.CheckIdentityException") {
+                    return this.checkIdentity().then(() => originalRpc(...args));
+                }
+                throw error;
+            });
+            promise.abort = originalPromise.abort;
+            return promise;
+        };
+        onWillDestroy(() => {
+            rpc._rpc = originalRpc;
+        });
+
+        useListener(this.channel, "message", (event) => {
             if (event.data === "identityChecked" && this.identityCheckCleanUp) {
                 this.identityCheckCleanUp();
             }
         });
+        onWillDestroy(() => {
+            this.channel.close();
+        });
 
-        registry
-            .category("error_handlers")
-            .add("verifyUserErrorHandler", this.verifyUserErrorHandler.bind(this), { force: true });
+        errorHandlerRegistry.add(
+            "verifyUserErrorHandler",
+            this.verifyUserErrorHandler.bind(this),
+            { force: true }
+        );
+        onWillDestroy(() => {
+            errorHandlerRegistry.remove("verifyUserErrorHandler");
+        });
 
         // Check the fingerprint each time webclient is loaded
         // Only for internal user
-        env.bus.addEventListener("WEB_CLIENT_READY", () => {
+        const globalBus = usePlugin(GlobalBusPlugin);
+        useListener(globalBus.bus, "WEB_CLIENT_READY", () => {
             if (session.device_salt) {
                 this.updateFingerprint()
                     .then((result) => !result && this.run())
@@ -265,7 +305,7 @@ export class CheckIdentity {
         if (!this.identityCheckPromise) {
             const { promise, resolve } = Promise.withResolvers();
             this.identityCheckPromise = promise;
-            const closeDialog = this.dialogService.add(CheckIdentityDialog);
+            const closeDialog = this.dialog.add(CheckIdentityDialog);
 
             this.identityCheckCleanUp = () => {
                 closeDialog();
@@ -313,50 +353,4 @@ export class CheckIdentity {
         }
     }
 }
-
-/**
- * Check Identity Service
- *
- * Manages global identity check logic:
- * - Listens for `CheckIdentityException` errors from RPC
- * - Displays dialog and synchronizes re-auth state across tabs
- *
- * @type {Object}
- * @property {string[]} dependencies Service this one relies on: ["dialog"]
- * @method start
- * @param {Object} env OWL environment
- * @param {Object} deps Injected service: dialog
- */
-export const checkIdentityService = {
-    dependencies: ["dialog"],
-
-    start(env, services) {
-        return new CheckIdentity(env, services);
-    },
-};
-
-registry.category("public_components").add("web.check_identity_form", CheckIdentityForm);
-registry.category("services").add("check_identity", checkIdentityService);
-registry.category("services").addEventListener("CLEANUP", function restorOriginalRpc() {
-    if (rpc._originalRpc) {
-        rpc._rpc = rpc._originalRpc;
-        delete rpc._originalRpc;
-    }
-});
-
-// Patch RPC to replay it automatically when the identity is verified
-const originalRpc = rpc._rpc;
-rpc._originalRpc = originalRpc;
-rpc._rpc = function (...args) {
-    const originalPromise = originalRpc(...args);
-    const promise = originalPromise.catch((error) => {
-        if (error.data?.name === "odoo.http.session.CheckIdentityException") {
-            return odoo.__WOWL_DEBUG__.root.env.services["check_identity"]
-                .checkIdentity()
-                .then(() => originalRpc(...args));
-        }
-        throw error;
-    });
-    promise.abort = originalPromise.abort;
-    return promise;
-};
+services.add(CheckIdentityPlugin);
