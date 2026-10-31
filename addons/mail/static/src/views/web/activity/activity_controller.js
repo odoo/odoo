@@ -78,7 +78,7 @@ export class ActivityController extends Component {
             title: _t("Search: %s", this.props.archInfo.title),
             multiSelect: false,
             context: this.props.context,
-            noCreate: this.props.context?.create === false,
+            noCreate: !this.props.archInfo.activeActions.create,
             onSelected: async (resIds) => {
                 await this.store.scheduleActivity(this.props.resModel, resIds);
             },
@@ -141,6 +141,7 @@ export class ActivityController extends Component {
             resModel: this.props.resModel,
             archInfo: this.props.archInfo,
             groupedActivities: this.model.activityData.grouped_activities,
+            canScheduleActivity: this.props.archInfo.activeActions.create,
             scheduleActivity: this.scheduleActivity.bind(this),
             onReloadData: () => this.model.load(this.getSearchProps()),
             onEmptyCell: this.openActivityFormView.bind(this),
