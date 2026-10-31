@@ -1,4 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+<<<<<<< 16cb880d18af43a4df716a307d3e6edbbdeac180
+||||||| c2c11a3c5287f9683e68e9e6d77457f27ef7f4b4
+
+from datetime import datetime, timedelta
+from dateutil.parser import parse
+=======
+
+from datetime import datetime, timedelta
+import psycopg2.errors
+from dateutil.parser import parse
+>>>>>>> 951ea96d3dfc5a2676073e6932869ab295582b96
 import logging
 from datetime import datetime, timedelta, UTC
 from unittest.mock import patch, ANY
@@ -13,8 +24,13 @@ from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCal
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 from odoo.addons.microsoft_calendar.models.res_users import ResUsers
 from odoo.addons.microsoft_calendar.tests.common import TestCommon, mock_get_token, _modified_date_in_the_future, patch_api
+<<<<<<< 16cb880d18af43a4df716a307d3e6edbbdeac180
 from odoo.tests import tagged
 
+||||||| c2c11a3c5287f9683e68e9e6d77457f27ef7f4b4
+=======
+from odoo.tests.test_cursor import TestCursor
+>>>>>>> 951ea96d3dfc5a2676073e6932869ab295582b96
 from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -77,6 +93,35 @@ class TestUpdateEvents(TestCommon):
             timeout=ANY,
         )
         self.assertEqual(self.simple_event.name, "my new simple event")
+
+    @patch.object(MicrosoftCalendarService, 'patch')
+    def test_update_simple_event_from_odoo_commit_error(self, mock_patch):
+        """
+        Update an Odoo event with Outlook sync enabled, when the commit of the
+        post-commit sync cursor fails (e.g. concurrent update of the same event).
+        The error must be logged instead of being raised to the user.
+        """
+
+        # arrange
+        mock_patch.return_value = True
+        serialization_error = psycopg2.errors.SerializationFailure(
+            "could not serialize access due to concurrent update"
+        )
+
+        # act
+        # discard the post-commit hooks registered before this test (e.g. by
+        # google_calendar when it is installed), only the ones of the write
+        # below must be run with the failing commit
+        self.env.cr.postcommit.clear()
+        self.simple_event.with_user(self.organizer_user).write({"name": "my new simple event"})
+        with patch.object(TestCursor, 'commit', side_effect=serialization_error):
+            with self.assertLogs('odoo.addons.microsoft_calendar.models.microsoft_sync', level='ERROR') as capture:
+                self.call_post_commit_hooks()
+
+        # assert
+        mock_patch.assert_called_once()
+        self.assertEqual(len(capture.records), 1)
+        self.assertIn("Could not commit sync of record", capture.records[0].getMessage())
 
     @patch.object(MicrosoftCalendarService, 'patch')
     def test_update_simple_event_from_odoo_attendee_calendar(self, mock_patch):
