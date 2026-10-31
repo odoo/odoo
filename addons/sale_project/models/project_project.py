@@ -403,8 +403,10 @@ class ProjectProject(models.Model):
                 ]),
         ]
         sale_order_line_query = SaleOrderLine._search(sale_order_line_domain, bypass_access=True)
+        sol_table = sale_order_line_query.table
+        so_table = sol_table._join('order_id')
         sale_order_line_sql = sale_order_line_query.select(
-            f'{SaleOrderLine._table}.project_id AS id',
+            SQL("COALESCE(%s.project_id, %s.project_id) AS id", sol_table, so_table),
             f'{SaleOrderLine._table}.id AS sale_line_id',
         )
 
