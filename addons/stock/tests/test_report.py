@@ -1168,6 +1168,54 @@ class TestReports(TestReportsCommon):
         self.assertTrue(delivery2_line, 'No line for delivery 2')
         self.assertTrue(delivery2_line['replenishment_filled'])
 
+    def test_forecast_information_unsaved_demand(self):
+        """ Edited demand uses incoming receipts without changing the saved move. """
+        first_date = datetime.now() + timedelta(days=1)
+        second_date = first_date + timedelta(days=7)
+        Move = self.env['stock.move']
+        receipts = Move.create([{
+            'product_id': self.product.id,
+            'product_uom': self.product.uom_id.id,
+            'product_uom_qty': 5,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.picking_type_in.id,
+            'date': receipt_date,
+        } for receipt_date in (first_date, second_date)])
+        receipts._action_confirm(merge=False)
+        outgoing = Move.create({
+            'product_id': self.product.id,
+            'product_uom': self.product.uom_id.id,
+            'product_uom_qty': 3,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'picking_type_id': self.picking_type_out.id,
+        })
+        outgoing._action_confirm()
+        self.assertEqual(outgoing.forecast_availability, 3)
+        self.assertEqual(outgoing.forecast_expected_date, first_date)
+
+        edited_move = Move.new({}, origin=outgoing)
+        edited_move.product_uom_qty = 8
+        self.assertEqual(edited_move.forecast_availability, 8)
+        self.assertEqual(edited_move.forecast_expected_date, second_date)
+
+        edited_move.product_uom_qty = 2
+        self.assertEqual(edited_move.forecast_availability, 2)
+        self.assertEqual(edited_move.forecast_expected_date, first_date)
+
+        # Explicit receipt links still match the saved move's original ID.
+        receipts.move_dest_ids = outgoing
+        edited_move.product_uom_qty = 8
+        self.assertEqual(edited_move.forecast_availability, 8)
+        self.assertEqual(edited_move.forecast_expected_date, second_date)
+
+        self.env.flush_all()
+        outgoing.invalidate_recordset()
+        self.assertEqual(outgoing.product_uom_qty, 3)
+        self.assertEqual(outgoing.forecast_availability, 3)
+        self.assertEqual(outgoing.forecast_expected_date, first_date)
+
     def test_report_forecast_10_report_line_corresponding_to_picking_highlighted(self):
         """ When accessing the report from a stock move, checks if the correct picking is highlighted in the report
             and if the forecasted availability for incoming and outcoming moves is correct

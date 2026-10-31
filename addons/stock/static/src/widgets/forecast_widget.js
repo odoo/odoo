@@ -7,24 +7,42 @@ import { useService } from "@web/core/utils/hooks";
 export class ForecastWidgetField extends FloatField {
     static template = "stock.ForecastWidget";
     setup() {
-        const { data, fields, resId } = this.props.record;
         this.actionService = useService("action");
         this.orm = useService("orm");
-        this.resId = resId;
+    }
 
-        this.forecastExpectedDate = formatDate(
+    get resId() {
+        return this.props.record.resId;
+    }
+
+    get forecastExpectedDate() {
+        const { data, fields } = this.props.record;
+        return formatDate(
             data.forecast_expected_date,
             fields.forecast_expected_date
         );
-        if (data.forecast_expected_date && data.date_deadline) {
-            this.forecastIsLate = data.forecast_expected_date > data.date_deadline;
-        }
-        const digits = fields.forecast_availability.digits;
-        const options = { digits, thousandsSep: "", decimalPoint: "." };
+    }
+
+    get forecastIsLate() {
+        const { data } = this.props.record;
+        return Boolean(data.forecast_expected_date && data.date_deadline &&
+            data.forecast_expected_date > data.date_deadline);
+    }
+
+    get quantityFormatOptions() {
+        const digits = this.props.record.fields.forecast_availability.digits;
+        return { digits, thousandsSep: "", decimalPoint: "." };
+    }
+
+    get product_qty() {
+        return parseFloat(formatFloat(this.props.record.data.product_qty, this.quantityFormatOptions));
+    }
+
+    get willBeFulfilled() {
+        const { data } = this.props.record;
+        const options = this.quantityFormatOptions;
         const forecast_availability = parseFloat(formatFloat(data.forecast_availability, options));
-        const product_qty = parseFloat(formatFloat(data.product_qty, options));
-        this.willBeFulfilled = forecast_availability >= product_qty;
-        this.state = data.state;
+        return forecast_availability >= this.product_qty;
     }
 
     //--------------------------------------------------------------------------
