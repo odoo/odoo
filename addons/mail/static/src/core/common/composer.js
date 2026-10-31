@@ -1,6 +1,7 @@
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
+import { DICTATION_STATE, useDictation } from "@mail/core/common/dictation/dictation_hook";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
 import {
     MAIL_HTML_PLUGINS,
@@ -194,6 +195,7 @@ export class Composer extends Component {
         });
         this.composer = propComputed("composer", t.instanceOf(this.store["Composer"]));
         this.composerActions = useComposerActions(this.composerActionsParams);
+        this.DICTATION_STATE = DICTATION_STATE;
         this.EDIT_CLICK_TYPE = EDIT_CLICK_TYPE;
         this.OR_PRESS_SEND_KEYBIND = _t("or press %(send_keybind)s", {
             send_keybind: htmlJoin(
@@ -213,14 +215,17 @@ export class Composer extends Component {
             active: true,
             isFullComposerOpen: false,
         });
-        // Block input while a message is being posted. The editable is not
-        // turned off for this, because that would make it lose the focus.
+        // Block input while a message is being posted or dictated. The editable
+        // is not turned off for this, because that would make it lose the focus.
         for (const type of ["beforeinput", "keydown", "paste", "cut", "drop"]) {
             useListener(
                 this.inputContainerRef,
                 type,
                 (ev) => {
-                    if (this.state.active || !this.editor?.editable.contains(ev.target)) {
+                    if (
+                        (this.state.active && this.dictation.state() === DICTATION_STATE.IDLE) ||
+                        !this.editor?.editable.contains(ev.target)
+                    ) {
                         return;
                     }
                     ev.stopPropagation();
@@ -233,6 +238,12 @@ export class Composer extends Component {
             );
         }
         this.rootRef = signal.ref(HTMLDivElement);
+        this.dictation = useDictation({
+            onCancel: () => this.revertDictation(),
+            onEnd: (text) => this.onDictationEnd(text),
+            onTranscript: (text) => this.dictationOperation.preview(text),
+            rootRef: this.rootRef,
+        });
         this.notification = usePlugin(NotificationPlugin);
         this.messageHighlight = useMaybePlugin(MessageHighlightPlugin);
         this.fullComposerRecoveryPopover = usePopover(FullComposerRecoveryPopover, {
@@ -320,7 +331,7 @@ export class Composer extends Component {
         onMounted(focusComposer);
         onPatched(focusComposer);
         useOnChange(
-            () => [this.readyEditor(), this.placeholder],
+            () => [this.readyEditor(), this.getEditorPlaceholder()],
             (readyEditor) => {
                 // The placeholder is rendered by the editor as a hint: the
                 // editor has no way to know it changed, so ask for a refresh.
@@ -529,6 +540,12 @@ export class Composer extends Component {
         return "";
     }
 
+    getEditorPlaceholder() {
+        return this.dictation.state() === DICTATION_STATE.IDLE
+            ? this.placeholder
+            : _t("Listening…");
+    }
+
     get wysiwygConfig() {
         return {
             content: this.props.composer.composerHtml,
@@ -543,7 +560,7 @@ export class Composer extends Component {
                 // creation, but the placeholder can change afterwards.
                 getAncestors: () => this.ancestors,
                 getComposerType: () => this.props.type,
-                getPlaceholder: () => this.placeholder,
+                getPlaceholder: () => this.getEditorPlaceholder(),
                 getSavedSelection: () => {
                     const { composerHtml, editorSelection } = this.props.composer;
                     // only valid for the content it was saved with
@@ -705,12 +722,22 @@ export class Composer extends Component {
         return groupAttachments(this.props.composer.attachments);
     }
 
+    get isSendButtonHidden() {
+        return false;
+    }
+
+    get isEmpty() {
+        return (
+            this.props.composer.isComposerHtmlEmpty && this.props.composer.attachments.length === 0
+        );
+    }
+
     get isSendButtonDisabled() {
-        const attachments = this.props.composer.attachments;
         return (
             !this.state.active ||
-            (this.props.composer.isComposerHtmlEmpty && attachments.length === 0) ||
-            attachments.some(({ uploading }) => Boolean(uploading))
+            this.dictation.state() !== DICTATION_STATE.IDLE ||
+            this.isEmpty ||
+            this.props.composer.attachments.some(({ uploading }) => Boolean(uploading))
         );
     }
 
@@ -1174,6 +1201,39 @@ export class Composer extends Component {
     onLoadWysiwyg(editor) {
         this.editor = editor;
         this.readyEditor.set(undefined);
+    }
+
+    /** Whether a dictation can start: it is only offered on an empty composer. */
+    canDictate() {
+        return (
+            this.state.active &&
+            this.dictation.state() === DICTATION_STATE.IDLE &&
+            Boolean(this.readyEditor()) &&
+            !this.isEditorReadonly &&
+            !this.isEditorDisabled &&
+            !this.props.composer.composerText.trim()
+        );
+    }
+
+    startDictation() {
+        this.dictationOperation = this.editor.shared.mail_composer.makeDictationOperation();
+        this.dictation.start();
+    }
+
+    revertDictation() {
+        this.dictationOperation.revert();
+        // not committed, so the editor does not notify the change
+        this.onChangeWysiwygContent();
+    }
+
+    /** @param {string} text */
+    onDictationEnd(text) {
+        if (text.trim()) {
+            this.dictationOperation.commit(text.trim());
+        } else {
+            this.revertDictation();
+        }
+        this.props.composer.autofocus++;
     }
 
     addEmoji(str) {
