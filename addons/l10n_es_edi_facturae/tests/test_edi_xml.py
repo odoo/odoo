@@ -725,3 +725,25 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             with file_open("l10n_es_edi_facturae/tests/data/expected_out_invoice_round_2.xml", "rt") as f:
                 expected_xml = lxml.etree.fromstring(f.read().encode())
             self.assertXmlTreeEqual(lxml.etree.fromstring(generated_file), expected_xml)
+
+    def test_out_invoice_rounding_discount(self):
+        """ TotalCost - DiscountAmount must equal GrossAmount on each line (FACe rule RCF6a). """
+        company = self.company_data['company']
+        company.tax_calculation_rounding_method = 'round_globally'
+        with freeze_time(self.frozen_today):
+            invoice = self.create_invoice(
+                partner_id=self.partner_a.id,
+                move_type='out_invoice',
+                invoice_line_ids=[
+                    {'price_unit': 166.98, 'quantity': 5.0, 'discount': 45.0, 'tax_ids': [self.tax.id]},
+                ],
+            )
+            invoice.action_post()
+            self.assertEqual(invoice.invoice_line_ids.price_subtotal, 459.20)
+
+            generated_file, errors = invoice._l10n_es_edi_facturae_render_facturae()
+            self.assertFalse(errors)
+            xml_tree = lxml.etree.fromstring(generated_file)
+            self.assertEqual(xml_tree.findtext('.//InvoiceLine/TotalCost'), '834.90')
+            self.assertEqual(xml_tree.findtext('.//InvoiceLine/DiscountsAndRebates/Discount/DiscountAmount'), '375.70')
+            self.assertEqual(xml_tree.findtext('.//InvoiceLine/GrossAmount'), '459.20')
