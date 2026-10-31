@@ -89,3 +89,24 @@ class TestResCompany(common.TransactionCase, MockIAPPartnerAutocomplete):
         with patch.object(self.env.registry['iap.autocomplete.api'], '_request_partner_autocomplete', patched_request):
             result = self.env['res.partner'].with_context(enriched_company_data=be_company_data).enrich_by_duns('BE1234567')
             self.assertEqual(result.get('vat'), '')
+
+    def test_enrich_by_duns_vat_from_query(self):
+        """
+        Ensure the VAT number is taken from the query when the company was found from it, but not from a name or a
+        number that the country can not check
+        """
+        def patched_request(self_api, endpoint, params, timeout=15):
+            return {'data': {'name': 'Test Company', 'duns': '123456789'}}, False
+
+        for country_xmlid, query, expected_vat in (
+            ('base.be', '0477472701', '0477472701'),
+            ('base.be', 'BE Comp 1234', None),
+            ('base.us', '94-2404110', None),
+        ):
+            with (
+                self.subTest(query=query),
+                patch.object(self.env.registry['iap.autocomplete.api'], '_request_partner_autocomplete', patched_request),
+            ):
+                company_data = {'name': 'Test Company', 'country_id': {'id': self.ref(country_xmlid)}, 'query': query}
+                result = self.env['res.partner'].with_context(enriched_company_data=company_data).enrich_by_duns('123456789')
+                self.assertEqual(result.get('vat'), expected_vat)
