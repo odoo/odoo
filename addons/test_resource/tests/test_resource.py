@@ -2,10 +2,12 @@
 
 from datetime import datetime, UTC
 
+from odoo.exceptions import ValidationError
+
 from odoo.tools.date_utils import sum_intervals
 from odoo.tools.intervals import Intervals
 
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 
 from odoo.addons.test_resource.tests.common import TestResourceCommon
 
@@ -94,3 +96,69 @@ class TestResource(TestResourceCommon):
         resource.company_id.resource_calendar_id = False
         unavailabilities = resource._get_unavailable_intervals(datetime(2024, 7, 11), datetime(2024, 7, 12))
         self.assertFalse(unavailabilities)
+
+    def test_multi_company_prevent_incoherent_calendar_for_material_resource(self):
+        """ Test that changing the company of a material resource sets its
+            working calendar to the new company's fully flexible calendar, in order
+            to prevent incoherent data.
+
+            Test case:
+            1) create multiple companies by setting up second company, with a fully flexible calendar
+            2) set a material of default company with a working calendar
+            3) switch the company of material resource to 2nd_company
+            4) verify that the working calendar is set to the new company's fully flexible calendar
+        """
+
+        # create a second company, with its own fully flexible calendar
+        second_company = self.env['res.company'].create({
+            'name': 'Arasaka',
+            'currency_id': self.env.ref('base.USD').id,
+        })
+        fully_flexible_calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible',
+            'company_id': second_company.id,
+            'calendar_type': 'undefined',
+        })
+        resource = self.env['resource.resource'].create({
+            'name': 'resource',
+            'resource_type': 'material',
+        })
+
+        # assign a working calendar to the material resource
+        resource.calendar_id = self.env['resource.calendar'].create({
+            'name': 'Classic 20h/week',
+            'company_id': self.env.company.id,
+            'hours_per_day': 4.0,
+            'attendance_ids': [
+                (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+            ]
+        })
+
+        # change company via the Form view
+        form = Form(resource)
+        form.company_id = second_company
+        form.save()
+
+        # check that the working calendar is set to the new company's fully flexible calendar
+        self.assertEqual(resource.company_id, second_company, "Material resource should have the new company set")
+        self.assertEqual(resource.calendar_id, fully_flexible_calendar, "Material resource should be assigned the new company's fully flexible calendar")
+
+    def test_change_company_id_with_linked_resources_should_raise_validation_error(self):
+        self.company_a = self.env['res.company'].create({'name': 'Company A'})
+        self.company_b = self.env['res.company'].create({'name': 'Company B'})
+        self.calendar = self.env['resource.calendar'].create({
+            'name': 'Test Calendar',
+            'company_id': self.company_a.id,
+        })
+        self.resource = self.env['resource.resource'].create({
+            'name': 'Test Resource',
+            'calendar_id': self.calendar.id,
+            'company_id': self.company_a.id,
+        })
+
+        with self.assertRaises(ValidationError):
+            self.calendar.write({'company_id': self.company_b.id})
