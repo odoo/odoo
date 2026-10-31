@@ -392,7 +392,7 @@ class TestUiTranslate(odoo.tests.HttpCase):
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
-class TestUi(HttpCaseWithWebsiteUser):
+class TestUiPart1(HttpCaseWithWebsiteUser):
 
     def test_01_admin_tour_homepage(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'homepage', login='admin')
@@ -496,6 +496,10 @@ class TestUi(HttpCaseWithWebsiteUser):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'conditional_visibility_4', login='admin')
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'conditional_visibility_5', login='admin')
 
+
+@odoo.tests.common.tagged('post_install', '-at_install')
+class TestUiPart2(HttpCaseWithWebsiteUser):
+
     def test_11_website_snippet_background_edition(self):
         self.env['ir.attachment'].create({
             'public': True,
@@ -574,6 +578,10 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_29_website_text_edition(self):
         self.start_tour(self.env["website"].get_client_action_url('/', True), 'website_text_edition', login='admin')
+
+
+@odoo.tests.common.tagged('post_install', '-at_install')
+class TestUiPart3(HttpCaseWithWebsiteUser):
 
     def test_29_website_backend_menus_redirect(self):
         Menu = self.env['ir.ui.menu']
@@ -673,6 +681,10 @@ class TestUi(HttpCaseWithWebsiteUser):
         self.env.ref('base.default_website').menu_id.child_id[1:].unlink()
 
         self.start_tour(self.env["website"].get_client_action_url('/', True), 'website_no_dirty_page', login='admin')
+
+
+@odoo.tests.common.tagged('post_install', '-at_install')
+class TestUiPart4(HttpCaseWithWebsiteUser):
 
     def test_drop_404_ir_attachment_url(self):
         website_snippets = self.env.ref('website.snippets')
@@ -801,6 +813,9 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_systray_items_disappear(self):
         self.start_tour(self.env['website'].get_client_action_url("/", False), "website_systray_items_disappear", login="admin")
 
+
+@odoo.tests.common.tagged('post_install', '-at_install')
+class TestUiPart5(HttpCaseWithWebsiteUser):
     def test_auto_hide_menu(self):
         self.start_tour(self.env['website'].get_client_action_url("/", False), "website_auto_hide_menu", login="admin")
 
