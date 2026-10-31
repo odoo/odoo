@@ -6201,7 +6201,7 @@ class AccountMove(models.Model):
                     raise RedirectWarning(
                         _(
                             "The company bank account (%(account_number)s) linked to this invoice is not trusted. "
-                            "Go to the Bank Settings, double-check that it is yours or correct the number, and click on Send Money to trust it.",
+                            "Go to the Bank Settings, double-check that it is yours or correct the number, and click on Tust bank account to trust it.",
                             account_number=invoice.partner_bank_id.display_name,
                         ),
                         invoice.partner_bank_id._get_records_action(),
