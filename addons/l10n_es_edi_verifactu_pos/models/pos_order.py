@@ -135,6 +135,7 @@ class PosOrder(models.Model):
             'document_vals': {
                 'pos_order_id': self.id,
                 'company_id': company.id,
+                'obligado_partner_id': company.partner_id.id,
                 'document_type': document_type,
             },
         }
