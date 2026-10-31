@@ -337,9 +337,20 @@ class MrpBom(models.Model):
 
     @api.constrains('product_tmpl_id', 'product_id', 'type')
     def check_kit_has_not_orderpoint(self):
-        product_ids = [pid for bom in self.filtered(lambda bom: bom.type == "phantom")
-                           for pid in (bom.product_id.ids or bom.product_tmpl_id.product_variant_ids.ids)]
-        if self.env['stock.warehouse.orderpoint'].search_count([('product_id', 'in', product_ids)], limit=1):
+        product_ids = set()
+        processed_tmpl_ids = set()
+        for bom in self:
+            if bom.type != "phantom":
+                continue
+            if bom.product_id:
+                product_ids.add(bom.product_id.id)
+            elif bom.product_tmpl_id:
+                if bom.product_tmpl_id.id in processed_tmpl_ids:
+                    continue
+                for product_id in bom.product_tmpl_id.product_variant_ids:
+                    product_ids.add(product_id.id)
+                processed_tmpl_ids.add(bom.product_tmpl_id.id)
+        if self.env['stock.warehouse.orderpoint'].search_count([('product_id', 'in', list(product_ids))], limit=1):
             raise ValidationError(_("You can not create a kit-type bill of materials for products that have at least one reordering rule."))
 
     @api.ondelete(at_uninstall=False)
