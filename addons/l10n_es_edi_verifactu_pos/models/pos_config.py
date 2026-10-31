@@ -14,10 +14,10 @@ class PosConfig(models.Model):
         data = super()._load_pos_data_read(records, config)
 
         if data and config.l10n_es_edi_verifactu_required:
-            verifactu_invoice_type_field = self.env['ir.model.fields']._get('pos.order', 'l10n_es_invoice_type')
+            verifactu_invoice_type_field = self.env['pos.order']._fields['l10n_es_invoice_type']
             data[0]['_verifactu_invoice_types'] = [
-                {'value': invoice_type.value, 'name': invoice_type.name}
-                for invoice_type in verifactu_invoice_type_field.selection_ids
+                {'value': value, 'name': name}
+                for value, name in verifactu_invoice_type_field._description_selection(self.env)
             ]
 
         return data
