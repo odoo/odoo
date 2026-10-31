@@ -369,7 +369,7 @@ class ResourceCalendar(models.Model):
                     end_date = end_datetime_adjusted
 
                     full_time_required_hours = hours_per_week
-                    max_hours_per_day = hours_per_day
+                    max_hours_per_day = hours_per_day or hours_per_week / 7
 
                     intervals = []
                     current_start_day = start_date

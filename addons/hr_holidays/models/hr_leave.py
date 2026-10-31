@@ -454,7 +454,7 @@ class HrLeave(models.Model):
                       ) for version in versions)))
 
     @api.depends('request_date_from_period', 'request_date_to_period', 'request_hour_from', 'request_hour_to',
-                 'request_date_from', 'request_date_to', 'employee_id')
+                 'request_date_from', 'request_date_to', 'employee_id', 'work_entry_type_request_unit')
     def _compute_date_from_to(self):
         for holiday in self:
             if not holiday.request_date_from or not holiday.request_date_to:
@@ -646,6 +646,11 @@ class HrLeave(models.Model):
                         )
                     else:
                         hours = (leave.date_to - leave.date_from).total_seconds() / 3600
+                    # without hours per day the window covers the whole day, count at most the average hours of a day instead
+                    version = leave.employee_id.sudo()._get_version(leave.request_date_from)
+                    average_day_hours = 0
+                    if version.is_flexible and not version.is_fully_flexible and not version.hours_per_day:
+                        average_day_hours = version.hours_per_week / 7
                     if leave.work_entry_type_request_unit != 'hour':
                         total_days = (leave.request_date_to - leave.request_date_from).days + 1
                         if public_holidays:
@@ -661,8 +666,12 @@ class HrLeave(models.Model):
                             if leave.request_date_to_period == 'am':
                                 total_days -= 0.5
                         days = max(0, total_days)
+                        if average_day_hours:
+                            hours = days * average_day_hours
                     else:
                         days = hours / 24
+                        if average_day_hours:
+                            hours = min(hours, average_day_hours)
                 elif leave.work_entry_type_request_unit == 'day' and check_work_entry_type:
                     # list of tuples (day, hours)
                     work_time_per_day_list = work_time_per_day_mapped[leave.date_from, leave.date_to, leave.work_entry_type_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
@@ -717,7 +726,7 @@ class HrLeave(models.Model):
                 tz = leave.employee_id._get_tz(leave.date_from) or tz
             leave.tz = tz
 
-    @api.depends('number_of_hours', 'number_of_days')
+    @api.depends('number_of_hours', 'number_of_days', 'work_entry_type_request_unit')
     def _compute_duration_display(self):
         for leave in self:
             duration = leave.number_of_days

@@ -149,6 +149,97 @@ class TestFlexibleResourceCalendar(TransactionCase):
         }, "week 31 (27/07 -> 02/08): 2 days off 31 & 01 (-16 hours), half day on 28 and 30 (-8 hours), 5 hours off on day 29 / hours = 40-(16+8+5) = 11 hours, no timeoff on week 32")
         self.assertTrue(self.fully_flex_resource.id not in hours_per_week)
 
+    def test_leave_duration_flexible_employee_without_hours_per_day(self):
+        """ A flexible employee with 40h/week but no hours per day must still get a
+        day count for their time off.
+
+        hours_per_day = 0 makes _attendance_intervals_batch allocate 0 hour to every
+        day of the request. Those zero length intervals are dropped by Intervals, so
+        _get_durations ends up with 0 day / 0 hour for a 3 days request, and
+        _action_validate then refuses the leave with "not supposed to work during
+        that period".
+        """
+        self.flex_employee.write({'tz': 'UTC', 'hours_per_day': 0.0})
+
+        leave_type = self.env['hr.work.entry.type'].create({
+            'name': 'Flexible Time Off',
+            'code': 'FLEXNOHOURS',
+            'requires_allocation': False,
+            'request_unit': 'half_day',
+            'unit_of_measure': 'day',
+        })
+
+        # Monday to Wednesday
+        leave = self.env['hr.leave'].with_context(mail_create_nolog=True, mail_notrack=True).create({
+            'name': 'Three days',
+            'work_entry_type_id': leave_type.id,
+            'employee_id': self.flex_employee.id,
+            'request_date_from': date(2025, 8, 11),
+            'request_date_to': date(2025, 8, 13),
+            'request_date_from_period': 'am',
+            'request_date_to_period': 'pm',
+        })
+
+        days, _hours = leave._get_durations()[leave.id]
+        self.assertEqual(days, 3.0, "3 requested days must be counted as 3 days, not 0")
+
+    def test_single_day_leave_flexible_employee_without_hours_per_day(self):
+        """ Without hours per day, the time off of a flexible employee covers the whole
+        day, but a single day only counts the average hours of a day: hours_per_week / 7.
+        """
+        self.flex_employee.write({'tz': 'UTC', 'hours_per_day': 0.0})
+
+        day_type, hour_type = self.env['hr.work.entry.type'].create([{
+            'name': 'Flexible Day Off',
+            'code': 'FLEXDAY',
+            'requires_allocation': False,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
+        }, {
+            'name': 'Flexible Hours Off',
+            'code': 'FLEXHOURS',
+            'count_as': 'absence',
+            'requires_allocation': False,
+            'request_unit': 'hour',
+            'unit_of_measure': 'hour',
+        }])
+        Leave = self.env['hr.leave'].with_context(mail_create_nolog=True, mail_notrack=True)
+
+        # Monday, in days
+        day_leave = Leave.create({
+            'name': 'Full day',
+            'work_entry_type_id': day_type.id,
+            'employee_id': self.flex_employee.id,
+            'request_date_from': date(2025, 8, 11),
+            'request_date_to': date(2025, 8, 11),
+        })
+        self.assertEqual(day_leave.date_from, datetime(2025, 8, 11, 0, 0), "the time off starts at the beginning of the day")
+        self.assertEqual(day_leave.number_of_days, 1)
+        self.assertAlmostEqual(day_leave.number_of_hours, 40 / 7, 2, msg="a day counts the average hours of a day, not 24 hours")
+
+        # Tuesday, in hours: the default hours cover the whole day, capped to the average hours of a day
+        full_day_hours_leave = Leave.create({
+            'name': 'Full day in hours',
+            'work_entry_type_id': hour_type.id,
+            'employee_id': self.flex_employee.id,
+            'request_date_from': date(2025, 8, 12),
+            'request_date_to': date(2025, 8, 12),
+        })
+        self.assertEqual((full_day_hours_leave.request_hour_from, full_day_hours_leave.request_hour_to), (0, 24))
+        self.assertAlmostEqual(full_day_hours_leave.number_of_hours, 40 / 7, 2, msg="00:00 -> 24:00 is capped to the average hours of a day")
+
+        # Wednesday, in hours: shorter than an average day, keeps its real duration
+        short_hours_leave = Leave.create({
+            'name': 'Two hours',
+            'work_entry_type_id': hour_type.id,
+            'employee_id': self.flex_employee.id,
+            'request_date_from': date(2025, 8, 13),
+            'request_date_to': date(2025, 8, 13),
+            'request_hour_from': 14.0,
+            'request_hour_to': 16.0,
+        })
+        self.assertEqual(short_hours_leave.number_of_hours, 2.0, "14:00 -> 16:00 is 2 hours")
+
     def test_get_unusal_days_for_fully_flexible_employees(self):
         """
         Test that _get_unusual_days return correct value for
