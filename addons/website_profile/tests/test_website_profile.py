@@ -46,6 +46,17 @@ class TestWebsiteProfile(HttpCaseGamification):
         })
         self.start_tour("/profile/users", 'website_profile_description', login="admin")
 
+    def test_profile_page_in_non_default_language(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        website = self.env.ref('base.default_website')
+        website.write({
+            'language_ids': [(6, 0, (self.env.ref('base.lang_en') + self.env.ref('base.lang_fr')).ids)],
+            'default_lang_id': self.env.ref('base.lang_fr').id,
+        })
+        self.authenticate('admin', 'admin')
+        response = self.url_open(f'/en/profile/user/{self.env.ref("base.user_admin").id}')
+        self.assertEqual(response.status_code, 200)
+
     def test_portal_access(self):
         # Delete demo data, to have a known set of given karma and badges
         self.env["gamification.karma.tracking"].search([]).unlink()
