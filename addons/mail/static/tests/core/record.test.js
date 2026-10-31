@@ -502,11 +502,7 @@ test("onEnter should see fully inserted data", async () => {
         static id = "name";
         name;
         type;
-        isAdmin = fields.Attr(false, {
-            compute() {
-                return this.type === "admin";
-            },
-        });
+        isAdmin = this.computed(() => this.type === "admin");
         thread = fields.One("Thread");
     }).register(localRegistry);
     const store = await start();
@@ -696,7 +692,6 @@ test("store updates can be observed", async () => {
     function onUpdate() {
         expect.step(`abc:${store.abc}`);
     }
-    const rawStore = toRaw(store)._raw;
     const disposeFn = immediateEffect(() => {
         onUpdate();
     });
@@ -704,9 +699,9 @@ test("store updates can be observed", async () => {
     expect.verifySteps(["abc:undefined"]);
     store.abc = 1;
     expect.verifySteps(["abc:1"]); // observable from makeStore"
-    rawStore.store.abc = 2;
+    store.store.abc = 2;
     expect.verifySteps(["abc:2"]); // observable from record.store
-    rawStore.Model.store.abc = 3;
+    store.Model.store.abc = 3;
     expect.verifySteps(["abc:3"]);
 });
 
@@ -963,12 +958,6 @@ test("writes of the queues drain do not wake the update observers", async () => 
     (class Thread extends Record {
         static id = "name";
         name;
-        first = fields.One("Persona", {
-            compute() {
-                return this.members[0];
-            },
-            eager: true,
-        });
         members = fields.Many("Persona");
     }).register(localRegistry);
     (class Persona extends Record {
@@ -976,15 +965,16 @@ test("writes of the queues drain do not wake the update observers", async () => 
         name;
     }).register(localRegistry);
     const store = await start();
-    const dispose = immediateEffect(() => {
-        expect.step(`updating:${store._.isUpdateInProgress()}`);
-    });
-    expect.verifySteps(["updating:false"]);
     store.Thread.insert([
         { name: "A", members: ["John"] },
         { name: "B", members: ["John"] },
         { name: "C", members: ["John"] },
     ]);
+    const dispose = immediateEffect(() => {
+        expect.step(`updating:${store._.isUpdateInProgress()}`);
+    });
+    expect.verifySteps(["updating:false"]);
+    store.Persona.get("John").delete();
     expect.verifySteps(["updating:true", "updating:false"]);
     dispose();
 });
@@ -1120,7 +1110,7 @@ test("record.toData() is JSON stringified and can be reinserted as record", asyn
     expect(p.team.name).toBe("Discuss");
     expect(p.signature.toString()).toBe("<p>-- John</p>");
     expect(p.signature).toBeInstanceOf(Markup);
-    expect(toRaw(store.Person.records.get(p.localId))).toBe(toRaw(p));
+    expect(store.Person.records.get(p.localId)).toBe(p);
     expect(serializeDateTime(p.due_datetime)).toBe("2024-08-28 10:19:44");
     // export data, delete, then insert back
     const data = p.toData();
@@ -1142,14 +1132,14 @@ test("record.toData() is JSON stringified and can be reinserted as record", asyn
     store.Message.get("1").delete();
     store.Message.get("2").delete();
     store.Team.get("Discuss").delete();
-    expect(toRaw(store.Person.records.get(p.localId))).toBe(undefined);
+    expect(store.Person.records.get(p.localId)).toBe(undefined);
     store.insert(serializedData);
     const p2 = store.Person.get(1);
     // Same assertions as before
     expect(p2.names).toEqual(["John", "Marc"]);
     expect(p2.messages.map((msg) => msg.body)).toEqual(["1", "2"]);
     expect(p2.team.name).toBe("Discuss");
-    expect(toRaw(store.Person.records.get(p2.localId))).toBe(toRaw(p2));
+    expect(store.Person.records.get(p2.localId)).toBe(p2);
     expect(serializeDateTime(p2.due_datetime)).toBe("2024-08-28 10:19:44");
     expect(p2.signature.toString()).toBe("<p>-- John</p>");
     expect(p.signature).toBeInstanceOf(Markup);
@@ -1493,12 +1483,13 @@ test("record.delete() should clear relation (inverse + computed)", async () => {
         static id = "name";
         name;
         members = fields.Many("Member", { inverse: "thread" });
-        onlineMembers = fields.Many("Member", {
-            compute() {
-                return this.members.filter((member) => member.online);
-            },
-        });
+        onlineMembers = fields.Many("Member");
         setup() {
+            this.onChange(
+                () => [this.members.filter((member) => member.online)],
+                (onlineMembers) => (this.onlineMembers = onlineMembers),
+                { immediate: true }
+            );
             this.onEnter(
                 () => this.members,
                 (member) => () => member.delete()
@@ -1539,7 +1530,7 @@ test("record.delete() should empty its own relations", async () => {
     thread.delete();
     expect(john.exists()).toBe(true);
     expect.verifySteps(["members:0"]);
-    expect(toRaw(john)._raw._.uses.data.size).toBe(0);
+    expect(john._.uses.data.size).toBe(0);
 });
 
 test("Delete record with side-effect compute to insert it should have resulting record with only insert data (old data is removed)'", async () => {
@@ -1554,7 +1545,7 @@ test("Delete record with side-effect compute to insert it should have resulting 
      */
     (class DiscussApp extends Record {
         static id;
-        state = fields.One("DiscussAppState", { compute: () => ({}) });
+        state = fields.One("DiscussAppState");
         setup() {
             this.onEnter(
                 () => [this.state],
@@ -1574,7 +1565,7 @@ test("Delete record with side-effect compute to insert it should have resulting 
         name;
     }).register(localRegistry);
     const store = await start();
-    const discussApp = store.DiscussApp.insert();
+    const discussApp = store.DiscussApp.insert({ state: {} });
     discussApp.state = { thread: "General", status: "ready" };
     expect(discussApp.state.status).toEqual("ready");
     expectRecord(discussApp.state.thread).toEqual(store.Thread.get("General"));
@@ -1598,13 +1589,14 @@ test("Can delete record with chained onEnter: () => record.delete()", async () =
     (class Thread extends Record {
         static id;
         channel = fields.One("Channel", { inverse: "thread" });
-        correspondent = fields.One("User", {
-            compute() {
-                return this.members[0];
-            },
-        });
+        correspondent = fields.One("User");
         members = fields.Many("User", { inverse: "threads" });
         setup() {
+            this.onChange(
+                () => [this.members[0]],
+                (correspondent) => (this.correspondent = correspondent),
+                { immediate: true }
+            );
             this.onEnter(
                 () => this.members,
                 (user) => () => user.delete()
@@ -1619,7 +1611,7 @@ test("Can delete record with chained onEnter: () => record.delete()", async () =
     const store = await start();
     const john = store.User.insert("john");
     const thread = store.Thread.insert({ channel: "general", members: [john] });
-    expectRecord(thread.correspondent).toEqual(john); // intentional observing correspondent field for compute on thread deletion
+    expectRecord(thread.correspondent).toEqual(john);
     thread.delete();
     expect(thread.exists()).toBe(false);
 });
@@ -1646,13 +1638,15 @@ test("fields, getters and functions are inherited", async () => {
     (class Thread extends Record {
         static id = "id";
         id;
-        channel = fields.One("Channel", {
-            compute() {
-                return this.id;
-            },
-            inverse: "thread",
-        });
+        channel = fields.One("Channel", { inverse: "thread" });
         name;
+        setup() {
+            this.onChange(
+                () => [this.id],
+                (id) => (this.channel = id),
+                { immediate: true }
+            );
+        }
         get displayName() {
             return `Thread: ${this.name}`;
         }
@@ -1680,13 +1674,15 @@ test("shadowed fields, getters and functions are not inherited", async () => {
     (class Thread extends Record {
         static id = "id";
         id;
-        channel = fields.One("Channel", {
-            compute() {
-                return this.id;
-            },
-            inverse: "thread",
-        });
+        channel = fields.One("Channel", { inverse: "thread" });
         name;
+        setup() {
+            this.onChange(
+                () => [this.id],
+                (id) => (this.channel = id),
+                { immediate: true }
+            );
+        }
         get displayName() {
             return `Thread: ${this.name}`;
         }
@@ -1906,11 +1902,7 @@ test("computed field first read by a component outlives that component", async (
         static id = "id";
         id;
         count = 0;
-        multiplicity = fields.Attr(undefined, {
-            compute() {
-                return this.count > 3 ? "many" : "few";
-            },
-        });
+        multiplicity = this.computed(() => (this.count > 3 ? "many" : "few"));
     }).register(localRegistry);
     const store = await start();
     const channel = store.Channel.insert(1);
