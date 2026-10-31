@@ -135,6 +135,11 @@ class ResPartner(models.Model):
 
     @api.model
     def _peppol_lookup_participant(self, edi_identification):
+        # TODO: Remove in master
+        return self._peppol_lookup_participant_formats_accepted(edi_identification, None)
+
+    @api.model
+    def _peppol_lookup_participant_formats_accepted(self, edi_identification, formats):
         """NAPTR DNS peppol participant lookup through Odoo's Peppol proxy"""
         company = self.env.company
         if (edi_mode := company._get_peppol_edi_mode()) == 'demo':
@@ -142,7 +147,7 @@ class ResPartner(models.Model):
 
         proxy_type = company._get_peppol_proxy_type()
         origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()[proxy_type][edi_mode]
-        query = parse.urlencode({'peppol_identifier': edi_identification.lower()})
+        query = parse.urlencode({'peppol_identifier': edi_identification.lower(), 'formats': formats})
         api_endpoint = self.env['account_edi_proxy_client.user']._get_peppol_proxy_endpoint('1/lookup', proxy_type=proxy_type)
         endpoint = f'{origin}{api_endpoint}?{query}'
 
@@ -171,6 +176,7 @@ class ResPartner(models.Model):
 
     @api.model
     def _check_document_type_support(self, participant_info, ubl_cii_format, process_type='billing', partner=None):
+        # DEPRECATED: TODO Remove in master
         edi_builder = self._get_edi_builder(ubl_cii_format)
         expected_customization_id = edi_builder._get_customization_id(process_type=process_type)
         if isinstance(participant_info, dict):
@@ -267,15 +273,30 @@ class ResPartner(models.Model):
             return 'not_verified'
 
         edi_identification = routing_identifier.lower()
-        participant_info = self._peppol_lookup_participant(edi_identification)
+
+        formats = {
+            edi_format: self.env['res.partner']._get_edi_builder(edi_format)._get_customization_id(process_type=process_type)
+            for edi_format in self.env['res.partner']._get_peppol_formats()
+        }
+        format_str = ",".join(formats.values())
+
+        participant_info = self._peppol_lookup_participant_formats_accepted(edi_identification, format_str)
         if participant_info is None:
             return 'not_valid'
-        is_participant_on_network = self._check_peppol_participant_exists(participant_info, edi_identification)
-        if not is_participant_on_network:
-            return 'not_valid'
-        if self._check_document_type_support(participant_info, invoice_edi_format, process_type=process_type, partner=partner):
-            return 'valid'
-        return 'not_valid_format'
+
+        if partner:
+            partner.peppol_supported_documents = [service['document_id'] for service in participant_info.get('services', []) if service.get('document_id')]
+
+        accepted_formats = {
+            ubl_format
+            for service in participant_info.get('services', [])
+            for ubl_format in service['formats']
+        }
+
+        if formats[invoice_edi_format] not in accepted_formats:
+            return 'not_valid_format'
+
+        return 'valid'
 
     def _get_frontend_writable_fields(self):
         frontend_writable_fields = super()._get_frontend_writable_fields()
