@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Also shown on the variant form, built from this one (product.product_normal_form_view). -->
+    <record id="product_template_form_view_inherit_l10n_ae_ubl_pint" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.l10n_ae_ubl_pint</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="account.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='invoicing']" position="inside">
+                <group string="FTA" invisible="'AE' not in l10n_ae_company_country_codes">
+                    <field name="l10n_ae_is_good_and_service"/>
+                    <field name="l10n_ae_goods_service_type" invisible="type == 'service' and not l10n_ae_is_good_and_service"/>
+                    <field name="l10n_ae_hs_code" string="HS Code" invisible="type == 'service' and not l10n_ae_is_good_and_service"/>
+                    <field name="l10n_ae_service_accounting_code" invisible="type != 'service' and not l10n_ae_is_good_and_service"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
