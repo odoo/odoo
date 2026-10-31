@@ -295,12 +295,12 @@ class test_search(TransactionCase):
             SELECT "res_country"."id"
             FROM "res_country"
             WHERE TRUE
-            ORDER BY "res_country"."name"->>%s
+            ORDER BY "res_country"."name"->>%s, "res_country"."id"
         """, """
             SELECT "res_country"."id"
             FROM "res_country"
             WHERE FALSE
-            ORDER BY "res_country"."name"->>%s
+            ORDER BY "res_country"."name"->>%s, "res_country"."id"
         """]):
             Model.search([('code', 'ilike', '')])
             Model.search([('code', 'not ilike', '')])

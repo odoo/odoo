@@ -1050,7 +1050,7 @@ class TestFlushSearch(TransactionCase):
             SELECT "test_new_api_city"."id", "test_new_api_city"."name"
             FROM "test_new_api_city"
             WHERE ("test_new_api_city"."id" = %s)
-            ORDER BY "test_new_api_city"."name"
+            ORDER BY "test_new_api_city"."name", "test_new_api_city"."id"
         '''], flush=False):
             self.brussels.name = "Brüsel"
             self.model.search_fetch([('id', '=', self.brussels.id)], ['name'], order='name')
