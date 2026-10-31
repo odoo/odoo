@@ -80,6 +80,41 @@ class TestAccountUblCii(AccountTestInvoicingCommon):
         partner_2.country_id = self.env.ref('base.be')
         self.assertEqual((partner_2.peppol_eas, partner_2.peppol_endpoint), ('0208', '12345674'))
 
+    @patch(
+        'odoo.addons.account_edi_ubl_cii.models.res_partner.ResPartner._build_error_peppol_endpoint',
+        _build_error_peppol_endpoint,
+    )
+    @patch.dict(EAS_MAPPING, {'BA': {'0184': 'company_registry', '0198': 'vat'}})
+    def test_peppol_endpoint_recomputed_on_vat_write(self):
+        partner = self.env['res.partner'].create({
+            'name': "A BA partner",
+            'country_id': self.env.ref('base.ba').id,
+            'peppol_eas': '0198',
+            'vat': 'BA12345674',
+        })
+        self.assertEqual(partner.peppol_endpoint, 'BA12345674')
+
+        partner.write({
+            'vat': 'BA87654321',
+            'peppol_endpoint': 'stale_value',
+        })
+        self.assertEqual(partner.peppol_endpoint, 'BA87654321')
+
+    @patch(
+        'odoo.addons.account_edi_ubl_cii.models.res_partner.ResPartner._build_error_peppol_endpoint',
+        _build_error_peppol_endpoint,
+    )
+    @patch.dict(EAS_MAPPING, {'BA': {'0184': 'company_registry', '0198': 'vat'}})
+    def test_peppol_endpoint_recomputed_on_vat_create(self):
+        partner = self.env['res.partner'].create({
+            'name': "A BA partner",
+            'country_id': self.env.ref('base.ba').id,
+            'peppol_eas': '0198',
+            'vat': 'BA12345674',
+            'peppol_endpoint': 'stale_value',
+        })
+        self.assertEqual(partner.peppol_endpoint, 'BA12345674')
+
     def test_partner_ubl_cii_formats(self):
         def _get_ubl_cii_formats_info(self):
             return {

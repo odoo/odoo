@@ -61,7 +61,7 @@ class TestUblImportBis3InvoiceBERetrievePartner(TestUblImportBis3InvoiceBE):
             'zip': "12345",
             'vat': 'CHE-107.787.577 TVA',
             'peppol_eas': '9927',
-            'peppol_endpoint': 'CHE-107.787.577TVA',
+            'peppol_endpoint': 'CHE-107.787.577 TVA',
         }])
 
         # Test the partner has been retrieved.

@@ -331,3 +331,17 @@ class ResPartner(models.Model):
                 'domain': [('peppol_eas', '=', peppol_eas), ('peppol_endpoint', '=', peppol_endpoint)],
             }],
         }
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'vat' in vals:
+            self._compute_peppol_endpoint()
+        return res
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        partners = super().create(vals_list)
+        for partner, vals in zip(partners, vals_list):
+            if 'vat' in vals:
+                partner._compute_peppol_endpoint()
+        return partners
