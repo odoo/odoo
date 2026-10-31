@@ -5,7 +5,7 @@ const REFRESH_DELAY = 1000;
 
 export class SnoozeTracker {
     constructor(snoozes) {
-        this.state = proxy({ activeSnoozes: new Array(), snoozedProductIds: new Set() });
+        this.state = proxy({ activeSnoozes: new Array(), snoozedProductIds: new Set(), now: 0 });
         if (snoozes) {
             this.setSnoozes(snoozes);
         }
@@ -25,6 +25,7 @@ export class SnoozeTracker {
         if (!this.snoozes || this.snoozes.length === 0) {
             this.state.activeSnoozes = [];
             this.state.snoozedProductIds = new Set();
+            this.stopCountdown();
             return;
         }
 
@@ -37,6 +38,12 @@ export class SnoozeTracker {
             snoozedProductIds.add(snooze.raw.product_template_id);
         });
         this.state.snoozedProductIds = snoozedProductIds;
+
+        if (this.state.activeSnoozes.some((s) => s.end_time)) {
+            this.startCountdown();
+        } else {
+            this.stopCountdown();
+        }
 
         // Schedule next refresh at earliest relevant boundary:
         // - earliest end among active snoozes
@@ -62,6 +69,23 @@ export class SnoozeTracker {
 
         const delay = Math.max(0, earliestUpdate - nowMs);
         this.updateTimeout = setTimeout(() => this.refresh(), delay + REFRESH_DELAY);
+    }
+
+    startCountdown() {
+        if (this.countdownInterval) {
+            return;
+        }
+        this.state.now = Date.now();
+        this.countdownInterval = setInterval(() => {
+            this.state.now = Date.now();
+        }, REFRESH_DELAY);
+    }
+
+    stopCountdown() {
+        if (this.countdownInterval) {
+            clearInterval(this.countdownInterval);
+            this.countdownInterval = null;
+        }
     }
 
     getActiveSnooze(type, data = {}) {
