@@ -316,24 +316,49 @@ class TestAccruedPurchaseStock(AccountTestInvoicingCommon):
         ])
 
     def test_purchase_stock_accruals_ordered_quantities_no_receipt(self):
-        """Test that accrued expense entries are created from the ordered quantity for
-        a storable product with ordered-quantity control."""
-        self.purchase_order.order_line.product_id.update({
+        """ Test that the accrual of an ordered-quantity-controlled product follows the
+            received and billed quantities: nothing before the bill, billed not received after
+        """
+        product = self.purchase_order.order_line.product_id
+        product.update({
             'is_storable': True,
             'purchase_method': 'purchase',
         })
+        product.categ_id.update({
+            'property_cost_method': 'average',
+            'property_valuation': 'real_time',
+        })
+        self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2020-01-13',
+            'date': '2020-01-13',
+            'invoice_line_ids': [Command.create({
+                'product_id': product.id,
+                'quantity': 10.0,
+                'price_unit': 30.0,
+                'tax_ids': False,
+                'purchase_line_id': self.purchase_order.order_line.id,
+            })],
+        }).action_post()
+
         wizard = self.env['account.accrued.orders.wizard'].with_context({
             'active_model': 'purchase.order',
             'active_ids': self.purchase_order.ids,
         }).create({
             'account_id': self.account_expense.id,
-            'date': fields.Date.context_today(self),
+            'date': '2020-01-12',
         })
+        with self.assertRaises(UserError):
+            wizard.create_entries()
+
+        wizard.date = fields.Date.to_date('2020-01-14')
+        product_account = wizard._get_product_expense_and_stock_var_accounts(product)[1] or self.account_expense
         self.assertRecordValues(self.env['account.move'].search(wizard.create_entries()['domain']).line_ids, [
             # reverse move lines
-            {'account_id': self.account_expense.id, 'debit': 0, 'credit': 300},
-            {'account_id': wizard.account_id.id, 'debit': 300, 'credit': 0},
-            # move lines
-            {'account_id': self.account_expense.id, 'debit': 300, 'credit': 0},
+            {'account_id': product_account.id, 'debit': 300, 'credit': 0},
             {'account_id': wizard.account_id.id, 'debit': 0, 'credit': 300},
+            # move lines
+            {'account_id': product_account.id, 'debit': 0, 'credit': 300},
+            {'account_id': wizard.account_id.id, 'debit': 300, 'credit': 0},
         ])
