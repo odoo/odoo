@@ -7,10 +7,11 @@ class ResPartner(models.Model):
 
     def _compute_im_status(self):
         super()._compute_im_status()
+        # sudo: hr.employee - can read the location of users, exceptions included, to show IM status
+        employee_by_user = self.user_ids.sudo()._get_employee_by_user()
         for user in self.user_ids:
             dayfield = self.env['hr.employee']._get_current_day_location_field()
-            # sudo: hr.employee.location - can read today's location of a user to show its IM status
-            employee = user.sudo().employee_id
+            employee = employee_by_user[user]
             location_type = (employee.exceptional_location_id or employee[dayfield]).location_type
             if not location_type:
                 continue
